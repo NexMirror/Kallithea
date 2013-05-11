@@ -229,7 +229,7 @@ class MercurialRepository(BaseRepository):
 
     def _get_all_revisions(self):
 
-        return map(lambda x: hex(x[7]), self._repo.changelog.index)[:-1]
+        return [self._repo[x].hex() for x in self._repo.filtered('visible').changelog.revs()]
 
     def get_diff(self, rev1, rev2, path='', ignore_whitespace=False,
                   context=3):
