@@ -9,19 +9,19 @@ Troubleshooting
 :A: Make sure either to set the `static_files = true` in the .ini file or
    double check the root path for your http setup. It should point to
    for example:
-   /home/my-virtual-python/lib/python2.6/site-packages/rhodecode/public
+   /home/my-virtual-python/lib/python2.6/site-packages/kallithea/public
 
 |
 
 :Q: **Can't install celery/rabbitmq?**
-:A: Don't worry RhodeCode works without them too. No extra setup is required.
+:A: Don't worry Kallithea works without them too. No extra setup is required.
     Try out great celery docs for further help.
 
 |
 
 :Q: **Long lasting push timeouts?**
 :A: Make sure you set a longer timeouts in your proxy/fcgi settings, timeouts
-    are caused by https server and not RhodeCode.
+    are caused by https server and not Kallithea.
 
 |
 
@@ -43,16 +43,16 @@ Troubleshooting
 
 |
 
-:Q: **How i use hooks in RhodeCode?**
+:Q: **How i use hooks in Kallithea?**
 :A: It's easy if they are python hooks just use advanced link in hooks section
     in Admin panel, that works only for Mercurial. If you want to use githooks,
     just install proper one in repository eg. create file in
-    `/gitrepo/hooks/pre-receive`. You can also use RhodeCode-extensions to
+    `/gitrepo/hooks/pre-receive`. You can also use Kallithea-extensions to
     connect to callback hooks, for both Git and Mercurial.
 
 |
 
-:Q: **RhodeCode is slow for me, how can i make it faster?**
+:Q: **Kallithea is slow for me, how can i make it faster?**
 :A: See the :ref:`performance` section
 
 |
@@ -67,9 +67,6 @@ Troubleshooting
     you have installed latest windows patches (especially KB2789397)
 
 
-For further questions search the `Issues tracker`_, or post a message in the
-`google group rhodecode`_
-
 .. _virtualenv: http://pypi.python.org/pypi/virtualenv
 .. _python: http://www.python.org/
 .. _mercurial: http://mercurial.selenic.com/
@@ -78,5 +75,4 @@ For further questions search the `Issues tracker`_, or post a message in the
 .. _python-ldap: http://www.python-ldap.org/
 .. _mercurial-server: http://www.lshift.net/mercurial-server.html
 .. _PublishingRepositories: http://mercurial.selenic.com/wiki/PublishingRepositories
-.. _Issues tracker: https://bitbucket.org/marcinkuzminski/rhodecode/issues
-.. _google group rhodecode: http://groups.google.com/group/rhodecode
+.. _Issues tracker: https://bitbucket.org/conservancy/kallithea/issues

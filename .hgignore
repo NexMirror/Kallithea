@@ -18,10 +18,9 @@ syntax: regexp
 ^\.project$
 ^\.pydevproject$
 ^\.coverage$
-^rhodecode\.db$
+^kallithea\.db$
 ^test\.db$
-^RhodeCode\.egg-info$
+^Kallithea\.egg-info$
 ^rc.*\.ini$
 ^fabfile.py
-^\.rhodecode$
 ^\.idea$

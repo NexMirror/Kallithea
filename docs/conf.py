@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# RhodeCode documentation build configuration file, created by
+# Kallithea documentation build configuration file, created by
 # sphinx-quickstart on Sun Oct 10 16:46:37 2010.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -44,8 +44,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'RhodeCode'
-copyright = u'%s, Marcin Kuzminski' % (datetime.datetime.now().year)
+project = u'Kallithea'
+copyright = u'2010-2014 by various authors, licensed as GPLv3.'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -54,7 +54,7 @@ copyright = u'%s, Marcin Kuzminski' % (datetime.datetime.now().year)
 # The short X.Y version.
 root = os.path.dirname(os.path.dirname(__file__))
 sys.path.append(root)
-from rhodecode import __version__
+from kallithea import __version__
 version = __version__
 # The full version, including alpha/beta/rc tags.
 release = __version__
@@ -171,7 +171,7 @@ html_theme_path = ['theme']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'RhodeCodedoc'
+htmlhelp_basename = 'Kallithea-docs'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -185,7 +185,7 @@ htmlhelp_basename = 'RhodeCodedoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'RhodeCode.tex', u'RhodeCode Documentation',
+  ('index', 'Kallithea.tex', u'Kallithea Documentation',
    u'Marcin Kuzminski', 'manual'),
 ]
 
@@ -218,7 +218,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'rhodecode', u'RhodeCode Documentation',
+    ('index', 'kallithea', u'Kallithea Documentation',
      [u'Marcin Kuzminski'], 1)
 ]
 

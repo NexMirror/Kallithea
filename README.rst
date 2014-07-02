@@ -1,71 +1,57 @@
 =========
-RhodeCode
+Kallithea
 =========
 
 About
 -----
 
-``RhodeCode`` is a fast and powerful management tool for Mercurial_ and GIT_
+``Kallithea`` is a fast and powerful management tool for Mercurial_ and GIT_
 with a built in push/pull server, full text search and code-review.
 It works on http/https and has a built in permission/authentication system with
-the ability to authenticate via LDAP or ActiveDirectory. RhodeCode also provides
+the ability to authenticate via LDAP or ActiveDirectory. Kallithea also provides
 simple API so it's easy integrable with existing external systems.
 
-RhodeCode is similar in some respects to github_ or bitbucket_,
-however RhodeCode can be run as standalone hosted application on your own server.
+Kallithea is similar in some respects to github_ or bitbucket_,
+however Kallithea can be run as standalone hosted application on your own server.
 It is open source and donation ware and focuses more on providing a customized,
 self administered interface for Mercurial_ and GIT_  repositories.
-RhodeCode works on \*nix systems and Windows it is powered by a vcs_ library
+Kallithea works on \*nix systems and Windows it is powered by a vcs_ library
 that Lukasz Balcerzak and Marcin Kuzminski created to handle multiple
 different version control systems.
 
-RhodeCode uses `PEP386 versioning <http://www.python.org/dev/peps/pep-0386/>`_
+Kallithea was forked from RhodeCode in July 2014 and has been heavily modified.
 
 Installation
 ------------
-Stable releases of RhodeCode are best installed via::
+Stable releases of Kallithea are best installed via::
 
-    easy_install rhodecode
+    easy_install kallithea
 
 Or::
 
-    pip install rhodecode
+    pip install kallithea
 
 Detailed instructions and links may be found on the Installation page.
 
-Please visit http://packages.python.org/RhodeCode/installation.html for
+Please visit http://packages.python.org/Kallithea/installation.html for
 more details
 
-RhodeCode demo
---------------
-
-http://demo.rhodecode.org
-
-The default access is anonymous but you can login to an administrative account
-using the following credentials:
-
-- username: demo
-- password: demo12
 
 Source code
 -----------
 
-The latest sources can be obtained from official RhodeCode instance
-https://secure.rhodecode.org
+The latest sources can be obtained from https://kallithea-scm.org/repos/kallithea
 
 
 MIRRORS:
 
 Issue tracker and sources at bitbucket_
 
-http://bitbucket.org/marcinkuzminski/rhodecode
-
-Sources at github_
-
-https://github.com/marcinkuzminski/rhodecode
+https://bitbucket.org/conservancy/kallithea
 
 
-RhodeCode Features
+
+Kallithea Features
 ------------------
 
 - Has its own middleware to handle mercurial_ and git_ protocol requests.
@@ -82,7 +68,7 @@ RhodeCode Features
 - Built in Gist functionality for sharing code snippets.
 - Integrates easily with other systems, with custom created mappers you can connect it to almost
   any issue tracker, and with an JSON-RPC API you can make much more
-- Build in commit-api let's you add, edit and commit files right from RhodeCode
+- Build in commit-api let's you add, edit and commit files right from Kallithea
   web interface using simple editor or upload binary files using simple form.
 - Powerfull pull-request driven review system with inline commenting,
   changeset statuses, and notification system.
@@ -127,7 +113,7 @@ Incoming / Plans
 License
 -------
 
-``RhodeCode`` is released under the GPLv3 license.
+``Kallithea`` is released under the GPLv3 license.
 
 
 Getting help
@@ -140,24 +126,20 @@ Listed bellow are various support resources that should help.
    Please try to read the documentation before posting any issues, especially
    the **troubleshooting section**
 
-- Join the `Google group <http://groups.google.com/group/rhodecode>`_ and ask
-  any questions.
+- Open an issue at `issue tracker <https://bitbucket.org/conservancy/kallithea/issues>`_
 
-- Open an issue at `issue tracker <http://bitbucket.org/marcinkuzminski/rhodecode/issues>`_
+- Join #kallithea on FreeNode (irc.freenode.net)
+  or use http://webchat.freenode.net/?channels=kallithea for web access to irc.
 
-- Join #rhodecode on FreeNode (irc.freenode.net)
-  or use http://webchat.freenode.net/?channels=rhodecode for web access to irc.
-
-- You can also follow me on twitter **@marcinkuzminski** where i often post some
-  news about RhodeCode
+You can follow this project on Twitter, **@KallitheaSCM**.
 
 
 Online documentation
 --------------------
 
-Online documentation for the current version of RhodeCode is available at
- - http://packages.python.org/RhodeCode/
- - http://rhodecode.readthedocs.org/en/latest/index.html
+Online documentation for the current version of Kallithea is available at
+ - http://packages.python.org/Kallithea/
+ - http://kallithea.readthedocs.org/
 
 You may also build the documentation for yourself - go into ``docs/`` and run::
 
@@ -166,6 +148,50 @@ You may also build the documentation for yourself - go into ``docs/`` and run::
 (You need to have sphinx_ installed to build the documentation. If you don't
 have sphinx_ installed you can install it via the command:
 ``easy_install sphinx``)
+
+
+Converting from RhodeCode
+-------------------------
+
+Currently, you have two options for working with an existing RhodeCode database:
+ - keep the database unconverted (intended for testing and evaluation)
+ - convert the database in a one-time step
+
+Maintaining Interoperability
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Interoperability with RhodeCode 2.2.5 installations is provided so you don't
+have to immediately commit to switching to Kallithea. This option will most
+likely go away once the two projects have diverged significantly.
+
+To run Kallithea on a Rhodecode database, run::
+
+   echo "BRAND = 'rhodecode'" > kallithea/brand.py
+
+This location will depend on where you installed Kallithea. If you installed via::
+
+   python setup.py install
+
+then you will find this location at
+``$VIRTUAL_ENV/lib/python2.7/site-packages/Kallithea-2.2.5-py2.7.egg/kallithea``
+
+One-time Conversion
+~~~~~~~~~~~~~~~~~~~
+
+Alternatively, if you would like to convert the database for good, you can use
+a helper script provided by Kallithea. This script will operate directly on the
+database, using the database string you can find in your ``production.ini`` (or
+``development.ini``) file. For example, if using SQLite::
+
+   cd /path/to/kallithea
+   cp /path/to/rhodecode/rhodecode.db kallithea.db
+   pip install sqlalchemy-migrate
+   python kallithea/bin/rebranddb.py sqlite:///kallithea.db
+
+.. WARNING::
+
+   If you used the other method for interoperability, overwrite brand.py with
+   an empty file (or watch out for stray brand.pyc after removing brand.py).
 
 .. _virtualenv: http://pypi.python.org/pypi/virtualenv
 .. _python: http://www.python.org/
