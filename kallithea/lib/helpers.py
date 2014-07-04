@@ -55,7 +55,7 @@ from kallithea.lib.annotate import annotate_highlight
 from kallithea.lib.utils import repo_name_slug, get_custom_lexer
 from kallithea.lib.utils2 import str2bool, safe_unicode, safe_str, \
     get_changeset_safe, datetime_to_time, time_to_datetime, AttributeDict, \
-    safe_int
+    safe_int, MENTIONS_REGEX
 from kallithea.lib.markup_renderer import MarkupRenderer, url_re
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError
 from kallithea.lib.vcs.backends.base import BaseChangeset, EmptyChangeset
@@ -1396,6 +1396,26 @@ def rst_w_mentions(source):
     """
     return literal('<div class="rst-block">%s</div>' %
                    MarkupRenderer.rst_with_mentions(source))
+
+
+def mentions_replace(match_obj):
+    return '<b>@%s</b>' % match_obj.group(1)
+
+
+def render_w_mentions(source):
+    """
+    Render plain text with @mention highlighting.
+    """
+    s = source.rstrip()
+    s = safe_unicode(s)
+    s = '\n'.join(s.splitlines())
+    s = html_escape(s)
+    # this sequence of html-ifications seems to be safe and non-conflicting
+    # if the issues regexp is sane
+    s = _urlify_text(s)
+    s = MENTIONS_REGEX.sub(mentions_replace, s)
+    return literal('<code style="white-space:pre-wrap">%s</code>' % s)
+
 
 def short_ref(ref_type, ref_name):
     if ref_type == 'rev':
