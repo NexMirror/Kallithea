@@ -59,7 +59,7 @@ class NotificationModel(BaseModel):
 
     def create(self, created_by, subject, body, recipients=None,
                type_=Notification.TYPE_MESSAGE, with_email=True,
-               email_kwargs=None):
+               email_kwargs=None, repo_name=None):
         """
 
         Creates notification of given type
@@ -123,7 +123,7 @@ class NotificationModel(BaseModel):
             ## this is passed into template
             html_kwargs = {
                       'subject': subject,
-                      'body': h.render_w_mentions(body),
+                      'body': h.render_w_mentions(body, repo_name),
                       'when': h.fmt_date(notif.created_on),
                       'user': notif.created_by_user.username,
                       }

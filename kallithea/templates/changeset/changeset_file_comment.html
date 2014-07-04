@@ -40,7 +40,7 @@
            </div>
         %endif
         %if co.text:
-          ${h.render_w_mentions(co.text)|n}
+          ${h.render_w_mentions(co.text, c.repo_name)|n}
         %endif
       </div>
     </div>

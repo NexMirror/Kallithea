@@ -1402,9 +1402,10 @@ def _mentions_replace(match_obj):
     return '<b>@%s</b>' % match_obj.group(1)
 
 
-def render_w_mentions(source):
+def render_w_mentions(source, repo_name=None):
     """
-    Render plain text with @mention highlighting.
+    Render plain text with revision hashes and issue references urlified
+    and with @mention highlighting.
     """
     s = source.rstrip()
     s = safe_unicode(s)
@@ -1413,6 +1414,9 @@ def render_w_mentions(source):
     # this sequence of html-ifications seems to be safe and non-conflicting
     # if the issues regexp is sane
     s = _urlify_text(s)
+    if repo_name is not None:
+        s = urlify_changesets(s, repo_name)
+    s = urlify_issues(s, repo_name)
     s = MENTIONS_REGEX.sub(_mentions_replace, s)
     return literal('<code style="white-space:pre-wrap">%s</code>' % s)
 
