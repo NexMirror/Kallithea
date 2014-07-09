@@ -103,6 +103,7 @@ def _colored(repo, dag):
 
     row = []
     colors = {}
+    obs = {}
     newcolor = 1
 
     for (rev, dagparents) in dag:
@@ -111,6 +112,7 @@ def _colored(repo, dag):
         if rev not in row:
             row.append(rev)  # new head
             colors[rev] = newcolor
+            obs[rev] = int(repo[rev].obsolete)
             newcolor += 1
 
         col = row.index(rev)
@@ -126,12 +128,14 @@ def _colored(repo, dag):
                 nextrow.append(r)
             else:
                 colors.pop(r)
+                obs.pop(r)
 
         # Set colors for the parents
         color = colors.pop(rev)
         if addparents:
             b = branch(rev)
             for p in reversed(addparents):
+                obs[p] = int(repo[p].obsolete)
                 if b and branch(abs(p)) == b:
                     colors[p] = color
                     b = None
@@ -143,10 +147,10 @@ def _colored(repo, dag):
         edges = []
         for ecol, ep in enumerate(row):
             if ep in nextrow:
-                edges.append((ecol, nextrow.index(ep), colors[ep]))
+                edges.append((ecol, nextrow.index(ep), colors[ep], obs[ep]))
             elif ep == rev:
                 for p in dagparents:
-                    edges.append((ecol, nextrow.index(p), colors[p]))
+                    edges.append((ecol, nextrow.index(p), colors[p], obs[p]))
 
         # Yield and move on
         closing = int(repo[rev].closesbranch)

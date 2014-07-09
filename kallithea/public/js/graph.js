@@ -115,6 +115,7 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 				start = line[0];
 				end = line[1];
 				color = line[2];
+				obsolete_line = line[3];
 				
 				x = Math.floor(base_x - box_size * start);
 
@@ -159,6 +160,11 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 				
 				this.ctx.lineWidth=this.line_width;
 				this.ctx.beginPath();
+				if (obsolete_line)
+				{
+					this.ctx.setLineDash([5]);
+				}
+				this.ctx.beginPath();
 				this.ctx.moveTo(x, rowY);
 				if (start == end)
 				{
@@ -168,9 +174,14 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 				{
 					var x2 = Math.floor(base_x - box_size * end);
 					var ymid = (rowY+nextY) / 2;
+					if (obsolete_node)
+					{
+						this.ctx.setLineDash([5]);
+					}
 					this.ctx.bezierCurveTo (x,ymid,x2,ymid,x2,nextY);
 				}
 				this.ctx.stroke();
+				this.ctx.setLineDash([]); // reset the dashed line, if any
 			}
 			
 			column = node[0];
