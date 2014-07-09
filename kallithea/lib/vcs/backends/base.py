@@ -667,6 +667,10 @@ class BaseChangeset(object):
     def closesbranch(self):
         return False
 
+    @LazyProperty
+    def obsolete(self):
+        return False
+
 class BaseWorkdir(object):
     """
     Working directory representation of single repository.

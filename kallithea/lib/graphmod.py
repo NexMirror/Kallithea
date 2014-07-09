@@ -150,5 +150,6 @@ def _colored(repo, dag):
 
         # Yield and move on
         closing = int(repo[rev].closesbranch)
-        yield ((col, color), edges, closing)
+        obsolete = int(repo[rev].obsolete)
+        yield ((col, color), edges, closing, obsolete)
         row = nextrow

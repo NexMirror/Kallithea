@@ -43,6 +43,10 @@ class MercurialChangeset(BaseChangeset):
         return  self._ctx.closesbranch()
 
     @LazyProperty
+    def obsolete(self):
+        return  self._ctx.obsolete()
+
+    @LazyProperty
     def bookmarks(self):
         return map(safe_unicode, self._ctx.bookmarks())
 

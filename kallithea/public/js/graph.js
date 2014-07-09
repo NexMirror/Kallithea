@@ -105,6 +105,7 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 			node = cur[0];
 			in_l = cur[1];
 			closing = cur[2];
+			obsolete_node = cur[3];
 
 			var rowY = row.offsetTop + row.offsetHeight/2;
 			var nextY = (next == null) ? rowY + row.offsetHeight/2 : next.offsetTop + next.offsetHeight/2;
@@ -178,6 +179,19 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 			x = Math.floor(base_x - box_size * column);
 		
 			this.setColor(color, 0.25, 0.75);
+
+
+			r = this.dot_radius
+			if (obsolete_node)
+			{
+				this.ctx.beginPath();
+				this.ctx.moveTo(x - this.close_x, rowY - this.close_y - 3);
+				this.ctx.lineTo(x - this.close_x + 2*this.close_x, rowY - this.close_y + 4*this.close_y - 1);
+				this.ctx.moveTo(x - this.close_x, rowY - this.close_y + 4*this.close_y - 1);
+				this.ctx.lineTo(x - this.close_x + 2*this.close_x, rowY - this.close_y - 3);
+				this.ctx.stroke();
+				r -= 0.5
+			}
 			if (closing)
 			{
 				this.ctx.fillRect(x - this.close_x, rowY - this.close_y, 2*this.close_x, 2*this.close_y);
@@ -185,7 +199,7 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 			else
 			{
 				this.ctx.beginPath();
-				this.ctx.arc(x, rowY, this.dot_radius, 0, Math.PI * 2, true);
+				this.ctx.arc(x, rowY, r, 0, Math.PI * 2, true);
 				this.ctx.fill();
 			}
 
