@@ -16,6 +16,7 @@ from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.vcs.utils.paths import get_dirs_for_path
 from kallithea.lib.vcs.utils.hgcompat import archival, hex
 
+from mercurial import obsolete
 
 class MercurialChangeset(BaseChangeset):
     """
@@ -45,6 +46,16 @@ class MercurialChangeset(BaseChangeset):
     @LazyProperty
     def obsolete(self):
         return  self._ctx.obsolete()
+
+    @LazyProperty
+    def successors(self):
+        successors = obsolete.successorssets(self._ctx._repo, self._ctx.node())
+        if successors:
+            # flatten the list here handles both divergent (len > 1)
+            # and the usual case (len = 1)
+            successors = [hex(n)[:12] for sub in successors for n in sub if n != self._ctx.node()]
+
+        return successors
 
     @LazyProperty
     def bookmarks(self):
