@@ -58,6 +58,16 @@ class MercurialChangeset(BaseChangeset):
         return successors
 
     @LazyProperty
+    def precursors(self):
+        precursors = set()
+        nm = self._ctx._repo.changelog.nodemap
+        for p in self._ctx._repo.obsstore.precursors.get(self._ctx.node(), ()):
+            pr = nm.get(p[0])
+            if pr is not None:
+                precursors.add(hex(p[0])[:12])
+        return precursors
+
+    @LazyProperty
     def bookmarks(self):
         return map(safe_unicode, self._ctx.bookmarks())
 
