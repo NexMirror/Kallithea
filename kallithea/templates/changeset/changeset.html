@@ -129,6 +129,21 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
                        ${_('Transplanted from:')} ${h.link_to(h.short_id(rev),h.url('changeset_home',repo_name=c.repo_name,revision=rev))}
                      </div>
                      %endif
+
+                     % if hasattr(c.changeset, 'successors') and c.changeset.successors:
+                     <div class='successors'>
+                       <span class='successors_header'>${_('Replaced by:')} </span>
+                       % for i, s in enumerate(c.changeset.successors):
+                           <%
+                           comma = ""
+                           if i != len(c.changeset.successors)-1:
+                             comma = ", "
+                           %>
+                         <a class='successors_hash' href="${h.url('changeset_home',repo_name=c.repo_name, revision=s)}">${s}</a>${comma}
+                       % endfor
+                     </div>
+                     % endif
+
                      <div class="message">${h.urlify_commit(c.changeset.message, c.repo_name)}</div>
                 </div>
             </div>
