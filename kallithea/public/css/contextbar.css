@@ -71,6 +71,10 @@ i[class^='icon-'] {
     vertical-align: text-bottom;
 }
 
+#content #context-bar li span {
+    margin: 0;
+}
+
 ul.horizontal-list {
     display: block;
 }

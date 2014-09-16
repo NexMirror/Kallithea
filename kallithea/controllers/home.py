@@ -130,6 +130,12 @@ class HomeController(BaseController):
                 'text': _('Branch'),
                 'children': [{'id': rev, 'text': name, 'type': 'branch'} for name, rev in _branches]
             })
+        _closed_branches = repo.closed_branches.items()
+        if _closed_branches:
+            res.append({
+                'text': _('Closed Branches'),
+                'children': [{'id': rev, 'text': name, 'type': 'closed-branch'} for name, rev in _closed_branches]
+            })
         _tags = repo.tags.items()
         if _tags:
             res.append({
