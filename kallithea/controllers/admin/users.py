@@ -452,6 +452,7 @@ class UsersController(BaseController):
             new_ssh_key = SshKeyModel().create(c.user.user_id,
                                                description, public_key)
             Session().commit()
+            SshKeyModel().write_authorized_keys()
             h.flash(_("SSH key %s successfully added") % new_ssh_key.fingerprint, category='success')
         except SshKeyModelException as errors:
             h.flash(errors.message, category='error')
@@ -465,6 +466,7 @@ class UsersController(BaseController):
         try:
             SshKeyModel().delete(public_key, c.user.user_id)
             Session().commit()
+            SshKeyModel().write_authorized_keys()
             h.flash(_("SSH key successfully deleted"), category='success')
         except SshKeyModelException as errors:
             h.flash(errors.message, category='error')
