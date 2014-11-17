@@ -66,6 +66,7 @@ no_about.add(('Sean Farley <sean.michael.farley@gmail.com>', '2013'))
 # history:
 other = [
     # Work folded into commits attributed to others:
+    ('2013', 'Ilya Beda <ir4y.ix@gmail.com>'),
 ]
 
 # Preserve contributors listed in about.html but not appearing in repository

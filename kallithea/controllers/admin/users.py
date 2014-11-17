@@ -43,9 +43,9 @@ from kallithea.lib import helpers as h
 from kallithea.lib.auth import LoginRequired, HasPermissionAnyDecorator, \
     AuthUser
 from kallithea.lib import auth_modules
-from kallithea.lib.base import BaseController, render
+from kallithea.lib.base import BaseController, render, IfSshEnabled
 from kallithea.model.api_key import ApiKeyModel
-
+from kallithea.model.ssh_key import SshKeyModel
 from kallithea.model.db import User, UserEmailMap, UserIpMap, UserToPerm
 from kallithea.model.forms import UserForm, CustomDefaultPermissionsForm
 from kallithea.model.user import UserModel
@@ -429,3 +429,37 @@ class UsersController(BaseController):
         if 'default_user' in request.POST:
             raise HTTPFound(location=url('admin_permissions_ips'))
         raise HTTPFound(location=url('edit_user_ips', id=id))
+
+    @IfSshEnabled
+    def edit_ssh_keys(self, id):
+        c.user = self._get_user_or_raise_if_default(id)
+        c.active = 'ssh_keys'
+        c.user_ssh_keys = SshKeyModel().get_ssh_keys(c.user.user_id)
+        defaults = c.user.get_dict()
+        return htmlfill.render(
+            render('admin/users/user_edit.html'),
+            defaults=defaults,
+            encoding="UTF-8",
+            force_defaults=False)
+
+    @IfSshEnabled
+    def ssh_keys_add(self, id):
+        c.user = self._get_user_or_raise_if_default(id)
+
+        description = request.POST.get('description')
+        public_key = request.POST.get('public_key')
+        new_ssh_key = SshKeyModel().create(c.user.user_id,
+                                       description, public_key)
+        Session().commit()
+        h.flash(_("SSH key %s successfully added") % new_ssh_key.fingerprint, category='success')
+        raise HTTPFound(location=url('edit_user_ssh_keys', id=c.user.user_id))
+
+    @IfSshEnabled
+    def ssh_keys_delete(self, id):
+        c.user = self._get_user_or_raise_if_default(id)
+
+        public_key = request.POST.get('del_public_key')
+        SshKeyModel().delete(public_key, c.user.user_id)
+        Session().commit()
+        h.flash(_("SSH key successfully deleted"), category='success')
+        raise HTTPFound(location=url('edit_user_ssh_keys', id=c.user.user_id))

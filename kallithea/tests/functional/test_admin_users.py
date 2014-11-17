@@ -18,7 +18,7 @@ import pytest
 from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
 from kallithea.controllers.admin.users import UsersController
-from kallithea.model.db import User, Permission, UserIpMap, UserApiKeys, RepoGroup
+from kallithea.model.db import User, Permission, UserIpMap, UserApiKeys, RepoGroup, UserSshKeys
 from kallithea.lib.auth import check_password
 from kallithea.model.user import UserModel
 from kallithea.model import validators
@@ -513,6 +513,54 @@ class TestAdminUsersController(TestController):
         self.checkSessionFlash(response, 'API key successfully reset')
         response = response.follow()
         response.mustcontain(no=[api_key])
+
+    def test_add_ssh_key(self):
+        description = u'something'
+        public_key = u'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC6Ycnc2oUZHQnQwuqgZqTTdMDZD7ataf3JM7oG2Fw8JR6cdmz4QZLe5mfDwaFwG2pWHLRpVqzfrD/Pn3rIO++bgCJH5ydczrl1WScfryV1hYMJ/4EzLGM657J1/q5EI+b9SntKjf4ax+KP322L0TNQGbZUHLbfG2MwHMrYBQpHUQ== me@localhost'
+        fingerprint = u'Ke3oUCNJM87P0jJTb3D+e3shjceP2CqMpQKVd75E9I8'
+
+        self.log_user()
+        user = User.get_by_username(TEST_USER_REGULAR_LOGIN)
+        user_id = user.user_id
+
+        response = self.app.post(url('edit_user_ssh_keys', id=user_id),
+                                 {'description': description,
+                                  'public_key': public_key,
+                                  '_authentication_token': self.authentication_token()})
+        self.checkSessionFlash(response, 'SSH key %s successfully added' % fingerprint)
+
+        response = response.follow()
+        response.mustcontain(fingerprint)
+        ssh_key = UserSshKeys.query().filter(UserSshKeys.user_id == user_id).one()
+        assert ssh_key.fingerprint == fingerprint
+        assert ssh_key.description == description
+        Session().delete(ssh_key)
+        Session().commit()
+
+    def test_remove_ssh_key(self):
+        description = u''
+        public_key = u'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC6Ycnc2oUZHQnQwuqgZqTTdMDZD7ataf3JM7oG2Fw8JR6cdmz4QZLe5mfDwaFwG2pWHLRpVqzfrD/Pn3rIO++bgCJH5ydczrl1WScfryV1hYMJ/4EzLGM657J1/q5EI+b9SntKjf4ax+KP322L0TNQGbZUHLbfG2MwHMrYBQpHUQ== me@localhost'
+        fingerprint = u'Ke3oUCNJM87P0jJTb3D+e3shjceP2CqMpQKVd75E9I8'
+
+        self.log_user()
+        user = User.get_by_username(TEST_USER_REGULAR_LOGIN)
+        user_id = user.user_id
+
+        response = self.app.post(url('edit_user_ssh_keys', id=user_id),
+                                 {'description': description,
+                                  'public_key': public_key,
+                                  '_authentication_token': self.authentication_token()})
+        self.checkSessionFlash(response, 'SSH key %s successfully added' % fingerprint)
+        response.follow()
+        ssh_key = UserSshKeys.query().filter(UserSshKeys.user_id == user_id).one()
+        assert ssh_key.description == description
+
+        response = self.app.post(url('edit_user_ssh_keys_delete', id=user_id),
+                                 {'del_public_key': ssh_key.public_key,
+                                  '_authentication_token': self.authentication_token()})
+        self.checkSessionFlash(response, 'SSH key successfully deleted')
+        keys = UserSshKeys.query().all()
+        assert 0 == len(keys)
 
 
 class TestAdminUsersController_unittest(TestController):
