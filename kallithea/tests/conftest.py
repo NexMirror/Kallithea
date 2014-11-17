@@ -43,6 +43,9 @@ def pytest_configure():
         },
         '[app:main]': {
             'ssh_enabled': 'true',
+            # Mainly to safeguard against accidentally overwriting the real one:
+            'ssh_authorized_keys': os.path.join(TESTS_TMP_PATH, 'authorized_keys'),
+            #'ssh_locale': 'C',
             'app_instance_uuid': 'test',
             'show_revision_number': 'true',
             'beaker.cache.sql_cache_short.expire': '1',

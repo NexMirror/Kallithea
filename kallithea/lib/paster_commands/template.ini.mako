@@ -329,6 +329,12 @@ allow_custom_hooks_settings = True
 <%text>## SSH is disabled by default, until an Administrator decides to enable it.</%text>
 ssh_enabled = false
 
+<%text>## File where users' SSH keys will be stored *if* ssh_enabled is true.</%text>
+#ssh_authorized_keys = /home/kallithea/.ssh/authorized_keys
+
+<%text>## Path to be used in ssh_authorized_keys file to invoke kallithea-cli with ssh-serve.</%text>
+#kallithea_cli_path = /srv/kallithea/venv/bin/kallithea-cli
+
 <%text>####################################</%text>
 <%text>###        CELERY CONFIG        ####</%text>
 <%text>####################################</%text>

@@ -89,3 +89,28 @@ def parse_pub_key(ssh_key):
         raise SshKeyParseError(_("Incorrect SSH key - base64 part is not %r as claimed but %r") % (str(keytype), str(decoded[4:].split('\0', 1)[0])))
 
     return keytype, decoded, comment
+
+
+SSH_OPTIONS = 'no-pty,no-port-forwarding,no-X11-forwarding,no-agent-forwarding'
+
+
+def authorized_keys_line(kallithea_cli_path, config_file, key):
+    """
+    Return a line as it would appear in .authorized_keys
+
+    >>> from kallithea.model.db import UserSshKeys, User
+    >>> user = User(user_id=7, username='uu')
+    >>> key = UserSshKeys(user_ssh_key_id=17, user=user, description='test key')
+    >>> key.public_key='''ssh-rsa  AAAAB3NzaC1yc2EAAAALVGhpcyBpcyBmYWtlIQ== and a comment'''
+    >>> authorized_keys_line('/srv/kallithea/venv/bin/kallithea-cli', '/srv/kallithea/my.ini', key)
+    'no-pty,no-port-forwarding,no-X11-forwarding,no-agent-forwarding,command="/srv/kallithea/venv/bin/kallithea-cli ssh-serve -c /srv/kallithea/my.ini 7 17" ssh-rsa AAAAB3NzaC1yc2EAAAALVGhpcyBpcyBmYWtlIQ==\\n'
+    """
+    try:
+        keytype, decoded, comment = parse_pub_key(key.public_key)
+    except SshKeyParseError:
+        return '# Invalid Kallithea SSH key: %s %s\n' % (key.user.user_id, key.user_ssh_key_id)
+    mimekey = decoded.encode('base64').replace('\n', '')
+    return '%s,command="%s ssh-serve -c %s %s %s" %s %s\n' % (
+        SSH_OPTIONS, kallithea_cli_path, config_file,
+        key.user.user_id, key.user_ssh_key_id,
+        keytype, mimekey)

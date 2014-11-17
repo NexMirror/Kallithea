@@ -25,6 +25,7 @@ import kallithea
 from kallithea.lib.utils2 import str2bool
 from kallithea.lib.vcs.backends.git.ssh import GitSshHandler
 from kallithea.lib.vcs.backends.hg.ssh import MercurialSshHandler
+from kallithea.model.ssh_key import SshKeyModel
 
 log = logging.getLogger(__name__)
 
@@ -69,3 +70,13 @@ def ssh_serve(user_id, key_id):
 
     sys.stderr.write("This account can only be used for repository access. SSH command %r is not supported.\n" % ssh_original_command)
     sys.exit(1)
+
+
+@cli_base.register_command(config_file_initialize_app=True)
+def ssh_update_authorized_keys():
+    """Update .ssh/authorized_keys file.
+
+    The file is usually maintained automatically, but this command will also re-write it.
+    """
+
+    SshKeyModel().write_authorized_keys()

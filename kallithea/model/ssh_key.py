@@ -20,10 +20,15 @@ SSH key model for Kallithea
 """
 
 import logging
+import os
+import stat
+import tempfile
+import errno
 
+from tg import config
 from tg.i18n import ugettext as _
 
-from kallithea.lib.utils2 import safe_str
+from kallithea.lib.utils2 import safe_str, str2bool
 from kallithea.model.db import UserSshKeys, User
 from kallithea.model.meta import Session
 from kallithea.lib import ssh
@@ -88,3 +93,48 @@ class SshKeyModel(object):
         user_ssh_keys = UserSshKeys.query() \
             .filter(UserSshKeys.user_id == user.user_id).all()
         return user_ssh_keys
+
+    def write_authorized_keys(self):
+        if not str2bool(config.get('ssh_enabled', False)):
+            log.error("Will not write SSH authorized_keys file - ssh_enabled is not configured")
+            return
+        authorized_keys = config.get('ssh_authorized_keys')
+        kallithea_cli_path = config.get('kallithea_cli_path', 'kallithea-cli')
+        if not authorized_keys:
+            log.error('Cannot write SSH authorized_keys file - ssh_authorized_keys is not configured')
+            return
+        log.info('Writing %s', authorized_keys)
+
+        authorized_keys_dir = os.path.dirname(authorized_keys)
+        try:
+            os.makedirs(authorized_keys_dir)
+            os.chmod(authorized_keys_dir, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR) # ~/.ssh/ must be 0700
+        except OSError as exception:
+            if exception.errno != errno.EEXIST:
+                raise
+        # Now, test that the directory is or was created in a readable way by previous.
+        if not (os.path.isdir(authorized_keys_dir) and
+                os.access(authorized_keys_dir, os.W_OK)):
+            raise Exception("Directory of authorized_keys cannot be written to so authorized_keys file %s cannot be written" % (authorized_keys))
+
+        # Make sure we don't overwrite a key file with important content
+        if os.path.exists(authorized_keys):
+            with open(authorized_keys) as f:
+                for l in f:
+                    if not l.strip() or l.startswith('#'):
+                        pass # accept empty lines and comments
+                    elif ssh.SSH_OPTIONS in l and ' ssh-serve ' in l:
+                        pass # Kallithea entries are ok to overwrite
+                    else:
+                        raise Exception("Safety check failed, found %r in %s - please review and remove it" % (l.strip(), authorized_keys))
+
+        fh, tmp_authorized_keys = tempfile.mkstemp('.authorized_keys', dir=os.path.dirname(authorized_keys))
+        with os.fdopen(fh, 'w') as f:
+            for key in UserSshKeys.query().join(UserSshKeys.user).filter(User.active == True):
+                f.write(ssh.authorized_keys_line(kallithea_cli_path, config['__file__'], key))
+        os.chmod(tmp_authorized_keys, stat.S_IRUSR | stat.S_IWUSR)
+        # This preliminary remove is needed for Windows, not for Unix.
+        # TODO In Python 3, the remove+rename sequence below should become os.replace.
+        if os.path.exists(authorized_keys):
+            os.remove(authorized_keys)
+        os.rename(tmp_authorized_keys, authorized_keys)
