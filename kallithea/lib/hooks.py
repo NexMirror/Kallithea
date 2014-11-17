@@ -394,3 +394,11 @@ def handle_git_post_receive(repo_path, git_stdin_lines):
     process_pushed_raw_ids(git_revs)
 
     return 0
+
+
+# Almost exactly like Mercurial contrib/hg-ssh:
+def rejectpush(ui, **kwargs):
+    """Mercurial hook to be installed as pretxnopen and prepushkey for read-only repos"""
+    ex = get_hook_environment()
+    ui.warn((b"Push access to %r denied\n") % safe_str(ex.repository))
+    return 1

@@ -25,3 +25,4 @@ import kallithea.bin.kallithea_cli_iis
 import kallithea.bin.kallithea_cli_index
 import kallithea.bin.kallithea_cli_ishell
 import kallithea.bin.kallithea_cli_repo
+import kallithea.bin.kallithea_cli_ssh
