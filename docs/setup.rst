@@ -92,36 +92,58 @@ set ``i18n.lang`` to the desired language (or leave empty for English).
 Using Kallithea with SSH
 ------------------------
 
-Kallithea currently only hosts repositories using http and https. (The addition
-of ssh hosting is a planned future feature.) However you can easily use ssh in
-parallel with Kallithea. (Repository access via ssh is a standard "out of
-the box" feature of Mercurial_ and you can use this to access any of the
-repositories that Kallithea is hosting. See PublishingRepositories_)
+Kallithea supports repository access via SSH key based authentication.
 
-Kallithea repository structures are kept in directories with the same name
-as the project. When using repository groups, each group is a subdirectory.
-This allows you to easily use ssh for accessing repositories.
+.. note:: At this moment, repository access via SSH has been tested on Unix
+    only. Windows users that care about SSH are invited to test it and report
+    problems, ideally contributing patches that solve these problems.
 
-In order to use ssh you need to make sure that your web server and the users'
-login accounts have the correct permissions set on the appropriate directories.
+Users and admins can upload SSH public keys (e.g. ``.ssh/id_rsa.pub``) through
+the web interface. The server's ``.ssh/authorized_keys`` file is automatically
+maintained with an entry for each SSH key. Each entry will tell ``sshd`` to run
+``kallithea-cli`` with the ``ssh-serve`` sub-command and the right Kallithea user ID
+when encountering the corresponding SSH key.
 
-.. note:: These permissions are independent of any permissions you
-          have set up using the Kallithea web interface.
+To enable SSH repository access, Kallithea must be configured with the path to
+the ``.ssh/authorized_keys`` file for the Kallithea user, and the path to the
+``kallithea-cli`` command. Put something like this in the ``.ini`` file::
 
-If your main directory (the same as set in Kallithea settings) is for
-example set to ``/srv/repos`` and the repository you are using is
-named ``kallithea``, then to clone via ssh you should run::
+    ssh_enabled = true
+    ssh_authorized_keys = /home/kallithea/.ssh/authorized_keys
+    kallithea_cli_path = /srv/kallithea/venv/bin/kallithea-cli
 
-    hg clone ssh://user@kallithea.example.com/srv/repos/kallithea
+The SSH service must be running, and the Kallithea user account must be active
+(not necessarily with password access, but public key access must be enabled),
+all file permissions must be set as sshd wants it, and ``authorized_keys`` must
+be writeable by the Kallithea user.
 
-Using other external tools such as mercurial-server_ or using ssh key-based
-authentication is fully supported.
+.. note:: The ``authorized_keys`` file will be rewritten from scratch on
+    each update. If it already exists with other data, Kallithea will not
+    overwrite the existing ``authorized_keys``, and the server process will
+    instead throw an exception. The system administrator thus cannot ssh
+    directly to the Kallithea user but must use su/sudo from another account.
 
-.. note:: In an advanced setup, in order for your ssh access to use
-          the same permissions as set up via the Kallithea web
-          interface, you can create an authentication hook to connect
-          to the Kallithea db and run check functions for permissions
-          against that.
+    If ``/home/kallithea/.ssh/`` (the directory of the path specified in the
+    ``ssh_authorized_keys`` setting of the ``.ini`` file) does not exist as a
+    directory, Kallithea will attempt to create it. If that path exists but is
+    *not* a directory, or is not readable-writable-executable by the server
+    process, the server process will raise an exception each time it attempts to
+    write the ``authorized_keys`` file.
+
+.. warning:: The handling of SSH access is steered directly by the command
+    specified in the ``authorized_keys`` file. There is no interaction with the
+    web UI.  Once SSH access is correctly configured and enabled, it will work
+    regardless of whether the Kallithea web process is actually running. Hence,
+    if you want to perform repository or server maintenance and want to fully
+    disable all access to the repositories, disable SSH access by setting
+    ``ssh_enabled = false`` in the correct ``.ini`` file (i.e. the ``.ini`` file
+    specified in the ``authorized_keys`` file.)
+
+The ``authorized_keys`` file can be updated manually with ``kallithea-cli
+ssh-update-authorized-keys -c my.ini``. This command is not needed in normal
+operation but is for example useful after changing SSH-related settings in the
+``.ini`` file or renaming that file. (The path to the ``.ini`` file is used in
+the generated ``authorized_keys`` file).
 
 
 Setting up Whoosh full text search

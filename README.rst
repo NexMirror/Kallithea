@@ -8,7 +8,7 @@ About
 
 **Kallithea** is a fast and powerful management tool for Mercurial_ and Git_
 with a built-in push/pull server, full text search and code-review. It works on
-HTTP/HTTPS, has a built-in permission/authentication system with the ability
+HTTP/HTTPS and SSH, has a built-in permission/authentication system with the ability
 to authenticate via LDAP or ActiveDirectory. Kallithea also provides simple API
 so it's easy to integrate with existing external systems.
 
@@ -61,6 +61,7 @@ Kallithea features
 - Built for speed and performance. You can make multiple pulls/pushes
   simultaneously. Proven to work with thousands of repositories and users.
 - Supports HTTP/HTTPS with LDAP, AD, or proxy-pass authentication.
+- Supports SSH access with server-side public key management.
 - Full permissions (private/read/write/admin) together with IP restrictions for
   each repository, additional explicit forking, repositories group and
   repository creation permissions.
