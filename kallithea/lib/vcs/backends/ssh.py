@@ -20,9 +20,11 @@ SSH backend for all available SCMs
 """
 
 import sys
+import datetime
 import logging
 
-from kallithea.model.db import Repository, User
+from kallithea.model.db import Repository, User, UserSshKeys
+from kallithea.model.meta import Session
 from kallithea.lib.auth import HasPermissionAnyMiddleware, AuthUser
 from kallithea.lib.utils2 import safe_str, set_hook_environment
 
@@ -64,6 +66,12 @@ class BaseSshHandler(object):
         log.info('Authorized user %s from SSH %s trusting user id %s and key id %s for %r', dbuser, client_ip, user_id, key_id, self.repo_name)
         if self.authuser is None: # not ok ... but already kind of authenticated by SSH ... but not really not authorized ...
             self.exit('User %s from %s cannot be authorized' % (dbuser.username, client_ip))
+
+        ssh_key = UserSshKeys.get(key_id)
+        if ssh_key is None:
+            self.exit('SSH key %r not found' % key_id)
+        ssh_key.last_seen = datetime.datetime.now()
+        Session().commit()
 
         if HasPermissionAnyMiddleware('repository.write',
                                       'repository.admin')(self.authuser, self.repo_name):
