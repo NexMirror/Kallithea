@@ -449,6 +449,7 @@ class User(Base, BaseDbModel):
     user_emails = relationship('UserEmailMap', cascade='all')
     # extra API keys
     user_api_keys = relationship('UserApiKeys', cascade='all')
+    ssh_keys = relationship('UserSshKeys', cascade='all')
 
     @hybrid_property
     def email(self):
@@ -2515,3 +2516,36 @@ class Gist(Base, BaseDbModel):
         base_path = self.base_path()
         return get_repo(os.path.join(*map(safe_str,
                                           [base_path, self.gist_access_id])))
+
+
+class UserSshKeys(Base, BaseDbModel):
+    __tablename__ = 'user_ssh_keys'
+    __table_args__ = (
+        Index('usk_public_key_idx', 'public_key'),
+        Index('usk_fingerprint_idx', 'fingerprint'),
+        UniqueConstraint('fingerprint'),
+        _table_args_default_dict
+    )
+    __mapper_args__ = {}
+
+    user_ssh_key_id = Column(Integer(), primary_key=True)
+    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
+    _public_key = Column('public_key', UnicodeText(), nullable=False)
+    description = Column(UnicodeText(), nullable=False)
+    fingerprint = Column(String(255), nullable=False, unique=True)
+    created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
+    last_seen = Column(DateTime(timezone=False), nullable=True)
+
+    user = relationship('User')
+
+    @property
+    def public_key(self):
+        return self._public_key
+
+    @public_key.setter
+    def public_key(self, full_key):
+        # the full public key is too long to be suitable as database key - instead,
+        # use fingerprints similar to 'ssh-keygen -E sha256 -lf ~/.ssh/id_rsa.pub'
+        self._public_key = full_key
+        enc_key = full_key.split(" ")[1]
+        self.fingerprint = hashlib.sha256(enc_key.decode('base64')).digest().encode('base64').replace('\n', '').rstrip('=')
