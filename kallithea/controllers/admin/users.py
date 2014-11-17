@@ -45,7 +45,7 @@ from kallithea.lib.auth import LoginRequired, HasPermissionAnyDecorator, \
 from kallithea.lib import auth_modules
 from kallithea.lib.base import BaseController, render, IfSshEnabled
 from kallithea.model.api_key import ApiKeyModel
-from kallithea.model.ssh_key import SshKeyModel
+from kallithea.model.ssh_key import SshKeyModel, SshKeyModelException
 from kallithea.model.db import User, UserEmailMap, UserIpMap, UserToPerm
 from kallithea.model.forms import UserForm, CustomDefaultPermissionsForm
 from kallithea.model.user import UserModel
@@ -448,10 +448,13 @@ class UsersController(BaseController):
 
         description = request.POST.get('description')
         public_key = request.POST.get('public_key')
-        new_ssh_key = SshKeyModel().create(c.user.user_id,
-                                       description, public_key)
-        Session().commit()
-        h.flash(_("SSH key %s successfully added") % new_ssh_key.fingerprint, category='success')
+        try:
+            new_ssh_key = SshKeyModel().create(c.user.user_id,
+                                               description, public_key)
+            Session().commit()
+            h.flash(_("SSH key %s successfully added") % new_ssh_key.fingerprint, category='success')
+        except SshKeyModelException as errors:
+            h.flash(errors.message, category='error')
         raise HTTPFound(location=url('edit_user_ssh_keys', id=c.user.user_id))
 
     @IfSshEnabled
@@ -459,7 +462,10 @@ class UsersController(BaseController):
         c.user = self._get_user_or_raise_if_default(id)
 
         public_key = request.POST.get('del_public_key')
-        SshKeyModel().delete(public_key, c.user.user_id)
-        Session().commit()
-        h.flash(_("SSH key successfully deleted"), category='success')
+        try:
+            SshKeyModel().delete(public_key, c.user.user_id)
+            Session().commit()
+            h.flash(_("SSH key successfully deleted"), category='success')
+        except SshKeyModelException as errors:
+            h.flash(errors.message, category='error')
         raise HTTPFound(location=url('edit_user_ssh_keys', id=c.user.user_id))

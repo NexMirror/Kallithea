@@ -46,7 +46,7 @@ from kallithea.model.forms import UserForm, PasswordChangeForm
 from kallithea.model.user import UserModel
 from kallithea.model.repo import RepoModel
 from kallithea.model.api_key import ApiKeyModel
-from kallithea.model.ssh_key import SshKeyModel
+from kallithea.model.ssh_key import SshKeyModel, SshKeyModelException
 from kallithea.model.meta import Session
 
 log = logging.getLogger(__name__)
@@ -272,16 +272,22 @@ class MyAccountController(BaseController):
     def my_account_ssh_keys_add(self):
         description = request.POST.get('description')
         public_key = request.POST.get('public_key')
-        new_ssh_key = SshKeyModel().create(request.authuser.user_id,
-                                           description, public_key)
-        Session().commit()
-        h.flash(_("SSH key %s successfully added") % new_ssh_key.fingerprint, category='success')
+        try:
+            new_ssh_key = SshKeyModel().create(request.authuser.user_id,
+                                               description, public_key)
+            Session().commit()
+            h.flash(_("SSH key %s successfully added") % new_ssh_key.fingerprint, category='success')
+        except SshKeyModelException as errors:
+            h.flash(errors.message, category='error')
         raise HTTPFound(location=url('my_account_ssh_keys'))
 
     @IfSshEnabled
     def my_account_ssh_keys_delete(self):
         public_key = request.POST.get('del_public_key')
-        SshKeyModel().delete(public_key, request.authuser.user_id)
-        Session().commit()
-        h.flash(_("SSH key successfully deleted"), category='success')
+        try:
+            SshKeyModel().delete(public_key, request.authuser.user_id)
+            Session().commit()
+            h.flash(_("SSH key successfully deleted"), category='success')
+        except SshKeyModelException as errors:
+            h.flash(errors.message, category='error')
         raise HTTPFound(location=url('my_account_ssh_keys'))
