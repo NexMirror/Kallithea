@@ -45,9 +45,11 @@ class SshKeyModel(object):
         Will raise SshKeyModelException on errors
         """
         try:
-            ssh.parse_pub_key(public_key)
+            keytype, pub, comment = ssh.parse_pub_key(public_key)
         except ssh.SshKeyParseError as e:
             raise SshKeyModelException(_('SSH key %r is invalid: %s') % (safe_str(public_key), e.message))
+        if not description.strip():
+            description = comment.strip()
 
         user = User.guess_instance(user)
 

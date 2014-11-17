@@ -285,7 +285,7 @@ class TestMyAccountController(TestController):
         response.follow()
         user_id = response.session['authuser']['user_id']
         ssh_key = UserSshKeys.query().filter(UserSshKeys.user_id == user_id).one()
-        assert ssh_key.description == description
+        assert ssh_key.description == u'me@localhost'
 
         response = self.app.post(url('my_account_ssh_keys_delete'),
                                  {'del_public_key': ssh_key.public_key,

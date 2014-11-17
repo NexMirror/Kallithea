@@ -553,7 +553,7 @@ class TestAdminUsersController(TestController):
         self.checkSessionFlash(response, 'SSH key %s successfully added' % fingerprint)
         response.follow()
         ssh_key = UserSshKeys.query().filter(UserSshKeys.user_id == user_id).one()
-        assert ssh_key.description == description
+        assert ssh_key.description == u'me@localhost'
 
         response = self.app.post(url('edit_user_ssh_keys_delete', id=user_id),
                                  {'del_public_key': ssh_key.public_key,
