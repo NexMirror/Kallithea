@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from kallithea.model.db import User, UserFollowing, Repository, UserApiKeys
+from kallithea.model.db import User, UserFollowing, Repository, UserApiKeys, UserSshKeys
 from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
 from kallithea.lib import helpers as h
@@ -249,3 +249,47 @@ class TestMyAccountController(TestController):
         self.checkSessionFlash(response, 'API key successfully reset')
         response = response.follow()
         response.mustcontain(no=[api_key])
+
+    def test_my_account_add_ssh_key(self):
+        description = u'something'
+        public_key = u'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC6Ycnc2oUZHQnQwuqgZqTTdMDZD7ataf3JM7oG2Fw8JR6cdmz4QZLe5mfDwaFwG2pWHLRpVqzfrD/Pn3rIO++bgCJH5ydczrl1WScfryV1hYMJ/4EzLGM657J1/q5EI+b9SntKjf4ax+KP322L0TNQGbZUHLbfG2MwHMrYBQpHUQ== me@localhost'
+        fingerprint = u'Ke3oUCNJM87P0jJTb3D+e3shjceP2CqMpQKVd75E9I8'
+
+        self.log_user(TEST_USER_REGULAR2_LOGIN, TEST_USER_REGULAR2_PASS)
+        response = self.app.post(url('my_account_ssh_keys'),
+                                 {'description': description,
+                                  'public_key': public_key,
+                                  '_authentication_token': self.authentication_token()})
+        self.checkSessionFlash(response, 'SSH key %s successfully added' % fingerprint)
+
+        response = response.follow()
+        response.mustcontain(fingerprint)
+        user_id = response.session['authuser']['user_id']
+        ssh_key = UserSshKeys.query().filter(UserSshKeys.user_id == user_id).one()
+        assert ssh_key.fingerprint == fingerprint
+        assert ssh_key.description == description
+        Session().delete(ssh_key)
+        Session().commit()
+
+    def test_my_account_remove_ssh_key(self):
+        description = u''
+        public_key = u'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC6Ycnc2oUZHQnQwuqgZqTTdMDZD7ataf3JM7oG2Fw8JR6cdmz4QZLe5mfDwaFwG2pWHLRpVqzfrD/Pn3rIO++bgCJH5ydczrl1WScfryV1hYMJ/4EzLGM657J1/q5EI+b9SntKjf4ax+KP322L0TNQGbZUHLbfG2MwHMrYBQpHUQ== me@localhost'
+        fingerprint = u'Ke3oUCNJM87P0jJTb3D+e3shjceP2CqMpQKVd75E9I8'
+
+        self.log_user(TEST_USER_REGULAR2_LOGIN, TEST_USER_REGULAR2_PASS)
+        response = self.app.post(url('my_account_ssh_keys'),
+                                 {'description': description,
+                                  'public_key': public_key,
+                                  '_authentication_token': self.authentication_token()})
+        self.checkSessionFlash(response, 'SSH key %s successfully added' % fingerprint)
+        response.follow()
+        user_id = response.session['authuser']['user_id']
+        ssh_key = UserSshKeys.query().filter(UserSshKeys.user_id == user_id).one()
+        assert ssh_key.description == description
+
+        response = self.app.post(url('my_account_ssh_keys_delete'),
+                                 {'del_public_key': ssh_key.public_key,
+                                  '_authentication_token': self.authentication_token()})
+        self.checkSessionFlash(response, 'SSH key successfully deleted')
+        keys = UserSshKeys.query().all()
+        assert 0 == len(keys)

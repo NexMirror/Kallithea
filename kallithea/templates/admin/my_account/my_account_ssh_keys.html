@@ -1,0 +1,63 @@
+<table class="table">
+    %if c.user_ssh_keys:
+        <tr>
+            <th>${_('Fingerprint')}</th>
+            <th>${_('Description')}</th>
+            <th>${_('Action')}</th>
+        </tr>
+        %for ssh_key in c.user_ssh_keys:
+          <tr>
+            <td>
+                ${ssh_key.fingerprint}
+            </td>
+            <td>
+                ${ssh_key.description}
+            </td>
+            <td>
+                ${h.form(url('my_account_ssh_keys_delete'))}
+                    ${h.hidden('del_public_key', ssh_key.public_key)}
+                    <button class="btn btn-danger btn-xs" type="submit"
+                            onclick="return confirm('${_('Confirm to remove this SSH key: %s') % ssh_key.fingerprint}');">
+                        <i class="icon-trashcan"></i>
+                        ${_('Remove')}
+                    </button>
+                ${h.end_form()}
+            </td>
+          </tr>
+        %endfor
+    %else:
+        <tr>
+            <td>
+                <div class="ip">${_('No SSH keys have been added')}</div>
+            </td>
+        </tr>
+    %endif
+</table>
+
+<div>
+    ${h.form(url('my_account_ssh_keys'))}
+    <div class="form">
+            <div class="form-group">
+                <label class="control-label">${_('New SSH key')}</label>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="public_key">${_('Public key')}:</label>
+                <div>
+                    ${h.textarea('public_key', '', class_='form-control', placeholder=_('Public key (contents of e.g. ~/.ssh/id_rsa.pub)'), cols=80, rows=5)}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="description">${_('Description')}:</label>
+                <div>
+                    ${h.text('description', class_='form-control', placeholder=_('Description'))}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="buttons">
+                    ${h.submit('save', _('Add'), class_="btn btn-default")}
+                    ${h.reset('reset', _('Reset'), class_="btn btn-default")}
+                </div>
+            </div>
+    </div>
+    ${h.end_form()}
+</div>

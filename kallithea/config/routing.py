@@ -358,6 +358,13 @@ def make_map(config):
         m.connect("my_account_api_keys_delete", "/my_account/api_keys/delete",
                   action="my_account_api_keys_delete", conditions=dict(method=["POST"]))
 
+        m.connect("my_account_ssh_keys", "/my_account/ssh_keys",
+                  action="my_account_ssh_keys", conditions=dict(method=["GET"]))
+        m.connect("my_account_ssh_keys", "/my_account/ssh_keys",
+                  action="my_account_ssh_keys_add", conditions=dict(method=["POST"]))
+        m.connect("my_account_ssh_keys_delete", "/my_account/ssh_keys/delete",
+                  action="my_account_ssh_keys_delete", conditions=dict(method=["POST"]))
+
     # ADMIN GIST
     with rmap.submapper(path_prefix=ADMIN_PREFIX,
                         controller='admin/gists') as m:
