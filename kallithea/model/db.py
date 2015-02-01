@@ -2024,14 +2024,14 @@ class CacheInvalidation(Base, BaseModel):
          'mysql_charset': 'utf8', 'sqlite_autoincrement': True},
     )
     # cache_id, not used
-    cache_id = Column("cache_id", Integer(), nullable=False, unique=True, default=None, primary_key=True)
+    cache_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
     # cache_key as created by _get_cache_key
-    cache_key = Column("cache_key", String(255, convert_unicode=False), nullable=True, unique=None, default=None)
+    cache_key = Column(String(255, convert_unicode=False))
     # cache_args is a repo_name
-    cache_args = Column("cache_args", String(255, convert_unicode=False), nullable=True, unique=None, default=None)
-    # instance sets cache_active True when it is caching,
-    # other instances set cache_active to False to indicate that this cache is invalid
-    cache_active = Column("cache_active", Boolean(), nullable=True, unique=None, default=False)
+    cache_args = Column(String(255, convert_unicode=False))
+    # instance sets cache_active True when it is caching, other instances set
+    # cache_active to False to indicate that this cache is invalid
+    cache_active = Column(Boolean(), nullable=True, unique=None, default=False)
 
     def __init__(self, cache_key, repo_name=''):
         self.cache_key = cache_key
@@ -2039,8 +2039,9 @@ class CacheInvalidation(Base, BaseModel):
         self.cache_active = False
 
     def __unicode__(self):
-        return u"<%s('%s:%s[%s]')>" % (self.__class__.__name__,
-                            self.cache_id, self.cache_key, self.cache_active)
+        return u"<%s('%s:%s[%s]')>" % (
+            self.__class__.__name__,
+            self.cache_id, self.cache_key, self.cache_active)
 
     def _cache_key_partition(self):
         prefix, repo_name, suffix = self.cache_key.partition(self.cache_args)
