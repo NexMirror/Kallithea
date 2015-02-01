@@ -2205,15 +2205,15 @@ class ChangesetStatus(Base, BaseModel):
         (STATUS_UNDER_REVIEW, _("Under Review")),
     ]
 
-    changeset_status_id = Column('changeset_status_id', Integer(), nullable=False, primary_key=True)
-    repo_id = Column('repo_id', Integer(), ForeignKey('repositories.repo_id'), nullable=False)
-    user_id = Column("user_id", Integer(), ForeignKey('users.user_id'), nullable=False, unique=None)
-    revision = Column('revision', String(40), nullable=False)
-    status = Column('status', String(128), nullable=False, default=DEFAULT)
-    changeset_comment_id = Column('changeset_comment_id', Integer(), ForeignKey('changeset_comments.comment_id'))
-    modified_at = Column('modified_at', DateTime(), nullable=False, default=datetime.datetime.now)
-    version = Column('version', Integer(), nullable=False, default=0)
-    pull_request_id = Column("pull_request_id", Integer(), ForeignKey('pull_requests.pull_request_id'), nullable=True)
+    changeset_status_id = Column(Integer(), nullable=False, primary_key=True)
+    repo_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=False)
+    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False, unique=None)
+    revision = Column(String(40), nullable=False)
+    status = Column(String(128), nullable=False, default=DEFAULT)
+    changeset_comment_id = Column(Integer(), ForeignKey('changeset_comments.comment_id'))
+    modified_at = Column(DateTime(), nullable=False, default=datetime.datetime.now)
+    version = Column(Integer(), nullable=False, default=0)
+    pull_request_id = Column(Integer(), ForeignKey('pull_requests.pull_request_id'), nullable=True)
 
     author = relationship('User')
     repo = relationship('Repository')
