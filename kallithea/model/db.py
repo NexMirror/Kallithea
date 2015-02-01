@@ -2432,14 +2432,14 @@ class Gist(Base, BaseModel):
     GIST_PRIVATE = u'private'
     DEFAULT_FILENAME = u'gistfile1.txt'
 
-    gist_id = Column('gist_id', Integer(), primary_key=True)
-    gist_access_id = Column('gist_access_id', Unicode(250))
-    gist_description = Column('gist_description', UnicodeText(1024))
-    gist_owner = Column('user_id', Integer(), ForeignKey('users.user_id'), nullable=True)
-    gist_expires = Column('gist_expires', Float(53), nullable=False)
-    gist_type = Column('gist_type', Unicode(128), nullable=False)
-    created_on = Column('created_on', DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
-    modified_at = Column('modified_at', DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
+    gist_id = Column(Integer(), primary_key=True)
+    gist_access_id = Column(Unicode(250))
+    gist_description = Column(UnicodeText(1024))
+    gist_owner = Column(Integer(), ForeignKey('users.user_id'), nullable=True)
+    gist_expires = Column(Float(53), nullable=False)
+    gist_type = Column(Unicode(128), nullable=False)
+    created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
+    modified_at = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
 
     owner = relationship('User')
 
