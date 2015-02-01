@@ -2407,10 +2407,10 @@ class UserNotification(Base, BaseModel):
         {'extend_existing': True, 'mysql_engine': 'InnoDB',
          'mysql_charset': 'utf8', 'sqlite_autoincrement': True}
     )
-    user_id = Column('user_id', Integer(), ForeignKey('users.user_id'), primary_key=True)
-    notification_id = Column("notification_id", Integer(), ForeignKey('notifications.notification_id'), primary_key=True)
-    read = Column('read', Boolean, default=False)
-    sent_on = Column('sent_on', DateTime(timezone=False), nullable=True, unique=None)
+    user_id = Column(Integer(), ForeignKey('users.user_id'), primary_key=True)
+    notification_id = Column(Integer(), ForeignKey('notifications.notification_id'), primary_key=True)
+    read = Column(Boolean, default=False)
+    sent_on = Column(DateTime(timezone=False), nullable=True, unique=None)
 
     user = relationship('User')
     notification = relationship('Notification')
