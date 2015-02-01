@@ -2357,11 +2357,11 @@ class Notification(Base, BaseModel):
     TYPE_PULL_REQUEST = u'pull_request'
     TYPE_PULL_REQUEST_COMMENT = u'pull_request_comment'
 
-    notification_id = Column('notification_id', Integer(), nullable=False, primary_key=True)
-    subject = Column('subject', Unicode(512), nullable=True)
-    body = Column('body', UnicodeText(50000), nullable=True)
-    created_by = Column("created_by", Integer(), ForeignKey('users.user_id'), nullable=True)
-    created_on = Column('created_on', DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
+    notification_id = Column(Integer(), nullable=False, primary_key=True)
+    subject = Column(Unicode(512), nullable=True)
+    body = Column(UnicodeText(50000), nullable=True)
+    created_by = Column(Integer(), ForeignKey('users.user_id'), nullable=True)
+    created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
     type_ = Column('type', Unicode(255))
 
     created_by_user = relationship('User')
@@ -2369,8 +2369,8 @@ class Notification(Base, BaseModel):
 
     @property
     def recipients(self):
-        return [x.user for x in UserNotification.query()\
-                .filter(UserNotification.notification == self)\
+        return [x.user for x in UserNotification.query()
+                .filter(UserNotification.notification == self)
                 .order_by(UserNotification.user_id.asc()).all()]
 
     @classmethod
