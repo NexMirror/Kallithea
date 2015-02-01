@@ -2516,6 +2516,6 @@ class DbMigrateVersion(Base, BaseModel):
         {'extend_existing': True, 'mysql_engine': 'InnoDB',
          'mysql_charset': 'utf8', 'sqlite_autoincrement': True},
     )
-    repository_id = Column('repository_id', String(250), primary_key=True)
-    repository_path = Column('repository_path', Text)
-    version = Column('version', Integer)
+    repository_id = Column(String(250), primary_key=True)
+    repository_path = Column(Text)
+    version = Column(Integer)
