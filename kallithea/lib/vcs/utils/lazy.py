@@ -1,3 +1,6 @@
+import threading
+
+
 class _Missing(object):
 
     def __repr__(self):
@@ -40,8 +43,6 @@ class LazyProperty(object):
             value = self._func(obj)
             obj.__dict__[self.__name__] = value
         return value
-
-import threading
 
 
 class ThreadLocalLazyProperty(LazyProperty):
