@@ -32,7 +32,7 @@ import paste.fileapp
 
 from pylons import tmpl_context as c, request, config
 from pylons.i18n.translation import _
-from pylons.middleware import  media_path
+from pylons.middleware import media_path
 
 from kallithea.lib.base import BaseController, render
 
@@ -50,7 +50,7 @@ class ErrorController(BaseController):
     """
 
     def __before__(self):
-        #disable all base actions since we don't need them here
+        # disable all base actions since we don't need them here
         pass
 
     def document(self):
@@ -60,12 +60,13 @@ class ErrorController(BaseController):
         log.debug('### %s ###' % (resp and resp.status or 'no response'))
 
         e = request.environ
-        c.serv_p = r'%(protocol)s://%(host)s/' \
-                                    % {'protocol': e.get('wsgi.url_scheme'),
-                                       'host': e.get('HTTP_HOST'), }
-
-        c.error_message = resp and cgi.escape(request.GET.get('code', str(resp.status)))
-        c.error_explanation = resp and self.get_error_explanation(resp.status_int)
+        c.serv_p = r'%(protocol)s://%(host)s/' % {
+            'protocol': e.get('wsgi.url_scheme'),
+            'host': e.get('HTTP_HOST'), }
+        if resp:
+            c.error_message = cgi.escape(request.GET.get('code',
+                                                         str(resp.status)))
+            c.error_explanation = self.get_error_explanation(resp.status_int)
 
         return render('/errors/error_document.html')
 
