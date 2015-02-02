@@ -410,12 +410,10 @@ class UserModel(BaseModel):
         user = self._get_user(user)
         perm = self._get_perm(perm)
 
-        obj = UserToPerm.query()\
-                .filter(UserToPerm.user == user)\
-                .filter(UserToPerm.permission == perm)\
-                .scalar()
-        if obj:
-            self.sa.delete(obj)
+        UserToPerm.query().filter(
+            UserToPerm.user == user,
+            UserToPerm.permission == perm,
+        ).delete()
 
     def add_extra_email(self, user, email):
         """
