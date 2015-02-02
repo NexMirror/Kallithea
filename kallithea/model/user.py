@@ -81,12 +81,17 @@ class UserModel(BaseModel):
         if not cur_user:
             cur_user = getattr(get_current_authuser(), 'username', None)
 
-        from kallithea.lib.hooks import log_create_user, check_allowed_create_user
+        from kallithea.lib.hooks import log_create_user, \
+            check_allowed_create_user
         _fd = form_data
         user_data = {
-            'username': _fd['username'], 'password': _fd['password'],
-            'email': _fd['email'], 'firstname': _fd['firstname'], 'lastname': _fd['lastname'],
-            'active': _fd['active'], 'admin': False
+            'username': _fd['username'],
+            'password': _fd['password'],
+            'email': _fd['email'],
+            'firstname': _fd['firstname'],
+            'lastname': _fd['lastname'],
+            'active': _fd['active'],
+            'admin': False
         }
         # raises UserCreationError if it's not allowed
         check_allowed_create_user(user_data, cur_user)
@@ -128,7 +133,8 @@ class UserModel(BaseModel):
             cur_user = getattr(get_current_authuser(), 'username', None)
 
         from kallithea.lib.auth import get_crypt_password, check_password
-        from kallithea.lib.hooks import log_create_user, check_allowed_create_user
+        from kallithea.lib.hooks import log_create_user, \
+            check_allowed_create_user
         user_data = {
             'username': username, 'password': password,
             'email': email, 'firstname': firstname, 'lastname': lastname,
@@ -153,8 +159,10 @@ class UserModel(BaseModel):
             new_user.admin = admin
             new_user.email = email
             new_user.active = active
-            new_user.extern_name = safe_unicode(extern_name) if extern_name else None
-            new_user.extern_type = safe_unicode(extern_type) if extern_type else None
+            new_user.extern_name = safe_unicode(extern_name) \
+                if extern_name else None
+            new_user.extern_type = safe_unicode(extern_type) \
+                if extern_type else None
             new_user.name = firstname
             new_user.lastname = lastname
 
@@ -162,12 +170,13 @@ class UserModel(BaseModel):
                 new_user.api_key = generate_api_key(username)
 
             # set password only if creating an user or password is changed
-            password_change = new_user.password and not check_password(password,
-                                                            new_user.password)
+            password_change = new_user.password and \
+                not check_password(password, new_user.password)
             if not edit or password_change:
                 reason = 'new password' if edit else 'new user'
                 log.debug('Updating password reason=>%s' % (reason,))
-                new_user.password = get_crypt_password(password) if password else None
+                new_user.password = get_crypt_password(password) \
+                    if password else None
 
             self.sa.add(new_user)
 
@@ -192,14 +201,17 @@ class UserModel(BaseModel):
 
         # notification to admins
         subject = _('New user registration')
-        body = ('New user registration\n'
-                '---------------------\n'
-                '- Username: %s\n'
-                '- Full Name: %s\n'
-                '- Email: %s\n')
-        body = body % (new_user.username, new_user.full_name, new_user.email)
+        body = (
+            'New user registration\n'
+            '---------------------\n'
+            '- Username: {user.username}\n'
+            '- Full Name: {user.full_name}\n'
+            '- Email: {user.email}\n'
+            ).format(user=new_user)
         edit_url = h.canonical_url('edit_user', id=new_user.user_id)
-        email_kwargs = {'registered_user_url': edit_url, 'new_username': new_user.username}
+        email_kwargs = {
+            'registered_user_url': edit_url,
+            'new_username': new_user.username}
         NotificationModel().create(created_by=new_user, subject=subject,
                                    body=body, recipients=None,
                                    type_=Notification.TYPE_REGISTRATION,
@@ -253,29 +265,25 @@ class UserModel(BaseModel):
         if user.username == User.DEFAULT_USER:
             raise DefaultUserException(
                 _(u"You can't remove this user since it's"
-                  " crucial for entire application")
-            )
+                  " crucial for entire application"))
         if user.repositories:
             repos = [x.repo_name for x in user.repositories]
             raise UserOwnsReposException(
                 _(u'User "%s" still owns %s repositories and cannot be '
                   'removed. Switch owners or remove those repositories: %s')
-                % (user.username, len(repos), ', '.join(repos))
-            )
+                % (user.username, len(repos), ', '.join(repos)))
         if user.repo_groups:
             repogroups = [x.group_name for x in user.repo_groups]
-            raise UserOwnsReposException(
-                _(u'User "%s" still owns %s repository groups and cannot be '
-                  'removed. Switch owners or remove those repository groups: %s')
-                % (user.username, len(repogroups), ', '.join(repogroups))
-            )
+            raise UserOwnsReposException(_(
+                'User "%s" still owns %s repository groups and cannot be '
+                'removed. Switch owners or remove those repository groups: %s')
+                % (user.username, len(repogroups), ', '.join(repogroups)))
         if user.user_groups:
             usergroups = [x.users_group_name for x in user.user_groups]
             raise UserOwnsReposException(
-                _(u'User "%s" still owns %s user groups and cannot be '
+                _('User "%s" still owns %s user groups and cannot be '
                   'removed. Switch owners or remove those user groups: %s')
-                % (user.username, len(usergroups), ', '.join(usergroups))
-            )
+                % (user.username, len(usergroups), ', '.join(usergroups)))
         self.sa.delete(user)
 
         from kallithea.lib.hooks import log_delete_user
@@ -290,16 +298,17 @@ class UserModel(BaseModel):
         user = User.get_by_email(user_email)
         if user:
             log.debug('password reset user found %s' % user)
-            link = h.canonical_url('reset_password_confirmation', key=user.api_key)
+            link = h.canonical_url('reset_password_confirmation',
+                                   key=user.api_key)
             reg_type = EmailNotificationModel.TYPE_PASSWORD_RESET
-            body = EmailNotificationModel().get_email_tmpl(reg_type,
-                                                           'txt',
-                                                           user=user.short_contact,
-                                                           reset_url=link)
-            html_body = EmailNotificationModel().get_email_tmpl(reg_type,
-                                                           'html',
-                                                           user=user.short_contact,
-                                                           reset_url=link)
+            body = EmailNotificationModel().get_email_tmpl(
+                reg_type, 'txt',
+                user=user.short_contact,
+                reset_url=link)
+            html_body = EmailNotificationModel().get_email_tmpl(
+                reg_type, 'html',
+                user=user.short_contact,
+                reset_url=link)
             log.debug('sending email')
             run_task(tasks.send_email, [user_email],
                      _("Password reset link"), body, html_body)
@@ -314,8 +323,8 @@ class UserModel(BaseModel):
         from kallithea.lib import auth
         user_email = data['email']
         user = User.get_by_email(user_email)
-        new_passwd = auth.PasswordGenerator().gen_password(8,
-                        auth.PasswordGenerator.ALPHABETS_BIG_SMALL)
+        new_passwd = auth.PasswordGenerator().gen_password(
+            8, auth.PasswordGenerator.ALPHABETS_BIG_SMALL)
         if user:
             user.password = auth.get_crypt_password(new_passwd)
             Session().add(user)
