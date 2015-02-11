@@ -32,7 +32,7 @@ import re
 
 from pylons import request, tmpl_context as c
 from pylons.i18n.translation import _
-from webob.exc import HTTPFound, HTTPBadRequest
+from webob.exc import HTTPFound, HTTPBadRequest, HTTPNotFound
 
 from kallithea.config.routing import url
 from kallithea.lib.utils2 import safe_str, safe_int
@@ -81,7 +81,7 @@ class CompareController(BaseRepoController):
         Returns lists of changesets that can be merged from org_repo@org_rev
         to other_repo@other_rev
         ... and the other way
-        ... and the ancestor that would be used for merge
+        ... and the ancestors that would be used for merge
 
         :param org_repo: repo object, that is most likely the original repo we forked from
         :param org_rev: the revision we want our compare to be made
@@ -89,11 +89,10 @@ class CompareController(BaseRepoController):
             all changesets that we need to obtain
         :param other_rev: revision we want out compare to be made on other_repo
         """
-        ancestor = None
+        ancestors = None
         if org_rev == other_rev:
             org_changesets = []
             other_changesets = []
-            ancestor = org_rev
 
         elif alias == 'hg':
             #case two independent repos
@@ -108,25 +107,20 @@ class CompareController(BaseRepoController):
             else:
                 hgrepo = other_repo._repo
 
-            if org_repo.EMPTY_CHANGESET in (org_rev, other_rev):
-                # work around unexpected behaviour in Mercurial < 3.4
-                ancestor = org_repo.EMPTY_CHANGESET
+            ancestors = [hgrepo[ancestor].hex() for ancestor in
+                         hgrepo.revs("id(%s) & ::id(%s)", other_rev, org_rev)]
+            if ancestors:
+                log.debug("shortcut found: %s is already an ancestor of %s", other_rev, org_rev)
             else:
-                ancestors = hgrepo.revs("ancestor(id(%s), id(%s))", org_rev, other_rev)
-                if ancestors:
-                    # FIXME: picks arbitrary ancestor - but there is usually only one
-                    try:
-                        ancestor = hgrepo[ancestors.first()].hex()
-                    except AttributeError:
-                        # removed in hg 3.2
-                        ancestor = hgrepo[ancestors[0]].hex()
+                log.debug("no shortcut found: %s is not an ancestor of %s", other_rev, org_rev)
+                ancestors = [hgrepo[ancestor].hex() for ancestor in
+                             hgrepo.revs("heads(::id(%s) & ::id(%s))", org_rev, other_rev)] # FIXME: expensive!
 
             other_revs = hgrepo.revs("ancestors(id(%s)) and not ancestors(id(%s)) and not id(%s)",
                                      other_rev, org_rev, org_rev)
             other_changesets = [other_repo.get_changeset(rev) for rev in other_revs]
             org_revs = hgrepo.revs("ancestors(id(%s)) and not ancestors(id(%s)) and not id(%s)",
                                    org_rev, other_rev, other_rev)
-
             org_changesets = [org_repo.get_changeset(hgrepo[rev].hex()) for rev in org_revs]
 
         elif alias == 'git':
@@ -147,10 +141,10 @@ class CompareController(BaseRepoController):
 
                 other_changesets = [other_repo.get_changeset(rev) for rev in reversed(revs)]
                 if other_changesets:
-                    ancestor = other_changesets[0].parents[0].raw_id
+                    ancestors = [other_changesets[0].parents[0].raw_id]
                 else:
                     # no changesets from other repo, ancestor is the other_rev
-                    ancestor = other_rev
+                    ancestors = [other_rev]
 
                 # dulwich 0.9.9 doesn't have a Repo.close() so we have to mess with internals:
                 gitrepo.object_store.close()
@@ -166,13 +160,13 @@ class CompareController(BaseRepoController):
                 so, se = org_repo.run_git_command(
                     ['merge-base', org_rev, other_rev]
                 )
-                ancestor = re.findall(r'[0-9a-fA-F]{40}', so)[0]
+                ancestors = [re.findall(r'[0-9a-fA-F]{40}', so)[0]]
             org_changesets = []
 
         else:
             raise Exception('Bad alias only git and hg is allowed')
 
-        return other_changesets, org_changesets, ancestor
+        return other_changesets, org_changesets, ancestors
 
     @LoginRequired()
     @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
@@ -228,7 +222,7 @@ class CompareController(BaseRepoController):
         c.cs_ref_name = other_ref_name
         c.cs_ref_type = other_ref_type
 
-        c.cs_ranges, c.cs_ranges_org, c.ancestor = self._get_changesets(
+        c.cs_ranges, c.cs_ranges_org, c.ancestors = self._get_changesets(
             c.a_repo.scm_instance.alias, c.a_repo.scm_instance, c.a_rev,
             c.cs_repo.scm_instance, c.cs_rev)
         raw_ids = [x.raw_id for x in c.cs_ranges]
@@ -244,17 +238,28 @@ class CompareController(BaseRepoController):
         org_repo = c.a_repo
         other_repo = c.cs_repo
 
-        if merge and c.ancestor:
+        if merge:
+            rev1 = msg = None
+            if not c.cs_ranges:
+                msg = _('Cannot show empty diff')
+            elif not c.ancestors:
+                msg = _('No ancestor found for merge diff')
+            elif len(c.ancestors) == 1:
+                rev1 = c.ancestors[0]
+            else:
+                msg = _('Multiple merge ancestors found for merge compare')
+            if rev1 is None:
+                h.flash(msg, category='error')
+                log.error(msg)
+                raise HTTPNotFound
+
             # case we want a simple diff without incoming changesets,
             # previewing what will be merged.
             # Make the diff on the other repo (which is known to have other_rev)
             log.debug('Using ancestor %s as rev1 instead of %s',
-                      c.ancestor, c.a_rev)
-            rev1 = c.ancestor
+                      rev1, c.a_rev)
             org_repo = other_repo
         else: # comparing tips, not necessarily linearly related
-            if merge:
-                log.error('Unable to find ancestor revision')
             if org_repo != other_repo:
                 # TODO: we could do this by using hg unionrepo
                 log.error('cannot compare across repos %s and %s', org_repo, other_repo)

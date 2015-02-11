@@ -343,13 +343,26 @@ class PullrequestsController(BaseRepoController):
             other_ref_name = cs.raw_id[:12]
             other_ref = '%s:%s:%s' % (other_ref_type, other_ref_name, cs.raw_id)
 
-        cs_ranges, _cs_ranges_not, ancestor_rev = \
+        cs_ranges, _cs_ranges_not, ancestor_revs = \
             CompareController._get_changesets(org_repo.scm_instance.alias,
                                               other_repo.scm_instance, other_rev, # org and other "swapped"
                                               org_repo.scm_instance, org_rev,
                                               )
-        if ancestor_rev is None:
+        ancestor_rev = msg = None
+        if not cs_ranges:
+            msg = _('Cannot create empty pull request')
+        elif not ancestor_revs:
             ancestor_rev = org_repo.scm_instance.EMPTY_CHANGESET
+        elif len(ancestor_revs) == 1:
+            ancestor_rev = ancestor_revs[0]
+        else:
+            msg = _('Cannot create pull request - criss cross merge detected, please merge a later %s revision to %s'
+                    ) % (other_ref_name, org_ref_name)
+        if ancestor_rev is None:
+            h.flash(msg, category='error')
+            log.error(msg)
+            raise HTTPNotFound
+
         revisions = [cs_.raw_id for cs_ in cs_ranges]
 
         # hack: ancestor_rev is not an other_rev but we want to show the
@@ -396,9 +409,23 @@ class PullrequestsController(BaseRepoController):
         #assert other_ref_type == 'branch', other_ref_type # TODO: what if not?
         new_other_rev = self._get_ref_rev(other_repo, other_ref_type, other_ref_name)
 
-        cs_ranges, _cs_ranges_not, ancestor_rev = CompareController._get_changesets(org_repo.scm_instance.alias,
+        cs_ranges, _cs_ranges_not, ancestor_revs = CompareController._get_changesets(org_repo.scm_instance.alias,
             other_repo.scm_instance, new_other_rev, # org and other "swapped"
             org_repo.scm_instance, new_org_rev)
+        ancestor_rev = msg = None
+        if not cs_ranges:
+            msg = _('Cannot create empty pull request update') # cannot happen!
+        elif not ancestor_revs:
+            msg = _('Cannot create pull request update - no common ancestor found') # cannot happen
+        elif len(ancestor_revs) == 1:
+            ancestor_rev = ancestor_revs[0]
+        else:
+            msg = _('Cannot create pull request update - criss cross merge detected, please merge a later %s revision to %s'
+                    ) % (other_ref_name, org_ref_name)
+        if ancestor_rev is None:
+            h.flash(msg, category='error')
+            log.error(msg)
+            raise HTTPNotFound
 
         old_revisions = set(old_pull_request.revisions)
         revisions = [cs.raw_id for cs in cs_ranges]
@@ -586,7 +613,7 @@ class PullrequestsController(BaseRepoController):
         c.a_repo = c.pull_request.other_repo
         (c.a_ref_type,
          c.a_ref_name,
-         c.a_rev) = c.pull_request.other_ref.split(':') # other_rev is ancestor
+         c.a_rev) = c.pull_request.other_ref.split(':') # a_rev is ancestor
 
         org_scm_instance = c.cs_repo.scm_instance # property with expensive cache invalidation check!!!
         c.cs_repo = c.cs_repo
@@ -746,7 +773,7 @@ class PullrequestsController(BaseRepoController):
         c.changeset_statuses = ChangesetStatus.STATUSES
 
         c.as_form = False
-        c.ancestor = None # there is one - but right here we don't know which
+        c.ancestors = None # [c.a_rev] ... but that is shown in an other way
         return render('/pullrequests/pullrequest_show.html')
 
     @LoginRequired()

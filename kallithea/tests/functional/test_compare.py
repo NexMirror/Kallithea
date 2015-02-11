@@ -489,12 +489,9 @@ class TestCompareController(TestController):
                                     other_ref_type="branch",
                                     other_ref_name=rev1,
                                     other_repo=r1_name,
-                                    merge='1',))
+                                    merge='1',), status=404)
 
-        response.mustcontain('%s@%s' % (r2_name, rev1))
-        response.mustcontain('%s@%s' % (r1_name, rev2))
-        response.mustcontain('No files')
-        response.mustcontain('No changesets')
+        response.mustcontain('Cannot show empty diff')
 
         cs0 = fixture.commit_change(repo=r1_name, filename='file2',
                 content='line1-added-after-fork', message='commit2-parent',
@@ -569,12 +566,9 @@ class TestCompareController(TestController):
                                     other_ref_type="branch",
                                     other_ref_name=rev2,
                                     other_repo=r1_name,
-                                    merge='1',))
+                                    merge='1',), status=404)
 
-        response.mustcontain('%s@%s' % (r2_name, rev1))
-        response.mustcontain('%s@%s' % (r1_name, rev2))
-        response.mustcontain('No files')
-        response.mustcontain('No changesets')
+        response.mustcontain('Cannot show empty diff')
 
         cs0 = fixture.commit_change(repo=r1_name, filename='file2',
                 content='line1-added-after-fork', message='commit2-parent',
