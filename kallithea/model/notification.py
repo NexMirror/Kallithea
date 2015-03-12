@@ -293,13 +293,13 @@ class EmailNotificationModel(BaseModel):
             self.TYPE_PULL_REQUEST_COMMENT: 'pull_request_comment',
         }
         self._subj_map = {
-            self.TYPE_CHANGESET_COMMENT: _('Comment on %(repo_name)s changeset %(short_id)s on %(branch)s by %(comment_username)s'),
+            self.TYPE_CHANGESET_COMMENT: _('[Comment from %(comment_username)s] %(repo_name)s changeset %(short_id)s on %(branch)s'),
             self.TYPE_MESSAGE: 'Test Message',
             # self.TYPE_PASSWORD_RESET
             self.TYPE_REGISTRATION: _('New user %(new_username)s registered'),
             # self.TYPE_DEFAULT
-            self.TYPE_PULL_REQUEST: _('Review request on %(repo_name)s pull request %(pr_nice_id)s from %(ref)s by %(pr_username)s'),
-            self.TYPE_PULL_REQUEST_COMMENT: _('Comment on %(repo_name)s pull request %(pr_nice_id)s from %(ref)s by %(comment_username)s'),
+            self.TYPE_PULL_REQUEST: _('[Added by %(pr_username)s] %(repo_name)s pull request %(pr_nice_id)s from %(ref)s'),
+            self.TYPE_PULL_REQUEST_COMMENT: _('[Comment from %(comment_username)s] %(repo_name)s pull request %(pr_nice_id)s from %(ref)s'),
         }
 
     def get_email_description(self, type_, **kwargs):
@@ -314,7 +314,10 @@ class EmailNotificationModel(BaseModel):
             raise
         l = [safe_unicode(x) for x in [kwargs.get('status_change'), kwargs.get('closing_pr') and _('Closing')] if x]
         if l:
-            subj += ' (%s)' % (', '.join(l))
+            if subj.startswith('['):
+                subj = '[' + ', '.join(l) + ': ' + subj[1:]
+            else:
+                subj = '[' + ', '.join(l) + '] ' + subj
         return subj
 
     def get_email_tmpl(self, type_, content_type, **kwargs):
