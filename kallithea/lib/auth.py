@@ -719,6 +719,14 @@ def set_available_permissions(config):
 #==============================================================================
 # CHECK DECORATORS
 #==============================================================================
+
+def redirect_to_login(message=None):
+    from kallithea.lib import helpers as h
+    p = url.current()
+    h.flash(h.literal(message), category='warning')
+    log.debug('Redirecting to login page, origin: %s' % p)
+    return redirect(url('login_home', came_from=p))
+
 class LoginRequired(object):
     """
     Must be logged in to execute this function else
@@ -738,14 +746,11 @@ class LoginRequired(object):
         cls = fargs[0]
         user = cls.authuser
         loc = "%s:%s" % (cls.__class__.__name__, func.__name__)
+        log.debug('Checking access for user %s @ %s' % (user, loc))
 
         # check if our IP is allowed
-        ip_access_valid = True
         if not user.ip_allowed:
-            from kallithea.lib import helpers as h
-            h.flash(h.literal(_('IP %s not allowed' % (user.ip_addr))),
-                    category='warning')
-            ip_access_valid = False
+            return redirect_to_login(_('IP %s not allowed' % (user.ip_addr)))
 
         # check if we used an APIKEY and it's a valid one
         # defined whitelist of controllers which API access will be enabled
@@ -775,21 +780,17 @@ class LoginRequired(object):
         log.debug('Checking if %s is authenticated @ %s' % (user.username, loc))
         reason = 'RegularAuth' if user.is_authenticated else 'APIAuth'
 
-        if ip_access_valid and (user.is_authenticated or api_access_valid):
+        if user.is_authenticated or api_access_valid:
             log.info('user %s authenticating with:%s IS authenticated on func %s '
                      % (user, reason, loc)
             )
             return func(*fargs, **fkwargs)
         else:
             log.warning('user %s authenticating with:%s NOT authenticated on func: %s: '
-                     'IP_ACCESS:%s API_ACCESS:%s'
-                     % (user, reason, loc, ip_access_valid, api_access_valid)
+                     'API_ACCESS:%s'
+                     % (user, reason, loc, api_access_valid)
             )
-            p = url.current()
-
-            log.debug('redirecting to login page with %s' % p)
-            return redirect(url('login_home', came_from=p))
-
+            return redirect_to_login()
 
 class NotAnonymous(object):
     """
@@ -808,13 +809,8 @@ class NotAnonymous(object):
         anonymous = self.user.username == User.DEFAULT_USER
 
         if anonymous:
-            p = url.current()
-
-            import kallithea.lib.helpers as h
-            h.flash(_('You need to be a registered user to '
-                      'perform this action'),
-                    category='warning')
-            return redirect(url('login_home', came_from=p))
+            return redirect_to_login(_('You need to be a registered user to '
+                    'perform this action'))
         else:
             return func(*fargs, **fkwargs)
 
@@ -845,14 +841,7 @@ class PermsDecorator(object):
             anonymous = self.user.username == User.DEFAULT_USER
 
             if anonymous:
-                p = url.current()
-
-                import kallithea.lib.helpers as h
-                h.flash(_('You need to be signed in to '
-                          'view this page'),
-                        category='warning')
-                return redirect(url('login_home', came_from=p))
-
+                return redirect_to_login(_('You need to be signed in to view this page'))
             else:
                 # redirect with forbidden ret code
                 return abort(403)
