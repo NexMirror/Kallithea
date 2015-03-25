@@ -777,18 +777,12 @@ class LoginRequired(object):
                 log.error('CSRF check failed')
                 return abort(403)
 
-        log.debug('Checking if %s is authenticated @ %s' % (user.username, loc))
-        reason = 'RegularAuth' if user.is_authenticated else 'APIAuth'
-
+        # regular user authentication
         if user.is_authenticated:
-            log.info('user %s authenticating with:%s IS authenticated on func %s '
-                     % (user, reason, loc)
-            )
+            log.info('user %s authenticated with regular auth @ %s' % (user, loc))
             return func(*fargs, **fkwargs)
         else:
-            log.warning('user %s authenticating with:%s NOT authenticated on func: %s: '
-                     % (user, reason, loc)
-            )
+            log.warning('user %s NOT authenticated with regular auth @ %s' % (user, loc))
             return redirect_to_login()
 
 class NotAnonymous(object):
