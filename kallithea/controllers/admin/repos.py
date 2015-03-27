@@ -41,7 +41,6 @@ from kallithea.lib.auth import LoginRequired, HasPermissionAllDecorator, \
     HasRepoGroupPermissionAny, HasRepoPermissionAnyDecorator
 from kallithea.lib.base import BaseRepoController, render
 from kallithea.lib.utils import action_logger, repo_name_slug, jsonify
-from kallithea.lib.helpers import get_token
 from kallithea.lib.vcs import RepositoryError
 from kallithea.model.meta import Session
 from kallithea.model.db import User, Repository, UserFollowing, RepoGroup,\
@@ -516,23 +515,17 @@ class ReposController(BaseRepoController):
         :param repo_name:
         """
 
-        cur_token = request.POST.get('auth_token')
-        token = get_token()
-        if cur_token == token:
-            try:
-                repo_id = Repository.get_by_repo_name(repo_name).repo_id
-                user_id = User.get_default_user().user_id
-                self.scm_model.toggle_following_repo(repo_id, user_id)
-                h.flash(_('Updated repository visibility in public journal'),
-                        category='success')
-                Session().commit()
-            except Exception:
-                h.flash(_('An error occurred during setting this'
-                          ' repository in public journal'),
-                        category='error')
-
-        else:
-            h.flash(_('Token mismatch'), category='error')
+        try:
+            repo_id = Repository.get_by_repo_name(repo_name).repo_id
+            user_id = User.get_default_user().user_id
+            self.scm_model.toggle_following_repo(repo_id, user_id)
+            h.flash(_('Updated repository visibility in public journal'),
+                    category='success')
+            Session().commit()
+        except Exception:
+            h.flash(_('An error occurred during setting this'
+                      ' repository in public journal'),
+                    category='error')
         return redirect(url('edit_repo_advanced', repo_name=repo_name))
 
 

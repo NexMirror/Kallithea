@@ -22,7 +22,6 @@ ${h.end_form()}
 <h3>${_('Public Journal Visibility')}</h3>
 ${h.form(url('edit_repo_advanced_journal', repo_name=c.repo_info.repo_name), method='put')}
 <div class="form">
-  ${h.hidden('auth_token',str(h.get_token()))}
   <div class="field">
   %if c.in_public_journal:
     <button class="btn btn-small" type="submit">

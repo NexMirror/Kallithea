@@ -458,20 +458,16 @@ var _onSuccessFollow = function(target){
     }
 }
 
-var toggleFollowingRepo = function(target, follows_repo_id, token, user_id){
+var toggleFollowingRepo = function(target, follows_repo_id){
     var args = 'follows_repo_id=' + follows_repo_id;
-    args += '&amp;auth_token=' + token;
-    if(user_id != undefined){
-        args +="&amp;user_id=" + user_id;
-    }
     $.post(TOGGLE_FOLLOW_URL, args, function(data){
             _onSuccessFollow(target);
         });
     return false;
 };
 
-var showRepoSize = function(target, repo_name, token){
-    var args = 'auth_token=' + token;
+var showRepoSize = function(target, repo_name){
+    var args = '';
 
     if(!$("#" + target).hasClass('loaded')){
         $("#" + target).html(_TM['Loading ...']);

@@ -304,33 +304,28 @@ class JournalController(BaseController):
     @LoginRequired()
     @NotAnonymous()
     def toggle_following(self):
-        cur_token = request.POST.get('auth_token')
-        token = h.get_token()
-        if cur_token == token:
+        user_id = request.POST.get('follows_user_id')
+        if user_id:
+            try:
+                self.scm_model.toggle_following_user(user_id,
+                                            self.authuser.user_id)
+                Session.commit()
+                return 'ok'
+            except Exception:
+                log.error(traceback.format_exc())
+                raise HTTPBadRequest()
 
-            user_id = request.POST.get('follows_user_id')
-            if user_id:
-                try:
-                    self.scm_model.toggle_following_user(user_id,
-                                                self.authuser.user_id)
-                    Session.commit()
-                    return 'ok'
-                except Exception:
-                    log.error(traceback.format_exc())
-                    raise HTTPBadRequest()
+        repo_id = request.POST.get('follows_repo_id')
+        if repo_id:
+            try:
+                self.scm_model.toggle_following_repo(repo_id,
+                                            self.authuser.user_id)
+                Session.commit()
+                return 'ok'
+            except Exception:
+                log.error(traceback.format_exc())
+                raise HTTPBadRequest()
 
-            repo_id = request.POST.get('follows_repo_id')
-            if repo_id:
-                try:
-                    self.scm_model.toggle_following_repo(repo_id,
-                                                self.authuser.user_id)
-                    Session.commit()
-                    return 'ok'
-                except Exception:
-                    log.error(traceback.format_exc())
-                    raise HTTPBadRequest()
-
-        log.debug('token mismatch %s vs %s' % (cur_token, token))
         raise HTTPBadRequest()
 
     @LoginRequired()

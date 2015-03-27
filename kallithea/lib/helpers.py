@@ -134,23 +134,6 @@ def FID(raw_id, path):
     return 'C-%s-%s' % (short_id(raw_id), md5(safe_str(path)).hexdigest()[:12])
 
 
-def get_token():
-    """Return the current authentication token, creating one if one doesn't
-    already exist.
-    """
-    token_key = "_authentication_token"
-    from pylons import session
-    if not token_key in session:
-        try:
-            token = hashlib.sha1(str(random.getrandbits(128))).hexdigest()
-        except AttributeError:  # Python < 2.4
-            token = hashlib.sha1(str(random.randrange(2 ** 128))).hexdigest()
-        session[token_key] = token
-        if hasattr(session, 'save'):
-            session.save()
-    return session[token_key]
-
-
 class _GetError(object):
     """Get error from form_errors, and represent it as span wrapped error
     message

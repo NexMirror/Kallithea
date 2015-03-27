@@ -176,7 +176,7 @@
               ## also it feels like a job for the controller
               %if c.authuser.username != 'default':
                   <li>
-                   <a class="${follow_class()}" onclick="javascript:toggleFollowingRepo(this,${c.db_repo.repo_id},'${str(h.get_token())}');">
+                   <a class="${follow_class()}" onclick="javascript:toggleFollowingRepo(this,${c.db_repo.repo_id});">
                     <span class="show-follow"><i class="icon-heart-empty"></i> ${_('Follow')}</span>
                     <span class="show-following"><i class="icon-heart"></i> ${_('Unfollow')}</span>
                   </a>

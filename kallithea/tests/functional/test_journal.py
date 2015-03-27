@@ -23,8 +23,7 @@ class TestJournalController(TestController):
 #
 #        response = self.app.post(url(controller='journal',
 #                                     action='toggle_following'),
-#                                     {'auth_token':get_token(session),
-#                                      'follows_repo_id':repo.repo_id})
+#                                     {'follows_repo_id':repo.repo_id})
 
     def test_start_following_repository(self):
         self.log_user()
