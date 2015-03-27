@@ -36,14 +36,14 @@ from webhelpers.html import literal, HTML, escape
 from webhelpers.html.tools import *
 from webhelpers.html.builder import make_tag
 from webhelpers.html.tags import auto_discovery_link, checkbox, css_classes, \
-    end_form, file, form, hidden, image, javascript_link, link_to, \
+    end_form, file, hidden, image, javascript_link, link_to, \
     link_to_if, link_to_unless, ol, required_legend, select, stylesheet_link, \
     submit, text, password, textarea, title, ul, xml_declaration, radio
 from webhelpers.html.tools import auto_link, button_to, highlight, \
     js_obfuscate, mail_to, strip_links, strip_tags, tag_re
 from webhelpers.number import format_byte_size, format_bit_size
 from webhelpers.pylonslib import Flash as _Flash
-from webhelpers.pylonslib.secure_form import secure_form
+from webhelpers.pylonslib.secure_form import secure_form as form
 from webhelpers.text import chop_at, collapse, convert_accented_entities, \
     convert_misc_entities, lchop, plural, rchop, remove_formatting, \
     replace_whitespace, urlify, truncate, wrap_paragraphs
