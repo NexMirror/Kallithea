@@ -406,6 +406,25 @@ class _Message(object):
 
 class Flash(_Flash):
 
+    def __call__(self, message, category=None, ignore_duplicate=False, logf=None):
+        """
+        Show a message to the user _and_ log it through the specified function
+
+        category: notice (default), warning, error, success
+        logf: a custom log function - such as log.debug
+
+        logf defaults to log.info, unless category equals 'success', in which
+        case logf defaults to log.debug.
+        """
+        if logf is None:
+            logf = log.info
+            if category == 'success':
+                logf = log.debug
+
+        logf('Flash %s: %s', category, message)
+
+        super(Flash, self).__call__(message, category, ignore_duplicate)
+
     def pop_messages(self):
         """Return all accumulated messages and delete them from the session.
 
