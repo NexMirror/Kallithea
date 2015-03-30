@@ -319,7 +319,7 @@ class TestLoginController(TestController):
                 self.app.get(url(controller='changeset',
                                  action='changeset_raw',
                                  repo_name=HG_REPO, revision='tip', api_key=api_key),
-                             status=302)
+                             status=403)
 
     @parameterized.expand([
         ('none', None, 302),

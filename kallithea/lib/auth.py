@@ -752,26 +752,25 @@ class LoginRequired(object):
         if not user.ip_allowed:
             return redirect_to_login(_('IP %s not allowed' % (user.ip_addr)))
 
-        # check if we used an APIKEY and it's a valid one
-        # defined whitelist of controllers which API access will be enabled
-        _api_key = request.GET.get('api_key', '')
-        api_access_valid = allowed_api_access(loc, api_key=_api_key)
-
-        # explicit controller is enabled or API is in our whitelist
-        if self.api_access or api_access_valid:
-            log.debug('Checking API KEY access for %s' % cls)
-            if _api_key and _api_key in user.api_keys:
-                api_access_valid = True
-                log.debug('API KEY ****%s is VALID' % _api_key[-4:])
-            else:
-                api_access_valid = False
-                if not _api_key:
-                    log.debug("API KEY *NOT* present in request")
+        # check if we used an API key and it's a valid one
+        api_key = request.GET.get('api_key')
+        if api_key is not None:
+            # explicit controller is enabled or API is in our whitelist
+            if self.api_access or allowed_api_access(loc, api_key=api_key):
+                if api_key in user.api_keys:
+                    log.info('user %s authenticated with API key ****%s @ %s'
+                             % (user, api_key[-4:], loc))
+                    return func(*fargs, **fkwargs)
                 else:
-                    log.warning("API KEY ****%s *NOT* valid" % _api_key[-4:])
+                    log.warning('API key ****%s is NOT valid' % api_key[-4:])
+                    return redirect_to_login(_('Invalid API key'))
+            else:
+                # controller does not allow API access
+                log.warning('API access to %s is not allowed' % loc)
+                return abort(403)
 
         # CSRF protection - POSTs with session auth must contain correct token
-        if request.POST and user.is_authenticated and not api_access_valid:
+        if request.POST and user.is_authenticated:
             token = request.POST.get(secure_form.token_key)
             if not token or token != secure_form.authentication_token():
                 log.error('CSRF check failed')
@@ -780,15 +779,14 @@ class LoginRequired(object):
         log.debug('Checking if %s is authenticated @ %s' % (user.username, loc))
         reason = 'RegularAuth' if user.is_authenticated else 'APIAuth'
 
-        if user.is_authenticated or api_access_valid:
+        if user.is_authenticated:
             log.info('user %s authenticating with:%s IS authenticated on func %s '
                      % (user, reason, loc)
             )
             return func(*fargs, **fkwargs)
         else:
             log.warning('user %s authenticating with:%s NOT authenticated on func: %s: '
-                     'API_ACCESS:%s'
-                     % (user, reason, loc, api_access_valid)
+                     % (user, reason, loc)
             )
             return redirect_to_login()
 
