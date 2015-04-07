@@ -4,16 +4,11 @@
 Installation on Unix/Linux
 ==========================
 
-**Kallithea** is written entirely in Python_ and requires Python version
-2.6 or higher. Python 3.x is currently not supported.
+Here are more details about 3 ways to install Kallithea:
 
-There are several ways to install Kallithea:
-
-- :ref:`installation-source`: The Kallithea development repository is stable
-  and can be used in production. In fact, the Kallithea maintainers do
-  use it in production. The advantage of installation from source and regularly
-  updating it is that you take advantage of the most recent improvements, which
-  is particularly useful because Kallithea is evolving rapidly.
+- :ref:`installation-source`: The simplest way to keep the installation
+  uptodate and keep track of local customizations is to run directly from
+  source in a Kallithea repository clone and use virtualenv.
 
 - :ref:`installation-virtualenv`: If you prefer to only use released versions
   of Kallithea, the recommended method is to install Kallithea in a virtual
@@ -205,5 +200,4 @@ Or::
 
 
 .. _virtualenv: http://pypi.python.org/pypi/virtualenv
-.. _Python: http://www.python.org/
 .. _pylons: http://www.pylonsproject.org/

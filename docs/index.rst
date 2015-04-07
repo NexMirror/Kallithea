@@ -15,6 +15,7 @@ Kallithea Documentation
 .. toctree::
    :maxdepth: 1
 
+   overview
    installation
    installation_win
    installation_win_old
