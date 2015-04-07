@@ -39,6 +39,7 @@ from decorator import decorator
 from pylons import url, request
 from pylons.controllers.util import abort, redirect
 from pylons.i18n.translation import _
+from webhelpers.pylonslib import secure_form
 from sqlalchemy import or_
 from sqlalchemy.orm.exc import ObjectDeletedError
 from sqlalchemy.orm import joinedload
@@ -763,6 +764,13 @@ class LoginRequired(object):
                     log.debug("API KEY *NOT* present in request")
                 else:
                     log.warning("API KEY ****%s *NOT* valid" % _api_key[-4:])
+
+        # CSRF protection - POSTs with session auth must contain correct token
+        if request.POST and user.is_authenticated and not api_access_valid:
+            token = request.POST.get(secure_form.token_key)
+            if not token or token != secure_form.authentication_token():
+                log.error('CSRF check failed')
+                return abort(403)
 
         log.debug('Checking if %s is authenticated @ %s' % (user.username, loc))
         reason = 'RegularAuth' if user.is_authenticated else 'APIAuth'
