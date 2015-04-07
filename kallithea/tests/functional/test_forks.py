@@ -60,7 +60,7 @@ class _BaseTest(TestController):
         # try create a fork
         repo_name = self.REPO
         self.app.post(url(controller='forks', action='fork_create',
-                          repo_name=repo_name), {}, status=403)
+                          repo_name=repo_name), {'_authentication_token': self.authentication_token()}, status=403)
 
     def test_index_with_fork(self):
         self.log_user()
@@ -77,7 +77,8 @@ class _BaseTest(TestController):
             'repo_type': self.REPO_TYPE,
             'description': description,
             'private': 'False',
-            'landing_rev': 'rev:tip'}
+            'landing_rev': 'rev:tip',
+            '_authentication_token': self.authentication_token()}
 
         self.app.post(url(controller='forks', action='fork_create',
                           repo_name=repo_name), creation_args)
@@ -108,7 +109,8 @@ class _BaseTest(TestController):
             'repo_type': self.REPO_TYPE,
             'description': description,
             'private': 'False',
-            'landing_rev': 'rev:tip'}
+            'landing_rev': 'rev:tip',
+            '_authentication_token': self.authentication_token()}
         self.app.post(url(controller='forks', action='fork_create',
                           repo_name=repo_name), creation_args)
         repo = Repository.get_by_repo_name(fork_name_full)
@@ -150,7 +152,8 @@ class _BaseTest(TestController):
             'repo_type': self.REPO_TYPE,
             'description': description,
             'private': 'False',
-            'landing_rev': 'rev:tip'}
+            'landing_rev': 'rev:tip',
+            '_authentication_token': self.authentication_token()}
         self.app.post(url(controller='forks', action='fork_create',
                           repo_name=repo_name), creation_args)
         repo = Repository.get_by_repo_name(self.REPO_FORK)

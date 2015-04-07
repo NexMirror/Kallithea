@@ -18,7 +18,8 @@ class TestAdminPermissionsController(TestController):
         self.log_user()
         default_user_id = User.get_default_user().user_id
         response = self.app.put(url('edit_user_ips', id=default_user_id),
-                                 params=dict(new_ip='127.0.0.0/24'))
+                                 params=dict(new_ip='127.0.0.0/24',
+                                 _authentication_token=self.authentication_token()))
 
         response = self.app.get(url('admin_permissions_ips'))
         response.mustcontain('127.0.0.0/24')
@@ -31,7 +32,8 @@ class TestAdminPermissionsController(TestController):
 
         response = self.app.post(url('edit_user_ips', id=default_user_id),
                                  params=dict(_method='delete',
-                                             del_ip_id=del_ip_id))
+                                             del_ip_id=del_ip_id,
+                                             _authentication_token=self.authentication_token()))
 
         response = self.app.get(url('admin_permissions_ips'))
         response.mustcontain('All IP addresses are allowed')

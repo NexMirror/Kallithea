@@ -213,6 +213,9 @@ class TestController(BaseTestCase):
     def _get_logged_user(self):
         return User.get_by_username(self._logged_username)
 
+    def authentication_token(self):
+        return self.app.get(url('authentication_token')).body
+
     def checkSessionFlash(self, response, msg, skip=0):
         if 'flash' not in response.session:
             self.fail(safe_str(u'msg `%s` not found - session has no flash ' % msg))

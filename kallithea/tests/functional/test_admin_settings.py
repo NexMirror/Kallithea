@@ -37,7 +37,8 @@ class TestAdminSettingsController(TestController):
         self.log_user()
         response = self.app.post(url('admin_settings_hooks'),
                                 params=dict(new_hook_ui_key='test_hooks_1',
-                                            new_hook_ui_value='cd /tmp'))
+                                            new_hook_ui_value='cd /tmp',
+                                            _authentication_token=self.authentication_token()))
 
         response = response.follow()
         response.mustcontain('test_hooks_1')
@@ -47,7 +48,8 @@ class TestAdminSettingsController(TestController):
         self.log_user()
         response = self.app.post(url('admin_settings_hooks'),
                                 params=dict(new_hook_ui_key='test_hooks_2',
-                                            new_hook_ui_value='cd /tmp2'))
+                                            new_hook_ui_value='cd /tmp2',
+                                            _authentication_token=self.authentication_token()))
 
         response = response.follow()
         response.mustcontain('test_hooks_2')
@@ -56,7 +58,7 @@ class TestAdminSettingsController(TestController):
         hook_id = Ui.get_by_key('test_hooks_2').ui_id
         ## delete
         self.app.post(url('admin_settings_hooks'),
-                        params=dict(hook_id=hook_id))
+                        params=dict(hook_id=hook_id, _authentication_token=self.authentication_token()))
         response = self.app.get(url('admin_settings_hooks'))
         response.mustcontain(no=['test_hooks_2'])
         response.mustcontain(no=['cd /tmp2'])
@@ -80,6 +82,7 @@ class TestAdminSettingsController(TestController):
                                  ga_code=new_ga_code,
                                  captcha_private_key='',
                                  captcha_public_key='',
+                                 _authentication_token=self.authentication_token(),
                                  ))
 
         self.checkSessionFlash(response, 'Updated application settings')
@@ -101,6 +104,7 @@ class TestAdminSettingsController(TestController):
                                  ga_code=new_ga_code,
                                  captcha_private_key='',
                                  captcha_public_key='',
+                                 _authentication_token=self.authentication_token(),
                                  ))
 
         self.checkSessionFlash(response, 'Updated application settings')
@@ -121,6 +125,7 @@ class TestAdminSettingsController(TestController):
                                  ga_code=new_ga_code,
                                  captcha_private_key='1234567890',
                                  captcha_public_key='1234567890',
+                                 _authentication_token=self.authentication_token(),
                                  ))
 
         self.checkSessionFlash(response, 'Updated application settings')
@@ -141,6 +146,7 @@ class TestAdminSettingsController(TestController):
                                  ga_code=new_ga_code,
                                  captcha_private_key='',
                                  captcha_public_key='1234567890',
+                                 _authentication_token=self.authentication_token(),
                                  ))
 
         self.checkSessionFlash(response, 'Updated application settings')
@@ -163,6 +169,7 @@ class TestAdminSettingsController(TestController):
                                  ga_code='',
                                  captcha_private_key='',
                                  captcha_public_key='',
+                                 _authentication_token=self.authentication_token(),
                                 ))
 
             self.checkSessionFlash(response, 'Updated application settings')

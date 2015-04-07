@@ -56,7 +56,8 @@ class _BaseTest(TestController):
                         fixture._get_repo_create_params(repo_private=False,
                                                 repo_name=repo_name,
                                                 repo_type=self.REPO_TYPE,
-                                                repo_description=description))
+                                                repo_description=description,
+                                                _authentication_token=self.authentication_token()))
         ## run the check page that triggers the flash message
         response = self.app.get(url('repo_check_home', repo_name=repo_name))
         self.assertEqual(response.json, {u'result': True})
@@ -96,7 +97,8 @@ class _BaseTest(TestController):
                         fixture._get_repo_create_params(repo_private=False,
                                                 repo_name=repo_name,
                                                 repo_type=self.REPO_TYPE,
-                                                repo_description=description))
+                                                repo_description=description,
+                                                _authentication_token=self.authentication_token()))
         ## run the check page that triggers the flash message
         response = self.app.get(url('repo_check_home', repo_name=repo_name))
         self.assertEqual(response.json, {u'result': True})
@@ -139,7 +141,8 @@ class _BaseTest(TestController):
                                                 repo_name=repo_name,
                                                 repo_type=self.REPO_TYPE,
                                                 repo_description=description,
-                                                repo_group=gr.group_id,))
+                                                repo_group=gr.group_id,
+                                                _authentication_token=self.authentication_token()))
         ## run the check page that triggers the flash message
         response = self.app.get(url('repo_check_home', repo_name=repo_name_full))
         self.assertEqual(response.json, {u'result': True})
@@ -177,6 +180,8 @@ class _BaseTest(TestController):
 
     def test_create_in_group_without_needed_permissions(self):
         usr = self.log_user(TEST_USER_REGULAR_LOGIN, TEST_USER_REGULAR_PASS)
+        # avoid spurious RepoGroup DetachedInstanceError ...
+        authentication_token = self.authentication_token()
         # revoke
         user_model = UserModel()
         # disable fork and create on default user
@@ -213,7 +218,8 @@ class _BaseTest(TestController):
                                                 repo_name=repo_name,
                                                 repo_type=self.REPO_TYPE,
                                                 repo_description=description,
-                                                repo_group=gr.group_id,))
+                                                repo_group=gr.group_id,
+                                                _authentication_token=authentication_token))
 
         response.mustcontain('Invalid value')
 
@@ -226,7 +232,8 @@ class _BaseTest(TestController):
                                                 repo_name=repo_name,
                                                 repo_type=self.REPO_TYPE,
                                                 repo_description=description,
-                                                repo_group=gr_allowed.group_id,))
+                                                repo_group=gr_allowed.group_id,
+                                                _authentication_token=authentication_token))
 
         ## run the check page that triggers the flash message
         response = self.app.get(url('repo_check_home', repo_name=repo_name_full))
@@ -287,7 +294,8 @@ class _BaseTest(TestController):
                                                 repo_type=self.REPO_TYPE,
                                                 repo_description=description,
                                                 repo_group=gr.group_id,
-                                                repo_copy_permissions=True))
+                                                repo_copy_permissions=True,
+                                                _authentication_token=self.authentication_token()))
 
         ## run the check page that triggers the flash message
         response = self.app.get(url('repo_check_home', repo_name=repo_name_full))
@@ -338,7 +346,8 @@ class _BaseTest(TestController):
                                                 repo_name=repo_name,
                                                 repo_type=self.REPO_TYPE,
                                                 repo_description=description,
-                                                clone_uri='http://127.0.0.1/repo'))
+                                                clone_uri='http://127.0.0.1/repo',
+                                                _authentication_token=self.authentication_token()))
         response.mustcontain('invalid clone URL')
 
 
@@ -351,7 +360,8 @@ class _BaseTest(TestController):
                                                 repo_name=repo_name,
                                                 repo_type=self.REPO_TYPE,
                                                 repo_description=description,
-                                                clone_uri='svn+http://127.0.0.1/repo'))
+                                                clone_uri='svn+http://127.0.0.1/repo',
+                                                _authentication_token=self.authentication_token()))
         response.mustcontain('invalid clone URL')
 
 
@@ -363,7 +373,8 @@ class _BaseTest(TestController):
                         fixture._get_repo_create_params(repo_private=False,
                                                 repo_type=self.REPO_TYPE,
                                                 repo_name=repo_name,
-                                                repo_description=description))
+                                                repo_description=description,
+                                                _authentication_token=self.authentication_token()))
         ## run the check page that triggers the flash message
         response = self.app.get(url('repo_check_home', repo_name=repo_name))
         self.checkSessionFlash(response,
@@ -413,7 +424,8 @@ class _BaseTest(TestController):
                         fixture._get_repo_create_params(repo_private=False,
                                                 repo_name=repo_name,
                                                 repo_type=self.REPO_TYPE,
-                                                repo_description=description))
+                                                repo_description=description,
+                                                _authentication_token=self.authentication_token()))
         ## run the check page that triggers the flash message
         response = self.app.get(url('repo_check_home', repo_name=repo_name))
         self.assertEqual(response.json, {u'result': True})
@@ -457,7 +469,7 @@ class _BaseTest(TestController):
 
     def test_delete_browser_fakeout(self):
         response = self.app.post(url('repo', repo_name=self.REPO),
-                                 params=dict(_method='delete'))
+                                 params=dict(_method='delete', _authentication_token=self.authentication_token()))
 
     def test_show(self):
         self.log_user()
@@ -478,7 +490,8 @@ class _BaseTest(TestController):
                         fixture._get_repo_create_params(repo_private=1,
                                                 repo_name=self.REPO,
                                                 repo_type=self.REPO_TYPE,
-                                                user=TEST_USER_ADMIN_LOGIN))
+                                                user=TEST_USER_ADMIN_LOGIN,
+                                                _authentication_token=self.authentication_token()))
         self.checkSessionFlash(response,
                                msg='Repository %s updated successfully' % (self.REPO))
         self.assertEqual(Repository.get_by_repo_name(self.REPO).private, True)
@@ -492,7 +505,8 @@ class _BaseTest(TestController):
                         fixture._get_repo_create_params(repo_private=False,
                                                 repo_name=self.REPO,
                                                 repo_type=self.REPO_TYPE,
-                                                user=TEST_USER_ADMIN_LOGIN))
+                                                user=TEST_USER_ADMIN_LOGIN,
+                                                _authentication_token=self.authentication_token()))
         self.checkSessionFlash(response,
                                msg='Repository %s updated successfully' % (self.REPO))
         self.assertEqual(Repository.get_by_repo_name(self.REPO).private, False)
@@ -521,7 +535,7 @@ class _BaseTest(TestController):
         repo = Repository.get_by_repo_name(self.REPO)
         repo2 = Repository.get_by_repo_name(other_repo)
         response = self.app.put(url('edit_repo_advanced_fork', repo_name=self.REPO),
-                                params=dict(id_fork_of=repo2.repo_id))
+                                params=dict(id_fork_of=repo2.repo_id, _authentication_token=self.authentication_token()))
         repo = Repository.get_by_repo_name(self.REPO)
         repo2 = Repository.get_by_repo_name(other_repo)
         self.checkSessionFlash(response,
@@ -542,7 +556,7 @@ class _BaseTest(TestController):
         repo = Repository.get_by_repo_name(self.REPO)
         repo2 = Repository.get_by_repo_name(self.OTHER_TYPE_REPO)
         response = self.app.put(url('edit_repo_advanced_fork', repo_name=self.REPO),
-                                params=dict(id_fork_of=repo2.repo_id))
+                                params=dict(id_fork_of=repo2.repo_id, _authentication_token=self.authentication_token()))
         repo = Repository.get_by_repo_name(self.REPO)
         repo2 = Repository.get_by_repo_name(self.OTHER_TYPE_REPO)
         self.checkSessionFlash(response,
@@ -552,7 +566,7 @@ class _BaseTest(TestController):
         self.log_user()
         ## mark it as None
         response = self.app.put(url('edit_repo_advanced_fork', repo_name=self.REPO),
-                                params=dict(id_fork_of=None))
+                                params=dict(id_fork_of=None, _authentication_token=self.authentication_token()))
         repo = Repository.get_by_repo_name(self.REPO)
         repo2 = Repository.get_by_repo_name(self.OTHER_TYPE_REPO)
         self.checkSessionFlash(response,
@@ -564,7 +578,7 @@ class _BaseTest(TestController):
         self.log_user()
         repo = Repository.get_by_repo_name(self.REPO)
         response = self.app.put(url('edit_repo_advanced_fork', repo_name=self.REPO),
-                                params=dict(id_fork_of=repo.repo_id))
+                                params=dict(id_fork_of=repo.repo_id, _authentication_token=self.authentication_token()))
         self.checkSessionFlash(response,
                                'An error occurred during this operation')
 
@@ -594,7 +608,8 @@ class _BaseTest(TestController):
                         fixture._get_repo_create_params(repo_private=False,
                                                 repo_name=repo_name,
                                                 repo_type=self.REPO_TYPE,
-                                                repo_description=description))
+                                                repo_description=description,
+                                                _authentication_token=self.authentication_token()))
 
         response.mustcontain('no permission to create repository in root location')
 
@@ -611,7 +626,8 @@ class _BaseTest(TestController):
                         fixture._get_repo_create_params(repo_private=False,
                                                 repo_name=repo_name,
                                                 repo_type=self.REPO_TYPE,
-                                                repo_description=description))
+                                                repo_description=description,
+                                                _authentication_token=self.authentication_token()))
 
         self.checkSessionFlash(response,
                                'Error creating repository %s' % repo_name)

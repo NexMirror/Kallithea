@@ -328,7 +328,8 @@ removed extra unicode conversion in diff.</div>
                                       repo_name=HG_REPO,
                                       revision='tip', f_path='/'),
                                  params={
-                                    'content': ''
+                                    'content': '',
+                                    '_authentication_token': self.authentication_token(),
                                  },
                                  status=302)
 
@@ -340,7 +341,8 @@ removed extra unicode conversion in diff.</div>
                                       repo_name=HG_REPO,
                                       revision='tip', f_path='/'),
                                  params={
-                                    'content': "foo"
+                                    'content': "foo",
+                                    '_authentication_token': self.authentication_token(),
                                  },
                                  status=302)
 
@@ -359,7 +361,8 @@ removed extra unicode conversion in diff.</div>
                                  params={
                                     'content': "foo",
                                     'filename': filename,
-                                    'location': location
+                                    'location': location,
+                                    '_authentication_token': self.authentication_token(),
                                  },
                                  status=302)
 
@@ -379,7 +382,8 @@ removed extra unicode conversion in diff.</div>
                                  params={
                                     'content': "foo",
                                     'filename': filename,
-                                    'location': location
+                                    'location': location,
+                                    '_authentication_token': self.authentication_token(),
                                  },
                                  status=302)
         try:
@@ -401,7 +405,8 @@ removed extra unicode conversion in diff.</div>
                                       repo_name=GIT_REPO,
                                       revision='tip', f_path='/'),
                                  params={
-                                     'content': ''
+                                     'content': '',
+                                     '_authentication_token': self.authentication_token(),
                                  },
                                  status=302)
         self.checkSessionFlash(response, 'No content')
@@ -412,7 +417,8 @@ removed extra unicode conversion in diff.</div>
                                       repo_name=GIT_REPO,
                                       revision='tip', f_path='/'),
                                  params={
-                                    'content': "foo"
+                                    'content': "foo",
+                                    '_authentication_token': self.authentication_token(),
                                  },
                                  status=302)
 
@@ -431,7 +437,8 @@ removed extra unicode conversion in diff.</div>
                                  params={
                                     'content': "foo",
                                     'filename': filename,
-                                    'location': location
+                                    'location': location,
+                                    '_authentication_token': self.authentication_token(),
                                  },
                                  status=302)
 
@@ -451,7 +458,8 @@ removed extra unicode conversion in diff.</div>
                                  params={
                                     'content': "foo",
                                     'filename': filename,
-                                    'location': location
+                                    'location': location,
+                                    '_authentication_token': self.authentication_token(),
                                  },
                                  status=302)
         try:
@@ -480,7 +488,8 @@ removed extra unicode conversion in diff.</div>
                                  params={
                                     'content': "def py():\n print 'hello'\n",
                                     'filename': filename,
-                                    'location': location
+                                    'location': location,
+                                    '_authentication_token': self.authentication_token(),
                                  },
                                  status=302)
         response.follow()
@@ -510,7 +519,8 @@ removed extra unicode conversion in diff.</div>
                                  params={
                                     'content': "def py():\n print 'hello'\n",
                                     'filename': filename,
-                                    'location': location
+                                    'location': location,
+                                    '_authentication_token': self.authentication_token(),
                                  },
                                  status=302)
         response.follow()
@@ -524,6 +534,7 @@ removed extra unicode conversion in diff.</div>
                                      params={
                                         'content': "def py():\n print 'hello world'\n",
                                         'message': 'i commited',
+                                        '_authentication_token': self.authentication_token(),
                                      },
                                     status=302)
             self.checkSessionFlash(response,
@@ -551,7 +562,8 @@ removed extra unicode conversion in diff.</div>
                                  params={
                                     'content': "def py():\n print 'hello'\n",
                                     'filename': filename,
-                                    'location': location
+                                    'location': location,
+                                    '_authentication_token': self.authentication_token(),
                                  },
                                  status=302)
         response.follow()
@@ -581,7 +593,8 @@ removed extra unicode conversion in diff.</div>
                                  params={
                                     'content': "def py():\n print 'hello'\n",
                                     'filename': filename,
-                                    'location': location
+                                    'location': location,
+                                    '_authentication_token': self.authentication_token(),
                                  },
                                  status=302)
         response.follow()
@@ -595,6 +608,7 @@ removed extra unicode conversion in diff.</div>
                                      params={
                                         'content': "def py():\n print 'hello world'\n",
                                         'message': 'i commited',
+                                        '_authentication_token': self.authentication_token(),
                                      },
                                     status=302)
             self.checkSessionFlash(response,
@@ -622,7 +636,8 @@ removed extra unicode conversion in diff.</div>
                                  params={
                                     'content': "def py():\n print 'hello'\n",
                                     'filename': filename,
-                                    'location': location
+                                    'location': location,
+                                    '_authentication_token': self.authentication_token(),
                                  },
                                  status=302)
         response.follow()
@@ -652,7 +667,8 @@ removed extra unicode conversion in diff.</div>
                                  params={
                                     'content': "def py():\n print 'hello'\n",
                                     'filename': filename,
-                                    'location': location
+                                    'location': location,
+                                    '_authentication_token': self.authentication_token(),
                                  },
                                  status=302)
         response.follow()
@@ -665,6 +681,7 @@ removed extra unicode conversion in diff.</div>
                                           f_path='vcs/nodes.py'),
                                      params={
                                         'message': 'i commited',
+                                        '_authentication_token': self.authentication_token(),
                                      },
                                     status=302)
             self.checkSessionFlash(response,
@@ -692,7 +709,8 @@ removed extra unicode conversion in diff.</div>
                                  params={
                                     'content': "def py():\n print 'hello'\n",
                                     'filename': filename,
-                                    'location': location
+                                    'location': location,
+                                    '_authentication_token': self.authentication_token(),
                                  },
                                  status=302)
         response.follow()
@@ -722,7 +740,8 @@ removed extra unicode conversion in diff.</div>
                                  params={
                                     'content': "def py():\n print 'hello'\n",
                                     'filename': filename,
-                                    'location': location
+                                    'location': location,
+                                    '_authentication_token': self.authentication_token(),
                                  },
                                  status=302)
         response.follow()
@@ -735,6 +754,7 @@ removed extra unicode conversion in diff.</div>
                                           f_path='vcs/nodes.py'),
                                      params={
                                         'message': 'i commited',
+                                        '_authentication_token': self.authentication_token(),
                                      },
                                     status=302)
             self.checkSessionFlash(response,

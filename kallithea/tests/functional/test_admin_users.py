@@ -58,7 +58,8 @@ class TestAdminUsersController(TestController):
              'lastname': lastname,
              'extern_name': 'internal',
              'extern_type': 'internal',
-             'email': email})
+             'email': email,
+             '_authentication_token': self.authentication_token()})
 
         self.checkSessionFlash(response, '''Created user <a href="/_admin/users/''')
         self.checkSessionFlash(response, '''/edit">%s</a>''' % (username))
@@ -89,7 +90,8 @@ class TestAdminUsersController(TestController):
                                                'name': name,
                                                'active': False,
                                                'lastname': lastname,
-                                               'email': email})
+                                               'email': email,
+                                               '_authentication_token': self.authentication_token()})
 
         msg = validators.ValidUsername(False, {})._messages['system_invalid_username']
         msg = h.html_escape(msg % {'username': 'new_user'})
@@ -145,8 +147,10 @@ class TestAdminUsersController(TestController):
                                           # logged in yet his data is not filled
                                           # so we use creation data
 
+        params.update({'_authentication_token': self.authentication_token()})
         response = self.app.put(url('user', id=usr.user_id), params)
         self.checkSessionFlash(response, 'User updated successfully')
+        params.pop('_authentication_token')
 
         updated_user = User.get_by_username(self.test_user_1)
         updated_params = updated_user.get_api_data(True)
@@ -266,7 +270,8 @@ class TestAdminUsersController(TestController):
 
             response = self.app.post(url('edit_user_perms', id=uid),
                                      params=dict(_method='put',
-                                                 create_repo_perm=True))
+                                                 create_repo_perm=True,
+                                                 _authentication_token=self.authentication_token()))
 
             perm_none = Permission.get_by_key('hg.create.none')
             perm_create = Permission.get_by_key('hg.create.repository')
@@ -295,7 +300,7 @@ class TestAdminUsersController(TestController):
             self.assertEqual(UserModel().has_perm(user, perm_create), False)
 
             response = self.app.post(url('edit_user_perms', id=uid),
-                                     params=dict(_method='put'))
+                                     params=dict(_method='put', _authentication_token=self.authentication_token()))
 
             perm_none = Permission.get_by_key('hg.create.none')
             perm_create = Permission.get_by_key('hg.create.repository')
@@ -325,7 +330,8 @@ class TestAdminUsersController(TestController):
 
             response = self.app.post(url('edit_user_perms', id=uid),
                                      params=dict(_method='put',
-                                                 create_repo_perm=True))
+                                                 create_repo_perm=True,
+                                                 _authentication_token=self.authentication_token()))
 
             perm_none = Permission.get_by_key('hg.create.none')
             perm_create = Permission.get_by_key('hg.create.repository')
@@ -354,7 +360,7 @@ class TestAdminUsersController(TestController):
             self.assertEqual(UserModel().has_perm(user, perm_fork), False)
 
             response = self.app.post(url('edit_user_perms', id=uid),
-                                     params=dict(_method='put'))
+                                     params=dict(_method='put', _authentication_token=self.authentication_token()))
 
             perm_none = Permission.get_by_key('hg.create.none')
             perm_create = Permission.get_by_key('hg.create.repository')
@@ -386,7 +392,7 @@ class TestAdminUsersController(TestController):
         user_id = user.user_id
 
         response = self.app.put(url('edit_user_ips', id=user_id),
-                                params=dict(new_ip=ip))
+                                params=dict(new_ip=ip, _authentication_token=self.authentication_token()))
 
         if failure:
             self.checkSessionFlash(response, 'Please enter a valid IPv4 or IpV6 address')
@@ -419,7 +425,7 @@ class TestAdminUsersController(TestController):
         response.mustcontain(ip_range)
 
         self.app.post(url('edit_user_ips', id=user_id),
-                      params=dict(_method='delete', del_ip_id=new_ip_id))
+                      params=dict(_method='delete', del_ip_id=new_ip_id, _authentication_token=self.authentication_token()))
 
         response = self.app.get(url('edit_user_ips', id=user_id))
         response.mustcontain('All IP addresses are allowed')
@@ -445,7 +451,7 @@ class TestAdminUsersController(TestController):
         user_id = user.user_id
 
         response = self.app.post(url('edit_user_api_keys', id=user_id),
-                 {'_method': 'put', 'description': desc, 'lifetime': lifetime})
+                 {'_method': 'put', 'description': desc, 'lifetime': lifetime, '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Api key successfully created')
         try:
             response = response.follow()
@@ -463,7 +469,7 @@ class TestAdminUsersController(TestController):
         user_id = user.user_id
 
         response = self.app.post(url('edit_user_api_keys', id=user_id),
-                {'_method': 'put', 'description': 'desc', 'lifetime': -1})
+                {'_method': 'put', 'description': 'desc', 'lifetime': -1, '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Api key successfully created')
         response = response.follow()
 
@@ -472,7 +478,7 @@ class TestAdminUsersController(TestController):
         self.assertEqual(1, len(keys))
 
         response = self.app.post(url('edit_user_api_keys', id=user_id),
-                 {'_method': 'delete', 'del_api_key': keys[0].api_key})
+                 {'_method': 'delete', 'del_api_key': keys[0].api_key, '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Api key successfully deleted')
         keys = UserApiKeys.query().filter(UserApiKeys.user_id == user_id).all()
         self.assertEqual(0, len(keys))
@@ -487,7 +493,7 @@ class TestAdminUsersController(TestController):
         response.mustcontain('expires: never')
 
         response = self.app.post(url('edit_user_api_keys', id=user_id),
-                 {'_method': 'delete', 'del_api_key_builtin': api_key})
+                 {'_method': 'delete', 'del_api_key_builtin': api_key, '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Api key successfully reset')
         response = response.follow()
         response.mustcontain(no=[api_key])

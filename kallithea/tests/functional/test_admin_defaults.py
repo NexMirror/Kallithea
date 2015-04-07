@@ -32,10 +32,12 @@ class TestDefaultsController(TestController):
             'default_repo_enable_statistics': True,
             'default_repo_private': True,
             'default_repo_type': 'hg',
+            '_authentication_token': self.authentication_token(),
         }
         response = self.app.put(url('default', id='default'), params=params)
         self.checkSessionFlash(response, 'Default settings updated successfully')
 
+        params.pop('_authentication_token')
         defs = Setting.get_default_repo_settings()
         self.assertEqual(params, defs)
 
@@ -47,20 +49,23 @@ class TestDefaultsController(TestController):
             'default_repo_enable_statistics': False,
             'default_repo_private': False,
             'default_repo_type': 'git',
+            '_authentication_token': self.authentication_token(),
         }
         response = self.app.put(url('default', id='default'), params=params)
         self.checkSessionFlash(response, 'Default settings updated successfully')
+
+        params.pop('_authentication_token')
         defs = Setting.get_default_repo_settings()
         self.assertEqual(params, defs)
 
     def test_update_browser_fakeout(self):
-        response = self.app.post(url('default', id=1), params=dict(_method='put'))
+        response = self.app.post(url('default', id=1), params=dict(_method='put', _authentication_token=self.authentication_token()))
 
     def test_delete(self):
         response = self.app.delete(url('default', id=1))
 
     def test_delete_browser_fakeout(self):
-        response = self.app.post(url('default', id=1), params=dict(_method='delete'))
+        response = self.app.post(url('default', id=1), params=dict(_method='delete', _authentication_token=self.authentication_token()))
 
     def test_show(self):
         response = self.app.get(url('default', id=1))

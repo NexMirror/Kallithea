@@ -19,7 +19,8 @@ class TestAdminUsersGroupsController(TestController):
         response = self.app.post(url('users_groups'),
                                  {'users_group_name': users_group_name,
                                   'user_group_description': 'DESC',
-                                  'active': True})
+                                  'active': True,
+                                  '_authentication_token': self.authentication_token()})
         response.follow()
 
         self.checkSessionFlash(response,
@@ -35,7 +36,7 @@ class TestAdminUsersGroupsController(TestController):
 
     def test_update_browser_fakeout(self):
         response = self.app.post(url('users_group', id=1),
-                                 params=dict(_method='put'))
+                                 params=dict(_method='put', _authentication_token=self.authentication_token()))
 
     def test_delete(self):
         self.log_user()
@@ -43,7 +44,8 @@ class TestAdminUsersGroupsController(TestController):
         response = self.app.post(url('users_groups'),
                                  {'users_group_name':users_group_name,
                                   'user_group_description': 'DESC',
-                                  'active': True})
+                                  'active': True,
+                                  '_authentication_token': self.authentication_token()})
         response.follow()
 
         self.checkSessionFlash(response,
@@ -65,7 +67,8 @@ class TestAdminUsersGroupsController(TestController):
         response = self.app.post(url('users_groups'),
                                  {'users_group_name': users_group_name,
                                   'user_group_description': 'DESC',
-                                  'active': True})
+                                  'active': True,
+                                  '_authentication_token': self.authentication_token()})
         response.follow()
 
         ug = UserGroup.get_by_group_name(users_group_name)
@@ -74,8 +77,8 @@ class TestAdminUsersGroupsController(TestController):
         ## ENABLE REPO CREATE ON A GROUP
         response = self.app.put(url('edit_user_group_default_perms',
                                     id=ug.users_group_id),
-                                 {'create_repo_perm': True})
-
+                                 {'create_repo_perm': True,
+                                  '_authentication_token': self.authentication_token()})
         response.follow()
         ug = UserGroup.get_by_group_name(users_group_name)
         p = Permission.get_by_key('hg.create.repository')
@@ -135,7 +138,8 @@ class TestAdminUsersGroupsController(TestController):
         response = self.app.post(url('users_groups'),
                                  {'users_group_name': users_group_name,
                                   'user_group_description': 'DESC',
-                                  'active': True})
+                                  'active': True,
+                                  '_authentication_token': self.authentication_token()})
         response.follow()
 
         ug = UserGroup.get_by_group_name(users_group_name)
@@ -144,7 +148,7 @@ class TestAdminUsersGroupsController(TestController):
         ## ENABLE REPO CREATE ON A GROUP
         response = self.app.put(url('edit_user_group_default_perms',
                                     id=ug.users_group_id),
-                                {'fork_repo_perm': True})
+                                {'fork_repo_perm': True, '_authentication_token': self.authentication_token()})
 
         response.follow()
         ug = UserGroup.get_by_group_name(users_group_name)
@@ -204,7 +208,7 @@ class TestAdminUsersGroupsController(TestController):
 
     def test_delete_browser_fakeout(self):
         response = self.app.post(url('users_group', id=1),
-                                 params=dict(_method='delete'))
+                                 params=dict(_method='delete', _authentication_token=self.authentication_token()))
 
     def test_show(self):
         response = self.app.get(url('users_group', id=1))

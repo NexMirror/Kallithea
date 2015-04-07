@@ -50,7 +50,7 @@ class TestMyAccountController(TestController):
         response = self.app.get(url('my_account_emails'))
         response.mustcontain('No additional emails specified')
         response = self.app.post(url('my_account_emails'),
-                                 {'new_email': TEST_USER_REGULAR_EMAIL})
+                                 {'new_email': TEST_USER_REGULAR_EMAIL, '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'This e-mail address is already taken')
 
     def test_my_account_my_emails_add_mising_email_in_form(self):
@@ -66,7 +66,7 @@ class TestMyAccountController(TestController):
         response.mustcontain('No additional emails specified')
 
         response = self.app.post(url('my_account_emails'),
-                                 {'new_email': 'foo@barz.com'})
+                                 {'new_email': 'foo@barz.com', '_authentication_token': self.authentication_token()})
 
         response = self.app.get(url('my_account_emails'))
 
@@ -79,7 +79,7 @@ class TestMyAccountController(TestController):
         response.mustcontain('<input id="del_email_id" name="del_email_id" type="hidden" value="%s" />' % email_id)
 
         response = self.app.post(url('my_account_emails'),
-                                 {'del_email_id': email_id, '_method': 'delete'})
+                                 {'del_email_id': email_id, '_method': 'delete', '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Removed email from user')
         response = self.app.get(url('my_account_emails'))
         response.mustcontain('No additional emails specified')
@@ -114,6 +114,7 @@ class TestMyAccountController(TestController):
         params.update({'new_password': ''})
         params.update({'extern_type': 'internal'})
         params.update({'extern_name': self.test_user_1})
+        params.update({'_authentication_token': self.authentication_token()})
 
         params.update(attrs)
         response = self.app.post(url('my_account'), params)
@@ -142,6 +143,7 @@ class TestMyAccountController(TestController):
             #my account cannot make you an admin !
             params['admin'] = False
 
+        params.pop('_authentication_token')
         self.assertEqual(params, updated_params)
 
     def test_my_account_update_err_email_exists(self):
@@ -155,7 +157,8 @@ class TestMyAccountController(TestController):
                                     password_confirmation='test122',
                                     firstname='NewName',
                                     lastname='NewLastname',
-                                    email=new_email,)
+                                    email=new_email,
+                                    _authentication_token=self.authentication_token())
                                 )
 
         response.mustcontain('This e-mail address is already taken')
@@ -171,7 +174,8 @@ class TestMyAccountController(TestController):
                                             password_confirmation='test122',
                                             firstname='NewName',
                                             lastname='NewLastname',
-                                            email=new_email,))
+                                            email=new_email,
+                                            _authentication_token=self.authentication_token()))
 
         response.mustcontain('An email address must contain a single @')
         from kallithea.model import validators
@@ -196,7 +200,7 @@ class TestMyAccountController(TestController):
         usr = self.log_user('test_regular2', 'test12')
         user = User.get(usr['user_id'])
         response = self.app.post(url('my_account_api_keys'),
-                                 {'description': desc, 'lifetime': lifetime})
+                                 {'description': desc, 'lifetime': lifetime, '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Api key successfully created')
         try:
             response = response.follow()
@@ -212,7 +216,7 @@ class TestMyAccountController(TestController):
         usr = self.log_user('test_regular2', 'test12')
         user = User.get(usr['user_id'])
         response = self.app.post(url('my_account_api_keys'),
-                                 {'description': 'desc', 'lifetime': -1})
+                                 {'description': 'desc', 'lifetime': -1, '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Api key successfully created')
         response = response.follow()
 
@@ -221,7 +225,7 @@ class TestMyAccountController(TestController):
         self.assertEqual(1, len(keys))
 
         response = self.app.post(url('my_account_api_keys'),
-                 {'_method': 'delete', 'del_api_key': keys[0].api_key})
+                 {'_method': 'delete', 'del_api_key': keys[0].api_key, '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Api key successfully deleted')
         keys = UserApiKeys.query().all()
         self.assertEqual(0, len(keys))
@@ -236,7 +240,7 @@ class TestMyAccountController(TestController):
         response.mustcontain('expires: never')
 
         response = self.app.post(url('my_account_api_keys'),
-                 {'_method': 'delete', 'del_api_key_builtin': api_key})
+                 {'_method': 'delete', 'del_api_key_builtin': api_key, '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Api key successfully reset')
         response = response.follow()
         response.mustcontain(no=[api_key])

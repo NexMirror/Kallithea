@@ -29,7 +29,7 @@ class TestChangeSetCommentsController(TestController):
         rev = '27cd5cce30c96924232dffcd24178a07ffeb5dfc'
         text = u'CommentOnRevision'
 
-        params = {'text': text}
+        params = {'text': text, '_authentication_token': self.authentication_token()}
         response = self.app.post(url(controller='changeset', action='comment',
                                      repo_name=HG_REPO, revision=rev),
                                      params=params)
@@ -66,7 +66,7 @@ class TestChangeSetCommentsController(TestController):
         f_path = 'vcs/web/simplevcs/views/repository.py'
         line = 'n1'
 
-        params = {'text': text, 'f_path': f_path, 'line': line}
+        params = {'text': text, 'f_path': f_path, 'line': line, '_authentication_token': self.authentication_token()}
         response = self.app.post(url(controller='changeset', action='comment',
                                      repo_name=HG_REPO, revision=rev),
                                      params=params)
@@ -106,7 +106,7 @@ class TestChangeSetCommentsController(TestController):
         rev = '27cd5cce30c96924232dffcd24178a07ffeb5dfc'
         text = u'@test_regular check CommentOnRevision'
 
-        params = {'text':text}
+        params = {'text': text, '_authentication_token': self.authentication_token()}
         response = self.app.post(url(controller='changeset', action='comment',
                                      repo_name=HG_REPO, revision=rev),
                                      params=params)
@@ -134,7 +134,7 @@ class TestChangeSetCommentsController(TestController):
         rev = '27cd5cce30c96924232dffcd24178a07ffeb5dfc'
         text = u'CommentOnRevision'
 
-        params = {'text': text}
+        params = {'text': text, '_authentication_token': self.authentication_token()}
         response = self.app.post(url(controller='changeset', action='comment',
                                      repo_name=HG_REPO, revision=rev),
                                      params=params)

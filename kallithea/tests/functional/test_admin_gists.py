@@ -56,7 +56,8 @@ class TestGistsController(TestController):
     def test_create_missing_description(self):
         self.log_user()
         response = self.app.post(url('gists'),
-                                 params={'lifetime': -1}, status=200)
+                                 params={'lifetime': -1, '_authentication_token': self.authentication_token()},
+                                 status=200)
 
         response.mustcontain('Missing value')
 
@@ -66,7 +67,8 @@ class TestGistsController(TestController):
                                  params={'lifetime': -1,
                                          'content': 'gist test',
                                          'filename': 'foo',
-                                         'public': 'public'},
+                                         'public': 'public',
+                                         '_authentication_token': self.authentication_token()},
                                  status=302)
         response = response.follow()
         response.mustcontain('added file: foo')
@@ -79,7 +81,8 @@ class TestGistsController(TestController):
                                  params={'lifetime': -1,
                                          'content': 'gist test',
                                          'filename': '/home/foo',
-                                         'public': 'public'},
+                                         'public': 'public',
+                                         '_authentication_token': self.authentication_token()},
                                  status=200)
         response.mustcontain('Filename cannot be inside a directory')
 
@@ -98,7 +101,8 @@ class TestGistsController(TestController):
                                  params={'lifetime': -1,
                                          'content': 'private gist test',
                                          'filename': 'private-foo',
-                                         'private': 'private'},
+                                         'private': 'private',
+                                         '_authentication_token': self.authentication_token()},
                                  status=302)
         response = response.follow()
         response.mustcontain('added file: private-foo<')
@@ -112,7 +116,8 @@ class TestGistsController(TestController):
                                          'content': 'gist test',
                                          'filename': 'foo-desc',
                                          'description': 'gist-desc',
-                                         'public': 'public'},
+                                         'public': 'public',
+                                         '_authentication_token': self.authentication_token()},
                                  status=302)
         response = response.follow()
         response.mustcontain('added file: foo-desc')

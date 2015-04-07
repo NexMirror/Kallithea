@@ -270,3 +270,11 @@ class LoginController(BaseController):
         session.delete()
         log.info('Logging out and deleting session for user')
         redirect(url('home'))
+
+    def authentication_token(self):
+        """Return the CSRF protection token for the session - just like it
+        could have been screen scrabed from a page with a form.
+        Only intended for testing but might also be useful for other kinds
+        of automation.
+        """
+        return h.authentication_token()
