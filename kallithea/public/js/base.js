@@ -391,6 +391,7 @@ var ajaxGET = function(url,success) {
 };
 
 var ajaxPOST = function(url, postData, success, failure) {
+    postData['_authentication_token'] = _authentication_token;
     var postData = _toQueryString(postData);
     if(failure === undefined) {
         failure = function(jqXHR, textStatus, errorThrown) {
@@ -460,6 +461,7 @@ var _onSuccessFollow = function(target){
 
 var toggleFollowingRepo = function(target, follows_repo_id){
     var args = 'follows_repo_id=' + follows_repo_id;
+    args += '&amp;_authentication_token=' + _authentication_token;
     $.post(TOGGLE_FOLLOW_URL, args, function(data){
             _onSuccessFollow(target);
         });
@@ -467,7 +469,7 @@ var toggleFollowingRepo = function(target, follows_repo_id){
 };
 
 var showRepoSize = function(target, repo_name){
-    var args = '';
+    var args = '_authentication_token=' + _authentication_token;
 
     if(!$("#" + target).hasClass('loaded')){
         $("#" + target).html(_TM['Loading ...']);

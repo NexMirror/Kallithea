@@ -43,7 +43,7 @@ from webhelpers.html.tools import auto_link, button_to, highlight, \
     js_obfuscate, mail_to, strip_links, strip_tags, tag_re
 from webhelpers.number import format_byte_size, format_bit_size
 from webhelpers.pylonslib import Flash as _Flash
-from webhelpers.pylonslib.secure_form import secure_form as form
+from webhelpers.pylonslib.secure_form import secure_form as form, authentication_token
 from webhelpers.text import chop_at, collapse, convert_accented_entities, \
     convert_misc_entities, lchop, plural, rchop, remove_formatting, \
     replace_whitespace, urlify, truncate, wrap_paragraphs
