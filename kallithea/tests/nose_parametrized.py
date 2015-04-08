@@ -141,20 +141,6 @@ def assert_not_contains(haystack, needle):
         raise AssertionError("%r in %r" % (needle, haystack))
 
 
-def imported_from_test():
-    """ Returns true if it looks like this module is being imported by unittest
-        or nose. """
-    import re
-    import inspect
-    nose_re = re.compile(r"\bnose\b")
-    unittest_re = re.compile(r"\bunittest2?\b")
-    for frame in inspect.stack():
-        file = frame[1]
-        if nose_re.search(file) or unittest_re.search(file):
-            return True
-    return False
-
-
 def assert_raises(func, exc_type, str_contains=None, repr_contains=None):
     try:
         func()
