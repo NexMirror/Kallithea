@@ -6,6 +6,8 @@ syntax: glob
 *.egg-info
 *.egg
 *.mo
+.eggs/
+tarballcache/
 
 syntax: regexp
 ^rcextensions
