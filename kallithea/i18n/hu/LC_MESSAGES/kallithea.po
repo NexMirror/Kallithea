@@ -8,14 +8,16 @@ msgstr ""
 "Project-Id-Version: Kallithea\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2015-04-01 03:17+0200\n"
-"PO-Revision-Date: 2014-07-02 19:08-0400\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2015-04-11 00:59+0200\n"
+"Last-Translator: Balázs Úr <urbalazs@gmail.com>\n"
+"Language-Team: Hungarian "
+"<https://hosted.weblate.org/projects/kallithea/kallithea/hu/>\n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: hu\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2.3-dev\n"
 
 #: kallithea/controllers/changelog.py:86
 #: kallithea/controllers/pullrequests.py:247 kallithea/lib/base.py:449
@@ -55,9 +57,8 @@ msgstr ""
 
 #: kallithea/controllers/changeset.py:352
 #: kallithea/controllers/pullrequests.py:699
-#, fuzzy
 msgid "No comments."
-msgstr ""
+msgstr "Nincsenek hozzászólások."
 
 #: kallithea/controllers/changeset.py:382
 msgid ""
@@ -2351,11 +2352,11 @@ msgstr ""
 
 #: kallithea/templates/admin/admin.html:13
 #: kallithea/templates/journal/journal.html:12
-#, fuzzy, python-format
+#, python-format
 msgid "%s Entry"
 msgid_plural "%s Entries"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s bejegyzés"
+msgstr[1] "%s bejegyzés"
 
 #: kallithea/templates/admin/admin_log.html:6
 #: kallithea/templates/admin/my_account/my_account_repos.html:50
@@ -3246,9 +3247,8 @@ msgid "Remove this group"
 msgstr ""
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_settings.html:53
-#, fuzzy
 msgid "Confirm to delete this group"
-msgstr ""
+msgstr "A csoport törlésének megerősítése"
 
 #: kallithea/templates/admin/repo_groups/repo_group_show.html:4
 #, python-format
@@ -3335,9 +3335,9 @@ msgid ""
 msgstr ""
 
 #: kallithea/templates/admin/repos/repo_edit.html:8
-#, fuzzy, python-format
+#, python-format
 msgid "%s Repository Settings"
-msgstr ""
+msgstr "%s tároló beállítások"
 
 #: kallithea/templates/admin/repos/repo_edit.html:49
 msgid "Extra Fields"
@@ -3429,16 +3429,15 @@ msgid "Confirm to delete this repository: %s"
 msgstr ""
 
 #: kallithea/templates/admin/repos/repo_edit_advanced.html:82
-#, fuzzy
 msgid "Delete this Repository"
-msgstr ""
+msgstr "Tároló törlése"
 
 #: kallithea/templates/admin/repos/repo_edit_advanced.html:85
-#, fuzzy, python-format
+#, python-format
 msgid "This repository has %s fork"
 msgid_plural "This repository has %s forks"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Ennek a tárolónak %s elágazása van"
+msgstr[1] "Ennek a tárolónak %s elágazása van"
 
 #: kallithea/templates/admin/repos/repo_edit_advanced.html:86
 msgid "Detach forks"
@@ -4437,9 +4436,8 @@ msgid "No permission defined"
 msgstr ""
 
 #: kallithea/templates/base/root.html:22
-#, fuzzy
 msgid "Add Another Comment"
-msgstr ""
+msgstr "Egy másik hozzászólás hozzáadása"
 
 #: kallithea/templates/base/root.html:23
 #: kallithea/templates/data_table/_dt_elements.html:216
@@ -4809,9 +4807,8 @@ msgid "Comment on changeset"
 msgstr ""
 
 #: kallithea/templates/changeset/changeset_file_comment.html:50
-#, fuzzy
 msgid "Delete comment?"
-msgstr ""
+msgstr "Hozzászólás törlése?"
 
 #: kallithea/templates/changeset/changeset_file_comment.html:67
 msgid "Commenting on line {1}."
@@ -4866,11 +4863,11 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: kallithea/templates/changeset/changeset_file_comment.html:115
-#, fuzzy, python-format
+#, python-format
 msgid "%d inline"
 msgid_plural "%d inline"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d sorközi"
+msgstr[1] "%d sorközi"
 
 #: kallithea/templates/changeset/changeset_file_comment.html:116
 #, python-format
@@ -4957,9 +4954,9 @@ msgid "is"
 msgstr ""
 
 #: kallithea/templates/compare/compare_cs.html:84
-#, fuzzy, python-format
+#, python-format
 msgid "%s changesets"
-msgstr ""
+msgstr "%s módosításcsomag"
 
 #: kallithea/templates/compare/compare_cs.html:85
 msgid "behind"
@@ -5575,14 +5572,12 @@ msgid "reviewer"
 msgstr ""
 
 #: kallithea/templates/pullrequests/pullrequest_show.html:227
-#, fuzzy
 msgid "Remove reviewer"
-msgstr ""
+msgstr "Átnéző eltávolítása"
 
 #: kallithea/templates/pullrequests/pullrequest_show.html:247
-#, fuzzy
 msgid "Potential Reviewers"
-msgstr ""
+msgstr "Lehetséges átnézők"
 
 #: kallithea/templates/pullrequests/pullrequest_show.html:250
 msgid "Click to add the repository owner as reviewer:"
@@ -5841,4 +5836,3 @@ msgstr ""
 #: kallithea/templates/tags/tags.html:26
 msgid "Compare Tags"
 msgstr ""
-
