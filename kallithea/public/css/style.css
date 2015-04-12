@@ -3733,6 +3733,7 @@ div#legend_data, div#legend_container, div#legend_choices {
 
 #content div.graph {
     padding: 0 10px 10px;
+    height: 450px;
 }
 
 #content div.box ol.lower-roman,
