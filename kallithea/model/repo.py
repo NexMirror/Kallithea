@@ -138,8 +138,8 @@ class RepoModel(BaseModel):
         return json.dumps([
             {
                 'id': u.user_id,
-                'fname': u.name,
-                'lname': u.lastname,
+                'fname': h.escape(u.name),
+                'lname': h.escape(u.lastname),
                 'nname': u.username,
                 'gravatar_lnk': h.gravatar_url(u.email, size=28),
                 'gravatar_size': 14,
@@ -210,9 +210,9 @@ class RepoModel(BaseModel):
 
         def desc(desc):
             if c.visual.stylify_metatags:
-                return h.urlify_text(h.desc_stylize(h.truncate(desc, 60)))
+                return h.urlify_text(h.desc_stylize(h.escape(h.truncate(desc, 60))))
             else:
-                return h.urlify_text(h.truncate(desc, 60))
+                return h.urlify_text(h.escape(h.truncate(desc, 60)))
 
         def state(repo_state):
             return _render("repo_state", repo_state)
