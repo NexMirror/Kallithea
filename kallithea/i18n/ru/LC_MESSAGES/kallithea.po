@@ -12,18 +12,20 @@
 # SkryabinD <skryabind@gmail.com>, 2014
 # softforwinxp <softforwinxp@gmail.com>, 2013
 # zhmylove <zhmylove@narod.ru>, 2013
+# Andrew Shadura <andrew@shadura.me>, 2015
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Kallithea\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2015-04-01 03:17+0200\n"
-"PO-Revision-Date: 2015-04-01 13:08+0200\n"
+"PO-Revision-Date: 2015-04-13 16:12+0200\n"
 "Last-Translator: Andrew Shadura <andrew@shadura.me>\n"
 "Language-Team: Russian "
 "<https://hosted.weblate.org/projects/kallithea/kallithea/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
 "4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
@@ -84,7 +86,7 @@ msgstr "Выбрать набор изменений"
 
 #: kallithea/controllers/compare.py:255
 msgid "Cannot compare repositories without using common ancestor"
-msgstr ""
+msgstr "Невозможно сравнивать репозитории без общего предка"
 
 #: kallithea/controllers/error.py:96
 msgid "The request could not be understood by the server due to malformed syntax."
@@ -221,7 +223,7 @@ msgstr "Неизвестная ревизия %s"
 
 #: kallithea/controllers/files.py:541
 msgid "Empty repository"
-msgstr "Пустой репозитарий"
+msgstr "Пустой репозиторий"
 
 #: kallithea/controllers/files.py:543
 msgid "Unknown archive type"
@@ -357,12 +359,12 @@ msgstr "Произошла ошибка при создании pull-запро�
 
 #: kallithea/controllers/pullrequests.py:398
 msgid "Missing changesets since the previous pull request:"
-msgstr ""
+msgstr "Отсутствующие ревизии относительно предыдущего pull-запроса:"
 
 #: kallithea/controllers/pullrequests.py:405
 #, python-format
 msgid "New changesets on %s %s since the previous pull request:"
-msgstr ""
+msgstr "Новые ревизии на %s %s относительно предыдущего pull-запроса"
 
 #: kallithea/controllers/pullrequests.py:412
 msgid "Ancestor didn't change - show diff since previous version:"
@@ -373,17 +375,17 @@ msgstr ""
 msgid ""
 "This pull request is based on another %s revision and there is no simple "
 "diff."
-msgstr ""
+msgstr "Этот pull-запрос основан на другой ревизии %s, простой diff невозможен"
 
 #: kallithea/controllers/pullrequests.py:421
 #, python-format
 msgid "No changes found on %s %s since previous version."
-msgstr ""
+msgstr "Нет изменений на %s %s относительно предыдущей версии."
 
 #: kallithea/controllers/pullrequests.py:456
 #, python-format
 msgid "Closed, replaced by %s ."
-msgstr ""
+msgstr "Закрыт, замещён %s ."
 
 #: kallithea/controllers/pullrequests.py:464
 msgid "Pull request update created"
@@ -400,11 +402,11 @@ msgstr "Pull-запрос успешно удалён"
 #: kallithea/controllers/pullrequests.py:577
 #, python-format
 msgid "This pull request has already been merged to %s."
-msgstr ""
+msgstr "Этот pull-запрос уже принят на ветку %s."
 
 #: kallithea/controllers/pullrequests.py:579
 msgid "This pull request has been closed and can not be updated."
-msgstr ""
+msgstr "Этот pull-запрос был закрыт и не может быть обновлён."
 
 #: kallithea/controllers/pullrequests.py:597
 #, python-format
