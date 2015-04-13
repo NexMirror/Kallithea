@@ -36,7 +36,7 @@ from webob.exc import HTTPFound, HTTPForbidden, HTTPBadRequest, HTTPNotFound
 
 from kallithea.lib.utils import jsonify
 from kallithea.lib.vcs.exceptions import RepositoryError, \
-    ChangesetDoesNotExistError
+    ChangesetDoesNotExistError, EmptyRepositoryError
 
 from kallithea.lib.compat import json
 import kallithea.lib.helpers as h
@@ -228,7 +228,7 @@ class ChangesetController(BaseRepoController):
             if not c.cs_ranges:
                 raise RepositoryError('Changeset range returned empty result')
 
-        except ChangesetDoesNotExistError:
+        except (ChangesetDoesNotExistError, EmptyRepositoryError):
             log.debug(traceback.format_exc())
             msg = _('Such revision does not exist for this repository')
             h.flash(msg, category='error')
