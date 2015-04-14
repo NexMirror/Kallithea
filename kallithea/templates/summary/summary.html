@@ -85,9 +85,9 @@ summary = lambda n:{False:'summary-short'}.get(n)
                   <label>${_('Description')}:</label>
               </div>
                  %if c.visual.stylify_metatags:
-                   <div class="input ${summary(c.show_stats)} desc">${h.urlify_text(h.desc_stylize(c.db_repo.description))}</div>
+                   <div class="input ${summary(c.show_stats)} desc">${h.urlify_text(h.desc_stylize(h.escape(c.db_repo.description)))}</div>
                  %else:
-                   <div class="input ${summary(c.show_stats)} desc">${h.urlify_text(c.db_repo.description)}</div>
+                   <div class="input ${summary(c.show_stats)} desc">${h.urlify_text(h.escape(c.db_repo.description))}</div>
                  %endif
             </div>
 
