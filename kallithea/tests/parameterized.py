@@ -5,8 +5,25 @@ import logging
 import logging.handlers
 from functools import wraps
 
-from nose.tools import nottest
 from unittest import TestCase
+
+
+def skip_test(func):
+    try:
+        from nose.tools import nottest
+    except ImportError:
+        pass
+    else:
+        func = nottest(func)
+
+    try:
+        import pytest
+    except ImportError:
+        pass
+    else:
+        func = pytest.mark.skipIf(True, func)
+
+    return func
 
 
 def _terrible_magic_get_defining_classes():
@@ -125,7 +142,7 @@ def parameterized_expand(input):
             name = base_name + name_suffix
             new_func = parameterized_expand_helper(name, f, args)
             frame_locals[name] = new_func
-        return nottest(f)
+        return skip_test(f)
     return parameterized_expand_wrapper
 
 parameterized.expand = parameterized_expand

@@ -55,7 +55,7 @@ from nose.plugins.skip import SkipTest
 from kallithea.lib.compat import unittest
 from kallithea import is_windows
 from kallithea.model.db import User
-from kallithea.tests.nose_parametrized import parameterized
+from kallithea.tests.parameterized import parameterized
 from kallithea.lib.utils2 import safe_str
 
 
