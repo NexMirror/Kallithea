@@ -4,7 +4,6 @@ from kallithea.model.repo_group import RepoGroupModel
 from kallithea.model.db import RepoGroup, User
 
 from kallithea.model.meta import Session
-from nose.tools import with_setup
 from kallithea.tests.models.common import _create_project_tree, check_tree_perms, \
     _get_perms, _check_expected_count, expected_count, _destroy_project_tree
 
@@ -21,13 +20,18 @@ def permissions_setup_func(group_name='g0', perm='group.read', recursive='all',
     """
     if not user_id:
         user_id = test_u1_id
-        # called by the @with_setup decorator also reset the default user stuff
         permissions_setup_func(group_name, perm, recursive,
                                user_id=User.get_default_user().user_id)
 
     repo_group = RepoGroup.get_by_group_name(group_name=group_name)
     if not repo_group:
         raise Exception('Cannot get group %s' % group_name)
+
+    # Start with a baseline that current group can read recursive
+    perms_updates = [[user_id, 'group.read', 'user']]
+    RepoGroupModel()._update_permissions(repo_group,
+                                         perms_updates=perms_updates,
+                                         recursive='all', check_perms=False)
 
     perms_updates = [[user_id, perm, 'user']]
     RepoGroupModel()._update_permissions(repo_group,
@@ -51,7 +55,6 @@ def teardown_module():
     _destroy_project_tree(test_u1_id)
 
 
-@with_setup(permissions_setup_func)
 def test_user_permissions_on_group_without_recursive_mode():
     # set permission to g0 non-recursive mode
     recursive = 'none'
@@ -71,7 +74,6 @@ def test_user_permissions_on_group_without_recursive_mode():
         yield check_tree_perms, name, perm, group, 'group.write'
 
 
-@with_setup(permissions_setup_func)
 def test_user_permissions_on_group_without_recursive_mode_subgroup():
     # set permission to g0 non-recursive mode
     recursive = 'none'
@@ -91,7 +93,6 @@ def test_user_permissions_on_group_without_recursive_mode_subgroup():
         yield check_tree_perms, name, perm, group, 'group.write'
 
 
-@with_setup(permissions_setup_func)
 def test_user_permissions_on_group_with_recursive_mode():
 
     # set permission to g0 recursive mode, all children including
@@ -111,7 +112,6 @@ def test_user_permissions_on_group_with_recursive_mode():
         yield check_tree_perms, name, perm, group, 'group.write'
 
 
-@with_setup(permissions_setup_func)
 def test_user_permissions_on_group_with_recursive_mode_for_default_user():
 
     # set permission to g0 recursive mode, all children including
@@ -139,7 +139,6 @@ def test_user_permissions_on_group_with_recursive_mode_for_default_user():
         yield check_tree_perms, name, perm, group, 'group.write'
 
 
-@with_setup(permissions_setup_func)
 def test_user_permissions_on_group_with_recursive_mode_inner_group():
     ## set permission to g0_3 group to none
     recursive = 'all'
@@ -157,7 +156,6 @@ def test_user_permissions_on_group_with_recursive_mode_inner_group():
         yield check_tree_perms, name, perm, group, 'group.none'
 
 
-@with_setup(permissions_setup_func)
 def test_user_permissions_on_group_with_recursive_mode_deepest():
     ## set permission to g0_3 group to none
     recursive = 'all'
@@ -175,7 +173,6 @@ def test_user_permissions_on_group_with_recursive_mode_deepest():
         yield check_tree_perms, name, perm, group, 'group.write'
 
 
-@with_setup(permissions_setup_func)
 def test_user_permissions_on_group_with_recursive_mode_only_with_repos():
     ## set permission to g0_3 group to none
     recursive = 'all'
@@ -193,7 +190,6 @@ def test_user_permissions_on_group_with_recursive_mode_only_with_repos():
         yield check_tree_perms, name, perm, group, 'group.admin'
 
 
-@with_setup(permissions_setup_func)
 def test_user_permissions_on_group_with_recursive_repo_mode_for_default_user():
     # set permission to g0/g0_1 recursive repos only mode, all children including
     # other repos should have this permission now set, inner groups are excluded!
@@ -228,7 +224,6 @@ def test_user_permissions_on_group_with_recursive_repo_mode_for_default_user():
         yield check_tree_perms, name, perm, group, old_perm
 
 
-@with_setup(permissions_setup_func)
 def test_user_permissions_on_group_with_recursive_repo_mode_inner_group():
     ## set permission to g0_3 group to none, with recursive repos only
     recursive = 'repos'
@@ -253,7 +248,6 @@ def test_user_permissions_on_group_with_recursive_repo_mode_inner_group():
         yield check_tree_perms, name, perm, group, old_perm
 
 
-@with_setup(permissions_setup_func)
 def test_user_permissions_on_group_with_recursive_group_mode_for_default_user():
     # set permission to g0/g0_1 with recursive groups only mode, all children including
     # other groups should have this permission now set. repositories should
@@ -281,7 +275,6 @@ def test_user_permissions_on_group_with_recursive_group_mode_for_default_user():
         yield check_tree_perms, name, perm, group, 'group.write'
 
 
-@with_setup(permissions_setup_func)
 def test_user_permissions_on_group_with_recursive_group_mode_inner_group():
     ## set permission to g0_3 group to none, with recursive mode for groups only
     recursive = 'groups'
