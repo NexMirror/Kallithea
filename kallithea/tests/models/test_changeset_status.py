@@ -24,13 +24,13 @@ class TestChangesetStatusCalculation(BaseTestCase):
         ('empty list', STATUS_UNDER_REVIEW, []),
         ('approve', STATUS_APPROVED, [S(STATUS_APPROVED)]),
         ('approve2', STATUS_APPROVED, [S(STATUS_APPROVED), S(STATUS_APPROVED)]),
-        ('approve_reject', STATUS_UNDER_REVIEW, [S(STATUS_APPROVED), S(STATUS_REJECTED)]),
+        ('approve_reject', STATUS_REJECTED, [S(STATUS_APPROVED), S(STATUS_REJECTED)]),
         ('approve_underreview', STATUS_UNDER_REVIEW, [S(STATUS_APPROVED), S(STATUS_UNDER_REVIEW)]),
         ('approve_notreviewed', STATUS_UNDER_REVIEW, [S(STATUS_APPROVED), S(STATUS_NOT_REVIEWED)]),
         ('underreview', STATUS_UNDER_REVIEW, [S(STATUS_UNDER_REVIEW), S(STATUS_UNDER_REVIEW)]),
-        ('reject', STATUS_UNDER_REVIEW, [S(STATUS_REJECTED)]),
-        ('reject_underreview', STATUS_UNDER_REVIEW, [S(STATUS_REJECTED), S(STATUS_UNDER_REVIEW)]),
-        ('reject_notreviewed', STATUS_UNDER_REVIEW, [S(STATUS_REJECTED), S(STATUS_NOT_REVIEWED)]),
+        ('reject', STATUS_REJECTED, [S(STATUS_REJECTED)]),
+        ('reject_underreview', STATUS_REJECTED, [S(STATUS_REJECTED), S(STATUS_UNDER_REVIEW)]),
+        ('reject_notreviewed', STATUS_REJECTED, [S(STATUS_REJECTED), S(STATUS_NOT_REVIEWED)]),
         ('notreviewed', STATUS_UNDER_REVIEW, [S(STATUS_NOT_REVIEWED)]),
     ])
     def test_result(self, name, expected_result, statuses):

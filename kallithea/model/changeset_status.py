@@ -69,7 +69,7 @@ class ChangesetStatusModel(BaseModel):
     def _calculate_status(self, statuses):
         """
         Given a list of statuses, calculate the resulting status, according to
-        the policy: approve if consensus.
+        the policy: approve if consensus, reject when at least one reject.
         """
 
         if not statuses:
@@ -77,6 +77,9 @@ class ChangesetStatusModel(BaseModel):
 
         if all(st.status == ChangesetStatus.STATUS_APPROVED for st in statuses):
             return ChangesetStatus.STATUS_APPROVED
+
+        if any(st.status == ChangesetStatus.STATUS_REJECTED for st in statuses):
+            return ChangesetStatus.STATUS_REJECTED
 
         return ChangesetStatus.STATUS_UNDER_REVIEW
 
