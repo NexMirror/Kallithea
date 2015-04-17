@@ -72,16 +72,13 @@ class ChangesetStatusModel(BaseModel):
         the policy: approve if consensus.
         """
 
-        approved_votes = 0
-        for st in statuses:
-            if st and st.status == ChangesetStatus.STATUS_APPROVED:
-                approved_votes += 1
+        if not statuses:
+            return ChangesetStatus.STATUS_UNDER_REVIEW
 
-        result = ChangesetStatus.STATUS_UNDER_REVIEW
-        if approved_votes and approved_votes == len(statuses):
-            result = ChangesetStatus.STATUS_APPROVED
+        if all(st.status == ChangesetStatus.STATUS_APPROVED for st in statuses):
+            return ChangesetStatus.STATUS_APPROVED
 
-        return result
+        return ChangesetStatus.STATUS_UNDER_REVIEW
 
     def calculate_pull_request_result(self, pull_request):
         """
