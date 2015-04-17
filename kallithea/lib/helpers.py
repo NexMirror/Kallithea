@@ -423,7 +423,7 @@ flash = Flash()
 #==============================================================================
 from kallithea.lib.vcs.utils import author_name, author_email
 from kallithea.lib.utils2 import credentials_filter, age as _age
-from kallithea.model.db import User, ChangesetStatus
+from kallithea.model.db import User, ChangesetStatus, PullRequest
 
 age = lambda  x, y=False: _age(x, y)
 capitalize = lambda x: x.capitalize()
@@ -736,12 +736,15 @@ def action_parser(user_log, feed=False, parse_cs=False):
 
     def get_pull_request():
         pull_request_id = action_params
+        nice_id = PullRequest.make_nice_id(pull_request_id)
+
         deleted = user_log.repository is None
         if deleted:
             repo_name = user_log.repository_name
         else:
             repo_name = user_log.repository.repo_name
-        return link_to(_('Pull request #%s') % pull_request_id,
+
+        return link_to(_('Pull request %s') % nice_id,
                     url('pullrequest_show', repo_name=repo_name,
                     pull_request_id=pull_request_id))
 

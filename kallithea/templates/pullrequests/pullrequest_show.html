@@ -3,11 +3,11 @@
 <%namespace name="comment" file="/changeset/changeset_file_comment.html"/>
 
 <%block name="title">
-    ${_('%s Pull Request #%s') % (c.repo_name, c.pull_request.pull_request_id)}
+    ${_('%s Pull Request %s') % (c.repo_name, c.pull_request.nice_id())}
 </%block>
 
 <%def name="breadcrumbs_links()">
-    ${_('Pull request #%s from %s#%s') % (c.pull_request.pull_request_id, c.pull_request.org_repo.repo_name, c.cs_branch_name)}
+    ${_('Pull request %s from %s#%s') % (c.pull_request.nice_id(), c.pull_request.org_repo.repo_name, c.cs_branch_name)}
 </%def>
 
 <%block name="header_menu">

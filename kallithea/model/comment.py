@@ -126,9 +126,9 @@ class ChangesetCommentsModel(BaseModel):
             comment_url = pull_request.url(canonical=True,
                 anchor='comment-%s' % comment.comment_id)
             subj = safe_unicode(
-                h.link_to('Re pull request #%(pr_id)s: %(desc)s %(line)s' % \
+                h.link_to('Re pull request %(pr_nice_id)s: %(desc)s %(line)s' % \
                           {'desc': desc,
-                           'pr_id': comment.pull_request.pull_request_id,
+                           'pr_nice_id': comment.pull_request.nice_id(),
                            'line': line},
                           comment_url)
             )
@@ -144,7 +144,7 @@ class ChangesetCommentsModel(BaseModel):
             #set some variables for email notification
             email_kwargs = {
                 'pr_title': pull_request.title,
-                'pr_id': pull_request.pull_request_id,
+                'pr_nice_id': pull_request.nice_id(),
                 'status_change': status_change,
                 'closing_pr': closing_pr,
                 'pr_comment_url': comment_url,

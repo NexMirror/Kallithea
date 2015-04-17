@@ -1384,12 +1384,13 @@ class Repository(Base, BaseModel):
 
         grouped = {}
         for stat in statuses.all():
-            pr_id = pr_repo = None
+            pr_id = pr_nice_id = pr_repo = None
             if stat.pull_request:
                 pr_id = stat.pull_request.pull_request_id
+                pr_nice_id = PullRequest.make_nice_id(pr_id)
                 pr_repo = stat.pull_request.other_repo.repo_name
             grouped[stat.revision] = [str(stat.status), stat.status_lbl,
-                                      pr_id, pr_repo]
+                                      pr_id, pr_repo, pr_nice_id]
         return grouped
 
     def _repo_size(self):
@@ -2304,6 +2305,15 @@ class PullRequest(Base, BaseModel):
             .order_by(ChangesetStatus.version)\
             .first()
         return str(status.status) if status else ''
+
+    @classmethod
+    def make_nice_id(cls, pull_request_id):
+        '''Return pull request id nicely formatted for displaying'''
+        return '#%s' % pull_request_id
+
+    def nice_id(self):
+        '''Return the id of this pull request, nicely formatted for displaying'''
+        return self.make_nice_id(self.pull_request_id)
 
     def __json__(self):
         return dict(

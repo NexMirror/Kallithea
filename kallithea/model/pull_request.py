@@ -129,10 +129,10 @@ class PullRequestModel(BaseModel):
                                      pull_request_id=pr.pull_request_id)]
         subject = safe_unicode(
             h.link_to(
-              _('%(user)s wants you to review pull request #%(pr_id)s: %(pr_title)s') % \
+              _('%(user)s wants you to review pull request %(pr_nice_id)s: %(pr_title)s') % \
                 {'user': pr.author.username,
                  'pr_title': pr.title,
-                 'pr_id': pr.pull_request_id},
+                 'pr_nice_id': pr.nice_id()},
                 pr_url)
             )
         body = pr.description
@@ -144,7 +144,7 @@ class PullRequestModel(BaseModel):
             'pr_url': pr_url,
             'pr_revisions': revision_data,
             'repo_name': pr.other_repo.repo_name,
-            'pr_id': pr.pull_request_id,
+            'pr_nice_id': pr.nice_id(),
             'ref': org_ref_name,
             'pr_username': pr.author.username,
             'threading': threading,
