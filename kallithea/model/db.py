@@ -2335,9 +2335,9 @@ class PullRequestReviewers(Base, BaseModel):
         self.user = user
         self.pull_request = pull_request
 
-    pull_requests_reviewers_id = Column('pull_requests_reviewers_id', Integer(), nullable=False, primary_key=True)
-    pull_request_id = Column("pull_request_id", Integer(), ForeignKey('pull_requests.pull_request_id'), nullable=False)
-    user_id = Column("user_id", Integer(), ForeignKey('users.user_id'), nullable=True)
+    pull_requests_reviewers_id = Column(Integer(), nullable=False, primary_key=True)
+    pull_request_id = Column(Integer(), ForeignKey('pull_requests.pull_request_id'), nullable=False)
+    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=True)
 
     user = relationship('User')
     pull_request = relationship('PullRequest')
