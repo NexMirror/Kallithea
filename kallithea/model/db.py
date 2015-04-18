@@ -2250,18 +2250,18 @@ class PullRequest(Base, BaseModel):
     STATUS_NEW = u'new'
     STATUS_CLOSED = u'closed'
 
-    pull_request_id = Column('pull_request_id', Integer(), nullable=False, primary_key=True)
-    title = Column('title', Unicode(255), nullable=True)
-    description = Column('description', UnicodeText(10240), nullable=True)
-    status = Column('status', Unicode(255), nullable=False, default=STATUS_NEW) # only for closedness, not approve/reject/etc
-    created_on = Column('created_on', DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
-    updated_on = Column('updated_on', DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
-    user_id = Column("user_id", Integer(), ForeignKey('users.user_id'), nullable=False, unique=None)
+    pull_request_id = Column(Integer(), primary_key=True)
+    title = Column(Unicode(255), nullable=True)
+    description = Column(UnicodeText(10240))
+    status = Column(Unicode(255), nullable=False, default=STATUS_NEW) # only for closedness, not approve/reject/etc
+    created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
+    updated_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
+    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False, unique=None)
     _revisions = Column('revisions', UnicodeText(20500))  # 500 revisions max
-    org_repo_id = Column('org_repo_id', Integer(), ForeignKey('repositories.repo_id'), nullable=False)
-    org_ref = Column('org_ref', Unicode(255), nullable=False)
-    other_repo_id = Column('other_repo_id', Integer(), ForeignKey('repositories.repo_id'), nullable=False)
-    other_ref = Column('other_ref', Unicode(255), nullable=False)
+    org_repo_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=False)
+    org_ref = Column(Unicode(255), nullable=False)
+    other_repo_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=False)
+    other_ref = Column(Unicode(255), nullable=False)
 
     @hybrid_property
     def revisions(self):
