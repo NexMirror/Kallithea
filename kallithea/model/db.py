@@ -414,7 +414,7 @@ class User(Base, BaseModel):
     extern_name = Column("extern_name", String(255, convert_unicode=False), nullable=True, unique=None, default=None)
     api_key = Column("api_key", String(255, convert_unicode=False), nullable=True, unique=None, default=None)
     inherit_default_permissions = Column("inherit_default_permissions", Boolean(), nullable=False, unique=None, default=True)
-    created_on = Column('created_on', DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
+    created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
     _user_data = Column("user_data", LargeBinary(), nullable=True)  # JSON data
 
     user_log = relationship('UserLog')
@@ -678,9 +678,9 @@ class UserApiKeys(Base, BaseModel):
     user_api_key_id = Column("user_api_key_id", Integer(), nullable=False, unique=True, default=None, primary_key=True)
     user_id = Column("user_id", Integer(), ForeignKey('users.user_id'), nullable=True, unique=None, default=None)
     api_key = Column("api_key", String(255, convert_unicode=False), nullable=False, unique=True)
-    description = Column('description', UnicodeText(1024))
-    expires = Column('expires', Float(53), nullable=False)
-    created_on = Column('created_on', DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
+    description = Column(UnicodeText(1024))
+    expires = Column(Float(53), nullable=False)
+    created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
 
     user = relationship('User')
 
@@ -795,7 +795,7 @@ class UserGroup(Base, BaseModel):
     users_group_active = Column("users_group_active", Boolean(), nullable=True, unique=None, default=None)
     inherit_default_permissions = Column("users_group_inherit_default_permissions", Boolean(), nullable=False, unique=None, default=True)
     user_id = Column("user_id", Integer(), ForeignKey('users.user_id'), nullable=False, unique=False, default=None)
-    created_on = Column('created_on', DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
+    created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
     _group_data = Column("group_data", LargeBinary(), nullable=True)  # JSON data
 
     members = relationship('UserGroupMember', cascade="all, delete-orphan")
@@ -907,7 +907,7 @@ class RepositoryField(Base, BaseModel):
     field_value = Column("field_value", String(10000, convert_unicode=False), nullable=False)
     field_desc = Column("field_desc", String(1024, convert_unicode=False), nullable=False)
     field_type = Column("field_type", String(255), nullable=False, unique=None)
-    created_on = Column('created_on', DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
+    created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
 
     repository = relationship('Repository')
 
@@ -955,8 +955,8 @@ class Repository(Base, BaseModel):
     enable_statistics = Column("statistics", Boolean(), nullable=True, unique=None, default=True)
     enable_downloads = Column("downloads", Boolean(), nullable=True, unique=None, default=True)
     description = Column("description", String(10000, convert_unicode=False), nullable=True, unique=None, default=None)
-    created_on = Column('created_on', DateTime(timezone=False), nullable=True, unique=None, default=datetime.datetime.now)
-    updated_on = Column('updated_on', DateTime(timezone=False), nullable=True, unique=None, default=datetime.datetime.now)
+    created_on = Column(DateTime(timezone=False), nullable=True, unique=None, default=datetime.datetime.now)
+    updated_on = Column(DateTime(timezone=False), nullable=True, unique=None, default=datetime.datetime.now)
     _landing_revision = Column("landing_revision", String(255, convert_unicode=False), nullable=False, unique=False, default=None)
     enable_locking = Column("enable_locking", Boolean(), nullable=False, unique=None, default=False)
     _locked = Column("locked", String(255, convert_unicode=False), nullable=True, unique=False, default=None)
@@ -1469,7 +1469,7 @@ class RepoGroup(Base, BaseModel):
     group_description = Column("group_description", String(10000, convert_unicode=False), nullable=True, unique=None, default=None)
     enable_locking = Column("enable_locking", Boolean(), nullable=False, unique=None, default=False)
     user_id = Column("user_id", Integer(), ForeignKey('users.user_id'), nullable=False, unique=False, default=None)
-    created_on = Column('created_on', DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
+    created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
 
     repo_group_to_perm = relationship('UserRepoGroupToPerm', cascade='all', order_by='UserRepoGroupToPerm.group_to_perm_id')
     users_group_to_perm = relationship('UserGroupRepoGroupToPerm', cascade='all')
@@ -2003,7 +2003,7 @@ class UserFollowing(Base, BaseModel):
     user_id = Column("user_id", Integer(), ForeignKey('users.user_id'), nullable=False, unique=None, default=None)
     follows_repo_id = Column("follows_repository_id", Integer(), ForeignKey('repositories.repo_id'), nullable=True, unique=None, default=None)
     follows_user_id = Column("follows_user_id", Integer(), ForeignKey('users.user_id'), nullable=True, unique=None, default=None)
-    follows_from = Column('follows_from', DateTime(timezone=False), nullable=True, unique=None, default=datetime.datetime.now)
+    follows_from = Column(DateTime(timezone=False), nullable=True, unique=None, default=datetime.datetime.now)
 
     user = relationship('User', primaryjoin='User.user_id==UserFollowing.user_id')
 
