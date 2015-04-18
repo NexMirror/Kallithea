@@ -2436,7 +2436,7 @@ class Gist(Base, BaseModel):
     gist_id = Column(Integer(), primary_key=True)
     gist_access_id = Column(Unicode(250))
     gist_description = Column(UnicodeText(1024))
-    gist_owner = Column(Integer(), ForeignKey('users.user_id'), nullable=True)
+    gist_owner = Column('user_id', Integer(), ForeignKey('users.user_id'), nullable=True)
     gist_expires = Column(Float(53), nullable=False)
     gist_type = Column(Unicode(128), nullable=False)
     created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
