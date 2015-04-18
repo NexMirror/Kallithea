@@ -2144,24 +2144,25 @@ class ChangesetComment(Base, BaseModel):
         {'extend_existing': True, 'mysql_engine': 'InnoDB',
          'mysql_charset': 'utf8', 'sqlite_autoincrement': True},
     )
-    comment_id = Column('comment_id', Integer(), nullable=False, primary_key=True)
-    repo_id = Column('repo_id', Integer(), ForeignKey('repositories.repo_id'), nullable=False)
-    revision = Column('revision', String(40), nullable=True)
-    pull_request_id = Column("pull_request_id", Integer(), ForeignKey('pull_requests.pull_request_id'), nullable=True)
-    line_no = Column('line_no', Unicode(10), nullable=True)
-    hl_lines = Column('hl_lines', Unicode(512), nullable=True)
-    f_path = Column('f_path', Unicode(1000), nullable=True)
-    user_id = Column('user_id', Integer(), ForeignKey('users.user_id'), nullable=False)
-    text = Column('text', UnicodeText(25000), nullable=False)
-    created_on = Column('created_on', DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
-    modified_at = Column('modified_at', DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
+    comment_id = Column(Integer(), nullable=False, primary_key=True)
+    repo_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=False)
+    revision = Column(String(40))
+    pull_request_id = Column(Integer(), ForeignKey('pull_requests.pull_request_id'))
+    line_no = Column(Unicode(10))
+    hl_lines = Column(Unicode(512))
+    f_path = Column(Unicode(1000))
+    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
+    text = Column(UnicodeText(25000), nullable=False)
+    created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
+    modified_at = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
 
     author = relationship('User')
     repo = relationship('Repository')
     # status_change is frequently used directly in templates - make it a lazy
     # join to avoid fetching each related ChangesetStatus on demand.
     # There will only be one ChangesetStatus referencing each comment so the join will not explode.
-    status_change = relationship('ChangesetStatus', cascade="all, delete-orphan", lazy='joined')
+    status_change = relationship('ChangesetStatus',
+                                 cascade="all, delete-orphan", lazy='joined')
     pull_request = relationship('PullRequest')
 
     @classmethod
