@@ -19,19 +19,19 @@ i[class^='icon-'] {
 
 .icon-diff-M:before {
     font-family: 'kallithea';
-    content: '\e805';
+    content: '\22a1';
     color: #d0b44c;
 }
 
 .icon-diff-D:before {
     font-family: 'kallithea';
-    content: '\e807';
+    content: '\229f';
     color: #bd2c00;
 }
 
 .icon-diff-A:before {
     font-family: 'kallithea';
-    content: '\e806';
+    content: '\229e';
     color: #6cc644;
 }
 
@@ -279,7 +279,7 @@ ul#context-actions {
 #revision-changer:before,
 #context-pages a.childs:after,
 #context-pages a.dropdown:after {
-    content: ' \25BE';
+    content: ' \23f7';
 }
 #context-pages a.childs {
     padding-right: 30px;
