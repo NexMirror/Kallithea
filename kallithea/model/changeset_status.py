@@ -75,10 +75,10 @@ class ChangesetStatusModel(BaseModel):
         if not statuses:
             return ChangesetStatus.STATUS_UNDER_REVIEW
 
-        if all(st.status == ChangesetStatus.STATUS_APPROVED for st in statuses):
+        if all(st and st.status == ChangesetStatus.STATUS_APPROVED for st in statuses):
             return ChangesetStatus.STATUS_APPROVED
 
-        if any(st.status == ChangesetStatus.STATUS_REJECTED for st in statuses):
+        if any(st and st.status == ChangesetStatus.STATUS_REJECTED for st in statuses):
             return ChangesetStatus.STATUS_REJECTED
 
         return ChangesetStatus.STATUS_UNDER_REVIEW
