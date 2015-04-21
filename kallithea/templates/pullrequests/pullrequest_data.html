@@ -82,7 +82,7 @@
   </table>
 </div>
 
-%if pullrequests.pager:
+%if hasattr(pullrequests, 'pager'):
 <div class="notification-paginator">
   <div class="pagination-wh pagination-left">
   ${pullrequests.pager('$link_previous ~2~ $link_next', **request.GET.mixed())}
