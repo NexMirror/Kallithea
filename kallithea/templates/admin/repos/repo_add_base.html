@@ -14,12 +14,12 @@ ${h.form(url('repos'))}
          </div>
         <div id="remote_clone" class="field">
             <div class="label">
-                <label for="clone_uri">${_('Clone from')}:</label>
+                <label for="clone_uri">${_('Clone remote repository')}:</label>
             </div>
             <div class="input">
                 ${h.text('clone_uri',class_="small")}
                 <span class="help-block">
-                    ${_('Optional URL from which repository should be cloned.')}
+                    ${_('Optional: URL of a remote repository. If set, the repository will be created as a clone from this URL.')}
                 </span>
             </div>
         </div>
