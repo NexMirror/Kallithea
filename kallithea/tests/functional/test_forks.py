@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+
+import unittest
+
 from kallithea.tests import *
 from kallithea.tests.fixture import Fixture
 
@@ -12,15 +15,7 @@ fixture = Fixture()
 from kallithea.tests import *
 
 
-class _BaseTest(TestController):
-    """
-    Write all tests here
-    """
-    REPO = None
-    REPO_TYPE = None
-    NEW_REPO = None
-    REPO_FORK = None
-
+class _BaseFixture(unittest.TestCase):
     @classmethod
     def setup_class(cls):
         pass
@@ -39,6 +34,16 @@ class _BaseTest(TestController):
     def tearDown(self):
         Session().delete(self.u1)
         Session().commit()
+
+
+class _BaseTestCase(object):
+    """
+    Write all tests here
+    """
+    REPO = None
+    REPO_TYPE = None
+    NEW_REPO = None
+    REPO_FORK = None
 
     def test_index(self):
         self.log_user()
@@ -218,14 +223,14 @@ class _BaseTest(TestController):
         response.mustcontain('There are no forks yet')
 
 
-class TestGIT(_BaseTest):
+class TestGIT(TestController, _BaseTestCase, _BaseFixture):
     REPO = GIT_REPO
     NEW_REPO = NEW_GIT_REPO
     REPO_TYPE = 'git'
     REPO_FORK = GIT_FORK
 
 
-class TestHG(_BaseTest):
+class TestHG(TestController, _BaseTestCase, _BaseFixture):
     REPO = HG_REPO
     NEW_REPO = NEW_HG_REPO
     REPO_TYPE = 'hg'

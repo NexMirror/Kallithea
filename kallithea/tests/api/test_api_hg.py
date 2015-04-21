@@ -13,9 +13,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from kallithea.tests import *
-from kallithea.tests.api.api_base import BaseTestApi
+from kallithea.tests.api.api_base import _BaseTestApi
 
 
-class TestHgApi(BaseTestApi, TestController):
+class TestHgApi(_BaseTestApi, TestController):
     REPO = HG_REPO
     REPO_TYPE = 'hg'

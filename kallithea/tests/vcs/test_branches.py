@@ -5,11 +5,11 @@ from kallithea.lib import vcs
 from kallithea.lib.vcs.utils.compat import unittest
 from kallithea.lib.vcs.nodes import FileNode
 
-from kallithea.tests.vcs.base import BackendTestMixin
+from kallithea.tests.vcs.base import _BackendTestMixin
 from kallithea.tests.vcs.conf import SCM_TESTS
 
 
-class BranchesTestCaseMixin(BackendTestMixin):
+class BranchesTestCaseMixin(_BackendTestMixin):
 
     @classmethod
     def _get_commits(cls):

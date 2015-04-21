@@ -13,7 +13,7 @@ from kallithea.lib.vcs.utils.compat import unittest
 from kallithea.lib.vcs.nodes import FileNode
 
 
-class BackendTestMixin(object):
+class _BackendTestMixin(object):
     """
     This is a backend independent test case class which should be created
     with ``type`` method.
@@ -103,7 +103,7 @@ for alias in SCM_TESTS:
         'backend_alias': alias,
     }
     cls_name = ''.join(('%s base backend test' % alias).title().split())
-    bases = (BackendTestMixin, unittest.TestCase)
+    bases = (_BackendTestMixin, unittest.TestCase)
     globals()[cls_name] = type(cls_name, bases, attrs)
 
 

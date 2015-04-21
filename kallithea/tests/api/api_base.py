@@ -88,7 +88,7 @@ def make_repo_group(name=TEST_REPO_GROUP):
     return gr
 
 
-class BaseTestApi(object):
+class _BaseTestApi(object):
     REPO = None
     REPO_TYPE = None
 
