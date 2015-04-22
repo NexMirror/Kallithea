@@ -3715,6 +3715,7 @@ div#legend_data, div#legend_container, div#legend_choices {
 }
 
 .repo-switcher .select2-chosen:after {
+    font-family: 'kallithea';
     content: ' \23f7';
 }
 
