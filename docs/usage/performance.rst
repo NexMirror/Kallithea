@@ -39,7 +39,8 @@ Follow these few steps to improve performance of Kallithea system.
     sqlite is a good option when having a small load on the system. But due to
     locking issues with sqlite, it is not recommended to use it for larger
     deployments. Switching to mysql or postgres will result in an immediate
-    performance increase.
+    performance increase. A tool like SQLAlchemyGrate_ can be used for
+    migrating to another database platform.
 
 3. Scale Kallithea horizontally
 
@@ -61,3 +62,5 @@ Follow these few steps to improve performance of Kallithea system.
     - Load balance using round robin or IP hash, recommended is writing LB rules
       that will separate regular user traffic from automated processes like CI
       servers or build bots.
+
+.. _SQLAlchemyGrate: https://github.com/shazow/sqlalchemygrate
