@@ -8,7 +8,7 @@ from kallithea.lib.vcs.backends.git import GitRepository, GitChangeset
 from kallithea.lib.vcs.exceptions import RepositoryError, VCSError, NodeDoesNotExistError
 from kallithea.lib.vcs.nodes import NodeKind, FileNode, DirNode, NodeState
 from kallithea.lib.vcs.utils.compat import unittest
-from kallithea.tests.vcs.base import BackendTestMixin
+from kallithea.tests.vcs.base import _BackendTestMixin
 from kallithea.tests.vcs.conf import TEST_GIT_REPO, TEST_GIT_REPO_CLONE, get_new_dir
 
 
@@ -620,7 +620,7 @@ class GitSpecificTest(unittest.TestCase):
             changeset.added
 
 
-class GitSpecificWithRepoTest(BackendTestMixin, unittest.TestCase):
+class GitSpecificWithRepoTest(_BackendTestMixin, unittest.TestCase):
     backend_alias = 'git'
 
     @classmethod
@@ -688,7 +688,7 @@ class GitSpecificWithRepoTest(BackendTestMixin, unittest.TestCase):
             % (3, self.repo._get_revision(0), self.repo._get_revision(1)))
 
 
-class GitRegressionTest(BackendTestMixin, unittest.TestCase):
+class GitRegressionTest(_BackendTestMixin, unittest.TestCase):
     backend_alias = 'git'
 
     @classmethod

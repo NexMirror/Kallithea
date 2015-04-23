@@ -26,7 +26,7 @@ def _get_permission_for_user(user, repo):
     return perm
 
 
-class _BaseTest(TestController):
+class _BaseTest(object):
     """
     Write all tests here
     """
@@ -638,7 +638,7 @@ class _BaseTest(TestController):
         # repo must not be in filesystem !
         self.assertFalse(os.path.isdir(os.path.join(TESTS_TMP_PATH, repo_name)))
 
-class TestAdminReposControllerGIT(_BaseTest):
+class TestAdminReposControllerGIT(TestController, _BaseTest):
     REPO = GIT_REPO
     REPO_TYPE = 'git'
     NEW_REPO = NEW_GIT_REPO
@@ -646,7 +646,7 @@ class TestAdminReposControllerGIT(_BaseTest):
     OTHER_TYPE = 'hg'
 
 
-class TestAdminReposControllerHG(_BaseTest):
+class TestAdminReposControllerHG(TestController, _BaseTest):
     REPO = HG_REPO
     REPO_TYPE = 'hg'
     NEW_REPO = NEW_HG_REPO

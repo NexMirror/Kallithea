@@ -4,7 +4,7 @@ from __future__ import with_statement
 import time
 import datetime
 from kallithea.lib import vcs
-from kallithea.tests.vcs.base import BackendTestMixin
+from kallithea.tests.vcs.base import _BackendTestMixin
 from kallithea.tests.vcs.conf import SCM_TESTS
 
 from kallithea.lib.vcs.backends.base import BaseChangeset
@@ -50,7 +50,7 @@ class TestBaseChangeset(unittest.TestCase):
             'removed': [],
         })
 
-class ChangesetsWithCommitsTestCaseixin(BackendTestMixin):
+class _ChangesetsWithCommitsTestCaseixin(_BackendTestMixin):
     recreate_repo_per_test = True
 
     @classmethod
@@ -146,7 +146,7 @@ class ChangesetsWithCommitsTestCaseixin(BackendTestMixin):
             self.assertEqual([sha], self.repo.get_changeset(test_rev).children)
 
 
-class ChangesetsTestCaseMixin(BackendTestMixin):
+class _ChangesetsTestCaseMixin(_BackendTestMixin):
     recreate_repo_per_test = False
 
     @classmethod
@@ -301,7 +301,7 @@ class ChangesetsTestCaseMixin(BackendTestMixin):
             list(self.repo.get_changesets(start=last-1, end=0))
 
 
-class ChangesetsChangesTestCaseMixin(BackendTestMixin):
+class _ChangesetsChangesTestCaseMixin(_BackendTestMixin):
     recreate_repo_per_test = False
 
     @classmethod
@@ -373,17 +373,17 @@ for alias in SCM_TESTS:
     }
     # tests with additional commits
     cls_name = ''.join(('%s changesets with commits test' % alias).title().split())
-    bases = (ChangesetsWithCommitsTestCaseixin, unittest.TestCase)
+    bases = (_ChangesetsWithCommitsTestCaseixin, unittest.TestCase)
     globals()[cls_name] = type(cls_name, bases, attrs)
 
     # tests without additional commits
     cls_name = ''.join(('%s changesets test' % alias).title().split())
-    bases = (ChangesetsTestCaseMixin, unittest.TestCase)
+    bases = (_ChangesetsTestCaseMixin, unittest.TestCase)
     globals()[cls_name] = type(cls_name, bases, attrs)
 
     # tests changes
     cls_name = ''.join(('%s changesets changes test' % alias).title().split())
-    bases = (ChangesetsChangesTestCaseMixin, unittest.TestCase)
+    bases = (_ChangesetsChangesTestCaseMixin, unittest.TestCase)
     globals()[cls_name] = type(cls_name, bases, attrs)
 
 
