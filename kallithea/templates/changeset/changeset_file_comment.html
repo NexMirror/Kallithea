@@ -51,7 +51,13 @@
       %endif
       </div>
       <div class="text">
+        %if co.text:
           ${h.rst_w_mentions(co.text)|n}
+        %else:
+          <div class="rst-block automatic-comment">
+            <p>${_('No comments.')}</p>
+          </div>
+        %endif
       </div>
     </div>
   </div>

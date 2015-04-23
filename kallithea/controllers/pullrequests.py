@@ -696,7 +696,7 @@ class PullrequestsController(BaseRepoController):
         if allowed_to_change_status:
             status = request.POST.get('changeset_status')
             close_pr = request.POST.get('save_close')
-        text = request.POST.get('text', '').strip() or _('No comments.')
+        text = request.POST.get('text', '').strip()
         if close_pr:
             text = _('Closing.') + '\n' + text
 

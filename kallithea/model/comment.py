@@ -182,7 +182,7 @@ class ChangesetCommentsModel(BaseModel):
         :param closing_pr: (for emails, not for comments)
         :param send_email: also send email
         """
-        if not text:
+        if not status_change and not text:
             log.warning('Missing text for comment, skipping...')
             return
 

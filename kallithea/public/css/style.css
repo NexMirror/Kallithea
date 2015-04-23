@@ -4347,6 +4347,10 @@ div.rst-block pre {
     font-size: 16px;
 }
 
+.automatic-comment {
+    font-style: italic;
+}
+
 /** comment form **/
 
 .status-block {
