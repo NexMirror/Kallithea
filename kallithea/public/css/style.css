@@ -4932,7 +4932,7 @@ table.code-difftable .lineno a {
     font: 11px Consolas, Monaco, Inconsolata, Liberation Mono, monospace !important;
     letter-spacing: -1px;
     text-align: right;
-    padding-right: 2px;
+    padding-right: 8px;
     cursor: pointer;
     display: block;
     width: 30px;
@@ -4958,39 +4958,63 @@ table.code-difftable .code td {
     padding: 0;
 }
 table.code-difftable .code pre {
-    margin: 0;
+    margin: 0 0 0 12px;
     padding: 0;
     min-height: 17px;
     line-height: 17px;
     white-space: pre-wrap;
 }
 
+table.code-difftable .del .code pre:before {
+    content: "-";
+    color: #550000;
+}
+ 
+table.code-difftable .add .code pre:before {
+    content: "+";
+    color: #005500;
+}
+ 
+table.code-difftable .unmod .code pre:before {
+    content: " ";
+}
+ 
 .add-bubble {
+    position: relative;
     display: none;
     float: left;
     width: 0px;
     height: 0px;
+    left: -8px;
+    box-sizing: border-box;
 }
 
-tr.line.add td.code:hover .add-bubble,
-tr.line.del td.code:hover .add-bubble,
-tr.line.unmod td.code:hover .add-bubble {
-    display: inherit;
+tr.line.add:hover td .add-bubble,
+tr.line.del:hover td .add-bubble,
+tr.line.unmod:hover td .add-bubble {
+    display: block;
 }
 
 .add-bubble div {
-    position: relative;
-    left: -32px;
-    width: 32px;
-    height: 32px;
+    background: #577632;
+    width: 16px;
+    height: 16px;
     cursor: pointer;
+    padding: 0 2px 2px 0.5px;
+    border: 1px solid #577632;
+    border-radius: 3px;
+    box-sizing: border-box;
 }
 
 .add-bubble div:before {
     font-size: 14px;
-    color: #577632;
+    color: #ffffff;
     font-family: "kallithea";
     content: '\1f5ea';
+}
+
+.add-bubble div:hover {
+    transform: scale(1.2, 1.2);
 }
 
 div.comment:target>.comment-wrapp {
