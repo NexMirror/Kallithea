@@ -200,8 +200,8 @@ class TestVCSOperations(BaseTestCase):
         clone_url = _construct_url(GIT_REPO)
         stdout, stderr = Command('/tmp').execute('git clone', clone_url)
 
-        assert 'Cloning into' in stdout
-        assert stderr == ''
+        assert 'Cloning into' in stdout + stderr
+        assert stderr == '' or stdout == ''
 
     def test_clone_wrong_credentials_hg(self):
         clone_url = _construct_url(HG_REPO, passwd='bad!')
@@ -532,5 +532,5 @@ class TestVCSOperations(BaseTestCase):
         clone_url = _construct_url(GIT_REPO)
         stdout, stderr = Command('/tmp').execute('git clone', clone_url)
 
-        assert 'Cloning into' in stdout
-        assert stderr == ''
+        assert 'Cloning into' in stdout + stderr
+        assert stderr == '' or stdout == ''
