@@ -4973,16 +4973,16 @@ table.code-difftable .del .code pre:before {
     content: "-";
     color: #550000;
 }
- 
+
 table.code-difftable .add .code pre:before {
     content: "+";
     color: #005500;
 }
- 
+
 table.code-difftable .unmod .code pre:before {
     content: " ";
 }
- 
+
 .add-bubble {
     position: relative;
     display: none;

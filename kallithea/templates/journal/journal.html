@@ -70,7 +70,7 @@
         </div>
     </div>
 
-    <script type="text/javascript">
+<script type="text/javascript">
 
     $('#j_filter').click(function(){
         var $jfilter = $('#j_filter');
@@ -334,5 +334,24 @@
         }
     }
 
-    </script>
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        var $journal = $('#journal');
+        $journal.on('click','.pager_link',function(e){
+            asynchtml(e.target.href, $journal, function(){
+                show_more_event();
+                tooltip_activate();
+                show_changeset_tooltip();
+            });
+            e.preventDefault();
+        });
+        $('#journal').on('click','.show_more',function(e){
+            var el = e.target;
+            $('#'+el.id.substring(1)).show();
+            $(el.parentNode).hide();
+        });
+    });
+</script>
 </%def>

@@ -12,6 +12,7 @@
 <%block name="header_menu">
     ${self.menu('repositories')}
 </%block>
+
 <%def name="main()">
 ${self.repo_context_bar('followers')}
 <div class="box">
@@ -26,4 +27,17 @@ ${self.repo_context_bar('followers')}
         </div>
     </div>
 </div>
+<script type="text/javascript">
+  $(document).ready(function(){
+    var $followers = $('#followers');
+    $followers.on('click','.pager_link',function(e){
+        asynchtml(e.target.href, $followers, function(){
+            show_more_event();
+            tooltip_activate();
+            show_changeset_tooltip();
+        });
+        e.preventDefault();
+    });
+  });
+</script>
 </%def>
