@@ -132,7 +132,7 @@ cheaper-step = 1
 host = ${host}
 port = ${port}
 
-<%text>## prefix middleware for rc</%text>
+<%text>## middleware for hosting the WSGI application under a URL prefix</%text>
 #[filter:proxy-prefix]
 #use = egg:PasteDeploy#prefix
 #prefix = /<your-prefix>
