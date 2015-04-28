@@ -625,25 +625,25 @@ def get_server_url(environ):
 
 def _extract_extras(env=None):
     """
-    Extracts the rc extras data from os.environ, and wraps it into named
+    Extracts the Kallithea extras data from os.environ, and wraps it into named
     AttributeDict object
     """
     if not env:
         env = os.environ
 
     try:
-        rc_extras = json.loads(env['KALLITHEA_EXTRAS'])
+        extras = json.loads(env['KALLITHEA_EXTRAS'])
     except KeyError:
-        rc_extras = {}
+        extras = {}
 
     try:
         for k in ['username', 'repository', 'locked_by', 'scm', 'make_lock',
                   'action', 'ip']:
-            rc_extras[k]
+            extras[k]
     except KeyError, e:
-        raise Exception('Missing key %s in os.environ %s' % (e, rc_extras))
+        raise Exception('Missing key %s in os.environ %s' % (e, extras))
 
-    return AttributeDict(rc_extras)
+    return AttributeDict(extras)
 
 
 def _set_extras(extras):
