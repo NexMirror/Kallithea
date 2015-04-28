@@ -397,4 +397,15 @@ $(document).ready(function(){
 </script>
 %endif
 
+## Shortlog paging
+<script type="text/javascript">
+  $(document).ready(function(){
+    var $shortlog_data = $('#shortlog_data');
+    $shortlog_data.on('click','.pager_link',function(e){
+      asynchtml(e.target.href, $shortlog_data, function(){tooltip_activate();});
+      e.preventDefault();
+    });
+  });
+</script>
+
 </%def>

@@ -72,16 +72,6 @@
 
 </table>
 
-<script type="text/javascript">
-  $(document).ready(function(){
-    var $shortlog_data = $('#shortlog_data');
-    $shortlog_data.on('click','.pager_link',function(e){
-      asynchtml(e.target.href, $shortlog_data, function(){tooltip_activate();});
-      e.preventDefault();
-    });
-  });
-</script>
-
 <div class="pagination-wh pagination-left">
 ${c.repo_changesets.pager('$link_previous ~2~ $link_next')}
 </div>

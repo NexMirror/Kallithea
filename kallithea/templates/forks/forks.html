@@ -27,4 +27,17 @@ ${self.repo_context_bar('showforks')}
         </div>
     </div>
 </div>
+<script type="text/javascript">
+  $(document).ready(function(){
+      var $forks = $('#forks');
+      $forks.on('click','.pager_link',function(e){
+          asynchtml(e.target.href, $forks, function(){
+              show_more_event();
+              tooltip_activate();
+              show_changeset_tooltip();
+          });
+          e.preventDefault();
+      });
+  });
+</script>
 </%def>
