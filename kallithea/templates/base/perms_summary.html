@@ -11,8 +11,8 @@
             %if section != 'global':
                 <div style="float: right">
                 ${_('show')}:
-                ${h.checkbox('perms_filter_none_%s' % section, 'none', 'checked', class_='perm_filter filter_%s' % section, section=section, perm_type='none')}   <label for="${'perms_filter_none_%s' % section}"><span class="perm_tag none">${_('none')}</span></label>
-                ${h.checkbox('perms_filter_read_%s' % section, 'read', 'checked', class_='perm_filter filter_%s' % section, section=section, perm_type='read')}   <label for="${'perms_filter_read_%s' % section}"><span class="perm_tag read">${_('read')}</span></label>
+                ${h.checkbox('perms_filter_none_%s' % section, 'none', 'checked', class_='perm_filter filter_%s' % section, section=section, perm_type='none')} <label for="${'perms_filter_none_%s' % section}"><span class="perm_tag none">${_('none')}</span></label>
+                ${h.checkbox('perms_filter_read_%s' % section, 'read', 'checked', class_='perm_filter filter_%s' % section, section=section, perm_type='read')} <label for="${'perms_filter_read_%s' % section}"><span class="perm_tag read">${_('read')}</span></label>
                 ${h.checkbox('perms_filter_write_%s' % section, 'write', 'checked', class_='perm_filter filter_%s' % section, section=section, perm_type='write')} <label for="${'perms_filter_write_%s' % section}"> <span class="perm_tag write">${_('write')}</span></label>
                 ${h.checkbox('perms_filter_admin_%s' % section, 'admin', 'checked', class_='perm_filter filter_%s' % section, section=section, perm_type='admin')} <label for="${'perms_filter_admin_%s' % section}"><span class="perm_tag admin">${_('admin')}</span></label>
                 </div>
@@ -108,15 +108,12 @@
                 $('#empty_{0}'.format(section)).hide();
             }
         }
-        $('.perm_filter').on('change', function(e){
-            var self = this;
-            var section = $(this).attr('section');
+        var update_show = function($checkbox){
+            var section = $checkbox.attr('section');
 
-            var opts = {}
             var elems = $('.filter_' + section).each(function(el){
-                var perm_type = $(this).attr('perm_type');
-                var checked = this.checked;
-                opts[perm_type] = checked;
+                var perm_type = $checkbox.attr('perm_type');
+                var checked = $checkbox.checked;
                 if(checked){
                     $('.'+section+'_'+perm_type).show();
                 }
@@ -125,8 +122,8 @@
                 }
             });
             show_empty(section);
-        })
-
+        }
+        $('.perm_filter').on('change', function(){update_show($(this));});
     })
 </script>
 </%def>
