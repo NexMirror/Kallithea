@@ -124,6 +124,7 @@
             show_empty(section);
         }
         $('.perm_filter').on('change', function(){update_show($(this));});
+        $('.perm_filter[value=none]').each(function(){this.checked = false; update_show($(this));});
     })
 </script>
 </%def>
