@@ -68,16 +68,21 @@ You are now ready to use Kallithea. To run it simply execute::
   settings, as well as edit more advanced options on users and
   repositories
 
+
+Extensions
+----------
+
 Optionally users can create an ``rcextensions`` package that extends Kallithea
 functionality. To do this simply execute::
 
     paster make-rcext my.ini
 
-This will create an ``rcextensions`` package in the same place that your ``ini`` file
-lives. With ``rcextensions`` it's possible to add additional mapping for whoosh,
+This will create an ``rcextensions`` package next to the specified ``ini`` file.
+With ``rcextensions`` it's possible to add additional mapping for whoosh,
 stats and add additional code into the push/pull/create/delete repo hooks,
-for example, for sending signals to build-bots such as Jenkins.
-Please see the ``__init__.py`` file inside ``rcextensions`` package
+for example for sending signals to build-bots such as Jenkins.
+
+See the ``__init__.py`` file inside the generated ``rcextensions`` package
 for more details.
 
 

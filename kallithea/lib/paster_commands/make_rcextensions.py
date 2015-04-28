@@ -30,7 +30,6 @@ from __future__ import with_statement
 
 import os
 import sys
-import logging
 import pkg_resources
 
 from kallithea.lib.utils import BasePasterCommand, ask_ok
@@ -40,46 +39,44 @@ from os.path import dirname as dn
 rc_path = dn(dn(dn(os.path.realpath(__file__))))
 sys.path.append(rc_path)
 
-log = logging.getLogger(__name__)
-
 
 class Command(BasePasterCommand):
 
     max_args = 1
     min_args = 1
 
-    usage = "CONFIG_FILE"
     group_name = "Kallithea"
     takes_config_file = -1
     parser = BasePasterCommand.standard_parser(verbose=True)
-    summary = "Creates additional extensions for kallithea"
+    summary = "Write template file for extending Kallithea in Python."
+    usage = "CONFIG_FILE"
+    description = '''\
+        A rcextensions directory with a __init__.py file will be created next to
+        the ini file. Local customizations in that file will survive upgrades.
+        The file contains instructions on how it can be customized.
+        '''
 
     def command(self):
-        logging.config.fileConfig(self.path_to_ini_file)
         from pylons import config
 
-        def _make_file(ext_file, tmpl):
-            bdir = os.path.split(ext_file)[0]
-            if not os.path.isdir(bdir):
-                os.makedirs(bdir)
-            with open(ext_file, 'wb') as f:
-                f.write(tmpl)
-                log.info('Writen new extensions file to %s' % ext_file)
-
         here = config['here']
-        tmpl = pkg_resources.resource_string(
+        content = pkg_resources.resource_string(
             'kallithea', os.path.join('config', 'rcextensions', '__init__.py')
         )
         ext_file = os.path.join(here, 'rcextensions', '__init__.py')
         if os.path.exists(ext_file):
             msg = ('Extension file already exists, do you want '
                    'to overwrite it ? [y/n]')
-            if ask_ok(msg):
-                _make_file(ext_file, tmpl)
-            else:
-                log.info('nothing done...')
-        else:
-            _make_file(ext_file, tmpl)
+            if not ask_ok(msg):
+                print 'Nothing done...'
+                return
+
+        dirname = os.path.dirname(ext_file)
+        if not os.path.isdir(dirname):
+            os.makedirs(dirname)
+        with open(ext_file, 'wb') as f:
+            f.write(content)
+            print 'Wrote new extensions file to %s' % ext_file
 
     def update_parser(self):
         pass
