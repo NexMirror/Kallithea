@@ -208,7 +208,7 @@ class TestLoginController(TestController):
     def test_register_ok(self):
         username = 'test_regular4'
         password = 'qweqwe'
-        email = 'marcin@test.com'
+        email = 'username@test.com'
         name = 'testname'
         lastname = 'testlastname'
 
@@ -233,7 +233,7 @@ class TestLoginController(TestController):
         self.assertEqual(ret.admin, False)
 
     def test_forgot_password_wrong_mail(self):
-        bad_email = 'marcin@wrongmail.org'
+        bad_email = 'username@wrongmail.org'
         response = self.app.post(
                         url(controller='login', action='password_reset'),
                             {'email': bad_email, }
@@ -250,7 +250,7 @@ class TestLoginController(TestController):
 
         username = 'test_password_reset_1'
         password = 'qweqwe'
-        email = 'marcin@python-works.com'
+        email = 'username@python-works.com'
         name = 'passwd'
         lastname = 'reset'
 

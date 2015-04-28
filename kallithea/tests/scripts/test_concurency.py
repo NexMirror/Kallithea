@@ -49,14 +49,14 @@ from kallithea.tests import TESTS_TMP_PATH, HG_REPO
 from kallithea.config.environment import load_environment
 
 rel_path = dn(dn(dn(dn(os.path.abspath(__file__)))))
-conf = appconfig('config:rc.ini', relative_to=rel_path)
+conf = appconfig('config:development.ini', relative_to=rel_path)
 load_environment(conf.global_conf, conf.local_conf)
 
 add_cache(conf)
 
 USER = 'test_admin'
 PASS = 'test12'
-HOST = 'rc.local'
+HOST = 'server.local'
 METHOD = 'pull'
 DEBUG = True
 log = logging.getLogger(__name__)

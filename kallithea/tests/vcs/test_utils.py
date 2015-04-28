@@ -185,14 +185,14 @@ class TestParseDatetime(unittest.TestCase):
 
 
 class TestAuthorExtractors(unittest.TestCase):
-    TEST_AUTHORS = [('Marcin Kuzminski <marcin@python-works.com>',
-                    ('Marcin Kuzminski', 'marcin@python-works.com')),
-                  ('Marcin Kuzminski Spaces < marcin@python-works.com >',
-                    ('Marcin Kuzminski Spaces', 'marcin@python-works.com')),
-                  ('Marcin Kuzminski <marcin.kuzminski@python-works.com>',
-                    ('Marcin Kuzminski', 'marcin.kuzminski@python-works.com')),
-                  ('mrf RFC_SPEC <marcin+kuzminski@python-works.com>',
-                    ('mrf RFC_SPEC', 'marcin+kuzminski@python-works.com')),
+    TEST_AUTHORS = [("Username Last'o'Name <username@python-works.com>",
+                    ("Username Last'o'Name", "username@python-works.com")),
+                  ("Username Last'o'Name Spaces < username@python-works.com >",
+                    ("Username Last'o'Name Spaces", "username@python-works.com")),
+                  ("Username Last'o'Name <username.lastname@python-works.com>",
+                    ("Username Last'o'Name", "username.lastname@python-works.com")),
+                  ('mrf RFC_SPEC <username+lastname@python-works.com>',
+                    ('mrf RFC_SPEC', 'username+lastname@python-works.com')),
                   ('username <user@email.com>',
                     ('username', 'user@email.com')),
                   ('username <user@email.com',

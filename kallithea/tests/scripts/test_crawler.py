@@ -60,7 +60,7 @@ if not BASE_URI.endswith('/'):
 
 print 'Crawling @ %s' % BASE_URI
 BASE_URI += '%s'
-PROJECT_PATH = jn('/', 'home', 'marcink', 'repos')
+PROJECT_PATH = jn('/', 'home', 'username', 'repos')
 PROJECTS = [
     #'linux-magx-pbranch',
     'CPython',

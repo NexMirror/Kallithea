@@ -111,7 +111,7 @@ def _add_files_and_push(vcs, DEST, **kwargs):
     for i in xrange(kwargs.get('files_no', 3)):
         cmd = """echo 'added_line%s' >> %s""" % (i, added_file)
         Command(cwd).execute(cmd)
-        author_str = 'Marcin Kuźminski <me@email.com>'
+        author_str = 'User ǝɯɐᴎ <me@email.com>'
         if vcs == 'hg':
             cmd = """hg commit -m 'commited new %s' -u '%s' %s """ % (
                 i, author_str, added_file
