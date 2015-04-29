@@ -1239,7 +1239,7 @@ class Repository(Base, BaseModel):
                 pass
 
         return get_clone_url(uri_tmpl=uri_tmpl,
-                             qualifed_home_url=qualified_home_url,
+                             qualified_home_url=qualified_home_url,
                              repo_name=self.repo_name,
                              repo_id=self.repo_id, **override)
 

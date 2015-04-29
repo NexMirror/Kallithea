@@ -267,7 +267,7 @@ class TestLibs(BaseTestCase):
     ])
     def test_clone_url_generator(self, tmpl, repo_name, overrides, prefix, expected):
         from kallithea.lib.utils2 import get_clone_url
-        clone_url = get_clone_url(uri_tmpl=tmpl, qualifed_home_url='http://vps1:8000'+prefix,
+        clone_url = get_clone_url(uri_tmpl=tmpl, qualified_home_url='http://vps1:8000'+prefix,
                                   repo_name=repo_name, repo_id=23, **overrides)
         self.assertEqual(clone_url, expected)
 

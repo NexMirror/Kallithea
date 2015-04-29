@@ -503,8 +503,8 @@ def credentials_filter(uri):
     return ''.join(uri)
 
 
-def get_clone_url(uri_tmpl, qualifed_home_url, repo_name, repo_id, **override):
-    parsed_url = urlobject.URLObject(qualifed_home_url)
+def get_clone_url(uri_tmpl, qualified_home_url, repo_name, repo_id, **override):
+    parsed_url = urlobject.URLObject(qualified_home_url)
     decoded_path = safe_unicode(urllib.unquote(parsed_url.path.rstrip('/')))
     args = {
         'scheme': parsed_url.scheme,
