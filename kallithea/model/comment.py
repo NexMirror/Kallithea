@@ -236,19 +236,8 @@ class ChangesetCommentsModel(BaseModel):
 
         Returns a list, ordered by creation date.
         """
-        q = ChangesetComment.query()\
-                .filter(ChangesetComment.repo_id == repo_id)\
-                .filter(ChangesetComment.line_no == None)\
-                .filter(ChangesetComment.f_path == None)
-        if revision:
-            q = q.filter(ChangesetComment.revision == revision)
-        elif pull_request:
-            pull_request = self.__get_pull_request(pull_request)
-            q = q.filter(ChangesetComment.pull_request == pull_request)
-        else:
-            raise Exception('Please specify revision or pull_request')
-        q = q.order_by(ChangesetComment.created_on)
-        return q.all()
+        return self._get_comments(repo_id, revision=revision, pull_request=pull_request,
+                                  inline=False)
 
     def get_inline_comments(self, repo_id, revision=None, pull_request=None):
         """
@@ -256,11 +245,27 @@ class ChangesetCommentsModel(BaseModel):
 
         Returns a list of tuples with file path and list of comments per line number.
         """
+        comments = self._get_comments(repo_id, revision=revision, pull_request=pull_request,
+                                      inline=True)
+
+        paths = defaultdict(lambda: defaultdict(list))
+        for co in comments:
+            paths[co.f_path][co.line_no].append(co)
+        return paths.items()
+
+    def _get_comments(self, repo_id, revision=None, pull_request=None, inline=False):
+        """
+        Gets comments for either revision or pull_request_id, either inline or general.
+        """
         q = Session().query(ChangesetComment)\
-            .filter(ChangesetComment.repo_id == repo_id)\
-            .filter(ChangesetComment.line_no != None)\
-            .filter(ChangesetComment.f_path != None)\
-            .order_by(ChangesetComment.comment_id.asc())\
+            .filter(ChangesetComment.repo_id == repo_id)
+
+        if inline:
+            q = q.filter(ChangesetComment.line_no != None)\
+                .filter(ChangesetComment.f_path != None)
+        else:
+            q = q.filter(ChangesetComment.line_no == None)\
+                .filter(ChangesetComment.f_path == None)
 
         if revision:
             q = q.filter(ChangesetComment.revision == revision)
@@ -268,12 +273,6 @@ class ChangesetCommentsModel(BaseModel):
             pull_request = self.__get_pull_request(pull_request)
             q = q.filter(ChangesetComment.pull_request == pull_request)
         else:
-            raise Exception('Please specify revision or pull_request_id')
+            raise Exception('Please specify either revision or pull_request')
 
-        comments = q.all()
-
-        paths = defaultdict(lambda: defaultdict(list))
-
-        for co in comments:
-            paths[co.f_path][co.line_no].append(co)
-        return paths.items()
+        return q.order_by(ChangesetComment.created_on).all()
