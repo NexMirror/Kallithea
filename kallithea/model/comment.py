@@ -63,10 +63,6 @@ class ChangesetCommentsModel(BaseModel):
                                line_no=None, revision=None, pull_request=None,
                                status_change=None, closing_pr=False):
         """
-        Get notification data
-
-        :param comment_text:
-        :param line:
         :returns: tuple (subj,body,recipients,notification_type,email_kwargs)
         """
         # make notification
@@ -167,20 +163,10 @@ class ChangesetCommentsModel(BaseModel):
                f_path=None, line_no=None, status_change=None, closing_pr=False,
                send_email=True):
         """
-        Creates new comment for changeset or pull request.
-        If status_change is not None this comment is associated with a
-        status change of changeset or changesets associated with pull request
+        Creates a new comment for either a changeset or a pull request.
+        status_change and closing_pr is only for the optional email.
 
-        :param text:
-        :param repo:
-        :param user:
-        :param revision:
-        :param pull_request: (for emails, not for comments)
-        :param f_path:
-        :param line_no:
-        :param status_change: (for emails, not for comments)
-        :param closing_pr: (for emails, not for comments)
-        :param send_email: also send email
+        Returns the created comment.
         """
         if not status_change and not text:
             log.warning('Missing text for comment, skipping...')
@@ -239,11 +225,6 @@ class ChangesetCommentsModel(BaseModel):
         return comment
 
     def delete(self, comment):
-        """
-        Deletes given comment
-
-        :param comment_id:
-        """
         comment = self.__get_changeset_comment(comment)
         Session().delete(comment)
 
@@ -251,13 +232,10 @@ class ChangesetCommentsModel(BaseModel):
 
     def get_comments(self, repo_id, revision=None, pull_request=None):
         """
-        Gets main comments based on revision or pull_request_id
+        Gets general comments for either revision or pull_request.
 
-        :param repo_id:
-        :param revision:
-        :param pull_request:
+        Returns a list, ordered by creation date.
         """
-
         q = ChangesetComment.query()\
                 .filter(ChangesetComment.repo_id == repo_id)\
                 .filter(ChangesetComment.line_no == None)\
@@ -273,6 +251,11 @@ class ChangesetCommentsModel(BaseModel):
         return q.all()
 
     def get_inline_comments(self, repo_id, revision=None, pull_request=None):
+        """
+        Gets inline comments for either revision or pull_request.
+
+        Returns a list of tuples with file path and list of comments per line number.
+        """
         q = Session().query(ChangesetComment)\
             .filter(ChangesetComment.repo_id == repo_id)\
             .filter(ChangesetComment.line_no != None)\
