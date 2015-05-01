@@ -4788,7 +4788,6 @@ div.diffblock {
 }
 div.diffblock.margined {
     margin: 0px 20px 0px 20px;
-    overflow: hidden;
 }
 div.diffblock .code-header {
     border-bottom: 1px solid #CCCCCC;
