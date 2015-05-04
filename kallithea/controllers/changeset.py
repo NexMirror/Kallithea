@@ -351,7 +351,7 @@ class ChangesetController(BaseRepoController):
         status = request.POST.get('changeset_status')
         text = request.POST.get('text', '').strip()
 
-        c.co = comm = ChangesetCommentsModel().create(
+        c.comment = comment = ChangesetCommentsModel().create(
             text=text,
             repo=c.db_repo.repo_id,
             user=c.authuser.user_id,
@@ -373,7 +373,7 @@ class ChangesetController(BaseRepoController):
                     c.db_repo.repo_id,
                     status,
                     c.authuser.user_id,
-                    comm,
+                    comment,
                     revision=revision,
                     dont_allow_on_closed_pull_request=True
                 )
@@ -397,8 +397,8 @@ class ChangesetController(BaseRepoController):
         data = {
            'target_id': h.safeid(h.safe_unicode(request.POST.get('f_path'))),
         }
-        if comm:
-            data.update(comm.get_dict())
+        if comment:
+            data.update(comment.get_dict())
             data.update({'rendered_text':
                          render('changeset/changeset_comment_block.html')})
 

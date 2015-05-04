@@ -700,7 +700,7 @@ class PullrequestsController(BaseRepoController):
         if close_pr:
             text = _('Closing.') + '\n' + text
 
-        comm = ChangesetCommentsModel().create(
+        comment = ChangesetCommentsModel().create(
             text=text,
             repo=c.db_repo.repo_id,
             user=c.authuser.user_id,
@@ -723,7 +723,7 @@ class PullrequestsController(BaseRepoController):
                     c.db_repo.repo_id,
                     status,
                     c.authuser.user_id,
-                    comm,
+                    comment,
                     pull_request=pull_request_id
                 )
 
@@ -741,9 +741,9 @@ class PullrequestsController(BaseRepoController):
         data = {
            'target_id': h.safeid(h.safe_unicode(request.POST.get('f_path'))),
         }
-        if comm:
-            c.co = comm
-            data.update(comm.get_dict())
+        if comment:
+            c.comment = comment
+            data.update(comment.get_dict())
             data.update({'rendered_text':
                          render('changeset/changeset_comment_block.html')})
 
