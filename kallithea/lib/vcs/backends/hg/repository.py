@@ -264,6 +264,7 @@ class MercurialRepository(BaseRepository):
 
         return ''.join(patch.diff(self._repo, rev1, rev2, match=file_filter,
                           opts=diffopts(git=True,
+                                        showfunc=True,
                                         ignorews=ignore_whitespace,
                                         context=context)))
 
