@@ -193,6 +193,6 @@ class MarkupRenderer(object):
 
         def wrapp(match_obj):
             uname = match_obj.groups()[0]
-            return ' **@%(uname)s** ' % {'uname': uname}
+            return '\ **@%(uname)s**\ ' % {'uname': uname}
         mention_hl = mention_pat.sub(wrapp, source).strip()
         return cls.rst(mention_hl)
