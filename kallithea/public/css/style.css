@@ -4358,11 +4358,6 @@ div.comment-form {
     margin-top: 20px;
 }
 
-.comment-form strong {
-    display: block;
-    margin-bottom: 15px;
-}
-
 .comment-form textarea {
     width: 100%;
     height: 100px;
@@ -4457,11 +4452,6 @@ form.comment-form {
 
 div.comment-inline-form {
     padding: 4px 0px 6px 0px;
-}
-
-.comment-inline-form strong {
-    display: block;
-    margin-bottom: 15px;
 }
 
 .comment-inline-form textarea {
