@@ -63,7 +63,6 @@ class TestFilesController(TestController):
         response.mustcontain('<a class="browser-dir ypjax-link" href="/vcs_test_hg/files/7ba66bec8d6dbba14a2155be32408c435c5f4492/tests"><i class="icon-folder-open"></i><span>tests</span></a>')
         response.mustcontain('<a class="browser-file ypjax-link" href="/vcs_test_hg/files/7ba66bec8d6dbba14a2155be32408c435c5f4492/README.rst"><i class="icon-doc"></i><span>README.rst</span></a>')
         response.mustcontain('1.1 KiB')
-        response.mustcontain('text/x-python')
 
     def test_index_different_branch(self):
         self.log_user()
