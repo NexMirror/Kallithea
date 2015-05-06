@@ -4965,7 +4965,7 @@ table.code-difftable .code pre {
 
 table.code-difftable .del .code pre:before {
     content: "-";
-    color: #550000;
+    color: #800;
     float: left;
     left: -1em;
     position: relative;
@@ -4974,7 +4974,7 @@ table.code-difftable .del .code pre:before {
  
 table.code-difftable .add .code pre:before {
     content: "+";
-    color: #005500;
+    color: #080;
     float: left;
     left: -1em;
     position: relative;
