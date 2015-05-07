@@ -13,50 +13,33 @@
           <div class="user">
               ${co.author.username_and_name}
           </div>
-          <div class="date">
+
+          <span>
               ${h.age(co.modified_at)}
-          </div>
+              %if co.pull_request:
+                ${_('on pull request')}
+                <a href="${co.pull_request.url()}">"${co.pull_request.title or _("No title")}"</a>
+              %else:
+                ${_('on this changeset')}
+              %endif
+              <a class="permalink" href="#comment-${co.comment_id}">&para;</a>
+          </span>
 
-       <div style="float:left;padding:4px 0px 0px 5px">
-        <span class="">
-         %if co.pull_request:
-            %if co.status_change:
-              ${_('Status change from pull request')}
-              <a href="${co.pull_request.url()}">"${co.pull_request.title or _("No title")}"</a>:
-            %else:
-              ${_('Comment from pull request')}
-              <a href="${co.pull_request.url()}">"${co.pull_request.title or _("No title")}"</a>
-            %endif
-         %else:
-            %if co.status_change:
-              ${_('Status change on changeset')}:
-            %else:
-              ${_('Comment on changeset')}
-            %endif
-         %endif
-        </span>
-       </div>
-
-        %if co.status_change:
-           <div  style="float:left" class="changeset-status-container">
-             <div style="float:left;padding:10px 2px 0px 2px"></div>
-             <span title="${_('Changeset status')}" class="changeset-status-lbl">${_("Status change")}: ${co.status_change[0].status_lbl}</span>
-             <span class="changeset-status-ico"><i class="icon-circle changeset-status-${co.status_change[0].status}"></i></span>
-           </div>
-        %endif
-
-      <a class="permalink" href="#comment-${co.comment_id}">&para;</a>
-      %if h.HasPermissionAny('hg.admin')() or h.HasRepoPermissionAny('repository.admin')(c.repo_name) or co.author.user_id == c.authuser.user_id:
-          <div onClick="confirm('${_("Delete comment?")}') && deleteComment(${co.comment_id})" class="buttons delete-comment btn btn-mini">${_('Delete')}</div>
-      %endif
+          %if h.HasPermissionAny('hg.admin')() or h.HasRepoPermissionAny('repository.admin')(c.repo_name) or co.author.user_id == c.authuser.user_id:
+            <div onClick="confirm('${_("Delete comment?")}') && deleteComment(${co.comment_id})" class="buttons delete-comment btn btn-mini">${_('Delete')}</div>
+          %endif
       </div>
       <div class="text">
+        %if co.status_change:
+           <div class="rst-block automatic-comment">
+             <p>
+               <span title="${_('Changeset status')}" class="changeset-status-lbl">${_("Status change")}: ${co.status_change[0].status_lbl}</span>
+               <span class="changeset-status-ico"><i class="icon-circle changeset-status-${co.status_change[0].status}"></i></span>
+             </p>
+           </div>
+        %endif
         %if co.text:
           ${h.rst_w_mentions(co.text)|n}
-        %else:
-          <div class="rst-block automatic-comment">
-            <p>${_('No comments.')}</p>
-          </div>
         %endif
       </div>
     </div>
