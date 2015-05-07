@@ -93,7 +93,7 @@ class PullRequestModel(BaseModel):
         #reset state to under-review
         from kallithea.model.comment import ChangesetCommentsModel
         comment = ChangesetCommentsModel().create(
-            text=u'Auto status change to %s' % (ChangesetStatus.get_status_lbl(ChangesetStatus.STATUS_UNDER_REVIEW)),
+            text=u'',
             repo=org_repo,
             user=new.author,
             pull_request=new,
