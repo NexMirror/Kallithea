@@ -283,7 +283,12 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
                   });
               e.preventDefault();
               }
-          })
+          });
+
+          // hack: re-navigate to target after JS is done ... if a target is set and setting href thus won't reload
+          if (window.location.hash != "") {
+              window.location.href = window.location.href;
+          }
       })
 
     </script>
