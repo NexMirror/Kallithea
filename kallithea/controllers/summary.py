@@ -67,25 +67,6 @@ class SummaryController(BaseRepoController):
     def __before__(self):
         super(SummaryController, self).__before__()
 
-    def _get_download_links(self, repo):
-
-        download_l = []
-
-        branches_group = ([], _("Branches"))
-        tags_group = ([], _("Tags"))
-
-        for name, chs in c.db_repo_scm_instance.branches.items():
-            #chs = chs.split(':')[-1]
-            branches_group[0].append((chs, name),)
-        download_l.append(branches_group)
-
-        for name, chs in c.db_repo_scm_instance.tags.items():
-            #chs = chs.split(':')[-1]
-            tags_group[0].append((chs, name),)
-        download_l.append(tags_group)
-
-        return download_l
-
     def __get_readme_data(self, db_repo):
         repo_name = db_repo.repo_name
         log.debug('Looking for README file')
