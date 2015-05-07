@@ -372,7 +372,6 @@ function asynchtml(url, $target, success, args){
         .fail(function(jqXHR, textStatus, errorThrown) {
                 if (textStatus == "abort")
                     return;
-                console.log('Ajax failure: ' + textStatus);
                 $target.html('<span class="error_red">ERROR: {0}</span>'.format(textStatus));
                 $target.css('opacity','1.0');
             })
@@ -911,7 +910,7 @@ var fileBrowserListeners = function(current_url, node_list_url, url_base){
                     }
                 })
             .fail(function() {
-                    console.log('failed to load');
+                    console.log('fileBrowserListeners initFilter failed to load');
                 })
         ;
     }

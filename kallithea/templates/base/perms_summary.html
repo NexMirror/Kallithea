@@ -99,8 +99,6 @@
     $(document).ready(function(){
         var show_empty = function(section){
             var visible = $('.section_{0} tr.perm_row:visible'.format(section)).length;
-            console.log(visible)
-            console.log($('.section_{0} tr.perm_row:visible'.format(section)))
             if(visible == 0){
                 $('#empty_{0}'.format(section)).show();
             }
