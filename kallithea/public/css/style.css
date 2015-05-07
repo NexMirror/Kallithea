@@ -4373,6 +4373,8 @@ form.comment-form {
 .comment-form .comment-block-ta {
     border: 1px solid #ccc;
     border-radius: 3px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
 
@@ -4923,6 +4925,8 @@ table.code-difftable .lineno a {
     letter-spacing: -1px;
     padding-left: 10px;
     padding-right: 8px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
     box-sizing: border-box;
     cursor: pointer;
     display: block;
@@ -4989,6 +4993,8 @@ table.code-difftable .unmod .code pre:before {
     width: 0px;
     height: 0px;
     left: -8px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
 
@@ -5007,6 +5013,8 @@ tr.line.unmod:hover td .add-bubble {
     padding: 0 2px 2px 0.5px;
     border: 1px solid #577632;
     border-radius: 3px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
 
