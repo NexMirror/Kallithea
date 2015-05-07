@@ -2690,15 +2690,11 @@ BIN_FILENODE = 6
     float: left;
     padding: 2px 0px 0px 2px;
 }
-.changeset-status-container .changeset-status-lbl {
-    float: left;
-    padding: 3px 4px 0px 0px
-}
 .code-header .changeset-status-container .changeset-status-lbl {
     float: left;
     padding: 0px 4px 0px 0px;
 }
-.changeset-status-container .changeset-status-ico {
+.changeset-status-container div.changeset-status-ico {
     float: left;
 }
 .code-header .changeset-status-container .changeset-status-ico,

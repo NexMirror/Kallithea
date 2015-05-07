@@ -76,15 +76,14 @@ ${self.repo_context_bar('showpullrequest')}
           <div class="input">
             <div class="changeset-status-container" style="float:none;clear:both">
             %if c.current_voting_result:
-              <div class="changeset-status-ico" style="padding:0px 4px 0px 0px">
-                  <i class="icon-circle changeset-status-${c.current_voting_result}" title="${_('Pull request status calculated from votes')}"></i></div>
-              <div class="changeset-status-lbl tooltip" title="${_('Pull request status calculated from votes')}">
+              <span class="changeset-status-ico" style="padding:0px 4px 0px 0px">
+                  <i class="icon-circle changeset-status-${c.current_voting_result}" title="${_('Pull request status calculated from votes')}"></i></span>
+              <span class="changeset-status-lbl tooltip" title="${_('Pull request status calculated from votes')}">
                 %if c.pull_request.is_closed():
                     ${_('Closed')},
                 %endif
                 ${h.changeset_status_lbl(c.current_voting_result)}
-              </div>
-
+              </span>
             %endif
             </div>
           </div>

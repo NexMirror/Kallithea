@@ -40,8 +40,8 @@
         %if co.status_change:
            <div  style="float:left" class="changeset-status-container">
              <div style="float:left;padding:10px 2px 0px 2px"></div>
-             <div title="${_('Changeset status')}" class="changeset-status-lbl"> ${co.status_change[0].status_lbl}</div>
-             <div class="changeset-status-ico"><i class="icon-circle changeset-status-${co.status_change[0].status}"></i></div>
+             <span title="${_('Changeset status')}" class="changeset-status-lbl">${_("Status change")}: ${co.status_change[0].status_lbl}</span>
+             <span class="changeset-status-ico"><i class="icon-circle changeset-status-${co.status_change[0].status}"></i></span>
            </div>
         %endif
 
