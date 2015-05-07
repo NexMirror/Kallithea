@@ -125,8 +125,9 @@ class PullRequestModel(BaseModel):
 
         #notification to reviewers
         pr_url = pr.url(canonical=True)
-        threading = [h.canonical_url('pullrequest_show', repo_name=pr.other_repo.repo_name,
-                                     pull_request_id=pr.pull_request_id)]
+        threading = ['%s-pr-%s@%s' % (pr.other_repo.repo_name,
+                                      pr.pull_request_id,
+                                      h.canonical_hostname())]
         subject = safe_unicode(
             h.link_to(
               _('%(user)s wants you to review pull request %(pr_nice_id)s: %(pr_title)s') % \

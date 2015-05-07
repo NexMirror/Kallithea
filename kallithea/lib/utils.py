@@ -247,7 +247,7 @@ def get_filesystem_repos(path, recursive=False, skip_removed_repos=True):
                     continue
                 #check if this dir containts other repos for recursive scan
                 rec_path = os.path.join(p, dirpath)
-                if os.path.isdir(rec_path):
+                if not os.path.islink(rec_path) and os.path.isdir(rec_path):
                     for inner_scm in _get_repos(rec_path):
                         yield inner_scm
 

@@ -240,7 +240,7 @@ $(document).ready(function(){
         var selected = e.currentTarget.options[e.currentTarget.selectedIndex].value;
         if(selected && selected != "${c.changeset.raw_id}"){
             window.location = pyroutes.url('files_home', {'repo_name': "${h.safe_unicode(c.repo_name)}", 'revision': selected, 'f_path': "${h.safe_unicode(c.file.path)}"});
-            $("#browserblock").hide();
+            $("#body.browserblock").hide();
         } else {
             $("#branch_selector").val("${c.changeset.raw_id}");
         }
