@@ -113,7 +113,7 @@
 
             var elems = $('.filter_' + section).each(function(el){
                 var perm_type = $checkbox.attr('perm_type');
-                var checked = $checkbox.checked;
+                var checked = $checkbox.prop('checked');
                 if(checked){
                     $('.'+section+'_'+perm_type).show();
                 }
