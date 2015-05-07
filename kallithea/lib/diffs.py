@@ -642,6 +642,7 @@ class DiffProcessor(object):
 
     def as_html(self, table_class='code-difftable', line_class='line',
                 old_lineno_class='lineno old', new_lineno_class='lineno new',
+                no_lineno_class='lineno',
                 code_class='code', enable_comments=False, parsed_lines=None):
         """
         Return given diff as html table with customized css classes
@@ -693,6 +694,8 @@ class DiffProcessor(object):
                                 change['old_lineno'])
                     cond_new = (change['new_lineno'] != '...' and
                                 change['new_lineno'])
+                    no_lineno = (change['old_lineno'] == '...' and
+                                 change['new_lineno'] == '...')
                     if cond_old:
                         anchor_old_id = 'id="%s"' % anchor_old
                     if cond_new:
@@ -700,9 +703,10 @@ class DiffProcessor(object):
                     ###########################################################
                     # OLD LINE NUMBER
                     ###########################################################
-                    _html.append('''\t<td %(a_id)s class="%(olc)s">''' % {
+                    _html.append('''\t<td %(a_id)s class="%(olc)s" %(colspan)s>''' % {
                         'a_id': anchor_old_id,
-                        'olc': old_lineno_class
+                        'olc': no_lineno_class if no_lineno else old_lineno_class,
+                        'colspan': 'colspan="2"' if no_lineno else ''
                     })
 
                     _html.append('''%(link)s''' % {
@@ -714,16 +718,17 @@ class DiffProcessor(object):
                     # NEW LINE NUMBER
                     ###########################################################
 
-                    _html.append('''\t<td %(a_id)s class="%(nlc)s">''' % {
-                        'a_id': anchor_new_id,
-                        'nlc': new_lineno_class
-                    })
+                    if not no_lineno:
+                        _html.append('''\t<td %(a_id)s class="%(nlc)s">''' % {
+                            'a_id': anchor_new_id,
+                            'nlc': new_lineno_class
+                        })
 
-                    _html.append('''%(link)s''' % {
-                        'link': _link_to_if(True, change['new_lineno'],
-                                            '#%s' % anchor_new)
-                    })
-                    _html.append('''</td>\n''')
+                        _html.append('''%(link)s''' % {
+                            'link': _link_to_if(True, change['new_lineno'],
+                                                '#%s' % anchor_new)
+                        })
+                        _html.append('''</td>\n''')
                     ###########################################################
                     # CODE
                     ###########################################################

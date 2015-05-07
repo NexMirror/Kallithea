@@ -4363,11 +4363,6 @@ div.comment-form {
     margin-top: 20px;
 }
 
-.comment-form strong {
-    display: block;
-    margin-bottom: 15px;
-}
-
 .comment-form textarea {
     width: 100%;
     height: 100px;
@@ -4383,6 +4378,8 @@ form.comment-form {
 .comment-form .comment-block-ta {
     border: 1px solid #ccc;
     border-radius: 3px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
 
@@ -4462,11 +4459,6 @@ form.comment-form {
 
 div.comment-inline-form {
     padding: 4px 0px 6px 0px;
-}
-
-.comment-inline-form strong {
-    display: block;
-    margin-bottom: 15px;
 }
 
 .comment-inline-form textarea {
@@ -4916,7 +4908,6 @@ table.code-difftable td.code pre i {
 table.code-difftable .lineno {
     padding-left: 2px;
     padding-right: 2px !important;
-    text-align: right;
     width: 30px;
     -moz-user-select: none;
     -webkit-user-select: none;
@@ -4925,20 +4916,26 @@ table.code-difftable .lineno {
     border-top: 0px solid #CCC !important;
     border-bottom: none !important;
     vertical-align: middle !important;
+    text-align: center;
 }
 table.code-difftable .lineno.new {
+    text-align: right;
 }
 table.code-difftable .lineno.old {
+    text-align: right;
 }
 table.code-difftable .lineno a {
     color: #aaa !important;
     font: 11px Consolas, Monaco, Inconsolata, Liberation Mono, monospace !important;
     letter-spacing: -1px;
-    text-align: right;
+    padding-left: 10px;
     padding-right: 8px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
     cursor: pointer;
     display: block;
-    width: 30px;
+    width: 100%;
 }
 
 table.code-difftable .lineno-inline {
@@ -4970,16 +4967,28 @@ table.code-difftable .code pre {
 
 table.code-difftable .del .code pre:before {
     content: "-";
-    color: #550000;
+    color: #800;
+    float: left;
+    left: -1em;
+    position: relative;
+    width: 0;
 }
 
 table.code-difftable .add .code pre:before {
     content: "+";
-    color: #005500;
+    color: #080;
+    float: left;
+    left: -1em;
+    position: relative;
+    width: 0;
 }
 
 table.code-difftable .unmod .code pre:before {
     content: " ";
+    float: left;
+    left: -1em;
+    position: relative;
+    width: 0;
 }
 
 .add-bubble {
@@ -4989,6 +4998,8 @@ table.code-difftable .unmod .code pre:before {
     width: 0px;
     height: 0px;
     left: -8px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
 
@@ -4996,6 +5007,7 @@ tr.line.add:hover td .add-bubble,
 tr.line.del:hover td .add-bubble,
 tr.line.unmod:hover td .add-bubble {
     display: block;
+    z-index: 1;
 }
 
 .add-bubble div {
@@ -5006,6 +5018,8 @@ tr.line.unmod:hover td .add-bubble {
     padding: 0 2px 2px 0.5px;
     border: 1px solid #577632;
     border-radius: 3px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
 
