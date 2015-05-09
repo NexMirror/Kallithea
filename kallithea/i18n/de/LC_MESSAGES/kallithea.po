@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Kallithea\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2015-04-01 03:17+0200\n"
-"PO-Revision-Date: 2015-04-01 12:15+0200\n"
+"PO-Revision-Date: 2015-05-09 21:31+0200\n"
 "Last-Translator: Peter Vitt <petervitt@web.de>\n"
 "Language-Team: German "
 "<https://hosted.weblate.org/projects/kallithea/kallithea/de/>\n"
@@ -75,6 +75,8 @@ msgstr "Änderungssätze auswählen"
 #: kallithea/controllers/compare.py:255
 msgid "Cannot compare repositories without using common ancestor"
 msgstr ""
+"Ohne einen gemeinsamen Vorfahren ist ein Vergleich der Repositories nicht "
+"möglich"
 
 #: kallithea/controllers/error.py:96
 msgid "The request could not be understood by the server due to malformed syntax."
@@ -354,7 +356,7 @@ msgstr ""
 #: kallithea/controllers/pullrequests.py:405
 #, python-format
 msgid "New changesets on %s %s since the previous pull request:"
-msgstr ""
+msgstr "Neue Changesets in %s %s seit dem letzten Pull Request:"
 
 #: kallithea/controllers/pullrequests.py:412
 msgid "Ancestor didn't change - show diff since previous version:"
@@ -366,11 +368,13 @@ msgid ""
 "This pull request is based on another %s revision and there is no simple "
 "diff."
 msgstr ""
+"Dieser Pull Request basiert auf einer anderen %s Revision. Daher ist kein "
+"Simple Diff verfügbar."
 
 #: kallithea/controllers/pullrequests.py:421
 #, python-format
 msgid "No changes found on %s %s since previous version."
-msgstr ""
+msgstr "Keine Änderungen seit der letzten Version gefunden in %s %s."
 
 #: kallithea/controllers/pullrequests.py:456
 #, python-format
@@ -379,12 +383,11 @@ msgstr ""
 
 #: kallithea/controllers/pullrequests.py:464
 msgid "Pull request update created"
-msgstr ""
+msgstr "Pull Request Update erstellt"
 
 #: kallithea/controllers/pullrequests.py:503
-#, fuzzy
 msgid "Pull request updated"
-msgstr "Pull Request"
+msgstr "Pull Request aktualisiert"
 
 #: kallithea/controllers/pullrequests.py:518
 msgid "Successfully deleted pull request"
@@ -393,34 +396,35 @@ msgstr "Erfolgreich Pull-Request gelöscht"
 #: kallithea/controllers/pullrequests.py:577
 #, python-format
 msgid "This pull request has already been merged to %s."
-msgstr ""
+msgstr "Dieser Pull Request wurde bereits in %s integriert."
 
 #: kallithea/controllers/pullrequests.py:579
 msgid "This pull request has been closed and can not be updated."
 msgstr ""
+"Dieser Pull Request wurde geschlossen und kann daher nicht aktualisiert "
+"werden."
 
 #: kallithea/controllers/pullrequests.py:597
 #, python-format
 msgid "This pull request can be updated with changes on %s:"
-msgstr ""
+msgstr "Dieser Pull Request kann mit Änderungen in %s aktualisiert werden:"
 
 #: kallithea/controllers/pullrequests.py:600
 msgid "No changesets found for updating this pull request."
-msgstr ""
+msgstr "Keine Changesets gefunden, um den Pull Request zu aktualisieren."
 
 #: kallithea/controllers/pullrequests.py:608
 #, python-format
 msgid "Note: Branch %s has another head: %s."
-msgstr ""
+msgstr "Hinweis: Branch %s hat einen anderen Head: %s."
 
 #: kallithea/controllers/pullrequests.py:614
 msgid "Git pull requests don't support updates yet."
-msgstr ""
+msgstr "Git Pull Request unterstützen bisher keine Updates."
 
 #: kallithea/controllers/pullrequests.py:701
-#, fuzzy
 msgid "Closing."
-msgstr "Schließen mit"
+msgstr "Schließen."
 
 #: kallithea/controllers/search.py:135
 msgid "Invalid search query. Try quoting it."
@@ -436,9 +440,8 @@ msgstr "Während der Suchoperation trat ein Fehler auf."
 
 #: kallithea/controllers/summary.py:199
 #: kallithea/templates/summary/summary.html:387
-#, fuzzy
 msgid "No data ready yet"
-msgstr "Es wurden bisher keine Daten geladen"
+msgstr "Es stehen noch keine Daten zur Verfügung"
 
 #: kallithea/controllers/summary.py:202
 #: kallithea/templates/summary/summary.html:101
@@ -897,19 +900,18 @@ msgstr ""
 "aufgetreten"
 
 #: kallithea/controllers/admin/settings.py:213
-#, fuzzy, python-format
+#, python-format
 msgid "Repositories successfully rescanned. Added: %s. Removed: %s."
 msgstr ""
-"Die Repositories wurden erfolgreich erneut überprüft hinzugefügt: %s ; "
-"entfernt: %s"
+"Die Repositories wurden erfolgreich überprüft. Hinzugefügt: %s. Entfernt: %s."
 
 #: kallithea/controllers/admin/settings.py:270
 msgid "Updated application settings"
-msgstr "Aktualisiere Applikations Einstellungen"
+msgstr "Anwendungseinstellungen aktualisiert"
 
 #: kallithea/controllers/admin/settings.py:327
 msgid "Updated visualisation settings"
-msgstr "Aktualisierte Layouteinstellungen"
+msgstr "Visualisierungseinstellungen aktualisiert"
 
 #: kallithea/controllers/admin/settings.py:332
 msgid "Error occurred during updating visualisation settings"
@@ -923,7 +925,7 @@ msgstr "Bitte gebe eine E-Mailadresse an"
 
 #: kallithea/controllers/admin/settings.py:373
 msgid "Send email task created"
-msgstr ""
+msgstr "Task zum Versenden von E-Mails erstellt"
 
 #: kallithea/controllers/admin/settings.py:404
 msgid "Added new hook"
@@ -971,7 +973,7 @@ msgstr "Während des Löschens der Benutzergruppe ist ein Fehler aufgetreten"
 
 #: kallithea/controllers/admin/user_groups.py:314
 msgid "Target group cannot be the same"
-msgstr ""
+msgstr "Zielgruppe kann nicht die gleiche Gruppe sein"
 
 #: kallithea/controllers/admin/user_groups.py:320
 msgid "User Group permissions updated"
@@ -1023,20 +1025,20 @@ msgstr "Sie können diesen Benutzer nicht editieren"
 #: kallithea/controllers/admin/users.py:482
 #, python-format
 msgid "Added ip %s to user whitelist"
-msgstr "Die IP %s wurde zur Nutzerwhitelist hinzugefügt"
+msgstr "Die IP-Adresse %s wurde zur Nutzerwhitelist hinzugefügt"
 
 #: kallithea/controllers/admin/users.py:488
 msgid "An error occurred during ip saving"
-msgstr ""
+msgstr "Während des Speicherns der IP-Adresse ist ein Fehler aufgetreten"
 
 #: kallithea/controllers/admin/users.py:502
 msgid "Removed ip address from user whitelist"
-msgstr "IP wurde von der Nutzerwhitelist entfernt"
+msgstr "IP-Adresse wurde von der Nutzerwhitelist entfernt"
 
 #: kallithea/lib/auth.py:745
 #, python-format
 msgid "IP %s not allowed"
-msgstr "IP %s ist nicht erlaubt"
+msgstr "IP-Adresse %s ist nicht erlaubt"
 
 #: kallithea/lib/auth.py:806
 msgid "You need to be a registered user to perform this action"
@@ -1048,7 +1050,7 @@ msgstr "Sie müssen sich anmelden um diese Seite aufzurufen"
 
 #: kallithea/lib/base.py:427
 msgid "Repository not found in the filesystem"
-msgstr ""
+msgstr "Das Repository konnte nicht im Filesystem gefunden werden"
 
 #: kallithea/lib/base.py:453 kallithea/lib/helpers.py:643
 msgid "Changeset not found"
@@ -1108,7 +1110,7 @@ msgstr "Fork Name %s"
 #: kallithea/lib/helpers.py:761
 #, python-format
 msgid "Pull request #%s"
-msgstr ""
+msgstr "Pull Request #%s"
 
 #: kallithea/lib/helpers.py:771
 msgid "[deleted] repository"
@@ -1408,7 +1410,7 @@ msgstr "Kallithea Administrator"
 #: kallithea/lib/dbmigrate/schema/db_2_2_0.py:1643
 #: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1670 kallithea/model/db.py:1672
 msgid "Repository creation disabled"
-msgstr "Repository erstelllung deaktiviert"
+msgstr "Erstellung eines Repositorys deaktiviert"
 
 #: kallithea/lib/dbmigrate/schema/db_1_4_0.py:1175
 #: kallithea/lib/dbmigrate/schema/db_1_5_0.py:1194
@@ -1423,7 +1425,7 @@ msgstr "Repository erstelllung deaktiviert"
 #: kallithea/lib/dbmigrate/schema/db_2_2_0.py:1644
 #: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1671 kallithea/model/db.py:1673
 msgid "Repository creation enabled"
-msgstr "Repository erstellung aktiviert"
+msgstr "Erstellung eines Repositorys aktiviert"
 
 #: kallithea/lib/dbmigrate/schema/db_1_4_0.py:1176
 #: kallithea/lib/dbmigrate/schema/db_1_5_0.py:1195
@@ -1438,7 +1440,7 @@ msgstr "Repository erstellung aktiviert"
 #: kallithea/lib/dbmigrate/schema/db_2_2_0.py:1648
 #: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1675 kallithea/model/db.py:1677
 msgid "Repository forking disabled"
-msgstr ""
+msgstr "Forking eines Repositorys deaktiviert"
 
 #: kallithea/lib/dbmigrate/schema/db_1_4_0.py:1177
 #: kallithea/lib/dbmigrate/schema/db_1_5_0.py:1196
@@ -1453,7 +1455,7 @@ msgstr ""
 #: kallithea/lib/dbmigrate/schema/db_2_2_0.py:1649
 #: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1676 kallithea/model/db.py:1678
 msgid "Repository forking enabled"
-msgstr ""
+msgstr "Forking eines Repositorys aktiviert"
 
 #: kallithea/lib/dbmigrate/schema/db_1_4_0.py:1178
 #: kallithea/lib/dbmigrate/schema/db_1_5_0.py:1197
@@ -1558,7 +1560,7 @@ msgstr "höchste Ebene"
 #: kallithea/lib/dbmigrate/schema/db_2_2_0.py:1627
 #: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1654 kallithea/model/db.py:1656
 msgid "Repository group no access"
-msgstr ""
+msgstr "Kein Zugriff für Repositorygruppe"
 
 #: kallithea/lib/dbmigrate/schema/db_1_6_0.py:1394
 #: kallithea/lib/dbmigrate/schema/db_1_7_0.py:1414
@@ -1570,7 +1572,7 @@ msgstr ""
 #: kallithea/lib/dbmigrate/schema/db_2_2_0.py:1628
 #: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1655 kallithea/model/db.py:1657
 msgid "Repository group read access"
-msgstr ""
+msgstr "Lesezugriff für Repositorygruppe"
 
 #: kallithea/lib/dbmigrate/schema/db_1_6_0.py:1395
 #: kallithea/lib/dbmigrate/schema/db_1_7_0.py:1415
@@ -1582,7 +1584,7 @@ msgstr ""
 #: kallithea/lib/dbmigrate/schema/db_2_2_0.py:1629
 #: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1656 kallithea/model/db.py:1658
 msgid "Repository group write access"
-msgstr ""
+msgstr "Schreibzugriff für Repositorygruppe"
 
 #: kallithea/lib/dbmigrate/schema/db_1_6_0.py:1396
 #: kallithea/lib/dbmigrate/schema/db_1_7_0.py:1416
@@ -1594,7 +1596,7 @@ msgstr ""
 #: kallithea/lib/dbmigrate/schema/db_2_2_0.py:1630
 #: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1657 kallithea/model/db.py:1659
 msgid "Repository group admin access"
-msgstr ""
+msgstr "Administrativer Zugriff für Repositorygruppe"
 
 #: kallithea/lib/dbmigrate/schema/db_1_7_0.py:1418
 #: kallithea/lib/dbmigrate/schema/db_1_8_0.py:1464
@@ -1605,7 +1607,7 @@ msgstr ""
 #: kallithea/lib/dbmigrate/schema/db_2_2_0.py:1632
 #: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1659 kallithea/model/db.py:1661
 msgid "User group no access"
-msgstr ""
+msgstr "Kein Zugriff für Benutzergruppe"
 
 #: kallithea/lib/dbmigrate/schema/db_1_7_0.py:1419
 #: kallithea/lib/dbmigrate/schema/db_1_8_0.py:1465
@@ -1616,7 +1618,7 @@ msgstr ""
 #: kallithea/lib/dbmigrate/schema/db_2_2_0.py:1633
 #: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1660 kallithea/model/db.py:1662
 msgid "User group read access"
-msgstr ""
+msgstr "Lesezugriff für Benutzergruppe"
 
 #: kallithea/lib/dbmigrate/schema/db_1_7_0.py:1420
 #: kallithea/lib/dbmigrate/schema/db_1_8_0.py:1466
@@ -1638,7 +1640,7 @@ msgstr "Nutzergruppe Schreibzugriff"
 #: kallithea/lib/dbmigrate/schema/db_2_2_0.py:1635
 #: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1662 kallithea/model/db.py:1664
 msgid "User group admin access"
-msgstr ""
+msgstr "Administrativer Zugriff für Benutzergruppe"
 
 #: kallithea/lib/dbmigrate/schema/db_1_7_0.py:1423
 #: kallithea/lib/dbmigrate/schema/db_1_8_0.py:1469
@@ -1649,7 +1651,7 @@ msgstr ""
 #: kallithea/lib/dbmigrate/schema/db_2_2_0.py:1637
 #: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1664 kallithea/model/db.py:1666
 msgid "Repository Group creation disabled"
-msgstr ""
+msgstr "Erstellung von Repositorygruppen deaktiviert"
 
 #: kallithea/lib/dbmigrate/schema/db_1_7_0.py:1424
 #: kallithea/lib/dbmigrate/schema/db_1_8_0.py:1470
@@ -1660,7 +1662,7 @@ msgstr ""
 #: kallithea/lib/dbmigrate/schema/db_2_2_0.py:1638
 #: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1665 kallithea/model/db.py:1667
 msgid "Repository Group creation enabled"
-msgstr ""
+msgstr "Erstellung von Repositorygruppen aktiviert"
 
 #: kallithea/lib/dbmigrate/schema/db_1_7_0.py:1426
 #: kallithea/lib/dbmigrate/schema/db_1_8_0.py:1472
@@ -1671,7 +1673,7 @@ msgstr ""
 #: kallithea/lib/dbmigrate/schema/db_2_2_0.py:1640
 #: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1667 kallithea/model/db.py:1669
 msgid "User Group creation disabled"
-msgstr ""
+msgstr "Erstellung von Benutzergruppen deaktiviert"
 
 #: kallithea/lib/dbmigrate/schema/db_1_7_0.py:1427
 #: kallithea/lib/dbmigrate/schema/db_1_8_0.py:1473
@@ -1682,7 +1684,7 @@ msgstr ""
 #: kallithea/lib/dbmigrate/schema/db_2_2_0.py:1641
 #: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1668 kallithea/model/db.py:1670
 msgid "User Group creation enabled"
-msgstr ""
+msgstr "Erstellung von Benutzergruppen aktiviert"
 
 #: kallithea/lib/dbmigrate/schema/db_1_7_0.py:1435
 #: kallithea/lib/dbmigrate/schema/db_1_8_0.py:1481
@@ -1721,11 +1723,14 @@ msgstr "Benutzerregistrierung mit automatische Kontoaktivierung"
 #: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1672 kallithea/model/db.py:1674
 msgid "Repository creation enabled with write permission to a repository group"
 msgstr ""
+"Erstellung von Repositories mit Schreibzugriff für Repositorygruppe aktiviert"
 
 #: kallithea/lib/dbmigrate/schema/db_2_2_0.py:1646
 #: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1673 kallithea/model/db.py:1675
 msgid "Repository creation disabled with write permission to a repository group"
 msgstr ""
+"Erstellung von Repositories mit Schreibzugriff für Repositorygruppe "
+"deaktiviert"
 
 #: kallithea/model/comment.py:76
 #, python-format
@@ -1815,14 +1820,13 @@ msgid ""
 msgstr ""
 
 #: kallithea/model/notification.py:315
-#, fuzzy
 msgid "Closing"
-msgstr "Schließen mit"
+msgstr "Schließen"
 
 #: kallithea/model/pull_request.py:132
 #, python-format
 msgid "%(user)s wants you to review pull request #%(pr_id)s: %(pr_title)s"
-msgstr ""
+msgstr "%(user)s möchte ein Review des Pull Request #%(pr_id)s: %(pr_title)s"
 
 #: kallithea/model/scm.py:808
 msgid "latest tip"
@@ -1830,19 +1834,19 @@ msgstr ""
 
 #: kallithea/model/user.py:194
 msgid "New user registration"
-msgstr ""
+msgstr "Neue Benutzerregistrierung"
 
 #: kallithea/model/user.py:214 kallithea/model/user.py:236
 msgid "You can't Edit this user since it's crucial for entire application"
 msgstr ""
 "Sie können diesen Benutzer nicht editieren, da er von entscheidender "
-"Bedeutung für die ganze Applikation ist"
+"Bedeutung für die gesamte Applikation ist"
 
 #: kallithea/model/user.py:255
 msgid "You can't remove this user since it's crucial for entire application"
 msgstr ""
-"Sie können diesen Benutzer nicht löschen, da er von entscheidender "
-"Bedeutung für die ganze Applikation ist"
+"Sie können diesen Benutzer nicht löschen, da er von entscheidender Bedeutung "
+"für die gesamte Applikation ist"
 
 #: kallithea/model/user.py:261
 #, python-format
@@ -1850,6 +1854,9 @@ msgid ""
 "User \"%s\" still owns %s repositories and cannot be removed. Switch "
 "owners or remove those repositories: %s"
 msgstr ""
+"Benutzer \"%s\" besitzt noch immer %s Repositories und kann daher nicht "
+"entfernt werden. Entweder muss der Besitzer geändert oder das Repository "
+"entfernt werden: %s"
 
 #: kallithea/model/user.py:268
 #, python-format
