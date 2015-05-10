@@ -4,6 +4,7 @@ from kallithea.model.db import Notification, User
 from kallithea.model.user import UserModel
 from kallithea.model.notification import NotificationModel
 from kallithea.model.meta import Session
+from kallithea.lib import helpers as h
 
 
 class TestNotificationsController(TestController):
@@ -89,3 +90,39 @@ class TestNotificationsController(TestController):
 
         response.mustcontain(subject)
         response.mustcontain(notif_body)
+
+    def test_description_with_age(self):
+        self.log_user()
+        cur_user = self._get_logged_user()
+        subject = u'test'
+        notify_body = u'hi there'
+        notification = NotificationModel().create(created_by = cur_user,
+                                                  subject    = subject,
+                                                  body       = notify_body)
+
+        description = NotificationModel().make_description(notification)
+        self.assertEqual(
+            description,
+            "{0} sent message {1}".format(
+                cur_user.username,
+                h.age(notification.created_on)
+                )
+            )
+
+    def test_description_with_datetime(self):
+        self.log_user()
+        cur_user = self._get_logged_user()
+        subject = u'test'
+        notify_body = u'hi there'
+        notification = NotificationModel().create(created_by = cur_user,
+                                                  subject    = subject,
+                                                  body       = notify_body)
+
+        description = NotificationModel().make_description(notification, False)
+        self.assertEqual(
+            description,
+            "{0} sent message at {1}".format(
+                cur_user.username,
+                h.fmt_date(notification.created_on)
+                )
+            )

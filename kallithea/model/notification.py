@@ -248,25 +248,31 @@ class NotificationModel(BaseModel):
         """
         #alias
         _n = notification
-        _map = {
-            _n.TYPE_CHANGESET_COMMENT: _('%(user)s commented on changeset at %(when)s'),
-            _n.TYPE_MESSAGE: _('%(user)s sent message at %(when)s'),
-            _n.TYPE_MENTION: _('%(user)s mentioned you at %(when)s'),
-            _n.TYPE_REGISTRATION: _('%(user)s registered in Kallithea at %(when)s'),
-            _n.TYPE_PULL_REQUEST: _('%(user)s opened new pull request at %(when)s'),
-            _n.TYPE_PULL_REQUEST_COMMENT: _('%(user)s commented on pull request at %(when)s')
-        }
-        tmpl = _map[notification.type_]
 
         if show_age:
-            when = h.age(notification.created_on)
+            return {
+                    _n.TYPE_CHANGESET_COMMENT: _('%(user)s commented on changeset %(age)s'),
+                    _n.TYPE_MESSAGE: _('%(user)s sent message %(age)s'),
+                    _n.TYPE_MENTION: _('%(user)s mentioned you %(age)s'),
+                    _n.TYPE_REGISTRATION: _('%(user)s registered in Kallithea %(age)s'),
+                    _n.TYPE_PULL_REQUEST: _('%(user)s opened new pull request %(age)s'),
+                    _n.TYPE_PULL_REQUEST_COMMENT: _('%(user)s commented on pull request %(age)s'),
+                }[notification.type_] % dict(
+                    user=notification.created_by_user.username,
+                    age=h.age(notification.created_on),
+                )
         else:
-            when = h.fmt_date(notification.created_on)
-
-        return tmpl % dict(
-            user=notification.created_by_user.username,
-            when=when,
-            )
+            return {
+                    _n.TYPE_CHANGESET_COMMENT: _('%(user)s commented on changeset at %(when)s'),
+                    _n.TYPE_MESSAGE: _('%(user)s sent message at %(when)s'),
+                    _n.TYPE_MENTION: _('%(user)s mentioned you at %(when)s'),
+                    _n.TYPE_REGISTRATION: _('%(user)s registered in Kallithea at %(when)s'),
+                    _n.TYPE_PULL_REQUEST: _('%(user)s opened new pull request at %(when)s'),
+                    _n.TYPE_PULL_REQUEST_COMMENT: _('%(user)s commented on pull request at %(when)s'),
+                }[notification.type_] % dict(
+                    user=notification.created_by_user.username,
+                    when=h.fmt_date(notification.created_on),
+                )
 
 
 class EmailNotificationModel(BaseModel):
