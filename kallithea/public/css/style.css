@@ -2307,6 +2307,14 @@ h3.files_location {
     margin-right: -3px;
 }
 
+.changeset-logical-index {
+    color: #666666;
+    font-style: italic;
+    font-size: 85%;
+    padding-right: 0.5em;
+    text-align: right;
+}
+
 .changeset_hash {
     color: #000000;
 }
