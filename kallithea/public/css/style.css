@@ -1872,7 +1872,7 @@ a.metatag[tag="license"]:hover {
     padding: 20px;
 }
 
-#login div.form div.fields div.field div.label {
+#login div.form div.form-horizontal div.form-group > label {
     width: 173px;
     float: left;
     text-align: right;
@@ -1880,7 +1880,7 @@ a.metatag[tag="license"]:hover {
     padding: 5px 0 0 5px;
 }
 
-#login div.form div.fields div.field div.input input {
+#login div.form div.form-horizontal div.form-group div input {
     background: #FFF;
     border-top: 1px solid #b3b3b3;
     border-left: 1px solid #b3b3b3;
@@ -1892,20 +1892,16 @@ a.metatag[tag="license"]:hover {
     padding: 7px 7px 6px;
 }
 
-#login div.form div.fields div.buttons {
-    clear: both;
-    overflow: hidden;
-    border-top: 1px solid #DDD;
-    text-align: right;
-    margin: 0;
-    padding: 10px 0 0;
+#login div.form .buttons {
+    float: right;
 }
 
 #login div.form div.links {
     clear: both;
     overflow: hidden;
     margin: 10px 0 0;
-    padding: 0 0 2px;
+    border-top: 1px solid #DDD;
+    padding: 10px 0 0;
 }
 
 .user-menu {
@@ -3756,8 +3752,8 @@ div#legend_data, div#legend_container, div#legend_choices {
 }
 
 #content div.box div.form div.fields,
-#login div.form,
-#login div.form div.fields,
+#login div.form-horizontal,
+#login div.form-horizontal div.form-group,
 #register div.form,
 #register div.form div.fields {
     clear: both;
@@ -3767,7 +3763,7 @@ div#legend_data, div#legend_container, div#legend_choices {
 }
 
 #content div.box div.form div.fields div.field div.label span,
-#login div.form div.fields div.field div.label span,
+#login div.form div.form-horizontal div.form-group div.label span,
 #register div.form div.fields div.field div.label span {
     height: 1%;
     display: block;
@@ -3777,7 +3773,7 @@ div#legend_data, div#legend_container, div#legend_choices {
 }
 
 #content div.box div.form div.fields div.field div.input input.error,
-#login div.form div.fields div.field div.input input.error,
+#login div.form div.form-horizontal div.form-group div.input input.error,
 #register div.form div.fields div.field div.input input.error {
     background: #FBE3E4;
     border-top: 1px solid #e1b2b3;
@@ -3787,7 +3783,7 @@ div#legend_data, div#legend_container, div#legend_choices {
 }
 
 #content div.box div.form div.fields div.field div.input input.success,
-#login div.form div.fields div.field div.input input.success,
+#login div.form div.form-horizontal div.form-group div.input input.success,
 #register div.form div.fields div.field div.input input.success {
     background: #E6EFC2;
     border-top: 1px solid #cebb98;
@@ -3889,7 +3885,7 @@ div.box-right div.form div.fields div.buttons {
 }
 
 #content div.box div.action div.button,
-#login div.form div.fields div.field div.input div.link,
+#login div.form div.form-horizontal div.form-group div.input div.link,
 #register div.form div.fields div.field div.input div.link {
     text-align: right;
     margin: 6px 0 0;
@@ -3958,7 +3954,7 @@ div.box-right div.form div.fields div.buttons {
     padding: 0;
 }
 
-#login div.form div.fields div.field,
+#login div.form div.form-horizontal div.form-group,
 #register div.form div.fields div.field {
     clear: both;
     overflow: hidden;
@@ -3966,7 +3962,7 @@ div.box-right div.form div.fields div.buttons {
     padding: 0 0 10px;
 }
 
-#login div.form div.fields div.field span.error-message,
+#login div.form div.form-horizontal div.form-group span.error-message,
 #register div.form div.fields div.field span.error-message {
     height: 1%;
     display: block;
@@ -3976,36 +3972,36 @@ div.box-right div.form div.fields div.buttons {
     max-width: 320px;
 }
 
-#login div.form div.fields div.field div.label label,
+#login div.form div.form-horizontal div.form-group label,
 #register div.form div.fields div.field div.label label {
     color: #000;
     font-weight: 700;
 }
 
-#login div.form div.fields div.field div.input,
+#login div.form div.form-horizontal div.form-group div,
 #register div.form div.fields div.field div.input {
     float: left;
     margin: 0;
     padding: 0;
 }
 
-#login div.form div.fields div.field div.input input.large {
+#login div.form div.form-horizontal div.form-group div input.large {
     width: 250px;
 }
 
-#login div.form div.fields div.field div.checkbox,
+#login div.form div.form-horizontal div.form-group div.checkbox,
 #register div.form div.fields div.field div.checkbox {
     margin: 0 0 0 184px;
     padding: 0;
 }
 
-#login div.form div.fields div.field div.checkbox label,
+#login div.form div.form-horizontal div.form-group div.checkbox label,
 #register div.form div.fields div.field div.checkbox label {
     color: #565656;
     font-weight: 700;
 }
 
-#login div.form div.fields div.buttons input,
+#login div.form div.buttons input,
 #register div.form div.fields div.buttons input {
     color: #000;
     font-size: 1em;

@@ -5,49 +5,46 @@
     ${_('Log In')}
 </%block>
 
-<div id="login">
+<div id="login" class="panel panel-default">
     <%include file="/base/flash_msg.html"/>
     <!-- login -->
-    <div class="title withlogo">
+    <div class="panel-heading title withlogo">
         %if c.site_name:
             <h5>${_('Log In to %s') % c.site_name}</h5>
         %else:
             <h5>${_('Log In')}</h5>
         %endif
     </div>
-    <div class="inner">
+    <div class="panel-body inner">
         ${h.form(h.url.current(came_from=c.came_from))}
         <div class="form">
             <i class="icon-lock"></i>
             <!-- fields -->
 
-            <div class="fields">
-                <div class="field">
-                    <div class="label">
-                        <label for="username">${_('Username')}:</label>
-                    </div>
-                    <div class="input">
-                        ${h.text('username',class_='focus large')}
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-sm-5" for="username">${_('Username')}:</label>
+                    <div class="input col-sm-7">
+                        ${h.text('username',class_='form-control focus large')}
                     </div>
 
                 </div>
-                <div class="field">
-                    <div class="label">
-                        <label for="password">${_('Password')}:</label>
-                    </div>
-                    <div class="input">
-                        ${h.password('password',class_='focus large')}
+                <div class="form-group">
+                    <label class="control-label col-sm-5" for="password">${_('Password')}:</label>
+                    <div class="input col-sm-7">
+                        ${h.password('password',class_='form-control focus large')}
                     </div>
 
                 </div>
-                <div class="field">
-                    <div class="checkbox">
-                        <input type="checkbox" id="remember" name="remember" />
-                        <label for="remember">${_('Remember me')}</label>
+                <div class="form-group">
+                    <div class="col-sm-offset-5 col-sm-7">
+                        <div class="checkbox">
+                            <label for="remember">
+                                <input type="checkbox" id="remember" name="remember"/>
+                                ${_('Remember me')}
+                            </label>
+                        </div>
                     </div>
-                </div>
-                <div class="buttons">
-                    ${h.submit('sign_in',_('Sign In'),class_="btn")}
                 </div>
             </div>
             <!-- end fields -->
@@ -58,6 +55,9 @@
                   /
                  ${h.link_to(_("Don't have an account ?"),h.url('register'))}
                 %endif
+                <span class="buttons">
+                    ${h.submit('sign_in',_('Sign In'),class_="btn btn-default")}
+                </span>
             </div>
 
             <!-- end links -->
