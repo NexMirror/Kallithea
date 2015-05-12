@@ -50,7 +50,7 @@ ${h.form(url('admin_permissions'), method='post')}
                     ${h.checkbox('overwrite_default_user_group','true')}
                     <label for="overwrite_default_user_group">
                     <span class="tooltip"
-                    title="${h.tooltip(_('All default permissions on each user group will be reset to chosen permission, note that all custom default permission on repository groups will be lost'))}">
+                    title="${h.tooltip(_('All default permissions on each user group will be reset to chosen permission, note that all custom default permission on user groups will be lost'))}">
                     ${_('Overwrite existing settings')}</span> </label>
 
                 </div>
