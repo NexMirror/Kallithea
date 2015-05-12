@@ -253,7 +253,8 @@ h3:hover > a.permalink,
 h4:hover > a.permalink,
 h5:hover > a.permalink,
 h6:hover > a.permalink,
-div:hover > a.permalink {
+div:hover > a.permalink,
+div:hover > span > a.permalink {
     visibility: visible;
 }
 
