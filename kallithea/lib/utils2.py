@@ -564,9 +564,9 @@ def time_to_datetime(tm):
         return datetime.datetime.fromtimestamp(tm)
 
 # Must match regexp in kallithea/public/js/base.js MentionsAutoComplete()
-# Eat char before @ - it must not look like we are in an email addresses.
+# Check char before @ - it must not look like we are in an email addresses.
 # Matching is gready so we don't have to look beyond the end.
-MENTIONS_REGEX = re.compile(r'(?:^|[^a-zA-Z0-9])@([a-zA-Z0-9][-_.a-zA-Z0-9]*[a-zA-Z0-9])')
+MENTIONS_REGEX = re.compile(r'(?:^|(?<=[^a-zA-Z0-9]))@([a-zA-Z0-9][-_.a-zA-Z0-9]*[a-zA-Z0-9])')
 
 def extract_mentioned_users(s):
     r"""
