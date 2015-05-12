@@ -452,7 +452,7 @@ class TestAdminUsersController(TestController):
 
         response = self.app.post(url('edit_user_api_keys', id=user_id),
                  {'_method': 'put', 'description': desc, 'lifetime': lifetime, '_authentication_token': self.authentication_token()})
-        self.checkSessionFlash(response, 'Api key successfully created')
+        self.checkSessionFlash(response, 'API key successfully created')
         try:
             response = response.follow()
             user = User.get(user_id)
@@ -470,7 +470,7 @@ class TestAdminUsersController(TestController):
 
         response = self.app.post(url('edit_user_api_keys', id=user_id),
                 {'_method': 'put', 'description': 'desc', 'lifetime': -1, '_authentication_token': self.authentication_token()})
-        self.checkSessionFlash(response, 'Api key successfully created')
+        self.checkSessionFlash(response, 'API key successfully created')
         response = response.follow()
 
         #now delete our key
@@ -479,7 +479,7 @@ class TestAdminUsersController(TestController):
 
         response = self.app.post(url('edit_user_api_keys', id=user_id),
                  {'_method': 'delete', 'del_api_key': keys[0].api_key, '_authentication_token': self.authentication_token()})
-        self.checkSessionFlash(response, 'Api key successfully deleted')
+        self.checkSessionFlash(response, 'API key successfully deleted')
         keys = UserApiKeys.query().filter(UserApiKeys.user_id == user_id).all()
         self.assertEqual(0, len(keys))
 
@@ -494,6 +494,6 @@ class TestAdminUsersController(TestController):
 
         response = self.app.post(url('edit_user_api_keys', id=user_id),
                  {'_method': 'delete', 'del_api_key_builtin': api_key, '_authentication_token': self.authentication_token()})
-        self.checkSessionFlash(response, 'Api key successfully reset')
+        self.checkSessionFlash(response, 'API key successfully reset')
         response = response.follow()
         response.mustcontain(no=[api_key])

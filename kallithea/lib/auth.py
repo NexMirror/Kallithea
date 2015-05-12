@@ -146,7 +146,7 @@ def check_password(password, hashed):
 
 def generate_api_key(str_, salt=None):
     """
-    Generates API KEY from given string
+    Generates API key from given string
 
     :param str_:
     :param salt:
@@ -519,9 +519,9 @@ class AuthUser(object):
             log.debug('Auth User lookup by USER ID %s' % self.user_id)
             is_user_loaded = user_model.fill_data(self, user_id=self.user_id)
 
-        # try go get user by api key
+        # try go get user by API key
         elif self._api_key and self._api_key != self.anonymous_user.api_key:
-            log.debug('Auth User lookup by API KEY %s' % self._api_key)
+            log.debug('Auth User lookup by API key %s' % self._api_key)
             is_user_loaded = user_model.fill_data(self, api_key=self._api_key)
 
         # lookup by username

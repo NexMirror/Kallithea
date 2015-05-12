@@ -553,7 +553,7 @@ class ApiController(JSONRPCController):
                     {
                         "user_id" :     "<user_id>",
                         "api_key" :     "<api_key>",
-                        "api_keys":     "[<list of all api keys including additional ones>]"
+                        "api_keys":     "[<list of all API keys including additional ones>]"
                         "username" :    "<username>",
                         "firstname":    "<firstname>",
                         "lastname" :    "<lastname>",

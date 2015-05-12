@@ -201,7 +201,7 @@ class TestMyAccountController(TestController):
         user = User.get(usr['user_id'])
         response = self.app.post(url('my_account_api_keys'),
                                  {'description': desc, 'lifetime': lifetime, '_authentication_token': self.authentication_token()})
-        self.checkSessionFlash(response, 'Api key successfully created')
+        self.checkSessionFlash(response, 'API key successfully created')
         try:
             response = response.follow()
             user = User.get(usr['user_id'])
@@ -217,7 +217,7 @@ class TestMyAccountController(TestController):
         user = User.get(usr['user_id'])
         response = self.app.post(url('my_account_api_keys'),
                                  {'description': 'desc', 'lifetime': -1, '_authentication_token': self.authentication_token()})
-        self.checkSessionFlash(response, 'Api key successfully created')
+        self.checkSessionFlash(response, 'API key successfully created')
         response = response.follow()
 
         #now delete our key
@@ -226,7 +226,7 @@ class TestMyAccountController(TestController):
 
         response = self.app.post(url('my_account_api_keys'),
                  {'_method': 'delete', 'del_api_key': keys[0].api_key, '_authentication_token': self.authentication_token()})
-        self.checkSessionFlash(response, 'Api key successfully deleted')
+        self.checkSessionFlash(response, 'API key successfully deleted')
         keys = UserApiKeys.query().all()
         self.assertEqual(0, len(keys))
 
@@ -241,6 +241,6 @@ class TestMyAccountController(TestController):
 
         response = self.app.post(url('my_account_api_keys'),
                  {'_method': 'delete', 'del_api_key_builtin': api_key, '_authentication_token': self.authentication_token()})
-        self.checkSessionFlash(response, 'Api key successfully reset')
+        self.checkSessionFlash(response, 'API key successfully reset')
         response = response.follow()
         response.mustcontain(no=[api_key])

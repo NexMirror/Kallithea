@@ -349,7 +349,7 @@ class UserModel(BaseModel):
 
         :param auth_user: instance of user to set attributes
         :param user_id: user id to fetch by
-        :param api_key: api key to fetch by
+        :param api_key: API key to fetch by
         :param username: username to fetch by
         """
         if user_id is None and api_key is None and username is None:

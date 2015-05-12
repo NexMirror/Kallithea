@@ -134,7 +134,7 @@ class JSONRPCController(WSGIController):
                                  message="JSON parse error ERR:%s RAW:%r"
                                  % (e, raw_body))
 
-        # check AUTH based on API KEY
+        # check AUTH based on API key
         try:
             self._req_api_key = json_body['api_key']
             self._req_id = json_body['id']
@@ -156,7 +156,7 @@ class JSONRPCController(WSGIController):
             u = User.get_by_api_key(self._req_api_key)
             if u is None:
                 return jsonrpc_error(retid=self._req_id,
-                                     message='Invalid API KEY')
+                                     message='Invalid API key')
 
             #check if we are allowed to use this IP
             auth_u = AuthUser(u.user_id, self._req_api_key, ip_addr=ip_addr)
@@ -168,7 +168,7 @@ class JSONRPCController(WSGIController):
 
         except Exception, e:
             return jsonrpc_error(retid=self._req_id,
-                                 message='Invalid API KEY')
+                                 message='Invalid API key')
 
         self._error = None
         try:
@@ -208,7 +208,7 @@ class JSONRPCController(WSGIController):
         # get our arglist and check if we provided them as args
         for arg, default in func_kwargs.iteritems():
             if arg == USER_SESSION_ATTR:
-                # USER_SESSION_ATTR is something translated from api key and
+                # USER_SESSION_ATTR is something translated from API key and
                 # this is checked before so we don't need validate it
                 continue
 

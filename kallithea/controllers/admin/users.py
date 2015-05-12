@@ -311,7 +311,7 @@ class UsersController(BaseController):
         description = request.POST.get('description')
         ApiKeyModel().create(c.user.user_id, description, lifetime)
         Session().commit()
-        h.flash(_("Api key successfully created"), category='success')
+        h.flash(_("API key successfully created"), category='success')
         return redirect(url('edit_user_api_keys', id=c.user.user_id))
 
     def delete_api_key(self, id):
@@ -327,11 +327,11 @@ class UsersController(BaseController):
                 user.api_key = generate_api_key(user.username)
                 Session().add(user)
                 Session().commit()
-                h.flash(_("Api key successfully reset"), category='success')
+                h.flash(_("API key successfully reset"), category='success')
         elif api_key:
             ApiKeyModel().delete(api_key, c.user.user_id)
             Session().commit()
-            h.flash(_("Api key successfully deleted"), category='success')
+            h.flash(_("API key successfully deleted"), category='success')
 
         return redirect(url('edit_user_api_keys', id=c.user.user_id))
 

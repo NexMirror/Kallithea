@@ -437,7 +437,7 @@ class User(Base, BaseModel):
     user_comments = relationship('ChangesetComment', cascade='all')
     #extra emails for this user
     user_emails = relationship('UserEmailMap', cascade='all')
-    #extra api keys
+    #extra API keys
     user_api_keys = relationship('UserApiKeys', cascade='all')
 
 
