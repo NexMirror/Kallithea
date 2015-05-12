@@ -11,13 +11,13 @@ ${h.form(form_url, method='put')}
         <div class="fields">
              <div class="field">
                 <div class="label label-checkbox">
-                    <label for="inherit_default_permissions">${_('Inherit from defaults')}:</label>
+                    <label for="inherit_default_permissions">${_('Inherit defaults')}:</label>
                 </div>
                 <div class="checkboxes">
                     ${h.checkbox('inherit_default_permissions',value=True)}
                     <span class="help-block">
-                    ${h.literal(_('Select to inherit permissions from %s permissions settings, and default IP address whitelist.')
-                                % h.link_to('default global', url('admin_permissions')))}
+                    ${h.literal(_('Select to inherit global settings, IP whitelist and permissions from the %s.')
+                                % h.link_to('default permissions', url('admin_permissions')))}
                     </span>
                 </div>
              </div>
