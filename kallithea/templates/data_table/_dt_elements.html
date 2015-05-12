@@ -119,7 +119,7 @@
 <%def name="repo_actions(repo_name, super_user=True)">
   <div>
     <div style="float:left; margin-right:5px;" class="grid_edit">
-      <a href="${h.url('edit_repo',repo_name=repo_name)}" title="${_('edit')}">
+      <a href="${h.url('edit_repo',repo_name=repo_name)}" title="${_('Edit')}">
         <i class="icon-pencil"></i> ${h.submit('edit_%s' % repo_name,_('edit'),class_="action_button")}
       </a>
     </div>
@@ -147,7 +147,7 @@
 
 <%def name="user_actions(user_id, username)">
  <div style="float:left" class="grid_edit">
-   <a href="${h.url('edit_user',id=user_id)}" title="${_('edit')}">
+   <a href="${h.url('edit_user',id=user_id)}" title="${_('Edit')}">
      <i class="icon-pencil"></i> ${h.submit('edit_%s' % username,_('edit'),class_="action_button")}
    </a>
  </div>

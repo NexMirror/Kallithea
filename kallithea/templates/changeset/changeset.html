@@ -33,13 +33,13 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
         <div class="diffblock">
             <div class="parents">
                 <div id="parent_link" class="changeset_hash">
-                    <i style="color:#036185" class="icon-left-open"></i> <a href="#">${_('parent rev.')}</a>
+                    <i style="color:#036185" class="icon-left-open"></i> <a href="#">${_('Parent rev.')}</a>
                 </div>
             </div>
 
             <div class="children">
                 <div id="child_link" class="changeset_hash">
-                    <a href="#">${_('child rev.')}</a> <i style="color:#036185" class="icon-right-open"></i>
+                    <a href="#">${_('Child rev.')}</a> <i style="color:#036185" class="icon-right-open"></i>
                 </div>
             </div>
 
@@ -86,7 +86,7 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
 
                     <span class="logtags">
                         %if len(c.changeset.parents)>1:
-                        <span class="merge">${_('merge')}</span>
+                        <span class="merge">${_('Merge')}</span>
                         %endif
 
                         %if h.is_hg(c.db_repo_scm_instance):
@@ -221,7 +221,7 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
                     success: function(data) {
                       if(data.results.length === 0){
                           $('#child_link').addClass('disabled');
-                          $('#child_link').html('${_('no revisions')}');
+                          $('#child_link').html('${_('No revisions')}');
                       }
                       if(data.results.length === 1){
                           var commit = data.results[0];
@@ -258,7 +258,7 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
                     success: function(data) {
                       if(data.results.length === 0){
                           $('#parent_link').addClass('disabled');
-                          $('#parent_link').html('${_('no revisions')}');
+                          $('#parent_link').html('${_('No revisions')}');
                       }
                       if(data.results.length === 1){
                           var commit = data.results[0];

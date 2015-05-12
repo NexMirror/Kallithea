@@ -5,14 +5,14 @@
         <td>
             <span class="btn btn-mini btn-success disabled">${_('Built-in')}</span>
         </td>
-        <td>${_('expires')}: ${_('never')}</td>
+        <td>${_('Expires')}: ${_('Never')}</td>
         <td>
             ${h.form(url('edit_user_api_keys', id=c.user.user_id),method='delete')}
                 ${h.hidden('del_api_key',c.user.api_key)}
                 ${h.hidden('del_api_key_builtin',1)}
                 <button class="btn btn-mini btn-danger" type="submit"
                         onclick="return confirm('${_('Confirm to reset this API key: %s') % c.user.api_key}');">
-                    ${_('reset')}
+                    ${_('Reset')}
                 </button>
             ${h.end_form()}
         </td>
@@ -24,12 +24,12 @@
             <td>${api_key.description}</td>
             <td style="min-width: 80px">
                  %if api_key.expires == -1:
-                  ${_('expires')}: ${_('never')}
+                  ${_('Expires')}: ${_('Never')}
                  %else:
                     %if api_key.expired:
-                        ${_('expired')}: ${h.age(h.time_to_datetime(api_key.expires))}
+                        ${_('Expired')}: ${h.age(h.time_to_datetime(api_key.expires))}
                     %else:
-                        ${_('expires')}: ${h.age(h.time_to_datetime(api_key.expires))}
+                        ${_('Expires')}: ${h.age(h.time_to_datetime(api_key.expires))}
                     %endif
                  %endif
             </td>
@@ -39,7 +39,7 @@
                     <button class="btn btn-mini btn-danger" type="submit"
                             onclick="return confirm('${_('Confirm to remove this API key: %s') % api_key.api_key}');">
                         <i class="icon-minus-circled"></i>
-                        ${_('remove')}
+                        ${_('Remove')}
                     </button>
                 ${h.end_form()}
             </td>

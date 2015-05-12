@@ -220,7 +220,7 @@ ${self.repo_context_bar('showpullrequest')}
                   <div class="reviewer_gravatar gravatar">
                     ${h.gravatar(member.email, size=14)}
                   </div>
-                  <div style="float:left;">${member.full_name} (${_('owner') if c.pull_request.user_id == member.user_id else _('reviewer')})</div>
+                  <div style="float:left;">${member.full_name} (${_('Owner') if c.pull_request.user_id == member.user_id else _('Reviewer')})</div>
                   <input type="hidden" value="${member.user_id}" name="review_members" />
                   %if editable:
                   <div class="reviewer_member_remove action_button" onclick="removeReviewMember(${member.user_id})" title="${_('Remove reviewer')}">

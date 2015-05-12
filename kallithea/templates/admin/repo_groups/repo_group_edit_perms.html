@@ -4,11 +4,11 @@ ${h.form(url('edit_repo_group_perms', group_name=c.repo_group.group_name),method
         <div class="field">
             <table id="permissions_manage" class="noborder">
                 <tr>
-                    <td>${_('none')}</td>
-                    <td>${_('read')}</td>
-                    <td>${_('write')}</td>
-                    <td>${_('admin')}</td>
-                    <td>${_('user/user group')}</td>
+                    <td>${_('None')}</td>
+                    <td>${_('Read')}</td>
+                    <td>${_('Write')}</td>
+                    <td>${_('Admin')}</td>
+                    <td>${_('User/User Group')}</td>
                     <td></td>
                 </tr>
                 ## USERS
@@ -31,7 +31,7 @@ ${h.form(url('edit_repo_group_perms', group_name=c.repo_group.group_name),method
                         <td>
                           %if r2p.user.username !='default':
                             <span style="color:#da4f49" class="action_button" onclick="ajaxActionRevoke(${r2p.user.user_id}, 'user', '${'id%s'%id(r2p.user.username)}', '${r2p.user.username}')">
-                             <i class="icon-minus-circled"></i> ${_('revoke')}
+                             <i class="icon-minus-circled"></i> ${_('Revoke')}
                             </span>
                           %endif
                         </td>
@@ -44,7 +44,7 @@ ${h.form(url('edit_repo_group_perms', group_name=c.repo_group.group_name),method
                             ${h.gravatar(r2p.user.email, cls="perm-gravatar", size=14)}
                             ${r2p.user.username if r2p.user.username != 'default' else _('default')}
                         </td>
-                        <td><i class="icon-user"></i> ${_('delegated admin')}</td>
+                        <td><i class="icon-user"></i> ${_('Delegated Admin')}</td>
                         %endif
                     </tr>
                 %endfor
@@ -68,7 +68,7 @@ ${h.form(url('edit_repo_group_perms', group_name=c.repo_group.group_name),method
                         </td>
                         <td>
                             <span style="color:#da4f49" class="action_button" onclick="ajaxActionRevoke(${g2p.users_group.users_group_id}, 'user_group', '${'id%s'%id(g2p.users_group.users_group_name)}', '${g2p.users_group.users_group_name}')">
-                            <i class="icon-minus-circled"></i> ${_('revoke')}
+                            <i class="icon-minus-circled"></i> ${_('Revoke')}
                             </span>
                         </td>
                     </tr>
@@ -100,7 +100,7 @@ ${h.form(url('edit_repo_group_perms', group_name=c.repo_group.group_name),method
                 </tr>
                 <tr>
                     <td colspan="6">
-                       ${_('apply to children')}:
+                       ${_('Apply to children')}:
                        ${h.radio('recursive', 'none', label=_('None'), checked="checked")}
                        ${h.radio('recursive', 'groups', label=_('Repository Groups'))}
                        ${h.radio('recursive', 'repos', label=_('Repositories'))}

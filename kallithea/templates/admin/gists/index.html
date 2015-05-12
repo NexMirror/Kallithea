@@ -54,7 +54,7 @@
                 ${_('Created')} ${h.age(gist.created_on)} /
                 <span style="color: #AAA">
                   %if gist.gist_expires == -1:
-                   ${_('Expires')}: ${_('never')}
+                   ${_('Expires')}: ${_('Never')}
                   %else:
                    ${_('Expires')}: ${h.age(h.time_to_datetime(gist.gist_expires))}
                   %endif

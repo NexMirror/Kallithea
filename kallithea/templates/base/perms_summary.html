@@ -10,11 +10,11 @@
             ${section.replace("_"," ").capitalize()}
             %if section != 'global':
                 <div style="float: right">
-                ${_('show')}:
-                ${h.checkbox('perms_filter_none_%s' % section, 'none', 'checked', class_='perm_filter filter_%s' % section, section=section, perm_type='none')} <label for="${'perms_filter_none_%s' % section}"><span class="perm_tag none">${_('none')}</span></label>
-                ${h.checkbox('perms_filter_read_%s' % section, 'read', 'checked', class_='perm_filter filter_%s' % section, section=section, perm_type='read')} <label for="${'perms_filter_read_%s' % section}"><span class="perm_tag read">${_('read')}</span></label>
-                ${h.checkbox('perms_filter_write_%s' % section, 'write', 'checked', class_='perm_filter filter_%s' % section, section=section, perm_type='write')} <label for="${'perms_filter_write_%s' % section}"> <span class="perm_tag write">${_('write')}</span></label>
-                ${h.checkbox('perms_filter_admin_%s' % section, 'admin', 'checked', class_='perm_filter filter_%s' % section, section=section, perm_type='admin')} <label for="${'perms_filter_admin_%s' % section}"><span class="perm_tag admin">${_('admin')}</span></label>
+                ${_('Show')}:
+                ${h.checkbox('perms_filter_none_%s' % section, 'none', 'checked', class_='perm_filter filter_%s' % section, section=section, perm_type='none')} <label for="${'perms_filter_none_%s' % section}"><span class="perm_tag none">${_('None')}</span></label>
+                ${h.checkbox('perms_filter_read_%s' % section, 'read', 'checked', class_='perm_filter filter_%s' % section, section=section, perm_type='read')} <label for="${'perms_filter_read_%s' % section}"><span class="perm_tag read">${_('Read')}</span></label>
+                ${h.checkbox('perms_filter_write_%s' % section, 'write', 'checked', class_='perm_filter filter_%s' % section, section=section, perm_type='write')} <label for="${'perms_filter_write_%s' % section}"> <span class="perm_tag write">${_('Write')}</span></label>
+                ${h.checkbox('perms_filter_admin_%s' % section, 'admin', 'checked', class_='perm_filter filter_%s' % section, section=section, perm_type='admin')} <label for="${'perms_filter_admin_%s' % section}"><span class="perm_tag admin">${_('Admin')}</span></label>
                 </div>
             %endif
         </div>
@@ -40,7 +40,7 @@
                       </td>
                       %if actions:
                       <td>
-                           <a href="${h.url('admin_permissions')}">${_('edit')}</a>
+                           <a href="${h.url('admin_permissions')}">${_('Edit')}</a>
                       </td>
                       %endif
                   </tr>
@@ -76,11 +76,11 @@
                       %if actions:
                       <td>
                           %if section == 'repositories':
-                              <a href="${h.url('edit_repo_perms',repo_name=k,anchor='permissions_manage')}">${_('edit')}</a>
+                              <a href="${h.url('edit_repo_perms',repo_name=k,anchor='permissions_manage')}">${_('Edit')}</a>
                           %elif section == 'repositories_groups':
-                              <a href="${h.url('edit_repo_group_perms',group_name=k,anchor='permissions_manage')}">${_('edit')}</a>
+                              <a href="${h.url('edit_repo_group_perms',group_name=k,anchor='permissions_manage')}">${_('Edit')}</a>
                           %elif section == 'user_groups':
-                              ##<a href="${h.url('edit_users_group',id=k)}">${_('edit')}</a>
+                              ##<a href="${h.url('edit_users_group',id=k)}">${_('Edit')}</a>
                           %endif
                       </td>
                       %endif

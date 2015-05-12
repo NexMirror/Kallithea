@@ -37,7 +37,7 @@
                     <li>
                       <div style="padding:3px 0px 3px 0px">
                           <span style="margin: 0px 10px 0px 0px" plugin_id="${plugin_path}" class="toggle-plugin btn btn-mini ${'btn-success' if plugin_path in c.enabled_plugins else ''}">
-                          ${_('enabled') if plugin_path in c.enabled_plugins else _('disabled')}</span>${plugin_path}
+                          ${_('Enabled') if plugin_path in c.enabled_plugins else _('Disabled')}</span>${plugin_path}
                       </div>
                     </li>
                %endfor

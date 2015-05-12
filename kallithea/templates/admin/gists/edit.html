@@ -58,7 +58,7 @@
                     ${h.select('lifetime', '0', c.lifetime_options)}
                     <span class="" style="color: #AAA">
                      %if c.gist.gist_expires == -1:
-                      ${_('Expires')}: ${_('never')}
+                      ${_('Expires')}: ${_('Never')}
                      %else:
                       ${_('Expires')}: ${h.age(h.time_to_datetime(c.gist.gist_expires))}
                      %endif

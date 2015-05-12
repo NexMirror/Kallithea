@@ -24,7 +24,7 @@ ${h.form(url('repo', repo_name=c.repo_info.repo_name),method='put')}
                    %if c.repo_info.clone_uri:
                     <div id="clone_uri_hidden" style="font-size: 14px">
                         <span id="clone_uri_hidden_value">${c.repo_info.clone_uri_hidden}</span>
-                        <span style="cursor: pointer; padding: 0px 0px 5px 0px" id="edit_clone_uri"><i class="icon-edit"></i>${_('edit')}</span>
+                        <span style="cursor: pointer; padding: 0px 0px 5px 0px" id="edit_clone_uri"><i class="icon-edit"></i>${_('Edit')}</span>
                     </div>
                     <div id="alter_clone_uri" style="display: none">
                         ${h.text('clone_uri',class_="medium",  placeholder=_('new value'))}

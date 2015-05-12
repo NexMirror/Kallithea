@@ -13,7 +13,7 @@ ${h.form(url('my_account'), method='post')}
                 %else:
                 <strong>${_('Avatars are disabled')}</strong>
                 <br/>${c.user.email or _('Missing email, please update your user email address.')}
-                    [${_('current IP')}: ${c.perm_user.ip_addr or "?"}]
+                    [${_('Current IP')}: ${c.perm_user.ip_addr or "?"}]
                 %endif
                </p>
            </div>
