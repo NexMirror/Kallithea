@@ -499,7 +499,7 @@ class UsersController(BaseController):
         user_model = UserModel()
         user_model.delete_extra_ip(id, ip_id)
         Session().commit()
-        h.flash(_("Removed ip address from user whitelist"), category='success')
+        h.flash(_("Removed IP address from user whitelist"), category='success')
 
         if 'default_user' in request.POST:
             return redirect(url('admin_permissions_ips'))

@@ -161,7 +161,7 @@ def action_logger(user, action, repo, ipaddr='', sa=None, commit=False):
         easy translations
     :param repo: string name of repository or object containing repo_id,
         that action was made on
-    :param ipaddr: optional ip address from what the action was made
+    :param ipaddr: optional IP address from what the action was made
     :param sa: optional sqlalchemy session
 
     """

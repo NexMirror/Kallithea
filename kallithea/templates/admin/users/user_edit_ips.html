@@ -20,7 +20,7 @@
                     ${h.hidden('del_ip_id',ip.ip_id)}
                     <i class="icon-minus-circled" style="color:#FF4444"></i>
                     ${h.submit('remove_',_('delete'),id="remove_ip_%s" % ip.ip_id,
-                    class_="action_button", onclick="return  confirm('"+_('Confirm to delete this ip: %s') % ip.ip_addr+"');")}
+                    class_="action_button", onclick="return  confirm('"+_('Confirm to delete this IP address: %s') % ip.ip_addr+"');")}
                 ${h.end_form()}
             </td>
           </tr>
@@ -39,7 +39,7 @@
         <div class="fields">
              <div class="field">
                 <div class="label">
-                    <label for="new_ip">${_('New ip address')}:</label>
+                    <label for="new_ip">${_('New IP address')}:</label>
                 </div>
                 <div class="input">
                     ${h.text('new_ip', class_='medium')}

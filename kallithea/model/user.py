@@ -447,7 +447,7 @@ class UserModel(BaseModel):
 
     def add_extra_ip(self, user, ip):
         """
-        Adds ip address to UserIpMap
+        Adds IP address to UserIpMap
 
         :param user:
         :param ip:
@@ -465,7 +465,7 @@ class UserModel(BaseModel):
 
     def delete_extra_ip(self, user, ip_id):
         """
-        Removes ip address from UserIpMap
+        Removes IP address from UserIpMap
 
         :param user:
         :param ip_id:

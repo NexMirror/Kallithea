@@ -211,7 +211,7 @@ if you closed it reopen it following the same commands (including the
   cd C:\Kallithea\Bin
   paster make-config Kallithea production.ini
 
-Then, you must edit production.ini to fit your needs (ip address, ip
+Then, you must edit production.ini to fit your needs (network address and
 port, mail settings, database, whatever). I recommend using NotePad++
 (free) or similar text editor, as it handles well the EndOfLine
 character differences between Unix and Windows
