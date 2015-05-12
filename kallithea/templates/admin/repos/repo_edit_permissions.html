@@ -34,7 +34,7 @@ ${h.form(url('edit_repo_perms_update', repo_name=c.repo_name), method='put')}
                             %if h.HasPermissionAny('hg.admin')() and r2p.user.username != 'default':
                              <a href="${h.url('edit_user',id=r2p.user.user_id)}">${r2p.user.username}</a>
                             %else:
-                             ${r2p.user.username if r2p.user.username != 'default' else _('default')}
+                             ${r2p.user.username if r2p.user.username != 'default' else _('Default')}
                             %endif
                         </td>
                         <td>

@@ -185,7 +185,7 @@ class LoginController(BaseController):
                                       remoteip=self.ip_addr)
                     if c.captcha_active and not response.is_valid:
                         _value = form_result
-                        _msg = _('bad captcha')
+                        _msg = _('Bad captcha')
                         error_dict = {'recaptcha_field': _msg}
                         raise formencode.Invalid(_msg, _value, None,
                                                  error_dict=error_dict)
@@ -231,7 +231,7 @@ class LoginController(BaseController):
                                       remoteip=self.ip_addr)
                     if c.captcha_active and not response.is_valid:
                         _value = form_result
-                        _msg = _('bad captcha')
+                        _msg = _('Bad captcha')
                         error_dict = {'recaptcha_field': _msg}
                         raise formencode.Invalid(_msg, _value, None,
                                                  error_dict=error_dict)

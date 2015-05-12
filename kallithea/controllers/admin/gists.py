@@ -56,7 +56,7 @@ class GistsController(BaseController):
 
     def __load_defaults(self, extra_values=None):
         c.lifetime_values = [
-            (str(-1), _('forever')),
+            (str(-1), _('Forever')),
             (str(5), _('5 minutes')),
             (str(60), _('1 hour')),
             (str(60 * 24), _('1 day')),
@@ -230,7 +230,7 @@ class GistsController(BaseController):
             log.error(traceback.format_exc())
             raise HTTPNotFound()
 
-        self.__load_defaults(extra_values=('0', _('unmodified')))
+        self.__load_defaults(extra_values=('0', _('Unmodified')))
         rendered = render('admin/gists/edit.html')
 
         if request.POST:

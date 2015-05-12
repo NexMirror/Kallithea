@@ -189,7 +189,7 @@ class TestMyAccountController(TestController):
         user = User.get(usr['user_id'])
         response = self.app.get(url('my_account_api_keys'))
         response.mustcontain(user.api_key)
-        response.mustcontain('expires: never')
+        response.mustcontain('Expires: Never')
 
     @parameterized.expand([
         ('forever', -1),
@@ -237,7 +237,7 @@ class TestMyAccountController(TestController):
         api_key = user.api_key
         response = self.app.get(url('my_account_api_keys'))
         response.mustcontain(api_key)
-        response.mustcontain('expires: never')
+        response.mustcontain('Expires: Never')
 
         response = self.app.post(url('my_account_api_keys'),
                  {'_method': 'delete', 'del_api_key_builtin': api_key, '_authentication_token': self.authentication_token()})

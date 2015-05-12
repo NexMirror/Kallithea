@@ -679,7 +679,7 @@ def action_parser(user_log, feed=False, parse_cs=False):
                 url('changeset_home', repo_name=repo_name,
                     revision=_rev
                 ),
-                _('compare view')
+                _('Compare view')
             )
         )
 
@@ -724,7 +724,7 @@ def action_parser(user_log, feed=False, parse_cs=False):
     def get_fork_name():
         repo_name = action_params
         _url = url('summary_home', repo_name=repo_name)
-        return _('fork name %s') % link_to(action_params, _url)
+        return _('Fork name %s') % link_to(action_params, _url)
 
     def get_user_name():
         user_name = action_params

@@ -166,7 +166,7 @@ def _context_url(GET, fileid=None):
     if ig_ws:
         params[ig_ws_key] += [ig_ws_val]
 
-    lbl = _('increase diff context to %(num)s lines') % {'num': ln_ctx}
+    lbl = _('Increase diff context to %(num)s lines') % {'num': ln_ctx}
 
     params['anchor'] = fileid
     icon = h.literal('<i class="icon-sort"></i>')

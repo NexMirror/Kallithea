@@ -235,7 +235,7 @@ class MyAccountController(BaseController):
         self.__load_data()
         show_expired = True
         c.lifetime_values = [
-            (str(-1), _('forever')),
+            (str(-1), _('Forever')),
             (str(5), _('5 minutes')),
             (str(60), _('1 hour')),
             (str(60 * 24), _('1 day')),

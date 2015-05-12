@@ -438,7 +438,7 @@ class TestAdminUsersController(TestController):
         user = User.get_by_username(TEST_USER_REGULAR_LOGIN)
         response = self.app.get(url('edit_user_api_keys', id=user.user_id))
         response.mustcontain(user.api_key)
-        response.mustcontain('expires: never')
+        response.mustcontain('Expires: Never')
 
     @parameterized.expand([
         ('forever', -1),
@@ -490,7 +490,7 @@ class TestAdminUsersController(TestController):
         api_key = user.api_key
         response = self.app.get(url('edit_user_api_keys', id=user_id))
         response.mustcontain(api_key)
-        response.mustcontain('expires: never')
+        response.mustcontain('Expires: Never')
 
         response = self.app.post(url('edit_user_api_keys', id=user_id),
                  {'_method': 'delete', 'del_api_key_builtin': api_key, '_authentication_token': self.authentication_token()})

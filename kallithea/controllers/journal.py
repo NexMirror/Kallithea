@@ -108,11 +108,11 @@ class JournalController(BaseController):
         journal = self._get_journal_data(repos)
         if public:
             _link = h.canonical_url('public_journal_atom')
-            _desc = '%s %s %s' % (c.site_name, _('public journal'),
+            _desc = '%s %s %s' % (c.site_name, _('Public Journal'),
                                   'atom feed')
         else:
             _link = h.canonical_url('journal_atom')
-            _desc = '%s %s %s' % (c.site_name, _('journal'), 'atom feed')
+            _desc = '%s %s %s' % (c.site_name, _('Journal'), 'atom feed')
 
         feed = Atom1Feed(title=_desc,
                          link=_link,
@@ -150,11 +150,11 @@ class JournalController(BaseController):
         journal = self._get_journal_data(repos)
         if public:
             _link = h.canonical_url('public_journal_atom')
-            _desc = '%s %s %s' % (c.site_name, _('public journal'),
+            _desc = '%s %s %s' % (c.site_name, _('Public Journal'),
                                   'rss feed')
         else:
             _link = h.canonical_url('journal_atom')
-            _desc = '%s %s %s' % (c.site_name, _('journal'), 'rss feed')
+            _desc = '%s %s %s' % (c.site_name, _('Journal'), 'rss feed')
 
         feed = Rss201rev2Feed(title=_desc,
                          link=_link,
