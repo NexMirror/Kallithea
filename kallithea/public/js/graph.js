@@ -89,7 +89,7 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 		}
 
 		var edge_pad = this.dot_radius + 2;
-		var box_size = Math.min(18, Math.floor((canvasWidth - edge_pad*2)/(lineCount)));
+		var box_size = Math.min(18, (canvasWidth - edge_pad * 2) / lineCount);
 		var base_x = canvasWidth - edge_pad;
 
 		for (var i=0; i < data.length; ++i) {
@@ -115,7 +115,7 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 				end = line[1];
 				color = line[2];
 				
-				x = base_x - box_size * start;
+				x = Math.floor(base_x - box_size * start);
 
 				// figure out if this is a dead-end;
 				// we want to fade away this line
@@ -165,7 +165,7 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 				}
 				else
 				{
-					var x2 = base_x - box_size * end;
+					var x2 = Math.floor(base_x - box_size * end);
 					var ymid = (rowY+nextY) / 2;
 					this.ctx.bezierCurveTo (x,ymid,x2,ymid,x2,nextY);
 				}
@@ -175,7 +175,7 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 			column = node[0];
 			color = node[1];
 			
-			x = base_x - box_size * column;
+			x = Math.floor(base_x - box_size * column);
 		
 			this.setColor(color, 0.25, 0.75);
 			if (closing)

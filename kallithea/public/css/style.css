@@ -3509,6 +3509,10 @@ ul.nav-stacked a {
     color: inherit;
 }
 
+ul.nav-stacked li.active {
+    list-style-type: disc
+}
+
 /* make .btn inputs and buttons and divs look the same */
 button.btn,
 input.btn {
