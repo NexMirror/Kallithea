@@ -30,7 +30,7 @@
         <li class="${'active' if c.active=='advanced' else ''}"><a href="${h.url('edit_user_group_advanced', id=c.user_group.users_group_id)}">${_('Advanced')}</a></li>
         <li class="${'active' if c.active=='perms' else ''}"><a href="${h.url('edit_user_group_perms', id=c.user_group.users_group_id)}">${_('Permissions')}</a></li>
         <li class="${'active' if c.active=='default_perms' else ''}"><a href="${h.url('edit_user_group_default_perms', id=c.user_group.users_group_id)}">${_('Show Permissions')}</a></li>
-        <li class="${'active' if c.active=='members' else ''}"><a href="${h.url('edit_user_group_members', id=c.user_group.users_group_id)}">${_('Members')}</a></li>
+        <li class="${'active' if c.active=='members' else ''}"><a href="${h.url('edit_user_group_members', id=c.user_group.users_group_id)}">${_('Show Members')}</a></li>
       </ul>
     </div>
 
