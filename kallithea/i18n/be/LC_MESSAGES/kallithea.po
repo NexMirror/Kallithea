@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Kallithea 0.1\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2015-04-01 03:17+0200\n"
-"PO-Revision-Date: 2015-04-30 19:24+0200\n"
+"PO-Revision-Date: 2015-05-13 09:51+0200\n"
 "Last-Translator: Viktar Palstsiuk <vipals@gmail.com>\n"
 "Language-Team: Belarusian "
 "<https://hosted.weblate.org/projects/kallithea/kallithea/be/>\n"
@@ -466,7 +466,7 @@ msgstr "назаўжды"
 #: kallithea/controllers/admin/my_account.py:239
 #: kallithea/controllers/admin/users.py:289
 msgid "5 minutes"
-msgstr "5 мінуць"
+msgstr "5 хвілін"
 
 #: kallithea/controllers/admin/gists.py:61
 #: kallithea/controllers/admin/my_account.py:240
@@ -494,12 +494,12 @@ msgstr "Тэрмін"
 
 #: kallithea/controllers/admin/gists.py:146
 msgid "Error occurred during gist creation"
-msgstr "Адбылася памылка падчас стварэння gist-запісы"
+msgstr "Адбылася памылка падчас стварэння gist-запіса"
 
 #: kallithea/controllers/admin/gists.py:184
 #, python-format
 msgid "Deleted gist %s"
-msgstr "Gist-запіс %s выдалена"
+msgstr "Gist-запіс %s выдалены"
 
 #: kallithea/controllers/admin/gists.py:233
 msgid "unmodified"
@@ -526,7 +526,7 @@ msgstr ""
 
 #: kallithea/controllers/admin/my_account.py:128
 msgid "Your account was updated successfully"
-msgstr "Ваш уліковы запіс паспяхова абноўлена"
+msgstr "Ваш уліковы запіс паспяхова абноўлены"
 
 #: kallithea/controllers/admin/my_account.py:143
 #: kallithea/controllers/admin/users.py:206
@@ -1253,8 +1253,8 @@ msgstr[2] "%d гадзіны"
 msgid "%d minute"
 msgid_plural "%d minutes"
 msgstr[0] "%d хвіліна"
-msgstr[1] "%d мінуць"
-msgstr[2] "%d хвіліны"
+msgstr[1] "%d хвіліны"
+msgstr[2] "%d хвілін"
 
 #: kallithea/lib/utils2.py:430
 #, python-format
@@ -1928,7 +1928,7 @@ msgstr ""
 
 #: kallithea/model/validators.py:199
 msgid "Cannot assign this group as parent"
-msgstr "Немагчыма выкарыстоўваць гэту групу як бацькі"
+msgstr "Немагчыма выкарыстоўваць гэту групу як бацькоўскую"
 
 #: kallithea/model/validators.py:200
 #, python-format
@@ -2296,7 +2296,7 @@ msgstr "Забыліся пароль для %s?"
 
 #: kallithea/templates/password_reset.html:14
 msgid "Reset Your Password"
-msgstr "Забыліся пароль?"
+msgstr "Скінуць Ваш пароль"
 
 #: kallithea/templates/password_reset.html:25
 msgid "Email Address"
@@ -4018,7 +4018,7 @@ msgstr ""
 
 #: kallithea/templates/admin/settings/settings_visual.html:24
 msgid "Use Gravatars in Kallithea"
-msgstr ""
+msgstr "Выкарыстоўваць Gravatars у Kallithea"
 
 #: kallithea/templates/admin/settings/settings_visual.html:30
 msgid ""
@@ -4112,17 +4112,17 @@ msgstr "Дадаць групу карыстачоў"
 #: kallithea/templates/admin/user_groups/user_group_edit.html:11
 #: kallithea/templates/base/base.html:63 kallithea/templates/base/base.html:83
 msgid "User Groups"
-msgstr ""
+msgstr "Групы карыстальнікаў"
 
 #: kallithea/templates/admin/user_groups/user_group_add.html:12
 #: kallithea/templates/admin/user_groups/user_groups.html:25
 msgid "Add User Group"
-msgstr ""
+msgstr "Дадаць групу карыстальнікаў"
 
 #: kallithea/templates/admin/user_groups/user_group_add.html:44
 #: kallithea/templates/admin/user_groups/user_group_edit_settings.html:19
 msgid "Short, optional description for this user group."
-msgstr ""
+msgstr "Кароткае дадатковае апісанне для гэтай групы карыстальнікаў."
 
 #: kallithea/templates/admin/user_groups/user_group_edit.html:5
 #, python-format
@@ -4153,7 +4153,7 @@ msgstr "Пацвердзіце выдаленне наступнай групы 
 
 #: kallithea/templates/admin/user_groups/user_group_edit_advanced.html:21
 msgid "Delete this user group"
-msgstr ""
+msgstr "Выдаліць гэтую групу карыстальнікаў"
 
 #: kallithea/templates/admin/user_groups/user_group_edit_members.html:17
 msgid "No members yet"
@@ -4173,7 +4173,7 @@ msgstr "Адміністраванне груп карыстачоў"
 
 #: kallithea/templates/admin/user_groups/user_groups.html:10
 msgid "user groups"
-msgstr ""
+msgstr "групы карыстальнікаў"
 
 #: kallithea/templates/admin/users/user_add.html:5
 msgid "Add user"
@@ -4189,7 +4189,7 @@ msgstr "Карыстачы"
 #: kallithea/templates/admin/users/user_add.html:12
 #: kallithea/templates/admin/users/users.html:24
 msgid "Add User"
-msgstr ""
+msgstr "Дадаць карыстача"
 
 #: kallithea/templates/admin/users/user_add.html:50
 msgid "Password confirmation"
@@ -4221,7 +4221,7 @@ msgstr ""
 #: kallithea/templates/admin/users/user_edit_advanced.html:9
 #: kallithea/templates/admin/users/users.html:53
 msgid "Last Login"
-msgstr ""
+msgstr "Апошні ўваход"
 
 #: kallithea/templates/admin/users/user_edit_advanced.html:10
 msgid "Member of User groups"
@@ -4235,7 +4235,7 @@ msgstr "Пацвердзіце выдаленне карыстача %s"
 
 #: kallithea/templates/admin/users/user_edit_advanced.html:23
 msgid "Delete this user"
-msgstr ""
+msgstr "Выдаліць гэтага карыстальніка"
 
 #: kallithea/templates/admin/users/user_edit_ips.html:8
 #, python-format
@@ -4280,7 +4280,7 @@ msgstr "Асобнік сервера: %s"
 
 #: kallithea/templates/base/base.html:30
 msgid "Support"
-msgstr ""
+msgstr "Падтрымка"
 
 #: kallithea/templates/base/base.html:122
 msgid "Create Fork"
@@ -5212,7 +5212,7 @@ msgstr "Размяшчэнне"
 
 #: kallithea/templates/files/files_add.html:42
 msgid "Enter filename..."
-msgstr ""
+msgstr "Увядзіце імя файла..."
 
 #: kallithea/templates/files/files_add.html:44
 #: kallithea/templates/files/files_add.html:48
@@ -5221,11 +5221,11 @@ msgstr "ці"
 
 #: kallithea/templates/files/files_add.html:44
 msgid "Upload File"
-msgstr ""
+msgstr "Адаслаць файл"
 
 #: kallithea/templates/files/files_add.html:48
 msgid "Create New File"
-msgstr ""
+msgstr "Стварыць новы файл"
 
 #: kallithea/templates/files/files_add.html:53
 msgid "New file mode"
@@ -5289,7 +5289,7 @@ msgstr ""
 #: kallithea/templates/files/files_delete.html:12
 #: kallithea/templates/files/files_delete.html:31
 msgid "Delete file"
-msgstr ""
+msgstr "Выдаліць файл"
 
 #: kallithea/templates/files/files_edit.html:4
 #, python-format
