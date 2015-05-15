@@ -40,7 +40,7 @@ from kallithea.lib.exceptions import DefaultUserException, \
     UserOwnsReposException, UserCreationError
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import LoginRequired, HasPermissionAllDecorator, \
-    AuthUser, generate_api_key
+    AuthUser
 import kallithea.lib.auth_modules.auth_internal
 from kallithea.lib import auth_modules
 from kallithea.lib.base import BaseController, render
@@ -52,7 +52,7 @@ from kallithea.model.user import UserModel
 from kallithea.model.meta import Session
 from kallithea.lib.utils import action_logger
 from kallithea.lib.compat import json
-from kallithea.lib.utils2 import datetime_to_time, safe_int
+from kallithea.lib.utils2 import datetime_to_time, safe_int, generate_api_key
 
 log = logging.getLogger(__name__)
 

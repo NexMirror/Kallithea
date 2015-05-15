@@ -144,20 +144,6 @@ def check_password(password, hashed):
     return KallitheaCrypto.hash_check(password, hashed)
 
 
-def generate_api_key(str_, salt=None):
-    """
-    Generates API KEY from given string
-
-    :param str_:
-    :param salt:
-    """
-
-    if salt is None:
-        salt = _RandomNameSequence().next()
-
-    return hashlib.sha1(str_ + salt).hexdigest()
-
-
 class CookieStoreWrapper(object):
 
     def __init__(self, cookie_store):
