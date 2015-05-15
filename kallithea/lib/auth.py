@@ -723,7 +723,8 @@ def set_available_permissions(config):
 def redirect_to_login(message=None):
     from kallithea.lib import helpers as h
     p = url.current()
-    h.flash(h.literal(message), category='warning')
+    if message:
+        h.flash(h.literal(message), category='warning')
     log.debug('Redirecting to login page, origin: %s' % p)
     return redirect(url('login_home', came_from=p))
 
