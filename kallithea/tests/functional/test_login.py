@@ -129,8 +129,7 @@ class TestLoginController(TestController):
                                  {'username': 'error',
                                   'password': 'test12'})
 
-        response.mustcontain('Invalid username')
-        response.mustcontain('Invalid password')
+        response.mustcontain('Invalid username or password')
 
     # verify that get arguments are correctly passed along login redirection
 
@@ -187,8 +186,7 @@ class TestLoginController(TestController):
                                  {'username': 'error',
                                   'password': 'test12'})
 
-        response.mustcontain('Invalid username')
-        response.mustcontain('Invalid password')
+        response.mustcontain('Invalid username or password')
         for encoded in args_encoded:
             self.assertIn(encoded, response.form.action)
 

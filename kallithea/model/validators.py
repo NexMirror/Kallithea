@@ -298,9 +298,7 @@ def ValidPasswordsMatch(password_field, password_confirmation_field):
 def ValidAuth():
     class _validator(formencode.validators.FancyValidator):
         messages = {
-            'invalid_password': _('Invalid password'),
-            'invalid_username': _('Invalid username'),
-            'disabled_account': _('Account has been disabled')
+            'invalid_auth': _(u'Invalid username or password'),
         }
 
         def validate_python(self, value, state):
@@ -315,16 +313,15 @@ def ValidAuth():
                 user = User.get_by_username(username)
                 if user and not user.active:
                     log.warning('user %s is disabled' % username)
-                    msg = M(self, 'disabled_account', state)
+                    msg = M(self, 'invalid_auth', state)
                     raise formencode.Invalid(msg, value, state,
-                        error_dict=dict(username=msg)
+                        error_dict=dict(username=' ', password=msg)
                     )
                 else:
                     log.warning('user %s failed to authenticate' % username)
-                    msg = M(self, 'invalid_username', state)
-                    msg2 = M(self, 'invalid_password', state)
+                    msg = M(self, 'invalid_auth', state)
                     raise formencode.Invalid(msg, value, state,
-                        error_dict=dict(username=msg, password=msg2)
+                        error_dict=dict(username=' ', password=msg)
                     )
     return _validator
 

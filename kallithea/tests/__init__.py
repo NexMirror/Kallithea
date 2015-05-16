@@ -215,7 +215,7 @@ class TestController(BaseTestCase):
                                  {'username': username,
                                   'password': password})
 
-        if 'invalid user name' in response.body:
+        if 'Invalid username or password' in response.body:
             self.fail('could not login using %s %s' % (username, password))
 
         self.assertEqual(response.status, '302 Found')
