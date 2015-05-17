@@ -380,7 +380,7 @@ ${self.repo_context_bar('showpullrequest')}
           var file_comments = $('.inline-comment-placeholder').toArray();
           renderInlineComments(file_comments);
 
-          linkInlineComments(document.getElementsByClassName('firstlink'), document.getElementsByClassName("comment"));
+          linkInlineComments($('.firstlink'), $('.comment'));
 
           $('#updaterevs input').change(function(e){
               var update = !!e.target.value;

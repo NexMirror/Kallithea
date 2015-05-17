@@ -847,10 +847,9 @@ var renderInlineComments = function(file_comments){
 /**
  * Double link comments
  */
-var linkInlineComments = function(firstlinks, comments){
-    var $comments = $(comments);
+var linkInlineComments = function($firstlinks, $comments){
     if ($comments.length > 0) {
-        $(firstlinks).html('<a href="#{0}">First comment</a>'.format($comments.attr('id')));
+        $firstlinks.html('<a href="#{0}">First comment</a>'.format($comments.attr('id')));
     }
     if ($comments.length <= 1) {
         return;
@@ -859,12 +858,12 @@ var linkInlineComments = function(firstlinks, comments){
     $comments.each(function(i, e){
             var prev = '';
             if (i > 0){
-                var prev_anchor = YUD.getAttribute(comments.item(i-1),'id');
+                var prev_anchor = $($comments.get(i-1)).attr('id');
                 prev = '<a href="#{0}">Previous comment</a>'.format(prev_anchor);
             }
             var next = '';
-            if (i+1 < comments.length){
-                var next_anchor = YUD.getAttribute(comments.item(i+1),'id');
+            if (i+1 < $comments.length){
+                var next_anchor = $($comments.get(i+1)).attr('id');
                 next = '<a href="#{0}">Next comment</a>'.format(next_anchor);
             }
             var $div = $(('<div class="prev-next-comment">'+
