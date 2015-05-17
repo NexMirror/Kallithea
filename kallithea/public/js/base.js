@@ -866,10 +866,9 @@ var linkInlineComments = function($firstlinks, $comments){
                 var next_anchor = $($comments.get(i+1)).attr('id');
                 next = '<a href="#{0}">Next comment</a>'.format(next_anchor);
             }
-            var $div = $(('<div class="prev-next-comment">'+
-                          '<div class="prev-comment">{0}</div>'+
-                          '<div class="next-comment">{1}</div>').format(prev, next));
-            $div.prependTo(this);
+            $(this).find('.comment-prev-next-links').html(
+                '<div class="prev-comment">{0}</div>'.format(prev) +
+                '<div class="next-comment">{0}</div>'.format(next));
         });
 }
 

@@ -5065,8 +5065,8 @@ div.comment:target>.comment-wrapp {
     margin: 5px;
 }
 
-div.prev-next-comment div.prev-comment,
-div.prev-next-comment div.next-comment {
+div.comment-prev-next-links div.prev-comment,
+div.comment-prev-next-links div.next-comment {
     display: inline-block;
     min-width: 150px;
     margin: 3px 6px;
