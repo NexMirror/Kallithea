@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement
 import re
+import time
 
 import mock
+
 from kallithea.tests import *
 from kallithea.tests.fixture import Fixture
 from kallithea.lib.utils2 import generate_api_key
@@ -12,6 +14,7 @@ from kallithea.model.api_key import ApiKeyModel
 from kallithea.model import validators
 from kallithea.model.db import User, Notification
 from kallithea.model.meta import Session
+from kallithea.model.user import UserModel
 
 fixture = Fixture()
 
@@ -326,6 +329,10 @@ class TestLoginController(TestController):
         self.assertNotEqual(ret.api_key, None)
         self.assertEqual(ret.admin, False)
 
+    #==========================================================================
+    # PASSWORD RESET
+    #==========================================================================
+
     def test_forgot_password_wrong_mail(self):
         bad_email = 'username%wrongmail.org'
         response = self.app.post(
@@ -345,6 +352,7 @@ class TestLoginController(TestController):
         email = 'username@python-works.com'
         name = 'passwd'
         lastname = 'reset'
+        timestamp = int(time.time())
 
         new = User()
         new.username = username
@@ -360,33 +368,57 @@ class TestLoginController(TestController):
                                      action='password_reset'),
                                  {'email': email, })
 
-        self.checkSessionFlash(response, 'Your password reset link was sent')
+        self.checkSessionFlash(response, 'A password reset confirmation code has been sent')
 
         response = response.follow()
 
-        # BAD KEY
+        # BAD TOKEN
 
-        key = "bad"
+        token = "bad"
+
+        response = self.app.post(url(controller='login',
+                                     action='password_reset_confirmation'),
+                                 {'email': email,
+                                  'timestamp': timestamp,
+                                  'password': "p@ssw0rd",
+                                  'password_confirm': "p@ssw0rd",
+                                  'token': token,
+                                 })
+        self.assertEqual(response.status, '200 OK')
+        response.mustcontain('Invalid password reset token')
+
+        # GOOD TOKEN
+
+        # TODO: The token should ideally be taken from the mail sent
+        # above, instead of being recalculated.
+
+        token = UserModel().get_reset_password_token(
+            User.get_by_username(username), timestamp, self.authentication_token())
+
         response = self.app.get(url(controller='login',
                                     action='password_reset_confirmation',
-                                    key=key))
+                                    email=email,
+                                    timestamp=timestamp,
+                                    token=token))
+        self.assertEqual(response.status, '200 OK')
+        response.mustcontain("You are about to set a new password for the email address %s" % email)
+
+        response = self.app.post(url(controller='login',
+                                     action='password_reset_confirmation'),
+                                 {'email': email,
+                                  'timestamp': timestamp,
+                                  'password': "p@ssw0rd",
+                                  'password_confirm': "p@ssw0rd",
+                                  'token': token,
+                                 })
         self.assertEqual(response.status, '302 Found')
-        self.assertTrue(response.location.endswith(url('reset_password')))
-
-        # GOOD KEY
-
-        key = User.get_by_username(username).api_key
-        response = self.app.get(url(controller='login',
-                                    action='password_reset_confirmation',
-                                    key=key))
-        self.assertEqual(response.status, '302 Found')
-        self.assertTrue(response.location.endswith(url('login_home')))
-
-        self.checkSessionFlash(response,
-                               ('Your password reset was successful, '
-                                'new password has been sent to your email'))
+        self.checkSessionFlash(response, 'Successfully updated password')
 
         response = response.follow()
+
+    #==========================================================================
+    # API
+    #==========================================================================
 
     def _get_api_whitelist(self, values=None):
         config = {'api_access_controllers_whitelist': values or []}

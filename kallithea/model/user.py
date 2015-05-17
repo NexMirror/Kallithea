@@ -26,8 +26,12 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 
+import hashlib
 import logging
+import time
 import traceback
+
+from pylons import config
 from pylons.i18n.translation import _
 
 from sqlalchemy.exc import DatabaseError
@@ -47,6 +51,8 @@ log = logging.getLogger(__name__)
 
 
 class UserModel(BaseModel):
+    password_reset_token_lifetime = 86400 # 24 hours
+
     cls = User
 
     def get(self, user_id, cache=False):
@@ -271,25 +277,73 @@ class UserModel(BaseModel):
         from kallithea.lib.hooks import log_delete_user
         log_delete_user(user.get_dict(), cur_user)
 
-    def reset_password_link(self, data):
+    def get_reset_password_token(self, user, timestamp, session_id):
+        """
+        The token is calculated as SHA1 hash of the following:
+
+         * user's identifier (number, not a name)
+         * timestamp
+         * hashed user's password
+         * session identifier
+         * per-application secret
+
+        We use numeric user's identifier, as it's fixed and doesn't change,
+        so renaming users doesn't affect the mechanism. Timestamp is added
+        to make it possible to limit the token's validness (currently hard
+        coded to 24h), and we don't want users to be able to fake that field
+        easily. Hashed user's password is needed to prevent using the token
+        again once the password has been changed. Session identifier is
+        an additional security measure to ensure someone else stealing the
+        token can't use it. Finally, per-application secret is just another
+        way to make it harder for an attacker to guess all values in an
+        attempt to generate a valid token.
+        """
+        return hashlib.sha1('\0'.join([
+            str(user.user_id),
+            str(timestamp),
+            user.password,
+            session_id,
+            config.get('app_instance_uuid'),
+        ])).hexdigest()
+
+    def send_reset_password_email(self, data):
+        """
+        Sends email with a password reset token and link to the password
+        reset confirmation page with all information (including the token)
+        pre-filled. Also returns URL of that page, only without the token,
+        allowing users to copy-paste or manually enter the token from the
+        email.
+        """
         from kallithea.lib.celerylib import tasks, run_task
         from kallithea.model.notification import EmailNotificationModel
         import kallithea.lib.helpers as h
 
         user_email = data['email']
         user = User.get_by_email(user_email)
+        timestamp = int(time.time())
         if user is not None:
-            log.debug('password reset user found %s', user)
-            link = h.canonical_url('reset_password_confirmation',
-                                   key=user.api_key)
+            log.debug('password reset user %s found', user)
+            token = self.get_reset_password_token(user,
+                                                  timestamp,
+                                                  h.authentication_token())
+            # URL must be fully qualified; but since the token is locked to
+            # the current browser session, we must provide a URL with the
+            # current scheme and hostname, rather than the canonical_url.
+            link = h.url('reset_password_confirmation', qualified=True,
+                         email=user_email,
+                         timestamp=timestamp,
+                         token=token)
+
             reg_type = EmailNotificationModel.TYPE_PASSWORD_RESET
             body = EmailNotificationModel().get_email_tmpl(
                 reg_type, 'txt',
                 user=user.short_contact,
+                reset_token=token,
                 reset_url=link)
             html_body = EmailNotificationModel().get_email_tmpl(
                 reg_type, 'html',
                 user=user.short_contact,
+                reset_token=token,
                 reset_url=link)
             log.debug('sending email')
             run_task(tasks.send_email, [user_email],
@@ -298,27 +352,52 @@ class UserModel(BaseModel):
         else:
             log.debug("password reset email %s not found", user_email)
 
-        return True
+        return h.url('reset_password_confirmation',
+                     email=user_email,
+                     timestamp=timestamp)
 
-    def reset_password(self, data):
+    def verify_reset_password_token(self, email, timestamp, token):
         from kallithea.lib.celerylib import tasks, run_task
         from kallithea.lib import auth
-        user_email = data['email']
+        import kallithea.lib.helpers as h
+        user = User.get_by_email(email)
+        if user is None:
+            log.debug("user with email %s not found", email)
+            return False
+
+        token_age = int(time.time()) - int(timestamp)
+
+        if token_age < 0:
+            log.debug('timestamp is from the future')
+            return False
+
+        if token_age > UserModel.password_reset_token_lifetime:
+            log.debug('password reset token expired')
+            return False
+
+        expected_token = self.get_reset_password_token(user,
+                                                       timestamp,
+                                                       h.authentication_token())
+        log.debug('computed password reset token: %s', expected_token)
+        log.debug('received password reset token: %s', token)
+        return expected_token == token
+
+    def reset_password(self, user_email, new_passwd):
+        from kallithea.lib.celerylib import tasks, run_task
+        from kallithea.lib import auth
         user = User.get_by_email(user_email)
-        new_passwd = auth.PasswordGenerator().gen_password(
-            8, auth.PasswordGenerator.ALPHABETS_BIG_SMALL)
         if user is not None:
             user.password = auth.get_crypt_password(new_passwd)
             Session().add(user)
             Session().commit()
             log.info('change password for %s', user_email)
         if new_passwd is None:
-            raise Exception('unable to generate new password')
+            raise Exception('unable to set new password')
 
         run_task(tasks.send_email, [user_email],
-                 _('Your new password'),
-                 _('Your new Kallithea password:%s') % (new_passwd,))
-        log.info('send new password mail to %s', user_email)
+                 _('Password reset notification'),
+                 _('The password to your account %s has been changed using password reset form.') % (user.username,))
+        log.info('send password reset mail to %s', user_email)
 
         return True
 

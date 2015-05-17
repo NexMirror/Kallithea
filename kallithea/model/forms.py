@@ -205,13 +205,27 @@ def RegisterForm(edit=False, old_data={}):
     return _RegisterForm
 
 
-def PasswordResetForm():
-    class _PasswordResetForm(formencode.Schema):
+def PasswordResetRequestForm():
+    class _PasswordResetRequestForm(formencode.Schema):
         allow_extra_fields = True
         filter_extra_fields = True
         email = v.Email(not_empty=True)
-    return _PasswordResetForm
+    return _PasswordResetRequestForm
 
+def PasswordResetConfirmationForm():
+    class _PasswordResetConfirmationForm(formencode.Schema):
+        allow_extra_fields = True
+        filter_extra_fields = True
+
+        email = v.UnicodeString(strip=True, not_empty=True)
+        timestamp = v.Number(strip=True, not_empty=True)
+        token = v.UnicodeString(strip=True, not_empty=True)
+        password = All(v.ValidPassword(), v.UnicodeString(strip=False, min=6))
+        password_confirm = All(v.ValidPassword(), v.UnicodeString(strip=False, min=6))
+
+        chained_validators = [v.ValidPasswordsMatch('password',
+                                                    'password_confirm')]
+    return _PasswordResetConfirmationForm
 
 def RepoForm(edit=False, old_data={}, supported_backends=BACKENDS.keys(),
              repo_groups=[], landing_revs=[]):

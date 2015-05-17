@@ -31,7 +31,7 @@ import formencode
 import urlparse
 
 from formencode import htmlfill
-from webob.exc import HTTPFound
+from webob.exc import HTTPFound, HTTPBadRequest
 from pylons.i18n.translation import _
 from pylons.controllers.util import redirect
 from pylons import request, session, tmpl_context as c, url
@@ -42,7 +42,8 @@ from kallithea.lib.base import BaseController, log_in_user, render
 from kallithea.lib.exceptions import UserCreationError
 from kallithea.lib.utils2 import safe_str
 from kallithea.model.db import User, Setting
-from kallithea.model.forms import LoginForm, RegisterForm, PasswordResetForm
+from kallithea.model.forms import \
+    LoginForm, RegisterForm, PasswordResetRequestForm, PasswordResetConfirmationForm
 from kallithea.model.user import UserModel
 from kallithea.model.meta import Session
 
@@ -182,7 +183,7 @@ class LoginController(BaseController):
         c.captcha_public_key = settings.get('captcha_public_key')
 
         if request.POST:
-            password_reset_form = PasswordResetForm()()
+            password_reset_form = PasswordResetRequestForm()()
             try:
                 form_result = password_reset_form.to_python(dict(request.POST))
                 if c.captcha_active:
@@ -197,10 +198,10 @@ class LoginController(BaseController):
                         error_dict = {'recaptcha_field': _msg}
                         raise formencode.Invalid(_msg, _value, None,
                                                  error_dict=error_dict)
-                UserModel().reset_password_link(form_result)
-                h.flash(_('Your password reset link was sent'),
+                redirect_link = UserModel().send_reset_password_email(form_result)
+                h.flash(_('A password reset confirmation code has been sent'),
                             category='success')
-                return redirect(url('login_home'))
+                return redirect(redirect_link)
 
             except formencode.Invalid as errors:
                 return htmlfill.render(
@@ -214,18 +215,45 @@ class LoginController(BaseController):
         return render('/password_reset.html')
 
     def password_reset_confirmation(self):
-        if request.GET and request.GET.get('key'):
-            try:
-                user = User.get_by_api_key(request.GET.get('key'))
-                data = dict(email=user.email)
-                UserModel().reset_password(data)
-                h.flash(_('Your password reset was successful, '
-                          'new password has been sent to your email'),
-                            category='success')
-            except Exception as e:
-                log.error(e)
-                return redirect(url('reset_password'))
+        # This controller handles both GET and POST requests, though we
+        # only ever perform the actual password change on POST (since
+        # GET requests are not allowed to have side effects, and do not
+        # receive automatic CSRF protection).
 
+        # The template needs the email address outside of the form.
+        c.email = request.params.get('email')
+
+        if not request.POST:
+            return htmlfill.render(
+                render('/password_reset_confirmation.html'),
+                defaults=dict(request.params),
+                encoding='UTF-8')
+
+        form = PasswordResetConfirmationForm()()
+        try:
+            form_result = form.to_python(dict(request.POST))
+        except formencode.Invalid as errors:
+            return htmlfill.render(
+                render('/password_reset_confirmation.html'),
+                defaults=errors.value,
+                errors=errors.error_dict or {},
+                prefix_error=False,
+                encoding='UTF-8')
+
+        if not UserModel().verify_reset_password_token(
+            form_result['email'],
+            form_result['timestamp'],
+            form_result['token'],
+        ):
+            return htmlfill.render(
+                render('/password_reset_confirmation.html'),
+                defaults=form_result,
+                errors={'token': _('Invalid password reset token')},
+                prefix_error=False,
+                encoding='UTF-8')
+
+        UserModel().reset_password(form_result['email'], form_result['password'])
+        h.flash(_('Successfully updated password'), category='success')
         return redirect(url('login_home'))
 
     def logout(self):
