@@ -85,8 +85,8 @@ whitespace noise in your patches.
 We support both Python 2.6.x and 2.7.x and nothing else. For now we don't care
 about Python 3 compatibility.
 
-We try to support the most common modern web browsers. IE8 is still supported
-to the extent it is feasible but we may stop supporting it very soon.
+We try to support the most common modern web browsers. IE9 is still supported
+to the extent it is feasible, IE8 is not.
 
 We primarily support Linux and OS X on the server side but Windows should also work.
 
