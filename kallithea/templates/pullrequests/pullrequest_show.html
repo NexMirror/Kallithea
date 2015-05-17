@@ -38,7 +38,7 @@ ${self.repo_context_bar('showpullrequest')}
             <label>${_('Description')}:</label>
             %if editable:
             <div style="margin: 5px">
-              <a class="btn btn-small" onclick="YUD.setStyle('pr-edit-form','display','');YUD.setStyle(YUD.getElementsByClassName('pr-not-edit'),'display','none')">${_("Edit")}</a>
+              <a class="btn btn-small" onclick="$('#pr-edit-form').show();$('.pr-not-edit').hide()">${_("Edit")}</a>
             </div>
             %endif
           </div>
