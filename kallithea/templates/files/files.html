@@ -233,7 +233,8 @@ $(document).ready(function(){
     // change branch filter
     $("#branch_selector").select2({
         dropdownAutoWidth: true,
-        minimumInputLength: 1
+        minimumInputLength: 1,
+        sortResults: branchSort
         });
 
     $("#branch_selector").change(function(e){

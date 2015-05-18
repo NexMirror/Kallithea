@@ -266,7 +266,8 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                 // change branch filter
                 $("#branch_filter").select2({
                     dropdownAutoWidth: true,
-                    minimumInputLength: 1
+                    minimumInputLength: 1,
+                    sortResults: branchSort
                     });
 
                 $("#branch_filter").change(function(e){

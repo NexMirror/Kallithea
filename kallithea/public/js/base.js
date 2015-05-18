@@ -2138,6 +2138,46 @@ var YUI_datatable = function(data, fields, columns, countnode, sortkey, rows){
         });
 }
 
+/**
+ Branch Sorting callback for select2, modifying the filtered result so prefix
+ matches come before matches in the line.
+ **/
+var branchSort = function(results, container, query) {
+    if (query.term) {
+        return results.sort(function (a, b) {
+            // Put closed branches after open ones (a bit of a hack ...)
+            var aClosed = a.text.indexOf("(closed)") > -1,
+                bClosed = b.text.indexOf("(closed)") > -1;
+            if (aClosed && !bClosed) {
+                return 1;
+            }
+            if (bClosed && !aClosed) {
+                return -1;
+            }
+
+            // Put prefix matches before matches in the line
+            var aPos = a.text.indexOf(query.term),
+                bPos = b.text.indexOf(query.term);
+            if (aPos === 0 && bPos !== 0) {
+                return -1;
+            }
+            if (bPos === 0 && aPos !== 0) {
+                return 1;
+            }
+
+            // Default sorting
+            if (a.text > b.text) {
+                return 1;
+            }
+            if (a.text < b.text) {
+                return -1;
+            }
+            return 0;
+        });
+    }
+    return results;
+};
+
 // global hooks after DOM is loaded
 
 $(document).ready(function(){

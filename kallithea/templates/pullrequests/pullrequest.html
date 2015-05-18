@@ -224,7 +224,8 @@ ${self.repo_context_bar('showpullrequest')}
       ## (org_repo can't change)
 
       $("#org_ref").select2({
-          dropdownAutoWidth: true
+          dropdownAutoWidth: true,
+          sortResults: branchSort
       });
       $("#org_ref").on("change", function(e){
           loadPreview();
@@ -238,7 +239,8 @@ ${self.repo_context_bar('showpullrequest')}
       });
 
       $("#other_ref").select2({
-          dropdownAutoWidth: true
+          dropdownAutoWidth: true,
+          sortResults: branchSort
       });
       $("#other_ref").on("change", function(e){
           loadPreview();
