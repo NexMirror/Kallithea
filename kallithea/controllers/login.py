@@ -42,6 +42,7 @@ from kallithea.lib.auth import AuthUser, HasPermissionAnyDecorator
 from kallithea.lib.auth_modules import importplugin
 from kallithea.lib.base import BaseController, render
 from kallithea.lib.exceptions import UserCreationError
+from kallithea.lib.utils2 import safe_str
 from kallithea.model.db import User, Setting
 from kallithea.model.forms import LoginForm, RegisterForm, PasswordResetForm
 from kallithea.model.user import UserModel
@@ -102,9 +103,14 @@ class LoginController(BaseController):
             came_from = url('home')
         return came_from
 
+    def _redirect_to_origin(self, origin, headers=None):
+        '''redirect to the original page, preserving any get arguments given'''
+        request.GET.pop('came_from', None)
+        raise HTTPFound(location=url(origin, **request.GET), headers=headers)
+
     def index(self):
         _default_came_from = url('home')
-        came_from = self._validate_came_from(request.GET.get('came_from'))
+        came_from = self._validate_came_from(safe_str(request.GET.get('came_from', '')))
         c.came_from = came_from or _default_came_from
 
         not_default = self.authuser.username != User.DEFAULT_USER
@@ -112,7 +118,7 @@ class LoginController(BaseController):
 
         # redirect if already logged in
         if self.authuser.is_authenticated and not_default and ip_allowed:
-            raise HTTPFound(location=c.came_from)
+            return self._redirect_to_origin(c.came_from)
 
         if request.POST:
             # import Login Form validator class
@@ -124,7 +130,8 @@ class LoginController(BaseController):
                 headers = self._store_user_in_session(
                                         username=c.form_result['username'],
                                         remember=c.form_result['remember'])
-                raise HTTPFound(location=c.came_from, headers=headers)
+                return self._redirect_to_origin(c.came_from, headers)
+
             except formencode.Invalid, errors:
                 defaults = errors.value
                 # remove password from filling in form again
@@ -157,7 +164,8 @@ class LoginController(BaseController):
 
             if auth_info:
                 headers = self._store_user_in_session(auth_info.get('username'))
-                raise HTTPFound(location=c.came_from, headers=headers)
+                return self._redirect_to_origin(c.came_from, headers)
+
         return render('/login.html')
 
     @HasPermissionAnyDecorator('hg.admin', 'hg.register.auto_activate',

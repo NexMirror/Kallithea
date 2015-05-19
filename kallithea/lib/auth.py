@@ -711,7 +711,7 @@ def redirect_to_login(message=None):
     if message:
         h.flash(h.literal(message), category='warning')
     log.debug('Redirecting to login page, origin: %s' % p)
-    return redirect(url('login_home', came_from=p))
+    return redirect(url('login_home', came_from=p, **request.GET))
 
 class LoginRequired(object):
     """

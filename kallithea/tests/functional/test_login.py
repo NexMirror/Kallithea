@@ -66,7 +66,7 @@ class TestLoginController(TestController):
           ('mailto:test@example.com',),
           ('file:///etc/passwd',),
           ('ftp://some.ftp.server',),
-          ('http://other.domain',),
+          ('http://other.domain/bl%C3%A5b%C3%A6rgr%C3%B8d',),
     ])
     def test_login_bad_came_froms(self, url_came_from):
         response = self.app.post(url(controller='login', action='index',
@@ -95,6 +95,66 @@ class TestLoginController(TestController):
 
         response.mustcontain('invalid user name')
         response.mustcontain('invalid password')
+
+    # verify that get arguments are correctly passed along login redirection
+
+    @parameterized.expand([
+        ({'foo':'one', 'bar':'two'}, ('foo=one', 'bar=two')),
+        ({'blue': u'blå'.encode('utf-8'), 'green':u'grøn'},
+             ('blue=bl%C3%A5', 'green=gr%C3%B8n')),
+    ])
+    def test_redirection_to_login_form_preserves_get_args(self, args, args_encoded):
+        with fixture.anon_access(False):
+            response = self.app.get(url(controller='summary', action='index',
+                                        repo_name=HG_REPO,
+                                        **args))
+            self.assertEqual(response.status, '302 Found')
+            for encoded in args_encoded:
+                self.assertIn(encoded, response.location)
+
+    @parameterized.expand([
+        ({'foo':'one', 'bar':'two'}, ('foo=one', 'bar=two')),
+        ({'blue': u'blå'.encode('utf-8'), 'green':u'grøn'},
+             ('blue=bl%C3%A5', 'green=gr%C3%B8n')),
+    ])
+    def test_login_form_preserves_get_args(self, args, args_encoded):
+        response = self.app.get(url(controller='login', action='index',
+                                    came_from = '/_admin/users',
+                                    **args))
+        for encoded in args_encoded:
+            self.assertIn(encoded, response.form.action)
+
+    @parameterized.expand([
+        ({'foo':'one', 'bar':'two'}, ('foo=one', 'bar=two')),
+        ({'blue': u'blå'.encode('utf-8'), 'green':u'grøn'},
+             ('blue=bl%C3%A5', 'green=gr%C3%B8n')),
+    ])
+    def test_redirection_after_successful_login_preserves_get_args(self, args, args_encoded):
+        response = self.app.post(url(controller='login', action='index',
+                                     came_from = '/_admin/users',
+                                     **args),
+                                 {'username': 'test_admin',
+                                  'password': 'test12'})
+        self.assertEqual(response.status, '302 Found')
+        for encoded in args_encoded:
+            self.assertIn(encoded, response.location)
+
+    @parameterized.expand([
+        ({'foo':'one', 'bar':'two'}, ('foo=one', 'bar=two')),
+        ({'blue': u'blå'.encode('utf-8'), 'green':u'grøn'},
+             ('blue=bl%C3%A5', 'green=gr%C3%B8n')),
+    ])
+    def test_login_form_after_incorrect_login_preserves_get_args(self, args, args_encoded):
+        response = self.app.post(url(controller='login', action='index',
+                                     came_from = '/_admin/users',
+                                     **args),
+                                 {'username': 'error',
+                                  'password': 'test12'})
+
+        response.mustcontain('invalid user name')
+        response.mustcontain('invalid password')
+        for encoded in args_encoded:
+            self.assertIn(encoded, response.form.action)
 
     #==========================================================================
     # REGISTRATIONS
