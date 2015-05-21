@@ -72,6 +72,20 @@ It is Copyright 2013 jQuery Foundation and other contributors http://jquery.com/
 
 
 
+DataTables
+----------
+
+Kallithea incorporates the Javascript system called
+[DataTables](http://www.datatables.net/) (jquery.dataTables.min.js and .css)
+which can be found together with their Corresponding Source in
+https://github.com/DataTables/DataTables at tag 1.10.11 (mirrored at
+https://kallithea-scm.org/repos/mirror/DataTables/files/1.10.11/ ).
+
+It is Copyright 2008-2015 SpryMedia Ltd. and is under an
+[MIT-permissive license](MIT-Permissive-License.txt).
+
+
+
 Mousetrap
 ---------
 

@@ -2,7 +2,7 @@
 
 # Enforce some consistency in whitespace - just to avoid spurious whitespaces changes
 
-files=`hg loc '*.py' '*.html' '*.css' '*.rst' '*.txt' '*.js' '*.ini' '*.cfg' CONTRIBUTORS LICENSE.md| egrep -v '/lockfiles.py|LICENSE-MERGELY.html|/codemirror/|/fontello/|(graph|mergely|native.history|select2/select2|yui.flot|yui.2.9)\.js$'`
+files=`hg loc '*.py' '*.html' '*.css' '*.rst' '*.txt' '*.js' '*.ini' '*.cfg' CONTRIBUTORS LICENSE.md | egrep -v '/lockfiles.py|LICENSE-MERGELY.html|/codemirror/|/fontello/|(graph|mergely|native.history|select2/select2|yui.flot|yui.2.9|jquery.dataTables)\.js$'`
 
 sed -i -e "s,`printf '\t'`,    ,g" $files
 sed -i -e "s,  *$,,g" $files
