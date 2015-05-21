@@ -6,7 +6,6 @@
 </%block>
 
 <%def name="breadcrumbs_links()">
-    <input class="q_filter_box" id="q_filter" size="15" type="text" name="filter" placeholder="${_('quick filter...')}" value=""/>
     ${h.link_to(_('Admin'),h.url('admin_home'))} &raquo; <span id="repo_group_count">0</span> ${_('Repository Groups')}
 </%def>
 
@@ -29,28 +28,25 @@
         </ul>
     </div>
     <!-- end box / title -->
-    <div class="table-grid table yui-skin-sam" id="datatable_list_wrap"></div>
+    <div class="table">
+        <table id="datatable_list_wrap"></table>
+    </div>
     <div id="user-paginator" style="padding: 0px 0px 0px 20px"></div>
 </div>
 <script>
   var data = ${c.data|n};
-  var fields = [
-    {key: "group_name"},
-    {key: "raw_name"},
-    {key: "desc"},
-    {key: "repos"},
-    {key: "owner"},
-    {key: "action"}
-  ];
-  var column_defs = [
-    {key:"group_name",label:"${_('Name')}",sortable:true, sortOptions: { sortFunction: nameSort }},
-    {key:"desc",label:"${_('Description')}",sortable:true},
-    {key:"repos",label:"${_('Number of Top-level Repositories')}",sortable:true},
-    {key:"owner",label:"${_('Owner')}",sortable:true},
-    {key:"action",label:"${_('Action')}",sortable:false}
-  ];
-  var counter = YUD.get('repo_group_count');
-  var sort_key = "group_name";
-  YUI_datatable(data, fields, column_defs, counter, sort_key, ${c.visual.admin_grid_items});
+  var myDataTable = $("#datatable_list_wrap").DataTable({
+        data: data.records,
+        columns: [
+            {data: "raw_name", visible: false, searchable: false},
+            {data: "group_name", orderData: 0, title: "${_('Name')}"},
+            {data: "desc", title: "${_('Description')}", searchable: false},
+            {data: "repos", title: "${_('Number of Top-level Repositories')}", searchable: false},
+            {data: "owner", title: "${_('Owner')}", searchable: false},
+            {data: "action", title: "${_('Action')}", sortable: false, searchable: false}
+        ],
+        drawCallback: updateRowCountCallback($("#repo_group_count"))
+    });
+
 </script>
 </%def>

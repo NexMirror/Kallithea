@@ -6,7 +6,6 @@
 </%block>
 
 <%def name="breadcrumbs_links()">
-    <input class="q_filter_box" id="q_filter" size="15" type="text" name="filter" placeholder="${_('quick filter...')}" value=""/>
     ${h.link_to(_('Admin'),h.url('admin_home'))} &raquo; <span id="user_count">0</span> ${_('Users')}
 </%def>
 
@@ -26,39 +25,30 @@
         </ul>
     </div>
     <!-- end box / title -->
-    <div class="table-grid table yui-skin-sam" id="datatable_list_wrap"></div>
-    <div id="user-paginator" style="padding: 0px 0px 0px 20px"></div>
+    <div class="table">
+        <table id="datatable_list_wrap"></table>
+    </div>
 </div>
 
 <script>
-  var data = ${c.data|n};
-  var fields = [
-    {key: "gravatar"},
-    {key: "raw_name"},
-    {key: "username"},
-    {key: "firstname"},
-    {key: "lastname"},
-    {key: "last_login"},
-    {key: "last_login_raw"},
-    {key: "active"},
-    {key: "admin"},
-    {key: "extern_type"},
-    {key: "action"}
-  ];
-  var column_defs = [
-    {key:"gravatar",label:"",sortable:false},
-    {key:"username",label:"${_('Username')}",sortable:true},
-    {key:"firstname",label:"${_('First Name')}",sortable:true},
-    {key:"lastname",label:"${_('Last Name')}",sortable:true},
-    {key:"last_login",label:"${_('Last Login')}",sortable:true, sortOptions: { sortFunction: lastLoginSort }},
-    {key:"active",label:"${_('Active')}",sortable:true},
-    {key:"admin",label:"${_('Admin')}",sortable:true},
-    {key:"extern_type",label:"${_('Auth Type')}",sortable:true},
-    {key:"action",label:"${_('Action')}",sortable:false}
-  ];
-  var counter = YUD.get('user_count');
-  var sort_key = "username";
-  YUI_datatable(data, fields, column_defs, counter, sort_key, ${c.visual.admin_grid_items});
+    var data = ${c.data|n};
+    var $dataTable = $("#datatable_list_wrap").DataTable({
+        data: data.records,
+        columns: [
+            {data: "gravatar", sortable: false, searchable: false},
+            {data: "username", title: "${_('Username')}"},
+            {data: "firstname", title: "${_('First Name')}"},
+            {data: "lastname", title: "${_('Last Name')}"},
+            {data: "last_login_raw", visible: false, searchable: false},
+            {data: "last_login", title: "${_('Last Login')}", orderData: 4, searchable: false},
+            {data: "active", title: "${_('Active')}", searchable: false, 'sType': 'str'},
+            {data: "admin", title: "${_('Admin')}", searchable: false, 'sType': 'str'},
+            {data: "extern_type", title: "${_('Auth Type')}", searchable: false},
+            {data: "action", title: "${_('Action')}", searchable: false, sortable: false}
+        ],
+        order: [[1, "asc"]],
+        drawCallback: updateRowCountCallback($("#user_count"))
+    });
 </script>
 
 </%def>

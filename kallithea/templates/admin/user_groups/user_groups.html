@@ -28,30 +28,25 @@
         </ul>
     </div>
     <!-- end box / title -->
-    <div class="table-grid table yui-skin-sam" id="datatable_list_wrap"></div>
+    <div class="table">
+        <table id="datatable_list_wrap"></table>
+    </div>
     <div id="user-paginator" style="padding: 0px 0px 0px 20px"></div>
 </div>
 <script>
-  var data = ${c.data|n};
-  var fields = [
-    {key: "group_name"},
-    {key: "raw_name"},
-    {key: "desc"},
-    {key: "members"},
-    {key: "active"},
-    {key: "owner"},
-    {key: "action"}
-  ];
-  var column_defs = [
-    {key:"group_name",label:"${_('Name')}",sortable:true, sortOptions: { sortFunction: nameSort }},
-    {key:"desc",label:"${_('Description')}",sortable:true},
-    {key:"members",label:"${_('Members')}",sortable:false},
-    {key:"active",label:"${_('Active')}",sortable:true},
-    {key:"owner",label:"${_('Owner')}",sortable:true},
-    {key:"action",label:"${_('Action')}",sortable:false}
-  ];
-  var counter = YUD.get('user_group_count');
-  var sort_key = "group_name";
-  YUI_datatable(data, fields, column_defs, counter, sort_key, ${c.visual.admin_grid_items});
+    var data = ${c.data|n};
+    var $dataTable = $("#datatable_list_wrap").DataTable({
+        data: data.records,
+        columns: [
+            {data: "raw_name", visible: false, searchable: false},
+            {data: "group_name", title: "${_('Name')}", orderData: 0},
+            {data: "desc", title: "${_('Description')}", searchable: false},
+            {data: "members", title: "${_('Members')}", searchable: false},
+            {data: "active", title: "${_('Active')}", searchable: false, 'sType': 'str'},
+            {data: "owner", title: "${_('Owner')}", searchable: false},
+            {data: "action", title: "${_('Action')}", searchable: false, sortable: false}
+        ],
+        order: [[1, "asc"]]
+    });
 </script>
 </%def>

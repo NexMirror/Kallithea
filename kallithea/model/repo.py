@@ -237,6 +237,7 @@ class RepoModel(BaseModel):
                 "raw_name": repo.repo_name,
                 "name": repo_lnk(repo.repo_name, repo.repo_type,
                                  repo.repo_state, repo.private, repo.fork),
+                "last_change_iso": repo.last_db_change.isoformat(),
                 "last_change": last_change(repo.last_db_change),
                 "last_changeset": last_rev(repo.repo_name, cs_cache),
                 "last_rev_raw": cs_cache.get('revision'),
