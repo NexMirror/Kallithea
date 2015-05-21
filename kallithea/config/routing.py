@@ -206,7 +206,7 @@ def make_map(config):
         m.connect("edit_user_api_keys", "/users/{id}/edit/api_keys",
                   action="edit_api_keys", conditions=dict(method=["GET"]))
         m.connect("edit_user_api_keys", "/users/{id}/edit/api_keys",
-                  action="add_api_key", conditions=dict(method=["PUT"]))
+                  action="add_api_key", conditions=dict(method=["POST"]))
         m.connect("edit_user_api_keys", "/users/{id}/edit/api_keys",
                   action="delete_api_key", conditions=dict(method=["DELETE"]))
 

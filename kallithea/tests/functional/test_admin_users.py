@@ -451,7 +451,7 @@ class TestAdminUsersController(TestController):
         user_id = user.user_id
 
         response = self.app.post(url('edit_user_api_keys', id=user_id),
-                 {'_method': 'put', 'description': desc, 'lifetime': lifetime, '_authentication_token': self.authentication_token()})
+                 {'description': desc, 'lifetime': lifetime, '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'API key successfully created')
         try:
             response = response.follow()
@@ -469,7 +469,7 @@ class TestAdminUsersController(TestController):
         user_id = user.user_id
 
         response = self.app.post(url('edit_user_api_keys', id=user_id),
-                {'_method': 'put', 'description': 'desc', 'lifetime': -1, '_authentication_token': self.authentication_token()})
+                {'description': 'desc', 'lifetime': -1, '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'API key successfully created')
         response = response.follow()
 
