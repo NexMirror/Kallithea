@@ -17,12 +17,18 @@ import urllib2
 import logging
 import posixpath
 import string
-try:
-    # Python <=2.7
-    from pipes import quote
-except ImportError:
-    # Python 3.3+
-    from shlex import quote
+import sys
+if sys.platform == "win32":
+    from subprocess import list2cmdline
+    def quote(s):
+        return list2cmdline([s])
+else:
+    try:
+        # Python <=2.7
+        from pipes import quote
+    except ImportError:
+        # Python 3.3+
+        from shlex import quote
 
 from dulwich.objects import Tag
 from dulwich.repo import Repo, NotGitRepository
