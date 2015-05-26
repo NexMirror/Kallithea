@@ -479,7 +479,7 @@ class UsersController(BaseController):
         try:
             user_model.add_extra_ip(id, ip)
             Session().commit()
-            h.flash(_("Added ip %s to user whitelist") % ip, category='success')
+            h.flash(_("Added IP address %s to user whitelist") % ip, category='success')
         except formencode.Invalid, error:
             msg = error.error_dict['ip']
             h.flash(msg, category='error')

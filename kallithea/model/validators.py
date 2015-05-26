@@ -814,7 +814,7 @@ def NotReviewedRevisions(repo_id):
 def ValidIp():
     class _validator(CIDR):
         messages = dict(
-            badFormat=_('Please enter a valid IPv4 or IpV6 address'),
+            badFormat=_('Please enter a valid IPv4 or IPv6 address'),
             illegalBits=_('The network size (bits) must be within the range'
                 ' of 0-32 (not %(bits)r)')
         )
@@ -836,7 +836,7 @@ def ValidIp():
         def validate_python(self, value, state):
             try:
                 addr = value.strip()
-                #this raises an ValueError if address is not IpV4 or IpV6
+                #this raises an ValueError if address is not IPv4 or IPv6
                 ipaddr.IPNetwork(address=addr)
             except ValueError:
                 raise formencode.Invalid(self.message('badFormat', state),

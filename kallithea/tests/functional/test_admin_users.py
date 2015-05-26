@@ -395,7 +395,7 @@ class TestAdminUsersController(TestController):
                                 params=dict(new_ip=ip, _authentication_token=self.authentication_token()))
 
         if failure:
-            self.checkSessionFlash(response, 'Please enter a valid IPv4 or IpV6 address')
+            self.checkSessionFlash(response, 'Please enter a valid IPv4 or IPv6 address')
             response = self.app.get(url('edit_user_ips', id=user_id))
             response.mustcontain(no=[ip])
             response.mustcontain(no=[ip_range])

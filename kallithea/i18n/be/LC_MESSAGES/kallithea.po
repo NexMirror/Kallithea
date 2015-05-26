@@ -1007,7 +1007,7 @@ msgstr "Вы не можаце рэдагаваць дадзенага кары�
 
 #: kallithea/controllers/admin/users.py:482
 #, python-format
-msgid "Added ip %s to user whitelist"
+msgid "Added IP address %s to user whitelist"
 msgstr "Дададзены IP %s у белы спіс карыстача"
 
 #: kallithea/controllers/admin/users.py:488
@@ -1015,7 +1015,7 @@ msgid "An error occurred during ip saving"
 msgstr "Адбылася памылка пры захаванні IP"
 
 #: kallithea/controllers/admin/users.py:502
-msgid "Removed ip address from user whitelist"
+msgid "Removed IP address from user whitelist"
 msgstr "Выдалены IP %s з белага спісу карыстача"
 
 #: kallithea/lib/auth.py:745
@@ -2041,8 +2041,8 @@ msgid "Revisions %(revs)s are already part of pull request or have set status"
 msgstr "Рэвізіі %(revs)s ужо ўключаны ў pull-request ці маюць усталяваны статус"
 
 #: kallithea/model/validators.py:817
-msgid "Please enter a valid IPv4 or IpV6 address"
-msgstr "Калі ласка, увядзіце існы IPv4 ці IpV6 адрас"
+msgid "Please enter a valid IPv4 or IPv6 address"
+msgstr "Калі ласка, увядзіце існы IPv4 ці IPv6 адрас"
 
 #: kallithea/model/validators.py:818
 #, python-format
@@ -3117,7 +3117,7 @@ msgstr "Дазволены любыя IP-адрасы."
 
 #: kallithea/templates/admin/permissions/permissions_ips.html:32
 #: kallithea/templates/admin/users/user_edit_ips.html:42
-msgid "New ip address"
+msgid "New IP address"
 msgstr "Новы IP-адрас"
 
 #: kallithea/templates/admin/permissions/permissions_perms.html:1

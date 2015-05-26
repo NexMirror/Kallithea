@@ -1010,7 +1010,7 @@ msgstr "Você não pode editar esse usuário"
 
 #: kallithea/controllers/admin/users.py:482
 #, python-format
-msgid "Added ip %s to user whitelist"
+msgid "Added IP address %s to user whitelist"
 msgstr ""
 
 #: kallithea/controllers/admin/users.py:488
@@ -1018,7 +1018,7 @@ msgid "An error occurred during ip saving"
 msgstr "Ocorreu um erro durante o salvamento do IP"
 
 #: kallithea/controllers/admin/users.py:502
-msgid "Removed ip address from user whitelist"
+msgid "Removed IP address from user whitelist"
 msgstr ""
 
 #: kallithea/lib/auth.py:745
@@ -2038,7 +2038,7 @@ msgstr ""
 "estado"
 
 #: kallithea/model/validators.py:817
-msgid "Please enter a valid IPv4 or IpV6 address"
+msgid "Please enter a valid IPv4 or IPv6 address"
 msgstr "Por favor, forneça um endereço válido IPv4 ou IPv6"
 
 #: kallithea/model/validators.py:818
@@ -3126,7 +3126,7 @@ msgstr "Todos os endereços IP são permitidos"
 
 #: kallithea/templates/admin/permissions/permissions_ips.html:32
 #: kallithea/templates/admin/users/user_edit_ips.html:42
-msgid "New ip address"
+msgid "New IP address"
 msgstr "Novo endereço IP"
 
 #: kallithea/templates/admin/permissions/permissions_perms.html:1
