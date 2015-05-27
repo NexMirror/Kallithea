@@ -162,7 +162,7 @@ div.readme .readme_box pre,
 div.rst-block pre,
 .CodeMirror .CodeMirror-code pre {
     font-size: 12px;
-    font-family: Consolas, Monaco, Inconsolata, Liberation Mono, monospace;
+    font-family: Lucida Console, Consolas, Monaco, Inconsolata, Liberation Mono, monospace;
 }
 
 .top-left-rounded-corner {
@@ -4371,7 +4371,7 @@ div.comment-form {
 .comment-form textarea {
     width: 100%;
     height: 100px;
-    font-family: Consolas, Monaco, Inconsolata, Liberation Mono, monospace;
+    font-family: Lucida Console, Consolas, Monaco, Inconsolata, Liberation Mono, monospace;
 }
 
 form.comment-form {
@@ -4469,7 +4469,7 @@ div.comment-inline-form {
 .comment-inline-form textarea {
     width: 100%;
     height: 100px;
-    font-family: Consolas, Monaco, Inconsolata, Liberation Mono, monospace;
+    font-family: Lucida Console, Consolas, Monaco, Inconsolata, Liberation Mono, monospace;
 }
 
 form.comment-inline-form {
@@ -4931,7 +4931,7 @@ table.code-difftable .lineno.old {
 }
 table.code-difftable .lineno a {
     color: #aaa !important;
-    font: 11px Consolas, Monaco, Inconsolata, Liberation Mono, monospace !important;
+    font: 11px Lucida Console, Consolas, Monaco, Inconsolata, Liberation Mono, monospace !important;
     letter-spacing: -1px;
     padding-left: 10px;
     padding-right: 8px;
