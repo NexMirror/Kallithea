@@ -12,6 +12,7 @@
 import os
 import re
 import time
+import errno
 import urllib
 import urllib2
 import logging
@@ -690,7 +691,13 @@ class GitRepository(BaseRepository):
         runs gits update-server-info command in this repo instance
         """
         from dulwich.server import update_server_info
-        update_server_info(self._repo)
+        try:
+            update_server_info(self._repo)
+        except OSError, e:
+            if e.errno != errno.ENOENT:
+                raise
+            # Workaround for dulwich crashing on for example its own dulwich/tests/data/repos/simple_merge.git/info/refs.lock
+            log.error('Ignoring error running update-server-info: %s', e)
 
     @LazyProperty
     def workdir(self):
