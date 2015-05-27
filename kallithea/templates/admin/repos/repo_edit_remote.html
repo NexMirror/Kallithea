@@ -4,9 +4,12 @@
 </div>
 ${h.form(url('edit_repo_remote', repo_name=c.repo_name), method='put')}
 <div class="form">
-   <div class="fields">
-       ${h.submit('remote_pull_%s' % c.repo_info.repo_name,_('Pull Changes from Remote Location'),class_="btn btn-small",onclick="return confirm('"+_('Confirm to pull changes from remote side.')+"');")}
-   </div>
+    <div class="fields">
+        ${h.submit('remote_pull_%s' % c.repo_info.repo_name,
+            _('Pull Changes from Remote Location'),
+            class_="btn btn-small",
+            onclick="return confirm('"+_('Confirm to pull changes from remote side.')+"');")}
+    </div>
 </div>
 ${h.end_form()}
 %else:

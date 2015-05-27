@@ -15,13 +15,13 @@ ${h.form(url('repo', repo_name=c.repo_info.repo_name),method='put')}
                                Using the above permanent URL guarantees that this repository always will be accessible on that URL.
                                This is useful for CI systems, or any other cases that you need to hardcode the URL into a 3rd party service.''')}</span>
                 </div>
-           </div>
-           <div class="field">
-               <div class="label">
-                   <label for="clone_uri">${_('Clone URL')}:</label>
-               </div>
-               <div class="input">
-                   %if c.repo_info.clone_uri:
+            </div>
+            <div class="field">
+                <div class="label">
+                    <label for="clone_uri">${_('Clone URL')}:</label>
+                </div>
+                <div class="input">
+                  %if c.repo_info.clone_uri:
                     <div id="clone_uri_hidden" style="font-size: 14px">
                         <span id="clone_uri_hidden_value">${c.repo_info.clone_uri_hidden}</span>
                         <span style="cursor: pointer; padding: 0px 0px 5px 0px" id="edit_clone_uri"><i class="icon-edit"></i>${_('Edit')}</span>
@@ -29,13 +29,15 @@ ${h.form(url('repo', repo_name=c.repo_info.repo_name),method='put')}
                     <div id="alter_clone_uri" style="display: none">
                         ${h.text('clone_uri',class_="medium",  placeholder=_('new value'))}
                     </div>
-                   %else:
+                  %else:
                     ## not set yet, display form to set it
                     ${h.text('clone_uri',class_="medium")}
                     ${h.hidden('clone_uri_change', 'NEW')}
-                   %endif
-                 <span id="alter_clone_uri_help_block" class="help-block">${_('URL used for doing remote pulls.')}</span>
-               </div>
+                  %endif
+                  <span id="alter_clone_uri_help_block" class="help-block">
+                      ${_('URL used for doing remote pulls.')}
+                  </span>
+                </div>
             </div>
             <div class="field">
                 <div class="label">
