@@ -379,7 +379,7 @@ function SummaryPlot(from,to,dataset,overview_dataset) {
                     item.series.label = 'commits';
                 }
                 var d = new Date(x*1000);
-                var fd = d.toDateString()
+                var fd = d.toDateString();
                 var nr_commits = parseInt(y);
 
                 var cur_data = dataset[item.series.label].data[item.dataIndex];
@@ -433,7 +433,7 @@ function SummaryPlot(from,to,dataset,overview_dataset) {
     overview.setSelection(initial_ranges);
 
     plot.subscribe("plotselected", plotselected);
-    plot.subscribe("plothover", plothover)
+    plot.subscribe("plothover", plothover);
 
     overview.subscribe("plotselected", function (ranges) {
         plot.setSelection(ranges);

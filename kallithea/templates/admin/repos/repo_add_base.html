@@ -90,7 +90,7 @@ ${h.form(url('repos'))}
     $(document).ready(function(){
         var setCopyPermsOption = function(group_val){
             if(group_val != "-1"){
-                $('#copy_perms').show()
+                $('#copy_perms').show();
             }
             else{
                 $('#copy_perms').hide();
@@ -100,7 +100,7 @@ ${h.form(url('repos'))}
         $('#remote_clone_toggle').on('click', function(e){
             $('#remote_clone').show();
             e.preventDefault();
-        })
+        });
         if($('#remote_clone input').hasClass('error')){
             $('#remote_clone').show();
         }
@@ -111,10 +111,10 @@ ${h.form(url('repos'))}
             'dropdownAutoWidth': true
         });
 
-        setCopyPermsOption($('#repo_group').val())
+        setCopyPermsOption($('#repo_group').val());
         $("#repo_group").on("change", function(e) {
-            setCopyPermsOption(e.val)
-        })
+            setCopyPermsOption(e.val);
+        });
 
         $("#repo_type").select2({
             'minimumResultsForSearch': -1
@@ -123,6 +123,6 @@ ${h.form(url('repos'))}
             'minimumResultsForSearch': -1
         });
         $('#repo_name').focus();
-    })
+    });
 </script>
 ${h.end_form()}

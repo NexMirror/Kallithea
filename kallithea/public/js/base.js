@@ -2059,7 +2059,7 @@ var YUI_paginator = function(links_per_page, containers){
         nextPageLinkLabel: '&gt;',
         previousPageLinkLabel: '&lt;',
         containers:containers
-    })
+    });
 
     return pagi
 }

@@ -210,7 +210,7 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                         YUD.get('open_new_pr').href = pyroutes.url('pullrequest_home',
                                                                    {'repo_name': '${c.repo_name}',
                                                                     'rev_start': rev_start,
-                                                                    'rev_end': rev_end})
+                                                                    'rev_end': rev_end});
 
                         YUD.setStyle('compare_fork','display','none');
                     }else{

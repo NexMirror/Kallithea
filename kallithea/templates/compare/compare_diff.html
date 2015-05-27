@@ -113,14 +113,14 @@ ${self.repo_context_bar('changelog')}
                 var children = [];
                 $.each(this.children, function(){
                     if(query.term.length == 0 || this.text.toUpperCase().indexOf(query.term.toUpperCase()) >= 0 ){
-                        children.push({'id': this.id, 'text': this.text})
+                        children.push({'id': this.id, 'text': this.text});
                     }
-                })
-                data.results.push({'text': section, 'children': children})
+                });
+                data.results.push({'text': section, 'children': children});
             });
             //push the typed in changeset
             data.results.push({'text':_TM['Specify changeset'],
-                               'children': [{'id': query.term, 'text': query.term, 'type': 'rev'}]})
+                               'children': [{'id': query.term, 'text': query.term, 'type': 'rev'}]});
             query.callback(data);
           }else{
               $.ajax({
@@ -132,7 +132,7 @@ ${self.repo_context_bar('changelog')}
                   cache[key] = data;
                   query.callback(data);
                 }
-              })
+              });
           }
         }
     });
@@ -140,7 +140,7 @@ ${self.repo_context_bar('changelog')}
         placeholder: "${'%s@%s' % (c.cs_repo.repo_name, c.cs_ref_name)}",
         dropdownAutoWidth: true,
         formatSelection: function(obj){
-            return '{0}@{1}'.format("${c.cs_repo.repo_name}", obj.text)
+            return '{0}@{1}'.format("${c.cs_repo.repo_name}", obj.text);
         },
         query: function(query){
           var key = 'cache2';
@@ -153,14 +153,14 @@ ${self.repo_context_bar('changelog')}
                 var children = [];
                 $.each(this.children, function(){
                     if(query.term.length == 0 || this.text.toUpperCase().indexOf(query.term.toUpperCase()) >= 0 ){
-                        children.push({'id': this.id, 'text': this.text})
+                        children.push({'id': this.id, 'text': this.text});
                     }
-                })
-                data.results.push({'text': section, 'children': children})
+                });
+                data.results.push({'text': section, 'children': children});
             });
             //push the typed in changeset
             data.results.push({'text':_TM['Specify changeset'],
-                               'children': [{'id': query.term, 'text': query.term, 'type': 'rev'}]})
+                               'children': [{'id': query.term, 'text': query.term, 'type': 'rev'}]});
             query.callback(data);
           }else{
               $.ajax({
@@ -172,7 +172,7 @@ ${self.repo_context_bar('changelog')}
                   cache[key] = data;
                   query.callback({results: data.results});
                 }
-              })
+              });
           }
         }
     });

@@ -267,10 +267,10 @@ $(document).ready(function(){
                 var children = [];
                 $.each(this.children, function(){
                     if(query.term.length == 0 || this.text.toUpperCase().indexOf(query.term.toUpperCase()) >= 0 ){
-                        children.push({'id': this.id, 'text': this.text})
+                        children.push({'id': this.id, 'text': this.text});
                     }
-                })
-                data.results.push({'text': section, 'children': children})
+                });
+                data.results.push({'text': section, 'children': children});
             });
             query.callback(data);
           }else{
@@ -283,7 +283,7 @@ $(document).ready(function(){
                   cache[key] = data;
                   query.callback({results: data.results});
                 }
-              })
+              });
           }
         }
     });
@@ -303,7 +303,7 @@ $(document).ready(function(){
              url = url.replace('__SUB__',subrepos);
              url = url.replace('__NAME__',title_tmpl);
 
-             s.html(url)
+             s.html(url);
            }
        }
     });
@@ -312,7 +312,7 @@ $(document).ready(function(){
     %for cnt,archive in enumerate(c.db_repo_scm_instance._get_archives()):
       tmpl_links["${archive['type']}"] = '${h.link_to('__NAME__', h.url('files_archive_home',repo_name=c.db_repo.repo_name, fname='__CS__'+archive['extension'],subrepos='__SUB__'),class_='btn btn-small')}';
     %endfor
-})
+});
 </script>
 
 %if c.show_stats:

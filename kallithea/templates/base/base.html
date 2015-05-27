@@ -419,11 +419,11 @@
                     var children = [];
                     $.each(this.children, function(){
                         if(query.term.length == 0 || this.text.toUpperCase().indexOf(query.term.toUpperCase()) >= 0 ){
-                            children.push({'id': this.id, 'text': this.text, 'type': this.type, 'obj': this.obj})
+                            children.push({'id': this.id, 'text': this.text, 'type': this.type, 'obj': this.obj});
                         }
-                    })
+                    });
                     if(children.length !== 0){
-                        data.results.push({'text': section, 'children': children})
+                        data.results.push({'text': section, 'children': children});
                     }
 
                 });
@@ -438,21 +438,21 @@
                       cache[key] = data;
                       query.callback({results: data.results});
                     }
-                  })
+                  });
               }
             }
         });
 
         $("#repo_switcher").on('select2-selecting', function(e){
             e.preventDefault();
-            window.location = pyroutes.url('summary_home', {'repo_name': e.val})
-        })
+            window.location = pyroutes.url('summary_home', {'repo_name': e.val});
+        });
 
         ## Global mouse bindings ##
 
         // general help "?"
         Mousetrap.bind(['?'], function(e) {
-            $('#help_kb').modal({})
+            $('#help_kb').modal({});
         });
 
         // / open the quick filter
@@ -544,7 +544,7 @@
                          ('g g', 'Goto my private gists page'),
                          ('g G', 'Goto my public gists page'),
                          ('n r', 'New repository page'),
-                         ('n g', 'New gist page')
+                         ('n g', 'New gist page'),
                      ]
                   %>
                   %for key, desc in elems:
@@ -572,7 +572,7 @@
                          ('g f', 'Goto files page'),
                          ('g F', 'Goto files page with file search activated'),
                          ('g o', 'Goto repository settings'),
-                         ('g O', 'Goto repository permissions settings')
+                         ('g O', 'Goto repository permissions settings'),
                      ]
                   %>
                   %for key, desc in elems:

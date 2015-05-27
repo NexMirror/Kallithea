@@ -112,7 +112,7 @@
             if (req) {
                 req = req.toLowerCase();
                 for (i = 0; i<data.length; i++) {
-                    var pos = data[i].raw_name.toLowerCase().indexOf(req, ${len(group_name)})
+                    var pos = data[i].raw_name.toLowerCase().indexOf(req, ${len(group_name)});
                     if (pos != -1) {
                         filtered.push(data[i]);
                     }

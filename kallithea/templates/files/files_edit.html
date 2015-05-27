@@ -98,7 +98,7 @@ $(document).ready(function(){
     var detected_mode = CodeMirror.findModeByExtension("${c.file.extension}");
     if(detected_mode){
         setCodeMirrorMode(myCodeMirror, detected_mode);
-        $($('#set_mode option[value="'+detected_mode.mime+'"]')[0]).attr("selected", "selected")
+        $($('#set_mode option[value="'+detected_mode.mime+'"]')[0]).attr("selected", "selected");
     }
 
     $('#set_mode').on('change', function(e){
@@ -107,6 +107,6 @@ $(document).ready(function(){
         var detected_mode = CodeMirror.findModeByMIME(node.value);
         setCodeMirrorMode(myCodeMirror, detected_mode);
     });
-})
+});
 </script>
 </%def>

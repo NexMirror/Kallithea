@@ -75,7 +75,7 @@ $(document).ready(function () {
         cmsettings: {mode: 'text/plain', readOnly: true, lineWrapping: false, lineNumbers: true},
         lhs: function(setValue) {
             if("${c.node1.is_binary}" == "True"){
-                setValue('Binary file')
+                setValue('Binary file');
             }
             else{
                 $.ajax(orig1_url, {dataType: 'text', success: setValue});
@@ -84,7 +84,7 @@ $(document).ready(function () {
         },
         rhs: function(setValue) {
             if("${c.node2.is_binary}" == "True"){
-                setValue('Binary file')
+                setValue('Binary file');
             }
             else{
                 $.ajax(orig2_url, {dataType: 'text', success: setValue});
@@ -95,13 +95,13 @@ $(document).ready(function () {
         var val = e.currentTarget.checked;
         $('#compare').mergely('options', {ignorews: val});
         $('#compare').mergely('update');
-    })
+    });
     $('#edit_mode').change(function(e){
         var val = !e.currentTarget.checked;
         $('#compare').mergely('cm', 'lhs').setOption('readOnly', val);
         $('#compare').mergely('cm', 'rhs').setOption('readOnly', val);
         $('#compare').mergely('update');
-    })
+    });
 });
 </script>
 
