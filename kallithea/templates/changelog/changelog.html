@@ -93,7 +93,7 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                                 <i class="icon-circle changeset-status-${c.statuses.get(cs.raw_id)[0]}"></i>
                               </a>
                             %else:
-                              <a class="tooltip" title="${_('Changeset status: %s') % c.statuses.get(cs.raw_id)[1]}" href="${h.url('changeset_home',repo_name=c.repo_name,revision=cs.raw_id,anchor='comment-%s' % c.comments[cs.raw_id][0].comment_id)}">
+                              <a class="tooltip" title="${_('Changeset status: %s') % c.statuses.get(cs.raw_id)[1]}" href="${c.comments[cs.raw_id][0].url()}">
                                   <i class="icon-circle changeset-status-${c.statuses.get(cs.raw_id)[0]}"></i>
                               </a>
                             %endif
@@ -122,7 +122,7 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                                     %if c.comments.get(cs.raw_id):
                                         <div class="comments-container">
                                             <div class="comments-cnt" title="${_('Changeset has comments')}">
-                                                <a href="${h.url('changeset_home',repo_name=c.repo_name,revision=cs.raw_id,anchor='comment-%s' % c.comments[cs.raw_id][0].comment_id)}">
+                                                <a href="${c.comments[cs.raw_id][0].url()}">
                                                     ${len(c.comments[cs.raw_id])}
                                                     <i class="icon-comment-discussion"></i>
                                                 </a>

@@ -2183,6 +2183,13 @@ class ChangesetComment(Base, BaseModel):
             q = q.filter(cls.pull_request_id == pull_request_id)
         return q.all()
 
+    def url(self):
+        anchor = "comment-%s" % self.comment_id
+        import kallithea.lib.helpers as h
+        if self.revision:
+            return h.url('changeset_home', repo_name=self.repo.repo_name, revision=self.revision, anchor=anchor)
+        elif self.pull_request_id is not None:
+            return self.pull_request.url(anchor=anchor)
 
 class ChangesetStatus(Base, BaseModel):
     __tablename__ = 'changeset_statuses'

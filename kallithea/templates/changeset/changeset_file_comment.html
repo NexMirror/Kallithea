@@ -22,7 +22,7 @@
               %else:
                 ${_('on this changeset')}
               %endif
-              <a class="permalink" href="#comment-${co.comment_id}">&para;</a>
+              <a class="permalink" href="${co.url()}">&para;</a>
           </span>
 
           %if h.HasPermissionAny('hg.admin')() or h.HasRepoPermissionAny('repository.admin')(c.repo_name) or co.author.user_id == c.authuser.user_id:
