@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Kallithea\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2015-04-01 03:17+0200\n"
-"PO-Revision-Date: 2015-03-31 16:25+0200\n"
+"PO-Revision-Date: 2015-05-28 22:41+0200\n"
 "Last-Translator: Sam Jaques <sam.jaques@me.com>\n"
 "Language-Team: Dutch (Belgium) "
 "<https://hosted.weblate.org/projects/kallithea/kallithea/nl_BE/>\n"
@@ -17,6 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Weblate 2.3-dev\n"
 
 #: kallithea/controllers/changelog.py:86
 #: kallithea/controllers/pullrequests.py:247 kallithea/lib/base.py:449
@@ -29,7 +30,7 @@ msgstr "Er zijn nog geen changesets"
 #: kallithea/controllers/admin/permissions.py:70
 #: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:104
 msgid "None"
-msgstr ""
+msgstr "Geen"
 
 #: kallithea/controllers/changelog.py:160 kallithea/controllers/files.py:197
 msgid "(closed)"
@@ -57,17 +58,16 @@ msgstr "Deze revisie bestaat niet in deze repository"
 
 #: kallithea/controllers/changeset.py:352
 #: kallithea/controllers/pullrequests.py:699
-#, fuzzy
 msgid "No comments."
-msgstr ""
+msgstr "Geen kommentaar."
 
 #: kallithea/controllers/changeset.py:382
 msgid ""
 "Changing status on a changeset associated with a closed pull request is "
 "not allowed"
 msgstr ""
-"Het is niet toegestaan de status te wijzigen van een changeset die "
-"geassocieerd is met een gesloten pull request"
+"Het is niet toegestaan de status te wijzigen van een changeset geassocieerd "
+"met een gesloten pull request"
 
 #: kallithea/controllers/compare.py:158 kallithea/templates/base/root.html:42
 msgid "Select changeset"
@@ -5853,4 +5853,3 @@ msgstr ""
 #: kallithea/templates/tags/tags.html:26
 msgid "Compare Tags"
 msgstr ""
-
