@@ -736,6 +736,9 @@ var deleteComment = function(comment_id){
     var success = function(o){
         var $deleted = $('#comment-tr-'+comment_id);
         var $prev = $deleted.prev('tr');
+        while ($prev.hasClass('inline-comments')){
+            $prev = $prev.prev('tr');
+        }
         $deleted.remove();
         _placeAddButton($prev);
     }
