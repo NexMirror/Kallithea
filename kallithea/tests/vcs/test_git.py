@@ -1,6 +1,7 @@
 from __future__ import with_statement
 
 import os
+import sys
 import mock
 import datetime
 import urllib2
@@ -39,12 +40,20 @@ class GitRepositoryTest(unittest.TestCase):
             clone_fail_repo.clone(repo_inject_path, update_after_clone=True,)
 
         # Verify correct quoting of evil characters that should work on posix file systems
-        tricky_path = get_new_dir("tricky-path-repo-$'\"`")
+        if sys.platform == 'win32':
+            # windows does not allow '"' in dir names
+            tricky_path = get_new_dir("tricky-path-repo-$'`")
+        else:
+            tricky_path = get_new_dir("tricky-path-repo-$'\"`")
         successfully_cloned = GitRepository(tricky_path, src_url=TEST_GIT_REPO, update_after_clone=True, create=True)
         # Repo should have been created
         self.assertFalse(successfully_cloned._repo.bare)
 
-        tricky_path_2 = get_new_dir("tricky-path-2-repo-$'\"`")
+        if sys.platform == 'win32':
+            # windows does not allow '"' in dir names
+            tricky_path_2 = get_new_dir("tricky-path-2-repo-$'`")
+        else:
+            tricky_path_2 = get_new_dir("tricky-path-2-repo-$'\"`")
         successfully_cloned2 = GitRepository(tricky_path_2, src_url=tricky_path, bare=True, create=True)
         # Repo should have been created and thus used correct quoting for clone
         self.assertTrue(successfully_cloned2._repo.bare)
@@ -52,6 +61,12 @@ class GitRepositoryTest(unittest.TestCase):
         # Should pass because URL has been properly quoted
         successfully_cloned.pull(tricky_path_2)
         successfully_cloned2.fetch(tricky_path)
+
+    def test_repo_create_with_spaces_in_path(self):
+        repo_path = get_new_dir("path with spaces")
+        repo = GitRepository(repo_path, src_url=None, bare=True, create=True)
+        # Repo should have been created
+        self.assertTrue(repo._repo.bare)
 
     def test_repo_clone(self):
         self.__check_for_existing_repo()
@@ -63,6 +78,15 @@ class GitRepositoryTest(unittest.TestCase):
         for changeset in repo.get_changesets():
             raw_id = changeset.raw_id
             self.assertEqual(raw_id, repo_clone.get_changeset(raw_id).raw_id)
+
+    def test_repo_clone_with_spaces_in_path(self):
+        repo_path = get_new_dir("path with spaces")
+        successfully_cloned = GitRepository(repo_path, src_url=TEST_GIT_REPO, update_after_clone=True, create=True)
+        # Repo should have been created
+        self.assertFalse(successfully_cloned._repo.bare)
+
+        successfully_cloned.pull(TEST_GIT_REPO)
+        self.repo.fetch(repo_path)
 
     def test_repo_clone_without_create(self):
         self.assertRaises(RepositoryError, GitRepository,
