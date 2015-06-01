@@ -60,16 +60,7 @@ class UserModel(BaseModel):
         return self._get_user(user)
 
     def get_by_username(self, username, cache=False, case_insensitive=False):
-
-        if case_insensitive:
-            user = self.sa.query(User).filter(User.username.ilike(username))
-        else:
-            user = self.sa.query(User)\
-                .filter(User.username == username)
-        if cache:
-            user = user.options(FromCache("sql_cache_short",
-                                          "get_user_%s" % username))
-        return user.scalar()
+        return User.get_by_username(username, case_insensitive, cache)
 
     def get_by_email(self, email, cache=False, case_insensitive=False):
         return User.get_by_email(email, case_insensitive, cache)
