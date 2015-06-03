@@ -13,6 +13,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from sqlalchemy.orm.exc import NoResultFound
+from webob.exc import HTTPNotFound
 
 from kallithea.tests import *
 from kallithea.tests.fixture import Fixture
@@ -497,3 +498,81 @@ class TestAdminUsersController(TestController):
         self.checkSessionFlash(response, 'API key successfully reset')
         response = response.follow()
         response.mustcontain(no=[api_key])
+
+# TODO To be uncommented when pytest is the test runner
+#import pytest
+#from kallithea.controllers.admin.users import UsersController
+#class TestAdminUsersController_unittest(object):
+#    """
+#    Unit tests for the users controller
+#    These are in a separate class, not deriving from TestController (and thus
+#    unittest.TestCase), to be able to benefit from pytest features like
+#    monkeypatch.
+#    """
+#    def test_get_user_or_raise_if_default(self, monkeypatch):
+#        # flash complains about an unexisting session
+#        def flash_mock(*args, **kwargs):
+#            pass
+#        monkeypatch.setattr(h, 'flash', flash_mock)
+#
+#        u = UsersController()
+#        # a regular user should work correctly
+#        user = User.get_by_username(TEST_USER_REGULAR_LOGIN)
+#        assert u._get_user_or_raise_if_default(user.user_id) == user
+#        # the default user should raise
+#        with pytest.raises(HTTPNotFound):
+#            u._get_user_or_raise_if_default(User.get_default_user().user_id)
+
+
+class TestAdminUsersControllerForDefaultUser(TestController):
+    """
+    Edit actions on the default user are not allowed.
+    Validate that they throw a 404 exception.
+    """
+    def test_edit_default_user(self):
+        self.log_user()
+        user = User.get_default_user()
+        response = self.app.get(url('edit_user', id=user.user_id), status=404)
+
+    def test_edit_advanced_default_user(self):
+        self.log_user()
+        user = User.get_default_user()
+        response = self.app.get(url('edit_user_advanced', id=user.user_id), status=404)
+
+    # API keys
+    def test_edit_api_keys_default_user(self):
+        self.log_user()
+        user = User.get_default_user()
+        response = self.app.get(url('edit_user_api_keys', id=user.user_id), status=404)
+
+    def test_add_api_keys_default_user(self):
+        self.log_user()
+        user = User.get_default_user()
+        response = self.app.post(url('edit_user_api_keys', id=user.user_id),
+                 {'_method': 'put', '_authentication_token': self.authentication_token()}, status=404)
+
+    def test_delete_api_keys_default_user(self):
+        self.log_user()
+        user = User.get_default_user()
+        response = self.app.post(url('edit_user_api_keys', id=user.user_id),
+                 {'_method': 'delete', '_authentication_token': self.authentication_token()}, status=404)
+
+    # Permissions
+    def test_edit_perms_default_user(self):
+        self.log_user()
+        user = User.get_default_user()
+        response = self.app.get(url('edit_user_perms', id=user.user_id), status=404)
+
+    # E-mails
+    def test_edit_emails_default_user(self):
+        self.log_user()
+        user = User.get_default_user()
+        response = self.app.get(url('edit_user_emails', id=user.user_id), status=404)
+
+    # IP addresses
+    # Add/delete of IP addresses for the default user is used to maintain
+    # the global IP whitelist and thus allowed. Only 'edit' is forbidden.
+    def test_edit_ip_default_user(self):
+        self.log_user()
+        user = User.get_default_user()
+        response = self.app.get(url('edit_user_ips', id=user.user_id), status=404)

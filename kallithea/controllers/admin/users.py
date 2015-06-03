@@ -34,6 +34,7 @@ from pylons import request, tmpl_context as c, url, config
 from pylons.controllers.util import redirect
 from pylons.i18n.translation import _
 from sqlalchemy.sql.expression import func
+from webob.exc import HTTPNotFound
 
 import kallithea
 from kallithea.lib.exceptions import DefaultUserException, \
@@ -233,14 +234,17 @@ class UsersController(BaseController):
         # url('user', id=ID)
         User.get_or_404(-1)
 
+    def _get_user_or_raise_if_default(self, id):
+        try:
+            return User.get_or_404(id, allow_default=False)
+        except DefaultUserException:
+            h.flash(_("The default user cannot be edited"), category='warning')
+            raise HTTPNotFound
+
     def edit(self, id, format='html'):
         """GET /users/id/edit: Form to edit an existing item"""
         # url('edit_user', id=ID)
-        c.user = User.get_or_404(id)
-        if c.user.username == User.DEFAULT_USER:
-            h.flash(_("You can't edit this user"), category='warning')
-            return redirect(url('users'))
-
+        c.user = self._get_user_or_raise_if_default(id)
         c.active = 'profile'
         c.extern_type = c.user.extern_type
         c.extern_name = c.user.extern_name
@@ -254,11 +258,7 @@ class UsersController(BaseController):
             force_defaults=False)
 
     def edit_advanced(self, id):
-        c.user = User.get_or_404(id)
-        if c.user.username == User.DEFAULT_USER:
-            h.flash(_("You can't edit this user"), category='warning')
-            return redirect(url('users'))
-
+        c.user = self._get_user_or_raise_if_default(id)
         c.active = 'advanced'
         c.perm_user = AuthUser(user_id=id, ip_addr=self.ip_addr)
 
@@ -277,11 +277,7 @@ class UsersController(BaseController):
             force_defaults=False)
 
     def edit_api_keys(self, id):
-        c.user = User.get_or_404(id)
-        if c.user.username == User.DEFAULT_USER:
-            h.flash(_("You can't edit this user"), category='warning')
-            return redirect(url('users'))
-
+        c.user = self._get_user_or_raise_if_default(id)
         c.active = 'api_keys'
         show_expired = True
         c.lifetime_values = [
@@ -302,10 +298,7 @@ class UsersController(BaseController):
             force_defaults=False)
 
     def add_api_key(self, id):
-        c.user = User.get_or_404(id)
-        if c.user.username == User.DEFAULT_USER:
-            h.flash(_("You can't edit this user"), category='warning')
-            return redirect(url('users'))
+        c.user = self._get_user_or_raise_if_default(id)
 
         lifetime = safe_int(request.POST.get('lifetime'), -1)
         description = request.POST.get('description')
@@ -315,10 +308,7 @@ class UsersController(BaseController):
         return redirect(url('edit_user_api_keys', id=c.user.user_id))
 
     def delete_api_key(self, id):
-        c.user = User.get_or_404(id)
-        if c.user.username == User.DEFAULT_USER:
-            h.flash(_("You can't edit this user"), category='warning')
-            return redirect(url('users'))
+        c.user = self._get_user_or_raise_if_default(id)
 
         api_key = request.POST.get('del_api_key')
         if request.POST.get('del_api_key_builtin'):
@@ -339,11 +329,7 @@ class UsersController(BaseController):
         pass
 
     def edit_perms(self, id):
-        c.user = User.get_or_404(id)
-        if c.user.username == User.DEFAULT_USER:
-            h.flash(_("You can't edit this user"), category='warning')
-            return redirect(url('users'))
-
+        c.user = self._get_user_or_raise_if_default(id)
         c.active = 'perms'
         c.perm_user = AuthUser(user_id=id, ip_addr=self.ip_addr)
 
@@ -402,11 +388,7 @@ class UsersController(BaseController):
         return redirect(url('edit_user_perms', id=id))
 
     def edit_emails(self, id):
-        c.user = User.get_or_404(id)
-        if c.user.username == User.DEFAULT_USER:
-            h.flash(_("You can't edit this user"), category='warning')
-            return redirect(url('users'))
-
+        c.user = self._get_user_or_raise_if_default(id)
         c.active = 'emails'
         c.user_email_map = UserEmailMap.query()\
             .filter(UserEmailMap.user == c.user).all()
@@ -449,11 +431,7 @@ class UsersController(BaseController):
         return redirect(url('edit_user_emails', id=id))
 
     def edit_ips(self, id):
-        c.user = User.get_or_404(id)
-        if c.user.username == User.DEFAULT_USER:
-            h.flash(_("You can't edit this user"), category='warning')
-            return redirect(url('users'))
-
+        c.user = self._get_user_or_raise_if_default(id)
         c.active = 'ips'
         c.user_ip_map = UserIpMap.query()\
             .filter(UserIpMap.user == c.user).all()

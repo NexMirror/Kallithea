@@ -43,6 +43,7 @@ from webob.exc import HTTPNotFound
 from pylons.i18n.translation import lazy_ugettext as _
 
 from kallithea import DB_PREFIX
+from kallithea.lib.exceptions import DefaultUserException
 from kallithea.lib.vcs import get_backend
 from kallithea.lib.vcs.utils.helpers import get_scm
 from kallithea.lib.vcs.exceptions import VCSError
@@ -524,6 +525,18 @@ class User(Base, BaseModel):
     def __unicode__(self):
         return u"<%s('id:%s:%s')>" % (self.__class__.__name__,
                                       self.user_id, self.username)
+
+    @classmethod
+    def get_or_404(cls, id_, allow_default=True):
+        '''
+        Overridden version of BaseModel.get_or_404, with an extra check on
+        the default user.
+        '''
+        user = super(User, cls).get_or_404(id_)
+        if allow_default == False:
+            if user.username == User.DEFAULT_USER:
+                raise DefaultUserException
+        return user
 
     @classmethod
     def get_by_username(cls, username, case_insensitive=False, cache=False):

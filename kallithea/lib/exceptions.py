@@ -45,6 +45,7 @@ class LdapImportError(Exception):
 
 
 class DefaultUserException(Exception):
+    """An invalid action was attempted on the default user"""
     pass
 
 
