@@ -350,7 +350,7 @@ class UsersController(BaseController):
     def update_perms(self, id):
         """PUT /users_perm/id: Update an existing item"""
         # url('user_perm', id=ID, method='put')
-        user = User.get_or_404(id)
+        user = self._get_user_or_raise_if_default(id)
 
         try:
             form = CustomDefaultPermissionsForm()()
@@ -403,7 +403,7 @@ class UsersController(BaseController):
     def add_email(self, id):
         """POST /user_emails:Add an existing item"""
         # url('user_emails', id=ID, method='put')
-
+        user = self._get_user_or_raise_if_default(id)
         email = request.POST.get('new_email')
         user_model = UserModel()
 
@@ -423,6 +423,7 @@ class UsersController(BaseController):
     def delete_email(self, id):
         """DELETE /user_emails_delete/id: Delete an existing item"""
         # url('user_emails_delete', id=ID, method='delete')
+        user = self._get_user_or_raise_if_default(id)
         email_id = request.POST.get('del_email_id')
         user_model = UserModel()
         user_model.delete_extra_email(id, email_id)

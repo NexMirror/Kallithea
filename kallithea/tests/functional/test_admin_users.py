@@ -563,11 +563,29 @@ class TestAdminUsersControllerForDefaultUser(TestController):
         user = User.get_default_user()
         response = self.app.get(url('edit_user_perms', id=user.user_id), status=404)
 
+    def test_update_perms_default_user(self):
+        self.log_user()
+        user = User.get_default_user()
+        response = self.app.post(url('edit_user_perms', id=user.user_id),
+                 {'_method': 'put', '_authentication_token': self.authentication_token()}, status=404)
+
     # E-mails
     def test_edit_emails_default_user(self):
         self.log_user()
         user = User.get_default_user()
         response = self.app.get(url('edit_user_emails', id=user.user_id), status=404)
+
+    def test_add_emails_default_user(self):
+        self.log_user()
+        user = User.get_default_user()
+        response = self.app.post(url('edit_user_emails', id=user.user_id),
+                 {'_method': 'put', '_authentication_token': self.authentication_token()}, status=404)
+
+    def test_delete_emails_default_user(self):
+        self.log_user()
+        user = User.get_default_user()
+        response = self.app.post(url('edit_user_emails', id=user.user_id),
+                 {'_method': 'delete', '_authentication_token': self.authentication_token()}, status=404)
 
     # IP addresses
     # Add/delete of IP addresses for the default user is used to maintain
