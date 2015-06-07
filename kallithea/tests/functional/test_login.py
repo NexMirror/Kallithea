@@ -293,15 +293,13 @@ class TestLoginController(TestController):
         self.assertEqual(ret.admin, False)
 
     def test_forgot_password_wrong_mail(self):
-        bad_email = 'username@wrongmail.org'
+        bad_email = 'username%wrongmail.org'
         response = self.app.post(
                         url(controller='login', action='password_reset'),
                             {'email': bad_email, }
         )
 
-        msg = validators.ValidSystemEmail()._messages['non_existing_email']
-        msg = h.html_escape(msg % {'email': bad_email})
-        response.mustcontain()
+        response.mustcontain('An email address must contain a single @')
 
     def test_forgot_password(self):
         response = self.app.get(url(controller='login',
