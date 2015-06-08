@@ -685,6 +685,7 @@ var injectInlineForm = function(tr){
             $tr.removeClass('form-open');
             $form.remove();
             _renderInlineComment(json_data);
+            linkInlineComments($('.firstlink'), $('.comment'));
         };
         var postData = {
                 'text': text,
