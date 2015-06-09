@@ -87,8 +87,9 @@ class LoginController(BaseController):
         return headers
 
     def _validate_came_from(self, came_from):
+        """Return True if came_from is valid and can and should be used"""
         if not came_from:
-            return came_from
+            return False
 
         parsed = urlparse.urlparse(came_from)
         server_parsed = urlparse.urlparse(url.current())
@@ -96,12 +97,12 @@ class LoginController(BaseController):
         if parsed.scheme and parsed.scheme not in allowed_schemes:
             log.error('Suspicious URL scheme detected %s for url %s' %
                      (parsed.scheme, parsed))
-            came_from = url('home')
-        elif server_parsed.netloc != parsed.netloc:
+            return False
+        if server_parsed.netloc != parsed.netloc:
             log.error('Suspicious NETLOC detected %s for url %s server url '
                       'is: %s' % (parsed.netloc, parsed, server_parsed))
-            came_from = url('home')
-        return came_from
+            return False
+        return True
 
     def _redirect_to_origin(self, origin, headers=None):
         '''redirect to the original page, preserving any get arguments given'''
@@ -109,9 +110,9 @@ class LoginController(BaseController):
         raise HTTPFound(location=url(origin, **request.GET), headers=headers)
 
     def index(self):
-        _default_came_from = url('home')
-        came_from = self._validate_came_from(safe_str(request.GET.get('came_from', '')))
-        c.came_from = came_from or _default_came_from
+        c.came_from = safe_str(request.GET.get('came_from', ''))
+        if not self._validate_came_from(c.came_from):
+            c.came_from = url('home')
 
         not_default = self.authuser.username != User.DEFAULT_USER
         ip_allowed = self.authuser.ip_allowed
