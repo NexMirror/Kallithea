@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Kallithea 0.1\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2015-04-01 03:17+0200\n"
-"PO-Revision-Date: 2015-05-13 09:51+0200\n"
+"PO-Revision-Date: 2015-06-09 14:58+0200\n"
 "Last-Translator: Viktar Palstsiuk <vipals@gmail.com>\n"
 "Language-Team: Belarusian "
 "<https://hosted.weblate.org/projects/kallithea/kallithea/be/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
 "4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 2.3-dev\n"
+"X-Generator: Weblate 2.4-dev\n"
 
 #: kallithea/controllers/changelog.py:86
 #: kallithea/controllers/pullrequests.py:247 kallithea/lib/base.py:449
@@ -2800,7 +2800,7 @@ msgstr ""
 #: kallithea/templates/admin/users/user_edit_api_keys.html:27
 #: kallithea/templates/admin/users/user_edit_api_keys.html:32
 msgid "expires"
-msgstr ""
+msgstr "мінае"
 
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:14
 #: kallithea/templates/admin/users/user_edit_api_keys.html:14
@@ -2827,7 +2827,7 @@ msgstr "Пацвердзіце выдаленне гэтага API-ключа: %
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:42
 #: kallithea/templates/admin/users/user_edit_api_keys.html:42
 msgid "remove"
-msgstr ""
+msgstr "выдаліць"
 
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:49
 #: kallithea/templates/admin/users/user_edit_api_keys.html:49
@@ -4014,7 +4014,7 @@ msgstr "Адлюстроўваць версію Kallithea"
 
 #: kallithea/templates/admin/settings/settings_visual.html:20
 msgid "Shows or hides a version number of Kallithea displayed in the footer."
-msgstr ""
+msgstr "Паказвае або хавае нумар версіі Kallithea ў ніжняй частцы старонкі."
 
 #: kallithea/templates/admin/settings/settings_visual.html:24
 msgid "Use Gravatars in Kallithea"
@@ -4063,6 +4063,8 @@ msgid ""
 "Number of items displayed in the main page dashboard before pagination is "
 "shown."
 msgstr ""
+"Колькасць элементаў, што паказваюцца на галоўнай старонцы панэлі кіравання "
+"перад паказам нумарацыі старонак."
 
 #: kallithea/templates/admin/settings/settings_visual.html:65
 msgid "Admin pages items"
@@ -4211,7 +4213,7 @@ msgstr ""
 #: kallithea/templates/admin/users/user_edit_advanced.html:1
 #, python-format
 msgid "User: %s"
-msgstr ""
+msgstr "Карыстальнік: %s"
 
 #: kallithea/templates/admin/users/user_edit_advanced.html:7
 #: kallithea/templates/admin/users/user_edit_profile.html:51
@@ -4858,7 +4860,7 @@ msgstr "Паказаць поўны diff"
 #: kallithea/templates/changeset/changeset.html:224
 #: kallithea/templates/changeset/changeset.html:261
 msgid "no revisions"
-msgstr ""
+msgstr "няма рэвізій"
 
 #: kallithea/templates/changeset/changeset_file_comment.html:24
 msgid "Status change from pull request"
@@ -5049,7 +5051,7 @@ msgstr "%s Параўнаць"
 #: kallithea/templates/compare/compare_diff.html:13
 #: kallithea/templates/compare/compare_diff.html:35
 msgid "Compare Revisions"
-msgstr ""
+msgstr "Параўнаць рэвізіі"
 
 #: kallithea/templates/compare/compare_diff.html:33
 msgid "Swap"
@@ -5112,7 +5114,7 @@ msgstr "Падпісацца на стужку Atom %s"
 
 #: kallithea/templates/data_table/_dt_elements.html:141
 msgid "Creating"
-msgstr ""
+msgstr "Ствараецца"
 
 #: kallithea/templates/email_templates/changeset_comment.html:5
 #, python-format
@@ -5239,7 +5241,7 @@ msgstr "Ужыць змены"
 
 #: kallithea/templates/files/files_browser.html:32
 msgid "revision"
-msgstr ""
+msgstr "рэвізія"
 
 #: kallithea/templates/files/files_browser.html:33
 msgid "Previous revision"
@@ -5340,7 +5342,7 @@ msgstr ""
 
 #: kallithea/templates/files/files_source.html:11
 msgid "Show Authors"
-msgstr ""
+msgstr "Паказаць аўтараў"
 
 #: kallithea/templates/files/files_source.html:30
 msgid "Show Source"
@@ -5378,7 +5380,7 @@ msgstr "анатацыя"
 
 #: kallithea/templates/files/files_ypjax.html:23
 msgid "Go Back"
-msgstr ""
+msgstr "Вярнуцца"
 
 #: kallithea/templates/files/files_ypjax.html:24
 msgid "No files at given path"
@@ -5534,11 +5536,11 @@ msgstr "Запісы отсуствуют"
 
 #: kallithea/templates/pullrequests/pullrequest_data.html:18
 msgid "From"
-msgstr ""
+msgstr "Ад"
 
 #: kallithea/templates/pullrequests/pullrequest_data.html:19
 msgid "To"
-msgstr ""
+msgstr "Да"
 
 #: kallithea/templates/pullrequests/pullrequest_data.html:27
 #, python-format
@@ -5547,16 +5549,16 @@ msgstr "Апошняя адзнака: %s"
 
 #: kallithea/templates/pullrequests/pullrequest_data.html:29
 msgid "Nobody voted"
-msgstr ""
+msgstr "Ніхто не галасаваў"
 
 #: kallithea/templates/pullrequests/pullrequest_data.html:34
 #, python-format
 msgid "You voted: %s"
-msgstr ""
+msgstr "Вы прагаласавалі: %s"
 
 #: kallithea/templates/pullrequests/pullrequest_data.html:36
 msgid "You didn't vote"
-msgstr ""
+msgstr "Вы не галасавалі"
 
 #: kallithea/templates/pullrequests/pullrequest_data.html:45
 msgid "Delete Pull Request"
@@ -5641,7 +5643,7 @@ msgstr "Створана"
 
 #: kallithea/templates/pullrequests/pullrequest_show.html:170
 msgid "Update"
-msgstr ""
+msgstr "Абнавіць"
 
 #: kallithea/templates/pullrequests/pullrequest_show.html:188
 msgid "Current revision - no change"
@@ -5701,12 +5703,12 @@ msgstr "Pull-запыты для %s"
 #: kallithea/templates/pullrequests/pullrequest_show_all.html:35
 #, python-format
 msgid "Show Pull Requests to %s"
-msgstr ""
+msgstr "Паказаць pull-запыты да %s"
 
 #: kallithea/templates/pullrequests/pullrequest_show_all.html:37
 #, python-format
 msgid "Show Pull Requests from '%s'"
-msgstr ""
+msgstr "Паказаць pull-запыты ад %s"
 
 #: kallithea/templates/pullrequests/pullrequest_show_all.html:47
 #: kallithea/templates/pullrequests/pullrequest_show_my.html:26
