@@ -189,8 +189,8 @@ class TestLibs(BaseTestCase):
             "[requires => url] [lang => python] [just a tag]"
             "[,d] [ => ULR ] [obsolete] [desc]]"
         )
-        from kallithea.lib.helpers import desc_stylize
-        res = desc_stylize(sample)
+        from kallithea.lib.helpers import desc_stylize, html_escape
+        res = desc_stylize(html_escape(sample))
         self.assertTrue('<div class="metatag" tag="tag">tag</div>' in res)
         self.assertTrue('<div class="metatag" tag="obsolete">obsolete</div>' in res)
         self.assertTrue('<div class="metatag" tag="stale">stale</div>' in res)
