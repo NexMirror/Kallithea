@@ -556,7 +556,7 @@ class FilesController(BaseRepoController):
             cached_archive_path = os.path.join(CONFIG['archive_cache_dir'], archive_name)
             if os.path.isfile(cached_archive_path):
                 log.debug('Found cached archive in %s' % cached_archive_path)
-                fd, archive = None, cached_archive_path
+                archive = cached_archive_path
                 use_cached_archive = True
             else:
                 log.debug('Archive %s is not yet cached' % (archive_name))
@@ -564,6 +564,7 @@ class FilesController(BaseRepoController):
         if not use_cached_archive:
             # generate new archive
             fd, archive = tempfile.mkstemp()
+            os.close(fd)
             temp_stream = open(archive, 'wb')
             log.debug('Creating new temp archive in %s' % archive)
             cs.fill_archive(stream=temp_stream, kind=fileformat, subrepos=subrepos)
@@ -580,8 +581,6 @@ class FilesController(BaseRepoController):
                 data = stream.read(16 * 1024)
                 if not data:
                     stream.close()
-                    if fd:  # fd means we used temporary file
-                        os.close(fd)
                     if not archive_cache_enabled:
                         log.debug('Destroying temp archive %s' % archive)
                         os.remove(archive)

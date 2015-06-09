@@ -202,7 +202,7 @@ def PasswordResetForm():
     class _PasswordResetForm(formencode.Schema):
         allow_extra_fields = True
         filter_extra_fields = True
-        email = All(v.ValidSystemEmail(), v.Email(not_empty=True))
+        email = v.Email(not_empty=True)
     return _PasswordResetForm
 
 
