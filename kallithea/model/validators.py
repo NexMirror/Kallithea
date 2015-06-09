@@ -471,9 +471,9 @@ def ValidCloneUri():
 
     class _validator(formencode.validators.FancyValidator):
         messages = {
-            'clone_uri': _(u'invalid clone URL'),
-            'invalid_clone_uri': _(u'Invalid clone URL, provide a '
-                                    'valid clone http(s)/svn+http(s)/ssh URL')
+            'clone_uri': _(u'Invalid repository URL'),
+            'invalid_clone_uri': _(u'Invalid repository URL. It must be a '
+                                    'valid http, https, ssh, svn+http or svn+https URL'),
         }
 
         def validate_python(self, value, state):

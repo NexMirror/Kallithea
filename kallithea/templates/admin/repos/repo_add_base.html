@@ -10,18 +10,9 @@ ${h.form(url('repos'))}
             </div>
             <div class="input">
                 ${h.text('repo_name',class_="small")}
-                <div style="margin: 6px 0px 0px 0px">
-                    <a id="remote_clone_toggle" href="#">
-                        <i class="icon-download-cloud"></i>
-                        ${_('Import existing repository ?')}
-                    </a>
-                </div>
-                %if not c.authuser.is_admin:
-                    ${h.hidden('user_created',True)}
-                %endif
             </div>
          </div>
-        <div id="remote_clone" class="field" style="display: none">
+        <div id="remote_clone" class="field">
             <div class="label">
                 <label for="clone_uri">${_('Clone from')}:</label>
             </div>
@@ -102,16 +93,6 @@ ${h.form(url('repos'))}
             }
         }
 
-        $('#remote_clone_toggle').on('click', function(e){
-            $('#remote_clone').show();
-            e.preventDefault();
-        });
-        if($('#remote_clone input').hasClass('error')){
-            $('#remote_clone').show();
-        }
-        if($('#remote_clone input').val()){
-            $('#remote_clone').show();
-        }
         $("#repo_group").select2({
             'dropdownAutoWidth': true
         });
