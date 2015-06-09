@@ -342,11 +342,9 @@ class SubprocessIOChunker(object):
             input_streamer.start()
             inputstream = input_streamer.output
 
-        _shell = kwargs.get('shell', True)
-        if isinstance(cmd, (list, tuple)):
-            cmd = ' '.join(cmd)
+        # Note: fragile cmd mangling has been removed for use in Kallithea
+        assert isinstance(cmd, list), cmd
 
-        kwargs['shell'] = _shell
         _p = subprocess.Popen(cmd, bufsize=-1,
                               stdin=inputstream,
                               stdout=subprocess.PIPE,

@@ -682,34 +682,34 @@ class GitSpecificWithRepoTest(_BackendTestMixin, unittest.TestCase):
             'base')
 
     def test_workdir_get_branch(self):
-        self.repo.run_git_command('checkout -b production')
+        self.repo.run_git_command(['checkout', '-b', 'production'])
         # Regression test: one of following would fail if we don't check
         # .git/HEAD file
-        self.repo.run_git_command('checkout production')
+        self.repo.run_git_command(['checkout', 'production'])
         self.assertEqual(self.repo.workdir.get_branch(), 'production')
-        self.repo.run_git_command('checkout master')
+        self.repo.run_git_command(['checkout', 'master'])
         self.assertEqual(self.repo.workdir.get_branch(), 'master')
 
     def test_get_diff_runs_git_command_with_hashes(self):
         self.repo.run_git_command = mock.Mock(return_value=['', ''])
         self.repo.get_diff(0, 1)
         self.repo.run_git_command.assert_called_once_with(
-          'diff -U%s --full-index --binary -p -M --abbrev=40 %s %s' %
-            (3, self.repo._get_revision(0), self.repo._get_revision(1)))
+            ['diff', '-U3', '--full-index', '--binary', '-p', '-M', '--abbrev=40',
+             self.repo._get_revision(0), self.repo._get_revision(1)])
 
     def test_get_diff_runs_git_command_with_str_hashes(self):
         self.repo.run_git_command = mock.Mock(return_value=['', ''])
         self.repo.get_diff(self.repo.EMPTY_CHANGESET, 1)
         self.repo.run_git_command.assert_called_once_with(
-            'show -U%s --full-index --binary -p -M --abbrev=40 %s' %
-            (3, self.repo._get_revision(1)))
+            ['show', '-U3', '--full-index', '--binary', '-p', '-M', '--abbrev=40',
+             self.repo._get_revision(1)])
 
     def test_get_diff_runs_git_command_with_path_if_its_given(self):
         self.repo.run_git_command = mock.Mock(return_value=['', ''])
         self.repo.get_diff(0, 1, 'foo')
         self.repo.run_git_command.assert_called_once_with(
-          'diff -U%s --full-index --binary -p -M --abbrev=40 %s %s -- "foo"'
-            % (3, self.repo._get_revision(0), self.repo._get_revision(1)))
+            ['diff', '-U3', '--full-index', '--binary', '-p', '-M', '--abbrev=40',
+             self.repo._get_revision(0), self.repo._get_revision(1), '--', 'foo'])
 
 
 class GitRegressionTest(_BackendTestMixin, unittest.TestCase):

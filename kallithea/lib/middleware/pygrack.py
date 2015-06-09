@@ -82,13 +82,12 @@ class GitRepository(object):
         server_advert = '# service=%s' % git_command
         packet_len = str(hex(len(server_advert) + 4)[2:].rjust(4, '0')).lower()
         _git_path = kallithea.CONFIG.get('git_path', 'git')
+        cmd = [_git_path, git_command[4:],
+               '--stateless-rpc', '--advertise-refs', self.content_path]
+        log.debug('handling cmd %s', cmd)
         try:
-            out = subprocessio.SubprocessIOChunker(
-                r'%s %s --stateless-rpc --advertise-refs "%s"' % (
-                    _git_path, git_command[4:], self.content_path),
-                starting_values=[
-                    packet_len + server_advert + '0000'
-                ]
+            out = subprocessio.SubprocessIOChunker(cmd,
+                starting_values=[packet_len + server_advert + '0000']
             )
         except EnvironmentError, e:
             log.error(traceback.format_exc())
@@ -118,21 +117,17 @@ class GitRepository(object):
         else:
             inputstream = environ['wsgi.input']
 
+        gitenv = dict(os.environ)
+        # forget all configs
+        gitenv['GIT_CONFIG_NOGLOBAL'] = '1'
+        cmd = [_git_path, git_command[4:], '--stateless-rpc', self.content_path]
+        log.debug('handling cmd %s', cmd)
         try:
-            gitenv = os.environ
-            # forget all configs
-            gitenv['GIT_CONFIG_NOGLOBAL'] = '1'
-            opts = dict(
-                env=gitenv,
-                cwd=self.content_path,
-            )
-            cmd = r'%s %s --stateless-rpc "%s"' % (_git_path, git_command[4:],
-                                                   self.content_path),
-            log.debug('handling cmd %s' % cmd)
             out = subprocessio.SubprocessIOChunker(
                 cmd,
                 inputstream=inputstream,
-                **opts
+                env=gitenv,
+                cwd=self.content_path,
             )
         except EnvironmentError, e:
             log.error(traceback.format_exc())

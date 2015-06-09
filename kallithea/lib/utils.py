@@ -799,7 +799,7 @@ def check_git_version():
     if 'git' not in BACKENDS:
         return None
 
-    stdout, stderr = GitRepository._run_git_command('--version', _bare=True,
+    stdout, stderr = GitRepository._run_git_command(['--version'], _bare=True,
                                                     _safe=True)
 
     m = re.search("\d+.\d+.\d+", stdout)
