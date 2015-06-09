@@ -1,0 +1,17 @@
+diff --git a/f b/f
+--- a/f	
++++ b/f	
+@@ -51,5 +51,12 @@
+ 	begin();
+ 	
++	int foo;
++	int bar; 
++	int baz;	
++	int space; 
++	int tab;	
++	
+  
+-	#define MAX_STEPS (48)
++	
++	#define MAX_STEPS (64)
+ 

@@ -275,3 +275,32 @@ class DiffLibTest(BaseTestCase):
         data = [(x['filename'], x['operation'], x['stats']) for x in diff_proc_d]
         expected_data = DIFF_FIXTURES[diff_fixture]
         self.assertListEqual(expected_data, data)
+
+    def test_diff_markup(self):
+        diff = fixture.load_resource('markuptest.diff', strip=False)
+        diff_proc = DiffProcessor(diff)
+        diff_proc_d = diff_proc.prepare()
+        chunks = diff_proc_d[0]['chunks']
+        self.assertFalse(chunks[0])
+        #from pprint import pprint; pprint(chunks[1])
+        l = ['\n']
+        for d in chunks[1]:
+            l.append('%(action)-7s %(new_lineno)3s %(old_lineno)3s %(line)r\n' % d)
+        s = ''.join(l)
+        print s
+        self.assertEqual(s, r'''
+context ... ... u'@@ -51,5 +51,12 @@\n'
+unmod    51  51 u'<u>\t</u>begin();\n'
+unmod    52  52 u'<u>\t</u>\n'
+add      53     u'<u>\t</u>int foo;<u class="cr"></u>\n'
+add      54     u'<u>\t</u>int bar; <u class="cr"></u>\n'
+add      55     u'<u>\t</u>int baz;<u>\t</u><u class="cr"></u>\n'
+add      56     u'<u>\t</u>int space; <i></i>'
+add      57     u'<u>\t</u>int tab;<u>\t</u>\n'
+add      58     u'<u>\t</u>\n'
+unmod    59  53 u' <i></i>'
+del          54 u'<u>\t</u><del>#define MAX_STEPS (48)</del>\n'
+add      60     u'<u>\t</u><ins><u class="cr"></u></ins>\n'
+add      61     u'<u>\t</u>#define MAX_STEPS (64)<u class="cr"></u>\n'
+unmod    62  55 u'\n'
+''')
