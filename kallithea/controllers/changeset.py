@@ -208,7 +208,7 @@ class ChangesetController(BaseRepoController):
                 raise RepositoryError('Changeset range returned empty result')
 
         except(ChangesetDoesNotExistError,), e:
-            log.error(traceback.format_exc())
+            log.debug(traceback.format_exc())
             msg = _('Such revision does not exist for this repository')
             h.flash(msg, category='error')
             raise HTTPNotFound()
@@ -378,7 +378,7 @@ class ChangesetController(BaseRepoController):
                     dont_allow_on_closed_pull_request=True
                 )
             except StatusChangeOnClosedPullRequestError:
-                log.error(traceback.format_exc())
+                log.debug(traceback.format_exc())
                 msg = _('Changing status on a changeset associated with '
                         'a closed pull request is not allowed')
                 h.flash(msg, category='warning')
