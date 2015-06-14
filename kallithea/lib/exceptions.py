@@ -99,6 +99,10 @@ class UserCreationError(Exception):
     pass
 
 
+class UserInvalidException(Exception):
+    pass
+
+
 class RepositoryCreationError(Exception):
     pass
 

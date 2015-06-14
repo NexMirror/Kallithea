@@ -44,6 +44,7 @@ from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator,\
 from kallithea.lib.helpers import Page
 from kallithea.lib import helpers as h
 from kallithea.lib import diffs
+from kallithea.lib.exceptions import UserInvalidException
 from kallithea.lib.utils import action_logger, jsonify
 from kallithea.lib.vcs.utils import safe_str
 from kallithea.lib.vcs.exceptions import EmptyRepositoryError
@@ -362,6 +363,9 @@ class PullrequestsController(BaseRepoController):
             Session().commit()
             h.flash(_('Successfully opened new pull request'),
                     category='success')
+        except UserInvalidException, u:
+            h.flash(_('Invalid reviewer "%s" specified') % u, category='error')
+            raise HTTPBadRequest()
         except Exception:
             h.flash(_('Error occurred while creating pull request'),
                     category='error')
@@ -446,6 +450,9 @@ class PullrequestsController(BaseRepoController):
                 old_pull_request.other_repo.repo_name, new_other_ref,
                 revisions, reviewers_ids, title, description
             )
+        except UserInvalidException, u:
+            h.flash(_('Invalid reviewer "%s" specified') % u, category='error')
+            raise HTTPBadRequest()
         except Exception:
             h.flash(_('Error occurred while creating pull request'),
                     category='error')
@@ -495,9 +502,12 @@ class PullrequestsController(BaseRepoController):
         old_description = pull_request.description
         pull_request.title = _form['pullrequest_title']
         pull_request.description = _form['pullrequest_desc'].strip() or _('No description')
-        PullRequestModel().mention_from_description(pull_request, old_description)
-
-        PullRequestModel().update_reviewers(pull_request_id, reviewers_ids)
+        try:
+            PullRequestModel().mention_from_description(pull_request, old_description)
+            PullRequestModel().update_reviewers(pull_request_id, reviewers_ids)
+        except UserInvalidException, u:
+            h.flash(_('Invalid reviewer "%s" specified') % u, category='error')
+            raise HTTPBadRequest()
 
         Session().commit()
         h.flash(_('Pull request updated'), category='success')

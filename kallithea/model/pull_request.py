@@ -32,6 +32,7 @@ from pylons.i18n.translation import _
 
 from kallithea.model.meta import Session
 from kallithea.lib import helpers as h
+from kallithea.lib.exceptions import UserInvalidException
 from kallithea.model import BaseModel
 from kallithea.model.db import PullRequest, PullRequestReviewers, Notification,\
     ChangesetStatus, User
@@ -117,6 +118,8 @@ class PullRequestModel(BaseModel):
         #members
         for member in set(reviewers):
             _usr = self._get_user(member)
+            if _usr is None:
+                raise UserInvalidException(member)
             reviewer = PullRequestReviewers(_usr, pr)
             Session().add(reviewer)
 
