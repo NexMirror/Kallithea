@@ -79,12 +79,6 @@ class LoginController(BaseController):
 
         # dumps session attrs back to cookie
         session._update_cookie_out()
-        # we set new cookie
-        headers = None
-        if session.request['set_cookie']:
-            # send set-cookie headers back to response to update cookie
-            headers = [('Set-Cookie', session.request['cookie_out'])]
-        return headers
 
     def _validate_came_from(self, came_from):
         """Return True if came_from is valid and can and should be used"""
@@ -104,10 +98,10 @@ class LoginController(BaseController):
             return False
         return True
 
-    def _redirect_to_origin(self, origin, headers=None):
+    def _redirect_to_origin(self, origin):
         '''redirect to the original page, preserving any get arguments given'''
         request.GET.pop('came_from', None)
-        raise HTTPFound(location=url(origin, **request.GET), headers=headers)
+        raise HTTPFound(location=url(origin, **request.GET))
 
     def index(self):
         c.came_from = safe_str(request.GET.get('came_from', ''))
@@ -128,10 +122,10 @@ class LoginController(BaseController):
                 session.invalidate()
                 c.form_result = login_form.to_python(dict(request.POST))
                 # form checks for username/password, now we're authenticated
-                headers = self._store_user_in_session(
+                self._store_user_in_session(
                                         username=c.form_result['username'],
                                         remember=c.form_result['remember'])
-                return self._redirect_to_origin(c.came_from, headers)
+                return self._redirect_to_origin(c.came_from)
 
             except formencode.Invalid, errors:
                 defaults = errors.value
@@ -164,8 +158,8 @@ class LoginController(BaseController):
                 return render('/login.html')
 
             if auth_info:
-                headers = self._store_user_in_session(auth_info.get('username'))
-                return self._redirect_to_origin(c.came_from, headers)
+                self._store_user_in_session(auth_info.get('username'))
+                return self._redirect_to_origin(c.came_from)
 
         return render('/login.html')
 
