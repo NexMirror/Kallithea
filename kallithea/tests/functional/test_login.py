@@ -61,6 +61,22 @@ class TestLoginController(TestController):
         self.assertEqual(response.status, '200 OK')
         response.mustcontain('Users Administration')
 
+    def test_logout(self):
+        response = self.app.post(url(controller='login', action='index'),
+                                 {'username': 'test_regular',
+                                  'password': 'test12'})
+
+        # Verify that a login session has been established.
+        response = self.app.get(url(controller='login', action='index'))
+        response = response.follow()
+        self.assertIn('authuser', response.session)
+
+        response.click('Log Out')
+
+        # Verify that the login session has been terminated.
+        response = self.app.get(url(controller='login', action='index'))
+        self.assertNotIn('authuser', response.session)
+
     @parameterized.expand([
           ('data:text/html,<script>window.alert("xss")</script>',),
           ('mailto:test@example.com',),
