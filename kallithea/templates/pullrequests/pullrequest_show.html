@@ -341,6 +341,7 @@ ${self.repo_context_bar('showpullrequest')}
     </script>
 
     ## diff block
+    <div class="commentable-diff">
     <%namespace name="diff_block" file="/changeset/diff_block.html"/>
     ${diff_block.diff_block_js()}
     %for fid, change, f, stat in c.files:
@@ -349,7 +350,7 @@ ${self.repo_context_bar('showpullrequest')}
     % if c.limited_diff:
       <h4>${_('Changeset was too big and was cut off...')} <a href="${h.url.current(fulldiff=1, **request.GET.mixed())}">${_('Show full diff anyway')}</a></h4>
     % endif
-
+    </div>
 
     ## template for inline comment form
     ${comment.comment_inline_form()}

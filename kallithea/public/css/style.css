@@ -5008,9 +5008,10 @@ table.code-difftable .unmod .code pre:before {
     box-sizing: border-box;
 }
 
-tr.line.add:hover td .add-bubble,
-tr.line.del:hover td .add-bubble,
-tr.line.unmod:hover td .add-bubble {
+/* comment bubble, only visible when in a commentable diff */
+.commentable-diff tr.line.add:hover td .add-bubble,
+.commentable-diff tr.line.del:hover td .add-bubble,
+.commentable-diff tr.line.unmod:hover td .add-bubble {
     display: block;
     z-index: 1;
 }
