@@ -174,6 +174,9 @@ class GitRepository(BaseRepository):
         if os.path.isdir(url) or url.startswith('file:'):
             return True
 
+        if url.startswith('git://'):
+            return True
+
         if '+' in url[:url.find('://')]:
             url = url[url.find('+') + 1:]
 

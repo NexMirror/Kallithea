@@ -469,7 +469,7 @@ def uri_filter(uri):
 
     proto = ''
 
-    for pat in ('https://', 'http://'):
+    for pat in ('https://', 'http://', 'git://'):
         if uri.startswith(pat):
             uri = uri[len(pat):]
             proto = pat

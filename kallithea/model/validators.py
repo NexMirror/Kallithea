@@ -458,7 +458,7 @@ def ValidCloneUri():
 
         elif repo_type == 'git':
             from kallithea.lib.vcs.backends.git.repository import GitRepository
-            if url.startswith('http'):
+            if url.startswith('http') or url.startswith('git'):
                 # initially check if it's at least the proper URL
                 # or does it pass basic auth
                 GitRepository._check_url(url)
