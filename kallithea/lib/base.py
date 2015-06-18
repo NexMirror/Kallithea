@@ -341,44 +341,59 @@ class BaseController(WSGIController):
         self.sa = meta.Session
         self.scm_model = ScmModel(self.sa)
 
+    @staticmethod
+    def _determine_auth_user(ip_addr, api_key, session_authuser):
+        """
+        Create an `AuthUser` object given the IP address of the request, the
+        API key (if any), and the authuser from the session.
+        """
+
+        if api_key:
+            # when using API_KEY we are sure user exists.
+            auth_user = AuthUser(api_key=api_key, ip_addr=ip_addr)
+            authenticated = False
+        else:
+            cookie_store = CookieStoreWrapper(session_authuser)
+            user_id = cookie_store.get('user_id')
+            try:
+                auth_user = AuthUser(user_id=user_id, ip_addr=ip_addr)
+            except UserCreationError as e:
+                # container auth or other auth functions that create users on
+                # the fly can throw UserCreationError to signal issues with
+                # user creation. Explanation should be provided in the
+                # exception object.
+                from kallithea.lib import helpers as h
+                h.flash(e, 'error')
+                auth_user = AuthUser(ip_addr=ip_addr)
+
+            authenticated = cookie_store.get('is_authenticated')
+
+        if not auth_user.is_authenticated and auth_user.user_id is not None:
+            # user is not authenticated and not empty
+            auth_user.set_authenticated(authenticated)
+
+        return auth_user
+
     def __call__(self, environ, start_response):
         """Invoke the Controller"""
+
         # WSGIController.__call__ dispatches to the Controller method
         # the request is routed to. This routing information is
         # available in environ['pylons.routes_dict']
         try:
             self.ip_addr = _get_ip_addr(environ)
             # make sure that we update permissions each time we call controller
-            api_key = request.GET.get('api_key')
 
-            if api_key:
-                # when using API_KEY we are sure user exists.
-                auth_user = AuthUser(api_key=api_key, ip_addr=self.ip_addr)
-                authenticated = False
-            else:
-                cookie_store = CookieStoreWrapper(session.get('authuser'))
-                try:
-                    auth_user = AuthUser(user_id=cookie_store.get('user_id', None),
-                                         ip_addr=self.ip_addr)
-                except UserCreationError, e:
-                    from kallithea.lib import helpers as h
-                    h.flash(e, 'error')
-                    # container auth or other auth functions that create users on
-                    # the fly can throw this exception signaling that there's issue
-                    # with user creation, explanation should be provided in
-                    # Exception itself
-                    auth_user = AuthUser(ip_addr=self.ip_addr)
-
-                authenticated = cookie_store.get('is_authenticated')
-
-            if not auth_user.is_authenticated and auth_user.user_id is not None:
-                # user is not authenticated and not empty
-                auth_user.set_authenticated(authenticated)
-            request.user = auth_user
             #set globals for auth user
-            self.authuser = c.authuser = auth_user
-            log.info('IP: %s User: %s accessed %s' % (
-               self.ip_addr, auth_user, safe_unicode(_get_access_path(environ)))
+            self.authuser = c.authuser = request.user = self._determine_auth_user(
+                self.ip_addr,
+                request.GET.get('api_key'),
+                session.get('authuser'),
+            )
+
+            log.info('IP: %s User: %s accessed %s',
+                self.ip_addr, self.authuser,
+                safe_unicode(_get_access_path(environ)),
             )
             return WSGIController.__call__(self, environ, start_response)
         finally:
