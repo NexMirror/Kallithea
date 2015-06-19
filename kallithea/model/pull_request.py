@@ -98,7 +98,8 @@ class PullRequestModel(BaseModel):
             repo=org_repo,
             user=new.author,
             pull_request=new,
-            send_email=False
+            send_email=False,
+            status_change=ChangesetStatus.STATUS_UNDER_REVIEW,
         )
         ChangesetStatusModel().set_status(
             org_repo,

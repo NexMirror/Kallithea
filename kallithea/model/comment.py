@@ -170,7 +170,7 @@ class ChangesetCommentsModel(BaseModel):
         """
         if not status_change and not text:
             log.warning('Missing text for comment, skipping...')
-            return
+            return None
 
         repo = self._get_repo(repo)
         user = self._get_user(user)
