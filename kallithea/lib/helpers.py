@@ -1264,21 +1264,21 @@ def fancy_file_stats(stats):
     return literal('<div style="width:%spx">%s%s</div>' % (width, d_a, d_d))
 
 
-def urlify_text(text_, safe=True):
+def _urlify_text(s):
     """
     Extract urls from text and make html links out of them
-
-    :param text_:
     """
-
     def url_func(match_obj):
-        url_full = match_obj.groups()[0]
+        url_full = match_obj.group(1)
         return '<a href="%(url)s">%(url)s</a>' % ({'url': url_full})
-    _newtext = url_re.sub(url_func, text_)
-    if safe:
-        return literal(_newtext)
-    return _newtext
+    return url_re.sub(url_func, s)
 
+def urlify_text(s):
+    """
+    Extract urls from text and make literal html links out of them
+    """
+    s = _urlify_text(s)
+    return literal(s)
 
 def urlify_changesets(text_, repository):
     """
@@ -1325,7 +1325,7 @@ def urlify_commit(text_, repository, link_=None):
     newtext = urlify_changesets(newtext, repository)
 
     # extract http/https links and make them real urls
-    newtext = urlify_text(newtext, safe=False)
+    newtext = _urlify_text(newtext)
 
     newtext = urlify_issues(newtext, repository, link_)
 
