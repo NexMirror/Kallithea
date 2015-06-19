@@ -212,6 +212,9 @@ ${self.repo_context_bar('showpullrequest')}
           <div>
             <ul id="review_members" class="group_members">
             %for member,status in c.pull_request_reviewers:
+              ## WARNING: the HTML below is duplicate with
+              ## kallithea/public/js/base.js
+              ## If you change something here it should be reflected in the template too.
               <li id="reviewer_${member.user_id}">
                 <div class="reviewers_member">
                     <div class="reviewer_status tooltip" title="${h.tooltip(h.changeset_status_lbl(status.status if status else 'not_reviewed'))}">

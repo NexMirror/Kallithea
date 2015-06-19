@@ -1473,6 +1473,9 @@ var addReviewMember = function(id,fname,lname,nname,gravatar_link,gravatar_size)
     var gravatarelm = '<img alt="gravatar" style="width: {0}px; height: {0}px" src="{1}"/>'.format(gravatar_size, gravatar_link);
     if (!gravatar_link)
         gravatarelm = '<i class="icon-user" style="font-size: {0}px;"></i>'.format(gravatar_size);
+    // WARNING: the HTML below is duplicate with
+    // kallithea/templates/pullrequests/pullrequest_show.html
+    // If you change something here it should be reflected in the template too.
     var element = (
         '     <li id="reviewer_{2}">\n'+
         '       <div class="reviewers_member">\n'+
