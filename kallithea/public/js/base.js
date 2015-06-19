@@ -1469,7 +1469,7 @@ var MentionsAutoComplete = function (divid, cont, users_list, groups_list) {
 }
 
 var addReviewMember = function(id,fname,lname,nname,gravatar_link,gravatar_size){
-    var displayname = "{0} {1} ({2})".format(fname, lname, nname);
+    var displayname = "{0} {1}".format(fname, lname);
     var gravatarelm = '<img alt="gravatar" style="width: {0}px; height: {0}px" src="{1}"/>'.format(gravatar_size, gravatar_link);
     if (!gravatar_link)
         gravatarelm = '<i class="icon-user" style="font-size: {0}px;"></i>'.format(gravatar_size);
