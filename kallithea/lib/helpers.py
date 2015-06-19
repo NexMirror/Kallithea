@@ -89,18 +89,17 @@ def canonical_hostname():
         parts = url('home', qualified=True).split('://', 1)
         return parts[1].split('/', 1)[0]
 
-def html_escape(text, html_escape_table=None):
-    """Produce entities within text."""
-    if not html_escape_table:
-        html_escape_table = {
-            "&": "&amp;",
-            '"': "&quot;",
-            "'": "&apos;",
-            ">": "&gt;",
-            "<": "&lt;",
-        }
-    return "".join(html_escape_table.get(c, c) for c in text)
-
+def html_escape(text):
+    """Return string with all html escaped.
+    This is also safe for javascript in html but not necessarily correct.
+    """
+    return (text
+        .replace('&', '&amp;')
+        .replace(">", "&gt;")
+        .replace("<", "&lt;")
+        .replace('"', "&quot;")
+        .replace("'", "&apos;")
+        )
 
 def shorter(text, size=20):
     postfix = '...'
@@ -1320,11 +1319,10 @@ def urlify_commit(text_, repository, link_=None):
     :param repository:
     :param link_: changeset link
     """
-    def escaper(string):
-        return string.replace('<', '&lt;').replace('>', '&gt;')
+    newtext = html_escape(text_)
 
     # urlify changesets - extract revisions and make link out of them
-    newtext = urlify_changesets(escaper(text_), repository)
+    newtext = urlify_changesets(newtext, repository)
 
     # extract http/https links and make them real urls
     newtext = urlify_text(newtext, safe=False)
