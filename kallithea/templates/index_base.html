@@ -59,11 +59,7 @@
                               </a>
                             </div>
                         </td>
-                        %if c.visual.stylify_metatags:
-                            <td>${h.urlify_text(h.desc_stylize(gr.group_description))}</td>
-                        %else:
-                            <td>${gr.group_description}</td>
-                        %endif
+                        <td>${h.urlify_text(gr.group_description, stylize=c.visual.stylify_metatags)}</td>
                         ## this is commented out since for multi nested repos can be HEAVY!
                         ## in number of executed queries during traversing uncomment at will
                         ##<td><b>${gr.repositories_recursive_count}</b></td>

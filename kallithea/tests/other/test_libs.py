@@ -189,14 +189,14 @@ class TestLibs(BaseTestCase):
             "[requires => url] [lang => python] [just a tag]"
             "[,d] [ => ULR ] [obsolete] [desc]]"
         )
-        from kallithea.lib.helpers import desc_stylize, html_escape
-        res = desc_stylize(html_escape(sample))
-        self.assertTrue('<div class="metatag" tag="tag">tag</div>' in res)
-        self.assertTrue('<div class="metatag" tag="obsolete">obsolete</div>' in res)
-        self.assertTrue('<div class="metatag" tag="stale">stale</div>' in res)
-        self.assertTrue('<div class="metatag" tag="lang">python</div>' in res)
-        self.assertTrue('<div class="metatag" tag="requires">requires =&gt; <a href="/url">url</a></div>' in res)
-        self.assertTrue('<div class="metatag" tag="tag">tag</div>' in res)
+        from kallithea.lib.helpers import urlify_text
+        res = urlify_text(sample, stylize=True)
+        self.assertIn('<div class="metatag" tag="tag">tag</div>', res)
+        self.assertIn('<div class="metatag" tag="obsolete">obsolete</div>', res)
+        self.assertIn('<div class="metatag" tag="stale">stale</div>', res)
+        self.assertIn('<div class="metatag" tag="lang">python</div>', res)
+        self.assertIn('<div class="metatag" tag="requires">requires =&gt; <a href="/url">url</a></div>', res)
+        self.assertIn('<div class="metatag" tag="tag">tag</div>', res)
 
     def test_alternative_gravatar(self):
         from kallithea.lib.helpers import gravatar_url

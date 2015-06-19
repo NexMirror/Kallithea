@@ -239,10 +239,7 @@ class JournalController(BaseController):
 
         def desc(desc):
             from pylons import tmpl_context as c
-            if c.visual.stylify_metatags:
-                return h.urlify_text(h.desc_stylize(h.truncate(desc, 60)))
-            else:
-                return h.urlify_text(h.truncate(desc, 60))
+            return h.urlify_text(desc, truncate=60, stylize=c.visual.stylify_metatags)
 
         def repo_actions(repo_name):
             return _render('repo_actions', repo_name)
