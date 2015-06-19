@@ -2233,7 +2233,7 @@ class ChangesetStatus(Base, BaseModel):
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False, unique=None)
     revision = Column(String(40), nullable=False)
     status = Column(String(128), nullable=False, default=DEFAULT)
-    changeset_comment_id = Column(Integer(), ForeignKey('changeset_comments.comment_id'))
+    changeset_comment_id = Column(Integer(), ForeignKey('changeset_comments.comment_id'), nullable=False)
     modified_at = Column(DateTime(), nullable=False, default=datetime.datetime.now)
     version = Column(Integer(), nullable=False, default=0)
     pull_request_id = Column(Integer(), ForeignKey('pull_requests.pull_request_id'), nullable=True)

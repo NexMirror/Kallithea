@@ -8,7 +8,7 @@ from kallithea.model.user_group import UserGroupModel
 
 from kallithea.model.meta import Session
 from kallithea.model.repo_group import RepoGroupModel
-from kallithea.model.db import ChangesetStatus, Repository
+from kallithea.model.db import ChangesetStatus, ChangesetComment, Repository
 from kallithea.model.changeset_status import ChangesetStatusModel
 from kallithea.tests.fixture import Fixture
 
@@ -233,16 +233,23 @@ class TestRepoGroups(BaseTestCase):
         self.assertEqual('DN_attr', validator.to_python('DN_attr'))
 
     def test_NotReviewedRevisions(self):
-        repo_id = Repository.get_by_repo_name(HG_REPO).repo_id
-        validator = v.NotReviewedRevisions(repo_id)
+        user = ChangesetStatusModel()._get_user(TEST_USER_ADMIN_LOGIN)
+        repo = Repository.get_by_repo_name(HG_REPO)
+        validator = v.NotReviewedRevisions(repo.repo_id)
         rev = '0' * 40
         # add status for a rev, that should throw an error because it is already
         # reviewed
+        new_comment = ChangesetComment()
+        new_comment.repo = repo
+        new_comment.author = user
+        new_comment.text = u''
+        Session().add(new_comment)
+        Session().flush()
         new_status = ChangesetStatus()
-        new_status.author = ChangesetStatusModel()._get_user(TEST_USER_ADMIN_LOGIN)
-        new_status.repo = ChangesetStatusModel()._get_repo(HG_REPO)
+        new_status.author = user
+        new_status.repo = repo
         new_status.status = ChangesetStatus.STATUS_APPROVED
-        new_status.comment = None
+        new_status.comment = new_comment
         new_status.revision = rev
         Session().add(new_status)
         Session().commit()
