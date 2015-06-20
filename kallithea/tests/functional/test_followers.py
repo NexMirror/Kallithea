@@ -10,7 +10,7 @@ class TestFollowersController(TestController):
                                     action='followers',
                                     repo_name=repo_name))
 
-        response.mustcontain("""test_admin""")
+        response.mustcontain(TEST_USER_ADMIN_LOGIN)
         response.mustcontain("""Started following""")
 
     def test_index_git(self):
@@ -20,5 +20,5 @@ class TestFollowersController(TestController):
                                     action='followers',
                                     repo_name=repo_name))
 
-        response.mustcontain("""test_admin""")
+        response.mustcontain(TEST_USER_ADMIN_LOGIN)
         response.mustcontain("""Started following""")

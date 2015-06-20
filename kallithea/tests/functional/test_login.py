@@ -30,11 +30,11 @@ class TestLoginController(TestController):
 
     def test_login_admin_ok(self):
         response = self.app.post(url(controller='login', action='index'),
-                                 {'username': 'test_admin',
+                                 {'username': TEST_USER_ADMIN_LOGIN,
                                   'password': 'test12'})
         self.assertEqual(response.status, '302 Found')
         self.assertEqual(response.session['authuser'].get('username'),
-                         'test_admin')
+                         TEST_USER_ADMIN_LOGIN)
         response = response.follow()
         response.mustcontain('/%s' % HG_REPO)
 
@@ -53,7 +53,7 @@ class TestLoginController(TestController):
         test_came_from = '/_admin/users'
         response = self.app.post(url(controller='login', action='index',
                                      came_from=test_came_from),
-                                 {'username': 'test_admin',
+                                 {'username': TEST_USER_ADMIN_LOGIN,
                                   'password': 'test12'})
         self.assertEqual(response.status, '302 Found')
         response = response.follow()
@@ -87,7 +87,7 @@ class TestLoginController(TestController):
     def test_login_bad_came_froms(self, url_came_from):
         response = self.app.post(url(controller='login', action='index',
                                      came_from=url_came_from),
-                                 {'username': 'test_admin',
+                                 {'username': TEST_USER_ADMIN_LOGIN,
                                   'password': 'test12'})
         self.assertEqual(response.status, '302 Found')
         self.assertEqual(response._environ['paste.testing_variables']
@@ -98,7 +98,7 @@ class TestLoginController(TestController):
 
     def test_login_short_password(self):
         response = self.app.post(url(controller='login', action='index'),
-                                 {'username': 'test_admin',
+                                 {'username': TEST_USER_ADMIN_LOGIN,
                                   'password': 'as'})
         self.assertEqual(response.status, '200 OK')
 
@@ -149,7 +149,7 @@ class TestLoginController(TestController):
         response = self.app.post(url(controller='login', action='index',
                                      came_from = '/_admin/users',
                                      **args),
-                                 {'username': 'test_admin',
+                                 {'username': TEST_USER_ADMIN_LOGIN,
                                   'password': 'test12'})
         self.assertEqual(response.status, '302 Found')
         for encoded in args_encoded:
@@ -180,7 +180,7 @@ class TestLoginController(TestController):
         response.mustcontain('Sign Up')
 
     def test_register_err_same_username(self):
-        uname = 'test_admin'
+        uname = TEST_USER_ADMIN_LOGIN
         response = self.app.post(url(controller='login', action='register'),
                                             {'username': uname,
                                              'password': 'test12',
@@ -244,7 +244,7 @@ class TestLoginController(TestController):
                 'alphanumeric character')
 
     def test_register_err_case_sensitive(self):
-        usr = 'Test_Admin'
+        usr = TEST_USER_ADMIN_LOGIN.title()
         response = self.app.post(url(controller='login', action='register'),
                                             {'username': usr,
                                              'password': 'test12',

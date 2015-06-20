@@ -23,7 +23,7 @@ class TestMyAccountController(TestController):
         self.log_user()
         response = self.app.get(url('my_account'))
 
-        response.mustcontain('value="test_admin')
+        response.mustcontain('value="%s' % TEST_USER_ADMIN_LOGIN)
 
     def test_my_account_my_repos(self):
         self.log_user()
@@ -152,7 +152,7 @@ class TestMyAccountController(TestController):
         new_email = 'test_regular@mail.com'  # already exisitn email
         response = self.app.post(url('my_account'),
                                 params=dict(
-                                    username='test_admin',
+                                    username=TEST_USER_ADMIN_LOGIN,
                                     new_password='test12',
                                     password_confirmation='test122',
                                     firstname='NewName',
@@ -169,7 +169,7 @@ class TestMyAccountController(TestController):
         new_email = 'newmail.pl'
         response = self.app.post(url('my_account'),
                                  params=dict(
-                                            username='test_admin',
+                                            username=TEST_USER_ADMIN_LOGIN,
                                             new_password='test12',
                                             password_confirmation='test122',
                                             firstname='NewName',
@@ -181,7 +181,7 @@ class TestMyAccountController(TestController):
         from kallithea.model import validators
         msg = validators.ValidUsername(edit=False, old_data={})\
                 ._messages['username_exists']
-        msg = h.html_escape(msg % {'username': 'test_admin'})
+        msg = h.html_escape(msg % {'username': TEST_USER_ADMIN_LOGIN})
         response.mustcontain(u"%s" % msg)
 
     def test_my_account_api_keys(self):

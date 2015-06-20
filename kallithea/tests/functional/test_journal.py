@@ -12,7 +12,7 @@ class TestJournalController(TestController):
 
     def test_stop_following_repository(self):
         session = self.log_user()
-#        usr = Session().query(User).filter(User.username == 'test_admin').one()
+#        usr = Session().query(User).filter(User.username == TEST_USER_ADMIN_LOGIN).one()
 #        repo = Session().query(Repository).filter(Repository.repo_name == HG_REPO).one()
 #
 #        followings = Session().query(UserFollowing)\

@@ -127,7 +127,7 @@ class TestChangeSetCommentsController(TestController):
         users = [x.user.username for x in UserNotification.query().all()]
 
         # test_regular gets notification by @mention
-        self.assertEqual(sorted(users), [u'test_admin', u'test_regular'])
+        self.assertEqual(sorted(users), [TEST_USER_ADMIN_LOGIN, u'test_regular'])
 
     def test_delete(self):
         self.log_user()
