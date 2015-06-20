@@ -40,12 +40,12 @@ class TestLoginController(TestController):
 
     def test_login_regular_ok(self):
         response = self.app.post(url(controller='login', action='index'),
-                                 {'username': 'test_regular',
+                                 {'username': TEST_USER_REGULAR_LOGIN,
                                   'password': 'test12'})
 
         self.assertEqual(response.status, '302 Found')
         self.assertEqual(response.session['authuser'].get('username'),
-                         'test_regular')
+                         TEST_USER_REGULAR_LOGIN)
         response = response.follow()
         response.mustcontain('/%s' % HG_REPO)
 
@@ -63,7 +63,7 @@ class TestLoginController(TestController):
 
     def test_logout(self):
         response = self.app.post(url(controller='login', action='index'),
-                                 {'username': 'test_regular',
+                                 {'username': TEST_USER_REGULAR_LOGIN,
                                   'password': 'test12'})
 
         # Verify that a login session has been established.

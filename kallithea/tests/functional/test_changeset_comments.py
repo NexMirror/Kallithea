@@ -104,7 +104,7 @@ class TestChangeSetCommentsController(TestController):
         self.log_user()
 
         rev = '27cd5cce30c96924232dffcd24178a07ffeb5dfc'
-        text = u'@test_regular check CommentOnRevision'
+        text = u'@%s check CommentOnRevision' % TEST_USER_REGULAR_LOGIN
 
         params = {'text': text, '_authentication_token': self.authentication_token()}
         response = self.app.post(url(controller='changeset', action='comment',
@@ -127,7 +127,7 @@ class TestChangeSetCommentsController(TestController):
         users = [x.user.username for x in UserNotification.query().all()]
 
         # test_regular gets notification by @mention
-        self.assertEqual(sorted(users), [TEST_USER_ADMIN_LOGIN, u'test_regular'])
+        self.assertEqual(sorted(users), [TEST_USER_ADMIN_LOGIN, TEST_USER_REGULAR_LOGIN])
 
     def test_delete(self):
         self.log_user()
