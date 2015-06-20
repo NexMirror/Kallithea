@@ -164,7 +164,7 @@ class TestMyAccountController(TestController):
         response.mustcontain('This e-mail address is already taken')
 
     def test_my_account_update_err(self):
-        self.log_user('test_regular2', 'test12')
+        self.log_user(TEST_USER_REGULAR2_LOGIN, 'test12')
 
         new_email = 'newmail.pl'
         response = self.app.post(url('my_account'),
@@ -185,7 +185,7 @@ class TestMyAccountController(TestController):
         response.mustcontain(u"%s" % msg)
 
     def test_my_account_api_keys(self):
-        usr = self.log_user('test_regular2', 'test12')
+        usr = self.log_user(TEST_USER_REGULAR2_LOGIN, 'test12')
         user = User.get(usr['user_id'])
         response = self.app.get(url('my_account_api_keys'))
         response.mustcontain(user.api_key)
@@ -197,7 +197,7 @@ class TestMyAccountController(TestController):
         ('30days', 60*60*24*30),
     ])
     def test_my_account_add_api_keys(self, desc, lifetime):
-        usr = self.log_user('test_regular2', 'test12')
+        usr = self.log_user(TEST_USER_REGULAR2_LOGIN, 'test12')
         user = User.get(usr['user_id'])
         response = self.app.post(url('my_account_api_keys'),
                                  {'description': desc, 'lifetime': lifetime, '_authentication_token': self.authentication_token()})
@@ -213,7 +213,7 @@ class TestMyAccountController(TestController):
                 Session().commit()
 
     def test_my_account_remove_api_key(self):
-        usr = self.log_user('test_regular2', 'test12')
+        usr = self.log_user(TEST_USER_REGULAR2_LOGIN, 'test12')
         user = User.get(usr['user_id'])
         response = self.app.post(url('my_account_api_keys'),
                                  {'description': 'desc', 'lifetime': -1, '_authentication_token': self.authentication_token()})
@@ -232,7 +232,7 @@ class TestMyAccountController(TestController):
 
 
     def test_my_account_reset_main_api_key(self):
-        usr = self.log_user('test_regular2', 'test12')
+        usr = self.log_user(TEST_USER_REGULAR2_LOGIN, 'test12')
         user = User.get(usr['user_id'])
         api_key = user.api_key
         response = self.app.get(url('my_account_api_keys'))
