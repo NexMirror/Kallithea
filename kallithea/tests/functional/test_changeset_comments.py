@@ -54,8 +54,8 @@ class TestChangeSetCommentsController(TestController):
         ID = ChangesetComment.query().first().comment_id
         self.assertEqual(notification.type_,
                          Notification.TYPE_CHANGESET_COMMENT)
-        sbj = (u'/vcs_test_hg/changeset/'
-               '27cd5cce30c96924232dffcd24178a07ffeb5dfc#comment-%s' % ID)
+        sbj = (u'/%s/changeset/'
+               '27cd5cce30c96924232dffcd24178a07ffeb5dfc#comment-%s' % (HG_REPO, ID))
         print "%s vs %s" % (sbj, notification.subject)
         self.assertTrue(sbj in notification.subject)
 
@@ -95,8 +95,8 @@ class TestChangeSetCommentsController(TestController):
         ID = ChangesetComment.query().first().comment_id
         self.assertEqual(notification.type_,
                          Notification.TYPE_CHANGESET_COMMENT)
-        sbj = (u'/vcs_test_hg/changeset/'
-               '27cd5cce30c96924232dffcd24178a07ffeb5dfc#comment-%s' % ID)
+        sbj = (u'/%s/changeset/'
+               '27cd5cce30c96924232dffcd24178a07ffeb5dfc#comment-%s' % (HG_REPO, ID))
         print "%s vs %s" % (sbj, notification.subject)
         self.assertTrue(sbj in notification.subject)
 
