@@ -149,7 +149,7 @@ class TestMyAccountController(TestController):
     def test_my_account_update_err_email_exists(self):
         self.log_user()
 
-        new_email = 'test_regular@mail.com'  # already exisitn email
+        new_email = TEST_USER_REGULAR_EMAIL  # already existing email
         response = self.app.post(url('my_account'),
                                 params=dict(
                                     username=TEST_USER_ADMIN_LOGIN,

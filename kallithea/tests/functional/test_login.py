@@ -198,7 +198,7 @@ class TestLoginController(TestController):
                                             {'username': 'test_admin_0',
                                              'password': 'test12',
                                              'password_confirmation': 'test12',
-                                             'email': 'test_admin@mail.com',
+                                             'email': TEST_USER_ADMIN_EMAIL,
                                              'firstname': 'test',
                                              'lastname': 'test'})
 
@@ -210,7 +210,7 @@ class TestLoginController(TestController):
                                             {'username': 'test_admin_1',
                                              'password': 'test12',
                                              'password_confirmation': 'test12',
-                                             'email': 'TesT_Admin@mail.COM',
+                                             'email': TEST_USER_ADMIN_EMAIL.title(),
                                              'firstname': 'test',
                                              'lastname': 'test'})
         msg = validators.UniqSystemEmail()()._messages['email_taken']
