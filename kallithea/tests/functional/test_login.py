@@ -31,7 +31,7 @@ class TestLoginController(TestController):
     def test_login_admin_ok(self):
         response = self.app.post(url(controller='login', action='index'),
                                  {'username': TEST_USER_ADMIN_LOGIN,
-                                  'password': 'test12'})
+                                  'password': TEST_USER_ADMIN_PASS})
         self.assertEqual(response.status, '302 Found')
         self.assertEqual(response.session['authuser'].get('username'),
                          TEST_USER_ADMIN_LOGIN)
@@ -41,7 +41,7 @@ class TestLoginController(TestController):
     def test_login_regular_ok(self):
         response = self.app.post(url(controller='login', action='index'),
                                  {'username': TEST_USER_REGULAR_LOGIN,
-                                  'password': 'test12'})
+                                  'password': TEST_USER_REGULAR_PASS})
 
         self.assertEqual(response.status, '302 Found')
         self.assertEqual(response.session['authuser'].get('username'),
@@ -54,7 +54,7 @@ class TestLoginController(TestController):
         response = self.app.post(url(controller='login', action='index',
                                      came_from=test_came_from),
                                  {'username': TEST_USER_ADMIN_LOGIN,
-                                  'password': 'test12'})
+                                  'password': TEST_USER_ADMIN_PASS})
         self.assertEqual(response.status, '302 Found')
         response = response.follow()
 
@@ -64,7 +64,7 @@ class TestLoginController(TestController):
     def test_logout(self):
         response = self.app.post(url(controller='login', action='index'),
                                  {'username': TEST_USER_REGULAR_LOGIN,
-                                  'password': 'test12'})
+                                  'password': TEST_USER_REGULAR_PASS})
 
         # Verify that a login session has been established.
         response = self.app.get(url(controller='login', action='index'))
@@ -88,7 +88,7 @@ class TestLoginController(TestController):
         response = self.app.post(url(controller='login', action='index',
                                      came_from=url_came_from),
                                  {'username': TEST_USER_ADMIN_LOGIN,
-                                  'password': 'test12'})
+                                  'password': TEST_USER_ADMIN_PASS})
         self.assertEqual(response.status, '302 Found')
         self.assertEqual(response._environ['paste.testing_variables']
                          ['tmpl_context'].came_from, '/')
@@ -150,7 +150,7 @@ class TestLoginController(TestController):
                                      came_from = '/_admin/users',
                                      **args),
                                  {'username': TEST_USER_ADMIN_LOGIN,
-                                  'password': 'test12'})
+                                  'password': TEST_USER_ADMIN_PASS})
         self.assertEqual(response.status, '302 Found')
         for encoded in args_encoded:
             self.assertIn(encoded, response.location)

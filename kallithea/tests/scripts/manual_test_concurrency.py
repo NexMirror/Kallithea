@@ -55,7 +55,7 @@ load_environment(conf.global_conf, conf.local_conf)
 add_cache(conf)
 
 USER = TEST_USER_ADMIN_LOGIN
-PASS = 'test12'
+PASS = TEST_USER_ADMIN_PASS
 HOST = 'server.local'
 METHOD = 'pull'
 DEBUG = True
