@@ -525,7 +525,7 @@ class _BaseTest(object):
         self.log_user()
         repo = Repository.get_by_repo_name(self.REPO)
         response = self.app.get(url('edit_repo_advanced', repo_name=self.REPO))
-        opt = """<option value="%s">vcs_test_git</option>""" % repo.repo_id
+        opt = """<option value="%s">%s</option>""" % (repo.repo_id, self.REPO)
         response.mustcontain(no=[opt])
 
     def test_set_fork_of_other_repo(self):
