@@ -41,6 +41,9 @@ class TestNotifications(BaseTestCase):
         Session().commit()
         self.assertEqual(Notification.query().all(), [])
 
+    def setUp(self):
+        self._clean_notifications()
+
     def tearDown(self):
         self._clean_notifications()
 
@@ -156,7 +159,6 @@ class TestNotifications(BaseTestCase):
         self.assertNotEqual(u2notification, None)
 
     def test_notification_counter(self):
-        self._clean_notifications()
         self.assertEqual([], Notification.query().all())
         self.assertEqual([], UserNotification.query().all())
 
