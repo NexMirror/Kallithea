@@ -1379,7 +1379,10 @@ var MentionsAutoComplete = function (inputElement, container, users_list) {
 }
 
 var addReviewMember = function(id,fname,lname,nname,gravatar_link,gravatar_size){
-    var displayname = "{0} {1}".format(fname, lname);
+    var displayname = nname;
+    if ((fname != "") && (lname != "")) {
+        displayname = "{0} {1} ({2})".format(fname, lname, nname);
+    }
     var gravatarelm = gravatar(gravatar_link, gravatar_size, "");
     // WARNING: the HTML below is duplicate with
     // kallithea/templates/pullrequests/pullrequest_show.html
