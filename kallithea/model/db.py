@@ -488,8 +488,10 @@ class User(Base, BaseModel):
     def full_name_and_username(self):
         """
         Show full name and username as 'Firstname Lastname (username)'.
+        If full name is not set, fall back to username.
         """
-        return '%s %s (%s)' % (self.firstname, self.lastname, self.username)
+        return ('%s %s (%s)' % (self.firstname, self.lastname, self.username)
+                if (self.firstname and self.lastname) else self.username)
 
     @property
     def full_contact(self):
