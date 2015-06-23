@@ -472,10 +472,6 @@ class User(Base, BaseModel):
         return [x.ip_addr for x in ret]
 
     @property
-    def username_and_name(self):
-        return '%s (%s %s)' % (self.username, self.firstname, self.lastname)
-
-    @property
     def full_name(self):
         return '%s %s' % (self.firstname, self.lastname)
 
@@ -483,6 +479,10 @@ class User(Base, BaseModel):
     def full_name_or_username(self):
         return ('%s %s' % (self.firstname, self.lastname)
                 if (self.firstname and self.lastname) else self.username)
+
+    @property
+    def full_name_and_username(self):
+        return '%s (%s %s)' % (self.username, self.firstname, self.lastname)
 
     @property
     def full_contact(self):

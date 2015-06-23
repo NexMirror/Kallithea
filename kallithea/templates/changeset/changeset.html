@@ -114,7 +114,7 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
                          <div class="gravatar">
                            ${h.gravatar(h.email_or_none(c.changeset.author), size=20)}
                          </div>
-                         <span><b>${h.person(c.changeset.author,'username_and_name')}</b> - ${h.age(c.changeset.date,True)} ${h.fmt_date(c.changeset.date)}</span><br/>
+                         <span><b>${h.person(c.changeset.author,'full_name_and_username')}</b> - ${h.age(c.changeset.date,True)} ${h.fmt_date(c.changeset.date)}</span><br/>
                          <span>${h.email_or_none(c.changeset.author)}</span><br/>
                      </div>
                      <% rev = c.changeset.extra.get('source') %>
