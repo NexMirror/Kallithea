@@ -1107,31 +1107,37 @@ var readNotification = function(url, notification_id, callbacks){
     ajaxPOST(sUrl, postData, success, failure);
 };
 
-/** MEMBERS AUTOCOMPLETE WIDGET **/
+/**
+ * Autocomplete functionality
+ */
+
+// Custom search function for the DataSource of users
+var autocompleteMatchUsers = function (sQuery, myUsers) {
+    // Case insensitive matching
+    var query = sQuery.toLowerCase();
+    var i = 0;
+    var l = myUsers.length;
+    var matches = [];
+
+    // Match against each name of each contact
+    for (; i < l; i++) {
+        var contact = myUsers[i];
+        if (((contact.fname+"").toLowerCase().indexOf(query) > -1) ||
+             ((contact.lname+"").toLowerCase().indexOf(query) > -1) ||
+             ((contact.nname) && ((contact.nname).toLowerCase().indexOf(query) > -1))) {
+            matches[matches.length] = contact;
+        }
+    }
+    return matches;
+};
+
 
 var _MembersAutoComplete = function (divid, cont, users_list, groups_list) {
-    var myUsers = users_list;
     var myGroups = groups_list;
 
-    // Define a custom search function for the DataSource of users
     var matchUsers = function (sQuery) {
-            // Case insensitive matching
-            var query = sQuery.toLowerCase();
-            var i = 0;
-            var l = myUsers.length;
-            var matches = [];
-
-            // Match against each name of each contact
-            for (; i < l; i++) {
-                var contact = myUsers[i];
-                if (((contact.fname+"").toLowerCase().indexOf(query) > -1) ||
-                     ((contact.lname+"").toLowerCase().indexOf(query) > -1) ||
-                     ((contact.nname) && ((contact.nname).toLowerCase().indexOf(query) > -1))) {
-                    matches[matches.length] = contact;
-                }
-            }
-            return matches;
-        };
+        return autocompleteMatchUsers(sQuery, users_list);
+    }
 
     // Define a custom search function for the DataSource of userGroups
     var matchGroups = function (sQuery) {
@@ -1151,7 +1157,6 @@ var _MembersAutoComplete = function (divid, cont, users_list, groups_list) {
             return matches;
         };
 
-    //match all
     var matchAll = function (sQuery) {
             var u = matchUsers(sQuery);
             var g = matchGroups(sQuery);
@@ -1290,32 +1295,15 @@ var _MembersAutoComplete = function (divid, cont, users_list, groups_list) {
 }
 
 var MentionsAutoComplete = function (divid, cont, users_list) {
-    var myUsers = users_list;
 
-    // Define a custom search function for the DataSource of users
     var matchUsers = function (sQuery) {
             var org_sQuery = sQuery;
             if(this.mentionQuery == null){
                 return []
             }
             sQuery = this.mentionQuery;
-            // Case insensitive matching
-            var query = sQuery.toLowerCase();
-            var i = 0;
-            var l = myUsers.length;
-            var matches = [];
-
-            // Match against each name of each contact
-            for (; i < l; i++) {
-                var contact = myUsers[i];
-                if (((contact.fname+"").toLowerCase().indexOf(query) > -1) ||
-                     ((contact.lname+"").toLowerCase().indexOf(query) > -1) ||
-                     ((contact.nname) && ((contact.nname).toLowerCase().indexOf(query) > -1))) {
-                    matches[matches.length] = contact;
-                }
-            }
-            return matches
-        };
+            return autocompleteMatchUsers(sQuery, users_list);
+    }
 
     // DataScheme for owner
     var ownerDS = new YAHOO.util.FunctionDataSource(matchUsers);
@@ -1511,27 +1499,10 @@ var removeReviewMember = function(reviewer_id, repo_name, pull_request_id){
 
 /* activate auto completion of users as PR reviewers */
 var PullRequestAutoComplete = function (divid, cont, users_list) {
-    var myUsers = users_list;
 
-    // Define a custom search function for the DataSource of users
     var matchUsers = function (sQuery) {
-            // Case insensitive matching
-            var query = sQuery.toLowerCase();
-            var i = 0;
-            var l = myUsers.length;
-            var matches = [];
-
-            // Match against each name of each contact
-            for (; i < l; i++) {
-                var contact = myUsers[i];
-                if (((contact.fname+"").toLowerCase().indexOf(query) > -1) ||
-                     ((contact.lname+"").toLowerCase().indexOf(query) > -1) ||
-                     ((contact.nname) && ((contact.nname).toLowerCase().indexOf(query) > -1))) {
-                    matches[matches.length] = contact;
-                }
-            }
-            return matches;
-        };
+        return autocompleteMatchUsers(sQuery, users_list);
+    };
 
     // DataScheme for owner
     var ownerDS = new YAHOO.util.FunctionDataSource(matchUsers);
