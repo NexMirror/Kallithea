@@ -731,7 +731,7 @@ var injectInlineForm = function(tr){
         // callbacks
         tooltip_activate();
         MentionsAutoComplete('text_'+lineno, 'mentions_container_'+lineno,
-                             _USERS_AC_DATA, _GROUPS_AC_DATA);
+                             _USERS_AC_DATA);
         $('#text_'+lineno).focus();
     },10)
 };
@@ -1289,9 +1289,8 @@ var _MembersAutoComplete = function (divid, cont, users_list, groups_list) {
     };
 }
 
-var MentionsAutoComplete = function (divid, cont, users_list, groups_list) {
+var MentionsAutoComplete = function (divid, cont, users_list) {
     var myUsers = users_list;
-    var myGroups = groups_list;
 
     // Define a custom search function for the DataSource of users
     var matchUsers = function (sQuery) {
@@ -1316,11 +1315,6 @@ var MentionsAutoComplete = function (divid, cont, users_list, groups_list) {
                 }
             }
             return matches
-        };
-
-    //match all
-    var matchAll = function (sQuery) {
-            return matchUsers(sQuery);
         };
 
     // DataScheme for owner
@@ -1515,10 +1509,9 @@ var removeReviewMember = function(reviewer_id, repo_name, pull_request_id){
     $li.find('.reviewer_member_remove').replaceWith('&nbsp;(remove not saved)');
 }
 
-/* activate auto completion of users and groups ... but only used for users as PR reviewers */
-var PullRequestAutoComplete = function (divid, cont, users_list, groups_list) {
+/* activate auto completion of users as PR reviewers */
+var PullRequestAutoComplete = function (divid, cont, users_list) {
     var myUsers = users_list;
-    var myGroups = groups_list;
 
     // Define a custom search function for the DataSource of users
     var matchUsers = function (sQuery) {
@@ -1538,29 +1531,6 @@ var PullRequestAutoComplete = function (divid, cont, users_list, groups_list) {
                 }
             }
             return matches;
-        };
-
-    // Define a custom search function for the DataSource of userGroups
-    var matchGroups = function (sQuery) {
-            // Case insensitive matching
-            var query = sQuery.toLowerCase();
-            var i = 0;
-            var l = myGroups.length;
-            var matches = [];
-
-            // Match against each name of each contact
-            for (; i < l; i++) {
-                matched_group = myGroups[i];
-                if (matched_group.grname.toLowerCase().indexOf(query) > -1) {
-                    matches[matches.length] = matched_group;
-                }
-            }
-            return matches;
-        };
-
-    //match all
-    var matchAll = function (sQuery) {
-            return matchUsers(sQuery);
         };
 
     // DataScheme for owner
