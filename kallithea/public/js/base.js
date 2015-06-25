@@ -1157,11 +1157,16 @@ var autocompleteHighlightMatch = function (full, snippet, matchindex) {
     + "</span>" + full.substring(matchindex + snippet.length);
 };
 
-var autocompleteGravatar = function(res, link, size, group) {
-    var elem = '<img alt="gravatar" class="perm-gravatar-ac" style="width: {0}px; height: {0}px" src="{1}"/>'.format(size, link);
+var gravatar = function(link, size, cssclass) {
+    var elem = '<img alt="gravatar" class="{2}" style="width: {0}px; height: {0}px" src="{1}"/>'.format(size, link, cssclass);
     if (!link) {
-        elem = '<i class="icon-user perm-gravatar-ac" style="font-size: {0}px;"></i>'.format(size);
+        elem = '<i class="icon-user {1}" style="font-size: {0}px;"></i>'.format(size, cssclass);
     }
+    return elem;
+}
+
+var autocompleteGravatar = function(res, link, size, group) {
+    var elem = gravatar(link, size, "perm-gravatar-ac");
     if (group !== undefined) {
         elem = '<i class="perm-gravatar-ac icon-users"></i>';
     }
@@ -1439,9 +1444,7 @@ var MentionsAutoComplete = function (divid, cont, users_list) {
 
 var addReviewMember = function(id,fname,lname,nname,gravatar_link,gravatar_size){
     var displayname = "{0} {1}".format(fname, lname);
-    var gravatarelm = '<img alt="gravatar" style="width: {0}px; height: {0}px" src="{1}"/>'.format(gravatar_size, gravatar_link);
-    if (!gravatar_link)
-        gravatarelm = '<i class="icon-user" style="font-size: {0}px;"></i>'.format(gravatar_size);
+    var gravatarelm = gravatar(gravatar_link, gravatar_size, "");
     // WARNING: the HTML below is duplicate with
     // kallithea/templates/pullrequests/pullrequest_show.html
     // If you change something here it should be reflected in the template too.
