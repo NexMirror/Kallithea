@@ -1149,6 +1149,14 @@ var autocompleteMatchGroups = function (sQuery, myGroups) {
     return matches;
 };
 
+// Helper highlight function for the formatter
+var autocompleteHighlightMatch = function (full, snippet, matchindex) {
+    return full.substring(0, matchindex)
+    + "<span class='match'>"
+    + full.substr(matchindex, snippet.length)
+    + "</span>" + full.substring(matchindex + snippet.length);
+};
+
 var _MembersAutoComplete = function (divid, cont, users_list, groups_list) {
 
     var matchUsers = function (sQuery) {
@@ -1191,14 +1199,6 @@ var _MembersAutoComplete = function (divid, cont, users_list, groups_list) {
     ownerAC.animHoriz = false;
     ownerAC.animSpeed = 0.1;
 
-    // Helper highlight function for the formatter
-    var highlightMatch = function (full, snippet, matchindex) {
-            return full.substring(0, matchindex)
-            + "<span class='match'>"
-            + full.substr(matchindex, snippet.length)
-            + "</span>" + full.substring(matchindex + snippet.length);
-        };
-
     // Custom formatter to highlight the matching letters
     var custom_formatter = function (oResultData, sQuery, sResultMatch) {
             var query = sQuery.toLowerCase();
@@ -1223,7 +1223,7 @@ var _MembersAutoComplete = function (divid, cont, users_list, groups_list) {
                 var grsuffix = " ({0}  {1})".format(grmembers, _TM['members']);
 
                 if (grnameMatchIndex > -1) {
-                    return _gravatar(grprefix + highlightMatch(grname, query, grnameMatchIndex) + grsuffix,null,null,true);
+                    return _gravatar(grprefix + autocompleteHighlightMatch(grname, query, grnameMatchIndex) + grsuffix,null,null,true);
                 }
                 return _gravatar(grprefix + oResultData.grname + grsuffix, null, null, true);
             // Users
@@ -1239,19 +1239,19 @@ var _MembersAutoComplete = function (divid, cont, users_list, groups_list) {
                     displayfname, displaylname, displaynname;
 
                 if (fnameMatchIndex > -1) {
-                    displayfname = highlightMatch(fname, query, fnameMatchIndex);
+                    displayfname = autocompleteHighlightMatch(fname, query, fnameMatchIndex);
                 } else {
                     displayfname = fname;
                 }
 
                 if (lnameMatchIndex > -1) {
-                    displaylname = highlightMatch(lname, query, lnameMatchIndex);
+                    displaylname = autocompleteHighlightMatch(lname, query, lnameMatchIndex);
                 } else {
                     displaylname = lname;
                 }
 
                 if (nnameMatchIndex > -1) {
-                    displaynname = "(" + highlightMatch(nname, query, nnameMatchIndex) + ")";
+                    displaynname = "(" + autocompleteHighlightMatch(nname, query, nnameMatchIndex) + ")";
                 } else {
                     displaynname = nname ? "(" + nname + ")" : "";
                 }
@@ -1321,14 +1321,6 @@ var MentionsAutoComplete = function (divid, cont, users_list) {
     ownerAC.animHoriz = false;
     ownerAC.animSpeed = 0.1;
 
-    // Helper highlight function for the formatter
-    var highlightMatch = function (full, snippet, matchindex) {
-            return full.substring(0, matchindex)
-                + "<span class='match'>"
-                + full.substr(matchindex, snippet.length)
-                + "</span>" + full.substring(matchindex + snippet.length);
-        };
-
     // Custom formatter to highlight the matching letters
     ownerAC.formatResult = function (oResultData, sQuery, sResultMatch) {
             var org_sQuery = sQuery;
@@ -1360,19 +1352,19 @@ var MentionsAutoComplete = function (divid, cont, users_list) {
                     displayfname, displaylname, displaynname;
 
                 if (fnameMatchIndex > -1) {
-                    displayfname = highlightMatch(fname, query, fnameMatchIndex);
+                    displayfname = autocompleteHighlightMatch(fname, query, fnameMatchIndex);
                 } else {
                     displayfname = fname;
                 }
 
                 if (lnameMatchIndex > -1) {
-                    displaylname = highlightMatch(lname, query, lnameMatchIndex);
+                    displaylname = autocompleteHighlightMatch(lname, query, lnameMatchIndex);
                 } else {
                     displaylname = lname;
                 }
 
                 if (nnameMatchIndex > -1) {
-                    displaynname = "(" + highlightMatch(nname, query, nnameMatchIndex) + ")";
+                    displaynname = "(" + autocompleteHighlightMatch(nname, query, nnameMatchIndex) + ")";
                 } else {
                     displaynname = nname ? "(" + nname + ")" : "";
                 }
@@ -1520,14 +1512,6 @@ var PullRequestAutoComplete = function (divid, cont, users_list) {
     reviewerAC.animHoriz = false;
     reviewerAC.animSpeed = 0.1;
 
-    // Helper highlight function for the formatter
-    var highlightMatch = function (full, snippet, matchindex) {
-            return full.substring(0, matchindex)
-                + "<span class='match'>"
-                + full.substr(matchindex, snippet.length)
-                + "</span>" + full.substring(matchindex + snippet.length);
-        };
-
     // Custom formatter to highlight the matching letters
     reviewerAC.formatResult = function (oResultData, sQuery, sResultMatch) {
             var org_sQuery = sQuery;
@@ -1559,19 +1543,19 @@ var PullRequestAutoComplete = function (divid, cont, users_list) {
                     displayfname, displaylname, displaynname;
 
                 if (fnameMatchIndex > -1) {
-                    displayfname = highlightMatch(fname, query, fnameMatchIndex);
+                    displayfname = autocompleteHighlightMatch(fname, query, fnameMatchIndex);
                 } else {
                     displayfname = fname;
                 }
 
                 if (lnameMatchIndex > -1) {
-                    displaylname = highlightMatch(lname, query, lnameMatchIndex);
+                    displaylname = autocompleteHighlightMatch(lname, query, lnameMatchIndex);
                 } else {
                     displaylname = lname;
                 }
 
                 if (nnameMatchIndex > -1) {
-                    displaynname = "(" + highlightMatch(nname, query, nnameMatchIndex) + ")";
+                    displaynname = "(" + autocompleteHighlightMatch(nname, query, nnameMatchIndex) + ")";
                 } else {
                     displaynname = nname ? "(" + nname + ")" : "";
                 }
