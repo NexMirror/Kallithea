@@ -1157,6 +1157,17 @@ var autocompleteHighlightMatch = function (full, snippet, matchindex) {
     + "</span>" + full.substring(matchindex + snippet.length);
 };
 
+var autocompleteGravatar = function(res, link, size, group) {
+    var elem = '<img alt="gravatar" class="perm-gravatar-ac" style="width: {0}px; height: {0}px" src="{1}"/>'.format(size, link);
+    if (!link) {
+        elem = '<i class="icon-user perm-gravatar-ac" style="font-size: {0}px;"></i>'.format(size);
+    }
+    if (group !== undefined) {
+        elem = '<i class="perm-gravatar-ac icon-users"></i>';
+    }
+    return '<div class="ac-container-wrap">{0}{1}</div>'.format(elem, res);
+}
+
 var _MembersAutoComplete = function (divid, cont, users_list, groups_list) {
 
     var matchUsers = function (sQuery) {
@@ -1202,17 +1213,6 @@ var _MembersAutoComplete = function (divid, cont, users_list, groups_list) {
     // Custom formatter to highlight the matching letters
     var custom_formatter = function (oResultData, sQuery, sResultMatch) {
             var query = sQuery.toLowerCase();
-            var _gravatar = function(res, em, size, group){
-                var elem = '<img alt="gravatar" class="perm-gravatar-ac" style="width: {0}px; height: {0}px" src="{1}"/>'.format(size, em);
-                if (!em) {
-                    elem = '<i class="icon-user perm-gravatar-ac" style="font-size: {0}px;"></i>'.format(size);
-                }
-                if (group !== undefined){
-                    elem = '<i class="perm-gravatar-ac icon-users"></i>'
-                }
-                var tmpl = '<div class="ac-container-wrap">{0}{1}</div>'
-                return tmpl.format(elem,res)
-            }
             // group
             if (oResultData.grname != undefined) {
                 var grname = oResultData.grname;
@@ -1223,9 +1223,9 @@ var _MembersAutoComplete = function (divid, cont, users_list, groups_list) {
                 var grsuffix = " ({0}  {1})".format(grmembers, _TM['members']);
 
                 if (grnameMatchIndex > -1) {
-                    return _gravatar(grprefix + autocompleteHighlightMatch(grname, query, grnameMatchIndex) + grsuffix,null,null,true);
+                    return autocompleteGravatar(grprefix + autocompleteHighlightMatch(grname, query, grnameMatchIndex) + grsuffix, null, null, true);
                 }
-                return _gravatar(grprefix + oResultData.grname + grsuffix, null, null, true);
+                return autocompleteGravatar(grprefix + oResultData.grname + grsuffix, null, null, true);
             // Users
             } else if (oResultData.nname != undefined) {
                 var fname = oResultData.fname || "";
@@ -1256,7 +1256,7 @@ var _MembersAutoComplete = function (divid, cont, users_list, groups_list) {
                     displaynname = nname ? "(" + nname + ")" : "";
                 }
 
-                return _gravatar(displayfname + " " + displaylname + " " + displaynname, oResultData.gravatar_lnk, oResultData.gravatar_size);
+                return autocompleteGravatar(displayfname + " " + displaylname + " " + displaynname, oResultData.gravatar_lnk, oResultData.gravatar_size);
             } else {
                 return '';
             }
@@ -1329,17 +1329,6 @@ var MentionsAutoComplete = function (divid, cont, users_list) {
             }
 
             var query = sQuery.toLowerCase();
-            var _gravatar = function(res, em, size, group){
-                var elem = '<img alt="gravatar" class="perm-gravatar-ac" style="width: {0}px; height: {0}px" src="{1}"/>'.format(size, em);
-                if (!em) {
-                    elem = '<i class="icon-user perm-gravatar-ac" style="font-size: {0}px;"></i>'.format(size);
-                }
-                if (group !== undefined){
-                    elem = '<i class="perm-gravatar-ac icon-users"></i>'
-                }
-                var tmpl = '<div class="ac-container-wrap">{0}{1}</div>'
-                return tmpl.format(elem,res)
-            }
             if (oResultData.nname != undefined) {
                 var fname = oResultData.fname || "";
                 var lname = oResultData.lname || "";
@@ -1369,7 +1358,7 @@ var MentionsAutoComplete = function (divid, cont, users_list) {
                     displaynname = nname ? "(" + nname + ")" : "";
                 }
 
-                return _gravatar(displayfname + " " + displaylname + " " + displaynname, oResultData.gravatar_lnk, oResultData.gravatar_size);
+                return autocompleteGravatar(displayfname + " " + displaylname + " " + displaynname, oResultData.gravatar_lnk, oResultData.gravatar_size);
             } else {
                 return '';
             }
@@ -1520,17 +1509,6 @@ var PullRequestAutoComplete = function (divid, cont, users_list) {
             }
 
             var query = sQuery.toLowerCase();
-            var _gravatar = function(res, em, size, group){
-                var elem = '<img alt="gravatar" class="perm-gravatar-ac" style="width: {0}px; height: {0}px" src="{1}"/>'.format(size, em);
-                if (!em) {
-                    elem = '<i class="icon-user perm-gravatar-ac" style="font-size: {0}px;"></i>'.format(size);
-                }
-                if (group !== undefined){
-                    elem = '<i class="perm-gravatar-ac icon-users"></i>'
-                }
-                var tmpl = '<div class="ac-container-wrap">{0}{1}</div>'
-                return tmpl.format(elem,res)
-            }
             if (oResultData.nname != undefined) {
                 var fname = oResultData.fname || "";
                 var lname = oResultData.lname || "";
@@ -1560,7 +1538,7 @@ var PullRequestAutoComplete = function (divid, cont, users_list) {
                     displaynname = nname ? "(" + nname + ")" : "";
                 }
 
-                return _gravatar(displayfname + " " + displaylname + " " + displaynname, oResultData.gravatar_lnk, oResultData.gravatar_size);
+                return autocompleteGravatar(displayfname + " " + displaylname + " " + displaynname, oResultData.gravatar_lnk, oResultData.gravatar_size);
             } else {
                 return '';
             }
