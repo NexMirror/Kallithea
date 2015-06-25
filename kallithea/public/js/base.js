@@ -1131,37 +1131,37 @@ var autocompleteMatchUsers = function (sQuery, myUsers) {
     return matches;
 };
 
+// Custom search function for the DataSource of userGroups
+var autocompleteMatchGroups = function (sQuery, myGroups) {
+    // Case insensitive matching
+    var query = sQuery.toLowerCase();
+    var i = 0;
+    var l = myGroups.length;
+    var matches = [];
+
+    // Match against each name of each group
+    for (; i < l; i++) {
+        var matched_group = myGroups[i];
+        if (matched_group.grname.toLowerCase().indexOf(query) > -1) {
+            matches[matches.length] = matched_group;
+        }
+    }
+    return matches;
+};
 
 var _MembersAutoComplete = function (divid, cont, users_list, groups_list) {
-    var myGroups = groups_list;
 
     var matchUsers = function (sQuery) {
         return autocompleteMatchUsers(sQuery, users_list);
     }
-
-    // Define a custom search function for the DataSource of userGroups
     var matchGroups = function (sQuery) {
-            // Case insensitive matching
-            var query = sQuery.toLowerCase();
-            var i = 0;
-            var l = myGroups.length;
-            var matches = [];
-
-            // Match against each name of each contact
-            for (; i < l; i++) {
-                var matched_group = myGroups[i];
-                if (matched_group.grname.toLowerCase().indexOf(query) > -1) {
-                    matches[matches.length] = matched_group;
-                }
-            }
-            return matches;
-        };
-
+        return autocompleteMatchGroups(sQuery, groups_list);
+    }
     var matchAll = function (sQuery) {
-            var u = matchUsers(sQuery);
-            var g = matchGroups(sQuery);
-            return u.concat(g);
-        };
+        var u = matchUsers(sQuery);
+        var g = matchGroups(sQuery);
+        return u.concat(g);
+    };
 
     // DataScheme for members
     var memberDS = new YAHOO.util.FunctionDataSource(matchAll);
