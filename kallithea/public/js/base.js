@@ -1173,6 +1173,60 @@ var autocompleteGravatar = function(res, link, size, group) {
     return '<div class="ac-container-wrap">{0}{1}</div>'.format(elem, res);
 }
 
+// Custom formatter to highlight the matching letters
+var autocompleteFormatter = function (oResultData, sQuery, sResultMatch) {
+    var query = sQuery.toLowerCase();
+
+    // group
+    if (oResultData.grname != undefined) {
+        var grname = oResultData.grname;
+        var grmembers = oResultData.grmembers;
+        var grnameMatchIndex = grname.toLowerCase().indexOf(query);
+        var grprefix = "{0}: ".format(_TM['Group']);
+        var grsuffix = " (" + grmembers + "  )";
+        var grsuffix = " ({0}  {1})".format(grmembers, _TM['members']);
+
+        if (grnameMatchIndex > -1) {
+            return autocompleteGravatar(grprefix + autocompleteHighlightMatch(grname, query, grnameMatchIndex) + grsuffix, null, null, true);
+        }
+        return autocompleteGravatar(grprefix + oResultData.grname + grsuffix, null, null, true);
+
+    // users
+    } else if (oResultData.nname != undefined) {
+        var fname = oResultData.fname || "";
+        var lname = oResultData.lname || "";
+        var nname = oResultData.nname;
+
+        // Guard against null value
+        var fnameMatchIndex = fname.toLowerCase().indexOf(query),
+            lnameMatchIndex = lname.toLowerCase().indexOf(query),
+            nnameMatchIndex = nname.toLowerCase().indexOf(query),
+            displayfname, displaylname, displaynname;
+
+        if (fnameMatchIndex > -1) {
+            displayfname = autocompleteHighlightMatch(fname, query, fnameMatchIndex);
+        } else {
+            displayfname = fname;
+        }
+
+        if (lnameMatchIndex > -1) {
+            displaylname = autocompleteHighlightMatch(lname, query, lnameMatchIndex);
+        } else {
+            displaylname = lname;
+        }
+
+        if (nnameMatchIndex > -1) {
+            displaynname = "(" + autocompleteHighlightMatch(nname, query, nnameMatchIndex) + ")";
+        } else {
+            displaynname = nname ? "(" + nname + ")" : "";
+        }
+
+        return autocompleteGravatar(displayfname + " " + displaylname + " " + displaynname, oResultData.gravatar_lnk, oResultData.gravatar_size);
+    } else {
+        return '';
+    }
+};
+
 var _MembersAutoComplete = function (divid, cont, users_list, groups_list) {
 
     var matchUsers = function (sQuery) {
@@ -1215,59 +1269,8 @@ var _MembersAutoComplete = function (divid, cont, users_list, groups_list) {
     ownerAC.animHoriz = false;
     ownerAC.animSpeed = 0.1;
 
-    // Custom formatter to highlight the matching letters
-    var custom_formatter = function (oResultData, sQuery, sResultMatch) {
-            var query = sQuery.toLowerCase();
-            // group
-            if (oResultData.grname != undefined) {
-                var grname = oResultData.grname;
-                var grmembers = oResultData.grmembers;
-                var grnameMatchIndex = grname.toLowerCase().indexOf(query);
-                var grprefix = "{0}: ".format(_TM['Group']);
-                var grsuffix = " (" + grmembers + "  )";
-                var grsuffix = " ({0}  {1})".format(grmembers, _TM['members']);
-
-                if (grnameMatchIndex > -1) {
-                    return autocompleteGravatar(grprefix + autocompleteHighlightMatch(grname, query, grnameMatchIndex) + grsuffix, null, null, true);
-                }
-                return autocompleteGravatar(grprefix + oResultData.grname + grsuffix, null, null, true);
-            // Users
-            } else if (oResultData.nname != undefined) {
-                var fname = oResultData.fname || "";
-                var lname = oResultData.lname || "";
-                var nname = oResultData.nname;
-
-                // Guard against null value
-                var fnameMatchIndex = fname.toLowerCase().indexOf(query),
-                    lnameMatchIndex = lname.toLowerCase().indexOf(query),
-                    nnameMatchIndex = nname.toLowerCase().indexOf(query),
-                    displayfname, displaylname, displaynname;
-
-                if (fnameMatchIndex > -1) {
-                    displayfname = autocompleteHighlightMatch(fname, query, fnameMatchIndex);
-                } else {
-                    displayfname = fname;
-                }
-
-                if (lnameMatchIndex > -1) {
-                    displaylname = autocompleteHighlightMatch(lname, query, lnameMatchIndex);
-                } else {
-                    displaylname = lname;
-                }
-
-                if (nnameMatchIndex > -1) {
-                    displaynname = "(" + autocompleteHighlightMatch(nname, query, nnameMatchIndex) + ")";
-                } else {
-                    displaynname = nname ? "(" + nname + ")" : "";
-                }
-
-                return autocompleteGravatar(displayfname + " " + displaylname + " " + displaynname, oResultData.gravatar_lnk, oResultData.gravatar_size);
-            } else {
-                return '';
-            }
-        };
-    membersAC.formatResult = custom_formatter;
-    ownerAC.formatResult = custom_formatter;
+    membersAC.formatResult = autocompleteFormatter;
+    ownerAC.formatResult = autocompleteFormatter;
 
     var myHandler = function (sType, aArgs) {
             var nextId = divid.split('perm_new_member_name_')[1];
@@ -1328,46 +1331,12 @@ var MentionsAutoComplete = function (divid, cont, users_list) {
 
     // Custom formatter to highlight the matching letters
     ownerAC.formatResult = function (oResultData, sQuery, sResultMatch) {
-            var org_sQuery = sQuery;
-            if(this.dataSource.mentionQuery != null){
-                sQuery = this.dataSource.mentionQuery;
-            }
-
-            var query = sQuery.toLowerCase();
-            if (oResultData.nname != undefined) {
-                var fname = oResultData.fname || "";
-                var lname = oResultData.lname || "";
-                var nname = oResultData.nname;
-
-                // Guard against null value
-                var fnameMatchIndex = fname.toLowerCase().indexOf(query),
-                    lnameMatchIndex = lname.toLowerCase().indexOf(query),
-                    nnameMatchIndex = nname.toLowerCase().indexOf(query),
-                    displayfname, displaylname, displaynname;
-
-                if (fnameMatchIndex > -1) {
-                    displayfname = autocompleteHighlightMatch(fname, query, fnameMatchIndex);
-                } else {
-                    displayfname = fname;
-                }
-
-                if (lnameMatchIndex > -1) {
-                    displaylname = autocompleteHighlightMatch(lname, query, lnameMatchIndex);
-                } else {
-                    displaylname = lname;
-                }
-
-                if (nnameMatchIndex > -1) {
-                    displaynname = "(" + autocompleteHighlightMatch(nname, query, nnameMatchIndex) + ")";
-                } else {
-                    displaynname = nname ? "(" + nname + ")" : "";
-                }
-
-                return autocompleteGravatar(displayfname + " " + displaylname + " " + displaynname, oResultData.gravatar_lnk, oResultData.gravatar_size);
-            } else {
-                return '';
-            }
-        };
+        var org_sQuery = sQuery;
+        if (this.dataSource.mentionQuery != null) {
+            sQuery = this.dataSource.mentionQuery;
+        }
+        return autocompleteFormatter(oResultData, sQuery, sResultMatch);
+    }
 
     if(ownerAC.itemSelectEvent){
         ownerAC.itemSelectEvent.subscribe(function (sType, aArgs) {
@@ -1504,48 +1473,7 @@ var PullRequestAutoComplete = function (divid, cont, users_list) {
     reviewerAC.animHoriz = false;
     reviewerAC.animSpeed = 0.1;
 
-    // Custom formatter to highlight the matching letters
-    reviewerAC.formatResult = function (oResultData, sQuery, sResultMatch) {
-            var org_sQuery = sQuery;
-            if(this.dataSource.mentionQuery != null){
-                sQuery = this.dataSource.mentionQuery;
-            }
-
-            var query = sQuery.toLowerCase();
-            if (oResultData.nname != undefined) {
-                var fname = oResultData.fname || "";
-                var lname = oResultData.lname || "";
-                var nname = oResultData.nname;
-
-                // Guard against null value
-                var fnameMatchIndex = fname.toLowerCase().indexOf(query),
-                    lnameMatchIndex = lname.toLowerCase().indexOf(query),
-                    nnameMatchIndex = nname.toLowerCase().indexOf(query),
-                    displayfname, displaylname, displaynname;
-
-                if (fnameMatchIndex > -1) {
-                    displayfname = autocompleteHighlightMatch(fname, query, fnameMatchIndex);
-                } else {
-                    displayfname = fname;
-                }
-
-                if (lnameMatchIndex > -1) {
-                    displaylname = autocompleteHighlightMatch(lname, query, lnameMatchIndex);
-                } else {
-                    displaylname = lname;
-                }
-
-                if (nnameMatchIndex > -1) {
-                    displaynname = "(" + autocompleteHighlightMatch(nname, query, nnameMatchIndex) + ")";
-                } else {
-                    displaynname = nname ? "(" + nname + ")" : "";
-                }
-
-                return autocompleteGravatar(displayfname + " " + displaylname + " " + displaynname, oResultData.gravatar_lnk, oResultData.gravatar_size);
-            } else {
-                return '';
-            }
-        };
+    reviewerAC.formatResult = autocompleteFormatter;
 
     //members cache to catch duplicates
     reviewerAC.dataSource.cache = [];
