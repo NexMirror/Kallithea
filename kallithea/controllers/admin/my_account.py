@@ -98,8 +98,8 @@ class MyAccountController(BaseController):
         # url('my_account')
         c.active = 'profile'
         self.__load_data()
-        c.perm_user = AuthUser(user_id=self.authuser.user_id,
-                               ip_addr=self.ip_addr)
+        c.perm_user = AuthUser(user_id=self.authuser.user_id)
+        c.ip_addr = self.ip_addr
         c.extern_type = c.user.extern_type
         c.extern_name = c.user.extern_name
 
@@ -193,8 +193,8 @@ class MyAccountController(BaseController):
     def my_account_perms(self):
         c.active = 'perms'
         self.__load_data()
-        c.perm_user = AuthUser(user_id=self.authuser.user_id,
-                               ip_addr=self.ip_addr)
+        c.perm_user = AuthUser(user_id=self.authuser.user_id)
+        c.ip_addr = self.ip_addr
 
         return render('admin/my_account/my_account.html')
 

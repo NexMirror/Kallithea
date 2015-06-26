@@ -468,14 +468,13 @@ class AuthUser(object):
     anonymous access is enabled and if so, it returns default user as logged in
     """
 
-    def __init__(self, user_id=None, api_key=None, username=None, ip_addr=None):
+    def __init__(self, user_id=None, api_key=None, username=None):
 
         self.user_id = user_id
         self._api_key = api_key
 
         self.api_key = None
         self.username = username
-        self.ip_addr = ip_addr
         self.name = ''
         self.lastname = ''
         self.email = ''
@@ -596,17 +595,13 @@ class AuthUser(object):
         return [x[0] for x in self.permissions['user_groups'].iteritems()
                 if x[1] == 'usergroup.admin']
 
-    @property
-    def ip_allowed(self):
+    def is_ip_allowed(self, ip_addr):
         """
-        Checks if ip_addr used in constructor is allowed from defined list of
-        allowed ip_addresses for user
-
-        :returns: boolean, True if ip is in allowed ip range
+        Determine if `ip_addr` is on the list of allowed IP addresses
+        for this user.
         """
-        # check IP
         inherit = self.inherit_default_permissions
-        return AuthUser.check_ip_allowed(self.user_id, self.ip_addr,
+        return AuthUser.check_ip_allowed(self.user_id, ip_addr,
                                          inherit_from_default=inherit)
 
     @classmethod
@@ -622,8 +617,8 @@ class AuthUser(object):
             return False
 
     def __repr__(self):
-        return "<AuthUser('id:%s[%s] ip:%s auth:%s')>"\
-            % (self.user_id, self.username, self.ip_addr, self.is_authenticated)
+        return "<AuthUser('id:%s[%s] auth:%s')>"\
+            % (self.user_id, self.username, self.is_authenticated)
 
     def set_authenticated(self, authenticated=True):
         if self.user_id != self.anonymous_user.user_id:
@@ -729,14 +724,14 @@ class LoginRequired(object):
         return decorator(self.__wrapper, func)
 
     def __wrapper(self, func, *fargs, **fkwargs):
-        cls = fargs[0]
-        user = cls.authuser
-        loc = "%s:%s" % (cls.__class__.__name__, func.__name__)
+        controller = fargs[0]
+        user = controller.authuser
+        loc = "%s:%s" % (controller.__class__.__name__, func.__name__)
         log.debug('Checking access for user %s @ %s' % (user, loc))
 
         # check if our IP is allowed
-        if not user.ip_allowed:
-            return redirect_to_login(_('IP %s not allowed' % (user.ip_addr)))
+        if not user.is_ip_allowed(controller.ip_addr):
+            return redirect_to_login(_('IP %s not allowed') % controller.ip_addr)
 
         # check if we used an API key and it's a valid one
         api_key = request.GET.get('api_key')

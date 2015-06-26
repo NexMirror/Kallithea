@@ -168,7 +168,8 @@ class UsersController(BaseController):
         c.user = user_model.get(id)
         c.extern_type = c.user.extern_type
         c.extern_name = c.user.extern_name
-        c.perm_user = AuthUser(user_id=id, ip_addr=self.ip_addr)
+        c.perm_user = AuthUser(user_id=id)
+        c.ip_addr = self.ip_addr
         _form = UserForm(edit=True, old_data={'user_id': id,
                                               'email': c.user.email})()
         form_result = {}
@@ -248,7 +249,8 @@ class UsersController(BaseController):
         c.active = 'profile'
         c.extern_type = c.user.extern_type
         c.extern_name = c.user.extern_name
-        c.perm_user = AuthUser(user_id=id, ip_addr=self.ip_addr)
+        c.perm_user = AuthUser(user_id=id)
+        c.ip_addr = self.ip_addr
 
         defaults = c.user.get_dict()
         return htmlfill.render(
@@ -260,7 +262,8 @@ class UsersController(BaseController):
     def edit_advanced(self, id):
         c.user = self._get_user_or_raise_if_default(id)
         c.active = 'advanced'
-        c.perm_user = AuthUser(user_id=id, ip_addr=self.ip_addr)
+        c.perm_user = AuthUser(user_id=id)
+        c.ip_addr = self.ip_addr
 
         umodel = UserModel()
         defaults = c.user.get_dict()
@@ -331,7 +334,8 @@ class UsersController(BaseController):
     def edit_perms(self, id):
         c.user = self._get_user_or_raise_if_default(id)
         c.active = 'perms'
-        c.perm_user = AuthUser(user_id=id, ip_addr=self.ip_addr)
+        c.perm_user = AuthUser(user_id=id)
+        c.ip_addr = self.ip_addr
 
         umodel = UserModel()
         defaults = c.user.get_dict()

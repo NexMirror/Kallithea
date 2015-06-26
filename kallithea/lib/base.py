@@ -342,7 +342,7 @@ class BaseController(WSGIController):
         self.scm_model = ScmModel(self.sa)
 
     @staticmethod
-    def _determine_auth_user(ip_addr, api_key, session_authuser):
+    def _determine_auth_user(api_key, session_authuser):
         """
         Create an `AuthUser` object given the IP address of the request, the
         API key (if any), and the authuser from the session.
@@ -350,13 +350,13 @@ class BaseController(WSGIController):
 
         if api_key:
             # when using API_KEY we are sure user exists.
-            auth_user = AuthUser(api_key=api_key, ip_addr=ip_addr)
+            auth_user = AuthUser(api_key=api_key)
             authenticated = False
         else:
             cookie_store = CookieStoreWrapper(session_authuser)
             user_id = cookie_store.get('user_id')
             try:
-                auth_user = AuthUser(user_id=user_id, ip_addr=ip_addr)
+                auth_user = AuthUser(user_id=user_id)
             except UserCreationError as e:
                 # container auth or other auth functions that create users on
                 # the fly can throw UserCreationError to signal issues with
@@ -364,7 +364,7 @@ class BaseController(WSGIController):
                 # exception object.
                 from kallithea.lib import helpers as h
                 h.flash(e, 'error')
-                auth_user = AuthUser(ip_addr=ip_addr)
+                auth_user = AuthUser()
 
             authenticated = cookie_store.get('is_authenticated')
 
@@ -386,7 +386,6 @@ class BaseController(WSGIController):
 
             #set globals for auth user
             self.authuser = c.authuser = request.user = self._determine_auth_user(
-                self.ip_addr,
                 request.GET.get('api_key'),
                 session.get('authuser'),
             )

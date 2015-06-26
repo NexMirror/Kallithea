@@ -109,7 +109,7 @@ class LoginController(BaseController):
             c.came_from = url('home')
 
         not_default = self.authuser.username != User.DEFAULT_USER
-        ip_allowed = self.authuser.ip_allowed
+        ip_allowed = self.authuser.is_ip_allowed(self.ip_addr)
 
         # redirect if already logged in
         if self.authuser.is_authenticated and not_default and ip_allowed:
