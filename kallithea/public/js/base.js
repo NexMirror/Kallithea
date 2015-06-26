@@ -1468,9 +1468,6 @@ var PullRequestAutoComplete = function (divid, cont, users_list) {
 
     reviewerAC.formatResult = autocompleteFormatter;
 
-    //members cache to catch duplicates
-    reviewerAC.dataSource.cache = [];
-
     // Handler for selection of an entry
     if(reviewerAC.itemSelectEvent){
         reviewerAC.itemSelectEvent.subscribe(function (sType, aArgs) {
@@ -1480,7 +1477,6 @@ var PullRequestAutoComplete = function (divid, cont, users_list) {
     
             addReviewMember(oData.id, oData.fname, oData.lname, oData.nname,
                             oData.gravatar_lnk, oData.gravatar_size);
-            myAC.dataSource.cache.push(oData.id);
             $('#user').val('');
         });
     }
