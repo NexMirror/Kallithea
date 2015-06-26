@@ -1272,26 +1272,26 @@ var _MembersAutoComplete = function (divid, cont, users_list, groups_list) {
     membersAC.formatResult = autocompleteFormatter;
     ownerAC.formatResult = autocompleteFormatter;
 
-    var myHandler = function (sType, aArgs) {
-            var nextId = divid.split('perm_new_member_name_')[1];
-            var myAC = aArgs[0]; // reference back to the AC instance
-            var elLI = aArgs[1]; // reference to the selected LI element
-            var oData = aArgs[2]; // object literal of selected item's result data
-            //fill the autocomplete with value
-            if (oData.nname != undefined) {
-                //users
-                myAC.getInputEl().value = oData.nname;
-                $('#perm_new_member_type_'+nextId).val('user');
-            } else {
-                //groups
-                myAC.getInputEl().value = oData.grname;
-                $('#perm_new_member_type_'+nextId).val('users_group');
-            }
-        };
-
-    membersAC.itemSelectEvent.subscribe(myHandler);
+    // Handler for selection of an entry
+    var itemSelectHandler = function (sType, aArgs) {
+        var nextId = divid.split('perm_new_member_name_')[1];
+        var myAC = aArgs[0]; // reference back to the AC instance
+        var elLI = aArgs[1]; // reference to the selected LI element
+        var oData = aArgs[2]; // object literal of selected item's result data
+        //fill the autocomplete with value
+        if (oData.nname != undefined) {
+            //users
+            myAC.getInputEl().value = oData.nname;
+            $('#perm_new_member_type_'+nextId).val('user');
+        } else {
+            //groups
+            myAC.getInputEl().value = oData.grname;
+            $('#perm_new_member_type_'+nextId).val('users_group');
+        }
+    };
+    membersAC.itemSelectEvent.subscribe(itemSelectHandler);
     if(ownerAC.itemSelectEvent){
-        ownerAC.itemSelectEvent.subscribe(myHandler);
+        ownerAC.itemSelectEvent.subscribe(itemSelectHandler);
     }
 
     return {
@@ -1338,28 +1338,21 @@ var MentionsAutoComplete = function (divid, cont, users_list) {
         return autocompleteFormatter(oResultData, sQuery, sResultMatch);
     }
 
+    // Handler for selection of an entry
     if(ownerAC.itemSelectEvent){
         ownerAC.itemSelectEvent.subscribe(function (sType, aArgs) {
             var myAC = aArgs[0]; // reference back to the AC instance
             var elLI = aArgs[1]; // reference to the selected LI element
             var oData = aArgs[2]; // object literal of selected item's result data
-            //fill the autocomplete with value
-            if (oData.nname != undefined) {
-                //users
-                //Replace the mention name with replaced
-                var re = new RegExp();
-                var org = myAC.getInputEl().value;
-                var chunks = myAC.dataSource.chunks
-                // replace middle chunk(the search term) with actuall  match
-                chunks[1] = chunks[1].replace('@'+myAC.dataSource.mentionQuery,
-                                              '@'+oData.nname+' ');
-                myAC.getInputEl().value = chunks.join('')
-                myAC.getInputEl().focus(); // Y U NO WORK !?
-            } else {
-                //groups
-                myAC.getInputEl().value = oData.grname;
-                $('#perm_new_member_type').val('users_group');
-            }
+            //Replace the mention name with replaced
+            var re = new RegExp();
+            var org = myAC.getInputEl().value;
+            var chunks = myAC.dataSource.chunks
+            // replace middle chunk(the search term) with actuall  match
+            chunks[1] = chunks[1].replace('@'+myAC.dataSource.mentionQuery,
+                                          '@'+oData.nname+' ');
+            myAC.getInputEl().value = chunks.join('')
+            myAC.getInputEl().focus(); // Y U NO WORK !?
         });
     }
 
@@ -1477,21 +1470,18 @@ var PullRequestAutoComplete = function (divid, cont, users_list) {
 
     //members cache to catch duplicates
     reviewerAC.dataSource.cache = [];
-    // hack into select event
+
+    // Handler for selection of an entry
     if(reviewerAC.itemSelectEvent){
         reviewerAC.itemSelectEvent.subscribe(function (sType, aArgs) {
-
             var myAC = aArgs[0]; // reference back to the AC instance
             var elLI = aArgs[1]; // reference to the selected LI element
             var oData = aArgs[2]; // object literal of selected item's result data
-
-            //fill the autocomplete with value
-            if (oData.nname != undefined) {
-                addReviewMember(oData.id, oData.fname, oData.lname, oData.nname,
-                                oData.gravatar_lnk, oData.gravatar_size);
-                myAC.dataSource.cache.push(oData.id);
-                $('#user').val('');
-            }
+    
+            addReviewMember(oData.id, oData.fname, oData.lname, oData.nname,
+                            oData.gravatar_lnk, oData.gravatar_size);
+            myAC.dataSource.cache.push(oData.id);
+            $('#user').val('');
         });
     }
 }
