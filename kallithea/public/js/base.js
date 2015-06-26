@@ -1293,13 +1293,6 @@ var _MembersAutoComplete = function (divid, cont, users_list, groups_list) {
     if(ownerAC.itemSelectEvent){
         ownerAC.itemSelectEvent.subscribe(itemSelectHandler);
     }
-
-    return {
-        memberDS: memberDS,
-        ownerDS: ownerDS,
-        membersAC: membersAC,
-        ownerAC: ownerAC
-    };
 }
 
 var MentionsAutoComplete = function (divid, cont, users_list) {
