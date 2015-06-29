@@ -162,5 +162,8 @@ ${h.form(url('repo', repo_name=c.repo_info.repo_name),method='put')}
             'dropdownAutoWidth': true
         });
 
+        // autocomplete
+        var _USERS_AC_DATA = ${c.users_array|n};
+        SimpleUserAutoComplete('user', 'owner_container', _USERS_AC_DATA);
     });
 </script>

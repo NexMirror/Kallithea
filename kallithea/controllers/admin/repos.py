@@ -370,6 +370,8 @@ class ReposController(BaseRepoController):
 
         c.repo_fields = RepositoryField.query()\
             .filter(RepositoryField.repository == c.repo_info).all()
+        repo_model = RepoModel()
+        c.users_array = repo_model.get_users_js()
         c.active = 'settings'
         return htmlfill.render(
             render('admin/repos/repo_edit.html'),

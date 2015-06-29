@@ -1242,23 +1242,33 @@ var autocompleteCreate = function (inputElement, container, matchFunc) {
     return autocomplete;
 }
 
-var _MembersAutoComplete = function (divid, cont, users_list, groups_list) {
+var SimpleUserAutoComplete = function (divid, cont, users_list) {
 
     var matchUsers = function (sQuery) {
         return autocompleteMatchUsers(sQuery, users_list);
     }
-    var matchGroups = function (sQuery) {
-        return autocompleteMatchGroups(sQuery, groups_list);
-    }
+
+    var userAC = autocompleteCreate(divid, cont, matchUsers);
+
+    // Handler for selection of an entry
+    var itemSelectHandler = function (sType, aArgs) {
+        var myAC = aArgs[0]; // reference back to the AC instance
+        var elLI = aArgs[1]; // reference to the selected LI element
+        var oData = aArgs[2]; // object literal of selected item's result data
+        myAC.getInputEl().value = oData.nname;
+    };
+    userAC.itemSelectEvent.subscribe(itemSelectHandler);
+}
+
+var _MembersAutoComplete = function (divid, cont, users_list, groups_list) {
+
     var matchAll = function (sQuery) {
-        var u = matchUsers(sQuery);
-        var g = matchGroups(sQuery);
+        var u = autocompleteMatchUsers(sQuery, users_list);
+        var g = autocompleteMatchGroups(sQuery, groups_list);
         return u.concat(g);
     };
 
     var membersAC = autocompleteCreate(divid, cont, matchAll);
-
-    var ownerAC = autocompleteCreate("user", "owner_container", matchUsers);
 
     // Handler for selection of an entry
     var itemSelectHandler = function (sType, aArgs) {
@@ -1278,9 +1288,6 @@ var _MembersAutoComplete = function (divid, cont, users_list, groups_list) {
         }
     };
     membersAC.itemSelectEvent.subscribe(itemSelectHandler);
-    if(ownerAC.itemSelectEvent){
-        ownerAC.itemSelectEvent.subscribe(itemSelectHandler);
-    }
 }
 
 var MentionsAutoComplete = function (divid, cont, users_list) {
