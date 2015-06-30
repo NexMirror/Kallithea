@@ -1242,13 +1242,13 @@ var autocompleteCreate = function (inputElement, container, matchFunc) {
     return autocomplete;
 }
 
-var SimpleUserAutoComplete = function (divid, cont, users_list) {
+var SimpleUserAutoComplete = function (inputElement, container, users_list) {
 
     var matchUsers = function (sQuery) {
         return autocompleteMatchUsers(sQuery, users_list);
     }
 
-    var userAC = autocompleteCreate(divid, cont, matchUsers);
+    var userAC = autocompleteCreate(inputElement, container, matchUsers);
 
     // Handler for selection of an entry
     var itemSelectHandler = function (sType, aArgs) {
@@ -1260,7 +1260,7 @@ var SimpleUserAutoComplete = function (divid, cont, users_list) {
     userAC.itemSelectEvent.subscribe(itemSelectHandler);
 }
 
-var _MembersAutoComplete = function (divid, cont, users_list, groups_list) {
+var MembersAutoComplete = function (inputElement, container, users_list, groups_list) {
 
     var matchAll = function (sQuery) {
         var u = autocompleteMatchUsers(sQuery, users_list);
@@ -1268,11 +1268,11 @@ var _MembersAutoComplete = function (divid, cont, users_list, groups_list) {
         return u.concat(g);
     };
 
-    var membersAC = autocompleteCreate(divid, cont, matchAll);
+    var membersAC = autocompleteCreate(inputElement, container, matchAll);
 
     // Handler for selection of an entry
     var itemSelectHandler = function (sType, aArgs) {
-        var nextId = divid.split('perm_new_member_name_')[1];
+        var nextId = inputElement.split('perm_new_member_name_')[1];
         var myAC = aArgs[0]; // reference back to the AC instance
         var elLI = aArgs[1]; // reference to the selected LI element
         var oData = aArgs[2]; // object literal of selected item's result data
@@ -1290,7 +1290,7 @@ var _MembersAutoComplete = function (divid, cont, users_list, groups_list) {
     membersAC.itemSelectEvent.subscribe(itemSelectHandler);
 }
 
-var MentionsAutoComplete = function (divid, cont, users_list) {
+var MentionsAutoComplete = function (inputElement, container, users_list) {
 
     var matchUsers = function (sQuery) {
             var org_sQuery = sQuery;
@@ -1301,7 +1301,7 @@ var MentionsAutoComplete = function (divid, cont, users_list) {
             return autocompleteMatchUsers(sQuery, users_list);
     }
 
-    var mentionsAC = autocompleteCreate(divid, cont, matchUsers);
+    var mentionsAC = autocompleteCreate(inputElement, container, matchUsers);
     mentionsAC.suppressInputUpdate = true;
     // Overwrite formatResult to take into account mentionQuery
     mentionsAC.formatResult = function (oResultData, sQuery, sResultMatch) {
@@ -1362,10 +1362,10 @@ var MentionsAutoComplete = function (divid, cont, users_list) {
         return [null, null];
     };
 
-    var $divid = $('#'+divid);
-    $divid.keyup(function(e){
-            var currentMessage = $divid.val();
-            var currentCaretPosition = $divid[0].selectionStart;
+    var $inputElement = $('#'+inputElement);
+    $inputElement.keyup(function(e){
+            var currentMessage = $inputElement.val();
+            var currentCaretPosition = $inputElement[0].selectionStart;
 
             var unam = mentionsAC.get_mention(currentMessage, currentCaretPosition);
             var curr_search = null;
@@ -1418,13 +1418,13 @@ var removeReviewMember = function(reviewer_id, repo_name, pull_request_id){
 }
 
 /* activate auto completion of users as PR reviewers */
-var PullRequestAutoComplete = function (divid, cont, users_list) {
+var PullRequestAutoComplete = function (inputElement, container, users_list) {
 
     var matchUsers = function (sQuery) {
         return autocompleteMatchUsers(sQuery, users_list);
     };
 
-    var reviewerAC = autocompleteCreate(divid, cont, matchUsers);
+    var reviewerAC = autocompleteCreate(inputElement, container, matchUsers);
     reviewerAC.suppressInputUpdate = true;
 
     // Handler for selection of an entry
@@ -1436,7 +1436,7 @@ var PullRequestAutoComplete = function (divid, cont, users_list) {
     
             addReviewMember(oData.id, oData.fname, oData.lname, oData.nname,
                             oData.gravatar_lnk, oData.gravatar_size);
-            $('#user').val('');
+            myAC.getInputEl().value = '';
         });
     }
 }
@@ -1506,7 +1506,7 @@ var addPermAction = function(_html, users_list, groups_list){
     var $last_node = $('.last_new_member').last(); // empty tr between last and add
     var next_id = $('.new_members').length;
     $last_node.before($('<tr class="new_members">').append(_html.format(next_id)));
-    _MembersAutoComplete("perm_new_member_name_"+next_id,
+    MembersAutoComplete("perm_new_member_name_"+next_id,
             "perm_container_"+next_id, users_list, groups_list);
 }
 
