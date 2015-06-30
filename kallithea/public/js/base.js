@@ -1227,6 +1227,21 @@ var autocompleteFormatter = function (oResultData, sQuery, sResultMatch) {
     }
 };
 
+// Generate a basic autocomplete instance that can be tweaked further by the caller
+var autocompleteCreate = function (inputElement, container, matchFunc) {
+    var datasource = new YAHOO.util.FunctionDataSource(matchFunc);
+
+    var autocomplete = new YAHOO.widget.AutoComplete(inputElement, container, datasource);
+    autocomplete.useShadow = false;
+    autocomplete.resultTypeList = false;
+    autocomplete.animVert = false;
+    autocomplete.animHoriz = false;
+    autocomplete.animSpeed = 0.1;
+    autocomplete.formatResult = autocompleteFormatter;
+
+    return autocomplete;
+}
+
 var _MembersAutoComplete = function (divid, cont, users_list, groups_list) {
 
     var matchUsers = function (sQuery) {
@@ -1241,30 +1256,9 @@ var _MembersAutoComplete = function (divid, cont, users_list, groups_list) {
         return u.concat(g);
     };
 
-    // DataScheme for members
-    var memberDS = new YAHOO.util.FunctionDataSource(matchAll);
+    var membersAC = autocompleteCreate(divid, cont, matchAll);
 
-    // DataScheme for owner
-    var ownerDS = new YAHOO.util.FunctionDataSource(matchUsers);
-
-    // Instantiate AutoComplete for perms
-    var membersAC = new YAHOO.widget.AutoComplete(divid, cont, memberDS);
-    membersAC.useShadow = false;
-    membersAC.resultTypeList = false;
-    membersAC.animVert = false;
-    membersAC.animHoriz = false;
-    membersAC.animSpeed = 0.1;
-
-    // Instantiate AutoComplete for owner
-    var ownerAC = new YAHOO.widget.AutoComplete("user", "owner_container", ownerDS);
-    ownerAC.useShadow = false;
-    ownerAC.resultTypeList = false;
-    ownerAC.animVert = false;
-    ownerAC.animHoriz = false;
-    ownerAC.animSpeed = 0.1;
-
-    membersAC.formatResult = autocompleteFormatter;
-    ownerAC.formatResult = autocompleteFormatter;
+    var ownerAC = autocompleteCreate("user", "owner_container", matchUsers);
 
     // Handler for selection of an entry
     var itemSelectHandler = function (sType, aArgs) {
@@ -1300,20 +1294,10 @@ var MentionsAutoComplete = function (divid, cont, users_list) {
             return autocompleteMatchUsers(sQuery, users_list);
     }
 
-    // DataScheme for owner
-    var ownerDS = new YAHOO.util.FunctionDataSource(matchUsers);
-
-    // Instantiate AutoComplete for mentions
-    var ownerAC = new YAHOO.widget.AutoComplete(divid, cont, ownerDS);
-    ownerAC.useShadow = false;
-    ownerAC.resultTypeList = false;
-    ownerAC.suppressInputUpdate = true;
-    ownerAC.animVert = false;
-    ownerAC.animHoriz = false;
-    ownerAC.animSpeed = 0.1;
-
-    // Custom formatter to highlight the matching letters
-    ownerAC.formatResult = function (oResultData, sQuery, sResultMatch) {
+    var mentionsAC = autocompleteCreate(divid, cont, matchUsers);
+    mentionsAC.suppressInputUpdate = true;
+    // Overwrite formatResult to take into account mentionQuery
+    mentionsAC.formatResult = function (oResultData, sQuery, sResultMatch) {
         var org_sQuery = sQuery;
         if (this.dataSource.mentionQuery != null) {
             sQuery = this.dataSource.mentionQuery;
@@ -1322,8 +1306,8 @@ var MentionsAutoComplete = function (divid, cont, users_list) {
     }
 
     // Handler for selection of an entry
-    if(ownerAC.itemSelectEvent){
-        ownerAC.itemSelectEvent.subscribe(function (sType, aArgs) {
+    if(mentionsAC.itemSelectEvent){
+        mentionsAC.itemSelectEvent.subscribe(function (sType, aArgs) {
             var myAC = aArgs[0]; // reference back to the AC instance
             var elLI = aArgs[1]; // reference to the selected LI element
             var oData = aArgs[2]; // object literal of selected item's result data
@@ -1342,10 +1326,10 @@ var MentionsAutoComplete = function (divid, cont, users_list) {
     // in this keybuffer we will gather current value of search !
     // since we need to get this just when someone does `@` then we do the
     // search
-    ownerAC.dataSource.chunks = [];
-    ownerAC.dataSource.mentionQuery = null;
+    mentionsAC.dataSource.chunks = [];
+    mentionsAC.dataSource.mentionQuery = null;
 
-    ownerAC.get_mention = function(msg, max_pos) {
+    mentionsAC.get_mention = function(msg, max_pos) {
         var org = msg;
         // Must match utils2.py MENTIONS_REGEX.
         // Only matching on string up to cursor, so it must end with $
@@ -1376,14 +1360,14 @@ var MentionsAutoComplete = function (divid, cont, users_list) {
             var currentMessage = $divid.val();
             var currentCaretPosition = $divid[0].selectionStart;
 
-            var unam = ownerAC.get_mention(currentMessage, currentCaretPosition);
+            var unam = mentionsAC.get_mention(currentMessage, currentCaretPosition);
             var curr_search = null;
             if(unam[0]){
                 curr_search = unam[0];
             }
 
-            ownerAC.dataSource.chunks = unam[1];
-            ownerAC.dataSource.mentionQuery = curr_search;
+            mentionsAC.dataSource.chunks = unam[1];
+            mentionsAC.dataSource.mentionQuery = curr_search;
         });
 }
 
@@ -1433,19 +1417,8 @@ var PullRequestAutoComplete = function (divid, cont, users_list) {
         return autocompleteMatchUsers(sQuery, users_list);
     };
 
-    // DataScheme for owner
-    var ownerDS = new YAHOO.util.FunctionDataSource(matchUsers);
-
-    // Instantiate AutoComplete for mentions
-    var reviewerAC = new YAHOO.widget.AutoComplete(divid, cont, ownerDS);
-    reviewerAC.useShadow = false;
-    reviewerAC.resultTypeList = false;
+    var reviewerAC = autocompleteCreate(divid, cont, matchUsers);
     reviewerAC.suppressInputUpdate = true;
-    reviewerAC.animVert = false;
-    reviewerAC.animHoriz = false;
-    reviewerAC.animSpeed = 0.1;
-
-    reviewerAC.formatResult = autocompleteFormatter;
 
     // Handler for selection of an entry
     if(reviewerAC.itemSelectEvent){
