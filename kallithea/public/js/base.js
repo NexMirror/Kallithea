@@ -1183,8 +1183,7 @@ var autocompleteFormatter = function (oResultData, sQuery, sResultMatch) {
         var grmembers = oResultData.grmembers;
         var grnameMatchIndex = grname.toLowerCase().indexOf(query);
         var grprefix = "{0}: ".format(_TM['Group']);
-        var grsuffix = " (" + grmembers + "  )";
-        var grsuffix = " ({0}  {1})".format(grmembers, _TM['members']);
+        var grsuffix = " ({0} {1})".format(grmembers, _TM['members']);
 
         if (grnameMatchIndex > -1) {
             return autocompleteGravatar(grprefix + autocompleteHighlightMatch(grname, query, grnameMatchIndex) + grsuffix, null, null, true);
@@ -1201,7 +1200,7 @@ var autocompleteFormatter = function (oResultData, sQuery, sResultMatch) {
         var fnameMatchIndex = fname.toLowerCase().indexOf(query),
             lnameMatchIndex = lname.toLowerCase().indexOf(query),
             nnameMatchIndex = nname.toLowerCase().indexOf(query),
-            displayfname, displaylname, displaynname;
+            displayfname, displaylname, displaynname, displayname;
 
         if (fnameMatchIndex > -1) {
             displayfname = autocompleteHighlightMatch(fname, query, fnameMatchIndex);
@@ -1216,12 +1215,17 @@ var autocompleteFormatter = function (oResultData, sQuery, sResultMatch) {
         }
 
         if (nnameMatchIndex > -1) {
-            displaynname = "(" + autocompleteHighlightMatch(nname, query, nnameMatchIndex) + ")";
+            displaynname = autocompleteHighlightMatch(nname, query, nnameMatchIndex);
         } else {
-            displaynname = nname ? "(" + nname + ")" : "";
+            displaynname = nname;
         }
 
-        return autocompleteGravatar(displayfname + " " + displaylname + " " + displaynname, oResultData.gravatar_lnk, oResultData.gravatar_size);
+        displayname = displaynname;
+        if (displayfname && displaylname) {
+            displayname = "{0} {1} ({2})".format(displayfname, displaylname, displayname);
+        }
+
+        return autocompleteGravatar(displayname, oResultData.gravatar_lnk, oResultData.gravatar_size);
     } else {
         return '';
     }
