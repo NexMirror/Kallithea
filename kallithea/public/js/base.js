@@ -1243,15 +1243,9 @@ var _MembersAutoComplete = function (divid, cont, users_list, groups_list) {
 
     // DataScheme for members
     var memberDS = new YAHOO.util.FunctionDataSource(matchAll);
-    memberDS.responseSchema = {
-        fields: ["id", "fname", "lname", "nname", "grname", "grmembers", "gravatar_lnk", "gravatar_size"]
-    };
 
     // DataScheme for owner
     var ownerDS = new YAHOO.util.FunctionDataSource(matchUsers);
-    ownerDS.responseSchema = {
-        fields: ["id", "fname", "lname", "nname", "gravatar_lnk", "gravatar_size"]
-    };
 
     // Instantiate AutoComplete for perms
     var membersAC = new YAHOO.widget.AutoComplete(divid, cont, memberDS);
@@ -1308,10 +1302,6 @@ var MentionsAutoComplete = function (divid, cont, users_list) {
 
     // DataScheme for owner
     var ownerDS = new YAHOO.util.FunctionDataSource(matchUsers);
-
-    ownerDS.responseSchema = {
-        fields: ["id", "fname", "lname", "nname", "gravatar_lnk", "gravatar_size"]
-    };
 
     // Instantiate AutoComplete for mentions
     var ownerAC = new YAHOO.widget.AutoComplete(divid, cont, ownerDS);
@@ -1445,10 +1435,6 @@ var PullRequestAutoComplete = function (divid, cont, users_list) {
 
     // DataScheme for owner
     var ownerDS = new YAHOO.util.FunctionDataSource(matchUsers);
-
-    ownerDS.responseSchema = {
-        fields: ["id", "fname", "lname", "nname", "gravatar_lnk", "gravatar_size"]
-    };
 
     // Instantiate AutoComplete for mentions
     var reviewerAC = new YAHOO.widget.AutoComplete(divid, cont, ownerDS);
