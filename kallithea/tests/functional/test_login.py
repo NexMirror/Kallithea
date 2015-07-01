@@ -15,12 +15,8 @@ fixture = Fixture()
 
 
 class TestLoginController(TestController):
-
-    def tearDown(self):
-        for n in Notification.query().all():
-            Session().delete(n)
-
-        Session().commit()
+    def setUp(self):
+        self.remove_all_notifications()
         self.assertEqual(Notification.query().all(), [])
 
     def test_index(self):

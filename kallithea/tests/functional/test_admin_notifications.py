@@ -8,12 +8,8 @@ from kallithea.lib import helpers as h
 
 
 class TestNotificationsController(TestController):
-
-    def tearDown(self):
-        for n in Notification.query().all():
-            inst = Notification.get(n.notification_id)
-            Session().delete(inst)
-        Session().commit()
+    def setUp(self):
+        self.remove_all_notifications()
 
     def test_index(self):
         self.log_user()

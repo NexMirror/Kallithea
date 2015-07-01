@@ -11,18 +11,7 @@ class TestChangeSetCommentsController(TestController):
             Session().delete(x)
         Session().commit()
 
-        for x in Notification.query().all():
-            Session().delete(x)
-        Session().commit()
-
-    def tearDown(self):
-        for x in ChangesetComment.query().all():
-            Session().delete(x)
-        Session().commit()
-
-        for x in Notification.query().all():
-            Session().delete(x)
-        Session().commit()
+        self.remove_all_notifications()
 
     def test_create(self):
         self.log_user()

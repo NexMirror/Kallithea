@@ -54,7 +54,8 @@ from nose.plugins.skip import SkipTest
 
 from kallithea.lib.compat import unittest
 from kallithea import is_windows
-from kallithea.model.db import User
+from kallithea.model.db import Notification, User, UserNotification
+from kallithea.model.meta import Session
 from kallithea.tests.parameterized import parameterized
 from kallithea.lib.utils2 import safe_str
 
@@ -182,6 +183,15 @@ class BaseTestCase(unittest.TestCase):
         self.wsgiapp = pylons.test.pylonsapp
         init_stack(self.wsgiapp.config)
         unittest.TestCase.__init__(self, *args, **kwargs)
+
+    def remove_all_notifications(self):
+        Notification.query().delete()
+
+        # Because query().delete() does not (by default) trigger cascades.
+        # http://docs.sqlalchemy.org/en/rel_0_7/orm/collections.html#passive-deletes
+        UserNotification.query().delete()
+
+        Session().commit()
 
 
 class TestController(BaseTestCase):
