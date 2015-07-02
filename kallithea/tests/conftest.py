@@ -1,5 +1,6 @@
 import os
 import sys
+import logging
 
 import pkg_resources
 from paste.deploy import loadapp
@@ -11,7 +12,11 @@ def pytest_configure():
     path = os.getcwd()
     sys.path.insert(0, path)
     pkg_resources.working_set.add_entry(path)
+
+    # Disable INFO logging of test database creation, restore with NOTSET
+    logging.disable(logging.INFO)
     pylons.test.pylonsapp = loadapp('config:test.ini', relative_to=path)
+    logging.disable(logging.NOTSET)
 
     # Setup the config and app_globals, only works if we can get
     # to the config object
