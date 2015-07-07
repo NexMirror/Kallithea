@@ -352,9 +352,9 @@ def pygmentize_annotation(repo_name, filenode, **kwargs):
     def url_func(repo_name):
 
         def _url_func(changeset):
-            author = changeset.author
+            author = escape(changeset.author)
             date = changeset.date
-            message = tooltip(changeset.message)
+            message = escape(changeset.message)
 
             tooltip_html = ("<div style='font-size:0.8em'><b>Author:</b>"
                             " %s<br/><b>Date:</b> %s</b><br/><b>Message:"
@@ -367,7 +367,7 @@ def pygmentize_annotation(repo_name, filenode, **kwargs):
                     url('changeset_home', repo_name=repo_name,
                         revision=changeset.raw_id),
                     style=get_color_string(changeset.raw_id),
-                    class_='tooltip',
+                    class_='tooltip safe-html-title',
                     title=tooltip_html
                   )
 

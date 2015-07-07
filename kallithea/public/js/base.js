@@ -510,25 +510,31 @@ var _init_tooltip = function(){
     _activate_tooltip($('.tooltip'));
 };
 
-var _show_tooltip = function(e, tipText){
+var _show_tooltip = function(e, tipText, safe){
     e.stopImmediatePropagation();
     var el = e.currentTarget;
+    var $el = $(el);
     if(tipText){
         // just use it
     } else if(el.tagName.toLowerCase() === 'img'){
         tipText = el.alt ? el.alt : '';
     } else {
         tipText = el.title ? el.title : '';
+        safe = safe || $el.hasClass("safe-html-title");
     }
 
     if(tipText !== ''){
         // save org title
-        $(el).attr('tt_title', tipText);
+        $el.attr('tt_title', tipText);
         // reset title to not show org tooltips
-        $(el).attr('title', '');
+        $el.attr('title', '');
 
         var $tipBox = $('#tip-box');
-        $tipBox.html(tipText);
+        if (safe) {
+            $tipBox.html(tipText);
+        } else {
+            $tipBox.text(tipText);
+        }
         $tipBox.css('display', 'block');
     }
 };
