@@ -246,7 +246,7 @@ class UserGroupModel(BaseModel):
         self.sa.add(new)
         return new
 
-    def revokehas_permrevoke_permgrant_perm_perm(self, user_group, perm):
+    def revoke_perm(self, user_group, perm):
         user_group = self._get_user_group(user_group)
         perm = self._get_perm(perm)
 

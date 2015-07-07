@@ -276,6 +276,9 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
         .join((UserGroupMember, UserGroupToPerm.users_group_id ==
                UserGroupMember.users_group_id))\
         .filter(UserGroupMember.user_id == uid)\
+        .join((UserGroup, UserGroupMember.users_group_id ==
+               UserGroup.users_group_id))\
+        .filter(UserGroup.users_group_active == True)\
         .order_by(UserGroupToPerm.users_group_id)\
         .all()
     # need to group here by groups since user can be in more than
@@ -326,6 +329,9 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
                Repository.repo_id))\
         .join((Permission, UserGroupRepoToPerm.permission_id ==
                Permission.permission_id))\
+        .join((UserGroup, UserGroupRepoToPerm.users_group_id ==
+               UserGroup.users_group_id))\
+        .filter(UserGroup.users_group_active == True)\
         .join((UserGroupMember, UserGroupRepoToPerm.users_group_id ==
                UserGroupMember.users_group_id))\
         .filter(UserGroupMember.user_id == uid)\
@@ -375,6 +381,9 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
      .join((RepoGroup, UserGroupRepoGroupToPerm.group_id == RepoGroup.group_id))\
      .join((Permission, UserGroupRepoGroupToPerm.permission_id
             == Permission.permission_id))\
+     .join((UserGroup, UserGroupRepoGroupToPerm.users_group_id ==
+            UserGroup.users_group_id))\
+     .filter(UserGroup.users_group_active == True)\
      .join((UserGroupMember, UserGroupRepoGroupToPerm.users_group_id
             == UserGroupMember.users_group_id))\
      .filter(UserGroupMember.user_id == uid)\
@@ -413,6 +422,9 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
      .join((UserGroupMember, UserGroupUserGroupToPerm.user_group_id
             == UserGroupMember.users_group_id))\
      .filter(UserGroupMember.user_id == uid)\
+     .join((UserGroup, UserGroupMember.users_group_id ==
+            UserGroup.users_group_id), aliased=True, from_joinpoint=True)\
+     .filter(UserGroup.users_group_active == True)\
      .all()
 
     multiple_counter = collections.defaultdict(int)
