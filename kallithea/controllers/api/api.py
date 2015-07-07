@@ -1561,6 +1561,12 @@ class ApiController(JSONRPCController):
                 ):
                 raise JSONRPCError('no permission to create (or move) repositories')
 
+            if not isinstance(owner, Optional):
+                #forbid setting owner for non-admins
+                raise JSONRPCError(
+                    'Only Kallithea admin can specify `owner` param'
+                )
+
         updates = {
             # update function requires this.
             'repo_name': repo.repo_name

@@ -1221,6 +1221,22 @@ class BaseTestApi(object):
             fixture.destroy_repo(repo_name)
             fixture.destroy_repo(new_repo_name)
 
+    def test_api_update_repo_regular_user_change_owner(self):
+        repo_name = 'admin_owned'
+        fixture.create_repo(repo_name, repo_type=self.REPO_TYPE)
+        RepoModel().grant_user_permission(repo=repo_name,
+                                          user=self.TEST_USER_LOGIN,
+                                          perm='repository.admin')
+        updates = {'owner': TEST_USER_ADMIN_LOGIN}
+        id_, params = _build_data(self.apikey_regular, 'update_repo',
+                                  repoid=repo_name, **updates)
+        response = api_call(self, params)
+        try:
+            expected = 'Only Kallithea admin can specify `owner` param'
+            self._compare_error(id_, expected, given=response.body)
+        finally:
+            fixture.destroy_repo(repo_name)
+
     def test_api_delete_repo(self):
         repo_name = 'api_delete_me'
         fixture.create_repo(repo_name, repo_type=self.REPO_TYPE)
