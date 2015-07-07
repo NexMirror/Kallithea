@@ -1556,6 +1556,11 @@ class ApiController(JSONRPCController):
                                                                repo_name=repo.repo_name):
                 raise JSONRPCError('repository `%s` does not exist' % (repoid,))
 
+            if (name != repo.repo_name and
+                not HasPermissionAnyApi('hg.create.repository')(user=apiuser)
+                ):
+                raise JSONRPCError('no permission to create (or move) repositories')
+
         updates = {
             # update function requires this.
             'repo_name': repo.repo_name
@@ -1653,6 +1658,9 @@ class ApiController(JSONRPCController):
                 raise JSONRPCError(
                     'Only Kallithea admin can specify `owner` param'
                 )
+
+            if not HasPermissionAnyApi('hg.create.repository')(user=apiuser):
+                raise JSONRPCError('no permission to create repositories')
         else:
             raise JSONRPCError('repository `%s` does not exist' % (repoid,))
 

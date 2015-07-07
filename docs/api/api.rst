@@ -833,8 +833,9 @@ fork_repo
 Create a fork of the given repo. If using Celery, this will
 return success message immediately and a fork will be created
 asynchronously.
-This command can only be executed using the api_key of a user with admin rights,
-or that of a regular user with fork permission and at least read access to the repository.
+This command can only be executed using the api_key of a user with admin
+rights, or with the global fork permission, by a regular user with create
+repository permission and at least read access to the repository.
 Regular users cannot specify owner parameter.
 
 

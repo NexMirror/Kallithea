@@ -1178,6 +1178,49 @@ class BaseTestApi(object):
         finally:
             fixture.destroy_repo(repo_name)
 
+    def test_api_update_repo_regular_user_change_repo_name(self):
+        repo_name = 'admin_owned'
+        new_repo_name = 'new_repo_name'
+        fixture.create_repo(repo_name, repo_type=self.REPO_TYPE)
+        RepoModel().grant_user_permission(repo=repo_name,
+                                          user=self.TEST_USER_LOGIN,
+                                          perm='repository.admin')
+        UserModel().revoke_perm('default', 'hg.create.repository')
+        UserModel().grant_perm('default', 'hg.create.none')
+        updates = {'name': new_repo_name}
+        id_, params = _build_data(self.apikey_regular, 'update_repo',
+                                  repoid=repo_name, **updates)
+        response = api_call(self, params)
+        try:
+            expected = 'no permission to create (or move) repositories'
+            self._compare_error(id_, expected, given=response.body)
+        finally:
+            fixture.destroy_repo(repo_name)
+            fixture.destroy_repo(new_repo_name)
+
+    def test_api_update_repo_regular_user_change_repo_name_allowed(self):
+        repo_name = 'admin_owned'
+        new_repo_name = 'new_repo_name'
+        repo = fixture.create_repo(repo_name, repo_type=self.REPO_TYPE)
+        RepoModel().grant_user_permission(repo=repo_name,
+                                          user=self.TEST_USER_LOGIN,
+                                          perm='repository.admin')
+        UserModel().revoke_perm('default', 'hg.create.none')
+        UserModel().grant_perm('default', 'hg.create.repository')
+        updates = {'name': new_repo_name}
+        id_, params = _build_data(self.apikey_regular, 'update_repo',
+                                  repoid=repo_name, **updates)
+        response = api_call(self, params)
+        try:
+            expected = {
+                'msg': 'updated repo ID:%s %s' % (repo.repo_id, new_repo_name),
+                'repository': repo.get_api_data()
+            }
+            self._compare_ok(id_, expected, given=response.body)
+        finally:
+            fixture.destroy_repo(repo_name)
+            fixture.destroy_repo(new_repo_name)
+
     def test_api_delete_repo(self):
         repo_name = 'api_delete_me'
         fixture.create_repo(repo_name, repo_type=self.REPO_TYPE)
@@ -1300,6 +1343,27 @@ class BaseTestApi(object):
         )
         response = api_call(self, params)
         expected = 'repository `%s` does not exist' % (self.REPO)
+        self._compare_error(id_, expected, given=response.body)
+        fixture.destroy_repo(fork_name)
+
+    @parameterized.expand([('read', 'repository.read'),
+                           ('write', 'repository.write'),
+                           ('admin', 'repository.admin')])
+    def test_api_fork_repo_non_admin_no_create_repo_permission(self, name, perm):
+        fork_name = 'api-repo-fork'
+        # regardless of base repository permission, forking is disallowed
+        # when repository creation is disabled
+        RepoModel().grant_user_permission(repo=self.REPO,
+                                          user=self.TEST_USER_LOGIN,
+                                          perm=perm)
+        UserModel().revoke_perm('default', 'hg.create.repository')
+        UserModel().grant_perm('default', 'hg.create.none')
+        id_, params = _build_data(self.apikey_regular, 'fork_repo',
+                                  repoid=self.REPO,
+                                  fork_name=fork_name,
+        )
+        response = api_call(self, params)
+        expected = 'no permission to create repositories'
         self._compare_error(id_, expected, given=response.body)
         fixture.destroy_repo(fork_name)
 
