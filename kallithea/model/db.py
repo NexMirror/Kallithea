@@ -1651,34 +1651,35 @@ class Permission(Base, BaseModel):
     PERMS = [
         ('hg.admin', _('Kallithea Administrator')),
 
-        ('repository.none', _('Repository no access')),
-        ('repository.read', _('Repository read access')),
-        ('repository.write', _('Repository write access')),
-        ('repository.admin', _('Repository admin access')),
+        ('repository.none', _('Default user has no access to new Repositories')),
+        ('repository.read', _('Default user has read access to new Repositories')),
+        ('repository.write', _('Default user has write access to new Repositories')),
+        ('repository.admin', _('Default user has admin access to new Repositories')),
 
-        ('group.none', _('Repository group no access')),
-        ('group.read', _('Repository group read access')),
-        ('group.write', _('Repository group write access')),
-        ('group.admin', _('Repository group admin access')),
+        ('group.none', _('Default user has no access to new Repository Groups')),
+        ('group.read', _('Default user has read access to new Repository Groups')),
+        ('group.write', _('Default user has write access to new Repository Groups')),
+        ('group.admin', _('Default user has admin access to new Repository Groups')),
 
-        ('usergroup.none', _('User group no access')),
-        ('usergroup.read', _('User group read access')),
-        ('usergroup.write', _('User group write access')),
-        ('usergroup.admin', _('User group admin access')),
+        ('usergroup.none', _('Default user has no access to new User Groups')),
+        ('usergroup.read', _('Default user has read access to new User Groups')),
+        ('usergroup.write', _('Default user has write access to new User Groups')),
+        ('usergroup.admin', _('Default user has admin access to new User Groups')),
 
-        ('hg.repogroup.create.false', _('Repository Group creation disabled')),
-        ('hg.repogroup.create.true', _('Repository Group creation enabled')),
+        ('hg.repogroup.create.false', _('Only admins can create Repository Groups')),
+        ('hg.repogroup.create.true', _('Non-admins can create Repository Groups')),
 
-        ('hg.usergroup.create.false', _('User Group creation disabled')),
-        ('hg.usergroup.create.true', _('User Group creation enabled')),
+        ('hg.usergroup.create.false', _('Only admins can create User Groups')),
+        ('hg.usergroup.create.true', _('Non-admins can create User Groups')),
 
-        ('hg.create.none', _('Repository creation disabled')),
-        ('hg.create.repository', _('Repository creation enabled')),
+        ('hg.create.none', _('Only admins can create top level Repositories')),
+        ('hg.create.repository', _('Non-admins can create top level Repositories')),
+
         ('hg.create.write_on_repogroup.true', _('Repository creation enabled with write permission to a repository group')),
         ('hg.create.write_on_repogroup.false', _('Repository creation disabled with write permission to a repository group')),
 
-        ('hg.fork.none', _('Repository forking disabled')),
-        ('hg.fork.repository', _('Repository forking enabled')),
+        ('hg.fork.none', _('Only admins can fork repositories')),
+        ('hg.fork.repository', _('Non-admins can can fork repositories')),
 
         ('hg.register.none', _('Registration disabled')),
         ('hg.register.manual_activate', _('User Registration with manual account activation')),
@@ -1686,7 +1687,6 @@ class Permission(Base, BaseModel):
 
         ('hg.extern_activate.manual', _('Manual activation of external account')),
         ('hg.extern_activate.auto', _('Automatic activation of external account')),
-
     ]
 
     #definition of system default permissions for DEFAULT user

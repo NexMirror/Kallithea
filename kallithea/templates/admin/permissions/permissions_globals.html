@@ -19,12 +19,12 @@ ${h.form(url('admin_permissions'), method='post')}
                 </div>
                 <div class="select">
                     ${h.select('default_repo_perm','',c.repo_perms_choices)}
-
                     ${h.checkbox('overwrite_default_repo','true')}
                     <label for="overwrite_default_repo">
                     <span class="tooltip"
                     title="${h.tooltip(_('All default permissions on each repository will be reset to chosen permission, note that all custom default permission on repositories will be lost'))}">
-                    ${_('Overwrite existing settings')}</span> </label>
+                    ${_('Apply to all existing repositories')}</span> </label>
+                    <span class="help-block">${_('Permissions for the Default user on new repositories.')}</span>
                 </div>
             </div>
             <div class="field">
@@ -37,8 +37,8 @@ ${h.form(url('admin_permissions'), method='post')}
                     <label for="overwrite_default_group">
                     <span class="tooltip"
                     title="${h.tooltip(_('All default permissions on each repository group will be reset to chosen permission, note that all custom default permission on repository groups will be lost'))}">
-                    ${_('Overwrite existing settings')}</span> </label>
-
+                    ${_('Apply to all existing repository groups')}</span> </label>
+                    <span class="help-block">${_('Permissions for the Default user on new repository groups.')}</span>
                 </div>
             </div>
             <div class="field">
@@ -51,16 +51,18 @@ ${h.form(url('admin_permissions'), method='post')}
                     <label for="overwrite_default_user_group">
                     <span class="tooltip"
                     title="${h.tooltip(_('All default permissions on each user group will be reset to chosen permission, note that all custom default permission on repository groups will be lost'))}">
-                    ${_('Overwrite existing settings')}</span> </label>
-
+                    ${_('Apply to all existing user groups')}</span></label>
+                    <span class="help-block">${_('Permissions for the Default user on new user groups.')}</span>
                 </div>
             </div>
              <div class="field">
                 <div class="label">
-                    <label for="default_repo_create">${_('Repository creation')}:</label>
+                    <label for="default_repo_create">${_('Top level repository creation')}:</label>
                 </div>
                 <div class="select">
                     ${h.select('default_repo_create','',c.repo_create_choices)}
+                    <span class="help-block">${_('Enable this to allow non-admins to create repositories at the top level.')}</span>
+                    <span class="help-block">${_('Note: This will also give all users API access to create repositories everywhere. That might change in future versions.')}</span>
                 </div>
              </div>
             <div class="field">
@@ -69,7 +71,7 @@ ${h.form(url('admin_permissions'), method='post')}
                 </div>
                 <div class="select">
                     ${h.select('create_on_write','',c.repo_create_on_write_choices)}
-                    <span class="help-block">${_('Write permission to a repository group allows creating repositories inside that group.')}</span>
+                    <span class="help-block">${_('With this, write permission to a repository group allows creating repositories inside that group. Without this, group write permissions mean nothing.')}</span>
                 </div>
             </div>
              <div class="field">
@@ -78,6 +80,7 @@ ${h.form(url('admin_permissions'), method='post')}
                 </div>
                 <div class="select">
                     ${h.select('default_user_group_create','',c.user_group_create_choices)}
+                    <span class="help-block">${_('Enable this to allow non-admins to create user groups.')}</span>
                 </div>
              </div>
              <div class="field">
@@ -86,6 +89,7 @@ ${h.form(url('admin_permissions'), method='post')}
                 </div>
                 <div class="select">
                     ${h.select('default_fork','',c.fork_choices)}
+                    <span class="help-block">${_('Enable this to allow non-admins to fork repositories.')}</span>
                 </div>
              </div>
              <div class="field">
