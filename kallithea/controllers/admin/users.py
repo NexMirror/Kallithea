@@ -324,7 +324,7 @@ class UsersController(BaseController):
         if request.POST.get('del_api_key_builtin'):
             user = User.get(c.user.user_id)
             if user:
-                user.api_key = generate_api_key(user.username)
+                user.api_key = generate_api_key()
                 Session().add(user)
                 Session().commit()
                 h.flash(_("Api key successfully reset"), category='success')

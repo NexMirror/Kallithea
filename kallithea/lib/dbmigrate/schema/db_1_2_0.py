@@ -336,7 +336,7 @@ class User(Base, BaseModel):
                     v = get_crypt_password(v)
                 setattr(new_user, k, v)
 
-            new_user.api_key = generate_api_key(form_data['username'])
+            new_user.api_key = generate_api_key()
             Session.add(new_user)
             Session.commit()
             return new_user

@@ -260,7 +260,7 @@ class TestLoginController(TestController):
         new.email = email
         new.name = name
         new.lastname = lastname
-        new.api_key = generate_api_key(username)
+        new.api_key = generate_api_key()
         Session().add(new)
         Session().commit()
 
