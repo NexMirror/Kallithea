@@ -26,7 +26,7 @@ Original author and date, and relevant copyright and licensing information is be
 """
 from __future__ import with_statement
 import time
-import random
+import os
 import logging
 import traceback
 import hashlib
@@ -85,14 +85,14 @@ class PasswordGenerator(object):
     ALPHABETS_ALPHANUM_BIG = ALPHABETS_BIG + ALPHABETS_NUM
     ALPHABETS_ALPHANUM_SMALL = ALPHABETS_SMALL + ALPHABETS_NUM
 
-    def __init__(self, passwd=''):
-        self.passwd = passwd
-
-    def gen_password(self, length, type_=None):
-        if type_ is None:
-            type_ = self.ALPHABETS_FULL
-        self.passwd = ''.join([random.choice(type_) for _ in xrange(length)])
-        return self.passwd
+    def gen_password(self, length, alphabet=ALPHABETS_FULL):
+        assert len(alphabet) <= 256, alphabet
+        l = []
+        while len(l) < length:
+            i = ord(os.urandom(1))
+            if i < len(alphabet):
+                l.append(alphabet[i])
+        return ''.join(l)
 
 
 class KallitheaCrypto(object):
