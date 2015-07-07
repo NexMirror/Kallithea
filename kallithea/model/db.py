@@ -542,6 +542,9 @@ class User(Base, BaseModel):
 
     @classmethod
     def get_by_api_key(cls, api_key, cache=False, fallback=True):
+        if len(api_key) != 40 or not api_key.isalnum():
+            return None
+
         q = cls.query().filter(cls.api_key == api_key)
 
         if cache:

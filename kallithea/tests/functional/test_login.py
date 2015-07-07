@@ -325,6 +325,8 @@ class TestLoginController(TestController):
         ('none', None, 302),
         ('empty_string', '', 302),
         ('fake_number', '123456', 302),
+        ('fake_not_alnum', 'a-z', 302),
+        ('fake_api_key', '0123456789abcdef0123456789ABCDEF01234567', 302),
         ('proper_api_key', None, 200)
     ])
     def test_access_whitelisted_page_via_api_key(self, test_name, api_key, code):
