@@ -156,6 +156,7 @@ class PullRequestModel(BaseModel):
         _other_ref_type, other_ref_name, _other_rev = pr.other_ref.split(':')
         email_kwargs = {
             'pr_title': pr.title,
+            'pr_title_short': h.shorter(pr.title, 50),
             'pr_user_created': user.full_name_and_username,
             'pr_repo_url': h.canonical_url('summary_home', repo_name=pr.other_repo.repo_name),
             'pr_url': pr_url,

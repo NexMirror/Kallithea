@@ -98,6 +98,7 @@ class ChangesetCommentsModel(BaseModel):
                 'cs_comment_url': comment_url,
                 'raw_id': revision,
                 'message': cs.message,
+                'message_short': h.shorter(cs.message, 50, firstline=True),
                 'cs_author': cs_author,
                 'repo_name': repo.repo_name,
                 'short_id': h.short_id(revision),
@@ -139,6 +140,7 @@ class ChangesetCommentsModel(BaseModel):
             #set some variables for email notification
             email_kwargs = {
                 'pr_title': pull_request.title,
+                'pr_title_short': h.shorter(pull_request.title, 50),
                 'pr_nice_id': pull_request.nice_id(),
                 'status_change': status_change,
                 'closing_pr': closing_pr,

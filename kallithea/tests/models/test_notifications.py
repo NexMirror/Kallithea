@@ -185,6 +185,7 @@ class TestNotifications(TestController):
             pr_kwargs = dict(
                 pr_nice_id='#7',
                 pr_title='The Title',
+                pr_title_short='The Title',
                 pr_url='http://pr.org/7',
                 pr_target_repo='http://mainline.com/repo',
                 pr_target_branch='trunk',
@@ -204,6 +205,7 @@ class TestNotifications(TestController):
                     cs_comment_url='http://comment.org',
                     is_mention=[False, True],
                     message='This changeset did something clever which is hard to explain',
+                    message_short='This changeset did something cl...',
                     status_change=[None, 'Approved'],
                     cs_target_repo='repo_target',
                     cs_url='http://changeset.com',
