@@ -96,7 +96,7 @@ class UserModel(BaseModel):
                 k = 'name'
             setattr(new_user, k, v)
 
-        new_user.api_key = generate_api_key(form_data['username'])
+        new_user.api_key = generate_api_key()
         self.sa.add(new_user)
 
         log_create_user(new_user.get_dict(), cur_user)
@@ -158,7 +158,7 @@ class UserModel(BaseModel):
             new_user.lastname = lastname
 
             if not edit:
-                new_user.api_key = generate_api_key(username)
+                new_user.api_key = generate_api_key()
 
             # set password only if creating an user or password is changed
             password_change = new_user.password and \

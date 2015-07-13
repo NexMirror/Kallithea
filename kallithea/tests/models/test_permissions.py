@@ -61,6 +61,8 @@ class TestPermissions(BaseTestCase):
 
         if hasattr(self, 'ug1'):
             UserGroupModel().delete(self.ug1, force=True)
+        if hasattr(self, 'ug2'):
+            UserGroupModel().delete(self.ug2, force=True)
 
         Session().commit()
 
@@ -433,6 +435,218 @@ class TestPermissions(BaseTestCase):
                               'hg.extern_activate.auto',
                               'repository.read', 'group.read',
                               'usergroup.read', 'hg.create.write_on_repogroup.true']))
+
+    def test_inactive_user_group_does_not_affect_global_permissions(self):
+        # Issue #138: Inactive User Groups affecting permissions
+        # Add user to inactive user group, set specific permissions on user
+        # group and disable inherit-from-default. User permissions should still
+        # inherit from default.
+        self.ug1 = fixture.create_user_group('G1')
+        self.ug1.inherit_default_permissions = False
+        user_group_model = UserGroupModel()
+        user_group_model.add_user_to_group(self.ug1, self.u1)
+        user_group_model.update(self.ug1, {'users_group_active': False})
+
+        # enable fork and create on user group
+        user_group_model.revoke_perm(self.ug1, perm='hg.create.none')
+        user_group_model.grant_perm(self.ug1, perm='hg.create.repository')
+        user_group_model.revoke_perm(self.ug1, perm='hg.fork.none')
+        user_group_model.grant_perm(self.ug1, perm='hg.fork.repository')
+
+        user_model = UserModel()
+        # disable fork and create on default user
+        usr = 'default'
+        user_model.revoke_perm(usr, 'hg.create.repository')
+        user_model.grant_perm(usr, 'hg.create.none')
+        user_model.revoke_perm(usr, 'hg.fork.repository')
+        user_model.grant_perm(usr, 'hg.fork.none')
+
+        Session().commit()
+        u1_auth = AuthUser(user_id=self.u1.user_id)
+
+        self.assertEqual(u1_auth.permissions['global'],
+                         set(['hg.create.none', 'hg.fork.none',
+                              'hg.register.manual_activate',
+                              'hg.extern_activate.auto',
+                              'repository.read', 'group.read',
+                              'usergroup.read',
+                              'hg.create.write_on_repogroup.true']))
+
+    def test_inactive_user_group_does_not_affect_global_permissions_inverse(self):
+        # Issue #138: Inactive User Groups affecting permissions
+        # Add user to inactive user group, set specific permissions on user
+        # group and disable inherit-from-default. User permissions should still
+        # inherit from default.
+        self.ug1 = fixture.create_user_group('G1')
+        self.ug1.inherit_default_permissions = False
+        user_group_model = UserGroupModel()
+        user_group_model.add_user_to_group(self.ug1, self.u1)
+        user_group_model.update(self.ug1, {'users_group_active': False})
+
+        # disable fork and create on user group
+        user_group_model.revoke_perm(self.ug1, perm='hg.create.repository')
+        user_group_model.grant_perm(self.ug1, perm='hg.create.none')
+        user_group_model.revoke_perm(self.ug1, perm='hg.fork.repository')
+        user_group_model.grant_perm(self.ug1, perm='hg.fork.none')
+
+        user_model = UserModel()
+        # enable fork and create on default user
+        usr = 'default'
+        user_model.revoke_perm(usr, 'hg.create.none')
+        user_model.grant_perm(usr, 'hg.create.repository')
+        user_model.revoke_perm(usr, 'hg.fork.none')
+        user_model.grant_perm(usr, 'hg.fork.repository')
+
+        Session().commit()
+        u1_auth = AuthUser(user_id=self.u1.user_id)
+
+        self.assertEqual(u1_auth.permissions['global'],
+                         set(['hg.create.repository', 'hg.fork.repository',
+                              'hg.register.manual_activate',
+                              'hg.extern_activate.auto',
+                              'repository.read', 'group.read',
+                              'usergroup.read',
+                              'hg.create.write_on_repogroup.true']))
+
+    def test_inactive_user_group_does_not_affect_repo_permissions(self):
+        self.ug1 = fixture.create_user_group('G1')
+        self.ug1.inherit_default_permissions = False
+        user_group_model = UserGroupModel()
+        user_group_model.add_user_to_group(self.ug1, self.u1)
+        user_group_model.update(self.ug1, {'users_group_active': False})
+
+        # note: make u2 repo owner rather than u1, because the owner always has
+        # admin permissions
+        self.test_repo = fixture.create_repo(name='myownrepo',
+                                             repo_type='hg',
+                                             cur_user=self.u2)
+
+        # enable admin access for user group on repo
+        RepoModel().grant_user_group_permission(self.test_repo,
+                                                group_name=self.ug1,
+                                                perm='repository.admin')
+        # enable only write access for default user on repo
+        RepoModel().grant_user_permission(self.test_repo,
+                                          user='default',
+                                          perm='repository.write')
+        Session().commit()
+        u1_auth = AuthUser(user_id=self.u1.user_id)
+        self.assertEqual(u1_auth.permissions['repositories']['myownrepo'],
+                         'repository.write')
+
+    def test_inactive_user_group_does_not_affect_repo_permissions_inverse(self):
+        self.ug1 = fixture.create_user_group('G1')
+        self.ug1.inherit_default_permissions = False
+        user_group_model = UserGroupModel()
+        user_group_model.add_user_to_group(self.ug1, self.u1)
+        user_group_model.update(self.ug1, {'users_group_active': False})
+
+        # note: make u2 repo owner rather than u1, because the owner always has
+        # admin permissions
+        self.test_repo = fixture.create_repo(name='myownrepo',
+                                             repo_type='hg',
+                                             cur_user=self.u2)
+
+        # enable only write access for user group on repo
+        RepoModel().grant_user_group_permission(self.test_repo,
+                                                group_name=self.ug1,
+                                                perm='repository.write')
+        # enable admin access for default user on repo
+        RepoModel().grant_user_permission(self.test_repo,
+                                          user='default',
+                                          perm='repository.admin')
+        Session().commit()
+        u1_auth = AuthUser(user_id=self.u1.user_id)
+        self.assertEqual(u1_auth.permissions['repositories']['myownrepo'],
+                         'repository.admin')
+
+    def test_inactive_user_group_does_not_affect_repo_group_permissions(self):
+        self.ug1 = fixture.create_user_group('G1')
+        self.ug1.inherit_default_permissions = False
+        user_group_model = UserGroupModel()
+        user_group_model.add_user_to_group(self.ug1, self.u1)
+        user_group_model.update(self.ug1, {'users_group_active': False})
+
+        self.g1 = fixture.create_repo_group('group1', skip_if_exists=True)
+
+        # enable admin access for user group on repo group
+        RepoGroupModel().grant_user_group_permission(self.g1,
+                                                     group_name=self.ug1,
+                                                     perm='group.admin')
+        # enable only write access for default user on repo group
+        RepoGroupModel().grant_user_permission(self.g1,
+                                               user='default',
+                                               perm='group.write')
+        Session().commit()
+        u1_auth = AuthUser(user_id=self.u1.user_id)
+        self.assertEqual(u1_auth.permissions['repositories_groups'],
+                         {u'group1': u'group.write'})
+
+    def test_inactive_user_group_does_not_affect_repo_group_permissions_inverse(self):
+        self.ug1 = fixture.create_user_group('G1')
+        self.ug1.inherit_default_permissions = False
+        user_group_model = UserGroupModel()
+        user_group_model.add_user_to_group(self.ug1, self.u1)
+        user_group_model.update(self.ug1, {'users_group_active': False})
+
+        self.g1 = fixture.create_repo_group('group1', skip_if_exists=True)
+
+        # enable only write access for user group on repo group
+        RepoGroupModel().grant_user_group_permission(self.g1,
+                                                     group_name=self.ug1,
+                                                     perm='group.write')
+        # enable admin access for default user on repo group
+        RepoGroupModel().grant_user_permission(self.g1,
+                                               user='default',
+                                               perm='group.admin')
+        Session().commit()
+        u1_auth = AuthUser(user_id=self.u1.user_id)
+        self.assertEqual(u1_auth.permissions['repositories_groups'],
+                         {u'group1': u'group.admin'})
+
+    def test_inactive_user_group_does_not_affect_user_group_permissions(self):
+        self.ug1 = fixture.create_user_group('G1')
+        self.ug1.inherit_default_permissions = False
+        user_group_model = UserGroupModel()
+        user_group_model.add_user_to_group(self.ug1, self.u1)
+        user_group_model.update(self.ug1, {'users_group_active': False})
+
+        self.ug2 = fixture.create_user_group('G2')
+
+        # enable admin access for user group on user group
+        UserGroupModel().grant_user_group_permission(self.ug2,
+                                                     user_group=self.ug1,
+                                                     perm='usergroup.admin')
+        # enable only write access for default user on user group
+        UserGroupModel().grant_user_permission(self.ug2,
+                                               user='default',
+                                               perm='usergroup.write')
+        Session().commit()
+        u1_auth = AuthUser(user_id=self.u1.user_id)
+        self.assertEqual(u1_auth.permissions['user_groups'][u'G1'], u'usergroup.read')
+        self.assertEqual(u1_auth.permissions['user_groups'][u'G2'], u'usergroup.write')
+
+    def test_inactive_user_group_does_not_affect_user_group_permissions_inverse(self):
+        self.ug1 = fixture.create_user_group('G1')
+        self.ug1.inherit_default_permissions = False
+        user_group_model = UserGroupModel()
+        user_group_model.add_user_to_group(self.ug1, self.u1)
+        user_group_model.update(self.ug1, {'users_group_active': False})
+
+        self.ug2 = fixture.create_user_group('G2')
+
+        # enable only write access for user group on user group
+        UserGroupModel().grant_user_group_permission(self.ug2,
+                                                     user_group=self.ug1,
+                                                     perm='usergroup.write')
+        # enable admin access for default user on user group
+        UserGroupModel().grant_user_permission(self.ug2,
+                                               user='default',
+                                               perm='usergroup.admin')
+        Session().commit()
+        u1_auth = AuthUser(user_id=self.u1.user_id)
+        self.assertEqual(u1_auth.permissions['user_groups'][u'G1'], u'usergroup.read')
+        self.assertEqual(u1_auth.permissions['user_groups'][u'G2'], u'usergroup.admin')
 
     def test_owner_permissions_doesnot_get_overwritten_by_group(self):
         #create repo as USER,

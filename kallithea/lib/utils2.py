@@ -32,8 +32,10 @@ import sys
 import time
 import uuid
 import datetime
-import webob
 import urllib
+import binascii
+
+import webob
 import urlobject
 
 from pylons.i18n.translation import _, ungettext
@@ -161,23 +163,11 @@ def detect_mode(line, default):
         return default
 
 
-def generate_api_key(username, salt=None):
+def generate_api_key():
     """
-    Generates unique API key for given username, if salt is not given
-    it'll be generated from some random string
-
-    :param username: username as string
-    :param salt: salt to hash generate KEY
-    :rtype: str
-    :returns: sha1 hash from username+salt
+    Generates a random (presumably unique) API key.
     """
-    from tempfile import _RandomNameSequence
-    import hashlib
-
-    if salt is None:
-        salt = _RandomNameSequence().next()
-
-    return hashlib.sha1(username + salt).hexdigest()
+    return binascii.hexlify(os.urandom(20))
 
 
 def safe_int(val, default=None):

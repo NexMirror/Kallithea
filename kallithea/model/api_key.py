@@ -50,7 +50,7 @@ class ApiKeyModel(BaseModel):
         user = self._get_user(user)
 
         new_api_key = UserApiKeys()
-        new_api_key.api_key = generate_api_key(user.username)
+        new_api_key.api_key = generate_api_key()
         new_api_key.user_id = user.user_id
         new_api_key.description = description
         new_api_key.expires = time.time() + (lifetime * 60) if lifetime != -1 else -1

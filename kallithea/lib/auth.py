@@ -26,7 +26,7 @@ Original author and date, and relevant copyright and licensing information is be
 """
 from __future__ import with_statement
 import time
-import random
+import os
 import logging
 import traceback
 import hashlib
@@ -85,14 +85,14 @@ class PasswordGenerator(object):
     ALPHABETS_ALPHANUM_BIG = ALPHABETS_BIG + ALPHABETS_NUM
     ALPHABETS_ALPHANUM_SMALL = ALPHABETS_SMALL + ALPHABETS_NUM
 
-    def __init__(self, passwd=''):
-        self.passwd = passwd
-
-    def gen_password(self, length, type_=None):
-        if type_ is None:
-            type_ = self.ALPHABETS_FULL
-        self.passwd = ''.join([random.choice(type_) for _ in xrange(length)])
-        return self.passwd
+    def gen_password(self, length, alphabet=ALPHABETS_FULL):
+        assert len(alphabet) <= 256, alphabet
+        l = []
+        while len(l) < length:
+            i = ord(os.urandom(1))
+            if i < len(alphabet):
+                l.append(alphabet[i])
+        return ''.join(l)
 
 
 class KallitheaCrypto(object):
@@ -142,6 +142,7 @@ def get_crypt_password(password):
 
 def check_password(password, hashed):
     return KallitheaCrypto.hash_check(password, hashed)
+
 
 class CookieStoreWrapper(object):
 
@@ -275,6 +276,9 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
         .join((UserGroupMember, UserGroupToPerm.users_group_id ==
                UserGroupMember.users_group_id))\
         .filter(UserGroupMember.user_id == uid)\
+        .join((UserGroup, UserGroupMember.users_group_id ==
+               UserGroup.users_group_id))\
+        .filter(UserGroup.users_group_active == True)\
         .order_by(UserGroupToPerm.users_group_id)\
         .all()
     # need to group here by groups since user can be in more than
@@ -325,6 +329,9 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
                Repository.repo_id))\
         .join((Permission, UserGroupRepoToPerm.permission_id ==
                Permission.permission_id))\
+        .join((UserGroup, UserGroupRepoToPerm.users_group_id ==
+               UserGroup.users_group_id))\
+        .filter(UserGroup.users_group_active == True)\
         .join((UserGroupMember, UserGroupRepoToPerm.users_group_id ==
                UserGroupMember.users_group_id))\
         .filter(UserGroupMember.user_id == uid)\
@@ -374,6 +381,9 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
      .join((RepoGroup, UserGroupRepoGroupToPerm.group_id == RepoGroup.group_id))\
      .join((Permission, UserGroupRepoGroupToPerm.permission_id
             == Permission.permission_id))\
+     .join((UserGroup, UserGroupRepoGroupToPerm.users_group_id ==
+            UserGroup.users_group_id))\
+     .filter(UserGroup.users_group_active == True)\
      .join((UserGroupMember, UserGroupRepoGroupToPerm.users_group_id
             == UserGroupMember.users_group_id))\
      .filter(UserGroupMember.user_id == uid)\
@@ -412,6 +422,9 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
      .join((UserGroupMember, UserGroupUserGroupToPerm.user_group_id
             == UserGroupMember.users_group_id))\
      .filter(UserGroupMember.user_id == uid)\
+     .join((UserGroup, UserGroupMember.users_group_id ==
+            UserGroup.users_group_id), aliased=True, from_joinpoint=True)\
+     .filter(UserGroup.users_group_active == True)\
      .all()
 
     multiple_counter = collections.defaultdict(int)
