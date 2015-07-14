@@ -28,6 +28,7 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+import datetime
 import logging
 import time
 import traceback
@@ -101,6 +102,37 @@ def _get_access_path(environ):
     if org_req:
         path = org_req.environ.get('PATH_INFO')
     return path
+
+
+def log_in_user(user, remember):
+    """
+    Log a `User` in and update session and cookies. If `remember` is True,
+    the session cookie is set to expire in a year; otherwise, it expires at
+    the end of the browser session.
+    """
+    user.update_lastlogin()
+    meta.Session().commit()
+
+    auth_user = AuthUser(user_id=user.user_id)
+    auth_user.set_authenticated()
+
+    # Start new session to prevent session fixation attacks.
+    session.invalidate()
+    cs = auth_user.get_cookie_store()
+    session['authuser'] = cs
+
+    # If they want to be remembered, update the cookie
+    if remember:
+        t = datetime.datetime.now() + datetime.timedelta(days=365)
+        session._set_cookie_expires(t)
+
+    session.save()
+
+    log.info('user %s is now authenticated and stored in '
+             'session, session attrs %s', user.username, cs)
+
+    # dumps session attrs back to cookie
+    session._update_cookie_out()
 
 
 class BasicAuth(paste.auth.basic.AuthBasicAuthenticator):

@@ -28,7 +28,6 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 import formencode
-import datetime
 import urlparse
 
 from formencode import htmlfill
@@ -40,7 +39,7 @@ from pylons import request, session, tmpl_context as c, url
 import kallithea.lib.helpers as h
 from kallithea.lib.auth import AuthUser, HasPermissionAnyDecorator
 from kallithea.lib.auth_modules import importplugin
-from kallithea.lib.base import BaseController, render
+from kallithea.lib.base import BaseController, log_in_user, render
 from kallithea.lib.exceptions import UserCreationError
 from kallithea.lib.utils2 import safe_str
 from kallithea.model.db import User, Setting
@@ -56,29 +55,6 @@ class LoginController(BaseController):
 
     def __before__(self):
         super(LoginController, self).__before__()
-
-    def _store_user_in_session(self, username, remember=False):
-        user = User.get_by_username(username, case_insensitive=True)
-        auth_user = AuthUser(user.user_id)
-        auth_user.set_authenticated()
-        cs = auth_user.get_cookie_store()
-        session['authuser'] = cs
-        user.update_lastlogin()
-        Session().commit()
-
-        # If they want to be remembered, update the cookie
-        if remember:
-            _year = (datetime.datetime.now() +
-                     datetime.timedelta(seconds=60 * 60 * 24 * 365))
-            session._set_cookie_expires(_year)
-
-        session.save()
-
-        log.info('user %s is now authenticated and stored in '
-                 'session, session attrs %s' % (username, cs))
-
-        # dumps session attrs back to cookie
-        session._update_cookie_out()
 
     def _validate_came_from(self, came_from):
         """Return True if came_from is valid and can and should be used"""
@@ -119,14 +95,10 @@ class LoginController(BaseController):
             # import Login Form validator class
             login_form = LoginForm()
             try:
-                session.invalidate()
                 c.form_result = login_form.to_python(dict(request.POST))
                 # form checks for username/password, now we're authenticated
-                self._store_user_in_session(
-                                        username=c.form_result['username'],
-                                        remember=c.form_result['remember'])
-                return self._redirect_to_origin(c.came_from)
-
+                username = c.form_result['username']
+                user = User.get_by_username(username, case_insensitive=True)
             except formencode.Invalid, errors:
                 defaults = errors.value
                 # remove password from filling in form again
@@ -144,6 +116,9 @@ class LoginController(BaseController):
                 # with user creation, explanation should be provided in
                 # Exception itself
                 h.flash(e, 'error')
+            else:
+                log_in_user(user, c.form_result['remember'])
+                return self._redirect_to_origin(c.came_from)
 
         # check if we use container plugin, and try to login using it.
         auth_plugins = Setting.get_auth_plugins()
@@ -158,7 +133,9 @@ class LoginController(BaseController):
                 return render('/login.html')
 
             if auth_info:
-                self._store_user_in_session(auth_info.get('username'))
+                username = auth_info.get('username')
+                user = User.get_by_username(username, case_insensitive=True)
+                log_in_user(user, remember=False)
                 return self._redirect_to_origin(c.came_from)
 
         return render('/login.html')
