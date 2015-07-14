@@ -60,9 +60,7 @@ class AuthSettingsController(BaseController):
         ]
         c.enabled_plugins = Setting.get_auth_plugins()
 
-    def index(self, defaults=None, errors=None, prefix_error=False):
-        self.__load_defaults()
-
+    def __render(self, defaults, errors):
         c.defaults = {}
         c.plugin_settings = {}
         c.plugin_shortnames = {}
@@ -91,9 +89,13 @@ class AuthSettingsController(BaseController):
             render('admin/auth/auth_settings.html'),
             defaults=c.defaults,
             errors=errors,
-            prefix_error=prefix_error,
+            prefix_error=False,
             encoding="UTF-8",
             force_defaults=False)
+
+    def index(self):
+        self.__load_defaults()
+        return self.__render(defaults=None, errors=None)
 
     def auth_settings(self):
         """POST create and store auth settings"""
@@ -116,10 +118,10 @@ class AuthSettingsController(BaseController):
         except formencode.Invalid, errors:
             log.error(traceback.format_exc())
             e = errors.error_dict or {}
-            return self.index(
+            return self.__render(
                 defaults=errors.value,
                 errors=e,
-                prefix_error=False)
+            )
         except Exception:
             log.error(traceback.format_exc())
             h.flash(_('error occurred during update of auth settings'),
