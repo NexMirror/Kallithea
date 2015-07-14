@@ -104,7 +104,7 @@ def _get_access_path(environ):
     return path
 
 
-def log_in_user(user, remember):
+def log_in_user(user, remember, is_external_auth):
     """
     Log a `User` in and update session and cookies. If `remember` is True,
     the session cookie is set to expire in a year; otherwise, it expires at
@@ -115,7 +115,8 @@ def log_in_user(user, remember):
     user.update_lastlogin()
     meta.Session().commit()
 
-    auth_user = AuthUser(user_id=user.user_id)
+    auth_user = AuthUser(user_id=user.user_id,
+                         is_external_auth=is_external_auth)
     auth_user.set_authenticated()
 
     # Start new session to prevent session fixation attacks.
@@ -384,7 +385,7 @@ class BaseController(WSGIController):
         # Authenticate by API key
         if api_key:
             # when using API_KEY we are sure user exists.
-            return AuthUser(api_key=api_key)
+            return AuthUser(api_key=api_key, is_external_auth=True)
 
         # Authenticate by session cookie
         cookie = session.get('authuser')
@@ -415,7 +416,8 @@ class BaseController(WSGIController):
                 if auth_info:
                     username = auth_info['username']
                     user = User.get_by_username(username, case_insensitive=True)
-                    return log_in_user(user, remember=False)
+                    return log_in_user(user, remember=False,
+                                       is_external_auth=True)
 
         # User is anonymous
         return AuthUser()

@@ -175,3 +175,15 @@ class TestAuthSettingsController(TestController):
             extra_environ={'REMOTE_USER': r'example\jane'},
             resulting_username=r'jane',
         )
+
+    def test_container_auth_no_logout(self):
+        self._container_auth_setup(
+            auth_container_header='REMOTE_USER',
+            auth_container_fallback_header='',
+            auth_container_clean_username='True',
+        )
+        response = self.app.get(
+            url=url(controller='admin/my_account', action='my_account'),
+            extra_environ={'REMOTE_USER': 'john'},
+        )
+        self.assertNotIn('Log Out', response.normal_body)

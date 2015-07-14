@@ -476,7 +476,8 @@ class AuthUser(object):
     so, set `is_authenticated` to True.
     """
 
-    def __init__(self, user_id=None, api_key=None, username=None):
+    def __init__(self, user_id=None, api_key=None, username=None,
+            is_external_auth=False):
 
         self.user_id = user_id
         self._api_key = api_key
@@ -489,6 +490,7 @@ class AuthUser(object):
         self.is_authenticated = False
         self.admin = False
         self.inherit_default_permissions = False
+        self.is_external_auth = is_external_auth
 
         self.propagate_data()
         self._instance = None
@@ -633,6 +635,7 @@ class AuthUser(object):
             'user_id': self.user_id,
             'username': self.username,
             'is_authenticated': self.is_authenticated,
+            'is_external_auth': self.is_external_auth,
         }
 
     @staticmethod
@@ -644,6 +647,7 @@ class AuthUser(object):
         au = AuthUser(
             user_id=cookie.get('user_id'),
             username=cookie.get('username'),
+            is_external_auth=cookie.get('is_external_auth', False),
         )
         if not au.is_authenticated and au.user_id is not None:
             # user is not authenticated and not empty

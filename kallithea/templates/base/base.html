@@ -348,7 +348,10 @@
             <ol class="links">
               <li><a href="${h.url('notifications')}">${_('Notifications')}: ${c.unread_notifications}</a></li>
               <li>${h.link_to(_(u'My Account'),h.url('my_account'))}</li>
-              <li class="logout">${h.link_to(_(u'Log Out'),h.url('logout_home'))}</li>
+              %if not c.authuser.is_external_auth:
+                ## Cannot log out if using external (container) authentication.
+                <li class="logout">${h.link_to(_(u'Log Out'), h.url('logout_home'))}</li>
+              %endif
             </ol>
             </div>
           %endif

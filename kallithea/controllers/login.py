@@ -116,7 +116,8 @@ class LoginController(BaseController):
                 # Exception itself
                 h.flash(e, 'error')
             else:
-                log_in_user(user, c.form_result['remember'])
+                log_in_user(user, c.form_result['remember'],
+                    is_external_auth=False)
                 return self._redirect_to_origin(c.came_from)
 
         return render('/login.html')
