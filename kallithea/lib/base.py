@@ -352,9 +352,9 @@ class BaseController(WSGIController):
             return AuthUser(api_key=api_key)
 
         # Authenticate by session cookie
-        if True:
-            cookie_store = CookieStoreWrapper(session_authuser)
-            user_id = cookie_store.get('user_id')
+        cookie_store = CookieStoreWrapper(session_authuser)
+        user_id = cookie_store.get('user_id')
+        if user_id is not None:
             try:
                 auth_user = AuthUser(user_id=user_id)
             except UserCreationError as e:
@@ -364,15 +364,17 @@ class BaseController(WSGIController):
                 # exception object.
                 from kallithea.lib import helpers as h
                 h.flash(e, 'error')
-                auth_user = AuthUser()
+            else:
+                authenticated = cookie_store.get('is_authenticated')
 
-            authenticated = cookie_store.get('is_authenticated')
+                if not auth_user.is_authenticated and auth_user.user_id is not None:
+                    # user is not authenticated and not empty
+                    auth_user.set_authenticated(authenticated)
 
-        if not auth_user.is_authenticated and auth_user.user_id is not None:
-            # user is not authenticated and not empty
-            auth_user.set_authenticated(authenticated)
+                return auth_user
 
-        return auth_user
+        # User is anonymous
+        return AuthUser()
 
     def __call__(self, environ, start_response):
         """Invoke the Controller"""
