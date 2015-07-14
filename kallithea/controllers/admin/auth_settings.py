@@ -62,13 +62,14 @@ class AuthSettingsController(BaseController):
 
     def index(self, defaults=None, errors=None, prefix_error=False):
         self.__load_defaults()
-        _defaults = {}
+
         # Import all auth settings into the template context.
         for k, v in Setting.get_auth_settings().iteritems():
             setattr(c, k, v)
+
+        c.defaults = {}
         c.plugin_settings = {}
         c.plugin_shortnames = {}
-        _defaults["auth_plugins"] = c.auth_plugins
 
         for module in c.auth_plugins:
             plugin = auth_modules.loadplugin(module)
@@ -78,22 +79,21 @@ class AuthSettingsController(BaseController):
             for v in c.plugin_settings[module]:
                 fullname = ("auth_" + plugin_name + "_" + v["name"])
                 if "default" in v:
-                    _defaults[fullname] = v["default"]
+                    c.defaults[fullname] = v["default"]
                 # Current values will be the default on the form, if there are any
                 setting = Setting.get_by_name(fullname)
                 if setting:
-                    _defaults[fullname] = setting.app_settings_value
+                    c.defaults[fullname] = setting.app_settings_value
         # we want to show , separated list of enabled plugins
-        _defaults['auth_plugins'] = ','.join(_defaults['auth_plugins'])
-        if defaults:
-            _defaults.update(defaults)
+        c.defaults['auth_plugins'] = ','.join(c.auth_plugins)
 
-        c.defaults = _defaults
+        if defaults:
+            c.defaults.update(defaults)
 
         log.debug(formatted_json(defaults))
         return formencode.htmlfill.render(
             render('admin/auth/auth_settings.html'),
-            defaults=_defaults,
+            defaults=c.defaults,
             errors=errors,
             prefix_error=prefix_error,
             encoding="UTF-8",
