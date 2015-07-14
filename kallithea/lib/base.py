@@ -109,6 +109,8 @@ def log_in_user(user, remember):
     Log a `User` in and update session and cookies. If `remember` is True,
     the session cookie is set to expire in a year; otherwise, it expires at
     the end of the browser session.
+
+    Returns populated `AuthUser` object.
     """
     user.update_lastlogin()
     meta.Session().commit()
@@ -133,6 +135,8 @@ def log_in_user(user, remember):
 
     # dumps session attrs back to cookie
     session._update_cookie_out()
+
+    return auth_user
 
 
 class BasicAuth(paste.auth.basic.AuthBasicAuthenticator):
@@ -395,7 +399,7 @@ class BaseController(WSGIController):
                 # user creation. Explanation should be provided in the
                 # exception object.
                 from kallithea.lib import helpers as h
-                h.flash(e, 'error')
+                h.flash(e, 'error', logf=log.error)
             else:
                 authenticated = cookie_store.get('is_authenticated')
 
@@ -404,6 +408,22 @@ class BaseController(WSGIController):
                     auth_user.set_authenticated(authenticated)
 
                 return auth_user
+
+        # Authenticate by auth_container plugin (if enabled)
+        if any(
+            auth_modules.importplugin(name).is_container_auth
+            for name in Setting.get_auth_plugins()
+        ):
+            try:
+                auth_info = auth_modules.authenticate('', '', request.environ)
+            except UserCreationError as e:
+                from kallithea.lib import helpers as h
+                h.flash(e, 'error', logf=log.error)
+            else:
+                if auth_info:
+                    username = auth_info['username']
+                    user = User.get_by_username(username, case_insensitive=True)
+                    return log_in_user(user, remember=False)
 
         # User is anonymous
         return AuthUser()

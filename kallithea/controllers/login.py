@@ -38,7 +38,6 @@ from pylons import request, session, tmpl_context as c, url
 
 import kallithea.lib.helpers as h
 from kallithea.lib.auth import AuthUser, HasPermissionAnyDecorator
-from kallithea.lib.auth_modules import importplugin
 from kallithea.lib.base import BaseController, log_in_user, render
 from kallithea.lib.exceptions import UserCreationError
 from kallithea.lib.utils2 import safe_str
@@ -118,24 +117,6 @@ class LoginController(BaseController):
                 h.flash(e, 'error')
             else:
                 log_in_user(user, c.form_result['remember'])
-                return self._redirect_to_origin(c.came_from)
-
-        # check if we use container plugin, and try to login using it.
-        auth_plugins = Setting.get_auth_plugins()
-        if any((importplugin(name).is_container_auth for name in auth_plugins)):
-            from kallithea.lib import auth_modules
-            try:
-                auth_info = auth_modules.authenticate('', '', request.environ)
-            except UserCreationError, e:
-                log.error(e)
-                h.flash(e, 'error')
-                # render login, with flash message about limit
-                return render('/login.html')
-
-            if auth_info:
-                username = auth_info.get('username')
-                user = User.get_by_username(username, case_insensitive=True)
-                log_in_user(user, remember=False)
                 return self._redirect_to_origin(c.came_from)
 
         return render('/login.html')

@@ -111,3 +111,67 @@ class TestAuthSettingsController(TestController):
 
     def test_ldap_login_incorrect(self):
         pass
+
+    def _container_auth_setup(self, **settings):
+        self.log_user()
+
+        params = self._enable_plugins('kallithea.lib.auth_modules.auth_internal,kallithea.lib.auth_modules.auth_container')
+        params.update(settings)
+
+        test_url = url(controller='admin/auth_settings',
+                       action='auth_settings')
+
+        response = self.app.post(url=test_url, params=params)
+        response = response.follow()
+        response.click('Log Out') # end admin login session
+
+    def _container_auth_verify_login(self, resulting_username, **get_kwargs):
+        response = self.app.get(
+            url=url(controller='admin/my_account', action='my_account'),
+            **get_kwargs
+        )
+        response.mustcontain('My Account %s' % resulting_username)
+
+    def test_container_auth_login_header(self):
+        self._container_auth_setup(
+            auth_container_header='THE_USER_NAME',
+            auth_container_fallback_header='',
+            auth_container_clean_username='False',
+        )
+        self._container_auth_verify_login(
+            extra_environ={'THE_USER_NAME': 'john@example.org'},
+            resulting_username='john@example.org',
+        )
+
+    def test_container_auth_login_fallback_header(self):
+        self._container_auth_setup(
+            auth_container_header='THE_USER_NAME',
+            auth_container_fallback_header='HTTP_X_YZZY',
+            auth_container_clean_username='False',
+        )
+        self._container_auth_verify_login(
+            headers={'X-Yzzy': r'foo\bar'},
+            resulting_username=r'foo\bar',
+        )
+
+    def test_container_auth_clean_username_at(self):
+        self._container_auth_setup(
+            auth_container_header='REMOTE_USER',
+            auth_container_fallback_header='',
+            auth_container_clean_username='True',
+        )
+        self._container_auth_verify_login(
+            extra_environ={'REMOTE_USER': 'john@example.org'},
+            resulting_username='john',
+        )
+
+    def test_container_auth_clean_username_backslash(self):
+        self._container_auth_setup(
+            auth_container_header='REMOTE_USER',
+            auth_container_fallback_header='',
+            auth_container_clean_username='True',
+        )
+        self._container_auth_verify_login(
+            extra_environ={'REMOTE_USER': r'example\jane'},
+            resulting_username=r'jane',
+        )
