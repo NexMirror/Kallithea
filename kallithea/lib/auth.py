@@ -144,21 +144,6 @@ def check_password(password, hashed):
     return KallitheaCrypto.hash_check(password, hashed)
 
 
-class CookieStoreWrapper(object):
-
-    def __init__(self, cookie_store):
-        self.cookie_store = cookie_store
-
-    def __repr__(self):
-        return 'CookieStore<%s>' % (self.cookie_store)
-
-    def get(self, key, other=None):
-        if isinstance(self.cookie_store, dict):
-            return self.cookie_store.get(key, other)
-        elif isinstance(self.cookie_store, AuthUser):
-            return self.cookie_store.__dict__.get(key, other)
-
-
 
 def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
                        explicit, algo):
@@ -642,23 +627,28 @@ class AuthUser(object):
         if self.user_id != self.anonymous_user.user_id:
             self.is_authenticated = authenticated
 
-    def get_cookie_store(self):
-        return {'username': self.username,
-                'user_id': self.user_id,
-                'is_authenticated': self.is_authenticated}
+    def to_cookie(self):
+        """ Serializes this login session to a cookie `dict`. """
+        return {
+            'user_id': self.user_id,
+            'username': self.username,
+            'is_authenticated': self.is_authenticated,
+        }
 
-    @classmethod
-    def from_cookie_store(cls, cookie_store):
+    @staticmethod
+    def from_cookie(cookie):
         """
-        Creates AuthUser from a cookie store
+        Deserializes an `AuthUser` from a cookie `dict`.
+        """
 
-        :param cls:
-        :param cookie_store:
-        """
-        user_id = cookie_store.get('user_id')
-        username = cookie_store.get('username')
-        api_key = cookie_store.get('api_key')
-        return AuthUser(user_id, api_key, username)
+        au = AuthUser(
+            user_id=cookie.get('user_id'),
+            username=cookie.get('username'),
+        )
+        if not au.is_authenticated and au.user_id is not None:
+            # user is not authenticated and not empty
+            au.set_authenticated(cookie.get('is_authenticated'))
+        return au
 
     @classmethod
     def get_allowed_ips(cls, user_id, cache=False, inherit_from_default=False):

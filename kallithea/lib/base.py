@@ -49,7 +49,7 @@ from kallithea import __version__, BACKENDS
 from kallithea.lib.utils2 import str2bool, safe_unicode, AttributeDict,\
     safe_str, safe_int
 from kallithea.lib import auth_modules
-from kallithea.lib.auth import AuthUser, HasPermissionAnyMiddleware, CookieStoreWrapper
+from kallithea.lib.auth import AuthUser, HasPermissionAnyMiddleware
 from kallithea.lib.utils import get_repo_slug
 from kallithea.lib.exceptions import UserCreationError
 from kallithea.lib.vcs.exceptions import RepositoryError, EmptyRepositoryError, ChangesetDoesNotExistError
@@ -120,8 +120,7 @@ def log_in_user(user, remember):
 
     # Start new session to prevent session fixation attacks.
     session.invalidate()
-    cs = auth_user.get_cookie_store()
-    session['authuser'] = cs
+    session['authuser'] = cookie = auth_user.to_cookie()
 
     # If they want to be remembered, update the cookie
     if remember:
@@ -131,7 +130,7 @@ def log_in_user(user, remember):
     session.save()
 
     log.info('user %s is now authenticated and stored in '
-             'session, session attrs %s', user.username, cs)
+             'session, session attrs %s', user.username, cookie)
 
     # dumps session attrs back to cookie
     session._update_cookie_out()
@@ -388,11 +387,12 @@ class BaseController(WSGIController):
             return AuthUser(api_key=api_key)
 
         # Authenticate by session cookie
-        cookie_store = CookieStoreWrapper(session_authuser)
-        user_id = cookie_store.get('user_id')
-        if user_id is not None:
+        cookie = session.get('authuser')
+        # In ancient login sessions, 'authuser' may not be a dict.
+        # In that case, the user will have to log in again.
+        if isinstance(cookie, dict):
             try:
-                auth_user = AuthUser(user_id=user_id)
+                return AuthUser.from_cookie(cookie)
             except UserCreationError as e:
                 # container auth or other auth functions that create users on
                 # the fly can throw UserCreationError to signal issues with
@@ -400,14 +400,6 @@ class BaseController(WSGIController):
                 # exception object.
                 from kallithea.lib import helpers as h
                 h.flash(e, 'error', logf=log.error)
-            else:
-                authenticated = cookie_store.get('is_authenticated')
-
-                if not auth_user.is_authenticated and auth_user.user_id is not None:
-                    # user is not authenticated and not empty
-                    auth_user.set_authenticated(authenticated)
-
-                return auth_user
 
         # Authenticate by auth_container plugin (if enabled)
         if any(
