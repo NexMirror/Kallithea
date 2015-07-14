@@ -474,11 +474,21 @@ def allowed_api_access(controller_name, whitelist=None, api_key=None):
 
 class AuthUser(object):
     """
-    A simple object that handles all attributes of user in Kallithea
+    Represents a Kallithea user, including various authentication and
+    authorization information. Typically used to store the current user,
+    but is also used as a generic user information data structure in
+    parts of the code, e.g. user management.
 
-    It does lookup based on API key,given user, or user present in session
-    Then it fills all required information for such user. It also checks if
-    anonymous access is enabled and if so, it returns default user as logged in
+    Constructed from user ID, username, API key or cookie dict, it looks
+    up the matching database `User` and copies all attributes to itself,
+    adding various non-persistent data. If lookup fails but anonymous
+    access to Kallithea is enabled, the default user is loaded instead.
+
+    `AuthUser` does not by itself authenticate users and the constructor
+    sets the `is_authenticated` field to False, except when falling back
+    to the default anonymous user (if enabled). It's up to other parts
+    of the code to check e.g. if a supplied password is correct, and if
+    so, set `is_authenticated` to True.
     """
 
     def __init__(self, user_id=None, api_key=None, username=None):
