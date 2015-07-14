@@ -182,7 +182,7 @@ class BaseVCSController(object):
         name
 
         :param action: push or pull action
-        :param user: user instance
+        :param user: `User` instance
         :param repo_name: repository name
         """
         # check IP

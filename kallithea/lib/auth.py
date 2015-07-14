@@ -500,7 +500,7 @@ class AuthUser(object):
 
     @LazyProperty
     def permissions(self):
-        return self.get_perms(user=self, cache=False)
+        return self.__get_perms(user=self, cache=False)
 
     @property
     def api_keys(self):
@@ -544,13 +544,13 @@ class AuthUser(object):
 
         log.debug('Auth User is now %s' % self)
 
-    def get_perms(self, user, explicit=True, algo='higherwin', cache=False):
+    def __get_perms(self, user, explicit=True, algo='higherwin', cache=False):
         """
         Fills user permission attribute with permissions taken from database
         works for permissions given for repositories, and for permissions that
         are granted to groups
 
-        :param user: instance of User object from database
+        :param user: `AuthUser` instance
         :param explicit: In case there are permissions both for user and a group
             that user is part of, explicit flag will define if user will
             explicitly override permissions from group, if it's False it will
