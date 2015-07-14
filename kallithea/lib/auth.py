@@ -608,19 +608,14 @@ class AuthUser(object):
         return [x[0] for x in self.permissions['user_groups'].iteritems()
                 if x[1] == 'usergroup.admin']
 
-    def is_ip_allowed(self, ip_addr):
+    @staticmethod
+    def check_ip_allowed(user, ip_addr):
         """
-        Determine if `ip_addr` is on the list of allowed IP addresses
-        for this user.
+        Check if the given IP address (a `str`) is allowed for the given
+        user (an `AuthUser` or `db.User`).
         """
-        inherit = self.inherit_default_permissions
-        return AuthUser.check_ip_allowed(self.user_id, ip_addr,
-                                         inherit_from_default=inherit)
-
-    @classmethod
-    def check_ip_allowed(cls, user_id, ip_addr, inherit_from_default):
-        allowed_ips = AuthUser.get_allowed_ips(user_id, cache=True,
-                        inherit_from_default=inherit_from_default)
+        allowed_ips = AuthUser.get_allowed_ips(user.user_id, cache=True,
+            inherit_from_default=user.inherit_default_permissions)
         if check_ip_access(source_ip=ip_addr, allowed_ips=allowed_ips):
             log.debug('IP:%s is in range of %s' % (ip_addr, allowed_ips))
             return True
@@ -742,8 +737,7 @@ class LoginRequired(object):
         loc = "%s:%s" % (controller.__class__.__name__, func.__name__)
         log.debug('Checking access for user %s @ %s' % (user, loc))
 
-        # check if our IP is allowed
-        if not user.is_ip_allowed(controller.ip_addr):
+        if not AuthUser.check_ip_allowed(user, controller.ip_addr):
             return redirect_to_login(_('IP %s not allowed') % controller.ip_addr)
 
         # check if we used an API key and it's a valid one

@@ -186,9 +186,7 @@ class BaseVCSController(object):
         :param repo_name: repository name
         """
         # check IP
-        inherit = user.inherit_default_permissions
-        ip_allowed = AuthUser.check_ip_allowed(user.user_id, ip_addr,
-                                               inherit_from_default=inherit)
+        ip_allowed = AuthUser.check_ip_allowed(user, ip_addr)
         if ip_allowed:
             log.info('Access for IP:%s allowed' % (ip_addr,))
         else:
