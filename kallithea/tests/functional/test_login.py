@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement
+import re
+
 import mock
 from kallithea.tests import *
 from kallithea.tests.fixture import Fixture
@@ -56,6 +58,28 @@ class TestLoginController(TestController):
 
         self.assertEqual(response.status, '200 OK')
         response.mustcontain('Users Administration')
+
+    def test_login_do_not_remember(self):
+        response = self.app.post(url(controller='login', action='index'),
+                                 {'username': TEST_USER_REGULAR_LOGIN,
+                                  'password': TEST_USER_REGULAR_PASS,
+                                  'remember': False})
+
+        self.assertIn('Set-Cookie', response.headers)
+        for cookie in response.headers.getall('Set-Cookie'):
+            self.assertFalse(re.search(r';\s+(Max-Age|Expires)=', cookie, re.IGNORECASE),
+                'Cookie %r has expiration date, but should be a session cookie' % cookie)
+
+    def test_login_remember(self):
+        response = self.app.post(url(controller='login', action='index'),
+                                 {'username': TEST_USER_REGULAR_LOGIN,
+                                  'password': TEST_USER_REGULAR_PASS,
+                                  'remember': True})
+
+        self.assertIn('Set-Cookie', response.headers)
+        for cookie in response.headers.getall('Set-Cookie'):
+            self.assertTrue(re.search(r';\s+(Max-Age|Expires)=', cookie, re.IGNORECASE),
+                'Cookie %r should have expiration date, but is a session cookie' % cookie)
 
     def test_logout(self):
         response = self.app.post(url(controller='login', action='index'),
