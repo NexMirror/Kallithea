@@ -64,10 +64,7 @@ class AuthSettingsController(BaseController):
     def index(self, defaults=None, errors=None, prefix_error=False):
         self.__load_defaults()
         _defaults = {}
-        # default plugins loaded
-        formglobals = {
-            "auth_plugins": ["kallithea.lib.auth_modules.auth_internal"]
-        }
+        formglobals = {}
         formglobals.update(Setting.get_auth_settings())
         formglobals["plugin_settings"] = {}
         formglobals["auth_plugins_shortnames"] = {}
