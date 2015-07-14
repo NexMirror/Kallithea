@@ -100,8 +100,24 @@ class AuthSettingsController(BaseController):
     def auth_settings(self):
         """POST create and store auth settings"""
         self.__load_defaults()
+        log.debug("POST Result: %s", formatted_json(dict(request.POST)))
+
+        # First, parse only the plugin list (not the plugin settings).
+        _auth_plugins_validator = AuthSettingsForm([]).fields['auth_plugins']
+        try:
+            new_enabled_plugins = _auth_plugins_validator.to_python(request.POST.get('auth_plugins'))
+        except formencode.Invalid:
+            pass
+        else:
+            # Hide plugins that the user has asked to be disabled, but
+            # do not show plugins that the user has asked to be enabled
+            # (yet), since that'll cause validation errors and/or wrong
+            # settings being applied (e.g. checkboxes being cleared),
+            # since the plugin settings will not be in the POST data.
+            c.enabled_plugins = [ p for p in c.enabled_plugins if p in new_enabled_plugins ]
+
+        # Next, parse everything including plugin settings.
         _form = AuthSettingsForm(c.enabled_plugins)()
-        log.debug("POST Result: %s" % formatted_json(dict(request.POST)))
 
         try:
             form_result = _form.to_python(dict(request.POST))
