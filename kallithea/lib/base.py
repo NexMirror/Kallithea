@@ -346,11 +346,13 @@ class BaseController(WSGIController):
         API key (if any), and the authuser from the session.
         """
 
+        # Authenticate by API key
         if api_key:
             # when using API_KEY we are sure user exists.
-            auth_user = AuthUser(api_key=api_key)
-            authenticated = False
-        else:
+            return AuthUser(api_key=api_key)
+
+        # Authenticate by session cookie
+        if True:
             cookie_store = CookieStoreWrapper(session_authuser)
             user_id = cookie_store.get('user_id')
             try:
