@@ -23,7 +23,6 @@ Original author and date, and relevant copyright and licensing information is be
 :author: akesterson
 """
 
-import pprint
 import logging
 import formencode.htmlfill
 import traceback
@@ -64,18 +63,19 @@ class AuthSettingsController(BaseController):
     def index(self, defaults=None, errors=None, prefix_error=False):
         self.__load_defaults()
         _defaults = {}
-        formglobals = {}
-        formglobals.update(Setting.get_auth_settings())
-        formglobals["plugin_settings"] = {}
-        formglobals["plugin_shortnames"] = {}
-        _defaults["auth_plugins"] = formglobals["auth_plugins"]
+        # Import all auth settings into the template context.
+        for k, v in Setting.get_auth_settings().iteritems():
+            setattr(c, k, v)
+        c.plugin_settings = {}
+        c.plugin_shortnames = {}
+        _defaults["auth_plugins"] = c.auth_plugins
 
-        for module in formglobals["auth_plugins"]:
+        for module in c.auth_plugins:
             plugin = auth_modules.loadplugin(module)
             plugin_name = plugin.name
-            formglobals["plugin_shortnames"][module] = plugin_name
-            formglobals["plugin_settings"][module] = plugin.plugin_settings()
-            for v in formglobals["plugin_settings"][module]:
+            c.plugin_shortnames[module] = plugin_name
+            c.plugin_settings[module] = plugin.plugin_settings()
+            for v in c.plugin_settings[module]:
                 fullname = ("auth_" + plugin_name + "_" + v["name"])
                 if "default" in v:
                     _defaults[fullname] = v["default"]
@@ -88,12 +88,8 @@ class AuthSettingsController(BaseController):
         if defaults:
             _defaults.update(defaults)
 
-        formglobals["defaults"] = _defaults
-        # set template context variables
-        for k, v in formglobals.iteritems():
-            setattr(c, k, v)
+        c.defaults = _defaults
 
-        log.debug(pprint.pformat(formglobals, indent=4))
         log.debug(formatted_json(defaults))
         return formencode.htmlfill.render(
             render('admin/auth/auth_settings.html'),
