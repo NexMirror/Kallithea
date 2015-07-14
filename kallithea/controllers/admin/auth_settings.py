@@ -63,15 +63,11 @@ class AuthSettingsController(BaseController):
     def index(self, defaults=None, errors=None, prefix_error=False):
         self.__load_defaults()
 
-        # Import all auth settings into the template context.
-        for k, v in Setting.get_auth_settings().iteritems():
-            setattr(c, k, v)
-
         c.defaults = {}
         c.plugin_settings = {}
         c.plugin_shortnames = {}
 
-        for module in c.auth_plugins:
+        for module in c.enabled_plugins:
             plugin = auth_modules.loadplugin(module)
             plugin_name = plugin.name
             c.plugin_shortnames[module] = plugin_name
@@ -85,7 +81,7 @@ class AuthSettingsController(BaseController):
                 if setting:
                     c.defaults[fullname] = setting.app_settings_value
         # we want to show , separated list of enabled plugins
-        c.defaults['auth_plugins'] = ','.join(c.auth_plugins)
+        c.defaults['auth_plugins'] = ','.join(c.enabled_plugins)
 
         if defaults:
             c.defaults.update(defaults)

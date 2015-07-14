@@ -46,7 +46,7 @@
        </div>
     </div>
 
-    %for cnt, module in enumerate(c.auth_plugins):
+    %for cnt, module in enumerate(c.enabled_plugins):
         <% pluginName = c.plugin_shortnames[module] %>
         <h1>${_('Plugin')}: ${pluginName}</h1>
         <div class="fields">
