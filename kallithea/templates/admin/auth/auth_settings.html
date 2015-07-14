@@ -47,7 +47,7 @@
     </div>
 
     %for cnt, module in enumerate(c.auth_plugins):
-        <% pluginName = c.auth_plugins_shortnames[module] %>
+        <% pluginName = c.plugin_shortnames[module] %>
         <h1>${_('Plugin')}: ${pluginName}</h1>
         <div class="fields">
         ## autoform generation, based on plugin definition from it's settings

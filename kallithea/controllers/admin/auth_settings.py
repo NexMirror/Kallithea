@@ -67,13 +67,13 @@ class AuthSettingsController(BaseController):
         formglobals = {}
         formglobals.update(Setting.get_auth_settings())
         formglobals["plugin_settings"] = {}
-        formglobals["auth_plugins_shortnames"] = {}
+        formglobals["plugin_shortnames"] = {}
         _defaults["auth_plugins"] = formglobals["auth_plugins"]
 
         for module in formglobals["auth_plugins"]:
             plugin = auth_modules.loadplugin(module)
             plugin_name = plugin.name
-            formglobals["auth_plugins_shortnames"][module] = plugin_name
+            formglobals["plugin_shortnames"][module] = plugin_name
             formglobals["plugin_settings"][module] = plugin.plugin_settings()
             for v in formglobals["plugin_settings"][module]:
                 fullname = ("auth_" + plugin_name + "_" + v["name"])
