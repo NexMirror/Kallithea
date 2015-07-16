@@ -24,7 +24,7 @@ pdebug = false
 #smtp_password =
 #smtp_port =
 #smtp_use_tls = false
-#smtp_use_ssl = true
+#smtp_use_ssl = false
 <%text>## Specify available auth parameters here (e.g. LOGIN PLAIN CRAM-MD5, etc.)</%text>
 #smtp_auth =
 
