@@ -10,30 +10,55 @@ debug = true
 pdebug = false
 
 <%text>################################################################################</%text>
-<%text>## Uncomment and replace with the address which should receive                ##</%text>
-<%text>## any error reports after application crash                                  ##</%text>
-<%text>## Additionally those settings will be used by Kallithea mailing system       ##</%text>
+<%text>## E-mail settings                                                            ##</%text>
+<%text>##                                                                            ##</%text>
+<%text>## Refer to the documentation ("E-mail settings") for more details.           ##</%text>
+<%text>##                                                                            ##</%text>
+<%text>## It is recommended to use a valid sender address that passes access         ##</%text>
+<%text>## validation and spam filtering in mail servers.                             ##</%text>
 <%text>################################################################################</%text>
+
+<%text>## 'From' header for application e-mails. You can optionally add a name.</%text>
+<%text>## Default:</%text>
 #app_email_from = Kallithea
+<%text>## Examples:</%text>
 #app_email_from = Kallithea <kallithea-noreply@example.com>
 #app_email_from = kallithea-noreply@example.com
+
+<%text>## Subject prefix for application e-mails.</%text>
+<%text>## A space between this prefix and the real subject is automatically added.</%text>
+<%text>## Default:</%text>
 #email_prefix =
+<%text>## Example:</%text>
 #email_prefix = [Kallithea]
 
-#email_to = admin@localhost
+<%text>## Recipients for error e-mails and fallback recipients of application mails.</%text>
+<%text>## Multiple addresses can be specified, space-separated.</%text>
+<%text>## Only addresses are allowed, do not add any name part.</%text>
+<%text>## Default:</%text>
+#email_to =
+<%text>## Examples:</%text>
 #email_to = admin@example.com
 #email_to = admin@example.com another_admin@example.com
+
+<%text>## 'From' header for error e-mails. You can optionally add a name.</%text>
+<%text>## Default:</%text>
 #error_email_from = pylons@yourapp.com
+<%text>## Examples:</%text>
 #error_email_from = Kallithea Errors <kallithea-noreply@example.com>
 #error_email_from = paste_error@example.com
 
+<%text>## SMTP server settings</%text>
+<%text>## Only smtp_server is mandatory. All other settings take the specified default</%text>
+<%text>## values.</%text>
 #smtp_server = mail.server.com
 #smtp_username =
 #smtp_password =
 #smtp_port = 25
 #smtp_use_tls = false
 #smtp_use_ssl = false
-<%text>## Specify available auth parameters here (e.g. LOGIN PLAIN CRAM-MD5, etc.)</%text>
+<%text>## SMTP authentication parameters to use (e.g. LOGIN PLAIN CRAM-MD5, etc.).</%text>
+<%text>## If empty, use any of the authentication parameters supported by the server.</%text>
 #smtp_auth =
 
 [server:main]
