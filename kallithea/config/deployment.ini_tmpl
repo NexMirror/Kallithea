@@ -18,7 +18,6 @@ pdebug = false
 #email_to = admin@localhost
 #error_email_from = paste_error@localhost
 #app_email_from = kallithea-noreply@localhost
-#error_message =
 #email_prefix = [Kallithea]
 
 #smtp_server = mail.server.com
