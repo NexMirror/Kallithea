@@ -295,6 +295,7 @@ class ReposController(BaseRepoController):
         except formencode.Invalid, errors:
             defaults = self.__load_data(repo_name)
             defaults.update(errors.value)
+            c.users_array = repo_model.get_users_js()
             return htmlfill.render(
                 render('admin/repos/repo_edit.html'),
                 defaults=defaults,
