@@ -178,8 +178,8 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
 
     if user_is_admin:
         #==================================================================
-        # admin user have all default rights for repositories
-        # and groups set to admin
+        # admin users have all rights;
+        # based on default permissions, just set everything to admin
         #==================================================================
         permissions[GLOBAL].add('hg.admin')
         permissions[GLOBAL].add('hg.create.write_on_repogroup.true')
@@ -206,7 +206,6 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
     #==================================================================
     # SET DEFAULTS GLOBAL, REPOS, REPOSITORY GROUPS
     #==================================================================
-    uid = user_id
 
     # default global permissions taken from the default user
     default_global_perms = UserToPerm.query()\
@@ -219,10 +218,10 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
     # defaults for repositories, taken from default user
     for perm in default_repo_perms:
         r_k = perm.UserRepoToPerm.repository.repo_name
-        if perm.Repository.private and not (perm.Repository.user_id == uid):
+        if perm.Repository.private and not (perm.Repository.user_id == user_id):
             # disable defaults for private repos,
             p = 'repository.none'
-        elif perm.Repository.user_id == uid:
+        elif perm.Repository.user_id == user_id:
             # set admin if owner
             p = 'repository.admin'
         else:
@@ -260,7 +259,7 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
         .options(joinedload(UserGroupToPerm.permission))\
         .join((UserGroupMember, UserGroupToPerm.users_group_id ==
                UserGroupMember.users_group_id))\
-        .filter(UserGroupMember.user_id == uid)\
+        .filter(UserGroupMember.user_id == user_id)\
         .join((UserGroup, UserGroupMember.users_group_id ==
                UserGroup.users_group_id))\
         .filter(UserGroup.users_group_active == True)\
@@ -286,7 +285,7 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
     # user specific global permissions
     user_perms = Session().query(UserToPerm)\
             .options(joinedload(UserToPerm.permission))\
-            .filter(UserToPerm.user_id == uid).all()
+            .filter(UserToPerm.user_id == user_id).all()
 
     if not user_inherit_default_permissions:
         # NEED TO IGNORE all configurable permissions and
@@ -319,7 +318,7 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
         .filter(UserGroup.users_group_active == True)\
         .join((UserGroupMember, UserGroupRepoToPerm.users_group_id ==
                UserGroupMember.users_group_id))\
-        .filter(UserGroupMember.user_id == uid)\
+        .filter(UserGroupMember.user_id == user_id)\
         .all()
 
     multiple_counter = collections.defaultdict(int)
@@ -329,7 +328,7 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
         p = perm.Permission.permission_name
         cur_perm = permissions[RK][r_k]
 
-        if perm.Repository.user_id == uid:
+        if perm.Repository.user_id == user_id:
             # set admin if owner
             p = 'repository.admin'
         else:
@@ -339,12 +338,12 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
 
     # user explicit permissions for repositories, overrides any specified
     # by the group permission
-    user_repo_perms = Permission.get_default_perms(uid)
+    user_repo_perms = Permission.get_default_perms(user_id)
     for perm in user_repo_perms:
         r_k = perm.UserRepoToPerm.repository.repo_name
         cur_perm = permissions[RK][r_k]
         # set admin if owner
-        if perm.Repository.user_id == uid:
+        if perm.Repository.user_id == user_id:
             p = 'repository.admin'
         else:
             p = perm.Permission.permission_name
@@ -371,7 +370,7 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
      .filter(UserGroup.users_group_active == True)\
      .join((UserGroupMember, UserGroupRepoGroupToPerm.users_group_id
             == UserGroupMember.users_group_id))\
-     .filter(UserGroupMember.user_id == uid)\
+     .filter(UserGroupMember.user_id == user_id)\
      .all()
 
     multiple_counter = collections.defaultdict(int)
@@ -385,7 +384,7 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
         permissions[GK][g_k] = p
 
     # user explicit permissions for repository groups
-    user_repo_groups_perms = Permission.get_default_group_perms(uid)
+    user_repo_groups_perms = Permission.get_default_group_perms(user_id)
     for perm in user_repo_groups_perms:
         rg_k = perm.UserRepoGroupToPerm.group.group_name
         p = perm.Permission.permission_name
@@ -406,7 +405,7 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
             == Permission.permission_id))\
      .join((UserGroupMember, UserGroupUserGroupToPerm.user_group_id
             == UserGroupMember.users_group_id))\
-     .filter(UserGroupMember.user_id == uid)\
+     .filter(UserGroupMember.user_id == user_id)\
      .join((UserGroup, UserGroupMember.users_group_id ==
             UserGroup.users_group_id), aliased=True, from_joinpoint=True)\
      .filter(UserGroup.users_group_active == True)\
@@ -423,7 +422,7 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
         permissions[UK][g_k] = p
 
     #user explicit permission for user groups
-    user_user_groups_perms = Permission.get_default_user_group_perms(uid)
+    user_user_groups_perms = Permission.get_default_user_group_perms(user_id)
     for perm in user_user_groups_perms:
         u_k = perm.UserUserGroupToPerm.user_group.users_group_name
         p = perm.Permission.permission_name
@@ -480,9 +479,9 @@ class AuthUser(object):
             is_external_auth=False):
 
         self.user_id = user_id
-        self._api_key = api_key
+        self._api_key = api_key # API key passed as parameter
 
-        self.api_key = None
+        self.api_key = None # API key set by user_model.fill_data
         self.username = username
         self.name = ''
         self.lastname = ''

@@ -58,7 +58,6 @@ log = logging.getLogger(__name__)
 
 
 class RepoGroupsController(BaseController):
-    """REST Controller styled on the Atom Publishing Protocol"""
 
     @LoginRequired()
     def __before__(self):

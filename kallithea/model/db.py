@@ -1742,6 +1742,7 @@ class Permission(Base, BaseModel):
         'usergroup.read': 1,
         'usergroup.write': 3,
         'usergroup.admin': 4,
+
         'hg.repogroup.create.false': 0,
         'hg.repogroup.create.true': 1,
 
@@ -1750,6 +1751,7 @@ class Permission(Base, BaseModel):
 
         'hg.fork.none': 0,
         'hg.fork.repository': 1,
+
         'hg.create.none': 0,
         'hg.create.repository': 1
     }

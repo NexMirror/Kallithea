@@ -37,7 +37,7 @@ from sqlalchemy.sql.expression import func
 
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import LoginRequired, HasPermissionAllDecorator, \
-    HasRepoPermissionAllDecorator, NotAnonymous,HasPermissionAny, \
+    HasRepoPermissionAllDecorator, NotAnonymous, HasPermissionAny, \
     HasRepoGroupPermissionAny, HasRepoPermissionAnyDecorator
 from kallithea.lib.base import BaseRepoController, render
 from kallithea.lib.utils import action_logger, repo_name_slug, jsonify
@@ -137,7 +137,7 @@ class ReposController(BaseRepoController):
         form_result = {}
         task_id = None
         try:
-            # CanWriteToGroup validators checks permissions of this POST
+            # CanWriteGroup validators checks permissions of this POST
             form_result = RepoForm(repo_groups=c.repo_groups_choices,
                                    landing_revs=c.landing_revs_choices)()\
                             .to_python(dict(request.POST))
@@ -149,6 +149,7 @@ class ReposController(BaseRepoController):
             if isinstance(task, BaseAsyncResult):
                 task_id = task.task_id
         except formencode.Invalid, errors:
+            log.info(errors)
             return htmlfill.render(
                 render('admin/repos/repo_add.html'),
                 defaults=errors.value,
@@ -290,6 +291,7 @@ class ReposController(BaseRepoController):
                               changed_name, self.ip_addr, self.sa)
             Session().commit()
         except formencode.Invalid, errors:
+            log.info(errors)
             defaults = self.__load_data(repo_name)
             defaults.update(errors.value)
             c.users_array = repo_model.get_users_js()
