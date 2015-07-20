@@ -2177,7 +2177,6 @@ class ChangesetComment(Base, BaseModel):
     revision = Column(String(40))
     pull_request_id = Column(Integer(), ForeignKey('pull_requests.pull_request_id'))
     line_no = Column(Unicode(10))
-    hl_lines = Column(Unicode(512))
     f_path = Column(Unicode(1000))
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
     text = Column(UnicodeText(25000), nullable=False)
