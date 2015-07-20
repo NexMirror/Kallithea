@@ -171,7 +171,6 @@ class ReposController(BaseRepoController):
     @NotAnonymous()
     def create_repository(self):
         """GET /_admin/create_repository: Form to create a new item"""
-        new_repo = request.GET.get('repo', '')
         parent_group = request.GET.get('parent_group')
         if not HasPermissionAny('hg.admin', 'hg.create.repository')():
             #you're not super admin nor have global create permissions,
@@ -190,8 +189,6 @@ class ReposController(BaseRepoController):
         c.repo_groups = RepoGroup.groups_choices(groups=acl_groups)
         c.repo_groups_choices = map(lambda k: unicode(k[0]), c.repo_groups)
         choices, c.landing_revs = ScmModel().get_repo_landing_revs()
-
-        c.new_repo = repo_name_slug(new_repo)
 
         ## apply the defaults from defaults page
         defaults = Setting.get_default_repo_settings(strip_prefix=True)

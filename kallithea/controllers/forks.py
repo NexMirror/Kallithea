@@ -174,7 +174,6 @@ class ForksController(BaseRepoController):
             if isinstance(task, BaseAsyncResult):
                 task_id = task.task_id
         except formencode.Invalid, errors:
-            c.new_repo = errors.value['repo_name']
             return htmlfill.render(
                 render('forks/fork.html'),
                 defaults=errors.value,
