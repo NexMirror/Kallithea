@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Kallithea\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2015-04-01 03:17+0200\n"
-"PO-Revision-Date: 2015-05-11 23:05+0200\n"
-"Last-Translator: David Avigni <david.avigni@ankapi.com>\n"
+"PO-Revision-Date: 2015-07-20 11:32+0200\n"
+"Last-Translator: Étienne Gilli <etienne.gilli@gmail.com>\n"
 "Language-Team: French "
 "<https://hosted.weblate.org/projects/kallithea/kallithea/fr/>\n"
 "Language: fr\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 2.3-dev\n"
+"X-Generator: Weblate 2.4-dev\n"
 
 #: kallithea/controllers/changelog.py:86
 #: kallithea/controllers/pullrequests.py:247 kallithea/lib/base.py:449
@@ -74,7 +74,7 @@ msgstr "Sélectionner le changeset"
 
 #: kallithea/controllers/compare.py:255
 msgid "Cannot compare repositories without using common ancestor"
-msgstr ""
+msgstr "Impossible de comparer des dépôts sans utiliser un ancêtre commun"
 
 #: kallithea/controllers/error.py:96
 msgid "The request could not be understood by the server due to malformed syntax."
@@ -171,6 +171,8 @@ msgstr "Une erreur est survenue durant le commit"
 #: kallithea/controllers/files.py:378
 msgid "You can only edit files with revision being a valid branch "
 msgstr ""
+"Vous pouvez modifier uniquement les fichiers dont la révision est dans une "
+"branche valide "
 
 #: kallithea/controllers/files.py:392
 #, python-format
@@ -363,6 +365,8 @@ msgstr "Nouveau changeset sur %s %s depuis la précédente pull request :"
 #: kallithea/controllers/pullrequests.py:412
 msgid "Ancestor didn't change - show diff since previous version:"
 msgstr ""
+"L'ancêtre n'a pas changé - montrer les différences avec la version "
+"précédente :"
 
 #: kallithea/controllers/pullrequests.py:419
 #, python-format
@@ -370,6 +374,8 @@ msgid ""
 "This pull request is based on another %s revision and there is no simple "
 "diff."
 msgstr ""
+"Cette demande de pull est basée sur une autre révision %s et il n'y a pas de "
+"diff simple."
 
 #: kallithea/controllers/pullrequests.py:421
 #, python-format
@@ -406,6 +412,7 @@ msgstr "Cette pull request a été fermée et ne peut pas être mise à jour."
 #, python-format
 msgid "This pull request can be updated with changes on %s:"
 msgstr ""
+"Cette demande de pull peut être mise à jour avec les modifications de %s :"
 
 #: kallithea/controllers/pullrequests.py:600
 msgid "No changesets found for updating this pull request."
@@ -4650,14 +4657,12 @@ msgstr "Lien vers la sélection"
 
 #: kallithea/templates/base/root.html:36
 #: kallithea/templates/changeset/diff_block.html:8
-#, fuzzy
 msgid "Collapse Diff"
-msgstr "Diff de fichier"
+msgstr "Replier le Diff"
 
 #: kallithea/templates/base/root.html:37
-#, fuzzy
 msgid "Expand Diff"
-msgstr "Diff de fichier"
+msgstr "Déplier le Diff"
 
 #: kallithea/templates/base/root.html:38
 msgid "Failed to revoke permission"
@@ -5114,7 +5119,7 @@ msgstr "Aucun changeset"
 
 #: kallithea/templates/compare/compare_cs.html:8
 msgid "Ancestor"
-msgstr ""
+msgstr "Ancêtre"
 
 #: kallithea/templates/compare/compare_cs.html:61
 msgid "Show merge diff"
@@ -5123,11 +5128,11 @@ msgstr ""
 #: kallithea/templates/compare/compare_cs.html:71
 #: kallithea/templates/pullrequests/pullrequest_show.html:299
 msgid "Common ancestor"
-msgstr ""
+msgstr "Ancêtre commun"
 
 #: kallithea/templates/compare/compare_cs.html:75
 msgid "No common ancestor found - repositories are unrelated"
-msgstr ""
+msgstr "Aucun ancêtre commun trouvé - les dépôts n'ont aucun lien entre eux"
 
 #: kallithea/templates/compare/compare_cs.html:83
 #, fuzzy
