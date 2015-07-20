@@ -153,7 +153,7 @@
                   // check for newer version.
                   $.ajax({
                     url: "${h.url('edit_gist_check_revision', gist_id=c.gist.gist_access_id)}",
-                    data: {'revision': '${c.file_changeset.raw_id}'},
+                    data: {'revision': '${c.file_changeset.raw_id}', '_authentication_token': _authentication_token},
                     dataType: 'json',
                     type: 'POST',
                     success: function(data) {
