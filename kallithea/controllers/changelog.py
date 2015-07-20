@@ -94,6 +94,15 @@ class ChangelogController(BaseRepoController):
     @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
                                    'repository.admin')
     def index(self, repo_name, revision=None, f_path=None):
+        # Fix URL after page size form submission via GET
+        # TODO: Somehow just don't send this extra junk in the GET URL
+        if request.GET.get('set'):
+            request.GET.pop('set', None)
+            request.GET.pop('_authentication_token', None)
+            if revision is None:
+                return redirect(url('changelog_home', repo_name=repo_name, **request.GET))
+            return redirect(url('changelog_file_home', repo_name=repo_name, revision=revision, f_path=f_path, **request.GET))
+
         limit = 2000
         default = 100
         if request.GET.get('size'):
