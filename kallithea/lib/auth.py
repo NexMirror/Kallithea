@@ -33,7 +33,6 @@ import hashlib
 import itertools
 import collections
 
-from tempfile import _RandomNameSequence
 from decorator import decorator
 
 from pylons import url, request

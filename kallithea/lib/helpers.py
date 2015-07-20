@@ -17,7 +17,6 @@ Helper functions
 Consists of functions to typically be used within templates, but also
 available to Controllers. This module is available to both as 'h'.
 """
-import random
 import hashlib
 import StringIO
 import math
@@ -30,7 +29,7 @@ from pygments.formatters.html import HtmlFormatter
 from pygments import highlight as code_highlight
 from pylons import url
 from pylons.i18n.translation import _, ungettext
-from hashlib import md5
+from hashlib import md5 # used as h.md5
 
 from webhelpers.html import literal, HTML, escape
 from webhelpers.html.tools import *
@@ -130,7 +129,7 @@ def FID(raw_id, path):
     :param path:
     """
 
-    return 'C-%s-%s' % (short_id(raw_id), md5(safe_str(path)).hexdigest()[:12])
+    return 'C-%s-%s' % (short_id(raw_id), hashlib.md5(safe_str(path)).hexdigest()[:12])
 
 
 class _GetError(object):
