@@ -1512,23 +1512,23 @@ class RepoGroup(Base, BaseModel):
 
     @classmethod
     def _generate_choice(cls, repo_group):
-        from webhelpers.html import literal as _literal
-        _name = lambda k: _literal(cls.SEP.join(k))
-        return repo_group.group_id, _name(repo_group.full_path_splitted)
+        """Return tuple with group_id as unicode string and name as html literal"""
+        from webhelpers.html import literal
+        if repo_group is None:
+            return (u'-1', u'-- %s --' % _('top level'))
+        return unicode(repo_group.group_id), literal(cls.SEP.join(repo_group.full_path_splitted))
 
     @classmethod
-    def groups_choices(cls, groups=None, show_empty_group=True):
-        if not groups:
-            groups = cls.query().all()
+    def groups_choices(cls, groups, show_empty_group=True):
+        """Return tuples with group_id as unicode string and name as html literal."""
 
-        repo_groups = []
         if show_empty_group:
-            repo_groups = [('-1', u'-- %s --' % _('Top level'))]
+            groups = list(groups)
+            groups.append(None)
 
-        repo_groups.extend([cls._generate_choice(x) for x in groups])
+        choices = [cls._generate_choice(g) for g in groups]
 
-        repo_groups = sorted(repo_groups, key=lambda t: t[1].split(cls.SEP)[0])
-        return repo_groups
+        return sorted(choices, key=lambda c: c[1].split(cls.SEP))
 
     @classmethod
     def url_sep(cls):
