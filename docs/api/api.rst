@@ -292,7 +292,6 @@ OUTPUT::
                     "repositories_groups": {"Group1": "group.read"}
                  },
             }
-
     error:  null
 
 
@@ -535,7 +534,7 @@ INPUT::
     method :  "create_user_group"
     args:     {
                 "group_name": "<groupname>",
-                "owner" :     "<onwer_name_or_id = Optional(=apiuser)>",
+                "owner" :     "<owner_name_or_id = Optional(=apiuser)>",
                 "active":     "<bool> = Optional(True)"
               }
 
@@ -725,7 +724,7 @@ OUTPUT::
                 "repo_name" :        "<reponame>"
                 "repo_type" :        "<repo_type>",
                 "clone_uri" :        "<clone_uri>",
-                "private": :         "<bool>",
+                "private" :          "<bool>",
                 "created_on" :       "<datetimecreated>",
                 "description" :      "<description>",
                 "landing_rev":       "<landing_rev>",
@@ -792,7 +791,7 @@ INPUT::
     method :  "create_repo"
     args:     {
                 "repo_name" :        "<reponame>",
-                "owner" :            "<onwer_name_or_id = Optional(=apiuser)>",
+                "owner" :            "<owner_name_or_id = Optional(=apiuser)>",
                 "repo_type" :        "<repo_type> = Optional('hg')",
                 "description" :      "<description> = Optional('')",
                 "private" :          "<bool> = Optional(False)",
@@ -813,7 +812,7 @@ OUTPUT::
                 "repo_name" :        "<reponame>"
                 "repo_type" :        "<repo_type>",
                 "clone_uri" :        "<clone_uri>",
-                "private": :         "<bool>",
+                "private" :          "<bool>",
                 "created_on" :       "<datetimecreated>",
                 "description" :      "<description>",
                 "landing_rev":       "<landing_rev>",
@@ -822,6 +821,68 @@ OUTPUT::
                 "enable_downloads":  "<bool>",
                 "enable_locking":    "<bool>",
                 "enable_statistics": "<bool>",
+              },
+            }
+    error:  null
+
+
+update_repo
+-----------
+
+Update a repository.
+This command can only be executed using the api_key of a user with admin rights,
+or that of a regular user with create repository permission.
+Regular users cannot specify owner parameter.
+
+
+INPUT::
+
+    id : <id_for_response>
+    api_key : "<api_key>"
+    method :  "update_repo"
+    args:     {
+                "repoid" :           "<reponame or repo_id>"
+                "name" :             "<reponame> = Optional('')",
+                "group" :            "<group_id> = Optional(None)",
+                "owner" :            "<owner_name_or_id = Optional(=apiuser)>",
+                "description" :      "<description> = Optional('')",
+                "private" :          "<bool> = Optional(False)",
+                "clone_uri" :        "<clone_uri> = Optional(None)",
+                "landing_rev" :      "<landing_rev> = Optional('tip')",
+                "enable_downloads":  "<bool> = Optional(False)",
+                "enable_locking":    "<bool> = Optional(False)",
+                "enable_statistics": "<bool> = Optional(False)",
+              }
+
+OUTPUT::
+
+    id : <id_given_in_input>
+    result: {
+              "msg": "updated repo ID:repo_id `<reponame>`",
+              "repository": {
+                "repo_id" :          "<repo_id>",
+                "repo_name" :        "<reponame>"
+                "repo_type" :        "<repo_type>",
+                "clone_uri" :        "<clone_uri>",
+                "private":           "<bool>",
+                "created_on" :       "<datetimecreated>",
+                "description" :      "<description>",
+                "landing_rev":       "<landing_rev>",
+                "owner":             "<username or user_id>",
+                "fork_of":           "<name_of_fork_parent>",
+                "enable_downloads":  "<bool>",
+                "enable_locking":    "<bool>",
+                "enable_statistics": "<bool>",
+                "last_changeset":    {
+                                       "author":   "<full_author>",
+                                       "date":     "<date_time_of_commit>",
+                                       "message":  "<commit_message>",
+                                       "raw_id":   "<raw_id>",
+                                       "revision": "<numeric_revision>",
+                                       "short_id": "<short_id>"
+                                     }
+                "locked_by": "<username>",
+                "locked_date": "<float lock_time>",
               },
             }
     error:  null
