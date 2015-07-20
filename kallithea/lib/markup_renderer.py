@@ -36,7 +36,7 @@ log = logging.getLogger(__name__)
 
 
 url_re = re.compile(r'''(\bhttps?://(?:[\da-zA-Z0-9@:.-]+)'''
-                    r'''(?:[/a-zA-Z0-9_=@#~&+%.,:?!*()-]*[/a-zA-Z0-9_=@#~])?)''')
+                    r'''(?:[/a-zA-Z0-9_=@#~&+%.,:;?!*()-]*[/a-zA-Z0-9_=@#~])?)''')
 
 class MarkupRenderer(object):
     RESTRUCTUREDTEXT_DISALLOWED_DIRECTIVES = ['include', 'meta', 'raw']
