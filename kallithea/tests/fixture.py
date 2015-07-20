@@ -75,7 +75,7 @@ class Fixture(object):
             repo_name=None,
             repo_type='hg',
             clone_uri='',
-            repo_group='-1',
+            repo_group=u'-1',
             repo_description='DESC',
             repo_private=False,
             repo_landing_rev='rev:tip',

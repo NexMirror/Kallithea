@@ -1512,15 +1512,15 @@ class RepoGroup(Base, BaseModel):
 
     @classmethod
     def _generate_choice(cls, repo_group):
-        """Return tuple with group_id as unicode string and name as html literal"""
+        """Return tuple with group_id and name as html literal"""
         from webhelpers.html import literal
         if repo_group is None:
-            return (u'-1', u'-- %s --' % _('top level'))
-        return unicode(repo_group.group_id), literal(cls.SEP.join(repo_group.full_path_splitted))
+            return (-1, u'-- %s --' % _('top level'))
+        return repo_group.group_id, literal(cls.SEP.join(repo_group.full_path_splitted))
 
     @classmethod
     def groups_choices(cls, groups, show_empty_group=True):
-        """Return tuples with group_id as unicode string and name as html literal."""
+        """Return tuples with group_id and name as html literal."""
 
         if show_empty_group:
             groups = list(groups)

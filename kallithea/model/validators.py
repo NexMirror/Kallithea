@@ -212,7 +212,7 @@ def ValidRepoGroup(edit=False, old_data={}):
 
             # check for parent of self
             parent_of_self = lambda: (
-                old_data['group_id'] == int(group_parent_id)
+                old_data['group_id'] == group_parent_id
                 if group_parent_id else False
             )
             if edit and parent_of_self():
@@ -520,13 +520,14 @@ def CanWriteGroup(old_data=None):
 
         def _to_python(self, value, state):
             #root location
-            if value in [-1, "-1"]:
+            if value == -1:
                 return None
             return value
 
         def validate_python(self, value, state):
             gr = RepoGroup.get(value)
-            gr_name = gr.group_name if gr else None  # None means ROOT location
+            gr_name = gr.group_name if gr is not None else None # None means ROOT location
+
             # create repositories with write permission on group is set to true
             create_on_write = HasPermissionAny('hg.create.write_on_repogroup.true')()
             group_admin = HasRepoGroupPermissionAny('group.admin')(gr_name,
@@ -537,7 +538,7 @@ def CanWriteGroup(old_data=None):
             can_create_repos = HasPermissionAny('hg.admin', 'hg.create.repository')
             gid = (old_data['repo_group'].get('group_id')
                    if (old_data and 'repo_group' in old_data) else None)
-            value_changed = gid != safe_int(value)
+            value_changed = gid != value
             new = not old_data
             # do check if we changed the value, there's a case that someone got
             # revoked write permissions to a repository, he still created, we
@@ -569,13 +570,13 @@ def CanCreateGroup(can_create_in_root=False):
 
         def to_python(self, value, state):
             #root location
-            if value in [-1, "-1"]:
+            if value == -1:
                 return None
             return value
 
         def validate_python(self, value, state):
             gr = RepoGroup.get(value)
-            gr_name = gr.group_name if gr else None  # None means ROOT location
+            gr_name = gr.group_name if gr is not None else None # None means ROOT location
 
             if can_create_in_root and gr is None:
                 #we can create in root, we're fine no validations required

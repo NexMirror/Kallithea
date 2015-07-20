@@ -59,7 +59,7 @@ class ForksController(BaseRepoController):
         acl_groups = RepoGroupList(RepoGroup.query().all(),
                                perm_set=['group.write', 'group.admin'])
         c.repo_groups = RepoGroup.groups_choices(groups=acl_groups)
-        c.repo_groups_choices = map(lambda k: unicode(k[0]), c.repo_groups)
+        c.repo_groups_choices = map(lambda k: k[0], c.repo_groups)
         choices, c.landing_revs = ScmModel().get_repo_landing_revs()
         c.landing_revs_choices = choices
         c.can_update = Ui.get_by_key(Ui.HOOK_UPDATE).ui_active

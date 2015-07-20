@@ -77,7 +77,7 @@ class _BaseTestCase(object):
         org_repo = Repository.get_by_repo_name(repo_name)
         creation_args = {
             'repo_name': fork_name,
-            'repo_group': '',
+            'repo_group': u'-1',
             'fork_parent_id': org_repo.repo_id,
             'repo_type': self.REPO_TYPE,
             'description': description,
@@ -152,7 +152,7 @@ class _BaseTestCase(object):
         org_repo = Repository.get_by_repo_name(repo_name)
         creation_args = {
             'repo_name': fork_name,
-            'repo_group': '',
+            'repo_group': u'-1',
             'fork_parent_id': org_repo.repo_id,
             'repo_type': self.REPO_TYPE,
             'description': description,

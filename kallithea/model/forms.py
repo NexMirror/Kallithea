@@ -165,7 +165,8 @@ def RepoGroupForm(edit=False, old_data={}, available_groups=[],
         group_parent_id = All(v.CanCreateGroup(can_create_in_root),
                               v.OneOf(available_groups, hideList=False,
                                       testValueList=True,
-                                      if_missing=None, not_empty=True))
+                                      if_missing=None, not_empty=True),
+                              v.Int(min=-1, not_empty=True))
         enable_locking = v.StringBoolean(if_missing=False)
         chained_validators = [v.ValidRepoGroup(edit, old_data)]
 
@@ -214,7 +215,8 @@ def RepoForm(edit=False, old_data={}, supported_backends=BACKENDS.keys(),
         repo_name = All(v.UnicodeString(strip=True, min=1, not_empty=True),
                         v.SlugifyName())
         repo_group = All(v.CanWriteGroup(old_data),
-                         v.OneOf(repo_groups, hideList=True))
+                         v.OneOf(repo_groups, hideList=True),
+                         v.Int(min=-1, not_empty=True))
         repo_type = v.OneOf(supported_backends, required=False,
                             if_missing=old_data.get('repo_type'))
         repo_description = v.UnicodeString(strip=True, min=1, not_empty=False)
@@ -286,7 +288,8 @@ def RepoForkForm(edit=False, old_data={}, supported_backends=BACKENDS.keys(),
         repo_name = All(v.UnicodeString(strip=True, min=1, not_empty=True),
                         v.SlugifyName())
         repo_group = All(v.CanWriteGroup(),
-                         v.OneOf(repo_groups, hideList=True))
+                         v.OneOf(repo_groups, hideList=True),
+                         v.Int(min=-1, not_empty=True))
         repo_type = All(v.ValidForkType(old_data), v.OneOf(supported_backends))
         description = v.UnicodeString(strip=True, min=1, not_empty=True)
         private = v.StringBoolean(if_missing=False)

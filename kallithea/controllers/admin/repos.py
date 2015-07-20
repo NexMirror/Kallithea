@@ -79,7 +79,7 @@ class ReposController(BaseRepoController):
         acl_groups = RepoGroupList(RepoGroup.query().all(),
                                perm_set=['group.write', 'group.admin'])
         c.repo_groups = RepoGroup.groups_choices(groups=acl_groups)
-        c.repo_groups_choices = map(lambda k: unicode(k[0]), c.repo_groups)
+        c.repo_groups_choices = map(lambda k: k[0], c.repo_groups)
 
         # in case someone no longer have a group.write access to a repository
         # pre fill the list with this entry, we don't care if this is the same
@@ -88,8 +88,8 @@ class ReposController(BaseRepoController):
         repo_group = None
         if repo:
             repo_group = repo.group
-        if repo_group and unicode(repo_group.group_id) not in c.repo_groups_choices:
-            c.repo_groups_choices.append(unicode(repo_group.group_id))
+        if repo_group and repo_group.group_id not in c.repo_groups_choices:
+            c.repo_groups_choices.append(repo_group.group_id)
             c.repo_groups.append(RepoGroup._generate_choice(repo_group))
 
         choices, c.landing_revs = ScmModel().get_repo_landing_revs()
@@ -188,7 +188,7 @@ class ReposController(BaseRepoController):
         acl_groups = RepoGroupList(RepoGroup.query().all(),
                                perm_set=['group.write', 'group.admin'])
         c.repo_groups = RepoGroup.groups_choices(groups=acl_groups)
-        c.repo_groups_choices = map(lambda k: unicode(k[0]), c.repo_groups)
+        c.repo_groups_choices = map(lambda k: k[0], c.repo_groups)
         choices, c.landing_revs = ScmModel().get_repo_landing_revs()
 
         ## apply the defaults from defaults page
