@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 from migrate.versioning.shell import main
 
 if __name__ == '__main__':
