@@ -509,7 +509,6 @@ class FilesController(BaseRepoController):
     @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
                                    'repository.admin')
     def archivefile(self, repo_name, fname):
-
         fileformat = None
         revision = None
         ext = None
@@ -525,7 +524,7 @@ class FilesController(BaseRepoController):
         try:
             dbrepo = RepoModel().get_by_repo_name(repo_name)
             if not dbrepo.enable_downloads:
-                return _('Downloads disabled')
+                return _('Downloads disabled') # TODO: do something else?
 
             if c.db_repo_scm_instance.alias == 'hg':
                 # patch and reset hooks section of UI config to not run any
@@ -541,58 +540,57 @@ class FilesController(BaseRepoController):
             return _('Empty repository')
         except (ImproperArchiveTypeError, KeyError):
             return _('Unknown archive type')
-        # archive cache
+
         from kallithea import CONFIG
         rev_name = cs.raw_id[:12]
         archive_name = '%s-%s%s' % (safe_str(repo_name.replace('/', '_')),
                                     safe_str(rev_name), ext)
 
-        use_cached_archive = False  # defines if we use cached version of archive
-        archive_cache_enabled = CONFIG.get('archive_cache_dir')
-        if not subrepos and archive_cache_enabled:
-            #check if we it's ok to write
-            if not os.path.isdir(CONFIG['archive_cache_dir']):
-                os.makedirs(CONFIG['archive_cache_dir'])
-            cached_archive_path = os.path.join(CONFIG['archive_cache_dir'], archive_name)
+        archive_path = None
+        cached_archive_path = None
+        archive_cache_dir = CONFIG.get('archive_cache_dir')
+        if archive_cache_dir and not subrepos: # TOOD: subrepo caching?
+            if not os.path.isdir(archive_cache_dir):
+                os.makedirs(archive_cache_dir)
+            cached_archive_path = os.path.join(archive_cache_dir, archive_name)
             if os.path.isfile(cached_archive_path):
                 log.debug('Found cached archive in %s' % cached_archive_path)
-                archive = cached_archive_path
-                use_cached_archive = True
+                archive_path = cached_archive_path
             else:
                 log.debug('Archive %s is not yet cached' % (archive_name))
 
-        if not use_cached_archive:
+        if archive_path is None:
             # generate new archive
-            fd, archive = tempfile.mkstemp()
-            os.close(fd)
-            temp_stream = open(archive, 'wb')
-            log.debug('Creating new temp archive in %s' % archive)
-            cs.fill_archive(stream=temp_stream, kind=fileformat, subrepos=subrepos)
-            temp_stream.close()
-            if not subrepos and archive_cache_enabled:
-                #if we generated the archive and use cache rename that
+            fd, archive_path = tempfile.mkstemp()
+            log.debug('Creating new temp archive in %s' % archive_path)
+            with os.fdopen(fd, 'wb') as stream:
+                cs.fill_archive(stream=stream, kind=fileformat, subrepos=subrepos)
+                # stream (and thus fd) has been closed by cs.fill_archive
+            if cached_archive_path is not None:
+                # we generated the archive - move it to cache
                 log.debug('Storing new archive in %s' % cached_archive_path)
-                shutil.move(archive, cached_archive_path)
-                archive = cached_archive_path
+                shutil.move(archive_path, cached_archive_path)
+                archive_path = cached_archive_path
 
-        def get_chunked_archive(archive):
-            stream = open(archive, 'rb')
+        def get_chunked_archive(archive_path):
+            stream = open(archive_path, 'rb')
             while True:
                 data = stream.read(16 * 1024)
                 if not data:
-                    stream.close()
-                    if not archive_cache_enabled:
-                        log.debug('Destroying temp archive %s' % archive)
-                        os.remove(archive)
                     break
                 yield data
-        # store download action
+            stream.close()
+            if archive_path != cached_archive_path:
+                log.debug('Destroying temp archive %s' % archive_path)
+                os.remove(archive_path)
+
         action_logger(user=c.authuser,
                       action='user_downloaded_archive:%s' % (archive_name),
                       repo=repo_name, ipaddr=self.ip_addr, commit=True)
+
         response.content_disposition = str('attachment; filename=%s' % (archive_name))
         response.content_type = str(content_type)
-        return get_chunked_archive(archive)
+        return get_chunked_archive(archive_path)
 
     @LoginRequired()
     @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
