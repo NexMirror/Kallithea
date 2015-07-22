@@ -231,30 +231,3 @@ class TestRepoGroups(BaseTestCase):
     def test_AttrLoginValidator(self):
         validator = v.AttrLoginValidator()
         self.assertEqual('DN_attr', validator.to_python('DN_attr'))
-
-    def test_NotReviewedRevisions(self):
-        user = ChangesetStatusModel()._get_user(TEST_USER_ADMIN_LOGIN)
-        repo = Repository.get_by_repo_name(HG_REPO)
-        validator = v.NotReviewedRevisions(repo.repo_id)
-        rev = '0' * 40
-        # add status for a rev, that should throw an error because it is already
-        # reviewed
-        new_comment = ChangesetComment()
-        new_comment.repo = repo
-        new_comment.author = user
-        new_comment.text = u''
-        Session().add(new_comment)
-        Session().flush()
-        new_status = ChangesetStatus()
-        new_status.author = user
-        new_status.repo = repo
-        new_status.status = ChangesetStatus.STATUS_APPROVED
-        new_status.comment = new_comment
-        new_status.revision = rev
-        Session().add(new_status)
-        Session().commit()
-        try:
-            self.assertRaises(formencode.Invalid, validator.to_python, [rev])
-        finally:
-            Session().delete(new_status)
-            Session().commit()

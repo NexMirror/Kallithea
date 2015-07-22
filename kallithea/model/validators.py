@@ -95,11 +95,11 @@ def ValidUsername(edit=False, old_data={}):
         messages = {
             'username_exists': _('Username "%(username)s" already exists'),
             'system_invalid_username':
-                _('Username "%(username)s" is forbidden'),
+                _('Username "%(username)s" cannot be used'),
             'invalid_username':
                 _('Username may only contain alphanumeric characters '
-                    'underscores, periods or dashes and must begin with '
-                    'alphanumeric character or underscore')
+                  'underscores, periods or dashes and must begin with an '
+                  'alphanumeric character or underscore')
         }
 
         def validate_python(self, value, state):
@@ -300,9 +300,9 @@ def ValidPasswordsMatch(passwd='new_password', passwd_confirmation='password_con
 def ValidAuth():
     class _validator(formencode.validators.FancyValidator):
         messages = {
-            'invalid_password': _('invalid password'),
-            'invalid_username': _('invalid user name'),
-            'disabled_account': _('Your account is disabled')
+            'invalid_password': _('Invalid password'),
+            'invalid_username': _('Invalid username'),
+            'disabled_account': _('Account has been disabled')
         }
 
         def validate_python(self, value, state):
@@ -346,7 +346,7 @@ def ValidRepoName(edit=False, old_data={}):
     class _validator(formencode.validators.FancyValidator):
         messages = {
             'invalid_repo_name':
-                _('Repository name %(repo)s is disallowed'),
+                _('Repository name %(repo)s is not allowed'),
             'repository_exists':
                 _('Repository named %(repo)s already exists'),
             'repository_in_group_exists': _('Repository "%(repo)s" already '
@@ -468,7 +468,7 @@ def ValidCloneUri():
         messages = {
             'clone_uri': _('Invalid repository URL'),
             'invalid_clone_uri': _('Invalid repository URL. It must be a '
-                                    'valid http, https, ssh, svn+http or svn+https URL'),
+                                   'valid http, https, ssh, svn+http or svn+https URL'),
         }
 
         def validate_python(self, value, state):
@@ -706,7 +706,7 @@ def ValidPath():
 def UniqSystemEmail(old_data={}):
     class _validator(formencode.validators.FancyValidator):
         messages = {
-            'email_taken': _('This e-mail address is already taken')
+            'email_taken': _('This e-mail address is already in use')
         }
 
         def _to_python(self, value, state):
@@ -726,7 +726,7 @@ def UniqSystemEmail(old_data={}):
 def ValidSystemEmail():
     class _validator(formencode.validators.FancyValidator):
         messages = {
-            'non_existing_email': _('e-mail "%(email)s" does not exist.')
+            'non_existing_email': _('E-mail address "%(email)s" not found')
         }
 
         def _to_python(self, value, state):
@@ -768,39 +768,6 @@ def AttrLoginValidator():
                     'to "username"')
         }
         messages['empty'] = messages['invalid_cn']
-
-    return _validator
-
-
-def NotReviewedRevisions(repo_id):
-    class _validator(formencode.validators.FancyValidator):
-        messages = {
-            'rev_already_reviewed':
-                  _('Revisions %(revs)s are already part of pull request '
-                    'or have set status')
-        }
-
-        def validate_python(self, value, state):
-            # check revisions if they are not reviewed, or a part of another
-            # pull request
-            statuses = ChangesetStatus.query()\
-                .filter(ChangesetStatus.revision.in_(value))\
-                .filter(ChangesetStatus.repo_id == repo_id)\
-                .all()
-
-            errors = []
-            for cs in statuses:
-                if cs.pull_request_id:
-                    errors.append(['pull_req', cs.revision[:12]])
-                elif cs.status:
-                    errors.append(['status', cs.revision[:12]])
-
-            if errors:
-                revs = ','.join([x[1] for x in errors])
-                msg = M(self, 'rev_already_reviewed', state, revs=revs)
-                raise formencode.Invalid(msg, value, state,
-                    error_dict=dict(revisions=revs)
-                )
 
     return _validator
 

@@ -255,8 +255,8 @@ class UserModel(BaseModel):
 
         if user.username == User.DEFAULT_USER:
             raise DefaultUserException(
-                _("You can't remove this user since it's"
-                  " crucial for entire application"))
+                _("You can't remove this user since it is"
+                  " crucial for the entire application"))
         if user.repositories:
             repos = [x.repo_name for x in user.repositories]
             raise UserOwnsReposException(

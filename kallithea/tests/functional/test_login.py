@@ -129,8 +129,8 @@ class TestLoginController(TestController):
                                  {'username': 'error',
                                   'password': 'test12'})
 
-        response.mustcontain('invalid user name')
-        response.mustcontain('invalid password')
+        response.mustcontain('Invalid username')
+        response.mustcontain('Invalid password')
 
     # verify that get arguments are correctly passed along login redirection
 
@@ -187,8 +187,8 @@ class TestLoginController(TestController):
                                  {'username': 'error',
                                   'password': 'test12'})
 
-        response.mustcontain('invalid user name')
-        response.mustcontain('invalid password')
+        response.mustcontain('Invalid username')
+        response.mustcontain('Invalid password')
         for encoded in args_encoded:
             self.assertIn(encoded, response.form.action)
 
@@ -260,7 +260,7 @@ class TestLoginController(TestController):
         response.mustcontain('An email address must contain a single @')
         response.mustcontain('Username may only contain '
                 'alphanumeric characters underscores, '
-                'periods or dashes and must begin with '
+                'periods or dashes and must begin with an '
                 'alphanumeric character')
 
     def test_register_err_case_sensitive(self):
