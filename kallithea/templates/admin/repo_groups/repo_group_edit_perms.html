@@ -15,7 +15,7 @@ ${h.form(url('edit_repo_group_perms', group_name=c.repo_group.group_name),method
                 %for r2p in c.repo_group.repo_group_to_perm:
                     ##forbid revoking permission from yourself, except if you're an super admin
                     <tr id="id${id(r2p.user.username)}">
-                        %if c.authuser.user_id != r2p.user.user_id or c.authuser.is_admin:
+                      %if c.authuser.user_id != r2p.user.user_id or c.authuser.is_admin:
                         <td>${h.radio('u_perm_%s' % r2p.user.username,'group.none')}</td>
                         <td>${h.radio('u_perm_%s' % r2p.user.username,'group.read')}</td>
                         <td>${h.radio('u_perm_%s' % r2p.user.username,'group.write')}</td>
@@ -35,7 +35,7 @@ ${h.form(url('edit_repo_group_perms', group_name=c.repo_group.group_name),method
                             </span>
                           %endif
                         </td>
-                        %else:
+                      %else:
                         <td>${h.radio('u_perm_%s' % r2p.user.username,'group.none', disabled="disabled")}</td>
                         <td>${h.radio('u_perm_%s' % r2p.user.username,'group.read', disabled="disabled")}</td>
                         <td>${h.radio('u_perm_%s' % r2p.user.username,'group.write', disabled="disabled")}</td>
@@ -44,8 +44,8 @@ ${h.form(url('edit_repo_group_perms', group_name=c.repo_group.group_name),method
                             ${h.gravatar(r2p.user.email, cls="perm-gravatar", size=14)}
                             ${r2p.user.username if r2p.user.username != 'default' else _('Default')}
                         </td>
-                        <td><i class="icon-user"></i> ${_('Delegated Admin')}</td>
-                        %endif
+                        <td><i class="icon-user"></i> ${_('Admin')}</td>
+                      %endif
                     </tr>
                 %endfor
 
