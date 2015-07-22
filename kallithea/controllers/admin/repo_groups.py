@@ -172,16 +172,14 @@ class RepoGroupsController(BaseController):
                                         map(lambda k: k[0], c.repo_groups))()
         try:
             form_result = repo_group_form.to_python(dict(request.POST))
-            RepoGroupModel().create(
+            gr = RepoGroupModel().create(
                 group_name=form_result['group_name'],
                 group_description=form_result['group_description'],
                 parent=form_result['group_parent_id'],
-                owner=self.authuser.user_id,
+                owner=self.authuser.user_id, # TODO: make editable
                 copy_permissions=form_result['group_copy_permissions']
             )
             Session().commit()
-            h.flash(_('Created repository group %s') \
-                    % form_result['group_name'], category='success')
             #TODO: in futureaction_logger(, '', '', '', self.sa)
         except formencode.Invalid, errors:
             return htmlfill.render(
@@ -195,9 +193,12 @@ class RepoGroupsController(BaseController):
             log.error(traceback.format_exc())
             h.flash(_('Error occurred during creation of repository group %s') \
                     % request.POST.get('group_name'), category='error')
-        parent_group_id = form_result['group_parent_id']
-        #TODO: maybe we should get back to the main view, not the admin one
-        return redirect(url('repos_groups', parent_group=parent_group_id))
+            parent_group_id = form_result['group_parent_id']
+            #TODO: maybe we should get back to the main view, not the admin one
+            return redirect(url('repos_groups', parent_group=parent_group_id))
+        h.flash(_('Created repository group %s') % gr.group_name,
+                category='success')
+        return redirect(url('repos_group_home', group_name=gr.group_name))
 
     def new(self):
         """GET /repo_groups/new: Form to create a new item"""
