@@ -38,7 +38,7 @@ import kallithea.lib.helpers as h
 
 from kallithea.lib.helpers import Page
 from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator, \
-    NotAnonymous, HasRepoPermissionAny, HasPermissionAnyDecorator
+    NotAnonymous, HasRepoPermissionAny, HasPermissionAnyDecorator, HasPermissionAny
 from kallithea.lib.base import BaseRepoController, render
 from kallithea.model.db import Repository, RepoGroup, UserFollowing, User,\
     Ui
@@ -56,8 +56,11 @@ class ForksController(BaseRepoController):
         super(ForksController, self).__before__()
 
     def __load_defaults(self):
+        repo_group_perms = ['group.admin']
+        if HasPermissionAny('hg.create.write_on_repogroup.true')():
+            repo_group_perms.append('group.write')
         acl_groups = RepoGroupList(RepoGroup.query().all(),
-                               perm_set=['group.write', 'group.admin'])
+                               perm_set=repo_group_perms)
         c.repo_groups = RepoGroup.groups_choices(groups=acl_groups)
         c.repo_groups_choices = map(lambda k: k[0], c.repo_groups)
         choices, c.landing_revs = ScmModel().get_repo_landing_revs()
