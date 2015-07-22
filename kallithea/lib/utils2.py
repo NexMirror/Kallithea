@@ -433,17 +433,17 @@ def age(prevdate, show_short_version=False, now=None):
 
         if sub_value == 0 or show_short_version:
             if future:
-                return _(u'in %s') % fmt_funcs[part](value)
+                return _('in %s') % fmt_funcs[part](value)
             else:
-                return _(u'%s ago') % fmt_funcs[part](value)
+                return _('%s ago') % fmt_funcs[part](value)
         if future:
-            return _(u'in %s and %s') % (fmt_funcs[part](value),
+            return _('in %s and %s') % (fmt_funcs[part](value),
                 fmt_funcs[sub_part](sub_value))
         else:
-            return _(u'%s and %s ago') % (fmt_funcs[part](value),
+            return _('%s and %s ago') % (fmt_funcs[part](value),
                 fmt_funcs[sub_part](sub_value))
 
-    return _(u'just now')
+    return _('just now')
 
 
 def uri_filter(uri):

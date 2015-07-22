@@ -255,12 +255,12 @@ class UserModel(BaseModel):
 
         if user.username == User.DEFAULT_USER:
             raise DefaultUserException(
-                _(u"You can't remove this user since it's"
+                _("You can't remove this user since it's"
                   " crucial for entire application"))
         if user.repositories:
             repos = [x.repo_name for x in user.repositories]
             raise UserOwnsReposException(
-                _(u'User "%s" still owns %s repositories and cannot be '
+                _('User "%s" still owns %s repositories and cannot be '
                   'removed. Switch owners or remove those repositories: %s')
                 % (user.username, len(repos), ', '.join(repos)))
         if user.repo_groups:

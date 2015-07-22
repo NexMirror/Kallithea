@@ -93,11 +93,11 @@ def UniqueListFromString():
 def ValidUsername(edit=False, old_data={}):
     class _validator(formencode.validators.FancyValidator):
         messages = {
-            'username_exists': _(u'Username "%(username)s" already exists'),
+            'username_exists': _('Username "%(username)s" already exists'),
             'system_invalid_username':
-                _(u'Username "%(username)s" is forbidden'),
+                _('Username "%(username)s" is forbidden'),
             'invalid_username':
-                _(u'Username may only contain alphanumeric characters '
+                _('Username may only contain alphanumeric characters '
                     'underscores, periods or dashes and must begin with '
                     'alphanumeric character or underscore')
         }
@@ -131,7 +131,7 @@ def ValidRegex(msg=None):
 def ValidRepoUser():
     class _validator(formencode.validators.FancyValidator):
         messages = {
-            'invalid_username': _(u'Username %(username)s is not valid')
+            'invalid_username': _('Username %(username)s is not valid')
         }
 
         def validate_python(self, value, state):
@@ -150,10 +150,10 @@ def ValidRepoUser():
 def ValidUserGroup(edit=False, old_data={}):
     class _validator(formencode.validators.FancyValidator):
         messages = {
-            'invalid_group': _(u'Invalid user group name'),
-            'group_exist': _(u'User group "%(usergroup)s" already exists'),
+            'invalid_group': _('Invalid user group name'),
+            'group_exist': _('User group "%(usergroup)s" already exists'),
             'invalid_usergroup_name':
-                _(u'user group name may only contain alphanumeric '
+                _('user group name may only contain alphanumeric '
                   'characters underscores, periods or dashes and must begin '
                   'with alphanumeric character')
         }
@@ -191,10 +191,10 @@ def ValidUserGroup(edit=False, old_data={}):
 def ValidRepoGroup(edit=False, old_data={}):
     class _validator(formencode.validators.FancyValidator):
         messages = {
-            'group_parent_id': _(u'Cannot assign this group as parent'),
-            'group_exists': _(u'Group "%(group_name)s" already exists'),
+            'group_parent_id': _('Cannot assign this group as parent'),
+            'group_exists': _('Group "%(group_name)s" already exists'),
             'repo_exists':
-                _(u'Repository with name "%(group_name)s" already exists')
+                _('Repository with name "%(group_name)s" already exists')
         }
 
         def validate_python(self, value, state):
@@ -252,7 +252,7 @@ def ValidPassword():
     class _validator(formencode.validators.FancyValidator):
         messages = {
             'invalid_password':
-                _(u'Invalid characters (non-ascii) in password')
+                _('Invalid characters (non-ascii) in password')
         }
 
         def validate_python(self, value, state):
@@ -267,7 +267,7 @@ def ValidPassword():
 def ValidOldPassword(username):
     class _validator(formencode.validators.FancyValidator):
         messages = {
-            'invalid_password': _(u'Invalid old password')
+            'invalid_password': _('Invalid old password')
         }
 
         def validate_python(self, value, state):
@@ -283,7 +283,7 @@ def ValidOldPassword(username):
 def ValidPasswordsMatch(passwd='new_password', passwd_confirmation='password_confirmation'):
     class _validator(formencode.validators.FancyValidator):
         messages = {
-            'password_mismatch': _(u'Passwords do not match'),
+            'password_mismatch': _('Passwords do not match'),
         }
 
         def validate_python(self, value, state):
@@ -300,9 +300,9 @@ def ValidPasswordsMatch(passwd='new_password', passwd_confirmation='password_con
 def ValidAuth():
     class _validator(formencode.validators.FancyValidator):
         messages = {
-            'invalid_password': _(u'invalid password'),
-            'invalid_username': _(u'invalid user name'),
-            'disabled_account': _(u'Your account is disabled')
+            'invalid_password': _('invalid password'),
+            'invalid_username': _('invalid user name'),
+            'disabled_account': _('Your account is disabled')
         }
 
         def validate_python(self, value, state):
@@ -332,7 +332,7 @@ def ValidAuth():
 def ValidAuthToken():
     class _validator(formencode.validators.FancyValidator):
         messages = {
-            'invalid_token': _(u'Token mismatch')
+            'invalid_token': _('Token mismatch')
         }
 
         def validate_python(self, value, state):
@@ -346,12 +346,12 @@ def ValidRepoName(edit=False, old_data={}):
     class _validator(formencode.validators.FancyValidator):
         messages = {
             'invalid_repo_name':
-                _(u'Repository name %(repo)s is disallowed'),
+                _('Repository name %(repo)s is disallowed'),
             'repository_exists':
-                _(u'Repository named %(repo)s already exists'),
-            'repository_in_group_exists': _(u'Repository "%(repo)s" already '
+                _('Repository named %(repo)s already exists'),
+            'repository_in_group_exists': _('Repository "%(repo)s" already '
                                             'exists in group "%(group)s"'),
-            'same_group_exists': _(u'Repository group with name "%(repo)s" '
+            'same_group_exists': _('Repository group with name "%(repo)s" '
                                    'already exists')
         }
 
@@ -466,8 +466,8 @@ def ValidCloneUri():
 
     class _validator(formencode.validators.FancyValidator):
         messages = {
-            'clone_uri': _(u'Invalid repository URL'),
-            'invalid_clone_uri': _(u'Invalid repository URL. It must be a '
+            'clone_uri': _('Invalid repository URL'),
+            'invalid_clone_uri': _('Invalid repository URL. It must be a '
                                     'valid http, https, ssh, svn+http or svn+https URL'),
         }
 
@@ -490,7 +490,7 @@ def ValidCloneUri():
 def ValidForkType(old_data={}):
     class _validator(formencode.validators.FancyValidator):
         messages = {
-            'invalid_fork_type': _(u'Fork has to be the same type as parent')
+            'invalid_fork_type': _('Fork has to be the same type as parent')
         }
 
         def validate_python(self, value, state):
@@ -505,9 +505,9 @@ def ValidForkType(old_data={}):
 def CanWriteGroup(old_data=None):
     class _validator(formencode.validators.FancyValidator):
         messages = {
-            'permission_denied': _(u"You don't have permissions "
+            'permission_denied': _("You don't have permissions "
                                    "to create repository in this group"),
-            'permission_denied_root': _(u"no permission to create repository "
+            'permission_denied_root': _("no permission to create repository "
                                         "in root location")
         }
 
@@ -557,7 +557,7 @@ def CanWriteGroup(old_data=None):
 def CanCreateGroup(can_create_in_root=False):
     class _validator(formencode.validators.FancyValidator):
         messages = {
-            'permission_denied': _(u"You don't have permissions "
+            'permission_denied': _("You don't have permissions "
                                    "to create a group in this location")
         }
 
@@ -598,7 +598,7 @@ def ValidPerms(type_='repo'):
     class _validator(formencode.validators.FancyValidator):
         messages = {
             'perm_new_member_name':
-                _(u'This username or user group name is not valid')
+                _('This username or user group name is not valid')
         }
 
         def to_python(self, value, state):
@@ -691,7 +691,7 @@ def ValidSettings():
 def ValidPath():
     class _validator(formencode.validators.FancyValidator):
         messages = {
-            'invalid_path': _(u'This is not a valid path')
+            'invalid_path': _('This is not a valid path')
         }
 
         def validate_python(self, value, state):
@@ -706,7 +706,7 @@ def ValidPath():
 def UniqSystemEmail(old_data={}):
     class _validator(formencode.validators.FancyValidator):
         messages = {
-            'email_taken': _(u'This e-mail address is already taken')
+            'email_taken': _('This e-mail address is already taken')
         }
 
         def _to_python(self, value, state):
@@ -726,7 +726,7 @@ def UniqSystemEmail(old_data={}):
 def ValidSystemEmail():
     class _validator(formencode.validators.FancyValidator):
         messages = {
-            'non_existing_email': _(u'e-mail "%(email)s" does not exist.')
+            'non_existing_email': _('e-mail "%(email)s" does not exist.')
         }
 
         def _to_python(self, value, state):
@@ -763,7 +763,7 @@ def AttrLoginValidator():
     class _validator(formencode.validators.UnicodeString):
         messages = {
             'invalid_cn':
-                  _(u'The LDAP Login attribute of the CN must be specified - '
+                  _('The LDAP Login attribute of the CN must be specified - '
                     'this is the name of the attribute that is equivalent '
                     'to "username"')
         }
@@ -776,7 +776,7 @@ def NotReviewedRevisions(repo_id):
     class _validator(formencode.validators.FancyValidator):
         messages = {
             'rev_already_reviewed':
-                  _(u'Revisions %(revs)s are already part of pull request '
+                  _('Revisions %(revs)s are already part of pull request '
                     'or have set status')
         }
 

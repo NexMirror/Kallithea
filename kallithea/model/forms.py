@@ -54,8 +54,8 @@ class LoginForm(formencode.Schema):
         min=1,
         not_empty=True,
         messages={
-           'empty': _(u'Please enter a login'),
-           'tooShort': _(u'Enter a value %(min)i characters long or more')}
+           'empty': _('Please enter a login'),
+           'tooShort': _('Enter a value %(min)i characters long or more')}
     )
 
     password = v.UnicodeString(
@@ -63,8 +63,8 @@ class LoginForm(formencode.Schema):
         min=3,
         not_empty=True,
         messages={
-            'empty': _(u'Please enter a password'),
-            'tooShort': _(u'Enter %(min)i characters or more')}
+            'empty': _('Please enter a password'),
+            'tooShort': _('Enter %(min)i characters or more')}
     )
 
     remember = v.StringBoolean(if_missing=False)
