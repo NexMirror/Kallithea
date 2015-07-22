@@ -353,12 +353,10 @@ def pygmentize_annotation(repo_name, filenode, **kwargs):
             author = escape(changeset.author)
             date = changeset.date
             message = escape(changeset.message)
-
             tooltip_html = ("<div style='font-size:0.8em'><b>Author:</b>"
                             " %s<br/><b>Date:</b> %s</b><br/><b>Message:"
-                            "</b> %s<br/></div>")
+                            "</b> %s<br/></div>") % (author, date, message)
 
-            tooltip_html = tooltip_html % (author, date, message)
             lnk_format = show_id(changeset)
             uri = link_to(
                     lnk_format,
@@ -618,28 +616,25 @@ def action_parser(user_log, feed=False, parse_cs=False):
         repo_name = user_log.repository.repo_name
 
         def lnk(rev, repo_name):
+            lazy_cs = False
+            title = None
+            _url = '#'
             if isinstance(rev, BaseChangeset) or isinstance(rev, AttributeDict):
-                lazy_cs = True
-                if getattr(rev, 'op', None) and getattr(rev, 'ref_name', None):
-                    lazy_cs = False
-                    lbl = '?'
+                if rev.op and rev.ref_name:
                     if rev.op == 'delete_branch':
                         lbl = '%s' % _('Deleted branch: %s') % rev.ref_name
-                        title = ''
                     elif rev.op == 'tag':
                         lbl = '%s' % _('Created tag: %s') % rev.ref_name
-                        title = ''
-                    _url = '#'
-
+                    else:
+                        lbl = 'Unknown operation %s' % rev.op
                 else:
-                    lbl = '%s' % (rev.short_id[:8])
+                    lazy_cs = True
+                    lbl = rev.short_id[:8]
                     _url = url('changeset_home', repo_name=repo_name,
                                revision=rev.raw_id)
-                    title = tooltip(rev.message)
             else:
-                ## changeset cannot be found/striped/removed etc.
+                # changeset cannot be found - it might have been stripped or removed
                 lbl = ('%s' % rev)[:12]
-                _url = '#'
                 title = _('Changeset not found')
             if parse_cs:
                 return link_to(lbl, _url, title=title, class_='tooltip')
@@ -669,7 +664,6 @@ def action_parser(user_log, feed=False, parse_cs=False):
                     except ChangesetDoesNotExistError:
                         log.error('cannot find revision %s in this repo' % rev)
                         revs.append(rev)
-                        continue
                 else:
                     _rev = AttributeDict({
                         'short_id': rev[:12],
