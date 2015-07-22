@@ -37,7 +37,7 @@ from sqlalchemy.sql.expression import func
 
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import LoginRequired, HasPermissionAllDecorator, \
-    HasRepoPermissionAllDecorator, NotAnonymous, HasPermissionAny, \
+    HasRepoPermissionAllDecorator, NotAnonymous, HasPermissionAny, HasPermissionAll, \
     HasRepoGroupPermissionAny, HasRepoPermissionAnyDecorator
 from kallithea.lib.base import BaseRepoController, render
 from kallithea.lib.utils import action_logger, repo_name_slug, jsonify
@@ -76,24 +76,26 @@ class ReposController(BaseRepoController):
         return repo_obj
 
     def __load_defaults(self, repo=None):
-        acl_groups = RepoGroupList(RepoGroup.query().all(),
-                               perm_set=['group.write', 'group.admin'])
-        c.repo_groups = RepoGroup.groups_choices(groups=acl_groups)
-        c.repo_groups_choices = map(lambda k: k[0], c.repo_groups)
+        top_perms = ['hg.create.repository']
+        repo_group_perms = ['group.admin']
+        if HasPermissionAny('hg.create.write_on_repogroup.true')():
+            repo_group_perms.append('group.write')
+        extras = [] if repo is None else [repo.group]
 
-        # in case someone no longer have a group.write access to a repository
-        # pre fill the list with this entry, we don't care if this is the same
-        # but it will allow saving repo data properly.
+        groups = RepoGroup.query().all()
+        if HasPermissionAll('hg.admin')('available repo groups'):
+            groups.append(None)
+        else:
+            groups = list(RepoGroupList(groups, perm_set=repo_group_perms))
+            if top_perms and HasPermissionAny(*top_perms)('available repo groups'):
+                groups.append(None)
+            for extra in extras:
+                if not any(rg == extra for rg in groups):
+                    groups.append(extra)
+        c.repo_groups = RepoGroup.groups_choices(groups=groups, show_empty_group=False)
+        c.repo_groups_choices = [rg[0] for rg in c.repo_groups]
 
-        repo_group = None
-        if repo:
-            repo_group = repo.group
-        if repo_group and repo_group.group_id not in c.repo_groups_choices:
-            c.repo_groups_choices.append(repo_group.group_id)
-            c.repo_groups.append(RepoGroup._generate_choice(repo_group))
-
-        choices, c.landing_revs = ScmModel().get_repo_landing_revs()
-        c.landing_revs_choices = choices
+        c.landing_revs_choices, c.landing_revs = ScmModel().get_repo_landing_revs(repo)
 
     def __load_data(self, repo_name=None):
         """
@@ -104,9 +106,6 @@ class ReposController(BaseRepoController):
         c.repo_info = self._load_repo(repo_name)
         self.__load_defaults(c.repo_info)
 
-        ##override defaults for exact repo info here git/hg etc
-        choices, c.landing_revs = ScmModel().get_repo_landing_revs(c.repo_info)
-        c.landing_revs_choices = choices
         defaults = RepoModel()._get_defaults(repo_name)
         defaults['clone_uri'] = c.repo_info.clone_uri_hidden # don't show password
 
@@ -173,28 +172,18 @@ class ReposController(BaseRepoController):
     @NotAnonymous()
     def create_repository(self):
         """GET /_admin/create_repository: Form to create a new item"""
+        self.__load_defaults()
+        if not c.repo_groups:
+            raise HTTPForbidden
         parent_group = request.GET.get('parent_group')
-        if not HasPermissionAny('hg.admin', 'hg.create.repository')():
-            #you're not super admin nor have global create permissions,
-            #but maybe you have at least write permission to a parent group ?
-            _gr = RepoGroup.get(parent_group)
-            gr_name = _gr.group_name if _gr else None
-            # create repositories with write permission on group is set to true
-            create_on_write = HasPermissionAny('hg.create.write_on_repogroup.true')()
-            group_admin = HasRepoGroupPermissionAny('group.admin')(group_name=gr_name)
-            group_write = HasRepoGroupPermissionAny('group.write')(group_name=gr_name)
-            if not (group_admin or (group_write and create_on_write)):
-                raise HTTPForbidden
-
-        acl_groups = RepoGroupList(RepoGroup.query().all(),
-                               perm_set=['group.write', 'group.admin'])
-        c.repo_groups = RepoGroup.groups_choices(groups=acl_groups)
-        c.repo_groups_choices = map(lambda k: k[0], c.repo_groups)
-        choices, c.landing_revs = ScmModel().get_repo_landing_revs()
 
         ## apply the defaults from defaults page
         defaults = Setting.get_default_repo_settings(strip_prefix=True)
         if parent_group:
+            prg = RepoGroup.get(parent_group)
+            if prg is None or not any(rgc[0] == prg.group_id
+                                      for rgc in c.repo_groups):
+                raise HTTPForbidden
             defaults.update({'repo_group': parent_group})
 
         return htmlfill.render(
@@ -260,16 +249,13 @@ class ReposController(BaseRepoController):
         #           method='put')
         # url('repo', repo_name=ID)
         c.repo_info = self._load_repo(repo_name)
+        self.__load_defaults(c.repo_info)
         c.active = 'settings'
         c.repo_fields = RepositoryField.query()\
             .filter(RepositoryField.repository == c.repo_info).all()
-        self.__load_defaults(c.repo_info)
 
         repo_model = RepoModel()
         changed_name = repo_name
-        #override the choices with extracted revisions !
-        choices, c.landing_revs = ScmModel().get_repo_landing_revs(repo_name)
-        c.landing_revs_choices = choices
         repo = Repository.get_by_repo_name(repo_name)
         old_data = {
             'repo_name': repo_name,

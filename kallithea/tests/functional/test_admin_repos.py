@@ -611,7 +611,7 @@ class _BaseTest(object):
                                                 repo_description=description,
                                                 _authentication_token=self.authentication_token()))
 
-        response.mustcontain('no permission to create repository in root location')
+        response.mustcontain('<span class="error-message">Invalid value</span>')
 
         RepoModel().delete(repo_name)
         Session().commit()
