@@ -50,7 +50,7 @@ from kallithea.lib import helpers as h
 from kallithea.lib.utils2 import safe_str, safe_unicode, get_server_url,\
     _set_extras
 from kallithea.lib.auth import HasRepoPermissionAny, HasRepoGroupPermissionAny,\
-    HasUserGroupPermissionAny
+    HasUserGroupPermissionAny, HasPermissionAny, HasPermissionAll
 from kallithea.lib.utils import get_filesystem_repos, make_ui, \
     action_logger
 from kallithea.model import BaseModel
@@ -884,3 +884,21 @@ class ScmModel(BaseModel):
                     log.error('error writing %s: %s' % (_hook_file, e))
             else:
                 log.debug('skipping writing hook file')
+
+def AvailableRepoGroupChoices(top_perms, repo_group_perms, extras=()):
+    """Return group_id,string tuples with choices for all the repo groups where
+    the user has the necessary permissions.
+
+    Top level is -1.
+    """
+    groups = RepoGroup.query().all()
+    if HasPermissionAll('hg.admin')('available repo groups'):
+        groups.append(None)
+    else:
+        groups = list(RepoGroupList(groups, perm_set=repo_group_perms))
+        if top_perms and HasPermissionAny(*top_perms)('available repo groups'):
+            groups.append(None)
+        for extra in extras:
+            if not any(rg == extra for rg in groups):
+                groups.append(extra)
+    return RepoGroup.groups_choices(groups=groups, show_empty_group=False)

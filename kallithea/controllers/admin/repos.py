@@ -46,7 +46,7 @@ from kallithea.model.meta import Session
 from kallithea.model.db import User, Repository, UserFollowing, RepoGroup,\
     Setting, RepositoryField
 from kallithea.model.forms import RepoForm, RepoFieldForm, RepoPermsForm
-from kallithea.model.scm import ScmModel, RepoGroupList, RepoList
+from kallithea.model.scm import ScmModel, AvailableRepoGroupChoices, RepoList
 from kallithea.model.repo import RepoModel
 from kallithea.lib.compat import json
 from kallithea.lib.exceptions import AttachedForksError
@@ -82,17 +82,7 @@ class ReposController(BaseRepoController):
             repo_group_perms.append('group.write')
         extras = [] if repo is None else [repo.group]
 
-        groups = RepoGroup.query().all()
-        if HasPermissionAll('hg.admin')('available repo groups'):
-            groups.append(None)
-        else:
-            groups = list(RepoGroupList(groups, perm_set=repo_group_perms))
-            if top_perms and HasPermissionAny(*top_perms)('available repo groups'):
-                groups.append(None)
-            for extra in extras:
-                if not any(rg == extra for rg in groups):
-                    groups.append(extra)
-        c.repo_groups = RepoGroup.groups_choices(groups=groups, show_empty_group=False)
+        c.repo_groups = AvailableRepoGroupChoices(top_perms, repo_group_perms, extras)
         c.repo_groups_choices = [rg[0] for rg in c.repo_groups]
 
         c.landing_revs_choices, c.landing_revs = ScmModel().get_repo_landing_revs(repo)
