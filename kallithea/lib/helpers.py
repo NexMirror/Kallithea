@@ -29,7 +29,6 @@ from pygments.formatters.html import HtmlFormatter
 from pygments import highlight as code_highlight
 from pylons import url
 from pylons.i18n.translation import _, ungettext
-from hashlib import md5 # used as h.md5
 
 from webhelpers.html import literal, HTML, escape
 from webhelpers.html.tools import *

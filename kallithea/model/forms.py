@@ -232,7 +232,8 @@ def RepoForm(edit=False, old_data={}, supported_backends=BACKENDS.keys(),
         if edit:
             #this is repo owner
             user = All(v.UnicodeString(not_empty=True), v.ValidRepoUser())
-            clone_uri_change = v.UnicodeString(not_empty=False, if_missing=v.Missing)
+            # Not a real field - just for reference for validation:
+            # clone_uri_hidden = v.UnicodeString(if_missing='')
 
         chained_validators = [v.ValidCloneUri(),
                               v.ValidRepoName(edit, old_data)]

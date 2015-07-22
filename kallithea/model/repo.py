@@ -325,25 +325,18 @@ class RepoModel(BaseModel):
             if 'repo_group' in kwargs:
                 cur_repo.group = RepoGroup.get(kwargs['repo_group'])
             log.debug('Updating repo %s with params:%s' % (cur_repo, kwargs))
-            for strip, k in [(1, 'repo_enable_downloads'),
-                             (1, 'repo_description'),
-                             (1, 'repo_enable_locking'),
-                             (1, 'repo_landing_rev'),
-                             (1, 'repo_private'),
-                             (1, 'repo_enable_statistics'),
-                             (0, 'clone_uri'),]:
+            for k in ['repo_enable_downloads',
+                      'repo_description',
+                      'repo_enable_locking',
+                      'repo_landing_rev',
+                      'repo_private',
+                      'repo_enable_statistics',
+                      ]:
                 if k in kwargs:
-                    val = kwargs[k]
-                    if strip:
-                        k = remove_prefix(k, 'repo_')
-                    if k == 'clone_uri':
-                        from kallithea.model.validators import Missing
-                        _change = kwargs.get('clone_uri_change')
-                        if _change == Missing:
-                            # we don't change the value, so use original one
-                            val = cur_repo.clone_uri
-
-                    setattr(cur_repo, k, val)
+                    setattr(cur_repo, remove_prefix(k, 'repo_'), kwargs[k])
+            clone_uri = kwargs.get('clone_uri')
+            if clone_uri is not None and clone_uri != cur_repo.clone_uri_hidden:
+                cur_repo.clone_uri = clone_uri
 
             new_name = cur_repo.get_new_name(kwargs['repo_name'])
             cur_repo.repo_name = new_name

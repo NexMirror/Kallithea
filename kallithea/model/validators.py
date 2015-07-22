@@ -44,11 +44,6 @@ UnicodeString, OneOf, Int, Number, Regex, Email, Bool, StringBoolean, Set, \
 
 log = logging.getLogger(__name__)
 
-class _Missing(object):
-    pass
-
-Missing = _Missing()
-
 
 class StateObj(object):
     """
@@ -480,9 +475,7 @@ def ValidCloneUri():
             repo_type = value.get('repo_type')
             url = value.get('clone_uri')
 
-            if not url:
-                pass
-            else:
+            if url and url != value.get('clone_uri_hidden'):
                 try:
                     url_handler(repo_type, url, make_ui('db', clear_session=False))
                 except Exception:

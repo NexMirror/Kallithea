@@ -108,6 +108,7 @@ class ReposController(BaseRepoController):
         choices, c.landing_revs = ScmModel().get_repo_landing_revs(c.repo_info)
         c.landing_revs_choices = choices
         defaults = RepoModel()._get_defaults(repo_name)
+        defaults['clone_uri'] = c.repo_info.clone_uri_hidden # don't show password
 
         return defaults
 
@@ -231,9 +232,8 @@ class ReposController(BaseRepoController):
         repo = Repository.get_by_repo_name(repo_name)
         if repo and repo.repo_state == Repository.STATE_CREATED:
             if repo.clone_uri:
-                clone_uri = repo.clone_uri_hidden
                 h.flash(_('Created repository %s from %s')
-                        % (repo.repo_name, clone_uri), category='success')
+                        % (repo.repo_name, repo.clone_uri_hidden), category='success')
             else:
                 repo_url = h.link_to(repo.repo_name,
                                      h.url('summary_home',
@@ -365,9 +365,6 @@ class ReposController(BaseRepoController):
         """GET /repo_name/settings: Form to edit an existing item"""
         # url('edit_repo', repo_name=ID)
         defaults = self.__load_data(repo_name)
-        if 'clone_uri' in defaults:
-            del defaults['clone_uri']
-
         c.repo_fields = RepositoryField.query()\
             .filter(RepositoryField.repository == c.repo_info).all()
         repo_model = RepoModel()
