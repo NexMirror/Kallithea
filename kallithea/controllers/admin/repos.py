@@ -83,7 +83,6 @@ class ReposController(BaseRepoController):
         extras = [] if repo is None else [repo.group]
 
         c.repo_groups = AvailableRepoGroupChoices(top_perms, repo_group_perms, extras)
-        c.repo_groups_choices = [rg[0] for rg in c.repo_groups]
 
         c.landing_revs_choices, c.landing_revs = ScmModel().get_repo_landing_revs(repo)
 
@@ -128,7 +127,7 @@ class ReposController(BaseRepoController):
         task_id = None
         try:
             # CanWriteGroup validators checks permissions of this POST
-            form_result = RepoForm(repo_groups=c.repo_groups_choices,
+            form_result = RepoForm(repo_groups=c.repo_groups,
                                    landing_revs=c.landing_revs_choices)()\
                             .to_python(dict(request.POST))
 
@@ -253,7 +252,7 @@ class ReposController(BaseRepoController):
             'repo_type': repo.repo_type,
         }
         _form = RepoForm(edit=True, old_data=old_data,
-                         repo_groups=c.repo_groups_choices,
+                         repo_groups=c.repo_groups,
                          landing_revs=c.landing_revs_choices)()
 
         try:

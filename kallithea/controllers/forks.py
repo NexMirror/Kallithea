@@ -60,7 +60,6 @@ class ForksController(BaseRepoController):
         if HasPermissionAny('hg.create.write_on_repogroup.true')():
             repo_group_perms.append('group.write')
         c.repo_groups = AvailableRepoGroupChoices(['hg.create.repository'], repo_group_perms)
-        c.repo_groups_choices = [rg[0] for rg in c.repo_groups]
 
         c.landing_revs_choices, c.landing_revs = ScmModel().get_repo_landing_revs()
 
@@ -158,7 +157,7 @@ class ForksController(BaseRepoController):
         self.__load_defaults()
         c.repo_info = Repository.get_by_repo_name(repo_name)
         _form = RepoForkForm(old_data={'repo_type': c.repo_info.repo_type},
-                             repo_groups=c.repo_groups_choices,
+                             repo_groups=c.repo_groups,
                              landing_revs=c.landing_revs_choices)()
         form_result = {}
         task_id = None

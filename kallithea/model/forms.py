@@ -145,8 +145,9 @@ def UserGroupForm(edit=False, old_data={}, available_members=[]):
     return _UserGroupForm
 
 
-def RepoGroupForm(edit=False, old_data={}, available_groups=[],
+def RepoGroupForm(edit=False, old_data={}, repo_groups=[],
                    can_create_in_root=False):
+    repo_group_ids = [rg[0] for rg in repo_groups]
     class _RepoGroupForm(formencode.Schema):
         allow_extra_fields = True
         filter_extra_fields = False
@@ -162,8 +163,9 @@ def RepoGroupForm(edit=False, old_data={}, available_groups=[],
             #FIXME: do a special check that we cannot move a group to one of
             #its children
             pass
+
         group_parent_id = All(v.CanCreateGroup(can_create_in_root),
-                              v.OneOf(available_groups, hideList=False,
+                              v.OneOf(repo_group_ids, hideList=False,
                                       testValueList=True,
                                       if_missing=None, not_empty=True),
                               v.Int(min=-1, not_empty=True))
@@ -209,13 +211,14 @@ def PasswordResetForm():
 
 def RepoForm(edit=False, old_data={}, supported_backends=BACKENDS.keys(),
              repo_groups=[], landing_revs=[]):
+    repo_group_ids = [rg[0] for rg in repo_groups]
     class _RepoForm(formencode.Schema):
         allow_extra_fields = True
         filter_extra_fields = False
         repo_name = All(v.UnicodeString(strip=True, min=1, not_empty=True),
                         v.SlugifyName())
         repo_group = All(v.CanWriteGroup(old_data),
-                         v.OneOf(repo_groups, hideList=True),
+                         v.OneOf(repo_group_ids, hideList=True),
                          v.Int(min=-1, not_empty=True))
         repo_type = v.OneOf(supported_backends, required=False,
                             if_missing=old_data.get('repo_type'))
@@ -283,13 +286,14 @@ def RepoFieldForm():
 
 def RepoForkForm(edit=False, old_data={}, supported_backends=BACKENDS.keys(),
                  repo_groups=[], landing_revs=[]):
+    repo_group_ids = [rg[0] for rg in repo_groups]
     class _RepoForkForm(formencode.Schema):
         allow_extra_fields = True
         filter_extra_fields = False
         repo_name = All(v.UnicodeString(strip=True, min=1, not_empty=True),
                         v.SlugifyName())
         repo_group = All(v.CanWriteGroup(),
-                         v.OneOf(repo_groups, hideList=True),
+                         v.OneOf(repo_group_ids, hideList=True),
                          v.Int(min=-1, not_empty=True))
         repo_type = All(v.ValidForkType(old_data), v.OneOf(supported_backends))
         description = v.UnicodeString(strip=True, min=1, not_empty=True)

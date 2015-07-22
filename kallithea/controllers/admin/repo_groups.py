@@ -72,7 +72,6 @@ class RepoGroupsController(BaseController):
         exclude_group_ids = set(rg.group_id for rg in exclude)
         c.repo_groups = [rg for rg in repo_groups
                          if rg[0] not in exclude_group_ids]
-        c.repo_groups_choices = [rg[0] for rg in c.repo_groups]
 
         repo_model = RepoModel()
         c.users_array = repo_model.get_users_js()
@@ -164,7 +163,7 @@ class RepoGroupsController(BaseController):
 
         # permissions for can create group based on parent_id are checked
         # here in the Form
-        repo_group_form = RepoGroupForm(available_groups=c.repo_groups_choices)
+        repo_group_form = RepoGroupForm(repo_groups=c.repo_groups)
         try:
             form_result = repo_group_form.to_python(dict(request.POST))
             gr = RepoGroupModel().create(
@@ -240,7 +239,7 @@ class RepoGroupsController(BaseController):
         repo_group_form = RepoGroupForm(
             edit=True,
             old_data=c.repo_group.get_dict(),
-            available_groups=c.repo_groups_choices,
+            repo_groups=c.repo_groups,
             can_create_in_root=allow_empty_group,
         )()
         try:
