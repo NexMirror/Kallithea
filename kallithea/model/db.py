@@ -1519,16 +1519,10 @@ class RepoGroup(Base, BaseModel):
         return repo_group.group_id, literal(cls.SEP.join(repo_group.full_path_splitted))
 
     @classmethod
-    def groups_choices(cls, groups, show_empty_group=True):
+    def groups_choices(cls, groups):
         """Return tuples with group_id and name as html literal."""
-
-        if show_empty_group:
-            groups = list(groups)
-            groups.append(None)
-
-        choices = [cls._generate_choice(g) for g in groups]
-
-        return sorted(choices, key=lambda c: c[1].split(cls.SEP))
+        return sorted((cls._generate_choice(g) for g in groups),
+                      key=lambda c: c[1].split(cls.SEP))
 
     @classmethod
     def url_sep(cls):

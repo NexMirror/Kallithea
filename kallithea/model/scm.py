@@ -901,4 +901,4 @@ def AvailableRepoGroupChoices(top_perms, repo_group_perms, extras=()):
         for extra in extras:
             if not any(rg == extra for rg in groups):
                 groups.append(extra)
-    return RepoGroup.groups_choices(groups=groups, show_empty_group=False)
+    return RepoGroup.groups_choices(groups=groups)
