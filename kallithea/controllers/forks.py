@@ -44,7 +44,7 @@ from kallithea.model.db import Repository, RepoGroup, UserFollowing, User,\
     Ui
 from kallithea.model.repo import RepoModel
 from kallithea.model.forms import RepoForkForm
-from kallithea.model.scm import ScmModel, RepoGroupList
+from kallithea.model.scm import ScmModel, AvailableRepoGroupChoices
 from kallithea.lib.utils2 import safe_int
 
 log = logging.getLogger(__name__)
@@ -59,12 +59,11 @@ class ForksController(BaseRepoController):
         repo_group_perms = ['group.admin']
         if HasPermissionAny('hg.create.write_on_repogroup.true')():
             repo_group_perms.append('group.write')
-        acl_groups = RepoGroupList(RepoGroup.query().all(),
-                               perm_set=repo_group_perms)
-        c.repo_groups = RepoGroup.groups_choices(groups=acl_groups)
-        c.repo_groups_choices = map(lambda k: k[0], c.repo_groups)
-        choices, c.landing_revs = ScmModel().get_repo_landing_revs()
-        c.landing_revs_choices = choices
+        c.repo_groups = AvailableRepoGroupChoices(['hg.create.repository'], repo_group_perms)
+        c.repo_groups_choices = [rg[0] for rg in c.repo_groups]
+
+        c.landing_revs_choices, c.landing_revs = ScmModel().get_repo_landing_revs()
+
         c.can_update = Ui.get_by_key(Ui.HOOK_UPDATE).ui_active
 
     def __load_data(self, repo_name=None):
