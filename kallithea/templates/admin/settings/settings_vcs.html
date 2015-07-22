@@ -66,7 +66,7 @@ ${h.form(url('admin_settings'), method='post')}
                 <div class="input">
                     ${h.text('paths_root_path',size=60,readonly="readonly", class_="disabled")}
                     <span id="path_unlock" class="tooltip" style="cursor: pointer"
-                            title="${h.tooltip(_('Click to unlock. You must restart Kallithea in order to make this setting take effect.'))}">
+                            title="${_('Click to unlock. You must restart Kallithea in order to make this setting take effect.')}">
                         <div class="btn btn-small"><i id="path_unlock_icon" class="icon-lock"></i></div>
                     </span>
                     <span class="help-block">${_('Filesystem location where repositories are stored. After changing this value, a restart and rescan of the repository folder are both required.')}</span>

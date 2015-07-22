@@ -94,7 +94,7 @@ ${self.repo_context_bar('showpullrequest')}
           </div>
           <div class="input">
             % if len(c.pull_request_pending_reviewers) > 0:
-                <div class="tooltip" title="${h.tooltip(', '.join([x.username for x in c.pull_request_pending_reviewers]))}">${ungettext('%d reviewer', '%d reviewers',len(c.pull_request_pending_reviewers)) % len(c.pull_request_pending_reviewers)}</div>
+                <div class="tooltip" title="${', '.join([x.username for x in c.pull_request_pending_reviewers])}">${ungettext('%d reviewer', '%d reviewers',len(c.pull_request_pending_reviewers)) % len(c.pull_request_pending_reviewers)}</div>
             % elif len(c.pull_request_reviewers) > 0:
                 <div>${_('Pull request was reviewed by all reviewers')}</div>
             %else:
@@ -217,7 +217,7 @@ ${self.repo_context_bar('showpullrequest')}
               ## If you change something here it should be reflected in the template too.
               <li id="reviewer_${member.user_id}">
                 <div class="reviewers_member">
-                    <div class="reviewer_status tooltip" title="${h.tooltip(h.changeset_status_lbl(status.status if status else 'not_reviewed'))}">
+                    <div class="reviewer_status tooltip" title="${h.changeset_status_lbl(status.status if status else 'not_reviewed')}">
                       <i class="icon-circle changeset-status-${status.status if status else 'not_reviewed'}"></i>
                     </div>
                   <div class="reviewer_gravatar gravatar">

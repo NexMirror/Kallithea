@@ -148,21 +148,6 @@ class _GetError(object):
 get_error = _GetError()
 
 
-class _ToolTip(object):
-
-    def __call__(self, tooltip_title, trim_at=50):
-        """
-        Special function just to wrap our text into nice formatted
-        autowrapped text
-
-        :param tooltip_title:
-        """
-        tooltip_title = escape(tooltip_title)
-        tooltip_title = tooltip_title.replace('<', '&lt;').replace('>', '&gt;')
-        return tooltip_title
-tooltip = _ToolTip()
-
-
 class _FilesBreadCrumbs(object):
 
     def __call__(self, repo_name, rev, paths):

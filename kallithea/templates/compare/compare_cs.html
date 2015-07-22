@@ -51,7 +51,7 @@
             ${index}
           </span>
         </td>
-        <td style="width: 140px"><span class="tooltip" title="${h.tooltip(h.age(cs.date))}">${cs.date}</span></td>
+        <td style="width: 140px"><span class="tooltip" title="${h.age(cs.date)}">${cs.date}</span></td>
         <td><div class="gravatar" commit_id="${cs.raw_id}">${h.gravatar(h.email_or_none(cs.author), size=14)}</div></td>
         <td><div class="author">${h.person(cs.author)}</div></td>
         <td>${h.link_to(h.show_id(cs),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}</td>
