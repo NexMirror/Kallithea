@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Kallithea\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2015-04-01 03:17+0200\n"
-"PO-Revision-Date: 2015-05-13 15:13+0200\n"
-"Last-Translator: Peter Vitt <peter.vitt2@uni-siegen.de>\n"
+"PO-Revision-Date: 2015-07-23 10:37+0200\n"
+"Last-Translator: Robert Martinez <ntttq@inboxen.org>\n"
 "Language-Team: German "
 "<https://hosted.weblate.org/projects/kallithea/kallithea/de/>\n"
 "Language: de\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2.3-dev\n"
+"X-Generator: Weblate 2.4-dev\n"
 
 #: kallithea/controllers/changelog.py:86
 #: kallithea/controllers/pullrequests.py:247 kallithea/lib/base.py:449
@@ -2085,7 +2085,7 @@ msgstr ""
 
 #: kallithea/model/validators.py:865
 msgid "Filename cannot be inside a directory"
-msgstr ""
+msgstr "Dateiname darf kein Unterverzeichnis enthalten"
 
 #: kallithea/model/validators.py:881
 #, python-format
@@ -2545,7 +2545,7 @@ msgstr "Repositorystandards"
 #: kallithea/templates/admin/defaults/defaults.html:11
 #: kallithea/templates/base/base.html:66
 msgid "Defaults"
-msgstr ""
+msgstr "Voreinstellungen"
 
 #: kallithea/templates/admin/defaults/defaults.html:35
 #: kallithea/templates/admin/repos/repo_add_base.html:59
@@ -2612,16 +2612,18 @@ msgid ""
 "Gist was update since you started editing. Copy your changes and click "
 "%(here)s to reload new version."
 msgstr ""
+"Gist wurde während der Änderung aktualisiert. Änderungen kopieren und %(here)"
+"s klicken um die neue Version nachzuladen."
 
 #: kallithea/templates/admin/gists/edit.html:55
 #: kallithea/templates/admin/gists/new.html:39
 msgid "Gist description ..."
-msgstr ""
+msgstr "Gist Beschreibung ..."
 
 #: kallithea/templates/admin/gists/edit.html:57
 #: kallithea/templates/admin/gists/new.html:41
 msgid "Gist lifetime"
-msgstr ""
+msgstr "Gist Lebenszeit"
 
 #: kallithea/templates/admin/gists/edit.html:61
 #: kallithea/templates/admin/gists/edit.html:63
@@ -2936,7 +2938,7 @@ msgstr "Bestätige neues Passwort"
 
 #: kallithea/templates/admin/my_account/my_account_profile.html:11
 msgid "Change your avatar at"
-msgstr ""
+msgstr "Benutzerbild ändern unter"
 
 #: kallithea/templates/admin/my_account/my_account_profile.html:12
 #: kallithea/templates/admin/users/user_edit_profile.html:9
@@ -3119,10 +3121,12 @@ msgid ""
 "Write permission to a repository group allows creating repositories "
 "inside that group."
 msgstr ""
+"Schreibrechte einer Repository Gruppe erlauben innerhalb der Gruppe neue "
+"Repositorys zu erstellen."
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:77
 msgid "User group creation"
-msgstr ""
+msgstr "Benutzergruppen Erstellung"
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:85
 msgid "Repository forking"
@@ -3138,18 +3142,18 @@ msgstr ""
 
 #: kallithea/templates/admin/permissions/permissions_ips.html:1
 msgid "Default IP Whitelist for All Users"
-msgstr ""
+msgstr "Standardmäßige IP Whitelist für alle Benutzer"
 
 #: kallithea/templates/admin/permissions/permissions_ips.html:15
 #: kallithea/templates/admin/users/user_edit_ips.html:23
 #, python-format
 msgid "Confirm to delete this ip: %s"
-msgstr ""
+msgstr "Bestätigen diese IP zu löschen: %s"
 
 #: kallithea/templates/admin/permissions/permissions_ips.html:21
 #: kallithea/templates/admin/users/user_edit_ips.html:30
 msgid "All IP addresses are allowed."
-msgstr ""
+msgstr "Alle IP-Adressen sind zulässig."
 
 #: kallithea/templates/admin/permissions/permissions_ips.html:32
 #: kallithea/templates/admin/users/user_edit_ips.html:42
