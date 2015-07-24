@@ -995,7 +995,7 @@ class _BaseTestApi(object):
         self._compare_ok(id_, expected, given=response.body)
         fixture.destroy_repo(repo_name)
 
-    def test_api_create_repo_in_group(self):
+    def test_api_create_repo_and_repo_group(self):
         repo_name = 'my_gr/api-repo'
         id_, params = _build_data(self.apikey, 'create_repo',
                                   repo_name=repo_name,
@@ -1014,6 +1014,39 @@ class _BaseTestApi(object):
         self._compare_ok(id_, expected, given=response.body)
         fixture.destroy_repo(repo_name)
         fixture.destroy_repo_group('my_gr')
+
+    def test_api_create_repo_in_repo_group_without_permission(self):
+        repo_group_name = '%s/api-repo-repo' % TEST_REPO_GROUP
+        repo_name = '%s/api-repo' % repo_group_name
+
+        rg = fixture.create_repo_group(repo_group_name)
+        Session().commit()
+        RepoGroupModel().grant_user_permission(repo_group_name,
+                                               self.TEST_USER_LOGIN,
+                                               'group.none')
+        Session().commit()
+
+        id_, params = _build_data(self.apikey_regular, 'create_repo',
+                                  repo_name=repo_name,
+                                  repo_type=self.REPO_TYPE,
+        )
+        response = api_call(self, params)
+
+        # Current result when API access control is different from Web:
+        ret = {
+            'msg': 'Created new repository `%s`' % repo_name,
+            'success': True,
+            'task': None,
+        }
+        expected = ret
+        self._compare_ok(id_, expected, given=response.body)
+        fixture.destroy_repo(repo_name)
+
+        # Expected and arguably more correct result:
+        #expected = 'failed to create repository `%s`' % repo_name
+        #self._compare_error(id_, expected, given=response.body)
+
+        fixture.destroy_repo_group(repo_group_name)
 
     def test_api_create_repo_unknown_owner(self):
         repo_name = 'api-repo'
