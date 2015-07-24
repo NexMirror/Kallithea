@@ -2319,10 +2319,6 @@ class PullRequest(Base, BaseModel):
     def is_closed(self):
         return self.status == self.STATUS_CLOSED
 
-    @property
-    def last_review_status(self):
-        return str(self.statuses[-1].status) if self.statuses else ''
-
     def user_review_status(self, user_id):
         """Return the user's latest status votes on PR"""
         # note: no filtering on repo - that would be redundant
