@@ -124,7 +124,7 @@
       </a>
     </div>
     <div style="float:left" class="grid_delete">
-      ${h.form(h.url('repo', repo_name=repo_name),method='delete')}
+      ${h.form(h.url('delete_repo', repo_name=repo_name), method='delete')}
         <i class="icon-minus-circled" style="color:#FF4444"></i>
         ${h.submit('remove_%s' % repo_name,_('Delete'),class_="action_button",
         onclick="return confirm('"+_('Confirm to delete this repository: %s') % repo_name+"');")}

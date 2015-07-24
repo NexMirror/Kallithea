@@ -234,9 +234,9 @@ class ReposController(BaseRepoController):
         # Forms posted to this method should contain a hidden field:
         #    <input type="hidden" name="_method" value="PUT" />
         # Or using helpers:
-        #    h.form(url('repo', repo_name=ID),
+        #    h.form(url('put_repo', repo_name=ID),
         #           method='put')
-        # url('repo', repo_name=ID)
+        # url('put_repo', repo_name=ID)
         c.repo_info = self._load_repo(repo_name)
         self.__load_defaults(c.repo_info)
         c.active = 'settings'
@@ -291,9 +291,9 @@ class ReposController(BaseRepoController):
         # Forms posted to this method should contain a hidden field:
         #    <input type="hidden" name="_method" value="DELETE" />
         # Or using helpers:
-        #    h.form(url('repo', repo_name=ID),
+        #    h.form(url('delete_repo', repo_name=ID),
         #           method='delete')
-        # url('repo', repo_name=ID)
+        # url('delete_repo', repo_name=ID)
 
         repo_model = RepoModel()
         repo = repo_model.get_by_repo_name(repo_name)
@@ -329,11 +329,6 @@ class ReposController(BaseRepoController):
         if repo.group:
             return redirect(url('repos_group_home', group_name=repo.group.group_name))
         return redirect(url('repos'))
-
-    @HasPermissionAllDecorator('hg.admin')
-    def show(self, repo_name, format='html'):
-        """GET /repos/repo_name: Show a specific item"""
-        # url('repo', repo_name=ID)
 
     @HasRepoPermissionAllDecorator('repository.admin')
     def edit(self, repo_name):

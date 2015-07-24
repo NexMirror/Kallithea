@@ -188,7 +188,7 @@ class TestAdminUsersController(TestController):
                                'Switch owners or remove those repositories: '
                                '%s' % (username, reponame))
 
-        response = self.app.delete(url('repo', repo_name=reponame))
+        response = self.app.delete(url('delete_repo', repo_name=reponame))
         self.checkSessionFlash(response, 'Deleted repository %s' % reponame)
 
         response = self.app.delete(url('user', id=new_user.user_id))

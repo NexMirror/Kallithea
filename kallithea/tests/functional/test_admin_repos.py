@@ -398,7 +398,7 @@ class _BaseTest(object):
         except vcs.exceptions.VCSError:
             self.fail('no repo %s in filesystem' % repo_name)
 
-        response = self.app.delete(url('repo', repo_name=repo_name))
+        response = self.app.delete(url('delete_repo', repo_name=repo_name))
 
         self.checkSessionFlash(response, 'Deleted repository %s' % (repo_name))
 
@@ -450,7 +450,7 @@ class _BaseTest(object):
         except vcs.exceptions.VCSError:
             self.fail('no repo %s in filesystem' % repo_name)
 
-        response = self.app.delete(url('repo', repo_name=repo_name))
+        response = self.app.delete(url('delete_repo', repo_name=repo_name))
         self.checkSessionFlash(response, 'Deleted repository %s' % (repo_name_unicode))
         response.follow()
 
@@ -468,12 +468,12 @@ class _BaseTest(object):
         pass
 
     def test_delete_browser_fakeout(self):
-        response = self.app.post(url('repo', repo_name=self.REPO),
+        response = self.app.post(url('delete_repo', repo_name=self.REPO),
                                  params=dict(_method='delete', _authentication_token=self.authentication_token()))
 
     def test_show(self):
         self.log_user()
-        response = self.app.get(url('repo', repo_name=self.REPO))
+        response = self.app.get(url('summary_home', repo_name=self.REPO))
 
     def test_edit(self):
         response = self.app.get(url('edit_repo', repo_name=self.REPO))
@@ -486,7 +486,7 @@ class _BaseTest(object):
         self.assertEqual(perm[0].permission.permission_name, 'repository.read')
         self.assertEqual(Repository.get_by_repo_name(self.REPO).private, False)
 
-        response = self.app.put(url('repo', repo_name=self.REPO),
+        response = self.app.put(url('put_repo', repo_name=self.REPO),
                         fixture._get_repo_create_params(repo_private=1,
                                                 repo_name=self.REPO,
                                                 repo_type=self.REPO_TYPE,
@@ -501,7 +501,7 @@ class _BaseTest(object):
         self.assertTrue(len(perm), 1)
         self.assertEqual(perm[0].permission.permission_name, 'repository.none')
 
-        response = self.app.put(url('repo', repo_name=self.REPO),
+        response = self.app.put(url('put_repo', repo_name=self.REPO),
                         fixture._get_repo_create_params(repo_private=False,
                                                 repo_name=self.REPO,
                                                 repo_type=self.REPO_TYPE,

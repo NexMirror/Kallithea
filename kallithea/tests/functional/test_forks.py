@@ -96,7 +96,7 @@ class _BaseTestCase(object):
         )
 
         # remove this fork
-        response = self.app.delete(url('repo', repo_name=fork_name))
+        response = self.app.delete(url('delete_repo', repo_name=fork_name))
 
     def test_fork_create_into_group(self):
         self.log_user()
