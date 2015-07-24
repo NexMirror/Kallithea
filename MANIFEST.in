@@ -18,5 +18,4 @@ recursive-include kallithea/templates *
 recursive-include kallithea/tests/fixtures *
 recursive-include kallithea/tests/scripts *
 include           kallithea/tests/vcs/aconfig
-include           production.ini
 include           test.ini
