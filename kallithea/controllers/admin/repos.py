@@ -217,7 +217,7 @@ class ReposController(BaseRepoController):
                                      h.url('summary_home',
                                            repo_name=repo.repo_name))
                 fork = repo.fork
-                if fork:
+                if fork is not None:
                     fork_name = fork.repo_name
                     h.flash(h.literal(_('Forked repository %s as %s')
                             % (fork_name, repo_url)), category='success')

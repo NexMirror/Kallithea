@@ -463,7 +463,7 @@ class ApiController(JSONRPCController):
             if time_:
                 _api_data = r.get_api_data()
                 # if we use userfilter just show the locks for this user
-                if user:
+                if user is not None:
                     if safe_int(userid) == user.user_id:
                         ret.append(_api_data)
                 else:

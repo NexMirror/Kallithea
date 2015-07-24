@@ -247,7 +247,7 @@ class ScmModel(BaseModel):
             return cls.get(instance)
         elif isinstance(instance, basestring):
             return cls.get_by_repo_name(instance)
-        elif instance:
+        elif instance is not None:
             raise Exception('given object must be int, basestr or Instance'
                             ' of %s got %s' % (type(cls), type(instance)))
 
@@ -340,7 +340,7 @@ class ScmModel(BaseModel):
         """
         CacheInvalidation.set_invalidate(repo_name, delete=delete)
         repo = Repository.get_by_repo_name(repo_name)
-        if repo:
+        if repo is not None:
             repo.update_changeset_cache()
 
     def toggle_following_repo(self, follow_repo_id, user_id):
@@ -807,7 +807,7 @@ class ScmModel(BaseModel):
         repo = self.__get_repo(repo)
         hist_l.append(['rev:tip', _('latest tip')])
         choices.append('rev:tip')
-        if not repo:
+        if repo is None:
             return choices, hist_l
 
         repo = repo.scm_instance

@@ -249,7 +249,7 @@ class UserModel(BaseModel):
         return user
 
     def delete(self, user, cur_user=None):
-        if not cur_user:
+        if cur_user is None:
             cur_user = getattr(get_current_authuser(), 'username', None)
         user = self._get_user(user)
 
@@ -287,7 +287,7 @@ class UserModel(BaseModel):
 
         user_email = data['email']
         user = User.get_by_email(user_email)
-        if user:
+        if user is not None:
             log.debug('password reset user found %s' % user)
             link = h.canonical_url('reset_password_confirmation',
                                    key=user.api_key)
@@ -316,7 +316,7 @@ class UserModel(BaseModel):
         user = User.get_by_email(user_email)
         new_passwd = auth.PasswordGenerator().gen_password(
             8, auth.PasswordGenerator.ALPHABETS_BIG_SMALL)
-        if user:
+        if user is not None:
             user.password = auth.get_crypt_password(new_passwd)
             Session().add(user)
             Session().commit()
@@ -433,7 +433,7 @@ class UserModel(BaseModel):
         """
         user = self._get_user(user)
         obj = UserEmailMap.query().get(email_id)
-        if obj:
+        if obj is not None:
             self.sa.delete(obj)
 
     def add_extra_ip(self, user, ip):

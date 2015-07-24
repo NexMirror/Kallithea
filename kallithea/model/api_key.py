@@ -65,7 +65,7 @@ class ApiKeyModel(BaseModel):
         """
         api_key = UserApiKeys.query().filter(UserApiKeys.api_key == api_key)
 
-        if user:
+        if user is not None:
             user = self._get_user(user)
             api_key = api_key.filter(UserApiKeys.user_id == user.user_id)
 

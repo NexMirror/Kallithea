@@ -94,7 +94,7 @@ class BaseModel(object):
         elif isinstance(instance, (int, long)) or safe_str(instance).isdigit():
             return cls.get(instance)
         else:
-            if instance:
+            if instance is not None:
                 if callback is None:
                     raise Exception(
                         'given object must be int, long or Instance of %s '

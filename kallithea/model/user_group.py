@@ -253,7 +253,7 @@ class UserGroupModel(BaseModel):
         obj = UserGroupToPerm.query()\
             .filter(UserGroupToPerm.users_group == user_group)\
             .filter(UserGroupToPerm.permission == perm).scalar()
-        if obj:
+        if obj is not None:
             self.sa.delete(obj)
 
     def grant_user_permission(self, user_group, user, perm):
@@ -302,7 +302,7 @@ class UserGroupModel(BaseModel):
             .filter(UserUserGroupToPerm.user == user)\
             .filter(UserUserGroupToPerm.user_group == user_group)\
             .scalar()
-        if obj:
+        if obj is not None:
             self.sa.delete(obj)
             log.debug('Revoked perm on %s on %s' % (user_group, user))
 
@@ -351,7 +351,7 @@ class UserGroupModel(BaseModel):
             .filter(UserGroupUserGroupToPerm.target_user_group == target_user_group)\
             .filter(UserGroupUserGroupToPerm.user_group == user_group)\
             .scalar()
-        if obj:
+        if obj is not None:
             self.sa.delete(obj)
             log.debug('Revoked perm on %s on %s' % (target_user_group, user_group))
 

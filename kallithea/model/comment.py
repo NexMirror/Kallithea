@@ -181,9 +181,9 @@ class ChangesetCommentsModel(BaseModel):
         comment.f_path = f_path
         comment.line_no = line_no
 
-        if revision:
+        if revision is not None:
             comment.revision = revision
-        elif pull_request:
+        elif pull_request is not None:
             pull_request = self.__get_pull_request(pull_request)
             comment.pull_request = pull_request
         else:

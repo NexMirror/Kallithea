@@ -259,7 +259,7 @@ class MyAccountController(BaseController):
         user_id = self.authuser.user_id
         if request.POST.get('del_api_key_builtin'):
             user = User.get(user_id)
-            if user:
+            if user is not None:
                 user.api_key = generate_api_key()
                 Session().add(user)
                 Session().commit()

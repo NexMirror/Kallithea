@@ -53,7 +53,7 @@ class NotificationModel(BaseModel):
         elif isinstance(notification, (int, long)):
             return Notification.get(notification)
         else:
-            if notification:
+            if notification is not None:
                 raise Exception('notification must be int, long or Instance'
                                 ' of Notification got %s' % type(notification))
 
@@ -85,7 +85,7 @@ class NotificationModel(BaseModel):
         if recipients:
             for u in recipients:
                 obj = self._get_user(u)
-                if obj:
+                if obj is not None:
                     recipients_objs.append(obj)
                 else:
                     # TODO: inform user that requested operation couldn't be completed

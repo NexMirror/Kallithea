@@ -228,7 +228,7 @@ def ValidRepoGroup(edit=False, old_data={}):
                       .filter(RepoGroup.group_parent_id == group_parent_id)\
                       .scalar()
 
-                if gr:
+                if gr is not None:
                     msg = M(self, 'group_exists', state, group_name=slug)
                     raise formencode.Invalid(msg, value, state,
                             error_dict=dict(group_name=msg)
@@ -239,7 +239,7 @@ def ValidRepoGroup(edit=False, old_data={}):
                       .filter(Repository.repo_name == slug)\
                       .scalar()
 
-                if repo:
+                if repo is not None:
                     msg = M(self, 'repo_exists', state, group_name=slug)
                     raise formencode.Invalid(msg, value, state,
                             error_dict=dict(group_name=msg)
@@ -715,7 +715,7 @@ def UniqSystemEmail(old_data={}):
         def validate_python(self, value, state):
             if (old_data.get('email') or '').lower() != value:
                 user = User.get_by_email(value, case_insensitive=True)
-                if user:
+                if user is not None:
                     msg = M(self, 'email_taken', state)
                     raise formencode.Invalid(msg, value, state,
                         error_dict=dict(email=msg)

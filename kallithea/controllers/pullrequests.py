@@ -751,7 +751,7 @@ class PullrequestsController(BaseRepoController):
         data = {
            'target_id': h.safeid(h.safe_unicode(request.POST.get('f_path'))),
         }
-        if comment:
+        if comment is not None:
             c.comment = comment
             data.update(comment.get_dict())
             data.update({'rendered_text':

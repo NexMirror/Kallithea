@@ -76,7 +76,7 @@ class AuthSettingsController(BaseController):
                     c.defaults[fullname] = v["default"]
                 # Current values will be the default on the form, if there are any
                 setting = Setting.get_by_name(fullname)
-                if setting:
+                if setting is not None:
                     c.defaults[fullname] = setting.app_settings_value
         # we want to show , separated list of enabled plugins
         c.defaults['auth_plugins'] = ','.join(c.enabled_plugins)

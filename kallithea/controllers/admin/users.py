@@ -316,7 +316,7 @@ class UsersController(BaseController):
         api_key = request.POST.get('del_api_key')
         if request.POST.get('del_api_key_builtin'):
             user = User.get(c.user.user_id)
-            if user:
+            if user is not None:
                 user.api_key = generate_api_key()
                 Session().add(user)
                 Session().commit()

@@ -535,7 +535,7 @@ class RepoModel(BaseModel):
         if not cur_user:
             cur_user = getattr(get_current_authuser(), 'username', None)
         repo = self._get_repo(repo)
-        if repo:
+        if repo is not None:
             if forks == 'detach':
                 for r in repo.forks:
                     r.fork = None
@@ -602,7 +602,7 @@ class RepoModel(BaseModel):
             .filter(UserRepoToPerm.repository == repo) \
             .filter(UserRepoToPerm.user == user) \
             .scalar()
-        if obj:
+        if obj is not None:
             self.sa.delete(obj)
             log.debug('Revoked perm on %s on %s' % (repo, user))
 
@@ -652,7 +652,7 @@ class RepoModel(BaseModel):
             .filter(UserGroupRepoToPerm.repository == repo) \
             .filter(UserGroupRepoToPerm.users_group == group_name) \
             .scalar()
-        if obj:
+        if obj is not None:
             self.sa.delete(obj)
             log.debug('Revoked perm to %s on %s' % (repo, group_name))
 
@@ -666,7 +666,7 @@ class RepoModel(BaseModel):
         try:
             obj = self.sa.query(Statistics) \
                 .filter(Statistics.repository == repo).scalar()
-            if obj:
+            if obj is not None:
                 self.sa.delete(obj)
         except Exception:
             log.error(traceback.format_exc())

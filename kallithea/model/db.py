@@ -130,7 +130,7 @@ class BaseModel(object):
             raise HTTPNotFound
 
         res = cls.query().get(id_)
-        if not res:
+        if res is None:
             raise HTTPNotFound
         return res
 
@@ -232,7 +232,7 @@ class Setting(Base, BaseModel):
     @classmethod
     def get_by_name_or_create(cls, key, val='', type='unicode'):
         res = cls.get_by_name(key)
-        if not res:
+        if res is None:
             res = cls(key, val, type)
         return res
 
@@ -248,7 +248,7 @@ class Setting(Base, BaseModel):
         :return:
         """
         res = cls.get_by_name(key)
-        if not res:
+        if res is None:
             val = Optional.extract(val)
             type = Optional.extract(type)
             res = cls(key, val, type)
@@ -270,7 +270,7 @@ class Setting(Base, BaseModel):
         if cache:
             ret = ret.options(FromCache("sql_cache_short", "get_hg_settings"))
 
-        if not ret:
+        if ret is None:
             raise Exception('Could not get application settings !')
         settings = {}
         for each in ret:
@@ -624,12 +624,12 @@ class User(Base, BaseModel):
         _email = email(author)
         if _email:
             user = cls.get_by_email(_email, case_insensitive=True)
-            if user:
+            if user is not None:
                 return user
         # Maybe we can match by username?
         _author = author_name(author)
         user = cls.get_by_username(_author, case_insensitive=True)
-        if user:
+        if user is not None:
             return user
 
     def update_lastlogin(self):
@@ -2488,7 +2488,7 @@ class Gist(Base, BaseModel):
     @classmethod
     def get_or_404(cls, id_):
         res = cls.query().filter(cls.gist_access_id == id_).scalar()
-        if not res:
+        if res is None:
             raise HTTPNotFound
         return res
 

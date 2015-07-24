@@ -485,7 +485,7 @@ class RepoGroupModel(BaseModel):
             .filter(UserRepoGroupToPerm.user == user)\
             .filter(UserRepoGroupToPerm.group == repo_group)\
             .scalar()
-        if obj:
+        if obj is not None:
             self.sa.delete(obj)
             log.debug('Revoked perm on %s on %s' % (repo_group, user))
 
@@ -537,6 +537,6 @@ class RepoGroupModel(BaseModel):
             .filter(UserGroupRepoGroupToPerm.group == repo_group)\
             .filter(UserGroupRepoGroupToPerm.users_group == group_name)\
             .scalar()
-        if obj:
+        if obj is not None:
             self.sa.delete(obj)
             log.debug('Revoked perm to %s on %s' % (repo_group, group_name))
