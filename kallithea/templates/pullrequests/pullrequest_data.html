@@ -17,6 +17,7 @@
         <th class="left">${_('Age')}</th>
         <th class="left">${_('From')}</th>
         <th class="left">${_('To')}</th>
+        <th class="right" style="padding-right:5px">${_('Delete')}</th>
       </tr>
     </thead>
 % for pr in pullrequests:
@@ -27,19 +28,6 @@
           <i class="icon-circle changeset-status-${status}" title="${_("You voted: %s") % status}"></i>
         %else:
           <i class="icon-circle changeset-status-not_reviewed" title="${_("You didn't vote")}"></i>
-        %endif
-
-        ## delete button
-        %if pr.author.user_id == c.authuser.user_id:
-          ${h.form(url('pullrequest_delete', repo_name=pr.other_repo.repo_name, pull_request_id=pr.pull_request_id),method='delete', style="display:inline-block")}
-          <button class="action_button"
-                  id="remove_${pr.pull_request_id}"
-                  name="remove_${pr.pull_request_id}"
-                  title="${_('Delete Pull Request')}"
-                  onclick="return confirm('${_('Confirm to delete this pull request')}');">
-            <i class="icon-minus-circled"></i>
-          </button>
-          ${h.end_form()}
         %endif
       </td>
       <td>
@@ -69,6 +57,19 @@
         <a href="${h.url('summary_home', repo_name=pr.other_repo.repo_name, anchor=other_ref_name)}">
           ${pr.other_repo.repo_name}#${other_ref_name}
         </a>
+      </td>
+      <td style="text-align:right">
+        %if pr.author.user_id == c.authuser.user_id:
+          ${h.form(url('pullrequest_delete', repo_name=pr.other_repo.repo_name, pull_request_id=pr.pull_request_id),method='delete', style="display:inline-block")}
+          <button class="action_button"
+                  id="remove_${pr.pull_request_id}"
+                  name="remove_${pr.pull_request_id}"
+                  title="${_('Delete Pull Request')}"
+                  onclick="return confirm('${_('Confirm to delete this pull request')}');">
+            <i class="icon-minus-circled"></i>
+          </button>
+          ${h.end_form()}
+        %endif
       </td>
     </tr>
 % endfor
