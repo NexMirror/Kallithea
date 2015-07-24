@@ -182,7 +182,7 @@ class TestMyAccountController(TestController):
         msg = validators.ValidUsername(edit=False, old_data={})\
                 ._messages['username_exists']
         msg = h.html_escape(msg % {'username': TEST_USER_ADMIN_LOGIN})
-        response.mustcontain(u"%s" % msg)
+        response.mustcontain(msg)
 
     def test_my_account_api_keys(self):
         usr = self.log_user(TEST_USER_REGULAR2_LOGIN, TEST_USER_REGULAR2_PASS)

@@ -71,7 +71,7 @@ try:
     from kallithea.lib import get_current_revision
     _rev = get_current_revision(quiet=True)
     if _rev and len(VERSION) > 3:
-        VERSION += ('%s' % _rev[0],)
+        VERSION += (_rev[0],)
 except ImportError:
     pass
 

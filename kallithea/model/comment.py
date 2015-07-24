@@ -75,7 +75,7 @@ class ChangesetCommentsModel(BaseModel):
         if revision:
             notification_type = Notification.TYPE_CHANGESET_COMMENT
             cs = repo.scm_instance.get_changeset(revision)
-            desc = "%s" % (cs.short_id)
+            desc = cs.short_id
 
             threading = ['%s-rev-%s@%s' % (repo.repo_name, revision, h.canonical_hostname())]
             if line_no: # TODO: url to file _and_ line number

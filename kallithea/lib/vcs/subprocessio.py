@@ -395,7 +395,7 @@ class SubprocessIOChunker(object):
 
     def next(self):
         if self.process and self.process.poll():
-            err = '%s' % ''.join(self.error)
+            err = ''.join(self.error)
             raise EnvironmentError("Subprocess exited due to an error:\n" + err)
         return self.output.next()
 

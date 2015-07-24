@@ -446,7 +446,7 @@ def show_id(cs):
     if show_rev:
         return 'r%s:%s' % (cs.revision, raw_id)
     else:
-        return '%s' % (raw_id)
+        return raw_id
 
 
 def fmt_date(date):
@@ -606,9 +606,9 @@ def action_parser(user_log, feed=False, parse_cs=False):
             if isinstance(rev, BaseChangeset) or isinstance(rev, AttributeDict):
                 if rev.op and rev.ref_name:
                     if rev.op == 'delete_branch':
-                        lbl = '%s' % _('Deleted branch: %s') % rev.ref_name
+                        lbl = _('Deleted branch: %s') % rev.ref_name
                     elif rev.op == 'tag':
-                        lbl = '%s' % _('Created tag: %s') % rev.ref_name
+                        lbl = _('Created tag: %s') % rev.ref_name
                     else:
                         lbl = 'Unknown operation %s' % rev.op
                 else:
@@ -618,7 +618,7 @@ def action_parser(user_log, feed=False, parse_cs=False):
                                revision=rev.raw_id)
             else:
                 # changeset cannot be found - it might have been stripped or removed
-                lbl = ('%s' % rev)[:12]
+                lbl = rev[:12]
                 title = _('Changeset not found')
             if parse_cs:
                 return link_to(lbl, _url, title=title, class_='tooltip')
@@ -945,15 +945,14 @@ class Page(_Page):
 
         for thispage in xrange(leftmost_page, rightmost_page + 1):
             # Highlight the current page number and do not use a link
+            text = str(thispage)
             if thispage == self.page:
-                text = '%s' % (thispage,)
                 # Wrap in a SPAN tag if nolink_attr is set
                 if self.curpage_attr:
                     text = HTML.span(c=text, **self.curpage_attr)
                 nav_items.append(text)
             # Otherwise create just a link to that page
             else:
-                text = '%s' % (thispage,)
                 nav_items.append(self._pagerlink(thispage, text))
 
         # Insert dots if there are pages between the displayed
@@ -1337,7 +1336,7 @@ def urlify_issues(newtext, repository, link_=None):
                   % (pattern_index, ISSUE_PATTERN, ISSUE_SERVER_LNK,
                      ISSUE_PREFIX))
 
-        URL_PAT = re.compile(r'%s' % ISSUE_PATTERN)
+        URL_PAT = re.compile(ISSUE_PATTERN)
 
         def url_func(match_obj):
             pref = ''

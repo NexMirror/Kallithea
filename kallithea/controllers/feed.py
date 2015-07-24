@@ -65,9 +65,7 @@ class FeedController(BaseRepoController):
         self.feed_diff_limit = safe_int(CONF.get('rss_cut_off_limit', 32 * 1024))
 
     def _get_title(self, cs):
-        return "%s" % (
-            h.shorter(cs.message, 160)
-        )
+        return h.shorter(cs.message, 160)
 
     def __changes(self, cs):
         changes = []

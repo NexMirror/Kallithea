@@ -62,7 +62,7 @@ class DaemonLock(object):
         locking function, if lock is present it
         will raise LockHeld exception
         """
-        lockname = '%s' % (os.getpid())
+        lockname = str(os.getpid())
         if self.debug:
             print 'running lock'
         self.trylock()
