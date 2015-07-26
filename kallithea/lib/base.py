@@ -388,12 +388,11 @@ class BaseController(WSGIController):
             return AuthUser(api_key=api_key, is_external_auth=True)
 
         # Authenticate by session cookie
-        cookie = session.get('authuser')
         # In ancient login sessions, 'authuser' may not be a dict.
         # In that case, the user will have to log in again.
-        if isinstance(cookie, dict):
+        if isinstance(session_authuser, dict):
             try:
-                return AuthUser.from_cookie(cookie)
+                return AuthUser.from_cookie(session_authuser)
             except UserCreationError as e:
                 # container auth or other auth functions that create users on
                 # the fly can throw UserCreationError to signal issues with
