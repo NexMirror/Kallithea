@@ -477,43 +477,34 @@ class AuthUser(object):
     def __init__(self, user_id=None, api_key=None,
             is_external_auth=False):
 
-        self.user_id = user_id
-        self._api_key = api_key # API key passed as parameter
-
-        self.api_key = None # API key set by user_model.fill_data
-        self.username = None
-        self.name = ''
-        self.lastname = ''
-        self.email = ''
         self.is_authenticated = False
-        self.admin = False
-        self.inherit_default_permissions = False
         self.is_external_auth = is_external_auth
 
-        self._propagate_data()
-
-    @LazyProperty
-    def permissions(self):
-        return self.__get_perms(user=self, cache=False)
-
-    @property
-    def api_keys(self):
-        return self._get_api_keys()
-
-    def _propagate_data(self):
         user_model = UserModel()
         self.anonymous_user = User.get_default_user(cache=True)
         is_user_loaded = False
 
+        # These attributes will be overriden by fill_data, below, unless the
+        # requested user cannot be found and the default anonymous user is
+        # not enabled.
+        self.user_id = None
+        self.username = None
+        self.api_key = None
+        self.name = ''
+        self.lastname = ''
+        self.email = ''
+        self.admin = False
+        self.inherit_default_permissions = False
+
         # lookup by userid
-        if self.user_id is not None:
-            log.debug('Auth User lookup by USER ID %s' % self.user_id)
-            is_user_loaded = user_model.fill_data(self, user_model.get(self.user_id))
+        if user_id is not None:
+            log.debug('Auth User lookup by USER ID %s' % user_id)
+            is_user_loaded = user_model.fill_data(self, user_model.get(user_id))
 
         # try go get user by API key
-        elif self._api_key:
-            log.debug('Auth User lookup by API key %s' % self._api_key)
-            is_user_loaded = user_model.fill_data(self, User.get_by_api_key(self._api_key))
+        elif api_key:
+            log.debug('Auth User lookup by API key %s' % api_key)
+            is_user_loaded = user_model.fill_data(self, User.get_by_api_key(api_key))
 
         else:
             log.debug('No data in %s that could been used to log in' % self)
@@ -521,12 +512,6 @@ class AuthUser(object):
         # If user cannot be found, try falling back to anonymous.
         if not is_user_loaded:
             is_user_loaded =  user_model.fill_data(self, self.anonymous_user)
-
-        # Still no luck? Give up.
-        if not is_user_loaded:
-            self.user_id = None
-            self.username = None
-            self.is_authenticated = False
 
         # The anonymous user is always "logged in".
         if self.user_id == self.anonymous_user.user_id:
@@ -536,6 +521,14 @@ class AuthUser(object):
             self.username = 'None'
 
         log.debug('Auth User is now %s' % self)
+
+    @LazyProperty
+    def permissions(self):
+        return self.__get_perms(user=self, cache=False)
+
+    @property
+    def api_keys(self):
+        return self._get_api_keys()
 
     def __get_perms(self, user, explicit=True, algo='higherwin', cache=False):
         """
