@@ -235,7 +235,7 @@ class _BaseTestApi(object):
 
         usr = User.get_by_username(TEST_USER_ADMIN_LOGIN)
         ret = usr.get_api_data()
-        ret['permissions'] = AuthUser(usr.user_id).permissions
+        ret['permissions'] = AuthUser(dbuser=usr).permissions
 
         expected = ret
         self._compare_ok(id_, expected, given=response.body)
@@ -254,7 +254,7 @@ class _BaseTestApi(object):
 
         usr = User.get_by_username(TEST_USER_ADMIN_LOGIN)
         ret = usr.get_api_data()
-        ret['permissions'] = AuthUser(usr.user_id).permissions
+        ret['permissions'] = AuthUser(dbuser=usr).permissions
 
         expected = ret
         self._compare_ok(id_, expected, given=response.body)
@@ -265,7 +265,7 @@ class _BaseTestApi(object):
 
         usr = User.get_by_username(self.TEST_USER_LOGIN)
         ret = usr.get_api_data()
-        ret['permissions'] = AuthUser(usr.user_id).permissions
+        ret['permissions'] = AuthUser(dbuser=usr).permissions
 
         expected = ret
         self._compare_ok(id_, expected, given=response.body)

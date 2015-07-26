@@ -460,8 +460,8 @@ class AuthUser(object):
     but is also used as a generic user information data structure in
     parts of the code, e.g. user management.
 
-    Constructed from user ID, API key or cookie dict, it looks
-    up the matching database `User` and copies all attributes to itself,
+    Constructed from a database `User` object, a user ID or cookie dict,
+    it looks up the user (if needed) and copies all attributes to itself,
     adding various non-persistent data. If lookup fails but anonymous
     access to Kallithea is enabled, the default user is loaded instead.
 
@@ -474,7 +474,7 @@ class AuthUser(object):
     However, `AuthUser` does refuse to load a user that is not `active`.
     """
 
-    def __init__(self, user_id=None, api_key=None,
+    def __init__(self, user_id=None, dbuser=None,
             is_external_auth=False):
 
         self.is_authenticated = False
@@ -482,7 +482,6 @@ class AuthUser(object):
 
         user_model = UserModel()
         self.anonymous_user = User.get_default_user(cache=True)
-        is_user_loaded = False
 
         # These attributes will be overriden by fill_data, below, unless the
         # requested user cannot be found and the default anonymous user is
@@ -496,18 +495,15 @@ class AuthUser(object):
         self.admin = False
         self.inherit_default_permissions = False
 
-        # lookup by userid
+        # Look up database user, if necessary.
         if user_id is not None:
             log.debug('Auth User lookup by USER ID %s' % user_id)
-            is_user_loaded = user_model.fill_data(self, user_model.get(user_id))
-
-        # try go get user by API key
-        elif api_key:
-            log.debug('Auth User lookup by API key %s' % api_key)
-            is_user_loaded = user_model.fill_data(self, User.get_by_api_key(api_key))
-
+            dbuser = user_model.get(user_id)
         else:
-            log.debug('No data in %s that could been used to log in' % self)
+            # Note: dbuser is allowed to be None.
+            log.debug('Auth User lookup by database user %s', dbuser)
+
+        is_user_loaded = user_model.fill_data(self, dbuser)
 
         # If user cannot be found, try falling back to anonymous.
         if not is_user_loaded:

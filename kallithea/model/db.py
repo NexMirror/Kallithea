@@ -511,7 +511,7 @@ class User(Base, BaseModel):
         Returns instance of AuthUser for this user
         """
         from kallithea.lib.auth import AuthUser
-        return AuthUser(user_id=self.user_id)
+        return AuthUser(dbuser=self)
 
     @hybrid_property
     def user_data(self):

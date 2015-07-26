@@ -158,7 +158,7 @@ class JSONRPCController(WSGIController):
                 return jsonrpc_error(retid=self._req_id,
                                      message='Invalid API key')
 
-            auth_u = AuthUser(u.user_id)
+            auth_u = AuthUser(dbuser=u)
             if not AuthUser.check_ip_allowed(auth_u, ip_addr):
                 return jsonrpc_error(retid=self._req_id,
                         message='request from IP:%s not allowed' % (ip_addr,))

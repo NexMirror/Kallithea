@@ -115,7 +115,7 @@ def log_in_user(user, remember, is_external_auth):
     user.update_lastlogin()
     meta.Session().commit()
 
-    auth_user = AuthUser(user_id=user.user_id,
+    auth_user = AuthUser(dbuser=user,
                          is_external_auth=is_external_auth)
     auth_user.set_authenticated()
 
@@ -385,7 +385,8 @@ class BaseController(WSGIController):
         # Authenticate by API key
         if api_key:
             # when using API_KEY we are sure user exists.
-            return AuthUser(api_key=api_key, is_external_auth=True)
+            return AuthUser(dbuser=User.get_by_api_key(api_key),
+                            is_external_auth=True)
 
         # Authenticate by session cookie
         # In ancient login sessions, 'authuser' may not be a dict.
