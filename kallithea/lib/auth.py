@@ -460,7 +460,7 @@ class AuthUser(object):
     but is also used as a generic user information data structure in
     parts of the code, e.g. user management.
 
-    Constructed from user ID, username, API key or cookie dict, it looks
+    Constructed from user ID, API key or cookie dict, it looks
     up the matching database `User` and copies all attributes to itself,
     adding various non-persistent data. If lookup fails but anonymous
     access to Kallithea is enabled, the default user is loaded instead.
@@ -474,14 +474,14 @@ class AuthUser(object):
     However, `AuthUser` does refuse to load a user that is not `active`.
     """
 
-    def __init__(self, user_id=None, api_key=None, username=None,
+    def __init__(self, user_id=None, api_key=None,
             is_external_auth=False):
 
         self.user_id = user_id
         self._api_key = api_key # API key passed as parameter
 
         self.api_key = None # API key set by user_model.fill_data
-        self.username = username
+        self.username = None
         self.name = ''
         self.lastname = ''
         self.email = ''
@@ -515,10 +515,6 @@ class AuthUser(object):
             log.debug('Auth User lookup by API key %s' % self._api_key)
             is_user_loaded = user_model.fill_data(self, User.get_by_api_key(self._api_key))
 
-        # lookup by username
-        elif self.username:
-            log.debug('Auth User lookup by USER NAME %s' % self.username)
-            is_user_loaded = user_model.fill_data(self, User.get_by_username(self.username))
         else:
             log.debug('No data in %s that could been used to log in' % self)
 
