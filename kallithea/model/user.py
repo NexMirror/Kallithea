@@ -333,10 +333,8 @@ class UserModel(BaseModel):
 
     def fill_data(self, auth_user, user_id=None, api_key=None, username=None):
         """
-        Fetches auth_user by user_id,or api_key if present.
+        Fetches auth_user by user_id, api_key or username, if present.
         Fills auth_user attributes with those taken from database.
-        Additionally sets is_authenticated if lookup fails
-        present in database
 
         :param auth_user: instance of user to set attributes
         :param user_id: user id to fetch by

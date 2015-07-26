@@ -472,6 +472,8 @@ class AuthUser(object):
     to the default anonymous user (if enabled). It's up to other parts
     of the code to check e.g. if a supplied password is correct, and if
     so, set `is_authenticated` to True.
+
+    However, `AuthUser` does refuse to load a user that is not `active`.
     """
 
     def __init__(self, user_id=None, api_key=None, username=None,

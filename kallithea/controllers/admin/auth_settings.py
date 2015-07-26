@@ -107,6 +107,9 @@ class AuthSettingsController(BaseController):
         try:
             new_enabled_plugins = _auth_plugins_validator.to_python(request.POST.get('auth_plugins'))
         except formencode.Invalid:
+            # User provided an invalid plugin list. Just fall back to
+            # the list of currently enabled plugins. (We'll re-validate
+            # and show an error message to the user, below.)
             pass
         else:
             # Hide plugins that the user has asked to be disabled, but

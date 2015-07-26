@@ -378,8 +378,8 @@ class BaseController(WSGIController):
     @staticmethod
     def _determine_auth_user(api_key, session_authuser):
         """
-        Create an `AuthUser` object given the IP address of the request, the
-        API key (if any), and the authuser from the session.
+        Create an `AuthUser` object given the API key (if any) and the
+        value of the authuser session cookie.
         """
 
         # Authenticate by API key

@@ -235,7 +235,7 @@ class LoginController(BaseController):
 
     def authentication_token(self):
         """Return the CSRF protection token for the session - just like it
-        could have been screen scrabed from a page with a form.
+        could have been screen scraped from a page with a form.
         Only intended for testing but might also be useful for other kinds
         of automation.
         """
