@@ -672,10 +672,10 @@ class ApiController(JSONRPCController):
 
         """
 
-        if UserModel().get_by_username(username):
+        if User.get_by_username(username):
             raise JSONRPCError("user `%s` already exist" % (username,))
 
-        if UserModel().get_by_email(email, case_insensitive=True):
+        if User.get_by_email(email, case_insensitive=True):
             raise JSONRPCError("email `%s` already exist" % (email,))
 
         if Optional.extract(extern_name):

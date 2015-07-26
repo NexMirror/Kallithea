@@ -94,7 +94,7 @@ class _BaseTestApi(object):
 
     @classmethod
     def setup_class(cls):
-        cls.usr = UserModel().get_by_username(TEST_USER_ADMIN_LOGIN)
+        cls.usr = User.get_by_username(TEST_USER_ADMIN_LOGIN)
         cls.apikey = cls.usr.api_key
         cls.test_user = UserModel().create_or_update(
             username='test-api',
@@ -233,7 +233,7 @@ class _BaseTestApi(object):
                                   userid=TEST_USER_ADMIN_LOGIN)
         response = api_call(self, params)
 
-        usr = UserModel().get_by_username(TEST_USER_ADMIN_LOGIN)
+        usr = User.get_by_username(TEST_USER_ADMIN_LOGIN)
         ret = usr.get_api_data()
         ret['permissions'] = AuthUser(usr.user_id).permissions
 
@@ -252,7 +252,7 @@ class _BaseTestApi(object):
         id_, params = _build_data(self.apikey, 'get_user')
         response = api_call(self, params)
 
-        usr = UserModel().get_by_username(TEST_USER_ADMIN_LOGIN)
+        usr = User.get_by_username(TEST_USER_ADMIN_LOGIN)
         ret = usr.get_api_data()
         ret['permissions'] = AuthUser(usr.user_id).permissions
 
@@ -263,7 +263,7 @@ class _BaseTestApi(object):
         id_, params = _build_data(self.apikey_regular, 'get_user')
         response = api_call(self, params)
 
-        usr = UserModel().get_by_username(self.TEST_USER_LOGIN)
+        usr = User.get_by_username(self.TEST_USER_LOGIN)
         ret = usr.get_api_data()
         ret['permissions'] = AuthUser(usr.user_id).permissions
 
@@ -580,7 +580,7 @@ class _BaseTestApi(object):
                                   password='trololo')
         response = api_call(self, params)
 
-        usr = UserModel().get_by_username(username)
+        usr = User.get_by_username(username)
         ret = dict(
             msg='created new user `%s`' % username,
             user=jsonify(usr.get_api_data())
@@ -601,7 +601,7 @@ class _BaseTestApi(object):
                                   email=email)
         response = api_call(self, params)
 
-        usr = UserModel().get_by_username(username)
+        usr = User.get_by_username(username)
         ret = dict(
             msg='created new user `%s`' % username,
             user=jsonify(usr.get_api_data())
@@ -621,7 +621,7 @@ class _BaseTestApi(object):
                                   email=email, extern_name='internal')
         response = api_call(self, params)
 
-        usr = UserModel().get_by_username(username)
+        usr = User.get_by_username(username)
         ret = dict(
             msg='created new user `%s`' % username,
             user=jsonify(usr.get_api_data())
@@ -697,7 +697,7 @@ class _BaseTestApi(object):
                            ('password', 'newpass')
     ])
     def test_api_update_user(self, name, expected):
-        usr = UserModel().get_by_username(self.TEST_USER_LOGIN)
+        usr = User.get_by_username(self.TEST_USER_LOGIN)
         kw = {name: expected,
               'userid': usr.user_id}
         id_, params = _build_data(self.apikey, 'update_user', **kw)
@@ -706,7 +706,7 @@ class _BaseTestApi(object):
         ret = {
             'msg': 'updated user ID:%s %s' % (
                 usr.user_id, self.TEST_USER_LOGIN),
-            'user': jsonify(UserModel() \
+            'user': jsonify(User \
                 .get_by_username(self.TEST_USER_LOGIN) \
                 .get_api_data())
         }
@@ -715,7 +715,7 @@ class _BaseTestApi(object):
         self._compare_ok(id_, expected, given=response.body)
 
     def test_api_update_user_no_changed_params(self):
-        usr = UserModel().get_by_username(TEST_USER_ADMIN_LOGIN)
+        usr = User.get_by_username(TEST_USER_ADMIN_LOGIN)
         ret = jsonify(usr.get_api_data())
         id_, params = _build_data(self.apikey, 'update_user',
                                   userid=TEST_USER_ADMIN_LOGIN)
@@ -730,7 +730,7 @@ class _BaseTestApi(object):
         self._compare_ok(id_, expected, given=response.body)
 
     def test_api_update_user_by_user_id(self):
-        usr = UserModel().get_by_username(TEST_USER_ADMIN_LOGIN)
+        usr = User.get_by_username(TEST_USER_ADMIN_LOGIN)
         ret = jsonify(usr.get_api_data())
         id_, params = _build_data(self.apikey, 'update_user',
                                   userid=usr.user_id)
@@ -755,7 +755,7 @@ class _BaseTestApi(object):
 
     @mock.patch.object(UserModel, 'update_user', crash)
     def test_api_update_user_when_exception_happens(self):
-        usr = UserModel().get_by_username(TEST_USER_ADMIN_LOGIN)
+        usr = User.get_by_username(TEST_USER_ADMIN_LOGIN)
         ret = jsonify(usr.get_api_data())
         id_, params = _build_data(self.apikey, 'update_user',
                                   userid=usr.user_id)

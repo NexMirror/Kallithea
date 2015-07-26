@@ -59,15 +59,6 @@ class UserModel(BaseModel):
     def get_user(self, user):
         return self._get_user(user)
 
-    def get_by_username(self, username, cache=False, case_insensitive=False):
-        return User.get_by_username(username, case_insensitive, cache)
-
-    def get_by_email(self, email, cache=False, case_insensitive=False):
-        return User.get_by_email(email, case_insensitive, cache)
-
-    def get_by_api_key(self, api_key, cache=False):
-        return User.get_by_api_key(api_key, cache)
-
     def create(self, form_data, cur_user=None):
         if not cur_user:
             cur_user = getattr(get_current_authuser(), 'username', None)
@@ -348,9 +339,9 @@ class UserModel(BaseModel):
         if user_id is not None:
             dbuser = self.get(user_id)
         elif api_key is not None:
-            dbuser = self.get_by_api_key(api_key)
+            dbuser = User.get_by_api_key(api_key)
         elif username is not None:
-            dbuser = self.get_by_username(username)
+            dbuser = User.get_by_username(username)
 
         if dbuser is not None and dbuser.active:
             log.debug('filling %s data' % dbuser)
