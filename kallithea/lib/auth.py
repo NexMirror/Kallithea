@@ -529,8 +529,8 @@ class AuthUser(object):
         if dbuser is not None and dbuser.active:
             log.debug('filling %s data', dbuser)
             for k, v in dbuser.get_dict().iteritems():
-                if k not in ['api_keys', 'permissions']:
-                    setattr(self, k, v)
+                assert k not in ['api_keys', 'permissions']
+                setattr(self, k, v)
             return True
         return False
 
