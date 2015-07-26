@@ -643,7 +643,6 @@ class AuthUser(object):
 
         au = AuthUser(
             user_id=cookie.get('user_id'),
-            username=cookie.get('username'),
             is_external_auth=cookie.get('is_external_auth', False),
         )
         if not au.is_authenticated and au.user_id is not None:
