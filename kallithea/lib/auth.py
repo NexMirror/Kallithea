@@ -503,11 +503,11 @@ class AuthUser(object):
             # Note: dbuser is allowed to be None.
             log.debug('Auth User lookup by database user %s', dbuser)
 
-        is_user_loaded = user_model.fill_data(self, dbuser)
+        is_user_loaded = self._fill_data(dbuser)
 
         # If user cannot be found, try falling back to anonymous.
         if not is_user_loaded:
-            is_user_loaded =  user_model.fill_data(self, self.anonymous_user)
+            is_user_loaded =  self._fill_data(self.anonymous_user)
 
         # The anonymous user is always "logged in".
         if self.user_id == self.anonymous_user.user_id:
@@ -517,6 +517,22 @@ class AuthUser(object):
             self.username = 'None'
 
         log.debug('Auth User is now %s' % self)
+
+    def _fill_data(self, dbuser):
+        """
+        Copies database fields from a `db.User` to this `AuthUser`. Does
+        not copy `api_keys` and `permissions` attributes.
+
+        Checks that `dbuser` is `active` (and not None) before copying;
+        returns True on success.
+        """
+        if dbuser is not None and dbuser.active:
+            log.debug('filling %s data', dbuser)
+            for k, v in dbuser.get_dict().iteritems():
+                if k not in ['api_keys', 'permissions']:
+                    setattr(self, k, v)
+            return True
+        return False
 
     @LazyProperty
     def permissions(self):

@@ -322,25 +322,6 @@ class UserModel(BaseModel):
 
         return True
 
-    def fill_data(self, auth_user, dbuser):
-        """
-        Copies database fields from a `db.User` to an `AuthUser`. Does
-        not copy `api_keys` and `permissions` attributes.
-
-        Checks that `dbuser` is `active` (and not None) before copying;
-        returns True on success.
-
-        :param auth_user: instance of user to set attributes
-        :param dbuser: `db.User` instance to copy from
-        """
-        if dbuser is not None and dbuser.active:
-            log.debug('filling %s data' % dbuser)
-            for k, v in dbuser.get_dict().iteritems():
-                if k not in ['api_keys', 'permissions']:
-                    setattr(auth_user, k, v)
-            return True
-        return False
-
     def has_perm(self, user, perm):
         perm = self._get_perm(perm)
         user = self._get_user(user)
