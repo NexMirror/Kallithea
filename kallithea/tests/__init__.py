@@ -213,15 +213,21 @@ class TestController(BaseTestCase):
             self.fail('could not login using %s %s' % (username, password))
 
         self.assertEqual(response.status, '302 Found')
-        ses = response.session['authuser']
-        self.assertEqual(ses.get('username'), username)
-        response = response.follow()
-        self.assertEqual(ses.get('is_authenticated'), True)
+        self.assert_authenticated_user(response, username)
 
+        response = response.follow()
         return response.session['authuser']
 
     def _get_logged_user(self):
         return User.get_by_username(self._logged_username)
+
+    def assert_authenticated_user(self, response, expected_username):
+        cookie = response.session.get('authuser')
+        user = cookie and cookie.get('user_id')
+        user = user and User.get(user)
+        user = user and user.username
+        self.assertEqual(user, expected_username)
+        self.assertEqual(cookie.get('is_authenticated'), True)
 
     def authentication_token(self):
         return self.app.get(url('authentication_token')).body

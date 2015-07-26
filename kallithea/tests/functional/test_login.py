@@ -31,8 +31,8 @@ class TestLoginController(TestController):
                                  {'username': TEST_USER_ADMIN_LOGIN,
                                   'password': TEST_USER_ADMIN_PASS})
         self.assertEqual(response.status, '302 Found')
-        self.assertEqual(response.session['authuser'].get('username'),
-                         TEST_USER_ADMIN_LOGIN)
+        self.assert_authenticated_user(response, TEST_USER_ADMIN_LOGIN)
+
         response = response.follow()
         response.mustcontain('/%s' % HG_REPO)
 
@@ -42,8 +42,8 @@ class TestLoginController(TestController):
                                   'password': TEST_USER_REGULAR_PASS})
 
         self.assertEqual(response.status, '302 Found')
-        self.assertEqual(response.session['authuser'].get('username'),
-                         TEST_USER_REGULAR_LOGIN)
+        self.assert_authenticated_user(response, TEST_USER_REGULAR_LOGIN)
+
         response = response.follow()
         response.mustcontain('/%s' % HG_REPO)
 

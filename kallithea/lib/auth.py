@@ -626,7 +626,6 @@ class AuthUser(object):
         """ Serializes this login session to a cookie `dict`. """
         return {
             'user_id': self.user_id,
-            'username': self.username,
             'is_authenticated': self.is_authenticated,
             'is_external_auth': self.is_external_auth,
         }
