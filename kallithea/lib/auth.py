@@ -105,8 +105,7 @@ class KallitheaCrypto(object):
         :param password: password to hash
         """
         if is_windows:
-            from hashlib import sha256
-            return sha256(str_).hexdigest()
+            return hashlib.sha256(str_).hexdigest()
         elif is_unix:
             import bcrypt
             return bcrypt.hashpw(str_, bcrypt.gensalt(10))
@@ -125,8 +124,7 @@ class KallitheaCrypto(object):
         """
 
         if is_windows:
-            from hashlib import sha256
-            return sha256(password).hexdigest() == hashed
+            return hashlib.sha256(password).hexdigest() == hashed
         elif is_unix:
             import bcrypt
             return bcrypt.hashpw(password, hashed) == hashed
