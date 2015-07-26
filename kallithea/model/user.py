@@ -322,27 +322,17 @@ class UserModel(BaseModel):
 
         return True
 
-    def fill_data(self, auth_user, user_id=None, api_key=None, username=None):
+    def fill_data(self, auth_user, dbuser):
         """
-        Fetches auth_user by user_id, api_key or username, if present.
-        Fills auth_user attributes with those taken from database.
+        Copies database fields from a `db.User` to an `AuthUser`. Does
+        not copy `api_keys` and `permissions` attributes.
+
+        Checks that `dbuser` is `active` (and not None) before copying;
+        returns True on success.
 
         :param auth_user: instance of user to set attributes
-        :param user_id: user id to fetch by
-        :param api_key: API key to fetch by
-        :param username: username to fetch by
+        :param dbuser: `db.User` instance to copy from
         """
-        if user_id is None and api_key is None and username is None:
-            raise Exception('You need to pass user_id, api_key or username')
-
-        dbuser = None
-        if user_id is not None:
-            dbuser = self.get(user_id)
-        elif api_key is not None:
-            dbuser = User.get_by_api_key(api_key)
-        elif username is not None:
-            dbuser = User.get_by_username(username)
-
         if dbuser is not None and dbuser.active:
             log.debug('filling %s data' % dbuser)
             for k, v in dbuser.get_dict().iteritems():

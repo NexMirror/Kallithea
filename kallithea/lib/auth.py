@@ -508,24 +508,24 @@ class AuthUser(object):
         # lookup by userid
         if self.user_id is not None and self.user_id != self.anonymous_user.user_id:
             log.debug('Auth User lookup by USER ID %s' % self.user_id)
-            is_user_loaded = user_model.fill_data(self, user_id=self.user_id)
+            is_user_loaded = user_model.fill_data(self, user_model.get(self.user_id))
 
         # try go get user by API key
         elif self._api_key and self._api_key != self.anonymous_user.api_key:
             log.debug('Auth User lookup by API key %s' % self._api_key)
-            is_user_loaded = user_model.fill_data(self, api_key=self._api_key)
+            is_user_loaded = user_model.fill_data(self, User.get_by_api_key(self._api_key))
 
         # lookup by username
         elif self.username:
             log.debug('Auth User lookup by USER NAME %s' % self.username)
-            is_user_loaded = user_model.fill_data(self, username=self.username)
+            is_user_loaded = user_model.fill_data(self, User.get_by_username(self.username))
         else:
             log.debug('No data in %s that could been used to log in' % self)
 
         if not is_user_loaded:
             # if we cannot authenticate user try anonymous
             if self.anonymous_user.active:
-                user_model.fill_data(self, user_id=self.anonymous_user.user_id)
+                user_model.fill_data(self, self.anonymous_user)
                 # then we set this user is logged in
                 self.is_authenticated = True
             else:
