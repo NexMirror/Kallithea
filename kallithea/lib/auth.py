@@ -492,8 +492,7 @@ class AuthUser(object):
         self.inherit_default_permissions = False
         self.is_external_auth = is_external_auth
 
-        self.propagate_data()
-        self._instance = None
+        self._propagate_data()
 
     @LazyProperty
     def permissions(self):
@@ -501,9 +500,9 @@ class AuthUser(object):
 
     @property
     def api_keys(self):
-        return self.get_api_keys()
+        return self._get_api_keys()
 
-    def propagate_data(self):
+    def _propagate_data(self):
         user_model = UserModel()
         self.anonymous_user = User.get_default_user(cache=True)
         is_user_loaded = False
@@ -567,7 +566,7 @@ class AuthUser(object):
         return compute(user_id, user_is_admin,
                        user_inherit_default_permissions, explicit, algo)
 
-    def get_api_keys(self):
+    def _get_api_keys(self):
         api_keys = [self.api_key]
         for api_key in UserApiKeys.query()\
                 .filter(UserApiKeys.user_id == self.user_id)\
