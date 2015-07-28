@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Kallithea 0.1\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2015-04-01 03:17+0200\n"
-"PO-Revision-Date: 2015-06-09 14:58+0200\n"
+"PO-Revision-Date: 2015-07-28 15:15+0200\n"
 "Last-Translator: Viktar Palstsiuk <vipals@gmail.com>\n"
 "Language-Team: Belarusian "
 "<https://hosted.weblate.org/projects/kallithea/kallithea/be/>\n"
@@ -503,7 +503,7 @@ msgstr "Gist-запіс %s выдалены"
 
 #: kallithea/controllers/admin/gists.py:233
 msgid "unmodified"
-msgstr ""
+msgstr "без змен"
 
 #: kallithea/controllers/admin/gists.py:262
 msgid "Successfully updated gist content"
@@ -1749,7 +1749,7 @@ msgstr "Увядзіце не меней %(min)i знакаў"
 
 #: kallithea/model/forms.py:156
 msgid "Name must not contain only digits"
-msgstr ""
+msgstr "Імя не павінна ўтрымліваць толькі лічбы"
 
 #: kallithea/model/notification.py:252
 #, python-format
@@ -2698,7 +2698,7 @@ msgstr "Скід"
 #: kallithea/templates/admin/gists/show.html:5
 #: kallithea/templates/admin/gists/show.html:9
 msgid "Gist"
-msgstr "Gist"
+msgstr ""
 
 #: kallithea/templates/admin/gists/show.html:10
 #: kallithea/templates/email_templates/changeset_comment.html:15
@@ -2791,7 +2791,7 @@ msgstr "Мае прывілеі"
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:6
 #: kallithea/templates/admin/users/user_edit_api_keys.html:6
 msgid "Built-in"
-msgstr ""
+msgstr "Убудаваны"
 
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:8
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:27
@@ -2811,7 +2811,7 @@ msgstr "Пацвердзіце скід гэтага API-ключа: %s"
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:15
 #: kallithea/templates/admin/users/user_edit_api_keys.html:15
 msgid "reset"
-msgstr ""
+msgstr "cкінуць"
 
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:30
 #: kallithea/templates/admin/users/user_edit_api_keys.html:30
@@ -3000,7 +3000,7 @@ msgstr "Прывілеі"
 #: kallithea/templates/admin/permissions/permissions.html:28
 #: kallithea/templates/admin/settings/settings.html:29
 msgid "Global"
-msgstr ""
+msgstr "Глабальныя"
 
 #: kallithea/templates/admin/permissions/permissions.html:29
 #: kallithea/templates/admin/users/user_edit.html:34
@@ -3189,7 +3189,7 @@ msgstr "Група рэпазітароў: %s"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_advanced.html:6
 msgid "Top level repositories"
-msgstr ""
+msgstr "Рэпазітары верхняга ўзроўню"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_advanced.html:7
 msgid "Total repositories"
@@ -3288,7 +3288,7 @@ msgstr "дастасаваць да даччыным"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:107
 msgid "Both"
-msgstr ""
+msgstr "Абедзьве"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:108
 msgid ""
@@ -3335,7 +3335,7 @@ msgstr "Лік рэпазітароў верхняга ўзроўня"
 
 #: kallithea/templates/admin/repos/repo_add_base.html:14
 msgid "Import existing repository ?"
-msgstr ""
+msgstr "Імпартаваць існы рэпазітар?"
 
 #: kallithea/templates/admin/repos/repo_add_base.html:23
 #: kallithea/templates/summary/summary.html:29
@@ -3384,7 +3384,7 @@ msgstr "Стварэнне рэпазітара %s"
 
 #: kallithea/templates/admin/repos/repo_creating.html:13
 msgid "Creating repository"
-msgstr ""
+msgstr "Стварэнне рэпазітара"
 
 #: kallithea/templates/admin/repos/repo_creating.html:27
 #, python-format
@@ -3410,7 +3410,7 @@ msgstr "Дадатковыя палі"
 
 #: kallithea/templates/admin/repos/repo_edit.html:52
 msgid "Caches"
-msgstr ""
+msgstr "Кэшы"
 
 #: kallithea/templates/admin/repos/repo_edit.html:55
 msgid "Remote"
@@ -3617,7 +3617,7 @@ msgstr "Нязменлівы id"
 
 #: kallithea/templates/admin/repos/repo_edit_settings.html:11
 msgid "What is that?"
-msgstr ""
+msgstr "Што гэта?"
 
 #: kallithea/templates/admin/repos/repo_edit_settings.html:13
 msgid "URL by id"
@@ -3653,7 +3653,7 @@ msgstr "рэдагаваць"
 
 #: kallithea/templates/admin/repos/repo_edit_settings.html:30
 msgid "new value"
-msgstr ""
+msgstr "новае значэнне"
 
 #: kallithea/templates/admin/repos/repo_edit_settings.html:37
 msgid "URL used for doing remote pulls."
@@ -3690,7 +3690,7 @@ msgstr "Адміністраванне рэпазітароў"
 
 #: kallithea/templates/admin/repos/repos.html:51
 msgid "State"
-msgstr ""
+msgstr "Стан"
 
 #: kallithea/templates/admin/settings/settings.html:5
 msgid "Settings Administration"
@@ -3715,11 +3715,11 @@ msgstr "Хукі"
 
 #: kallithea/templates/admin/settings/settings.html:33
 msgid "Full Text Search"
-msgstr ""
+msgstr "Паўнатэкставы пошук"
 
 #: kallithea/templates/admin/settings/settings.html:34
 msgid "System Info"
-msgstr ""
+msgstr "Інфармацыя аб сістэме"
 
 #: kallithea/templates/admin/settings/settings_email.html:4
 msgid "Email prefix"
@@ -3739,7 +3739,7 @@ msgstr ""
 
 #: kallithea/templates/admin/settings/settings_email.html:9
 msgid "SMTP server"
-msgstr ""
+msgstr "SMTP-сервер"
 
 #: kallithea/templates/admin/settings/settings_email.html:10
 msgid "SMTP username"
@@ -3767,7 +3767,7 @@ msgstr ""
 
 #: kallithea/templates/admin/settings/settings_email.html:31
 msgid "Send test email to"
-msgstr ""
+msgstr "Адаслаць тэставы ліст на"
 
 #: kallithea/templates/admin/settings/settings_email.html:39
 msgid "Send"
@@ -3897,7 +3897,7 @@ msgstr ""
 
 #: kallithea/templates/admin/settings/settings_system.html:4
 msgid "check for updates"
-msgstr ""
+msgstr "праверыць наяўнасць абнаўленняў"
 
 #: kallithea/templates/admin/settings/settings_system.html:5
 msgid "Python version"
@@ -3905,7 +3905,7 @@ msgstr ""
 
 #: kallithea/templates/admin/settings/settings_system.html:6
 msgid "Platform"
-msgstr ""
+msgstr "Платформа"
 
 #: kallithea/templates/admin/settings/settings_system.html:7
 msgid "Git version"
@@ -3925,7 +3925,7 @@ msgstr ""
 
 #: kallithea/templates/admin/settings/settings_system.html:14
 msgid "Checking for updates..."
-msgstr ""
+msgstr "Праверка абнаўленняў..."
 
 #: kallithea/templates/admin/settings/settings_system.html:22
 msgid "Python Packages"
@@ -4250,7 +4250,7 @@ msgstr ""
 
 #: kallithea/templates/admin/users/user_edit_profile.html:12
 msgid "Missing email, please update this user email address."
-msgstr ""
+msgstr "Не паказаны email. Калі ласка, абнавіце email карыстальніка."
 
 #: kallithea/templates/admin/users/user_edit_profile.html:27
 #, python-format
@@ -4438,11 +4438,11 @@ msgstr "Выйсце"
 
 #: kallithea/templates/base/base.html:395
 msgid "No matches found"
-msgstr ""
+msgstr "Супадзенняў не знойдзена"
 
 #: kallithea/templates/base/base.html:524
 msgid "Keyboard shortcuts"
-msgstr ""
+msgstr "Гарачыя клавішы"
 
 #: kallithea/templates/base/base.html:533
 msgid "Site-wide shortcuts"
@@ -4487,7 +4487,7 @@ msgstr ""
 
 #: kallithea/templates/base/perms_summary.html:13
 msgid "show"
-msgstr ""
+msgstr "паказа́ць"
 
 #: kallithea/templates/base/perms_summary.html:22
 msgid "No permissions defined yet"
@@ -4772,7 +4772,7 @@ msgstr "Дадаць ці загрузіць файлы праз Kallithea"
 #: kallithea/templates/files/files_add.html:21
 #: kallithea/templates/files/files_ypjax.html:9
 msgid "Add New File"
-msgstr ""
+msgstr "Дадаць новы файл"
 
 #: kallithea/templates/changelog/changelog_summary_data.html:100
 msgid "Push new repo"
@@ -5132,7 +5132,7 @@ msgstr "Стан набору змен зменена на"
 
 #: kallithea/templates/email_templates/main.html:6
 msgid "This is an automatic notification. Don't reply to this mail."
-msgstr ""
+msgstr "Гэта аўтаматычнае апавяшчэнне. Не адказвайце на гэты ліст."
 
 #: kallithea/templates/email_templates/password_reset.html:4
 #, python-format
@@ -5338,7 +5338,7 @@ msgstr ""
 
 #: kallithea/templates/files/files_source.html:10
 msgid "Show Full History"
-msgstr ""
+msgstr "Паказаць ўсю гісторыю"
 
 #: kallithea/templates/files/files_source.html:11
 msgid "Show Authors"
@@ -5355,7 +5355,7 @@ msgstr ""
 
 #: kallithea/templates/files/files_source.html:41
 msgid "Editing binary files not allowed"
-msgstr ""
+msgstr "Рэдагаванне бінарных файлаў забаронена"
 
 #: kallithea/templates/files/files_source.html:44
 msgid "Editing files allowed only when on branch head revision"
@@ -5570,7 +5570,7 @@ msgstr "Пацвердзіце выдаленне гэтага pull-request'а"
 
 #: kallithea/templates/pullrequests/pullrequest_data.html:54
 msgid "(no title)"
-msgstr ""
+msgstr "(няма загалоўка)"
 
 #: kallithea/templates/pullrequests/pullrequest_data.html:56
 #: kallithea/templates/pullrequests/pullrequest_show.html:31
@@ -5627,11 +5627,11 @@ msgstr ""
 
 #: kallithea/templates/pullrequests/pullrequest_show.html:114
 msgid "on"
-msgstr ""
+msgstr "на"
 
 #: kallithea/templates/pullrequests/pullrequest_show.html:121
 msgid "Target"
-msgstr ""
+msgstr "Цэль"
 
 #: kallithea/templates/pullrequests/pullrequest_show.html:132
 msgid "Pull changes"
