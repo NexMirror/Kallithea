@@ -54,7 +54,6 @@ class KallitheaAuthPluginBase(object):
         "email": "email address",
         "groups": '["list", "of", "groups"]',
         "extern_name": "name in external source of record",
-        "extern_type": "type of external source of record",
         "admin": 'True|False defines if user should be Kallithea admin',
         "active": 'True|False defines active state of user in Kallithea',
         "active_from_extern": "True|False|None, active state from the external auth, "

@@ -78,7 +78,6 @@ class KallitheaAuthPlugin(auth_modules.KallitheaAuthPluginBase):
             "active": userobj.active,
             "active_from_extern": userobj.active,
             "extern_name": userobj.user_id,
-            'extern_type': userobj.extern_type,
         }
 
         log.debug(formatted_json(user_data))

@@ -220,7 +220,6 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
         email = getattr(userobj, 'email', '')
         firstname = getattr(userobj, 'firstname', '')
         lastname = getattr(userobj, 'lastname', '')
-        extern_type = getattr(userobj, 'extern_type', '')
 
         user_data = {
             'username': username,
@@ -232,7 +231,6 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
             'active': active,
             'active_from_extern': crowd_user.get('active'),
             'extern_name': crowd_user["name"],
-            'extern_type': extern_type,
         }
 
         # set an admin if we're in admin_groups of crowd

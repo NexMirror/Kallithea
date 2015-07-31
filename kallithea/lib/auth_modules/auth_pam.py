@@ -109,7 +109,6 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
         email = getattr(userobj, 'email', '') or "%s@%s" % (username, socket.gethostname())
         firstname = getattr(userobj, 'firstname', '')
         lastname = getattr(userobj, 'lastname', '')
-        extern_type = getattr(userobj, 'extern_type', '')
 
         user_data = {
             'username': username,
@@ -121,7 +120,6 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
             'active': active,
             "active_from_extern": None,
             'extern_name': username,
-            'extern_type': extern_type,
         }
 
         try:
