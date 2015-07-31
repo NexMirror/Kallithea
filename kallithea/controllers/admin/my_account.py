@@ -100,8 +100,6 @@ class MyAccountController(BaseController):
         self.__load_data()
         c.perm_user = AuthUser(user_id=self.authuser.user_id)
         c.ip_addr = self.ip_addr
-        c.extern_type = c.user.extern_type
-        c.extern_name = c.user.extern_name
 
         defaults = c.user.get_dict()
         update = False
@@ -119,8 +117,9 @@ class MyAccountController(BaseController):
                 skip_attrs = ['admin', 'active', 'extern_type', 'extern_name',
                               'new_password', 'password_confirmation']
                 #TODO: plugin should define if username can be updated
-                if c.extern_type != EXTERN_TYPE_INTERNAL:
+                if c.user.extern_type != EXTERN_TYPE_INTERNAL:
                     # forbid updating username for external accounts
+                    # TODO: also skip username (and email etc) if self registration not enabled
                     skip_attrs.append('username')
 
                 UserModel().update(self.authuser.user_id, form_result,
