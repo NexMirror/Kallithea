@@ -20,9 +20,6 @@ ${h.form(url('my_account'), method='post')}
          </div>
 
         <div class="fields">
-            %if c.user.extern_type != c.EXTERN_TYPE_INTERNAL:
-                <strong>${_('Your user is in an external Source of Record; some details cannot be managed here')}.</strong>
-            %endif
              <div class="field">
                 <div class="label">
                     <label for="username">${_('Username')}:</label>

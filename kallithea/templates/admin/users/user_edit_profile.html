@@ -18,11 +18,6 @@ ${h.form(url('update_user', id=c.user.user_id),method='put')}
            </div>
         </div>
         <div class="fields">
-            %if c.user.extern_type != c.EXTERN_TYPE_INTERNAL:
-             <div class="field">
-               <strong>${_('This user is in an external Source of Record (%s); some details cannot be managed here.' % c.user.extern_type)}.</strong>
-             </div>
-            %endif
 
              <div class="field">
                 <div class="label">

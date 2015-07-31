@@ -102,6 +102,10 @@ class MyAccountController(BaseController):
         c.perm_user = AuthUser(user_id=self.authuser.user_id)
         c.ip_addr = self.ip_addr
         managed_fields = auth_modules.get_managed_fields(c.user)
+        def_user_perms = User.get_default_user().AuthUser.permissions['global']
+        if 'hg.register.none' in def_user_perms:
+            managed_fields.extend(['username', 'firstname', 'lastname', 'email'])
+
         c.readonly = lambda n: 'readonly' if n in managed_fields else None
 
         defaults = c.user.get_dict()
