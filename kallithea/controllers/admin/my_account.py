@@ -155,7 +155,11 @@ class MyAccountController(BaseController):
     def my_account_password(self):
         c.active = 'password'
         self.__load_data()
-        if request.POST:
+
+        managed_fields = auth_modules.get_managed_fields(c.user)
+        c.can_change_password = 'password' not in managed_fields
+
+        if request.POST and c.can_change_password:
             _form = PasswordChangeForm(self.authuser.username)()
             try:
                 form_result = _form.to_python(request.POST)
