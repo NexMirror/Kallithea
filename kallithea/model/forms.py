@@ -120,8 +120,8 @@ def UserForm(edit=False, old_data={}):
         firstname = v.UnicodeString(strip=True, min=1, not_empty=False)
         lastname = v.UnicodeString(strip=True, min=1, not_empty=False)
         email = All(v.Email(not_empty=True), v.UniqSystemEmail(old_data))
-        extern_name = v.UnicodeString(strip=True)
-        extern_type = v.UnicodeString(strip=True)
+        extern_name = v.UnicodeString(strip=True, if_missing=None)
+        extern_type = v.UnicodeString(strip=True, if_missing=None)
     return _UserForm
 
 
