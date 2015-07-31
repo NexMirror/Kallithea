@@ -234,7 +234,7 @@ class TestController(BaseTestCase):
 
     def checkSessionFlash(self, response, msg, skip=0):
         if 'flash' not in response.session:
-            self.fail(safe_str(u'msg `%s` not found - session has no flash ' % msg))
+            self.fail(safe_str(u'msg `%s` not found - session has no flash:\n%s' % (msg, response)))
         try:
             level, m = response.session['flash'][-1 - skip]
             if msg in m:
