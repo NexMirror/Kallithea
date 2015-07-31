@@ -165,7 +165,7 @@ class BasicAuth(paste.auth.basic.AuthBasicAuthenticator):
         _parts = auth.split(':', 1)
         if len(_parts) == 2:
             username, password = _parts
-            if self.authfunc(username, password, environ):
+            if self.authfunc(username, password, environ) is not None:
                 return username
         return self.build_authentication()
 
@@ -179,7 +179,7 @@ class BaseVCSController(object):
         self.config = config
         # base path of repo locations
         self.basepath = self.config['base_path']
-        #authenticate this VCS request using authfunc
+        # authenticate this VCS request using the authentication modules
         self.authenticate = BasicAuth('', auth_modules.authenticate,
                                       config.get('auth_ret_code'))
         self.ip_addr = '0.0.0.0'
@@ -413,7 +413,7 @@ class BaseController(WSGIController):
                 from kallithea.lib import helpers as h
                 h.flash(e, 'error', logf=log.error)
             else:
-                if auth_info:
+                if auth_info is not None:
                     username = auth_info['username']
                     user = User.get_by_username(username, case_insensitive=True)
                     return log_in_user(user, remember=False,

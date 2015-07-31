@@ -272,7 +272,7 @@ def ValidOldPassword(username):
 
         def validate_python(self, value, state):
             from kallithea.lib import auth_modules
-            if not auth_modules.authenticate(username, value, ''):
+            if auth_modules.authenticate(username, value, '') is None:
                 msg = M(self, 'invalid_password', state)
                 raise formencode.Invalid(msg, value, state,
                     error_dict=dict(current_password=msg)
@@ -309,7 +309,9 @@ def ValidAuth():
             password = value['password']
             username = value['username']
 
-            if not auth_modules.authenticate(username, password):
+            # authenticate returns unused dict but has called
+            # plugin._authenticate which has create_or_update'ed the username user in db
+            if auth_modules.authenticate(username, password) is None:
                 user = User.get_by_username(username)
                 if user and not user.active:
                     log.warning('user %s is disabled' % username)

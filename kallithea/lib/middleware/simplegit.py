@@ -124,7 +124,7 @@ class SimpleGit(BaseVCSController):
                 # try to auth based on environ, container auth methods
                 log.debug('Running PRE-AUTH for container based authentication')
                 pre_auth = auth_modules.authenticate('', '', environ)
-                if pre_auth and pre_auth.get('username'):
+                if pre_auth is not None and pre_auth.get('username'):
                     username = pre_auth['username']
                 log.debug('PRE-AUTH got %s as username' % username)
 

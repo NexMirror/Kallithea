@@ -55,10 +55,10 @@ class KallitheaAuthPluginBase(object):
         "groups": '["list", "of", "groups"]',
         "extern_name": "name in external source of record",
         "extern_type": "type of external source of record",
-        "admin": 'True|False defines if user should be Kallithea super admin',
-        "active": 'True|False defines active state of user internally for Kallithea',
-        "active_from_extern": "True|False\None, active state from the external auth, "
-                              "None means use definition from Kallithea extern_type active value"
+        "admin": 'True|False defines if user should be Kallithea admin',
+        "active": 'True|False defines active state of user in Kallithea',
+        "active_from_extern": "True|False|None, active state from the external auth, "
+                              "None means use value from the auth plugin"
     }
 
     @property
@@ -184,7 +184,7 @@ class KallitheaAuthPluginBase(object):
     def plugin_settings(self):
         """
         This method is called by the authentication framework, not the .settings()
-        method. This method adds a few default settings (e.g., "active"), so that
+        method. This method adds a few default settings (e.g., "enabled"), so that
         plugin authors don't have to maintain a bunch of boilerplate.
 
         OVERRIDING THIS METHOD WILL CAUSE YOUR PLUGIN TO FAIL.
@@ -211,14 +211,14 @@ class KallitheaAuthPluginBase(object):
 
     def auth(self, userobj, username, passwd, settings, **kwargs):
         """
-        Given a user object (which may be null), username, a plaintext password,
+        Given a user object (which may be None), username, a plaintext password,
         and a settings object (containing all the keys needed as listed in settings()),
         authenticate this user's login attempt.
 
-        Return None on failure. On success, return a dictionary of the form:
+        Return None on failure. On success, return a dictionary with keys from
+        KallitheaAuthPluginBase.auth_func_attrs.
 
-            see: KallitheaAuthPluginBase.auth_func_attrs
-        This is later validated for correctness
+        This is later validated for correctness.
         """
         raise NotImplementedError("not implemented in base class")
 
@@ -232,9 +232,9 @@ class KallitheaAuthPluginBase(object):
         :param settings: plugin settings
         """
         auth = self.auth(userobj, username, passwd, settings, **kwargs)
-        if auth:
+        if auth is not None:
             return self._validate_auth_return(auth)
-        return auth
+        return None
 
     def _validate_auth_return(self, ret):
         if not isinstance(ret, dict):
@@ -259,7 +259,7 @@ class KallitheaExternalAuthPlugin(KallitheaAuthPluginBase):
     def _authenticate(self, userobj, username, passwd, settings, **kwargs):
         auth = super(KallitheaExternalAuthPlugin, self)._authenticate(
             userobj, username, passwd, settings, **kwargs)
-        if auth:
+        if auth is not None:
             # maybe plugin will clean the username ?
             # we should use the return value
             username = auth['username']
@@ -408,11 +408,11 @@ def authenticate(username, password, environ=None):
                                            environ=environ or {})
         log.debug('PLUGIN USER DATA: %s' % plugin_user)
 
-        if plugin_user:
+        if plugin_user is not None:
             log.debug('Plugin returned proper authentication data')
             return plugin_user
 
-        # we failed to Auth because .auth() method didn't return proper the user
+        # we failed to Auth because .auth() method didn't return the user
         if username:
             log.warning("User `%s` failed to authenticate against %s"
                         % (username, plugin.__module__))
