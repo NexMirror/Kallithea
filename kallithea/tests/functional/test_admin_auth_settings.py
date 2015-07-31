@@ -187,3 +187,43 @@ class TestAuthSettingsController(TestController):
             extra_environ={'REMOTE_USER': 'john'},
         )
         self.assertNotIn('Log Out', response.normal_body)
+
+    def test_crowd_save_settings(self):
+        self.log_user()
+
+        params = self._enable_plugins('kallithea.lib.auth_modules.auth_internal,kallithea.lib.auth_modules.auth_crowd')
+        params.update({'auth_crowd_host': ' hostname ',
+                       'auth_crowd_app_password': 'secret',
+                       'auth_crowd_admin_groups': 'mygroup',
+                       'auth_crowd_port': '123',
+                       'auth_crowd_app_name': 'xyzzy'})
+
+        test_url = url(controller='admin/auth_settings',
+                       action='auth_settings')
+
+        response = self.app.post(url=test_url, params=params)
+        self.checkSessionFlash(response, 'Auth settings updated successfully')
+
+        new_settings = Setting.get_auth_settings()
+        self.assertEqual(new_settings['auth_crowd_host'], u'hostname',
+                         'fail db write compare')
+
+    def test_pam_save_settings(self):
+        self.log_user()
+
+        if not pam_lib_installed:
+            raise SkipTest('skipping due to missing pam lib')
+
+        params = self._enable_plugins('kallithea.lib.auth_modules.auth_internal,kallithea.lib.auth_modules.auth_pam')
+        params.update({'auth_pam_service': 'kallithea',
+                       'auth_pam_gecos': '^foo-.*'})
+
+        test_url = url(controller='admin/auth_settings',
+                       action='auth_settings')
+
+        response = self.app.post(url=test_url, params=params)
+        self.checkSessionFlash(response, 'Auth settings updated successfully')
+
+        new_settings = Setting.get_auth_settings()
+        self.assertEqual(new_settings['auth_pam_service'], u'kallithea',
+                         'fail db write compare')
