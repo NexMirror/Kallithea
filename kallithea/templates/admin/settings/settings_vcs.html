@@ -64,7 +64,7 @@ ${h.form(url('admin_settings'), method='post')}
                     <label for="paths_root_path">${_('Location of repositories')}:</label>
                 </div>
                 <div class="input">
-                    ${h.text('paths_root_path',size=60,readonly="readonly", class_="disabled")}
+                    ${h.text('paths_root_path',size=60,readonly="readonly")}
                     <span id="path_unlock" class="tooltip" style="cursor: pointer"
                             title="${_('Click to unlock. You must restart Kallithea in order to make this setting take effect.')}">
                         <div class="btn btn-small"><i id="path_unlock_icon" class="icon-lock"></i></div>
@@ -74,7 +74,7 @@ ${h.form(url('admin_settings'), method='post')}
             </div>
             %else:
             ## form still requires this but we cannot internally change it anyway
-            ${h.hidden('paths_root_path',size=30,readonly="readonly", class_="disabled")}
+            ${h.hidden('paths_root_path',size=30,readonly="readonly")}
             %endif
             <div class="buttons">
                 ${h.submit('save',_('Save Settings'),class_="btn")}
@@ -90,7 +90,6 @@ ${h.form(url('admin_settings'), method='post')}
                 $('#path_unlock_icon').removeClass('icon-lock');
                 $('#path_unlock_icon').addClass('icon-lock-open-alt');
                 $('#paths_root_path').removeAttr('readonly');
-                $('#paths_root_path').removeClass('disabled');
             });
         });
     </script>

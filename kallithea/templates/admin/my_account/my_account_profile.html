@@ -20,11 +20,9 @@ ${h.form(url('my_account'), method='post')}
          </div>
 
         <% readonly = None %>
-        <% disabled = "" %>
         <div class="fields">
             %if c.user.extern_type != c.EXTERN_TYPE_INTERNAL:
                 <% readonly = "readonly" %>
-                <% disabled = " disabled" %>
                 <strong>${_('Your user is in an external Source of Record; some details cannot be managed here')}.</strong>
             %endif
              <div class="field">
@@ -32,7 +30,7 @@ ${h.form(url('my_account'), method='post')}
                     <label for="username">${_('Username')}:</label>
                 </div>
                 <div class="input">
-                  ${h.text('username',class_='medium%s' % disabled, readonly=readonly)}
+                  ${h.text('username',class_='medium', readonly=readonly)}
                 </div>
              </div>
 

@@ -18,12 +18,10 @@ ${h.form(url('update_user', id=c.user.user_id),method='put')}
            </div>
         </div>
         <% readonly = None %>
-        <% disabled = "" %>
         <div class="fields">
             %if c.user.extern_type != c.EXTERN_TYPE_INTERNAL:
              <div class="field">
                <% readonly = "readonly" %>
-               <% disabled = " disabled" %>
                <strong>${_('This user is in an external Source of Record (%s); some details cannot be managed here.' % c.user.extern_type)}.</strong>
              </div>
             %endif
@@ -33,7 +31,7 @@ ${h.form(url('update_user', id=c.user.user_id),method='put')}
                     <label for="username">${_('Username')}:</label>
                 </div>
                 <div class="input">
-                  ${h.text('username',class_='medium%s' % disabled, readonly=readonly)}
+                  ${h.text('username',class_='medium', readonly=readonly)}
                 </div>
              </div>
 
@@ -51,7 +49,7 @@ ${h.form(url('update_user', id=c.user.user_id),method='put')}
                     <label for="extern_type">${_('Source of Record')}:</label>
                 </div>
                 <div class="input">
-                    ${h.text('extern_type',class_='medium disabled',readonly="readonly")}
+                    ${h.text('extern_type',class_='medium',readonly="readonly")}
                 </div>
              </div>
 
@@ -60,7 +58,7 @@ ${h.form(url('update_user', id=c.user.user_id),method='put')}
                     <label for="extern_name">${_('Name in Source of Record')}:</label>
                 </div>
                 <div class="input">
-                    ${h.text('extern_name',class_='medium disabled',readonly="readonly")}
+                    ${h.text('extern_name',class_='medium',readonly="readonly")}
                 </div>
              </div>
 
@@ -69,7 +67,7 @@ ${h.form(url('update_user', id=c.user.user_id),method='put')}
                     <label for="new_password">${_('New password')}:</label>
                 </div>
                 <div class="input">
-                    ${h.password('new_password',class_='medium%s' % disabled,readonly=readonly)}
+                    ${h.password('new_password',class_='medium',readonly=readonly)}
                 </div>
              </div>
 
@@ -78,7 +76,7 @@ ${h.form(url('update_user', id=c.user.user_id),method='put')}
                     <label for="password_confirmation">${_('New password confirmation')}:</label>
                 </div>
                 <div class="input">
-                    ${h.password('password_confirmation',class_="medium%s" % disabled,readonly=readonly)}
+                    ${h.password('password_confirmation',class_="medium",readonly=readonly)}
                 </div>
              </div>
 
