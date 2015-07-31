@@ -229,7 +229,7 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
             'email': crowd_user["email"] or email,
             'admin': admin,
             'active': active,
-            'active_from_extern': crowd_user.get('active'),
+            'active_from_extern': crowd_user.get('active'), # ???
             'extern_name': crowd_user["name"],
         }
 
@@ -240,3 +240,6 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
         log.debug("Final crowd user object: \n%s" % (formatted_json(user_data)))
         log.info('user %s authenticated correctly' % user_data['username'])
         return user_data
+
+    def get_managed_fields(self):
+        return ['username', 'firstname', 'lastname', 'email', 'password']

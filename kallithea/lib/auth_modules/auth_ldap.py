@@ -359,3 +359,6 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
         except (Exception,):
             log.error(traceback.format_exc())
             return None
+
+    def get_managed_fields(self):
+        return ['username', 'firstname', 'lastname', 'email', 'password']

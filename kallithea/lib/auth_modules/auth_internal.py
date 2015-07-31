@@ -97,3 +97,7 @@ class KallitheaAuthPlugin(auth_modules.KallitheaAuthPluginBase):
         else:
             log.warning('user %s tried auth but is disabled' % username)
             return None
+
+    def get_managed_fields(self):
+        # Note: 'username' should only be editable (at least for user) if self registration is enabled
+        return []

@@ -190,3 +190,6 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
 
         log.info('user `%s` authenticated correctly' % user_data['username'])
         return user_data
+
+    def get_managed_fields(self):
+        return ['username', 'password']

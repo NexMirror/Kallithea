@@ -42,7 +42,6 @@ from kallithea.lib.exceptions import DefaultUserException, \
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import LoginRequired, HasPermissionAllDecorator, \
     AuthUser
-import kallithea.lib.auth_modules.auth_internal
 from kallithea.lib import auth_modules
 from kallithea.lib.base import BaseController, render
 from kallithea.model.api_key import ApiKeyModel
@@ -175,11 +174,8 @@ class UsersController(BaseController):
         form_result = {}
         try:
             form_result = _form.to_python(dict(request.POST))
-            skip_attrs = ['extern_type', 'extern_name']
-            #TODO: plugin should define if username can be updated
-            if c.user.extern_type != kallithea.EXTERN_TYPE_INTERNAL:
-                # forbid updating username for external accounts
-                skip_attrs.append('username')
+            skip_attrs = ['extern_type', 'extern_name',
+                         ] + auth_modules.get_managed_fields(c.user)
 
             user_model.update(id, form_result, skip_attrs=skip_attrs)
             usr = form_result['username']
@@ -249,6 +245,8 @@ class UsersController(BaseController):
         c.active = 'profile'
         c.perm_user = AuthUser(user_id=id)
         c.ip_addr = self.ip_addr
+        managed_fields = auth_modules.get_managed_fields(c.user)
+        c.readonly = lambda n: 'readonly' if n in managed_fields else None
 
         defaults = c.user.get_dict()
         return htmlfill.render(

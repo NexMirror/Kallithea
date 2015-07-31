@@ -19,10 +19,8 @@ ${h.form(url('my_account'), method='post')}
            </div>
          </div>
 
-        <% readonly = None %>
         <div class="fields">
             %if c.user.extern_type != c.EXTERN_TYPE_INTERNAL:
-                <% readonly = "readonly" %>
                 <strong>${_('Your user is in an external Source of Record; some details cannot be managed here')}.</strong>
             %endif
              <div class="field">
@@ -30,7 +28,7 @@ ${h.form(url('my_account'), method='post')}
                     <label for="username">${_('Username')}:</label>
                 </div>
                 <div class="input">
-                  ${h.text('username',class_='medium', readonly=readonly)}
+                  ${h.text('username',class_='medium', readonly=c.readonly('username'))}
                 </div>
              </div>
 
@@ -39,7 +37,7 @@ ${h.form(url('my_account'), method='post')}
                     <label for="name">${_('First Name')}:</label>
                 </div>
                 <div class="input">
-                    ${h.text('firstname',class_="medium")}
+                    ${h.text('firstname',class_="medium", readonly=c.readonly('firstname'))}
                 </div>
              </div>
 
@@ -48,7 +46,7 @@ ${h.form(url('my_account'), method='post')}
                     <label for="lastname">${_('Last Name')}:</label>
                 </div>
                 <div class="input">
-                    ${h.text('lastname',class_="medium")}
+                    ${h.text('lastname',class_="medium", readonly=c.readonly('lastname'))}
                 </div>
              </div>
 
@@ -57,8 +55,7 @@ ${h.form(url('my_account'), method='post')}
                     <label for="email">${_('Email')}:</label>
                 </div>
                 <div class="input">
-                    ## we should be able to edit email !
-                    ${h.text('email',class_="medium")}
+                    ${h.text('email',class_="medium", readonly=c.readonly('email'))}
                 </div>
              </div>
 

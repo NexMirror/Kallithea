@@ -37,6 +37,7 @@ from pylons.i18n.translation import _
 
 from kallithea import EXTERN_TYPE_INTERNAL
 from kallithea.lib import helpers as h
+from kallithea.lib import auth_modules
 from kallithea.lib.auth import LoginRequired, NotAnonymous, AuthUser
 from kallithea.lib.base import BaseController, render
 from kallithea.lib.utils2 import generate_api_key, safe_int
@@ -100,6 +101,8 @@ class MyAccountController(BaseController):
         self.__load_data()
         c.perm_user = AuthUser(user_id=self.authuser.user_id)
         c.ip_addr = self.ip_addr
+        managed_fields = auth_modules.get_managed_fields(c.user)
+        c.readonly = lambda n: 'readonly' if n in managed_fields else None
 
         defaults = c.user.get_dict()
         update = False
@@ -115,12 +118,8 @@ class MyAccountController(BaseController):
                 form_result = _form.to_python(post_data)
                 # skip updating those attrs for my account
                 skip_attrs = ['admin', 'active', 'extern_type', 'extern_name',
-                              'new_password', 'password_confirmation']
-                #TODO: plugin should define if username can be updated
-                if c.user.extern_type != EXTERN_TYPE_INTERNAL:
-                    # forbid updating username for external accounts
-                    # TODO: also skip username (and email etc) if self registration not enabled
-                    skip_attrs.append('username')
+                              'new_password', 'password_confirmation',
+                             ] + managed_fields
 
                 UserModel().update(self.authuser.user_id, form_result,
                                    skip_attrs=skip_attrs)

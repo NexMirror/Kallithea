@@ -136,3 +136,6 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
         log.debug("pamuser: \n%s" % formatted_json(user_data))
         log.info('user %s authenticated correctly' % user_data['username'])
         return user_data
+
+    def get_managed_fields(self):
+        return ['username', 'password']

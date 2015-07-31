@@ -416,3 +416,16 @@ def authenticate(username, password, environ=None):
             log.warning("User `%s` failed to authenticate against %s"
                         % (username, plugin.__module__))
     return None
+
+def get_managed_fields(user):
+    """return list of fields that are managed by the user's auth source, usually some of
+    'username', 'firstname', 'lastname', 'email', 'active', 'password'
+    """
+    auth_plugins = Setting.get_auth_plugins()
+    for module in auth_plugins:
+        log.debug('testing %s (%s) with auth plugin %s', user, user.extern_type, module)
+        plugin = loadplugin(module)
+        if plugin.name == user.extern_type:
+            return plugin.get_managed_fields()
+    log.error('no auth plugin %s found for %s', user.extern_type, user)
+    return [] # TODO: Fail badly instead of allowing everything to be edited?
