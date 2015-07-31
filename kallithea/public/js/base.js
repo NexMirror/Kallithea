@@ -137,8 +137,7 @@ if (!Array.prototype.filter)
  * Usage pyroutes.url('mark_error_fixed',{"error_id":error_id}) // /mark_error_fixed/<error_id>
  */
 var pyroutes = (function() {
-    // access global map defined in special file pyroutes
-    var matchlist = PROUTES_MAP;
+    var matchlist = {};
     var sprintf = (function() {
         function get_type(variable) {
             return Object.prototype.toString.call(variable).slice(8, -1).toLowerCase();
