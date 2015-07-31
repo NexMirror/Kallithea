@@ -345,7 +345,7 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
                 'firstname': safe_unicode(get_ldap_attr('attr_firstname') or firstname),
                 'lastname': safe_unicode(get_ldap_attr('attr_lastname') or lastname),
                 'groups': [],
-                'email': get_ldap_attr('attr_email' or email),
+                'email': get_ldap_attr('attr_email') or email,
                 'admin': admin,
                 'active': active,
                 "active_from_extern": None,
