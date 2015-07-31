@@ -100,9 +100,9 @@ class TestRepoGroups(BaseTestCase):
         self.assertRaises(formencode.Invalid, validator.to_python, 'ąćżź')
 
     def test_ValidPasswordsMatch(self):
-        validator = v.ValidPasswordsMatch()
+        validator = v.ValidPasswordsMatch('new_password', 'password_confirmation')
         self.assertRaises(formencode.Invalid,
-                    validator.to_python, {'password': 'pass',
+                    validator.to_python, {'new_password': 'pass',
                                           'password_confirmation': 'pass2'})
 
         self.assertRaises(formencode.Invalid,
@@ -114,9 +114,9 @@ class TestRepoGroups(BaseTestCase):
                     validator.to_python({'new_password': 'pass',
                                          'password_confirmation': 'pass'}))
 
-        self.assertEqual({'password': 'pass',
+        self.assertEqual({'new_password': 'pass',
                           'password_confirmation': 'pass'},
-                    validator.to_python({'password': 'pass',
+                    validator.to_python({'new_password': 'pass',
                                          'password_confirmation': 'pass'}))
 
     def test_ValidAuth(self):

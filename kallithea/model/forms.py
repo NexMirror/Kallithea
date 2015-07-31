@@ -102,6 +102,8 @@ def UserForm(edit=False, old_data={}):
                 v.UnicodeString(strip=False, min=6, not_empty=False),
             )
             admin = v.StringBoolean(if_missing=False)
+            chained_validators = [v.ValidPasswordsMatch('new_password',
+                                                        'password_confirmation')]
         else:
             password = All(
                 v.ValidPassword(),
@@ -111,6 +113,8 @@ def UserForm(edit=False, old_data={}):
                 v.ValidPassword(),
                 v.UnicodeString(strip=False, min=6, not_empty=False)
             )
+            chained_validators = [v.ValidPasswordsMatch('password',
+                                                        'password_confirmation')]
 
         active = v.StringBoolean(if_missing=False)
         firstname = v.UnicodeString(strip=True, min=1, not_empty=False)
@@ -118,7 +122,6 @@ def UserForm(edit=False, old_data={}):
         email = All(v.Email(not_empty=True), v.UniqSystemEmail(old_data))
         extern_name = v.UnicodeString(strip=True)
         extern_type = v.UnicodeString(strip=True)
-        chained_validators = [v.ValidPasswordsMatch()]
     return _UserForm
 
 
@@ -196,7 +199,8 @@ def RegisterForm(edit=False, old_data={}):
         lastname = v.UnicodeString(strip=True, min=1, not_empty=False)
         email = All(v.Email(not_empty=True), v.UniqSystemEmail(old_data))
 
-        chained_validators = [v.ValidPasswordsMatch()]
+        chained_validators = [v.ValidPasswordsMatch('password',
+                                                    'password_confirmation')]
 
     return _RegisterForm
 

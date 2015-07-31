@@ -298,7 +298,7 @@ class TestLoginController(TestController):
                                              'email': 'goodmailm@test.plxa',
                                              'firstname': 'test',
                                              'lastname': 'test'})
-        msg = validators.ValidPasswordsMatch()._messages['password_mismatch']
+        msg = validators.ValidPasswordsMatch('password', 'password_confirmation')._messages['password_mismatch']
         response.mustcontain(msg)
 
     def test_register_ok(self):

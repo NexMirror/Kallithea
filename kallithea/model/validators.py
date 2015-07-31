@@ -280,19 +280,17 @@ def ValidOldPassword(username):
     return _validator
 
 
-def ValidPasswordsMatch(passwd='new_password', passwd_confirmation='password_confirmation'):
+def ValidPasswordsMatch(password_field, password_confirmation_field):
     class _validator(formencode.validators.FancyValidator):
         messages = {
             'password_mismatch': _('Passwords do not match'),
         }
 
         def validate_python(self, value, state):
-
-            pass_val = value.get('password') or value.get(passwd)
-            if pass_val != value[passwd_confirmation]:
+            if value.get(password_field) != value[password_confirmation_field]:
                 msg = M(self, 'password_mismatch', state)
                 raise formencode.Invalid(msg, value, state,
-                     error_dict={passwd:msg, passwd_confirmation: msg}
+                     error_dict={password_field:msg, password_confirmation_field: msg}
                 )
     return _validator
 
