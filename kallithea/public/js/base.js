@@ -1439,7 +1439,7 @@ var PullRequestAutoComplete = function (inputElement, container, users_list) {
             var myAC = aArgs[0]; // reference back to the AC instance
             var elLI = aArgs[1]; // reference to the selected LI element
             var oData = aArgs[2]; // object literal of selected item's result data
-    
+
             addReviewMember(oData.id, oData.fname, oData.lname, oData.nname,
                             oData.gravatar_lnk, oData.gravatar_size);
             myAC.getInputEl().value = '';
