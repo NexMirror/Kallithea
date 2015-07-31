@@ -111,7 +111,7 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
         lastname = getattr(userobj, 'lastname', '')
         extern_type = getattr(userobj, 'extern_type', '')
 
-        user_attrs = {
+        user_data = {
             'username': username,
             'firstname': firstname,
             'lastname': lastname,
@@ -129,12 +129,12 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
             regex = settings["gecos"]
             match = re.search(regex, user_data.pw_gecos)
             if match:
-                user_attrs["firstname"] = match.group('first_name')
-                user_attrs["lastname"] = match.group('last_name')
+                user_data["firstname"] = match.group('first_name')
+                user_data["lastname"] = match.group('last_name')
         except Exception:
             log.warning("Cannot extract additional info for PAM user %s", username)
             pass
 
-        log.debug("pamuser: \n%s" % formatted_json(user_attrs))
-        log.info('user %s authenticated correctly' % user_attrs['username'])
-        return user_attrs
+        log.debug("pamuser: \n%s" % formatted_json(user_data))
+        log.info('user %s authenticated correctly' % user_data['username'])
+        return user_data

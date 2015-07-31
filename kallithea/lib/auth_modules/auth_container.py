@@ -177,7 +177,7 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
         lastname = getattr(userobj, 'lastname', '')
         extern_type = getattr(userobj, 'extern_type', '')
 
-        user_attrs = {
+        user_data = {
             'username': username,
             'firstname': safe_unicode(firstname or username),
             'lastname': safe_unicode(lastname or ''),
@@ -190,5 +190,5 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
             'extern_type': extern_type,
         }
 
-        log.info('user `%s` authenticated correctly' % user_attrs['username'])
-        return user_attrs
+        log.info('user `%s` authenticated correctly' % user_data['username'])
+        return user_data

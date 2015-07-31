@@ -408,13 +408,13 @@ class BaseController(WSGIController):
             for name in Setting.get_auth_plugins()
         ):
             try:
-                auth_info = auth_modules.authenticate('', '', request.environ)
+                user_info = auth_modules.authenticate('', '', request.environ)
             except UserCreationError as e:
                 from kallithea.lib import helpers as h
                 h.flash(e, 'error', logf=log.error)
             else:
-                if auth_info is not None:
-                    username = auth_info['username']
+                if user_info is not None:
+                    username = user_info['username']
                     user = User.get_by_username(username, case_insensitive=True)
                     return log_in_user(user, remember=False,
                                        is_external_auth=True)

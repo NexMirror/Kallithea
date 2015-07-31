@@ -340,7 +340,7 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
             lastname = getattr(userobj, 'lastname', '')
             extern_type = getattr(userobj, 'extern_type', '')
 
-            user_attrs = {
+            user_data = {
                 'username': username,
                 'firstname': safe_unicode(get_ldap_attr('attr_firstname') or firstname),
                 'lastname': safe_unicode(get_ldap_attr('attr_lastname') or lastname),
@@ -352,8 +352,8 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
                 'extern_name': user_dn,
                 'extern_type': extern_type,
             }
-            log.info('user %s authenticated correctly' % user_attrs['username'])
-            return user_attrs
+            log.info('user %s authenticated correctly' % user_data['username'])
+            return user_data
 
         except (LdapUsernameError, LdapPasswordError, LdapImportError):
             log.error(traceback.format_exc())

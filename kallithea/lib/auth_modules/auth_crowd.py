@@ -222,7 +222,7 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
         lastname = getattr(userobj, 'lastname', '')
         extern_type = getattr(userobj, 'extern_type', '')
 
-        user_attrs = {
+        user_data = {
             'username': username,
             'firstname': crowd_user["first-name"] or firstname,
             'lastname': crowd_user["last-name"] or lastname,
@@ -237,8 +237,8 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
 
         # set an admin if we're in admin_groups of crowd
         for group in settings["admin_groups"].split(","):
-            if group in user_attrs["groups"]:
-                user_attrs["admin"] = True
-        log.debug("Final crowd user object: \n%s" % (formatted_json(user_attrs)))
-        log.info('user %s authenticated correctly' % user_attrs['username'])
-        return user_attrs
+            if group in user_data["groups"]:
+                user_data["admin"] = True
+        log.debug("Final crowd user object: \n%s" % (formatted_json(user_data)))
+        log.info('user %s authenticated correctly' % user_data['username'])
+        return user_data
