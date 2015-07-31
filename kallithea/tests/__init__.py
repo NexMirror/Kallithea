@@ -68,7 +68,7 @@ log = logging.getLogger(__name__)
 
 __all__ = [
     'parameterized', 'environ', 'url', 'get_new_dir', 'TestController',
-    'SkipTest', 'ldap_lib_installed', 'BaseTestCase', 'init_stack',
+    'SkipTest', 'ldap_lib_installed', 'pam_lib_installed', 'BaseTestCase', 'init_stack',
     'TESTS_TMP_PATH', 'HG_REPO', 'GIT_REPO', 'NEW_HG_REPO', 'NEW_GIT_REPO',
     'HG_FORK', 'GIT_FORK', 'TEST_USER_ADMIN_LOGIN', 'TEST_USER_ADMIN_PASS',
     'TEST_USER_ADMIN_EMAIL', 'TEST_USER_REGULAR_LOGIN', 'TEST_USER_REGULAR_PASS',
@@ -143,6 +143,12 @@ except ImportError:
     # means that python-ldap is not installed
     pass
 
+try:
+    import pam
+    pam.PAM_TEXT_INFO
+    pam_lib_installed = True
+except ImportError:
+    pam_lib_installed = False
 
 def get_new_dir(title):
     """
