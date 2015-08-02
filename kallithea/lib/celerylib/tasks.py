@@ -264,15 +264,14 @@ def send_email(recipients, subject, body='', html_body='', headers=None):
     email_prefix = email_config.get('email_prefix', '')
     if email_prefix:
         subject = "%s %s" % (email_prefix, subject)
-    if recipients is None:
+
+    if not recipients:
         # if recipients are not defined we send to email_config + all admins
         admins = [u.email for u in User.query()
                   .filter(User.admin == True).all()]
         recipients = [email_config.get('email_to')] + admins
-        log.warning("recipients not specified for '%s' - sending to admins %s", subject, ' '.join(recipients))
-    elif not recipients:
-        log.error("No recipients specified")
-        return False
+
+        log.warning("No recipients specified for '%s' - sending to admins %s", subject, ' '.join(recipients))
 
     mail_from = email_config.get('app_email_from', 'Kallithea')
     user = email_config.get('smtp_username')
