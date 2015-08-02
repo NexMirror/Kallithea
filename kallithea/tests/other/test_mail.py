@@ -68,3 +68,25 @@ class TestMail(BaseTestCase):
         self.assertIn('Subject: %s' % subject, smtplib_mock.lastmsg)
         self.assertIn(body, smtplib_mock.lastmsg)
         self.assertIn(html_body, smtplib_mock.lastmsg)
+
+    def test_send_mail_no_recipients_no_email_to(self):
+        mailserver = 'smtp.mailserver.org'
+        recipients = []
+        envelope_from = 'noreply@mailserver.org'
+        subject = 'subject'
+        body = 'body'
+        html_body = 'html_body'
+
+        config_mock = {
+                'smtp_server': mailserver,
+                'app_email_from': envelope_from,
+        }
+        with mock.patch('kallithea.lib.celerylib.tasks.config', config_mock):
+            kallithea.lib.celerylib.tasks.send_email(recipients, subject, body, html_body)
+
+        self.assertSetEqual(smtplib_mock.lastdest, set([TEST_USER_ADMIN_EMAIL]))
+        self.assertEqual(smtplib_mock.lastsender, envelope_from)
+        self.assertIn('From: %s' % envelope_from, smtplib_mock.lastmsg)
+        self.assertIn('Subject: %s' % subject, smtplib_mock.lastmsg)
+        self.assertIn(body, smtplib_mock.lastmsg)
+        self.assertIn(html_body, smtplib_mock.lastmsg)

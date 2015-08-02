@@ -267,9 +267,16 @@ def send_email(recipients, subject, body='', html_body='', headers=None):
 
     if not recipients:
         # if recipients are not defined we send to email_config + all admins
-        admins = [u.email for u in User.query()
-                  .filter(User.admin == True).all()]
-        recipients = [email_config.get('email_to')] + admins
+        recipients = [u.email for u in User.query()
+                      .filter(User.admin == True).all()]
+        if email_config.get('email_to') is not None:
+            recipients += [email_config.get('email_to')]
+
+        # If there are still no recipients, there are no admins and no address
+        # configured in email_to, so return.
+        if not recipients:
+            log.error("No recipients specified and no fallback available.")
+            return False
 
         log.warning("No recipients specified for '%s' - sending to admins %s", subject, ' '.join(recipients))
 
