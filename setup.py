@@ -57,6 +57,7 @@ requirements = [
     "URLObject==2.3.4",
     "Routes==1.13",
     "dulwich>=0.9.9,<=0.9.9",
+    "mercurial>=2.9,<3.6",
 ]
 
 if sys.version_info < (2, 7):
@@ -64,7 +65,6 @@ if sys.version_info < (2, 7):
     requirements.append("unittest2")
     requirements.append("argparse")
 
-requirements.append("mercurial>=2.9,<3.4")
 if not is_windows:
     requirements.append("py-bcrypt>=0.3.0,<=0.4")
 

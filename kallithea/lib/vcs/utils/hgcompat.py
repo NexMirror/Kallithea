@@ -44,3 +44,5 @@ if inspect.getargspec(memfilectx.__init__).args[1] != 'repo':
 
 # workaround for 3.3 94ac64bcf6fe and not calling largefiles reposetup correctly
 localrepository._lfstatuswriters = [lambda *msg, **opts: None]
+# 3.5 7699d3212994 added the invariant that repo.lfstatus must exist before hitting overridearchive
+localrepository.lfstatus = False
