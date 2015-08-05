@@ -223,19 +223,12 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
                   $('#{0} .inline-comments-button'.format(boxid)).hide();
               }
           });
+
           $('.add-bubble').click(function(e){
-              var tr = e.currentTarget;
-              if(tr == null){
-                  tr = this;
-              }
-              injectInlineForm(tr.parentNode.parentNode);
+              show_comment_form($(this));
           });
 
-          // inject comments into they proper positions
-          var file_comments = $('.inline-comment-placeholder').toArray();
-          renderInlineComments(file_comments);
-
-          linkInlineComments($('.firstlink'), $('.comment'));
+          move_comments($(".comments .comments-list-chunk"));
 
           pyroutes.register('changeset_home',
                             "${h.url('changeset_home', repo_name='%(repo_name)s', revision='%(revision)s')}",

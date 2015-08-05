@@ -4164,8 +4164,7 @@ div.rst-block pre {
     margin: 0.5em 0px !important;
 }
 
-.comments .comments-number,
-.pr-comments-number {
+.comments-number {
     margin: 5px;
     padding: 0px 0px 10px 0px;
     font-weight: bold;
@@ -4182,11 +4181,6 @@ div.rst-block pre {
 .status-block {
     margin: 5px;
     clear: both
-}
-
-
-div.comment-form {
-    margin-top: 20px;
 }
 
 .comment-form textarea {
@@ -4325,7 +4319,7 @@ form.comment-inline-form {
 
 /** comment inline **/
 .inline-comments {
-    padding: 10px 20px;
+    padding: 0 20px;
 }
 
 .inline-comments div.rst-block {

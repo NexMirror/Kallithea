@@ -72,9 +72,9 @@ class TestChangeSetCommentsController(TestController):
             ''' 1 comment (1 inline, 0 general)'''
         )
         response.mustcontain(
-            '''<div style="display:none" class="inline-comment-placeholder" '''
-            '''path="vcs/web/simplevcs/views/repository.py" '''
-            '''target_id="vcswebsimplevcsviewsrepositorypy">'''
+            '''<div class="comments-list-chunk" '''
+            '''data-f_path="vcs/web/simplevcs/views/repository.py" '''
+            '''data-line_no="n1" data-target-id="vcswebsimplevcsviewsrepositorypy_n1">'''
         )
 
         self.assertEqual(Notification.query().count(), 1)

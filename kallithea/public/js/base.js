@@ -607,250 +607,160 @@ var q_filter = (function() {
     }
 })();
 
-/* return jQuery expression with a tr with body in 3rd column and class cls and id named after the body */
-var _table_tr = function(cls, body){
-    // like: <div class="comment" id="comment-8" line="o92"><div class="comment-wrapp">...
-    // except new inlines which are different ...
-    var comment_id = ($(body).attr('id') || 'comment-new').split('comment-')[1];
-    var tr_id = 'comment-tr-{0}'.format(comment_id);
-    return $(('<tr id="{0}" class="{1}">'+
-                  '<td class="lineno-inline new-inline"></td>'+
-                  '<td class="lineno-inline old-inline"></td>'+
-                  '<td>{2}</td>'+
-                 '</tr>').format(tr_id, cls, body));
-};
-
-/** return jQuery expression with new inline form based on template **/
-var _createInlineForm = function(parent_tr, f_path, line) {
-    var $tmpl = $('#comment-inline-form-template').html().format(f_path, line);
-    var $form = _table_tr('comment-form-inline', $tmpl)
-
-    // create event for hide button
-    $form.find('.hide-inline-form').click(function(e) {
-        var newtr = e.currentTarget.parentNode.parentNode.parentNode.parentNode.parentNode;
-        if($(newtr).next().hasClass('inline-comments-button')){
-            $(newtr).next().show();
-        }
-        $(newtr).remove();
-        $(parent_tr).removeClass('form-open');
-        $(parent_tr).removeClass('hl-comment');
-    });
-
-    return $form
-};
 
 /**
- * Inject inline comment for an given TR. This tr should always be a .line .
- * The form will be inject after any comments.
+ * Comment handling
  */
-var injectInlineForm = function(tr){
-    var $tr = $(tr);
-    if(!$tr.hasClass('line')){
-        return
-    }
-    var submit_url = AJAX_COMMENT_URL;
-    var $td = $tr.find('.code');
-    if($tr.hasClass('form-open') || $tr.hasClass('context') || $td.hasClass('no-comment')){
-        return
-    }
-    $tr.addClass('form-open hl-comment');
-    var f_path = $tr.parent().closest('.full_f_path').data('f_path');
-    var lineno = _getLineNo(tr);
-    var $form = _createInlineForm(tr, f_path, lineno, submit_url);
 
-    var $parent = $tr;
-    while ($parent.next().hasClass('inline-comments')){
-        var $parent = $parent.next();
-    }
-    $form.insertAfter($parent);
-    var $overlay = $form.find('.submitting-overlay');
-    var $inlineform = $form.find('.inline-form');
+// move comments to their right location, inside new trs
+function move_comments($anchorcomments) {
+    $anchorcomments.each(function(i, anchorcomment) {
+        var $anchorcomment = $(anchorcomment);
+        var target_id = $anchorcomment.data('target-id');
+        var $comment_div = _get_add_comment_div(target_id);
+        var f_path = $anchorcomment.data('f_path');
+        var line_no = $anchorcomment.data('line_no');
+        if ($comment_div[0]) {
+            $comment_div.append($anchorcomment.children());
+            _comment_div_append_add($comment_div, f_path, line_no);
+        } else {
+           $anchorcomment.before("Comment to {0} line {1} which is outside the diff context:".format(f_path || '?', line_no || '?'));
+        }
+    });
+    linkInlineComments($('.firstlink'), $('.comment'));
+}
 
-    $form.submit(function(e){
+// comment bubble was clicked - insert new tr and show form
+function show_comment_form($bubble) {
+    var children = $bubble.closest('tr.line').children('[id]');
+    var line_td_id = children[children.length - 1].id;
+    var $comment_div = _get_add_comment_div(line_td_id);
+    var f_path = $bubble.closest('div.full_f_path').data('f_path');
+    var parts = line_td_id.split('_');
+    var line_no = parts[parts.length-1];
+    comment_div_state($comment_div, f_path, line_no, true);
+}
+
+// return comment div for target_id - add it if it doesn't exist yet
+function _get_add_comment_div(target_id) {
+    var comments_box_id = 'comments-' + target_id;
+    var $comments_box = $('#' + comments_box_id);
+    if (!$comments_box.length) {
+        var html = '<tr><td id="{0}" colspan="3" class="inline-comments"></td></tr>'.format(comments_box_id);
+        $('#' + target_id).closest('tr').after(html);
+        $comments_box = $('#' + comments_box_id);
+    }
+    return $comments_box;
+}
+
+// set $comment_div state - showing or not showing form and Add button
+function comment_div_state($comment_div, f_path, line_no, show_form) {
+    var $forms = $comment_div.children('.comment-inline-form');
+    var $buttons = $comment_div.children('.add-comment');
+    var $comments = $comment_div.children('.comment');
+    if (show_form) {
+        if (!$forms.length) {
+            _comment_div_append_form($comment_div, f_path, line_no);
+        }
+    } else {
+        $forms.remove();
+    }
+    $buttons.remove();
+    if ($comments.length && !show_form) {
+        _comment_div_append_add($comment_div, f_path, line_no);
+    }
+}
+
+// append an Add button to $comment_div and hook it up to show form
+function _comment_div_append_add($comment_div, f_path, line_no) {
+    var addlabel = TRANSLATION_MAP['Add Another Comment'];
+    var $add = $('<div class="add-comment"><span class="btn btn-mini">{0}</span></div>'.format(addlabel));
+    $comment_div.append($add);
+    $add.click(function(e) {
+        comment_div_state($comment_div, f_path, line_no, true);
+    });
+}
+
+// append a comment form to $comment_div
+function _comment_div_append_form($comment_div, f_path, line_no) {
+    var $form_div = $($('#comment-inline-form-template').html().format(f_path, line_no));
+    $comment_div.append($form_div);
+    var $form = $comment_div.find("form");
+
+    $form.submit(function(e) {
         e.preventDefault();
 
-        if(lineno === undefined){
-            alert('Error submitting, line ' + lineno + ' not found.');
-            return;
-        }
-        if(f_path === undefined){
-            alert('Error submitting, file path ' + f_path + ' not found.');
+        var text = $('#text_'+line_no).val();
+        if (!text){
             return;
         }
 
-        var text = $('#text_'+lineno).val();
-        if(text == ""){
-            return;
-        }
+        $form.find('.submitting-overlay').show();
 
-        $overlay.show();
-
-        var success = function(json_data){
-            $tr.removeClass('form-open');
-            $form.remove();
-            _renderInlineComment(json_data);
+        var success = function(json_data) {
+            $comment_div.append(json_data['rendered_text']);
+            comment_div_state($comment_div, f_path, line_no, false);
             linkInlineComments($('.firstlink'), $('.comment'));
         };
         var postData = {
-                'text': text,
-                'f_path': f_path,
-                'line': lineno
+            'text': text,
+            'f_path': f_path,
+            'line': line_no
         };
-        ajaxPOST(submit_url, postData, success);
+        ajaxPOST(AJAX_COMMENT_URL, postData, success);
     });
 
-    $('#preview-btn_'+lineno).click(function(e){
-        var text = $('#text_'+lineno).val();
+    $('#preview-btn_'+line_no).click(function(e){
+        var text = $('#text_'+line_no).val();
         if(!text){
             return
         }
-        $('#preview-box_'+lineno).addClass('unloaded');
-        $('#preview-box_'+lineno).html(_TM['Loading ...']);
-        $('#edit-container_'+lineno).hide();
-        $('#edit-btn_'+lineno).show();
-        $('#preview-container_'+lineno).show();
-        $('#preview-btn_'+lineno).hide();
+        $('#preview-box_'+line_no).addClass('unloaded');
+        $('#preview-box_'+line_no).html(_TM['Loading ...']);
+        $('#edit-container_'+line_no).hide();
+        $('#edit-btn_'+line_no).show();
+        $('#preview-container_'+line_no).show();
+        $('#preview-btn_'+line_no).hide();
 
         var url = pyroutes.url('changeset_comment_preview', {'repo_name': REPO_NAME});
         var post_data = {'text': text};
-        ajaxPOST(url, post_data, function(html){
-            $('#preview-box_'+lineno).html(html);
-            $('#preview-box_'+lineno).removeClass('unloaded');
+        ajaxPOST(url, post_data, function(html) {
+            $('#preview-box_'+line_no).html(html);
+            $('#preview-box_'+line_no).removeClass('unloaded');
         })
     })
-    $('#edit-btn_'+lineno).click(function(e){
-        $('#edit-container_'+lineno).show();
-        $('#edit-btn_'+lineno).hide();
-        $('#preview-container_'+lineno).hide();
-        $('#preview-btn_'+lineno).show();
+    $('#edit-btn_'+line_no).click(function(e) {
+        $('#edit-container_'+line_no).show();
+        $('#edit-btn_'+line_no).hide();
+        $('#preview-container_'+line_no).hide();
+        $('#preview-btn_'+line_no).show();
     })
 
-    setTimeout(function(){
+    // create event for hide button
+    $form.find('.hide-inline-form').click(function(e) {
+        comment_div_state($comment_div, f_path, line_no, false);
+    });
+
+    setTimeout(function() {
         // callbacks
         tooltip_activate();
-        MentionsAutoComplete('text_'+lineno, 'mentions_container_'+lineno,
+        MentionsAutoComplete('text_'+line_no, 'mentions_container_'+line_no,
                              _USERS_AC_DATA);
-        $('#text_'+lineno).focus();
-    },10)
-};
-
-var deleteComment = function(comment_id){
-    var url = AJAX_COMMENT_DELETE_URL.replace('__COMMENT_ID__',comment_id);
-    var postData = {'_method':'delete'};
-    var success = function(o){
-        var $deleted = $('#comment-tr-'+comment_id);
-        var $prev = $deleted.prev('tr');
-        while ($prev.hasClass('inline-comments')){
-            $prev = $prev.prev('tr');
-        }
-        $deleted.remove();
-        _placeAddButton($prev);
-    }
-    ajaxPOST(url,postData,success);
+        $('#text_'+line_no).focus();
+    }, 10)
 }
 
-var _getLineNo = function(tr) {
-    var line;
-    var o = $(tr).children()[0].id.split('_');
-    var n = $(tr).children()[1].id.split('_');
 
-    if (n.length >= 2) {
-        line = n[n.length-1];
-    } else if (o.length >= 2) {
-        line = o[o.length-1];
+function deleteComment(comment_id) {
+    var url = AJAX_COMMENT_DELETE_URL.replace('__COMMENT_ID__', comment_id);
+    var postData = {'_method': 'delete'};
+    var success = function(o) {
+        $('#comment-'+comment_id).remove();
+        // Ignore that this might leave a stray Add button (or have a pending form with another comment) ...
     }
-
-    return line
-};
-
-var _placeAddButton = function($line_tr){
-    var $tr = $line_tr;
-    while ($tr.next().hasClass('inline-comments')){
-        $tr.find('.add-comment').remove();
-        $tr = $tr.next();
-    }
-    $tr.find('.add-comment').remove();
-    var label = TRANSLATION_MAP['Add Another Comment'];
-    var $html_el = $('<div class="add-comment"><span class="btn btn-mini">{0}</span></div>'.format(label));
-    $html_el.click(function(e) {
-        injectInlineForm($line_tr);
-    });
-    $tr.find('.comment').after($html_el);
-};
-
-/**
- * Places the inline comment into the changeset block in proper line position
- */
-var _placeInline = function(target_id, lineno, html){
-    var $td = $("#{0}_{1}".format(target_id, lineno));
-    if (!$td.length){
-        return false;
-    }
-
-    // check if there are comments already !
-    var $line_tr = $td.parent(); // the tr
-    var $after_tr = $line_tr;
-    while ($after_tr.next().hasClass('inline-comments')){
-        $after_tr = $after_tr.next();
-    }
-    // put in the comment at the bottom
-    var $tr = _table_tr('inline-comments', html)
-    $tr.find('div.comment').addClass('inline-comment');
-    $after_tr.after($tr);
-
-    // scan nodes, and attach add button to last one
-    _placeAddButton($line_tr);
-    return true;
+    ajaxPOST(url, postData, success);
 }
 
-/**
- * make a single inline comment and place it inside
- */
-var _renderInlineComment = function(json_data){
-    var html =  json_data['rendered_text'];
-    var lineno = json_data['line_no'];
-    var target_id = json_data['target_id'];
-    return _placeInline(target_id, lineno, html);
-}
-
-/**
- * Iterates over all the inlines, and places them inside proper blocks of data
- */
-var renderInlineComments = function(file_comments){
-    for (var f in file_comments){
-        // holding all comments for a FILE
-        var box = file_comments[f];
-
-        var target_id = $(box).attr('target_id');
-        // actual comments with line numbers
-        var comments = box.children;
-        var obsolete_comments = [];
-        for(var i=0; i<comments.length; i++){
-            var data = {
-                'rendered_text': comments[i].outerHTML,
-                'line_no': $(comments[i]).attr('line'),
-                'target_id': target_id
-            }
-            if (_renderInlineComment(data)) {
-                obsolete_comments.push(comments[i]);
-                $(comments[i]).hide();
-            }else{
-                var txt = document.createTextNode(
-                        "Comment to " + YUD.getAttribute(comments[i].parentNode,'path') +
-                        " line " + data.line_no +
-                        " which is outside the diff context:");
-                comments[i].insertBefore(txt, comments[i].firstChild);
-            }
-        }
-        // now remove all the obsolete comments that have been copied to their
-        // respective locations.
-        for (var i=0; i < obsolete_comments.length; i++) {
-            obsolete_comments[i].parentNode.removeChild(obsolete_comments[i]);
-        }
-
-        $(box).show();
-    }
-}
 
 /**
  * Double link comments

@@ -377,19 +377,14 @@ ${self.repo_context_bar('showpullrequest')}
           PullRequestAutoComplete('user', 'reviewers_container', _USERS_AC_DATA);
 
           $('.add-bubble').click(function(e){
-              var tr = e.currentTarget;
-              injectInlineForm(tr.parentNode.parentNode);
+              show_comment_form($(this));
           });
 
           var avail_jsdata = ${c.avail_jsdata|n};
           var avail_r = new BranchRenderer('avail_graph_canvas', 'updaterevs-table', 'chg_available_');
           avail_r.render(avail_jsdata,40);
 
-          // inject comments into they proper positions
-          var file_comments = $('.inline-comment-placeholder').toArray();
-          renderInlineComments(file_comments);
-
-          linkInlineComments($('.firstlink'), $('.comment'));
+          move_comments($(".comments .comments-list-chunk"));
 
           $('#updaterevs input').change(function(e){
               var update = !!e.target.value;
