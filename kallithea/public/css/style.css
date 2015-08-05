@@ -4128,7 +4128,7 @@ div.rst-block pre {
     max-width: 978px;
 }
 
-.comments .comment {
+.comments .comment .comment-wrapp {
     border: 1px solid #ddd;
     margin-top: 10px;
     border-radius: 4px;
@@ -4328,20 +4328,19 @@ form.comment-inline-form {
     margin: 0;
     padding: 0 20px 0px;
 }
-.inline-comments .comment {
+
+.inline-comments .comment .comment-wrapp {
     max-width: 978px;
     border: 1px solid #ddd;
     border-radius: 4px;
     margin: 3px 3px 5px 5px;
     background-color: #FAFAFA;
 }
+
 .inline-comments .add-comment {
     padding: 2px 4px 8px 5px;
 }
 
-.inline-comments .comment-wrapp {
-    padding: 1px;
-}
 .inline-comments .comment .meta {
     background: #f8f8f8;
     padding: 4px;
@@ -4837,6 +4836,15 @@ table.code-difftable .unmod .code pre:before {
 
 .add-bubble div:hover {
     transform: scale(1.2, 1.2);
+}
+
+/* show some context of link targets - but only works when the link target
+   can be extended with any visual difference */
+:target:before {
+  display: block;
+  height: 100px;
+  margin: -100px 0 0;
+  content: "";
 }
 
 div.comment:target>.comment-wrapp {
