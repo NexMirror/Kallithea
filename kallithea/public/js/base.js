@@ -627,7 +627,7 @@ function move_comments($anchorcomments) {
            $anchorcomment.before("Comment to {0} line {1} which is outside the diff context:".format(f_path || '?', line_no || '?'));
         }
     });
-    linkInlineComments($('.firstlink'), $('.comment'));
+    linkInlineComments($('.firstlink'), $('.comment:first-child'));
 }
 
 // comment bubble was clicked - insert new tr and show form
@@ -700,7 +700,7 @@ function _comment_div_append_form($comment_div, f_path, line_no) {
         var success = function(json_data) {
             $comment_div.append(json_data['rendered_text']);
             comment_div_state($comment_div, f_path, line_no, false);
-            linkInlineComments($('.firstlink'), $('.comment'));
+            linkInlineComments($('.firstlink'), $('.comment:first-child'));
         };
         var postData = {
             'text': text,
