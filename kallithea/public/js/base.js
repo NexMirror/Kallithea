@@ -654,8 +654,7 @@ var injectInlineForm = function(tr){
         return
     }
     $tr.addClass('form-open hl-comment');
-    var $node = $tr.parent().parent().parent().find('.full_f_path');
-    var f_path = $node.attr('path');
+    var f_path = $tr.parent().closest('.full_f_path').data('f_path');
     var lineno = _getLineNo(tr);
     var $form = _createInlineForm(tr, f_path, lineno, submit_url);
 

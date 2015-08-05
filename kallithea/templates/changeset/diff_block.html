@@ -41,8 +41,7 @@
                 </span>
             </div>
         </div>
-        <div class="code-body">
-            <div class="full_f_path" path="${h.safe_unicode(path)}"></div>
+        <div class="code-body full_f_path" data-f_path="${h.safe_unicode(path)}">
             ${diff|n}
             %if path.rsplit('.')[-1] in ['png', 'gif', 'jpg', 'bmp']:
               <div class="btn btn-image-diff-show">Show images</div>
@@ -104,8 +103,7 @@
               </div>
           </div>
       </div>
-        <div class="code-body">
-            <div class="full_f_path" path="${h.safe_unicode(filenode_path)}"></div>
+        <div class="code-body full_f_path" data-f_path="${h.safe_unicode(filenode_path)}">
             ${diff|n}
             %if filenode_path.rsplit('.')[-1] in ['png', 'gif', 'jpg', 'bmp']:
               <div class="btn btn-image-diff-show">Show images</div>
