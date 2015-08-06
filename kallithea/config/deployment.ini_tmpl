@@ -241,7 +241,6 @@ issue_prefix = #
 #issue_server_link_wiki = https://mywiki.com/{id}
 #issue_prefix_wiki = WIKI-
 
-
 ## instance-id prefix
 ## a prefix key for this instance used for cache invalidation when running
 ## multiple instances of kallithea, make sure it's globally unique for
@@ -262,7 +261,6 @@ allow_repo_location_change = True
 
 ## allows to setup custom hooks in settings page
 allow_custom_hooks_settings = True
-
 
 ####################################
 ###        CELERY CONFIG        ####
@@ -368,7 +366,6 @@ beaker.session.auto = False
 ## default cookie expiration time in seconds `true` expire at browser close ##
 #beaker.session.cookie_expires = 3600
 
-
 ############################
 ## ERROR HANDLING SYSTEMS ##
 ############################
@@ -416,7 +413,6 @@ errormator.logging_on_error = false
 ## start with HTTP* this list be extended with additional keywords here
 errormator.environ_keys_whitelist =
 
-
 ## list of keywords that should be blanked from request object
 ## can be string with comma separated list of words in lowercase
 ## (by default client will always blank keys that contain following words
@@ -424,12 +420,10 @@ errormator.environ_keys_whitelist =
 ## this list be extended with additional keywords set here
 errormator.request_keys_blacklist =
 
-
 ## list of namespaces that should be ignores when gathering log entries
 ## can be string with comma separated list of namespaces
 ## (by default the client ignores own entries: errormator_client.client)
 errormator.log_namespace_blacklist =
-
 
 ################
 ### [sentry] ###
@@ -448,7 +442,6 @@ sentry.project =
 sentry.site =
 sentry.include_paths =
 sentry.exclude_paths =
-
 
 ################################################################################
 ## WARNING: *THE LINE BELOW MUST BE UNCOMMENTED ON A PRODUCTION ENVIRONMENT*  ##
