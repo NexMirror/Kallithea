@@ -38,8 +38,8 @@ threadpool_workers = 5
 threadpool_max_requests = 10
 <%text>## option to use threads of process</%text>
 use_threadpool = true
-%endif
-%if http_server == 'waitress':
+
+%elif http_server == 'waitress':
 <%text>## WAITRESS ##</%text>
 use = egg:waitress#main
 <%text>## number of worker threads</%text>
@@ -49,8 +49,8 @@ max_request_body_size = 107374182400
 <%text>## use poll instead of select, fixes fd limits, may not work on old</%text>
 <%text>## windows systems.</%text>
 #asyncore_use_poll = True
-%endif
-%if http_server == 'gunicorn':
+
+%elif http_server == 'gunicorn':
 <%text>## GUNICORN ##</%text>
 use = egg:gunicorn#main
 <%text>## number of process workers. You must set `instance_id = *` when this option</%text>
@@ -65,8 +65,8 @@ max_requests = 1000
 <%text>## ammount of time a worker can handle request before it gets killed and</%text>
 <%text>## restarted</%text>
 timeout = 3600
-%endif
-%if http_server == 'uwsgi':
+
+%elif http_server == 'uwsgi':
 <%text>## UWSGI ##</%text>
 <%text>## run with uwsgi --ini-paste-logged <inifile.ini></%text>
 [uwsgi]
@@ -96,11 +96,11 @@ listen = 256
 max-requests = 1000
 
 <%text>## enable large buffers</%text>
-buffer-size=65535
+buffer-size = 65535
 
 <%text>## socket and http timeouts ##</%text>
-http-timeout=3600
-socket-timeout=3600
+http-timeout = 3600
+socket-timeout = 3600
 
 <%text>## Log requests slower than the specified number of milliseconds.</%text>
 log-slow = 10
@@ -126,6 +126,7 @@ workers = 4
 
 <%text>## how many workers should be spawned at a time</%text>
 cheaper-step = 1
+
 %endif
 <%text>## COMMON ##</%text>
 host = ${host}
@@ -297,33 +298,33 @@ celery.always.eager = false
 <%text>###         BEAKER CACHE        ####</%text>
 <%text>####################################</%text>
 
-beaker.cache.data_dir=${here}/data/cache/data
-beaker.cache.lock_dir=${here}/data/cache/lock
+beaker.cache.data_dir = ${here}/data/cache/data
+beaker.cache.lock_dir = ${here}/data/cache/lock
 
-beaker.cache.regions=super_short_term,short_term,long_term,sql_cache_short,sql_cache_med,sql_cache_long
+beaker.cache.regions = super_short_term,short_term,long_term,sql_cache_short,sql_cache_med,sql_cache_long
 
-beaker.cache.super_short_term.type=memory
-beaker.cache.super_short_term.expire=10
+beaker.cache.super_short_term.type = memory
+beaker.cache.super_short_term.expire = 10
 beaker.cache.super_short_term.key_length = 256
 
-beaker.cache.short_term.type=memory
-beaker.cache.short_term.expire=60
+beaker.cache.short_term.type = memory
+beaker.cache.short_term.expire = 60
 beaker.cache.short_term.key_length = 256
 
-beaker.cache.long_term.type=memory
-beaker.cache.long_term.expire=36000
+beaker.cache.long_term.type = memory
+beaker.cache.long_term.expire = 36000
 beaker.cache.long_term.key_length = 256
 
-beaker.cache.sql_cache_short.type=memory
-beaker.cache.sql_cache_short.expire=10
+beaker.cache.sql_cache_short.type = memory
+beaker.cache.sql_cache_short.expire = 10
 beaker.cache.sql_cache_short.key_length = 256
 
-beaker.cache.sql_cache_med.type=memory
-beaker.cache.sql_cache_med.expire=360
+beaker.cache.sql_cache_med.type = memory
+beaker.cache.sql_cache_med.expire = 360
 beaker.cache.sql_cache_med.key_length = 256
 
-beaker.cache.sql_cache_long.type=file
-beaker.cache.sql_cache_long.expire=3600
+beaker.cache.sql_cache_long.type = file
+beaker.cache.sql_cache_long.expire = 3600
 beaker.cache.sql_cache_long.key_length = 256
 
 <%text>####################################</%text>
@@ -370,7 +371,6 @@ beaker.session.auto = False
 #beaker.session.cookie_expires = 3600
 
 %if error_aggregation_service == 'errormator':
-
 <%text>############################</%text>
 <%text>## ERROR HANDLING SYSTEMS ##</%text>
 <%text>############################</%text>
@@ -402,10 +402,10 @@ errormator.slow_request_time = 1
 errormator.slow_requests = true
 
 <%text>## enable hooking to application loggers</%text>
-# errormator.logging = true
+#errormator.logging = true
 
 <%text>## minimum log level for log capture</%text>
-# errormator.logging.level = WARNING
+#errormator.logging.level = WARNING
 
 <%text>## send logs only from erroneous/slow requests</%text>
 <%text>## (saves API quota for intensive logging)</%text>
@@ -429,8 +429,8 @@ errormator.request_keys_blacklist =
 <%text>## can be string with comma separated list of namespaces</%text>
 <%text>## (by default the client ignores own entries: errormator_client.client)</%text>
 errormator.log_namespace_blacklist =
-%elif error_aggregation_service == 'sentry':
 
+%elif error_aggregation_service == 'sentry':
 <%text>################</%text>
 <%text>### [sentry] ###</%text>
 <%text>################</%text>
@@ -448,8 +448,8 @@ sentry.project =
 sentry.site =
 sentry.include_paths =
 sentry.exclude_paths =
-%endif
 
+%endif
 <%text>################################################################################</%text>
 <%text>## WARNING: *THE LINE BELOW MUST BE UNCOMMENTED ON A PRODUCTION ENVIRONMENT*  ##</%text>
 <%text>## Debug mode will enable the interactive debugging tool, allowing ANYONE to  ##</%text>
@@ -472,12 +472,15 @@ logview.pylons.util = #eee
 %if database_engine == 'sqlite':
 # SQLITE [default]
 sqlalchemy.db1.url = sqlite:///${here}/kallithea.db?timeout=60
+
 %elif database_engine == 'postgres':
 # POSTGRESQL
 sqlalchemy.db1.url = postgresql://user:pass@localhost/kallithea
+
 %elif database_engine == 'mysql':
 # MySQL
 sqlalchemy.db1.url = mysql://user:pass@localhost/kallithea
+
 %endif
 # see sqlalchemy docs for others
 
@@ -568,11 +571,11 @@ format = %(asctime)s.%(msecs)03d %(levelname)-5.5s [%(name)s] %(message)s
 datefmt = %Y-%m-%d %H:%M:%S
 
 [formatter_color_formatter]
-class=kallithea.lib.colored_formatter.ColorFormatter
-format= %(asctime)s.%(msecs)03d %(levelname)-5.5s [%(name)s] %(message)s
+class = kallithea.lib.colored_formatter.ColorFormatter
+format = %(asctime)s.%(msecs)03d %(levelname)-5.5s [%(name)s] %(message)s
 datefmt = %Y-%m-%d %H:%M:%S
 
 [formatter_color_formatter_sql]
-class=kallithea.lib.colored_formatter.ColorFormatterSql
-format= %(asctime)s.%(msecs)03d %(levelname)-5.5s [%(name)s] %(message)s
+class = kallithea.lib.colored_formatter.ColorFormatterSql
+format = %(asctime)s.%(msecs)03d %(levelname)-5.5s [%(name)s] %(message)s
 datefmt = %Y-%m-%d %H:%M:%S
