@@ -132,13 +132,13 @@ def _run(argv):
             tmpl_file = args.template
 
         with open(tmpl_file, 'rb') as f:
-            tmpl_data = f.read()
+            tmpl_data = f.read().decode('utf-8')
             if args.raw:
                 tmpl = tmpl_data
             else:
                 tmpl = Template(tmpl_data).render(**tmpl_stored_args)
         with open(args.filename, 'wb') as f:
-            f.write(tmpl)
+            f.write(tmpl.encode('utf-8'))
         print 'Wrote new config file in %s' % (os.path.abspath(args.filename))
 
     except Exception:
