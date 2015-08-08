@@ -1007,7 +1007,7 @@ msgid "Added IP address %s to user whitelist"
 msgstr ""
 
 #: kallithea/controllers/admin/users.py:471
-msgid "An error occurred during ip saving"
+msgid "An error occurred while adding IP address"
 msgstr ""
 
 #: kallithea/controllers/admin/users.py:485

@@ -464,7 +464,7 @@ class UsersController(BaseController):
             h.flash(msg, category='error')
         except Exception:
             log.error(traceback.format_exc())
-            h.flash(_('An error occurred during ip saving'),
+            h.flash(_('An error occurred while adding IP address'),
                     category='error')
 
         if 'default_user' in request.POST:

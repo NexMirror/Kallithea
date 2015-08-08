@@ -579,17 +579,17 @@ msgstr "L’e-mail a été enlevé de l’utilisateur"
 
 #: kallithea/controllers/admin/my_account.py:254
 #: kallithea/controllers/admin/users.py:314
-msgid "Api key successfully created"
+msgid "API key successfully created"
 msgstr "Clé d'API créée avec succès"
 
 #: kallithea/controllers/admin/my_account.py:266
 #: kallithea/controllers/admin/users.py:330
-msgid "Api key successfully reset"
+msgid "API key successfully reset"
 msgstr "Clé d'API remise à zéro avec succès"
 
 #: kallithea/controllers/admin/my_account.py:270
 #: kallithea/controllers/admin/users.py:334
-msgid "Api key successfully deleted"
+msgid "API key successfully deleted"
 msgstr "Clé d'API supprimée avec succès"
 
 #: kallithea/controllers/admin/permissions.py:63
@@ -1036,7 +1036,7 @@ msgid "Added IP address %s to user whitelist"
 msgstr "L'adresse IP %s a été ajoutée à la liste blanche"
 
 #: kallithea/controllers/admin/users.py:488
-msgid "An error occurred during ip saving"
+msgid "An error occurred while adding IP address"
 msgstr "Une erreur est survenue durant la sauvegarde d'IP"
 
 #: kallithea/controllers/admin/users.py:502

@@ -561,17 +561,17 @@ msgstr "成功删除用户电子邮件"
 
 #: kallithea/controllers/admin/my_account.py:254
 #: kallithea/controllers/admin/users.py:314
-msgid "Api key successfully created"
+msgid "API key successfully created"
 msgstr ""
 
 #: kallithea/controllers/admin/my_account.py:266
 #: kallithea/controllers/admin/users.py:330
-msgid "Api key successfully reset"
+msgid "API key successfully reset"
 msgstr ""
 
 #: kallithea/controllers/admin/my_account.py:270
 #: kallithea/controllers/admin/users.py:334
-msgid "Api key successfully deleted"
+msgid "API key successfully deleted"
 msgstr ""
 
 #: kallithea/controllers/admin/permissions.py:63
@@ -1010,7 +1010,7 @@ msgid "Added IP address %s to user whitelist"
 msgstr ""
 
 #: kallithea/controllers/admin/users.py:488
-msgid "An error occurred during ip saving"
+msgid "An error occurred while adding IP address"
 msgstr ""
 
 #: kallithea/controllers/admin/users.py:502
