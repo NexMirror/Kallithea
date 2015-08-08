@@ -309,13 +309,6 @@ class MercurialChangeset(BaseChangeset):
         archival.archive(self.repository._repo, stream, self.raw_id,
                          kind, prefix=prefix, subrepos=subrepos)
 
-        if stream.closed and hasattr(stream, 'name'):
-            stream = open(stream.name, 'rb')
-        elif hasattr(stream, 'mode') and 'r' not in stream.mode:
-            stream = open(stream.name, 'rb')
-        else:
-            stream.seek(0)
-
     def get_nodes(self, path):
         """
         Returns combined ``DirNode`` and ``FileNode`` objects list representing
