@@ -87,7 +87,7 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
                             ts_max_y)
     lockkey_path = config['app_conf']['cache_dir']
 
-    log.info('running task with lockkey %s' % lockkey)
+    log.info('running task with lockkey %s', lockkey)
 
     try:
         lock = l = DaemonLock(file_=jn(lockkey_path, lockkey))
@@ -134,15 +134,15 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
                                         cur_stats.commit_activity_combined))
             co_day_auth_aggr = json.loads(cur_stats.commit_activity)
 
-        log.debug('starting parsing %s' % parse_limit)
+        log.debug('starting parsing %s', parse_limit)
         lmktime = mktime
 
         last_rev = last_rev + 1 if last_rev >= 0 else 0
-        log.debug('Getting revisions from %s to %s' % (
-             last_rev, last_rev + parse_limit)
+        log.debug('Getting revisions from %s to %s',
+             last_rev, last_rev + parse_limit
         )
         for cs in repo[last_rev:last_rev + parse_limit]:
-            log.debug('parsing %s' % cs)
+            log.debug('parsing %s', cs)
             last_cs = cs  # remember last parsed changeset
             k = lmktime([cs.date.timetuple()[0], cs.date.timetuple()[1],
                           cs.date.timetuple()[2], 0, 0, 0, 0, 0, 0])
@@ -210,9 +210,9 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
         stats.commit_activity = json.dumps(co_day_auth_aggr)
         stats.commit_activity_combined = json.dumps(overview_data)
 
-        log.debug('last revision %s' % last_rev)
+        log.debug('last revision %s', last_rev)
         leftovers = len(repo.revisions[last_rev:])
-        log.debug('revisions to parse %s' % leftovers)
+        log.debug('revisions to parse %s', leftovers)
 
         if last_rev == 0 or leftovers < parse_limit:
             log.debug('getting code trending stats')

@@ -439,10 +439,10 @@ def allowed_api_access(controller_name, whitelist=None, api_key=None):
         from kallithea import CONFIG
         whitelist = aslist(CONFIG.get('api_access_controllers_whitelist'),
                            sep=',')
-        log.debug('whitelist of API access is: %s' % (whitelist))
+        log.debug('whitelist of API access is: %s', whitelist)
     api_access_valid = controller_name in whitelist
     if api_access_valid:
-        log.debug('controller:%s is in API whitelist' % (controller_name))
+        log.debug('controller:%s is in API whitelist', controller_name)
     else:
         msg = 'controller: %s is *NOT* in API whitelist' % (controller_name)
         if api_key:
@@ -497,7 +497,7 @@ class AuthUser(object):
 
         # Look up database user, if necessary.
         if user_id is not None:
-            log.debug('Auth User lookup by USER ID %s' % user_id)
+            log.debug('Auth User lookup by USER ID %s', user_id)
             dbuser = user_model.get(user_id)
         else:
             # Note: dbuser is allowed to be None.
@@ -516,7 +516,7 @@ class AuthUser(object):
         if not self.username:
             self.username = 'None'
 
-        log.debug('Auth User is now %s' % self)
+        log.debug('Auth User is now %s', self)
 
     def _fill_data(self, dbuser):
         """
@@ -615,7 +615,7 @@ class AuthUser(object):
         allowed_ips = AuthUser.get_allowed_ips(user.user_id, cache=True,
             inherit_from_default=user.inherit_default_permissions)
         if check_ip_access(source_ip=ip_addr, allowed_ips=allowed_ips):
-            log.debug('IP:%s is in range of %s' % (ip_addr, allowed_ips))
+            log.debug('IP:%s is in range of %s', ip_addr, allowed_ips)
             return True
         else:
             log.info('Access for IP:%s forbidden, '
@@ -716,7 +716,7 @@ def redirect_to_login(message=None):
     p = url.current()
     if message:
         h.flash(h.literal(message), category='warning')
-    log.debug('Redirecting to login page, origin: %s' % p)
+    log.debug('Redirecting to login page, origin: %s', p)
     return redirect(url('login_home', came_from=p, **request.GET))
 
 class LoginRequired(object):
@@ -738,7 +738,7 @@ class LoginRequired(object):
         controller = fargs[0]
         user = controller.authuser
         loc = "%s:%s" % (controller.__class__.__name__, func.__name__)
-        log.debug('Checking access for user %s @ %s' % (user, loc))
+        log.debug('Checking access for user %s @ %s', user, loc)
 
         if not AuthUser.check_ip_allowed(user, controller.ip_addr):
             return redirect_to_login(_('IP %s not allowed') % controller.ip_addr)
@@ -749,15 +749,15 @@ class LoginRequired(object):
             # explicit controller is enabled or API is in our whitelist
             if self.api_access or allowed_api_access(loc, api_key=api_key):
                 if api_key in user.api_keys:
-                    log.info('user %s authenticated with API key ****%s @ %s'
-                             % (user, api_key[-4:], loc))
+                    log.info('user %s authenticated with API key ****%s @ %s',
+                             user, api_key[-4:], loc)
                     return func(*fargs, **fkwargs)
                 else:
-                    log.warning('API key ****%s is NOT valid' % api_key[-4:])
+                    log.warning('API key ****%s is NOT valid', api_key[-4:])
                     return redirect_to_login(_('Invalid API key'))
             else:
                 # controller does not allow API access
-                log.warning('API access to %s is not allowed' % loc)
+                log.warning('API access to %s is not allowed', loc)
                 return abort(403)
 
         # CSRF protection - POSTs with session auth must contain correct token
@@ -769,10 +769,10 @@ class LoginRequired(object):
 
         # regular user authentication
         if user.is_authenticated:
-            log.info('user %s authenticated with regular auth @ %s' % (user, loc))
+            log.info('user %s authenticated with regular auth @ %s', user, loc)
             return func(*fargs, **fkwargs)
         else:
-            log.warning('user %s NOT authenticated with regular auth @ %s' % (user, loc))
+            log.warning('user %s NOT authenticated with regular auth @ %s', user, loc)
             return redirect_to_login()
 
 class NotAnonymous(object):
@@ -787,7 +787,7 @@ class NotAnonymous(object):
         cls = fargs[0]
         self.user = cls.authuser
 
-        log.debug('Checking if user is not anonymous @%s' % cls)
+        log.debug('Checking if user is not anonymous @%s', cls)
 
         anonymous = self.user.username == User.DEFAULT_USER
 
@@ -813,14 +813,14 @@ class PermsDecorator(object):
         self.user = cls.authuser
         self.user_perms = self.user.permissions
         log.debug('checking %s permissions %s for %s %s',
-           self.__class__.__name__, self.required_perms, cls, self.user)
+          self.__class__.__name__, self.required_perms, cls, self.user)
 
         if self.check_permissions():
-            log.debug('Permission granted for %s %s' % (cls, self.user))
+            log.debug('Permission granted for %s %s', cls, self.user)
             return func(*fargs, **fkwargs)
 
         else:
-            log.debug('Permission denied for %s %s' % (cls, self.user))
+            log.debug('Permission denied for %s %s', cls, self.user)
             anonymous = self.user.username == User.DEFAULT_USER
 
             if anonymous:
@@ -1003,15 +1003,15 @@ class PermsFunction(object):
             return False
         self.user_perms = user.permissions
         if self.check_permissions():
-            log.debug('Permission to %s granted for user: %s @ %s'
-                      % (check_scope, user,
-                         check_location or 'unspecified location'))
+            log.debug('Permission to %s granted for user: %s @ %s',
+                      check_scope, user,
+                         check_location or 'unspecified location')
             return True
 
         else:
-            log.debug('Permission to %s denied for user: %s @ %s'
-                      % (check_scope, user,
-                         check_location or 'unspecified location'))
+            log.debug('Permission to %s denied for user: %s @ %s',
+                      check_scope, user,
+                         check_location or 'unspecified location')
             return False
 
     def check_permissions(self):
@@ -1163,11 +1163,11 @@ class HasPermissionAnyMiddleware(object):
                   'permissions %s for user:%s repository:%s', self.user_perms,
                                                 self.username, self.repo_name)
         if self.required_perms.intersection(self.user_perms):
-            log.debug('Permission to repo: %s granted for user: %s @ %s'
-                      % (self.repo_name, self.username, 'PermissionMiddleware'))
+            log.debug('Permission to repo: %s granted for user: %s @ %s',
+                      self.repo_name, self.username, 'PermissionMiddleware')
             return True
-        log.debug('Permission to repo: %s denied for user: %s @ %s'
-                  % (self.repo_name, self.username, 'PermissionMiddleware'))
+        log.debug('Permission to repo: %s denied for user: %s @ %s',
+                  self.repo_name, self.username, 'PermissionMiddleware')
         return False
 
 
@@ -1188,8 +1188,8 @@ class _BaseApiPerm(object):
         if group_name:
             check_scope += ', repo group:%s' % (group_name)
 
-        log.debug('checking cls:%s %s %s @ %s'
-                  % (cls_name, self.required_perms, check_scope, check_location))
+        log.debug('checking cls:%s %s %s @ %s',
+                  cls_name, self.required_perms, check_scope, check_location)
         if not user:
             log.debug('Empty User passed into arguments')
             return False
@@ -1200,13 +1200,13 @@ class _BaseApiPerm(object):
         if not check_location:
             check_location = 'unspecified'
         if self.check_permissions(user.permissions, repo_name, group_name):
-            log.debug('Permission to %s granted for user: %s @ %s'
-                      % (check_scope, user, check_location))
+            log.debug('Permission to %s granted for user: %s @ %s',
+                      check_scope, user, check_location)
             return True
 
         else:
-            log.debug('Permission to %s denied for user: %s @ %s'
-                      % (check_scope, user, check_location))
+            log.debug('Permission to %s denied for user: %s @ %s',
+                      check_scope, user, check_location)
             return False
 
     def check_permissions(self, perm_defs, repo_name=None, group_name=None):
@@ -1288,11 +1288,11 @@ def check_ip_access(source_ip, allowed_ips=None):
     :param allowed_ips: list of allowed ips together with mask
     """
     from kallithea.lib import ipaddr
-    log.debug('checking if ip:%s is subnet of %s' % (source_ip, allowed_ips))
+    log.debug('checking if ip:%s is subnet of %s', source_ip, allowed_ips)
     if isinstance(allowed_ips, (tuple, list, set)):
         for ip in allowed_ips:
             if ipaddr.IPAddress(source_ip) in ipaddr.IPNetwork(ip):
-                log.debug('IP %s is network %s' %
-                          (ipaddr.IPAddress(source_ip), ipaddr.IPNetwork(ip)))
+                log.debug('IP %s is network %s',
+                          ipaddr.IPAddress(source_ip), ipaddr.IPNetwork(ip))
                 return True
     return False

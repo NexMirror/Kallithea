@@ -60,7 +60,7 @@ def init_model(engine):
     :param engine: engine to bind to
     """
     engine_str = obfuscate_url_pw(str(engine.url))
-    log.info("initializing db for %s" % engine_str)
+    log.info("initializing db for %s", engine_str)
     meta.Base.metadata.bind = engine
 
 

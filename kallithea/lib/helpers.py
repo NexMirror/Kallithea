@@ -646,7 +646,7 @@ def action_parser(user_log, feed=False, parse_cs=False):
                         _rev = repo.get_changeset(rev)
                         revs.append(_rev)
                     except ChangesetDoesNotExistError:
-                        log.error('cannot find revision %s in this repo' % rev)
+                        log.error('cannot find revision %s in this repo', rev)
                         revs.append(rev)
                 else:
                     _rev = AttributeDict({
@@ -1324,17 +1324,17 @@ def urlify_issues(newtext, repository, link_=None):
     ]
 
     if valid_indices:
-        log.debug('found issue server suffixes `%s` during valuation of: %s'
-                  % (','.join(valid_indices), newtext))
+        log.debug('found issue server suffixes `%s` during valuation of: %s',
+                  ','.join(valid_indices), newtext)
 
     for pattern_index in valid_indices:
         ISSUE_PATTERN = conf.get('issue_pat%s' % pattern_index)
         ISSUE_SERVER_LNK = conf.get('issue_server_link%s' % pattern_index)
         ISSUE_PREFIX = conf.get('issue_prefix%s' % pattern_index)
 
-        log.debug('pattern suffix `%s` PAT:%s SERVER_LINK:%s PREFIX:%s'
-                  % (pattern_index, ISSUE_PATTERN, ISSUE_SERVER_LNK,
-                     ISSUE_PREFIX))
+        log.debug('pattern suffix `%s` PAT:%s SERVER_LINK:%s PREFIX:%s',
+                  pattern_index, ISSUE_PATTERN, ISSUE_SERVER_LNK,
+                     ISSUE_PREFIX)
 
         URL_PAT = re.compile(ISSUE_PATTERN)
 
@@ -1363,7 +1363,7 @@ def urlify_issues(newtext, repository, link_=None):
                  'serv': ISSUE_SERVER_LNK,
                 }
         newtext = URL_PAT.sub(url_func, newtext)
-        log.debug('processed prefix:`%s` => %s' % (pattern_index, newtext))
+        log.debug('processed prefix:`%s` => %s', pattern_index, newtext)
 
     # if we actually did something above
     if link_:

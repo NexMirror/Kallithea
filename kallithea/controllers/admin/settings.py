@@ -497,7 +497,7 @@ class SettingsController(BaseController):
         try:
             import kallithea
             ver = kallithea.__version__
-            log.debug('Checking for upgrade on `%s` server' % _update_url)
+            log.debug('Checking for upgrade on `%s` server', _update_url)
             opener = urllib2.build_opener()
             opener.addheaders = [('User-agent', 'Kallithea-SCM/%s' % ver)]
             response = opener.open(_update_url)

@@ -129,7 +129,7 @@ class ChangelogController(BaseRepoController):
         try:
 
             if f_path:
-                log.debug('generating changelog for path %s' % f_path)
+                log.debug('generating changelog for path %s', f_path)
                 # get the history for the file !
                 tip_cs = c.db_repo_scm_instance.get_changeset()
                 try:

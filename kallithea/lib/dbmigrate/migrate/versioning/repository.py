@@ -74,14 +74,14 @@ class Repository(pathed.Pathed):
     _versions = 'versions'
 
     def __init__(self, path):
-        log.debug('Loading repository %s...' % path)
+        log.debug('Loading repository %s...', path)
         self.verify(path)
         super(Repository, self).__init__(path)
         self.config = cfgparse.Config(os.path.join(self.path, self._config))
         self.versions = version.Collection(os.path.join(self.path,
                                                       self._versions))
-        log.debug('Repository %s loaded successfully' % path)
-        log.debug('Config: %r' % self.config.to_dict())
+        log.debug('Repository %s loaded successfully', path)
+        log.debug('Config: %r', self.config.to_dict())
 
     @classmethod
     def verify(cls, path):

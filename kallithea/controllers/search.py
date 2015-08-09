@@ -77,8 +77,8 @@ class SearchController(BaseRepoController):
             'path': SCHEMA
         }.get(c.cur_type, SCHEMA)
 
-        log.debug('IDX: %s' % index_name)
-        log.debug('SCHEMA: %s' % schema_defn)
+        log.debug('IDX: %s', index_name)
+        log.debug('SCHEMA: %s', schema_defn)
 
         if c.cur_query:
             cur_query = c.cur_query.lower()
@@ -109,8 +109,8 @@ class SearchController(BaseRepoController):
 
                     matcher = query.matcher(searcher)
 
-                    log.debug('query: %s' % query)
-                    log.debug('hl terms: %s' % highlight_items)
+                    log.debug('query: %s', query)
+                    log.debug('hl terms: %s', highlight_items)
                     results = searcher.search(query)
                     res_ln = len(results)
                     c.runtime = '%s results (%.3f seconds)' % (

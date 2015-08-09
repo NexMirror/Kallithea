@@ -103,7 +103,7 @@ class DbManage(object):
 
         checkfirst = not override
         Base.metadata.create_all(checkfirst=checkfirst)
-        log.info('Created tables for %s' % self.dbname)
+        log.info('Created tables for %s', self.dbname)
 
     def set_db_version(self):
         ver = DbMigrateVersion()
@@ -111,7 +111,7 @@ class DbManage(object):
         ver.repository_id = DB_MIGRATIONS
         ver.repository_path = 'versions'
         self.sa.add(ver)
-        log.info('db version set to: %s' % __dbversion__)
+        log.info('db version set to: %s', __dbversion__)
 
     def upgrade(self):
         """
@@ -363,7 +363,7 @@ class DbManage(object):
         for k, v, t in [('auth_plugins', 'kallithea.lib.auth_modules.auth_internal', 'list'),
                      ('auth_internal_enabled', 'True', 'bool')]:
             if skip_existing and Setting.get_by_name(k) != None:
-                log.debug('Skipping option %s' % k)
+                log.debug('Skipping option %s', k)
                 continue
             setting = Setting(k, v, t)
             self.sa.add(setting)
@@ -379,7 +379,7 @@ class DbManage(object):
             ('default_repo_type', 'hg', 'unicode')]:
 
             if skip_existing and Setting.get_by_name(k) is not None:
-                log.debug('Skipping option %s' % k)
+                log.debug('Skipping option %s', k)
                 continue
             setting = Setting(k, v, t)
             self.sa.add(setting)
@@ -396,7 +396,7 @@ class DbManage(object):
                 .scalar()
 
             if default is None:
-                log.debug('missing default permission for group %s adding' % g)
+                log.debug('missing default permission for group %s adding', g)
                 perm_obj = RepoGroupModel()._create_default_perms(g)
                 self.sa.add(perm_obj)
 
@@ -444,20 +444,20 @@ class DbManage(object):
         # check proper dir
         if not os.path.isdir(path):
             path_ok = False
-            log.error('Given path %s is not a valid directory' % (path,))
+            log.error('Given path %s is not a valid directory', path)
 
         elif not os.path.isabs(path):
             path_ok = False
-            log.error('Given path %s is not an absolute path' % (path,))
+            log.error('Given path %s is not an absolute path', path)
 
         # check if path is at least readable.
         if not os.access(path, os.R_OK):
             path_ok = False
-            log.error('Given path %s is not readable' % (path,))
+            log.error('Given path %s is not readable', path)
 
         # check write access, warn user about non writeable paths
         elif not os.access(path, os.W_OK) and path_ok:
-            log.warning('No write permission to given path %s' % (path,))
+            log.warning('No write permission to given path %s', path)
             if not ask_ok('Given path %s is not writeable, do you want to '
                           'continue with read only mode ? [y/n]' % (path,)):
                 log.error('Canceled by user')
@@ -472,7 +472,7 @@ class DbManage(object):
         real_path = os.path.normpath(os.path.realpath(path))
 
         if real_path != os.path.normpath(path):
-            log.warning('Using normalized path %s instead of %s' % (real_path, path))
+            log.warning('Using normalized path %s instead of %s', real_path, path)
 
         return real_path
 
@@ -520,7 +520,7 @@ class DbManage(object):
         log.info('created ui config')
 
     def create_user(self, username, password, email='', admin=False):
-        log.info('creating user %s' % username)
+        log.info('creating user %s', username)
         UserModel().create_or_update(username, password, email,
                                      firstname='Kallithea', lastname='Admin',
                                      active=True, admin=admin,

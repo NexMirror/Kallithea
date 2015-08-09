@@ -641,8 +641,8 @@ class PullrequestsController(BaseRepoController):
         diff_limit = self.cut_off_limit if not c.fulldiff else None
 
         # we swap org/other ref since we run a simple diff on one repo
-        log.debug('running diff between %s and %s in %s'
-                  % (c.a_rev, c.cs_rev, org_scm_instance.path))
+        log.debug('running diff between %s and %s in %s',
+                  c.a_rev, c.cs_rev, org_scm_instance.path)
         txtdiff = org_scm_instance.get_diff(rev1=safe_str(c.a_rev), rev2=safe_str(c.cs_rev),
                                       ignore_whitespace=ignore_whitespace,
                                       context=line_context)

@@ -35,7 +35,7 @@ class Pathed(KeyedInstance):
         """Try to initialize this object's parent, if it has one"""
         parent_path = self.__class__._parent_path(path)
         self.parent = self.__class__.parent(parent_path)
-        log.debug("Getting parent %r:%r" % (self.__class__.parent, parent_path))
+        log.debug("Getting parent %r:%r", self.__class__.parent, parent_path)
         self.parent._init_child(path, self)
 
     def _init_child(self, child, path):

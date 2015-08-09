@@ -127,8 +127,8 @@ class AuthLdap(object):
                 server.start_tls_s()
 
             if self.LDAP_BIND_DN and self.LDAP_BIND_PASS:
-                log.debug('Trying simple_bind with password and given DN: %s'
-                          % self.LDAP_BIND_DN)
+                log.debug('Trying simple_bind with password and given DN: %s',
+                          self.LDAP_BIND_DN)
                 server.simple_bind_s(self.LDAP_BIND_DN, self.LDAP_BIND_PASS)
 
             filter_ = '(&%s(%s=%s))' % (self.LDAP_FILTER, self.attr_login,
@@ -146,15 +146,15 @@ class AuthLdap(object):
                     continue
 
                 try:
-                    log.debug('Trying simple bind with %s' % dn)
+                    log.debug('Trying simple bind with %s', dn)
                     server.simple_bind_s(dn, safe_str(password))
                     attrs = server.search_ext_s(dn, ldap.SCOPE_BASE,
                                                 '(objectClass=*)')[0][1]
                     break
 
                 except ldap.INVALID_CREDENTIALS:
-                    log.debug("LDAP rejected password for user '%s' (%s): %s"
-                              % (uid, username, dn))
+                    log.debug("LDAP rejected password for user '%s' (%s): %s",
+                              uid, username, dn)
 
             else:
                 log.debug("No matching LDAP objects for authentication "
@@ -162,7 +162,7 @@ class AuthLdap(object):
                 raise LdapPasswordError()
 
         except ldap.NO_SUCH_OBJECT:
-            log.debug("LDAP says no such user '%s' (%s)" % (uid, username))
+            log.debug("LDAP says no such user '%s' (%s)", uid, username)
             raise LdapUsernameError()
         except ldap.SERVER_DOWN:
             raise LdapConnectionError("LDAP can't access authentication server")
@@ -328,7 +328,7 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
         try:
             aldap = AuthLdap(**kwargs)
             (user_dn, ldap_attrs) = aldap.authenticate_ldap(username, password)
-            log.debug('Got ldap DN response %s' % user_dn)
+            log.debug('Got ldap DN response %s', user_dn)
 
             get_ldap_attr = lambda k: ldap_attrs.get(settings.get(k), [''])[0]
 
@@ -350,7 +350,7 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
                 "active_from_extern": None,
                 'extern_name': user_dn,
             }
-            log.info('user %s authenticated correctly' % user_data['username'])
+            log.info('user %s authenticated correctly', user_data['username'])
             return user_data
 
         except (LdapUsernameError, LdapPasswordError, LdapImportError):

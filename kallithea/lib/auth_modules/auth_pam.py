@@ -98,10 +98,10 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
                 _pam_lock.release()
 
             if not auth_result:
-                log.error("PAM was unable to authenticate user: %s" % (username,))
+                log.error("PAM was unable to authenticate user: %s", username)
                 return None
         else:
-            log.debug("Using cached auth for user: %s" % (username,))
+            log.debug("Using cached auth for user: %s", username)
 
         # old attrs fetched from Kallithea database
         admin = getattr(userobj, 'admin', False)
@@ -133,8 +133,8 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
             log.warning("Cannot extract additional info for PAM user %s", username)
             pass
 
-        log.debug("pamuser: \n%s" % formatted_json(user_data))
-        log.info('user %s authenticated correctly' % user_data['username'])
+        log.debug("pamuser: \n%s", formatted_json(user_data))
+        log.info('user %s authenticated correctly', user_data['username'])
         return user_data
 
     def get_managed_fields(self):

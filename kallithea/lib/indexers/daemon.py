@@ -182,11 +182,11 @@ class WhooshIndexingDaemon(object):
                             'replacing with empty content' % path)
                 u_content = u''
             else:
-                log.debug('    >> %s [WITH CONTENT]' % path)
+                log.debug('    >> %s [WITH CONTENT]', path)
                 indexed_w_content += 1
 
         else:
-            log.debug('    >> %s' % path)
+            log.debug('    >> %s', path)
             # just index file name without it's content
             u_content = u''
             indexed += 1
@@ -221,14 +221,14 @@ class WhooshIndexingDaemon(object):
         if start_rev is None:
             start_rev = repo[0].raw_id
 
-        log.debug('indexing changesets in %s starting at rev: %s' %
-                  (repo_name, start_rev))
+        log.debug('indexing changesets in %s starting at rev: %s',
+                  repo_name, start_rev)
 
         indexed = 0
         cs_iter = repo.get_changesets(start=start_rev)
         total = len(cs_iter)
         for cs in cs_iter:
-            log.debug('    >> %s/%s' % (cs, total))
+            log.debug('    >> %s/%s', cs, total)
             writer.add_document(
                 raw_id=unicode(cs.raw_id),
                 owner=unicode(repo.contact),
@@ -244,7 +244,7 @@ class WhooshIndexingDaemon(object):
             )
             indexed += 1
 
-        log.debug('indexed %d changesets for repo %s' % (indexed, repo_name))
+        log.debug('indexed %d changesets for repo %s', indexed, repo_name)
         return indexed
 
     def index_files(self, file_idx_writer, repo_name, repo):
@@ -256,16 +256,16 @@ class WhooshIndexingDaemon(object):
         :param repo: instance of vcs repo
         """
         i_cnt = iwc_cnt = 0
-        log.debug('building index for %s @revision:%s' % (repo.path,
-                                                self._get_index_revision(repo)))
+        log.debug('building index for %s @revision:%s', repo.path,
+                                                self._get_index_revision(repo))
         index_rev = self._get_index_revision(repo)
         for idx_path in self.get_paths(repo):
             i, iwc = self.add_doc(file_idx_writer, idx_path, repo, repo_name, index_rev)
             i_cnt += i
             iwc_cnt += iwc
 
-        log.debug('added %s files %s with content for repo %s' %
-                  (i_cnt + iwc_cnt, iwc_cnt, repo.path))
+        log.debug('added %s files %s with content for repo %s',
+                  i_cnt + iwc_cnt, iwc_cnt, repo.path)
         return i_cnt, iwc_cnt
 
     def update_changeset_index(self):
@@ -311,8 +311,8 @@ class WhooshIndexingDaemon(object):
                         indexed_total += self.index_changesets(writer,
                                                 repo_name, repo, start_id)
                         writer_is_dirty = True
-                log.debug('indexed %s changesets for repo %s' % (
-                          indexed_total, repo_name)
+                log.debug('indexed %s changesets for repo %s',
+                          indexed_total, repo_name
                 )
             finally:
                 if writer_is_dirty:
@@ -357,8 +357,8 @@ class WhooshIndexingDaemon(object):
                             # The file has changed, delete it and add it to
                             # the list of files to reindex
                             log.debug(
-                                'adding to reindex list %s mtime: %s vs %s' % (
-                                    indexed_path, mtime, indexed_time)
+                                'adding to reindex list %s mtime: %s vs %s',
+                                    indexed_path, mtime, indexed_time
                             )
                             writer.delete_by_term('fileid', indexed_path)
                             writer_is_dirty = True
@@ -366,7 +366,7 @@ class WhooshIndexingDaemon(object):
                             to_index.add(indexed_path)
                     except (ChangesetError, NodeDoesNotExistError):
                         # This file was deleted since it was indexed
-                        log.debug('removing from index %s' % indexed_path)
+                        log.debug('removing from index %s', indexed_path)
                         writer.delete_by_term('path', indexed_path)
                         writer_is_dirty = True
 
@@ -389,16 +389,16 @@ class WhooshIndexingDaemon(object):
                         # that wasn't indexed before. So index it!
                         i, iwc = self.add_doc(writer, path, repo, repo_name)
                         writer_is_dirty = True
-                        log.debug('re indexing %s' % path)
+                        log.debug('re indexing %s', path)
                         ri_cnt += i
                         ri_cnt_total += 1
                         riwc_cnt += iwc
                         riwc_cnt_total += iwc
-                log.debug('added %s files %s with content for repo %s' % (
-                             ri_cnt + riwc_cnt, riwc_cnt, repo.path)
+                log.debug('added %s files %s with content for repo %s',
+                             ri_cnt + riwc_cnt, riwc_cnt, repo.path
                 )
-            log.debug('indexed %s files in total and %s with content' % (
-                        ri_cnt_total, riwc_cnt_total)
+            log.debug('indexed %s files in total and %s with content',
+                        ri_cnt_total, riwc_cnt_total
             )
         finally:
             if writer_is_dirty:

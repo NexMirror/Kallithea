@@ -87,7 +87,7 @@ class SummaryController(BaseRepoController):
                         if not isinstance(readme, FileNode):
                             continue
                         readme_file = f
-                        log.debug('Found README file `%s` rendering...' %
+                        log.debug('Found README file `%s` rendering...',
                                   readme_file)
                         readme_data = renderer.render(readme.content,
                                                       filename=f)

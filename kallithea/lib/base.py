@@ -74,7 +74,7 @@ def _filter_proxy(ip):
     if ',' in ip:
         _ips = ip.split(',')
         _first_ip = _ips[0].strip()
-        log.debug('Got multiple IPs %s, using %s' % (','.join(_ips), _first_ip))
+        log.debug('Got multiple IPs %s, using %s', ','.join(_ips), _first_ip)
         return _first_ip
     return ip
 
@@ -224,7 +224,7 @@ class BaseVCSController(object):
         # check IP
         ip_allowed = AuthUser.check_ip_allowed(user, ip_addr)
         if ip_allowed:
-            log.info('Access for IP:%s allowed' % (ip_addr,))
+            log.info('Access for IP:%s allowed', ip_addr)
         else:
             return False
 
@@ -256,8 +256,8 @@ class BaseVCSController(object):
         if str2bool(Ui.get_by_key('push_ssl').ui_value):
             org_proto = environ.get('wsgi._org_proto', environ['wsgi.url_scheme'])
             if org_proto != 'https':
-                log.debug('proto is %s and SSL is required BAD REQUEST !'
-                          % org_proto)
+                log.debug('proto is %s and SSL is required BAD REQUEST !',
+                          org_proto)
                 return False
         return True
 
@@ -286,7 +286,7 @@ class BaseVCSController(object):
                 #check if it's already locked !, if it is compare users
                 user_id, _date = repo.locked
                 if user.user_id == user_id:
-                    log.debug('Got push from user %s, now unlocking' % (user))
+                    log.debug('Got push from user %s, now unlocking', user)
                     # unlock if we have push from user who locked
                     make_lock = False
                 else:
@@ -296,13 +296,13 @@ class BaseVCSController(object):
                 if repo.locked[0] and repo.locked[1]:
                     locked = True
                 else:
-                    log.debug('Setting lock on repo %s by %s' % (repo, user))
+                    log.debug('Setting lock on repo %s by %s', repo, user)
                     make_lock = True
 
         else:
-            log.debug('Repository %s do not have locking enabled' % (repo))
-        log.debug('FINAL locking values make_lock:%s,locked:%s,locked_by:%s'
-                  % (make_lock, locked, locked_by))
+            log.debug('Repository %s do not have locking enabled', repo)
+        log.debug('FINAL locking values make_lock:%s,locked:%s,locked_by:%s',
+                  make_lock, locked, locked_by)
         return make_lock, locked, locked_by
 
     def __call__(self, environ, start_response):
@@ -311,7 +311,7 @@ class BaseVCSController(object):
             return self._handle_request(environ, start_response)
         finally:
             log = logging.getLogger('kallithea.' + self.__class__.__name__)
-            log.debug('Request time: %.3fs' % (time.time() - start))
+            log.debug('Request time: %.3fs', time.time() - start)
             meta.Session.remove()
 
 
@@ -466,8 +466,8 @@ class BaseRepoController(BaseController):
             if not _dbr:
                 return
 
-            log.debug('Found repository in database %s with state `%s`'
-                      % (safe_unicode(_dbr), safe_unicode(_dbr.repo_state)))
+            log.debug('Found repository in database %s with state `%s`',
+                      safe_unicode(_dbr), safe_unicode(_dbr.repo_state))
             route = getattr(request.environ.get('routes.route'), 'name', '')
 
             # allow to delete repos that are somehow damages in filesystem

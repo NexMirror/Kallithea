@@ -74,7 +74,7 @@ class KallitheaAuthPluginBase(object):
             def __call__(self, *args, **kwargs):
                 from kallithea.model import validators as v
                 obj = getattr(v, self.validator_name)
-                #log.debug('Initializing lazy formencode object: %s' % obj)
+                #log.debug('Initializing lazy formencode object: %s', obj)
                 return LazyFormencode(obj, *args, **kwargs)
 
 
@@ -120,8 +120,8 @@ class KallitheaAuthPluginBase(object):
             return False
 
         if user and user.extern_type and user.extern_type != plugin_name:
-            log.debug('User %s should authenticate using %s this is %s, skipping'
-                      % (user, user.extern_type, plugin_name))
+            log.debug('User %s should authenticate using %s this is %s, skipping',
+                      user, user.extern_type, plugin_name)
 
             return False
         return True
@@ -136,15 +136,15 @@ class KallitheaAuthPluginBase(object):
         :param kwargs: extra arguments needed for user fetching.
         """
         user = None
-        log.debug('Trying to fetch user `%s` from Kallithea database'
-                  % (username))
+        log.debug('Trying to fetch user `%s` from Kallithea database',
+                  username)
         if username:
             user = User.get_by_username(username)
             if not user:
                 log.debug('Fallback to fetch user in case insensitive mode')
                 user = User.get_by_username(username, case_insensitive=True)
         else:
-            log.debug('provided username:`%s` is empty skipping...' % username)
+            log.debug('provided username:`%s` is empty skipping...', username)
         return user
 
     def settings(self):
@@ -267,8 +267,8 @@ class KallitheaExternalAuthPlugin(KallitheaAuthPluginBase):
             # external authentication, but if it's inactive user we shouldn't
             # create that user anyway
             if user_data['active_from_extern'] is False:
-                log.warning("User %s authenticated against %s, but is inactive"
-                            % (username, self.__module__))
+                log.warning("User %s authenticated against %s, but is inactive",
+                            username, self.__module__)
                 return None
 
             if self.use_fake_password():
@@ -276,8 +276,8 @@ class KallitheaExternalAuthPlugin(KallitheaAuthPluginBase):
                 # them blank either
                 passwd = PasswordGenerator().gen_password(length=8)
 
-            log.debug('Updating or creating user info from %s plugin'
-                      % self.name)
+            log.debug('Updating or creating user info from %s plugin',
+                      self.name)
             user = UserModel().create_or_update(
                 username=username,
                 password=passwd,
@@ -309,7 +309,7 @@ def importplugin(plugin):
         TypeError -- if the KallitheaAuthPlugin is not a subclass of ours KallitheaAuthPluginBase
         ImportError -- if we couldn't import the plugin at all
     """
-    log.debug("Importing %s" % plugin)
+    log.debug("Importing %s", plugin)
     if not plugin.startswith(u'kallithea.lib.auth_modules.auth_'):
         parts = plugin.split(u'.lib.auth_modules.auth_', 1)
         if len(parts) == 2:
@@ -326,8 +326,8 @@ def importplugin(plugin):
         # the plugin name, the crash is pretty bad and hard to recover
         raise
 
-    log.debug("Loaded auth plugin from %s (module:%s, file:%s)"
-              % (plugin, module.__name__, module.__file__))
+    log.debug("Loaded auth plugin from %s (module:%s, file:%s)",
+              plugin, module.__name__, module.__file__)
 
     pluginclass = getattr(module, PLUGIN_CLASS_NAME)
     if not issubclass(pluginclass, KallitheaAuthPluginBase):
@@ -362,14 +362,14 @@ def authenticate(username, password, environ=None):
     """
 
     auth_plugins = Setting.get_auth_plugins()
-    log.debug('Authentication against %s plugins' % (auth_plugins,))
+    log.debug('Authentication against %s plugins', auth_plugins)
     for module in auth_plugins:
         try:
             plugin = loadplugin(module)
         except (ImportError, AttributeError, TypeError) as e:
             raise ImportError('Failed to load authentication module %s : %s'
                               % (module, str(e)))
-        log.debug('Trying authentication using ** %s **' % (module,))
+        log.debug('Trying authentication using ** %s **', module)
         # load plugin settings from Kallithea database
         plugin_name = plugin.name
         plugin_settings = {}
@@ -377,26 +377,26 @@ def authenticate(username, password, environ=None):
             conf_key = "auth_%s_%s" % (plugin_name, v["name"])
             setting = Setting.get_by_name(conf_key)
             plugin_settings[v["name"]] = setting.app_settings_value if setting else None
-        log.debug('Plugin settings \n%s' % formatted_json(plugin_settings))
+        log.debug('Plugin settings \n%s', formatted_json(plugin_settings))
 
         if not str2bool(plugin_settings["enabled"]):
-            log.info("Authentication plugin %s is disabled, skipping for %s"
-                     % (module, username))
+            log.info("Authentication plugin %s is disabled, skipping for %s",
+                     module, username)
             continue
 
         # use plugin's method of user extraction.
         user = plugin.get_user(username, environ=environ,
                                settings=plugin_settings)
-        log.debug('Plugin %s extracted user is `%s`' % (module, user))
+        log.debug('Plugin %s extracted user is `%s`', module, user)
         if not plugin.accepts(user):
-            log.debug('Plugin %s does not accept user `%s` for authentication'
-                      % (module, user))
+            log.debug('Plugin %s does not accept user `%s` for authentication',
+                      module, user)
             continue
         else:
-            log.debug('Plugin %s accepted user `%s` for authentication'
-                      % (module, user))
+            log.debug('Plugin %s accepted user `%s` for authentication',
+                      module, user)
 
-        log.info('Authenticating user using %s plugin' % plugin.__module__)
+        log.info('Authenticating user using %s plugin', plugin.__module__)
         # _authenticate is a wrapper for .auth() method of plugin.
         # it checks if .auth() sends proper data. For KallitheaExternalAuthPlugin
         # it also maps users to Database and maps the attributes returned
@@ -405,7 +405,7 @@ def authenticate(username, password, environ=None):
         user_data = plugin._authenticate(user, username, password,
                                            plugin_settings,
                                            environ=environ or {})
-        log.debug('PLUGIN USER DATA: %s' % user_data)
+        log.debug('PLUGIN USER DATA: %s', user_data)
 
         if user_data is not None:
             log.debug('Plugin returned proper authentication data')
@@ -413,8 +413,8 @@ def authenticate(username, password, environ=None):
 
         # we failed to Auth because .auth() method didn't return the user
         if username:
-            log.warning("User `%s` failed to authenticate against %s"
-                        % (username, plugin.__module__))
+            log.warning("User `%s` failed to authenticate against %s",
+                        username, plugin.__module__)
     return None
 
 def get_managed_fields(user):

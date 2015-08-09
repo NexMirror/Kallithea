@@ -60,8 +60,8 @@ def is_mercurial(environ):
     else:
         ishg_path = False
 
-    log.debug('pathinfo: %s detected as Mercurial %s' % (
-        path_info, ishg_path)
+    log.debug('pathinfo: %s detected as Mercurial %s',
+        path_info, ishg_path
     )
     return ishg_path
 
@@ -84,7 +84,7 @@ class SimpleHg(BaseVCSController):
         #======================================================================
         try:
             repo_name = environ['REPO_NAME'] = self.__get_repository(environ)
-            log.debug('Extracted repo name is %s' % repo_name)
+            log.debug('Extracted repo name is %s', repo_name)
         except Exception:
             return HTTPInternalServerError()(environ, start_response)
 
@@ -130,7 +130,7 @@ class SimpleHg(BaseVCSController):
                 pre_auth = auth_modules.authenticate('', '', environ)
                 if pre_auth is not None and pre_auth.get('username'):
                     username = pre_auth['username']
-                log.debug('PRE-AUTH got %s as username' % username)
+                log.debug('PRE-AUTH got %s as username', username)
 
                 # If not authenticated by the container, running basic auth
                 if not username:
@@ -181,7 +181,7 @@ class SimpleHg(BaseVCSController):
         #======================================================================
         str_repo_name = safe_str(repo_name)
         repo_path = os.path.join(safe_str(self.basepath), str_repo_name)
-        log.debug('Repository path is %s' % repo_path)
+        log.debug('Repository path is %s', repo_path)
 
         # CHECK LOCKING only if it's not ANONYMOUS USER
         if username != User.DEFAULT_USER:
@@ -197,13 +197,13 @@ class SimpleHg(BaseVCSController):
                            'locked_by': locked_by})
 
         fix_PATH()
-        log.debug('HOOKS extras is %s' % extras)
+        log.debug('HOOKS extras is %s', extras)
         baseui = make_ui('db')
         self.__inject_extras(repo_path, baseui, extras)
 
         try:
-            log.info('%s action on Mercurial repo "%s" by "%s" from %s' %
-                     (action, str_repo_name, safe_str(username), ip_addr))
+            log.info('%s action on Mercurial repo "%s" by "%s" from %s',
+                     action, str_repo_name, safe_str(username), ip_addr)
             app = self.__make_app(repo_path, baseui, extras)
             return app(environ, start_response)
         except RepoError as e:
@@ -211,7 +211,7 @@ class SimpleHg(BaseVCSController):
                 return HTTPNotFound()(environ, start_response)
         except HTTPLockedRC as e:
             _code = CONFIG.get('lock_ret_code')
-            log.debug('Repository LOCKED ret code %s!' % (_code))
+            log.debug('Repository LOCKED ret code %s!', _code)
             return e(environ, start_response)
         except Exception:
             log.error(traceback.format_exc())

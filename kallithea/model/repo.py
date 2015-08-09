@@ -324,7 +324,7 @@ class RepoModel(BaseModel):
 
             if 'repo_group' in kwargs:
                 cur_repo.group = RepoGroup.get(kwargs['repo_group'])
-            log.debug('Updating repo %s with params:%s' % (cur_repo, kwargs))
+            log.debug('Updating repo %s with params:%s', cur_repo, kwargs)
             for k in ['repo_enable_downloads',
                       'repo_description',
                       'repo_enable_locking',
@@ -584,7 +584,7 @@ class RepoModel(BaseModel):
         obj.user = user
         obj.permission = permission
         self.sa.add(obj)
-        log.debug('Granted perm %s to %s on %s' % (perm, user, repo))
+        log.debug('Granted perm %s to %s on %s', perm, user, repo)
         return obj
 
     def revoke_user_permission(self, repo, user):
@@ -604,7 +604,7 @@ class RepoModel(BaseModel):
             .scalar()
         if obj is not None:
             self.sa.delete(obj)
-            log.debug('Revoked perm on %s on %s' % (repo, user))
+            log.debug('Revoked perm on %s on %s', repo, user)
 
     def grant_user_group_permission(self, repo, group_name, perm):
         """
@@ -634,7 +634,7 @@ class RepoModel(BaseModel):
         obj.users_group = group_name
         obj.permission = permission
         self.sa.add(obj)
-        log.debug('Granted perm %s to %s on %s' % (perm, group_name, repo))
+        log.debug('Granted perm %s to %s on %s', perm, group_name, repo)
         return obj
 
     def revoke_user_group_permission(self, repo, group_name):
@@ -654,7 +654,7 @@ class RepoModel(BaseModel):
             .scalar()
         if obj is not None:
             self.sa.delete(obj)
-            log.debug('Revoked perm to %s on %s' % (repo, group_name))
+            log.debug('Revoked perm to %s on %s', repo, group_name)
 
     def delete_stats(self, repo_name):
         """
@@ -710,9 +710,9 @@ class RepoModel(BaseModel):
         if is_valid_repo_group(repo_path, self.repos_path):
             raise Exception('This path %s is a valid group' % repo_path)
 
-        log.info('creating repo %s in %s from url: `%s`' % (
+        log.info('creating repo %s in %s from url: `%s`',
             repo_name, safe_unicode(repo_path),
-            obfuscate_url_pw(clone_uri)))
+            obfuscate_url_pw(clone_uri))
 
         backend = get_backend(repo_type)
 
@@ -731,8 +731,8 @@ class RepoModel(BaseModel):
         else:
             raise Exception('Not supported repo_type %s expected hg/git' % repo_type)
 
-        log.debug('Created repo %s with %s backend'
-                  % (safe_unicode(repo_name), safe_unicode(repo_type)))
+        log.debug('Created repo %s with %s backend',
+                  safe_unicode(repo_name), safe_unicode(repo_type))
         return repo
 
     def _rename_filesystem_repo(self, old, new):
@@ -742,7 +742,7 @@ class RepoModel(BaseModel):
         :param old: old name
         :param new: new name
         """
-        log.info('renaming repo from %s to %s' % (old, new))
+        log.info('renaming repo from %s to %s', old, new)
 
         old_path = os.path.join(self.repos_path, old)
         new_path = os.path.join(self.repos_path, new)
@@ -761,7 +761,7 @@ class RepoModel(BaseModel):
         :param repo: repo object
         """
         rm_path = os.path.join(self.repos_path, repo.repo_name)
-        log.info("Removing %s" % (rm_path))
+        log.info("Removing %s", rm_path)
 
         _now = datetime.now()
         _ms = str(_now.microsecond).rjust(6, '0')

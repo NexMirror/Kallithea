@@ -246,8 +246,8 @@ class CompareController(BaseRepoController):
             # case we want a simple diff without incoming changesets,
             # previewing what will be merged.
             # Make the diff on the other repo (which is known to have other_rev)
-            log.debug('Using ancestor %s as rev1 instead of %s'
-                      % (c.ancestor, c.a_rev))
+            log.debug('Using ancestor %s as rev1 instead of %s',
+                      c.ancestor, c.a_rev)
             rev1 = c.ancestor
             org_repo = other_repo
         else: # comparing tips, not necessarily linearly related
@@ -262,8 +262,8 @@ class CompareController(BaseRepoController):
 
         diff_limit = self.cut_off_limit if not c.fulldiff else None
 
-        log.debug('running diff between %s and %s in %s'
-                  % (rev1, c.cs_rev, org_repo.scm_instance.path))
+        log.debug('running diff between %s and %s in %s',
+                  rev1, c.cs_rev, org_repo.scm_instance.path)
         txtdiff = org_repo.scm_instance.get_diff(rev1=rev1, rev2=c.cs_rev,
                                       ignore_whitespace=ignore_whitespace,
                                       context=line_context)

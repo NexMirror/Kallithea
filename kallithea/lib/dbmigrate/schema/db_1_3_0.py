@@ -391,7 +391,7 @@ class User(Base, BaseModel):
         """Update user lastlogin"""
         self.last_login = datetime.datetime.now()
         Session.add(self)
-        log.debug('updated user %s lastlogin' % self.username)
+        log.debug('updated user %s lastlogin', self.username)
 
     def __json__(self):
         return dict(
@@ -716,7 +716,7 @@ class Repository(Base, BaseModel):
         repo_full_path = self.repo_full_path
         try:
             alias = get_scm(repo_full_path)[0]
-            log.debug('Creating instance of %s repository' % alias)
+            log.debug('Creating instance of %s repository', alias)
             backend = get_backend(alias)
         except VCSError:
             log.error(traceback.format_exc())
@@ -813,7 +813,7 @@ class RepoGroup(Base, BaseModel):
                 break
             if cnt == parents_recursion_limit:
                 # this will prevent accidental infinite loops
-                log.error('group nested more than %s' %
+                log.error('group nested more than %s',
                           parents_recursion_limit)
                 break
 
@@ -1151,8 +1151,8 @@ class CacheInvalidation(Base, BaseModel):
 
         key, _prefix, _org_key = cls._get_key(key)
         inv_objs = Session.query(cls).filter(cls.cache_args == _org_key).all()
-        log.debug('marking %s key[s] %s for invalidation' % (len(inv_objs),
-                                                             _org_key))
+        log.debug('marking %s key[s] %s for invalidation', len(inv_objs),
+                                                             _org_key)
         try:
             for inv_obj in inv_objs:
                 if inv_obj:

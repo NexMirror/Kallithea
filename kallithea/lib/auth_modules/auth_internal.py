@@ -61,11 +61,11 @@ class KallitheaAuthPlugin(auth_modules.KallitheaAuthPluginBase):
 
     def auth(self, userobj, username, password, settings, **kwargs):
         if not userobj:
-            log.debug('userobj was:%s skipping' % (userobj, ))
+            log.debug('userobj was:%s skipping', userobj)
             return None
         if userobj.extern_type != self.name:
-            log.warning("userobj:%s extern_type mismatch got:`%s` expected:`%s`"
-                     % (userobj, userobj.extern_type, self.name))
+            log.warning("userobj:%s extern_type mismatch got:`%s` expected:`%s`",
+                     userobj, userobj.extern_type, self.name)
             return None
 
         user_data = {
@@ -85,17 +85,17 @@ class KallitheaAuthPlugin(auth_modules.KallitheaAuthPluginBase):
             from kallithea.lib import auth
             password_match = auth.KallitheaCrypto.hash_check(password, userobj.password)
             if userobj.username == User.DEFAULT_USER and userobj.active:
-                log.info('user %s authenticated correctly as anonymous user' %
+                log.info('user %s authenticated correctly as anonymous user',
                          username)
                 return user_data
 
             elif userobj.username == username and password_match:
-                log.info('user %s authenticated correctly' % user_data['username'])
+                log.info('user %s authenticated correctly', user_data['username'])
                 return user_data
-            log.error("user %s had a bad password" % username)
+            log.error("user %s had a bad password", username)
             return None
         else:
-            log.warning('user %s tried auth but is disabled' % username)
+            log.warning('user %s tried auth but is disabled', username)
             return None
 
     def get_managed_fields(self):

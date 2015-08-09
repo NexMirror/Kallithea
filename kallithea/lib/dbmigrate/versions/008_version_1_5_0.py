@@ -90,7 +90,7 @@ def fixups(models, _SESSION):
     perms = models.UserToPerm.query().filter(models.UserToPerm.user == user).all()
     defined_perms_groups = map(_get_group,
                               (x.permission.permission_name for x in perms))
-    log.debug('GOT ALREADY DEFINED:%s' % perms)
+    log.debug('GOT ALREADY DEFINED:%s', perms)
     DEFAULT_PERMS = models.Permission.DEFAULT_USER_PERMISSIONS
 
     # for every default permission that needs to be created, we check if
@@ -98,8 +98,8 @@ def fixups(models, _SESSION):
     for perm_name in DEFAULT_PERMS:
         gr = _get_group(perm_name)
         if gr not in defined_perms_groups:
-            log.debug('GR:%s not found, creating permission %s'
-                      % (gr, perm_name))
+            log.debug('GR:%s not found, creating permission %s',
+                      gr, perm_name)
             new_perm = _make_perm(perm_name)
             _SESSION().add(new_perm)
     _SESSION().commit()
@@ -115,7 +115,7 @@ def fixups(models, _SESSION):
         ('default_repo_type', 'hg')]:
 
         if skip_existing and models.Setting.get_by_name(k) is not None:
-            log.debug('Skipping option %s' % k)
+            log.debug('Skipping option %s', k)
             continue
         setting = models.Setting(k, v)
         _SESSION().add(setting)

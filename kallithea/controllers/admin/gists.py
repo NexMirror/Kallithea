@@ -196,8 +196,8 @@ class GistsController(BaseController):
         #check if this gist is not expired
         if c.gist.gist_expires != -1:
             if time.time() > c.gist.gist_expires:
-                log.error('Gist expired at %s' %
-                          (time_to_datetime(c.gist.gist_expires)))
+                log.error('Gist expired at %s',
+                          time_to_datetime(c.gist.gist_expires))
                 raise HTTPNotFound()
         try:
             c.file_changeset, c.files = GistModel().get_gist_files(gist_id,
@@ -221,8 +221,8 @@ class GistsController(BaseController):
         #check if this gist is not expired
         if c.gist.gist_expires != -1:
             if time.time() > c.gist.gist_expires:
-                log.error('Gist expired at %s' %
-                          (time_to_datetime(c.gist.gist_expires)))
+                log.error('Gist expired at %s',
+                          time_to_datetime(c.gist.gist_expires))
                 raise HTTPNotFound()
         try:
             c.file_changeset, c.files = GistModel().get_gist_files(gist_id)
@@ -285,8 +285,8 @@ class GistsController(BaseController):
 
         ##TODO: maybe move this to model ?
         if revision != last_rev.raw_id:
-            log.error('Last revision %s is different than submitted %s'
-                      % (revision, last_rev))
+            log.error('Last revision %s is different than submitted %s',
+                      revision, last_rev)
             # our gist has newer version than we
             success = False
 

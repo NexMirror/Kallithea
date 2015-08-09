@@ -554,21 +554,21 @@ class FilesController(BaseRepoController):
                 os.makedirs(archive_cache_dir)
             cached_archive_path = os.path.join(archive_cache_dir, archive_name)
             if os.path.isfile(cached_archive_path):
-                log.debug('Found cached archive in %s' % cached_archive_path)
+                log.debug('Found cached archive in %s', cached_archive_path)
                 archive_path = cached_archive_path
             else:
-                log.debug('Archive %s is not yet cached' % (archive_name))
+                log.debug('Archive %s is not yet cached', archive_name)
 
         if archive_path is None:
             # generate new archive
             fd, archive_path = tempfile.mkstemp()
-            log.debug('Creating new temp archive in %s' % archive_path)
+            log.debug('Creating new temp archive in %s', archive_path)
             with os.fdopen(fd, 'wb') as stream:
                 cs.fill_archive(stream=stream, kind=fileformat, subrepos=subrepos)
                 # stream (and thus fd) has been closed by cs.fill_archive
             if cached_archive_path is not None:
                 # we generated the archive - move it to cache
-                log.debug('Storing new archive in %s' % cached_archive_path)
+                log.debug('Storing new archive in %s', cached_archive_path)
                 shutil.move(archive_path, cached_archive_path)
                 archive_path = cached_archive_path
 
@@ -581,7 +581,7 @@ class FilesController(BaseRepoController):
                 yield data
             stream.close()
             if archive_path != cached_archive_path:
-                log.debug('Destroying temp archive %s' % archive_path)
+                log.debug('Destroying temp archive %s', archive_path)
                 os.remove(archive_path)
 
         action_logger(user=c.authuser,

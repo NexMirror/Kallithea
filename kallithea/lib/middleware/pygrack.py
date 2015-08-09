@@ -69,7 +69,7 @@ class GitRepository(object):
 
         git_command = request.GET.get('service')
         if git_command not in self.commands:
-            log.debug('command %s not allowed' % git_command)
+            log.debug('command %s not allowed', git_command)
             return exc.HTTPMethodNotAllowed()
 
         # note to self:
@@ -108,7 +108,7 @@ class GitRepository(object):
         _git_path = kallithea.CONFIG.get('git_path', 'git')
         git_command = self._get_fixedpath(request.path_info)
         if git_command not in self.commands:
-            log.debug('command %s not allowed' % git_command)
+            log.debug('command %s not allowed', git_command)
             return exc.HTTPMethodNotAllowed()
 
         if 'CONTENT_LENGTH' in environ:

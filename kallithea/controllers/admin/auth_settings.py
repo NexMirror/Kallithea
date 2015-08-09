@@ -128,7 +128,7 @@ class AuthSettingsController(BaseController):
                 if k == 'auth_plugins':
                     # we want to store it comma separated inside our settings
                     v = ','.join(v)
-                log.debug("%s = %s" % (k, str(v)))
+                log.debug("%s = %s", k, str(v))
                 setting = Setting.create_or_update(k, v)
                 Session().add(setting)
             Session().commit()

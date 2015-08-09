@@ -462,7 +462,7 @@ class User(Base, BaseModel):
         """Update user lastlogin"""
         self.last_login = datetime.datetime.now()
         Session().add(self)
-        log.debug('updated user %s lastlogin' % self.username)
+        log.debug('updated user %s lastlogin', self.username)
 
     def get_api_data(self):
         """
@@ -995,15 +995,15 @@ class Repository(Base, BaseModel):
         if (cs_cache != self.changeset_cache or not self.changeset_cache):
             _default = datetime.datetime.fromtimestamp(0)
             last_change = cs_cache.get('date') or _default
-            log.debug('updated repo %s with new cs cache %s'
-                      % (self.repo_name, cs_cache))
+            log.debug('updated repo %s with new cs cache %s',
+                      self.repo_name, cs_cache)
             self.updated_on = last_change
             self.changeset_cache = cs_cache
             Session().add(self)
             Session().commit()
         else:
-            log.debug('Skipping repo:%s already with latest changes'
-                      % self.repo_name)
+            log.debug('Skipping repo:%s already with latest changes',
+                      self.repo_name)
 
     @property
     def tip(self):
@@ -1117,7 +1117,7 @@ class Repository(Base, BaseModel):
         repo_full_path = self.repo_full_path
         try:
             alias = get_scm(repo_full_path)[0]
-            log.debug('Creating instance of %s repository' % alias)
+            log.debug('Creating instance of %s repository', alias)
             backend = get_backend(alias)
         except VCSError:
             log.error(traceback.format_exc())
@@ -1221,7 +1221,7 @@ class RepoGroup(Base, BaseModel):
                 break
             if cnt == parents_recursion_limit:
                 # this will prevent accidental infinite loops
-                log.error('group nested more than %s' %
+                log.error('group nested more than %s',
                           parents_recursion_limit)
                 break
 
@@ -1645,8 +1645,8 @@ class CacheInvalidation(Base, BaseModel):
         elif repo_name:
             inv_objs = Session().query(cls).filter(cls.cache_args == repo_name).all()
 
-        log.debug('marking %s key[s] for invalidation based on key=%s,repo_name=%s'
-                  % (len(inv_objs), key, repo_name))
+        log.debug('marking %s key[s] for invalidation based on key=%s,repo_name=%s',
+                  len(inv_objs), key, repo_name)
         try:
             for inv_obj in inv_objs:
                 inv_obj.cache_active = False

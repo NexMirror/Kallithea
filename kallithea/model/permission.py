@@ -79,7 +79,7 @@ class PermissionModel(BaseModel):
         perms = UserToPerm.query().filter(UserToPerm.user == user).all()
         defined_perms_groups = map(_get_group,
                                 (x.permission.permission_name for x in perms))
-        log.debug('GOT ALREADY DEFINED:%s' % perms)
+        log.debug('GOT ALREADY DEFINED:%s', perms)
         DEFAULT_PERMS = Permission.DEFAULT_USER_PERMISSIONS
 
         if force:
@@ -92,8 +92,8 @@ class PermissionModel(BaseModel):
         for perm_name in DEFAULT_PERMS:
             gr = _get_group(perm_name)
             if gr not in defined_perms_groups:
-                log.debug('GR:%s not found, creating permission %s'
-                          % (gr, perm_name))
+                log.debug('GR:%s not found, creating permission %s',
+                          gr, perm_name)
                 new_perm = _make_perm(perm_name)
                 self.sa.add(new_perm)
 
@@ -108,7 +108,7 @@ class PermissionModel(BaseModel):
 
             # stage 2 reset defaults and set them from form data
             def _make_new(usr, perm_name):
-                log.debug('Creating new permission:%s' % (perm_name))
+                log.debug('Creating new permission:%s', perm_name)
                 new = UserToPerm()
                 new.user = usr
                 new.permission = Permission.get_by_key(perm_name)

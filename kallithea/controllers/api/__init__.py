@@ -117,7 +117,7 @@ class JSONRPCController(WSGIController):
         else:
             length = environ['CONTENT_LENGTH'] or 0
             length = int(environ['CONTENT_LENGTH'])
-            log.debug('Content-Length: %s' % length)
+            log.debug('Content-Length: %s', length)
 
         if length == 0:
             log.debug("Content-Length is 0")
@@ -144,8 +144,8 @@ class JSONRPCController(WSGIController):
                 self._request_params = {}
 
             log.debug(
-                'method: %s, params: %s' % (self._req_method,
-                                            self._request_params)
+                'method: %s, params: %s', self._req_method,
+                                            self._request_params
             )
         except KeyError as e:
             return jsonrpc_error(retid=self._req_id,
@@ -163,7 +163,7 @@ class JSONRPCController(WSGIController):
                 return jsonrpc_error(retid=self._req_id,
                         message='request from IP:%s not allowed' % (ip_addr,))
             else:
-                log.info('Access for IP:%s allowed' % (ip_addr,))
+                log.info('Access for IP:%s allowed', ip_addr)
 
         except Exception as e:
             return jsonrpc_error(retid=self._req_id,
@@ -261,8 +261,8 @@ class JSONRPCController(WSGIController):
         except JSONRPCError as e:
             self._error = safe_str(e)
         except Exception as e:
-            log.error('Encountered unhandled exception: %s'
-                      % (traceback.format_exc(),))
+            log.error('Encountered unhandled exception: %s',
+                      traceback.format_exc(),)
             json_exc = JSONRPCError('Internal server error')
             self._error = safe_str(json_exc)
 
@@ -273,7 +273,7 @@ class JSONRPCController(WSGIController):
         try:
             return json.dumps(response)
         except TypeError as e:
-            log.error('API FAILED. Error encoding response: %s' % e)
+            log.error('API FAILED. Error encoding response: %s', e)
             return json.dumps(
                 dict(
                     id=self._req_id,
@@ -286,7 +286,7 @@ class JSONRPCController(WSGIController):
         """
         Return method named by `self._req_method` in controller if able
         """
-        log.debug('Trying to find JSON-RPC method: %s' % (self._req_method,))
+        log.debug('Trying to find JSON-RPC method: %s', self._req_method)
         if self._req_method.startswith('_'):
             raise AttributeError("Method not allowed")
 

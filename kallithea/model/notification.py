@@ -91,14 +91,14 @@ class NotificationModel(BaseModel):
                     # TODO: inform user that requested operation couldn't be completed
                     log.error('cannot email unknown user %r', u)
             recipients_objs = set(recipients_objs)
-            log.debug('sending notifications %s to %s' % (
-                type_, recipients_objs)
+            log.debug('sending notifications %s to %s',
+                type_, recipients_objs
             )
         elif recipients is None:
             # empty recipients means to all admins
             recipients_objs = User.query().filter(User.admin == True).all()
-            log.debug('sending notifications %s to admins: %s' % (
-                type_, recipients_objs)
+            log.debug('sending notifications %s to admins: %s',
+                type_, recipients_objs
             )
         #else: silently skip notification mails?
 
@@ -338,5 +338,5 @@ class EmailNotificationModel(BaseModel):
                    'h': h,
                    'c': c}
         _kwargs.update(kwargs)
-        log.debug('rendering tmpl %s with kwargs %s' % (base, _kwargs))
+        log.debug('rendering tmpl %s with kwargs %s', base, _kwargs)
         return email_template.render(**_kwargs)

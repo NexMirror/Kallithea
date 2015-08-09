@@ -272,7 +272,7 @@ class ScmModel(BaseModel):
         if repos_path is None:
             repos_path = self.repos_path
 
-        log.info('scanning for repositories in %s' % repos_path)
+        log.info('scanning for repositories in %s', repos_path)
 
         baseui = make_ui('db')
         repos = {}
@@ -297,7 +297,7 @@ class ScmModel(BaseModel):
                         repos[name] = klass(path[1])
             except OSError:
                 continue
-        log.debug('found %s paths with repositories' % (len(repos)))
+        log.debug('found %s paths with repositories', len(repos))
         return repos
 
     def get_repos(self, all_repos=None, sort_key=None, simple=False):
@@ -854,7 +854,7 @@ class ScmModel(BaseModel):
         for h_type, tmpl in [('pre', tmpl_pre), ('post', tmpl_post)]:
             _hook_file = jn(loc, '%s-receive' % h_type)
             has_hook = False
-            log.debug('Installing git hook in repo %s' % repo)
+            log.debug('Installing git hook in repo %s', repo)
             if os.path.exists(_hook_file):
                 # let's take a look at this hook, maybe it's kallithea ?
                 log.debug('hook exists, checking if it is from kallithea')
@@ -865,7 +865,7 @@ class ScmModel(BaseModel):
                     if matches:
                         try:
                             ver = matches.groups()[0]
-                            log.debug('got %s it is kallithea' % (ver))
+                            log.debug('got %s it is kallithea', ver)
                             has_hook = True
                         except Exception:
                             log.error(traceback.format_exc())
@@ -874,14 +874,14 @@ class ScmModel(BaseModel):
                 has_hook = True
 
             if has_hook or force_create:
-                log.debug('writing %s hook file !' % (h_type,))
+                log.debug('writing %s hook file !', h_type)
                 try:
                     with open(_hook_file, 'wb') as f:
                         tmpl = tmpl.replace('_TMPL_', kallithea.__version__)
                         f.write(tmpl)
                     os.chmod(_hook_file, 0755)
                 except IOError as e:
-                    log.error('error writing %s: %s' % (_hook_file, e))
+                    log.error('error writing %s: %s', _hook_file, e)
             else:
                 log.debug('skipping writing hook file')
 

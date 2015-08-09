@@ -125,14 +125,14 @@ class UserModel(BaseModel):
         # raises UserCreationError if it's not allowed
         check_allowed_create_user(user_data, cur_user)
 
-        log.debug('Checking for %s account in Kallithea database' % username)
+        log.debug('Checking for %s account in Kallithea database', username)
         user = User.get_by_username(username, case_insensitive=True)
         if user is None:
-            log.debug('creating new user %s' % username)
+            log.debug('creating new user %s', username)
             new_user = User()
             edit = False
         else:
-            log.debug('updating user %s' % username)
+            log.debug('updating user %s', username)
             new_user = user
             edit = True
 
@@ -156,7 +156,7 @@ class UserModel(BaseModel):
                 not check_password(password, new_user.password)
             if not edit or password_change:
                 reason = 'new password' if edit else 'new user'
-                log.debug('Updating password reason=>%s' % (reason,))
+                log.debug('Updating password reason=>%s', reason)
                 new_user.password = get_crypt_password(password) \
                     if password else None
 
@@ -279,7 +279,7 @@ class UserModel(BaseModel):
         user_email = data['email']
         user = User.get_by_email(user_email)
         if user is not None:
-            log.debug('password reset user found %s' % user)
+            log.debug('password reset user found %s', user)
             link = h.canonical_url('reset_password_confirmation',
                                    key=user.api_key)
             reg_type = EmailNotificationModel.TYPE_PASSWORD_RESET
@@ -294,9 +294,9 @@ class UserModel(BaseModel):
             log.debug('sending email')
             run_task(tasks.send_email, [user_email],
                      _("Password reset link"), body, html_body)
-            log.info('send new password mail to %s' % user_email)
+            log.info('send new password mail to %s', user_email)
         else:
-            log.debug("password reset email %s not found" % user_email)
+            log.debug("password reset email %s not found", user_email)
 
         return True
 
@@ -311,14 +311,14 @@ class UserModel(BaseModel):
             user.password = auth.get_crypt_password(new_passwd)
             Session().add(user)
             Session().commit()
-            log.info('change password for %s' % user_email)
+            log.info('change password for %s', user_email)
         if new_passwd is None:
             raise Exception('unable to generate new password')
 
         run_task(tasks.send_email, [user_email],
                  _('Your new password'),
                  _('Your new Kallithea password:%s') % (new_passwd,))
-        log.info('send new password mail to %s' % user_email)
+        log.info('send new password mail to %s', user_email)
 
         return True
 

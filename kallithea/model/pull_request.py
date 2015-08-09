@@ -179,7 +179,7 @@ class PullRequestModel(BaseModel):
         mention_recipients.difference_update(User.get_by_username(username, case_insensitive=True)
                                              for username in extract_mentioned_users(old_description))
 
-        log.debug("Mentioning %s" % mention_recipients)
+        log.debug("Mentioning %s", mention_recipients)
         self.__add_reviewers(pr, [], mention_recipients)
 
     def update_reviewers(self, pull_request, reviewers_ids):
@@ -194,10 +194,10 @@ class PullRequestModel(BaseModel):
         to_add = reviewers_ids.difference(current_reviewers_ids)
         to_remove = current_reviewers_ids.difference(reviewers_ids)
 
-        log.debug("Adding %s reviewers" % to_add)
+        log.debug("Adding %s reviewers", to_add)
         self.__add_reviewers(pull_request, to_add)
 
-        log.debug("Removing %s reviewers" % to_remove)
+        log.debug("Removing %s reviewers", to_remove)
         for uid in to_remove:
             reviewer = PullRequestReviewers.query()\
                     .filter(PullRequestReviewers.user_id==uid,

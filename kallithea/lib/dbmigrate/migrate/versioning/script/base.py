@@ -24,10 +24,10 @@ class BaseScript(pathed.Pathed):
     """ # TODO: sphinxfy this and implement it correctly
 
     def __init__(self, path):
-        log.debug('Loading script %s...' % path)
+        log.debug('Loading script %s...', path)
         self.verify(path)
         super(BaseScript, self).__init__(path)
-        log.debug('Script %s loaded successfully' % path)
+        log.debug('Script %s loaded successfully', path)
 
     @classmethod
     def verify(cls, path):

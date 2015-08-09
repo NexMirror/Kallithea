@@ -312,13 +312,13 @@ def ValidAuth():
             if auth_modules.authenticate(username, password) is None:
                 user = User.get_by_username(username)
                 if user and not user.active:
-                    log.warning('user %s is disabled' % username)
+                    log.warning('user %s is disabled', username)
                     msg = M(self, 'invalid_auth', state)
                     raise formencode.Invalid(msg, value, state,
                         error_dict=dict(username=' ', password=msg)
                     )
                 else:
-                    log.warning('user %s failed to authenticate' % username)
+                    log.warning('user %s failed to authenticate', username)
                     msg = M(self, 'invalid_auth', state)
                     raise formencode.Invalid(msg, value, state,
                         error_dict=dict(username=' ', password=msg)
