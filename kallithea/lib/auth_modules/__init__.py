@@ -366,7 +366,7 @@ def authenticate(username, password, environ=None):
     for module in auth_plugins:
         try:
             plugin = loadplugin(module)
-        except (ImportError, AttributeError, TypeError), e:
+        except (ImportError, AttributeError, TypeError) as e:
             raise ImportError('Failed to load authentication module %s : %s'
                               % (module, str(e)))
         log.debug('Trying authentication using ** %s **' % (module,))

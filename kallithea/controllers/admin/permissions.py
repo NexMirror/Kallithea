@@ -125,7 +125,7 @@ class PermissionsController(BaseController):
                 h.flash(_('Global permissions updated successfully'),
                         category='success')
 
-            except formencode.Invalid, errors:
+            except formencode.Invalid as errors:
                 defaults = errors.value
 
                 return htmlfill.render(

@@ -83,7 +83,7 @@ class FilesController(BaseRepoController):
 
         try:
             return c.db_repo_scm_instance.get_changeset(rev)
-        except EmptyRepositoryError, e:
+        except EmptyRepositoryError as e:
             if silent_empty:
                 return None
             url_ = url('files_add_home',
@@ -97,7 +97,7 @@ class FilesController(BaseRepoController):
             msg = _('Such revision does not exist for this repository')
             h.flash(msg, category='error')
             raise HTTPNotFound()
-        except RepositoryError, e:
+        except RepositoryError as e:
             h.flash(safe_str(e), category='error')
             raise HTTPNotFound()
 
@@ -117,7 +117,7 @@ class FilesController(BaseRepoController):
             msg = _('Such revision does not exist for this repository')
             h.flash(msg, category='error')
             raise HTTPNotFound()
-        except RepositoryError, e:
+        except RepositoryError as e:
             h.flash(safe_str(e), category='error')
             raise HTTPNotFound()
 
@@ -182,7 +182,7 @@ class FilesController(BaseRepoController):
                     c.authors.append((h.email(a), h.person(a)))
             else:
                 c.authors = c.file_history = []
-        except RepositoryError, e:
+        except RepositoryError as e:
             h.flash(safe_str(e), category='error')
             raise HTTPNotFound()
 
@@ -490,12 +490,12 @@ class FilesController(BaseRepoController):
 
                 h.flash(_('Successfully committed to %s') % node_path,
                         category='success')
-            except NonRelativePathError, e:
+            except NonRelativePathError as e:
                 h.flash(_('Location must be relative path and must not '
                           'contain .. in path'), category='warning')
                 return redirect(url('changeset_home', repo_name=c.repo_name,
                                     revision='tip'))
-            except (NodeError, NodeAlreadyExistsError), e:
+            except (NodeError, NodeAlreadyExistsError) as e:
                 h.flash(_(e), category='error')
             except Exception:
                 log.error(traceback.format_exc())

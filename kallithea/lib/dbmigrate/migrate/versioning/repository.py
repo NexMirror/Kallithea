@@ -95,7 +95,7 @@ class Repository(pathed.Pathed):
             cls.require_found(path)
             cls.require_found(os.path.join(path, cls._config))
             cls.require_found(os.path.join(path, cls._versions))
-        except exceptions.PathNotFoundError, e:
+        except exceptions.PathNotFoundError as e:
             raise exceptions.InvalidRepositoryError(path)
 
     @classmethod

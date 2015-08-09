@@ -94,7 +94,7 @@ class SettingsController(BaseController):
             application_form = ApplicationUiSettingsForm()()
             try:
                 form_result = application_form.to_python(dict(request.POST))
-            except formencode.Invalid, errors:
+            except formencode.Invalid as errors:
                 return htmlfill.render(
                      render('admin/settings/settings.html'),
                      defaults=errors.value,
@@ -235,7 +235,7 @@ class SettingsController(BaseController):
             application_form = ApplicationSettingsForm()()
             try:
                 form_result = application_form.to_python(dict(request.POST))
-            except formencode.Invalid, errors:
+            except formencode.Invalid as errors:
                 return htmlfill.render(
                     render('admin/settings/settings.html'),
                     defaults=errors.value,
@@ -295,7 +295,7 @@ class SettingsController(BaseController):
             application_form = ApplicationVisualisationForm()()
             try:
                 form_result = application_form.to_python(dict(request.POST))
-            except formencode.Invalid, errors:
+            except formencode.Invalid as errors:
                 return htmlfill.render(
                     render('admin/settings/settings.html'),
                     defaults=errors.value,
@@ -503,10 +503,10 @@ class SettingsController(BaseController):
             response = opener.open(_update_url)
             response_data = response.read()
             data = json.loads(response_data)
-        except urllib2.URLError, e:
+        except urllib2.URLError as e:
             log.error(traceback.format_exc())
             return _err('Failed to contact upgrade server: %r' % e)
-        except ValueError, e:
+        except ValueError as e:
             log.error(traceback.format_exc())
             return _err('Bad data sent from update server')
 

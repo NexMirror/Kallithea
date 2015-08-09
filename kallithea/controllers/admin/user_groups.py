@@ -150,7 +150,7 @@ class UserGroupsController(BaseController):
             h.flash(h.literal(_('Created user group %s') % h.link_to(h.escape(gr), url('edit_users_group', id=ug.users_group_id))),
                 category='success')
             Session().commit()
-        except formencode.Invalid, errors:
+        except formencode.Invalid as errors:
             return htmlfill.render(
                 render('admin/user_groups/user_group_add.html'),
                 defaults=errors.value,
@@ -200,7 +200,7 @@ class UserGroupsController(BaseController):
                           None, self.ip_addr, self.sa)
             h.flash(_('Updated user group %s') % gr, category='success')
             Session().commit()
-        except formencode.Invalid, errors:
+        except formencode.Invalid as errors:
             ug_model = UserGroupModel()
             defaults = errors.value
             e = errors.error_dict or {}
@@ -240,7 +240,7 @@ class UserGroupsController(BaseController):
             UserGroupModel().delete(usr_gr)
             Session().commit()
             h.flash(_('Successfully deleted user group'), category='success')
-        except UserGroupsAssignedException, e:
+        except UserGroupsAssignedException as e:
             h.flash(e, category='error')
         except Exception:
             log.error(traceback.format_exc())

@@ -175,7 +175,7 @@ class RepoGroupsController(BaseController):
             )
             Session().commit()
             #TODO: in futureaction_logger(, '', '', '', self.sa)
-        except formencode.Invalid, errors:
+        except formencode.Invalid as errors:
             return htmlfill.render(
                 render('admin/repo_groups/repo_group_add.html'),
                 defaults=errors.value,
@@ -252,7 +252,7 @@ class RepoGroupsController(BaseController):
             # we now have new name !
             group_name = new_gr.group_name
             #TODO: in future action_logger(, '', '', '', self.sa)
-        except formencode.Invalid, errors:
+        except formencode.Invalid as errors:
 
             return htmlfill.render(
                 render('admin/repo_groups/repo_group_edit.html'),

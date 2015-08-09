@@ -443,7 +443,7 @@ class ChangesetController(BaseRepoController):
         if request.is_xhr:
             try:
                 return c.db_repo_scm_instance.get_changeset(revision)
-            except ChangesetDoesNotExistError, e:
+            except ChangesetDoesNotExistError as e:
                 return EmptyChangeset(message=str(e))
         else:
             raise HTTPBadRequest()

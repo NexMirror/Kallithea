@@ -98,7 +98,7 @@ class LoginController(BaseController):
                 # form checks for username/password, now we're authenticated
                 username = c.form_result['username']
                 user = User.get_by_username(username, case_insensitive=True)
-            except formencode.Invalid, errors:
+            except formencode.Invalid as errors:
                 defaults = errors.value
                 # remove password from filling in form again
                 del defaults['password']
@@ -109,7 +109,7 @@ class LoginController(BaseController):
                     prefix_error=False,
                     encoding="UTF-8",
                     force_defaults=False)
-            except UserCreationError, e:
+            except UserCreationError as e:
                 # container auth or other auth functions that create users on
                 # the fly can throw this exception signaling that there's issue
                 # with user creation, explanation should be provided in
@@ -158,7 +158,7 @@ class LoginController(BaseController):
                 Session().commit()
                 return redirect(url('login_home'))
 
-            except formencode.Invalid, errors:
+            except formencode.Invalid as errors:
                 return htmlfill.render(
                     render('/register.html'),
                     defaults=errors.value,
@@ -166,7 +166,7 @@ class LoginController(BaseController):
                     prefix_error=False,
                     encoding="UTF-8",
                     force_defaults=False)
-            except UserCreationError, e:
+            except UserCreationError as e:
                 # container auth or other auth functions that create users on
                 # the fly can throw this exception signaling that there's issue
                 # with user creation, explanation should be provided in
@@ -202,7 +202,7 @@ class LoginController(BaseController):
                             category='success')
                 return redirect(url('login_home'))
 
-            except formencode.Invalid, errors:
+            except formencode.Invalid as errors:
                 return htmlfill.render(
                     render('/password_reset.html'),
                     defaults=errors.value,
@@ -222,7 +222,7 @@ class LoginController(BaseController):
                 h.flash(_('Your password reset was successful, '
                           'new password has been sent to your email'),
                             category='success')
-            except Exception, e:
+            except Exception as e:
                 log.error(e)
                 return redirect(url('reset_password'))
 

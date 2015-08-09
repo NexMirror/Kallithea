@@ -45,7 +45,7 @@ def get_current_revision(quiet=False):
         wk_dir = repo.workdir
         cur_rev = wk_dir.get_changeset()
         return (cur_rev.revision, cur_rev.short_id)
-    except Exception, err:
+    except Exception as err:
         if not quiet:
             print ("WARNING: Cannot retrieve kallithea's revision. "
                    "disregard this if you don't know what that means. "

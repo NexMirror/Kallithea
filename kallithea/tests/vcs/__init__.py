@@ -49,7 +49,7 @@ def setup_package():
         for scm, fetcher_info in fetchers.items():
             fetcher = SCMFetcher(**fetcher_info)
             fetcher.setup()
-    except VCSTestError, err:
+    except VCSTestError as err:
         raise RuntimeError(str(err))
 
 

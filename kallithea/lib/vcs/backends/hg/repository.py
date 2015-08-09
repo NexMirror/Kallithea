@@ -177,7 +177,7 @@ class MercurialRepository(BaseRepository):
         try:
             self._repo.tag(name, changeset._ctx.node(), message, local, user,
                 date)
-        except Abort, e:
+        except Abort as e:
             raise RepositoryError(e.message)
 
         # Reinitialize tags
@@ -208,7 +208,7 @@ class MercurialRepository(BaseRepository):
         try:
             self._repo.tag(name, nullid, message, local, user, date)
             self.tags = self._get_tags()
-        except Abort, e:
+        except Abort as e:
             raise RepositoryError(e.message)
 
     @LazyProperty
@@ -321,7 +321,7 @@ class MercurialRepository(BaseRepository):
             resp = o.open(req)
             if resp.code != 200:
                 raise Exception('Return Code is not 200')
-        except Exception, e:
+        except Exception as e:
             # means it cannot be cloned
             raise urllib2.URLError("[%s] org_exc: %s" % (cleaned_uri, e))
 
@@ -329,7 +329,7 @@ class MercurialRepository(BaseRepository):
             # now check if it's a proper hg repo
             try:
                 httppeer(repoui or ui.ui(), url).lookup('tip')
-            except Exception, e:
+            except Exception as e:
                 raise urllib2.URLError(
                     "url [%s] does not look like an hg repo org_exc: %s"
                     % (cleaned_uri, e))
@@ -359,7 +359,7 @@ class MercurialRepository(BaseRepository):
                 # Don't try to create if we've already cloned repo
                 create = False
             return localrepository(self.baseui, self.path, create=create)
-        except (Abort, RepoError), err:
+        except (Abort, RepoError) as err:
             if create:
                 msg = "Cannot create repository at %s. Original error was %s"\
                     % (self.path, err)
@@ -565,7 +565,7 @@ class MercurialRepository(BaseRepository):
             exchange.pull(self._repo, other, heads=None, force=None)
         except ImportError:
             self._repo.pull(other, heads=None, force=None)
-        except Abort, err:
+        except Abort as err:
             # Propagate error but with vcs's type
             raise RepositoryError(str(err))
 

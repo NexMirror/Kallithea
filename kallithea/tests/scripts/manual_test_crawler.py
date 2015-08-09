@@ -157,7 +157,7 @@ def test_files_walk(proj, limit=100):
             for f in files:
                 paths_.add(f.path)
 
-    except RepositoryError, e:
+    except RepositoryError as e:
         pass
 
     cnt = 0

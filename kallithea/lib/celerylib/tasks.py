@@ -377,7 +377,7 @@ def create_repo(form_data, cur_user):
         # set new created state
         repo.set_state(Repository.STATE_CREATED)
         DBS.commit()
-    except Exception, e:
+    except Exception as e:
         log.warning('Exception %s occurred when forking repository, '
                     'doing cleanup...' % e)
         # rollback things manually !
@@ -462,7 +462,7 @@ def create_repo_fork(form_data, cur_user):
         # set new created state
         repo.set_state(Repository.STATE_CREATED)
         DBS.commit()
-    except Exception, e:
+    except Exception as e:
         log.warning('Exception %s occurred when forking repository, '
                     'doing cleanup...' % e)
         #rollback things manually !

@@ -244,7 +244,7 @@ class PullrequestsController(BaseRepoController):
         org_scm_instance = org_repo.scm_instance
         try:
             org_scm_instance.get_changeset()
-        except EmptyRepositoryError, e:
+        except EmptyRepositoryError as e:
             h.flash(h.literal(_('There are no changesets yet')),
                     category='warning')
             redirect(url('summary_home', repo_name=org_repo.repo_name))
@@ -307,7 +307,7 @@ class PullrequestsController(BaseRepoController):
         repo = RepoModel()._get_repo(repo_name)
         try:
             _form = PullRequestForm(repo.repo_id)().to_python(request.POST)
-        except formencode.Invalid, errors:
+        except formencode.Invalid as errors:
             log.error(traceback.format_exc())
             log.error(str(errors))
             msg = _('Error creating pull request: %s') % errors.msg
@@ -365,7 +365,7 @@ class PullrequestsController(BaseRepoController):
             Session().commit()
             h.flash(_('Successfully opened new pull request'),
                     category='success')
-        except UserInvalidException, u:
+        except UserInvalidException as u:
             h.flash(_('Invalid reviewer "%s" specified') % u, category='error')
             raise HTTPBadRequest()
         except Exception:
@@ -452,7 +452,7 @@ class PullrequestsController(BaseRepoController):
                 old_pull_request.other_repo.repo_name, new_other_ref,
                 revisions, reviewers_ids, title, description
             )
-        except UserInvalidException, u:
+        except UserInvalidException as u:
             h.flash(_('Invalid reviewer "%s" specified') % u, category='error')
             raise HTTPBadRequest()
         except Exception:
@@ -507,7 +507,7 @@ class PullrequestsController(BaseRepoController):
         try:
             PullRequestModel().mention_from_description(pull_request, old_description)
             PullRequestModel().update_reviewers(pull_request_id, reviewers_ids)
-        except UserInvalidException, u:
+        except UserInvalidException as u:
             h.flash(_('Invalid reviewer "%s" specified') % u, category='error')
             raise HTTPBadRequest()
 

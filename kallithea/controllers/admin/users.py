@@ -133,7 +133,7 @@ class UsersController(BaseController):
             h.flash(h.literal(_('Created user %s') % h.link_to(h.escape(usr), url('edit_user', id=user.user_id))),
                     category='success')
             Session().commit()
-        except formencode.Invalid, errors:
+        except formencode.Invalid as errors:
             return htmlfill.render(
                 render('admin/users/user_add.html'),
                 defaults=errors.value,
@@ -141,7 +141,7 @@ class UsersController(BaseController):
                 prefix_error=False,
                 encoding="UTF-8",
                 force_defaults=False)
-        except UserCreationError, e:
+        except UserCreationError as e:
             h.flash(e, 'error')
         except Exception:
             log.error(traceback.format_exc())
@@ -183,7 +183,7 @@ class UsersController(BaseController):
                           None, self.ip_addr, self.sa)
             h.flash(_('User updated successfully'), category='success')
             Session().commit()
-        except formencode.Invalid, errors:
+        except formencode.Invalid as errors:
             defaults = errors.value
             e = errors.error_dict or {}
             defaults.update({
@@ -218,7 +218,7 @@ class UsersController(BaseController):
             UserModel().delete(usr)
             Session().commit()
             h.flash(_('Successfully deleted user'), category='success')
-        except (UserOwnsReposException, DefaultUserException), e:
+        except (UserOwnsReposException, DefaultUserException) as e:
             h.flash(e, category='warning')
         except Exception:
             log.error(traceback.format_exc())
@@ -411,7 +411,7 @@ class UsersController(BaseController):
             user_model.add_extra_email(id, email)
             Session().commit()
             h.flash(_("Added email %s to user") % email, category='success')
-        except formencode.Invalid, error:
+        except formencode.Invalid as error:
             msg = error.error_dict['email']
             h.flash(msg, category='error')
         except Exception:
@@ -459,7 +459,7 @@ class UsersController(BaseController):
             user_model.add_extra_ip(id, ip)
             Session().commit()
             h.flash(_("Added IP address %s to user whitelist") % ip, category='success')
-        except formencode.Invalid, error:
+        except formencode.Invalid as error:
             msg = error.error_dict['ip']
             h.flash(msg, category='error')
         except Exception:

@@ -57,7 +57,7 @@ def do_migrate(db, old, new):
             t = metadata.tables[old_ui_name]
             print 'Renaming', t, 'to', new_ui_name
             migrate.changeset.rename_table(t, new_ui_name)
-        except KeyError, e:
+        except KeyError as e:
             print 'Not renaming ui:', e
 
     if new_settings_name == old_settings_name:
@@ -67,7 +67,7 @@ def do_migrate(db, old, new):
             t = metadata.tables[old_settings_name]
             print 'Renaming', t, 'to', new_settings_name
             migrate.changeset.rename_table(t, new_settings_name)
-        except KeyError, e:
+        except KeyError as e:
             print 'Not renaming settings:', e
 
     old_auth_name = 'internal' if old == 'kallithea' else old

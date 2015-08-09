@@ -128,7 +128,7 @@ class JSONRPCController(WSGIController):
 
         try:
             json_body = json.loads(raw_body)
-        except ValueError, e:
+        except ValueError as e:
             # catch JSON errors Here
             return jsonrpc_error(retid=self._req_id,
                                  message="JSON parse error ERR:%s RAW:%r"
@@ -147,7 +147,7 @@ class JSONRPCController(WSGIController):
                 'method: %s, params: %s' % (self._req_method,
                                             self._request_params)
             )
-        except KeyError, e:
+        except KeyError as e:
             return jsonrpc_error(retid=self._req_id,
                                  message='Incorrect JSON query missing %s' % e)
 
@@ -165,14 +165,14 @@ class JSONRPCController(WSGIController):
             else:
                 log.info('Access for IP:%s allowed' % (ip_addr,))
 
-        except Exception, e:
+        except Exception as e:
             return jsonrpc_error(retid=self._req_id,
                                  message='Invalid API key')
 
         self._error = None
         try:
             self._func = self._find_method()
-        except AttributeError, e:
+        except AttributeError as e:
             return jsonrpc_error(retid=self._req_id,
                                  message=str(e))
 
@@ -258,9 +258,9 @@ class JSONRPCController(WSGIController):
             raw_response = self._inspect_call(self._func)
             if isinstance(raw_response, HTTPError):
                 self._error = str(raw_response)
-        except JSONRPCError, e:
+        except JSONRPCError as e:
             self._error = safe_str(e)
-        except Exception, e:
+        except Exception as e:
             log.error('Encountered unhandled exception: %s'
                       % (traceback.format_exc(),))
             json_exc = JSONRPCError('Internal server error')
@@ -272,7 +272,7 @@ class JSONRPCController(WSGIController):
         response = dict(id=self._req_id, result=raw_response, error=self._error)
         try:
             return json.dumps(response)
-        except TypeError, e:
+        except TypeError as e:
             log.error('API FAILED. Error encoding response: %s' % e)
             return json.dumps(
                 dict(

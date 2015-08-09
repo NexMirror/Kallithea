@@ -857,7 +857,7 @@ def ValidAuthPlugins():
                                 next_to_load=plugin_name)
                         raise formencode.Invalid(msg, value, state)
                     unique_names[plugin_name] = plugin
-            except (ImportError, AttributeError, TypeError), e:
+            except (ImportError, AttributeError, TypeError) as e:
                 raise formencode.Invalid(str(e), value, state)
 
     return _validator

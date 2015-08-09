@@ -134,7 +134,7 @@ class AuthSettingsController(BaseController):
             Session().commit()
             h.flash(_('Auth settings updated successfully'),
                        category='success')
-        except formencode.Invalid, errors:
+        except formencode.Invalid as errors:
             log.error(traceback.format_exc())
             e = errors.error_dict or {}
             return self.__render(

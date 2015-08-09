@@ -130,7 +130,7 @@ class GistsController(BaseController):
             )
             Session().commit()
             new_gist_id = gist.gist_access_id
-        except formencode.Invalid, errors:
+        except formencode.Invalid as errors:
             defaults = errors.value
 
             return formencode.htmlfill.render(
@@ -141,7 +141,7 @@ class GistsController(BaseController):
                 encoding="UTF-8",
                 force_defaults=False)
 
-        except Exception, e:
+        except Exception as e:
             log.error(traceback.format_exc())
             h.flash(_('Error occurred during gist creation'), category='error')
             return redirect(url('new_gist'))

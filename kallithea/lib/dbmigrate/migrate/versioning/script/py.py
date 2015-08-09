@@ -96,7 +96,7 @@ class PythonScript(base.BaseScript):
         module = import_path(path)
         try:
             assert callable(module.upgrade)
-        except Exception, e:
+        except Exception as e:
             raise InvalidScriptError(path + ': %s' % str(e))
         return module
 

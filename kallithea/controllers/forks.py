@@ -174,7 +174,7 @@ class ForksController(BaseRepoController):
             from celery.result import BaseAsyncResult
             if isinstance(task, BaseAsyncResult):
                 task_id = task.task_id
-        except formencode.Invalid, errors:
+        except formencode.Invalid as errors:
             return htmlfill.render(
                 render('forks/fork.html'),
                 defaults=errors.value,

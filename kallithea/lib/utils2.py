@@ -630,7 +630,7 @@ def _extract_extras(env=None):
         for k in ['username', 'repository', 'locked_by', 'scm', 'make_lock',
                   'action', 'ip']:
             extras[k]
-    except KeyError, e:
+    except KeyError as e:
         raise Exception('Missing key %s in os.environ %s' % (e, extras))
 
     return AttributeDict(extras)

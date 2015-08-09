@@ -132,7 +132,7 @@ class MyAccountController(BaseController):
                 Session().commit()
                 update = True
 
-            except formencode.Invalid, errors:
+            except formencode.Invalid as errors:
                 return htmlfill.render(
                     render('admin/my_account/my_account.html'),
                     defaults=errors.value,
@@ -219,7 +219,7 @@ class MyAccountController(BaseController):
             UserModel().add_extra_email(self.authuser.user_id, email)
             Session().commit()
             h.flash(_("Added email %s to user") % email, category='success')
-        except formencode.Invalid, error:
+        except formencode.Invalid as error:
             msg = error.error_dict['email']
             h.flash(msg, category='error')
         except Exception:

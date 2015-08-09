@@ -161,7 +161,7 @@ def assert_not_contains(haystack, needle):
 def assert_raises(func, exc_type, str_contains=None, repr_contains=None):
     try:
         func()
-    except exc_type, e:
+    except exc_type as e:
         if str_contains is not None and str_contains not in str(e):
             raise AssertionError("%s raised, but %r does not contain %r"
                                  % (exc_type, str(e), str_contains))

@@ -89,7 +89,7 @@ class GitRepository(object):
             out = subprocessio.SubprocessIOChunker(cmd,
                 starting_values=[packet_len + server_advert + '0000']
             )
-        except EnvironmentError, e:
+        except EnvironmentError as e:
             log.error(traceback.format_exc())
             raise exc.HTTPExpectationFailed()
         resp = Response()
@@ -129,7 +129,7 @@ class GitRepository(object):
                 env=gitenv,
                 cwd=self.content_path,
             )
-        except EnvironmentError, e:
+        except EnvironmentError as e:
             log.error(traceback.format_exc())
             raise exc.HTTPExpectationFailed()
 
@@ -157,10 +157,10 @@ class GitRepository(object):
             app = self.backend
         try:
             resp = app(request, environ)
-        except exc.HTTPException, e:
+        except exc.HTTPException as e:
             resp = e
             log.error(traceback.format_exc())
-        except Exception, e:
+        except Exception as e:
             log.error(traceback.format_exc())
             resp = exc.HTTPInternalServerError()
         return resp(environ, start_response)

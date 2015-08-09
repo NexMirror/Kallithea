@@ -1066,7 +1066,7 @@ class ApiController(JSONRPCController):
                     (user_group.users_group_id, user_group.users_group_name),
                 user_group=None
             )
-        except UserGroupsAssignedException, e:
+        except UserGroupsAssignedException as e:
             log.error(traceback.format_exc())
             raise JSONRPCError(str(e))
         except Exception:

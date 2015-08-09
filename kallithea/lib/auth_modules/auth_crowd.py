@@ -106,7 +106,7 @@ class CrowdServer(object):
                 rval["status"] = True
             else:
                 rval = "".join(rdoc.readlines())
-        except Exception, e:
+        except Exception as e:
             if not noformat:
                 rval = {"status": False,
                         "body": body,

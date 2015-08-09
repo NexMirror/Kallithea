@@ -65,15 +65,15 @@ def run_task(task, *args, **kwargs):
             log.info('running task %s:%s' % (t.task_id, task))
             return t
 
-        except socket.error, e:
+        except socket.error as e:
             if isinstance(e, IOError) and e.errno == 111:
                 log.debug('Unable to connect to celeryd. Sync execution')
                 CELERY_ON = False
             else:
                 log.error(traceback.format_exc())
-        except KeyError, e:
+        except KeyError as e:
                 log.debug('Unable to connect to celeryd. Sync execution')
-        except Exception, e:
+        except Exception as e:
             log.error(traceback.format_exc())
 
     log.debug('executing task %s in sync mode' % task)

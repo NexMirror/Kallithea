@@ -164,7 +164,7 @@ def main(argv=None):
 
     try:
         return _run(argv)
-    except Exception, e:
+    except Exception as e:
         print e
         return 1
 

@@ -338,7 +338,7 @@ def to_message(mail, separator="; "):
 
     try:
         out = MIMEPart(ctype, **params)
-    except TypeError, exc:  # pragma: no cover
+    except TypeError as exc:  # pragma: no cover
         raise EncodingError("Content-Type malformed, not allowed: %r; "
                             "%r (Python ERROR: %s" %
                             (ctype, params, exc.message))

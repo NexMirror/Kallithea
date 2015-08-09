@@ -127,7 +127,7 @@ class BaseRepository(object):
                     for f in files:
                         size += tip.get_file_size(f.path)
 
-        except RepositoryError, e:
+        except RepositoryError as e:
             pass
         return size
 

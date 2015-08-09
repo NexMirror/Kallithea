@@ -557,7 +557,7 @@ class ScmModel(BaseModel):
         try:
             tip = imc.commit(message=message, author=author,
                              parents=[cs], branch=cs.branch)
-        except Exception, e:
+        except Exception as e:
             log.error(traceback.format_exc())
             raise IMCCommitError(str(e))
         finally:
@@ -880,7 +880,7 @@ class ScmModel(BaseModel):
                         tmpl = tmpl.replace('_TMPL_', kallithea.__version__)
                         f.write(tmpl)
                     os.chmod(_hook_file, 0755)
-                except IOError, e:
+                except IOError as e:
                     log.error('error writing %s: %s' % (_hook_file, e))
             else:
                 log.debug('skipping writing hook file')

@@ -137,7 +137,7 @@ class ReposController(BaseRepoController):
             from celery.result import BaseAsyncResult
             if isinstance(task, BaseAsyncResult):
                 task_id = task.task_id
-        except formencode.Invalid, errors:
+        except formencode.Invalid as errors:
             log.info(errors)
             return htmlfill.render(
                 render('admin/repos/repo_add.html'),
@@ -265,7 +265,7 @@ class ReposController(BaseRepoController):
             action_logger(self.authuser, 'admin_updated_repo',
                               changed_name, self.ip_addr, self.sa)
             Session().commit()
-        except formencode.Invalid, errors:
+        except formencode.Invalid as errors:
             log.info(errors)
             defaults = self.__load_data(repo_name)
             defaults.update(errors.value)
@@ -425,7 +425,7 @@ class ReposController(BaseRepoController):
             new_field.field_label = form_result['new_field_label']
             Session().add(new_field)
             Session().commit()
-        except Exception, e:
+        except Exception as e:
             log.error(traceback.format_exc())
             msg = _('An error occurred during creation of field')
             if isinstance(e, formencode.Invalid):
@@ -439,7 +439,7 @@ class ReposController(BaseRepoController):
         try:
             Session().delete(field)
             Session().commit()
-        except Exception, e:
+        except Exception as e:
             log.error(traceback.format_exc())
             msg = _('An error occurred during removal of field')
             h.flash(msg, category='error')
@@ -513,10 +513,10 @@ class ReposController(BaseRepoController):
             Session().commit()
             h.flash(_('Marked repo %s as fork of %s') % (repo_name, fork),
                     category='success')
-        except RepositoryError, e:
+        except RepositoryError as e:
             log.error(traceback.format_exc())
             h.flash(str(e), category='error')
-        except Exception, e:
+        except Exception as e:
             log.error(traceback.format_exc())
             h.flash(_('An error occurred during this operation'),
                     category='error')
@@ -538,7 +538,7 @@ class ReposController(BaseRepoController):
             elif request.POST.get('set_unlock'):
                 Repository.unlock(repo)
                 h.flash(_('Unlocked repository'), category='success')
-        except Exception, e:
+        except Exception as e:
             log.error(traceback.format_exc())
             h.flash(_('An error occurred during unlocking'),
                     category='error')
@@ -565,7 +565,7 @@ class ReposController(BaseRepoController):
 
                 h.flash(_('Repository has been %s') % action,
                         category='success')
-        except Exception, e:
+        except Exception as e:
             log.error(traceback.format_exc())
             h.flash(_('An error occurred during unlocking'),
                     category='error')
@@ -583,7 +583,7 @@ class ReposController(BaseRepoController):
                 Session().commit()
                 h.flash(_('Cache invalidation successful'),
                         category='success')
-            except Exception, e:
+            except Exception as e:
                 log.error(traceback.format_exc())
                 h.flash(_('An error occurred during cache invalidation'),
                         category='error')
@@ -601,7 +601,7 @@ class ReposController(BaseRepoController):
             try:
                 ScmModel().pull_changes(repo_name, self.authuser.username)
                 h.flash(_('Pulled from remote location'), category='success')
-            except Exception, e:
+            except Exception as e:
                 log.error(traceback.format_exc())
                 h.flash(_('An error occurred during pull from remote location'),
                         category='error')
@@ -634,7 +634,7 @@ class ReposController(BaseRepoController):
             try:
                 RepoModel().delete_stats(repo_name)
                 Session().commit()
-            except Exception, e:
+            except Exception as e:
                 log.error(traceback.format_exc())
                 h.flash(_('An error occurred during deletion of repository stats'),
                         category='error')
