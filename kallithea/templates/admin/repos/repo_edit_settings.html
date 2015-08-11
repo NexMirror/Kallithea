@@ -147,6 +147,6 @@ ${h.form(url('put_repo', repo_name=c.repo_info.repo_name), method='put')}
 
         // autocomplete
         var _USERS_AC_DATA = ${c.users_array|n};
-        SimpleUserAutoComplete('user', 'owner_container', _USERS_AC_DATA);
+        SimpleUserAutoComplete($('#user'), $('#owner_container'), _USERS_AC_DATA);
     });
 </script>

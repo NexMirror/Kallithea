@@ -744,7 +744,7 @@ function _comment_div_append_form($comment_div, f_path, line_no) {
     setTimeout(function() {
         // callbacks
         tooltip_activate();
-        MentionsAutoComplete('text_'+line_no, 'mentions_container_'+line_no,
+        MentionsAutoComplete($('#text_'+line_no), $('#mentions_container_'+line_no),
                              _USERS_AC_DATA);
         $('#text_'+line_no).focus();
     }, 10)
@@ -1140,10 +1140,10 @@ var autocompleteFormatter = function (oResultData, sQuery, sResultMatch) {
 };
 
 // Generate a basic autocomplete instance that can be tweaked further by the caller
-var autocompleteCreate = function (inputElement, container, matchFunc) {
+var autocompleteCreate = function ($inputElement, $container, matchFunc) {
     var datasource = new YAHOO.util.FunctionDataSource(matchFunc);
 
-    var autocomplete = new YAHOO.widget.AutoComplete(inputElement, container, datasource);
+    var autocomplete = new YAHOO.widget.AutoComplete($inputElement[0], $container[0], datasource);
     autocomplete.useShadow = false;
     autocomplete.resultTypeList = false;
     autocomplete.animVert = false;
@@ -1154,13 +1154,13 @@ var autocompleteCreate = function (inputElement, container, matchFunc) {
     return autocomplete;
 }
 
-var SimpleUserAutoComplete = function (inputElement, container, users_list) {
+var SimpleUserAutoComplete = function ($inputElement, $container, users_list) {
 
     var matchUsers = function (sQuery) {
         return autocompleteMatchUsers(sQuery, users_list);
     }
 
-    var userAC = autocompleteCreate(inputElement, container, matchUsers);
+    var userAC = autocompleteCreate($inputElement, $container, matchUsers);
 
     // Handler for selection of an entry
     var itemSelectHandler = function (sType, aArgs) {
@@ -1172,7 +1172,7 @@ var SimpleUserAutoComplete = function (inputElement, container, users_list) {
     userAC.itemSelectEvent.subscribe(itemSelectHandler);
 }
 
-var MembersAutoComplete = function (inputElement, container, users_list, groups_list) {
+var MembersAutoComplete = function ($inputElement, $container, users_list, groups_list) {
 
     var matchAll = function (sQuery) {
         var u = autocompleteMatchUsers(sQuery, users_list);
@@ -1180,11 +1180,11 @@ var MembersAutoComplete = function (inputElement, container, users_list, groups_
         return u.concat(g);
     };
 
-    var membersAC = autocompleteCreate(inputElement, container, matchAll);
+    var membersAC = autocompleteCreate($inputElement, $container, matchAll);
 
     // Handler for selection of an entry
     var itemSelectHandler = function (sType, aArgs) {
-        var nextId = inputElement.split('perm_new_member_name_')[1];
+        var nextId = $inputElement.attr('id').split('perm_new_member_name_')[1];
         var myAC = aArgs[0]; // reference back to the AC instance
         var elLI = aArgs[1]; // reference to the selected LI element
         var oData = aArgs[2]; // object literal of selected item's result data
@@ -1202,7 +1202,7 @@ var MembersAutoComplete = function (inputElement, container, users_list, groups_
     membersAC.itemSelectEvent.subscribe(itemSelectHandler);
 }
 
-var MentionsAutoComplete = function (inputElement, container, users_list) {
+var MentionsAutoComplete = function ($inputElement, $container, users_list) {
 
     var matchUsers = function (sQuery) {
             var org_sQuery = sQuery;
@@ -1213,7 +1213,7 @@ var MentionsAutoComplete = function (inputElement, container, users_list) {
             return autocompleteMatchUsers(sQuery, users_list);
     }
 
-    var mentionsAC = autocompleteCreate(inputElement, container, matchUsers);
+    var mentionsAC = autocompleteCreate($inputElement, $container, matchUsers);
     mentionsAC.suppressInputUpdate = true;
     // Overwrite formatResult to take into account mentionQuery
     mentionsAC.formatResult = function (oResultData, sQuery, sResultMatch) {
@@ -1274,7 +1274,6 @@ var MentionsAutoComplete = function (inputElement, container, users_list) {
         return [null, null];
     };
 
-    var $inputElement = $('#'+inputElement);
     $inputElement.keyup(function(e){
             var currentMessage = $inputElement.val();
             var currentCaretPosition = $inputElement[0].selectionStart;
@@ -1333,13 +1332,13 @@ var removeReviewMember = function(reviewer_id, repo_name, pull_request_id){
 }
 
 /* activate auto completion of users as PR reviewers */
-var PullRequestAutoComplete = function (inputElement, container, users_list) {
+var PullRequestAutoComplete = function ($inputElement, $container, users_list) {
 
     var matchUsers = function (sQuery) {
         return autocompleteMatchUsers(sQuery, users_list);
     };
 
-    var reviewerAC = autocompleteCreate(inputElement, container, matchUsers);
+    var reviewerAC = autocompleteCreate($inputElement, $container, matchUsers);
     reviewerAC.suppressInputUpdate = true;
 
     // Handler for selection of an entry
@@ -1421,8 +1420,8 @@ var addPermAction = function(_html, users_list, groups_list){
     var $last_node = $('.last_new_member').last(); // empty tr between last and add
     var next_id = $('.new_members').length;
     $last_node.before($('<tr class="new_members">').append(_html.format(next_id)));
-    MembersAutoComplete("perm_new_member_name_"+next_id,
-            "perm_container_"+next_id, users_list, groups_list);
+    MembersAutoComplete($("#perm_new_member_name_"+next_id),
+            $("#perm_container_"+next_id), users_list, groups_list);
 }
 
 function ajaxActionRevokePermission(url, obj_id, obj_type, field_id, extra_data) {

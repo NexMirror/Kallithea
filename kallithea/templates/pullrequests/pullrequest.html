@@ -130,7 +130,7 @@ ${self.repo_context_bar('showpullrequest')}
 <script type="text/javascript">
   var _USERS_AC_DATA = ${c.users_array|n};
   var _GROUPS_AC_DATA = ${c.user_groups_array|n};
-  PullRequestAutoComplete('user', 'reviewers_container', _USERS_AC_DATA);
+  PullRequestAutoComplete($('#user'), $('#reviewers_container'), _USERS_AC_DATA);
 
   pyroutes.register('pullrequest_repo_info', "${url('pullrequest_repo_info',repo_name='%(repo_name)s')}", ['repo_name']);
 
