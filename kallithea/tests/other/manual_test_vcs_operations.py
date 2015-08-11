@@ -12,8 +12,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-kallithea.tests.test_scm_operations
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kallithea.tests.other.manual_test_vcs_operations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Test suite for making push/pull operations.
 

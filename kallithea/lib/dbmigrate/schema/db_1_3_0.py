@@ -12,8 +12,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-kallithea.model.db_1_3_0
-~~~~~~~~~~~~~~~~~~~~~~~~
+kallithea.lib.dbmigrate.schema.db_1_3_0
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Database Models for Kallithea <=1.3.X
 

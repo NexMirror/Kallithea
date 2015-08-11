@@ -12,8 +12,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-kallithea.lib.auth_pam
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kallithea.lib.auth_modules.auth_pam
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Kallithea authentication library for PAM
 

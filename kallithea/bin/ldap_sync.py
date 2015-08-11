@@ -12,8 +12,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-kallithea.bin.__init__
-~~~~~~~~~~~~~~~~~~~~~~
+kallithea.bin.ldap_sync
+~~~~~~~~~~~~~~~~~~~~~~~
 
 LDAP sync script
 

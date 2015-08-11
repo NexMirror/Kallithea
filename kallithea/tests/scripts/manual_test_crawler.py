@@ -12,8 +12,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-kallithea.tests.test_crawer
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kallithea.tests.scripts.manual_test_crawler
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Test for crawling a project for memory usage
 This should be runned just as regular script together

@@ -12,7 +12,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-kallithea.model.user_group
+kallithea.model.repo_group
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 repo group model for Kallithea

@@ -12,8 +12,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-kallithea.tests.test_libs
-~~~~~~~~~~~~~~~~~~~~~~~~~
+kallithea.tests.other.test_libs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Package for testing various lib/helper functions in kallithea
 
