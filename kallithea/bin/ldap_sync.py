@@ -198,8 +198,8 @@ class LdapSync(object):
                                       config.get("default", "ldap_user"),
                                       config.get("default", "ldap_key"),
                                       config.get("default", "base_dn"))
-        self.rhodocode_api = API(config.get("default", "api_url"),
-                                          config.get("default", "api_key"))
+        self.kallithea_api = API(config.get("default", "api_url"),
+                                 config.get("default", "api_key"))
 
     def update_groups_from_ldap(self):
         """Add all the groups from LDAP to Kallithea."""
@@ -225,7 +225,7 @@ class LdapSync(object):
         for member in members:
             if member not in group_users:
                 try:
-                    self.rhodocode_api.remove_membership(group,
+                    self.kallithea_api.remove_membership(group,
                                                          member)
                 except UserNotInGroupError:
                     pass
