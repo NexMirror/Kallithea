@@ -173,7 +173,7 @@ ${self.repo_context_bar('showpullrequest')}
               %if c.avail_revs:
               <div id="updaterevs" style="max-height:200px; overflow-y:auto; overflow-x:hidden; margin-bottom: 10px">
                 <div style="height:0">
-                  <canvas id="avail_graph_canvas"></canvas>
+                  <canvas id="avail_graph_canvas" style="width:0"></canvas>
                 </div>
                 <table id="updaterevs-table" class="noborder" style="padding-left:50px">
                   %for cnt, cs in enumerate(c.avail_cs):
