@@ -295,4 +295,3 @@ class Fixture(object):
                 f_path=filename
             )
         return cs
-
