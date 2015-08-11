@@ -175,5 +175,8 @@ setup(
     upgrade-db=kallithea.lib.dbmigrate:UpgradeDb
     celeryd=kallithea.lib.celerypylons.commands:CeleryDaemonCommand
     install-iis=kallithea.lib.paster_commands.install_iis:Command
+
+    [nose.plugins]
+    pylons = pylons.test:PylonsPlugin
     """,
 )
