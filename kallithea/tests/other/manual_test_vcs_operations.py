@@ -46,7 +46,7 @@ from kallithea.model.repo import RepoModel
 from kallithea.model.user import UserModel
 
 DEBUG = True
-HOST = '127.0.0.1:5000'  # test host
+HOST = '127.0.0.1:4999'  # test host
 
 
 class Command(object):
@@ -324,7 +324,7 @@ class TestVCSOperations(BaseTestCase):
         stdout, stderr = Command('/tmp').execute('hg clone', clone_url)
 
         stdout, stderr = _add_files_and_push('hg', DEST,
-                                    clone_url='http://127.0.0.1:5000/tmp',)
+                                    clone_url='http://%s/tmp' % HOST)
 
         assert 'HTTP Error 404: Not Found' in stderr
 
@@ -334,7 +334,7 @@ class TestVCSOperations(BaseTestCase):
         stdout, stderr = Command('/tmp').execute('git clone', clone_url)
 
         stdout, stderr = _add_files_and_push('git', DEST,
-                                    clone_url='http://127.0.0.1:5000/tmp',)
+                                    clone_url='http://%s/tmp' % HOST)
 
         assert 'not found' in stderr
 
