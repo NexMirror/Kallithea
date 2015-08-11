@@ -1210,7 +1210,7 @@ def fancy_file_stats(stats):
 
         #import ipdb;ipdb.set_trace()
         b_d = '<div class="bin bin%s %s" style="width:100%%">%s</div>' % (bin_op, cgen('a', a_v='', d_v=0), lbl)
-        b_a = '<div class="bin bin1" style="width:0%%"></div>'
+        b_a = '<div class="bin bin1" style="width:0%"></div>'
         return literal('<div style="width:%spx">%s%s</div>' % (width, b_a, b_d))
 
     t = stats['added'] + stats['deleted']
