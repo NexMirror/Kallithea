@@ -51,7 +51,6 @@ requirements = [
     "python-dateutil>=1.5.0,<2.0.0",
     "markdown==2.2.1",
     "docutils>=0.8.1,<=0.11",
-    "simplejson==2.5.2",
     "mock",
     "pycrypto>=2.6.0,<=2.6.1",
     "URLObject==2.3.4",
