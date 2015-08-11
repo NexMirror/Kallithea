@@ -376,7 +376,7 @@ ${self.repo_context_bar('showpullrequest')}
       $(document).ready(function(){
           PullRequestAutoComplete('user', 'reviewers_container', _USERS_AC_DATA);
 
-          $('.add-bubble').click(function(e){
+          $('.code-difftable').on('click', '.add-bubble', function(e){
               show_comment_form($(this));
           });
 
