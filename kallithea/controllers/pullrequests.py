@@ -67,12 +67,6 @@ log = logging.getLogger(__name__)
 
 class PullrequestsController(BaseRepoController):
 
-    def __before__(self):
-        super(PullrequestsController, self).__before__()
-        repo_model = RepoModel()
-        c.users_array = repo_model.get_users_js()
-        c.user_groups_array = repo_model.get_user_groups_js()
-
     def _get_repo_refs(self, repo, rev=None, branch=None, branch_rev=None):
         """return a structure with repo's interesting changesets, suitable for
         the selectors in pullrequest.html

@@ -92,25 +92,6 @@ ${self.repo_context_bar('showpullrequest')}
 
         </div>
 
-        ## Reviewers
-        <div style="float:left; border-left:1px dashed #eee">
-            <div class="pr-details-title">${_('Pull Request Reviewers')}</div>
-            <div id="reviewers" style="padding:0px 0px 0px 15px">
-              ## members goes here !
-              <div>
-                <ul id="review_members" class="group_members">
-                </ul>
-              </div>
-
-              <div class='ac'>
-                <div class="reviewer_ac">
-                   ${h.text('user', class_='yui-ac-input',placeholder=_('Type name of reviewer to add'))}
-                   <div id="reviewers_container"></div>
-                </div>
-              </div>
-            </div>
-        </div>
-
         <div style="clear:both;padding: 0 0 30px 0;"></div>
 
         <h4>${_('Changesets')}</h4>
@@ -128,10 +109,6 @@ ${self.repo_context_bar('showpullrequest')}
 
 <script type="text/javascript" src="${h.url('/js/graph.js', ver=c.kallithea_version)}"></script>
 <script type="text/javascript">
-  var _USERS_AC_DATA = ${c.users_array|n};
-  var _GROUPS_AC_DATA = ${c.user_groups_array|n};
-  PullRequestAutoComplete($('#user'), $('#reviewers_container'), _USERS_AC_DATA);
-
   pyroutes.register('pullrequest_repo_info', "${url('pullrequest_repo_info',repo_name='%(repo_name)s')}", ['repo_name']);
 
   var pendingajax = undefined;
