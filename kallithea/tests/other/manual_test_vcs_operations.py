@@ -32,6 +32,7 @@ Original author and date, and relevant copyright and licensing information is be
 
 """
 
+import re
 import tempfile
 import time
 from os.path import join as jn
@@ -520,8 +521,8 @@ class TestVCSOperations(BaseTestCase):
             Session().commit()
             clone_url = _construct_url(GIT_REPO)
             stdout, stderr = Command('/tmp').execute('git clone', clone_url)
-            msg = ("""The requested URL returned error: 403""")
-            assert msg in stderr
+            # The message apparently changed in Git 1.8.3, so match it loosely.
+            assert re.search(r'\b403\b', stderr)
         finally:
             #release IP restrictions
             for ip in UserIpMap.getAll():
