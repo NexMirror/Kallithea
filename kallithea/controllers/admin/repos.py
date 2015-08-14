@@ -318,7 +318,7 @@ class ReposController(BaseRepoController):
             h.flash(_('Deleted repository %s') % repo_name, category='success')
             Session().commit()
         except AttachedForksError:
-            h.flash(_('Cannot delete %s it still contains attached forks')
+            h.flash(_('Cannot delete repository %s which still has forks')
                         % repo_name, category='warning')
 
         except Exception:
