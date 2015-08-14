@@ -850,7 +850,7 @@ def gravatar(email_address, cls='', size=30, ssl_enabled=True):
 
     #  here it makes sense to use style="width: ..." (instead of, say, a
     # stylesheet) because we using this to generate a high-res (retina) size
-    tmpl = """<img alt="gravatar" class="{cls}" style="width: {size}px; height: {size}px" src="{src}"/>"""
+    tmpl = '<img alt="" class="{cls}" style="width: {size}px; height: {size}px" src="{src}"/>'
 
     # if src is empty then there was no gravatar, so we use a font icon
     if not src:

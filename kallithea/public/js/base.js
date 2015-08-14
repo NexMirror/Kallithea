@@ -1067,7 +1067,7 @@ var autocompleteHighlightMatch = function (full, snippet, matchindex) {
 };
 
 var gravatar = function(link, size, cssclass) {
-    var elem = '<img alt="gravatar" class="{2}" style="width: {0}px; height: {0}px" src="{1}"/>'.format(size, link, cssclass);
+    var elem = '<img alt="" class="{2}" style="width: {0}px; height: {0}px" src="{1}"/>'.format(size, link, cssclass);
     if (!link) {
         elem = '<i class="icon-user {1}" style="font-size: {0}px;"></i>'.format(size, cssclass);
     }
