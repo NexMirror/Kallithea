@@ -1125,7 +1125,7 @@ def changed_tooltip(nodes):
         return literal(pref + '<br/> '.join([safe_unicode(x.path)
                                              for x in nodes[:30]]) + suf)
     else:
-        return ': ' + _('No Files')
+        return ': ' + _('No files')
 
 
 def repo_link(groups_and_repos):

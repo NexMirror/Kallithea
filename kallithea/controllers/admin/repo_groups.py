@@ -417,7 +417,7 @@ class RepoGroupsController(BaseController):
         #action_logger(self.authuser, 'admin_changed_repo_permissions',
         #              repo_name, self.ip_addr, self.sa)
         Session().commit()
-        h.flash(_('Repository Group permissions updated'), category='success')
+        h.flash(_('Repository group permissions updated'), category='success')
         return redirect(url('edit_repo_group_perms', group_name=group_name))
 
     @HasRepoGroupPermissionAnyDecorator('group.admin')

@@ -317,7 +317,7 @@ class UserGroupsController(BaseController):
         #action_logger(self.authuser, 'admin_changed_repo_permissions',
         #              repo_name, self.ip_addr, self.sa)
         Session().commit()
-        h.flash(_('User Group permissions updated'), category='success')
+        h.flash(_('User group permissions updated'), category='success')
         return redirect(url('edit_user_group_perms', id=id))
 
     @HasUserGroupPermissionAnyDecorator('usergroup.admin')

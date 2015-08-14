@@ -1664,29 +1664,29 @@ class Permission(Base, BaseModel):
     PERMS = [
         ('hg.admin', _('Kallithea Administrator')),
 
-        ('repository.none', _('Default user has no access to new Repositories')),
-        ('repository.read', _('Default user has read access to new Repositories')),
-        ('repository.write', _('Default user has write access to new Repositories')),
-        ('repository.admin', _('Default user has admin access to new Repositories')),
+        ('repository.none', _('Default user has no access to new repositories')),
+        ('repository.read', _('Default user has read access to new repositories')),
+        ('repository.write', _('Default user has write access to new repositories')),
+        ('repository.admin', _('Default user has admin access to new repositories')),
 
-        ('group.none', _('Default user has no access to new Repository Groups')),
-        ('group.read', _('Default user has read access to new Repository Groups')),
-        ('group.write', _('Default user has write access to new Repository Groups')),
-        ('group.admin', _('Default user has admin access to new Repository Groups')),
+        ('group.none', _('Default user has no access to new repository groups')),
+        ('group.read', _('Default user has read access to new repository groups')),
+        ('group.write', _('Default user has write access to new repository groups')),
+        ('group.admin', _('Default user has admin access to new repository groups')),
 
-        ('usergroup.none', _('Default user has no access to new User Groups')),
-        ('usergroup.read', _('Default user has read access to new User Groups')),
-        ('usergroup.write', _('Default user has write access to new User Groups')),
-        ('usergroup.admin', _('Default user has admin access to new User Groups')),
+        ('usergroup.none', _('Default user has no access to new user groups')),
+        ('usergroup.read', _('Default user has read access to new user groups')),
+        ('usergroup.write', _('Default user has write access to new user groups')),
+        ('usergroup.admin', _('Default user has admin access to new user groups')),
 
-        ('hg.repogroup.create.false', _('Only admins can create Repository Groups')),
-        ('hg.repogroup.create.true', _('Non-admins can create Repository Groups')),
+        ('hg.repogroup.create.false', _('Only admins can create repository groups')),
+        ('hg.repogroup.create.true', _('Non-admins can create repository groups')),
 
-        ('hg.usergroup.create.false', _('Only admins can create User Groups')),
-        ('hg.usergroup.create.true', _('Non-admins can create User Groups')),
+        ('hg.usergroup.create.false', _('Only admins can create user groups')),
+        ('hg.usergroup.create.true', _('Non-admins can create user groups')),
 
-        ('hg.create.none', _('Only admins can create top level Repositories')),
-        ('hg.create.repository', _('Non-admins can create top level Repositories')),
+        ('hg.create.none', _('Only admins can create top level repositories')),
+        ('hg.create.repository', _('Non-admins can create top level repositories')),
 
         ('hg.create.write_on_repogroup.true', _('Repository creation enabled with write permission to a repository group')),
         ('hg.create.write_on_repogroup.false', _('Repository creation disabled with write permission to a repository group')),
@@ -1695,8 +1695,8 @@ class Permission(Base, BaseModel):
         ('hg.fork.repository', _('Non-admins can can fork repositories')),
 
         ('hg.register.none', _('Registration disabled')),
-        ('hg.register.manual_activate', _('User Registration with manual account activation')),
-        ('hg.register.auto_activate', _('User Registration with automatic account activation')),
+        ('hg.register.manual_activate', _('User registration with manual account activation')),
+        ('hg.register.auto_activate', _('User registration with automatic account activation')),
 
         ('hg.extern_activate.manual', _('Manual activation of external account')),
         ('hg.extern_activate.auto', _('Automatic activation of external account')),
@@ -2225,10 +2225,10 @@ class ChangesetStatus(Base, BaseModel):
     STATUS_UNDER_REVIEW = 'under_review'
 
     STATUSES = [
-        (STATUS_NOT_REVIEWED, _("Not Reviewed")),  # (no icon) and default
+        (STATUS_NOT_REVIEWED, _("Not reviewed")),  # (no icon) and default
         (STATUS_APPROVED, _("Approved")),
         (STATUS_REJECTED, _("Rejected")),
-        (STATUS_UNDER_REVIEW, _("Under Review")),
+        (STATUS_UNDER_REVIEW, _("Under review")),
     ]
 
     changeset_status_id = Column(Integer(), nullable=False, unique=True, primary_key=True)

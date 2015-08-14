@@ -205,7 +205,7 @@ class UserModel(BaseModel):
         user = self.get(user_id, cache=False)
         if user.username == User.DEFAULT_USER:
             raise DefaultUserException(
-                            _("You can't Edit this user since it's "
+                            _("You can't edit this user since it's "
                               "crucial for entire application"))
 
         for k, v in form_data.items():
@@ -227,7 +227,7 @@ class UserModel(BaseModel):
         user = self._get_user(user)
         if user.username == User.DEFAULT_USER:
             raise DefaultUserException(
-                _("You can't Edit this user since it's"
+                _("You can't edit this user since it's"
                   " crucial for entire application")
             )
 

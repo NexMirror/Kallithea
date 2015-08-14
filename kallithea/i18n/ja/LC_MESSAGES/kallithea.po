@@ -721,7 +721,7 @@ msgid "Cannot revoke permission for yourself as admin"
 msgstr "自分自身の管理者としての権限を取り消すことはできません"
 
 #: kallithea/controllers/admin/repo_groups.py:435
-msgid "Repository Group permissions updated"
+msgid "Repository group permissions updated"
 msgstr "リポジトリグループ権限を更新しました"
 
 #: kallithea/controllers/admin/repo_groups.py:472
@@ -961,7 +961,7 @@ msgid "Target group cannot be the same"
 msgstr "対象に同じ物を選ぶことはできません"
 
 #: kallithea/controllers/admin/user_groups.py:320
-msgid "User Group permissions updated"
+msgid "User group permissions updated"
 msgstr "ユーザーグループ権限を更新しました"
 
 #: kallithea/controllers/admin/user_groups.py:440
@@ -1811,7 +1811,7 @@ msgid "New user registration"
 msgstr "新規ユーザー登録"
 
 #: kallithea/model/user.py:214 kallithea/model/user.py:236
-msgid "You can't Edit this user since it's crucial for entire application"
+msgid "You can't edit this user since it's crucial for entire application"
 msgstr "このユーザーを編集できません。このユーザーはアプリケーションにとって必要不可欠です。"
 
 #: kallithea/model/user.py:255
@@ -2900,9 +2900,9 @@ msgstr "現在の IP"
 
 #: kallithea/templates/admin/my_account/my_account_profile.html:28
 msgid ""
-"Your user is in an external Source of Record; some details cannot be "
+"Your user is in an external source of record; some details cannot be "
 "managed here"
-msgstr "ユーザーは外部の Source of Record  に属しているため、ここでは詳細を管理できません"
+msgstr "ユーザーは外部の source of record  に属しているため、ここでは詳細を管理できません"
 
 #: kallithea/templates/admin/my_account/my_account_repos.html:1
 #, fuzzy
@@ -4271,7 +4271,7 @@ msgid "Last Login"
 msgstr "最終ログイン日時"
 
 #: kallithea/templates/admin/users/user_edit_advanced.html:10
-msgid "Member of User groups"
+msgid "Member of User Groups"
 msgstr "グループのメンバー数"
 
 #: kallithea/templates/admin/users/user_edit_advanced.html:21
@@ -4300,9 +4300,9 @@ msgstr "メールアドレスがありません。このユーザーのメール
 #: kallithea/templates/admin/users/user_edit_profile.html:27
 #, python-format
 msgid ""
-"This user is in an external Source of Record (%s); some details cannot be"
+"This user is in an external source of record (%s); some details cannot be"
 " managed here."
-msgstr "このユーザーは外部の Source of Record (%s) に属しています。ここでは詳細を管理できません。"
+msgstr "このユーザーは外部の source of record (%s) に属しています。ここでは詳細を管理できません。"
 
 #: kallithea/templates/admin/users/user_edit_profile.html:60
 msgid "Name in Source of Record"

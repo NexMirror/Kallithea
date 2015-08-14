@@ -7,7 +7,7 @@
     (_('Source of Record'), c.user.extern_type, ''),
     (_('Created on'), h.fmt_date(c.user.created_on), ''),
     (_('Last Login'), c.user.last_login or '-', ''),
-    (_('Member of User groups'), len(c.user.group_member), ', '.join((x.users_group.users_group_name for x in c.user.group_member))),
+    (_('Member of User Groups'), len(c.user.group_member), ', '.join((x.users_group.users_group_name for x in c.user.group_member))),
  ]
 %>
 %for dt, dd, tt in elems:

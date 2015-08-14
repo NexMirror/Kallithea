@@ -728,7 +728,7 @@ msgid "Cannot revoke permission for yourself as admin"
 msgstr ""
 
 #: kallithea/controllers/admin/repo_groups.py:435
-msgid "Repository Group permissions updated"
+msgid "Repository group permissions updated"
 msgstr ""
 
 #: kallithea/controllers/admin/repo_groups.py:472
@@ -962,7 +962,7 @@ msgid "Target group cannot be the same"
 msgstr ""
 
 #: kallithea/controllers/admin/user_groups.py:320
-msgid "User Group permissions updated"
+msgid "User group permissions updated"
 msgstr ""
 
 #: kallithea/controllers/admin/user_groups.py:440
@@ -1718,51 +1718,51 @@ msgid "Top level"
 msgstr ""
 
 #: kallithea/model/db.py:1668
-msgid "Default user has no access to new Repositories"
+msgid "Default user has no access to new repositories"
 msgstr ""
 
 #: kallithea/model/db.py:1669
-msgid "Default user has read access to new Repositories"
+msgid "Default user has read access to new repositories"
 msgstr ""
 
 #: kallithea/model/db.py:1670
-msgid "Default user has write access to new Repositories"
+msgid "Default user has write access to new repositories"
 msgstr ""
 
 #: kallithea/model/db.py:1671
-msgid "Default user has admin access to new Repositories"
+msgid "Default user has admin access to new repositories"
 msgstr ""
 
 #: kallithea/model/db.py:1673
-msgid "Default user has no access to new Repository Groups"
+msgid "Default user has no access to new repository groups"
 msgstr ""
 
 #: kallithea/model/db.py:1674
-msgid "Default user has read access to new Repository Groups"
+msgid "Default user has read access to new repository groups"
 msgstr ""
 
 #: kallithea/model/db.py:1675
-msgid "Default user has write access to new Repository Groups"
+msgid "Default user has write access to new repository groups"
 msgstr ""
 
 #: kallithea/model/db.py:1676
-msgid "Default user has admin access to new Repository Groups"
+msgid "Default user has admin access to new repository groups"
 msgstr ""
 
 #: kallithea/model/db.py:1678
-msgid "Default user has no access to new User Groups"
+msgid "Default user has no access to new user groups"
 msgstr ""
 
 #: kallithea/model/db.py:1679
-msgid "Default user has read access to new User Groups"
+msgid "Default user has read access to new user groups"
 msgstr ""
 
 #: kallithea/model/db.py:1680
-msgid "Default user has write access to new User Groups"
+msgid "Default user has write access to new user groups"
 msgstr ""
 
 #: kallithea/model/db.py:1681
-msgid "Default user has admin access to new User Groups"
+msgid "Default user has admin access to new user groups"
 msgstr ""
 
 #: kallithea/model/db.py:1683
@@ -1774,19 +1774,19 @@ msgid "Non-admins can create Repository Groups"
 msgstr ""
 
 #: kallithea/model/db.py:1686
-msgid "Only admins can create User Groups"
+msgid "Only admins can create user groups"
 msgstr ""
 
 #: kallithea/model/db.py:1687
-msgid "Non-admins can create User Groups"
+msgid "Non-admins can create user groups"
 msgstr ""
 
 #: kallithea/model/db.py:1689
-msgid "Only admins can create top level Repositories"
+msgid "Only admins can create top level repositories"
 msgstr ""
 
 #: kallithea/model/db.py:1690
-msgid "Non-admins can create top level Repositories"
+msgid "Non-admins can create top level repositories"
 msgstr ""
 
 #: kallithea/model/db.py:1695
@@ -1917,7 +1917,7 @@ msgid "New user registration"
 msgstr ""
 
 #: kallithea/model/user.py:217 kallithea/model/user.py:239
-msgid "You can't Edit this user since it's crucial for entire application"
+msgid "You can't edit this user since it's crucial for entire application"
 msgstr ""
 
 #: kallithea/model/user.py:258
@@ -2965,7 +2965,7 @@ msgid "Current IP"
 msgstr ""
 
 #: kallithea/templates/admin/my_account/my_account_profile.html:28
-msgid "Your user is in an external Source of Record; some details cannot be managed here"
+msgid "Your user is in an external source of record; some details cannot be managed here"
 msgstr ""
 
 #: kallithea/templates/admin/my_account/my_account_repos.html:1
@@ -4135,7 +4135,7 @@ msgid "Last Login"
 msgstr ""
 
 #: kallithea/templates/admin/users/user_edit_advanced.html:10
-msgid "Member of User groups"
+msgid "Member of User Groups"
 msgstr ""
 
 #: kallithea/templates/admin/users/user_edit_advanced.html:21
@@ -4163,7 +4163,7 @@ msgstr ""
 
 #: kallithea/templates/admin/users/user_edit_profile.html:27
 #, python-format
-msgid "This user is in an external Source of Record (%s); some details cannot be managed here."
+msgid "This user is in an external source of record (%s); some details cannot be managed here."
 msgstr ""
 
 #: kallithea/templates/admin/users/user_edit_profile.html:60

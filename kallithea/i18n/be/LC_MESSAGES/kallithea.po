@@ -717,7 +717,7 @@ msgid "Cannot revoke permission for yourself as admin"
 msgstr "Адміністратар не можа адклікаць свае прывелеі"
 
 #: kallithea/controllers/admin/repo_groups.py:435
-msgid "Repository Group permissions updated"
+msgid "Repository group permissions updated"
 msgstr "Прывілеі групы рэпазітароў абноўлены"
 
 #: kallithea/controllers/admin/repo_groups.py:472
@@ -959,7 +959,7 @@ msgid "Target group cannot be the same"
 msgstr "Мэтавая група не можа быць такі ж"
 
 #: kallithea/controllers/admin/user_groups.py:320
-msgid "User Group permissions updated"
+msgid "User group permissions updated"
 msgstr "Прывілеі групы карыстачоў абноўлены"
 
 #: kallithea/controllers/admin/user_groups.py:440
@@ -1825,7 +1825,7 @@ msgid "New user registration"
 msgstr "Рэгістрацыя новага карыстача"
 
 #: kallithea/model/user.py:214 kallithea/model/user.py:236
-msgid "You can't Edit this user since it's crucial for entire application"
+msgid "You can't edit this user since it's crucial for entire application"
 msgstr ""
 "Вы не можаце рэдагаваць карыстача, паколькі гэта крытычна для працы ўсяго "
 "прыкладання"
@@ -2926,7 +2926,7 @@ msgstr "бягучы IP-адрас"
 
 #: kallithea/templates/admin/my_account/my_account_profile.html:28
 msgid ""
-"Your user is in an external Source of Record; some details cannot be managed "
+"Your user is in an external source of record; some details cannot be managed "
 "here"
 msgstr ""
 
@@ -4226,7 +4226,7 @@ msgid "Last Login"
 msgstr "Апошні ўваход"
 
 #: kallithea/templates/admin/users/user_edit_advanced.html:10
-msgid "Member of User groups"
+msgid "Member of User Groups"
 msgstr ""
 
 #: kallithea/templates/admin/users/user_edit_advanced.html:21
@@ -4255,7 +4255,7 @@ msgstr "Не паказаны email. Калі ласка, абнавіце email
 #: kallithea/templates/admin/users/user_edit_profile.html:27
 #, python-format
 msgid ""
-"This user is in an external Source of Record (%s); some details cannot be "
+"This user is in an external source of record (%s); some details cannot be "
 "managed here."
 msgstr ""
 
