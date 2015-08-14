@@ -2518,7 +2518,7 @@ msgid "Enabled Plugins"
 msgstr ""
 
 #: kallithea/templates/admin/auth/auth_settings.html:33
-msgid "Comma separated list of plugins. Order of plugins is also order in which Kallithea will try to authenticate user"
+msgid "Comma-separated list of plugins; Kallithea will try user authentication in plugin order"
 msgstr ""
 
 #: kallithea/templates/admin/auth/auth_settings.html:34
