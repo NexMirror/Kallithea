@@ -511,7 +511,7 @@ class ReposController(BaseRepoController):
                                            self.authuser.username)
             fork = repo.fork.repo_name if repo.fork else _('Nothing')
             Session().commit()
-            h.flash(_('Marked repo %s as fork of %s') % (repo_name, fork),
+            h.flash(_('Marked repository %s as fork of %s') % (repo_name, fork),
                     category='success')
         except RepositoryError as e:
             log.error(traceback.format_exc())

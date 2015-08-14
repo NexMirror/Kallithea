@@ -816,7 +816,7 @@ msgstr "无"
 
 #: kallithea/controllers/admin/repos.py:552
 #, python-format
-msgid "Marked repo %s as fork of %s"
+msgid "Marked repository %s as fork of %s"
 msgstr "成功将版本库%s标记为复刻自%s"
 
 #: kallithea/controllers/admin/repos.py:559
@@ -4061,11 +4061,11 @@ msgid "Icons"
 msgstr "图标"
 
 #: kallithea/templates/admin/settings/settings_visual.html:80
-msgid "Show public repo icon on repositories"
+msgid "Show public repository icon on repositories"
 msgstr "显示公共版本库图标"
 
 #: kallithea/templates/admin/settings/settings_visual.html:84
-msgid "Show private repo icon on repositories"
+msgid "Show private repository icon on repositories"
 msgstr "显示私有版本库图标"
 
 #: kallithea/templates/admin/settings/settings_visual.html:86
@@ -4653,7 +4653,7 @@ msgstr ""
 
 #: kallithea/templates/changelog/changelog.html:62
 #, python-format
-msgid "Compare fork with parent repo (%s)"
+msgid "Compare fork with parent repository (%s)"
 msgstr ""
 
 #: kallithea/templates/changelog/changelog.html:66

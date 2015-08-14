@@ -822,7 +822,7 @@ msgstr "Brak"
 
 #: kallithea/controllers/admin/repos.py:552
 #, python-format
-msgid "Marked repo %s as fork of %s"
+msgid "Marked repository %s as fork of %s"
 msgstr "Oznaczono %s repo jako rozwidlenie %s"
 
 #: kallithea/controllers/admin/repos.py:559
@@ -4137,11 +4137,11 @@ msgid "Icons"
 msgstr "Ikony"
 
 #: kallithea/templates/admin/settings/settings_visual.html:80
-msgid "Show public repo icon on repositories"
+msgid "Show public repository icon on repositories"
 msgstr "Pokazuj w publicznym repo ikonę w repozytoriach"
 
 #: kallithea/templates/admin/settings/settings_visual.html:84
-msgid "Show private repo icon on repositories"
+msgid "Show private repository icon on repositories"
 msgstr "Pokazuj w prywatnym repo ikonę w repozytoriach"
 
 #: kallithea/templates/admin/settings/settings_visual.html:86
@@ -4743,7 +4743,7 @@ msgstr "porównaj gałęzie %s"
 
 #: kallithea/templates/changelog/changelog.html:62
 #, fuzzy, python-format
-msgid "Compare fork with parent repo (%s)"
+msgid "Compare fork with parent repository (%s)"
 msgstr "porównaj gałęzie %s"
 
 #: kallithea/templates/changelog/changelog.html:66

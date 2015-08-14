@@ -822,7 +822,7 @@ msgstr ""
 
 #: kallithea/controllers/admin/repos.py:545
 #, python-format
-msgid "Marked repo %s as fork of %s"
+msgid "Marked repository %s as fork of %s"
 msgstr ""
 
 #: kallithea/controllers/admin/repos.py:552
@@ -4000,11 +4000,11 @@ msgid "Icons"
 msgstr ""
 
 #: kallithea/templates/admin/settings/settings_visual.html:80
-msgid "Show public repo icon on repositories"
+msgid "Show public repository icon on repositories"
 msgstr ""
 
 #: kallithea/templates/admin/settings/settings_visual.html:84
-msgid "Show private repo icon on repositories"
+msgid "Show private repository icon on repositories"
 msgstr ""
 
 #: kallithea/templates/admin/settings/settings_visual.html:86
@@ -4570,7 +4570,7 @@ msgstr ""
 
 #: kallithea/templates/changelog/changelog.html:62
 #, python-format
-msgid "Compare fork with parent repo (%s)"
+msgid "Compare fork with parent repository (%s)"
 msgstr ""
 
 #: kallithea/templates/changelog/changelog.html:66
@@ -4683,7 +4683,7 @@ msgid "Add New File"
 msgstr ""
 
 #: kallithea/templates/changelog/changelog_summary_data.html:90
-msgid "Push new repo"
+msgid "Push new repository"
 msgstr ""
 
 #: kallithea/templates/changelog/changelog_summary_data.html:98

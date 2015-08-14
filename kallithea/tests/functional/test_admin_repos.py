@@ -539,7 +539,7 @@ class _BaseTest(object):
         repo = Repository.get_by_repo_name(self.REPO)
         repo2 = Repository.get_by_repo_name(other_repo)
         self.checkSessionFlash(response,
-            'Marked repo %s as fork of %s' % (repo.repo_name, repo2.repo_name))
+            'Marked repository %s as fork of %s' % (repo.repo_name, repo2.repo_name))
 
         assert repo.fork == repo2
         response = response.follow()
@@ -570,7 +570,7 @@ class _BaseTest(object):
         repo = Repository.get_by_repo_name(self.REPO)
         repo2 = Repository.get_by_repo_name(self.OTHER_TYPE_REPO)
         self.checkSessionFlash(response,
-                               'Marked repo %s as fork of %s'
+                               'Marked repository %s as fork of %s'
                                % (repo.repo_name, "Nothing"))
         assert repo.fork is None
 

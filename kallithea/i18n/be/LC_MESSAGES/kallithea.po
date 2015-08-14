@@ -815,7 +815,7 @@ msgstr "Нічога"
 
 #: kallithea/controllers/admin/repos.py:552
 #, python-format
-msgid "Marked repo %s as fork of %s"
+msgid "Marked repository %s as fork of %s"
 msgstr "Рэпазітар %s адзначаны як форк %s"
 
 #: kallithea/controllers/admin/repos.py:559
@@ -4081,11 +4081,11 @@ msgid "Icons"
 msgstr "Абразкі"
 
 #: kallithea/templates/admin/settings/settings_visual.html:80
-msgid "Show public repo icon on repositories"
+msgid "Show public repository icon on repositories"
 msgstr "Паказваць абразкі публічных рэпазітароў"
 
 #: kallithea/templates/admin/settings/settings_visual.html:84
-msgid "Show private repo icon on repositories"
+msgid "Show private repository icon on repositories"
 msgstr "Паказваць абразкі прыватных рэпазітароў"
 
 #: kallithea/templates/admin/settings/settings_visual.html:86
@@ -4660,7 +4660,7 @@ msgstr "Параўнаць fork з %s"
 
 #: kallithea/templates/changelog/changelog.html:62
 #, python-format
-msgid "Compare fork with parent repo (%s)"
+msgid "Compare fork with parent repository (%s)"
 msgstr "Параўнаць форк з бацькоўскім рэпазітаром (%s)"
 
 #: kallithea/templates/changelog/changelog.html:66

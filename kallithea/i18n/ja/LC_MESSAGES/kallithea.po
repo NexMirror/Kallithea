@@ -819,7 +819,7 @@ msgstr "ありません"
 
 #: kallithea/controllers/admin/repos.py:552
 #, python-format
-msgid "Marked repo %s as fork of %s"
+msgid "Marked repository %s as fork of %s"
 msgstr "%s リポジトリを %s のフォークとする"
 
 #: kallithea/controllers/admin/repos.py:559
@@ -4122,11 +4122,11 @@ msgid "Icons"
 msgstr "アイコン"
 
 #: kallithea/templates/admin/settings/settings_visual.html:80
-msgid "Show public repo icon on repositories"
+msgid "Show public repository icon on repositories"
 msgstr "公開リポジトリのアイコンを表示する"
 
 #: kallithea/templates/admin/settings/settings_visual.html:84
-msgid "Show private repo icon on repositories"
+msgid "Show private repository icon on repositories"
 msgstr "非公開リポジトリのアイコンを表示する"
 
 #: kallithea/templates/admin/settings/settings_visual.html:86
@@ -4724,7 +4724,7 @@ msgstr "%s とフォークを比較"
 
 #: kallithea/templates/changelog/changelog.html:62
 #, fuzzy, python-format
-msgid "Compare fork with parent repo (%s)"
+msgid "Compare fork with parent repository (%s)"
 msgstr "フォーク元(%s)とフォークを比較"
 
 #: kallithea/templates/changelog/changelog.html:66
