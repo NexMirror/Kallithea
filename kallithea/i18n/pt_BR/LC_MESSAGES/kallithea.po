@@ -2014,12 +2014,12 @@ msgid "This is not a valid path"
 msgstr "Esse não é um caminho válido"
 
 #: kallithea/model/validators.py:715
-msgid "This e-mail address is already taken"
+msgid "This email address is already taken"
 msgstr "Esse endereço de e-mail já está tomado"
 
 #: kallithea/model/validators.py:735
 #, python-format
-msgid "e-mail \"%(email)s\" does not exist."
+msgid "email \"%(email)s\" does not exist."
 msgstr "o e-mail \"%(email)s\" não existe."
 
 #: kallithea/model/validators.py:772

@@ -199,7 +199,7 @@ Here's a typical LDAP setup::
  Login Attribute      = uid
  First Name Attribute = firstName
  Last Name Attribute  = lastName
- E-mail Attribute     = mail
+ Email Attribute      = mail
 
 If your user groups are placed in an Organisation Unit (OU) structure, the Search Settings configuration differs::
 
@@ -364,7 +364,7 @@ Directory ::
  Login Attribute      = sAMAccountName
  First Name Attribute = givenName
  Last Name Attribute  = sn
- E-mail Attribute     = mail
+ Email Attribute     = mail
 
 All other LDAP settings will likely be site-specific and should be
 appropriately configured.
@@ -509,7 +509,7 @@ Celery configuration
 --------------------
 
 Kallithea can use the distributed task queue system Celery_ to run tasks like
-cloning repositories or sending mails.
+cloning repositories or sending emails.
 
 Kallithea will in most setups work perfectly fine out of the box (without
 Celery), executing all tasks in the web server process. Some tasks can however

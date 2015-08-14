@@ -1975,12 +1975,12 @@ msgid "This is not a valid path"
 msgstr "不是一個有效的路徑"
 
 #: kallithea/model/validators.py:715
-msgid "This e-mail address is already taken"
+msgid "This email address is already taken"
 msgstr "這個郵件位址已經使用了"
 
 #: kallithea/model/validators.py:735
 #, python-format
-msgid "e-mail \"%(email)s\" does not exist."
+msgid "email \"%(email)s\" does not exist."
 msgstr ""
 
 #: kallithea/model/validators.py:772

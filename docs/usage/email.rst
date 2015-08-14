@@ -1,24 +1,24 @@
 .. _email:
 
-===============
-E-mail settings
-===============
+==============
+Email settings
+==============
 
-The Kallithea configuration file has several e-mail related settings. When
-these contain correct values, Kallithea will send e-mail in the situations
-described below. If the e-mail configuration is not correct so that e-mails
+The Kallithea configuration file has several email related settings. When
+these contain correct values, Kallithea will send email in the situations
+described below. If the email configuration is not correct so that emails
 cannot be sent, all mails will show up in the log output.
 
-Before any e-mail can be sent, an SMTP server has to be configured using the
+Before any email can be sent, an SMTP server has to be configured using the
 configuration file setting ``smtp_server``. If required for that server, specify
 a username (``smtp_username``) and password (``smtp_password``), a non-standard
 port (``smtp_port``), encryption settings (``smtp_use_tls`` or ``smtp_use_ssl``)
 and/or specific authentication parameters (``smtp_auth``).
 
-Application e-mails
--------------------
+Application emails
+------------------
 
-Kallithea sends an e-mail to `users` on several occasions:
+Kallithea sends an email to `users` on several occasions:
 
 - when comments are given on one of their changesets
 - when comments are given on changesets they are reviewer on or on which they
@@ -26,34 +26,34 @@ Kallithea sends an e-mail to `users` on several occasions:
 - when they are invited as reviewer in pull requests
 - when they request a password reset
 
-Kallithea sends an e-mail to all `administrators` upon new account registration.
+Kallithea sends an email to all `administrators` upon new account registration.
 Administrators are users with the ``Admin`` flag set in the ``Admin->Users``
 section.
 
-When Kallithea wants to send an e-mail but due to an error cannot correctly
+When Kallithea wants to send an email but due to an error cannot correctly
 determine the intended recipients, the administrators and the addresses
 specified in ``email_to`` in the configuration file are used as fallback.
 
-Recipients will see these e-mails originating from the sender specified in the
+Recipients will see these emails originating from the sender specified in the
 ``app_email_from`` setting in the configuration file. This setting can either
-contain only an e-mail address, like `kallithea-noreply@example.com`, or both
+contain only an email address, like `kallithea-noreply@example.com`, or both
 a name and an address in the following format: `Kallithea
-<kallithea-noreply@example.com>`. The subject of these e-mails can
+<kallithea-noreply@example.com>`. The subject of these emails can
 optionally be prefixed with the value of ``email_prefix`` in the configuration
 file.
 
-Error e-mails
--------------
+Error emails
+------------
 
 When an exception occurs in Kallithea -- and unless interactive debugging is
 enabled using ``set debug = true`` in the ``[app:main]`` section of the
-configuration file -- an e-mail with exception details is sent by WebError_'s
+configuration file -- an email with exception details is sent by WebError_'s
 ``ErrorMiddleware`` to the addresses specified in ``email_to`` in the
 configuration file.
 
-Recipients will see these e-mails originating from the sender specified in the
+Recipients will see these emails originating from the sender specified in the
 ``error_email_from`` setting in the configuration file. This setting can either
-contain only an e-mail address, like `kallithea-noreply@example.com`, or both
+contain only an email address, like `kallithea-noreply@example.com`, or both
 a name and an address in the following format: `Kallithea Errors
 <kallithea-noreply@example.com>`.
 

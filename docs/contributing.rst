@@ -105,7 +105,7 @@ bug fixes, put "(Issue #123)" at the end of this line.
 
 Contributions will be accepted in most formats - such as pull requests on
 bitbucket, something hosted on your own Kallithea instance, or patches sent by
-mail to the kallithea-general mailing list.
+email to the kallithea-general mailing list.
 
 Make sure to test your changes both manually and with the automatic tests
 before posting.

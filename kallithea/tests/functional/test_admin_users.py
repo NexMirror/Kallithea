@@ -568,7 +568,7 @@ class TestAdminUsersControllerForDefaultUser(TestController):
         response = self.app.post(url('edit_user_perms', id=user.user_id),
                  {'_method': 'put', '_authentication_token': self.authentication_token()}, status=404)
 
-    # E-mails
+    # Emails
     def test_edit_emails_default_user(self):
         self.log_user()
         user = User.get_default_user()

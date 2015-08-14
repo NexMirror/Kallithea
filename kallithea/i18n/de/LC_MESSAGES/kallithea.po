@@ -2043,12 +2043,12 @@ msgid "This is not a valid path"
 msgstr "Dies ist ein Ungültiger Pfad"
 
 #: kallithea/model/validators.py:715
-msgid "This e-mail address is already taken"
+msgid "This email address is already taken"
 msgstr "Diese E-Mailaddresse ist bereits in Benutzung"
 
 #: kallithea/model/validators.py:735
 #, python-format
-msgid "e-mail \"%(email)s\" does not exist."
+msgid "email \"%(email)s\" does not exist."
 msgstr "E-MailAddresse \"%(email)s\" existiert nicht."
 
 #: kallithea/model/validators.py:772

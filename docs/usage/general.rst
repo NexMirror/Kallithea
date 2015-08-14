@@ -97,14 +97,14 @@ In the example, the repository could also be accessible as::
 The ID of a given repository can be shown from the repository ``Summary`` page,
 by selecting the ``Show by ID`` button next to ``Clone URL``.
 
-E-mail notifications
---------------------
+Email notifications
+-------------------
 
-When the administrator correctly specified the e-mail settings in the Kallithea
-configuration file, Kallithea will send e-mails on user registration and when
+When the administrator correctly specified the email settings in the Kallithea
+configuration file, Kallithea will send emails on user registration and when
 errors occur.
 
-Mails are also sent for comments on changesets. In this case, an e-mail is sent
+Emails are also sent for comments on changesets. In this case, an email is sent
 to the committer of the changeset (if known to Kallithea), to all reviewers of
 the pull request (if applicable) and to all people mentioned in the comment
 using @mention notation.

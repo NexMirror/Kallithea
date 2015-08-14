@@ -37,7 +37,7 @@ Kallithea Documentation
 .. toctree::
    :maxdepth: 1
 
-   usage/e-mail
+   usage/email
    usage/performance
    usage/backup
    usage/debugging

@@ -10,29 +10,29 @@ debug = true
 pdebug = false
 
 <%text>################################################################################</%text>
-<%text>## E-mail settings                                                            ##</%text>
+<%text>## Email settings                                                             ##</%text>
 <%text>##                                                                            ##</%text>
-<%text>## Refer to the documentation ("E-mail settings") for more details.           ##</%text>
+<%text>## Refer to the documentation ("Email settings") for more details.            ##</%text>
 <%text>##                                                                            ##</%text>
 <%text>## It is recommended to use a valid sender address that passes access         ##</%text>
 <%text>## validation and spam filtering in mail servers.                             ##</%text>
 <%text>################################################################################</%text>
 
-<%text>## 'From' header for application e-mails. You can optionally add a name.</%text>
+<%text>## 'From' header for application emails. You can optionally add a name.</%text>
 <%text>## Default:</%text>
 #app_email_from = Kallithea
 <%text>## Examples:</%text>
 #app_email_from = Kallithea <kallithea-noreply@example.com>
 #app_email_from = kallithea-noreply@example.com
 
-<%text>## Subject prefix for application e-mails.</%text>
+<%text>## Subject prefix for application emails.</%text>
 <%text>## A space between this prefix and the real subject is automatically added.</%text>
 <%text>## Default:</%text>
 #email_prefix =
 <%text>## Example:</%text>
 #email_prefix = [Kallithea]
 
-<%text>## Recipients for error e-mails and fallback recipients of application mails.</%text>
+<%text>## Recipients for error emails and fallback recipients of application mails.</%text>
 <%text>## Multiple addresses can be specified, space-separated.</%text>
 <%text>## Only addresses are allowed, do not add any name part.</%text>
 <%text>## Default:</%text>
@@ -41,7 +41,7 @@ pdebug = false
 #email_to = admin@example.com
 #email_to = admin@example.com another_admin@example.com
 
-<%text>## 'From' header for error e-mails. You can optionally add a name.</%text>
+<%text>## 'From' header for error emails. You can optionally add a name.</%text>
 <%text>## Default:</%text>
 #error_email_from = pylons@yourapp.com
 <%text>## Examples:</%text>

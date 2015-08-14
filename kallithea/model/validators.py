@@ -702,7 +702,7 @@ def ValidPath():
 def UniqSystemEmail(old_data={}):
     class _validator(formencode.validators.FancyValidator):
         messages = {
-            'email_taken': _('This e-mail address is already in use')
+            'email_taken': _('This email address is already in use')
         }
 
         def _to_python(self, value, state):
@@ -722,7 +722,7 @@ def UniqSystemEmail(old_data={}):
 def ValidSystemEmail():
     class _validator(formencode.validators.FancyValidator):
         messages = {
-            'non_existing_email': _('E-mail address "%(email)s" not found')
+            'non_existing_email': _('Email address "%(email)s" not found')
         }
 
         def _to_python(self, value, state):

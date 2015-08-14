@@ -1991,12 +1991,12 @@ msgid "This is not a valid path"
 msgstr "不正なパスです"
 
 #: kallithea/model/validators.py:715
-msgid "This e-mail address is already taken"
+msgid "This email address is already taken"
 msgstr "このメールアドレスはすでに取得されています"
 
 #: kallithea/model/validators.py:735
 #, python-format
-msgid "e-mail \"%(email)s\" does not exist."
+msgid "email \"%(email)s\" does not exist."
 msgstr "メールアドレス \"%(email)s\" は存在しません"
 
 #: kallithea/model/validators.py:772

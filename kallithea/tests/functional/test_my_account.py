@@ -51,7 +51,7 @@ class TestMyAccountController(TestController):
         response.mustcontain('No additional emails specified')
         response = self.app.post(url('my_account_emails'),
                                  {'new_email': TEST_USER_REGULAR_EMAIL, '_authentication_token': self.authentication_token()})
-        self.checkSessionFlash(response, 'This e-mail address is already in use')
+        self.checkSessionFlash(response, 'This email address is already in use')
 
     def test_my_account_my_emails_add_mising_email_in_form(self):
         self.log_user()
@@ -161,7 +161,7 @@ class TestMyAccountController(TestController):
                                     _authentication_token=self.authentication_token())
                                 )
 
-        response.mustcontain('This e-mail address is already in use')
+        response.mustcontain('This email address is already in use')
 
     def test_my_account_update_err(self):
         self.log_user(TEST_USER_REGULAR2_LOGIN, TEST_USER_REGULAR2_PASS)

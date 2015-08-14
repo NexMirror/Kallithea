@@ -1984,12 +1984,12 @@ msgid "This is not a valid path"
 msgstr "不是一个合法的路径"
 
 #: kallithea/model/validators.py:715
-msgid "This e-mail address is already taken"
+msgid "This email address is already taken"
 msgstr "该邮件地址已被使用"
 
 #: kallithea/model/validators.py:735
 #, python-format
-msgid "e-mail \"%(email)s\" does not exist."
+msgid "email \"%(email)s\" does not exist."
 msgstr "邮件地址\"%(email)s\"不存在"
 
 #: kallithea/model/validators.py:772
