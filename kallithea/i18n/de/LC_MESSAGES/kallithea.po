@@ -894,7 +894,7 @@ msgstr ""
 
 #: kallithea/controllers/admin/settings.py:180
 #: kallithea/controllers/admin/settings.py:274
-msgid "Error occurred during updating application settings"
+msgid "Error occurred while updating application settings"
 msgstr ""
 "Ein Fehler ist während der Aktualisierung der Applikationseinstellungen "
 "aufgetreten"

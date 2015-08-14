@@ -177,7 +177,7 @@ class SettingsController(BaseController):
 
             except Exception:
                 log.error(traceback.format_exc())
-                h.flash(_('Error occurred during updating '
+                h.flash(_('Error occurred while updating '
                           'application settings'), category='error')
 
         defaults = Setting.get_app_settings()
@@ -271,7 +271,7 @@ class SettingsController(BaseController):
 
             except Exception:
                 log.error(traceback.format_exc())
-                h.flash(_('Error occurred during updating '
+                h.flash(_('Error occurred while updating '
                           'application settings'),
                           category='error')
 
