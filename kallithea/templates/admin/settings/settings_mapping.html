@@ -8,9 +8,9 @@ ${h.form(url('admin_settings_mapping'), method='post')}
                 <div class="checkboxes">
                     <div class="checkbox">
                         ${h.checkbox('destroy',True)}
-                        <label for="destroy">${_('Destroy old data')}</label>
+                        <label for="destroy">${_('Delete records of missing repositories')}</label>
                     </div>
-                    <span class="help-block">${_('Check this option to remove references to repositories that no longer exist in on the filesystem.')}</span>
+                    <span class="help-block">${_('Check this option to remove all comments, pull requests and other records related to repositories that no longer exist in the filesystem.')}</span>
 
                     <div class="checkbox">
                         ${h.checkbox('invalidate',True)}
