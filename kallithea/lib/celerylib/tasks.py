@@ -290,10 +290,19 @@ def send_email(recipients, subject, body='', html_body='', headers=None):
     debug = str2bool(email_config.get('debug'))
     smtp_auth = email_config.get('smtp_auth')
 
-    if not mail_server:
-        log.error("SMTP mail server not configured - cannot send mail '%s' to %s", subject, ' '.join(recipients))
-        log.warning("body:\n%s", body)
-        log.warning("html:\n%s", html_body)
+    logmsg = ("Mail details:\n"
+              "recipients: %s\n"
+              "headers: %s\n"
+              "subject: %s\n"
+              "body:\n%s\n"
+              "html:\n%s\n"
+              % (' '.join(recipients), headers, subject, body, html_body))
+
+    if mail_server:
+        log.debug("Sending e-mail. " + logmsg)
+    else:
+        log.error("SMTP mail server not configured - cannot send e-mail.")
+        log.warning(logmsg)
         return False
 
     try:
