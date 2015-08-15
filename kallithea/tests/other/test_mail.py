@@ -31,8 +31,8 @@ class TestMail(BaseTestCase):
         html_body = 'html_body'
 
         config_mock = {
-                'smtp_server': mailserver,
-                'app_email_from': envelope_from,
+            'smtp_server': mailserver,
+            'app_email_from': envelope_from,
         }
         with mock.patch('kallithea.lib.celerylib.tasks.config', config_mock):
             kallithea.lib.celerylib.tasks.send_email(recipients, subject, body, html_body)
@@ -54,9 +54,9 @@ class TestMail(BaseTestCase):
         html_body = 'html_body'
 
         config_mock = {
-                'smtp_server': mailserver,
-                'app_email_from': envelope_from,
-                'email_to': email_to,
+            'smtp_server': mailserver,
+            'app_email_from': envelope_from,
+            'email_to': email_to,
         }
         with mock.patch('kallithea.lib.celerylib.tasks.config', config_mock):
             kallithea.lib.celerylib.tasks.send_email(recipients, subject, body, html_body)
@@ -77,8 +77,8 @@ class TestMail(BaseTestCase):
         html_body = 'html_body'
 
         config_mock = {
-                'smtp_server': mailserver,
-                'app_email_from': envelope_from,
+            'smtp_server': mailserver,
+            'app_email_from': envelope_from,
         }
         with mock.patch('kallithea.lib.celerylib.tasks.config', config_mock):
             kallithea.lib.celerylib.tasks.send_email(recipients, subject, body, html_body)
