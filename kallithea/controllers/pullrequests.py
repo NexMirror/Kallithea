@@ -701,12 +701,21 @@ class PullrequestsController(BaseRepoController):
     def comment(self, repo_name, pull_request_id):
         pull_request = PullRequest.get_or_404(pull_request_id)
 
-        status = 0
-        close_pr = False
+        status = request.POST.get('changeset_status')
+        close_pr = request.POST.get('save_close')
+        f_path = request.POST.get('f_path')
+        line_no = request.POST.get('line')
+
+        if (status or close_pr) and (f_path or line_no):
+            # status votes and closing is only possible in general comments
+            raise HTTPBadRequest()
+
         allowed_to_change_status = self._get_is_allowed_change_status(pull_request)
-        if allowed_to_change_status:
-            status = request.POST.get('changeset_status')
-            close_pr = request.POST.get('save_close')
+        if not allowed_to_change_status:
+            if status or close_pr:
+                h.flash(_('No permission to change pull request status'), 'error')
+                raise HTTPForbidden()
+
         text = request.POST.get('text', '').strip()
         if close_pr:
             text = _('Closing.') + '\n' + text
@@ -716,8 +725,8 @@ class PullrequestsController(BaseRepoController):
             repo=c.db_repo.repo_id,
             user=c.authuser.user_id,
             pull_request=pull_request_id,
-            f_path=request.POST.get('f_path'),
-            line_no=request.POST.get('line'),
+            f_path=f_path,
+            line_no=line_no,
             status_change=(ChangesetStatus.get_status_lbl(status)
                            if status and allowed_to_change_status else None),
             closing_pr=close_pr
@@ -727,22 +736,20 @@ class PullrequestsController(BaseRepoController):
                       'user_commented_pull_request:%s' % pull_request_id,
                       c.db_repo, self.ip_addr, self.sa)
 
-        if allowed_to_change_status:
-            # get status if set !
-            if status:
-                ChangesetStatusModel().set_status(
-                    c.db_repo.repo_id,
-                    status,
-                    c.authuser.user_id,
-                    comment,
-                    pull_request=pull_request_id
-                )
+        if status:
+            ChangesetStatusModel().set_status(
+                c.db_repo.repo_id,
+                status,
+                c.authuser.user_id,
+                comment,
+                pull_request=pull_request_id
+            )
 
-            if close_pr:
-                PullRequestModel().close_pull_request(pull_request_id)
-                action_logger(self.authuser,
-                              'user_closed_pull_request:%s' % pull_request_id,
-                              c.db_repo, self.ip_addr, self.sa)
+        if close_pr:
+            PullRequestModel().close_pull_request(pull_request_id)
+            action_logger(self.authuser,
+                          'user_closed_pull_request:%s' % pull_request_id,
+                          c.db_repo, self.ip_addr, self.sa)
 
         Session().commit()
 
