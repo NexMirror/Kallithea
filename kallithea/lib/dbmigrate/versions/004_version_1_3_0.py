@@ -22,19 +22,19 @@ def upgrade(migrate_engine):
     #==========================================================================
     # Add table `changeset_comments`
     #==========================================================================
-    from kallithea.lib.dbmigrate.schema.db_1_3_0 import  ChangesetComment
+    from kallithea.lib.dbmigrate.schema.db_1_3_0 import ChangesetComment
     ChangesetComment().__table__.create()
 
     #==========================================================================
     # Add table `notifications`
     #==========================================================================
-    from kallithea.lib.dbmigrate.schema.db_1_3_0 import  Notification
+    from kallithea.lib.dbmigrate.schema.db_1_3_0 import Notification
     Notification().__table__.create()
 
     #==========================================================================
     # Add table `user_to_notification`
     #==========================================================================
-    from kallithea.lib.dbmigrate.schema.db_1_3_0 import  UserNotification
+    from kallithea.lib.dbmigrate.schema.db_1_3_0 import UserNotification
     UserNotification().__table__.create()
 
     #==========================================================================

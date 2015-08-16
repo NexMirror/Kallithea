@@ -50,11 +50,9 @@ from kallithea.lib.vcs.utils.hgcompat import ui, config
 from kallithea.lib.vcs.utils.helpers import get_scm
 from kallithea.lib.vcs.exceptions import VCSError
 
-from kallithea.lib.caching_query import FromCache
-
 from kallithea.model import meta
 from kallithea.model.db import Repository, User, Ui, \
-    UserLog, RepoGroup, Setting, CacheInvalidation, UserGroup
+    UserLog, RepoGroup, Setting, UserGroup
 from kallithea.model.meta import Session
 from kallithea.model.repo_group import RepoGroupModel
 from kallithea.lib.utils2 import safe_str, safe_unicode, get_current_authuser
@@ -407,7 +405,6 @@ def set_vcs_config(config):
 
     :param config: kallithea.CONFIG
     """
-    import kallithea
     from kallithea.lib.vcs import conf
     from kallithea.lib.utils2 import aslist
     conf.settings.BACKENDS = {

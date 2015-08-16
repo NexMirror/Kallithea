@@ -49,7 +49,7 @@ from kallithea.lib.utils import action_logger, jsonify
 from kallithea.lib.vcs.utils import safe_str
 from kallithea.lib.vcs.exceptions import EmptyRepositoryError
 from kallithea.lib.diffs import LimitedDiffContainer
-from kallithea.model.db import  PullRequest, ChangesetStatus, ChangesetComment,\
+from kallithea.model.db import PullRequest, ChangesetStatus, ChangesetComment,\
     PullRequestReviewers
 from kallithea.model.pull_request import PullRequestModel
 from kallithea.model.meta import Session
@@ -58,8 +58,7 @@ from kallithea.model.comment import ChangesetCommentsModel
 from kallithea.model.changeset_status import ChangesetStatusModel
 from kallithea.model.forms import PullRequestForm, PullRequestPostForm
 from kallithea.lib.utils2 import safe_int
-from kallithea.controllers.changeset import _ignorews_url,\
-    _context_url, get_line_ctx, get_ignore_ws
+from kallithea.controllers.changeset import _ignorews_url, _context_url
 from kallithea.controllers.compare import CompareController
 from kallithea.lib.graphmod import graph_data
 

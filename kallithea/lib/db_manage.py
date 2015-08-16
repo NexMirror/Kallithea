@@ -39,7 +39,7 @@ from kallithea.lib.utils import ask_ok
 from kallithea.model import init_model
 from kallithea.model.db import User, Permission, Ui, \
     Setting, UserToPerm, DbMigrateVersion, RepoGroup, \
-    UserRepoGroupToPerm, CacheInvalidation, UserGroup, Repository
+    UserRepoGroupToPerm, CacheInvalidation, Repository
 
 from sqlalchemy.engine import create_engine
 from kallithea.model.repo_group import RepoGroupModel

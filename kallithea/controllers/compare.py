@@ -42,8 +42,7 @@ from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator
 from kallithea.lib import diffs
 from kallithea.model.db import Repository
 from kallithea.lib.diffs import LimitedDiffContainer
-from kallithea.controllers.changeset import _ignorews_url,\
-    _context_url, get_line_ctx, get_ignore_ws
+from kallithea.controllers.changeset import _ignorews_url, _context_url
 from kallithea.lib.graphmod import graph_data
 from kallithea.lib.compat import json
 

@@ -1,5 +1,5 @@
 from kallithea.tests import *
-from kallithea.model.db import Notification, User
+from kallithea.model.db import User
 
 from kallithea.model.user import UserModel
 from kallithea.model.notification import NotificationModel

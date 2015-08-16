@@ -17,7 +17,6 @@ import urllib
 import urllib2
 import logging
 import posixpath
-import string
 
 from dulwich.objects import Tag
 from dulwich.repo import Repo, NotGitRepository

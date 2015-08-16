@@ -46,7 +46,6 @@ from kallithea import DB_PREFIX
 from kallithea.lib.exceptions import DefaultUserException
 from kallithea.lib.vcs import get_backend
 from kallithea.lib.vcs.utils.helpers import get_scm
-from kallithea.lib.vcs.exceptions import VCSError
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 

@@ -36,8 +36,7 @@ from pylons.controllers.util import redirect
 from pylons.i18n.translation import _
 
 from kallithea.lib import helpers as h
-from kallithea.lib.auth import LoginRequired, HasPermissionAllDecorator,\
-    AuthUser
+from kallithea.lib.auth import LoginRequired, HasPermissionAllDecorator
 from kallithea.lib.base import BaseController, render
 from kallithea.model.forms import DefaultPermissionsForm
 from kallithea.model.permission import PermissionModel

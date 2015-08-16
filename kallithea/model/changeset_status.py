@@ -26,7 +26,6 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 import logging
-from collections import  defaultdict
 from sqlalchemy.orm import joinedload
 
 from kallithea.model import BaseModel

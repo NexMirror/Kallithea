@@ -36,11 +36,11 @@ from pylons.i18n.translation import _
 from sqlalchemy.sql.expression import func
 
 from kallithea.lib import helpers as h
-from kallithea.lib.auth import LoginRequired, HasPermissionAllDecorator, \
-    HasRepoPermissionAllDecorator, NotAnonymous, HasPermissionAny, HasPermissionAll, \
-    HasRepoGroupPermissionAny, HasRepoPermissionAnyDecorator
+from kallithea.lib.auth import LoginRequired, \
+    HasRepoPermissionAllDecorator, NotAnonymous, HasPermissionAny, \
+    HasRepoPermissionAnyDecorator
 from kallithea.lib.base import BaseRepoController, render
-from kallithea.lib.utils import action_logger, repo_name_slug, jsonify
+from kallithea.lib.utils import action_logger, jsonify
 from kallithea.lib.vcs import RepositoryError
 from kallithea.model.meta import Session
 from kallithea.model.db import User, Repository, UserFollowing, RepoGroup,\

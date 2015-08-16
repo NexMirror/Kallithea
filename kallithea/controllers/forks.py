@@ -40,8 +40,7 @@ from kallithea.lib.helpers import Page
 from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator, \
     NotAnonymous, HasRepoPermissionAny, HasPermissionAnyDecorator, HasPermissionAny
 from kallithea.lib.base import BaseRepoController, render
-from kallithea.model.db import Repository, RepoGroup, UserFollowing, User,\
-    Ui
+from kallithea.model.db import Repository, UserFollowing, User, Ui
 from kallithea.model.repo import RepoModel
 from kallithea.model.forms import RepoForkForm
 from kallithea.model.scm import ScmModel, AvailableRepoGroupChoices

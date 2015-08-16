@@ -2,7 +2,6 @@ import mock
 
 import kallithea
 from kallithea.tests import *
-from kallithea.model.db import User
 
 class smtplib_mock(object):
 

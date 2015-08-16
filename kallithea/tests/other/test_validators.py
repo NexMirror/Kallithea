@@ -8,8 +8,6 @@ from kallithea.model.user_group import UserGroupModel
 
 from kallithea.model.meta import Session
 from kallithea.model.repo_group import RepoGroupModel
-from kallithea.model.db import ChangesetStatus, ChangesetComment, Repository
-from kallithea.model.changeset_status import ChangesetStatusModel
 from kallithea.tests.fixture import Fixture
 
 fixture = Fixture()

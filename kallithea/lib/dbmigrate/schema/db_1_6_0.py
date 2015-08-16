@@ -48,7 +48,7 @@ from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 
 from kallithea.lib.utils2 import str2bool, safe_str, get_changeset_safe, \
-    safe_unicode, remove_suffix, remove_prefix, time_to_datetime, _set_extras
+    safe_unicode, remove_suffix, remove_prefix, time_to_datetime
 from kallithea.lib.compat import json
 from kallithea.lib.caching_query import FromCache
 

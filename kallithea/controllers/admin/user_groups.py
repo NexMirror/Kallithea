@@ -40,18 +40,18 @@ from webob.exc import HTTPInternalServerError
 
 import kallithea
 from kallithea.lib import helpers as h
-from kallithea.lib.exceptions import UserGroupsAssignedException,\
+from kallithea.lib.exceptions import UserGroupsAssignedException, \
     RepoGroupAssignmentError
 from kallithea.lib.utils2 import safe_unicode, safe_int
-from kallithea.lib.auth import LoginRequired, HasPermissionAllDecorator,\
+from kallithea.lib.auth import LoginRequired, \
     HasUserGroupPermissionAnyDecorator, HasPermissionAnyDecorator
 from kallithea.lib.base import BaseController, render
 from kallithea.model.scm import UserGroupList
 from kallithea.model.user_group import UserGroupModel
 from kallithea.model.repo import RepoModel
-from kallithea.model.db import User, UserGroup, UserGroupToPerm,\
+from kallithea.model.db import User, UserGroup, UserGroupToPerm, \
     UserGroupRepoToPerm, UserGroupRepoGroupToPerm
-from kallithea.model.forms import UserGroupForm, UserGroupPermsForm,\
+from kallithea.model.forms import UserGroupForm, UserGroupPermsForm, \
     CustomDefaultPermissionsForm
 from kallithea.model.meta import Session
 from kallithea.lib.utils import action_logger

@@ -5,7 +5,6 @@ from kallithea.tests.fixture import Fixture
 from kallithea.model.meta import Session
 
 from kallithea.controllers.pullrequests import PullrequestsController
-from kallithea.lib.exceptions import UserInvalidException
 
 fixture = Fixture()
 

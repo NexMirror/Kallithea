@@ -39,8 +39,8 @@ from pylons.i18n.translation import _, ungettext
 import kallithea
 from kallithea.lib import helpers as h
 from kallithea.lib.compat import json
-from kallithea.lib.auth import LoginRequired, HasPermissionAnyDecorator,\
-    HasRepoGroupPermissionAnyDecorator, HasRepoGroupPermissionAll,\
+from kallithea.lib.auth import LoginRequired, \
+    HasRepoGroupPermissionAnyDecorator, HasRepoGroupPermissionAll, \
     HasPermissionAll
 from kallithea.lib.base import BaseController, render
 from kallithea.model.db import RepoGroup, Repository

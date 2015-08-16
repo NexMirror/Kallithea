@@ -10,7 +10,7 @@ from kallithea.lib.vcs.exceptions import (
     ChangesetDoesNotExistError, ImproperArchiveTypeError
 )
 from kallithea.lib.vcs.nodes import (
-    FileNode, DirNode, NodeKind, RootNode, RemovedFileNode, SubModuleNode,
+    FileNode, DirNode, NodeKind, RootNode, SubModuleNode,
     ChangedFileNodesGenerator, AddedFileNodesGenerator, RemovedFileNodesGenerator
 )
 from kallithea.lib.vcs.utils import (

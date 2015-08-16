@@ -13,7 +13,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from sqlalchemy.orm.exc import NoResultFound
-from webob.exc import HTTPNotFound
 
 from kallithea.tests import *
 from kallithea.tests.fixture import Fixture

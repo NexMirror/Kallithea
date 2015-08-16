@@ -29,7 +29,7 @@ from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.vcs.utils.ordered_dict import OrderedDict
 from kallithea.lib.vcs.utils.paths import abspath
 from kallithea.lib.vcs.utils.hgcompat import (
-    ui, nullid, match, patch, diffopts, clone, get_contact, pull,
+    ui, nullid, match, patch, diffopts, clone, get_contact,
     localrepository, RepoLookupError, Abort, RepoError, hex, scmutil, hg_url,
     httpbasicauthhandler, httpdigestauthhandler, peer, httppeer, sshpeer
 )

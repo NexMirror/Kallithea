@@ -42,8 +42,7 @@ from kallithea.lib.auth import LoginRequired, NotAnonymous, AuthUser
 from kallithea.lib.base import BaseController, render
 from kallithea.lib.utils2 import generate_api_key, safe_int
 from kallithea.lib.compat import json
-from kallithea.model.db import Repository, \
-    UserEmailMap, UserApiKeys, User, UserFollowing
+from kallithea.model.db import Repository, UserEmailMap, User, UserFollowing
 from kallithea.model.forms import UserForm, PasswordChangeForm
 from kallithea.model.user import UserModel
 from kallithea.model.repo import RepoModel

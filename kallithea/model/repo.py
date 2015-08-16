@@ -45,8 +45,7 @@ from kallithea.lib.hooks import log_delete_repository
 from kallithea.model import BaseModel
 from kallithea.model.db import Repository, UserRepoToPerm, UserGroupRepoToPerm, \
     UserRepoGroupToPerm, UserGroupRepoGroupToPerm, User, Permission, \
-    Statistics, UserGroup, UserGroupMember, Ui, RepoGroup, \
-    Setting, RepositoryField
+    Statistics, UserGroup, Ui, RepoGroup, RepositoryField
 
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import HasRepoPermissionAny, HasUserGroupPermissionAny

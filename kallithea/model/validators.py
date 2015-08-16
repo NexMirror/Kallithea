@@ -31,9 +31,8 @@ from formencode.validators import (
 from kallithea.lib.compat import OrderedSet
 from kallithea.lib import ipaddr
 from kallithea.lib.utils import repo_name_slug
-from kallithea.lib.utils2 import safe_int, str2bool, aslist
-from kallithea.model.db import RepoGroup, Repository, UserGroup, User,\
-    ChangesetStatus
+from kallithea.lib.utils2 import str2bool, aslist
+from kallithea.model.db import RepoGroup, Repository, UserGroup, User
 from kallithea.lib.exceptions import LdapImportError
 from kallithea.config.routing import ADMIN_PREFIX
 from kallithea.lib.auth import HasRepoGroupPermissionAny, HasPermissionAny
