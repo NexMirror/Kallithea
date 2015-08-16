@@ -4840,7 +4840,7 @@ table.code-difftable .unmod .code pre:before {
 
 /* show some context of link targets - but only works when the link target
    can be extended with any visual difference */
-:target:before {
+div.comment:target:before {
   display: block;
   height: 100px;
   margin: -100px 0 0;
