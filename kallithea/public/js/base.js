@@ -683,7 +683,8 @@ function _comment_div_append_add($comment_div, f_path, line_no) {
 
 // append a comment form to $comment_div
 function _comment_div_append_form($comment_div, f_path, line_no) {
-    var $form_div = $($('#comment-inline-form-template').html().format(f_path, line_no));
+    var $form_div = $($('#comment-inline-form-template').html().format(f_path, line_no))
+        .addClass('comment-inline-form');
     $comment_div.append($form_div);
     var $form = $comment_div.find("form");
 
