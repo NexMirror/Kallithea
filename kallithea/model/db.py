@@ -1051,14 +1051,12 @@ class Repository(Base, BaseModel):
 
     @hybrid_property
     def changeset_cache(self):
-        from kallithea.lib.vcs.backends.base import EmptyChangeset
-        dummy = EmptyChangeset().__json__()
-        if not self._changeset_cache:
-            return dummy
         try:
-            return json.loads(self._changeset_cache)
-        except TypeError:
-            return dummy
+            cs_cache = json.loads(self._changeset_cache) # might raise on bad data
+            cs_cache['raw_id'] # verify data, raise exception on error
+            return cs_cache
+        except (TypeError, KeyError, ValueError):
+            return EmptyChangeset().__json__()
 
     @changeset_cache.setter
     def changeset_cache(self, val):
