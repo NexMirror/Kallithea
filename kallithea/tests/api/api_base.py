@@ -2146,7 +2146,7 @@ class _BaseTestApi(object):
         self._compare_error(id_, expected, given=response.body)
 
     @mock.patch.object(RepoGroupModel, 'grant_user_group_permission', crash)
-    def test_api_grant_user_group_permission_exception_when_adding(self):
+    def test_api_grant_user_group_permission_exception_when_adding_to_repo_group(self):
         perm = 'group.read'
         id_, params = _build_data(self.apikey,
                                   'grant_user_group_permission_to_repo_group',

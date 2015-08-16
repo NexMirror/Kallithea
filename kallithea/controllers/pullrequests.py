@@ -339,7 +339,7 @@ class PullrequestsController(BaseRepoController):
                                               )
         if ancestor_rev is None:
             ancestor_rev = org_repo.scm_instance.EMPTY_CHANGESET
-        revisions = [cs.raw_id for cs in cs_ranges]
+        revisions = [cs_.raw_id for cs_ in cs_ranges]
 
         # hack: ancestor_rev is not an other_rev but we want to show the
         # requested destination and have the exact ancestor

@@ -87,11 +87,11 @@ def canonical_hostname():
         parts = url('home', qualified=True).split('://', 1)
         return parts[1].split('/', 1)[0]
 
-def html_escape(text):
+def html_escape(s):
     """Return string with all html escaped.
     This is also safe for javascript in html but not necessarily correct.
     """
-    return (text
+    return (s
         .replace('&', '&amp;')
         .replace(">", "&gt;")
         .replace("<", "&lt;")
@@ -99,11 +99,11 @@ def html_escape(text):
         .replace("'", "&apos;")
         )
 
-def shorter(text, size=20):
+def shorter(s, size=20):
     postfix = '...'
-    if len(text) > size:
-        return text[:size - len(postfix)] + postfix
-    return text
+    if len(s) > size:
+        return s[:size - len(postfix)] + postfix
+    return s
 
 
 def _reset(name, value=None, id=NotGiven, type="reset", **attrs):
@@ -601,8 +601,8 @@ def action_parser(user_log, feed=False, parse_cs=False):
 
         def lnk(rev, repo_name):
             lazy_cs = False
-            title = None
-            _url = '#'
+            title_ = None
+            url_ = '#'
             if isinstance(rev, BaseChangeset) or isinstance(rev, AttributeDict):
                 if rev.op and rev.ref_name:
                     if rev.op == 'delete_branch':
@@ -614,15 +614,15 @@ def action_parser(user_log, feed=False, parse_cs=False):
                 else:
                     lazy_cs = True
                     lbl = rev.short_id[:8]
-                    _url = url('changeset_home', repo_name=repo_name,
+                    url_ = url('changeset_home', repo_name=repo_name,
                                revision=rev.raw_id)
             else:
                 # changeset cannot be found - it might have been stripped or removed
                 lbl = rev[:12]
-                title = _('Changeset not found')
+                title_ = _('Changeset not found')
             if parse_cs:
-                return link_to(lbl, _url, title=title, class_='tooltip')
-            return link_to(lbl, _url, raw_id=rev.raw_id, repo_name=repo_name,
+                return link_to(lbl, url_, title=title_, class_='tooltip')
+            return link_to(lbl, url_, raw_id=rev.raw_id, repo_name=repo_name,
                            class_='lazy-cs' if lazy_cs else '')
 
         def _get_op(rev_txt):
@@ -718,8 +718,8 @@ def action_parser(user_log, feed=False, parse_cs=False):
 
     def get_fork_name():
         repo_name = action_params
-        _url = url('summary_home', repo_name=repo_name)
-        return _('Fork name %s') % link_to(action_params, _url)
+        url_ = url('summary_home', repo_name=repo_name)
+        return _('Fork name %s') % link_to(action_params, url_)
 
     def get_user_name():
         user_name = action_params
@@ -938,31 +938,31 @@ class Page(_Page):
         # and the currently displayed page range
         if leftmost_page - self.first_page > 1:
             # Wrap in a SPAN tag if nolink_attr is set
-            text = '..'
+            text_ = '..'
             if self.dotdot_attr:
-                text = HTML.span(c=text, **self.dotdot_attr)
-            nav_items.append(text)
+                text_ = HTML.span(c=text_, **self.dotdot_attr)
+            nav_items.append(text_)
 
         for thispage in xrange(leftmost_page, rightmost_page + 1):
             # Highlight the current page number and do not use a link
-            text = str(thispage)
+            text_ = str(thispage)
             if thispage == self.page:
                 # Wrap in a SPAN tag if nolink_attr is set
                 if self.curpage_attr:
-                    text = HTML.span(c=text, **self.curpage_attr)
-                nav_items.append(text)
+                    text_ = HTML.span(c=text_, **self.curpage_attr)
+                nav_items.append(text_)
             # Otherwise create just a link to that page
             else:
-                nav_items.append(self._pagerlink(thispage, text))
+                nav_items.append(self._pagerlink(thispage, text_))
 
         # Insert dots if there are pages between the displayed
         # page numbers and the end of the page range
         if self.last_page - rightmost_page > 1:
-            text = '..'
+            text_ = '..'
             # Wrap in a SPAN tag if nolink_attr is set
             if self.dotdot_attr:
-                text = HTML.span(c=text, **self.dotdot_attr)
-            nav_items.append(text)
+                text_ = HTML.span(c=text_, **self.dotdot_attr)
+            nav_items.append(text_)
 
         # Create a link to the very last page (unless we are on the last
         # page or there would be no need to insert '..' spacers)
