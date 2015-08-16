@@ -297,7 +297,7 @@ var pyroutes = (function() {
             }
             var keys = [];
             for (var i=0; i < req_params.length; i++) {
-                keys.push(req_params[i])
+                keys.push(req_params[i]);
             }
             matchlist[route_name] = [
                 unescape(route_tmpl),
@@ -428,7 +428,7 @@ var show_changeset_tooltip = function(){
             _show_tooltip(e, _TM['loading ...']);
             var url = pyroutes.url('changeset_info', {"repo_name": repo_name, "revision": rid});
             ajaxGET(url, function(json){
-                    $target.addClass('tooltip')
+                    $target.addClass('tooltip');
                     _show_tooltip(e, json['message']);
                     _activate_tooltip($target);
                 });
@@ -497,7 +497,7 @@ var _activate_tooltip = function($tt){
 var _init_tooltip = function(){
     var $tipBox = $('#tip-box');
     if(!$tipBox.length){
-        $tipBox = $('<div id="tip-box"></div>')
+        $tipBox = $('<div id="tip-box"></div>');
         $(document.body).append($tipBox);
     }
 
@@ -748,7 +748,7 @@ function _comment_div_append_form($comment_div, f_path, line_no) {
         MentionsAutoComplete($('#text_'+line_no), $('#mentions_container_'+line_no),
                              _USERS_AC_DATA);
         $('#text_'+line_no).focus();
-    }, 10)
+    }, 10);
 }
 
 
@@ -804,7 +804,7 @@ var fileBrowserListeners = function(current_url, node_list_url, url_base){
         else{
             window.location = current_url;
         }
-    })
+    });
 
     var $node_filter = $('#node_filter');
 
@@ -842,7 +842,7 @@ var fileBrowserListeners = function(current_url, node_list_url, url_base){
             var matches_max = 20;
             if (query != ""){
                 for(var i=0;i<nodes.length;i++){
-                    var pos = nodes[i].name.toLowerCase().indexOf(query)
+                    var pos = nodes[i].name.toLowerCase().indexOf(query);
                     if(query && pos != -1){
                         matches++
                         //show only certain amount to not kill browser
@@ -853,8 +853,8 @@ var fileBrowserListeners = function(current_url, node_list_url, url_base){
                         var n = nodes[i].name;
                         var t = nodes[i].type;
                         var n_hl = n.substring(0,pos)
-                          +"<b>{0}</b>".format(n.substring(pos,pos+query.length))
-                          +n.substring(pos+query.length)
+                            + "<b>{0}</b>".format(n.substring(pos,pos+query.length))
+                            + n.substring(pos+query.length);
                         var new_url = url_base.replace('__FPATH__',n);
                         match.push('<tr><td><a class="browser-{0}" href="{1}">{2}</a></td><td colspan="5"></td></tr>'.format(t,new_url,n_hl));
                     }
@@ -1061,9 +1061,9 @@ var autocompleteMatchGroups = function (sQuery, myGroups) {
 // Helper highlight function for the formatter
 var autocompleteHighlightMatch = function (full, snippet, matchindex) {
     return full.substring(0, matchindex)
-    + "<span class='match'>"
-    + full.substr(matchindex, snippet.length)
-    + "</span>" + full.substring(matchindex + snippet.length);
+        + "<span class='match'>"
+        + full.substr(matchindex, snippet.length)
+        + "</span>" + full.substring(matchindex + snippet.length);
 };
 
 var gravatar = function(link, size, cssclass) {
@@ -1238,7 +1238,7 @@ var MentionsAutoComplete = function ($inputElement, $container, users_list) {
             // replace middle chunk(the search term) with actuall  match
             chunks[1] = chunks[1].replace('@'+myAC.dataSource.mentionQuery,
                                           '@'+oData.nname+' ');
-            myAC.getInputEl().value = chunks.join('')
+            myAC.getInputEl().value = chunks.join('');
             myAC.getInputEl().focus(); // Y U NO WORK !?
         });
     }
@@ -1253,7 +1253,7 @@ var MentionsAutoComplete = function ($inputElement, $container, users_list) {
         var org = msg;
         // Must match utils2.py MENTIONS_REGEX.
         // Only matching on string up to cursor, so it must end with $
-        var re = new RegExp('(?:^|[^a-zA-Z0-9])@([a-zA-Z0-9][-_.a-zA-Z0-9]*[a-zA-Z0-9])$')
+        var re = new RegExp('(?:^|[^a-zA-Z0-9])@([a-zA-Z0-9][-_.a-zA-Z0-9]*[a-zA-Z0-9])$');
         var chunks  = [];
 
         // cut first chunk until current pos
@@ -1261,9 +1261,9 @@ var MentionsAutoComplete = function ($inputElement, $container, users_list) {
         var at_pos = Math.max(0,to_max.lastIndexOf('@')-1);
         var msg2 = to_max.substr(at_pos);
 
-        chunks.push(org.substr(0,at_pos))// prefix chunk
-        chunks.push(msg2)                // search chunk
-        chunks.push(org.substr(max_pos)) // postfix chunk
+        chunks.push(org.substr(0,at_pos)); // prefix chunk
+        chunks.push(msg2);                 // search chunk
+        chunks.push(org.substr(max_pos));  // postfix chunk
 
         // clean up msg2 for filtering and regex match
         var msg2 = msg2.lstrip(' ').lstrip('\n');
@@ -1366,14 +1366,14 @@ var quick_repo_menu = function(){
                 $menu.removeClass('hidden').addClass('active');
                 $(e.currentTarget).removeClass('hidden').addClass('active');
             }
-        })
+        });
     $(".quick_repo_menu").mouseleave(function(e) {
             var $menu = $(e.currentTarget).children().first().children().first();
             if($menu.hasClass('active')){
                 $menu.removeClass('active').addClass('hidden');
                 $(e.currentTarget).removeClass('active').addClass('hidden');
             }
-        })
+        });
 };
 
 
@@ -1542,8 +1542,8 @@ var YUI_paginator = function(links_per_page, containers){
                     var radius = parseInt(items / 2);
                 }
 
-                var left = Math.max(1, (cur_page - (radius)))
-                var right = Math.min(max_page, cur_page + (radius))
+                var left = Math.max(1, (cur_page - (radius)));
+                var right = Math.min(max_page, cur_page + (radius));
                 return [left, cur_page, right]
             },
             render : function (id_base) {
@@ -1666,8 +1666,8 @@ var YUI_paginator = function(links_per_page, containers){
                     var radius = parseInt(items / 2);
                 }
 
-                var left = Math.max(1, (cur_page - (radius)))
-                var right = Math.min(max_page, cur_page + (radius))
+                var left = Math.max(1, (cur_page - (radius)));
+                var right = Math.min(max_page, cur_page + (radius));
                 return [left, cur_page, right]
             },
             render : function (id_base) {
@@ -1785,7 +1785,7 @@ var YUI_datatable = function(data, fields, columns, countnode, sortkey, rows){
         if (req) {
             req = req.toLowerCase();
             for (i = 0; i<data.length; i++) {
-                var pos = data[i].raw_name.toLowerCase().indexOf(req)
+                var pos = data[i].raw_name.toLowerCase().indexOf(req);
                 if (pos != -1) {
                     filtered.push(data[i]);
                 }

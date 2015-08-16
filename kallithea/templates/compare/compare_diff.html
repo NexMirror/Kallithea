@@ -99,7 +99,7 @@ ${self.repo_context_bar('changelog')}
     $("#compare_org").select2({
         placeholder: "${'%s@%s' % (c.a_repo.repo_name, c.a_ref_name)}",
         formatSelection: function(obj){
-            return '{0}@{1}'.format("${c.a_repo.repo_name}", obj.text)
+            return '{0}@{1}'.format("${c.a_repo.repo_name}", obj.text);
         },
         dropdownAutoWidth: true,
         query: function(query){
