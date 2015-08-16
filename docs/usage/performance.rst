@@ -22,17 +22,8 @@ Follow these few steps to improve performance of Kallithea system.
 
 1. Increase cache
 
-    In the .ini file::
-
-     beaker.cache.sql_cache_long.expire=3600 <-- set this to higher number
-
-    This option affects the cache expiration time for the main
-    page. Having several hundreds of repositories on main page can
-    sometimes make the system behave slowly when the cache expires for
-    all of them. Increasing the ``expire`` option to a day (86400) or a
-    week (604800) will improve general response times for the main
-    page. Kallithea has an intelligent cache expiration system and it
-    will expire the cache for repositories that have been changed.
+    Tweak beaker cache settings in the ini file. That actual effect of that
+    is questionable.
 
 2. Switch from sqlite to postgres or mysql
 
