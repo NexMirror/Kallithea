@@ -22,7 +22,7 @@ Follow these few steps to improve performance of Kallithea system.
 
 1. Increase cache
 
-    Tweak beaker cache settings in the ini file. That actual effect of that
+    Tweak beaker cache settings in the ini file. The actual effect of that
     is questionable.
 
 2. Switch from sqlite to postgres or mysql

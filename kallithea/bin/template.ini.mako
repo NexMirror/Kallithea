@@ -351,45 +351,34 @@ beaker.cache.sql_cache_short.key_length = 256
 <%text>####################################</%text>
 <%text>###       BEAKER SESSION        ####</%text>
 <%text>####################################</%text>
-<%text>## Type of storage used for the session, current types are</%text>
-<%text>## dbm, file, memcached, database, and memory.</%text>
-<%text>## The storage uses the Container API</%text>
-<%text>## that is also used by the cache system.</%text>
 
-<%text>## db session ##</%text>
-#beaker.session.type = ext:database
-#beaker.session.sa.url = postgresql://postgres:qwe@localhost/kallithea
-#beaker.session.table_name = db_session
-
-<%text>## encrypted cookie client side session, good for many instances ##</%text>
-#beaker.session.type = cookie
-
-<%text>## file based cookies (default) ##</%text>
-#beaker.session.type = file
-
-<%text>## beaker.session.key should be unique for a given host, even when running</%text>
+<%text>## Name of session cookie. Should be unique for a given host and path, even when running</%text>
 <%text>## on different ports. Otherwise, cookie sessions will be shared and messed up.</%text>
 beaker.session.key = kallithea
-beaker.session.secret = ${uuid()}
+<%text>## Sessions should always only be accessible by the browser, not directly by JavaScript.</%text>
+beaker.session.httponly = true
+<%text>## Session lifetime. 2592000 seconds is 30 days.</%text>
+beaker.session.timeout = 2592000
 
-<%text>## Secure encrypted cookie. Requires AES and AES python libraries</%text>
-<%text>## you must disable beaker.session.secret to use this</%text>
+<%text>## Server secret used with HMAC to ensure integrity of cookies.</%text>
+beaker.session.secret = ${uuid()}
+<%text>## Further, encrypt the data with AES.</%text>
 #beaker.session.encrypt_key = <key_for_encryption>
 #beaker.session.validate_key = <validation_key>
 
-<%text>## sets session as invalid if it haven't been accessed for given amount of time</%text>
-beaker.session.timeout = 2592000
-beaker.session.httponly = true
-#beaker.session.cookie_path = /<your-prefix>
+<%text>## Type of storage used for the session, current types are</%text>
+<%text>## dbm, file, memcached, database, and memory.</%text>
 
-<%text>## uncomment for https secure cookie</%text>
-beaker.session.secure = false
+<%text>## File system storage of session data. (default)</%text>
+#beaker.session.type = file
 
-<%text>## auto save the session to not to use .save()</%text>
-beaker.session.auto = False
+<%text>## Cookie only, store all session data inside the cookie. Requires secure secrets.</%text>
+#beaker.session.type = cookie
 
-<%text>## default cookie expiration time in seconds `true` expire at browser close ##</%text>
-#beaker.session.cookie_expires = 3600
+<%text>## Database storage of session data.</%text>
+#beaker.session.type = ext:database
+#beaker.session.sa.url = postgresql://postgres:qwe@localhost/kallithea
+#beaker.session.table_name = db_session
 
 %if error_aggregation_service == 'errormator':
 <%text>############################</%text>

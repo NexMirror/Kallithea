@@ -123,7 +123,8 @@ def log_in_user(user, remember, is_external_auth):
     session.invalidate()
     session['authuser'] = cookie = auth_user.to_cookie()
 
-    # If they want to be remembered, update the cookie
+    # If they want to be remembered, update the cookie.
+    # NOTE: Assumes that beaker defaults to browser session cookie.
     if remember:
         t = datetime.datetime.now() + datetime.timedelta(days=365)
         session._set_cookie_expires(t)
