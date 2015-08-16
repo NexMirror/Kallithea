@@ -65,7 +65,10 @@
                   id="remove_${pr.pull_request_id}"
                   name="remove_${pr.pull_request_id}"
                   title="${_('Delete Pull Request')}"
-                  onclick="return confirm('${_('Confirm to delete this pull request')}');">
+                  onclick="return confirm('${_('Confirm to delete this pull request')}')
+                      && ((${len(pr.comments)} == 0) ||
+                          confirm('${_('Confirm again to delete this pull request with %s comments') % len(pr.comments)}'))
+                      ">
             <i class="icon-minus-circled"></i>
           </button>
           ${h.end_form()}
