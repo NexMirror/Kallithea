@@ -4378,6 +4378,10 @@ form.comment-inline-form {
     margin: 2px 0px 8px 5px !important
 }
 
+input.status_change_radio {
+    margin-left: 15px;
+}
+
 .notification-paginator {
     padding: 0px 0px 4px 16px;
 }

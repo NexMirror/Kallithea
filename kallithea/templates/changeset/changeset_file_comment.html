@@ -163,7 +163,7 @@
                   ${_('No change')}
                 </label>
                 %for status,lbl in c.changeset_statuses:
-                    <span style="margin-left: 15px;">
+                    <span>
                         <input type="radio" class="status_change_radio" name="changeset_status" id="${status}" value="${status}">
                         <label for="${status}"><i class="icon-circle changeset-status-${status}" /></i>${lbl}</label>
                     </span>
