@@ -534,10 +534,10 @@ class ReposController(BaseRepoController):
             repo = Repository.get_by_repo_name(repo_name)
             if request.POST.get('set_lock'):
                 Repository.lock(repo, c.authuser.user_id)
-                h.flash(_('Locked repository'), category='success')
+                h.flash(_('Repository has been locked'), category='success')
             elif request.POST.get('set_unlock'):
                 Repository.unlock(repo)
-                h.flash(_('Unlocked repository'), category='success')
+                h.flash(_('Repository has been unlocked'), category='success')
         except Exception as e:
             log.error(traceback.format_exc())
             h.flash(_('An error occurred during unlocking'),
@@ -558,13 +558,11 @@ class ReposController(BaseRepoController):
             if repo.enable_locking:
                 if repo.locked[0]:
                     Repository.unlock(repo)
-                    action = _('Unlocked')
+                    h.flash(_('Repository has been unlocked'), category='success')
                 else:
                     Repository.lock(repo, c.authuser.user_id)
-                    action = _('Locked')
+                    h.flash(_('Repository has been locked'), category='success')
 
-                h.flash(_('Repository has been %s') % action,
-                        category='success')
         except Exception as e:
             log.error(traceback.format_exc())
             h.flash(_('An error occurred during unlocking'),
