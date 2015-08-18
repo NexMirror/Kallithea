@@ -7,7 +7,7 @@ API
 
 Kallithea has a simple JSON RPC API with a single schema for calling all API
 methods. Everything is available by sending JSON encoded http(s) requests to
-<your_server>/_admin/api .
+``<your_server>/_admin/api``.
 
 
 API access for web views
@@ -16,12 +16,12 @@ API access for web views
 API access can also be turned on for each web view in Kallithea that is
 decorated with the ``@LoginRequired`` decorator. Some views use
 ``@LoginRequired(api_access=True)`` and are always available. By default only
-RSS/ATOM feed views are enabled. Other views are
-only available if they have been white listed. Edit the
+RSS/Atom feed views are enabled. Other views are
+only available if they have been whitelisted. Edit the
 ``api_access_controllers_whitelist`` option in your .ini file and define views
 that should have API access enabled.
 
-For example, to enable API access to patch/diff raw file and archive::
+For example, to enable API access to patch/diff, raw file and archive::
 
     api_access_controllers_whitelist =
         ChangesetController:changeset_patch,
@@ -33,7 +33,7 @@ After this change, a Kallithea view can be accessed without login by adding a
 GET parameter ``?api_key=<api_key>`` to the URL.
 
 Exposing raw diffs is a good way to integrate with
-3rd party services like code review, or build farms that could download archives.
+third-party services like code review, or build farms that can download archives.
 
 
 API access
@@ -50,27 +50,28 @@ Clients must send JSON encoded JSON-RPC requests::
 
 For example, to pull to a local "CPython" mirror using curl::
 
-    curl https://server.com/_admin/api -X POST -H 'content-type:text/plain' --data-binary '{"id":1,"api_key":"xe7cdb2v278e4evbdf5vs04v832v0efvcbcve4a3","method":"pull","args":{"repo":"CPython"}}'
+    curl https://example.com/_admin/api -X POST -H 'content-type:text/plain' \
+        --data-binary '{"id":1,"api_key":"xe7cdb2v278e4evbdf5vs04v832v0efvcbcve4a3","method":"pull","args":{"repo":"CPython"}}'
 
 In general, provide
  - *id*, a value of any type, can be used to match the response with the request that it is replying to.
  - *api_key*, for authentication and permission validation.
- - *method*, the name of the method to call - a list of available methods can be found below.
+ - *method*, the name of the method to call -- a list of available methods can be found below.
  - *args*, the arguments to pass to the method.
 
 .. note::
 
-    api_key can be found or set on the user account page
+    api_key can be found or set on the user account page.
 
 The response to the JSON-RPC API call will always be a JSON structure::
 
     {
-        "id":<id>, # the id that was used in the request
-        "result": "<result>"|null, # JSON formatted result, null if any errors
-        "error": "null"|<error_message> # JSON formatted error (if any)
+        "id": <id>,  # the id that was used in the request
+        "result": <result>|null,  # JSON formatted result (null on error)
+        "error": null|<error_message>  # JSON formatted error (null on success)
     }
 
-All responses from API will be ``HTTP/1.0 200 OK``. If there is an error,
+All responses from the API will be ``HTTP/1.0 200 OK``. If an error occurs,
 the reponse will have a failure description in *error* and
 *result* will be null.
 
@@ -78,7 +79,7 @@ the reponse will have a failure description in *error* and
 API client
 ++++++++++
 
-Kallithea comes with a ``kallithea-api`` command line tool providing a convenient
+Kallithea comes with a ``kallithea-api`` command line tool, providing a convenient
 way to call the JSON-RPC API.
 
 For example, to call ``get_repo``::
@@ -106,7 +107,7 @@ To avoid specifying ``apihost`` and ``apikey`` every time, run::
 
   kallithea-api --save-config --apihost=<your.kallithea.server.url> --apikey=<yourapikey>
 
-This will create a ``~/.config/kallithea`` with the specified hostname and apikey
+This will create a ``~/.config/kallithea`` with the specified hostname and API key
 so you don't have to specify them every time.
 
 
@@ -332,6 +333,8 @@ OUTPUT::
     error:  null
 
 
+.. _create-user:
+
 create_user
 -----------
 
@@ -374,6 +377,10 @@ OUTPUT::
               },
             }
     error:  null
+
+Example::
+
+    kallithea-api create_user username:bent email:bent@example.com firstname:Bent lastname:Bentsen extern_type:ldap extern_name:uid=bent,dc=example,dc=com
 
 
 update_user

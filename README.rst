@@ -21,6 +21,7 @@ version control systems.
 
 Kallithea was forked from RhodeCode in July 2014 and has been heavily modified.
 
+
 Installation
 ------------
 Kallithea requires Python_ 2.x and it is recommended to install it in a
@@ -29,7 +30,7 @@ virtualenv_. Official releases of Kallithea can be installed with::
     pip install kallithea
 
 The development repository is kept very stable and used in production by the
-developers - you can do the same.
+developers -- you can do the same.
 
 Please visit https://docs.kallithea-scm.org/en/latest/installation.html for
 more details.
@@ -115,11 +116,11 @@ Community
 ---------
 
 **Kallithea** is maintained by its users who contribute the fixes they would
- like to see.
+like to see.
 
 Get in touch with the rest of the community:
 
-- Join the mailing list users and developers - see
+- Join the mailing list users and developers -- see
   http://lists.sfconservancy.org/mailman/listinfo/kallithea-general.
 
 - Use IRC and join #kallithea on FreeNode (irc.freenode.net) or use
@@ -197,6 +198,7 @@ database, using the database string you can find in your ``production.ini`` (or
 
    If you started out using the branding interoperability approach mentioned
    above, watch out for stray brand.pyc after removing brand.py.
+
 
 .. _virtualenv: http://pypi.python.org/pypi/virtualenv
 .. _Python: http://www.python.org/

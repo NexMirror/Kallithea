@@ -14,7 +14,7 @@ following command to do so::
     paster make-config Kallithea my.ini
 
 This will create the file ``my.ini`` in the current directory. This
-configuration file contains the various settings for Kallithea, e.g.,
+configuration file contains the various settings for Kallithea, e.g.
 proxy port, email settings, usage of static files, cache, Celery
 settings, and logging.
 
@@ -34,12 +34,13 @@ entering this "root" path ``setup-db`` will also prompt you for a username
 and password for the initial admin account which ``setup-db`` sets
 up for you.
 
-The setup process can be fully automated, example for lazy::
+The ``setup-db`` values can also be given on the command line.
+Example::
 
-    paster setup-db my.ini --user=nn --password=secret --email=nn@your.kallithea.server --repos=/srv/repos
+    paster setup-db my.ini --user=nn --password=secret --email=nn@example.org --repos=/srv/repos
 
 
-The ``setup-db`` command will create all of the needed tables and an
+The ``setup-db`` command will create all needed tables and an
 admin account. When choosing a root path you can either use a new
 empty location, or a location which already contains existing
 repositories. If you choose a location which contains existing
@@ -58,22 +59,22 @@ You are now ready to use Kallithea. To run it simply execute::
     paster serve my.ini
 
 - This command runs the Kallithea server. The web app should be available at
-  http://127.0.0.1:5000. This ip and port is configurable via the my.ini
-  file created in previous step
-- Use the admin account you created above when running ``setup-db``
-  to login to the web app.
+  http://127.0.0.1:5000. The IP address and port is configurable via the
+  configuration file created in the previous step.
+- Log in to Kallithea using the admin account created when running ``setup-db``.
 - The default permissions on each repository is read, and the owner is admin.
   Remember to update these if needed.
 - In the admin panel you can toggle LDAP, anonymous, and permissions
   settings, as well as edit more advanced options on users and
-  repositories
+  repositories.
 
 
 Extensions
 ----------
 
-Optionally users can create an ``rcextensions`` package that extends Kallithea
-functionality. To do this simply execute::
+Optionally one can create an ``rcextensions`` package that extends Kallithea
+functionality.
+To generate a skeleton extensions package, run::
 
     paster make-rcext my.ini
 
@@ -123,45 +124,38 @@ authentication is fully supported.
 Setting up Whoosh full text search
 ----------------------------------
 
-The whoosh index can be built by using the paster
-command ``make-index``. To use ``make-index`` you must specify the configuration
-file that stores the location of the index. You may specify the location of the
-repositories (``--repo-location``).  If not specified, this value is retrieved
-from the Kallithea database.
-It is also possible to specify a comma separated list of
-repositories (``--index-only``) to build index only on chooses repositories
-skipping any other found in repos location
+Kallithea provides full text search of repositories using `Whoosh`__.
 
-You may optionally pass the option ``-f`` to enable a full index rebuild. Without
-the ``-f`` option, indexing will run always in "incremental" mode.
+.. __: https://pythonhosted.org/Whoosh/
 
-For an incremental index build use::
+For an incremental index build, run::
 
     paster make-index my.ini
 
-For a full index rebuild use::
+For a full index rebuild, run::
 
     paster make-index my.ini -f
 
+The ``--repo-location`` option allows the location of the repositories to be overriden;
+usually, the location is retrieved from the Kallithea database.
 
-Building an index for just selected repositories is possible with such command::
+The ``--index-only`` option can be used to limit the indexed repositories to a comma-separated list::
 
     paster make-index my.ini --index-only=vcs,kallithea
 
 
-In order to do periodic index builds and keep your index always up to
-date, it is recommended to use a crontab entry.  An example entry
-might look like this::
+To keep your index up-to-date it is necessary to do periodic index builds;
+for this, it is recommended to use a crontab entry. Example::
 
-    /path/to/python/bin/paster make-index /path/to/kallithea/my.ini
+    0  3  *  *  *  /path/to/virtualenv/bin/paster make-index /path/to/kallithea/my.ini
 
-When using incremental mode (the default) whoosh will check the last
+When using incremental mode (the default), Whoosh will check the last
 modification date of each file and add it to be reindexed if a newer file is
 available. The indexing daemon checks for any removed files and removes them
 from index.
 
 If you want to rebuild the index from scratch, you can use the ``-f`` flag as above,
-or in the admin panel you can check the "build from scratch" flag.
+or in the admin panel you can check the "build from scratch" checkbox.
 
 
 Setting up LDAP support
@@ -169,7 +163,7 @@ Setting up LDAP support
 
 Kallithea supports LDAP authentication. In order
 to use LDAP, you have to install the python-ldap_ package. This package is
-available via pypi, so you can install it by running::
+available via PyPI, so you can install it by running::
 
     pip install python-ldap
 
@@ -378,15 +372,16 @@ of users to its WSGI container, or to a reverse-proxy server through which all
 clients access the application.
 
 When these authentication methods are enabled in Kallithea, it uses the
-username that the container/proxy (Apache/Nginx/etc) authenticated and doesn't
+username that the container/proxy (Apache or Nginx, etc.) provides and doesn't
 perform the authentication itself. The authorization, however, is still done by
 Kallithea according to its settings.
 
 When a user logs in for the first time using these authentication methods,
 a matching user account is created in Kallithea with default permissions. An
 administrator can then modify it using Kallithea's admin interface.
+
 It's also possible for an administrator to create accounts and configure their
-permissions before the user logs in for the first time.
+permissions before the user logs in for the first time, using the :ref:`create-user` API.
 
 
 Container-based authentication
@@ -395,7 +390,7 @@ Container-based authentication
 In a container-based authentication setup, Kallithea reads the user name from
 the ``REMOTE_USER`` server variable provided by the WSGI container.
 
-After setting up your container (see `Apache's WSGI config`_), you'd need
+After setting up your container (see `Apache with mod_wsgi`_), you'll need
 to configure it to require authentication on the location configured for
 Kallithea.
 
@@ -408,22 +403,24 @@ from the ``X-Forwarded-User`` request header, which should be configured to be
 sent by the reverse-proxy server.
 
 After setting up your proxy solution (see `Apache virtual host reverse proxy example`_,
-`Apache as subdirectory`_ or `Nginx virtual host example`_), you'd need to
+`Apache as subdirectory`_ or `Nginx virtual host example`_), you'll need to
 configure the authentication and add the username in a request header named
 ``X-Forwarded-User``.
 
 For example, the following config section for Apache sets a subdirectory in a
-reverse-proxy setup with basic auth::
+reverse-proxy setup with basic auth:
 
-    <Location /<someprefix> >
-      ProxyPass http://127.0.0.1:5000/<someprefix>
-      ProxyPassReverse http://127.0.0.1:5000/<someprefix>
+.. code-block:: apache
+
+    <Location /someprefix>
+      ProxyPass http://127.0.0.1:5000/someprefix
+      ProxyPassReverse http://127.0.0.1:5000/someprefix
       SetEnvIf X-Url-Scheme https HTTPS=1
 
       AuthType Basic
       AuthName "Kallithea authentication"
       AuthUserFile /srv/kallithea/.htpasswd
-      require valid-user
+      Require valid-user
 
       RequestHeader unset X-Forwarded-User
 
@@ -445,8 +442,8 @@ Integration with issue trackers
 -------------------------------
 
 Kallithea provides a simple integration with issue trackers. It's possible
-to define a regular expression that will fetch an issue id stored in a commit
-messages and replace that with a URL to the issue. To enable this simply
+to define a regular expression that will match an issue ID in commit messages,
+and have that replaced with a URL to the issue. To enable this simply
 uncomment the following variables in the ini file::
 
     issue_pat = (?:^#|\s#)(\w+)
@@ -459,12 +456,14 @@ parentheses should be used to specify the actual issue id.
 
 The default expression matches issues in the format ``#<number>``, e.g., ``#300``.
 
-Matched issues are replaced with the link specified as
-``issue_server_link`` ``{id}`` is replaced with issue id, and
+Matched issue references are replaced with the link specified in
+``issue_server_link``. ``{id}`` is replaced with the issue ID, and
 ``{repo}`` with the repository name.  Since the # is stripped away,
 ``issue_prefix`` is prepended to the link text.  ``issue_prefix`` doesn't
 necessarily need to be ``#``: if you set issue prefix to ``ISSUE-`` this will
-generate a URL in the format::
+generate a URL in the format:
+
+.. code-block:: html
 
   <a href="https://myissueserver.com/example_repo/issue/300">ISSUE-300</a>
 
@@ -476,7 +475,9 @@ the variables. For example::
     issue_prefix_wiki = WIKI-
 
 With these settings, wiki pages can be referenced as wiki-some-id, and every
-such reference will be transformed into::
+such reference will be transformed into:
+
+.. code-block:: html
 
   <a href="https://mywiki.com/some-id">WIKI-some-id</a>
 
@@ -488,10 +489,10 @@ Hooks can be managed in similar way to that used in ``.hgrc`` files.
 To access hooks setting click `advanced setup` in the `Hooks` section
 of Mercurial Settings in Admin.
 
-There are four built in hooks that cannot be changed (only enabled/disabled by
-checkboxes in the previous section).
-To add another custom hook simply fill in the first section with
-``<name>.<hook_type>`` and the second one with hook path. Example hooks
+The built-in hooks cannot be modified, though they can be enabled or disabled in the *VCS* section.
+
+To add another custom hook simply fill in the first textbox with
+``<name>.<hook_type>`` and the second with the hook path. Example hooks
 can be found in ``kallithea.lib.hooks``.
 
 
@@ -541,6 +542,7 @@ To start the Celery process, run::
    Make sure you run this command from the same virtualenv, and with the same
    user that Kallithea runs.
 
+
 HTTPS support
 -------------
 
@@ -549,15 +551,19 @@ Kallithea will by default generate URLs based on the WSGI environment.
 Alternatively, you can use some special configuration settings to control
 directly which scheme/protocol Kallithea will use when generating URLs:
 
-- With ``https_fixup = true``, the scheme will be taken from the ``HTTP_X_URL_SCHEME``,
-  ``HTTP_X_FORWARDED_SCHEME`` or ``HTTP_X_FORWARDED_PROTO HTTP`` header (default ``http``).
+- With ``https_fixup = true``, the scheme will be taken from the
+  ``X-Url-Scheme``, ``X-Forwarded-Scheme`` or ``X-Forwarded-Proto`` HTTP header
+  (default ``http``).
 - With ``force_https = true`` the default will be ``https``.
-- With ``use_htsts = true``, it will set ``Strict-Transport-Security`` when using https.
+- With ``use_htsts = true``, Kallithea will set ``Strict-Transport-Security`` when using https.
+
 
 Nginx virtual host example
 --------------------------
 
-Sample config for nginx using proxy::
+Sample config for Nginx using proxy:
+
+.. code-block:: nginx
 
     upstream kallithea {
         server 127.0.0.1:5000;
@@ -643,15 +649,21 @@ pushes or large pushes::
 Apache virtual host reverse proxy example
 -----------------------------------------
 
-Here is a sample configuration file for apache using proxy::
+Here is a sample configuration file for Apache using proxy:
+
+.. code-block:: apache
 
     <VirtualHost *:80>
             ServerName hg.myserver.com
             ServerAlias hg.myserver.com
 
             <Proxy *>
-              Order allow,deny
-              Allow from all
+              # For Apache 2.4 and later:
+              Require all granted
+
+              # For Apache 2.2 and earlier, instead use:
+              # Order allow,deny
+              # Allow from all
             </Proxy>
 
             #important !
@@ -664,7 +676,6 @@ Here is a sample configuration file for apache using proxy::
 
             #to enable https use line below
             #SetEnvIf X-Url-Scheme https HTTPS=1
-
     </VirtualHost>
 
 
@@ -675,7 +686,9 @@ http://pylonsbook.com/en/1.1/deployment.html#using-apache-to-proxy-requests-to-p
 Apache as subdirectory
 ----------------------
 
-Apache subdirectory part::
+Apache subdirectory part:
+
+.. code-block:: apache
 
     <Location /<someprefix> >
       ProxyPass http://127.0.0.1:5000/<someprefix>
@@ -697,7 +710,7 @@ Add the following at the end of the .ini file::
 
 then change ``<someprefix>`` into your chosen prefix
 
-Apache's WSGI config
+Apache with mod_wsgi
 --------------------
 
 Alternatively, Kallithea can be set up with Apache under mod_wsgi. For
@@ -719,7 +732,10 @@ that, you'll need to:
   as in the following example. Once again, check the paths are
   correctly specified.
 
-Here is a sample excerpt from an Apache Virtual Host configuration file::
+Here is a sample excerpt from an Apache Virtual Host configuration file:
+
+
+.. code-block:: apache
 
     WSGIDaemonProcess kallithea \
         processes=1 threads=4 \
@@ -727,7 +743,9 @@ Here is a sample excerpt from an Apache Virtual Host configuration file::
     WSGIScriptAlias / /srv/kallithea/dispatch.wsgi
     WSGIPassAuthorization On
 
-Or if using a dispatcher WSGI script with proper virtualenv activation::
+Or if using a dispatcher WSGI script with proper virtualenv activation:
+
+.. code-block:: apache
 
     WSGIDaemonProcess kallithea processes=1 threads=4
     WSGIScriptAlias / /srv/kallithea/dispatch.wsgi
@@ -744,7 +762,9 @@ Or if using a dispatcher WSGI script with proper virtualenv activation::
    gets it's own cache invalidation key.
 
 
-Example WSGI dispatch script::
+Example WSGI dispatch script:
+
+.. code-block:: python
 
     import os
     os.environ["HGENCODING"] = "UTF-8"
@@ -762,10 +782,12 @@ Example WSGI dispatch script::
     fileConfig('/srv/kallithea/my.ini')
     application = loadapp('config:/srv/kallithea/my.ini')
 
-Or using proper virtualenv activation::
+Or using proper virtualenv activation:
+
+.. code-block:: python
 
     activate_this = '/srv/kallithea/venv/bin/activate_this.py'
-    execfile(activate_this,dict(__file__=activate_this))
+    execfile(activate_this, dict(__file__=activate_this))
 
     import os
     os.environ['HOME'] = '/srv/kallithea'
@@ -780,8 +802,10 @@ Or using proper virtualenv activation::
 Other configuration files
 -------------------------
 
-Some example init.d scripts can be found in the ``init.d`` directory:
-https://kallithea-scm.org/repos/kallithea/files/tip/init.d/ .
+A number of `example init.d scripts`__ can be found in
+the ``init.d`` directory of the Kallithea source.
+
+.. __: https://kallithea-scm.org/repos/kallithea/files/tip/init.d/ .
 
 .. _virtualenv: http://pypi.python.org/pypi/virtualenv
 .. _python: http://www.python.org/

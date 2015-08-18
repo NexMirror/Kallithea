@@ -4,11 +4,12 @@
 Installation on Unix/Linux
 ==========================
 
-Here are more details about 3 ways to install Kallithea:
+The following describes three different ways of installing Kallithea:
 
 - :ref:`installation-source`: The simplest way to keep the installation
-  uptodate and keep track of local customizations is to run directly from
-  source in a Kallithea repository clone and use virtualenv.
+  up-to-date and track any local customizations is to run directly from
+  source in a Kallithea repository clone, preferably inside a virtualenv
+  virtual Python environment.
 
 - :ref:`installation-virtualenv`: If you prefer to only use released versions
   of Kallithea, the recommended method is to install Kallithea in a virtual
@@ -30,7 +31,7 @@ Here are more details about 3 ways to install Kallithea:
 Installation from repository source
 -----------------------------------
 
-To install Kallithea in a virtualenv using the stable branch of the development
+To install Kallithea in a virtualenv_ using the stable branch of the development
 repository, follow the instructions below::
 
         hg clone https://kallithea-scm.org/repos/kallithea -u stable

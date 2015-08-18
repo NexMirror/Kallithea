@@ -21,7 +21,7 @@ ISAPI-WSGI bridge module, e.g. isapi-wsgi.
 Installation
 ------------
 
-The following will assume that your Kallithea is at ``c:\inetpub\kallithea`` and
+The following assumes that your Kallithea is at ``c:\inetpub\kallithea``, and
 will be served from the root of its own website. The changes to serve it in its
 own virtual folder will be noted where appropriate.
 
@@ -32,15 +32,15 @@ Make sure that there is a unique application pool for the Kallithea application
 with an identity that has read access to the Kallithea distribution.
 
 The application pool does not need to be able to run any managed code. If you
-are using a 32-bit Python installation, then you must enable 32 bit program in
-the advanced settings for the application pool otherwise Python will not be able
-to run on the website and consequently, Kallithea will not be able to run.
+are using a 32-bit Python installation, then you must enable 32-bit program in
+the advanced settings for the application pool; otherwise Python will not be able
+to run on the website and neither will Kallithea.
 
 .. note::
 
-    The application pool can be the same as an existing application pool as long
-    as the requirements to Kallithea are enabled by the existing application
-    pool.
+    The application pool can be the same as an existing application pool,
+    as long as the Kallithea requirements are met by the existing pool.
+
 
 ISAPI handler
 .............

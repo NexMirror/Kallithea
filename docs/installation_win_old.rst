@@ -7,17 +7,17 @@ Installation and upgrade on Windows (XP/Vista/Server 2003/Server 2008)
 First-time install
 ::::::::::::::::::
 
-Target OS: Windows XP SP3 32bit English (Clean installation)
+Target OS: Windows XP SP3 32-bit English (Clean installation)
 + All Windows Updates until 24-may-2012
 
 .. note::
 
-   This installation is for 32bit systems, for 64bit windows you might need
-   to download proper 64bit versions of the different packages(Windows Installer, Win32py extensions)
+   This installation is for 32-bit systems, for 64-bit Windows you might need
+   to download proper 64-bit versions of the different packages (Windows Installer, Win32py extensions)
    plus some extra tweaks.
-   These extra steps haven been marked as "64bit".
+   These extra steps haven been marked as "64-bit".
    Tested on Windows Server 2008 R2 SP1, 9-feb-2013.
-   If you run into any 64bit related problems, please check these pages:
+   If you run into any 64-bit related problems, please check these pages:
    - http://blog.victorjabur.com/2011/06/05/compiling-python-2-7-modules-on-windows-32-and-64-using-msvc-2008-express/
    - http://bugs.python.org/issue7511
 
@@ -47,34 +47,35 @@ choose "Visual C++ 2008 Express" when installing.
 
 .. note::
 
-   64bit: You also need to install the Microsoft Windows SDK for .NET 3.5 SP1 (.NET 4.0 won't work).
+   64-bit: You also need to install the Microsoft Windows SDK for .NET 3.5 SP1 (.NET 4.0 won't work).
    Download from: http://www.microsoft.com/en-us/download/details.aspx?id=3138
 
 .. note::
 
-   64bit: You also need to copy and rename a .bat file to make the Visual C++ compiler work.
-   I am not sure why this is not necessary for 32bit.
+   64-bit: You also need to copy and rename a .bat file to make the Visual C++ compiler work.
+   I am not sure why this is not necessary for 32-bit.
    Copy C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\bin\vcvars64.bat to C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\bin\amd64\vcvarsamd64.bat
 
 
-Step 2 - Install Python
------------------------
+Step 2 -- Install Python
+------------------------
 
-Install Python 2.x.y (x = 6 or 7) x86 version (32bit). DO NOT USE A 3.x version.
+Install Python 2.x.y (x = 6 or 7) x86 version (32-bit). DO NOT USE A 3.x version.
 Download Python 2.x.y from:
 http://www.python.org/download/
 
-Choose "Windows Installer" (32bit version) not "Windows X86-64
+Choose "Windows Installer" (32-bit version) not "Windows X86-64
 Installer". While writing this guide, the latest version was v2.7.3.
 Remember the specific major and minor version installed, because it will
 be needed in the next step. In this case, it is "2.7".
 
 .. note::
 
-   64bit: Just download and install the 64bit version of python.
+   64-bit: Just download and install the 64-bit version of python.
 
-Step 3 - Install Win32py extensions
------------------------------------
+
+Step 3 -- Install Win32py extensions
+------------------------------------
 
 Download pywin32 from:
 http://sourceforge.net/projects/pywin32/files/
@@ -88,12 +89,13 @@ http://sourceforge.net/projects/pywin32/files/
 
   .. note::
 
-     64bit: Download and install the 64bit version.
+     64-bit: Download and install the 64-bit version.
      At the time of writing you can find this at:
      http://sourceforge.net/projects/pywin32/files/pywin32/Build%20218/pywin32-218.win-amd64-py2.7.exe/download
 
-Step 4 - Python BIN
--------------------
+
+Step 4 -- Python BIN
+--------------------
 
 Add Python BIN folder to the path
 
@@ -120,8 +122,8 @@ that came preinstalled in Vista/7 and can be installed in Windows XP.
   Typically: C:\\Python27
 
 
-Step 5 - Kallithea folder structure
------------------------------------
+Step 5 -- Kallithea folder structure
+------------------------------------
 
 Create a Kallithea folder structure
 
@@ -138,8 +140,8 @@ Create the following folder structure::
   C:\Kallithea\Repos
 
 
-Step 6 - Install virtualenv
----------------------------
+Step 6 -- Install virtualenv
+----------------------------
 
 Install Virtual Env for Python
 
@@ -159,8 +161,8 @@ where you downloaded "virtualenv.py", and write::
 to include it)
 
 
-Step 7 - Install Kallithea
---------------------------
+Step 7 -- Install Kallithea
+---------------------------
 
 Finally, install Kallithea
 
@@ -171,7 +173,7 @@ Command Prompt (**IMPORTANT!!**). To do so, go to Start Menu, and then open
 
 .. note::
 
-   64bit: For 64bit you need to modify the shortcut that is used to start the
+   64-bit: For 64-bit you need to modify the shortcut that is used to start the
    Visual Studio 2008 Command Prompt. Use right-mouse click to open properties.
 
 Change commandline from::
@@ -198,9 +200,8 @@ The prompt will change into "(Env) C:\\Kallithea\\Env\\Scripts" or similar
 Some warnings will appear, don't worry as they are normal.
 
 
-Step 8 - Configuring Kallithea
-------------------------------
-
+Step 8 -- Configuring Kallithea
+-------------------------------
 
 steps taken from http://packages.python.org/Kallithea/setup.html
 
@@ -238,8 +239,8 @@ If you make some mistake and the script does not end, don't worry, start
 it again.
 
 
-Step 9 - Running Kallithea
---------------------------
+Step 9 -- Running Kallithea
+---------------------------
 
 
 In the previous command prompt, being in the C:\\Kallithea\\Bin folder,

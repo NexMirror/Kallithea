@@ -4,7 +4,7 @@
 Repository statistics
 =====================
 
-Kallithea has a ``repository statistics`` feature, disabled by default. When
+Kallithea has a *repository statistics* feature, disabled by default. When
 enabled, the amount of commits per committer is visualized in a timeline. This
 feature can be enabled using the ``Enable statistics`` checkbox on the
 repository ``Settings`` page.

@@ -4,6 +4,6 @@
 Changelog
 =========
 
-Kallithea project doesn't keep its changelog here.  We refer you to our Mercurial logs_ .
+Kallithea project doesn't keep its changelog here.  We refer you to our `Mercurial logs`__.
 
-.. _logs: https://kallithea-scm.org/repos/kallithea/changelog
+.. __: https://kallithea-scm.org/repos/kallithea/changelog
