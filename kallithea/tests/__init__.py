@@ -33,6 +33,7 @@ optional FLAGS:
 
 """
 import os
+import re
 import time
 import logging
 import datetime
@@ -238,15 +239,18 @@ class TestController(BaseTestCase):
     def authentication_token(self):
         return self.app.get(url('authentication_token')).body
 
-    def checkSessionFlash(self, response, msg, skip=0):
+    def checkSessionFlash(self, response, msg=None, skip=0, _matcher=lambda msg, m: msg in m):
         if 'flash' not in response.session:
             self.fail(safe_str(u'msg `%s` not found - session has no flash:\n%s' % (msg, response)))
         try:
             level, m = response.session['flash'][-1 - skip]
-            if msg in m:
+            if _matcher(msg, m):
                 return
         except IndexError:
             pass
         self.fail(safe_str(u'msg `%s` not found in session flash (skipping %s): %s' %
                            (msg, skip,
                             ', '.join('`%s`' % m for level, m in response.session['flash']))))
+
+    def checkSessionFlashRegex(self, response, regex, skip=0):
+        self.checkSessionFlash(response, regex, skip=skip, _matcher=re.search)
