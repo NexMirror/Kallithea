@@ -28,7 +28,7 @@ gunicorn_ (Linux only) can be used. By default, Kallithea uses
 waitress_ for `paster serve` instead of the built-in `paste` WSGI
 server.
 
-The default paste server is controlled in the .ini file::
+The paster server is controlled in the .ini file::
 
     use = egg:waitress#main
 

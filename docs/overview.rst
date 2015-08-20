@@ -75,14 +75,14 @@ Web server
 ----------
 
 Kallithea is (primarily) a WSGI_ application that must be run from a web
-server that expose WSGI as HTTP.
+server that serves WSGI applications over HTTP.
 
-- Kallithea uses the Paste_ tool for some admin tasks. Paste provides ``paste
+- Kallithea uses the Paste_ tool for some admin tasks. Paste provides ``paster
   serve`` as a convenient way to launch Python WSGI / web servers.
   This method is perfect for development but *can* also be used for production.
 
-  ``paste`` is a command line tool. Using it in production requires some way to
-  wrap it as a managable service.
+  ``paster`` is a command line tool. Using it in production requires some way to
+  wrap it as a manageable service.
 
   Paste come with its own web server but Kallithea defaults to use Waitress_.
   Gunicorn_ is also an option. These web servers have different limited feature
@@ -93,7 +93,7 @@ server that expose WSGI as HTTP.
   setup will thus often end up being quite complex.
 
   The configuration of which web server to use is in the ini file passed to
-  ``paste``. The entry point for the WSGI application is configured in
+  ``paster``. The entry point for the WSGI application is configured in
   ``setup.py`` as ``kallithea.config.middleware:make_app``.
 
 - `Apache httpd`_ can serve WSGI applications directly using mod_wsgi_ and a
