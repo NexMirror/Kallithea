@@ -122,6 +122,10 @@ div.sphinxsidebar input {
 div.sphinxsidebar input[type=text]{
     margin-left: 20px;
 }
+
+div.sphinxsidebar input[type=image] {
+    border: 0;
+}
  
 /* -- body styles ----------------------------------------------------------- */
  
