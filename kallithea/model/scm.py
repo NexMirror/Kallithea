@@ -505,6 +505,9 @@ class ScmModel(BaseModel):
                         % (scm_type,))
 
     def pull_changes(self, repo, username):
+        """
+        Pull from "clone URL".
+        """
         dbrepo = self.__get_repo(repo)
         clone_uri = dbrepo.clone_uri
         if not clone_uri:
@@ -536,10 +539,9 @@ class ScmModel(BaseModel):
     def commit_change(self, repo, repo_name, cs, user, author, message,
                       content, f_path):
         """
-        Commits changes
+        Commit a change to a single file
 
-        :param repo: SCM instance
-
+        :param repo: a db_repo.scm_instance
         """
         user = self._get_user(user)
         IMC = self._get_IMC_module(repo.alias)
@@ -677,6 +679,9 @@ class ScmModel(BaseModel):
 
     def update_nodes(self, user, repo, message, nodes, parent_cs=None,
                      author=None, trigger_push_hook=True):
+        """
+        Commits specified nodes to repo. Again.
+        """
         user = self._get_user(user)
         scm_instance = repo.scm_instance_no_cache()
 

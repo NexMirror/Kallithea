@@ -157,10 +157,8 @@ def log_pull_action(ui, repo, **kwargs):
 
 def log_push_action(ui, repo, **kwargs):
     """
-    Maps user last push action to new changeset id, from mercurial
-
-    :param ui:
-    :param repo: repo object containing the `ui` object
+    Register that changes have been pushed.
+    Mercurial invokes this directly as a hook, git uses handle_git_receive.
     """
 
     ex = _extract_extras()
@@ -369,13 +367,13 @@ def log_delete_user(user_dict, deleted_by, **kwargs):
     return 0
 
 
-handle_git_pre_receive = (lambda repo_path, revs, env:
-    handle_git_receive(repo_path, revs, env, hook_type='pre'))
-handle_git_post_receive = (lambda repo_path, revs, env:
-    handle_git_receive(repo_path, revs, env, hook_type='post'))
+def handle_git_pre_receive(repo_path, revs, env):
+    return handle_git_receive(repo_path, revs, env, hook_type='pre')
 
+def handle_git_post_receive(repo_path, revs, env):
+    return handle_git_receive(repo_path, revs, env, hook_type='post')
 
-def handle_git_receive(repo_path, revs, env, hook_type='post'):
+def handle_git_receive(repo_path, revs, env, hook_type):
     """
     A really hacky method that is run by git post-receive hook and logs
     an push action together with pushed revisions. It's executed by subprocess
