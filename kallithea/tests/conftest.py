@@ -15,7 +15,7 @@ def pytest_configure():
 
     # Disable INFO logging of test database creation, restore with NOTSET
     logging.disable(logging.INFO)
-    pylons.test.pylonsapp = loadapp('config:test.ini', relative_to=path)
+    pylons.test.pylonsapp = loadapp('config:kallithea/tests/test.ini', relative_to=path)
     logging.disable(logging.NOTSET)
 
     # Setup the config and app_globals, only works if we can get

@@ -16,6 +16,7 @@ syntax: regexp
 ^docs/build/
 ^docs/_build/
 ^data$
+^kallithea/tests/data$
 ^sql_dumps/
 ^\.settings$
 ^\.project$

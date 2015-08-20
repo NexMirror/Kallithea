@@ -50,13 +50,13 @@ After finishing your changes make sure all tests pass cleanly. You can run
 the testsuite running ``nosetests`` from the project root, or if you use tox
 run ``tox`` for python2.6-2.7 with multiple database test.
 
-When using `nosetests`, the `test.ini` file is used with an SQLite database. Edit
-this file to change your testing enviroment.
+When running tests, Kallithea uses `kallithea/tests/test.ini` and populates the
+SQLite database specified there.
 
 It is possible to avoid recreating the full test database on each invocation of
 the tests, thus eliminating the initial delay. To achieve this, run the tests as::
 
-    paster serve test.ini --pid-file=test.pid --daemon
+    paster serve kallithea/tests/test.ini --pid-file=test.pid --daemon
     KALLITHEA_WHOOSH_TEST_DISABLE=1 KALLITHEA_NO_TMP_PATH=1 nosetests
     kill -9 $(cat test.pid)
 

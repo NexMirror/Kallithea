@@ -83,7 +83,7 @@ new translation instructions
 Testing translations
 --------------------
 
-Edit test.ini file and set lang attribute to::
+Edit kallithea/tests/test.ini file and set lang attribute to::
 
     lang=<new_language_code>
 
