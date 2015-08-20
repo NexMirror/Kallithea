@@ -20,9 +20,9 @@ import logging
 import kallithea
 import platform
 
-from mako.lookup import TemplateLookup
-from pylons.configuration import PylonsConfig
-from pylons.error import handle_mako_error
+import pylons
+import mako.lookup
+import beaker
 
 # don't remove this import it does magic for celery
 from kallithea.lib import celerypylons
@@ -49,7 +49,7 @@ def load_environment(global_conf, app_conf, initial=False,
     Configure the Pylons environment via the ``pylons.config``
     object
     """
-    config = PylonsConfig()
+    config = pylons.configuration.PylonsConfig()
 
     # Pylons paths
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -75,13 +75,12 @@ def load_environment(global_conf, app_conf, initial=False,
     load_rcextensions(root_path=config['here'])
 
     # Setup cache object as early as possible
-    import pylons
     pylons.cache._push_object(config['pylons.app_globals'].cache)
 
     # Create the Mako TemplateLookup, with the default auto-escaping
-    config['pylons.app_globals'].mako_lookup = TemplateLookup(
+    config['pylons.app_globals'].mako_lookup = mako.lookup.TemplateLookup(
         directories=paths['templates'],
-        error_handler=handle_mako_error,
+        error_handler=pylons.error.handle_mako_error,
         module_directory=os.path.join(app_conf['cache_dir'], 'templates'),
         input_encoding='utf-8', default_filters=['escape'],
         imports=['from webhelpers.html import escape'])
