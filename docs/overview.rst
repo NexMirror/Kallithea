@@ -77,37 +77,49 @@ Web server
 Kallithea is (primarily) a WSGI_ application that must be run from a web
 server that serves WSGI applications over HTTP.
 
-- Kallithea uses the Paste_ tool for some admin tasks. Paste provides ``paster
-  serve`` as a convenient way to launch Python WSGI / web servers.
-  This method is perfect for development but *can* also be used for production.
+Kallithea itself is not serving HTTP (or HTTPS); that is the web server's
+responsibility. Kallithea does however need to know its own user facing URL
+(protocol, address, port and path) for each HTTP request. Kallithea will
+usually use its own HTML/cookie based authentication but can also be configured
+to use web server authentication.
 
-  ``paster`` is a command line tool. Using it in production requires some way to
-  wrap it as a manageable service.
+There are several web server options:
 
-  Paste come with its own web server but Kallithea defaults to use Waitress_.
-  Gunicorn_ is also an option. These web servers have different limited feature
-  sets.
+- Kallithea uses the Paste_ tool as command line interface. Paste provides
+  ``paster serve`` as a convenient way to launch a Python WSGI / web server
+  from the command line. That is perfect for development and evaluation.
+  Actual use in production might have different requirements and need extra
+  work to make it manageable as a scalable system service.
 
-  It is also common/mandatory to put another web server or (reverse) proxy in
-  front of these Python web servers. Nginx_ is a common choice. This simple
-  setup will thus often end up being quite complex.
+  Paste comes with its own built-in web server but Kallithea defaults to use
+  Waitress_. Gunicorn_ is also an option. These web servers have different
+  limited feature sets.
 
-  The configuration of which web server to use is in the ini file passed to
-  ``paster``. The entry point for the WSGI application is configured in
-  ``setup.py`` as ``kallithea.config.middleware:make_app``.
+  The web server used by ``paster`` is configured in the ``.ini`` file passed
+  to it. The entry point for the WSGI application is configured
+  in ``setup.py`` as ``kallithea.config.middleware:make_app``.
 
 - `Apache httpd`_ can serve WSGI applications directly using mod_wsgi_ and a
   simple Python file with the necessary configuration. This is a good option if
   Apache is an option.
 
+- uWSGI_ is also a full web server with built-in WSGI module.
+
 - IIS_ can also server WSGI applications directly using isapi-wsgi_.
 
-- UWSGI_ is also an option.
+- A `reverse HTTP proxy <https://en.wikipedia.org/wiki/Reverse_proxy>`_
+  can be put in front of another web server which has WSGI support.
+  Such a layered setup can be complex but might in some cases be the right
+  option, for example to standardize on one internet-facing web server, to add
+  encryption or special authentication or for other security reasons, to
+  provide caching of static files, or to provide load balancing or fail-over.
+  Nginx_, Varnish_ and HAProxy_ are often used for this purpose, often in front
+  of a ``paster`` server that somehow is wrapped as a service.
 
 The best option depends on what you are familiar with and the requirements for
 performance and stability. Also, keep in mind that Kallithea mainly is serving
-custom data generated from relatively slow Python process. Kallithea is also
-often used inside organizations with a limited amount of users and thus no
+dynamically generated pages from a relatively slow Python process. Kallithea is
+also often used inside organizations with a limited amount of users and thus no
 continuous hammering from the internet.
 
 
@@ -120,9 +132,11 @@ continuous hammering from the internet.
 .. _Apache httpd: http://httpd.apache.org/
 .. _mod_wsgi: https://code.google.com/p/modwsgi/
 .. _isapi-wsgi: https://github.com/hexdump42/isapi-wsgi
-.. _UWSGI: https://uwsgi-docs.readthedocs.org/en/latest/
+.. _uWSGI: https://uwsgi-docs.readthedocs.org/en/latest/
 .. _nginx: http://nginx.org/en/
 .. _iis: http://en.wikipedia.org/wiki/Internet_Information_Services
 .. _pip: http://en.wikipedia.org/wiki/Pip_%28package_manager%29
 .. _WSGI: http://en.wikipedia.org/wiki/Web_Server_Gateway_Interface
 .. _pylons: http://www.pylonsproject.org/
+.. _HAProxy: http://www.haproxy.org/
+.. _Varnish: https://www.varnish-cache.org/
