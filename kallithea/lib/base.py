@@ -520,3 +520,20 @@ class BaseRepoController(BaseController):
             log.error(traceback.format_exc())
             h.flash(safe_str(e), category='error')
             raise webob.exc.HTTPBadRequest()
+
+
+class WSGIResultCloseCallback(object):
+    """Wrap a WSGI result and let close call close after calling the
+    close method on the result.
+    """
+    def __init__(self, result, close):
+        self._result = result
+        self._close = close
+
+    def __iter__(self):
+        return iter(self._result)
+
+    def close(self):
+        if hasattr(self._result, 'close'):
+            self._result.close()
+        self._close()
