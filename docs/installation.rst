@@ -107,7 +107,7 @@ To install as a regular user in ``~/.local``, you can use::
 You can now proceed to :ref:`setup`.
 
 Upgrading Kallithea from Python Package Index (PyPI)
------------------------------------------------------
+----------------------------------------------------
 
 .. note::
    It is strongly recommended that you **always** perform a database and

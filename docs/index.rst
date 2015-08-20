@@ -1,7 +1,9 @@
 .. _index:
 
+#######################
 Kallithea Documentation
------------------------
+#######################
+
 
 **Readme**
 
@@ -32,7 +34,7 @@ Kallithea Documentation
    usage/locking
    usage/statistics
 
-**Administrators Guide**
+**Administrator's guide**
 
 .. toctree::
    :maxdepth: 1
@@ -43,7 +45,7 @@ Kallithea Documentation
    usage/debugging
    usage/troubleshooting
 
-**Develop**
+**Development**
 
 .. toctree::
    :maxdepth: 1

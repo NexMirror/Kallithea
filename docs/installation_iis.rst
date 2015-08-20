@@ -1,5 +1,6 @@
 .. _installation_iis:
 
+=====================================================================
 Installing Kallithea on Microsoft Internet Information Services (IIS)
 =====================================================================
 
@@ -24,7 +25,7 @@ The following will assume that your Kallithea is at ``c:\inetpub\kallithea`` and
 will be served from the root of its own website. The changes to serve it in its
 own virtual folder will be noted where appropriate.
 
-Application Pool
+Application pool
 ................
 
 Make sure that there is a unique application pool for the Kallithea application
@@ -41,7 +42,7 @@ to run on the website and consequently, Kallithea will not be able to run.
     as the requirements to Kallithea are enabled by the existing application
     pool.
 
-ISAPI Handler
+ISAPI handler
 .............
 
 The ISAPI handler can be generated using::

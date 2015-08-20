@@ -440,7 +440,8 @@ reverse-proxy setup with basic auth::
    forge the authentication header and could effectively become authenticated
    using any account of their liking.
 
-Integration with Issue trackers
+
+Integration with issue trackers
 -------------------------------
 
 Kallithea provides a simple integration with issue trackers. It's possible

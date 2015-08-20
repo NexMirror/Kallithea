@@ -45,8 +45,7 @@ The issue tracker and a repository mirror can be found at Bitbucket_ on
 https://bitbucket.org/conservancy/kallithea.
 
 
-
-Kallithea Features
+Kallithea features
 ------------------
 
 - Has its own middleware to handle Mercurial_ and Git_ protocol requests. Each
@@ -162,7 +161,7 @@ database:
 - keep the database unconverted (intended for testing and evaluation)
 - convert the database in a one-time step
 
-Maintaining Interoperability
+Maintaining interoperability
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Interoperability with RhodeCode 2.2.X installations is provided so you don't
@@ -181,7 +180,7 @@ via::
 then you will find this location at
 ``$VIRTUAL_ENV/lib/python2.7/site-packages/Kallithea-0.1-py2.7.egg/kallithea``.
 
-One-time Conversion
+One-time conversion
 ~~~~~~~~~~~~~~~~~~~
 
 Alternatively, if you would like to convert the database for good, you can use

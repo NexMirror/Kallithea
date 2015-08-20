@@ -1,7 +1,7 @@
 .. _performance:
 
 ================================
-Optimizing Kallithea Performance
+Optimizing Kallithea performance
 ================================
 
 When serving a large amount of big repositories, Kallithea can start

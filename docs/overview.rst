@@ -1,7 +1,7 @@
 .. _overview:
 
 =====================
-Installation Overview
+Installation overview
 =====================
 
 
@@ -9,7 +9,7 @@ Some overview and some details that can help understanding the options when
 installing Kallithea.
 
 
-Python Environment
+Python environment
 ------------------
 
 **Kallithea** is written entirely in Python_ and requires Python version
@@ -38,7 +38,7 @@ environment used for running Kallithea.
 We recommend using virtualenv for installing Kallithea.
 
 
-Installation Methods
+Installation methods
 --------------------
 
 Kallithea must be installed on a server. Kallithea is installed in a Python
@@ -71,7 +71,7 @@ installed.
   but build the Kallithea package itself locally instead of downloading it.)
 
 
-Web Server
+Web server
 ----------
 
 Kallithea is (primarily) a WSGI_ application that must be run from a web

@@ -161,7 +161,7 @@ into repositories, e.g., defining a ``repo_manager`` key that would give info
 about a manager of each repository.  There's no limit for adding custom fields.
 Newly created fields are accessible via the API.
 
-Meta-Tagging
+Meta tagging
 ~~~~~~~~~~~~
 
 In the `Visual` tab, option `Stylify recognised meta tags` will cause Kallithea

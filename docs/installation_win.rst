@@ -1,6 +1,6 @@
 .. _installation_win:
 
-
+================================================================
 Installation and upgrade on Windows (7/Server 2008 R2 and newer)
 ================================================================
 
@@ -88,7 +88,7 @@ open a CMD and type::
   SETX PATH "%PATH%;[your-python-path]\Scripts" /M
 
 
-Step 5 - Kallithea Folder Structure
+Step 5 - Kallithea folder structure
 -----------------------------------
 
 Create a Kallithea folder structure.
@@ -151,7 +151,7 @@ The prompt will change into "(Env) C:\\Kallithea\\Env\\Scripts" or similar
           normal.
 
 
-Step 8 - (Optional) Install git
+Step 8 - Install git (optional)
 -------------------------------
 
 Mercurial being a python package, it was installed automatically when doing "pip install kallithea".

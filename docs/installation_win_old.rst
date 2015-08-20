@@ -1,10 +1,10 @@
 .. _installation_win_old:
 
-
+======================================================================
 Installation and upgrade on Windows (XP/Vista/Server 2003/Server 2008)
 ======================================================================
 
-First time install
+First-time install
 ::::::::::::::::::
 
 Target OS: Windows XP SP3 32bit English (Clean installation)
@@ -21,8 +21,8 @@ Target OS: Windows XP SP3 32bit English (Clean installation)
    - http://blog.victorjabur.com/2011/06/05/compiling-python-2-7-modules-on-windows-32-and-64-using-msvc-2008-express/
    - http://bugs.python.org/issue7511
 
-Step1 - Install Visual Studio 2008 Express
-------------------------------------------
+Step 1 - Install Visual Studio 2008 Express
+-------------------------------------------
 
 
 Optional: You can also install MinGW, but VS2008 installation is easier.
@@ -57,8 +57,8 @@ choose "Visual C++ 2008 Express" when installing.
    Copy C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\bin\vcvars64.bat to C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\bin\amd64\vcvarsamd64.bat
 
 
-Step2 - Install Python
-----------------------
+Step 2 - Install Python
+-----------------------
 
 Install Python 2.x.y (x = 6 or 7) x86 version (32bit). DO NOT USE A 3.x version.
 Download Python 2.x.y from:
@@ -73,8 +73,8 @@ be needed in the next step. In this case, it is "2.7".
 
    64bit: Just download and install the 64bit version of python.
 
-Step3 - Install Win32py extensions
-----------------------------------
+Step 3 - Install Win32py extensions
+-----------------------------------
 
 Download pywin32 from:
 http://sourceforge.net/projects/pywin32/files/
@@ -92,8 +92,8 @@ http://sourceforge.net/projects/pywin32/files/
      At the time of writing you can find this at:
      http://sourceforge.net/projects/pywin32/files/pywin32/Build%20218/pywin32-218.win-amd64-py2.7.exe/download
 
-Step4 - Python BIN
-------------------
+Step 4 - Python BIN
+-------------------
 
 Add Python BIN folder to the path
 
@@ -120,8 +120,8 @@ that came preinstalled in Vista/7 and can be installed in Windows XP.
   Typically: C:\\Python27
 
 
-Step5 - Kallithea folder structure
-----------------------------------
+Step 5 - Kallithea folder structure
+-----------------------------------
 
 Create a Kallithea folder structure
 
@@ -138,7 +138,7 @@ Create the following folder structure::
   C:\Kallithea\Repos
 
 
-Step6 - Install virtualenv
+Step 6 - Install virtualenv
 ---------------------------
 
 Install Virtual Env for Python
@@ -159,8 +159,8 @@ where you downloaded "virtualenv.py", and write::
 to include it)
 
 
-Step7 - Install Kallithea
--------------------------
+Step 7 - Install Kallithea
+--------------------------
 
 Finally, install Kallithea
 
@@ -198,8 +198,8 @@ The prompt will change into "(Env) C:\\Kallithea\\Env\\Scripts" or similar
 Some warnings will appear, don't worry as they are normal.
 
 
-Step8 - Configuring Kallithea
------------------------------
+Step 8 - Configuring Kallithea
+------------------------------
 
 
 steps taken from http://packages.python.org/Kallithea/setup.html
@@ -238,8 +238,8 @@ If you make some mistake and the script does not end, don't worry, start
 it again.
 
 
-Step9 - Running Kallithea
--------------------------
+Step 9 - Running Kallithea
+--------------------------
 
 
 In the previous command prompt, being in the C:\\Kallithea\\Bin folder,
