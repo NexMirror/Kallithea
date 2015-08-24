@@ -171,7 +171,8 @@ available via PyPI, so you can install it by running::
           your system, so before installing it check that you have at
           least the ``openldap`` and ``sasl`` libraries.
 
-LDAP settings are located in the Admin->LDAP section.
+Choose *Admin > Authentication*, click the ``kallithea.lib.auth_modules.auth_ldap`` button
+and then *Save*, to enable the LDAP plugin and configure its settings.
 
 Here's a typical LDAP setup::
 
@@ -486,8 +487,7 @@ Hook management
 ---------------
 
 Hooks can be managed in similar way to that used in ``.hgrc`` files.
-To access hooks setting click `advanced setup` in the `Hooks` section
-of Mercurial Settings in Admin.
+To manage hooks, choose *Admin > Settings > Hooks*.
 
 The built-in hooks cannot be modified, though they can be enabled or disabled in the *VCS* section.
 

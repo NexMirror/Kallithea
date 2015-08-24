@@ -27,8 +27,8 @@ Kallithea sends an email to `users` on several occasions:
 - when they request a password reset
 
 Kallithea sends an email to all `administrators` upon new account registration.
-Administrators are users with the ``Admin`` flag set in the ``Admin->Users``
-section.
+Administrators are users with the ``Admin`` flag set on the *Admin > Users*
+page.
 
 When Kallithea wants to send an email but due to an error cannot correctly
 determine the intended recipients, the administrators and the addresses
