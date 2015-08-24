@@ -164,18 +164,15 @@ class UsersController(BaseController):
         #    h.form(url('update_user', id=ID),
         #           method='put')
         # url('user', id=ID)
-        c.active = 'profile'
         user_model = UserModel()
-        c.user = user_model.get(id)
-        c.perm_user = AuthUser(user_id=id)
-        c.ip_addr = self.ip_addr
+        user = user_model.get(id)
         _form = UserForm(edit=True, old_data={'user_id': id,
-                                              'email': c.user.email})()
+                                              'email': user.email})()
         form_result = {}
         try:
             form_result = _form.to_python(dict(request.POST))
             skip_attrs = ['extern_type', 'extern_name',
-                         ] + auth_modules.get_managed_fields(c.user)
+                         ] + auth_modules.get_managed_fields(user)
 
             user_model.update(id, form_result, skip_attrs=skip_attrs)
             usr = form_result['username']
@@ -193,7 +190,7 @@ class UsersController(BaseController):
                 '_method': 'put'
             })
             return htmlfill.render(
-                render('admin/users/user_edit.html'),
+                self._render_edit_profile(user),
                 defaults=defaults,
                 errors=e,
                 prefix_error=False,
@@ -238,19 +235,23 @@ class UsersController(BaseController):
             h.flash(_("The default user cannot be edited"), category='warning')
             raise HTTPNotFound
 
+    def _render_edit_profile(self, user):
+        c.user = user
+        c.active = 'profile'
+        c.perm_user = AuthUser(dbuser=user)
+        c.ip_addr = self.ip_addr
+        managed_fields = auth_modules.get_managed_fields(user)
+        c.readonly = lambda n: 'readonly' if n in managed_fields else None
+        return render('admin/users/user_edit.html')
+
     def edit(self, id, format='html'):
         """GET /users/id/edit: Form to edit an existing item"""
         # url('edit_user', id=ID)
-        c.user = self._get_user_or_raise_if_default(id)
-        c.active = 'profile'
-        c.perm_user = AuthUser(user_id=id)
-        c.ip_addr = self.ip_addr
-        managed_fields = auth_modules.get_managed_fields(c.user)
-        c.readonly = lambda n: 'readonly' if n in managed_fields else None
+        user = self._get_user_or_raise_if_default(id)
+        defaults = user.get_dict()
 
-        defaults = c.user.get_dict()
         return htmlfill.render(
-            render('admin/users/user_edit.html'),
+            self._render_edit_profile(user),
             defaults=defaults,
             encoding="UTF-8",
             force_defaults=False)
