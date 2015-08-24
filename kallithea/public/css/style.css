@@ -709,25 +709,11 @@ tbody .yui-dt-editable { cursor: pointer }
     padding-top: 6px;
     text-align: right;
 }
-.yui-skin-sam tr.yui-dt-even { background-color: #FFF }
-.yui-skin-sam tr.yui-dt-odd { background-color: #edf5ff }
-.yui-skin-sam tr.yui-dt-even td.yui-dt-asc,
-.yui-skin-sam tr.yui-dt-even td.yui-dt-desc { background-color: #edf5ff }
-.yui-skin-sam tr.yui-dt-odd td.yui-dt-asc,
-.yui-skin-sam tr.yui-dt-odd td.yui-dt-desc { background-color: #dbeaff }
-.yui-skin-sam .yui-dt-list tr.yui-dt-even { background-color: #FFF }
-.yui-skin-sam .yui-dt-list tr.yui-dt-odd { background-color: #FFF }
-.yui-skin-sam .yui-dt-list tr.yui-dt-even td.yui-dt-asc,
-.yui-skin-sam .yui-dt-list tr.yui-dt-even td.yui-dt-desc { background-color: #edf5ff }
-.yui-skin-sam .yui-dt-list tr.yui-dt-odd td.yui-dt-asc,
-.yui-skin-sam .yui-dt-list tr.yui-dt-odd td.yui-dt-desc { background-color: #edf5ff }
 .yui-skin-sam th.yui-dt-highlighted,
 .yui-skin-sam th.yui-dt-highlighted a { background-color: #b2d2ff }
 .yui-skin-sam tr.yui-dt-highlighted,
 .yui-skin-sam tr.yui-dt-highlighted td.yui-dt-asc,
-.yui-skin-sam tr.yui-dt-highlighted td.yui-dt-desc,
-.yui-skin-sam tr.yui-dt-even td.yui-dt-highlighted,
-.yui-skin-sam tr.yui-dt-odd td.yui-dt-highlighted {
+.yui-skin-sam tr.yui-dt-highlighted td.yui-dt-desc {
     cursor: pointer;
     background-color: #b2d2ff;
 }
@@ -735,9 +721,7 @@ tbody .yui-dt-editable { cursor: pointer }
 .yui-skin-sam .yui-dt-list th.yui-dt-highlighted a { background-color: #b2d2ff }
 .yui-skin-sam .yui-dt-list tr.yui-dt-highlighted,
 .yui-skin-sam .yui-dt-list tr.yui-dt-highlighted td.yui-dt-asc,
-.yui-skin-sam .yui-dt-list tr.yui-dt-highlighted td.yui-dt-desc,
-.yui-skin-sam .yui-dt-list tr.yui-dt-even td.yui-dt-highlighted,
-.yui-skin-sam .yui-dt-list tr.yui-dt-odd td.yui-dt-highlighted {
+.yui-skin-sam .yui-dt-list tr.yui-dt-highlighted td.yui-dt-desc {
     cursor: pointer;
     background-color: #b2d2ff;
 }
@@ -749,22 +733,12 @@ tbody .yui-dt-editable { cursor: pointer }
     background-color: #426fd9;
     color: #FFF;
 }
-.yui-skin-sam tr.yui-dt-even td.yui-dt-selected,
-.yui-skin-sam tr.yui-dt-odd td.yui-dt-selected {
-    background-color: #446cd7;
-    color: #FFF;
-}
 .yui-skin-sam .yui-dt-list th.yui-dt-selected,
 .yui-skin-sam .yui-dt-list th.yui-dt-selected a { background-color: #446cd7 }
 .yui-skin-sam .yui-dt-list tr.yui-dt-selected td,
 .yui-skin-sam .yui-dt-list tr.yui-dt-selected td.yui-dt-asc,
 .yui-skin-sam .yui-dt-list tr.yui-dt-selected td.yui-dt-desc {
     background-color: #426fd9;
-    color: #FFF;
-}
-.yui-skin-sam .yui-dt-list tr.yui-dt-even td.yui-dt-selected,
-.yui-skin-sam .yui-dt-list tr.yui-dt-odd td.yui-dt-selected {
-    background-color: #446cd7;
     color: #FFF;
 }
 .yui-skin-sam .yui-dt-paginator {
