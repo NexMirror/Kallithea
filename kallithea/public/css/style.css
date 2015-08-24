@@ -4554,6 +4554,19 @@ span.pr-closed-tag {
     overflow: hidden;
 }
 
+.compare-revision-selector {
+    font-weight: bold;
+    font-size: 14px;
+}
+.compare-revision-selector > div {
+    display: inline-block;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+.compare-revision-selector .btn {
+    margin-bottom: 0;
+}
+
 
 div.diffblock {
     overflow: auto;
@@ -4569,6 +4582,7 @@ div.diffblock {
 div.diffblock.margined {
     margin: 0px 20px 0px 20px;
 }
+.compare-revision-selector,
 div.diffblock .code-header {
     border-bottom: 1px solid #CCCCCC;
     background: #EEEEEE;
