@@ -2375,6 +2375,10 @@ BIN_FILENODE = 6
     border-color: #cdcdcd;
 }
 
+#graph_content #changesets tr.mergerow {
+    opacity: 0.5;
+}
+
 #graph_content #changesets td {
     overflow: hidden;
     text-overflow: ellipsis;
