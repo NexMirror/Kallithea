@@ -165,79 +165,65 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
         <script type="text/javascript" src="${h.url('/js/graph.js', ver=c.kallithea_version)}"></script>
         <script type="text/javascript">
             $(document).ready(function(){
-                //Monitor range checkboxes and build a link to changesets ranges
-                var checkboxes = YUD.getElementsByClassName('changeset_range');
-                // register extra routes needed for this view
+                var $checkboxes = $('.changeset_range');
+
                 pyroutes.register('changeset_home', "${h.url('changeset_home', repo_name='%(repo_name)s', revision='%(revision)s')}", ['repo_name', 'revision']);
 
-                var checkbox_checker = function(e){
-                    var checked_checkboxes = [];
-                    for (pos in checkboxes){
-                        if(checkboxes[pos].checked){
-                            checked_checkboxes.push(checkboxes[pos]);
-                        }
-                    }
-                    if(YUD.get('open_new_pr')){
-                        if(checked_checkboxes.length>1){
-                            YUD.setStyle('open_new_pr','display','none');
+                var checkbox_checker = function(e) {
+                    var $checked_checkboxes = $checkboxes.filter(':checked');
+                    if ($checked_checkboxes.length > 1) {
+                        $('#open_new_pr').hide();
+                    } else {
+                        $('#open_new_pr').show();
+                        if($checked_checkboxes.length > 0) {
+                            $('#open_new_pr').html(_TM['Open New Pull Request for Selected Changesets']);
                         } else {
-                            YUD.setStyle('open_new_pr','display','');
-                            if(checked_checkboxes.length>0){
-                                YUD.get('open_new_pr').innerHTML = _TM['Open New Pull Request for Selected Changesets'];
-                            }else{
-                                YUD.get('open_new_pr').innerHTML = _TM['Open New Pull Request'];
-                            }
+                            $('#open_new_pr').html(_TM['Open New Pull Request']);
                         }
                     }
 
-                    if(checked_checkboxes.length>0){
-                        var rev_end = checked_checkboxes[0].name;
-                        var rev_start = checked_checkboxes[checked_checkboxes.length-1].name;
-                        var url = pyroutes.url('changeset_home', {'repo_name': '${c.repo_name}',
-                                                                  'revision': rev_start+'...'+rev_end});
+                    if ($checked_checkboxes.length > 0) {
+                        var rev_end = $checked_checkboxes.first().prop('name');
+                        var rev_start = $checked_checkboxes.last().prop('name');
+                        $('#rev_range_container').prop('href',
+                            pyroutes.url('changeset_home', {'repo_name': '${c.repo_name}',
+                                                            'revision': rev_start+'...'+rev_end}));
+                        $('#rev_range_container').html(
+                            ((rev_start == rev_end)
+                             ? _TM['Show Selected Changeset __S']
+                             : _TM['Show Selected Changesets __S &rarr; __E'])
+                            .replace('__S',rev_start.substr(0,6))
+                            .replace('__E',rev_end.substr(0,6)));
+                        $('#rev_range_container').show();
+                        $('#rev_range_clear').show();
 
-                        var link = (rev_start == rev_end)
-                            ? _TM['Show Selected Changeset __S']
-                            : _TM['Show Selected Changesets __S &rarr; __E'];
+                        $('#open_new_pr').prop('href', pyroutes.url('pullrequest_home',
+                                                                    {'repo_name': '${c.repo_name}',
+                                                                     'rev_start': rev_start,
+                                                                     'rev_end': rev_end}));
 
-                        link = link.replace('__S',rev_start.substr(0,6));
-                        link = link.replace('__E',rev_end.substr(0,6));
-                        YUD.get('rev_range_container').href = url;
-                        YUD.get('rev_range_container').innerHTML = link;
-                        YUD.setStyle('rev_range_container','display','');
-                        YUD.setStyle('rev_range_clear','display','');
-
-                        YUD.get('open_new_pr').href = pyroutes.url('pullrequest_home',
-                                                                   {'repo_name': '${c.repo_name}',
-                                                                    'rev_start': rev_start,
-                                                                    'rev_end': rev_end});
-
-                        YUD.setStyle('compare_fork','display','none');
-                    }else{
-                        YUD.setStyle('rev_range_container','display','none');
-                        YUD.setStyle('rev_range_clear','display','none');
+                        $('#compare_fork').hide();
+                    } else {
+                        $('#rev_range_container').hide();
+                        $('#rev_range_clear').hide();
                         %if c.revision:
-                            YUD.get('open_new_pr').href = pyroutes.url('pullrequest_home',
-                                                                       {'repo_name': '${c.repo_name}',
-                                                                        'rev_end':'${c.first_revision.raw_id}'});
+                            $('#open_new_pr').prop('href', pyroutes.url('pullrequest_home',
+                                                                        {'repo_name': '${c.repo_name}',
+                                                                         'rev_end':'${c.first_revision.raw_id}'}));
                         %else:
-                            YUD.get('open_new_pr').href = pyroutes.url('pullrequest_home',
-                                                                       {'repo_name': '${c.repo_name}',
-                                                                        'branch':'${c.first_revision.branch}'});
+                            $('#open_new_pr').prop('href', pyroutes.url('pullrequest_home',
+                                                                        {'repo_name': '${c.repo_name}',
+                                                                        'branch':'${c.first_revision.branch}'}));
                         %endif
-                        YUD.setStyle('compare_fork','display','');
+                        $('#compare_fork').show();
                     }
                 };
                 checkbox_checker();
-                YUE.on(checkboxes,'click', checkbox_checker);
+                $checkboxes.click(checkbox_checker);
 
-                YUE.on('rev_range_clear','click',function(e){
-                    for (var i=0; i<checkboxes.length; i++){
-                        var cb = checkboxes[i];
-                        cb.checked = false;
-                    }
+                $('#rev_range_clear').click(function(e){
+                    $checkboxes.prop('checked', false);
                     checkbox_checker();
-                    YUE.preventDefault(e);
                 });
 
                 var $msgs = $('.message');
