@@ -104,6 +104,11 @@ Variables holding jQuery objects should be named with a leading ``$``.
 Commit messages should have a leading short line summarizing the changes. For
 bug fixes, put ``(Issue #123)`` at the end of this line.
 
+Use American English grammar and spelling overall. Use `English title case`_ for
+page titles, button labels, headers, and 'labels' for fields in forms.
+
+.. _English title case: https://en.wikipedia.org/wiki/Capitalization#Title_case
+
 Contributions will be accepted in most formats -- such as pull requests on
 bitbucket, something hosted on your own Kallithea instance, or patches sent by
 email to the `kallithea-general`_ mailing list.
