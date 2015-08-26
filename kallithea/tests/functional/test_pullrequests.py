@@ -100,6 +100,7 @@ class TestPullrequestsController(TestController):
                                   'updaterev': 'default',
                                   'pullrequest_title': 'title',
                                   'pullrequest_desc': 'description',
+                                  'owner': TEST_USER_ADMIN_LOGIN,
                                   '_authentication_token': self.authentication_token(),
                                   'review_members': invalid_user_id,
                                  },
@@ -135,6 +136,7 @@ class TestPullrequestsController(TestController):
                                  {
                                   'pullrequest_title': 'title',
                                   'pullrequest_desc': 'description',
+                                  'owner': TEST_USER_ADMIN_LOGIN,
                                   '_authentication_token': self.authentication_token(),
                                   'review_members': invalid_user_id,
                                  },

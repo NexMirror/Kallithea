@@ -61,6 +61,7 @@ from kallithea.lib.utils2 import safe_int
 from kallithea.controllers.changeset import _ignorews_url, _context_url
 from kallithea.controllers.compare import CompareController
 from kallithea.lib.graphmod import graph_data
+from kallithea.model.db import User ### FIXME
 
 log = logging.getLogger(__name__)
 
@@ -497,6 +498,7 @@ class PullrequestsController(BaseRepoController):
         old_description = pull_request.description
         pull_request.title = _form['pullrequest_title']
         pull_request.description = _form['pullrequest_desc'].strip() or _('No description')
+        pull_request.owner = User.get_by_username(_form['owner'])
         try:
             PullRequestModel().mention_from_description(pull_request, old_description)
             PullRequestModel().update_reviewers(pull_request_id, reviewers_ids)

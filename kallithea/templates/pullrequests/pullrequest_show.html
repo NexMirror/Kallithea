@@ -38,7 +38,7 @@ ${self.repo_context_bar('showpullrequest')}
             <label>${_('Description')}:</label>
             %if editable:
             <div style="margin: 5px">
-              <a class="btn btn-small" onclick="$('#pr-edit-form').show();$('.pr-not-edit').hide()">${_("Edit")}</a>
+              <a class="btn btn-small" onclick="$('.pr-do-edit').show();$('.pr-not-edit').hide()">${_("Edit")}</a>
             </div>
             %endif
           </div>
@@ -48,7 +48,7 @@ ${self.repo_context_bar('showpullrequest')}
         </div>
 
         %if editable:
-        <div id="pr-edit-form" style="display:none">
+        <div class="pr-do-edit" style="display:none">
           <div class="field">
               <div class="label-summary">
                   <label for="pullrequest_title">${_('Title')}:</label>
@@ -153,12 +153,16 @@ ${self.repo_context_bar('showpullrequest')}
           <div class="label-summary">
               <label>${_('Owner')}:</label>
           </div>
-          <div class="input">
+          <div class="input pr-not-edit">
                   <div class="gravatar">
                     ${h.gravatar(c.pull_request.owner.email, size=20)}
                   </div>
                   <span>${c.pull_request.owner.full_name_and_username}</span><br/>
                   <span><a href="mailto:${c.pull_request.owner.email}">${c.pull_request.owner.email}</a></span><br/>
+          </div>
+          <div class="input pr-do-edit ac" style="display:none">
+               ${h.text('owner', class_="large", value=c.pull_request.owner.username, placeholder=_('Username'))}
+               <div id="owner_completion_container"></div>
           </div>
         </div>
 
@@ -373,6 +377,7 @@ ${self.repo_context_bar('showpullrequest')}
     <script type="text/javascript">
       $(document).ready(function(){
           PullRequestAutoComplete($('#user'), $('#reviewers_container'), _USERS_AC_DATA);
+          SimpleUserAutoComplete($('#owner'), $('#owner_completion_container'), _USERS_AC_DATA);
 
           $('.code-difftable').on('click', '.add-bubble', function(e){
               show_comment_form($(this));
@@ -391,7 +396,7 @@ ${self.repo_context_bar('showpullrequest')}
           });
           var $org_review_members = $('#review_members').clone();
           $('#pr-form-reset').click(function(e){
-              $('#pr-edit-form').hide();
+              $('.pr-do-edit').hide();
               $('.pr-not-edit').show();
               $('#pr-form-save').prop('disabled',false);
               $('#pr-form-clone').prop('disabled',true);
