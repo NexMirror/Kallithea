@@ -524,7 +524,7 @@ var _show_tooltip = function(e, tipText, safe){
         // save org title
         $el.attr('tt_title', tipText);
         // reset title to not show org tooltips
-        $el.attr('title', '');
+        $el.prop('title', '');
 
         var $tipBox = $('#tip-box');
         if (safe) {
@@ -548,7 +548,7 @@ var _close_tooltip = function(e){
     var $tipBox = $('#tip-box');
     $tipBox.hide();
     var el = e.currentTarget;
-    $(el).attr('title', $(el).attr('tt_title'));
+    $(el).prop('title', $(el).attr('tt_title'));
 };
 
 /**
@@ -767,7 +767,7 @@ function deleteComment(comment_id) {
  */
 var linkInlineComments = function($firstlinks, $comments){
     if ($comments.length > 0) {
-        $firstlinks.html('<a href="#{0}">First comment</a>'.format($comments.attr('id')));
+        $firstlinks.html('<a href="#{0}">First comment</a>'.format($comments.prop('id')));
     }
     if ($comments.length <= 1) {
         return;
@@ -776,12 +776,12 @@ var linkInlineComments = function($firstlinks, $comments){
     $comments.each(function(i, e){
             var prev = '';
             if (i > 0){
-                var prev_anchor = $($comments.get(i-1)).attr('id');
+                var prev_anchor = $($comments.get(i-1)).prop('id');
                 prev = '<a href="#{0}">Previous comment</a>'.format(prev_anchor);
             }
             var next = '';
             if (i+1 < $comments.length){
-                var next_anchor = $($comments.get(i+1)).attr('id');
+                var next_anchor = $($comments.get(i+1)).prop('id');
                 next = '<a href="#{0}">Next comment</a>'.format(next_anchor);
             }
             $(this).find('.comment-prev-next-links').html(
@@ -976,7 +976,7 @@ var getSelectionLink = function(e) {
                 $('body').prepend($hl_div);
             }
 
-            $hl_div.append($('<a>').html(_TM['Selection link']).attr('href', location.href.substring(0, location.href.indexOf('#')) + '#L' + ranges[0] + '-'+ranges[1]));
+            $hl_div.append($('<a>').html(_TM['Selection link']).prop('href', location.href.substring(0, location.href.indexOf('#')) + '#L' + ranges[0] + '-'+ranges[1]));
             var xy = $(till).offset();
             $hl_div.css('top', (xy.top + yoffset) + 'px').css('left', xy.left + 'px');
             $hl_div.show();
@@ -1184,7 +1184,7 @@ var MembersAutoComplete = function ($inputElement, $container, users_list, group
 
     // Handler for selection of an entry
     var itemSelectHandler = function (sType, aArgs) {
-        var nextId = $inputElement.attr('id').split('perm_new_member_name_')[1];
+        var nextId = $inputElement.prop('id').split('perm_new_member_name_')[1];
         var myAC = aArgs[0]; // reference back to the AC instance
         var elLI = aArgs[1]; // reference to the selected LI element
         var oData = aArgs[2]; // object literal of selected item's result data
@@ -1327,7 +1327,7 @@ var addReviewMember = function(id,fname,lname,nname,gravatar_link,gravatar_size)
 var removeReviewMember = function(reviewer_id, repo_name, pull_request_id){
     var $li = $('#reviewer_{0}'.format(reviewer_id));
     $li.find('div div').css("text-decoration", "line-through");
-    $li.find('input').attr('name', 'review_members_removed');
+    $li.find('input').prop('name', 'review_members_removed');
     $li.find('.reviewer_member_remove').replaceWith('&nbsp;(remove not saved)');
 }
 
@@ -1886,7 +1886,7 @@ var branchSort = function(results, container, query) {
 $(document).ready(function(){
     $('.diff-collapse-button').click(function(e) {
         var $button = $(e.currentTarget);
-        var $target = $('#' + $button.attr('target'));
+        var $target = $('#' + $button.prop('target'));
         if($target.hasClass('hidden')){
             $target.removeClass('hidden');
             $button.html("&uarr; {0} &uarr;".format(_TM['Collapse Diff']));

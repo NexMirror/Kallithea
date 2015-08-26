@@ -87,7 +87,7 @@ $(document).ready(function(){
             $(opt).attr('mode', m.mode);
             if (m.mime == 'text/plain') {
                 // default plain text
-                $(opt).attr('selected', 'selected');
+                $(opt).prop('selected', true);
                 modes_select.options[0] = opt;
             } else {
                 modes_select.options[index++] = opt;
@@ -98,7 +98,7 @@ $(document).ready(function(){
     var detected_mode = CodeMirror.findModeByExtension("${c.file.extension}");
     if(detected_mode){
         setCodeMirrorMode(myCodeMirror, detected_mode);
-        $($('#set_mode option[value="'+detected_mode.mime+'"]')[0]).attr("selected", "selected");
+        $($('#set_mode option[value="'+detected_mode.mime+'"]')[0]).prop('selected', true);
     }
 
     $('#set_mode').on('change', function(e){

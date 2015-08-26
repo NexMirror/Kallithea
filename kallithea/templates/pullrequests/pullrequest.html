@@ -129,7 +129,7 @@ ${self.repo_context_bar('showpullrequest')}
               $other_ref.empty();
               for(var i = 0; i < data.refs.length; i++)
               {
-                var $optgroup = $('<optgroup/>').attr('label', data.refs[i][1]);
+                var $optgroup = $('<optgroup/>').prop('label', data.refs[i][1]);
                 var options = data.refs[i][0];
                 var length = options.length;
                 for(var j = 0; j < length; j++)

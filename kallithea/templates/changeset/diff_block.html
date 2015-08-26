@@ -134,7 +134,7 @@ $(document).ready(function(){
         $('.btn-image-diff-swap').show();
         $('.img-diff-swapable')
             .each(function(i,e){
-                    $(e).attr('src', $(e).attr('realsrc'));
+                    $(e).prop('src', $(e).attr('realsrc'));
                 })
             .show();
         });
