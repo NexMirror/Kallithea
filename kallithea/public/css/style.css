@@ -2375,6 +2375,7 @@ BIN_FILENODE = 6
     border-color: #cdcdcd;
 }
 
+#graph_content #changesets tr.out-of-range,
 #graph_content #changesets tr.mergerow {
     opacity: 0.5;
 }

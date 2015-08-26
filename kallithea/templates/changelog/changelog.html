@@ -196,6 +196,19 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
 
                         $('#rev_range_clear').show();
                         $('#compare_fork').hide();
+                        var disabled = true;
+                        $checkboxes.each(function(){
+                            var $this = $(this);
+                            if (disabled) {
+                                if ($this.prop('checked'))
+                                       disabled = false;
+                                $this.closest('tr').toggleClass('out-of-range', disabled);
+                            } else {
+                                $this.closest('tr').toggleClass('out-of-range', false);
+                                if ($this.prop('checked'))
+                                       disabled = true;
+                            }
+                        });
                     } else {
                         $('#rev_range_container').hide();
                         $('#rev_range_clear').hide();
@@ -211,6 +224,7 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                             $('#open_new_pr').html(_TM['Open New Pull Request from {0}'].format('${c.first_revision.branch}'));
                         %endif
                         $('#compare_fork').show();
+                        $checkboxes.closest('tr').removeClass('out-of-range');
                     }
                 };
                 checkbox_checker();
