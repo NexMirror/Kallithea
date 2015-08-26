@@ -198,7 +198,7 @@ class PullrequestsController(BaseRepoController):
         c.repo_name = repo_name
         p = safe_int(request.GET.get('page', 1), 1)
 
-        c.pullrequests_pager = Page(c.pull_requests, page=p, items_per_page=10)
+        c.pullrequests_pager = Page(c.pull_requests, page=p, items_per_page=100)
 
         if request.environ.get('HTTP_X_PARTIAL_XHR'):
             return render('/pullrequests/pullrequest_data.html')
