@@ -4351,7 +4351,8 @@ form.comment-inline-form {
 }
 
 input.status_change_radio {
-    margin-left: 15px;
+    margin: 2px 0 5px 15px;
+    vertical-align: middle;
 }
 
 .notification-paginator {
