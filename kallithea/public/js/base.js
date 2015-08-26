@@ -439,18 +439,17 @@ var show_changeset_tooltip = function(){
 var _onSuccessFollow = function(target){
     var $target = $(target);
     var $f_cnt = $('#current_followers_count');
-    if($target.hasClass('follow')){
-        $target.attr('class', 'following');
-        $target.attr('title', _TM['Stop following this repository']);
-        if($f_cnt.html()){
+    if ($target.hasClass('follow')) {
+        $target.removeClass('follow').addClass('following');
+        $target.prop('title', _TM['Stop following this repository']);
+        if ($f_cnt.html()) {
             var cnt = Number($f_cnt.html())+1;
             $f_cnt.html(cnt);
         }
-    }
-    else{
-        $target.attr('class', 'follow');
-        $target.attr('title', _TM['Start following this repository']);
-        if($f_cnt.html()){
+    } else {
+        $target.removeClass('following').addClass('follow');
+        $target.prop('title', _TM['Start following this repository']);
+        if ($f_cnt.html()) {
             var cnt = Number($f_cnt.html())-1;
             $f_cnt.html(cnt);
         }

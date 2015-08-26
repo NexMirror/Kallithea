@@ -97,13 +97,6 @@
 <%def name="repo_context_bar(current=None, rev=None)">
   <% rev = None if rev == 'tip' else rev %>
   <%
-      def follow_class():
-          if c.repository_following:
-              return h.literal('following')
-          else:
-              return h.literal('follow')
-  %>
-  <%
     def is_current(selected):
         if selected == current:
             return h.literal('class="current"')
@@ -176,10 +169,10 @@
               ## also it feels like a job for the controller
               %if c.authuser.username != 'default':
                   <li>
-                   <a class="${follow_class()}" onclick="javascript:toggleFollowingRepo(this,${c.db_repo.repo_id});">
+                   <a class="${'following' if c.repository_following else 'follow'}" onclick="toggleFollowingRepo(this, ${c.db_repo.repo_id});">
                     <span class="show-follow"><i class="icon-heart-empty"></i> ${_('Follow')}</span>
                     <span class="show-following"><i class="icon-heart"></i> ${_('Unfollow')}</span>
-                  </a>
+                   </a>
                   </li>
                   <li><a href="${h.url('repo_fork_home',repo_name=c.repo_name)}"><i class="icon-git-pull-request"></i> ${_('Fork')}</a></li>
                   <li><a href="${h.url('pullrequest_home',repo_name=c.repo_name)}"><i class="icon-git-pull-request"></i> ${_('Create Pull Request')}</a></li>
