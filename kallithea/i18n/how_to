@@ -9,6 +9,7 @@ Translations are available on Hosted Weblate at the following URL:
 Registered users may contribute to the existing languages, or request a new
 language translations.
 
+
 Translating using Weblate
 -------------------------
 
@@ -26,6 +27,7 @@ them. Most common mistakes are inconsistent punctuation, whitespaces, missing or
 format parameters, untranslated strings copied into the translation. Please perform
 necessary corrections when they're needed, or override the false positives.
 
+
 Merging translations from Weblate
 ---------------------------------
 
@@ -40,6 +42,7 @@ It makes sense sometimes to re-order or fold commits by the same author when the
 just the same language translation. That, however, may confuse Weblate sometimes, in
 which case it should be manually convinced it has to discard the commits it created by
 using its administrative interface.
+
 
 Manual creation of a new language translation
 ---------------------------------------------
@@ -66,6 +69,7 @@ Finally, compile the translations::
 
     python setup.py compile_catalog -l <new_language_code>
 
+
 Updating translations
 ---------------------
 
@@ -79,6 +83,7 @@ Update the PO file by doing::
 
 Edit the new updated translation file. Repeat all steps after `init_catalog` step from
 new translation instructions
+
 
 Testing translations
 --------------------

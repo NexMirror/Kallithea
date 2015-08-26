@@ -121,6 +121,7 @@ authentication is fully supported.
           to the Kallithea db and run check functions for permissions
           against that.
 
+
 Setting up Whoosh full text search
 ----------------------------------
 
@@ -384,7 +385,6 @@ administrator can then modify it using Kallithea's admin interface.
 It's also possible for an administrator to create accounts and configure their
 permissions before the user logs in for the first time, using the :ref:`create-user` API.
 
-
 Container-based authentication
 ''''''''''''''''''''''''''''''
 
@@ -394,7 +394,6 @@ the ``REMOTE_USER`` server variable provided by the WSGI container.
 After setting up your container (see `Apache with mod_wsgi`_), you'll need
 to configure it to require authentication on the location configured for
 Kallithea.
-
 
 Proxy pass-through authentication
 '''''''''''''''''''''''''''''''''
@@ -710,6 +709,7 @@ Add the following at the end of the .ini file::
 
 then change ``<someprefix>`` into your chosen prefix
 
+
 Apache with mod_wsgi
 --------------------
 
@@ -806,6 +806,7 @@ A number of `example init.d scripts`__ can be found in
 the ``init.d`` directory of the Kallithea source.
 
 .. __: https://kallithea-scm.org/repos/kallithea/files/tip/init.d/ .
+
 
 .. _virtualenv: http://pypi.python.org/pypi/virtualenv
 .. _python: http://www.python.org/

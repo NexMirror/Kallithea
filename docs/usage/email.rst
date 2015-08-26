@@ -15,6 +15,7 @@ a username (``smtp_username``) and password (``smtp_password``), a non-standard
 port (``smtp_port``), encryption settings (``smtp_use_tls`` or ``smtp_use_ssl``)
 and/or specific authentication parameters (``smtp_auth``).
 
+
 Application emails
 ------------------
 
@@ -42,6 +43,7 @@ a name and an address in the following format: `Kallithea
 optionally be prefixed with the value of ``email_prefix`` in the configuration
 file.
 
+
 Error emails
 ------------
 
@@ -61,10 +63,12 @@ a name and an address in the following format: `Kallithea Errors
 standard SMTP port (25). If you have a remote SMTP server with a different port,
 you could set up a local forwarding SMTP server on port 25.
 
+
 References
 ----------
 
 - `Error Middleware (Pylons documentation) <http://pylons-webframework.readthedocs.org/en/latest/debugging.html#error-middleware>`_
 - `ErrorHandler (Pylons modules documentation) <http://pylons-webframework.readthedocs.org/en/latest/modules/middleware.html#pylons.middleware.ErrorHandler>`_
+
 
 .. _WebError: https://pypi.python.org/pypi/WebError

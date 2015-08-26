@@ -17,11 +17,14 @@ file ``kallithea/__init__.py`` and commenting out the backend.
        #'git': 'Git repository',
    }
 
+
 Git support
 -----------
 
+
 Web server with chunked encoding
 ````````````````````````````````
+
 Large Git pushes require an HTTP server with support for
 chunked encoding for POST. The Python web servers waitress_ and
 gunicorn_ (Linux only) can be used. By default, Kallithea uses
@@ -47,8 +50,10 @@ Also make sure to comment out the following options::
 Mercurial support
 -----------------
 
+
 Working with Mercurial subrepositories
 ``````````````````````````````````````
+
 This section explains how to use Mercurial subrepositories_ in Kallithea.
 
 Example usage::
@@ -76,6 +81,7 @@ Cloning ``mainrepo`` will also clone the attached subrepository.
 
 Next we can edit the subrepository data, and push back to Kallithea. This will
 update both repositories.
+
 
 .. _waitress: http://pypi.python.org/pypi/waitress
 .. _gunicorn: http://pypi.python.org/pypi/gunicorn

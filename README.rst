@@ -2,6 +2,7 @@
 Kallithea README
 ================
 
+
 About
 -----
 
@@ -24,6 +25,7 @@ Kallithea was forked from RhodeCode in July 2014 and has been heavily modified.
 
 Installation
 ------------
+
 Kallithea requires Python_ 2.x and it is recommended to install it in a
 virtualenv_. Official releases of Kallithea can be installed with::
 

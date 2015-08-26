@@ -4,7 +4,6 @@
 API
 ===
 
-
 Kallithea has a simple JSON RPC API with a single schema for calling all API
 methods. Everything is available by sending JSON encoded http(s) requests to
 ``<your_server>/_admin/api``.
@@ -137,7 +136,6 @@ OUTPUT::
     result : "Pulled from `<reponame>`"
     error :  null
 
-
 rescan_repos
 ------------
 
@@ -161,7 +159,6 @@ OUTPUT::
                'removed': [<list of names of removed repos>]}"
     error :  null
 
-
 invalidate_cache
 ----------------
 
@@ -183,7 +180,6 @@ OUTPUT::
     id : <id_given_in_input>
     result : "Caches of repository `<reponame>`"
     error :  null
-
 
 lock
 ----
@@ -216,7 +212,6 @@ OUTPUT::
              }
     error :  null
 
-
 get_ip
 ------
 
@@ -248,7 +243,6 @@ OUTPUT::
              }
 
     error :  null
-
 
 get_user
 --------
@@ -294,7 +288,6 @@ OUTPUT::
                  },
             }
     error:  null
-
 
 get_users
 ---------
@@ -382,7 +375,6 @@ Example::
 
     kallithea-api create_user username:bent email:bent@example.com firstname:Bent lastname:Bentsen extern_type:ldap extern_name:uid=bent,dc=example,dc=com
 
-
 update_user
 -----------
 
@@ -428,7 +420,6 @@ OUTPUT::
             }
     error:  null
 
-
 delete_user
 -----------
 
@@ -453,7 +444,6 @@ OUTPUT::
               "user": null
             }
     error:  null
-
 
 get_user_group
 --------------
@@ -498,7 +488,6 @@ OUTPUT::
              }
     error : null
 
-
 get_user_groups
 ---------------
 
@@ -525,7 +514,6 @@ OUTPUT::
                …
               ]
     error : null
-
 
 create_user_group
 -----------------
@@ -558,7 +546,6 @@ OUTPUT::
             }
     error:  null
 
-
 add_user_to_user_group
 ----------------------
 
@@ -587,7 +574,6 @@ OUTPUT::
             }
     error:  null
 
-
 remove_user_from_user_group
 ---------------------------
 
@@ -615,7 +601,6 @@ OUTPUT::
                       User wasn't in group"
             }
     error:  null
-
 
 get_repo
 --------
@@ -706,7 +691,6 @@ OUTPUT::
             }
     error:  null
 
-
 get_repos
 ---------
 
@@ -745,7 +729,6 @@ OUTPUT::
             ]
     error:  null
 
-
 get_repo_nodes
 --------------
 
@@ -777,7 +760,6 @@ OUTPUT::
               …
             ]
     error:  null
-
 
 create_repo
 -----------
@@ -831,7 +813,6 @@ OUTPUT::
               },
             }
     error:  null
-
 
 update_repo
 -----------
@@ -894,7 +875,6 @@ OUTPUT::
             }
     error:  null
 
-
 fork_repo
 ---------
 
@@ -932,7 +912,6 @@ OUTPUT::
             }
     error:  null
 
-
 delete_repo
 -----------
 
@@ -961,7 +940,6 @@ OUTPUT::
             }
     error:  null
 
-
 grant_user_permission
 ---------------------
 
@@ -989,7 +967,6 @@ OUTPUT::
             }
     error:  null
 
-
 revoke_user_permission
 ----------------------
 
@@ -1015,7 +992,6 @@ OUTPUT::
               "success": true
             }
     error:  null
-
 
 grant_user_group_permission
 ---------------------------
@@ -1044,7 +1020,6 @@ OUTPUT::
               "success": true
             }
     error:  null
-
 
 revoke_user_group_permission
 ----------------------------

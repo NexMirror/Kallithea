@@ -28,6 +28,7 @@ The following describes three different ways of installing Kallithea:
 
 .. _installation-source:
 
+
 Installation from repository source
 -----------------------------------
 
@@ -47,6 +48,7 @@ To upgrade, simply update the repository with ``hg pull -u`` and restart the
 server.
 
 .. _installation-virtualenv:
+
 
 Installing a released version in a virtualenv
 ---------------------------------------------
@@ -91,6 +93,7 @@ You can now proceed to :ref:`setup`.
 
 .. _installation-without-virtualenv:
 
+
 Installing a released version without virtualenv
 ------------------------------------------------
 
@@ -106,6 +109,7 @@ To install as a regular user in ``~/.local``, you can use::
     pip install --user kallithea
 
 You can now proceed to :ref:`setup`.
+
 
 Upgrading Kallithea from Python Package Index (PyPI)
 ----------------------------------------------------

@@ -4,7 +4,6 @@
 Installation overview
 =====================
 
-
 Some overview and some details that can help understanding the options when
 installing Kallithea.
 

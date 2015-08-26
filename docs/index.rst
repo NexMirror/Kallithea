@@ -4,7 +4,6 @@
 Kallithea Documentation
 #######################
 
-
 **Readme**
 
 .. toctree::
@@ -67,6 +66,7 @@ Other topics
 
 * :ref:`genindex`
 * :ref:`search`
+
 
 .. _virtualenv: http://pypi.python.org/pypi/virtualenv
 .. _python: http://www.python.org/

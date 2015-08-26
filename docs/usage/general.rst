@@ -27,6 +27,7 @@ It is worth noting that even if someone is given administrative access to
 Kallithea and deletes a repository, you can easily restore such an action by
 renaming the repository directory, removing the ``rm__<date>`` prefix.
 
+
 File view: follow current branch
 --------------------------------
 

@@ -4,6 +4,7 @@
 Installation and upgrade on Windows (7/Server 2008 R2 and newer)
 ================================================================
 
+
 First time install
 ::::::::::::::::::
 
@@ -12,7 +13,6 @@ Target OS: Windows 7 and newer or Windows Server 2008 R2 and newer
 Tested on Windows 8.1, Windows Server 2008 R2 and Windows Server 2012
 
 To install on an older version of Windows, see `<installation_win_old.html>`_
-
 
 Step 1 - Install Python
 -----------------------
@@ -30,7 +30,6 @@ While writing this guide, the latest version was v2.7.9.
 Remember the specific major and minor versions installed, because they will
 be needed in the next step. In this case, it is "2.7".
 
-
 Step 2 - Python BIN
 -------------------
 
@@ -44,7 +43,6 @@ Open a CMD and type::
 
 Please substitute [your-python-path] with your Python installation
 path. Typically this is ``C:\\Python27``.
-
 
 Step 3 - Install pywin32 extensions
 -----------------------------------
@@ -61,7 +59,6 @@ http://sourceforge.net/projects/pywin32/files/
   (x64)
   http://sourceforge.net/projects/pywin32/files/pywin32/Build%20219/pywin32-219.win32-py2.7.exe/download
   (Win32)
-
 
 Step 4 - Install pip
 --------------------
@@ -87,7 +84,6 @@ open a CMD and type::
 
   SETX PATH "%PATH%;[your-python-path]\Scripts" /M
 
-
 Step 5 - Kallithea folder structure
 -----------------------------------
 
@@ -105,7 +101,6 @@ Create the following folder structure::
   C:\Kallithea\Env
   C:\Kallithea\Repos
 
-
 Step 6 - Install virtualenv
 ---------------------------
 
@@ -122,7 +117,6 @@ Virtualenv will now be inside your Python Scripts path (C:\\Python27\\Scripts or
 To create a virtual environment, run::
 
   virtualenv C:\Kallithea\Env
-
 
 Step 7 - Install Kallithea
 --------------------------
@@ -150,7 +144,6 @@ The prompt will change into "(Env) C:\\Kallithea\\Env\\Scripts" or similar
           complete. Some warnings will appear. Don't worry, they are
           normal.
 
-
 Step 8 - Install git (optional)
 -------------------------------
 
@@ -159,7 +152,6 @@ Mercurial being a python package, it was installed automatically when doing "pip
 You need to install git manually if you want Kallithea to be able to host git repositories.
 
 See http://git-scm.com/book/en/v2/Getting-Started-Installing-Git#Installing-on-Windows for instructions.
-
 
 Step 9 - Configuring Kallithea
 ------------------------------
@@ -199,7 +191,6 @@ The script will ask you for admin mail, answer "admin@xxxx.com" (or whatever you
 If you make a mistake and the script doesn't end, don't worry: start it again.
 
 If you decided not to install git, you will get errors about it that you can ignore.
-
 
 Step 10 - Running Kallithea
 ---------------------------

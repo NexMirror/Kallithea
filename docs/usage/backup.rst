@@ -10,6 +10,7 @@ Settings
 
 Just copy your .ini file, it contains all Kallithea settings.
 
+
 Whoosh index
 ------------
 

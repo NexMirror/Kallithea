@@ -12,11 +12,13 @@ preventing you from applying this on IIS 6 well.
     For the best security, it is strongly recommended to only host the site over
     a secure connection, e.g. using TLS.
 
+
 Prerequisites
 -------------
 
 Apart from the normal requirements for Kallithea, it is also necessary to get an
 ISAPI-WSGI bridge module, e.g. isapi-wsgi.
+
 
 Installation
 ------------
@@ -40,7 +42,6 @@ to run on the website and neither will Kallithea.
 
     The application pool can be the same as an existing application pool,
     as long as the Kallithea requirements are met by the existing pool.
-
 
 ISAPI handler
 .............
@@ -88,6 +89,7 @@ external account*. Finally, save the changes.
 
 The last necessary step is to enable the relevant authentication in IIS, e.g.
 Windows authentication.
+
 
 Troubleshooting
 ---------------

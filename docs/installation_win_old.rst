@@ -4,6 +4,7 @@
 Installation and upgrade on Windows (XP/Vista/Server 2003/Server 2008)
 ======================================================================
 
+
 First-time install
 ::::::::::::::::::
 
@@ -23,7 +24,6 @@ Target OS: Windows XP SP3 32-bit English (Clean installation)
 
 Step 1 - Install Visual Studio 2008 Express
 -------------------------------------------
-
 
 Optional: You can also install MinGW, but VS2008 installation is easier.
 
@@ -56,7 +56,6 @@ choose "Visual C++ 2008 Express" when installing.
    I am not sure why this is not necessary for 32-bit.
    Copy C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\bin\vcvars64.bat to C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\bin\amd64\vcvarsamd64.bat
 
-
 Step 2 -- Install Python
 ------------------------
 
@@ -72,7 +71,6 @@ be needed in the next step. In this case, it is "2.7".
 .. note::
 
    64-bit: Just download and install the 64-bit version of python.
-
 
 Step 3 -- Install Win32py extensions
 ------------------------------------
@@ -92,7 +90,6 @@ http://sourceforge.net/projects/pywin32/files/
      64-bit: Download and install the 64-bit version.
      At the time of writing you can find this at:
      http://sourceforge.net/projects/pywin32/files/pywin32/Build%20218/pywin32-218.win-amd64-py2.7.exe/download
-
 
 Step 4 -- Python BIN
 --------------------
@@ -121,7 +118,6 @@ that came preinstalled in Vista/7 and can be installed in Windows XP.
   Please substitute [your-python-path] with your Python installation path.
   Typically: C:\\Python27
 
-
 Step 5 -- Kallithea folder structure
 ------------------------------------
 
@@ -138,7 +134,6 @@ Create the following folder structure::
   C:\Kallithea\Bin
   C:\Kallithea\Env
   C:\Kallithea\Repos
-
 
 Step 6 -- Install virtualenv
 ----------------------------
@@ -159,7 +154,6 @@ where you downloaded "virtualenv.py", and write::
 
 (--no-site-packages is now the default behaviour of virtualenv, no need
 to include it)
-
 
 Step 7 -- Install Kallithea
 ---------------------------
@@ -199,7 +193,6 @@ The prompt will change into "(Env) C:\\Kallithea\\Env\\Scripts" or similar
 
 Some warnings will appear, don't worry as they are normal.
 
-
 Step 8 -- Configuring Kallithea
 -------------------------------
 
@@ -238,10 +231,8 @@ whatever you want)
 If you make some mistake and the script does not end, don't worry, start
 it again.
 
-
 Step 9 -- Running Kallithea
 ---------------------------
-
 
 In the previous command prompt, being in the C:\\Kallithea\\Bin folder,
 just type::
@@ -255,7 +246,6 @@ It works!! :-)
 Remark:
 If it does not work first time, just Ctrl-C the CMD process and start it
 again. Don't forget the "http://" in Internet Explorer
-
 
 
 What this Guide does not cover:

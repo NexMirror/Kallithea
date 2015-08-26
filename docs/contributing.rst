@@ -24,6 +24,7 @@ than English. Join our project on `Hosted Weblate`_ to help us.
 To register, you can use your Bitbucket or GitHub account. See :ref:`translations`
 for more details.
 
+
 Getting started
 ---------------
 
@@ -68,6 +69,7 @@ are::
     -s, --nocapture       Don't capture stdout (any stdout output will be
                           printed immediately) [NOSE_NOCAPTURE]
     --failed              Run the tests that failed in the last test run.
+
 
 Coding/contribution guidelines
 ------------------------------
@@ -133,6 +135,7 @@ elsewhere (for example in a pull request) until they are ready.
 
 .. _translations:
 .. include:: ./../kallithea/i18n/how_to
+
 
 "Roadmap"
 ---------
