@@ -16,9 +16,7 @@ the best performance.
   increasing cache size (see below). This includes using the lightweight dashboard
   option and ``vcs_full_cache`` setting in .ini file.
 
-
 Follow these few steps to improve performance of Kallithea system.
-
 
 1. Increase cache
 

@@ -132,7 +132,6 @@ Currently it supports the following options:
 - svn -> hg clone
 - git -> git clone
 
-
 .. note:: svn -> hg cloning requires the ``hgsubversion`` library to be
    installed.
 

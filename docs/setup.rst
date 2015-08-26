@@ -18,7 +18,6 @@ configuration file contains the various settings for Kallithea, e.g.
 proxy port, email settings, usage of static files, cache, Celery
 settings, and logging.
 
-
 Next, you need to create the databases used by Kallithea. It is recommended to
 use PostgreSQL or SQLite (default). If you choose a database other than the
 default, ensure you properly adjust the database URL in your ``my.ini``
@@ -38,7 +37,6 @@ The ``setup-db`` values can also be given on the command line.
 Example::
 
     paster setup-db my.ini --user=nn --password=secret --email=nn@example.org --repos=/srv/repos
-
 
 The ``setup-db`` command will create all needed tables and an
 admin account. When choosing a root path you can either use a new
@@ -143,7 +141,6 @@ usually, the location is retrieved from the Kallithea database.
 The ``--index-only`` option can be used to limit the indexed repositories to a comma-separated list::
 
     paster make-index my.ini --index-only=vcs,kallithea
-
 
 To keep your index up-to-date it is necessary to do periodic index builds;
 for this, it is recommended to use a crontab entry. Example::
@@ -430,7 +427,6 @@ reverse-proxy setup with basic auth:
       RequestHeader set X-Forwarded-User %{RU}e
     </Location>
 
-
 .. note::
    If you enable proxy pass-through authentication, make sure your server is
    only accessible through the proxy. Otherwise, any client would be able to
@@ -535,7 +531,6 @@ Celery. So for example setting `BROKER_HOST` in Celery means setting
 To start the Celery process, run::
 
  paster celeryd <configfile.ini>
-
 
 .. note::
    Make sure you run this command from the same virtualenv, and with the same
@@ -677,7 +672,6 @@ Here is a sample configuration file for Apache using proxy:
             #SetEnvIf X-Url-Scheme https HTTPS=1
     </VirtualHost>
 
-
 Additional tutorial
 http://pylonsbook.com/en/1.1/deployment.html#using-apache-to-proxy-requests-to-pylons
 
@@ -733,7 +727,6 @@ that, you'll need to:
   correctly specified.
 
 Here is a sample excerpt from an Apache Virtual Host configuration file:
-
 
 .. code-block:: apache
 

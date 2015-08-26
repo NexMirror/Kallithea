@@ -39,7 +39,6 @@ or::
 
     use = egg:gunicorn#main
 
-
 Also make sure to comment out the following options::
 
     threadpool_workers =

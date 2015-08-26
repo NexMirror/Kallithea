@@ -206,7 +206,6 @@ It works!! :-)
 Remark:
 If it does not work the first time, Ctrl-C the CMD process and start it again. Don't forget the "http://" in Internet Explorer.
 
-
 What this guide does not cover:
 
 - Installing Celery

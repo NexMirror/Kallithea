@@ -123,18 +123,15 @@ Upgrading Kallithea from Python Package Index (PyPI)
    instance from version 0.1 to 0.2, the ``my.ini`` file could be
    backed up to ``my.ini.0-1``.
 
-
 If using a SQLite database, stop the Kallithea process/daemon/service, and
 then make a copy of the database file::
 
  service kallithea stop
  cp kallithea.db kallithea.db.{version}
 
-
 Back up your configuration file::
 
  cp my.ini my.ini.{version}
-
 
 Ensure that you are using the Python virtual environment that you originally
 installed Kallithea in by running::
@@ -146,11 +143,9 @@ Kallithea isn't listed, activate the correct virtual environment::
 
  source /srv/kallithea/venv/bin/activate
 
-
 Once you have verified the environment you can upgrade Kallithea with::
 
  pip install --upgrade kallithea
-
 
 Then run the following command from the installation directory::
 
@@ -164,11 +159,9 @@ that you recheck the content after the automerge.
    Please always make sure your .ini files are up to date. Errors can
    often be caused by missing parameters added in new versions.
 
-
 It is also recommended that you rebuild the whoosh index after upgrading since
 the new whoosh version could introduce some incompatible index changes. Please
 read the changelog to see if there were any changes to whoosh.
-
 
 The final step is to upgrade the database. To do this simply run::
 
@@ -177,7 +170,6 @@ The final step is to upgrade the database. To do this simply run::
 This will upgrade the schema and update some of the defaults in the database,
 and will always recheck the settings of the application, if there are no new
 options that need to be set.
-
 
 .. note::
    The DB schema upgrade library has some limitations and can sometimes fail if you try to

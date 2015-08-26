@@ -178,7 +178,6 @@ to::
 
 %comspec% /k ""C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\vcvarsall.bat"" amd64
 
-
 In that CMD (loaded with VS2008 PATHs) type::
 
   cd C:\Kallithea\Env\Scripts (or similar)
@@ -246,7 +245,6 @@ It works!! :-)
 Remark:
 If it does not work first time, just Ctrl-C the CMD process and start it
 again. Don't forget the "http://" in Internet Explorer
-
 
 What this Guide does not cover:
 

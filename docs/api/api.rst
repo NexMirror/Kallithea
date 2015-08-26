@@ -252,7 +252,6 @@ If userid param is skipped, it is set to id of user who is calling this method.
 Any userid can be specified when the command is executed using the api_key of a user with admin rights.
 Regular users can only speicy their own userid.
 
-
 INPUT::
 
     id : <id_for_response>
@@ -295,7 +294,6 @@ get_users
 List all existing users.
 This command can only be executed using the api_key of a user with admin rights.
 
-
 INPUT::
 
     id : <id_for_response>
@@ -325,7 +323,6 @@ OUTPUT::
             ]
     error:  null
 
-
 .. _create-user:
 
 create_user
@@ -333,7 +330,6 @@ create_user
 
 Create new user.
 This command can only be executed using the api_key of a user with admin rights.
-
 
 INPUT::
 
@@ -381,7 +377,6 @@ update_user
 Update the given user if such user exists.
 This command can only be executed using the api_key of a user with admin rights.
 
-
 INPUT::
 
     id : <id_for_response>
@@ -426,7 +421,6 @@ delete_user
 Delete the given user if such a user exists.
 This command can only be executed using the api_key of a user with admin rights.
 
-
 INPUT::
 
     id : <id_for_response>
@@ -450,7 +444,6 @@ get_user_group
 
 Get an existing user group.
 This command can only be executed using the api_key of a user with admin rights.
-
 
 INPUT::
 
@@ -494,7 +487,6 @@ get_user_groups
 List all existing user groups.
 This command can only be executed using the api_key of a user with admin rights.
 
-
 INPUT::
 
     id : <id_for_response>
@@ -520,7 +512,6 @@ create_user_group
 
 Create a new user group.
 This command can only be executed using the api_key of a user with admin rights.
-
 
 INPUT::
 
@@ -553,7 +544,6 @@ Adds a user to a user group. If the user already is in that group, success will 
 ``false``.
 This command can only be executed using the api_key of a user with admin rights.
 
-
 INPUT::
 
     id : <id_for_response>
@@ -580,7 +570,6 @@ remove_user_from_user_group
 Remove a user from a user group. If the user isn't in the given group, success will
 be ``false``.
 This command can only be executed using the api_key of a user with admin rights.
-
 
 INPUT::
 
@@ -698,7 +687,6 @@ List all existing repositories.
 This command can only be executed using the api_key of a user with admin rights,
 or that of a regular user with at least read access to the repository.
 
-
 INPUT::
 
     id : <id_for_response>
@@ -736,7 +724,6 @@ Return a list of files and directories for a given path at the given revision.
 It is possible to specify ret_type to show only ``files`` or ``dirs``.
 This command can only be executed using the api_key of a user with admin rights.
 
-
 INPUT::
 
     id : <id_for_response>
@@ -771,7 +758,6 @@ groups will be created. For example "foo/bar/baz" will create repository groups
 This command can only be executed using the api_key of a user with admin rights,
 or that of a regular user with create repository permission.
 Regular users cannot specify owner parameter.
-
 
 INPUT::
 
@@ -821,7 +807,6 @@ Update a repository.
 This command can only be executed using the api_key of a user with admin rights,
 or that of a regular user with create repository permission.
 Regular users cannot specify owner parameter.
-
 
 INPUT::
 
@@ -886,7 +871,6 @@ rights, or with the global fork permission, by a regular user with create
 repository permission and at least read access to the repository.
 Regular users cannot specify owner parameter.
 
-
 INPUT::
 
     id : <id_for_response>
@@ -920,7 +904,6 @@ This command can only be executed using the api_key of a user with admin rights,
 or that of a regular user with admin access to the repository.
 When ``forks`` param is set it is possible to detach or delete forks of the deleted repository.
 
-
 INPUT::
 
     id : <id_for_response>
@@ -945,7 +928,6 @@ grant_user_permission
 
 Grant permission for a user on the given repository, or update the existing one if found.
 This command can only be executed using the api_key of a user with admin rights.
-
 
 INPUT::
 
@@ -973,7 +955,6 @@ revoke_user_permission
 Revoke permission for a user on the given repository.
 This command can only be executed using the api_key of a user with admin rights.
 
-
 INPUT::
 
     id : <id_for_response>
@@ -999,7 +980,6 @@ grant_user_group_permission
 Grant permission for a user group on the given repository, or update the
 existing one if found.
 This command can only be executed using the api_key of a user with admin rights.
-
 
 INPUT::
 
