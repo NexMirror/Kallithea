@@ -2303,7 +2303,7 @@ class PullRequest(Base, BaseModel):
     def other_ref_parts(self):
         return self.other_ref.split(':')
 
-    author = relationship('User')
+    owner = relationship('User')
     reviewers = relationship('PullRequestReviewers',
                              cascade="all, delete-orphan")
     org_repo = relationship('Repository', primaryjoin='PullRequest.org_repo_id==Repository.repo_id')

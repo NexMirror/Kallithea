@@ -479,7 +479,7 @@ class PullrequestsController(BaseRepoController):
             raise HTTPForbidden()
         assert pull_request.other_repo.repo_name == repo_name
         #only owner or admin can update it
-        owner = pull_request.author.user_id == c.authuser.user_id
+        owner = pull_request.owner.user_id == c.authuser.user_id
         repo_admin = h.HasRepoPermissionAny('repository.admin')(c.repo_name)
         if not (h.HasPermissionAny('hg.admin') or repo_admin or owner):
             raise HTTPForbidden()
@@ -517,7 +517,7 @@ class PullrequestsController(BaseRepoController):
     def delete(self, repo_name, pull_request_id):
         pull_request = PullRequest.get_or_404(pull_request_id)
         #only owner can delete it !
-        if pull_request.author.user_id == c.authuser.user_id:
+        if pull_request.owner.user_id == c.authuser.user_id:
             PullRequestModel().delete(pull_request)
             Session().commit()
             h.flash(_('Successfully deleted pull request'),

@@ -92,7 +92,7 @@ class ChangesetCommentsModel(BaseModel):
             )
             # get the current participants of this changeset
             recipients = ChangesetComment.get_users(revision=revision)
-            # add changeset author if it's in kallithea system
+            # add changeset author if it's known locally
             cs_author = User.get_from_cs_author(cs.author)
             if not cs_author:
                 #use repo owner if we cannot extract the author correctly
@@ -136,7 +136,7 @@ class ChangesetCommentsModel(BaseModel):
             recipients = ChangesetComment.get_users(pull_request_id=
                                                 pull_request.pull_request_id)
             # add pull request author
-            recipients += [pull_request.author]
+            recipients += [pull_request.owner]
 
             # add the reviewers to notification
             recipients += [x.user for x in pull_request.reviewers]

@@ -15,7 +15,7 @@
 </%block>
 
 <%def name="main()">
-<% editable = not c.pull_request.is_closed() and (h.HasPermissionAny('hg.admin')() or h.HasRepoPermissionAny('repository.admin')(c.repo_name) or c.pull_request.author.user_id == c.authuser.user_id) %>
+<% editable = not c.pull_request.is_closed() and (h.HasPermissionAny('hg.admin')() or h.HasRepoPermissionAny('repository.admin')(c.repo_name) or c.pull_request.owner.user_id == c.authuser.user_id) %>
 ${self.repo_context_bar('showpullrequest')}
 <div class="box">
   <!-- box / title -->
@@ -151,16 +151,14 @@ ${self.repo_context_bar('showpullrequest')}
         </div>
         <div class="field">
           <div class="label-summary">
-              <label>${_('Created by')}:</label>
+              <label>${_('Owner')}:</label>
           </div>
           <div class="input">
-              <div class="author">
                   <div class="gravatar">
-                    ${h.gravatar(c.pull_request.author.email, size=20)}
+                    ${h.gravatar(c.pull_request.owner.email, size=20)}
                   </div>
-                  <span>${c.pull_request.author.full_name_and_username}</span><br/>
-                  <span><a href="mailto:${c.pull_request.author.email}">${c.pull_request.author.email}</a></span><br/>
-              </div>
+                  <span>${c.pull_request.owner.full_name_and_username}</span><br/>
+                  <span><a href="mailto:${c.pull_request.owner.email}">${c.pull_request.owner.email}</a></span><br/>
           </div>
         </div>
 

@@ -13,7 +13,7 @@
       <tr>
         <th class="left">${_('Vote')}</th>
         <th class="left">${_('Title')}</th>
-        <th class="left">${_('Author')}</th>
+        <th class="left">${_('Owner')}</th>
         <th class="left">${_('Age')}</th>
         <th class="left">${_('From')}</th>
         <th class="left">${_('To')}</th>
@@ -39,7 +39,7 @@
         </a>
       </td>
       <td>
-        ${pr.author.full_name_and_username}
+        ${pr.owner.full_name_and_username}
       </td>
       <td>
         <span class="tooltip" title="${h.fmt_date(pr.created_on)}">
@@ -59,7 +59,7 @@
         </a>
       </td>
       <td style="text-align:right">
-        %if pr.author.user_id == c.authuser.user_id:
+        %if pr.owner.user_id == c.authuser.user_id:
           ${h.form(url('pullrequest_delete', repo_name=pr.other_repo.repo_name, pull_request_id=pr.pull_request_id),method='delete', style="display:inline-block")}
           <button class="action_button"
                   id="remove_${pr.pull_request_id}"

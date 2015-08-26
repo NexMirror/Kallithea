@@ -87,7 +87,7 @@ class PullRequestModel(BaseModel):
         new.revisions = revisions
         new.title = title
         new.description = description
-        new.author = created_by_user
+        new.owner = created_by_user
         Session().add(new)
         Session().flush()
 
@@ -96,7 +96,7 @@ class PullRequestModel(BaseModel):
         comment = ChangesetCommentsModel().create(
             text=u'',
             repo=org_repo,
-            user=new.author,
+            user=new.owner,
             pull_request=new,
             send_email=False,
             status_change=ChangesetStatus.STATUS_UNDER_REVIEW,
@@ -104,7 +104,7 @@ class PullRequestModel(BaseModel):
         ChangesetStatusModel().set_status(
             org_repo,
             ChangesetStatus.STATUS_UNDER_REVIEW,
-            new.author,
+            new.owner,
             comment,
             pull_request=new
         )
@@ -135,7 +135,7 @@ class PullRequestModel(BaseModel):
         subject = safe_unicode(
             h.link_to(
               _('%(user)s wants you to review pull request %(pr_nice_id)s: %(pr_title)s') % \
-                {'user': pr.author.username,
+                {'user': pr.owner.username,
                  'pr_title': pr.title,
                  'pr_nice_id': pr.nice_id()},
                 pr_url)
@@ -144,19 +144,19 @@ class PullRequestModel(BaseModel):
         _org_ref_type, org_ref_name, _org_rev = pr.org_ref.split(':')
         email_kwargs = {
             'pr_title': pr.title,
-            'pr_user_created': h.person(pr.author),
+            'pr_user_created': h.person(pr.owner),
             'pr_repo_url': h.canonical_url('summary_home', repo_name=pr.other_repo.repo_name),
             'pr_url': pr_url,
             'pr_revisions': revision_data,
             'repo_name': pr.other_repo.repo_name,
             'pr_nice_id': pr.nice_id(),
             'ref': org_ref_name,
-            'pr_username': pr.author.username,
+            'pr_username': pr.owner.username,
             'threading': threading,
             'is_mention': False,
             }
         if reviewers:
-            NotificationModel().create(created_by=pr.author, subject=subject, body=body,
+            NotificationModel().create(created_by=pr.owner, subject=subject, body=body,
                                        recipients=reviewers,
                                        type_=Notification.TYPE_PULL_REQUEST,
                                        email_kwargs=email_kwargs)
@@ -167,8 +167,7 @@ class PullRequestModel(BaseModel):
         if mention_recipients:
             email_kwargs['is_mention'] = True
             subject = _('[Mention]') + ' ' + subject
-
-            NotificationModel().create(created_by=pr.author, subject=subject, body=body,
+            NotificationModel().create(created_by=pr.owner, subject=subject, body=body,
                                        recipients=mention_recipients,
                                        type_=Notification.TYPE_PULL_REQUEST,
                                        email_kwargs=email_kwargs)
