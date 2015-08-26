@@ -47,7 +47,7 @@ available for other packages.
 Two different cases will pretty much cover the options for how it can be
 installed.
 
-- The Kallithea source repository can be cloned and used - it is kept stable and
+- The Kallithea source repository can be cloned and used -- it is kept stable and
   can be used in production. The Kallithea maintainers use the development
   branch in production. The advantage of installation from source and regularly
   updating it is that you take advantage of the most recent improvements. Using

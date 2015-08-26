@@ -249,7 +249,7 @@ Connection Security : required
 .. _Certificate Checks:
 
 Certificate Checks : optional
-    How SSL certificates verification is handled - this is only useful when
+    How SSL certificates verification is handled -- this is only useful when
     `Enable LDAPS`_ is enabled.  Only DEMAND or HARD offer full SSL security
     while the other options are susceptible to man-in-the-middle attacks.  SSL
     certificates can be installed to /etc/openldap/cacerts so that the
@@ -700,7 +700,6 @@ Add the following at the end of the .ini file::
     use = egg:PasteDeploy#prefix
     prefix = /<someprefix>
 
-
 then change ``<someprefix>`` into your chosen prefix
 
 
@@ -744,7 +743,6 @@ Or if using a dispatcher WSGI script with proper virtualenv activation:
     WSGIScriptAlias / /srv/kallithea/dispatch.wsgi
     WSGIPassAuthorization On
 
-
 .. note::
    When running apache as root, please make sure it doesn't run Kallithea as
    root, for examply by adding: ``user=www-data group=www-data`` to the configuration.
@@ -753,7 +751,6 @@ Or if using a dispatcher WSGI script with proper virtualenv activation:
    If running Kallithea in multiprocess mode,
    make sure you set ``instance_id = *`` in the configuration so each process
    gets it's own cache invalidation key.
-
 
 Example WSGI dispatch script:
 

@@ -19,11 +19,12 @@ Target OS: Windows XP SP3 32-bit English (Clean installation)
    These extra steps haven been marked as "64-bit".
    Tested on Windows Server 2008 R2 SP1, 9-feb-2013.
    If you run into any 64-bit related problems, please check these pages:
+
    - http://blog.victorjabur.com/2011/06/05/compiling-python-2-7-modules-on-windows-32-and-64-using-msvc-2008-express/
    - http://bugs.python.org/issue7511
 
-Step 1 - Install Visual Studio 2008 Express
--------------------------------------------
+Step 1 -- Install Visual Studio 2008 Express
+--------------------------------------------
 
 Optional: You can also install MinGW, but VS2008 installation is easier.
 
@@ -32,7 +33,7 @@ http://download.microsoft.com/download/E/8/E/E8EEB394-7F42-4963-A2D8-29559B73829
 (if not found or relocated, google for "visual studio 2008 express" for updated link. This link was taken from http://stackoverflow.com/questions/15318560/visual-c-2008-express-download-link-dead)
 
 You can also download full ISO file for offline installation, just
-choose "All - Offline Install ISO image file" in the previous page and
+choose "All -- Offline Install ISO image file" in the previous page and
 choose "Visual C++ 2008 Express" when installing.
 
 .. note::
