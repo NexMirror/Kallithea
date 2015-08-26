@@ -569,6 +569,13 @@ class PullrequestsController(BaseRepoController):
         revs = [ctx.revision for ctx in reversed(c.cs_ranges)]
         c.jsdata = json.dumps(graph_data(org_scm_instance, revs))
 
+        c.is_range = False
+        if c.a_ref_type == 'rev': # this looks like a free range where target is ancestor
+            cs_a = org_scm_instance.get_changeset(c.a_rev)
+            root_parents = c.cs_ranges[0].parents
+            c.is_range = cs_a in root_parents
+            #c.merge_root = len(root_parents) > 1 # a range starting with a merge might deserve a warning
+
         avail_revs = set()
         avail_show = []
         c.cs_branch_name = c.cs_ref_name

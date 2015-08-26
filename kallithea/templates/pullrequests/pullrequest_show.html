@@ -120,10 +120,12 @@ ${self.repo_context_bar('showpullrequest')}
               <label>${_('Target')}:</label>
           </div>
           <div class="input">
-              <div>
+            %if c.is_range:
+              ${_("This is just a range of changesets and doesn't have a target or a real merge ancestor.")}
+            %else:
               ${h.link_to_ref(c.pull_request.other_repo.repo_name, c.a_ref_type, c.a_ref_name)}
               ## we don't know other rev - c.a_rev is ancestor and not necessarily on other_name_branch branch
-              </div>
+            %endif
           </div>
         </div>
         <div class="field">
