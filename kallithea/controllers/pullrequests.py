@@ -246,7 +246,14 @@ class PullrequestsController(BaseRepoController):
         org_rev = request.GET.get('rev_end')
         # rev_start is not directly useful - its parent could however be used
         # as default for other and thus give a simple compare view
-        #other_rev = request.POST.get('rev_start')
+        rev_start = request.GET.get('rev_start')
+        other_rev = None
+        if rev_start:
+            starters = org_repo.get_changeset(rev_start).parents
+            if starters:
+                other_rev = starters[0].raw_id
+            else:
+                other_rev = org_repo.scm_instance.EMPTY_CHANGESET
         branch = request.GET.get('branch')
 
         c.cs_repos = [(org_repo.repo_name, org_repo.repo_name)]
@@ -266,11 +273,11 @@ class PullrequestsController(BaseRepoController):
             c.a_repos.append((org_repo.parent.repo_name, '%s (parent)' % org_repo.parent.repo_name))
             c.a_repo = org_repo.parent
             c.a_refs, c.default_a_ref = self._get_repo_refs(
-                    org_repo.parent.scm_instance, branch=default_cs_branch)
+                    org_repo.parent.scm_instance, branch=default_cs_branch, rev=other_rev)
 
         else:
             c.a_repo = org_repo
-            c.a_refs, c.default_a_ref = self._get_repo_refs(org_scm_instance) # without rev and branch
+            c.a_refs, c.default_a_ref = self._get_repo_refs(org_scm_instance, rev=other_rev)
 
         # gather forks and add to this list ... even though it is rare to
         # request forks to pull from their parent
