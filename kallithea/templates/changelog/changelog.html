@@ -154,6 +154,8 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                 </tbody>
                 </table>
 
+                <input type="checkbox" id="singlerange" style="display:none"/>
+
                 </div>
 
                 <div class="pagination-wh pagination-left">
@@ -171,16 +173,18 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
 
                 var checkbox_checker = function(e) {
                     var $checked_checkboxes = $checkboxes.filter(':checked');
+                    var $singlerange = $('#singlerange');
+
+                    $('#rev_range_container').hide();
+                    $checkboxes.show();
+                    $singlerange.show();
+
                     if ($checked_checkboxes.length > 0) {
+                        $checked_checkboxes.first().parent('td').append($singlerange);
+                        var singlerange = $singlerange.prop('checked');
                         var rev_end = $checked_checkboxes.first().prop('name').substr(0, 12);
-                        var rev_start = $checked_checkboxes.last().prop('name').substr(0, 12);
-                        if (rev_start == rev_end) {
-                            $('#rev_range_container').hide();
-                            $('#open_new_pr').prop('href', pyroutes.url('pullrequest_home',
-                                                                        {'repo_name': '${c.repo_name}',
-                                                                         'rev_end': rev_end}));
-                            $('#open_new_pr').html(_TM['Open New Pull Request from {0}'].format(rev_end));
-                        } else {
+                        if ($checked_checkboxes.length > 1 || singlerange) {
+                            var rev_start = $checked_checkboxes.last().prop('name').substr(0, 12);
                             $('#rev_range_container').prop('href',
                                 pyroutes.url('changeset_home', {'repo_name': '${c.repo_name}',
                                                                 'revision': rev_start + '...' + rev_end}));
@@ -192,31 +196,46 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                                                                          'rev_start': rev_start,
                                                                          'rev_end': rev_end}));
                             $('#open_new_pr').html(_TM['Open New Pull Request for {0} &rarr; {1}'].format(rev_start, rev_end));
+                        } else {
+                            $('#open_new_pr').prop('href', pyroutes.url('pullrequest_home',
+                                                                        {'repo_name': '${c.repo_name}',
+                                                                         'rev_end': rev_end}));
+                            $('#open_new_pr').html(_TM['Open New Pull Request from {0}'].format(rev_end));
                         }
 
                         $('#rev_range_clear').show();
                         $('#compare_fork').hide();
+
                         var disabled = true;
                         $checkboxes.each(function(){
                             var $this = $(this);
                             if (disabled) {
-                                if ($this.prop('checked'))
-                                       disabled = false;
-                                $this.closest('tr').toggleClass('out-of-range', disabled);
+                                if ($this.prop('checked')) {
+                                    $this.closest('tr').removeClass('out-of-range');
+                                    disabled = singlerange;
+                                } else {
+                                    $this.closest('tr').addClass('out-of-range');
+                                }
                             } else {
-                                $this.closest('tr').toggleClass('out-of-range', false);
-                                if ($this.prop('checked'))
-                                       disabled = true;
+                                $this.closest('tr').removeClass('out-of-range');
+                                disabled = $this.prop('checked');
                             }
                         });
+
+                        if ($checked_checkboxes.length + (singlerange ? 1 : 0) >= 2) {
+                            $checkboxes.hide();
+                            $checked_checkboxes.show();
+                            if (!singlerange)
+                                $singlerange.hide();
+                        }
                     } else {
-                        $('#rev_range_container').hide();
+                        $('#singlerange').hide().prop('checked', false);
                         $('#rev_range_clear').hide();
                         %if c.revision:
                             $('#open_new_pr').prop('href', pyroutes.url('pullrequest_home',
                                                                         {'repo_name': '${c.repo_name}',
                                                                          'rev_end':'${c.first_revision.raw_id}'}));
-                            $('#open_new_pr').html(_TM['Open New Pull Request from {0}'].format(c.revision));
+                            $('#open_new_pr').html(_TM['Open New Pull Request from {0}'].format('${c.revision}'));
                         %else:
                             $('#open_new_pr').prop('href', pyroutes.url('pullrequest_home',
                                                                         {'repo_name': '${c.repo_name}',
@@ -228,11 +247,16 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                     }
                 };
                 checkbox_checker();
-                $checkboxes.click(checkbox_checker);
+                $checkboxes.click(function() {
+                    checkbox_checker();
+                    r.render(jsdata,100);
+                });
+                $('#singlerange').click(checkbox_checker);
 
                 $('#rev_range_clear').click(function(e){
                     $checkboxes.prop('checked', false);
                     checkbox_checker();
+                    r.render(jsdata,100);
                 });
 
                 var $msgs = $('.message');

@@ -2390,7 +2390,7 @@ BIN_FILENODE = 6
 }
 
 #graph_content .container .checkbox {
-    width: 12px;
+    width: 14px;
     font-size: 0.85em;
 }
 
@@ -2435,6 +2435,7 @@ BIN_FILENODE = 6
     position: relative;
 }
 
+#graph_content .container #singlerange,
 #graph_content .container .changeset_range {
     float: left;
     margin: 6px 3px;
