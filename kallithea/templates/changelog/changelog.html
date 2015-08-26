@@ -78,7 +78,7 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                 <table id="changesets">
                 <tbody>
                 %for cnt,cs in enumerate(c.pagination):
-                    <tr id="chg_${cnt+1}" class="container ${'tablerow%s' % (cnt%2)}">
+                    <tr id="chg_${cnt+1}" class="container">
                         <td class="checkbox">
                             %if c.changelog_for_path:
                                 ${h.checkbox(cs.raw_id,class_="changeset_range", disabled="disabled")}

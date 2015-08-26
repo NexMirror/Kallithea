@@ -8,7 +8,7 @@ class TestChangelogController(TestController):
         response = self.app.get(url(controller='changelog', action='index',
                                     repo_name=HG_REPO))
 
-        response.mustcontain('''id="chg_20" class="container tablerow1"''')
+        response.mustcontain('''id="chg_20" class="container"''')
         response.mustcontain(
             """<input class="changeset_range" """
             """id="7b22a518347bb9bc19679f6af07cd0a61bfe16e7" """
@@ -54,7 +54,7 @@ class TestChangelogController(TestController):
         response = self.app.get(url(controller='changelog', action='index',
                                     repo_name=GIT_REPO))
 
-        response.mustcontain('''id="chg_20" class="container tablerow1"''')
+        response.mustcontain('''id="chg_20" class="container"''')
         response.mustcontain(
             """<input class="changeset_range" """
             """id="95f9a91d775b0084b2368ae7779e44931c849c0e" """
