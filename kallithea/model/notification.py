@@ -145,7 +145,7 @@ class NotificationModel(BaseModel):
                                 .get_email_tmpl(type_, 'html', **html_kwargs)
 
             run_task(tasks.send_email, [rec.email], email_subject, email_txt_body,
-                     email_html_body, headers)
+                     email_html_body, headers, author=created_by_obj)
 
         return notif
 

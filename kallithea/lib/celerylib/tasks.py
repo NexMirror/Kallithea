@@ -31,6 +31,7 @@ from celery.decorators import task
 import os
 import traceback
 import logging
+import rfc822
 from os.path import join as jn
 
 from time import mktime
@@ -45,6 +46,7 @@ from kallithea.lib.celerylib import run_task, locked_task, dbsession, \
 from kallithea.lib.helpers import person
 from kallithea.lib.rcmail.smtp_mailer import SmtpMailer
 from kallithea.lib.utils import add_cache, action_logger
+from kallithea.lib.vcs.utils import author_email
 from kallithea.lib.compat import json, OrderedDict
 from kallithea.lib.hooks import log_create_repository
 
@@ -247,7 +249,7 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
 
 @task(ignore_result=True)
 @dbsession
-def send_email(recipients, subject, body='', html_body='', headers=None):
+def send_email(recipients, subject, body='', html_body='', headers=None, author=None):
     """
     Sends an email with defined parameters from the .ini files.
 
@@ -256,9 +258,16 @@ def send_email(recipients, subject, body='', html_body='', headers=None):
     :param subject: subject of the mail
     :param body: body of the mail
     :param html_body: html version of body
+    :param headers: dictionary of prepopulated e-mail headers
+    :param author: User object of the author of this mail, if known and relevant
     """
     log = get_logger(send_email)
     assert isinstance(recipients, list), recipients
+    if headers is None:
+        headers = {}
+    else:
+        # do not modify the original headers object passed by the caller
+        headers = headers.copy()
 
     email_config = config
     email_prefix = email_config.get('email_prefix', '')
@@ -280,7 +289,18 @@ def send_email(recipients, subject, body='', html_body='', headers=None):
 
         log.warning("No recipients specified for '%s' - sending to admins %s", subject, ' '.join(recipients))
 
-    mail_from = email_config.get('app_email_from', 'Kallithea')
+    # SMTP sender
+    envelope_from = email_config.get('app_email_from', 'Kallithea')
+    # 'From' header
+    if author is not None:
+        # set From header based on author but with a generic e-mail address
+        # In case app_email_from is in "Some Name <e-mail>" format, we first
+        # extract the e-mail address.
+        envelope_addr = author_email(envelope_from)
+        headers['From'] = '"%s" <%s>' % (
+            rfc822.quote('%s (no-reply)' % author.full_name_or_username),
+            envelope_addr)
+
     user = email_config.get('smtp_username')
     passwd = email_config.get('smtp_password')
     mail_server = email_config.get('smtp_server')
@@ -306,7 +326,7 @@ def send_email(recipients, subject, body='', html_body='', headers=None):
         return False
 
     try:
-        m = SmtpMailer(mail_from, user, passwd, mail_server, smtp_auth,
+        m = SmtpMailer(envelope_from, user, passwd, mail_server, smtp_auth,
                        mail_port, ssl, tls, debug=debug)
         m.send(recipients, subject, body, html_body, headers=headers)
     except:

@@ -39,9 +39,14 @@ Recipients will see these emails originating from the sender specified in the
 ``app_email_from`` setting in the configuration file. This setting can either
 contain only an email address, like `kallithea-noreply@example.com`, or both
 a name and an address in the following format: `Kallithea
-<kallithea-noreply@example.com>`. The subject of these emails can
-optionally be prefixed with the value of ``email_prefix`` in the configuration
-file.
+<kallithea-noreply@example.com>`. However, if the email is sent due to an
+action of a particular user, for example when a comment is given or a pull
+request created, the name of that user will be combined with the email address
+specified in ``app_email_from`` to form the sender (and any name part in that
+configuration setting disregarded).
+
+The subject of these emails can optionally be prefixed with the value of
+``email_prefix`` in the configuration file.
 
 
 Error emails
