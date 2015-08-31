@@ -24,7 +24,6 @@ Original author and date, and relevant copyright and licensing information is be
 :copyright: (c) 2013 RhodeCode GmbH, and others.
 :license: GPLv3, see LICENSE.md for more details.
 """
-from __future__ import with_statement
 import time
 import os
 import logging

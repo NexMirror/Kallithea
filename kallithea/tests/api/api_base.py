@@ -18,7 +18,6 @@ tests for api. run with::
     KALLITHEA_WHOOSH_TEST_DISABLE=1 nosetests --with-coverage --cover-package=kallithea.controllers.api.api -x kallithea/tests/api
 """
 
-from __future__ import with_statement
 import os
 import random
 import mock

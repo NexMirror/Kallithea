@@ -1,4 +1,3 @@
-from __future__ import with_statement
 from kallithea.tests import *
 from kallithea.lib.diffs import DiffProcessor, NEW_FILENODE, DEL_FILENODE, \
     MOD_FILENODE, RENAMED_FILENODE, CHMOD_FILENODE, BIN_FILENODE, COPIED_FILENODE

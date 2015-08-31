@@ -1,4 +1,3 @@
-from __future__ import with_statement
 
 from kallithea.lib.vcs.utils.filesize import filesizeformat
 from kallithea.lib.vcs.utils.compat import unittest
