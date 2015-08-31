@@ -77,19 +77,19 @@
                   ## TODO: link to ancestor and head of other instead of exactly other
                   %if op == 'A':
                     ${_('Added')}
-                    <a class="spantag" href="${h.url('files_home', repo_name=c.cs_repo.repo_name, f_path=filenode_path, revision=c.cs_rev)}">${h.short_id(c.cs_ref_name) if c.cs_ref_type=='rev' else c.cs_ref_name}</a>
+                    <a class="spantag" href="${h.url('files_home', repo_name=c.cs_repo.repo_name, f_path=filenode_path, revision=c.cs_rev)}">${h.short_ref(c.cs_ref_type, c.cs_ref_name)}</a>
                   %elif op == 'M':
-                    <a class="spantag" href="${h.url('files_home', repo_name=c.a_repo.repo_name, f_path=filenode_path, revision=c.a_rev)}">${h.short_id(c.a_ref_name) if c.a_ref_type=='rev' else c.a_ref_name}</a>
+                    <a class="spantag" href="${h.url('files_home', repo_name=c.a_repo.repo_name, f_path=filenode_path, revision=c.a_rev)}">${h.short_ref(c.a_ref_type, c.a_ref_name)}</a>
                     <i class="icon-right"></i>
-                    <a class="spantag" href="${h.url('files_home', repo_name=c.cs_repo.repo_name, f_path=filenode_path, revision=c.cs_rev)}">${h.short_id(c.cs_ref_name) if c.cs_ref_type=='rev' else c.cs_ref_name}</a>
+                    <a class="spantag" href="${h.url('files_home', repo_name=c.cs_repo.repo_name, f_path=filenode_path, revision=c.cs_rev)}">${h.short_ref(c.cs_ref_type, c.cs_ref_name)}</a>
                   %elif op == 'D':
                     ${_('Deleted')}
-                    <a class="spantag" href="${h.url('files_home', repo_name=c.a_repo.repo_name, f_path=filenode_path, revision=c.a_rev)}">${h.short_id(c.a_ref_name) if c.a_ref_type=='rev' else c.a_ref_name}</a>
+                    <a class="spantag" href="${h.url('files_home', repo_name=c.a_repo.repo_name, f_path=filenode_path, revision=c.a_rev)}">${h.short_ref(c.a_ref_type, c.a_ref_name)}</a>
                   %elif op == 'R':
                     ${_('Renamed')}
-                    <a class="spantag" href="${h.url('files_home', repo_name=c.a_repo.repo_name, f_path=filenode_path, revision=c.a_rev)}">${h.short_id(c.a_ref_name) if c.a_ref_type=='rev' else c.a_ref_name}</a>
+                    <a class="spantag" href="${h.url('files_home', repo_name=c.a_repo.repo_name, f_path=filenode_path, revision=c.a_rev)}">${h.short_ref(c.a_ref_type, c.a_ref_name)}</a>
                     <i class="icon-right"></i>
-                    <a class="spantag" href="${h.url('files_home', repo_name=c.cs_repo.repo_name, f_path=filenode_path, revision=c.cs_rev)}">${h.short_id(c.cs_ref_name) if c.cs_ref_type=='rev' else c.cs_ref_name}</a>
+                    <a class="spantag" href="${h.url('files_home', repo_name=c.cs_repo.repo_name, f_path=filenode_path, revision=c.cs_rev)}">${h.short_ref(c.cs_ref_type, c.cs_ref_name)}</a>
                   %else:
                     ${op}???
                   %endif
