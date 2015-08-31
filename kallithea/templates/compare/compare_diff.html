@@ -115,7 +115,7 @@ ${self.repo_context_bar('changelog')}
                 var children = [];
                 $.each(this.children, function(){
                     if(query.term.length == 0 || this.text.toUpperCase().indexOf(query.term.toUpperCase()) >= 0 ){
-                        children.push({'id': this.id, 'text': this.text});
+                        children.push(this);
                     }
                 });
                 data.results.push({'text': section, 'children': children});
