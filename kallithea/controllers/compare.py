@@ -165,6 +165,9 @@ class CompareController(BaseRepoController):
     @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
                                    'repository.admin')
     def compare(self, repo_name, org_ref_type, org_ref_name, other_ref_type, other_ref_name):
+        org_ref_name = org_ref_name.strip()
+        other_ref_name = other_ref_name.strip()
+
         org_repo = c.db_repo.repo_name
         other_repo = request.GET.get('other_repo', org_repo)
         # If merge is True:
