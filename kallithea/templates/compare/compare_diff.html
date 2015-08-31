@@ -95,15 +95,17 @@ ${self.repo_context_bar('changelog')}
     <script type="text/javascript">
 
    $(document).ready(function(){
-    var cache = {}
-    $("#compare_org").select2({
-        placeholder: "${'%s@%s' % (c.a_repo.repo_name, c.a_ref_name)}",
+    var cache = {};
+
+    function make_revision_dropdown(css_selector, placeholder, repo_name, cache_key) {
+      $(css_selector).select2({
+        placeholder: placeholder,
         formatSelection: function(obj){
-            return '{0}@{1}'.format("${c.a_repo.repo_name}", obj.text);
+            return '{0}@{1}'.format(repo_name, obj.text);
         },
         dropdownAutoWidth: true,
         query: function(query){
-          var key = 'cache';
+          var key = cache_key;
           var cached = cache[key] ;
           if(cached) {
             var data = {results: []};
@@ -124,7 +126,7 @@ ${self.repo_context_bar('changelog')}
             query.callback(data);
           }else{
               $.ajax({
-                url: pyroutes.url('repo_refs_data', {'repo_name': '${c.a_repo.repo_name}'}),
+                url: pyroutes.url('repo_refs_data', {'repo_name': repo_name}),
                 data: {},
                 dataType: 'json',
                 type: 'GET',
@@ -136,46 +138,10 @@ ${self.repo_context_bar('changelog')}
           }
         }
     });
-    $("#compare_other").select2({
-        placeholder: "${'%s@%s' % (c.cs_repo.repo_name, c.cs_ref_name)}",
-        dropdownAutoWidth: true,
-        formatSelection: function(obj){
-            return '{0}@{1}'.format("${c.cs_repo.repo_name}", obj.text);
-        },
-        query: function(query){
-          var key = 'cache2';
-          var cached = cache[key] ;
-          if(cached) {
-            var data = {results: []};
-            //filter results
-            $.each(cached.results, function(){
-                var section = this.text;
-                var children = [];
-                $.each(this.children, function(){
-                    if(query.term.length == 0 || this.text.toUpperCase().indexOf(query.term.toUpperCase()) >= 0 ){
-                        children.push({'id': this.id, 'text': this.text});
-                    }
-                });
-                data.results.push({'text': section, 'children': children});
-            });
-            //push the typed in changeset
-            data.results.push({'text':_TM['Specify changeset'],
-                               'children': [{'id': query.term, 'text': query.term, 'type': 'rev'}]});
-            query.callback(data);
-          }else{
-              $.ajax({
-                url: pyroutes.url('repo_refs_data', {'repo_name': '${c.cs_repo.repo_name}'}),
-                data: {},
-                dataType: 'json',
-                type: 'GET',
-                success: function(data) {
-                  cache[key] = data;
-                  query.callback({results: data.results});
-                }
-              });
-          }
-        }
-    });
+    }
+
+    make_revision_dropdown("#compare_org",   "${'%s@%s' % (c.a_repo.repo_name, c.a_ref_name)}",   "${c.a_repo.repo_name}",  'cache');
+    make_revision_dropdown("#compare_other", "${'%s@%s' % (c.cs_repo.repo_name, c.cs_ref_name)}", "${c.cs_repo.repo_name}", 'cache2');
 
     var values_changed = function() {
         var values = $('#compare_org').select2('data') && $('#compare_other').select2('data');
