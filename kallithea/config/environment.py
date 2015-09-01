@@ -136,5 +136,5 @@ def load_environment(global_conf, app_conf, initial=False,
 
     if str2bool(config.get('initial_repo_scan', True)):
         repo2db_mapper(ScmModel().repo_scan(repos_path),
-                       remove_obsolete=False, install_git_hook=False)
+                       remove_obsolete=False, install_git_hooks=False)
     return config

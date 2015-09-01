@@ -835,7 +835,7 @@ class ScmModel(BaseModel):
 
         return choices, hist_l
 
-    def install_git_hook(self, repo, force_create=False):
+    def install_git_hooks(self, repo, force_create=False):
         """
         Creates a kallithea hook inside a git repository
 

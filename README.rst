@@ -201,6 +201,31 @@ database, using the database string you can find in your ``production.ini`` (or
    If you started out using the branding interoperability approach mentioned
    above, watch out for stray brand.pyc after removing brand.py.
 
+Git hooks
+~~~~~~~~~
+
+After switching to Kallithea, it will be necessary to update the Git_ hooks in
+your repositories. If not, the Git_ hooks from RhodeCode will still be called,
+which will cause ``git push`` to fail every time.
+
+If you do not have any custom Git_ hooks deployed, perform the following steps
+(this may take some time depending on the number and size of repositories you
+have):
+
+1. Log-in as an administrator.
+
+2. Open page *Admin > Settings > Remap and Rescan*.
+
+3. Turn on the option **Install Git Hooks**.
+
+4. Turn on the option **Overwrite existing Git hooks**.
+
+5. Click on the button **Rescan Repositories**.
+
+If you do have custom hooks, you will need to merge those changes manually. In
+order to get sample hooks from Kallithea, the easiest way is to create a new Git_
+repository, and have a look at the hooks deployed there.
+
 
 .. _virtualenv: http://pypi.python.org/pypi/virtualenv
 .. _Python: http://www.python.org/

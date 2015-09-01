@@ -460,7 +460,7 @@ def map_groups(path):
 
 
 def repo2db_mapper(initial_repo_list, remove_obsolete=False,
-                   install_git_hook=False, user=None):
+                   install_git_hooks=False, user=None, overwrite_git_hooks=False):
     """
     maps all repos given in initial_repo_list, non existing repositories
     are created, if remove_obsolete is True it also check for db entries
@@ -468,8 +468,10 @@ def repo2db_mapper(initial_repo_list, remove_obsolete=False,
 
     :param initial_repo_list: list of repositories found by scanning methods
     :param remove_obsolete: check for obsolete entries in database
-    :param install_git_hook: if this is True, also check and install githook
+    :param install_git_hooks: if this is True, also check and install git hook
         for a repo if missing
+    :param overwrite_git_hooks: if this is True, overwrite any existing git hooks
+        that may be encountered (even if user-deployed)
     """
     from kallithea.model.repo import RepoModel
     from kallithea.model.scm import ScmModel
@@ -515,14 +517,14 @@ def repo2db_mapper(initial_repo_list, remove_obsolete=False,
             # installed, and updated server info
             if new_repo.repo_type == 'git':
                 git_repo = new_repo.scm_instance
-                ScmModel().install_git_hook(git_repo)
+                ScmModel().install_git_hooks(git_repo)
                 # update repository server-info
                 log.debug('Running update server info')
                 git_repo._update_server_info()
             new_repo.update_changeset_cache()
-        elif install_git_hook:
+        elif install_git_hooks:
             if db_repo.repo_type == 'git':
-                ScmModel().install_git_hook(db_repo.scm_instance)
+                ScmModel().install_git_hooks(db_repo.scm_instance, force_create=overwrite_git_hooks)
 
     removed = []
     # remove from database those repositories that are not in the filesystem

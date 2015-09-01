@@ -23,6 +23,11 @@ ${h.form(url('admin_settings_mapping'), method='post')}
                         <label for="hooks"> ${_('Install Git hooks')} </label>
                     </div>
                     <span class="help-block">${_("Verify if Kallithea's Git hooks are installed for each repository. Current hooks will be updated to the latest version.")}</span>
+                    <div class="checkbox">
+                        ${h.checkbox('hooks_overwrite', True)}
+                        <label for="hooks_overwrite"> ${_('Overwrite existing Git hooks')}</label>
+                    </div>
+                    <span class="help-block">${_("If installing Git hooks, overwrite any existing hooks, even if they do not seem to come from Kallithea. WARNING: This operation will destroy any custom git hooks you may have deployed by hand!")}</span>
                 </div>
             </div>
 
