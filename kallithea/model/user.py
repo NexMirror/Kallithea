@@ -27,6 +27,7 @@ Original author and date, and relevant copyright and licensing information is be
 
 
 import hashlib
+import hmac
 import logging
 import time
 import traceback
@@ -279,32 +280,41 @@ class UserModel(BaseModel):
 
     def get_reset_password_token(self, user, timestamp, session_id):
         """
-        The token is calculated as SHA1 hash of the following:
+        The token is a 40-digit hexstring, calculated as a HMAC-SHA1.
 
-         * user's identifier (number, not a name)
-         * timestamp
-         * hashed user's password
-         * session identifier
-         * per-application secret
+        In a traditional HMAC scenario, an attacker is unable to know or
+        influence the secret key, but can know or influence the message
+        and token. This scenario is slightly different (in particular
+        since the message sender is also the message recipient), but
+        sufficiently similar to use an HMAC. Benefits compared to a plain
+        SHA1 hash includes resistance against a length extension attack.
 
-        We use numeric user's identifier, as it's fixed and doesn't change,
-        so renaming users doesn't affect the mechanism. Timestamp is added
-        to make it possible to limit the token's validness (currently hard
-        coded to 24h), and we don't want users to be able to fake that field
-        easily. Hashed user's password is needed to prevent using the token
-        again once the password has been changed. Session identifier is
-        an additional security measure to ensure someone else stealing the
-        token can't use it. Finally, per-application secret is just another
-        way to make it harder for an attacker to guess all values in an
-        attempt to generate a valid token.
+        The HMAC key consists of the following values (known only to the
+        server and authorized users):
+
+        * per-application secret (the `app_instance_uuid` setting), without
+          which an attacker cannot counterfeit tokens
+        * hashed user password, invalidating the token upon password change
+
+        The HMAC message consists of the following values (potentially known
+        to an attacker):
+
+        * session ID (the anti-CSRF token), requiring an attacker to have
+          access to the browser session in which the token was created
+        * numeric user ID, limiting the token to a specific user (yet allowing
+          users to be renamed)
+        * user email address
+        * time of token issue (a Unix timestamp, to enable token expiration)
+
+        The key and message values are separated by NUL characters, which are
+        guaranteed not to occur in any of the values.
         """
-        return hashlib.sha1('\0'.join([
-            str(user.user_id),
-            str(timestamp),
-            user.password,
-            session_id,
-            config.get('app_instance_uuid'),
-        ])).hexdigest()
+        app_secret = config.get('app_instance_uuid')
+        return hmac.HMAC(
+            key=u'\0'.join([app_secret, user.password]).encode('utf-8'),
+            msg=u'\0'.join([session_id, str(user.user_id), user.email, str(timestamp)]).encode('utf-8'),
+            digestmod=hashlib.sha1,
+        ).hexdigest()
 
     def send_reset_password_email(self, data):
         """
