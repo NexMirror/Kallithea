@@ -763,10 +763,10 @@ class LoginRequired(object):
         # CSRF protection: Whenever a request has ambient authority (whether
         # through a session cookie or its origin IP address), it must include
         # the correct token, unless the HTTP method is GET or HEAD (and thus
-        # guaranteed to be side effect free.
-        # Note that the 'is_authenticated' flag is True for anonymous users too,
-        # but not when the user is authenticated by API key.
-        if user.is_authenticated and request.method not in ['GET', 'HEAD']:
+        # guaranteed to be side effect free. In practice, the only situation
+        # where we allow side effects without ambient authority is when the
+        # authority comes from an API key; and that is handled above.
+        if request.method not in ['GET', 'HEAD']:
             token = request.POST.get(secure_form.token_key)
             if not token or token != secure_form.authentication_token():
                 log.error('CSRF check failed')
