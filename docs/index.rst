@@ -22,6 +22,7 @@ Kallithea Documentation
    installation_win_old
    installation_iis
    setup
+   installation_puppet
 
 **Usage**
 

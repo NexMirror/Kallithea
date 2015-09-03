@@ -37,6 +37,13 @@ developers -- you can do the same.
 Please visit https://docs.kallithea-scm.org/en/latest/installation.html for
 more details.
 
+There is also an experimental `Puppet module`_ for installing and setting up
+Kallithea. Currently, only basic functionality is provided, but it is still
+enough to get up and running quickly, especially for people without Python
+background. See
+https://docs.kallithea-scm.org/en/latest/installation_puppet.html for further
+information.
+
 
 Source code
 -----------
@@ -238,3 +245,4 @@ repository, and have a look at the hooks deployed there.
 .. _Celery: http://celeryproject.org/
 .. _vcs: http://pypi.python.org/pypi/vcs
 .. _Software Freedom Conservancy: http://sfconservancy.org/
+.. _Puppet module: https://forge.puppetlabs.com/rauch/kallithea
