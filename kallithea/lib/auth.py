@@ -100,7 +100,7 @@ class KallitheaCrypto(object):
     def hash_string(cls, str_):
         """
         Cryptographic function used for password hashing based on pybcrypt
-        or pycrypto in windows
+        or Python's own OpenSSL wrapper on windows
 
         :param password: password to hash
         """
