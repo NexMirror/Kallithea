@@ -9,6 +9,7 @@ from kallithea.lib.vcs.backends.git import GitRepository, GitChangeset
 from kallithea.lib.vcs.exceptions import RepositoryError, VCSError, NodeDoesNotExistError
 from kallithea.lib.vcs.nodes import NodeKind, FileNode, DirNode, NodeState
 from kallithea.lib.vcs.utils.compat import unittest
+from kallithea.model.scm import ScmModel
 from kallithea.tests.vcs.base import _BackendTestMixin
 from kallithea.tests.vcs.conf import TEST_GIT_REPO, TEST_GIT_REPO_CLONE, get_new_dir
 
@@ -753,6 +754,82 @@ class GitRegressionTest(_BackendTestMixin, unittest.TestCase):
         self.assertEqual(paths(*cs.get_nodes('bot/build/static/templates')), ['bot/build/static/templates/f.html', 'bot/build/static/templates/f1.html'])
         self.assertEqual(paths(*cs.get_nodes('bot/build/templates')), ['bot/build/templates/err.html', 'bot/build/templates/err2.html'])
         self.assertEqual(paths(*cs.get_nodes('bot/templates/')), ['bot/templates/404.html', 'bot/templates/500.html'])
+
+
+class GitHooksTest(unittest.TestCase):
+    """
+    Tests related to hook functionality of Git repositories.
+    """
+
+    def setUp(self):
+        # For each run we want a fresh repo.
+        self.repo_directory = get_new_dir("githookrepo")
+        self.repo = GitRepository(self.repo_directory, create=True)
+
+        # Create a dictionary where keys are hook names, and values are paths to
+        # them. Deduplicates code in tests a bit.
+        self.hook_directory = self.repo.get_hook_location()
+        self.kallithea_hooks = {h: os.path.join(self.hook_directory, h) for h in ("pre-receive", "post-receive")}
+
+    def test_hooks_created_if_missing(self):
+        """
+        Tests if hooks are installed in repository if they are missing.
+        """
+
+        for hook, hook_path in self.kallithea_hooks.iteritems():
+            if os.path.exists(hook_path):
+                os.remove(hook_path)
+
+        ScmModel().install_git_hooks(repo=self.repo)
+
+        for hook, hook_path in self.kallithea_hooks.iteritems():
+            self.assertTrue(os.path.exists(hook_path))
+
+    def test_kallithea_hooks_updated(self):
+        """
+        Tests if hooks are updated if they are Kallithea hooks already.
+        """
+
+        for hook, hook_path in self.kallithea_hooks.iteritems():
+            with open(hook_path, "w") as f:
+                f.write("KALLITHEA_HOOK_VER=0.0.0\nJUST_BOGUS")
+
+        ScmModel().install_git_hooks(repo=self.repo)
+
+        for hook, hook_path in self.kallithea_hooks.iteritems():
+            with open(hook_path) as f:
+                self.assertNotIn("JUST_BOGUS", f.read())
+
+    def test_custom_hooks_untouched(self):
+        """
+        Tests if hooks are left untouched if they are not Kallithea hooks.
+        """
+
+        for hook, hook_path in self.kallithea_hooks.iteritems():
+            with open(hook_path, "w") as f:
+                f.write("#!/bin/bash\n#CUSTOM_HOOK")
+
+        ScmModel().install_git_hooks(repo=self.repo)
+
+        for hook, hook_path in self.kallithea_hooks.iteritems():
+            with open(hook_path) as f:
+                self.assertIn("CUSTOM_HOOK", f.read())
+
+    def test_custom_hooks_forced_update(self):
+        """
+        Tests if hooks are forcefully updated even though they are custom hooks.
+        """
+
+        for hook, hook_path in self.kallithea_hooks.iteritems():
+            with open(hook_path, "w") as f:
+                f.write("#!/bin/bash\n#CUSTOM_HOOK")
+
+        ScmModel().install_git_hooks(repo=self.repo, force_create=True)
+
+        for hook, hook_path in self.kallithea_hooks.iteritems():
+            with open(hook_path) as f:
+                self.assertIn("KALLITHEA_HOOK_VER", f.read())
+
 
 if __name__ == '__main__':
     unittest.main()
