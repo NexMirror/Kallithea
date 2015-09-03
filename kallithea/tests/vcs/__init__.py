@@ -21,7 +21,7 @@ function at ``tests/__init__.py``.
 """
 from kallithea.lib.vcs.utils.compat import unittest
 from kallithea.tests.vcs.conf import *
-from kallithea.tests.vcs.utils import VCSTestError, SCMFetcher
+from kallithea.tests.vcs.utils import SCMFetcher
 
 from kallithea.tests import *
 
@@ -45,12 +45,10 @@ def setup_package():
             'clone_cmd': 'git clone --bare',
         },
     }
-    try:
-        for scm, fetcher_info in fetchers.items():
-            fetcher = SCMFetcher(**fetcher_info)
-            fetcher.setup()
-    except VCSTestError as err:
-        raise RuntimeError(str(err))
+
+    for scm, fetcher_info in fetchers.items():
+        fetcher = SCMFetcher(**fetcher_info)
+        fetcher.setup()
 
 
 def collector():

@@ -7,7 +7,7 @@ import hashlib
 import tempfile
 import datetime
 import shutil
-from utils import get_normalized_path
+import uuid
 from os.path import join as jn
 
 __all__ = (
@@ -42,17 +42,40 @@ TEST_DIR = os.environ.get('VCS_TEST_ROOT', tempfile.gettempdir())
 TEST_REPO_PREFIX = 'vcs-test'
 
 
-def get_new_dir(title):
+def get_new_dir(title=None):
     """
-    Returns always new directory path.
+    Calculates a path for a new, non-existant, unique sub-directory in TEST_DIR.
+
+    Resulting directory name will have format:
+
+    prefix-[title-]hexuuid
+
+    Prefix is equal to value of variable TEST_REPO_PREFIX. The "hexuuid" is a
+    hexadecimal value of a randomly generated UUID. Title will be added if
+    specified.
+
+    Args:
+        title: Custom title to include as part of the resulting sub-directory
+            name. Can be useful for debugging to identify destination. Defaults
+            to None.
+
+    Returns:
+        Path to the new directory as a string.
     """
-    name = TEST_REPO_PREFIX
+
     if title:
-        name = '-'.join((name, title))
-    hex = hashlib.sha1(str(time.time())).hexdigest()
-    name = '-'.join((name, hex))
+        name = "%s-%s" % (TEST_REPO_PREFIX, title)
+    else:
+        name = TEST_REPO_PREFIX
+
     path = os.path.join(TEST_DIR, name)
-    return get_normalized_path(path)
+
+    # Generate new hexes until we get a unique name (just in case).
+    hex_uuid = uuid.uuid4().hex
+    while os.path.exists("%s-%s" % (path, hex_uuid)):
+        hex_uuid = uuid.uuid4().hex
+
+    return "%s-%s" % (path, hex_uuid)
 
 
 PACKAGE_DIR = os.path.abspath(os.path.join(

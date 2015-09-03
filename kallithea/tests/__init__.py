@@ -68,7 +68,7 @@ if not is_windows:
 log = logging.getLogger(__name__)
 
 __all__ = [
-    'parameterized', 'environ', 'url', 'get_new_dir', 'TestController',
+    'parameterized', 'environ', 'url', 'TestController',
     'SkipTest', 'ldap_lib_installed', 'pam_lib_installed', 'BaseTestCase', 'init_stack',
     'TESTS_TMP_PATH', 'HG_REPO', 'GIT_REPO', 'NEW_HG_REPO', 'NEW_GIT_REPO',
     'HG_FORK', 'GIT_FORK', 'TEST_USER_ADMIN_LOGIN', 'TEST_USER_ADMIN_PASS',
@@ -150,20 +150,6 @@ try:
     pam_lib_installed = True
 except ImportError:
     pam_lib_installed = False
-
-def get_new_dir(title):
-    """
-    Returns always new directory path.
-    """
-    from kallithea.tests.vcs.utils import get_normalized_path
-    name = TEST_REPO_PREFIX
-    if title:
-        name = '-'.join((name, title))
-    hex = hashlib.sha1(str(time.time())).hexdigest()
-    name = '-'.join((name, hex))
-    path = os.path.join(TEST_DIR, name)
-    return get_normalized_path(path)
-
 
 import logging
 
