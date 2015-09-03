@@ -32,7 +32,7 @@ class TestAdminUsersGroupsController(TestController):
         response = self.app.get(url('new_users_group'))
 
     def test_update(self):
-        response = self.app.put(url('users_group', id=1))
+        response = self.app.put(url('users_group', id=1), status=403)
 
     def test_update_browser_fakeout(self):
         response = self.app.post(url('users_group', id=1),
@@ -54,7 +54,8 @@ class TestAdminUsersGroupsController(TestController):
         gr = Session().query(UserGroup)\
             .filter(UserGroup.users_group_name == users_group_name).one()
 
-        response = self.app.delete(url('users_group', id=gr.users_group_id))
+        response = self.app.post(url('users_group', id=gr.users_group_id),
+            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
 
         gr = Session().query(UserGroup)\
             .filter(UserGroup.users_group_name == users_group_name).scalar()
@@ -97,7 +98,8 @@ class TestAdminUsersGroupsController(TestController):
 
         ## DISABLE REPO CREATE ON A GROUP
         response = self.app.put(
-            url('edit_user_group_default_perms', id=ug.users_group_id), {})
+            url('edit_user_group_default_perms', id=ug.users_group_id),
+            params={'_authentication_token': self.authentication_token()})
 
         response.follow()
         ug = UserGroup.get_by_group_name(users_group_name)
@@ -119,7 +121,8 @@ class TestAdminUsersGroupsController(TestController):
         # DELETE !
         ug = UserGroup.get_by_group_name(users_group_name)
         ugid = ug.users_group_id
-        response = self.app.delete(url('users_group', id=ug.users_group_id))
+        response = self.app.post(url('users_group', id=ug.users_group_id),
+            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
         response = response.follow()
         gr = Session().query(UserGroup)\
             .filter(UserGroup.users_group_name == users_group_name).scalar()
@@ -167,8 +170,8 @@ class TestAdminUsersGroupsController(TestController):
                     [ug.users_group_id, p3.permission_id]]))
 
         ## DISABLE REPO CREATE ON A GROUP
-        response = self.app.put(
-            url('edit_user_group_default_perms', id=ug.users_group_id), {})
+        response = self.app.put(url('edit_user_group_default_perms', id=ug.users_group_id),
+            params={'_authentication_token': self.authentication_token()})
 
         response.follow()
         ug = UserGroup.get_by_group_name(users_group_name)
@@ -189,7 +192,8 @@ class TestAdminUsersGroupsController(TestController):
         # DELETE !
         ug = UserGroup.get_by_group_name(users_group_name)
         ugid = ug.users_group_id
-        response = self.app.delete(url('users_group', id=ug.users_group_id))
+        response = self.app.post(url('users_group', id=ug.users_group_id),
+            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
         response = response.follow()
         gr = Session().query(UserGroup)\
                            .filter(UserGroup.users_group_name ==

@@ -56,9 +56,9 @@ class TestNotificationsController(TestController):
         self.assertEqual(get_notif(u2.notifications), [notification])
         cur_usr_id = cur_user.user_id
 
-        response = self.app.delete(url('notification',
-                                       notification_id=
-                                       notification.notification_id))
+        response = self.app.post(
+            url('notification', notification_id=notification.notification_id),
+            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
         self.assertEqual(response.body, 'ok')
 
         cur_user = User.get(cur_usr_id)

@@ -57,7 +57,8 @@ class TestMyAccountController(TestController):
         self.log_user()
         response = self.app.get(url('my_account_emails'))
         response.mustcontain('No additional emails specified')
-        response = self.app.post(url('my_account_emails'),)
+        response = self.app.post(url('my_account_emails'),
+            {'_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Please enter an email address')
 
     def test_my_account_my_emails_add_remove(self):

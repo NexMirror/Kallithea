@@ -16,7 +16,8 @@ class TestDefaultsController(TestController):
         response = self.app.get(url('formatted_defaults', format='xml'))
 
     def test_create(self):
-        response = self.app.post(url('defaults'))
+        response = self.app.post(url('defaults'),
+            {'_authentication_token': self.authentication_token()})
 
     def test_new(self):
         response = self.app.get(url('new_default'))
@@ -62,7 +63,8 @@ class TestDefaultsController(TestController):
         response = self.app.post(url('default', id=1), params=dict(_method='put', _authentication_token=self.authentication_token()))
 
     def test_delete(self):
-        response = self.app.delete(url('default', id=1))
+        # Not possible due to CSRF protection.
+        response = self.app.delete(url('default', id=1), status=403)
 
     def test_delete_browser_fakeout(self):
         response = self.app.post(url('default', id=1), params=dict(_method='delete', _authentication_token=self.authentication_token()))

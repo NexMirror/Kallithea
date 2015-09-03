@@ -398,7 +398,8 @@ class _BaseTest(object):
         except vcs.exceptions.VCSError:
             self.fail('no repo %s in filesystem' % repo_name)
 
-        response = self.app.delete(url('delete_repo', repo_name=repo_name))
+        response = self.app.post(url('delete_repo', repo_name=repo_name),
+            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
 
         self.checkSessionFlash(response, 'Deleted repository %s' % (repo_name))
 
@@ -450,7 +451,8 @@ class _BaseTest(object):
         except vcs.exceptions.VCSError:
             self.fail('no repo %s in filesystem' % repo_name)
 
-        response = self.app.delete(url('delete_repo', repo_name=repo_name))
+        response = self.app.post(url('delete_repo', repo_name=repo_name),
+            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Deleted repository %s' % (repo_name_unicode))
         response.follow()
 

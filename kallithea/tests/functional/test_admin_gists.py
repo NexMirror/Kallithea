@@ -136,19 +136,20 @@ class TestGistsController(TestController):
     def test_delete(self):
         self.log_user()
         gist = _create_gist('delete-me')
-        response = self.app.delete(url('gist', gist_id=gist.gist_id))
-        self.checkSessionFlash(response, 'Deleted gist %s' % gist.gist_id)
+        response = self.app.post(url('gist', gist_id=gist.gist_id),
+            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
 
     def test_delete_normal_user_his_gist(self):
         self.log_user(TEST_USER_REGULAR_LOGIN, TEST_USER_REGULAR_PASS)
         gist = _create_gist('delete-me', owner=TEST_USER_REGULAR_LOGIN)
-        response = self.app.delete(url('gist', gist_id=gist.gist_id))
-        self.checkSessionFlash(response, 'Deleted gist %s' % gist.gist_id)
+        response = self.app.post(url('gist', gist_id=gist.gist_id),
+            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
 
     def test_delete_normal_user_not_his_own_gist(self):
         self.log_user(TEST_USER_REGULAR_LOGIN, TEST_USER_REGULAR_PASS)
         gist = _create_gist('delete-me')
-        response = self.app.delete(url('gist', gist_id=gist.gist_id), status=403)
+        response = self.app.post(url('gist', gist_id=gist.gist_id), status=403,
+            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
 
     def test_show(self):
         gist = _create_gist('gist-show-me')
