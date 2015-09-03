@@ -1,7 +1,0 @@
-<%namespace name="pullrequests" file="/pullrequests/pullrequest_data.html"/>
-
-<div class="pullrequests_section_head">${_('Pull Requests Created by Me')}</div>
-${pullrequests.pullrequest_overview(c.my_pull_requests)}
-
-<div class="pullrequests_section_head" style="clear:both">${_('Pull Requests I Participate In')}</div>
-${pullrequests.pullrequest_overview(c.participate_in_pull_requests)}
