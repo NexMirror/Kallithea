@@ -257,8 +257,7 @@ class ChangesetCommentsModel(BaseModel):
         """
         Gets comments for either revision or pull_request_id, either inline or general.
         """
-        q = Session().query(ChangesetComment)\
-            .filter(ChangesetComment.repo_id == repo_id)
+        q = Session().query(ChangesetComment)
 
         if inline:
             q = q.filter(ChangesetComment.line_no != None)\
@@ -268,7 +267,8 @@ class ChangesetCommentsModel(BaseModel):
                 .filter(ChangesetComment.f_path == None)
 
         if revision:
-            q = q.filter(ChangesetComment.revision == revision)
+            q = q.filter(ChangesetComment.revision == revision)\
+                .filter(ChangesetComment.repo_id == repo_id)
         elif pull_request:
             pull_request = self.__get_pull_request(pull_request)
             q = q.filter(ChangesetComment.pull_request == pull_request)
