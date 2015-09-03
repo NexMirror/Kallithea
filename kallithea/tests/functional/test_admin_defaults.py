@@ -64,7 +64,7 @@ class TestDefaultsController(TestController):
 
     def test_delete(self):
         # Not possible due to CSRF protection.
-        response = self.app.delete(url('default', id=1), status=403)
+        response = self.app.delete(url('default', id=1), status=405)
 
     def test_delete_browser_fakeout(self):
         response = self.app.post(url('default', id=1), params=dict(_method='delete', _authentication_token=self.authentication_token()))

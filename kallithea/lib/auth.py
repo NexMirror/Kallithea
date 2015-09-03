@@ -760,6 +760,12 @@ class LoginRequired(object):
                 log.warning('API access to %s is not allowed', loc)
                 return abort(403)
 
+        # Only allow the following HTTP request methods. (We sometimes use POST
+        # requests with a '_method' set to 'PUT' or 'DELETE'; but that is only
+        # used for the route lookup, and does not affect request.method.)
+        if request.method not in ['GET', 'HEAD', 'POST', 'PUT']:
+            return abort(405)
+
         # CSRF protection: Whenever a request has ambient authority (whether
         # through a session cookie or its origin IP address), it must include
         # the correct token, unless the HTTP method is GET or HEAD (and thus
@@ -771,6 +777,13 @@ class LoginRequired(object):
             if not token or token != secure_form.authentication_token():
                 log.error('CSRF check failed')
                 return abort(403)
+
+        # WebOb already ignores request payload parameters for anything other
+        # than POST/PUT, but double-check since other Kallithea code relies on
+        # this assumption.
+        if request.method not in ['POST', 'PUT'] and request.POST:
+            log.error('%r request with payload parameters; WebOb should have stopped this', request.method)
+            return abort(400)
 
         # regular user authentication
         if user.is_authenticated:
