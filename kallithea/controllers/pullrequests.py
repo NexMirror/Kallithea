@@ -200,9 +200,6 @@ class PullrequestsController(BaseRepoController):
 
         c.pullrequests_pager = Page(c.pull_requests, page=p, items_per_page=100)
 
-        if request.environ.get('HTTP_X_PARTIAL_XHR'):
-            return render('/pullrequests/pullrequest_data.html')
-
         return render('/pullrequests/pullrequest_show_all.html')
 
     @LoginRequired()
