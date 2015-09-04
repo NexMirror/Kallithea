@@ -50,7 +50,7 @@ from kallithea.lib.vcs.utils import safe_str
 from kallithea.lib.vcs.exceptions import EmptyRepositoryError
 from kallithea.lib.diffs import LimitedDiffContainer
 from kallithea.model.db import PullRequest, ChangesetStatus, ChangesetComment,\
-    PullRequestReviewers
+    PullRequestReviewers, User
 from kallithea.model.pull_request import PullRequestModel
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
@@ -61,7 +61,6 @@ from kallithea.lib.utils2 import safe_int
 from kallithea.controllers.changeset import _ignorews_url, _context_url
 from kallithea.controllers.compare import CompareController
 from kallithea.lib.graphmod import graph_data
-from kallithea.model.db import User ### FIXME
 
 log = logging.getLogger(__name__)
 
