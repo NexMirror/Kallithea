@@ -33,7 +33,7 @@ def upgrade(migrate_engine):
     if old_cons:
         try:
             old_cons.drop()
-        except Exception, e:
+        except Exception as e:
             # we don't care if this fails really... better to pass migration than
             # leave this in intermidiate state
             print 'Failed to remove Unique for user_id, repository_id reason %s' % e
@@ -61,7 +61,7 @@ def upgrade(migrate_engine):
     if old_cons:
         try:
             old_cons.drop()
-        except Exception, e:
+        except Exception as e:
             # we don't care if this fails really... better to pass migration than
             # leave this in intermidiate state
             print 'Failed to remove Unique for user_id, repository_id reason %s' % e

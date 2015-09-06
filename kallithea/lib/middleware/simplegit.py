@@ -40,7 +40,7 @@ from kallithea.model.db import User, Ui
 
 from kallithea.lib.utils2 import safe_str, fix_PATH, get_server_url,\
     _set_extras
-from kallithea.lib.base import BaseVCSController
+from kallithea.lib.base import BaseVCSController, WSGIResultCloseCallback
 from kallithea.lib.utils import make_ui, is_valid_repo
 from kallithea.lib.exceptions import HTTPLockedRC
 from kallithea.lib.hooks import pre_pull
@@ -55,8 +55,8 @@ GIT_PROTO_PAT = re.compile(r'^/(.+)/(info/refs|git-upload-pack|git-receive-pack)
 def is_git(environ):
     path_info = environ['PATH_INFO']
     isgit_path = GIT_PROTO_PAT.match(path_info)
-    log.debug('pathinfo: %s detected as Git %s' % (
-        path_info, isgit_path is not None)
+    log.debug('pathinfo: %s detected as Git %s',
+        path_info, isgit_path is not None
     )
     return isgit_path
 
@@ -80,7 +80,7 @@ class SimpleGit(BaseVCSController):
         #======================================================================
         try:
             repo_name = self.__get_repository(environ)
-            log.debug('Extracted repo name is %s' % repo_name)
+            log.debug('Extracted repo name is %s', repo_name)
         except Exception:
             return HTTPInternalServerError()(environ, start_response)
 
@@ -124,9 +124,9 @@ class SimpleGit(BaseVCSController):
                 # try to auth based on environ, container auth methods
                 log.debug('Running PRE-AUTH for container based authentication')
                 pre_auth = auth_modules.authenticate('', '', environ)
-                if pre_auth and pre_auth.get('username'):
+                if pre_auth is not None and pre_auth.get('username'):
                     username = pre_auth['username']
-                log.debug('PRE-AUTH got %s as username' % username)
+                log.debug('PRE-AUTH got %s as username', username)
 
                 # If not authenticated by the container, running basic auth
                 if not username:
@@ -178,7 +178,7 @@ class SimpleGit(BaseVCSController):
         #===================================================================
         str_repo_name = safe_str(repo_name)
         repo_path = os.path.join(safe_str(self.basepath),str_repo_name)
-        log.debug('Repository path is %s' % repo_path)
+        log.debug('Repository path is %s', repo_path)
 
         # CHECK LOCKING only if it's not ANONYMOUS USER
         if username != User.DEFAULT_USER:
@@ -194,27 +194,27 @@ class SimpleGit(BaseVCSController):
                            'locked_by': locked_by})
 
         fix_PATH()
-        log.debug('HOOKS extras is %s' % extras)
+        log.debug('HOOKS extras is %s', extras)
         baseui = make_ui('db')
         self.__inject_extras(repo_path, baseui, extras)
 
         try:
             self._handle_githooks(repo_name, action, baseui, environ)
-            log.info('%s action on Git repo "%s" by "%s" from %s' %
-                     (action, str_repo_name, safe_str(username), ip_addr))
+            log.info('%s action on Git repo "%s" by "%s" from %s',
+                     action, str_repo_name, safe_str(username), ip_addr)
             app = self.__make_app(repo_name, repo_path, extras)
-            return app(environ, start_response)
-        except HTTPLockedRC, e:
+            result = app(environ, start_response)
+            if action == 'push':
+                result = WSGIResultCloseCallback(result,
+                    lambda: self._invalidate_cache(repo_name))
+            return result
+        except HTTPLockedRC as e:
             _code = CONFIG.get('lock_ret_code')
-            log.debug('Repository LOCKED ret code %s!' % (_code))
+            log.debug('Repository LOCKED ret code %s!', _code)
             return e(environ, start_response)
         except Exception:
             log.error(traceback.format_exc())
             return HTTPInternalServerError()(environ, start_response)
-        finally:
-            # invalidate cache on push
-            if action == 'push':
-                self._invalidate_cache(repo_name)
 
     def __make_app(self, repo_name, repo_path, extras):
         """

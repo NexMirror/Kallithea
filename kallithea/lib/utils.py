@@ -50,11 +50,9 @@ from kallithea.lib.vcs.utils.hgcompat import ui, config
 from kallithea.lib.vcs.utils.helpers import get_scm
 from kallithea.lib.vcs.exceptions import VCSError
 
-from kallithea.lib.caching_query import FromCache
-
 from kallithea.model import meta
 from kallithea.model.db import Repository, User, Ui, \
-    UserLog, RepoGroup, Setting, CacheInvalidation, UserGroup
+    UserLog, RepoGroup, Setting, UserGroup
 from kallithea.model.meta import Session
 from kallithea.model.repo_group import RepoGroupModel
 from kallithea.lib.utils2 import safe_str, safe_unicode, get_current_authuser
@@ -161,7 +159,7 @@ def action_logger(user, action, repo, ipaddr='', sa=None, commit=False):
         easy translations
     :param repo: string name of repository or object containing repo_id,
         that action was made on
-    :param ipaddr: optional ip address from what the action was made
+    :param ipaddr: optional IP address from what the action was made
     :param sa: optional sqlalchemy session
 
     """
@@ -202,8 +200,8 @@ def action_logger(user, action, repo, ipaddr='', sa=None, commit=False):
     user_log.user_ip = ipaddr
     sa.add(user_log)
 
-    log.info('Logging action:%s on %s by user:%s ip:%s' %
-             (action, safe_unicode(repo), user_obj, ipaddr))
+    log.info('Logging action:%s on %s by user:%s ip:%s',
+             action, safe_unicode(repo), user_obj, ipaddr)
     if commit:
         sa.commit()
 
@@ -218,14 +216,14 @@ def get_filesystem_repos(path, recursive=False, skip_removed_repos=True):
 
     # remove ending slash for better results
     path = path.rstrip(os.sep)
-    log.debug('now scanning in %s location recursive:%s...' % (path, recursive))
+    log.debug('now scanning in %s location recursive:%s...', path, recursive)
 
     def _get_repos(p):
         if not os.access(p, os.R_OK) or not os.access(p, os.X_OK):
-            log.warning('ignoring repo path without access: %s' % (p,))
+            log.warning('ignoring repo path without access: %s', p)
             return
         if not os.access(p, os.W_OK):
-            log.warning('repo path without write access: %s' % (p,))
+            log.warning('repo path without write access: %s', p)
         for dirpath in os.listdir(p):
             if os.path.isfile(os.path.join(p, dirpath)):
                 continue
@@ -350,14 +348,14 @@ def make_ui(read_from='file', path=None, checkpaths=True, clear_session=True):
 
     if read_from == 'file':
         if not os.path.isfile(path):
-            log.debug('hgrc file is not present at %s, skipping...' % path)
+            log.debug('hgrc file is not present at %s, skipping...', path)
             return False
-        log.debug('reading hgrc from %s' % path)
+        log.debug('reading hgrc from %s', path)
         cfg = config.config()
         cfg.read(path)
         for section in ui_sections:
             for k, v in cfg.items(section):
-                log.debug('settings ui from file: [%s] %s=%s' % (section, k, v))
+                log.debug('settings ui from file: [%s] %s=%s', section, k, v)
                 baseui.setconfig(safe_str(section), safe_str(k), safe_str(v))
 
     elif read_from == 'db':
@@ -407,7 +405,6 @@ def set_vcs_config(config):
 
     :param config: kallithea.CONFIG
     """
-    import kallithea
     from kallithea.lib.vcs import conf
     from kallithea.lib.utils2 import aslist
     conf.settings.BACKENDS = {
@@ -448,8 +445,8 @@ def map_groups(path):
             break
 
         if group is None:
-            log.debug('creating group level: %s group_name: %s'
-                      % (lvl, group_name))
+            log.debug('creating group level: %s group_name: %s',
+                      lvl, group_name)
             group = RepoGroup(group_name, parent)
             group.group_description = desc
             group.user = owner
@@ -463,7 +460,7 @@ def map_groups(path):
 
 
 def repo2db_mapper(initial_repo_list, remove_obsolete=False,
-                   install_git_hook=False, user=None):
+                   install_git_hooks=False, user=None, overwrite_git_hooks=False):
     """
     maps all repos given in initial_repo_list, non existing repositories
     are created, if remove_obsolete is True it also check for db entries
@@ -471,8 +468,10 @@ def repo2db_mapper(initial_repo_list, remove_obsolete=False,
 
     :param initial_repo_list: list of repositories found by scanning methods
     :param remove_obsolete: check for obsolete entries in database
-    :param install_git_hook: if this is True, also check and install githook
+    :param install_git_hooks: if this is True, also check and install git hook
         for a repo if missing
+    :param overwrite_git_hooks: if this is True, overwrite any existing git hooks
+        that may be encountered (even if user-deployed)
     """
     from kallithea.model.repo import RepoModel
     from kallithea.model.scm import ScmModel
@@ -495,7 +494,7 @@ def repo2db_mapper(initial_repo_list, remove_obsolete=False,
         db_repo = repo_model.get_by_repo_name(unicode_name)
         # found repo that is on filesystem not in Kallithea database
         if not db_repo:
-            log.info('repository %s not found, creating now' % name)
+            log.info('repository %s not found, creating now', name)
             added.append(name)
             desc = (repo.description
                     if repo.description != 'unknown'
@@ -518,21 +517,21 @@ def repo2db_mapper(initial_repo_list, remove_obsolete=False,
             # installed, and updated server info
             if new_repo.repo_type == 'git':
                 git_repo = new_repo.scm_instance
-                ScmModel().install_git_hook(git_repo)
+                ScmModel().install_git_hooks(git_repo)
                 # update repository server-info
                 log.debug('Running update server info')
                 git_repo._update_server_info()
             new_repo.update_changeset_cache()
-        elif install_git_hook:
+        elif install_git_hooks:
             if db_repo.repo_type == 'git':
-                ScmModel().install_git_hook(db_repo.scm_instance)
+                ScmModel().install_git_hooks(db_repo.scm_instance, force_create=overwrite_git_hooks)
 
     removed = []
     # remove from database those repositories that are not in the filesystem
     for repo in sa.query(Repository).all():
         if repo.repo_name not in initial_repo_list.keys():
             if remove_obsolete:
-                log.debug("Removing non-existing repository found in db `%s`" %
+                log.debug("Removing non-existing repository found in db `%s`",
                           repo.repo_name)
                 try:
                     RepoModel(sa).delete(repo, forks='detach', fs_remove=False)
@@ -581,7 +580,7 @@ def load_rcextensions(root_path):
     if os.path.isfile(path):
         rcext = create_module('rc', path)
         EXT = kallithea.EXTENSIONS = rcext
-        log.debug('Found rcextensions now loading %s...' % rcext)
+        log.debug('Found rcextensions now loading %s...', rcext)
 
         # Additional mappings that are not present in the pygments lexers
         conf.LANGUAGES_EXTENSIONS_MAP.update(getattr(EXT, 'EXTRA_MAPPINGS', {}))
@@ -657,11 +656,11 @@ def create_test_env(repos_test_path, config):
 
     # PART ONE create db
     dbconf = config['sqlalchemy.db1.url']
-    log.debug('making test db %s' % dbconf)
+    log.debug('making test db %s', dbconf)
 
     # create test dir if it doesn't exist
     if not os.path.isdir(repos_test_path):
-        log.debug('Creating testdir %s' % repos_test_path)
+        log.debug('Creating testdir %s', repos_test_path)
         os.makedirs(repos_test_path)
 
     dbmanage = DbManage(log_sql=True, dbconf=dbconf, root=config['here'],
@@ -682,11 +681,11 @@ def create_test_env(repos_test_path, config):
 
     #clean index and data
     if idx_path and os.path.exists(idx_path):
-        log.debug('remove %s' % idx_path)
+        log.debug('remove %s', idx_path)
         shutil.rmtree(idx_path)
 
     if data_path and os.path.exists(data_path):
-        log.debug('remove %s' % data_path)
+        log.debug('remove %s', data_path)
         shutil.rmtree(data_path)
 
     #CREATE DEFAULT TEST REPOS
@@ -799,7 +798,7 @@ def check_git_version():
     if 'git' not in BACKENDS:
         return None
 
-    stdout, stderr = GitRepository._run_git_command('--version', _bare=True,
+    stdout, stderr = GitRepository._run_git_command(['--version'], _bare=True,
                                                     _safe=True)
 
     m = re.search("\d+.\d+.\d+", stdout)
@@ -810,10 +809,10 @@ def check_git_version():
 
     req_ver = StrictVersion('1.7.4')
 
-    log.debug('Git executable: "%s" version %s detected: %s'
-              % (settings.GIT_EXECUTABLE_PATH, ver, stdout))
+    log.debug('Git executable: "%s" version %s detected: %s',
+              settings.GIT_EXECUTABLE_PATH, ver, stdout)
     if stderr:
-        log.warning('Error detecting git version: %r' % stderr)
+        log.warning('Error detecting git version: %r', stderr)
     elif ver < req_ver:
         log.warning('Kallithea detected git version %s, which is too old '
                     'for the system to function properly. '

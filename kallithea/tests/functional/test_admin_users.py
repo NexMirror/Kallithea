@@ -167,7 +167,8 @@ class TestAdminUsersController(TestController):
 
         new_user = Session().query(User)\
             .filter(User.username == username).one()
-        response = self.app.delete(url('user', id=new_user.user_id))
+        response = self.app.post(url('user', id=new_user.user_id),
+            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
 
         self.checkSessionFlash(response, 'Successfully deleted user')
 
@@ -181,16 +182,19 @@ class TestAdminUsersController(TestController):
 
         new_user = Session().query(User)\
             .filter(User.username == username).one()
-        response = self.app.delete(url('user', id=new_user.user_id))
+        response = self.app.post(url('user', id=new_user.user_id),
+            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'User "%s" still '
                                'owns 1 repositories and cannot be removed. '
                                'Switch owners or remove those repositories: '
                                '%s' % (username, reponame))
 
-        response = self.app.delete(url('repo', repo_name=reponame))
+        response = self.app.post(url('delete_repo', repo_name=reponame),
+            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Deleted repository %s' % reponame)
 
-        response = self.app.delete(url('user', id=new_user.user_id))
+        response = self.app.post(url('user', id=new_user.user_id),
+            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Successfully deleted user')
 
     def test_delete_repo_group_err(self):
@@ -203,7 +207,8 @@ class TestAdminUsersController(TestController):
 
         new_user = Session().query(User)\
             .filter(User.username == username).one()
-        response = self.app.delete(url('user', id=new_user.user_id))
+        response = self.app.post(url('user', id=new_user.user_id),
+            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'User "%s" still '
                                'owns 1 repository groups and cannot be removed. '
                                'Switch owners or remove those repository groups: '
@@ -213,10 +218,12 @@ class TestAdminUsersController(TestController):
         # rg = RepoGroup.get_by_group_name(group_name=groupname)
         # response = self.app.get(url('repos_groups', id=rg.group_id))
 
-        response = self.app.delete(url('delete_repo_group', group_name=groupname))
+        response = self.app.post(url('delete_repo_group', group_name=groupname),
+            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Removed repository group %s' % groupname)
 
-        response = self.app.delete(url('user', id=new_user.user_id))
+        response = self.app.post(url('user', id=new_user.user_id),
+            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Successfully deleted user')
 
     def test_delete_user_group_err(self):
@@ -229,7 +236,8 @@ class TestAdminUsersController(TestController):
 
         new_user = Session().query(User)\
             .filter(User.username == username).one()
-        response = self.app.delete(url('user', id=new_user.user_id))
+        response = self.app.post(url('user', id=new_user.user_id),
+            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'User "%s" still '
                                'owns 1 user groups and cannot be removed. '
                                'Switch owners or remove those user groups: '
@@ -241,7 +249,8 @@ class TestAdminUsersController(TestController):
 
         fixture.destroy_user_group(ug.users_group_id)
 
-        response = self.app.delete(url('user', id=new_user.user_id))
+        response = self.app.post(url('user', id=new_user.user_id),
+            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Successfully deleted user')
 
     def test_show(self):
@@ -395,7 +404,7 @@ class TestAdminUsersController(TestController):
                                 params=dict(new_ip=ip, _authentication_token=self.authentication_token()))
 
         if failure:
-            self.checkSessionFlash(response, 'Please enter a valid IPv4 or IpV6 address')
+            self.checkSessionFlash(response, 'Please enter a valid IPv4 or IPv6 address')
             response = self.app.get(url('edit_user_ips', id=user_id))
             response.mustcontain(no=[ip])
             response.mustcontain(no=[ip_range])
@@ -438,7 +447,7 @@ class TestAdminUsersController(TestController):
         user = User.get_by_username(TEST_USER_REGULAR_LOGIN)
         response = self.app.get(url('edit_user_api_keys', id=user.user_id))
         response.mustcontain(user.api_key)
-        response.mustcontain('expires: never')
+        response.mustcontain('Expires: Never')
 
     @parameterized.expand([
         ('forever', -1),
@@ -451,8 +460,8 @@ class TestAdminUsersController(TestController):
         user_id = user.user_id
 
         response = self.app.post(url('edit_user_api_keys', id=user_id),
-                 {'_method': 'put', 'description': desc, 'lifetime': lifetime, '_authentication_token': self.authentication_token()})
-        self.checkSessionFlash(response, 'Api key successfully created')
+                 {'description': desc, 'lifetime': lifetime, '_authentication_token': self.authentication_token()})
+        self.checkSessionFlash(response, 'API key successfully created')
         try:
             response = response.follow()
             user = User.get(user_id)
@@ -469,8 +478,8 @@ class TestAdminUsersController(TestController):
         user_id = user.user_id
 
         response = self.app.post(url('edit_user_api_keys', id=user_id),
-                {'_method': 'put', 'description': 'desc', 'lifetime': -1, '_authentication_token': self.authentication_token()})
-        self.checkSessionFlash(response, 'Api key successfully created')
+                {'description': 'desc', 'lifetime': -1, '_authentication_token': self.authentication_token()})
+        self.checkSessionFlash(response, 'API key successfully created')
         response = response.follow()
 
         #now delete our key
@@ -479,7 +488,7 @@ class TestAdminUsersController(TestController):
 
         response = self.app.post(url('edit_user_api_keys', id=user_id),
                  {'_method': 'delete', 'del_api_key': keys[0].api_key, '_authentication_token': self.authentication_token()})
-        self.checkSessionFlash(response, 'Api key successfully deleted')
+        self.checkSessionFlash(response, 'API key successfully deleted')
         keys = UserApiKeys.query().filter(UserApiKeys.user_id == user_id).all()
         self.assertEqual(0, len(keys))
 
@@ -490,10 +499,106 @@ class TestAdminUsersController(TestController):
         api_key = user.api_key
         response = self.app.get(url('edit_user_api_keys', id=user_id))
         response.mustcontain(api_key)
-        response.mustcontain('expires: never')
+        response.mustcontain('Expires: Never')
 
         response = self.app.post(url('edit_user_api_keys', id=user_id),
                  {'_method': 'delete', 'del_api_key_builtin': api_key, '_authentication_token': self.authentication_token()})
-        self.checkSessionFlash(response, 'Api key successfully reset')
+        self.checkSessionFlash(response, 'API key successfully reset')
         response = response.follow()
         response.mustcontain(no=[api_key])
+
+# TODO To be uncommented when pytest is the test runner
+#import pytest
+#from kallithea.controllers.admin.users import UsersController
+#class TestAdminUsersController_unittest(object):
+#    """
+#    Unit tests for the users controller
+#    These are in a separate class, not deriving from TestController (and thus
+#    unittest.TestCase), to be able to benefit from pytest features like
+#    monkeypatch.
+#    """
+#    def test_get_user_or_raise_if_default(self, monkeypatch):
+#        # flash complains about an unexisting session
+#        def flash_mock(*args, **kwargs):
+#            pass
+#        monkeypatch.setattr(h, 'flash', flash_mock)
+#
+#        u = UsersController()
+#        # a regular user should work correctly
+#        user = User.get_by_username(TEST_USER_REGULAR_LOGIN)
+#        assert u._get_user_or_raise_if_default(user.user_id) == user
+#        # the default user should raise
+#        with pytest.raises(HTTPNotFound):
+#            u._get_user_or_raise_if_default(User.get_default_user().user_id)
+
+
+class TestAdminUsersControllerForDefaultUser(TestController):
+    """
+    Edit actions on the default user are not allowed.
+    Validate that they throw a 404 exception.
+    """
+    def test_edit_default_user(self):
+        self.log_user()
+        user = User.get_default_user()
+        response = self.app.get(url('edit_user', id=user.user_id), status=404)
+
+    def test_edit_advanced_default_user(self):
+        self.log_user()
+        user = User.get_default_user()
+        response = self.app.get(url('edit_user_advanced', id=user.user_id), status=404)
+
+    # API keys
+    def test_edit_api_keys_default_user(self):
+        self.log_user()
+        user = User.get_default_user()
+        response = self.app.get(url('edit_user_api_keys', id=user.user_id), status=404)
+
+    def test_add_api_keys_default_user(self):
+        self.log_user()
+        user = User.get_default_user()
+        response = self.app.post(url('edit_user_api_keys', id=user.user_id),
+                 {'_method': 'put', '_authentication_token': self.authentication_token()}, status=404)
+
+    def test_delete_api_keys_default_user(self):
+        self.log_user()
+        user = User.get_default_user()
+        response = self.app.post(url('edit_user_api_keys', id=user.user_id),
+                 {'_method': 'delete', '_authentication_token': self.authentication_token()}, status=404)
+
+    # Permissions
+    def test_edit_perms_default_user(self):
+        self.log_user()
+        user = User.get_default_user()
+        response = self.app.get(url('edit_user_perms', id=user.user_id), status=404)
+
+    def test_update_perms_default_user(self):
+        self.log_user()
+        user = User.get_default_user()
+        response = self.app.post(url('edit_user_perms', id=user.user_id),
+                 {'_method': 'put', '_authentication_token': self.authentication_token()}, status=404)
+
+    # Emails
+    def test_edit_emails_default_user(self):
+        self.log_user()
+        user = User.get_default_user()
+        response = self.app.get(url('edit_user_emails', id=user.user_id), status=404)
+
+    def test_add_emails_default_user(self):
+        self.log_user()
+        user = User.get_default_user()
+        response = self.app.post(url('edit_user_emails', id=user.user_id),
+                 {'_method': 'put', '_authentication_token': self.authentication_token()}, status=404)
+
+    def test_delete_emails_default_user(self):
+        self.log_user()
+        user = User.get_default_user()
+        response = self.app.post(url('edit_user_emails', id=user.user_id),
+                 {'_method': 'delete', '_authentication_token': self.authentication_token()}, status=404)
+
+    # IP addresses
+    # Add/delete of IP addresses for the default user is used to maintain
+    # the global IP whitelist and thus allowed. Only 'edit' is forbidden.
+    def test_edit_ip_default_user(self):
+        self.log_user()
+        user = User.get_default_user()
+        response = self.app.get(url('edit_user_ips', id=user.user_id), status=404)

@@ -12,7 +12,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-kallithea.model.user_group
+kallithea.model.repo_group
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 repo group model for Kallithea
@@ -87,13 +87,13 @@ class RepoGroupModel(BaseModel):
         """
 
         create_path = os.path.join(self.repos_path, group_name)
-        log.debug('creating new group in %s' % create_path)
+        log.debug('creating new group in %s', create_path)
 
         if os.path.isdir(create_path):
             raise Exception('That directory already exists !')
 
         os.makedirs(create_path)
-        log.debug('Created group in %s' % create_path)
+        log.debug('Created group in %s', create_path)
 
     def _rename_group(self, old, new):
         """
@@ -106,12 +106,12 @@ class RepoGroupModel(BaseModel):
             log.debug('skipping group rename')
             return
 
-        log.debug('renaming repository group from %s to %s' % (old, new))
+        log.debug('renaming repository group from %s to %s', old, new)
 
         old_path = os.path.join(self.repos_path, old)
         new_path = os.path.join(self.repos_path, new)
 
-        log.debug('renaming repos paths from %s to %s' % (old_path, new_path))
+        log.debug('renaming repos paths from %s to %s', old_path, new_path)
 
         if os.path.isdir(new_path):
             raise Exception('Was trying to rename to already '
@@ -129,7 +129,7 @@ class RepoGroupModel(BaseModel):
         paths = os.sep.join(paths)
 
         rm_path = os.path.join(self.repos_path, paths)
-        log.info("Removing group %s" % (rm_path))
+        log.info("Removing group %s", rm_path)
         # delete only if that path really exists
         if os.path.isdir(rm_path):
             if force_delete:
@@ -235,8 +235,8 @@ class RepoGroupModel(BaseModel):
 
         # start updates
         updates = []
-        log.debug('Now updating permissions for %s in recursive mode:%s'
-                  % (repo_group, recursive))
+        log.debug('Now updating permissions for %s in recursive mode:%s',
+                  repo_group, recursive)
 
         for obj in repo_group.recursive_groups_and_repos():
             # iterated obj is an instance of a repos group or repository in
@@ -336,7 +336,7 @@ class RepoGroupModel(BaseModel):
             self.sa.delete(repo_group)
             self._delete_group(repo_group, force_delete)
         except Exception:
-            log.error('Error removing repo_group %s' % repo_group)
+            log.error('Error removing repo_group %s', repo_group)
             raise
 
     def add_permission(self, repo_group, obj, obj_type, perm, recursive):
@@ -466,7 +466,7 @@ class RepoGroupModel(BaseModel):
         obj.user = user
         obj.permission = permission
         self.sa.add(obj)
-        log.debug('Granted perm %s to %s on %s' % (perm, user, repo_group))
+        log.debug('Granted perm %s to %s on %s', perm, user, repo_group)
         return obj
 
     def revoke_user_permission(self, repo_group, user):
@@ -485,9 +485,9 @@ class RepoGroupModel(BaseModel):
             .filter(UserRepoGroupToPerm.user == user)\
             .filter(UserRepoGroupToPerm.group == repo_group)\
             .scalar()
-        if obj:
+        if obj is not None:
             self.sa.delete(obj)
-            log.debug('Revoked perm on %s on %s' % (repo_group, user))
+            log.debug('Revoked perm on %s on %s', repo_group, user)
 
     def grant_user_group_permission(self, repo_group, group_name, perm):
         """
@@ -518,7 +518,7 @@ class RepoGroupModel(BaseModel):
         obj.users_group = group_name
         obj.permission = permission
         self.sa.add(obj)
-        log.debug('Granted perm %s to %s on %s' % (perm, group_name, repo_group))
+        log.debug('Granted perm %s to %s on %s', perm, group_name, repo_group)
         return obj
 
     def revoke_user_group_permission(self, repo_group, group_name):
@@ -537,6 +537,6 @@ class RepoGroupModel(BaseModel):
             .filter(UserGroupRepoGroupToPerm.group == repo_group)\
             .filter(UserGroupRepoGroupToPerm.users_group == group_name)\
             .scalar()
-        if obj:
+        if obj is not None:
             self.sa.delete(obj)
-            log.debug('Revoked perm to %s on %s' % (repo_group, group_name))
+            log.debug('Revoked perm to %s on %s', repo_group, group_name)

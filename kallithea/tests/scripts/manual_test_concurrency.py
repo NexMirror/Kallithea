@@ -12,8 +12,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-kallithea.tests.test_hg_operations
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kallithea.tests.scripts.manual_test_concurrency
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Test suite for making push/pull operations
 
@@ -49,14 +49,14 @@ from kallithea.tests import TESTS_TMP_PATH, HG_REPO
 from kallithea.config.environment import load_environment
 
 rel_path = dn(dn(dn(dn(os.path.abspath(__file__)))))
-conf = appconfig('config:rc.ini', relative_to=rel_path)
+conf = appconfig('config:development.ini', relative_to=rel_path)
 load_environment(conf.global_conf, conf.local_conf)
 
 add_cache(conf)
 
-USER = 'test_admin'
-PASS = 'test12'
-HOST = 'rc.local'
+USER = TEST_USER_ADMIN_LOGIN
+PASS = TEST_USER_ADMIN_PASS
+HOST = 'server.local'
 METHOD = 'pull'
 DEBUG = True
 log = logging.getLogger(__name__)
@@ -72,7 +72,7 @@ class Command(object):
         """
 
         command = cmd + ' ' + ' '.join(args)
-        log.debug('Executing %s' % command)
+        log.debug('Executing %s', command)
         if DEBUG:
             print command
         p = Popen(command, shell=True, stdout=PIPE, stderr=PIPE, cwd=self.cwd)
@@ -218,5 +218,5 @@ if __name__ == '__main__':
             test_clone_with_credentials(repo=sys.argv[1], method=METHOD,
                                         seq=seq, backend=backend)
         print 'time taken %.3f' % (time.time() - s)
-    except Exception, e:
+    except Exception as e:
         sys.exit('stop on %s' % e)

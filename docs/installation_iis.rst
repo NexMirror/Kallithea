@@ -1,5 +1,6 @@
 .. _installation_iis:
 
+=====================================================================
 Installing Kallithea on Microsoft Internet Information Services (IIS)
 =====================================================================
 
@@ -11,37 +12,38 @@ preventing you from applying this on IIS 6 well.
     For the best security, it is strongly recommended to only host the site over
     a secure connection, e.g. using TLS.
 
+
 Prerequisites
 -------------
 
 Apart from the normal requirements for Kallithea, it is also necessary to get an
 ISAPI-WSGI bridge module, e.g. isapi-wsgi.
 
+
 Installation
 ------------
 
-The following will assume that your Kallithea is at ``c:\inetpub\kallithea`` and
+The following assumes that your Kallithea is at ``c:\inetpub\kallithea``, and
 will be served from the root of its own website. The changes to serve it in its
 own virtual folder will be noted where appropriate.
 
-Application Pool
+Application pool
 ................
 
 Make sure that there is a unique application pool for the Kallithea application
 with an identity that has read access to the Kallithea distribution.
 
 The application pool does not need to be able to run any managed code. If you
-are using a 32-bit Python installation, then you must enable 32 bit program in
-the advanced settings for the application pool otherwise Python will not be able
-to run on the website and consequently, Kallithea will not be able to run.
+are using a 32-bit Python installation, then you must enable 32-bit program in
+the advanced settings for the application pool; otherwise Python will not be able
+to run on the website and neither will Kallithea.
 
 .. note::
 
-    The application pool can be the same as an existing application pool as long
-    as the requirements to Kallithea are enabled by the existing application
-    pool.
+    The application pool can be the same as an existing application pool,
+    as long as the Kallithea requirements are met by the existing pool.
 
-ISAPI Handler
+ISAPI handler
 .............
 
 The ISAPI handler can be generated using::
@@ -87,6 +89,7 @@ external account*. Finally, save the changes.
 
 The last necessary step is to enable the relevant authentication in IIS, e.g.
 Windows authentication.
+
 
 Troubleshooting
 ---------------

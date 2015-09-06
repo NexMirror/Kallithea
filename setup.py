@@ -36,9 +36,9 @@ is_windows = __platform__ in ['Windows']
 
 requirements = [
     "waitress==0.8.8",
-    "webob==1.0.8",
+    "webob>=1.0.8,<=1.1.1",
     "webtest==1.4.3",
-    "Pylons==1.0.0",
+    "Pylons>=1.0.0,<=1.0.2",
     "Beaker==1.6.4",
     "WebHelpers==1.3",
     "formencode>=1.2.4,<=1.2.6",
@@ -51,12 +51,11 @@ requirements = [
     "python-dateutil>=1.5.0,<2.0.0",
     "markdown==2.2.1",
     "docutils>=0.8.1,<=0.11",
-    "simplejson==2.5.2",
     "mock",
-    "pycrypto>=2.6.0,<=2.6.1",
     "URLObject==2.3.4",
     "Routes==1.13",
     "dulwich>=0.9.9,<=0.9.9",
+    "mercurial>=2.9,<3.6",
 ]
 
 if sys.version_info < (2, 7):
@@ -64,7 +63,6 @@ if sys.version_info < (2, 7):
     requirements.append("unittest2")
     requirements.append("argparse")
 
-requirements.append("mercurial>=2.9,<3.4")
 if not is_windows:
     requirements.append("py-bcrypt>=0.3.0,<=0.4")
 
@@ -110,7 +108,7 @@ try:
     long_description = open(README_FILE).read() + '\n\n' + \
         open(CHANGELOG_FILE).read()
 
-except IOError, err:
+except IOError as err:
     sys.stderr.write(
         "[WARNING] Cannot find file specified as long_description (%s)\n or "
         "changelog (%s) skipping that file" % (README_FILE, CHANGELOG_FILE)
@@ -176,5 +174,8 @@ setup(
     upgrade-db=kallithea.lib.dbmigrate:UpgradeDb
     celeryd=kallithea.lib.celerypylons.commands:CeleryDaemonCommand
     install-iis=kallithea.lib.paster_commands.install_iis:Command
+
+    [nose.plugins]
+    pylons = pylons.test:PylonsPlugin
     """,
 )

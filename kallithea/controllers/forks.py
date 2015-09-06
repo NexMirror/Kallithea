@@ -38,13 +38,12 @@ import kallithea.lib.helpers as h
 
 from kallithea.lib.helpers import Page
 from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator, \
-    NotAnonymous, HasRepoPermissionAny, HasPermissionAnyDecorator
+    NotAnonymous, HasRepoPermissionAny, HasPermissionAnyDecorator, HasPermissionAny
 from kallithea.lib.base import BaseRepoController, render
-from kallithea.model.db import Repository, RepoGroup, UserFollowing, User,\
-    Ui
+from kallithea.model.db import Repository, UserFollowing, User, Ui
 from kallithea.model.repo import RepoModel
 from kallithea.model.forms import RepoForkForm
-from kallithea.model.scm import ScmModel, RepoGroupList
+from kallithea.model.scm import ScmModel, AvailableRepoGroupChoices
 from kallithea.lib.utils2 import safe_int
 
 log = logging.getLogger(__name__)
@@ -56,12 +55,13 @@ class ForksController(BaseRepoController):
         super(ForksController, self).__before__()
 
     def __load_defaults(self):
-        acl_groups = RepoGroupList(RepoGroup.query().all(),
-                               perm_set=['group.write', 'group.admin'])
-        c.repo_groups = RepoGroup.groups_choices(groups=acl_groups)
-        c.repo_groups_choices = map(lambda k: unicode(k[0]), c.repo_groups)
-        choices, c.landing_revs = ScmModel().get_repo_landing_revs()
-        c.landing_revs_choices = choices
+        repo_group_perms = ['group.admin']
+        if HasPermissionAny('hg.create.write_on_repogroup.true')():
+            repo_group_perms.append('group.write')
+        c.repo_groups = AvailableRepoGroupChoices(['hg.create.repository'], repo_group_perms)
+
+        c.landing_revs_choices, c.landing_revs = ScmModel().get_repo_landing_revs()
+
         c.can_update = Ui.get_by_key(Ui.HOOK_UPDATE).ui_active
 
     def __load_data(self, repo_name=None):
@@ -156,7 +156,7 @@ class ForksController(BaseRepoController):
         self.__load_defaults()
         c.repo_info = Repository.get_by_repo_name(repo_name)
         _form = RepoForkForm(old_data={'repo_type': c.repo_info.repo_type},
-                             repo_groups=c.repo_groups_choices,
+                             repo_groups=c.repo_groups,
                              landing_revs=c.landing_revs_choices)()
         form_result = {}
         task_id = None
@@ -173,8 +173,7 @@ class ForksController(BaseRepoController):
             from celery.result import BaseAsyncResult
             if isinstance(task, BaseAsyncResult):
                 task_id = task.task_id
-        except formencode.Invalid, errors:
-            c.new_repo = errors.value['repo_name']
+        except formencode.Invalid as errors:
             return htmlfill.render(
                 render('forks/fork.html'),
                 defaults=errors.value,

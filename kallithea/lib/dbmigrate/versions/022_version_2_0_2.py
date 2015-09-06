@@ -50,7 +50,7 @@ def fixups(models, _SESSION):
                         _rev_type = 'branch'
                     elif _rev in known_bookmarks:
                         _rev_type = 'book'
-            except Exception, e:
+            except Exception as e:
                 print e
                 print 'continue...'
                 #we don't want any error to break the process

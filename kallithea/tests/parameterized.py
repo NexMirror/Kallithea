@@ -5,8 +5,25 @@ import logging
 import logging.handlers
 from functools import wraps
 
-from nose.tools import nottest
 from unittest import TestCase
+
+
+def skip_test(func):
+    try:
+        from nose.tools import nottest
+    except ImportError:
+        pass
+    else:
+        func = nottest(func)
+
+    try:
+        import pytest
+    except ImportError:
+        pass
+    else:
+        func = pytest.mark.skipIf(True, func)
+
+    return func
 
 
 def _terrible_magic_get_defining_classes():
@@ -125,7 +142,7 @@ def parameterized_expand(input):
             name = base_name + name_suffix
             new_func = parameterized_expand_helper(name, f, args)
             frame_locals[name] = new_func
-        return nottest(f)
+        return skip_test(f)
     return parameterized_expand_wrapper
 
 parameterized.expand = parameterized_expand
@@ -141,24 +158,10 @@ def assert_not_contains(haystack, needle):
         raise AssertionError("%r in %r" % (needle, haystack))
 
 
-def imported_from_test():
-    """ Returns true if it looks like this module is being imported by unittest
-        or nose. """
-    import re
-    import inspect
-    nose_re = re.compile(r"\bnose\b")
-    unittest_re = re.compile(r"\bunittest2?\b")
-    for frame in inspect.stack():
-        file = frame[1]
-        if nose_re.search(file) or unittest_re.search(file):
-            return True
-    return False
-
-
 def assert_raises(func, exc_type, str_contains=None, repr_contains=None):
     try:
         func()
-    except exc_type, e:
+    except exc_type as e:
         if str_contains is not None and str_contains not in str(e):
             raise AssertionError("%s raised, but %r does not contain %r"
                                  % (exc_type, str(e), str_contains))

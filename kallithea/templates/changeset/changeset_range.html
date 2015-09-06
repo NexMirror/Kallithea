@@ -45,7 +45,7 @@ ${self.repo_context_bar('changelog')}
                 <td><span class="tooltip" title="${h.age(cs.date)}">${cs.date}</span></td>
                 <td>
                   %if c.statuses:
-                    <div title="${h.tooltip(_('Changeset status'))}" class="changeset-status-ico"><i class="icon-circle changeset-status-${c.statuses[cnt]}"></i></div>
+                    <div title="${_('Changeset status')}" class="changeset-status-ico"><i class="icon-circle changeset-status-${c.statuses[cnt]}"></i></div>
                   %endif
                 </td>
                 <td><div class="message">${h.urlify_commit(h.wrap_paragraphs(cs.message),c.repo_name)}</div></td>
@@ -78,14 +78,14 @@ ${self.repo_context_bar('changelog')}
           ##${comment.comment_inline_form(cs)}
           ## diff block
           <div class="h3">
-          <a class="tooltip" title="${h.tooltip(cs.message)}" href="${h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id)}">${h.show_id(cs)}</a>
+          <a class="tooltip" title="${cs.message}" href="${h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id)}">${h.show_id(cs)}</a>
              <div class="gravatar">
                ${h.gravatar(h.email_or_none(cs.author), size=20)}
              </div>
              <div class="right">
               <span class="logtags">
                 %if len(cs.parents)>1:
-                <span class="merge">${_('merge')}</span>
+                <span class="merge">${_('Merge')}</span>
                 %endif
                 %if h.is_hg(c.db_repo_scm_instance):
                   %for book in cs.bookmarks:

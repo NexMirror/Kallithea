@@ -1,6 +1,6 @@
-from __future__ import with_statement
 
 import os
+import sys
 import mock
 import datetime
 import urllib2
@@ -8,7 +8,8 @@ from kallithea.lib.vcs.backends.git import GitRepository, GitChangeset
 from kallithea.lib.vcs.exceptions import RepositoryError, VCSError, NodeDoesNotExistError
 from kallithea.lib.vcs.nodes import NodeKind, FileNode, DirNode, NodeState
 from kallithea.lib.vcs.utils.compat import unittest
-from kallithea.tests.vcs.base import BackendTestMixin
+from kallithea.model.scm import ScmModel
+from kallithea.tests.vcs.base import _BackendTestMixin
 from kallithea.tests.vcs.conf import TEST_GIT_REPO, TEST_GIT_REPO_CLONE, get_new_dir
 
 
@@ -39,12 +40,20 @@ class GitRepositoryTest(unittest.TestCase):
             clone_fail_repo.clone(repo_inject_path, update_after_clone=True,)
 
         # Verify correct quoting of evil characters that should work on posix file systems
-        tricky_path = get_new_dir("tricky-path-repo-$'\"`")
+        if sys.platform == 'win32':
+            # windows does not allow '"' in dir names
+            tricky_path = get_new_dir("tricky-path-repo-$'`")
+        else:
+            tricky_path = get_new_dir("tricky-path-repo-$'\"`")
         successfully_cloned = GitRepository(tricky_path, src_url=TEST_GIT_REPO, update_after_clone=True, create=True)
         # Repo should have been created
         self.assertFalse(successfully_cloned._repo.bare)
 
-        tricky_path_2 = get_new_dir("tricky-path-2-repo-$'\"`")
+        if sys.platform == 'win32':
+            # windows does not allow '"' in dir names
+            tricky_path_2 = get_new_dir("tricky-path-2-repo-$'`")
+        else:
+            tricky_path_2 = get_new_dir("tricky-path-2-repo-$'\"`")
         successfully_cloned2 = GitRepository(tricky_path_2, src_url=tricky_path, bare=True, create=True)
         # Repo should have been created and thus used correct quoting for clone
         self.assertTrue(successfully_cloned2._repo.bare)
@@ -52,6 +61,12 @@ class GitRepositoryTest(unittest.TestCase):
         # Should pass because URL has been properly quoted
         successfully_cloned.pull(tricky_path_2)
         successfully_cloned2.fetch(tricky_path)
+
+    def test_repo_create_with_spaces_in_path(self):
+        repo_path = get_new_dir("path with spaces")
+        repo = GitRepository(repo_path, src_url=None, bare=True, create=True)
+        # Repo should have been created
+        self.assertTrue(repo._repo.bare)
 
     def test_repo_clone(self):
         self.__check_for_existing_repo()
@@ -63,6 +78,15 @@ class GitRepositoryTest(unittest.TestCase):
         for changeset in repo.get_changesets():
             raw_id = changeset.raw_id
             self.assertEqual(raw_id, repo_clone.get_changeset(raw_id).raw_id)
+
+    def test_repo_clone_with_spaces_in_path(self):
+        repo_path = get_new_dir("path with spaces")
+        successfully_cloned = GitRepository(repo_path, src_url=TEST_GIT_REPO, update_after_clone=True, create=True)
+        # Repo should have been created
+        self.assertFalse(successfully_cloned._repo.bare)
+
+        successfully_cloned.pull(TEST_GIT_REPO)
+        self.repo.fetch(repo_path)
 
     def test_repo_clone_without_create(self):
         self.assertRaises(RepositoryError, GitRepository,
@@ -620,7 +644,7 @@ class GitSpecificTest(unittest.TestCase):
             changeset.added
 
 
-class GitSpecificWithRepoTest(BackendTestMixin, unittest.TestCase):
+class GitSpecificWithRepoTest(_BackendTestMixin, unittest.TestCase):
     backend_alias = 'git'
 
     @classmethod
@@ -658,37 +682,37 @@ class GitSpecificWithRepoTest(BackendTestMixin, unittest.TestCase):
             'base')
 
     def test_workdir_get_branch(self):
-        self.repo.run_git_command('checkout -b production')
+        self.repo.run_git_command(['checkout', '-b', 'production'])
         # Regression test: one of following would fail if we don't check
         # .git/HEAD file
-        self.repo.run_git_command('checkout production')
+        self.repo.run_git_command(['checkout', 'production'])
         self.assertEqual(self.repo.workdir.get_branch(), 'production')
-        self.repo.run_git_command('checkout master')
+        self.repo.run_git_command(['checkout', 'master'])
         self.assertEqual(self.repo.workdir.get_branch(), 'master')
 
     def test_get_diff_runs_git_command_with_hashes(self):
         self.repo.run_git_command = mock.Mock(return_value=['', ''])
         self.repo.get_diff(0, 1)
         self.repo.run_git_command.assert_called_once_with(
-          'diff -U%s --full-index --binary -p -M --abbrev=40 %s %s' %
-            (3, self.repo._get_revision(0), self.repo._get_revision(1)))
+            ['diff', '-U3', '--full-index', '--binary', '-p', '-M', '--abbrev=40',
+             self.repo._get_revision(0), self.repo._get_revision(1)])
 
     def test_get_diff_runs_git_command_with_str_hashes(self):
         self.repo.run_git_command = mock.Mock(return_value=['', ''])
         self.repo.get_diff(self.repo.EMPTY_CHANGESET, 1)
         self.repo.run_git_command.assert_called_once_with(
-            'show -U%s --full-index --binary -p -M --abbrev=40 %s' %
-            (3, self.repo._get_revision(1)))
+            ['show', '-U3', '--full-index', '--binary', '-p', '-M', '--abbrev=40',
+             self.repo._get_revision(1)])
 
     def test_get_diff_runs_git_command_with_path_if_its_given(self):
         self.repo.run_git_command = mock.Mock(return_value=['', ''])
         self.repo.get_diff(0, 1, 'foo')
         self.repo.run_git_command.assert_called_once_with(
-          'diff -U%s --full-index --binary -p -M --abbrev=40 %s %s -- "foo"'
-            % (3, self.repo._get_revision(0), self.repo._get_revision(1)))
+            ['diff', '-U3', '--full-index', '--binary', '-p', '-M', '--abbrev=40',
+             self.repo._get_revision(0), self.repo._get_revision(1), '--', 'foo'])
 
 
-class GitRegressionTest(BackendTestMixin, unittest.TestCase):
+class GitRegressionTest(_BackendTestMixin, unittest.TestCase):
     backend_alias = 'git'
 
     @classmethod
@@ -729,6 +753,82 @@ class GitRegressionTest(BackendTestMixin, unittest.TestCase):
         self.assertEqual(paths(*cs.get_nodes('bot/build/static/templates')), ['bot/build/static/templates/f.html', 'bot/build/static/templates/f1.html'])
         self.assertEqual(paths(*cs.get_nodes('bot/build/templates')), ['bot/build/templates/err.html', 'bot/build/templates/err2.html'])
         self.assertEqual(paths(*cs.get_nodes('bot/templates/')), ['bot/templates/404.html', 'bot/templates/500.html'])
+
+
+class GitHooksTest(unittest.TestCase):
+    """
+    Tests related to hook functionality of Git repositories.
+    """
+
+    def setUp(self):
+        # For each run we want a fresh repo.
+        self.repo_directory = get_new_dir("githookrepo")
+        self.repo = GitRepository(self.repo_directory, create=True)
+
+        # Create a dictionary where keys are hook names, and values are paths to
+        # them. Deduplicates code in tests a bit.
+        self.hook_directory = self.repo.get_hook_location()
+        self.kallithea_hooks = {h: os.path.join(self.hook_directory, h) for h in ("pre-receive", "post-receive")}
+
+    def test_hooks_created_if_missing(self):
+        """
+        Tests if hooks are installed in repository if they are missing.
+        """
+
+        for hook, hook_path in self.kallithea_hooks.iteritems():
+            if os.path.exists(hook_path):
+                os.remove(hook_path)
+
+        ScmModel().install_git_hooks(repo=self.repo)
+
+        for hook, hook_path in self.kallithea_hooks.iteritems():
+            self.assertTrue(os.path.exists(hook_path))
+
+    def test_kallithea_hooks_updated(self):
+        """
+        Tests if hooks are updated if they are Kallithea hooks already.
+        """
+
+        for hook, hook_path in self.kallithea_hooks.iteritems():
+            with open(hook_path, "w") as f:
+                f.write("KALLITHEA_HOOK_VER=0.0.0\nJUST_BOGUS")
+
+        ScmModel().install_git_hooks(repo=self.repo)
+
+        for hook, hook_path in self.kallithea_hooks.iteritems():
+            with open(hook_path) as f:
+                self.assertNotIn("JUST_BOGUS", f.read())
+
+    def test_custom_hooks_untouched(self):
+        """
+        Tests if hooks are left untouched if they are not Kallithea hooks.
+        """
+
+        for hook, hook_path in self.kallithea_hooks.iteritems():
+            with open(hook_path, "w") as f:
+                f.write("#!/bin/bash\n#CUSTOM_HOOK")
+
+        ScmModel().install_git_hooks(repo=self.repo)
+
+        for hook, hook_path in self.kallithea_hooks.iteritems():
+            with open(hook_path) as f:
+                self.assertIn("CUSTOM_HOOK", f.read())
+
+    def test_custom_hooks_forced_update(self):
+        """
+        Tests if hooks are forcefully updated even though they are custom hooks.
+        """
+
+        for hook, hook_path in self.kallithea_hooks.iteritems():
+            with open(hook_path, "w") as f:
+                f.write("#!/bin/bash\n#CUSTOM_HOOK")
+
+        ScmModel().install_git_hooks(repo=self.repo, force_create=True)
+
+        for hook, hook_path in self.kallithea_hooks.iteritems():
+            with open(hook_path) as f:
+                self.assertIn("KALLITHEA_HOOK_VER", f.read())
+
 
 if __name__ == '__main__':
     unittest.main()

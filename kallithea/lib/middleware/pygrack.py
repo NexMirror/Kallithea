@@ -69,7 +69,7 @@ class GitRepository(object):
 
         git_command = request.GET.get('service')
         if git_command not in self.commands:
-            log.debug('command %s not allowed' % git_command)
+            log.debug('command %s not allowed', git_command)
             return exc.HTTPMethodNotAllowed()
 
         # note to self:
@@ -82,15 +82,14 @@ class GitRepository(object):
         server_advert = '# service=%s' % git_command
         packet_len = str(hex(len(server_advert) + 4)[2:].rjust(4, '0')).lower()
         _git_path = kallithea.CONFIG.get('git_path', 'git')
+        cmd = [_git_path, git_command[4:],
+               '--stateless-rpc', '--advertise-refs', self.content_path]
+        log.debug('handling cmd %s', cmd)
         try:
-            out = subprocessio.SubprocessIOChunker(
-                r'%s %s --stateless-rpc --advertise-refs "%s"' % (
-                    _git_path, git_command[4:], self.content_path),
-                starting_values=[
-                    packet_len + server_advert + '0000'
-                ]
+            out = subprocessio.SubprocessIOChunker(cmd,
+                starting_values=[packet_len + server_advert + '0000']
             )
-        except EnvironmentError, e:
+        except EnvironmentError as e:
             log.error(traceback.format_exc())
             raise exc.HTTPExpectationFailed()
         resp = Response()
@@ -109,7 +108,7 @@ class GitRepository(object):
         _git_path = kallithea.CONFIG.get('git_path', 'git')
         git_command = self._get_fixedpath(request.path_info)
         if git_command not in self.commands:
-            log.debug('command %s not allowed' % git_command)
+            log.debug('command %s not allowed', git_command)
             return exc.HTTPMethodNotAllowed()
 
         if 'CONTENT_LENGTH' in environ:
@@ -118,23 +117,19 @@ class GitRepository(object):
         else:
             inputstream = environ['wsgi.input']
 
+        gitenv = dict(os.environ)
+        # forget all configs
+        gitenv['GIT_CONFIG_NOGLOBAL'] = '1'
+        cmd = [_git_path, git_command[4:], '--stateless-rpc', self.content_path]
+        log.debug('handling cmd %s', cmd)
         try:
-            gitenv = os.environ
-            # forget all configs
-            gitenv['GIT_CONFIG_NOGLOBAL'] = '1'
-            opts = dict(
-                env=gitenv,
-                cwd=self.content_path,
-            )
-            cmd = r'%s %s --stateless-rpc "%s"' % (_git_path, git_command[4:],
-                                                   self.content_path),
-            log.debug('handling cmd %s' % cmd)
             out = subprocessio.SubprocessIOChunker(
                 cmd,
                 inputstream=inputstream,
-                **opts
+                env=gitenv,
+                cwd=self.content_path,
             )
-        except EnvironmentError, e:
+        except EnvironmentError as e:
             log.error(traceback.format_exc())
             raise exc.HTTPExpectationFailed()
 
@@ -162,10 +157,10 @@ class GitRepository(object):
             app = self.backend
         try:
             resp = app(request, environ)
-        except exc.HTTPException, e:
+        except exc.HTTPException as e:
             resp = e
             log.error(traceback.format_exc())
-        except Exception, e:
+        except Exception as e:
             log.error(traceback.format_exc())
             resp = exc.HTTPInternalServerError()
         return resp(environ, start_response)

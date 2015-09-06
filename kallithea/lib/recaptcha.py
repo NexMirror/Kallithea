@@ -55,7 +55,7 @@ def submit(recaptcha_challenge_field, recaptcha_response_field, private_key,
     recaptcha_challenge_field -- The value of recaptcha_challenge_field from the form
     recaptcha_response_field -- The value of recaptcha_response_field from the form
     private_key -- your reCAPTCHA private key
-    remoteip -- the user's ip address
+    remoteip -- the user's IP address
     """
 
     if not (recaptcha_response_field and recaptcha_challenge_field and

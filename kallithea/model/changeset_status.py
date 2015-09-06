@@ -1,4 +1,16 @@
 # -*- coding: utf-8 -*-
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 kallithea.model.changeset_status
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -12,22 +24,8 @@ Original author and date, and relevant copyright and licensing information is be
 :copyright: (c) 2013 RhodeCode GmbH, and others.
 :license: GPLv3, see LICENSE.md for more details.
 """
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 
 import logging
-from collections import  defaultdict
 from sqlalchemy.orm import joinedload
 
 from kallithea.model import BaseModel
@@ -66,9 +64,27 @@ class ChangesetStatusModel(BaseModel):
         q = q.order_by(ChangesetStatus.version.asc())
         return q
 
+    def _calculate_status(self, statuses):
+        """
+        Given a list of statuses, calculate the resulting status, according to
+        the policy: approve if consensus, reject when at least one reject.
+        """
+
+        if not statuses:
+            return ChangesetStatus.STATUS_UNDER_REVIEW
+
+        if all(st and st.status == ChangesetStatus.STATUS_APPROVED for st in statuses):
+            return ChangesetStatus.STATUS_APPROVED
+
+        if any(st and st.status == ChangesetStatus.STATUS_REJECTED for st in statuses):
+            return ChangesetStatus.STATUS_REJECTED
+
+        return ChangesetStatus.STATUS_UNDER_REVIEW
+
     def calculate_pull_request_result(self, pull_request):
         """
-        Policy: approve if consensus. Only approve and reject counts as valid votes.
+        Return a tuple (reviewers, pending reviewers, pull request status)
+        Only approve and reject counts as valid votes.
         """
 
         # collect latest votes from all voters
@@ -77,24 +93,21 @@ class ChangesetStatusModel(BaseModel):
                                              pull_request=pull_request,
                                              with_revisions=True)):
             cs_statuses[st.author.username] = st
+
         # collect votes from official reviewers
         pull_request_reviewers = []
         pull_request_pending_reviewers = []
-        approved_votes = 0
+        relevant_statuses = []
         for r in pull_request.reviewers:
             st = cs_statuses.get(r.user.username)
-            if st and st.status == ChangesetStatus.STATUS_APPROVED:
-                approved_votes += 1
+            relevant_statuses.append(st)
             if not st or st.status in (ChangesetStatus.STATUS_NOT_REVIEWED,
                                        ChangesetStatus.STATUS_UNDER_REVIEW):
                 st = None
                 pull_request_pending_reviewers.append(r.user)
             pull_request_reviewers.append((r.user, st))
 
-        # calculate result
-        result = ChangesetStatus.STATUS_UNDER_REVIEW
-        if approved_votes and approved_votes == len(pull_request.reviewers):
-            result = ChangesetStatus.STATUS_APPROVED
+        result = self._calculate_status(relevant_statuses)
 
         return (pull_request_reviewers,
                 pull_request_pending_reviewers,

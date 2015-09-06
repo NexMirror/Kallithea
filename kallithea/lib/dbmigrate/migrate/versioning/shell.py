@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
 """The migrate command-line tool."""
@@ -207,7 +207,7 @@ def main(argv=None, **kwargs):
         ret = command_func(**kwargs)
         if ret is not None:
             log.info(ret)
-    except (exceptions.UsageError, exceptions.KnownError), e:
+    except (exceptions.UsageError, exceptions.KnownError) as e:
         parser.error(e.args[0])
 
 if __name__ == "__main__":

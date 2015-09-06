@@ -11,18 +11,7 @@ class TestChangeSetCommentsController(TestController):
             Session().delete(x)
         Session().commit()
 
-        for x in Notification.query().all():
-            Session().delete(x)
-        Session().commit()
-
-    def tearDown(self):
-        for x in ChangesetComment.query().all():
-            Session().delete(x)
-        Session().commit()
-
-        for x in Notification.query().all():
-            Session().delete(x)
-        Session().commit()
+        self.remove_all_notifications()
 
     def test_create(self):
         self.log_user()
@@ -54,8 +43,8 @@ class TestChangeSetCommentsController(TestController):
         ID = ChangesetComment.query().first().comment_id
         self.assertEqual(notification.type_,
                          Notification.TYPE_CHANGESET_COMMENT)
-        sbj = (u'/vcs_test_hg/changeset/'
-               '27cd5cce30c96924232dffcd24178a07ffeb5dfc#comment-%s' % ID)
+        sbj = (u'/%s/changeset/'
+               '27cd5cce30c96924232dffcd24178a07ffeb5dfc#comment-%s' % (HG_REPO, ID))
         print "%s vs %s" % (sbj, notification.subject)
         self.assertTrue(sbj in notification.subject)
 
@@ -83,9 +72,9 @@ class TestChangeSetCommentsController(TestController):
             ''' 1 comment (1 inline, 0 general)'''
         )
         response.mustcontain(
-            '''<div style="display:none" class="inline-comment-placeholder" '''
-            '''path="vcs/web/simplevcs/views/repository.py" '''
-            '''target_id="vcswebsimplevcsviewsrepositorypy">'''
+            '''<div class="comments-list-chunk" '''
+            '''data-f_path="vcs/web/simplevcs/views/repository.py" '''
+            '''data-line_no="n1" data-target-id="vcswebsimplevcsviewsrepositorypy_n1">'''
         )
 
         self.assertEqual(Notification.query().count(), 1)
@@ -95,8 +84,8 @@ class TestChangeSetCommentsController(TestController):
         ID = ChangesetComment.query().first().comment_id
         self.assertEqual(notification.type_,
                          Notification.TYPE_CHANGESET_COMMENT)
-        sbj = (u'/vcs_test_hg/changeset/'
-               '27cd5cce30c96924232dffcd24178a07ffeb5dfc#comment-%s' % ID)
+        sbj = (u'/%s/changeset/'
+               '27cd5cce30c96924232dffcd24178a07ffeb5dfc#comment-%s' % (HG_REPO, ID))
         print "%s vs %s" % (sbj, notification.subject)
         self.assertTrue(sbj in notification.subject)
 
@@ -104,7 +93,7 @@ class TestChangeSetCommentsController(TestController):
         self.log_user()
 
         rev = '27cd5cce30c96924232dffcd24178a07ffeb5dfc'
-        text = u'@test_regular check CommentOnRevision'
+        text = u'@%s check CommentOnRevision' % TEST_USER_REGULAR_LOGIN
 
         params = {'text': text, '_authentication_token': self.authentication_token()}
         response = self.app.post(url(controller='changeset', action='comment',
@@ -127,7 +116,7 @@ class TestChangeSetCommentsController(TestController):
         users = [x.user.username for x in UserNotification.query().all()]
 
         # test_regular gets notification by @mention
-        self.assertEqual(sorted(users), [u'test_admin', u'test_regular'])
+        self.assertEqual(sorted(users), [TEST_USER_ADMIN_LOGIN, TEST_USER_REGULAR_LOGIN])
 
     def test_delete(self):
         self.log_user()
@@ -143,10 +132,11 @@ class TestChangeSetCommentsController(TestController):
         self.assertEqual(len(comments), 1)
         comment_id = comments[0].comment_id
 
-        self.app.delete(url(controller='changeset',
+        self.app.post(url(controller='changeset',
                                     action='delete_comment',
                                     repo_name=HG_REPO,
-                                    comment_id=comment_id))
+                                    comment_id=comment_id),
+            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
 
         comments = ChangesetComment.query().all()
         self.assertEqual(len(comments), 0)

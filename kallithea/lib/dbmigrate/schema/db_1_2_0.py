@@ -12,8 +12,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-kallithea.model.db_1_2_0
-~~~~~~~~~~~~~~~~~~~~~~~~
+kallithea.lib.dbmigrate.schema.db_1_2_0
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Database Models for Kallithea <=1.2.X
 
@@ -323,7 +323,7 @@ class User(Base, BaseModel):
         self.last_login = datetime.datetime.now()
         Session.add(self)
         Session.commit()
-        log.debug('updated user %s lastlogin' % self.username)
+        log.debug('updated user %s lastlogin', self.username)
 
     @classmethod
     def create(cls, form_data):
@@ -698,7 +698,7 @@ class Repository(Base, BaseModel):
 
         try:
             alias = get_scm(repo_full_path)[0]
-            log.debug('Creating instance of %s repository' % alias)
+            log.debug('Creating instance of %s repository', alias)
             backend = get_backend(alias)
         except VCSError:
             log.error(traceback.format_exc())
@@ -785,7 +785,7 @@ class Group(Base, BaseModel):
                 break
             if cnt == parents_recursion_limit:
                 # this will prevent accidental infinite loops
-                log.error('group nested more than %s' %
+                log.error('group nested more than %s',
                           parents_recursion_limit)
                 break
 
@@ -1060,7 +1060,7 @@ class CacheInvalidation(Base, BaseModel):
         :param key:
         """
 
-        log.debug('marking %s for invalidation' % key)
+        log.debug('marking %s for invalidation', key)
         inv_obj = Session.query(cls)\
             .filter(cls.cache_key == key).scalar()
         if inv_obj:

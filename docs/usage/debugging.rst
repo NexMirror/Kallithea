@@ -9,6 +9,7 @@ on how to debug them.
 
 .. note:: First make sure you're using the latest version available.
 
+
 Enable detailed debug
 ---------------------
 

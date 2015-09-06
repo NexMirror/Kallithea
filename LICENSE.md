@@ -13,7 +13,7 @@ they so chose.
 However, the definitive list of copyright holders for this project is kept in
 [the about page template](kallithea/templates/about.html) so that it is
 displayed appropriately when Kallithea is installed.  This is the most
-important place to update copyright notices. 
+important place to update copyright notices.
 
 Third-Party Code Incorporated in Kallithea
 ==========================================

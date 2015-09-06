@@ -11,42 +11,23 @@
   <table>
     <thead>
       <tr>
-        <th></th>
+        <th class="left">${_('Vote')}</th>
         <th class="left">${_('Title')}</th>
-        <th class="left">${_('Author')}</th>
+        <th class="left">${_('Owner')}</th>
         <th class="left">${_('Age')}</th>
         <th class="left">${_('From')}</th>
         <th class="left">${_('To')}</th>
+        <th class="right" style="padding-right:5px">${_('Delete')}</th>
       </tr>
     </thead>
 % for pr in pullrequests:
     <tr class="${'pr-closed' if pr.is_closed() else ''}">
       <td width="80px">
-        ## review status
-        %if pr.last_review_status:
-          <i class="icon-circle changeset-status-${pr.last_review_status}" title="${_("Latest vote: %s") % pr.last_review_status}"></i>
-        %else:
-          <i class="icon-circle changeset-status-not_reviewed" title="${_("Nobody voted")}"></i>
-        %endif
-
         <% status = pr.user_review_status(c.authuser.user_id) %>
         %if status:
           <i class="icon-circle changeset-status-${status}" title="${_("You voted: %s") % status}"></i>
         %else:
           <i class="icon-circle changeset-status-not_reviewed" title="${_("You didn't vote")}"></i>
-        %endif
-
-        ## delete button
-        %if pr.author.user_id == c.authuser.user_id:
-          ${h.form(url('pullrequest_delete', repo_name=pr.other_repo.repo_name, pull_request_id=pr.pull_request_id),method='delete', style="display:inline-block")}
-          <button class="action_button"
-                  id="remove_${pr.pull_request_id}"
-                  name="remove_${pr.pull_request_id}"
-                  title="${_('Delete Pull Request')}"
-                  onclick="return confirm('${_('Confirm to delete this pull request')}');">
-            <i class="icon-minus-circled"></i>
-          </button>
-          ${h.end_form()}
         %endif
       </td>
       <td>
@@ -58,10 +39,10 @@
         </a>
       </td>
       <td>
-        ${pr.author.username_and_name}
+        ${pr.owner.full_name_and_username}
       </td>
       <td>
-        <span class="tooltip" title="${h.tooltip(h.fmt_date(pr.created_on))}">
+        <span class="tooltip" title="${h.fmt_date(pr.created_on)}">
           ${h.age(pr.created_on)}
         </span>
       </td>
@@ -77,6 +58,22 @@
           ${pr.other_repo.repo_name}#${other_ref_name}
         </a>
       </td>
+      <td style="text-align:right">
+        %if pr.owner.user_id == c.authuser.user_id:
+          ${h.form(url('pullrequest_delete', repo_name=pr.other_repo.repo_name, pull_request_id=pr.pull_request_id),method='delete', style="display:inline-block")}
+          <button class="action_button"
+                  id="remove_${pr.pull_request_id}"
+                  name="remove_${pr.pull_request_id}"
+                  title="${_('Delete Pull Request')}"
+                  onclick="return confirm('${_('Confirm to delete this pull request')}')
+                      && ((${len(pr.comments)} == 0) ||
+                          confirm('${_('Confirm again to delete this pull request with %s comments') % len(pr.comments)}'))
+                      ">
+            <i class="icon-minus-circled"></i>
+          </button>
+          ${h.end_form()}
+        %endif
+      </td>
     </tr>
 % endfor
   </table>
@@ -91,5 +88,3 @@
 %endif
 
 </%def>
-
-${pullrequest_overview(c.pullrequests_pager)}

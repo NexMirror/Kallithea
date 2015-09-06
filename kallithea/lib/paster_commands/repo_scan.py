@@ -12,8 +12,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-kallithea.lib.paster_commands.make_rcextensions
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kallithea.lib.paster_commands.repo_scan
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 repo-scan paster command for Kallithea
 
@@ -25,7 +25,6 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-from __future__ import with_statement
 
 import os
 import sys
@@ -62,7 +61,7 @@ class Command(BasePasterCommand):
                                         remove_obsolete=rm_obsolete)
         added = ', '.join(added) or '-'
         removed = ', '.join(removed) or '-'
-        log.info('Scan completed added: %s removed: %s' % (added, removed))
+        log.info('Scan completed added: %s removed: %s', added, removed)
 
     def update_parser(self):
         self.parser.add_option(

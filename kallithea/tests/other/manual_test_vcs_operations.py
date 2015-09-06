@@ -12,12 +12,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-kallithea.tests.test_scm_operations
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kallithea.tests.other.manual_test_vcs_operations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Test suite for making push/pull operations.
-Run using after doing paster serve test.ini::
- KALLITHEA_WHOOSH_TEST_DISABLE=1 KALLITHEA_NO_TMP_PATH=1 nosetests kallithea/tests/other/test_vcs_operations.py
+
+Run it in two terminals::
+ paster serve kallithea/tests/test.ini
+ KALLITHEA_WHOOSH_TEST_DISABLE=1 KALLITHEA_NO_TMP_PATH=1 nosetests kallithea/tests/other/manual_test_vcs_operations.py
 
 You must have git > 1.8.1 for tests to work fine
 
@@ -30,6 +32,7 @@ Original author and date, and relevant copyright and licensing information is be
 
 """
 
+import re
 import tempfile
 import time
 from os.path import join as jn
@@ -44,7 +47,7 @@ from kallithea.model.repo import RepoModel
 from kallithea.model.user import UserModel
 
 DEBUG = True
-HOST = '127.0.0.1:5000'  # test host
+HOST = '127.0.0.1:4999'  # test host
 
 
 class Command(object):
@@ -63,7 +66,8 @@ class Command(object):
         p = Popen(command, shell=True, stdout=PIPE, stderr=PIPE, cwd=self.cwd)
         stdout, stderr = p.communicate()
         if DEBUG:
-            print stdout, stderr
+            print 'stdout:', repr(stdout)
+            print 'stderr:', repr(stderr)
         return stdout, stderr
 
 
@@ -108,7 +112,7 @@ def _add_files_and_push(vcs, DEST, **kwargs):
     for i in xrange(kwargs.get('files_no', 3)):
         cmd = """echo 'added_line%s' >> %s""" % (i, added_file)
         Command(cwd).execute(cmd)
-        author_str = 'Marcin Kuźminski <me@email.com>'
+        author_str = 'User ǝɯɐᴎ <me@email.com>'
         if vcs == 'hg':
             cmd = """hg commit -m 'commited new %s' -u '%s' %s """ % (
                 i, author_str, added_file
@@ -197,8 +201,8 @@ class TestVCSOperations(BaseTestCase):
         clone_url = _construct_url(GIT_REPO)
         stdout, stderr = Command('/tmp').execute('git clone', clone_url)
 
-        assert 'Cloning into' in stdout
-        assert stderr == ''
+        assert 'Cloning into' in stdout + stderr
+        assert stderr == '' or stdout == ''
 
     def test_clone_wrong_credentials_hg(self):
         clone_url = _construct_url(HG_REPO, passwd='bad!')
@@ -321,7 +325,7 @@ class TestVCSOperations(BaseTestCase):
         stdout, stderr = Command('/tmp').execute('hg clone', clone_url)
 
         stdout, stderr = _add_files_and_push('hg', DEST,
-                                    clone_url='http://127.0.0.1:5000/tmp',)
+                                    clone_url='http://%s/tmp' % HOST)
 
         assert 'HTTP Error 404: Not Found' in stderr
 
@@ -331,7 +335,7 @@ class TestVCSOperations(BaseTestCase):
         stdout, stderr = Command('/tmp').execute('git clone', clone_url)
 
         stdout, stderr = _add_files_and_push('git', DEST,
-                                    clone_url='http://127.0.0.1:5000/tmp',)
+                                    clone_url='http://%s/tmp' % HOST)
 
         assert 'not found' in stderr
 
@@ -517,8 +521,8 @@ class TestVCSOperations(BaseTestCase):
             Session().commit()
             clone_url = _construct_url(GIT_REPO)
             stdout, stderr = Command('/tmp').execute('git clone', clone_url)
-            msg = ("""The requested URL returned error: 403""")
-            assert msg in stderr
+            # The message apparently changed in Git 1.8.3, so match it loosely.
+            assert re.search(r'\b403\b', stderr)
         finally:
             #release IP restrictions
             for ip in UserIpMap.getAll():
@@ -529,5 +533,5 @@ class TestVCSOperations(BaseTestCase):
         clone_url = _construct_url(GIT_REPO)
         stdout, stderr = Command('/tmp').execute('git clone', clone_url)
 
-        assert 'Cloning into' in stdout
-        assert stderr == ''
+        assert 'Cloning into' in stdout + stderr
+        assert stderr == '' or stdout == ''

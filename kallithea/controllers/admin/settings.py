@@ -94,7 +94,7 @@ class SettingsController(BaseController):
             application_form = ApplicationUiSettingsForm()()
             try:
                 form_result = application_form.to_python(dict(request.POST))
-            except formencode.Invalid, errors:
+            except formencode.Invalid as errors:
                 return htmlfill.render(
                      render('admin/settings/settings.html'),
                      defaults=errors.value,
@@ -177,7 +177,7 @@ class SettingsController(BaseController):
 
             except Exception:
                 log.error(traceback.format_exc())
-                h.flash(_('Error occurred during updating '
+                h.flash(_('Error occurred while updating '
                           'application settings'), category='error')
 
         defaults = Setting.get_app_settings()
@@ -197,9 +197,11 @@ class SettingsController(BaseController):
         if request.POST:
             rm_obsolete = request.POST.get('destroy', False)
             install_git_hooks = request.POST.get('hooks', False)
+            overwrite_git_hooks = request.POST.get('hooks_overwrite', False);
             invalidate_cache = request.POST.get('invalidate', False)
-            log.debug('rescanning repo location with destroy obsolete=%s and '
-                      'install git hooks=%s' % (rm_obsolete,install_git_hooks))
+            log.debug('rescanning repo location with destroy obsolete=%s, '
+                      'install git hooks=%s and '
+                      'overwrite git hooks=%s' % (rm_obsolete, install_git_hooks, overwrite_git_hooks))
 
             if invalidate_cache:
                 log.debug('invalidating all repositories cache')
@@ -208,8 +210,9 @@ class SettingsController(BaseController):
 
             filesystem_repos = ScmModel().repo_scan()
             added, removed = repo2db_mapper(filesystem_repos, rm_obsolete,
-                                            install_git_hook=install_git_hooks,
-                                            user=c.authuser.username)
+                                            install_git_hooks=install_git_hooks,
+                                            user=c.authuser.username,
+                                            overwrite_git_hooks=overwrite_git_hooks)
             h.flash(h.literal(_('Repositories successfully rescanned. Added: %s. Removed: %s.') %
                 (', '.join(h.link_to(safe_unicode(repo_name), h.url('summary_home', repo_name=repo_name))
                  for repo_name in added) or '-',
@@ -235,7 +238,7 @@ class SettingsController(BaseController):
             application_form = ApplicationSettingsForm()()
             try:
                 form_result = application_form.to_python(dict(request.POST))
-            except formencode.Invalid, errors:
+            except formencode.Invalid as errors:
                 return htmlfill.render(
                     render('admin/settings/settings.html'),
                     defaults=errors.value,
@@ -271,7 +274,7 @@ class SettingsController(BaseController):
 
             except Exception:
                 log.error(traceback.format_exc())
-                h.flash(_('Error occurred during updating '
+                h.flash(_('Error occurred while updating '
                           'application settings'),
                           category='error')
 
@@ -295,7 +298,7 @@ class SettingsController(BaseController):
             application_form = ApplicationVisualisationForm()()
             try:
                 form_result = application_form.to_python(dict(request.POST))
-            except formencode.Invalid, errors:
+            except formencode.Invalid as errors:
                 return htmlfill.render(
                     render('admin/settings/settings.html'),
                     defaults=errors.value,
@@ -497,16 +500,16 @@ class SettingsController(BaseController):
         try:
             import kallithea
             ver = kallithea.__version__
-            log.debug('Checking for upgrade on `%s` server' % _update_url)
+            log.debug('Checking for upgrade on `%s` server', _update_url)
             opener = urllib2.build_opener()
             opener.addheaders = [('User-agent', 'Kallithea-SCM/%s' % ver)]
             response = opener.open(_update_url)
             response_data = response.read()
             data = json.loads(response_data)
-        except urllib2.URLError, e:
+        except urllib2.URLError as e:
             log.error(traceback.format_exc())
             return _err('Failed to contact upgrade server: %r' % e)
-        except ValueError, e:
+        except ValueError as e:
             log.error(traceback.format_exc())
             return _err('Bad data sent from update server')
 

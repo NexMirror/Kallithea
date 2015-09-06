@@ -36,17 +36,17 @@ from pylons.i18n.translation import _
 from sqlalchemy.sql.expression import func
 
 from kallithea.lib import helpers as h
-from kallithea.lib.auth import LoginRequired, HasPermissionAllDecorator, \
-    HasRepoPermissionAllDecorator, NotAnonymous,HasPermissionAny, \
-    HasRepoGroupPermissionAny, HasRepoPermissionAnyDecorator
+from kallithea.lib.auth import LoginRequired, \
+    HasRepoPermissionAllDecorator, NotAnonymous, HasPermissionAny, \
+    HasRepoPermissionAnyDecorator
 from kallithea.lib.base import BaseRepoController, render
-from kallithea.lib.utils import action_logger, repo_name_slug, jsonify
+from kallithea.lib.utils import action_logger, jsonify
 from kallithea.lib.vcs import RepositoryError
 from kallithea.model.meta import Session
 from kallithea.model.db import User, Repository, UserFollowing, RepoGroup,\
     Setting, RepositoryField
 from kallithea.model.forms import RepoForm, RepoFieldForm, RepoPermsForm
-from kallithea.model.scm import ScmModel, RepoGroupList, RepoList
+from kallithea.model.scm import ScmModel, AvailableRepoGroupChoices, RepoList
 from kallithea.model.repo import RepoModel
 from kallithea.lib.compat import json
 from kallithea.lib.exceptions import AttachedForksError
@@ -76,24 +76,15 @@ class ReposController(BaseRepoController):
         return repo_obj
 
     def __load_defaults(self, repo=None):
-        acl_groups = RepoGroupList(RepoGroup.query().all(),
-                               perm_set=['group.write', 'group.admin'])
-        c.repo_groups = RepoGroup.groups_choices(groups=acl_groups)
-        c.repo_groups_choices = map(lambda k: unicode(k[0]), c.repo_groups)
+        top_perms = ['hg.create.repository']
+        repo_group_perms = ['group.admin']
+        if HasPermissionAny('hg.create.write_on_repogroup.true')():
+            repo_group_perms.append('group.write')
+        extras = [] if repo is None else [repo.group]
 
-        # in case someone no longer have a group.write access to a repository
-        # pre fill the list with this entry, we don't care if this is the same
-        # but it will allow saving repo data properly.
+        c.repo_groups = AvailableRepoGroupChoices(top_perms, repo_group_perms, extras)
 
-        repo_group = None
-        if repo:
-            repo_group = repo.group
-        if repo_group and unicode(repo_group.group_id) not in c.repo_groups_choices:
-            c.repo_groups_choices.append(unicode(repo_group.group_id))
-            c.repo_groups.append(RepoGroup._generate_choice(repo_group))
-
-        choices, c.landing_revs = ScmModel().get_repo_landing_revs()
-        c.landing_revs_choices = choices
+        c.landing_revs_choices, c.landing_revs = ScmModel().get_repo_landing_revs(repo)
 
     def __load_data(self, repo_name=None):
         """
@@ -104,10 +95,8 @@ class ReposController(BaseRepoController):
         c.repo_info = self._load_repo(repo_name)
         self.__load_defaults(c.repo_info)
 
-        ##override defaults for exact repo info here git/hg etc
-        choices, c.landing_revs = ScmModel().get_repo_landing_revs(c.repo_info)
-        c.landing_revs_choices = choices
         defaults = RepoModel()._get_defaults(repo_name)
+        defaults['clone_uri'] = c.repo_info.clone_uri_hidden # don't show password
 
         return defaults
 
@@ -137,8 +126,8 @@ class ReposController(BaseRepoController):
         form_result = {}
         task_id = None
         try:
-            # CanWriteToGroup validators checks permissions of this POST
-            form_result = RepoForm(repo_groups=c.repo_groups_choices,
+            # CanWriteGroup validators checks permissions of this POST
+            form_result = RepoForm(repo_groups=c.repo_groups,
                                    landing_revs=c.landing_revs_choices)()\
                             .to_python(dict(request.POST))
 
@@ -148,7 +137,8 @@ class ReposController(BaseRepoController):
             from celery.result import BaseAsyncResult
             if isinstance(task, BaseAsyncResult):
                 task_id = task.task_id
-        except formencode.Invalid, errors:
+        except formencode.Invalid as errors:
+            log.info(errors)
             return htmlfill.render(
                 render('admin/repos/repo_add.html'),
                 defaults=errors.value,
@@ -171,31 +161,18 @@ class ReposController(BaseRepoController):
     @NotAnonymous()
     def create_repository(self):
         """GET /_admin/create_repository: Form to create a new item"""
-        new_repo = request.GET.get('repo', '')
+        self.__load_defaults()
+        if not c.repo_groups:
+            raise HTTPForbidden
         parent_group = request.GET.get('parent_group')
-        if not HasPermissionAny('hg.admin', 'hg.create.repository')():
-            #you're not super admin nor have global create permissions,
-            #but maybe you have at least write permission to a parent group ?
-            _gr = RepoGroup.get(parent_group)
-            gr_name = _gr.group_name if _gr else None
-            # create repositories with write permission on group is set to true
-            create_on_write = HasPermissionAny('hg.create.write_on_repogroup.true')()
-            group_admin = HasRepoGroupPermissionAny('group.admin')(group_name=gr_name)
-            group_write = HasRepoGroupPermissionAny('group.write')(group_name=gr_name)
-            if not (group_admin or (group_write and create_on_write)):
-                raise HTTPForbidden
-
-        acl_groups = RepoGroupList(RepoGroup.query().all(),
-                               perm_set=['group.write', 'group.admin'])
-        c.repo_groups = RepoGroup.groups_choices(groups=acl_groups)
-        c.repo_groups_choices = map(lambda k: unicode(k[0]), c.repo_groups)
-        choices, c.landing_revs = ScmModel().get_repo_landing_revs()
-
-        c.new_repo = repo_name_slug(new_repo)
 
         ## apply the defaults from defaults page
         defaults = Setting.get_default_repo_settings(strip_prefix=True)
         if parent_group:
+            prg = RepoGroup.get(parent_group)
+            if prg is None or not any(rgc[0] == prg.group_id
+                                      for rgc in c.repo_groups):
+                raise HTTPForbidden
             defaults.update({'repo_group': parent_group})
 
         return htmlfill.render(
@@ -233,15 +210,14 @@ class ReposController(BaseRepoController):
         repo = Repository.get_by_repo_name(repo_name)
         if repo and repo.repo_state == Repository.STATE_CREATED:
             if repo.clone_uri:
-                clone_uri = repo.clone_uri_hidden
                 h.flash(_('Created repository %s from %s')
-                        % (repo.repo_name, clone_uri), category='success')
+                        % (repo.repo_name, repo.clone_uri_hidden), category='success')
             else:
                 repo_url = h.link_to(repo.repo_name,
                                      h.url('summary_home',
                                            repo_name=repo.repo_name))
                 fork = repo.fork
-                if fork:
+                if fork is not None:
                     fork_name = fork.repo_name
                     h.flash(h.literal(_('Forked repository %s as %s')
                             % (fork_name, repo_url)), category='success')
@@ -258,20 +234,17 @@ class ReposController(BaseRepoController):
         # Forms posted to this method should contain a hidden field:
         #    <input type="hidden" name="_method" value="PUT" />
         # Or using helpers:
-        #    h.form(url('repo', repo_name=ID),
+        #    h.form(url('put_repo', repo_name=ID),
         #           method='put')
-        # url('repo', repo_name=ID)
+        # url('put_repo', repo_name=ID)
         c.repo_info = self._load_repo(repo_name)
+        self.__load_defaults(c.repo_info)
         c.active = 'settings'
         c.repo_fields = RepositoryField.query()\
             .filter(RepositoryField.repository == c.repo_info).all()
-        self.__load_defaults(c.repo_info)
 
         repo_model = RepoModel()
         changed_name = repo_name
-        #override the choices with extracted revisions !
-        choices, c.landing_revs = ScmModel().get_repo_landing_revs(repo_name)
-        c.landing_revs_choices = choices
         repo = Repository.get_by_repo_name(repo_name)
         old_data = {
             'repo_name': repo_name,
@@ -279,7 +252,7 @@ class ReposController(BaseRepoController):
             'repo_type': repo.repo_type,
         }
         _form = RepoForm(edit=True, old_data=old_data,
-                         repo_groups=c.repo_groups_choices,
+                         repo_groups=c.repo_groups,
                          landing_revs=c.landing_revs_choices)()
 
         try:
@@ -292,9 +265,11 @@ class ReposController(BaseRepoController):
             action_logger(self.authuser, 'admin_updated_repo',
                               changed_name, self.ip_addr, self.sa)
             Session().commit()
-        except formencode.Invalid, errors:
+        except formencode.Invalid as errors:
+            log.info(errors)
             defaults = self.__load_data(repo_name)
             defaults.update(errors.value)
+            c.users_array = repo_model.get_users_js()
             return htmlfill.render(
                 render('admin/repos/repo_edit.html'),
                 defaults=defaults,
@@ -316,9 +291,9 @@ class ReposController(BaseRepoController):
         # Forms posted to this method should contain a hidden field:
         #    <input type="hidden" name="_method" value="DELETE" />
         # Or using helpers:
-        #    h.form(url('repo', repo_name=ID),
+        #    h.form(url('delete_repo', repo_name=ID),
         #           method='delete')
-        # url('repo', repo_name=ID)
+        # url('delete_repo', repo_name=ID)
 
         repo_model = RepoModel()
         repo = repo_model.get_by_repo_name(repo_name)
@@ -343,7 +318,7 @@ class ReposController(BaseRepoController):
             h.flash(_('Deleted repository %s') % repo_name, category='success')
             Session().commit()
         except AttachedForksError:
-            h.flash(_('Cannot delete %s it still contains attached forks')
+            h.flash(_('Cannot delete repository %s which still has forks')
                         % repo_name, category='warning')
 
         except Exception:
@@ -355,21 +330,15 @@ class ReposController(BaseRepoController):
             return redirect(url('repos_group_home', group_name=repo.group.group_name))
         return redirect(url('repos'))
 
-    @HasPermissionAllDecorator('hg.admin')
-    def show(self, repo_name, format='html'):
-        """GET /repos/repo_name: Show a specific item"""
-        # url('repo', repo_name=ID)
-
     @HasRepoPermissionAllDecorator('repository.admin')
     def edit(self, repo_name):
         """GET /repo_name/settings: Form to edit an existing item"""
         # url('edit_repo', repo_name=ID)
         defaults = self.__load_data(repo_name)
-        if 'clone_uri' in defaults:
-            del defaults['clone_uri']
-
         c.repo_fields = RepositoryField.query()\
             .filter(RepositoryField.repository == c.repo_info).all()
+        repo_model = RepoModel()
+        c.users_array = repo_model.get_users_js()
         c.active = 'settings'
         return htmlfill.render(
             render('admin/repos/repo_edit.html'),
@@ -456,7 +425,7 @@ class ReposController(BaseRepoController):
             new_field.field_label = form_result['new_field_label']
             Session().add(new_field)
             Session().commit()
-        except Exception, e:
+        except Exception as e:
             log.error(traceback.format_exc())
             msg = _('An error occurred during creation of field')
             if isinstance(e, formencode.Invalid):
@@ -470,7 +439,7 @@ class ReposController(BaseRepoController):
         try:
             Session().delete(field)
             Session().commit()
-        except Exception, e:
+        except Exception as e:
             log.error(traceback.format_exc())
             msg = _('An error occurred during removal of field')
             h.flash(msg, category='error')
@@ -542,12 +511,12 @@ class ReposController(BaseRepoController):
                                            self.authuser.username)
             fork = repo.fork.repo_name if repo.fork else _('Nothing')
             Session().commit()
-            h.flash(_('Marked repo %s as fork of %s') % (repo_name, fork),
+            h.flash(_('Marked repository %s as fork of %s') % (repo_name, fork),
                     category='success')
-        except RepositoryError, e:
+        except RepositoryError as e:
             log.error(traceback.format_exc())
             h.flash(str(e), category='error')
-        except Exception, e:
+        except Exception as e:
             log.error(traceback.format_exc())
             h.flash(_('An error occurred during this operation'),
                     category='error')
@@ -565,11 +534,11 @@ class ReposController(BaseRepoController):
             repo = Repository.get_by_repo_name(repo_name)
             if request.POST.get('set_lock'):
                 Repository.lock(repo, c.authuser.user_id)
-                h.flash(_('Locked repository'), category='success')
+                h.flash(_('Repository has been locked'), category='success')
             elif request.POST.get('set_unlock'):
                 Repository.unlock(repo)
-                h.flash(_('Unlocked repository'), category='success')
-        except Exception, e:
+                h.flash(_('Repository has been unlocked'), category='success')
+        except Exception as e:
             log.error(traceback.format_exc())
             h.flash(_('An error occurred during unlocking'),
                     category='error')
@@ -589,14 +558,12 @@ class ReposController(BaseRepoController):
             if repo.enable_locking:
                 if repo.locked[0]:
                     Repository.unlock(repo)
-                    action = _('Unlocked')
+                    h.flash(_('Repository has been unlocked'), category='success')
                 else:
                     Repository.lock(repo, c.authuser.user_id)
-                    action = _('Locked')
+                    h.flash(_('Repository has been locked'), category='success')
 
-                h.flash(_('Repository has been %s') % action,
-                        category='success')
-        except Exception, e:
+        except Exception as e:
             log.error(traceback.format_exc())
             h.flash(_('An error occurred during unlocking'),
                     category='error')
@@ -614,7 +581,7 @@ class ReposController(BaseRepoController):
                 Session().commit()
                 h.flash(_('Cache invalidation successful'),
                         category='success')
-            except Exception, e:
+            except Exception as e:
                 log.error(traceback.format_exc())
                 h.flash(_('An error occurred during cache invalidation'),
                         category='error')
@@ -632,7 +599,7 @@ class ReposController(BaseRepoController):
             try:
                 ScmModel().pull_changes(repo_name, self.authuser.username)
                 h.flash(_('Pulled from remote location'), category='success')
-            except Exception, e:
+            except Exception as e:
                 log.error(traceback.format_exc())
                 h.flash(_('An error occurred during pull from remote location'),
                         category='error')
@@ -665,7 +632,7 @@ class ReposController(BaseRepoController):
             try:
                 RepoModel().delete_stats(repo_name)
                 Session().commit()
-            except Exception, e:
+            except Exception as e:
                 log.error(traceback.format_exc())
                 h.flash(_('An error occurred during deletion of repository stats'),
                         category='error')

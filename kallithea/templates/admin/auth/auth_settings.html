@@ -30,14 +30,14 @@
        <div class="field">
            <div class="label"><label for="auth_plugins">${_("Enabled Plugins")}</label></div>
            <div class="input">${h.text("auth_plugins", class_='large')}
-           <span class="help-block">${_('Comma separated list of plugins. Order of plugins is also order in which Kallithea will try to authenticate user')}</span>
+           <span class="help-block">${_('Comma-separated list of plugins; Kallithea will try user authentication in plugin order')}</span>
                <div style="padding:10px 0px 10px 0px;font-weight: bold">${_('Available built-in plugins')}</div>
                <ul>
                %for plugin_path in c.available_plugins:
                     <li>
                       <div style="padding:3px 0px 3px 0px">
                           <span style="margin: 0px 10px 0px 0px" plugin_id="${plugin_path}" class="toggle-plugin btn btn-mini ${'btn-success' if plugin_path in c.enabled_plugins else ''}">
-                          ${_('enabled') if plugin_path in c.enabled_plugins else _('disabled')}</span>${plugin_path}
+                          ${_('Enabled') if plugin_path in c.enabled_plugins else _('Disabled')}</span>${plugin_path}
                       </div>
                     </li>
                %endfor
@@ -46,8 +46,8 @@
        </div>
     </div>
 
-    %for cnt, module in enumerate(c.auth_plugins):
-        <% pluginName = c.auth_plugins_shortnames[module] %>
+    %for cnt, module in enumerate(c.enabled_plugins):
+        <% pluginName = c.plugin_shortnames[module] %>
         <h1>${_('Plugin')}: ${pluginName}</h1>
         <div class="fields">
         ## autoform generation, based on plugin definition from it's settings
@@ -58,7 +58,7 @@
             <div class="field">
                 <div class="label"><label for="${fullsetting}">${_(displayname)}</label></div>
                 <div class="input">
-                    ${h.password(fullsetting,class_='small',autocomplete="off")}
+                    ${h.password(fullsetting,class_='small')}
                     <span class="help-block">${setting["description"]}</span>
                 </div>
             </div>
@@ -122,7 +122,6 @@
             $cur_button.html(_TM['disabled']);
         }
         else{
-            console.log(elems);
             if(elems.indexOf(plugin_id) == -1){
                 elems.push(plugin_id);
             }

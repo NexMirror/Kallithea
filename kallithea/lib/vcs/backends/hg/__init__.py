@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
     vcs.backends.hg
-    ~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~~~~~
 
     Mercurial backend implementation.
 

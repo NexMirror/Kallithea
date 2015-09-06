@@ -37,12 +37,12 @@ from pylons.i18n.translation import _
 
 from kallithea import EXTERN_TYPE_INTERNAL
 from kallithea.lib import helpers as h
+from kallithea.lib import auth_modules
 from kallithea.lib.auth import LoginRequired, NotAnonymous, AuthUser
 from kallithea.lib.base import BaseController, render
 from kallithea.lib.utils2 import generate_api_key, safe_int
 from kallithea.lib.compat import json
-from kallithea.model.db import Repository, \
-    UserEmailMap, UserApiKeys, User, UserFollowing
+from kallithea.model.db import Repository, UserEmailMap, User, UserFollowing
 from kallithea.model.forms import UserForm, PasswordChangeForm
 from kallithea.model.user import UserModel
 from kallithea.model.repo import RepoModel
@@ -98,10 +98,14 @@ class MyAccountController(BaseController):
         # url('my_account')
         c.active = 'profile'
         self.__load_data()
-        c.perm_user = AuthUser(user_id=self.authuser.user_id,
-                               ip_addr=self.ip_addr)
-        c.extern_type = c.user.extern_type
-        c.extern_name = c.user.extern_name
+        c.perm_user = AuthUser(user_id=self.authuser.user_id)
+        c.ip_addr = self.ip_addr
+        managed_fields = auth_modules.get_managed_fields(c.user)
+        def_user_perms = User.get_default_user().AuthUser.permissions['global']
+        if 'hg.register.none' in def_user_perms:
+            managed_fields.extend(['username', 'firstname', 'lastname', 'email'])
+
+        c.readonly = lambda n: 'readonly' if n in managed_fields else None
 
         defaults = c.user.get_dict()
         update = False
@@ -117,11 +121,8 @@ class MyAccountController(BaseController):
                 form_result = _form.to_python(post_data)
                 # skip updating those attrs for my account
                 skip_attrs = ['admin', 'active', 'extern_type', 'extern_name',
-                              'new_password', 'password_confirmation']
-                #TODO: plugin should define if username can be updated
-                if c.extern_type != EXTERN_TYPE_INTERNAL:
-                    # forbid updating username for external accounts
-                    skip_attrs.append('username')
+                              'new_password', 'password_confirmation',
+                             ] + managed_fields
 
                 UserModel().update(self.authuser.user_id, form_result,
                                    skip_attrs=skip_attrs)
@@ -130,7 +131,7 @@ class MyAccountController(BaseController):
                 Session().commit()
                 update = True
 
-            except formencode.Invalid, errors:
+            except formencode.Invalid as errors:
                 return htmlfill.render(
                     render('admin/my_account/my_account.html'),
                     defaults=errors.value,
@@ -153,7 +154,11 @@ class MyAccountController(BaseController):
     def my_account_password(self):
         c.active = 'password'
         self.__load_data()
-        if request.POST:
+
+        managed_fields = auth_modules.get_managed_fields(c.user)
+        c.can_change_password = 'password' not in managed_fields
+
+        if request.POST and c.can_change_password:
             _form = PasswordChangeForm(self.authuser.username)()
             try:
                 form_result = _form.to_python(request.POST)
@@ -193,8 +198,8 @@ class MyAccountController(BaseController):
     def my_account_perms(self):
         c.active = 'perms'
         self.__load_data()
-        c.perm_user = AuthUser(user_id=self.authuser.user_id,
-                               ip_addr=self.ip_addr)
+        c.perm_user = AuthUser(user_id=self.authuser.user_id)
+        c.ip_addr = self.ip_addr
 
         return render('admin/my_account/my_account.html')
 
@@ -213,7 +218,7 @@ class MyAccountController(BaseController):
             UserModel().add_extra_email(self.authuser.user_id, email)
             Session().commit()
             h.flash(_("Added email %s to user") % email, category='success')
-        except formencode.Invalid, error:
+        except formencode.Invalid as error:
             msg = error.error_dict['email']
             h.flash(msg, category='error')
         except Exception:
@@ -235,7 +240,7 @@ class MyAccountController(BaseController):
         self.__load_data()
         show_expired = True
         c.lifetime_values = [
-            (str(-1), _('forever')),
+            (str(-1), _('Forever')),
             (str(5), _('5 minutes')),
             (str(60), _('1 hour')),
             (str(60 * 24), _('1 day')),
@@ -251,7 +256,7 @@ class MyAccountController(BaseController):
         description = request.POST.get('description')
         ApiKeyModel().create(self.authuser.user_id, description, lifetime)
         Session().commit()
-        h.flash(_("Api key successfully created"), category='success')
+        h.flash(_("API key successfully created"), category='success')
         return redirect(url('my_account_api_keys'))
 
     def my_account_api_keys_delete(self):
@@ -259,14 +264,14 @@ class MyAccountController(BaseController):
         user_id = self.authuser.user_id
         if request.POST.get('del_api_key_builtin'):
             user = User.get(user_id)
-            if user:
+            if user is not None:
                 user.api_key = generate_api_key()
                 Session().add(user)
                 Session().commit()
-                h.flash(_("Api key successfully reset"), category='success')
+                h.flash(_("API key successfully reset"), category='success')
         elif api_key:
             ApiKeyModel().delete(api_key, self.authuser.user_id)
             Session().commit()
-            h.flash(_("Api key successfully deleted"), category='success')
+            h.flash(_("API key successfully deleted"), category='success')
 
         return redirect(url('my_account_api_keys'))

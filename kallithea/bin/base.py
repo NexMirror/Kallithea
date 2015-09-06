@@ -146,7 +146,7 @@ class RcConf(object):
         try:
             with open(self._conf_name, 'rb') as conf:
                 config = json.load(conf)
-        except IOError, e:
+        except IOError as e:
             sys.stderr.write(str(e) + '\n')
 
         config.update(new_config)
@@ -159,6 +159,6 @@ class RcConf(object):
         try:
             with open(self._conf_name, 'rb') as conf:
                 return  json.load(conf)
-        except IOError, e:
+        except IOError as e:
             #sys.stderr.write(str(e) + '\n')
             pass

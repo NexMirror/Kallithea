@@ -12,7 +12,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import with_statement
 import os
 import errno
 
@@ -62,7 +61,7 @@ class DaemonLock(object):
         locking function, if lock is present it
         will raise LockHeld exception
         """
-        lockname = '%s' % (os.getpid())
+        lockname = str(os.getpid())
         if self.debug:
             print 'running lock'
         self.trylock()
@@ -88,7 +87,7 @@ class DaemonLock(object):
             if running_pid:
                 try:
                     kill(running_pid, 0)
-                except OSError, exc:
+                except OSError as exc:
                     if exc.errno in (errno.ESRCH, errno.EPERM):
                         print ("Lock File is there but"
                                " the program is not running")
@@ -101,7 +100,7 @@ class DaemonLock(object):
                     print "It is running as process %s" % running_pid
                     raise LockHeld()
 
-        except IOError, e:
+        except IOError as e:
             if e.errno != 2:
                 raise
 
@@ -121,7 +120,7 @@ class DaemonLock(object):
                 print 'removing pidfile %s' % self.pidfile
             os.remove(self.pidfile)
             self.held = False
-        except OSError, e:
+        except OSError as e:
             if self.debug:
                 print 'removing pidfile failed %s' % e
             pass

@@ -18,16 +18,16 @@
                     revision=cs2,f_path=h.safe_unicode(path)))}
                 </div>
                 <div class="diff-actions">
-                  <a href="${h.url('files_diff_home',repo_name=c.repo_name,f_path=h.safe_unicode(path),diff2=cs2,diff1=cs1,diff='diff',fulldiff=1)}" class="tooltip" title="${h.tooltip(_('Show full diff for this file'))}">
+                  <a href="${h.url('files_diff_home',repo_name=c.repo_name,f_path=h.safe_unicode(path),diff2=cs2,diff1=cs1,diff='diff',fulldiff=1)}" class="tooltip" title="${_('Show full diff for this file')}">
                       <i class="icon-file-code"></i>
                   </a>
-                  <a href="${h.url('files_diff_2way_home',repo_name=c.repo_name,f_path=h.safe_unicode(path),diff2=cs2,diff1=cs1,diff='diff',fulldiff=1)}" class="tooltip" title="${h.tooltip(_('Show full side-by-side diff for this file'))}">
+                  <a href="${h.url('files_diff_2way_home',repo_name=c.repo_name,f_path=h.safe_unicode(path),diff2=cs2,diff1=cs1,diff='diff',fulldiff=1)}" class="tooltip" title="${_('Show full side-by-side diff for this file')}">
                       <i class="icon-docs"></i>
                   </a>
-                  <a href="${h.url('files_diff_home',repo_name=c.repo_name,f_path=h.safe_unicode(path),diff2=cs2,diff1=cs1,diff='raw')}" class="tooltip" title="${h.tooltip(_('Raw diff'))}">
+                  <a href="${h.url('files_diff_home',repo_name=c.repo_name,f_path=h.safe_unicode(path),diff2=cs2,diff1=cs1,diff='raw')}" class="tooltip" title="${_('Raw diff')}">
                       <i class="icon-diff"></i>
                   </a>
-                  <a href="${h.url('files_diff_home',repo_name=c.repo_name,f_path=h.safe_unicode(path),diff2=cs2,diff1=cs1,diff='download')}" class="tooltip" title="${h.tooltip(_('Download diff'))}">
+                  <a href="${h.url('files_diff_home',repo_name=c.repo_name,f_path=h.safe_unicode(path),diff2=cs2,diff1=cs1,diff='download')}" class="tooltip" title="${_('Download diff')}">
                       <i class="icon-floppy"></i>
                   </a>
                   ${c.ignorews_url(request.GET, h.FID(cs2,path))}
@@ -41,8 +41,7 @@
                 </span>
             </div>
         </div>
-        <div class="code-body">
-            <div class="full_f_path" path="${h.safe_unicode(path)}"></div>
+        <div class="code-body full_f_path" data-f_path="${h.safe_unicode(path)}">
             ${diff|n}
             %if path.rsplit('.')[-1] in ['png', 'gif', 'jpg', 'bmp']:
               <div class="btn btn-image-diff-show">Show images</div>
@@ -96,7 +95,7 @@
                   %endif
               </div>
               <div class="diff-actions">
-                <a href="${h.url('files_diff_2way_home',repo_name=c.cs_repo.repo_name,f_path=h.safe_unicode(filenode_path),diff1=c.a_rev,diff2=c.cs_rev,diff='diff',fulldiff=1)}" class="tooltip" title="${h.tooltip(_('Show full side-by-side diff for this file'))}">
+                <a href="${h.url('files_diff_2way_home',repo_name=c.cs_repo.repo_name,f_path=h.safe_unicode(filenode_path),diff1=c.a_rev,diff2=c.cs_rev,diff='diff',fulldiff=1)}" class="tooltip" title="${_('Show full side-by-side diff for this file')}">
                   <i class="icon-docs"></i>
                 </a>
                 ${c.ignorews_url(request.GET)}
@@ -104,8 +103,7 @@
               </div>
           </div>
       </div>
-        <div class="code-body">
-            <div class="full_f_path" path="${h.safe_unicode(filenode_path)}"></div>
+        <div class="code-body full_f_path" data-f_path="${h.safe_unicode(filenode_path)}">
             ${diff|n}
             %if filenode_path.rsplit('.')[-1] in ['png', 'gif', 'jpg', 'bmp']:
               <div class="btn btn-image-diff-show">Show images</div>
@@ -136,7 +134,7 @@ $(document).ready(function(){
         $('.btn-image-diff-swap').show();
         $('.img-diff-swapable')
             .each(function(i,e){
-                    $(e).attr('src', $(e).attr('realsrc'));
+                    $(e).prop('src', $(e).attr('realsrc'));
                 })
             .show();
         });

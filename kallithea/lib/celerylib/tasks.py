@@ -31,6 +31,7 @@ from celery.decorators import task
 import os
 import traceback
 import logging
+import rfc822
 from os.path import join as jn
 
 from time import mktime
@@ -45,6 +46,7 @@ from kallithea.lib.celerylib import run_task, locked_task, dbsession, \
 from kallithea.lib.helpers import person
 from kallithea.lib.rcmail.smtp_mailer import SmtpMailer
 from kallithea.lib.utils import add_cache, action_logger
+from kallithea.lib.vcs.utils import author_email
 from kallithea.lib.compat import json, OrderedDict
 from kallithea.lib.hooks import log_create_repository
 
@@ -87,7 +89,7 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
                             ts_max_y)
     lockkey_path = config['app_conf']['cache_dir']
 
-    log.info('running task with lockkey %s' % lockkey)
+    log.info('running task with lockkey %s', lockkey)
 
     try:
         lock = l = DaemonLock(file_=jn(lockkey_path, lockkey))
@@ -134,15 +136,15 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
                                         cur_stats.commit_activity_combined))
             co_day_auth_aggr = json.loads(cur_stats.commit_activity)
 
-        log.debug('starting parsing %s' % parse_limit)
+        log.debug('starting parsing %s', parse_limit)
         lmktime = mktime
 
         last_rev = last_rev + 1 if last_rev >= 0 else 0
-        log.debug('Getting revisions from %s to %s' % (
-             last_rev, last_rev + parse_limit)
+        log.debug('Getting revisions from %s to %s',
+             last_rev, last_rev + parse_limit
         )
         for cs in repo[last_rev:last_rev + parse_limit]:
-            log.debug('parsing %s' % cs)
+            log.debug('parsing %s', cs)
             last_cs = cs  # remember last parsed changeset
             k = lmktime([cs.date.timetuple()[0], cs.date.timetuple()[1],
                           cs.date.timetuple()[2], 0, 0, 0, 0, 0, 0])
@@ -210,9 +212,9 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
         stats.commit_activity = json.dumps(co_day_auth_aggr)
         stats.commit_activity_combined = json.dumps(overview_data)
 
-        log.debug('last revision %s' % last_rev)
+        log.debug('last revision %s', last_rev)
         leftovers = len(repo.revisions[last_rev:])
-        log.debug('revisions to parse %s' % leftovers)
+        log.debug('revisions to parse %s', leftovers)
 
         if last_rev == 0 or leftovers < parse_limit:
             log.debug('getting code trending stats')
@@ -247,7 +249,7 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
 
 @task(ignore_result=True)
 @dbsession
-def send_email(recipients, subject, body='', html_body='', headers=None):
+def send_email(recipients, subject, body='', html_body='', headers=None, author=None):
     """
     Sends an email with defined parameters from the .ini files.
 
@@ -256,25 +258,49 @@ def send_email(recipients, subject, body='', html_body='', headers=None):
     :param subject: subject of the mail
     :param body: body of the mail
     :param html_body: html version of body
+    :param headers: dictionary of prepopulated e-mail headers
+    :param author: User object of the author of this mail, if known and relevant
     """
     log = get_logger(send_email)
     assert isinstance(recipients, list), recipients
+    if headers is None:
+        headers = {}
+    else:
+        # do not modify the original headers object passed by the caller
+        headers = headers.copy()
 
     email_config = config
     email_prefix = email_config.get('email_prefix', '')
     if email_prefix:
         subject = "%s %s" % (email_prefix, subject)
-    if recipients is None:
-        # if recipients are not defined we send to email_config + all admins
-        admins = [u.email for u in User.query()
-                  .filter(User.admin == True).all()]
-        recipients = [email_config.get('email_to')] + admins
-        log.warning("recipients not specified for '%s' - sending to admins %s", subject, ' '.join(recipients))
-    elif not recipients:
-        log.error("No recipients specified")
-        return False
 
-    mail_from = email_config.get('app_email_from', 'Kallithea')
+    if not recipients:
+        # if recipients are not defined we send to email_config + all admins
+        recipients = [u.email for u in User.query()
+                      .filter(User.admin == True).all()]
+        if email_config.get('email_to') is not None:
+            recipients += [email_config.get('email_to')]
+
+        # If there are still no recipients, there are no admins and no address
+        # configured in email_to, so return.
+        if not recipients:
+            log.error("No recipients specified and no fallback available.")
+            return False
+
+        log.warning("No recipients specified for '%s' - sending to admins %s", subject, ' '.join(recipients))
+
+    # SMTP sender
+    envelope_from = email_config.get('app_email_from', 'Kallithea')
+    # 'From' header
+    if author is not None:
+        # set From header based on author but with a generic e-mail address
+        # In case app_email_from is in "Some Name <e-mail>" format, we first
+        # extract the e-mail address.
+        envelope_addr = author_email(envelope_from)
+        headers['From'] = '"%s" <%s>' % (
+            rfc822.quote('%s (no-reply)' % author.full_name_or_username),
+            envelope_addr)
+
     user = email_config.get('smtp_username')
     passwd = email_config.get('smtp_password')
     mail_server = email_config.get('smtp_server')
@@ -284,14 +310,23 @@ def send_email(recipients, subject, body='', html_body='', headers=None):
     debug = str2bool(email_config.get('debug'))
     smtp_auth = email_config.get('smtp_auth')
 
-    if not mail_server:
-        log.error("SMTP mail server not configured - cannot send mail '%s' to %s", subject, ' '.join(recipients))
-        log.warning("body:\n%s", body)
-        log.warning("html:\n%s", html_body)
+    logmsg = ("Mail details:\n"
+              "recipients: %s\n"
+              "headers: %s\n"
+              "subject: %s\n"
+              "body:\n%s\n"
+              "html:\n%s\n"
+              % (' '.join(recipients), headers, subject, body, html_body))
+
+    if mail_server:
+        log.debug("Sending e-mail. " + logmsg)
+    else:
+        log.error("SMTP mail server not configured - cannot send e-mail.")
+        log.warning(logmsg)
         return False
 
     try:
-        m = SmtpMailer(mail_from, user, passwd, mail_server, smtp_auth,
+        m = SmtpMailer(envelope_from, user, passwd, mail_server, smtp_auth,
                        mail_port, ssl, tls, debug=debug)
         m.send(recipients, subject, body, html_body, headers=headers)
     except:
@@ -371,7 +406,7 @@ def create_repo(form_data, cur_user):
         # set new created state
         repo.set_state(Repository.STATE_CREATED)
         DBS.commit()
-    except Exception, e:
+    except Exception as e:
         log.warning('Exception %s occurred when forking repository, '
                     'doing cleanup...' % e)
         # rollback things manually !
@@ -456,7 +491,7 @@ def create_repo_fork(form_data, cur_user):
         # set new created state
         repo.set_state(Repository.STATE_CREATED)
         DBS.commit()
-    except Exception, e:
+    except Exception as e:
         log.warning('Exception %s occurred when forking repository, '
                     'doing cleanup...' % e)
         #rollback things manually !

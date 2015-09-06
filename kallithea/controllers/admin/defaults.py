@@ -97,7 +97,7 @@ class DefaultsController(BaseController):
             h.flash(_('Default settings updated successfully'),
                     category='success')
 
-        except formencode.Invalid, errors:
+        except formencode.Invalid as errors:
             defaults = errors.value
 
             return htmlfill.render(

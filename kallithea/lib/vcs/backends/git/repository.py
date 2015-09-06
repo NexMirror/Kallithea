@@ -12,23 +12,11 @@
 import os
 import re
 import time
+import errno
 import urllib
 import urllib2
 import logging
 import posixpath
-import string
-import sys
-if sys.platform == "win32":
-    from subprocess import list2cmdline
-    def quote(s):
-        return list2cmdline([s])
-else:
-    try:
-        # Python <=2.7
-        from pipes import quote
-    except ImportError:
-        # Python 3.3+
-        from shlex import quote
 
 from dulwich.objects import Tag
 from dulwich.repo import Repo, NotGitRepository
@@ -134,10 +122,7 @@ class GitRepository(BaseRepository):
             del opts['_safe']
             safe_call = True
 
-        _str_cmd = False
-        if isinstance(cmd, basestring):
-            cmd = [cmd]
-            _str_cmd = True
+        assert isinstance(cmd, list), cmd
 
         gitenv = os.environ
         # need to clean fix GIT_DIR !
@@ -147,17 +132,15 @@ class GitRepository(BaseRepository):
 
         _git_path = settings.GIT_EXECUTABLE_PATH
         cmd = [_git_path] + _copts + cmd
-        if _str_cmd:
-            cmd = ' '.join(cmd)
 
         try:
             _opts = dict(
                 env=gitenv,
-                shell=True,
+                shell=False,
             )
             _opts.update(opts)
             p = subprocessio.SubprocessIOChunker(cmd, **_opts)
-        except (EnvironmentError, OSError), err:
+        except (EnvironmentError, OSError) as err:
             tb_err = ("Couldn't run git command (%s).\n"
                       "Original error was:%s\n" % (cmd, err))
             log.error(tb_err)
@@ -188,6 +171,9 @@ class GitRepository(BaseRepository):
 
         # check first if it's not an local url
         if os.path.isdir(url) or url.startswith('file:'):
+            return True
+
+        if url.startswith('git://'):
             return True
 
         if '+' in url[:url.find('://')]:
@@ -222,7 +208,7 @@ class GitRepository(BaseRepository):
             resp = o.open(req)
             if resp.code != 200:
                 raise Exception('Return Code is not 200')
-        except Exception, e:
+        except Exception as e:
             # means it cannot be cloned
             raise urllib2.URLError("[%s] org_exc: %s" % (cleaned_uri, e))
 
@@ -254,7 +240,7 @@ class GitRepository(BaseRepository):
                     return Repo.init(self.path)
             else:
                 return self._repo
-        except (NotGitRepository, OSError), err:
+        except (NotGitRepository, OSError) as err:
             raise RepositoryError(err)
 
     def _get_all_revisions(self):
@@ -267,7 +253,7 @@ class GitRepository(BaseRepository):
             return []
 
         rev_filter = settings.GIT_REV_FILTER
-        cmd = 'rev-list %s --reverse --date-order' % (rev_filter)
+        cmd = ['rev-list', rev_filter, '--reverse', '--date-order']
         try:
             so, se = self.run_git_command(cmd)
         except RepositoryError:
@@ -459,7 +445,7 @@ class GitRepository(BaseRepository):
             os.remove(tagpath)
             self._parsed_refs = self._get_parsed_refs()
             self.tags = self._get_tags()
-        except OSError, e:
+        except OSError as e:
             raise RepositoryError(e.strerror)
 
     @LazyProperty
@@ -550,22 +536,16 @@ class GitRepository(BaseRepository):
 
         # %H at format means (full) commit hash, initial hashes are retrieved
         # in ascending date order
-        cmd_template = 'log --date-order --reverse --pretty=format:"%H"'
-        cmd_params = {}
+        cmd = ['log', '--date-order', '--reverse', '--pretty=format:%H']
         if start_date:
-            cmd_template += ' --since "$since"'
-            cmd_params['since'] = start_date.strftime('%m/%d/%y %H:%M:%S')
+            cmd += ['--since', start_date.strftime('%m/%d/%y %H:%M:%S')]
         if end_date:
-            cmd_template += ' --until "$until"'
-            cmd_params['until'] = end_date.strftime('%m/%d/%y %H:%M:%S')
+            cmd += ['--until', end_date.strftime('%m/%d/%y %H:%M:%S')]
         if branch_name:
-            cmd_template += ' $branch_name'
-            cmd_params['branch_name'] = branch_name
+            cmd.append(branch_name)
         else:
-            rev_filter = settings.GIT_REV_FILTER
-            cmd_template += ' %s' % (rev_filter)
+            cmd.append(settings.GIT_REV_FILTER)
 
-        cmd = string.Template(cmd_template).safe_substitute(**cmd_params)
         revs = self.run_git_command(cmd)[0].splitlines()
         start_pos = 0
         end_pos = len(revs)
@@ -621,14 +601,14 @@ class GitRepository(BaseRepository):
 
         if rev1 == self.EMPTY_CHANGESET:
             rev2 = self.get_changeset(rev2).raw_id
-            cmd = ' '.join(['show'] + flags + [rev2])
+            cmd = ['show'] + flags + [rev2]
         else:
             rev1 = self.get_changeset(rev1).raw_id
             rev2 = self.get_changeset(rev2).raw_id
-            cmd = ' '.join(['diff'] + flags + [rev1, rev2])
+            cmd = ['diff'] + flags + [rev1, rev2]
 
         if path:
-            cmd += ' -- "%s"' % path
+            cmd += ['--', path]
 
         stdout, stderr = self.run_git_command(cmd)
         # TODO: don't ignore stderr
@@ -662,8 +642,7 @@ class GitRepository(BaseRepository):
             cmd.append('--bare')
         elif not update_after_clone:
             cmd.append('--no-checkout')
-        cmd += ['--', quote(url), quote(self.path)]
-        cmd = ' '.join(cmd)
+        cmd += ['--', url, self.path]
         # If error occurs run_git_command raises RepositoryError already
         self.run_git_command(cmd)
 
@@ -672,8 +651,7 @@ class GitRepository(BaseRepository):
         Tries to pull changes from external location.
         """
         url = self._get_url(url)
-        cmd = ['pull', "--ff-only", quote(url)]
-        cmd = ' '.join(cmd)
+        cmd = ['pull', '--ff-only', url]
         # If error occurs run_git_command raises RepositoryError already
         self.run_git_command(cmd)
 
@@ -682,13 +660,11 @@ class GitRepository(BaseRepository):
         Tries to pull changes from external location.
         """
         url = self._get_url(url)
-        so, se = self.run_git_command('ls-remote -h %s' % quote(url))
-        refs = []
+        so, se = self.run_git_command(['ls-remote', '-h', url])
+        cmd = ['fetch', url, '--']
         for line in (x for x in so.splitlines()):
             sha, ref = line.split('\t')
-            refs.append(ref)
-        refs = ' '.join(('+%s:%s' % (r, r) for r in refs))
-        cmd = '''fetch %s -- %s''' % (quote(url), refs)
+            cmd.append('+%s:%s' % (ref, ref))
         self.run_git_command(cmd)
 
     def _update_server_info(self):
@@ -696,7 +672,13 @@ class GitRepository(BaseRepository):
         runs gits update-server-info command in this repo instance
         """
         from dulwich.server import update_server_info
-        update_server_info(self._repo)
+        try:
+            update_server_info(self._repo)
+        except OSError as e:
+            if e.errno != errno.ENOENT:
+                raise
+            # Workaround for dulwich crashing on for example its own dulwich/tests/data/repos/simple_merge.git/info/refs.lock
+            log.error('Ignoring error running update-server-info: %s', e)
 
     @LazyProperty
     def workdir(self):

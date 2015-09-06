@@ -25,7 +25,6 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-from __future__ import with_statement
 import os
 import re
 import time
@@ -50,7 +49,7 @@ from kallithea.lib import helpers as h
 from kallithea.lib.utils2 import safe_str, safe_unicode, get_server_url,\
     _set_extras
 from kallithea.lib.auth import HasRepoPermissionAny, HasRepoGroupPermissionAny,\
-    HasUserGroupPermissionAny
+    HasUserGroupPermissionAny, HasPermissionAny, HasPermissionAll
 from kallithea.lib.utils import get_filesystem_repos, make_ui, \
     action_logger
 from kallithea.model import BaseModel
@@ -247,7 +246,7 @@ class ScmModel(BaseModel):
             return cls.get(instance)
         elif isinstance(instance, basestring):
             return cls.get_by_repo_name(instance)
-        elif instance:
+        elif instance is not None:
             raise Exception('given object must be int, basestr or Instance'
                             ' of %s got %s' % (type(cls), type(instance)))
 
@@ -272,7 +271,7 @@ class ScmModel(BaseModel):
         if repos_path is None:
             repos_path = self.repos_path
 
-        log.info('scanning for repositories in %s' % repos_path)
+        log.info('scanning for repositories in %s', repos_path)
 
         baseui = make_ui('db')
         repos = {}
@@ -297,7 +296,7 @@ class ScmModel(BaseModel):
                         repos[name] = klass(path[1])
             except OSError:
                 continue
-        log.debug('found %s paths with repositories' % (len(repos)))
+        log.debug('found %s paths with repositories', len(repos))
         return repos
 
     def get_repos(self, all_repos=None, sort_key=None, simple=False):
@@ -340,7 +339,7 @@ class ScmModel(BaseModel):
         """
         CacheInvalidation.set_invalidate(repo_name, delete=delete)
         repo = Repository.get_by_repo_name(repo_name)
-        if repo:
+        if repo is not None:
             repo.update_changeset_cache()
 
     def toggle_following_repo(self, follow_repo_id, user_id):
@@ -505,6 +504,9 @@ class ScmModel(BaseModel):
                         % (scm_type,))
 
     def pull_changes(self, repo, username):
+        """
+        Pull from "clone URL".
+        """
         dbrepo = self.__get_repo(repo)
         clone_uri = dbrepo.clone_uri
         if not clone_uri:
@@ -536,10 +538,9 @@ class ScmModel(BaseModel):
     def commit_change(self, repo, repo_name, cs, user, author, message,
                       content, f_path):
         """
-        Commits changes
+        Commit a change to a single file
 
-        :param repo: SCM instance
-
+        :param repo: a db_repo.scm_instance
         """
         user = self._get_user(user)
         IMC = self._get_IMC_module(repo.alias)
@@ -557,7 +558,7 @@ class ScmModel(BaseModel):
         try:
             tip = imc.commit(message=message, author=author,
                              parents=[cs], branch=cs.branch)
-        except Exception, e:
+        except Exception as e:
             log.error(traceback.format_exc())
             raise IMCCommitError(str(e))
         finally:
@@ -677,6 +678,9 @@ class ScmModel(BaseModel):
 
     def update_nodes(self, user, repo, message, nodes, parent_cs=None,
                      author=None, trigger_push_hook=True):
+        """
+        Commits specified nodes to repo. Again.
+        """
         user = self._get_user(user)
         scm_instance = repo.scm_instance_no_cache()
 
@@ -807,7 +811,7 @@ class ScmModel(BaseModel):
         repo = self.__get_repo(repo)
         hist_l.append(['rev:tip', _('latest tip')])
         choices.append('rev:tip')
-        if not repo:
+        if repo is None:
             return choices, hist_l
 
         repo = repo.scm_instance
@@ -830,7 +834,7 @@ class ScmModel(BaseModel):
 
         return choices, hist_l
 
-    def install_git_hook(self, repo, force_create=False):
+    def install_git_hooks(self, repo, force_create=False):
         """
         Creates a kallithea hook inside a git repository
 
@@ -854,7 +858,7 @@ class ScmModel(BaseModel):
         for h_type, tmpl in [('pre', tmpl_pre), ('post', tmpl_post)]:
             _hook_file = jn(loc, '%s-receive' % h_type)
             has_hook = False
-            log.debug('Installing git hook in repo %s' % repo)
+            log.debug('Installing git hook in repo %s', repo)
             if os.path.exists(_hook_file):
                 # let's take a look at this hook, maybe it's kallithea ?
                 log.debug('hook exists, checking if it is from kallithea')
@@ -865,7 +869,7 @@ class ScmModel(BaseModel):
                     if matches:
                         try:
                             ver = matches.groups()[0]
-                            log.debug('got %s it is kallithea' % (ver))
+                            log.debug('got %s it is kallithea', ver)
                             has_hook = True
                         except Exception:
                             log.error(traceback.format_exc())
@@ -874,13 +878,31 @@ class ScmModel(BaseModel):
                 has_hook = True
 
             if has_hook or force_create:
-                log.debug('writing %s hook file !' % (h_type,))
+                log.debug('writing %s hook file !', h_type)
                 try:
                     with open(_hook_file, 'wb') as f:
                         tmpl = tmpl.replace('_TMPL_', kallithea.__version__)
                         f.write(tmpl)
                     os.chmod(_hook_file, 0755)
-                except IOError, e:
-                    log.error('error writing %s: %s' % (_hook_file, e))
+                except IOError as e:
+                    log.error('error writing %s: %s', _hook_file, e)
             else:
                 log.debug('skipping writing hook file')
+
+def AvailableRepoGroupChoices(top_perms, repo_group_perms, extras=()):
+    """Return group_id,string tuples with choices for all the repo groups where
+    the user has the necessary permissions.
+
+    Top level is -1.
+    """
+    groups = RepoGroup.query().all()
+    if HasPermissionAll('hg.admin')('available repo groups'):
+        groups.append(None)
+    else:
+        groups = list(RepoGroupList(groups, perm_set=repo_group_perms))
+        if top_perms and HasPermissionAny(*top_perms)('available repo groups'):
+            groups.append(None)
+        for extra in extras:
+            if not any(rg == extra for rg in groups):
+                groups.append(extra)
+    return RepoGroup.groups_choices(groups=groups)

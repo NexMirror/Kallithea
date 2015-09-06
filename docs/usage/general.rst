@@ -5,7 +5,7 @@ General Kallithea usage
 =======================
 
 
-Repository deleting
+Repository deletion
 -------------------
 
 Currently when an admin or owner deletes a repository, Kallithea does
@@ -13,7 +13,7 @@ not physically delete said repository from the filesystem, but instead
 renames it in a special way so that it is not possible to push, clone
 or access the repository.
 
-There is a special command for cleaning up such archived repos::
+There is a special command for cleaning up such archived repositories::
 
     paster cleanup-repos --older-than=30d my.ini
 
@@ -26,6 +26,7 @@ command via crontab.
 It is worth noting that even if someone is given administrative access to
 Kallithea and deletes a repository, you can easily restore such an action by
 renaming the repository directory, removing the ``rm__<date>`` prefix.
+
 
 File view: follow current branch
 --------------------------------
@@ -70,17 +71,18 @@ Creating a pull request
   (and its ancestors) by selecting it and clicking the ``Open new pull request
   for selected changesets`` button.
 
+
 Permanent repository URLs
 -------------------------
 
 Due to the complicated nature of repository grouping, URLs of repositories
 can often change. For example, a repository originally accessible from::
 
-  http://server.com/repo_name
+  http://example.com/repo_name
 
 would get a new URL after moving it to test_group::
 
-  http://server.com/test_group/repo_name
+  http://example.com/test_group/repo_name
 
 Such moving of a repository to a group can be an issue for build systems and
 other scripts where the repository paths are hardcoded. To mitigate this,
@@ -92,19 +94,20 @@ such URLs.
 
 In the example, the repository could also be accessible as::
 
-  http://server.com/_<ID>
+  http://example.com/_<ID>
 
 The ID of a given repository can be shown from the repository ``Summary`` page,
 by selecting the ``Show by ID`` button next to ``Clone URL``.
 
-E-mail notifications
---------------------
 
-When the administrator correctly specified the e-mail settings in the Kallithea
-configuration file, Kallithea will send e-mails on user registration and when
+Email notifications
+-------------------
+
+With email settings properly configured in the Kallithea
+configuration file, Kallithea will send emails on user registration and when
 errors occur.
 
-Mails are also sent for comments on changesets. In this case, an e-mail is sent
+Emails are also sent for comments on changesets. In this case, an email is sent
 to the committer of the changeset (if known to Kallithea), to all reviewers of
 the pull request (if applicable) and to all people mentioned in the comment
 using @mention notation.
@@ -129,7 +132,6 @@ Currently it supports the following options:
 - svn -> hg clone
 - git -> git clone
 
-
 .. note:: svn -> hg cloning requires the ``hgsubversion`` library to be
    installed.
 
@@ -151,22 +153,23 @@ features that merit further explanation.
 Repository extra fields
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-In the `Visual` tab, there is an option `Use repository extra
-fields`, which allows to set custom fields for each repository in the system.
-Each new field consists of 3 attributes: ``field key``, ``field label``,
-``field description``.
+In the *Visual* tab, there is an option "Use repository extra
+fields", which allows to set custom fields for each repository in the system.
+
+Once enabled site-wide, the custom fields can be edited per-repository under
+*Options* | *Settings* | *Extra Fields*.
 
 Example usage of such fields would be to define company-specific information
 into repositories, e.g., defining a ``repo_manager`` key that would give info
 about a manager of each repository.  There's no limit for adding custom fields.
 Newly created fields are accessible via the API.
 
-Meta-Tagging
+Meta tagging
 ~~~~~~~~~~~~
 
-In the `Visual` tab, option `Stylify recognised meta tags` will cause Kallithea
-to turn certain meta-tags, detected in repository and repository group
-descriptions, into colored tags. Currently recognised tags are::
+In the *Visual* tab, option "Stylify recognised meta tags" will cause Kallithea
+to turn certain text fragments in repository and repository group
+descriptions into colored tags. Currently recognised tags are::
 
     [featured]
     [stale]

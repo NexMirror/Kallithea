@@ -12,8 +12,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-kallithea.lib.auth_pam
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kallithea.lib.auth_modules.auth_pam
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Kallithea authentication library for PAM
 
@@ -98,10 +98,10 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
                 _pam_lock.release()
 
             if not auth_result:
-                log.error("PAM was unable to authenticate user: %s" % (username,))
+                log.error("PAM was unable to authenticate user: %s", username)
                 return None
         else:
-            log.debug("Using cached auth for user: %s" % (username,))
+            log.debug("Using cached auth for user: %s", username)
 
         # old attrs fetched from Kallithea database
         admin = getattr(userobj, 'admin', False)
@@ -109,9 +109,8 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
         email = getattr(userobj, 'email', '') or "%s@%s" % (username, socket.gethostname())
         firstname = getattr(userobj, 'firstname', '')
         lastname = getattr(userobj, 'lastname', '')
-        extern_type = getattr(userobj, 'extern_type', '')
 
-        user_attrs = {
+        user_data = {
             'username': username,
             'firstname': firstname,
             'lastname': lastname,
@@ -121,7 +120,6 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
             'active': active,
             "active_from_extern": None,
             'extern_name': username,
-            'extern_type': extern_type,
         }
 
         try:
@@ -129,12 +127,15 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
             regex = settings["gecos"]
             match = re.search(regex, user_data.pw_gecos)
             if match:
-                user_attrs["firstname"] = match.group('first_name')
-                user_attrs["lastname"] = match.group('last_name')
+                user_data["firstname"] = match.group('first_name')
+                user_data["lastname"] = match.group('last_name')
         except Exception:
             log.warning("Cannot extract additional info for PAM user %s", username)
             pass
 
-        log.debug("pamuser: \n%s" % formatted_json(user_attrs))
-        log.info('user %s authenticated correctly' % user_attrs['username'])
-        return user_attrs
+        log.debug("pamuser: \n%s", formatted_json(user_data))
+        log.info('user %s authenticated correctly', user_data['username'])
+        return user_data
+
+    def get_managed_fields(self):
+        return ['username', 'password']

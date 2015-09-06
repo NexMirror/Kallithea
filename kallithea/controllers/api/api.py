@@ -12,8 +12,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-kallithea.controllers.api
-~~~~~~~~~~~~~~~~~~~~~~~~~
+kallithea.controllers.api.api
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 API controller for Kallithea
 
@@ -463,7 +463,7 @@ class ApiController(JSONRPCController):
             if time_:
                 _api_data = r.get_api_data()
                 # if we use userfilter just show the locks for this user
-                if user:
+                if user is not None:
                     if safe_int(userid) == user.user_id:
                         ret.append(_api_data)
                 else:
@@ -553,7 +553,7 @@ class ApiController(JSONRPCController):
                     {
                         "user_id" :     "<user_id>",
                         "api_key" :     "<api_key>",
-                        "api_keys":     "[<list of all api keys including additional ones>]"
+                        "api_keys":     "[<list of all API keys including additional ones>]"
                         "username" :    "<username>",
                         "firstname":    "<firstname>",
                         "lastname" :    "<lastname>",
@@ -672,10 +672,10 @@ class ApiController(JSONRPCController):
 
         """
 
-        if UserModel().get_by_username(username):
+        if User.get_by_username(username):
             raise JSONRPCError("user `%s` already exist" % (username,))
 
-        if UserModel().get_by_email(email, case_insensitive=True):
+        if User.get_by_email(email, case_insensitive=True):
             raise JSONRPCError("email `%s` already exist" % (email,))
 
         if Optional.extract(extern_name):
@@ -1066,7 +1066,7 @@ class ApiController(JSONRPCController):
                     (user_group.users_group_id, user_group.users_group_name),
                 user_group=None
             )
-        except UserGroupsAssignedException, e:
+        except UserGroupsAssignedException as e:
             log.error(traceback.format_exc())
             raise JSONRPCError(str(e))
         except Exception:

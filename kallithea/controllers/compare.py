@@ -42,8 +42,7 @@ from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator
 from kallithea.lib import diffs
 from kallithea.model.db import Repository
 from kallithea.lib.diffs import LimitedDiffContainer
-from kallithea.controllers.changeset import _ignorews_url,\
-    _context_url, get_line_ctx, get_ignore_ws
+from kallithea.controllers.changeset import _ignorews_url, _context_url
 from kallithea.lib.graphmod import graph_data
 from kallithea.lib.compat import json
 
@@ -70,7 +69,7 @@ class CompareController(BaseRepoController):
         :param other_rev: revision we want out compare to be made on other_repo
         """
         ancestor = None
-        if org_rev == other_rev or org_repo.EMPTY_CHANGESET in (org_rev, other_rev):
+        if org_rev == other_rev:
             org_changesets = []
             other_changesets = []
             ancestor = org_rev
@@ -88,14 +87,18 @@ class CompareController(BaseRepoController):
             else:
                 hgrepo = other_repo._repo
 
-            ancestors = hgrepo.revs("ancestor(id(%s), id(%s))", org_rev, other_rev)
-            if ancestors:
-                # FIXME: picks arbitrary ancestor - but there is usually only one
-                try:
-                    ancestor = hgrepo[ancestors.first()].hex()
-                except AttributeError:
-                    # removed in hg 3.2
-                    ancestor = hgrepo[ancestors[0]].hex()
+            if org_repo.EMPTY_CHANGESET in (org_rev, other_rev):
+                # work around unexpected behaviour in Mercurial < 3.4
+                ancestor = org_repo.EMPTY_CHANGESET
+            else:
+                ancestors = hgrepo.revs("ancestor(id(%s), id(%s))", org_rev, other_rev)
+                if ancestors:
+                    # FIXME: picks arbitrary ancestor - but there is usually only one
+                    try:
+                        ancestor = hgrepo[ancestors.first()].hex()
+                    except AttributeError:
+                        # removed in hg 3.2
+                        ancestor = hgrepo[ancestors[0]].hex()
 
             other_revs = hgrepo.revs("ancestors(id(%s)) and not ancestors(id(%s)) and not id(%s)",
                                      other_rev, org_rev, org_rev)
@@ -130,13 +133,13 @@ class CompareController(BaseRepoController):
 
             else:
                 so, se = org_repo.run_git_command(
-                    'log --reverse --pretty="format: %%H" -s %s..%s'
-                        % (org_rev, other_rev)
+                    ['log', '--reverse', '--pretty=format:%H',
+                     '-s', '%s..%s' % (org_rev, other_rev)]
                 )
                 other_changesets = [org_repo.get_changeset(cs)
                               for cs in re.findall(r'[0-9a-fA-F]{40}', so)]
                 so, se = org_repo.run_git_command(
-                    'merge-base %s %s' % (org_rev, other_rev)
+                    ['merge-base', org_rev, other_rev]
                 )
                 ancestor = re.findall(r'[0-9a-fA-F]{40}', so)[0]
             org_changesets = []
@@ -162,6 +165,9 @@ class CompareController(BaseRepoController):
     @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
                                    'repository.admin')
     def compare(self, repo_name, org_ref_type, org_ref_name, other_ref_type, other_ref_name):
+        org_ref_name = org_ref_name.strip()
+        other_ref_name = other_ref_name.strip()
+
         org_repo = c.db_repo.repo_name
         other_repo = request.GET.get('other_repo', org_repo)
         # If merge is True:
@@ -242,8 +248,8 @@ class CompareController(BaseRepoController):
             # case we want a simple diff without incoming changesets,
             # previewing what will be merged.
             # Make the diff on the other repo (which is known to have other_rev)
-            log.debug('Using ancestor %s as rev1 instead of %s'
-                      % (c.ancestor, c.a_rev))
+            log.debug('Using ancestor %s as rev1 instead of %s',
+                      c.ancestor, c.a_rev)
             rev1 = c.ancestor
             org_repo = other_repo
         else: # comparing tips, not necessarily linearly related
@@ -258,8 +264,8 @@ class CompareController(BaseRepoController):
 
         diff_limit = self.cut_off_limit if not c.fulldiff else None
 
-        log.debug('running diff between %s and %s in %s'
-                  % (rev1, c.cs_rev, org_repo.scm_instance.path))
+        log.debug('running diff between %s and %s in %s',
+                  rev1, c.cs_rev, org_repo.scm_instance.path)
         txtdiff = org_repo.scm_instance.get_diff(rev1=rev1, rev2=c.cs_rev,
                                       ignore_whitespace=ignore_whitespace,
                                       context=line_context)

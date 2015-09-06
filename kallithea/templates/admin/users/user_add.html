@@ -41,7 +41,7 @@
                     <label for="password">${_('Password')}:</label>
                 </div>
                 <div class="input">
-                    ${h.password('password',class_='small',autocomplete="off")}
+                    ${h.password('password',class_='small')}
                 </div>
              </div>
 
@@ -50,7 +50,7 @@
                     <label for="password_confirmation">${_('Password confirmation')}:</label>
                 </div>
                 <div class="input">
-                    ${h.password('password_confirmation',class_="small",autocomplete="off")}
+                    ${h.password('password_confirmation',class_="small")}
                 </div>
              </div>
 
@@ -78,8 +78,6 @@
                 </div>
                 <div class="input">
                     ${h.text('email',class_='small')}
-                    ${h.hidden('extern_name', c.default_extern_type)}
-                    ${h.hidden('extern_type', c.default_extern_type)}
                 </div>
              </div>
 
@@ -92,6 +90,8 @@
                 </div>
              </div>
 
+            ${h.hidden('extern_type', c.default_extern_type)}
+            ${h.hidden('extern_name', c.default_extern_name)}
             <div class="buttons">
               ${h.submit('save',_('Save'),class_="btn")}
             </div>
@@ -103,6 +103,6 @@
 <script>
     $(document).ready(function(){
         $('#username').focus();
-    })
+    });
 </script>
 </%def>

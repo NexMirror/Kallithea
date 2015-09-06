@@ -1,18 +1,15 @@
 from kallithea.tests import *
-from kallithea.model.db import Notification, User
+from kallithea.model.db import User
 
 from kallithea.model.user import UserModel
 from kallithea.model.notification import NotificationModel
 from kallithea.model.meta import Session
+from kallithea.lib import helpers as h
 
 
 class TestNotificationsController(TestController):
-
-    def tearDown(self):
-        for n in Notification.query().all():
-            inst = Notification.get(n.notification_id)
-            Session().delete(inst)
-        Session().commit()
+    def setUp(self):
+        self.remove_all_notifications()
 
     def test_index(self):
         self.log_user()
@@ -59,9 +56,9 @@ class TestNotificationsController(TestController):
         self.assertEqual(get_notif(u2.notifications), [notification])
         cur_usr_id = cur_user.user_id
 
-        response = self.app.delete(url('notification',
-                                       notification_id=
-                                       notification.notification_id))
+        response = self.app.post(
+            url('notification', notification_id=notification.notification_id),
+            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
         self.assertEqual(response.body, 'ok')
 
         cur_user = User.get(cur_usr_id)
@@ -89,3 +86,39 @@ class TestNotificationsController(TestController):
 
         response.mustcontain(subject)
         response.mustcontain(notif_body)
+
+    def test_description_with_age(self):
+        self.log_user()
+        cur_user = self._get_logged_user()
+        subject = u'test'
+        notify_body = u'hi there'
+        notification = NotificationModel().create(created_by = cur_user,
+                                                  subject    = subject,
+                                                  body       = notify_body)
+
+        description = NotificationModel().make_description(notification)
+        self.assertEqual(
+            description,
+            "{0} sent message {1}".format(
+                cur_user.username,
+                h.age(notification.created_on)
+                )
+            )
+
+    def test_description_with_datetime(self):
+        self.log_user()
+        cur_user = self._get_logged_user()
+        subject = u'test'
+        notify_body = u'hi there'
+        notification = NotificationModel().create(created_by = cur_user,
+                                                  subject    = subject,
+                                                  body       = notify_body)
+
+        description = NotificationModel().make_description(notification, False)
+        self.assertEqual(
+            description,
+            "{0} sent message at {1}".format(
+                cur_user.username,
+                h.fmt_date(notification.created_on)
+                )
+            )

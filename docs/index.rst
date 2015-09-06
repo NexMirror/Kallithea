@@ -1,7 +1,8 @@
 .. _index:
 
+#######################
 Kallithea Documentation
------------------------
+#######################
 
 **Readme**
 
@@ -15,6 +16,7 @@ Kallithea Documentation
 .. toctree::
    :maxdepth: 1
 
+   overview
    installation
    installation_win
    installation_win_old
@@ -31,17 +33,18 @@ Kallithea Documentation
    usage/locking
    usage/statistics
 
-**Administrators Guide**
+**Administrator's guide**
 
 .. toctree::
    :maxdepth: 1
 
+   usage/email
    usage/performance
    usage/backup
    usage/debugging
    usage/troubleshooting
 
-**Develop**
+**Development**
 
 .. toctree::
    :maxdepth: 1
@@ -63,6 +66,7 @@ Other topics
 
 * :ref:`genindex`
 * :ref:`search`
+
 
 .. _virtualenv: http://pypi.python.org/pypi/virtualenv
 .. _python: http://www.python.org/

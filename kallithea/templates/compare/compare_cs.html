@@ -11,7 +11,7 @@
     %endif
 
     <div id="graph_nodes">
-        <canvas id="graph_canvas"></canvas>
+        <canvas id="graph_canvas" style="width:0"></canvas>
     </div>
 
     <div id="graph_content_pr" style="margin-left: 100px;">
@@ -28,7 +28,7 @@
           %if c.cs_comments.get(cs.raw_id):
               <div class="comments-container">
                   <div class="comments-cnt" title="${_('Changeset has comments')}">
-                      <a href="${h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id,anchor='comment-%s' % c.cs_comments[cs.raw_id][0].comment_id)}">
+                      <a href="${c.cs_comments[cs.raw_id][0].url()}">
                           ${len(c.cs_comments[cs.raw_id])}
                           <i class="icon-comment"></i>
                       </a>
@@ -36,7 +36,22 @@
               </div>
           %endif
         </td>
-        <td style="width: 140px"><span class="tooltip" title="${h.tooltip(h.age(cs.date))}">${cs.date}</span></td>
+        <td class="changeset-logical-index">
+          <%
+              num_cs = len(c.cs_ranges)
+              index = num_cs - cnt
+              if index == 1:
+                  title = _('First (oldest) changeset in this list')
+              elif index == num_cs:
+                  title = _('Last (most recent) changeset in this list')
+              else:
+                  title = _('Position in this list of changesets')
+          %>
+          <span class="tooltip" title="${title}">
+            ${index}
+          </span>
+        </td>
+        <td style="width: 140px"><span class="tooltip" title="${h.age(cs.date)}">${cs.date}</span></td>
         <td><div class="gravatar" commit_id="${cs.raw_id}">${h.gravatar(h.email_or_none(cs.author), size=14)}</div></td>
         <td><div class="author">${h.person(cs.author)}</div></td>
         <td>${h.link_to(h.show_id(cs),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}</td>

@@ -16,7 +16,7 @@ ${h.end_form()}
         $("#id_fork_of").select2({
             'dropdownAutoWidth': true
         });
-    })
+    });
 </script>
 
 <h3>${_('Public Journal Visibility')}</h3>
@@ -73,7 +73,7 @@ ${h.form(url('edit_repo_advanced_locking', repo_name=c.repo_info.repo_name), met
 ${h.end_form()}
 
 <h3>${_('Delete')}</h3>
-${h.form(url('repo', repo_name=c.repo_name),method='delete')}
+${h.form(url('delete_repo', repo_name=c.repo_name), method='delete')}
 <div class="form">
     <button class="btn btn-small btn-danger" type="submit"
             onclick="return confirm('${_('Confirm to delete this repository: %s') % c.repo_name}');">

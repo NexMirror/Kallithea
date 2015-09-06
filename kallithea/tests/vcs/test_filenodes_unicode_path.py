@@ -1,6 +1,5 @@
 # encoding: utf8
 
-from __future__ import with_statement
 
 import datetime
 from kallithea.lib.vcs.nodes import FileNode

@@ -34,6 +34,7 @@ from pylons import request, tmpl_context as c, url, config
 from pylons.controllers.util import redirect
 from pylons.i18n.translation import _
 from sqlalchemy.sql.expression import func
+from webob.exc import HTTPNotFound
 
 import kallithea
 from kallithea.lib.exceptions import DefaultUserException, \
@@ -41,8 +42,8 @@ from kallithea.lib.exceptions import DefaultUserException, \
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import LoginRequired, HasPermissionAllDecorator, \
     AuthUser
-import kallithea.lib.auth_modules.auth_internal
 from kallithea.lib import auth_modules
+from kallithea.lib.auth_modules import auth_internal
 from kallithea.lib.base import BaseController, render
 from kallithea.model.api_key import ApiKeyModel
 
@@ -120,7 +121,8 @@ class UsersController(BaseController):
     def create(self):
         """POST /users: Create a new item"""
         # url('users')
-        c.default_extern_type = auth_modules.auth_internal.KallitheaAuthPlugin.name
+        c.default_extern_type = auth_internal.KallitheaAuthPlugin.name
+        c.default_extern_name = auth_internal.KallitheaAuthPlugin.name
         user_model = UserModel()
         user_form = UserForm()()
         try:
@@ -132,7 +134,7 @@ class UsersController(BaseController):
             h.flash(h.literal(_('Created user %s') % h.link_to(h.escape(usr), url('edit_user', id=user.user_id))),
                     category='success')
             Session().commit()
-        except formencode.Invalid, errors:
+        except formencode.Invalid as errors:
             return htmlfill.render(
                 render('admin/users/user_add.html'),
                 defaults=errors.value,
@@ -140,7 +142,7 @@ class UsersController(BaseController):
                 prefix_error=False,
                 encoding="UTF-8",
                 force_defaults=False)
-        except UserCreationError, e:
+        except UserCreationError as e:
             h.flash(e, 'error')
         except Exception:
             log.error(traceback.format_exc())
@@ -151,7 +153,8 @@ class UsersController(BaseController):
     def new(self, format='html'):
         """GET /users/new: Form to create a new item"""
         # url('new_user')
-        c.default_extern_type = auth_modules.auth_internal.KallitheaAuthPlugin.name
+        c.default_extern_type = auth_internal.KallitheaAuthPlugin.name
+        c.default_extern_name = auth_internal.KallitheaAuthPlugin.name
         return render('admin/users/user_add.html')
 
     def update(self, id):
@@ -162,22 +165,15 @@ class UsersController(BaseController):
         #    h.form(url('update_user', id=ID),
         #           method='put')
         # url('user', id=ID)
-        c.active = 'profile'
         user_model = UserModel()
-        c.user = user_model.get(id)
-        c.extern_type = c.user.extern_type
-        c.extern_name = c.user.extern_name
-        c.perm_user = AuthUser(user_id=id, ip_addr=self.ip_addr)
+        user = user_model.get(id)
         _form = UserForm(edit=True, old_data={'user_id': id,
-                                              'email': c.user.email})()
+                                              'email': user.email})()
         form_result = {}
         try:
             form_result = _form.to_python(dict(request.POST))
-            skip_attrs = ['extern_type', 'extern_name']
-            #TODO: plugin should define if username can be updated
-            if c.extern_type != kallithea.EXTERN_TYPE_INTERNAL:
-                # forbid updating username for external accounts
-                skip_attrs.append('username')
+            skip_attrs = ['extern_type', 'extern_name',
+                         ] + auth_modules.get_managed_fields(user)
 
             user_model.update(id, form_result, skip_attrs=skip_attrs)
             usr = form_result['username']
@@ -185,7 +181,7 @@ class UsersController(BaseController):
                           None, self.ip_addr, self.sa)
             h.flash(_('User updated successfully'), category='success')
             Session().commit()
-        except formencode.Invalid, errors:
+        except formencode.Invalid as errors:
             defaults = errors.value
             e = errors.error_dict or {}
             defaults.update({
@@ -195,7 +191,7 @@ class UsersController(BaseController):
                 '_method': 'put'
             })
             return htmlfill.render(
-                render('admin/users/user_edit.html'),
+                self._render_edit_profile(user),
                 defaults=defaults,
                 errors=e,
                 prefix_error=False,
@@ -220,7 +216,7 @@ class UsersController(BaseController):
             UserModel().delete(usr)
             Session().commit()
             h.flash(_('Successfully deleted user'), category='success')
-        except (UserOwnsReposException, DefaultUserException), e:
+        except (UserOwnsReposException, DefaultUserException) as e:
             h.flash(e, category='warning')
         except Exception:
             log.error(traceback.format_exc())
@@ -233,34 +229,39 @@ class UsersController(BaseController):
         # url('user', id=ID)
         User.get_or_404(-1)
 
+    def _get_user_or_raise_if_default(self, id):
+        try:
+            return User.get_or_404(id, allow_default=False)
+        except DefaultUserException:
+            h.flash(_("The default user cannot be edited"), category='warning')
+            raise HTTPNotFound
+
+    def _render_edit_profile(self, user):
+        c.user = user
+        c.active = 'profile'
+        c.perm_user = AuthUser(dbuser=user)
+        c.ip_addr = self.ip_addr
+        managed_fields = auth_modules.get_managed_fields(user)
+        c.readonly = lambda n: 'readonly' if n in managed_fields else None
+        return render('admin/users/user_edit.html')
+
     def edit(self, id, format='html'):
         """GET /users/id/edit: Form to edit an existing item"""
         # url('edit_user', id=ID)
-        c.user = User.get_or_404(id)
-        if c.user.username == User.DEFAULT_USER:
-            h.flash(_("You can't edit this user"), category='warning')
-            return redirect(url('users'))
+        user = self._get_user_or_raise_if_default(id)
+        defaults = user.get_dict()
 
-        c.active = 'profile'
-        c.extern_type = c.user.extern_type
-        c.extern_name = c.user.extern_name
-        c.perm_user = AuthUser(user_id=id, ip_addr=self.ip_addr)
-
-        defaults = c.user.get_dict()
         return htmlfill.render(
-            render('admin/users/user_edit.html'),
+            self._render_edit_profile(user),
             defaults=defaults,
             encoding="UTF-8",
             force_defaults=False)
 
     def edit_advanced(self, id):
-        c.user = User.get_or_404(id)
-        if c.user.username == User.DEFAULT_USER:
-            h.flash(_("You can't edit this user"), category='warning')
-            return redirect(url('users'))
-
+        c.user = self._get_user_or_raise_if_default(id)
         c.active = 'advanced'
-        c.perm_user = AuthUser(user_id=id, ip_addr=self.ip_addr)
+        c.perm_user = AuthUser(user_id=id)
+        c.ip_addr = self.ip_addr
 
         umodel = UserModel()
         defaults = c.user.get_dict()
@@ -277,15 +278,11 @@ class UsersController(BaseController):
             force_defaults=False)
 
     def edit_api_keys(self, id):
-        c.user = User.get_or_404(id)
-        if c.user.username == User.DEFAULT_USER:
-            h.flash(_("You can't edit this user"), category='warning')
-            return redirect(url('users'))
-
+        c.user = self._get_user_or_raise_if_default(id)
         c.active = 'api_keys'
         show_expired = True
         c.lifetime_values = [
-            (str(-1), _('forever')),
+            (str(-1), _('Forever')),
             (str(5), _('5 minutes')),
             (str(60), _('1 hour')),
             (str(60 * 24), _('1 day')),
@@ -302,36 +299,30 @@ class UsersController(BaseController):
             force_defaults=False)
 
     def add_api_key(self, id):
-        c.user = User.get_or_404(id)
-        if c.user.username == User.DEFAULT_USER:
-            h.flash(_("You can't edit this user"), category='warning')
-            return redirect(url('users'))
+        c.user = self._get_user_or_raise_if_default(id)
 
         lifetime = safe_int(request.POST.get('lifetime'), -1)
         description = request.POST.get('description')
         ApiKeyModel().create(c.user.user_id, description, lifetime)
         Session().commit()
-        h.flash(_("Api key successfully created"), category='success')
+        h.flash(_("API key successfully created"), category='success')
         return redirect(url('edit_user_api_keys', id=c.user.user_id))
 
     def delete_api_key(self, id):
-        c.user = User.get_or_404(id)
-        if c.user.username == User.DEFAULT_USER:
-            h.flash(_("You can't edit this user"), category='warning')
-            return redirect(url('users'))
+        c.user = self._get_user_or_raise_if_default(id)
 
         api_key = request.POST.get('del_api_key')
         if request.POST.get('del_api_key_builtin'):
             user = User.get(c.user.user_id)
-            if user:
+            if user is not None:
                 user.api_key = generate_api_key()
                 Session().add(user)
                 Session().commit()
-                h.flash(_("Api key successfully reset"), category='success')
+                h.flash(_("API key successfully reset"), category='success')
         elif api_key:
             ApiKeyModel().delete(api_key, c.user.user_id)
             Session().commit()
-            h.flash(_("Api key successfully deleted"), category='success')
+            h.flash(_("API key successfully deleted"), category='success')
 
         return redirect(url('edit_user_api_keys', id=c.user.user_id))
 
@@ -339,13 +330,10 @@ class UsersController(BaseController):
         pass
 
     def edit_perms(self, id):
-        c.user = User.get_or_404(id)
-        if c.user.username == User.DEFAULT_USER:
-            h.flash(_("You can't edit this user"), category='warning')
-            return redirect(url('users'))
-
+        c.user = self._get_user_or_raise_if_default(id)
         c.active = 'perms'
-        c.perm_user = AuthUser(user_id=id, ip_addr=self.ip_addr)
+        c.perm_user = AuthUser(user_id=id)
+        c.ip_addr = self.ip_addr
 
         umodel = UserModel()
         defaults = c.user.get_dict()
@@ -364,7 +352,7 @@ class UsersController(BaseController):
     def update_perms(self, id):
         """PUT /users_perm/id: Update an existing item"""
         # url('user_perm', id=ID, method='put')
-        user = User.get_or_404(id)
+        user = self._get_user_or_raise_if_default(id)
 
         try:
             form = CustomDefaultPermissionsForm()()
@@ -402,11 +390,7 @@ class UsersController(BaseController):
         return redirect(url('edit_user_perms', id=id))
 
     def edit_emails(self, id):
-        c.user = User.get_or_404(id)
-        if c.user.username == User.DEFAULT_USER:
-            h.flash(_("You can't edit this user"), category='warning')
-            return redirect(url('users'))
-
+        c.user = self._get_user_or_raise_if_default(id)
         c.active = 'emails'
         c.user_email_map = UserEmailMap.query()\
             .filter(UserEmailMap.user == c.user).all()
@@ -421,7 +405,7 @@ class UsersController(BaseController):
     def add_email(self, id):
         """POST /user_emails:Add an existing item"""
         # url('user_emails', id=ID, method='put')
-
+        user = self._get_user_or_raise_if_default(id)
         email = request.POST.get('new_email')
         user_model = UserModel()
 
@@ -429,7 +413,7 @@ class UsersController(BaseController):
             user_model.add_extra_email(id, email)
             Session().commit()
             h.flash(_("Added email %s to user") % email, category='success')
-        except formencode.Invalid, error:
+        except formencode.Invalid as error:
             msg = error.error_dict['email']
             h.flash(msg, category='error')
         except Exception:
@@ -441,6 +425,7 @@ class UsersController(BaseController):
     def delete_email(self, id):
         """DELETE /user_emails_delete/id: Delete an existing item"""
         # url('user_emails_delete', id=ID, method='delete')
+        user = self._get_user_or_raise_if_default(id)
         email_id = request.POST.get('del_email_id')
         user_model = UserModel()
         user_model.delete_extra_email(id, email_id)
@@ -449,11 +434,7 @@ class UsersController(BaseController):
         return redirect(url('edit_user_emails', id=id))
 
     def edit_ips(self, id):
-        c.user = User.get_or_404(id)
-        if c.user.username == User.DEFAULT_USER:
-            h.flash(_("You can't edit this user"), category='warning')
-            return redirect(url('users'))
-
+        c.user = self._get_user_or_raise_if_default(id)
         c.active = 'ips'
         c.user_ip_map = UserIpMap.query()\
             .filter(UserIpMap.user == c.user).all()
@@ -479,13 +460,13 @@ class UsersController(BaseController):
         try:
             user_model.add_extra_ip(id, ip)
             Session().commit()
-            h.flash(_("Added ip %s to user whitelist") % ip, category='success')
-        except formencode.Invalid, error:
+            h.flash(_("Added IP address %s to user whitelist") % ip, category='success')
+        except formencode.Invalid as error:
             msg = error.error_dict['ip']
             h.flash(msg, category='error')
         except Exception:
             log.error(traceback.format_exc())
-            h.flash(_('An error occurred during ip saving'),
+            h.flash(_('An error occurred while adding IP address'),
                     category='error')
 
         if 'default_user' in request.POST:
@@ -499,7 +480,7 @@ class UsersController(BaseController):
         user_model = UserModel()
         user_model.delete_extra_ip(id, ip_id)
         Session().commit()
-        h.flash(_("Removed ip address from user whitelist"), category='success')
+        h.flash(_("Removed IP address from user whitelist"), category='success')
 
         if 'default_user' in request.POST:
             return redirect(url('admin_permissions_ips'))

@@ -33,6 +33,7 @@ optional FLAGS:
 
 """
 import os
+import re
 import time
 import logging
 import datetime
@@ -54,8 +55,9 @@ from nose.plugins.skip import SkipTest
 
 from kallithea.lib.compat import unittest
 from kallithea import is_windows
-from kallithea.model.db import User
-from kallithea.tests.nose_parametrized import parameterized
+from kallithea.model.db import Notification, User, UserNotification
+from kallithea.model.meta import Session
+from kallithea.tests.parameterized import parameterized
 from kallithea.lib.utils2 import safe_str
 
 
@@ -66,11 +68,11 @@ if not is_windows:
 log = logging.getLogger(__name__)
 
 __all__ = [
-    'parameterized', 'environ', 'url', 'get_new_dir', 'TestController',
-    'SkipTest', 'ldap_lib_installed', 'BaseTestCase', 'init_stack',
+    'parameterized', 'environ', 'url', 'TestController',
+    'SkipTest', 'ldap_lib_installed', 'pam_lib_installed', 'BaseTestCase', 'init_stack',
     'TESTS_TMP_PATH', 'HG_REPO', 'GIT_REPO', 'NEW_HG_REPO', 'NEW_GIT_REPO',
     'HG_FORK', 'GIT_FORK', 'TEST_USER_ADMIN_LOGIN', 'TEST_USER_ADMIN_PASS',
-    'TEST_USER_REGULAR_LOGIN', 'TEST_USER_REGULAR_PASS',
+    'TEST_USER_ADMIN_EMAIL', 'TEST_USER_REGULAR_LOGIN', 'TEST_USER_REGULAR_PASS',
     'TEST_USER_REGULAR_EMAIL', 'TEST_USER_REGULAR2_LOGIN',
     'TEST_USER_REGULAR2_PASS', 'TEST_USER_REGULAR2_EMAIL', 'TEST_HG_REPO',
     'TEST_HG_REPO_CLONE', 'TEST_HG_REPO_PULL', 'TEST_GIT_REPO',
@@ -142,20 +144,12 @@ except ImportError:
     # means that python-ldap is not installed
     pass
 
-
-def get_new_dir(title):
-    """
-    Returns always new directory path.
-    """
-    from kallithea.tests.vcs.utils import get_normalized_path
-    name = TEST_REPO_PREFIX
-    if title:
-        name = '-'.join((name, title))
-    hex = hashlib.sha1(str(time.time())).hexdigest()
-    name = '-'.join((name, hex))
-    path = os.path.join(TEST_DIR, name)
-    return get_normalized_path(path)
-
+try:
+    import pam
+    pam.PAM_TEXT_INFO
+    pam_lib_installed = True
+except ImportError:
+    pam_lib_installed = False
 
 import logging
 
@@ -183,6 +177,15 @@ class BaseTestCase(unittest.TestCase):
         init_stack(self.wsgiapp.config)
         unittest.TestCase.__init__(self, *args, **kwargs)
 
+    def remove_all_notifications(self):
+        Notification.query().delete()
+
+        # Because query().delete() does not (by default) trigger cascades.
+        # http://docs.sqlalchemy.org/en/rel_0_7/orm/collections.html#passive-deletes
+        UserNotification.query().delete()
+
+        Session().commit()
+
 
 class TestController(BaseTestCase):
 
@@ -199,32 +202,41 @@ class TestController(BaseTestCase):
                                  {'username': username,
                                   'password': password})
 
-        if 'invalid user name' in response.body:
+        if 'Invalid username or password' in response.body:
             self.fail('could not login using %s %s' % (username, password))
 
         self.assertEqual(response.status, '302 Found')
-        ses = response.session['authuser']
-        self.assertEqual(ses.get('username'), username)
-        response = response.follow()
-        self.assertEqual(ses.get('is_authenticated'), True)
+        self.assert_authenticated_user(response, username)
 
+        response = response.follow()
         return response.session['authuser']
 
     def _get_logged_user(self):
         return User.get_by_username(self._logged_username)
 
+    def assert_authenticated_user(self, response, expected_username):
+        cookie = response.session.get('authuser')
+        user = cookie and cookie.get('user_id')
+        user = user and User.get(user)
+        user = user and user.username
+        self.assertEqual(user, expected_username)
+        self.assertEqual(cookie.get('is_authenticated'), True)
+
     def authentication_token(self):
         return self.app.get(url('authentication_token')).body
 
-    def checkSessionFlash(self, response, msg, skip=0):
+    def checkSessionFlash(self, response, msg=None, skip=0, _matcher=lambda msg, m: msg in m):
         if 'flash' not in response.session:
-            self.fail(safe_str(u'msg `%s` not found - session has no flash ' % msg))
+            self.fail(safe_str(u'msg `%s` not found - session has no flash:\n%s' % (msg, response)))
         try:
             level, m = response.session['flash'][-1 - skip]
-            if msg in m:
+            if _matcher(msg, m):
                 return
         except IndexError:
             pass
         self.fail(safe_str(u'msg `%s` not found in session flash (skipping %s): %s' %
                            (msg, skip,
                             ', '.join('`%s`' % m for level, m in response.session['flash']))))
+
+    def checkSessionFlashRegex(self, response, regex, skip=0):
+        self.checkSessionFlash(response, regex, skip=skip, _matcher=re.search)

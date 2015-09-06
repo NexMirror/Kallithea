@@ -45,6 +45,7 @@ class LdapImportError(Exception):
 
 
 class DefaultUserException(Exception):
+    """An invalid action was attempted on the default user"""
     pass
 
 
@@ -95,6 +96,10 @@ class IMCCommitError(Exception):
 
 
 class UserCreationError(Exception):
+    pass
+
+
+class UserInvalidException(Exception):
     pass
 
 

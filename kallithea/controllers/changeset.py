@@ -166,7 +166,7 @@ def _context_url(GET, fileid=None):
     if ig_ws:
         params[ig_ws_key] += [ig_ws_val]
 
-    lbl = _('increase diff context to %(num)s lines') % {'num': ln_ctx}
+    lbl = _('Increase diff context to %(num)s lines') % {'num': ln_ctx}
 
     params['anchor'] = fileid
     icon = h.literal('<i class="icon-sort"></i>')
@@ -208,7 +208,7 @@ class ChangesetController(BaseRepoController):
                 raise RepositoryError('Changeset range returned empty result')
 
         except(ChangesetDoesNotExistError,), e:
-            log.error(traceback.format_exc())
+            log.debug(traceback.format_exc())
             msg = _('Such revision does not exist for this repository')
             h.flash(msg, category='error')
             raise HTTPNotFound()
@@ -241,7 +241,8 @@ class ChangesetController(BaseRepoController):
                 comments.update((st.changeset_comment_id, st.comment)
                                 for st in ChangesetStatusModel()
                                 .get_statuses(c.db_repo.repo_id,
-                                              changeset.raw_id, with_revisions=True))
+                                              changeset.raw_id, with_revisions=True)
+                                if st.changeset_comment_id is not None)
 
                 inlines = ChangesetCommentsModel()\
                             .get_inline_comments(c.db_repo.repo_id,
@@ -349,9 +350,9 @@ class ChangesetController(BaseRepoController):
     @jsonify
     def comment(self, repo_name, revision):
         status = request.POST.get('changeset_status')
-        text = request.POST.get('text', '').strip() or _('No comments.')
+        text = request.POST.get('text', '').strip()
 
-        c.co = comm = ChangesetCommentsModel().create(
+        c.comment = comment = ChangesetCommentsModel().create(
             text=text,
             repo=c.db_repo.repo_id,
             user=c.authuser.user_id,
@@ -373,12 +374,12 @@ class ChangesetController(BaseRepoController):
                     c.db_repo.repo_id,
                     status,
                     c.authuser.user_id,
-                    comm,
+                    comment,
                     revision=revision,
                     dont_allow_on_closed_pull_request=True
                 )
             except StatusChangeOnClosedPullRequestError:
-                log.error(traceback.format_exc())
+                log.debug(traceback.format_exc())
                 msg = _('Changing status on a changeset associated with '
                         'a closed pull request is not allowed')
                 h.flash(msg, category='warning')
@@ -397,8 +398,8 @@ class ChangesetController(BaseRepoController):
         data = {
            'target_id': h.safeid(h.safe_unicode(request.POST.get('f_path'))),
         }
-        if comm:
-            data.update(comm.get_dict())
+        if comment is not None:
+            data.update(comment.get_dict())
             data.update({'rendered_text':
                          render('changeset/changeset_comment_block.html')})
 
@@ -442,7 +443,7 @@ class ChangesetController(BaseRepoController):
         if request.is_xhr:
             try:
                 return c.db_repo_scm_instance.get_changeset(revision)
-            except ChangesetDoesNotExistError, e:
+            except ChangesetDoesNotExistError as e:
                 return EmptyChangeset(message=str(e))
         else:
             raise HTTPBadRequest()

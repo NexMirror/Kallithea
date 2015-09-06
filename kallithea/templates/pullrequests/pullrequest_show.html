@@ -3,11 +3,11 @@
 <%namespace name="comment" file="/changeset/changeset_file_comment.html"/>
 
 <%block name="title">
-    ${_('%s Pull Request #%s') % (c.repo_name, c.pull_request.pull_request_id)}
+    ${_('%s Pull Request %s') % (c.repo_name, c.pull_request.nice_id())}
 </%block>
 
 <%def name="breadcrumbs_links()">
-    ${_('Pull request #%s from %s#%s') % (c.pull_request.pull_request_id, c.pull_request.org_repo.repo_name, c.cs_branch_name)}
+    ${_('Pull request %s from %s#%s') % (c.pull_request.nice_id(), c.pull_request.org_repo.repo_name, c.cs_branch_name)}
 </%def>
 
 <%block name="header_menu">
@@ -15,7 +15,7 @@
 </%block>
 
 <%def name="main()">
-<% editable = not c.pull_request.is_closed() and (h.HasPermissionAny('hg.admin')() or h.HasRepoPermissionAny('repository.admin')(c.repo_name) or c.pull_request.author.user_id == c.authuser.user_id) %>
+<% editable = not c.pull_request.is_closed() and (h.HasPermissionAny('hg.admin')() or h.HasRepoPermissionAny('repository.admin')(c.repo_name) or c.pull_request.owner.user_id == c.authuser.user_id) %>
 ${self.repo_context_bar('showpullrequest')}
 <div class="box">
   <!-- box / title -->
@@ -38,7 +38,7 @@ ${self.repo_context_bar('showpullrequest')}
             <label>${_('Description')}:</label>
             %if editable:
             <div style="margin: 5px">
-              <a class="btn btn-small" onclick="YUD.setStyle('pr-edit-form','display','');YUD.setStyle(YUD.getElementsByClassName('pr-not-edit'),'display','none')">${_("Edit")}</a>
+              <a class="btn btn-small" onclick="$('.pr-do-edit').show();$('.pr-not-edit').hide()">${_("Edit")}</a>
             </div>
             %endif
           </div>
@@ -48,7 +48,7 @@ ${self.repo_context_bar('showpullrequest')}
         </div>
 
         %if editable:
-        <div id="pr-edit-form" style="display:none">
+        <div class="pr-do-edit" style="display:none">
           <div class="field">
               <div class="label-summary">
                   <label for="pullrequest_title">${_('Title')}:</label>
@@ -76,15 +76,14 @@ ${self.repo_context_bar('showpullrequest')}
           <div class="input">
             <div class="changeset-status-container" style="float:none;clear:both">
             %if c.current_voting_result:
-              <div class="changeset-status-ico" style="padding:0px 4px 0px 0px">
-                  <i class="icon-circle changeset-status-${c.current_voting_result}" title="${_('Pull request status calculated from votes')}"></i></div>
-              <div class="changeset-status-lbl tooltip" title="${_('Pull request status calculated from votes')}">
+              <span class="changeset-status-ico" style="padding:0px 4px 0px 0px">
+                  <i class="icon-circle changeset-status-${c.current_voting_result}" title="${_('Pull request status calculated from votes')}"></i></span>
+              <span class="changeset-status-lbl tooltip" title="${_('Pull request status calculated from votes')}">
                 %if c.pull_request.is_closed():
                     ${_('Closed')},
                 %endif
                 ${h.changeset_status_lbl(c.current_voting_result)}
-              </div>
-
+              </span>
             %endif
             </div>
           </div>
@@ -95,7 +94,7 @@ ${self.repo_context_bar('showpullrequest')}
           </div>
           <div class="input">
             % if len(c.pull_request_pending_reviewers) > 0:
-                <div class="tooltip" title="${h.tooltip(', '.join([x.username for x in c.pull_request_pending_reviewers]))}">${ungettext('%d reviewer', '%d reviewers',len(c.pull_request_pending_reviewers)) % len(c.pull_request_pending_reviewers)}</div>
+                <div class="tooltip" title="${', '.join([x.username for x in c.pull_request_pending_reviewers])}">${ungettext('%d reviewer', '%d reviewers',len(c.pull_request_pending_reviewers)) % len(c.pull_request_pending_reviewers)}</div>
             % elif len(c.pull_request_reviewers) > 0:
                 <div>${_('Pull request was reviewed by all reviewers')}</div>
             %else:
@@ -121,10 +120,12 @@ ${self.repo_context_bar('showpullrequest')}
               <label>${_('Target')}:</label>
           </div>
           <div class="input">
-              <div>
+            %if c.is_range:
+              ${_("This is just a range of changesets and doesn't have a target or a real merge ancestor.")}
+            %else:
               ${h.link_to_ref(c.pull_request.other_repo.repo_name, c.a_ref_type, c.a_ref_name)}
               ## we don't know other rev - c.a_rev is ancestor and not necessarily on other_name_branch branch
-              </div>
+            %endif
           </div>
         </div>
         <div class="field">
@@ -152,16 +153,18 @@ ${self.repo_context_bar('showpullrequest')}
         </div>
         <div class="field">
           <div class="label-summary">
-              <label>${_('Created by')}:</label>
+              <label>${_('Owner')}:</label>
           </div>
-          <div class="input">
-              <div class="author">
+          <div class="input pr-not-edit">
                   <div class="gravatar">
-                    ${h.gravatar(c.pull_request.author.email, size=20)}
+                    ${h.gravatar(c.pull_request.owner.email, size=20)}
                   </div>
-                  <span>${c.pull_request.author.username_and_name}</span><br/>
-                  <span><a href="mailto:${c.pull_request.author.email}">${c.pull_request.author.email}</a></span><br/>
-              </div>
+                  <span>${c.pull_request.owner.full_name_and_username}</span><br/>
+                  <span><a href="mailto:${c.pull_request.owner.email}">${c.pull_request.owner.email}</a></span><br/>
+          </div>
+          <div class="input pr-do-edit ac" style="display:none">
+               ${h.text('owner', class_="large", value=c.pull_request.owner.username, placeholder=_('Username'))}
+               <div id="owner_completion_container"></div>
           </div>
         </div>
 
@@ -172,9 +175,9 @@ ${self.repo_context_bar('showpullrequest')}
             <div class="input">
               <div class="msg-div">${c.update_msg}</div>
               %if c.avail_revs:
-              <div id="updaterevs" style="max-height:200px; overflow-y:auto; overflow-x:hidden; margin-bottom: 10px">
+              <div id="updaterevs" style="max-height:200px; overflow-y:auto; overflow-x:hidden; margin-bottom: 10px; padding: 1px 0">
                 <div style="height:0">
-                  <canvas id="avail_graph_canvas"></canvas>
+                  <canvas id="avail_graph_canvas" style="width:0"></canvas>
                 </div>
                 <table id="updaterevs-table" class="noborder" style="padding-left:50px">
                   %for cnt, cs in enumerate(c.avail_cs):
@@ -213,15 +216,23 @@ ${self.repo_context_bar('showpullrequest')}
           <div>
             <ul id="review_members" class="group_members">
             %for member,status in c.pull_request_reviewers:
+              ## WARNING: the HTML below is duplicate with
+              ## kallithea/public/js/base.js
+              ## If you change something here it should be reflected in the template too.
               <li id="reviewer_${member.user_id}">
                 <div class="reviewers_member">
-                    <div class="reviewer_status tooltip" title="${h.tooltip(h.changeset_status_lbl(status.status if status else 'not_reviewed'))}">
+                    <div class="reviewer_status tooltip" title="${h.changeset_status_lbl(status.status if status else 'not_reviewed')}">
                       <i class="icon-circle changeset-status-${status.status if status else 'not_reviewed'}"></i>
                     </div>
                   <div class="reviewer_gravatar gravatar">
                     ${h.gravatar(member.email, size=14)}
                   </div>
-                  <div style="float:left;">${member.full_name} (${_('owner') if c.pull_request.user_id == member.user_id else _('reviewer')})</div>
+                  <div style="float:left;">
+                    ${member.full_name_and_username}
+                    %if c.pull_request.user_id == member.user_id:
+                      (${_('Owner')})
+                    %endif
+                  </div>
                   <input type="hidden" value="${member.user_id}" name="review_members" />
                   %if editable:
                   <div class="reviewer_member_remove action_button" onclick="removeReviewMember(${member.user_id})" title="${_('Remove reviewer')}">
@@ -342,6 +353,7 @@ ${self.repo_context_bar('showpullrequest')}
     </script>
 
     ## diff block
+    <div class="commentable-diff">
     <%namespace name="diff_block" file="/changeset/diff_block.html"/>
     ${diff_block.diff_block_js()}
     %for fid, change, f, stat in c.files:
@@ -350,7 +362,7 @@ ${self.repo_context_bar('showpullrequest')}
     % if c.limited_diff:
       <h4>${_('Changeset was too big and was cut off...')} <a href="${h.url.current(fulldiff=1, **request.GET.mixed())}">${_('Show full diff anyway')}</a></h4>
     % endif
-
+    </div>
 
     ## template for inline comment form
     ${comment.comment_inline_form()}
@@ -366,22 +378,18 @@ ${self.repo_context_bar('showpullrequest')}
 
     <script type="text/javascript">
       $(document).ready(function(){
-          PullRequestAutoComplete('user', 'reviewers_container', _USERS_AC_DATA, _GROUPS_AC_DATA);
+          PullRequestAutoComplete($('#user'), $('#reviewers_container'), _USERS_AC_DATA);
+          SimpleUserAutoComplete($('#owner'), $('#owner_completion_container'), _USERS_AC_DATA);
 
-          $('.add-bubble').click(function(e){
-              var tr = e.currentTarget;
-              injectInlineForm(tr.parentNode.parentNode);
+          $('.code-difftable').on('click', '.add-bubble', function(e){
+              show_comment_form($(this));
           });
 
           var avail_jsdata = ${c.avail_jsdata|n};
           var avail_r = new BranchRenderer('avail_graph_canvas', 'updaterevs-table', 'chg_available_');
           avail_r.render(avail_jsdata,40);
 
-          // inject comments into they proper positions
-          var file_comments = $('.inline-comment-placeholder').toArray();
-          renderInlineComments(file_comments);
-
-          linkInlineComments(document.getElementsByClassName('firstlink'), document.getElementsByClassName("comment"));
+          move_comments($(".comments .comments-list-chunk"));
 
           $('#updaterevs input').change(function(e){
               var update = !!e.target.value;
@@ -390,7 +398,7 @@ ${self.repo_context_bar('showpullrequest')}
           });
           var $org_review_members = $('#review_members').clone();
           $('#pr-form-reset').click(function(e){
-              $('#pr-edit-form').hide();
+              $('.pr-do-edit').hide();
               $('.pr-not-edit').show();
               $('#pr-form-save').prop('disabled',false);
               $('#pr-form-clone').prop('disabled',true);

@@ -29,7 +29,7 @@ from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.vcs.utils.ordered_dict import OrderedDict
 from kallithea.lib.vcs.utils.paths import abspath
 from kallithea.lib.vcs.utils.hgcompat import (
-    ui, nullid, match, patch, diffopts, clone, get_contact, pull,
+    ui, nullid, match, patch, diffopts, clone, get_contact,
     localrepository, RepoLookupError, Abort, RepoError, hex, scmutil, hg_url,
     httpbasicauthhandler, httpdigestauthhandler, peer, httppeer, sshpeer
 )
@@ -177,7 +177,7 @@ class MercurialRepository(BaseRepository):
         try:
             self._repo.tag(name, changeset._ctx.node(), message, local, user,
                 date)
-        except Abort, e:
+        except Abort as e:
             raise RepositoryError(e.message)
 
         # Reinitialize tags
@@ -208,7 +208,7 @@ class MercurialRepository(BaseRepository):
         try:
             self._repo.tag(name, nullid, message, local, user, date)
             self.tags = self._get_tags()
-        except Abort, e:
+        except Abort as e:
             raise RepositoryError(e.message)
 
     @LazyProperty
@@ -229,7 +229,7 @@ class MercurialRepository(BaseRepository):
 
     def _get_all_revisions(self):
 
-        return map(lambda x: hex(x[7]), self._repo.changelog.index)[:-1]
+        return [self._repo[x].hex() for x in self._repo.filtered('visible').changelog.revs()]
 
     def get_diff(self, rev1, rev2, path='', ignore_whitespace=False,
                   context=3):
@@ -264,6 +264,7 @@ class MercurialRepository(BaseRepository):
 
         return ''.join(patch.diff(self._repo, rev1, rev2, match=file_filter,
                           opts=diffopts(git=True,
+                                        showfunc=True,
                                         ignorews=ignore_whitespace,
                                         context=context)))
 
@@ -320,7 +321,7 @@ class MercurialRepository(BaseRepository):
             resp = o.open(req)
             if resp.code != 200:
                 raise Exception('Return Code is not 200')
-        except Exception, e:
+        except Exception as e:
             # means it cannot be cloned
             raise urllib2.URLError("[%s] org_exc: %s" % (cleaned_uri, e))
 
@@ -328,7 +329,7 @@ class MercurialRepository(BaseRepository):
             # now check if it's a proper hg repo
             try:
                 httppeer(repoui or ui.ui(), url).lookup('tip')
-            except Exception, e:
+            except Exception as e:
                 raise urllib2.URLError(
                     "url [%s] does not look like an hg repo org_exc: %s"
                     % (cleaned_uri, e))
@@ -358,7 +359,7 @@ class MercurialRepository(BaseRepository):
                 # Don't try to create if we've already cloned repo
                 create = False
             return localrepository(self.baseui, self.path, create=create)
-        except (Abort, RepoError), err:
+        except (Abort, RepoError) as err:
             if create:
                 msg = "Cannot create repository at %s. Original error was %s"\
                     % (self.path, err)
@@ -564,7 +565,7 @@ class MercurialRepository(BaseRepository):
             exchange.pull(self._repo, other, heads=None, force=None)
         except ImportError:
             self._repo.pull(other, heads=None, force=None)
-        except Abort, err:
+        except Abort as err:
             # Propagate error but with vcs's type
             raise RepositoryError(str(err))
 

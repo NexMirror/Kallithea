@@ -342,11 +342,9 @@ class SubprocessIOChunker(object):
             input_streamer.start()
             inputstream = input_streamer.output
 
-        _shell = kwargs.get('shell', True)
-        if isinstance(cmd, (list, tuple)):
-            cmd = ' '.join(cmd)
+        # Note: fragile cmd mangling has been removed for use in Kallithea
+        assert isinstance(cmd, list), cmd
 
-        kwargs['shell'] = _shell
         _p = subprocess.Popen(cmd, bufsize=-1,
                               stdin=inputstream,
                               stdout=subprocess.PIPE,
@@ -397,7 +395,7 @@ class SubprocessIOChunker(object):
 
     def next(self):
         if self.process and self.process.poll():
-            err = '%s' % ''.join(self.error)
+            err = ''.join(self.error)
             raise EnvironmentError("Subprocess exited due to an error:\n" + err)
         return self.output.next()
 

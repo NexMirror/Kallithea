@@ -1,32 +1,64 @@
 ## -*- coding: utf-8 -*-
-<%text>################################################################################
-################################################################################
+<%text>################################################################################</%text>
+<%text>################################################################################</%text>
 # Kallithea - config file generated with kallithea-config                      #
-################################################################################
-################################################################################
-</%text>
+<%text>################################################################################</%text>
+<%text>################################################################################</%text>
+
 [DEFAULT]
 debug = true
 pdebug = false
-<%text>
-################################################################################
-## Uncomment and replace with the address which should receive                ##
-## any error reports after application crash                                  ##
-## Additionally those settings will be used by Kallithea mailing system       ##
-################################################################################</%text>
-#email_to = admin@localhost
-#error_email_from = paste_error@localhost
-#app_email_from = kallithea-noreply@localhost
-#error_message =
+
+<%text>################################################################################</%text>
+<%text>## Email settings                                                             ##</%text>
+<%text>##                                                                            ##</%text>
+<%text>## Refer to the documentation ("Email settings") for more details.            ##</%text>
+<%text>##                                                                            ##</%text>
+<%text>## It is recommended to use a valid sender address that passes access         ##</%text>
+<%text>## validation and spam filtering in mail servers.                             ##</%text>
+<%text>################################################################################</%text>
+
+<%text>## 'From' header for application emails. You can optionally add a name.</%text>
+<%text>## Default:</%text>
+#app_email_from = Kallithea
+<%text>## Examples:</%text>
+#app_email_from = Kallithea <kallithea-noreply@example.com>
+#app_email_from = kallithea-noreply@example.com
+
+<%text>## Subject prefix for application emails.</%text>
+<%text>## A space between this prefix and the real subject is automatically added.</%text>
+<%text>## Default:</%text>
+#email_prefix =
+<%text>## Example:</%text>
 #email_prefix = [Kallithea]
 
+<%text>## Recipients for error emails and fallback recipients of application mails.</%text>
+<%text>## Multiple addresses can be specified, space-separated.</%text>
+<%text>## Only addresses are allowed, do not add any name part.</%text>
+<%text>## Default:</%text>
+#email_to =
+<%text>## Examples:</%text>
+#email_to = admin@example.com
+#email_to = admin@example.com another_admin@example.com
+
+<%text>## 'From' header for error emails. You can optionally add a name.</%text>
+<%text>## Default:</%text>
+#error_email_from = pylons@yourapp.com
+<%text>## Examples:</%text>
+#error_email_from = Kallithea Errors <kallithea-noreply@example.com>
+#error_email_from = paste_error@example.com
+
+<%text>## SMTP server settings</%text>
+<%text>## Only smtp_server is mandatory. All other settings take the specified default</%text>
+<%text>## values.</%text>
 #smtp_server = mail.server.com
 #smtp_username =
 #smtp_password =
-#smtp_port =
+#smtp_port = 25
 #smtp_use_tls = false
-#smtp_use_ssl = true
-<%text>## Specify available auth parameters here (e.g. LOGIN PLAIN CRAM-MD5, etc.)</%text>
+#smtp_use_ssl = false
+<%text>## SMTP authentication parameters to use (e.g. LOGIN PLAIN CRAM-MD5, etc.).</%text>
+<%text>## If empty, use any of the authentication parameters supported by the server.</%text>
 #smtp_auth =
 
 [server:main]
@@ -39,8 +71,8 @@ threadpool_workers = 5
 threadpool_max_requests = 10
 <%text>## option to use threads of process</%text>
 use_threadpool = true
-%endif
-%if http_server == 'waitress':
+
+%elif http_server == 'waitress':
 <%text>## WAITRESS ##</%text>
 use = egg:waitress#main
 <%text>## number of worker threads</%text>
@@ -50,8 +82,8 @@ max_request_body_size = 107374182400
 <%text>## use poll instead of select, fixes fd limits, may not work on old</%text>
 <%text>## windows systems.</%text>
 #asyncore_use_poll = True
-%endif
-%if http_server == 'gunicorn':
+
+%elif http_server == 'gunicorn':
 <%text>## GUNICORN ##</%text>
 use = egg:gunicorn#main
 <%text>## number of process workers. You must set `instance_id = *` when this option</%text>
@@ -66,8 +98,8 @@ max_requests = 1000
 <%text>## ammount of time a worker can handle request before it gets killed and</%text>
 <%text>## restarted</%text>
 timeout = 3600
-%endif
-%if http_server == 'uwsgi':
+
+%elif http_server == 'uwsgi':
 <%text>## UWSGI ##</%text>
 <%text>## run with uwsgi --ini-paste-logged <inifile.ini></%text>
 [uwsgi]
@@ -97,11 +129,11 @@ listen = 256
 max-requests = 1000
 
 <%text>## enable large buffers</%text>
-buffer-size=65535
+buffer-size = 65535
 
 <%text>## socket and http timeouts ##</%text>
-http-timeout=3600
-socket-timeout=3600
+http-timeout = 3600
+socket-timeout = 3600
 
 <%text>## Log requests slower than the specified number of milliseconds.</%text>
 log-slow = 10
@@ -127,12 +159,13 @@ workers = 4
 
 <%text>## how many workers should be spawned at a time</%text>
 cheaper-step = 1
+
 %endif
 <%text>## COMMON ##</%text>
 host = ${host}
 port = ${port}
 
-<%text>## prefix middleware for rc</%text>
+<%text>## middleware for hosting the WSGI application under a URL prefix</%text>
 #[filter:proxy-prefix]
 #use = egg:PasteDeploy#prefix
 #prefix = /<your-prefix>
@@ -245,7 +278,6 @@ issue_prefix = #
 #issue_server_link_wiki = https://mywiki.com/{id}
 #issue_prefix_wiki = WIKI-
 
-
 <%text>## instance-id prefix</%text>
 <%text>## a prefix key for this instance used for cache invalidation when running</%text>
 <%text>## multiple instances of kallithea, make sure it's globally unique for</%text>
@@ -267,11 +299,10 @@ allow_repo_location_change = True
 <%text>## allows to setup custom hooks in settings page</%text>
 allow_custom_hooks_settings = True
 
-<%text>
-####################################
-###        CELERY CONFIG        ####
-####################################
-</%text>
+<%text>####################################</%text>
+<%text>###        CELERY CONFIG        ####</%text>
+<%text>####################################</%text>
+
 use_celery = false
 broker.host = localhost
 broker.vhost = rabbitmqhost
@@ -295,99 +326,73 @@ celeryd.max.tasks.per.child = 1
 
 <%text>## tasks will never be sent to the queue, but executed locally instead.</%text>
 celery.always.eager = false
-<%text>
-####################################
-###         BEAKER CACHE        ####
-####################################
-</%text>
-beaker.cache.data_dir=${here}/data/cache/data
-beaker.cache.lock_dir=${here}/data/cache/lock
 
-beaker.cache.regions=super_short_term,short_term,long_term,sql_cache_short,sql_cache_med,sql_cache_long
+<%text>####################################</%text>
+<%text>###         BEAKER CACHE        ####</%text>
+<%text>####################################</%text>
 
-beaker.cache.super_short_term.type=memory
-beaker.cache.super_short_term.expire=10
-beaker.cache.super_short_term.key_length = 256
+beaker.cache.data_dir = ${here}/data/cache/data
+beaker.cache.lock_dir = ${here}/data/cache/lock
 
-beaker.cache.short_term.type=memory
-beaker.cache.short_term.expire=60
+beaker.cache.regions = short_term,long_term,sql_cache_short
+
+beaker.cache.short_term.type = memory
+beaker.cache.short_term.expire = 60
 beaker.cache.short_term.key_length = 256
 
-beaker.cache.long_term.type=memory
-beaker.cache.long_term.expire=36000
+beaker.cache.long_term.type = memory
+beaker.cache.long_term.expire = 36000
 beaker.cache.long_term.key_length = 256
 
-beaker.cache.sql_cache_short.type=memory
-beaker.cache.sql_cache_short.expire=10
+beaker.cache.sql_cache_short.type = memory
+beaker.cache.sql_cache_short.expire = 10
 beaker.cache.sql_cache_short.key_length = 256
 
-beaker.cache.sql_cache_med.type=memory
-beaker.cache.sql_cache_med.expire=360
-beaker.cache.sql_cache_med.key_length = 256
+<%text>####################################</%text>
+<%text>###       BEAKER SESSION        ####</%text>
+<%text>####################################</%text>
 
-beaker.cache.sql_cache_long.type=file
-beaker.cache.sql_cache_long.expire=3600
-beaker.cache.sql_cache_long.key_length = 256
-<%text>
-####################################
-###       BEAKER SESSION        ####
-####################################
-## Type of storage used for the session, current types are
-## dbm, file, memcached, database, and memory.
-## The storage uses the Container API
-## that is also used by the cache system.
-</%text>
-<%text>## db session ##</%text>
+<%text>## Name of session cookie. Should be unique for a given host and path, even when running</%text>
+<%text>## on different ports. Otherwise, cookie sessions will be shared and messed up.</%text>
+beaker.session.key = kallithea
+<%text>## Sessions should always only be accessible by the browser, not directly by JavaScript.</%text>
+beaker.session.httponly = true
+<%text>## Session lifetime. 2592000 seconds is 30 days.</%text>
+beaker.session.timeout = 2592000
+
+<%text>## Server secret used with HMAC to ensure integrity of cookies.</%text>
+beaker.session.secret = ${uuid()}
+<%text>## Further, encrypt the data with AES.</%text>
+#beaker.session.encrypt_key = <key_for_encryption>
+#beaker.session.validate_key = <validation_key>
+
+<%text>## Type of storage used for the session, current types are</%text>
+<%text>## dbm, file, memcached, database, and memory.</%text>
+
+<%text>## File system storage of session data. (default)</%text>
+#beaker.session.type = file
+
+<%text>## Cookie only, store all session data inside the cookie. Requires secure secrets.</%text>
+#beaker.session.type = cookie
+
+<%text>## Database storage of session data.</%text>
 #beaker.session.type = ext:database
 #beaker.session.sa.url = postgresql://postgres:qwe@localhost/kallithea
 #beaker.session.table_name = db_session
 
-<%text>## encrypted cookie client side session, good for many instances ##</%text>
-#beaker.session.type = cookie
-
-<%text>## file based cookies (default) ##</%text>
-#beaker.session.type = file
-
-<%text>
-## beaker.session.key should be unique for a given host, even when running
-## on different ports. Otherwise, cookie sessions will be shared and messed up.
-</%text>
-beaker.session.key = kallithea
-beaker.session.secret = ${uuid()}
-
-<%text>## Secure encrypted cookie. Requires AES and AES python libraries</%text>
-<%text>## you must disable beaker.session.secret to use this</%text>
-#beaker.session.encrypt_key = <key_for_encryption>
-#beaker.session.validate_key = <validation_key>
-
-<%text>## sets session as invalid if it haven't been accessed for given amount of time</%text>
-beaker.session.timeout = 2592000
-beaker.session.httponly = true
-#beaker.session.cookie_path = /<your-prefix>
-
-<%text>## uncomment for https secure cookie</%text>
-beaker.session.secure = false
-
-<%text>## auto save the session to not to use .save()</%text>
-beaker.session.auto = False
-
-<%text>## default cookie expiration time in seconds `true` expire at browser close ##</%text>
-#beaker.session.cookie_expires = 3600
-
 %if error_aggregation_service == 'errormator':
-<%text>
-############################
-## ERROR HANDLING SYSTEMS ##
-############################
+<%text>############################</%text>
+<%text>## ERROR HANDLING SYSTEMS ##</%text>
+<%text>############################</%text>
 
-####################
-### [errormator] ###
-####################
+<%text>####################</%text>
+<%text>### [errormator] ###</%text>
+<%text>####################</%text>
 
-## Errormator is tailored to work with Kallithea, see
-## http://errormator.com for details how to obtain an account
-## you must install python package `errormator_client` to make it work
-</%text>
+<%text>## Errormator is tailored to work with Kallithea, see</%text>
+<%text>## http://errormator.com for details how to obtain an account</%text>
+<%text>## you must install python package `errormator_client` to make it work</%text>
+
 <%text>## errormator enabled</%text>
 errormator = false
 
@@ -407,10 +412,10 @@ errormator.slow_request_time = 1
 errormator.slow_requests = true
 
 <%text>## enable hooking to application loggers</%text>
-# errormator.logging = true
+#errormator.logging = true
 
 <%text>## minimum log level for log capture</%text>
-# errormator.logging.level = WARNING
+#errormator.logging.level = WARNING
 
 <%text>## send logs only from erroneous/slow requests</%text>
 <%text>## (saves API quota for intensive logging)</%text>
@@ -423,7 +428,6 @@ errormator.logging_on_error = false
 <%text>## start with HTTP* this list be extended with additional keywords here</%text>
 errormator.environ_keys_whitelist =
 
-
 <%text>## list of keywords that should be blanked from request object</%text>
 <%text>## can be string with comma separated list of words in lowercase</%text>
 <%text>## (by default client will always blank keys that contain following words</%text>
@@ -431,20 +435,19 @@ errormator.environ_keys_whitelist =
 <%text>## this list be extended with additional keywords set here</%text>
 errormator.request_keys_blacklist =
 
-
 <%text>## list of namespaces that should be ignores when gathering log entries</%text>
 <%text>## can be string with comma separated list of namespaces</%text>
 <%text>## (by default the client ignores own entries: errormator_client.client)</%text>
 errormator.log_namespace_blacklist =
-%elif error_aggregation_service == 'sentry':
-<%text>
-################
-### [sentry] ###
-################
 
-## sentry is a alternative open source error aggregator
-## you must install python packages `sentry` and `raven` to enable
-</%text>
+%elif error_aggregation_service == 'sentry':
+<%text>################</%text>
+<%text>### [sentry] ###</%text>
+<%text>################</%text>
+
+<%text>## sentry is a alternative open source error aggregator</%text>
+<%text>## you must install python packages `sentry` and `raven` to enable</%text>
+
 sentry.dsn = YOUR_DNS
 sentry.servers =
 sentry.name =
@@ -455,47 +458,50 @@ sentry.project =
 sentry.site =
 sentry.include_paths =
 sentry.exclude_paths =
+
 %endif
-<%text>
-################################################################################
-## WARNING: *THE LINE BELOW MUST BE UNCOMMENTED ON A PRODUCTION ENVIRONMENT*  ##
-## Debug mode will enable the interactive debugging tool, allowing ANYONE to  ##
-## execute malicious code after an exception is raised.                       ##
-################################################################################</%text>
+<%text>################################################################################</%text>
+<%text>## WARNING: *THE LINE BELOW MUST BE UNCOMMENTED ON A PRODUCTION ENVIRONMENT*  ##</%text>
+<%text>## Debug mode will enable the interactive debugging tool, allowing ANYONE to  ##</%text>
+<%text>## execute malicious code after an exception is raised.                       ##</%text>
+<%text>################################################################################</%text>
 set debug = false
-<%text>
-##################################
-###       LOGVIEW CONFIG       ###
-##################################
-</%text>
+
+<%text>##################################</%text>
+<%text>###       LOGVIEW CONFIG       ###</%text>
+<%text>##################################</%text>
+
 logview.sqlalchemy = #faa
 logview.pylons.templating = #bfb
 logview.pylons.util = #eee
-<%text>
-#########################################################
-### DB CONFIGS - EACH DB WILL HAVE IT'S OWN CONFIG    ###
-#########################################################
-</%text>
+
+<%text>#########################################################</%text>
+<%text>### DB CONFIGS - EACH DB WILL HAVE IT'S OWN CONFIG    ###</%text>
+<%text>#########################################################</%text>
+
 %if database_engine == 'sqlite':
 # SQLITE [default]
 sqlalchemy.db1.url = sqlite:///${here}/kallithea.db?timeout=60
+
 %elif database_engine == 'postgres':
 # POSTGRESQL
 sqlalchemy.db1.url = postgresql://user:pass@localhost/kallithea
+
 %elif database_engine == 'mysql':
 # MySQL
 sqlalchemy.db1.url = mysql://user:pass@localhost/kallithea
+
 %endif
 # see sqlalchemy docs for others
 
 sqlalchemy.db1.echo = false
 sqlalchemy.db1.pool_recycle = 3600
 sqlalchemy.db1.convert_unicode = true
-<%text>
-################################
-### LOGGING CONFIGURATION   ####
-################################
-</%text>
+
+<%text>################################</%text>
+<%text>### LOGGING CONFIGURATION   ####</%text>
+<%text>################################</%text>
+
 [loggers]
 keys = root, routes, kallithea, sqlalchemy, beaker, templates, whoosh_indexer
 
@@ -504,11 +510,11 @@ keys = console, console_sql
 
 [formatters]
 keys = generic, color_formatter, color_formatter_sql
-<%text>
-#############
-## LOGGERS ##
-#############
-</%text>
+
+<%text>#############</%text>
+<%text>## LOGGERS ##</%text>
+<%text>#############</%text>
+
 [logger_root]
 level = NOTSET
 handlers = console
@@ -549,11 +555,11 @@ level = DEBUG
 handlers =
 qualname = whoosh_indexer
 propagate = 1
-<%text>
-##############
-## HANDLERS ##
-##############
-</%text>
+
+<%text>##############</%text>
+<%text>## HANDLERS ##</%text>
+<%text>##############</%text>
+
 [handler_console]
 class = StreamHandler
 args = (sys.stderr,)
@@ -565,21 +571,21 @@ class = StreamHandler
 args = (sys.stderr,)
 level = WARN
 formatter = generic
-<%text>
-################
-## FORMATTERS ##
-################
-</%text>
+
+<%text>################</%text>
+<%text>## FORMATTERS ##</%text>
+<%text>################</%text>
+
 [formatter_generic]
 format = %(asctime)s.%(msecs)03d %(levelname)-5.5s [%(name)s] %(message)s
 datefmt = %Y-%m-%d %H:%M:%S
 
 [formatter_color_formatter]
-class=kallithea.lib.colored_formatter.ColorFormatter
-format= %(asctime)s.%(msecs)03d %(levelname)-5.5s [%(name)s] %(message)s
+class = kallithea.lib.colored_formatter.ColorFormatter
+format = %(asctime)s.%(msecs)03d %(levelname)-5.5s [%(name)s] %(message)s
 datefmt = %Y-%m-%d %H:%M:%S
 
 [formatter_color_formatter_sql]
-class=kallithea.lib.colored_formatter.ColorFormatterSql
-format= %(asctime)s.%(msecs)03d %(levelname)-5.5s [%(name)s] %(message)s
+class = kallithea.lib.colored_formatter.ColorFormatterSql
+format = %(asctime)s.%(msecs)03d %(levelname)-5.5s [%(name)s] %(message)s
 datefmt = %Y-%m-%d %H:%M:%S

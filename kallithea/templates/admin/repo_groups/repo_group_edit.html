@@ -12,13 +12,13 @@
     %if c.repo_group.parent_group:
         &raquo; ${h.link_to(c.repo_group.parent_group.name,h.url('repos_group_home',group_name=c.repo_group.parent_group.group_name))}
     %endif
-    &raquo; ${c.repo_group.name}
+    &raquo; ${h.link_to(c.repo_group.name,h.url('repos_group_home',group_name=c.repo_group.group_name))}
 </%def>
 
 <%def name="breadcrumbs_side_links()">
     <ul class="links">
       <li>
-          <a href="${h.url('new_repos_group', parent_group=c.repo_group.group_id)}" class="btn btn-small btn-success"><i class="icon-plus"></i> ${_(u'Add Child Group')}</a>
+          <a href="${h.url('new_repos_group', parent_group=c.repo_group.group_id)}" class="btn btn-small btn-success"><i class="icon-plus"></i> ${_('Add Child Group')}</a>
       </li>
     </ul>
 </%def>

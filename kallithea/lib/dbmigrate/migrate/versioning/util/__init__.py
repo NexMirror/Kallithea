@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """.. currentmodule:: migrate.versioning.util"""
 
@@ -87,7 +87,7 @@ def catch_known_errors(f, *a, **kw):
 
     try:
         return f(*a, **kw)
-    except exceptions.PathFoundError, e:
+    except exceptions.PathFoundError as e:
         raise exceptions.KnownError("The path %s already exists" % e.args[0])
 
 def construct_engine(engine, **opts):

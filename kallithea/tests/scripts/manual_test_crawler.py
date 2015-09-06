@@ -1,3 +1,4 @@
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,8 +13,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-kallithea.tests.test_crawer
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kallithea.tests.scripts.manual_test_crawler
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Test for crawling a project for memory usage
 This should be runned just as regular script together
@@ -60,7 +61,7 @@ if not BASE_URI.endswith('/'):
 
 print 'Crawling @ %s' % BASE_URI
 BASE_URI += '%s'
-PROJECT_PATH = jn('/', 'home', 'marcink', 'repos')
+PROJECT_PATH = jn('/', 'home', 'username', 'repos')
 PROJECTS = [
     #'linux-magx-pbranch',
     'CPython',
@@ -157,7 +158,7 @@ def test_files_walk(proj, limit=100):
             for f in files:
                 paths_.add(f.path)
 
-    except RepositoryError, e:
+    except RepositoryError as e:
         pass
 
     cnt = 0

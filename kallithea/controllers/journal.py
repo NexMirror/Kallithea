@@ -108,11 +108,11 @@ class JournalController(BaseController):
         journal = self._get_journal_data(repos)
         if public:
             _link = h.canonical_url('public_journal_atom')
-            _desc = '%s %s %s' % (c.site_name, _('public journal'),
+            _desc = '%s %s %s' % (c.site_name, _('Public Journal'),
                                   'atom feed')
         else:
             _link = h.canonical_url('journal_atom')
-            _desc = '%s %s %s' % (c.site_name, _('journal'), 'atom feed')
+            _desc = '%s %s %s' % (c.site_name, _('Journal'), 'atom feed')
 
         feed = Atom1Feed(title=_desc,
                          link=_link,
@@ -150,11 +150,11 @@ class JournalController(BaseController):
         journal = self._get_journal_data(repos)
         if public:
             _link = h.canonical_url('public_journal_atom')
-            _desc = '%s %s %s' % (c.site_name, _('public journal'),
+            _desc = '%s %s %s' % (c.site_name, _('Public Journal'),
                                   'rss feed')
         else:
             _link = h.canonical_url('journal_atom')
-            _desc = '%s %s %s' % (c.site_name, _('journal'), 'rss feed')
+            _desc = '%s %s %s' % (c.site_name, _('Journal'), 'rss feed')
 
         feed = Rss201rev2Feed(title=_desc,
                          link=_link,
@@ -239,10 +239,7 @@ class JournalController(BaseController):
 
         def desc(desc):
             from pylons import tmpl_context as c
-            if c.visual.stylify_metatags:
-                return h.urlify_text(h.desc_stylize(h.truncate(desc, 60)))
-            else:
-                return h.urlify_text(h.truncate(desc, 60))
+            return h.urlify_text(desc, truncate=60, stylize=c.visual.stylify_metatags)
 
         def repo_actions(repo_name):
             return _render('repo_actions', repo_name)

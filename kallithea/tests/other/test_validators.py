@@ -8,8 +8,6 @@ from kallithea.model.user_group import UserGroupModel
 
 from kallithea.model.meta import Session
 from kallithea.model.repo_group import RepoGroupModel
-from kallithea.model.db import ChangesetStatus, Repository
-from kallithea.model.changeset_status import ChangesetStatusModel
 from kallithea.tests.fixture import Fixture
 
 fixture = Fixture()
@@ -100,9 +98,9 @@ class TestRepoGroups(BaseTestCase):
         self.assertRaises(formencode.Invalid, validator.to_python, 'ąćżź')
 
     def test_ValidPasswordsMatch(self):
-        validator = v.ValidPasswordsMatch()
+        validator = v.ValidPasswordsMatch('new_password', 'password_confirmation')
         self.assertRaises(formencode.Invalid,
-                    validator.to_python, {'password': 'pass',
+                    validator.to_python, {'new_password': 'pass',
                                           'password_confirmation': 'pass2'})
 
         self.assertRaises(formencode.Invalid,
@@ -114,9 +112,9 @@ class TestRepoGroups(BaseTestCase):
                     validator.to_python({'new_password': 'pass',
                                          'password_confirmation': 'pass'}))
 
-        self.assertEqual({'password': 'pass',
+        self.assertEqual({'new_password': 'pass',
                           'password_confirmation': 'pass'},
-                    validator.to_python({'password': 'pass',
+                    validator.to_python({'new_password': 'pass',
                                          'password_confirmation': 'pass'}))
 
     def test_ValidAuth(self):
@@ -231,23 +229,3 @@ class TestRepoGroups(BaseTestCase):
     def test_AttrLoginValidator(self):
         validator = v.AttrLoginValidator()
         self.assertEqual('DN_attr', validator.to_python('DN_attr'))
-
-    def test_NotReviewedRevisions(self):
-        repo_id = Repository.get_by_repo_name(HG_REPO).repo_id
-        validator = v.NotReviewedRevisions(repo_id)
-        rev = '0' * 40
-        # add status for a rev, that should throw an error because it is already
-        # reviewed
-        new_status = ChangesetStatus()
-        new_status.author = ChangesetStatusModel()._get_user(TEST_USER_ADMIN_LOGIN)
-        new_status.repo = ChangesetStatusModel()._get_repo(HG_REPO)
-        new_status.status = ChangesetStatus.STATUS_APPROVED
-        new_status.comment = None
-        new_status.revision = rev
-        Session().add(new_status)
-        Session().commit()
-        try:
-            self.assertRaises(formencode.Invalid, validator.to_python, [rev])
-        finally:
-            Session().delete(new_status)
-            Session().commit()

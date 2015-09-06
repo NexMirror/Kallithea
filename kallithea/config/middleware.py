@@ -15,7 +15,6 @@
     Pylons middleware initialization
 """
 
-from beaker.middleware import SessionMiddleware
 from routes.middleware import RoutesMiddleware
 from paste.cascade import Cascade
 from paste.registry import RegistryManager
@@ -29,6 +28,7 @@ from pylons.wsgiapp import PylonsApp
 from kallithea.lib.middleware.simplehg import SimpleHg
 from kallithea.lib.middleware.simplegit import SimpleGit
 from kallithea.lib.middleware.https_fixup import HttpsFixup
+from kallithea.lib.middleware.sessionmiddleware import SecureSessionMiddleware
 from kallithea.config.environment import load_environment
 from kallithea.lib.middleware.wrapper import RequestWrapper
 
@@ -60,7 +60,7 @@ def make_app(global_conf, full_stack=True, static_files=True, **app_conf):
 
     # Routing/Session/Cache Middleware
     app = RoutesMiddleware(app, config['routes.map'])
-    app = SessionMiddleware(app, config)
+    app = SecureSessionMiddleware(app, config)
 
     # CUSTOM MIDDLEWARE HERE (filtered by error handling middlewares)
     if asbool(config['pdebug']):

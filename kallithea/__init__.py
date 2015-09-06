@@ -12,8 +12,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-kallithea.__init__
-~~~~~~~~~~~~~~~~~~
+kallithea
+~~~~~~~~~
 
 Kallithea, a web based repository management based on pylons
 versioning implementation: http://www.python.org/dev/peps/pep-0386/
@@ -71,7 +71,7 @@ try:
     from kallithea.lib import get_current_revision
     _rev = get_current_revision(quiet=True)
     if _rev and len(VERSION) > 3:
-        VERSION += ('%s' % _rev[0],)
+        VERSION += (_rev[0],)
 except ImportError:
     pass
 

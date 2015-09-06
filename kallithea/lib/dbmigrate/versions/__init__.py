@@ -12,8 +12,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-kallithea.lib.dbmigrate.versions.__init__
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kallithea.lib.dbmigrate.versions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Package containing new versions of database models
 

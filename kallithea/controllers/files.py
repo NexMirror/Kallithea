@@ -25,7 +25,6 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-from __future__ import with_statement
 import os
 import logging
 import traceback
@@ -83,7 +82,7 @@ class FilesController(BaseRepoController):
 
         try:
             return c.db_repo_scm_instance.get_changeset(rev)
-        except EmptyRepositoryError, e:
+        except EmptyRepositoryError as e:
             if silent_empty:
                 return None
             url_ = url('files_add_home',
@@ -97,7 +96,7 @@ class FilesController(BaseRepoController):
             msg = _('Such revision does not exist for this repository')
             h.flash(msg, category='error')
             raise HTTPNotFound()
-        except RepositoryError, e:
+        except RepositoryError as e:
             h.flash(safe_str(e), category='error')
             raise HTTPNotFound()
 
@@ -117,7 +116,7 @@ class FilesController(BaseRepoController):
             msg = _('Such revision does not exist for this repository')
             h.flash(msg, category='error')
             raise HTTPNotFound()
-        except RepositoryError, e:
+        except RepositoryError as e:
             h.flash(safe_str(e), category='error')
             raise HTTPNotFound()
 
@@ -182,7 +181,7 @@ class FilesController(BaseRepoController):
                     c.authors.append((h.email(a), h.person(a)))
             else:
                 c.authors = c.file_history = []
-        except RepositoryError, e:
+        except RepositoryError as e:
             h.flash(safe_str(e), category='error')
             raise HTTPNotFound()
 
@@ -490,12 +489,12 @@ class FilesController(BaseRepoController):
 
                 h.flash(_('Successfully committed to %s') % node_path,
                         category='success')
-            except NonRelativePathError, e:
+            except NonRelativePathError as e:
                 h.flash(_('Location must be relative path and must not '
                           'contain .. in path'), category='warning')
                 return redirect(url('changeset_home', repo_name=c.repo_name,
                                     revision='tip'))
-            except (NodeError, NodeAlreadyExistsError), e:
+            except (NodeError, NodeAlreadyExistsError) as e:
                 h.flash(_(e), category='error')
             except Exception:
                 log.error(traceback.format_exc())
@@ -509,7 +508,6 @@ class FilesController(BaseRepoController):
     @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
                                    'repository.admin')
     def archivefile(self, repo_name, fname):
-
         fileformat = None
         revision = None
         ext = None
@@ -525,7 +523,7 @@ class FilesController(BaseRepoController):
         try:
             dbrepo = RepoModel().get_by_repo_name(repo_name)
             if not dbrepo.enable_downloads:
-                return _('Downloads disabled')
+                return _('Downloads disabled') # TODO: do something else?
 
             if c.db_repo_scm_instance.alias == 'hg':
                 # patch and reset hooks section of UI config to not run any
@@ -541,58 +539,57 @@ class FilesController(BaseRepoController):
             return _('Empty repository')
         except (ImproperArchiveTypeError, KeyError):
             return _('Unknown archive type')
-        # archive cache
+
         from kallithea import CONFIG
         rev_name = cs.raw_id[:12]
         archive_name = '%s-%s%s' % (safe_str(repo_name.replace('/', '_')),
                                     safe_str(rev_name), ext)
 
-        use_cached_archive = False  # defines if we use cached version of archive
-        archive_cache_enabled = CONFIG.get('archive_cache_dir')
-        if not subrepos and archive_cache_enabled:
-            #check if we it's ok to write
-            if not os.path.isdir(CONFIG['archive_cache_dir']):
-                os.makedirs(CONFIG['archive_cache_dir'])
-            cached_archive_path = os.path.join(CONFIG['archive_cache_dir'], archive_name)
+        archive_path = None
+        cached_archive_path = None
+        archive_cache_dir = CONFIG.get('archive_cache_dir')
+        if archive_cache_dir and not subrepos: # TOOD: subrepo caching?
+            if not os.path.isdir(archive_cache_dir):
+                os.makedirs(archive_cache_dir)
+            cached_archive_path = os.path.join(archive_cache_dir, archive_name)
             if os.path.isfile(cached_archive_path):
-                log.debug('Found cached archive in %s' % cached_archive_path)
-                archive = cached_archive_path
-                use_cached_archive = True
+                log.debug('Found cached archive in %s', cached_archive_path)
+                archive_path = cached_archive_path
             else:
-                log.debug('Archive %s is not yet cached' % (archive_name))
+                log.debug('Archive %s is not yet cached', archive_name)
 
-        if not use_cached_archive:
+        if archive_path is None:
             # generate new archive
-            fd, archive = tempfile.mkstemp()
-            os.close(fd)
-            temp_stream = open(archive, 'wb')
-            log.debug('Creating new temp archive in %s' % archive)
-            cs.fill_archive(stream=temp_stream, kind=fileformat, subrepos=subrepos)
-            temp_stream.close()
-            if not subrepos and archive_cache_enabled:
-                #if we generated the archive and use cache rename that
-                log.debug('Storing new archive in %s' % cached_archive_path)
-                shutil.move(archive, cached_archive_path)
-                archive = cached_archive_path
+            fd, archive_path = tempfile.mkstemp()
+            log.debug('Creating new temp archive in %s', archive_path)
+            with os.fdopen(fd, 'wb') as stream:
+                cs.fill_archive(stream=stream, kind=fileformat, subrepos=subrepos)
+                # stream (and thus fd) has been closed by cs.fill_archive
+            if cached_archive_path is not None:
+                # we generated the archive - move it to cache
+                log.debug('Storing new archive in %s', cached_archive_path)
+                shutil.move(archive_path, cached_archive_path)
+                archive_path = cached_archive_path
 
-        def get_chunked_archive(archive):
-            stream = open(archive, 'rb')
+        def get_chunked_archive(archive_path):
+            stream = open(archive_path, 'rb')
             while True:
                 data = stream.read(16 * 1024)
                 if not data:
-                    stream.close()
-                    if not archive_cache_enabled:
-                        log.debug('Destroying temp archive %s' % archive)
-                        os.remove(archive)
                     break
                 yield data
-        # store download action
+            stream.close()
+            if archive_path != cached_archive_path:
+                log.debug('Destroying temp archive %s', archive_path)
+                os.remove(archive_path)
+
         action_logger(user=c.authuser,
                       action='user_downloaded_archive:%s' % (archive_name),
                       repo=repo_name, ipaddr=self.ip_addr, commit=True)
+
         response.content_disposition = str('attachment; filename=%s' % (archive_name))
         response.content_type = str(content_type)
-        return get_chunked_archive(archive)
+        return get_chunked_archive(archive_path)
 
     @LoginRequired()
     @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',

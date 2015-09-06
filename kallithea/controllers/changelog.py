@@ -82,10 +82,10 @@ class ChangelogController(BaseRepoController):
 
         try:
             return c.db_repo_scm_instance.get_changeset(rev)
-        except EmptyRepositoryError, e:
+        except EmptyRepositoryError as e:
             h.flash(h.literal(_('There are no changesets yet')),
                     category='error')
-        except RepositoryError, e:
+        except RepositoryError as e:
             log.error(traceback.format_exc())
             h.flash(safe_str(e), category='error')
         raise HTTPBadRequest()
@@ -94,6 +94,15 @@ class ChangelogController(BaseRepoController):
     @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
                                    'repository.admin')
     def index(self, repo_name, revision=None, f_path=None):
+        # Fix URL after page size form submission via GET
+        # TODO: Somehow just don't send this extra junk in the GET URL
+        if request.GET.get('set'):
+            request.GET.pop('set', None)
+            request.GET.pop('_authentication_token', None)
+            if revision is None:
+                return redirect(url('changelog_home', repo_name=repo_name, **request.GET))
+            return redirect(url('changelog_file_home', repo_name=repo_name, revision=revision, f_path=f_path, **request.GET))
+
         limit = 2000
         default = 100
         if request.GET.get('size'):
@@ -120,7 +129,7 @@ class ChangelogController(BaseRepoController):
         try:
 
             if f_path:
-                log.debug('generating changelog for path %s' % f_path)
+                log.debug('generating changelog for path %s', f_path)
                 # get the history for the file !
                 tip_cs = c.db_repo_scm_instance.get_changeset()
                 try:
@@ -130,7 +139,7 @@ class ChangelogController(BaseRepoController):
                     try:
                         cs = self.__get_cs(revision, repo_name)
                         collection = cs.get_file_history(f_path)
-                    except RepositoryError, e:
+                    except RepositoryError as e:
                         h.flash(safe_str(e), category='warning')
                         redirect(h.url('changelog_home', repo_name=repo_name))
                 collection = list(reversed(collection))
@@ -145,10 +154,10 @@ class ChangelogController(BaseRepoController):
             page_revisions = [x.raw_id for x in c.pagination]
             c.comments = c.db_repo.get_comments(page_revisions)
             c.statuses = c.db_repo.statuses(page_revisions)
-        except (EmptyRepositoryError), e:
+        except EmptyRepositoryError as e:
             h.flash(safe_str(e), category='warning')
             return redirect(url('summary_home', repo_name=c.repo_name))
-        except (RepositoryError, ChangesetDoesNotExistError, Exception), e:
+        except (RepositoryError, ChangesetDoesNotExistError, Exception) as e:
             log.error(traceback.format_exc())
             h.flash(safe_str(e), category='error')
             return redirect(url('changelog_home', repo_name=c.repo_name))

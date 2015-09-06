@@ -28,6 +28,7 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+import datetime
 import logging
 import time
 import traceback
@@ -48,7 +49,7 @@ from kallithea import __version__, BACKENDS
 from kallithea.lib.utils2 import str2bool, safe_unicode, AttributeDict,\
     safe_str, safe_int
 from kallithea.lib import auth_modules
-from kallithea.lib.auth import AuthUser, HasPermissionAnyMiddleware, CookieStoreWrapper
+from kallithea.lib.auth import AuthUser, HasPermissionAnyMiddleware
 from kallithea.lib.utils import get_repo_slug
 from kallithea.lib.exceptions import UserCreationError
 from kallithea.lib.vcs.exceptions import RepositoryError, EmptyRepositoryError, ChangesetDoesNotExistError
@@ -73,7 +74,7 @@ def _filter_proxy(ip):
     if ',' in ip:
         _ips = ip.split(',')
         _first_ip = _ips[0].strip()
-        log.debug('Got multiple IPs %s, using %s' % (','.join(_ips), _first_ip))
+        log.debug('Got multiple IPs %s, using %s', ','.join(_ips), _first_ip)
         return _first_ip
     return ip
 
@@ -103,6 +104,42 @@ def _get_access_path(environ):
     return path
 
 
+def log_in_user(user, remember, is_external_auth):
+    """
+    Log a `User` in and update session and cookies. If `remember` is True,
+    the session cookie is set to expire in a year; otherwise, it expires at
+    the end of the browser session.
+
+    Returns populated `AuthUser` object.
+    """
+    user.update_lastlogin()
+    meta.Session().commit()
+
+    auth_user = AuthUser(dbuser=user,
+                         is_external_auth=is_external_auth)
+    auth_user.set_authenticated()
+
+    # Start new session to prevent session fixation attacks.
+    session.invalidate()
+    session['authuser'] = cookie = auth_user.to_cookie()
+
+    # If they want to be remembered, update the cookie.
+    # NOTE: Assumes that beaker defaults to browser session cookie.
+    if remember:
+        t = datetime.datetime.now() + datetime.timedelta(days=365)
+        session._set_cookie_expires(t)
+
+    session.save()
+
+    log.info('user %s is now authenticated and stored in '
+             'session, session attrs %s', user.username, cookie)
+
+    # dumps session attrs back to cookie
+    session._update_cookie_out()
+
+    return auth_user
+
+
 class BasicAuth(paste.auth.basic.AuthBasicAuthenticator):
 
     def __init__(self, realm, authfunc, auth_http_code=None):
@@ -129,7 +166,7 @@ class BasicAuth(paste.auth.basic.AuthBasicAuthenticator):
         _parts = auth.split(':', 1)
         if len(_parts) == 2:
             username, password = _parts
-            if self.authfunc(username, password, environ):
+            if self.authfunc(username, password, environ) is not None:
                 return username
         return self.build_authentication()
 
@@ -143,7 +180,7 @@ class BaseVCSController(object):
         self.config = config
         # base path of repo locations
         self.basepath = self.config['base_path']
-        #authenticate this VCS request using authfunc
+        # authenticate this VCS request using the authentication modules
         self.authenticate = BasicAuth('', auth_modules.authenticate,
                                       config.get('auth_ret_code'))
         self.ip_addr = '0.0.0.0'
@@ -182,15 +219,13 @@ class BaseVCSController(object):
         name
 
         :param action: push or pull action
-        :param user: user instance
+        :param user: `User` instance
         :param repo_name: repository name
         """
         # check IP
-        inherit = user.inherit_default_permissions
-        ip_allowed = AuthUser.check_ip_allowed(user.user_id, ip_addr,
-                                               inherit_from_default=inherit)
+        ip_allowed = AuthUser.check_ip_allowed(user, ip_addr)
         if ip_allowed:
-            log.info('Access for IP:%s allowed' % (ip_addr,))
+            log.info('Access for IP:%s allowed', ip_addr)
         else:
             return False
 
@@ -222,8 +257,8 @@ class BaseVCSController(object):
         if str2bool(Ui.get_by_key('push_ssl').ui_value):
             org_proto = environ.get('wsgi._org_proto', environ['wsgi.url_scheme'])
             if org_proto != 'https':
-                log.debug('proto is %s and SSL is required BAD REQUEST !'
-                          % org_proto)
+                log.debug('proto is %s and SSL is required BAD REQUEST !',
+                          org_proto)
                 return False
         return True
 
@@ -252,7 +287,7 @@ class BaseVCSController(object):
                 #check if it's already locked !, if it is compare users
                 user_id, _date = repo.locked
                 if user.user_id == user_id:
-                    log.debug('Got push from user %s, now unlocking' % (user))
+                    log.debug('Got push from user %s, now unlocking', user)
                     # unlock if we have push from user who locked
                     make_lock = False
                 else:
@@ -262,13 +297,13 @@ class BaseVCSController(object):
                 if repo.locked[0] and repo.locked[1]:
                     locked = True
                 else:
-                    log.debug('Setting lock on repo %s by %s' % (repo, user))
+                    log.debug('Setting lock on repo %s by %s', repo, user)
                     make_lock = True
 
         else:
-            log.debug('Repository %s do not have locking enabled' % (repo))
-        log.debug('FINAL locking values make_lock:%s,locked:%s,locked_by:%s'
-                  % (make_lock, locked, locked_by))
+            log.debug('Repository %s do not have locking enabled', repo)
+        log.debug('FINAL locking values make_lock:%s,locked:%s,locked_by:%s',
+                  make_lock, locked, locked_by)
         return make_lock, locked, locked_by
 
     def __call__(self, environ, start_response):
@@ -277,7 +312,7 @@ class BaseVCSController(object):
             return self._handle_request(environ, start_response)
         finally:
             log = logging.getLogger('kallithea.' + self.__class__.__name__)
-            log.debug('Request time: %.3fs' % (time.time() - start))
+            log.debug('Request time: %.3fs', time.time() - start)
             meta.Session.remove()
 
 
@@ -341,44 +376,72 @@ class BaseController(WSGIController):
         self.sa = meta.Session
         self.scm_model = ScmModel(self.sa)
 
+    @staticmethod
+    def _determine_auth_user(api_key, session_authuser):
+        """
+        Create an `AuthUser` object given the API key (if any) and the
+        value of the authuser session cookie.
+        """
+
+        # Authenticate by API key
+        if api_key:
+            # when using API_KEY we are sure user exists.
+            return AuthUser(dbuser=User.get_by_api_key(api_key),
+                            is_external_auth=True)
+
+        # Authenticate by session cookie
+        # In ancient login sessions, 'authuser' may not be a dict.
+        # In that case, the user will have to log in again.
+        if isinstance(session_authuser, dict):
+            try:
+                return AuthUser.from_cookie(session_authuser)
+            except UserCreationError as e:
+                # container auth or other auth functions that create users on
+                # the fly can throw UserCreationError to signal issues with
+                # user creation. Explanation should be provided in the
+                # exception object.
+                from kallithea.lib import helpers as h
+                h.flash(e, 'error', logf=log.error)
+
+        # Authenticate by auth_container plugin (if enabled)
+        if any(
+            auth_modules.importplugin(name).is_container_auth
+            for name in Setting.get_auth_plugins()
+        ):
+            try:
+                user_info = auth_modules.authenticate('', '', request.environ)
+            except UserCreationError as e:
+                from kallithea.lib import helpers as h
+                h.flash(e, 'error', logf=log.error)
+            else:
+                if user_info is not None:
+                    username = user_info['username']
+                    user = User.get_by_username(username, case_insensitive=True)
+                    return log_in_user(user, remember=False,
+                                       is_external_auth=True)
+
+        # User is anonymous
+        return AuthUser()
+
     def __call__(self, environ, start_response):
         """Invoke the Controller"""
+
         # WSGIController.__call__ dispatches to the Controller method
         # the request is routed to. This routing information is
         # available in environ['pylons.routes_dict']
         try:
             self.ip_addr = _get_ip_addr(environ)
             # make sure that we update permissions each time we call controller
-            api_key = request.GET.get('api_key')
 
-            if api_key:
-                # when using API_KEY we are sure user exists.
-                auth_user = AuthUser(api_key=api_key, ip_addr=self.ip_addr)
-                authenticated = False
-            else:
-                cookie_store = CookieStoreWrapper(session.get('authuser'))
-                try:
-                    auth_user = AuthUser(user_id=cookie_store.get('user_id', None),
-                                         ip_addr=self.ip_addr)
-                except UserCreationError, e:
-                    from kallithea.lib import helpers as h
-                    h.flash(e, 'error')
-                    # container auth or other auth functions that create users on
-                    # the fly can throw this exception signaling that there's issue
-                    # with user creation, explanation should be provided in
-                    # Exception itself
-                    auth_user = AuthUser(ip_addr=self.ip_addr)
-
-                authenticated = cookie_store.get('is_authenticated')
-
-            if not auth_user.is_authenticated and auth_user.user_id is not None:
-                # user is not authenticated and not empty
-                auth_user.set_authenticated(authenticated)
-            request.user = auth_user
             #set globals for auth user
-            self.authuser = c.authuser = auth_user
-            log.info('IP: %s User: %s accessed %s' % (
-               self.ip_addr, auth_user, safe_unicode(_get_access_path(environ)))
+            self.authuser = c.authuser = request.user = self._determine_auth_user(
+                request.GET.get('api_key'),
+                session.get('authuser'),
+            )
+
+            log.info('IP: %s User: %s accessed %s',
+                self.ip_addr, self.authuser,
+                safe_unicode(_get_access_path(environ)),
             )
             return WSGIController.__call__(self, environ, start_response)
         finally:
@@ -404,8 +467,8 @@ class BaseRepoController(BaseController):
             if not _dbr:
                 return
 
-            log.debug('Found repository in database %s with state `%s`'
-                      % (safe_unicode(_dbr), safe_unicode(_dbr.repo_state)))
+            log.debug('Found repository in database %s with state `%s`',
+                      safe_unicode(_dbr), safe_unicode(_dbr.repo_state))
             route = getattr(request.environ.get('routes.route'), 'name', '')
 
             # allow to delete repos that are somehow damages in filesystem
@@ -457,3 +520,20 @@ class BaseRepoController(BaseController):
             log.error(traceback.format_exc())
             h.flash(safe_str(e), category='error')
             raise webob.exc.HTTPBadRequest()
+
+
+class WSGIResultCloseCallback(object):
+    """Wrap a WSGI result and let close call close after calling the
+    close method on the result.
+    """
+    def __init__(self, result, close):
+        self._result = result
+        self._close = close
+
+    def __iter__(self):
+        return iter(self._result)
+
+    def close(self):
+        if hasattr(self._result, 'close'):
+            self._result.close()
+        self._close()

@@ -72,7 +72,7 @@ class TestPermissions(BaseTestCase):
             'repositories_groups': {},
             'global': set([u'hg.create.repository', u'repository.read',
                            u'hg.register.manual_activate']),
-            'repositories': {u'vcs_test_hg': u'repository.read'}
+            'repositories': {HG_REPO: u'repository.read'}
         }
         self.assertEqual(u1_auth.permissions['repositories'][HG_REPO],
                          perms['repositories'][HG_REPO])
@@ -90,7 +90,7 @@ class TestPermissions(BaseTestCase):
         perms = {
             'repositories_groups': {},
             'global': set([u'hg.admin', 'hg.create.write_on_repogroup.true']),
-            'repositories': {u'vcs_test_hg': u'repository.admin'}
+            'repositories': {HG_REPO: u'repository.admin'}
         }
         self.assertEqual(a1_auth.permissions['repositories'][HG_REPO],
                          perms['repositories'][HG_REPO])
@@ -111,7 +111,7 @@ class TestPermissions(BaseTestCase):
         perms = {
             'repositories_groups': {u'test1': 'group.read', u'test2': 'group.read'},
             'global': set(Permission.DEFAULT_USER_PERMISSIONS),
-            'repositories': {u'vcs_test_hg': u'repository.read'}
+            'repositories': {HG_REPO: u'repository.read'}
         }
         self.assertEqual(u1_auth.permissions['repositories'][HG_REPO],
                          perms['repositories'][HG_REPO])
@@ -127,7 +127,7 @@ class TestPermissions(BaseTestCase):
         perms = {
             'repositories_groups': {u'test1': 'group.admin', u'test2': 'group.admin'},
             'global': set(['hg.admin', 'hg.create.write_on_repogroup.true']),
-            'repositories': {u'vcs_test_hg': 'repository.admin'}
+            'repositories': {HG_REPO: 'repository.admin'}
         }
 
         self.assertEqual(a1_auth.permissions['repositories'][HG_REPO],
@@ -160,7 +160,7 @@ class TestPermissions(BaseTestCase):
             'repositories_groups': {},
             'global': set([u'hg.create.repository', u'repository.read',
                            u'hg.register.manual_activate']),
-            'repositories': {u'vcs_test_hg': u'repository.read'}
+            'repositories': {HG_REPO: u'repository.read'}
         }
         self.assertEqual(u1_auth.permissions['repositories'][HG_REPO],
                          new_perm)
@@ -183,7 +183,7 @@ class TestPermissions(BaseTestCase):
             'repositories_groups': {},
             'global': set([u'hg.create.repository', u'repository.read',
                            u'hg.register.manual_activate']),
-            'repositories': {u'vcs_test_hg': u'repository.read'}
+            'repositories': {HG_REPO: u'repository.read'}
         }
         self.assertEqual(u3_auth.permissions['repositories'][HG_REPO],
                          new_perm_gr)
@@ -217,7 +217,7 @@ class TestPermissions(BaseTestCase):
             'repositories_groups': {},
             'global': set([u'hg.create.repository', u'repository.read',
                            u'hg.register.manual_activate']),
-            'repositories': {u'vcs_test_hg': u'repository.write'}
+            'repositories': {HG_REPO: u'repository.write'}
         }
         self.assertEqual(u1_auth.permissions['repositories'][HG_REPO],
                          new_perm_h)

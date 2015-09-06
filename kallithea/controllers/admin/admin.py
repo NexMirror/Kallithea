@@ -54,13 +54,13 @@ def _journal_filter(user_log, search_term):
     :param user_log:
     :param search_term:
     """
-    log.debug('Initial search term: %r' % search_term)
+    log.debug('Initial search term: %r', search_term)
     qry = None
     if search_term:
         qp = QueryParser('repository', schema=JOURNAL_SCHEMA)
         qp.add_plugin(DateParserPlugin())
         qry = qp.parse(unicode(search_term))
-        log.debug('Filtering using parsed query %r' % qry)
+        log.debug('Filtering using parsed query %r', qry)
 
     def wildcard_handler(col, wc_term):
         if wc_term.startswith('*') and not wc_term.endswith('*'):
@@ -85,7 +85,7 @@ def _journal_filter(user_log, search_term):
             field = getattr(UserLog, 'username')
         else:
             field = getattr(UserLog, field)
-        log.debug('filter field: %s val=>%s' % (field, val))
+        log.debug('filter field: %s val=>%s', field, val)
 
         #sql filtering
         if isinstance(term, query.Wildcard):

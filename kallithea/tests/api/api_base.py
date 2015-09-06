@@ -18,7 +18,6 @@ tests for api. run with::
     KALLITHEA_WHOOSH_TEST_DISABLE=1 nosetests --with-coverage --cover-package=kallithea.controllers.api.api -x kallithea/tests/api
 """
 
-from __future__ import with_statement
 import os
 import random
 import mock
@@ -88,13 +87,13 @@ def make_repo_group(name=TEST_REPO_GROUP):
     return gr
 
 
-class BaseTestApi(object):
+class _BaseTestApi(object):
     REPO = None
     REPO_TYPE = None
 
     @classmethod
     def setup_class(cls):
-        cls.usr = UserModel().get_by_username(TEST_USER_ADMIN_LOGIN)
+        cls.usr = User.get_by_username(TEST_USER_ADMIN_LOGIN)
         cls.apikey = cls.usr.api_key
         cls.test_user = UserModel().create_or_update(
             username='test-api',
@@ -166,7 +165,7 @@ class BaseTestApi(object):
         id_, params = _build_data('trololo', 'get_user')
         response = api_call(self, params)
 
-        expected = 'Invalid API KEY'
+        expected = 'Invalid API key'
         self._compare_error(id_, expected, given=response.body)
 
     def test_api_missing_non_optional_param(self):
@@ -233,9 +232,9 @@ class BaseTestApi(object):
                                   userid=TEST_USER_ADMIN_LOGIN)
         response = api_call(self, params)
 
-        usr = UserModel().get_by_username(TEST_USER_ADMIN_LOGIN)
+        usr = User.get_by_username(TEST_USER_ADMIN_LOGIN)
         ret = usr.get_api_data()
-        ret['permissions'] = AuthUser(usr.user_id).permissions
+        ret['permissions'] = AuthUser(dbuser=usr).permissions
 
         expected = ret
         self._compare_ok(id_, expected, given=response.body)
@@ -252,9 +251,9 @@ class BaseTestApi(object):
         id_, params = _build_data(self.apikey, 'get_user')
         response = api_call(self, params)
 
-        usr = UserModel().get_by_username(TEST_USER_ADMIN_LOGIN)
+        usr = User.get_by_username(TEST_USER_ADMIN_LOGIN)
         ret = usr.get_api_data()
-        ret['permissions'] = AuthUser(usr.user_id).permissions
+        ret['permissions'] = AuthUser(dbuser=usr).permissions
 
         expected = ret
         self._compare_ok(id_, expected, given=response.body)
@@ -263,9 +262,9 @@ class BaseTestApi(object):
         id_, params = _build_data(self.apikey_regular, 'get_user')
         response = api_call(self, params)
 
-        usr = UserModel().get_by_username(self.TEST_USER_LOGIN)
+        usr = User.get_by_username(self.TEST_USER_LOGIN)
         ret = usr.get_api_data()
-        ret['permissions'] = AuthUser(usr.user_id).permissions
+        ret['permissions'] = AuthUser(dbuser=usr).permissions
 
         expected = ret
         self._compare_ok(id_, expected, given=response.body)
@@ -580,7 +579,7 @@ class BaseTestApi(object):
                                   password='trololo')
         response = api_call(self, params)
 
-        usr = UserModel().get_by_username(username)
+        usr = User.get_by_username(username)
         ret = dict(
             msg='created new user `%s`' % username,
             user=jsonify(usr.get_api_data())
@@ -601,7 +600,7 @@ class BaseTestApi(object):
                                   email=email)
         response = api_call(self, params)
 
-        usr = UserModel().get_by_username(username)
+        usr = User.get_by_username(username)
         ret = dict(
             msg='created new user `%s`' % username,
             user=jsonify(usr.get_api_data())
@@ -621,7 +620,7 @@ class BaseTestApi(object):
                                   email=email, extern_name='internal')
         response = api_call(self, params)
 
-        usr = UserModel().get_by_username(username)
+        usr = User.get_by_username(username)
         ret = dict(
             msg='created new user `%s`' % username,
             user=jsonify(usr.get_api_data())
@@ -697,7 +696,7 @@ class BaseTestApi(object):
                            ('password', 'newpass')
     ])
     def test_api_update_user(self, name, expected):
-        usr = UserModel().get_by_username(self.TEST_USER_LOGIN)
+        usr = User.get_by_username(self.TEST_USER_LOGIN)
         kw = {name: expected,
               'userid': usr.user_id}
         id_, params = _build_data(self.apikey, 'update_user', **kw)
@@ -706,7 +705,7 @@ class BaseTestApi(object):
         ret = {
             'msg': 'updated user ID:%s %s' % (
                 usr.user_id, self.TEST_USER_LOGIN),
-            'user': jsonify(UserModel() \
+            'user': jsonify(User \
                 .get_by_username(self.TEST_USER_LOGIN) \
                 .get_api_data())
         }
@@ -715,7 +714,7 @@ class BaseTestApi(object):
         self._compare_ok(id_, expected, given=response.body)
 
     def test_api_update_user_no_changed_params(self):
-        usr = UserModel().get_by_username(TEST_USER_ADMIN_LOGIN)
+        usr = User.get_by_username(TEST_USER_ADMIN_LOGIN)
         ret = jsonify(usr.get_api_data())
         id_, params = _build_data(self.apikey, 'update_user',
                                   userid=TEST_USER_ADMIN_LOGIN)
@@ -730,7 +729,7 @@ class BaseTestApi(object):
         self._compare_ok(id_, expected, given=response.body)
 
     def test_api_update_user_by_user_id(self):
-        usr = UserModel().get_by_username(TEST_USER_ADMIN_LOGIN)
+        usr = User.get_by_username(TEST_USER_ADMIN_LOGIN)
         ret = jsonify(usr.get_api_data())
         id_, params = _build_data(self.apikey, 'update_user',
                                   userid=usr.user_id)
@@ -755,7 +754,7 @@ class BaseTestApi(object):
 
     @mock.patch.object(UserModel, 'update_user', crash)
     def test_api_update_user_when_exception_happens(self):
-        usr = UserModel().get_by_username(TEST_USER_ADMIN_LOGIN)
+        usr = User.get_by_username(TEST_USER_ADMIN_LOGIN)
         ret = jsonify(usr.get_api_data())
         id_, params = _build_data(self.apikey, 'update_user',
                                   userid=usr.user_id)
@@ -995,7 +994,7 @@ class BaseTestApi(object):
         self._compare_ok(id_, expected, given=response.body)
         fixture.destroy_repo(repo_name)
 
-    def test_api_create_repo_in_group(self):
+    def test_api_create_repo_and_repo_group(self):
         repo_name = 'my_gr/api-repo'
         id_, params = _build_data(self.apikey, 'create_repo',
                                   repo_name=repo_name,
@@ -1014,6 +1013,39 @@ class BaseTestApi(object):
         self._compare_ok(id_, expected, given=response.body)
         fixture.destroy_repo(repo_name)
         fixture.destroy_repo_group('my_gr')
+
+    def test_api_create_repo_in_repo_group_without_permission(self):
+        repo_group_name = '%s/api-repo-repo' % TEST_REPO_GROUP
+        repo_name = '%s/api-repo' % repo_group_name
+
+        rg = fixture.create_repo_group(repo_group_name)
+        Session().commit()
+        RepoGroupModel().grant_user_permission(repo_group_name,
+                                               self.TEST_USER_LOGIN,
+                                               'group.none')
+        Session().commit()
+
+        id_, params = _build_data(self.apikey_regular, 'create_repo',
+                                  repo_name=repo_name,
+                                  repo_type=self.REPO_TYPE,
+        )
+        response = api_call(self, params)
+
+        # Current result when API access control is different from Web:
+        ret = {
+            'msg': 'Created new repository `%s`' % repo_name,
+            'success': True,
+            'task': None,
+        }
+        expected = ret
+        self._compare_ok(id_, expected, given=response.body)
+        fixture.destroy_repo(repo_name)
+
+        # Expected and arguably more correct result:
+        #expected = 'failed to create repository `%s`' % repo_name
+        #self._compare_error(id_, expected, given=response.body)
+
+        fixture.destroy_repo_group(repo_group_name)
 
     def test_api_create_repo_unknown_owner(self):
         repo_name = 'api-repo'
@@ -2113,7 +2145,7 @@ class BaseTestApi(object):
         self._compare_error(id_, expected, given=response.body)
 
     @mock.patch.object(RepoGroupModel, 'grant_user_group_permission', crash)
-    def test_api_grant_user_group_permission_exception_when_adding(self):
+    def test_api_grant_user_group_permission_exception_when_adding_to_repo_group(self):
         perm = 'group.read'
         id_, params = _build_data(self.apikey,
                                   'grant_user_group_permission_to_repo_group',

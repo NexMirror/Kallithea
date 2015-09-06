@@ -10,21 +10,17 @@ ${h.form(url('repos'))}
             </div>
             <div class="input">
                 ${h.text('repo_name',class_="small")}
-                <div style="margin: 6px 0px 0px 0px">
-                    <a id="remote_clone_toggle" href="#"><i class="icon-download-cloud"></i> ${_('Import existing repository ?')}</a>
-                </div>
-                %if not c.authuser.is_admin:
-                    ${h.hidden('user_created',True)}
-                %endif
             </div>
          </div>
-        <div id="remote_clone" class="field" style="display: none">
+        <div id="remote_clone" class="field">
             <div class="label">
-                <label for="clone_uri">${_('Clone from')}:</label>
+                <label for="clone_uri">${_('Clone remote repository')}:</label>
             </div>
             <div class="input">
                 ${h.text('clone_uri',class_="small")}
-                <span class="help-block">${_('Optional URL from which repository should be cloned.')}</span>
+                <span class="help-block">
+                    ${_('Optional: URL of a remote repository. If set, the repository will be created as a clone from this URL.')}
+                </span>
             </div>
         </div>
         <div class="field">
@@ -90,31 +86,21 @@ ${h.form(url('repos'))}
     $(document).ready(function(){
         var setCopyPermsOption = function(group_val){
             if(group_val != "-1"){
-                $('#copy_perms').show()
+                $('#copy_perms').show();
             }
             else{
                 $('#copy_perms').hide();
             }
         }
 
-        $('#remote_clone_toggle').on('click', function(e){
-            $('#remote_clone').show();
-            e.preventDefault();
-        })
-        if($('#remote_clone input').hasClass('error')){
-            $('#remote_clone').show();
-        }
-        if($('#remote_clone input').val()){
-            $('#remote_clone').show();
-        }
         $("#repo_group").select2({
             'dropdownAutoWidth': true
         });
 
-        setCopyPermsOption($('#repo_group').val())
+        setCopyPermsOption($('#repo_group').val());
         $("#repo_group").on("change", function(e) {
-            setCopyPermsOption(e.val)
-        })
+            setCopyPermsOption(e.val);
+        });
 
         $("#repo_type").select2({
             'minimumResultsForSearch': -1
@@ -123,6 +109,6 @@ ${h.form(url('repos'))}
             'minimumResultsForSearch': -1
         });
         $('#repo_name').focus();
-    })
+    });
 </script>
 ${h.end_form()}

@@ -10,7 +10,7 @@ from kallithea.lib.vcs.exceptions import (
     ChangesetDoesNotExistError, ImproperArchiveTypeError
 )
 from kallithea.lib.vcs.nodes import (
-    FileNode, DirNode, NodeKind, RootNode, RemovedFileNode, SubModuleNode,
+    FileNode, DirNode, NodeKind, RootNode, SubModuleNode,
     ChangedFileNodesGenerator, AddedFileNodesGenerator, RemovedFileNodesGenerator
 )
 from kallithea.lib.vcs.utils import (
@@ -189,7 +189,7 @@ class GitChangeset(BaseChangeset):
         """
         rev_filter = settings.GIT_REV_FILTER
         so, se = self.repository.run_git_command(
-            "rev-list %s --children" % (rev_filter)
+            ['rev-list', rev_filter, '--children']
         )
 
         children = []
@@ -288,12 +288,12 @@ class GitChangeset(BaseChangeset):
         f_path = safe_str(path)
 
         if limit:
-            cmd = 'log -n %s --pretty="format: %%H" -s %s -- "%s"' % (
-                      safe_int(limit, 0), cs_id, f_path)
+            cmd = ['log', '-n', str(safe_int(limit, 0)),
+                   '--pretty=format:%H', '-s', cs_id, '--', f_path]
 
         else:
-            cmd = 'log --pretty="format: %%H" -s %s -- "%s"' % (
-                      cs_id, f_path)
+            cmd = ['log',
+                   '--pretty=format:%H', '-s', cs_id, '--', f_path]
         so, se = self.repository.run_git_command(cmd)
         ids = re.findall(r'[0-9a-fA-F]{40}', so)
         return [self.repository.get_changeset(sha) for sha in ids]
@@ -321,7 +321,7 @@ class GitChangeset(BaseChangeset):
         generally not good. Should be replaced with algorithm iterating
         commits.
         """
-        cmd = 'blame -l --root -r %s -- "%s"' % (self.id, path)
+        cmd = ['blame', '-l', '--root', '-r', self.id, '--', path]
         # -l     ==> outputs long shas (and we need all 40 characters)
         # --root ==> doesn't put '^' character for boundaries
         # -r sha ==> blames for the given revision
@@ -471,8 +471,8 @@ class GitChangeset(BaseChangeset):
     def _diff_name_status(self):
         output = []
         for parent in self.parents:
-            cmd = 'diff --name-status %s %s --encoding=utf8' % (parent.raw_id,
-                                                                self.raw_id)
+            cmd = ['diff', '--name-status', parent.raw_id, self.raw_id,
+                   '--encoding=utf8']
             so, se = self.repository.run_git_command(cmd)
             output.append(so.strip())
         return '\n'.join(output)

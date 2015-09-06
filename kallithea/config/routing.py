@@ -19,7 +19,6 @@ may take precedent over the more generic routes. For more information
 refer to the routes manual at http://routes.groovie.org/docs/
 """
 
-from __future__ import with_statement
 from routes import Mapper
 
 # prefix for non repository related links needs to be prefixed with `/`
@@ -120,15 +119,12 @@ def make_map(config):
                   action="index", conditions=dict(method=["GET"]))
         m.connect("new_repo", "/create_repository",
                   action="create_repository", conditions=dict(method=["GET"]))
-        m.connect("/repos/{repo_name:.*?}",
+        m.connect("put_repo", "/repos/{repo_name:.*?}",
                   action="update", conditions=dict(method=["PUT"],
                   function=check_repo))
         m.connect("delete_repo", "/repos/{repo_name:.*?}",
                   action="delete", conditions=dict(method=["DELETE"],
                   ))
-        m.connect("repo", "/repos/{repo_name:.*?}",
-                  action="show", conditions=dict(method=["GET"],
-                  function=check_repo))
 
     #ADMIN REPOSITORY GROUPS ROUTES
     with rmap.submapper(path_prefix=ADMIN_PREFIX,
@@ -206,7 +202,7 @@ def make_map(config):
         m.connect("edit_user_api_keys", "/users/{id}/edit/api_keys",
                   action="edit_api_keys", conditions=dict(method=["GET"]))
         m.connect("edit_user_api_keys", "/users/{id}/edit/api_keys",
-                  action="add_api_key", conditions=dict(method=["PUT"]))
+                  action="add_api_key", conditions=dict(method=["POST"]))
         m.connect("edit_user_api_keys", "/users/{id}/edit/api_keys",
                   action="delete_api_key", conditions=dict(method=["DELETE"]))
 
@@ -698,11 +694,6 @@ def make_map(config):
                  '/{repo_name:.*?}/pull-request/new', controller='pullrequests',
                  action='create', conditions=dict(function=check_repo,
                                                   method=["POST"]))
-
-    rmap.connect('pullrequest_copy_update',
-                 '/{repo_name:.*?}/pull-request-update/{pull_request_id}', controller='pullrequests',
-                 action='copy_update', conditions=dict(function=check_repo,
-                                                       method=["POST"]))
 
     rmap.connect('pullrequest_show',
                  '/{repo_name:.*?}/pull-request/{pull_request_id:\\d+}{extra:(/.*)?}', extra='',

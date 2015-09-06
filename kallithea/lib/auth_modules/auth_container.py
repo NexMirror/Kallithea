@@ -95,24 +95,24 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
         username = None
         environ = environ or {}
         if not environ:
-            log.debug('got empty environ: %s' % environ)
+            log.debug('got empty environ: %s', environ)
 
         settings = settings or {}
         if settings.get('header'):
             header = settings.get('header')
             username = environ.get(header)
-            log.debug('extracted %s:%s' % (header, username))
+            log.debug('extracted %s:%s', header, username)
 
         # fallback mode
         if not username and settings.get('fallback_header'):
             header = settings.get('fallback_header')
             username = environ.get(header)
-            log.debug('extracted %s:%s' % (header, username))
+            log.debug('extracted %s:%s', header, username)
 
         if username and str2bool(settings.get('clean_username')):
-            log.debug('Received username %s from container' % username)
+            log.debug('Received username %s from container', username)
             username = self._clean_username(username)
-            log.debug('New cleanup user is: %s' % username)
+            log.debug('New cleanup user is: %s', username)
         return username
 
     def get_user(self, username=None, **kwargs):
@@ -175,9 +175,8 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
         email = getattr(userobj, 'email', '')
         firstname = getattr(userobj, 'firstname', '')
         lastname = getattr(userobj, 'lastname', '')
-        extern_type = getattr(userobj, 'extern_type', '')
 
-        user_attrs = {
+        user_data = {
             'username': username,
             'firstname': safe_unicode(firstname or username),
             'lastname': safe_unicode(lastname or ''),
@@ -187,8 +186,10 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
             'active': active,
             'active_from_extern': True,
             'extern_name': username,
-            'extern_type': extern_type,
         }
 
-        log.info('user `%s` authenticated correctly' % user_attrs['username'])
-        return user_attrs
+        log.info('user `%s` authenticated correctly', user_data['username'])
+        return user_data
+
+    def get_managed_fields(self):
+        return ['username', 'password']

@@ -1,27 +1,3 @@
-<dl class="dl-horizontal">
-<%
- elems = [
-    (_('Email prefix'), c.ini.get('email_prefix'), ''),
-    (_('Kallithea email from'), c.ini.get('app_email_from'), ''),
-    (_('Error email from'), c.ini.get('error_email_from'), ''),
-    (_('Error email recipients'), c.ini.get('email_to'), ''),
-
-    (_('SMTP server'), c.ini.get('smtp_server'), ''),
-    (_('SMTP username'), c.ini.get('smtp_username'), ''),
-    (_('SMTP password'), '%s chars' % len(c.ini.get('smtp_password', '')), ''),
-    (_('SMTP port'), c.ini.get('smtp_port'), ''),
-
-    (_('SMTP use TLS'), c.ini.get('smtp_use_tls'), ''),
-    (_('SMTP use SSL'), c.ini.get('smtp_use_ssl'), ''),
-    (_('SMTP auth'), c.ini.get('smtp_auth'), '')
- ]
-%>
-%for dt, dd, tt in elems:
-  <dt style="width:150px; text-align: left">${dt}:</dt>
-  <dd style="margin-left: 160px" title="${tt}">${dd}</dd>
-%endfor
-</dl>
-
 ${h.form(url('admin_settings_email'), method='post')}
     <div class="form">
 

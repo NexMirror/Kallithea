@@ -85,9 +85,9 @@ class CrowdServer(object):
             _headers["Authorization"] = "Basic %s" % authstring
         if headers:
             _headers.update(headers)
-        log.debug("Sent crowd: \n%s"
-                  % (formatted_json({"url": url, "body": body,
-                                           "headers": _headers})))
+        log.debug("Sent crowd: \n%s",
+                  formatted_json({"url": url, "body": body,
+                                           "headers": _headers}))
         request = urllib2.Request(url, body, _headers)
         if method:
             request.get_method = lambda: method
@@ -106,7 +106,7 @@ class CrowdServer(object):
                 rval["status"] = True
             else:
                 rval = "".join(rdoc.readlines())
-        except Exception, e:
+        except Exception as e:
             if not noformat:
                 rval = {"status": False,
                         "body": body,
@@ -202,16 +202,16 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
             log.debug('Empty username or password skipping...')
             return None
 
-        log.debug("Crowd settings: \n%s" % (formatted_json(settings)))
+        log.debug("Crowd settings: \n%s", formatted_json(settings))
         server = CrowdServer(**settings)
         server.set_credentials(settings["app_name"], settings["app_password"])
         crowd_user = server.user_auth(username, password)
-        log.debug("Crowd returned: \n%s" % (formatted_json(crowd_user)))
+        log.debug("Crowd returned: \n%s", formatted_json(crowd_user))
         if not crowd_user["status"]:
             return None
 
         res = server.user_groups(crowd_user["name"])
-        log.debug("Crowd groups: \n%s" % (formatted_json(res)))
+        log.debug("Crowd groups: \n%s", formatted_json(res))
         crowd_user["groups"] = [x["name"] for x in res["groups"]]
 
         # old attrs fetched from Kallithea database
@@ -220,9 +220,8 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
         email = getattr(userobj, 'email', '')
         firstname = getattr(userobj, 'firstname', '')
         lastname = getattr(userobj, 'lastname', '')
-        extern_type = getattr(userobj, 'extern_type', '')
 
-        user_attrs = {
+        user_data = {
             'username': username,
             'firstname': crowd_user["first-name"] or firstname,
             'lastname': crowd_user["last-name"] or lastname,
@@ -230,15 +229,17 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
             'email': crowd_user["email"] or email,
             'admin': admin,
             'active': active,
-            'active_from_extern': crowd_user.get('active'),
+            'active_from_extern': crowd_user.get('active'), # ???
             'extern_name': crowd_user["name"],
-            'extern_type': extern_type,
         }
 
         # set an admin if we're in admin_groups of crowd
         for group in settings["admin_groups"].split(","):
-            if group in user_attrs["groups"]:
-                user_attrs["admin"] = True
-        log.debug("Final crowd user object: \n%s" % (formatted_json(user_attrs)))
-        log.info('user %s authenticated correctly' % user_attrs['username'])
-        return user_attrs
+            if group in user_data["groups"]:
+                user_data["admin"] = True
+        log.debug("Final crowd user object: \n%s", formatted_json(user_data))
+        log.info('user %s authenticated correctly', user_data['username'])
+        return user_data
+
+    def get_managed_fields(self):
+        return ['username', 'firstname', 'lastname', 'email', 'password']

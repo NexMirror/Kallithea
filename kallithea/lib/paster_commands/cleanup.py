@@ -26,7 +26,6 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-from __future__ import with_statement
 
 import os
 import sys
@@ -86,7 +85,7 @@ class Command(BasePasterCommand):
 
         repos_location = Ui.get_repos_location()
         to_remove = []
-        for dn, dirs, f in os.walk(safe_str(repos_location)):
+        for dn_, dirs, f in os.walk(safe_str(repos_location)):
             alldirs = list(dirs)
             del dirs[:]
             if ('.hg' in alldirs or
@@ -94,7 +93,7 @@ class Command(BasePasterCommand):
                 continue
             for loc in alldirs:
                 if REMOVED_REPO_PAT.match(loc):
-                    to_remove.append([os.path.join(dn, loc),
+                    to_remove.append([os.path.join(dn_, loc),
                                       self._extract_date(loc)])
                 else:
                     dirs.append(loc)

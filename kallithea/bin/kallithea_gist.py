@@ -25,7 +25,6 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-from __future__ import with_statement
 import os
 import sys
 import stat
@@ -164,7 +163,7 @@ def main(argv=None):
 
     try:
         return _run(argv)
-    except Exception, e:
+    except Exception as e:
         print e
         return 1
 

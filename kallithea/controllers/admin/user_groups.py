@@ -12,8 +12,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-kallithea.controllers.admin.users_groups
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kallithea.controllers.admin.user_groups
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 User Groups crud controller for pylons
 
@@ -40,18 +40,18 @@ from webob.exc import HTTPInternalServerError
 
 import kallithea
 from kallithea.lib import helpers as h
-from kallithea.lib.exceptions import UserGroupsAssignedException,\
+from kallithea.lib.exceptions import UserGroupsAssignedException, \
     RepoGroupAssignmentError
 from kallithea.lib.utils2 import safe_unicode, safe_int
-from kallithea.lib.auth import LoginRequired, HasPermissionAllDecorator,\
+from kallithea.lib.auth import LoginRequired, \
     HasUserGroupPermissionAnyDecorator, HasPermissionAnyDecorator
 from kallithea.lib.base import BaseController, render
 from kallithea.model.scm import UserGroupList
 from kallithea.model.user_group import UserGroupModel
 from kallithea.model.repo import RepoModel
-from kallithea.model.db import User, UserGroup, UserGroupToPerm,\
+from kallithea.model.db import User, UserGroup, UserGroupToPerm, \
     UserGroupRepoToPerm, UserGroupRepoGroupToPerm
-from kallithea.model.forms import UserGroupForm, UserGroupPermsForm,\
+from kallithea.model.forms import UserGroupForm, UserGroupPermsForm, \
     CustomDefaultPermissionsForm
 from kallithea.model.meta import Session
 from kallithea.lib.utils import action_logger
@@ -150,7 +150,7 @@ class UserGroupsController(BaseController):
             h.flash(h.literal(_('Created user group %s') % h.link_to(h.escape(gr), url('edit_users_group', id=ug.users_group_id))),
                 category='success')
             Session().commit()
-        except formencode.Invalid, errors:
+        except formencode.Invalid as errors:
             return htmlfill.render(
                 render('admin/user_groups/user_group_add.html'),
                 defaults=errors.value,
@@ -200,7 +200,7 @@ class UserGroupsController(BaseController):
                           None, self.ip_addr, self.sa)
             h.flash(_('Updated user group %s') % gr, category='success')
             Session().commit()
-        except formencode.Invalid, errors:
+        except formencode.Invalid as errors:
             ug_model = UserGroupModel()
             defaults = errors.value
             e = errors.error_dict or {}
@@ -240,7 +240,7 @@ class UserGroupsController(BaseController):
             UserGroupModel().delete(usr_gr)
             Session().commit()
             h.flash(_('Successfully deleted user group'), category='success')
-        except UserGroupsAssignedException, e:
+        except UserGroupsAssignedException as e:
             h.flash(e, category='error')
         except Exception:
             log.error(traceback.format_exc())
@@ -317,7 +317,7 @@ class UserGroupsController(BaseController):
         #action_logger(self.authuser, 'admin_changed_repo_permissions',
         #              repo_name, self.ip_addr, self.sa)
         Session().commit()
-        h.flash(_('User Group permissions updated'), category='success')
+        h.flash(_('User group permissions updated'), category='success')
         return redirect(url('edit_user_group_perms', id=id))
 
     @HasUserGroupPermissionAnyDecorator('usergroup.admin')

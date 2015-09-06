@@ -1,8 +1,9 @@
 .. _installation_win:
 
-
+================================================================
 Installation and upgrade on Windows (7/Server 2008 R2 and newer)
 ================================================================
+
 
 First time install
 ::::::::::::::::::
@@ -13,9 +14,8 @@ Tested on Windows 8.1, Windows Server 2008 R2 and Windows Server 2012
 
 To install on an older version of Windows, see `<installation_win_old.html>`_
 
-
-Step 1 - Install Python
------------------------
+Step 1 -- Install Python
+------------------------
 
 Install Python 2.x.y (x = 6 or 7). Latest version is recommended. If you need another version, they can run side by side.
 
@@ -30,9 +30,8 @@ While writing this guide, the latest version was v2.7.9.
 Remember the specific major and minor versions installed, because they will
 be needed in the next step. In this case, it is "2.7".
 
-
-Step 2 - Python BIN
--------------------
+Step 2 -- Python BIN
+--------------------
 
 Add Python BIN folder to the path. This can be done manually (editing
 "PATH" environment variable) or by using Windows Support Tools that
@@ -45,9 +44,8 @@ Open a CMD and type::
 Please substitute [your-python-path] with your Python installation
 path. Typically this is ``C:\\Python27``.
 
-
-Step 3 - Install pywin32 extensions
------------------------------------
+Step 3 -- Install pywin32 extensions
+------------------------------------
 
 Download pywin32 from:
 http://sourceforge.net/projects/pywin32/files/
@@ -62,9 +60,8 @@ http://sourceforge.net/projects/pywin32/files/
   http://sourceforge.net/projects/pywin32/files/pywin32/Build%20219/pywin32-219.win32-py2.7.exe/download
   (Win32)
 
-
-Step 4 - Install pip
---------------------
+Step 4 -- Install pip
+---------------------
 
 pip is a package management system for Python. You will need it to install Kallithea and its dependencies.
 
@@ -87,9 +84,8 @@ open a CMD and type::
 
   SETX PATH "%PATH%;[your-python-path]\Scripts" /M
 
-
-Step 5 - Kallithea Folder Structure
------------------------------------
+Step 5 -- Kallithea folder structure
+------------------------------------
 
 Create a Kallithea folder structure.
 
@@ -105,9 +101,8 @@ Create the following folder structure::
   C:\Kallithea\Env
   C:\Kallithea\Repos
 
-
-Step 6 - Install virtualenv
----------------------------
+Step 6 -- Install virtualenv
+----------------------------
 
 .. note::
    A python virtual environment will allow for isolation between the Python packages of your system and those used for Kallithea.
@@ -123,9 +118,8 @@ To create a virtual environment, run::
 
   virtualenv C:\Kallithea\Env
 
-
-Step 7 - Install Kallithea
---------------------------
+Step 7 -- Install Kallithea
+---------------------------
 
 In order to install Kallithea, you need to be able to run "pip install kallithea". It will use pip to install the Kallithea Python package and its dependencies.
 Some Python packages use managed code and need to be compiled.
@@ -150,9 +144,8 @@ The prompt will change into "(Env) C:\\Kallithea\\Env\\Scripts" or similar
           complete. Some warnings will appear. Don't worry, they are
           normal.
 
-
-Step 8 - (Optional) Install git
--------------------------------
+Step 8 -- Install git (optional)
+--------------------------------
 
 Mercurial being a python package, it was installed automatically when doing "pip install kallithea".
 
@@ -160,9 +153,8 @@ You need to install git manually if you want Kallithea to be able to host git re
 
 See http://git-scm.com/book/en/v2/Getting-Started-Installing-Git#Installing-on-Windows for instructions.
 
-
-Step 9 - Configuring Kallithea
-------------------------------
+Step 9 -- Configuring Kallithea
+-------------------------------
 
 Steps taken from `<setup.html>`_
 
@@ -200,9 +192,8 @@ If you make a mistake and the script doesn't end, don't worry: start it again.
 
 If you decided not to install git, you will get errors about it that you can ignore.
 
-
-Step 10 - Running Kallithea
----------------------------
+Step 10 -- Running Kallithea
+----------------------------
 
 In the previous command prompt, being in the C:\\Kallithea\\Bin folder, type::
 
@@ -214,7 +205,6 @@ It works!! :-)
 
 Remark:
 If it does not work the first time, Ctrl-C the CMD process and start it again. Don't forget the "http://" in Internet Explorer.
-
 
 What this guide does not cover:
 

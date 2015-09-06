@@ -12,8 +12,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-kallithea.bin.api
-~~~~~~~~~~~~~~~~~
+kallithea.bin.kallithea_api
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Api CLI client for Kallithea
 
@@ -25,7 +25,6 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-from __future__ import with_statement
 import sys
 import argparse
 

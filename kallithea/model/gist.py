@@ -25,7 +25,6 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-from __future__ import with_statement
 import os
 import time
 import logging
@@ -33,7 +32,7 @@ import traceback
 import shutil
 
 from kallithea.lib.utils2 import safe_unicode, unique_id, safe_int, \
-    time_to_datetime, safe_str, AttributeDict
+    time_to_datetime, AttributeDict
 from kallithea.lib.compat import json
 from kallithea.model import BaseModel
 from kallithea.model.db import Gist
@@ -65,7 +64,7 @@ class GistModel(BaseModel):
         """
         root_path = RepoModel().repos_path
         rm_path = os.path.join(root_path, GIST_STORE_LOC, gist.gist_access_id)
-        log.info("Removing %s" % (rm_path,))
+        log.info("Removing %s", rm_path)
         shutil.rmtree(rm_path)
 
     def _store_metadata(self, repo, gist_id, gist_access_id, user_id, gist_type,
@@ -113,9 +112,9 @@ class GistModel(BaseModel):
         gist_id = safe_unicode(unique_id(20))
         lifetime = safe_int(lifetime, -1)
         gist_expires = time.time() + (lifetime * 60) if lifetime != -1 else -1
-        log.debug('set GIST expiration date to: %s'
-                  % (time_to_datetime(gist_expires)
-                   if gist_expires != -1 else 'forever'))
+        log.debug('set GIST expiration date to: %s',
+                  time_to_datetime(gist_expires)
+                   if gist_expires != -1 else 'forever')
         #create the Database version
         gist = Gist()
         gist.gist_description = description
@@ -132,7 +131,7 @@ class GistModel(BaseModel):
             self.sa.add(gist)
 
         gist_repo_path = os.path.join(GIST_STORE_LOC, gist_id)
-        log.debug('Creating new %s GIST repo in %s' % (gist_type, gist_repo_path))
+        log.debug('Creating new %s GIST repo in %s', gist_type, gist_repo_path)
         repo = RepoModel()._create_filesystem_repo(
             repo_name=gist_id, repo_type='hg', repo_group=GIST_STORE_LOC)
 

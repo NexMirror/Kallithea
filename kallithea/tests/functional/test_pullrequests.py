@@ -1,3 +1,5 @@
+import re
+
 from kallithea.tests import *
 from kallithea.tests.fixture import Fixture
 from kallithea.model.meta import Session
@@ -12,6 +14,134 @@ class TestPullrequestsController(TestController):
         self.log_user()
         response = self.app.get(url(controller='pullrequests', action='index',
                                     repo_name=HG_REPO))
+
+    def test_create_trivial(self):
+        self.log_user()
+        response = self.app.post(url(controller='pullrequests', action='create',
+                                     repo_name=HG_REPO),
+                                 {'org_repo': HG_REPO,
+                                  'org_ref': 'branch:default:default',
+                                  'other_repo': HG_REPO,
+                                  'other_ref': 'branch:default:default',
+                                  'pullrequest_title': 'title',
+                                  'pullrequest_desc': 'description',
+                                  '_authentication_token': self.authentication_token(),
+                                 }
+                                )
+        self.assertEqual(response.status, '302 Found')
+        response = response.follow()
+        self.assertEqual(response.status, '200 OK')
+        response.mustcontain('This pull request has already been merged to default.')
+
+    def test_create_with_existing_reviewer(self):
+        self.log_user()
+        response = self.app.post(url(controller='pullrequests', action='create',
+                                     repo_name=HG_REPO),
+                                 {'org_repo': HG_REPO,
+                                  'org_ref': 'branch:default:default',
+                                  'other_repo': HG_REPO,
+                                  'other_ref': 'branch:default:default',
+                                  'pullrequest_title': 'title',
+                                  'pullrequest_desc': 'description',
+                                  '_authentication_token': self.authentication_token(),
+                                  'review_members': TEST_USER_ADMIN_LOGIN,
+                                 }
+                                )
+        self.assertEqual(response.status, '302 Found')
+        response = response.follow()
+        self.assertEqual(response.status, '200 OK')
+        response.mustcontain('This pull request has already been merged to default.')
+
+    def test_create_with_invalid_reviewer(self):
+        invalid_user_name = 'invalid_user'
+        self.log_user()
+        response = self.app.post(url(controller='pullrequests', action='create',
+                                     repo_name=HG_REPO),
+                                 {
+                                  'org_repo': HG_REPO,
+                                  'org_ref': 'branch:default:default',
+                                  'other_repo': HG_REPO,
+                                  'other_ref': 'branch:default:default',
+                                  'pullrequest_title': 'title',
+                                  'pullrequest_desc': 'description',
+                                  '_authentication_token': self.authentication_token(),
+                                  'review_members': invalid_user_name,
+                                 },
+                                 status=400)
+        response.mustcontain('Invalid reviewer &#34;%s&#34; specified' % invalid_user_name)
+
+    def test_update_with_invalid_reviewer(self):
+        invalid_user_id = 99999
+        self.log_user()
+        # create a valid pull request
+        response = self.app.post(url(controller='pullrequests', action='create',
+                                     repo_name=HG_REPO),
+                                 {
+                                  'org_repo': HG_REPO,
+                                  'org_ref': 'branch:default:default',
+                                  'other_repo': HG_REPO,
+                                  'other_ref': 'branch:default:default',
+                                  'pullrequest_title': 'title',
+                                  'pullrequest_desc': 'description',
+                                  '_authentication_token': self.authentication_token(),
+                                 }
+                                )
+        self.assertEqual(response.status, '302 Found')
+        # location is of the form:
+        # http://localhost/vcs_test_hg/pull-request/54/_/title
+        m = re.search('/pull-request/(\d+)/', response.location)
+        self.assertNotEqual(m, None)
+        pull_request_id = m.group(1)
+
+        # update it
+        response = self.app.post(url(controller='pullrequests', action='post',
+                                     repo_name=HG_REPO, pull_request_id=pull_request_id),
+                                 {
+                                  'updaterev': 'default',
+                                  'pullrequest_title': 'title',
+                                  'pullrequest_desc': 'description',
+                                  'owner': TEST_USER_ADMIN_LOGIN,
+                                  '_authentication_token': self.authentication_token(),
+                                  'review_members': invalid_user_id,
+                                 },
+                                 status=400)
+        response.mustcontain('Invalid reviewer &#34;%s&#34; specified' % invalid_user_id)
+
+    def test_edit_with_invalid_reviewer(self):
+        invalid_user_id = 99999
+        self.log_user()
+        # create a valid pull request
+        response = self.app.post(url(controller='pullrequests', action='create',
+                                     repo_name=HG_REPO),
+                                 {
+                                  'org_repo': HG_REPO,
+                                  'org_ref': 'branch:default:default',
+                                  'other_repo': HG_REPO,
+                                  'other_ref': 'branch:default:default',
+                                  'pullrequest_title': 'title',
+                                  'pullrequest_desc': 'description',
+                                  '_authentication_token': self.authentication_token(),
+                                 }
+                                )
+        self.assertEqual(response.status, '302 Found')
+        # location is of the form:
+        # http://localhost/vcs_test_hg/pull-request/54/_/title
+        m = re.search('/pull-request/(\d+)/', response.location)
+        self.assertNotEqual(m, None)
+        pull_request_id = m.group(1)
+
+        # edit it
+        response = self.app.post(url(controller='pullrequests', action='post',
+                                     repo_name=HG_REPO, pull_request_id=pull_request_id),
+                                 {
+                                  'pullrequest_title': 'title',
+                                  'pullrequest_desc': 'description',
+                                  'owner': TEST_USER_ADMIN_LOGIN,
+                                  '_authentication_token': self.authentication_token(),
+                                  'review_members': invalid_user_id,
+                                 },
+                                 status=400)
+        response.mustcontain('Invalid reviewer &#34;%s&#34; specified' % invalid_user_id)
 
 class TestPullrequestsGetRepoRefs(TestController):
 

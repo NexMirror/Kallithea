@@ -193,8 +193,8 @@ class DiffProcessor(object):
         (?:^\+\+\+[ ](b/(?P<b_file>.+?)|/dev/null)\t?(?:\n|$))?
     """, re.VERBOSE | re.MULTILINE)
 
-    #used for inline highlighter word split
-    _token_re = re.compile(r'()(&gt;|&lt;|&amp;|<u>\t</u>| <i></i>|\W+?)')
+    # Used for inline highlighter word split, must match the substitutions in _escaper
+    _token_re = re.compile(r'()(&amp;|&lt;|&gt;|<u>\t</u>|<u class="cr"></u>| <i></i>|\W+?)')
 
     _escape_re = re.compile(r'(&)|(<)|(>)|(\t)|(\r)|(?<=.)( \n| $)')
 
@@ -618,7 +618,7 @@ class DiffProcessor(object):
 
         """
         # Transform all whitespace to underscore
-        idstring = re.sub(r'\s', "_", '%s' % idstring)
+        idstring = re.sub(r'\s', "_", idstring)
         # Remove everything that is not a hyphen or a member of \w
         idstring = re.sub(r'(?!-)\W', "", idstring).lower()
         return idstring

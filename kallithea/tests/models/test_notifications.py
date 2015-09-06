@@ -34,20 +34,12 @@ class TestNotifications(BaseTestCase):
 
         super(TestNotifications, self).__init__(methodName=methodName)
 
-    def _clean_notifications(self):
-        for n in Notification.query().all():
-            Session().delete(n)
-
-        Session().commit()
-        self.assertEqual(Notification.query().all(), [])
-
-    def tearDown(self):
-        self._clean_notifications()
-
-    def test_create_notification(self):
+    def setUp(self):
+        self.remove_all_notifications()
         self.assertEqual([], Notification.query().all())
         self.assertEqual([], UserNotification.query().all())
 
+    def test_create_notification(self):
         usrs = [self.u1, self.u2]
         notification = NotificationModel().create(created_by=self.u1,
                                            subject=u'subj', body=u'hi there',
@@ -71,9 +63,6 @@ class TestNotifications(BaseTestCase):
                          set(usrs))
 
     def test_user_notifications(self):
-        self.assertEqual([], Notification.query().all())
-        self.assertEqual([], UserNotification.query().all())
-
         notification1 = NotificationModel().create(created_by=self.u1,
                                             subject=u'subj', body=u'hi there1',
                                             recipients=[self.u3])
@@ -88,9 +77,6 @@ class TestNotifications(BaseTestCase):
                          sorted([notification2, notification1]))
 
     def test_delete_notifications(self):
-        self.assertEqual([], Notification.query().all())
-        self.assertEqual([], UserNotification.query().all())
-
         notification = NotificationModel().create(created_by=self.u1,
                                            subject=u'title', body=u'hi there3',
                                     recipients=[self.u3, self.u1, self.u2])
@@ -109,10 +95,6 @@ class TestNotifications(BaseTestCase):
         self.assertEqual(un, [])
 
     def test_delete_association(self):
-
-        self.assertEqual([], Notification.query().all())
-        self.assertEqual([], UserNotification.query().all())
-
         notification = NotificationModel().create(created_by=self.u1,
                                            subject=u'title', body=u'hi there3',
                                     recipients=[self.u3, self.u1, self.u2])
@@ -156,10 +138,6 @@ class TestNotifications(BaseTestCase):
         self.assertNotEqual(u2notification, None)
 
     def test_notification_counter(self):
-        self._clean_notifications()
-        self.assertEqual([], Notification.query().all())
-        self.assertEqual([], UserNotification.query().all())
-
         NotificationModel().create(created_by=self.u1,
                             subject=u'title', body=u'hi there_delete',
                             recipients=[self.u3, self.u1])

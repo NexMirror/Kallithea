@@ -41,8 +41,8 @@ class TestSummaryController(TestController):
         )
 
         # clone url...
-        response.mustcontain('''id="clone_url" readonly="readonly" value="http://test_admin@localhost:80/%s"''' % HG_REPO)
-        response.mustcontain('''id="clone_url_id" readonly="readonly" value="http://test_admin@localhost:80/_%s"''' % ID)
+        response.mustcontain('''id="clone_url" readonly="readonly" value="http://%s@localhost:80/%s"''' % (TEST_USER_ADMIN_LOGIN, HG_REPO))
+        response.mustcontain('''id="clone_url_id" readonly="readonly" value="http://%s@localhost:80/_%s"''' % (TEST_USER_ADMIN_LOGIN, ID))
 
     def test_index_git(self):
         self.log_user()
@@ -61,8 +61,8 @@ class TestSummaryController(TestController):
         )
 
         # clone url...
-        response.mustcontain('''id="clone_url" readonly="readonly" value="http://test_admin@localhost:80/%s"''' % GIT_REPO)
-        response.mustcontain('''id="clone_url_id" readonly="readonly" value="http://test_admin@localhost:80/_%s"''' % ID)
+        response.mustcontain('''id="clone_url" readonly="readonly" value="http://%s@localhost:80/%s"''' % (TEST_USER_ADMIN_LOGIN, GIT_REPO))
+        response.mustcontain('''id="clone_url_id" readonly="readonly" value="http://%s@localhost:80/_%s"''' % (TEST_USER_ADMIN_LOGIN, ID))
 
     def test_index_by_id_hg(self):
         self.log_user()

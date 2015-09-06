@@ -24,7 +24,6 @@ Original author and date, and relevant copyright and licensing information is be
 :copyright: (c) 2013 RhodeCode GmbH, and others.
 :license: GPLv3, see LICENSE.md for more details.
 """
-from __future__ import with_statement
 import time
 import os
 import logging
@@ -33,7 +32,6 @@ import hashlib
 import itertools
 import collections
 
-from tempfile import _RandomNameSequence
 from decorator import decorator
 
 from pylons import url, request
@@ -101,13 +99,12 @@ class KallitheaCrypto(object):
     def hash_string(cls, str_):
         """
         Cryptographic function used for password hashing based on pybcrypt
-        or pycrypto in windows
+        or Python's own OpenSSL wrapper on windows
 
         :param password: password to hash
         """
         if is_windows:
-            from hashlib import sha256
-            return sha256(str_).hexdigest()
+            return hashlib.sha256(str_).hexdigest()
         elif is_unix:
             import bcrypt
             return bcrypt.hashpw(str_, bcrypt.gensalt(10))
@@ -126,8 +123,7 @@ class KallitheaCrypto(object):
         """
 
         if is_windows:
-            from hashlib import sha256
-            return sha256(password).hexdigest() == hashed
+            return hashlib.sha256(password).hexdigest() == hashed
         elif is_unix:
             import bcrypt
             return bcrypt.hashpw(password, hashed) == hashed
@@ -142,21 +138,6 @@ def get_crypt_password(password):
 
 def check_password(password, hashed):
     return KallitheaCrypto.hash_check(password, hashed)
-
-
-class CookieStoreWrapper(object):
-
-    def __init__(self, cookie_store):
-        self.cookie_store = cookie_store
-
-    def __repr__(self):
-        return 'CookieStore<%s>' % (self.cookie_store)
-
-    def get(self, key, other=None):
-        if isinstance(self.cookie_store, dict):
-            return self.cookie_store.get(key, other)
-        elif isinstance(self.cookie_store, AuthUser):
-            return self.cookie_store.__dict__.get(key, other)
 
 
 
@@ -193,8 +174,8 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
 
     if user_is_admin:
         #==================================================================
-        # admin user have all default rights for repositories
-        # and groups set to admin
+        # admin users have all rights;
+        # based on default permissions, just set everything to admin
         #==================================================================
         permissions[GLOBAL].add('hg.admin')
         permissions[GLOBAL].add('hg.create.write_on_repogroup.true')
@@ -221,7 +202,6 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
     #==================================================================
     # SET DEFAULTS GLOBAL, REPOS, REPOSITORY GROUPS
     #==================================================================
-    uid = user_id
 
     # default global permissions taken from the default user
     default_global_perms = UserToPerm.query()\
@@ -234,10 +214,10 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
     # defaults for repositories, taken from default user
     for perm in default_repo_perms:
         r_k = perm.UserRepoToPerm.repository.repo_name
-        if perm.Repository.private and not (perm.Repository.user_id == uid):
+        if perm.Repository.private and not (perm.Repository.user_id == user_id):
             # disable defaults for private repos,
             p = 'repository.none'
-        elif perm.Repository.user_id == uid:
+        elif perm.Repository.user_id == user_id:
             # set admin if owner
             p = 'repository.admin'
         else:
@@ -275,7 +255,7 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
         .options(joinedload(UserGroupToPerm.permission))\
         .join((UserGroupMember, UserGroupToPerm.users_group_id ==
                UserGroupMember.users_group_id))\
-        .filter(UserGroupMember.user_id == uid)\
+        .filter(UserGroupMember.user_id == user_id)\
         .join((UserGroup, UserGroupMember.users_group_id ==
                UserGroup.users_group_id))\
         .filter(UserGroup.users_group_active == True)\
@@ -301,7 +281,7 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
     # user specific global permissions
     user_perms = Session().query(UserToPerm)\
             .options(joinedload(UserToPerm.permission))\
-            .filter(UserToPerm.user_id == uid).all()
+            .filter(UserToPerm.user_id == user_id).all()
 
     if not user_inherit_default_permissions:
         # NEED TO IGNORE all configurable permissions and
@@ -334,7 +314,7 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
         .filter(UserGroup.users_group_active == True)\
         .join((UserGroupMember, UserGroupRepoToPerm.users_group_id ==
                UserGroupMember.users_group_id))\
-        .filter(UserGroupMember.user_id == uid)\
+        .filter(UserGroupMember.user_id == user_id)\
         .all()
 
     multiple_counter = collections.defaultdict(int)
@@ -344,7 +324,7 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
         p = perm.Permission.permission_name
         cur_perm = permissions[RK][r_k]
 
-        if perm.Repository.user_id == uid:
+        if perm.Repository.user_id == user_id:
             # set admin if owner
             p = 'repository.admin'
         else:
@@ -354,12 +334,12 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
 
     # user explicit permissions for repositories, overrides any specified
     # by the group permission
-    user_repo_perms = Permission.get_default_perms(uid)
+    user_repo_perms = Permission.get_default_perms(user_id)
     for perm in user_repo_perms:
         r_k = perm.UserRepoToPerm.repository.repo_name
         cur_perm = permissions[RK][r_k]
         # set admin if owner
-        if perm.Repository.user_id == uid:
+        if perm.Repository.user_id == user_id:
             p = 'repository.admin'
         else:
             p = perm.Permission.permission_name
@@ -386,7 +366,7 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
      .filter(UserGroup.users_group_active == True)\
      .join((UserGroupMember, UserGroupRepoGroupToPerm.users_group_id
             == UserGroupMember.users_group_id))\
-     .filter(UserGroupMember.user_id == uid)\
+     .filter(UserGroupMember.user_id == user_id)\
      .all()
 
     multiple_counter = collections.defaultdict(int)
@@ -400,7 +380,7 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
         permissions[GK][g_k] = p
 
     # user explicit permissions for repository groups
-    user_repo_groups_perms = Permission.get_default_group_perms(uid)
+    user_repo_groups_perms = Permission.get_default_group_perms(user_id)
     for perm in user_repo_groups_perms:
         rg_k = perm.UserRepoGroupToPerm.group.group_name
         p = perm.Permission.permission_name
@@ -421,7 +401,7 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
             == Permission.permission_id))\
      .join((UserGroupMember, UserGroupUserGroupToPerm.user_group_id
             == UserGroupMember.users_group_id))\
-     .filter(UserGroupMember.user_id == uid)\
+     .filter(UserGroupMember.user_id == user_id)\
      .join((UserGroup, UserGroupMember.users_group_id ==
             UserGroup.users_group_id), aliased=True, from_joinpoint=True)\
      .filter(UserGroup.users_group_active == True)\
@@ -438,7 +418,7 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
         permissions[UK][g_k] = p
 
     #user explicit permission for user groups
-    user_user_groups_perms = Permission.get_default_user_group_perms(uid)
+    user_user_groups_perms = Permission.get_default_user_group_perms(user_id)
     for perm in user_user_groups_perms:
         u_k = perm.UserUserGroupToPerm.user_group.users_group_name
         p = perm.Permission.permission_name
@@ -458,10 +438,10 @@ def allowed_api_access(controller_name, whitelist=None, api_key=None):
         from kallithea import CONFIG
         whitelist = aslist(CONFIG.get('api_access_controllers_whitelist'),
                            sep=',')
-        log.debug('whitelist of API access is: %s' % (whitelist))
+        log.debug('whitelist of API access is: %s', whitelist)
     api_access_valid = controller_name in whitelist
     if api_access_valid:
-        log.debug('controller:%s is in API whitelist' % (controller_name))
+        log.debug('controller:%s is in API whitelist', controller_name)
     else:
         msg = 'controller: %s is *NOT* in API whitelist' % (controller_name)
         if api_key:
@@ -474,84 +454,100 @@ def allowed_api_access(controller_name, whitelist=None, api_key=None):
 
 class AuthUser(object):
     """
-    A simple object that handles all attributes of user in Kallithea
+    Represents a Kallithea user, including various authentication and
+    authorization information. Typically used to store the current user,
+    but is also used as a generic user information data structure in
+    parts of the code, e.g. user management.
 
-    It does lookup based on API key,given user, or user present in session
-    Then it fills all required information for such user. It also checks if
-    anonymous access is enabled and if so, it returns default user as logged in
+    Constructed from a database `User` object, a user ID or cookie dict,
+    it looks up the user (if needed) and copies all attributes to itself,
+    adding various non-persistent data. If lookup fails but anonymous
+    access to Kallithea is enabled, the default user is loaded instead.
+
+    `AuthUser` does not by itself authenticate users and the constructor
+    sets the `is_authenticated` field to False, except when falling back
+    to the default anonymous user (if enabled). It's up to other parts
+    of the code to check e.g. if a supplied password is correct, and if
+    so, set `is_authenticated` to True.
+
+    However, `AuthUser` does refuse to load a user that is not `active`.
     """
 
-    def __init__(self, user_id=None, api_key=None, username=None, ip_addr=None):
+    def __init__(self, user_id=None, dbuser=None,
+            is_external_auth=False):
 
-        self.user_id = user_id
-        self._api_key = api_key
+        self.is_authenticated = False
+        self.is_external_auth = is_external_auth
 
+        user_model = UserModel()
+        self.anonymous_user = User.get_default_user(cache=True)
+
+        # These attributes will be overriden by fill_data, below, unless the
+        # requested user cannot be found and the default anonymous user is
+        # not enabled.
+        self.user_id = None
+        self.username = None
         self.api_key = None
-        self.username = username
-        self.ip_addr = ip_addr
         self.name = ''
         self.lastname = ''
         self.email = ''
-        self.is_authenticated = False
         self.admin = False
         self.inherit_default_permissions = False
 
-        self.propagate_data()
-        self._instance = None
-
-    @LazyProperty
-    def permissions(self):
-        return self.get_perms(user=self, cache=False)
-
-    @property
-    def api_keys(self):
-        return self.get_api_keys()
-
-    def propagate_data(self):
-        user_model = UserModel()
-        self.anonymous_user = User.get_default_user(cache=True)
-        is_user_loaded = False
-
-        # lookup by userid
-        if self.user_id is not None and self.user_id != self.anonymous_user.user_id:
-            log.debug('Auth User lookup by USER ID %s' % self.user_id)
-            is_user_loaded = user_model.fill_data(self, user_id=self.user_id)
-
-        # try go get user by api key
-        elif self._api_key and self._api_key != self.anonymous_user.api_key:
-            log.debug('Auth User lookup by API KEY %s' % self._api_key)
-            is_user_loaded = user_model.fill_data(self, api_key=self._api_key)
-
-        # lookup by username
-        elif self.username:
-            log.debug('Auth User lookup by USER NAME %s' % self.username)
-            is_user_loaded = user_model.fill_data(self, username=self.username)
+        # Look up database user, if necessary.
+        if user_id is not None:
+            log.debug('Auth User lookup by USER ID %s', user_id)
+            dbuser = user_model.get(user_id)
         else:
-            log.debug('No data in %s that could been used to log in' % self)
+            # Note: dbuser is allowed to be None.
+            log.debug('Auth User lookup by database user %s', dbuser)
 
+        is_user_loaded = self._fill_data(dbuser)
+
+        # If user cannot be found, try falling back to anonymous.
         if not is_user_loaded:
-            # if we cannot authenticate user try anonymous
-            if self.anonymous_user.active:
-                user_model.fill_data(self, user_id=self.anonymous_user.user_id)
-                # then we set this user is logged in
-                self.is_authenticated = True
-            else:
-                self.user_id = None
-                self.username = None
-                self.is_authenticated = False
+            is_user_loaded =  self._fill_data(self.anonymous_user)
+
+        # The anonymous user is always "logged in".
+        if self.user_id == self.anonymous_user.user_id:
+            self.is_authenticated = True
 
         if not self.username:
             self.username = 'None'
 
-        log.debug('Auth User is now %s' % self)
+        log.debug('Auth User is now %s', self)
 
-    def get_perms(self, user, explicit=True, algo='higherwin', cache=False):
+    def _fill_data(self, dbuser):
+        """
+        Copies database fields from a `db.User` to this `AuthUser`. Does
+        not copy `api_keys` and `permissions` attributes.
+
+        Checks that `dbuser` is `active` (and not None) before copying;
+        returns True on success.
+        """
+        if dbuser is not None and dbuser.active:
+            log.debug('filling %s data', dbuser)
+            for k, v in dbuser.get_dict().iteritems():
+                assert k not in ['api_keys', 'permissions']
+                setattr(self, k, v)
+            return True
+        return False
+
+    @LazyProperty
+    def permissions(self):
+        return self.__get_perms(user=self, cache=False)
+
+    @property
+    def api_keys(self):
+        return self._get_api_keys()
+
+    def __get_perms(self, user, explicit=True, algo='higherwin', cache=False):
         """
         Fills user permission attribute with permissions taken from database
         works for permissions given for repositories, and for permissions that
         are granted to groups
 
-        :param user: instance of User object from database
+        :param user: `AuthUser` instance
         :param explicit: In case there are permissions both for user and a group
             that user is part of, explicit flag will define if user will
             explicitly override permissions from group, if it's False it will
@@ -571,7 +567,7 @@ class AuthUser(object):
         return compute(user_id, user_is_admin,
                        user_inherit_default_permissions, explicit, algo)
 
-    def get_api_keys(self):
+    def _get_api_keys(self):
         api_keys = [self.api_key]
         for api_key in UserApiKeys.query()\
                 .filter(UserApiKeys.user_id == self.user_id)\
@@ -609,25 +605,16 @@ class AuthUser(object):
         return [x[0] for x in self.permissions['user_groups'].iteritems()
                 if x[1] == 'usergroup.admin']
 
-    @property
-    def ip_allowed(self):
+    @staticmethod
+    def check_ip_allowed(user, ip_addr):
         """
-        Checks if ip_addr used in constructor is allowed from defined list of
-        allowed ip_addresses for user
-
-        :returns: boolean, True if ip is in allowed ip range
+        Check if the given IP address (a `str`) is allowed for the given
+        user (an `AuthUser` or `db.User`).
         """
-        # check IP
-        inherit = self.inherit_default_permissions
-        return AuthUser.check_ip_allowed(self.user_id, self.ip_addr,
-                                         inherit_from_default=inherit)
-
-    @classmethod
-    def check_ip_allowed(cls, user_id, ip_addr, inherit_from_default):
-        allowed_ips = AuthUser.get_allowed_ips(user_id, cache=True,
-                        inherit_from_default=inherit_from_default)
+        allowed_ips = AuthUser.get_allowed_ips(user.user_id, cache=True,
+            inherit_from_default=user.inherit_default_permissions)
         if check_ip_access(source_ip=ip_addr, allowed_ips=allowed_ips):
-            log.debug('IP:%s is in range of %s' % (ip_addr, allowed_ips))
+            log.debug('IP:%s is in range of %s', ip_addr, allowed_ips)
             return True
         else:
             log.info('Access for IP:%s forbidden, '
@@ -635,30 +622,35 @@ class AuthUser(object):
             return False
 
     def __repr__(self):
-        return "<AuthUser('id:%s[%s] ip:%s auth:%s')>"\
-            % (self.user_id, self.username, self.ip_addr, self.is_authenticated)
+        return "<AuthUser('id:%s[%s] auth:%s')>"\
+            % (self.user_id, self.username, self.is_authenticated)
 
     def set_authenticated(self, authenticated=True):
         if self.user_id != self.anonymous_user.user_id:
             self.is_authenticated = authenticated
 
-    def get_cookie_store(self):
-        return {'username': self.username,
-                'user_id': self.user_id,
-                'is_authenticated': self.is_authenticated}
+    def to_cookie(self):
+        """ Serializes this login session to a cookie `dict`. """
+        return {
+            'user_id': self.user_id,
+            'is_authenticated': self.is_authenticated,
+            'is_external_auth': self.is_external_auth,
+        }
 
-    @classmethod
-    def from_cookie_store(cls, cookie_store):
+    @staticmethod
+    def from_cookie(cookie):
         """
-        Creates AuthUser from a cookie store
+        Deserializes an `AuthUser` from a cookie `dict`.
+        """
 
-        :param cls:
-        :param cookie_store:
-        """
-        user_id = cookie_store.get('user_id')
-        username = cookie_store.get('username')
-        api_key = cookie_store.get('api_key')
-        return AuthUser(user_id, api_key, username)
+        au = AuthUser(
+            user_id=cookie.get('user_id'),
+            is_external_auth=cookie.get('is_external_auth', False),
+        )
+        if not au.is_authenticated and au.user_id is not None:
+            # user is not authenticated and not empty
+            au.set_authenticated(cookie.get('is_authenticated'))
+        return au
 
     @classmethod
     def get_allowed_ips(cls, user_id, cache=False, inherit_from_default=False):
@@ -717,6 +709,15 @@ def set_available_permissions(config):
 #==============================================================================
 # CHECK DECORATORS
 #==============================================================================
+
+def redirect_to_login(message=None):
+    from kallithea.lib import helpers as h
+    p = url.current()
+    if message:
+        h.flash(h.literal(message), category='warning')
+    log.debug('Redirecting to login page, origin: %s', p)
+    return redirect(url('login_home', came_from=p, **request.GET))
+
 class LoginRequired(object):
     """
     Must be logged in to execute this function else
@@ -733,61 +734,63 @@ class LoginRequired(object):
         return decorator(self.__wrapper, func)
 
     def __wrapper(self, func, *fargs, **fkwargs):
-        cls = fargs[0]
-        user = cls.authuser
-        loc = "%s:%s" % (cls.__class__.__name__, func.__name__)
+        controller = fargs[0]
+        user = controller.authuser
+        loc = "%s:%s" % (controller.__class__.__name__, func.__name__)
+        log.debug('Checking access for user %s @ %s', user, loc)
 
-        # check if our IP is allowed
-        ip_access_valid = True
-        if not user.ip_allowed:
-            from kallithea.lib import helpers as h
-            h.flash(h.literal(_('IP %s not allowed' % (user.ip_addr))),
-                    category='warning')
-            ip_access_valid = False
+        if not AuthUser.check_ip_allowed(user, controller.ip_addr):
+            return redirect_to_login(_('IP %s not allowed') % controller.ip_addr)
 
-        # check if we used an APIKEY and it's a valid one
-        # defined whitelist of controllers which API access will be enabled
-        _api_key = request.GET.get('api_key', '')
-        api_access_valid = allowed_api_access(loc, api_key=_api_key)
-
-        # explicit controller is enabled or API is in our whitelist
-        if self.api_access or api_access_valid:
-            log.debug('Checking API KEY access for %s' % cls)
-            if _api_key and _api_key in user.api_keys:
-                api_access_valid = True
-                log.debug('API KEY ****%s is VALID' % _api_key[-4:])
-            else:
-                api_access_valid = False
-                if not _api_key:
-                    log.debug("API KEY *NOT* present in request")
+        # check if we used an API key and it's a valid one
+        api_key = request.GET.get('api_key')
+        if api_key is not None:
+            # explicit controller is enabled or API is in our whitelist
+            if self.api_access or allowed_api_access(loc, api_key=api_key):
+                if api_key in user.api_keys:
+                    log.info('user %s authenticated with API key ****%s @ %s',
+                             user, api_key[-4:], loc)
+                    return func(*fargs, **fkwargs)
                 else:
-                    log.warning("API KEY ****%s *NOT* valid" % _api_key[-4:])
+                    log.warning('API key ****%s is NOT valid', api_key[-4:])
+                    return redirect_to_login(_('Invalid API key'))
+            else:
+                # controller does not allow API access
+                log.warning('API access to %s is not allowed', loc)
+                return abort(403)
 
-        # CSRF protection - POSTs with session auth must contain correct token
-        if request.POST and user.is_authenticated and not api_access_valid:
+        # Only allow the following HTTP request methods. (We sometimes use POST
+        # requests with a '_method' set to 'PUT' or 'DELETE'; but that is only
+        # used for the route lookup, and does not affect request.method.)
+        if request.method not in ['GET', 'HEAD', 'POST', 'PUT']:
+            return abort(405)
+
+        # CSRF protection: Whenever a request has ambient authority (whether
+        # through a session cookie or its origin IP address), it must include
+        # the correct token, unless the HTTP method is GET or HEAD (and thus
+        # guaranteed to be side effect free. In practice, the only situation
+        # where we allow side effects without ambient authority is when the
+        # authority comes from an API key; and that is handled above.
+        if request.method not in ['GET', 'HEAD']:
             token = request.POST.get(secure_form.token_key)
             if not token or token != secure_form.authentication_token():
                 log.error('CSRF check failed')
                 return abort(403)
 
-        log.debug('Checking if %s is authenticated @ %s' % (user.username, loc))
-        reason = 'RegularAuth' if user.is_authenticated else 'APIAuth'
+        # WebOb already ignores request payload parameters for anything other
+        # than POST/PUT, but double-check since other Kallithea code relies on
+        # this assumption.
+        if request.method not in ['POST', 'PUT'] and request.POST:
+            log.error('%r request with payload parameters; WebOb should have stopped this', request.method)
+            return abort(400)
 
-        if ip_access_valid and (user.is_authenticated or api_access_valid):
-            log.info('user %s authenticating with:%s IS authenticated on func %s '
-                     % (user, reason, loc)
-            )
+        # regular user authentication
+        if user.is_authenticated:
+            log.info('user %s authenticated with regular auth @ %s', user, loc)
             return func(*fargs, **fkwargs)
         else:
-            log.warning('user %s authenticating with:%s NOT authenticated on func: %s: '
-                     'IP_ACCESS:%s API_ACCESS:%s'
-                     % (user, reason, loc, ip_access_valid, api_access_valid)
-            )
-            p = url.current()
-
-            log.debug('redirecting to login page with %s' % p)
-            return redirect(url('login_home', came_from=p))
-
+            log.warning('user %s NOT authenticated with regular auth @ %s', user, loc)
+            return redirect_to_login()
 
 class NotAnonymous(object):
     """
@@ -801,18 +804,13 @@ class NotAnonymous(object):
         cls = fargs[0]
         self.user = cls.authuser
 
-        log.debug('Checking if user is not anonymous @%s' % cls)
+        log.debug('Checking if user is not anonymous @%s', cls)
 
         anonymous = self.user.username == User.DEFAULT_USER
 
         if anonymous:
-            p = url.current()
-
-            import kallithea.lib.helpers as h
-            h.flash(_('You need to be a registered user to '
-                      'perform this action'),
-                    category='warning')
-            return redirect(url('login_home', came_from=p))
+            return redirect_to_login(_('You need to be a registered user to '
+                    'perform this action'))
         else:
             return func(*fargs, **fkwargs)
 
@@ -832,25 +830,18 @@ class PermsDecorator(object):
         self.user = cls.authuser
         self.user_perms = self.user.permissions
         log.debug('checking %s permissions %s for %s %s',
-           self.__class__.__name__, self.required_perms, cls, self.user)
+          self.__class__.__name__, self.required_perms, cls, self.user)
 
         if self.check_permissions():
-            log.debug('Permission granted for %s %s' % (cls, self.user))
+            log.debug('Permission granted for %s %s', cls, self.user)
             return func(*fargs, **fkwargs)
 
         else:
-            log.debug('Permission denied for %s %s' % (cls, self.user))
+            log.debug('Permission denied for %s %s', cls, self.user)
             anonymous = self.user.username == User.DEFAULT_USER
 
             if anonymous:
-                p = url.current()
-
-                import kallithea.lib.helpers as h
-                h.flash(_('You need to be signed in to '
-                          'view this page'),
-                        category='warning')
-                return redirect(url('login_home', came_from=p))
-
+                return redirect_to_login(_('You need to be signed in to view this page'))
             else:
                 # redirect with forbidden ret code
                 return abort(403)
@@ -1029,15 +1020,15 @@ class PermsFunction(object):
             return False
         self.user_perms = user.permissions
         if self.check_permissions():
-            log.debug('Permission to %s granted for user: %s @ %s'
-                      % (check_scope, user,
-                         check_location or 'unspecified location'))
+            log.debug('Permission to %s granted for user: %s @ %s',
+                      check_scope, user,
+                         check_location or 'unspecified location')
             return True
 
         else:
-            log.debug('Permission to %s denied for user: %s @ %s'
-                      % (check_scope, user,
-                         check_location or 'unspecified location'))
+            log.debug('Permission to %s denied for user: %s @ %s',
+                      check_scope, user,
+                         check_location or 'unspecified location')
             return False
 
     def check_permissions(self):
@@ -1189,11 +1180,11 @@ class HasPermissionAnyMiddleware(object):
                   'permissions %s for user:%s repository:%s', self.user_perms,
                                                 self.username, self.repo_name)
         if self.required_perms.intersection(self.user_perms):
-            log.debug('Permission to repo: %s granted for user: %s @ %s'
-                      % (self.repo_name, self.username, 'PermissionMiddleware'))
+            log.debug('Permission to repo: %s granted for user: %s @ %s',
+                      self.repo_name, self.username, 'PermissionMiddleware')
             return True
-        log.debug('Permission to repo: %s denied for user: %s @ %s'
-                  % (self.repo_name, self.username, 'PermissionMiddleware'))
+        log.debug('Permission to repo: %s denied for user: %s @ %s',
+                  self.repo_name, self.username, 'PermissionMiddleware')
         return False
 
 
@@ -1214,8 +1205,8 @@ class _BaseApiPerm(object):
         if group_name:
             check_scope += ', repo group:%s' % (group_name)
 
-        log.debug('checking cls:%s %s %s @ %s'
-                  % (cls_name, self.required_perms, check_scope, check_location))
+        log.debug('checking cls:%s %s %s @ %s',
+                  cls_name, self.required_perms, check_scope, check_location)
         if not user:
             log.debug('Empty User passed into arguments')
             return False
@@ -1226,13 +1217,13 @@ class _BaseApiPerm(object):
         if not check_location:
             check_location = 'unspecified'
         if self.check_permissions(user.permissions, repo_name, group_name):
-            log.debug('Permission to %s granted for user: %s @ %s'
-                      % (check_scope, user, check_location))
+            log.debug('Permission to %s granted for user: %s @ %s',
+                      check_scope, user, check_location)
             return True
 
         else:
-            log.debug('Permission to %s denied for user: %s @ %s'
-                      % (check_scope, user, check_location))
+            log.debug('Permission to %s denied for user: %s @ %s',
+                      check_scope, user, check_location)
             return False
 
     def check_permissions(self, perm_defs, repo_name=None, group_name=None):
@@ -1314,11 +1305,11 @@ def check_ip_access(source_ip, allowed_ips=None):
     :param allowed_ips: list of allowed ips together with mask
     """
     from kallithea.lib import ipaddr
-    log.debug('checking if ip:%s is subnet of %s' % (source_ip, allowed_ips))
+    log.debug('checking if ip:%s is subnet of %s', source_ip, allowed_ips)
     if isinstance(allowed_ips, (tuple, list, set)):
         for ip in allowed_ips:
             if ipaddr.IPAddress(source_ip) in ipaddr.IPNetwork(ip):
-                log.debug('IP %s is network %s' %
-                          (ipaddr.IPAddress(source_ip), ipaddr.IPNetwork(ip)))
+                log.debug('IP %s is network %s',
+                          ipaddr.IPAddress(source_ip), ipaddr.IPNetwork(ip))
                 return True
     return False

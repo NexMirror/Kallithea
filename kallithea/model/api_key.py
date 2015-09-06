@@ -15,7 +15,7 @@
 kallithea.model.api_key
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-api key model for Kallithea
+API key model for Kallithea
 
 This file was forked by the Kallithea project in July 2014.
 Original author and date, and relevant copyright and licensing information is below:
@@ -25,7 +25,6 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-from __future__ import with_statement
 import time
 import logging
 from sqlalchemy import or_
@@ -65,7 +64,7 @@ class ApiKeyModel(BaseModel):
         """
         api_key = UserApiKeys.query().filter(UserApiKeys.api_key == api_key)
 
-        if user:
+        if user is not None:
             user = self._get_user(user)
             api_key = api_key.filter(UserApiKeys.user_id == user.user_id)
 

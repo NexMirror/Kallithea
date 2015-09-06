@@ -17,7 +17,6 @@ Helper functions
 Consists of functions to typically be used within templates, but also
 available to Controllers. This module is available to both as 'h'.
 """
-import random
 import hashlib
 import StringIO
 import math
@@ -30,7 +29,6 @@ from pygments.formatters.html import HtmlFormatter
 from pygments import highlight as code_highlight
 from pylons import url
 from pylons.i18n.translation import _, ungettext
-from hashlib import md5
 
 from webhelpers.html import literal, HTML, escape
 from webhelpers.html.tools import *
@@ -89,24 +87,23 @@ def canonical_hostname():
         parts = url('home', qualified=True).split('://', 1)
         return parts[1].split('/', 1)[0]
 
-def html_escape(text, html_escape_table=None):
-    """Produce entities within text."""
-    if not html_escape_table:
-        html_escape_table = {
-            "&": "&amp;",
-            '"': "&quot;",
-            "'": "&apos;",
-            ">": "&gt;",
-            "<": "&lt;",
-        }
-    return "".join(html_escape_table.get(c, c) for c in text)
+def html_escape(s):
+    """Return string with all html escaped.
+    This is also safe for javascript in html but not necessarily correct.
+    """
+    return (s
+        .replace('&', '&amp;')
+        .replace(">", "&gt;")
+        .replace("<", "&lt;")
+        .replace('"', "&quot;")
+        .replace("'", "&apos;")
+        )
 
-
-def shorter(text, size=20):
+def shorter(s, size=20):
     postfix = '...'
-    if len(text) > size:
-        return text[:size - len(postfix)] + postfix
-    return text
+    if len(s) > size:
+        return s[:size - len(postfix)] + postfix
+    return s
 
 
 def _reset(name, value=None, id=NotGiven, type="reset", **attrs):
@@ -131,7 +128,7 @@ def FID(raw_id, path):
     :param path:
     """
 
-    return 'C-%s-%s' % (short_id(raw_id), md5(safe_str(path)).hexdigest()[:12])
+    return 'C-%s-%s' % (short_id(raw_id), hashlib.md5(safe_str(path)).hexdigest()[:12])
 
 
 class _GetError(object):
@@ -148,21 +145,6 @@ class _GetError(object):
             return literal(tmpl % form_errors.get(field_name))
 
 get_error = _GetError()
-
-
-class _ToolTip(object):
-
-    def __call__(self, tooltip_title, trim_at=50):
-        """
-        Special function just to wrap our text into nice formatted
-        autowrapped text
-
-        :param tooltip_title:
-        """
-        tooltip_title = escape(tooltip_title)
-        tooltip_title = tooltip_title.replace('<', '&lt;').replace('>', '&gt;')
-        return tooltip_title
-tooltip = _ToolTip()
 
 
 class _FilesBreadCrumbs(object):
@@ -355,12 +337,10 @@ def pygmentize_annotation(repo_name, filenode, **kwargs):
             author = escape(changeset.author)
             date = changeset.date
             message = escape(changeset.message)
-
             tooltip_html = ("<div style='font-size:0.8em'><b>Author:</b>"
                             " %s<br/><b>Date:</b> %s</b><br/><b>Message:"
-                            "</b> %s<br/></div>")
+                            "</b> %s<br/></div>") % (author, date, message)
 
-            tooltip_html = tooltip_html % (author, date, message)
             lnk_format = show_id(changeset)
             uri = link_to(
                     lnk_format,
@@ -406,6 +386,25 @@ class _Message(object):
 
 class Flash(_Flash):
 
+    def __call__(self, message, category=None, ignore_duplicate=False, logf=None):
+        """
+        Show a message to the user _and_ log it through the specified function
+
+        category: notice (default), warning, error, success
+        logf: a custom log function - such as log.debug
+
+        logf defaults to log.info, unless category equals 'success', in which
+        case logf defaults to log.debug.
+        """
+        if logf is None:
+            logf = log.info
+            if category == 'success':
+                logf = log.debug
+
+        logf('Flash %s: %s', category, message)
+
+        super(Flash, self).__call__(message, category, ignore_duplicate)
+
     def pop_messages(self):
         """Return all accumulated messages and delete them from the session.
 
@@ -423,7 +422,7 @@ flash = Flash()
 #==============================================================================
 from kallithea.lib.vcs.utils import author_name, author_email
 from kallithea.lib.utils2 import credentials_filter, age as _age
-from kallithea.model.db import User, ChangesetStatus
+from kallithea.model.db import User, ChangesetStatus, PullRequest
 
 age = lambda  x, y=False: _age(x, y)
 capitalize = lambda x: x.capitalize()
@@ -447,7 +446,7 @@ def show_id(cs):
     if show_rev:
         return 'r%s:%s' % (cs.revision, raw_id)
     else:
-        return '%s' % (raw_id)
+        return raw_id
 
 
 def fmt_date(date):
@@ -545,13 +544,13 @@ def desc_stylize(value):
     if not value:
         return ''
 
-    value = re.sub(r'\[see\ \=\>\ *([a-zA-Z0-9\/\=\?\&\ \:\/\.\-]*)\]',
+    value = re.sub(r'\[see\ \=&gt;\ *([a-zA-Z0-9\/\=\?\&\ \:\/\.\-]*)\]',
                    '<div class="metatag" tag="see">see =&gt; \\1 </div>', value)
-    value = re.sub(r'\[license\ \=\>\ *([a-zA-Z0-9\/\=\?\&\ \:\/\.\-]*)\]',
+    value = re.sub(r'\[license\ \=&gt;\ *([a-zA-Z0-9\/\=\?\&\ \:\/\.\-]*)\]',
                    '<div class="metatag" tag="license"><a href="http:\/\/www.opensource.org/licenses/\\1">\\1</a></div>', value)
-    value = re.sub(r'\[(requires|recommends|conflicts|base)\ \=\>\ *([a-zA-Z0-9\-\/]*)\]',
+    value = re.sub(r'\[(requires|recommends|conflicts|base)\ \=&gt;\ *([a-zA-Z0-9\-\/]*)\]',
                    '<div class="metatag" tag="\\1">\\1 =&gt; <a href="/\\2">\\2</a></div>', value)
-    value = re.sub(r'\[(lang|language)\ \=\>\ *([a-zA-Z\-\/\#\+]*)\]',
+    value = re.sub(r'\[(lang|language)\ \=&gt;\ *([a-zA-Z\-\/\#\+]*)\]',
                    '<div class="metatag" tag="lang">\\2</div>', value)
     value = re.sub(r'\[([a-z]+)\]',
                   '<div class="metatag" tag="\\1">\\1</div>', value)
@@ -601,32 +600,29 @@ def action_parser(user_log, feed=False, parse_cs=False):
         repo_name = user_log.repository.repo_name
 
         def lnk(rev, repo_name):
+            lazy_cs = False
+            title_ = None
+            url_ = '#'
             if isinstance(rev, BaseChangeset) or isinstance(rev, AttributeDict):
-                lazy_cs = True
-                if getattr(rev, 'op', None) and getattr(rev, 'ref_name', None):
-                    lazy_cs = False
-                    lbl = '?'
+                if rev.op and rev.ref_name:
                     if rev.op == 'delete_branch':
-                        lbl = '%s' % _('Deleted branch: %s') % rev.ref_name
-                        title = ''
+                        lbl = _('Deleted branch: %s') % rev.ref_name
                     elif rev.op == 'tag':
-                        lbl = '%s' % _('Created tag: %s') % rev.ref_name
-                        title = ''
-                    _url = '#'
-
+                        lbl = _('Created tag: %s') % rev.ref_name
+                    else:
+                        lbl = 'Unknown operation %s' % rev.op
                 else:
-                    lbl = '%s' % (rev.short_id[:8])
-                    _url = url('changeset_home', repo_name=repo_name,
+                    lazy_cs = True
+                    lbl = rev.short_id[:8]
+                    url_ = url('changeset_home', repo_name=repo_name,
                                revision=rev.raw_id)
-                    title = tooltip(rev.message)
             else:
-                ## changeset cannot be found/striped/removed etc.
-                lbl = ('%s' % rev)[:12]
-                _url = '#'
-                title = _('Changeset not found')
+                # changeset cannot be found - it might have been stripped or removed
+                lbl = rev[:12]
+                title_ = _('Changeset not found')
             if parse_cs:
-                return link_to(lbl, _url, title=title, class_='tooltip')
-            return link_to(lbl, _url, raw_id=rev.raw_id, repo_name=repo_name,
+                return link_to(lbl, url_, title=title_, class_='tooltip')
+            return link_to(lbl, url_, raw_id=rev.raw_id, repo_name=repo_name,
                            class_='lazy-cs' if lazy_cs else '')
 
         def _get_op(rev_txt):
@@ -650,9 +646,8 @@ def action_parser(user_log, feed=False, parse_cs=False):
                         _rev = repo.get_changeset(rev)
                         revs.append(_rev)
                     except ChangesetDoesNotExistError:
-                        log.error('cannot find revision %s in this repo' % rev)
+                        log.error('cannot find revision %s in this repo', rev)
                         revs.append(rev)
-                        continue
                 else:
                     _rev = AttributeDict({
                         'short_id': rev[:12],
@@ -679,7 +674,7 @@ def action_parser(user_log, feed=False, parse_cs=False):
                 url('changeset_home', repo_name=repo_name,
                     revision=_rev
                 ),
-                _('compare view')
+                _('Compare view')
             )
         )
 
@@ -723,8 +718,8 @@ def action_parser(user_log, feed=False, parse_cs=False):
 
     def get_fork_name():
         repo_name = action_params
-        _url = url('summary_home', repo_name=repo_name)
-        return _('fork name %s') % link_to(action_params, _url)
+        url_ = url('summary_home', repo_name=repo_name)
+        return _('Fork name %s') % link_to(action_params, url_)
 
     def get_user_name():
         user_name = action_params
@@ -736,12 +731,15 @@ def action_parser(user_log, feed=False, parse_cs=False):
 
     def get_pull_request():
         pull_request_id = action_params
+        nice_id = PullRequest.make_nice_id(pull_request_id)
+
         deleted = user_log.repository is None
         if deleted:
             repo_name = user_log.repository_name
         else:
             repo_name = user_log.repository.repo_name
-        return link_to(_('Pull request #%s') % pull_request_id,
+
+        return link_to(_('Pull request %s') % nice_id,
                     url('pullrequest_show', repo_name=repo_name,
                     pull_request_id=pull_request_id))
 
@@ -852,7 +850,7 @@ def gravatar(email_address, cls='', size=30, ssl_enabled=True):
 
     #  here it makes sense to use style="width: ..." (instead of, say, a
     # stylesheet) because we using this to generate a high-res (retina) size
-    tmpl = """<img alt="gravatar" class="{cls}" style="width: {size}px; height: {size}px" src="{src}"/>"""
+    tmpl = '<img alt="" class="{cls}" style="width: {size}px; height: {size}px" src="{src}"/>'
 
     # if src is empty then there was no gravatar, so we use a font icon
     if not src:
@@ -940,32 +938,31 @@ class Page(_Page):
         # and the currently displayed page range
         if leftmost_page - self.first_page > 1:
             # Wrap in a SPAN tag if nolink_attr is set
-            text = '..'
+            text_ = '..'
             if self.dotdot_attr:
-                text = HTML.span(c=text, **self.dotdot_attr)
-            nav_items.append(text)
+                text_ = HTML.span(c=text_, **self.dotdot_attr)
+            nav_items.append(text_)
 
         for thispage in xrange(leftmost_page, rightmost_page + 1):
             # Highlight the current page number and do not use a link
+            text_ = str(thispage)
             if thispage == self.page:
-                text = '%s' % (thispage,)
                 # Wrap in a SPAN tag if nolink_attr is set
                 if self.curpage_attr:
-                    text = HTML.span(c=text, **self.curpage_attr)
-                nav_items.append(text)
+                    text_ = HTML.span(c=text_, **self.curpage_attr)
+                nav_items.append(text_)
             # Otherwise create just a link to that page
             else:
-                text = '%s' % (thispage,)
-                nav_items.append(self._pagerlink(thispage, text))
+                nav_items.append(self._pagerlink(thispage, text_))
 
         # Insert dots if there are pages between the displayed
         # page numbers and the end of the page range
         if self.last_page - rightmost_page > 1:
-            text = '..'
+            text_ = '..'
             # Wrap in a SPAN tag if nolink_attr is set
             if self.dotdot_attr:
-                text = HTML.span(c=text, **self.dotdot_attr)
-            nav_items.append(text)
+                text_ = HTML.span(c=text_, **self.dotdot_attr)
+            nav_items.append(text_)
 
         # Create a link to the very last page (unless we are on the last
         # page or there would be no need to insert '..' spacers)
@@ -1128,7 +1125,7 @@ def changed_tooltip(nodes):
         return literal(pref + '<br/> '.join([safe_unicode(x.path)
                                              for x in nodes[:30]]) + suf)
     else:
-        return ': ' + _('No Files')
+        return ': ' + _('No files')
 
 
 def repo_link(groups_and_repos):
@@ -1213,7 +1210,7 @@ def fancy_file_stats(stats):
 
         #import ipdb;ipdb.set_trace()
         b_d = '<div class="bin bin%s %s" style="width:100%%">%s</div>' % (bin_op, cgen('a', a_v='', d_v=0), lbl)
-        b_a = '<div class="bin bin1" style="width:0%%"></div>'
+        b_a = '<div class="bin bin1" style="width:0%"></div>'
         return literal('<div style="width:%spx">%s%s</div>' % (width, b_a, b_d))
 
     t = stats['added'] + stats['deleted']
@@ -1243,21 +1240,26 @@ def fancy_file_stats(stats):
     return literal('<div style="width:%spx">%s%s</div>' % (width, d_a, d_d))
 
 
-def urlify_text(text_, safe=True):
+def _urlify_text(s):
     """
     Extract urls from text and make html links out of them
-
-    :param text_:
     """
-
     def url_func(match_obj):
-        url_full = match_obj.groups()[0]
+        url_full = match_obj.group(1)
         return '<a href="%(url)s">%(url)s</a>' % ({'url': url_full})
-    _newtext = url_re.sub(url_func, text_)
-    if safe:
-        return literal(_newtext)
-    return _newtext
+    return url_re.sub(url_func, s)
 
+def urlify_text(s, truncate=None, stylize=False, truncatef=truncate):
+    """
+    Extract urls from text and make literal html links out of them
+    """
+    if truncate is not None:
+        s = truncatef(s, truncate)
+    s = html_escape(s)
+    if stylize:
+        s = desc_stylize(s)
+    s = _urlify_text(s)
+    return literal(s)
 
 def urlify_changesets(text_, repository):
     """
@@ -1298,14 +1300,13 @@ def urlify_commit(text_, repository, link_=None):
     :param repository:
     :param link_: changeset link
     """
-    def escaper(string):
-        return string.replace('<', '&lt;').replace('>', '&gt;')
+    newtext = html_escape(text_)
 
     # urlify changesets - extract revisions and make link out of them
-    newtext = urlify_changesets(escaper(text_), repository)
+    newtext = urlify_changesets(newtext, repository)
 
     # extract http/https links and make them real urls
-    newtext = urlify_text(newtext, safe=False)
+    newtext = _urlify_text(newtext)
 
     newtext = urlify_issues(newtext, repository, link_)
 
@@ -1323,19 +1324,19 @@ def urlify_issues(newtext, repository, link_=None):
     ]
 
     if valid_indices:
-        log.debug('found issue server suffixes `%s` during valuation of: %s'
-                  % (','.join(valid_indices), newtext))
+        log.debug('found issue server suffixes `%s` during valuation of: %s',
+                  ','.join(valid_indices), newtext)
 
     for pattern_index in valid_indices:
         ISSUE_PATTERN = conf.get('issue_pat%s' % pattern_index)
         ISSUE_SERVER_LNK = conf.get('issue_server_link%s' % pattern_index)
         ISSUE_PREFIX = conf.get('issue_prefix%s' % pattern_index)
 
-        log.debug('pattern suffix `%s` PAT:%s SERVER_LINK:%s PREFIX:%s'
-                  % (pattern_index, ISSUE_PATTERN, ISSUE_SERVER_LNK,
-                     ISSUE_PREFIX))
+        log.debug('pattern suffix `%s` PAT:%s SERVER_LINK:%s PREFIX:%s',
+                  pattern_index, ISSUE_PATTERN, ISSUE_SERVER_LNK,
+                     ISSUE_PREFIX)
 
-        URL_PAT = re.compile(r'%s' % ISSUE_PATTERN)
+        URL_PAT = re.compile(ISSUE_PATTERN)
 
         def url_func(match_obj):
             pref = ''
@@ -1362,7 +1363,7 @@ def urlify_issues(newtext, repository, link_=None):
                  'serv': ISSUE_SERVER_LNK,
                 }
         newtext = URL_PAT.sub(url_func, newtext)
-        log.debug('processed prefix:`%s` => %s' % (pattern_index, newtext))
+        log.debug('processed prefix:`%s` => %s', pattern_index, newtext)
 
     # if we actually did something above
     if link_:

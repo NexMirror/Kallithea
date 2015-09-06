@@ -53,7 +53,7 @@ class NotificationModel(BaseModel):
         elif isinstance(notification, (int, long)):
             return Notification.get(notification)
         else:
-            if notification:
+            if notification is not None:
                 raise Exception('notification must be int, long or Instance'
                                 ' of Notification got %s' % type(notification))
 
@@ -85,20 +85,20 @@ class NotificationModel(BaseModel):
         if recipients:
             for u in recipients:
                 obj = self._get_user(u)
-                if obj:
+                if obj is not None:
                     recipients_objs.append(obj)
                 else:
                     # TODO: inform user that requested operation couldn't be completed
                     log.error('cannot email unknown user %r', u)
             recipients_objs = set(recipients_objs)
-            log.debug('sending notifications %s to %s' % (
-                type_, recipients_objs)
+            log.debug('sending notifications %s to %s',
+                type_, recipients_objs
             )
         elif recipients is None:
             # empty recipients means to all admins
             recipients_objs = User.query().filter(User.admin == True).all()
-            log.debug('sending notifications %s to admins: %s' % (
-                type_, recipients_objs)
+            log.debug('sending notifications %s to admins: %s',
+                type_, recipients_objs
             )
         #else: silently skip notification mails?
 
@@ -145,7 +145,7 @@ class NotificationModel(BaseModel):
                                 .get_email_tmpl(type_, 'html', **html_kwargs)
 
             run_task(tasks.send_email, [rec.email], email_subject, email_txt_body,
-                     email_html_body, headers)
+                     email_html_body, headers, author=created_by_obj)
 
         return notif
 
@@ -248,25 +248,31 @@ class NotificationModel(BaseModel):
         """
         #alias
         _n = notification
-        _map = {
-            _n.TYPE_CHANGESET_COMMENT: _('%(user)s commented on changeset at %(when)s'),
-            _n.TYPE_MESSAGE: _('%(user)s sent message at %(when)s'),
-            _n.TYPE_MENTION: _('%(user)s mentioned you at %(when)s'),
-            _n.TYPE_REGISTRATION: _('%(user)s registered in Kallithea at %(when)s'),
-            _n.TYPE_PULL_REQUEST: _('%(user)s opened new pull request at %(when)s'),
-            _n.TYPE_PULL_REQUEST_COMMENT: _('%(user)s commented on pull request at %(when)s')
-        }
-        tmpl = _map[notification.type_]
 
         if show_age:
-            when = h.age(notification.created_on)
+            return {
+                    _n.TYPE_CHANGESET_COMMENT: _('%(user)s commented on changeset %(age)s'),
+                    _n.TYPE_MESSAGE: _('%(user)s sent message %(age)s'),
+                    _n.TYPE_MENTION: _('%(user)s mentioned you %(age)s'),
+                    _n.TYPE_REGISTRATION: _('%(user)s registered in Kallithea %(age)s'),
+                    _n.TYPE_PULL_REQUEST: _('%(user)s opened new pull request %(age)s'),
+                    _n.TYPE_PULL_REQUEST_COMMENT: _('%(user)s commented on pull request %(age)s'),
+                }[notification.type_] % dict(
+                    user=notification.created_by_user.username,
+                    age=h.age(notification.created_on),
+                )
         else:
-            when = h.fmt_date(notification.created_on)
-
-        return tmpl % dict(
-            user=notification.created_by_user.username,
-            when=when,
-            )
+            return {
+                    _n.TYPE_CHANGESET_COMMENT: _('%(user)s commented on changeset at %(when)s'),
+                    _n.TYPE_MESSAGE: _('%(user)s sent message at %(when)s'),
+                    _n.TYPE_MENTION: _('%(user)s mentioned you at %(when)s'),
+                    _n.TYPE_REGISTRATION: _('%(user)s registered in Kallithea at %(when)s'),
+                    _n.TYPE_PULL_REQUEST: _('%(user)s opened new pull request at %(when)s'),
+                    _n.TYPE_PULL_REQUEST_COMMENT: _('%(user)s commented on pull request at %(when)s'),
+                }[notification.type_] % dict(
+                    user=notification.created_by_user.username,
+                    when=h.fmt_date(notification.created_on),
+                )
 
 
 class EmailNotificationModel(BaseModel):
@@ -293,13 +299,13 @@ class EmailNotificationModel(BaseModel):
             self.TYPE_PULL_REQUEST_COMMENT: 'pull_request_comment',
         }
         self._subj_map = {
-            self.TYPE_CHANGESET_COMMENT: _('Comment on %(repo_name)s changeset %(short_id)s on %(branch)s by %(comment_username)s'),
+            self.TYPE_CHANGESET_COMMENT: _('[Comment] %(repo_name)s changeset %(short_id)s on %(branch)s'),
             self.TYPE_MESSAGE: 'Test Message',
             # self.TYPE_PASSWORD_RESET
             self.TYPE_REGISTRATION: _('New user %(new_username)s registered'),
             # self.TYPE_DEFAULT
-            self.TYPE_PULL_REQUEST: _('Review request on %(repo_name)s pull request #%(pr_id)s from %(ref)s by %(pr_username)s'),
-            self.TYPE_PULL_REQUEST_COMMENT: _('Comment on %(repo_name)s pull request #%(pr_id)s from %(ref)s by %(comment_username)s'),
+            self.TYPE_PULL_REQUEST: _('[Added] %(repo_name)s pull request %(pr_nice_id)s from %(ref)s'),
+            self.TYPE_PULL_REQUEST_COMMENT: _('[Comment] %(repo_name)s pull request %(pr_nice_id)s from %(ref)s'),
         }
 
     def get_email_description(self, type_, **kwargs):
@@ -309,12 +315,15 @@ class EmailNotificationModel(BaseModel):
         tmpl = self._subj_map[type_]
         try:
             subj = tmpl % kwargs
-        except KeyError, e:
+        except KeyError as e:
             log.error('error generating email subject for %r from %s: %s', type_, ','.join(self._subj_map.keys()), e)
             raise
         l = [safe_unicode(x) for x in [kwargs.get('status_change'), kwargs.get('closing_pr') and _('Closing')] if x]
         if l:
-            subj += ' (%s)' % (', '.join(l))
+            if subj.startswith('['):
+                subj = '[' + ', '.join(l) + ': ' + subj[1:]
+            else:
+                subj = '[' + ', '.join(l) + '] ' + subj
         return subj
 
     def get_email_tmpl(self, type_, content_type, **kwargs):
@@ -329,5 +338,5 @@ class EmailNotificationModel(BaseModel):
                    'h': h,
                    'c': c}
         _kwargs.update(kwargs)
-        log.debug('rendering tmpl %s with kwargs %s' % (base, _kwargs))
+        log.debug('rendering tmpl %s with kwargs %s', base, _kwargs)
         return email_template.render(**_kwargs)

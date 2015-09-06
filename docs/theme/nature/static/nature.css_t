@@ -122,6 +122,10 @@ div.sphinxsidebar input {
 div.sphinxsidebar input[type=text]{
     margin-left: 20px;
 }
+
+div.sphinxsidebar input[type=image] {
+    border: 0;
+}
  
 /* -- body styles ----------------------------------------------------------- */
  
@@ -216,8 +220,7 @@ pre {
     border: 1px solid #C6C9CB;
     font-size: 1.2em;
     margin: 1.5em 0 1.5em 0;
-    -webkit-box-shadow: 1px 1px 1px #d8d8d8;
-    -moz-box-shadow: 1px 1px 1px #d8d8d8;
+    box-shadow: 1px 1px 1px #d8d8d8;
 }
  
 tt {

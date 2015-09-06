@@ -2,7 +2,6 @@
 from kallithea.tests import *
 from kallithea.model.repo import RepoModel
 from kallithea.model.meta import Session
-from kallithea.model.db import Repository
 from kallithea.tests.fixture import Fixture
 
 fixture = Fixture()

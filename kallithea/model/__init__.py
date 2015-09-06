@@ -12,8 +12,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-kallithea.model.__init__
-~~~~~~~~~~~~~~~~~~~~~~~~
+kallithea.model
+~~~~~~~~~~~~~~~
 
 The application's model objects
 
@@ -60,7 +60,7 @@ def init_model(engine):
     :param engine: engine to bind to
     """
     engine_str = obfuscate_url_pw(str(engine.url))
-    log.info("initializing db for %s" % engine_str)
+    log.info("initializing db for %s", engine_str)
     meta.Base.metadata.bind = engine
 
 
@@ -94,7 +94,7 @@ class BaseModel(object):
         elif isinstance(instance, (int, long)) or safe_str(instance).isdigit():
             return cls.get(instance)
         else:
-            if instance:
+            if instance is not None:
                 if callback is None:
                     raise Exception(
                         'given object must be int, long or Instance of %s '

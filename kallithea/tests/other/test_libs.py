@@ -12,8 +12,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-kallithea.tests.test_libs
-~~~~~~~~~~~~~~~~~~~~~~~~~
+kallithea.tests.other.test_libs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Package for testing various lib/helper functions in kallithea
 
@@ -25,7 +25,6 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-from __future__ import with_statement
 import datetime
 import hashlib
 import mock
@@ -37,9 +36,9 @@ proto = 'http'
 TEST_URLS = [
     ('%s://127.0.0.1' % proto, ['%s://' % proto, '127.0.0.1'],
      '%s://127.0.0.1' % proto),
-    ('%s://marcink@127.0.0.1' % proto, ['%s://' % proto, '127.0.0.1'],
+    ('%s://username@127.0.0.1' % proto, ['%s://' % proto, '127.0.0.1'],
      '%s://127.0.0.1' % proto),
-    ('%s://marcink:pass@127.0.0.1' % proto, ['%s://' % proto, '127.0.0.1'],
+    ('%s://username:pass@127.0.0.1' % proto, ['%s://' % proto, '127.0.0.1'],
      '%s://127.0.0.1' % proto),
     ('%s://127.0.0.1:8080' % proto, ['%s://' % proto, '127.0.0.1', '8080'],
      '%s://127.0.0.1:8080' % proto),
@@ -54,9 +53,9 @@ proto = 'https'
 TEST_URLS += [
     ('%s://127.0.0.1' % proto, ['%s://' % proto, '127.0.0.1'],
      '%s://127.0.0.1' % proto),
-    ('%s://marcink@127.0.0.1' % proto, ['%s://' % proto, '127.0.0.1'],
+    ('%s://username@127.0.0.1' % proto, ['%s://' % proto, '127.0.0.1'],
      '%s://127.0.0.1' % proto),
-    ('%s://marcink:pass@127.0.0.1' % proto, ['%s://' % proto, '127.0.0.1'],
+    ('%s://username:pass@127.0.0.1' % proto, ['%s://' % proto, '127.0.0.1'],
      '%s://127.0.0.1' % proto),
     ('%s://127.0.0.1:8080' % proto, ['%s://' % proto, '127.0.0.1', '8080'],
      '%s://127.0.0.1:8080' % proto),
@@ -105,16 +104,16 @@ class TestLibs(BaseTestCase):
     def test_mention_extractor(self):
         from kallithea.lib.utils2 import extract_mentioned_users
         sample = (
-            "@first hi there @marcink here's my email marcin@email.com "
+            "@first hi there @world here's my email username@email.com "
             "@lukaszb check @one_more22 it pls @ ttwelve @D[] @one@two@three "
-            "@MARCIN    @maRCiN @2one_more22 @john please see this http://org.pl "
+            "@UPPER    @cAmEL @2one_more22 @john please see this http://org.pl "
             "@marian.user just do it @marco-polo and next extract @marco_polo "
             "user.dot  hej ! not-needed maril@domain.org"
         )
 
         s = sorted([
-            '2one_more22', 'first', 'marcink', 'lukaszb', 'one', 'one_more22', 'MARCIN', 'maRCiN', 'john',
-            'marian.user', 'marco-polo', 'marco_polo'], key=lambda k: k.lower())
+            '2one_more22', 'first', 'lukaszb', 'one', 'one_more22', 'UPPER', 'cAmEL', 'john',
+            'marian.user', 'marco-polo', 'marco_polo', 'world'], key=lambda k: k.lower())
         self.assertEqual(s, extract_mentioned_users(sample))
 
     @parameterized.expand([
@@ -189,14 +188,14 @@ class TestLibs(BaseTestCase):
             "[requires => url] [lang => python] [just a tag]"
             "[,d] [ => ULR ] [obsolete] [desc]]"
         )
-        from kallithea.lib.helpers import desc_stylize
-        res = desc_stylize(sample)
-        self.assertTrue('<div class="metatag" tag="tag">tag</div>' in res)
-        self.assertTrue('<div class="metatag" tag="obsolete">obsolete</div>' in res)
-        self.assertTrue('<div class="metatag" tag="stale">stale</div>' in res)
-        self.assertTrue('<div class="metatag" tag="lang">python</div>' in res)
-        self.assertTrue('<div class="metatag" tag="requires">requires =&gt; <a href="/url">url</a></div>' in res)
-        self.assertTrue('<div class="metatag" tag="tag">tag</div>' in res)
+        from kallithea.lib.helpers import urlify_text
+        res = urlify_text(sample, stylize=True)
+        self.assertIn('<div class="metatag" tag="tag">tag</div>', res)
+        self.assertIn('<div class="metatag" tag="obsolete">obsolete</div>', res)
+        self.assertIn('<div class="metatag" tag="stale">stale</div>', res)
+        self.assertIn('<div class="metatag" tag="lang">python</div>', res)
+        self.assertIn('<div class="metatag" tag="requires">requires =&gt; <a href="/url">url</a></div>', res)
+        self.assertIn('<div class="metatag" tag="tag">tag</div>', res)
 
     def test_alternative_gravatar(self):
         from kallithea.lib.helpers import gravatar_url
@@ -251,23 +250,23 @@ class TestLibs(BaseTestCase):
 
     @parameterized.expand([
         (Repository.DEFAULT_CLONE_URI, 'group/repo1', {}, '', 'http://vps1:8000/group/repo1'),
-        (Repository.DEFAULT_CLONE_URI, 'group/repo1', {'user': 'marcink'}, '', 'http://marcink@vps1:8000/group/repo1'),
-        (Repository.DEFAULT_CLONE_URI, 'group/repo1', {}, '/rc', 'http://vps1:8000/rc/group/repo1'),
-        (Repository.DEFAULT_CLONE_URI, 'group/repo1', {'user': 'user'}, '/rc', 'http://user@vps1:8000/rc/group/repo1'),
-        (Repository.DEFAULT_CLONE_URI, 'group/repo1', {'user': 'marcink'}, '/rc', 'http://marcink@vps1:8000/rc/group/repo1'),
-        (Repository.DEFAULT_CLONE_URI, 'group/repo1', {'user': 'user'}, '/rc/', 'http://user@vps1:8000/rc/group/repo1'),
-        (Repository.DEFAULT_CLONE_URI, 'group/repo1', {'user': 'marcink'}, '/rc/', 'http://marcink@vps1:8000/rc/group/repo1'),
+        (Repository.DEFAULT_CLONE_URI, 'group/repo1', {'user': 'username'}, '', 'http://username@vps1:8000/group/repo1'),
+        (Repository.DEFAULT_CLONE_URI, 'group/repo1', {}, '/prefix', 'http://vps1:8000/prefix/group/repo1'),
+        (Repository.DEFAULT_CLONE_URI, 'group/repo1', {'user': 'user'}, '/prefix', 'http://user@vps1:8000/prefix/group/repo1'),
+        (Repository.DEFAULT_CLONE_URI, 'group/repo1', {'user': 'username'}, '/prefix', 'http://username@vps1:8000/prefix/group/repo1'),
+        (Repository.DEFAULT_CLONE_URI, 'group/repo1', {'user': 'user'}, '/prefix/', 'http://user@vps1:8000/prefix/group/repo1'),
+        (Repository.DEFAULT_CLONE_URI, 'group/repo1', {'user': 'username'}, '/prefix/', 'http://username@vps1:8000/prefix/group/repo1'),
         ('{scheme}://{user}@{netloc}/_{repoid}', 'group/repo1', {}, '', 'http://vps1:8000/_23'),
-        ('{scheme}://{user}@{netloc}/_{repoid}', 'group/repo1', {'user': 'marcink'}, '', 'http://marcink@vps1:8000/_23'),
-        ('http://{user}@{netloc}/_{repoid}', 'group/repo1', {'user': 'marcink'}, '', 'http://marcink@vps1:8000/_23'),
-        ('http://{netloc}/_{repoid}', 'group/repo1', {'user': 'marcink'}, '', 'http://vps1:8000/_23'),
-        ('https://{user}@proxy1.server.com/{repo}', 'group/repo1', {'user': 'marcink'}, '', 'https://marcink@proxy1.server.com/group/repo1'),
+        ('{scheme}://{user}@{netloc}/_{repoid}', 'group/repo1', {'user': 'username'}, '', 'http://username@vps1:8000/_23'),
+        ('http://{user}@{netloc}/_{repoid}', 'group/repo1', {'user': 'username'}, '', 'http://username@vps1:8000/_23'),
+        ('http://{netloc}/_{repoid}', 'group/repo1', {'user': 'username'}, '', 'http://vps1:8000/_23'),
+        ('https://{user}@proxy1.server.com/{repo}', 'group/repo1', {'user': 'username'}, '', 'https://username@proxy1.server.com/group/repo1'),
         ('https://{user}@proxy1.server.com/{repo}', 'group/repo1', {}, '', 'https://proxy1.server.com/group/repo1'),
-        ('https://proxy1.server.com/{user}/{repo}', 'group/repo1', {'user': 'marcink'}, '', 'https://proxy1.server.com/marcink/group/repo1'),
+        ('https://proxy1.server.com/{user}/{repo}', 'group/repo1', {'user': 'username'}, '', 'https://proxy1.server.com/username/group/repo1'),
     ])
     def test_clone_url_generator(self, tmpl, repo_name, overrides, prefix, expected):
         from kallithea.lib.utils2 import get_clone_url
-        clone_url = get_clone_url(uri_tmpl=tmpl, qualifed_home_url='http://vps1:8000'+prefix,
+        clone_url = get_clone_url(uri_tmpl=tmpl, qualified_home_url='http://vps1:8000'+prefix,
                                   repo_name=repo_name, repo_id=23, **overrides)
         self.assertEqual(clone_url, expected)
 
@@ -366,7 +365,7 @@ class TestLibs(BaseTestCase):
       ("/_21/foobar", '21'),
       ("_21/121", '21'),
       ("/_21/_12", '21'),
-      ("_21/rc/foo", '21'),
+      ("_21/prefix/foo", '21'),
     ])
     def test_get_repo_by_id(self, test, expected):
         from kallithea.lib.utils import _extract_id_from_repo_name

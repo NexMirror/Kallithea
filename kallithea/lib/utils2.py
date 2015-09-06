@@ -12,8 +12,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-kallithea.lib.utils
-~~~~~~~~~~~~~~~~~~~
+kallithea.lib.utils2
+~~~~~~~~~~~~~~~~~~~~
 
 Some simple helper functions
 
@@ -433,17 +433,17 @@ def age(prevdate, show_short_version=False, now=None):
 
         if sub_value == 0 or show_short_version:
             if future:
-                return _(u'in %s') % fmt_funcs[part](value)
+                return _('in %s') % fmt_funcs[part](value)
             else:
-                return _(u'%s ago') % fmt_funcs[part](value)
+                return _('%s ago') % fmt_funcs[part](value)
         if future:
-            return _(u'in %s and %s') % (fmt_funcs[part](value),
+            return _('in %s and %s') % (fmt_funcs[part](value),
                 fmt_funcs[sub_part](sub_value))
         else:
-            return _(u'%s and %s ago') % (fmt_funcs[part](value),
+            return _('%s and %s ago') % (fmt_funcs[part](value),
                 fmt_funcs[sub_part](sub_value))
 
-    return _(u'just now')
+    return _('just now')
 
 
 def uri_filter(uri):
@@ -459,7 +459,7 @@ def uri_filter(uri):
 
     proto = ''
 
-    for pat in ('https://', 'http://'):
+    for pat in ('https://', 'http://', 'git://'):
         if uri.startswith(pat):
             uri = uri[len(pat):]
             proto = pat
@@ -493,8 +493,8 @@ def credentials_filter(uri):
     return ''.join(uri)
 
 
-def get_clone_url(uri_tmpl, qualifed_home_url, repo_name, repo_id, **override):
-    parsed_url = urlobject.URLObject(qualifed_home_url)
+def get_clone_url(uri_tmpl, qualified_home_url, repo_name, repo_id, **override):
+    parsed_url = urlobject.URLObject(qualified_home_url)
     decoded_path = safe_unicode(urllib.unquote(parsed_url.path.rstrip('/')))
     args = {
         'scheme': parsed_url.scheme,
@@ -615,25 +615,25 @@ def get_server_url(environ):
 
 def _extract_extras(env=None):
     """
-    Extracts the rc extras data from os.environ, and wraps it into named
+    Extracts the Kallithea extras data from os.environ, and wraps it into named
     AttributeDict object
     """
     if not env:
         env = os.environ
 
     try:
-        rc_extras = json.loads(env['KALLITHEA_EXTRAS'])
+        extras = json.loads(env['KALLITHEA_EXTRAS'])
     except KeyError:
-        rc_extras = {}
+        extras = {}
 
     try:
         for k in ['username', 'repository', 'locked_by', 'scm', 'make_lock',
                   'action', 'ip']:
-            rc_extras[k]
-    except KeyError, e:
-        raise Exception('Missing key %s in os.environ %s' % (e, rc_extras))
+            extras[k]
+    except KeyError as e:
+        raise Exception('Missing key %s in os.environ %s' % (e, extras))
 
-    return AttributeDict(rc_extras)
+    return AttributeDict(extras)
 
 
 def _set_extras(extras):

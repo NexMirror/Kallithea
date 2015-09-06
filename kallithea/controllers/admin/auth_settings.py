@@ -23,7 +23,6 @@ Original author and date, and relevant copyright and licensing information is be
 :author: akesterson
 """
 
-import pprint
 import logging
 import formencode.htmlfill
 import traceback
@@ -61,56 +60,67 @@ class AuthSettingsController(BaseController):
         ]
         c.enabled_plugins = Setting.get_auth_plugins()
 
-    def index(self, defaults=None, errors=None, prefix_error=False):
-        self.__load_defaults()
-        _defaults = {}
-        # default plugins loaded
-        formglobals = {
-            "auth_plugins": ["kallithea.lib.auth_modules.auth_internal"]
-        }
-        formglobals.update(Setting.get_auth_settings())
-        formglobals["plugin_settings"] = {}
-        formglobals["auth_plugins_shortnames"] = {}
-        _defaults["auth_plugins"] = formglobals["auth_plugins"]
+    def __render(self, defaults, errors):
+        c.defaults = {}
+        c.plugin_settings = {}
+        c.plugin_shortnames = {}
 
-        for module in formglobals["auth_plugins"]:
+        for module in c.enabled_plugins:
             plugin = auth_modules.loadplugin(module)
             plugin_name = plugin.name
-            formglobals["auth_plugins_shortnames"][module] = plugin_name
-            formglobals["plugin_settings"][module] = plugin.plugin_settings()
-            for v in formglobals["plugin_settings"][module]:
+            c.plugin_shortnames[module] = plugin_name
+            c.plugin_settings[module] = plugin.plugin_settings()
+            for v in c.plugin_settings[module]:
                 fullname = ("auth_" + plugin_name + "_" + v["name"])
                 if "default" in v:
-                    _defaults[fullname] = v["default"]
+                    c.defaults[fullname] = v["default"]
                 # Current values will be the default on the form, if there are any
                 setting = Setting.get_by_name(fullname)
-                if setting:
-                    _defaults[fullname] = setting.app_settings_value
+                if setting is not None:
+                    c.defaults[fullname] = setting.app_settings_value
         # we want to show , separated list of enabled plugins
-        _defaults['auth_plugins'] = ','.join(_defaults['auth_plugins'])
+        c.defaults['auth_plugins'] = ','.join(c.enabled_plugins)
+
         if defaults:
-            _defaults.update(defaults)
+            c.defaults.update(defaults)
 
-        formglobals["defaults"] = _defaults
-        # set template context variables
-        for k, v in formglobals.iteritems():
-            setattr(c, k, v)
-
-        log.debug(pprint.pformat(formglobals, indent=4))
         log.debug(formatted_json(defaults))
         return formencode.htmlfill.render(
             render('admin/auth/auth_settings.html'),
-            defaults=_defaults,
+            defaults=c.defaults,
             errors=errors,
-            prefix_error=prefix_error,
+            prefix_error=False,
             encoding="UTF-8",
             force_defaults=False)
+
+    def index(self):
+        self.__load_defaults()
+        return self.__render(defaults=None, errors=None)
 
     def auth_settings(self):
         """POST create and store auth settings"""
         self.__load_defaults()
+        log.debug("POST Result: %s", formatted_json(dict(request.POST)))
+
+        # First, parse only the plugin list (not the plugin settings).
+        _auth_plugins_validator = AuthSettingsForm([]).fields['auth_plugins']
+        try:
+            new_enabled_plugins = _auth_plugins_validator.to_python(request.POST.get('auth_plugins'))
+        except formencode.Invalid:
+            # User provided an invalid plugin list. Just fall back to
+            # the list of currently enabled plugins. (We'll re-validate
+            # and show an error message to the user, below.)
+            pass
+        else:
+            # Hide plugins that the user has asked to be disabled, but
+            # do not show plugins that the user has asked to be enabled
+            # (yet), since that'll cause validation errors and/or wrong
+            # settings being applied (e.g. checkboxes being cleared),
+            # since the plugin settings will not be in the POST data.
+            c.enabled_plugins = [ p for p in c.enabled_plugins if p in new_enabled_plugins ]
+
+        # Next, parse everything including plugin settings.
         _form = AuthSettingsForm(c.enabled_plugins)()
-        log.debug("POST Result: %s" % formatted_json(dict(request.POST)))
 
         try:
             form_result = _form.to_python(dict(request.POST))
@@ -118,19 +128,19 @@ class AuthSettingsController(BaseController):
                 if k == 'auth_plugins':
                     # we want to store it comma separated inside our settings
                     v = ','.join(v)
-                log.debug("%s = %s" % (k, str(v)))
+                log.debug("%s = %s", k, str(v))
                 setting = Setting.create_or_update(k, v)
                 Session().add(setting)
             Session().commit()
             h.flash(_('Auth settings updated successfully'),
                        category='success')
-        except formencode.Invalid, errors:
+        except formencode.Invalid as errors:
             log.error(traceback.format_exc())
             e = errors.error_dict or {}
-            return self.index(
+            return self.__render(
                 defaults=errors.value,
                 errors=e,
-                prefix_error=False)
+            )
         except Exception:
             log.error(traceback.format_exc())
             h.flash(_('error occurred during update of auth settings'),

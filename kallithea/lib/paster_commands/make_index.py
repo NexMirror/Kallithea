@@ -26,7 +26,6 @@ Original author and date, and relevant copyright and licensing information is be
 
 """
 
-from __future__ import with_statement
 
 import os
 import sys

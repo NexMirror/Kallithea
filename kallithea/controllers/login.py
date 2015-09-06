@@ -28,22 +28,22 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 import formencode
-import datetime
 import urlparse
 
 from formencode import htmlfill
-from webob.exc import HTTPFound
+from webob.exc import HTTPFound, HTTPBadRequest
 from pylons.i18n.translation import _
 from pylons.controllers.util import redirect
 from pylons import request, session, tmpl_context as c, url
 
 import kallithea.lib.helpers as h
 from kallithea.lib.auth import AuthUser, HasPermissionAnyDecorator
-from kallithea.lib.auth_modules import importplugin
-from kallithea.lib.base import BaseController, render
+from kallithea.lib.base import BaseController, log_in_user, render
 from kallithea.lib.exceptions import UserCreationError
+from kallithea.lib.utils2 import safe_str
 from kallithea.model.db import User, Setting
-from kallithea.model.forms import LoginForm, RegisterForm, PasswordResetForm
+from kallithea.model.forms import \
+    LoginForm, RegisterForm, PasswordResetRequestForm, PasswordResetConfirmationForm
 from kallithea.model.user import UserModel
 from kallithea.model.meta import Session
 
@@ -56,76 +56,50 @@ class LoginController(BaseController):
     def __before__(self):
         super(LoginController, self).__before__()
 
-    def _store_user_in_session(self, username, remember=False):
-        user = User.get_by_username(username, case_insensitive=True)
-        auth_user = AuthUser(user.user_id)
-        auth_user.set_authenticated()
-        cs = auth_user.get_cookie_store()
-        session['authuser'] = cs
-        user.update_lastlogin()
-        Session().commit()
-
-        # If they want to be remembered, update the cookie
-        if remember:
-            _year = (datetime.datetime.now() +
-                     datetime.timedelta(seconds=60 * 60 * 24 * 365))
-            session._set_cookie_expires(_year)
-
-        session.save()
-
-        log.info('user %s is now authenticated and stored in '
-                 'session, session attrs %s' % (username, cs))
-
-        # dumps session attrs back to cookie
-        session._update_cookie_out()
-        # we set new cookie
-        headers = None
-        if session.request['set_cookie']:
-            # send set-cookie headers back to response to update cookie
-            headers = [('Set-Cookie', session.request['cookie_out'])]
-        return headers
-
     def _validate_came_from(self, came_from):
+        """Return True if came_from is valid and can and should be used"""
         if not came_from:
-            return came_from
+            return False
 
         parsed = urlparse.urlparse(came_from)
         server_parsed = urlparse.urlparse(url.current())
         allowed_schemes = ['http', 'https']
         if parsed.scheme and parsed.scheme not in allowed_schemes:
-            log.error('Suspicious URL scheme detected %s for url %s' %
-                     (parsed.scheme, parsed))
-            came_from = url('home')
-        elif server_parsed.netloc != parsed.netloc:
+            log.error('Suspicious URL scheme detected %s for url %s',
+                     parsed.scheme, parsed)
+            return False
+        if server_parsed.netloc != parsed.netloc:
             log.error('Suspicious NETLOC detected %s for url %s server url '
                       'is: %s' % (parsed.netloc, parsed, server_parsed))
-            came_from = url('home')
-        return came_from
+            return False
+        return True
+
+    def _redirect_to_origin(self, origin):
+        '''redirect to the original page, preserving any get arguments given'''
+        request.GET.pop('came_from', None)
+        raise HTTPFound(location=url(origin, **request.GET))
 
     def index(self):
-        _default_came_from = url('home')
-        came_from = self._validate_came_from(request.GET.get('came_from'))
-        c.came_from = came_from or _default_came_from
+        c.came_from = safe_str(request.GET.get('came_from', ''))
+        if not self._validate_came_from(c.came_from):
+            c.came_from = url('home')
 
         not_default = self.authuser.username != User.DEFAULT_USER
-        ip_allowed = self.authuser.ip_allowed
+        ip_allowed = AuthUser.check_ip_allowed(self.authuser, self.ip_addr)
 
         # redirect if already logged in
         if self.authuser.is_authenticated and not_default and ip_allowed:
-            raise HTTPFound(location=c.came_from)
+            return self._redirect_to_origin(c.came_from)
 
         if request.POST:
             # import Login Form validator class
             login_form = LoginForm()
             try:
-                session.invalidate()
                 c.form_result = login_form.to_python(dict(request.POST))
                 # form checks for username/password, now we're authenticated
-                headers = self._store_user_in_session(
-                                        username=c.form_result['username'],
-                                        remember=c.form_result['remember'])
-                raise HTTPFound(location=c.came_from, headers=headers)
-            except formencode.Invalid, errors:
+                username = c.form_result['username']
+                user = User.get_by_username(username, case_insensitive=True)
+            except formencode.Invalid as errors:
                 defaults = errors.value
                 # remove password from filling in form again
                 del defaults['password']
@@ -136,28 +110,17 @@ class LoginController(BaseController):
                     prefix_error=False,
                     encoding="UTF-8",
                     force_defaults=False)
-            except UserCreationError, e:
+            except UserCreationError as e:
                 # container auth or other auth functions that create users on
                 # the fly can throw this exception signaling that there's issue
                 # with user creation, explanation should be provided in
                 # Exception itself
                 h.flash(e, 'error')
+            else:
+                log_in_user(user, c.form_result['remember'],
+                    is_external_auth=False)
+                return self._redirect_to_origin(c.came_from)
 
-        # check if we use container plugin, and try to login using it.
-        auth_plugins = Setting.get_auth_plugins()
-        if any((importplugin(name).is_container_auth for name in auth_plugins)):
-            from kallithea.lib import auth_modules
-            try:
-                auth_info = auth_modules.authenticate('', '', request.environ)
-            except UserCreationError, e:
-                log.error(e)
-                h.flash(e, 'error')
-                # render login, with flash message about limit
-                return render('/login.html')
-
-            if auth_info:
-                headers = self._store_user_in_session(auth_info.get('username'))
-                raise HTTPFound(location=c.came_from, headers=headers)
         return render('/login.html')
 
     @HasPermissionAnyDecorator('hg.admin', 'hg.register.auto_activate',
@@ -185,7 +148,7 @@ class LoginController(BaseController):
                                       remoteip=self.ip_addr)
                     if c.captcha_active and not response.is_valid:
                         _value = form_result
-                        _msg = _('bad captcha')
+                        _msg = _('Bad captcha')
                         error_dict = {'recaptcha_field': _msg}
                         raise formencode.Invalid(_msg, _value, None,
                                                  error_dict=error_dict)
@@ -196,7 +159,7 @@ class LoginController(BaseController):
                 Session().commit()
                 return redirect(url('login_home'))
 
-            except formencode.Invalid, errors:
+            except formencode.Invalid as errors:
                 return htmlfill.render(
                     render('/register.html'),
                     defaults=errors.value,
@@ -204,7 +167,7 @@ class LoginController(BaseController):
                     prefix_error=False,
                     encoding="UTF-8",
                     force_defaults=False)
-            except UserCreationError, e:
+            except UserCreationError as e:
                 # container auth or other auth functions that create users on
                 # the fly can throw this exception signaling that there's issue
                 # with user creation, explanation should be provided in
@@ -220,7 +183,7 @@ class LoginController(BaseController):
         c.captcha_public_key = settings.get('captcha_public_key')
 
         if request.POST:
-            password_reset_form = PasswordResetForm()()
+            password_reset_form = PasswordResetRequestForm()()
             try:
                 form_result = password_reset_form.to_python(dict(request.POST))
                 if c.captcha_active:
@@ -231,16 +194,16 @@ class LoginController(BaseController):
                                       remoteip=self.ip_addr)
                     if c.captcha_active and not response.is_valid:
                         _value = form_result
-                        _msg = _('bad captcha')
+                        _msg = _('Bad captcha')
                         error_dict = {'recaptcha_field': _msg}
                         raise formencode.Invalid(_msg, _value, None,
                                                  error_dict=error_dict)
-                UserModel().reset_password_link(form_result)
-                h.flash(_('Your password reset link was sent'),
+                redirect_link = UserModel().send_reset_password_email(form_result)
+                h.flash(_('A password reset confirmation code has been sent'),
                             category='success')
-                return redirect(url('login_home'))
+                return redirect(redirect_link)
 
-            except formencode.Invalid, errors:
+            except formencode.Invalid as errors:
                 return htmlfill.render(
                     render('/password_reset.html'),
                     defaults=errors.value,
@@ -252,18 +215,45 @@ class LoginController(BaseController):
         return render('/password_reset.html')
 
     def password_reset_confirmation(self):
-        if request.GET and request.GET.get('key'):
-            try:
-                user = User.get_by_api_key(request.GET.get('key'))
-                data = dict(email=user.email)
-                UserModel().reset_password(data)
-                h.flash(_('Your password reset was successful, '
-                          'new password has been sent to your email'),
-                            category='success')
-            except Exception, e:
-                log.error(e)
-                return redirect(url('reset_password'))
+        # This controller handles both GET and POST requests, though we
+        # only ever perform the actual password change on POST (since
+        # GET requests are not allowed to have side effects, and do not
+        # receive automatic CSRF protection).
 
+        # The template needs the email address outside of the form.
+        c.email = request.params.get('email')
+
+        if not request.POST:
+            return htmlfill.render(
+                render('/password_reset_confirmation.html'),
+                defaults=dict(request.params),
+                encoding='UTF-8')
+
+        form = PasswordResetConfirmationForm()()
+        try:
+            form_result = form.to_python(dict(request.POST))
+        except formencode.Invalid as errors:
+            return htmlfill.render(
+                render('/password_reset_confirmation.html'),
+                defaults=errors.value,
+                errors=errors.error_dict or {},
+                prefix_error=False,
+                encoding='UTF-8')
+
+        if not UserModel().verify_reset_password_token(
+            form_result['email'],
+            form_result['timestamp'],
+            form_result['token'],
+        ):
+            return htmlfill.render(
+                render('/password_reset_confirmation.html'),
+                defaults=form_result,
+                errors={'token': _('Invalid password reset token')},
+                prefix_error=False,
+                encoding='UTF-8')
+
+        UserModel().reset_password(form_result['email'], form_result['password'])
+        h.flash(_('Successfully updated password'), category='success')
         return redirect(url('login_home'))
 
     def logout(self):
@@ -273,7 +263,7 @@ class LoginController(BaseController):
 
     def authentication_token(self):
         """Return the CSRF protection token for the session - just like it
-        could have been screen scrabed from a page with a form.
+        could have been screen scraped from a page with a form.
         Only intended for testing but might also be useful for other kinds
         of automation.
         """

@@ -1,5 +1,7 @@
 <%inherit file="/base/base.html"/>
 
+<%namespace name="pullrequest_data" file="pullrequest_data.html"/>
+
 <%block name="title">
     ${_('%s Pull Requests') % c.repo_name}
 </%block>
@@ -51,7 +53,7 @@ ${self.repo_context_bar('showpullrequest')}
         </div>
     </div>
 
-    <%include file='pullrequest_data.html'/>
+    ${pullrequest_data.pullrequest_overview(c.pullrequests_pager)}
 
 </div>
 </%def>

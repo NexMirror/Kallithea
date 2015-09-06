@@ -13,7 +13,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 kallithea.lib.auth_modules.auth_internal
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Kallithea authentication plugin for built in internal auth
 
@@ -61,14 +61,14 @@ class KallitheaAuthPlugin(auth_modules.KallitheaAuthPluginBase):
 
     def auth(self, userobj, username, password, settings, **kwargs):
         if not userobj:
-            log.debug('userobj was:%s skipping' % (userobj, ))
+            log.debug('userobj was:%s skipping', userobj)
             return None
         if userobj.extern_type != self.name:
-            log.warning("userobj:%s extern_type mismatch got:`%s` expected:`%s`"
-                     % (userobj, userobj.extern_type, self.name))
+            log.warning("userobj:%s extern_type mismatch got:`%s` expected:`%s`",
+                     userobj, userobj.extern_type, self.name)
             return None
 
-        user_attrs = {
+        user_data = {
             "username": userobj.username,
             "firstname": userobj.firstname,
             "lastname": userobj.lastname,
@@ -78,23 +78,26 @@ class KallitheaAuthPlugin(auth_modules.KallitheaAuthPluginBase):
             "active": userobj.active,
             "active_from_extern": userobj.active,
             "extern_name": userobj.user_id,
-            'extern_type': userobj.extern_type,
         }
 
-        log.debug(formatted_json(user_attrs))
+        log.debug(formatted_json(user_data))
         if userobj.active:
             from kallithea.lib import auth
             password_match = auth.KallitheaCrypto.hash_check(password, userobj.password)
             if userobj.username == User.DEFAULT_USER and userobj.active:
-                log.info('user %s authenticated correctly as anonymous user' %
+                log.info('user %s authenticated correctly as anonymous user',
                          username)
-                return user_attrs
+                return user_data
 
             elif userobj.username == username and password_match:
-                log.info('user %s authenticated correctly' % user_attrs['username'])
-                return user_attrs
-            log.error("user %s had a bad password" % username)
+                log.info('user %s authenticated correctly', user_data['username'])
+                return user_data
+            log.error("user %s had a bad password", username)
             return None
         else:
-            log.warning('user %s tried auth but is disabled' % username)
+            log.warning('user %s tried auth but is disabled', username)
             return None
+
+    def get_managed_fields(self):
+        # Note: 'username' should only be editable (at least for user) if self registration is enabled
+        return []

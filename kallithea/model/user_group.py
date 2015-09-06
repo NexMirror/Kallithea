@@ -12,8 +12,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-kallithea.model.users_group
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kallithea.model.user_group
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 user group model for Kallithea
 
@@ -253,7 +253,7 @@ class UserGroupModel(BaseModel):
         obj = UserGroupToPerm.query()\
             .filter(UserGroupToPerm.users_group == user_group)\
             .filter(UserGroupToPerm.permission == perm).scalar()
-        if obj:
+        if obj is not None:
             self.sa.delete(obj)
 
     def grant_user_permission(self, user_group, user, perm):
@@ -283,7 +283,7 @@ class UserGroupModel(BaseModel):
         obj.user = user
         obj.permission = permission
         self.sa.add(obj)
-        log.debug('Granted perm %s to %s on %s' % (perm, user, user_group))
+        log.debug('Granted perm %s to %s on %s', perm, user, user_group)
         return obj
 
     def revoke_user_permission(self, user_group, user):
@@ -302,9 +302,9 @@ class UserGroupModel(BaseModel):
             .filter(UserUserGroupToPerm.user == user)\
             .filter(UserUserGroupToPerm.user_group == user_group)\
             .scalar()
-        if obj:
+        if obj is not None:
             self.sa.delete(obj)
-            log.debug('Revoked perm on %s on %s' % (user_group, user))
+            log.debug('Revoked perm on %s on %s', user_group, user)
 
     def grant_user_group_permission(self, target_user_group, user_group, perm):
         """
@@ -334,7 +334,7 @@ class UserGroupModel(BaseModel):
         obj.target_user_group = target_user_group
         obj.permission = permission
         self.sa.add(obj)
-        log.debug('Granted perm %s to %s on %s' % (perm, target_user_group, user_group))
+        log.debug('Granted perm %s to %s on %s', perm, target_user_group, user_group)
         return obj
 
     def revoke_user_group_permission(self, target_user_group, user_group):
@@ -351,13 +351,13 @@ class UserGroupModel(BaseModel):
             .filter(UserGroupUserGroupToPerm.target_user_group == target_user_group)\
             .filter(UserGroupUserGroupToPerm.user_group == user_group)\
             .scalar()
-        if obj:
+        if obj is not None:
             self.sa.delete(obj)
-            log.debug('Revoked perm on %s on %s' % (target_user_group, user_group))
+            log.debug('Revoked perm on %s on %s', target_user_group, user_group)
 
     def enforce_groups(self, user, groups, extern_type=None):
         user = self._get_user(user)
-        log.debug('Enforcing groups %s on user %s' % (user, groups))
+        log.debug('Enforcing groups %s on user %s', user, groups)
         current_groups = user.group_member
         # find the external created groups
         externals = [x.users_group for x in current_groups
@@ -367,7 +367,7 @@ class UserGroupModel(BaseModel):
         # externals that are not in groups
         for gr in externals:
             if gr.users_group_name not in groups:
-                log.debug('Removing user %s from user group %s' % (user, gr))
+                log.debug('Removing user %s from user group %s', user, gr)
                 self.remove_user_from_group(gr, user)
 
         # now we calculate in which groups user should be == groups params
@@ -383,7 +383,7 @@ class UserGroupModel(BaseModel):
             # we can only add users to special groups created via plugins
             managed = 'extern_type' in existing_group.group_data
             if managed:
-                log.debug('Adding user %s to user group %s' % (user, gr))
+                log.debug('Adding user %s to user group %s', user, gr)
                 UserGroupModel().add_user_to_group(existing_group, user)
             else:
                 log.debug('Skipping addition to group %s since it is '

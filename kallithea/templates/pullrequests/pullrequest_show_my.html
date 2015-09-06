@@ -1,5 +1,7 @@
 <%inherit file="/base/base.html"/>
 
+<%namespace name="pullrequest_data" file="pullrequest_data.html"/>
+
 <%block name="title">
     ${_('My Pull Requests')}
 </%block>
@@ -30,7 +32,11 @@
         </div>
     </div>
 
-    <%include file='pullrequest_show_my_data.html'/>
+    <div class="pullrequests_section_head">${_('Pull Requests Created by Me')}</div>
+    ${pullrequest_data.pullrequest_overview(c.my_pull_requests)}
+
+    <div class="pullrequests_section_head" style="clear:both">${_('Pull Requests I Participate In')}</div>
+    ${pullrequest_data.pullrequest_overview(c.participate_in_pull_requests)}
 
 </div>
 </%def>

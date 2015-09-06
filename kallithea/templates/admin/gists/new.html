@@ -72,7 +72,7 @@
                     $(opt).attr('mode', m.mode);
                     if (m.mime == 'text/plain') {
                         // default plain text
-                        $(opt).attr('selected', 'selected');
+                        $(opt).prop('selected', true);
                         modes_select.options[0] = opt;
                     } else {
                         modes_select.options[index++] = opt;

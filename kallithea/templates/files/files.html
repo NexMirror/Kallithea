@@ -64,10 +64,10 @@ var ypjax_links = function(){
         var url = el.href;
 
         var _base_url = '${h.url("files_home",repo_name=c.repo_name,revision='',f_path='')}';
-        _base_url = _base_url.replace('//','/')
+        _base_url = _base_url.replace('//','/');
 
         //extract rev and the f_path from url.
-        parts = url.split(_base_url)
+        parts = url.split(_base_url);
         if(parts.length != 2){
             return false;
         }
@@ -145,7 +145,7 @@ var callbacks = function(State){
     $('#hlcode').mouseup(getSelectionLink);
 
     // history select field
-    var cache = {}
+    var cache = {};
     $("#diff1").select2({
         placeholder: _TM['Select changeset'],
         dropdownAutoWidth: true,
@@ -160,10 +160,10 @@ var callbacks = function(State){
                 var children = [];
                 $.each(this.children, function(){
                     if(query.term.length == 0 || this.text.toUpperCase().indexOf(query.term.toUpperCase()) >= 0 ){
-                        children.push({'id': this.id, 'text': this.text})
+                        children.push({'id': this.id, 'text': this.text});
                     }
-                })
-                data.results.push({'text': section, 'children': children})
+                });
+                data.results.push({'text': section, 'children': children});
             });
             query.callback(data);
           }else{
@@ -176,7 +176,7 @@ var callbacks = function(State){
                   cache[key] = data;
                   query.callback({results: data.results});
                 }
-              })
+              });
           }
         }
     });
@@ -186,10 +186,10 @@ var callbacks = function(State){
             success: function(data) {
                 $('#file_authors').html(data);
                 $('#file_authors').show();
-                tooltip_activate()
+                tooltip_activate();
             }
-        })
-    })
+        });
+    });
 }
 
 $(document).ready(function(){
@@ -233,7 +233,8 @@ $(document).ready(function(){
     // change branch filter
     $("#branch_selector").select2({
         dropdownAutoWidth: true,
-        minimumInputLength: 1
+        minimumInputLength: 1,
+        sortResults: branchSort
         });
 
     $("#branch_selector").change(function(e){

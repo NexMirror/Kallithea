@@ -12,8 +12,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-kallithea.model.db_1_6_0
-~~~~~~~~~~~~~~~~~~~~~~~~
+kallithea.lib.dbmigrate.schema.db_1_6_0
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Database Models for Kallithea <=1.5.X
 
@@ -48,7 +48,7 @@ from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 
 from kallithea.lib.utils2 import str2bool, safe_str, get_changeset_safe, \
-    safe_unicode, remove_suffix, remove_prefix, time_to_datetime, _set_extras
+    safe_unicode, remove_suffix, remove_prefix, time_to_datetime
 from kallithea.lib.compat import json
 from kallithea.lib.caching_query import FromCache
 
@@ -491,7 +491,7 @@ class User(Base, BaseModel):
         """Update user lastlogin"""
         self.last_login = datetime.datetime.now()
         Session().add(self)
-        log.debug('updated user %s lastlogin' % self.username)
+        log.debug('updated user %s lastlogin', self.username)
 
     def get_api_data(self):
         """
@@ -1065,15 +1065,15 @@ class Repository(Base, BaseModel):
         if (cs_cache != self.changeset_cache or not self.changeset_cache):
             _default = datetime.datetime.fromtimestamp(0)
             last_change = cs_cache.get('date') or _default
-            log.debug('updated repo %s with new cs cache %s'
-                      % (self.repo_name, cs_cache))
+            log.debug('updated repo %s with new cs cache %s',
+                      self.repo_name, cs_cache)
             self.updated_on = last_change
             self.changeset_cache = cs_cache
             Session().add(self)
             Session().commit()
         else:
-            log.debug('Skipping repo:%s already with latest changes'
-                      % self.repo_name)
+            log.debug('Skipping repo:%s already with latest changes',
+                      self.repo_name)
 
     @property
     def tip(self):
@@ -1192,8 +1192,8 @@ class Repository(Base, BaseModel):
         repo_full_path = self.repo_full_path
         try:
             alias = get_scm(repo_full_path)[0]
-            log.debug('Creating instance of %s repository from %s'
-                      % (alias, repo_full_path))
+            log.debug('Creating instance of %s repository from %s',
+                      alias, repo_full_path)
             backend = get_backend(alias)
         except VCSError:
             log.error(traceback.format_exc())
@@ -1296,7 +1296,7 @@ class RepoGroup(Base, BaseModel):
                 break
             if cnt == parents_recursion_limit:
                 # this will prevent accidental infinite loops
-                log.error('group nested more than %s' %
+                log.error('group nested more than %s',
                           parents_recursion_limit)
                 break
 
@@ -1723,8 +1723,8 @@ class CacheInvalidation(Base, BaseModel):
         try:
             for inv_obj in inv_objs:
                 inv_obj.cache_active = False
-                log.debug('marking %s key for invalidation based on key=%s,repo_name=%s'
-                  % (inv_obj, key, safe_str(repo_name)))
+                log.debug('marking %s key for invalidation based on key=%s,repo_name=%s',
+                  inv_obj, key, safe_str(repo_name))
                 invalidated_keys.append(inv_obj.cache_key)
                 Session().add(inv_obj)
             Session().commit()

@@ -12,8 +12,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-kallithea.controllers.admin.gist
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kallithea.controllers.admin.gists
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 gist controller for Kallithea
 
@@ -56,7 +56,7 @@ class GistsController(BaseController):
 
     def __load_defaults(self, extra_values=None):
         c.lifetime_values = [
-            (str(-1), _('forever')),
+            (str(-1), _('Forever')),
             (str(5), _('5 minutes')),
             (str(60), _('1 hour')),
             (str(60 * 24), _('1 day')),
@@ -130,7 +130,7 @@ class GistsController(BaseController):
             )
             Session().commit()
             new_gist_id = gist.gist_access_id
-        except formencode.Invalid, errors:
+        except formencode.Invalid as errors:
             defaults = errors.value
 
             return formencode.htmlfill.render(
@@ -141,7 +141,7 @@ class GistsController(BaseController):
                 encoding="UTF-8",
                 force_defaults=False)
 
-        except Exception, e:
+        except Exception as e:
             log.error(traceback.format_exc())
             h.flash(_('Error occurred during gist creation'), category='error')
             return redirect(url('new_gist'))
@@ -196,8 +196,8 @@ class GistsController(BaseController):
         #check if this gist is not expired
         if c.gist.gist_expires != -1:
             if time.time() > c.gist.gist_expires:
-                log.error('Gist expired at %s' %
-                          (time_to_datetime(c.gist.gist_expires)))
+                log.error('Gist expired at %s',
+                          time_to_datetime(c.gist.gist_expires))
                 raise HTTPNotFound()
         try:
             c.file_changeset, c.files = GistModel().get_gist_files(gist_id,
@@ -221,8 +221,8 @@ class GistsController(BaseController):
         #check if this gist is not expired
         if c.gist.gist_expires != -1:
             if time.time() > c.gist.gist_expires:
-                log.error('Gist expired at %s' %
-                          (time_to_datetime(c.gist.gist_expires)))
+                log.error('Gist expired at %s',
+                          time_to_datetime(c.gist.gist_expires))
                 raise HTTPNotFound()
         try:
             c.file_changeset, c.files = GistModel().get_gist_files(gist_id)
@@ -230,7 +230,7 @@ class GistsController(BaseController):
             log.error(traceback.format_exc())
             raise HTTPNotFound()
 
-        self.__load_defaults(extra_values=('0', _('unmodified')))
+        self.__load_defaults(extra_values=('0', _('Unmodified')))
         rendered = render('admin/gists/edit.html')
 
         if request.POST:
@@ -285,8 +285,8 @@ class GistsController(BaseController):
 
         ##TODO: maybe move this to model ?
         if revision != last_rev.raw_id:
-            log.error('Last revision %s is different than submitted %s'
-                      % (revision, last_rev))
+            log.error('Last revision %s is different than submitted %s',
+                      revision, last_rev)
             # our gist has newer version than we
             success = False
 

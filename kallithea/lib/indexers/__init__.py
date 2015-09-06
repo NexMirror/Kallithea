@@ -12,8 +12,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-kallithea.lib.indexers.__init__
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kallithea.lib.indexers
+~~~~~~~~~~~~~~~~~~~~~~
 
 Whoosh indexing module for Kallithea
 
@@ -138,7 +138,7 @@ class WhooshResultWrapper(object):
 
     def get_full_content(self, docid):
         res = self.searcher.stored_fields(docid[0])
-        log.debug('result: %s' % res)
+        log.debug('result: %s', res)
         if self.search_type == 'content':
             full_repo_path = jn(self.repo_location, res['repository'])
             f_path = res['path'].split(full_repo_path)[-1]
@@ -156,7 +156,7 @@ class WhooshResultWrapper(object):
         elif self.search_type == 'message':
             res.update({'message_hl': self.highlight(res['message'])})
 
-        log.debug('result: %s' % res)
+        log.debug('result: %s', res)
 
         return res
 

@@ -1,4 +1,3 @@
-from __future__ import with_statement
 
 import stat
 from kallithea.lib.vcs.nodes import DirNode

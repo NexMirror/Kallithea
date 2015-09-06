@@ -137,8 +137,7 @@ if (!Array.prototype.filter)
  * Usage pyroutes.url('mark_error_fixed',{"error_id":error_id}) // /mark_error_fixed/<error_id>
  */
 var pyroutes = (function() {
-    // access global map defined in special file pyroutes
-    var matchlist = PROUTES_MAP;
+    var matchlist = {};
     var sprintf = (function() {
         function get_type(variable) {
             return Object.prototype.toString.call(variable).slice(8, -1).toLowerCase();
@@ -298,7 +297,7 @@ var pyroutes = (function() {
             }
             var keys = [];
             for (var i=0; i < req_params.length; i++) {
-                keys.push(req_params[i])
+                keys.push(req_params[i]);
             }
             matchlist[route_name] = [
                 unescape(route_tmpl),
@@ -372,7 +371,6 @@ function asynchtml(url, $target, success, args){
         .fail(function(jqXHR, textStatus, errorThrown) {
                 if (textStatus == "abort")
                     return;
-                console.log('Ajax failure: ' + textStatus);
                 $target.html('<span class="error_red">ERROR: {0}</span>'.format(textStatus));
                 $target.css('opacity','1.0');
             })
@@ -430,7 +428,7 @@ var show_changeset_tooltip = function(){
             _show_tooltip(e, _TM['loading ...']);
             var url = pyroutes.url('changeset_info', {"repo_name": repo_name, "revision": rid});
             ajaxGET(url, function(json){
-                    $target.addClass('tooltip')
+                    $target.addClass('tooltip');
                     _show_tooltip(e, json['message']);
                     _activate_tooltip($target);
                 });
@@ -441,18 +439,17 @@ var show_changeset_tooltip = function(){
 var _onSuccessFollow = function(target){
     var $target = $(target);
     var $f_cnt = $('#current_followers_count');
-    if($target.hasClass('follow')){
-        $target.attr('class', 'following');
-        $target.attr('title', _TM['Stop following this repository']);
-        if($f_cnt.html()){
+    if ($target.hasClass('follow')) {
+        $target.removeClass('follow').addClass('following');
+        $target.prop('title', _TM['Stop following this repository']);
+        if ($f_cnt.html()) {
             var cnt = Number($f_cnt.html())+1;
             $f_cnt.html(cnt);
         }
-    }
-    else{
-        $target.attr('class', 'follow');
-        $target.attr('title', _TM['Start following this repository']);
-        if($f_cnt.html()){
+    } else {
+        $target.removeClass('following').addClass('follow');
+        $target.prop('title', _TM['Start following this repository']);
+        if ($f_cnt.html()) {
             var cnt = Number($f_cnt.html())-1;
             $f_cnt.html(cnt);
         }
@@ -499,7 +496,7 @@ var _activate_tooltip = function($tt){
 var _init_tooltip = function(){
     var $tipBox = $('#tip-box');
     if(!$tipBox.length){
-        $tipBox = $('<div id="tip-box"></div>')
+        $tipBox = $('<div id="tip-box"></div>');
         $(document.body).append($tipBox);
     }
 
@@ -527,7 +524,7 @@ var _show_tooltip = function(e, tipText, safe){
         // save org title
         $el.attr('tt_title', tipText);
         // reset title to not show org tooltips
-        $el.attr('title', '');
+        $el.prop('title', '');
 
         var $tipBox = $('#tip-box');
         if (safe) {
@@ -551,7 +548,7 @@ var _close_tooltip = function(e){
     var $tipBox = $('#tip-box');
     $tipBox.hide();
     var el = e.currentTarget;
-    $(el).attr('title', $(el).attr('tt_title'));
+    $(el).prop('title', $(el).attr('tt_title'));
 };
 
 /**
@@ -609,258 +606,168 @@ var q_filter = (function() {
     }
 })();
 
-/* return jQuery expression with a tr with body in 3rd column and class cls and id named after the body */
-var _table_tr = function(cls, body){
-    // like: <div class="comment" id="comment-8" line="o92"><div class="comment-wrapp">...
-    // except new inlines which are different ...
-    var comment_id = ($(body).attr('id') || 'comment-new').split('comment-')[1];
-    var tr_id = 'comment-tr-{0}'.format(comment_id);
-    return $(('<tr id="{0}" class="{1}">'+
-                  '<td class="lineno-inline new-inline"></td>'+
-                  '<td class="lineno-inline old-inline"></td>'+
-                  '<td>{2}</td>'+
-                 '</tr>').format(tr_id, cls, body));
-};
-
-/** return jQuery expression with new inline form based on template **/
-var _createInlineForm = function(parent_tr, f_path, line) {
-    var $tmpl = $('#comment-inline-form-template').html().format(f_path, line);
-    var $form = _table_tr('comment-form-inline', $tmpl)
-
-    // create event for hide button
-    $form.find('.hide-inline-form').click(function(e) {
-        var newtr = e.currentTarget.parentNode.parentNode.parentNode.parentNode.parentNode;
-        if($(newtr).next().hasClass('inline-comments-button')){
-            $(newtr).next().show();
-        }
-        $(newtr).remove();
-        $(parent_tr).removeClass('form-open');
-        $(parent_tr).removeClass('hl-comment');
-    });
-
-    return $form
-};
 
 /**
- * Inject inline comment for an given TR. This tr should always be a .line .
- * The form will be inject after any comments.
+ * Comment handling
  */
-var injectInlineForm = function(tr){
-    var $tr = $(tr);
-    if(!$tr.hasClass('line')){
-        return
-    }
-    var submit_url = AJAX_COMMENT_URL;
-    var $td = $tr.find('.code');
-    if($tr.hasClass('form-open') || $tr.hasClass('context') || $td.hasClass('no-comment')){
-        return
-    }
-    $tr.addClass('form-open hl-comment');
-    var $node = $tr.parent().parent().parent().find('.full_f_path');
-    var f_path = $node.attr('path');
-    var lineno = _getLineNo(tr);
-    var $form = _createInlineForm(tr, f_path, lineno, submit_url);
 
-    var $parent = $tr;
-    while ($parent.next().hasClass('inline-comments')){
-        var $parent = $parent.next();
-    }
-    $form.insertAfter($parent);
-    var $overlay = $form.find('.submitting-overlay');
-    var $inlineform = $form.find('.inline-form');
+// move comments to their right location, inside new trs
+function move_comments($anchorcomments) {
+    $anchorcomments.each(function(i, anchorcomment) {
+        var $anchorcomment = $(anchorcomment);
+        var target_id = $anchorcomment.data('target-id');
+        var $comment_div = _get_add_comment_div(target_id);
+        var f_path = $anchorcomment.data('f_path');
+        var line_no = $anchorcomment.data('line_no');
+        if ($comment_div[0]) {
+            $comment_div.append($anchorcomment.children());
+            _comment_div_append_add($comment_div, f_path, line_no);
+        } else {
+           $anchorcomment.before("Comment to {0} line {1} which is outside the diff context:".format(f_path || '?', line_no || '?'));
+        }
+    });
+    linkInlineComments($('.firstlink'), $('.comment:first-child'));
+}
 
-    $form.submit(function(e){
+// comment bubble was clicked - insert new tr and show form
+function show_comment_form($bubble) {
+    var children = $bubble.closest('tr.line').children('[id]');
+    var line_td_id = children[children.length - 1].id;
+    var $comment_div = _get_add_comment_div(line_td_id);
+    var f_path = $bubble.closest('div.full_f_path').data('f_path');
+    var parts = line_td_id.split('_');
+    var line_no = parts[parts.length-1];
+    comment_div_state($comment_div, f_path, line_no, true);
+}
+
+// return comment div for target_id - add it if it doesn't exist yet
+function _get_add_comment_div(target_id) {
+    var comments_box_id = 'comments-' + target_id;
+    var $comments_box = $('#' + comments_box_id);
+    if (!$comments_box.length) {
+        var html = '<tr><td id="{0}" colspan="3" class="inline-comments"></td></tr>'.format(comments_box_id);
+        $('#' + target_id).closest('tr').after(html);
+        $comments_box = $('#' + comments_box_id);
+    }
+    return $comments_box;
+}
+
+// set $comment_div state - showing or not showing form and Add button
+function comment_div_state($comment_div, f_path, line_no, show_form) {
+    var $forms = $comment_div.children('.comment-inline-form');
+    var $buttons = $comment_div.children('.add-comment');
+    var $comments = $comment_div.children('.comment');
+    if (show_form) {
+        if (!$forms.length) {
+            _comment_div_append_form($comment_div, f_path, line_no);
+        }
+    } else {
+        $forms.remove();
+    }
+    $buttons.remove();
+    if ($comments.length && !show_form) {
+        _comment_div_append_add($comment_div, f_path, line_no);
+    }
+}
+
+// append an Add button to $comment_div and hook it up to show form
+function _comment_div_append_add($comment_div, f_path, line_no) {
+    var addlabel = TRANSLATION_MAP['Add Another Comment'];
+    var $add = $('<div class="add-comment"><span class="btn btn-mini">{0}</span></div>'.format(addlabel));
+    $comment_div.append($add);
+    $add.click(function(e) {
+        comment_div_state($comment_div, f_path, line_no, true);
+    });
+}
+
+// append a comment form to $comment_div
+function _comment_div_append_form($comment_div, f_path, line_no) {
+    var $form_div = $($('#comment-inline-form-template').html().format(f_path, line_no))
+        .addClass('comment-inline-form');
+    $comment_div.append($form_div);
+    var $form = $comment_div.find("form");
+
+    $form.submit(function(e) {
         e.preventDefault();
 
-        if(lineno === undefined){
-            alert('Error submitting, line ' + lineno + ' not found.');
-            return;
-        }
-        if(f_path === undefined){
-            alert('Error submitting, file path ' + f_path + ' not found.');
+        var text = $('#text_'+line_no).val();
+        if (!text){
             return;
         }
 
-        var text = $('#text_'+lineno).val();
-        if(text == ""){
-            return;
-        }
+        $form.find('.submitting-overlay').show();
 
-        $overlay.show();
-
-        var success = function(json_data){
-            $tr.removeClass('form-open');
-            $form.remove();
-            _renderInlineComment(json_data);
+        var success = function(json_data) {
+            $comment_div.append(json_data['rendered_text']);
+            comment_div_state($comment_div, f_path, line_no, false);
+            linkInlineComments($('.firstlink'), $('.comment:first-child'));
         };
         var postData = {
-                'text': text,
-                'f_path': f_path,
-                'line': lineno
+            'text': text,
+            'f_path': f_path,
+            'line': line_no
         };
-        ajaxPOST(submit_url, postData, success);
+        ajaxPOST(AJAX_COMMENT_URL, postData, success);
     });
 
-    $('#preview-btn_'+lineno).click(function(e){
-        var text = $('#text_'+lineno).val();
+    $('#preview-btn_'+line_no).click(function(e){
+        var text = $('#text_'+line_no).val();
         if(!text){
             return
         }
-        $('#preview-box_'+lineno).addClass('unloaded');
-        $('#preview-box_'+lineno).html(_TM['Loading ...']);
-        $('#edit-container_'+lineno).hide();
-        $('#edit-btn_'+lineno).show();
-        $('#preview-container_'+lineno).show();
-        $('#preview-btn_'+lineno).hide();
+        $('#preview-box_'+line_no).addClass('unloaded');
+        $('#preview-box_'+line_no).html(_TM['Loading ...']);
+        $('#edit-container_'+line_no).hide();
+        $('#edit-btn_'+line_no).show();
+        $('#preview-container_'+line_no).show();
+        $('#preview-btn_'+line_no).hide();
 
         var url = pyroutes.url('changeset_comment_preview', {'repo_name': REPO_NAME});
         var post_data = {'text': text};
-        ajaxPOST(url, post_data, function(html){
-            $('#preview-box_'+lineno).html(html);
-            $('#preview-box_'+lineno).removeClass('unloaded');
+        ajaxPOST(url, post_data, function(html) {
+            $('#preview-box_'+line_no).html(html);
+            $('#preview-box_'+line_no).removeClass('unloaded');
         })
     })
-    $('#edit-btn_'+lineno).click(function(e){
-        $('#edit-container_'+lineno).show();
-        $('#edit-btn_'+lineno).hide();
-        $('#preview-container_'+lineno).hide();
-        $('#preview-btn_'+lineno).show();
+    $('#edit-btn_'+line_no).click(function(e) {
+        $('#edit-container_'+line_no).show();
+        $('#edit-btn_'+line_no).hide();
+        $('#preview-container_'+line_no).hide();
+        $('#preview-btn_'+line_no).show();
     })
 
-    setTimeout(function(){
+    // create event for hide button
+    $form.find('.hide-inline-form').click(function(e) {
+        comment_div_state($comment_div, f_path, line_no, false);
+    });
+
+    setTimeout(function() {
         // callbacks
         tooltip_activate();
-        MentionsAutoComplete('text_'+lineno, 'mentions_container_'+lineno,
-                             _USERS_AC_DATA, _GROUPS_AC_DATA);
-        $('#text_'+lineno).focus();
-    },10)
-};
-
-var deleteComment = function(comment_id){
-    var url = AJAX_COMMENT_DELETE_URL.replace('__COMMENT_ID__',comment_id);
-    var postData = {'_method':'delete'};
-    var success = function(o){
-        var $deleted = $('#comment-tr-'+comment_id);
-        var $prev = $deleted.prev('tr');
-        while ($prev.hasClass('inline-comments')){
-            $prev = $prev.prev('tr');
-        }
-        $deleted.remove();
-        _placeAddButton($prev);
-    }
-    ajaxPOST(url,postData,success);
+        MentionsAutoComplete($('#text_'+line_no), $('#mentions_container_'+line_no),
+                             _USERS_AC_DATA);
+        $('#text_'+line_no).focus();
+    }, 10);
 }
 
-var _getLineNo = function(tr) {
-    var line;
-    var o = $(tr).children()[0].id.split('_');
-    var n = $(tr).children()[1].id.split('_');
 
-    if (n.length >= 2) {
-        line = n[n.length-1];
-    } else if (o.length >= 2) {
-        line = o[o.length-1];
+function deleteComment(comment_id) {
+    var url = AJAX_COMMENT_DELETE_URL.replace('__COMMENT_ID__', comment_id);
+    var postData = {'_method': 'delete'};
+    var success = function(o) {
+        $('#comment-'+comment_id).remove();
+        // Ignore that this might leave a stray Add button (or have a pending form with another comment) ...
     }
-
-    return line
-};
-
-var _placeAddButton = function($line_tr){
-    var $tr = $line_tr;
-    while ($tr.next().hasClass('inline-comments')){
-        $tr.find('.add-comment').remove();
-        $tr = $tr.next();
-    }
-    $tr.find('.add-comment').remove();
-    var label = TRANSLATION_MAP['Add Another Comment'];
-    var $html_el = $('<div class="add-comment"><span class="btn btn-mini">{0}</span></div>'.format(label));
-    $html_el.click(function(e) {
-        injectInlineForm($line_tr);
-    });
-    $tr.find('.comment').after($html_el);
-};
-
-/**
- * Places the inline comment into the changeset block in proper line position
- */
-var _placeInline = function(target_id, lineno, html){
-    var $td = $("#{0}_{1}".format(target_id, lineno));
-    if (!$td.length){
-        return false;
-    }
-
-    // check if there are comments already !
-    var $line_tr = $td.parent(); // the tr
-    var $after_tr = $line_tr;
-    while ($after_tr.next().hasClass('inline-comments')){
-        $after_tr = $after_tr.next();
-    }
-    // put in the comment at the bottom
-    var $tr = _table_tr('inline-comments', html)
-    $tr.find('div.comment').addClass('inline-comment');
-    $after_tr.after($tr);
-
-    // scan nodes, and attach add button to last one
-    _placeAddButton($line_tr);
-    return true;
+    ajaxPOST(url, postData, success);
 }
 
-/**
- * make a single inline comment and place it inside
- */
-var _renderInlineComment = function(json_data){
-    var html =  json_data['rendered_text'];
-    var lineno = json_data['line_no'];
-    var target_id = json_data['target_id'];
-    return _placeInline(target_id, lineno, html);
-}
-
-/**
- * Iterates over all the inlines, and places them inside proper blocks of data
- */
-var renderInlineComments = function(file_comments){
-    for (var f in file_comments){
-        // holding all comments for a FILE
-        var box = file_comments[f];
-
-        var target_id = $(box).attr('target_id');
-        // actual comments with line numbers
-        var comments = box.children;
-        var obsolete_comments = [];
-        for(var i=0; i<comments.length; i++){
-            var data = {
-                'rendered_text': comments[i].outerHTML,
-                'line_no': $(comments[i]).attr('line'),
-                'target_id': target_id
-            }
-            if (_renderInlineComment(data)) {
-                obsolete_comments.push(comments[i]);
-                $(comments[i]).hide();
-            }else{
-                var txt = document.createTextNode(
-                        "Comment to " + YUD.getAttribute(comments[i].parentNode,'path') +
-                        " line " + data.line_no +
-                        " which is outside the diff context:");
-                comments[i].insertBefore(txt, comments[i].firstChild);
-            }
-        }
-        // now remove all the obsolete comments that have been copied to their
-        // respective locations.
-        for (var i=0; i < obsolete_comments.length; i++) {
-            obsolete_comments[i].parentNode.removeChild(obsolete_comments[i]);
-        }
-
-        $(box).show();
-    }
-}
 
 /**
  * Double link comments
  */
-var linkInlineComments = function(firstlinks, comments){
-    var $comments = $(comments);
+var linkInlineComments = function($firstlinks, $comments){
     if ($comments.length > 0) {
-        $(firstlinks).html('<a href="#{0}">First comment</a>'.format($comments.attr('id')));
+        $firstlinks.html('<a href="#{0}">First comment</a>'.format($comments.prop('id')));
     }
     if ($comments.length <= 1) {
         return;
@@ -869,18 +776,17 @@ var linkInlineComments = function(firstlinks, comments){
     $comments.each(function(i, e){
             var prev = '';
             if (i > 0){
-                var prev_anchor = YUD.getAttribute(comments.item(i-1),'id');
+                var prev_anchor = $($comments.get(i-1)).prop('id');
                 prev = '<a href="#{0}">Previous comment</a>'.format(prev_anchor);
             }
             var next = '';
-            if (i+1 < comments.length){
-                var next_anchor = YUD.getAttribute(comments.item(i+1),'id');
+            if (i+1 < $comments.length){
+                var next_anchor = $($comments.get(i+1)).prop('id');
                 next = '<a href="#{0}">Next comment</a>'.format(next_anchor);
             }
-            var $div = $(('<div class="prev-next-comment">'+
-                          '<div class="prev-comment">{0}</div>'+
-                          '<div class="next-comment">{1}</div>').format(prev, next));
-            $div.prependTo(this);
+            $(this).find('.comment-prev-next-links').html(
+                '<div class="prev-comment">{0}</div>'.format(prev) +
+                '<div class="next-comment">{0}</div>'.format(next));
         });
 }
 
@@ -897,7 +803,7 @@ var fileBrowserListeners = function(current_url, node_list_url, url_base){
         else{
             window.location = current_url;
         }
-    })
+    });
 
     var $node_filter = $('#node_filter');
 
@@ -920,7 +826,7 @@ var fileBrowserListeners = function(current_url, node_list_url, url_base){
                     }
                 })
             .fail(function() {
-                    console.log('failed to load');
+                    console.log('fileBrowserListeners initFilter failed to load');
                 })
         ;
     }
@@ -935,7 +841,7 @@ var fileBrowserListeners = function(current_url, node_list_url, url_base){
             var matches_max = 20;
             if (query != ""){
                 for(var i=0;i<nodes.length;i++){
-                    var pos = nodes[i].name.toLowerCase().indexOf(query)
+                    var pos = nodes[i].name.toLowerCase().indexOf(query);
                     if(query && pos != -1){
                         matches++
                         //show only certain amount to not kill browser
@@ -946,8 +852,8 @@ var fileBrowserListeners = function(current_url, node_list_url, url_base){
                         var n = nodes[i].name;
                         var t = nodes[i].type;
                         var n_hl = n.substring(0,pos)
-                          +"<b>{0}</b>".format(n.substring(pos,pos+query.length))
-                          +n.substring(pos+query.length)
+                            + "<b>{0}</b>".format(n.substring(pos,pos+query.length))
+                            + n.substring(pos+query.length);
                         var new_url = url_base.replace('__FPATH__',n);
                         match.push('<tr><td><a class="browser-{0}" href="{1}">{2}</a></td><td colspan="5"></td></tr>'.format(t,new_url,n_hl));
                     }
@@ -1070,7 +976,7 @@ var getSelectionLink = function(e) {
                 $('body').prepend($hl_div);
             }
 
-            $hl_div.append($('<a>').html(_TM['Selection link']).attr('href', location.href.substring(0, location.href.indexOf('#')) + '#L' + ranges[0] + '-'+ranges[1]));
+            $hl_div.append($('<a>').html(_TM['Selection link']).prop('href', location.href.substring(0, location.href.indexOf('#')) + '#L' + ranges[0] + '-'+ranges[1]));
             var xy = $(till).offset();
             $hl_div.css('top', (xy.top + yoffset) + 'px').css('left', xy.left + 'px');
             $hl_div.show();
@@ -1109,336 +1015,244 @@ var readNotification = function(url, notification_id, callbacks){
     ajaxPOST(sUrl, postData, success, failure);
 };
 
-/** MEMBERS AUTOCOMPLETE WIDGET **/
+/**
+ * Autocomplete functionality
+ */
 
-var _MembersAutoComplete = function (divid, cont, users_list, groups_list) {
-    var myUsers = users_list;
-    var myGroups = groups_list;
+// Custom search function for the DataSource of users
+var autocompleteMatchUsers = function (sQuery, myUsers) {
+    // Case insensitive matching
+    var query = sQuery.toLowerCase();
+    var i = 0;
+    var l = myUsers.length;
+    var matches = [];
 
-    // Define a custom search function for the DataSource of users
-    var matchUsers = function (sQuery) {
-            // Case insensitive matching
-            var query = sQuery.toLowerCase();
-            var i = 0;
-            var l = myUsers.length;
-            var matches = [];
-
-            // Match against each name of each contact
-            for (; i < l; i++) {
-                var contact = myUsers[i];
-                if (((contact.fname+"").toLowerCase().indexOf(query) > -1) ||
-                     ((contact.lname+"").toLowerCase().indexOf(query) > -1) ||
-                     ((contact.nname) && ((contact.nname).toLowerCase().indexOf(query) > -1))) {
-                    matches[matches.length] = contact;
-                }
-            }
-            return matches;
-        };
-
-    // Define a custom search function for the DataSource of userGroups
-    var matchGroups = function (sQuery) {
-            // Case insensitive matching
-            var query = sQuery.toLowerCase();
-            var i = 0;
-            var l = myGroups.length;
-            var matches = [];
-
-            // Match against each name of each contact
-            for (; i < l; i++) {
-                var matched_group = myGroups[i];
-                if (matched_group.grname.toLowerCase().indexOf(query) > -1) {
-                    matches[matches.length] = matched_group;
-                }
-            }
-            return matches;
-        };
-
-    //match all
-    var matchAll = function (sQuery) {
-            var u = matchUsers(sQuery);
-            var g = matchGroups(sQuery);
-            return u.concat(g);
-        };
-
-    // DataScheme for members
-    var memberDS = new YAHOO.util.FunctionDataSource(matchAll);
-    memberDS.responseSchema = {
-        fields: ["id", "fname", "lname", "nname", "grname", "grmembers", "gravatar_lnk", "gravatar_size"]
-    };
-
-    // DataScheme for owner
-    var ownerDS = new YAHOO.util.FunctionDataSource(matchUsers);
-    ownerDS.responseSchema = {
-        fields: ["id", "fname", "lname", "nname", "gravatar_lnk", "gravatar_size"]
-    };
-
-    // Instantiate AutoComplete for perms
-    var membersAC = new YAHOO.widget.AutoComplete(divid, cont, memberDS);
-    membersAC.useShadow = false;
-    membersAC.resultTypeList = false;
-    membersAC.animVert = false;
-    membersAC.animHoriz = false;
-    membersAC.animSpeed = 0.1;
-
-    // Instantiate AutoComplete for owner
-    var ownerAC = new YAHOO.widget.AutoComplete("user", "owner_container", ownerDS);
-    ownerAC.useShadow = false;
-    ownerAC.resultTypeList = false;
-    ownerAC.animVert = false;
-    ownerAC.animHoriz = false;
-    ownerAC.animSpeed = 0.1;
-
-    // Helper highlight function for the formatter
-    var highlightMatch = function (full, snippet, matchindex) {
-            return full.substring(0, matchindex)
-            + "<span class='match'>"
-            + full.substr(matchindex, snippet.length)
-            + "</span>" + full.substring(matchindex + snippet.length);
-        };
-
-    // Custom formatter to highlight the matching letters
-    var custom_formatter = function (oResultData, sQuery, sResultMatch) {
-            var query = sQuery.toLowerCase();
-            var _gravatar = function(res, em, size, group){
-                var elem = '<img alt="gravatar" class="perm-gravatar-ac" style="width: {0}px; height: {0}px" src="{1}"/>'.format(size, em);
-                if (!em) {
-                    elem = '<i class="icon-user perm-gravatar-ac" style="font-size: {0}px;"></i>'.format(size);
-                }
-                if (group !== undefined){
-                    elem = '<i class="perm-gravatar-ac icon-users"></i>'
-                }
-                var tmpl = '<div class="ac-container-wrap">{0}{1}</div>'
-                return tmpl.format(elem,res)
-            }
-            // group
-            if (oResultData.grname != undefined) {
-                var grname = oResultData.grname;
-                var grmembers = oResultData.grmembers;
-                var grnameMatchIndex = grname.toLowerCase().indexOf(query);
-                var grprefix = "{0}: ".format(_TM['Group']);
-                var grsuffix = " (" + grmembers + "  )";
-                var grsuffix = " ({0}  {1})".format(grmembers, _TM['members']);
-
-                if (grnameMatchIndex > -1) {
-                    return _gravatar(grprefix + highlightMatch(grname, query, grnameMatchIndex) + grsuffix,null,null,true);
-                }
-                return _gravatar(grprefix + oResultData.grname + grsuffix, null, null, true);
-            // Users
-            } else if (oResultData.nname != undefined) {
-                var fname = oResultData.fname || "";
-                var lname = oResultData.lname || "";
-                var nname = oResultData.nname;
-
-                // Guard against null value
-                var fnameMatchIndex = fname.toLowerCase().indexOf(query),
-                    lnameMatchIndex = lname.toLowerCase().indexOf(query),
-                    nnameMatchIndex = nname.toLowerCase().indexOf(query),
-                    displayfname, displaylname, displaynname;
-
-                if (fnameMatchIndex > -1) {
-                    displayfname = highlightMatch(fname, query, fnameMatchIndex);
-                } else {
-                    displayfname = fname;
-                }
-
-                if (lnameMatchIndex > -1) {
-                    displaylname = highlightMatch(lname, query, lnameMatchIndex);
-                } else {
-                    displaylname = lname;
-                }
-
-                if (nnameMatchIndex > -1) {
-                    displaynname = "(" + highlightMatch(nname, query, nnameMatchIndex) + ")";
-                } else {
-                    displaynname = nname ? "(" + nname + ")" : "";
-                }
-
-                return _gravatar(displayfname + " " + displaylname + " " + displaynname, oResultData.gravatar_lnk, oResultData.gravatar_size);
-            } else {
-                return '';
-            }
-        };
-    membersAC.formatResult = custom_formatter;
-    ownerAC.formatResult = custom_formatter;
-
-    var myHandler = function (sType, aArgs) {
-            var nextId = divid.split('perm_new_member_name_')[1];
-            var myAC = aArgs[0]; // reference back to the AC instance
-            var elLI = aArgs[1]; // reference to the selected LI element
-            var oData = aArgs[2]; // object literal of selected item's result data
-            //fill the autocomplete with value
-            if (oData.nname != undefined) {
-                //users
-                myAC.getInputEl().value = oData.nname;
-                $('#perm_new_member_type_'+nextId).val('user');
-            } else {
-                //groups
-                myAC.getInputEl().value = oData.grname;
-                $('#perm_new_member_type_'+nextId).val('users_group');
-            }
-        };
-
-    membersAC.itemSelectEvent.subscribe(myHandler);
-    if(ownerAC.itemSelectEvent){
-        ownerAC.itemSelectEvent.subscribe(myHandler);
+    // Match against each name of each contact
+    for (; i < l; i++) {
+        var contact = myUsers[i];
+        if (((contact.fname+"").toLowerCase().indexOf(query) > -1) ||
+             ((contact.lname+"").toLowerCase().indexOf(query) > -1) ||
+             ((contact.nname) && ((contact.nname).toLowerCase().indexOf(query) > -1))) {
+            matches[matches.length] = contact;
+        }
     }
+    return matches;
+};
 
-    return {
-        memberDS: memberDS,
-        ownerDS: ownerDS,
-        membersAC: membersAC,
-        ownerAC: ownerAC
-    };
+// Custom search function for the DataSource of userGroups
+var autocompleteMatchGroups = function (sQuery, myGroups) {
+    // Case insensitive matching
+    var query = sQuery.toLowerCase();
+    var i = 0;
+    var l = myGroups.length;
+    var matches = [];
+
+    // Match against each name of each group
+    for (; i < l; i++) {
+        var matched_group = myGroups[i];
+        if (matched_group.grname.toLowerCase().indexOf(query) > -1) {
+            matches[matches.length] = matched_group;
+        }
+    }
+    return matches;
+};
+
+// Helper highlight function for the formatter
+var autocompleteHighlightMatch = function (full, snippet, matchindex) {
+    return full.substring(0, matchindex)
+        + "<span class='match'>"
+        + full.substr(matchindex, snippet.length)
+        + "</span>" + full.substring(matchindex + snippet.length);
+};
+
+var gravatar = function(link, size, cssclass) {
+    var elem = '<img alt="" class="{2}" style="width: {0}px; height: {0}px" src="{1}"/>'.format(size, link, cssclass);
+    if (!link) {
+        elem = '<i class="icon-user {1}" style="font-size: {0}px;"></i>'.format(size, cssclass);
+    }
+    return elem;
 }
 
-var MentionsAutoComplete = function (divid, cont, users_list, groups_list) {
-    var myUsers = users_list;
-    var myGroups = groups_list;
+var autocompleteGravatar = function(res, link, size, group) {
+    var elem = gravatar(link, size, "perm-gravatar-ac");
+    if (group !== undefined) {
+        elem = '<i class="perm-gravatar-ac icon-users"></i>';
+    }
+    return '<div class="ac-container-wrap">{0}{1}</div>'.format(elem, res);
+}
 
-    // Define a custom search function for the DataSource of users
+// Custom formatter to highlight the matching letters
+var autocompleteFormatter = function (oResultData, sQuery, sResultMatch) {
+    var query = sQuery.toLowerCase();
+
+    // group
+    if (oResultData.grname != undefined) {
+        var grname = oResultData.grname;
+        var grmembers = oResultData.grmembers;
+        var grnameMatchIndex = grname.toLowerCase().indexOf(query);
+        var grprefix = "{0}: ".format(_TM['Group']);
+        var grsuffix = " ({0} {1})".format(grmembers, _TM['members']);
+
+        if (grnameMatchIndex > -1) {
+            return autocompleteGravatar(grprefix + autocompleteHighlightMatch(grname, query, grnameMatchIndex) + grsuffix, null, null, true);
+        }
+        return autocompleteGravatar(grprefix + oResultData.grname + grsuffix, null, null, true);
+
+    // users
+    } else if (oResultData.nname != undefined) {
+        var fname = oResultData.fname || "";
+        var lname = oResultData.lname || "";
+        var nname = oResultData.nname;
+
+        // Guard against null value
+        var fnameMatchIndex = fname.toLowerCase().indexOf(query),
+            lnameMatchIndex = lname.toLowerCase().indexOf(query),
+            nnameMatchIndex = nname.toLowerCase().indexOf(query),
+            displayfname, displaylname, displaynname, displayname;
+
+        if (fnameMatchIndex > -1) {
+            displayfname = autocompleteHighlightMatch(fname, query, fnameMatchIndex);
+        } else {
+            displayfname = fname;
+        }
+
+        if (lnameMatchIndex > -1) {
+            displaylname = autocompleteHighlightMatch(lname, query, lnameMatchIndex);
+        } else {
+            displaylname = lname;
+        }
+
+        if (nnameMatchIndex > -1) {
+            displaynname = autocompleteHighlightMatch(nname, query, nnameMatchIndex);
+        } else {
+            displaynname = nname;
+        }
+
+        displayname = displaynname;
+        if (displayfname && displaylname) {
+            displayname = "{0} {1} ({2})".format(displayfname, displaylname, displayname);
+        }
+
+        return autocompleteGravatar(displayname, oResultData.gravatar_lnk, oResultData.gravatar_size);
+    } else {
+        return '';
+    }
+};
+
+// Generate a basic autocomplete instance that can be tweaked further by the caller
+var autocompleteCreate = function ($inputElement, $container, matchFunc) {
+    var datasource = new YAHOO.util.FunctionDataSource(matchFunc);
+
+    var autocomplete = new YAHOO.widget.AutoComplete($inputElement[0], $container[0], datasource);
+    autocomplete.useShadow = false;
+    autocomplete.resultTypeList = false;
+    autocomplete.animVert = false;
+    autocomplete.animHoriz = false;
+    autocomplete.animSpeed = 0.1;
+    autocomplete.formatResult = autocompleteFormatter;
+
+    return autocomplete;
+}
+
+var SimpleUserAutoComplete = function ($inputElement, $container, users_list) {
+
+    var matchUsers = function (sQuery) {
+        return autocompleteMatchUsers(sQuery, users_list);
+    }
+
+    var userAC = autocompleteCreate($inputElement, $container, matchUsers);
+
+    // Handler for selection of an entry
+    var itemSelectHandler = function (sType, aArgs) {
+        var myAC = aArgs[0]; // reference back to the AC instance
+        var elLI = aArgs[1]; // reference to the selected LI element
+        var oData = aArgs[2]; // object literal of selected item's result data
+        myAC.getInputEl().value = oData.nname;
+    };
+    userAC.itemSelectEvent.subscribe(itemSelectHandler);
+}
+
+var MembersAutoComplete = function ($inputElement, $container, users_list, groups_list) {
+
+    var matchAll = function (sQuery) {
+        var u = autocompleteMatchUsers(sQuery, users_list);
+        var g = autocompleteMatchGroups(sQuery, groups_list);
+        return u.concat(g);
+    };
+
+    var membersAC = autocompleteCreate($inputElement, $container, matchAll);
+
+    // Handler for selection of an entry
+    var itemSelectHandler = function (sType, aArgs) {
+        var nextId = $inputElement.prop('id').split('perm_new_member_name_')[1];
+        var myAC = aArgs[0]; // reference back to the AC instance
+        var elLI = aArgs[1]; // reference to the selected LI element
+        var oData = aArgs[2]; // object literal of selected item's result data
+        //fill the autocomplete with value
+        if (oData.nname != undefined) {
+            //users
+            myAC.getInputEl().value = oData.nname;
+            $('#perm_new_member_type_'+nextId).val('user');
+        } else {
+            //groups
+            myAC.getInputEl().value = oData.grname;
+            $('#perm_new_member_type_'+nextId).val('users_group');
+        }
+    };
+    membersAC.itemSelectEvent.subscribe(itemSelectHandler);
+}
+
+var MentionsAutoComplete = function ($inputElement, $container, users_list) {
+
     var matchUsers = function (sQuery) {
             var org_sQuery = sQuery;
             if(this.mentionQuery == null){
                 return []
             }
             sQuery = this.mentionQuery;
-            // Case insensitive matching
-            var query = sQuery.toLowerCase();
-            var i = 0;
-            var l = myUsers.length;
-            var matches = [];
+            return autocompleteMatchUsers(sQuery, users_list);
+    }
 
-            // Match against each name of each contact
-            for (; i < l; i++) {
-                var contact = myUsers[i];
-                if (((contact.fname+"").toLowerCase().indexOf(query) > -1) ||
-                     ((contact.lname+"").toLowerCase().indexOf(query) > -1) ||
-                     ((contact.nname) && ((contact.nname).toLowerCase().indexOf(query) > -1))) {
-                    matches[matches.length] = contact;
-                }
-            }
-            return matches
-        };
+    var mentionsAC = autocompleteCreate($inputElement, $container, matchUsers);
+    mentionsAC.suppressInputUpdate = true;
+    // Overwrite formatResult to take into account mentionQuery
+    mentionsAC.formatResult = function (oResultData, sQuery, sResultMatch) {
+        var org_sQuery = sQuery;
+        if (this.dataSource.mentionQuery != null) {
+            sQuery = this.dataSource.mentionQuery;
+        }
+        return autocompleteFormatter(oResultData, sQuery, sResultMatch);
+    }
 
-    //match all
-    var matchAll = function (sQuery) {
-            return matchUsers(sQuery);
-        };
-
-    // DataScheme for owner
-    var ownerDS = new YAHOO.util.FunctionDataSource(matchUsers);
-
-    ownerDS.responseSchema = {
-        fields: ["id", "fname", "lname", "nname", "gravatar_lnk", "gravatar_size"]
-    };
-
-    // Instantiate AutoComplete for mentions
-    var ownerAC = new YAHOO.widget.AutoComplete(divid, cont, ownerDS);
-    ownerAC.useShadow = false;
-    ownerAC.resultTypeList = false;
-    ownerAC.suppressInputUpdate = true;
-    ownerAC.animVert = false;
-    ownerAC.animHoriz = false;
-    ownerAC.animSpeed = 0.1;
-
-    // Helper highlight function for the formatter
-    var highlightMatch = function (full, snippet, matchindex) {
-            return full.substring(0, matchindex)
-                + "<span class='match'>"
-                + full.substr(matchindex, snippet.length)
-                + "</span>" + full.substring(matchindex + snippet.length);
-        };
-
-    // Custom formatter to highlight the matching letters
-    ownerAC.formatResult = function (oResultData, sQuery, sResultMatch) {
-            var org_sQuery = sQuery;
-            if(this.dataSource.mentionQuery != null){
-                sQuery = this.dataSource.mentionQuery;
-            }
-
-            var query = sQuery.toLowerCase();
-            var _gravatar = function(res, em, size, group){
-                var elem = '<img alt="gravatar" class="perm-gravatar-ac" style="width: {0}px; height: {0}px" src="{1}"/>'.format(size, em);
-                if (!em) {
-                    elem = '<i class="icon-user perm-gravatar-ac" style="font-size: {0}px;"></i>'.format(size);
-                }
-                if (group !== undefined){
-                    elem = '<i class="perm-gravatar-ac icon-users"></i>'
-                }
-                var tmpl = '<div class="ac-container-wrap">{0}{1}</div>'
-                return tmpl.format(elem,res)
-            }
-            if (oResultData.nname != undefined) {
-                var fname = oResultData.fname || "";
-                var lname = oResultData.lname || "";
-                var nname = oResultData.nname;
-
-                // Guard against null value
-                var fnameMatchIndex = fname.toLowerCase().indexOf(query),
-                    lnameMatchIndex = lname.toLowerCase().indexOf(query),
-                    nnameMatchIndex = nname.toLowerCase().indexOf(query),
-                    displayfname, displaylname, displaynname;
-
-                if (fnameMatchIndex > -1) {
-                    displayfname = highlightMatch(fname, query, fnameMatchIndex);
-                } else {
-                    displayfname = fname;
-                }
-
-                if (lnameMatchIndex > -1) {
-                    displaylname = highlightMatch(lname, query, lnameMatchIndex);
-                } else {
-                    displaylname = lname;
-                }
-
-                if (nnameMatchIndex > -1) {
-                    displaynname = "(" + highlightMatch(nname, query, nnameMatchIndex) + ")";
-                } else {
-                    displaynname = nname ? "(" + nname + ")" : "";
-                }
-
-                return _gravatar(displayfname + " " + displaylname + " " + displaynname, oResultData.gravatar_lnk, oResultData.gravatar_size);
-            } else {
-                return '';
-            }
-        };
-
-    if(ownerAC.itemSelectEvent){
-        ownerAC.itemSelectEvent.subscribe(function (sType, aArgs) {
+    // Handler for selection of an entry
+    if(mentionsAC.itemSelectEvent){
+        mentionsAC.itemSelectEvent.subscribe(function (sType, aArgs) {
             var myAC = aArgs[0]; // reference back to the AC instance
             var elLI = aArgs[1]; // reference to the selected LI element
             var oData = aArgs[2]; // object literal of selected item's result data
-            //fill the autocomplete with value
-            if (oData.nname != undefined) {
-                //users
-                //Replace the mention name with replaced
-                var re = new RegExp();
-                var org = myAC.getInputEl().value;
-                var chunks = myAC.dataSource.chunks
-                // replace middle chunk(the search term) with actuall  match
-                chunks[1] = chunks[1].replace('@'+myAC.dataSource.mentionQuery,
-                                              '@'+oData.nname+' ');
-                myAC.getInputEl().value = chunks.join('')
-                myAC.getInputEl().focus(); // Y U NO WORK !?
-            } else {
-                //groups
-                myAC.getInputEl().value = oData.grname;
-                $('#perm_new_member_type').val('users_group');
-            }
+            //Replace the mention name with replaced
+            var re = new RegExp();
+            var org = myAC.getInputEl().value;
+            var chunks = myAC.dataSource.chunks
+            // replace middle chunk(the search term) with actuall  match
+            chunks[1] = chunks[1].replace('@'+myAC.dataSource.mentionQuery,
+                                          '@'+oData.nname+' ');
+            myAC.getInputEl().value = chunks.join('');
+            myAC.getInputEl().focus(); // Y U NO WORK !?
         });
     }
 
     // in this keybuffer we will gather current value of search !
     // since we need to get this just when someone does `@` then we do the
     // search
-    ownerAC.dataSource.chunks = [];
-    ownerAC.dataSource.mentionQuery = null;
+    mentionsAC.dataSource.chunks = [];
+    mentionsAC.dataSource.mentionQuery = null;
 
-    ownerAC.get_mention = function(msg, max_pos) {
+    mentionsAC.get_mention = function(msg, max_pos) {
         var org = msg;
         // Must match utils2.py MENTIONS_REGEX.
         // Only matching on string up to cursor, so it must end with $
-        var re = new RegExp('(?:^|[^a-zA-Z0-9])@([a-zA-Z0-9][-_.a-zA-Z0-9]*[a-zA-Z0-9])$')
+        var re = new RegExp('(?:^|[^a-zA-Z0-9])@([a-zA-Z0-9][-_.a-zA-Z0-9]*[a-zA-Z0-9])$');
         var chunks  = [];
 
         // cut first chunk until current pos
@@ -1446,9 +1260,9 @@ var MentionsAutoComplete = function (divid, cont, users_list, groups_list) {
         var at_pos = Math.max(0,to_max.lastIndexOf('@')-1);
         var msg2 = to_max.substr(at_pos);
 
-        chunks.push(org.substr(0,at_pos))// prefix chunk
-        chunks.push(msg2)                // search chunk
-        chunks.push(org.substr(max_pos)) // postfix chunk
+        chunks.push(org.substr(0,at_pos)); // prefix chunk
+        chunks.push(msg2);                 // search chunk
+        chunks.push(org.substr(max_pos));  // postfix chunk
 
         // clean up msg2 for filtering and regex match
         var msg2 = msg2.lstrip(' ').lstrip('\n');
@@ -1460,27 +1274,30 @@ var MentionsAutoComplete = function (divid, cont, users_list, groups_list) {
         return [null, null];
     };
 
-    var $divid = $('#'+divid);
-    $divid.keyup(function(e){
-            var currentMessage = $divid.val();
-            var currentCaretPosition = $divid[0].selectionStart;
+    $inputElement.keyup(function(e){
+            var currentMessage = $inputElement.val();
+            var currentCaretPosition = $inputElement[0].selectionStart;
 
-            var unam = ownerAC.get_mention(currentMessage, currentCaretPosition);
+            var unam = mentionsAC.get_mention(currentMessage, currentCaretPosition);
             var curr_search = null;
             if(unam[0]){
                 curr_search = unam[0];
             }
 
-            ownerAC.dataSource.chunks = unam[1];
-            ownerAC.dataSource.mentionQuery = curr_search;
+            mentionsAC.dataSource.chunks = unam[1];
+            mentionsAC.dataSource.mentionQuery = curr_search;
         });
 }
 
 var addReviewMember = function(id,fname,lname,nname,gravatar_link,gravatar_size){
-    var displayname = "{0} {1} ({2})".format(fname, lname, nname);
-    var gravatarelm = '<img alt="gravatar" style="width: {0}px; height: {0}px" src="{1}"/>'.format(gravatar_size, gravatar_link);
-    if (!gravatar_link)
-        gravatarelm = '<i class="icon-user" style="font-size: {0}px;"></i>'.format(gravatar_size);
+    var displayname = nname;
+    if ((fname != "") && (lname != "")) {
+        displayname = "{0} {1} ({2})".format(fname, lname, nname);
+    }
+    var gravatarelm = gravatar(gravatar_link, gravatar_size, "");
+    // WARNING: the HTML below is duplicate with
+    // kallithea/templates/pullrequests/pullrequest_show.html
+    // If you change something here it should be reflected in the template too.
     var element = (
         '     <li id="reviewer_{2}">\n'+
         '       <div class="reviewers_member">\n'+
@@ -1510,153 +1327,30 @@ var addReviewMember = function(id,fname,lname,nname,gravatar_link,gravatar_size)
 var removeReviewMember = function(reviewer_id, repo_name, pull_request_id){
     var $li = $('#reviewer_{0}'.format(reviewer_id));
     $li.find('div div').css("text-decoration", "line-through");
-    $li.find('input').attr('name', 'review_members_removed');
+    $li.find('input').prop('name', 'review_members_removed');
     $li.find('.reviewer_member_remove').replaceWith('&nbsp;(remove not saved)');
 }
 
-/* activate auto completion of users and groups ... but only used for users as PR reviewers */
-var PullRequestAutoComplete = function (divid, cont, users_list, groups_list) {
-    var myUsers = users_list;
-    var myGroups = groups_list;
+/* activate auto completion of users as PR reviewers */
+var PullRequestAutoComplete = function ($inputElement, $container, users_list) {
 
-    // Define a custom search function for the DataSource of users
     var matchUsers = function (sQuery) {
-            // Case insensitive matching
-            var query = sQuery.toLowerCase();
-            var i = 0;
-            var l = myUsers.length;
-            var matches = [];
-
-            // Match against each name of each contact
-            for (; i < l; i++) {
-                var contact = myUsers[i];
-                if (((contact.fname+"").toLowerCase().indexOf(query) > -1) ||
-                     ((contact.lname+"").toLowerCase().indexOf(query) > -1) ||
-                     ((contact.nname) && ((contact.nname).toLowerCase().indexOf(query) > -1))) {
-                    matches[matches.length] = contact;
-                }
-            }
-            return matches;
-        };
-
-    // Define a custom search function for the DataSource of userGroups
-    var matchGroups = function (sQuery) {
-            // Case insensitive matching
-            var query = sQuery.toLowerCase();
-            var i = 0;
-            var l = myGroups.length;
-            var matches = [];
-
-            // Match against each name of each contact
-            for (; i < l; i++) {
-                matched_group = myGroups[i];
-                if (matched_group.grname.toLowerCase().indexOf(query) > -1) {
-                    matches[matches.length] = matched_group;
-                }
-            }
-            return matches;
-        };
-
-    //match all
-    var matchAll = function (sQuery) {
-            return matchUsers(sQuery);
-        };
-
-    // DataScheme for owner
-    var ownerDS = new YAHOO.util.FunctionDataSource(matchUsers);
-
-    ownerDS.responseSchema = {
-        fields: ["id", "fname", "lname", "nname", "gravatar_lnk", "gravatar_size"]
+        return autocompleteMatchUsers(sQuery, users_list);
     };
 
-    // Instantiate AutoComplete for mentions
-    var reviewerAC = new YAHOO.widget.AutoComplete(divid, cont, ownerDS);
-    reviewerAC.useShadow = false;
-    reviewerAC.resultTypeList = false;
+    var reviewerAC = autocompleteCreate($inputElement, $container, matchUsers);
     reviewerAC.suppressInputUpdate = true;
-    reviewerAC.animVert = false;
-    reviewerAC.animHoriz = false;
-    reviewerAC.animSpeed = 0.1;
 
-    // Helper highlight function for the formatter
-    var highlightMatch = function (full, snippet, matchindex) {
-            return full.substring(0, matchindex)
-                + "<span class='match'>"
-                + full.substr(matchindex, snippet.length)
-                + "</span>" + full.substring(matchindex + snippet.length);
-        };
-
-    // Custom formatter to highlight the matching letters
-    reviewerAC.formatResult = function (oResultData, sQuery, sResultMatch) {
-            var org_sQuery = sQuery;
-            if(this.dataSource.mentionQuery != null){
-                sQuery = this.dataSource.mentionQuery;
-            }
-
-            var query = sQuery.toLowerCase();
-            var _gravatar = function(res, em, size, group){
-                var elem = '<img alt="gravatar" class="perm-gravatar-ac" style="width: {0}px; height: {0}px" src="{1}"/>'.format(size, em);
-                if (!em) {
-                    elem = '<i class="icon-user perm-gravatar-ac" style="font-size: {0}px;"></i>'.format(size);
-                }
-                if (group !== undefined){
-                    elem = '<i class="perm-gravatar-ac icon-users"></i>'
-                }
-                var tmpl = '<div class="ac-container-wrap">{0}{1}</div>'
-                return tmpl.format(elem,res)
-            }
-            if (oResultData.nname != undefined) {
-                var fname = oResultData.fname || "";
-                var lname = oResultData.lname || "";
-                var nname = oResultData.nname;
-
-                // Guard against null value
-                var fnameMatchIndex = fname.toLowerCase().indexOf(query),
-                    lnameMatchIndex = lname.toLowerCase().indexOf(query),
-                    nnameMatchIndex = nname.toLowerCase().indexOf(query),
-                    displayfname, displaylname, displaynname;
-
-                if (fnameMatchIndex > -1) {
-                    displayfname = highlightMatch(fname, query, fnameMatchIndex);
-                } else {
-                    displayfname = fname;
-                }
-
-                if (lnameMatchIndex > -1) {
-                    displaylname = highlightMatch(lname, query, lnameMatchIndex);
-                } else {
-                    displaylname = lname;
-                }
-
-                if (nnameMatchIndex > -1) {
-                    displaynname = "(" + highlightMatch(nname, query, nnameMatchIndex) + ")";
-                } else {
-                    displaynname = nname ? "(" + nname + ")" : "";
-                }
-
-                return _gravatar(displayfname + " " + displaylname + " " + displaynname, oResultData.gravatar_lnk, oResultData.gravatar_size);
-            } else {
-                return '';
-            }
-        };
-
-    //members cache to catch duplicates
-    reviewerAC.dataSource.cache = [];
-    // hack into select event
+    // Handler for selection of an entry
     if(reviewerAC.itemSelectEvent){
         reviewerAC.itemSelectEvent.subscribe(function (sType, aArgs) {
-
             var myAC = aArgs[0]; // reference back to the AC instance
             var elLI = aArgs[1]; // reference to the selected LI element
             var oData = aArgs[2]; // object literal of selected item's result data
 
-            //fill the autocomplete with value
-            if (oData.nname != undefined) {
-                addReviewMember(oData.id, oData.fname, oData.lname, oData.nname,
-                                oData.gravatar_lnk, oData.gravatar_size);
-                myAC.dataSource.cache.push(oData.id);
-                $('#user').val('');
-            }
+            addReviewMember(oData.id, oData.fname, oData.lname, oData.nname,
+                            oData.gravatar_lnk, oData.gravatar_size);
+            myAC.getInputEl().value = '';
         });
     }
 }
@@ -1671,14 +1365,14 @@ var quick_repo_menu = function(){
                 $menu.removeClass('hidden').addClass('active');
                 $(e.currentTarget).removeClass('hidden').addClass('active');
             }
-        })
+        });
     $(".quick_repo_menu").mouseleave(function(e) {
             var $menu = $(e.currentTarget).children().first().children().first();
             if($menu.hasClass('active')){
                 $menu.removeClass('active').addClass('hidden');
                 $(e.currentTarget).removeClass('active').addClass('hidden');
             }
-        })
+        });
 };
 
 
@@ -1726,8 +1420,8 @@ var addPermAction = function(_html, users_list, groups_list){
     var $last_node = $('.last_new_member').last(); // empty tr between last and add
     var next_id = $('.new_members').length;
     $last_node.before($('<tr class="new_members">').append(_html.format(next_id)));
-    _MembersAutoComplete("perm_new_member_name_"+next_id,
-            "perm_container_"+next_id, users_list, groups_list);
+    MembersAutoComplete($("#perm_new_member_name_"+next_id),
+            $("#perm_container_"+next_id), users_list, groups_list);
 }
 
 function ajaxActionRevokePermission(url, obj_id, obj_type, field_id, extra_data) {
@@ -1847,8 +1541,8 @@ var YUI_paginator = function(links_per_page, containers){
                     var radius = parseInt(items / 2);
                 }
 
-                var left = Math.max(1, (cur_page - (radius)))
-                var right = Math.min(max_page, cur_page + (radius))
+                var left = Math.max(1, (cur_page - (radius)));
+                var right = Math.min(max_page, cur_page + (radius));
                 return [left, cur_page, right]
             },
             render : function (id_base) {
@@ -1971,8 +1665,8 @@ var YUI_paginator = function(links_per_page, containers){
                     var radius = parseInt(items / 2);
                 }
 
-                var left = Math.max(1, (cur_page - (radius)))
-                var right = Math.min(max_page, cur_page + (radius))
+                var left = Math.max(1, (cur_page - (radius)));
+                var right = Math.min(max_page, cur_page + (radius));
                 return [left, cur_page, right]
             },
             render : function (id_base) {
@@ -2069,7 +1763,7 @@ var YUI_paginator = function(links_per_page, containers){
         nextPageLinkLabel: '&gt;',
         previousPageLinkLabel: '&lt;',
         containers:containers
-    })
+    });
 
     return pagi
 }
@@ -2090,7 +1784,7 @@ var YUI_datatable = function(data, fields, columns, countnode, sortkey, rows){
         if (req) {
             req = req.toLowerCase();
             for (i = 0; i<data.length; i++) {
-                var pos = data[i].raw_name.toLowerCase().indexOf(req)
+                var pos = data[i].raw_name.toLowerCase().indexOf(req);
                 if (pos != -1) {
                     filtered.push(data[i]);
                 }
@@ -2147,12 +1841,52 @@ var YUI_datatable = function(data, fields, columns, countnode, sortkey, rows){
         });
 }
 
+/**
+ Branch Sorting callback for select2, modifying the filtered result so prefix
+ matches come before matches in the line.
+ **/
+var branchSort = function(results, container, query) {
+    if (query.term) {
+        return results.sort(function (a, b) {
+            // Put closed branches after open ones (a bit of a hack ...)
+            var aClosed = a.text.indexOf("(closed)") > -1,
+                bClosed = b.text.indexOf("(closed)") > -1;
+            if (aClosed && !bClosed) {
+                return 1;
+            }
+            if (bClosed && !aClosed) {
+                return -1;
+            }
+
+            // Put prefix matches before matches in the line
+            var aPos = a.text.indexOf(query.term),
+                bPos = b.text.indexOf(query.term);
+            if (aPos === 0 && bPos !== 0) {
+                return -1;
+            }
+            if (bPos === 0 && aPos !== 0) {
+                return 1;
+            }
+
+            // Default sorting
+            if (a.text > b.text) {
+                return 1;
+            }
+            if (a.text < b.text) {
+                return -1;
+            }
+            return 0;
+        });
+    }
+    return results;
+};
+
 // global hooks after DOM is loaded
 
 $(document).ready(function(){
     $('.diff-collapse-button').click(function(e) {
         var $button = $(e.currentTarget);
-        var $target = $('#' + $button.attr('target'));
+        var $target = $('#' + $button.prop('target'));
         if($target.hasClass('hidden')){
             $target.removeClass('hidden');
             $button.html("&uarr; {0} &uarr;".format(_TM['Collapse Diff']));

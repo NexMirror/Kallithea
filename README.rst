@@ -2,6 +2,7 @@
 Kallithea README
 ================
 
+
 About
 -----
 
@@ -21,14 +22,17 @@ version control systems.
 
 Kallithea was forked from RhodeCode in July 2014 and has been heavily modified.
 
+
 Installation
 ------------
-Official releases of Kallithea can be installed via::
+
+Kallithea requires Python_ 2.x and it is recommended to install it in a
+virtualenv_. Official releases of Kallithea can be installed with::
 
     pip install kallithea
 
 The development repository is kept very stable and used in production by the
-developers - you can do the same.
+developers -- you can do the same.
 
 Please visit https://docs.kallithea-scm.org/en/latest/installation.html for
 more details.
@@ -44,8 +48,7 @@ The issue tracker and a repository mirror can be found at Bitbucket_ on
 https://bitbucket.org/conservancy/kallithea.
 
 
-
-Kallithea Features
+Kallithea features
 ------------------
 
 - Has its own middleware to handle Mercurial_ and Git_ protocol requests. Each
@@ -115,11 +118,11 @@ Community
 ---------
 
 **Kallithea** is maintained by its users who contribute the fixes they would
- like to see.
+like to see.
 
 Get in touch with the rest of the community:
 
-- Join the mailing list users and developers - see
+- Join the mailing list users and developers -- see
   http://lists.sfconservancy.org/mailman/listinfo/kallithea-general.
 
 - Use IRC and join #kallithea on FreeNode (irc.freenode.net) or use
@@ -161,7 +164,7 @@ database:
 - keep the database unconverted (intended for testing and evaluation)
 - convert the database in a one-time step
 
-Maintaining Interoperability
+Maintaining interoperability
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Interoperability with RhodeCode 2.2.X installations is provided so you don't
@@ -180,7 +183,7 @@ via::
 then you will find this location at
 ``$VIRTUAL_ENV/lib/python2.7/site-packages/Kallithea-0.1-py2.7.egg/kallithea``.
 
-One-time Conversion
+One-time conversion
 ~~~~~~~~~~~~~~~~~~~
 
 Alternatively, if you would like to convert the database for good, you can use
@@ -197,6 +200,32 @@ database, using the database string you can find in your ``production.ini`` (or
 
    If you started out using the branding interoperability approach mentioned
    above, watch out for stray brand.pyc after removing brand.py.
+
+Git hooks
+~~~~~~~~~
+
+After switching to Kallithea, it will be necessary to update the Git_ hooks in
+your repositories. If not, the Git_ hooks from RhodeCode will still be called,
+which will cause ``git push`` to fail every time.
+
+If you do not have any custom Git_ hooks deployed, perform the following steps
+(this may take some time depending on the number and size of repositories you
+have):
+
+1. Log-in as an administrator.
+
+2. Open page *Admin > Settings > Remap and Rescan*.
+
+3. Turn on the option **Install Git Hooks**.
+
+4. Turn on the option **Overwrite existing Git hooks**.
+
+5. Click on the button **Rescan Repositories**.
+
+If you do have custom hooks, you will need to merge those changes manually. In
+order to get sample hooks from Kallithea, the easiest way is to create a new Git_
+repository, and have a look at the hooks deployed there.
+
 
 .. _virtualenv: http://pypi.python.org/pypi/virtualenv
 .. _Python: http://www.python.org/

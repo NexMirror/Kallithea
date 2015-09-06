@@ -1782,9 +1782,9 @@ user_log_id,user_id,username,repository_id,repository_name,user_ip,action,action
 1846,3,demo,99,another-fork-to-check-code-review,"",user_commented_revision:fba17a64fa4978bfea19222da5e64a18cfddeecd,2012-11-06 04:15:29.032768
 1847,3,demo,68,aaa-project,"",user_commented_revision:0c33fa58efc5a5541d8d3f1a3d3b77367e3d94f5,2012-11-06 04:17:16.091927
 1848,3,demo,249,abcdefg,"",user_commented_revision:5d80e28538141e322b317168e2367fb03178d58c,2012-11-06 06:10:53.372505
-1849,3,demo,362,Marcin,"",started_following_repo,2012-11-06 10:45:38.505485
-1850,3,demo,362,Marcin,"",user_created_repo,2012-11-06 10:45:38.518969
-1851,3,demo,362,hidden/Marcin,"",user_updated_repo,2012-11-06 10:45:46.281581
+1849,3,demo,362,Username,"",started_following_repo,2012-11-06 10:45:38.505485
+1850,3,demo,362,Username,"",user_created_repo,2012-11-06 10:45:38.518969
+1851,3,demo,362,hidden/Username,"",user_updated_repo,2012-11-06 10:45:46.281581
 1852,3,demo,177,blah,62.200.22.2,push:b369fb18c8d61fe0d3b14c417466680230cabe46,2012-11-06 10:47:55.655029
 1853,3,demo,99,another-fork-to-check-code-review,"",user_commented_revision:d5422faf648cc589425cd3b0dbf1f6dbf93036a0,2012-11-06 13:12:05.517155
 1854,3,demo,38,code-review-test,"",user_commented_revision:6d7db5794e8cad7da042b6ae6238116c6e59a4d2,2012-11-06 16:12:59.38977

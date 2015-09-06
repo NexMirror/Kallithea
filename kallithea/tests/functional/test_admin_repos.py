@@ -26,7 +26,7 @@ def _get_permission_for_user(user, repo):
     return perm
 
 
-class _BaseTest(TestController):
+class _BaseTest(object):
     """
     Write all tests here
     """
@@ -348,7 +348,7 @@ class _BaseTest(TestController):
                                                 repo_description=description,
                                                 clone_uri='http://127.0.0.1/repo',
                                                 _authentication_token=self.authentication_token()))
-        response.mustcontain('invalid clone URL')
+        response.mustcontain('Invalid repository URL')
 
 
     def test_create_remote_repo_wrong_clone_uri_hg_svn(self):
@@ -362,7 +362,7 @@ class _BaseTest(TestController):
                                                 repo_description=description,
                                                 clone_uri='svn+http://127.0.0.1/repo',
                                                 _authentication_token=self.authentication_token()))
-        response.mustcontain('invalid clone URL')
+        response.mustcontain('Invalid repository URL')
 
 
     def test_delete(self):
@@ -398,7 +398,8 @@ class _BaseTest(TestController):
         except vcs.exceptions.VCSError:
             self.fail('no repo %s in filesystem' % repo_name)
 
-        response = self.app.delete(url('repo', repo_name=repo_name))
+        response = self.app.post(url('delete_repo', repo_name=repo_name),
+            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
 
         self.checkSessionFlash(response, 'Deleted repository %s' % (repo_name))
 
@@ -450,7 +451,8 @@ class _BaseTest(TestController):
         except vcs.exceptions.VCSError:
             self.fail('no repo %s in filesystem' % repo_name)
 
-        response = self.app.delete(url('repo', repo_name=repo_name))
+        response = self.app.post(url('delete_repo', repo_name=repo_name),
+            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Deleted repository %s' % (repo_name_unicode))
         response.follow()
 
@@ -468,12 +470,12 @@ class _BaseTest(TestController):
         pass
 
     def test_delete_browser_fakeout(self):
-        response = self.app.post(url('repo', repo_name=self.REPO),
+        response = self.app.post(url('delete_repo', repo_name=self.REPO),
                                  params=dict(_method='delete', _authentication_token=self.authentication_token()))
 
     def test_show(self):
         self.log_user()
-        response = self.app.get(url('repo', repo_name=self.REPO))
+        response = self.app.get(url('summary_home', repo_name=self.REPO))
 
     def test_edit(self):
         response = self.app.get(url('edit_repo', repo_name=self.REPO))
@@ -486,7 +488,7 @@ class _BaseTest(TestController):
         self.assertEqual(perm[0].permission.permission_name, 'repository.read')
         self.assertEqual(Repository.get_by_repo_name(self.REPO).private, False)
 
-        response = self.app.put(url('repo', repo_name=self.REPO),
+        response = self.app.put(url('put_repo', repo_name=self.REPO),
                         fixture._get_repo_create_params(repo_private=1,
                                                 repo_name=self.REPO,
                                                 repo_type=self.REPO_TYPE,
@@ -501,7 +503,7 @@ class _BaseTest(TestController):
         self.assertTrue(len(perm), 1)
         self.assertEqual(perm[0].permission.permission_name, 'repository.none')
 
-        response = self.app.put(url('repo', repo_name=self.REPO),
+        response = self.app.put(url('put_repo', repo_name=self.REPO),
                         fixture._get_repo_create_params(repo_private=False,
                                                 repo_name=self.REPO,
                                                 repo_type=self.REPO_TYPE,
@@ -525,7 +527,7 @@ class _BaseTest(TestController):
         self.log_user()
         repo = Repository.get_by_repo_name(self.REPO)
         response = self.app.get(url('edit_repo_advanced', repo_name=self.REPO))
-        opt = """<option value="%s">vcs_test_git</option>""" % repo.repo_id
+        opt = """<option value="%s">%s</option>""" % (repo.repo_id, self.REPO)
         response.mustcontain(no=[opt])
 
     def test_set_fork_of_other_repo(self):
@@ -539,7 +541,7 @@ class _BaseTest(TestController):
         repo = Repository.get_by_repo_name(self.REPO)
         repo2 = Repository.get_by_repo_name(other_repo)
         self.checkSessionFlash(response,
-            'Marked repo %s as fork of %s' % (repo.repo_name, repo2.repo_name))
+            'Marked repository %s as fork of %s' % (repo.repo_name, repo2.repo_name))
 
         assert repo.fork == repo2
         response = response.follow()
@@ -570,7 +572,7 @@ class _BaseTest(TestController):
         repo = Repository.get_by_repo_name(self.REPO)
         repo2 = Repository.get_by_repo_name(self.OTHER_TYPE_REPO)
         self.checkSessionFlash(response,
-                               'Marked repo %s as fork of %s'
+                               'Marked repository %s as fork of %s'
                                % (repo.repo_name, "Nothing"))
         assert repo.fork is None
 
@@ -611,7 +613,7 @@ class _BaseTest(TestController):
                                                 repo_description=description,
                                                 _authentication_token=self.authentication_token()))
 
-        response.mustcontain('no permission to create repository in root location')
+        response.mustcontain('<span class="error-message">Invalid value</span>')
 
         RepoModel().delete(repo_name)
         Session().commit()
@@ -638,7 +640,7 @@ class _BaseTest(TestController):
         # repo must not be in filesystem !
         self.assertFalse(os.path.isdir(os.path.join(TESTS_TMP_PATH, repo_name)))
 
-class TestAdminReposControllerGIT(_BaseTest):
+class TestAdminReposControllerGIT(TestController, _BaseTest):
     REPO = GIT_REPO
     REPO_TYPE = 'git'
     NEW_REPO = NEW_GIT_REPO
@@ -646,7 +648,7 @@ class TestAdminReposControllerGIT(_BaseTest):
     OTHER_TYPE = 'hg'
 
 
-class TestAdminReposControllerHG(_BaseTest):
+class TestAdminReposControllerHG(TestController, _BaseTest):
     REPO = HG_REPO
     REPO_TYPE = 'hg'
     NEW_REPO = NEW_HG_REPO

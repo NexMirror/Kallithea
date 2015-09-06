@@ -117,7 +117,7 @@ class JSONRPCController(WSGIController):
         else:
             length = environ['CONTENT_LENGTH'] or 0
             length = int(environ['CONTENT_LENGTH'])
-            log.debug('Content-Length: %s' % length)
+            log.debug('Content-Length: %s', length)
 
         if length == 0:
             log.debug("Content-Length is 0")
@@ -128,13 +128,13 @@ class JSONRPCController(WSGIController):
 
         try:
             json_body = json.loads(raw_body)
-        except ValueError, e:
+        except ValueError as e:
             # catch JSON errors Here
             return jsonrpc_error(retid=self._req_id,
                                  message="JSON parse error ERR:%s RAW:%r"
                                  % (e, raw_body))
 
-        # check AUTH based on API KEY
+        # check AUTH based on API key
         try:
             self._req_api_key = json_body['api_key']
             self._req_id = json_body['id']
@@ -144,10 +144,10 @@ class JSONRPCController(WSGIController):
                 self._request_params = {}
 
             log.debug(
-                'method: %s, params: %s' % (self._req_method,
-                                            self._request_params)
+                'method: %s, params: %s', self._req_method,
+                                            self._request_params
             )
-        except KeyError, e:
+        except KeyError as e:
             return jsonrpc_error(retid=self._req_id,
                                  message='Incorrect JSON query missing %s' % e)
 
@@ -156,24 +156,23 @@ class JSONRPCController(WSGIController):
             u = User.get_by_api_key(self._req_api_key)
             if u is None:
                 return jsonrpc_error(retid=self._req_id,
-                                     message='Invalid API KEY')
+                                     message='Invalid API key')
 
-            #check if we are allowed to use this IP
-            auth_u = AuthUser(u.user_id, self._req_api_key, ip_addr=ip_addr)
-            if not auth_u.ip_allowed:
+            auth_u = AuthUser(dbuser=u)
+            if not AuthUser.check_ip_allowed(auth_u, ip_addr):
                 return jsonrpc_error(retid=self._req_id,
                         message='request from IP:%s not allowed' % (ip_addr,))
             else:
-                log.info('Access for IP:%s allowed' % (ip_addr,))
+                log.info('Access for IP:%s allowed', ip_addr)
 
-        except Exception, e:
+        except Exception as e:
             return jsonrpc_error(retid=self._req_id,
-                                 message='Invalid API KEY')
+                                 message='Invalid API key')
 
         self._error = None
         try:
             self._func = self._find_method()
-        except AttributeError, e:
+        except AttributeError as e:
             return jsonrpc_error(retid=self._req_id,
                                  message=str(e))
 
@@ -208,7 +207,7 @@ class JSONRPCController(WSGIController):
         # get our arglist and check if we provided them as args
         for arg, default in func_kwargs.iteritems():
             if arg == USER_SESSION_ATTR:
-                # USER_SESSION_ATTR is something translated from api key and
+                # USER_SESSION_ATTR is something translated from API key and
                 # this is checked before so we don't need validate it
                 continue
 
@@ -259,11 +258,11 @@ class JSONRPCController(WSGIController):
             raw_response = self._inspect_call(self._func)
             if isinstance(raw_response, HTTPError):
                 self._error = str(raw_response)
-        except JSONRPCError, e:
+        except JSONRPCError as e:
             self._error = safe_str(e)
-        except Exception, e:
-            log.error('Encountered unhandled exception: %s'
-                      % (traceback.format_exc(),))
+        except Exception as e:
+            log.error('Encountered unhandled exception: %s',
+                      traceback.format_exc(),)
             json_exc = JSONRPCError('Internal server error')
             self._error = safe_str(json_exc)
 
@@ -273,8 +272,8 @@ class JSONRPCController(WSGIController):
         response = dict(id=self._req_id, result=raw_response, error=self._error)
         try:
             return json.dumps(response)
-        except TypeError, e:
-            log.error('API FAILED. Error encoding response: %s' % e)
+        except TypeError as e:
+            log.error('API FAILED. Error encoding response: %s', e)
             return json.dumps(
                 dict(
                     id=self._req_id,
@@ -287,7 +286,7 @@ class JSONRPCController(WSGIController):
         """
         Return method named by `self._req_method` in controller if able
         """
-        log.debug('Trying to find JSON-RPC method: %s' % (self._req_method,))
+        log.debug('Trying to find JSON-RPC method: %s', self._req_method)
         if self._req_method.startswith('_'):
             raise AttributeError("Method not allowed")
 

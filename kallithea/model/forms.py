@@ -54,8 +54,8 @@ class LoginForm(formencode.Schema):
         min=1,
         not_empty=True,
         messages={
-           'empty': _(u'Please enter a login'),
-           'tooShort': _(u'Enter a value %(min)i characters long or more')}
+           'empty': _('Please enter a login'),
+           'tooShort': _('Enter a value %(min)i characters long or more')}
     )
 
     password = v.UnicodeString(
@@ -63,8 +63,8 @@ class LoginForm(formencode.Schema):
         min=3,
         not_empty=True,
         messages={
-            'empty': _(u'Please enter a password'),
-            'tooShort': _(u'Enter %(min)i characters or more')}
+            'empty': _('Please enter a password'),
+            'tooShort': _('Enter %(min)i characters or more')}
     )
 
     remember = v.StringBoolean(if_missing=False)
@@ -102,6 +102,8 @@ def UserForm(edit=False, old_data={}):
                 v.UnicodeString(strip=False, min=6, not_empty=False),
             )
             admin = v.StringBoolean(if_missing=False)
+            chained_validators = [v.ValidPasswordsMatch('new_password',
+                                                        'password_confirmation')]
         else:
             password = All(
                 v.ValidPassword(),
@@ -111,14 +113,15 @@ def UserForm(edit=False, old_data={}):
                 v.ValidPassword(),
                 v.UnicodeString(strip=False, min=6, not_empty=False)
             )
+            chained_validators = [v.ValidPasswordsMatch('password',
+                                                        'password_confirmation')]
 
         active = v.StringBoolean(if_missing=False)
         firstname = v.UnicodeString(strip=True, min=1, not_empty=False)
         lastname = v.UnicodeString(strip=True, min=1, not_empty=False)
         email = All(v.Email(not_empty=True), v.UniqSystemEmail(old_data))
-        extern_name = v.UnicodeString(strip=True)
-        extern_type = v.UnicodeString(strip=True)
-        chained_validators = [v.ValidPasswordsMatch()]
+        extern_name = v.UnicodeString(strip=True, if_missing=None)
+        extern_type = v.UnicodeString(strip=True, if_missing=None)
     return _UserForm
 
 
@@ -145,8 +148,9 @@ def UserGroupForm(edit=False, old_data={}, available_members=[]):
     return _UserGroupForm
 
 
-def RepoGroupForm(edit=False, old_data={}, available_groups=[],
+def RepoGroupForm(edit=False, old_data={}, repo_groups=[],
                    can_create_in_root=False):
+    repo_group_ids = [rg[0] for rg in repo_groups]
     class _RepoGroupForm(formencode.Schema):
         allow_extra_fields = True
         filter_extra_fields = False
@@ -162,10 +166,12 @@ def RepoGroupForm(edit=False, old_data={}, available_groups=[],
             #FIXME: do a special check that we cannot move a group to one of
             #its children
             pass
+
         group_parent_id = All(v.CanCreateGroup(can_create_in_root),
-                              v.OneOf(available_groups, hideList=False,
+                              v.OneOf(repo_group_ids, hideList=False,
                                       testValueList=True,
-                                      if_missing=None, not_empty=True))
+                                      if_missing=None, not_empty=True),
+                              v.Int(min=-1, not_empty=True))
         enable_locking = v.StringBoolean(if_missing=False)
         chained_validators = [v.ValidRepoGroup(edit, old_data)]
 
@@ -193,28 +199,45 @@ def RegisterForm(edit=False, old_data={}):
         lastname = v.UnicodeString(strip=True, min=1, not_empty=False)
         email = All(v.Email(not_empty=True), v.UniqSystemEmail(old_data))
 
-        chained_validators = [v.ValidPasswordsMatch()]
+        chained_validators = [v.ValidPasswordsMatch('password',
+                                                    'password_confirmation')]
 
     return _RegisterForm
 
 
-def PasswordResetForm():
-    class _PasswordResetForm(formencode.Schema):
+def PasswordResetRequestForm():
+    class _PasswordResetRequestForm(formencode.Schema):
         allow_extra_fields = True
         filter_extra_fields = True
         email = v.Email(not_empty=True)
-    return _PasswordResetForm
+    return _PasswordResetRequestForm
 
+def PasswordResetConfirmationForm():
+    class _PasswordResetConfirmationForm(formencode.Schema):
+        allow_extra_fields = True
+        filter_extra_fields = True
+
+        email = v.UnicodeString(strip=True, not_empty=True)
+        timestamp = v.Number(strip=True, not_empty=True)
+        token = v.UnicodeString(strip=True, not_empty=True)
+        password = All(v.ValidPassword(), v.UnicodeString(strip=False, min=6))
+        password_confirm = All(v.ValidPassword(), v.UnicodeString(strip=False, min=6))
+
+        chained_validators = [v.ValidPasswordsMatch('password',
+                                                    'password_confirm')]
+    return _PasswordResetConfirmationForm
 
 def RepoForm(edit=False, old_data={}, supported_backends=BACKENDS.keys(),
              repo_groups=[], landing_revs=[]):
+    repo_group_ids = [rg[0] for rg in repo_groups]
     class _RepoForm(formencode.Schema):
         allow_extra_fields = True
         filter_extra_fields = False
         repo_name = All(v.UnicodeString(strip=True, min=1, not_empty=True),
                         v.SlugifyName())
         repo_group = All(v.CanWriteGroup(old_data),
-                         v.OneOf(repo_groups, hideList=True))
+                         v.OneOf(repo_group_ids, hideList=True),
+                         v.Int(min=-1, not_empty=True))
         repo_type = v.OneOf(supported_backends, required=False,
                             if_missing=old_data.get('repo_type'))
         repo_description = v.UnicodeString(strip=True, min=1, not_empty=False)
@@ -230,7 +253,8 @@ def RepoForm(edit=False, old_data={}, supported_backends=BACKENDS.keys(),
         if edit:
             #this is repo owner
             user = All(v.UnicodeString(not_empty=True), v.ValidRepoUser())
-            clone_uri_change = v.UnicodeString(not_empty=False, if_missing=v.Missing)
+            # Not a real field - just for reference for validation:
+            # clone_uri_hidden = v.UnicodeString(if_missing='')
 
         chained_validators = [v.ValidCloneUri(),
                               v.ValidRepoName(edit, old_data)]
@@ -280,13 +304,15 @@ def RepoFieldForm():
 
 def RepoForkForm(edit=False, old_data={}, supported_backends=BACKENDS.keys(),
                  repo_groups=[], landing_revs=[]):
+    repo_group_ids = [rg[0] for rg in repo_groups]
     class _RepoForkForm(formencode.Schema):
         allow_extra_fields = True
         filter_extra_fields = False
         repo_name = All(v.UnicodeString(strip=True, min=1, not_empty=True),
                         v.SlugifyName())
         repo_group = All(v.CanWriteGroup(),
-                         v.OneOf(repo_groups, hideList=True))
+                         v.OneOf(repo_group_ids, hideList=True),
+                         v.Int(min=-1, not_empty=True))
         repo_type = All(v.ValidForkType(old_data), v.OneOf(supported_backends))
         description = v.UnicodeString(strip=True, min=1, not_empty=True)
         private = v.StringBoolean(if_missing=False)
@@ -506,6 +532,8 @@ def PullRequestPostForm():
         pullrequest_desc = v.UnicodeString(strip=True, required=False)
         review_members = v.Set()
         updaterev = v.UnicodeString(strip=True, required=False, if_missing=None)
+        owner = All(v.UnicodeString(strip=True, required=True),
+                    v.ValidRepoUser())
 
     return _PullRequestPostForm
 

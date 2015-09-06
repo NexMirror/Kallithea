@@ -39,12 +39,12 @@ from pylons.i18n.translation import _, ungettext
 import kallithea
 from kallithea.lib import helpers as h
 from kallithea.lib.compat import json
-from kallithea.lib.auth import LoginRequired, HasPermissionAnyDecorator,\
-    HasRepoGroupPermissionAnyDecorator, HasRepoGroupPermissionAll,\
+from kallithea.lib.auth import LoginRequired, \
+    HasRepoGroupPermissionAnyDecorator, HasRepoGroupPermissionAll, \
     HasPermissionAll
 from kallithea.lib.base import BaseController, render
 from kallithea.model.db import RepoGroup, Repository
-from kallithea.model.scm import RepoGroupList
+from kallithea.model.scm import RepoGroupList, AvailableRepoGroupChoices
 from kallithea.model.repo_group import RepoGroupModel
 from kallithea.model.forms import RepoGroupForm, RepoGroupPermsForm
 from kallithea.model.meta import Session
@@ -58,27 +58,21 @@ log = logging.getLogger(__name__)
 
 
 class RepoGroupsController(BaseController):
-    """REST Controller styled on the Atom Publishing Protocol"""
 
     @LoginRequired()
     def __before__(self):
         super(RepoGroupsController, self).__before__()
 
-    def __load_defaults(self, allow_empty_group=False, exclude_group_ids=[]):
-        if HasPermissionAll('hg.admin')('group edit'):
-            #we're global admin, we're ok and we can create TOP level groups
-            allow_empty_group = True
+    def __load_defaults(self, extras=(), exclude=()):
+        """extras is used for keeping current parent ignoring permissions
+        exclude is used for not moving group to itself TODO: also exclude descendants
+        Note: only admin can create top level groups
+        """
+        repo_groups = AvailableRepoGroupChoices([], ['group.admin'], extras)
+        exclude_group_ids = set(rg.group_id for rg in exclude)
+        c.repo_groups = [rg for rg in repo_groups
+                         if rg[0] not in exclude_group_ids]
 
-        #override the choices for this form, we need to filter choices
-        #and display only those we have ADMIN right
-        groups_with_admin_rights = RepoGroupList(RepoGroup.query().all(),
-                                                 perm_set=['group.admin'])
-        c.repo_groups = RepoGroup.groups_choices(groups=groups_with_admin_rights,
-                                                 show_empty_group=allow_empty_group)
-        # exclude filtered ids
-        c.repo_groups = filter(lambda x: x[0] not in exclude_group_ids,
-                               c.repo_groups)
-        c.repo_groups_choices = map(lambda k: unicode(k[0]), c.repo_groups)
         repo_model = RepoModel()
         c.users_array = repo_model.get_users_js()
         c.user_groups_array = repo_model.get_user_groups_js()
@@ -169,22 +163,19 @@ class RepoGroupsController(BaseController):
 
         # permissions for can create group based on parent_id are checked
         # here in the Form
-        repo_group_form = RepoGroupForm(available_groups=
-                                map(lambda k: unicode(k[0]), c.repo_groups))()
+        repo_group_form = RepoGroupForm(repo_groups=c.repo_groups)
         try:
             form_result = repo_group_form.to_python(dict(request.POST))
-            RepoGroupModel().create(
+            gr = RepoGroupModel().create(
                 group_name=form_result['group_name'],
                 group_description=form_result['group_description'],
                 parent=form_result['group_parent_id'],
-                owner=self.authuser.user_id,
+                owner=self.authuser.user_id, # TODO: make editable
                 copy_permissions=form_result['group_copy_permissions']
             )
             Session().commit()
-            h.flash(_('Created repository group %s') \
-                    % form_result['group_name'], category='success')
             #TODO: in futureaction_logger(, '', '', '', self.sa)
-        except formencode.Invalid, errors:
+        except formencode.Invalid as errors:
             return htmlfill.render(
                 render('admin/repo_groups/repo_group_add.html'),
                 defaults=errors.value,
@@ -196,9 +187,12 @@ class RepoGroupsController(BaseController):
             log.error(traceback.format_exc())
             h.flash(_('Error occurred during creation of repository group %s') \
                     % request.POST.get('group_name'), category='error')
-        parent_group_id = form_result['group_parent_id']
-        #TODO: maybe we should get back to the main view, not the admin one
-        return redirect(url('repos_groups', parent_group=parent_group_id))
+            parent_group_id = form_result['group_parent_id']
+            #TODO: maybe we should get back to the main view, not the admin one
+            return redirect(url('repos_groups', parent_group=parent_group_id))
+        h.flash(_('Created repository group %s') % gr.group_name,
+                category='success')
+        return redirect(url('repos_group_home', group_name=gr.group_name))
 
     def new(self):
         """GET /repo_groups/new: Form to create a new item"""
@@ -231,6 +225,10 @@ class RepoGroupsController(BaseController):
         # url('repos_group', group_name=GROUP_NAME)
 
         c.repo_group = RepoGroupModel()._get_repo_group(group_name)
+        self.__load_defaults(extras=[c.repo_group.parent_group],
+                             exclude=[c.repo_group])
+
+        # TODO: kill allow_empty_group - it is only used for redundant form validation!
         if HasPermissionAll('hg.admin')('group edit'):
             #we're global admin, we're ok and we can create TOP level groups
             allow_empty_group = True
@@ -238,13 +236,10 @@ class RepoGroupsController(BaseController):
             allow_empty_group = True
         else:
             allow_empty_group = False
-        self.__load_defaults(allow_empty_group=allow_empty_group,
-                             exclude_group_ids=[c.repo_group.group_id])
-
         repo_group_form = RepoGroupForm(
             edit=True,
             old_data=c.repo_group.get_dict(),
-            available_groups=c.repo_groups_choices,
+            repo_groups=c.repo_groups,
             can_create_in_root=allow_empty_group,
         )()
         try:
@@ -257,7 +252,7 @@ class RepoGroupsController(BaseController):
             # we now have new name !
             group_name = new_gr.group_name
             #TODO: in future action_logger(, '', '', '', self.sa)
-        except formencode.Invalid, errors:
+        except formencode.Invalid as errors:
 
             return htmlfill.render(
                 render('admin/repo_groups/repo_group_edit.html'),
@@ -358,18 +353,8 @@ class RepoGroupsController(BaseController):
         c.active = 'settings'
 
         c.repo_group = RepoGroupModel()._get_repo_group(group_name)
-        #we can only allow moving empty group if it's already a top-level
-        #group, ie has no parents, or we're admin
-        if HasPermissionAll('hg.admin')('group edit'):
-            #we're global admin, we're ok and we can create TOP level groups
-            allow_empty_group = True
-        elif not c.repo_group.parent_group:
-            allow_empty_group = True
-        else:
-            allow_empty_group = False
-
-        self.__load_defaults(allow_empty_group=allow_empty_group,
-                             exclude_group_ids=[c.repo_group.group_id])
+        self.__load_defaults(extras=[c.repo_group.parent_group],
+                             exclude=[c.repo_group])
         defaults = self.__load_data(c.repo_group.group_id)
 
         return htmlfill.render(
@@ -432,7 +417,7 @@ class RepoGroupsController(BaseController):
         #action_logger(self.authuser, 'admin_changed_repo_permissions',
         #              repo_name, self.ip_addr, self.sa)
         Session().commit()
-        h.flash(_('Repository Group permissions updated'), category='success')
+        h.flash(_('Repository group permissions updated'), category='success')
         return redirect(url('edit_repo_group_perms', group_name=group_name))
 
     @HasRepoGroupPermissionAnyDecorator('group.admin')

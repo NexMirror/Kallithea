@@ -4,10 +4,9 @@
 API
 ===
 
-
 Kallithea has a simple JSON RPC API with a single schema for calling all API
 methods. Everything is available by sending JSON encoded http(s) requests to
-<your_server>/_admin/api .
+``<your_server>/_admin/api``.
 
 
 API access for web views
@@ -16,12 +15,12 @@ API access for web views
 API access can also be turned on for each web view in Kallithea that is
 decorated with the ``@LoginRequired`` decorator. Some views use
 ``@LoginRequired(api_access=True)`` and are always available. By default only
-RSS/ATOM feed views are enabled. Other views are
-only available if they have been white listed. Edit the
+RSS/Atom feed views are enabled. Other views are
+only available if they have been whitelisted. Edit the
 ``api_access_controllers_whitelist`` option in your .ini file and define views
 that should have API access enabled.
 
-For example, to enable API access to patch/diff raw file and archive::
+For example, to enable API access to patch/diff, raw file and archive::
 
     api_access_controllers_whitelist =
         ChangesetController:changeset_patch,
@@ -33,7 +32,7 @@ After this change, a Kallithea view can be accessed without login by adding a
 GET parameter ``?api_key=<api_key>`` to the URL.
 
 Exposing raw diffs is a good way to integrate with
-3rd party services like code review, or build farms that could download archives.
+third-party services like code review, or build farms that can download archives.
 
 
 API access
@@ -50,27 +49,28 @@ Clients must send JSON encoded JSON-RPC requests::
 
 For example, to pull to a local "CPython" mirror using curl::
 
-    curl https://server.com/_admin/api -X POST -H 'content-type:text/plain' --data-binary '{"id":1,"api_key":"xe7cdb2v278e4evbdf5vs04v832v0efvcbcve4a3","method":"pull","args":{"repo":"CPython"}}'
+    curl https://example.com/_admin/api -X POST -H 'content-type:text/plain' \
+        --data-binary '{"id":1,"api_key":"xe7cdb2v278e4evbdf5vs04v832v0efvcbcve4a3","method":"pull","args":{"repo":"CPython"}}'
 
 In general, provide
  - *id*, a value of any type, can be used to match the response with the request that it is replying to.
  - *api_key*, for authentication and permission validation.
- - *method*, the name of the method to call - a list of available methods can be found below.
+ - *method*, the name of the method to call -- a list of available methods can be found below.
  - *args*, the arguments to pass to the method.
 
 .. note::
 
-    api_key can be found or set on the user account page
+    api_key can be found or set on the user account page.
 
 The response to the JSON-RPC API call will always be a JSON structure::
 
     {
-        "id":<id>, # the id that was used in the request
-        "result": "<result>"|null, # JSON formatted result, null if any errors
-        "error": "null"|<error_message> # JSON formatted error (if any)
+        "id": <id>,  # the id that was used in the request
+        "result": <result>|null,  # JSON formatted result (null on error)
+        "error": null|<error_message>  # JSON formatted error (null on success)
     }
 
-All responses from API will be ``HTTP/1.0 200 OK``. If there is an error,
+All responses from the API will be ``HTTP/1.0 200 OK``. If an error occurs,
 the reponse will have a failure description in *error* and
 *result* will be null.
 
@@ -78,7 +78,7 @@ the reponse will have a failure description in *error* and
 API client
 ++++++++++
 
-Kallithea comes with a ``kallithea-api`` command line tool providing a convenient
+Kallithea comes with a ``kallithea-api`` command line tool, providing a convenient
 way to call the JSON-RPC API.
 
 For example, to call ``get_repo``::
@@ -106,7 +106,7 @@ To avoid specifying ``apihost`` and ``apikey`` every time, run::
 
   kallithea-api --save-config --apihost=<your.kallithea.server.url> --apikey=<yourapikey>
 
-This will create a ``~/.config/kallithea`` with the specified hostname and apikey
+This will create a ``~/.config/kallithea`` with the specified hostname and API key
 so you don't have to specify them every time.
 
 
@@ -136,7 +136,6 @@ OUTPUT::
     result : "Pulled from `<reponame>`"
     error :  null
 
-
 rescan_repos
 ------------
 
@@ -160,7 +159,6 @@ OUTPUT::
                'removed': [<list of names of removed repos>]}"
     error :  null
 
-
 invalidate_cache
 ----------------
 
@@ -182,7 +180,6 @@ OUTPUT::
     id : <id_given_in_input>
     result : "Caches of repository `<reponame>`"
     error :  null
-
 
 lock
 ----
@@ -214,7 +211,6 @@ OUTPUT::
                  "msg": "User `<username>` set lock state for repo `<reponame>` to `<false|true>`"
              }
     error :  null
-
 
 get_ip
 ------
@@ -248,7 +244,6 @@ OUTPUT::
 
     error :  null
 
-
 get_user
 --------
 
@@ -256,7 +251,6 @@ Get a user by username or userid. The result is empty if user can't be found.
 If userid param is skipped, it is set to id of user who is calling this method.
 Any userid can be specified when the command is executed using the api_key of a user with admin rights.
 Regular users can only speicy their own userid.
-
 
 INPUT::
 
@@ -292,16 +286,13 @@ OUTPUT::
                     "repositories_groups": {"Group1": "group.read"}
                  },
             }
-
     error:  null
-
 
 get_users
 ---------
 
 List all existing users.
 This command can only be executed using the api_key of a user with admin rights.
-
 
 INPUT::
 
@@ -332,13 +323,13 @@ OUTPUT::
             ]
     error:  null
 
+.. _create-user:
 
 create_user
 -----------
 
 Create new user.
 This command can only be executed using the api_key of a user with admin rights.
-
 
 INPUT::
 
@@ -376,13 +367,15 @@ OUTPUT::
             }
     error:  null
 
+Example::
+
+    kallithea-api create_user username:bent email:bent@example.com firstname:Bent lastname:Bentsen extern_type:ldap extern_name:uid=bent,dc=example,dc=com
 
 update_user
 -----------
 
 Update the given user if such user exists.
 This command can only be executed using the api_key of a user with admin rights.
-
 
 INPUT::
 
@@ -422,13 +415,11 @@ OUTPUT::
             }
     error:  null
 
-
 delete_user
 -----------
 
 Delete the given user if such a user exists.
 This command can only be executed using the api_key of a user with admin rights.
-
 
 INPUT::
 
@@ -448,13 +439,11 @@ OUTPUT::
             }
     error:  null
 
-
 get_user_group
 --------------
 
 Get an existing user group.
 This command can only be executed using the api_key of a user with admin rights.
-
 
 INPUT::
 
@@ -492,13 +481,11 @@ OUTPUT::
              }
     error : null
 
-
 get_user_groups
 ---------------
 
 List all existing user groups.
 This command can only be executed using the api_key of a user with admin rights.
-
 
 INPUT::
 
@@ -520,13 +507,11 @@ OUTPUT::
               ]
     error : null
 
-
 create_user_group
 -----------------
 
 Create a new user group.
 This command can only be executed using the api_key of a user with admin rights.
-
 
 INPUT::
 
@@ -535,7 +520,7 @@ INPUT::
     method :  "create_user_group"
     args:     {
                 "group_name": "<groupname>",
-                "owner" :     "<onwer_name_or_id = Optional(=apiuser)>",
+                "owner" :     "<owner_name_or_id = Optional(=apiuser)>",
                 "active":     "<bool> = Optional(True)"
               }
 
@@ -552,14 +537,12 @@ OUTPUT::
             }
     error:  null
 
-
 add_user_to_user_group
 ----------------------
 
 Adds a user to a user group. If the user already is in that group, success will be
 ``false``.
 This command can only be executed using the api_key of a user with admin rights.
-
 
 INPUT::
 
@@ -581,14 +564,12 @@ OUTPUT::
             }
     error:  null
 
-
 remove_user_from_user_group
 ---------------------------
 
 Remove a user from a user group. If the user isn't in the given group, success will
 be ``false``.
 This command can only be executed using the api_key of a user with admin rights.
-
 
 INPUT::
 
@@ -609,7 +590,6 @@ OUTPUT::
                       User wasn't in group"
             }
     error:  null
-
 
 get_repo
 --------
@@ -700,14 +680,12 @@ OUTPUT::
             }
     error:  null
 
-
 get_repos
 ---------
 
 List all existing repositories.
 This command can only be executed using the api_key of a user with admin rights,
 or that of a regular user with at least read access to the repository.
-
 
 INPUT::
 
@@ -725,7 +703,7 @@ OUTPUT::
                 "repo_name" :        "<reponame>"
                 "repo_type" :        "<repo_type>",
                 "clone_uri" :        "<clone_uri>",
-                "private": :         "<bool>",
+                "private" :          "<bool>",
                 "created_on" :       "<datetimecreated>",
                 "description" :      "<description>",
                 "landing_rev":       "<landing_rev>",
@@ -739,14 +717,12 @@ OUTPUT::
             ]
     error:  null
 
-
 get_repo_nodes
 --------------
 
 Return a list of files and directories for a given path at the given revision.
 It is possible to specify ret_type to show only ``files`` or ``dirs``.
 This command can only be executed using the api_key of a user with admin rights.
-
 
 INPUT::
 
@@ -772,7 +748,6 @@ OUTPUT::
             ]
     error:  null
 
-
 create_repo
 -----------
 
@@ -784,7 +759,6 @@ This command can only be executed using the api_key of a user with admin rights,
 or that of a regular user with create repository permission.
 Regular users cannot specify owner parameter.
 
-
 INPUT::
 
     id : <id_for_response>
@@ -792,7 +766,7 @@ INPUT::
     method :  "create_repo"
     args:     {
                 "repo_name" :        "<reponame>",
-                "owner" :            "<onwer_name_or_id = Optional(=apiuser)>",
+                "owner" :            "<owner_name_or_id = Optional(=apiuser)>",
                 "repo_type" :        "<repo_type> = Optional('hg')",
                 "description" :      "<description> = Optional('')",
                 "private" :          "<bool> = Optional(False)",
@@ -813,7 +787,7 @@ OUTPUT::
                 "repo_name" :        "<reponame>"
                 "repo_type" :        "<repo_type>",
                 "clone_uri" :        "<clone_uri>",
-                "private": :         "<bool>",
+                "private" :          "<bool>",
                 "created_on" :       "<datetimecreated>",
                 "description" :      "<description>",
                 "landing_rev":       "<landing_rev>",
@@ -826,6 +800,65 @@ OUTPUT::
             }
     error:  null
 
+update_repo
+-----------
+
+Update a repository.
+This command can only be executed using the api_key of a user with admin rights,
+or that of a regular user with create repository permission.
+Regular users cannot specify owner parameter.
+
+INPUT::
+
+    id : <id_for_response>
+    api_key : "<api_key>"
+    method :  "update_repo"
+    args:     {
+                "repoid" :           "<reponame or repo_id>"
+                "name" :             "<reponame> = Optional('')",
+                "group" :            "<group_id> = Optional(None)",
+                "owner" :            "<owner_name_or_id = Optional(=apiuser)>",
+                "description" :      "<description> = Optional('')",
+                "private" :          "<bool> = Optional(False)",
+                "clone_uri" :        "<clone_uri> = Optional(None)",
+                "landing_rev" :      "<landing_rev> = Optional('tip')",
+                "enable_downloads":  "<bool> = Optional(False)",
+                "enable_locking":    "<bool> = Optional(False)",
+                "enable_statistics": "<bool> = Optional(False)",
+              }
+
+OUTPUT::
+
+    id : <id_given_in_input>
+    result: {
+              "msg": "updated repo ID:repo_id `<reponame>`",
+              "repository": {
+                "repo_id" :          "<repo_id>",
+                "repo_name" :        "<reponame>"
+                "repo_type" :        "<repo_type>",
+                "clone_uri" :        "<clone_uri>",
+                "private":           "<bool>",
+                "created_on" :       "<datetimecreated>",
+                "description" :      "<description>",
+                "landing_rev":       "<landing_rev>",
+                "owner":             "<username or user_id>",
+                "fork_of":           "<name_of_fork_parent>",
+                "enable_downloads":  "<bool>",
+                "enable_locking":    "<bool>",
+                "enable_statistics": "<bool>",
+                "last_changeset":    {
+                                       "author":   "<full_author>",
+                                       "date":     "<date_time_of_commit>",
+                                       "message":  "<commit_message>",
+                                       "raw_id":   "<raw_id>",
+                                       "revision": "<numeric_revision>",
+                                       "short_id": "<short_id>"
+                                     }
+                "locked_by": "<username>",
+                "locked_date": "<float lock_time>",
+              },
+            }
+    error:  null
 
 fork_repo
 ---------
@@ -837,7 +870,6 @@ This command can only be executed using the api_key of a user with admin
 rights, or with the global fork permission, by a regular user with create
 repository permission and at least read access to the repository.
 Regular users cannot specify owner parameter.
-
 
 INPUT::
 
@@ -864,7 +896,6 @@ OUTPUT::
             }
     error:  null
 
-
 delete_repo
 -----------
 
@@ -872,7 +903,6 @@ Delete a repository.
 This command can only be executed using the api_key of a user with admin rights,
 or that of a regular user with admin access to the repository.
 When ``forks`` param is set it is possible to detach or delete forks of the deleted repository.
-
 
 INPUT::
 
@@ -893,13 +923,11 @@ OUTPUT::
             }
     error:  null
 
-
 grant_user_permission
 ---------------------
 
 Grant permission for a user on the given repository, or update the existing one if found.
 This command can only be executed using the api_key of a user with admin rights.
-
 
 INPUT::
 
@@ -921,13 +949,11 @@ OUTPUT::
             }
     error:  null
 
-
 revoke_user_permission
 ----------------------
 
 Revoke permission for a user on the given repository.
 This command can only be executed using the api_key of a user with admin rights.
-
 
 INPUT::
 
@@ -948,14 +974,12 @@ OUTPUT::
             }
     error:  null
 
-
 grant_user_group_permission
 ---------------------------
 
 Grant permission for a user group on the given repository, or update the
 existing one if found.
 This command can only be executed using the api_key of a user with admin rights.
-
 
 INPUT::
 
@@ -976,7 +1000,6 @@ OUTPUT::
               "success": true
             }
     error:  null
-
 
 revoke_user_group_permission
 ----------------------------

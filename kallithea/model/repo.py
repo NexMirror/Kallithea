@@ -26,7 +26,6 @@ Original author and date, and relevant copyright and licensing information is be
 
 """
 
-from __future__ import with_statement
 import os
 import shutil
 import logging
@@ -45,8 +44,7 @@ from kallithea.lib.hooks import log_delete_repository
 from kallithea.model import BaseModel
 from kallithea.model.db import Repository, UserRepoToPerm, UserGroupRepoToPerm, \
     UserRepoGroupToPerm, UserGroupRepoGroupToPerm, User, Permission, \
-    Statistics, UserGroup, UserGroupMember, Ui, RepoGroup, \
-    Setting, RepositoryField
+    Statistics, UserGroup, Ui, RepoGroup, RepositoryField
 
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import HasRepoPermissionAny, HasUserGroupPermissionAny
@@ -209,10 +207,7 @@ class RepoModel(BaseModel):
                            cs_cache.get('message'))
 
         def desc(desc):
-            if c.visual.stylify_metatags:
-                return h.urlify_text(h.desc_stylize(h.html_escape(h.truncate(desc, 60))))
-            else:
-                return h.urlify_text(h.html_escape(h.truncate(desc, 60)))
+            return h.urlify_text(desc, truncate=60, stylize=c.visual.stylify_metatags)
 
         def state(repo_state):
             return _render("repo_state", repo_state)
@@ -327,26 +322,19 @@ class RepoModel(BaseModel):
 
             if 'repo_group' in kwargs:
                 cur_repo.group = RepoGroup.get(kwargs['repo_group'])
-            log.debug('Updating repo %s with params:%s' % (cur_repo, kwargs))
-            for strip, k in [(1, 'repo_enable_downloads'),
-                             (1, 'repo_description'),
-                             (1, 'repo_enable_locking'),
-                             (1, 'repo_landing_rev'),
-                             (1, 'repo_private'),
-                             (1, 'repo_enable_statistics'),
-                             (0, 'clone_uri'),]:
+            log.debug('Updating repo %s with params:%s', cur_repo, kwargs)
+            for k in ['repo_enable_downloads',
+                      'repo_description',
+                      'repo_enable_locking',
+                      'repo_landing_rev',
+                      'repo_private',
+                      'repo_enable_statistics',
+                      ]:
                 if k in kwargs:
-                    val = kwargs[k]
-                    if strip:
-                        k = remove_prefix(k, 'repo_')
-                    if k == 'clone_uri':
-                        from kallithea.model.validators import Missing
-                        _change = kwargs.get('clone_uri_change')
-                        if _change == Missing:
-                            # we don't change the value, so use original one
-                            val = cur_repo.clone_uri
-
-                    setattr(cur_repo, k, val)
+                    setattr(cur_repo, remove_prefix(k, 'repo_'), kwargs[k])
+            clone_uri = kwargs.get('clone_uri')
+            if clone_uri is not None and clone_uri != cur_repo.clone_uri_hidden:
+                cur_repo.clone_uri = clone_uri
 
             new_name = cur_repo.get_new_name(kwargs['repo_name'])
             cur_repo.repo_name = new_name
@@ -545,7 +533,7 @@ class RepoModel(BaseModel):
         if not cur_user:
             cur_user = getattr(get_current_authuser(), 'username', None)
         repo = self._get_repo(repo)
-        if repo:
+        if repo is not None:
             if forks == 'detach':
                 for r in repo.forks:
                     r.fork = None
@@ -594,7 +582,7 @@ class RepoModel(BaseModel):
         obj.user = user
         obj.permission = permission
         self.sa.add(obj)
-        log.debug('Granted perm %s to %s on %s' % (perm, user, repo))
+        log.debug('Granted perm %s to %s on %s', perm, user, repo)
         return obj
 
     def revoke_user_permission(self, repo, user):
@@ -612,9 +600,9 @@ class RepoModel(BaseModel):
             .filter(UserRepoToPerm.repository == repo) \
             .filter(UserRepoToPerm.user == user) \
             .scalar()
-        if obj:
+        if obj is not None:
             self.sa.delete(obj)
-            log.debug('Revoked perm on %s on %s' % (repo, user))
+            log.debug('Revoked perm on %s on %s', repo, user)
 
     def grant_user_group_permission(self, repo, group_name, perm):
         """
@@ -644,7 +632,7 @@ class RepoModel(BaseModel):
         obj.users_group = group_name
         obj.permission = permission
         self.sa.add(obj)
-        log.debug('Granted perm %s to %s on %s' % (perm, group_name, repo))
+        log.debug('Granted perm %s to %s on %s', perm, group_name, repo)
         return obj
 
     def revoke_user_group_permission(self, repo, group_name):
@@ -662,9 +650,9 @@ class RepoModel(BaseModel):
             .filter(UserGroupRepoToPerm.repository == repo) \
             .filter(UserGroupRepoToPerm.users_group == group_name) \
             .scalar()
-        if obj:
+        if obj is not None:
             self.sa.delete(obj)
-            log.debug('Revoked perm to %s on %s' % (repo, group_name))
+            log.debug('Revoked perm to %s on %s', repo, group_name)
 
     def delete_stats(self, repo_name):
         """
@@ -676,7 +664,7 @@ class RepoModel(BaseModel):
         try:
             obj = self.sa.query(Statistics) \
                 .filter(Statistics.repository == repo).scalar()
-            if obj:
+            if obj is not None:
                 self.sa.delete(obj)
         except Exception:
             log.error(traceback.format_exc())
@@ -720,9 +708,9 @@ class RepoModel(BaseModel):
         if is_valid_repo_group(repo_path, self.repos_path):
             raise Exception('This path %s is a valid group' % repo_path)
 
-        log.info('creating repo %s in %s from url: `%s`' % (
+        log.info('creating repo %s in %s from url: `%s`',
             repo_name, safe_unicode(repo_path),
-            obfuscate_url_pw(clone_uri)))
+            obfuscate_url_pw(clone_uri))
 
         backend = get_backend(repo_type)
 
@@ -737,12 +725,12 @@ class RepoModel(BaseModel):
         elif repo_type == 'git':
             repo = backend(repo_path, create=True, src_url=clone_uri, bare=True)
             # add kallithea hook into this repo
-            ScmModel().install_git_hook(repo=repo)
+            ScmModel().install_git_hooks(repo=repo)
         else:
             raise Exception('Not supported repo_type %s expected hg/git' % repo_type)
 
-        log.debug('Created repo %s with %s backend'
-                  % (safe_unicode(repo_name), safe_unicode(repo_type)))
+        log.debug('Created repo %s with %s backend',
+                  safe_unicode(repo_name), safe_unicode(repo_type))
         return repo
 
     def _rename_filesystem_repo(self, old, new):
@@ -752,7 +740,7 @@ class RepoModel(BaseModel):
         :param old: old name
         :param new: new name
         """
-        log.info('renaming repo from %s to %s' % (old, new))
+        log.info('renaming repo from %s to %s', old, new)
 
         old_path = os.path.join(self.repos_path, old)
         new_path = os.path.join(self.repos_path, new)
@@ -771,7 +759,7 @@ class RepoModel(BaseModel):
         :param repo: repo object
         """
         rm_path = os.path.join(self.repos_path, repo.repo_name)
-        log.info("Removing %s" % (rm_path))
+        log.info("Removing %s", rm_path)
 
         _now = datetime.now()
         _ms = str(_now.microsecond).rjust(6, '0')

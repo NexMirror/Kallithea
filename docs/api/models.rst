@@ -1,7 +1,7 @@
 .. _models:
 
 ========================
-The :mod:`models` Module
+The :mod:`models` module
 ========================
 
 .. automodule:: kallithea.model

@@ -12,8 +12,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-kallithea.lib.celerylib.__init__
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kallithea.lib.celerylib
+~~~~~~~~~~~~~~~~~~~~~~~
 
 celery libs for Kallithea
 
@@ -62,21 +62,21 @@ def run_task(task, *args, **kwargs):
     if CELERY_ON:
         try:
             t = task.apply_async(args=args, kwargs=kwargs)
-            log.info('running task %s:%s' % (t.task_id, task))
+            log.info('running task %s:%s', t.task_id, task)
             return t
 
-        except socket.error, e:
+        except socket.error as e:
             if isinstance(e, IOError) and e.errno == 111:
                 log.debug('Unable to connect to celeryd. Sync execution')
                 CELERY_ON = False
             else:
                 log.error(traceback.format_exc())
-        except KeyError, e:
+        except KeyError as e:
                 log.debug('Unable to connect to celeryd. Sync execution')
-        except Exception, e:
+        except Exception as e:
             log.error(traceback.format_exc())
 
-    log.debug('executing task %s in sync mode' % task)
+    log.debug('executing task %s in sync mode', task)
     return ResultWrapper(task(*args, **kwargs))
 
 
@@ -96,7 +96,7 @@ def locked_task(func):
         lockkey = __get_lockkey(func, *fargs, **fkwargs)
         lockkey_path = config['app_conf']['cache_dir']
 
-        log.info('running task with lockkey %s' % lockkey)
+        log.info('running task with lockkey %s', lockkey)
         try:
             l = DaemonLock(file_=jn(lockkey_path, lockkey))
             ret = func(*fargs, **fkwargs)

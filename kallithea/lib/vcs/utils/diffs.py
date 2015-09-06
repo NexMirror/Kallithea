@@ -356,7 +356,7 @@ class DiffProcessor(object):
 
         """
         # Transform all whitespace to underscore
-        idstring = re.sub(r'\s', "_", '%s' % idstring)
+        idstring = re.sub(r'\s', "_", idstring)
         # Remove everything that is not a hyphen or a member of \w
         idstring = re.sub(r'(?!-)\W', "", idstring).lower()
         return idstring

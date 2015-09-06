@@ -34,7 +34,7 @@
         %if c.authuser.username != 'default':
         <ul class="links">
           <li>
-             <a href="${h.url('new_gist')}" class="btn btn-small btn-success"><i class="icon-plus"></i> ${_(u'Create New Gist')}</a>
+             <a href="${h.url('new_gist')}" class="btn btn-small btn-success"><i class="icon-plus"></i> ${_('Create New Gist')}</a>
           </li>
         </ul>
         %endif
@@ -54,7 +54,7 @@
                 ${_('Created')} ${h.age(gist.created_on)} /
                 <span style="color: #AAA">
                   %if gist.gist_expires == -1:
-                   ${_('Expires')}: ${_('never')}
+                   ${_('Expires')}: ${_('Never')}
                   %else:
                    ${_('Expires')}: ${h.age(h.time_to_datetime(gist.gist_expires))}
                   %endif
