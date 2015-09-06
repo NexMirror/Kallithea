@@ -1,81 +1,110 @@
 List of contributors to Kallithea project:
 
-    Marcin Kuźmiński <marcin@python-works.com>
-    Łukasz Balcerzak <lukaszbalcerzak@gmail.com>
-    Jason Harris <jason@jasonfharris.com>
-    Thayne Harbaugh <thayne@fusionio.com>
-    cejones
-    Thomas Waldmann <tw-public@gmx.de>
-    Lorenzo M. Catucci <lorenzo@sancho.ccd.uniroma2.it>
-    Dmitri Kuznetsov
-    Jared Bunting <jared.bunting@peachjean.com>
-    Steve Romanow <slestak989@gmail.com>
-    Augusto Herrmann <augusto.herrmann@planejamento.gov.br>
-    Ankit Solanki <ankit.solanki@gmail.com>
-    Liad Shani <liadff@gmail.com>
-    Les Peabody <lpeabody@gmail.com>
-    Jonas Oberschweiber <jonas.oberschweiber@d-velop.de>
-    Matt Zuba <matt.zuba@goodwillaz.org>
-    Aras Pranckevičius <aras@unity3d.com>
-    Tony Bussieres <t.bussieres@gmail.com>
-    Erwin Kroon <e.kroon@smartmetersolutions.nl>
-    nansenat16 <nansenat16@null.tw>
-    Vincent Duvert <vincent@duvert.net>
-    Takumi IINO <trot.thunder@gmail.com>
-    Indra Talip <indra.talip@gmail.com>
-    James Rhodes <jrhodes@redpointsoftware.com.au>
-    Dominik Ruf <dominikruf@gmail.com>
-    xpol <xpolife@gmail.com>
-    Vincent Caron <vcaron@bearstech.com>
-    Zachary Auclair <zach101@gmail.com>
-    Stefan Engel <mail@engel-stefan.de>
-    Andrew Shadura <andrew@shadura.me>
-    Raoul Thill <raoul.thill@gmail.com>
-    Philip Jameson <philip.j@hostdime.com>
-    Mads Kiilerich <madski@unity3d.com>
-    Dan Sheridan <djs@adelard.com>
-    Dennis Brakhane <brakhane@googlemail.com>
-    Simon Lopez <simon.lopez@slopez.org>
-    Jonathan Sternberg <jonathansternberg@gmail.com>
-    Grzegorz Rożniecki <xaerxess@gmail.com>
+    Mads Kiilerich <madski@unity3d.com> 2012-2015
+    Takumi IINO <trot.thunder@gmail.com> 2012-2015
+    Unity Technologies 2012-2015
+    Andrew Shadura <andrew@shadura.me> 2012 2014-2015
+    Aras Pranckevičius <aras@unity3d.com> 2012-2013 2015
+    Sean Farley <sean.michael.farley@gmail.com> 2013-2015
+    Christian Oyarzun <oyarzun@gmail.com> 2014-2015
+    Joseph Rivera <rivera.d.joseph@gmail.com> 2014-2015
+    Thomas De Schampheleire <thomas.de.schampheleire@gmail.com> 2014-2015
+    Anatoly Bubenkov <bubenkoff@gmail.com> 2015
+    Andrew Bartlett <abartlet@catalyst.net.nz> 2015
+    Balázs Úr <urbalazs@gmail.com> 2015
+    Ben Finney <ben@benfinney.id.au> 2015
+    Branko Majic <branko@majic.rs> 2015
+    Daniel Hobley <danielh@unity3d.com> 2015
+    David Avigni <david.avigni@ankapi.com> 2015
+    Denis Blanchette <dblanchette@coveo.com> 2015
+    duanhongyi <duanhongyi@doopai.com> 2015
+    EriCSN Chang <ericsning@gmail.com> 2015
+    Étienne Gilli <etienne.gilli@gmail.com> 2015
+    Grzegorz Krason <grzegorz.krason@gmail.com> 2015
+    Jan Heylen <heyleke@gmail.com> 2015
+    Kazunari Kobayashi <kobanari@nifty.com> 2015
+    Kevin Bullock <kbullock@ringworld.org> 2015
+    kobanari <kobanari@nifty.com> 2015
+    Marc Abramowitz <marc@marc-abramowitz.com> 2015
+    Marc Villetard <marc.villetard@gmail.com> 2015
+    Matthias Zilk <matthias.zilk@gmail.com> 2015
+    Michael Pohl <michael@mipapo.de> 2015
+    Michael V. DePalatis <mike@depalatis.net> 2015
+    Morten Skaaning <mortens@unity3d.com> 2015
+    Nick High <nick@silverchip.org> 2015
+    Niemand Jedermann <predatorix@web.de> 2015
+    Peter Vitt <petervitt@web.de> 2015
+    Robert Martinez <ntttq@inboxen.org> 2015
+    Ronny Pfannschmidt <opensource@ronnypfannschmidt.de> 2015
+    Sam Jaques <sam.jaques@me.com> 2015
+    Søren Løvborg <sorenl@unity3d.com> 2015
+    Tuux <tuxa@galaxie.eu.org> 2015
+    Viktar Palstsiuk <vipals@gmail.com> 2015
+    Dominik Ruf <dominikruf@gmail.com> 2012 2014
+    Bradley M. Kuhn <bkuhn@sfconservancy.org> 2014
+    Calinou <calinou@opmbx.org> 2014
+    Daniel Anderson <daniel@dattrix.com> 2014
+    Henrik Stuart <hg@hstuart.dk> 2014
+    Ingo von Borstel <kallithea@planetmaker.de> 2014
+    Jelmer Vernooĳ <jelmer@samba.org> 2014
+    Jim Hague <jim.hague@acm.org> 2014
+    Matt Fellows <kallithea@matt-fellows.me.uk> 2014
+    Max Roman <max@choloclos.se> 2014
+    Michal Čihař <michal@cihar.com> 2014
+    Na'Tosha Bard <natosha@unity3d.com> 2014
+    Rasmus Selsmark <rasmuss@unity3d.com> 2014
+    Tim Freund <tim@freunds.net> 2014
+    Travis Burtrum <android@moparisthebest.com> 2014
+    Zoltan Gyarmati <mr.zoltan.gyarmati@gmail.com> 2014
+    Marcin Kuźmiński <marcin@python-works.com> 2010-2013
+    xpol <xpolife@gmail.com> 2012-2013
+    Aparkar <aparkar@icloud.com> 2013
+    Dennis Brakhane <brakhane@googlemail.com> 2013
+    Grzegorz Rożniecki <xaerxess@gmail.com> 2013
+    Jonathan Sternberg <jonathansternberg@gmail.com> 2013
+    Leonardo Carneiro <leonardo@unity3d.com> 2013
+    Magnus Ericmats <magnus.ericmats@gmail.com> 2013
+    Martin Vium <martinv@unity3d.com> 2013
+    Simon Lopez <simon.lopez@slopez.org> 2013
+    Ton Plomp <tcplomp@gmail.com> 2013
+    Augusto Herrmann <augusto.herrmann@planejamento.gov.br> 2011-2012
+    Dan Sheridan <djs@adelard.com> 2012
+    Dies Koper <diesk@fast.au.fujitsu.com> 2012
+    Erwin Kroon <e.kroon@smartmetersolutions.nl> 2012
+    H Waldo G <gwaldo@gmail.com> 2012
+    hppj <hppj@postmage.biz> 2012
+    Indra Talip <indra.talip@gmail.com> 2012
+    mikespook 2012
+    nansenat16 <nansenat16@null.tw> 2012
+    Philip Jameson <philip.j@hostdime.com> 2012
+    Raoul Thill <raoul.thill@gmail.com> 2012
+    Stefan Engel <mail@engel-stefan.de> 2012
+    Tony Bussieres <t.bussieres@gmail.com> 2012
+    Vincent Caron <vcaron@bearstech.com> 2012
+    Vincent Duvert <vincent@duvert.net> 2012
+    Vladislav Poluhin <nuklea@gmail.com> 2012
+    Zachary Auclair <zach101@gmail.com> 2012
+    Ankit Solanki <ankit.solanki@gmail.com> 2011
+    Dmitri Kuznetsov 2011
+    Jared Bunting <jared.bunting@peachjean.com> 2011
+    Jason Harris <jason@jasonfharris.com> 2011
+    Les Peabody <lpeabody@gmail.com> 2011
+    Liad Shani <liadff@gmail.com> 2011
+    Lorenzo M. Catucci <lorenzo@sancho.ccd.uniroma2.it> 2011
+    Matt Zuba <matt.zuba@goodwillaz.org> 2011
+    Nicolas VINOT <aeris@imirhil.fr> 2011
+    Shawn K. O'Shea <shawn@eth0.net> 2011
+    Thayne Harbaugh <thayne@fusionio.com> 2011
+    Łukasz Balcerzak <lukaszbalcerzak@gmail.com> 2010
     Andrew Kesterson <andrew@aklabs.net>
+    cejones
     David A. Sjøen <david.sjoen@westcon.no>
-    Jelmer Vernooĳ <jelmer@samba.org>
+    James Rhodes <jrhodes@redpointsoftware.com.au>
+    Jonas Oberschweiber <jonas.oberschweiber@d-velop.de>
     larikale
-    SteveCohen
     RhodeCode GmbH
     Sebastian Kreutzberger <sebastian@rhodecode.com>
+    Steve Romanow <slestak989@gmail.com>
+    SteveCohen
     Thomas <thomas@rhodecode.com>
-    Bradley M. Kuhn <bkuhn@sfconservancy.org>
-    Sean Farley <sean.michael.farley@gmail.com>
-    Martin Vium <martinv@unity3d.com>
-    Daniel Anderson <daniel@dattrix.com>
-    Travis Burtrum <android@moparisthebest.com>
-    Calinou <calinou@opmbx.org>
-    Christian Oyarzun <oyarzun@gmail.com>
-    Denis Blanchette <dblanchette@coveo.com>
-    duanhongyi <duanhongyi@doopai.com>
-    Henrik Stuart <hg@hstuart.dk>
-    Ingo von Borstel <kallithea@planetmaker.de>
-    Jan Heylen <heyleke@gmail.com>
-    Jim Hague <jim.hague@acm.org>
-    Joseph Rivera <rivera.d.joseph@gmail.com>
-    Kazunari Kobayashi <kobanari@nifty.com>
-    Matt Fellows <kallithea@matt-fellows.me.uk>
-    Max Roman <max@choloclos.se>
-    Michael Pohl <michael@mipapo.de>
-    Michael V. DePalatis <mike@depalatis.net>
-    Michal Čihař <michal@cihar.com>
-    Morten Skaaning <mortens@unity3d.com>
-    Na'Tosha Bard <natosha@unity3d.com>
-    Nick High <nick@silverchip.org>
-    Niemand Jedermann <predatorix@web.de>
-    Peter Vitt <petervitt@web.de>
-    Sam Jaques <sam.jaques@me.com>
-    Thomas De Schampheleire <thomas.de.schampheleire@gmail.com>
-    Tuux <tuxa@galaxie.eu.org>
-    Zoltan Gyarmati <mr.zoltan.gyarmati@gmail.com>
-    Kevin Bullock <kbullock@ringworld.org>
-    Marc Villetard <marc.villetard@gmail.com>
-    Matthias Zilk <matthias.zilk@gmail.com>
-    Tim Freund <tim@freunds.net>
+    Thomas Waldmann <tw-public@gmx.de>
