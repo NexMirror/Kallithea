@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2015-08-25 11:37+0200\n"
-"PO-Revision-Date: 2015-07-20 11:32+0200\n"
-"Last-Translator: Étienne Gilli <etienne.gilli@gmail.com>\n"
+"PO-Revision-Date: 2015-09-07 16:35+0200\n"
+"Last-Translator: Andrew Shadura <andrew@shadura.me>\n"
 "Language-Team: French "
 "<https://hosted.weblate.org/projects/kallithea/kallithea/fr/>\n"
 "Language: fr\n"
@@ -77,14 +77,13 @@ msgid "Cannot compare repositories without using common ancestor"
 msgstr "Impossible de comparer des dépôts sans utiliser un ancêtre commun"
 
 #: kallithea/controllers/error.py:71
-#, fuzzy
 #| msgid "revisions"
 msgid "No response"
-msgstr "révisions"
+msgstr "Pas de réponse"
 
 #: kallithea/controllers/error.py:72
 msgid "Unknown error"
-msgstr ""
+msgstr "Erreur inconnue"
 
 #: kallithea/controllers/error.py:100
 msgid "The request could not be understood by the server due to malformed syntax."
@@ -303,10 +302,9 @@ msgid "Journal"
 msgstr "Historique"
 
 #: kallithea/controllers/login.py:150 kallithea/controllers/login.py:196
-#, fuzzy
 #| msgid "bad captcha"
 msgid "Bad captcha"
-msgstr "mauvais captcha"
+msgstr "Mauvais captcha"
 
 #: kallithea/controllers/login.py:156
 msgid "You have successfully registered into Kallithea"
@@ -368,7 +366,7 @@ msgstr "La requête de pull a été ouverte avec succès"
 #: kallithea/controllers/pullrequests.py:504
 #, python-format
 msgid "Invalid reviewer \"%s\" specified"
-msgstr ""
+msgstr "Reviewer spécifié \"%s\" non valide"
 
 #: kallithea/controllers/pullrequests.py:365
 #: kallithea/controllers/pullrequests.py:452
@@ -437,16 +435,16 @@ msgstr "Cette demande de pull peut être mise à jour avec les modifications de 
 
 #: kallithea/controllers/pullrequests.py:605
 msgid "No changesets found for updating this pull request."
-msgstr ""
+msgstr "Pas de changeset trouvé pour ce pull request"
 
 #: kallithea/controllers/pullrequests.py:613
 #, python-format
 msgid "Note: Branch %s has another head: %s."
-msgstr ""
+msgstr "Note: La branche %s a une autre tête: %s."
 
 #: kallithea/controllers/pullrequests.py:619
 msgid "Git pull requests don't support updates yet."
-msgstr ""
+msgstr "Le smises à jour des Git pull requests ne sont pas encore supportées."
 
 #: kallithea/controllers/pullrequests.py:710
 msgid "No permission to change pull request status"
@@ -2114,9 +2112,7 @@ msgstr "Le nom d’utilisateur « %(username)s » n’est pas valide"
 
 #: kallithea/model/validators.py:99
 #, fuzzy
-#| msgid "" "Username may only contain alphanumeric characters underscores,
-#| periods or" " dashes and must begin with alphanumeric character or
-#| underscore"
+#| msgid "" "
 msgid ""
 "Username may only contain alphanumeric characters underscores, periods or"
 " dashes and must begin with an alphanumeric character or underscore"
@@ -2688,8 +2684,7 @@ msgstr "Greffons activés"
 
 #: kallithea/templates/admin/auth/auth_settings.html:33
 #, fuzzy
-#| msgid "" "Comma separated list of plugins. Order of plugins is also order in
-#| which " "Kallithea will try to authenticate user"
+#| msgid "" "
 msgid ""
 "Comma-separated list of plugins; Kallithea will try user authentication "
 "in plugin order"
@@ -6157,7 +6152,6 @@ msgid "Clone from"
 msgstr "Cloner depuis"
 
 #: kallithea/templates/summary/summary.html:72
-#, fuzzy
 msgid "Clone URL"
 msgstr "URL de clone"
 
@@ -6201,32 +6195,30 @@ msgstr "avec les sous-dépôts"
 
 #: kallithea/templates/summary/summary.html:156
 msgid "Repository Size"
-msgstr ""
+msgstr "Taille du dépôt"
 
 #: kallithea/templates/summary/summary.html:163
 #: kallithea/templates/summary/summary.html:165
 msgid "Feed"
-msgstr ""
+msgstr "Flux"
 
 #: kallithea/templates/summary/summary.html:186
-#, fuzzy
 msgid "Latest Changes"
-msgstr "fichiers modifiés"
+msgstr "Derniers changements"
 
 #: kallithea/templates/summary/summary.html:188
-#, fuzzy
 msgid "Quick Start"
 msgstr "Démarrage rapide"
 
 #: kallithea/templates/summary/summary.html:202
 #, python-format
 msgid "Readme file from revision %s:%s"
-msgstr ""
+msgstr "Fichier Lisez-moi de la revision %s:%s"
 
 #: kallithea/templates/summary/summary.html:293
 #, python-format
 msgid "Download %s as %s"
-msgstr "Télécharger %s comme archive %s"
+msgstr "Télécharge %s comme %s"
 
 #: kallithea/templates/tags/tags.html:5
 #, python-format
@@ -6234,9 +6226,8 @@ msgid "%s Tags"
 msgstr "Tags de %s"
 
 #: kallithea/templates/tags/tags.html:26
-#, fuzzy
 msgid "Compare Tags"
-msgstr "vue de comparaison"
+msgstr "Comparer les tags"
 
 #~ msgid "No comments."
 #~ msgstr "Aucun commentaire."
@@ -6542,4 +6533,3 @@ msgstr "vue de comparaison"
 
 #~ msgid "reviewer"
 #~ msgstr ""
-
