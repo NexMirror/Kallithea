@@ -33,8 +33,9 @@ import itertools
 from formencode import htmlfill
 
 from pylons import request, tmpl_context as c, url
-from pylons.controllers.util import abort, redirect
+from pylons.controllers.util import redirect
 from pylons.i18n.translation import _, ungettext
+from webob.exc import HTTPForbidden, HTTPNotFound, HTTPInternalServerError
 
 import kallithea
 from kallithea.lib import helpers as h
@@ -49,7 +50,6 @@ from kallithea.model.repo_group import RepoGroupModel
 from kallithea.model.forms import RepoGroupForm, RepoGroupPermsForm
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
-from webob.exc import HTTPInternalServerError, HTTPNotFound
 from kallithea.lib.utils2 import safe_int
 from sqlalchemy.sql.expression import func
 
@@ -209,7 +209,7 @@ class RepoGroupsController(BaseController):
             if HasRepoGroupPermissionAll('group.admin')(group_name, 'group create'):
                 pass
             else:
-                return abort(403)
+                raise HTTPForbidden()
 
         self.__load_defaults()
         return render('admin/repo_groups/repo_group_add.html')

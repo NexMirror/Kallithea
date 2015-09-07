@@ -30,8 +30,7 @@ import traceback
 
 from pylons import request
 from pylons import tmpl_context as c
-from pylons.controllers.util import abort
-from webob.exc import HTTPBadRequest
+from webob.exc import HTTPBadRequest, HTTPForbidden
 
 from kallithea.model.db import Notification
 from kallithea.model.notification import NotificationModel
@@ -168,7 +167,7 @@ class NotificationsController(BaseController):
 
                 return render('admin/notifications/show_notification.html')
 
-        return abort(403)
+        raise HTTPForbidden()
 
     def edit(self, notification_id, format='html'):
         """GET /_admin/notifications/id/edit: Form to edit an existing item"""
