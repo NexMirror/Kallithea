@@ -1121,10 +1121,9 @@ msgid "Show all combined changesets %s->%s"
 msgstr "Zeige alle Kombinierten Änderungensätze %s->%s"
 
 #: kallithea/lib/helpers.py:677
-#, fuzzy
 #| msgid "compare view"
 msgid "Compare view"
-msgstr "vergleichsansicht"
+msgstr "Vergleichsansicht"
 
 #: kallithea/lib/helpers.py:696
 msgid "and"
