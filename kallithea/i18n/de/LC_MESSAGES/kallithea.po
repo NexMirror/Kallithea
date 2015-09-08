@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2015-08-25 11:37+0200\n"
-"PO-Revision-Date: 2015-07-23 10:37+0200\n"
-"Last-Translator: Robert Martinez <ntttq@inboxen.org>\n"
+"PO-Revision-Date: 2015-09-08 10:38+0200\n"
+"Last-Translator: Robert Rauch <mail@robertrauch.de>\n"
 "Language-Team: German "
 "<https://hosted.weblate.org/projects/kallithea/kallithea/de/>\n"
 "Language: de\n"
@@ -50,10 +50,10 @@ msgid "Ignore whitespace"
 msgstr "Ignoriere unsichtbare Zeichen"
 
 #: kallithea/controllers/changeset.py:169
-#, fuzzy, python-format
+#, python-format
 #| msgid "increase diff context to %(num)s lines"
 msgid "Increase diff context to %(num)s lines"
-msgstr "diff-Kontext auf %(num)s Zeilen erhöhen"
+msgstr "Erhöhe diff-Kontext auf %(num)s Zeilen"
 
 #: kallithea/controllers/changeset.py:212 kallithea/controllers/files.py:97
 #: kallithea/controllers/files.py:117 kallithea/controllers/files.py:743
@@ -86,7 +86,7 @@ msgstr "revisionen"
 
 #: kallithea/controllers/error.py:72
 msgid "Unknown error"
-msgstr ""
+msgstr "Unbekannter Fehler"
 
 #: kallithea/controllers/error.py:100
 msgid "The request could not be understood by the server due to malformed syntax."
@@ -161,7 +161,7 @@ msgstr "Dieses Repository ist von %s am %s gesperrt worden"
 
 #: kallithea/controllers/files.py:318
 msgid "You can only delete files with revision being a valid branch "
-msgstr ""
+msgstr "Du kannst nur Dateien löschen, deren Revision ein gültiger Branch ist "
 
 #: kallithea/controllers/files.py:329
 #, python-format
@@ -181,6 +181,7 @@ msgstr "Während des Commits trat ein Fehler auf"
 #: kallithea/controllers/files.py:378
 msgid "You can only edit files with revision being a valid branch "
 msgstr ""
+"Du kannst nur Dateien bearbeiten, deren Revision ein gültiger Branch ist "
 
 #: kallithea/controllers/files.py:392
 #, python-format
@@ -299,10 +300,9 @@ msgid "Journal"
 msgstr "Logbuch"
 
 #: kallithea/controllers/login.py:150 kallithea/controllers/login.py:196
-#, fuzzy
 #| msgid "bad captcha"
 msgid "Bad captcha"
-msgstr "falsches Captcha"
+msgstr "Falsches Captcha"
 
 #: kallithea/controllers/login.py:156
 msgid "You have successfully registered into Kallithea"
@@ -373,7 +373,7 @@ msgstr "Während des Erstellens des Pull Requests trat ein Fehler auf"
 
 #: kallithea/controllers/pullrequests.py:397
 msgid "Missing changesets since the previous pull request:"
-msgstr ""
+msgstr "Fehlende Changesets seit letztem Pull Request:"
 
 #: kallithea/controllers/pullrequests.py:404
 #, python-format
@@ -878,17 +878,15 @@ msgstr "Während dieser operation trat ein Fehler auf"
 
 #: kallithea/controllers/admin/repos.py:537
 #: kallithea/controllers/admin/repos.py:564
-#, fuzzy
 #| msgid "Repository is not locked"
 msgid "Repository has been locked"
-msgstr "Repository ist nicht gesperrt"
+msgstr "Repository wurde gesperrt"
 
 #: kallithea/controllers/admin/repos.py:540
 #: kallithea/controllers/admin/repos.py:561
-#, fuzzy
 #| msgid "Repository is not locked"
 msgid "Repository has been unlocked"
-msgstr "Repository ist nicht gesperrt"
+msgstr "Repository nicht mehr gesperrt"
 
 #: kallithea/controllers/admin/repos.py:543
 #: kallithea/controllers/admin/repos.py:568
@@ -1051,7 +1049,7 @@ msgstr "Während der Löschen des Benutzers trat ein Fehler auf"
 
 #: kallithea/controllers/admin/users.py:238
 msgid "The default user cannot be edited"
-msgstr ""
+msgstr "Der Standard-Benutzer kann nicht bearbeitet werden"
 
 #: kallithea/controllers/admin/users.py:461
 #, python-format
@@ -2015,8 +2013,7 @@ msgstr "Neuer Benutzer %(new_username)s registriert"
 
 #: kallithea/model/notification.py:307
 #, fuzzy, python-format
-#| msgid "" "Review request on %(repo_name)s pull request #%(pr_id)s from
-#| %(ref)s by " "%(pr_username)s"
+#| msgid "" "
 msgid ""
 "[Added by %(pr_username)s] %(repo_name)s pull request %(pr_nice_id)s from"
 " %(ref)s"
@@ -2121,9 +2118,7 @@ msgstr "Benutzername \"%(username)s\" ist ungültig"
 
 #: kallithea/model/validators.py:99
 #, fuzzy
-#| msgid "" "Username may only contain alphanumeric characters underscores,
-#| periods or" " dashes and must begin with alphanumeric character or
-#| underscore"
+#| msgid "" "
 msgid ""
 "Username may only contain alphanumeric characters underscores, periods or"
 " dashes and must begin with an alphanumeric character or underscore"
@@ -2703,8 +2698,7 @@ msgstr "Aktivierte Plugins"
 
 #: kallithea/templates/admin/auth/auth_settings.html:33
 #, fuzzy
-#| msgid "" "Comma separated list of plugins. Order of plugins is also order in
-#| which " "Kallithea will try to authenticate user"
+#| msgid "" "
 msgid ""
 "Comma-separated list of plugins; Kallithea will try user authentication "
 "in plugin order"
@@ -3332,8 +3326,8 @@ msgstr "Benutzergruppe"
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:53
 #, fuzzy
-#| msgid "" "All default permissions on each user group will be reset to chosen
-#| " "permission, note that all custom default permission on repository groups
+#| msgid "" "
+#| " "
 #| " "will be lost"
 msgid ""
 "All default permissions on each user group will be reset to chosen "
@@ -3374,8 +3368,7 @@ msgstr ""
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:74
 #, fuzzy
-#| msgid "" "Write permission to a repository group allows creating
-#| repositories " "inside that group."
+#| msgid "" "
 msgid ""
 "With this, write permission to a repository group allows creating "
 "repositories inside that group. Without this, group write permissions "
@@ -6437,4 +6430,3 @@ msgstr "Tags vergleichen"
 
 #~ msgid "with subrepos"
 #~ msgstr ""
-
