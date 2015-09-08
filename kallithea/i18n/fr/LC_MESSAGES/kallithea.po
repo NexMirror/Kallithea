@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2015-09-08 10:34+0200\n"
-"PO-Revision-Date: 2015-09-07 16:35+0200\n"
-"Last-Translator: Andrew Shadura <andrew@shadura.me>\n"
+"PO-Revision-Date: 2015-09-08 17:59+0200\n"
+"Last-Translator: Étienne Gilli <etienne.gilli@gmail.com>\n"
 "Language-Team: French "
 "<https://hosted.weblate.org/projects/kallithea/stable/fr/>\n"
 "Language: fr\n"
@@ -50,9 +50,9 @@ msgid "Ignore whitespace"
 msgstr "Ignorer les espaces et tabulations"
 
 #: kallithea/controllers/changeset.py:169
-#, fuzzy, python-format
+#, python-format
 msgid "Increase diff context to %(num)s lines"
-msgstr "augmenter le contexte du diff à %(num)s lignes"
+msgstr "Augmenter le contexte du diff à %(num)s lignes"
 
 #: kallithea/controllers/changeset.py:212 kallithea/controllers/files.py:96
 #: kallithea/controllers/files.py:116 kallithea/controllers/files.py:742
@@ -308,16 +308,15 @@ msgid "You have successfully registered into Kallithea"
 msgstr "Vous vous êtes inscrits avec succès à Kallithea"
 
 #: kallithea/controllers/login.py:202
-#, fuzzy
 #| msgid "Your password reset link was sent"
 msgid "A password reset confirmation code has been sent"
-msgstr "Un lien de rénitialisation de votre mot de passe vous a été envoyé"
+msgstr ""
+"Un lien de confirmation de réinitialisation de mot de passe a été envoyé"
 
 #: kallithea/controllers/login.py:251
-#, fuzzy
 #| msgid "Password reset link"
 msgid "Invalid password reset token"
-msgstr "Lien de remise à zéro du mot de passe"
+msgstr "Clé de réinitialisation de mot de passe invalide"
 
 #: kallithea/controllers/login.py:256
 #: kallithea/controllers/admin/my_account.py:167
@@ -437,7 +436,7 @@ msgstr "Cette demande de pull peut être mise à jour avec les modifications de 
 
 #: kallithea/controllers/pullrequests.py:617
 msgid "No changesets found for updating this pull request."
-msgstr "Pas de changeset trouvé pour ce pull request"
+msgstr "Pas de changeset trouvé pour ce pull request."
 
 #: kallithea/controllers/pullrequests.py:625
 #, python-format
@@ -450,7 +449,7 @@ msgstr "Le smises à jour des Git pull requests ne sont pas encore supportées."
 
 #: kallithea/controllers/pullrequests.py:722
 msgid "No permission to change pull request status"
-msgstr ""
+msgstr "Permission manquante pour changer le statut du pull request"
 
 #: kallithea/controllers/pullrequests.py:727
 msgid "Closing."
@@ -501,9 +500,8 @@ msgstr "Une erreur est survenue durant la mise à jour des réglages par défaut
 #: kallithea/controllers/admin/gists.py:59
 #: kallithea/controllers/admin/my_account.py:243
 #: kallithea/controllers/admin/users.py:285
-#, fuzzy
 msgid "Forever"
-msgstr "pour toujours"
+msgstr "Pour toujours"
 
 #: kallithea/controllers/admin/gists.py:60
 #: kallithea/controllers/admin/my_account.py:244
@@ -545,9 +543,8 @@ msgid "Deleted gist %s"
 msgstr "Gist %s supprimé"
 
 #: kallithea/controllers/admin/gists.py:233
-#, fuzzy
 msgid "Unmodified"
-msgstr "non modifié"
+msgstr "Non modifié"
 
 #: kallithea/controllers/admin/gists.py:262
 msgid "Successfully updated gist content"
@@ -831,9 +828,9 @@ msgid "Deleted repository %s"
 msgstr "Dépôt %s supprimé"
 
 #: kallithea/controllers/admin/repos.py:321
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot delete repository %s which still has forks"
-msgstr "Impossible de supprimer le dépôt %s : Des forks y sont attachés"
+msgstr "Impossible de supprimer le dépôt %s : des forks y sont attachés"
 
 #: kallithea/controllers/admin/repos.py:326
 #, python-format
@@ -881,15 +878,13 @@ msgstr "Une erreur est survenue durant cette opération"
 
 #: kallithea/controllers/admin/repos.py:537
 #: kallithea/controllers/admin/repos.py:564
-#, fuzzy
 msgid "Repository has been locked"
-msgstr "Ce dépôt n’est pas verrouillé"
+msgstr "Ce dépôt a été verrouillé"
 
 #: kallithea/controllers/admin/repos.py:540
 #: kallithea/controllers/admin/repos.py:561
-#, fuzzy
 msgid "Repository has been unlocked"
-msgstr "Ce dépôt n’est pas verrouillé"
+msgstr "Ce dépôt a été déverrouillé"
 
 #: kallithea/controllers/admin/repos.py:543
 #: kallithea/controllers/admin/repos.py:568
@@ -1048,7 +1043,7 @@ msgstr "Une erreur est survenue durant la suppression de l’utilisateur"
 
 #: kallithea/controllers/admin/users.py:236
 msgid "The default user cannot be edited"
-msgstr ""
+msgstr "L'utilisateur par défaut ne peut pas être modifié"
 
 #: kallithea/controllers/admin/users.py:463
 #, python-format
@@ -1069,9 +1064,8 @@ msgid "IP %s not allowed"
 msgstr "IP %s non autorisée"
 
 #: kallithea/lib/auth.py:756
-#, fuzzy
 msgid "Invalid API key"
-msgstr "Nouvelle clé d'API"
+msgstr "Clé d'API invalide"
 
 #: kallithea/lib/auth.py:812
 msgid "You need to be a registered user to perform this action"
@@ -1083,7 +1077,7 @@ msgstr "Vous devez être connecté pour visualiser cette page"
 
 #: kallithea/lib/base.py:490
 msgid "Repository not found in the filesystem"
-msgstr ""
+msgstr "Dépôt non trouvé sur le système de fichiers"
 
 #: kallithea/lib/base.py:516 kallithea/lib/helpers.py:622
 msgid "Changeset not found"
@@ -1119,9 +1113,8 @@ msgid "Show all combined changesets %s->%s"
 msgstr "Afficher les changements combinés %s->%s"
 
 #: kallithea/lib/helpers.py:677
-#, fuzzy
 msgid "Compare view"
-msgstr "vue de comparaison"
+msgstr "Vue de comparaison"
 
 #: kallithea/lib/helpers.py:696
 msgid "and"
@@ -1137,9 +1130,9 @@ msgid "revisions"
 msgstr "révisions"
 
 #: kallithea/lib/helpers.py:722
-#, fuzzy, python-format
+#, python-format
 msgid "Fork name %s"
-msgstr "nom du fork %s"
+msgstr "Nom du fork %s"
 
 #: kallithea/lib/helpers.py:742
 #, fuzzy, python-format
@@ -1235,7 +1228,7 @@ msgstr " et %s de plus"
 #: kallithea/templates/compare/compare_diff.html:65
 #: kallithea/templates/pullrequests/pullrequest_show.html:326
 msgid "No files"
-msgstr ""
+msgstr "Aucun fichier"
 
 #: kallithea/lib/helpers.py:1194
 msgid "new file"
@@ -1780,21 +1773,19 @@ msgstr "[Mention]"
 
 #: kallithea/model/db.py:1667
 msgid "Default user has no access to new repositories"
-msgstr ""
+msgstr "L'utilisateur par défaut n'a pas accès aux nouveaux dépôts"
 
 #: kallithea/model/db.py:1668
-#, fuzzy
 msgid "Default user has read access to new repositories"
-msgstr "Accès interdit à cette ressource"
+msgstr "L'utilisateur par défaut a un accès en lecture aux nouveaux dépôts"
 
 #: kallithea/model/db.py:1669
-#, fuzzy
 msgid "Default user has write access to new repositories"
-msgstr "Accès interdit à cette ressource"
+msgstr "L'utilisateur par défaut a un accès en écriture aux nouveaux dépôts"
 
 #: kallithea/model/db.py:1670
 msgid "Default user has admin access to new repositories"
-msgstr ""
+msgstr "L'utilisateur par défaut a un accès administrateur aux nouveaux dépôts"
 
 #: kallithea/model/db.py:1672
 msgid "Default user has no access to new repository groups"
@@ -1982,8 +1973,7 @@ msgstr "Nouvel utilisateur %(new_username)s enregistré"
 
 #: kallithea/model/notification.py:307
 #, fuzzy, python-format
-#| msgid "%(user)s wants you to review pull request %(pr_nice_id)s:
-#| %(pr_title)s"
+#| msgid "%(user)s wants you to review pull request %(pr_nice_id)s:"
 msgid "[Added] %(repo_name)s pull request %(pr_nice_id)s from %(ref)s"
 msgstr ""
 "%(user)s veut que vous regardiez la demande de pull #%(pr_id)s : "
@@ -2504,8 +2494,7 @@ msgstr "Envoyer l'E-mail de réinitialisation du mot de passe"
 
 #: kallithea/templates/password_reset.html:47
 #, fuzzy
-#| msgid "" "Password reset link will be sent to the email address matching
-#| your " "username."
+#| msgid "" "
 msgid ""
 "A password reset link will be sent to the specified email address if it "
 "is registered in the system."
@@ -6236,6 +6225,8 @@ msgstr "Comparer les tags"
 #~ msgstr "Aucun fichier"
 
 #~ msgid ""
+#~ "_: \n"
+#~ ""
 #~ msgstr ""
 
 #~ msgid "Username \"%(username)s\" is forbidden"
@@ -6471,4 +6462,3 @@ msgstr "Comparer les tags"
 
 #~ msgid "Created by"
 #~ msgstr "créé"
-
