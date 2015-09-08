@@ -465,8 +465,7 @@ class AuthUser(object):
     access to Kallithea is enabled, the default user is loaded instead.
 
     `AuthUser` does not by itself authenticate users and the constructor
-    sets the `is_authenticated` field to False, except when falling back
-    to the default anonymous user (if enabled). It's up to other parts
+    sets the `is_authenticated` field to False. It's up to other parts
     of the code to check e.g. if a supplied password is correct, and if
     so, set `is_authenticated` to True.
 
@@ -508,10 +507,7 @@ class AuthUser(object):
         if not is_user_loaded:
             is_user_loaded =  self._fill_data(self.anonymous_user)
 
-        # The anonymous user is always "logged in".
         self.is_default_user = (self.user_id == self.anonymous_user.user_id)
-        if self.is_default_user:
-            self.is_authenticated = True
 
         if not self.username:
             self.username = 'None'
@@ -624,13 +620,13 @@ class AuthUser(object):
 
     def __repr__(self):
         return "<AuthUser('id:%s[%s] auth:%s')>"\
-            % (self.user_id, self.username, self.is_authenticated)
+            % (self.user_id, self.username, (self.is_authenticated or self.is_default_user))
 
     def to_cookie(self):
         """ Serializes this login session to a cookie `dict`. """
         return {
             'user_id': self.user_id,
-            'is_authenticated': self.is_authenticated,
+            'is_authenticated': self.is_authenticated or self.is_default_user,
             'is_external_auth': self.is_external_auth,
         }
 
@@ -644,10 +640,9 @@ class AuthUser(object):
             user_id=cookie.get('user_id'),
             is_external_auth=cookie.get('is_external_auth', False),
         )
-        if not au.is_authenticated and au.user_id is not None:
+        if not au.is_default_user and au.user_id is not None:
             # user is not authenticated and not empty
-            if not au.is_default_user:
-                au.is_authenticated = cookie.get('is_authenticated')
+            au.is_authenticated = cookie.get('is_authenticated')
         return au
 
     @classmethod
@@ -793,7 +788,7 @@ class LoginRequired(object):
             raise HTTPBadRequest()
 
         # regular user authentication
-        if user.is_authenticated:
+        if user.is_authenticated or user.is_default_user:
             log.info('user %s authenticated with regular auth @ %s', user, loc)
             return func(*fargs, **fkwargs)
         else:
