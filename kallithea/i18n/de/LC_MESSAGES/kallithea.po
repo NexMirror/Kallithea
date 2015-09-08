@@ -179,7 +179,7 @@ msgstr "Während des Commits trat ein Fehler auf"
 
 #: kallithea/controllers/files.py:378
 msgid "You can only edit files with revision being a valid branch "
-msgstr "Du kannst nur Dateien bearbeiten, deren Revision ein gültiger Branch ist "
+msgstr ""
 "Du kannst nur Dateien bearbeiten, deren Revision ein gültiger Branch ist "
 
 #: kallithea/controllers/files.py:392
