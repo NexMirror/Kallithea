@@ -220,7 +220,6 @@ class TestController(BaseTestCase):
         user = user and User.get(user)
         user = user and user.username
         self.assertEqual(user, expected_username)
-        self.assertEqual(cookie.get('is_authenticated'), True)
 
     def authentication_token(self):
         return self.app.get(url('authentication_token')).body

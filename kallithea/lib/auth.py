@@ -626,7 +626,6 @@ class AuthUser(object):
         """ Serializes this login session to a cookie `dict`. """
         return {
             'user_id': self.user_id,
-            'is_authenticated': self.is_authenticated or self.is_default_user,
             'is_external_auth': self.is_external_auth,
         }
 
@@ -640,9 +639,7 @@ class AuthUser(object):
             user_id=cookie.get('user_id'),
             is_external_auth=cookie.get('is_external_auth', False),
         )
-        if not au.is_default_user and au.user_id is not None:
-            # user is not authenticated and not empty
-            au.is_authenticated = cookie.get('is_authenticated')
+        au.is_authenticated = True
         return au
 
     @classmethod
