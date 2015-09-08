@@ -144,7 +144,7 @@ class TestNotifications(BaseTestCase):
         Session().commit()
 
         self.assertEqual(NotificationModel()
-                         .get_unread_cnt_for_user(self.u1), 1)
+                         .get_unread_cnt_for_user(self.u1), 0)
         self.assertEqual(NotificationModel()
                          .get_unread_cnt_for_user(self.u2), 0)
         self.assertEqual(NotificationModel()
@@ -156,7 +156,7 @@ class TestNotifications(BaseTestCase):
         Session().commit()
 
         self.assertEqual(NotificationModel()
-                         .get_unread_cnt_for_user(self.u1), 2)
+                         .get_unread_cnt_for_user(self.u1), 0)
         self.assertEqual(NotificationModel()
                          .get_unread_cnt_for_user(self.u2), 1)
         self.assertEqual(NotificationModel()

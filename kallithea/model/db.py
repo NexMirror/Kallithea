@@ -2412,11 +2412,15 @@ class Notification(Base, BaseModel):
         notification.type_ = type_
         notification.created_on = datetime.datetime.now()
 
-        for u in recipients:
-            assoc = UserNotification()
-            assoc.notification = notification
-            assoc.user_id = u.user_id
-            Session().add(assoc)
+        for recipient in recipients:
+            un = UserNotification()
+            un.notification = notification
+            un.user_id = recipient.user_id
+            # Mark notifications to self "pre-read" - should perhaps just be skipped
+            if recipient == created_by:
+                un.read = True
+            Session().add(un)
+
         Session().add(notification)
         Session().flush() # assign notificaiton.notification_id
         return notification
