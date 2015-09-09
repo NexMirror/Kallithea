@@ -612,7 +612,7 @@ Sample config for Nginx using proxy:
        }
 
        location @kallithea {
-            proxy_pass      http://kallithea;
+            proxy_pass      http://127.0.0.1:5000;
        }
 
     }
@@ -649,7 +649,6 @@ Here is a sample configuration file for Apache using proxy:
 
     <VirtualHost *:80>
             ServerName hg.myserver.com
-            ServerAlias hg.myserver.com
 
             <Proxy *>
               # For Apache 2.4 and later:
