@@ -626,10 +626,6 @@ class AuthUser(object):
         return "<AuthUser('id:%s[%s] auth:%s')>"\
             % (self.user_id, self.username, self.is_authenticated)
 
-    def set_authenticated(self, authenticated=True):
-        if not self.is_default_user:
-            self.is_authenticated = authenticated
-
     def to_cookie(self):
         """ Serializes this login session to a cookie `dict`. """
         return {
@@ -650,7 +646,8 @@ class AuthUser(object):
         )
         if not au.is_authenticated and au.user_id is not None:
             # user is not authenticated and not empty
-            au.set_authenticated(cookie.get('is_authenticated'))
+            if not au.is_default_user:
+                au.is_authenticated = cookie.get('is_authenticated')
         return au
 
     @classmethod
