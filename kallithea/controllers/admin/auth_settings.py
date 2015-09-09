@@ -28,8 +28,8 @@ import formencode.htmlfill
 import traceback
 
 from pylons import request, tmpl_context as c, url
-from pylons.controllers.util import redirect
 from pylons.i18n.translation import _
+from webob.exc import HTTPFound
 
 from kallithea.lib import helpers as h
 from kallithea.lib.compat import formatted_json
@@ -146,4 +146,4 @@ class AuthSettingsController(BaseController):
             h.flash(_('error occurred during update of auth settings'),
                     category='error')
 
-        return redirect(url('auth_home'))
+        raise HTTPFound(location=url('auth_home'))

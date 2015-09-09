@@ -35,13 +35,12 @@ import collections
 from decorator import decorator
 
 from pylons import url, request, session
-from pylons.controllers.util import redirect
 from pylons.i18n.translation import _
 from webhelpers.pylonslib import secure_form
 from sqlalchemy import or_
 from sqlalchemy.orm.exc import ObjectDeletedError
 from sqlalchemy.orm import joinedload
-from webob.exc import HTTPBadRequest, HTTPForbidden, HTTPMethodNotAllowed
+from webob.exc import HTTPFound, HTTPBadRequest, HTTPForbidden, HTTPMethodNotAllowed
 
 from kallithea import __platform__, is_windows, is_unix
 from kallithea.lib.vcs.utils.lazy import LazyProperty
@@ -717,7 +716,7 @@ def redirect_to_login(message=None):
     if message:
         h.flash(h.literal(message), category='warning')
     log.debug('Redirecting to login page, origin: %s', p)
-    return redirect(url('login_home', came_from=p))
+    raise HTTPFound(location=url('login_home', came_from=p))
 
 
 class LoginRequired(object):

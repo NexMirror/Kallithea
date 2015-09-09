@@ -29,9 +29,8 @@ import logging
 import traceback
 
 from pylons import request, url, session, tmpl_context as c
-from pylons.controllers.util import redirect
 from pylons.i18n.translation import _
-from webob.exc import HTTPNotFound, HTTPBadRequest
+from webob.exc import HTTPFound, HTTPNotFound, HTTPBadRequest
 
 import kallithea.lib.helpers as h
 from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator
@@ -99,8 +98,8 @@ class ChangelogController(BaseRepoController):
         if request.GET.get('set'):
             request.GET.pop('set', None)
             if revision is None:
-                return redirect(url('changelog_home', repo_name=repo_name, **request.GET))
-            return redirect(url('changelog_file_home', repo_name=repo_name, revision=revision, f_path=f_path, **request.GET))
+                raise HTTPFound(location=url('changelog_home', repo_name=repo_name, **request.GET))
+            raise HTTPFound(location=url('changelog_file_home', repo_name=repo_name, revision=revision, f_path=f_path, **request.GET))
 
         limit = 2000
         default = 100
@@ -118,7 +117,7 @@ class ChangelogController(BaseRepoController):
             branch_name not in c.db_repo_scm_instance.branches and
             branch_name not in c.db_repo_scm_instance.closed_branches and
             not revision):
-            return redirect(url('changelog_file_home', repo_name=c.repo_name,
+            raise HTTPFound(location=url('changelog_file_home', repo_name=c.repo_name,
                                     revision=branch_name, f_path=f_path or ''))
 
         if revision == 'tip':
@@ -140,7 +139,7 @@ class ChangelogController(BaseRepoController):
                         collection = cs.get_file_history(f_path)
                     except RepositoryError as e:
                         h.flash(safe_str(e), category='warning')
-                        redirect(h.url('changelog_home', repo_name=repo_name))
+                        raise HTTPFound(location=h.url('changelog_home', repo_name=repo_name))
                 collection = list(reversed(collection))
             else:
                 collection = c.db_repo_scm_instance.get_changesets(start=0, end=revision,
@@ -155,11 +154,11 @@ class ChangelogController(BaseRepoController):
             c.statuses = c.db_repo.statuses(page_revisions)
         except EmptyRepositoryError as e:
             h.flash(safe_str(e), category='warning')
-            return redirect(url('summary_home', repo_name=c.repo_name))
+            raise HTTPFound(location=url('summary_home', repo_name=c.repo_name))
         except (RepositoryError, ChangesetDoesNotExistError, Exception) as e:
             log.error(traceback.format_exc())
             h.flash(safe_str(e), category='error')
-            return redirect(url('changelog_home', repo_name=c.repo_name))
+            raise HTTPFound(location=url('changelog_home', repo_name=c.repo_name))
 
         c.branch_name = branch_name
         c.branch_filters = [('', _('None'))] + \

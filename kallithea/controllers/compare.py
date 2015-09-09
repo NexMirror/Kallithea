@@ -30,10 +30,9 @@ Original author and date, and relevant copyright and licensing information is be
 import logging
 import re
 
-from webob.exc import HTTPBadRequest
 from pylons import request, tmpl_context as c, url
-from pylons.controllers.util import redirect
 from pylons.i18n.translation import _
+from webob.exc import HTTPFound, HTTPBadRequest
 
 from kallithea.lib.utils2 import safe_str
 from kallithea.lib.vcs.utils.hgcompat import unionrepo
@@ -207,19 +206,19 @@ class CompareController(BaseRepoController):
             msg = 'Could not find org repo %s' % org_repo
             log.error(msg)
             h.flash(msg, category='error')
-            return redirect(url('compare_home', repo_name=c.repo_name))
+            raise HTTPFound(location=url('compare_home', repo_name=c.repo_name))
 
         if other_repo is None:
             msg = 'Could not find other repo %s' % other_repo
             log.error(msg)
             h.flash(msg, category='error')
-            return redirect(url('compare_home', repo_name=c.repo_name))
+            raise HTTPFound(location=url('compare_home', repo_name=c.repo_name))
 
         if org_repo.scm_instance.alias != other_repo.scm_instance.alias:
             msg = 'compare of two different kind of remote repos not available'
             log.error(msg)
             h.flash(msg, category='error')
-            return redirect(url('compare_home', repo_name=c.repo_name))
+            raise HTTPFound(location=url('compare_home', repo_name=c.repo_name))
 
         c.a_rev = self._get_ref_rev(org_repo, org_ref_type, org_ref_name,
             returnempty=True)

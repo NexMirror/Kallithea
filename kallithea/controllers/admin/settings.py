@@ -31,8 +31,8 @@ import formencode
 
 from formencode import htmlfill
 from pylons import request, tmpl_context as c, url, config
-from pylons.controllers.util import redirect
 from pylons.i18n.translation import _
+from webob.exc import HTTPFound
 
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import LoginRequired, HasPermissionAllDecorator
@@ -218,7 +218,7 @@ class SettingsController(BaseController):
                  for repo_name in added) or '-',
                  ', '.join(h.escape(safe_unicode(repo_name)) for repo_name in removed) or '-')),
                 category='success')
-            return redirect(url('admin_settings_mapping'))
+            raise HTTPFound(location=url('admin_settings_mapping'))
 
         defaults = Setting.get_app_settings()
         defaults.update(self._get_hg_ui_settings())
@@ -278,7 +278,7 @@ class SettingsController(BaseController):
                           'application settings'),
                           category='error')
 
-            return redirect(url('admin_settings_global'))
+            raise HTTPFound(location=url('admin_settings_global'))
 
         defaults = Setting.get_app_settings()
         defaults.update(self._get_hg_ui_settings())
@@ -336,7 +336,7 @@ class SettingsController(BaseController):
                           'visualisation settings'),
                         category='error')
 
-            return redirect(url('admin_settings_visual'))
+            raise HTTPFound(location=url('admin_settings_visual'))
 
         defaults = Setting.get_app_settings()
         defaults.update(self._get_hg_ui_settings())
@@ -359,7 +359,7 @@ class SettingsController(BaseController):
                                'Kallithea version: %s' % c.kallithea_version)
             if not test_email:
                 h.flash(_('Please enter email address'), category='error')
-                return redirect(url('admin_settings_email'))
+                raise HTTPFound(location=url('admin_settings_email'))
 
             test_email_txt_body = EmailNotificationModel()\
                 .get_email_tmpl(EmailNotificationModel.TYPE_DEFAULT,
@@ -374,7 +374,7 @@ class SettingsController(BaseController):
                      test_email_txt_body, test_email_html_body)
 
             h.flash(_('Send email task created'), category='success')
-            return redirect(url('admin_settings_email'))
+            raise HTTPFound(location=url('admin_settings_email'))
 
         defaults = Setting.get_app_settings()
         defaults.update(self._get_hg_ui_settings())
@@ -425,7 +425,7 @@ class SettingsController(BaseController):
                     h.flash(_('Error occurred during hook creation'),
                             category='error')
 
-                return redirect(url('admin_settings_hooks'))
+                raise HTTPFound(location=url('admin_settings_hooks'))
 
         defaults = Setting.get_app_settings()
         defaults.update(self._get_hg_ui_settings())
@@ -449,7 +449,7 @@ class SettingsController(BaseController):
             full_index = request.POST.get('full_index', False)
             run_task(tasks.whoosh_index, repo_location, full_index)
             h.flash(_('Whoosh reindex task scheduled'), category='success')
-            return redirect(url('admin_settings_search'))
+            raise HTTPFound(location=url('admin_settings_search'))
 
         defaults = Setting.get_app_settings()
         defaults.update(self._get_hg_ui_settings())

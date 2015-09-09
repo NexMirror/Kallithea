@@ -30,11 +30,9 @@ import traceback
 import formencode
 import re
 
-from webob.exc import HTTPNotFound, HTTPForbidden, HTTPBadRequest
-
 from pylons import request, tmpl_context as c, url
-from pylons.controllers.util import redirect
 from pylons.i18n.translation import _
+from webob.exc import HTTPFound, HTTPNotFound, HTTPForbidden, HTTPBadRequest
 
 from kallithea.lib.vcs.utils.hgcompat import unionrepo
 from kallithea.lib.compat import json
@@ -237,7 +235,7 @@ class PullrequestsController(BaseRepoController):
         except EmptyRepositoryError as e:
             h.flash(h.literal(_('There are no changesets yet')),
                     category='warning')
-            redirect(url('summary_home', repo_name=org_repo.repo_name))
+            raise HTTPFound(location=url('summary_home', repo_name=org_repo.repo_name))
 
         org_rev = request.GET.get('rev_end')
         # rev_start is not directly useful - its parent could however be used
@@ -369,9 +367,9 @@ class PullrequestsController(BaseRepoController):
             h.flash(_('Error occurred while creating pull request'),
                     category='error')
             log.error(traceback.format_exc())
-            return redirect(url('pullrequest_home', repo_name=repo_name))
+            raise HTTPFound(location=url('pullrequest_home', repo_name=repo_name))
 
-        return redirect(pull_request.url())
+        raise HTTPFound(location=pull_request.url())
 
     def create_update(self, old_pull_request, updaterev, title, description, reviewers_ids):
         org_repo = RepoModel()._get_repo(old_pull_request.org_repo.repo_name)
@@ -456,7 +454,7 @@ class PullrequestsController(BaseRepoController):
             h.flash(_('Error occurred while creating pull request'),
                     category='error')
             log.error(traceback.format_exc())
-            return redirect(old_pull_request.url())
+            raise HTTPFound(location=old_pull_request.url())
 
         ChangesetCommentsModel().create(
             text=_('Closed, replaced by %s .') % pull_request.url(canonical=True),
@@ -470,7 +468,7 @@ class PullrequestsController(BaseRepoController):
         h.flash(_('Pull request update created'),
                 category='success')
 
-        return redirect(pull_request.url())
+        raise HTTPFound(location=pull_request.url())
 
     # pullrequest_post for PR editing
     @LoginRequired()
@@ -513,7 +511,7 @@ class PullrequestsController(BaseRepoController):
         Session().commit()
         h.flash(_('Pull request updated'), category='success')
 
-        return redirect(pull_request.url())
+        raise HTTPFound(location=pull_request.url())
 
     @LoginRequired()
     @NotAnonymous()
@@ -528,7 +526,7 @@ class PullrequestsController(BaseRepoController):
             Session().commit()
             h.flash(_('Successfully deleted pull request'),
                     category='success')
-            return redirect(url('my_pullrequests'))
+            raise HTTPFound(location=url('my_pullrequests'))
         raise HTTPForbidden()
 
     @LoginRequired()
@@ -762,7 +760,7 @@ class PullrequestsController(BaseRepoController):
         Session().commit()
 
         if not request.environ.get('HTTP_X_PARTIAL_XHR'):
-            return redirect(pull_request.url())
+            raise HTTPFound(location=pull_request.url())
 
         data = {
            'target_id': h.safeid(h.safe_unicode(request.POST.get('f_path'))),

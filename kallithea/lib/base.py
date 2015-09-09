@@ -40,7 +40,6 @@ import paste.httpheaders
 
 from pylons import config, tmpl_context as c, request, session, url
 from pylons.controllers import WSGIController
-from pylons.controllers.util import redirect
 from pylons.templating import render_mako as render  # don't remove this import
 from pylons.i18n.translation import _
 
@@ -479,7 +478,7 @@ class BaseRepoController(BaseController):
                 if route in ['repo_creating_home']:
                     return
                 check_url = url('repo_creating_home', repo_name=c.repo_name)
-                return redirect(check_url)
+                raise webob.exc.HTTPFound(location=check_url)
 
             dbr = c.db_repo = _dbr
             c.db_repo_scm_instance = c.db_repo.scm_instance

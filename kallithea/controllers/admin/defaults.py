@@ -31,8 +31,8 @@ import formencode
 from formencode import htmlfill
 
 from pylons import request, tmpl_context as c, url
-from pylons.controllers.util import redirect
 from pylons.i18n.translation import _
+from webob.exc import HTTPFound
 
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import LoginRequired, HasPermissionAllDecorator
@@ -112,7 +112,7 @@ class DefaultsController(BaseController):
             h.flash(_('Error occurred during update of defaults'),
                     category='error')
 
-        return redirect(url('defaults'))
+        raise HTTPFound(location=url('defaults'))
 
     def delete(self, id):
         """DELETE /defaults/id: Delete an existing item"""

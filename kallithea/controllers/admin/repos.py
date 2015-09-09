@@ -29,11 +29,10 @@ import logging
 import traceback
 import formencode
 from formencode import htmlfill
-from webob.exc import HTTPInternalServerError, HTTPForbidden, HTTPNotFound
 from pylons import request, tmpl_context as c, url
-from pylons.controllers.util import redirect
 from pylons.i18n.translation import _
 from sqlalchemy.sql.expression import func
+from webob.exc import HTTPFound, HTTPInternalServerError, HTTPForbidden, HTTPNotFound
 
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import LoginRequired, \
@@ -71,7 +70,7 @@ class ReposController(BaseRepoController):
 
         if repo_obj is None:
             h.not_mapped_error(repo_name)
-            return redirect(url('repos'))
+            raise HTTPFound(location=url('repos'))
 
         return repo_obj
 
@@ -152,9 +151,9 @@ class ReposController(BaseRepoController):
             msg = (_('Error creating repository %s')
                    % form_result.get('repo_name'))
             h.flash(msg, category='error')
-            return redirect(url('home'))
+            raise HTTPFound(location=url('home'))
 
-        return redirect(h.url('repo_creating_home',
+        raise HTTPFound(location=h.url('repo_creating_home',
                               repo_name=form_result['repo_name_full'],
                               task_id=task_id))
 
@@ -282,7 +281,7 @@ class ReposController(BaseRepoController):
             log.error(traceback.format_exc())
             h.flash(_('Error occurred during update of repository %s') \
                     % repo_name, category='error')
-        return redirect(url('edit_repo', repo_name=changed_name))
+        raise HTTPFound(location=url('edit_repo', repo_name=changed_name))
 
     @HasRepoPermissionAllDecorator('repository.admin')
     def delete(self, repo_name):
@@ -299,7 +298,7 @@ class ReposController(BaseRepoController):
         repo = repo_model.get_by_repo_name(repo_name)
         if not repo:
             h.not_mapped_error(repo_name)
-            return redirect(url('repos'))
+            raise HTTPFound(location=url('repos'))
         try:
             _forks = repo.forks.count()
             handle_forks = None
@@ -327,8 +326,8 @@ class ReposController(BaseRepoController):
                     category='error')
 
         if repo.group:
-            return redirect(url('repos_group_home', group_name=repo.group.group_name))
-        return redirect(url('repos'))
+            raise HTTPFound(location=url('repos_group_home', group_name=repo.group.group_name))
+        raise HTTPFound(location=url('repos'))
 
     @HasRepoPermissionAllDecorator('repository.admin')
     def edit(self, repo_name):
@@ -372,7 +371,7 @@ class ReposController(BaseRepoController):
         #              repo_name, self.ip_addr, self.sa)
         Session().commit()
         h.flash(_('Repository permissions updated'), category='success')
-        return redirect(url('edit_repo_perms', repo_name=repo_name))
+        raise HTTPFound(location=url('edit_repo_perms', repo_name=repo_name))
 
     def edit_permissions_revoke(self, repo_name):
         try:
@@ -409,7 +408,7 @@ class ReposController(BaseRepoController):
         c.active = 'fields'
         if request.POST:
 
-            return redirect(url('repo_edit_fields'))
+            raise HTTPFound(location=url('repo_edit_fields'))
         return render('admin/repos/repo_edit.html')
 
     @HasRepoPermissionAllDecorator('repository.admin')
@@ -431,7 +430,7 @@ class ReposController(BaseRepoController):
             if isinstance(e, formencode.Invalid):
                 msg += ". " + e.msg
             h.flash(msg, category='error')
-        return redirect(url('edit_repo_fields', repo_name=repo_name))
+        raise HTTPFound(location=url('edit_repo_fields', repo_name=repo_name))
 
     @HasRepoPermissionAllDecorator('repository.admin')
     def delete_repo_field(self, repo_name, field_id):
@@ -443,7 +442,7 @@ class ReposController(BaseRepoController):
             log.error(traceback.format_exc())
             msg = _('An error occurred during removal of field')
             h.flash(msg, category='error')
-        return redirect(url('edit_repo_fields', repo_name=repo_name))
+        raise HTTPFound(location=url('edit_repo_fields', repo_name=repo_name))
 
     @HasRepoPermissionAllDecorator('repository.admin')
     def edit_advanced(self, repo_name):
@@ -468,7 +467,7 @@ class ReposController(BaseRepoController):
 
         c.active = 'advanced'
         if request.POST:
-            return redirect(url('repo_edit_advanced'))
+            raise HTTPFound(location=url('repo_edit_advanced'))
         return htmlfill.render(
             render('admin/repos/repo_edit.html'),
             defaults=defaults,
@@ -495,7 +494,7 @@ class ReposController(BaseRepoController):
             h.flash(_('An error occurred during setting this'
                       ' repository in public journal'),
                     category='error')
-        return redirect(url('edit_repo_advanced', repo_name=repo_name))
+        raise HTTPFound(location=url('edit_repo_advanced', repo_name=repo_name))
 
 
     @HasRepoPermissionAllDecorator('repository.admin')
@@ -521,7 +520,7 @@ class ReposController(BaseRepoController):
             h.flash(_('An error occurred during this operation'),
                     category='error')
 
-        return redirect(url('edit_repo_advanced', repo_name=repo_name))
+        raise HTTPFound(location=url('edit_repo_advanced', repo_name=repo_name))
 
     @HasRepoPermissionAllDecorator('repository.admin')
     def edit_advanced_locking(self, repo_name):
@@ -542,7 +541,7 @@ class ReposController(BaseRepoController):
             log.error(traceback.format_exc())
             h.flash(_('An error occurred during unlocking'),
                     category='error')
-        return redirect(url('edit_repo_advanced', repo_name=repo_name))
+        raise HTTPFound(location=url('edit_repo_advanced', repo_name=repo_name))
 
     @HasRepoPermissionAnyDecorator('repository.write', 'repository.admin')
     def toggle_locking(self, repo_name):
@@ -567,7 +566,7 @@ class ReposController(BaseRepoController):
             log.error(traceback.format_exc())
             h.flash(_('An error occurred during unlocking'),
                     category='error')
-        return redirect(url('summary_home', repo_name=repo_name))
+        raise HTTPFound(location=url('summary_home', repo_name=repo_name))
 
     @HasRepoPermissionAllDecorator('repository.admin')
     def edit_caches(self, repo_name):
@@ -586,7 +585,7 @@ class ReposController(BaseRepoController):
                 h.flash(_('An error occurred during cache invalidation'),
                         category='error')
 
-            return redirect(url('edit_repo_caches', repo_name=c.repo_name))
+            raise HTTPFound(location=url('edit_repo_caches', repo_name=c.repo_name))
         return render('admin/repos/repo_edit.html')
 
     @HasRepoPermissionAllDecorator('repository.admin')
@@ -603,7 +602,7 @@ class ReposController(BaseRepoController):
                 log.error(traceback.format_exc())
                 h.flash(_('An error occurred during pull from remote location'),
                         category='error')
-            return redirect(url('edit_repo_remote', repo_name=c.repo_name))
+            raise HTTPFound(location=url('edit_repo_remote', repo_name=c.repo_name))
         return render('admin/repos/repo_edit.html')
 
     @HasRepoPermissionAllDecorator('repository.admin')
@@ -636,6 +635,6 @@ class ReposController(BaseRepoController):
                 log.error(traceback.format_exc())
                 h.flash(_('An error occurred during deletion of repository stats'),
                         category='error')
-            return redirect(url('edit_repo_statistics', repo_name=c.repo_name))
+            raise HTTPFound(location=url('edit_repo_statistics', repo_name=c.repo_name))
 
         return render('admin/repos/repo_edit.html')

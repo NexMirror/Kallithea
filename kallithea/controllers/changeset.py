@@ -29,13 +29,12 @@ Original author and date, and relevant copyright and licensing information is be
 import logging
 import traceback
 from collections import defaultdict
-from webob.exc import HTTPForbidden, HTTPBadRequest, HTTPNotFound
 
 from pylons import tmpl_context as c, request, response
 from pylons.i18n.translation import _
-from pylons.controllers.util import redirect
-from kallithea.lib.utils import jsonify
+from webob.exc import HTTPFound, HTTPForbidden, HTTPBadRequest, HTTPNotFound
 
+from kallithea.lib.utils import jsonify
 from kallithea.lib.vcs.exceptions import RepositoryError, \
     ChangesetDoesNotExistError
 
@@ -383,7 +382,7 @@ class ChangesetController(BaseRepoController):
                 msg = _('Changing status on a changeset associated with '
                         'a closed pull request is not allowed')
                 h.flash(msg, category='warning')
-                return redirect(h.url('changeset_home', repo_name=repo_name,
+                raise HTTPFound(location=h.url('changeset_home', repo_name=repo_name,
                                       revision=revision))
         action_logger(self.authuser,
                       'user_commented_revision:%s' % revision,
@@ -392,7 +391,7 @@ class ChangesetController(BaseRepoController):
         Session().commit()
 
         if not request.environ.get('HTTP_X_PARTIAL_XHR'):
-            return redirect(h.url('changeset_home', repo_name=repo_name,
+            raise HTTPFound(location=h.url('changeset_home', repo_name=repo_name,
                                   revision=revision))
         #only ajax below
         data = {

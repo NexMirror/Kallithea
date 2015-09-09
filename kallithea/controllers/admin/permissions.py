@@ -32,8 +32,8 @@ import formencode
 from formencode import htmlfill
 
 from pylons import request, tmpl_context as c, url
-from pylons.controllers.util import redirect
 from pylons.i18n.translation import _
+from webob.exc import HTTPFound
 
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import LoginRequired, HasPermissionAllDecorator
@@ -139,7 +139,7 @@ class PermissionsController(BaseController):
                 h.flash(_('Error occurred during update of permissions'),
                         category='error')
 
-            return redirect(url('admin_permissions'))
+            raise HTTPFound(location=url('admin_permissions'))
 
         c.user = User.get_default_user()
         defaults = {'anonymous': c.user.active}

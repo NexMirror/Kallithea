@@ -31,8 +31,8 @@ import traceback
 from formencode import htmlfill
 
 from pylons import tmpl_context as c, request, url
-from pylons.controllers.util import redirect
 from pylons.i18n.translation import _
+from webob.exc import HTTPFound
 
 import kallithea.lib.helpers as h
 
@@ -77,7 +77,7 @@ class ForksController(BaseRepoController):
 
         if c.repo_info is None:
             h.not_mapped_error(repo_name)
-            return redirect(url('repos'))
+            raise HTTPFound(location=url('repos'))
 
         c.default_user_id = User.get_default_user().user_id
         c.in_public_journal = UserFollowing.query()\
@@ -137,7 +137,7 @@ class ForksController(BaseRepoController):
         c.repo_info = Repository.get_by_repo_name(repo_name)
         if not c.repo_info:
             h.not_mapped_error(repo_name)
-            return redirect(url('home'))
+            raise HTTPFound(location=url('home'))
 
         defaults = self.__load_data(repo_name)
 
@@ -186,6 +186,6 @@ class ForksController(BaseRepoController):
             h.flash(_('An error occurred during repository forking %s') %
                     repo_name, category='error')
 
-        return redirect(h.url('repo_creating_home',
+        raise HTTPFound(location=h.url('repo_creating_home',
                               repo_name=form_result['repo_name_full'],
                               task_id=task_id))

@@ -32,8 +32,8 @@ import formencode
 from sqlalchemy import func
 from formencode import htmlfill
 from pylons import request, tmpl_context as c, url
-from pylons.controllers.util import redirect
 from pylons.i18n.translation import _
+from webob.exc import HTTPFound
 
 from kallithea import EXTERN_TYPE_INTERNAL
 from kallithea.lib import helpers as h
@@ -69,7 +69,7 @@ class MyAccountController(BaseController):
         if c.user.username == User.DEFAULT_USER:
             h.flash(_("You can't edit this user since it's"
                       " crucial for entire application"), category='warning')
-            return redirect(url('users'))
+            raise HTTPFound(location=url('users'))
         c.EXTERN_TYPE_INTERNAL = EXTERN_TYPE_INTERNAL
 
     def _load_my_repos_data(self, watched=False):
@@ -144,7 +144,7 @@ class MyAccountController(BaseController):
                 h.flash(_('Error occurred during update of user %s') \
                         % form_result.get('username'), category='error')
         if update:
-            return redirect('my_account')
+            raise HTTPFound(location='my_account')
         return htmlfill.render(
             render('admin/my_account/my_account.html'),
             defaults=defaults,
@@ -225,7 +225,7 @@ class MyAccountController(BaseController):
             log.error(traceback.format_exc())
             h.flash(_('An error occurred during email saving'),
                     category='error')
-        return redirect(url('my_account_emails'))
+        raise HTTPFound(location=url('my_account_emails'))
 
     def my_account_emails_delete(self):
         email_id = request.POST.get('del_email_id')
@@ -233,7 +233,7 @@ class MyAccountController(BaseController):
         user_model.delete_extra_email(self.authuser.user_id, email_id)
         Session().commit()
         h.flash(_("Removed email from user"), category='success')
-        return redirect(url('my_account_emails'))
+        raise HTTPFound(location=url('my_account_emails'))
 
     def my_account_api_keys(self):
         c.active = 'api_keys'
@@ -257,7 +257,7 @@ class MyAccountController(BaseController):
         ApiKeyModel().create(self.authuser.user_id, description, lifetime)
         Session().commit()
         h.flash(_("API key successfully created"), category='success')
-        return redirect(url('my_account_api_keys'))
+        raise HTTPFound(location=url('my_account_api_keys'))
 
     def my_account_api_keys_delete(self):
         api_key = request.POST.get('del_api_key')
@@ -274,4 +274,4 @@ class MyAccountController(BaseController):
             Session().commit()
             h.flash(_("API key successfully deleted"), category='success')
 
-        return redirect(url('my_account_api_keys'))
+        raise HTTPFound(location=url('my_account_api_keys'))
