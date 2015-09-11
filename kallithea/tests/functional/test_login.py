@@ -103,8 +103,8 @@ class TestLoginController(TestController):
           ('data:text/html,<script>window.alert("xss")</script>',),
           ('mailto:test@example.com',),
           ('file:///etc/passwd',),
-          ('ftp://some.ftp.server',),
-          ('http://other.domain/bl%C3%A5b%C3%A6rgr%C3%B8d',),
+          ('ftp://ftp.example.com',),
+          ('http://other.example.com/bl%C3%A5b%C3%A6rgr%C3%B8d',),
     ])
     def test_login_bad_came_froms(self, url_came_from):
         response = self.app.post(url(controller='login', action='index',
@@ -205,7 +205,7 @@ class TestLoginController(TestController):
                                             {'username': uname,
                                              'password': 'test12',
                                              'password_confirmation': 'test12',
-                                             'email': 'goodmail@domain.com',
+                                             'email': 'goodmail@example.com',
                                              'firstname': 'test',
                                              'lastname': 'test'})
 
@@ -304,7 +304,7 @@ class TestLoginController(TestController):
     def test_register_ok(self):
         username = 'test_regular4'
         password = 'qweqwe'
-        email = 'username@test.com'
+        email = 'user4@example.com'
         name = 'testname'
         lastname = 'testlastname'
 
@@ -348,7 +348,7 @@ class TestLoginController(TestController):
 
         username = 'test_password_reset_1'
         password = 'qweqwe'
-        email = 'username@python-works.com'
+        email = 'username@example.com'
         name = 'passwd'
         lastname = 'reset'
         timestamp = int(time.time())

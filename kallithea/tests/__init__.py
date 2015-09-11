@@ -90,15 +90,15 @@ environ = {}
 TESTS_TMP_PATH = jn('/', 'tmp', 'rc_test_%s' % _RandomNameSequence().next())
 TEST_USER_ADMIN_LOGIN = 'test_admin'
 TEST_USER_ADMIN_PASS = 'test12'
-TEST_USER_ADMIN_EMAIL = 'test_admin@mail.com'
+TEST_USER_ADMIN_EMAIL = 'test_admin@example.com'
 
 TEST_USER_REGULAR_LOGIN = 'test_regular'
 TEST_USER_REGULAR_PASS = 'test12'
-TEST_USER_REGULAR_EMAIL = 'test_regular@mail.com'
+TEST_USER_REGULAR_EMAIL = 'test_regular@example.com'
 
 TEST_USER_REGULAR2_LOGIN = 'test_regular2'
 TEST_USER_REGULAR2_PASS = 'test12'
-TEST_USER_REGULAR2_EMAIL = 'test_regular2@mail.com'
+TEST_USER_REGULAR2_EMAIL = 'test_regular2@example.com'
 
 HG_REPO = 'vcs_test_hg'
 GIT_REPO = 'vcs_test_git'

@@ -97,7 +97,7 @@ class TestFilesController(TestController):
                                     revision='8911406ad776fdd3d0b9932a2e89677e57405a48',
                                     f_path='vcs/nodes.py'))
 
-        response.mustcontain("""<div class="commit">Partially implemented <a class="issue-tracker-link" href="https://myissueserver.com/vcs_test_hg/issue/16">#16</a>. filecontent/commit message/author/node name are safe_unicode now.
+        response.mustcontain("""<div class="commit">Partially implemented <a class="issue-tracker-link" href="https://issues.example.com/vcs_test_hg/issue/16">#16</a>. filecontent/commit message/author/node name are safe_unicode now.
 In addition some other __str__ are unicode as well
 Added test for unicode
 Improved test to clone into uniq repository.

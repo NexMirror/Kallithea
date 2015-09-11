@@ -67,16 +67,16 @@ class TestMyAccountController(TestController):
         response.mustcontain('No additional emails specified')
 
         response = self.app.post(url('my_account_emails'),
-                                 {'new_email': 'foo@barz.com', '_authentication_token': self.authentication_token()})
+                                 {'new_email': 'barz@example.com', '_authentication_token': self.authentication_token()})
 
         response = self.app.get(url('my_account_emails'))
 
         from kallithea.model.db import UserEmailMap
         email_id = UserEmailMap.query()\
             .filter(UserEmailMap.user == User.get_by_username(TEST_USER_ADMIN_LOGIN))\
-            .filter(UserEmailMap.email == 'foo@barz.com').one().email_id
+            .filter(UserEmailMap.email == 'barz@example.com').one().email_id
 
-        response.mustcontain('foo@barz.com')
+        response.mustcontain('barz@example.com')
         response.mustcontain('<input id="del_email_id" name="del_email_id" type="hidden" value="%s" />' % email_id)
 
         response = self.app.post(url('my_account_emails'),
@@ -97,7 +97,7 @@ class TestMyAccountController(TestController):
          #('extern_name', {'extern_name': None}),
          ('active', {'active': False}),
          ('active', {'active': True}),
-         ('email', {'email': 'some@email.com'}),
+         ('email', {'email': 'someemail@example.com'}),
         # ('new_password', {'new_password': 'foobar123',
         #                   'password_confirmation': 'foobar123'})
         ])
