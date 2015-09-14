@@ -121,6 +121,16 @@ except ImportError:
     from ez_setup import use_setuptools
     use_setuptools()
     from setuptools import setup, find_packages
+
+# monkey patch setuptools to use distutils owner/group functionality
+from setuptools.command import sdist
+sdist_org = sdist.sdist
+class sdist_new(sdist_org):
+    def initialize_options(self):
+        sdist_org.initialize_options(self)
+        self.owner = self.group = 'root'
+sdist.sdist = sdist_new
+
 # packages
 packages = find_packages(exclude=['ez_setup'])
 
