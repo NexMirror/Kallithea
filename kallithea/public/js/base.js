@@ -655,7 +655,7 @@ function _get_add_comment_div(target_id) {
 // set $comment_div state - showing or not showing form and Add button
 function comment_div_state($comment_div, f_path, line_no, show_form) {
     var $forms = $comment_div.children('.comment-inline-form');
-    var $buttons = $comment_div.children('.add-comment');
+    var $buttonrow = $comment_div.children('.add-button-row');
     var $comments = $comment_div.children('.comment');
     if (show_form) {
         if (!$forms.length) {
@@ -664,7 +664,7 @@ function comment_div_state($comment_div, f_path, line_no, show_form) {
     } else {
         $forms.remove();
     }
-    $buttons.remove();
+    $buttonrow.remove();
     if ($comments.length && !show_form) {
         _comment_div_append_add($comment_div, f_path, line_no);
     }
@@ -673,9 +673,9 @@ function comment_div_state($comment_div, f_path, line_no, show_form) {
 // append an Add button to $comment_div and hook it up to show form
 function _comment_div_append_add($comment_div, f_path, line_no) {
     var addlabel = TRANSLATION_MAP['Add Another Comment'];
-    var $add = $('<div class="add-comment"><span class="btn btn-mini">{0}</span></div>'.format(addlabel));
+    var $add = $('<div class="add-button-row"><span class="btn btn-mini add-button">{0}</span></div>'.format(addlabel));
     $comment_div.append($add);
-    $add.click(function(e) {
+    $add.children('.add-button').click(function(e) {
         comment_div_state($comment_div, f_path, line_no, true);
     });
 }
