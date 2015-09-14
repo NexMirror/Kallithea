@@ -502,9 +502,10 @@ class PullrequestsController(BaseRepoController):
         pull_request.title = _form['pullrequest_title']
         pull_request.description = _form['pullrequest_desc'].strip() or _('No description')
         pull_request.owner = User.get_by_username(_form['owner'])
+        user = User.get(c.authuser.user_id)
         try:
-            PullRequestModel().mention_from_description(pull_request, old_description)
-            PullRequestModel().update_reviewers(pull_request_id, reviewers_ids)
+            PullRequestModel().mention_from_description(user, pull_request, old_description)
+            PullRequestModel().update_reviewers(user, pull_request_id, reviewers_ids)
         except UserInvalidException as u:
             h.flash(_('Invalid reviewer "%s" specified') % u, category='error')
             raise HTTPBadRequest()

@@ -111,11 +111,11 @@ class PullRequestModel(BaseModel):
 
         mention_recipients = set(User.get_by_username(username, case_insensitive=True)
                                  for username in extract_mentioned_users(new.description))
-        self.__add_reviewers(new, reviewers, mention_recipients)
+        self.__add_reviewers(created_by_user, new, reviewers, mention_recipients)
 
         return new
 
-    def __add_reviewers(self, pr, reviewers, mention_recipients=None):
+    def __add_reviewers(self, user, pr, reviewers, mention_recipients=None):
         #members
         for member in set(reviewers):
             _usr = self._get_user(member)
@@ -135,7 +135,7 @@ class PullRequestModel(BaseModel):
         subject = safe_unicode(
             h.link_to(
               _('%(user)s wants you to review pull request %(pr_nice_id)s: %(pr_title)s') % \
-                {'user': pr.owner.username,
+                {'user': user.username,
                  'pr_title': pr.title,
                  'pr_nice_id': pr.nice_id()},
                 pr_url)
@@ -144,19 +144,19 @@ class PullRequestModel(BaseModel):
         _org_ref_type, org_ref_name, _org_rev = pr.org_ref.split(':')
         email_kwargs = {
             'pr_title': pr.title,
-            'pr_user_created': h.person(pr.owner),
+            'pr_user_created': user.full_name_and_username,
             'pr_repo_url': h.canonical_url('summary_home', repo_name=pr.other_repo.repo_name),
             'pr_url': pr_url,
             'pr_revisions': revision_data,
             'repo_name': pr.other_repo.repo_name,
             'pr_nice_id': pr.nice_id(),
             'ref': org_ref_name,
-            'pr_username': pr.owner.username,
+            'pr_username': user.username,
             'threading': threading,
             'is_mention': False,
             }
         if reviewers:
-            NotificationModel().create(created_by=pr.owner, subject=subject, body=body,
+            NotificationModel().create(created_by=user, subject=subject, body=body,
                                        recipients=reviewers,
                                        type_=Notification.TYPE_PULL_REQUEST,
                                        email_kwargs=email_kwargs)
@@ -167,21 +167,21 @@ class PullRequestModel(BaseModel):
         if mention_recipients:
             email_kwargs['is_mention'] = True
             subject = _('[Mention]') + ' ' + subject
-            NotificationModel().create(created_by=pr.owner, subject=subject, body=body,
+            NotificationModel().create(created_by=user, subject=subject, body=body,
                                        recipients=mention_recipients,
                                        type_=Notification.TYPE_PULL_REQUEST,
                                        email_kwargs=email_kwargs)
 
-    def mention_from_description(self, pr, old_description=''):
+    def mention_from_description(self, user, pr, old_description=''):
         mention_recipients = set(User.get_by_username(username, case_insensitive=True)
                                  for username in extract_mentioned_users(pr.description))
         mention_recipients.difference_update(User.get_by_username(username, case_insensitive=True)
                                              for username in extract_mentioned_users(old_description))
 
         log.debug("Mentioning %s", mention_recipients)
-        self.__add_reviewers(pr, [], mention_recipients)
+        self.__add_reviewers(user, pr, [], mention_recipients)
 
-    def update_reviewers(self, pull_request, reviewers_ids):
+    def update_reviewers(self, user, pull_request, reviewers_ids):
         reviewers_ids = set(reviewers_ids)
         pull_request = self.__get_pull_request(pull_request)
         current_reviewers = PullRequestReviewers.query()\
@@ -194,7 +194,7 @@ class PullRequestModel(BaseModel):
         to_remove = current_reviewers_ids.difference(reviewers_ids)
 
         log.debug("Adding %s reviewers", to_add)
-        self.__add_reviewers(pull_request, to_add)
+        self.__add_reviewers(user, pull_request, to_add)
 
         log.debug("Removing %s reviewers", to_remove)
         for uid in to_remove:
