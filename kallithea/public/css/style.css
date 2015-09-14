@@ -4826,6 +4826,7 @@ div.comment:target:before {
 
 div.comment:target>.comment-wrapp {
     border: solid 2px #ee0 !important;
+    margin: 2px 2px 4px 4px;
 }
 
 .lineno:target a {
