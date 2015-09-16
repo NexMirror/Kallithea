@@ -591,7 +591,7 @@ class PullrequestsController(BaseRepoController):
             # candidates: descendants of old head that are on the right branch
             #             and not are the old head itself ...
             #             and nothing at all if old head is a descendant of target ref name
-            if other_scm_instance._repo.revs('present(%s)::&%s', c.cs_ranges[-1].raw_id, c.a_branch_name):
+            if not c.is_range and other_scm_instance._repo.revs('present(%s)::&%s', c.cs_ranges[-1].raw_id, c.a_branch_name):
                 c.update_msg = _('This pull request has already been merged to %s.') % c.a_branch_name
             elif c.pull_request.is_closed():
                 c.update_msg = _('This pull request has been closed and can not be updated.')
