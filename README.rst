@@ -185,7 +185,7 @@ To run Kallithea on a RhodeCode database, run::
 This location will depend on where you installed Kallithea. If you installed
 via::
 
-   python setup.py install
+   python2 setup.py install
 
 then you will find this location at
 ``$VIRTUAL_ENV/lib/python2.7/site-packages/Kallithea-0.1-py2.7.egg/kallithea``.
@@ -201,7 +201,7 @@ database, using the database string you can find in your ``production.ini`` (or
    cd /path/to/kallithea
    cp /path/to/rhodecode/rhodecode.db kallithea.db
    pip install sqlalchemy-migrate
-   python kallithea/bin/rebranddb.py sqlite:///kallithea.db
+   python2 kallithea/bin/rebranddb.py sqlite:///kallithea.db
 
 .. Note::
 

@@ -50,11 +50,11 @@ Manual creation of a new language translation
 In the prepared development environment, run the following to ensure
 all translation strings are extracted and up-to-date::
 
-    python setup.py extract_messages
+    python2 setup.py extract_messages
 
 Create new language by executing following command::
 
-    python setup.py init_catalog -l <new_language_code>
+    python2 setup.py init_catalog -l <new_language_code>
 
 This creates a new translation under directory `kallithea/i18n/<new_language_code>`
 based on the translation template file, `kallithea/i18n/kallithea.pot`.
@@ -67,7 +67,7 @@ translation file for errors by executing::
 
 Finally, compile the translations::
 
-    python setup.py compile_catalog -l <new_language_code>
+    python2 setup.py compile_catalog -l <new_language_code>
 
 
 Updating translations
@@ -75,11 +75,11 @@ Updating translations
 
 Extract the latest versions of strings for translation by running::
 
-    python setup.py extract_messages
+    python2 setup.py extract_messages
 
 Update the PO file by doing::
 
-    python setup.py update_catalog -l <new_language_code>
+    python2 setup.py update_catalog -l <new_language_code>
 
 Edit the new updated translation file. Repeat all steps after `init_catalog` step from
 new translation instructions

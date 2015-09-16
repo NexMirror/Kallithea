@@ -39,8 +39,8 @@ repository, follow the instructions below::
         cd kallithea
         virtualenv ../kallithea-venv
         source ../kallithea-venv/bin/activate
-        python setup.py develop
-        python setup.py compile_catalog   # for translation of the UI
+        python2 setup.py develop
+        python2 setup.py compile_catalog   # for translation of the UI
 
 You can now proceed to :ref:`setup`.
 
@@ -84,7 +84,7 @@ An additional benefit of virtualenv_ is that it doesn't require root privileges.
   Alternatively, download a .tar.gz from http://pypi.python.org/pypi/Kallithea,
   extract it and run::
 
-    python setup.py install
+    python2 setup.py install
 
 - This will install Kallithea together with pylons_ and all other required
   python libraries into the activated virtualenv.
