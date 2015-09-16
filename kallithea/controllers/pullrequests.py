@@ -615,10 +615,11 @@ class PullrequestsController(BaseRepoController):
                     c.update_msg = _('This pull request can be updated with changes on %s:') % c.cs_branch_name
                 else:
                     show = set()
+                    avail_revs = set() # drop revs[0]
                     c.update_msg = _('No changesets found for updating this pull request.')
 
                 # TODO: handle branch heads that not are tip-most
-                brevs = org_scm_instance._repo.revs('%s - %ld', c.cs_branch_name, avail_revs)
+                brevs = org_scm_instance._repo.revs('%s - %ld - %s', c.cs_branch_name, avail_revs, revs[0])
                 if brevs:
                     # also show changesets that are on branch but neither ancestors nor descendants
                     show.update(org_scm_instance._repo.revs('::%ld - ::%ld - ::%s', brevs, avail_revs, c.a_branch_name))
