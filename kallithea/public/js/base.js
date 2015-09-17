@@ -896,14 +896,14 @@ var fileBrowserListeners = function(current_url, node_list_url, url_base){
 };
 
 
-var initCodeMirror = function(textarea_id, resetUrl){
+var initCodeMirror = function(textarea_id, baseUrl, resetUrl){
     var myCodeMirror = CodeMirror.fromTextArea($('#' + textarea_id)[0], {
             mode: "null",
             lineNumbers: true,
             indentUnit: 4,
             autofocus: true
         });
-    CodeMirror.modeURL = "/codemirror/mode/%N/%N.js";
+    CodeMirror.modeURL = baseUrl + "/codemirror/mode/%N/%N.js";
 
     $('#reset').click(function(e){
             window.location=resetUrl;

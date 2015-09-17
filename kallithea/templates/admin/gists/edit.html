@@ -81,7 +81,7 @@
 
                 ## dynamic edit box.
                 <script type="text/javascript">
-                var myCodeMirror = initCodeMirror("editor_${h.FID('f',file.path)}", '');
+                var myCodeMirror = initCodeMirror("editor_${h.FID('f',file.path)}", "${request.script_name}", '');
 
                 //inject new modes
                 var $modes_select = $('#mimetype_${h.FID('f',file.path)}');
