@@ -67,16 +67,15 @@ class LoginController(BaseController):
             if not self._validate_came_from(c.came_from):
                 log.error('Invalid came_from (not server-relative): %r', c.came_from)
                 raise HTTPBadRequest()
-            came_from = url(c.came_from)
         else:
-            c.came_from = came_from = url('home')
+            c.came_from = url('home')
 
         not_default = self.authuser.username != User.DEFAULT_USER
         ip_allowed = AuthUser.check_ip_allowed(self.authuser, self.ip_addr)
 
         # redirect if already logged in
         if self.authuser.is_authenticated and not_default and ip_allowed:
-            raise HTTPFound(location=came_from)
+            raise HTTPFound(location=c.came_from)
 
         if request.POST:
             # import Login Form validator class
@@ -106,7 +105,7 @@ class LoginController(BaseController):
             else:
                 log_in_user(user, c.form_result['remember'],
                     is_external_auth=False)
-                raise HTTPFound(location=came_from)
+                raise HTTPFound(location=c.came_from)
 
         return render('/login.html')
 
