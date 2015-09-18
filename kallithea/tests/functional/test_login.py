@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
 import time
+import urlparse
 
 import mock
 
@@ -132,9 +133,9 @@ class TestLoginController(TestController):
     # verify that get arguments are correctly passed along login redirection
 
     @parameterized.expand([
-        ({'foo':'one', 'bar':'two'}, ('foo=one', 'bar=two')),
+        ({'foo':'one', 'bar':'two'}, (('foo', 'one'), ('bar', 'two'))),
         ({'blue': u'blå'.encode('utf-8'), 'green':u'grøn'},
-             ('blue=bl%C3%A5', 'green=gr%C3%B8n')),
+             (('blue', u'blå'.encode('utf-8')), ('green', u'grøn'.encode('utf-8')))),
     ])
     def test_redirection_to_login_form_preserves_get_args(self, args, args_encoded):
         with fixture.anon_access(False):
@@ -142,30 +143,31 @@ class TestLoginController(TestController):
                                         repo_name=HG_REPO,
                                         **args))
             self.assertEqual(response.status, '302 Found')
+            came_from = urlparse.parse_qs(urlparse.urlparse(response.location).query)['came_from'][0]
+            came_from_qs = urlparse.parse_qsl(urlparse.urlparse(came_from).query)
             for encoded in args_encoded:
-                self.assertIn(encoded, response.location)
+                self.assertIn(encoded, came_from_qs)
 
     @parameterized.expand([
         ({'foo':'one', 'bar':'two'}, ('foo=one', 'bar=two')),
-        ({'blue': u'blå'.encode('utf-8'), 'green':u'grøn'},
+        ({'blue': u'blå', 'green':u'grøn'},
              ('blue=bl%C3%A5', 'green=gr%C3%B8n')),
     ])
     def test_login_form_preserves_get_args(self, args, args_encoded):
         response = self.app.get(url(controller='login', action='index',
-                                    came_from = '/_admin/users',
-                                    **args))
+                                    came_from=url('/_admin/users', **args)))
+        came_from = urlparse.parse_qs(urlparse.urlparse(response.form.action).query)['came_from'][0]
         for encoded in args_encoded:
-            self.assertIn(encoded, response.form.action)
+            self.assertIn(encoded, came_from)
 
     @parameterized.expand([
         ({'foo':'one', 'bar':'two'}, ('foo=one', 'bar=two')),
-        ({'blue': u'blå'.encode('utf-8'), 'green':u'grøn'},
+        ({'blue': u'blå', 'green':u'grøn'},
              ('blue=bl%C3%A5', 'green=gr%C3%B8n')),
     ])
     def test_redirection_after_successful_login_preserves_get_args(self, args, args_encoded):
         response = self.app.post(url(controller='login', action='index',
-                                     came_from = '/_admin/users',
-                                     **args),
+                                     came_from = url('/_admin/users', **args)),
                                  {'username': TEST_USER_ADMIN_LOGIN,
                                   'password': TEST_USER_ADMIN_PASS})
         self.assertEqual(response.status, '302 Found')
@@ -174,19 +176,19 @@ class TestLoginController(TestController):
 
     @parameterized.expand([
         ({'foo':'one', 'bar':'two'}, ('foo=one', 'bar=two')),
-        ({'blue': u'blå'.encode('utf-8'), 'green':u'grøn'},
+        ({'blue': u'blå', 'green':u'grøn'},
              ('blue=bl%C3%A5', 'green=gr%C3%B8n')),
     ])
     def test_login_form_after_incorrect_login_preserves_get_args(self, args, args_encoded):
         response = self.app.post(url(controller='login', action='index',
-                                     came_from = '/_admin/users',
-                                     **args),
+                                     came_from=url('/_admin/users', **args)),
                                  {'username': 'error',
                                   'password': 'test12'})
 
         response.mustcontain('Invalid username or password')
+        came_from = urlparse.parse_qs(urlparse.urlparse(response.form.action).query)['came_from'][0]
         for encoded in args_encoded:
-            self.assertIn(encoded, response.form.action)
+            self.assertIn(encoded, came_from)
 
     #==========================================================================
     # REGISTRATIONS

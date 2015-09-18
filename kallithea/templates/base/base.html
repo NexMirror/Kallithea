@@ -294,7 +294,7 @@
         <div id="quick_login">
           %if c.authuser.username == 'default' or c.authuser.user_id is None:
             <h4>${_('Login to Your Account')}</h4>
-            ${h.form(h.url('login_home',came_from=h.url.current()))}
+            ${h.form(h.url('login_home', came_from=request.path_qs))}
             <div class="form">
                 <div class="fields">
                     <div class="field">

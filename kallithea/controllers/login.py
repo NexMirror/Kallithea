@@ -62,12 +62,12 @@ class LoginController(BaseController):
         return not url.scheme and not url.netloc
 
     def index(self):
-        c.came_from = safe_str(request.GET.pop('came_from', ''))
+        c.came_from = safe_str(request.GET.get('came_from', ''))
         if c.came_from:
             if not self._validate_came_from(c.came_from):
                 log.error('Invalid came_from (not server-relative): %r', c.came_from)
                 raise HTTPBadRequest()
-            came_from = url(c.came_from, **request.GET)
+            came_from = url(c.came_from)
         else:
             c.came_from = came_from = url('home')
 
