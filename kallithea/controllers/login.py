@@ -58,21 +58,8 @@ class LoginController(BaseController):
 
     def _validate_came_from(self, came_from):
         """Return True if came_from is valid and can and should be used"""
-        if not came_from:
-            return False
-
-        parsed = urlparse.urlparse(came_from)
-        server_parsed = urlparse.urlparse(url.current())
-        allowed_schemes = ['http', 'https']
-        if parsed.scheme and parsed.scheme not in allowed_schemes:
-            log.error('Suspicious URL scheme detected %s for url %s',
-                     parsed.scheme, parsed)
-            return False
-        if server_parsed.netloc != parsed.netloc:
-            log.error('Suspicious NETLOC detected %s for url %s server url '
-                      'is: %s' % (parsed.netloc, parsed, server_parsed))
-            return False
-        return True
+        url = urlparse.urlsplit(came_from)
+        return not url.scheme and not url.netloc
 
     def index(self):
         c.came_from = safe_str(request.GET.pop('came_from', ''))

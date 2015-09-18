@@ -105,18 +105,14 @@ class TestLoginController(TestController):
           ('file:///etc/passwd',),
           ('ftp://ftp.example.com',),
           ('http://other.example.com/bl%C3%A5b%C3%A6rgr%C3%B8d',),
+          ('//evil.example.com/',),
     ])
     def test_login_bad_came_froms(self, url_came_from):
         response = self.app.post(url(controller='login', action='index',
                                      came_from=url_came_from),
                                  {'username': TEST_USER_ADMIN_LOGIN,
-                                  'password': TEST_USER_ADMIN_PASS})
-        self.assertEqual(response.status, '302 Found')
-        self.assertEqual(response._environ['paste.testing_variables']
-                         ['tmpl_context'].came_from, '/')
-        response = response.follow()
-
-        self.assertEqual(response.status, '200 OK')
+                                  'password': TEST_USER_ADMIN_PASS},
+                                 status=400)
 
     def test_login_short_password(self):
         response = self.app.post(url(controller='login', action='index'),
