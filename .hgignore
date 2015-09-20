@@ -28,3 +28,4 @@ syntax: regexp
 ^my\.ini$
 ^fabfile.py
 ^\.idea$
+^\.cache$
