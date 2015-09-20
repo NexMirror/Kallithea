@@ -951,7 +951,7 @@ var _getIdentNode = function(n){
 var getSelectionLink = function(e) {
     //get selection from start/to nodes
     if (typeof window.getSelection != "undefined") {
-        s = window.getSelection();
+        var s = window.getSelection();
 
         var from = _getIdentNode(s.anchorNode);
         var till = _getIdentNode(s.focusNode);
