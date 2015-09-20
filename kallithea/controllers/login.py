@@ -74,22 +74,19 @@ class LoginController(BaseController):
             return False
         return True
 
-    def _redirect_to_origin(self, origin):
-        '''redirect to the original page, preserving any get arguments given'''
-        request.GET.pop('came_from', None)
-        raise HTTPFound(location=url(origin, **request.GET))
-
     def index(self):
-        c.came_from = safe_str(request.GET.get('came_from', ''))
-        if not self._validate_came_from(c.came_from):
-            c.came_from = url('home')
+        c.came_from = safe_str(request.GET.pop('came_from', ''))
+        if self._validate_came_from(c.came_from):
+            came_from = url(c.came_from, **request.GET)
+        else:
+            c.came_from = came_from = url('home')
 
         not_default = self.authuser.username != User.DEFAULT_USER
         ip_allowed = AuthUser.check_ip_allowed(self.authuser, self.ip_addr)
 
         # redirect if already logged in
         if self.authuser.is_authenticated and not_default and ip_allowed:
-            return self._redirect_to_origin(c.came_from)
+            raise HTTPFound(location=came_from)
 
         if request.POST:
             # import Login Form validator class
@@ -119,7 +116,7 @@ class LoginController(BaseController):
             else:
                 log_in_user(user, c.form_result['remember'],
                     is_external_auth=False)
-                return self._redirect_to_origin(c.came_from)
+                raise HTTPFound(location=came_from)
 
         return render('/login.html')
 
