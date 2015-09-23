@@ -27,8 +27,8 @@ Original author and date, and relevant copyright and licensing information is be
 
 
 import logging
+import re
 import formencode
-import urlparse
 
 from formencode import htmlfill
 from webob.exc import HTTPFound, HTTPBadRequest
@@ -56,10 +56,19 @@ class LoginController(BaseController):
     def __before__(self):
         super(LoginController, self).__before__()
 
-    def _validate_came_from(self, came_from):
-        """Return True if came_from is valid and can and should be used"""
-        url = urlparse.urlsplit(came_from)
-        return not url.scheme and not url.netloc
+    def _validate_came_from(self, came_from,
+            _re=re.compile(r"/(?!/)[-!#$%&'()*+,./:;=?@_~0-9A-Za-z]*$")):
+        """Return True if came_from is valid and can and should be used.
+
+        Determines if a URI reference is valid and relative to the origin;
+        or in RFC 3986 terms, whether it matches this production:
+
+          origin-relative-ref = path-absolute [ "?" query ] [ "#" fragment ]
+
+        with the exception that '%' escapes are not validated and '#' is
+        allowed inside the fragment part.
+        """
+        return _re.match(came_from) is not None
 
     def index(self):
         c.came_from = safe_str(request.GET.get('came_from', ''))

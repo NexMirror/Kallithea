@@ -107,6 +107,9 @@ class TestLoginController(TestController):
           ('ftp://ftp.example.com',),
           ('http://other.example.com/bl%C3%A5b%C3%A6rgr%C3%B8d',),
           ('//evil.example.com/',),
+          ('/\r\nX-Header-Injection: boo',),
+          ('/invälid_url_bytes',),
+          ('non-absolute-path',),
     ])
     def test_login_bad_came_froms(self, url_came_from):
         response = self.app.post(url(controller='login', action='index',
