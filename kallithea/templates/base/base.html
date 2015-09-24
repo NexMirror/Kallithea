@@ -360,7 +360,11 @@
 
     ## USER MENU
     <li>
-      <a class="menu_link childs" id="quick_login_link">
+      <a class="menu_link childs" id="quick_login_link"
+        %if c.authuser.username != 'default':
+          href="${h.url('notifications')}"
+        %endif
+      >
           <span class="icon">
             ${h.gravatar(c.authuser.email, size=20)}
           </span>
