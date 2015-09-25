@@ -195,6 +195,7 @@ class SummaryController(BaseRepoController):
         stats = self.sa.query(Statistics)\
             .filter(Statistics.repository == c.db_repo)\
             .scalar()
+        c.stats_percentage = 0
         if stats and stats.languages:
             c.no_data = False is c.db_repo.enable_statistics
             lang_stats_d = json.loads(stats.languages)
