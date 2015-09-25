@@ -134,6 +134,7 @@ In a command prompt type (adapting paths if necessary)::
 
   cd C:\Kallithea\Env\Scripts
   activate
+  pip install --upgrade pip setuptools
 
 The prompt will change into "(Env) C:\\Kallithea\\Env\\Scripts" or similar
 (depending of your folder structure). Then type::
