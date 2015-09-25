@@ -75,6 +75,15 @@ An additional benefit of virtualenv_ is that it doesn't require root privileges.
    will "activate" a shell that terminates immediately. It is also perfectly
    acceptable (and desirable) to create a virtualenv as a normal user.
 
+.. note:: Some dependencies are optional. If you need them, install them in
+   the virtualenv too::
+
+     pip install psycopg2
+     pip install python-ldap
+
+   This might require installation of development packages using your
+   distribution's package manager.
+
 - Make a folder for Kallithea data files, and configuration somewhere on the
   filesystem. For example::
 
