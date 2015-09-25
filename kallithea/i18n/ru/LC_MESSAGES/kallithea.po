@@ -1904,34 +1904,34 @@ msgid "Name must not contain only digits"
 msgstr ""
 
 #: kallithea/model/notification.py:254
-#, fuzzy, python-format
+#, python-format
 msgid "%(user)s commented on changeset %(age)s"
-msgstr "%(user)s оставил комментарий к набору изменений %(when)s"
+msgstr "%(user)s оставил комментарий к набору изменений %(age)s"
 
 #: kallithea/model/notification.py:255
-#, fuzzy, python-format
+#, python-format
 msgid "%(user)s sent message %(age)s"
-msgstr "%(user)s отправил сообщение %(when)s"
+msgstr "%(user)s отправил сообщение %(age)s"
 
 #: kallithea/model/notification.py:256
-#, fuzzy, python-format
+#, python-format
 msgid "%(user)s mentioned you %(age)s"
-msgstr "%(user)s упомянул вас %(when)s"
+msgstr "%(user)s упомянул вас %(age)s"
 
 #: kallithea/model/notification.py:257
-#, fuzzy, python-format
+#, python-format
 msgid "%(user)s registered in Kallithea %(age)s"
-msgstr "%(user)s зарегистрировался в Kallithea %(when)s"
+msgstr "%(user)s зарегистрировался в Kallithea %(age)s"
 
 #: kallithea/model/notification.py:258
-#, fuzzy, python-format
+#, python-format
 msgid "%(user)s opened new pull request %(age)s"
-msgstr "%(user)s открыл новый pull-запрос %(when)s"
+msgstr "%(user)s открыл новый pull-запрос %(age)s"
 
 #: kallithea/model/notification.py:259
-#, fuzzy, python-format
+#, python-format
 msgid "%(user)s commented on pull request %(age)s"
-msgstr "%(user)s оставил комментарий к pull-запросу %(when)s"
+msgstr "%(user)s оставил комментарий к pull-запросу %(age)s"
 
 #: kallithea/model/notification.py:266
 #, python-format
