@@ -36,12 +36,13 @@ from webhelpers.html.builder import make_tag
 from webhelpers.html.tags import auto_discovery_link, checkbox, css_classes, \
     end_form, file, hidden, image, javascript_link, link_to, \
     link_to_if, link_to_unless, ol, required_legend, select, stylesheet_link, \
-    submit, text, password, textarea, title, ul, xml_declaration, radio
+    submit, text, password, textarea, title, ul, xml_declaration, radio, \
+    form as insecure_form
 from webhelpers.html.tools import auto_link, button_to, highlight, \
     js_obfuscate, mail_to, strip_links, strip_tags, tag_re
 from webhelpers.number import format_byte_size, format_bit_size
 from webhelpers.pylonslib import Flash as _Flash
-from webhelpers.pylonslib.secure_form import secure_form as form, authentication_token
+from webhelpers.pylonslib.secure_form import secure_form, authentication_token
 from webhelpers.text import chop_at, collapse, convert_accented_entities, \
     convert_misc_entities, lchop, plural, rchop, remove_formatting, \
     replace_whitespace, urlify, truncate, wrap_paragraphs
@@ -1451,3 +1452,13 @@ def ip_range(ip_addr):
     from kallithea.model.db import UserIpMap
     s, e = UserIpMap._get_ip_range(ip_addr)
     return '%s - %s' % (s, e)
+
+
+def form(url, method="post", **attrs):
+    """Like webhelpers.html.tags.form but automatically using secure_form with
+    authentication_token for POST. authentication_token is thus never leaked
+    in the URL."""
+    if method.lower() == 'get':
+        return insecure_form(url, method=method, **attrs)
+    # webhelpers will turn everything but GET into POST
+    return secure_form(url, method=method, **attrs)
