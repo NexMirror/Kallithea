@@ -678,7 +678,7 @@ class GitRepository(BaseRepository):
             if e.errno not in [errno.ENOENT, errno.EROFS]:
                 raise
             # Workaround for dulwich crashing on for example its own dulwich/tests/data/repos/simple_merge.git/info/refs.lock
-            log.error('Ignoring %s running update-server-info: %s', type(e).name, e)
+            log.error('Ignoring %s running update-server-info: %s', type(e).__name__, e)
 
     @LazyProperty
     def workdir(self):
