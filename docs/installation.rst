@@ -39,8 +39,9 @@ repository, follow the instructions below::
         cd kallithea
         virtualenv ../kallithea-venv
         source ../kallithea-venv/bin/activate
-        python setup.py develop
-        python setup.py compile_catalog   # for translation of the UI
+        pip install --upgrade pip setuptools
+        python2 setup.py develop
+        python2 setup.py compile_catalog   # for translation of the UI
 
 You can now proceed to :ref:`setup`.
 
@@ -64,13 +65,24 @@ An additional benefit of virtualenv_ is that it doesn't require root privileges.
 
     virtualenv /srv/kallithea/venv
 
-- Activate the virtualenv_ in your current shell session by running::
+- Activate the virtualenv_ in your current shell session and make sure the
+  basic requirements are up-to-date by running::
 
     source /srv/kallithea/venv/bin/activate
+    pip install --upgrade pip setuptools
 
 .. note:: You can't use UNIX ``sudo`` to source the ``virtualenv`` script; it
    will "activate" a shell that terminates immediately. It is also perfectly
    acceptable (and desirable) to create a virtualenv as a normal user.
+
+.. note:: Some dependencies are optional. If you need them, install them in
+   the virtualenv too::
+
+     pip install psycopg2
+     pip install python-ldap
+
+   This might require installation of development packages using your
+   distribution's package manager.
 
 - Make a folder for Kallithea data files, and configuration somewhere on the
   filesystem. For example::
@@ -84,7 +96,7 @@ An additional benefit of virtualenv_ is that it doesn't require root privileges.
   Alternatively, download a .tar.gz from http://pypi.python.org/pypi/Kallithea,
   extract it and run::
 
-    python setup.py install
+    python2 setup.py install
 
 - This will install Kallithea together with pylons_ and all other required
   python libraries into the activated virtualenv.

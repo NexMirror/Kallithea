@@ -675,10 +675,10 @@ class GitRepository(BaseRepository):
         try:
             update_server_info(self._repo)
         except OSError as e:
-            if e.errno != errno.ENOENT:
+            if e.errno not in [errno.ENOENT, errno.EROFS]:
                 raise
             # Workaround for dulwich crashing on for example its own dulwich/tests/data/repos/simple_merge.git/info/refs.lock
-            log.error('Ignoring error running update-server-info: %s', e)
+            log.error('Ignoring %s running update-server-info: %s', type(e).__name__, e)
 
     @LazyProperty
     def workdir(self):

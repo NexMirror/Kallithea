@@ -34,7 +34,8 @@ To get started with development::
         cd kallithea
         virtualenv ../kallithea-venv
         source ../kallithea-venv/bin/activate
-        python setup.py develop
+        pip install --upgrade pip setuptools
+        python2 setup.py develop
         paster make-config Kallithea my.ini
         paster setup-db my.ini --user=user --email=user@example.com --password=password --repos=/tmp
         paster serve my.ini --reload &

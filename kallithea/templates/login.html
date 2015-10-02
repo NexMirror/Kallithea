@@ -16,7 +16,7 @@
         %endif
     </div>
     <div class="panel-body inner">
-        ${h.form(h.url.current(**request.GET))}
+        ${h.form(url('login_home', came_from=c.came_from))}
         <div class="form">
             <i class="icon-lock"></i>
             <!-- fields -->

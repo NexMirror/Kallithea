@@ -47,7 +47,7 @@ class TestAdminUsersController(TestController):
         password_confirmation = password
         name = 'name'
         lastname = 'lastname'
-        email = 'mail@mail.com'
+        email = 'mail@example.com'
 
         response = self.app.post(url('users'),
             {'username': username,
@@ -83,7 +83,7 @@ class TestAdminUsersController(TestController):
         password = ''
         name = 'name'
         lastname = 'lastname'
-        email = 'errmail.com'
+        email = 'errmail.example.com'
 
         response = self.app.post(url('users'), {'username': username,
                                                'password': password,
@@ -119,7 +119,7 @@ class TestAdminUsersController(TestController):
          ('extern_name', {'extern_name': None}),
          ('active', {'active': False}),
          ('active', {'active': True}),
-         ('email', {'email': 'some@email.com'}),
+         ('email', {'email': 'someemail@example.com'}),
         # ('new_password', {'new_password': 'foobar123',
         #                   'password_confirmation': 'foobar123'})
         ])

@@ -151,7 +151,7 @@ Create a virtual Python environment in C:\\Kallithea\\Env (or similar). To
 do so, open a CMD (Python Path should be included in Step3), navigate
 where you downloaded "virtualenv.py", and write::
 
- python virtualenv.py C:\Kallithea\Env
+  python2 virtualenv.py C:\Kallithea\Env
 
 (--no-site-packages is now the default behaviour of virtualenv, no need
 to include it)
@@ -183,6 +183,7 @@ In that CMD (loaded with VS2008 PATHs) type::
 
   cd C:\Kallithea\Env\Scripts (or similar)
   activate
+  pip install --upgrade pip setuptools
 
 The prompt will change into "(Env) C:\\Kallithea\\Env\\Scripts" or similar
 (depending of your folder structure). Then type::

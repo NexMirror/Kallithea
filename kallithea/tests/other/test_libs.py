@@ -42,11 +42,11 @@ TEST_URLS = [
      '%s://127.0.0.1' % proto),
     ('%s://127.0.0.1:8080' % proto, ['%s://' % proto, '127.0.0.1', '8080'],
      '%s://127.0.0.1:8080' % proto),
-    ('%s://domain.org' % proto, ['%s://' % proto, 'domain.org'],
-     '%s://domain.org' % proto),
-    ('%s://user:pass@domain.org:8080' % proto, ['%s://' % proto, 'domain.org',
+    ('%s://example.com' % proto, ['%s://' % proto, 'example.com'],
+     '%s://example.com' % proto),
+    ('%s://user:pass@example.com:8080' % proto, ['%s://' % proto, 'example.com',
                                                 '8080'],
-     '%s://domain.org:8080' % proto),
+     '%s://example.com:8080' % proto),
 ]
 
 proto = 'https'
@@ -59,11 +59,11 @@ TEST_URLS += [
      '%s://127.0.0.1' % proto),
     ('%s://127.0.0.1:8080' % proto, ['%s://' % proto, '127.0.0.1', '8080'],
      '%s://127.0.0.1:8080' % proto),
-    ('%s://domain.org' % proto, ['%s://' % proto, 'domain.org'],
-     '%s://domain.org' % proto),
-    ('%s://user:pass@domain.org:8080' % proto, ['%s://' % proto, 'domain.org',
+    ('%s://example.com' % proto, ['%s://' % proto, 'example.com'],
+     '%s://example.com' % proto),
+    ('%s://user:pass@example.com:8080' % proto, ['%s://' % proto, 'example.com',
                                                 '8080'],
-     '%s://domain.org:8080' % proto),
+     '%s://example.com:8080' % proto),
 ]
 
 
@@ -104,11 +104,11 @@ class TestLibs(BaseTestCase):
     def test_mention_extractor(self):
         from kallithea.lib.utils2 import extract_mentioned_users
         sample = (
-            "@first hi there @world here's my email username@email.com "
+            "@first hi there @world here's my email username@example.com "
             "@lukaszb check @one_more22 it pls @ ttwelve @D[] @one@two@three "
             "@UPPER    @cAmEL @2one_more22 @john please see this http://org.pl "
             "@marian.user just do it @marco-polo and next extract @marco_polo "
-            "user.dot  hej ! not-needed maril@domain.org"
+            "user.dot  hej ! not-needed maril@example.com"
         )
 
         s = sorted([
@@ -184,7 +184,7 @@ class TestLibs(BaseTestCase):
     def test_tag_exctrator(self):
         sample = (
             "hello pta[tag] gog [[]] [[] sda ero[or]d [me =>>< sa]"
-            "[requires] [stale] [see<>=>] [see => http://url.com]"
+            "[requires] [stale] [see<>=>] [see => http://example.com]"
             "[requires => url] [lang => python] [just a tag]"
             "[,d] [ => ULR ] [obsolete] [desc]]"
         )
@@ -205,7 +205,7 @@ class TestLibs(BaseTestCase):
         class fake_url(object):
             @classmethod
             def current(cls, *args, **kwargs):
-                return 'https://server.com'
+                return 'https://example.com'
 
         #mock pylons.tmpl_context
         def fake_tmpl_context(_url):
@@ -218,35 +218,35 @@ class TestLibs(BaseTestCase):
 
 
         with mock.patch('pylons.url', fake_url):
-            fake = fake_tmpl_context(_url='http://test.com/{email}')
+            fake = fake_tmpl_context(_url='http://example.com/{email}')
             with mock.patch('pylons.tmpl_context', fake):
                     from pylons import url
-                    assert url.current() == 'https://server.com'
-                    grav = gravatar_url(email_address='test@foo.com', size=24)
-                    assert grav == 'http://test.com/test@foo.com'
+                    assert url.current() == 'https://example.com'
+                    grav = gravatar_url(email_address='test@example.com', size=24)
+                    assert grav == 'http://example.com/test@example.com'
 
-            fake = fake_tmpl_context(_url='http://test.com/{email}')
+            fake = fake_tmpl_context(_url='http://example.com/{email}')
             with mock.patch('pylons.tmpl_context', fake):
-                grav = gravatar_url(email_address='test@foo.com', size=24)
-                assert grav == 'http://test.com/test@foo.com'
+                grav = gravatar_url(email_address='test@example.com', size=24)
+                assert grav == 'http://example.com/test@example.com'
 
-            fake = fake_tmpl_context(_url='http://test.com/{md5email}')
+            fake = fake_tmpl_context(_url='http://example.com/{md5email}')
             with mock.patch('pylons.tmpl_context', fake):
-                em = 'test@foo.com'
+                em = 'test@example.com'
                 grav = gravatar_url(email_address=em, size=24)
-                assert grav == 'http://test.com/%s' % (_md5(em))
+                assert grav == 'http://example.com/%s' % (_md5(em))
 
-            fake = fake_tmpl_context(_url='http://test.com/{md5email}/{size}')
+            fake = fake_tmpl_context(_url='http://example.com/{md5email}/{size}')
             with mock.patch('pylons.tmpl_context', fake):
-                em = 'test@foo.com'
+                em = 'test@example.com'
                 grav = gravatar_url(email_address=em, size=24)
-                assert grav == 'http://test.com/%s/%s' % (_md5(em), 24)
+                assert grav == 'http://example.com/%s/%s' % (_md5(em), 24)
 
             fake = fake_tmpl_context(_url='{scheme}://{netloc}/{md5email}/{size}')
             with mock.patch('pylons.tmpl_context', fake):
-                em = 'test@foo.com'
+                em = 'test@example.com'
                 grav = gravatar_url(email_address=em, size=24)
-                assert grav == 'https://server.com/%s/%s' % (_md5(em), 24)
+                assert grav == 'https://example.com/%s/%s' % (_md5(em), 24)
 
     @parameterized.expand([
         (Repository.DEFAULT_CLONE_URI, 'group/repo1', {}, '', 'http://vps1:8000/group/repo1'),
@@ -260,9 +260,9 @@ class TestLibs(BaseTestCase):
         ('{scheme}://{user}@{netloc}/_{repoid}', 'group/repo1', {'user': 'username'}, '', 'http://username@vps1:8000/_23'),
         ('http://{user}@{netloc}/_{repoid}', 'group/repo1', {'user': 'username'}, '', 'http://username@vps1:8000/_23'),
         ('http://{netloc}/_{repoid}', 'group/repo1', {'user': 'username'}, '', 'http://vps1:8000/_23'),
-        ('https://{user}@proxy1.server.com/{repo}', 'group/repo1', {'user': 'username'}, '', 'https://username@proxy1.server.com/group/repo1'),
-        ('https://{user}@proxy1.server.com/{repo}', 'group/repo1', {}, '', 'https://proxy1.server.com/group/repo1'),
-        ('https://proxy1.server.com/{user}/{repo}', 'group/repo1', {'user': 'username'}, '', 'https://proxy1.server.com/username/group/repo1'),
+        ('https://{user}@proxy1.example.com/{repo}', 'group/repo1', {'user': 'username'}, '', 'https://username@proxy1.example.com/group/repo1'),
+        ('https://{user}@proxy1.example.com/{repo}', 'group/repo1', {}, '', 'https://proxy1.example.com/group/repo1'),
+        ('https://proxy1.example.com/{user}/{repo}', 'group/repo1', {'user': 'username'}, '', 'https://proxy1.example.com/username/group/repo1'),
     ])
     def test_clone_url_generator(self, tmpl, repo_name, overrides, prefix, expected):
         from kallithea.lib.utils2 import get_clone_url
@@ -337,12 +337,12 @@ class TestLibs(BaseTestCase):
        "from rev a also rev url[http://google.com]",
        "http://google.com"),
        ("""Multi line
-       https://foo.bar.com
+       https://foo.bar.example.com
        some text lalala""",
        """Multi line
-       url[https://foo.bar.com]
+       url[https://foo.bar.example.com]
        some text lalala""",
-       "https://foo.bar.com")
+       "https://foo.bar.example.com")
     ])
     def test_urlify_test(self, sample, expected, url_):
         from kallithea.lib.helpers import urlify_text

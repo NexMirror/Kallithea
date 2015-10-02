@@ -1,7 +1,4 @@
 (function() {
-  // FIXME: if this default value ever is used, it will probably be wrong
-  if (!CodeMirror.modeURL) CodeMirror.modeURL = "../mode/%N/%N.js";
-
   var loading = {};
   function splitCallback(cont, n) {
     var countDown = n;

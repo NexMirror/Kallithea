@@ -655,7 +655,7 @@ function _get_add_comment_div(target_id) {
 // set $comment_div state - showing or not showing form and Add button
 function comment_div_state($comment_div, f_path, line_no, show_form) {
     var $forms = $comment_div.children('.comment-inline-form');
-    var $buttons = $comment_div.children('.add-comment');
+    var $buttonrow = $comment_div.children('.add-button-row');
     var $comments = $comment_div.children('.comment');
     if (show_form) {
         if (!$forms.length) {
@@ -664,7 +664,7 @@ function comment_div_state($comment_div, f_path, line_no, show_form) {
     } else {
         $forms.remove();
     }
-    $buttons.remove();
+    $buttonrow.remove();
     if ($comments.length && !show_form) {
         _comment_div_append_add($comment_div, f_path, line_no);
     }
@@ -673,9 +673,9 @@ function comment_div_state($comment_div, f_path, line_no, show_form) {
 // append an Add button to $comment_div and hook it up to show form
 function _comment_div_append_add($comment_div, f_path, line_no) {
     var addlabel = TRANSLATION_MAP['Add Another Comment'];
-    var $add = $('<div class="add-comment"><span class="btn btn-mini">{0}</span></div>'.format(addlabel));
+    var $add = $('<div class="add-button-row"><span class="btn btn-mini add-button">{0}</span></div>'.format(addlabel));
     $comment_div.append($add);
-    $add.click(function(e) {
+    $add.children('.add-button').click(function(e) {
         comment_div_state($comment_div, f_path, line_no, true);
     });
 }
@@ -896,14 +896,14 @@ var fileBrowserListeners = function(current_url, node_list_url, url_base){
 };
 
 
-var initCodeMirror = function(textarea_id, resetUrl){
+var initCodeMirror = function(textarea_id, baseUrl, resetUrl){
     var myCodeMirror = CodeMirror.fromTextArea($('#' + textarea_id)[0], {
             mode: "null",
             lineNumbers: true,
             indentUnit: 4,
             autofocus: true
         });
-    CodeMirror.modeURL = "/codemirror/mode/%N/%N.js";
+    CodeMirror.modeURL = baseUrl + "/codemirror/mode/%N/%N.js";
 
     $('#reset').click(function(e){
             window.location=resetUrl;
@@ -951,7 +951,7 @@ var _getIdentNode = function(n){
 var getSelectionLink = function(e) {
     //get selection from start/to nodes
     if (typeof window.getSelection != "undefined") {
-        s = window.getSelection();
+        var s = window.getSelection();
 
         var from = _getIdentNode(s.anchorNode);
         var till = _getIdentNode(s.focusNode);

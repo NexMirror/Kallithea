@@ -78,11 +78,11 @@ Permanent repository URLs
 Due to the complicated nature of repository grouping, URLs of repositories
 can often change. For example, a repository originally accessible from::
 
-  http://example.com/repo_name
+  http://kallithea.example.com/repo_name
 
 would get a new URL after moving it to test_group::
 
-  http://example.com/test_group/repo_name
+  http://kallithea.example.com/test_group/repo_name
 
 Such moving of a repository to a group can be an issue for build systems and
 other scripts where the repository paths are hardcoded. To mitigate this,
@@ -94,7 +94,7 @@ such URLs.
 
 In the example, the repository could also be accessible as::
 
-  http://example.com/_<ID>
+  http://kallithea.example.com/_<ID>
 
 The ID of a given repository can be shown from the repository ``Summary`` page,
 by selecting the ``Show by ID`` button next to ``Clone URL``.
@@ -137,7 +137,7 @@ Currently it supports the following options:
 
 If you need to clone repositories that are protected via basic authentication,
 you can pass the credentials in the URL, e.g.
-``http://user:passw@remote.server/repo``. Kallithea will then try to login and
+``http://user:passw@remote.example.com/repo``. Kallithea will then try to login and
 clone using the given credentials. Please note that the given credentials will
 be stored as plaintext inside the database. However, the authentication
 information will not be shown in the clone URL on the summary page.

@@ -36,7 +36,7 @@ up for you.
 The ``setup-db`` values can also be given on the command line.
 Example::
 
-    paster setup-db my.ini --user=nn --password=secret --email=nn@example.org --repos=/srv/repos
+    paster setup-db my.ini --user=nn --password=secret --email=nn@example.com --repos=/srv/repos
 
 The ``setup-db`` command will create all needed tables and an
 admin account. When choosing a root path you can either use a new
@@ -108,7 +108,7 @@ If your main directory (the same as set in Kallithea settings) is for
 example set to ``/srv/repos`` and the repository you are using is
 named ``kallithea``, then to clone via ssh you should run::
 
-    hg clone ssh://user@server.com//srv/repos/kallithea
+    hg clone ssh://user@kallithea.example.com/srv/repos/kallithea
 
 Using other external tools such as mercurial-server_ or using ssh key-based
 authentication is fully supported.
@@ -176,7 +176,7 @@ Here's a typical LDAP setup::
 
  Connection settings
  Enable LDAP          = checked
- Host                 = host.example.org
+ Host                 = host.example.com
  Port                 = 389
  Account              = <account>
  Password             = <password>
@@ -443,7 +443,7 @@ and have that replaced with a URL to the issue. To enable this simply
 uncomment the following variables in the ini file::
 
     issue_pat = (?:^#|\s#)(\w+)
-    issue_server_link = https://myissueserver.com/{repo}/issue/{id}
+    issue_server_link = https://issues.example.com/{repo}/issue/{id}
     issue_prefix = #
 
 ``issue_pat`` is the regular expression describing which strings in
@@ -461,13 +461,13 @@ generate a URL in the format:
 
 .. code-block:: html
 
-  <a href="https://myissueserver.com/example_repo/issue/300">ISSUE-300</a>
+  <a href="https://issues.example.com/example_repo/issue/300">ISSUE-300</a>
 
 If needed, more than one pattern can be specified by appending a unique suffix to
 the variables. For example::
 
     issue_pat_wiki = (?:wiki-)(.+)
-    issue_server_link_wiki = https://mywiki.com/{id}
+    issue_server_link_wiki = https://wiki.example.com/{id}
     issue_prefix_wiki = WIKI-
 
 With these settings, wiki pages can be referenced as wiki-some-id, and every
@@ -475,7 +475,7 @@ such reference will be transformed into:
 
 .. code-block:: html
 
-  <a href="https://mywiki.com/some-id">WIKI-some-id</a>
+  <a href="https://wiki.example.com/some-id">WIKI-some-id</a>
 
 
 Hook management
@@ -569,7 +569,7 @@ Sample config for Nginx using proxy:
     ## gist alias
     server {
        listen          443;
-       server_name     gist.myserver.com;
+       server_name     gist.example.com;
        access_log      /var/log/nginx/gist.access.log;
        error_log       /var/log/nginx/gist.error.log;
 
@@ -583,13 +583,13 @@ Sample config for Nginx using proxy:
        ssl_ciphers DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:EDH-RSA-DES-CBC3-SHA:AES256-SHA:DES-CBC3-SHA:AES128-SHA:RC4-SHA:RC4-MD5;
        ssl_prefer_server_ciphers on;
 
-       rewrite ^/(.+)$ https://your.kallithea.server/_admin/gists/$1;
-       rewrite (.*)    https://your.kallithea.server/_admin/gists;
+       rewrite ^/(.+)$ https://kallithea.example.com/_admin/gists/$1;
+       rewrite (.*)    https://kallithea.example.com/_admin/gists;
     }
 
     server {
        listen          443;
-       server_name     your.kallithea.server;
+       server_name     kallithea.example.com
        access_log      /var/log/nginx/kallithea.access.log;
        error_log       /var/log/nginx/kallithea.error.log;
 
@@ -612,7 +612,7 @@ Sample config for Nginx using proxy:
        }
 
        location @kallithea {
-            proxy_pass      http://kallithea;
+            proxy_pass      http://127.0.0.1:5000;
        }
 
     }
@@ -648,8 +648,7 @@ Here is a sample configuration file for Apache using proxy:
 .. code-block:: apache
 
     <VirtualHost *:80>
-            ServerName hg.myserver.com
-            ServerAlias hg.myserver.com
+            ServerName kallithea.example.com
 
             <Proxy *>
               # For Apache 2.4 and later:

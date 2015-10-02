@@ -1,0 +1,63 @@
+#!/bin/bash
+set -e
+set -x
+
+echo "Checking tools needed for uploading stuff"
+pip freeze | grep '^Sphinx==' || pip install Sphinx
+pip freeze | grep '^Sphinx-PyPI-upload==' || pip install Sphinx-PyPI-upload
+
+echo "Verifying everything can build"
+hg purge --all dist
+python2 setup.py build_sphinx
+python2 setup.py compile_catalog # TODO: check for errors
+python2 setup.py sdist
+
+echo "Verifying VERSION from kallithea/__init__.py"
+namerel=$(cd dist && echo Kallithea-*.tar.gz)
+namerel=${namerel%.tar.gz}
+version=${namerel#Kallithea-}
+echo "Releasing Kallithea $version in directory $namerel"
+echo "Verifying current revision is tagged for $version"
+hg log -r "'$version'&." | grep .
+
+echo "Cleaning before making release build"
+hg up -c .
+hg revert -a -r null
+hg up -C "'$version'&."
+hg purge --all
+
+echo "Building dist file"
+python2 setup.py compile_catalog
+python2 setup.py sdist
+
+echo "Verifying dist file content"
+tar tf dist/Kallithea-*.tar.gz | sed "s|^$namerel/||" | LANG=C sort > scripts/manifest
+hg diff
+hg up -c . # fail if manifest changed
+
+echo "Now, make sure"
+echo "* the copyright and contributor lists have been updated"
+echo "* all tests are passing"
+echo "* release note is ready"
+echo "* announcement is ready"
+echo "* source has been pushed to https://kallithea-scm.org/repos/kallithea"
+echo
+
+echo -n "Enter \"pypi\" to upload Kallithea $version to pypi: "
+read answer
+[ "$answer" = "pypi" ]
+extraargs=${EMAIL:+--identity=$EMAIL}
+python2 setup.py sdist upload --sign $extraargs
+xdg-open https://pypi.python.org/pypi/Kallithea
+
+echo "Uploading docs to pypi"
+# See https://wiki.python.org/moin/PyPiDocumentationHosting
+python2 setup.py build_sphinx upload_sphinx
+xdg-open https://pythonhosted.org/Kallithea/
+xdg-open http://packages.python.org/Kallithea/installation.html
+
+echo "Rebuilding readthedocs for docs.kallithea-scm.org"
+xdg-open https://readthedocs.org/projects/kallithea/
+curl -X POST http://readthedocs.org/build/kallithea
+xdg-open https://readthedocs.org/builds/kallithea/
+xdg-open http://docs.kallithea-scm.org/en/latest/ # or whatever the branch is

@@ -71,7 +71,7 @@ If it was not installed or if you are using Python>=2.6,<2.7.9:
 
 - Go to https://bootstrap.pypa.io
 - Right-click on get-pip.py and choose Saves as...
-- Run "python get-pip.py" in the folder where you downloaded get-pip.py (may require admin access).
+- Run "python2 get-pip.py" in the folder where you downloaded get-pip.py (may require admin access).
 
 .. note::
 
@@ -134,6 +134,7 @@ In a command prompt type (adapting paths if necessary)::
 
   cd C:\Kallithea\Env\Scripts
   activate
+  pip install --upgrade pip setuptools
 
 The prompt will change into "(Env) C:\\Kallithea\\Env\\Scripts" or similar
 (depending of your folder structure). Then type::

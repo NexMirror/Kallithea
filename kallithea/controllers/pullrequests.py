@@ -502,9 +502,10 @@ class PullrequestsController(BaseRepoController):
         pull_request.title = _form['pullrequest_title']
         pull_request.description = _form['pullrequest_desc'].strip() or _('No description')
         pull_request.owner = User.get_by_username(_form['owner'])
+        user = User.get(c.authuser.user_id)
         try:
-            PullRequestModel().mention_from_description(pull_request, old_description)
-            PullRequestModel().update_reviewers(pull_request_id, reviewers_ids)
+            PullRequestModel().mention_from_description(user, pull_request, old_description)
+            PullRequestModel().update_reviewers(user, pull_request_id, reviewers_ids)
         except UserInvalidException as u:
             h.flash(_('Invalid reviewer "%s" specified') % u, category='error')
             raise HTTPBadRequest()
@@ -590,7 +591,7 @@ class PullrequestsController(BaseRepoController):
             # candidates: descendants of old head that are on the right branch
             #             and not are the old head itself ...
             #             and nothing at all if old head is a descendant of target ref name
-            if other_scm_instance._repo.revs('present(%s)::&%s', c.cs_ranges[-1].raw_id, c.a_branch_name):
+            if not c.is_range and other_scm_instance._repo.revs('present(%s)::&%s', c.cs_ranges[-1].raw_id, c.a_branch_name):
                 c.update_msg = _('This pull request has already been merged to %s.') % c.a_branch_name
             elif c.pull_request.is_closed():
                 c.update_msg = _('This pull request has been closed and can not be updated.')
@@ -614,10 +615,11 @@ class PullrequestsController(BaseRepoController):
                     c.update_msg = _('This pull request can be updated with changes on %s:') % c.cs_branch_name
                 else:
                     show = set()
+                    avail_revs = set() # drop revs[0]
                     c.update_msg = _('No changesets found for updating this pull request.')
 
                 # TODO: handle branch heads that not are tip-most
-                brevs = org_scm_instance._repo.revs('%s - %ld', c.cs_branch_name, avail_revs)
+                brevs = org_scm_instance._repo.revs('%s - %ld - %s', c.cs_branch_name, avail_revs, revs[0])
                 if brevs:
                     # also show changesets that are on branch but neither ancestors nor descendants
                     show.update(org_scm_instance._repo.revs('::%ld - ::%ld - ::%s', brevs, avail_revs, c.a_branch_name))

@@ -51,7 +51,7 @@ pdebug = false
 <%text>## SMTP server settings</%text>
 <%text>## Only smtp_server is mandatory. All other settings take the specified default</%text>
 <%text>## values.</%text>
-#smtp_server = mail.server.com
+#smtp_server = smtp.example.com
 #smtp_username =
 #smtp_password =
 #smtp_port = 25
@@ -226,8 +226,8 @@ show_revision_number = false
 
 <%text>## gist URL alias, used to create nicer urls for gist. This should be an</%text>
 <%text>## url that does rewrites to _admin/gists/<gistid>.</%text>
-<%text>## example: http://gist.kallithea.server/{gistid}. Empty means use the internal</%text>
-<%text>## Kallithea url, ie. http[s]://your.kallithea.server/_admin/gists/<gistid></%text>
+<%text>## example: http://gist.example.com/{gistid}. Empty means use the internal</%text>
+<%text>## Kallithea url, ie. http[s]://kallithea.example.com/_admin/gists/<gistid></%text>
 gist_alias_url =
 
 <%text>## white list of API enabled controllers. This allows to add list of</%text>
@@ -262,7 +262,7 @@ issue_pat = (?:\s*#)(\d+)
 <%text>## fetched from the regex and {repo} is replaced with full repository name</%text>
 <%text>## including groups {repo_name} is replaced with just name of repo</%text>
 
-issue_server_link = https://myissueserver.com/{repo}/issue/{id}
+issue_server_link = https://issues.example.com/{repo}/issue/{id}
 
 <%text>## prefix to add to link to indicate it's an url</%text>
 <%text>## #314 will be replaced by <issue_prefix><id></%text>
@@ -272,10 +272,10 @@ issue_prefix = #
 <%text>## issue_pat, issue_server_link, issue_prefix can have suffixes to specify</%text>
 <%text>## multiple patterns, to other issues server, wiki or others</%text>
 <%text>## below an example how to create a wiki pattern</%text>
-# wiki-some-id -> https://mywiki.com/some-id
+# wiki-some-id -> https://wiki.example.com/some-id
 
 #issue_pat_wiki = (?:wiki-)(.+)
-#issue_server_link_wiki = https://mywiki.com/{id}
+#issue_server_link_wiki = https://wiki.example.com/{id}
 #issue_prefix_wiki = WIKI-
 
 <%text>## instance-id prefix</%text>

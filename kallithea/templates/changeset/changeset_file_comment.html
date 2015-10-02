@@ -87,7 +87,7 @@
       ${h.form('')}
       <div class="clearfix">
           <div class="comment-help">
-            ${_('You need to be logged in to comment.')} <a href="${h.url('login_home',came_from=h.url.current())}">${_('Login now')}</a>
+            ${_('You need to be logged in to comment.')} <a href="${h.url('login_home', came_from=request.path_qs)}">${_('Login now')}</a>
           </div>
       </div>
       <div class="comment-button">

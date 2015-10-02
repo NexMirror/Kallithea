@@ -36,7 +36,7 @@ def argparser(argv):
       "kallithea-api [-h] [--format=FORMAT] [--apikey=APIKEY] [--apihost=APIHOST] "
       "[--config=CONFIG] [--save-config] "
       "METHOD <key:val> <key2:val> ...\n"
-      "Create config file: kallithea-api --apikey=<key> --apihost=http://your.kallithea.server --save-config"
+      "Create config file: kallithea-api --apikey=<key> --apihost=http://kallithea.example.com --save-config"
     )
 
     parser = argparse.ArgumentParser(description='Kallithea API cli',

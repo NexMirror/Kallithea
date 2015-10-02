@@ -49,7 +49,7 @@ Clients must send JSON encoded JSON-RPC requests::
 
 For example, to pull to a local "CPython" mirror using curl::
 
-    curl https://example.com/_admin/api -X POST -H 'content-type:text/plain' \
+    curl https://kallithea.example.com/_admin/api -X POST -H 'content-type:text/plain' \
         --data-binary '{"id":1,"api_key":"xe7cdb2v278e4evbdf5vs04v832v0efvcbcve4a3","method":"pull","args":{"repo":"CPython"}}'
 
 In general, provide
@@ -83,30 +83,29 @@ way to call the JSON-RPC API.
 
 For example, to call ``get_repo``::
 
- kallithea-api --apihost=<your.kallithea.server.url> --apikey=<yourapikey> get_repo
+    kallithea-api --apihost=<Kallithea URL> --apikey=<API key> get_repo
 
- calling {"api_key": "<apikey>", "id": 75, "args": {}, "method": "get_repo"} to http://127.0.0.1:5000
- Kallithea said:
- {'error': 'Missing non optional `repoid` arg in JSON DATA',
-  'id': 75,
-  'result': None}
+    Calling method get_repo => <Kallithea URL>
+    Server response
+    ERROR:"Missing non optional `repoid` arg in JSON DATA"
 
 Oops, looks like we forgot to add an argument. Let's try again, now
 providing the ``repoid`` as a parameter::
 
-    kallithea-api get_repo repoid:myrepo
+    kallithea-api --apihost=<Kallithea URL> --apikey=<API key> get_repo repoid:myrepo
 
-    calling {"api_key": "<apikey>", "id": 39, "args": {"repoid": "myrepo"}, "method": "get_repo"} to http://127.0.0.1:5000
-    Kallithea said:
-    {'error': None,
-     'id': 39,
-     'result': <json data...>}
+    Calling method get_repo => <Kallithea URL>
+    Server response
+    {
+        "clone_uri": null,
+        "created_on": "2015-08-31T14:55:19.042",
+    ...
 
 To avoid specifying ``apihost`` and ``apikey`` every time, run::
 
-  kallithea-api --save-config --apihost=<your.kallithea.server.url> --apikey=<yourapikey>
+    kallithea-api --save-config --apihost=<Kallithea URL> --apikey=<API key>
 
-This will create a ``~/.config/kallithea`` with the specified hostname and API key
+This will create a ``~/.config/kallithea`` with the specified URL and API key
 so you don't have to specify them every time.
 
 

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
 import time
+import urlparse
 
 import mock
 
@@ -103,20 +104,19 @@ class TestLoginController(TestController):
           ('data:text/html,<script>window.alert("xss")</script>',),
           ('mailto:test@example.com',),
           ('file:///etc/passwd',),
-          ('ftp://some.ftp.server',),
-          ('http://other.domain/bl%C3%A5b%C3%A6rgr%C3%B8d',),
+          ('ftp://ftp.example.com',),
+          ('http://other.example.com/bl%C3%A5b%C3%A6rgr%C3%B8d',),
+          ('//evil.example.com/',),
+          ('/\r\nX-Header-Injection: boo',),
+          ('/invälid_url_bytes',),
+          ('non-absolute-path',),
     ])
     def test_login_bad_came_froms(self, url_came_from):
         response = self.app.post(url(controller='login', action='index',
                                      came_from=url_came_from),
                                  {'username': TEST_USER_ADMIN_LOGIN,
-                                  'password': TEST_USER_ADMIN_PASS})
-        self.assertEqual(response.status, '302 Found')
-        self.assertEqual(response._environ['paste.testing_variables']
-                         ['tmpl_context'].came_from, '/')
-        response = response.follow()
-
-        self.assertEqual(response.status, '200 OK')
+                                  'password': TEST_USER_ADMIN_PASS},
+                                 status=400)
 
     def test_login_short_password(self):
         response = self.app.post(url(controller='login', action='index'),
@@ -136,9 +136,9 @@ class TestLoginController(TestController):
     # verify that get arguments are correctly passed along login redirection
 
     @parameterized.expand([
-        ({'foo':'one', 'bar':'two'}, ('foo=one', 'bar=two')),
+        ({'foo':'one', 'bar':'two'}, (('foo', 'one'), ('bar', 'two'))),
         ({'blue': u'blå'.encode('utf-8'), 'green':u'grøn'},
-             ('blue=bl%C3%A5', 'green=gr%C3%B8n')),
+             (('blue', u'blå'.encode('utf-8')), ('green', u'grøn'.encode('utf-8')))),
     ])
     def test_redirection_to_login_form_preserves_get_args(self, args, args_encoded):
         with fixture.anon_access(False):
@@ -146,30 +146,31 @@ class TestLoginController(TestController):
                                         repo_name=HG_REPO,
                                         **args))
             self.assertEqual(response.status, '302 Found')
+            came_from = urlparse.parse_qs(urlparse.urlparse(response.location).query)['came_from'][0]
+            came_from_qs = urlparse.parse_qsl(urlparse.urlparse(came_from).query)
             for encoded in args_encoded:
-                self.assertIn(encoded, response.location)
+                self.assertIn(encoded, came_from_qs)
 
     @parameterized.expand([
         ({'foo':'one', 'bar':'two'}, ('foo=one', 'bar=two')),
-        ({'blue': u'blå'.encode('utf-8'), 'green':u'grøn'},
+        ({'blue': u'blå', 'green':u'grøn'},
              ('blue=bl%C3%A5', 'green=gr%C3%B8n')),
     ])
     def test_login_form_preserves_get_args(self, args, args_encoded):
         response = self.app.get(url(controller='login', action='index',
-                                    came_from = '/_admin/users',
-                                    **args))
+                                    came_from=url('/_admin/users', **args)))
+        came_from = urlparse.parse_qs(urlparse.urlparse(response.form.action).query)['came_from'][0]
         for encoded in args_encoded:
-            self.assertIn(encoded, response.form.action)
+            self.assertIn(encoded, came_from)
 
     @parameterized.expand([
         ({'foo':'one', 'bar':'two'}, ('foo=one', 'bar=two')),
-        ({'blue': u'blå'.encode('utf-8'), 'green':u'grøn'},
+        ({'blue': u'blå', 'green':u'grøn'},
              ('blue=bl%C3%A5', 'green=gr%C3%B8n')),
     ])
     def test_redirection_after_successful_login_preserves_get_args(self, args, args_encoded):
         response = self.app.post(url(controller='login', action='index',
-                                     came_from = '/_admin/users',
-                                     **args),
+                                     came_from = url('/_admin/users', **args)),
                                  {'username': TEST_USER_ADMIN_LOGIN,
                                   'password': TEST_USER_ADMIN_PASS})
         self.assertEqual(response.status, '302 Found')
@@ -178,19 +179,19 @@ class TestLoginController(TestController):
 
     @parameterized.expand([
         ({'foo':'one', 'bar':'two'}, ('foo=one', 'bar=two')),
-        ({'blue': u'blå'.encode('utf-8'), 'green':u'grøn'},
+        ({'blue': u'blå', 'green':u'grøn'},
              ('blue=bl%C3%A5', 'green=gr%C3%B8n')),
     ])
     def test_login_form_after_incorrect_login_preserves_get_args(self, args, args_encoded):
         response = self.app.post(url(controller='login', action='index',
-                                     came_from = '/_admin/users',
-                                     **args),
+                                     came_from=url('/_admin/users', **args)),
                                  {'username': 'error',
                                   'password': 'test12'})
 
         response.mustcontain('Invalid username or password')
+        came_from = urlparse.parse_qs(urlparse.urlparse(response.form.action).query)['came_from'][0]
         for encoded in args_encoded:
-            self.assertIn(encoded, response.form.action)
+            self.assertIn(encoded, came_from)
 
     #==========================================================================
     # REGISTRATIONS
@@ -205,7 +206,7 @@ class TestLoginController(TestController):
                                             {'username': uname,
                                              'password': 'test12',
                                              'password_confirmation': 'test12',
-                                             'email': 'goodmail@domain.com',
+                                             'email': 'goodmail@example.com',
                                              'firstname': 'test',
                                              'lastname': 'test'})
 
@@ -304,7 +305,7 @@ class TestLoginController(TestController):
     def test_register_ok(self):
         username = 'test_regular4'
         password = 'qweqwe'
-        email = 'username@test.com'
+        email = 'user4@example.com'
         name = 'testname'
         lastname = 'testlastname'
 
@@ -348,7 +349,7 @@ class TestLoginController(TestController):
 
         username = 'test_password_reset_1'
         password = 'qweqwe'
-        email = 'username@python-works.com'
+        email = 'username@example.com'
         name = 'passwd'
         lastname = 'reset'
         timestamp = int(time.time())

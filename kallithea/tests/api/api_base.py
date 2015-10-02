@@ -552,7 +552,7 @@ class _BaseTestApi(object):
     def test_api_create_existing_user(self):
         id_, params = _build_data(self.apikey, 'create_user',
                                   username=TEST_USER_ADMIN_LOGIN,
-                                  email='test@foo.com',
+                                  email='test@example.com',
                                   password='trololo')
         response = api_call(self, params)
 
@@ -571,7 +571,7 @@ class _BaseTestApi(object):
 
     def test_api_create_user(self):
         username = 'test_new_api_user'
-        email = username + "@foo.com"
+        email = username + "@example.com"
 
         id_, params = _build_data(self.apikey, 'create_user',
                                   username=username,
@@ -593,7 +593,7 @@ class _BaseTestApi(object):
 
     def test_api_create_user_without_password(self):
         username = 'test_new_api_user_passwordless'
-        email = username + "@foo.com"
+        email = username + "@example.com"
 
         id_, params = _build_data(self.apikey, 'create_user',
                                   username=username,
@@ -613,7 +613,7 @@ class _BaseTestApi(object):
 
     def test_api_create_user_with_extern_name(self):
         username = 'test_new_api_user_passwordless'
-        email = username + "@foo.com"
+        email = username + "@example.com"
 
         id_, params = _build_data(self.apikey, 'create_user',
                                   username=username,
@@ -635,7 +635,7 @@ class _BaseTestApi(object):
     def test_api_create_user_when_exception_happened(self):
 
         username = 'test_new_api_user'
-        email = username + "@foo.com"
+        email = username + "@example.com"
 
         id_, params = _build_data(self.apikey, 'create_user',
                                   username=username,
@@ -1138,7 +1138,7 @@ class _BaseTestApi(object):
         ('description', {'description': 'new description'}),
         ('active', {'active': True}),
         ('active', {'active': False}),
-        ('clone_uri', {'clone_uri': 'http://foo.com/repo'}),
+        ('clone_uri', {'clone_uri': 'http://example.com/repo'}),
         ('clone_uri', {'clone_uri': None}),
         ('landing_rev', {'landing_rev': 'branch:master'}),
         ('enable_statistics', {'enable_statistics': True}),

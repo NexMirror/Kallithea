@@ -27,8 +27,8 @@ Original author and date, and relevant copyright and licensing information is be
 
 
 import logging
+import re
 import formencode
-import urlparse
 
 from formencode import htmlfill
 from webob.exc import HTTPFound, HTTPBadRequest
@@ -56,32 +56,27 @@ class LoginController(BaseController):
     def __before__(self):
         super(LoginController, self).__before__()
 
-    def _validate_came_from(self, came_from):
-        """Return True if came_from is valid and can and should be used"""
-        if not came_from:
-            return False
+    def _validate_came_from(self, came_from,
+            _re=re.compile(r"/(?!/)[-!#$%&'()*+,./:;=?@_~0-9A-Za-z]*$")):
+        """Return True if came_from is valid and can and should be used.
 
-        parsed = urlparse.urlparse(came_from)
-        server_parsed = urlparse.urlparse(url.current())
-        allowed_schemes = ['http', 'https']
-        if parsed.scheme and parsed.scheme not in allowed_schemes:
-            log.error('Suspicious URL scheme detected %s for url %s',
-                     parsed.scheme, parsed)
-            return False
-        if server_parsed.netloc != parsed.netloc:
-            log.error('Suspicious NETLOC detected %s for url %s server url '
-                      'is: %s' % (parsed.netloc, parsed, server_parsed))
-            return False
-        return True
+        Determines if a URI reference is valid and relative to the origin;
+        or in RFC 3986 terms, whether it matches this production:
 
-    def _redirect_to_origin(self, origin):
-        '''redirect to the original page, preserving any get arguments given'''
-        request.GET.pop('came_from', None)
-        raise HTTPFound(location=url(origin, **request.GET))
+          origin-relative-ref = path-absolute [ "?" query ] [ "#" fragment ]
+
+        with the exception that '%' escapes are not validated and '#' is
+        allowed inside the fragment part.
+        """
+        return _re.match(came_from) is not None
 
     def index(self):
         c.came_from = safe_str(request.GET.get('came_from', ''))
-        if not self._validate_came_from(c.came_from):
+        if c.came_from:
+            if not self._validate_came_from(c.came_from):
+                log.error('Invalid came_from (not server-relative): %r', c.came_from)
+                raise HTTPBadRequest()
+        else:
             c.came_from = url('home')
 
         not_default = self.authuser.username != User.DEFAULT_USER
@@ -89,7 +84,7 @@ class LoginController(BaseController):
 
         # redirect if already logged in
         if self.authuser.is_authenticated and not_default and ip_allowed:
-            return self._redirect_to_origin(c.came_from)
+            raise HTTPFound(location=c.came_from)
 
         if request.POST:
             # import Login Form validator class
@@ -119,7 +114,7 @@ class LoginController(BaseController):
             else:
                 log_in_user(user, c.form_result['remember'],
                     is_external_auth=False)
-                return self._redirect_to_origin(c.came_from)
+                raise HTTPFound(location=c.came_from)
 
         return render('/login.html')
 

@@ -34,7 +34,7 @@ import collections
 
 from decorator import decorator
 
-from pylons import url, request
+from pylons import url, request, session
 from pylons.controllers.util import abort, redirect
 from pylons.i18n.translation import _
 from webhelpers.pylonslib import secure_form
@@ -712,11 +712,12 @@ def set_available_permissions(config):
 
 def redirect_to_login(message=None):
     from kallithea.lib import helpers as h
-    p = url.current()
+    p = request.path_qs
     if message:
         h.flash(h.literal(message), category='warning')
     log.debug('Redirecting to login page, origin: %s', p)
-    return redirect(url('login_home', came_from=p, **request.GET))
+    return redirect(url('login_home', came_from=p))
+
 
 class LoginRequired(object):
     """
@@ -764,6 +765,15 @@ class LoginRequired(object):
         # used for the route lookup, and does not affect request.method.)
         if request.method not in ['GET', 'HEAD', 'POST', 'PUT']:
             return abort(405)
+
+        # Make sure CSRF token never appears in the URL. If so, invalidate it.
+        if secure_form.token_key in request.GET:
+            log.error('CSRF key leak detected')
+            session.pop(secure_form.token_key, None)
+            session.save()
+            from kallithea.lib import helpers as h
+            h.flash(_("CSRF token leak has been detected - all form tokens have been expired"),
+                    category='error')
 
         # CSRF protection: Whenever a request has ambient authority (whether
         # through a session cookie or its origin IP address), it must include
