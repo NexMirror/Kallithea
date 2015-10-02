@@ -46,7 +46,8 @@ echo
 echo -n "Enter \"pypi\" to upload Kallithea $version to pypi: "
 read answer
 [ "$answer" = "pypi" ]
-python2 setup.py sdist upload --sign
+extraargs=${EMAIL:+--identity=$EMAIL}
+python2 setup.py sdist upload --sign $extraargs
 xdg-open https://pypi.python.org/pypi/Kallithea
 
 echo "Uploading docs to pypi"
