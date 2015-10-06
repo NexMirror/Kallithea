@@ -69,7 +69,7 @@ class GistsController(BaseController):
     def index(self):
         """GET /admin/gists: All items in the collection"""
         # url('gists')
-        not_default_user = c.authuser.username != User.DEFAULT_USER
+        not_default_user = not c.authuser.is_default_user
         c.show_private = request.GET.get('private') and not_default_user
         c.show_public = request.GET.get('public') and not_default_user
 

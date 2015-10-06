@@ -509,7 +509,8 @@ class AuthUser(object):
             is_user_loaded =  self._fill_data(self.anonymous_user)
 
         # The anonymous user is always "logged in".
-        if self.user_id == self.anonymous_user.user_id:
+        self.is_default_user = (self.user_id == self.anonymous_user.user_id)
+        if self.is_default_user:
             self.is_authenticated = True
 
         if not self.username:
@@ -626,7 +627,7 @@ class AuthUser(object):
             % (self.user_id, self.username, self.is_authenticated)
 
     def set_authenticated(self, authenticated=True):
-        if self.user_id != self.anonymous_user.user_id:
+        if not self.is_default_user:
             self.is_authenticated = authenticated
 
     def to_cookie(self):
@@ -816,9 +817,7 @@ class NotAnonymous(object):
 
         log.debug('Checking if user is not anonymous @%s', cls)
 
-        anonymous = self.user.username == User.DEFAULT_USER
-
-        if anonymous:
+        if self.user.is_default_user:
             return redirect_to_login(_('You need to be a registered user to '
                     'perform this action'))
         else:
@@ -848,9 +847,7 @@ class PermsDecorator(object):
 
         else:
             log.debug('Permission denied for %s %s', cls, self.user)
-            anonymous = self.user.username == User.DEFAULT_USER
-
-            if anonymous:
+            if self.user.is_default_user:
                 return redirect_to_login(_('You need to be signed in to view this page'))
             else:
                 raise HTTPForbidden()
