@@ -266,10 +266,10 @@ class ChangesetCommentsModel(BaseModel):
             q = q.filter(ChangesetComment.line_no == None)\
                 .filter(ChangesetComment.f_path == None)
 
-        if revision:
+        if revision is not None:
             q = q.filter(ChangesetComment.revision == revision)\
                 .filter(ChangesetComment.repo_id == repo_id)
-        elif pull_request:
+        elif pull_request is not None:
             pull_request = self.__get_pull_request(pull_request)
             q = q.filter(ChangesetComment.pull_request == pull_request)
         else:
