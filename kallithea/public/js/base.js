@@ -377,15 +377,16 @@ function asynchtml(url, $target, success, args){
         ;
 };
 
-var ajaxGET = function(url,success) {
+var ajaxGET = function(url, success, failure) {
+    if(failure === undefined) {
+        failure = function(jqXHR, textStatus, errorThrown) {
+                if (textStatus != "abort")
+                    alert("Ajax GET error: " + textStatus);
+            };
+    }
     return $.ajax({url: url, headers: {'X-PARTIAL-XHR': '1'}, cache: false})
         .done(success)
-        .fail(function(jqXHR, textStatus, errorThrown) {
-                if (textStatus == "abort")
-                    return;
-                alert("Ajax GET error: " + textStatus);
-        })
-        ;
+        .fail(failure);
 };
 
 var ajaxPOST = function(url, postData, success, failure) {
