@@ -4346,9 +4346,6 @@ form.comment-inline-form {
     color: #666;
     font-size: 16px;
 }
-.inline-comments-button .add-comment {
-    margin: 2px 0px 8px 5px !important
-}
 
 input.status_change_radio {
     margin: 2px 0 5px 15px;
