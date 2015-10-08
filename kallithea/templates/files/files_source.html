@@ -63,15 +63,19 @@
           ${_('Binary file (%s)') % c.file.mimetype}
         </div>
       %else:
-        %if c.file.size < c.cut_off_limit:
+        %if c.file.size < c.cut_off_limit or c.fulldiff:
             %if c.annotate:
               ${h.pygmentize_annotation(c.repo_name,c.file,linenos=True,anchorlinenos=True,lineanchors='L',cssclass="code-highlight")}
             %else:
               ${h.pygmentize(c.file,linenos=True,anchorlinenos=True,lineanchors='L',cssclass="code-highlight")}
             %endif
         %else:
-            ${_('File is too big to display')} ${h.link_to(_('Show as raw'),
-            h.url('files_raw_home',repo_name=c.repo_name,revision=c.file_changeset.raw_id,f_path=c.f_path))}
+            ${_('File is too big to display')}
+            %if c.annotate:
+              ${h.link_to(_('Show full annotation anyway'), h.url.current(fulldiff=1, **request.GET.mixed()))}
+            %else:
+              ${h.link_to(_('Show as raw'), h.url('files_raw_home',repo_name=c.repo_name,revision=c.file_changeset.raw_id,f_path=c.f_path))}
+            %endif
         %endif
       %endif
     </div>

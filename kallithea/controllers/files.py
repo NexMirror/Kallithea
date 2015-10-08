@@ -137,6 +137,7 @@ class FilesController(BaseRepoController):
         c.f_path = f_path
         c.annotate = annotate
         cur_rev = c.changeset.revision
+        c.fulldiff = request.GET.get('fulldiff')
 
         # prev link
         try:
