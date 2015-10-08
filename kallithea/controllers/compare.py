@@ -35,6 +35,7 @@ from pylons import request, tmpl_context as c, url
 from pylons.controllers.util import redirect
 from pylons.i18n.translation import _
 
+from kallithea.lib.utils2 import safe_str
 from kallithea.lib.vcs.utils.hgcompat import unionrepo
 from kallithea.lib import helpers as h
 from kallithea.lib.base import BaseRepoController, render
@@ -114,10 +115,10 @@ class CompareController(BaseRepoController):
                 from dulwich.client import SubprocessGitClient
 
                 gitrepo = Repo(org_repo.path)
-                SubprocessGitClient(thin_packs=False).fetch(other_repo.path, gitrepo)
+                SubprocessGitClient(thin_packs=False).fetch(safe_str(other_repo.path), gitrepo)
 
                 gitrepo_remote = Repo(other_repo.path)
-                SubprocessGitClient(thin_packs=False).fetch(org_repo.path, gitrepo_remote)
+                SubprocessGitClient(thin_packs=False).fetch(safe_str(org_repo.path), gitrepo_remote)
 
                 revs = []
                 for x in gitrepo_remote.get_walker(include=[other_rev],
