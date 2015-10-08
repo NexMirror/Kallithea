@@ -746,11 +746,6 @@ Or if using a dispatcher WSGI script with proper virtualenv activation:
    When running apache as root, please make sure it doesn't run Kallithea as
    root, for examply by adding: ``user=www-data group=www-data`` to the configuration.
 
-.. note::
-   If running Kallithea in multiprocess mode,
-   make sure you set ``instance_id = *`` in the configuration so each process
-   gets it's own cache invalidation key.
-
 Example WSGI dispatch script:
 
 .. code-block:: python

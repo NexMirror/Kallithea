@@ -118,7 +118,7 @@ def load_environment(global_conf, app_conf, initial=False,
     config['base_path'] = repos_path
     set_app_settings(config)
 
-    instance_id = kallithea.CONFIG.get('instance_id')
+    instance_id = kallithea.CONFIG.get('instance_id', '*')
     if instance_id == '*':
         instance_id = '%s-%s' % (platform.uname()[1], os.getpid())
         kallithea.CONFIG['instance_id'] = instance_id

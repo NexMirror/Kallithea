@@ -38,7 +38,6 @@ Follow these few steps to improve performance of Kallithea system.
     scaled horizontally on one (recommended) or multiple machines. In order
     to scale horizontally you need to do the following:
 
-    - Each instance needs its own .ini file and unique ``instance_id`` set.
     - Each instance's ``data`` storage needs to be configured to be stored on a
       shared disk storage, preferably together with repositories. This ``data``
       dir contains template caches, sessions, whoosh index and is used for
