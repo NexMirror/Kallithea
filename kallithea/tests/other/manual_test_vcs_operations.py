@@ -273,8 +273,8 @@ class TestVCSOperations(BaseTestCase):
         stdout, stderr = _add_files_and_push('hg', DEST, files_no=1)
 
         key = CacheInvalidation.query().filter(CacheInvalidation.cache_key
-                                               ==HG_REPO).one()
-        self.assertEqual(key.cache_active, False)
+                                               ==HG_REPO).all()
+        self.assertEqual(key, [])
 
     def test_push_invalidates_cache_git(self):
         key = CacheInvalidation.query().filter(CacheInvalidation.cache_key
@@ -295,9 +295,8 @@ class TestVCSOperations(BaseTestCase):
         _check_proper_git_push(stdout, stderr)
 
         key = CacheInvalidation.query().filter(CacheInvalidation.cache_key
-                                               ==GIT_REPO).one()
-        print CacheInvalidation.get_all()
-        self.assertEqual(key.cache_active, False)
+                                               ==GIT_REPO).all()
+        self.assertEqual(key, [])
 
     def test_push_wrong_credentials_hg(self):
         DEST = _get_tmp_dir()

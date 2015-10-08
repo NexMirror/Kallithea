@@ -577,7 +577,7 @@ class ReposController(BaseRepoController):
         c.active = 'caches'
         if request.POST:
             try:
-                ScmModel().mark_for_invalidation(repo_name, delete=True)
+                ScmModel().mark_for_invalidation(repo_name)
                 Session().commit()
                 h.flash(_('Cache invalidation successful'),
                         category='success')

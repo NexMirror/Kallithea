@@ -331,13 +331,13 @@ class ScmModel(BaseModel):
                 .filter(RepoGroup.group_parent_id == None).all()
         return [x for x in RepoGroupList(all_groups)]
 
-    def mark_for_invalidation(self, repo_name, delete=False):
+    def mark_for_invalidation(self, repo_name):
         """
         Mark caches of this repo invalid in the database.
 
         :param repo_name: the repo for which caches should be marked invalid
         """
-        CacheInvalidation.set_invalidate(repo_name, delete=delete)
+        CacheInvalidation.set_invalidate(repo_name)
         repo = Repository.get_by_repo_name(repo_name)
         if repo is not None:
             repo.update_changeset_cache()

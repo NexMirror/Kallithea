@@ -2103,7 +2103,7 @@ class CacheInvalidation(Base, BaseModel):
         return "%s%s" % (prefix, key)
 
     @classmethod
-    def set_invalidate(cls, repo_name, delete=False):
+    def set_invalidate(cls, repo_name):
         """
         Mark all caches of a repo as invalid in the database.
         """
@@ -2114,11 +2114,7 @@ class CacheInvalidation(Base, BaseModel):
         for inv_obj in inv_objs:
             log.debug('marking %s key for invalidation based on repo_name=%s',
                       inv_obj, safe_str(repo_name))
-            if delete:
-                Session().delete(inv_obj)
-            else:
-                inv_obj.cache_active = False
-                Session().add(inv_obj)
+            Session().delete(inv_obj)
         Session().commit()
 
     @classmethod
