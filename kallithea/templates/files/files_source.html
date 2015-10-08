@@ -70,12 +70,14 @@
               ${h.pygmentize(c.file,linenos=True,anchorlinenos=True,lineanchors='L',cssclass="code-highlight")}
             %endif
         %else:
+            <h4>
             ${_('File is too big to display')}
             %if c.annotate:
               ${h.link_to(_('Show full annotation anyway'), h.url.current(fulldiff=1, **request.GET.mixed()))}
             %else:
               ${h.link_to(_('Show as raw'), h.url('files_raw_home',repo_name=c.repo_name,revision=c.file_changeset.raw_id,f_path=c.f_path))}
             %endif
+            </h4>
         %endif
       %endif
     </div>
