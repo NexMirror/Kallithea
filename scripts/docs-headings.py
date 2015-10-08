@@ -1,0 +1,66 @@
+#!/usr/bin/env python2
+
+"""
+Consistent formatting of rst section titles
+"""
+
+import re
+import subprocess
+
+spaces = [
+    (0, 1), # we assume this is a over-and-underlined header
+    (2, 1),
+    (1, 1),
+    (1, 0),
+    (1, 0),
+    ]
+
+# match on a header line underlined with one of the valid characters
+headermatch = re.compile(r'''\n*(.+)\n([][!"#$%&'()*+,./:;<=>?@\\^_`{|}~-])\2{2,}\n+''', flags=re.MULTILINE)
+
+
+def main():
+    for fn in subprocess.check_output(['hg', 'loc', 'set:**.rst+kallithea/i18n/how_to']).splitlines():
+        print 'processing %s:' % fn
+        s = file(fn).read()
+
+        # find levels and their styles
+        lastpos = 0
+        styles = []
+        for markup in headermatch.findall(s):
+            style = markup[1]
+            if style in styles:
+                stylepos = styles.index(style)
+                if stylepos > lastpos + 1:
+                    print 'bad style %r with level %s - was at %s' % (style, stylepos, lastpos)
+            else:
+                stylepos = len(styles)
+                if stylepos > lastpos + 1:
+                    print 'bad new style %r - expected %r' % (style, styles[lastpos + 1])
+                else:
+                    styles.append(style)
+            lastpos = stylepos
+
+        # remove superfluous spacing (may however be restored by header spacing)
+        s = re.sub(r'''(\n\n)\n*''', r'\1', s, flags=re.MULTILINE)
+
+        # rewrite header markup with correct style, length and spacing
+        def subf(m):
+            title, style = m.groups()
+            level = styles.index(style)
+            before, after = spaces[level]
+            return '\n' * (before + 1) + title + '\n' + style * len(title) + '\n' * (after + 1)
+        s = headermatch.sub(subf, s)
+
+        # remove superfluous spacing when headers are adjacent
+        s = re.sub(r'''(\n.+\n([][!"#$%&'()*+,./:;<=>?@\\^_`{|}~-])\2{2,}\n\n\n)\n*''', r'\1', s, flags=re.MULTILINE)
+        # fix trailing space and spacing before link sections
+        s = s.strip() + '\n'
+        s = re.sub(r'''\n+((?:\.\. _[^\n]*\n)+)$''', r'\n\n\n\1', s)
+
+        file(fn, 'w').write(s)
+        print subprocess.check_output(['hg', 'diff', fn])
+        print
+
+if __name__ == '__main__':
+    main()
