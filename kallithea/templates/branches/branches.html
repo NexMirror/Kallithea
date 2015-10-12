@@ -31,7 +31,7 @@ ${self.repo_context_bar('switch-to')}
 </div>
 
 <script type="text/javascript">
-$('#compare_branches','click',function(e){
+$('#compare_branches').click(function(e){
     e.preventDefault();
     var org = $('input[name=compare_org]:checked')[0];
     var other = $('input[name=compare_other]:checked')[0];
