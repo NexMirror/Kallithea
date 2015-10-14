@@ -540,7 +540,8 @@ else:
                 return cmp(type(self), type(other))
             return cmp(list(self), list(other))
 
-        def __repr__(self, _track=[]):
+        def __repr__(self, _track=None):
+            _track = _track or []
             if id(self) in _track:
                 return '...'
             _track.append(id(self))
@@ -560,8 +561,9 @@ else:
         def __copy__(self):
             return self.__class__(self)
 
-        def __deepcopy__(self, memo={}):
+        def __deepcopy__(self, memo=None):
             from copy import deepcopy
+            memo = memo or {}
             result = self.__class__()
             memo[id(self)] = result
             result.__init__(deepcopy(tuple(self), memo))

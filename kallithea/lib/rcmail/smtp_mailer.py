@@ -60,9 +60,9 @@ class SmtpMailer(object):
         self.debug = debug
         self.auth = smtp_auth
 
-    def send(self, recipients=[], subject='', body='', html='',
+    def send(self, recipients=None, subject='', body='', html='',
              attachment_files=None, headers=None):
-
+        recipients = recipients or []
         if isinstance(recipients, basestring):
             recipients = [recipients]
         if headers is None:

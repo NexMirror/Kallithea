@@ -156,8 +156,8 @@ class BufferedGenerator(object):
     """
 
     def __init__(self, source, buffer_size=65536, chunk_size=4096,
-                 starting_values=[], bottomless=False):
-
+                 starting_values=None, bottomless=False):
+        starting_values = starting_values or []
         if bottomless:
             maxlen = int(buffer_size / chunk_size)
         else:
@@ -326,7 +326,7 @@ class SubprocessIOChunker(object):
     """
 
     def __init__(self, cmd, inputstream=None, buffer_size=65536,
-                 chunk_size=4096, starting_values=[], **kwargs):
+                 chunk_size=4096, starting_values=None, **kwargs):
         """
         Initializes SubprocessIOChunker
 
@@ -336,7 +336,7 @@ class SubprocessIOChunker(object):
         :param chunk_size: (Default: 4096) A max size of a chunk. Actual chunk may be smaller.
         :param starting_values: (Default: []) An array of strings to put in front of output que.
         """
-
+        starting_values = starting_values or []
         if inputstream:
             input_streamer = StreamFeeder(inputstream)
             input_streamer.start()

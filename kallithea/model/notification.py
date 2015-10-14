@@ -59,7 +59,7 @@ class NotificationModel(BaseModel):
 
     def create(self, created_by, subject, body, recipients=None,
                type_=Notification.TYPE_MESSAGE, with_email=True,
-               email_kwargs={}):
+               email_kwargs=None):
         """
 
         Creates notification of given type
@@ -75,7 +75,7 @@ class NotificationModel(BaseModel):
         :param email_kwargs: additional dict to pass as args to email template
         """
         from kallithea.lib.celerylib import tasks, run_task
-
+        email_kwargs = email_kwargs or {}
         if recipients and not getattr(recipients, '__iter__', False):
             raise Exception('recipients must be a list or iterable')
 

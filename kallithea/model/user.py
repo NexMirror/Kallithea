@@ -206,9 +206,9 @@ class UserModel(BaseModel):
                                    type_=Notification.TYPE_REGISTRATION,
                                    email_kwargs=email_kwargs)
 
-    def update(self, user_id, form_data, skip_attrs=[]):
+    def update(self, user_id, form_data, skip_attrs=None):
         from kallithea.lib.auth import get_crypt_password
-
+        skip_attrs = skip_attrs or []
         user = self.get(user_id, cache=False)
         if user.username == User.DEFAULT_USER:
             raise DefaultUserException(

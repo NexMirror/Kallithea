@@ -272,7 +272,7 @@ class SimpleHg(BaseVCSController):
         raise Exception('Unable to detect pull/push action !!'
                         'Are you using non standard command or client ?')
 
-    def __inject_extras(self, repo_path, baseui, extras={}):
+    def __inject_extras(self, repo_path, baseui, extras=None):
         """
         Injects some extra params into baseui instance
 
@@ -291,4 +291,4 @@ class SimpleHg(BaseVCSController):
             for section in ui_sections:
                 for k, v in repoui.configitems(section):
                     baseui.setconfig(section, k, v)
-        _set_extras(extras)
+        _set_extras(extras or {})

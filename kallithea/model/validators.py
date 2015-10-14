@@ -89,7 +89,8 @@ def UniqueListFromString():
     return _UniqueListFromString
 
 
-def ValidUsername(edit=False, old_data={}):
+def ValidUsername(edit=False, old_data=None):
+    old_data = old_data or {}
     class _validator(formencode.validators.FancyValidator):
         messages = {
             'username_exists': _('Username "%(username)s" already exists'),
@@ -146,7 +147,8 @@ def ValidRepoUser():
     return _validator
 
 
-def ValidUserGroup(edit=False, old_data={}):
+def ValidUserGroup(edit=False, old_data=None):
+    old_data = old_data or {}
     class _validator(formencode.validators.FancyValidator):
         messages = {
             'invalid_group': _('Invalid user group name'),
@@ -187,7 +189,9 @@ def ValidUserGroup(edit=False, old_data={}):
     return _validator
 
 
-def ValidRepoGroup(edit=False, old_data={}):
+def ValidRepoGroup(edit=False, old_data=None):
+    old_data = old_data or {}
+
     class _validator(formencode.validators.FancyValidator):
         messages = {
             'group_parent_id': _('Cannot assign this group as parent'),
@@ -338,7 +342,9 @@ def ValidAuthToken():
     return _validator
 
 
-def ValidRepoName(edit=False, old_data={}):
+def ValidRepoName(edit=False, old_data=None):
+    old_data = old_data or {}
+
     class _validator(formencode.validators.FancyValidator):
         messages = {
             'invalid_repo_name':
@@ -373,7 +379,6 @@ def ValidRepoName(edit=False, old_data={}):
             return value
 
         def validate_python(self, value, state):
-
             repo_name = value.get('repo_name')
             repo_name_full = value.get('repo_name_full')
             group_path = value.get('group_path')
@@ -483,7 +488,9 @@ def ValidCloneUri():
     return _validator
 
 
-def ValidForkType(old_data={}):
+def ValidForkType(old_data=None):
+    old_data = old_data or {}
+
     class _validator(formencode.validators.FancyValidator):
         messages = {
             'invalid_fork_type': _('Fork has to be the same type as parent')
@@ -699,7 +706,9 @@ def ValidPath():
     return _validator
 
 
-def UniqSystemEmail(old_data={}):
+def UniqSystemEmail(old_data=None):
+    old_data = old_data or {}
+
     class _validator(formencode.validators.FancyValidator):
         messages = {
             'email_taken': _('This email address is already in use')

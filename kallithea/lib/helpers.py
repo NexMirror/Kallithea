@@ -979,18 +979,17 @@ class Page(_Page):
         show_if_single_page=False, separator=' ', onclick=None,
         symbol_first='<<', symbol_last='>>',
         symbol_previous='<', symbol_next='>',
-        link_attr={'class': 'pager_link', 'rel': 'prerender'},
-        curpage_attr={'class': 'pager_curpage'},
-        dotdot_attr={'class': 'pager_dotdot'}, **kwargs):
-
-        self.curpage_attr = curpage_attr
+        link_attr=None,
+        curpage_attr=None,
+        dotdot_attr=None, **kwargs):
+        self.curpage_attr = curpage_attr or {'class': 'pager_curpage'}
         self.separator = separator
         self.pager_kwargs = kwargs
         self.page_param = page_param
         self.partial_param = partial_param
         self.onclick = onclick
-        self.link_attr = link_attr
-        self.dotdot_attr = dotdot_attr
+        self.link_attr = link_attr or {'class': 'pager_link', 'rel': 'prerender'}
+        self.dotdot_attr = dotdot_attr or {'class': 'pager_dotdot'}
 
         # Don't show navigator if there is no more than one page
         if self.page_count == 0 or (self.page_count == 1 and not show_if_single_page):

@@ -294,12 +294,11 @@ class SimpleGit(BaseVCSController):
         if action == 'pull' and _hooks.get(Ui.HOOK_PULL):
             log_pull_action(ui=baseui, repo=_repo._repo)
 
-    def __inject_extras(self, repo_path, baseui, extras={}):
+    def __inject_extras(self, repo_path, baseui, extras=None):
         """
         Injects some extra params into baseui instance
 
         :param baseui: baseui instance
         :param extras: dict with extra params to put into baseui
         """
-
-        _set_extras(extras)
+        _set_extras(extras or {})

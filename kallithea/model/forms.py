@@ -86,7 +86,8 @@ def PasswordChangeForm(username):
     return _PasswordChangeForm
 
 
-def UserForm(edit=False, old_data={}):
+def UserForm(edit=False, old_data=None):
+    old_data = old_data or {}
     class _UserForm(formencode.Schema):
         allow_extra_fields = True
         filter_extra_fields = True
@@ -125,7 +126,9 @@ def UserForm(edit=False, old_data={}):
     return _UserForm
 
 
-def UserGroupForm(edit=False, old_data={}, available_members=[]):
+def UserGroupForm(edit=False, old_data=None, available_members=None):
+    old_data = old_data or {}
+    available_members = available_members or []
     class _UserGroupForm(formencode.Schema):
         allow_extra_fields = True
         filter_extra_fields = True
@@ -148,8 +151,10 @@ def UserGroupForm(edit=False, old_data={}, available_members=[]):
     return _UserGroupForm
 
 
-def RepoGroupForm(edit=False, old_data={}, repo_groups=[],
+def RepoGroupForm(edit=False, old_data=None, repo_groups=None,
                    can_create_in_root=False):
+    old_data = old_data or {}
+    repo_groups = repo_groups or []
     repo_group_ids = [rg[0] for rg in repo_groups]
     class _RepoGroupForm(formencode.Schema):
         allow_extra_fields = True
@@ -178,7 +183,7 @@ def RepoGroupForm(edit=False, old_data={}, repo_groups=[],
     return _RepoGroupForm
 
 
-def RegisterForm(edit=False, old_data={}):
+def RegisterForm(edit=False, old_data=None):
     class _RegisterForm(formencode.Schema):
         allow_extra_fields = True
         filter_extra_fields = True
@@ -227,8 +232,11 @@ def PasswordResetConfirmationForm():
                                                     'password_confirm')]
     return _PasswordResetConfirmationForm
 
-def RepoForm(edit=False, old_data={}, supported_backends=BACKENDS.keys(),
-             repo_groups=[], landing_revs=[]):
+def RepoForm(edit=False, old_data=None, supported_backends=BACKENDS.keys(),
+             repo_groups=None, landing_revs=None):
+    old_data = old_data or {}
+    repo_groups = repo_groups or []
+    landing_revs = landing_revs or []
     repo_group_ids = [rg[0] for rg in repo_groups]
     class _RepoForm(formencode.Schema):
         allow_extra_fields = True
@@ -302,8 +310,11 @@ def RepoFieldForm():
     return _RepoFieldForm
 
 
-def RepoForkForm(edit=False, old_data={}, supported_backends=BACKENDS.keys(),
-                 repo_groups=[], landing_revs=[]):
+def RepoForkForm(edit=False, old_data=None, supported_backends=BACKENDS.keys(),
+                 repo_groups=None, landing_revs=None):
+    old_data = old_data or {}
+    repo_groups = repo_groups or []
+    landing_revs = landing_revs or []
     repo_group_ids = [rg[0] for rg in repo_groups]
     class _RepoForkForm(formencode.Schema):
         allow_extra_fields = True
@@ -421,7 +432,7 @@ def CustomDefaultPermissionsForm():
     return _CustomDefaultPermissionsForm
 
 
-def DefaultsForm(edit=False, old_data={}, supported_backends=BACKENDS.keys()):
+def DefaultsForm(edit=False, old_data=None, supported_backends=BACKENDS.keys()):
     class _DefaultsForm(formencode.Schema):
         allow_extra_fields = True
         filter_extra_fields = True

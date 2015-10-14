@@ -61,14 +61,14 @@ def notify(msg):
 
 
 class DbManage(object):
-    def __init__(self, log_sql, dbconf, root, tests=False, SESSION=None, cli_args={}):
+    def __init__(self, log_sql, dbconf, root, tests=False, SESSION=None, cli_args=None):
         self.dbname = dbconf.split('/')[-1]
         self.tests = tests
         self.root = root
         self.dburi = dbconf
         self.log_sql = log_sql
         self.db_exists = False
-        self.cli_args = cli_args
+        self.cli_args = cli_args or {}
         self.init_db(SESSION=SESSION)
 
         force_ask = self.cli_args.get('force_ask')
