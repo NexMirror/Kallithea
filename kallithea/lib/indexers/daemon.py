@@ -41,7 +41,7 @@ from os.path import join as jn
 project_path = dn(dn(dn(dn(os.path.realpath(__file__)))))
 sys.path.append(project_path)
 
-from kallithea.config.conf import INDEX_EXTENSIONS
+from kallithea.config.conf import INDEX_EXTENSIONS, INDEX_FILENAMES
 from kallithea.model.scm import ScmModel
 from kallithea.model.db import Repository
 from kallithea.lib.utils2 import safe_unicode, safe_str
@@ -162,6 +162,13 @@ class WhooshIndexingDaemon(object):
         node = cs.get_node(node_path)
         return node
 
+    def is_indexable_node(self, node):
+        """
+        Just index the content of chosen files, skipping binary files
+        """
+        return (node.extension in INDEX_EXTENSIONS or node.name in INDEX_FILENAMES) and \
+               not node.is_binary
+
     def get_node_mtime(self, node):
         return mktime(node.last_changeset.date.timetuple())
 
@@ -173,8 +180,7 @@ class WhooshIndexingDaemon(object):
 
         node = self.get_node(repo, path, index_rev)
         indexed = indexed_w_content = 0
-        # we just index the content of chosen files, and skip binary files
-        if node.extension in INDEX_EXTENSIONS and not node.is_binary:
+        if self.is_indexable_node(node):
             u_content = node.content
             if not isinstance(u_content, unicode):
                 log.warning('  >> %s Could not get this content as unicode '

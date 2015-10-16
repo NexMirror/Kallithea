@@ -32,11 +32,13 @@ from kallithea.lib.utils2 import __get_lem
 # extensions will index it's content
 LANGUAGES_EXTENSIONS_MAP = __get_lem()
 
-#==============================================================================
-# WHOOSH INDEX EXTENSIONS
-#==============================================================================
-# EXTENSIONS WE WANT TO INDEX CONTENT OFF USING WHOOSH
+# Whoosh index targets
+
+# Extensions we want to index content of using whoosh
 INDEX_EXTENSIONS = LANGUAGES_EXTENSIONS_MAP.keys()
+
+# Filenames we want to index content of using whoosh
+INDEX_FILENAMES = []
 
 # list of readme files to search in file tree and display in summary
 # attached weights defines the search  order lower is first
