@@ -123,9 +123,9 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
         }
 
         try:
-            user_data = pwd.getpwnam(username)
+            user_pw_data = pwd.getpwnam(username)
             regex = settings["gecos"]
-            match = re.search(regex, user_data.pw_gecos)
+            match = re.search(regex, user_pw_data.pw_gecos)
             if match:
                 user_data["firstname"] = match.group('first_name')
                 user_data["lastname"] = match.group('last_name')
