@@ -34,7 +34,7 @@ from kallithea.config.routing import make_map
 from kallithea.lib import helpers
 from kallithea.lib.auth import set_available_permissions
 from kallithea.lib.utils import repo2db_mapper, make_ui, set_app_settings,\
-    load_rcextensions, check_git_version, set_vcs_config
+    load_rcextensions, check_git_version, set_vcs_config, set_indexer_config
 from kallithea.lib.utils2 import engine_from_config, str2bool
 from kallithea.lib.db_manage import DbManage
 from kallithea.model import init_model
@@ -130,6 +130,7 @@ def load_environment(global_conf, app_conf, initial=False,
     # pylons
     kallithea.CONFIG.update(config)
     set_vcs_config(kallithea.CONFIG)
+    set_indexer_config(kallithea.CONFIG)
 
     #check git version
     check_git_version()

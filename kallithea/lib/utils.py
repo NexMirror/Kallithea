@@ -418,6 +418,21 @@ def set_vcs_config(config):
                                                         'utf8'), sep=',')
 
 
+def set_indexer_config(config):
+    """
+    Update Whoosh index mapping
+
+    :param config: kallithea.CONFIG
+    """
+    from kallithea.config import conf
+
+    log.debug('adding extra into INDEX_EXTENSIONS')
+    conf.INDEX_EXTENSIONS.extend(re.split('\s+', config.get('index.extensions', '')))
+
+    log.debug('adding extra into INDEX_FILENAMES')
+    conf.INDEX_FILENAMES.extend(re.split('\s+', config.get('index.filenames', '')))
+
+
 def map_groups(path):
     """
     Given a full path to a repository, create all nested groups that this

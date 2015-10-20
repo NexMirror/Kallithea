@@ -289,6 +289,18 @@ allow_repo_location_change = True
 ## allows to setup custom hooks in settings page
 allow_custom_hooks_settings = True
 
+## extra extensions for indexing, space separated and without the leading '.'.
+# index.extensions =
+#    gemfile
+#    lock
+
+## extra filenames for indexing, space separated
+# index.filenames =
+#    .dockerignore
+#    .editorconfig
+#    INSTALL
+#    CHANGELOG
+
 ####################################
 ###        CELERY CONFIG        ####
 ####################################
