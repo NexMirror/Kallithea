@@ -25,7 +25,7 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-from kallithea.lib.utils2 import __get_lem
+from kallithea.lib.utils2 import __get_lem, __get_index_filenames
 
 
 # language map is also used by whoosh indexer, which for those specified
@@ -38,7 +38,7 @@ LANGUAGES_EXTENSIONS_MAP = __get_lem()
 INDEX_EXTENSIONS = LANGUAGES_EXTENSIONS_MAP.keys()
 
 # Filenames we want to index content of using whoosh
-INDEX_FILENAMES = []
+INDEX_FILENAMES = __get_index_filenames()
 
 # list of readme files to search in file tree and display in summary
 # attached weights defines the search  order lower is first

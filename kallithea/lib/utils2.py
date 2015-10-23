@@ -78,6 +78,25 @@ def __get_lem():
     return dict(d)
 
 
+def __get_index_filenames():
+    """
+    Get list of known indexable filenames from pygment lexer internals
+    """
+    from pygments import lexers
+    from itertools import ifilter
+
+    filenames = []
+
+    def likely_filename(s):
+        return s.find('*') == -1 and s.find('[') == -1
+
+    for lx, t in sorted(lexers.LEXERS.items()):
+        for f in ifilter(likely_filename, t[-2]):
+            filenames.append(f)
+
+    return filenames
+
+
 def str2bool(_str):
     """
     returs True/False value from given string, it tries to translate the
