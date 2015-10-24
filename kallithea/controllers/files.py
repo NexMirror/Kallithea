@@ -316,7 +316,7 @@ class FilesController(BaseRepoController):
         # check if revision is a branch name or branch hash
         if revision not in _branches.keys() + _branches.values():
             h.flash(_('You can only delete files with revision '
-                      'being a valid branch '), category='warning')
+                      'being a valid branch'), category='warning')
             raise HTTPFound(location=h.url('files_home',
                                   repo_name=repo_name, revision='tip',
                                   f_path=f_path))
@@ -376,7 +376,7 @@ class FilesController(BaseRepoController):
         # check if revision is a branch name or branch hash
         if revision not in _branches.keys() + _branches.values():
             h.flash(_('You can only edit files with revision '
-                      'being a valid branch '), category='warning')
+                      'being a valid branch'), category='warning')
             raise HTTPFound(location=h.url('files_home',
                                   repo_name=repo_name, revision='tip',
                                   f_path=f_path))

@@ -16,7 +16,7 @@
             <div style="clear:both;padding-top: 10px"></div>
             <div class="follower_date">${_('Forked')} -
                 <span class="tooltip" title="${h.fmt_date(f.created_on)}"> ${h.age(f.created_on)}</span>
-                <a title="${_('Compare fork with %s' % c.repo_name)}"
+                <a title="${_('Compare fork with %s') % c.repo_name}"
                    href="${h.url('compare_url',repo_name=c.repo_name, org_ref_type=c.db_repo.landing_rev[0],org_ref_name=c.db_repo.landing_rev[1],other_repo=f.repo_name,other_ref_type=c.db_repo.landing_rev[0],other_ref_name=c.db_repo.landing_rev[1], merge=1)}"
                    class="btn btn-small"><i class="icon-git-compare"></i> ${_('Compare Fork')}</a>
             </div>

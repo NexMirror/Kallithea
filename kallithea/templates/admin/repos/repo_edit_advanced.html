@@ -53,7 +53,7 @@ ${h.form(url('edit_repo_advanced_locking', repo_name=c.repo_info.repo_name), met
             <i class="icon-lock-open-alt"></i>
             ${_('Unlock Repository')}
         </button>
-       ${'Locked by %s on %s' % (h.person_by_id(c.repo_info.locked[0]),h.fmt_date(h.time_to_datetime(c.repo_info.locked[1])))}
+       ${_('Locked by %s on %s') % (h.person_by_id(c.repo_info.locked[0]),h.fmt_date(h.time_to_datetime(c.repo_info.locked[1])))}
       %else:
         ${h.hidden('set_lock', '1')}
         <button class="btn btn-small" type="submit"
