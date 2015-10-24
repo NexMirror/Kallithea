@@ -8,7 +8,7 @@
 
 <%def name="breadcrumbs_links()">
 %if c.from_:
-    ${_("Pull Requests from %s'") % c.repo_name}
+    ${_("Pull Requests from '%s'") % c.repo_name}
 %else:
     ${_("Pull Requests to '%s'") % c.repo_name}
 %endif

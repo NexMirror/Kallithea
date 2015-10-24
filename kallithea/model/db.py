@@ -1692,7 +1692,7 @@ class Permission(Base, BaseModel):
         ('hg.create.write_on_repogroup.false', _('Repository creation disabled with write permission to a repository group')),
 
         ('hg.fork.none', _('Only admins can fork repositories')),
-        ('hg.fork.repository', _('Non-admins can can fork repositories')),
+        ('hg.fork.repository', _('Non-admins can fork repositories')),
 
         ('hg.register.none', _('Registration disabled')),
         ('hg.register.manual_activate', _('User registration with manual account activation')),
