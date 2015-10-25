@@ -353,95 +353,97 @@
     </li>
 
     <script type="text/javascript">
-        var visual_show_public_icon = "${c.visual.show_public_icon}" == "True";
-        var cache = {}
-        /*format the look of items in the list*/
-        var format = function(state){
-            if (!state.id){
-              return state.text; // optgroup
-            }
-            var obj_dict = state.obj;
-            var tmpl = '';
+        $(document).ready(function(){
+            var visual_show_public_icon = "${c.visual.show_public_icon}" == "True";
+            var cache = {}
+            /*format the look of items in the list*/
+            var format = function(state){
+                if (!state.id){
+                  return state.text; // optgroup
+                }
+                var obj_dict = state.obj;
+                var tmpl = '';
 
-            if(obj_dict && state.type == 'repo'){
-                tmpl += '<span class="repo-icons">';
-                if(obj_dict['repo_type'] === 'hg'){
-                    tmpl += '<span class="repotag">hg</span> ';
+                if(obj_dict && state.type == 'repo'){
+                    tmpl += '<span class="repo-icons">';
+                    if(obj_dict['repo_type'] === 'hg'){
+                        tmpl += '<span class="repotag">hg</span> ';
+                    }
+                    else if(obj_dict['repo_type'] === 'git'){
+                        tmpl += '<span class="repotag">git</span> ';
+                    }
+                    if(obj_dict['private']){
+                        tmpl += '<i class="icon-keyhole-circled"></i> ';
+                    }
+                    else if(visual_show_public_icon){
+                        tmpl += '<i class="icon-globe"></i> ';
+                    }
+                    tmpl += '</span>';
                 }
-                else if(obj_dict['repo_type'] === 'git'){
-                    tmpl += '<span class="repotag">git</span> ';
+                if(obj_dict && state.type == 'group'){
+                        tmpl += '<i class="icon-folder"></i> ';
                 }
-                if(obj_dict['private']){
-                    tmpl += '<i class="icon-keyhole-circled"></i> ';
-                }
-                else if(visual_show_public_icon){
-                    tmpl += '<i class="icon-globe"></i> ';
-                }
-                tmpl += '</span>';
+                tmpl += state.text;
+                return tmpl;
             }
-            if(obj_dict && state.type == 'group'){
-                    tmpl += '<i class="icon-folder"></i> ';
-            }
-            tmpl += state.text;
-            return tmpl;
-        }
 
-        $("#repo_switcher").select2({
-            placeholder: '<i class="icon-database"></i> ${_('Repositories')}',
-            dropdownAutoWidth: true,
-            formatResult: format,
-            formatSelection: format,
-            formatNoMatches: function(term){
-                return "${_('No matches found')}";
-            },
-            containerCssClass: "repo-switcher",
-            dropdownCssClass: "repo-switcher-dropdown",
-            escapeMarkup: function(m){
-                // don't escape our custom placeholder
-                if(m.substr(0,29) == '<i class="icon-database"></i>'){
-                    return m;
-                }
+            $("#repo_switcher").select2({
+                placeholder: '<i class="icon-database"></i> ${_('Repositories')}',
+                dropdownAutoWidth: true,
+                formatResult: format,
+                formatSelection: format,
+                formatNoMatches: function(term){
+                    return "${_('No matches found')}";
+                },
+                containerCssClass: "repo-switcher",
+                dropdownCssClass: "repo-switcher-dropdown",
+                escapeMarkup: function(m){
+                    // don't escape our custom placeholder
+                    if(m.substr(0,29) == '<i class="icon-database"></i>'){
+                        return m;
+                    }
 
-                return Select2.util.escapeMarkup(m);
-            },
-            query: function(query){
-              var key = 'cache';
-              var cached = cache[key] ;
-              if(cached) {
-                var data = {results: []};
-                //filter results
-                $.each(cached.results, function(){
-                    var section = this.text;
-                    var children = [];
-                    $.each(this.children, function(){
-                        if(query.term.length == 0 || this.text.toUpperCase().indexOf(query.term.toUpperCase()) >= 0 ){
-                            children.push({'id': this.id, 'text': this.text, 'type': this.type, 'obj': this.obj});
+                    return Select2.util.escapeMarkup(m);
+                },
+                query: function(query){
+                  var key = 'cache';
+                  var cached = cache[key] ;
+                  if(cached) {
+                    var data = {results: []};
+                    //filter results
+                    $.each(cached.results, function(){
+                        var section = this.text;
+                        var children = [];
+                        $.each(this.children, function(){
+                            if(query.term.length == 0 || this.text.toUpperCase().indexOf(query.term.toUpperCase()) >= 0 ){
+                                children.push({'id': this.id, 'text': this.text, 'type': this.type, 'obj': this.obj});
+                            }
+                        });
+                        if(children.length !== 0){
+                            data.results.push({'text': section, 'children': children});
                         }
+
                     });
-                    if(children.length !== 0){
-                        data.results.push({'text': section, 'children': children});
-                    }
+                    query.callback(data);
+                  }else{
+                      $.ajax({
+                        url: "${h.url('repo_switcher_data')}",
+                        data: {},
+                        dataType: 'json',
+                        type: 'GET',
+                        success: function(data) {
+                          cache[key] = data;
+                          query.callback({results: data.results});
+                        }
+                      });
+                  }
+                }
+            });
 
-                });
-                query.callback(data);
-              }else{
-                  $.ajax({
-                    url: "${h.url('repo_switcher_data')}",
-                    data: {},
-                    dataType: 'json',
-                    type: 'GET',
-                    success: function(data) {
-                      cache[key] = data;
-                      query.callback({results: data.results});
-                    }
-                  });
-              }
-            }
-        });
-
-        $("#repo_switcher").on('select2-selecting', function(e){
-            e.preventDefault();
-            window.location = pyroutes.url('summary_home', {'repo_name': e.val});
+            $("#repo_switcher").on('select2-selecting', function(e){
+                e.preventDefault();
+                window.location = pyroutes.url('summary_home', {'repo_name': e.val});
+            });
         });
 
         ## Global mouse bindings ##
