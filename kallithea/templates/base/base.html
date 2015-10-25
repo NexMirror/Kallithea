@@ -269,8 +269,12 @@
                   'f_path': '',
                   'at': e.choice.text
               });
-          }
-          else if(context == 'summary' || context == 'changelog') {
+          } else if (context == 'changelog') {
+              if (e.choice.type == 'tag' || e.choice.type == 'book') {
+                  $("#branch_filter").append($('<option/>').val(e.choice.text));
+              }
+              $("#branch_filter").val(e.choice.text).change();
+          } else {
               window.location = pyroutes.url('changelog_home', {
                   'repo_name': '${c.repo_name}',
                   'branch': e.choice.text
