@@ -225,7 +225,6 @@ class ChangesetController(BaseRepoController):
 
         # Iterate over ranges (default changeset view is always one changeset)
         for changeset in c.cs_ranges:
-            inlines = []
             if method == 'show':
                 c.statuses.extend([ChangesetStatusModel().get_status(
                             c.db_repo.repo_id, changeset.raw_id)])
@@ -253,7 +252,7 @@ class ChangesetController(BaseRepoController):
             cs2 = changeset.raw_id
             cs1 = changeset.parents[0].raw_id if changeset.parents else EmptyChangeset().raw_id
             context_lcl = get_line_ctx('', request.GET)
-            ign_whitespace_lcl = ign_whitespace_lcl = get_ignore_ws('', request.GET)
+            ign_whitespace_lcl = get_ignore_ws('', request.GET)
 
             _diff = c.db_repo_scm_instance.get_diff(cs1, cs2,
                 ignore_whitespace=ign_whitespace_lcl, context=context_lcl)
