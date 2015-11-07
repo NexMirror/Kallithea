@@ -977,7 +977,7 @@ var getSelectionLink = function(e) {
                 $('body').prepend($hl_div);
             }
 
-            $hl_div.append($('<a>').html(_TM['Selection link']).prop('href', location.href.substring(0, location.href.indexOf('#')) + '#L' + ranges[0] + '-'+ranges[1]));
+            $hl_div.append($('<a>').html(_TM['Selection Link']).prop('href', location.href.substring(0, location.href.indexOf('#')) + '#L' + ranges[0] + '-'+ranges[1]));
             var xy = $(till).offset();
             $hl_div.css('top', (xy.top + yoffset) + 'px').css('left', xy.left + 'px');
             $hl_div.show();
