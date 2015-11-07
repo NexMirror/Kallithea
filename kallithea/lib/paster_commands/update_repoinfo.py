@@ -63,7 +63,7 @@ class Command(BasePasterCommand):
                                self.options.repo_update_list.split(',')) \
                                if self.options.repo_update_list else None
 
-        if repo_update_list:
+        if repo_update_list is not None:
             repo_list = list(Repository.query()\
                 .filter(Repository.repo_name.in_(repo_update_list)))
         else:

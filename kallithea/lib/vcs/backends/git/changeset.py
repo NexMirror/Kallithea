@@ -287,7 +287,7 @@ class GitChangeset(BaseChangeset):
         cs_id = safe_str(self.id)
         f_path = safe_str(path)
 
-        if limit:
+        if limit is not None:
             cmd = ['log', '-n', str(safe_int(limit, 0)),
                    '--pretty=format:%H', '-s', cs_id, '--', f_path]
 

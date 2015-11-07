@@ -256,7 +256,7 @@ class MercurialChangeset(BaseChangeset):
         for cs in reversed([x for x in fctx.filelog()]):
             cnt += 1
             hist.append(hex(fctx.filectx(cs).node()))
-            if limit and cnt == limit:
+            if limit is not None and cnt == limit:
                 break
 
         return [self.repository.get_changeset(node) for node in hist]
