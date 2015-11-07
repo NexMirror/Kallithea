@@ -77,7 +77,7 @@ class User(Base):
             session.add(self)
             session.commit()
             log.debug('updated user %s lastlogin', self.username)
-        except (DatabaseError,):
+        except DatabaseError:
             session.rollback()
 
 

@@ -356,7 +356,7 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
         except (LdapUsernameError, LdapPasswordError, LdapImportError):
             log.error(traceback.format_exc())
             return None
-        except (Exception,):
+        except Exception:
             log.error(traceback.format_exc())
             return None
 

@@ -206,7 +206,7 @@ class ChangesetController(BaseRepoController):
             if not c.cs_ranges:
                 raise RepositoryError('Changeset range returned empty result')
 
-        except(ChangesetDoesNotExistError,), e:
+        except ChangesetDoesNotExistError:
             log.debug(traceback.format_exc())
             msg = _('Such revision does not exist for this repository')
             h.flash(msg, category='error')

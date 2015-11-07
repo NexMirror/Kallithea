@@ -92,7 +92,7 @@ class FilesController(BaseRepoController):
             h.flash(h.literal(_('There are no files yet. %s') % add_new),
                     category='warning')
             raise HTTPNotFound()
-        except(ChangesetDoesNotExistError, LookupError), e:
+        except (ChangesetDoesNotExistError, LookupError):
             msg = _('Such revision does not exist for this repository')
             h.flash(msg, category='error')
             raise HTTPNotFound()
@@ -112,7 +112,7 @@ class FilesController(BaseRepoController):
             file_node = cs.get_node(path)
             if file_node.is_dir():
                 raise RepositoryError('given path is a directory')
-        except(ChangesetDoesNotExistError,), e:
+        except ChangesetDoesNotExistError:
             msg = _('Such revision does not exist for this repository')
             h.flash(msg, category='error')
             raise HTTPNotFound()

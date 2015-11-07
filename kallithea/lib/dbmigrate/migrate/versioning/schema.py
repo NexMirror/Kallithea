@@ -67,7 +67,7 @@ class ControlledSchema(object):
         else:
             try:
                 self.table.drop()
-            except (sa_exceptions.SQLError):
+            except sa_exceptions.SQLError:
                 raise exceptions.DatabaseNotControlledError(str(self.table))
 
     def changeset(self, version=None):

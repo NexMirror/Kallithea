@@ -139,7 +139,7 @@ class SearchController(BaseRepoController):
                 log.error('Empty Index data')
                 c.runtime = _('There is no index to search in. '
                               'Please run whoosh indexer')
-            except (Exception):
+            except Exception:
                 log.error(traceback.format_exc())
                 c.runtime = _('An error occurred during search operation.')
 
