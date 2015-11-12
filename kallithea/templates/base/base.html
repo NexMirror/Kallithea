@@ -390,6 +390,7 @@
             $("#repo_switcher").select2({
                 placeholder: '<i class="icon-database"></i> ${_('Repositories')}',
                 dropdownAutoWidth: true,
+                sortResults: prefixFirstSort,
                 formatResult: format,
                 formatSelection: format,
                 formatNoMatches: function(term){

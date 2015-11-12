@@ -1882,6 +1882,37 @@ var branchSort = function(results, container, query) {
     return results;
 };
 
+var prefixFirstSort = function(results, container, query) {
+    if (query.term) {
+        return results.sort(function (a, b) {
+            // if parent node, no sorting
+            if (a.children != undefined || b.children != undefined) {
+                return 0;
+            }
+
+            // Put prefix matches before matches in the line
+            var aPos = a.text.toLowerCase().indexOf(query.term.toLowerCase()),
+                bPos = b.text.toLowerCase().indexOf(query.term.toLowerCase());
+            if (aPos === 0 && bPos !== 0) {
+                return -1;
+            }
+            if (bPos === 0 && aPos !== 0) {
+                return 1;
+            }
+
+            // Default sorting
+            if (a.text > b.text) {
+                return 1;
+            }
+            if (a.text < b.text) {
+                return -1;
+            }
+            return 0;
+        });
+    }
+    return results;
+};
+
 // global hooks after DOM is loaded
 
 $(document).ready(function(){
