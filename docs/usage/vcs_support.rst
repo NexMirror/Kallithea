@@ -23,7 +23,7 @@ Git support
 
 
 Web server with chunked encoding
-````````````````````````````````
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Large Git pushes require an HTTP server with support for
 chunked encoding for POST. The Python web servers waitress_ and
@@ -51,7 +51,7 @@ Mercurial support
 
 
 Working with Mercurial subrepositories
-``````````````````````````````````````
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This section explains how to use Mercurial subrepositories_ in Kallithea.
 

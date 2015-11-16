@@ -6,7 +6,7 @@ Installation and upgrade on Windows (XP/Vista/Server 2003/Server 2008)
 
 
 First-time install
-::::::::::::::::::
+------------------
 
 Target OS: Windows XP SP3 32-bit English (Clean installation)
 + All Windows Updates until 24-may-2012
@@ -24,7 +24,7 @@ Target OS: Windows XP SP3 32-bit English (Clean installation)
    - http://bugs.python.org/issue7511
 
 Step 1 -- Install Visual Studio 2008 Express
---------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Optional: You can also install MinGW, but VS2008 installation is easier.
 
@@ -58,7 +58,7 @@ choose "Visual C++ 2008 Express" when installing.
    Copy C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\bin\vcvars64.bat to C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\bin\amd64\vcvarsamd64.bat
 
 Step 2 -- Install Python
-------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 Install Python 2.x.y (x = 6 or 7) x86 version (32-bit). DO NOT USE A 3.x version.
 Download Python 2.x.y from:
@@ -74,7 +74,7 @@ be needed in the next step. In this case, it is "2.7".
    64-bit: Just download and install the 64-bit version of python.
 
 Step 3 -- Install Win32py extensions
-------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Download pywin32 from:
 http://sourceforge.net/projects/pywin32/files/
@@ -93,7 +93,7 @@ http://sourceforge.net/projects/pywin32/files/
      http://sourceforge.net/projects/pywin32/files/pywin32/Build%20218/pywin32-218.win-amd64-py2.7.exe/download
 
 Step 4 -- Python BIN
---------------------
+^^^^^^^^^^^^^^^^^^^^
 
 Add Python BIN folder to the path
 
@@ -120,7 +120,7 @@ that came preinstalled in Vista/7 and can be installed in Windows XP.
   Typically: C:\\Python27
 
 Step 5 -- Kallithea folder structure
-------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Create a Kallithea folder structure
 
@@ -137,7 +137,7 @@ Create the following folder structure::
   C:\Kallithea\Repos
 
 Step 6 -- Install virtualenv
-----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Install Virtual Env for Python
 
@@ -157,7 +157,7 @@ where you downloaded "virtualenv.py", and write::
 to include it)
 
 Step 7 -- Install Kallithea
----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Finally, install Kallithea
 
@@ -195,7 +195,7 @@ The prompt will change into "(Env) C:\\Kallithea\\Env\\Scripts" or similar
 Some warnings will appear, don't worry as they are normal.
 
 Step 8 -- Configuring Kallithea
--------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 steps taken from http://packages.python.org/Kallithea/setup.html
 
@@ -233,7 +233,7 @@ If you make some mistake and the script does not end, don't worry, start
 it again.
 
 Step 9 -- Running Kallithea
----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In the previous command prompt, being in the C:\\Kallithea\\Bin folder,
 just type::
@@ -263,7 +263,7 @@ What this Guide does not cover:
 
 
 Upgrading
-:::::::::
+---------
 
 Stop running Kallithea
 Open a CommandPrompt like in Step7 (VS2008 path + activate) and type::

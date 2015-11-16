@@ -10,7 +10,7 @@ methods. Everything is available by sending JSON encoded http(s) requests to
 
 
 API access for web views
-++++++++++++++++++++++++
+------------------------
 
 API access can also be turned on for each web view in Kallithea that is
 decorated with the ``@LoginRequired`` decorator. Some views use
@@ -36,7 +36,7 @@ third-party services like code review, or build farms that can download archives
 
 
 API access
-++++++++++
+----------
 
 Clients must send JSON encoded JSON-RPC requests::
 
@@ -76,7 +76,7 @@ the reponse will have a failure description in *error* and
 
 
 API client
-++++++++++
+----------
 
 Kallithea comes with a ``kallithea-api`` command line tool, providing a convenient
 way to call the JSON-RPC API.
@@ -110,11 +110,11 @@ so you don't have to specify them every time.
 
 
 API methods
-+++++++++++
+-----------
 
 
 pull
-----
+^^^^
 
 Pull the given repo from remote location. Can be used to automatically keep
 remote repos up to date.
@@ -136,7 +136,7 @@ OUTPUT::
     error :  null
 
 rescan_repos
-------------
+^^^^^^^^^^^^
 
 Rescan repositories. If ``remove_obsolete`` is set,
 Kallithea will delete repos that are in the database but not in the filesystem.
@@ -159,7 +159,7 @@ OUTPUT::
     error :  null
 
 invalidate_cache
-----------------
+^^^^^^^^^^^^^^^^
 
 Invalidate the cache for a repository.
 This command can only be executed using the api_key of a user with admin rights,
@@ -181,7 +181,7 @@ OUTPUT::
     error :  null
 
 lock
-----
+^^^^
 
 Set the locking state on the given repository by the given user.
 If the param ``userid`` is skipped, it is set to the ID of the user who is calling this method.
@@ -212,7 +212,7 @@ OUTPUT::
     error :  null
 
 get_ip
-------
+^^^^^^
 
 Return IP address as seen from Kallithea server, together with all
 defined IP addresses for given user.
@@ -244,7 +244,7 @@ OUTPUT::
     error :  null
 
 get_user
---------
+^^^^^^^^
 
 Get a user by username or userid. The result is empty if user can't be found.
 If userid param is skipped, it is set to id of user who is calling this method.
@@ -288,7 +288,7 @@ OUTPUT::
     error:  null
 
 get_users
----------
+^^^^^^^^^
 
 List all existing users.
 This command can only be executed using the api_key of a user with admin rights.
@@ -325,7 +325,7 @@ OUTPUT::
 .. _create-user:
 
 create_user
------------
+^^^^^^^^^^^
 
 Create new user.
 This command can only be executed using the api_key of a user with admin rights.
@@ -371,7 +371,7 @@ Example::
     kallithea-api create_user username:bent email:bent@example.com firstname:Bent lastname:Bentsen extern_type:ldap extern_name:uid=bent,dc=example,dc=com
 
 update_user
------------
+^^^^^^^^^^^
 
 Update the given user if such user exists.
 This command can only be executed using the api_key of a user with admin rights.
@@ -415,7 +415,7 @@ OUTPUT::
     error:  null
 
 delete_user
------------
+^^^^^^^^^^^
 
 Delete the given user if such a user exists.
 This command can only be executed using the api_key of a user with admin rights.
@@ -439,7 +439,7 @@ OUTPUT::
     error:  null
 
 get_user_group
---------------
+^^^^^^^^^^^^^^
 
 Get an existing user group.
 This command can only be executed using the api_key of a user with admin rights.
@@ -481,7 +481,7 @@ OUTPUT::
     error : null
 
 get_user_groups
----------------
+^^^^^^^^^^^^^^^
 
 List all existing user groups.
 This command can only be executed using the api_key of a user with admin rights.
@@ -507,7 +507,7 @@ OUTPUT::
     error : null
 
 create_user_group
------------------
+^^^^^^^^^^^^^^^^^
 
 Create a new user group.
 This command can only be executed using the api_key of a user with admin rights.
@@ -537,7 +537,7 @@ OUTPUT::
     error:  null
 
 add_user_to_user_group
-----------------------
+^^^^^^^^^^^^^^^^^^^^^^
 
 Adds a user to a user group. If the user already is in that group, success will be
 ``false``.
@@ -564,7 +564,7 @@ OUTPUT::
     error:  null
 
 remove_user_from_user_group
----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Remove a user from a user group. If the user isn't in the given group, success will
 be ``false``.
@@ -591,7 +591,7 @@ OUTPUT::
     error:  null
 
 get_repo
---------
+^^^^^^^^
 
 Get an existing repository by its name or repository_id. Members will contain
 either users_group or users associated to that repository.
@@ -680,7 +680,7 @@ OUTPUT::
     error:  null
 
 get_repos
----------
+^^^^^^^^^
 
 List all existing repositories.
 This command can only be executed using the api_key of a user with admin rights,
@@ -717,7 +717,7 @@ OUTPUT::
     error:  null
 
 get_repo_nodes
---------------
+^^^^^^^^^^^^^^
 
 Return a list of files and directories for a given path at the given revision.
 It is possible to specify ret_type to show only ``files`` or ``dirs``.
@@ -748,7 +748,7 @@ OUTPUT::
     error:  null
 
 create_repo
------------
+^^^^^^^^^^^
 
 Create a repository. If the repository name contains "/", all needed repository
 groups will be created. For example "foo/bar/baz" will create repository groups
@@ -800,7 +800,7 @@ OUTPUT::
     error:  null
 
 update_repo
------------
+^^^^^^^^^^^
 
 Update a repository.
 This command can only be executed using the api_key of a user with admin rights,
@@ -860,7 +860,7 @@ OUTPUT::
     error:  null
 
 fork_repo
----------
+^^^^^^^^^
 
 Create a fork of the given repo. If using Celery, this will
 return success message immediately and a fork will be created
@@ -896,7 +896,7 @@ OUTPUT::
     error:  null
 
 delete_repo
------------
+^^^^^^^^^^^
 
 Delete a repository.
 This command can only be executed using the api_key of a user with admin rights,
@@ -923,7 +923,7 @@ OUTPUT::
     error:  null
 
 grant_user_permission
----------------------
+^^^^^^^^^^^^^^^^^^^^^
 
 Grant permission for a user on the given repository, or update the existing one if found.
 This command can only be executed using the api_key of a user with admin rights.
@@ -949,7 +949,7 @@ OUTPUT::
     error:  null
 
 revoke_user_permission
-----------------------
+^^^^^^^^^^^^^^^^^^^^^^
 
 Revoke permission for a user on the given repository.
 This command can only be executed using the api_key of a user with admin rights.
@@ -974,7 +974,7 @@ OUTPUT::
     error:  null
 
 grant_user_group_permission
----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Grant permission for a user group on the given repository, or update the
 existing one if found.
@@ -1001,7 +1001,7 @@ OUTPUT::
     error:  null
 
 revoke_user_group_permission
-----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Revoke permission for a user group on the given repository.
 This command can only be executed using the api_key of a user with admin rights.

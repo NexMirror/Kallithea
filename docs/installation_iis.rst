@@ -28,7 +28,7 @@ will be served from the root of its own website. The changes to serve it in its
 own virtual folder will be noted where appropriate.
 
 Application pool
-................
+^^^^^^^^^^^^^^^^
 
 Make sure that there is a unique application pool for the Kallithea application
 with an identity that has read access to the Kallithea distribution.
@@ -44,7 +44,7 @@ to run on the website and neither will Kallithea.
     as long as the Kallithea requirements are met by the existing pool.
 
 ISAPI handler
-.............
+^^^^^^^^^^^^^
 
 The ISAPI handler can be generated using::
 
@@ -68,7 +68,7 @@ middleware WSGI handler that Kallithea runs within and each HTTP request to the
 site will be processed through this logic henceforth.
 
 Authentication with Kallithea using IIS authentication modules
-..............................................................
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The recommended way to handle authentication with Kallithea using IIS is to let
 IIS handle all the authentication and just pass it to Kallithea.

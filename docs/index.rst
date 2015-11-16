@@ -63,7 +63,7 @@ Kallithea Documentation
 
 
 Other topics
-------------
+************
 
 * :ref:`genindex`
 * :ref:`search`

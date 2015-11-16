@@ -172,7 +172,7 @@ database:
 - convert the database in a one-time step
 
 Maintaining interoperability
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Interoperability with RhodeCode 2.2.X installations is provided so you don't
 have to immediately commit to switching to Kallithea. This option will most
@@ -191,7 +191,7 @@ then you will find this location at
 ``$VIRTUAL_ENV/lib/python2.7/site-packages/Kallithea-0.1-py2.7.egg/kallithea``.
 
 One-time conversion
-~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^
 
 Alternatively, if you would like to convert the database for good, you can use
 a helper script provided by Kallithea. This script will operate directly on the
@@ -209,7 +209,7 @@ database, using the database string you can find in your ``production.ini`` (or
    above, watch out for stray brand.pyc after removing brand.py.
 
 Git hooks
-~~~~~~~~~
+^^^^^^^^^
 
 After switching to Kallithea, it will be necessary to update the Git_ hooks in
 your repositories. If not, the Git_ hooks from RhodeCode will still be called,

@@ -15,6 +15,16 @@ spaces = [
     (1, 0),
     ]
 
+# http://sphinx-doc.org/rest.html :
+#   for the Python documentation, this convention is used which you may follow:
+#   # with overline, for parts
+#   * with overline, for chapters
+#   =, for sections
+#   -, for subsections
+#   ^, for subsubsections
+#   ", for paragraphs
+pystyles = ['#', '*', '=', '-', '^', '"']
+
 # match on a header line underlined with one of the valid characters
 headermatch = re.compile(r'''\n*(.+)\n([][!"#$%&'()*+,./:;<=>?@\\^_`{|}~-])\2{2,}\n+''', flags=re.MULTILINE)
 
@@ -44,13 +54,16 @@ def main():
         # remove superfluous spacing (may however be restored by header spacing)
         s = re.sub(r'''(\n\n)\n*''', r'\1', s, flags=re.MULTILINE)
 
-        # rewrite header markup with correct style, length and spacing
-        def subf(m):
-            title, style = m.groups()
-            level = styles.index(style)
-            before, after = spaces[level]
-            return '\n' * (before + 1) + title + '\n' + style * len(title) + '\n' * (after + 1)
-        s = headermatch.sub(subf, s)
+        if styles:
+            newstyles = pystyles[pystyles.index(styles[0]):]
+
+            def subf(m):
+                title, style = m.groups()
+                level = styles.index(style)
+                before, after = spaces[level]
+                newstyle = newstyles[level]
+                return '\n' * (before + 1) + title + '\n' + newstyle * len(title) + '\n' * (after + 1)
+            s = headermatch.sub(subf, s)
 
         # remove superfluous spacing when headers are adjacent
         s = re.sub(r'''(\n.+\n([][!"#$%&'()*+,./:;<=>?@\\^_`{|}~-])\2{2,}\n\n\n)\n*''', r'\1', s, flags=re.MULTILINE)

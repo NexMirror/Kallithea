@@ -151,7 +151,7 @@ described in more detail in this documentation. However, there are a few
 features that merit further explanation.
 
 Repository extra fields
-~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^
 
 In the *Visual* tab, there is an option "Use repository extra
 fields", which allows to set custom fields for each repository in the system.
@@ -165,7 +165,7 @@ about a manager of each repository.  There's no limit for adding custom fields.
 Newly created fields are accessible via the API.
 
 Meta tagging
-~~~~~~~~~~~~
+^^^^^^^^^^^^
 
 In the *Visual* tab, option "Stylify recognised meta tags" will cause Kallithea
 to turn certain text fragments in repository and repository group
