@@ -1860,8 +1860,8 @@ var branchSort = function(results, container, query) {
             }
 
             // Put prefix matches before matches in the line
-            var aPos = a.text.indexOf(query.term),
-                bPos = b.text.indexOf(query.term);
+            var aPos = a.text.toLowerCase().indexOf(query.term.toLowerCase()),
+                bPos = b.text.toLowerCase().indexOf(query.term.toLowerCase());
             if (aPos === 0 && bPos !== 0) {
                 return -1;
             }
