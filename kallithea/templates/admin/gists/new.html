@@ -59,51 +59,53 @@
             </div>
           ${h.end_form()}
           <script type="text/javascript">
-            var myCodeMirror = initCodeMirror('editor', "${request.script_name}", '');
+            $(document).ready(function(){
+                var myCodeMirror = initCodeMirror('editor', "${request.script_name}", '');
 
-            //inject new modes
-            var $modes_select = $('#mimetype');
-            $modes_select.each(function(){
-                var modes_select = this;
-                var index = 1;
-                for(var i=0;i<CodeMirror.modeInfo.length;i++) {
-                    var m = CodeMirror.modeInfo[i];
-                    var opt = new Option(m.name, m.mime);
-                    $(opt).attr('mode', m.mode);
-                    if (m.mime == 'text/plain') {
-                        // default plain text
-                        $(opt).prop('selected', true);
-                        modes_select.options[0] = opt;
-                    } else {
-                        modes_select.options[index++] = opt;
+                //inject new modes
+                var $modes_select = $('#mimetype');
+                $modes_select.each(function(){
+                    var modes_select = this;
+                    var index = 1;
+                    for(var i=0;i<CodeMirror.modeInfo.length;i++) {
+                        var m = CodeMirror.modeInfo[i];
+                        var opt = new Option(m.name, m.mime);
+                        $(opt).attr('mode', m.mode);
+                        if (m.mime == 'text/plain') {
+                            // default plain text
+                            $(opt).prop('selected', true);
+                            modes_select.options[0] = opt;
+                        } else {
+                            modes_select.options[index++] = opt;
+                        }
                     }
-                }
-            });
+                });
 
-            var $filename = $('#filename');
-            // on select change set new mode
-            $modes_select.change(function(e){
-                var selected = e.currentTarget;
-                var node = selected.options[selected.selectedIndex];
-                var detected_mode = CodeMirror.findModeByMIME(node.value);
-                setCodeMirrorMode(myCodeMirror, detected_mode);
+                var $filename = $('#filename');
+                // on select change set new mode
+                $modes_select.change(function(e){
+                    var selected = e.currentTarget;
+                    var node = selected.options[selected.selectedIndex];
+                    var detected_mode = CodeMirror.findModeByMIME(node.value);
+                    setCodeMirrorMode(myCodeMirror, detected_mode);
 
-                var proposed_ext = CodeMirror.findExtensionByMode(detected_mode);
-                var file_data = CodeMirror.getFilenameAndExt($filename.val());
-                var filename = file_data['filename'] || 'filename1';
-                $filename.val(filename + '.' + proposed_ext);
-            });
+                    var proposed_ext = CodeMirror.findExtensionByMode(detected_mode);
+                    var file_data = CodeMirror.getFilenameAndExt($filename.val());
+                    var filename = file_data['filename'] || 'filename1';
+                    $filename.val(filename + '.' + proposed_ext);
+                });
 
-            // on type the new filename set mode
-            $filename.keyup(function(e){
-                var file_data = CodeMirror.getFilenameAndExt(this.value);
-                if(file_data['ext'] != null){
-                    var detected_mode = CodeMirror.findModeByExtension(file_data['ext']) || CodeMirror.findModeByMIME('text/plain');
-                    if (detected_mode){
-                        setCodeMirrorMode(myCodeMirror, detected_mode);
-                        $modes_select.val(detected_mode.mime);
+                // on type the new filename set mode
+                $filename.keyup(function(e){
+                    var file_data = CodeMirror.getFilenameAndExt(this.value);
+                    if(file_data['ext'] != null){
+                        var detected_mode = CodeMirror.findModeByExtension(file_data['ext']) || CodeMirror.findModeByMIME('text/plain');
+                        if (detected_mode){
+                            setCodeMirrorMode(myCodeMirror, detected_mode);
+                            $modes_select.val(detected_mode.mime);
+                        }
                     }
-                }
+                });
             });
           </script>
         </div>
