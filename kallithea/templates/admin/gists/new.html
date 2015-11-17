@@ -63,8 +63,8 @@
                 var myCodeMirror = initCodeMirror('editor', "${request.script_name}", '');
 
                 //inject new modes
-                var $modes_select = $('#mimetype');
-                $modes_select.each(function(){
+                var $mimetype_select = $('#mimetype');
+                $mimetype_select.each(function(){
                     var modes_select = this;
                     var index = 1;
                     for(var i=0;i<CodeMirror.modeInfo.length;i++) {
@@ -81,28 +81,28 @@
                     }
                 });
 
-                var $filename = $('#filename');
+                var $filename_input = $('#filename');
                 // on select change set new mode
-                $modes_select.change(function(e){
+                $mimetype_select.change(function(e){
                     var selected = e.currentTarget;
                     var node = selected.options[selected.selectedIndex];
                     var detected_mode = CodeMirror.findModeByMIME(node.value);
                     setCodeMirrorMode(myCodeMirror, detected_mode);
 
                     var proposed_ext = CodeMirror.findExtensionByMode(detected_mode);
-                    var file_data = CodeMirror.getFilenameAndExt($filename.val());
+                    var file_data = CodeMirror.getFilenameAndExt($filename_input.val());
                     var filename = file_data['filename'] || 'filename1';
-                    $filename.val(filename + '.' + proposed_ext);
+                    $filename_input.val(filename + '.' + proposed_ext);
                 });
 
                 // on type the new filename set mode
-                $filename.keyup(function(e){
+                $filename_input.keyup(function(e){
                     var file_data = CodeMirror.getFilenameAndExt(this.value);
                     if(file_data['ext'] != null){
                         var detected_mode = CodeMirror.findModeByExtension(file_data['ext']) || CodeMirror.findModeByMIME('text/plain');
                         if (detected_mode){
                             setCodeMirrorMode(myCodeMirror, detected_mode);
-                            $modes_select.val(detected_mode.mime);
+                            $mimetype_select.val(detected_mode.mime);
                         }
                     }
                 });
