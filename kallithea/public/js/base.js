@@ -914,14 +914,14 @@ var initCodeMirror = function(textarea_id, baseUrl, resetUrl){
             $('#editor_container').show();
             $('#upload_file_container').hide();
             $('#filename_container').show();
-            $('#set_mode_header').show();
+            $('#mimetype_header').show();
         });
 
     $('#upload_file_enable').click(function(){
             $('#editor_container').hide();
             $('#upload_file_container').show();
             $('#filename_container').hide();
-            $('#set_mode_header').hide();
+            $('#mimetype_header').hide();
         });
 
     return myCodeMirror

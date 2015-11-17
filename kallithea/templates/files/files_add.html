@@ -44,14 +44,14 @@ ${self.repo_context_bar('files')}
                   ${_('or')} <div class="btn btn-small" id="upload_file_enable">${_('Upload File')}</div>
               </span>
               <span id="upload_file_container" class="reviewer_ac" style="display:none">
-                  <input type="file"  size="20" name="upload_file" id="upload_file">
+                  <input type="file" size="20" name="upload_file" id="upload_file">
                   ${_('or')} <div class="btn btn-small" id="file_enable">${_('Create New File')}</div>
               </span>
           </h3>
             <div id="body" class="codeblock">
-            <div class="code-header" id="set_mode_header">
-                <label class="commit" for="set_mode">${_('New file mode')}</label>
-                <select id="set_mode" name="set_mode"/>
+            <div class="code-header" id="mimetype_header">
+                <label class="commit" for="mimetype">${_('New file type')}</label>
+                <select id="mimetype" name="mimetype"/>
             </div>
                 <div id="editor_container">
                     <pre id="editor_pre"></pre>
@@ -71,7 +71,7 @@ ${self.repo_context_bar('files')}
                     var myCodeMirror = initCodeMirror('editor', "${request.script_name}", reset_url);
 
                     //inject new modes, based on codeMirrors modeInfo object
-                    $('#set_mode').each(function(){
+                    $('#mimetype').each(function(){
                         var modes_select = this;
                         var index = 1;
                         for(var i=0;i<CodeMirror.modeInfo.length;i++){
@@ -87,7 +87,7 @@ ${self.repo_context_bar('files')}
                             }
                         }
                     });
-                    $('#set_mode').change(function(e){
+                    $('#mimetype').change(function(e){
                         var selected = e.currentTarget;
                         var node = selected.options[selected.selectedIndex];
                         var detected_mode = CodeMirror.findModeByMIME(node.value);
@@ -107,7 +107,7 @@ ${self.repo_context_bar('files')}
                             var detected_mode = CodeMirror.findModeByExtension(file_data['ext']) || CodeMirror.findModeByMIME('text/plain');
                             if (detected_mode){
                                 setCodeMirrorMode(myCodeMirror, detected_mode);
-                                $('#set_mode').val(detected_mode.mime);
+                                $('#mimetype').val(detected_mode.mime);
                             }
                         }
                     });
