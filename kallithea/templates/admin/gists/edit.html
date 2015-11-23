@@ -69,8 +69,8 @@
             % for cnt, file in enumerate(c.files):
                 <div id="body" class="codeblock" style="margin-bottom: 4px">
                     <div style="padding: 10px 10px 10px 26px;color:#666666">
-                        <input type="hidden" value="${file.path}" name="org_files">
-                        <input id="filename_${h.FID('f',file.path)}" name="files" size="30" type="text" value="${file.path}">
+                        <input type="hidden" value="${h.safe_unicode(file.path)}" name="org_files">
+                        <input id="filename_${h.FID('f',file.path)}" name="files" size="30" type="text" value="${h.safe_unicode(file.path)}">
                         <select id="mimetype_${h.FID('f',file.path)}" name="mimetypes"/>
                     </div>
                     <div class="editor_container">
