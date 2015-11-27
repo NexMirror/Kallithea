@@ -700,13 +700,16 @@ def set_available_permissions(config):
 # CHECK DECORATORS
 #==============================================================================
 
-def redirect_to_login(message=None):
+def _redirect_to_login(message=None):
+    """Return an exception that must be raised. It will redirect to the login
+    page which will redirect back to the current URL after authentication.
+    The optional message will be shown in a flash message."""
     from kallithea.lib import helpers as h
-    p = request.path_qs
     if message:
         h.flash(h.literal(message), category='warning')
+    p = request.path_qs
     log.debug('Redirecting to login page, origin: %s', p)
-    raise HTTPFound(location=url('login_home', came_from=p))
+    return HTTPFound(location=url('login_home', came_from=p))
 
 
 class LoginRequired(object):
@@ -731,7 +734,7 @@ class LoginRequired(object):
         log.debug('Checking access for user %s @ %s', user, loc)
 
         if not AuthUser.check_ip_allowed(user, controller.ip_addr):
-            return redirect_to_login(_('IP %s not allowed') % controller.ip_addr)
+            raise _redirect_to_login(_('IP %s not allowed') % controller.ip_addr)
 
         # check if we used an API key and it's a valid one
         api_key = request.GET.get('api_key')
@@ -744,7 +747,7 @@ class LoginRequired(object):
                     return func(*fargs, **fkwargs)
                 else:
                     log.warning('API key ****%s is NOT valid', api_key[-4:])
-                    return redirect_to_login(_('Invalid API key'))
+                    raise _redirect_to_login(_('Invalid API key'))
             else:
                 # controller does not allow API access
                 log.warning('API access to %s is not allowed', loc)
@@ -790,7 +793,7 @@ class LoginRequired(object):
             return func(*fargs, **fkwargs)
         else:
             log.warning('user %s NOT authenticated with regular auth @ %s', user, loc)
-            return redirect_to_login()
+            raise _redirect_to_login()
 
 class NotAnonymous(object):
     """
@@ -807,8 +810,8 @@ class NotAnonymous(object):
         log.debug('Checking if user is not anonymous @%s', cls)
 
         if self.user.is_default_user:
-            return redirect_to_login(_('You need to be a registered user to '
-                    'perform this action'))
+            raise _redirect_to_login(_('You need to be a registered user to '
+                                       'perform this action'))
         else:
             return func(*fargs, **fkwargs)
 
@@ -837,7 +840,7 @@ class PermsDecorator(object):
         else:
             log.debug('Permission denied for %s %s', cls, self.user)
             if self.user.is_default_user:
-                return redirect_to_login(_('You need to be signed in to view this page'))
+                raise _redirect_to_login(_('You need to be signed in to view this page'))
             else:
                 raise HTTPForbidden()
 
