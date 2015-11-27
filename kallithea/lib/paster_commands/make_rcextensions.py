@@ -23,7 +23,6 @@ Original author and date, and relevant copyright and licensing information is be
 :author: marcink
 :copyright: (c) 2013 RhodeCode GmbH, and others.
 :license: GPLv3, see LICENSE.md for more details.
-
 """
 
 
@@ -67,7 +66,7 @@ class Command(BasePasterCommand):
             msg = ('Extension file already exists, do you want '
                    'to overwrite it ? [y/n]')
             if not ask_ok(msg):
-                print 'Nothing done...'
+                print 'Nothing done, exiting...'
                 return
 
         dirname = os.path.dirname(ext_file)

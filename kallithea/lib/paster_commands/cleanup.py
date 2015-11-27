@@ -22,7 +22,7 @@ This file was forked by the Kallithea project in July 2014.
 Original author and date, and relevant copyright and licensing information is below:
 :created_on: Jul 14, 2012
 :author: marcink
-:copyright: (c) 2013 RhodeCode GmbH.
+:copyright: (c) 2013 RhodeCode GmbH, and others.
 :license: GPLv3, see LICENSE.md for more details.
 """
 
@@ -31,7 +31,6 @@ import os
 import sys
 import re
 import shutil
-import logging
 import datetime
 
 from kallithea.lib.utils import BasePasterCommand, ask_ok, REMOVED_REPO_PAT
@@ -42,8 +41,6 @@ from kallithea.model.db import Ui
 from os.path import dirname as dn
 rc_path = dn(dn(dn(os.path.realpath(__file__))))
 sys.path.append(rc_path)
-
-log = logging.getLogger(__name__)
 
 
 class Command(BasePasterCommand):
@@ -110,27 +107,25 @@ class Command(BasePasterCommand):
                     to_remove_filtered.append([name, date_])
 
             to_remove = to_remove_filtered
-            print >> sys.stdout, 'removing %s deleted repos older than %s (%s)' \
+            print 'Removing %s deleted repos older than %s (%s)' \
                 % (len(to_remove), older_than, older_than_date)
         else:
-            print >> sys.stdout, 'removing all [%s] deleted repos' \
-                % len(to_remove)
+            print 'Removing all %s deleted repos' % len(to_remove)
         if self.options.dont_ask or not to_remove:
             # don't ask just remove !
             remove = True
         else:
             remove = ask_ok('the following repositories will be deleted completely:\n%s\n'
                             'are you sure you want to remove them [y/n]?'
-                            % ', \n'.join(['%s removed on %s'
-                    % (safe_str(x[0]), safe_str(x[1])) for x in to_remove]))
+                            % '\n'.join(['%s removed on %s' % (safe_str(x[0]), safe_str(x[1]))
+                                         for x in to_remove]))
 
         if remove:
             for path, date_ in to_remove:
-                print >> sys.stdout, 'removing repository %s' % path
+                print 'Removing repository %s' % path
                 shutil.rmtree(path)
         else:
-            print 'nothing done exiting...'
-            sys.exit(0)
+            print 'Nothing done, exiting...'
 
     def update_parser(self):
         self.parser.add_option(

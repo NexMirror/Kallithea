@@ -28,7 +28,6 @@ Original author and date, and relevant copyright and licensing information is be
 
 import os
 import sys
-import logging
 import string
 
 from kallithea.lib.utils import BasePasterCommand
@@ -40,8 +39,6 @@ from kallithea.model.meta import Session
 from os.path import dirname as dn
 rc_path = dn(dn(dn(os.path.realpath(__file__))))
 sys.path.append(rc_path)
-
-log = logging.getLogger(__name__)
 
 
 class Command(BasePasterCommand):

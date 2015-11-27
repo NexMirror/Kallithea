@@ -29,7 +29,6 @@ Original author and date, and relevant copyright and licensing information is be
 
 import os
 import sys
-import logging
 
 from kallithea.model.meta import Session
 from kallithea.lib.utils import BasePasterCommand
@@ -39,8 +38,6 @@ from kallithea.model.db import CacheInvalidation
 from os.path import dirname as dn
 rc_path = dn(dn(dn(os.path.realpath(__file__))))
 sys.path.append(rc_path)
-
-log = logging.getLogger(__name__)
 
 
 class Command(BasePasterCommand):
@@ -57,6 +54,7 @@ class Command(BasePasterCommand):
     def command(self):
         #get SqlAlchemy session
         self._init_session()
+
         _caches = CacheInvalidation.query().order_by(CacheInvalidation.cache_key).all()
         if self.options.show:
             for c_obj in _caches:
@@ -64,11 +62,10 @@ class Command(BasePasterCommand):
         elif self.options.cleanup:
             for c_obj in _caches:
                 Session().delete(c_obj)
-                print 'removing key:%s' % (c_obj.cache_key)
+                print 'Removing key: %s' % (c_obj.cache_key)
                 Session().commit()
         else:
-            print 'nothing done exiting...'
-        sys.exit(0)
+            print 'Nothing done, exiting...'
 
     def update_parser(self):
         self.parser.add_option(

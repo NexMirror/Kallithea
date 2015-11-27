@@ -1,3 +1,24 @@
+# -*- coding: utf-8 -*-
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
+kallithea.lib.paster_commands.install_iis
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+IIS installation tools for Kallithea
+"""
+
+
 import os
 import sys
 from paste.script.appinstall import AbstractInstallCommand
@@ -37,7 +58,9 @@ class Command(AbstractInstallCommand):
         except ImportError:
             raise BadCommand('missing requirement: isapi-wsgi not installed')
 
-        file = '''import sys
+        file = '''\
+# Created by Kallithea install_iis
+import sys
 
 if hasattr(sys, "isapidllhandle"):
     import win32traceutil
@@ -78,8 +101,8 @@ if __name__=='__main__':
 
         dispatchfile = os.path.join(os.getcwd(), 'dispatch.py')
         self.ensure_file(dispatchfile, outdata, False)
-        print 'generating', dispatchfile
+        print 'Generating %s' % (dispatchfile,)
 
-        print ('run \'python "%s" install\' with administrative privileges '
+        print ('Run \'python "%s" install\' with administrative privileges '
             'to generate the _dispatch.dll file and install it into the '
             'default web site') % (dispatchfile,)

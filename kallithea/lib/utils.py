@@ -790,11 +790,10 @@ class BasePasterCommand(Command):
         Inits SqlAlchemy Session
         """
         logging.config.fileConfig(self.path_to_ini_file)
+
         from pylons import config
         from kallithea.model import init_model
         from kallithea.lib.utils2 import engine_from_config
-
-        #get to remove repos !!
         add_cache(config)
         engine = engine_from_config(config, 'sqlalchemy.db1.')
         init_model(engine)

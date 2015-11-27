@@ -1,3 +1,24 @@
+# -*- coding: utf-8 -*-
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
+kallithea.lib.paster_commands.setup_db
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Databaset setup paster command for Kallithea
+"""
+
+
 import os
 import sys
 from paste.script.appinstall import AbstractInstallCommand
@@ -74,6 +95,7 @@ class Command(AbstractInstallCommand):
                        dest='public_access',
                        default=None,
                        help='Disable public access on this installation ')
+
     def command(self):
         config_spec = self.args[0]
         section = self.options.section_name
@@ -100,7 +122,7 @@ class Command(AbstractInstallCommand):
         dist = conf.context.distribution
         if dist is None:
             raise BadCommand(
-                "The section %r is not the application (probably a filter).  "
+                "The section %r is not the application (probably a filter). "
                 "You should add #section_name, where section_name is the "
                 "section that configures your application" % plain_section)
         installer = self.get_installer(dist, ep_group, ep_name)

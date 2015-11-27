@@ -28,7 +28,6 @@ Original author and date, and relevant copyright and licensing information is be
 
 import os
 import sys
-import logging
 
 from kallithea.lib.utils import BasePasterCommand
 
@@ -36,8 +35,6 @@ from kallithea.lib.utils import BasePasterCommand
 from os.path import dirname as dn
 rc_path = dn(dn(dn(os.path.realpath(__file__))))
 sys.path.append(rc_path)
-
-log = logging.getLogger(__name__)
 
 
 class Command(BasePasterCommand):
@@ -55,7 +52,7 @@ class Command(BasePasterCommand):
         #get SqlAlchemy session
         self._init_session()
 
-        # imports, used in ipython shell
+        # imports, used in IPython shell
         import os
         import sys
         import time
@@ -70,7 +67,7 @@ class Command(BasePasterCommand):
             cfg.InteractiveShellEmbed.confirm_exit = False
             embed(config=cfg, banner1="Kallithea IShell.")
         except ImportError:
-            print 'ipython installation required for ishell'
+            print 'IPython installation is required for ishell'
             sys.exit(-1)
 
     def update_parser(self):
