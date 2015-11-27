@@ -42,7 +42,7 @@ from kallithea.lib import helpers as h
 from kallithea.lib.base import BaseController, render
 from kallithea.lib.auth import LoginRequired, NotAnonymous
 from kallithea.lib.utils import jsonify
-from kallithea.lib.utils2 import safe_int, time_to_datetime
+from kallithea.lib.utils2 import safe_int, safe_unicode, time_to_datetime
 from kallithea.lib.helpers import Page
 from sqlalchemy.sql.expression import or_
 from kallithea.lib.vcs.exceptions import VCSError, NodeNotChangedError
@@ -205,7 +205,7 @@ class GistsController(BaseController):
             log.error(traceback.format_exc())
             raise HTTPNotFound()
         if format == 'raw':
-            content = '\n\n'.join([f.content for f in c.files if (f_path is None or f.path == f_path)])
+            content = '\n\n'.join([f.content for f in c.files if (f_path is None or safe_unicode(f.path) == f_path)])
             response.content_type = 'text/plain'
             return content
         return render('admin/gists/show.html')

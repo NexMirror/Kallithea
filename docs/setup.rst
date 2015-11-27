@@ -730,7 +730,7 @@ Here is a sample excerpt from an Apache Virtual Host configuration file:
 
     WSGIDaemonProcess kallithea \
         processes=1 threads=4 \
-        python-path=/srv/kallithea/pyenv/lib/python2.7/site-packages
+        python-path=/srv/kallithea/venv/lib/python2.7/site-packages
     WSGIScriptAlias / /srv/kallithea/dispatch.wsgi
     WSGIPassAuthorization On
 
@@ -758,7 +758,7 @@ Example WSGI dispatch script:
     os.chdir('/srv/kallithea/')
 
     import site
-    site.addsitedir("/srv/kallithea/pyenv/lib/python2.7/site-packages")
+    site.addsitedir("/srv/kallithea/venv/lib/python2.7/site-packages")
 
     from paste.deploy import loadapp
     from paste.script.util.logging_config import fileConfig

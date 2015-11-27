@@ -81,9 +81,9 @@
                <div style="border: 1px solid #EEE;margin-top:20px">
                 <div id="${h.FID('G', file.path)}" class="stats" style="border-bottom: 1px solid #DDD;padding: 8px 14px;">
                     <a href="${c.gist.gist_url()}">¶</a>
-                    <b style="margin:0px 0px 0px 4px">${file.path}</b>
+                    <b style="margin:0px 0px 0px 4px">${h.safe_unicode(file.path)}</b>
                     <div style="float:right; margin: -5px">
-                       ${h.link_to(_('Show as raw'),h.url('formatted_gist_file', gist_id=c.gist.gist_access_id, format='raw', revision=file.changeset.raw_id, f_path=file.path),class_="btn btn-mini")}
+                       ${h.link_to(_('Show as raw'),h.url('formatted_gist_file', gist_id=c.gist.gist_access_id, format='raw', revision=file.changeset.raw_id, f_path=h.safe_unicode(file.path)),class_="btn btn-mini")}
                     </div>
                 </div>
                 <div class="code-body">
