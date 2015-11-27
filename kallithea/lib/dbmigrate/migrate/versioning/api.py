@@ -181,7 +181,7 @@ def upgrade(url, repository, version=None, **opts):
     You may preview the Python or SQL code to be executed, rather than
     actually executing it, using the appropriate 'preview' option.
     """
-    err = "Cannot upgrade a database of version %s to version %s. "\
+    err = "Cannot upgrade a database of version %s to version %s. " \
         "Try 'downgrade' instead."
     return _migrate(url, repository, version, upgrade=True, err=err, **opts)
 
@@ -197,7 +197,7 @@ def downgrade(url, repository, version, **opts):
     You may preview the Python or SQL code to be executed, rather than
     actually executing it, using the appropriate 'preview' option.
     """
-    err = "Cannot downgrade a database of version %s to version %s. "\
+    err = "Cannot downgrade a database of version %s to version %s. " \
         "Try 'upgrade' instead."
     return _migrate(url, repository, version, upgrade=False, err=err, **opts)
 

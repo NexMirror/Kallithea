@@ -37,7 +37,7 @@ from webob.exc import HTTPFound, HTTPNotFound, HTTPForbidden, HTTPBadRequest
 from kallithea.lib.vcs.utils.hgcompat import unionrepo
 from kallithea.lib.compat import json
 from kallithea.lib.base import BaseRepoController, render
-from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator,\
+from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator, \
     NotAnonymous
 from kallithea.lib.helpers import Page
 from kallithea.lib import helpers as h
@@ -47,7 +47,7 @@ from kallithea.lib.utils import action_logger, jsonify
 from kallithea.lib.vcs.utils import safe_str
 from kallithea.lib.vcs.exceptions import EmptyRepositoryError
 from kallithea.lib.diffs import LimitedDiffContainer
-from kallithea.model.db import PullRequest, ChangesetStatus, ChangesetComment,\
+from kallithea.model.db import PullRequest, ChangesetStatus, ChangesetComment, \
     PullRequestReviewers, User
 from kallithea.model.pull_request import PullRequestModel
 from kallithea.model.meta import Session
@@ -210,15 +210,15 @@ class PullrequestsController(BaseRepoController):
                 s = filter(lambda p: p.status != PullRequest.STATUS_CLOSED, s)
             return s
 
-        c.my_pull_requests = _filter(PullRequest.query()\
+        c.my_pull_requests = _filter(PullRequest.query() \
                                 .filter(PullRequest.user_id ==
-                                        self.authuser.user_id)\
+                                        self.authuser.user_id) \
                                 .all())
 
-        c.participate_in_pull_requests = _filter(PullRequest.query()\
-                                .join(PullRequestReviewers)\
+        c.participate_in_pull_requests = _filter(PullRequest.query() \
+                                .join(PullRequestReviewers) \
                                 .filter(PullRequestReviewers.user_id ==
-                                        self.authuser.user_id)\
+                                        self.authuser.user_id) \
                                                  )
 
         return render('/pullrequests/pullrequest_show_my.html')

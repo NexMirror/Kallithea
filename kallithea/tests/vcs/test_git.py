@@ -303,8 +303,8 @@ class GitChangesetTest(unittest.TestCase):
         self.assertTrue(api is chset.get_node('docs/api'))
         index = api.get_node('index.rst')
         self.assertTrue(index is chset.get_node('docs/api/index.rst'))
-        self.assertTrue(index is chset.get_node('docs')\
-            .get_node('api')\
+        self.assertTrue(index is chset.get_node('docs') \
+            .get_node('api') \
             .get_node('index.rst'))
 
     def test_branch_and_tags(self):
@@ -535,8 +535,8 @@ class GitChangesetTest(unittest.TestCase):
         """
         Tests state of FileNodes.
         """
-        node = self.repo\
-            .get_changeset('e6ea6d16e2f26250124a1f4b4fe37a912f9d86a0')\
+        node = self.repo \
+            .get_changeset('e6ea6d16e2f26250124a1f4b4fe37a912f9d86a0') \
             .get_node('vcs/utils/diffs.py')
         self.assertTrue(node.state, NodeState.ADDED)
         self.assertTrue(node.added)
@@ -544,8 +544,8 @@ class GitChangesetTest(unittest.TestCase):
         self.assertFalse(node.not_changed)
         self.assertFalse(node.removed)
 
-        node = self.repo\
-            .get_changeset('33fa3223355104431402a888fa77a4e9956feb3e')\
+        node = self.repo \
+            .get_changeset('33fa3223355104431402a888fa77a4e9956feb3e') \
             .get_node('.hgignore')
         self.assertTrue(node.state, NodeState.CHANGED)
         self.assertFalse(node.added)
@@ -553,8 +553,8 @@ class GitChangesetTest(unittest.TestCase):
         self.assertFalse(node.not_changed)
         self.assertFalse(node.removed)
 
-        node = self.repo\
-            .get_changeset('e29b67bd158580fc90fc5e9111240b90e6e86064')\
+        node = self.repo \
+            .get_changeset('e29b67bd158580fc90fc5e9111240b90e6e86064') \
             .get_node('setup.py')
         self.assertTrue(node.state, NodeState.NOT_CHANGED)
         self.assertFalse(node.added)
@@ -599,24 +599,24 @@ class GitChangesetTest(unittest.TestCase):
 
     def test_author_email(self):
         self.assertEqual('marcin@python-blog.com',
-          self.repo.get_changeset('c1214f7e79e02fc37156ff215cd71275450cffc3')\
+          self.repo.get_changeset('c1214f7e79e02fc37156ff215cd71275450cffc3') \
           .author_email)
         self.assertEqual('lukasz.balcerzak@python-center.pl',
-          self.repo.get_changeset('ff7ca51e58c505fec0dd2491de52c622bb7a806b')\
+          self.repo.get_changeset('ff7ca51e58c505fec0dd2491de52c622bb7a806b') \
           .author_email)
         self.assertEqual('none@none',
-          self.repo.get_changeset('8430a588b43b5d6da365400117c89400326e7992')\
+          self.repo.get_changeset('8430a588b43b5d6da365400117c89400326e7992') \
           .author_email)
 
     def test_author_username(self):
         self.assertEqual('Marcin Kuzminski',
-          self.repo.get_changeset('c1214f7e79e02fc37156ff215cd71275450cffc3')\
+          self.repo.get_changeset('c1214f7e79e02fc37156ff215cd71275450cffc3') \
           .author_name)
         self.assertEqual('Lukasz Balcerzak',
-          self.repo.get_changeset('ff7ca51e58c505fec0dd2491de52c622bb7a806b')\
+          self.repo.get_changeset('ff7ca51e58c505fec0dd2491de52c622bb7a806b') \
           .author_name)
         self.assertEqual('marcink',
-          self.repo.get_changeset('8430a588b43b5d6da365400117c89400326e7992')\
+          self.repo.get_changeset('8430a588b43b5d6da365400117c89400326e7992') \
           .author_name)
 
 

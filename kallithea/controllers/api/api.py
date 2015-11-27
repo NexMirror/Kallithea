@@ -2508,9 +2508,9 @@ class ApiController(JSONRPCController):
             user_id = get_user_or_error(userid).user_id
 
         gists = []
-        _gists = Gist().query()\
-            .filter(or_(Gist.gist_expires == -1, Gist.gist_expires >= time.time()))\
-            .filter(Gist.gist_owner == user_id)\
+        _gists = Gist().query() \
+            .filter(or_(Gist.gist_expires == -1, Gist.gist_expires >= time.time())) \
+            .filter(Gist.gist_owner == user_id) \
             .order_by(Gist.created_on.desc())
         for gist in _gists:
             gists.append(gist.get_api_data())

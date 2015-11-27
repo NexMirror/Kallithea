@@ -42,7 +42,7 @@ from kallithea.lib.base import BaseRepoController, render
 from kallithea.lib.utils import action_logger, jsonify
 from kallithea.lib.vcs import RepositoryError
 from kallithea.model.meta import Session
-from kallithea.model.db import User, Repository, UserFollowing, RepoGroup,\
+from kallithea.model.db import User, Repository, UserFollowing, RepoGroup, \
     Setting, RepositoryField
 from kallithea.model.forms import RepoForm, RepoFieldForm, RepoPermsForm
 from kallithea.model.scm import ScmModel, AvailableRepoGroupChoices, RepoList
@@ -102,8 +102,8 @@ class ReposController(BaseRepoController):
     def index(self, format='html'):
         """GET /repos: All items in the collection"""
         # url('repos')
-        _list = Repository.query()\
-                        .order_by(func.lower(Repository.repo_name))\
+        _list = Repository.query() \
+                        .order_by(func.lower(Repository.repo_name)) \
                         .all()
 
         c.repos_list = RepoList(_list, perm_set=['repository.admin'])
@@ -127,7 +127,7 @@ class ReposController(BaseRepoController):
         try:
             # CanWriteGroup validators checks permissions of this POST
             form_result = RepoForm(repo_groups=c.repo_groups,
-                                   landing_revs=c.landing_revs_choices)()\
+                                   landing_revs=c.landing_revs_choices)() \
                             .to_python(dict(request.POST))
 
             # create is done sometimes async on celery, db transaction
@@ -239,7 +239,7 @@ class ReposController(BaseRepoController):
         c.repo_info = self._load_repo(repo_name)
         self.__load_defaults(c.repo_info)
         c.active = 'settings'
-        c.repo_fields = RepositoryField.query()\
+        c.repo_fields = RepositoryField.query() \
             .filter(RepositoryField.repository == c.repo_info).all()
 
         repo_model = RepoModel()
@@ -334,7 +334,7 @@ class ReposController(BaseRepoController):
         """GET /repo_name/settings: Form to edit an existing item"""
         # url('edit_repo', repo_name=ID)
         defaults = self.__load_data(repo_name)
-        c.repo_fields = RepositoryField.query()\
+        c.repo_fields = RepositoryField.query() \
             .filter(RepositoryField.repository == c.repo_info).all()
         repo_model = RepoModel()
         c.users_array = repo_model.get_users_js()
@@ -403,7 +403,7 @@ class ReposController(BaseRepoController):
         """GET /repo_name/settings: Form to edit an existing item"""
         # url('edit_repo', repo_name=ID)
         c.repo_info = self._load_repo(repo_name)
-        c.repo_fields = RepositoryField.query()\
+        c.repo_fields = RepositoryField.query() \
             .filter(RepositoryField.repository == c.repo_info).all()
         c.active = 'fields'
         if request.POST:
@@ -450,8 +450,8 @@ class ReposController(BaseRepoController):
         # url('edit_repo', repo_name=ID)
         c.repo_info = self._load_repo(repo_name)
         c.default_user_id = User.get_default_user().user_id
-        c.in_public_journal = UserFollowing.query()\
-            .filter(UserFollowing.user_id == c.default_user_id)\
+        c.in_public_journal = UserFollowing.query() \
+            .filter(UserFollowing.user_id == c.default_user_id) \
             .filter(UserFollowing.follows_repository == c.repo_info).scalar()
 
         _repos = Repository.query().order_by(Repository.repo_name).all()

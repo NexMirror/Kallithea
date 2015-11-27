@@ -90,8 +90,8 @@ class UserGroupsController(BaseController):
     def index(self, format='html'):
         """GET /users_groups: All items in the collection"""
         # url('users_groups')
-        _list = UserGroup.query()\
-                        .order_by(func.lower(UserGroup.users_group_name))\
+        _list = UserGroup.query() \
+                        .order_by(func.lower(UserGroup.users_group_name)) \
                         .all()
         group_iter = UserGroupList(_list, perm_set=['usergroup.admin'])
         user_groups_data = []
@@ -362,20 +362,20 @@ class UserGroupsController(BaseController):
             'repositories': {},
             'repositories_groups': {}
         }
-        ugroup_repo_perms = UserGroupRepoToPerm.query()\
-            .options(joinedload(UserGroupRepoToPerm.permission))\
-            .options(joinedload(UserGroupRepoToPerm.repository))\
-            .filter(UserGroupRepoToPerm.users_group_id == id)\
+        ugroup_repo_perms = UserGroupRepoToPerm.query() \
+            .options(joinedload(UserGroupRepoToPerm.permission)) \
+            .options(joinedload(UserGroupRepoToPerm.repository)) \
+            .filter(UserGroupRepoToPerm.users_group_id == id) \
             .all()
 
         for gr in ugroup_repo_perms:
             permissions['repositories'][gr.repository.repo_name]  \
                 = gr.permission.permission_name
 
-        ugroup_group_perms = UserGroupRepoGroupToPerm.query()\
-            .options(joinedload(UserGroupRepoGroupToPerm.permission))\
-            .options(joinedload(UserGroupRepoGroupToPerm.group))\
-            .filter(UserGroupRepoGroupToPerm.users_group_id == id)\
+        ugroup_group_perms = UserGroupRepoGroupToPerm.query() \
+            .options(joinedload(UserGroupRepoGroupToPerm.permission)) \
+            .options(joinedload(UserGroupRepoGroupToPerm.group)) \
+            .filter(UserGroupRepoGroupToPerm.users_group_id == id) \
             .all()
 
         for gr in ugroup_group_perms:
@@ -418,8 +418,8 @@ class UserGroupsController(BaseController):
             Session().add(user_group)
             usergroup_model = UserGroupModel()
 
-            defs = UserGroupToPerm.query()\
-                .filter(UserGroupToPerm.users_group == user_group)\
+            defs = UserGroupToPerm.query() \
+                .filter(UserGroupToPerm.users_group == user_group) \
                 .all()
             for ug in defs:
                 Session().delete(ug)

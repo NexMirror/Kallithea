@@ -37,7 +37,7 @@ from webob.exc import HTTPNotFound, HTTPForbidden, HTTPInternalServerError, \
     HTTPNotAcceptable
 from kallithea.model.db import User
 
-from kallithea.lib.utils2 import safe_str, fix_PATH, get_server_url,\
+from kallithea.lib.utils2 import safe_str, fix_PATH, get_server_url, \
     _set_extras
 from kallithea.lib.base import BaseVCSController, WSGIResultCloseCallback
 from kallithea.lib.utils import make_ui, is_valid_repo, ui_sections

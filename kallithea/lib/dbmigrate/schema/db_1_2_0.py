@@ -182,7 +182,7 @@ class Setting(Base, BaseModel):
 
     @classmethod
     def get_by_name(cls, ldap_key):
-        return cls.query()\
+        return cls.query() \
             .filter(cls.app_settings_name == ldap_key).scalar()
 
     @classmethod
@@ -204,7 +204,7 @@ class Setting(Base, BaseModel):
 
     @classmethod
     def get_ldap_settings(cls, cache=False):
-        ret = cls.query()\
+        ret = cls.query() \
                 .filter(cls.app_settings_name.startswith('ldap_')).all()
         fd = {}
         for row in ret:
@@ -380,10 +380,10 @@ class UserGroup(Base, BaseModel):
     @classmethod
     def get_by_group_name(cls, group_name, cache=False, case_insensitive=False):
         if case_insensitive:
-            gr = cls.query()\
+            gr = cls.query() \
                 .filter(cls.users_group_name.ilike(group_name))
         else:
-            gr = cls.query()\
+            gr = cls.query() \
                 .filter(cls.users_group_name == group_name)
         if cache:
             gr = gr.options(FromCache("sql_cache_short",
@@ -445,7 +445,7 @@ class UserGroup(Base, BaseModel):
         try:
 
             # check if this group is not assigned to repo
-            assigned_groups = UserGroupRepoToPerm.query()\
+            assigned_groups = UserGroupRepoToPerm.query() \
                 .filter(UserGroupRepoToPerm.users_group_id ==
                         users_group_id).all()
 
@@ -526,8 +526,8 @@ class Repository(Base, BaseModel):
     @classmethod
     def get_by_repo_name(cls, repo_name):
         q = Session.query(cls).filter(cls.repo_name == repo_name)
-        q = q.options(joinedload(Repository.fork))\
-                .options(joinedload(Repository.user))\
+        q = q.options(joinedload(Repository.fork)) \
+                .options(joinedload(Repository.user)) \
                 .options(joinedload(Repository.group))
         return q.one()
 
@@ -616,7 +616,7 @@ class Repository(Base, BaseModel):
         baseui._tcfg = config.config()
 
 
-        ret = Ui.query()\
+        ret = Ui.query() \
             .options(FromCache("sql_cache_short", "repository_repo_ui")).all()
 
         hg_ui = ret
@@ -758,10 +758,10 @@ class Group(Base, BaseModel):
     @classmethod
     def get_by_group_name(cls, group_name, cache=False, case_insensitive=False):
         if case_insensitive:
-            gr = cls.query()\
+            gr = cls.query() \
                 .filter(cls.group_name.ilike(group_name))
         else:
-            gr = cls.query()\
+            gr = cls.query() \
                 .filter(cls.group_name == group_name)
         if cache:
             gr = gr.options(FromCache("sql_cache_short",
@@ -879,7 +879,7 @@ class UserToPerm(Base, BaseModel):
         if not isinstance(perm, Permission):
             raise Exception('perm needs to be an instance of Permission class')
 
-        return cls.query().filter(cls.user_id == user_id)\
+        return cls.query().filter(cls.user_id == user_id) \
             .filter(cls.permission == perm).scalar() is not None
 
     @classmethod
@@ -941,8 +941,8 @@ class UserGroupToPerm(Base, BaseModel):
             raise Exception('perm needs to be an instance of Permission class')
 
         return cls.query().filter(cls.users_group_id ==
-                                         users_group_id)\
-                                         .filter(cls.permission == perm)\
+                                         users_group_id) \
+                                         .filter(cls.permission == perm) \
                                          .scalar() is not None
 
     @classmethod
@@ -1047,9 +1047,9 @@ class CacheInvalidation(Base, BaseModel):
 
         :param key:
         """
-        return cls.query()\
-                .filter(CacheInvalidation.cache_key == key)\
-                .filter(CacheInvalidation.cache_active == False)\
+        return cls.query() \
+                .filter(CacheInvalidation.cache_key == key) \
+                .filter(CacheInvalidation.cache_active == False) \
                 .scalar()
 
     @classmethod
@@ -1061,7 +1061,7 @@ class CacheInvalidation(Base, BaseModel):
         """
 
         log.debug('marking %s for invalidation', key)
-        inv_obj = Session.query(cls)\
+        inv_obj = Session.query(cls) \
             .filter(cls.cache_key == key).scalar()
         if inv_obj:
             inv_obj.cache_active = False
@@ -1083,7 +1083,7 @@ class CacheInvalidation(Base, BaseModel):
 
         :param key:
         """
-        inv_obj = Session.query(CacheInvalidation)\
+        inv_obj = Session.query(CacheInvalidation) \
             .filter(CacheInvalidation.cache_key == key).scalar()
         inv_obj.cache_active = True
         Session.add(inv_obj)

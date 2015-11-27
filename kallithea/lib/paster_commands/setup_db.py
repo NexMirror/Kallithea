@@ -41,11 +41,10 @@ class Command(AbstractInstallCommand):
     group_name = "Kallithea"
 
     description = """\
-
-    Setup Kallithea according to its configuration file.  This is
-    the second part of a two-phase web application installation
-    process (the first phase is prepare-app).  The setup process
-    consist of things like setting up databases, creating super user
+        Setup Kallithea according to its configuration file.  This is
+        the second part of a two-phase web application installation
+        process (the first phase is prepare-app).  The setup process
+        consist of things like setting up databases, creating super user
     """
 
     parser = AbstractInstallCommand.standard_parser(

@@ -40,7 +40,7 @@ from kallithea.lib import diffs
 from kallithea.lib import helpers as h
 
 from kallithea.lib.compat import OrderedDict
-from kallithea.lib.utils2 import convert_line_endings, detect_mode, safe_str,\
+from kallithea.lib.utils2 import convert_line_endings, detect_mode, safe_str, \
     str2bool
 from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator
 from kallithea.lib.base import BaseRepoController, render
@@ -48,7 +48,7 @@ from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.conf import settings
 from kallithea.lib.vcs.exceptions import RepositoryError, \
     ChangesetDoesNotExistError, EmptyRepositoryError, \
-    ImproperArchiveTypeError, VCSError, NodeAlreadyExistsError,\
+    ImproperArchiveTypeError, VCSError, NodeAlreadyExistsError, \
     NodeDoesNotExistError, ChangesetError, NodeError
 from kallithea.lib.vcs.nodes import FileNode
 
@@ -56,7 +56,7 @@ from kallithea.model.repo import RepoModel
 from kallithea.model.scm import ScmModel
 from kallithea.model.db import Repository
 
-from kallithea.controllers.changeset import anchor_url, _ignorews_url,\
+from kallithea.controllers.changeset import anchor_url, _ignorews_url, \
     _context_url, get_line_ctx, get_ignore_ws
 from webob.exc import HTTPNotFound
 from kallithea.lib.exceptions import NonRelativePathError

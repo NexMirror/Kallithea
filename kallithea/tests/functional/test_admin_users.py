@@ -64,7 +64,7 @@ class TestAdminUsersController(TestController):
         self.checkSessionFlash(response, '''Created user <a href="/_admin/users/''')
         self.checkSessionFlash(response, '''/edit">%s</a>''' % (username))
 
-        new_user = Session().query(User).\
+        new_user = Session().query(User). \
             filter(User.username == username).one()
 
         self.assertEqual(new_user.username, username)
@@ -165,7 +165,7 @@ class TestAdminUsersController(TestController):
 
         fixture.create_user(name=username)
 
-        new_user = Session().query(User)\
+        new_user = Session().query(User) \
             .filter(User.username == username).one()
         response = self.app.post(url('user', id=new_user.user_id),
             params={'_method': 'delete', '_authentication_token': self.authentication_token()})
@@ -180,7 +180,7 @@ class TestAdminUsersController(TestController):
         fixture.create_user(name=username)
         fixture.create_repo(name=reponame, cur_user=username)
 
-        new_user = Session().query(User)\
+        new_user = Session().query(User) \
             .filter(User.username == username).one()
         response = self.app.post(url('user', id=new_user.user_id),
             params={'_method': 'delete', '_authentication_token': self.authentication_token()})
@@ -205,7 +205,7 @@ class TestAdminUsersController(TestController):
         fixture.create_user(name=username)
         fixture.create_repo_group(name=groupname, cur_user=username)
 
-        new_user = Session().query(User)\
+        new_user = Session().query(User) \
             .filter(User.username == username).one()
         response = self.app.post(url('user', id=new_user.user_id),
             params={'_method': 'delete', '_authentication_token': self.authentication_token()})
@@ -234,7 +234,7 @@ class TestAdminUsersController(TestController):
         fixture.create_user(name=username)
         ug = fixture.create_user_group(name=groupname, cur_user=username)
 
-        new_user = Session().query(User)\
+        new_user = Session().query(User) \
             .filter(User.username == username).one()
         response = self.app.post(url('user', id=new_user.user_id),
             params={'_method': 'delete', '_authentication_token': self.authentication_token()})

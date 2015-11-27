@@ -75,7 +75,7 @@ ${h.form(url('edit_user_group_perms', id=c.user_group.users_group_id),method='pu
                 %endfor
 
                 <%
-                _tmpl = h.literal("""' \
+                _tmpl = h.literal("""'\
                     <td><input type="radio" value="usergroup.none" name="perm_new_member_{0}" id="perm_new_member_{0}"></td> \
                     <td><input type="radio" value="usergroup.read" checked="checked" name="perm_new_member_{0}" id="perm_new_member_{0}"></td> \
                     <td><input type="radio" value="usergroup.write" name="perm_new_member_{0}" id="perm_new_member_{0}"></td> \

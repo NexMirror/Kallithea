@@ -32,8 +32,8 @@ def upgrade(migrate_engine):
 
     _Session = meta.Session()
     ## after adding that column fix all usernames
-    users_log = _Session.query(db_1_5_0.UserLog)\
-            .options(joinedload(db_1_5_0.UserLog.user))\
+    users_log = _Session.query(db_1_5_0.UserLog) \
+            .options(joinedload(db_1_5_0.UserLog.user)) \
             .options(joinedload(db_1_5_0.UserLog.repository)).all()
 
     for entry in users_log:

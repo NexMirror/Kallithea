@@ -186,5 +186,5 @@ def author_name(author):
         return ''
     if not '@' in author:
         return author
-    return author.replace(author_email(author), '').replace('<', '')\
+    return author.replace(author_email(author), '').replace('<', '') \
         .replace('>', '').strip()

@@ -75,7 +75,7 @@ ${h.form(url('edit_repo_group_perms', group_name=c.repo_group.group_name),method
                 %endfor
 
                 <%
-                _tmpl = h.literal("""' \
+                _tmpl = h.literal("""'\
                     <td><input type="radio" value="group.none" name="perm_new_member_{0}" id="perm_new_member_{0}"></td> \
                     <td><input type="radio" value="group.read" checked="checked" name="perm_new_member_{0}" id="perm_new_member_{0}"></td> \
                     <td><input type="radio" value="group.write" name="perm_new_member_{0}" id="perm_new_member_{0}"></td> \

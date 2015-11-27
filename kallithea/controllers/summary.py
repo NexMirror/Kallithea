@@ -44,7 +44,7 @@ from kallithea.config.conf import ALL_READMES, ALL_EXTS, LANGUAGES_EXTENSIONS_MA
 from kallithea.model.db import Statistics, CacheInvalidation, User
 from kallithea.lib.utils import jsonify
 from kallithea.lib.utils2 import safe_str
-from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator,\
+from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator, \
     NotAnonymous
 from kallithea.lib.base import BaseRepoController, render
 from kallithea.lib.vcs.backends.base import EmptyChangeset
@@ -135,8 +135,8 @@ class SummaryController(BaseRepoController):
         else:
             c.show_stats = False
 
-        stats = self.sa.query(Statistics)\
-            .filter(Statistics.repository == c.db_repo)\
+        stats = self.sa.query(Statistics) \
+            .filter(Statistics.repository == c.db_repo) \
             .scalar()
 
         c.stats_percentage = 0
@@ -193,8 +193,8 @@ class SummaryController(BaseRepoController):
         c.ts_min = ts_min_m
         c.ts_max = ts_max_y
 
-        stats = self.sa.query(Statistics)\
-            .filter(Statistics.repository == c.db_repo)\
+        stats = self.sa.query(Statistics) \
+            .filter(Statistics.repository == c.db_repo) \
             .scalar()
         c.stats_percentage = 0
         if stats and stats.languages:
@@ -211,7 +211,7 @@ class SummaryController(BaseRepoController):
                 sorted(lang_stats, reverse=True, key=lambda k: k[1])[:10]
             )
             last_rev = stats.stat_on_revision + 1
-            c.repo_last_rev = c.db_repo_scm_instance.count()\
+            c.repo_last_rev = c.db_repo_scm_instance.count() \
                 if c.db_repo_scm_instance.revisions else 0
             if last_rev == 0 or c.repo_last_rev == 0:
                 pass

@@ -184,7 +184,7 @@ class PermissionsController(BaseController):
     def permission_ips(self):
         c.active = 'ips'
         c.user = User.get_default_user()
-        c.user_ip_map = UserIpMap.query()\
+        c.user_ip_map = UserIpMap.query() \
                         .filter(UserIpMap.user == c.user).all()
 
         return render('admin/permissions/permissions.html')

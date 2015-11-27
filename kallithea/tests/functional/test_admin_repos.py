@@ -5,7 +5,7 @@ import mock
 import urllib
 
 from kallithea.lib import vcs
-from kallithea.model.db import Repository, RepoGroup, UserRepoToPerm, User,\
+from kallithea.model.db import Repository, RepoGroup, UserRepoToPerm, User, \
     Permission
 from kallithea.model.user import UserModel
 from kallithea.tests import *
@@ -18,10 +18,10 @@ fixture = Fixture()
 
 
 def _get_permission_for_user(user, repo):
-    perm = UserRepoToPerm.query()\
+    perm = UserRepoToPerm.query() \
                 .filter(UserRepoToPerm.repository ==
-                        Repository.get_by_repo_name(repo))\
-                .filter(UserRepoToPerm.user == User.get_by_username(user))\
+                        Repository.get_by_repo_name(repo)) \
+                .filter(UserRepoToPerm.user == User.get_by_username(user)) \
                 .all()
     return perm
 
@@ -66,7 +66,7 @@ class _BaseTest(object):
                                % (repo_name, repo_name))
 
         # test if the repo was created in the database
-        new_repo = Session().query(Repository)\
+        new_repo = Session().query(Repository) \
             .filter(Repository.repo_name == repo_name).one()
 
         self.assertEqual(new_repo.repo_name, repo_name)
@@ -106,7 +106,7 @@ class _BaseTest(object):
                                u'Created repository <a href="/%s">%s</a>'
                                % (urllib.quote(repo_name), repo_name_unicode))
         # test if the repo was created in the database
-        new_repo = Session().query(Repository)\
+        new_repo = Session().query(Repository) \
             .filter(Repository.repo_name == repo_name_unicode).one()
 
         self.assertEqual(new_repo.repo_name, repo_name_unicode)
@@ -150,7 +150,7 @@ class _BaseTest(object):
                                'Created repository <a href="/%s">%s</a>'
                                % (repo_name_full, repo_name_full))
         # test if the repo was created in the database
-        new_repo = Session().query(Repository)\
+        new_repo = Session().query(Repository) \
             .filter(Repository.repo_name == repo_name_full).one()
         new_repo_id = new_repo.repo_id
 
@@ -162,7 +162,7 @@ class _BaseTest(object):
         response.mustcontain(repo_name_full)
         response.mustcontain(self.REPO_TYPE)
 
-        inherited_perms = UserRepoToPerm.query()\
+        inherited_perms = UserRepoToPerm.query() \
             .filter(UserRepoToPerm.repository_id == new_repo_id).all()
         self.assertEqual(len(inherited_perms), 1)
 
@@ -242,7 +242,7 @@ class _BaseTest(object):
                                'Created repository <a href="/%s">%s</a>'
                                % (repo_name_full, repo_name_full))
         # test if the repo was created in the database
-        new_repo = Session().query(Repository)\
+        new_repo = Session().query(Repository) \
             .filter(Repository.repo_name == repo_name_full).one()
         new_repo_id = new_repo.repo_id
 
@@ -254,7 +254,7 @@ class _BaseTest(object):
         response.mustcontain(repo_name_full)
         response.mustcontain(self.REPO_TYPE)
 
-        inherited_perms = UserRepoToPerm.query()\
+        inherited_perms = UserRepoToPerm.query() \
             .filter(UserRepoToPerm.repository_id == new_repo_id).all()
         self.assertEqual(len(inherited_perms), 1)
 
@@ -303,7 +303,7 @@ class _BaseTest(object):
                                'Created repository <a href="/%s">%s</a>'
                                % (repo_name_full, repo_name_full))
         # test if the repo was created in the database
-        new_repo = Session().query(Repository)\
+        new_repo = Session().query(Repository) \
             .filter(Repository.repo_name == repo_name_full).one()
         new_repo_id = new_repo.repo_id
 
@@ -324,7 +324,7 @@ class _BaseTest(object):
             self.fail('no repo %s in filesystem' % repo_name)
 
         #check if inherited permissiona are applied
-        inherited_perms = UserRepoToPerm.query()\
+        inherited_perms = UserRepoToPerm.query() \
             .filter(UserRepoToPerm.repository_id == new_repo_id).all()
         self.assertEqual(len(inherited_perms), 2)
 
@@ -381,7 +381,7 @@ class _BaseTest(object):
                                'Created repository <a href="/%s">%s</a>'
                                % (repo_name, repo_name))
         # test if the repo was created in the database
-        new_repo = Session().query(Repository)\
+        new_repo = Session().query(Repository) \
             .filter(Repository.repo_name == repo_name).one()
 
         self.assertEqual(new_repo.repo_name, repo_name)
@@ -406,7 +406,7 @@ class _BaseTest(object):
         response.follow()
 
         #check if repo was deleted from db
-        deleted_repo = Session().query(Repository)\
+        deleted_repo = Session().query(Repository) \
             .filter(Repository.repo_name == repo_name).scalar()
 
         self.assertEqual(deleted_repo, None)
@@ -434,7 +434,7 @@ class _BaseTest(object):
                                u'Created repository <a href="/%s">%s</a>'
                                % (urllib.quote(repo_name), repo_name_unicode))
         # test if the repo was created in the database
-        new_repo = Session().query(Repository)\
+        new_repo = Session().query(Repository) \
             .filter(Repository.repo_name == repo_name_unicode).one()
 
         self.assertEqual(new_repo.repo_name, repo_name_unicode)
@@ -457,7 +457,7 @@ class _BaseTest(object):
         response.follow()
 
         #check if repo was deleted from db
-        deleted_repo = Session().query(Repository)\
+        deleted_repo = Session().query(Repository) \
             .filter(Repository.repo_name == repo_name_unicode).scalar()
 
         self.assertEqual(deleted_repo, None)

@@ -73,23 +73,23 @@ class GistsController(BaseController):
         c.show_private = request.GET.get('private') and not_default_user
         c.show_public = request.GET.get('public') and not_default_user
 
-        gists = Gist().query()\
-            .filter(or_(Gist.gist_expires == -1, Gist.gist_expires >= time.time()))\
+        gists = Gist().query() \
+            .filter(or_(Gist.gist_expires == -1, Gist.gist_expires >= time.time())) \
             .order_by(Gist.created_on.desc())
 
         # MY private
         if c.show_private and not c.show_public:
-            gists = gists.filter(Gist.gist_type == Gist.GIST_PRIVATE)\
+            gists = gists.filter(Gist.gist_type == Gist.GIST_PRIVATE) \
                              .filter(Gist.gist_owner == c.authuser.user_id)
         # MY public
         elif c.show_public and not c.show_private:
-            gists = gists.filter(Gist.gist_type == Gist.GIST_PUBLIC)\
+            gists = gists.filter(Gist.gist_type == Gist.GIST_PUBLIC) \
                              .filter(Gist.gist_owner == c.authuser.user_id)
 
         # MY public+private
         elif c.show_private and c.show_public:
             gists = gists.filter(or_(Gist.gist_type == Gist.GIST_PUBLIC,
-                                     Gist.gist_type == Gist.GIST_PRIVATE))\
+                                     Gist.gist_type == Gist.GIST_PRIVATE)) \
                              .filter(Gist.gist_owner == c.authuser.user_id)
 
         # default show ALL public gists

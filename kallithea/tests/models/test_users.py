@@ -1,6 +1,6 @@
 from kallithea.tests import *
 
-from kallithea.model.db import User, UserGroup, UserGroupMember, UserEmailMap,\
+from kallithea.model.db import User, UserGroup, UserGroupMember, UserEmailMap, \
     Permission
 from kallithea.model.user import UserModel
 

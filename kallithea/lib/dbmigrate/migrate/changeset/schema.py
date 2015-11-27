@@ -180,7 +180,7 @@ class ColumnDelta(DictMixin, sqlalchemy.schema.SchemaItem):
         * **current_col_name, \*p, \*\*kw**
             Table kw must specified.
 
-        :param table: Table at which current Column should be bound to.\
+        :param table: Table at which current Column should be bound to. \
         If table name is given, reflection will be used.
         :type table: string or Table instance
 
@@ -499,9 +499,9 @@ class ChangesetColumn(object):
 
         :param table: Table instance to create on.
         :param index_name: Creates :class:`ChangesetIndex` on this column.
-        :param unique_name: Creates :class:\
+        :param unique_name: Creates :class: \
 `~migrate.changeset.constraint.UniqueConstraint` on this column.
-        :param primary_key_name: Creates :class:\
+        :param primary_key_name: Creates :class: \
 `~migrate.changeset.constraint.PrimaryKeyConstraint` on this column.
         :param populate_default: If True, created column will be \
 populated with defaults

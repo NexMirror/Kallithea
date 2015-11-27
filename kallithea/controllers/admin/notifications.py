@@ -154,7 +154,7 @@ class NotificationsController(BaseController):
                     for un in no.notifications_to_users)
         repo_admin = h.HasRepoPermissionAny('repository.admin')
         if no and (h.HasPermissionAny('hg.admin')() or repo_admin or owner):
-            unotification = NotificationModel()\
+            unotification = NotificationModel() \
                             .get_user_notification(c.user.user_id, no)
 
             # if this association to user is not valid, we don't want to show

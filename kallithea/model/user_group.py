@@ -28,10 +28,10 @@ import logging
 import traceback
 
 from kallithea.model import BaseModel
-from kallithea.model.db import UserGroupMember, UserGroup,\
-    UserGroupRepoToPerm, Permission, UserGroupToPerm, User, UserUserGroupToPerm,\
+from kallithea.model.db import UserGroupMember, UserGroup, \
+    UserGroupRepoToPerm, Permission, UserGroupToPerm, User, UserUserGroupToPerm, \
     UserGroupUserGroupToPerm
-from kallithea.lib.exceptions import UserGroupsAssignedException,\
+from kallithea.lib.exceptions import UserGroupsAssignedException, \
     RepoGroupAssignmentError
 
 log = logging.getLogger(__name__)
@@ -162,7 +162,7 @@ class UserGroupModel(BaseModel):
         user_group = self._get_user_group(user_group)
         try:
             # check if this group is not assigned to repo
-            assigned_groups = UserGroupRepoToPerm.query()\
+            assigned_groups = UserGroupRepoToPerm.query() \
                 .filter(UserGroupRepoToPerm.users_group == user_group).all()
             assigned_groups = [x.repository.repo_name for x in assigned_groups]
 
@@ -224,8 +224,8 @@ class UserGroupModel(BaseModel):
         user_group = self._get_user_group(user_group)
         perm = self._get_perm(perm)
 
-        return UserGroupToPerm.query()\
-            .filter(UserGroupToPerm.users_group == user_group)\
+        return UserGroupToPerm.query() \
+            .filter(UserGroupToPerm.users_group == user_group) \
             .filter(UserGroupToPerm.permission == perm).scalar() is not None
 
     def grant_perm(self, user_group, perm):
@@ -233,9 +233,9 @@ class UserGroupModel(BaseModel):
         perm = self._get_perm(perm)
 
         # if this permission is already granted skip it
-        _perm = UserGroupToPerm.query()\
-            .filter(UserGroupToPerm.users_group == user_group)\
-            .filter(UserGroupToPerm.permission == perm)\
+        _perm = UserGroupToPerm.query() \
+            .filter(UserGroupToPerm.users_group == user_group) \
+            .filter(UserGroupToPerm.permission == perm) \
             .scalar()
         if _perm:
             return
@@ -250,8 +250,8 @@ class UserGroupModel(BaseModel):
         user_group = self._get_user_group(user_group)
         perm = self._get_perm(perm)
 
-        obj = UserGroupToPerm.query()\
-            .filter(UserGroupToPerm.users_group == user_group)\
+        obj = UserGroupToPerm.query() \
+            .filter(UserGroupToPerm.users_group == user_group) \
             .filter(UserGroupToPerm.permission == perm).scalar()
         if obj is not None:
             self.sa.delete(obj)
@@ -272,9 +272,9 @@ class UserGroupModel(BaseModel):
         permission = self._get_perm(perm)
 
         # check if we have that permission already
-        obj = self.sa.query(UserUserGroupToPerm)\
-            .filter(UserUserGroupToPerm.user == user)\
-            .filter(UserUserGroupToPerm.user_group == user_group)\
+        obj = self.sa.query(UserUserGroupToPerm) \
+            .filter(UserUserGroupToPerm.user == user) \
+            .filter(UserUserGroupToPerm.user_group == user_group) \
             .scalar()
         if obj is None:
             # create new !
@@ -298,9 +298,9 @@ class UserGroupModel(BaseModel):
         user_group = self._get_user_group(user_group)
         user = self._get_user(user)
 
-        obj = self.sa.query(UserUserGroupToPerm)\
-            .filter(UserUserGroupToPerm.user == user)\
-            .filter(UserUserGroupToPerm.user_group == user_group)\
+        obj = self.sa.query(UserUserGroupToPerm) \
+            .filter(UserUserGroupToPerm.user == user) \
+            .filter(UserUserGroupToPerm.user_group == user_group) \
             .scalar()
         if obj is not None:
             self.sa.delete(obj)
@@ -323,9 +323,9 @@ class UserGroupModel(BaseModel):
                                            'assigned to itself' % target_user_group)
 
         # check if we have that permission already
-        obj = self.sa.query(UserGroupUserGroupToPerm)\
-            .filter(UserGroupUserGroupToPerm.target_user_group == target_user_group)\
-            .filter(UserGroupUserGroupToPerm.user_group == user_group)\
+        obj = self.sa.query(UserGroupUserGroupToPerm) \
+            .filter(UserGroupUserGroupToPerm.target_user_group == target_user_group) \
+            .filter(UserGroupUserGroupToPerm.user_group == user_group) \
             .scalar()
         if obj is None:
             # create new !
@@ -347,9 +347,9 @@ class UserGroupModel(BaseModel):
         target_user_group = self._get_user_group(target_user_group)
         user_group = self._get_user_group(user_group)
 
-        obj = self.sa.query(UserGroupUserGroupToPerm)\
-            .filter(UserGroupUserGroupToPerm.target_user_group == target_user_group)\
-            .filter(UserGroupUserGroupToPerm.user_group == user_group)\
+        obj = self.sa.query(UserGroupUserGroupToPerm) \
+            .filter(UserGroupUserGroupToPerm.target_user_group == target_user_group) \
+            .filter(UserGroupUserGroupToPerm.user_group == user_group) \
             .scalar()
         if obj is not None:
             self.sa.delete(obj)

@@ -201,7 +201,7 @@ class Setting(Base, BaseModel):
 
     @classmethod
     def get_by_name(cls, ldap_key):
-        return cls.query()\
+        return cls.query() \
             .filter(cls.app_settings_name == ldap_key).scalar()
 
     @classmethod
@@ -223,7 +223,7 @@ class Setting(Base, BaseModel):
 
     @classmethod
     def get_ldap_settings(cls, cache=False):
-        ret = cls.query()\
+        ret = cls.query() \
                 .filter(cls.app_settings_name.startswith('ldap_')).all()
         fd = {}
         for row in ret:
@@ -533,8 +533,8 @@ class Repository(Base, BaseModel):
     @classmethod
     def get_by_repo_name(cls, repo_name):
         q = Session.query(cls).filter(cls.repo_name == repo_name)
-        q = q.options(joinedload(Repository.fork))\
-                .options(joinedload(Repository.user))\
+        q = q.options(joinedload(Repository.fork)) \
+                .options(joinedload(Repository.user)) \
                 .options(joinedload(Repository.group))
         return q.scalar()
 
@@ -549,7 +549,7 @@ class Repository(Base, BaseModel):
 
         :param cls:
         """
-        q = Session.query(Ui)\
+        q = Session.query(Ui) \
             .filter(Ui.ui_key == cls.url_sep())
         q = q.options(FromCache("sql_cache_short", "repository_repo_path"))
         return q.one().ui_value
@@ -622,7 +622,7 @@ class Repository(Base, BaseModel):
         baseui._ucfg = config.config()
         baseui._tcfg = config.config()
 
-        ret = Ui.query()\
+        ret = Ui.query() \
             .options(FromCache("sql_cache_short", "repository_repo_ui")).all()
 
         hg_ui = ret
@@ -671,7 +671,7 @@ class Repository(Base, BaseModel):
 
         :param revisions: filter query by revisions only
         """
-        cmts = ChangesetComment.query()\
+        cmts = ChangesetComment.query() \
             .filter(ChangesetComment.repo == self)
         if revisions:
             cmts = cmts.filter(ChangesetComment.revision.in_(revisions))
@@ -783,10 +783,10 @@ class RepoGroup(Base, BaseModel):
     @classmethod
     def get_by_group_name(cls, group_name, cache=False, case_insensitive=False):
         if case_insensitive:
-            gr = cls.query()\
+            gr = cls.query() \
                 .filter(cls.group_name.ilike(group_name))
         else:
-            gr = cls.query()\
+            gr = cls.query() \
                 .filter(cls.group_name == group_name)
         if cache:
             gr = gr.options(FromCache(
@@ -838,8 +838,8 @@ class RepoGroup(Base, BaseModel):
 
     @property
     def repositories(self):
-        return Repository.query()\
-                .filter(Repository.group == self)\
+        return Repository.query() \
+                .filter(Repository.group == self) \
                 .order_by(Repository.repo_name)
 
     @property
@@ -887,18 +887,18 @@ class Permission(Base, BaseModel):
 
     @classmethod
     def get_default_perms(cls, default_user_id):
-        q = Session.query(UserRepoToPerm, Repository, cls)\
-         .join((Repository, UserRepoToPerm.repository_id == Repository.repo_id))\
-         .join((cls, UserRepoToPerm.permission_id == cls.permission_id))\
+        q = Session.query(UserRepoToPerm, Repository, cls) \
+         .join((Repository, UserRepoToPerm.repository_id == Repository.repo_id)) \
+         .join((cls, UserRepoToPerm.permission_id == cls.permission_id)) \
          .filter(UserRepoToPerm.user_id == default_user_id)
 
         return q.all()
 
     @classmethod
     def get_default_group_perms(cls, default_user_id):
-        q = Session.query(UserRepoGroupToPerm, RepoGroup, cls)\
-         .join((RepoGroup, UserRepoGroupToPerm.group_id == RepoGroup.group_id))\
-         .join((cls, UserRepoGroupToPerm.permission_id == cls.permission_id))\
+        q = Session.query(UserRepoGroupToPerm, RepoGroup, cls) \
+         .join((RepoGroup, UserRepoGroupToPerm.group_id == RepoGroup.group_id)) \
+         .join((cls, UserRepoGroupToPerm.permission_id == cls.permission_id)) \
          .filter(UserRepoGroupToPerm.user_id == default_user_id)
 
         return q.all()
@@ -1204,8 +1204,8 @@ class ChangesetComment(Base, BaseModel):
         :param cls:
         :param revision:
         """
-        return Session.query(User)\
-                .filter(cls.revision == revision)\
+        return Session.query(User) \
+                .filter(cls.revision == revision) \
                 .join(ChangesetComment.author).all()
 
 
@@ -1234,7 +1234,7 @@ class Notification(Base, BaseModel):
 
     @property
     def recipients(self):
-        return [x.user for x in UserNotification.query()\
+        return [x.user for x in UserNotification.query() \
                 .filter(UserNotification.notification == self).all()]
 
     @classmethod

@@ -38,7 +38,7 @@ from kallithea.lib.base import BaseRepoController, render
 from kallithea.lib.helpers import RepoPage
 from kallithea.lib.compat import json
 from kallithea.lib.graphmod import graph_data
-from kallithea.lib.vcs.exceptions import RepositoryError, ChangesetDoesNotExistError,\
+from kallithea.lib.vcs.exceptions import RepositoryError, ChangesetDoesNotExistError, \
     ChangesetError, NodeDoesNotExistError, EmptyRepositoryError
 from kallithea.lib.utils2 import safe_int, safe_str
 

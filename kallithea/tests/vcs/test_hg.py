@@ -302,8 +302,8 @@ class MercurialChangesetTest(unittest.TestCase):
         self.assertTrue(api is chset.get_node('docs/api'))
         index = api.get_node('index.rst')
         self.assertTrue(index is chset.get_node('docs/api/index.rst'))
-        self.assertTrue(index is chset.get_node('docs')\
-            .get_node('api')\
+        self.assertTrue(index is chset.get_node('docs') \
+            .get_node('api') \
             .get_node('index.rst'))
 
     def test_branch_and_tags(self):

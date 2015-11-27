@@ -81,9 +81,9 @@ class MyAccountController(BaseController):
                               self.authuser.user_id).all()]
         else:
             admin = True
-            repos_list = Session().query(Repository)\
+            repos_list = Session().query(Repository) \
                          .filter(Repository.user_id ==
-                                 self.authuser.user_id)\
+                                 self.authuser.user_id) \
                          .order_by(func.lower(Repository.repo_name)).all()
 
         repos_data = RepoModel().get_repos_as_dict(repos_list=repos_list,
@@ -207,7 +207,7 @@ class MyAccountController(BaseController):
         c.active = 'emails'
         self.__load_data()
 
-        c.user_email_map = UserEmailMap.query()\
+        c.user_email_map = UserEmailMap.query() \
             .filter(UserEmailMap.user == c.user).all()
         return render('admin/my_account/my_account.html')
 

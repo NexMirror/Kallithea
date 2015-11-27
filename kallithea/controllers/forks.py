@@ -80,8 +80,8 @@ class ForksController(BaseRepoController):
             raise HTTPFound(location=url('repos'))
 
         c.default_user_id = User.get_default_user().user_id
-        c.in_public_journal = UserFollowing.query()\
-            .filter(UserFollowing.user_id == c.default_user_id)\
+        c.in_public_journal = UserFollowing.query() \
+            .filter(UserFollowing.user_id == c.default_user_id) \
             .filter(UserFollowing.follows_repository == c.repo_info).scalar()
 
         if c.repo_info.stats:

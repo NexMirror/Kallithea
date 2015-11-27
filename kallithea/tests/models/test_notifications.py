@@ -55,7 +55,7 @@ class TestNotifications(BaseTestCase):
         self.assertEqual(notification.notification_id,
                          notifications[0].notification_id)
 
-        unotification = UserNotification.query()\
+        unotification = UserNotification.query() \
             .filter(UserNotification.notification == notification).all()
 
         self.assertEqual(len(unotification), len(usrs))
@@ -100,10 +100,10 @@ class TestNotifications(BaseTestCase):
                                     recipients=[self.u3, self.u1, self.u2])
         Session().commit()
 
-        unotification = UserNotification.query()\
+        unotification = UserNotification.query() \
                             .filter(UserNotification.notification ==
-                                    notification)\
-                            .filter(UserNotification.user_id == self.u3)\
+                                    notification) \
+                            .filter(UserNotification.user_id == self.u3) \
                             .scalar()
 
         self.assertEqual(unotification.user_id, self.u3)
@@ -112,10 +112,10 @@ class TestNotifications(BaseTestCase):
                                    notification.notification_id)
         Session().commit()
 
-        u3notification = UserNotification.query()\
+        u3notification = UserNotification.query() \
                             .filter(UserNotification.notification ==
-                                    notification)\
-                            .filter(UserNotification.user_id == self.u3)\
+                                    notification) \
+                            .filter(UserNotification.user_id == self.u3) \
                             .scalar()
 
         self.assertEqual(u3notification, None)
@@ -124,16 +124,16 @@ class TestNotifications(BaseTestCase):
         self.assertEqual(Notification.query().all(), [notification])
 
         #u1 and u2 still have assignments
-        u1notification = UserNotification.query()\
+        u1notification = UserNotification.query() \
                             .filter(UserNotification.notification ==
-                                    notification)\
-                            .filter(UserNotification.user_id == self.u1)\
+                                    notification) \
+                            .filter(UserNotification.user_id == self.u1) \
                             .scalar()
         self.assertNotEqual(u1notification, None)
-        u2notification = UserNotification.query()\
+        u2notification = UserNotification.query() \
                             .filter(UserNotification.notification ==
-                                    notification)\
-                            .filter(UserNotification.user_id == self.u2)\
+                                    notification) \
+                            .filter(UserNotification.user_id == self.u2) \
                             .scalar()
         self.assertNotEqual(u2notification, None)
 

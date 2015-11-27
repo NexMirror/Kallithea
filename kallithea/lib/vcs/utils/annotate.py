@@ -41,7 +41,7 @@ class AnnotateHtmlFormatter(HtmlFormatter):
         following function as ``annotate_from_changeset_func``::
 
             def changeset_to_anchor(changeset):
-                return '<a href="/changesets/%s/">%s</a>\n' %\
+                return '<a href="/changesets/%s/">%s</a>\n' % \
                        (changeset.id, changeset.id)
 
         :param annotate_from_changeset_func: see above

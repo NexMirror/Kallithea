@@ -49,7 +49,7 @@ class ChangesetStatusModel(BaseModel):
                           with_revisions=False):
         repo = self._get_repo(repo)
 
-        q = ChangesetStatus.query()\
+        q = ChangesetStatus.query() \
             .filter(ChangesetStatus.repo == repo)
         if not with_revisions:
             q = q.filter(ChangesetStatus.version == 0)

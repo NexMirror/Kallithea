@@ -71,9 +71,9 @@ class UsersController(BaseController):
         """GET /users: All items in the collection"""
         # url('users')
 
-        c.users_list = User.query().order_by(User.username)\
-                        .filter(User.username != User.DEFAULT_USER)\
-                        .order_by(func.lower(User.username))\
+        c.users_list = User.query().order_by(User.username) \
+                        .filter(User.username != User.DEFAULT_USER) \
+                        .order_by(func.lower(User.username)) \
                         .all()
 
         users_data = []
@@ -362,8 +362,8 @@ class UsersController(BaseController):
             Session().add(user)
             user_model = UserModel()
 
-            defs = UserToPerm.query()\
-                .filter(UserToPerm.user == user)\
+            defs = UserToPerm.query() \
+                .filter(UserToPerm.user == user) \
                 .all()
             for ug in defs:
                 Session().delete(ug)
@@ -391,7 +391,7 @@ class UsersController(BaseController):
     def edit_emails(self, id):
         c.user = self._get_user_or_raise_if_default(id)
         c.active = 'emails'
-        c.user_email_map = UserEmailMap.query()\
+        c.user_email_map = UserEmailMap.query() \
             .filter(UserEmailMap.user == c.user).all()
 
         defaults = c.user.get_dict()
@@ -435,11 +435,11 @@ class UsersController(BaseController):
     def edit_ips(self, id):
         c.user = self._get_user_or_raise_if_default(id)
         c.active = 'ips'
-        c.user_ip_map = UserIpMap.query()\
+        c.user_ip_map = UserIpMap.query() \
             .filter(UserIpMap.user == c.user).all()
 
         c.inherit_default_ips = c.user.inherit_default_permissions
-        c.default_user_ip_map = UserIpMap.query()\
+        c.default_user_ip_map = UserIpMap.query() \
             .filter(UserIpMap.user == User.get_default_user()).all()
 
         defaults = c.user.get_dict()

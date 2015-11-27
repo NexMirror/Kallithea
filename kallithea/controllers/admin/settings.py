@@ -361,10 +361,10 @@ class SettingsController(BaseController):
                 h.flash(_('Please enter email address'), category='error')
                 raise HTTPFound(location=url('admin_settings_email'))
 
-            test_email_txt_body = EmailNotificationModel()\
+            test_email_txt_body = EmailNotificationModel() \
                 .get_email_tmpl(EmailNotificationModel.TYPE_DEFAULT,
                                 'txt', body=test_body)
-            test_email_html_body = EmailNotificationModel()\
+            test_email_html_body = EmailNotificationModel() \
                 .get_email_tmpl(EmailNotificationModel.TYPE_DEFAULT,
                                 'html', body=test_body)
 

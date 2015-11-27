@@ -42,19 +42,19 @@ def one_space_trim(s):
 def format_sql(sql):
     sql = sql.replace('\n', '')
     sql = one_space_trim(sql)
-    sql = sql\
-        .replace(',', ',\n\t')\
-        .replace('SELECT', '\n\tSELECT \n\t')\
-        .replace('UPDATE', '\n\tUPDATE \n\t')\
-        .replace('DELETE', '\n\tDELETE \n\t')\
-        .replace('FROM', '\n\tFROM')\
-        .replace('ORDER BY', '\n\tORDER BY')\
-        .replace('LIMIT', '\n\tLIMIT')\
-        .replace('WHERE', '\n\tWHERE')\
-        .replace('AND', '\n\tAND')\
-        .replace('LEFT', '\n\tLEFT')\
-        .replace('INNER', '\n\tINNER')\
-        .replace('INSERT', '\n\tINSERT')\
+    sql = sql \
+        .replace(',', ',\n\t') \
+        .replace('SELECT', '\n\tSELECT \n\t') \
+        .replace('UPDATE', '\n\tUPDATE \n\t') \
+        .replace('DELETE', '\n\tDELETE \n\t') \
+        .replace('FROM', '\n\tFROM') \
+        .replace('ORDER BY', '\n\tORDER BY') \
+        .replace('LIMIT', '\n\tLIMIT') \
+        .replace('WHERE', '\n\tWHERE') \
+        .replace('AND', '\n\tAND') \
+        .replace('LEFT', '\n\tLEFT') \
+        .replace('INNER', '\n\tINNER') \
+        .replace('INSERT', '\n\tINSERT') \
         .replace('DELETE', '\n\tDELETE')
     return sql
 

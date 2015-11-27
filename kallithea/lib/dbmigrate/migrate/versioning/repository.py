@@ -238,7 +238,7 @@ class Repository(pathed.Pathed):
         :param file_: Destination file to be written
         :param opts: Options that are passed to :func:`migrate.versioning.shell.main`
         """
-        mng_file = Template(opts.pop('templates_path', None))\
+        mng_file = Template(opts.pop('templates_path', None)) \
             .get_manage(theme=opts.pop('templates_theme', None))
 
         tmpl = open(mng_file).read()

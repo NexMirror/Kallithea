@@ -136,7 +136,7 @@ def ValidRepoUser():
 
         def validate_python(self, value, state):
             try:
-                User.query().filter(User.active == True)\
+                User.query().filter(User.active == True) \
                     .filter(User.username == value).one()
             except sqlalchemy.exc.InvalidRequestError: # NoResultFound/MultipleResultsFound
                 msg = M(self, 'invalid_username', state, username=value)
@@ -226,9 +226,9 @@ def ValidRepoGroup(edit=False, old_data=None):
             if old_gname != group_name or not edit:
 
                 # check group
-                gr = RepoGroup.query()\
-                      .filter(RepoGroup.group_name == slug)\
-                      .filter(RepoGroup.group_parent_id == group_parent_id)\
+                gr = RepoGroup.query() \
+                      .filter(RepoGroup.group_name == slug) \
+                      .filter(RepoGroup.group_parent_id == group_parent_id) \
                       .scalar()
 
                 if gr is not None:
@@ -238,8 +238,8 @@ def ValidRepoGroup(edit=False, old_data=None):
                     )
 
                 # check for same repo
-                repo = Repository.query()\
-                      .filter(Repository.repo_name == slug)\
+                repo = Repository.query() \
+                      .filter(Repository.repo_name == slug) \
                       .scalar()
 
                 if repo is not None:
@@ -651,12 +651,12 @@ def ValidPerms(type_='repo'):
             for k, v, t in perms_new:
                 try:
                     if t is 'user':
-                        self.user_db = User.query()\
-                            .filter(User.active == True)\
+                        self.user_db = User.query() \
+                            .filter(User.active == True) \
                             .filter(User.username == k).one()
                     if t is 'users_group':
-                        self.user_db = UserGroup.query()\
-                            .filter(UserGroup.users_group_active == True)\
+                        self.user_db = UserGroup.query() \
+                            .filter(UserGroup.users_group_active == True) \
                             .filter(UserGroup.users_group_name == k).one()
 
                 except Exception:

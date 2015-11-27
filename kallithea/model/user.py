@@ -425,7 +425,7 @@ class UserModel(BaseModel):
         perm = self._get_perm(perm)
         user = self._get_user(user)
 
-        return UserToPerm.query().filter(UserToPerm.user == user)\
+        return UserToPerm.query().filter(UserToPerm.user == user) \
             .filter(UserToPerm.permission == perm).scalar() is not None
 
     def grant_perm(self, user, perm):
@@ -438,9 +438,9 @@ class UserModel(BaseModel):
         user = self._get_user(user)
         perm = self._get_perm(perm)
         # if this permission is already granted skip it
-        _perm = UserToPerm.query()\
-            .filter(UserToPerm.user == user)\
-            .filter(UserToPerm.permission == perm)\
+        _perm = UserToPerm.query() \
+            .filter(UserToPerm.user == user) \
+            .filter(UserToPerm.permission == perm) \
             .scalar()
         if _perm:
             return

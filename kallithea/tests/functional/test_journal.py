@@ -15,8 +15,8 @@ class TestJournalController(TestController):
 #        usr = Session().query(User).filter(User.username == TEST_USER_ADMIN_LOGIN).one()
 #        repo = Session().query(Repository).filter(Repository.repo_name == HG_REPO).one()
 #
-#        followings = Session().query(UserFollowing)\
-#            .filter(UserFollowing.user == usr)\
+#        followings = Session().query(UserFollowing) \
+#            .filter(UserFollowing.user == usr) \
 #            .filter(UserFollowing.follows_repository == repo).all()
 #
 #        assert len(followings) == 1, 'Not following any repository'

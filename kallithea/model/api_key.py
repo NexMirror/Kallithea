@@ -73,10 +73,10 @@ class ApiKeyModel(BaseModel):
 
     def get_api_keys(self, user, show_expired=True):
         user = self._get_user(user)
-        user_api_keys = UserApiKeys.query()\
+        user_api_keys = UserApiKeys.query() \
             .filter(UserApiKeys.user_id == user.user_id)
         if not show_expired:
-            user_api_keys = user_api_keys\
+            user_api_keys = user_api_keys \
                 .filter(or_(UserApiKeys.expires == -1,
                             UserApiKeys.expires >= time.time()))
         return user_api_keys

@@ -196,7 +196,7 @@ class Setting(Base, BaseModel):
 
     @classmethod
     def get_by_name(cls, key):
-        return cls.query()\
+        return cls.query() \
             .filter(cls.app_settings_name == key).scalar()
 
     @classmethod
@@ -225,7 +225,7 @@ class Setting(Base, BaseModel):
 
     @classmethod
     def get_ldap_settings(cls, cache=False):
-        ret = cls.query()\
+        ret = cls.query() \
                 .filter(cls.app_settings_name.startswith('ldap_')).all()
         fd = {}
         for row in ret:
@@ -235,7 +235,7 @@ class Setting(Base, BaseModel):
 
     @classmethod
     def get_default_repo_settings(cls, cache=False, strip_prefix=False):
-        ret = cls.query()\
+        ret = cls.query() \
                 .filter(cls.app_settings_name.startswith('default_')).all()
         fd = {}
         for row in ret:
@@ -713,8 +713,8 @@ class RepositoryField(Base, BaseModel):
 
     @classmethod
     def get_by_key_name(cls, key, repo):
-        row = cls.query()\
-                .filter(cls.repository == repo)\
+        row = cls.query() \
+                .filter(cls.repository == repo) \
                 .filter(cls.field_key == key).scalar()
         return row
 
@@ -826,8 +826,8 @@ class Repository(Base, BaseModel):
     @classmethod
     def get_by_repo_name(cls, repo_name):
         q = Session().query(cls).filter(cls.repo_name == repo_name)
-        q = q.options(joinedload(Repository.fork))\
-                .options(joinedload(Repository.user))\
+        q = q.options(joinedload(Repository.fork)) \
+                .options(joinedload(Repository.user)) \
                 .options(joinedload(Repository.group))
         return q.scalar()
 
@@ -848,7 +848,7 @@ class Repository(Base, BaseModel):
 
         :param cls:
         """
-        q = Session().query(Ui)\
+        q = Session().query(Ui) \
             .filter(Ui.ui_key == cls.url_sep())
         q = q.options(FromCache("sql_cache_short", "repository_repo_path"))
         return q.one().ui_value
@@ -917,9 +917,9 @@ class Repository(Base, BaseModel):
         """
         Returns associated cache keys for that repo
         """
-        return CacheInvalidation.query()\
-            .filter(CacheInvalidation.cache_args == self.repo_name)\
-            .order_by(CacheInvalidation.cache_key)\
+        return CacheInvalidation.query() \
+            .filter(CacheInvalidation.cache_args == self.repo_name) \
+            .order_by(CacheInvalidation.cache_key) \
             .all()
 
     def get_new_name(self, repo_name):
@@ -1093,7 +1093,7 @@ class Repository(Base, BaseModel):
 
         :param revisions: filter query by revisions only
         """
-        cmts = ChangesetComment.query()\
+        cmts = ChangesetComment.query() \
             .filter(ChangesetComment.repo == self)
         if revisions:
             cmts = cmts.filter(ChangesetComment.revision.in_(revisions))
@@ -1110,8 +1110,8 @@ class Repository(Base, BaseModel):
         :type revisions: list
         """
 
-        statuses = ChangesetStatus.query()\
-            .filter(ChangesetStatus.repo == self)\
+        statuses = ChangesetStatus.query() \
+            .filter(ChangesetStatus.repo == self) \
             .filter(ChangesetStatus.version == 0)
         if revisions:
             statuses = statuses.filter(ChangesetStatus.revision.in_(revisions))
@@ -1266,10 +1266,10 @@ class RepoGroup(Base, BaseModel):
     @classmethod
     def get_by_group_name(cls, group_name, cache=False, case_insensitive=False):
         if case_insensitive:
-            gr = cls.query()\
+            gr = cls.query() \
                 .filter(cls.group_name.ilike(group_name))
         else:
-            gr = cls.query()\
+            gr = cls.query() \
                 .filter(cls.group_name == group_name)
         if cache:
             gr = gr.options(FromCache(
@@ -1321,8 +1321,8 @@ class RepoGroup(Base, BaseModel):
 
     @property
     def repositories(self):
-        return Repository.query()\
-                .filter(Repository.group == self)\
+        return Repository.query() \
+                .filter(Repository.group == self) \
                 .order_by(Repository.repo_name)
 
     @property
@@ -1441,18 +1441,18 @@ class Permission(Base, BaseModel):
 
     @classmethod
     def get_default_perms(cls, default_user_id):
-        q = Session().query(UserRepoToPerm, Repository, cls)\
-         .join((Repository, UserRepoToPerm.repository_id == Repository.repo_id))\
-         .join((cls, UserRepoToPerm.permission_id == cls.permission_id))\
+        q = Session().query(UserRepoToPerm, Repository, cls) \
+         .join((Repository, UserRepoToPerm.repository_id == Repository.repo_id)) \
+         .join((cls, UserRepoToPerm.permission_id == cls.permission_id)) \
          .filter(UserRepoToPerm.user_id == default_user_id)
 
         return q.all()
 
     @classmethod
     def get_default_group_perms(cls, default_user_id):
-        q = Session().query(UserRepoGroupToPerm, RepoGroup, cls)\
-         .join((RepoGroup, UserRepoGroupToPerm.group_id == RepoGroup.group_id))\
-         .join((cls, UserRepoGroupToPerm.permission_id == cls.permission_id))\
+        q = Session().query(UserRepoGroupToPerm, RepoGroup, cls) \
+         .join((RepoGroup, UserRepoGroupToPerm.group_id == RepoGroup.group_id)) \
+         .join((cls, UserRepoGroupToPerm.permission_id == cls.permission_id)) \
          .filter(UserRepoGroupToPerm.user_id == default_user_id)
 
         return q.all()
@@ -1811,7 +1811,7 @@ class ChangesetComment(Base, BaseModel):
         :param cls:
         :param revision:
         """
-        q = Session().query(User)\
+        q = Session().query(User) \
                 .join(ChangesetComment.author)
         if revision:
             q = q.filter(cls.revision == revision)
@@ -1980,8 +1980,8 @@ class Notification(Base, BaseModel):
 
     @property
     def recipients(self):
-        return [x.user for x in UserNotification.query()\
-                .filter(UserNotification.notification == self)\
+        return [x.user for x in UserNotification.query() \
+                .filter(UserNotification.notification == self) \
                 .order_by(UserNotification.user_id.asc()).all()]
 
     @classmethod

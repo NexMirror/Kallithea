@@ -40,7 +40,7 @@ from kallithea.lib.vcs.exceptions import RepositoryError, \
 
 from kallithea.lib.compat import json
 import kallithea.lib.helpers as h
-from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator,\
+from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator, \
     NotAnonymous
 from kallithea.lib.base import BaseRepoController, render
 from kallithea.lib.utils import action_logger
@@ -242,7 +242,7 @@ class ChangesetController(BaseRepoController):
                                               changeset.raw_id, with_revisions=True)
                                 if st.changeset_comment_id is not None)
 
-                inlines = ChangesetCommentsModel()\
+                inlines = ChangesetCommentsModel() \
                             .get_inline_comments(c.db_repo.repo_id,
                                                  revision=changeset.raw_id)
                 c.inline_comments.extend(inlines)

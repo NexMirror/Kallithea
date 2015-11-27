@@ -130,7 +130,7 @@ class _BaseTestCase(object):
                 % (repo_name, fork_name_full, fork_name_full))
 
         #test if the fork was created in the database
-        fork_repo = Session().query(Repository)\
+        fork_repo = Session().query(Repository) \
             .filter(Repository.repo_name == fork_name_full).one()
 
         self.assertEqual(fork_repo.repo_name, fork_name_full)
@@ -173,7 +173,7 @@ class _BaseTestCase(object):
                 % (repo_name, fork_name, fork_name))
 
         #test if the fork was created in the database
-        fork_repo = Session().query(Repository)\
+        fork_repo = Session().query(Repository) \
             .filter(Repository.repo_name == fork_name).one()
 
         self.assertEqual(fork_repo.repo_name, fork_name)
@@ -189,8 +189,8 @@ class _BaseTestCase(object):
         usr = self.log_user(self.username, self.password)['user_id']
         repo_name = self.REPO
 
-        forks = Repository.query()\
-            .filter(Repository.repo_type == self.REPO_TYPE)\
+        forks = Repository.query() \
+            .filter(Repository.repo_type == self.REPO_TYPE) \
             .filter(Repository.fork_id != None).all()
         self.assertEqual(1, len(forks))
 
@@ -209,8 +209,8 @@ class _BaseTestCase(object):
         usr = self.log_user(self.username, self.password)['user_id']
         repo_name = self.REPO
 
-        forks = Repository.query()\
-            .filter(Repository.repo_type == self.REPO_TYPE)\
+        forks = Repository.query() \
+            .filter(Repository.repo_type == self.REPO_TYPE) \
             .filter(Repository.fork_id != None).all()
         self.assertEqual(1, len(forks))
 

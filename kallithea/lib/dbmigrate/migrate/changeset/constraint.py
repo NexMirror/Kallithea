@@ -146,7 +146,7 @@ class CheckConstraint(ConstraintChangeset, schema.CheckConstraint):
     Migrate's additional parameters:
 
     :param sqltext: Plain SQL text to check condition
-    :param columns: If not name is applied, you must supply this kw\
+    :param columns: If not name is applied, you must supply this kw \
     to autoname constraint
     :param table: If columns are passed as strings, this kw is required
     :type table: Table instance

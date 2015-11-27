@@ -2,7 +2,7 @@ from kallithea.tests import *
 from kallithea.tests.fixture import Fixture
 from kallithea.model.repo_group import RepoGroupModel
 from kallithea.model.repo import RepoModel
-from kallithea.model.db import RepoGroup, User, UserGroupRepoGroupToPerm,\
+from kallithea.model.db import RepoGroup, User, UserGroupRepoGroupToPerm, \
     Permission, UserToPerm
 from kallithea.model.user import UserModel
 
@@ -325,9 +325,9 @@ class TestPermissions(BaseTestCase):
                                                       perm='group.read')
         Session().commit()
         # check if the
-        obj = Session().query(UserGroupRepoGroupToPerm)\
-            .filter(UserGroupRepoGroupToPerm.group == self.g1)\
-            .filter(UserGroupRepoGroupToPerm.users_group == self.ug1)\
+        obj = Session().query(UserGroupRepoGroupToPerm) \
+            .filter(UserGroupRepoGroupToPerm.group == self.g1) \
+            .filter(UserGroupRepoGroupToPerm.users_group == self.ug1) \
             .scalar()
         self.assertEqual(obj.permission.permission_name, 'group.read')
 
@@ -689,8 +689,8 @@ class TestPermissions(BaseTestCase):
                          'repository.admin')
 
     def _test_def_perm_equal(self, user, change_factor=0):
-        perms = UserToPerm.query()\
-                .filter(UserToPerm.user == user)\
+        perms = UserToPerm.query() \
+                .filter(UserToPerm.user == user) \
                 .all()
         self.assertEqual(len(perms),
                          len(Permission.DEFAULT_USER_PERMISSIONS,)+change_factor,
@@ -704,8 +704,8 @@ class TestPermissions(BaseTestCase):
         PermissionModel().create_default_permissions(user=self.u1)
         self._test_def_perm_equal(user=self.u1)
         #now we delete one, it should be re-created after another call
-        perms = UserToPerm.query()\
-                .filter(UserToPerm.user == self.u1)\
+        perms = UserToPerm.query() \
+                .filter(UserToPerm.user == self.u1) \
                 .all()
         Session().delete(perms[0])
         Session().commit()
@@ -734,9 +734,9 @@ class TestPermissions(BaseTestCase):
         self.assertNotEqual(new, None)
 
         #now modify permissions
-        p = UserToPerm.query()\
-                .filter(UserToPerm.user == self.u1)\
-                .filter(UserToPerm.permission == old)\
+        p = UserToPerm.query() \
+                .filter(UserToPerm.user == self.u1) \
+                .filter(UserToPerm.permission == old) \
                 .one()
         p.permission = new
         Session().add(p)

@@ -76,7 +76,7 @@ def whoosh_index(repo_location, full_index):
 
     index_location = config['index_dir']
     WhooshIndexingDaemon(index_location=index_location,
-                         repo_location=repo_location, sa=DBS)\
+                         repo_location=repo_location, sa=DBS) \
                          .run(full_index=full_index)
 
 
@@ -116,9 +116,9 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
         last_cs = None
         timegetter = itemgetter('time')
 
-        dbrepo = DBS.query(Repository)\
+        dbrepo = DBS.query(Repository) \
             .filter(Repository.repo_name == repo_name).scalar()
-        cur_stats = DBS.query(Statistics)\
+        cur_stats = DBS.query(Statistics) \
             .filter(Statistics.repository == dbrepo).scalar()
 
         if cur_stats is not None:
@@ -176,7 +176,7 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
                                     "changed": len(cs.changed),
                                     "removed": len(cs.removed),
                                    }
-                        co_day_auth_aggr[akc(cs.author)]['data']\
+                        co_day_auth_aggr[akc(cs.author)]['data'] \
                             .append(datadict)
 
             else:

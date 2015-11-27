@@ -45,7 +45,7 @@ from pylons.i18n.translation import _
 
 from kallithea import __version__, BACKENDS
 
-from kallithea.lib.utils2 import str2bool, safe_unicode, AttributeDict,\
+from kallithea.lib.utils2 import str2bool, safe_unicode, AttributeDict, \
     safe_str, safe_int
 from kallithea.lib import auth_modules
 from kallithea.lib.auth import AuthUser, HasPermissionAnyMiddleware
@@ -367,7 +367,7 @@ class BaseController(WSGIController):
 
         c.repo_name = get_repo_slug(request)  # can be empty
         c.backends = BACKENDS.keys()
-        c.unread_notifications = NotificationModel()\
+        c.unread_notifications = NotificationModel() \
                         .get_unread_cnt_for_user(c.authuser.user_id)
 
         self.cut_off_limit = safe_int(config.get('cut_off_limit'))

@@ -110,8 +110,8 @@ class RepoGroupsController(BaseController):
     def index(self, format='html'):
         """GET /repo_groups: All items in the collection"""
         # url('repos_groups')
-        _list = RepoGroup.query()\
-                    .order_by(func.lower(RepoGroup.group_name))\
+        _list = RepoGroup.query() \
+                    .order_by(func.lower(RepoGroup.group_name)) \
                     .all()
         group_iter = RepoGroupList(_list, perm_set=['group.admin'])
         repo_groups_data = []
@@ -329,13 +329,13 @@ class RepoGroupsController(BaseController):
         #overwrite our cached list with current filter
         c.repo_cnt = 0
 
-        groups = RepoGroup.query().order_by(RepoGroup.group_name)\
+        groups = RepoGroup.query().order_by(RepoGroup.group_name) \
             .filter(RepoGroup.group_parent_id == c.group.group_id).all()
         c.groups = self.scm_model.get_repo_groups(groups)
 
-        c.repos_list = Repository.query()\
-                        .filter(Repository.group_id == c.group.group_id)\
-                        .order_by(func.lower(Repository.repo_name))\
+        c.repos_list = Repository.query() \
+                        .filter(Repository.group_id == c.group.group_id) \
+                        .order_by(func.lower(Repository.repo_name)) \
                         .all()
 
         repos_data = RepoModel().get_repos_as_dict(repos_list=c.repos_list,

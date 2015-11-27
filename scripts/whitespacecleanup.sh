@@ -6,6 +6,7 @@ files=`hg loc '*.py' '*.html' '*.css' '*.rst' '*.txt' '*.js' '*.ini' '*.cfg' CON
 
 sed -i -e "s,`printf '\t'`,    ,g" $files
 sed -i -e "s,  *$,,g" $files
+sed -i -e 's,\([^ ]\)\\$,\1 \\,g' -e 's,\(["'"'"']["'"'"']["'"'"']\) \\$,\1\\,g' $files
 # ensure one trailing newline - remove empty last line and make last line include trailing newline:
 sed -i -e '$,${/^$/d}' -e '$a\' $files
 

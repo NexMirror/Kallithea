@@ -125,8 +125,8 @@ class AdminController(BaseController):
 
     @HasPermissionAllDecorator('hg.admin')
     def index(self):
-        users_log = UserLog.query()\
-                .options(joinedload(UserLog.user))\
+        users_log = UserLog.query() \
+                .options(joinedload(UserLog.user)) \
                 .options(joinedload(UserLog.repository))
 
         #FILTERING

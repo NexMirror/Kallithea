@@ -54,7 +54,7 @@ from webhelpers.html.tags import _set_input_attrs, _set_id_attr, \
 from kallithea.lib.annotate import annotate_highlight
 from kallithea.lib.utils import repo_name_slug, get_custom_lexer
 from kallithea.lib.utils2 import str2bool, safe_unicode, safe_str, \
-    get_changeset_safe, datetime_to_time, time_to_datetime, AttributeDict,\
+    get_changeset_safe, datetime_to_time, time_to_datetime, AttributeDict, \
     safe_int
 from kallithea.lib.markup_renderer import MarkupRenderer, url_re
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError
@@ -802,8 +802,8 @@ def action_parser(user_log, feed=False, parse_cs=False):
     if feed:
         action = action_str[0].replace('[', '').replace(']', '')
     else:
-        action = action_str[0]\
-            .replace('[', '<span class="journal_highlight">')\
+        action = action_str[0] \
+            .replace('[', '<span class="journal_highlight">') \
             .replace(']', '</span>')
 
     action_params_func = lambda: ""
@@ -879,10 +879,10 @@ def gravatar_url(email_address, size=30, ssl_enabled=True):
 
         tmpl = _gravatar_url
         parsed_url = urlparse.urlparse(url.current(qualified=True))
-        tmpl = tmpl.replace('{email}', email_address)\
+        tmpl = tmpl.replace('{email}', email_address) \
                    .replace('{md5email}', _md5(safe_str(email_address).lower())) \
-                   .replace('{netloc}', parsed_url.netloc)\
-                   .replace('{scheme}', parsed_url.scheme)\
+                   .replace('{netloc}', parsed_url.netloc) \
+                   .replace('{scheme}', parsed_url.scheme) \
                    .replace('{size}', safe_str(size))
         return tmpl
 

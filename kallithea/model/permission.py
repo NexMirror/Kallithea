@@ -32,7 +32,7 @@ import traceback
 from sqlalchemy.exc import DatabaseError
 
 from kallithea.model import BaseModel
-from kallithea.model.db import User, Permission, UserToPerm, UserRepoToPerm,\
+from kallithea.model.db import User, Permission, UserToPerm, UserRepoToPerm, \
     UserRepoGroupToPerm, UserUserGroupToPerm
 from kallithea.lib.utils2 import str2bool
 
@@ -116,8 +116,8 @@ class PermissionModel(BaseModel):
             # clear current entries, to make this function idempotent
             # it will fix even if we define more permissions or permissions
             # are somehow missing
-            u2p = self.sa.query(UserToPerm)\
-                .filter(UserToPerm.user == perm_user)\
+            u2p = self.sa.query(UserToPerm) \
+                .filter(UserToPerm.user == perm_user) \
                 .all()
             for p in u2p:
                 self.sa.delete(p)
@@ -140,8 +140,8 @@ class PermissionModel(BaseModel):
                 _def_name = form_result['default_repo_perm'].split('repository.')[-1]
                 _def = Permission.get_by_key('repository.' + _def_name)
                 # repos
-                for r2p in self.sa.query(UserRepoToPerm)\
-                               .filter(UserRepoToPerm.user == perm_user)\
+                for r2p in self.sa.query(UserRepoToPerm) \
+                               .filter(UserRepoToPerm.user == perm_user) \
                                .all():
 
                     #don't reset PRIVATE repositories
@@ -153,8 +153,8 @@ class PermissionModel(BaseModel):
                 _def_name = form_result['default_group_perm'].split('group.')[-1]
                 # groups
                 _def = Permission.get_by_key('group.' + _def_name)
-                for g2p in self.sa.query(UserRepoGroupToPerm)\
-                               .filter(UserRepoGroupToPerm.user == perm_user)\
+                for g2p in self.sa.query(UserRepoGroupToPerm) \
+                               .filter(UserRepoGroupToPerm.user == perm_user) \
                                .all():
                     g2p.permission = _def
                     self.sa.add(g2p)
@@ -163,8 +163,8 @@ class PermissionModel(BaseModel):
                 _def_name = form_result['default_user_group_perm'].split('usergroup.')[-1]
                 # groups
                 _def = Permission.get_by_key('usergroup.' + _def_name)
-                for g2p in self.sa.query(UserUserGroupToPerm)\
-                               .filter(UserUserGroupToPerm.user == perm_user)\
+                for g2p in self.sa.query(UserUserGroupToPerm) \
+                               .filter(UserUserGroupToPerm.user == perm_user) \
                                .all():
                     g2p.permission = _def
                     self.sa.add(g2p)

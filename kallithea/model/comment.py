@@ -210,7 +210,7 @@ class ChangesetCommentsModel(BaseModel):
                 email_kwargs=email_kwargs,
             )
 
-            mention_recipients = set(self._extract_mentions(body))\
+            mention_recipients = set(self._extract_mentions(body)) \
                                     .difference(recipients)
             if mention_recipients:
                 email_kwargs['is_mention'] = True
@@ -260,14 +260,14 @@ class ChangesetCommentsModel(BaseModel):
         q = Session().query(ChangesetComment)
 
         if inline:
-            q = q.filter(ChangesetComment.line_no != None)\
+            q = q.filter(ChangesetComment.line_no != None) \
                 .filter(ChangesetComment.f_path != None)
         else:
-            q = q.filter(ChangesetComment.line_no == None)\
+            q = q.filter(ChangesetComment.line_no == None) \
                 .filter(ChangesetComment.f_path == None)
 
         if revision is not None:
-            q = q.filter(ChangesetComment.revision == revision)\
+            q = q.filter(ChangesetComment.revision == revision) \
                 .filter(ChangesetComment.repo_id == repo_id)
         elif pull_request is not None:
             pull_request = self.__get_pull_request(pull_request)

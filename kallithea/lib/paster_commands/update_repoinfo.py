@@ -61,7 +61,7 @@ class Command(BasePasterCommand):
                                if self.options.repo_update_list else None
 
         if repo_update_list is not None:
-            repo_list = list(Repository.query()\
+            repo_list = list(Repository.query() \
                 .filter(Repository.repo_name.in_(repo_update_list)))
         else:
             repo_list = Repository.getAll()

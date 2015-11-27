@@ -184,8 +184,8 @@ class DbManage(object):
         Fixes a old kallithea version path into new one without a '*'
         """
 
-        paths = self.sa.query(Ui)\
-                .filter(Ui.ui_key == '/')\
+        paths = self.sa.query(Ui) \
+                .filter(Ui.ui_key == '/') \
                 .scalar()
 
         paths.ui_value = paths.ui_value.replace('*', '')
@@ -198,8 +198,8 @@ class DbManage(object):
         Fixes a old default user with some 'nicer' default values,
         used mostly for anonymous access
         """
-        def_user = self.sa.query(User)\
-                .filter(User.username == User.DEFAULT_USER)\
+        def_user = self.sa.query(User) \
+                .filter(User.username == User.DEFAULT_USER) \
                 .one()
 
         def_user.name = 'Anonymous'
@@ -278,7 +278,7 @@ class DbManage(object):
 
         #HOOKS
         hooks1_key = Ui.HOOK_UPDATE
-        hooks1_ = self.sa.query(Ui)\
+        hooks1_ = self.sa.query(Ui) \
             .filter(Ui.ui_key == hooks1_key).scalar()
 
         hooks1 = Ui() if hooks1_ is None else hooks1_
@@ -289,7 +289,7 @@ class DbManage(object):
         self.sa.add(hooks1)
 
         hooks2_key = Ui.HOOK_REPO_SIZE
-        hooks2_ = self.sa.query(Ui)\
+        hooks2_ = self.sa.query(Ui) \
             .filter(Ui.ui_key == hooks2_key).scalar()
         hooks2 = Ui() if hooks2_ is None else hooks2_
         hooks2.ui_section = 'hooks'
@@ -390,9 +390,9 @@ class DbManage(object):
             g.group_name = g.get_new_name(g.name)
             self.sa.add(g)
             # get default perm
-            default = UserRepoGroupToPerm.query()\
-                .filter(UserRepoGroupToPerm.group == g)\
-                .filter(UserRepoGroupToPerm.user == def_usr)\
+            default = UserRepoGroupToPerm.query() \
+                .filter(UserRepoGroupToPerm.group == g) \
+                .filter(UserRepoGroupToPerm.user == def_usr) \
                 .scalar()
 
             if default is None:
@@ -411,7 +411,7 @@ class DbManage(object):
         if not default_user:
             return
 
-        u2p = UserToPerm.query()\
+        u2p = UserToPerm.query() \
             .filter(UserToPerm.user == default_user).all()
         fixed = False
         if len(u2p) != len(Permission.DEFAULT_USER_PERMISSIONS):

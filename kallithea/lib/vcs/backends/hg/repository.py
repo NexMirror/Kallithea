@@ -361,10 +361,10 @@ class MercurialRepository(BaseRepository):
             return localrepository(self.baseui, self.path, create=create)
         except (Abort, RepoError) as err:
             if create:
-                msg = "Cannot create repository at %s. Original error was %s"\
+                msg = "Cannot create repository at %s. Original error was %s" \
                     % (self.path, err)
             else:
-                msg = "Not valid repository at %s. Original error was %s"\
+                msg = "Not valid repository at %s. Original error was %s" \
                     % (self.path, err)
             raise RepositoryError(msg)
 

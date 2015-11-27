@@ -40,7 +40,7 @@ class GitInMemoryChangeset(BaseInMemoryChangeset):
         ENCODING = "UTF-8"
 
         # Create tree and populates it with blobs
-        commit_tree = self.parents[0] and repo[self.parents[0]._commit.tree] or\
+        commit_tree = self.parents[0] and repo[self.parents[0]._commit.tree] or \
             objects.Tree()
         for node in self.added + self.changed:
             # Compute subdirs if needed

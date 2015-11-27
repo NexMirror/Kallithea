@@ -76,7 +76,7 @@ class Command(BasePasterCommand):
             WhooshIndexingDaemon(index_location=index_location,
                                  repo_location=repo_location,
                                  repo_list=repo_list,
-                                 repo_update_list=repo_update_list)\
+                                 repo_update_list=repo_update_list) \
                 .run(full_index=self.options.full_index)
             l.release()
         except LockHeld:
