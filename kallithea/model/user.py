@@ -278,6 +278,11 @@ class UserModel(BaseModel):
         from kallithea.lib.hooks import log_delete_user
         log_delete_user(user.get_dict(), cur_user)
 
+    def can_change_password(self, user):
+        from kallithea.lib import auth_modules
+        managed_fields = auth_modules.get_managed_fields(user)
+        return 'password' not in managed_fields
+
     def get_reset_password_token(self, user, timestamp, session_id):
         """
         The token is a 40-digit hexstring, calculated as a HMAC-SHA1.
@@ -332,18 +337,21 @@ class UserModel(BaseModel):
         user = User.get_by_email(user_email)
         timestamp = int(time.time())
         if user is not None:
-            log.debug('password reset user %s found', user)
-            token = self.get_reset_password_token(user,
-                                                  timestamp,
-                                                  h.authentication_token())
-            # URL must be fully qualified; but since the token is locked to
-            # the current browser session, we must provide a URL with the
-            # current scheme and hostname, rather than the canonical_url.
-            link = h.url('reset_password_confirmation', qualified=True,
-                         email=user_email,
-                         timestamp=timestamp,
-                         token=token)
-
+            if self.can_change_password(user):
+                log.debug('password reset user %s found', user)
+                token = self.get_reset_password_token(user,
+                                                      timestamp,
+                                                      h.authentication_token())
+                # URL must be fully qualified; but since the token is locked to
+                # the current browser session, we must provide a URL with the
+                # current scheme and hostname, rather than the canonical_url.
+                link = h.url('reset_password_confirmation', qualified=True,
+                             email=user_email,
+                             timestamp=timestamp,
+                             token=token)
+            else:
+                log.debug('password reset user %s found but was managed', user)
+                token = link = None
             reg_type = EmailNotificationModel.TYPE_PASSWORD_RESET
             body = EmailNotificationModel().get_email_tmpl(
                 reg_type, 'txt',
@@ -397,6 +405,8 @@ class UserModel(BaseModel):
         from kallithea.lib import auth
         user = User.get_by_email(user_email)
         if user is not None:
+            if not self.can_change_password(user):
+                raise Exception('trying to change password for external user')
             user.password = auth.get_crypt_password(new_passwd)
             Session().add(user)
             Session().commit()
