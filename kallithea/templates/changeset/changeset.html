@@ -209,19 +209,6 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
     ## FORM FOR MAKING JS ACTION AS CHANGESET COMMENTS
     <script type="text/javascript">
       $(document).ready(function(){
-          $('.show-inline-comments').change(function(e){
-              var target = e.currentTarget;
-              if(target == null){
-                  target = this;
-              }
-              var boxid = $(target).attr('id_for');
-              if(target.checked){
-                  $('#{0} .inline-comments'.format(boxid)).show();
-              }else{
-                  $('#{0} .inline-comments'.format(boxid)).hide();
-              }
-          });
-
           $('.code-difftable').on('click', '.add-bubble', function(e){
               show_comment_form($(this));
           });

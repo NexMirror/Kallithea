@@ -117,6 +117,12 @@
                   ${c.ignorews_url(request.GET, url_fid)}
                   ${c.context_url(request.GET, url_fid)}
                 </div>
+                <span style="float:right;margin-top:-3px">
+                    <label>
+                        ${_('Show inline comments')}
+                        ${h.checkbox('',checked="checked",class_="show-inline-comments",id_for=url_fid)}
+                    </label>
+                </span>
             </div>
         </div>
         <div class="code-body full_f_path" data-f_path="${h.safe_unicode(filename)}">
@@ -177,6 +183,18 @@ $(document).ready(function(){
         else if(!$target.hasClass('hidden')){
             $target.addClass('hidden');
             $button.html("&darr; {0} &darr;".format(_TM['Expand Diff']));
+        }
+    });
+    $('.show-inline-comments').change(function(e){
+        var target = e.currentTarget;
+        if(target == null){
+            target = this;
+        }
+        var boxid = $(target).attr('id_for');
+        if(target.checked){
+            $('#{0} .inline-comments'.format(boxid)).show();
+        }else{
+            $('#{0} .inline-comments'.format(boxid)).hide();
         }
     });
 });
