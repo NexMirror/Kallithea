@@ -276,7 +276,10 @@ class DiffLibTest(BaseTestCase):
     @parameterized.expand([(x,) for x in DIFF_FIXTURES])
     def test_diff(self, diff_fixture):
         diff = fixture.load_resource(diff_fixture, strip=False)
-        diff_proc = DiffProcessor(diff)
+        vcs = 'hg'
+        if diff_fixture.startswith('git_'):
+            vcs = 'git'
+        diff_proc = DiffProcessor(diff, vcs=vcs)
         diff_proc_d = diff_proc.prepare()
         data = [(x['filename'], x['operation'], x['stats']) for x in diff_proc_d]
         expected_data = DIFF_FIXTURES[diff_fixture]
