@@ -2,3 +2,9 @@ diff --git a/work-horus.xls b/file.xls
 similarity index 100%
 rename from work-horus.xls
 rename to file.xls
+diff --git a/files/var/www/favicon.ico b/files/var/www/favicon.ico/DEFAULT
+old mode 100644
+new mode 100755
+similarity index 100%
+rename from files/var/www/favicon.ico
+rename to files/var/www/favicon.ico/DEFAULT

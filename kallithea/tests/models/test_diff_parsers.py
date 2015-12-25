@@ -133,7 +133,14 @@ DIFF_FIXTURES = {
          {'added': 0,
           'deleted': 0,
           'binary': True,
-          'ops': {RENAMED_FILENODE: 'file renamed from work-horus.xls to file.xls'}})
+          'ops': {RENAMED_FILENODE: 'file renamed from work-horus.xls to file.xls'}}),
+        ('files/var/www/favicon.ico/DEFAULT',
+         'R',
+         {'added': 0,
+          'binary': True,
+          'deleted': 0,
+          'ops': {4: 'file renamed from files/var/www/favicon.ico to files/var/www/favicon.ico/DEFAULT',
+                  6: 'modified file chmod 100644 => 100755'}})
     ],
     'git_diff_mod_single_binary_file.diff': [
         ('US Warszawa.jpg', 'M',

@@ -85,6 +85,9 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
         return True
 
     def auth(self, userobj, username, password, settings, **kwargs):
+        if not username:
+            log.debug('Empty username - skipping...')
+            return None
         if username not in _auth_cache:
             # Need lock here, as PAM authentication is not thread safe
             _pam_lock.acquire()

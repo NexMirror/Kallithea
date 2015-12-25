@@ -1918,7 +1918,7 @@ var prefixFirstSort = function(results, container, query) {
 $(document).ready(function(){
     $('.diff-collapse-button').click(function(e) {
         var $button = $(e.currentTarget);
-        var $target = $('#' + $button.prop('target'));
+        var $target = $('#' + $button.attr('target'));
         if($target.hasClass('hidden')){
             $target.removeClass('hidden');
             $button.html("&uarr; {0} &uarr;".format(_TM['Collapse Diff']));

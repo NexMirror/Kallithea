@@ -2138,7 +2138,13 @@ class CacheInvalidation(Base, BaseModel):
             return True
         inv_obj.cache_active = True
         Session().add(inv_obj)
-        Session().commit()
+        try:
+            Session().commit()
+        except exc.IntegrityError:
+            inv_obj = cls.query().filter(cls.cache_key == cache_key).scalar()
+            if not inv_obj:
+                raise
+            # TOCTOU - another thread added the key at the same time; no further action required
         return False
 
     @classmethod
