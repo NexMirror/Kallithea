@@ -170,8 +170,12 @@ class WhooshIndexingDaemon(object):
         Adding doc to writer this function itself fetches data from
         the instance of vcs backend
         """
+        try:
+            node = self.get_node(repo, path, index_rev)
+        except (ChangesetError, NodeDoesNotExistError):
+            log.debug("couldn't add doc - %s did not have %r at %s", repo, path, index_rev)
+            return 0, 0
 
-        node = self.get_node(repo, path, index_rev)
         indexed = indexed_w_content = 0
         # we just index the content of chosen files, and skip binary files
         if node.extension in INDEX_EXTENSIONS and not node.is_binary:
