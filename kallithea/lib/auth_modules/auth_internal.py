@@ -67,6 +67,9 @@ class KallitheaAuthPlugin(auth_modules.KallitheaAuthPluginBase):
             log.warning("userobj:%s extern_type mismatch got:`%s` expected:`%s`",
                      userobj, userobj.extern_type, self.name)
             return None
+        if not username:
+            log.debug('Empty username - skipping...')
+            return None
 
         user_data = {
             "username": userobj.username,
