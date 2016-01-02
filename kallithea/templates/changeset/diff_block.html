@@ -119,11 +119,11 @@
               <div style="font-size: 0">
                 %if op in 'DM':
                   <img id="${h.FID('',filenode_path)}_image-diff-img-a" class="img-diff img-diff-swapable" style="display:none"
-                      realsrc="${h.url('files_raw_home',repo_name=c.a_repo.repo_name,revision=c.a_rev,f_path=filenode_path) if op in 'DM' else ''}" />
+                      realsrc="${h.url('files_raw_home',repo_name=c.a_repo.repo_name,revision=c.a_rev,f_path=filenode_path)}" />
                 %endif
                 %if op in 'AM':
                   <img id="${h.FID('',filenode_path)}_image-diff-img-b" class="img-diff img-diff-swapable" style="display:none"
-                      realsrc="${h.url('files_raw_home',repo_name=c.cs_repo.repo_name,revision=c.cs_rev,f_path=filenode_path) if op in 'AM' else ''}" />
+                      realsrc="${h.url('files_raw_home',repo_name=c.cs_repo.repo_name,revision=c.cs_rev,f_path=filenode_path)}" />
                 %endif
               </div>
             %endif
