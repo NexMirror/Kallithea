@@ -49,7 +49,7 @@
                 <div id="${FID}_image-diff" class="btn btn-image-diff-swap" style="display:none">Press to swap images</div>
               %endif
               <div style="font-size: 0">
-                %if change == 'M':
+                %if change in 'DM':
                   <img id="${FID}_image-diff-img-a" class="img-diff img-diff-swapable" style="display:none"
                       realsrc="${h.url('files_raw_home',repo_name=c.repo_name,revision=cs1,f_path=path)}" />
                 %endif
@@ -111,7 +111,7 @@
                 <div id="${h.FID('',filenode_path)}_image-diff" class="btn btn-image-diff-swap" style="display:none">Press to swap images</div>
               %endif
               <div style="font-size: 0">
-                %if op == 'M':
+                %if op in 'DM':
                   <img id="${h.FID('',filenode_path)}_image-diff-img-a" class="img-diff img-diff-swapable" style="display:none"
                       realsrc="${h.url('files_raw_home',repo_name=c.a_repo.repo_name,revision=c.a_rev,f_path=filenode_path) if op in 'DM' else ''}" />
                 %endif
