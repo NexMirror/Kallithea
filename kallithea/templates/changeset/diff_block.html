@@ -151,6 +151,19 @@ $(document).ready(function(){
     };
     $('.btn-image-diff-swap').mouseup(reset);
     $('.btn-image-diff-swap').mouseleave(reset);
+
+    $('.diff-collapse-button').click(function(e) {
+        var $button = $(e.currentTarget);
+        var $target = $('#' + $button.attr('target'));
+        if($target.hasClass('hidden')){
+            $target.removeClass('hidden');
+            $button.html("&uarr; {0} &uarr;".format(_TM['Collapse Diff']));
+        }
+        else if(!$target.hasClass('hidden')){
+            $target.addClass('hidden');
+            $button.html("&darr; {0} &darr;".format(_TM['Expand Diff']));
+        }
+    });
 });
 </script>
 </%def>

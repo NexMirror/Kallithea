@@ -1912,20 +1912,3 @@ var prefixFirstSort = function(results, container, query) {
     }
     return results;
 };
-
-// global hooks after DOM is loaded
-
-$(document).ready(function(){
-    $('.diff-collapse-button').click(function(e) {
-        var $button = $(e.currentTarget);
-        var $target = $('#' + $button.attr('target'));
-        if($target.hasClass('hidden')){
-            $target.removeClass('hidden');
-            $button.html("&uarr; {0} &uarr;".format(_TM['Collapse Diff']));
-        }
-        else if(!$target.hasClass('hidden')){
-            $target.addClass('hidden');
-            $button.html("&darr; {0} &darr;".format(_TM['Expand Diff']));
-        }
-    });
-});
