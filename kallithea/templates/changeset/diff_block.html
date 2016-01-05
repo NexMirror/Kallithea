@@ -8,54 +8,54 @@
     <span target="${'diff-container-%s' % (id(change))}" class="diff-collapse-button">&uarr; ${_('Collapse Diff')} &uarr;</span>
 </div>
 <div class="diff-container" id="${'diff-container-%s' % (id(change))}">
-%for FID,(cs1, cs2, change, path, diff, stats) in change.iteritems():
-    <div id="${FID}_target" style="clear:both;margin-top:25px"></div>
-    <div id="${FID}" class="diffblock  margined comm">
+%for id_fid, (a_rev, cs_rev, op, filename, diff, stats) in change.iteritems():
+    <div id="${id_fid}_target" style="clear:both;margin-top:25px"></div>
+    <div id="${id_fid}" class="diffblock margined comm">
         <div class="code-header">
             <div class="changeset_header">
                 <div class="changeset_file">
-                    ${h.link_to_if(change!='D',h.safe_unicode(path),h.url('files_home',repo_name=c.repo_name,
-                    revision=cs2,f_path=h.safe_unicode(path)))}
+                    ${h.link_to_if(op!='D',h.safe_unicode(filename),h.url('files_home',repo_name=c.repo_name,
+                    revision=cs_rev,f_path=h.safe_unicode(filename)))}
                 </div>
                 <div class="diff-actions">
-                  <a href="${h.url('files_diff_home',repo_name=c.repo_name,f_path=h.safe_unicode(path),diff2=cs2,diff1=cs1,diff='diff',fulldiff=1)}" class="tooltip" title="${_('Show full diff for this file')}">
+                  <a href="${h.url('files_diff_home',repo_name=c.repo_name,f_path=h.safe_unicode(filename),diff2=cs_rev,diff1=a_rev,diff='diff',fulldiff=1)}" class="tooltip" title="${_('Show full diff for this file')}">
                       <i class="icon-file-code"></i>
                   </a>
-                  <a href="${h.url('files_diff_2way_home',repo_name=c.repo_name,f_path=h.safe_unicode(path),diff2=cs2,diff1=cs1,diff='diff',fulldiff=1)}" class="tooltip" title="${_('Show full side-by-side diff for this file')}">
+                  <a href="${h.url('files_diff_2way_home',repo_name=c.repo_name,f_path=h.safe_unicode(filename),diff2=cs_rev,diff1=a_rev,diff='diff',fulldiff=1)}" class="tooltip" title="${_('Show full side-by-side diff for this file')}">
                       <i class="icon-docs"></i>
                   </a>
-                  <a href="${h.url('files_diff_home',repo_name=c.repo_name,f_path=h.safe_unicode(path),diff2=cs2,diff1=cs1,diff='raw')}" class="tooltip" title="${_('Raw diff')}">
+                  <a href="${h.url('files_diff_home',repo_name=c.repo_name,f_path=h.safe_unicode(filename),diff2=cs_rev,diff1=a_rev,diff='raw')}" class="tooltip" title="${_('Raw diff')}">
                       <i class="icon-diff"></i>
                   </a>
-                  <a href="${h.url('files_diff_home',repo_name=c.repo_name,f_path=h.safe_unicode(path),diff2=cs2,diff1=cs1,diff='download')}" class="tooltip" title="${_('Download diff')}">
+                  <a href="${h.url('files_diff_home',repo_name=c.repo_name,f_path=h.safe_unicode(filename),diff2=cs_rev,diff1=a_rev,diff='download')}" class="tooltip" title="${_('Download diff')}">
                       <i class="icon-floppy"></i>
                   </a>
-                  ${c.ignorews_url(request.GET, h.FID(cs2,path))}
-                  ${c.context_url(request.GET, h.FID(cs2,path))}
+                  ${c.ignorews_url(request.GET, h.FID(cs_rev,filename))}
+                  ${c.context_url(request.GET, h.FID(cs_rev,filename))}
                 </div>
                 <span style="float:right;margin-top:-3px">
-                  <label>
-                  ${_('Show inline comments')}
-                  ${h.checkbox('',checked="checked",class_="show-inline-comments",id_for=h.FID(cs2,path))}
-                  </label>
+                    <label>
+                        ${_('Show inline comments')}
+                        ${h.checkbox('',checked="checked",class_="show-inline-comments",id_for=h.FID(cs_rev,filename))}
+                    </label>
                 </span>
             </div>
         </div>
-        <div class="code-body full_f_path" data-f_path="${h.safe_unicode(path)}">
+        <div class="code-body full_f_path" data-f_path="${h.safe_unicode(filename)}">
             ${diff|n}
-            %if path.rsplit('.')[-1] in ['png', 'gif', 'jpg', 'bmp']:
+            %if filename.rsplit('.')[-1] in ['png', 'gif', 'jpg', 'bmp']:
               <div class="btn btn-image-diff-show">Show images</div>
-              %if change =='M':
-                <div id="${FID}_image-diff" class="btn btn-image-diff-swap" style="display:none">Press to swap images</div>
+              %if op == 'M':
+                <div id="${id_fid}_image-diff" class="btn btn-image-diff-swap" style="display:none">Press to swap images</div>
               %endif
               <div style="font-size: 0">
-                %if change in 'DM':
-                  <img id="${FID}_image-diff-img-a" class="img-diff img-diff-swapable" style="display:none"
-                      realsrc="${h.url('files_raw_home',repo_name=c.repo_name,revision=cs1,f_path=path)}" />
+                %if op in 'DM':
+                  <img id="${id_fid}_image-diff-img-a" class="img-diff img-diff-swapable" style="display:none"
+                      realsrc="${h.url('files_raw_home',repo_name=c.repo_name,revision=c.a_rev,f_path=filename)}" />
                 %endif
-                %if change in 'AM':
-                  <img id="${FID}_image-diff-img-b" class="img-diff img-diff-swapable" style="display:none"
-                      realsrc="${h.url('files_raw_home',repo_name=c.repo_name,revision=cs2,f_path=path)}" />
+                %if op in 'AM':
+                  <img id="${id_fid}_image-diff-img-b" class="img-diff img-diff-swapable" style="display:none"
+                      realsrc="${h.url('files_raw_home',repo_name=c.repo_name,revision=c.cs_rev,f_path=filename)}" />
                 %endif
               </div>
             %endif
@@ -72,58 +72,58 @@
 <div class="diff-container" id="${'diff-container-%s' % (id(changes))}">
   %for fid, ch, f, stat in files:
     <%
-    op, filenode_path, diff = changes[fid]
+    op, filename, diff = changes[fid]
     %>
-    <div id="${h.FID('',filenode_path)}_target" style="clear:both;margin-top:25px"></div>
-    <div id="${h.FID('',filenode_path)}" class="diffblock  margined comm">
-      <div class="code-header">
-          <div class="changeset_header">
-              <div class="changeset_file">
-                  ${h.safe_unicode(filenode_path)} |
-                  ## TODO: link to ancestor and head of other instead of exactly other
-                  %if op == 'A':
-                    ${_('Added')}
-                    <a class="spantag" href="${h.url('files_home', repo_name=c.cs_repo.repo_name, f_path=filenode_path, revision=c.cs_rev)}">${h.short_ref(c.cs_ref_type, c.cs_ref_name)}</a>
-                  %elif op == 'M':
-                    <a class="spantag" href="${h.url('files_home', repo_name=c.a_repo.repo_name, f_path=filenode_path, revision=c.a_rev)}">${h.short_ref(c.a_ref_type, c.a_ref_name)}</a>
-                    <i class="icon-right"></i>
-                    <a class="spantag" href="${h.url('files_home', repo_name=c.cs_repo.repo_name, f_path=filenode_path, revision=c.cs_rev)}">${h.short_ref(c.cs_ref_type, c.cs_ref_name)}</a>
-                  %elif op == 'D':
-                    ${_('Deleted')}
-                    <a class="spantag" href="${h.url('files_home', repo_name=c.a_repo.repo_name, f_path=filenode_path, revision=c.a_rev)}">${h.short_ref(c.a_ref_type, c.a_ref_name)}</a>
-                  %elif op == 'R':
-                    ${_('Renamed')}
-                    <a class="spantag" href="${h.url('files_home', repo_name=c.a_repo.repo_name, f_path=filenode_path, revision=c.a_rev)}">${h.short_ref(c.a_ref_type, c.a_ref_name)}</a>
-                    <i class="icon-right"></i>
-                    <a class="spantag" href="${h.url('files_home', repo_name=c.cs_repo.repo_name, f_path=filenode_path, revision=c.cs_rev)}">${h.short_ref(c.cs_ref_type, c.cs_ref_name)}</a>
-                  %else:
-                    ${op}???
-                  %endif
-              </div>
-              <div class="diff-actions">
-                <a href="${h.url('files_diff_2way_home',repo_name=c.cs_repo.repo_name,f_path=h.safe_unicode(filenode_path),diff1=c.a_rev,diff2=c.cs_rev,diff='diff',fulldiff=1)}" class="tooltip" title="${_('Show full side-by-side diff for this file')}">
-                  <i class="icon-docs"></i>
-                </a>
-                ${c.ignorews_url(request.GET)}
-                ${c.context_url(request.GET)}
-              </div>
-          </div>
-      </div>
-        <div class="code-body full_f_path" data-f_path="${h.safe_unicode(filenode_path)}">
+    <div id="${h.FID('', filename)}_target" style="clear:both;margin-top:25px"></div>
+    <div id="${h.FID('', filename)}" class="diffblock margined comm">
+        <div class="code-header">
+            <div class="changeset_header">
+                <div class="changeset_file">
+                    ${h.safe_unicode(filename)} |
+                    ## TODO: link to ancestor and head of other instead of exactly other
+                    %if op == 'A':
+                      ${_('Added')}
+                      <a class="spantag" href="${h.url('files_home', repo_name=c.cs_repo.repo_name, f_path=filename, revision=c.cs_rev)}">${h.short_ref(c.cs_ref_type, c.cs_ref_name)}</a>
+                    %elif op == 'M':
+                      <a class="spantag" href="${h.url('files_home', repo_name=c.a_repo.repo_name, f_path=filename, revision=c.a_rev)}">${h.short_ref(c.a_ref_type, c.a_ref_name)}</a>
+                      <i class="icon-right"></i>
+                      <a class="spantag" href="${h.url('files_home', repo_name=c.cs_repo.repo_name, f_path=filename, revision=c.cs_rev)}">${h.short_ref(c.cs_ref_type, c.cs_ref_name)}</a>
+                    %elif op == 'D':
+                      ${_('Deleted')}
+                      <a class="spantag" href="${h.url('files_home', repo_name=c.a_repo.repo_name, f_path=filename, revision=c.a_rev)}">${h.short_ref(c.a_ref_type, c.a_ref_name)}</a>
+                    %elif op == 'R':
+                      ${_('Renamed')}
+                      <a class="spantag" href="${h.url('files_home', repo_name=c.a_repo.repo_name, f_path=filename, revision=c.a_rev)}">${h.short_ref(c.a_ref_type, c.a_ref_name)}</a>
+                      <i class="icon-right"></i>
+                      <a class="spantag" href="${h.url('files_home', repo_name=c.cs_repo.repo_name, f_path=filename, revision=c.cs_rev)}">${h.short_ref(c.cs_ref_type, c.cs_ref_name)}</a>
+                    %else:
+                      ${op}???
+                    %endif
+                </div>
+                <div class="diff-actions">
+                  <a href="${h.url('files_diff_2way_home',repo_name=c.cs_repo.repo_name,f_path=h.safe_unicode(filename),diff1=c.a_rev,diff2=c.cs_rev,diff='diff',fulldiff=1)}" class="tooltip" title="${_('Show full side-by-side diff for this file')}">
+                      <i class="icon-docs"></i>
+                  </a>
+                  ${c.ignorews_url(request.GET)}
+                  ${c.context_url(request.GET)}
+                </div>
+            </div>
+        </div>
+        <div class="code-body full_f_path" data-f_path="${h.safe_unicode(filename)}">
             ${diff|n}
-            %if filenode_path.rsplit('.')[-1] in ['png', 'gif', 'jpg', 'bmp']:
+            %if filename.rsplit('.')[-1] in ['png', 'gif', 'jpg', 'bmp']:
               <div class="btn btn-image-diff-show">Show images</div>
               %if op == 'M':
-                <div id="${h.FID('',filenode_path)}_image-diff" class="btn btn-image-diff-swap" style="display:none">Press to swap images</div>
+                <div id="${h.FID('',filename)}_image-diff" class="btn btn-image-diff-swap" style="display:none">Press to swap images</div>
               %endif
               <div style="font-size: 0">
                 %if op in 'DM':
-                  <img id="${h.FID('',filenode_path)}_image-diff-img-a" class="img-diff img-diff-swapable" style="display:none"
-                      realsrc="${h.url('files_raw_home',repo_name=c.a_repo.repo_name,revision=c.a_rev,f_path=filenode_path)}" />
+                  <img id="${h.FID('',filename)}_image-diff-img-a" class="img-diff img-diff-swapable" style="display:none"
+                      realsrc="${h.url('files_raw_home',repo_name=c.a_repo.repo_name,revision=c.a_rev,f_path=filename)}" />
                 %endif
                 %if op in 'AM':
-                  <img id="${h.FID('',filenode_path)}_image-diff-img-b" class="img-diff img-diff-swapable" style="display:none"
-                      realsrc="${h.url('files_raw_home',repo_name=c.cs_repo.repo_name,revision=c.cs_rev,f_path=filenode_path)}" />
+                  <img id="${h.FID('',filename)}_image-diff-img-b" class="img-diff img-diff-swapable" style="display:none"
+                      realsrc="${h.url('files_raw_home',repo_name=c.cs_repo.repo_name,revision=c.cs_rev,f_path=filename)}" />
                 %endif
               </div>
             %endif
