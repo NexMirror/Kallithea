@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2015-09-08 10:34+0200\n"
-"PO-Revision-Date: 2015-10-24 16:59+0200\n"
+"PO-Revision-Date: 2016-01-05 06:29+0000\n"
 "Last-Translator: Takumi IINO <trot.thunder@gmail.com>\n"
 "Language-Team: Japanese "
 "<https://hosted.weblate.org/projects/kallithea/stable/ja/>\n"
@@ -174,7 +174,7 @@ msgstr "コミット中にエラーが発生しました"
 
 #: kallithea/controllers/files.py:377
 msgid "You can only edit files with revision being a valid branch "
-msgstr "有効なブランチを示すリビジョンでのみファイルを編集できます。"
+msgstr "有効なブランチを示すリビジョンでのみファイルを編集できます "
 
 #: kallithea/controllers/files.py:391
 #, python-format
@@ -898,7 +898,7 @@ msgstr "VCS設定を更新しました"
 msgid ""
 "Unable to activate hgsubversion support. The \"hgsubversion\" library is "
 "missing"
-msgstr "\"hgsubversion\"ライブラリが見つからないため、hgsubversionサポートを有効に出来ません。"
+msgstr "\"hgsubversion\"ライブラリが見つからないため、hgsubversionサポートを有効に出来ません"
 
 #: kallithea/controllers/admin/settings.py:180
 #: kallithea/controllers/admin/settings.py:277
@@ -908,7 +908,7 @@ msgstr "アプリケーション設定の更新中にエラーが発生しまし
 #: kallithea/controllers/admin/settings.py:216
 #, python-format
 msgid "Repositories successfully rescanned. Added: %s. Removed: %s."
-msgstr "リポジトリの再スキャンに成功しました。 追加: %s 削除: %s"
+msgstr "リポジトリの再スキャンに成功しました。 追加: %s 削除: %s。"
 
 #: kallithea/controllers/admin/settings.py:273
 msgid "Updated application settings"
@@ -1228,8 +1228,8 @@ msgid ""
 "the filesystem please run the application again in order to rescan "
 "repositories"
 msgstr ""
-"%s "
-"リポジトリはDB内に見つかりませんでした。おそらくファイルシステム上で作られたか名前が変更されたためです。リポジトリをもう一度チェックするためにアプリケーションを立ち上げ直してください。"
+"%s リポジトリはDB内に見つかりませんでした。おそらくファイルシステム上で作られたか名前が変更されたためです。リポジトリをもう一度チェックするためにアプ"
+"リケーションを再起動してください"
 
 #: kallithea/lib/utils2.py:415
 #, python-format
@@ -2156,7 +2156,7 @@ msgstr "ネットワークサイズ (bits) は0-32の範囲にする必要があ
 
 #: kallithea/model/validators.py:808
 msgid "Key name can only consist of letters, underscore, dash or numbers"
-msgstr "キー名はアルファベット、アンダースコア(_)、ピリオド(.)、ダッシュ(-)、数字しか使えません。"
+msgstr "キー名にはアルファベット、アンダースコア(_)、ピリオド(.)、ダッシュ(-)、数字が使えます"
 
 #: kallithea/model/validators.py:822
 msgid "Filename cannot be inside a directory"
@@ -2655,7 +2655,7 @@ msgstr "非公開リポジトリ"
 msgid ""
 "Private repositories are only visible to people explicitly added as "
 "collaborators."
-msgstr "非公開リポジトリはコラボレーターとして明示的に追加された人でないと見つけられません"
+msgstr "非公開リポジトリはコラボレーターとして明示的に追加された人のみ閲覧できます。"
 
 #: kallithea/templates/admin/defaults/defaults.html:53
 #: kallithea/templates/admin/repos/repo_edit_settings.html:84
