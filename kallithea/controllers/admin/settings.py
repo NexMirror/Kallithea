@@ -74,8 +74,7 @@ class SettingsController(BaseController):
             if k == 'web_push_ssl':
                 v = str2bool(v)
 
-            if k.find('.') != -1:
-                k = k.replace('.', '_')
+            k = k.replace('.', '_')
 
             if each.ui_section in ['hooks', 'extensions']:
                 v = each.ui_active
