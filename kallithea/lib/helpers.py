@@ -483,11 +483,6 @@ def user_or_none(author):
         user = User.get_by_email(email, case_insensitive=True, cache=True)
         if user is not None:
             return user
-
-    user = User.get_by_username(author_name(author), case_insensitive=True, cache=True)
-    if user is not None:
-        return user
-
     return None
 
 def email_or_none(author):
