@@ -106,29 +106,23 @@ class SettingsController(BaseController):
             try:
                 sett = Ui.get_by_key('push_ssl')
                 sett.ui_value = form_result['web_push_ssl']
-                Session().add(sett)
+
                 if c.visual.allow_repo_location_change:
                     sett = Ui.get_by_key('/')
                     sett.ui_value = form_result['paths_root_path']
-                    Session().add(sett)
 
                 #HOOKS
                 sett = Ui.get_by_key(Ui.HOOK_UPDATE)
                 sett.ui_active = form_result['hooks_changegroup_update']
-                Session().add(sett)
 
                 sett = Ui.get_by_key(Ui.HOOK_REPO_SIZE)
                 sett.ui_active = form_result['hooks_changegroup_repo_size']
-                Session().add(sett)
 
                 sett = Ui.get_by_key(Ui.HOOK_PUSH)
                 sett.ui_active = form_result['hooks_changegroup_push_logger']
-                Session().add(sett)
 
                 sett = Ui.get_by_key(Ui.HOOK_PULL)
                 sett.ui_active = form_result['hooks_outgoing_pull_logger']
-
-                Session().add(sett)
 
                 ## EXTENSIONS
                 sett = Ui.get_by_key('largefiles')
@@ -137,8 +131,8 @@ class SettingsController(BaseController):
                     sett = Ui()
                     sett.ui_key = 'largefiles'
                     sett.ui_section = 'extensions'
+                    Session().add(sett)
                 sett.ui_active = form_result['extensions_largefiles']
-                Session().add(sett)
 
                 sett = Ui.get_by_key('hgsubversion')
                 if not sett:
@@ -146,6 +140,7 @@ class SettingsController(BaseController):
                     sett = Ui()
                     sett.ui_key = 'hgsubversion'
                     sett.ui_section = 'extensions'
+                    Session().add(sett)
 
                 sett.ui_active = form_result['extensions_hgsubversion']
                 if sett.ui_active:
@@ -153,7 +148,6 @@ class SettingsController(BaseController):
                         import hgsubversion  # pragma: no cover
                     except ImportError:
                         raise HgsubversionImportError
-                Session().add(sett)
 
 #                sett = Ui.get_by_key('hggit')
 #                if not sett:
@@ -161,9 +155,9 @@ class SettingsController(BaseController):
 #                    sett = Ui()
 #                    sett.ui_key = 'hggit'
 #                    sett.ui_section = 'extensions'
+#                    Session().add(sett)
 #
 #                sett.ui_active = form_result['extensions_hggit']
-#                Session().add(sett)
 
                 Session().commit()
 
