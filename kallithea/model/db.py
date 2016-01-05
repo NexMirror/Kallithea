@@ -331,7 +331,10 @@ class Setting(Base, BaseModel):
 class Ui(Base, BaseModel):
     __tablename__ = DB_PREFIX + 'ui'
     __table_args__ = (
+        # FIXME: ui_key as key is wrong and should be removed when the corresponding
+        # Ui.get_by_key has been replaced by the composite key
         UniqueConstraint('ui_key'),
+        UniqueConstraint('ui_section', 'ui_key'),
         _table_args_default_dict,
     )
 
@@ -347,11 +350,6 @@ class Ui(Base, BaseModel):
     ui_key = Column(String(255), nullable=True, unique=None, default=None)
     ui_value = Column(String(255), nullable=True, unique=None, default=None)
     ui_active = Column(Boolean(), nullable=True, unique=None, default=True)
-
-    # def __init__(self, section='', key='', value=''):
-    #     self.ui_section = section
-    #     self.ui_key = key
-    #     self.ui_value = value
 
     @classmethod
     def get_by_key(cls, key):
