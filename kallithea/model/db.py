@@ -352,7 +352,17 @@ class Ui(Base, BaseModel):
 
     @classmethod
     def get_by_key(cls, key):
+        """ Return specified Ui object, or None if not found. """
         return cls.query().filter(cls.ui_key == key).scalar()
+
+    @classmethod
+    def get_or_create(cls, section, key):
+        """ Return specified Ui object, creating it if necessary. """
+        setting = cls.get_by_key(key)
+        if setting is None:
+            setting = cls(ui_section=section, ui_key=key)
+            Session().add(setting)
+        return setting
 
     @classmethod
     def get_builtin_hooks(cls):
@@ -377,13 +387,9 @@ class Ui(Base, BaseModel):
 
     @classmethod
     def create_or_update_hook(cls, key, val):
-        new_ui = cls.get_by_key(key) or cls()
-        new_ui.ui_section = 'hooks'
+        new_ui = cls.get_or_create('hooks', key)
         new_ui.ui_active = True
-        new_ui.ui_key = key
         new_ui.ui_value = val
-
-        Session().add(new_ui)
 
     def __repr__(self):
         return '<%s[%s]%s=>%s]>' % (self.__class__.__name__, self.ui_section,

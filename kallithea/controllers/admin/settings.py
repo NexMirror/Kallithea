@@ -125,23 +125,10 @@ class SettingsController(BaseController):
                 sett.ui_active = form_result['hooks_outgoing_pull_logger']
 
                 ## EXTENSIONS
-                sett = Ui.get_by_key('largefiles')
-                if not sett:
-                    #make one if it's not there !
-                    sett = Ui()
-                    sett.ui_key = 'largefiles'
-                    sett.ui_section = 'extensions'
-                    Session().add(sett)
+                sett = Ui.get_or_create('extensions', 'largefiles')
                 sett.ui_active = form_result['extensions_largefiles']
 
-                sett = Ui.get_by_key('hgsubversion')
-                if not sett:
-                    #make one if it's not there !
-                    sett = Ui()
-                    sett.ui_key = 'hgsubversion'
-                    sett.ui_section = 'extensions'
-                    Session().add(sett)
-
+                sett = Ui.get_or_create('extensions', 'hgsubversion')
                 sett.ui_active = form_result['extensions_hgsubversion']
                 if sett.ui_active:
                     try:
@@ -149,14 +136,7 @@ class SettingsController(BaseController):
                     except ImportError:
                         raise HgsubversionImportError
 
-#                sett = Ui.get_by_key('hggit')
-#                if not sett:
-#                    #make one if it's not there !
-#                    sett = Ui()
-#                    sett.ui_key = 'hggit'
-#                    sett.ui_section = 'extensions'
-#                    Session().add(sett)
-#
+#                sett = Ui.get_or_create('extensions', 'hggit')
 #                sett.ui_active = form_result['extensions_hggit']
 
                 Session().commit()
