@@ -485,7 +485,7 @@ sqlalchemy.db1.url = sqlite:///%(here)s/kallithea.db?timeout=60
 #sqlalchemy.db1.url = postgresql://user:pass@localhost/kallithea
 
 # MySQL
-#sqlalchemy.db1.url = mysql://user:pass@localhost/kallithea
+#sqlalchemy.db1.url = mysql://user:pass@localhost/kallithea?charset=utf8
 
 # see sqlalchemy docs for others
 

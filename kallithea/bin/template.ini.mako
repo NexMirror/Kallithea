@@ -495,7 +495,7 @@ sqlalchemy.db1.url = postgresql://user:pass@localhost/kallithea
 
 %elif database_engine == 'mysql':
 # MySQL
-sqlalchemy.db1.url = mysql://user:pass@localhost/kallithea
+sqlalchemy.db1.url = mysql://user:pass@localhost/kallithea?charset=utf8
 
 %endif
 # see sqlalchemy docs for others
