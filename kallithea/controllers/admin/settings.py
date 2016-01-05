@@ -68,12 +68,12 @@ class SettingsController(BaseController):
             raise Exception('Could not get application ui settings !')
         settings = {}
         for each in ret:
-            k = each.ui_key
+            k = each.ui_section + '_' + each.ui_key
             v = each.ui_value
-            if k == '/':
-                k = 'root_path'
+            if k == 'paths_/':
+                k = 'paths_root_path'
 
-            if k == 'push_ssl':
+            if k == 'web_push_ssl':
                 v = str2bool(v)
 
             if k.find('.') != -1:
@@ -82,7 +82,7 @@ class SettingsController(BaseController):
             if each.ui_section in ['hooks', 'extensions']:
                 v = each.ui_active
 
-            settings[each.ui_section + '_' + k] = v
+            settings[k] = v
         return settings
 
     @HasPermissionAllDecorator('hg.admin')
