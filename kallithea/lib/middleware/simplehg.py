@@ -37,7 +37,7 @@ from webob.exc import HTTPNotFound, HTTPForbidden, HTTPInternalServerError, \
     HTTPNotAcceptable
 from kallithea.model.db import User
 
-from kallithea.lib.utils2 import safe_str, fix_PATH, get_server_url, \
+from kallithea.lib.utils2 import safe_str, safe_unicode, fix_PATH, get_server_url, \
     _set_extras
 from kallithea.lib.base import BaseVCSController, WSGIResultCloseCallback
 from kallithea.lib.utils import make_ui, is_valid_repo, ui_sections
@@ -83,9 +83,13 @@ class SimpleHg(BaseVCSController):
         # EXTRACT REPOSITORY NAME FROM ENV
         #======================================================================
         try:
-            repo_name = environ['REPO_NAME'] = self.__get_repository(environ)
+            str_repo_name = environ['REPO_NAME'] = self.__get_repository(environ)
+            assert isinstance(str_repo_name, str)
+            repo_name = safe_unicode(str_repo_name)
+            assert safe_str(repo_name) == str_repo_name, (str_repo_name, repo_name)
             log.debug('Extracted repo name is %s', repo_name)
-        except Exception:
+        except Exception as e:
+            log.error('error extracting repo_name: %r', e)
             return HTTPInternalServerError()(environ, start_response)
 
         # quick check if that dir exists...
@@ -179,7 +183,6 @@ class SimpleHg(BaseVCSController):
         #======================================================================
         # MERCURIAL REQUEST HANDLING
         #======================================================================
-        str_repo_name = safe_str(repo_name)
         repo_path = os.path.join(safe_str(self.basepath), str_repo_name)
         log.debug('Repository path is %s', repo_path)
 

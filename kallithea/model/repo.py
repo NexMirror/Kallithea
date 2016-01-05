@@ -742,8 +742,8 @@ class RepoModel(BaseModel):
         """
         log.info('renaming repo from %s to %s', old, new)
 
-        old_path = os.path.join(self.repos_path, old)
-        new_path = os.path.join(self.repos_path, new)
+        old_path = safe_str(os.path.join(self.repos_path, old))
+        new_path = safe_str(os.path.join(self.repos_path, new))
         if os.path.isdir(new_path):
             raise Exception(
                 'Was trying to rename to already existing dir %s' % new_path
@@ -758,7 +758,7 @@ class RepoModel(BaseModel):
 
         :param repo: repo object
         """
-        rm_path = os.path.join(self.repos_path, repo.repo_name)
+        rm_path = safe_str(os.path.join(self.repos_path, repo.repo_name))
         log.info("Removing %s", rm_path)
 
         _now = datetime.now()
@@ -768,4 +768,4 @@ class RepoModel(BaseModel):
         if repo.group:
             args = repo.group.full_path_splitted + [_d]
             _d = os.path.join(*args)
-        shutil.move(rm_path, os.path.join(self.repos_path, _d))
+        shutil.move(rm_path, safe_str(os.path.join(self.repos_path, _d)))

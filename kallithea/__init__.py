@@ -93,3 +93,9 @@ if len(VERSION) > 3:
         __version__ += VERSION[4]
     else:
         __version__ += '0'
+
+# Hack for making the celery dependency kombu==1.5.1 compatible with Python
+# 2.7.11 which has https://hg.python.org/releases/2.7.11/rev/24bdc4940e81
+import uuid
+if not hasattr(uuid, '_uuid_generate_random'):
+    uuid._uuid_generate_random = None
