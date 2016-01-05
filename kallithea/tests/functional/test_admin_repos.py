@@ -5,6 +5,7 @@ import mock
 import urllib
 
 from kallithea.lib import vcs
+from kallithea.lib.utils2 import safe_str
 from kallithea.model.db import Repository, RepoGroup, UserRepoToPerm, User, \
     Permission
 from kallithea.model.user import UserModel
@@ -79,7 +80,7 @@ class _BaseTest(object):
 
         # test if the repository was created on filesystem
         try:
-            vcs.get_repo(os.path.join(TESTS_TMP_PATH, repo_name))
+            vcs.get_repo(safe_str(os.path.join(TESTS_TMP_PATH, repo_name)))
         except vcs.exceptions.VCSError:
             self.fail('no repo %s in filesystem' % repo_name)
 
@@ -119,7 +120,7 @@ class _BaseTest(object):
 
         # test if the repository was created on filesystem
         try:
-            vcs.get_repo(os.path.join(TESTS_TMP_PATH, repo_name))
+            vcs.get_repo(safe_str(os.path.join(TESTS_TMP_PATH, repo_name)))
         except vcs.exceptions.VCSError:
             self.fail('no repo %s in filesystem' % repo_name)
 
@@ -168,7 +169,7 @@ class _BaseTest(object):
 
         # test if the repository was created on filesystem
         try:
-            vcs.get_repo(os.path.join(TESTS_TMP_PATH, repo_name_full))
+            vcs.get_repo(safe_str(os.path.join(TESTS_TMP_PATH, repo_name_full)))
         except vcs.exceptions.VCSError:
             RepoGroupModel().delete(group_name)
             Session().commit()
@@ -260,7 +261,7 @@ class _BaseTest(object):
 
         # test if the repository was created on filesystem
         try:
-            vcs.get_repo(os.path.join(TESTS_TMP_PATH, repo_name_full))
+            vcs.get_repo(safe_str(os.path.join(TESTS_TMP_PATH, repo_name_full)))
         except vcs.exceptions.VCSError:
             RepoGroupModel().delete(group_name)
             Session().commit()
@@ -317,7 +318,7 @@ class _BaseTest(object):
 
         # test if the repository was created on filesystem
         try:
-            vcs.get_repo(os.path.join(TESTS_TMP_PATH, repo_name_full))
+            vcs.get_repo(safe_str(os.path.join(TESTS_TMP_PATH, repo_name_full)))
         except vcs.exceptions.VCSError:
             RepoGroupModel().delete(group_name)
             Session().commit()
@@ -394,7 +395,7 @@ class _BaseTest(object):
 
         # test if the repository was created on filesystem
         try:
-            vcs.get_repo(os.path.join(TESTS_TMP_PATH, repo_name))
+            vcs.get_repo(safe_str(os.path.join(TESTS_TMP_PATH, repo_name)))
         except vcs.exceptions.VCSError:
             self.fail('no repo %s in filesystem' % repo_name)
 
@@ -447,7 +448,7 @@ class _BaseTest(object):
 
         # test if the repository was created on filesystem
         try:
-            vcs.get_repo(os.path.join(TESTS_TMP_PATH, repo_name))
+            vcs.get_repo(safe_str(os.path.join(TESTS_TMP_PATH, repo_name)))
         except vcs.exceptions.VCSError:
             self.fail('no repo %s in filesystem' % repo_name)
 

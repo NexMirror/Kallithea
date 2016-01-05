@@ -2,6 +2,7 @@
 import os
 import shutil
 
+from kallithea.lib.utils2 import safe_str
 from kallithea.lib.vcs import VCSError, get_repo, get_backend
 from kallithea.lib.vcs.backends.hg import MercurialRepository
 from kallithea.lib.vcs.utils.compat import unittest
@@ -22,14 +23,14 @@ class VCSTest(unittest.TestCase):
         alias = 'hg'
         path = TEST_HG_REPO
         backend = get_backend(alias)
-        repo = backend(path)
+        repo = backend(safe_str(path))
         self.assertEqual('hg',repo.alias)
 
     def test_alias_detect_git(self):
         alias = 'git'
         path = TEST_GIT_REPO
         backend = get_backend(alias)
-        repo = backend(path)
+        repo = backend(safe_str(path))
         self.assertEqual('git',repo.alias)
 
     def test_wrong_alias(self):
@@ -40,28 +41,28 @@ class VCSTest(unittest.TestCase):
         alias = 'hg'
         path = TEST_HG_REPO
         backend = get_backend(alias)
-        repo = backend(path)
+        repo = backend(safe_str(path))
 
-        self.assertEqual(repo.__class__, get_repo(path, alias).__class__)
-        self.assertEqual(repo.path, get_repo(path, alias).path)
+        self.assertEqual(repo.__class__, get_repo(safe_str(path), alias).__class__)
+        self.assertEqual(repo.path, get_repo(safe_str(path), alias).path)
 
     def test_get_repo_autoalias_hg(self):
         alias = 'hg'
         path = TEST_HG_REPO
         backend = get_backend(alias)
-        repo = backend(path)
+        repo = backend(safe_str(path))
 
-        self.assertEqual(repo.__class__, get_repo(path).__class__)
-        self.assertEqual(repo.path, get_repo(path).path)
+        self.assertEqual(repo.__class__, get_repo(safe_str(path)).__class__)
+        self.assertEqual(repo.path, get_repo(safe_str(path)).path)
 
     def test_get_repo_autoalias_git(self):
         alias = 'git'
         path = TEST_GIT_REPO
         backend = get_backend(alias)
-        repo = backend(path)
+        repo = backend(safe_str(path))
 
-        self.assertEqual(repo.__class__, get_repo(path).__class__)
-        self.assertEqual(repo.path, get_repo(path).path)
+        self.assertEqual(repo.__class__, get_repo(safe_str(path)).__class__)
+        self.assertEqual(repo.path, get_repo(safe_str(path)).path)
 
 
     def test_get_repo_err(self):
