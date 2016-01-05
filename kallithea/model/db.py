@@ -34,6 +34,7 @@ import hashlib
 import collections
 import functools
 
+import sqlalchemy
 from sqlalchemy import *
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship, joinedload, class_mapper, validates
@@ -2136,19 +2137,22 @@ class CacheInvalidation(Base, BaseModel):
             return True
 
         inv_obj = cls.query().filter(cls.cache_key == cache_key).scalar()
-        if not inv_obj:
+        if inv_obj is None:
             inv_obj = CacheInvalidation(cache_key, repo_name)
-        if inv_obj.cache_active:
+        elif inv_obj.cache_active:
             return True
         inv_obj.cache_active = True
         Session().add(inv_obj)
         try:
             Session().commit()
-        except exc.IntegrityError:
+        except sqlalchemy.exc.IntegrityError:
+            log.error('commit of CacheInvalidation failed - retrying')
+            Session().rollback()
             inv_obj = cls.query().filter(cls.cache_key == cache_key).scalar()
-            if not inv_obj:
-                raise
-            # TOCTOU - another thread added the key at the same time; no further action required
+            if inv_obj is None:
+                log.error('failed to create CacheInvalidation entry')
+                # TODO: fail badly?
+            # else: TOCTOU - another thread added the key at the same time; no further action required
         return False
 
     @classmethod
