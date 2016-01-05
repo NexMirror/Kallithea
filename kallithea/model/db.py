@@ -396,7 +396,8 @@ class Ui(Base, BaseModel):
 class User(Base, BaseModel):
     __tablename__ = 'users'
     __table_args__ = (
-        UniqueConstraint('username'), UniqueConstraint('email'),
+        UniqueConstraint('username'),
+        UniqueConstraint('email'),
         Index('u_username_idx', 'username'),
         Index('u_email_idx', 'email'),
         _table_args_default_dict,
@@ -696,7 +697,6 @@ class UserApiKeys(Base, BaseModel):
     __table_args__ = (
         Index('uak_api_key_idx', 'api_key'),
         Index('uak_api_key_expires_idx', 'api_key', 'expires'),
-        UniqueConstraint('api_key'),
         _table_args_default_dict,
     )
     __mapper_args__ = {}
@@ -954,7 +954,6 @@ class RepositoryField(Base, BaseModel):
 class Repository(Base, BaseModel):
     __tablename__ = 'repositories'
     __table_args__ = (
-        UniqueConstraint('repo_name'),
         Index('r_repo_name_idx', 'repo_name'),
         _table_args_default_dict,
     )
@@ -1990,7 +1989,6 @@ class UserGroupRepoGroupToPerm(Base, BaseModel):
 class Statistics(Base, BaseModel):
     __tablename__ = 'statistics'
     __table_args__ = (
-         UniqueConstraint('repository_id'),
          _table_args_default_dict,
     )
 
