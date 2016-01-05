@@ -1458,7 +1458,7 @@ class Repository(Base, BaseModel):
     def __get_instance(self):
         repo_full_path = self.repo_full_path
 
-        alias = get_scm(repo_full_path)[0]
+        alias = get_scm(safe_str(repo_full_path))[0]
         log.debug('Creating instance of %s repository from %s',
                   alias, repo_full_path)
         backend = get_backend(alias)
