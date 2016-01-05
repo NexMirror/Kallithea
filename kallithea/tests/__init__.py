@@ -100,14 +100,14 @@ TEST_USER_REGULAR2_LOGIN = 'test_regular2'
 TEST_USER_REGULAR2_PASS = 'test12'
 TEST_USER_REGULAR2_EMAIL = 'test_regular2@example.com'
 
-HG_REPO = 'vcs_test_hg'
-GIT_REPO = 'vcs_test_git'
+HG_REPO = u'vcs_test_hg'
+GIT_REPO = u'vcs_test_git'
 
-NEW_HG_REPO = 'vcs_test_hg_new'
-NEW_GIT_REPO = 'vcs_test_git_new'
+NEW_HG_REPO = u'vcs_test_hg_new'
+NEW_GIT_REPO = u'vcs_test_git_new'
 
-HG_FORK = 'vcs_test_hg_fork'
-GIT_FORK = 'vcs_test_git_fork'
+HG_FORK = u'vcs_test_hg_fork'
+GIT_FORK = u'vcs_test_git_fork'
 
 ## VCS
 SCM_TESTS = ['hg', 'git']

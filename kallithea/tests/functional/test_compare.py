@@ -26,7 +26,7 @@ class TestCompareController(TestController):
 
     def test_compare_forks_on_branch_extra_commits_hg(self):
         self.log_user()
-        repo1 = fixture.create_repo('one', repo_type='hg',
+        repo1 = fixture.create_repo(u'one', repo_type='hg',
                                     repo_description='diff-test',
                                     cur_user=TEST_USER_ADMIN_LOGIN)
         self.r1_id = repo1.repo_id
@@ -36,7 +36,7 @@ class TestCompareController(TestController):
                 parent=None, newfile=True)
 
         #fork this repo
-        repo2 = fixture.create_fork('one', 'one-fork')
+        repo2 = fixture.create_fork(u'one', u'one-fork')
         self.r2_id = repo2.repo_id
 
         #add two extra commit into fork
@@ -77,7 +77,7 @@ class TestCompareController(TestController):
 
     def test_compare_forks_on_branch_extra_commits_git(self):
         self.log_user()
-        repo1 = fixture.create_repo('one-git', repo_type='git',
+        repo1 = fixture.create_repo(u'one-git', repo_type='git',
                                     repo_description='diff-test',
                                     cur_user=TEST_USER_ADMIN_LOGIN)
         self.r1_id = repo1.repo_id
@@ -87,7 +87,7 @@ class TestCompareController(TestController):
                 parent=None, newfile=True)
 
         #fork this repo
-        repo2 = fixture.create_fork('one-git', 'one-git-fork')
+        repo2 = fixture.create_fork(u'one-git', u'one-git-fork')
         self.r2_id = repo2.repo_id
 
         #add two extra commit into fork
@@ -129,7 +129,7 @@ class TestCompareController(TestController):
     def test_compare_forks_on_branch_extra_commits_origin_has_incomming_hg(self):
         self.log_user()
 
-        repo1 = fixture.create_repo('one', repo_type='hg',
+        repo1 = fixture.create_repo(u'one', repo_type='hg',
                                     repo_description='diff-test',
                                     cur_user=TEST_USER_ADMIN_LOGIN)
 
@@ -141,7 +141,7 @@ class TestCompareController(TestController):
                 parent=None, newfile=True)
 
         #fork this repo
-        repo2 = fixture.create_fork('one', 'one-fork')
+        repo2 = fixture.create_fork(u'one', u'one-fork')
         self.r2_id = repo2.repo_id
 
         #now commit something to origin repo
@@ -188,7 +188,7 @@ class TestCompareController(TestController):
     def test_compare_forks_on_branch_extra_commits_origin_has_incomming_git(self):
         self.log_user()
 
-        repo1 = fixture.create_repo('one-git', repo_type='git',
+        repo1 = fixture.create_repo(u'one-git', repo_type='git',
                                     repo_description='diff-test',
                                     cur_user=TEST_USER_ADMIN_LOGIN)
 
@@ -200,7 +200,7 @@ class TestCompareController(TestController):
                 parent=None, newfile=True)
 
         #fork this repo
-        repo2 = fixture.create_fork('one-git', 'one-git-fork')
+        repo2 = fixture.create_fork(u'one-git', u'one-git-fork')
         self.r2_id = repo2.repo_id
 
         #now commit something to origin repo
@@ -259,7 +259,7 @@ class TestCompareController(TestController):
         #make repo1, and cs1+cs2
         self.log_user()
 
-        repo1 = fixture.create_repo('repo1', repo_type='hg',
+        repo1 = fixture.create_repo(u'repo1', repo_type='hg',
                                     repo_description='diff-test',
                                     cur_user=TEST_USER_ADMIN_LOGIN)
         self.r1_id = repo1.repo_id
@@ -272,7 +272,7 @@ class TestCompareController(TestController):
                 content='line1\nline2\n', message='commit2', vcs_type='hg',
                 parent=cs0)
         #fork this repo
-        repo2 = fixture.create_fork('repo1', 'repo1-fork')
+        repo2 = fixture.create_fork(u'repo1', u'repo1-fork')
         self.r2_id = repo2.repo_id
         #now make cs3-6
         cs2 = fixture.commit_change(repo1.repo_name, filename='file1',
@@ -326,7 +326,7 @@ class TestCompareController(TestController):
 #
         #make repo1, and cs1+cs2
         self.log_user()
-        repo1 = fixture.create_repo('repo1', repo_type='hg',
+        repo1 = fixture.create_repo(u'repo1', repo_type='hg',
                                     repo_description='diff-test',
                                     cur_user=TEST_USER_ADMIN_LOGIN)
         self.r1_id = repo1.repo_id
@@ -339,7 +339,7 @@ class TestCompareController(TestController):
                 content='line1\nline2\n', message='commit2', vcs_type='hg',
                 parent=cs0)
         #fork this repo
-        repo2 = fixture.create_fork('repo1', 'repo1-fork')
+        repo2 = fixture.create_fork(u'repo1', u'repo1-fork')
         self.r2_id = repo2.repo_id
         #now make cs3-6
         cs2 = fixture.commit_change(repo1.repo_name, filename='file1',
@@ -445,7 +445,7 @@ class TestCompareController(TestController):
     def test_org_repo_new_commits_after_forking_simple_diff_hg(self):
         self.log_user()
 
-        repo1 = fixture.create_repo('one', repo_type='hg',
+        repo1 = fixture.create_repo(u'one', repo_type='hg',
                                     repo_description='diff-test',
                                     cur_user=TEST_USER_ADMIN_LOGIN)
 
@@ -457,7 +457,7 @@ class TestCompareController(TestController):
         Session().commit()
         self.assertEqual(repo1.scm_instance.revisions, [cs0.raw_id])
         #fork the repo1
-        repo2 = fixture.create_repo('one-fork', repo_type='hg',
+        repo2 = fixture.create_repo(u'one-fork', repo_type='hg',
                                     repo_description='diff-test',
                                     cur_user=TEST_USER_ADMIN_LOGIN,
                                     clone_uri=repo1.repo_full_path,
@@ -524,7 +524,7 @@ class TestCompareController(TestController):
     def test_org_repo_new_commits_after_forking_simple_diff_git(self):
         self.log_user()
 
-        repo1 = fixture.create_repo('one-git', repo_type='git',
+        repo1 = fixture.create_repo(u'one-git', repo_type='git',
                                     repo_description='diff-test',
                                     cur_user=TEST_USER_ADMIN_LOGIN)
 
@@ -537,7 +537,7 @@ class TestCompareController(TestController):
         Session().commit()
         self.assertEqual(repo1.scm_instance.revisions, [cs0.raw_id])
         #fork the repo1
-        repo2 = fixture.create_repo('one-git-fork', repo_type='git',
+        repo2 = fixture.create_repo(u'one-git-fork', repo_type='git',
                                     repo_description='diff-test',
                                     cur_user=TEST_USER_ADMIN_LOGIN,
                                     clone_uri=repo1.repo_full_path,

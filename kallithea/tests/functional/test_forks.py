@@ -101,7 +101,7 @@ class _BaseTestCase(object):
 
     def test_fork_create_into_group(self):
         self.log_user()
-        group = fixture.create_repo_group('vc')
+        group = fixture.create_repo_group(u'vc')
         group_id = group.group_id
         fork_name = self.REPO_FORK
         fork_name_full = 'vc/%s' % fork_name

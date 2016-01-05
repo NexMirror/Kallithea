@@ -13,7 +13,7 @@ _get_repo_perms = None
 _get_group_perms = None
 
 
-def permissions_setup_func(group_name='g0', perm='group.read', recursive='all',
+def permissions_setup_func(group_name=u'g0', perm='group.read', recursive='all',
                            user_id=None):
     """
     Resets all permissions to perm attribute
@@ -58,7 +58,7 @@ def teardown_module():
 def test_user_permissions_on_group_without_recursive_mode():
     # set permission to g0 non-recursive mode
     recursive = 'none'
-    group = 'g0'
+    group = u'g0'
     permissions_setup_func(group, 'group.write', recursive=recursive)
 
     items = [x for x in _get_repo_perms(group, recursive)]
@@ -77,7 +77,7 @@ def test_user_permissions_on_group_without_recursive_mode():
 def test_user_permissions_on_group_without_recursive_mode_subgroup():
     # set permission to g0 non-recursive mode
     recursive = 'none'
-    group = 'g0/g0_1'
+    group = u'g0/g0_1'
     permissions_setup_func(group, 'group.write', recursive=recursive)
 
     items = [x for x in _get_repo_perms(group, recursive)]
@@ -98,7 +98,7 @@ def test_user_permissions_on_group_with_recursive_mode():
     # set permission to g0 recursive mode, all children including
     # other repos and groups should have this permission now set !
     recursive = 'all'
-    group = 'g0'
+    group = u'g0'
     permissions_setup_func(group, 'group.write', recursive=recursive)
 
     repo_items = [x for x in _get_repo_perms(group, recursive)]
@@ -117,7 +117,7 @@ def test_user_permissions_on_group_with_recursive_mode_for_default_user():
     # set permission to g0 recursive mode, all children including
     # other repos and groups should have this permission now set !
     recursive = 'all'
-    group = 'g0'
+    group = u'g0'
     default_user_id = User.get_default_user().user_id
     permissions_setup_func(group, 'group.write', recursive=recursive,
                            user_id=default_user_id)
@@ -142,7 +142,7 @@ def test_user_permissions_on_group_with_recursive_mode_for_default_user():
 def test_user_permissions_on_group_with_recursive_mode_inner_group():
     ## set permission to g0_3 group to none
     recursive = 'all'
-    group = 'g0/g0_3'
+    group = u'g0/g0_3'
     permissions_setup_func(group, 'group.none', recursive=recursive)
 
     repo_items = [x for x in _get_repo_perms(group, recursive)]
@@ -159,7 +159,7 @@ def test_user_permissions_on_group_with_recursive_mode_inner_group():
 def test_user_permissions_on_group_with_recursive_mode_deepest():
     ## set permission to g0_3 group to none
     recursive = 'all'
-    group = 'g0/g0_1/g0_1_1'
+    group = u'g0/g0_1/g0_1_1'
     permissions_setup_func(group, 'group.write', recursive=recursive)
 
     repo_items = [x for x in _get_repo_perms(group, recursive)]
@@ -176,7 +176,7 @@ def test_user_permissions_on_group_with_recursive_mode_deepest():
 def test_user_permissions_on_group_with_recursive_mode_only_with_repos():
     ## set permission to g0_3 group to none
     recursive = 'all'
-    group = 'g0/g0_2'
+    group = u'g0/g0_2'
     permissions_setup_func(group, 'group.admin', recursive=recursive)
 
     repo_items = [x for x in _get_repo_perms(group, recursive)]
@@ -194,7 +194,7 @@ def test_user_permissions_on_group_with_recursive_repo_mode_for_default_user():
     # set permission to g0/g0_1 recursive repos only mode, all children including
     # other repos should have this permission now set, inner groups are excluded!
     recursive = 'repos'
-    group = 'g0/g0_1'
+    group = u'g0/g0_1'
     perm = 'group.none'
     default_user_id = User.get_default_user().user_id
 
@@ -227,7 +227,7 @@ def test_user_permissions_on_group_with_recursive_repo_mode_for_default_user():
 def test_user_permissions_on_group_with_recursive_repo_mode_inner_group():
     ## set permission to g0_3 group to none, with recursive repos only
     recursive = 'repos'
-    group = 'g0/g0_3'
+    group = u'g0/g0_3'
     perm = 'group.none'
     permissions_setup_func(group, perm, recursive=recursive)
 
@@ -253,7 +253,7 @@ def test_user_permissions_on_group_with_recursive_group_mode_for_default_user():
     # other groups should have this permission now set. repositories should
     # remain intact as we use groups only mode !
     recursive = 'groups'
-    group = 'g0/g0_1'
+    group = u'g0/g0_1'
     default_user_id = User.get_default_user().user_id
     permissions_setup_func(group, 'group.write', recursive=recursive,
                            user_id=default_user_id)
@@ -278,7 +278,7 @@ def test_user_permissions_on_group_with_recursive_group_mode_for_default_user():
 def test_user_permissions_on_group_with_recursive_group_mode_inner_group():
     ## set permission to g0_3 group to none, with recursive mode for groups only
     recursive = 'groups'
-    group = 'g0/g0_3'
+    group = u'g0/g0_3'
     permissions_setup_func(group, 'group.none', recursive=recursive)
 
     repo_items = [x for x in _get_repo_perms(group, recursive)]

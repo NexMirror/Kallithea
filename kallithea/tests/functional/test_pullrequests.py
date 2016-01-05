@@ -146,13 +146,13 @@ class TestPullrequestsController(TestController):
 class TestPullrequestsGetRepoRefs(TestController):
 
     def setUp(self):
-        self.main = fixture.create_repo('main', repo_type='hg')
+        self.main = fixture.create_repo(u'main', repo_type='hg')
         Session.add(self.main)
         Session.commit()
         self.c = PullrequestsController()
 
     def tearDown(self):
-        fixture.destroy_repo('main')
+        fixture.destroy_repo(u'main')
         Session.commit()
         Session.remove()
 

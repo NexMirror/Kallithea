@@ -3,7 +3,7 @@ from kallithea.tests import *
 from kallithea.model.db import UserGroup, UserGroupToPerm, Permission
 from kallithea.model.meta import Session
 
-TEST_USER_GROUP = 'admins_test'
+TEST_USER_GROUP = u'admins_test'
 
 
 class TestAdminUsersGroupsController(TestController):
@@ -18,7 +18,7 @@ class TestAdminUsersGroupsController(TestController):
         users_group_name = TEST_USER_GROUP
         response = self.app.post(url('users_groups'),
                                  {'users_group_name': users_group_name,
-                                  'user_group_description': 'DESC',
+                                  'user_group_description': u'DESC',
                                   'active': True,
                                   '_authentication_token': self.authentication_token()})
         response.follow()
@@ -43,7 +43,7 @@ class TestAdminUsersGroupsController(TestController):
         users_group_name = TEST_USER_GROUP + 'another'
         response = self.app.post(url('users_groups'),
                                  {'users_group_name':users_group_name,
-                                  'user_group_description': 'DESC',
+                                  'user_group_description': u'DESC',
                                   'active': True,
                                   '_authentication_token': self.authentication_token()})
         response.follow()
@@ -67,7 +67,7 @@ class TestAdminUsersGroupsController(TestController):
         users_group_name = TEST_USER_GROUP + 'another2'
         response = self.app.post(url('users_groups'),
                                  {'users_group_name': users_group_name,
-                                  'user_group_description': 'DESC',
+                                  'user_group_description': u'DESC',
                                   'active': True,
                                   '_authentication_token': self.authentication_token()})
         response.follow()
@@ -140,7 +140,7 @@ class TestAdminUsersGroupsController(TestController):
         users_group_name = TEST_USER_GROUP + 'another2'
         response = self.app.post(url('users_groups'),
                                  {'users_group_name': users_group_name,
-                                  'user_group_description': 'DESC',
+                                  'user_group_description': u'DESC',
                                   'active': True,
                                   '_authentication_token': self.authentication_token()})
         response.follow()

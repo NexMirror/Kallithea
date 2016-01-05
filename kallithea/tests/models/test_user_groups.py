@@ -20,12 +20,12 @@ class TestUserGroups(BaseTestCase):
 
     @parameterized.expand([
         ([], [], [], [], []),
-        ([], ['regular'], [], [], ['regular']),  # no changes of regular
-        (['some_other'], [], [], ['some_other'], []),   # not added to regular group
-        ([], ['regular'], ['container'], ['container'], ['regular', 'container']),
-        ([], ['regular'], [], ['container', 'container2'], ['regular', 'container', 'container2']),
-        ([], ['regular'], ['other'], [], ['regular']),  # remove not used
-        (['some_other'], ['regular'], ['other', 'container'], ['container', 'container2'], ['regular', 'container', 'container2']),
+        ([], [u'regular'], [], [], [u'regular']),  # no changes of regular
+        ([u'some_other'], [], [], [u'some_other'], []),   # not added to regular group
+        ([], [u'regular'], [u'container'], [u'container'], [u'regular', u'container']),
+        ([], [u'regular'], [], [u'container', u'container2'], [u'regular', u'container', u'container2']),
+        ([], [u'regular'], [u'other'], [], [u'regular']),  # remove not used
+        ([u'some_other'], [u'regular'], [u'other', u'container'], [u'container', u'container2'], [u'regular', u'container', u'container2']),
     ])
     def test_enforce_groups(self, pre_existing, regular_should_be,
                             external_should_be, groups, expected):

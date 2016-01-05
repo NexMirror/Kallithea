@@ -350,8 +350,8 @@ class TestLoginController(TestController):
         username = 'test_password_reset_1'
         password = 'qweqwe'
         email = 'username@example.com'
-        name = 'passwd'
-        lastname = 'reset'
+        name = u'passwd'
+        lastname = u'reset'
         timestamp = int(time.time())
 
         new = User()

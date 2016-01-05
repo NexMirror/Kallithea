@@ -15,7 +15,7 @@ fixture = Fixture()
 
 def _destroy_project_tree(test_u1_id):
     Session.remove()
-    repo_group = RepoGroup.get_by_group_name(group_name='g0')
+    repo_group = RepoGroup.get_by_group_name(group_name=u'g0')
     for el in reversed(repo_group.recursive_groups_and_repos()):
         if isinstance(el, Repository):
             RepoModel().delete(el)
@@ -56,18 +56,18 @@ def _create_project_tree():
         username=u'test_u1', password=u'qweqwe',
         email=u'test_u1@example.com', firstname=u'test_u1', lastname=u'test_u1'
     )
-    g0 = fixture.create_repo_group('g0')
-    g0_1 = fixture.create_repo_group('g0_1', group_parent_id=g0)
-    g0_1_1 = fixture.create_repo_group('g0_1_1', group_parent_id=g0_1)
-    g0_1_1_r1 = fixture.create_repo('g0/g0_1/g0_1_1/g0_1_1_r1', repo_group=g0_1_1)
-    g0_1_1_r2 = fixture.create_repo('g0/g0_1/g0_1_1/g0_1_1_r2', repo_group=g0_1_1)
-    g0_1_r1 = fixture.create_repo('g0/g0_1/g0_1_r1', repo_group=g0_1)
-    g0_2 = fixture.create_repo_group('g0_2', group_parent_id=g0)
-    g0_2_r1 = fixture.create_repo('g0/g0_2/g0_2_r1', repo_group=g0_2)
-    g0_2_r2 = fixture.create_repo('g0/g0_2/g0_2_r2', repo_group=g0_2)
-    g0_3 = fixture.create_repo_group('g0_3', group_parent_id=g0)
-    g0_3_r1 = fixture.create_repo('g0/g0_3/g0_3_r1', repo_group=g0_3)
-    g0_3_r2_private = fixture.create_repo('g0/g0_3/g0_3_r1_private',
+    g0 = fixture.create_repo_group(u'g0')
+    g0_1 = fixture.create_repo_group(u'g0_1', group_parent_id=g0)
+    g0_1_1 = fixture.create_repo_group(u'g0_1_1', group_parent_id=g0_1)
+    g0_1_1_r1 = fixture.create_repo(u'g0/g0_1/g0_1_1/g0_1_1_r1', repo_group=g0_1_1)
+    g0_1_1_r2 = fixture.create_repo(u'g0/g0_1/g0_1_1/g0_1_1_r2', repo_group=g0_1_1)
+    g0_1_r1 = fixture.create_repo(u'g0/g0_1/g0_1_r1', repo_group=g0_1)
+    g0_2 = fixture.create_repo_group(u'g0_2', group_parent_id=g0)
+    g0_2_r1 = fixture.create_repo(u'g0/g0_2/g0_2_r1', repo_group=g0_2)
+    g0_2_r2 = fixture.create_repo(u'g0/g0_2/g0_2_r2', repo_group=g0_2)
+    g0_3 = fixture.create_repo_group(u'g0_3', group_parent_id=g0)
+    g0_3_r1 = fixture.create_repo(u'g0/g0_3/g0_3_r1', repo_group=g0_3)
+    g0_3_r2_private = fixture.create_repo(u'g0/g0_3/g0_3_r1_private',
                                           repo_group=g0_3, repo_private=True)
     return test_u1
 

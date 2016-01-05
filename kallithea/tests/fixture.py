@@ -76,7 +76,7 @@ class Fixture(object):
             repo_type='hg',
             clone_uri='',
             repo_group=u'-1',
-            repo_description='DESC',
+            repo_description=u'DESC',
             repo_private=False,
             repo_landing_rev='rev:tip',
             repo_copy_permissions=False,
@@ -95,7 +95,7 @@ class Fixture(object):
     def _get_group_create_params(self, **custom):
         defs = dict(
             group_name=None,
-            group_description='DESC',
+            group_description=u'DESC',
             group_parent_id=None,
             perms_updates=[],
             perms_new=[],
@@ -111,8 +111,8 @@ class Fixture(object):
             username=name,
             password='qweqwe',
             email='%s+test@example.com' % name,
-            firstname='TestUser',
-            lastname='Test',
+            firstname=u'TestUser',
+            lastname=u'Test',
             active=True,
             admin=False,
             extern_type='internal',
@@ -125,7 +125,7 @@ class Fixture(object):
     def _get_user_group_create_params(self, name, **custom):
         defs = dict(
             users_group_name=name,
-            user_group_description='DESC',
+            user_group_description=u'DESC',
             users_group_active=True,
             user_group_data={},
         )

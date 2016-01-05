@@ -16,7 +16,7 @@ class TestNotificationsController(TestController):
 
         u1 = UserModel().create_or_update(username='u1', password='qweqwe',
                                           email='u1@example.com',
-                                          firstname='u1', lastname='u1')
+                                          firstname=u'u1', lastname=u'u1')
         u1 = u1.user_id
 
         response = self.app.get(url('notifications'))
@@ -35,10 +35,10 @@ class TestNotificationsController(TestController):
 
         u1 = UserModel().create_or_update(username='u1', password='qweqwe',
                                                email='u1@example.com',
-                                               firstname='u1', lastname='u1')
+                                               firstname=u'u1', lastname=u'u1')
         u2 = UserModel().create_or_update(username='u2', password='qweqwe',
                                                email='u2@example.com',
-                                               firstname='u2', lastname='u2')
+                                               firstname=u'u2', lastname=u'u2')
 
         # make notifications
         notification = NotificationModel().create(created_by=cur_user,
@@ -69,10 +69,10 @@ class TestNotificationsController(TestController):
         cur_user = self._get_logged_user()
         u1 = UserModel().create_or_update(username='u1', password='qweqwe',
                                           email='u1@example.com',
-                                          firstname='u1', lastname='u1')
+                                          firstname=u'u1', lastname=u'u1')
         u2 = UserModel().create_or_update(username='u2', password='qweqwe',
                                           email='u2@example.com',
-                                          firstname='u2', lastname='u2')
+                                          firstname=u'u2', lastname=u'u2')
 
         subject = u'test'
         notif_body = u'hi there'

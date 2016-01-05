@@ -44,13 +44,13 @@ class TestHomeController(TestController):
 
     def test_index_page_on_groups(self):
         self.log_user()
-        gr = fixture.create_repo_group('gr1')
-        fixture.create_repo(name='gr1/repo_in_group', repo_group=gr)
-        response = self.app.get(url('repos_group_home', group_name='gr1'))
+        gr = fixture.create_repo_group(u'gr1')
+        fixture.create_repo(name=u'gr1/repo_in_group', repo_group=gr)
+        response = self.app.get(url('repos_group_home', group_name=u'gr1'))
 
         try:
-            response.mustcontain("gr1/repo_in_group")
+            response.mustcontain(u"gr1/repo_in_group")
         finally:
-            RepoModel().delete('gr1/repo_in_group')
-            RepoGroupModel().delete(repo_group='gr1', force_delete=True)
+            RepoModel().delete(u'gr1/repo_in_group')
+            RepoGroupModel().delete(repo_group=u'gr1', force_delete=True)
             Session().commit()

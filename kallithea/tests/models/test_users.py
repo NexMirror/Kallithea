@@ -28,7 +28,7 @@ class TestUser(BaseTestCase):
         self.assertEqual(User.get_by_username(u'test_user'), usr)
 
         # make user group
-        user_group = fixture.create_user_group('some_example_group')
+        user_group = fixture.create_user_group(u'some_example_group')
         Session().commit()
 
         UserGroupModel().add_user_to_group(user_group, usr)

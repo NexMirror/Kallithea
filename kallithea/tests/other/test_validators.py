@@ -51,21 +51,21 @@ class TestRepoGroups(BaseTestCase):
 
     def test_ValidUserGroup(self):
         validator = v.ValidUserGroup()
-        self.assertRaises(formencode.Invalid, validator.to_python, 'default')
-        self.assertRaises(formencode.Invalid, validator.to_python, '.,')
+        self.assertRaises(formencode.Invalid, validator.to_python, u'default')
+        self.assertRaises(formencode.Invalid, validator.to_python, u'.,')
 
-        gr = fixture.create_user_group('test')
-        gr2 = fixture.create_user_group('tes2')
+        gr = fixture.create_user_group(u'test')
+        gr2 = fixture.create_user_group(u'tes2')
         Session().commit()
-        self.assertRaises(formencode.Invalid, validator.to_python, 'test')
+        self.assertRaises(formencode.Invalid, validator.to_python, u'test')
         assert gr.users_group_id is not None
         validator = v.ValidUserGroup(edit=True,
                                     old_data={'users_group_id':
                                               gr2.users_group_id})
 
-        self.assertRaises(formencode.Invalid, validator.to_python, 'test')
-        self.assertRaises(formencode.Invalid, validator.to_python, 'TesT')
-        self.assertRaises(formencode.Invalid, validator.to_python, 'TEST')
+        self.assertRaises(formencode.Invalid, validator.to_python, u'test')
+        self.assertRaises(formencode.Invalid, validator.to_python, u'TesT')
+        self.assertRaises(formencode.Invalid, validator.to_python, u'TEST')
         UserGroupModel().delete(gr)
         UserGroupModel().delete(gr2)
         Session().commit()
@@ -75,7 +75,7 @@ class TestRepoGroups(BaseTestCase):
         model = RepoGroupModel()
         self.assertRaises(formencode.Invalid, validator.to_python,
                           {'group_name': HG_REPO, })
-        gr = model.create(group_name='test_gr', group_description='desc',
+        gr = model.create(group_name=u'test_gr', group_description=u'desc',
                           parent=None,
                           just_db=True,
                           owner=TEST_USER_ADMIN_LOGIN)
@@ -147,8 +147,8 @@ class TestRepoGroups(BaseTestCase):
         self.assertRaises(formencode.Invalid,
                           validator.to_python, {'repo_name': HG_REPO})
 
-        gr = RepoGroupModel().create(group_name='group_test',
-                                      group_description='desc',
+        gr = RepoGroupModel().create(group_name=u'group_test',
+                                      group_description=u'desc',
                                       parent=None,
                                       owner=TEST_USER_ADMIN_LOGIN)
         self.assertRaises(formencode.Invalid,

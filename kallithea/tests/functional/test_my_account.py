@@ -156,8 +156,8 @@ class TestMyAccountController(TestController):
                                     username=TEST_USER_ADMIN_LOGIN,
                                     new_password=TEST_USER_ADMIN_PASS,
                                     password_confirmation='test122',
-                                    firstname='NewName',
-                                    lastname='NewLastname',
+                                    firstname=u'NewName',
+                                    lastname=u'NewLastname',
                                     email=new_email,
                                     _authentication_token=self.authentication_token())
                                 )
@@ -173,8 +173,8 @@ class TestMyAccountController(TestController):
                                             username=TEST_USER_ADMIN_LOGIN,
                                             new_password=TEST_USER_ADMIN_PASS,
                                             password_confirmation='test122',
-                                            firstname='NewName',
-                                            lastname='NewLastname',
+                                            firstname=u'NewName',
+                                            lastname=u'NewLastname',
                                             email=new_email,
                                             _authentication_token=self.authentication_token()))
 

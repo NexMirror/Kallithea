@@ -38,8 +38,8 @@ from kallithea.lib.utils2 import time_to_datetime
 
 
 API_URL = '/_admin/api'
-TEST_USER_GROUP = 'test_user_group'
-TEST_REPO_GROUP = 'test_repo_group'
+TEST_USER_GROUP = u'test_user_group'
+TEST_REPO_GROUP = u'test_repo_group'
 
 fixture = Fixture()
 
@@ -99,8 +99,8 @@ class _BaseTestApi(object):
             username='test-api',
             password='test',
             email='test@example.com',
-            firstname='first',
-            lastname='last'
+            firstname=u'first',
+            lastname=u'last'
         )
         Session().commit()
         cls.TEST_USER_LOGIN = cls.test_user.username
@@ -278,7 +278,7 @@ class _BaseTestApi(object):
         self._compare_error(id_, expected, given=response.body)
 
     def test_api_pull(self):
-        repo_name = 'test_pull'
+        repo_name = u'test_pull'
         r = fixture.create_repo(repo_name, repo_type=self.REPO_TYPE)
         r.clone_uri = os.path.join(TESTS_TMP_PATH, self.REPO)
         Session.add(r)
@@ -368,7 +368,7 @@ class _BaseTestApi(object):
         self._compare_ok(id_, expected, given=response.body)
 
     def test_api_lock_repo_lock_aquire_by_non_admin(self):
-        repo_name = 'api_delete_me'
+        repo_name = u'api_delete_me'
         fixture.create_repo(repo_name, repo_type=self.REPO_TYPE,
                             cur_user=self.TEST_USER_LOGIN)
         try:
@@ -390,7 +390,7 @@ class _BaseTestApi(object):
             fixture.destroy_repo(repo_name)
 
     def test_api_lock_repo_lock_aquire_non_admin_with_userid(self):
-        repo_name = 'api_delete_me'
+        repo_name = u'api_delete_me'
         fixture.create_repo(repo_name, repo_type=self.REPO_TYPE,
                             cur_user=self.TEST_USER_LOGIN)
         try:
@@ -465,7 +465,7 @@ class _BaseTestApi(object):
         self._compare_ok(id_, expected, given=response.body)
 
     def test_api_lock_repo_lock_optional_not_locked(self):
-        repo_name = 'api_not_locked'
+        repo_name = u'api_not_locked'
         repo = fixture.create_repo(repo_name, repo_type=self.REPO_TYPE,
                             cur_user=self.TEST_USER_LOGIN)
         self.assertEqual(repo.locked, [None, None])
@@ -516,7 +516,7 @@ class _BaseTestApi(object):
         self._compare_ok(id_, expected, given=response.body)
 
     def test_api_get_locks_with_one_locked_repo(self):
-        repo_name = 'api_delete_me'
+        repo_name = u'api_delete_me'
         repo = fixture.create_repo(repo_name, repo_type=self.REPO_TYPE,
                                    cur_user=self.TEST_USER_LOGIN)
         Repository.lock(repo, User.get_by_username(self.TEST_USER_LOGIN).user_id)
@@ -529,7 +529,7 @@ class _BaseTestApi(object):
             fixture.destroy_repo(repo_name)
 
     def test_api_get_locks_with_one_locked_repo_for_specific_user(self):
-        repo_name = 'api_delete_me'
+        repo_name = u'api_delete_me'
         repo = fixture.create_repo(repo_name, repo_type=self.REPO_TYPE,
                                    cur_user=self.TEST_USER_LOGIN)
         Repository.lock(repo, User.get_by_username(self.TEST_USER_LOGIN).user_id)
@@ -766,7 +766,7 @@ class _BaseTestApi(object):
         self._compare_error(id_, expected, given=response.body)
 
     def test_api_get_repo(self):
-        new_group = 'some_new_group'
+        new_group = u'some_new_group'
         make_user_group(new_group)
         RepoModel().grant_user_group_permission(repo=self.REPO,
                                                 group_name=new_group,
@@ -975,7 +975,7 @@ class _BaseTestApi(object):
             RepoModel().revoke_user_permission(self.REPO, self.TEST_USER_LOGIN)
 
     def test_api_create_repo(self):
-        repo_name = 'api-repo'
+        repo_name = u'api-repo'
         id_, params = _build_data(self.apikey, 'create_repo',
                                   repo_name=repo_name,
                                   owner=TEST_USER_ADMIN_LOGIN,
@@ -995,7 +995,7 @@ class _BaseTestApi(object):
         fixture.destroy_repo(repo_name)
 
     def test_api_create_repo_and_repo_group(self):
-        repo_name = 'my_gr/api-repo'
+        repo_name = u'my_gr/api-repo'
         id_, params = _build_data(self.apikey, 'create_repo',
                                   repo_name=repo_name,
                                   owner=TEST_USER_ADMIN_LOGIN,
@@ -1012,11 +1012,11 @@ class _BaseTestApi(object):
         expected = ret
         self._compare_ok(id_, expected, given=response.body)
         fixture.destroy_repo(repo_name)
-        fixture.destroy_repo_group('my_gr')
+        fixture.destroy_repo_group(u'my_gr')
 
     def test_api_create_repo_in_repo_group_without_permission(self):
-        repo_group_name = '%s/api-repo-repo' % TEST_REPO_GROUP
-        repo_name = '%s/api-repo' % repo_group_name
+        repo_group_name = u'%s/api-repo-repo' % TEST_REPO_GROUP
+        repo_name = u'%s/api-repo' % repo_group_name
 
         rg = fixture.create_repo_group(repo_group_name)
         Session().commit()
@@ -1048,7 +1048,7 @@ class _BaseTestApi(object):
         fixture.destroy_repo_group(repo_group_name)
 
     def test_api_create_repo_unknown_owner(self):
-        repo_name = 'api-repo'
+        repo_name = u'api-repo'
         owner = 'i-dont-exist'
         id_, params = _build_data(self.apikey, 'create_repo',
                                   repo_name=repo_name,
@@ -1060,7 +1060,7 @@ class _BaseTestApi(object):
         self._compare_error(id_, expected, given=response.body)
 
     def test_api_create_repo_dont_specify_owner(self):
-        repo_name = 'api-repo'
+        repo_name = u'api-repo'
         owner = 'i-dont-exist'
         id_, params = _build_data(self.apikey, 'create_repo',
                                   repo_name=repo_name,
@@ -1080,7 +1080,7 @@ class _BaseTestApi(object):
         fixture.destroy_repo(repo_name)
 
     def test_api_create_repo_by_non_admin(self):
-        repo_name = 'api-repo'
+        repo_name = u'api-repo'
         owner = 'i-dont-exist'
         id_, params = _build_data(self.apikey_regular, 'create_repo',
                                   repo_name=repo_name,
@@ -1100,7 +1100,7 @@ class _BaseTestApi(object):
         fixture.destroy_repo(repo_name)
 
     def test_api_create_repo_by_non_admin_specify_owner(self):
-        repo_name = 'api-repo'
+        repo_name = u'api-repo'
         owner = 'i-dont-exist'
         id_, params = _build_data(self.apikey_regular, 'create_repo',
                                   repo_name=repo_name,
@@ -1124,7 +1124,7 @@ class _BaseTestApi(object):
 
     @mock.patch.object(RepoModel, 'create', crash)
     def test_api_create_repo_exception_occurred(self):
-        repo_name = 'api-repo'
+        repo_name = u'api-repo'
         id_, params = _build_data(self.apikey, 'create_repo',
                                   repo_name=repo_name,
                                   owner=TEST_USER_ADMIN_LOGIN,
@@ -1135,7 +1135,7 @@ class _BaseTestApi(object):
 
     @parameterized.expand([
         ('owner', {'owner': TEST_USER_REGULAR_LOGIN}),
-        ('description', {'description': 'new description'}),
+        ('description', {'description': u'new description'}),
         ('active', {'active': True}),
         ('active', {'active': False}),
         ('clone_uri', {'clone_uri': 'http://example.com/repo'}),
@@ -1144,11 +1144,11 @@ class _BaseTestApi(object):
         ('enable_statistics', {'enable_statistics': True}),
         ('enable_locking', {'enable_locking': True}),
         ('enable_downloads', {'enable_downloads': True}),
-        ('name', {'name': 'new_repo_name'}),
-        ('repo_group', {'group': 'test_group_for_update'}),
+        ('name', {'name': u'new_repo_name'}),
+        ('repo_group', {'group': u'test_group_for_update'}),
     ])
     def test_api_update_repo(self, changing_attr, updates):
-        repo_name = 'api_update_me'
+        repo_name = u'api_update_me'
         repo = fixture.create_repo(repo_name, repo_type=self.REPO_TYPE)
         if changing_attr == 'repo_group':
             fixture.create_repo_group(updates['group'])
@@ -1159,7 +1159,7 @@ class _BaseTestApi(object):
         if changing_attr == 'name':
             repo_name = updates['name']
         if changing_attr == 'repo_group':
-            repo_name = '/'.join([updates['group'], repo_name])
+            repo_name = u'/'.join([updates['group'], repo_name])
         try:
             expected = {
                 'msg': 'updated repo ID:%s %s' % (repo.repo_id, repo_name),
@@ -1172,7 +1172,7 @@ class _BaseTestApi(object):
                 fixture.destroy_repo_group(updates['group'])
 
     def test_api_update_repo_repo_group_does_not_exist(self):
-        repo_name = 'admin_owned'
+        repo_name = u'admin_owned'
         fixture.create_repo(repo_name)
         updates = {'group': 'test_group_for_update'}
         id_, params = _build_data(self.apikey, 'update_repo',
@@ -1185,7 +1185,7 @@ class _BaseTestApi(object):
             fixture.destroy_repo(repo_name)
 
     def test_api_update_repo_regular_user_not_allowed(self):
-        repo_name = 'admin_owned'
+        repo_name = u'admin_owned'
         fixture.create_repo(repo_name)
         updates = {'active': False}
         id_, params = _build_data(self.apikey_regular, 'update_repo',
@@ -1199,7 +1199,7 @@ class _BaseTestApi(object):
 
     @mock.patch.object(RepoModel, 'update', crash)
     def test_api_update_repo_exception_occurred(self):
-        repo_name = 'api_update_me'
+        repo_name = u'api_update_me'
         fixture.create_repo(repo_name, repo_type=self.REPO_TYPE)
         id_, params = _build_data(self.apikey, 'update_repo',
                                   repoid=repo_name, owner=TEST_USER_ADMIN_LOGIN,)
@@ -1211,8 +1211,8 @@ class _BaseTestApi(object):
             fixture.destroy_repo(repo_name)
 
     def test_api_update_repo_regular_user_change_repo_name(self):
-        repo_name = 'admin_owned'
-        new_repo_name = 'new_repo_name'
+        repo_name = u'admin_owned'
+        new_repo_name = u'new_repo_name'
         fixture.create_repo(repo_name, repo_type=self.REPO_TYPE)
         RepoModel().grant_user_permission(repo=repo_name,
                                           user=self.TEST_USER_LOGIN,
@@ -1231,8 +1231,8 @@ class _BaseTestApi(object):
             fixture.destroy_repo(new_repo_name)
 
     def test_api_update_repo_regular_user_change_repo_name_allowed(self):
-        repo_name = 'admin_owned'
-        new_repo_name = 'new_repo_name'
+        repo_name = u'admin_owned'
+        new_repo_name = u'new_repo_name'
         repo = fixture.create_repo(repo_name, repo_type=self.REPO_TYPE)
         RepoModel().grant_user_permission(repo=repo_name,
                                           user=self.TEST_USER_LOGIN,
@@ -1254,7 +1254,7 @@ class _BaseTestApi(object):
             fixture.destroy_repo(new_repo_name)
 
     def test_api_update_repo_regular_user_change_owner(self):
-        repo_name = 'admin_owned'
+        repo_name = u'admin_owned'
         fixture.create_repo(repo_name, repo_type=self.REPO_TYPE)
         RepoModel().grant_user_permission(repo=repo_name,
                                           user=self.TEST_USER_LOGIN,
@@ -1270,7 +1270,7 @@ class _BaseTestApi(object):
             fixture.destroy_repo(repo_name)
 
     def test_api_delete_repo(self):
-        repo_name = 'api_delete_me'
+        repo_name = u'api_delete_me'
         fixture.create_repo(repo_name, repo_type=self.REPO_TYPE)
 
         id_, params = _build_data(self.apikey, 'delete_repo',
@@ -1288,7 +1288,7 @@ class _BaseTestApi(object):
             fixture.destroy_repo(repo_name)
 
     def test_api_delete_repo_by_non_admin(self):
-        repo_name = 'api_delete_me'
+        repo_name = u'api_delete_me'
         fixture.create_repo(repo_name, repo_type=self.REPO_TYPE,
                             cur_user=self.TEST_USER_LOGIN)
         id_, params = _build_data(self.apikey_regular, 'delete_repo',
@@ -1306,7 +1306,7 @@ class _BaseTestApi(object):
             fixture.destroy_repo(repo_name)
 
     def test_api_delete_repo_by_non_admin_no_permission(self):
-        repo_name = 'api_delete_me'
+        repo_name = u'api_delete_me'
         fixture.create_repo(repo_name, repo_type=self.REPO_TYPE)
         try:
             id_, params = _build_data(self.apikey_regular, 'delete_repo',
@@ -1318,7 +1318,7 @@ class _BaseTestApi(object):
             fixture.destroy_repo(repo_name)
 
     def test_api_delete_repo_exception_occurred(self):
-        repo_name = 'api_delete_me'
+        repo_name = u'api_delete_me'
         fixture.create_repo(repo_name, repo_type=self.REPO_TYPE)
         try:
             with mock.patch.object(RepoModel, 'delete', crash):
@@ -1332,7 +1332,7 @@ class _BaseTestApi(object):
             fixture.destroy_repo(repo_name)
 
     def test_api_fork_repo(self):
-        fork_name = 'api-repo-fork'
+        fork_name = u'api-repo-fork'
         id_, params = _build_data(self.apikey, 'fork_repo',
                                   repoid=self.REPO,
                                   fork_name=fork_name,
@@ -1351,7 +1351,7 @@ class _BaseTestApi(object):
         fixture.destroy_repo(fork_name)
 
     def test_api_fork_repo_non_admin(self):
-        fork_name = 'api-repo-fork'
+        fork_name = u'api-repo-fork'
         id_, params = _build_data(self.apikey_regular, 'fork_repo',
                                   repoid=self.REPO,
                                   fork_name=fork_name,
@@ -1369,7 +1369,7 @@ class _BaseTestApi(object):
         fixture.destroy_repo(fork_name)
 
     def test_api_fork_repo_non_admin_specify_owner(self):
-        fork_name = 'api-repo-fork'
+        fork_name = u'api-repo-fork'
         id_, params = _build_data(self.apikey_regular, 'fork_repo',
                                   repoid=self.REPO,
                                   fork_name=fork_name,
@@ -1384,7 +1384,7 @@ class _BaseTestApi(object):
         RepoModel().grant_user_permission(repo=self.REPO,
                                           user=self.TEST_USER_LOGIN,
                                           perm='repository.none')
-        fork_name = 'api-repo-fork'
+        fork_name = u'api-repo-fork'
         id_, params = _build_data(self.apikey_regular, 'fork_repo',
                                   repoid=self.REPO,
                                   fork_name=fork_name,
@@ -1398,7 +1398,7 @@ class _BaseTestApi(object):
                            ('write', 'repository.write'),
                            ('admin', 'repository.admin')])
     def test_api_fork_repo_non_admin_no_create_repo_permission(self, name, perm):
-        fork_name = 'api-repo-fork'
+        fork_name = u'api-repo-fork'
         # regardless of base repository permission, forking is disallowed
         # when repository creation is disabled
         RepoModel().grant_user_permission(repo=self.REPO,
@@ -1416,7 +1416,7 @@ class _BaseTestApi(object):
         fixture.destroy_repo(fork_name)
 
     def test_api_fork_repo_unknown_owner(self):
-        fork_name = 'api-repo-fork'
+        fork_name = u'api-repo-fork'
         owner = 'i-dont-exist'
         id_, params = _build_data(self.apikey, 'fork_repo',
                                   repoid=self.REPO,
@@ -1428,11 +1428,11 @@ class _BaseTestApi(object):
         self._compare_error(id_, expected, given=response.body)
 
     def test_api_fork_repo_fork_exists(self):
-        fork_name = 'api-repo-fork'
+        fork_name = u'api-repo-fork'
         fixture.create_fork(self.REPO, fork_name)
 
         try:
-            fork_name = 'api-repo-fork'
+            fork_name = u'api-repo-fork'
 
             id_, params = _build_data(self.apikey, 'fork_repo',
                                       repoid=self.REPO,
@@ -1461,7 +1461,7 @@ class _BaseTestApi(object):
 
     @mock.patch.object(RepoModel, 'create_fork', crash)
     def test_api_fork_repo_exception_occurred(self):
-        fork_name = 'api-repo-fork'
+        fork_name = u'api-repo-fork'
         id_, params = _build_data(self.apikey, 'fork_repo',
                                   repoid=self.REPO,
                                   fork_name=fork_name,
@@ -1490,7 +1490,7 @@ class _BaseTestApi(object):
         self._compare_ok(id_, expected, given=response.body)
 
     def test_api_get_user_groups(self):
-        gr_name = 'test_user_group2'
+        gr_name = u'test_user_group2'
         make_user_group(gr_name)
 
         id_, params = _build_data(self.apikey, 'get_user_groups', )
@@ -1498,7 +1498,7 @@ class _BaseTestApi(object):
 
         try:
             expected = []
-            for gr_name in [TEST_USER_GROUP, 'test_user_group2']:
+            for gr_name in [TEST_USER_GROUP, u'test_user_group2']:
                 user_group = UserGroupModel().get_group(gr_name)
                 ret = user_group.get_api_data()
                 expected.append(ret)
@@ -1507,7 +1507,7 @@ class _BaseTestApi(object):
             fixture.destroy_user_group(gr_name)
 
     def test_api_create_user_group(self):
-        group_name = 'some_new_group'
+        group_name = u'some_new_group'
         id_, params = _build_data(self.apikey, 'create_user_group',
                                   group_name=group_name)
         response = api_call(self, params)
@@ -1533,7 +1533,7 @@ class _BaseTestApi(object):
 
     @mock.patch.object(UserGroupModel, 'create', crash)
     def test_api_get_user_group_exception_occurred(self):
-        group_name = 'exception_happens'
+        group_name = u'exception_happens'
         id_, params = _build_data(self.apikey, 'create_user_group',
                                   group_name=group_name)
         response = api_call(self, params)
@@ -1541,13 +1541,13 @@ class _BaseTestApi(object):
         expected = 'failed to create group `%s`' % group_name
         self._compare_error(id_, expected, given=response.body)
 
-    @parameterized.expand([('group_name', {'group_name': 'new_group_name'}),
-                           ('group_name', {'group_name': 'test_group_for_update'}),
+    @parameterized.expand([('group_name', {'group_name': u'new_group_name'}),
+                           ('group_name', {'group_name': u'test_group_for_update'}),
                            ('owner', {'owner': TEST_USER_REGULAR_LOGIN}),
                            ('active', {'active': False}),
                            ('active', {'active': True})])
     def test_api_update_user_group(self, changing_attr, updates):
-        gr_name = 'test_group_for_update'
+        gr_name = u'test_group_for_update'
         user_group = fixture.create_user_group(gr_name)
         id_, params = _build_data(self.apikey, 'update_user_group',
                                   usergroupid=gr_name, **updates)
@@ -1567,7 +1567,7 @@ class _BaseTestApi(object):
 
     @mock.patch.object(UserGroupModel, 'update', crash)
     def test_api_update_user_group_exception_occurred(self):
-        gr_name = 'test_group'
+        gr_name = u'test_group'
         fixture.create_user_group(gr_name)
         id_, params = _build_data(self.apikey, 'update_user_group',
                                   usergroupid=gr_name)
@@ -1579,7 +1579,7 @@ class _BaseTestApi(object):
             fixture.destroy_user_group(gr_name)
 
     def test_api_add_user_to_user_group(self):
-        gr_name = 'test_group'
+        gr_name = u'test_group'
         fixture.create_user_group(gr_name)
         id_, params = _build_data(self.apikey, 'add_user_to_user_group',
                                   usergroupid=gr_name,
@@ -1606,7 +1606,7 @@ class _BaseTestApi(object):
 
     @mock.patch.object(UserGroupModel, 'add_user_to_group', crash)
     def test_api_add_user_to_user_group_exception_occurred(self):
-        gr_name = 'test_group'
+        gr_name = u'test_group'
         fixture.create_user_group(gr_name)
         id_, params = _build_data(self.apikey, 'add_user_to_user_group',
                                   usergroupid=gr_name,
@@ -1620,7 +1620,7 @@ class _BaseTestApi(object):
             fixture.destroy_user_group(gr_name)
 
     def test_api_remove_user_from_user_group(self):
-        gr_name = 'test_group_3'
+        gr_name = u'test_group_3'
         gr = fixture.create_user_group(gr_name)
         UserGroupModel().add_user_to_group(gr, user=TEST_USER_ADMIN_LOGIN)
         Session().commit()
@@ -1641,7 +1641,7 @@ class _BaseTestApi(object):
 
     @mock.patch.object(UserGroupModel, 'remove_user_from_group', crash)
     def test_api_remove_user_from_user_group_exception_occurred(self):
-        gr_name = 'test_group_3'
+        gr_name = u'test_group_3'
         gr = fixture.create_user_group(gr_name)
         UserGroupModel().add_user_to_group(gr, user=TEST_USER_ADMIN_LOGIN)
         Session().commit()
@@ -1656,7 +1656,7 @@ class _BaseTestApi(object):
             fixture.destroy_user_group(gr_name)
 
     def test_api_delete_user_group(self):
-        gr_name = 'test_group'
+        gr_name = u'test_group'
         ugroup = fixture.create_user_group(gr_name)
         gr_id = ugroup.users_group_id
         id_, params = _build_data(self.apikey, 'delete_user_group',
@@ -1675,7 +1675,7 @@ class _BaseTestApi(object):
                 fixture.destroy_user_group(gr_name)
 
     def test_api_delete_user_group_that_is_assigned(self):
-        gr_name = 'test_group'
+        gr_name = u'test_group'
         ugroup = fixture.create_user_group(gr_name)
         gr_id = ugroup.users_group_id
 
@@ -1695,7 +1695,7 @@ class _BaseTestApi(object):
                 fixture.destroy_user_group(gr_name)
 
     def test_api_delete_user_group_exception_occurred(self):
-        gr_name = 'test_group'
+        gr_name = u'test_group'
         ugroup = fixture.create_user_group(gr_name)
         gr_id = ugroup.users_group_id
         id_, params = _build_data(self.apikey, 'delete_user_group',

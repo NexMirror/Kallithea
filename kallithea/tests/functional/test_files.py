@@ -374,7 +374,7 @@ removed extra unicode conversion in diff.</div>
     ])
     def test_add_file_into_hg(self, cnt, location, filename):
         self.log_user()
-        repo = fixture.create_repo('commit-test-%s' % cnt, repo_type='hg')
+        repo = fixture.create_repo(u'commit-test-%s' % cnt, repo_type='hg')
         response = self.app.post(url('files_add_home',
                                       repo_name=repo.repo_name,
                                       revision='tip', f_path='/'),
@@ -450,7 +450,7 @@ removed extra unicode conversion in diff.</div>
     ])
     def test_add_file_into_git(self, cnt, location, filename):
         self.log_user()
-        repo = fixture.create_repo('commit-test-%s' % cnt, repo_type='git')
+        repo = fixture.create_repo(u'commit-test-%s' % cnt, repo_type='git')
         response = self.app.post(url('files_add_home',
                                       repo_name=repo.repo_name,
                                       revision='tip', f_path='/'),
@@ -476,7 +476,7 @@ removed extra unicode conversion in diff.</div>
 
     def test_edit_file_view_not_on_branch_hg(self):
         self.log_user()
-        repo = fixture.create_repo('test-edit-repo', repo_type='hg')
+        repo = fixture.create_repo(u'test-edit-repo', repo_type='hg')
 
         ## add file
         location = 'vcs'
@@ -506,7 +506,7 @@ removed extra unicode conversion in diff.</div>
 
     def test_edit_file_view_commit_changes_hg(self):
         self.log_user()
-        repo = fixture.create_repo('test-edit-repo', repo_type='hg')
+        repo = fixture.create_repo(u'test-edit-repo', repo_type='hg')
 
         ## add file
         location = 'vcs'
@@ -550,7 +550,7 @@ removed extra unicode conversion in diff.</div>
 
     def test_edit_file_view_not_on_branch_git(self):
         self.log_user()
-        repo = fixture.create_repo('test-edit-repo', repo_type='git')
+        repo = fixture.create_repo(u'test-edit-repo', repo_type='git')
 
         ## add file
         location = 'vcs'
@@ -580,7 +580,7 @@ removed extra unicode conversion in diff.</div>
 
     def test_edit_file_view_commit_changes_git(self):
         self.log_user()
-        repo = fixture.create_repo('test-edit-repo', repo_type='git')
+        repo = fixture.create_repo(u'test-edit-repo', repo_type='git')
 
         ## add file
         location = 'vcs'
@@ -624,7 +624,7 @@ removed extra unicode conversion in diff.</div>
 
     def test_delete_file_view_not_on_branch_hg(self):
         self.log_user()
-        repo = fixture.create_repo('test-delete-repo', repo_type='hg')
+        repo = fixture.create_repo(u'test-delete-repo', repo_type='hg')
 
         ## add file
         location = 'vcs'
@@ -654,7 +654,7 @@ removed extra unicode conversion in diff.</div>
 
     def test_delete_file_view_commit_changes_hg(self):
         self.log_user()
-        repo = fixture.create_repo('test-delete-repo', repo_type='hg')
+        repo = fixture.create_repo(u'test-delete-repo', repo_type='hg')
 
         ## add file
         location = 'vcs'
@@ -697,7 +697,7 @@ removed extra unicode conversion in diff.</div>
 
     def test_delete_file_view_not_on_branch_git(self):
         self.log_user()
-        repo = fixture.create_repo('test-delete-repo', repo_type='git')
+        repo = fixture.create_repo(u'test-delete-repo', repo_type='git')
 
         ## add file
         location = 'vcs'
@@ -727,7 +727,7 @@ removed extra unicode conversion in diff.</div>
 
     def test_delete_file_view_commit_changes_git(self):
         self.log_user()
-        repo = fixture.create_repo('test-delete-repo', repo_type='git')
+        repo = fixture.create_repo(u'test-delete-repo', repo_type='git')
 
         ## add file
         location = 'vcs'

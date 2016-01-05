@@ -52,7 +52,7 @@ class _BaseTest(object):
     def test_create(self):
         self.log_user()
         repo_name = self.NEW_REPO
-        description = 'description for newly created repo'
+        description = u'description for newly created repo'
         response = self.app.post(url('repos'),
                         fixture._get_repo_create_params(repo_private=False,
                                                 repo_name=repo_name,
@@ -91,15 +91,15 @@ class _BaseTest(object):
         self.log_user()
 
         ## create GROUP
-        group_name = 'sometest_%s' % self.REPO_TYPE
+        group_name = u'sometest_%s' % self.REPO_TYPE
         gr = RepoGroupModel().create(group_name=group_name,
-                                     group_description='test',
+                                     group_description=u'test',
                                      owner=TEST_USER_ADMIN_LOGIN)
         Session().commit()
 
-        repo_name = 'ingroup'
+        repo_name = u'ingroup'
         repo_name_full = RepoGroup.url_sep().join([group_name, repo_name])
-        description = 'description for newly created repo'
+        description = u'description for newly created repo'
         response = self.app.post(url('repos'),
                         fixture._get_repo_create_params(repo_private=False,
                                                 repo_name=repo_name,
@@ -162,21 +162,21 @@ class _BaseTest(object):
         Session().commit()
 
         ## create GROUP
-        group_name = 'reg_sometest_%s' % self.REPO_TYPE
+        group_name = u'reg_sometest_%s' % self.REPO_TYPE
         gr = RepoGroupModel().create(group_name=group_name,
-                                     group_description='test',
+                                     group_description=u'test',
                                      owner=TEST_USER_ADMIN_LOGIN)
         Session().commit()
 
-        group_name_allowed = 'reg_sometest_allowed_%s' % self.REPO_TYPE
+        group_name_allowed = u'reg_sometest_allowed_%s' % self.REPO_TYPE
         gr_allowed = RepoGroupModel().create(group_name=group_name_allowed,
-                                     group_description='test',
+                                     group_description=u'test',
                                      owner=TEST_USER_REGULAR_LOGIN)
         Session().commit()
 
-        repo_name = 'ingroup'
+        repo_name = u'ingroup'
         repo_name_full = RepoGroup.url_sep().join([group_name, repo_name])
-        description = 'description for newly created repo'
+        description = u'description for newly created repo'
         response = self.app.post(url('repos'),
                         fixture._get_repo_create_params(repo_private=False,
                                                 repo_name=repo_name,
@@ -188,9 +188,9 @@ class _BaseTest(object):
         response.mustcontain('Invalid value')
 
         # user is allowed to create in this group
-        repo_name = 'ingroup'
+        repo_name = u'ingroup'
         repo_name_full = RepoGroup.url_sep().join([group_name_allowed, repo_name])
-        description = 'description for newly created repo'
+        description = u'description for newly created repo'
         response = self.app.post(url('repos'),
                         fixture._get_repo_create_params(repo_private=False,
                                                 repo_name=repo_name,
@@ -239,9 +239,9 @@ class _BaseTest(object):
         self.log_user()
 
         ## create GROUP
-        group_name = 'sometest_%s' % self.REPO_TYPE
+        group_name = u'sometest_%s' % self.REPO_TYPE
         gr = RepoGroupModel().create(group_name=group_name,
-                                     group_description='test',
+                                     group_description=u'test',
                                      owner=TEST_USER_ADMIN_LOGIN)
         perm = Permission.get_by_key('repository.write')
         RepoGroupModel().grant_user_permission(gr, TEST_USER_REGULAR_LOGIN, perm)
@@ -249,9 +249,9 @@ class _BaseTest(object):
         ## add repo permissions
         Session().commit()
 
-        repo_name = 'ingroup_inherited_%s' % self.REPO_TYPE
+        repo_name = u'ingroup_inherited_%s' % self.REPO_TYPE
         repo_name_full = RepoGroup.url_sep().join([group_name, repo_name])
-        description = 'description for newly created repo'
+        description = u'description for newly created repo'
         response = self.app.post(url('repos'),
                         fixture._get_repo_create_params(repo_private=False,
                                                 repo_name=repo_name,
@@ -304,7 +304,7 @@ class _BaseTest(object):
     def test_create_remote_repo_wrong_clone_uri(self):
         self.log_user()
         repo_name = self.NEW_REPO
-        description = 'description for newly created repo'
+        description = u'description for newly created repo'
         response = self.app.post(url('repos'),
                         fixture._get_repo_create_params(repo_private=False,
                                                 repo_name=repo_name,
@@ -318,7 +318,7 @@ class _BaseTest(object):
     def test_create_remote_repo_wrong_clone_uri_hg_svn(self):
         self.log_user()
         repo_name = self.NEW_REPO
-        description = 'description for newly created repo'
+        description = u'description for newly created repo'
         response = self.app.post(url('repos'),
                         fixture._get_repo_create_params(repo_private=False,
                                                 repo_name=repo_name,
@@ -331,8 +331,8 @@ class _BaseTest(object):
 
     def test_delete(self):
         self.log_user()
-        repo_name = 'vcs_test_new_to_delete_%s' % self.REPO_TYPE
-        description = 'description for newly created repo'
+        repo_name = u'vcs_test_new_to_delete_%s' % self.REPO_TYPE
+        description = u'description for newly created repo'
         response = self.app.post(url('repos'),
                         fixture._get_repo_create_params(repo_private=False,
                                                 repo_type=self.REPO_TYPE,
@@ -496,7 +496,7 @@ class _BaseTest(object):
 
     def test_set_fork_of_other_repo(self):
         self.log_user()
-        other_repo = 'other_%s' % self.REPO_TYPE
+        other_repo = u'other_%s' % self.REPO_TYPE
         fixture.create_repo(other_repo, repo_type=self.REPO_TYPE)
         repo = Repository.get_by_repo_name(self.REPO)
         repo2 = Repository.get_by_repo_name(other_repo)
@@ -568,7 +568,7 @@ class _BaseTest(object):
 
         user = User.get(usr['user_id'])
 
-        repo_name = self.NEW_REPO+'no_perms'
+        repo_name = self.NEW_REPO + u'no_perms'
         description = 'description for newly created repo'
         response = self.app.post(url('repos'),
                         fixture._get_repo_create_params(repo_private=False,
