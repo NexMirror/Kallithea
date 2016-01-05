@@ -38,7 +38,7 @@ from pylons.i18n.translation import _
 from sqlalchemy.exc import DatabaseError
 
 from kallithea import EXTERN_TYPE_INTERNAL
-from kallithea.lib.utils2 import safe_unicode, generate_api_key, get_current_authuser
+from kallithea.lib.utils2 import safe_str, generate_api_key, get_current_authuser
 from kallithea.lib.caching_query import FromCache
 from kallithea.model import BaseModel
 from kallithea.model.db import User, UserToPerm, Notification, \
@@ -148,9 +148,9 @@ class UserModel(BaseModel):
             new_user.admin = admin
             new_user.email = email
             new_user.active = active
-            new_user.extern_name = safe_unicode(extern_name) \
+            new_user.extern_name = safe_str(extern_name) \
                 if extern_name else None
-            new_user.extern_type = safe_unicode(extern_type) \
+            new_user.extern_type = safe_str(extern_type) \
                 if extern_type else None
             new_user.name = firstname
             new_user.lastname = lastname
