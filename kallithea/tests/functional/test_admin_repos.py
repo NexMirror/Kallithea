@@ -5,7 +5,7 @@ import mock
 import urllib
 
 from kallithea.lib import vcs
-from kallithea.lib.utils2 import safe_str
+from kallithea.lib.utils2 import safe_str, safe_unicode
 from kallithea.model.db import Repository, RepoGroup, UserRepoToPerm, User, \
     Permission
 from kallithea.model.user import UserModel
@@ -86,43 +86,6 @@ class _BaseTest(object):
 
         RepoModel().delete(repo_name)
         Session().commit()
-
-    def test_create_non_ascii(self):
-        self.log_user()
-        non_ascii = "ąęł"
-        repo_name = "%s%s" % (self.NEW_REPO, non_ascii)
-        repo_name_unicode = repo_name.decode('utf8')
-        description = 'description for newly created repo' + non_ascii
-        description_unicode = description.decode('utf8')
-        response = self.app.post(url('repos'),
-                        fixture._get_repo_create_params(repo_private=False,
-                                                repo_name=repo_name,
-                                                repo_type=self.REPO_TYPE,
-                                                repo_description=description,
-                                                _authentication_token=self.authentication_token()))
-        ## run the check page that triggers the flash message
-        response = self.app.get(url('repo_check_home', repo_name=repo_name))
-        self.assertEqual(response.json, {u'result': True})
-        self.checkSessionFlash(response,
-                               u'Created repository <a href="/%s">%s</a>'
-                               % (urllib.quote(repo_name), repo_name_unicode))
-        # test if the repo was created in the database
-        new_repo = Session().query(Repository) \
-            .filter(Repository.repo_name == repo_name_unicode).one()
-
-        self.assertEqual(new_repo.repo_name, repo_name_unicode)
-        self.assertEqual(new_repo.description, description_unicode)
-
-        # test if the repository is visible in the list ?
-        response = self.app.get(url('summary_home', repo_name=repo_name))
-        response.mustcontain(repo_name)
-        response.mustcontain(self.REPO_TYPE)
-
-        # test if the repository was created on filesystem
-        try:
-            vcs.get_repo(safe_str(os.path.join(TESTS_TMP_PATH, repo_name)))
-        except vcs.exceptions.VCSError:
-            self.fail('no repo %s in filesystem' % repo_name)
 
     def test_create_in_group(self):
         self.log_user()
@@ -418,10 +381,10 @@ class _BaseTest(object):
     def test_delete_non_ascii(self):
         self.log_user()
         non_ascii = "ąęł"
-        repo_name = "%s%s" % (self.NEW_REPO, non_ascii)
-        repo_name_unicode = repo_name.decode('utf8')
+        repo_name = "%s%s" % (safe_str(self.NEW_REPO), non_ascii)
+        repo_name_unicode = safe_unicode(repo_name)
         description = 'description for newly created repo' + non_ascii
-        description_unicode = description.decode('utf8')
+        description_unicode = safe_unicode(description)
         response = self.app.post(url('repos'),
                         fixture._get_repo_create_params(repo_private=False,
                                                 repo_name=repo_name,
