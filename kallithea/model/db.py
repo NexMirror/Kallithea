@@ -182,7 +182,7 @@ class Setting(Base, BaseModel):
 
     app_settings_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
     app_settings_name = Column(String(255, convert_unicode=False), nullable=True, unique=None, default=None)
-    _app_settings_value = Column("app_settings_value", String(4096, convert_unicode=False), nullable=True, unique=None, default=None)
+    _app_settings_value = Column("app_settings_value", Unicode(4096), nullable=True, unique=None, default=None)
     _app_settings_type = Column("app_settings_type", String(255, convert_unicode=False), nullable=True, unique=None, default=None)
 
     def __init__(self, key='', val='', type='unicode'):
@@ -411,8 +411,8 @@ class User(Base, BaseModel):
     password = Column(String(255, convert_unicode=False), nullable=True, unique=None, default=None)
     active = Column(Boolean(), nullable=True, unique=None, default=True)
     admin = Column(Boolean(), nullable=True, unique=None, default=False)
-    name = Column("firstname", String(255, convert_unicode=False), nullable=True, unique=None, default=None)
-    lastname = Column(String(255, convert_unicode=False), nullable=True, unique=None, default=None)
+    name = Column("firstname", Unicode(255), nullable=True, unique=None, default=None)
+    lastname = Column(Unicode(255), nullable=True, unique=None, default=None)
     _email = Column("email", String(255, convert_unicode=False), nullable=True, unique=None, default=None)
     last_login = Column(DateTime(timezone=False), nullable=True, unique=None, default=None)
     extern_type = Column(String(255, convert_unicode=False), nullable=True, unique=None, default=None)
@@ -788,9 +788,9 @@ class UserLog(Base, BaseModel):
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=True, unique=None, default=None)
     username = Column(String(255, convert_unicode=False), nullable=True, unique=None, default=None)
     repository_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=True)
-    repository_name = Column(String(255, convert_unicode=False), nullable=True, unique=None, default=None)
+    repository_name = Column(Unicode(255), nullable=True, unique=None, default=None)
     user_ip = Column(String(255, convert_unicode=False), nullable=True, unique=None, default=None)
-    action = Column(UnicodeText(1200000, convert_unicode=False), nullable=True, unique=None, default=None)
+    action = Column(UnicodeText(1200000), nullable=True, unique=None, default=None)
     action_date = Column(DateTime(timezone=False), nullable=True, unique=None, default=None)
 
     def __unicode__(self):
@@ -813,8 +813,8 @@ class UserGroup(Base, BaseModel):
     )
 
     users_group_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
-    users_group_name = Column(String(255, convert_unicode=False), nullable=False, unique=True, default=None)
-    user_group_description = Column(String(10000, convert_unicode=False), nullable=True, unique=None, default=None)
+    users_group_name = Column(Unicode(255), nullable=False, unique=True, default=None)
+    user_group_description = Column(Unicode(10000), nullable=True, unique=None, default=None)
     users_group_active = Column(Boolean(), nullable=True, unique=None, default=None)
     inherit_default_permissions = Column("users_group_inherit_default_permissions", Boolean(), nullable=False, unique=None, default=True)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False, unique=False, default=None)
@@ -966,7 +966,7 @@ class Repository(Base, BaseModel):
     STATE_ERROR = 'repo_state_error'
 
     repo_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
-    repo_name = Column(String(255, convert_unicode=False), nullable=False, unique=True, default=None)
+    repo_name = Column(Unicode(255), nullable=False, unique=True, default=None)
     repo_state = Column(String(255), nullable=True)
 
     clone_uri = Column(String(255, convert_unicode=False), nullable=True, unique=False, default=None)
@@ -975,7 +975,7 @@ class Repository(Base, BaseModel):
     private = Column(Boolean(), nullable=True, unique=None, default=None)
     enable_statistics = Column("statistics", Boolean(), nullable=True, unique=None, default=True)
     enable_downloads = Column("downloads", Boolean(), nullable=True, unique=None, default=True)
-    description = Column(String(10000, convert_unicode=False), nullable=True, unique=None, default=None)
+    description = Column(Unicode(10000), nullable=True, unique=None, default=None)
     created_on = Column(DateTime(timezone=False), nullable=False, unique=None, default=datetime.datetime.now)
     updated_on = Column(DateTime(timezone=False), nullable=False, unique=None, default=datetime.datetime.now)
     _landing_revision = Column("landing_revision", String(255, convert_unicode=False), nullable=False, unique=False, default=None)
@@ -1483,9 +1483,9 @@ class RepoGroup(Base, BaseModel):
     SEP = ' &raquo; '
 
     group_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
-    group_name = Column(String(255, convert_unicode=False), nullable=False, unique=True, default=None)
+    group_name = Column(Unicode(255), nullable=False, unique=True, default=None)
     group_parent_id = Column(Integer(), ForeignKey('groups.group_id'), nullable=True, unique=None, default=None)
-    group_description = Column(String(10000, convert_unicode=False), nullable=True, unique=None, default=None)
+    group_description = Column(Unicode(10000), nullable=True, unique=None, default=None)
     enable_locking = Column(Boolean(), nullable=False, unique=None, default=False)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False, unique=False, default=None)
     created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
@@ -2036,9 +2036,9 @@ class CacheInvalidation(Base, BaseModel):
     # cache_id, not used
     cache_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
     # cache_key as created by _get_cache_key
-    cache_key = Column(String(255, convert_unicode=False))
+    cache_key = Column(Unicode(255))
     # cache_args is a repo_name
-    cache_args = Column(String(255, convert_unicode=False))
+    cache_args = Column(Unicode(255))
     # instance sets cache_active True when it is caching, other instances set
     # cache_active to False to indicate that this cache is invalid
     cache_active = Column(Boolean(), nullable=True, unique=None, default=False)
