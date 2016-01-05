@@ -158,13 +158,17 @@ class BaseModel(object):
         return '<DB:%s>' % (self.__class__.__name__)
 
 
+_table_args_default_dict = {'extend_existing': True,
+                            'mysql_engine': 'InnoDB',
+                            'mysql_charset': 'utf8',
+                            'sqlite_autoincrement': True,
+                           }
+
 class Setting(Base, BaseModel):
     __tablename__ = DB_PREFIX + 'settings'
-
     __table_args__ = (
         UniqueConstraint('app_settings_name'),
-        {'extend_existing': True, 'mysql_engine': 'InnoDB',
-         'mysql_charset': 'utf8', 'sqlite_autoincrement': True}
+        _table_args_default_dict,
     )
 
     SETTINGS_TYPES = {
@@ -328,8 +332,7 @@ class Ui(Base, BaseModel):
     __tablename__ = DB_PREFIX + 'ui'
     __table_args__ = (
         UniqueConstraint('ui_key'),
-        {'extend_existing': True, 'mysql_engine': 'InnoDB',
-         'mysql_charset': 'utf8', 'sqlite_autoincrement': True}
+        _table_args_default_dict,
     )
 
     HOOK_UPDATE = 'changegroup.update'
@@ -396,9 +399,9 @@ class User(Base, BaseModel):
         UniqueConstraint('username'), UniqueConstraint('email'),
         Index('u_username_idx', 'username'),
         Index('u_email_idx', 'email'),
-        {'extend_existing': True, 'mysql_engine': 'InnoDB',
-         'mysql_charset': 'utf8', 'sqlite_autoincrement': True}
+        _table_args_default_dict,
     )
+
     DEFAULT_USER = 'default'
     DEFAULT_GRAVATAR_URL = 'https://secure.gravatar.com/avatar/{md5email}?d=identicon&s={size}'
 
@@ -694,8 +697,7 @@ class UserApiKeys(Base, BaseModel):
         Index('uak_api_key_idx', 'api_key'),
         Index('uak_api_key_expires_idx', 'api_key', 'expires'),
         UniqueConstraint('api_key'),
-        {'extend_existing': True, 'mysql_engine': 'InnoDB',
-         'mysql_charset': 'utf8', 'sqlite_autoincrement': True}
+        _table_args_default_dict,
     )
     __mapper_args__ = {}
 
@@ -720,8 +722,7 @@ class UserEmailMap(Base, BaseModel):
     __table_args__ = (
         Index('uem_email_idx', 'email'),
         UniqueConstraint('email'),
-        {'extend_existing': True, 'mysql_engine': 'InnoDB',
-         'mysql_charset': 'utf8', 'sqlite_autoincrement': True}
+        _table_args_default_dict,
     )
     __mapper_args__ = {}
 
@@ -751,8 +752,7 @@ class UserIpMap(Base, BaseModel):
     __tablename__ = 'user_ip_map'
     __table_args__ = (
         UniqueConstraint('user_id', 'ip_addr'),
-        {'extend_existing': True, 'mysql_engine': 'InnoDB',
-         'mysql_charset': 'utf8', 'sqlite_autoincrement': True}
+        _table_args_default_dict,
     )
     __mapper_args__ = {}
 
@@ -781,9 +781,9 @@ class UserIpMap(Base, BaseModel):
 class UserLog(Base, BaseModel):
     __tablename__ = 'user_logs'
     __table_args__ = (
-        {'extend_existing': True, 'mysql_engine': 'InnoDB',
-         'mysql_charset': 'utf8', 'sqlite_autoincrement': True},
+        _table_args_default_dict,
     )
+
     user_log_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=True, unique=None, default=None)
     username = Column(String(255, convert_unicode=False), nullable=True, unique=None, default=None)
@@ -809,8 +809,7 @@ class UserLog(Base, BaseModel):
 class UserGroup(Base, BaseModel):
     __tablename__ = 'users_groups'
     __table_args__ = (
-        {'extend_existing': True, 'mysql_engine': 'InnoDB',
-         'mysql_charset': 'utf8', 'sqlite_autoincrement': True},
+        _table_args_default_dict,
     )
 
     users_group_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
@@ -899,8 +898,7 @@ class UserGroup(Base, BaseModel):
 class UserGroupMember(Base, BaseModel):
     __tablename__ = 'users_groups_members'
     __table_args__ = (
-        {'extend_existing': True, 'mysql_engine': 'InnoDB',
-         'mysql_charset': 'utf8', 'sqlite_autoincrement': True},
+        _table_args_default_dict,
     )
 
     users_group_member_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
@@ -919,9 +917,9 @@ class RepositoryField(Base, BaseModel):
     __tablename__ = 'repositories_fields'
     __table_args__ = (
         UniqueConstraint('repository_id', 'field_key'),  # no-multi field
-        {'extend_existing': True, 'mysql_engine': 'InnoDB',
-         'mysql_charset': 'utf8', 'sqlite_autoincrement': True},
+        _table_args_default_dict,
     )
+
     PREFIX = 'ex_'  # prefix used in form to not conflict with already existing fields
 
     repo_field_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
@@ -958,9 +956,9 @@ class Repository(Base, BaseModel):
     __table_args__ = (
         UniqueConstraint('repo_name'),
         Index('r_repo_name_idx', 'repo_name'),
-        {'extend_existing': True, 'mysql_engine': 'InnoDB',
-         'mysql_charset': 'utf8', 'sqlite_autoincrement': True},
+        _table_args_default_dict,
     )
+
     DEFAULT_CLONE_URI = '{scheme}://{user}@{netloc}/{repo}'
     DEFAULT_CLONE_URI_ID = '{scheme}://{user}@{netloc}/_{repoid}'
 
@@ -1479,8 +1477,7 @@ class RepoGroup(Base, BaseModel):
     __table_args__ = (
         UniqueConstraint('group_name', 'group_parent_id'),
         CheckConstraint('group_id != group_parent_id'),
-        {'extend_existing': True, 'mysql_engine': 'InnoDB',
-         'mysql_charset': 'utf8', 'sqlite_autoincrement': True},
+        _table_args_default_dict,
     )
     __mapper_args__ = {'order_by': 'group_name'}
 
@@ -1659,9 +1656,9 @@ class Permission(Base, BaseModel):
     __tablename__ = 'permissions'
     __table_args__ = (
         Index('p_perm_name_idx', 'permission_name'),
-        {'extend_existing': True, 'mysql_engine': 'InnoDB',
-         'mysql_charset': 'utf8', 'sqlite_autoincrement': True},
+        _table_args_default_dict,
     )
+
     PERMS = [
         ('hg.admin', _('Kallithea Administrator')),
 
@@ -1792,9 +1789,9 @@ class UserRepoToPerm(Base, BaseModel):
     __tablename__ = 'repo_to_perm'
     __table_args__ = (
         UniqueConstraint('user_id', 'repository_id', 'permission_id'),
-        {'extend_existing': True, 'mysql_engine': 'InnoDB',
-         'mysql_charset': 'utf8', 'sqlite_autoincrement': True}
+        _table_args_default_dict,
     )
+
     repo_to_perm_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False, unique=None, default=None)
     permission_id = Column(Integer(), ForeignKey('permissions.permission_id'), nullable=False, unique=None, default=None)
@@ -1821,9 +1818,9 @@ class UserUserGroupToPerm(Base, BaseModel):
     __tablename__ = 'user_user_group_to_perm'
     __table_args__ = (
         UniqueConstraint('user_id', 'user_group_id', 'permission_id'),
-        {'extend_existing': True, 'mysql_engine': 'InnoDB',
-         'mysql_charset': 'utf8', 'sqlite_autoincrement': True}
+        _table_args_default_dict,
     )
+
     user_user_group_to_perm_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False, unique=None, default=None)
     permission_id = Column(Integer(), ForeignKey('permissions.permission_id'), nullable=False, unique=None, default=None)
@@ -1850,9 +1847,9 @@ class UserToPerm(Base, BaseModel):
     __tablename__ = 'user_to_perm'
     __table_args__ = (
         UniqueConstraint('user_id', 'permission_id'),
-        {'extend_existing': True, 'mysql_engine': 'InnoDB',
-         'mysql_charset': 'utf8', 'sqlite_autoincrement': True}
+        _table_args_default_dict,
     )
+
     user_to_perm_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False, unique=None, default=None)
     permission_id = Column(Integer(), ForeignKey('permissions.permission_id'), nullable=False, unique=None, default=None)
@@ -1868,9 +1865,9 @@ class UserGroupRepoToPerm(Base, BaseModel):
     __tablename__ = 'users_group_repo_to_perm'
     __table_args__ = (
         UniqueConstraint('repository_id', 'users_group_id', 'permission_id'),
-        {'extend_existing': True, 'mysql_engine': 'InnoDB',
-         'mysql_charset': 'utf8', 'sqlite_autoincrement': True}
+        _table_args_default_dict,
     )
+
     users_group_to_perm_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
     users_group_id = Column(Integer(), ForeignKey('users_groups.users_group_id'), nullable=False, unique=None, default=None)
     permission_id = Column(Integer(), ForeignKey('permissions.permission_id'), nullable=False, unique=None, default=None)
@@ -1898,9 +1895,9 @@ class UserGroupUserGroupToPerm(Base, BaseModel):
     __table_args__ = (
         UniqueConstraint('target_user_group_id', 'user_group_id', 'permission_id'),
         CheckConstraint('target_user_group_id != user_group_id'),
-        {'extend_existing': True, 'mysql_engine': 'InnoDB',
-         'mysql_charset': 'utf8', 'sqlite_autoincrement': True}
+        _table_args_default_dict,
     )
+
     user_group_user_group_to_perm_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
     target_user_group_id = Column(Integer(), ForeignKey('users_groups.users_group_id'), nullable=False, unique=None, default=None)
     permission_id = Column(Integer(), ForeignKey('permissions.permission_id'), nullable=False, unique=None, default=None)
@@ -1927,9 +1924,9 @@ class UserGroupToPerm(Base, BaseModel):
     __tablename__ = 'users_group_to_perm'
     __table_args__ = (
         UniqueConstraint('users_group_id', 'permission_id',),
-        {'extend_existing': True, 'mysql_engine': 'InnoDB',
-         'mysql_charset': 'utf8', 'sqlite_autoincrement': True}
+        _table_args_default_dict,
     )
+
     users_group_to_perm_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
     users_group_id = Column(Integer(), ForeignKey('users_groups.users_group_id'), nullable=False, unique=None, default=None)
     permission_id = Column(Integer(), ForeignKey('permissions.permission_id'), nullable=False, unique=None, default=None)
@@ -1942,8 +1939,7 @@ class UserRepoGroupToPerm(Base, BaseModel):
     __tablename__ = 'user_repo_group_to_perm'
     __table_args__ = (
         UniqueConstraint('user_id', 'group_id', 'permission_id'),
-        {'extend_existing': True, 'mysql_engine': 'InnoDB',
-         'mysql_charset': 'utf8', 'sqlite_autoincrement': True}
+        _table_args_default_dict,
     )
 
     group_to_perm_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
@@ -1969,8 +1965,7 @@ class UserGroupRepoGroupToPerm(Base, BaseModel):
     __tablename__ = 'users_group_repo_group_to_perm'
     __table_args__ = (
         UniqueConstraint('users_group_id', 'group_id'),
-        {'extend_existing': True, 'mysql_engine': 'InnoDB',
-         'mysql_charset': 'utf8', 'sqlite_autoincrement': True}
+        _table_args_default_dict,
     )
 
     users_group_repo_group_to_perm_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
@@ -1996,9 +1991,9 @@ class Statistics(Base, BaseModel):
     __tablename__ = 'statistics'
     __table_args__ = (
          UniqueConstraint('repository_id'),
-         {'extend_existing': True, 'mysql_engine': 'InnoDB',
-          'mysql_charset': 'utf8', 'sqlite_autoincrement': True}
+         _table_args_default_dict,
     )
+
     stat_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
     repository_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=False, unique=True, default=None)
     stat_on_revision = Column(Integer(), nullable=False)
@@ -2014,8 +2009,7 @@ class UserFollowing(Base, BaseModel):
     __table_args__ = (
         UniqueConstraint('user_id', 'follows_repository_id'),
         UniqueConstraint('user_id', 'follows_user_id'),
-        {'extend_existing': True, 'mysql_engine': 'InnoDB',
-         'mysql_charset': 'utf8', 'sqlite_autoincrement': True}
+        _table_args_default_dict,
     )
 
     user_following_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
@@ -2039,9 +2033,9 @@ class CacheInvalidation(Base, BaseModel):
     __table_args__ = (
         UniqueConstraint('cache_key'),
         Index('key_idx', 'cache_key'),
-        {'extend_existing': True, 'mysql_engine': 'InnoDB',
-         'mysql_charset': 'utf8', 'sqlite_autoincrement': True},
+        _table_args_default_dict,
     )
+
     # cache_id, not used
     cache_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
     # cache_key as created by _get_cache_key
@@ -2165,9 +2159,9 @@ class ChangesetComment(Base, BaseModel):
     __table_args__ = (
         Index('cc_revision_idx', 'revision'),
         Index('cc_pull_request_id_idx', 'pull_request_id'),
-        {'extend_existing': True, 'mysql_engine': 'InnoDB',
-         'mysql_charset': 'utf8', 'sqlite_autoincrement': True},
+        _table_args_default_dict,
     )
+
     comment_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
     repo_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=False)
     revision = Column(String(40))
@@ -2222,9 +2216,9 @@ class ChangesetStatus(Base, BaseModel):
         Index('cs_changeset_comment_id_idx', 'changeset_comment_id'),
         Index('cs_pull_request_id_user_id_version_idx', 'pull_request_id', 'user_id', 'version'),
         UniqueConstraint('repo_id', 'revision', 'version'),
-        {'extend_existing': True, 'mysql_engine': 'InnoDB',
-         'mysql_charset': 'utf8', 'sqlite_autoincrement': True}
+        _table_args_default_dict,
     )
+
     STATUS_NOT_REVIEWED = DEFAULT = 'not_reviewed'
     STATUS_APPROVED = 'approved'
     STATUS_REJECTED = 'rejected'
@@ -2272,8 +2266,7 @@ class PullRequest(Base, BaseModel):
     __table_args__ = (
         Index('pr_org_repo_id_idx', 'org_repo_id'),
         Index('pr_other_repo_id_idx', 'other_repo_id'),
-        {'extend_existing': True, 'mysql_engine': 'InnoDB',
-         'mysql_charset': 'utf8', 'sqlite_autoincrement': True},
+        _table_args_default_dict,
     )
 
     # values for .status
@@ -2363,8 +2356,7 @@ class PullRequest(Base, BaseModel):
 class PullRequestReviewers(Base, BaseModel):
     __tablename__ = 'pull_request_reviewers'
     __table_args__ = (
-        {'extend_existing': True, 'mysql_engine': 'InnoDB',
-         'mysql_charset': 'utf8', 'sqlite_autoincrement': True},
+        _table_args_default_dict,
     )
 
     def __init__(self, user=None, pull_request=None):
@@ -2383,8 +2375,7 @@ class Notification(Base, BaseModel):
     __tablename__ = 'notifications'
     __table_args__ = (
         Index('notification_type_idx', 'type'),
-        {'extend_existing': True, 'mysql_engine': 'InnoDB',
-         'mysql_charset': 'utf8', 'sqlite_autoincrement': True},
+        _table_args_default_dict,
     )
 
     TYPE_CHANGESET_COMMENT = u'cs_comment'
@@ -2445,9 +2436,9 @@ class UserNotification(Base, BaseModel):
     __tablename__ = 'user_to_notification'
     __table_args__ = (
         UniqueConstraint('user_id', 'notification_id'),
-        {'extend_existing': True, 'mysql_engine': 'InnoDB',
-         'mysql_charset': 'utf8', 'sqlite_autoincrement': True}
+        _table_args_default_dict,
     )
+
     user_id = Column(Integer(), ForeignKey('users.user_id'), primary_key=True)
     notification_id = Column(Integer(), ForeignKey('notifications.notification_id'), primary_key=True)
     read = Column(Boolean, default=False)
@@ -2466,9 +2457,9 @@ class Gist(Base, BaseModel):
     __table_args__ = (
         Index('g_gist_access_id_idx', 'gist_access_id'),
         Index('g_created_on_idx', 'created_on'),
-        {'extend_existing': True, 'mysql_engine': 'InnoDB',
-         'mysql_charset': 'utf8', 'sqlite_autoincrement': True}
+        _table_args_default_dict,
     )
+
     GIST_PUBLIC = u'public'
     GIST_PRIVATE = u'private'
     DEFAULT_FILENAME = u'gistfile1.txt'
@@ -2554,9 +2545,9 @@ class Gist(Base, BaseModel):
 class DbMigrateVersion(Base, BaseModel):
     __tablename__ = 'db_migrate_version'
     __table_args__ = (
-        {'extend_existing': True, 'mysql_engine': 'InnoDB',
-         'mysql_charset': 'utf8', 'sqlite_autoincrement': True},
+        _table_args_default_dict,
     )
+
     repository_id = Column(String(250), nullable=False, unique=True, primary_key=True)
     repository_path = Column(Text)
     version = Column(Integer)
