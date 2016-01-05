@@ -181,9 +181,9 @@ class Setting(Base, BaseModel):
     DEFAULT_UPDATE_URL = ''
 
     app_settings_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
-    app_settings_name = Column(String(255, convert_unicode=False), nullable=True, unique=None, default=None)
+    app_settings_name = Column(String(255), nullable=True, unique=None, default=None)
     _app_settings_value = Column("app_settings_value", Unicode(4096), nullable=True, unique=None, default=None)
-    _app_settings_type = Column("app_settings_type", String(255, convert_unicode=False), nullable=True, unique=None, default=None)
+    _app_settings_type = Column("app_settings_type", String(255), nullable=True, unique=None, default=None)
 
     def __init__(self, key='', val='', type='unicode'):
         self.app_settings_name = key
@@ -343,9 +343,9 @@ class Ui(Base, BaseModel):
     HOOK_PRE_PULL = 'preoutgoing.pre_pull'
 
     ui_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
-    ui_section = Column(String(255, convert_unicode=False), nullable=True, unique=None, default=None)
-    ui_key = Column(String(255, convert_unicode=False), nullable=True, unique=None, default=None)
-    ui_value = Column(String(255, convert_unicode=False), nullable=True, unique=None, default=None)
+    ui_section = Column(String(255), nullable=True, unique=None, default=None)
+    ui_key = Column(String(255), nullable=True, unique=None, default=None)
+    ui_value = Column(String(255), nullable=True, unique=None, default=None)
     ui_active = Column(Boolean(), nullable=True, unique=None, default=True)
 
     # def __init__(self, section='', key='', value=''):
@@ -407,17 +407,17 @@ class User(Base, BaseModel):
     DEFAULT_GRAVATAR_URL = 'https://secure.gravatar.com/avatar/{md5email}?d=identicon&s={size}'
 
     user_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
-    username = Column(String(255, convert_unicode=False), nullable=True, unique=None, default=None)
-    password = Column(String(255, convert_unicode=False), nullable=True, unique=None, default=None)
+    username = Column(String(255), nullable=True, unique=None, default=None)
+    password = Column(String(255), nullable=True, unique=None, default=None)
     active = Column(Boolean(), nullable=True, unique=None, default=True)
     admin = Column(Boolean(), nullable=True, unique=None, default=False)
     name = Column("firstname", Unicode(255), nullable=True, unique=None, default=None)
     lastname = Column(Unicode(255), nullable=True, unique=None, default=None)
-    _email = Column("email", String(255, convert_unicode=False), nullable=True, unique=None, default=None)
+    _email = Column("email", String(255), nullable=True, unique=None, default=None)
     last_login = Column(DateTime(timezone=False), nullable=True, unique=None, default=None)
-    extern_type = Column(String(255, convert_unicode=False), nullable=True, unique=None, default=None)
-    extern_name = Column(String(255, convert_unicode=False), nullable=True, unique=None, default=None)
-    api_key = Column(String(255, convert_unicode=False), nullable=True, unique=None, default=None)
+    extern_type = Column(String(255), nullable=True, unique=None, default=None)
+    extern_name = Column(String(255), nullable=True, unique=None, default=None)
+    api_key = Column(String(255), nullable=True, unique=None, default=None)
     inherit_default_permissions = Column(Boolean(), nullable=False, unique=None, default=True)
     created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
     _user_data = Column("user_data", LargeBinary(), nullable=True)  # JSON data
@@ -703,7 +703,7 @@ class UserApiKeys(Base, BaseModel):
 
     user_api_key_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=True, unique=None, default=None)
-    api_key = Column(String(255, convert_unicode=False), nullable=False, unique=True)
+    api_key = Column(String(255), nullable=False, unique=True)
     description = Column(UnicodeText(1024))
     expires = Column(Float(53), nullable=False)
     created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
@@ -728,7 +728,7 @@ class UserEmailMap(Base, BaseModel):
 
     email_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=True, unique=None, default=None)
-    _email = Column("email", String(255, convert_unicode=False), nullable=True, unique=False, default=None)
+    _email = Column("email", String(255), nullable=True, unique=False, default=None)
     user = relationship('User')
 
     @validates('_email')
@@ -758,7 +758,7 @@ class UserIpMap(Base, BaseModel):
 
     ip_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=True, unique=None, default=None)
-    ip_addr = Column(String(255, convert_unicode=False), nullable=True, unique=False, default=None)
+    ip_addr = Column(String(255), nullable=True, unique=False, default=None)
     active = Column(Boolean(), nullable=True, unique=None, default=True)
     user = relationship('User')
 
@@ -786,10 +786,10 @@ class UserLog(Base, BaseModel):
 
     user_log_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=True, unique=None, default=None)
-    username = Column(String(255, convert_unicode=False), nullable=True, unique=None, default=None)
+    username = Column(String(255), nullable=True, unique=None, default=None)
     repository_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=True)
     repository_name = Column(Unicode(255), nullable=True, unique=None, default=None)
-    user_ip = Column(String(255, convert_unicode=False), nullable=True, unique=None, default=None)
+    user_ip = Column(String(255), nullable=True, unique=None, default=None)
     action = Column(UnicodeText(1200000), nullable=True, unique=None, default=None)
     action_date = Column(DateTime(timezone=False), nullable=True, unique=None, default=None)
 
@@ -924,10 +924,10 @@ class RepositoryField(Base, BaseModel):
 
     repo_field_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
     repository_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=False, unique=None, default=None)
-    field_key = Column(String(250, convert_unicode=False))
-    field_label = Column(String(1024, convert_unicode=False), nullable=False)
-    field_value = Column(String(10000, convert_unicode=False), nullable=False)
-    field_desc = Column(String(1024, convert_unicode=False), nullable=False)
+    field_key = Column(String(250))
+    field_label = Column(String(1024), nullable=False)
+    field_value = Column(String(10000), nullable=False)
+    field_desc = Column(String(1024), nullable=False)
     field_type = Column(String(255), nullable=False, unique=None)
     created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
 
@@ -969,8 +969,8 @@ class Repository(Base, BaseModel):
     repo_name = Column(Unicode(255), nullable=False, unique=True, default=None)
     repo_state = Column(String(255), nullable=True)
 
-    clone_uri = Column(String(255, convert_unicode=False), nullable=True, unique=False, default=None)
-    repo_type = Column(String(255, convert_unicode=False), nullable=False, unique=False, default=None)
+    clone_uri = Column(String(255), nullable=True, unique=False, default=None)
+    repo_type = Column(String(255), nullable=False, unique=False, default=None)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False, unique=False, default=None)
     private = Column(Boolean(), nullable=True, unique=None, default=None)
     enable_statistics = Column("statistics", Boolean(), nullable=True, unique=None, default=True)
@@ -978,9 +978,9 @@ class Repository(Base, BaseModel):
     description = Column(Unicode(10000), nullable=True, unique=None, default=None)
     created_on = Column(DateTime(timezone=False), nullable=False, unique=None, default=datetime.datetime.now)
     updated_on = Column(DateTime(timezone=False), nullable=False, unique=None, default=datetime.datetime.now)
-    _landing_revision = Column("landing_revision", String(255, convert_unicode=False), nullable=False, unique=False, default=None)
+    _landing_revision = Column("landing_revision", String(255), nullable=False, unique=False, default=None)
     enable_locking = Column(Boolean(), nullable=False, unique=None, default=False)
-    _locked = Column("locked", String(255, convert_unicode=False), nullable=True, unique=False, default=None)
+    _locked = Column("locked", String(255), nullable=True, unique=False, default=None)
     _changeset_cache = Column("changeset_cache", LargeBinary(), nullable=True) #JSON data
 
     fork_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=True, unique=False, default=None)
@@ -1744,7 +1744,7 @@ class Permission(Base, BaseModel):
     }
 
     permission_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
-    permission_name = Column(String(255, convert_unicode=False), nullable=True, unique=None, default=None)
+    permission_name = Column(String(255), nullable=True, unique=None, default=None)
 
     def __unicode__(self):
         return u"<%s('%s:%s')>" % (

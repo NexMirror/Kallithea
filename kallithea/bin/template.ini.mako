@@ -502,7 +502,6 @@ sqlalchemy.db1.url = mysql://user:pass@localhost/kallithea?charset=utf8
 
 sqlalchemy.db1.echo = false
 sqlalchemy.db1.pool_recycle = 3600
-sqlalchemy.db1.convert_unicode = true
 
 <%text>################################</%text>
 <%text>### LOGGING CONFIGURATION   ####</%text>
