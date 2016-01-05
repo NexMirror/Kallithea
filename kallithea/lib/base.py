@@ -255,7 +255,7 @@ class BaseVCSController(object):
         and required True otherwise
         """
         #check if we have SSL required  ! if not it's a bad request !
-        if str2bool(Ui.get_by_key('push_ssl').ui_value):
+        if str2bool(Ui.get_by_key('web', 'push_ssl').ui_value):
             org_proto = environ.get('wsgi._org_proto', environ['wsgi.url_scheme'])
             if org_proto != 'https':
                 log.debug('proto is %s and SSL is required BAD REQUEST !',

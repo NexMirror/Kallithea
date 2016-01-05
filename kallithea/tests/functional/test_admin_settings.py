@@ -55,7 +55,7 @@ class TestAdminSettingsController(TestController):
         response.mustcontain('test_hooks_2')
         response.mustcontain('cd /tmp2')
 
-        hook_id = Ui.get_by_key('test_hooks_2').ui_id
+        hook_id = Ui.get_by_key('hooks', 'test_hooks_2').ui_id
         ## delete
         self.app.post(url('admin_settings_hooks'),
                         params=dict(hook_id=hook_id, _authentication_token=self.authentication_token()))

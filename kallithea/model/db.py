@@ -351,14 +351,14 @@ class Ui(Base, BaseModel):
     ui_active = Column(Boolean(), nullable=False, default=True)
 
     @classmethod
-    def get_by_key(cls, key):
+    def get_by_key(cls, section, key):
         """ Return specified Ui object, or None if not found. """
-        return cls.query().filter(cls.ui_key == key).scalar()
+        return cls.query().filter_by(ui_section=section, ui_key=key).scalar()
 
     @classmethod
     def get_or_create(cls, section, key):
         """ Return specified Ui object, creating it if necessary. """
-        setting = cls.get_by_key(key)
+        setting = cls.get_by_key(section, key)
         if setting is None:
             setting = cls(ui_section=section, ui_key=key)
             Session().add(setting)
@@ -370,6 +370,7 @@ class Ui(Base, BaseModel):
         q = q.filter(cls.ui_key.in_([cls.HOOK_UPDATE, cls.HOOK_REPO_SIZE,
                                      cls.HOOK_PUSH, cls.HOOK_PRE_PUSH,
                                      cls.HOOK_PULL, cls.HOOK_PRE_PULL]))
+        q = q.filter(cls.ui_section == 'hooks')
         return q.all()
 
     @classmethod
@@ -383,7 +384,7 @@ class Ui(Base, BaseModel):
 
     @classmethod
     def get_repos_location(cls):
-        return cls.get_by_key('/').ui_value
+        return cls.get_by_key('paths', '/').ui_value
 
     @classmethod
     def create_or_update_hook(cls, key, val):

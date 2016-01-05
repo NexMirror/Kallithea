@@ -104,24 +104,24 @@ class SettingsController(BaseController):
                      force_defaults=False)
 
             try:
-                sett = Ui.get_by_key('push_ssl')
+                sett = Ui.get_by_key('web', 'push_ssl')
                 sett.ui_value = form_result['web_push_ssl']
 
                 if c.visual.allow_repo_location_change:
-                    sett = Ui.get_by_key('/')
+                    sett = Ui.get_by_key('paths', '/')
                     sett.ui_value = form_result['paths_root_path']
 
                 #HOOKS
-                sett = Ui.get_by_key(Ui.HOOK_UPDATE)
+                sett = Ui.get_by_key('hooks', Ui.HOOK_UPDATE)
                 sett.ui_active = form_result['hooks_changegroup_update']
 
-                sett = Ui.get_by_key(Ui.HOOK_REPO_SIZE)
+                sett = Ui.get_by_key('hooks', Ui.HOOK_REPO_SIZE)
                 sett.ui_active = form_result['hooks_changegroup_repo_size']
 
-                sett = Ui.get_by_key(Ui.HOOK_PUSH)
+                sett = Ui.get_by_key('hooks', Ui.HOOK_PUSH)
                 sett.ui_active = form_result['hooks_changegroup_push_logger']
 
-                sett = Ui.get_by_key(Ui.HOOK_PULL)
+                sett = Ui.get_by_key('hooks', Ui.HOOK_PULL)
                 sett.ui_active = form_result['hooks_outgoing_pull_logger']
 
                 ## EXTENSIONS

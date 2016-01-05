@@ -62,7 +62,7 @@ class ForksController(BaseRepoController):
 
         c.landing_revs_choices, c.landing_revs = ScmModel().get_repo_landing_revs()
 
-        c.can_update = Ui.get_by_key(Ui.HOOK_UPDATE).ui_active
+        c.can_update = Ui.get_by_key('hooks', Ui.HOOK_UPDATE).ui_active
 
     def __load_data(self, repo_name=None):
         """
@@ -164,7 +164,7 @@ class ForksController(BaseRepoController):
             form_result = _form.to_python(dict(request.POST))
 
             # an approximation that is better than nothing
-            if not Ui.get_by_key(Ui.HOOK_UPDATE).ui_active:
+            if not Ui.get_by_key('hooks', Ui.HOOK_UPDATE).ui_active:
                 form_result['update_after_clone'] = False
 
             # create fork is done sometimes async on celery, db transaction

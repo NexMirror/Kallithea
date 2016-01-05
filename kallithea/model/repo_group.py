@@ -59,7 +59,7 @@ class RepoGroupModel(BaseModel):
         Gets the repositories root path from database
         """
 
-        q = Ui.get_by_key('/')
+        q = Ui.get_by_key('paths', '/')
         return q.ui_value
 
     def _create_default_perms(self, new_group):
