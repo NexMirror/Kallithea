@@ -179,7 +179,7 @@ class Setting(Base, BaseModel):
     }
     DEFAULT_UPDATE_URL = ''
 
-    app_settings_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
+    app_settings_id = Column(Integer(), unique=True, primary_key=True)
     app_settings_name = Column(String(255), nullable=True, unique=True)
     _app_settings_value = Column("app_settings_value", Unicode(4096), nullable=True)
     _app_settings_type = Column("app_settings_type", String(255), nullable=True)
@@ -344,7 +344,7 @@ class Ui(Base, BaseModel):
     HOOK_PULL = 'outgoing.pull_logger'
     HOOK_PRE_PULL = 'preoutgoing.pre_pull'
 
-    ui_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
+    ui_id = Column(Integer(), unique=True, primary_key=True)
     ui_section = Column(String(255), nullable=True)
     ui_key = Column(String(255), nullable=True)
     ui_value = Column(String(255), nullable=True)
@@ -401,7 +401,7 @@ class User(Base, BaseModel):
     DEFAULT_USER = 'default'
     DEFAULT_GRAVATAR_URL = 'https://secure.gravatar.com/avatar/{md5email}?d=identicon&s={size}'
 
-    user_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
+    user_id = Column(Integer(), unique=True, primary_key=True)
     username = Column(String(255), nullable=True, unique=True)
     password = Column(String(255), nullable=True)
     active = Column(Boolean(), nullable=True, default=True)
@@ -696,7 +696,7 @@ class UserApiKeys(Base, BaseModel):
     )
     __mapper_args__ = {}
 
-    user_api_key_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
+    user_api_key_id = Column(Integer(), unique=True, primary_key=True)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=True)
     api_key = Column(String(255), nullable=False, unique=True)
     description = Column(UnicodeText(1024))
@@ -720,7 +720,7 @@ class UserEmailMap(Base, BaseModel):
     )
     __mapper_args__ = {}
 
-    email_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
+    email_id = Column(Integer(), unique=True, primary_key=True)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=True)
     _email = Column("email", String(255), nullable=True, unique=True)
     user = relationship('User')
@@ -750,7 +750,7 @@ class UserIpMap(Base, BaseModel):
     )
     __mapper_args__ = {}
 
-    ip_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
+    ip_id = Column(Integer(), unique=True, primary_key=True)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=True)
     ip_addr = Column(String(255), nullable=True)
     active = Column(Boolean(), nullable=True, default=True)
@@ -778,7 +778,7 @@ class UserLog(Base, BaseModel):
         _table_args_default_dict,
     )
 
-    user_log_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
+    user_log_id = Column(Integer(), unique=True, primary_key=True)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=True)
     username = Column(String(255), nullable=True)
     repository_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=True)
@@ -806,7 +806,7 @@ class UserGroup(Base, BaseModel):
         _table_args_default_dict,
     )
 
-    users_group_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
+    users_group_id = Column(Integer(), unique=True, primary_key=True)
     users_group_name = Column(Unicode(255), nullable=False, unique=True)
     user_group_description = Column(Unicode(10000), nullable=True)
     users_group_active = Column(Boolean(), nullable=True)
@@ -895,7 +895,7 @@ class UserGroupMember(Base, BaseModel):
         _table_args_default_dict,
     )
 
-    users_group_member_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
+    users_group_member_id = Column(Integer(), unique=True, primary_key=True)
     users_group_id = Column(Integer(), ForeignKey('users_groups.users_group_id'), nullable=False)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
 
@@ -916,7 +916,7 @@ class RepositoryField(Base, BaseModel):
 
     PREFIX = 'ex_'  # prefix used in form to not conflict with already existing fields
 
-    repo_field_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
+    repo_field_id = Column(Integer(), unique=True, primary_key=True)
     repository_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=False)
     field_key = Column(String(250))
     field_label = Column(String(1024), nullable=False)
@@ -959,7 +959,7 @@ class Repository(Base, BaseModel):
     STATE_PENDING = 'repo_state_pending'
     STATE_ERROR = 'repo_state_error'
 
-    repo_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
+    repo_id = Column(Integer(), unique=True, primary_key=True)
     repo_name = Column(Unicode(255), nullable=False, unique=True)
     repo_state = Column(String(255), nullable=True)
 
@@ -1476,7 +1476,7 @@ class RepoGroup(Base, BaseModel):
 
     SEP = ' &raquo; '
 
-    group_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
+    group_id = Column(Integer(), unique=True, primary_key=True)
     group_name = Column(Unicode(255), nullable=False, unique=True)
     group_parent_id = Column(Integer(), ForeignKey('groups.group_id'), nullable=True)
     group_description = Column(Unicode(10000), nullable=True)
@@ -1737,7 +1737,7 @@ class Permission(Base, BaseModel):
         'hg.create.repository': 1
     }
 
-    permission_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
+    permission_id = Column(Integer(), unique=True, primary_key=True)
     permission_name = Column(String(255), nullable=True)
 
     def __unicode__(self):
@@ -1784,7 +1784,7 @@ class UserRepoToPerm(Base, BaseModel):
         _table_args_default_dict,
     )
 
-    repo_to_perm_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
+    repo_to_perm_id = Column(Integer(), unique=True, primary_key=True)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
     permission_id = Column(Integer(), ForeignKey('permissions.permission_id'), nullable=False)
     repository_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=False)
@@ -1813,7 +1813,7 @@ class UserUserGroupToPerm(Base, BaseModel):
         _table_args_default_dict,
     )
 
-    user_user_group_to_perm_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
+    user_user_group_to_perm_id = Column(Integer(), unique=True, primary_key=True)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
     permission_id = Column(Integer(), ForeignKey('permissions.permission_id'), nullable=False)
     user_group_id = Column(Integer(), ForeignKey('users_groups.users_group_id'), nullable=False)
@@ -1842,7 +1842,7 @@ class UserToPerm(Base, BaseModel):
         _table_args_default_dict,
     )
 
-    user_to_perm_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
+    user_to_perm_id = Column(Integer(), unique=True, primary_key=True)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
     permission_id = Column(Integer(), ForeignKey('permissions.permission_id'), nullable=False)
 
@@ -1860,7 +1860,7 @@ class UserGroupRepoToPerm(Base, BaseModel):
         _table_args_default_dict,
     )
 
-    users_group_to_perm_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
+    users_group_to_perm_id = Column(Integer(), unique=True, primary_key=True)
     users_group_id = Column(Integer(), ForeignKey('users_groups.users_group_id'), nullable=False)
     permission_id = Column(Integer(), ForeignKey('permissions.permission_id'), nullable=False)
     repository_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=False)
@@ -1890,7 +1890,7 @@ class UserGroupUserGroupToPerm(Base, BaseModel):
         _table_args_default_dict,
     )
 
-    user_group_user_group_to_perm_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
+    user_group_user_group_to_perm_id = Column(Integer(), unique=True, primary_key=True)
     target_user_group_id = Column(Integer(), ForeignKey('users_groups.users_group_id'), nullable=False)
     permission_id = Column(Integer(), ForeignKey('permissions.permission_id'), nullable=False)
     user_group_id = Column(Integer(), ForeignKey('users_groups.users_group_id'), nullable=False)
@@ -1919,7 +1919,7 @@ class UserGroupToPerm(Base, BaseModel):
         _table_args_default_dict,
     )
 
-    users_group_to_perm_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
+    users_group_to_perm_id = Column(Integer(), unique=True, primary_key=True)
     users_group_id = Column(Integer(), ForeignKey('users_groups.users_group_id'), nullable=False)
     permission_id = Column(Integer(), ForeignKey('permissions.permission_id'), nullable=False)
 
@@ -1934,7 +1934,7 @@ class UserRepoGroupToPerm(Base, BaseModel):
         _table_args_default_dict,
     )
 
-    group_to_perm_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
+    group_to_perm_id = Column(Integer(), unique=True, primary_key=True)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
     group_id = Column(Integer(), ForeignKey('groups.group_id'), nullable=False)
     permission_id = Column(Integer(), ForeignKey('permissions.permission_id'), nullable=False)
@@ -1960,7 +1960,7 @@ class UserGroupRepoGroupToPerm(Base, BaseModel):
         _table_args_default_dict,
     )
 
-    users_group_repo_group_to_perm_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
+    users_group_repo_group_to_perm_id = Column(Integer(), unique=True, primary_key=True)
     users_group_id = Column(Integer(), ForeignKey('users_groups.users_group_id'), nullable=False)
     group_id = Column(Integer(), ForeignKey('groups.group_id'), nullable=False)
     permission_id = Column(Integer(), ForeignKey('permissions.permission_id'), nullable=False)
@@ -1985,7 +1985,7 @@ class Statistics(Base, BaseModel):
          _table_args_default_dict,
     )
 
-    stat_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
+    stat_id = Column(Integer(), unique=True, primary_key=True)
     repository_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=False, unique=True)
     stat_on_revision = Column(Integer(), nullable=False)
     commit_activity = Column(LargeBinary(1000000), nullable=False)#JSON data
@@ -2003,7 +2003,7 @@ class UserFollowing(Base, BaseModel):
         _table_args_default_dict,
     )
 
-    user_following_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
+    user_following_id = Column(Integer(), unique=True, primary_key=True)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
     follows_repo_id = Column("follows_repository_id", Integer(), ForeignKey('repositories.repo_id'), nullable=True)
     follows_user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=True)
@@ -2027,7 +2027,7 @@ class CacheInvalidation(Base, BaseModel):
     )
 
     # cache_id, not used
-    cache_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
+    cache_id = Column(Integer(), unique=True, primary_key=True)
     # cache_key as created by _get_cache_key
     cache_key = Column(Unicode(255), unique=True)
     # cache_args is a repo_name
@@ -2152,7 +2152,7 @@ class ChangesetComment(Base, BaseModel):
         _table_args_default_dict,
     )
 
-    comment_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
+    comment_id = Column(Integer(), unique=True, primary_key=True)
     repo_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=False)
     revision = Column(String(40))
     pull_request_id = Column(Integer(), ForeignKey('pull_requests.pull_request_id'))
@@ -2221,7 +2221,7 @@ class ChangesetStatus(Base, BaseModel):
         (STATUS_UNDER_REVIEW, _("Under review")),
     ]
 
-    changeset_status_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
+    changeset_status_id = Column(Integer(), unique=True, primary_key=True)
     repo_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=False)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
     revision = Column(String(40), nullable=False)
@@ -2263,7 +2263,7 @@ class PullRequest(Base, BaseModel):
     STATUS_NEW = u'new'
     STATUS_CLOSED = u'closed'
 
-    pull_request_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
+    pull_request_id = Column(Integer(), unique=True, primary_key=True)
     title = Column(Unicode(255), nullable=True)
     description = Column(UnicodeText(10240))
     status = Column(Unicode(255), nullable=False, default=STATUS_NEW) # only for closedness, not approve/reject/etc
@@ -2353,7 +2353,7 @@ class PullRequestReviewers(Base, BaseModel):
         self.user = user
         self.pull_request = pull_request
 
-    pull_requests_reviewers_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
+    pull_requests_reviewers_id = Column(Integer(), unique=True, primary_key=True)
     pull_request_id = Column(Integer(), ForeignKey('pull_requests.pull_request_id'), nullable=False)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=True)
 
@@ -2375,7 +2375,7 @@ class Notification(Base, BaseModel):
     TYPE_PULL_REQUEST = u'pull_request'
     TYPE_PULL_REQUEST_COMMENT = u'pull_request_comment'
 
-    notification_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
+    notification_id = Column(Integer(), unique=True, primary_key=True)
     subject = Column(Unicode(512), nullable=True)
     body = Column(UnicodeText(50000), nullable=True)
     created_by = Column(Integer(), ForeignKey('users.user_id'), nullable=True)
@@ -2454,7 +2454,7 @@ class Gist(Base, BaseModel):
     GIST_PRIVATE = u'private'
     DEFAULT_FILENAME = u'gistfile1.txt'
 
-    gist_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
+    gist_id = Column(Integer(), unique=True, primary_key=True)
     gist_access_id = Column(Unicode(250))
     gist_description = Column(UnicodeText(1024))
     gist_owner = Column('user_id', Integer(), ForeignKey('users.user_id'), nullable=True)
@@ -2538,6 +2538,6 @@ class DbMigrateVersion(Base, BaseModel):
         _table_args_default_dict,
     )
 
-    repository_id = Column(String(250), nullable=False, unique=True, primary_key=True)
+    repository_id = Column(String(250), unique=True, primary_key=True)
     repository_path = Column(Text)
     version = Column(Integer)
