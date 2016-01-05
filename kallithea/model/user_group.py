@@ -375,7 +375,7 @@ class UserGroupModel(BaseModel):
         for gr in set(groups):
             existing_group = UserGroup.get_by_group_name(gr)
             if not existing_group:
-                desc = 'Automatically created from plugin:%s' % extern_type
+                desc = u'Automatically created from plugin:%s' % extern_type
                 # we use first admin account to set the owner of the group
                 existing_group = UserGroupModel().create(gr, desc, owner,
                                         group_data={'extern_type': extern_type})

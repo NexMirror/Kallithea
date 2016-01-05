@@ -522,7 +522,7 @@ class DbManage(object):
     def create_user(self, username, password, email='', admin=False):
         log.info('creating user %s', username)
         UserModel().create_or_update(username, password, email,
-                                     firstname='Kallithea', lastname='Admin',
+                                     firstname=u'Kallithea', lastname=u'Admin',
                                      active=True, admin=admin,
                                      extern_type=EXTERN_TYPE_INTERNAL)
 
@@ -532,8 +532,8 @@ class DbManage(object):
         user = UserModel().create_or_update(username=User.DEFAULT_USER,
                                             password=str(uuid.uuid1())[:20],
                                             email='anonymous@kallithea-scm.org',
-                                            firstname='Anonymous',
-                                            lastname='User')
+                                            firstname=u'Anonymous',
+                                            lastname=u'User')
         # based on configuration options activate/deactivate this user which
         # controls anonymous access
         if self.cli_args.get('public_access') is False:

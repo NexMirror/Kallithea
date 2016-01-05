@@ -100,8 +100,8 @@ class UserModel(BaseModel):
         log_create_user(new_user.get_dict(), cur_user)
         return new_user
 
-    def create_or_update(self, username, password, email, firstname='',
-                         lastname='', active=True, admin=False,
+    def create_or_update(self, username, password, email, firstname=u'',
+                         lastname=u'', active=True, admin=False,
                          extern_type=None, extern_name=None, cur_user=None):
         """
         Creates a new instance if not found, or updates current one
@@ -191,7 +191,7 @@ class UserModel(BaseModel):
         # notification to admins
         subject = _('New user registration')
         body = (
-            'New user registration\n'
+            u'New user registration\n'
             '---------------------\n'
             '- Username: {user.username}\n'
             '- Full Name: {user.full_name}\n'
