@@ -54,7 +54,6 @@ class PermissionModel(BaseModel):
             if not Permission.get_by_key(p[0]):
                 new_perm = Permission()
                 new_perm.permission_name = p[0]
-                new_perm.permission_longname = p[0]  #translation err with p[1]
                 self.sa.add(new_perm)
 
     def create_default_permissions(self, user, force=False):

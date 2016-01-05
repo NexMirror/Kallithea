@@ -1745,7 +1745,6 @@ class Permission(Base, BaseModel):
 
     permission_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
     permission_name = Column(String(255, convert_unicode=False), nullable=True, unique=None, default=None)
-    permission_longname = Column(String(255, convert_unicode=False), nullable=True, unique=None, default=None)
 
     def __unicode__(self):
         return u"<%s('%s:%s')>" % (
