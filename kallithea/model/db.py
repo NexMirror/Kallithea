@@ -167,7 +167,6 @@ _table_args_default_dict = {'extend_existing': True,
 class Setting(Base, BaseModel):
     __tablename__ = DB_PREFIX + 'settings'
     __table_args__ = (
-        UniqueConstraint('app_settings_name'),
         _table_args_default_dict,
     )
 
@@ -181,7 +180,7 @@ class Setting(Base, BaseModel):
     DEFAULT_UPDATE_URL = ''
 
     app_settings_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
-    app_settings_name = Column(String(255), nullable=True, unique=None, default=None)
+    app_settings_name = Column(String(255), nullable=True, unique=True, default=None)
     _app_settings_value = Column("app_settings_value", Unicode(4096), nullable=True, unique=None, default=None)
     _app_settings_type = Column("app_settings_type", String(255), nullable=True, unique=None, default=None)
 
@@ -394,8 +393,6 @@ class Ui(Base, BaseModel):
 class User(Base, BaseModel):
     __tablename__ = 'users'
     __table_args__ = (
-        UniqueConstraint('username'),
-        UniqueConstraint('email'),
         Index('u_username_idx', 'username'),
         Index('u_email_idx', 'email'),
         _table_args_default_dict,
@@ -405,13 +402,13 @@ class User(Base, BaseModel):
     DEFAULT_GRAVATAR_URL = 'https://secure.gravatar.com/avatar/{md5email}?d=identicon&s={size}'
 
     user_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
-    username = Column(String(255), nullable=True, unique=None, default=None)
+    username = Column(String(255), nullable=True, unique=True, default=None)
     password = Column(String(255), nullable=True, unique=None, default=None)
     active = Column(Boolean(), nullable=True, unique=None, default=True)
     admin = Column(Boolean(), nullable=True, unique=None, default=False)
     name = Column("firstname", Unicode(255), nullable=True, unique=None, default=None)
     lastname = Column(Unicode(255), nullable=True, unique=None, default=None)
-    _email = Column("email", String(255), nullable=True, unique=None, default=None)
+    _email = Column("email", String(255), nullable=True, unique=True, default=None)
     last_login = Column(DateTime(timezone=False), nullable=True, unique=None, default=None)
     extern_type = Column(String(255), nullable=True, unique=None, default=None)
     extern_name = Column(String(255), nullable=True, unique=None, default=None)
@@ -719,14 +716,13 @@ class UserEmailMap(Base, BaseModel):
     __tablename__ = 'user_email_map'
     __table_args__ = (
         Index('uem_email_idx', 'email'),
-        UniqueConstraint('email'),
         _table_args_default_dict,
     )
     __mapper_args__ = {}
 
     email_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=True, unique=None, default=None)
-    _email = Column("email", String(255), nullable=True, unique=False, default=None)
+    _email = Column("email", String(255), nullable=True, unique=True, default=None)
     user = relationship('User')
 
     @validates('_email')
@@ -2026,7 +2022,6 @@ class UserFollowing(Base, BaseModel):
 class CacheInvalidation(Base, BaseModel):
     __tablename__ = 'cache_invalidation'
     __table_args__ = (
-        UniqueConstraint('cache_key'),
         Index('key_idx', 'cache_key'),
         _table_args_default_dict,
     )
@@ -2034,7 +2029,7 @@ class CacheInvalidation(Base, BaseModel):
     # cache_id, not used
     cache_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
     # cache_key as created by _get_cache_key
-    cache_key = Column(Unicode(255))
+    cache_key = Column(Unicode(255), unique=True)
     # cache_args is a repo_name
     cache_args = Column(Unicode(255))
     # instance sets cache_active True when it is caching, other instances set
