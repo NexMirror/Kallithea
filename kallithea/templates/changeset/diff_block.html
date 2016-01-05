@@ -66,6 +66,10 @@
 </%def>
 
 <%def name="diff_block_simple(files, changes)">
+<div class="diff-collapse">
+    <span target="${'diff-container-%s' % (id(changes))}" class="diff-collapse-button">&uarr; ${_('Collapse Diff')} &uarr;</span>
+</div>
+<div class="diff-container" id="${'diff-container-%s' % (id(changes))}">
   %for fid, ch, f, stat in files:
     <%
     op, filenode_path, diff = changes[fid]
@@ -126,6 +130,7 @@
         </div>
     </div>
   %endfor
+</div>
 </%def>
 
 <%def name="diff_block_js()">
