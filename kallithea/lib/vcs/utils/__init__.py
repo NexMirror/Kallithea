@@ -171,9 +171,9 @@ def author_email(author):
                               r"""0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]"""
                               r"""*[a-z0-9])?""", re.IGNORECASE)
         m = re.findall(email_re, author)
-        return m[0] if m else ''
+        return safe_str(m[0]) if m else ''
 
-    return author[l + 1:r].strip()
+    return safe_str(author[l + 1:r].strip())
 
 
 def author_name(author):
