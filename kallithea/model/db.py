@@ -180,9 +180,9 @@ class Setting(Base, BaseModel):
     DEFAULT_UPDATE_URL = ''
 
     app_settings_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
-    app_settings_name = Column(String(255), nullable=True, unique=True, default=None)
-    _app_settings_value = Column("app_settings_value", Unicode(4096), nullable=True, default=None)
-    _app_settings_type = Column("app_settings_type", String(255), nullable=True, default=None)
+    app_settings_name = Column(String(255), nullable=True, unique=True)
+    _app_settings_value = Column("app_settings_value", Unicode(4096), nullable=True)
+    _app_settings_type = Column("app_settings_type", String(255), nullable=True)
 
     def __init__(self, key='', val='', type='unicode'):
         self.app_settings_name = key
@@ -345,9 +345,9 @@ class Ui(Base, BaseModel):
     HOOK_PRE_PULL = 'preoutgoing.pre_pull'
 
     ui_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
-    ui_section = Column(String(255), nullable=True, default=None)
-    ui_key = Column(String(255), nullable=True, default=None)
-    ui_value = Column(String(255), nullable=True, default=None)
+    ui_section = Column(String(255), nullable=True)
+    ui_key = Column(String(255), nullable=True)
+    ui_value = Column(String(255), nullable=True)
     ui_active = Column(Boolean(), nullable=True, default=True)
 
     @classmethod
@@ -402,17 +402,17 @@ class User(Base, BaseModel):
     DEFAULT_GRAVATAR_URL = 'https://secure.gravatar.com/avatar/{md5email}?d=identicon&s={size}'
 
     user_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
-    username = Column(String(255), nullable=True, unique=True, default=None)
-    password = Column(String(255), nullable=True, default=None)
+    username = Column(String(255), nullable=True, unique=True)
+    password = Column(String(255), nullable=True)
     active = Column(Boolean(), nullable=True, default=True)
     admin = Column(Boolean(), nullable=True, default=False)
-    name = Column("firstname", Unicode(255), nullable=True, default=None)
-    lastname = Column(Unicode(255), nullable=True, default=None)
-    _email = Column("email", String(255), nullable=True, unique=True, default=None)
-    last_login = Column(DateTime(timezone=False), nullable=True, default=None)
-    extern_type = Column(String(255), nullable=True, default=None)
-    extern_name = Column(String(255), nullable=True, default=None)
-    api_key = Column(String(255), nullable=True, default=None)
+    name = Column("firstname", Unicode(255), nullable=True)
+    lastname = Column(Unicode(255), nullable=True)
+    _email = Column("email", String(255), nullable=True, unique=True)
+    last_login = Column(DateTime(timezone=False), nullable=True)
+    extern_type = Column(String(255), nullable=True)
+    extern_name = Column(String(255), nullable=True)
+    api_key = Column(String(255), nullable=True)
     inherit_default_permissions = Column(Boolean(), nullable=False, default=True)
     created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
     _user_data = Column("user_data", LargeBinary(), nullable=True)  # JSON data
@@ -697,7 +697,7 @@ class UserApiKeys(Base, BaseModel):
     __mapper_args__ = {}
 
     user_api_key_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
-    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=True, default=None)
+    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=True)
     api_key = Column(String(255), nullable=False, unique=True)
     description = Column(UnicodeText(1024))
     expires = Column(Float(53), nullable=False)
@@ -721,8 +721,8 @@ class UserEmailMap(Base, BaseModel):
     __mapper_args__ = {}
 
     email_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
-    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=True, default=None)
-    _email = Column("email", String(255), nullable=True, unique=True, default=None)
+    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=True)
+    _email = Column("email", String(255), nullable=True, unique=True)
     user = relationship('User')
 
     @validates('_email')
@@ -751,8 +751,8 @@ class UserIpMap(Base, BaseModel):
     __mapper_args__ = {}
 
     ip_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
-    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=True, default=None)
-    ip_addr = Column(String(255), nullable=True, default=None)
+    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=True)
+    ip_addr = Column(String(255), nullable=True)
     active = Column(Boolean(), nullable=True, default=True)
     user = relationship('User')
 
@@ -779,13 +779,13 @@ class UserLog(Base, BaseModel):
     )
 
     user_log_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
-    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=True, default=None)
-    username = Column(String(255), nullable=True, default=None)
+    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=True)
+    username = Column(String(255), nullable=True)
     repository_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=True)
-    repository_name = Column(Unicode(255), nullable=True, default=None)
-    user_ip = Column(String(255), nullable=True, default=None)
-    action = Column(UnicodeText(1200000), nullable=True, default=None)
-    action_date = Column(DateTime(timezone=False), nullable=True, default=None)
+    repository_name = Column(Unicode(255), nullable=True)
+    user_ip = Column(String(255), nullable=True)
+    action = Column(UnicodeText(1200000), nullable=True)
+    action_date = Column(DateTime(timezone=False), nullable=True)
 
     def __unicode__(self):
         return u"<%s('id:%s:%s')>" % (self.__class__.__name__,
@@ -807,11 +807,11 @@ class UserGroup(Base, BaseModel):
     )
 
     users_group_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
-    users_group_name = Column(Unicode(255), nullable=False, unique=True, default=None)
-    user_group_description = Column(Unicode(10000), nullable=True, default=None)
-    users_group_active = Column(Boolean(), nullable=True, default=None)
+    users_group_name = Column(Unicode(255), nullable=False, unique=True)
+    user_group_description = Column(Unicode(10000), nullable=True)
+    users_group_active = Column(Boolean(), nullable=True)
     inherit_default_permissions = Column("users_group_inherit_default_permissions", Boolean(), nullable=False, default=True)
-    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False, default=None)
+    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
     created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
     _group_data = Column("group_data", LargeBinary(), nullable=True)  # JSON data
 
@@ -896,8 +896,8 @@ class UserGroupMember(Base, BaseModel):
     )
 
     users_group_member_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
-    users_group_id = Column(Integer(), ForeignKey('users_groups.users_group_id'), nullable=False, default=None)
-    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False, default=None)
+    users_group_id = Column(Integer(), ForeignKey('users_groups.users_group_id'), nullable=False)
+    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
 
     user = relationship('User')
     users_group = relationship('UserGroup')
@@ -917,7 +917,7 @@ class RepositoryField(Base, BaseModel):
     PREFIX = 'ex_'  # prefix used in form to not conflict with already existing fields
 
     repo_field_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
-    repository_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=False, default=None)
+    repository_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=False)
     field_key = Column(String(250))
     field_label = Column(String(1024), nullable=False)
     field_value = Column(String(10000), nullable=False)
@@ -960,25 +960,25 @@ class Repository(Base, BaseModel):
     STATE_ERROR = 'repo_state_error'
 
     repo_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
-    repo_name = Column(Unicode(255), nullable=False, unique=True, default=None)
+    repo_name = Column(Unicode(255), nullable=False, unique=True)
     repo_state = Column(String(255), nullable=True)
 
-    clone_uri = Column(String(255), nullable=True, default=None)
-    repo_type = Column(String(255), nullable=False, default=None)
-    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False, default=None)
-    private = Column(Boolean(), nullable=True, default=None)
+    clone_uri = Column(String(255), nullable=True)
+    repo_type = Column(String(255), nullable=False)
+    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
+    private = Column(Boolean(), nullable=True)
     enable_statistics = Column("statistics", Boolean(), nullable=True, default=True)
     enable_downloads = Column("downloads", Boolean(), nullable=True, default=True)
-    description = Column(Unicode(10000), nullable=True, default=None)
+    description = Column(Unicode(10000), nullable=True)
     created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
     updated_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
-    _landing_revision = Column("landing_revision", String(255), nullable=False, default=None)
+    _landing_revision = Column("landing_revision", String(255), nullable=False)
     enable_locking = Column(Boolean(), nullable=False, default=False)
-    _locked = Column("locked", String(255), nullable=True, default=None)
+    _locked = Column("locked", String(255), nullable=True)
     _changeset_cache = Column("changeset_cache", LargeBinary(), nullable=True) #JSON data
 
-    fork_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=True, default=None)
-    group_id = Column(Integer(), ForeignKey('groups.group_id'), nullable=True, default=None)
+    fork_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=True)
+    group_id = Column(Integer(), ForeignKey('groups.group_id'), nullable=True)
 
     user = relationship('User')
     fork = relationship('Repository', remote_side=repo_id)
@@ -1477,11 +1477,11 @@ class RepoGroup(Base, BaseModel):
     SEP = ' &raquo; '
 
     group_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
-    group_name = Column(Unicode(255), nullable=False, unique=True, default=None)
-    group_parent_id = Column(Integer(), ForeignKey('groups.group_id'), nullable=True, default=None)
-    group_description = Column(Unicode(10000), nullable=True, default=None)
+    group_name = Column(Unicode(255), nullable=False, unique=True)
+    group_parent_id = Column(Integer(), ForeignKey('groups.group_id'), nullable=True)
+    group_description = Column(Unicode(10000), nullable=True)
     enable_locking = Column(Boolean(), nullable=False, default=False)
-    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False, default=None)
+    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
     created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
 
     repo_group_to_perm = relationship('UserRepoGroupToPerm', cascade='all', order_by='UserRepoGroupToPerm.group_to_perm_id')
@@ -1738,7 +1738,7 @@ class Permission(Base, BaseModel):
     }
 
     permission_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
-    permission_name = Column(String(255), nullable=True, default=None)
+    permission_name = Column(String(255), nullable=True)
 
     def __unicode__(self):
         return u"<%s('%s:%s')>" % (
@@ -1785,9 +1785,9 @@ class UserRepoToPerm(Base, BaseModel):
     )
 
     repo_to_perm_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
-    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False, default=None)
-    permission_id = Column(Integer(), ForeignKey('permissions.permission_id'), nullable=False, default=None)
-    repository_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=False, default=None)
+    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
+    permission_id = Column(Integer(), ForeignKey('permissions.permission_id'), nullable=False)
+    repository_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=False)
 
     user = relationship('User')
     repository = relationship('Repository')
@@ -1814,9 +1814,9 @@ class UserUserGroupToPerm(Base, BaseModel):
     )
 
     user_user_group_to_perm_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
-    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False, default=None)
-    permission_id = Column(Integer(), ForeignKey('permissions.permission_id'), nullable=False, default=None)
-    user_group_id = Column(Integer(), ForeignKey('users_groups.users_group_id'), nullable=False, default=None)
+    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
+    permission_id = Column(Integer(), ForeignKey('permissions.permission_id'), nullable=False)
+    user_group_id = Column(Integer(), ForeignKey('users_groups.users_group_id'), nullable=False)
 
     user = relationship('User')
     user_group = relationship('UserGroup')
@@ -1843,8 +1843,8 @@ class UserToPerm(Base, BaseModel):
     )
 
     user_to_perm_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
-    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False, default=None)
-    permission_id = Column(Integer(), ForeignKey('permissions.permission_id'), nullable=False, default=None)
+    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
+    permission_id = Column(Integer(), ForeignKey('permissions.permission_id'), nullable=False)
 
     user = relationship('User')
     permission = relationship('Permission')
@@ -1861,9 +1861,9 @@ class UserGroupRepoToPerm(Base, BaseModel):
     )
 
     users_group_to_perm_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
-    users_group_id = Column(Integer(), ForeignKey('users_groups.users_group_id'), nullable=False, default=None)
-    permission_id = Column(Integer(), ForeignKey('permissions.permission_id'), nullable=False, default=None)
-    repository_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=False, default=None)
+    users_group_id = Column(Integer(), ForeignKey('users_groups.users_group_id'), nullable=False)
+    permission_id = Column(Integer(), ForeignKey('permissions.permission_id'), nullable=False)
+    repository_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=False)
 
     users_group = relationship('UserGroup')
     permission = relationship('Permission')
@@ -1891,9 +1891,9 @@ class UserGroupUserGroupToPerm(Base, BaseModel):
     )
 
     user_group_user_group_to_perm_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
-    target_user_group_id = Column(Integer(), ForeignKey('users_groups.users_group_id'), nullable=False, default=None)
-    permission_id = Column(Integer(), ForeignKey('permissions.permission_id'), nullable=False, default=None)
-    user_group_id = Column(Integer(), ForeignKey('users_groups.users_group_id'), nullable=False, default=None)
+    target_user_group_id = Column(Integer(), ForeignKey('users_groups.users_group_id'), nullable=False)
+    permission_id = Column(Integer(), ForeignKey('permissions.permission_id'), nullable=False)
+    user_group_id = Column(Integer(), ForeignKey('users_groups.users_group_id'), nullable=False)
 
     target_user_group = relationship('UserGroup', primaryjoin='UserGroupUserGroupToPerm.target_user_group_id==UserGroup.users_group_id')
     user_group = relationship('UserGroup', primaryjoin='UserGroupUserGroupToPerm.user_group_id==UserGroup.users_group_id')
@@ -1920,8 +1920,8 @@ class UserGroupToPerm(Base, BaseModel):
     )
 
     users_group_to_perm_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
-    users_group_id = Column(Integer(), ForeignKey('users_groups.users_group_id'), nullable=False, default=None)
-    permission_id = Column(Integer(), ForeignKey('permissions.permission_id'), nullable=False, default=None)
+    users_group_id = Column(Integer(), ForeignKey('users_groups.users_group_id'), nullable=False)
+    permission_id = Column(Integer(), ForeignKey('permissions.permission_id'), nullable=False)
 
     users_group = relationship('UserGroup')
     permission = relationship('Permission')
@@ -1935,9 +1935,9 @@ class UserRepoGroupToPerm(Base, BaseModel):
     )
 
     group_to_perm_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
-    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False, default=None)
-    group_id = Column(Integer(), ForeignKey('groups.group_id'), nullable=False, default=None)
-    permission_id = Column(Integer(), ForeignKey('permissions.permission_id'), nullable=False, default=None)
+    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
+    group_id = Column(Integer(), ForeignKey('groups.group_id'), nullable=False)
+    permission_id = Column(Integer(), ForeignKey('permissions.permission_id'), nullable=False)
 
     user = relationship('User')
     group = relationship('RepoGroup')
@@ -1961,9 +1961,9 @@ class UserGroupRepoGroupToPerm(Base, BaseModel):
     )
 
     users_group_repo_group_to_perm_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
-    users_group_id = Column(Integer(), ForeignKey('users_groups.users_group_id'), nullable=False, default=None)
-    group_id = Column(Integer(), ForeignKey('groups.group_id'), nullable=False, default=None)
-    permission_id = Column(Integer(), ForeignKey('permissions.permission_id'), nullable=False, default=None)
+    users_group_id = Column(Integer(), ForeignKey('users_groups.users_group_id'), nullable=False)
+    group_id = Column(Integer(), ForeignKey('groups.group_id'), nullable=False)
+    permission_id = Column(Integer(), ForeignKey('permissions.permission_id'), nullable=False)
 
     users_group = relationship('UserGroup')
     permission = relationship('Permission')
@@ -1986,7 +1986,7 @@ class Statistics(Base, BaseModel):
     )
 
     stat_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
-    repository_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=False, unique=True, default=None)
+    repository_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=False, unique=True)
     stat_on_revision = Column(Integer(), nullable=False)
     commit_activity = Column(LargeBinary(1000000), nullable=False)#JSON data
     commit_activity_combined = Column(LargeBinary(), nullable=False)#JSON data
@@ -2004,9 +2004,9 @@ class UserFollowing(Base, BaseModel):
     )
 
     user_following_id = Column(Integer(), nullable=False, unique=True, primary_key=True)
-    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False, default=None)
-    follows_repo_id = Column("follows_repository_id", Integer(), ForeignKey('repositories.repo_id'), nullable=True, default=None)
-    follows_user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=True, default=None)
+    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
+    follows_repo_id = Column("follows_repository_id", Integer(), ForeignKey('repositories.repo_id'), nullable=True)
+    follows_user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=True)
     follows_from = Column(DateTime(timezone=False), nullable=True, default=datetime.datetime.now)
 
     user = relationship('User', primaryjoin='User.user_id==UserFollowing.user_id')
