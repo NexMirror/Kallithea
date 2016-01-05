@@ -64,8 +64,6 @@ class SettingsController(BaseController):
     def _get_hg_ui_settings(self):
         ret = Ui.query().all()
 
-        if not ret:
-            raise Exception('Could not get application ui settings !')
         settings = {}
         for each in ret:
             k = each.ui_section + '_' + each.ui_key
