@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2015-09-08 10:34+0200\n"
-"PO-Revision-Date: 2016-01-05 06:29+0000\n"
+"PO-Revision-Date: 2016-01-07 01:53+0000\n"
 "Last-Translator: Takumi IINO <trot.thunder@gmail.com>\n"
 "Language-Team: Japanese "
 "<https://hosted.weblate.org/projects/kallithea/stable/ja/>\n"
@@ -2665,7 +2665,7 @@ msgstr "統計を有効にする"
 #: kallithea/templates/admin/defaults/defaults.html:57
 #: kallithea/templates/admin/repos/repo_edit_settings.html:88
 msgid "Enable statistics window on summary page."
-msgstr "概要ページの統計ウィンドウを有効にします"
+msgstr "概要ページの統計ウィンドウを有効にします。"
 
 #: kallithea/templates/admin/defaults/defaults.html:63
 #: kallithea/templates/admin/repos/repo_edit_settings.html:93
@@ -2675,7 +2675,7 @@ msgstr "ダウンロードを有効にする"
 #: kallithea/templates/admin/defaults/defaults.html:67
 #: kallithea/templates/admin/repos/repo_edit_settings.html:97
 msgid "Enable download menu on summary page."
-msgstr "概要ページのダウンロードメニューを有効にします"
+msgstr "概要ページのダウンロードメニューを有効にします。"
 
 #: kallithea/templates/admin/defaults/defaults.html:73
 #: kallithea/templates/admin/repo_groups/repo_group_edit_settings.html:34
@@ -2686,7 +2686,7 @@ msgstr "ロックを有効にする"
 #: kallithea/templates/admin/defaults/defaults.html:77
 #: kallithea/templates/admin/repos/repo_edit_settings.html:106
 msgid "Enable lock-by-pulling on repository."
-msgstr "リポジトリのpullのロックを有効にします"
+msgstr "リポジトリのpullのロックを有効にします。"
 
 #: kallithea/templates/admin/gists/edit.html:5
 #: kallithea/templates/admin/gists/edit.html:18
