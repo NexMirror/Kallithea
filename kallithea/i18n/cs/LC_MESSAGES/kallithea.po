@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2015-09-08 10:34+0200\n"
-"PO-Revision-Date: 2015-02-13 15:26+0200\n"
-"Last-Translator: Andrew Shadura <andrew@shadura.me>\n"
+"PO-Revision-Date: 2015-11-12 08:51+0000\n"
+"Last-Translator: Michal Čihař <michal@cihar.com>\n"
 "Language-Team: Czech "
 "<https://hosted.weblate.org/projects/kallithea/kallithea/cs/>\n"
 "Language: cs\n"
@@ -17,6 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Weblate 2.5-dev\n"
 
 #: kallithea/controllers/changelog.py:86
 #: kallithea/controllers/pullrequests.py:238 kallithea/lib/base.py:512
@@ -288,9 +289,8 @@ msgid "Journal"
 msgstr ""
 
 #: kallithea/controllers/login.py:151 kallithea/controllers/login.py:197
-#, fuzzy
 msgid "Bad captcha"
-msgstr "špatná captcha"
+msgstr "Špatná captcha"
 
 #: kallithea/controllers/login.py:157
 msgid "You have successfully registered into Kallithea"
@@ -310,9 +310,9 @@ msgid "Successfully updated password"
 msgstr "Úspěšně aktualizované heslo"
 
 #: kallithea/controllers/pullrequests.py:124
-#, fuzzy, python-format
+#, python-format
 msgid "%s (closed)"
-msgstr ""
+msgstr "%s (zavřené)"
 
 #: kallithea/controllers/pullrequests.py:152
 #: kallithea/templates/changeset/changeset.html:12
@@ -446,9 +446,8 @@ msgid "There is no index to search in. Please run whoosh indexer"
 msgstr ""
 
 #: kallithea/controllers/search.py:144
-#, fuzzy
 msgid "An error occurred during search operation."
-msgstr "Došlo k chybě při vytváření gist"
+msgstr "Došlo k chybě při vyhledávání."
 
 #: kallithea/controllers/summary.py:180
 #: kallithea/templates/summary/summary.html:384
@@ -851,15 +850,13 @@ msgstr ""
 
 #: kallithea/controllers/admin/repos.py:537
 #: kallithea/controllers/admin/repos.py:564
-#, fuzzy
 msgid "Repository has been locked"
-msgstr ""
+msgstr "Repozitář byl uzamčen"
 
 #: kallithea/controllers/admin/repos.py:540
 #: kallithea/controllers/admin/repos.py:561
-#, fuzzy
 msgid "Repository has been unlocked"
-msgstr ""
+msgstr "Repozitář byl odemčen"
 
 #: kallithea/controllers/admin/repos.py:543
 #: kallithea/controllers/admin/repos.py:568
@@ -6050,6 +6047,8 @@ msgstr ""
 #~ msgstr ""
 
 #~ msgid ""
+#~ "_: \n"
+#~ ""
 #~ msgstr ""
 
 #~ msgid "%(user)s wants you to review pull request #%(pr_id)s: %(pr_title)s"
@@ -6378,4 +6377,3 @@ msgstr ""
 
 #~ msgid "Created by"
 #~ msgstr ""
-
