@@ -222,7 +222,7 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
         lastname = getattr(userobj, 'lastname', '')
 
         user_data = {
-            'username': username,
+            'username': crowd_user["name"] or username,
             'firstname': crowd_user["first-name"] or firstname,
             'lastname': crowd_user["last-name"] or lastname,
             'groups': crowd_user["groups"],
