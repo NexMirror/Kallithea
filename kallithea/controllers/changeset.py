@@ -175,6 +175,9 @@ def _context_url(GET, fileid=None):
 # Could perhaps be nice to have in the model but is too high level ...
 def create_comment(text, status, f_path, line_no, revision=None, pull_request_id=None, closing_pr=None):
     """Comment functionality shared between changesets and pullrequests"""
+    f_path = f_path or None
+    line_no = line_no or None
+
     comment = ChangesetCommentsModel().create(
         text=text,
         repo=c.db_repo.repo_id,
@@ -202,6 +205,7 @@ class ChangesetController(BaseRepoController):
         c.user_groups_array = repo_model.get_user_groups_js()
 
     def _index(self, revision, method):
+        c.pull_request = None
         c.anchor_url = anchor_url
         c.ignorews_url = _ignorews_url
         c.context_url = _context_url
@@ -365,6 +369,8 @@ class ChangesetController(BaseRepoController):
                                    'repository.admin')
     @jsonify
     def comment(self, repo_name, revision):
+        assert request.environ.get('HTTP_X_PARTIAL_XHR')
+
         status = request.POST.get('changeset_status')
         text = request.POST.get('text', '').strip()
 
@@ -379,9 +385,7 @@ class ChangesetController(BaseRepoController):
         # get status if set !
         if status:
             # if latest status was from pull request and it's closed
-            # disallow changing status !
-            # dont_allow_on_closed_pull_request = True !
-
+            # disallow changing status ! RLY?
             try:
                 ChangesetStatusModel().set_status(
                     c.db_repo.repo_id,
@@ -389,25 +393,18 @@ class ChangesetController(BaseRepoController):
                     c.authuser.user_id,
                     c.comment,
                     revision=revision,
-                    dont_allow_on_closed_pull_request=True
+                    dont_allow_on_closed_pull_request=True,
                 )
             except StatusChangeOnClosedPullRequestError:
-                log.debug(traceback.format_exc())
-                msg = _('Changing status on a changeset associated with '
-                        'a closed pull request is not allowed')
-                h.flash(msg, category='warning')
-                raise HTTPFound(location=h.url('changeset_home', repo_name=repo_name,
-                                      revision=revision))
+                log.debug('cannot change status on %s with closed pull request', revision)
+                raise HTTPBadRequest()
+
         action_logger(self.authuser,
                       'user_commented_revision:%s' % revision,
                       c.db_repo, self.ip_addr, self.sa)
 
         Session().commit()
 
-        if not request.environ.get('HTTP_X_PARTIAL_XHR'):
-            raise HTTPFound(location=h.url('changeset_home', repo_name=repo_name,
-                                  revision=revision))
-        #only ajax below
         data = {
            'target_id': h.safeid(h.safe_unicode(request.POST.get('f_path'))),
         }

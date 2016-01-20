@@ -369,10 +369,7 @@ ${self.repo_context_bar('showpullrequest')}
     ${comment.generate_comments()}
 
     ## main comment form and it status
-    ${comment.comments(h.url('pullrequest_comment', repo_name=c.repo_name,
-                              pull_request_id=c.pull_request.pull_request_id),
-                       c.current_voting_result,
-                       is_pr=True, change_status=c.allowed_to_change_status)}
+    ${comment.comments(change_status=c.allowed_to_change_status)}
 
     <script type="text/javascript">
       $(document).ready(function(){

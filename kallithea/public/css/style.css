@@ -208,6 +208,10 @@ div.rst-block pre,
     color: #B9B9B9;
 }
 
+.inline-comments-general.show-general-status .hidden.general-only {
+    display: block !important;
+}
+
 .truncate {
        white-space: nowrap;
        overflow: hidden;

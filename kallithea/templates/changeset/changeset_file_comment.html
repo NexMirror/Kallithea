@@ -59,6 +59,36 @@
         </div>
         <div class="mentions-container"></div>
         <textarea name="text" class="comment-block-ta yui-ac-input"></textarea>
+
+        <div id="status_block_container" class="status-block general-only hidden">
+                %if c.pull_request is None:
+                  ${_('Set changeset status')}:
+                %else:
+                  ${_('Vote for pull request status')}:
+                %endif
+                <span class="general-only cs-only">
+                </span>
+                <input type="radio" class="status_change_radio" name="changeset_status" id="changeset_status_unchanged" value="" checked="checked" />
+                <label for="changeset_status_unchanged">
+                  ${_('No change')}
+                </label>
+                %for status, lbl in c.changeset_statuses:
+                    <label>
+                      <input type="radio" class="status_change_radio" name="changeset_status" id="${status}" value="${status}">
+                      ${lbl}<i class="icon-circle changeset-status-${status}" /></i>
+                    </label>
+                %endfor
+
+                %if c.pull_request is not None and ( \
+                    h.HasPermissionAny('hg.admin')() or h.HasRepoPermissionAny('repository.admin')(c.repo_name) \
+                    or c.pull_request.owner.user_id == c.authuser.user_id):
+                  <label>
+                    <input id="save_close" type="checkbox" name="save_close">
+                    ${_("Close")}
+                  </label>
+                %endif
+        </div>
+
       </div>
       <div class="comment-button">
         <div class="submitting-overlay">${_('Submitting ...')}</div>
@@ -111,7 +141,7 @@
     ${comment_count(c.inline_cnt, len(c.comments))}
   </div>
 
-      <div class="comments-list-general">
+      <div class="comments-list-chunk" data-f_path="" data-line_no="" data-target-id="general-comments">
         %for co in c.comments:
             ${comment_block(co)}
         %endfor
@@ -120,73 +150,29 @@
 </%def>
 
 ## MAIN COMMENT FORM
-<%def name="comments(post_url, cur_status, is_pr=False, change_status=True)">
+<%def name="comments(change_status=True)">
 
-<div class="comments">
-    %if c.authuser.username != 'default':
-    <div class="comment-form ac">
-      ${h.form(post_url, id="main_form")}
-        <div id="edit-container" class="clearfix">
-            <div class="comment-help">
-              <span style="color:#577632" class="tooltip">${_('Comments are in plain text. Use @username inside this text to send notification to another local user.')|n}</span>
-            </div>
-            <div class="mentions-container" id="mentions_container"></div>
-            ${h.textarea('text', class_="comment-block-ta")}
-            %if change_status:
-              <div id="status_block_container" class="status-block">
-                %if is_pr:
-                  ${_('Vote for pull request status')}:
-                %else:
-                  ${_('Set changeset status')}:
-                %endif
-                <input type="radio" class="status_change_radio" name="changeset_status" id="changeset_status_unchanged" value="" checked="checked" />
-                <label for="changeset_status_unchanged">
-                  ${_('No change')}
-                </label>
-                %for status,lbl in c.changeset_statuses:
-                    <span>
-                        <input type="radio" class="status_change_radio" name="changeset_status" id="${status}" value="${status}">
-                        <label for="${status}"><i class="icon-circle changeset-status-${status}" /></i>${lbl}</label>
-                    </span>
-                %endfor
+## global, shared for all edit boxes
+<div class="mentions-container" id="mentions_container"></div>
 
-                %if is_pr and ( \
-                    h.HasPermissionAny('hg.admin')() or h.HasRepoPermissionAny('repository.admin')(c.repo_name) \
-                    or c.pull_request.owner.user_id == c.authuser.user_id):
-                  <input id="save_close" type="checkbox" name="save_close">
-                  <label id="save_close_label" for="save_close">${_("Close")}</label>
-                %endif
-              </div>
-            %endif
-        </div>
-
-        <div class="comment-button">
-            ${h.submit('save', _('Comment'), class_="btn")}
-        </div>
-      ${h.end_form()}
-    </div>
-    %endif
+<div class="inline-comments inline-comments-general
+            ${'show-general-status' if change_status else ''}">
+  <div id="comments-general-comments" class="">
+  ## comment_div for general comments
+  </div>
 </div>
 
 <script>
 
 $(document).ready(function () {
-   MentionsAutoComplete($('#text'), $('#mentions_container'), _USERS_AC_DATA, _GROUPS_AC_DATA);
 
    $(window).on('beforeunload', function(){
-      if($('.comment-inline-form textarea[name=text]').size() ||
-         $('textarea#text').val()) {
+      var $textareas = $('.comment-inline-form textarea[name=text]');
+      if($textareas.size() > 1 ||
+         $textareas.val()) {
          // this message will not be displayed on all browsers
          // (e.g. some versions of Firefox), but the user will still be warned
          return 'There are uncommitted comments.';
-      }
-   });
-
-   $('form#main_form').submit(function(){
-      // if no open inline forms, disable the beforeunload check - it would
-      // fail in the check for the textarea we are about to submit
-      if(!$('.form-open').size()){
-          $(window).off('beforeunload');
       }
    });
 

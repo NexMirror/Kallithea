@@ -673,12 +673,16 @@ function comment_div_state($comment_div, f_path, line_no, show_form) {
 
 // append an Add button to $comment_div and hook it up to show form
 function _comment_div_append_add($comment_div, f_path, line_no) {
-    var addlabel = TRANSLATION_MAP['Add Another Comment'];
-    var $add = $('<div class="add-button-row"><span class="btn btn-mini add-button">{0}</span></div>'.format(addlabel));
-    $comment_div.append($add);
-    $add.children('.add-button').click(function(e) {
+    if (f_path && line_no) {
+        var addlabel = TRANSLATION_MAP['Add Another Comment'];
+        var $add = $('<div class="add-button-row"><span class="btn btn-mini add-button">{0}</span></div>'.format(addlabel));
+        $comment_div.append($add);
+        $add.children('.add-button').click(function(e) {
+            comment_div_state($comment_div, f_path, line_no, true);
+        });
+    } else {
         comment_div_state($comment_div, f_path, line_no, true);
-    });
+    }
 }
 
 // append a comment form to $comment_div
@@ -695,21 +699,27 @@ function _comment_div_append_form($comment_div, f_path, line_no) {
         e.preventDefault();
 
         var text = $textarea.val();
-        if (!text){
-            return;
+        var review_status = $form.find('input:radio[name=changeset_status]:checked').val();
+        var pr_close = $form.find('input:checkbox[name=save_close]:checked').length ? 'on' : '';
+
+        if (!text && !review_status && !pr_close) {
+            alert("Please provide a comment");
+            return false;
         }
 
         $form.find('.submitting-overlay').show();
 
+        var postData = {
+            'text': text,
+            'f_path': f_path,
+            'line': line_no,
+            'changeset_status': review_status,
+            'save_close': pr_close
+        };
         var success = function(json_data) {
             $comment_div.append(json_data['rendered_text']);
             comment_div_state($comment_div, f_path, line_no, false);
             linkInlineComments($('.firstlink'), $('.comment:first-child'));
-        };
-        var postData = {
-            'text': text,
-            'f_path': f_path,
-            'line': line_no
         };
         ajaxPOST(AJAX_COMMENT_URL, postData, success);
     });

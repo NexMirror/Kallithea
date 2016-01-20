@@ -21,10 +21,9 @@ class TestChangeSetCommentsController(TestController):
         params = {'text': text, '_authentication_token': self.authentication_token()}
         response = self.app.post(url(controller='changeset', action='comment',
                                      repo_name=HG_REPO, revision=rev),
-                                     params=params)
+                                     params=params, extra_environ={'HTTP_X_PARTIAL_XHR': '1'})
         # Test response...
-        self.assertEqual(response.status, '302 Found')
-        response.follow()
+        self.assertEqual(response.status, '200 OK')
 
         response = self.app.get(url(controller='changeset', action='index',
                                 repo_name=HG_REPO, revision=rev))
@@ -58,10 +57,9 @@ class TestChangeSetCommentsController(TestController):
         params = {'text': text, 'f_path': f_path, 'line': line, '_authentication_token': self.authentication_token()}
         response = self.app.post(url(controller='changeset', action='comment',
                                      repo_name=HG_REPO, revision=rev),
-                                     params=params)
+                                     params=params, extra_environ={'HTTP_X_PARTIAL_XHR': '1'})
         # Test response...
-        self.assertEqual(response.status, '302 Found')
-        response.follow()
+        self.assertEqual(response.status, '200 OK')
 
         response = self.app.get(url(controller='changeset', action='index',
                                 repo_name=HG_REPO, revision=rev))
@@ -98,10 +96,9 @@ class TestChangeSetCommentsController(TestController):
         params = {'text': text, '_authentication_token': self.authentication_token()}
         response = self.app.post(url(controller='changeset', action='comment',
                                      repo_name=HG_REPO, revision=rev),
-                                     params=params)
+                                     params=params, extra_environ={'HTTP_X_PARTIAL_XHR': '1'})
         # Test response...
-        self.assertEqual(response.status, '302 Found')
-        response.follow()
+        self.assertEqual(response.status, '200 OK')
 
         response = self.app.get(url(controller='changeset', action='index',
                                 repo_name=HG_REPO, revision=rev))
@@ -126,7 +123,7 @@ class TestChangeSetCommentsController(TestController):
         params = {'text': text, '_authentication_token': self.authentication_token()}
         response = self.app.post(url(controller='changeset', action='comment',
                                      repo_name=HG_REPO, revision=rev),
-                                     params=params)
+                                     params=params, extra_environ={'HTTP_X_PARTIAL_XHR': '1'})
 
         comments = ChangesetComment.query().all()
         self.assertEqual(len(comments), 1)
