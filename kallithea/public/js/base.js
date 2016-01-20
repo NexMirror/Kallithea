@@ -733,12 +733,11 @@ function _comment_div_append_form($comment_div, f_path, line_no) {
         comment_div_state($comment_div, f_path, line_no);
     });
 
-    setTimeout(function() {
-        // callbacks
-        tooltip_activate();
-        MentionsAutoComplete($textarea, $mentions_container, _USERS_AC_DATA);
+    tooltip_activate();
+    MentionsAutoComplete($textarea, $mentions_container, _USERS_AC_DATA);
+    if (f_path) {
         $textarea.focus();
-    }, 10);
+    }
 }
 
 
