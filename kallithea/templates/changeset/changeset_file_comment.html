@@ -82,10 +82,17 @@
                 %if c.pull_request is not None and ( \
                     h.HasPermissionAny('hg.admin')() or h.HasRepoPermissionAny('repository.admin')(c.repo_name) \
                     or c.pull_request.owner.user_id == c.authuser.user_id):
+                <div>
+                  ${_('Finish pull request')}:
                   <label>
                     <input id="save_close" type="checkbox" name="save_close">
                     ${_("Close")}
                   </label>
+                  <label>
+                    <input id="save_delete" type="checkbox" name="save_delete" value="delete">
+                    ${_("Delete")}
+                  </label>
+                </div>
                 %endif
         </div>
 

@@ -710,10 +710,11 @@ class PullrequestsController(BaseRepoController):
 
         status = request.POST.get('changeset_status')
         close_pr = request.POST.get('save_close')
+        delete = request.POST.get('save_delete')
         f_path = request.POST.get('f_path')
         line_no = request.POST.get('line')
 
-        if (status or close_pr) and (f_path or line_no):
+        if (status or close_pr or delete) and (f_path or line_no):
             # status votes and closing is only possible in general comments
             raise HTTPBadRequest()
 
@@ -722,6 +723,22 @@ class PullrequestsController(BaseRepoController):
             if status or close_pr:
                 h.flash(_('No permission to change pull request status'), 'error')
                 raise HTTPForbidden()
+
+        if delete == "delete":
+            if (pull_request.owner.user_id == c.authuser.user_id or
+                h.HasPermissionAny('hg.admin')() or
+                h.HasRepoPermissionAny('repository.admin')(pull_request.org_repo.repo_name) or
+                h.HasRepoPermissionAny('repository.admin')(pull_request.other_repo.repo_name)
+                ) and not pull_request.is_closed():
+                PullRequestModel().delete(pull_request)
+                Session().commit()
+                h.flash(_('Successfully deleted pull request %s') % pull_request_id,
+                        category='success')
+                return {
+                   'location': url('my_pullrequests'), # or repo pr list?
+                }
+                raise HTTPFound(location=url('my_pullrequests')) # or repo pr list?
+            raise HTTPForbidden()
 
         text = request.POST.get('text', '').strip()
         if close_pr:

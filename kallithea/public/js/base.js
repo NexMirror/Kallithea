@@ -700,10 +700,26 @@ function _comment_div_append_form($comment_div, f_path, line_no) {
         var text = $textarea.val();
         var review_status = $form.find('input:radio[name=changeset_status]:checked').val();
         var pr_close = $form.find('input:checkbox[name=save_close]:checked').length ? 'on' : '';
+        var pr_delete = $form.find('input:checkbox[name=save_delete]:checked').length ? 'delete' : '';
 
-        if (!text && !review_status && !pr_close) {
+        if (!text && !review_status && !pr_close && !pr_delete) {
             alert("Please provide a comment");
             return false;
+        }
+
+        if (pr_delete) {
+            if (text || review_status || pr_close) {
+                alert('Cannot delete pull request while making other changes');
+                return false;
+            }
+            if (!confirm('Confirm to delete this pull request')) {
+                return false;
+            }
+            var comments = $('.comment').size();
+            if (comments > 0 &&
+                !confirm('Confirm again to delete this pull request with {0} comments'.format(comments))) {
+                return false;
+            }
         }
 
         $form.find('.submitting-overlay').show();
@@ -713,16 +729,21 @@ function _comment_div_append_form($comment_div, f_path, line_no) {
             'f_path': f_path,
             'line': line_no,
             'changeset_status': review_status,
-            'save_close': pr_close
+            'save_close': pr_close,
+            'save_delete': pr_delete
         };
         var success = function(json_data) {
-            $comment_div.append(json_data['rendered_text']);
-            comment_div_state($comment_div, f_path, line_no);
-            linkInlineComments($('.firstlink'), $('.comment:first-child'));
-            if ((review_status || pr_close) && !f_path && !line_no) {
-                // Page changed a lot - reload it after closing the submitted form
-                comment_div_state($comment_div, f_path, line_no, false);
-                location.reload(true);
+            if (pr_delete) {
+                location = json_data['location'];
+            } else {
+                $comment_div.append(json_data['rendered_text']);
+                comment_div_state($comment_div, f_path, line_no);
+                linkInlineComments($('.firstlink'), $('.comment:first-child'));
+                if ((review_status || pr_close) && !f_path && !line_no) {
+                    // Page changed a lot - reload it after closing the submitted form
+                    comment_div_state($comment_div, f_path, line_no, false);
+                    location.reload(true);
+                }
             }
         };
         ajaxPOST(AJAX_COMMENT_URL, postData, success);
