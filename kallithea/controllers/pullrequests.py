@@ -56,7 +56,8 @@ from kallithea.model.comment import ChangesetCommentsModel
 from kallithea.model.changeset_status import ChangesetStatusModel
 from kallithea.model.forms import PullRequestForm, PullRequestPostForm
 from kallithea.lib.utils2 import safe_int
-from kallithea.controllers.changeset import _ignorews_url, _context_url
+from kallithea.controllers.changeset import _ignorews_url, _context_url, \
+    create_comment
 from kallithea.controllers.compare import CompareController
 from kallithea.lib.graphmod import graph_data
 
@@ -726,16 +727,13 @@ class PullrequestsController(BaseRepoController):
         if close_pr:
             text = _('Closing.') + '\n' + text
 
-        comment = ChangesetCommentsModel().create(
-            text=text,
-            repo=c.db_repo.repo_id,
-            user=c.authuser.user_id,
-            pull_request=pull_request_id,
+        comment = create_comment(
+            text,
+            status,
+            pull_request_id=pull_request_id,
             f_path=f_path,
             line_no=line_no,
-            status_change=(ChangesetStatus.get_status_lbl(status)
-                           if status and allowed_to_change_status else None),
-            closing_pr=close_pr
+            closing_pr=close_pr,
         )
 
         action_logger(self.authuser,

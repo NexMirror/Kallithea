@@ -172,6 +172,24 @@ def _context_url(GET, fileid=None):
     return h.link_to(icon, h.url.current(**params), title=lbl, class_='tooltip')
 
 
+# Could perhaps be nice to have in the model but is too high level ...
+def create_comment(text, status, f_path, line_no, revision=None, pull_request_id=None, closing_pr=None):
+    """Comment functionality shared between changesets and pullrequests"""
+    comment = ChangesetCommentsModel().create(
+        text=text,
+        repo=c.db_repo.repo_id,
+        user=c.authuser.user_id,
+        revision=revision,
+        pull_request=pull_request_id,
+        f_path=f_path,
+        line_no=line_no,
+        status_change=ChangesetStatus.get_status_lbl(status) if status else None,
+        closing_pr=closing_pr,
+    )
+
+    return comment
+
+
 class ChangesetController(BaseRepoController):
 
     def __before__(self):
@@ -350,15 +368,12 @@ class ChangesetController(BaseRepoController):
         status = request.POST.get('changeset_status')
         text = request.POST.get('text', '').strip()
 
-        c.comment = comment = ChangesetCommentsModel().create(
-            text=text,
-            repo=c.db_repo.repo_id,
-            user=c.authuser.user_id,
+        c.comment = create_comment(
+            text,
+            status,
             revision=revision,
             f_path=request.POST.get('f_path'),
             line_no=request.POST.get('line'),
-            status_change=(ChangesetStatus.get_status_lbl(status)
-                           if status else None)
         )
 
         # get status if set !
@@ -372,7 +387,7 @@ class ChangesetController(BaseRepoController):
                     c.db_repo.repo_id,
                     status,
                     c.authuser.user_id,
-                    comment,
+                    c.comment,
                     revision=revision,
                     dont_allow_on_closed_pull_request=True
                 )
@@ -396,8 +411,8 @@ class ChangesetController(BaseRepoController):
         data = {
            'target_id': h.safeid(h.safe_unicode(request.POST.get('f_path'))),
         }
-        if comment is not None:
-            data.update(comment.get_dict())
+        if c.comment is not None:
+            data.update(c.comment.get_dict())
             data.update({'rendered_text':
                          render('changeset/changeset_comment_block.html')})
 
