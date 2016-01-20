@@ -26,8 +26,10 @@
               <a class="permalink" href="${co.url()}">&para;</a>
           </span>
 
-          %if h.HasPermissionAny('hg.admin')() or h.HasRepoPermissionAny('repository.admin')(c.repo_name) or co.author.user_id == c.authuser.user_id:
-            <div onClick="confirm('${_("Delete comment?")}') && deleteComment(${co.comment_id})" class="buttons delete-comment btn btn-mini">${_('Delete')}</div>
+          %if co.author.user_id == c.authuser.user_id or h.HasRepoPermissionAny('repository.admin')(c.repo_name):
+            %if co.deletable():
+              <div onClick="confirm('${_("Delete comment?")}') && deleteComment(${co.comment_id})" class="buttons delete-comment btn btn-mini" style="margin:0 5px">${_('Delete')}</div>
+            %endif
           %endif
       </div>
       <div class="text">

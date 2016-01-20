@@ -2197,6 +2197,10 @@ class ChangesetComment(Base, BaseModel):
         elif self.pull_request_id is not None:
             return self.pull_request.url(anchor=anchor)
 
+    def deletable(self):
+        return self.created_on > datetime.datetime.now() - datetime.timedelta(minutes=5)
+
+
 class ChangesetStatus(Base, BaseModel):
     __tablename__ = 'changeset_statuses'
     __table_args__ = (
