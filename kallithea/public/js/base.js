@@ -622,9 +622,13 @@ function move_comments($anchorcomments) {
         var line_no = $anchorcomment.data('line_no');
         if ($comment_div[0]) {
             $comment_div.append($anchorcomment.children());
-            _comment_div_append_add($comment_div, f_path, line_no);
+            if (f_path && line_no) {
+                _comment_div_append_add($comment_div, f_path, line_no);
+            } else {
+                _comment_div_append_form($comment_div, f_path, line_no);
+            }
         } else {
-           $anchorcomment.before("Comment to {0} line {1} which is outside the diff context:".format(f_path || '?', line_no || '?'));
+            $anchorcomment.before("Comment to {0} line {1} which is outside the diff context:".format(f_path || '?', line_no || '?'));
         }
     });
     linkInlineComments($('.firstlink'), $('.comment:first-child'));
@@ -653,36 +657,31 @@ function _get_add_comment_div(target_id) {
     return $comments_box;
 }
 
-// set $comment_div state - showing or not showing form and Add button
-function comment_div_state($comment_div, f_path, line_no, show_form) {
+// Set $comment_div state - showing or not showing form and Add button.
+// An Add button is shown on non-empty forms when no form is shown.
+// The form is controlled by show_form - if undefined, form is only shown for general comments.
+function comment_div_state($comment_div, f_path, line_no, show_form_opt) {
+    var show_form = show_form_opt !== undefined ? show_form_opt : !f_path && !line_no;
     var $forms = $comment_div.children('.comment-inline-form');
     var $buttonrow = $comment_div.children('.add-button-row');
     var $comments = $comment_div.children('.comment');
-    if (show_form) {
-        if (!$forms.length) {
-            _comment_div_append_form($comment_div, f_path, line_no);
-        }
-    } else {
-        $forms.remove();
-    }
+    $forms.remove();
     $buttonrow.remove();
-    if ($comments.length && !show_form) {
+    if (show_form) {
+        _comment_div_append_form($comment_div, f_path, line_no);
+    } else if ($comments.length) {
         _comment_div_append_add($comment_div, f_path, line_no);
     }
 }
 
 // append an Add button to $comment_div and hook it up to show form
 function _comment_div_append_add($comment_div, f_path, line_no) {
-    if (f_path && line_no) {
-        var addlabel = TRANSLATION_MAP['Add Another Comment'];
-        var $add = $('<div class="add-button-row"><span class="btn btn-mini add-button">{0}</span></div>'.format(addlabel));
-        $comment_div.append($add);
-        $add.children('.add-button').click(function(e) {
-            comment_div_state($comment_div, f_path, line_no, true);
-        });
-    } else {
+    var addlabel = TRANSLATION_MAP['Add Another Comment'];
+    var $add = $('<div class="add-button-row"><span class="btn btn-mini add-button">{0}</span></div>'.format(addlabel));
+    $comment_div.append($add);
+    $add.children('.add-button').click(function(e) {
         comment_div_state($comment_div, f_path, line_no, true);
-    }
+    });
 }
 
 // append a comment form to $comment_div
@@ -718,15 +717,20 @@ function _comment_div_append_form($comment_div, f_path, line_no) {
         };
         var success = function(json_data) {
             $comment_div.append(json_data['rendered_text']);
-            comment_div_state($comment_div, f_path, line_no, false);
+            comment_div_state($comment_div, f_path, line_no);
             linkInlineComments($('.firstlink'), $('.comment:first-child'));
+            if ((review_status || pr_close) && !f_path && !line_no) {
+                // Page changed a lot - reload it after closing the submitted form
+                comment_div_state($comment_div, f_path, line_no, false);
+                location.reload(true);
+            }
         };
         ajaxPOST(AJAX_COMMENT_URL, postData, success);
     });
 
     // create event for hide button
     $form.find('.hide-inline-form').click(function(e) {
-        comment_div_state($comment_div, f_path, line_no, false);
+        comment_div_state($comment_div, f_path, line_no);
     });
 
     setTimeout(function() {
