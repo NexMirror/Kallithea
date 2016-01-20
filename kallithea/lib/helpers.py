@@ -1235,14 +1235,16 @@ def fancy_file_stats(stats):
     return literal('<div style="width:%spx">%s%s</div>' % (width, d_a, d_d))
 
 
+def _urlify_text_replace(match_obj):
+    url_full = match_obj.group(1)
+    return '<a href="%(url)s">%(url)s</a>' % {'url': url_full}
+
+
 def _urlify_text(s):
     """
     Extract urls from text and make html links out of them
     """
-    def url_func(match_obj):
-        url_full = match_obj.group(1)
-        return '<a href="%(url)s">%(url)s</a>' % ({'url': url_full})
-    return url_re.sub(url_func, s)
+    return url_re.sub(_urlify_text_replace, s)
 
 def urlify_text(s, truncate=None, stylize=False, truncatef=truncate):
     """
@@ -1256,6 +1258,20 @@ def urlify_text(s, truncate=None, stylize=False, truncatef=truncate):
     s = _urlify_text(s)
     return literal(s)
 
+
+def _urlify_changeset_replace_f(repository):
+    from pylons import url  # doh, we need to re-import url to mock it later
+    def urlify_changeset_replace(match_obj):
+        rev = match_obj.group(0)
+        return '<a class="revision-link" href="%(url)s">%(rev)s</a>' % {
+         'url': url('changeset_home', repo_name=repository, revision=rev),
+         'rev': rev,
+        }
+    return urlify_changeset_replace
+
+
+urilify_changeset_re = r'(?:^|(?<=[\s(),]))([0-9a-fA-F]{12,40})(?=$|\s|[.,:()])'
+
 def urlify_changesets(text_, repository):
     """
     Extract revision ids from changeset and make link from them
@@ -1263,18 +1279,12 @@ def urlify_changesets(text_, repository):
     :param text_:
     :param repository: repo name to build the URL with
     """
-    from pylons import url  # doh, we need to re-import url to mock it later
+    urlify_changeset_replace = _urlify_changeset_replace_f(repository)
+    return re.sub(urilify_changeset_re, urlify_changeset_replace, text_)
 
-    def url_func(match_obj):
-        rev = match_obj.group(0)
-        return '<a class="revision-link" href="%(url)s">%(rev)s</a>' % {
-         'url': url('changeset_home', repo_name=repository, revision=rev),
-         'rev': rev,
-        }
-
-    return re.sub(r'(?:^|(?<=[\s(),]))([0-9a-fA-F]{12,40})(?=$|\s|[.,:()])', url_func, text_)
 
 def linkify_others(t, l):
+    # attempt at fixing double quoting?
     urls = re.compile(r'(\<a.*?\<\/a\>)',)
     links = []
     for e in urls.split(t):
@@ -1307,6 +1317,35 @@ def urlify_commit(text_, repository, link_=None):
 
     return literal(newtext)
 
+
+def _urlify_issues_replace_f(repository, ISSUE_SERVER_LNK, ISSUE_PREFIX):
+    def urlify_issues_replace(match_obj):
+        pref = ''
+        if match_obj.group().startswith(' '):
+            pref = ' '
+
+        issue_id = ''.join(match_obj.groups())
+        issue_url = ISSUE_SERVER_LNK.replace('{id}', issue_id)
+        if repository:
+            issue_url = issue_url.replace('{repo}', repository)
+            repo_name = repository.split(URL_SEP)[-1]
+            issue_url = issue_url.replace('{repo_name}', repo_name)
+
+        return (
+            '%(pref)s<a class="%(cls)s" href="%(url)s">'
+            '%(issue-prefix)s%(id-repr)s'
+            '</a>'
+            ) % {
+             'pref': pref,
+             'cls': 'issue-tracker-link',
+             'url': issue_url,
+             'id-repr': issue_id,
+             'issue-prefix': ISSUE_PREFIX,
+             'serv': ISSUE_SERVER_LNK,
+            }
+    return urlify_issues_replace
+
+
 def urlify_issues(newtext, repository, link_=None):
     from kallithea import CONFIG as conf
 
@@ -1329,35 +1368,12 @@ def urlify_issues(newtext, repository, link_=None):
 
         log.debug('pattern suffix `%s` PAT:%s SERVER_LINK:%s PREFIX:%s',
                   pattern_index, ISSUE_PATTERN, ISSUE_SERVER_LNK,
-                     ISSUE_PREFIX)
+                  ISSUE_PREFIX)
 
         URL_PAT = re.compile(ISSUE_PATTERN)
 
-        def url_func(match_obj):
-            pref = ''
-            if match_obj.group().startswith(' '):
-                pref = ' '
-
-            issue_id = ''.join(match_obj.groups())
-            issue_url = ISSUE_SERVER_LNK.replace('{id}', issue_id)
-            if repository:
-                issue_url = issue_url.replace('{repo}', repository)
-                repo_name = repository.split(URL_SEP)[-1]
-                issue_url = issue_url.replace('{repo_name}', repo_name)
-
-            return (
-                '%(pref)s<a class="%(cls)s" href="%(url)s">'
-                '%(issue-prefix)s%(id-repr)s'
-                '</a>'
-                ) % {
-                 'pref': pref,
-                 'cls': 'issue-tracker-link',
-                 'url': issue_url,
-                 'id-repr': issue_id,
-                 'issue-prefix': ISSUE_PREFIX,
-                 'serv': ISSUE_SERVER_LNK,
-                }
-        newtext = URL_PAT.sub(url_func, newtext)
+        urlify_issues_replace = _urlify_issues_replace_f(repository, ISSUE_SERVER_LNK, ISSUE_PREFIX)
+        newtext = URL_PAT.sub(urlify_issues_replace, newtext)
         log.debug('processed prefix:`%s` => %s', pattern_index, newtext)
 
     # if we actually did something above
