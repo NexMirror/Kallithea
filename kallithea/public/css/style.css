@@ -4139,8 +4139,7 @@ div.rst-block pre {
 }
 
 .comments-number {
-    margin: 5px;
-    padding: 0px 0px 10px 0px;
+    padding: 0px 20px 10px;
     font-weight: bold;
     color: #666;
     font-size: 16px;

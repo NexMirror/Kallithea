@@ -126,7 +126,8 @@
 
 ## generate inline comments and the main ones
 <%def name="generate_comments()">
-<div class="comments">
+## original location of comments ... but the ones outside diff context remains here
+<div class="comments inline-comments">
   %for f_path, lines in c.inline_comments:
     %for line_no, comments in lines.iteritems():
       <div class="comments-list-chunk" data-f_path="${f_path}" data-line_no="${line_no}" data-target-id="${h.safeid(h.safe_unicode(f_path))}_${line_no}">
@@ -137,15 +138,14 @@
     %endfor
   %endfor
 
-  <div class="comments-number">
-    ${comment_count(c.inline_cnt, len(c.comments))}
-  </div>
-
       <div class="comments-list-chunk" data-f_path="" data-line_no="" data-target-id="general-comments">
         %for co in c.comments:
             ${comment_block(co)}
         %endfor
       </div>
+</div>
+<div class="comments-number">
+    ${comment_count(c.inline_cnt, len(c.comments))}
 </div>
 </%def>
 
