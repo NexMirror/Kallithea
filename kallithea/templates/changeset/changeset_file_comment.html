@@ -48,24 +48,20 @@
 </%def>
 
 
-## expanded with .format(f_path, line_no)
-## TODO: don't assume line_no is globally unique ...
 <%def name="comment_inline_form()">
 <div id='comment-inline-form-template' style="display:none">
   <div class="ac">
   %if c.authuser.username != 'default':
     ${h.form('#', class_='inline-form')}
       <div class="clearfix">
-        <div class="comment-help">${_('Commenting on line {1}.')}
+        <div class="comment-help">${_('Commenting on line.')}
           <span style="color:#577632" class="tooltip">${_('Comments are in plain text. Use @username inside this text to notify another user.')|n}</span>
         </div>
-        <div class="mentions-container" id="mentions_container_{1}"></div>
-        <textarea id="text_{1}" name="text" class="comment-block-ta yui-ac-input"></textarea>
+        <div class="mentions-container"></div>
+        <textarea name="text" class="comment-block-ta yui-ac-input"></textarea>
       </div>
       <div class="comment-button">
         <div class="submitting-overlay">${_('Submitting ...')}</div>
-        <input type="hidden" name="f_path" value="{0}">
-        <input type="hidden" name="line" value="{1}">
         ${h.submit('save', _('Comment'), class_='btn btn-small save-inline-form')}
         ${h.reset('hide-inline-form', _('Cancel'), class_='btn btn-small hide-inline-form')}
       </div>

@@ -683,15 +683,18 @@ function _comment_div_append_add($comment_div, f_path, line_no) {
 
 // append a comment form to $comment_div
 function _comment_div_append_form($comment_div, f_path, line_no) {
-    var $form_div = $($('#comment-inline-form-template').html().format(f_path, line_no))
+    var $form_div = $('#comment-inline-form-template').children()
+        .clone()
         .addClass('comment-inline-form');
     $comment_div.append($form_div);
     var $form = $comment_div.find("form");
+    var $textarea = $form.find('textarea');
+    var $mentions_container = $form.find('div.mentions-container');
 
     $form.submit(function(e) {
         e.preventDefault();
 
-        var text = $('#text_'+line_no).val();
+        var text = $textarea.val();
         if (!text){
             return;
         }
@@ -719,9 +722,8 @@ function _comment_div_append_form($comment_div, f_path, line_no) {
     setTimeout(function() {
         // callbacks
         tooltip_activate();
-        MentionsAutoComplete($('#text_'+line_no), $('#mentions_container_'+line_no),
-                             _USERS_AC_DATA);
-        $('#text_'+line_no).focus();
+        MentionsAutoComplete($textarea, $mentions_container, _USERS_AC_DATA);
+        $textarea.focus();
     }, 10);
 }
 
