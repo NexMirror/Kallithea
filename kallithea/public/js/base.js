@@ -711,32 +711,6 @@ function _comment_div_append_form($comment_div, f_path, line_no) {
         ajaxPOST(AJAX_COMMENT_URL, postData, success);
     });
 
-    $('#preview-btn_'+line_no).click(function(e){
-        var text = $('#text_'+line_no).val();
-        if(!text){
-            return
-        }
-        $('#preview-box_'+line_no).addClass('unloaded');
-        $('#preview-box_'+line_no).html(_TM['Loading ...']);
-        $('#edit-container_'+line_no).hide();
-        $('#edit-btn_'+line_no).show();
-        $('#preview-container_'+line_no).show();
-        $('#preview-btn_'+line_no).hide();
-
-        var url = pyroutes.url('changeset_comment_preview', {'repo_name': REPO_NAME});
-        var post_data = {'text': text};
-        ajaxPOST(url, post_data, function(html) {
-            $('#preview-box_'+line_no).html(html);
-            $('#preview-box_'+line_no).removeClass('unloaded');
-        })
-    })
-    $('#edit-btn_'+line_no).click(function(e) {
-        $('#edit-container_'+line_no).show();
-        $('#edit-btn_'+line_no).hide();
-        $('#preview-container_'+line_no).hide();
-        $('#preview-btn_'+line_no).show();
-    })
-
     // create event for hide button
     $form.find('.hide-inline-form').click(function(e) {
         comment_div_state($comment_div, f_path, line_no, false);

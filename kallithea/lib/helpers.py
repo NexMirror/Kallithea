@@ -1383,21 +1383,6 @@ def urlify_issues(newtext, repository, link_=None):
     return newtext
 
 
-def rst(source):
-    return literal('<div class="rst-block">%s</div>' %
-                   MarkupRenderer.rst(source))
-
-
-def rst_w_mentions(source):
-    """
-    Wrapped rst renderer with @mention highlighting
-
-    :param source:
-    """
-    return literal('<div class="rst-block">%s</div>' %
-                   MarkupRenderer.rst_with_mentions(source))
-
-
 def _mentions_replace(match_obj):
     return '<b>@%s</b>' % match_obj.group(1)
 

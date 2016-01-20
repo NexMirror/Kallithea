@@ -4188,19 +4188,6 @@ form.comment-form {
     padding: 5px 5px 5px 5px;
     color: #666;
 }
-.comment-form .comment-help .preview-btn,
-.comment-form .comment-help .edit-btn {
-    float: right;
-    margin: -6px 0px 0px 0px;
-}
-
-.comment-form .preview-box.unloaded,
-.comment-inline-form .preview-box.unloaded {
-    height: 50px;
-    text-align: center;
-    padding: 20px;
-    background-color: #fafafa;
-}
 
 .comment-form .comment-button {
     padding-top: 5px;
@@ -4216,7 +4203,6 @@ form.comment-form {
     float: right;
     margin: -1px 0px 0px 0px;
 }
-
 
 .show-inline-comments {
     position: relative;
@@ -4275,12 +4261,6 @@ form.comment-inline-form {
 .comment-inline-form .comment-help {
     padding: 5px 5px 5px 5px;
     color: #666;
-}
-
-.comment-inline-form .comment-help .preview-btn,
-.comment-inline-form .comment-help .edit-btn {
-    float: right;
-    margin: -6px 0px 0px 0px;
 }
 
 .comment-inline-form .comment-button {

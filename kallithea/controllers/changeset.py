@@ -407,18 +407,6 @@ class ChangesetController(BaseRepoController):
     @NotAnonymous()
     @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
                                    'repository.admin')
-    def preview_comment(self):
-        if not request.environ.get('HTTP_X_PARTIAL_XHR'):
-            raise HTTPBadRequest()
-        text = request.POST.get('text')
-        if text:
-            return h.render_w_mentions(text)
-        return ''
-
-    @LoginRequired()
-    @NotAnonymous()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
     @jsonify
     def delete_comment(self, repo_name, comment_id):
         co = ChangesetComment.get(comment_id)

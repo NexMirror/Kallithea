@@ -55,18 +55,12 @@
   <div class="ac">
   %if c.authuser.username != 'default':
     ${h.form('#', class_='inline-form')}
-      <div id="edit-container_{1}" class="clearfix">
+      <div class="clearfix">
         <div class="comment-help">${_('Commenting on line {1}.')}
           <span style="color:#577632" class="tooltip">${_('Comments are in plain text. Use @username inside this text to notify another user.')|n}</span>
         </div>
         <div class="mentions-container" id="mentions_container_{1}"></div>
         <textarea id="text_{1}" name="text" class="comment-block-ta yui-ac-input"></textarea>
-      </div>
-      <div id="preview-container_{1}" class="clearfix" style="display:none">
-        <div class="comment-help">
-            ${_('Comment preview')}
-        </div>
-        <div id="preview-box_{1}" class="preview-box"></div>
       </div>
       <div class="comment-button">
         <div class="submitting-overlay">${_('Submitting ...')}</div>
@@ -74,8 +68,6 @@
         <input type="hidden" name="line" value="{1}">
         ${h.submit('save', _('Comment'), class_='btn btn-small save-inline-form')}
         ${h.reset('hide-inline-form', _('Cancel'), class_='btn btn-small hide-inline-form')}
-        <div id="preview-btn_{1}" class="preview-btn btn btn-small">${_('Preview')}</div>
-        <div id="edit-btn_{1}" class="edit-btn btn btn-small" style="display:none">${_('Edit')}</div>
       </div>
     ${h.end_form()}
   %else:
@@ -172,17 +164,8 @@
             %endif
         </div>
 
-        <div id="preview-container" class="clearfix" style="display:none">
-            <div class="comment-help">
-                ${_('Comment preview')}
-            </div>
-            <div id="preview-box" class="preview-box"></div>
-        </div>
-
         <div class="comment-button">
             ${h.submit('save', _('Comment'), class_="btn")}
-            <div id="preview-btn" class="preview-btn btn">${_('Preview')}</div>
-            <div id="edit-btn" class="edit-btn btn" style="display:none">${_('Edit')}</div>
         </div>
       ${h.end_form()}
     </div>
@@ -209,32 +192,6 @@ $(document).ready(function () {
       if(!$('.form-open').size()){
           $(window).off('beforeunload');
       }
-   });
-
-   $('#preview-btn').click(function(){
-       var _text = $('#text').val();
-       if(!_text){
-           return;
-       }
-       var post_data = {'text': _text};
-       $('#preview-box').addClass('unloaded');
-       $('#preview-box').html(_TM['Loading ...']);
-       $('#edit-container').hide();
-       $('#edit-btn').show();
-       $('#preview-container').show();
-       $('#preview-btn').hide();
-
-       var url = pyroutes.url('changeset_comment_preview', {'repo_name': '${c.repo_name}'});
-       ajaxPOST(url,post_data,function(html){
-           $('#preview-box').html(html);
-           $('#preview-box').removeClass('unloaded');
-       });
-   });
-   $('#edit-btn').click(function(){
-       $('#edit-container').show();
-       $('#edit-btn').hide();
-       $('#preview-container').hide();
-       $('#preview-btn').show();
    });
 
 });
