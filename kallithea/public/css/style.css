@@ -4131,9 +4131,7 @@ div.rst-block pre {
 
 .comments .comment .text {
     background-color: #FAFAFA;
-}
-.comment .text div.rst-block p {
-    margin: 0.5em 0px !important;
+    margin: 6px;
 }
 
 .comments-number {
@@ -4294,13 +4292,6 @@ form.comment-inline-form {
     padding: 0 20px;
 }
 
-.inline-comments div.rst-block {
-    clear: both;
-    overflow: hidden;
-    margin: 0;
-    padding: 0 20px 0px;
-}
-
 .inline-comments .comment .comment-wrapp {
     max-width: 978px;
     border: 1px solid #ddd;
@@ -4338,6 +4329,7 @@ form.comment-inline-form {
 
 .inline-comments .comment .text {
     background-color: #FAFAFA;
+    margin: 6px;
 }
 
 .inline-comments .comments-number {

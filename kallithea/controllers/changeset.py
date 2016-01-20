@@ -412,7 +412,7 @@ class ChangesetController(BaseRepoController):
             raise HTTPBadRequest()
         text = request.POST.get('text')
         if text:
-            return h.rst_w_mentions(text)
+            return h.render_w_mentions(text)
         return ''
 
     @LoginRequired()

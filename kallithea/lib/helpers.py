@@ -1398,7 +1398,7 @@ def rst_w_mentions(source):
                    MarkupRenderer.rst_with_mentions(source))
 
 
-def mentions_replace(match_obj):
+def _mentions_replace(match_obj):
     return '<b>@%s</b>' % match_obj.group(1)
 
 
@@ -1413,7 +1413,7 @@ def render_w_mentions(source):
     # this sequence of html-ifications seems to be safe and non-conflicting
     # if the issues regexp is sane
     s = _urlify_text(s)
-    s = MENTIONS_REGEX.sub(mentions_replace, s)
+    s = MENTIONS_REGEX.sub(_mentions_replace, s)
     return literal('<code style="white-space:pre-wrap">%s</code>' % s)
 
 

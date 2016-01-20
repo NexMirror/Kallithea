@@ -37,7 +37,7 @@
         <div class="notification-body">
         <div class="notification-subject">${h.literal(c.notification.subject)}</div>
         %if c.notification.body:
-            ${h.rst_w_mentions(c.notification.body)}
+            ${h.render_w_mentions(c.notification.body)}
         %endif
         </div>
       </div>

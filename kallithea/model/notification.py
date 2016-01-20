@@ -123,7 +123,7 @@ class NotificationModel(BaseModel):
             ## this is passed into template
             html_kwargs = {
                       'subject': subject,
-                      'body': h.rst_w_mentions(body),
+                      'body': h.render_w_mentions(body),
                       'when': h.fmt_date(notif.created_on),
                       'user': notif.created_by_user.username,
                       }

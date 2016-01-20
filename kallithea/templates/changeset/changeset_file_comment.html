@@ -32,7 +32,7 @@
       </div>
       <div class="text">
         %if co.status_change:
-           <div class="rst-block automatic-comment">
+           <div class="automatic-comment">
              <p>
                <span title="${_('Changeset status')}" class="changeset-status-lbl">${_("Status change")}: ${co.status_change[0].status_lbl}</span>
                <span class="changeset-status-ico"><i class="icon-circle changeset-status-${co.status_change[0].status}"></i></span>
@@ -40,7 +40,7 @@
            </div>
         %endif
         %if co.text:
-          ${h.rst_w_mentions(co.text)|n}
+          ${h.render_w_mentions(co.text)|n}
         %endif
       </div>
     </div>
@@ -57,12 +57,7 @@
     ${h.form('#', class_='inline-form')}
       <div id="edit-container_{1}" class="clearfix">
         <div class="comment-help">${_('Commenting on line {1}.')}
-          ${(_('Comments parsed using %s syntax with %s support.') % (
-                 ('<a href="%s">RST</a>' % h.url('rst_help')),
-                   ('<span style="color:#577632" class="tooltip" title="%s">@mention</span>' % _('Use @username inside this text to notify another user'))
-               )
-            )|n
-           }
+          <span style="color:#577632" class="tooltip">${_('Comments are in plain text. Use @username inside this text to notify another user.')|n}</span>
         </div>
         <div class="mentions-container" id="mentions_container_{1}"></div>
         <textarea id="text_{1}" name="text" class="comment-block-ta yui-ac-input"></textarea>
@@ -145,9 +140,7 @@
       ${h.form(post_url, id="main_form")}
         <div id="edit-container" class="clearfix">
             <div class="comment-help">
-                ${(_('Comments parsed using %s syntax with %s support.') % (('<a href="%s">RST</a>' % h.url('rst_help')),
-                  '<span style="color:#577632" class="tooltip" title="%s">@mention</span>' %
-                  _('Use @username inside this text to notify another user.')))|n}
+              <span style="color:#577632" class="tooltip">${_('Comments are in plain text. Use @username inside this text to send notification to another local user.')|n}</span>
             </div>
             <div class="mentions-container" id="mentions_container"></div>
             ${h.textarea('text', class_="comment-block-ta")}
