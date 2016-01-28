@@ -33,7 +33,7 @@ from kallithea.model.repo_group import RepoGroupModel
 from kallithea.model.meta import Session
 from kallithea.model.scm import ScmModel
 from kallithea.model.gist import GistModel
-from kallithea.model.db import Repository, User, Setting
+from kallithea.model.db import Repository, User, Setting, Ui
 from kallithea.lib.utils2 import time_to_datetime
 
 
@@ -280,7 +280,7 @@ class _BaseTestApi(object):
     def test_api_pull(self):
         repo_name = u'test_pull'
         r = fixture.create_repo(repo_name, repo_type=self.REPO_TYPE)
-        r.clone_uri = os.path.join(TESTS_TMP_PATH, self.REPO)
+        r.clone_uri = os.path.join(Ui.get_by_key('paths', '/').ui_value, self.REPO)
         Session.add(r)
         Session.commit()
 

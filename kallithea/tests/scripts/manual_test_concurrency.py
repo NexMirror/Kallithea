@@ -42,10 +42,10 @@ from sqlalchemy import engine_from_config
 from kallithea.lib.utils import add_cache
 from kallithea.model import init_model
 from kallithea.model import meta
-from kallithea.model.db import User, Repository
+from kallithea.model.db import User, Repository, Ui
 from kallithea.lib.auth import get_crypt_password
 
-from kallithea.tests import TESTS_TMP_PATH, HG_REPO
+from kallithea.tests import HG_REPO
 from kallithea.config.environment import load_environment
 
 rel_path = dn(dn(dn(dn(os.path.abspath(__file__)))))
@@ -161,7 +161,7 @@ def get_anonymous_access():
 #==============================================================================
 def test_clone_with_credentials(no_errors=False, repo=HG_REPO, method=METHOD,
                                 seq=None, backend='hg'):
-    cwd = path = jn(TESTS_TMP_PATH, repo)
+    cwd = path = jn(Ui.get_by_key('paths', '/').ui_value, repo)
 
     if seq is None:
         seq = _RandomNameSequence().next()

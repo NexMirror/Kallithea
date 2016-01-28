@@ -7,7 +7,7 @@ import urllib
 from kallithea.lib import vcs
 from kallithea.lib.utils2 import safe_str, safe_unicode
 from kallithea.model.db import Repository, RepoGroup, UserRepoToPerm, User, \
-    Permission
+    Permission, Ui
 from kallithea.model.user import UserModel
 from kallithea.tests import *
 from kallithea.model.repo_group import RepoGroupModel
@@ -80,7 +80,7 @@ class _BaseTest(object):
 
         # test if the repository was created on filesystem
         try:
-            vcs.get_repo(safe_str(os.path.join(TESTS_TMP_PATH, repo_name)))
+            vcs.get_repo(safe_str(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name)))
         except vcs.exceptions.VCSError:
             pytest.fail('no repo %s in filesystem' % repo_name)
 
@@ -132,7 +132,7 @@ class _BaseTest(object):
 
         # test if the repository was created on filesystem
         try:
-            vcs.get_repo(safe_str(os.path.join(TESTS_TMP_PATH, repo_name_full)))
+            vcs.get_repo(safe_str(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name_full)))
         except vcs.exceptions.VCSError:
             RepoGroupModel().delete(group_name)
             Session().commit()
@@ -224,7 +224,7 @@ class _BaseTest(object):
 
         # test if the repository was created on filesystem
         try:
-            vcs.get_repo(safe_str(os.path.join(TESTS_TMP_PATH, repo_name_full)))
+            vcs.get_repo(safe_str(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name_full)))
         except vcs.exceptions.VCSError:
             RepoGroupModel().delete(group_name)
             Session().commit()
@@ -281,7 +281,7 @@ class _BaseTest(object):
 
         # test if the repository was created on filesystem
         try:
-            vcs.get_repo(safe_str(os.path.join(TESTS_TMP_PATH, repo_name_full)))
+            vcs.get_repo(safe_str(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name_full)))
         except vcs.exceptions.VCSError:
             RepoGroupModel().delete(group_name)
             Session().commit()
@@ -358,7 +358,7 @@ class _BaseTest(object):
 
         # test if the repository was created on filesystem
         try:
-            vcs.get_repo(safe_str(os.path.join(TESTS_TMP_PATH, repo_name)))
+            vcs.get_repo(safe_str(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name)))
         except vcs.exceptions.VCSError:
             pytest.fail('no repo %s in filesystem' % repo_name)
 
@@ -375,7 +375,7 @@ class _BaseTest(object):
 
         self.assertEqual(deleted_repo, None)
 
-        self.assertEqual(os.path.isdir(os.path.join(TESTS_TMP_PATH, repo_name)),
+        self.assertEqual(os.path.isdir(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name)),
                                   False)
 
     def test_delete_non_ascii(self):
@@ -411,7 +411,7 @@ class _BaseTest(object):
 
         # test if the repository was created on filesystem
         try:
-            vcs.get_repo(safe_str(os.path.join(TESTS_TMP_PATH, repo_name)))
+            vcs.get_repo(safe_str(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name_unicode)))
         except vcs.exceptions.VCSError:
             pytest.fail('no repo %s in filesystem' % repo_name)
 
@@ -426,7 +426,7 @@ class _BaseTest(object):
 
         self.assertEqual(deleted_repo, None)
 
-        self.assertEqual(os.path.isdir(os.path.join(TESTS_TMP_PATH, repo_name)),
+        self.assertEqual(os.path.isdir(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name_unicode)),
                                   False)
 
     def test_delete_repo_with_group(self):
@@ -602,7 +602,7 @@ class _BaseTest(object):
         self.assertEqual(repo, None)
 
         # repo must not be in filesystem !
-        self.assertFalse(os.path.isdir(os.path.join(TESTS_TMP_PATH, repo_name)))
+        self.assertFalse(os.path.isdir(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name)))
 
 class TestAdminReposControllerGIT(TestController, _BaseTest):
     REPO = GIT_REPO
