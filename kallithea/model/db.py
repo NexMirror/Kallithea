@@ -553,6 +553,20 @@ class User(Base, BaseModel):
         return user
 
     @classmethod
+    def get_by_username_or_email(cls, username_or_email, case_insensitive=False, cache=False):
+        """
+        For anything that looks like an email address, look up by the email address (matching
+        case insensitively).
+        For anything else, try to look up by the user name.
+
+        This assumes no normal username can have '@' symbol.
+        """
+        if '@' in username_or_email:
+            return User.get_by_email(username_or_email, cache=cache)
+        else:
+            return User.get_by_username(username_or_email, case_insensitive=case_insensitive, cache=cache)
+
+    @classmethod
     def get_by_username(cls, username, case_insensitive=False, cache=False):
         if case_insensitive:
             q = cls.query().filter(func.lower(cls.username) == func.lower(username))
