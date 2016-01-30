@@ -105,7 +105,7 @@ class SimpleHg(BaseVCSController):
         # CHECK ANONYMOUS PERMISSION
         #======================================================================
         if action in ['pull', 'push']:
-            anonymous_user = self.__get_user('default')
+            anonymous_user = User.get_default_user(cache=True)
             username = anonymous_user.username
             if anonymous_user.active:
                 # ONLY check permissions if the user is activated
@@ -152,7 +152,7 @@ class SimpleHg(BaseVCSController):
                 # CHECK PERMISSIONS FOR THIS REQUEST USING GIVEN USERNAME
                 #==============================================================
                 try:
-                    user = self.__get_user(username)
+                    user = User.get_by_username_or_email(username)
                     if user is None or not user.active:
                         return HTTPForbidden()(environ, start_response)
                     username = user.username
@@ -247,9 +247,6 @@ class SimpleHg(BaseVCSController):
             raise
 
         return repo_name
-
-    def __get_user(self, username):
-        return User.get_by_username(username)
 
     def __get_action(self, environ):
         """
