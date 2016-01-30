@@ -139,8 +139,8 @@ class KallitheaAuthPluginBase(object):
         log.debug('Trying to fetch user `%s` from Kallithea database',
                   username)
         if username:
-            user = User.get_by_username(username)
-            if not user:
+            user = User.get_by_username_or_email(username)
+            if user is None:
                 log.debug('Fallback to fetch user in case insensitive mode')
                 user = User.get_by_username(username, case_insensitive=True)
         else:
@@ -395,8 +395,15 @@ def authenticate(username, password, environ=None):
         else:
             log.debug('Plugin %s accepted user `%s` for authentication',
                       module, user)
+            # The user might have tried to authenticate using their email address,
+            # then the username variable wouldn't contain a valid username.
+            # But as the plugin has accepted the user, .username field should
+            # have a valid username, so use it for authentication purposes.
+            if user is not None:
+                username = user.username
 
         log.info('Authenticating user using %s plugin', plugin.__module__)
+
         # _authenticate is a wrapper for .auth() method of plugin.
         # it checks if .auth() sends proper data. For KallitheaExternalAuthPlugin
         # it also maps users to Database and maps the attributes returned
