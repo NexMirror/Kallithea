@@ -72,6 +72,10 @@ class TestUser(BaseTestCase):
         Session().add(m)
         Session().commit()
 
+        u = User.get_by_email(email='MAIN_email@example.com')
+        self.assertEqual(usr.user_id, u.user_id)
+        self.assertEqual(usr.username, u.username)
+
         u = User.get_by_email(email='main_email@example.com')
         self.assertEqual(usr.user_id, u.user_id)
         self.assertEqual(usr.username, u.username)
@@ -81,6 +85,12 @@ class TestUser(BaseTestCase):
         self.assertEqual(usr.username, u.username)
         u = User.get_by_email(email='main_email3@example.com')
         self.assertEqual(None, u)
+
+        u = User.get_by_email(email='main_e%ail@example.com')
+        self.assertEqual(None, u)
+        u = User.get_by_email(email='main_emai_@example.com')
+        self.assertEqual(None, u)
+
 
         UserModel().delete(usr.user_id)
         Session().commit()

@@ -591,11 +591,8 @@ class User(Base, BaseModel):
         return res
 
     @classmethod
-    def get_by_email(cls, email, case_insensitive=False, cache=False):
-        if case_insensitive:
-            q = cls.query().filter(cls.email.ilike(email))
-        else:
-            q = cls.query().filter(cls.email == email)
+    def get_by_email(cls, email, cache=False):
+        q = cls.query().filter(cls.email.ilike(email))
 
         if cache:
             q = q.options(FromCache("sql_cache_short",
@@ -605,10 +602,7 @@ class User(Base, BaseModel):
         if ret is None:
             q = UserEmailMap.query()
             # try fetching in alternate email map
-            if case_insensitive:
-                q = q.filter(UserEmailMap.email.ilike(email))
-            else:
-                q = q.filter(UserEmailMap.email == email)
+            q = q.filter(UserEmailMap.email.ilike(email))
             q = q.options(joinedload(UserEmailMap.user))
             if cache:
                 q = q.options(FromCache("sql_cache_short",
@@ -628,7 +622,7 @@ class User(Base, BaseModel):
         # Valid email in the attribute passed, see if they're in the system
         _email = email(author)
         if _email:
-            user = cls.get_by_email(_email, case_insensitive=True)
+            user = cls.get_by_email(_email)
             if user is not None:
                 return user
         # Maybe we can match by username?

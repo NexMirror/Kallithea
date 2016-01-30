@@ -719,7 +719,7 @@ def UniqSystemEmail(old_data=None):
 
         def validate_python(self, value, state):
             if (old_data.get('email') or '').lower() != value:
-                user = User.get_by_email(value, case_insensitive=True)
+                user = User.get_by_email(value)
                 if user is not None:
                     msg = M(self, 'email_taken', state)
                     raise formencode.Invalid(msg, value, state,
@@ -738,7 +738,7 @@ def ValidSystemEmail():
             return value.lower()
 
         def validate_python(self, value, state):
-            user = User.get_by_email(value, case_insensitive=True)
+            user = User.get_by_email(value)
             if user is None:
                 msg = M(self, 'non_existing_email', state, email=value)
                 raise formencode.Invalid(msg, value, state,

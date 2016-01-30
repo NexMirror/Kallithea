@@ -480,7 +480,7 @@ def is_hg(repository):
 def user_or_none(author):
     email = author_email(author)
     if email:
-        user = User.get_by_email(email, case_insensitive=True, cache=True)
+        user = User.get_by_email(email, cache=True)
         if user is not None:
             return user
     return None
