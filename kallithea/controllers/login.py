@@ -91,7 +91,7 @@ class LoginController(BaseController):
                 c.form_result = login_form.to_python(dict(request.POST))
                 # form checks for username/password, now we're authenticated
                 username = c.form_result['username']
-                user = User.get_by_username(username, case_insensitive=True)
+                user = User.get_by_username_or_email(username, case_insensitive=True)
             except formencode.Invalid as errors:
                 defaults = errors.value
                 # remove password from filling in form again

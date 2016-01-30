@@ -313,7 +313,7 @@ def ValidAuth():
             # authenticate returns unused dict but has called
             # plugin._authenticate which has create_or_update'ed the username user in db
             if auth_modules.authenticate(username, password) is None:
-                user = User.get_by_username(username)
+                user = User.get_by_username_or_email(username)
                 if user and not user.active:
                     log.warning('user %s is disabled', username)
                     msg = M(self, 'invalid_auth', state)

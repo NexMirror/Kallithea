@@ -50,6 +50,17 @@ class TestLoginController(TestController):
         response = response.follow()
         response.mustcontain('/%s' % HG_REPO)
 
+    def test_login_regular_email_ok(self):
+        response = self.app.post(url(controller='login', action='index'),
+                                 {'username': TEST_USER_REGULAR_EMAIL,
+                                  'password': TEST_USER_REGULAR_PASS})
+
+        self.assertEqual(response.status, '302 Found')
+        self.assert_authenticated_user(response, TEST_USER_REGULAR_LOGIN)
+
+        response = response.follow()
+        response.mustcontain('/%s' % HG_REPO)
+
     def test_login_ok_came_from(self):
         test_came_from = '/_admin/users'
         response = self.app.post(url(controller='login', action='index',
