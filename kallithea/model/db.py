@@ -555,7 +555,7 @@ class User(Base, BaseModel):
     @classmethod
     def get_by_username(cls, username, case_insensitive=False, cache=False):
         if case_insensitive:
-            q = cls.query().filter(cls.username.ilike(username))
+            q = cls.query().filter(func.lower(cls.username) == func.lower(username))
         else:
             q = cls.query().filter(cls.username == username)
 
@@ -592,7 +592,7 @@ class User(Base, BaseModel):
 
     @classmethod
     def get_by_email(cls, email, cache=False):
-        q = cls.query().filter(cls.email.ilike(email))
+        q = cls.query().filter(func.lower(cls.email) == func.lower(email))
 
         if cache:
             q = q.options(FromCache("sql_cache_short",
@@ -602,7 +602,7 @@ class User(Base, BaseModel):
         if ret is None:
             q = UserEmailMap.query()
             # try fetching in alternate email map
-            q = q.filter(UserEmailMap.email.ilike(email))
+            q = q.filter(func.lower(UserEmailMap.email) == func.lower(email))
             q = q.options(joinedload(UserEmailMap.user))
             if cache:
                 q = q.options(FromCache("sql_cache_short",
@@ -851,7 +851,7 @@ class UserGroup(Base, BaseModel):
     def get_by_group_name(cls, group_name, cache=False,
                           case_insensitive=False):
         if case_insensitive:
-            q = cls.query().filter(cls.users_group_name.ilike(group_name))
+            q = cls.query().filter(func.lower(cls.users_group_name) == func.lower(group_name))
         else:
             q = cls.query().filter(cls.users_group_name == group_name)
         if cache:
@@ -1520,7 +1520,7 @@ class RepoGroup(Base, BaseModel):
     def get_by_group_name(cls, group_name, cache=False, case_insensitive=False):
         if case_insensitive:
             gr = cls.query() \
-                .filter(cls.group_name.ilike(group_name))
+                .filter(func.lower(cls.group_name) == func.lower(group_name))
         else:
             gr = cls.query() \
                 .filter(cls.group_name == group_name)
