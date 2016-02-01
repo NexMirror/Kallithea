@@ -950,7 +950,7 @@ tbody .yui-dt-editable { cursor: pointer }
 }
 
 #content div.box div.message {
-    clear: both;
+    float: left;
     overflow: hidden;
     margin: 0;
     padding: 5px 0;

@@ -197,7 +197,16 @@ ${self.repo_context_bar('showpullrequest')}
                         </td>
                         <td style="width: 120px"><span class="tooltip" title="${h.age(cs.date)}">${cs.date}</span></td>
                         <td>${h.link_to(h.show_id(cs),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}</td>
-                        <td><div class="message" style="white-space:normal; height:1.1em; max-width: 500px; padding:0">${h.urlify_commit(cs.message, c.repo_name)}</div></td>
+                        <td>
+                          <div style="float: right; margin-top: -4px;">
+                            %for tag in cs.tags:
+                              <div class="tagtag" title="${_('Tag %s') % tag}">
+                                ${h.link_to(tag,h.url('changeset_home',repo_name=c.repo_name,revision=cs.raw_id))}
+                              </div>
+                            %endfor
+                          </div>
+                          <div class="message" style="white-space:normal; height:1.1em; max-width: 500px; padding:0">${h.urlify_commit(cs.message, c.repo_name)}</div>
+                        </td>
                       %endif
                     </tr>
                   %endfor

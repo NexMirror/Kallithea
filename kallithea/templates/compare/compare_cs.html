@@ -63,7 +63,16 @@
         <td class="expand_commit" commit_id="${cs.raw_id}" title="${_('Expand commit message')}">
             <i class="icon-align-left" style="color:#999"></i>
         </td>
-        <td><div id="C-${cs.raw_id}" class="message">${h.urlify_commit(cs.message, c.repo_name)}</div></td>
+        <td>
+            <div style="float: right; margin-top: -4px;">
+                %for tag in cs.tags:
+                    <div class="tagtag" title="${_('Tag %s') % tag}">
+                        ${h.link_to(tag,h.url('changeset_home',repo_name=c.repo_name,revision=cs.raw_id))}
+                    </div>
+                %endfor
+            </div>
+            <div id="C-${cs.raw_id}" class="message">${h.urlify_commit(cs.message, c.repo_name)}</div>
+        </td>
         </tr>
     %endfor
     </table>
