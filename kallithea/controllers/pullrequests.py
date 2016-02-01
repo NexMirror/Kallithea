@@ -609,7 +609,7 @@ class PullrequestsController(BaseRepoController):
                                                            other_scm_instance.path)
                     else:
                         hgrepo = org_scm_instance._repo
-                    show = set(hgrepo.revs('::%ld & !::%s & !::%s',
+                    show = set(hgrepo.revs('::%ld & !::parents(%s) & !::%s',
                                            avail_revs, revs[0], targethead))
                     c.update_msg = _('This pull request can be updated with changes on %s:') % c.cs_branch_name
                 else:
