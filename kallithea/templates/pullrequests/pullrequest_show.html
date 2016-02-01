@@ -188,13 +188,14 @@ ${self.repo_context_bar('showpullrequest')}
                             ${h.radio(name='updaterev', value='', checked=True)}
                           %endif
                         </td>
-                        <td colspan="2">${_("Current revision - no change")}</td>
+                        <td colspan="4">${_("Current revision - no change")}</td>
                       %else:
                         <td>
                           %if editable and cs.revision in c.avail_revs:
                             ${h.radio(name='updaterev', value=cs.raw_id)}
                           %endif
                         </td>
+                        <td style="width: 120px"><span class="tooltip" title="${h.age(cs.date)}">${cs.date}</span></td>
                         <td>${h.link_to(h.show_id(cs),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}</td>
                         <td><div class="message" style="white-space:normal; height:1.1em; max-width: 500px; padding:0">${h.urlify_commit(cs.message, c.repo_name)}</div></td>
                       %endif
