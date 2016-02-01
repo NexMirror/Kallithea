@@ -212,6 +212,17 @@ div.rst-block pre,
     display: block !important;
 }
 
+/* Bootstrap compatible */
+.show {
+    display: block !important;
+}
+.hidden {
+    display: none !important;
+}
+.invisible {
+    visibility: hidden;
+}
+
 .truncate {
        white-space: nowrap;
        overflow: hidden;
@@ -524,10 +535,6 @@ td.quick_repo_menu .menu_items a:hover {
 
 td.quick_repo_menu .menu_items .icon img {
     margin-bottom: -2px;
-}
-
-td.quick_repo_menu .menu_items.hidden {
-    display: none;
 }
 
 .dt_repo {
@@ -3444,10 +3451,6 @@ label.disabled {
     color: #aaa;
 }
 
-.btn.blue.hidden {
-    display: none;
-}
-
 .btn.active {
     font-weight: bold;
 }
@@ -4522,11 +4525,6 @@ span.pr-closed-tag {
 }
 .diff-container {
 
-}
-
-.diff-container.hidden {
-    display: none;
-    overflow: hidden;
 }
 
 .compare-revision-selector {
