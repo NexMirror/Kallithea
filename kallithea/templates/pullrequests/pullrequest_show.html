@@ -202,6 +202,7 @@ ${self.repo_context_bar('showpullrequest')}
                   %endfor
                 </table>
               </div>
+              <div class="msg-div">${_("Pull requests do not change once created. Select a revision and save to replace this pull request with a new one.")}</div>
               %endif
               <div class="msg-div">${c.update_msg_other}</div>
             </div>
@@ -282,7 +283,7 @@ ${self.repo_context_bar('showpullrequest')}
         %if editable:
           <div class="buttons">
             ${h.submit('pr-form-save',_('Save Changes'),class_="btn btn-small")}
-            ${h.submit('pr-form-clone',_('Save as New Pull Request'),class_="btn btn-small",disabled='disabled')}
+            ${h.submit('pr-form-clone',_('Save Updates as New Pull Request'),class_="btn btn-small",disabled='disabled')}
             ${h.reset('pr-form-reset',_('Cancel Changes'),class_="btn btn-small")}
           </div>
         %endif
