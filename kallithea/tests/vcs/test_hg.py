@@ -3,6 +3,7 @@ import os
 
 import pytest
 
+import tempfile
 from kallithea.lib.utils2 import safe_str
 from kallithea.lib.vcs.backends.hg import MercurialRepository, MercurialChangeset
 from kallithea.lib.vcs.exceptions import RepositoryError, VCSError, NodeDoesNotExistError
@@ -31,7 +32,7 @@ class MercurialRepositoryTest(unittest.TestCase):
         self.repo = MercurialRepository(safe_str(TEST_HG_REPO))
 
     def test_wrong_repo_path(self):
-        wrong_repo_path = '/tmp/errorrepo'
+        wrong_repo_path = os.path.join(tempfile.gettempdir(), 'errorrepo')
         self.assertRaises(RepositoryError, MercurialRepository, wrong_repo_path)
 
     def test_unicode_path_repo(self):

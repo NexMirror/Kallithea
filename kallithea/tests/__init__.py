@@ -80,7 +80,7 @@ environ = {}
 
 #SOME GLOBALS FOR TESTS
 
-TESTS_TMP_PATH = jn('/', 'tmp', 'rc_test_%s' % _RandomNameSequence().next())
+TESTS_TMP_PATH = jn(tempfile.gettempdir(), 'rc_test_%s' % _RandomNameSequence().next())
 TEST_USER_ADMIN_LOGIN = 'test_admin'
 TEST_USER_ADMIN_PASS = 'test12'
 TEST_USER_ADMIN_EMAIL = 'test_admin@example.com'

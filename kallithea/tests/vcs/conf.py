@@ -22,7 +22,7 @@ THIS = os.path.abspath(os.path.dirname(__file__))
 
 GIT_REMOTE_REPO = 'git://github.com/codeinn/vcs.git'
 
-TEST_TMP_PATH = os.environ.get('VCS_TEST_ROOT', '/tmp')
+TEST_TMP_PATH = os.environ.get('VCS_TEST_ROOT', tempfile.gettempdir())
 TEST_GIT_REPO = os.environ.get('VCS_TEST_GIT_REPO',
                               jn(TEST_TMP_PATH, 'vcs-git'))
 TEST_GIT_REPO_CLONE = os.environ.get('VCS_TEST_GIT_REPO_CLONE',

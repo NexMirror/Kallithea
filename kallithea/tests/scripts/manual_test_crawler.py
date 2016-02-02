@@ -37,6 +37,7 @@ import urllib2
 import time
 import os
 import sys
+import tempfile
 from os.path import join as jn
 from os.path import dirname as dn
 
@@ -69,7 +70,7 @@ PROJECTS = [
 ]
 
 
-cj = cookielib.FileCookieJar('/tmp/rc_test_cookie.txt')
+cj = cookielib.FileCookieJar(jn(tempfile.gettempdir(), 'rc_test_cookie.txt'))
 o = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
 o.addheaders = [
     ('User-agent', 'kallithea-crawler'),

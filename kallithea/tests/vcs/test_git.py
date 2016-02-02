@@ -4,6 +4,7 @@ import sys
 import mock
 import datetime
 import urllib2
+import tempfile
 
 import pytest
 
@@ -28,7 +29,7 @@ class GitRepositoryTest(unittest.TestCase):
         self.repo = GitRepository(TEST_GIT_REPO)
 
     def test_wrong_repo_path(self):
-        wrong_repo_path = '/tmp/errorrepo'
+        wrong_repo_path = os.path.join(tempfile.gettempdir(), 'errorrepo')
         self.assertRaises(RepositoryError, GitRepository, wrong_repo_path)
 
     def test_git_cmd_injection(self):
