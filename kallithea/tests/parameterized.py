@@ -10,13 +10,6 @@ from unittest import TestCase
 
 def skip_test(func):
     try:
-        from nose.tools import nottest
-    except ImportError:
-        pass
-    else:
-        func = nottest(func)
-
-    try:
         import pytest
     except ImportError:
         pass

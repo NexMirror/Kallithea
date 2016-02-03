@@ -54,6 +54,7 @@ requirements = [
     "mock",
     "URLObject==2.3.4",
     "Routes==1.13",
+    "pytest>=2.7.0,<3.0",
     "dulwich>=0.9.9,<=0.9.9",
     "mercurial>=2.9,<3.7",
 ]
@@ -147,11 +148,12 @@ setup(
     url=__url__,
     install_requires=requirements,
     classifiers=classifiers,
-    setup_requires=["PasteScript>=1.6.3"],
+    setup_requires=['PasteScript>=1.6.3',
+                    'pytest-runner'],
+    tests_require=['pytest'],
     data_files=data_files,
     packages=packages,
     include_package_data=True,
-    test_suite='nose.collector',
     package_data=package_data,
     message_extractors={'kallithea': [
             ('**.py', 'python', None),
@@ -184,8 +186,5 @@ setup(
     upgrade-db=kallithea.lib.dbmigrate:UpgradeDb
     celeryd=kallithea.lib.celerypylons.commands:CeleryDaemonCommand
     install-iis=kallithea.lib.paster_commands.install_iis:Command
-
-    [nose.plugins]
-    pylons = pylons.test:PylonsPlugin
     """,
 )
