@@ -1,3 +1,4 @@
+import mock
 import os
 from kallithea.tests import *
 
@@ -12,10 +13,15 @@ class TestSearchController(TestController):
         # Test response...
 
     def test_empty_search(self):
-        if os.path.isdir(self.index_location):
-            raise SkipTest('skipped due to existing index')
-        else:
-            self.log_user()
+        self.log_user()
+
+        config_mock = {
+            'app_conf': {
+                # can be any existing dir that does not contain an actual index
+                'index_dir': '.',
+            }
+        }
+        with mock.patch('kallithea.controllers.search.config', config_mock):
             response = self.app.get(url(controller='search', action='index'),
                                     {'q': HG_REPO})
             response.mustcontain('There is no index to search in. '
