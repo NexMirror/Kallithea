@@ -41,7 +41,7 @@ from pylons.util import ContextObj
 
 from routes.util import URLGenerator
 from webtest import TestApp
-from nose.plugins.skip import SkipTest
+import pytest
 
 from kallithea.lib.compat import unittest
 from kallithea import is_windows
@@ -57,9 +57,11 @@ if not is_windows:
 
 log = logging.getLogger(__name__)
 
+skipif = pytest.mark.skipif
+
 __all__ = [
-    'parameterized', 'environ', 'url', 'TestController',
-    'SkipTest', 'ldap_lib_installed', 'pam_lib_installed', 'BaseTestCase', 'init_stack',
+    'skipif', 'parameterized', 'environ', 'url', 'TestController',
+    'ldap_lib_installed', 'pam_lib_installed', 'BaseTestCase', 'init_stack',
     'TESTS_TMP_PATH', 'HG_REPO', 'GIT_REPO', 'NEW_HG_REPO', 'NEW_GIT_REPO',
     'HG_FORK', 'GIT_FORK', 'TEST_USER_ADMIN_LOGIN', 'TEST_USER_ADMIN_PASS',
     'TEST_USER_ADMIN_EMAIL', 'TEST_USER_REGULAR_LOGIN', 'TEST_USER_REGULAR_PASS',

@@ -21,10 +21,9 @@ class TestAuthSettingsController(TestController):
                                     action='index'))
         response.mustcontain('Authentication Plugins')
 
+    @skipif(not ldap_lib_installed, reason='skipping due to missing ldap lib')
     def test_ldap_save_settings(self):
         self.log_user()
-        if not ldap_lib_installed:
-            raise SkipTest('skipping due to missing ldap lib')
 
         params = self._enable_plugins('kallithea.lib.auth_modules.auth_internal,kallithea.lib.auth_modules.auth_ldap')
         params.update({'auth_ldap_host': u'dc.example.com',
@@ -51,10 +50,9 @@ class TestAuthSettingsController(TestController):
         self.assertEqual(new_settings['auth_ldap_host'], u'dc.example.com',
                          'fail db write compare')
 
+    @skipif(not ldap_lib_installed, reason='skipping due to missing ldap lib')
     def test_ldap_error_form_wrong_port_number(self):
         self.log_user()
-        if not ldap_lib_installed:
-            raise SkipTest('skipping due to missing ldap lib')
 
         params = self._enable_plugins('kallithea.lib.auth_modules.auth_internal,kallithea.lib.auth_modules.auth_ldap')
         params.update({'auth_ldap_host': '',
@@ -78,10 +76,9 @@ class TestAuthSettingsController(TestController):
         response.mustcontain("""<span class="error-message">"""
                              """Please enter a number</span>""")
 
+    @skipif(not ldap_lib_installed, reason='skipping due to missing ldap lib')
     def test_ldap_error_form(self):
         self.log_user()
-        if not ldap_lib_installed:
-            raise SkipTest('skipping due to missing ldap lib')
 
         params = self._enable_plugins('kallithea.lib.auth_modules.auth_internal,kallithea.lib.auth_modules.auth_ldap')
         params.update({'auth_ldap_host': 'Host',
@@ -245,11 +242,9 @@ class TestAuthSettingsController(TestController):
         self.assertEqual(new_settings['auth_crowd_host'], u'hostname',
                          'fail db write compare')
 
+    @skipif(not pam_lib_installed, reason='skipping due to missing pam lib')
     def test_pam_save_settings(self):
         self.log_user()
-
-        if not pam_lib_installed:
-            raise SkipTest('skipping due to missing pam lib')
 
         params = self._enable_plugins('kallithea.lib.auth_modules.auth_internal,kallithea.lib.auth_modules.auth_pam')
         params.update({'auth_pam_service': 'kallithea',
