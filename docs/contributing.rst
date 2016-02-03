@@ -49,7 +49,7 @@ Running tests
 -------------
 
 After finishing your changes make sure all tests pass cleanly. You can run
-the testsuite running ``nosetests`` from the project root, or if you use tox
+the testsuite running ``py.test`` from the project root, or if you use tox
 run ``tox`` for Python 2.6--2.7 with multiple database test.
 
 When running tests, Kallithea uses `kallithea/tests/test.ini` and populates the
@@ -59,17 +59,31 @@ It is possible to avoid recreating the full test database on each invocation of
 the tests, thus eliminating the initial delay. To achieve this, run the tests as::
 
     paster serve kallithea/tests/test.ini --pid-file=test.pid --daemon
-    KALLITHEA_WHOOSH_TEST_DISABLE=1 KALLITHEA_NO_TMP_PATH=1 nosetests
+    KALLITHEA_WHOOSH_TEST_DISABLE=1 KALLITHEA_NO_TMP_PATH=1 py.test
     kill -9 $(cat test.pid)
 
-You can run individual tests by specifying their path as argument to nosetests.
-nosetests also has many more options, see `nosetests -h`. Some useful options
+In these commands, the following variables are used::
+
+    KALLITHEA_WHOOSH_TEST_DISABLE=1 - skip whoosh index building and tests
+    KALLITHEA_NO_TMP_PATH=1 - disable new temp path for tests, used mostly for testing_vcs_operations
+
+You can run individual tests by specifying their path as argument to py.test.
+py.test also has many more options, see `py.test -h`. Some useful options
 are::
 
-    -x, --stop            Stop running tests after the first error or failure
-    -s, --nocapture       Don't capture stdout (any stdout output will be
-                          printed immediately) [NOSE_NOCAPTURE]
-    --failed              Run the tests that failed in the last test run.
+    -k EXPRESSION         only run tests which match the given substring
+                          expression. An expression is a python evaluatable
+                          expression where all names are substring-matched
+                          against test names and their parent classes. Example:
+    -x, --exitfirst       exit instantly on first error or failed test.
+    --lf                  rerun only the tests that failed at the last run (or
+                          all if none failed)
+    --ff                  run all tests but run the last failures first. This
+                          may re-order tests and thus lead to repeated fixture
+                          setup/teardown
+    --pdb                 start the interactive Python debugger on errors.
+    -s, --capture=no      don't capture stdout (any stdout output will be
+                          printed immediately)
 
 
 Coding/contribution guidelines

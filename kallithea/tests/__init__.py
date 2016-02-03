@@ -15,22 +15,12 @@
 """
 Pylons application test package
 
-This package assumes the Pylons environment is already loaded, such as
-when this script is imported from the `nosetests --with-pylons=test.ini`
-command.
+This package assumes the Pylons environment is already loaded.
 
 This module initializes the application via ``websetup`` (`paster
 setup-app`) and provides the base testing objects.
 
-nosetests -x - fail on first error
-nosetests kallithea.tests.functional.test_admin_settings:TestSettingsController.test_my_account
-nosetests --pdb --pdb-failures
-nosetests --with-coverage --cover-package=kallithea.model.validators kallithea.tests.test_validators
-
-optional FLAGS:
-    KALLITHEA_WHOOSH_TEST_DISABLE=1 - skip whoosh index building and tests
-    KALLITHEA_NO_TMP_PATH=1 - disable new temp path for tests, used mostly for test_vcs_operations
-
+Refer to docs/contributing.rst for details on running the test suite.
 """
 import os
 import re

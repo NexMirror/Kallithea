@@ -94,4 +94,4 @@ Edit kallithea/tests/test.ini file and set lang attribute to::
 
 Run Kallithea tests by executing::
 
-    nosetests
+    py.test
