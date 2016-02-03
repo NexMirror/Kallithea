@@ -129,9 +129,9 @@ class TestGistsController(TestController):
         self.log_user()
         response = self.app.get(url('new_gist'))
 
-    def test_update(self):
-        self.skipTest('not implemented')
-        response = self.app.put(url('gist', gist_id=1))
+    # Functionality currently not implemented
+    #def test_update(self):
+    #    response = self.app.put(url('gist', gist_id=1))
 
     def test_delete(self):
         self.log_user()
