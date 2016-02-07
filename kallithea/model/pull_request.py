@@ -149,6 +149,7 @@ class PullRequestModel(BaseModel):
             'pr_url': pr_url,
             'pr_revisions': revision_data,
             'repo_name': pr.other_repo.repo_name,
+            'org_repo_name': pr.org_repo.repo_name,
             'pr_nice_id': pr.nice_id(),
             'ref': org_ref_name,
             'pr_username': user.username,

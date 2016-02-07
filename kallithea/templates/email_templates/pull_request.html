@@ -15,7 +15,7 @@
 <p>${_('Changesets')}:</p>
 <p style="white-space: pre-wrap;">
 %for r,r_msg in pr_revisions:
-<i>${h.short_id(r)}</i>:
+<i><a href="${h.canonical_url('changeset_home', repo_name=org_repo_name, revision=r)}">${h.short_id(r)}</a></i>:
 ${h.shorter(r_msg, 256)}
 
 %endfor
