@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2015-09-08 10:34+0200\n"
-"PO-Revision-Date: 2015-09-08 10:56+0200\n"
-"Last-Translator: Robert Rauch <mail@robertrauch.de>\n"
+"PO-Revision-Date: 2016-02-08 22:22+0000\n"
+"Last-Translator: Andrew Shadura <andrew@shadura.me>\n"
 "Language-Team: German "
 "<https://hosted.weblate.org/projects/kallithea/kallithea/de/>\n"
 "Language: de\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2.4-dev\n"
+"X-Generator: Weblate 2.5-dev\n"
 
 #: kallithea/controllers/changelog.py:86
 #: kallithea/controllers/pullrequests.py:241 kallithea/lib/base.py:512
@@ -309,15 +309,15 @@ msgstr "Sie haben sich erfolgreich bei Kallithea registriert"
 
 #: kallithea/controllers/login.py:201
 msgid "Your password reset link was sent"
-msgstr "Ihr Passwort Zurücksetzen link wurde versendet"
+msgstr "Ihr Link um das Passwort zurückzusetzen wurde versendet"
 
 #: kallithea/controllers/login.py:222
 msgid ""
 "Your password reset was successful, new password has been sent to your "
 "email"
 msgstr ""
-"Das Zurücksetzen des Passworted war erfolgreich, ein neues Passwort wurde"
-" an ihre EMail Addresse gesendet"
+"Das Zurücksetzen des Passwortes war erfolgreich, ein neues Passwort wurde an "
+"ihre EMail-Addresse gesendet"
 
 #: kallithea/controllers/pullrequests.py:124
 #, python-format
@@ -336,7 +336,7 @@ msgstr "Spezial"
 
 #: kallithea/controllers/pullrequests.py:174
 msgid "Peer branches"
-msgstr ""
+msgstr "Branches anderer"
 
 #: kallithea/controllers/pullrequests.py:175 kallithea/model/scm.py:827
 #: kallithea/templates/switch_to_list.html:38
