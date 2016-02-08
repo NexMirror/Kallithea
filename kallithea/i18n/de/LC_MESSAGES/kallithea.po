@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2015-09-08 10:34+0200\n"
 "PO-Revision-Date: 2016-02-08 22:22+0000\n"
-"Last-Translator: Andrew Shadura <andrew@shadura.me>\n"
+"Last-Translator: Robert Rauch <mail@robertrauch.de>\n"
 "Language-Team: German "
 "<https://hosted.weblate.org/projects/kallithea/kallithea/de/>\n"
 "Language: de\n"
@@ -381,7 +381,7 @@ msgstr "Neue Changesets in %s %s seit dem letzten Pull Request:"
 
 #: kallithea/controllers/pullrequests.py:411
 msgid "Ancestor didn't change - show diff since previous version:"
-msgstr ""
+msgstr "Vorgänger unverändert - zeige Diff zu lezter Version:"
 
 #: kallithea/controllers/pullrequests.py:418
 #, python-format
@@ -445,7 +445,7 @@ msgstr "Git Pull Request unterstützen bisher keine Updates."
 
 #: kallithea/controllers/pullrequests.py:710
 msgid "No permission to change pull request status"
-msgstr ""
+msgstr "Keine Berechtigung zum Ändern des Pull Request Status"
 
 #: kallithea/controllers/pullrequests.py:715
 msgid "Closing."
