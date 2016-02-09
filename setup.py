@@ -56,7 +56,7 @@ requirements = [
     "Routes==1.13",
     "pytest>=2.7.0,<3.0",
     "dulwich>=0.9.9,<=0.9.9",
-    "mercurial>=2.9,<3.7",
+    "mercurial>=2.9,<3.8",
 ]
 
 if sys.version_info < (2, 7):
