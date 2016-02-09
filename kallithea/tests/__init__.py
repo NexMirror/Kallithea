@@ -143,8 +143,6 @@ try:
 except ImportError:
     pam_lib_installed = False
 
-import logging
-
 class NullHandler(logging.Handler):
     def emit(self, record):
         pass
