@@ -35,7 +35,7 @@ class TestNotifications(BaseTestCase):
         super(TestNotifications, self).__init__(methodName=methodName)
 
     def setUp(self):
-        self.remove_all_notifications()
+        remove_all_notifications()
         self.assertEqual([], Notification.query().all())
         self.assertEqual([], UserNotification.query().all())
 

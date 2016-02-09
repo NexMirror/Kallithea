@@ -11,7 +11,7 @@ class TestChangeSetCommentsController(TestController):
             Session().delete(x)
         Session().commit()
 
-        self.remove_all_notifications()
+        remove_all_notifications()
 
     def test_create(self):
         self.log_user()

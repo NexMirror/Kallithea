@@ -21,7 +21,7 @@ fixture = Fixture()
 
 class TestLoginController(TestController):
     def setUp(self):
-        self.remove_all_notifications()
+        remove_all_notifications()
         self.assertEqual(Notification.query().all(), [])
 
     def test_index(self):
