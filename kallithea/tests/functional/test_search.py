@@ -3,7 +3,7 @@ import os
 from kallithea.tests import *
 
 
-class TestSearchController(TestController):
+class TestSearchController(TestControllerPytest):
 
     def test_index(self):
         self.log_user()
@@ -12,13 +12,13 @@ class TestSearchController(TestController):
         response.mustcontain('class="small" id="q" name="q" type="text"')
         # Test response...
 
-    def test_empty_search(self):
+    def test_empty_search(self, tmpdir):
         self.log_user()
 
         config_mock = {
             'app_conf': {
                 # can be any existing dir that does not contain an actual index
-                'index_dir': '.',
+                'index_dir': str(tmpdir),
             }
         }
         with mock.patch('kallithea.controllers.search.config', config_mock):
