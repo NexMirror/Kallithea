@@ -60,7 +60,7 @@ log = logging.getLogger(__name__)
 skipif = pytest.mark.skipif
 
 __all__ = [
-    'skipif', 'parameterized', 'environ', 'url', 'TestController',
+    'skipif', 'parameterized', 'environ', 'url', 'TestController', 'TestControllerPytest',
     'ldap_lib_installed', 'pam_lib_installed', 'BaseTestCase', 'init_stack',
     'TESTS_TMP_PATH', 'HG_REPO', 'GIT_REPO', 'NEW_HG_REPO', 'NEW_GIT_REPO',
     'HG_FORK', 'GIT_FORK', 'TEST_USER_ADMIN_LOGIN', 'TEST_USER_ADMIN_PASS',
@@ -170,18 +170,19 @@ def remove_all_notifications():
     Session().commit()
 
 class BaseTestCase(unittest.TestCase):
+    """Unittest-style base test case. Deprecated in favor of pytest style."""
+
     def __init__(self, *args, **kwargs):
         self.wsgiapp = pylons.test.pylonsapp
         init_stack(self.wsgiapp.config)
         unittest.TestCase.__init__(self, *args, **kwargs)
 
+class BaseTestController(object):
+    """Base test controller used by pytest and unittest tests controllers."""
 
+    # Note: pytest base classes cannot have an __init__ method
 
-
-class TestController(BaseTestCase):
-
-    def __init__(self, *args, **kwargs):
-        BaseTestCase.__init__(self, *args, **kwargs)
+    def init(self):
         self.app = TestApp(self.wsgiapp)
         self.maxDiff = None
         self.index_location = config['app_conf']['index_dir']
@@ -230,3 +231,43 @@ class TestController(BaseTestCase):
 
     def checkSessionFlashRegex(self, response, regex, skip=0):
         self.checkSessionFlash(response, regex, skip=skip, _matcher=re.search)
+
+class TestController(BaseTestCase, BaseTestController):
+    """Deprecated unittest-style test controller"""
+
+    def __init__(self, *args, **kwargs):
+        super(TestController, self).__init__(*args, **kwargs)
+        self.init()
+
+class TestControllerPytest(BaseTestController):
+    """Pytest-style test controller"""
+
+    # Note: pytest base classes cannot have an __init__ method
+
+    @pytest.fixture(autouse=True)
+    def app_fixture(self):
+        self.wsgiapp = pylons.test.pylonsapp
+        init_stack(self.wsgiapp.config)
+        self.init()
+        return self.app
+
+    # transitional implementations of unittest.TestCase asserts
+    # Users of these should be converted to pytest's single 'assert' call
+    def assertEqual(self, first, second, msg=None):
+        assert first == second
+    def assertNotEqual(self, first, second, msg=None):
+        assert first != second
+    def assertTrue(self, expr, msg=None):
+        assert bool(expr) is True
+    def assertFalse(self, expr, msg=None):
+        assert bool(expr) is False
+    def assertIn(self, first, second, msg=None):
+        assert first in second
+    def assertNotIn(self, first, second, msg=None):
+        assert first not in second
+    def assertSetEqual(self, first, second, msg=None):
+        assert first == second
+    def assertListEqual(self, first, second, msg=None):
+        assert first == second
+    def assertDictEqual(self, first, second, msg=None):
+        assert first == second
