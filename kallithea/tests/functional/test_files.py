@@ -24,7 +24,7 @@ def _set_downloads(repo_name, set_to):
     Session().commit()
 
 
-class TestFilesController(TestController):
+class TestFilesController(TestControllerPytest):
 
     def test_index(self):
         self.log_user()
@@ -347,7 +347,7 @@ removed extra unicode conversion in diff.</div>
 
         self.checkSessionFlash(response, 'No filename')
 
-    @parameterized.expand([
+    @parametrize('location,filename', [
         ('/abs', 'foo'),
         ('../rel', 'foo'),
         ('file/../foo', 'foo'),
@@ -367,7 +367,7 @@ removed extra unicode conversion in diff.</div>
 
         self.checkSessionFlash(response, 'Location must be relative path and must not contain .. in path')
 
-    @parameterized.expand([
+    @parametrize('cnt,location,filename', [
         (1, '', 'foo.txt'),
         (2, 'dir', 'foo.rst'),
         (3, 'rel/dir', 'foo.bar'),
@@ -423,7 +423,7 @@ removed extra unicode conversion in diff.</div>
 
         self.checkSessionFlash(response, 'No filename')
 
-    @parameterized.expand([
+    @parametrize('location,filename', [
         ('/abs', 'foo'),
         ('../rel', 'foo'),
         ('file/../foo', 'foo'),
@@ -443,7 +443,7 @@ removed extra unicode conversion in diff.</div>
 
         self.checkSessionFlash(response, 'Location must be relative path and must not contain .. in path')
 
-    @parameterized.expand([
+    @parametrize('cnt,location,filename', [
         (1, '', 'foo.txt'),
         (2, 'dir', 'foo.rst'),
         (3, 'rel/dir', 'foo.bar'),
