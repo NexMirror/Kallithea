@@ -1,7 +1,7 @@
 from kallithea.tests import *
 
 
-class TestRepoGroupsController(TestController):
+class TestRepoGroupsController(TestControllerPytest):
 
     def test_index(self):
         self.log_user()

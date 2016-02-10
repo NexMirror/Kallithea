@@ -1,6 +1,6 @@
 from kallithea.tests import *
 
-class TestChangesetController(TestController):
+class TestChangesetController(TestControllerPytest):
 
     def test_index(self):
         response = self.app.get(url(controller='changeset', action='index',

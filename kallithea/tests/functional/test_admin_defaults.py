@@ -2,7 +2,7 @@ from kallithea.tests import *
 from kallithea.model.db import Setting
 
 
-class TestDefaultsController(TestController):
+class TestDefaultsController(TestControllerPytest):
 
     def test_index(self):
         self.log_user()

@@ -1,6 +1,6 @@
 from kallithea.tests import *
 
-class TestFeedController(TestController):
+class TestFeedController(TestControllerPytest):
 
     def test_rss(self):
         self.log_user()

@@ -1,4 +1,4 @@
 from kallithea.tests import *
 
-class TestRepoGroupsController(TestController):
+class TestRepoGroupsController(TestControllerPytest):
     pass

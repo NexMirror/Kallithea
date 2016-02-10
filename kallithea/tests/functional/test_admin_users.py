@@ -532,7 +532,7 @@ class TestAdminUsersController(TestController):
 #            u._get_user_or_raise_if_default(User.get_default_user().user_id)
 
 
-class TestAdminUsersControllerForDefaultUser(TestController):
+class TestAdminUsersControllerForDefaultUser(TestControllerPytest):
     """
     Edit actions on the default user are not allowed.
     Validate that they throw a 404 exception.

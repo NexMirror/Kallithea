@@ -7,7 +7,7 @@ from kallithea.tests.fixture import Fixture
 fixture = Fixture()
 
 
-class TestAdminSettingsController(TestController):
+class TestAdminSettingsController(TestControllerPytest):
 
     def test_index_main(self):
         self.log_user()

@@ -1,7 +1,7 @@
 from kallithea.tests import *
 
 
-class TestChangelogController(TestController):
+class TestChangelogController(TestControllerPytest):
 
     def test_index_hg(self):
         self.log_user()

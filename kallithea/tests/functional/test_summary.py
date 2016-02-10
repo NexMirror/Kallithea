@@ -22,7 +22,7 @@ from kallithea.model.scm import ScmModel
 fixture = Fixture()
 
 
-class TestSummaryController(TestController):
+class TestSummaryController(TestControllerPytest):
 
     def test_index(self):
         self.log_user()

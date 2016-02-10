@@ -8,7 +8,7 @@ from kallithea.controllers.pullrequests import PullrequestsController
 
 fixture = Fixture()
 
-class TestPullrequestsController(TestController):
+class TestPullrequestsController(TestControllerPytest):
 
     def test_index(self):
         self.log_user()

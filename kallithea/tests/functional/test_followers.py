@@ -1,7 +1,7 @@
 from kallithea.tests import *
 
 
-class TestFollowersController(TestController):
+class TestFollowersController(TestControllerPytest):
 
     def test_index_hg(self):
         self.log_user()
