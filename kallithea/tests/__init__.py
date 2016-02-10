@@ -58,9 +58,10 @@ if not is_windows:
 log = logging.getLogger(__name__)
 
 skipif = pytest.mark.skipif
+parametrize = pytest.mark.parametrize
 
 __all__ = [
-    'skipif', 'parameterized', 'environ', 'url', 'TestController', 'TestControllerPytest',
+    'skipif', 'parametrize', 'parameterized', 'environ', 'url', 'TestController', 'TestControllerPytest',
     'ldap_lib_installed', 'pam_lib_installed', 'BaseTestCase', 'init_stack',
     'TESTS_TMP_PATH', 'HG_REPO', 'GIT_REPO', 'NEW_HG_REPO', 'NEW_GIT_REPO',
     'HG_FORK', 'GIT_FORK', 'TEST_USER_ADMIN_LOGIN', 'TEST_USER_ADMIN_PASS',
