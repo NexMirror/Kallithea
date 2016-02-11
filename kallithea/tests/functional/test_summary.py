@@ -121,6 +121,9 @@ class TestSummaryController(TestController):
         self._enable_stats(HG_REPO)
 
         ScmModel().mark_for_invalidation(HG_REPO)
+        # generate statistics first
+        response = self.app.get(url(controller='summary', action='statistics',
+                                    repo_name=HG_REPO))
         response = self.app.get(url(controller='summary', action='index',
                                     repo_name=HG_REPO))
         response.mustcontain(
@@ -151,6 +154,9 @@ class TestSummaryController(TestController):
         self._enable_stats(GIT_REPO)
 
         ScmModel().mark_for_invalidation(GIT_REPO)
+        # generate statistics first
+        response = self.app.get(url(controller='summary', action='statistics',
+                                    repo_name=GIT_REPO))
         response = self.app.get(url(controller='summary', action='index',
                                     repo_name=GIT_REPO))
         response.mustcontain(
