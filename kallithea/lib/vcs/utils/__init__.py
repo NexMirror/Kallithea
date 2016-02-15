@@ -5,6 +5,7 @@ output. It also includes some internal helpers.
 
 import time
 import datetime
+import re
 
 
 def makedate():
@@ -150,30 +151,33 @@ def safe_str(unicode_, to_encoding=None):
         return unicode_.encode(to_encoding[0], 'replace')
 
 
+# Regex taken from http://www.regular-expressions.info/email.html
+email_re = re.compile(
+    r"""[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@"""
+    r"""(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?""",
+    re.IGNORECASE)
+
 def author_email(author):
     """
-    returns email address of given author.
-    If any of <,> sign are found, it fallbacks to regex findall()
-    and returns first found result or empty string
+    Returns email address of given author string.
+    If author contains <> brackets, only look inside that.
+    If any RFC valid email address is found, return that.
+    Else, return empty string.
 
-    Regex taken from http://www.regular-expressions.info/email.html
     """
     if not author:
         return ''
-    import re
-    r = author.find('>')
-    l = author.find('<')
 
-    if l == -1 or r == -1:
-        # fallback to regex match of email out of a string
-        email_re = re.compile(r"""[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!"""
-                              r"""#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z"""
-                              r"""0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]"""
-                              r"""*[a-z0-9])?""", re.IGNORECASE)
-        m = re.findall(email_re, author)
-        return safe_str(m[0]) if m else ''
+    l = author.find('<') + 1
+    if l != 0:
+        r = author.find('>', l)
+        if r != -1:
+            author = author[l:r]
 
-    return safe_str(author[l + 1:r].strip())
+    m = email_re.search(author)
+    if m is None:
+        return ''
+    return safe_str(m.group(0))
 
 
 def author_name(author):

@@ -206,7 +206,7 @@ class TestAuthorExtractors(unittest.TestCase):
                   ('Mr Double Name withemail@example.com ',
                    ('Mr Double Name', 'withemail@example.com')),
                   (u'John Doe <джондо à éẋàṁṗłê.ç°ḿ>',
-                   (u'John Doe <\u0434\u0436\u043e\u043d\u0434\u043e \xe0 \xe9\u1e8b\xe0\u1e41\u1e57\u0142\xea.\xe7\xb0\u1e3f>', '\xd0\xb4\xd0\xb6\xd0\xbe\xd0\xbd\xd0\xb4\xd0\xbe \xc3\xa0 \xc3\xa9\xe1\xba\x8b\xc3\xa0\xe1\xb9\x81\xe1\xb9\x97\xc5\x82\xc3\xaa.\xc3\xa7\xc2\xb0\xe1\xb8\xbf')),
+                   (u'John Doe <\u0434\u0436\u043e\u043d\u0434\u043e \xe0 \xe9\u1e8b\xe0\u1e41\u1e57\u0142\xea.\xe7\xb0\u1e3f>', '')),
                   ]
 
     def test_author_email(self):
