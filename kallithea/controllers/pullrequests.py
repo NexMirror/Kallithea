@@ -45,7 +45,7 @@ from kallithea.lib import diffs
 from kallithea.lib.exceptions import UserInvalidException
 from kallithea.lib.utils import action_logger, jsonify
 from kallithea.lib.vcs.utils import safe_str
-from kallithea.lib.vcs.exceptions import EmptyRepositoryError
+from kallithea.lib.vcs.exceptions import EmptyRepositoryError, ChangesetDoesNotExistError
 from kallithea.lib.diffs import LimitedDiffContainer
 from kallithea.model.db import PullRequest, ChangesetStatus, ChangesetComment, \
     PullRequestReviewers, User
@@ -563,7 +563,11 @@ class PullrequestsController(BaseRepoController):
 
         org_scm_instance = c.cs_repo.scm_instance # property with expensive cache invalidation check!!!
         c.cs_repo = c.cs_repo
-        c.cs_ranges = [org_scm_instance.get_changeset(x) for x in c.pull_request.revisions]
+        try:
+            c.cs_ranges = [org_scm_instance.get_changeset(x)
+                           for x in c.pull_request.revisions]
+        except ChangesetDoesNotExistError:
+            c.cs_ranges = []
         c.cs_ranges_org = None # not stored and not important and moving target - could be calculated ...
         revs = [ctx.revision for ctx in reversed(c.cs_ranges)]
         c.jsdata = json.dumps(graph_data(org_scm_instance, revs))
@@ -581,58 +585,62 @@ class PullrequestsController(BaseRepoController):
         other_scm_instance = c.a_repo.scm_instance
         c.update_msg = ""
         c.update_msg_other = ""
-        if org_scm_instance.alias == 'hg' and c.a_ref_name != 'ancestor':
-            if c.cs_ref_type != 'branch':
-                c.cs_branch_name = org_scm_instance.get_changeset(c.cs_ref_name).branch # use ref_type ?
-            c.a_branch_name = c.a_ref_name
-            if c.a_ref_type != 'branch':
-                try:
-                    c.a_branch_name = other_scm_instance.get_changeset(c.a_ref_name).branch # use ref_type ?
-                except EmptyRepositoryError:
-                    c.a_branch_name = 'null' # not a branch name ... but close enough
-            # candidates: descendants of old head that are on the right branch
-            #             and not are the old head itself ...
-            #             and nothing at all if old head is a descendant of target ref name
-            if not c.is_range and other_scm_instance._repo.revs('present(%s)::&%s', c.cs_ranges[-1].raw_id, c.a_branch_name):
-                c.update_msg = _('This pull request has already been merged to %s.') % c.a_branch_name
-            elif c.pull_request.is_closed():
-                c.update_msg = _('This pull request has been closed and can not be updated.')
-            else: # look for descendants of PR head on source branch in org repo
-                avail_revs = org_scm_instance._repo.revs('%s:: & branch(%s)',
-                                                         revs[0], c.cs_branch_name)
-                if len(avail_revs) > 1: # more than just revs[0]
-                    # also show changesets that not are descendants but would be merged in
-                    targethead = other_scm_instance.get_changeset(c.a_branch_name).raw_id
-                    if org_scm_instance.path != other_scm_instance.path:
-                        # Note: org_scm_instance.path must come first so all
-                        # valid revision numbers are 100% org_scm compatible
-                        # - both for avail_revs and for revset results
-                        hgrepo = unionrepo.unionrepository(org_scm_instance.baseui,
-                                                           org_scm_instance.path,
-                                                           other_scm_instance.path)
+        try:
+            if org_scm_instance.alias == 'hg' and c.a_ref_name != 'ancestor':
+                if c.cs_ref_type != 'branch':
+                    c.cs_branch_name = org_scm_instance.get_changeset(c.cs_ref_name).branch # use ref_type ?
+                c.a_branch_name = c.a_ref_name
+                if c.a_ref_type != 'branch':
+                    try:
+                        c.a_branch_name = other_scm_instance.get_changeset(c.a_ref_name).branch # use ref_type ?
+                    except EmptyRepositoryError:
+                        c.a_branch_name = 'null' # not a branch name ... but close enough
+                # candidates: descendants of old head that are on the right branch
+                #             and not are the old head itself ...
+                #             and nothing at all if old head is a descendant of target ref name
+                if not c.is_range and other_scm_instance._repo.revs('present(%s)::&%s', c.cs_ranges[-1].raw_id, c.a_branch_name):
+                    c.update_msg = _('This pull request has already been merged to %s.') % c.a_branch_name
+                elif c.pull_request.is_closed():
+                    c.update_msg = _('This pull request has been closed and can not be updated.')
+                else: # look for descendants of PR head on source branch in org repo
+                    avail_revs = org_scm_instance._repo.revs('%s:: & branch(%s)',
+                                                             revs[0], c.cs_branch_name)
+                    if len(avail_revs) > 1: # more than just revs[0]
+                        # also show changesets that not are descendants but would be merged in
+                        targethead = other_scm_instance.get_changeset(c.a_branch_name).raw_id
+                        if org_scm_instance.path != other_scm_instance.path:
+                            # Note: org_scm_instance.path must come first so all
+                            # valid revision numbers are 100% org_scm compatible
+                            # - both for avail_revs and for revset results
+                            hgrepo = unionrepo.unionrepository(org_scm_instance.baseui,
+                                                               org_scm_instance.path,
+                                                               other_scm_instance.path)
+                        else:
+                            hgrepo = org_scm_instance._repo
+                        show = set(hgrepo.revs('::%ld & !::parents(%s) & !::%s',
+                                               avail_revs, revs[0], targethead))
+                        c.update_msg = _('The following changes are available on %s:') % c.cs_branch_name
                     else:
-                        hgrepo = org_scm_instance._repo
-                    show = set(hgrepo.revs('::%ld & !::parents(%s) & !::%s',
-                                           avail_revs, revs[0], targethead))
-                    c.update_msg = _('The following changes are available on %s:') % c.cs_branch_name
-                else:
-                    show = set()
-                    avail_revs = set() # drop revs[0]
-                    c.update_msg = _('No changesets found for updating this pull request.')
+                        show = set()
+                        avail_revs = set() # drop revs[0]
+                        c.update_msg = _('No changesets found for updating this pull request.')
 
-                # TODO: handle branch heads that not are tip-most
-                brevs = org_scm_instance._repo.revs('%s - %ld - %s', c.cs_branch_name, avail_revs, revs[0])
-                if brevs:
-                    # also show changesets that are on branch but neither ancestors nor descendants
-                    show.update(org_scm_instance._repo.revs('::%ld - ::%ld - ::%s', brevs, avail_revs, c.a_branch_name))
-                    show.add(revs[0]) # make sure graph shows this so we can see how they relate
-                    c.update_msg_other = _('Note: Branch %s has another head: %s.') % (c.cs_branch_name,
-                        h.short_id(org_scm_instance.get_changeset((max(brevs))).raw_id))
+                    # TODO: handle branch heads that not are tip-most
+                    brevs = org_scm_instance._repo.revs('%s - %ld - %s', c.cs_branch_name, avail_revs, revs[0])
+                    if brevs:
+                        # also show changesets that are on branch but neither ancestors nor descendants
+                        show.update(org_scm_instance._repo.revs('::%ld - ::%ld - ::%s', brevs, avail_revs, c.a_branch_name))
+                        show.add(revs[0]) # make sure graph shows this so we can see how they relate
+                        c.update_msg_other = _('Note: Branch %s has another head: %s.') % (c.cs_branch_name,
+                            h.short_id(org_scm_instance.get_changeset((max(brevs))).raw_id))
 
-                avail_show = sorted(show, reverse=True)
+                    avail_show = sorted(show, reverse=True)
 
-        elif org_scm_instance.alias == 'git':
-            c.update_msg = _("Git pull requests don't support updates yet.")
+            elif org_scm_instance.alias == 'git':
+                c.cs_repo.scm_instance.get_changeset(c.cs_rev) # check it exists - raise ChangesetDoesNotExistError if not
+                c.update_msg = _("Git pull requests don't support updates yet.")
+        except ChangesetDoesNotExistError:
+            c.update_msg = _('Error: revision %s was not found. Please create a new pull request!') % c.cs_rev
 
         c.avail_revs = avail_revs
         c.avail_cs = [org_scm_instance.get_changeset(r) for r in avail_show]
@@ -652,10 +660,12 @@ class PullrequestsController(BaseRepoController):
         # we swap org/other ref since we run a simple diff on one repo
         log.debug('running diff between %s and %s in %s',
                   c.a_rev, c.cs_rev, org_scm_instance.path)
-        txtdiff = org_scm_instance.get_diff(rev1=safe_str(c.a_rev), rev2=safe_str(c.cs_rev),
-                                      ignore_whitespace=ignore_whitespace,
-                                      context=line_context)
-
+        try:
+            txtdiff = org_scm_instance.get_diff(rev1=safe_str(c.a_rev), rev2=safe_str(c.cs_rev),
+                                                ignore_whitespace=ignore_whitespace,
+                                                context=line_context)
+        except ChangesetDoesNotExistError:
+            txtdiff =  _("The diff can't be shown - the PR revisions could not be found.")
         diff_processor = diffs.DiffProcessor(txtdiff or '', format='gitdiff',
                                              diff_limit=diff_limit)
         _parsed = diff_processor.prepare()
