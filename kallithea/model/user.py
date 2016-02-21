@@ -191,7 +191,7 @@ class UserModel(BaseModel):
         # notification to admins
         subject = _('New user registration')
         body = (
-            'New user registration\n'
+            u'New user registration\n'
             '---------------------\n'
             '- Username: {user.username}\n'
             '- Full Name: {user.full_name}\n'
