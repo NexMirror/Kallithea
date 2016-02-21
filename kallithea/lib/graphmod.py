@@ -143,12 +143,13 @@ def _colored(repo, dag):
         color = colors.pop(rev)
         if addparents:
             b = branch(rev)
+            searching = True
             for p in reversed(addparents):
                 obs[p] = int(repo[p].obsolete)
-                if b and branch(abs(p)) == b:
+                if searching and branch(abs(p)) == b:
                     # This is the first parent on the same branch - inherit the color
                     colors[p] = color
-                    b = None # make sure we don't give the color away twice
+                    searching = False # make sure we don't give the color away twice
                 else:
                     colors[p] = newcolor
                     newcolor += 1
