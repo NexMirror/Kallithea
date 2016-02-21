@@ -1418,7 +1418,8 @@ class Repository(Base, BaseModel):
                 pr_nice_id = PullRequest.make_nice_id(pr_id)
                 pr_repo = stat.pull_request.other_repo.repo_name
             grouped[stat.revision] = [str(stat.status), stat.status_lbl,
-                                      pr_id, pr_repo, pr_nice_id]
+                                      pr_id, pr_repo, pr_nice_id,
+                                      stat.author]
         return grouped
 
     def _repo_size(self):
