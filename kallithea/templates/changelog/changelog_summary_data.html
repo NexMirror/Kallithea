@@ -21,7 +21,9 @@
                     <i class="icon-circle changeset-status-${c.statuses.get(cs.raw_id)[0]}"></i>
                   </a>
                 %else:
-                  <i class="icon-circle changeset-status-${c.statuses.get(cs.raw_id)[0]}"></i>
+                  <a class="tooltip" title="${_('Changeset status: %s') % c.statuses.get(cs.raw_id)[1]}" href="${c.comments[cs.raw_id][0].url()}">
+                    <i class="icon-circle changeset-status-${c.statuses.get(cs.raw_id)[0]}"></i>
+                  </a>
                 %endif
                 </span>
               %endif
