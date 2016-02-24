@@ -172,7 +172,7 @@ class MercurialRepository(BaseRepository):
                 changeset.short_id)
 
         if date is None:
-            date = datetime.datetime.now().ctime()
+            date = datetime.datetime.now().strftime('%a, %d %b %Y %H:%M:%S')
 
         try:
             self._repo.tag(name, changeset._ctx.node(), message, local, user,
@@ -202,7 +202,7 @@ class MercurialRepository(BaseRepository):
         if message is None:
             message = "Removed tag %s" % name
         if date is None:
-            date = datetime.datetime.now().ctime()
+            date = datetime.datetime.now().strftime('%a, %d %b %Y %H:%M:%S')
         local = False
 
         try:

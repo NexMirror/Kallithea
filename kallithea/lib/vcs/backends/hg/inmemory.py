@@ -83,7 +83,7 @@ class MercurialInMemoryChangeset(BaseInMemoryChangeset):
                 parents[i] = parent._ctx.node()
 
         if date and isinstance(date, datetime.datetime):
-            date = date.ctime()
+            date = date.strftime('%a, %d %b %Y %H:%M:%S')
 
         commit_ctx = memctx(repo=self.repository._repo,
             parents=parents,
