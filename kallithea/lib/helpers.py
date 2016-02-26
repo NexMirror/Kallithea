@@ -1256,7 +1256,7 @@ def urlify_text(s, truncate=None, stylize=False, truncatef=truncate):
     Extract urls from text and make literal html links out of them
     """
     if truncate is not None:
-        s = truncatef(s, truncate)
+        s = truncatef(s, truncate, whole_word=True)
     s = html_escape(s)
     if stylize:
         s = desc_stylize(s)
