@@ -207,7 +207,7 @@ class RepoModel(BaseModel):
                            cs_cache.get('message'))
 
         def desc(desc):
-            return h.urlify_text(desc, truncate=60, stylize=c.visual.stylify_metatags)
+            return h.urlify_text(desc, truncate=80, stylize=c.visual.stylify_metatags)
 
         def state(repo_state):
             return _render("repo_state", repo_state)
