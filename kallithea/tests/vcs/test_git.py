@@ -4,6 +4,9 @@ import sys
 import mock
 import datetime
 import urllib2
+
+import pytest
+
 from kallithea.lib.vcs.backends.git import GitRepository, GitChangeset
 from kallithea.lib.vcs.exceptions import RepositoryError, VCSError, NodeDoesNotExistError
 from kallithea.lib.vcs.nodes import NodeKind, FileNode, DirNode, NodeState
@@ -17,7 +20,7 @@ class GitRepositoryTest(unittest.TestCase):
 
     def __check_for_existing_repo(self):
         if os.path.exists(TEST_GIT_REPO_CLONE):
-            self.fail('Cannot test git clone repo as location %s already '
+            pytest.fail('Cannot test git clone repo as location %s already '
                       'exists. You should manually remove it first.'
                       % TEST_GIT_REPO_CLONE)
 
@@ -339,7 +342,7 @@ class GitChangesetTest(unittest.TestCase):
             idx += 1
             rev_id = self.repo.revisions[rev]
             if idx > limit:
-                self.fail("Exceeded limit already (getting revision %s, "
+                pytest.fail("Exceeded limit already (getting revision %s, "
                     "there are %s total revisions, offset=%s, limit=%s)"
                     % (rev_id, count, offset, limit))
             self.assertEqual(changeset, self.repo.get_changeset(rev_id))
@@ -347,7 +350,7 @@ class GitChangesetTest(unittest.TestCase):
         start = offset
         end = limit and offset + limit or None
         sliced = list(self.repo[start:end])
-        self.failUnlessEqual(result, sliced,
+        pytest.failUnlessEqual(result, sliced,
             msg="Comparison failed for limit=%s, offset=%s"
             "(get_changeset returned: %s and sliced: %s"
             % (limit, offset, result, sliced))

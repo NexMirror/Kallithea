@@ -76,7 +76,7 @@ class NodeBasicTest(unittest.TestCase):
     '''
     def _test_trailing_slash(self, path):
         if not path.endswith('/'):
-            self.fail("Trailing slash tests needs paths to end with slash")
+            pytest.fail("Trailing slash tests needs paths to end with slash")
         for kind in NodeKind.FILE, NodeKind.DIR:
             self.assertRaises(NodeError, Node, path=path, kind=kind)
 

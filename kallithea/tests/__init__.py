@@ -196,7 +196,7 @@ class BaseTestController(object):
                                   'password': password})
 
         if 'Invalid username or password' in response.body:
-            self.fail('could not login using %s %s' % (username, password))
+            pytest.fail('could not login using %s %s' % (username, password))
 
         self.assertEqual(response.status, '302 Found')
         self.assert_authenticated_user(response, username)
@@ -219,14 +219,14 @@ class BaseTestController(object):
 
     def checkSessionFlash(self, response, msg=None, skip=0, _matcher=lambda msg, m: msg in m):
         if 'flash' not in response.session:
-            self.fail(safe_str(u'msg `%s` not found - session has no flash:\n%s' % (msg, response)))
+            pytest.fail(safe_str(u'msg `%s` not found - session has no flash:\n%s' % (msg, response)))
         try:
             level, m = response.session['flash'][-1 - skip]
             if _matcher(msg, m):
                 return
         except IndexError:
             pass
-        self.fail(safe_str(u'msg `%s` not found in session flash (skipping %s): %s' %
+        pytest.fail(safe_str(u'msg `%s` not found in session flash (skipping %s): %s' %
                            (msg, skip,
                             ', '.join('`%s`' % m for level, m in response.session['flash']))))
 

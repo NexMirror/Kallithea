@@ -82,7 +82,7 @@ class _BaseTest(object):
         try:
             vcs.get_repo(safe_str(os.path.join(TESTS_TMP_PATH, repo_name)))
         except vcs.exceptions.VCSError:
-            self.fail('no repo %s in filesystem' % repo_name)
+            pytest.fail('no repo %s in filesystem' % repo_name)
 
         RepoModel().delete(repo_name)
         Session().commit()
@@ -136,7 +136,7 @@ class _BaseTest(object):
         except vcs.exceptions.VCSError:
             RepoGroupModel().delete(group_name)
             Session().commit()
-            self.fail('no repo %s in filesystem' % repo_name)
+            pytest.fail('no repo %s in filesystem' % repo_name)
 
         RepoModel().delete(repo_name_full)
         RepoGroupModel().delete(group_name)
@@ -228,7 +228,7 @@ class _BaseTest(object):
         except vcs.exceptions.VCSError:
             RepoGroupModel().delete(group_name)
             Session().commit()
-            self.fail('no repo %s in filesystem' % repo_name)
+            pytest.fail('no repo %s in filesystem' % repo_name)
 
         RepoModel().delete(repo_name_full)
         RepoGroupModel().delete(group_name)
@@ -285,7 +285,7 @@ class _BaseTest(object):
         except vcs.exceptions.VCSError:
             RepoGroupModel().delete(group_name)
             Session().commit()
-            self.fail('no repo %s in filesystem' % repo_name)
+            pytest.fail('no repo %s in filesystem' % repo_name)
 
         #check if inherited permissiona are applied
         inherited_perms = UserRepoToPerm.query() \
@@ -360,7 +360,7 @@ class _BaseTest(object):
         try:
             vcs.get_repo(safe_str(os.path.join(TESTS_TMP_PATH, repo_name)))
         except vcs.exceptions.VCSError:
-            self.fail('no repo %s in filesystem' % repo_name)
+            pytest.fail('no repo %s in filesystem' % repo_name)
 
         response = self.app.post(url('delete_repo', repo_name=repo_name),
             params={'_method': 'delete', '_authentication_token': self.authentication_token()})
@@ -413,7 +413,7 @@ class _BaseTest(object):
         try:
             vcs.get_repo(safe_str(os.path.join(TESTS_TMP_PATH, repo_name)))
         except vcs.exceptions.VCSError:
-            self.fail('no repo %s in filesystem' % repo_name)
+            pytest.fail('no repo %s in filesystem' % repo_name)
 
         response = self.app.post(url('delete_repo', repo_name=repo_name),
             params={'_method': 'delete', '_authentication_token': self.authentication_token()})

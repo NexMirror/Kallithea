@@ -1,5 +1,8 @@
 
 import os
+
+import pytest
+
 from kallithea.lib.utils2 import safe_str
 from kallithea.lib.vcs.backends.hg import MercurialRepository, MercurialChangeset
 from kallithea.lib.vcs.exceptions import RepositoryError, VCSError, NodeDoesNotExistError
@@ -20,7 +23,7 @@ class MercurialRepositoryTest(unittest.TestCase):
 
     def __check_for_existing_repo(self):
         if os.path.exists(TEST_HG_REPO_CLONE):
-            self.fail('Cannot test mercurial clone repo as location %s already '
+            pytest.fail('Cannot test mercurial clone repo as location %s already '
                       'exists. You should manually remove it first.'
                       % TEST_HG_REPO_CLONE)
 
@@ -67,7 +70,7 @@ class MercurialRepositoryTest(unittest.TestCase):
 
     def test_pull(self):
         if os.path.exists(TEST_HG_REPO_PULL):
-            self.fail('Cannot test mercurial pull command as location %s '
+            pytest.fail('Cannot test mercurial pull command as location %s '
                       'already exists. You should manually remove it first'
                       % TEST_HG_REPO_PULL)
         repo_new = MercurialRepository(TEST_HG_REPO_PULL, create=True)
