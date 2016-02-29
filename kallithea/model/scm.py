@@ -628,8 +628,8 @@ class ScmModel(BaseModel):
 
         processed_nodes = []
         for f_path in nodes:
-            f_path = self._sanitize_path(f_path)
             content = nodes[f_path]['content']
+            f_path = self._sanitize_path(f_path)
             f_path = safe_str(f_path)
             # decoding here will force that we have proper encoded values
             # in any other case this will throw exceptions and deny commit
