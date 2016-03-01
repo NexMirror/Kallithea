@@ -543,8 +543,9 @@ def repo2db_mapper(initial_repo_list, remove_obsolete=False,
 
     removed = []
     # remove from database those repositories that are not in the filesystem
+    unicode_initial_repo_list = set(safe_unicode(name) for name in initial_repo_list)
     for repo in sa.query(Repository).all():
-        if repo.repo_name not in initial_repo_list.keys():
+        if repo.repo_name not in unicode_initial_repo_list:
             if remove_obsolete:
                 log.debug("Removing non-existing repository found in db `%s`",
                           repo.repo_name)
