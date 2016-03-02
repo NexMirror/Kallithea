@@ -259,7 +259,7 @@ class Fixture(object):
         Session().commit()
 
     def load_resource(self, resource_name, strip=True):
-        with open(os.path.join(FIXTURES, resource_name)) as f:
+        with open(os.path.join(FIXTURES, resource_name), 'rb') as f:
             source = f.read()
             if strip:
                 source = source.strip()
