@@ -74,12 +74,12 @@ class ArchivesTestCaseMixin(_BackendTestMixin):
 
     def test_archive_default_stream(self):
         tmppath = tempfile.mkstemp()[1]
-        with open(tmppath, 'w') as stream:
+        with open(tmppath, 'wb') as stream:
             self.tip.fill_archive(stream=stream)
         mystream = StringIO.StringIO()
         self.tip.fill_archive(stream=mystream)
         mystream.seek(0)
-        with open(tmppath, 'r') as f:
+        with open(tmppath, 'rb') as f:
             self.assertEqual(f.read(), mystream.read())
 
     def test_archive_wrong_kind(self):
