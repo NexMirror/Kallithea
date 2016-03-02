@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import posixpath
 from kallithea.tests import *
 from kallithea.model.db import Repository
 from kallithea.model.meta import Session
@@ -387,7 +388,7 @@ removed extra unicode conversion in diff.</div>
                                  status=302)
         try:
             self.checkSessionFlash(response, 'Successfully committed to %s'
-                                   % os.path.join(location, filename))
+                                   % posixpath.join(location, filename))
         finally:
             fixture.destroy_repo(repo.repo_name)
 
@@ -463,7 +464,7 @@ removed extra unicode conversion in diff.</div>
                                  status=302)
         try:
             self.checkSessionFlash(response, 'Successfully committed to %s'
-                                   % os.path.join(location, filename))
+                                   % posixpath.join(location, filename))
         finally:
             fixture.destroy_repo(repo.repo_name)
 
@@ -494,10 +495,10 @@ removed extra unicode conversion in diff.</div>
         response.follow()
         try:
             self.checkSessionFlash(response, 'Successfully committed to %s'
-                                   % os.path.join(location, filename))
+                                   % posixpath.join(location, filename))
             response = self.app.get(url('files_edit_home',
                                           repo_name=repo.repo_name,
-                                          revision='tip', f_path='vcs/nodes.py'),
+                                          revision='tip', f_path=posixpath.join(location, filename)),
                                     status=302)
             self.checkSessionFlash(response,
                 'You can only edit files with revision being a valid branch')
@@ -525,19 +526,19 @@ removed extra unicode conversion in diff.</div>
         response.follow()
         try:
             self.checkSessionFlash(response, 'Successfully committed to %s'
-                                   % os.path.join(location, filename))
+                                   % posixpath.join(location, filename))
             response = self.app.post(url('files_edit_home',
                                           repo_name=repo.repo_name,
                                           revision=repo.scm_instance.DEFAULT_BRANCH_NAME,
-                                          f_path='vcs/nodes.py'),
+                                          f_path=posixpath.join(location, filename)),
                                      params={
                                         'content': "def py():\n print 'hello world'\n",
                                         'message': 'i commited',
                                         '_authentication_token': self.authentication_token(),
                                      },
                                     status=302)
-            self.checkSessionFlash(response,
-                                   'Successfully committed to vcs/nodes.py')
+            self.checkSessionFlash(response, 'Successfully committed to %s'
+                                   % posixpath.join(location, filename))
         finally:
             fixture.destroy_repo(repo.repo_name)
 
@@ -568,10 +569,10 @@ removed extra unicode conversion in diff.</div>
         response.follow()
         try:
             self.checkSessionFlash(response, 'Successfully committed to %s'
-                                   % os.path.join(location, filename))
+                                   % posixpath.join(location, filename))
             response = self.app.get(url('files_edit_home',
                                           repo_name=repo.repo_name,
-                                          revision='tip', f_path='vcs/nodes.py'),
+                                          revision='tip', f_path=posixpath.join(location, filename)),
                                     status=302)
             self.checkSessionFlash(response,
                 'You can only edit files with revision being a valid branch')
@@ -599,19 +600,19 @@ removed extra unicode conversion in diff.</div>
         response.follow()
         try:
             self.checkSessionFlash(response, 'Successfully committed to %s'
-                                   % os.path.join(location, filename))
+                                   % posixpath.join(location, filename))
             response = self.app.post(url('files_edit_home',
                                           repo_name=repo.repo_name,
                                           revision=repo.scm_instance.DEFAULT_BRANCH_NAME,
-                                          f_path='vcs/nodes.py'),
+                                          f_path=posixpath.join(location, filename)),
                                      params={
                                         'content': "def py():\n print 'hello world'\n",
                                         'message': 'i commited',
                                         '_authentication_token': self.authentication_token(),
                                      },
                                     status=302)
-            self.checkSessionFlash(response,
-                                   'Successfully committed to vcs/nodes.py')
+            self.checkSessionFlash(response, 'Successfully committed to %s'
+                                   % posixpath.join(location, filename))
         finally:
             fixture.destroy_repo(repo.repo_name)
 
@@ -642,10 +643,10 @@ removed extra unicode conversion in diff.</div>
         response.follow()
         try:
             self.checkSessionFlash(response, 'Successfully committed to %s'
-                                   % os.path.join(location, filename))
+                                   % posixpath.join(location, filename))
             response = self.app.get(url('files_delete_home',
                                           repo_name=repo.repo_name,
-                                          revision='tip', f_path='vcs/nodes.py'),
+                                          revision='tip', f_path=posixpath.join(location, filename)),
                                     status=302)
             self.checkSessionFlash(response,
                 'You can only delete files with revision being a valid branch')
@@ -673,18 +674,18 @@ removed extra unicode conversion in diff.</div>
         response.follow()
         try:
             self.checkSessionFlash(response, 'Successfully committed to %s'
-                                   % os.path.join(location, filename))
+                                   % posixpath.join(location, filename))
             response = self.app.post(url('files_delete_home',
                                           repo_name=repo.repo_name,
                                           revision=repo.scm_instance.DEFAULT_BRANCH_NAME,
-                                          f_path='vcs/nodes.py'),
+                                          f_path=posixpath.join(location, filename)),
                                      params={
                                         'message': 'i commited',
                                         '_authentication_token': self.authentication_token(),
                                      },
                                     status=302)
             self.checkSessionFlash(response,
-                                   'Successfully deleted file vcs/nodes.py')
+                                   'Successfully deleted file %s' % posixpath.join(location, filename))
         finally:
             fixture.destroy_repo(repo.repo_name)
 
@@ -715,10 +716,10 @@ removed extra unicode conversion in diff.</div>
         response.follow()
         try:
             self.checkSessionFlash(response, 'Successfully committed to %s'
-                                   % os.path.join(location, filename))
+                                   % posixpath.join(location, filename))
             response = self.app.get(url('files_delete_home',
                                           repo_name=repo.repo_name,
-                                          revision='tip', f_path='vcs/nodes.py'),
+                                          revision='tip', f_path=posixpath.join(location, filename)),
                                     status=302)
             self.checkSessionFlash(response,
                 'You can only delete files with revision being a valid branch')
@@ -746,17 +747,17 @@ removed extra unicode conversion in diff.</div>
         response.follow()
         try:
             self.checkSessionFlash(response, 'Successfully committed to %s'
-                                   % os.path.join(location, filename))
+                                   % posixpath.join(location, filename))
             response = self.app.post(url('files_delete_home',
                                           repo_name=repo.repo_name,
                                           revision=repo.scm_instance.DEFAULT_BRANCH_NAME,
-                                          f_path='vcs/nodes.py'),
+                                          f_path=posixpath.join(location, filename)),
                                      params={
                                         'message': 'i commited',
                                         '_authentication_token': self.authentication_token(),
                                      },
                                     status=302)
             self.checkSessionFlash(response,
-                                   'Successfully deleted file vcs/nodes.py')
+                                   'Successfully deleted file %s' % posixpath.join(location, filename))
         finally:
             fixture.destroy_repo(repo.repo_name)

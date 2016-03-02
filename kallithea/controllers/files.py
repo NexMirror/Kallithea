@@ -26,6 +26,7 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 import os
+import posixpath
 import logging
 import traceback
 import tempfile
@@ -471,7 +472,7 @@ class FilesController(BaseRepoController):
                                     revision='tip'))
             #strip all crap out of file, just leave the basename
             filename = os.path.basename(filename)
-            node_path = os.path.join(location, filename)
+            node_path = posixpath.join(location, filename)
             author = self.authuser.full_contact
 
             try:

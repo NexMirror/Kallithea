@@ -26,6 +26,7 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 import os
+import posixpath
 import re
 import time
 import traceback
@@ -575,7 +576,7 @@ class ScmModel(BaseModel):
         if f_path.startswith('/') or f_path.startswith('.') or '../' in f_path:
             raise NonRelativePathError('%s is not an relative path' % f_path)
         if f_path:
-            f_path = os.path.normpath(f_path)
+            f_path = posixpath.normpath(f_path)
         return f_path
 
     def get_nodes(self, repo_name, revision, root_path='/', flat=True):
