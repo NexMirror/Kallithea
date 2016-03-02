@@ -1,0 +1,4 @@
+# requirements.txt file for use as "pip install -r requirements.txt" as a
+# readthedocs compatible alternative to "pip install -e ." which is a working
+# alternative to "setup.py develop" which doesn't work with Mercurial 3.7
+.
