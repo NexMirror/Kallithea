@@ -355,7 +355,7 @@ class SubprocessIOChunker(object):
                                    starting_values)
         bg_err = BufferedGenerator(_p.stderr, 16000, 1, bottomless=True)
 
-        while not bg_out.done_reading and not bg_out.reading_paused and not bg_err.length:
+        while not bg_out.done_reading and not bg_out.reading_paused:
             # doing this until we reach either end of file, or end of buffer.
             bg_out.data_added_event.wait(1)
             bg_out.data_added_event.clear()
