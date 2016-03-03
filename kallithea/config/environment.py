@@ -23,6 +23,7 @@ import platform
 import pylons
 import mako.lookup
 import beaker
+import formencode
 
 # don't remove this import it does magic for celery
 from kallithea.lib import celerypylons
@@ -138,4 +139,5 @@ def load_environment(global_conf, app_conf, initial=False,
     if str2bool(config.get('initial_repo_scan', True)):
         repo2db_mapper(ScmModel().repo_scan(repos_path),
                        remove_obsolete=False, install_git_hooks=False)
+    formencode.api.set_stdtranslation(languages=[config.get('lang')])
     return config
