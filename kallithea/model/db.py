@@ -1463,15 +1463,14 @@ class Repository(Base, BaseModel):
         return _c(rn)
 
     def __get_instance(self):
-        repo_full_path = self.repo_full_path
-
-        alias = get_scm(safe_str(repo_full_path))[0]
+        repo_full_path = safe_str(self.repo_full_path)
+        alias = get_scm(repo_full_path)[0]
         log.debug('Creating instance of %s repository from %s',
-                  alias, repo_full_path)
+                  alias, self.repo_full_path)
         backend = get_backend(alias)
 
         if alias == 'hg':
-            repo = backend(safe_str(repo_full_path), create=False,
+            repo = backend(repo_full_path, create=False,
                            baseui=self._ui)
         else:
             repo = backend(repo_full_path, create=False)
