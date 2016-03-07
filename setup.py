@@ -89,9 +89,6 @@ classifiers = [
 # relative to sys.prefix
 data_files = []
 
-# additional files that goes into package itself
-package_data = {'kallithea': ['i18n/*/LC_MESSAGES/*.mo', ], }
-
 description = ('Kallithea is a fast and powerful management tool '
                'for Mercurial and Git with a built in push/pull server, '
                'full text search and code-review.')
@@ -154,7 +151,6 @@ setup(
     data_files=data_files,
     packages=packages,
     include_package_data=True,
-    package_data=package_data,
     message_extractors={'kallithea': [
             ('**.py', 'python', None),
             ('templates/**.mako', 'mako', {'input_encoding': 'utf-8'}),
