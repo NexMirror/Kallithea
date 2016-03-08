@@ -1450,7 +1450,8 @@ class Repository(Base, BaseModel):
 
     def scm_instance_cached(self, valid_cache_keys=None):
         @cache_region('long_term')
-        def _c(repo_name):
+        def _c(repo_name): # repo_name is just for the cache key
+            log.debug('Creating new %s scm_instance and populating cache', repo_name)
             return self.__get_instance()
         rn = self.repo_name
 
@@ -1459,7 +1460,7 @@ class Repository(Base, BaseModel):
             log.debug('Cache for %s invalidated, getting new object', rn)
             region_invalidate(_c, None, rn)
         else:
-            log.debug('Getting scm_instance of %s from cache', rn)
+            log.debug('Trying to get scm_instance of %s from cache', rn)
         return _c(rn)
 
     def __get_instance(self):
@@ -2133,7 +2134,7 @@ class CacheInvalidation(Base, BaseModel):
 
         inv_obj = cls.query().filter(cls.cache_key == cache_key).scalar()
         if inv_obj is None:
-            inv_obj = CacheInvalidation(cache_key, repo_name)
+            inv_obj = cls(cache_key, repo_name)
         elif inv_obj.cache_active:
             return True
         inv_obj.cache_active = True

@@ -857,7 +857,7 @@ def conditional_cache(region, prefix, condition, func):
             return data
 
         # denpending from condition the compute is wrapped in cache or not
-        compute = conditional_cache('short_term', 'cache_desc', codnition=True, func=func)
+        compute = conditional_cache('short_term', 'cache_desc', condition=True, func=func)
         return compute(arg)
 
     :param region: name of cache region
