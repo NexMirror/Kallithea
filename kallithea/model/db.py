@@ -1437,9 +1437,13 @@ class Repository(Base, BaseModel):
         """
         CacheInvalidation.set_invalidate(self.repo_name)
 
+    _scm_instance = None
+
     @property
     def scm_instance(self):
-        return self.scm_instance_cached()
+        if self._scm_instance is None:
+            self._scm_instance = self.scm_instance_cached()
+        return self._scm_instance
 
     def scm_instance_cached(self, valid_cache_keys=None):
         @cache_region('long_term', 'scm_instance_cached')
