@@ -27,7 +27,7 @@ def _get_permission_for_user(user, repo):
     return perm
 
 
-class _BaseTest(object):
+class _BaseTestCase(TestControllerPytest):
     """
     Write all tests here
     """
@@ -36,14 +36,6 @@ class _BaseTest(object):
     NEW_REPO = None
     OTHER_TYPE_REPO = None
     OTHER_TYPE = None
-
-    @classmethod
-    def setup_class(cls):
-        pass
-
-    @classmethod
-    def teardown_class(cls):
-        pass
 
     def test_index(self):
         self.log_user()
@@ -604,7 +596,7 @@ class _BaseTest(object):
         # repo must not be in filesystem !
         self.assertFalse(os.path.isdir(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name)))
 
-class TestAdminReposControllerGIT(TestControllerPytest, _BaseTest):
+class TestAdminReposControllerGIT(_BaseTestCase):
     REPO = GIT_REPO
     REPO_TYPE = 'git'
     NEW_REPO = NEW_GIT_REPO
@@ -612,7 +604,7 @@ class TestAdminReposControllerGIT(TestControllerPytest, _BaseTest):
     OTHER_TYPE = 'hg'
 
 
-class TestAdminReposControllerHG(TestControllerPytest, _BaseTest):
+class TestAdminReposControllerHG(_BaseTestCase):
     REPO = HG_REPO
     REPO_TYPE = 'hg'
     NEW_REPO = NEW_HG_REPO
