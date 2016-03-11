@@ -18,6 +18,7 @@ class TestNotificationsController(TestController):
                                           email='u1@example.com',
                                           firstname=u'u1', lastname=u'u1')
         u1 = u1.user_id
+        Session().commit()
 
         response = self.app.get(url('notifications'))
         response.mustcontain('<div class="table">No notifications here yet</div>')
