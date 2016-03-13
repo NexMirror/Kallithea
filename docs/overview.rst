@@ -53,7 +53,7 @@ installed.
   updating it is that you take advantage of the most recent improvements. Using
   it directly from a DVCS also means that it is easy to track local customizations.
 
-  Running ``setup.py develop`` in the source will use pip to install the
+  Running ``pip install -e .`` in the source will use pip to install the
   necessary dependencies in the Python environment and create a
   ``.../site-packages/Kallithea.egg-link`` file there that points at the Kallithea
   source.

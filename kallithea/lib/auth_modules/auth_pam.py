@@ -25,7 +25,14 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 import time
-import pam
+
+try:
+    from pam import authenticate as pam_authenticate
+except ImportError:
+    # work around pam.authenticate missing in python-pam 1.8.*
+    from pam import pam
+    pam_authenticate = pam().authenticate
+
 import pwd
 import grp
 import re
@@ -92,7 +99,7 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
             # Need lock here, as PAM authentication is not thread safe
             _pam_lock.acquire()
             try:
-                auth_result = pam.authenticate(username, password,
+                auth_result = pam_authenticate(username, password,
                                                settings["service"])
                 # cache result only if we properly authenticated
                 if auth_result:
