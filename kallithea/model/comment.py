@@ -139,7 +139,7 @@ class ChangesetCommentsModel(BaseModel):
             recipients += [pull_request.owner]
 
             # add the reviewers to notification
-            recipients += [x.user for x in pull_request.reviewers]
+            recipients += pull_request.get_reviewer_users()
 
             #set some variables for email notification
             email_kwargs = {

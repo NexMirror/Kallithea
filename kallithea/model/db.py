@@ -2322,6 +2322,14 @@ class PullRequest(Base, BaseModel):
     comments = relationship('ChangesetComment', order_by='ChangesetComment.comment_id',
                              cascade="all, delete-orphan")
 
+    def get_reviewer_users(self):
+        """Like .reviewers, but actually returning the users"""
+        return User.query() \
+            .join(PullRequestReviewers) \
+            .filter(PullRequestReviewers.pull_request == self) \
+            .order_by(PullRequestReviewers.pull_requests_reviewers_id) \
+            .all()
+
     def is_closed(self):
         return self.status == self.STATUS_CLOSED
 

@@ -182,8 +182,11 @@ class PullrequestsController(BaseRepoController):
             return False
 
         owner = self.authuser.user_id == pull_request.user_id
-        reviewer = self.authuser.user_id in [x.user_id for x in
-                                                   pull_request.reviewers]
+        reviewer = PullRequestReviewers.query() \
+            .filter(PullRequestReviewers.pull_request == pull_request) \
+            .filter(PullRequestReviewers.user_id == self.authuser.user_id) \
+            .count() != 0
+
         return self.authuser.admin or owner or reviewer
 
     @LoginRequired()

@@ -98,14 +98,14 @@ class ChangesetStatusModel(BaseModel):
         pull_request_reviewers = []
         pull_request_pending_reviewers = []
         relevant_statuses = []
-        for r in pull_request.reviewers:
-            st = cs_statuses.get(r.user.username)
+        for user in pull_request.get_reviewer_users():
+            st = cs_statuses.get(user.username)
             relevant_statuses.append(st)
             if not st or st.status in (ChangesetStatus.STATUS_NOT_REVIEWED,
                                        ChangesetStatus.STATUS_UNDER_REVIEW):
                 st = None
-                pull_request_pending_reviewers.append(r.user)
-            pull_request_reviewers.append((r.user, st))
+                pull_request_pending_reviewers.append(user)
+            pull_request_reviewers.append((user, st))
 
         result = self._calculate_status(relevant_statuses)
 
