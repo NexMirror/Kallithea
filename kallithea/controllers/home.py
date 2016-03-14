@@ -76,25 +76,34 @@ class HomeController(BaseController):
         def _c():
             log.debug('generating switcher repo/groups list')
             all_repos = Repository.query().order_by(Repository.repo_name).all()
-            repo_iter = self.scm_model.get_repos(all_repos, simple=True)
+            repo_iter = self.scm_model.get_repos(all_repos)
             all_groups = RepoGroup.query().order_by(RepoGroup.group_name).all()
             repo_groups_iter = self.scm_model.get_repo_groups(all_groups)
 
             res = [{
                     'text': _('Groups'),
                     'children': [
-                       {'id': obj.group_name, 'text': obj.group_name,
-                        'type': 'group', 'obj': {}} for obj in repo_groups_iter]
-                   }, {
+                       {'id': obj.group_name,
+                        'text': obj.group_name,
+                        'type': 'group',
+                        'obj': {}}
+                       for obj in repo_groups_iter
+                    ],
+                   },
+                   {
                     'text': _('Repositories'),
                     'children': [
-                       {'id': obj['name'], 'text': obj['name'],
-                        'type': 'repo', 'obj': obj['dbrepo']} for obj in repo_iter]
+                       {'id': obj.repo_name,
+                        'text': obj.repo_name,
+                        'type': 'repo',
+                        'obj': obj.get_dict()}
+                       for obj in repo_iter
+                    ],
                    }]
 
             data = {
                 'more': False,
-                'results': res
+                'results': res,
             }
             return data
 

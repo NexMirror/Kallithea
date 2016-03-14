@@ -78,92 +78,6 @@ class RepoTemp(object):
         return "<%s('id:%s')>" % (self.__class__.__name__, self.repo_id)
 
 
-class CachedRepoList(object):
-    """
-    Cached repo list. Uses super-fast in-memory cache after initialization.
-    """
-
-    def __init__(self, db_repo_list, repos_path, order_by=None, perm_set=None):
-        self.db_repo_list = db_repo_list
-        self.repos_path = repos_path
-        self.order_by = order_by
-        self.reversed = (order_by or '').startswith('-')
-        if not perm_set:
-            perm_set = ['repository.read', 'repository.write',
-                        'repository.admin']
-        self.perm_set = perm_set
-
-    def __len__(self):
-        return len(self.db_repo_list)
-
-    def __repr__(self):
-        return '<%s (%s)>' % (self.__class__.__name__, self.__len__())
-
-    def __iter__(self):
-        # pre-propagated valid_cache_keys to save executing select statements
-        # for each repo
-        valid_cache_keys = CacheInvalidation.get_valid_cache_keys()
-
-        for dbr in self.db_repo_list:
-            scmr = dbr.scm_instance_cached(valid_cache_keys)
-            # check permission at this level
-            if not HasRepoPermissionAny(
-                *self.perm_set)(dbr.repo_name, 'get repo check'):
-                continue
-
-            try:
-                last_change = scmr.last_change
-                tip = h.get_changeset_safe(scmr, 'tip')
-            except Exception:
-                log.error(
-                    '%s this repository is present in database but it '
-                    'cannot be created as an scm instance, org_exc:%s'
-                    % (dbr.repo_name, traceback.format_exc())
-                )
-                continue
-
-            tmp_d = {}
-            tmp_d['name'] = dbr.repo_name
-            tmp_d['name_sort'] = tmp_d['name'].lower()
-            tmp_d['raw_name'] = tmp_d['name'].lower()
-            tmp_d['description'] = dbr.description
-            tmp_d['description_sort'] = tmp_d['description'].lower()
-            tmp_d['last_change'] = last_change
-            tmp_d['last_change_sort'] = time.mktime(last_change.timetuple())
-            tmp_d['tip'] = tip.raw_id
-            tmp_d['tip_sort'] = tip.revision
-            tmp_d['rev'] = tip.revision
-            tmp_d['contact'] = dbr.user.full_contact
-            tmp_d['contact_sort'] = tmp_d['contact']
-            tmp_d['owner_sort'] = tmp_d['contact']
-            tmp_d['repo_archives'] = list(scmr._get_archives())
-            tmp_d['last_msg'] = tip.message
-            tmp_d['author'] = tip.author
-            tmp_d['dbrepo'] = dbr.get_dict()
-            tmp_d['dbrepo_fork'] = dbr.fork.get_dict() if dbr.fork else {}
-            yield tmp_d
-
-
-class SimpleCachedRepoList(CachedRepoList):
-    """
-    Lighter version of CachedRepoList without the scm initialisation
-    """
-
-    def __iter__(self):
-        for dbr in self.db_repo_list:
-            # check permission at this level
-            if not HasRepoPermissionAny(
-                *self.perm_set)(dbr.repo_name, 'get repo check'):
-                continue
-
-            tmp_d = {
-                'name': dbr.repo_name,
-                'dbrepo': dbr.get_dict(),
-                'dbrepo_fork': dbr.fork.get_dict() if dbr.fork else {}
-            }
-            yield tmp_d
-
-
 class _PermCheckIterator(object):
     def __init__(self, obj_list, obj_attr, perm_set, perm_checker, extra_kwargs=None):
         """
@@ -300,37 +214,18 @@ class ScmModel(BaseModel):
         log.debug('found %s paths with repositories', len(repos))
         return repos
 
-    def get_repos(self, all_repos=None, sort_key=None, simple=False):
+    def get_repos(self, repos):
+        """Return the repos the user has access to"""
+        return RepoList(repos)
+
+    def get_repo_groups(self, groups=None):
+        """Return the repo groups the user has access to
+        If no groups are specified, use top level groups.
         """
-        Get all repos from db and for each repo create its
-        backend instance and fill that backed with information from database
-
-        :param all_repos: list of repository names as strings
-            give specific repositories list, good for filtering
-
-        :param sort_key: initial sorting of repos
-        :param simple: use SimpleCachedList - one without the SCM info
-        """
-        if all_repos is None:
-            all_repos = self.sa.query(Repository) \
-                        .filter(Repository.group_id == None) \
-                        .order_by(func.lower(Repository.repo_name)).all()
-        if simple:
-            repo_iter = SimpleCachedRepoList(all_repos,
-                                             repos_path=self.repos_path,
-                                             order_by=sort_key)
-        else:
-            repo_iter = CachedRepoList(all_repos,
-                                       repos_path=self.repos_path,
-                                       order_by=sort_key)
-
-        return repo_iter
-
-    def get_repo_groups(self, all_groups=None):
-        if all_groups is None:
-            all_groups = RepoGroup.query() \
+        if groups is None:
+            groups = RepoGroup.query() \
                 .filter(RepoGroup.group_parent_id == None).all()
-        return [x for x in RepoGroupList(all_groups)]
+        return RepoGroupList(groups)
 
     def mark_for_invalidation(self, repo_name):
         """
