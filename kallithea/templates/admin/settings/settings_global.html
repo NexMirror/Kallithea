@@ -24,11 +24,16 @@ ${h.form(url('admin_settings_global'), method='post')}
 
             <div class="field">
                 <div class="label">
-                    <label for="ga_code">${_('Analytics HTML block')}:</label>
+                    <label for="ga_code">${_('HTML/JavaScript/CSS customization block')}:</label>
                 </div>
                 <div class="input">
                     ${h.textarea('ga_code', cols=80, rows=10)}
-                    <span class="help-block">${_('HTML with JavaScript for web analytics systems like Google Analytics or Piwik. This will be added at the bottom of every page.')}</span>
+                    <span class="help-block">${_('HTML (possibly with\
+                        JavaScript and/or CSS) that will be added to the bottom\
+                        of every page. This can be used for web analytics\
+                        systems like Google Analytics or Piwik, but also to\
+                        perform instance-specific customizations like adding a\
+                        project banner at the top of every page.')}</span>
                 </div>
             </div>
 
