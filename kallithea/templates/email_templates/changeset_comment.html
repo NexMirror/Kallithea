@@ -5,15 +5,35 @@
 <%include file="header.html" args="title=title,link=cs_comment_url"/>\
 </%block>\
 \
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td>
 <%include file="comment.html" args="text=body,author=cs_comment_user,status=status_change"/>\
-            <p>
+        </td>
+    </tr>
+    <tr>
+        <td height="30px"></td>
+    </tr>
+    <tr>
+        <td>
+            <div>
                 ${_('Changeset on')}
-                <a href="${cs_target_repo}">${cs_target_repo}</a>
+                <a style="color:${color_link};text-decoration:none"
+                   href="${cs_target_repo}">${cs_target_repo}</a>
                 ${_('branch')}
-                ${branch}:
-                <br/>
-                "<a href="${cs_url}">${h.shorter(message, 60, firstline=True)}</a>"
+                <span style="color:${color_link}">${branch}</span>:
+            </div>
+            <div>
+                "<a style="color:${color_link};text-decoration:none"
+                   href="${cs_url}">${h.shorter(message, 60, firstline=True)}</a>"
                 ${_('by')}
-                ${cs_author.full_name_and_username}.
-            </p>
+                <span style="color:${color_link}">${cs_author.full_name_and_username}</span>.
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
 <%include file="button.html" args="url=cs_comment_url,title=_('View Comment'),padding_bottom=False"/>\
+        </td>
+    </tr>
+</table>

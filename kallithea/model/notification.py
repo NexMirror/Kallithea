@@ -326,5 +326,21 @@ class EmailNotificationModel(BaseModel):
                    'h': h,
                    'c': c}
         _kwargs.update(kwargs)
+        if content_type == 'html':
+            _kwargs.update({
+                "color_text": "#202020",
+                "color_emph": "#395fa0",
+                "color_link": "#395fa0",
+                "color_border": "#ddd",
+                "color_background_grey": "#f9f9f9",
+                "color_button": "#395fa0",
+                "monospace_style": "font-family:Lucida Console,Consolas,Monaco,Inconsolata,Liberation Mono,monospace",
+                "sans_style": "font-family:Helvetica,Arial,sans-serif",
+                })
+            _kwargs.update({
+                "default_style": "%(sans_style)s;font-weight:200;font-size:14px;line-height:17px;color:%(color_text)s" % _kwargs,
+                "comment_style": "%(monospace_style)s;white-space:pre-wrap" % _kwargs,
+                })
+
         log.debug('rendering tmpl %s with kwargs %s', base, _kwargs)
         return email_template.render(**_kwargs)

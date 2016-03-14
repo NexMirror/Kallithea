@@ -5,19 +5,40 @@
 <%include file="header.html" args="title=_('New User Registration'),link=registered_user_url"/>\
 </%block>\
 \
-        <p>
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td>
             ${_('Username')}:
-            <br/>
+        </td>
+        <td style="color:${color_link}">
             ${new_username}
-        </p>
-        <p>
+        </td>
+    </tr>
+    <tr>
+        <td height="10px" colspan="2"></td>
+    </tr>
+    <tr>
+        <td>
             ${_('Full Name')}:
-            <br/>
+        </td>
+        <td style="color:${color_link}">
             ${new_full_name}
-        </p>
-        <p>
+        </td>
+    </tr>
+    <tr>
+        <td height="10px" colspan="2"></td>
+    </tr>
+    <tr>
+        <td>
             ${_('Email')}:
-            <br/>
+        </td>
+        <td style="color:${color_link}">
             ${new_email}
-        </p>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
 <%include file="button.html" args="url=registered_user_url,title=_('View User Profile'),padding_bottom=False"/>\
+        </td>
+    </tr>
+</table>

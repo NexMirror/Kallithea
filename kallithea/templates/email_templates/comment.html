@@ -1,17 +1,57 @@
 <%page args="author,text,status,close=False" />\
 \
 ##<!-- comment ->
-            <h2>${author}</h2>
+<table cellpadding="0" cellspacing="0" width="100%" border="0" bgcolor="${color_background_grey}" style="border:1px solid ${color_border};border-radius:4px">
+    <tr>
+        <td height="10px" colspan="3"></td>
+    </tr>
+    <tr>
+        <td width="20px"></td>
+        <td>
+            <div style="font-weight:600;color:${color_emph}">${author}</div>
+        </td>
+        <td width="20px"></td>
+    </tr>
+    <tr>
+        <td height="10px" colspan="3" style="border-bottom:1px solid ${color_border}"></td>
+    </tr>
+    %if status or close:
+        <tr>
+            <td height="10px" colspan="3"></td>
+        </tr>
+        <tr>
+            <td width="20px"></td>
+            <td>
                 %if status:
-                    <p>
+                    <div style="font-weight:600">
                         ${_('Status change:')}
                         ${status}
-                    </p>
+                    </div>
                 %endif
                 %if close:
-                    <p>
+                    <div style="font-weight:600">
                         ${_('The pull request has been closed.')}
-                    </p>
+                    </div>
                 %endif
-                <div style="font-family:monospace;white-space:pre-wrap">${text}</div>
+            </td>
+            <td width="20px"></td>
+        </tr>
+        <tr>
+            <td height="10px" colspan="3" style="border-bottom:1px solid ${color_border}"></td>
+        </tr>
+    %endif
+    <tr>
+        <td height="10px" colspan="3"></td>
+    </tr>
+    <tr>
+        <td width="20px"></td>
+        <td>
+            <div style="${comment_style}">${text}</div>
+        </td>
+        <td width="20px"></td>
+    </tr>
+    <tr>
+        <td height="10px" colspan="3"></td>
+    </tr>
+</table>
 ##<!-- /comment ->

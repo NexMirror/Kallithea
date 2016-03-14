@@ -5,33 +5,69 @@
 <%include file="header.html" args="title=title,link=pr_url"/>\
 </%block>\
 \
-            <p>
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td>
+            <div>
                 ${_('Pull request from')}
-                <a href="${pr_source_repo}">${pr_source_repo}</a>
+                <a style="color:${color_link};text-decoration:none"
+                   href="${pr_source_repo}">${pr_source_repo}</a>
                 ${_('at')}
-                ${pr_source_branch}
+                <span style="color:${color_link}">${pr_source_branch}</span>
                 ${_('to')}
-                <a href="${pr_target_repo}">${pr_target_repo}</a>
+                <a style="color:${color_link};text-decoration:none"
+                   href="${pr_target_repo}">${pr_target_repo}</a>
                 ${_('at')}
-                ${pr_target_branch}:
-                <br/>
-                <a href="${pr_url}">${pr_nice_id}</a>
-                "${pr_title}"
+                <span style="color:${color_link}">${pr_target_branch}</span>:
+            </div>
+            <div>
+                <a style="color:${color_link};text-decoration:none"
+                   href="${pr_url}">${pr_nice_id}</a>
+                "<span style="color:${color_link}">${pr_title}</span>"
                 ${_('by')}
-                ${pr_owner.full_name_and_username}.
-            </p>
-            <p>
+                <span style="color:${color_link}">${pr_owner.full_name_and_username}</span>.
+            </div>
+        </td>
+    </tr>
+    <tr><td height="10px"></td></tr>
+    <tr>
+        <td>
+            <div>
                 ${_('Description')}:
-            </p>
-            <div style="font-family:monospace;white-space:pre-wrap">${body}</div>
-            <p>${_('Changesets')}:</p>
-            <ul>
+            </div>
+        </td>
+    </tr>
+    <tr><td height="10px"></td></tr>
+    <tr>
+        <td>
+            <div style="${comment_style};color:${color_link}">${body}</div>
+        </td>
+    </tr>
+    <tr><td height="15px"></td></tr>
+    <tr>
+        <td>
+            <div>${_('Changesets')}:</div>
+        </td>
+    </tr>
+    <tr><td height="10px"></td></tr>
+
+    <tr>
+        <td style="${sans_style}">
+            <ul style="color:${color_link};padding-left:15px;margin:0">
                 %for revision, desc in pr_revisions:
                     <li>
-                        <a href="${h.canonical_url('changeset_home', repo_name=org_repo_name, revision=revision)}">
+                        <a style="color:${color_link};text-decoration:none"
+                           href="${h.canonical_url('changeset_home', repo_name=org_repo_name, revision=revision)}">
                             ${h.shorter(desc, 80, firstline=True)}
                         </a>
                     </li>
                 %endfor
             </ul>
+        </td>
+    </tr>
+    <tr>
+        <td>
 <%include file="button.html" args="url=pr_url,title=_('View Pull Request'),padding_bottom=False"/>\
+        </td>
+    </tr>
+</table>

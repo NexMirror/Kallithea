@@ -6,8 +6,37 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
 <body>
+<table align="center" cellpadding="0" cellspacing="0" border="0" style="min-width:348px;max-width:800px;${default_style}">
+    <tr>
+        <td width="30px"></td>
+        <td>
+            <table width="100%" cellpadding="0" cellspacing="0" border="0"
+                   style="table-layout:fixed;${sans_style};border:1px solid ${color_border}">
+                <tr><td width="30px"></td><td></td><td width="30px"></td></tr>
+                <tr>
+                    <td colspan="3">
+<%block name="header"/>\
+                    </td>
+                </tr>
+                <tr>
+                    <td height="30px" colspan="3"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
                         ##<!-- body -->
 ${self.body()}\
                         ##<!-- /body -->
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td height="30px" colspan="3"></td>
+                </tr>
+            </table>
+        </td>
+        <td width="30px"></td>
+    </tr>
+</table>
 </body>
 </html>
