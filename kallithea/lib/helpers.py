@@ -25,6 +25,7 @@ import re
 import urlparse
 import textwrap
 
+from beaker.cache import cache_region
 from pygments.formatters.html import HtmlFormatter
 from pygments import highlight as code_highlight
 from pylons import url
@@ -477,15 +478,19 @@ def is_hg(repository):
     return _type == 'hg'
 
 
+@cache_region('long_term', 'user_or_none')
 def user_or_none(author):
+    """Try to match email part of VCS committer string with a local user - or return None"""
     email = author_email(author)
     if email:
-        user = User.get_by_email(email, cache=True)
+        user = User.get_by_email(email, cache=True) # cache will only use sql_cache_short
         if user is not None:
             return user
     return None
 
 def email_or_none(author):
+    """Try to match email part of VCS committer string with a local user.
+    Return primary email of user, email part of the specified author name, or None."""
     if not author:
         return None
     user = user_or_none(author)
