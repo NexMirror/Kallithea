@@ -1437,9 +1437,6 @@ class Repository(Base, BaseModel):
         """
         CacheInvalidation.set_invalidate(self.repo_name)
 
-    def scm_instance_no_cache(self):
-        return self.__get_instance()
-
     @property
     def scm_instance(self):
         import kallithea
@@ -1452,7 +1449,7 @@ class Repository(Base, BaseModel):
         @cache_region('long_term')
         def _c(repo_name): # repo_name is just for the cache key
             log.debug('Creating new %s scm_instance and populating cache', repo_name)
-            return self.__get_instance()
+            return self.scm_instance_no_cache()
         rn = self.repo_name
 
         valid = CacheInvalidation.test_and_set_valid(rn, None, valid_cache_keys=valid_cache_keys)
@@ -1463,7 +1460,7 @@ class Repository(Base, BaseModel):
             log.debug('Trying to get scm_instance of %s from cache', rn)
         return _c(rn)
 
-    def __get_instance(self):
+    def scm_instance_no_cache(self):
         repo_full_path = safe_str(self.repo_full_path)
         alias = get_scm(repo_full_path)[0]
         log.debug('Creating instance of %s repository from %s',
