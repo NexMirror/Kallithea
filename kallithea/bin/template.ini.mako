@@ -196,9 +196,6 @@ app_instance_uuid = ${uuid()}
 <%text>## cut off limit for large diffs (size in bytes)</%text>
 cut_off_limit = 256000
 
-<%text>## use cache version of scm repo everywhere</%text>
-vcs_full_cache = true
-
 <%text>## force https in Kallithea, fixes https redirects, assumes it's always https</%text>
 force_https = false
 

@@ -40,7 +40,6 @@ ini_files = [
         '''
         Kallithea - config for tests:
         initial_repo_scan = true
-        vcs_full_cache = false
         sqlalchemy and kallithea_test.sqlite
         custom logging
 
@@ -53,7 +52,6 @@ ini_files = [
             '[app:main]': {
                 'initial_repo_scan': 'true',
                 'app_instance_uuid': 'test',
-                'vcs_full_cache': 'false',
                 'show_revision_number': 'true',
                 'beaker.cache.sql_cache_short.expire': '1',
                 'beaker.session.secret': '{74e0cd75-b339-478b-b129-07dd221def1f}',

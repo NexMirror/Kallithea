@@ -9,21 +9,17 @@ performing slower than expected. Because of the demanding nature of handling lar
 amounts of data from version control systems, here are some tips on how to get
 the best performance.
 
-* Kallithea is often I/O bound, and hence a fast disk (SSD/SAN) is
-  usually more important than a fast CPU.
-
-* Sluggish loading of the front page can easily be fixed by grouping repositories or by
-  increasing cache size (see below). This includes using the lightweight dashboard
-  option and ``vcs_full_cache`` setting in .ini file.
-
 Follow these few steps to improve performance of Kallithea system.
 
-1. Increase cache
+1.  Kallithea is often I/O bound, and hence a fast disk (SSD/SAN) is
+    usually more important than a fast CPU.
+
+2. Increase cache
 
     Tweak beaker cache settings in the ini file. The actual effect of that
     is questionable.
 
-2. Switch from SQLite to PostgreSQL or MySQL
+3. Switch from SQLite to PostgreSQL or MySQL
 
     SQLite is a good option when having a small load on the system. But due to
     locking issues with SQLite, it is not recommended to use it for larger
@@ -31,7 +27,7 @@ Follow these few steps to improve performance of Kallithea system.
     performance increase. A tool like SQLAlchemyGrate_ can be used for
     migrating to another database platform.
 
-3. Scale Kallithea horizontally
+4. Scale Kallithea horizontally
 
     Scaling horizontally can give huge performance benefits when dealing with
     large amounts of traffic (many users, CI servers, etc.). Kallithea can be

@@ -1439,11 +1439,7 @@ class Repository(Base, BaseModel):
 
     @property
     def scm_instance(self):
-        import kallithea
-        full_cache = str2bool(kallithea.CONFIG.get('vcs_full_cache'))
-        if full_cache:
-            return self.scm_instance_cached()
-        return self.__get_instance()
+        return self.scm_instance_cached()
 
     def scm_instance_cached(self, valid_cache_keys=None):
         @cache_region('long_term', 'scm_instance_cached')
