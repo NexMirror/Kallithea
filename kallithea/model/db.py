@@ -2317,8 +2317,8 @@ class PullRequest(Base, BaseModel):
                              cascade="all, delete-orphan")
     org_repo = relationship('Repository', primaryjoin='PullRequest.org_repo_id==Repository.repo_id')
     other_repo = relationship('Repository', primaryjoin='PullRequest.other_repo_id==Repository.repo_id')
-    statuses = relationship('ChangesetStatus')
-    comments = relationship('ChangesetComment',
+    statuses = relationship('ChangesetStatus', order_by='ChangesetStatus.changeset_status_id')
+    comments = relationship('ChangesetComment', order_by='ChangesetComment.comment_id',
                              cascade="all, delete-orphan")
 
     def is_closed(self):
