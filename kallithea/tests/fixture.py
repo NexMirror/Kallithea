@@ -147,6 +147,7 @@ class Fixture(object):
         cur_user = kwargs.get('cur_user', TEST_USER_ADMIN_LOGIN)
         RepoModel().create(form_data, cur_user)
         Session().commit()
+        ScmModel().mark_for_invalidation(name)
         return Repository.get_by_repo_name(name)
 
     def create_fork(self, repo_to_fork, fork_name, **kwargs):
@@ -166,6 +167,7 @@ class Fixture(object):
         owner = kwargs.get('cur_user', TEST_USER_ADMIN_LOGIN)
         RepoModel().create_fork(form_data, cur_user=owner)
         Session().commit()
+        ScmModel().mark_for_invalidation(fork_name)
         r = Repository.get_by_repo_name(fork_name)
         assert r
         return r
