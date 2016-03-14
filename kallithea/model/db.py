@@ -2225,6 +2225,7 @@ class ChangesetStatus(Base, BaseModel):
         Index('cs_pull_request_id_idx', 'pull_request_id'),
         Index('cs_changeset_comment_id_idx', 'changeset_comment_id'),
         Index('cs_pull_request_id_user_id_version_idx', 'pull_request_id', 'user_id', 'version'),
+        Index('cs_repo_id_pull_request_id_idx', 'repo_id', 'pull_request_id'),
         UniqueConstraint('repo_id', 'revision', 'version'),
         _table_args_default_dict,
     )
