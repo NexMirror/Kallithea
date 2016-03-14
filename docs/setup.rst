@@ -67,24 +67,6 @@ You are now ready to use Kallithea. To run it simply execute::
   repositories.
 
 
-Extensions
-----------
-
-Optionally one can create an ``rcextensions`` package that extends Kallithea
-functionality.
-To generate a skeleton extensions package, run::
-
-    paster make-rcext my.ini
-
-This will create an ``rcextensions`` package next to the specified ``ini`` file.
-With ``rcextensions`` it's possible to add additional mapping for whoosh,
-stats and add additional code into the push/pull/create/delete repo hooks,
-for example for sending signals to build-bots such as Jenkins.
-
-See the ``__init__.py`` file inside the generated ``rcextensions`` package
-for more details.
-
-
 Using Kallithea with SSH
 ------------------------
 

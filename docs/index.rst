@@ -44,6 +44,7 @@ Kallithea Documentation
    usage/backup
    usage/debugging
    usage/troubleshooting
+   usage/customization
 
 **Development**
 
