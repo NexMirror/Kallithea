@@ -117,7 +117,7 @@ class FeedController(BaseRepoController):
     def atom(self, repo_name):
         """Produce an atom-1.0 feed via feedgenerator module"""
 
-        @cache_region('long_term')
+        @cache_region('long_term', '_get_feed_from_cache')
         def _get_feed_from_cache(key, kind):
             feed = Atom1Feed(
                  title=self.title % repo_name,
@@ -142,13 +142,13 @@ class FeedController(BaseRepoController):
         kind = 'ATOM'
         valid = CacheInvalidation.test_and_set_valid(repo_name, kind)
         if not valid:
-            region_invalidate(_get_feed_from_cache, None, repo_name, kind)
+            region_invalidate(_get_feed_from_cache, None, '_get_feed_from_cache', repo_name, kind)
         return _get_feed_from_cache(repo_name, kind)
 
     def rss(self, repo_name):
         """Produce an rss2 feed via feedgenerator module"""
 
-        @cache_region('long_term')
+        @cache_region('long_term', '_get_feed_from_cache')
         def _get_feed_from_cache(key, kind):
             feed = Rss201rev2Feed(
                 title=self.title % repo_name,
@@ -173,5 +173,5 @@ class FeedController(BaseRepoController):
         kind = 'RSS'
         valid = CacheInvalidation.test_and_set_valid(repo_name, kind)
         if not valid:
-            region_invalidate(_get_feed_from_cache, None, repo_name, kind)
+            region_invalidate(_get_feed_from_cache, None, '_get_feed_from_cache', repo_name, kind)
         return _get_feed_from_cache(repo_name, kind)
