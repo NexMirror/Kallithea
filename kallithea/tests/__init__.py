@@ -272,3 +272,6 @@ class TestControllerPytest(BaseTestController):
         assert first == second
     def assertDictEqual(self, first, second, msg=None):
         assert first == second
+    def assertRaises(self, exception, method):
+        with pytest.raises(exception):
+            method()
