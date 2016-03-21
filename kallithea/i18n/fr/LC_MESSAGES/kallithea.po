@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2016-03-14 16:51+0100\n"
-"PO-Revision-Date: 2016-03-14 18:25+0000\n"
+"PO-Revision-Date: 2016-03-21 13:00+0000\n"
 "Last-Translator: Étienne Gilli <etienne.gilli@gmail.com>\n"
 "Language-Team: French "
 "<https://hosted.weblate.org/projects/kallithea/kallithea/fr/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 2.5\n"
+"X-Generator: Weblate 2.6-dev\n"
 
 #: kallithea/controllers/changelog.py:85
 #: kallithea/controllers/pullrequests.py:240 kallithea/lib/base.py:515
@@ -1068,6 +1068,8 @@ msgstr "Clé d'API invalide"
 #: kallithea/lib/auth.py:768
 msgid "CSRF token leak has been detected - all form tokens have been expired"
 msgstr ""
+"Une fuite de jeton CSRF a été détectée - tous les jetons de formulaire ont "
+"été marqués « expirés »"
 
 #: kallithea/lib/auth.py:813
 msgid "You need to be a registered user to perform this action"
@@ -1866,7 +1868,6 @@ msgid "Only admins can fork repositories"
 msgstr "Seul un administrateur peut faire un fork de dépôt"
 
 #: kallithea/model/db.py:1699
-#, fuzzy
 msgid "Non-admins can fork repositories"
 msgstr "Les utilisateurs non-administrateurs peuvent faire un fork de dépôt"
 
@@ -3695,7 +3696,7 @@ msgstr "Déverrouiller le dépôt"
 #: kallithea/templates/admin/repos/repo_edit_advanced.html:56
 #, python-format
 msgid "Locked by %s on %s"
-msgstr ""
+msgstr "Verrouillé par %s sur %s"
 
 #: kallithea/templates/admin/repos/repo_edit_advanced.html:60
 msgid "Confirm to lock repository."
@@ -4931,21 +4932,21 @@ msgstr "Filtre de branche :"
 
 #: kallithea/templates/changelog/changelog.html:92
 #: kallithea/templates/changelog/changelog_summary_data.html:20
-#, fuzzy, python-format
+#, python-format
 #| msgid "" "Changeset status: %s\n" "Click to open associated pull request %s"
 msgid ""
 "Changeset status: %s by %s\n"
 "Click to open associated pull request %s"
 msgstr ""
-"Statut du changeset : %s\n"
+"Statut du changeset : %s par %s\n"
 "Cliquer pour ouvrir la requête de pull %s associée"
 
 #: kallithea/templates/changelog/changelog.html:96
 #: kallithea/templates/changelog/changelog_summary_data.html:24
-#, fuzzy, python-format
+#, python-format
 #| msgid "Changeset status: %s"
 msgid "Changeset status: %s by %s"
-msgstr "Statut de changeset : %s"
+msgstr "Statut de changeset : %s par %s"
 
 #: kallithea/templates/changelog/changelog.html:116
 #: kallithea/templates/compare/compare_cs.html:63
@@ -5154,18 +5155,16 @@ msgid "Status change"
 msgstr "Changement de statut"
 
 #: kallithea/templates/changeset/changeset_file_comment.html:59
-#, fuzzy
 msgid "Commenting on line."
-msgstr "Commentaire sur la ligne {1}."
+msgstr "Création d’un commentaire sur la ligne."
 
 #: kallithea/templates/changeset/changeset_file_comment.html:60
-#, fuzzy
 msgid ""
 "Comments are in plain text. Use @username inside this text to notify "
 "another user."
 msgstr ""
-"Utilisez @nomutilisateur dans ce texte pour envoyer une notification à un"
-" autre utilisateur."
+"Les commentaires sont du texte brut. Utilisez @nomutilisateur dans ce texte "
+"pour envoyer une notification à un autre utilisateur."
 
 #: kallithea/templates/changeset/changeset_file_comment.html:67
 msgid "Set changeset status"
@@ -5180,9 +5179,8 @@ msgid "No change"
 msgstr "Aucun changement"
 
 #: kallithea/templates/changeset/changeset_file_comment.html:88
-#, fuzzy
 msgid "Finish pull request"
-msgstr "sur la requête de pull"
+msgstr "Terminer la requête de pull"
 
 #: kallithea/templates/changeset/changeset_file_comment.html:91
 msgid "Close"
@@ -5401,11 +5399,12 @@ msgstr ""
 "compte."
 
 #: kallithea/templates/email_templates/password_reset.html:8
-#, fuzzy
 msgid ""
 "This account is however managed outside this system and the password "
 "cannot be changed here."
-msgstr "Ce compte est géré avec %s et le mot de passe ne peut pas être changé ici"
+msgstr ""
+"Cependant, ce compte est géré hors de ce système et le mot de passe ne peut "
+"pas être changé ici."
 
 #: kallithea/templates/email_templates/password_reset.html:10
 msgid "To set a new password, click the following link"
@@ -5504,9 +5503,8 @@ msgid "Create New File"
 msgstr "Créer un nouveau fichier"
 
 #: kallithea/templates/files/files_add.html:53
-#, fuzzy
 msgid "New file type"
-msgstr "nouveau fichier"
+msgstr "Nouveau type de fichier"
 
 #: kallithea/templates/files/files_add.html:64
 #: kallithea/templates/files/files_delete.html:43
@@ -5641,19 +5639,16 @@ msgid "Binary file (%s)"
 msgstr "Fichier binaire (%s)"
 
 #: kallithea/templates/files/files_source.html:74
-#, fuzzy
 msgid "File is too big to display."
-msgstr "Ce fichier est trop gros pour être affiché"
+msgstr "Ce fichier est trop gros pour être affiché."
 
 #: kallithea/templates/files/files_source.html:76
-#, fuzzy
 msgid "Show full annotation anyway."
-msgstr "Afficher le diff complet quand même"
+msgstr "Afficher les annotations complètes quand même."
 
 #: kallithea/templates/files/files_source.html:78
-#, fuzzy
 msgid "Show as raw."
-msgstr "Montrer en brut"
+msgstr "Afficher en tant que texte brut."
 
 #: kallithea/templates/files/files_ypjax.html:5
 msgid "annotation"
@@ -5926,6 +5921,9 @@ msgid ""
 "Pull requests do not change once created. Select a revision and save to "
 "replace this pull request with a new one."
 msgstr ""
+"Les requêtes de pull ne peuvent pas changer après leur création. "
+"Sélectionner une révision puis sauvegarder afin de remplacer cette requête "
+"de pull par une nouvelle."
 
 #: kallithea/templates/pullrequests/pullrequest_show.html:224
 msgid "Pull Request Reviewers"
@@ -5952,9 +5950,9 @@ msgid "Save Changes"
 msgstr "Enregistrer les changements"
 
 #: kallithea/templates/pullrequests/pullrequest_show.html:296
-#, fuzzy
 msgid "Save Updates as New Pull Request"
-msgstr "Sauvegarder en tant que nouvelle requête de pull"
+msgstr ""
+"Sauvegarder les modifications entrantes en tant que nouvelle requête de pull"
 
 #: kallithea/templates/pullrequests/pullrequest_show.html:297
 msgid "Cancel Changes"
@@ -5970,9 +5968,9 @@ msgid "%s Pull Requests"
 msgstr "Requêtes de pull pour %s"
 
 #: kallithea/templates/pullrequests/pullrequest_show_all.html:11
-#, fuzzy, python-format
+#, python-format
 msgid "Pull Requests from '%s'"
-msgstr "Requête de pull depuis %s'"
+msgstr "Requêtes de pull depuis '%s'"
 
 #: kallithea/templates/pullrequests/pullrequest_show_all.html:13
 #, python-format
