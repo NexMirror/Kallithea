@@ -9,32 +9,6 @@ methods. Everything is available by sending JSON encoded http(s) requests to
 ``<your_server>/_admin/api``.
 
 
-API access for web views
-------------------------
-
-API access can also be turned on for each web view in Kallithea that is
-decorated with the ``@LoginRequired`` decorator. Some views use
-``@LoginRequired(api_access=True)`` and are always available. By default only
-RSS/Atom feed views are enabled. Other views are
-only available if they have been whitelisted. Edit the
-``api_access_controllers_whitelist`` option in your .ini file and define views
-that should have API access enabled.
-
-For example, to enable API access to patch/diff, raw file and archive::
-
-    api_access_controllers_whitelist =
-        ChangesetController:changeset_patch,
-        ChangesetController:changeset_raw,
-        FilesController:raw,
-        FilesController:archivefile
-
-After this change, a Kallithea view can be accessed without login by adding a
-GET parameter ``?api_key=<api_key>`` to the URL.
-
-Exposing raw diffs is a good way to integrate with
-third-party services like code review, or build farms that can download archives.
-
-
 API access
 ----------
 
@@ -1024,3 +998,29 @@ OUTPUT::
               "success": true
             }
     error:  null
+
+
+API access for web views
+------------------------
+
+API access can also be turned on for each web view in Kallithea that is
+decorated with the ``@LoginRequired`` decorator. Some views use
+``@LoginRequired(api_access=True)`` and are always available. By default only
+RSS/Atom feed views are enabled. Other views are
+only available if they have been whitelisted. Edit the
+``api_access_controllers_whitelist`` option in your .ini file and define views
+that should have API access enabled.
+
+For example, to enable API access to patch/diff, raw file and archive::
+
+    api_access_controllers_whitelist =
+        ChangesetController:changeset_patch,
+        ChangesetController:changeset_raw,
+        FilesController:raw,
+        FilesController:archivefile
+
+After this change, a Kallithea view can be accessed without login by adding a
+GET parameter ``?api_key=<api_key>`` to the URL.
+
+Exposing raw diffs is a good way to integrate with
+third-party services like code review, or build farms that can download archives.
