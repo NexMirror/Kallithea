@@ -60,7 +60,6 @@ Kallithea Documentation
    :maxdepth: 1
 
    api/api
-   api/models
 
 
 Other topics
