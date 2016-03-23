@@ -25,7 +25,7 @@
       <td width="80px">
         <% status = pr.user_review_status(c.authuser.user_id) %>
         %if status:
-          <i class="icon-circle changeset-status-${status}" title="${_("You voted: %s") % status}"></i>
+          <i class="icon-circle changeset-status-${status}" title="${_("You voted: %s") % h.changeset_status_lbl(status)}"></i>
         %else:
           <i class="icon-circle changeset-status-not_reviewed" title="${_("You didn't vote")}"></i>
         %endif
