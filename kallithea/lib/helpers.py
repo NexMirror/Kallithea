@@ -1438,7 +1438,7 @@ def changeset_status(repo, revision):
 
 
 def changeset_status_lbl(changeset_status):
-    return dict(ChangesetStatus.STATUSES).get(changeset_status)
+    return ChangesetStatus.get_status_lbl(changeset_status)
 
 
 def get_permission_name(key):

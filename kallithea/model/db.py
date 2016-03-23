@@ -2238,6 +2238,7 @@ class ChangesetStatus(Base, BaseModel):
         (STATUS_REJECTED, _("Rejected")),
         (STATUS_UNDER_REVIEW, _("Under review")),
     ]
+    STATUSES_DICT = dict(STATUSES)
 
     changeset_status_id = Column(Integer(), unique=True, primary_key=True)
     repo_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=False)
@@ -2262,7 +2263,7 @@ class ChangesetStatus(Base, BaseModel):
 
     @classmethod
     def get_status_lbl(cls, value):
-        return dict(cls.STATUSES).get(value)
+        return cls.STATUSES_DICT.get(value)
 
     @property
     def status_lbl(self):
