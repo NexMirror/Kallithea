@@ -10,14 +10,16 @@ msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2016-03-14 16:51+0100\n"
-"PO-Revision-Date: 2014-12-12 14:19+0200\n"
-"Last-Translator: Michal Čihař <michal@cihar.com>\n"
-"Language-Team: Simplified Chinese "
+"PO-Revision-Date: 2016-03-24 15:03+0000\n"
+"Last-Translator: YFdyh000 <yfdyh000@gmail.com>\n"
+"Language-Team: Chinese (China) "
 "<https://hosted.weblate.org/projects/kallithea/kallithea/zh_CN/>\n"
-"Plural-Forms: nplurals=1; plural=0\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 2.6-dev\n"
 "Generated-By: Babel 1.3\n"
 
 #: kallithea/controllers/changelog.py:85
@@ -39,21 +41,21 @@ msgstr "无"
 
 #: kallithea/controllers/changelog.py:167 kallithea/controllers/files.py:198
 msgid "(closed)"
-msgstr ""
+msgstr "(已关闭)"
 
 #: kallithea/controllers/changeset.py:88
 msgid "Show whitespace"
-msgstr ""
+msgstr "显示空白"
 
 #: kallithea/controllers/changeset.py:95 kallithea/controllers/changeset.py:102
 #: kallithea/templates/files/diff_2way.html:55
 msgid "Ignore whitespace"
-msgstr ""
+msgstr "忽略空白"
 
 #: kallithea/controllers/changeset.py:168
 #, python-format
 msgid "Increase diff context to %(num)s lines"
-msgstr ""
+msgstr "增加差异上下文到 %(num)s 行"
 
 #: kallithea/controllers/changeset.py:233 kallithea/controllers/files.py:97
 #: kallithea/controllers/files.py:117 kallithea/controllers/files.py:744
@@ -62,20 +64,19 @@ msgstr ""
 
 #: kallithea/controllers/compare.py:161 kallithea/templates/base/root.html:41
 msgid "Select changeset"
-msgstr ""
+msgstr "选择修订集"
 
 #: kallithea/controllers/compare.py:261
 msgid "Cannot compare repositories without using common ancestor"
 msgstr ""
 
 #: kallithea/controllers/error.py:71
-#, fuzzy
 msgid "No response"
-msgstr "修订"
+msgstr "无响应"
 
 #: kallithea/controllers/error.py:72
 msgid "Unknown error"
-msgstr ""
+msgstr "未知错误"
 
 #: kallithea/controllers/error.py:100
 msgid "The request could not be understood by the server due to malformed syntax."
@@ -117,7 +118,7 @@ msgstr "%s %s订阅"
 #: kallithea/templates/pullrequests/pullrequest_show.html:350
 #: kallithea/templates/pullrequests/pullrequest_show.html:372
 msgid "Changeset was too big and was cut off..."
-msgstr "修订集太大已被截断......"
+msgstr "修订集太大并已被截断..."
 
 #: kallithea/controllers/feed.py:91
 #, python-format
@@ -126,17 +127,17 @@ msgstr ""
 
 #: kallithea/controllers/files.py:92
 msgid "Click here to add new file"
-msgstr ""
+msgstr "点击这里添加新文件"
 
 #: kallithea/controllers/files.py:93
 #, python-format
 msgid "There are no files yet. %s"
-msgstr ""
+msgstr "这里还没有文件。%s"
 
 #: kallithea/controllers/files.py:195
-#, fuzzy, python-format
+#, python-format
 msgid "%s at %s"
-msgstr "%s零%s"
+msgstr "%s 在 %s"
 
 #: kallithea/controllers/files.py:307 kallithea/controllers/files.py:367
 #: kallithea/controllers/files.py:434
@@ -146,17 +147,17 @@ msgstr "版本库由%s于%s锁定"
 
 #: kallithea/controllers/files.py:319
 msgid "You can only delete files with revision being a valid branch"
-msgstr ""
+msgstr "您只能删除有效分支的修订中的文件"
 
 #: kallithea/controllers/files.py:330
 #, python-format
 msgid "Deleted file %s via Kallithea"
-msgstr ""
+msgstr "删除文件 %s 通过 Kallithea"
 
 #: kallithea/controllers/files.py:352
 #, python-format
 msgid "Successfully deleted file %s"
-msgstr ""
+msgstr "成功删除文件 %s"
 
 #: kallithea/controllers/files.py:356 kallithea/controllers/files.py:422
 #: kallithea/controllers/files.py:503
@@ -165,12 +166,12 @@ msgstr "提交时发生错误"
 
 #: kallithea/controllers/files.py:379
 msgid "You can only edit files with revision being a valid branch"
-msgstr ""
+msgstr "您只能编辑有效分支的修订中的文件"
 
 #: kallithea/controllers/files.py:393
 #, python-format
 msgid "Edited file %s via Kallithea"
-msgstr ""
+msgstr "已编辑文件 %s 通过 Kallithea"
 
 #: kallithea/controllers/files.py:409
 msgid "No changes"
@@ -183,7 +184,7 @@ msgstr "成功提交到%s"
 
 #: kallithea/controllers/files.py:445
 msgid "Added file via Kallithea"
-msgstr ""
+msgstr "已添加文件通过 Kallithea"
 
 #: kallithea/controllers/files.py:466
 msgid "No content"
@@ -199,7 +200,7 @@ msgstr ""
 
 #: kallithea/controllers/files.py:528
 msgid "Downloads disabled"
-msgstr ""
+msgstr "下载已禁用"
 
 #: kallithea/controllers/files.py:539
 #, python-format
@@ -240,7 +241,7 @@ msgstr "在复刻版本库%s的时候发生错误"
 
 #: kallithea/controllers/home.py:84
 msgid "Groups"
-msgstr ""
+msgstr "组"
 
 #: kallithea/controllers/home.py:94
 #: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:106
@@ -260,19 +261,19 @@ msgstr "版本库"
 #: kallithea/templates/files/files_delete.html:23
 #: kallithea/templates/files/files_edit.html:32
 msgid "Branch"
-msgstr ""
+msgstr "分支"
 
 #: kallithea/controllers/home.py:145 kallithea/templates/switch_to_list.html:16
 msgid "Closed Branches"
-msgstr ""
+msgstr "已关闭分支"
 
 #: kallithea/controllers/home.py:151
 msgid "Tag"
-msgstr ""
+msgstr "标签"
 
 #: kallithea/controllers/home.py:157
 msgid "Bookmark"
-msgstr ""
+msgstr "书签"
 
 #: kallithea/controllers/journal.py:111 kallithea/controllers/journal.py:153
 #: kallithea/templates/journal/public_journal.html:4
@@ -289,31 +290,29 @@ msgstr "日志"
 
 #: kallithea/controllers/login.py:144 kallithea/controllers/login.py:190
 msgid "Bad captcha"
-msgstr ""
+msgstr "验证码错误"
 
 #: kallithea/controllers/login.py:150
 msgid "You have successfully registered into Kallithea"
-msgstr ""
+msgstr "您已成功注册 Kallithea"
 
 #: kallithea/controllers/login.py:195
-#, fuzzy
 msgid "A password reset confirmation code has been sent"
-msgstr "密码重置链接已经发送"
+msgstr "密码重置确认码已经发送"
 
 #: kallithea/controllers/login.py:244
-#, fuzzy
 msgid "Invalid password reset token"
-msgstr "密码重置链接已经发送"
+msgstr "无效的密码重置令牌"
 
 #: kallithea/controllers/login.py:249
 #: kallithea/controllers/admin/my_account.py:167
 msgid "Successfully updated password"
-msgstr ""
+msgstr "成功更新密码"
 
 #: kallithea/controllers/pullrequests.py:123
 #, python-format
 msgid "%s (closed)"
-msgstr ""
+msgstr "%s (已关闭)"
 
 #: kallithea/controllers/pullrequests.py:151
 #: kallithea/templates/changeset/changeset.html:12
@@ -323,11 +322,11 @@ msgstr "修订集"
 
 #: kallithea/controllers/pullrequests.py:172
 msgid "Special"
-msgstr ""
+msgstr "特殊"
 
 #: kallithea/controllers/pullrequests.py:173
 msgid "Peer branches"
-msgstr ""
+msgstr "同等分支"
 
 #: kallithea/controllers/pullrequests.py:174 kallithea/model/scm.py:722
 #: kallithea/templates/switch_to_list.html:38
@@ -338,13 +337,12 @@ msgstr "书签"
 #: kallithea/controllers/pullrequests.py:312
 #, python-format
 msgid "Error creating pull request: %s"
-msgstr ""
+msgstr "创建拉取请求出错：%s"
 
 #: kallithea/controllers/pullrequests.py:358
 #: kallithea/controllers/pullrequests.py:505
-#, fuzzy
 msgid "No description"
-msgstr "描述"
+msgstr "无描述"
 
 #: kallithea/controllers/pullrequests.py:365
 msgid "Successfully opened new pull request"
@@ -355,22 +353,21 @@ msgstr "成功提交拉取请求"
 #: kallithea/controllers/pullrequests.py:512
 #, python-format
 msgid "Invalid reviewer \"%s\" specified"
-msgstr ""
+msgstr "指定的审核者 \"%s\" 无效"
 
 #: kallithea/controllers/pullrequests.py:371
 #: kallithea/controllers/pullrequests.py:458
-#, fuzzy
 msgid "Error occurred while creating pull request"
-msgstr "提交拉取请求时发生错误"
+msgstr "创建拉取请求时发生错误"
 
 #: kallithea/controllers/pullrequests.py:403
 msgid "Missing changesets since the previous pull request:"
-msgstr ""
+msgstr "缺少上次拉取请求之后的修订集："
 
 #: kallithea/controllers/pullrequests.py:410
 #, python-format
 msgid "New changesets on %s %s since the previous pull request:"
-msgstr ""
+msgstr "在上次拉取请求之后，在 %s %s 上的新修订集："
 
 #: kallithea/controllers/pullrequests.py:417
 msgid "Ancestor didn't change - show diff since previous version:"
@@ -391,17 +388,15 @@ msgstr ""
 #: kallithea/controllers/pullrequests.py:464
 #, python-format
 msgid "Closed, replaced by %s ."
-msgstr ""
+msgstr "已关闭，被 %s 替换。"
 
 #: kallithea/controllers/pullrequests.py:472
-#, fuzzy
 msgid "Pull request update created"
-msgstr "拉取请求检视人员"
+msgstr "拉取请求更新已创建"
 
 #: kallithea/controllers/pullrequests.py:516
-#, fuzzy
 msgid "Pull request updated"
-msgstr "拉取请求"
+msgstr "拉取请求已更新"
 
 #: kallithea/controllers/pullrequests.py:531
 msgid "Successfully deleted pull request"
@@ -423,7 +418,7 @@ msgstr ""
 
 #: kallithea/controllers/pullrequests.py:621
 msgid "No changesets found for updating this pull request."
-msgstr ""
+msgstr "没有找到更新此拉取请求的修订集。"
 
 #: kallithea/controllers/pullrequests.py:629
 #, python-format
@@ -444,9 +439,8 @@ msgid "Successfully deleted pull request %s"
 msgstr "成功删除拉取请求"
 
 #: kallithea/controllers/pullrequests.py:748
-#, fuzzy
 msgid "Closing."
-msgstr "使用中"
+msgstr "关闭。"
 
 #: kallithea/controllers/search.py:135
 msgid "Invalid search query. Try quoting it."
@@ -457,15 +451,13 @@ msgid "There is no index to search in. Please run whoosh indexer"
 msgstr "没有索引用于搜索。请运行whoosh索引器"
 
 #: kallithea/controllers/search.py:144
-#, fuzzy
 msgid "An error occurred during search operation."
-msgstr "在搜索操作中发生异常"
+msgstr "搜索操作期间发生错误。"
 
 #: kallithea/controllers/summary.py:181
 #: kallithea/templates/summary/summary.html:384
-#, fuzzy
 msgid "No data ready yet"
-msgstr "数据未加载"
+msgstr "数据尚未就绪"
 
 #: kallithea/controllers/summary.py:184
 #: kallithea/templates/summary/summary.html:98
@@ -474,11 +466,11 @@ msgstr "该版本库统计功能已经禁用"
 
 #: kallithea/controllers/admin/auth_settings.py:135
 msgid "Auth settings updated successfully"
-msgstr ""
+msgstr "验证设置更新成功"
 
 #: kallithea/controllers/admin/auth_settings.py:146
 msgid "error occurred during update of auth settings"
-msgstr ""
+msgstr "验证设置更新时发生错误"
 
 #: kallithea/controllers/admin/defaults.py:97
 msgid "Default settings updated successfully"
@@ -486,7 +478,7 @@ msgstr "默认设置已经成功更新"
 
 #: kallithea/controllers/admin/defaults.py:112
 msgid "Error occurred during update of defaults"
-msgstr ""
+msgstr "默认值更新时发生错误"
 
 #: kallithea/controllers/admin/gists.py:58
 #: kallithea/controllers/admin/my_account.py:243
@@ -499,58 +491,57 @@ msgstr "检视者"
 #: kallithea/controllers/admin/my_account.py:244
 #: kallithea/controllers/admin/users.py:285
 msgid "5 minutes"
-msgstr ""
+msgstr "5 分钟"
 
 #: kallithea/controllers/admin/gists.py:60
 #: kallithea/controllers/admin/my_account.py:245
 #: kallithea/controllers/admin/users.py:286
 msgid "1 hour"
-msgstr ""
+msgstr "1 小时"
 
 #: kallithea/controllers/admin/gists.py:61
 #: kallithea/controllers/admin/my_account.py:246
 #: kallithea/controllers/admin/users.py:287
 msgid "1 day"
-msgstr ""
+msgstr "1 天"
 
 #: kallithea/controllers/admin/gists.py:62
 #: kallithea/controllers/admin/my_account.py:247
 #: kallithea/controllers/admin/users.py:288
 msgid "1 month"
-msgstr ""
+msgstr "1 个月"
 
 #: kallithea/controllers/admin/gists.py:66
 #: kallithea/controllers/admin/my_account.py:249
 #: kallithea/controllers/admin/users.py:290
 msgid "Lifetime"
-msgstr ""
+msgstr "终身"
 
 #: kallithea/controllers/admin/gists.py:145
 msgid "Error occurred during gist creation"
-msgstr ""
+msgstr "gist 创建时发生错误"
 
 #: kallithea/controllers/admin/gists.py:183
 #, python-format
 msgid "Deleted gist %s"
-msgstr ""
+msgstr "已删除 gist %s"
 
 #: kallithea/controllers/admin/gists.py:232
-#, fuzzy
 msgid "Unmodified"
-msgstr "最后修改于"
+msgstr "未修改"
 
 #: kallithea/controllers/admin/gists.py:261
 msgid "Successfully updated gist content"
-msgstr ""
+msgstr "成功更新 gist 内容"
 
 #: kallithea/controllers/admin/gists.py:266
 msgid "Successfully updated gist data"
-msgstr ""
+msgstr "成功更新 gist 数据"
 
 #: kallithea/controllers/admin/gists.py:269
 #, python-format
 msgid "Error occurred during update of gist %s"
-msgstr ""
+msgstr "gist %s 更新时发生错误"
 
 #: kallithea/controllers/admin/my_account.py:70 kallithea/model/user.py:215
 #: kallithea/model/user.py:237
@@ -565,11 +556,11 @@ msgstr "你的帐号已经更新完成"
 #: kallithea/controllers/admin/users.py:201
 #, python-format
 msgid "Error occurred during update of user %s"
-msgstr ""
+msgstr "用户 %s 更新时发生错误"
 
 #: kallithea/controllers/admin/my_account.py:178
 msgid "Error occurred during update of user password"
-msgstr ""
+msgstr "用户密码更新时发生错误"
 
 #: kallithea/controllers/admin/my_account.py:220
 #: kallithea/controllers/admin/users.py:414
@@ -590,17 +581,17 @@ msgstr "成功删除用户电子邮件"
 #: kallithea/controllers/admin/my_account.py:259
 #: kallithea/controllers/admin/users.py:307
 msgid "API key successfully created"
-msgstr ""
+msgstr "API 密钥创建成功"
 
 #: kallithea/controllers/admin/my_account.py:271
 #: kallithea/controllers/admin/users.py:320
 msgid "API key successfully reset"
-msgstr ""
+msgstr "API 密钥重置成功"
 
 #: kallithea/controllers/admin/my_account.py:275
 #: kallithea/controllers/admin/users.py:324
 msgid "API key successfully deleted"
-msgstr ""
+msgstr "API 密钥删除成功"
 
 #: kallithea/controllers/admin/permissions.py:62
 #: kallithea/controllers/admin/permissions.py:66
@@ -668,11 +659,11 @@ msgstr "停用"
 
 #: kallithea/controllers/admin/permissions.py:77
 msgid "Allowed with manual account activation"
-msgstr ""
+msgstr "已允许手动激活账号"
 
 #: kallithea/controllers/admin/permissions.py:79
 msgid "Allowed with automatic account activation"
-msgstr ""
+msgstr "已允许自动激活账号"
 
 #: kallithea/controllers/admin/permissions.py:82
 #: kallithea/lib/dbmigrate/schema/db_1_7_0.py:1439
@@ -684,7 +675,7 @@ msgstr ""
 #: kallithea/lib/dbmigrate/schema/db_2_2_0.py:1655
 #: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1682 kallithea/model/db.py:1705
 msgid "Manual activation of external account"
-msgstr ""
+msgstr "外部账号手动激活"
 
 #: kallithea/controllers/admin/permissions.py:83
 #: kallithea/lib/dbmigrate/schema/db_1_7_0.py:1440
@@ -696,7 +687,7 @@ msgstr ""
 #: kallithea/lib/dbmigrate/schema/db_2_2_0.py:1656
 #: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1683 kallithea/model/db.py:1706
 msgid "Automatic activation of external account"
-msgstr ""
+msgstr "外部账号自动激活"
 
 #: kallithea/controllers/admin/permissions.py:87
 #: kallithea/controllers/admin/permissions.py:90
@@ -709,11 +700,11 @@ msgstr "启用"
 
 #: kallithea/controllers/admin/permissions.py:124
 msgid "Global permissions updated successfully"
-msgstr ""
+msgstr "全局权限更新成功"
 
 #: kallithea/controllers/admin/permissions.py:139
 msgid "Error occurred during update of permissions"
-msgstr ""
+msgstr "权限更新时发生错误"
 
 #: kallithea/controllers/admin/repo_groups.py:187
 #, python-format
@@ -1076,7 +1067,7 @@ msgstr ""
 
 #: kallithea/lib/diffs.py:82
 msgid "Changeset was too big and was cut off, use diff menu to display this diff"
-msgstr "修订集因过大而被截断，可查看原始修订集作为替代"
+msgstr "修订集过大并已被截断，使用差异菜单查看此差异"
 
 #: kallithea/lib/diffs.py:92
 msgid "No changes detected"
@@ -1095,7 +1086,7 @@ msgstr "创建标签%s"
 #: kallithea/lib/helpers.py:672
 #, python-format
 msgid "Show all combined changesets %s->%s"
-msgstr "显示合并的修订集%s->%s"
+msgstr "显示所有合并的修订集 %s->%s"
 
 #: kallithea/lib/helpers.py:678
 #, fuzzy
@@ -1873,7 +1864,7 @@ msgstr ""
 #: kallithea/model/notification.py:254
 #, python-format
 msgid "%(user)s commented on changeset %(age)s"
-msgstr ""
+msgstr "%(user)s 已评论修订集在 %(age)s"
 
 #: kallithea/model/notification.py:255
 #, python-format
@@ -1903,7 +1894,7 @@ msgstr "[评论]拉取请求"
 #: kallithea/model/notification.py:266
 #, python-format
 msgid "%(user)s commented on changeset at %(when)s"
-msgstr ""
+msgstr "%(user)s 已评论修订集于 %(when)s"
 
 #: kallithea/model/notification.py:267
 #, python-format
@@ -1933,7 +1924,7 @@ msgstr ""
 #: kallithea/model/notification.py:302
 #, python-format
 msgid "[Comment] %(repo_name)s changeset %(short_id)s on %(branch)s"
-msgstr ""
+msgstr "[评论] %(repo_name)s 修订集 %(short_id)s 在 %(branch)s"
 
 #: kallithea/model/notification.py:305
 #, fuzzy, python-format
@@ -2347,7 +2338,7 @@ msgstr ""
 #: kallithea/templates/journal/journal.html:292
 #: kallithea/templates/tags/tags.html:82
 msgid "Data error."
-msgstr "数据错误"
+msgstr "数据错误。"
 
 #: kallithea/templates/index_base.html:144
 #: kallithea/templates/admin/my_account/my_account_repos.html:61
@@ -2681,7 +2672,7 @@ msgstr "启用统计"
 #: kallithea/templates/admin/defaults/defaults.html:57
 #: kallithea/templates/admin/repos/repo_edit_settings.html:88
 msgid "Enable statistics window on summary page."
-msgstr "启用概况页的统计窗口"
+msgstr "启用概况页面上的统计窗口。"
 
 #: kallithea/templates/admin/defaults/defaults.html:63
 #: kallithea/templates/admin/repos/repo_edit_settings.html:93
@@ -2691,7 +2682,7 @@ msgstr "启用下载"
 #: kallithea/templates/admin/defaults/defaults.html:67
 #: kallithea/templates/admin/repos/repo_edit_settings.html:97
 msgid "Enable download menu on summary page."
-msgstr "启用概况页的下载菜单"
+msgstr "启用概况页面上的下载菜单。"
 
 #: kallithea/templates/admin/defaults/defaults.html:73
 #: kallithea/templates/admin/repo_groups/repo_group_edit_settings.html:34
@@ -2702,7 +2693,7 @@ msgstr "启用锁定"
 #: kallithea/templates/admin/defaults/defaults.html:77
 #: kallithea/templates/admin/repos/repo_edit_settings.html:106
 msgid "Enable lock-by-pulling on repository."
-msgstr "启用版本库的拉取锁定"
+msgstr "启用版本库的拉取锁定。"
 
 #: kallithea/templates/admin/gists/edit.html:5
 #: kallithea/templates/admin/gists/edit.html:18
@@ -3058,7 +3049,7 @@ msgstr "修改你的头像"
 #: kallithea/templates/admin/my_account/my_account_profile.html:12
 #: kallithea/templates/admin/users/user_edit_profile.html:9
 msgid "Using"
-msgstr "使用中"
+msgstr "使用"
 
 #: kallithea/templates/admin/my_account/my_account_profile.html:14
 #: kallithea/templates/admin/users/user_edit_profile.html:11
@@ -3088,7 +3079,7 @@ msgstr "版本库"
 #: kallithea/templates/journal/journal.html:291
 #: kallithea/templates/tags/tags.html:81
 msgid "No records found."
-msgstr "没有找到记录"
+msgstr "没有找到记录。"
 
 #: kallithea/templates/admin/my_account/my_account_watched.html:1
 #, fuzzy
@@ -3491,11 +3482,11 @@ msgstr "保持简短。用README文件来写更长的描述。"
 #: kallithea/templates/admin/repos/repo_edit_settings.html:39
 #: kallithea/templates/forks/fork.html:52
 msgid "Optionally select a group to put this repository into."
-msgstr "可选的，选择一个组将版本库放到其中"
+msgstr "可选的选择一个组将版本库放到其中。"
 
 #: kallithea/templates/admin/repos/repo_add_base.html:59
 msgid "Type of repository to create."
-msgstr "要创建的版本库类型"
+msgstr "要创建的版本库类型。"
 
 #: kallithea/templates/admin/repos/repo_add_base.html:64
 #: kallithea/templates/admin/repos/repo_edit_settings.html:44
@@ -3805,7 +3796,7 @@ msgstr "文件浏览、下载、whoosh和README的默认修订版本"
 
 #: kallithea/templates/admin/repos/repo_edit_settings.html:58
 msgid "Change owner of this repository."
-msgstr "修改这个版本库的所有者"
+msgstr "修改这个版本库的所有者。"
 
 #: kallithea/templates/admin/repos/repo_edit_statistics.html:6
 msgid "Processed commits"
@@ -4669,9 +4660,8 @@ msgid "Open New Pull Request for {0} &rarr; {1}"
 msgstr ""
 
 #: kallithea/templates/base/root.html:33
-#, fuzzy
 msgid "Show Selected Changesets {0} &rarr; {1}"
-msgstr "显示合并的修订集%s->%s"
+msgstr "显示选中的修订集 {0} &rarr; {1}"
 
 #: kallithea/templates/base/root.html:34
 #, fuzzy
@@ -4707,9 +4697,8 @@ msgid "disabled"
 msgstr ""
 
 #: kallithea/templates/base/root.html:42
-#, fuzzy
 msgid "Specify changeset"
-msgstr "%s修订集"
+msgstr "指定修订集"
 
 #: kallithea/templates/bookmarks/bookmarks.html:5
 #, python-format
@@ -4796,13 +4785,15 @@ msgid ""
 "Changeset status: %s by %s\n"
 "Click to open associated pull request %s"
 msgstr ""
+"修订集状态：%s 由 %s\n"
+"点击打开相关联的拉取请求 %s"
 
 #: kallithea/templates/changelog/changelog.html:96
 #: kallithea/templates/changelog/changelog_summary_data.html:24
-#, fuzzy, python-format
+#, python-format
 #| msgid "Changeset status"
 msgid "Changeset status: %s by %s"
-msgstr "修订集状态"
+msgstr "修订集状态：%s 由 %s"
 
 #: kallithea/templates/changelog/changelog.html:116
 #: kallithea/templates/compare/compare_cs.html:63
@@ -4812,7 +4803,7 @@ msgstr ""
 #: kallithea/templates/changelog/changelog.html:125
 #: kallithea/templates/compare/compare_cs.html:30
 msgid "Changeset has comments"
-msgstr ""
+msgstr "修订集有评论"
 
 #: kallithea/templates/changelog/changelog.html:135
 #: kallithea/templates/changelog/changelog_summary_data.html:57
@@ -4908,7 +4899,7 @@ msgstr "已有版本库？"
 #: kallithea/templates/changeset/changeset.html:8
 #, python-format
 msgid "%s Changeset"
-msgstr "%s修订集"
+msgstr "%s 修订集"
 
 #: kallithea/templates/changeset/changeset.html:36
 msgid "Parent rev."
@@ -5005,9 +4996,8 @@ msgid "No title"
 msgstr "无文件"
 
 #: kallithea/templates/changeset/changeset_file_comment.html:24
-#, fuzzy
 msgid "on this changeset"
-msgstr "无修订"
+msgstr "在此修订集"
 
 #: kallithea/templates/changeset/changeset_file_comment.html:31
 #, fuzzy
@@ -5032,9 +5022,8 @@ msgid ""
 msgstr "在文本中使用 @用户名 以发送通知到该Kallithea用户"
 
 #: kallithea/templates/changeset/changeset_file_comment.html:67
-#, fuzzy
 msgid "Set changeset status"
-msgstr "修订集状态"
+msgstr "设置修订集状态"
 
 #: kallithea/templates/changeset/changeset_file_comment.html:69
 msgid "Vote for pull request status"
@@ -5066,7 +5055,7 @@ msgstr "评论"
 
 #: kallithea/templates/changeset/changeset_file_comment.html:112
 msgid "You need to be logged in to comment."
-msgstr "必须登录才能评论"
+msgstr "您必须登录才能评论。"
 
 #: kallithea/templates/changeset/changeset_file_comment.html:112
 msgid "Login now"
@@ -5097,7 +5086,7 @@ msgstr[0] ""
 #: kallithea/templates/changeset/changeset_range.html:5
 #, python-format
 msgid "%s Changesets"
-msgstr "%s修订集"
+msgstr "%s 修订集"
 
 #: kallithea/templates/changeset/changeset_range.html:56
 msgid "Files affected"
@@ -5129,7 +5118,7 @@ msgstr ""
 
 #: kallithea/templates/compare/compare_cs.html:4
 msgid "No changesets"
-msgstr "无修订"
+msgstr "无修订集"
 
 #: kallithea/templates/compare/compare_cs.html:8
 msgid "Ancestor"
@@ -5138,19 +5127,19 @@ msgstr ""
 #: kallithea/templates/compare/compare_cs.html:24
 #, python-format
 msgid "Changeset status: %s"
-msgstr ""
+msgstr "修订集状态：%s"
 
 #: kallithea/templates/compare/compare_cs.html:44
 msgid "First (oldest) changeset in this list"
-msgstr ""
+msgstr "此列表中首个（最旧）修订集"
 
 #: kallithea/templates/compare/compare_cs.html:46
 msgid "Last (most recent) changeset in this list"
-msgstr ""
+msgstr "此列表中末个（最近）修订集"
 
 #: kallithea/templates/compare/compare_cs.html:48
 msgid "Position in this list of changesets"
-msgstr ""
+msgstr "修订集在此列表中的位置"
 
 #: kallithea/templates/compare/compare_cs.html:85
 msgid "Show merge diff"
@@ -5170,9 +5159,9 @@ msgid "is"
 msgstr ""
 
 #: kallithea/templates/compare/compare_cs.html:108
-#, fuzzy, python-format
+#, python-format
 msgid "%s changesets"
-msgstr "%s修订集"
+msgstr "%s 修订集"
 
 #: kallithea/templates/compare/compare_cs.html:109
 #, fuzzy
@@ -5220,7 +5209,7 @@ msgstr ""
 
 #: kallithea/templates/data_table/_dt_elements.html:98
 msgid "No changesets yet"
-msgstr "无修订"
+msgstr "尚无任何修订集"
 
 #: kallithea/templates/data_table/_dt_elements.html:105
 #: kallithea/templates/data_table/_dt_elements.html:107
@@ -5538,7 +5527,7 @@ msgstr "关注者"
 
 #: kallithea/templates/followers/followers_data.html:12
 msgid "Started following -"
-msgstr "开始关注 - "
+msgstr "开始关注 -"
 
 #: kallithea/templates/forks/fork.html:5
 #, python-format
@@ -5941,7 +5930,7 @@ msgstr ""
 
 #: kallithea/templates/summary/statistics.html:39
 msgid "Stats gathered: "
-msgstr "已收集的统计："
+msgstr "已收集的统计： "
 
 #: kallithea/templates/summary/statistics.html:89
 #: kallithea/templates/summary/summary.html:349
@@ -6131,6 +6120,8 @@ msgstr "比较标签"
 #~ msgstr "没有文件"
 
 #~ msgid ""
+#~ "_: \n"
+#~ ""
 #~ msgstr ""
 
 #~ msgid "%(user)s wants you to review pull request #%(pr_id)s: %(pr_title)s"
@@ -6407,4 +6398,3 @@ msgstr "比较标签"
 #~ "Changeset status: %s\n"
 #~ "Click to open associated pull request %s"
 #~ msgstr ""
-
