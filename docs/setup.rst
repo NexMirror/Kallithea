@@ -155,6 +155,7 @@ from index.
 If you want to rebuild the index from scratch, you can use the ``-f`` flag as above,
 or in the admin panel you can check the "build from scratch" checkbox.
 
+.. _ldap-setup:
 
 Setting up LDAP support
 -----------------------
