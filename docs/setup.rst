@@ -718,6 +718,12 @@ that, you'll need to:
 
     a2enmod wsgi
 
+- Add global Apache configuration to tell mod_wsgi that Python only will be
+  used in the WSGI processes and shouldn't be initialized in the Apache
+  processes::
+
+    WSGIRestrictEmbedded On
+
 - Create a wsgi dispatch script, like the one below. Make sure you
   check that the paths correctly point to where you installed Kallithea
   and its Python Virtual Environment.
@@ -730,8 +736,9 @@ Here is a sample excerpt from an Apache Virtual Host configuration file:
 .. code-block:: apache
 
     WSGIDaemonProcess kallithea \
-        processes=1 threads=4 \
-        python-path=/srv/kallithea/venv/lib/python2.7/site-packages
+        threads=4 \
+        python-home=/srv/kallithea/venv
+    WSGIProcessGroup kallithea
     WSGIScriptAlias / /srv/kallithea/dispatch.wsgi
     WSGIPassAuthorization On
 
@@ -739,13 +746,15 @@ Or if using a dispatcher WSGI script with proper virtualenv activation:
 
 .. code-block:: apache
 
-    WSGIDaemonProcess kallithea processes=1 threads=4
+    WSGIDaemonProcess kallithea threads=4
+    WSGIProcessGroup kallithea
     WSGIScriptAlias / /srv/kallithea/dispatch.wsgi
     WSGIPassAuthorization On
 
-.. note::
-   When running apache as root, please make sure it doesn't run Kallithea as
-   root, for examply by adding: ``user=www-data group=www-data`` to the configuration.
+Apache will by default run as a special Apache user, on Linux systems
+usually ``www-data`` or ``apache``. If you need to have the repositories
+directory owned by a different user, use the user and group options to
+WSGIDaemonProcess to set the name of the user and group. """
 
 .. note::
    If running Kallithea in multiprocess mode,
@@ -766,11 +775,11 @@ Example WSGI dispatch script:
     import site
     site.addsitedir("/srv/kallithea/venv/lib/python2.7/site-packages")
 
-    from paste.deploy import loadapp
+    ini = '/srv/kallithea/my.ini'
     from paste.script.util.logging_config import fileConfig
-
-    fileConfig('/srv/kallithea/my.ini')
-    application = loadapp('config:/srv/kallithea/my.ini')
+    fileConfig(ini)
+    from paste.deploy import loadapp
+    application = loadapp('config:' + ini)
 
 Or using proper virtualenv activation:
 
