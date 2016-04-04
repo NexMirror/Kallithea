@@ -754,7 +754,7 @@ Or if using a dispatcher WSGI script with proper virtualenv activation:
 Apache will by default run as a special Apache user, on Linux systems
 usually ``www-data`` or ``apache``. If you need to have the repositories
 directory owned by a different user, use the user and group options to
-WSGIDaemonProcess to set the name of the user and group. """
+WSGIDaemonProcess to set the name of the user and group.
 
 .. note::
    If running Kallithea in multiprocess mode,
