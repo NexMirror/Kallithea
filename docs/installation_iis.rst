@@ -9,6 +9,17 @@ preventing you from applying this on IIS 6 well.
 
 .. note::
 
+    Installing Kallithea under IIS can enable Single Sign-On to the Kallithea
+    web interface from web browsers that can authenticate to the web server.
+    (As an alternative to IIS, SSO is also possible with for example Apache and
+    mod_sspi.)
+
+    Mercurial and Git do however by default not support SSO on the client side
+    and will still require some other kind of authentication.
+    (An extension like hgssoauthentication_ might solve that.)
+
+.. note::
+
     For the best security, it is strongly recommended to only host the site over
     a secure connection, e.g. using TLS.
 
@@ -48,7 +59,7 @@ ISAPI handler
 
 The ISAPI handler can be generated using::
 
-    paster install-iis my.ini --root=/
+    paster install-iis my.ini --virtualdir=/
 
 This will generate a ``dispatch.py`` file in the current directory that contains
 the necessary components to finalize an installation into IIS. Once this file
@@ -59,10 +70,10 @@ that ISAPI-WSGI is made::
 
 This accomplishes two things: generating an ISAPI compliant DLL file,
 ``_dispatch.dll``, and installing a script map handler into IIS for the
-``--root`` specified above pointing to ``_dispatch.dll``.
+``--virtualdir`` specified above pointing to ``_dispatch.dll``.
 
 The ISAPI handler is registered to all file extensions, so it will automatically
-be the one handling all requests to the specified root. When the website starts
+be the one handling all requests to the specified virtual directory. When the website starts
 the ISAPI handler, it will start a thread pool managed wrapper around the paster
 middleware WSGI handler that Kallithea runs within and each HTTP request to the
 site will be processed through this logic henceforth.
@@ -72,6 +83,11 @@ Authentication with Kallithea using IIS authentication modules
 
 The recommended way to handle authentication with Kallithea using IIS is to let
 IIS handle all the authentication and just pass it to Kallithea.
+
+.. note::
+
+    As an alternative without SSO, you can also use LDAP authentication with
+    Active Directory, see :ref:`ldap-setup`.
 
 To move responsibility into IIS from Kallithea, we need to configure Kallithea
 to let external systems handle authentication and then let Kallithea create the
@@ -108,3 +124,6 @@ type the following in a console window::
 and any exceptions occurring in the WSGI layer and below (i.e. in the Kallithea
 application itself) that are uncaught, will be printed here complete with stack
 traces, making it a lot easier to identify issues.
+
+
+.. _hgssoauthenticatio: https://bitbucket.org/domruf/hgssoauthentication

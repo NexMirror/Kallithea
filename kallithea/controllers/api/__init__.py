@@ -120,7 +120,6 @@ class JSONRPCController(WSGIController):
             log.debug('Content-Length: %s', length)
 
         if length == 0:
-            log.debug("Content-Length is 0")
             return jsonrpc_error(retid=self._req_id,
                                  message="Content-Length is 0")
 
@@ -239,8 +238,7 @@ class JSONRPCController(WSGIController):
             exc_info.append(new_exc_info)
 
         output = WSGIController.__call__(self, environ, change_content)
-        output = list(output)
-        headers.append(('Content-Length', str(len(output[0]))))
+        output = list(output) # expand iterator - just to ensure exact timing
         replace_header(headers, 'Content-Type', 'application/json')
         start_response(status[0], headers, exc_info[0])
         log.info('IP: %s Request to %s time: %.3fs' % (
