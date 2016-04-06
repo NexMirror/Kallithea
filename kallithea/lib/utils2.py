@@ -572,25 +572,30 @@ def time_to_datetime(tm):
                 return
         return datetime.datetime.fromtimestamp(tm)
 
+
 # Must match regexp in kallithea/public/js/base.js MentionsAutoComplete()
 # Check char before @ - it must not look like we are in an email addresses.
 # Matching is greedy so we don't have to look beyond the end.
 MENTIONS_REGEX = re.compile(r'(?:^|(?<=[^a-zA-Z0-9]))@([a-zA-Z0-9][-_.a-zA-Z0-9]*[a-zA-Z0-9])')
 
-def extract_mentioned_users(s):
+def extract_mentioned_usernames(text):
     r"""
-    Returns unique usernames from given string s that have @mention
+    Returns list of (possible) usernames @mentioned in given text.
 
-    :param s: string to get mentions
-
-    >>> extract_mentioned_users('@1-2.a_X,@1234 not@not @ddd@not @n @ee @ff @gg, @gg;@hh @n\n@zz,')
+    >>> extract_mentioned_usernames('@1-2.a_X,@1234 not@not @ddd@not @n @ee @ff @gg, @gg;@hh @n\n@zz,')
     ['1-2.a_X', '1234', 'ddd', 'ee', 'ff', 'gg', 'hh', 'zz']
     """
-    usrs = set()
-    for username in MENTIONS_REGEX.findall(s):
-        usrs.add(username)
+    return MENTIONS_REGEX.findall(text)
 
-    return sorted(list(usrs), key=lambda k: k.lower())
+def extract_mentioned_users(text):
+    """ Returns set of actual database Users @mentioned in given text. """
+    from kallithea.model.db import User
+    result = set()
+    for name in extract_mentioned_usernames(text):
+        user = User.get_by_username(name, case_insensitive=True)
+        if user is not None and user.username != User.DEFAULT_USER:
+            result.add(user)
+    return result
 
 
 class AttributeDict(dict):

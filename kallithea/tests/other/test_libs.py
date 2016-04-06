@@ -102,7 +102,7 @@ class TestLibs(BaseTestCase):
         self.assertEqual(str2bool(str_bool), expected)
 
     def test_mention_extractor(self):
-        from kallithea.lib.utils2 import extract_mentioned_users
+        from kallithea.lib.utils2 import extract_mentioned_usernames
         sample = (
             "@first hi there @world here's my email username@example.com "
             "@lukaszb check @one_more22 it pls @ ttwelve @D[] @one@two@three "
@@ -111,10 +111,10 @@ class TestLibs(BaseTestCase):
             "user.dot  hej ! not-needed maril@example.com"
         )
 
-        s = sorted([
+        expected = set([
             '2one_more22', 'first', 'lukaszb', 'one', 'one_more22', 'UPPER', 'cAmEL', 'john',
-            'marian.user', 'marco-polo', 'marco_polo', 'world'], key=lambda k: k.lower())
-        self.assertEqual(s, extract_mentioned_users(sample))
+            'marian.user', 'marco-polo', 'marco_polo', 'world'])
+        self.assertEqual(expected, set(extract_mentioned_usernames(sample)))
 
     @parameterized.expand([
         (dict(), u'just now'),

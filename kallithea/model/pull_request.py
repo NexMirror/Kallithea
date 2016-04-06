@@ -35,7 +35,7 @@ from kallithea.lib import helpers as h
 from kallithea.lib.exceptions import UserInvalidException
 from kallithea.model import BaseModel
 from kallithea.model.db import PullRequest, PullRequestReviewers, Notification, \
-    ChangesetStatus, User
+    ChangesetStatus
 from kallithea.model.notification import NotificationModel
 from kallithea.lib.utils2 import extract_mentioned_users, safe_unicode
 
@@ -109,8 +109,7 @@ class PullRequestModel(BaseModel):
             pull_request=new
         )
 
-        mention_recipients = set(User.get_by_username(username, case_insensitive=True)
-                                 for username in extract_mentioned_users(new.description))
+        mention_recipients = extract_mentioned_users(new.description)
         self.__add_reviewers(created_by_user, new, reviewers, mention_recipients)
 
         return new
@@ -163,7 +162,6 @@ class PullRequestModel(BaseModel):
                                        email_kwargs=email_kwargs)
 
         if mention_recipients:
-            mention_recipients.discard(None)
             mention_recipients.difference_update(reviewers)
         if mention_recipients:
             email_kwargs['is_mention'] = True
@@ -174,10 +172,8 @@ class PullRequestModel(BaseModel):
                                        email_kwargs=email_kwargs)
 
     def mention_from_description(self, user, pr, old_description=''):
-        mention_recipients = set(User.get_by_username(username, case_insensitive=True)
-                                 for username in extract_mentioned_users(pr.description))
-        mention_recipients.difference_update(User.get_by_username(username, case_insensitive=True)
-                                             for username in extract_mentioned_users(old_description))
+        mention_recipients = (extract_mentioned_users(pr.description) -
+                              extract_mentioned_users(old_description))
 
         log.debug("Mentioning %s", mention_recipients)
         self.__add_reviewers(user, pr, [], mention_recipients)

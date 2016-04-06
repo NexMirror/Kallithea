@@ -51,14 +51,6 @@ class ChangesetCommentsModel(BaseModel):
     def __get_pull_request(self, pull_request):
         return self._get_instance(PullRequest, pull_request)
 
-    def _extract_mentions(self, s):
-        user_objects = []
-        for username in extract_mentioned_users(s):
-            user_obj = User.get_by_username(username, case_insensitive=True)
-            if user_obj:
-                user_objects.append(user_obj)
-        return user_objects
-
     def _get_notification_data(self, repo, comment, user, comment_text,
                                line_no=None, revision=None, pull_request=None,
                                status_change=None, closing_pr=False):
@@ -210,8 +202,7 @@ class ChangesetCommentsModel(BaseModel):
                 email_kwargs=email_kwargs,
             )
 
-            mention_recipients = set(self._extract_mentions(body)) \
-                                    .difference(recipients)
+            mention_recipients = extract_mentioned_users(body).difference(recipients)
             if mention_recipients:
                 email_kwargs['is_mention'] = True
                 subj = _('[Mention]') + ' ' + subj
