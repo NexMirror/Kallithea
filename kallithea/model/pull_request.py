@@ -35,7 +35,7 @@ from kallithea.lib import helpers as h
 from kallithea.lib.exceptions import UserInvalidException
 from kallithea.model import BaseModel
 from kallithea.model.db import PullRequest, PullRequestReviewers, Notification, \
-    ChangesetStatus
+    ChangesetStatus, User
 from kallithea.model.notification import NotificationModel
 from kallithea.lib.utils2 import extract_mentioned_users, safe_unicode
 
@@ -70,6 +70,17 @@ class PullRequestModel(BaseModel):
         if not closed:
             q = q.filter(PullRequest.status != PullRequest.STATUS_CLOSED)
         return q.order_by(PullRequest.created_on.desc()).all()
+
+    def _get_valid_reviewers(self, seq):
+        """ Generate User objects from a sequence of user IDs, usernames or
+        User objects. Raises UserInvalidException if the DEFAULT user is
+        specified, or if a given ID or username does not match any user.
+        """
+        for user_spec in seq:
+            user = self._get_user(user_spec)
+            if user is None or user.username == User.DEFAULT_USER:
+                raise UserInvalidException(user_spec)
+            yield user
 
     def create(self, created_by, org_repo, org_ref, other_repo, other_ref,
                revisions, reviewers, title, description=None):
@@ -109,18 +120,17 @@ class PullRequestModel(BaseModel):
             pull_request=new
         )
 
+        reviewers = set(self._get_valid_reviewers(reviewers))
         mention_recipients = extract_mentioned_users(new.description)
         self.__add_reviewers(created_by_user, new, reviewers, mention_recipients)
 
         return new
 
-    def __add_reviewers(self, user, pr, reviewers, mention_recipients=None):
+    def __add_reviewers(self, user, pr, reviewers, mention_recipients):
+        # reviewers and mention_recipients should be sets of User objects.
         #members
-        for member in set(reviewers):
-            _usr = self._get_user(member)
-            if _usr is None:
-                raise UserInvalidException(member)
-            reviewer = PullRequestReviewers(_usr, pr)
+        for reviewer in reviewers:
+            reviewer = PullRequestReviewers(reviewer, pr)
             Session().add(reviewer)
 
         revision_data = [(x.raw_id, x.message)
@@ -176,7 +186,7 @@ class PullRequestModel(BaseModel):
                               extract_mentioned_users(old_description))
 
         log.debug("Mentioning %s", mention_recipients)
-        self.__add_reviewers(user, pr, [], mention_recipients)
+        self.__add_reviewers(user, pr, set(), mention_recipients)
 
     def update_reviewers(self, user, pull_request, reviewers_ids):
         reviewers_ids = set(reviewers_ids)
@@ -191,7 +201,7 @@ class PullRequestModel(BaseModel):
         to_remove = current_reviewers_ids.difference(reviewers_ids)
 
         log.debug("Adding %s reviewers", to_add)
-        self.__add_reviewers(user, pull_request, to_add)
+        self.__add_reviewers(user, pull_request, set(self._get_valid_reviewers(to_add)), set())
 
         log.debug("Removing %s reviewers", to_remove)
         for uid in to_remove:
