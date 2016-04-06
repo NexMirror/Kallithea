@@ -30,6 +30,8 @@ import datetime
 
 from pylons.i18n.translation import _
 
+from sqlalchemy.orm import joinedload
+
 from kallithea.model.meta import Session
 from kallithea.lib import helpers as h
 from kallithea.lib.exceptions import UserInvalidException
@@ -192,25 +194,25 @@ class PullRequestModel(BaseModel):
         reviewers_ids = set(reviewers_ids)
         pull_request = self.__get_pull_request(pull_request)
         current_reviewers = PullRequestReviewers.query() \
-                            .filter(PullRequestReviewers.pull_request==
-                                   pull_request) \
-                            .all()
-        current_reviewers_ids = set([x.user.user_id for x in current_reviewers])
+            .options(joinedload('user')) \
+            .filter_by(pull_request=pull_request) \
+            .all()
+        current_reviewer_users = set(x.user for x in current_reviewers)
+        new_reviewer_users = set(self._get_valid_reviewers(reviewers_ids))
 
-        to_add = reviewers_ids.difference(current_reviewers_ids)
-        to_remove = current_reviewers_ids.difference(reviewers_ids)
+        to_add = new_reviewer_users - current_reviewer_users
+        to_remove = current_reviewer_users - new_reviewer_users
+
+        if not to_add and not to_remove:
+            return # all done
 
         log.debug("Adding %s reviewers", to_add)
-        self.__add_reviewers(user, pull_request, set(self._get_valid_reviewers(to_add)), set())
+        self.__add_reviewers(user, pull_request, to_add, set())
 
         log.debug("Removing %s reviewers", to_remove)
-        for uid in to_remove:
-            reviewer = PullRequestReviewers.query() \
-                    .filter(PullRequestReviewers.user_id==uid,
-                            PullRequestReviewers.pull_request==pull_request) \
-                    .scalar()
-            if reviewer:
-                Session().delete(reviewer)
+        for prr in current_reviewers:
+            if prr.user in to_remove:
+                Session().delete(prr)
 
     def delete(self, pull_request):
         pull_request = self.__get_pull_request(pull_request)
