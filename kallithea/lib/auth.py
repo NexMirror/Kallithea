@@ -944,7 +944,7 @@ class PermsFunction(object):
         """
         raise AssertionError(self.__class__.__name__ + ' is not a bool and must be called!')
 
-    def __call__(self, check_location='', user=None):
+    def __call__(self, check_location='unspecified location', user=None):
         if not user:
             #TODO: remove this someday,put as user as attribute here
             user = request.user
@@ -954,33 +954,27 @@ class PermsFunction(object):
             user = AuthUser(user.user_id)
 
         cls_name = self.__class__.__name__
-        check_scope = {
-            'HasPermissionAny': '',
-            'HasRepoPermissionAny': 'repo:%s' % self.repo_name,
-            'HasRepoGroupPermissionAny': 'group:%s' % self.group_name,
-        }.get(cls_name, '?')
+        check_scope = self._scope()
         log.debug('checking cls:%s %s usr:%s %s @ %s', cls_name,
                   self.required_perms, user, check_scope,
-                  check_location or 'unspecified location')
+                  check_location)
         if not user:
             log.debug('Empty request user')
             return False
         self.user_perms = user.permissions
-        if self.check_permissions():
-            log.debug('Permission to %s granted for user: %s @ %s',
-                      check_scope, user,
-                         check_location or 'unspecified location')
-            return True
 
-        else:
-            log.debug('Permission to %s denied for user: %s @ %s',
-                      check_scope, user,
-                         check_location or 'unspecified location')
-            return False
+        result = self.check_permissions()
+        result_text = 'granted' if result else 'denied'
+        log.debug('Permission to %s %s for user: %s @ %s',
+            check_scope, result_text, user, check_location)
+        return result
 
     def check_permissions(self):
         """Dummy function for overriding"""
         raise Exception('You have to write this function in child class')
+
+    def _scope(self):
+        return '(unknown scope)'
 
 
 class HasPermissionAny(PermsFunction):
@@ -1009,6 +1003,9 @@ class HasRepoPermissionAny(PermsFunction):
             return True
         return False
 
+    def _scope(self):
+        return 'repo:%s' % self.repo_name
+
 
 class HasRepoGroupPermissionAny(PermsFunction):
     def __call__(self, group_name=None, check_location='', user=None):
@@ -1026,6 +1023,9 @@ class HasRepoGroupPermissionAny(PermsFunction):
             return True
         return False
 
+    def _scope(self):
+        return 'repogroup:%s' % self.group_name
+
 
 class HasUserGroupPermissionAny(PermsFunction):
     def __call__(self, user_group_name=None, check_location='', user=None):
@@ -1042,6 +1042,9 @@ class HasUserGroupPermissionAny(PermsFunction):
         if self.required_perms.intersection(self._user_perms):
             return True
         return False
+
+    def _scope(self):
+        return 'usergroup:%s' % self.user_group_name
 
 
 #==============================================================================
