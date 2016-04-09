@@ -1,5 +1,6 @@
 
 import stat
+import mimetypes
 from kallithea.lib.vcs.nodes import DirNode
 from kallithea.lib.vcs.nodes import FileNode
 from kallithea.lib.vcs.nodes import Node
@@ -159,11 +160,11 @@ class NodeBasicTest(unittest.TestCase):
         my_node3 = FileNode('myfile3')
         my_node3._mimetype = [ext,ext]
 
-        self.assertEqual(py_node.mimetype,'text/x-python')
-        self.assertEqual(py_node.get_mimetype(),('text/x-python',None))
+        self.assertEqual(py_node.mimetype, mimetypes.guess_type(py_node.name)[0])
+        self.assertEqual(py_node.get_mimetype(), mimetypes.guess_type(py_node.name))
 
-        self.assertEqual(tar_node.mimetype,'application/x-tar')
-        self.assertEqual(tar_node.get_mimetype(),('application/x-tar','gzip'))
+        self.assertEqual(tar_node.mimetype, mimetypes.guess_type(tar_node.name)[0])
+        self.assertEqual(tar_node.get_mimetype(), mimetypes.guess_type(tar_node.name))
 
         self.assertRaises(NodeError,my_node2.get_mimetype)
 

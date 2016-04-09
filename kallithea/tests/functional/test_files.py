@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import posixpath
+import mimetypes
 from kallithea.tests import *
 from kallithea.model.db import Repository
 from kallithea.model.meta import Session
@@ -242,7 +243,7 @@ removed extra unicode conversion in diff.</div>
                                     f_path='vcs/nodes.py'))
 
         self.assertEqual(response.content_disposition, "attachment; filename=nodes.py")
-        self.assertEqual(response.content_type, "text/x-python")
+        self.assertEqual(response.content_type, mimetypes.guess_type("nodes.py")[0])
 
     def test_raw_file_wrong_cs(self):
         self.log_user()
