@@ -46,7 +46,8 @@ class GitRepositoryTest(unittest.TestCase):
         # Verify correct quoting of evil characters that should work on posix file systems
         if sys.platform == 'win32':
             # windows does not allow '"' in dir names
-            tricky_path = get_new_dir("tricky-path-repo-$'`")
+            # and some versions of the git client don't like ` and '
+            tricky_path = get_new_dir("tricky-path-repo-$")
         else:
             tricky_path = get_new_dir("tricky-path-repo-$'\"`")
         successfully_cloned = GitRepository(tricky_path, src_url=TEST_GIT_REPO, update_after_clone=True, create=True)
@@ -55,7 +56,8 @@ class GitRepositoryTest(unittest.TestCase):
 
         if sys.platform == 'win32':
             # windows does not allow '"' in dir names
-            tricky_path_2 = get_new_dir("tricky-path-2-repo-$'`")
+            # and some versions of the git client don't like ` and '
+            tricky_path_2 = get_new_dir("tricky-path-2-repo-$")
         else:
             tricky_path_2 = get_new_dir("tricky-path-2-repo-$'\"`")
         successfully_cloned2 = GitRepository(tricky_path_2, src_url=tricky_path, bare=True, create=True)
