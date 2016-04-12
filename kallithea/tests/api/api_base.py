@@ -1493,10 +1493,10 @@ class _BaseTestApi(object):
         gr_name = u'test_user_group2'
         make_user_group(gr_name)
 
-        id_, params = _build_data(self.apikey, 'get_user_groups', )
-        response = api_call(self, params)
-
         try:
+            id_, params = _build_data(self.apikey, 'get_user_groups', )
+            response = api_call(self, params)
+
             expected = []
             for gr_name in [TEST_USER_GROUP, u'test_user_group2']:
                 user_group = UserGroupModel().get_group(gr_name)
@@ -1549,10 +1549,10 @@ class _BaseTestApi(object):
     def test_api_update_user_group(self, changing_attr, updates):
         gr_name = u'test_group_for_update'
         user_group = fixture.create_user_group(gr_name)
-        id_, params = _build_data(self.apikey, 'update_user_group',
-                                  usergroupid=gr_name, **updates)
-        response = api_call(self, params)
         try:
+            id_, params = _build_data(self.apikey, 'update_user_group',
+                                      usergroupid=gr_name, **updates)
+            response = api_call(self, params)
             expected = {
                'msg': 'updated user group ID:%s %s' % (user_group.users_group_id,
                                                      user_group.users_group_name),
@@ -1569,10 +1569,10 @@ class _BaseTestApi(object):
     def test_api_update_user_group_exception_occurred(self):
         gr_name = u'test_group'
         fixture.create_user_group(gr_name)
-        id_, params = _build_data(self.apikey, 'update_user_group',
-                                  usergroupid=gr_name)
-        response = api_call(self, params)
         try:
+            id_, params = _build_data(self.apikey, 'update_user_group',
+                                      usergroupid=gr_name)
+            response = api_call(self, params)
             expected = 'failed to update user group `%s`' % gr_name
             self._compare_error(id_, expected, given=response.body)
         finally:
@@ -1581,11 +1581,11 @@ class _BaseTestApi(object):
     def test_api_add_user_to_user_group(self):
         gr_name = u'test_group'
         fixture.create_user_group(gr_name)
-        id_, params = _build_data(self.apikey, 'add_user_to_user_group',
-                                  usergroupid=gr_name,
-                                  userid=TEST_USER_ADMIN_LOGIN)
-        response = api_call(self, params)
         try:
+            id_, params = _build_data(self.apikey, 'add_user_to_user_group',
+                                      usergroupid=gr_name,
+                                      userid=TEST_USER_ADMIN_LOGIN)
+            response = api_call(self, params)
             expected = {
             'msg': 'added member `%s` to user group `%s`' % (
                     TEST_USER_ADMIN_LOGIN, gr_name),
@@ -1608,12 +1608,11 @@ class _BaseTestApi(object):
     def test_api_add_user_to_user_group_exception_occurred(self):
         gr_name = u'test_group'
         fixture.create_user_group(gr_name)
-        id_, params = _build_data(self.apikey, 'add_user_to_user_group',
-                                  usergroupid=gr_name,
-                                  userid=TEST_USER_ADMIN_LOGIN)
-        response = api_call(self, params)
-
         try:
+            id_, params = _build_data(self.apikey, 'add_user_to_user_group',
+                                      usergroupid=gr_name,
+                                      userid=TEST_USER_ADMIN_LOGIN)
+            response = api_call(self, params)
             expected = 'failed to add member to user group `%s`' % gr_name
             self._compare_error(id_, expected, given=response.body)
         finally:
@@ -1624,12 +1623,11 @@ class _BaseTestApi(object):
         gr = fixture.create_user_group(gr_name)
         UserGroupModel().add_user_to_group(gr, user=TEST_USER_ADMIN_LOGIN)
         Session().commit()
-        id_, params = _build_data(self.apikey, 'remove_user_from_user_group',
-                                  usergroupid=gr_name,
-                                  userid=TEST_USER_ADMIN_LOGIN)
-        response = api_call(self, params)
-
         try:
+            id_, params = _build_data(self.apikey, 'remove_user_from_user_group',
+                                      usergroupid=gr_name,
+                                      userid=TEST_USER_ADMIN_LOGIN)
+            response = api_call(self, params)
             expected = {
                 'msg': 'removed member `%s` from user group `%s`' % (
                     TEST_USER_ADMIN_LOGIN, gr_name
@@ -1645,11 +1643,11 @@ class _BaseTestApi(object):
         gr = fixture.create_user_group(gr_name)
         UserGroupModel().add_user_to_group(gr, user=TEST_USER_ADMIN_LOGIN)
         Session().commit()
-        id_, params = _build_data(self.apikey, 'remove_user_from_user_group',
-                                  usergroupid=gr_name,
-                                  userid=TEST_USER_ADMIN_LOGIN)
-        response = api_call(self, params)
         try:
+            id_, params = _build_data(self.apikey, 'remove_user_from_user_group',
+                                      usergroupid=gr_name,
+                                      userid=TEST_USER_ADMIN_LOGIN)
+            response = api_call(self, params)
             expected = 'failed to remove member from user group `%s`' % gr_name
             self._compare_error(id_, expected, given=response.body)
         finally:
@@ -1659,12 +1657,11 @@ class _BaseTestApi(object):
         gr_name = u'test_group'
         ugroup = fixture.create_user_group(gr_name)
         gr_id = ugroup.users_group_id
-        id_, params = _build_data(self.apikey, 'delete_user_group',
-                                  usergroupid=gr_name,
-                                  userid=TEST_USER_ADMIN_LOGIN)
-        response = api_call(self, params)
-
         try:
+            id_, params = _build_data(self.apikey, 'delete_user_group',
+                                      usergroupid=gr_name,
+                                      userid=TEST_USER_ADMIN_LOGIN)
+            response = api_call(self, params)
             expected = {
                 'user_group': None,
                 'msg': 'deleted user group ID:%s %s' % (gr_id, gr_name)
@@ -1682,12 +1679,11 @@ class _BaseTestApi(object):
         ugr_to_perm = RepoModel().grant_user_group_permission(self.REPO, gr_name, 'repository.write')
         msg = 'User Group assigned to %s' % ugr_to_perm.repository.repo_name
 
-        id_, params = _build_data(self.apikey, 'delete_user_group',
-                                  usergroupid=gr_name,
-                                  userid=TEST_USER_ADMIN_LOGIN)
-        response = api_call(self, params)
-
         try:
+            id_, params = _build_data(self.apikey, 'delete_user_group',
+                                      usergroupid=gr_name,
+                                      userid=TEST_USER_ADMIN_LOGIN)
+            response = api_call(self, params)
             expected = msg
             self._compare_error(id_, expected, given=response.body)
         finally:
