@@ -485,7 +485,7 @@ class PullrequestsController(BaseRepoController):
         #only owner or admin can update it
         owner = pull_request.owner.user_id == c.authuser.user_id
         repo_admin = h.HasRepoPermissionAny('repository.admin')(c.repo_name)
-        if not (h.HasPermissionAny('hg.admin') or repo_admin or owner):
+        if not (h.HasPermissionAny('hg.admin')() or repo_admin or owner):
             raise HTTPForbidden()
 
         _form = PullRequestPostForm()().to_python(request.POST)
@@ -788,7 +788,7 @@ class PullrequestsController(BaseRepoController):
 
         owner = co.author.user_id == c.authuser.user_id
         repo_admin = h.HasRepoPermissionAny('repository.admin')(c.repo_name)
-        if h.HasPermissionAny('hg.admin') or repo_admin or owner:
+        if h.HasPermissionAny('hg.admin')() or repo_admin or owner:
             ChangesetCommentsModel().delete(comment=co)
             Session().commit()
             return True
