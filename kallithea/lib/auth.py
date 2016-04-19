@@ -1002,6 +1002,13 @@ class PermsFunction(object):
         self.repo_name = None
         self.group_name = None
 
+    def __nonzero__(self):
+        """ Defend against accidentally forgetting to call the object
+            and instead evaluating it directly in a boolean context,
+            which could have security implications.
+        """
+        raise AssertionError(self.__class__.__name__ + ' is not a bool and must be called!')
+
     def __call__(self, check_location='', user=None):
         if not user:
             #TODO: remove this someday,put as user as attribute here
