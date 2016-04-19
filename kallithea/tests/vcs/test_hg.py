@@ -354,7 +354,7 @@ class MercurialChangesetTest(unittest.TestCase):
             self._test_dir_size(revision, path, size)
 
     def test_repo_size(self):
-        self.assertEqual(self.repo.size, 1042958) # FIXME
+        self.assertEqual(self.repo.size, 682421)
 
     def test_file_history(self):
         # we can only check if those revisions are present in the history

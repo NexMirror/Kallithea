@@ -390,7 +390,7 @@ class GitChangesetTest(unittest.TestCase):
             self._test_dir_size(revision, path, size)
 
     def test_repo_size(self):
-        self.assertEqual(self.repo.size, 1022026) # FIXME
+        self.assertEqual(self.repo.size, 674076)
 
     def test_file_history(self):
         # we can only check if those revisions are present in the history
