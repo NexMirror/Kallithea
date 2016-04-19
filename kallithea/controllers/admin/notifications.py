@@ -147,27 +147,23 @@ class NotificationsController(BaseController):
     def show(self, notification_id, format='html'):
         """GET /_admin/notifications/id: Show a specific item"""
         # url('notification', notification_id=ID)
+        notification = Notification.get_or_404(notification_id)
+
+        unotification = NotificationModel() \
+            .get_user_notification(self.authuser.user_id, notification)
+
+        # if this association to user is not valid, we don't want to show
+        # this message
+        if unotification is None:
+            raise HTTPForbidden()
+
+        if not unotification.read:
+            unotification.mark_as_read()
+            Session().commit()
+
+        c.notification = notification
         c.user = self.authuser
-        no = Notification.get(notification_id)
-
-        owner = any(un.user.user_id == c.authuser.user_id
-                    for un in no.notifications_to_users)
-        repo_admin = h.HasRepoPermissionAny('repository.admin')
-        if no and (h.HasPermissionAny('hg.admin')() or repo_admin or owner):
-            unotification = NotificationModel() \
-                            .get_user_notification(c.user.user_id, no)
-
-            # if this association to user is not valid, we don't want to show
-            # this message
-            if unotification is not None:
-                if not unotification.read:
-                    unotification.mark_as_read()
-                    Session().commit()
-                c.notification = no
-
-                return render('admin/notifications/show_notification.html')
-
-        raise HTTPForbidden()
+        return render('admin/notifications/show_notification.html')
 
     def edit(self, notification_id, format='html'):
         """GET /_admin/notifications/id/edit: Form to edit an existing item"""
