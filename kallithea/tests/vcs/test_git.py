@@ -376,6 +376,22 @@ class GitChangesetTest(unittest.TestCase):
         for revision, path, size in to_check:
             self._test_file_size(revision, path, size)
 
+    def _test_dir_size(self, revision, path, size):
+        node = self.repo.get_changeset(revision).get_node(path)
+        self.assertEqual(node.size, size)
+
+    def test_dir_size(self):
+        to_check = (
+            ('5f2c6ee195929b0be80749243c18121c9864a3b3', '/', 674076),
+            ('7ab37bc680b4aa72c34d07b230c866c28e9fc204', '/', 674049),
+            ('6892503fb8f2a552cef5f4d4cc2cdbd13ae1cd2f', '/', 671830),
+        )
+        for revision, path, size in to_check:
+            self._test_dir_size(revision, path, size)
+
+    def test_repo_size(self):
+        self.assertEqual(self.repo.size, 1022026) # FIXME
+
     def test_file_history(self):
         # we can only check if those revisions are present in the history
         # as we cannot update this test every time file is changed

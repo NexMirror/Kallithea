@@ -339,6 +339,23 @@ class MercurialChangesetTest(unittest.TestCase):
         for revision, path, size in to_check:
             self._test_file_size(revision, path, size)
 
+    def _test_dir_size(self, revision, path, size):
+        node = self.repo.get_changeset(revision).get_node(path)
+        self.assertFalse(node.is_file())
+        self.assertEqual(node.size, size)
+
+    def test_dir_size(self):
+        to_check = (
+            ('96507bd11ecc', '/', 682421),
+            ('a53d9201d4bc', '/', 682410),
+            ('90243de06161', '/', 682006),
+        )
+        for revision, path, size in to_check:
+            self._test_dir_size(revision, path, size)
+
+    def test_repo_size(self):
+        self.assertEqual(self.repo.size, 1042958) # FIXME
+
     def test_file_history(self):
         # we can only check if those revisions are present in the history
         # as we cannot update this test every time file is changed
