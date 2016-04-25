@@ -10,7 +10,7 @@ from kallithea.model.meta import Session
 fixture = Fixture()
 
 
-class TestMyAccountController(TestController):
+class TestMyAccountController(TestControllerPytest):
     test_user_1 = 'testme'
 
     @classmethod
@@ -86,7 +86,7 @@ class TestMyAccountController(TestController):
         response.mustcontain('No additional emails specified')
 
 
-    @parameterized.expand(
+    @parametrize('name,attrs',
         [('firstname', {'firstname': 'new_username'}),
          ('lastname', {'lastname': 'new_username'}),
          ('admin', {'admin': True}),
@@ -192,7 +192,7 @@ class TestMyAccountController(TestController):
         response.mustcontain(user.api_key)
         response.mustcontain('Expires: Never')
 
-    @parameterized.expand([
+    @parametrize('desc,lifetime', [
         ('forever', -1),
         ('5mins', 60*5),
         ('30days', 60*60*24*30),

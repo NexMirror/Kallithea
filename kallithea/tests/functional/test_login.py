@@ -19,8 +19,8 @@ from kallithea.model.user import UserModel
 fixture = Fixture()
 
 
-class TestLoginController(TestController):
-    def setUp(self):
+class TestLoginController(TestControllerPytest):
+    def setup_method(self, method):
         remove_all_notifications()
         self.assertEqual(Notification.query().all(), [])
 
@@ -111,7 +111,7 @@ class TestLoginController(TestController):
         response = self.app.get(url(controller='login', action='index'))
         self.assertNotIn('authuser', response.session)
 
-    @parameterized.expand([
+    @parametrize('url_came_from', [
           ('data:text/html,<script>window.alert("xss")</script>',),
           ('mailto:test@example.com',),
           ('file:///etc/passwd',),
@@ -146,7 +146,7 @@ class TestLoginController(TestController):
 
     # verify that get arguments are correctly passed along login redirection
 
-    @parameterized.expand([
+    @parametrize('args,args_encoded', [
         ({'foo':'one', 'bar':'two'}, (('foo', 'one'), ('bar', 'two'))),
         ({'blue': u'blå'.encode('utf-8'), 'green':u'grøn'},
              (('blue', u'blå'.encode('utf-8')), ('green', u'grøn'.encode('utf-8')))),
@@ -162,7 +162,7 @@ class TestLoginController(TestController):
             for encoded in args_encoded:
                 self.assertIn(encoded, came_from_qs)
 
-    @parameterized.expand([
+    @parametrize('args,args_encoded', [
         ({'foo':'one', 'bar':'two'}, ('foo=one', 'bar=two')),
         ({'blue': u'blå', 'green':u'grøn'},
              ('blue=bl%C3%A5', 'green=gr%C3%B8n')),
@@ -174,7 +174,7 @@ class TestLoginController(TestController):
         for encoded in args_encoded:
             self.assertIn(encoded, came_from)
 
-    @parameterized.expand([
+    @parametrize('args,args_encoded', [
         ({'foo':'one', 'bar':'two'}, ('foo=one', 'bar=two')),
         ({'blue': u'blå', 'green':u'grøn'},
              ('blue=bl%C3%A5', 'green=gr%C3%B8n')),
@@ -188,7 +188,7 @@ class TestLoginController(TestController):
         for encoded in args_encoded:
             self.assertIn(encoded, response.location)
 
-    @parameterized.expand([
+    @parametrize('args,args_encoded', [
         ({'foo':'one', 'bar':'two'}, ('foo=one', 'bar=two')),
         ({'blue': u'blå', 'green':u'grøn'},
              ('blue=bl%C3%A5', 'green=gr%C3%B8n')),
@@ -435,7 +435,7 @@ class TestLoginController(TestController):
         config = {'api_access_controllers_whitelist': values or []}
         return config
 
-    @parameterized.expand([
+    @parametrize('test_name,api_key', [
         ('none', None),
         ('empty_string', ''),
         ('fake_number', '123456'),
@@ -456,7 +456,7 @@ class TestLoginController(TestController):
                                  repo_name=HG_REPO, revision='tip', api_key=api_key),
                              status=403)
 
-    @parameterized.expand([
+    @parametrize('test_name,api_key,code', [
         ('none', None, 302),
         ('empty_string', '', 302),
         ('fake_number', '123456', 302),

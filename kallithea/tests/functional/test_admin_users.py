@@ -26,7 +26,7 @@ from kallithea.model.meta import Session
 fixture = Fixture()
 
 
-class TestAdminUsersController(TestController):
+class TestAdminUsersController(TestControllerPytest):
     test_user_1 = 'testme'
 
     @classmethod
@@ -108,7 +108,7 @@ class TestAdminUsersController(TestController):
         self.log_user()
         response = self.app.get(url('new_user'))
 
-    @parameterized.expand(
+    @parametrize('name,attrs',
         [('firstname', {'firstname': 'new_username'}),
          ('lastname', {'lastname': 'new_username'}),
          ('admin', {'admin': True}),
@@ -387,7 +387,7 @@ class TestAdminUsersController(TestController):
         response = self.app.get(url('edit_user_ips', id=user.user_id))
         response.mustcontain('All IP addresses are allowed')
 
-    @parameterized.expand([
+    @parametrize('test_name,ip,ip_range,failure', [
         ('127/24', '127.0.0.1/24', '127.0.0.0 - 127.0.0.255', False),
         ('10/32', '10.0.0.10/32', '10.0.0.10 - 10.0.0.10', False),
         ('0/16', '0.0.0.0/16', '0.0.0.0 - 0.0.255.255', False),
@@ -449,7 +449,7 @@ class TestAdminUsersController(TestController):
         response.mustcontain(user.api_key)
         response.mustcontain('Expires: Never')
 
-    @parameterized.expand([
+    @parametrize('desc,lifetime', [
         ('forever', -1),
         ('5mins', 60*5),
         ('30days', 60*60*24*30),
