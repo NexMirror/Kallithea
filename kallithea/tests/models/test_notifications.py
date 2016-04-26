@@ -7,9 +7,9 @@ from kallithea.model.meta import Session
 from kallithea.model.notification import NotificationModel
 
 
-class TestNotifications(BaseTestCase):
+class TestNotifications(TestControllerPytest):
 
-    def __init__(self, methodName='runTest'):
+    def setup_method(self, method):
         Session.remove()
         self.u1 = UserModel().create_or_update(username=u'u1',
                                         password=u'qweqwe',
@@ -32,9 +32,6 @@ class TestNotifications(BaseTestCase):
         Session().commit()
         self.u3 = self.u3.user_id
 
-        super(TestNotifications, self).__init__(methodName=methodName)
-
-    def setUp(self):
         remove_all_notifications()
         self.assertEqual([], Notification.query().all())
         self.assertEqual([], UserNotification.query().all())

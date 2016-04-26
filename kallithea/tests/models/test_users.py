@@ -11,12 +11,13 @@ from kallithea.tests.fixture import Fixture
 fixture = Fixture()
 
 
-class TestUser(BaseTestCase):
-    def __init__(self, methodName='runTest'):
-        Session.remove()
-        super(TestUser, self).__init__(methodName=methodName)
+class TestUser(TestControllerPytest):
 
-    def tearDown(self):
+    @classmethod
+    def setup_class(cls):
+        Session.remove()
+
+    def teardown_method(self, method):
         Session.remove()
 
     def test_create_and_remove(self):
@@ -98,18 +99,15 @@ class TestUser(BaseTestCase):
         Session().commit()
 
 
-class TestUsers(BaseTestCase):
+class TestUsers(TestControllerPytest):
 
-    def __init__(self, methodName='runTest'):
-        super(TestUsers, self).__init__(methodName=methodName)
-
-    def setUp(self):
+    def setup_method(self, method):
         self.u1 = UserModel().create_or_update(username=u'u1',
                                         password=u'qweqwe',
                                         email=u'u1@example.com',
                                         firstname=u'u1', lastname=u'u1')
 
-    def tearDown(self):
+    def teardown_method(self, method):
         perm = Permission.query().all()
         for p in perm:
             UserModel().revoke_perm(self.u1, p)

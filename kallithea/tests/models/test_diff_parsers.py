@@ -271,9 +271,9 @@ DIFF_FIXTURES = {
 }
 
 
-class DiffLibTest(BaseTestCase):
+class TestDiffLib(TestControllerPytest):
 
-    @parameterized.expand([(x,) for x in DIFF_FIXTURES])
+    @parametrize('diff_fixture', DIFF_FIXTURES)
     def test_diff(self, diff_fixture):
         diff = fixture.load_resource(diff_fixture, strip=False)
         vcs = 'hg'

@@ -33,14 +33,14 @@ def _update_repo(name, **kwargs):
     return r
 
 
-class TestRepoGroups(BaseTestCase):
+class TestRepoGroups(TestControllerPytest):
 
-    def setUp(self):
+    def setup_method(self, method):
         self.g1 = fixture.create_repo_group(u'test1', skip_if_exists=True)
         self.g2 = fixture.create_repo_group(u'test2', skip_if_exists=True)
         self.g3 = fixture.create_repo_group(u'test3', skip_if_exists=True)
 
-    def tearDown(self):
+    def teardown_method(self, method):
         Session.remove()
 
     def __check_path(self, *path):

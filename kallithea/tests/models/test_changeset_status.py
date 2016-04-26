@@ -7,12 +7,12 @@ class CSM(object): # ChangesetStatusMock
     def __init__(self, status):
         self.status = status
 
-class TestChangesetStatusCalculation(BaseTestCase):
+class TestChangesetStatusCalculation(TestControllerPytest):
 
-    def setUp(self):
+    def setup_method(self, method):
         self.m = ChangesetStatusModel()
 
-    @parameterized.expand([
+    @parametrize('name,expected_result,statuses', [
         ('empty list', CS.STATUS_UNDER_REVIEW, []),
         ('approve', CS.STATUS_APPROVED, [CSM(CS.STATUS_APPROVED)]),
         ('approve2', CS.STATUS_APPROVED, [CSM(CS.STATUS_APPROVED), CSM(CS.STATUS_APPROVED)]),

@@ -1,6 +1,6 @@
 from kallithea.model.db import User
 
-from kallithea.tests import BaseTestCase, parameterized, TEST_USER_REGULAR_LOGIN
+from kallithea.tests import *
 from kallithea.tests.fixture import Fixture
 
 from kallithea.model.user_group import UserGroupModel
@@ -10,15 +10,15 @@ from kallithea.model.meta import Session
 fixture = Fixture()
 
 
-class TestUserGroups(BaseTestCase):
+class TestUserGroups(TestControllerPytest):
 
-    def tearDown(self):
+    def teardown_method(self, method):
         # delete all groups
         for gr in UserGroupModel.get_all():
             fixture.destroy_user_group(gr)
         Session().commit()
 
-    @parameterized.expand([
+    @parametrize('pre_existing,regular_should_be,external_should_be,groups,expected', [
         ([], [], [], [], []),
         ([], [u'regular'], [], [], [u'regular']),  # no changes of regular
         ([u'some_other'], [], [], [u'some_other'], []),   # not added to regular group

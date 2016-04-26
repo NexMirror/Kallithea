@@ -9,12 +9,9 @@ from kallithea.lib.exceptions import AttachedForksError
 fixture = Fixture()
 
 
-class TestRepos(BaseTestCase):
+class TestRepos(TestControllerPytest):
 
-    def setUp(self):
-        pass
-
-    def tearDown(self):
+    def teardown_method(self, method):
         Session.remove()
 
     def test_remove_repo(self):
@@ -34,6 +31,10 @@ class TestRepos(BaseTestCase):
         Session().commit()
 
         self.assertRaises(AttachedForksError, lambda: RepoModel().delete(repo=repo))
+        # cleanup
+        RepoModel().delete(repo=u'test-repo-fork-1')
+        RepoModel().delete(repo=u'test-repo-1')
+        Session().commit()
 
     def test_remove_repo_delete_forks(self):
         repo = fixture.create_repo(name=u'test-repo-1')

@@ -15,18 +15,16 @@ from kallithea.model.permission import PermissionModel
 fixture = Fixture()
 
 
-class TestPermissions(BaseTestCase):
-    def __init__(self, methodName='runTest'):
-        super(TestPermissions, self).__init__(methodName=methodName)
+class TestPermissions(TestControllerPytest):
 
     @classmethod
-    def setUpClass(cls):
+    def setup_class(cls):
         #recreate default user to get a clean start
         PermissionModel().create_default_permissions(user=User.DEFAULT_USER,
                                                      force=True)
         Session().commit()
 
-    def setUp(self):
+    def setup_method(self, method):
         self.u1 = UserModel().create_or_update(
             username=u'u1', password=u'qweqwe',
             email=u'u1@example.com', firstname=u'u1', lastname=u'u1'
@@ -46,7 +44,7 @@ class TestPermissions(BaseTestCase):
         )
         Session().commit()
 
-    def tearDown(self):
+    def teardown_method(self, method):
         if hasattr(self, 'test_repo'):
             RepoModel().delete(repo=self.test_repo)
 
@@ -716,7 +714,7 @@ class TestPermissions(BaseTestCase):
         PermissionModel().create_default_permissions(user=self.u1)
         self._test_def_perm_equal(user=self.u1)
 
-    @parameterized.expand([
+    @parametrize('perm,modify_to', [
         ('repository.read', 'repository.none'),
         ('group.read', 'group.none'),
         ('usergroup.read', 'usergroup.none'),
