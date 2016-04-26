@@ -18,9 +18,9 @@ def _create_gist(f_name, content='some gist', lifetime=-1,
     return gist
 
 
-class TestGistsController(TestController):
+class TestGistsController(TestControllerPytest):
 
-    def tearDown(self):
+    def teardown_method(self, method):
         for g in Gist.get_all():
             GistModel().delete(g)
         Session().commit()

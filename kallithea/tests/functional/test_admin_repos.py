@@ -604,7 +604,7 @@ class _BaseTest(object):
         # repo must not be in filesystem !
         self.assertFalse(os.path.isdir(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name)))
 
-class TestAdminReposControllerGIT(TestController, _BaseTest):
+class TestAdminReposControllerGIT(TestControllerPytest, _BaseTest):
     REPO = GIT_REPO
     REPO_TYPE = 'git'
     NEW_REPO = NEW_GIT_REPO
@@ -612,7 +612,7 @@ class TestAdminReposControllerGIT(TestController, _BaseTest):
     OTHER_TYPE = 'hg'
 
 
-class TestAdminReposControllerHG(TestController, _BaseTest):
+class TestAdminReposControllerHG(TestControllerPytest, _BaseTest):
     REPO = HG_REPO
     REPO_TYPE = 'hg'
     NEW_REPO = NEW_HG_REPO

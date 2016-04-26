@@ -12,10 +12,7 @@ from kallithea.model.meta import Session
 
 fixture = Fixture()
 
-from kallithea.tests import *
-
-
-class _BaseFixture(unittest.TestCase):
+class _BaseFixture(object):
     @classmethod
     def setup_class(cls):
         pass
@@ -24,14 +21,14 @@ class _BaseFixture(unittest.TestCase):
     def teardown_class(cls):
         pass
 
-    def setUp(self):
+    def setup_method(self, method):
         self.username = u'forkuser'
         self.password = u'qweqwe'
         self.u1 = fixture.create_user(self.username, password=self.password,
                                       email=u'fork_king@example.com')
         Session().commit()
 
-    def tearDown(self):
+    def teardown_method(self, method):
         Session().delete(self.u1)
         Session().commit()
 
@@ -224,14 +221,14 @@ class _BaseTestCase(object):
         response.mustcontain('There are no forks yet')
 
 
-class TestGIT(TestController, _BaseTestCase, _BaseFixture):
+class TestGIT(TestControllerPytest, _BaseTestCase, _BaseFixture):
     REPO = GIT_REPO
     NEW_REPO = NEW_GIT_REPO
     REPO_TYPE = 'git'
     REPO_FORK = GIT_FORK
 
 
-class TestHG(TestController, _BaseTestCase, _BaseFixture):
+class TestHG(TestControllerPytest, _BaseTestCase, _BaseFixture):
     REPO = HG_REPO
     NEW_REPO = NEW_HG_REPO
     REPO_TYPE = 'hg'

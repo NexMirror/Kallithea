@@ -10,7 +10,7 @@ dn = os.path.dirname
 FIXTURES = os.path.join(dn(dn(os.path.abspath(__file__))), 'fixtures')
 
 
-class TestAdminController(TestController):
+class TestAdminController(TestControllerPytest):
 
     @classmethod
     def setup_class(cls):

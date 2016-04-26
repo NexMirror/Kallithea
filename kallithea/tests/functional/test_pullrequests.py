@@ -143,15 +143,15 @@ class TestPullrequestsController(TestControllerPytest):
                                  status=400)
         response.mustcontain('Invalid reviewer &#34;%s&#34; specified' % invalid_user_id)
 
-class TestPullrequestsGetRepoRefs(TestController):
+class TestPullrequestsGetRepoRefs(TestControllerPytest):
 
-    def setUp(self):
+    def setup_method(self, method):
         self.main = fixture.create_repo(u'main', repo_type='hg')
         Session.add(self.main)
         Session.commit()
         self.c = PullrequestsController()
 
-    def tearDown(self):
+    def teardown_method(self, method):
         fixture.destroy_repo(u'main')
         Session.commit()
         Session.remove()

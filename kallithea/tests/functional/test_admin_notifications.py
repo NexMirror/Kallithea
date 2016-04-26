@@ -7,8 +7,8 @@ from kallithea.model.meta import Session
 from kallithea.lib import helpers as h
 
 
-class TestNotificationsController(TestController):
-    def setUp(self):
+class TestNotificationsController(TestControllerPytest):
+    def setup_method(self, method):
         remove_all_notifications()
 
     def test_index(self):

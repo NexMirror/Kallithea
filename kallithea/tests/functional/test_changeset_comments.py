@@ -4,9 +4,9 @@ from kallithea.model.db import ChangesetComment, Notification, \
 from kallithea.model.meta import Session
 
 
-class TestChangeSetCommentsController(TestController):
+class TestChangeSetCommentsController(TestControllerPytest):
 
-    def setUp(self):
+    def setup_method(self, method):
         for x in ChangesetComment.query().all():
             Session().delete(x)
         Session().commit()

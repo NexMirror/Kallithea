@@ -10,13 +10,13 @@ def _commit_div(sha, msg):
     return """<div id="C-%s" class="message">%s</div>""" % (sha, msg)
 
 
-class TestCompareController(TestController):
+class TestCompareController(TestControllerPytest):
 
-    def setUp(self):
+    def setup_method(self, method):
         self.r1_id = None
         self.r2_id = None
 
-    def tearDown(self):
+    def teardown_method(self, method):
         if self.r2_id:
             RepoModel().delete(self.r2_id)
         if self.r1_id:
