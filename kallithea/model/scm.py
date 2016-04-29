@@ -26,6 +26,7 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 import os
+import sys
 import posixpath
 import re
 import time
@@ -744,10 +745,12 @@ class ScmModel(BaseModel):
         if not os.path.isdir(loc):
             os.makedirs(loc)
 
-        tmpl_post = pkg_resources.resource_string(
+        tmpl_post = "#!/usr/bin/env %s\n" % sys.executable or 'python2'
+        tmpl_post += pkg_resources.resource_string(
             'kallithea', jn('config', 'post_receive_tmpl.py')
         )
-        tmpl_pre = pkg_resources.resource_string(
+        tmpl_pre = "#!/usr/bin/env %s\n" % sys.executable or 'python2'
+        tmpl_pre += pkg_resources.resource_string(
             'kallithea', jn('config', 'pre_receive_tmpl.py')
         )
 
