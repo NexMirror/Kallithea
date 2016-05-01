@@ -6,6 +6,9 @@ import pkg_resources
 from paste.deploy import loadapp
 import pylons.test
 from pylons.i18n.translation import _get_translator
+import pytest
+from kallithea.model.user import UserModel
+from kallithea.model.meta import Session
 
 
 def pytest_configure():
@@ -32,3 +35,17 @@ def pytest_configure():
     pylons.translator._push_object(translator)
 
     return pylons.test.pylonsapp
+
+
+@pytest.yield_fixture
+def create_test_user():
+    """Provide users that automatically disappear after test is over."""
+    test_users = []
+    def _create_test_user(user_form):
+        user = UserModel().create(user_form)
+        test_users.append(user)
+        return user
+    yield _create_test_user
+    for user in test_users:
+        UserModel().delete(user)
+    Session().commit()
