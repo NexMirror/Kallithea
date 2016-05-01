@@ -93,3 +93,46 @@ def test_init_user_attributes_from_ldap(monkeypatch, arrange_ldap_auth):
     assert new_user.firstname == 'spam ldap first name'
     assert new_user.lastname == 'spam ldap last name'
     assert new_user.email == 'spam ldap email'
+
+
+class _AuthLdapNoEmailMock():
+
+    def __init__(self, **kwargs):
+        pass
+
+    def authenticate_ldap(self, username, password):
+        return 'spam dn', dict(test_ldap_firstname=['spam ldap first name'],
+                               test_ldap_lastname=['spam ldap last name'],
+                               test_ldap_email=[''])
+
+
+def test_init_user_attributes_from_ldap_with_missing_email(monkeypatch,
+                                                           arrange_ldap_auth):
+    """Authenticate unknown user with mocked LDAP where email is missing.
+    """
+
+    # Arrange test user.
+    uniqifier = uuid.uuid4()
+    username = 'test-user-{}'.format(uniqifier)
+    assert User.get_by_username(username) is None
+
+    # Arrange LDAP auth.
+    monkeypatch.setattr(auth_ldap, 'AuthLdap', _AuthLdapNoEmailMock)
+
+    # Authenticate with LDAP.
+    user_data = authenticate(username, 'password')
+
+    # Verify that authenication succeeded and retrieved correct attributes
+    # from LDAP, with empty email.
+    assert user_data is not None
+    assert user_data.get('firstname') == 'spam ldap first name'
+    assert user_data.get('lastname') == 'spam ldap last name'
+    assert user_data.get('email') == ''
+
+    # Verify that authentication created new user with attributes
+    # retrieved from LDAP, with email == None.
+    new_user = User.get_by_username(username)
+    assert new_user is not None
+    assert new_user.firstname == 'spam ldap first name'
+    assert new_user.lastname == 'spam ldap last name'
+    assert new_user.email is None
