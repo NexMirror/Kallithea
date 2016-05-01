@@ -62,3 +62,34 @@ def test_update_user_attributes_from_ldap(monkeypatch, create_test_user,
     assert user.firstname == 'spam ldap first name'
     assert user.lastname == 'spam ldap last name'
     assert user.email == 'spam ldap email'
+
+
+def test_init_user_attributes_from_ldap(monkeypatch, arrange_ldap_auth):
+    """Authenticate unknown user with mocked LDAP, verify user is created.
+    """
+
+    # Arrange test user.
+    uniqifier = uuid.uuid4()
+    username = 'test-user-{}'.format(uniqifier)
+    assert User.get_by_username(username) is None
+
+    # Arrange LDAP auth.
+    monkeypatch.setattr(auth_ldap, 'AuthLdap', _AuthLdapMock)
+
+    # Authenticate with LDAP.
+    user_data = authenticate(username, 'password')
+
+    # Verify that authenication succeeded and retrieved correct attributes
+    # from LDAP.
+    assert user_data is not None
+    assert user_data.get('firstname') == 'spam ldap first name'
+    assert user_data.get('lastname') == 'spam ldap last name'
+    assert user_data.get('email') == 'spam ldap email'
+
+    # Verify that authentication created new user with attributes
+    # retrieved from LDAP.
+    new_user = User.get_by_username(username)
+    assert new_user is not None
+    assert new_user.firstname == 'spam ldap first name'
+    assert new_user.lastname == 'spam ldap last name'
+    assert new_user.email == 'spam ldap email'
