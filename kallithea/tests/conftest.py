@@ -9,6 +9,7 @@ from pylons.i18n.translation import _get_translator
 import pytest
 from kallithea.model.user import UserModel
 from kallithea.model.meta import Session
+from kallithea.model.db import Setting
 
 
 def pytest_configure():
@@ -49,3 +50,37 @@ def create_test_user():
     for user in test_users:
         UserModel().delete(user)
     Session().commit()
+
+
+def _set_settings(*kvtseq):
+    session = Session()
+    for kvt in kvtseq:
+        assert len(kvt) in (2, 3)
+        k = kvt[0]
+        v = kvt[1]
+        t = kvt[2] if len(kvt) == 3 else 'unicode'
+        setting = Setting.create_or_update(k, v, t)
+        session.add(setting)
+    session.flush()
+
+
+@pytest.yield_fixture
+def set_test_settings():
+    """Restore settings after test is over."""
+    # Save settings.
+    settings_snapshot = [
+        (s.app_settings_name, s.app_settings_value, s.app_settings_type)
+        for s in Setting.query().all()]
+    yield _set_settings
+    # Restore settings.
+    session = Session()
+    keys = frozenset(k for (k, v, t) in settings_snapshot)
+    for s in Setting.query().all():
+        if s.app_settings_name not in keys:
+            session.delete(s)
+    for k, v, t in settings_snapshot:
+        if t == 'list' and hasattr(v, '__iter__'):
+            v = ','.join(v) # Quirk: must format list value manually.
+        s = Setting.create_or_update(k, v, t)
+        session.add(s)
+    session.commit()
