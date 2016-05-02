@@ -95,7 +95,7 @@ class LoginController(BaseController):
             except formencode.Invalid as errors:
                 defaults = errors.value
                 # remove password from filling in form again
-                del defaults['password']
+                defaults.pop('password', None)
                 return htmlfill.render(
                     render('/login.html'),
                     defaults=errors.value,
