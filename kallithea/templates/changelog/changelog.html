@@ -183,27 +183,26 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                     if ($checked_checkboxes.length > 0) {
                         $checked_checkboxes.first().parent('td').append($singlerange);
                         var singlerange = $singlerange.prop('checked');
-                        var rev_end = $checked_checkboxes.first().prop('name').substr(0, 12);
+                        var rev_end = $checked_checkboxes.first().prop('name');
                         if ($checked_checkboxes.length > 1 || singlerange) {
-                            var rev_start = $checked_checkboxes.last().prop('name').substr(0, 12);
+                            var rev_start = $checked_checkboxes.last().prop('name');
                             $('#rev_range_container').prop('href',
                                 pyroutes.url('changeset_home', {'repo_name': '${c.repo_name}',
                                                                 'revision': rev_start + '...' + rev_end}));
                             $('#rev_range_container').html(
-                                 _TM['Show Selected Changesets {0} &rarr; {1}'].format(rev_start, rev_end));
+                                 _TM['Show Selected Changesets {0} &rarr; {1}'].format(rev_start.substr(0, 12), rev_end.substr(0, 12)));
                             $('#rev_range_container').show();
                             $('#open_new_pr').prop('href', pyroutes.url('pullrequest_home',
                                                                         {'repo_name': '${c.repo_name}',
                                                                          'rev_start': rev_start,
                                                                          'rev_end': rev_end}));
-                            $('#open_new_pr').html(_TM['Open New Pull Request for {0} &rarr; {1}'].format(rev_start, rev_end));
+                            $('#open_new_pr').html(_TM['Open New Pull Request for {0} &rarr; {1}'].format(rev_start.substr(0, 12), rev_end.substr(0, 12)));
                         } else {
                             $('#open_new_pr').prop('href', pyroutes.url('pullrequest_home',
                                                                         {'repo_name': '${c.repo_name}',
                                                                          'rev_end': rev_end}));
-                            $('#open_new_pr').html(_TM['Open New Pull Request from {0}'].format(rev_end));
+                            $('#open_new_pr').html(_TM['Open New Pull Request from {0}'].format(rev_end.substr(0, 12)));
                         }
-
                         $('#rev_range_clear').show();
                         $('#compare_fork').hide();
 

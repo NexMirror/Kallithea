@@ -139,6 +139,7 @@ or in the admin panel you can check the "build from scratch" checkbox.
 
 .. _ldap-setup:
 
+
 Setting up LDAP support
 -----------------------
 
@@ -411,8 +412,7 @@ reverse-proxy setup with basic auth:
     </Location>
 
 Setting metadata in container/reverse-proxy
-'''''''''''''''''''''''''''''''''''''''''''
-
+"""""""""""""""""""""""""""""""""""""""""""
 When a new user account is created on the first login, Kallithea has no information about
 the user's email and full name. So you can set some additional request headers like in the
 example below. In this example the user is authenticated via Kerberos and an Apache

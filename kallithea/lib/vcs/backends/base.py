@@ -123,9 +123,6 @@ class BaseRepository(object):
             for topnode, dirs, files in tip.walk('/'):
                 for f in files:
                     size += tip.get_file_size(f.path)
-                for dir in dirs:
-                    for f in files:
-                        size += tip.get_file_size(f.path)
 
         except RepositoryError as e:
             pass

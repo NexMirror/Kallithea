@@ -759,6 +759,16 @@ class LoginRequired(object):
         if request.method not in ['GET', 'HEAD', 'POST', 'PUT']:
             raise HTTPMethodNotAllowed()
 
+        # Also verify the _method override. This is only permitted in POST
+        # requests, and can specify PUT or DELETE.
+        _method = request.params.get('_method')
+        if _method is None:
+            pass # no override, no problem
+        elif request.method == 'POST' and _method.upper() in ['PUT', 'DELETE']:
+            pass # permitted override
+        else:
+            raise HTTPMethodNotAllowed()
+
         # Make sure CSRF token never appears in the URL. If so, invalidate it.
         if secure_form.token_key in request.GET:
             log.error('CSRF key leak detected')
