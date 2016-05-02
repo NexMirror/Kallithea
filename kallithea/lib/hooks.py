@@ -83,8 +83,7 @@ def repo_size(ui, repo, hooktype=None, **kwargs):
            'Last revision is now r%s:%s\n') % (
         size_hg_f, size_root_f, size_total_f, last_cs.rev(), last_cs.hex()[:12]
     )
-
-    sys.stdout.write(msg)
+    ui.status(msg)
 
 
 def pre_push(ui, repo, **kwargs):
@@ -100,7 +99,7 @@ def pre_push(ui, repo, **kwargs):
         _http_ret = HTTPLockedRC(ex.repository, locked_by)
         if str(_http_ret.code).startswith('2'):
             #2xx Codes don't raise exceptions
-            sys.stdout.write(_http_ret.title)
+            ui.status(_http_ret.title)
         else:
             raise _http_ret
 
@@ -116,7 +115,7 @@ def pre_pull(ui, repo, **kwargs):
         _http_ret = HTTPLockedRC(ex.repository, locked_by)
         if str(_http_ret.code).startswith('2'):
             #2xx Codes don't raise exceptions
-            sys.stdout.write(_http_ret.title)
+            ui.status(_http_ret.title)
         else:
             raise _http_ret
 
@@ -144,14 +143,14 @@ def log_pull_action(ui, repo, **kwargs):
     if ex.make_lock is not None and ex.make_lock:
         Repository.lock(Repository.get_by_repo_name(ex.repository), user.user_id)
         #msg = 'Made lock on repo `%s`' % repository
-        #sys.stdout.write(msg)
+        #ui.status(msg)
 
     if ex.locked_by[0]:
         locked_by = User.get(ex.locked_by[0]).username
         _http_ret = HTTPLockedRC(ex.repository, locked_by)
         if str(_http_ret.code).startswith('2'):
             #2xx Codes don't raise exceptions
-            sys.stdout.write(_http_ret.title)
+            ui.status(_http_ret.title)
     return 0
 
 
@@ -200,14 +199,14 @@ def log_push_action(ui, repo, **kwargs):
     if ex.make_lock is not None and not ex.make_lock:
         Repository.unlock(Repository.get_by_repo_name(ex.repository))
         msg = 'Released lock on repo `%s`\n' % ex.repository
-        sys.stdout.write(msg)
+        ui.status(msg)
 
     if ex.locked_by[0]:
         locked_by = User.get(ex.locked_by[0]).username
         _http_ret = HTTPLockedRC(ex.repository, locked_by)
         if str(_http_ret.code).startswith('2'):
             #2xx Codes don't raise exceptions
-            sys.stdout.write(_http_ret.title)
+            ui.status(_http_ret.title)
 
     return 0
 
