@@ -153,6 +153,10 @@ def webserver():
     server = WSGIServer(application=kallithea.tests.base.testapp)
     server.start()
 
+    # temporary hack for using this server for the vcs tests:
+    from kallithea.tests.other import manual_test_vcs_operations
+    manual_test_vcs_operations.HOST = '%s:%s' % server.server_address
+
     yield server
 
     server.stop()
