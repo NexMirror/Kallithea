@@ -110,15 +110,15 @@ def _add_files_and_push(vcs, DEST, **kwargs):
     Command(cwd).execute('%s add %s' % (vcs, added_file))
 
     for i in xrange(kwargs.get('files_no', 3)):
-        cmd = """echo 'added_line%s' >> %s""" % (i, added_file)
+        cmd = """echo "added_line%s" >> %s""" % (i, added_file)
         Command(cwd).execute(cmd)
         author_str = 'User ǝɯɐᴎ <me@example.com>'
         if vcs == 'hg':
-            cmd = """hg commit -m 'committed new %s' -u '%s' %s """ % (
+            cmd = """hg commit -m "committed new %s" -u "%s" "%s" """ % (
                 i, author_str, added_file
             )
         elif vcs == 'git':
-            cmd = """EMAIL="me@example.com" git commit -m 'committed new %s' --author '%s' %s """ % (
+            cmd = """EMAIL="me@example.com" git commit -m "committed new %s" --author "%s" "%s" """ % (
                 i, author_str, added_file
             )
         Command(cwd).execute(cmd)
