@@ -110,12 +110,12 @@ class _BaseTestApi(object):
     def teardown_class(cls):
         pass
 
-    def setUp(self):
+    def setup_method(self, method):
         self.maxDiff = None
         make_user_group()
         make_repo_group()
 
-    def tearDown(self):
+    def teardown_method(self, method):
         fixture.destroy_user_group(TEST_USER_GROUP)
         fixture.destroy_gists()
         fixture.destroy_repo_group(TEST_REPO_GROUP)
@@ -686,18 +686,19 @@ class _BaseTestApi(object):
         expected = ret
         self._compare_error(id_, expected, given=response.body)
 
-    @parameterized.expand([('firstname', 'new_username'),
-                           ('lastname', 'new_username'),
-                           ('email', 'new_username'),
-                           ('admin', True),
-                           ('admin', False),
-                           ('extern_type', 'ldap'),
-                           ('extern_type', None),
-                           ('extern_name', 'test'),
-                           ('extern_name', None),
-                           ('active', False),
-                           ('active', True),
-                           ('password', 'newpass')
+    @parametrize('name,expected', [
+        ('firstname', 'new_username'),
+        ('lastname', 'new_username'),
+        ('email', 'new_username'),
+        ('admin', True),
+        ('admin', False),
+        ('extern_type', 'ldap'),
+        ('extern_type', None),
+        ('extern_name', 'test'),
+        ('extern_name', None),
+        ('active', False),
+        ('active', True),
+        ('password', 'newpass'),
     ])
     def test_api_update_user(self, name, expected):
         usr = User.get_by_username(self.TEST_USER_LOGIN)
@@ -809,10 +810,10 @@ class _BaseTestApi(object):
         self._compare_ok(id_, expected, given=response.body)
         fixture.destroy_user_group(new_group)
 
-    @parameterized.expand([
-        ('repository.admin',),
-        ('repository.write',),
-        ('repository.read',),
+    @parametrize('grant_perm', [
+        ('repository.admin'),
+        ('repository.write'),
+        ('repository.read'),
     ])
     def test_api_get_repo_by_non_admin(self, grant_perm):
         RepoModel().grant_user_permission(repo=self.REPO,
@@ -900,9 +901,11 @@ class _BaseTestApi(object):
         expected = ret
         self._compare_ok(id_, expected, given=response.body)
 
-    @parameterized.expand([('all', 'all'),
-                           ('dirs', 'dirs'),
-                           ('files', 'files'), ])
+    @parametrize('name,ret_type', [
+        ('all', 'all'),
+        ('dirs', 'dirs'),
+        ('files', 'files'),
+    ])
     def test_api_get_repo_nodes(self, name, ret_type):
         rev = 'tip'
         path = '/'
@@ -953,9 +956,11 @@ class _BaseTestApi(object):
                     % (','.join(['files', 'dirs', 'all'])))
         self._compare_error(id_, expected, given=response.body)
 
-    @parameterized.expand([('all', 'all', 'repository.write'),
-                           ('dirs', 'dirs', 'repository.admin'),
-                           ('files', 'files', 'repository.read'), ])
+    @parametrize('name,ret_type,grant_perm', [
+        ('all', 'all', 'repository.write'),
+        ('dirs', 'dirs', 'repository.admin'),
+        ('files', 'files', 'repository.read'),
+    ])
     def test_api_get_repo_nodes_by_regular_user(self, name, ret_type, grant_perm):
         RepoModel().grant_user_permission(repo=self.REPO,
                                           user=self.TEST_USER_LOGIN,
@@ -1137,7 +1142,7 @@ class _BaseTestApi(object):
         expected = 'failed to create repository `%s`' % repo_name
         self._compare_error(id_, expected, given=response.body)
 
-    @parameterized.expand([
+    @parametrize('changing_attr,updates', [
         ('owner', {'owner': TEST_USER_REGULAR_LOGIN}),
         ('description', {'description': u'new description'}),
         ('active', {'active': True}),
@@ -1398,9 +1403,11 @@ class _BaseTestApi(object):
         self._compare_error(id_, expected, given=response.body)
         fixture.destroy_repo(fork_name)
 
-    @parameterized.expand([('read', 'repository.read'),
-                           ('write', 'repository.write'),
-                           ('admin', 'repository.admin')])
+    @parametrize('name,perm', [
+        ('read', 'repository.read'),
+        ('write', 'repository.write'),
+        ('admin', 'repository.admin'),
+    ])
     def test_api_fork_repo_non_admin_no_create_repo_permission(self, name, perm):
         fork_name = u'api-repo-fork'
         # regardless of base repository permission, forking is disallowed
@@ -1545,11 +1552,13 @@ class _BaseTestApi(object):
         expected = 'failed to create group `%s`' % group_name
         self._compare_error(id_, expected, given=response.body)
 
-    @parameterized.expand([('group_name', {'group_name': u'new_group_name'}),
-                           ('group_name', {'group_name': u'test_group_for_update'}),
-                           ('owner', {'owner': TEST_USER_REGULAR_LOGIN}),
-                           ('active', {'active': False}),
-                           ('active', {'active': True})])
+    @parametrize('changing_attr,updates', [
+        ('group_name', {'group_name': u'new_group_name'}),
+        ('group_name', {'group_name': u'test_group_for_update'}),
+        ('owner', {'owner': TEST_USER_REGULAR_LOGIN}),
+        ('active', {'active': False}),
+        ('active', {'active': True}),
+    ])
     def test_api_update_user_group(self, changing_attr, updates):
         gr_name = u'test_group_for_update'
         user_group = fixture.create_user_group(gr_name)
@@ -1710,10 +1719,12 @@ class _BaseTestApi(object):
         finally:
             fixture.destroy_user_group(gr_name)
 
-    @parameterized.expand([('none', 'repository.none'),
-                           ('read', 'repository.read'),
-                           ('write', 'repository.write'),
-                           ('admin', 'repository.admin')])
+    @parametrize('name,perm', [
+        ('none', 'repository.none'),
+        ('read', 'repository.read'),
+        ('write', 'repository.write'),
+        ('admin', 'repository.admin'),
+    ])
     def test_api_grant_user_permission(self, name, perm):
         id_, params = _build_data(self.apikey,
                                   'grant_user_permission',
@@ -1786,10 +1797,12 @@ class _BaseTestApi(object):
         )
         self._compare_error(id_, expected, given=response.body)
 
-    @parameterized.expand([('none', 'repository.none'),
-                           ('read', 'repository.read'),
-                           ('write', 'repository.write'),
-                           ('admin', 'repository.admin')])
+    @parametrize('name,perm', [
+        ('none', 'repository.none'),
+        ('read', 'repository.read'),
+        ('write', 'repository.write'),
+        ('admin', 'repository.admin'),
+    ])
     def test_api_grant_user_group_permission(self, name, perm):
         id_, params = _build_data(self.apikey,
                                   'grant_user_group_permission',
@@ -1866,7 +1879,7 @@ class _BaseTestApi(object):
         )
         self._compare_error(id_, expected, given=response.body)
 
-    @parameterized.expand([
+    @parametrize('name,perm,apply_to_children', [
         ('none', 'group.none', 'none'),
         ('read', 'group.read', 'none'),
         ('write', 'group.write', 'none'),
@@ -1904,7 +1917,7 @@ class _BaseTestApi(object):
         expected = ret
         self._compare_ok(id_, expected, given=response.body)
 
-    @parameterized.expand([
+    @parametrize('name,perm,apply_to_children,grant_admin,access_ok', [
         ('none_fails', 'group.none', 'none', False, False),
         ('read_fails', 'group.read', 'none', False, False),
         ('write_fails', 'group.write', 'none', False, False),
@@ -1970,7 +1983,7 @@ class _BaseTestApi(object):
         )
         self._compare_error(id_, expected, given=response.body)
 
-    @parameterized.expand([
+    @parametrize('name,apply_to_children', [
         ('none', 'none'),
         ('all', 'all'),
         ('repos', 'repos'),
@@ -1997,7 +2010,7 @@ class _BaseTestApi(object):
         }
         self._compare_ok(id_, expected, given=response.body)
 
-    @parameterized.expand([
+    @parametrize('name,apply_to_children,grant_admin,access_ok', [
         ('none', 'none', False, False),
         ('all', 'all', False, False),
         ('repos', 'repos', False, False),
@@ -2053,7 +2066,7 @@ class _BaseTestApi(object):
         )
         self._compare_error(id_, expected, given=response.body)
 
-    @parameterized.expand([
+    @parametrize('name,perm,apply_to_children', [
         ('none', 'group.none', 'none'),
         ('read', 'group.read', 'none'),
         ('write', 'group.write', 'none'),
@@ -2092,7 +2105,7 @@ class _BaseTestApi(object):
         expected = ret
         self._compare_ok(id_, expected, given=response.body)
 
-    @parameterized.expand([
+    @parametrize('name,perm,apply_to_children,grant_admin,access_ok', [
         ('none_fails', 'group.none', 'none', False, False),
         ('read_fails', 'group.read', 'none', False, False),
         ('write_fails', 'group.write', 'none', False, False),
@@ -2159,7 +2172,7 @@ class _BaseTestApi(object):
         )
         self._compare_error(id_, expected, given=response.body)
 
-    @parameterized.expand([
+    @parametrize('name,apply_to_children', [
         ('none', 'none'),
         ('all', 'all'),
         ('repos', 'repos'),
@@ -2185,7 +2198,7 @@ class _BaseTestApi(object):
         }
         self._compare_ok(id_, expected, given=response.body)
 
-    @parameterized.expand([
+    @parametrize('name,apply_to_children,grant_admin,access_ok', [
         ('none', 'none', False, False),
         ('all', 'all', False, False),
         ('repos', 'repos', False, False),
