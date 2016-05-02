@@ -32,6 +32,7 @@ Original author and date, and relevant copyright and licensing information is be
 
 """
 
+import os
 import re
 import tempfile
 import time
@@ -63,7 +64,10 @@ class Command(object):
         command = cmd + ' ' + ' '.join(args)
         if DEBUG:
             print '*** CMD %s ***' % command
-        p = Popen(command, shell=True, stdout=PIPE, stderr=PIPE, cwd=self.cwd)
+        testenv = dict(os.environ)
+        testenv['LANG'] = 'en_US.UTF-8'
+        testenv['LANGUAGE'] = 'en_US:en'
+        p = Popen(command, shell=True, stdout=PIPE, stderr=PIPE, cwd=self.cwd, env=testenv)
         stdout, stderr = p.communicate()
         if DEBUG:
             print 'stdout:', repr(stdout)
