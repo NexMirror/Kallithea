@@ -4,6 +4,7 @@ pytest ~= 3.0
 pytest-runner
 pytest-sugar>=0.7.0
 pytest-catchlog
+pytest-localserver
 mock
 sphinx
 webtest < 3

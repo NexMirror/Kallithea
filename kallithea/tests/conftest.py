@@ -5,15 +5,17 @@ import pkg_resources
 
 from paste.deploy import loadwsgi
 from routes.util import URLGenerator
-
 import pytest
+from pytest_localserver.http import WSGIServer
+
 from kallithea.controllers.root import RootController
 from kallithea.lib.utils import repo2db_mapper
 from kallithea.model.user import UserModel
 from kallithea.model.meta import Session
 from kallithea.model.db import Setting, User, UserIpMap
 from kallithea.model.scm import ScmModel
-from kallithea.tests.base import invalidate_all_caches, TEST_USER_REGULAR_LOGIN, TESTS_TMP_PATH
+from kallithea.tests.base import invalidate_all_caches, TEST_USER_REGULAR_LOGIN, TESTS_TMP_PATH, \
+    TEST_USER_ADMIN_LOGIN, TEST_USER_ADMIN_PASS
 import kallithea.tests.base # FIXME: needed for setting testapp instance!!!
 
 from tg.util.webtest import test_context
@@ -142,3 +144,15 @@ def test_context_fixture(app_fixture):
     """
     with test_context(app_fixture):
         yield
+
+
+@pytest.yield_fixture(scope="session")
+def webserver():
+    """Start web server while tests are running.
+    Useful for debugging and necessary for vcs operation tests."""
+    server = WSGIServer(application=kallithea.tests.base.testapp)
+    server.start()
+
+    yield server
+
+    server.stop()
