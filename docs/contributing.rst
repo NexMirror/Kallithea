@@ -118,6 +118,9 @@ multiline functions should be indented two levels -- one for the ``()`` and one 
 ``{}``.
 Variables holding jQuery objects should be named with a leading ``$``.
 
+Run ``scripts/run-all-cleanup`` before committing to ensure some basic code
+formatting consistency.
+
 Commit messages should have a leading short line summarizing the changes. For
 bug fixes, put ``(Issue #123)`` at the end of this line.
 
