@@ -109,10 +109,13 @@ def _add_files_and_push(vcs, DEST, **kwargs):
     Command(cwd).execute('touch %s' % added_file)
     Command(cwd).execute('%s add %s' % (vcs, added_file))
 
+    if os.name == 'nt':
+        author_str = 'User <me@example.com>'
+    else:
+        author_str = 'User ǝɯɐᴎ <me@example.com>'
     for i in xrange(kwargs.get('files_no', 3)):
         cmd = """echo "added_line%s" >> %s""" % (i, added_file)
         Command(cwd).execute(cmd)
-        author_str = 'User ǝɯɐᴎ <me@example.com>'
         if vcs == 'hg':
             cmd = """hg commit -m "committed new %s" -u "%s" "%s" """ % (
                 i, author_str, added_file
