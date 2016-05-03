@@ -450,8 +450,8 @@ could set the request headers however you want.
     LDAP_USER = ""
     LDAP_PASS = ""
     LDAP_ROOT = "dc=mydomain,dc=com"
-    LDAP_FILTER = "sAMAcountName=%s"
-    LDAP_ATTR_LIST = ['sAMAcountName','givenname','sn','mail']
+    LDAP_FILTER = "sAMAccountName=%s"
+    LDAP_ATTR_LIST = ['sAMAccountName','givenname','sn','mail']
 
     def fixuphandler(req):
         if req.user is None:
