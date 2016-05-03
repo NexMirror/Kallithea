@@ -2229,13 +2229,13 @@ class ChangesetStatus(Base, BaseModel):
 
     STATUS_NOT_REVIEWED = DEFAULT = 'not_reviewed'
     STATUS_APPROVED = 'approved'
-    STATUS_REJECTED = 'rejected'
+    STATUS_REJECTED = 'rejected' # is shown as "Not approved" - TODO: change database content / scheme
     STATUS_UNDER_REVIEW = 'under_review'
 
     STATUSES = [
         (STATUS_NOT_REVIEWED, _("Not reviewed")),  # (no icon) and default
         (STATUS_APPROVED, _("Approved")),
-        (STATUS_REJECTED, _("Rejected")),
+        (STATUS_REJECTED, _("Not approved")),
         (STATUS_UNDER_REVIEW, _("Under review")),
     ]
     STATUSES_DICT = dict(STATUSES)
