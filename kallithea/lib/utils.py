@@ -233,7 +233,7 @@ def get_filesystem_repos(path, recursive=False, skip_removed_repos=True):
             if skip_removed_repos and REMOVED_REPO_PAT.match(dirpath):
                 continue
 
-            #skip .<somethin> dirs
+            #skip .<something> dirs
             if dirpath.startswith('.'):
                 continue
 
