@@ -625,7 +625,7 @@ class DiffProcessor(object):
 
     def prepare(self, inline_diff=True):
         """
-        Prepare the passed udiff for HTML rendering. It'l return a list
+        Prepare the passed udiff for HTML rendering. It'll return a list
         of dicts with diff information
         """
         parsed = self._parser(inline_diff=inline_diff)
