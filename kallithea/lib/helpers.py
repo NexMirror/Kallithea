@@ -839,7 +839,7 @@ HasRepoGroupPermissionAny
 #==============================================================================
 # GRAVATAR URL
 #==============================================================================
-def gravatar(email_address, cls='', size=30, ssl_enabled=True):
+def gravatar(email_address, cls='', size=30):
     """return html element of the gravatar
 
     This method will return an <img> with the resolution double the size (for
@@ -847,44 +847,42 @@ def gravatar(email_address, cls='', size=30, ssl_enabled=True):
     empty then we fallback to using an icon.
 
     """
-    src = gravatar_url(email_address, size*2, ssl_enabled)
+    src = gravatar_url(email_address, size * 2)
 
-    #  here it makes sense to use style="width: ..." (instead of, say, a
-    # stylesheet) because we using this to generate a high-res (retina) size
-    tmpl = '<img alt="" class="{cls}" style="width: {size}px; height: {size}px" src="{src}"/>'
+    if src:
+        # here it makes sense to use style="width: ..." (instead of, say, a
+        # stylesheet) because we using this to generate a high-res (retina) size
+        html = ('<img alt="" class="{cls}" style="width: {size}px; height: {size}px" src="{src}"/>'
+            .format(cls=cls, size=size, src=src))
 
-    # if src is empty then there was no gravatar, so we use a font icon
-    if not src:
-        tmpl = """<i class="icon-user {cls}" style="font-size: {size}px;"></i>"""
+    else:
+        # if src is empty then there was no gravatar, so we use a font icon
+        html = ("""<i class="icon-user {cls}" style="font-size: {size}px;"></i>"""
+            .format(cls=cls, size=size, src=src))
 
-    tmpl = tmpl.format(cls=cls, size=size, src=src)
-    return literal(tmpl)
+    return literal(html)
 
-def gravatar_url(email_address, size=30, ssl_enabled=True):
+def gravatar_url(email_address, size=30):
     # doh, we need to re-import those to mock it later
     from pylons import url
     from pylons import tmpl_context as c
-
-    _def = 'anonymous@kallithea-scm.org'  # default gravatar
-    _use_gravatar = c.visual.use_gravatar
-    _gravatar_url = c.visual.gravatar_url or User.DEFAULT_GRAVATAR_URL
-
-    email_address = email_address or _def
-
-    if not _use_gravatar or not email_address or email_address == _def:
+    if not c.visual.use_gravatar:
         return ""
 
-    if _use_gravatar:
-        _md5 = lambda s: hashlib.md5(s).hexdigest()
+    _def = 'anonymous@kallithea-scm.org'  # default gravatar
+    email_address = email_address or _def
 
-        tmpl = _gravatar_url
-        parsed_url = urlparse.urlparse(url.current(qualified=True))
-        tmpl = tmpl.replace('{email}', email_address) \
-                   .replace('{md5email}', _md5(safe_str(email_address).lower())) \
-                   .replace('{netloc}', parsed_url.netloc) \
-                   .replace('{scheme}', parsed_url.scheme) \
-                   .replace('{size}', safe_str(size))
-        return tmpl
+    if email_address == _def:
+        return ""
+
+    parsed_url = urlparse.urlparse(url.current(qualified=True))
+    url = (c.visual.gravatar_url or User.DEFAULT_GRAVATAR_URL ) \
+               .replace('{email}', email_address) \
+               .replace('{md5email}', hashlib.md5(safe_str(email_address).lower()).hexdigest()) \
+               .replace('{netloc}', parsed_url.netloc) \
+               .replace('{scheme}', parsed_url.scheme) \
+               .replace('{size}', safe_str(size))
+    return url
 
 class Page(_Page):
     """

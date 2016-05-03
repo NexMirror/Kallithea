@@ -1076,18 +1076,19 @@ var autocompleteHighlightMatch = function (full, snippet, matchindex) {
         + "</span>" + full.substring(matchindex + snippet.length);
 };
 
-var gravatar = function(link, size, cssclass) {
-    var elem = '<img alt="" class="{2}" style="width: {0}px; height: {0}px" src="{1}"/>'.format(size, link, cssclass);
-    if (!link) {
-        elem = '<i class="icon-user {1}" style="font-size: {0}px;"></i>'.format(size, cssclass);
+var gravatar = function(gravatar_lnk, size, cssclass) {
+    if (!gravatar_lnk) {
+        return '<i class="icon-user {1}" style="font-size: {0}px;"></i>'.format(size, cssclass);
     }
-    return elem;
+    return '<img alt="" class="{2}" style="width: {0}px; height: {0}px" src="{1}"/>'.format(size, gravatar_lnk, cssclass);
 }
 
-var autocompleteGravatar = function(res, link, size, group) {
-    var elem = gravatar(link, size, "perm-gravatar-ac");
+var autocompleteGravatar = function(res, gravatar_lnk, size, group) {
+    var elem;
     if (group !== undefined) {
         elem = '<i class="perm-gravatar-ac icon-users"></i>';
+    } else {
+        elem = gravatar(gravatar_lnk, size, "perm-gravatar-ac");
     }
     return '<div class="ac-container-wrap">{0}{1}</div>'.format(elem, res);
 }
