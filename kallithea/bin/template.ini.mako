@@ -220,6 +220,11 @@ rss_include_diff = false
 show_sha_length = 12
 show_revision_number = false
 
+<%text>## Canonical URL to use when creating full URLs in UI and texts.</%text>
+<%text>## Useful when the site is available under different names or protocols.</%text>
+<%text>## Defaults to what is provided in the WSGI environment.</%text>
+#canonical_url = https://kallithea.example.com/repos
+
 <%text>## gist URL alias, used to create nicer urls for gist. This should be an</%text>
 <%text>## url that does rewrites to _admin/gists/<gistid>.</%text>
 <%text>## example: http://gist.example.com/{gistid}. Empty means use the internal</%text>
