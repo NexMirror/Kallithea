@@ -181,7 +181,7 @@ class TestLibs(BaseTestCase):
         delt = lambda *args, **kwargs: relativedelta.relativedelta(*args, **kwargs)
         self.assertEqual(age(n + delt(**age_args), now=n), expected)
 
-    def test_tag_exctrator(self):
+    def test_tag_extractor(self):
         sample = (
             "hello pta[tag] gog [[]] [[] sda ero[or]d [me =>>< sa]"
             "[requires] [stale] [see<>=>] [see => http://example.com]"
