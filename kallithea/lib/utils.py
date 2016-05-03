@@ -243,7 +243,7 @@ def get_filesystem_repos(path, recursive=False, skip_removed_repos=True):
             except VCSError:
                 if not recursive:
                     continue
-                #check if this dir containts other repos for recursive scan
+                #check if this dir contains other repos for recursive scan
                 rec_path = os.path.join(p, dirpath)
                 if not os.path.islink(rec_path) and os.path.isdir(rec_path):
                     for inner_scm in _get_repos(rec_path):
