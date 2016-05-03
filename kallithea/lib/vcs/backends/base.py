@@ -137,9 +137,6 @@ class BaseRepository(object):
     def is_empty(self):
         return self._empty
 
-    def get_last_change(self):
-        self.get_changesets()
-
     #==========================================================================
     # CHANGESETS
     #==========================================================================
