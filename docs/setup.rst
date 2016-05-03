@@ -117,7 +117,7 @@ For a full index rebuild, run::
 
     paster make-index my.ini -f
 
-The ``--repo-location`` option allows the location of the repositories to be overriden;
+The ``--repo-location`` option allows the location of the repositories to be overridden;
 usually, the location is retrieved from the Kallithea database.
 
 The ``--index-only`` option can be used to limit the indexed repositories to a comma-separated list::

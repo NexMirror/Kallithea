@@ -481,7 +481,7 @@ class AuthUser(object):
         user_model = UserModel()
         self.anonymous_user = User.get_default_user(cache=True)
 
-        # These attributes will be overriden by fill_data, below, unless the
+        # These attributes will be overridden by fill_data, below, unless the
         # requested user cannot be found and the default anonymous user is
         # not enabled.
         self.user_id = None

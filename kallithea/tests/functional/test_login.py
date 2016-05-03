@@ -327,7 +327,7 @@ class TestLoginController(TestControllerPytest):
                                              'email': email,
                                              'firstname': name,
                                              'lastname': lastname,
-                                             'admin': True})  # This should be overriden
+                                             'admin': True})  # This should be overridden
         self.assertEqual(response.status, '302 Found')
         self.checkSessionFlash(response, 'You have successfully registered into Kallithea')
 
