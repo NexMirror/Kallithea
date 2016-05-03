@@ -1,6 +1,6 @@
 """
 Module provides a class allowing to wrap communication over subprocess.Popen
-input, output, error streams into a meaningfull, non-blocking, concurrent
+input, output, error streams into a meaningful, non-blocking, concurrent
 stream processor exposing the output data as an iterator fitting to be a
 return value passed by a WSGI application to a WSGI server per PEP 3333.
 
