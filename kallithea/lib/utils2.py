@@ -656,7 +656,7 @@ def _extract_extras(env=None):
 
 
 def _set_extras(extras):
-    # RC_SCM_DATA can probably be removed in the future, but for compatibilty now...
+    # RC_SCM_DATA can probably be removed in the future, but for compatibility now...
     os.environ['KALLITHEA_EXTRAS'] = os.environ['RC_SCM_DATA'] = json.dumps(extras)
 
 
