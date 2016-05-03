@@ -3,9 +3,7 @@
 % for f in c.followers_pager:
     <div>
         <div class="follower_user">
-            <div class="gravatar">
-              ${h.gravatar(f.user.email, size=24)}
-            </div>
+            ${h.gravatar_div(f.user.email, size=24)}
             <span style="font-size: 20px"> <b>${f.user.username}</b> (${f.user.name} ${f.user.lastname})</span>
         </div>
         <div style="clear:both;padding-top: 10px"></div>

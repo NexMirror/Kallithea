@@ -426,12 +426,12 @@ div.header img {
     padding: 10px 12px 8px;
 }
 
-#header #header-inner #quick li span.icon {
+#header #header-inner #quick li .icon {
     border-left: none;
     padding-left: 10px;
 }
 
-#header #header-inner #quick li span.icon_short {
+#header #header-inner #quick li .icon_short {
     top: 0;
     left: 0;
     border-left: none;
@@ -439,8 +439,8 @@ div.header img {
     padding: 8px 6px 4px;
 }
 
-#header #header-inner #quick li span.icon img,
-#header #header-inner #quick li span.icon_short img {
+#header #header-inner #quick li .icon img,
+#header #header-inner #quick li .icon_short img {
     vertical-align: middle;
     margin-bottom: 2px;
 }

@@ -5,9 +5,7 @@
      <div class="journal_day">${day}</div>
         % for user,entries in items:
             <div class="journal_container">
-                <div class="gravatar">
-                    ${h.gravatar(user.email if user else 'anonymous@kallithea-scm.org', size=24)}
-                </div>
+                ${h.gravatar_div(user.email if user else 'anonymous@kallithea-scm.org', size=24)}
                 %if user:
                     <div class="journal_user">${user.name} ${user.lastname}</div>
                 %else:

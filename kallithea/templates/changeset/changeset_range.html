@@ -39,7 +39,7 @@ ${self.repo_context_bar('changelog')}
             <table class="compare_view_commits noborder">
             %for cnt,cs in enumerate(c.cs_ranges):
                 <tr>
-                <td><div class="gravatar">${h.gravatar(h.email_or_none(cs.author), size=14)}</div></td>
+                <td>${h.gravatar_div(h.email_or_none(cs.author), size=14)}</td>
                 <td>${h.link_to('r%s:%s' % (cs.revision,h.short_id(cs.raw_id)),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}</td>
                 <td><div class="author">${h.person(cs.author)}</div></td>
                 <td><span class="tooltip" title="${h.age(cs.date)}">${cs.date}</span></td>
@@ -79,9 +79,7 @@ ${self.repo_context_bar('changelog')}
           ## diff block
           <div class="h3">
           <a class="tooltip" title="${cs.message}" href="${h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id)}">${h.show_id(cs)}</a>
-             <div class="gravatar">
-               ${h.gravatar(h.email_or_none(cs.author), size=20)}
-             </div>
+             ${h.gravatar_div(h.email_or_none(cs.author), size=20)}
              <div class="right">
               <span class="logtags">
                 %if len(cs.parents)>1:

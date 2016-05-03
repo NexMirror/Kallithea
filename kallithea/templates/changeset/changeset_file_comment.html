@@ -8,9 +8,7 @@
     <div class="comment-prev-next-links"></div>
     <div class="comment-wrapp">
       <div class="meta">
-          <div style="float:left">
-               ${h.gravatar(co.author.email, size=20)}
-          </div>
+          ${h.gravatar_div(co.author.email, size=20, div_style="float:left")}
           <div class="user">
               ${co.author.full_name_and_username}
           </div>

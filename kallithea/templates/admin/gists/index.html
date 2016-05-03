@@ -43,9 +43,7 @@
         % for gist in c.gists_pager:
           <div class="gist-item" style="padding:10px 20px 10px 15px">
 
-            <div class="gravatar">
-              ${h.gravatar(gist.owner.email, size=28)}
-            </div>
+            ${h.gravatar_div(gist.owner.email, size=28)}
             <div title="${gist.owner.full_contact}" class="user" style="font-size: 16px">
                 <b>${h.person(gist.owner.full_contact)}</b> /
                 <b><a href="${h.url('gist',gist_id=gist.gist_access_id)}">gist: ${gist.gist_access_id}</a></b>

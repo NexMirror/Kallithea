@@ -133,9 +133,7 @@ summary = lambda n:{False:'summary-short'}.get(n)
             <li>
                <a title="${_('Owner')} ${c.db_repo.user.email}">
                 <i class="icon-user"></i> ${c.db_repo.user.username}
-                  <div class="gravatar" style="float: right; margin: 0px 0px 0px 0px" title="${c.db_repo.user.name} ${c.db_repo.user.lastname}">
-                    ${h.gravatar(c.db_repo.user.email, size=18)}
-                  </div>
+                ${h.gravatar_div(c.db_repo.user.email, size=18, div_style="float: right; margin: 0px 0px 0px 0px", div_title=c.db_repo.user.full_name)}
               </a>
             </li>
             <li>

@@ -24,9 +24,7 @@
         <ul class="nav nav-pills nav-stacked">
           <li>
            <div class="gravatar_box" style="height: 26px">
-               <div class="gravatar" style="float: left">
-                 ${h.gravatar(c.user.email)}
-               </div>
+               ${h.gravatar_div(c.user.email, div_style="float: left")}
                <div class="truncate" style="margin:10px 0px 10px 0px; color:#5f5f5f; float:left; width: 100px">
                 <strong>${c.user.username}</strong>
                </div>

@@ -365,9 +365,7 @@
           href="${h.url('notifications')}"
         %endif
       >
-          <span class="icon">
-            ${h.gravatar(c.authuser.email, size=20)}
-          </span>
+          ${h.gravatar_div(c.authuser.email, size=20, div_class="icon", div_style="display:inline")}
           %if c.authuser.username != 'default':
             <span class="menu_link_user">${c.authuser.username}</span>
             %if c.unread_notifications != 0:
@@ -419,9 +417,7 @@
             ${h.end_form()}
           %else:
             <div class="links_left">
-                <div class="big_gravatar">
-                  ${h.gravatar(c.authuser.email, size=48)}
-                </div>
+                ${h.gravatar_div(c.authuser.email, size=48, div_class="big_gravatar")}
                 <div class="full_name">${c.authuser.full_name_or_username}</div>
                 <div class="email">${c.authuser.email}</div>
             </div>

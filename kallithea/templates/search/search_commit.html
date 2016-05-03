@@ -12,9 +12,7 @@
             </div>
             <div class="left">
                 <div class="author">
-                    <div class="gravatar">
-                      ${h.gravatar(h.email_or_none(sr['author']), size=20)}
-                    </div>
+                    ${h.gravatar_div(h.email_or_none(sr['author']), size=20)}
                     <span>${h.person(sr['author'])}</span><br/>
                     <span>${h.email_or_none(sr['author'])}</a></span><br/>
                 </div>

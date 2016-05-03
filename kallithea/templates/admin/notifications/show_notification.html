@@ -24,9 +24,7 @@
     <div class="table">
       <div id="notification_${c.notification.notification_id}">
         <div class="notification-header">
-          <div class="gravatar">
-            ${h.gravatar(c.notification.created_by_user.email, size=24)}
-          </div>
+          ${h.gravatar_div(c.notification.created_by_user.email, size=24)}
           <div class="desc">
               ${c.notification.description}
           </div>

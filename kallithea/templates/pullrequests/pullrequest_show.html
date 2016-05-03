@@ -156,9 +156,7 @@ ${self.repo_context_bar('showpullrequest')}
               <label>${_('Owner')}:</label>
           </div>
           <div class="input pr-not-edit">
-                  <div class="gravatar">
-                    ${h.gravatar(c.pull_request.owner.email, size=20)}
-                  </div>
+                  ${h.gravatar_div(c.pull_request.owner.email, size=20)}
                   <span>${c.pull_request.owner.full_name_and_username}</span><br/>
                   <span><a href="mailto:${c.pull_request.owner.email}">${c.pull_request.owner.email}</a></span><br/>
           </div>
@@ -235,9 +233,7 @@ ${self.repo_context_bar('showpullrequest')}
                     <div class="reviewer_status tooltip" title="${h.changeset_status_lbl(status.status if status else 'not_reviewed')}">
                       <i class="icon-circle changeset-status-${status.status if status else 'not_reviewed'}"></i>
                     </div>
-                  <div class="reviewer_gravatar gravatar">
-                    ${h.gravatar(member.email, size=14)}
-                  </div>
+                  ${h.gravatar_div(member.email, size=14, div_class="reviewer_gravatar gravatar")}
                   <div style="float:left;">
                     ${member.full_name_and_username}
                     %if c.pull_request.user_id == member.user_id:
