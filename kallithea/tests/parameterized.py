@@ -81,7 +81,7 @@ def parameterized(input):
                 else:
                     args = [f] + list(args)
                 # ... then yield that as a tuple. If those steps aren't
-                # followed precicely, Nose gets upset and doesn't run the test
+                # followed precisely, Nose gets upset and doesn't run the test
                 # or doesn't run setup methods.
                 yield tuple(args)
 
