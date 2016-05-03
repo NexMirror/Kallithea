@@ -96,7 +96,7 @@ class ForeignKeyConstraint(ConstraintChangeset, schema.ForeignKeyConstraint):
     Migrate's additional parameters:
 
     :param columns: Columns in constraint
-    :param refcolumns: Columns that this FK reffers to in another table.
+    :param refcolumns: Columns that this FK refers to in another table.
     :param table: If columns are passed as strings, this kw is required
     :type table: Table instance
     :type columns: list of strings or Column instances
