@@ -45,7 +45,7 @@ class TestRepoGroups(TestControllerPytest):
 
     def __check_path(self, *path):
         """
-        Checks the path for existance !
+        Checks the path for existence !
         """
         path = [TESTS_TMP_PATH] + list(path)
         path = os.path.join(*path)
