@@ -1,7 +1,7 @@
 ## -*- coding: utf-8 -*-
 
-%if c.journal_day_aggreagate:
-    %for day,items in c.journal_day_aggreagate:
+%if c.journal_day_aggregate:
+    %for day,items in c.journal_day_aggregate:
      <div class="journal_day">${day}</div>
         % for user,entries in items:
             <div class="journal_container">

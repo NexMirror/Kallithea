@@ -205,7 +205,7 @@ class JournalController(BaseController):
             return url.current(filter=c.search_term, **kw)
 
         c.journal_pager = Page(journal, page=p, items_per_page=20, url=url_generator)
-        c.journal_day_aggreagate = self._get_daily_aggregate(c.journal_pager)
+        c.journal_day_aggregate = self._get_daily_aggregate(c.journal_pager)
 
         if request.environ.get('HTTP_X_PARTIAL_XHR'):
             return render('journal/journal_data.html')
@@ -339,7 +339,7 @@ class JournalController(BaseController):
 
         c.journal_pager = Page(journal, page=p, items_per_page=20)
 
-        c.journal_day_aggreagate = self._get_daily_aggregate(c.journal_pager)
+        c.journal_day_aggregate = self._get_daily_aggregate(c.journal_pager)
 
         if request.environ.get('HTTP_X_PARTIAL_XHR'):
             return render('journal/journal_data.html')
