@@ -240,7 +240,7 @@ api_access_controllers_whitelist =
 #    FilesController:archivefile
 
 <%text>## default encoding used to convert from and to unicode</%text>
-<%text>## can be also a comma seperated list of encoding in case of mixed encodings</%text>
+<%text>## can be also a comma separated list of encoding in case of mixed encodings</%text>
 default_encoding = utf8
 
 <%text>## issue tracker for Kallithea (leave blank to disable, absent for default)</%text>
