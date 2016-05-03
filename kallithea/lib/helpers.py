@@ -840,10 +840,13 @@ HasRepoGroupPermissionAny
 # GRAVATAR URL
 #==============================================================================
 def gravatar_div(email_address, cls='', size=30, **div_attributes):
-    """Return an html literal with a div around a gravatar.
+    """Return an html literal with a div around a gravatar if they are enabled.
     Extra keyword parameters starting with 'div_' will get the prefix removed
     and be used as attributes on the div. The default class is 'gravatar'.
     """
+    from pylons import tmpl_context as c
+    if not c.visual.use_gravatar:
+        return ''
     if 'div_class' not in div_attributes:
         div_attributes['div_class'] = "gravatar"
     attributes = []
@@ -862,6 +865,10 @@ def gravatar(email_address, cls='', size=30):
     empty then we fallback to using an icon.
 
     """
+    from pylons import tmpl_context as c
+    if not c.visual.use_gravatar:
+        return ''
+
     src = gravatar_url(email_address, size * 2)
 
     if src:

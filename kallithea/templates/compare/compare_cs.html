@@ -52,7 +52,9 @@
           </span>
         </td>
         <td style="width: 140px"><span class="tooltip" title="${h.age(cs.date)}">${cs.date}</span></td>
+        %if c.visual.use_gravatar:
         <td>${h.gravatar_div(h.email_or_none(cs.author), size=14, div_commit_id="${cs.raw_id}")}</td>
+        %endif
         <td><div class="author">${h.person(cs.author)}</div></td>
         <td>${h.link_to(h.show_id(cs),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}</td>
         <td>

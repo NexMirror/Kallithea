@@ -1078,7 +1078,10 @@ var autocompleteHighlightMatch = function (full, snippet, matchindex) {
 
 // Return html snippet for showing the provided gravatar url
 var gravatar = function(gravatar_lnk, size, cssclass) {
-    if (!gravatar_lnk || gravatar_lnk == 'default') {
+    if (!gravatar_lnk) {
+        return '';
+    }
+    if (gravatar_lnk == 'default') {
         return '<i class="icon-user {1}" style="font-size: {0}px;"></i>'.format(size, cssclass);
     }
     return '<img alt="" class="{2}" style="width: {0}px; height: {0}px" src="{1}"/>'.format(size, gravatar_lnk, cssclass);
@@ -1317,7 +1320,9 @@ var addReviewMember = function(id,fname,lname,nname,gravatar_link,gravatar_size)
         '           <div class="reviewer_status tooltip" title="not_reviewed">\n'+
         '             <i class="icon-circle changeset-status-not_reviewed"></i>\n'+
         '           </div>\n'+
-        '         <div class="reviewer_gravatar gravatar">{0}</div>\n'+
+        (gravatarelm ?
+        '         <div class="reviewer_gravatar gravatar">{0}</div>\n' :
+        '')+
         '         <div style="float:left;">{1}</div>\n'+
         '         <input type="hidden" value="{2}" name="review_members" />\n'+
         '         <div class="reviewer_member_remove action_button" onclick="removeReviewMember({2})">\n'+

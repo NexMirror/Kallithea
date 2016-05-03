@@ -1,7 +1,9 @@
 <div class="emails_wrap">
   <table class="noborder">
     <tr>
+    %if c.visual.use_gravatar:
     <td>${h.gravatar_div(c.user.email, size=16)}</td>
+    %endif
     <td><div class="email">${c.user.email}</div></td>
     <td>
         <span class="btn btn-mini btn-success disabled">${_('Primary')}</span>
@@ -10,7 +12,9 @@
     %if c.user_email_map:
         %for em in c.user_email_map:
           <tr>
+            %if c.visual.use_gravatar:
             <td>${h.gravatar_div(c.user.email, size=16)}</td>
+            %endif
             <td><div class="email">${em.email}</div></td>
             <td>
                 ${h.form(url('edit_user_emails', id=c.user.user_id),method='delete')}

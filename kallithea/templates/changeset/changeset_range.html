@@ -39,7 +39,9 @@ ${self.repo_context_bar('changelog')}
             <table class="compare_view_commits noborder">
             %for cnt,cs in enumerate(c.cs_ranges):
                 <tr>
+                %if c.visual.use_gravatar:
                 <td>${h.gravatar_div(h.email_or_none(cs.author), size=14)}</td>
+                %endif
                 <td>${h.link_to('r%s:%s' % (cs.revision,h.short_id(cs.raw_id)),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}</td>
                 <td><div class="author">${h.person(cs.author)}</div></td>
                 <td><span class="tooltip" title="${h.age(cs.date)}">${cs.date}</span></td>
