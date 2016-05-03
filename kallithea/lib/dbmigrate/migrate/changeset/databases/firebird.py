@@ -44,7 +44,7 @@ class FBColumnDropper(ansisql.ANSIColumnDropper):
                 self.append("DROP CONSTRAINT ")
                 self.append(self.preparer.format_constraint(cons))
                 self.execute()
-            # TODO: recreate unique constraint if it refenrences more than this column
+            # TODO: recreate unique constraint if it references more than this column
 
         self.start_alter_table(column)
         self.append('DROP %s' % self.preparer.format_column(column))
