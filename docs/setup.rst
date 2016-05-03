@@ -814,7 +814,7 @@ Example WSGI dispatch script:
     os.environ["HGENCODING"] = "UTF-8"
     os.environ['PYTHON_EGG_CACHE'] = '/srv/kallithea/.egg-cache'
 
-    # sometimes it's needed to set the curent dir
+    # sometimes it's needed to set the current dir
     os.chdir('/srv/kallithea/')
 
     import site
