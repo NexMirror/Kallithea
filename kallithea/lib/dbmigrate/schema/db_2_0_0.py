@@ -232,7 +232,7 @@ class Setting(Base, BaseModel):
     def create_or_update(cls, key, val=Optional(''), type=Optional('unicode')):
         """
         Creates or updates Kallithea setting. If updates is triggered it will only
-        update parameters that are explicityl set Optional instance will be skipped
+        update parameters that are explicitly set Optional instance will be skipped
 
         :param key:
         :param val:
