@@ -10,10 +10,10 @@
 <p>${_('URL')}: <a href="${pr_url}">${pr_url}</a></p>
 
 <p>${_('Description')}:</p>
-<p style="white-space: pre-wrap;">${body}</p>
+<p style="white-space: pre-wrap; font-family: monospace">${body}</p>
 
 <p>${_('Changesets')}:</p>
-<p style="white-space: pre-wrap;">
+<p style="white-space: pre-wrap">
 %for r,r_msg in pr_revisions:
 <i><a href="${h.canonical_url('changeset_home', repo_name=org_repo_name, revision=r)}">${h.short_id(r)}</a></i>:
 ${h.shorter(r_msg, 256)}

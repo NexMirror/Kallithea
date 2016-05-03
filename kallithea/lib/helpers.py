@@ -1428,7 +1428,7 @@ def render_w_mentions(source, repo_name=None):
         s = urlify_changesets(s, repo_name)
     s = urlify_issues(s, repo_name)
     s = MENTIONS_REGEX.sub(_mentions_replace, s)
-    return literal('<code style="white-space:pre-wrap">%s</code>' % s)
+    return literal('<div class="formatted-fixed">%s</div>' % s)
 
 
 def short_ref(ref_type, ref_name):
