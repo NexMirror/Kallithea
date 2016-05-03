@@ -2,7 +2,7 @@
 Module provides a class allowing to wrap communication over subprocess.Popen
 input, output, error streams into a meaningfull, non-blocking, concurrent
 stream processor exposing the output data as an iterator fitting to be a
-return value passed by a WSGI applicaiton to a WSGI server per PEP 3333.
+return value passed by a WSGI application to a WSGI server per PEP 3333.
 
 Copyright (c) 2011  Daniel Dotsenko <dotsa[at]hotmail.com>
 
