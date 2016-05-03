@@ -72,7 +72,7 @@ py.test also has many more options, see `py.test -h`. Some useful options
 are::
 
     -k EXPRESSION         only run tests which match the given substring
-                          expression. An expression is a python evaluatable
+                          expression. An expression is a python evaluable
                           expression where all names are substring-matched
                           against test names and their parent classes. Example:
     -x, --exitfirst       exit instantly on first error or failed test.
