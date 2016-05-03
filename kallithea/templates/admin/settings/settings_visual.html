@@ -36,6 +36,9 @@ ${h.form(url('admin_settings_visual'), method='post')}
                                                         {netloc}    network location/server host of running Kallithea server''')}</span>
                     </div>
                 </div>
+                <div class="label label-checkbox">
+                    <label>${_('Clone URL')}:</label>
+                </div>
                 <div class="field">
                     <div class="input">
                         ${h.text('clone_uri_tmpl', size=80)}
