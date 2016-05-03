@@ -45,7 +45,7 @@ def notify(msg, caps=True):
 
 
 def _reset_base(migrate_engine):
-    ## RESET COMPLETLY THE metadata for sqlalchemy to use previous declared Base
+    ## RESET COMPLETELY THE metadata for sqlalchemy to use previous declared Base
     Base = declarative_base()
     Base.metadata.clear()
     Base.metadata = MetaData()
