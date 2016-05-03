@@ -63,7 +63,7 @@ class WorkdirTestCaseMixin(_BackendTestMixin):
         self.repo.workdir.checkout_branch('foobar')
         self.assertEqual(self.repo.workdir.get_changeset(), head)
 
-        # Make sure that old head is still there after update to defualt branch
+        # Make sure that old head is still there after update to default branch
         self.repo.workdir.checkout_branch(self.default_branch)
         self.assertEqual(self.repo.workdir.get_changeset(), old_head)
 
