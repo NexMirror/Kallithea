@@ -534,7 +534,7 @@ removed extra unicode conversion in diff.</div>
                                           f_path=posixpath.join(location, filename)),
                                      params={
                                         'content': "def py():\n print 'hello world'\n",
-                                        'message': 'i commited',
+                                        'message': 'i committed',
                                         '_authentication_token': self.authentication_token(),
                                      },
                                     status=302)
@@ -608,7 +608,7 @@ removed extra unicode conversion in diff.</div>
                                           f_path=posixpath.join(location, filename)),
                                      params={
                                         'content': "def py():\n print 'hello world'\n",
-                                        'message': 'i commited',
+                                        'message': 'i committed',
                                         '_authentication_token': self.authentication_token(),
                                      },
                                     status=302)
@@ -681,7 +681,7 @@ removed extra unicode conversion in diff.</div>
                                           revision=repo.scm_instance.DEFAULT_BRANCH_NAME,
                                           f_path=posixpath.join(location, filename)),
                                      params={
-                                        'message': 'i commited',
+                                        'message': 'i committed',
                                         '_authentication_token': self.authentication_token(),
                                      },
                                     status=302)
@@ -754,7 +754,7 @@ removed extra unicode conversion in diff.</div>
                                           revision=repo.scm_instance.DEFAULT_BRANCH_NAME,
                                           f_path=posixpath.join(location, filename)),
                                      params={
-                                        'message': 'i commited',
+                                        'message': 'i committed',
                                         '_authentication_token': self.authentication_token(),
                                      },
                                     status=302)
