@@ -50,7 +50,7 @@ def upgrade(migrate_engine):
 
     # fix uniqueConstraints
     if migrate_engine.name in ['mysql']:
-        #mysql is givinig troubles here...
+        #mysql is giving troubles here...
         old_cons = UniqueConstraint('group_id', 'permission_id', table=tbl, name="group_id")
     elif migrate_engine.name in ['postgresql']:
         old_cons = UniqueConstraint('group_id', 'permission_id', table=tbl, name='group_to_perm_group_id_permission_id_key')
