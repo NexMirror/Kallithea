@@ -126,7 +126,7 @@ class TestCompareController(TestControllerPytest):
         #swap
         response.mustcontain("""<a class="btn btn-small" href="/%s/compare/branch@%s...branch@%s?other_repo=%s&amp;merge=True"><i class="icon-arrows-cw"></i> Swap</a>""" % (repo2.repo_name, rev1, rev2, repo1.repo_name))
 
-    def test_compare_forks_on_branch_extra_commits_origin_has_incomming_hg(self):
+    def test_compare_forks_on_branch_extra_commits_origin_has_incoming_hg(self):
         self.log_user()
 
         repo1 = fixture.create_repo(u'one', repo_type='hg',
@@ -185,7 +185,7 @@ class TestCompareController(TestControllerPytest):
         #swap
         response.mustcontain("""<a class="btn btn-small" href="/%s/compare/branch@%s...branch@%s?other_repo=%s&amp;merge=True"><i class="icon-arrows-cw"></i> Swap</a>""" % (repo2.repo_name, rev1, rev2, repo1.repo_name))
 
-    def test_compare_forks_on_branch_extra_commits_origin_has_incomming_git(self):
+    def test_compare_forks_on_branch_extra_commits_origin_has_incoming_git(self):
         self.log_user()
 
         repo1 = fixture.create_repo(u'one-git', repo_type='git',
