@@ -53,7 +53,7 @@ class TestMyAccountController(TestControllerPytest):
                                  {'new_email': TEST_USER_REGULAR_EMAIL, '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'This email address is already in use')
 
-    def test_my_account_my_emails_add_mising_email_in_form(self):
+    def test_my_account_my_emails_add_missing_email_in_form(self):
         self.log_user()
         response = self.app.get(url('my_account_emails'))
         response.mustcontain('No additional emails specified')
