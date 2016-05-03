@@ -550,7 +550,7 @@ class FilesController(BaseRepoController):
         archive_path = None
         cached_archive_path = None
         archive_cache_dir = CONFIG.get('archive_cache_dir')
-        if archive_cache_dir and not subrepos: # TOOD: subrepo caching?
+        if archive_cache_dir and not subrepos: # TODO: subrepo caching?
             if not os.path.isdir(archive_cache_dir):
                 os.makedirs(archive_cache_dir)
             cached_archive_path = os.path.join(archive_cache_dir, archive_name)
