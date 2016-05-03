@@ -84,7 +84,7 @@ def _escape_split(text, sep):
     # recurse because there may be more escaped separators
     endlist = _escape_split(after, sep)
 
-    # finish building the escaped value. we use endlist[0] becaue the first
+    # finish building the escaped value. we use endlist[0] because the first
     # part of the string sent in recursion is the rest of the escaped value.
     unfinished += sep + endlist[0]
 
