@@ -12,8 +12,17 @@ cannot be sent, all mails will show up in the log output.
 Before any email can be sent, an SMTP server has to be configured using the
 configuration file setting ``smtp_server``. If required for that server, specify
 a username (``smtp_username``) and password (``smtp_password``), a non-standard
-port (``smtp_port``), encryption settings (``smtp_use_tls`` or ``smtp_use_ssl``)
-and/or specific authentication parameters (``smtp_auth``).
+port (``smtp_port``), whether to use "SSL" when connecting (``smtp_use_ssl``)
+or use STARTTLS (``smtp_use_tls``), and/or specify special ESMTP "auth" features
+(``smtp_auth``).
+
+For example, for sending through gmail, use::
+
+    smtp_server = smtp.gmail.com
+    smtp_username = username
+    smtp_password = password
+    smtp_port = 465
+    smtp_use_ssl = true
 
 
 Application emails

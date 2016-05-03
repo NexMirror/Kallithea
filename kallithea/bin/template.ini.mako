@@ -49,17 +49,16 @@ pdebug = false
 #error_email_from = paste_error@example.com
 
 <%text>## SMTP server settings</%text>
-<%text>## Only smtp_server is mandatory. All other settings take the specified default</%text>
-<%text>## values.</%text>
+<%text>## If specifying credentials, make sure to use secure connections.</%text>
+<%text>## Default: Send unencrypted unauthenticated mails to the specified smtp_server.</%text>
+<%text>## For "SSL", use smtp_use_ssl = true and smtp_port = 465.</%text>
+<%text>## For "STARTTLS", use smtp_use_tls = true and smtp_port = 587.</%text>
 #smtp_server = smtp.example.com
 #smtp_username =
 #smtp_password =
 #smtp_port = 25
-#smtp_use_tls = false
 #smtp_use_ssl = false
-<%text>## SMTP authentication parameters to use (e.g. LOGIN PLAIN CRAM-MD5, etc.).</%text>
-<%text>## If empty, use any of the authentication parameters supported by the server.</%text>
-#smtp_auth =
+#smtp_use_tls = false
 
 [server:main]
 %if http_server == 'paste':
