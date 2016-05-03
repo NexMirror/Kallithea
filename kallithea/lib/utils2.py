@@ -99,7 +99,7 @@ def __get_index_filenames():
 
 def str2bool(_str):
     """
-    returs True/False value from given string, it tries to translate the
+    returns True/False value from given string, it tries to translate the
     string into boolean
 
     :param _str: string value to translate into boolean
