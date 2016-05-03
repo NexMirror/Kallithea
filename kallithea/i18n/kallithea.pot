@@ -3970,7 +3970,7 @@ msgid ""
 "                                                        {user}   current user username,\n"
 "                                                        {netloc} network location/server host of running Kallithea server,\n"
 "                                                        {repo}   full repository name,\n"
-"                                                        {repoid} ID of repository, can be used to contruct clone-by-id"
+"                                                        {repoid} ID of repository, can be used to construct clone-by-id"
 msgstr ""
 
 #: kallithea/templates/admin/settings/settings_visual.html:55
