@@ -44,7 +44,7 @@ class TestUser(TestControllerPytest):
 
         self.assertEqual(UserGroupMember.query().all(), [])
 
-    def test_additonal_email_as_main(self):
+    def test_additional_email_as_main(self):
         usr = UserModel().create_or_update(username=u'test_user',
                                            password=u'qweqwe',
                                      email=u'main_email@example.com',

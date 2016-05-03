@@ -419,7 +419,7 @@ errormator.slow_requests = true
 ## (saves API quota for intensive logging)
 errormator.logging_on_error = false
 
-## list of additonal keywords that should be grabbed from environ object
+## list of additional keywords that should be grabbed from environ object
 ## can be string with comma separated list of words in lowercase
 ## (by default client will always send following info:
 ## 'REMOTE_USER', 'REMOTE_ADDR', 'SERVER_NAME', 'CONTENT_TYPE' + all keys that

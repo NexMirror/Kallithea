@@ -424,7 +424,7 @@ errormator.slow_requests = true
 <%text>## (saves API quota for intensive logging)</%text>
 errormator.logging_on_error = false
 
-<%text>## list of additonal keywords that should be grabbed from environ object</%text>
+<%text>## list of additional keywords that should be grabbed from environ object</%text>
 <%text>## can be string with comma separated list of words in lowercase</%text>
 <%text>## (by default client will always send following info:</%text>
 <%text>## 'REMOTE_USER', 'REMOTE_ADDR', 'SERVER_NAME', 'CONTENT_TYPE' + all keys that</%text>
