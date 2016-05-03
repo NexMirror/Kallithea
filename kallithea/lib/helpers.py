@@ -839,6 +839,21 @@ HasRepoGroupPermissionAny
 #==============================================================================
 # GRAVATAR URL
 #==============================================================================
+def gravatar_div(email_address, cls='', size=30, **div_attributes):
+    """Return an html literal with a div around a gravatar.
+    Extra keyword parameters starting with 'div_' will get the prefix removed
+    and be used as attributes on the div. The default class is 'gravatar'.
+    """
+    if 'div_class' not in div_attributes:
+        div_attributes['div_class'] = "gravatar"
+    attributes = []
+    for k, v in sorted(div_attributes.items()):
+        assert k.startswith('div_'), k
+        attributes.append(' %s="%s"' % (k[4:], escape(v)))
+    return literal("""<div%s>%s</div>""" %
+                   (''.join(attributes),
+                    gravatar(email_address, cls=cls, size=size)))
+
 def gravatar(email_address, cls='', size=30):
     """return html element of the gravatar
 
