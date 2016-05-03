@@ -279,7 +279,7 @@ ${self.repo_context_bar('showpullrequest')}
                   fname="${u.name}"
                   lname="${u.lastname}"
                   nname="${u.username}"
-                  gravatar_lnk="${h.gravatar_url(u.email, size=28)}"
+                  gravatar_lnk="${h.gravatar_url(u.email, size=28, default='default')}"
                   gravatar_size="14"
                   title="Click to add reviewer to the list, then Save Changes.">${u.full_name}</a>
               </li>

@@ -862,7 +862,7 @@ def gravatar(email_address, cls='', size=30):
 
     return literal(html)
 
-def gravatar_url(email_address, size=30):
+def gravatar_url(email_address, size=30, default=''):
     # doh, we need to re-import those to mock it later
     from pylons import url
     from pylons import tmpl_context as c
@@ -873,7 +873,7 @@ def gravatar_url(email_address, size=30):
     email_address = email_address or _def
 
     if email_address == _def:
-        return ""
+        return default
 
     parsed_url = urlparse.urlparse(url.current(qualified=True))
     url = (c.visual.gravatar_url or User.DEFAULT_GRAVATAR_URL ) \

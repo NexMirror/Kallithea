@@ -142,7 +142,7 @@ class RepoModel(BaseModel):
                 'fname': h.escape(u.name),
                 'lname': h.escape(u.lastname),
                 'nname': u.username,
-                'gravatar_lnk': h.gravatar_url(u.email, size=28),
+                'gravatar_lnk': h.gravatar_url(u.email, size=28, default='default'),
                 'gravatar_size': 14,
             } for u in users]
         )
