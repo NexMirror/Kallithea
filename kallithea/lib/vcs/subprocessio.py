@@ -364,12 +364,9 @@ class SubprocessIOChunker(object):
         # Either way, if error (returned by ended process, or implied based on
         # presence of stuff in stderr output) we error out.
         # Else, we are happy.
-        _returncode = _p.poll()
-        if _returncode or (_returncode is None and bg_err.length):
-            try:
-                _p.terminate()
-            except Exception:
-                pass
+        returncode = _p.poll()
+        if (returncode is not None # process has terminated
+            and returncode != 0): # and it failed
             bg_out.stop()
             out = ''.join(bg_out)
             bg_err.stop()
@@ -384,7 +381,7 @@ class SubprocessIOChunker(object):
                     "Subprocess exited due to an error:\n" + err)
             else:
                 raise EnvironmentError(
-                    "Subprocess exited with non 0 ret code:%s" % _returncode)
+                    "Subprocess exited with non 0 ret code: %s" % returncode)
         self.process = _p
         self.output = bg_out
         self.error = bg_err
@@ -394,9 +391,14 @@ class SubprocessIOChunker(object):
         return self
 
     def next(self):
-        if self.process and self.process.poll():
-            err = ''.join(self.error)
-            raise EnvironmentError("Subprocess exited due to an error:\n" + err)
+        if self.process:
+            returncode = self.process.poll()
+            if (returncode is not None # process has terminated
+                and returncode != 0): # and it failed
+                self.output.stop()
+                self.error.stop()
+                err = ''.join(self.error)
+                raise EnvironmentError("Subprocess exited due to an error:\n" + err)
         return self.output.next()
 
     def throw(self, type, value=None, traceback=None):
