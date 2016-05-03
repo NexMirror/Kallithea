@@ -304,8 +304,8 @@ class TestPermissions(TestControllerPytest):
         Session().commit()
 
         # check if user is in the group
-        membrs = [x.user_id for x in UserGroupModel().get(self.ug1.users_group_id).members]
-        self.assertEqual(membrs, [self.u1.user_id])
+        members = [x.user_id for x in UserGroupModel().get(self.ug1.users_group_id).members]
+        self.assertEqual(members, [self.u1.user_id])
         # add some user to that group
 
         # check his permissions
