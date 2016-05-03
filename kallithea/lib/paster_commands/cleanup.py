@@ -73,7 +73,7 @@ class Command(BasePasterCommand):
 
         :param name:
         """
-        date_part = name[4:19]  # 4:19 since we don't parse milisecods
+        date_part = name[4:19]  # 4:19 since we don't parse milliseconds
         return datetime.datetime.strptime(date_part, '%Y%m%d_%H%M%S')
 
     def command(self):
