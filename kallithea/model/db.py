@@ -2441,7 +2441,7 @@ class Notification(Base, BaseModel):
             Session().add(un)
 
         Session().add(notification)
-        Session().flush() # assign notificaiton.notification_id
+        Session().flush() # assign notification.notification_id
         return notification
 
     @property
