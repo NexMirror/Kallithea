@@ -856,7 +856,7 @@ def conditional_cache(region, prefix, condition, func):
             #heavy computation function
             return data
 
-        # denpending from condition the compute is wrapped in cache or not
+        # depending from condition the compute is wrapped in cache or not
         compute = conditional_cache('short_term', 'cache_desc', condition=True, func=func)
         return compute(arg)
 
