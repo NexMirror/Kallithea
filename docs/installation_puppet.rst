@@ -90,7 +90,7 @@ customizing the setup process. You have seen the usage of the ``seed_db``
 parameter in the :ref:`example above <simple_manifest>`, but there are more.
 For example, you can specify the installation directory, the name of the user
 under which Kallithea gets installed, the initial admin password, etc.
-Notably, you can provide arbitrary modifications to Kallitheas configuration
+Notably, you can provide arbitrary modifications to Kallithea's configuration
 file by means of the ``config_hash`` parameter.
 
 Parameters, which have not been set explicitly, will be set to default values,
