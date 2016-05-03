@@ -168,7 +168,7 @@ ${self.repo_context_bar('showpullrequest')}
 
         <div class="field">
             <div class="label-summary">
-              <label>${_('Update')}:</label>
+              <label>${_('Next iteration')}:</label>
             </div>
             <div class="input">
               <div class="msg-div">${c.update_msg}</div>
@@ -210,7 +210,7 @@ ${self.repo_context_bar('showpullrequest')}
                   %endfor
                 </table>
               </div>
-              <div class="msg-div">${_("Pull requests do not change once created. Select a revision and save to replace this pull request with a new one.")}</div>
+              <div class="msg-div">${_("Pull request iterations do not change content once created. Select a revision and save to make a new iteration.")}</div>
               %endif
               <div class="msg-div">${c.update_msg_other}</div>
             </div>
@@ -289,7 +289,7 @@ ${self.repo_context_bar('showpullrequest')}
         %if editable:
           <div class="buttons">
             ${h.submit('pr-form-save',_('Save Changes'),class_="btn btn-small")}
-            ${h.submit('pr-form-clone',_('Save Updates as New Pull Request'),class_="btn btn-small",disabled='disabled')}
+            ${h.submit('pr-form-clone',_('Create New Iteration with Changes'),class_="btn btn-small",disabled='disabled')}
             ${h.reset('pr-form-reset',_('Cancel Changes'),class_="btn btn-small")}
           </div>
         %endif

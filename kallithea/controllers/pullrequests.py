@@ -375,6 +375,7 @@ class PullrequestsController(BaseRepoController):
 
         raise HTTPFound(location=pull_request.url())
 
+    # TODO: rename to create_new_iteration or iterate ...
     def create_update(self, old_pull_request, updaterev, title, description, reviewers_ids):
         org_repo = RepoModel()._get_repo(old_pull_request.org_repo.repo_name)
         org_ref_type, org_ref_name, org_rev = old_pull_request.org_ref.split(':')
@@ -394,36 +395,36 @@ class PullrequestsController(BaseRepoController):
         new_revisions = [r for r in revisions if r not in old_revisions]
         lost = old_revisions.difference(revisions)
 
-        infos = ['This is an update of %s "%s".' %
+        infos = ['This is a new iteration of %s "%s".' %
                  (h.canonical_url('pullrequest_show', repo_name=old_pull_request.other_repo.repo_name,
                       pull_request_id=old_pull_request.pull_request_id),
                   old_pull_request.title)]
 
         if lost:
-            infos.append(_('Missing changesets since the previous pull request:'))
+            infos.append(_('Missing changesets since the previous iteration:'))
             for r in old_pull_request.revisions:
                 if r in lost:
                     rev_desc = org_repo.get_changeset(r).message.split('\n')[0]
                     infos.append('  %s "%s"' % (h.short_id(r), rev_desc))
 
         if new_revisions:
-            infos.append(_('New changesets on %s %s since the previous pull request:') % (org_ref_type, org_ref_name))
+            infos.append(_('New changesets on %s %s since the previous iteration:') % (org_ref_type, org_ref_name))
             for r in reversed(revisions):
                 if r in new_revisions:
                     rev_desc = org_repo.get_changeset(r).message.split('\n')[0]
                     infos.append('  %s %s' % (h.short_id(r), h.shorter(rev_desc, 80)))
 
             if ancestor_rev == other_rev:
-                infos.append(_("Ancestor didn't change - show diff since previous version:"))
+                infos.append(_("Ancestor didn't change - diff since previous iteration:"))
                 infos.append(h.canonical_url('compare_url',
                                  repo_name=org_repo.repo_name, # other_repo is always same as repo_name
                                  org_ref_type='rev', org_ref_name=h.short_id(org_rev), # use old org_rev as base
                                  other_ref_type='rev', other_ref_name=h.short_id(new_org_rev),
                                  )) # note: linear diff, merge or not doesn't matter
             else:
-                infos.append(_('This pull request is based on another %s revision and there is no simple diff.') % other_ref_name)
+                infos.append(_('This iteration is based on another %s revision and there is no simple diff.') % other_ref_name)
         else:
-           infos.append(_('No changes found on %s %s since previous version.') % (org_ref_type, org_ref_name))
+           infos.append(_('No changes found on %s %s since previous iteration.') % (org_ref_type, org_ref_name))
            # TODO: fail?
 
         # hack: ancestor_rev is not an other_ref but we want to show the
@@ -438,7 +439,7 @@ class PullrequestsController(BaseRepoController):
             v = 2
         title = '%s (v%s)' % (title.strip(), v)
 
-        # using a mail-like separator, insert new update info at the top of the list
+        # using a mail-like separator, insert new iteration info in description with latest first
         descriptions = description.replace('\r\n', '\n').split('\n-- \n', 1)
         description = descriptions[0].strip() + '\n\n-- \n' + '\n'.join(infos)
         if len(descriptions) > 1:
@@ -461,7 +462,7 @@ class PullrequestsController(BaseRepoController):
             raise HTTPFound(location=old_pull_request.url())
 
         ChangesetCommentsModel().create(
-            text=_('Closed, replaced by %s .') % pull_request.url(canonical=True),
+            text=_('Closed, next iteration: %s .') % pull_request.url(canonical=True),
             repo=old_pull_request.other_repo.repo_id,
             user=c.authuser.user_id,
             pull_request=old_pull_request.pull_request_id,
@@ -469,7 +470,7 @@ class PullrequestsController(BaseRepoController):
         PullRequestModel().close_pull_request(old_pull_request.pull_request_id)
 
         Session().commit()
-        h.flash(_('Pull request update created'),
+        h.flash(_('New pull request iteration created'),
                 category='success')
 
         raise HTTPFound(location=pull_request.url())
@@ -623,7 +624,7 @@ class PullrequestsController(BaseRepoController):
                     else:
                         show = set()
                         avail_revs = set() # drop revs[0]
-                        c.update_msg = _('No changesets found for updating this pull request.')
+                        c.update_msg = _('No changesets found for iterating on this pull request.')
 
                     # TODO: handle branch heads that not are tip-most
                     brevs = org_scm_instance._repo.revs('%s - %ld - %s', c.cs_branch_name, avail_revs, revs[0])
@@ -638,7 +639,7 @@ class PullrequestsController(BaseRepoController):
 
             elif org_scm_instance.alias == 'git':
                 c.cs_repo.scm_instance.get_changeset(c.cs_rev) # check it exists - raise ChangesetDoesNotExistError if not
-                c.update_msg = _("Git pull requests don't support updates yet.")
+                c.update_msg = _("Git pull requests don't support iterating yet.")
         except ChangesetDoesNotExistError:
             c.update_msg = _('Error: revision %s was not found. Please create a new pull request!') % c.cs_rev
 
