@@ -82,6 +82,7 @@ def load_environment(global_conf, app_conf, initial=False,
     config['pylons.app_globals'].mako_lookup = mako.lookup.TemplateLookup(
         directories=paths['templates'],
         error_handler=pylons.error.handle_mako_error,
+        strict_undefined=True,
         module_directory=os.path.join(app_conf['cache_dir'], 'templates'),
         input_encoding='utf-8', default_filters=['escape'],
         imports=['from webhelpers.html import escape'])
