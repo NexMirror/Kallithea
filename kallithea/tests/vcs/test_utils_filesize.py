@@ -17,7 +17,7 @@ class TestFilesizeformat(unittest.TestCase):
     def test_gigabytes(self):
         self.assertEqual(filesizeformat(1024 * 1024 * 1024 * 12.92), '12.92 GB')
 
-    def test_that_function_respects_sep_paramtere(self):
+    def test_that_function_respects_sep_parameter(self):
         self.assertEqual(filesizeformat(1, ''), '1B')
 
 
