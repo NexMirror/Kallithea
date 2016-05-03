@@ -2234,9 +2234,9 @@ class ChangesetStatus(Base, BaseModel):
 
     STATUSES = [
         (STATUS_NOT_REVIEWED, _("Not reviewed")),  # (no icon) and default
-        (STATUS_APPROVED, _("Approved")),
-        (STATUS_REJECTED, _("Not approved")),
         (STATUS_UNDER_REVIEW, _("Under review")),
+        (STATUS_REJECTED, _("Not approved")),
+        (STATUS_APPROVED, _("Approved")),
     ]
     STATUSES_DICT = dict(STATUSES)
 
