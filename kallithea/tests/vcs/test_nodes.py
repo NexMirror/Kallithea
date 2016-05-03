@@ -13,7 +13,7 @@ class NodeBasicTest(unittest.TestCase):
 
     def test_init(self):
         """
-        Cannot innitialize Node objects with path with slash at the beginning.
+        Cannot initialize Node objects with path with slash at the beginning.
         """
         wrong_paths = (
             '/foo',
