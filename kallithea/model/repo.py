@@ -132,7 +132,10 @@ class RepoModel(BaseModel):
         return Repository.query().filter(Repository.repo_name.in_(repos))
 
     def get_users_js(self):
-        users = self.sa.query(User).filter(User.active == True).all()
+        users = self.sa.query(User) \
+            .filter(User.active == True) \
+            .order_by(User.name, User.lastname) \
+            .all()
         return json.dumps([
             {
                 'id': u.user_id,
@@ -147,6 +150,7 @@ class RepoModel(BaseModel):
     def get_user_groups_js(self):
         user_groups = self.sa.query(UserGroup) \
             .filter(UserGroup.users_group_active == True) \
+            .order_by(UserGroup.users_group_name) \
             .options(subqueryload(UserGroup.members)) \
             .all()
         user_groups = UserGroupList(user_groups, perm_set=['usergroup.read',
