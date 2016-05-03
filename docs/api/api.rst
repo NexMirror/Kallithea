@@ -223,7 +223,7 @@ get_user
 Get a user by username or userid. The result is empty if user can't be found.
 If userid param is skipped, it is set to id of user who is calling this method.
 Any userid can be specified when the command is executed using the api_key of a user with admin rights.
-Regular users can only speicy their own userid.
+Regular users can only specify their own userid.
 
 INPUT::
 
