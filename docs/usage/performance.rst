@@ -47,5 +47,35 @@ Follow these few steps to improve performance of Kallithea system.
       that will separate regular user traffic from automated processes like CI
       servers or build bots.
 
+5. Serve static files directly from the web server
+
+With the default ``static_files`` ini setting, the Kallithea WSGI application
+will take care of serving the static files found in ``kallithea/public`` from
+the root of the application URL. While doing that, it will currently also
+apply buffering and compression of all the responses it is serving.
+
+The actual serving of the static files is unlikely to be a problem in a
+Kallithea setup. The buffering of responses is more likely to be a problem;
+large responses (clones or pulls) will have to be fully processed and spooled
+to disk or memory before the client will see any response.
+
+To serve static files from the web server, use something like this Apache config
+snippet::
+
+        Alias /images/ /srv/kallithea/kallithea/kallithea/public/images/
+        Alias /css/ /srv/kallithea/kallithea/kallithea/public/css/
+        Alias /js/ /srv/kallithea/kallithea/kallithea/public/js/
+        Alias /codemirror/ /srv/kallithea/kallithea/kallithea/public/codemirror/
+        Alias /fontello/ /srv/kallithea/kallithea/kallithea/public/fontello/
+
+Then disable serving of static files in the ``.ini`` ``app:main`` section::
+
+        static_files = false
+
+If using Kallithea installed as a package, you should be able to find the files
+under site-packages/kallithea, either in your Python installation or in your
+virtualenv. When upgrading, make sure to update the web server configuration
+too if necessary.
+
 
 .. _SQLAlchemyGrate: https://github.com/shazow/sqlalchemygrate
