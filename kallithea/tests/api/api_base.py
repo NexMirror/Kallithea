@@ -351,7 +351,7 @@ class _BaseTestApi(object):
         expected = "repository `%s` does not exist" % (self.REPO,)
         self._compare_error(id_, expected, given=response.body)
 
-    def test_api_lock_repo_lock_aquire(self):
+    def test_api_lock_repo_lock_acquire(self):
         id_, params = _build_data(self.apikey, 'lock',
                                   userid=TEST_USER_ADMIN_LOGIN,
                                   repoid=self.REPO,
@@ -367,7 +367,7 @@ class _BaseTestApi(object):
         }
         self._compare_ok(id_, expected, given=response.body)
 
-    def test_api_lock_repo_lock_aquire_by_non_admin(self):
+    def test_api_lock_repo_lock_acquire_by_non_admin(self):
         repo_name = u'api_delete_me'
         fixture.create_repo(repo_name, repo_type=self.REPO_TYPE,
                             cur_user=self.TEST_USER_LOGIN)
@@ -389,7 +389,7 @@ class _BaseTestApi(object):
         finally:
             fixture.destroy_repo(repo_name)
 
-    def test_api_lock_repo_lock_aquire_non_admin_with_userid(self):
+    def test_api_lock_repo_lock_acquire_non_admin_with_userid(self):
         repo_name = u'api_delete_me'
         fixture.create_repo(repo_name, repo_type=self.REPO_TYPE,
                             cur_user=self.TEST_USER_LOGIN)
@@ -404,7 +404,7 @@ class _BaseTestApi(object):
         finally:
             fixture.destroy_repo(repo_name)
 
-    def test_api_lock_repo_lock_aquire_non_admin_not_his_repo(self):
+    def test_api_lock_repo_lock_acquire_non_admin_not_his_repo(self):
         id_, params = _build_data(self.apikey_regular, 'lock',
                                   repoid=self.REPO,
                                   locked=True)
@@ -429,7 +429,7 @@ class _BaseTestApi(object):
         }
         self._compare_ok(id_, expected, given=response.body)
 
-    def test_api_lock_repo_lock_aquire_optional_userid(self):
+    def test_api_lock_repo_lock_acquire_optional_userid(self):
         id_, params = _build_data(self.apikey, 'lock',
                                   repoid=self.REPO,
                                   locked=True)
