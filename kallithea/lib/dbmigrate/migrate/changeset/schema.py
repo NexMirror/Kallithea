@@ -77,7 +77,7 @@ def rename_index(index, name, table=None, engine=None, **kw):
 
     :param index: Index to be renamed.
     :param name: New name for index.
-    :param table: Table to which Index is reffered.
+    :param table: Table to which Index is referred.
     :param engine: Engine instance.
     :type index: string or Index instance
     :type name: string
