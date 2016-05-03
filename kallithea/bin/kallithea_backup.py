@@ -86,7 +86,7 @@ class BackupManager(object):
                '%(backup_server)s' % params]
 
         subprocess.call(cmd)
-        logging.info('Transfered file %s to %s', self.backup_file_name, cmd[4])
+        logging.info('Transferred file %s to %s', self.backup_file_name, cmd[4])
 
     def rm_file(self):
         logging.info('Removing file %s', self.backup_file_name)
