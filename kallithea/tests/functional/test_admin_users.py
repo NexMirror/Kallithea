@@ -14,14 +14,17 @@
 
 from sqlalchemy.orm.exc import NoResultFound
 
+import pytest
 from kallithea.tests import *
 from kallithea.tests.fixture import Fixture
+from kallithea.controllers.admin.users import UsersController
 from kallithea.model.db import User, Permission, UserIpMap, UserApiKeys
 from kallithea.lib.auth import check_password
 from kallithea.model.user import UserModel
 from kallithea.model import validators
 from kallithea.lib import helpers as h
 from kallithea.model.meta import Session
+from webob.exc import HTTPNotFound
 
 fixture = Fixture()
 
@@ -507,29 +510,23 @@ class TestAdminUsersController(TestControllerPytest):
         response = response.follow()
         response.mustcontain(no=[api_key])
 
-# TODO To be uncommented when pytest is the test runner
-#import pytest
-#from kallithea.controllers.admin.users import UsersController
-#class TestAdminUsersController_unittest(object):
-#    """
-#    Unit tests for the users controller
-#    These are in a separate class, not deriving from TestController (and thus
-#    unittest.TestCase), to be able to benefit from pytest features like
-#    monkeypatch.
-#    """
-#    def test_get_user_or_raise_if_default(self, monkeypatch):
-#        # flash complains about an unexisting session
-#        def flash_mock(*args, **kwargs):
-#            pass
-#        monkeypatch.setattr(h, 'flash', flash_mock)
-#
-#        u = UsersController()
-#        # a regular user should work correctly
-#        user = User.get_by_username(TEST_USER_REGULAR_LOGIN)
-#        assert u._get_user_or_raise_if_default(user.user_id) == user
-#        # the default user should raise
-#        with pytest.raises(HTTPNotFound):
-#            u._get_user_or_raise_if_default(User.get_default_user().user_id)
+
+class TestAdminUsersController_unittest(object):
+    """ Unit tests for the users controller """
+
+    def test_get_user_or_raise_if_default(self, monkeypatch):
+        # flash complains about an non-existing session
+        def flash_mock(*args, **kwargs):
+            pass
+        monkeypatch.setattr(h, 'flash', flash_mock)
+
+        u = UsersController()
+        # a regular user should work correctly
+        user = User.get_by_username(TEST_USER_REGULAR_LOGIN)
+        assert u._get_user_or_raise_if_default(user.user_id) == user
+        # the default user should raise
+        with pytest.raises(HTTPNotFound):
+            u._get_user_or_raise_if_default(User.get_default_user().user_id)
 
 
 class TestAdminUsersControllerForDefaultUser(TestControllerPytest):
