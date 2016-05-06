@@ -166,14 +166,14 @@ def _check_proper_git_push(stdout, stderr):
     assert 'master -> master' in stderr
 
 
-class TestVCSOperations(BaseTestCase):
+class TestVCSOperations(TestControllerPytest):
 
     @classmethod
     def setup_class(cls):
         #DISABLE ANONYMOUS ACCESS
         set_anonymous_access(False)
 
-    def setUp(self):
+    def setup_method(self, method):
         r = Repository.get_by_repo_name(GIT_REPO)
         Repository.unlock(r)
         r.enable_locking = False

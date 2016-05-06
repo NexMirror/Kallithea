@@ -67,19 +67,20 @@ TEST_URLS += [
 ]
 
 
-class TestLibs(BaseTestCase):
+class TestLibs(TestControllerPytest):
 
-    @parameterized.expand(TEST_URLS)
+    @parametrize('test_url,expected,expected_creds', TEST_URLS)
     def test_uri_filter(self, test_url, expected, expected_creds):
         from kallithea.lib.utils2 import uri_filter
         self.assertEqual(uri_filter(test_url), expected)
 
-    @parameterized.expand(TEST_URLS)
+    @parametrize('test_url,expected,expected_creds', TEST_URLS)
     def test_credentials_filter(self, test_url, expected, expected_creds):
         from kallithea.lib.utils2 import credentials_filter
         self.assertEqual(credentials_filter(test_url), expected_creds)
 
-    @parameterized.expand([('t', True),
+    @parametrize('str_bool,expected', [
+                           ('t', True),
                            ('true', True),
                            ('y', True),
                            ('yes', True),
@@ -116,7 +117,7 @@ class TestLibs(BaseTestCase):
             'marian.user', 'marco-polo', 'marco_polo', 'world'])
         self.assertEqual(expected, set(extract_mentioned_usernames(sample)))
 
-    @parameterized.expand([
+    @parametrize('age_args,expected', [
         (dict(), u'just now'),
         (dict(seconds= -1), u'1 second ago'),
         (dict(seconds= -60 * 2), u'2 minutes ago'),
@@ -139,7 +140,7 @@ class TestLibs(BaseTestCase):
         delt = lambda *args, **kwargs: relativedelta.relativedelta(*args, **kwargs)
         self.assertEqual(age(n + delt(**age_args), now=n), expected)
 
-    @parameterized.expand([
+    @parametrize('age_args,expected', [
         (dict(), u'just now'),
         (dict(seconds= -1), u'1 second ago'),
         (dict(seconds= -60 * 2), u'2 minutes ago'),
@@ -163,7 +164,7 @@ class TestLibs(BaseTestCase):
         delt = lambda *args, **kwargs: relativedelta.relativedelta(*args, **kwargs)
         self.assertEqual(age(n + delt(**age_args), show_short_version=True, now=n), expected)
 
-    @parameterized.expand([
+    @parametrize('age_args,expected', [
         (dict(), u'just now'),
         (dict(seconds=1), u'in 1 second'),
         (dict(seconds=60 * 2), u'in 2 minutes'),
@@ -248,7 +249,7 @@ class TestLibs(BaseTestCase):
                 grav = gravatar_url(email_address=em, size=24)
                 assert grav == 'https://example.com/%s/%s' % (_md5(em), 24)
 
-    @parameterized.expand([
+    @parametrize('tmpl,repo_name,overrides,prefix,expected', [
         (Repository.DEFAULT_CLONE_URI, 'group/repo1', {}, '', 'http://vps1:8000/group/repo1'),
         (Repository.DEFAULT_CLONE_URI, 'group/repo1', {'user': 'username'}, '', 'http://username@vps1:8000/group/repo1'),
         (Repository.DEFAULT_CLONE_URI, 'group/repo1', {}, '/prefix', 'http://vps1:8000/prefix/group/repo1'),
@@ -285,7 +286,7 @@ class TestLibs(BaseTestCase):
             return tmpl % (url_ or '/some-url', _url)
         return URL_PAT.sub(url_func, text)
 
-    @parameterized.expand([
+    @parametrize('sample,expected', [
       ("",
        ""),
       ("git-svn-id: https://svn.apache.org/repos/asf/libcloud/trunk@1441655 13f79535-47bb-0310-9956-ffa450edef68",
@@ -323,7 +324,7 @@ class TestLibs(BaseTestCase):
             from kallithea.lib.helpers import urlify_changesets
             self.assertEqual(urlify_changesets(sample, 'repo_name'), expected)
 
-    @parameterized.expand([
+    @parametrize('sample,expected,url_', [
       ("",
        "",
        ""),
@@ -350,7 +351,7 @@ class TestLibs(BaseTestCase):
                                    tmpl="""<a href="%s">%s</a>""", url_=url_)
         self.assertEqual(urlify_text(sample), expected)
 
-    @parameterized.expand([
+    @parametrize('test,expected', [
       ("", None),
       ("/_2", '2'),
       ("_2", '2'),

@@ -14,12 +14,9 @@ from kallithea.tests.fixture import Fixture
 fixture = Fixture()
 
 
-class TestRepoGroups(BaseTestCase):
+class TestRepoGroups(TestControllerPytest):
 
-    def setUp(self):
-        pass
-
-    def tearDown(self):
+    def teardown_method(self, method):
         Session.remove()
 
     def test_Message_extractor(self):
@@ -164,7 +161,7 @@ class TestRepoGroups(BaseTestCase):
         # this uses ValidRepoName validator
         assert True
 
-    @parameterized.expand([
+    @parametrize('name,expected', [
         ('test', 'test'), ('lolz!', 'lolz'), ('  aavv', 'aavv'),
         ('ala ma kota', 'ala-ma-kota'), ('@nooo', 'nooo'),
         ('$!haha lolz !', 'haha-lolz'), ('$$$$$', ''), ('{}OK!', 'OK'),

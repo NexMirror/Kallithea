@@ -21,7 +21,7 @@ class smtplib_mock(object):
         pass
 
 @mock.patch('kallithea.lib.rcmail.smtp_mailer.smtplib', smtplib_mock)
-class TestMail(BaseTestCase):
+class TestMail(TestControllerPytest):
 
     def test_send_mail_trivial(self):
         mailserver = 'smtp.mailserver.org'
