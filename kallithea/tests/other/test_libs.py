@@ -72,12 +72,12 @@ class TestLibs(TestControllerPytest):
     @parametrize('test_url,expected,expected_creds', TEST_URLS)
     def test_uri_filter(self, test_url, expected, expected_creds):
         from kallithea.lib.utils2 import uri_filter
-        self.assertEqual(uri_filter(test_url), expected)
+        assert uri_filter(test_url) == expected
 
     @parametrize('test_url,expected,expected_creds', TEST_URLS)
     def test_credentials_filter(self, test_url, expected, expected_creds):
         from kallithea.lib.utils2 import credentials_filter
-        self.assertEqual(credentials_filter(test_url), expected_creds)
+        assert credentials_filter(test_url) == expected_creds
 
     @parametrize('str_bool,expected', [
                            ('t', True),
@@ -100,7 +100,7 @@ class TestLibs(TestControllerPytest):
     ])
     def test_str2bool(self, str_bool, expected):
         from kallithea.lib.utils2 import str2bool
-        self.assertEqual(str2bool(str_bool), expected)
+        assert str2bool(str_bool) == expected
 
     def test_mention_extractor(self):
         from kallithea.lib.utils2 import extract_mentioned_usernames
@@ -115,7 +115,7 @@ class TestLibs(TestControllerPytest):
         expected = set([
             '2one_more22', 'first', 'lukaszb', 'one', 'one_more22', 'UPPER', 'cAmEL', 'john',
             'marian.user', 'marco-polo', 'marco_polo', 'world'])
-        self.assertEqual(expected, set(extract_mentioned_usernames(sample)))
+        assert expected == set(extract_mentioned_usernames(sample))
 
     @parametrize('age_args,expected', [
         (dict(), u'just now'),
@@ -138,7 +138,7 @@ class TestLibs(TestControllerPytest):
         from dateutil import relativedelta
         n = datetime.datetime(year=2012, month=5, day=17)
         delt = lambda *args, **kwargs: relativedelta.relativedelta(*args, **kwargs)
-        self.assertEqual(age(n + delt(**age_args), now=n), expected)
+        assert age(n + delt(**age_args), now=n) == expected
 
     @parametrize('age_args,expected', [
         (dict(), u'just now'),
@@ -162,7 +162,7 @@ class TestLibs(TestControllerPytest):
         from dateutil import relativedelta
         n = datetime.datetime(year=2012, month=5, day=17)
         delt = lambda *args, **kwargs: relativedelta.relativedelta(*args, **kwargs)
-        self.assertEqual(age(n + delt(**age_args), show_short_version=True, now=n), expected)
+        assert age(n + delt(**age_args), show_short_version=True, now=n) == expected
 
     @parametrize('age_args,expected', [
         (dict(), u'just now'),
@@ -180,7 +180,7 @@ class TestLibs(TestControllerPytest):
         from dateutil import relativedelta
         n = datetime.datetime(year=2012, month=5, day=17)
         delt = lambda *args, **kwargs: relativedelta.relativedelta(*args, **kwargs)
-        self.assertEqual(age(n + delt(**age_args), now=n), expected)
+        assert age(n + delt(**age_args), now=n) == expected
 
     def test_tag_extractor(self):
         sample = (
@@ -191,12 +191,12 @@ class TestLibs(TestControllerPytest):
         )
         from kallithea.lib.helpers import urlify_text
         res = urlify_text(sample, stylize=True)
-        self.assertIn('<div class="metatag" tag="tag">tag</div>', res)
-        self.assertIn('<div class="metatag" tag="obsolete">obsolete</div>', res)
-        self.assertIn('<div class="metatag" tag="stale">stale</div>', res)
-        self.assertIn('<div class="metatag" tag="lang">python</div>', res)
-        self.assertIn('<div class="metatag" tag="requires">requires =&gt; <a href="/url">url</a></div>', res)
-        self.assertIn('<div class="metatag" tag="tag">tag</div>', res)
+        assert '<div class="metatag" tag="tag">tag</div>' in res
+        assert '<div class="metatag" tag="obsolete">obsolete</div>' in res
+        assert '<div class="metatag" tag="stale">stale</div>' in res
+        assert '<div class="metatag" tag="lang">python</div>' in res
+        assert '<div class="metatag" tag="requires">requires =&gt; <a href="/url">url</a></div>' in res
+        assert '<div class="metatag" tag="tag">tag</div>' in res
 
     def test_alternative_gravatar(self):
         from kallithea.lib.helpers import gravatar_url
@@ -269,7 +269,7 @@ class TestLibs(TestControllerPytest):
         from kallithea.lib.utils2 import get_clone_url
         clone_url = get_clone_url(uri_tmpl=tmpl, qualified_home_url='http://vps1:8000'+prefix,
                                   repo_name=repo_name, repo_id=23, **overrides)
-        self.assertEqual(clone_url, expected)
+        assert clone_url == expected
 
     def _quick_url(self, text, tmpl="""<a class="revision-link" href="%s">%s</a>""", url_=None):
         """
@@ -322,7 +322,7 @@ class TestLibs(TestControllerPytest):
 
         with mock.patch('pylons.url', fake_url):
             from kallithea.lib.helpers import urlify_changesets
-            self.assertEqual(urlify_changesets(sample, 'repo_name'), expected)
+            assert urlify_changesets(sample, 'repo_name') == expected
 
     @parametrize('sample,expected,url_', [
       ("",
@@ -349,7 +349,7 @@ class TestLibs(TestControllerPytest):
         from kallithea.lib.helpers import urlify_text
         expected = self._quick_url(expected,
                                    tmpl="""<a href="%s">%s</a>""", url_=url_)
-        self.assertEqual(urlify_text(sample), expected)
+        assert urlify_text(sample) == expected
 
     @parametrize('test,expected', [
       ("", None),
@@ -371,5 +371,4 @@ class TestLibs(TestControllerPytest):
     def test_get_repo_by_id(self, test, expected):
         from kallithea.lib.utils import _extract_id_from_repo_name
         _test = _extract_id_from_repo_name(test)
-        self.assertEqual(_test, expected, msg='url:%s, got:`%s` expected: `%s`'
-                                              % (test, _test, expected))
+        assert _test == expected, 'url:%s, got:`%s` expected: `%s`' % (test, _test, expected)

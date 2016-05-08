@@ -274,7 +274,7 @@ class TestVCSOperations(TestControllerPytest):
 
         key = CacheInvalidation.query().filter(CacheInvalidation.cache_key
                                                ==HG_REPO).all()
-        self.assertEqual(key, [])
+        assert key == []
 
     def test_push_invalidates_cache_git(self):
         key = CacheInvalidation.query().filter(CacheInvalidation.cache_key
@@ -296,7 +296,7 @@ class TestVCSOperations(TestControllerPytest):
 
         key = CacheInvalidation.query().filter(CacheInvalidation.cache_key
                                                ==GIT_REPO).all()
-        self.assertEqual(key, [])
+        assert key == []
 
     def test_push_wrong_credentials_hg(self):
         DEST = _get_tmp_dir()

@@ -38,12 +38,12 @@ class TestMail(TestControllerPytest):
         with mock.patch('kallithea.lib.celerylib.tasks.config', config_mock):
             kallithea.lib.celerylib.tasks.send_email(recipients, subject, body, html_body)
 
-        self.assertSetEqual(smtplib_mock.lastdest, set(recipients))
-        self.assertEqual(smtplib_mock.lastsender, envelope_from)
-        self.assertIn('From: %s' % envelope_from, smtplib_mock.lastmsg)
-        self.assertIn('Subject: %s' % subject, smtplib_mock.lastmsg)
-        self.assertIn(body, smtplib_mock.lastmsg)
-        self.assertIn(html_body, smtplib_mock.lastmsg)
+        assert smtplib_mock.lastdest == set(recipients)
+        assert smtplib_mock.lastsender == envelope_from
+        assert 'From: %s' % envelope_from in smtplib_mock.lastmsg
+        assert 'Subject: %s' % subject in smtplib_mock.lastmsg
+        assert body in smtplib_mock.lastmsg
+        assert html_body in smtplib_mock.lastmsg
 
     def test_send_mail_no_recipients(self):
         mailserver = 'smtp.mailserver.org'
@@ -62,12 +62,12 @@ class TestMail(TestControllerPytest):
         with mock.patch('kallithea.lib.celerylib.tasks.config', config_mock):
             kallithea.lib.celerylib.tasks.send_email(recipients, subject, body, html_body)
 
-        self.assertSetEqual(smtplib_mock.lastdest, set([TEST_USER_ADMIN_EMAIL, email_to]))
-        self.assertEqual(smtplib_mock.lastsender, envelope_from)
-        self.assertIn('From: %s' % envelope_from, smtplib_mock.lastmsg)
-        self.assertIn('Subject: %s' % subject, smtplib_mock.lastmsg)
-        self.assertIn(body, smtplib_mock.lastmsg)
-        self.assertIn(html_body, smtplib_mock.lastmsg)
+        assert smtplib_mock.lastdest == set([TEST_USER_ADMIN_EMAIL, email_to])
+        assert smtplib_mock.lastsender == envelope_from
+        assert 'From: %s' % envelope_from in smtplib_mock.lastmsg
+        assert 'Subject: %s' % subject in smtplib_mock.lastmsg
+        assert body in smtplib_mock.lastmsg
+        assert html_body in smtplib_mock.lastmsg
 
     def test_send_mail_no_recipients_no_email_to(self):
         mailserver = 'smtp.mailserver.org'
@@ -84,12 +84,12 @@ class TestMail(TestControllerPytest):
         with mock.patch('kallithea.lib.celerylib.tasks.config', config_mock):
             kallithea.lib.celerylib.tasks.send_email(recipients, subject, body, html_body)
 
-        self.assertSetEqual(smtplib_mock.lastdest, set([TEST_USER_ADMIN_EMAIL]))
-        self.assertEqual(smtplib_mock.lastsender, envelope_from)
-        self.assertIn('From: %s' % envelope_from, smtplib_mock.lastmsg)
-        self.assertIn('Subject: %s' % subject, smtplib_mock.lastmsg)
-        self.assertIn(body, smtplib_mock.lastmsg)
-        self.assertIn(html_body, smtplib_mock.lastmsg)
+        assert smtplib_mock.lastdest == set([TEST_USER_ADMIN_EMAIL])
+        assert smtplib_mock.lastsender == envelope_from
+        assert 'From: %s' % envelope_from in smtplib_mock.lastmsg
+        assert 'Subject: %s' % subject in smtplib_mock.lastmsg
+        assert body in smtplib_mock.lastmsg
+        assert html_body in smtplib_mock.lastmsg
 
     def test_send_mail_with_author(self):
         mailserver = 'smtp.mailserver.org'
@@ -107,12 +107,12 @@ class TestMail(TestControllerPytest):
         with mock.patch('kallithea.lib.celerylib.tasks.config', config_mock):
             kallithea.lib.celerylib.tasks.send_email(recipients, subject, body, html_body, author=author)
 
-        self.assertSetEqual(smtplib_mock.lastdest, set(recipients))
-        self.assertEqual(smtplib_mock.lastsender, envelope_from)
-        self.assertIn('From: "Kallithea Admin (no-reply)" <%s>' % envelope_from, smtplib_mock.lastmsg)
-        self.assertIn('Subject: %s' % subject, smtplib_mock.lastmsg)
-        self.assertIn(body, smtplib_mock.lastmsg)
-        self.assertIn(html_body, smtplib_mock.lastmsg)
+        assert smtplib_mock.lastdest == set(recipients)
+        assert smtplib_mock.lastsender == envelope_from
+        assert 'From: "Kallithea Admin (no-reply)" <%s>' % envelope_from in smtplib_mock.lastmsg
+        assert 'Subject: %s' % subject in smtplib_mock.lastmsg
+        assert body in smtplib_mock.lastmsg
+        assert html_body in smtplib_mock.lastmsg
 
     def test_send_mail_with_author_full_mail_from(self):
         mailserver = 'smtp.mailserver.org'
@@ -131,12 +131,12 @@ class TestMail(TestControllerPytest):
         with mock.patch('kallithea.lib.celerylib.tasks.config', config_mock):
             kallithea.lib.celerylib.tasks.send_email(recipients, subject, body, html_body, author=author)
 
-        self.assertSetEqual(smtplib_mock.lastdest, set(recipients))
-        self.assertEqual(smtplib_mock.lastsender, envelope_from)
-        self.assertIn('From: "Kallithea Admin (no-reply)" <%s>' % envelope_addr, smtplib_mock.lastmsg)
-        self.assertIn('Subject: %s' % subject, smtplib_mock.lastmsg)
-        self.assertIn(body, smtplib_mock.lastmsg)
-        self.assertIn(html_body, smtplib_mock.lastmsg)
+        assert smtplib_mock.lastdest == set(recipients)
+        assert smtplib_mock.lastsender == envelope_from
+        assert 'From: "Kallithea Admin (no-reply)" <%s>' % envelope_addr in smtplib_mock.lastmsg
+        assert 'Subject: %s' % subject in smtplib_mock.lastmsg
+        assert body in smtplib_mock.lastmsg
+        assert html_body in smtplib_mock.lastmsg
 
     def test_send_mail_extra_headers(self):
         mailserver = 'smtp.mailserver.org'
@@ -156,12 +156,12 @@ class TestMail(TestControllerPytest):
             kallithea.lib.celerylib.tasks.send_email(recipients, subject, body, html_body,
                                                      author=author, headers=headers)
 
-        self.assertSetEqual(smtplib_mock.lastdest, set(recipients))
-        self.assertEqual(smtplib_mock.lastsender, envelope_from)
-        self.assertIn(r'From: "foo (fubar) \"baz\" (no-reply)" <%s>' % envelope_from, smtplib_mock.lastmsg)
-        self.assertIn('Subject: %s' % subject, smtplib_mock.lastmsg)
-        self.assertIn(body, smtplib_mock.lastmsg)
-        self.assertIn(html_body, smtplib_mock.lastmsg)
-        self.assertIn('Extra: yes', smtplib_mock.lastmsg)
+        assert smtplib_mock.lastdest == set(recipients)
+        assert smtplib_mock.lastsender == envelope_from
+        assert r'From: "foo (fubar) \"baz\" (no-reply)" <%s>' % envelope_from in smtplib_mock.lastmsg
+        assert 'Subject: %s' % subject in smtplib_mock.lastmsg
+        assert body in smtplib_mock.lastmsg
+        assert html_body in smtplib_mock.lastmsg
+        assert 'Extra: yes' in smtplib_mock.lastmsg
         # verify that headers dict hasn't mutated by send_email
-        self.assertDictEqual(headers, {'extra': 'yes'})
+        assert headers == {'extra': 'yes'}
