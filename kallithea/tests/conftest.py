@@ -61,7 +61,7 @@ def _set_settings(*kvtseq):
         t = kvt[2] if len(kvt) == 3 else 'unicode'
         setting = Setting.create_or_update(k, v, t)
         session.add(setting)
-    session.flush()
+    session.commit()
 
 
 @pytest.yield_fixture
