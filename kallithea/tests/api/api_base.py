@@ -127,7 +127,7 @@ class _BaseTestApi(object):
             'result': expected
         })
         given = json.loads(given)
-        self.assertEqual(expected, given)
+        assert expected == given
 
     def _compare_error(self, id_, expected, given):
         expected = jsonify({
@@ -136,30 +136,30 @@ class _BaseTestApi(object):
             'result': None
         })
         given = json.loads(given)
-        self.assertEqual(expected, given)
+        assert expected == given
 
     def test_Optional_object(self):
         from kallithea.controllers.api.api import Optional
 
         option1 = Optional(None)
-        self.assertEqual('<Optional:%s>' % None, repr(option1))
-        self.assertEqual(option1(), None)
+        assert '<Optional:%s>' % None == repr(option1)
+        assert option1() == None
 
-        self.assertEqual(1, Optional.extract(Optional(1)))
-        self.assertEqual('trololo', Optional.extract('trololo'))
+        assert 1 == Optional.extract(Optional(1))
+        assert 'trololo' == Optional.extract('trololo')
 
     def test_Optional_OAttr(self):
         from kallithea.controllers.api.api import Optional, OAttr
 
         option1 = Optional(OAttr('apiuser'))
-        self.assertEqual('apiuser', Optional.extract(option1))
+        assert 'apiuser' == Optional.extract(option1)
 
     def test_OAttr_object(self):
         from kallithea.controllers.api.api import OAttr
 
         oattr1 = OAttr('apiuser')
-        self.assertEqual('<OptionalAttr:apiuser>', repr(oattr1))
-        self.assertEqual(oattr1(), oattr1)
+        assert '<OptionalAttr:apiuser>' == repr(oattr1)
+        assert oattr1() == oattr1
 
     def test_api_wrong_key(self):
         id_, params = _build_data('trololo', 'get_user')
@@ -195,13 +195,13 @@ class _BaseTestApi(object):
         id_, params = _build_data(self.apikey, 'get_users', )
         params = params.replace('"args": {}', '"args": null')
         response = api_call(self, params)
-        self.assertEqual(response.status, '200 OK')
+        assert response.status == '200 OK'
 
     def test_api_args_is_bad(self):
         id_, params = _build_data(self.apikey, 'get_users', )
         params = params.replace('"args": {}', '"args": 1')
         response = api_call(self, params)
-        self.assertEqual(response.status, '200 OK')
+        assert response.status == '200 OK'
 
     def test_api_args_different_args(self):
         import string
@@ -212,7 +212,7 @@ class _BaseTestApi(object):
         }
         id_, params = _build_data(self.apikey, 'test', args=expected)
         response = api_call(self, params)
-        self.assertEqual(response.status, '200 OK')
+        assert response.status == '200 OK'
         self._compare_ok(id_, expected, response.body)
 
     def test_api_get_users(self):
@@ -472,7 +472,7 @@ class _BaseTestApi(object):
         repo_name = u'api_not_locked'
         repo = fixture.create_repo(repo_name, repo_type=self.REPO_TYPE,
                             cur_user=self.TEST_USER_LOGIN)
-        self.assertEqual(repo.locked, [None, None])
+        assert repo.locked == [None, None]
         try:
             id_, params = _build_data(self.apikey, 'lock',
                                       repoid=repo.repo_id)
@@ -829,7 +829,7 @@ class _BaseTestApi(object):
 
         members = []
         followers = []
-        self.assertEqual(2, len(repo.repo_to_perm))
+        assert 2 == len(repo.repo_to_perm)
         for user in repo.repo_to_perm:
             perm = user.permission.permission_name
             user_obj = user.user
@@ -993,7 +993,7 @@ class _BaseTestApi(object):
         response = api_call(self, params)
 
         repo = RepoModel().get_by_repo_name(repo_name)
-        self.assertNotEqual(repo, None)
+        assert repo != None
         ret = {
             'msg': 'Created new repository `%s`' % repo_name,
             'success': True,
@@ -1012,7 +1012,7 @@ class _BaseTestApi(object):
         response = api_call(self, params)
         print params
         repo = RepoModel().get_by_repo_name(repo_name)
-        self.assertNotEqual(repo, None)
+        assert repo != None
         ret = {
             'msg': 'Created new repository `%s`' % repo_name,
             'success': True,
@@ -1078,7 +1078,7 @@ class _BaseTestApi(object):
         response = api_call(self, params)
 
         repo = RepoModel().get_by_repo_name(repo_name)
-        self.assertNotEqual(repo, None)
+        assert repo != None
         ret = {
             'msg': 'Created new repository `%s`' % repo_name,
             'success': True,
@@ -1098,7 +1098,7 @@ class _BaseTestApi(object):
         response = api_call(self, params)
 
         repo = RepoModel().get_by_repo_name(repo_name)
-        self.assertNotEqual(repo, None)
+        assert repo != None
         ret = {
             'msg': 'Created new repository `%s`' % repo_name,
             'success': True,
@@ -2298,7 +2298,7 @@ class _BaseTestApi(object):
         id_, params = _build_data(self.apikey, 'get_gists')
         response = api_call(self, params)
         expected = response.json
-        self.assertEqual(len(response.json['result']), 2)
+        assert len(response.json['result']) == 2
         #self._compare_ok(id_, expected, given=response.body)
 
     def test_api_get_gists_regular_user(self):
@@ -2314,7 +2314,7 @@ class _BaseTestApi(object):
         id_, params = _build_data(self.apikey_regular, 'get_gists')
         response = api_call(self, params)
         expected = response.json
-        self.assertEqual(len(response.json['result']), 3)
+        assert len(response.json['result']) == 3
         #self._compare_ok(id_, expected, given=response.body)
 
     def test_api_get_gists_only_for_regular_user(self):
@@ -2331,7 +2331,7 @@ class _BaseTestApi(object):
                                   userid=self.TEST_USER_LOGIN)
         response = api_call(self, params)
         expected = response.json
-        self.assertEqual(len(response.json['result']), 3)
+        assert len(response.json['result']) == 3
         #self._compare_ok(id_, expected, given=response.body)
 
     def test_api_get_gists_regular_user_with_different_userid(self):
