@@ -1,3 +1,4 @@
+import pytest
 from kallithea.tests import *
 
 from kallithea.model.meta import Session
@@ -21,7 +22,7 @@ class TestRepos(TestControllerPytest):
         RepoModel().delete(repo=repo)
         Session().commit()
 
-        self.assertEqual(None, Repository.get_by_repo_name(repo_name=u'test-repo-1'))
+        assert None == Repository.get_by_repo_name(repo_name=u'test-repo-1')
 
     def test_remove_repo_repo_raises_exc_when_attached_forks(self):
         repo = fixture.create_repo(name=u'test-repo-1')
@@ -30,7 +31,8 @@ class TestRepos(TestControllerPytest):
         fixture.create_fork(repo.repo_name, u'test-repo-fork-1')
         Session().commit()
 
-        self.assertRaises(AttachedForksError, lambda: RepoModel().delete(repo=repo))
+        with pytest.raises(AttachedForksError):
+            RepoModel().delete(repo=repo)
         # cleanup
         RepoModel().delete(repo=u'test-repo-fork-1')
         RepoModel().delete(repo=u'test-repo-1')
@@ -50,9 +52,9 @@ class TestRepos(TestControllerPytest):
         RepoModel().delete(repo=repo, forks='delete')
         Session().commit()
 
-        self.assertEqual(None, Repository.get_by_repo_name(repo_name=u'test-repo-1'))
-        self.assertEqual(None, Repository.get_by_repo_name(repo_name=u'test-repo-fork-1'))
-        self.assertEqual(None, Repository.get_by_repo_name(repo_name=u'test-repo-fork-fork-1'))
+        assert None == Repository.get_by_repo_name(repo_name=u'test-repo-1')
+        assert None == Repository.get_by_repo_name(repo_name=u'test-repo-fork-1')
+        assert None == Repository.get_by_repo_name(repo_name=u'test-repo-fork-fork-1')
 
     def test_remove_repo_detach_forks(self):
         repo = fixture.create_repo(name=u'test-repo-1')
@@ -69,9 +71,9 @@ class TestRepos(TestControllerPytest):
         Session().commit()
 
         try:
-            self.assertEqual(None, Repository.get_by_repo_name(repo_name=u'test-repo-1'))
-            self.assertNotEqual(None, Repository.get_by_repo_name(repo_name=u'test-repo-fork-1'))
-            self.assertNotEqual(None, Repository.get_by_repo_name(repo_name=u'test-repo-fork-fork-1'))
+            assert None == Repository.get_by_repo_name(repo_name=u'test-repo-1')
+            assert None != Repository.get_by_repo_name(repo_name=u'test-repo-fork-1')
+            assert None != Repository.get_by_repo_name(repo_name=u'test-repo-fork-fork-1')
         finally:
             RepoModel().delete(repo=u'test-repo-fork-fork-1')
             RepoModel().delete(repo=u'test-repo-fork-1')

@@ -58,4 +58,4 @@ class TestUserGroups(TestControllerPytest):
 
         user = User.get_by_username(TEST_USER_REGULAR_LOGIN)
         in_groups = user.group_member
-        self.assertEqual(expected, [x.users_group.users_group_name for x in in_groups])
+        assert expected == [x.users_group.users_group_name for x in in_groups]

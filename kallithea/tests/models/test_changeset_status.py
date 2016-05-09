@@ -37,4 +37,4 @@ class TestChangesetStatusCalculation(TestControllerPytest):
     ])
     def test_result(self, name, expected_result, statuses):
         result = self.m._calculate_status(statuses)
-        self.assertEqual(result, expected_result)
+        assert result == expected_result

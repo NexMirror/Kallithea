@@ -33,8 +33,8 @@ class TestNotifications(TestControllerPytest):
         self.u3 = self.u3.user_id
 
         remove_all_notifications()
-        self.assertEqual([], Notification.query().all())
-        self.assertEqual([], UserNotification.query().all())
+        assert [] == Notification.query().all()
+        assert [] == UserNotification.query().all()
 
     def test_create_notification(self):
         usrs = [self.u1, self.u2]
@@ -46,18 +46,16 @@ class TestNotifications(TestControllerPytest):
         u2 = User.get(self.u2)
         u3 = User.get(self.u3)
         notifications = Notification.query().all()
-        self.assertEqual(len(notifications), 1)
+        assert len(notifications) == 1
 
-        self.assertEqual(notifications[0].recipients, [u1, u2])
-        self.assertEqual(notification.notification_id,
-                         notifications[0].notification_id)
+        assert notifications[0].recipients == [u1, u2]
+        assert notification.notification_id == notifications[0].notification_id
 
         unotification = UserNotification.query() \
             .filter(UserNotification.notification == notification).all()
 
-        self.assertEqual(len(unotification), len(usrs))
-        self.assertEqual(set([x.user.user_id for x in unotification]),
-                         set(usrs))
+        assert len(unotification) == len(usrs)
+        assert set([x.user.user_id for x in unotification]) == set(usrs)
 
     def test_user_notifications(self):
         notification1 = NotificationModel().create(created_by=self.u1,
@@ -70,8 +68,7 @@ class TestNotifications(TestControllerPytest):
         Session().commit()
         u3 = Session().query(User).get(self.u3)
 
-        self.assertEqual(sorted([x.notification for x in u3.notifications]),
-                         sorted([notification2, notification1]))
+        assert sorted([x.notification for x in u3.notifications]) == sorted([notification2, notification1])
 
     def test_delete_notifications(self):
         notification = NotificationModel().create(created_by=self.u1,
@@ -79,17 +76,17 @@ class TestNotifications(TestControllerPytest):
                                     recipients=[self.u3, self.u1, self.u2])
         Session().commit()
         notifications = Notification.query().all()
-        self.assertTrue(notification in notifications)
+        assert notification in notifications
 
         Notification.delete(notification.notification_id)
         Session().commit()
 
         notifications = Notification.query().all()
-        self.assertFalse(notification in notifications)
+        assert not notification in notifications
 
         un = UserNotification.query().filter(UserNotification.notification
                                              == notification).all()
-        self.assertEqual(un, [])
+        assert un == []
 
     def test_delete_association(self):
         notification = NotificationModel().create(created_by=self.u1,
@@ -103,7 +100,7 @@ class TestNotifications(TestControllerPytest):
                             .filter(UserNotification.user_id == self.u3) \
                             .scalar()
 
-        self.assertEqual(unotification.user_id, self.u3)
+        assert unotification.user_id == self.u3
 
         NotificationModel().delete(self.u3,
                                    notification.notification_id)
@@ -115,10 +112,10 @@ class TestNotifications(TestControllerPytest):
                             .filter(UserNotification.user_id == self.u3) \
                             .scalar()
 
-        self.assertEqual(u3notification, None)
+        assert u3notification == None
 
         # notification object is still there
-        self.assertEqual(Notification.query().all(), [notification])
+        assert Notification.query().all() == [notification]
 
         #u1 and u2 still have assignments
         u1notification = UserNotification.query() \
@@ -126,13 +123,13 @@ class TestNotifications(TestControllerPytest):
                                     notification) \
                             .filter(UserNotification.user_id == self.u1) \
                             .scalar()
-        self.assertNotEqual(u1notification, None)
+        assert u1notification != None
         u2notification = UserNotification.query() \
                             .filter(UserNotification.notification ==
                                     notification) \
                             .filter(UserNotification.user_id == self.u2) \
                             .scalar()
-        self.assertNotEqual(u2notification, None)
+        assert u2notification != None
 
     def test_notification_counter(self):
         NotificationModel().create(created_by=self.u1,
@@ -140,21 +137,15 @@ class TestNotifications(TestControllerPytest):
                             recipients=[self.u3, self.u1])
         Session().commit()
 
-        self.assertEqual(NotificationModel()
-                         .get_unread_cnt_for_user(self.u1), 0)
-        self.assertEqual(NotificationModel()
-                         .get_unread_cnt_for_user(self.u2), 0)
-        self.assertEqual(NotificationModel()
-                         .get_unread_cnt_for_user(self.u3), 1)
+        assert NotificationModel().get_unread_cnt_for_user(self.u1) == 0
+        assert NotificationModel().get_unread_cnt_for_user(self.u2) == 0
+        assert NotificationModel().get_unread_cnt_for_user(self.u3) == 1
 
         notification = NotificationModel().create(created_by=self.u1,
                                            subject=u'title', body=u'hi there3',
                                     recipients=[self.u3, self.u1, self.u2])
         Session().commit()
 
-        self.assertEqual(NotificationModel()
-                         .get_unread_cnt_for_user(self.u1), 0)
-        self.assertEqual(NotificationModel()
-                         .get_unread_cnt_for_user(self.u2), 1)
-        self.assertEqual(NotificationModel()
-                         .get_unread_cnt_for_user(self.u3), 2)
+        assert NotificationModel().get_unread_cnt_for_user(self.u1) == 0
+        assert NotificationModel().get_unread_cnt_for_user(self.u2) == 1
+        assert NotificationModel().get_unread_cnt_for_user(self.u3) == 2

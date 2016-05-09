@@ -1,3 +1,4 @@
+import pytest
 from kallithea.tests import *
 
 from kallithea.model.db import User, UserGroup, UserGroupMember, UserEmailMap, \
@@ -26,9 +27,9 @@ class TestUser(TestControllerPytest):
                                            email=u'u232@example.com',
                                            firstname=u'u1', lastname=u'u1')
         Session().commit()
-        self.assertEqual(User.get_by_username(u'test_user'), usr)
-        self.assertEqual(User.get_by_username(u'test_USER', case_insensitive=True), usr)
-        self.assertEqual(User.get_by_username(u'test_USER', case_insensitive=False), None)
+        assert User.get_by_username(u'test_user') == usr
+        assert User.get_by_username(u'test_USER', case_insensitive=True) == usr
+        assert User.get_by_username(u'test_USER', case_insensitive=False) == None
 
         # make user group
         user_group = fixture.create_user_group(u'some_example_group')
@@ -37,12 +38,12 @@ class TestUser(TestControllerPytest):
         UserGroupModel().add_user_to_group(user_group, usr)
         Session().commit()
 
-        self.assertEqual(UserGroup.get(user_group.users_group_id), user_group)
-        self.assertEqual(UserGroupMember.query().count(), 1)
+        assert UserGroup.get(user_group.users_group_id) == user_group
+        assert UserGroupMember.query().count() == 1
         UserModel().delete(usr.user_id)
         Session().commit()
 
-        self.assertEqual(UserGroupMember.query().all(), [])
+        assert UserGroupMember.query().all() == []
 
     def test_additional_email_as_main(self):
         usr = UserModel().create_or_update(username=u'test_user',
@@ -51,13 +52,12 @@ class TestUser(TestControllerPytest):
                                      firstname=u'u1', lastname=u'u1')
         Session().commit()
 
-        def do():
+        with pytest.raises(AttributeError):
             m = UserEmailMap()
             m.email = u'main_email@example.com'
             m.user = usr
             Session().add(m)
             Session().commit()
-        self.assertRaises(AttributeError, do)
 
         UserModel().delete(usr.user_id)
         Session().commit()
@@ -76,23 +76,23 @@ class TestUser(TestControllerPytest):
         Session().commit()
 
         u = User.get_by_email(email='MAIN_email@example.com')
-        self.assertEqual(usr.user_id, u.user_id)
-        self.assertEqual(usr.username, u.username)
+        assert usr.user_id == u.user_id
+        assert usr.username == u.username
 
         u = User.get_by_email(email='main_email@example.com')
-        self.assertEqual(usr.user_id, u.user_id)
-        self.assertEqual(usr.username, u.username)
+        assert usr.user_id == u.user_id
+        assert usr.username == u.username
 
         u = User.get_by_email(email='main_email2@example.com')
-        self.assertEqual(usr.user_id, u.user_id)
-        self.assertEqual(usr.username, u.username)
+        assert usr.user_id == u.user_id
+        assert usr.username == u.username
         u = User.get_by_email(email='main_email3@example.com')
-        self.assertEqual(None, u)
+        assert None == u
 
         u = User.get_by_email(email='main_e%ail@example.com')
-        self.assertEqual(None, u)
+        assert None == u
         u = User.get_by_email(email='main_emai_@example.com')
-        self.assertEqual(None, u)
+        assert None == u
 
 
         UserModel().delete(usr.user_id)
@@ -120,21 +120,21 @@ class TestUsers(TestControllerPytest):
         perm = Permission.query().all()[0]
         UserModel().grant_perm(self.u1, perm)
         Session().commit()
-        self.assertEqual(UserModel().has_perm(self.u1, perm), True)
+        assert UserModel().has_perm(self.u1, perm) == True
 
     def test_has_perm(self):
         perm = Permission.query().all()
         for p in perm:
             has_p = UserModel().has_perm(self.u1, p)
-            self.assertEqual(False, has_p)
+            assert False == has_p
 
     def test_revoke_perm(self):
         perm = Permission.query().all()[0]
         UserModel().grant_perm(self.u1, perm)
         Session().commit()
-        self.assertEqual(UserModel().has_perm(self.u1, perm), True)
+        assert UserModel().has_perm(self.u1, perm) == True
 
         #revoke
         UserModel().revoke_perm(self.u1, perm)
         Session().commit()
-        self.assertEqual(UserModel().has_perm(self.u1, perm), False)
+        assert UserModel().has_perm(self.u1, perm) == False
