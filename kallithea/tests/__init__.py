@@ -62,7 +62,7 @@ parametrize = pytest.mark.parametrize
 
 __all__ = [
     'skipif', 'parametrize', 'environ', 'url', 'TestControllerPytest',
-    'ldap_lib_installed', 'pam_lib_installed', 'init_stack',
+    'ldap_lib_installed', 'pam_lib_installed',
     'TESTS_TMP_PATH', 'HG_REPO', 'GIT_REPO', 'NEW_HG_REPO', 'NEW_GIT_REPO',
     'HG_FORK', 'GIT_FORK', 'TEST_USER_ADMIN_LOGIN', 'TEST_USER_ADMIN_PASS',
     'TEST_USER_ADMIN_EMAIL', 'TEST_USER_REGULAR_LOGIN', 'TEST_USER_REGULAR_PASS',
@@ -148,20 +148,6 @@ class NullHandler(logging.Handler):
     def emit(self, record):
         pass
 
-def init_stack(config=None):
-    if not config:
-        config = pylons.test.pylonsapp.config
-    url._push_object(URLGenerator(config['routes.map'], environ))
-    pylons.app_globals._push_object(config['pylons.app_globals'])
-    pylons.config._push_object(config)
-    pylons.tmpl_context._push_object(ContextObj())
-    # Initialize a translator for tests that utilize i18n
-    translator = _get_translator(pylons.config.get('lang'))
-    pylons.translator._push_object(translator)
-    h = NullHandler()
-    logging.getLogger("kallithea").addHandler(h)
-
-
 class TestControllerPytest(object):
     """Pytest-style test controller"""
 
@@ -170,11 +156,24 @@ class TestControllerPytest(object):
     @pytest.fixture(autouse=True)
     def app_fixture(self):
         self.wsgiapp = pylons.test.pylonsapp
-        init_stack(self.wsgiapp.config)
+        self.init_stack(self.wsgiapp.config)
         self.app = TestApp(self.wsgiapp)
         self.maxDiff = None
         self.index_location = config['app_conf']['index_dir']
         return self.app
+
+    def init_stack(self, config=None):
+        if not config:
+            config = pylons.test.pylonsapp.config
+        url._push_object(URLGenerator(config['routes.map'], environ))
+        pylons.app_globals._push_object(config['pylons.app_globals'])
+        pylons.config._push_object(config)
+        pylons.tmpl_context._push_object(ContextObj())
+        # Initialize a translator for tests that utilize i18n
+        translator = _get_translator(pylons.config.get('lang'))
+        pylons.translator._push_object(translator)
+        h = NullHandler()
+        logging.getLogger("kallithea").addHandler(h)
 
     def remove_all_notifications(self):
         Notification.query().delete()
