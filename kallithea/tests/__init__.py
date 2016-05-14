@@ -61,7 +61,7 @@ skipif = pytest.mark.skipif
 parametrize = pytest.mark.parametrize
 
 __all__ = [
-    'skipif', 'parametrize', 'parameterized', 'environ', 'url', 'TestControllerPytest',
+    'skipif', 'parametrize', 'environ', 'url', 'TestControllerPytest',
     'ldap_lib_installed', 'pam_lib_installed', 'init_stack',
     'TESTS_TMP_PATH', 'HG_REPO', 'GIT_REPO', 'NEW_HG_REPO', 'NEW_GIT_REPO',
     'HG_FORK', 'GIT_FORK', 'TEST_USER_ADMIN_LOGIN', 'TEST_USER_ADMIN_PASS',
