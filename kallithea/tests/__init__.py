@@ -251,27 +251,3 @@ class TestControllerPytest(BaseTestController):
         init_stack(self.wsgiapp.config)
         self.init()
         return self.app
-
-    # transitional implementations of unittest.TestCase asserts
-    # Users of these should be converted to pytest's single 'assert' call
-    def assertEqual(self, first, second, msg=None):
-        assert first == second
-    def assertNotEqual(self, first, second, msg=None):
-        assert first != second
-    def assertTrue(self, expr, msg=None):
-        assert bool(expr) is True
-    def assertFalse(self, expr, msg=None):
-        assert bool(expr) is False
-    def assertIn(self, first, second, msg=None):
-        assert first in second
-    def assertNotIn(self, first, second, msg=None):
-        assert first not in second
-    def assertSetEqual(self, first, second, msg=None):
-        assert first == second
-    def assertListEqual(self, first, second, msg=None):
-        assert first == second
-    def assertDictEqual(self, first, second, msg=None):
-        assert first == second
-    def assertRaises(self, exception, method, *args, **kwargs):
-        with pytest.raises(exception):
-            method(*args, **kwargs)
