@@ -61,8 +61,8 @@ skipif = pytest.mark.skipif
 parametrize = pytest.mark.parametrize
 
 __all__ = [
-    'skipif', 'parametrize', 'parameterized', 'environ', 'url', 'TestController', 'TestControllerPytest',
-    'ldap_lib_installed', 'pam_lib_installed', 'BaseTestCase', 'init_stack',
+    'skipif', 'parametrize', 'parameterized', 'environ', 'url', 'TestControllerPytest',
+    'ldap_lib_installed', 'pam_lib_installed', 'init_stack',
     'TESTS_TMP_PATH', 'HG_REPO', 'GIT_REPO', 'NEW_HG_REPO', 'NEW_GIT_REPO',
     'HG_FORK', 'GIT_FORK', 'TEST_USER_ADMIN_LOGIN', 'TEST_USER_ADMIN_PASS',
     'TEST_USER_ADMIN_EMAIL', 'TEST_USER_REGULAR_LOGIN', 'TEST_USER_REGULAR_PASS',
@@ -170,14 +170,6 @@ def remove_all_notifications():
 
     Session().commit()
 
-class BaseTestCase(unittest.TestCase):
-    """Unittest-style base test case. Deprecated in favor of pytest style."""
-
-    def __init__(self, *args, **kwargs):
-        self.wsgiapp = pylons.test.pylonsapp
-        init_stack(self.wsgiapp.config)
-        unittest.TestCase.__init__(self, *args, **kwargs)
-
 class BaseTestController(object):
     """Base test controller used by pytest and unittest tests controllers."""
 
@@ -232,13 +224,6 @@ class BaseTestController(object):
 
     def checkSessionFlashRegex(self, response, regex, skip=0):
         self.checkSessionFlash(response, regex, skip=skip, _matcher=re.search)
-
-class TestController(BaseTestCase, BaseTestController):
-    """Deprecated unittest-style test controller"""
-
-    def __init__(self, *args, **kwargs):
-        super(TestController, self).__init__(*args, **kwargs)
-        self.init()
 
 class TestControllerPytest(BaseTestController):
     """Pytest-style test controller"""
