@@ -170,15 +170,19 @@ def remove_all_notifications():
 
     Session().commit()
 
-class BaseTestController(object):
-    """Base test controller used by pytest and unittest tests controllers."""
+class TestControllerPytest(object):
+    """Pytest-style test controller"""
 
     # Note: pytest base classes cannot have an __init__ method
 
-    def init(self):
+    @pytest.fixture(autouse=True)
+    def app_fixture(self):
+        self.wsgiapp = pylons.test.pylonsapp
+        init_stack(self.wsgiapp.config)
         self.app = TestApp(self.wsgiapp)
         self.maxDiff = None
         self.index_location = config['app_conf']['index_dir']
+        return self.app
 
     def log_user(self, username=TEST_USER_ADMIN_LOGIN,
                  password=TEST_USER_ADMIN_PASS):
@@ -225,14 +229,3 @@ class BaseTestController(object):
     def checkSessionFlashRegex(self, response, regex, skip=0):
         self.checkSessionFlash(response, regex, skip=skip, _matcher=re.search)
 
-class TestControllerPytest(BaseTestController):
-    """Pytest-style test controller"""
-
-    # Note: pytest base classes cannot have an __init__ method
-
-    @pytest.fixture(autouse=True)
-    def app_fixture(self):
-        self.wsgiapp = pylons.test.pylonsapp
-        init_stack(self.wsgiapp.config)
-        self.init()
-        return self.app
