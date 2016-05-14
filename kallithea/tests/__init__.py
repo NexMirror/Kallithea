@@ -198,7 +198,7 @@ class BaseTestController(object):
         if 'Invalid username or password' in response.body:
             pytest.fail('could not login using %s %s' % (username, password))
 
-        self.assertEqual(response.status, '302 Found')
+        assert response.status == '302 Found'
         self.assert_authenticated_user(response, username)
 
         response = response.follow()
@@ -212,7 +212,7 @@ class BaseTestController(object):
         user = cookie and cookie.get('user_id')
         user = user and User.get(user)
         user = user and user.username
-        self.assertEqual(user, expected_username)
+        assert user == expected_username
 
     def authentication_token(self):
         return self.app.get(url('authentication_token')).body
