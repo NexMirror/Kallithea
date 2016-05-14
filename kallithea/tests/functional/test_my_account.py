@@ -145,7 +145,7 @@ class TestMyAccountController(TestControllerPytest):
             params['admin'] = False
 
         params.pop('_authentication_token')
-        self.assertEqual(params, updated_params)
+        assert params == updated_params
 
     def test_my_account_update_err_email_exists(self):
         self.log_user()
@@ -223,13 +223,13 @@ class TestMyAccountController(TestControllerPytest):
 
         #now delete our key
         keys = UserApiKeys.query().all()
-        self.assertEqual(1, len(keys))
+        assert 1 == len(keys)
 
         response = self.app.post(url('my_account_api_keys'),
                  {'_method': 'delete', 'del_api_key': keys[0].api_key, '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'API key successfully deleted')
         keys = UserApiKeys.query().all()
-        self.assertEqual(0, len(keys))
+        assert 0 == len(keys)
 
 
     def test_my_account_reset_main_api_key(self):

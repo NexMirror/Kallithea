@@ -121,8 +121,8 @@ class _BaseTestCase(TestControllerPytest):
         fork_repo = Session().query(Repository) \
             .filter(Repository.repo_name == fork_name_full).one()
 
-        self.assertEqual(fork_repo.repo_name, fork_name_full)
-        self.assertEqual(fork_repo.fork.repo_name, repo_name)
+        assert fork_repo.repo_name == fork_name_full
+        assert fork_repo.fork.repo_name == repo_name
 
         # test if the repository is visible in the list ?
         response = self.app.get(url('summary_home', repo_name=fork_name_full))
@@ -164,8 +164,8 @@ class _BaseTestCase(TestControllerPytest):
         fork_repo = Session().query(Repository) \
             .filter(Repository.repo_name == fork_name).one()
 
-        self.assertEqual(fork_repo.repo_name, fork_name)
-        self.assertEqual(fork_repo.fork.repo_name, repo_name)
+        assert fork_repo.repo_name == fork_name
+        assert fork_repo.fork.repo_name == repo_name
 
         # test if the repository is visible in the list ?
         response = self.app.get(url('summary_home', repo_name=fork_name))
@@ -180,7 +180,7 @@ class _BaseTestCase(TestControllerPytest):
         forks = Repository.query() \
             .filter(Repository.repo_type == self.REPO_TYPE) \
             .filter(Repository.fork_id != None).all()
-        self.assertEqual(1, len(forks))
+        assert 1 == len(forks)
 
         # set read permissions for this
         RepoModel().grant_user_permission(repo=forks[0],
@@ -200,7 +200,7 @@ class _BaseTestCase(TestControllerPytest):
         forks = Repository.query() \
             .filter(Repository.repo_type == self.REPO_TYPE) \
             .filter(Repository.fork_id != None).all()
-        self.assertEqual(1, len(forks))
+        assert 1 == len(forks)
 
         # set none
         RepoModel().grant_user_permission(repo=forks[0],

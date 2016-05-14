@@ -28,9 +28,9 @@ class TestPullrequestsController(TestControllerPytest):
                                   '_authentication_token': self.authentication_token(),
                                  }
                                 )
-        self.assertEqual(response.status, '302 Found')
+        assert response.status == '302 Found'
         response = response.follow()
-        self.assertEqual(response.status, '200 OK')
+        assert response.status == '200 OK'
         response.mustcontain('This pull request has already been merged to default.')
 
     def test_create_with_existing_reviewer(self):
@@ -47,9 +47,9 @@ class TestPullrequestsController(TestControllerPytest):
                                   'review_members': TEST_USER_ADMIN_LOGIN,
                                  }
                                 )
-        self.assertEqual(response.status, '302 Found')
+        assert response.status == '302 Found'
         response = response.follow()
-        self.assertEqual(response.status, '200 OK')
+        assert response.status == '200 OK'
         response.mustcontain('This pull request has already been merged to default.')
 
     def test_create_with_invalid_reviewer(self):
@@ -86,11 +86,11 @@ class TestPullrequestsController(TestControllerPytest):
                                   '_authentication_token': self.authentication_token(),
                                  }
                                 )
-        self.assertEqual(response.status, '302 Found')
+        assert response.status == '302 Found'
         # location is of the form:
         # http://localhost/vcs_test_hg/pull-request/54/_/title
         m = re.search('/pull-request/(\d+)/', response.location)
-        self.assertNotEqual(m, None)
+        assert m != None
         pull_request_id = m.group(1)
 
         # update it
@@ -123,11 +123,11 @@ class TestPullrequestsController(TestControllerPytest):
                                   '_authentication_token': self.authentication_token(),
                                  }
                                 )
-        self.assertEqual(response.status, '302 Found')
+        assert response.status == '302 Found'
         # location is of the form:
         # http://localhost/vcs_test_hg/pull-request/54/_/title
         m = re.search('/pull-request/(\d+)/', response.location)
-        self.assertNotEqual(m, None)
+        assert m != None
         pull_request_id = m.group(1)
 
         # edit it
@@ -159,7 +159,7 @@ class TestPullrequestsGetRepoRefs(TestControllerPytest):
     def test_repo_refs_empty_repo(self):
         # empty repo with no commits, no branches, no bookmarks, just one tag
         refs, default = self.c._get_repo_refs(self.main.scm_instance)
-        self.assertEqual(default, 'tag:null:0000000000000000000000000000000000000000')
+        assert default == 'tag:null:0000000000000000000000000000000000000000'
 
     def test_repo_refs_one_commit_no_hints(self):
         cs0 = fixture.commit_change(self.main.repo_name, filename='file1',
@@ -167,9 +167,9 @@ class TestPullrequestsGetRepoRefs(TestControllerPytest):
                 parent=None, newfile=True)
 
         refs, default = self.c._get_repo_refs(self.main.scm_instance)
-        self.assertEqual(default, 'branch:default:%s' % cs0.raw_id)
-        self.assertIn(([('branch:default:%s' % cs0.raw_id, 'default (current tip)')],
-                'Branches'), refs)
+        assert default == 'branch:default:%s' % cs0.raw_id
+        assert ([('branch:default:%s' % cs0.raw_id, 'default (current tip)')],
+                'Branches') in refs
 
     def test_repo_refs_one_commit_rev_hint(self):
         cs0 = fixture.commit_change(self.main.repo_name, filename='file1',
@@ -178,8 +178,8 @@ class TestPullrequestsGetRepoRefs(TestControllerPytest):
 
         refs, default = self.c._get_repo_refs(self.main.scm_instance, rev=cs0.raw_id)
         expected = 'branch:default:%s' % cs0.raw_id
-        self.assertEqual(default, expected)
-        self.assertIn(([(expected, 'default (current tip)')], 'Branches'), refs)
+        assert default == expected
+        assert ([(expected, 'default (current tip)')], 'Branches') in refs
 
     def test_repo_refs_two_commits_no_hints(self):
         cs0 = fixture.commit_change(self.main.repo_name, filename='file1',
@@ -191,8 +191,8 @@ class TestPullrequestsGetRepoRefs(TestControllerPytest):
 
         refs, default = self.c._get_repo_refs(self.main.scm_instance)
         expected = 'branch:default:%s' % cs1.raw_id
-        self.assertEqual(default, expected)
-        self.assertIn(([(expected, 'default (current tip)')], 'Branches'), refs)
+        assert default == expected
+        assert ([(expected, 'default (current tip)')], 'Branches') in refs
 
     def test_repo_refs_two_commits_rev_hints(self):
         cs0 = fixture.commit_change(self.main.repo_name, filename='file1',
@@ -204,14 +204,14 @@ class TestPullrequestsGetRepoRefs(TestControllerPytest):
 
         refs, default = self.c._get_repo_refs(self.main.scm_instance, rev=cs0.raw_id)
         expected = 'rev:%s:%s' % (cs0.raw_id, cs0.raw_id)
-        self.assertEqual(default, expected)
-        self.assertIn(([(expected, 'Changeset: %s' % cs0.raw_id[0:12])], 'Special'), refs)
-        self.assertIn(([('branch:default:%s' % cs1.raw_id, 'default (current tip)')], 'Branches'), refs)
+        assert default == expected
+        assert ([(expected, 'Changeset: %s' % cs0.raw_id[0:12])], 'Special') in refs
+        assert ([('branch:default:%s' % cs1.raw_id, 'default (current tip)')], 'Branches') in refs
 
         refs, default = self.c._get_repo_refs(self.main.scm_instance, rev=cs1.raw_id)
         expected = 'branch:default:%s' % cs1.raw_id
-        self.assertEqual(default, expected)
-        self.assertIn(([(expected, 'default (current tip)')], 'Branches'), refs)
+        assert default == expected
+        assert ([(expected, 'default (current tip)')], 'Branches') in refs
 
     def test_repo_refs_two_commits_branch_hint(self):
         cs0 = fixture.commit_change(self.main.repo_name, filename='file1',
@@ -223,8 +223,8 @@ class TestPullrequestsGetRepoRefs(TestControllerPytest):
 
         refs, default = self.c._get_repo_refs(self.main.scm_instance, branch='default')
         expected = 'branch:default:%s' % cs1.raw_id
-        self.assertEqual(default, expected)
-        self.assertIn(([(expected, 'default (current tip)')], 'Branches'), refs)
+        assert default == expected
+        assert ([(expected, 'default (current tip)')], 'Branches') in refs
 
     def test_repo_refs_one_branch_no_hints(self):
         cs0 = fixture.commit_change(self.main.repo_name, filename='file1',

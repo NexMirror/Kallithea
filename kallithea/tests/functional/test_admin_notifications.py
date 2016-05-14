@@ -52,18 +52,18 @@ class TestNotificationsController(TestControllerPytest):
 
         # check DB
         get_notif = lambda un: [x.notification for x in un]
-        self.assertEqual(get_notif(cur_user.notifications), [notification])
-        self.assertEqual(get_notif(u1.notifications), [notification])
-        self.assertEqual(get_notif(u2.notifications), [notification])
+        assert get_notif(cur_user.notifications) == [notification]
+        assert get_notif(u1.notifications) == [notification]
+        assert get_notif(u2.notifications) == [notification]
         cur_usr_id = cur_user.user_id
 
         response = self.app.post(
             url('notification', notification_id=notification.notification_id),
             params={'_method': 'delete', '_authentication_token': self.authentication_token()})
-        self.assertEqual(response.body, 'ok')
+        assert response.body == 'ok'
 
         cur_user = User.get(cur_usr_id)
-        self.assertEqual(cur_user.notifications, [])
+        assert cur_user.notifications == []
 
     def test_show(self):
         self.log_user()
@@ -98,13 +98,10 @@ class TestNotificationsController(TestControllerPytest):
                                                   body       = notify_body)
 
         description = NotificationModel().make_description(notification)
-        self.assertEqual(
-            description,
-            "{0} sent message {1}".format(
+        assert description == "{0} sent message {1}".format(
                 cur_user.username,
                 h.age(notification.created_on)
                 )
-            )
 
     def test_description_with_datetime(self):
         self.log_user()
@@ -116,10 +113,7 @@ class TestNotificationsController(TestControllerPytest):
                                                   body       = notify_body)
 
         description = NotificationModel().make_description(notification, False)
-        self.assertEqual(
-            description,
-            "{0} sent message at {1}".format(
+        assert description == "{0} sent message at {1}".format(
                 cur_user.username,
                 h.fmt_date(notification.created_on)
                 )
-            )

@@ -53,7 +53,7 @@ class _BaseTestCase(TestControllerPytest):
                                                 _authentication_token=self.authentication_token()))
         ## run the check page that triggers the flash message
         response = self.app.get(url('repo_check_home', repo_name=repo_name))
-        self.assertEqual(response.json, {u'result': True})
+        assert response.json == {u'result': True}
         self.checkSessionFlash(response,
                                'Created repository <a href="/%s">%s</a>'
                                % (repo_name, repo_name))
@@ -62,8 +62,8 @@ class _BaseTestCase(TestControllerPytest):
         new_repo = Session().query(Repository) \
             .filter(Repository.repo_name == repo_name).one()
 
-        self.assertEqual(new_repo.repo_name, repo_name)
-        self.assertEqual(new_repo.description, description)
+        assert new_repo.repo_name == repo_name
+        assert new_repo.description == description
 
         # test if the repository is visible in the list ?
         response = self.app.get(url('summary_home', repo_name=repo_name))
@@ -101,7 +101,7 @@ class _BaseTestCase(TestControllerPytest):
                                                 _authentication_token=self.authentication_token()))
         ## run the check page that triggers the flash message
         response = self.app.get(url('repo_check_home', repo_name=repo_name_full))
-        self.assertEqual(response.json, {u'result': True})
+        assert response.json == {u'result': True}
         self.checkSessionFlash(response,
                                'Created repository <a href="/%s">%s</a>'
                                % (repo_name_full, repo_name_full))
@@ -110,8 +110,8 @@ class _BaseTestCase(TestControllerPytest):
             .filter(Repository.repo_name == repo_name_full).one()
         new_repo_id = new_repo.repo_id
 
-        self.assertEqual(new_repo.repo_name, repo_name_full)
-        self.assertEqual(new_repo.description, description)
+        assert new_repo.repo_name == repo_name_full
+        assert new_repo.description == description
 
         # test if the repository is visible in the list ?
         response = self.app.get(url('summary_home', repo_name=repo_name_full))
@@ -120,7 +120,7 @@ class _BaseTestCase(TestControllerPytest):
 
         inherited_perms = UserRepoToPerm.query() \
             .filter(UserRepoToPerm.repository_id == new_repo_id).all()
-        self.assertEqual(len(inherited_perms), 1)
+        assert len(inherited_perms) == 1
 
         # test if the repository was created on filesystem
         try:
@@ -193,7 +193,7 @@ class _BaseTestCase(TestControllerPytest):
 
         ## run the check page that triggers the flash message
         response = self.app.get(url('repo_check_home', repo_name=repo_name_full))
-        self.assertEqual(response.json, {u'result': True})
+        assert response.json == {u'result': True}
         self.checkSessionFlash(response,
                                'Created repository <a href="/%s">%s</a>'
                                % (repo_name_full, repo_name_full))
@@ -202,8 +202,8 @@ class _BaseTestCase(TestControllerPytest):
             .filter(Repository.repo_name == repo_name_full).one()
         new_repo_id = new_repo.repo_id
 
-        self.assertEqual(new_repo.repo_name, repo_name_full)
-        self.assertEqual(new_repo.description, description)
+        assert new_repo.repo_name == repo_name_full
+        assert new_repo.description == description
 
         # test if the repository is visible in the list ?
         response = self.app.get(url('summary_home', repo_name=repo_name_full))
@@ -212,7 +212,7 @@ class _BaseTestCase(TestControllerPytest):
 
         inherited_perms = UserRepoToPerm.query() \
             .filter(UserRepoToPerm.repository_id == new_repo_id).all()
-        self.assertEqual(len(inherited_perms), 1)
+        assert len(inherited_perms) == 1
 
         # test if the repository was created on filesystem
         try:
@@ -263,8 +263,8 @@ class _BaseTestCase(TestControllerPytest):
             .filter(Repository.repo_name == repo_name_full).one()
         new_repo_id = new_repo.repo_id
 
-        self.assertEqual(new_repo.repo_name, repo_name_full)
-        self.assertEqual(new_repo.description, description)
+        assert new_repo.repo_name == repo_name_full
+        assert new_repo.description == description
 
         # test if the repository is visible in the list ?
         response = self.app.get(url('summary_home', repo_name=repo_name_full))
@@ -282,12 +282,12 @@ class _BaseTestCase(TestControllerPytest):
         #check if inherited permissiona are applied
         inherited_perms = UserRepoToPerm.query() \
             .filter(UserRepoToPerm.repository_id == new_repo_id).all()
-        self.assertEqual(len(inherited_perms), 2)
+        assert len(inherited_perms) == 2
 
-        self.assertTrue(TEST_USER_REGULAR_LOGIN in [x.user.username
-                                                    for x in inherited_perms])
-        self.assertTrue('repository.write' in [x.permission.permission_name
-                                               for x in inherited_perms])
+        assert TEST_USER_REGULAR_LOGIN in [x.user.username
+                                                    for x in inherited_perms]
+        assert 'repository.write' in [x.permission.permission_name
+                                               for x in inherited_perms]
 
         RepoModel().delete(repo_name_full)
         RepoGroupModel().delete(group_name)
@@ -340,8 +340,8 @@ class _BaseTestCase(TestControllerPytest):
         new_repo = Session().query(Repository) \
             .filter(Repository.repo_name == repo_name).one()
 
-        self.assertEqual(new_repo.repo_name, repo_name)
-        self.assertEqual(new_repo.description, description)
+        assert new_repo.repo_name == repo_name
+        assert new_repo.description == description
 
         # test if the repository is visible in the list ?
         response = self.app.get(url('summary_home', repo_name=repo_name))
@@ -365,10 +365,9 @@ class _BaseTestCase(TestControllerPytest):
         deleted_repo = Session().query(Repository) \
             .filter(Repository.repo_name == repo_name).scalar()
 
-        self.assertEqual(deleted_repo, None)
+        assert deleted_repo == None
 
-        self.assertEqual(os.path.isdir(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name)),
-                                  False)
+        assert os.path.isdir(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name)) == False
 
     def test_delete_non_ascii(self):
         self.log_user()
@@ -385,7 +384,7 @@ class _BaseTestCase(TestControllerPytest):
                                                 _authentication_token=self.authentication_token()))
         ## run the check page that triggers the flash message
         response = self.app.get(url('repo_check_home', repo_name=repo_name))
-        self.assertEqual(response.json, {u'result': True})
+        assert response.json == {u'result': True}
         self.checkSessionFlash(response,
                                u'Created repository <a href="/%s">%s</a>'
                                % (urllib.quote(repo_name), repo_name_unicode))
@@ -393,8 +392,8 @@ class _BaseTestCase(TestControllerPytest):
         new_repo = Session().query(Repository) \
             .filter(Repository.repo_name == repo_name_unicode).one()
 
-        self.assertEqual(new_repo.repo_name, repo_name_unicode)
-        self.assertEqual(new_repo.description, description_unicode)
+        assert new_repo.repo_name == repo_name_unicode
+        assert new_repo.description == description_unicode
 
         # test if the repository is visible in the list ?
         response = self.app.get(url('summary_home', repo_name=repo_name))
@@ -416,10 +415,9 @@ class _BaseTestCase(TestControllerPytest):
         deleted_repo = Session().query(Repository) \
             .filter(Repository.repo_name == repo_name_unicode).scalar()
 
-        self.assertEqual(deleted_repo, None)
+        assert deleted_repo == None
 
-        self.assertEqual(os.path.isdir(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name_unicode)),
-                                  False)
+        assert os.path.isdir(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name_unicode)) == False
 
     def test_delete_repo_with_group(self):
         #TODO:
@@ -440,9 +438,9 @@ class _BaseTestCase(TestControllerPytest):
         self.log_user()
         #initially repository perm should be read
         perm = _get_permission_for_user(user='default', repo=self.REPO)
-        self.assertTrue(len(perm), 1)
-        self.assertEqual(perm[0].permission.permission_name, 'repository.read')
-        self.assertEqual(Repository.get_by_repo_name(self.REPO).private, False)
+        assert len(perm), 1
+        assert perm[0].permission.permission_name == 'repository.read'
+        assert Repository.get_by_repo_name(self.REPO).private == False
 
         response = self.app.put(url('put_repo', repo_name=self.REPO),
                         fixture._get_repo_create_params(repo_private=1,
@@ -452,12 +450,12 @@ class _BaseTestCase(TestControllerPytest):
                                                 _authentication_token=self.authentication_token()))
         self.checkSessionFlash(response,
                                msg='Repository %s updated successfully' % (self.REPO))
-        self.assertEqual(Repository.get_by_repo_name(self.REPO).private, True)
+        assert Repository.get_by_repo_name(self.REPO).private == True
 
         #now the repo default permission should be None
         perm = _get_permission_for_user(user='default', repo=self.REPO)
-        self.assertTrue(len(perm), 1)
-        self.assertEqual(perm[0].permission.permission_name, 'repository.none')
+        assert len(perm), 1
+        assert perm[0].permission.permission_name == 'repository.none'
 
         response = self.app.put(url('put_repo', repo_name=self.REPO),
                         fixture._get_repo_create_params(repo_private=False,
@@ -467,12 +465,12 @@ class _BaseTestCase(TestControllerPytest):
                                                 _authentication_token=self.authentication_token()))
         self.checkSessionFlash(response,
                                msg='Repository %s updated successfully' % (self.REPO))
-        self.assertEqual(Repository.get_by_repo_name(self.REPO).private, False)
+        assert Repository.get_by_repo_name(self.REPO).private == False
 
         #we turn off private now the repo default permission should stay None
         perm = _get_permission_for_user(user='default', repo=self.REPO)
-        self.assertTrue(len(perm), 1)
-        self.assertEqual(perm[0].permission.permission_name, 'repository.none')
+        assert len(perm), 1
+        assert perm[0].permission.permission_name == 'repository.none'
 
         #update this permission back
         perm[0].permission = Permission.get_by_key('repository.read')
@@ -591,10 +589,10 @@ class _BaseTestCase(TestControllerPytest):
                                'Error creating repository %s' % repo_name)
         # repo must not be in db
         repo = Repository.get_by_repo_name(repo_name)
-        self.assertEqual(repo, None)
+        assert repo == None
 
         # repo must not be in filesystem !
-        self.assertFalse(os.path.isdir(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name)))
+        assert not os.path.isdir(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name))
 
 class TestAdminReposControllerGIT(_BaseTestCase):
     REPO = GIT_REPO

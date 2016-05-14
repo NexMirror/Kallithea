@@ -89,8 +89,7 @@ class TestAdminSettingsController(TestControllerPytest):
 
         self.checkSessionFlash(response, 'Updated application settings')
 
-        self.assertEqual(Setting
-                         .get_app_settings()['ga_code'], new_ga_code)
+        assert Setting.get_app_settings()['ga_code'] == new_ga_code
 
         response = response.follow()
         response.mustcontain("""_gaq.push(['_setAccount', '%s']);""" % new_ga_code)
@@ -110,8 +109,7 @@ class TestAdminSettingsController(TestControllerPytest):
                                  ))
 
         self.checkSessionFlash(response, 'Updated application settings')
-        self.assertEqual(Setting
-                        .get_app_settings()['ga_code'], new_ga_code)
+        assert Setting.get_app_settings()['ga_code'] == new_ga_code
 
         response = response.follow()
         response.mustcontain(no=["_gaq.push(['_setAccount', '%s']);" % new_ga_code])
@@ -131,8 +129,7 @@ class TestAdminSettingsController(TestControllerPytest):
                                  ))
 
         self.checkSessionFlash(response, 'Updated application settings')
-        self.assertEqual(Setting
-                        .get_app_settings()['captcha_private_key'], '1234567890')
+        assert Setting.get_app_settings()['captcha_private_key'] == '1234567890'
 
         response = self.app.get(url('register'))
         response.mustcontain('captcha')
@@ -152,8 +149,7 @@ class TestAdminSettingsController(TestControllerPytest):
                                  ))
 
         self.checkSessionFlash(response, 'Updated application settings')
-        self.assertEqual(Setting
-                        .get_app_settings()['captcha_private_key'], '')
+        assert Setting.get_app_settings()['captcha_private_key'] == ''
 
         response = self.app.get(url('register'))
         response.mustcontain(no=['captcha'])
@@ -175,9 +171,7 @@ class TestAdminSettingsController(TestControllerPytest):
                                 ))
 
             self.checkSessionFlash(response, 'Updated application settings')
-            self.assertEqual(Setting
-                             .get_app_settings()['title'],
-                             new_title.decode('utf-8'))
+            assert Setting.get_app_settings()['title'] == new_title.decode('utf-8')
 
             response = response.follow()
             response.mustcontain("""<div class="branding">%s</div>""" % new_title)

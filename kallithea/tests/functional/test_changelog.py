@@ -133,25 +133,25 @@ class TestChangelogController(TestControllerPytest):
         response = self.app.get(url(controller='changelog', action='index',
                                     revision='tip', f_path='/tests',
                                     repo_name=HG_REPO))
-        self.assertEqual(response.status, '302 Found')
+        assert response.status == '302 Found'
 
     def test_index_git_with_filenode_that_is_dirnode(self):
         self.log_user()
         response = self.app.get(url(controller='changelog', action='index',
                                     revision='tip', f_path='/tests',
                                     repo_name=GIT_REPO))
-        self.assertEqual(response.status, '302 Found')
+        assert response.status == '302 Found'
 
     def test_index_hg_with_filenode_not_existing(self):
         self.log_user()
         response = self.app.get(url(controller='changelog', action='index',
                                     revision='tip', f_path='/wrong_path',
                                     repo_name=HG_REPO))
-        self.assertEqual(response.status, '302 Found')
+        assert response.status == '302 Found'
 
     def test_index_git_with_filenode_not_existing(self):
         self.log_user()
         response = self.app.get(url(controller='changelog', action='index',
                                     revision='tip', f_path='/wrong_path',
                                     repo_name=GIT_REPO))
-        self.assertEqual(response.status, '302 Found')
+        assert response.status == '302 Found'

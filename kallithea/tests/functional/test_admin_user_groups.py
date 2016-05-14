@@ -60,7 +60,7 @@ class TestAdminUsersGroupsController(TestControllerPytest):
         gr = Session().query(UserGroup) \
             .filter(UserGroup.users_group_name == users_group_name).scalar()
 
-        self.assertEqual(gr, None)
+        assert gr == None
 
     def test_default_perms_enable_repository_read_on_group(self):
         self.log_user()
@@ -90,11 +90,9 @@ class TestAdminUsersGroupsController(TestControllerPytest):
         perms = UserGroupToPerm.query() \
             .filter(UserGroupToPerm.users_group == ug).all()
 
-        self.assertEqual(
-            sorted([[x.users_group_id, x.permission_id, ] for x in perms]),
-            sorted([[ug.users_group_id, p.permission_id],
+        assert sorted([[x.users_group_id, x.permission_id, ] for x in perms]) == sorted([[ug.users_group_id, p.permission_id],
                     [ug.users_group_id, p2.permission_id],
-                    [ug.users_group_id, p3.permission_id]]))
+                    [ug.users_group_id, p3.permission_id]])
 
         ## DISABLE REPO CREATE ON A GROUP
         response = self.app.put(
@@ -112,11 +110,9 @@ class TestAdminUsersGroupsController(TestControllerPytest):
         perms = UserGroupToPerm.query() \
             .filter(UserGroupToPerm.users_group == ug).all()
 
-        self.assertEqual(
-            sorted([[x.users_group_id, x.permission_id, ] for x in perms]),
-            sorted([[ug.users_group_id, p.permission_id],
+        assert sorted([[x.users_group_id, x.permission_id, ] for x in perms]) == sorted([[ug.users_group_id, p.permission_id],
                     [ug.users_group_id, p2.permission_id],
-                    [ug.users_group_id, p3.permission_id]]))
+                    [ug.users_group_id, p3.permission_id]])
 
         # DELETE !
         ug = UserGroup.get_by_group_name(users_group_name)
@@ -127,13 +123,13 @@ class TestAdminUsersGroupsController(TestControllerPytest):
         gr = Session().query(UserGroup) \
             .filter(UserGroup.users_group_name == users_group_name).scalar()
 
-        self.assertEqual(gr, None)
+        assert gr == None
         p = Permission.get_by_key('hg.create.repository')
         perms = UserGroupToPerm.query() \
             .filter(UserGroupToPerm.users_group_id == ugid).all()
         perms = [[x.users_group_id,
                   x.permission_id, ] for x in perms]
-        self.assertEqual(perms, [])
+        assert perms == []
 
     def test_default_perms_enable_repository_fork_on_group(self):
         self.log_user()
@@ -163,11 +159,9 @@ class TestAdminUsersGroupsController(TestControllerPytest):
         perms = UserGroupToPerm.query() \
             .filter(UserGroupToPerm.users_group == ug).all()
 
-        self.assertEqual(
-            sorted([[x.users_group_id, x.permission_id, ] for x in perms]),
-            sorted([[ug.users_group_id, p.permission_id],
+        assert sorted([[x.users_group_id, x.permission_id, ] for x in perms]) == sorted([[ug.users_group_id, p.permission_id],
                     [ug.users_group_id, p2.permission_id],
-                    [ug.users_group_id, p3.permission_id]]))
+                    [ug.users_group_id, p3.permission_id]])
 
         ## DISABLE REPO CREATE ON A GROUP
         response = self.app.put(url('edit_user_group_default_perms', id=ug.users_group_id),
@@ -183,11 +177,9 @@ class TestAdminUsersGroupsController(TestControllerPytest):
         perms = UserGroupToPerm.query() \
             .filter(UserGroupToPerm.users_group == ug).all()
 
-        self.assertEqual(
-            sorted([[x.users_group_id, x.permission_id, ] for x in perms]),
-            sorted([[ug.users_group_id, p.permission_id],
+        assert sorted([[x.users_group_id, x.permission_id, ] for x in perms]) == sorted([[ug.users_group_id, p.permission_id],
                     [ug.users_group_id, p2.permission_id],
-                    [ug.users_group_id, p3.permission_id]]))
+                    [ug.users_group_id, p3.permission_id]])
 
         # DELETE !
         ug = UserGroup.get_by_group_name(users_group_name)
@@ -199,16 +191,13 @@ class TestAdminUsersGroupsController(TestControllerPytest):
                            .filter(UserGroup.users_group_name ==
                                    users_group_name).scalar()
 
-        self.assertEqual(gr, None)
+        assert gr == None
         p = Permission.get_by_key('hg.fork.repository')
         perms = UserGroupToPerm.query() \
             .filter(UserGroupToPerm.users_group_id == ugid).all()
         perms = [[x.users_group_id,
                   x.permission_id, ] for x in perms]
-        self.assertEqual(
-            perms,
-            []
-        )
+        assert perms == []
 
     def test_delete_browser_fakeout(self):
         response = self.app.post(url('users_group', id=1),

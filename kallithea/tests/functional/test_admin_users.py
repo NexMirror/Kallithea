@@ -70,11 +70,11 @@ class TestAdminUsersController(TestControllerPytest):
         new_user = Session().query(User). \
             filter(User.username == username).one()
 
-        self.assertEqual(new_user.username, username)
-        self.assertEqual(check_password(password, new_user.password), True)
-        self.assertEqual(new_user.name, name)
-        self.assertEqual(new_user.lastname, lastname)
-        self.assertEqual(new_user.email, email)
+        assert new_user.username == username
+        assert check_password(password, new_user.password) == True
+        assert new_user.name == name
+        assert new_user.lastname == lastname
+        assert new_user.email == email
 
         response.follow()
         response = response.follow()
@@ -105,7 +105,8 @@ class TestAdminUsersController(TestControllerPytest):
         def get_user():
             Session().query(User).filter(User.username == username).one()
 
-        self.assertRaises(NoResultFound, get_user), 'found user in database'
+        with pytest.raises(NoResultFound):
+            get_user(), 'found user in database'
 
     def test_new(self):
         self.log_user()
@@ -160,7 +161,7 @@ class TestAdminUsersController(TestControllerPytest):
         updated_params.update({'password_confirmation': ''})
         updated_params.update({'new_password': ''})
 
-        self.assertEqual(params, updated_params)
+        assert params == updated_params
 
     def test_delete(self):
         self.log_user()
@@ -277,8 +278,8 @@ class TestAdminUsersController(TestControllerPytest):
 
         try:
             #User should have None permission on creation repository
-            self.assertEqual(UserModel().has_perm(user, perm_none), False)
-            self.assertEqual(UserModel().has_perm(user, perm_create), False)
+            assert UserModel().has_perm(user, perm_none) == False
+            assert UserModel().has_perm(user, perm_create) == False
 
             response = self.app.post(url('edit_user_perms', id=uid),
                                      params=dict(_method='put',
@@ -289,8 +290,8 @@ class TestAdminUsersController(TestControllerPytest):
             perm_create = Permission.get_by_key('hg.create.repository')
 
             #User should have None permission on creation repository
-            self.assertEqual(UserModel().has_perm(uid, perm_none), False)
-            self.assertEqual(UserModel().has_perm(uid, perm_create), True)
+            assert UserModel().has_perm(uid, perm_none) == False
+            assert UserModel().has_perm(uid, perm_create) == True
         finally:
             UserModel().delete(uid)
             Session().commit()
@@ -308,8 +309,8 @@ class TestAdminUsersController(TestControllerPytest):
 
         try:
             #User should have None permission on creation repository
-            self.assertEqual(UserModel().has_perm(user, perm_none), False)
-            self.assertEqual(UserModel().has_perm(user, perm_create), False)
+            assert UserModel().has_perm(user, perm_none) == False
+            assert UserModel().has_perm(user, perm_create) == False
 
             response = self.app.post(url('edit_user_perms', id=uid),
                                      params=dict(_method='put', _authentication_token=self.authentication_token()))
@@ -318,8 +319,8 @@ class TestAdminUsersController(TestControllerPytest):
             perm_create = Permission.get_by_key('hg.create.repository')
 
             #User should have None permission on creation repository
-            self.assertEqual(UserModel().has_perm(uid, perm_none), True)
-            self.assertEqual(UserModel().has_perm(uid, perm_create), False)
+            assert UserModel().has_perm(uid, perm_none) == True
+            assert UserModel().has_perm(uid, perm_create) == False
         finally:
             UserModel().delete(uid)
             Session().commit()
@@ -337,8 +338,8 @@ class TestAdminUsersController(TestControllerPytest):
 
         try:
             #User should have None permission on creation repository
-            self.assertEqual(UserModel().has_perm(user, perm_none), False)
-            self.assertEqual(UserModel().has_perm(user, perm_fork), False)
+            assert UserModel().has_perm(user, perm_none) == False
+            assert UserModel().has_perm(user, perm_fork) == False
 
             response = self.app.post(url('edit_user_perms', id=uid),
                                      params=dict(_method='put',
@@ -349,8 +350,8 @@ class TestAdminUsersController(TestControllerPytest):
             perm_create = Permission.get_by_key('hg.create.repository')
 
             #User should have None permission on creation repository
-            self.assertEqual(UserModel().has_perm(uid, perm_none), False)
-            self.assertEqual(UserModel().has_perm(uid, perm_create), True)
+            assert UserModel().has_perm(uid, perm_none) == False
+            assert UserModel().has_perm(uid, perm_create) == True
         finally:
             UserModel().delete(uid)
             Session().commit()
@@ -368,8 +369,8 @@ class TestAdminUsersController(TestControllerPytest):
 
         try:
             #User should have None permission on creation repository
-            self.assertEqual(UserModel().has_perm(user, perm_none), False)
-            self.assertEqual(UserModel().has_perm(user, perm_fork), False)
+            assert UserModel().has_perm(user, perm_none) == False
+            assert UserModel().has_perm(user, perm_fork) == False
 
             response = self.app.post(url('edit_user_perms', id=uid),
                                      params=dict(_method='put', _authentication_token=self.authentication_token()))
@@ -378,8 +379,8 @@ class TestAdminUsersController(TestControllerPytest):
             perm_create = Permission.get_by_key('hg.create.repository')
 
             #User should have None permission on creation repository
-            self.assertEqual(UserModel().has_perm(uid, perm_none), True)
-            self.assertEqual(UserModel().has_perm(uid, perm_create), False)
+            assert UserModel().has_perm(uid, perm_none) == True
+            assert UserModel().has_perm(uid, perm_create) == False
         finally:
             UserModel().delete(uid)
             Session().commit()
@@ -487,13 +488,13 @@ class TestAdminUsersController(TestControllerPytest):
 
         #now delete our key
         keys = UserApiKeys.query().filter(UserApiKeys.user_id == user_id).all()
-        self.assertEqual(1, len(keys))
+        assert 1 == len(keys)
 
         response = self.app.post(url('edit_user_api_keys', id=user_id),
                  {'_method': 'delete', 'del_api_key': keys[0].api_key, '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'API key successfully deleted')
         keys = UserApiKeys.query().filter(UserApiKeys.user_id == user_id).all()
-        self.assertEqual(0, len(keys))
+        assert 0 == len(keys)
 
     def test_reset_main_api_key(self):
         self.log_user()

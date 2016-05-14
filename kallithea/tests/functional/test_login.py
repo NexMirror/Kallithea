@@ -22,18 +22,18 @@ fixture = Fixture()
 class TestLoginController(TestControllerPytest):
     def setup_method(self, method):
         remove_all_notifications()
-        self.assertEqual(Notification.query().all(), [])
+        assert Notification.query().all() == []
 
     def test_index(self):
         response = self.app.get(url(controller='login', action='index'))
-        self.assertEqual(response.status, '200 OK')
+        assert response.status == '200 OK'
         # Test response...
 
     def test_login_admin_ok(self):
         response = self.app.post(url(controller='login', action='index'),
                                  {'username': TEST_USER_ADMIN_LOGIN,
                                   'password': TEST_USER_ADMIN_PASS})
-        self.assertEqual(response.status, '302 Found')
+        assert response.status == '302 Found'
         self.assert_authenticated_user(response, TEST_USER_ADMIN_LOGIN)
 
         response = response.follow()
@@ -44,7 +44,7 @@ class TestLoginController(TestControllerPytest):
                                  {'username': TEST_USER_REGULAR_LOGIN,
                                   'password': TEST_USER_REGULAR_PASS})
 
-        self.assertEqual(response.status, '302 Found')
+        assert response.status == '302 Found'
         self.assert_authenticated_user(response, TEST_USER_REGULAR_LOGIN)
 
         response = response.follow()
@@ -55,7 +55,7 @@ class TestLoginController(TestControllerPytest):
                                  {'username': TEST_USER_REGULAR_EMAIL,
                                   'password': TEST_USER_REGULAR_PASS})
 
-        self.assertEqual(response.status, '302 Found')
+        assert response.status == '302 Found'
         self.assert_authenticated_user(response, TEST_USER_REGULAR_LOGIN)
 
         response = response.follow()
@@ -67,10 +67,10 @@ class TestLoginController(TestControllerPytest):
                                      came_from=test_came_from),
                                  {'username': TEST_USER_ADMIN_LOGIN,
                                   'password': TEST_USER_ADMIN_PASS})
-        self.assertEqual(response.status, '302 Found')
+        assert response.status == '302 Found'
         response = response.follow()
 
-        self.assertEqual(response.status, '200 OK')
+        assert response.status == '200 OK'
         response.mustcontain('Users Administration')
 
     def test_login_do_not_remember(self):
@@ -79,10 +79,9 @@ class TestLoginController(TestControllerPytest):
                                   'password': TEST_USER_REGULAR_PASS,
                                   'remember': False})
 
-        self.assertIn('Set-Cookie', response.headers)
+        assert 'Set-Cookie' in response.headers
         for cookie in response.headers.getall('Set-Cookie'):
-            self.assertFalse(re.search(r';\s+(Max-Age|Expires)=', cookie, re.IGNORECASE),
-                'Cookie %r has expiration date, but should be a session cookie' % cookie)
+            assert not re.search(r';\s+(Max-Age|Expires)=', cookie, re.IGNORECASE), 'Cookie %r has expiration date, but should be a session cookie' % cookie
 
     def test_login_remember(self):
         response = self.app.post(url(controller='login', action='index'),
@@ -90,10 +89,9 @@ class TestLoginController(TestControllerPytest):
                                   'password': TEST_USER_REGULAR_PASS,
                                   'remember': True})
 
-        self.assertIn('Set-Cookie', response.headers)
+        assert 'Set-Cookie' in response.headers
         for cookie in response.headers.getall('Set-Cookie'):
-            self.assertTrue(re.search(r';\s+(Max-Age|Expires)=', cookie, re.IGNORECASE),
-                'Cookie %r should have expiration date, but is a session cookie' % cookie)
+            assert re.search(r';\s+(Max-Age|Expires)=', cookie, re.IGNORECASE), 'Cookie %r should have expiration date, but is a session cookie' % cookie
 
     def test_logout(self):
         response = self.app.post(url(controller='login', action='index'),
@@ -103,13 +101,13 @@ class TestLoginController(TestControllerPytest):
         # Verify that a login session has been established.
         response = self.app.get(url(controller='login', action='index'))
         response = response.follow()
-        self.assertIn('authuser', response.session)
+        assert 'authuser' in response.session
 
         response.click('Log Out')
 
         # Verify that the login session has been terminated.
         response = self.app.get(url(controller='login', action='index'))
-        self.assertNotIn('authuser', response.session)
+        assert 'authuser' not in response.session
 
     @parametrize('url_came_from', [
           ('data:text/html,<script>window.alert("xss")</script>',),
@@ -133,7 +131,7 @@ class TestLoginController(TestControllerPytest):
         response = self.app.post(url(controller='login', action='index'),
                                  {'username': TEST_USER_ADMIN_LOGIN,
                                   'password': 'as'})
-        self.assertEqual(response.status, '200 OK')
+        assert response.status == '200 OK'
 
         response.mustcontain('Enter 3 characters or more')
 
@@ -156,11 +154,11 @@ class TestLoginController(TestControllerPytest):
             response = self.app.get(url(controller='summary', action='index',
                                         repo_name=HG_REPO,
                                         **args))
-            self.assertEqual(response.status, '302 Found')
+            assert response.status == '302 Found'
             came_from = urlparse.parse_qs(urlparse.urlparse(response.location).query)['came_from'][0]
             came_from_qs = urlparse.parse_qsl(urlparse.urlparse(came_from).query)
             for encoded in args_encoded:
-                self.assertIn(encoded, came_from_qs)
+                assert encoded in came_from_qs
 
     @parametrize('args,args_encoded', [
         ({'foo':'one', 'bar':'two'}, ('foo=one', 'bar=two')),
@@ -172,7 +170,7 @@ class TestLoginController(TestControllerPytest):
                                     came_from=url('/_admin/users', **args)))
         came_from = urlparse.parse_qs(urlparse.urlparse(response.form.action).query)['came_from'][0]
         for encoded in args_encoded:
-            self.assertIn(encoded, came_from)
+            assert encoded in came_from
 
     @parametrize('args,args_encoded', [
         ({'foo':'one', 'bar':'two'}, ('foo=one', 'bar=two')),
@@ -184,9 +182,9 @@ class TestLoginController(TestControllerPytest):
                                      came_from = url('/_admin/users', **args)),
                                  {'username': TEST_USER_ADMIN_LOGIN,
                                   'password': TEST_USER_ADMIN_PASS})
-        self.assertEqual(response.status, '302 Found')
+        assert response.status == '302 Found'
         for encoded in args_encoded:
-            self.assertIn(encoded, response.location)
+            assert encoded in response.location
 
     @parametrize('args,args_encoded', [
         ({'foo':'one', 'bar':'two'}, ('foo=one', 'bar=two')),
@@ -202,7 +200,7 @@ class TestLoginController(TestControllerPytest):
         response.mustcontain('Invalid username or password')
         came_from = urlparse.parse_qs(urlparse.urlparse(response.form.action).query)['came_from'][0]
         for encoded in args_encoded:
-            self.assertIn(encoded, came_from)
+            assert encoded in came_from
 
     #==========================================================================
     # REGISTRATIONS
@@ -256,7 +254,7 @@ class TestLoginController(TestControllerPytest):
                                              'email': 'goodmailm',
                                              'firstname': 'test',
                                              'lastname': 'test'})
-        self.assertEqual(response.status, '200 OK')
+        assert response.status == '200 OK'
         response.mustcontain('An email address must contain a single @')
         response.mustcontain('Enter a value 6 characters long or more')
 
@@ -328,17 +326,17 @@ class TestLoginController(TestControllerPytest):
                                              'firstname': name,
                                              'lastname': lastname,
                                              'admin': True})  # This should be overridden
-        self.assertEqual(response.status, '302 Found')
+        assert response.status == '302 Found'
         self.checkSessionFlash(response, 'You have successfully registered into Kallithea')
 
         ret = Session().query(User).filter(User.username == 'test_regular4').one()
-        self.assertEqual(ret.username, username)
-        self.assertEqual(check_password(password, ret.password), True)
-        self.assertEqual(ret.email, email)
-        self.assertEqual(ret.name, name)
-        self.assertEqual(ret.lastname, lastname)
-        self.assertNotEqual(ret.api_key, None)
-        self.assertEqual(ret.admin, False)
+        assert ret.username == username
+        assert check_password(password, ret.password) == True
+        assert ret.email == email
+        assert ret.name == name
+        assert ret.lastname == lastname
+        assert ret.api_key != None
+        assert ret.admin == False
 
     #==========================================================================
     # PASSWORD RESET
@@ -356,7 +354,7 @@ class TestLoginController(TestControllerPytest):
     def test_forgot_password(self):
         response = self.app.get(url(controller='login',
                                     action='password_reset'))
-        self.assertEqual(response.status, '200 OK')
+        assert response.status == '200 OK'
 
         username = 'test_password_reset_1'
         password = 'qweqwe'
@@ -395,7 +393,7 @@ class TestLoginController(TestControllerPytest):
                                   'password_confirm': "p@ssw0rd",
                                   'token': token,
                                  })
-        self.assertEqual(response.status, '200 OK')
+        assert response.status == '200 OK'
         response.mustcontain('Invalid password reset token')
 
         # GOOD TOKEN
@@ -411,7 +409,7 @@ class TestLoginController(TestControllerPytest):
                                     email=email,
                                     timestamp=timestamp,
                                     token=token))
-        self.assertEqual(response.status, '200 OK')
+        assert response.status == '200 OK'
         response.mustcontain("You are about to set a new password for the email address %s" % email)
 
         response = self.app.post(url(controller='login',
@@ -422,7 +420,7 @@ class TestLoginController(TestControllerPytest):
                                   'password_confirm': "p@ssw0rd",
                                   'token': token,
                                  })
-        self.assertEqual(response.status, '302 Found')
+        assert response.status == '302 Found'
         self.checkSessionFlash(response, 'Successfully updated password')
 
         response = response.follow()
@@ -444,8 +442,7 @@ class TestLoginController(TestControllerPytest):
     def test_access_not_whitelisted_page_via_api_key(self, test_name, api_key):
         whitelist = self._get_api_whitelist([])
         with mock.patch('kallithea.CONFIG', whitelist):
-            self.assertEqual([],
-                             whitelist['api_access_controllers_whitelist'])
+            assert [] == whitelist['api_access_controllers_whitelist']
             if test_name == 'proper_api_key':
                 #use builtin if api_key is None
                 api_key = User.get_first_admin().api_key
@@ -467,8 +464,7 @@ class TestLoginController(TestControllerPytest):
     def test_access_whitelisted_page_via_api_key(self, test_name, api_key, code):
         whitelist = self._get_api_whitelist(['ChangesetController:changeset_raw'])
         with mock.patch('kallithea.CONFIG', whitelist):
-            self.assertEqual(['ChangesetController:changeset_raw'],
-                             whitelist['api_access_controllers_whitelist'])
+            assert ['ChangesetController:changeset_raw'] == whitelist['api_access_controllers_whitelist']
             if test_name == 'proper_api_key':
                 api_key = User.get_first_admin().api_key
 
@@ -481,8 +477,7 @@ class TestLoginController(TestControllerPytest):
     def test_access_page_via_extra_api_key(self):
         whitelist = self._get_api_whitelist(['ChangesetController:changeset_raw'])
         with mock.patch('kallithea.CONFIG', whitelist):
-            self.assertEqual(['ChangesetController:changeset_raw'],
-                             whitelist['api_access_controllers_whitelist'])
+            assert ['ChangesetController:changeset_raw'] == whitelist['api_access_controllers_whitelist']
 
             new_api_key = ApiKeyModel().create(TEST_USER_ADMIN_LOGIN, u'test')
             Session().commit()
@@ -495,8 +490,7 @@ class TestLoginController(TestControllerPytest):
     def test_access_page_via_expired_api_key(self):
         whitelist = self._get_api_whitelist(['ChangesetController:changeset_raw'])
         with mock.patch('kallithea.CONFIG', whitelist):
-            self.assertEqual(['ChangesetController:changeset_raw'],
-                             whitelist['api_access_controllers_whitelist'])
+            assert ['ChangesetController:changeset_raw'] == whitelist['api_access_controllers_whitelist']
 
             new_api_key = ApiKeyModel().create(TEST_USER_ADMIN_LOGIN, u'test')
             Session().commit()

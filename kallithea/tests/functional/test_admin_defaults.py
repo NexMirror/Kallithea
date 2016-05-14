@@ -40,7 +40,7 @@ class TestDefaultsController(TestControllerPytest):
 
         params.pop('_authentication_token')
         defs = Setting.get_default_repo_settings()
-        self.assertEqual(params, defs)
+        assert params == defs
 
     def test_update_params_false_git(self):
         self.log_user()
@@ -57,7 +57,7 @@ class TestDefaultsController(TestControllerPytest):
 
         params.pop('_authentication_token')
         defs = Setting.get_default_repo_settings()
-        self.assertEqual(params, defs)
+        assert params == defs
 
     def test_update_browser_fakeout(self):
         response = self.app.post(url('default', id=1), params=dict(_method='put', _authentication_token=self.authentication_token()))

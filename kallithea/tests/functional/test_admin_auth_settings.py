@@ -47,8 +47,7 @@ class TestAuthSettingsController(TestControllerPytest):
         self.checkSessionFlash(response, 'Auth settings updated successfully')
 
         new_settings = Setting.get_auth_settings()
-        self.assertEqual(new_settings['auth_ldap_host'], u'dc.example.com',
-                         'fail db write compare')
+        assert new_settings['auth_ldap_host'] == u'dc.example.com', 'fail db write compare'
 
     @skipif(not ldap_lib_installed, reason='skipping due to missing ldap lib')
     def test_ldap_error_form_wrong_port_number(self):
@@ -160,9 +159,9 @@ class TestAuthSettingsController(TestControllerPytest):
                            'THE_USER_LASTNAME': 'Doe',
                            }
         )
-        self.assertEqual(response.form['email'].value, 'john@example.org')
-        self.assertEqual(response.form['firstname'].value, 'John')
-        self.assertEqual(response.form['lastname'].value, 'Doe')
+        assert response.form['email'].value == 'john@example.org'
+        assert response.form['firstname'].value == 'John'
+        assert response.form['lastname'].value == 'Doe'
 
 
     def test_container_auth_login_fallback_header(self):
@@ -220,7 +219,7 @@ class TestAuthSettingsController(TestControllerPytest):
             url=url(controller='admin/my_account', action='my_account'),
             extra_environ={'REMOTE_USER': 'john'},
         )
-        self.assertNotIn('Log Out', response.normal_body)
+        assert 'Log Out' not in response.normal_body
 
     def test_crowd_save_settings(self):
         self.log_user()
@@ -239,8 +238,7 @@ class TestAuthSettingsController(TestControllerPytest):
         self.checkSessionFlash(response, 'Auth settings updated successfully')
 
         new_settings = Setting.get_auth_settings()
-        self.assertEqual(new_settings['auth_crowd_host'], u'hostname',
-                         'fail db write compare')
+        assert new_settings['auth_crowd_host'] == u'hostname', 'fail db write compare'
 
     @skipif(not pam_lib_installed, reason='skipping due to missing pam lib')
     def test_pam_save_settings(self):
@@ -257,5 +255,4 @@ class TestAuthSettingsController(TestControllerPytest):
         self.checkSessionFlash(response, 'Auth settings updated successfully')
 
         new_settings = Setting.get_auth_settings()
-        self.assertEqual(new_settings['auth_pam_service'], u'kallithea',
-                         'fail db write compare')
+        assert new_settings['auth_pam_service'] == u'kallithea', 'fail db write compare'

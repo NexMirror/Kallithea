@@ -115,7 +115,7 @@ removed extra unicode conversion in diff.</div>
                                     revision='tip',
                                     f_path='vcs/nodes.py'),
                                 extra_environ={'HTTP_X_PARTIAL_XHR': '1'},)
-        self.assertEqual(response.body, HG_NODE_HISTORY)
+        assert response.body == HG_NODE_HISTORY
 
     def test_file_source_history_git(self):
         self.log_user()
@@ -124,7 +124,7 @@ removed extra unicode conversion in diff.</div>
                                     revision='master',
                                     f_path='vcs/nodes.py'),
                                 extra_environ={'HTTP_X_PARTIAL_XHR': '1'},)
-        self.assertEqual(response.body, GIT_NODE_HISTORY)
+        assert response.body == GIT_NODE_HISTORY
 
     def test_file_annotation(self):
         self.log_user()
@@ -154,7 +154,7 @@ removed extra unicode conversion in diff.</div>
                                     annotate=True),
                                 extra_environ={'HTTP_X_PARTIAL_XHR': '1'})
 
-        self.assertEqual(response.body, HG_NODE_HISTORY)
+        assert response.body == HG_NODE_HISTORY
 
     def test_file_annotation_history_git(self):
         self.log_user()
@@ -165,7 +165,7 @@ removed extra unicode conversion in diff.</div>
                                     annotate=True),
                                 extra_environ={'HTTP_X_PARTIAL_XHR': '1'})
 
-        self.assertEqual(response.body, GIT_NODE_HISTORY)
+        assert response.body == GIT_NODE_HISTORY
 
     def test_file_authors(self):
         self.log_user()
@@ -199,14 +199,14 @@ removed extra unicode conversion in diff.</div>
                                         repo_name=HG_REPO,
                                         fname=fname))
 
-            self.assertEqual(response.status, '200 OK')
+            assert response.status == '200 OK'
             heads = [
                 ('Pragma', 'no-cache'),
                 ('Cache-Control', 'no-cache'),
                 ('Content-Disposition', 'attachment; filename=%s' % filename),
                 ('Content-Type', '%s; charset=utf-8' % info[0]),
             ]
-            self.assertEqual(response.response._headers.items(), heads)
+            assert response.response._headers.items() == heads
 
     def test_archival_wrong_ext(self):
         self.log_user()
@@ -242,8 +242,8 @@ removed extra unicode conversion in diff.</div>
                                     revision='27cd5cce30c96924232dffcd24178a07ffeb5dfc',
                                     f_path='vcs/nodes.py'))
 
-        self.assertEqual(response.content_disposition, "attachment; filename=nodes.py")
-        self.assertEqual(response.content_type, mimetypes.guess_type("nodes.py")[0])
+        assert response.content_disposition == "attachment; filename=nodes.py"
+        assert response.content_type == mimetypes.guess_type("nodes.py")[0]
 
     def test_raw_file_wrong_cs(self):
         self.log_user()
@@ -280,7 +280,7 @@ removed extra unicode conversion in diff.</div>
                                     revision='27cd5cce30c96924232dffcd24178a07ffeb5dfc',
                                     f_path='vcs/nodes.py'))
 
-        self.assertEqual(response.content_type, "text/plain")
+        assert response.content_type == "text/plain"
 
     def test_raw_wrong_cs(self):
         self.log_user()
