@@ -9,7 +9,7 @@ from kallithea.lib import helpers as h
 
 class TestNotificationsController(TestControllerPytest):
     def setup_method(self, method):
-        remove_all_notifications()
+        self.remove_all_notifications()
 
     def test_index(self):
         self.log_user()

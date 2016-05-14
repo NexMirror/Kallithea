@@ -70,7 +70,7 @@ __all__ = [
     'TEST_USER_REGULAR2_PASS', 'TEST_USER_REGULAR2_EMAIL', 'TEST_HG_REPO',
     'TEST_HG_REPO_CLONE', 'TEST_HG_REPO_PULL', 'TEST_GIT_REPO',
     'TEST_GIT_REPO_CLONE', 'TEST_GIT_REPO_PULL', 'HG_REMOTE_REPO',
-    'GIT_REMOTE_REPO', 'SCM_TESTS', 'remove_all_notifications',
+    'GIT_REMOTE_REPO', 'SCM_TESTS',
 ]
 
 # Invoke websetup with the current config file
@@ -161,14 +161,6 @@ def init_stack(config=None):
     h = NullHandler()
     logging.getLogger("kallithea").addHandler(h)
 
-def remove_all_notifications():
-    Notification.query().delete()
-
-    # Because query().delete() does not (by default) trigger cascades.
-    # http://docs.sqlalchemy.org/en/rel_0_7/orm/collections.html#passive-deletes
-    UserNotification.query().delete()
-
-    Session().commit()
 
 class TestControllerPytest(object):
     """Pytest-style test controller"""
@@ -183,6 +175,14 @@ class TestControllerPytest(object):
         self.maxDiff = None
         self.index_location = config['app_conf']['index_dir']
         return self.app
+
+    def remove_all_notifications(self):
+        Notification.query().delete()
+
+        # Because query().delete() does not (by default) trigger cascades.
+        # http://docs.sqlalchemy.org/en/rel_0_7/orm/collections.html#passive-deletes
+        UserNotification.query().delete()
+        Session().commit()
 
     def log_user(self, username=TEST_USER_ADMIN_LOGIN,
                  password=TEST_USER_ADMIN_PASS):

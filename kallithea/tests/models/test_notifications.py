@@ -32,7 +32,7 @@ class TestNotifications(TestControllerPytest):
         Session().commit()
         self.u3 = self.u3.user_id
 
-        remove_all_notifications()
+        self.remove_all_notifications()
         assert [] == Notification.query().all()
         assert [] == UserNotification.query().all()
 

@@ -21,7 +21,7 @@ fixture = Fixture()
 
 class TestLoginController(TestControllerPytest):
     def setup_method(self, method):
-        remove_all_notifications()
+        self.remove_all_notifications()
         assert Notification.query().all() == []
 
     def test_index(self):
