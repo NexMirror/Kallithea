@@ -7,7 +7,7 @@ class CSM(object): # ChangesetStatusMock
     def __init__(self, status):
         self.status = status
 
-class TestChangesetStatusCalculation(TestControllerPytest):
+class TestChangesetStatusCalculation(TestController):
 
     def setup_method(self, method):
         self.m = ChangesetStatusModel()

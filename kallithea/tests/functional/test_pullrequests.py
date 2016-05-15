@@ -8,7 +8,7 @@ from kallithea.controllers.pullrequests import PullrequestsController
 
 fixture = Fixture()
 
-class TestPullrequestsController(TestControllerPytest):
+class TestPullrequestsController(TestController):
 
     def test_index(self):
         self.log_user()
@@ -143,7 +143,7 @@ class TestPullrequestsController(TestControllerPytest):
                                  status=400)
         response.mustcontain('Invalid reviewer &#34;%s&#34; specified' % invalid_user_id)
 
-class TestPullrequestsGetRepoRefs(TestControllerPytest):
+class TestPullrequestsGetRepoRefs(TestController):
 
     def setup_method(self, method):
         self.main = fixture.create_repo(u'main', repo_type='hg')

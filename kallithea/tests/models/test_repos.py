@@ -10,7 +10,7 @@ from kallithea.lib.exceptions import AttachedForksError
 fixture = Fixture()
 
 
-class TestRepos(TestControllerPytest):
+class TestRepos(TestController):
 
     def teardown_method(self, method):
         Session.remove()

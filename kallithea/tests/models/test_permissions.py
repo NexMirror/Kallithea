@@ -15,7 +15,7 @@ from kallithea.model.permission import PermissionModel
 fixture = Fixture()
 
 
-class TestPermissions(TestControllerPytest):
+class TestPermissions(TestController):
 
     @classmethod
     def setup_class(cls):

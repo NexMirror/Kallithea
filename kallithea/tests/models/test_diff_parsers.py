@@ -271,7 +271,7 @@ DIFF_FIXTURES = {
 }
 
 
-class TestDiffLib(TestControllerPytest):
+class TestDiffLib(TestController):
 
     @parametrize('diff_fixture', DIFF_FIXTURES)
     def test_diff(self, diff_fixture):

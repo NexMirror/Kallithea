@@ -3,7 +3,7 @@ import os
 from kallithea.tests import *
 
 
-class TestSearchController(TestControllerPytest):
+class TestSearchController(TestController):
 
     def test_index(self):
         self.log_user()

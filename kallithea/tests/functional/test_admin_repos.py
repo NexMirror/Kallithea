@@ -27,7 +27,7 @@ def _get_permission_for_user(user, repo):
     return perm
 
 
-class _BaseTestCase(TestControllerPytest):
+class _BaseTestCase(TestController):
     """
     Write all tests here
     """

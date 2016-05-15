@@ -7,7 +7,7 @@ from kallithea.model.meta import Session
 from kallithea.model.notification import NotificationModel
 
 
-class TestNotifications(TestControllerPytest):
+class TestNotifications(TestController):
 
     def setup_method(self, method):
         Session.remove()

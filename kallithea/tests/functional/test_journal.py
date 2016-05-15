@@ -2,7 +2,7 @@ from kallithea.tests import *
 import datetime
 
 
-class TestJournalController(TestControllerPytest):
+class TestJournalController(TestController):
 
     def test_index(self):
         self.log_user()

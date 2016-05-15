@@ -15,7 +15,7 @@ from kallithea.tests.fixture import Fixture
 fixture = Fixture()
 
 
-class TestRepoGroups(TestControllerPytest):
+class TestRepoGroups(TestController):
 
     def teardown_method(self, method):
         Session.remove()

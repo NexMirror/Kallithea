@@ -19,7 +19,7 @@ from kallithea.model.user import UserModel
 fixture = Fixture()
 
 
-class TestLoginController(TestControllerPytest):
+class TestLoginController(TestController):
     def setup_method(self, method):
         self.remove_all_notifications()
         assert Notification.query().all() == []

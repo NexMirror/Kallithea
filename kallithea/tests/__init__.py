@@ -61,7 +61,7 @@ skipif = pytest.mark.skipif
 parametrize = pytest.mark.parametrize
 
 __all__ = [
-    'skipif', 'parametrize', 'environ', 'url', 'TestControllerPytest',
+    'skipif', 'parametrize', 'environ', 'url', 'TestController',
     'ldap_lib_installed', 'pam_lib_installed',
     'TESTS_TMP_PATH', 'HG_REPO', 'GIT_REPO', 'NEW_HG_REPO', 'NEW_GIT_REPO',
     'HG_FORK', 'GIT_FORK', 'TEST_USER_ADMIN_LOGIN', 'TEST_USER_ADMIN_PASS',
@@ -148,7 +148,7 @@ class NullHandler(logging.Handler):
     def emit(self, record):
         pass
 
-class TestControllerPytest(object):
+class TestController(object):
     """Pytest-style test controller"""
 
     # Note: pytest base classes cannot have an __init__ method

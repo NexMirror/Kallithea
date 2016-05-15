@@ -34,7 +34,7 @@ def _update_repo(name, **kwargs):
     return r
 
 
-class TestRepoGroups(TestControllerPytest):
+class TestRepoGroups(TestController):
 
     def setup_method(self, method):
         self.g1 = fixture.create_repo_group(u'test1', skip_if_exists=True)

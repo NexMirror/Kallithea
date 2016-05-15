@@ -2,7 +2,7 @@ from kallithea.tests import *
 from kallithea.model.db import Setting
 
 
-class TestAuthSettingsController(TestControllerPytest):
+class TestAuthSettingsController(TestController):
     def _enable_plugins(self, plugins_list):
         test_url = url(controller='admin/auth_settings',
                        action='auth_settings')

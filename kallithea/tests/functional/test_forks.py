@@ -12,7 +12,7 @@ from kallithea.model.meta import Session
 
 fixture = Fixture()
 
-class _BaseTestCase(TestControllerPytest):
+class _BaseTestCase(TestController):
     """
     Write all tests here
     """

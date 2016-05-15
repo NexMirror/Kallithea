@@ -10,7 +10,7 @@ from kallithea.model.meta import Session
 fixture = Fixture()
 
 
-class TestMyAccountController(TestControllerPytest):
+class TestMyAccountController(TestController):
     test_user_1 = 'testme'
 
     @classmethod

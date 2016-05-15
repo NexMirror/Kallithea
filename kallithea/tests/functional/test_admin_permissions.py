@@ -3,7 +3,7 @@ import time
 from kallithea.model.db import User, UserIpMap
 from kallithea.tests import *
 
-class TestAdminPermissionsController(TestControllerPytest):
+class TestAdminPermissionsController(TestController):
 
     def test_index(self):
         self.log_user()

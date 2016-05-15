@@ -10,7 +10,7 @@ from kallithea.model.meta import Session
 fixture = Fixture()
 
 
-class TestUserGroups(TestControllerPytest):
+class TestUserGroups(TestController):
 
     def teardown_method(self, method):
         # delete all groups

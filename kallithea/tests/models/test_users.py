@@ -12,7 +12,7 @@ from kallithea.tests.fixture import Fixture
 fixture = Fixture()
 
 
-class TestUser(TestControllerPytest):
+class TestUser(TestController):
 
     @classmethod
     def setup_class(cls):
@@ -99,7 +99,7 @@ class TestUser(TestControllerPytest):
         Session().commit()
 
 
-class TestUsers(TestControllerPytest):
+class TestUsers(TestController):
 
     def setup_method(self, method):
         self.u1 = UserModel().create_or_update(username=u'u1',

@@ -10,7 +10,7 @@ def _commit_div(sha, msg):
     return """<div id="C-%s" class="message">%s</div>""" % (sha, msg)
 
 
-class TestCompareController(TestControllerPytest):
+class TestCompareController(TestController):
 
     def setup_method(self, method):
         self.r1_id = None

@@ -6,7 +6,7 @@ from kallithea.model.meta import Session
 TEST_USER_GROUP = u'admins_test'
 
 
-class TestAdminUsersGroupsController(TestControllerPytest):
+class TestAdminUsersGroupsController(TestController):
 
     def test_index(self):
         self.log_user()

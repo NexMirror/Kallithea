@@ -26,7 +26,7 @@ def _set_downloads(repo_name, set_to):
     Session().commit()
 
 
-class TestFilesController(TestControllerPytest):
+class TestFilesController(TestController):
 
     def test_index(self):
         self.log_user()

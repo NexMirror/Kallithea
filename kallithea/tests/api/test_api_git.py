@@ -12,10 +12,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from kallithea.tests import TestControllerPytest, GIT_REPO
+from kallithea.tests import TestController, GIT_REPO
 from kallithea.tests.api.api_base import _BaseTestApi
 
 
-class TestGitApi(_BaseTestApi, TestControllerPytest):
+class TestGitApi(_BaseTestApi, TestController):
     REPO = GIT_REPO
     REPO_TYPE = 'git'

@@ -9,7 +9,7 @@ from kallithea.model.repo_group import RepoGroupModel
 fixture = Fixture()
 
 
-class TestHomeController(TestControllerPytest):
+class TestHomeController(TestController):
 
     def test_index(self):
         self.log_user()

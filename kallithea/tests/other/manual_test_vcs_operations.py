@@ -166,7 +166,7 @@ def _check_proper_git_push(stdout, stderr):
     assert 'master -> master' in stderr
 
 
-class TestVCSOperations(TestControllerPytest):
+class TestVCSOperations(TestController):
 
     @classmethod
     def setup_class(cls):

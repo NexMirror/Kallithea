@@ -29,7 +29,7 @@ from webob.exc import HTTPNotFound
 fixture = Fixture()
 
 
-class TestAdminUsersController(TestControllerPytest):
+class TestAdminUsersController(TestController):
     test_user_1 = 'testme'
 
     @classmethod
@@ -530,7 +530,7 @@ class TestAdminUsersController_unittest(object):
             u._get_user_or_raise_if_default(User.get_default_user().user_id)
 
 
-class TestAdminUsersControllerForDefaultUser(TestControllerPytest):
+class TestAdminUsersControllerForDefaultUser(TestController):
     """
     Edit actions on the default user are not allowed.
     Validate that they throw a 404 exception.

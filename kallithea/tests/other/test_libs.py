@@ -67,7 +67,7 @@ TEST_URLS += [
 ]
 
 
-class TestLibs(TestControllerPytest):
+class TestLibs(TestController):
 
     @parametrize('test_url,expected,expected_creds', TEST_URLS)
     def test_uri_filter(self, test_url, expected, expected_creds):
