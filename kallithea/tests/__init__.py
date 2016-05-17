@@ -47,7 +47,6 @@ from kallithea.lib.compat import unittest
 from kallithea import is_windows
 from kallithea.model.db import Notification, User, UserNotification
 from kallithea.model.meta import Session
-from kallithea.tests.parameterized import parameterized
 from kallithea.lib.utils2 import safe_str
 
 

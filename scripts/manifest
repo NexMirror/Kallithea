@@ -918,7 +918,6 @@ kallithea/tests/other/manual_test_vcs_operations.py
 kallithea/tests/other/test_libs.py
 kallithea/tests/other/test_mail.py
 kallithea/tests/other/test_validators.py
-kallithea/tests/parameterized.py
 kallithea/tests/scripts/
 kallithea/tests/scripts/create_rc.sh
 kallithea/tests/scripts/manual_test_concurrency.py
