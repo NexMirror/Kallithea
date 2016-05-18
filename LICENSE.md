@@ -255,19 +255,6 @@ in this distribution.
 
 
 
-Migrate
--------
-
-Kallithea incorporates in kallithea/lib/dbmigrate/migrate parts of the Python
-system called [Migrate or sqlalchemy-migrate](https://github.com/stackforge/sqlalchemy-migrate),
-which is:
-
-Copyright (c) 2009 Evan Rosson, Jan Dittberner, Domen Kožar
-
-and licensed under the MIT-permissive license, which is
-[included in this distribution](MIT-Permissive-License.txt).
-
-
 Icon fonts
 ----------
 

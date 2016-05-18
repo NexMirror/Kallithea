@@ -12,7 +12,6 @@ include           kallithea/bin/ldap_sync.conf
 include           kallithea/bin/template.ini.mako
 include           kallithea/config/deployment.ini_tmpl
 recursive-include kallithea/i18n *
-recursive-include kallithea/lib/dbmigrate *.py_tmpl README migrate.cfg
 recursive-include kallithea/public *
 recursive-include kallithea/templates *
 recursive-include kallithea/tests/fixtures *
