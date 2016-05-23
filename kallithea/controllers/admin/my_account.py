@@ -75,16 +75,15 @@ class MyAccountController(BaseController):
     def _load_my_repos_data(self, watched=False):
         if watched:
             admin = False
-            repos_list = [x.follows_repository for x in
-                          Session().query(UserFollowing).filter(
-                              UserFollowing.user_id ==
-                              self.authuser.user_id).all()]
+            repos_list = Session().query(Repository) \
+                         .join(UserFollowing) \
+                         .filter(UserFollowing.user_id ==
+                                 self.authuser.user_id).all()
         else:
             admin = True
             repos_list = Session().query(Repository) \
                          .filter(Repository.user_id ==
-                                 self.authuser.user_id) \
-                         .order_by(func.lower(Repository.repo_name)).all()
+                                 self.authuser.user_id).all()
 
         repos_data = RepoModel().get_repos_as_dict(repos_list=repos_list,
                                                    admin=admin)
