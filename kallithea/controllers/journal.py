@@ -255,7 +255,7 @@ class JournalController(BaseController):
             cs_cache = repo.changeset_cache
             row = {
                 "menu": quick_menu(repo.repo_name),
-                "raw_name": repo.repo_name.lower(),
+                "raw_name": repo.repo_name,
                 "name": repo_lnk(repo.repo_name, repo.repo_type,
                                  repo.repo_state, repo.private, repo.fork),
                 "last_changeset": last_rev(repo.repo_name, cs_cache),

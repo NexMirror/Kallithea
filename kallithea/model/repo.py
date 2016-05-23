@@ -234,7 +234,7 @@ class RepoModel(BaseModel):
             cs_cache = repo.changeset_cache
             row = {
                 "menu": quick_menu(repo.repo_name),
-                "raw_name": repo.repo_name.lower(),
+                "raw_name": repo.repo_name,
                 "name": repo_lnk(repo.repo_name, repo.repo_type,
                                  repo.repo_state, repo.private, repo.fork),
                 "last_change": last_change(repo.last_db_change),
