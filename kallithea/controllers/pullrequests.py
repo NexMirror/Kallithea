@@ -219,11 +219,19 @@ class PullrequestsController(BaseRepoController):
                                         self.authuser.user_id) \
                                 .all())
 
-        c.participate_in_pull_requests = _filter(PullRequest.query() \
-                                .join(PullRequestReviewers) \
+        c.participate_in_pull_requests = []
+        c.participate_in_pull_requests_todo = []
+        done_status = set([ChangesetStatus.STATUS_APPROVED, ChangesetStatus.STATUS_REJECTED])
+        for pr in _filter(PullRequest.query()
+                                .join(PullRequestReviewers)
                                 .filter(PullRequestReviewers.user_id ==
-                                        self.authuser.user_id) \
-                                                 )
+                                        self.authuser.user_id)
+                         ):
+            status = pr.user_review_status(c.authuser.user_id) # very inefficient!!!
+            if status in done_status:
+                c.participate_in_pull_requests.append(pr)
+            else:
+                c.participate_in_pull_requests_todo.append(pr)
 
         return render('/pullrequests/pullrequest_show_my.html')
 
