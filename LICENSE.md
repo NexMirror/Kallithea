@@ -62,10 +62,10 @@ jQuery
 ------
 
 Kallithea incorporates the Javascript system called
-[jQuery](http://jquery.org/),
-[herein](kallithea/public/js/jquery-1.11.1.min.js), and the Corresponding
-Source can be found in https://github.com/jquery/jquery at tag 1.11.1
-(mirrored at https://kallithea-scm.org/repos/mirror/jquery/files/1.11.1/ ).
+[jQuery](http://jquery.org/), [herein](kallithea/public/js/jquery.min.js),
+which can be found together with its Corresponding Source in
+https://github.com/jquery/jquery at tag 1.12.3 (mirrored at
+https://kallithea-scm.org/repos/mirror/jquery/files/1.12.3/ ).
 
 It is Copyright 2013 jQuery Foundation and other contributors http://jquery.com/ and is under an
 [MIT-permissive license](MIT-Permissive-License.txt).

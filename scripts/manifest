@@ -640,7 +640,7 @@ kallithea/public/js/base.js
 kallithea/public/js/bootstrap.js
 kallithea/public/js/codemirror_loadmode.js
 kallithea/public/js/graph.js
-kallithea/public/js/jquery-1.11.1.min.js
+kallithea/public/js/jquery.min.js
 kallithea/public/js/mergely.js
 kallithea/public/js/mousetrap.js
 kallithea/public/js/native.history.js
