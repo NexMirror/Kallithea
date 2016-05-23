@@ -230,8 +230,8 @@ ${self.repo_context_bar('showpullrequest')}
               ## If you change something here it should be reflected in the template too.
               <li id="reviewer_${member.user_id}">
                 <div class="reviewers_member">
-                    <div class="reviewer_status tooltip" title="${h.changeset_status_lbl(status.status if status else 'not_reviewed')}">
-                      <i class="icon-circle changeset-status-${status.status if status else 'not_reviewed'}"></i>
+                    <div class="reviewer_status tooltip" title="${h.changeset_status_lbl(status)}">
+                      <i class="icon-circle changeset-status-${status}"></i>
                     </div>
                   ${h.gravatar_div(member.email, size=14, div_class="reviewer_gravatar gravatar")}
                   <div style="float:left;">
