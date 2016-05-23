@@ -227,9 +227,9 @@ Kallithea includes a minified version of YUI 2.9. To build yui.2.9.js:
     git checkout hudson-yui2-2800
     ln -sf JumpToPageDropDown.js src/paginator/js/JumpToPageDropdown.js # work around inconsistent casing
     rm -f tmp.js
-    for m in yahoo event dom connection animation dragdrop element datasource autocomplete container event-delegate json datatable paginator; do
-      rm -f build/\$m/\$m.js
-      ( cd src/\$m && ant build deploybuild ) && sed -e 's,@VERSION@,2.9.0,g' -e 's,@BUILD@,2800,g' build/\$m/\$m.js >> tmp.js
+    for m in yahoo event dom animation datasource autocomplete event-delegate; do
+      rm -f build/$m/$m.js
+      ( cd src/$m && ant build deploybuild ) && sed -e 's,@VERSION@,2.9.0,g' -e 's,@BUILD@,2800,g' build/$m/$m.js >> tmp.js
     done
     java -jar ../builder/componentbuild/lib/yuicompressor/yuicompressor-2.4.4.jar tmp.js -o yui.2.9.js
 
