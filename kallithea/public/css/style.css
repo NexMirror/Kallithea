@@ -4863,3 +4863,29 @@ div.comment-prev-next-links div.next-comment {
 .icon-only-links i {
     color: white;
 }
+
+
+body table.dataTable thead .sorting {
+  background-image: none;
+}
+body table.dataTable thead .sorting_asc {
+  background-image: none;
+}
+body table.dataTable thead .sorting_desc {
+  background-image: none;
+}
+body table.dataTable thead .sorting_asc_disabled {
+  background-image: none;
+}
+body table.dataTable thead .sorting_desc_disabled {
+  background-image: none;
+}
+
+body table.dataTable thead .sorting_asc::after {
+  font-family: "kallithea";
+  content: "\23f6";
+}
+body table.dataTable thead .sorting_desc::after {
+  font-family: "kallithea";
+  content: "\23f7";
+}
