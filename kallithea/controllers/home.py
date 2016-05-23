@@ -63,7 +63,7 @@ class HomeController(BaseController):
                         .all()
 
         repos_data = RepoModel().get_repos_as_dict(repos_list=c.repos_list,
-                                                   admin=False)
+                                                   admin=False, short_name=True)
         #json used to render the grid
         c.data = json.dumps(repos_data)
 

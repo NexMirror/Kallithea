@@ -185,7 +185,7 @@ class RepoModel(BaseModel):
             repo.update_changeset_cache()
 
     def get_repos_as_dict(self, repos_list=None, admin=False, perm_check=True,
-                          super_user_actions=False):
+                          super_user_actions=False, short_name=False):
         _render = self._render_datatable
         from pylons import tmpl_context as c
 
@@ -194,7 +194,7 @@ class RepoModel(BaseModel):
 
         def repo_lnk(name, rtype, rstate, private, fork_of):
             return _render('repo_name', name, rtype, rstate, private, fork_of,
-                           short_name=not admin, admin=False)
+                           short_name=short_name, admin=False)
 
         def last_change(last_change):
             return _render("last_change", last_change)
