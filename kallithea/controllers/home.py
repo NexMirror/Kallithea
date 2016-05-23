@@ -118,17 +118,6 @@ class HomeController(BaseController):
     @LoginRequired()
     @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
                                    'repository.admin')
-    def branch_tag_switcher(self, repo_name):
-        if request.is_xhr:
-            c.db_repo = Repository.get_by_repo_name(repo_name)
-            if c.db_repo:
-                c.db_repo_scm_instance = c.db_repo.scm_instance
-                return render('/switch_to_list.html')
-        raise HTTPBadRequest()
-
-    @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
     @jsonify
     def repo_refs_data(self, repo_name):
         repo = Repository.get_by_repo_name(repo_name).scm_instance

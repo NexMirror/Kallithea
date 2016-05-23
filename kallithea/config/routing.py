@@ -543,8 +543,6 @@ def make_map(config):
                 controller='summary', action='repo_size',
                 conditions=dict(function=check_repo))
 
-    rmap.connect('branch_tag_switcher', '/{repo_name:.*?}/branches-tags',
-                 controller='home', action='branch_tag_switcher')
     rmap.connect('repo_refs_data', '/{repo_name:.*?}/refs-data',
                  controller='home', action='repo_refs_data')
 
@@ -730,15 +728,6 @@ def make_map(config):
 
     rmap.connect('summary_home_summary', '/{repo_name:.*?}/summary',
                 controller='summary', conditions=dict(function=check_repo))
-
-    rmap.connect('branches_home', '/{repo_name:.*?}/branches',
-                controller='branches', conditions=dict(function=check_repo))
-
-    rmap.connect('tags_home', '/{repo_name:.*?}/tags',
-                controller='tags', conditions=dict(function=check_repo))
-
-    rmap.connect('bookmarks_home', '/{repo_name:.*?}/bookmarks',
-                controller='bookmarks', conditions=dict(function=check_repo))
 
     rmap.connect('changelog_home', '/{repo_name:.*?}/changelog',
                 controller='changelog', conditions=dict(function=check_repo))
