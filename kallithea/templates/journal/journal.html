@@ -23,11 +23,17 @@
 </%block>
 
 <%def name="main()">
-    <div class="box box-left">
+    <div class="box">
         <!-- box / title -->
         <div class="title">
          ${self.breadcrumbs()}
          <ul class="links icon-only-links">
+           <li>
+             <a href="${h.url('my_account_watched')}"><i class="icon-eye"></i> ${_('Watched Repositories')}</a>
+           </li>
+           <li>
+             <a href="${h.url('my_account_repos')}"><i class="icon-database"></i> ${_('My Repositories')}</a>
+           </li>
            <li>
              <span><a id="refresh" href="${h.url('journal')}"><i class="icon-arrows-cw"></i></a></span>
            </li>
@@ -38,35 +44,6 @@
         </div>
         <div id="journal">
             <%include file='journal_data.html'/>
-        </div>
-    </div>
-    <div class="box box-right">
-        <!-- box / title -->
-
-        <div class="title">
-            <h5>
-            <input class="q_filter_box" id="q_filter" size="15" type="text" name="filter" placeholder="${_('quick filter...')}" value="" style="display: none"/>
-            <input class="q_filter_box" id="q_filter_watched" size="15" type="text" name="filter" placeholder="${_('quick filter...')}" value="" style="display: none"/>
-            </h5>
-            <ul class="links nav nav-tabs">
-                <li class="active" id="show_watched_li">
-                    <a id="show_watched" href="#watched"><i class="icon-eye"></i> ${_('Watched Repositories')}</a>
-                </li>
-                <li id="show_my_li">
-                    <a id="show_my" href="#my"><i class="icon-database"></i> ${_('My Repositories')}</a>
-               </li>
-            </ul>
-        </div>
-
-        <!-- end box / title -->
-        <div id="my_container" style="display:none">
-            <div class="table-grid table yui-skin-sam" id="repos_list_wrap"></div>
-            <div id="user-paginator" style="padding: 0px 0px 0px 20px"></div>
-        </div>
-
-        <div id="watched_container">
-            <div class="table-grid table yui-skin-sam" id="watched_repos_list_wrap"></div>
-            <div id="watched-user-paginator" style="padding: 0px 0px 0px 20px"></div>
         </div>
     </div>
 
@@ -99,240 +76,6 @@
             });
         e.preventDefault();
     });
-
-    var show_my = function(e){
-        $('#watched_container').hide();
-        $('#my_container').show();
-        $('#q_filter').show();
-        $('#q_filter_watched').hide();
-
-        $('#show_my_li').addClass('active');
-        $('#show_watched_li').removeClass('active');
-        if(!$('#show_my').hasClass('loaded')){
-            table_renderer(${c.data |n});
-            $('#show_my').addClass('loaded');
-        }
-    };
-    $('#show_my').click(function(){
-        show_my();
-    });
-    var show_watched = function(){
-        $('#my_container').hide();
-        $('#watched_container').show();
-        $('#q_filter_watched').show();
-        $('#q_filter').hide();
-
-        $('#show_watched_li').addClass('active');
-        $('#show_my_li').removeClass('active');
-        if(!$('#show_watched').hasClass('loaded')){
-            watched_renderer(${c.watched_data |n});
-            $('#show_watched').addClass('loaded');
-        }
-    };
-    $('#show_watched').click(function(){
-        show_watched();
-    });
-    //init watched
-    show_watched();
-
-    var tabs = {
-        'watched': show_watched,
-        'my': show_my
-    }
-    var url = location.href.split('#');
-    if (url[1]) {
-        //We have a hash
-        var tabHash = url[1];
-        var func = tabs[tabHash]
-        if (func){
-            func();
-        }
-    }
-    function watched_renderer(data){
-        var myDataSource = new YAHOO.util.DataSource(data);
-        myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
-
-        myDataSource.responseSchema = {
-            resultsList: "records",
-            fields: [
-               {key:"menu"},
-               {key:"raw_name"},
-               {key:"name"},
-               {key:"last_changeset"},
-               {key:"last_rev_raw"},
-               {key:"action"}
-            ]
-         };
-        myDataSource.doBeforeCallback = function(req,raw,res,cb) {
-            // This is the filter function
-            var data     = res.results || [],
-                filtered = [],
-                i,l;
-
-            if (req) {
-                req = req.toLowerCase();
-                for (i = 0; i<data.length; i++) {
-                    var pos = data[i].raw_name.toLowerCase().indexOf(req);
-                    if (pos != -1) {
-                        filtered.push(data[i]);
-                    }
-                }
-                res.results = filtered;
-            }
-            return res;
-        }
-        // main table sorting
-        var myColumnDefs = [
-            {key:"menu",label:"",sortable:false,className:"quick_repo_menu hidden"},
-            {key:"name",label:"${_('Name')}",sortable:true,
-                sortOptions: { sortFunction: nameSort }},
-            {key:"last_changeset",label:"${_('Tip')}",sortable:true,
-                sortOptions: { sortFunction: revisionSort }},
-            {key:"action",label:"${_('Action')}",sortable:false}
-        ];
-
-        var myDataTable = new YAHOO.widget.DataTable("watched_repos_list_wrap", myColumnDefs, myDataSource,{
-          sortedBy:{key:"name",dir:"asc"},
-          paginator: YUI_paginator(25, ['watched-user-paginator']),
-
-          MSG_SORTASC:"${_('Click to sort ascending')}",
-          MSG_SORTDESC:"${_('Click to sort descending')}",
-          MSG_EMPTY:"${_('No records found.')}",
-          MSG_ERROR:"${_('Data error.')}",
-          MSG_LOADING:"${_('Loading...')}"
-        }
-        );
-        myDataTable.subscribe('postRenderEvent',function(oArgs) {
-            tooltip_activate();
-            quick_repo_menu();
-        });
-
-        var filterTimeout = null;
-
-        updateFilter  = function () {
-            // Reset timeout
-            filterTimeout = null;
-
-            // Reset sort
-            var state = myDataTable.getState();
-            state.sortedBy = {key:'name', dir:YAHOO.widget.DataTable.CLASS_ASC};
-
-            // Get filtered data
-            myDataSource.sendRequest(YUD.get('q_filter_watched').value,{
-                success : myDataTable.onDataReturnInitializeTable,
-                failure : myDataTable.onDataReturnInitializeTable,
-                scope   : myDataTable,
-                argument: state
-            });
-
-        };
-        $('#q_filter_watched').click(function(){
-            if(!$('#q_filter_watched').hasClass('loaded')) {
-                //TODO: load here full list later to do search within groups
-                $('#q_filter_watched').css('loaded');
-            }
-        });
-
-        $('#q_filter_watched').keyup(function(){
-            clearTimeout(filterTimeout);
-            filterTimeout = setTimeout(updateFilter,600);
-        });
-      }
-
-    function table_renderer(data){
-        var myDataSource = new YAHOO.util.DataSource(data);
-        myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
-
-        myDataSource.responseSchema = {
-            resultsList: "records",
-            fields: [
-               {key:"menu"},
-               {key:"raw_name"},
-               {key:"name"},
-               {key:"last_changeset"},
-               {key:"last_rev_raw"},
-               {key:"action"}
-            ]
-         };
-        myDataSource.doBeforeCallback = function(req,raw,res,cb) {
-            // This is the filter function
-            var data     = res.results || [],
-                filtered = [],
-                i,l;
-
-            if (req) {
-                req = req.toLowerCase();
-                for (i = 0; i<data.length; i++) {
-                    var pos = data[i].raw_name.toLowerCase().indexOf(req);
-                    if (pos != -1) {
-                        filtered.push(data[i]);
-                    }
-                }
-                res.results = filtered;
-            }
-            return res;
-        }
-        // main table sorting
-        var myColumnDefs = [
-            {key:"menu",label:"",sortable:false,className:"quick_repo_menu hidden"},
-            {key:"name",label:"${_('Name')}",sortable:true,
-                sortOptions: { sortFunction: nameSort }},
-            {key:"last_changeset",label:"${_('Tip')}",sortable:true,
-                sortOptions: { sortFunction: revisionSort }},
-            {key:"action",label:"${_('Action')}",sortable:false}
-        ];
-
-        var myDataTable = new YAHOO.widget.DataTable("repos_list_wrap", myColumnDefs, myDataSource,{
-          sortedBy:{key:"name",dir:"asc"},
-          paginator: YUI_paginator(25, ['user-paginator']),
-
-          MSG_SORTASC:"${_('Click to sort ascending')}",
-          MSG_SORTDESC:"${_('Click to sort descending')}",
-          MSG_EMPTY:"${_('No records found.')}",
-          MSG_ERROR:"${_('Data error.')}",
-          MSG_LOADING:"${_('Loading...')}"
-        }
-        );
-        myDataTable.subscribe('postRenderEvent',function(oArgs) {
-            tooltip_activate();
-            quick_repo_menu();
-        });
-
-        var filterTimeout = null;
-
-        updateFilter = function () {
-            // Reset timeout
-            filterTimeout = null;
-
-            // Reset sort
-            var state = myDataTable.getState();
-            state.sortedBy = {key:'name', dir:YAHOO.widget.DataTable.CLASS_ASC};
-
-            // Get filtered data
-            myDataSource.sendRequest(YUD.get('q_filter').value,{
-                success : myDataTable.onDataReturnInitializeTable,
-                failure : myDataTable.onDataReturnInitializeTable,
-                scope   : myDataTable,
-                argument: state
-            });
-
-        };
-        $('#q_filter').click(function(){
-            if(!$('#q_filter').hasClass('loaded')){
-                //TODO: load here full list later to do search within groups
-                $('#q_filter').addClass('loaded');
-            }
-        });
-
-        $('#q_filter').keyup(function(){
-            clearTimeout(filterTimeout);
-            filterTimeout = setTimeout(updateFilter,600);
-        });
-
-        if($('#q_filter').val()) {
-            updateFilter();
-        }
-    }
 
 </script>
 
