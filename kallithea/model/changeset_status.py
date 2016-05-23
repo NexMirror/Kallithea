@@ -52,6 +52,7 @@ class ChangesetStatusModel(BaseModel):
         q = ChangesetStatus.query() \
             .filter(ChangesetStatus.repo == repo)
         if not with_revisions:
+            # only report the latest vote across all users! TODO: be smarter!
             q = q.filter(ChangesetStatus.version == 0)
 
         if revision:
