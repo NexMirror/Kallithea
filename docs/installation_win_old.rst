@@ -1,8 +1,8 @@
 .. _installation_win_old:
 
-======================================================================
-Installation and upgrade on Windows (XP/Vista/Server 2003/Server 2008)
-======================================================================
+==========================================================
+Installation on Windows (XP/Vista/Server 2003/Server 2008)
+==========================================================
 
 
 First-time install
@@ -217,8 +217,9 @@ your edits (if any), in the previous Command Prompt, type::
 
  paster setup-db production.ini
 
-(this time a NEW database will be installed, you must follow a different
-step to later UPGRADE to a newer Kallithea version)
+.. warning:: This time a *new* database will be installed. You must
+             follow a different process to later :ref:`upgrade <upgrade>`
+             to a newer Kallithea version.
 
 The script will ask you for confirmation about creating a NEW database,
 answer yes (y)
@@ -260,23 +261,3 @@ What this Guide does not cover:
 - Using Apache. You can investigate here:
 
   - https://groups.google.com/group/rhodecode/msg/c433074e813ffdc4
-
-
-Upgrading
----------
-
-Stop running Kallithea
-Open a CommandPrompt like in Step7 (VS2008 path + activate) and type::
-
- easy_install -U kallithea
- cd \Kallithea\Bin
-
-{ backup your production.ini file now} ::
-
- paster make-config Kallithea production.ini
-
-(check changes and update your production.ini accordingly) ::
-
- paster upgrade-db production.ini (update database)
-
-Full steps in http://packages.python.org/Kallithea/upgrade.html

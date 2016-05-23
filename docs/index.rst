@@ -23,6 +23,7 @@ Kallithea Documentation
    installation_iis
    setup
    installation_puppet
+   upgrade
 
 **Usage**
 

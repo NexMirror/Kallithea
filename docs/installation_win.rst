@@ -1,8 +1,8 @@
 .. _installation_win:
 
-================================================================
-Installation and upgrade on Windows (7/Server 2008 R2 and newer)
-================================================================
+====================================================
+Installation on Windows (7/Server 2008 R2 and newer)
+====================================================
 
 
 First time install
@@ -178,8 +178,8 @@ For the sake of simplicity, run it with the default settings. After your edits (
   paster setup-db production.ini
 
 .. warning:: This time a *new* database will be installed. You must
-             follow a different step to later *upgrade* to a newer
-             Kallithea version)
+             follow a different process to later :ref:`upgrade <upgrade>`
+             to a newer Kallithea version.
 
 The script will ask you for confirmation about creating a new database, answer yes (y)
 
@@ -219,27 +219,3 @@ What this guide does not cover:
 - Using Apache. You can investigate here:
 
   - https://groups.google.com/group/rhodecode/msg/c433074e813ffdc4
-
-
-Upgrading
----------
-
-Stop running Kallithea
-Open a CommandPrompt like in Step 7 (cd to C:\Kallithea\Env\Scripts and activate) and type::
-
-  pip install kallithea --upgrade
-  cd \Kallithea\Bin
-
-Backup your production.ini file now.
-
-Then run::
-
-  paster make-config Kallithea production.ini
-
-Look for changes and update your production.ini accordingly.
-
-Next, update the database::
-
-  paster upgrade-db production.ini
-
-More details can be found in `<upgrade.html>`_.
