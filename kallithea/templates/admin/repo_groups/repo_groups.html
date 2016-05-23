@@ -45,7 +45,8 @@
             {data: "owner", title: "${_('Owner')}", searchable: false},
             {data: "action", title: "${_('Action')}", sortable: false, searchable: false}
         ],
-        drawCallback: updateRowCountCallback($("#repo_group_count"))
+        drawCallback: updateRowCountCallback($("#repo_group_count")),
+        pageLength: 100
     });
 
 </script>

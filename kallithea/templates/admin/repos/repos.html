@@ -46,7 +46,8 @@
             {data: "state", title: "${_('State')}", searchable: false},
             {data: "action", title: "${_('Action')}", sortable: false, searchable: false}
         ],
-        drawCallback: updateRowCountCallback($("#repo_count"))
+        drawCallback: updateRowCountCallback($("#repo_count")),
+        pageLength: 100
     });
 </script>
 

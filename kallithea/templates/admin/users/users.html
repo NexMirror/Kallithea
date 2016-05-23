@@ -47,7 +47,8 @@
             {data: "action", title: "${_('Action')}", searchable: false, sortable: false}
         ],
         order: [[1, "asc"]],
-        drawCallback: updateRowCountCallback($("#user_count"))
+        drawCallback: updateRowCountCallback($("#user_count")),
+        pageLength: 100
     });
 </script>
 
