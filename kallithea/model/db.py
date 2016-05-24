@@ -2559,14 +2559,3 @@ class Gist(Base, BaseModel):
         base_path = self.base_path()
         return get_repo(os.path.join(*map(safe_str,
                                           [base_path, self.gist_access_id])))
-
-
-class DbMigrateVersion(Base, BaseModel):
-    __tablename__ = 'db_migrate_version'
-    __table_args__ = (
-        _table_args_default_dict,
-    )
-
-    repository_id = Column(String(250), primary_key=True)
-    repository_path = Column(Text, nullable=False)
-    version = Column(Integer, nullable=False)
