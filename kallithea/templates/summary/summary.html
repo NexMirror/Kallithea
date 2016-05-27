@@ -139,13 +139,13 @@ summary = lambda n:{False:'summary-short'}.get(n)
             <li>
                <a title="${_('Followers')}" href="${h.url('repo_followers_home',repo_name=c.repo_name)}">
                 <i class="icon-heart"></i> ${_('Followers')}
-                <span class="stats-bullet" id="current_followers_count">${c.repository_followers}</span>
+                <span class="badge" id="current_followers_count">${c.repository_followers}</span>
               </a>
             </li>
             <li>
               <a title="${_('Forks')}" href="${h.url('repo_forks_home',repo_name=c.repo_name)}">
                 <i class="icon-fork"></i> ${_('Forks')}
-                <span class="stats-bullet">${c.repository_forks}</span>
+                <span class="badge">${c.repository_forks}</span>
               </a>
             </li>
 

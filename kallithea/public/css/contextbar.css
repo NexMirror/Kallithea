@@ -249,7 +249,7 @@ ul#context-actions {
 
 #header #header-inner #quick a,
 #context-pages a,
-#context-pages .admin_menu a {
+#context-pages .dropdown-menu a {
     display: block;
     padding: 0px 10px 1px 10px;
     line-height: 35px;
@@ -257,7 +257,7 @@ ul#context-actions {
 
 #header #header-inner #quick a.thin,
 #context-pages a.thin,
-#context-pages .admin_menu a.thin {
+#context-pages .dropdown-menu a.thin {
     line-height: 28px !important;
 }
 
@@ -268,17 +268,7 @@ ul#context-actions {
 #header #header-inner #quick a {
     overflow: hidden;
 }
-#quick a.childs:after,
-#revision-changer:before,
-#context-pages a.childs:after,
-#context-pages a.dropdown:after {
-    font-family: 'kallithea';
-    content: ' \23f7';
-}
-#context-pages a.childs {
-    padding-right: 30px;
-}
-#context-pages a.childs:after {
+#context-pages a.dropdown-toggle:after {
     position: absolute;
     float: right;
     padding-left: 5px;

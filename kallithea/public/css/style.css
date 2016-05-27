@@ -498,8 +498,6 @@ td.quick_repo_menu {
 }
 
 td.quick_repo_menu.active:before {
-    font-family: "kallithea";
-    content: "\23f7";           /* triangle-down */
     margin-left: 1px;
     padding-right: 1px;
 }
@@ -1634,11 +1632,8 @@ div.form div.fields div.field div.button {
     text-decoration: none;
 }
 
-#summary-menu-stats a span {
-    background-color: #DEDEDE;
-    color: #888 !important;
-    border-radius: 4px;
-    padding: 2px 4px;
+#summary-menu-stats .badge {
+    padding: 2px 4px !important;
     font-size: 10px;
 }
 
@@ -3516,6 +3511,11 @@ div#legend_data, div#legend_container, div#legend_choices {
     display: block;
 }
 
+.caret:after {
+    font-family: 'kallithea';
+    content: ' \23f7';           /* triangle-down */
+}
+
 .repo-switcher .select2-choice {
     padding: 0px 8px 1px !important;
     display: block;
@@ -3533,11 +3533,6 @@ div#legend_data, div#legend_container, div#legend_choices {
 
 .repo-switcher .select2-arrow {
     display: none !important;
-}
-
-.repo-switcher .select2-chosen:after {
-    font-family: 'kallithea';
-    content: ' \23f7';
 }
 
 .repo-switcher-dropdown.select2-drop.select2-drop-active {
@@ -4340,24 +4335,13 @@ input.status_change_radio {
     padding: 0px 0px 4px 16px;
 }
 
-#context-pages .pull-request span,
-.menu_link_notifications {
+.badge {
     padding: 4px 4px !important;
     text-align: center;
     color: #888 !important;
     background-color: #DEDEDE !important;
     border-radius: 4px !important;
 }
-
-#context-pages .forks span,
-.menu_link_notifications {
-    padding: 4px 4px !important;
-    text-align: center;
-    color: #888 !important;
-    background-color: #DEDEDE !important;
-    border-radius: 4px !important;
-}
-
 
 .notification-header {
     padding-top: 6px;
