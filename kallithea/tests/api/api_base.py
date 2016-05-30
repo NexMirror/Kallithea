@@ -1391,8 +1391,11 @@ class _BaseTestApi(object):
         self._compare_ok(id_, expected, given=response.body)
         fixture.destroy_repo(fork_name)
 
-    def test_api_fork_repo_non_admin(self):
-        fork_name = 'api-repo-fork'
+    @parameterized.expand([
+        (u'api-repo-fork',),
+        (u'%s/api-repo-fork' % TEST_REPO_GROUP,),
+    ])
+    def test_api_fork_repo_non_admin(self, fork_name):
         id_, params = _build_data(self.apikey_regular, 'fork_repo',
                                   repoid=self.REPO,
                                   fork_name=fork_name,

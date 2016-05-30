@@ -1675,9 +1675,10 @@ class ApiController(JSONRPCController):
         try:
             # create structure of groups and return the last group
             group = map_groups(fork_name)
+            fork_base_name = fork_name.rsplit('/', 1)[-1]
 
             form_data = dict(
-                repo_name=fork_name,
+                repo_name=fork_base_name,
                 repo_name_full=fork_name,
                 repo_group=group,
                 repo_type=repo.repo_type,
