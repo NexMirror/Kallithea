@@ -1566,10 +1566,7 @@ class ApiController(JSONRPCController):
                     'Only Kallithea admin can specify `owner` param'
                 )
 
-        updates = {
-            # update function requires this.
-            'repo_name': repo.repo_name
-        }
+        updates = {}
         repo_group = group
         if not isinstance(repo_group, Optional):
             repo_group = get_repo_group_or_error(repo_group)
@@ -1677,9 +1674,10 @@ class ApiController(JSONRPCController):
         try:
             # create structure of groups and return the last group
             group = map_groups(fork_name)
+            fork_base_name = fork_name.rsplit('/', 1)[-1]
 
             form_data = dict(
-                repo_name=fork_name,
+                repo_name=fork_base_name,
                 repo_name_full=fork_name,
                 repo_group=group,
                 repo_type=repo.repo_type,

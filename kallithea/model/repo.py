@@ -327,6 +327,7 @@ class RepoModel(BaseModel):
 
             if 'repo_group' in kwargs:
                 cur_repo.group = RepoGroup.get(kwargs['repo_group'])
+                cur_repo.repo_name = cur_repo.get_new_name(cur_repo.just_name)
             log.debug('Updating repo %s with params:%s', cur_repo, kwargs)
             for k in ['repo_enable_downloads',
                       'repo_description',
@@ -341,10 +342,10 @@ class RepoModel(BaseModel):
             if clone_uri is not None and clone_uri != cur_repo.clone_uri_hidden:
                 cur_repo.clone_uri = clone_uri
 
-            new_name = cur_repo.get_new_name(kwargs['repo_name'])
-            cur_repo.repo_name = new_name
-            #if private flag is set, reset default permission to NONE
+            if 'repo_name' in kwargs:
+                cur_repo.repo_name = cur_repo.get_new_name(kwargs['repo_name'])
 
+            #if private flag is set, reset default permission to NONE
             if kwargs.get('repo_private'):
                 EMPTY_PERM = 'repository.none'
                 RepoModel().grant_user_permission(
@@ -360,9 +361,9 @@ class RepoModel(BaseModel):
                     self.sa.add(ex_field)
             self.sa.add(cur_repo)
 
-            if org_repo_name != new_name:
+            if org_repo_name != cur_repo.repo_name:
                 # rename repository
-                self._rename_filesystem_repo(old=org_repo_name, new=new_name)
+                self._rename_filesystem_repo(old=org_repo_name, new=cur_repo.repo_name)
 
             return cur_repo
         except Exception:

@@ -64,9 +64,11 @@ def fixups(models, _SESSION):
         old_setting = models.Setting.get_by_name(k)
         name = 'auth_%s' % k
         setting = models.Setting.get_by_name(name)
-        if not setting:
+        if setting is None:
             # if we don't have this option create it
-            setting = models.Setting(name, old_setting.app_settings_value, t)
+            if old_setting is not None:
+                v = old_setting.app_settings_value
+            setting = models.Setting(name, v, t)
 
         _SESSION().add(setting)
         _SESSION().commit()
