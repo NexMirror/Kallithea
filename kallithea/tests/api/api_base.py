@@ -1171,6 +1171,47 @@ class _BaseTestApi(object):
             if changing_attr == 'repo_group':
                 fixture.destroy_repo_group(updates['group'])
 
+    @parameterized.expand([
+        ('owner', {'owner': TEST_USER_REGULAR_LOGIN}),
+        ('description', {'description': u'new description'}),
+        ('active', {'active': True}),
+        ('active', {'active': False}),
+        ('clone_uri', {'clone_uri': 'http://example.com/repo'}),
+        ('clone_uri', {'clone_uri': None}),
+        ('landing_rev', {'landing_rev': 'branch:master'}),
+        ('enable_statistics', {'enable_statistics': True}),
+        ('enable_locking', {'enable_locking': True}),
+        ('enable_downloads', {'enable_downloads': True}),
+        ('name', {'name': u'new_repo_name'}),
+        ('repo_group', {'group': u'test_group_for_update'}),
+    ])
+    def test_api_update_group_repo(self, changing_attr, updates):
+        group_name = u'lololo'
+        fixture.create_repo_group(group_name)
+        repo_name = u'%s/api_update_me' % group_name
+        repo = fixture.create_repo(repo_name, repo_group=group_name, repo_type=self.REPO_TYPE)
+        if changing_attr == 'repo_group':
+            fixture.create_repo_group(updates['group'])
+
+        id_, params = _build_data(self.apikey, 'update_repo',
+                                  repoid=repo_name, **updates)
+        response = api_call(self, params)
+        if changing_attr == 'name':
+            repo_name = u'%s/%s' % (group_name, updates['name'])
+        if changing_attr == 'repo_group':
+            repo_name = u'/'.join([updates['group'], repo_name.rsplit('/', 1)[-1]])
+        try:
+            expected = {
+                'msg': 'updated repo ID:%s %s' % (repo.repo_id, repo_name),
+                'repository': repo.get_api_data()
+            }
+            self._compare_ok(id_, expected, given=response.body)
+        finally:
+            fixture.destroy_repo(repo_name)
+            if changing_attr == 'repo_group':
+                fixture.destroy_repo_group(updates['group'])
+        fixture.destroy_repo_group(group_name)
+
     def test_api_update_repo_repo_group_does_not_exist(self):
         repo_name = 'admin_owned'
         fixture.create_repo(repo_name)

@@ -1567,10 +1567,7 @@ class ApiController(JSONRPCController):
                     'Only Kallithea admin can specify `owner` param'
                 )
 
-        updates = {
-            # update function requires this.
-            'repo_name': repo.repo_name
-        }
+        updates = {}
         repo_group = group
         if not isinstance(repo_group, Optional):
             repo_group = get_repo_group_or_error(repo_group)
