@@ -8,6 +8,7 @@ include           README.rst
 include           development.ini
 recursive-include docs *
 recursive-include init.d *
+recursive-include kallithea/alembic *
 include           kallithea/bin/ldap_sync.conf
 include           kallithea/bin/template.ini.mako
 include           kallithea/config/deployment.ini_tmpl

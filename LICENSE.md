@@ -22,6 +22,18 @@ Various third-party code under GPLv3-compatible licenses is included as part
 of Kallithea.
 
 
+Alembic
+-------
+
+Kallithea incorporates an [Alembic](http://alembic.zzzcomputing.com/en/latest/)
+"migration environment" in `kallithea/alembic`, portions of which is:
+
+Copyright &copy; 2009-2016 by Michael Bayer.
+Alembic is a trademark of Michael Bayer.
+
+and licensed under the MIT-permissive license, which is
+[included in this distribution](MIT-Permissive-License.txt).
+
 
 Bootstrap
 ---------
