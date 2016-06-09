@@ -466,8 +466,10 @@ class DbManage(object):
         if retries == 0:
             sys.exit('max retries reached')
         if not path_ok:
+            if _path is not None:
+                sys.exit('Invalid repo path: %s' % _path)
             retries -= 1
-            return self.config_prompt(test_repo_path, retries)
+            return self.config_prompt(test_repo_path, retries) # recursing!!!
 
         real_path = os.path.normpath(os.path.realpath(path))
 
