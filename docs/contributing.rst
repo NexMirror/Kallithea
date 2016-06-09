@@ -49,8 +49,12 @@ Running tests
 -------------
 
 After finishing your changes make sure all tests pass cleanly. You can run
-the testsuite running ``py.test`` from the project root, or if you use tox
-run ``tox`` for Python 2.6--2.7 with multiple database test.
+the testsuite by running ``py.test`` from the project root::
+
+    py.test
+
+You can also use ``tox`` to run the tests with all supported Python versions
+(currently Python 2.6--2.7).
 
 When running tests, Kallithea uses `kallithea/tests/test.ini` and populates the
 SQLite database specified there.
