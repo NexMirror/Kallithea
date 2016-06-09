@@ -11,19 +11,19 @@ class TestNotifications(TestController):
 
     def setup_method(self, method):
         Session.remove()
-        self.u1 = UserModel().create_or_update(username=u'u1',
+        u1 = UserModel().create_or_update(username=u'u1',
                                         password=u'qweqwe',
                                         email=u'u1@example.com',
                                         firstname=u'u1', lastname=u'u1')
         Session().commit()
-        self.u1 = self.u1.user_id
+        self.u1 = u1.user_id
 
-        self.u2 = UserModel().create_or_update(username=u'u2',
+        u2 = UserModel().create_or_update(username=u'u2',
                                         password=u'qweqwe',
                                         email=u'u2@example.com',
                                         firstname=u'u2', lastname=u'u3')
         Session().commit()
-        self.u2 = self.u2.user_id
+        self.u2 = u2.user_id
 
         self.u3 = UserModel().create_or_update(username=u'u3',
                                         password=u'qweqwe',
