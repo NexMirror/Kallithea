@@ -774,4 +774,7 @@ class RepoModel(BaseModel):
         if repo.group:
             args = repo.group.full_path_splitted + [_d]
             _d = os.path.join(*args)
-        shutil.move(rm_path, safe_str(os.path.join(self.repos_path, _d)))
+        if os.path.exists(rm_path):
+            shutil.move(rm_path, safe_str(os.path.join(self.repos_path, _d)))
+        else:
+            log.error("Can't find repo to delete in %r", rm_path)
