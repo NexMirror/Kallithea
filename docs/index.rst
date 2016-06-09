@@ -53,6 +53,7 @@ Kallithea Documentation
    :maxdepth: 1
 
    contributing
+   dev/translation
    changelog
 
 **API**

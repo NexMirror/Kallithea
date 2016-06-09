@@ -155,9 +155,6 @@ For now we just have one official branch ("default") and will keep it so stable
 that it can be (and is) used in production. Experimental changes should live
 elsewhere (for example in a pull request) until they are ready.
 
-.. _translations:
-.. include:: ./../kallithea/i18n/how_to
-
 
 "Roadmap"
 ---------
