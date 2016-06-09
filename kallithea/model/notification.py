@@ -166,7 +166,7 @@ class NotificationModel(BaseModel):
             log.error(traceback.format_exc())
             raise
 
-    def get_for_user(self, user, filter_=None):
+    def query_for_user(self, user, filter_=None):
         """
         Get notifications for given user, filter them if filter dict is given
 
@@ -186,7 +186,7 @@ class NotificationModel(BaseModel):
         if filter_:
             q = q.filter(Notification.type_.in_(filter_))
 
-        return q.all()
+        return q
 
     def mark_read(self, user, notification):
         try:

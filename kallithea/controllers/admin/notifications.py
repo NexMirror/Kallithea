@@ -61,7 +61,7 @@ class NotificationsController(BaseController):
         """GET /_admin/notifications: All items in the collection"""
         # url('notifications')
         c.user = self.authuser
-        notif = NotificationModel().get_for_user(self.authuser.user_id,
+        notif = NotificationModel().query_for_user(self.authuser.user_id,
                                             filter_=request.GET.getall('type'))
 
         p = safe_int(request.GET.get('page', 1), 1)
