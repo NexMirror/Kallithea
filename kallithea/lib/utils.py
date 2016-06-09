@@ -215,7 +215,7 @@ def get_filesystem_repos(path, recursive=False, skip_removed_repos=True):
     """
 
     # remove ending slash for better results
-    path = path.rstrip(os.sep)
+    path = safe_str(path.rstrip(os.sep))
     log.debug('now scanning in %s location recursive:%s...', path, recursive)
 
     def _get_repos(p):
@@ -233,7 +233,7 @@ def get_filesystem_repos(path, recursive=False, skip_removed_repos=True):
             if skip_removed_repos and REMOVED_REPO_PAT.match(dirpath):
                 continue
 
-            #skip .<somethin> dirs
+            #skip .<something> dirs TODO: rly? then we should prevent creating them ...
             if dirpath.startswith('.'):
                 continue
 
