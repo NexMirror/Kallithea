@@ -30,7 +30,6 @@ import os
 import sys
 import shutil
 import logging
-from os.path import join as jn
 from os.path import dirname as dn
 
 from tempfile import _RandomNameSequence
@@ -161,7 +160,7 @@ def get_anonymous_access():
 #==============================================================================
 def test_clone_with_credentials(no_errors=False, repo=HG_REPO, method=METHOD,
                                 seq=None, backend='hg'):
-    cwd = path = jn(Ui.get_by_key('paths', '/').ui_value, repo)
+    cwd = path = os.path.join(Ui.get_by_key('paths', '/').ui_value, repo)
 
     if seq is None:
         seq = _RandomNameSequence().next()
@@ -169,7 +168,7 @@ def test_clone_with_credentials(no_errors=False, repo=HG_REPO, method=METHOD,
     try:
         shutil.rmtree(path, ignore_errors=True)
         os.makedirs(path)
-        #print 'made dirs %s' % jn(path)
+        #print 'made dirs %s' % os.path.join(path)
     except OSError:
         raise
 

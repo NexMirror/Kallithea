@@ -34,7 +34,6 @@ import traceback
 import logging
 import cStringIO
 import pkg_resources
-from os.path import join as jn
 
 from sqlalchemy import func
 from pylons.i18n.translation import _
@@ -739,23 +738,23 @@ class ScmModel(BaseModel):
         :param force_create: Create even if same name hook exists
         """
 
-        loc = jn(repo.path, 'hooks')
+        loc = os.path.join(repo.path, 'hooks')
         if not repo.bare:
-            loc = jn(repo.path, '.git', 'hooks')
+            loc = os.path.join(repo.path, '.git', 'hooks')
         if not os.path.isdir(loc):
             os.makedirs(loc)
 
         tmpl_post = "#!/usr/bin/env %s\n" % sys.executable or 'python2'
         tmpl_post += pkg_resources.resource_string(
-            'kallithea', jn('config', 'post_receive_tmpl.py')
+            'kallithea', os.path.join('config', 'post_receive_tmpl.py')
         )
         tmpl_pre = "#!/usr/bin/env %s\n" % sys.executable or 'python2'
         tmpl_pre += pkg_resources.resource_string(
-            'kallithea', jn('config', 'pre_receive_tmpl.py')
+            'kallithea', os.path.join('config', 'pre_receive_tmpl.py')
         )
 
         for h_type, tmpl in [('pre', tmpl_pre), ('post', tmpl_post)]:
-            _hook_file = jn(loc, '%s-receive' % h_type)
+            _hook_file = os.path.join(loc, '%s-receive' % h_type)
             has_hook = False
             log.debug('Installing git hook in repo %s', repo)
             if os.path.exists(_hook_file):

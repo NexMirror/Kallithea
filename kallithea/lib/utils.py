@@ -37,7 +37,7 @@ import shutil
 import decorator
 import warnings
 from os.path import abspath
-from os.path import dirname as dn, join as jn
+from os.path import dirname as dn
 
 from paste.script.command import Command, BadCommand
 
@@ -653,7 +653,7 @@ def create_test_index(repo_location, config, full_index):
         os.makedirs(index_location)
 
     try:
-        l = DaemonLock(file_=jn(dn(index_location), 'make_index.lock'))
+        l = DaemonLock(file_=os.path.join(dn(index_location), 'make_index.lock'))
         WhooshIndexingDaemon(index_location=index_location,
                              repo_location=repo_location) \
             .run(full_index=full_index)
@@ -706,13 +706,13 @@ def create_test_env(repos_test_path, config):
 
     #CREATE DEFAULT TEST REPOS
     cur_dir = dn(dn(abspath(__file__)))
-    tar = tarfile.open(jn(cur_dir, 'tests', 'fixtures', "vcs_test_hg.tar.gz"))
-    tar.extractall(jn(TESTS_TMP_PATH, HG_REPO))
+    tar = tarfile.open(os.path.join(cur_dir, 'tests', 'fixtures', "vcs_test_hg.tar.gz"))
+    tar.extractall(os.path.join(TESTS_TMP_PATH, HG_REPO))
     tar.close()
 
     cur_dir = dn(dn(abspath(__file__)))
-    tar = tarfile.open(jn(cur_dir, 'tests', 'fixtures', "vcs_test_git.tar.gz"))
-    tar.extractall(jn(TESTS_TMP_PATH, GIT_REPO))
+    tar = tarfile.open(os.path.join(cur_dir, 'tests', 'fixtures', "vcs_test_git.tar.gz"))
+    tar.extractall(os.path.join(TESTS_TMP_PATH, GIT_REPO))
     tar.close()
 
     #LOAD VCS test stuff

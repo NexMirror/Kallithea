@@ -29,7 +29,6 @@ import logging
 import datetime
 import hashlib
 import tempfile
-from os.path import join as jn
 
 from tempfile import _RandomNameSequence
 
@@ -79,7 +78,7 @@ environ = {}
 
 #SOME GLOBALS FOR TESTS
 
-TESTS_TMP_PATH = jn(tempfile.gettempdir(), 'rc_test_%s' % _RandomNameSequence().next())
+TESTS_TMP_PATH = os.path.join(tempfile.gettempdir(), 'rc_test_%s' % _RandomNameSequence().next())
 TEST_USER_ADMIN_LOGIN = 'test_admin'
 TEST_USER_ADMIN_PASS = 'test12'
 TEST_USER_ADMIN_EMAIL = 'test_admin@example.com'
@@ -107,24 +106,24 @@ uniq_suffix = str(int(time.mktime(datetime.datetime.now().timetuple())))
 
 GIT_REMOTE_REPO = 'git://github.com/codeinn/vcs.git'
 
-TEST_GIT_REPO = jn(TESTS_TMP_PATH, GIT_REPO)
-TEST_GIT_REPO_CLONE = jn(TESTS_TMP_PATH, 'vcsgitclone%s' % uniq_suffix)
-TEST_GIT_REPO_PULL = jn(TESTS_TMP_PATH, 'vcsgitpull%s' % uniq_suffix)
+TEST_GIT_REPO = os.path.join(TESTS_TMP_PATH, GIT_REPO)
+TEST_GIT_REPO_CLONE = os.path.join(TESTS_TMP_PATH, 'vcsgitclone%s' % uniq_suffix)
+TEST_GIT_REPO_PULL = os.path.join(TESTS_TMP_PATH, 'vcsgitpull%s' % uniq_suffix)
 
 
 HG_REMOTE_REPO = 'http://bitbucket.org/marcinkuzminski/vcs'
 
-TEST_HG_REPO = jn(TESTS_TMP_PATH, HG_REPO)
-TEST_HG_REPO_CLONE = jn(TESTS_TMP_PATH, 'vcshgclone%s' % uniq_suffix)
-TEST_HG_REPO_PULL = jn(TESTS_TMP_PATH, 'vcshgpull%s' % uniq_suffix)
+TEST_HG_REPO = os.path.join(TESTS_TMP_PATH, HG_REPO)
+TEST_HG_REPO_CLONE = os.path.join(TESTS_TMP_PATH, 'vcshgclone%s' % uniq_suffix)
+TEST_HG_REPO_PULL = os.path.join(TESTS_TMP_PATH, 'vcshgpull%s' % uniq_suffix)
 
 TEST_DIR = tempfile.gettempdir()
 TEST_REPO_PREFIX = 'vcs-test'
 
 # cached repos if any !
 # comment out to get some other repos from bb or github
-GIT_REMOTE_REPO = jn(TESTS_TMP_PATH, GIT_REPO)
-HG_REMOTE_REPO = jn(TESTS_TMP_PATH, HG_REPO)
+GIT_REMOTE_REPO = os.path.join(TESTS_TMP_PATH, GIT_REPO)
+HG_REMOTE_REPO = os.path.join(TESTS_TMP_PATH, HG_REPO)
 
 #skip ldap tests if LDAP lib is not installed
 ldap_lib_installed = False

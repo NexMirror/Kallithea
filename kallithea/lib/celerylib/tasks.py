@@ -32,7 +32,6 @@ import os
 import traceback
 import logging
 import rfc822
-from os.path import join as jn
 
 from time import mktime
 from operator import itemgetter
@@ -92,7 +91,7 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
     log.info('running task with lockkey %s', lockkey)
 
     try:
-        lock = l = DaemonLock(file_=jn(lockkey_path, lockkey))
+        lock = l = DaemonLock(file_=os.path.join(lockkey_path, lockkey))
 
         # for js data compatibility cleans the key for person from '
         akc = lambda k: person(k).replace('"', "")

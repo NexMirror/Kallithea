@@ -28,7 +28,7 @@ Original author and date, and relevant copyright and licensing information is be
 import os
 import sys
 import logging
-from os.path import dirname as dn, join as jn
+from os.path import dirname as dn
 
 # Add location of top level folder to sys.path
 sys.path.append(dn(dn(dn(os.path.realpath(__file__)))))
@@ -140,7 +140,7 @@ class WhooshResultWrapper(object):
         res = self.searcher.stored_fields(docid[0])
         log.debug('result: %s', res)
         if self.search_type == 'content':
-            full_repo_path = jn(self.repo_location, res['repository'])
+            full_repo_path = os.path.join(self.repo_location, res['repository'])
             f_path = res['path'].split(full_repo_path)[-1]
             f_path = f_path.lstrip(os.sep)
             content_short = self.get_short_content(res, docid[1])
@@ -149,7 +149,7 @@ class WhooshResultWrapper(object):
                         'f_path': f_path
             })
         elif self.search_type == 'path':
-            full_repo_path = jn(self.repo_location, res['repository'])
+            full_repo_path = os.path.join(self.repo_location, res['repository'])
             f_path = res['path'].split(full_repo_path)[-1]
             f_path = f_path.lstrip(os.sep)
             res.update({'f_path': f_path})

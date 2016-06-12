@@ -26,10 +26,11 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 
+import os
 import socket
 import traceback
 import logging
-from os.path import join as jn
+
 from pylons import config
 
 from hashlib import md5
@@ -98,7 +99,7 @@ def locked_task(func):
 
         log.info('running task with lockkey %s', lockkey)
         try:
-            l = DaemonLock(file_=jn(lockkey_path, lockkey))
+            l = DaemonLock(file_=os.path.join(lockkey_path, lockkey))
             ret = func(*fargs, **fkwargs)
             l.release()
             return ret

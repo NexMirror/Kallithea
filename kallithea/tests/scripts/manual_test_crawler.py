@@ -38,7 +38,6 @@ import time
 import os
 import sys
 import tempfile
-from os.path import join as jn
 from os.path import dirname as dn
 
 __here__ = os.path.abspath(__file__)
@@ -62,7 +61,7 @@ if not BASE_URI.endswith('/'):
 
 print 'Crawling @ %s' % BASE_URI
 BASE_URI += '%s'
-PROJECT_PATH = jn('/', 'home', 'username', 'repos')
+PROJECT_PATH = os.path.join('/', 'home', 'username', 'repos')
 PROJECTS = [
     #'linux-magx-pbranch',
     'CPython',
@@ -70,7 +69,7 @@ PROJECTS = [
 ]
 
 
-cj = cookielib.FileCookieJar(jn(tempfile.gettempdir(), 'rc_test_cookie.txt'))
+cj = cookielib.FileCookieJar(os.path.join(tempfile.gettempdir(), 'rc_test_cookie.txt'))
 o = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
 o.addheaders = [
     ('User-agent', 'kallithea-crawler'),
@@ -82,7 +81,7 @@ urllib2.install_opener(o)
 
 def _get_repo(proj):
     if isinstance(proj, basestring):
-        repo = vcs.get_repo(jn(PROJECT_PATH, proj))
+        repo = vcs.get_repo(os.path.join(PROJECT_PATH, proj))
         proj = proj
     else:
         repo = proj
@@ -117,7 +116,7 @@ def test_changelog_walk(proj, pages=100):
 def test_changeset_walk(proj, limit=None):
     repo, proj = _get_repo(proj)
 
-    print 'processing', jn(PROJECT_PATH, proj)
+    print 'processing', os.path.join(PROJECT_PATH, proj)
     total_time = 0
 
     cnt = 0
@@ -143,7 +142,7 @@ def test_changeset_walk(proj, limit=None):
 def test_files_walk(proj, limit=100):
     repo, proj = _get_repo(proj)
 
-    print 'processing', jn(PROJECT_PATH, proj)
+    print 'processing', os.path.join(PROJECT_PATH, proj)
     total_time = 0
 
     paths_ = OrderedSet([''])
@@ -183,7 +182,7 @@ def test_files_walk(proj, limit=100):
 
 if __name__ == '__main__':
     for path in PROJECTS:
-        repo = vcs.get_repo(jn(PROJECT_PATH, path))
+        repo = vcs.get_repo(os.path.join(PROJECT_PATH, path))
         for i in range(PASES):
             print 'PASS %s/%s' % (i, PASES)
             test_changelog_walk(repo, pages=80)

@@ -36,7 +36,6 @@ import os
 import re
 import tempfile
 import time
-from os.path import join as jn
 
 from tempfile import _RandomNameSequence
 from subprocess import Popen, PIPE
@@ -113,9 +112,9 @@ def _add_files_and_push(vcs, DEST, **kwargs):
     :param DEST:
     """
     # commit some stuff into this repo
-    cwd = path = jn(DEST)
-    #added_file = jn(path, '%ssetupążźć.py' % _RandomNameSequence().next())
-    added_file = jn(path, '%ssetup.py' % _RandomNameSequence().next())
+    cwd = path = os.path.join(DEST)
+    #added_file = os.path.join(path, '%ssetupążźć.py' % _RandomNameSequence().next())
+    added_file = os.path.join(path, '%ssetup.py' % _RandomNameSequence().next())
     Command(cwd).execute('touch %s' % added_file)
     Command(cwd).execute('%s add %s' % (vcs, added_file))
 

@@ -35,7 +35,6 @@ from shutil import rmtree
 from time import mktime
 
 from os.path import dirname as dn
-from os.path import join as jn
 
 # Add location of top level folder to sys.path
 project_path = dn(dn(dn(dn(os.path.realpath(__file__)))))
@@ -136,7 +135,7 @@ class WhooshIndexingDaemon(object):
             cs = self._get_index_changeset(repo)
             for _topnode, _dirs, files in cs.walk('/'):
                 for f in files:
-                    index_paths_.add(jn(safe_str(repo.path), safe_str(f.path)))
+                    index_paths_.add(os.path.join(safe_str(repo.path), safe_str(f.path)))
 
         except RepositoryError:
             log.debug(traceback.format_exc())
