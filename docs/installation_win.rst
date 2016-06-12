@@ -145,14 +145,16 @@ The prompt will change into "(Env) C:\\Kallithea\\Env\\Scripts" or similar
           complete. Some warnings will appear. Don't worry, they are
           normal.
 
-Step 8 -- Install git (optional)
+Step 8 -- Install Git (optional)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Mercurial being a python package, it was installed automatically when doing "pip install kallithea".
+Mercurial being a python package, was installed automatically when doing ``pip install kallithea``.
 
-You need to install git manually if you want Kallithea to be able to host git repositories.
-
+You need to install Git manually if you want Kallithea to be able to host Git repositories.
 See http://git-scm.com/book/en/v2/Getting-Started-Installing-Git#Installing-on-Windows for instructions.
+The location of the Git binaries (like ``c:\path\to\git\bin``) must be
+added to the ``PATH`` environment variable so ``git.exe`` and other tools like
+``gzip.exe`` are available.
 
 Step 9 -- Configuring Kallithea
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -191,7 +193,7 @@ The script will ask you for admin mail, answer "admin@xxxx.com" (or whatever you
 
 If you make a mistake and the script doesn't end, don't worry: start it again.
 
-If you decided not to install git, you will get errors about it that you can ignore.
+If you decided not to install Git, you will get errors about it that you can ignore.
 
 Step 10 -- Running Kallithea
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
