@@ -67,6 +67,7 @@ class Command(object):
         testenv = dict(os.environ)
         testenv['LANG'] = 'en_US.UTF-8'
         testenv['LANGUAGE'] = 'en_US:en'
+        testenv.pop('EMAIL', None) # might not be necessary
         p = Popen(command, shell=True, stdout=PIPE, stderr=PIPE, cwd=self.cwd, env=testenv)
         stdout, stderr = p.communicate()
         if DEBUG:
@@ -125,7 +126,7 @@ def _add_files_and_push(vcs, DEST, **kwargs):
                 i, author_str, added_file
             )
         elif vcs == 'git':
-            cmd = """EMAIL="me@example.com" git commit -m "committed new %s" --author "%s" "%s" """ % (
+            cmd = """git commit -m "committed new %s" --author "%s" "%s" """ % (
                 i, author_str, added_file
             )
         Command(cwd).execute(cmd)
