@@ -13,9 +13,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-tests for api. run with::
-
-    KALLITHEA_WHOOSH_TEST_DISABLE=1 nosetests --with-coverage --cover-package=kallithea.controllers.api.api -x kallithea/tests/api
+Tests for the JSON-RPC web api.
 """
 
 import os
