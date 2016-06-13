@@ -71,8 +71,10 @@ class Command(object):
         p = Popen(command, shell=True, stdout=PIPE, stderr=PIPE, cwd=self.cwd, env=testenv)
         stdout, stderr = p.communicate()
         if DEBUG:
-            print 'stdout:', repr(stdout)
-            print 'stderr:', repr(stderr)
+            if stdout:
+                print 'stdout:', repr(stdout)
+            if stderr:
+                print 'stderr:', repr(stderr)
         return stdout, stderr
 
 
