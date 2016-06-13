@@ -28,10 +28,10 @@ Original author and date, and relevant copyright and licensing information is be
 import os
 import sys
 import logging
-from os.path import dirname as dn
+from os.path import dirname
 
 # Add location of top level folder to sys.path
-sys.path.append(dn(dn(dn(os.path.realpath(__file__)))))
+sys.path.append(dirname(dirname(dirname(os.path.realpath(__file__)))))
 
 from whoosh.analysis import RegexTokenizer, LowercaseFilter
 from whoosh.fields import TEXT, ID, STORED, NUMERIC, BOOLEAN, Schema, FieldType, DATETIME

@@ -25,8 +25,8 @@ from paste.script.appinstall import AbstractInstallCommand
 from paste.script.command import BadCommand
 
 # Add location of top level folder to sys.path
-from os.path import dirname as dn
-rc_path = dn(dn(dn(os.path.realpath(__file__))))
+from os.path import dirname
+rc_path = dirname(dirname(dirname(os.path.realpath(__file__))))
 sys.path.append(rc_path)
 
 class Command(AbstractInstallCommand):

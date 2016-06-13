@@ -34,8 +34,8 @@ from kallithea.model.repo import RepoModel
 from kallithea.lib.utils import BasePasterCommand, load_rcextensions
 
 # Add location of top level folder to sys.path
-from os.path import dirname as dn
-rc_path = dn(dn(dn(os.path.realpath(__file__))))
+from os.path import dirname
+rc_path = dirname(dirname(dirname(os.path.realpath(__file__))))
 sys.path.append(rc_path)
 
 
@@ -71,7 +71,7 @@ class Command(BasePasterCommand):
         from kallithea.lib.pidlock import LockHeld, DaemonLock
         from kallithea.lib.indexers.daemon import WhooshIndexingDaemon
         try:
-            l = DaemonLock(file_=os.path.join(dn(dn(index_location)),
+            l = DaemonLock(file_=os.path.join(dirname(dirname(index_location)),
                                               'make_index.lock'))
             WhooshIndexingDaemon(index_location=index_location,
                                  repo_location=repo_location,

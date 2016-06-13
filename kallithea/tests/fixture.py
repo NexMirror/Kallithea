@@ -27,9 +27,9 @@ from kallithea.model.user_group import UserGroupModel
 from kallithea.model.gist import GistModel
 from kallithea.model.scm import ScmModel
 from kallithea.lib.vcs.backends.base import EmptyChangeset
+from os.path import dirname
 
-dn = os.path.dirname
-FIXTURES = os.path.join(dn(dn(os.path.abspath(__file__))), 'tests', 'fixtures')
+FIXTURES = os.path.join(dirname(dirname(os.path.abspath(__file__))), 'tests', 'fixtures')
 
 
 def error_function(*args, **kwargs):

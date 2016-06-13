@@ -31,7 +31,7 @@ import sys
 import time
 import uuid
 import logging
-from os.path import dirname as dn
+from os.path import dirname
 
 from kallithea import __dbversion__, __py_version__, EXTERN_TYPE_INTERNAL, DB_MIGRATIONS
 from kallithea.model.user import UserModel
@@ -138,7 +138,7 @@ class DbManage(object):
             print 'No upgrade performed'
             sys.exit(0)
 
-        repository_path = os.path.join(dn(dn(dn(os.path.realpath(__file__)))),
+        repository_path = os.path.join(dirname(dirname(dirname(os.path.realpath(__file__)))),
                                        'kallithea', 'lib', 'dbmigrate')
         db_uri = self.dburi
 

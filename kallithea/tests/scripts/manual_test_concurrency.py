@@ -30,7 +30,7 @@ import os
 import sys
 import shutil
 import logging
-from os.path import dirname as dn
+from os.path import dirname
 
 from tempfile import _RandomNameSequence
 from subprocess import Popen, PIPE
@@ -47,7 +47,7 @@ from kallithea.lib.auth import get_crypt_password
 from kallithea.tests import HG_REPO
 from kallithea.config.environment import load_environment
 
-rel_path = dn(dn(dn(dn(os.path.abspath(__file__)))))
+rel_path = dirname(dirname(dirname(dirname(os.path.abspath(__file__)))))
 conf = appconfig('config:development.ini', relative_to=rel_path)
 load_environment(conf.global_conf, conf.local_conf)
 

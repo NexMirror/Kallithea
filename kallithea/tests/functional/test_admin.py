@@ -5,9 +5,9 @@ from kallithea.tests import *
 from kallithea.model.db import UserLog
 from kallithea.model.meta import Session
 from kallithea.lib.utils2 import safe_unicode
+from os.path import dirname
 
-dn = os.path.dirname
-FIXTURES = os.path.join(dn(dn(os.path.abspath(__file__))), 'fixtures')
+FIXTURES = os.path.join(dirname(dirname(os.path.abspath(__file__))), 'fixtures')
 
 
 class TestAdminController(TestController):

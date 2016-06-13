@@ -38,10 +38,10 @@ import time
 import os
 import sys
 import tempfile
-from os.path import dirname as dn
+from os.path import dirname
 
 __here__ = os.path.abspath(__file__)
-__root__ = dn(dn(dn(__here__)))
+__root__ = dirname(dirname(dirname(__here__)))
 sys.path.append(__root__)
 
 from kallithea.lib import vcs

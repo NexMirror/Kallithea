@@ -34,10 +34,10 @@ import traceback
 from shutil import rmtree
 from time import mktime
 
-from os.path import dirname as dn
+from os.path import dirname
 
 # Add location of top level folder to sys.path
-project_path = dn(dn(dn(dn(os.path.realpath(__file__)))))
+project_path = dirname(dirname(dirname(dirname(os.path.realpath(__file__)))))
 sys.path.append(project_path)
 
 from kallithea.config.conf import INDEX_EXTENSIONS, INDEX_FILENAMES
