@@ -217,6 +217,7 @@ class SimpleHg(BaseVCSController):
             if str(e).find('not found') != -1:
                 return HTTPNotFound()(environ, start_response)
         except HTTPLockedRC as e:
+            # Before Mercurial 3.6, lock exceptions were caught here
             log.debug('Locked, response %s: %s', e.code, e.title)
             return e(environ, start_response)
         except Exception:
@@ -228,7 +229,18 @@ class SimpleHg(BaseVCSController):
         Make an wsgi application using hgweb, and inject generated baseui
         instance, additionally inject some extras into ui object
         """
-        return hgweb_mod.hgweb(repo_name, name=repo_name, baseui=baseui)
+        class HgWebWrapper(hgweb_mod.hgweb):
+            # Work-around for Mercurial 3.6+ causing lock exceptions to be
+            # thrown late
+            def _runwsgi(self, req, repo):
+                try:
+                    return super(HgWebWrapper, self)._runwsgi(req, repo)
+                except HTTPLockedRC as e:
+                    log.debug('Locked, response %s: %s', e.code, e.title)
+                    req.respond(e.status, 'text/plain')
+                    return ''
+
+        return HgWebWrapper(repo_name, name=repo_name, baseui=baseui)
 
     def __get_repository(self, environ):
         """
