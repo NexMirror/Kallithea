@@ -494,7 +494,7 @@ class TestVCSOperations(TestController):
         stdout, stderr = _add_files_and_push('git', DEST)
         _check_proper_git_push(stdout, stderr)
 
-        #assert ('remote: Released lock on repo `%s`' % GIT_REPO) in stdout
+        assert ('remote: Released lock on repo `%s`' % GIT_REPO) in stderr
         #we need to cleanup the Session Here !
         Session.remove()
         r = Repository.get_by_repo_name(GIT_REPO)
