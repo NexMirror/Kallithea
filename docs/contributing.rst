@@ -100,8 +100,8 @@ that is brought into the project.
 
 We don't have a formal coding/formatting standard. We are currently using a mix
 of Mercurial (http://mercurial.selenic.com/wiki/CodingStyle), pep8, and
-consistency with existing code. Run whitespacecleanup.sh to avoid stupid
-whitespace noise in your patches.
+consistency with existing code. Run ``scripts/run-all-cleanup`` before
+committing to ensure some basic code formatting consistency.
 
 We support both Python 2.6.x and 2.7.x and nothing else. For now we don't care
 about Python 3 compatibility.
@@ -121,9 +121,6 @@ JavaScript must use ``;`` between/after statements. Indentation 4 spaces. Inline
 multiline functions should be indented two levels -- one for the ``()`` and one for
 ``{}``.
 Variables holding jQuery objects should be named with a leading ``$``.
-
-Run ``scripts/run-all-cleanup`` before committing to ensure some basic code
-formatting consistency.
 
 Commit messages should have a leading short line summarizing the changes. For
 bug fixes, put ``(Issue #123)`` at the end of this line.
