@@ -9,7 +9,7 @@ from pylons.i18n.translation import _get_translator
 import pytest
 from kallithea.model.user import UserModel
 from kallithea.model.meta import Session
-from kallithea.model.db import Setting
+from kallithea.model.db import Setting, User
 
 
 def pytest_configure():
@@ -41,14 +41,14 @@ def pytest_configure():
 @pytest.yield_fixture
 def create_test_user():
     """Provide users that automatically disappear after test is over."""
-    test_users = []
+    test_user_ids = []
     def _create_test_user(user_form):
         user = UserModel().create(user_form)
-        test_users.append(user)
+        test_user_ids.append(user.user_id)
         return user
     yield _create_test_user
-    for user in test_users:
-        UserModel().delete(user)
+    for user_id in test_user_ids:
+        UserModel().delete(user_id)
     Session().commit()
 
 
