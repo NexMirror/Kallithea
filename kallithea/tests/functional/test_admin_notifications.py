@@ -11,12 +11,13 @@ class TestNotificationsController(TestController):
     def setup_method(self, method):
         self.remove_all_notifications()
 
-    def test_index(self):
+    def test_index(self, create_test_user):
         self.log_user()
 
-        u1 = UserModel().create_or_update(username='u1', password='qweqwe',
-                                          email='u1@example.com',
-                                          firstname=u'u1', lastname=u'u1')
+        u1 = create_test_user(dict(username='u1', password='qweqwe',
+                                   email='u1@example.com',
+                                   firstname=u'u1', lastname=u'u1',
+                                   active=True))
         u1 = u1.user_id
         Session().commit()
 
@@ -30,16 +31,18 @@ class TestNotificationsController(TestController):
         response = self.app.get(url('notifications'))
         response.mustcontain('id="notification_%s"' % notif.notification_id)
 
-    def test_delete(self):
+    def test_delete(self, create_test_user):
         self.log_user()
         cur_user = self._get_logged_user()
 
-        u1 = UserModel().create_or_update(username='u1', password='qweqwe',
-                                               email='u1@example.com',
-                                               firstname=u'u1', lastname=u'u1')
-        u2 = UserModel().create_or_update(username='u2', password='qweqwe',
-                                               email='u2@example.com',
-                                               firstname=u'u2', lastname=u'u2')
+        u1 = create_test_user(dict(username='u1', password='qweqwe',
+                                   email='u1@example.com',
+                                   firstname=u'u1', lastname=u'u1',
+                                   active=True))
+        u2 = create_test_user(dict(username='u2', password='qweqwe',
+                                   email='u2@example.com',
+                                   firstname=u'u2', lastname=u'u2',
+                                   active=True))
 
         # make notifications
         notification = NotificationModel().create(created_by=cur_user,
@@ -65,15 +68,18 @@ class TestNotificationsController(TestController):
         cur_user = User.get(cur_usr_id)
         assert cur_user.notifications == []
 
-    def test_show(self):
+    def test_show(self, create_test_user):
         self.log_user()
         cur_user = self._get_logged_user()
-        u1 = UserModel().create_or_update(username='u1', password='qweqwe',
-                                          email='u1@example.com',
-                                          firstname=u'u1', lastname=u'u1')
-        u2 = UserModel().create_or_update(username='u2', password='qweqwe',
-                                          email='u2@example.com',
-                                          firstname=u'u2', lastname=u'u2')
+        u1 = create_test_user(dict(username='u1', password='qweqwe',
+                                   email='u1@example.com',
+                                   firstname=u'u1', lastname=u'u1',
+                                   active=True))
+        u2 = create_test_user(dict(username='u2', password='qweqwe',
+                                   email='u2@example.com',
+                                   firstname=u'u2', lastname=u'u2',
+                                   active=True))
+        Session().commit()
 
         subject = u'test'
         notif_body = u'hi there'
