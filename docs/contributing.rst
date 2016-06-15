@@ -131,8 +131,16 @@ page titles, button labels, headers, and 'labels' for fields in forms.
 .. _English title case: https://en.wikipedia.org/wiki/Capitalization#Title_case
 
 Contributions will be accepted in most formats -- such as pull requests on
-bitbucket, something hosted on your own Kallithea instance, or patches sent by
+Bitbucket, something hosted on your own Kallithea instance, or patches sent by
 email to the `kallithea-general`_ mailing list.
+
+When contributing via Bitbucket, please make your fork of
+https://bitbucket.org/conservancy/kallithea/ `non-publishing`_ -- it is one of
+the settings on "Repository details" page. This ensures your commits are in
+"draft" phase and makes it easier for you to address feedback and for project
+maintainers to integrate your changes.
+
+.. _non-publishing: https://www.mercurial-scm.org/wiki/Phases#Publishing_Repository
 
 Make sure to test your changes both manually and with the automatic tests
 before posting.
