@@ -25,12 +25,12 @@ class TestNotifications(TestController):
         Session().commit()
         self.u2 = u2.user_id
 
-        self.u3 = UserModel().create_or_update(username=u'u3',
+        u3 = UserModel().create_or_update(username=u'u3',
                                         password=u'qweqwe',
                                         email=u'u3@example.com',
                                         firstname=u'u3', lastname=u'u3')
         Session().commit()
-        self.u3 = self.u3.user_id
+        self.u3 = u3.user_id
 
         self.remove_all_notifications()
         assert [] == Notification.query().all()
