@@ -483,7 +483,7 @@ class TestVCSOperations(TestController):
 
         #push is ok and repo is now unlocked
         stdout, stderr = _add_files_and_push('hg', DEST, clone_url=clone_url.split()[0])
-        assert ('remote: Released lock on repo `%s`' % fork_name) in stdout
+        assert str('remote: Released lock on repo `%s`' % fork_name) in stdout
         #we need to cleanup the Session Here !
         Session.remove()
         r = Repository.get_by_repo_name(fork_name)

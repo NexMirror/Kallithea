@@ -197,8 +197,7 @@ def log_push_action(ui, repo, **kwargs):
 
     if ex.make_lock is not None and not ex.make_lock:
         Repository.unlock(Repository.get_by_repo_name(ex.repository))
-        msg = 'Released lock on repo `%s`\n' % ex.repository
-        ui.status(msg)
+        ui.status(safe_str('Released lock on repo `%s`\n' % ex.repository))
 
     if ex.locked_by[0]:
         locked_by = User.get(ex.locked_by[0]).username
