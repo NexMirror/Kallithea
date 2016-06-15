@@ -123,3 +123,40 @@ class TestNotificationsController(TestController):
                 cur_user.username,
                 h.fmt_date(notification.created_on)
                 )
+
+    def test_mark_all_read(self, create_test_user):
+        self.log_user()
+        u0 = self._get_logged_user()
+        u1 = create_test_user(dict(username='u1', password='qweqwe',
+                                   email='u1@example.com',
+                                   firstname=u'u1', lastname=u'u1',
+                                   active=True))
+        u2 = create_test_user(dict(username='u2', password='qweqwe',
+                                   email='u2@example.com',
+                                   firstname=u'u2', lastname=u'u2',
+                                   active=True))
+        notif = NotificationModel().create(created_by=u1,
+                                           subject=u'subject',
+                                           body=u'body',
+                                           recipients=[u0, u2])
+        u0_id, u1_id, u2_id = u0.user_id, u1.user_id, u2.user_id
+
+        assert [n.read for n in u0.notifications] == [False]
+        assert u1.notifications == []
+        assert [n.read for n in u2.notifications] == [False]
+
+        # Mark all read for current user.
+
+        response = self.app.get(url('notifications_mark_all_read'), # TODO: should be POST
+                                extra_environ=dict(HTTP_X_PARTIAL_XHR='1'))
+
+        assert response.status_int == 200
+        response.mustcontain('id="notification_%s"' % notif.notification_id)
+
+        u0 = User.get(u0_id)
+        u1 = User.get(u1_id)
+        u2 = User.get(u2_id)
+
+        assert [n.read for n in u0.notifications] == [True]
+        assert u1.notifications == []
+        assert [n.read for n in u2.notifications] == [False]
