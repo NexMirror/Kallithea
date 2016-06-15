@@ -87,8 +87,8 @@ class NotificationsController(BaseController):
                                       filter_=request.GET.getall('type'))
             Session().commit()
             c.user = self.authuser
-            notif = nm.get_for_user(self.authuser.user_id,
-                                    filter_=request.GET.getall('type'))
+            notif = nm.query_for_user(self.authuser.user_id,
+                                      filter_=request.GET.getall('type'))
             c.notifications = Page(notif, page=1, items_per_page=10)
             return render('admin/notifications/notifications_data.html')
 
