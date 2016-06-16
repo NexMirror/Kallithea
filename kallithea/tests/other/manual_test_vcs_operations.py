@@ -56,7 +56,7 @@ class Command(object):
     def __init__(self, cwd):
         self.cwd = cwd
 
-    def execute(self, cmd, *args):
+    def execute(self, cmd, *args, **environ):
         """
         Runs command on the system with given ``args``.
         """
@@ -67,7 +67,7 @@ class Command(object):
         testenv = dict(os.environ)
         testenv['LANG'] = 'en_US.UTF-8'
         testenv['LANGUAGE'] = 'en_US:en'
-        testenv.pop('EMAIL', None) # might not be necessary
+        testenv.update(environ)
         p = Popen(command, shell=True, stdout=PIPE, stderr=PIPE, cwd=self.cwd, env=testenv)
         stdout, stderr = p.communicate()
         if DEBUG:
@@ -116,10 +116,11 @@ def _add_files_and_push(vcs, DEST, **kwargs):
     Command(cwd).execute('touch %s' % added_file)
     Command(cwd).execute('%s add %s' % (vcs, added_file))
 
+    email = 'me@example.com'
     if os.name == 'nt':
-        author_str = 'User <me@example.com>'
+        author_str = 'User <%s>' % email
     else:
-        author_str = 'User ǝɯɐᴎ <me@example.com>'
+        author_str = 'User ǝɯɐᴎ <%s>' % email
     for i in xrange(kwargs.get('files_no', 3)):
         cmd = """echo "added_line%s" >> %s""" % (i, added_file)
         Command(cwd).execute(cmd)
@@ -131,7 +132,8 @@ def _add_files_and_push(vcs, DEST, **kwargs):
             cmd = """git commit -m "committed new %s" --author "%s" "%s" """ % (
                 i, author_str, added_file
             )
-        Command(cwd).execute(cmd)
+        # git commit needs EMAIL on some machines
+        Command(cwd).execute(cmd, EMAIL=email)
 
     # PUSH it back
     _REPO = None
