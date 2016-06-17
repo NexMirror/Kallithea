@@ -57,10 +57,10 @@ class TestPermissions(TestController):
         if hasattr(self, 'g2'):
             RepoGroupModel().delete(self.g2.group_id)
 
-        if hasattr(self, 'ug1'):
-            UserGroupModel().delete(self.ug1, force=True)
         if hasattr(self, 'ug2'):
             UserGroupModel().delete(self.ug2, force=True)
+        if hasattr(self, 'ug1'):
+            UserGroupModel().delete(self.ug1, force=True)
 
         Session().commit()
 
