@@ -175,11 +175,12 @@ class TestController(object):
         logging.getLogger("kallithea").addHandler(h)
 
     def remove_all_notifications(self):
-        Notification.query().delete()
-
-        # Because query().delete() does not (by default) trigger cascades.
-        # http://docs.sqlalchemy.org/en/rel_0_7/orm/collections.html#passive-deletes
+        # query().delete() does not (by default) trigger cascades
+        # ( http://docs.sqlalchemy.org/en/rel_0_7/orm/collections.html#passive-deletes )
+        # so delete the UserNotification first to ensure referential integrity.
         UserNotification.query().delete()
+
+        Notification.query().delete()
         Session().commit()
 
     def log_user(self, username=TEST_USER_ADMIN_LOGIN,
