@@ -150,6 +150,11 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                                             Unstable
                                         </div>
                                     %endif
+                                    %if cs.phase:
+                                        <div class="phasetag" title="Phase">
+                                            ${cs.phase}
+                                        </div>
+                                    %endif
                                     %if h.is_hg(c.db_repo_scm_instance):
                                         %for book in cs.bookmarks:
                                             <div class="booktag" title="${_('Bookmark %s') % book}">

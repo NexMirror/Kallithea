@@ -2680,10 +2680,11 @@ BIN_FILENODE = 6
 .right .logtags {
     line-height: 2.2em;
 }
-.bumpedtag, .divergenttag, .extincttag, .unstabletag, .repotag, .branchtag, .logtags .tagtag, .logtags .booktag {
+.phasetag, .bumpedtag, .divergenttag, .extincttag, .unstabletag, .repotag, .branchtag, .logtags .tagtag, .logtags .booktag {
     margin: 0px 2px;
 }
 
+.phasetag,
 .bumpedtag,
 .divergenttag,
 .extincttag,
@@ -2702,6 +2703,7 @@ BIN_FILENODE = 6
     line-height: 1.5em;
 }
 
+#graph_content .phasetag,
 #graph_content .bumpedtag,
 #graph_content .divergenttag,
 #graph_content .extincttag,
@@ -2713,6 +2715,7 @@ BIN_FILENODE = 6
     margin-right: 0.5em;
 }
 
+.phasetag,
 .bumpedtag,
 .divergenttag,
 .extincttag,
@@ -2724,6 +2727,7 @@ BIN_FILENODE = 6
     float: left;
 }
 
+.right .logtags .phasetag,
 .right .logtags .bumpedtag,
 .right .logtags .divergenttag,
 .right .logtags .extincttag,
@@ -2775,6 +2779,11 @@ BIN_FILENODE = 6
     background-color: #f00;
     border-color: #600;
     color: #fff;
+}
+
+.phasetag {
+    border-color: #1F14CE;
+    color: #1F14CE;
 }
 
 .logtags .branchtag a:hover,
