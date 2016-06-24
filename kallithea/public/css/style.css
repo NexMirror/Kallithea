@@ -2680,10 +2680,14 @@ BIN_FILENODE = 6
 .right .logtags {
     line-height: 2.2em;
 }
-.repotag, .branchtag, .logtags .tagtag, .logtags .booktag {
+.bumpedtag, .divergenttag, .extincttag, .unstabletag, .repotag, .branchtag, .logtags .tagtag, .logtags .booktag {
     margin: 0px 2px;
 }
 
+.bumpedtag,
+.divergenttag,
+.extincttag,
+.unstabletag,
 .repotag,
 .branchtag,
 .tagtag,
@@ -2698,6 +2702,10 @@ BIN_FILENODE = 6
     line-height: 1.5em;
 }
 
+#graph_content .bumpedtag,
+#graph_content .divergenttag,
+#graph_content .extincttag,
+#graph_content .unstabletag,
 #graph_content .branchtag,
 #graph_content .tagtag,
 #graph_content .booktag {
@@ -2705,6 +2713,10 @@ BIN_FILENODE = 6
     margin-right: 0.5em;
 }
 
+.bumpedtag,
+.divergenttag,
+.extincttag,
+.unstabletag,
 .repotag,
 .branchtag,
 .tagtag,
@@ -2712,6 +2724,10 @@ BIN_FILENODE = 6
     float: left;
 }
 
+.right .logtags .bumpedtag,
+.right .logtags .divergenttag,
+.right .logtags .extincttag,
+.right .logtags .unstabletag,
 .right .logtags .branchtag,
 .right .logtags .tagtag,
 .right .logtags .booktag,
@@ -2750,6 +2766,15 @@ BIN_FILENODE = 6
 .tagtag {
     border-color: #62cffc;
     color: #62cffc;
+}
+
+.bumpedtag,
+.divergenttag,
+.extincttag,
+.unstabletag {
+    background-color: #f00;
+    border-color: #600;
+    color: #fff;
 }
 
 .logtags .branchtag a:hover,

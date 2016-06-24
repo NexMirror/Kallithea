@@ -130,6 +130,26 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                                             </div>
                                         </div>
                                     %endif
+                                    %if cs.bumped:
+                                        <div class="bumpedtag" title="Bumped">
+                                            Bumped
+                                        </div>
+                                    %endif
+                                    %if cs.divergent:
+                                        <div class="divergenttag" title="Divergent">
+                                            Divergent
+                                        </div>
+                                    %endif
+                                    %if cs.extinct:
+                                        <div class="extincttag" title="Extinct">
+                                            Extinct
+                                        </div>
+                                    %endif
+                                    %if cs.unstable:
+                                        <div class="unstabletag" title="Unstable">
+                                            Unstable
+                                        </div>
+                                    %endif
                                     %if h.is_hg(c.db_repo_scm_instance):
                                         %for book in cs.bookmarks:
                                             <div class="booktag" title="${_('Bookmark %s') % book}">
