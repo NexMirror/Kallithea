@@ -166,5 +166,9 @@ def _colored(repo, dag):
         # Yield and move on
         closing = int(repo[rev].closesbranch)
         obsolete = int(repo[rev].obsolete)
-        yield ((col, color), edges, closing, obsolete)
+        bumped = int(repo[rev].bumped)
+        divergent = int(repo[rev].divergent)
+        extinct = int(repo[rev].extinct)
+        unstable = int(repo[rev].unstable)
+        yield ((col, color), edges, closing, obsolete, bumped, divergent, extinct, unstable)
         row = nextrow

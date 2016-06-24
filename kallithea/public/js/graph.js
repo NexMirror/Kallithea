@@ -106,6 +106,10 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 			in_l = cur[1];
 			closing = cur[2];
 			obsolete_node = cur[3];
+			bumped_node = cur[4];
+			divergent_node = cur[5];
+			extinct_node = cur[6];
+			unstable_node = cur[7];
 
 			var rowY = row.offsetTop + row.offsetHeight/2;
 			var nextY = (next == null) ? rowY + row.offsetHeight/2 : next.offsetTop + next.offsetHeight/2;
@@ -190,7 +194,10 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 			x = Math.floor(base_x - box_size * column);
 
 			this.setColor(color, 0.25, 0.75);
-
+			if(unstable_node)
+			{
+				this.ctx.fillStyle = 'rgb(255, 0, 0)';
+			}
 
 			r = this.dot_radius
 			if (obsolete_node)

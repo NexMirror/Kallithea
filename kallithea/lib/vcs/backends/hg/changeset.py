@@ -41,11 +41,36 @@ class MercurialChangeset(BaseChangeset):
 
     @LazyProperty
     def closesbranch(self):
-        return  self._ctx.closesbranch()
+        return self._ctx.closesbranch()
 
     @LazyProperty
     def obsolete(self):
-        return  self._ctx.obsolete()
+        return self._ctx.obsolete()
+
+    @LazyProperty
+    def bumped(self):
+        return self._ctx.bumped()
+
+    @LazyProperty
+    def divergent(self):
+        return self._ctx.divergent()
+
+    @LazyProperty
+    def extinct(self):
+        return self._ctx.extinct()
+
+    @LazyProperty
+    def unstable(self):
+        return self._ctx.unstable()
+
+    @LazyProperty
+    def phase(self):
+        if(self._ctx.phase() == 1):
+            return 'Draft'
+        elif(self._ctx.phase() == 2):
+            return 'Secret'
+        else:
+            return ''
 
     @LazyProperty
     def successors(self):

@@ -665,6 +665,26 @@ class BaseChangeset(object):
     def obsolete(self):
         return False
 
+    @LazyProperty
+    def bumped(self):
+        return False
+
+    @LazyProperty
+    def divergent(self):
+        return False
+
+    @LazyProperty
+    def extinct(self):
+        return False
+
+    @LazyProperty
+    def unstable(self):
+        return False
+
+    @LazyProperty
+    def phase(self):
+        return ''
+
 class BaseWorkdir(object):
     """
     Working directory representation of single repository.
