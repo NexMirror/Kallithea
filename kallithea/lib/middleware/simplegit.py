@@ -210,8 +210,7 @@ class SimpleGit(BaseVCSController):
                     lambda: self._invalidate_cache(repo_name))
             return result
         except HTTPLockedRC as e:
-            _code = CONFIG.get('lock_ret_code')
-            log.debug('Repository LOCKED ret code %s!', _code)
+            log.debug('Locked, response %s: %s', e.code, e.title)
             return e(environ, start_response)
         except Exception:
             log.error(traceback.format_exc())
