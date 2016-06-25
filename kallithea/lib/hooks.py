@@ -105,8 +105,7 @@ def pre_push(ui, repo, **kwargs):
 
 
 def pre_pull(ui, repo, **kwargs):
-    # pre push function, currently used to ban pushing when
-    # repository is locked
+    # pre pull function ...
     ex = _extract_extras()
     if ex.locked_by[0]:
         locked_by = User.get(ex.locked_by[0]).username
