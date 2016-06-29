@@ -1474,13 +1474,13 @@ var branchSort = function(results, container, query) {
                 return -1;
             }
 
-            // Put prefix matches before matches in the line
+            // Put early (especially prefix) matches before later matches
             var aPos = a.text.toLowerCase().indexOf(query.term.toLowerCase()),
                 bPos = b.text.toLowerCase().indexOf(query.term.toLowerCase());
-            if (aPos === 0 && bPos !== 0) {
+            if (aPos < bPos) {
                 return -1;
             }
-            if (bPos === 0 && aPos !== 0) {
+            if (bPos < aPos) {
                 return 1;
             }
 
