@@ -271,7 +271,7 @@
               });
           } else if (context == 'changelog') {
               if (e.choice.type == 'tag' || e.choice.type == 'book') {
-                  $("#branch_filter").append($('<option/>').val(e.choice.text));
+                  $("#branch_filter").append($('<'+'option/>').val(e.choice.text));
               }
               $("#branch_filter").val(e.choice.text).change();
           } else {
