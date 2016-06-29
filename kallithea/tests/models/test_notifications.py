@@ -1,10 +1,17 @@
-from kallithea.tests import *
+import os
 
+import mock
+import routes.util
+
+from kallithea.tests import *
+from kallithea.lib import helpers as h
 from kallithea.model.db import User, Notification, UserNotification
 from kallithea.model.user import UserModel
-
 from kallithea.model.meta import Session
-from kallithea.model.notification import NotificationModel
+from kallithea.model.notification import NotificationModel, EmailNotificationModel
+
+import kallithea.lib.celerylib
+import kallithea.lib.celerylib.tasks
 
 
 class TestNotifications(TestController):
@@ -38,9 +45,16 @@ class TestNotifications(TestController):
 
     def test_create_notification(self):
         usrs = [self.u1, self.u2]
-        notification = NotificationModel().create(created_by=self.u1,
-                                           subject=u'subj', body=u'hi there',
-                                           recipients=usrs)
+        def send_email(recipients, subject, body='', html_body='', headers=None, author=None):
+            assert recipients == ['u2@example.com']
+            assert subject == 'Test Message'
+            assert body == "\n\nhi there\n\n\n-- \nThis is an automatic notification. Don't reply to this mail.\n"
+            assert '>hi there<' in html_body
+            assert author.username == 'u1'
+        with mock.patch.object(kallithea.lib.celerylib.tasks, 'send_email', send_email):
+            notification = NotificationModel().create(created_by=self.u1,
+                                               subject=u'subj', body=u'hi there',
+                                               recipients=usrs)
         Session().commit()
         u1 = User.get(self.u1)
         u2 = User.get(self.u2)
@@ -149,3 +163,71 @@ class TestNotifications(TestController):
         assert NotificationModel().get_unread_cnt_for_user(self.u1) == 0
         assert NotificationModel().get_unread_cnt_for_user(self.u2) == 1
         assert NotificationModel().get_unread_cnt_for_user(self.u3) == 2
+
+    @mock.patch.object(h, 'canonical_url', (lambda arg, **kwargs: 'http://%s/?%s' % (arg, '&'.join('%s=%s' % (k, v) for (k, v) in sorted(kwargs.items())))))
+    def test_dump_html_mails(self):
+        # Exercise all notification types and dump them to one big html file
+        l = []
+
+        def send_email(recipients, subject, body='', html_body='', headers=None, author=None):
+            l.append('\n\n<h1>%s</h1>\n' % desc) # desc is from outer scope
+            l.append('<pre>\n\n')
+            l.append('From: %s\n' % author.username)
+            l.append('To: %s\n' % ' '.join(recipients))
+            l.append('Subject: %s\n' % subject)
+            l.append('\n--------------------\n%s\n--------------------' % body)
+            l.append('</pre>\n')
+            l.append('\n%s\n' % html_body)
+            l.append('<pre>--------------------</pre>\n')
+
+        l.append('<html><body>\n')
+        with mock.patch.object(kallithea.lib.celerylib.tasks, 'send_email', send_email):
+            pr_kwargs = dict(pr_nice_id='7', ref='ref', org_repo_name='repo_org', pr_title='The Title', pr_url='http://pr.org')
+
+            for type_, body, kwargs in [
+                (Notification.TYPE_CHANGESET_COMMENT, 'This is the new comment.\n\n - and here it ends indented.', dict(short_id='cafe', raw_id='c0ffeecafe', branch='brunch', cs_comment_user='Commenter Name', cs_comment_url='http://comment.org', is_mention=[False, True], message='This changeset did something clever which is hard to explain', status_change=[None, 'Approved'], cs_target_repo='repo_target', cs_url='http://changeset.com')),
+                (Notification.TYPE_MESSAGE, 'This is the body of the test message\n - nothing interesting here except indentation.', dict()),
+                #(Notification.TYPE_MENTION, '$body', None), # not used
+                (Notification.TYPE_REGISTRATION, 'Registration body', dict(new_username='newbie', registered_user_url='http://newbie.org', new_email='new@email.com', new_full_name='New Full Name')),
+                (Notification.TYPE_PULL_REQUEST, 'This PR is awesome because it does stuff\n - please approve indented!', dict(pr_user_created='Requester Name', is_mention=[False, True], pr_revisions=[('123abc', 'Introduce one and two'), ('567fed', 'Make one plus two equal tree')], **pr_kwargs)),
+                (Notification.TYPE_PULL_REQUEST_COMMENT, 'Me too!\n\n - and indented on second line', dict(closing_pr=[False, True], pr_comment_user='Commenter Name', pr_comment_url='http://pr.org/comment', status_change=[None, 'Under Review'], pr_target_repo='http://target.com/repo', **pr_kwargs)),
+                ]:
+                kwargs['repo_name'] = 'repo/name'
+                params = [(type_, type_, body, kwargs)]
+                for param_name in ['is_mention', 'status_change', 'closing_pr']: # TODO: inline/general
+                    if not isinstance(kwargs.get(param_name), list):
+                        continue
+                    new_params = []
+                    for v in kwargs[param_name]:
+                        for desc, type_, body, kwargs in params:
+                            kwargs = dict(kwargs)
+                            kwargs[param_name] = v
+                            new_params.append(('%s, %s=%r' % (desc, param_name, v), type_, body, kwargs))
+                    params = new_params
+
+                for desc, type_, body, kwargs in params:
+                    # desc is used as "global" variable
+                    notification = NotificationModel().create(created_by=self.u1,
+                                                       subject='unused', body=body, email_kwargs=kwargs,
+                                                       recipients=[self.u2], type_=type_)
+
+            # Email type TYPE_PASSWORD_RESET has no corresponding notification type - test it directly:
+            desc = 'TYPE_PASSWORD_RESET'
+            kwargs = dict(user='John Doe', reset_token='decbf64715098db5b0bd23eab44bd792670ab746', reset_url='http://reset.com/decbf64715098db5b0bd23eab44bd792670ab746')
+            kallithea.lib.celerylib.run_task(kallithea.lib.celerylib.tasks.send_email, ['john@doe.com'],
+                "Password reset link",
+                EmailNotificationModel().get_email_tmpl(EmailNotificationModel.TYPE_PASSWORD_RESET, 'txt', **kwargs),
+                EmailNotificationModel().get_email_tmpl(EmailNotificationModel.TYPE_PASSWORD_RESET, 'html', **kwargs),
+                author=User.get(self.u1))
+
+        l.append('\n</body></html>\n')
+        out = ''.join(l)
+
+        outfn = os.path.join(os.path.dirname(__file__), 'test_dump_html_mails.out.html')
+        reffn = os.path.join(os.path.dirname(__file__), 'test_dump_html_mails.ref.html')
+        with file(outfn, 'w') as f:
+            f.write(out)
+        with file(reffn) as f:
+            ref = f.read()
+        assert ref == out # copy test_dump_html_mails.out.html to test_dump_html_mails.ref.html to update expectations
+        os.unlink(outfn)
