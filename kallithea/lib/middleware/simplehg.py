@@ -84,7 +84,7 @@ class SimpleHg(BaseVCSController):
         #======================================================================
         try:
             str_repo_name = environ['REPO_NAME'] = self.__get_repository(environ)
-            assert isinstance(str_repo_name, str)
+            assert isinstance(str_repo_name, str), str_repo_name
             repo_name = safe_unicode(str_repo_name)
             assert safe_str(repo_name) == str_repo_name, (str_repo_name, repo_name)
             log.debug('Extracted repo name is %s', repo_name)

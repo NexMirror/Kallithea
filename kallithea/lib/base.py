@@ -202,7 +202,7 @@ class BaseVCSController(object):
             from kallithea.lib.utils import get_repo_by_id
             by_id_match = get_repo_by_id(repo_name)
             if by_id_match:
-                data[1] = by_id_match
+                data[1] = safe_str(by_id_match)
 
         return '/'.join(data)
 
