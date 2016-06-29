@@ -33,11 +33,11 @@ def test_update_user_attributes_from_ldap(monkeypatch, create_test_user,
 
     # Arrange test user.
     uniqifier = uuid.uuid4()
-    username = 'test-user-{}'.format(uniqifier)
+    username = 'test-user-{0}'.format(uniqifier)
     assert User.get_by_username(username) is None
-    user_input = dict(username='test-user-{}'.format(uniqifier),
+    user_input = dict(username='test-user-{0}'.format(uniqifier),
                       password='spam password',
-                      email='spam-email-{}'.format(uniqifier),
+                      email='spam-email-{0}'.format(uniqifier),
                       firstname='spam first name',
                       lastname='spam last name',
                       active=True,
@@ -70,7 +70,7 @@ def test_init_user_attributes_from_ldap(monkeypatch, arrange_ldap_auth):
 
     # Arrange test user.
     uniqifier = uuid.uuid4()
-    username = 'test-user-{}'.format(uniqifier)
+    username = 'test-user-{0}'.format(uniqifier)
     assert User.get_by_username(username) is None
 
     # Arrange LDAP auth.
@@ -113,7 +113,7 @@ def test_init_user_attributes_from_ldap_with_missing_email(monkeypatch,
 
     # Arrange test user.
     uniqifier = uuid.uuid4()
-    username = 'test-user-{}'.format(uniqifier)
+    username = 'test-user-{0}'.format(uniqifier)
     assert User.get_by_username(username) is None
 
     # Arrange LDAP auth.
