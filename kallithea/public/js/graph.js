@@ -28,7 +28,7 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 	// row_id_prefix is prefix that is applied to get row id's
 	this.canvas = document.getElementById(canvas_id);
 	var content = document.getElementById(content_id);
-	
+
 	if (!document.createElement("canvas").getContext)
 		this.canvas = window.G_vmlCanvasManager.initElement(this.canvas);
 	if (!this.canvas) { // canvas creation did for some reason fail - fail silently
@@ -100,7 +100,7 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 			}
 			var next = document.getElementById(row_id_prefix+(idx+1));
 			var extra = 0;
-			
+
 			cur = data[i];
 			node = cur[0];
 			in_l = cur[1];
@@ -116,7 +116,7 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 				end = line[1];
 				color = line[2];
 				obsolete_line = line[3];
-				
+
 				x = Math.floor(base_x - box_size * start);
 
 				// figure out if this is a dead-end;
@@ -157,7 +157,7 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 				{
 					this.setColor(color, 0.0, 0.65);
 				}
-				
+
 				this.ctx.lineWidth=this.line_width;
 				this.ctx.beginPath();
 				if (obsolete_line)
@@ -183,12 +183,12 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 				this.ctx.stroke();
 				this.ctx.setLineDash([]); // reset the dashed line, if any
 			}
-			
+
 			column = node[0];
 			color = node[1];
-			
+
 			x = Math.floor(base_x - box_size * column);
-		
+
 			this.setColor(color, 0.25, 0.75);
 
 
@@ -216,7 +216,7 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 
 			idx++;
 		}
-				
+
 	}
 
 }

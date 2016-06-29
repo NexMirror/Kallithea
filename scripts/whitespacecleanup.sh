@@ -18,6 +18,7 @@ sed -i -e '1s|, |,|g' kallithea/public/css/{style,contextbar}.css
 sed -i -e 's/^\([^ ,/]\+ [^,]*[^ ,]\) *, *\(.\)/\1,\n\2/g' kallithea/public/css/{style,contextbar}.css
 sed -i -e 's/^\([^ ,/].*\)   */\1 /g' kallithea/public/css/{style,contextbar}.css
 sed -i -e 's,^--$,-- ,g' kallithea/templates/email_templates/main.txt
+sed -i -e 's,[ 	][ 	]*$,,g' -e 's, 	,	,g' kallithea/public/js/graph.js
 
 hg mani | xargs chmod -x
 hg loc 'set:!binary()&grep("^#!")&!(**_tmpl.py)&!(**/template**)' | xargs chmod +x
