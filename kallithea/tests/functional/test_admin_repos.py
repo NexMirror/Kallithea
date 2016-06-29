@@ -4,6 +4,8 @@ import os
 import mock
 import urllib
 
+import pytest
+
 from kallithea.lib import vcs
 from kallithea.model.db import Repository, RepoGroup, UserRepoToPerm, User,\
     Permission
@@ -654,3 +656,8 @@ class TestAdminReposControllerHG(TestController, _BaseTest):
     NEW_REPO = NEW_HG_REPO
     OTHER_TYPE_REPO = GIT_REPO
     OTHER_TYPE = 'git'
+
+    def test_permanent_url_protocol_access(self):
+        with pytest.raises(Exception) as e:
+            self.app.get(url('summary_home', repo_name='_1'), extra_environ={'HTTP_ACCEPT': 'application/mercurial'})
+        assert 'Unable to detect pull/push action' in str(e)
