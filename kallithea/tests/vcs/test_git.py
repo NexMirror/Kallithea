@@ -790,7 +790,7 @@ class GitHooksTest(unittest.TestCase):
         # Create a dictionary where keys are hook names, and values are paths to
         # them. Deduplicates code in tests a bit.
         self.hook_directory = self.repo.get_hook_location()
-        self.kallithea_hooks = {h: os.path.join(self.hook_directory, h) for h in ("pre-receive", "post-receive")}
+        self.kallithea_hooks = dict((h, os.path.join(self.hook_directory, h)) for h in ("pre-receive", "post-receive"))
 
     def test_hooks_created_if_missing(self):
         """
