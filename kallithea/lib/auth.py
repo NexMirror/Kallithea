@@ -52,7 +52,7 @@ from kallithea.model.db import User, Repository, Permission, \
     RepoGroup, UserGroupRepoGroupToPerm, UserIpMap, UserGroupUserGroupToPerm, \
     UserGroup, UserApiKeys
 
-from kallithea.lib.utils2 import safe_unicode, aslist
+from kallithea.lib.utils2 import safe_str, safe_unicode, aslist
 from kallithea.lib.utils import get_repo_slug, get_repo_group_slug, \
     get_user_group_slug, conditional_cache
 from kallithea.lib.caching_query import FromCache
@@ -107,7 +107,7 @@ class KallitheaCrypto(object):
             return hashlib.sha256(str_).hexdigest()
         elif is_unix:
             import bcrypt
-            return bcrypt.hashpw(str_, bcrypt.gensalt(10))
+            return bcrypt.hashpw(safe_str(str_), bcrypt.gensalt(10))
         else:
             raise Exception('Unknown or unsupported platform %s' \
                             % __platform__)
@@ -126,7 +126,7 @@ class KallitheaCrypto(object):
             return hashlib.sha256(password).hexdigest() == hashed
         elif is_unix:
             import bcrypt
-            return bcrypt.hashpw(password, hashed) == hashed
+            return bcrypt.checkpw(safe_str(password), safe_str(hashed))
         else:
             raise Exception('Unknown or unsupported platform %s' \
                             % __platform__)

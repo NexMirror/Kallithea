@@ -66,7 +66,7 @@ if sys.version_info < (2, 7):
     requirements.append("argparse")
 
 if not is_windows:
-    requirements.append("py-bcrypt>=0.3.0,<=0.4")
+    requirements.append("bcrypt>=2.0.0")
 
 
 dependency_links = [
