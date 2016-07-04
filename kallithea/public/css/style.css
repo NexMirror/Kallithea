@@ -488,63 +488,6 @@ div.header img {
     text-decoration: none;
 }
 
-td.quick_repo_menu:before {
-    font-family: "kallithea";
-    content: "\23f5";           /* triangle-right */
-    margin-left: 3px;
-    padding-right: 3px;
-}
-
-td.quick_repo_menu {
-    cursor: pointer;
-    width: 8px;
-    border: 1px solid transparent;
-}
-
-td.quick_repo_menu.active:before {
-    margin-left: 1px;
-    padding-right: 1px;
-}
-
-td.quick_repo_menu.active {
-    border: 1px solid #577632;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-}
-
-td.quick_repo_menu .menu_items {
-    margin-top: 5px;
-    margin-left: -6px;
-    width: 150px;
-    position: absolute;
-    background-color: #FFF;
-    background: none repeat scroll 0 0 #FFFFFF;
-    border-color: #577632 #666666 #666666;
-    border-right: 1px solid #666666;
-    border-style: solid;
-    border-width: 1px;
-    box-shadow: 2px 8px 4px rgba(0, 0, 0, 0.2);
-    border-top-style: none;
-}
-
-td.quick_repo_menu .menu_items li {
-    padding: 0 !important;
-}
-
-td.quick_repo_menu .menu_items a {
-    display: block;
-    padding: 4px 12px 4px 8px;
-}
-
-td.quick_repo_menu .menu_items a:hover {
-    background-color: #EEE;
-    text-decoration: none;
-}
-
-td.quick_repo_menu .menu_items .icon img {
-    margin-bottom: -2px;
-}
-
 .dt_repo {
     white-space: nowrap;
     color: #577632;

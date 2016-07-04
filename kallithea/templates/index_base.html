@@ -82,7 +82,6 @@
             $dataTable = $("#repos_list_wrap").DataTable({
                 data: data.records,
                 columns: [
-                    {data: "menu", sortable: false, className: "quick_repo_menu hidden", searchable: false},
                     {data: "raw_name", visible: false, searchable: false},
                     {title: "${_('Name')}", data: "name", orderData: 1, render: {
                         filter: function(data) {

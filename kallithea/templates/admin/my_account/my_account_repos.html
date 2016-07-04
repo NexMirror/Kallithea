@@ -9,7 +9,6 @@
   var myDataTable = $("#datatable_list_wrap").DataTable({
         data: data.records,
         columns: [
-            {data: "menu", sortable: false, className: "quick_repo_menu hidden", searchable: false},
             {data: "raw_name", "visible": false, searchable: false},
             {data: "name", "orderData": 1, title: "${_('Name')}"},
             {data: "last_rev_raw", "visible": false, searchable: false},

@@ -1367,26 +1367,6 @@ var PullRequestAutoComplete = function ($inputElement, $container, users_list) {
     }
 }
 
-/**
- * Activate .quick_repo_menu
- */
-var quick_repo_menu = function(){
-    $(".quick_repo_menu").mouseenter(function(e) {
-            var $menu = $(e.currentTarget).children().first().children().first();
-            if($menu.hasClass('hidden')){
-                $menu.removeClass('hidden').addClass('active');
-                $(e.currentTarget).removeClass('hidden').addClass('active');
-            }
-        });
-    $(".quick_repo_menu").mouseleave(function(e) {
-            var $menu = $(e.currentTarget).children().first().children().first();
-            if($menu.hasClass('active')){
-                $menu.removeClass('active').addClass('hidden');
-                $(e.currentTarget).removeClass('active').addClass('hidden');
-            }
-        });
-};
-
 
 var addPermAction = function(_html, users_list, groups_list){
     var $last_node = $('.last_new_member').last(); // empty tr between last and add
