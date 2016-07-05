@@ -39,8 +39,11 @@ database_url = (
 logging.getLogger('alembic').setLevel(logging.WARNING)
 
 # Setup Python loggers based on the config file provided to the alembic
-# command.
-fileConfig(config.config_file_name, disable_existing_loggers=False)
+# command. If we're being invoked via the Alembic API (presumably for
+# stamping during "paster setup-db"), config_file_name is not available,
+# and loggers are assumed to already have been configured.
+if config.config_file_name:
+    fileConfig(config.config_file_name, disable_existing_loggers=False)
 
 
 def include_in_autogeneration(object, name, type, reflected, compare_to):

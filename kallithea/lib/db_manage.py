@@ -33,6 +33,9 @@ import uuid
 import logging
 from os.path import dirname
 
+import alembic.config
+import alembic.command
+
 from kallithea import __dbversion__, __py_version__, EXTERN_TYPE_INTERNAL
 from kallithea.model.user import UserModel
 from kallithea.lib.utils import ask_ok
@@ -103,6 +106,18 @@ class DbManage(object):
 
         checkfirst = not override
         Base.metadata.create_all(checkfirst=checkfirst)
+
+        # Create an Alembic configuration and generate the version table,
+        # "stamping" it with the most recent Alembic migration revision, to
+        # tell Alembic that all the schema upgrades are already in effect.
+        alembic_cfg = alembic.config.Config()
+        alembic_cfg.set_main_option('script_location', 'kallithea:alembic')
+        alembic_cfg.set_main_option('sqlalchemy.url', self.dburi)
+        # This command will give an error in an Alembic multi-head scenario,
+        # but in practice, such a scenario should not come up during database
+        # creation, even during development.
+        alembic.command.stamp(alembic_cfg, 'head')
+
         log.info('Created tables for %s', self.dbname)
 
     def fix_repo_paths(self):
