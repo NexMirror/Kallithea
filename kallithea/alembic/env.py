@@ -20,6 +20,8 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
+from kallithea.model import db
+
 
 # The alembic.config.Config object, which wraps the current .ini file.
 config = context.config
@@ -39,6 +41,16 @@ logging.getLogger('alembic').setLevel(logging.WARNING)
 # Setup Python loggers based on the config file provided to the alembic
 # command.
 fileConfig(config.config_file_name, disable_existing_loggers=False)
+
+
+def include_in_autogeneration(object, name, type, reflected, compare_to):
+    """Filter changes subject to autogeneration of migrations. """
+
+    # Don't include changes to sqlite_sequence.
+    if type == 'table' and name == 'sqlite_sequence':
+        return False
+
+    return True
 
 
 def run_migrations_offline():
@@ -72,6 +84,12 @@ def run_migrations_online():
     with connectable.connect() as connection:
         context.configure(
             connection=connection,
+
+            # Support autogeneration of migration scripts based on "diff" between
+            # current database schema and kallithea.model.db schema.
+            target_metadata=db.Base.metadata,
+            include_object=include_in_autogeneration,
+            render_as_batch=True, # batch mode is needed for SQLite support
         )
 
         with context.begin_transaction():
