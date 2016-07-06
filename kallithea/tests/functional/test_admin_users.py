@@ -394,7 +394,7 @@ class TestAdminUsersController(TestController):
         ('127_bad_mask', '127.0.0.1/99', '127.0.0.1 - 127.0.0.1', True),
         ('127_bad_ip', 'foobar', 'foobar', True),
     ])
-    def test_add_ip(self, test_name, ip, ip_range, failure):
+    def test_add_ip(self, test_name, ip, ip_range, failure, auto_clear_ip_permissions):
         self.log_user()
         user = User.get_by_username(TEST_USER_REGULAR_LOGIN)
         user_id = user.user_id
@@ -413,12 +413,7 @@ class TestAdminUsersController(TestController):
             response.mustcontain(ip)
             response.mustcontain(ip_range)
 
-        ## cleanup
-        for del_ip in UserIpMap.query().filter(UserIpMap.user_id == user_id).all():
-            Session().delete(del_ip)
-            Session().commit()
-
-    def test_delete_ip(self):
+    def test_delete_ip(self, auto_clear_ip_permissions):
         self.log_user()
         user = User.get_by_username(TEST_USER_REGULAR_LOGIN)
         user_id = user.user_id
