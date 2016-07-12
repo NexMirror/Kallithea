@@ -56,7 +56,7 @@ requirements = [
     "Routes==1.13",
     "pytest>=2.7.0,<3.0",
     "pytest-sugar>=0.7.0,<1.0.0",
-    "dulwich>=0.9.9,<=0.9.9",
+    "dulwich>=0.14.1",
     "mercurial>=2.9,<3.9",
 ]
 
