@@ -86,7 +86,8 @@ class GitRepository(object):
 
         :param path:
         """
-        return path.split(self.repo_name, 1)[-1].strip('/')
+        assert path.startswith('/' + self.repo_name + '/')
+        return path[len(self.repo_name) + 2:].strip('/')
 
     def inforefs(self, request, environ):
         """
