@@ -26,6 +26,22 @@ The following describes three different ways of installing Kallithea:
   have to remove its dependencies manually and make sure that they are not
   needed by other packages.
 
+Regardless of the installation method you may need to make sure you have
+appropriate development packages installed, as installation of some of the
+Kallithea dependencies requires a working C compiler and libffi library
+headers. Depending on your configuration, you may also need to install
+Git and development packages for the database of your choice.
+
+For Debian and Ubuntu, the following command will ensure that a reasonable
+set of dependencies is installed::
+
+    sudo apt-get install build-essential git python-pip python-virtualenv libffi-dev python-dev
+
+For Fedora and RHEL-derivatives, the following command will ensure that a
+reasonable set of dependencies is installed::
+
+    sudo yum install gcc git python-pip python-virtualenv libffi-devel python-devel
+
 .. _installation-source:
 
 
