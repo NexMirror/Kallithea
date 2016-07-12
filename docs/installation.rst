@@ -54,7 +54,7 @@ repository, follow the instructions below::
         hg clone https://kallithea-scm.org/repos/kallithea -u stable
         cd kallithea
         virtualenv ../kallithea-venv
-        source ../kallithea-venv/bin/activate
+        . ../kallithea-venv/bin/activate
         pip install --upgrade pip setuptools
         pip install -e .
         python2 setup.py compile_catalog   # for translation of the UI
@@ -81,7 +81,7 @@ An additional benefit of virtualenv_ is that it doesn't require root privileges.
 - Activate the virtualenv_ in your current shell session and make sure the
   basic requirements are up-to-date by running::
 
-    source /srv/kallithea/venv/bin/activate
+    . /srv/kallithea/venv/bin/activate
     pip install --upgrade pip setuptools
 
 .. note:: You can't use UNIX ``sudo`` to source the ``virtualenv`` script; it
