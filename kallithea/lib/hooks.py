@@ -35,7 +35,7 @@ from kallithea.lib import helpers as h
 from kallithea.lib.utils import action_logger
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.exceptions import HTTPLockedRC, UserCreationError
-from kallithea.lib.utils2 import safe_str, _extract_extras
+from kallithea.lib.utils2 import safe_str, safe_unicode, _extract_extras
 from kallithea.model.db import Repository, User
 
 
@@ -390,6 +390,7 @@ def handle_git_receive(repo_path, revs, env, hook_type):
     from kallithea.lib.utils import make_ui
     extras = _extract_extras(env)
 
+    repo_path = safe_unicode(repo_path)
     path, ini_name = os.path.split(extras['config'])
     conf = appconfig('config:%s' % ini_name, relative_to=path)
     load_environment(conf.global_conf, conf.local_conf, test_env=False,

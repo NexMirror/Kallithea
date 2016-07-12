@@ -34,6 +34,7 @@ from webob import Request, Response, exc
 
 import kallithea
 from kallithea.lib.vcs import subprocessio
+from kallithea.lib.utils2 import safe_unicode
 
 log = logging.getLogger(__name__)
 
@@ -86,6 +87,7 @@ class GitRepository(object):
 
         :param path:
         """
+        path = safe_unicode(path)
         assert path.startswith('/' + self.repo_name + '/')
         return path[len(self.repo_name) + 2:].strip('/')
 

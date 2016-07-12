@@ -227,7 +227,7 @@ class SimpleGit(BaseVCSController):
         from kallithea.lib.middleware.pygrack import make_wsgi_app
         app = make_wsgi_app(
             repo_root=safe_str(self.basepath),
-            repo_name=repo_name,
+            repo_name=safe_unicode(repo_name),
             extras=extras,
         )
         return app
