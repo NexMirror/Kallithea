@@ -102,14 +102,17 @@ class GitRepository(object):
             log.debug('command %s not allowed', git_command)
             return exc.HTTPMethodNotAllowed()
 
-        # note to self:
-        # please, resist the urge to add '\n' to git capture and increment
-        # line count by 1.
-        # The code in Git client not only does NOT need '\n', but actually
-        # blows up if you sprinkle "flush" (0000) as "0001\n".
-        # It reads binary, per number of bytes specified.
-        # if you do add '\n' as part of data, count it.
-        server_advert = '# service=%s' % git_command
+        # From Documentation/technical/http-protocol.txt shipped with Git:
+        #
+        # Clients MUST verify the first pkt-line is `# service=$servicename`.
+        # Servers MUST set $servicename to be the request parameter value.
+        # Servers SHOULD include an LF at the end of this line.
+        # Clients MUST ignore an LF at the end of the line.
+        #
+        #  smart_reply     =  PKT-LINE("# service=$servicename" LF)
+        #                     ref_list
+        #                     "0000"
+        server_advert = '# service=%s\n' % git_command
         packet_len = str(hex(len(server_advert) + 4)[2:].rjust(4, '0')).lower()
         _git_path = kallithea.CONFIG.get('git_path', 'git')
         cmd = [_git_path, git_command[4:],
