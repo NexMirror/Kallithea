@@ -1096,7 +1096,10 @@ class Repository(Base, BaseModel):
 
     @classmethod
     def get_by_full_path(cls, repo_full_path):
-        repo_name = repo_full_path.split(cls.base_path(), 1)[-1]
+        base_full_path = os.path.realpath(cls.base_path())
+        repo_full_path = os.path.realpath(repo_full_path)
+        assert repo_full_path.startswith(base_full_path + os.path.sep)
+        repo_name = repo_full_path[len(base_full_path) + 1:]
         repo_name = cls.normalize_repo_name(repo_name)
         return cls.get_by_repo_name(repo_name.strip(URL_SEP))
 
