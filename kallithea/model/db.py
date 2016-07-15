@@ -1484,7 +1484,6 @@ class Repository(Base, BaseModel):
 class RepoGroup(Base, BaseModel):
     __tablename__ = 'groups'
     __table_args__ = (
-        UniqueConstraint('group_name', 'group_parent_id'),
         CheckConstraint('group_id != group_parent_id'),
         _table_args_default_dict,
     )
@@ -1493,7 +1492,7 @@ class RepoGroup(Base, BaseModel):
     SEP = ' &raquo; '
 
     group_id = Column(Integer(), primary_key=True)
-    group_name = Column(Unicode(255), nullable=False, unique=True)
+    group_name = Column(Unicode(255), nullable=False, unique=True) # full path
     group_parent_id = Column(Integer(), ForeignKey('groups.group_id'), nullable=True)
     group_description = Column(Unicode(10000), nullable=False)
     enable_locking = Column(Boolean(), nullable=False, default=False)
