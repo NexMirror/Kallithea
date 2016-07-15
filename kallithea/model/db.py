@@ -714,7 +714,7 @@ class UserApiKeys(Base, BaseModel):
     user_api_key_id = Column(Integer(), unique=True, primary_key=True)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
     api_key = Column(String(255), nullable=False, unique=True)
-    description = Column(UnicodeText(1024), nullable=False)
+    description = Column(UnicodeText(), nullable=False)
     expires = Column(Float(53), nullable=False)
     created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
 
@@ -799,7 +799,7 @@ class UserLog(Base, BaseModel):
     repository_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=True)
     repository_name = Column(Unicode(255), nullable=False)
     user_ip = Column(String(255), nullable=True)
-    action = Column(UnicodeText(1200000), nullable=False)
+    action = Column(UnicodeText(), nullable=False)
     action_date = Column(DateTime(timezone=False), nullable=False)
 
     def __unicode__(self):
@@ -2175,7 +2175,7 @@ class ChangesetComment(Base, BaseModel):
     line_no = Column(Unicode(10), nullable=True)
     f_path = Column(Unicode(1000), nullable=True)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
-    text = Column(UnicodeText(25000), nullable=False)
+    text = Column(UnicodeText(), nullable=False)
     created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
     modified_at = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
 
@@ -2287,12 +2287,12 @@ class PullRequest(Base, BaseModel):
 
     pull_request_id = Column(Integer(), unique=True, primary_key=True)
     title = Column(Unicode(255), nullable=False)
-    description = Column(UnicodeText(10240), nullable=False)
+    description = Column(UnicodeText(), nullable=False)
     status = Column(Unicode(255), nullable=False, default=STATUS_NEW) # only for closedness, not approve/reject/etc
     created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
     updated_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
-    _revisions = Column('revisions', UnicodeText(20500), nullable=False)  # 500 revisions max
+    _revisions = Column('revisions', UnicodeText(), nullable=False)
     org_repo_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=False)
     org_ref = Column(Unicode(255), nullable=False)
     other_repo_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=False)
@@ -2408,7 +2408,7 @@ class Notification(Base, BaseModel):
 
     notification_id = Column(Integer(), unique=True, primary_key=True)
     subject = Column(Unicode(512), nullable=False)
-    body = Column(UnicodeText(50000), nullable=False)
+    body = Column(UnicodeText(), nullable=False)
     created_by = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
     created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
     type_ = Column('type', Unicode(255), nullable=False)
@@ -2487,7 +2487,7 @@ class Gist(Base, BaseModel):
 
     gist_id = Column(Integer(), unique=True, primary_key=True)
     gist_access_id = Column(Unicode(250), nullable=False)
-    gist_description = Column(UnicodeText(1024), nullable=False)
+    gist_description = Column(UnicodeText(), nullable=False)
     gist_owner = Column('user_id', Integer(), ForeignKey('users.user_id'), nullable=False)
     gist_expires = Column(Float(53), nullable=False)
     gist_type = Column(Unicode(128), nullable=False)
