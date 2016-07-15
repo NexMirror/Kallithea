@@ -1483,7 +1483,7 @@ class Repository(Base, BaseModel):
 class RepoGroup(Base, BaseModel):
     __tablename__ = 'groups'
     __table_args__ = (
-        CheckConstraint('group_id != group_parent_id'),
+        CheckConstraint('group_id != group_parent_id', name='ck_groups_no_self_parent'),
         _table_args_default_dict,
     )
     __mapper_args__ = {'order_by': 'group_name'}
@@ -1900,7 +1900,7 @@ class UserGroupUserGroupToPerm(Base, BaseModel):
     __tablename__ = 'user_group_user_group_to_perm'
     __table_args__ = (
         UniqueConstraint('target_user_group_id', 'user_group_id', 'permission_id'),
-        CheckConstraint('target_user_group_id != user_group_id'),
+        CheckConstraint('target_user_group_id != user_group_id', name='ck_user_group_user_group_to_perm_no_self_target'),
         _table_args_default_dict,
     )
 
@@ -2012,8 +2012,8 @@ class Statistics(Base, BaseModel):
 class UserFollowing(Base, BaseModel):
     __tablename__ = 'user_followings'
     __table_args__ = (
-        UniqueConstraint('user_id', 'follows_repository_id'),
-        UniqueConstraint('user_id', 'follows_user_id'),
+        UniqueConstraint('user_id', 'follows_repository_id', name='uq_user_followings_user_repo'),
+        UniqueConstraint('user_id', 'follows_user_id', name='uq_user_followings_user_user'),
         _table_args_default_dict,
     )
 

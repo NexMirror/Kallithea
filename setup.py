@@ -43,7 +43,7 @@ requirements = [
     "Beaker==1.6.4",
     "WebHelpers==1.3",
     "formencode>=1.2.4,<=1.2.6",
-    "SQLAlchemy>=0.7.10,<1.1",
+    "SQLAlchemy>=1.0,<1.1",
     "Mako>=0.9.0,<=1.0.0",
     "pygments>=1.5",
     "whoosh>=2.4.0,<=2.5.7",
