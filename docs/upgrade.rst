@@ -107,20 +107,7 @@ that you check the contents after the merge.
 6. Upgrade your database
 ------------------------
 
-To do this simply run::
-
-    paster upgrade-db my.ini
-
-This will upgrade the schema and update some of the defaults in the database,
-and will always recheck the settings of the application, if there are no new
-options that need to be set.
-
-.. note::
-    The DB schema upgrade library has some limitations and can sometimes fail if you try to
-    upgrade from older major releases. In such a case simply run upgrades sequentially, e.g.,
-    upgrading from 0.1.X to 0.3.X should be done like this: 0.1.X. > 0.2.X > 0.3.X.
-    You can always specify what version of Kallithea you want to install e.g. using pip:
-    ``pip install Kallithea==0.2``
+Not required.
 
 
 7. Rebuild the Whoosh full-text index

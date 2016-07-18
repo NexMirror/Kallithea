@@ -33,12 +33,12 @@ import uuid
 import logging
 from os.path import dirname
 
-from kallithea import __dbversion__, __py_version__, EXTERN_TYPE_INTERNAL, DB_MIGRATIONS
+from kallithea import __dbversion__, __py_version__, EXTERN_TYPE_INTERNAL
 from kallithea.model.user import UserModel
 from kallithea.lib.utils import ask_ok
 from kallithea.model import init_model
 from kallithea.model.db import User, Permission, Ui, \
-    Setting, UserToPerm, DbMigrateVersion, RepoGroup, \
+    Setting, UserToPerm, RepoGroup, \
     UserRepoGroupToPerm, CacheInvalidation, Repository
 
 from sqlalchemy.engine import create_engine
@@ -104,80 +104,6 @@ class DbManage(object):
         checkfirst = not override
         Base.metadata.create_all(checkfirst=checkfirst)
         log.info('Created tables for %s', self.dbname)
-
-    def set_db_version(self):
-        ver = DbMigrateVersion()
-        ver.version = __dbversion__
-        ver.repository_id = DB_MIGRATIONS
-        ver.repository_path = 'versions'
-        self.sa.add(ver)
-        log.info('db version set to: %s', __dbversion__)
-
-    def upgrade(self):
-        """
-        Upgrades given database schema to given revision following
-        all needed steps, to perform the upgrade
-
-        """
-
-        from kallithea.lib.dbmigrate.migrate.versioning import api
-        from kallithea.lib.dbmigrate.migrate.exceptions import \
-            DatabaseNotControlledError
-
-        if 'sqlite' in self.dburi:
-            print (
-               '********************** WARNING **********************\n'
-               'Make sure your version of sqlite is at least 3.7.X.  \n'
-               'Earlier versions are known to fail on some migrations\n'
-               '*****************************************************\n')
-
-        upgrade = ask_ok('You are about to perform database upgrade, make '
-                         'sure You backed up your database before. '
-                         'Continue ? [y/n]')
-        if not upgrade:
-            print 'No upgrade performed'
-            sys.exit(0)
-
-        repository_path = os.path.join(dirname(dirname(dirname(os.path.realpath(__file__)))),
-                                       'kallithea', 'lib', 'dbmigrate')
-        db_uri = self.dburi
-
-        try:
-            curr_version = api.db_version(db_uri, repository_path)
-            msg = ('Found current database under version '
-                   'control with version %s' % curr_version)
-
-        except (RuntimeError, DatabaseNotControlledError):
-            curr_version = 1
-            msg = ('Current database is not under version control. Setting '
-                   'as version %s' % curr_version)
-            api.version_control(db_uri, repository_path, curr_version)
-
-        notify(msg)
-        if curr_version == __dbversion__:
-            print 'This database is already at the newest version'
-            sys.exit(0)
-
-        # clear cache keys
-        log.info("Clearing cache keys now...")
-        CacheInvalidation.clear_cache()
-
-        upgrade_steps = range(curr_version + 1, __dbversion__ + 1)
-        notify('attempting to do database upgrade from '
-               'version %s to version %s' % (curr_version, __dbversion__))
-
-        # CALL THE PROPER ORDER OF STEPS TO PERFORM FULL UPGRADE
-        _step = None
-        for step in upgrade_steps:
-            notify('performing upgrade step %s' % step)
-            time.sleep(0.5)
-
-            api.upgrade(db_uri, repository_path, step)
-            notify('schema upgrade for step %s completed' % (step,))
-
-            _step = step
-
-        notify('upgrade to version %s successful' % _step)
 
     def fix_repo_paths(self):
         """

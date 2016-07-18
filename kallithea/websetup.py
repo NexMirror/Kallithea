@@ -41,7 +41,6 @@ def setup_app(command, conf, vars):
     dbmanage = DbManage(log_sql=True, dbconf=dbconf, root=conf['here'],
                         tests=False, cli_args=command.options.__dict__)
     dbmanage.create_tables(override=True)
-    dbmanage.set_db_version()
     opts = dbmanage.config_prompt(None)
     dbmanage.create_settings(opts)
     dbmanage.create_default_user()
