@@ -494,6 +494,13 @@ sqlalchemy.db1.echo = false
 sqlalchemy.db1.pool_recycle = 3600
 
 ################################
+### ALEMBIC CONFIGURATION   ####
+################################
+
+[alembic]
+script_location = kallithea:alembic
+
+################################
 ### LOGGING CONFIGURATION   ####
 ################################
 

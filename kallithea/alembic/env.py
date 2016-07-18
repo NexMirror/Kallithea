@@ -14,6 +14,7 @@
 
 # Alembic migration environment (configuration).
 
+import logging
 from logging.config import fileConfig
 
 from alembic import context
@@ -23,9 +24,21 @@ from sqlalchemy import engine_from_config, pool
 # The alembic.config.Config object, which wraps the current .ini file.
 config = context.config
 
-# Interpret the config file for Python logging.
-# This line sets up loggers basically.
-fileConfig(config.config_file_name)
+# Default to use the main Kallithea database string in [app:main].
+# For advanced uses, this can be overridden by specifying an explicit
+# [alembic] sqlalchemy.url.
+database_url = (
+    config.get_main_option('sqlalchemy.url') or
+    config.get_section_option('app:main', 'sqlalchemy.db1.url')
+)
+
+# Configure default logging for Alembic. (This can be overriden by the
+# config file, but usually isn't.)
+logging.getLogger('alembic').setLevel(logging.WARNING)
+
+# Setup Python loggers based on the config file provided to the alembic
+# command.
+fileConfig(config.config_file_name, disable_existing_loggers=False)
 
 
 def run_migrations_offline():
@@ -34,9 +47,8 @@ def run_migrations_offline():
     This produces an SQL script instead of directly applying the changes.
     Some migrations may not run in offline mode.
     """
-    url = config.get_main_option("sqlalchemy.url")
     context.configure(
-        url=url,
+        url=database_url,
         literal_binds=True,
     )
 
@@ -50,8 +62,10 @@ def run_migrations_online():
     Connects to the database and directly applies the necessary
     migrations.
     """
+    cfg = config.get_section(config.config_ini_section)
+    cfg['sqlalchemy.url'] = database_url
     connectable = engine_from_config(
-        config.get_section(config.config_ini_section),
+        cfg,
         prefix='sqlalchemy.',
         poolclass=pool.NullPool)
 
