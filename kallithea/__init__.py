@@ -44,28 +44,18 @@ CONFIG = {}
 # Linked module for extensions
 EXTENSIONS = {}
 
-# BRAND controls internal references in database and config to the products
-# own name.
-#
-# NOTE: If you want compatibility with a database that was originally created
-#  for use with the RhodeCode software product, change BRAND to "rhodecode",
-#  either by editing here or by creating a new file:
-#  echo "BRAND = 'rhodecode'" > kallithea/brand.py
-
-BRAND = "kallithea"
 try:
-    from kallithea.brand import BRAND
+    import kallithea.brand
 except ImportError:
     pass
-
-# Prefix for the ui and settings table names
-DB_PREFIX = (BRAND + "_") if BRAND != "kallithea" else ""
+else:
+    assert False, 'Database rebranding is no longer supported; see README.'
 
 # Users.extern_type and .extern_name value for local users
-EXTERN_TYPE_INTERNAL = BRAND if BRAND != 'kallithea' else 'internal'
+EXTERN_TYPE_INTERNAL = 'internal'
 
 # db_migrate_version.repository_id value, same as kallithea/lib/dbmigrate/migrate.cfg
-DB_MIGRATIONS = BRAND + "_db_migrations"
+DB_MIGRATIONS = "kallithea_db_migrations"
 
 try:
     from kallithea.lib import get_current_revision

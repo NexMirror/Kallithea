@@ -7,6 +7,13 @@ Upgrading Kallithea
 This describes the process for upgrading Kallithea, independently of the
 Kallithea installation method.
 
+.. note::
+    If you are upgrading from a RhodeCode installation, you must first
+    install Kallithea 0.3.2 and follow the instructions in the 0.3.2
+    README to perform a one-time conversion of the database from
+    RhodeCode to Kallithea, before upgrading to the latest version
+    of Kallithea.
+
 
 1. Stop the Kallithea web application
 -------------------------------------

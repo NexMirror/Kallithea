@@ -44,8 +44,6 @@ from paste.script.command import Command, BadCommand
 from webhelpers.text import collapse, remove_formatting, strip_tags
 from beaker.cache import _cache_decorate
 
-from kallithea import BRAND
-
 from kallithea.lib.vcs.utils.hgcompat import ui, config
 from kallithea.lib.vcs.utils.helpers import get_scm
 from kallithea.lib.vcs.exceptions import VCSError
@@ -366,8 +364,6 @@ def make_ui(read_from='file', path=None, checkpaths=True, clear_session=True):
         for ui_ in hg_ui:
             if ui_.ui_active:
                 ui_val = safe_str(ui_.ui_value)
-                if ui_.ui_section == 'hooks' and BRAND != 'kallithea' and ui_val.startswith('python:' + BRAND + '.lib.hooks.'):
-                    ui_val = ui_val.replace('python:' + BRAND + '.lib.hooks.', 'python:kallithea.lib.hooks.')
                 log.debug('settings ui from db: [%s] %s=%s', ui_.ui_section,
                           ui_.ui_key, ui_val)
                 baseui.setconfig(safe_str(ui_.ui_section), safe_str(ui_.ui_key),

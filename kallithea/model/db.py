@@ -43,7 +43,6 @@ from webob.exc import HTTPNotFound
 
 from pylons.i18n.translation import lazy_ugettext as _
 
-from kallithea import DB_PREFIX
 from kallithea.lib.exceptions import DefaultUserException
 from kallithea.lib.vcs import get_backend
 from kallithea.lib.vcs.utils.helpers import get_scm
@@ -165,7 +164,7 @@ _table_args_default_dict = {'extend_existing': True,
                            }
 
 class Setting(Base, BaseModel):
-    __tablename__ = DB_PREFIX + 'settings'
+    __tablename__ = 'settings'
     __table_args__ = (
         _table_args_default_dict,
     )
@@ -328,7 +327,7 @@ class Setting(Base, BaseModel):
 
 
 class Ui(Base, BaseModel):
-    __tablename__ = DB_PREFIX + 'ui'
+    __tablename__ = 'ui'
     __table_args__ = (
         # FIXME: ui_key as key is wrong and should be removed when the corresponding
         # Ui.get_by_key has been replaced by the composite key
