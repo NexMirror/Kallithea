@@ -424,14 +424,14 @@ def handle_git_receive(repo_path, revs, env, hook_type):
     elif hook_type == 'post' and _hooks.get(Ui.HOOK_PUSH):
         rev_data = []
         for l in revs:
-            old_rev, new_rev, ref = l.split(' ')
+            old_rev, new_rev, ref = l.strip().split(' ')
             _ref_data = ref.split('/')
             if _ref_data[1] in ['tags', 'heads']:
                 rev_data.append({'old_rev': old_rev,
                                  'new_rev': new_rev,
                                  'ref': ref,
                                  'type': _ref_data[1],
-                                 'name': _ref_data[2].strip()})
+                                 'name': '/'.join(_ref_data[2:])})
 
         git_revs = []
 
