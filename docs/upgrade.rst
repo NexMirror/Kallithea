@@ -103,11 +103,64 @@ that you check the contents after the merge.
     Please always make sure your ``.ini`` files are up to date. Errors
     can often be caused by missing parameters added in new versions.
 
+.. _upgrade_db:
+
 
 6. Upgrade your database
 ------------------------
 
-Not required.
+.. note::
+    If you are *downgrading* Kallithea, you should perform the database
+    migration step *before* installing the older version. (That is,
+    always perform migrations using the most recent of the two versions
+    you're migrating between.)
+
+First, run the following command to see your current database version::
+
+    alembic -c my.ini current
+
+Typical output will be something like "9358dc3d6828 (head)", which is
+the current Alembic database "revision ID". Write down the entire output
+for troubleshooting purposes.
+
+The output will be empty if you're upgrading from Kallithea 0.3.x or
+older. That's expected. If you get an error that the config file was not
+found or has no ``[alembic]`` section, see the next section.
+
+Next, if you are performing an *upgrade*: Run the following command to
+upgrade your database to the current Kallithea version::
+
+    alembic -c my.ini upgrade head
+
+If you are performing a *downgrade*: Run the following command to
+downgrade your database to the given version::
+
+    alembic -c my.ini downgrade 0.4
+
+Alembic will show the necessary migrations (if any) as it executes them.
+If no "ERROR" is displayed, the command was successful.
+
+Should an error occur, the database may be "stranded" half-way
+through the migration, and you should restore it from backup.
+
+Enabling old Kallithea config files for Alembic use
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Kallithea configuration files created before the introduction of Alembic
+(i.e. predating Kallithea 0.4) need to be updated for use with Alembic.
+Without this, Alembic will fail with an error like this::
+
+    FAILED: No config file 'my.ini' found, or file has no '[alembic]' section
+
+If Alembic complains specifically about a missing ``alembic.ini``, it is
+likely because you did not specify a config file using the ``-c`` option.
+On the other hand, if the mentioned config file actually exists, you
+need to append the following lines to it::
+
+    [alembic]
+    script_location = kallithea:alembic
+
+Your config file should now work with Alembic.
 
 
 7. Rebuild the Whoosh full-text index

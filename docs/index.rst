@@ -54,6 +54,7 @@ Kallithea Documentation
 
    contributing
    dev/translation
+   dev/dbmigrations
    changelog
 
 **API**
