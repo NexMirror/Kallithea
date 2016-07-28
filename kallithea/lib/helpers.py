@@ -911,6 +911,10 @@ class Page(_Page):
     Custom pager to match rendering style with YUI paginator
     """
 
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('url', url.current)
+        _Page.__init__(self, *args, **kwargs)
+
     def _get_pos(self, cur_page, max_page, items):
         edge = (items / 2) + 1
         if (cur_page <= edge):
@@ -1050,12 +1054,13 @@ class Page(_Page):
 class RepoPage(Page):
 
     def __init__(self, collection, page=1, items_per_page=20,
-                 item_count=None, url=None, **kwargs):
+                 item_count=None, **kwargs):
 
         """Create a "RepoPage" instance. special pager for paging
         repository
         """
-        self._url_generator = url
+        # TODO: call baseclass __init__
+        self._url_generator = kwargs.pop('url', url.current)
 
         # Safe the kwargs class-wide so they can be used in the pager() method
         self.kwargs = kwargs
