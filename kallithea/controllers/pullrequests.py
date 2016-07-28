@@ -590,6 +590,7 @@ class PullrequestsController(BaseRepoController):
         avail_revs = set()
         avail_show = []
         c.cs_branch_name = c.cs_ref_name
+        c.a_branch_name = None
         other_scm_instance = c.a_repo.scm_instance
         c.update_msg = ""
         c.update_msg_other = ""
