@@ -36,7 +36,7 @@ database_url = (
 
 # Configure default logging for Alembic. (This can be overriden by the
 # config file, but usually isn't.)
-logging.getLogger('alembic').setLevel(logging.WARNING)
+logging.getLogger('alembic').setLevel(logging.INFO)
 
 # Setup Python loggers based on the config file provided to the alembic
 # command. If we're being invoked via the Alembic API (presumably for
