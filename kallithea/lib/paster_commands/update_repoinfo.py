@@ -31,6 +31,7 @@ import sys
 import string
 
 from kallithea.lib.utils import BasePasterCommand
+from kallithea.lib.utils2 import safe_unicode
 from kallithea.model.db import Repository
 from kallithea.model.repo import RepoModel
 from kallithea.model.meta import Session
@@ -56,15 +57,14 @@ class Command(BasePasterCommand):
         #get SqlAlchemy session
         self._init_session()
 
-        repo_update_list = map(string.strip,
-                               self.options.repo_update_list.split(',')) \
-                               if self.options.repo_update_list else None
 
-        if repo_update_list is not None:
-            repo_list = list(Repository.query() \
-                .filter(Repository.repo_name.in_(repo_update_list)))
-        else:
+        if self.options.repo_update_list is None:
             repo_list = Repository.getAll()
+        else:
+            repo_names = [safe_unicode(n.strip())
+                          for n in self.options.repo_update_list.split(',')]
+            repo_list = list(Repository.query()
+                .filter(Repository.repo_name.in_(repo_names)))
         RepoModel.update_repoinfo(repositories=repo_list)
         Session().commit()
 
