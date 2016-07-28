@@ -185,6 +185,7 @@ class PullRequestModel(BaseModel):
         if mention_recipients:
             email_kwargs['is_mention'] = True
             subject = _('[Mention]') + ' ' + subject
+            # FIXME: this subject is wrong and unused!
             NotificationModel().create(created_by=user, subject=subject, body=body,
                                        recipients=mention_recipients,
                                        type_=Notification.TYPE_PULL_REQUEST,

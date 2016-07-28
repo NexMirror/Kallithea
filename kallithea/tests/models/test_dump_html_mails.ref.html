@@ -411,7 +411,7 @@ This is an automatic notification. Don&#39;t reply to this mail.
 <pre>--------------------</pre>
 
 
-<h1>pull_request_comment, status_change=None, closing_pr=False</h1>
+<h1>pull_request_comment, is_mention=False, status_change=None, closing_pr=False</h1>
 <pre>
 
 From: u1
@@ -454,7 +454,50 @@ This is an automatic notification. Don&#39;t reply to this mail.
 <pre>--------------------</pre>
 
 
-<h1>pull_request_comment, status_change='Under Review', closing_pr=False</h1>
+<h1>pull_request_comment, is_mention=True, status_change=None, closing_pr=False</h1>
+<pre>
+
+From: u1
+To: u2@example.com
+Subject: [Comment] repo/name pull request #7 from devbranch
+
+--------------------
+
+
+Comment from Opinionated User (jsmith) on repo/name pull request "The Title":
+Me too!
+
+ - and indented on second line
+
+
+URL: http://pr.org/comment
+
+
+--
+This is an automatic notification. Don't reply to this mail.
+
+--------------------</pre>
+
+
+
+<p>Comment from Opinionated User (jsmith) on repo/name pull request &#34;The Title&#34;:</p>
+<p><div class="formatted-fixed">Me too!
+
+ - and indented on second line</div></p>
+
+
+<p>URL: <a href="http://pr.org/comment">http://pr.org/comment</a></p>
+
+
+<br/>
+<br/>
+-- <br/>
+This is an automatic notification. Don&#39;t reply to this mail.
+
+<pre>--------------------</pre>
+
+
+<h1>pull_request_comment, is_mention=False, status_change='Under Review', closing_pr=False</h1>
 <pre>
 
 From: u1
@@ -499,7 +542,52 @@ This is an automatic notification. Don&#39;t reply to this mail.
 <pre>--------------------</pre>
 
 
-<h1>pull_request_comment, status_change=None, closing_pr=True</h1>
+<h1>pull_request_comment, is_mention=True, status_change='Under Review', closing_pr=False</h1>
+<pre>
+
+From: u1
+To: u2@example.com
+Subject: [Under Review: Comment] repo/name pull request #7 from devbranch
+
+--------------------
+
+
+Comment from Opinionated User (jsmith) on repo/name pull request "The Title":
+Me too!
+
+ - and indented on second line
+
+The comment was made with status: Under Review
+
+URL: http://pr.org/comment
+
+
+--
+This is an automatic notification. Don't reply to this mail.
+
+--------------------</pre>
+
+
+
+<p>Comment from Opinionated User (jsmith) on repo/name pull request &#34;The Title&#34;:</p>
+<p><div class="formatted-fixed">Me too!
+
+ - and indented on second line</div></p>
+
+       <p>The comment was made with status: <b>Under Review</b></p>
+
+<p>URL: <a href="http://pr.org/comment">http://pr.org/comment</a></p>
+
+
+<br/>
+<br/>
+-- <br/>
+This is an automatic notification. Don&#39;t reply to this mail.
+
+<pre>--------------------</pre>
+
+
+<h1>pull_request_comment, is_mention=False, status_change=None, closing_pr=True</h1>
 <pre>
 
 From: u1
@@ -542,7 +630,95 @@ This is an automatic notification. Don&#39;t reply to this mail.
 <pre>--------------------</pre>
 
 
-<h1>pull_request_comment, status_change='Under Review', closing_pr=True</h1>
+<h1>pull_request_comment, is_mention=True, status_change=None, closing_pr=True</h1>
+<pre>
+
+From: u1
+To: u2@example.com
+Subject: [Closing: Comment] repo/name pull request #7 from devbranch
+
+--------------------
+
+
+Comment from Opinionated User (jsmith) on repo/name pull request "The Title":
+Me too!
+
+ - and indented on second line
+
+
+URL: http://pr.org/comment
+
+
+--
+This is an automatic notification. Don't reply to this mail.
+
+--------------------</pre>
+
+
+
+<p>Comment from Opinionated User (jsmith) on repo/name pull request &#34;The Title&#34;:</p>
+<p><div class="formatted-fixed">Me too!
+
+ - and indented on second line</div></p>
+
+
+<p>URL: <a href="http://pr.org/comment">http://pr.org/comment</a></p>
+
+
+<br/>
+<br/>
+-- <br/>
+This is an automatic notification. Don&#39;t reply to this mail.
+
+<pre>--------------------</pre>
+
+
+<h1>pull_request_comment, is_mention=False, status_change='Under Review', closing_pr=True</h1>
+<pre>
+
+From: u1
+To: u2@example.com
+Subject: [Under Review, Closing: Comment] repo/name pull request #7 from devbranch
+
+--------------------
+
+
+Comment from Opinionated User (jsmith) on repo/name pull request "The Title":
+Me too!
+
+ - and indented on second line
+
+The comment closed the pull request with status: Under Review
+
+URL: http://pr.org/comment
+
+
+--
+This is an automatic notification. Don't reply to this mail.
+
+--------------------</pre>
+
+
+
+<p>Comment from Opinionated User (jsmith) on repo/name pull request &#34;The Title&#34;:</p>
+<p><div class="formatted-fixed">Me too!
+
+ - and indented on second line</div></p>
+
+       <p>The comment closed the pull request with status: <b>Under Review</b></p>
+
+<p>URL: <a href="http://pr.org/comment">http://pr.org/comment</a></p>
+
+
+<br/>
+<br/>
+-- <br/>
+This is an automatic notification. Don&#39;t reply to this mail.
+
+<pre>--------------------</pre>
+
+
+<h1>pull_request_comment, is_mention=True, status_change='Under Review', closing_pr=True</h1>
 <pre>
 
 From: u1

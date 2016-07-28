@@ -213,6 +213,7 @@ class ChangesetCommentsModel(BaseModel):
             if mention_recipients:
                 email_kwargs['is_mention'] = True
                 subj = _('[Mention]') + ' ' + subj
+                # FIXME: this subject is wrong and unused!
                 NotificationModel().create(
                     created_by=user, subject=subj, body=body,
                     recipients=mention_recipients,

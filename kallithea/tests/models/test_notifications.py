@@ -231,6 +231,7 @@ class TestNotifications(TestController):
                  u'Me too!\n\n - and indented on second line',
                  dict(
                     closing_pr=[False, True],
+                    is_mention=[False, True],
                     pr_comment_user='Opinionated User (jsmith)',
                     pr_comment_url='http://pr.org/comment',
                     status_change=[None, 'Under Review'],
