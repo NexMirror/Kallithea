@@ -31,7 +31,8 @@ import sys
 
 from string import strip
 from kallithea.model.repo import RepoModel
-from kallithea.lib.utils import BasePasterCommand, load_rcextensions
+from kallithea.lib.paster_commands.common import BasePasterCommand
+from kallithea.lib.utils import load_rcextensions
 
 # Add location of top level folder to sys.path
 from os.path import dirname

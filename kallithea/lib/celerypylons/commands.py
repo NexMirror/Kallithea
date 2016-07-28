@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import kallithea
-from kallithea.lib.utils import BasePasterCommand, Command, load_rcextensions
+from kallithea.lib.paster_commands.common import BasePasterCommand
+from kallithea.lib.utils import Command, load_rcextensions
 from celery.app import app_or_default
 from celery.bin import camqadm, celerybeat, celeryd, celeryev
 

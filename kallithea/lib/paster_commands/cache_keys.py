@@ -30,8 +30,8 @@ Original author and date, and relevant copyright and licensing information is be
 import os
 import sys
 
+from kallithea.lib.paster_commands.common import BasePasterCommand
 from kallithea.model.meta import Session
-from kallithea.lib.utils import BasePasterCommand
 from kallithea.lib.utils2 import safe_str
 from kallithea.model.db import CacheInvalidation
 

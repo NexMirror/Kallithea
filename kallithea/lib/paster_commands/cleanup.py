@@ -33,7 +33,8 @@ import re
 import shutil
 import datetime
 
-from kallithea.lib.utils import BasePasterCommand, ask_ok, REMOVED_REPO_PAT
+from kallithea.lib.paster_commands.common import ask_ok, BasePasterCommand
+from kallithea.lib.utils import REMOVED_REPO_PAT
 from kallithea.lib.utils2 import safe_str
 from kallithea.model.db import Ui
 

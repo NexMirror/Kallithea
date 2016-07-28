@@ -30,7 +30,8 @@ import os
 import sys
 
 from kallithea.model.scm import ScmModel
-from kallithea.lib.utils import BasePasterCommand, repo2db_mapper
+from kallithea.lib.paster_commands.common import BasePasterCommand
+from kallithea.lib.utils import repo2db_mapper
 
 # Add location of top level folder to sys.path
 from os.path import dirname

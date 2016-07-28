@@ -30,7 +30,7 @@ import os
 import sys
 import pkg_resources
 
-from kallithea.lib.utils import BasePasterCommand, ask_ok
+from kallithea.lib.paster_commands.common import ask_ok, BasePasterCommand
 
 # Add location of top level folder to sys.path
 from os.path import dirname

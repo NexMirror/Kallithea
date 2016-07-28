@@ -29,7 +29,7 @@ Original author and date, and relevant copyright and licensing information is be
 import os
 import sys
 
-from kallithea.lib.utils import BasePasterCommand
+from kallithea.lib.paster_commands.common import BasePasterCommand
 
 # Add location of top level folder to sys.path
 from os.path import dirname

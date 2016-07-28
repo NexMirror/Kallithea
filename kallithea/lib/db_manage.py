@@ -37,8 +37,8 @@ import alembic.config
 import alembic.command
 
 from kallithea import __dbversion__, __py_version__, EXTERN_TYPE_INTERNAL
+from kallithea.lib.paster_commands.common import ask_ok
 from kallithea.model.user import UserModel
-from kallithea.lib.utils import ask_ok
 from kallithea.model import init_model
 from kallithea.model.db import User, Permission, Ui, \
     Setting, UserToPerm, RepoGroup, \
