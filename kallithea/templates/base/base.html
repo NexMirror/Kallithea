@@ -138,13 +138,13 @@
           <input id="branch_switcher" name="branch_switcher" type="hidden">
         </li>
         <li ${is_current('options')} data-context="options">
-             %if h.HasRepoPermissionAll('repository.admin')(c.repo_name):
+             %if h.HasRepoPermissionAny('repository.admin')(c.repo_name):
                <a href="${h.url('edit_repo',repo_name=c.repo_name)}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"><i class="icon-wrench"></i> ${_('Options')} <i class="caret"></i></a>
              %else:
                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"><i class="icon-wrench"></i> ${_('Options')} <i class="caret"></i></a>
              %endif
           <ul class="dropdown-menu" role="menu">
-             %if h.HasRepoPermissionAll('repository.admin')(c.repo_name):
+             %if h.HasRepoPermissionAny('repository.admin')(c.repo_name):
                    <li><a href="${h.url('edit_repo',repo_name=c.repo_name)}"><i class="icon-gear"></i> ${_('Settings')}</a></li>
              %endif
               %if c.db_repo.fork:
@@ -331,7 +331,7 @@
           <i class="icon-search"></i> ${_('Search')}
         </a>
     </li>
-    % if h.HasPermissionAll('hg.admin')('access admin main page'):
+    % if h.HasPermissionAny('hg.admin')('access admin main page'):
       <li ${is_current('admin')} class="dropdown">
         <a class="menu_link dropdown-toggle" data-toggle="dropdown" role="button" title="${_('Admin')}" href="${h.url('admin_home')}">
           <i class="icon-gear"></i> ${_('Admin')} <span class="caret"></span>

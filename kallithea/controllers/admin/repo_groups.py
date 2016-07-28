@@ -40,8 +40,8 @@ import kallithea
 from kallithea.lib import helpers as h
 from kallithea.lib.compat import json
 from kallithea.lib.auth import LoginRequired, \
-    HasRepoGroupPermissionAnyDecorator, HasRepoGroupPermissionAll, \
-    HasPermissionAll
+    HasRepoGroupPermissionAnyDecorator, HasRepoGroupPermissionAny, \
+    HasPermissionAny
 from kallithea.lib.base import BaseController, render
 from kallithea.model.db import RepoGroup, Repository
 from kallithea.model.scm import RepoGroupList, AvailableRepoGroupChoices
@@ -196,7 +196,7 @@ class RepoGroupsController(BaseController):
     def new(self):
         """GET /repo_groups/new: Form to create a new item"""
         # url('new_repos_group')
-        if HasPermissionAll('hg.admin')('group create'):
+        if HasPermissionAny('hg.admin')('group create'):
             #we're global admin, we're ok and we can create TOP level groups
             pass
         else:
@@ -205,7 +205,7 @@ class RepoGroupsController(BaseController):
             group_id = safe_int(request.GET.get('parent_group'))
             group = RepoGroup.get(group_id) if group_id else None
             group_name = group.group_name if group else None
-            if HasRepoGroupPermissionAll('group.admin')(group_name, 'group create'):
+            if HasRepoGroupPermissionAny('group.admin')(group_name, 'group create'):
                 pass
             else:
                 raise HTTPForbidden()
@@ -228,7 +228,7 @@ class RepoGroupsController(BaseController):
                              exclude=[c.repo_group])
 
         # TODO: kill allow_empty_group - it is only used for redundant form validation!
-        if HasPermissionAll('hg.admin')('group edit'):
+        if HasPermissionAny('hg.admin')('group edit'):
             #we're global admin, we're ok and we can create TOP level groups
             allow_empty_group = True
         elif not c.repo_group.parent_group:

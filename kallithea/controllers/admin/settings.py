@@ -35,7 +35,7 @@ from pylons.i18n.translation import _
 from webob.exc import HTTPFound
 
 from kallithea.lib import helpers as h
-from kallithea.lib.auth import LoginRequired, HasPermissionAllDecorator
+from kallithea.lib.auth import LoginRequired, HasPermissionAnyDecorator
 from kallithea.lib.base import BaseController, render
 from kallithea.lib.celerylib import tasks, run_task
 from kallithea.lib.exceptions import HgsubversionImportError
@@ -82,7 +82,7 @@ class SettingsController(BaseController):
             settings[k] = v
         return settings
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def settings_vcs(self):
         """GET /admin/settings: All items in the collection"""
         # url('admin_settings')
@@ -160,7 +160,7 @@ class SettingsController(BaseController):
             encoding="UTF-8",
             force_defaults=False)
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def settings_mapping(self):
         """GET /admin/settings/mapping: All items in the collection"""
         # url('admin_settings_mapping')
@@ -200,7 +200,7 @@ class SettingsController(BaseController):
             encoding="UTF-8",
             force_defaults=False)
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def settings_global(self):
         """GET /admin/settings/global: All items in the collection"""
         # url('admin_settings_global')
@@ -260,7 +260,7 @@ class SettingsController(BaseController):
             encoding="UTF-8",
             force_defaults=False)
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def settings_visual(self):
         """GET /admin/settings/visual: All items in the collection"""
         # url('admin_settings_visual')
@@ -318,7 +318,7 @@ class SettingsController(BaseController):
             encoding="UTF-8",
             force_defaults=False)
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def settings_email(self):
         """GET /admin/settings/email: All items in the collection"""
         # url('admin_settings_email')
@@ -359,7 +359,7 @@ class SettingsController(BaseController):
             encoding="UTF-8",
             force_defaults=False)
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def settings_hooks(self):
         """GET /admin/settings/hooks: All items in the collection"""
         # url('admin_settings_hooks')
@@ -410,7 +410,7 @@ class SettingsController(BaseController):
             encoding="UTF-8",
             force_defaults=False)
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def settings_search(self):
         """GET /admin/settings/search: All items in the collection"""
         # url('admin_settings_search')
@@ -431,7 +431,7 @@ class SettingsController(BaseController):
             encoding="UTF-8",
             force_defaults=False)
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def settings_system(self):
         """GET /admin/settings/system: All items in the collection"""
         # url('admin_settings_system')
@@ -453,7 +453,7 @@ class SettingsController(BaseController):
             encoding="UTF-8",
             force_defaults=False)
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def settings_system_update(self):
         """GET /admin/settings/system/updates: All items in the collection"""
         # url('admin_settings_system_update')

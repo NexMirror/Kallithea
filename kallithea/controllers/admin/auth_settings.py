@@ -34,7 +34,7 @@ from webob.exc import HTTPFound
 from kallithea.lib import helpers as h
 from kallithea.lib.compat import formatted_json
 from kallithea.lib.base import BaseController, render
-from kallithea.lib.auth import LoginRequired, HasPermissionAllDecorator
+from kallithea.lib.auth import LoginRequired, HasPermissionAnyDecorator
 from kallithea.lib import auth_modules
 from kallithea.model.forms import AuthSettingsForm
 from kallithea.model.db import Setting
@@ -46,7 +46,7 @@ log = logging.getLogger(__name__)
 class AuthSettingsController(BaseController):
 
     @LoginRequired()
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def __before__(self):
         super(AuthSettingsController, self).__before__()
 

@@ -35,7 +35,7 @@ from pylons.i18n.translation import _
 from webob.exc import HTTPFound
 
 from kallithea.lib import helpers as h
-from kallithea.lib.auth import LoginRequired, HasPermissionAllDecorator
+from kallithea.lib.auth import LoginRequired, HasPermissionAnyDecorator
 from kallithea.lib.base import BaseController, render
 from kallithea.model.forms import DefaultsForm
 from kallithea.model.meta import Session
@@ -52,7 +52,7 @@ class DefaultsController(BaseController):
     #     map.resource('default', 'defaults')
 
     @LoginRequired()
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def __before__(self):
         super(DefaultsController, self).__before__()
 

@@ -96,7 +96,7 @@ summary = lambda n:{False:'summary-short'}.get(n)
                 <div id="lang_stats"></div>
                 %else:
                    ${_('Statistics are disabled for this repository')}
-                   %if h.HasPermissionAll('hg.admin')('enable stats on from summary'):
+                   %if h.HasPermissionAny('hg.admin')('enable stats on from summary'):
                         ${h.link_to(_('Enable'),h.url('edit_repo',repo_name=c.repo_name, anchor='repo_enable_statistics'),class_="btn btn-mini")}
                    %endif
                 %endif
@@ -112,7 +112,7 @@ summary = lambda n:{False:'summary-short'}.get(n)
                   ${_('There are no downloads yet')}
                 %elif not c.enable_downloads:
                   ${_('Downloads are disabled for this repository')}
-                    %if h.HasPermissionAll('hg.admin')('enable downloads on from summary'):
+                    %if h.HasPermissionAny('hg.admin')('enable downloads on from summary'):
                         ${h.link_to(_('Enable'),h.url('edit_repo',repo_name=c.repo_name, anchor='repo_enable_downloads'),class_="btn btn-mini")}
                     %endif
                 %else:

@@ -36,7 +36,7 @@ from whoosh import query
 from sqlalchemy.sql.expression import or_, and_, func
 
 from kallithea.model.db import UserLog
-from kallithea.lib.auth import LoginRequired, HasPermissionAllDecorator
+from kallithea.lib.auth import LoginRequired, HasPermissionAnyDecorator
 from kallithea.lib.base import BaseController, render
 from kallithea.lib.utils2 import safe_int, remove_prefix, remove_suffix
 from kallithea.lib.indexers import JOURNAL_SCHEMA
@@ -123,7 +123,7 @@ class AdminController(BaseController):
     def __before__(self):
         super(AdminController, self).__before__()
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def index(self):
         users_log = UserLog.query() \
                 .options(joinedload(UserLog.user)) \

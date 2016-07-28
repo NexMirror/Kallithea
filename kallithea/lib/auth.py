@@ -859,18 +859,6 @@ class PermsDecorator(object):
         raise Exception('You have to write this function in child class')
 
 
-class HasPermissionAllDecorator(PermsDecorator):
-    """
-    Checks for access permission for all given predicates. All of them
-    have to be meet in order to fulfill the request
-    """
-
-    def check_permissions(self):
-        if self.required_perms.issubset(self.user_perms.get('global')):
-            return True
-        return False
-
-
 class HasPermissionAnyDecorator(PermsDecorator):
     """
     Checks for access permission for any of given predicates. In order to
@@ -879,23 +867,6 @@ class HasPermissionAnyDecorator(PermsDecorator):
 
     def check_permissions(self):
         if self.required_perms.intersection(self.user_perms.get('global')):
-            return True
-        return False
-
-
-class HasRepoPermissionAllDecorator(PermsDecorator):
-    """
-    Checks for access permission for all given predicates for specific
-    repository. All of them have to be meet in order to fulfill the request
-    """
-
-    def check_permissions(self):
-        repo_name = get_repo_slug(request)
-        try:
-            user_perms = set([self.user_perms['repositories'][repo_name]])
-        except KeyError:
-            return False
-        if self.required_perms.issubset(user_perms):
             return True
         return False
 
@@ -918,24 +889,6 @@ class HasRepoPermissionAnyDecorator(PermsDecorator):
         return False
 
 
-class HasRepoGroupPermissionAllDecorator(PermsDecorator):
-    """
-    Checks for access permission for all given predicates for specific
-    repository group. All of them have to be meet in order to fulfill the request
-    """
-
-    def check_permissions(self):
-        group_name = get_repo_group_slug(request)
-        try:
-            user_perms = set([self.user_perms['repositories_groups'][group_name]])
-        except KeyError:
-            return False
-
-        if self.required_perms.issubset(user_perms):
-            return True
-        return False
-
-
 class HasRepoGroupPermissionAnyDecorator(PermsDecorator):
     """
     Checks for access permission for any of given predicates for specific
@@ -950,24 +903,6 @@ class HasRepoGroupPermissionAnyDecorator(PermsDecorator):
             return False
 
         if self.required_perms.intersection(user_perms):
-            return True
-        return False
-
-
-class HasUserGroupPermissionAllDecorator(PermsDecorator):
-    """
-    Checks for access permission for all given predicates for specific
-    user group. All of them have to be meet in order to fulfill the request
-    """
-
-    def check_permissions(self):
-        group_name = get_user_group_slug(request)
-        try:
-            user_perms = set([self.user_perms['user_groups'][group_name]])
-        except KeyError:
-            return False
-
-        if self.required_perms.issubset(user_perms):
             return True
         return False
 
@@ -1020,11 +955,8 @@ class PermsFunction(object):
 
         cls_name = self.__class__.__name__
         check_scope = {
-            'HasPermissionAll': '',
             'HasPermissionAny': '',
-            'HasRepoPermissionAll': 'repo:%s' % self.repo_name,
             'HasRepoPermissionAny': 'repo:%s' % self.repo_name,
-            'HasRepoGroupPermissionAll': 'group:%s' % self.group_name,
             'HasRepoGroupPermissionAny': 'group:%s' % self.group_name,
         }.get(cls_name, '?')
         log.debug('checking cls:%s %s usr:%s %s @ %s', cls_name,
@@ -1051,36 +983,9 @@ class PermsFunction(object):
         raise Exception('You have to write this function in child class')
 
 
-class HasPermissionAll(PermsFunction):
-    def check_permissions(self):
-        if self.required_perms.issubset(self.user_perms.get('global')):
-            return True
-        return False
-
-
 class HasPermissionAny(PermsFunction):
     def check_permissions(self):
         if self.required_perms.intersection(self.user_perms.get('global')):
-            return True
-        return False
-
-
-class HasRepoPermissionAll(PermsFunction):
-    def __call__(self, repo_name=None, check_location='', user=None):
-        self.repo_name = repo_name
-        return super(HasRepoPermissionAll, self).__call__(check_location, user)
-
-    def check_permissions(self):
-        if not self.repo_name:
-            self.repo_name = get_repo_slug(request)
-
-        try:
-            self._user_perms = set(
-                [self.user_perms['repositories'][self.repo_name]]
-            )
-        except KeyError:
-            return False
-        if self.required_perms.issubset(self._user_perms):
             return True
         return False
 
@@ -1122,23 +1027,6 @@ class HasRepoGroupPermissionAny(PermsFunction):
         return False
 
 
-class HasRepoGroupPermissionAll(PermsFunction):
-    def __call__(self, group_name=None, check_location='', user=None):
-        self.group_name = group_name
-        return super(HasRepoGroupPermissionAll, self).__call__(check_location, user)
-
-    def check_permissions(self):
-        try:
-            self._user_perms = set(
-                [self.user_perms['repositories_groups'][self.group_name]]
-            )
-        except KeyError:
-            return False
-        if self.required_perms.issubset(self._user_perms):
-            return True
-        return False
-
-
 class HasUserGroupPermissionAny(PermsFunction):
     def __call__(self, user_group_name=None, check_location='', user=None):
         self.user_group_name = user_group_name
@@ -1152,23 +1040,6 @@ class HasUserGroupPermissionAny(PermsFunction):
         except KeyError:
             return False
         if self.required_perms.intersection(self._user_perms):
-            return True
-        return False
-
-
-class HasUserGroupPermissionAll(PermsFunction):
-    def __call__(self, user_group_name=None, check_location='', user=None):
-        self.user_group_name = user_group_name
-        return super(HasUserGroupPermissionAll, self).__call__(check_location, user)
-
-    def check_permissions(self):
-        try:
-            self._user_perms = set(
-                [self.user_perms['user_groups'][self.user_group_name]]
-            )
-        except KeyError:
-            return False
-        if self.required_perms.issubset(self._user_perms):
             return True
         return False
 
@@ -1252,28 +1123,9 @@ class _BaseApiPerm(object):
         raise NotImplementedError()
 
 
-class HasPermissionAllApi(_BaseApiPerm):
-    def check_permissions(self, perm_defs, repo_name=None, group_name=None):
-        if self.required_perms.issubset(perm_defs.get('global')):
-            return True
-        return False
-
-
 class HasPermissionAnyApi(_BaseApiPerm):
     def check_permissions(self, perm_defs, repo_name=None, group_name=None):
         if self.required_perms.intersection(perm_defs.get('global')):
-            return True
-        return False
-
-
-class HasRepoPermissionAllApi(_BaseApiPerm):
-    def check_permissions(self, perm_defs, repo_name=None, group_name=None):
-        try:
-            _user_perms = set([perm_defs['repositories'][repo_name]])
-        except KeyError:
-            log.warning(traceback.format_exc())
-            return False
-        if self.required_perms.issubset(_user_perms):
             return True
         return False
 
@@ -1301,16 +1153,6 @@ class HasRepoGroupPermissionAnyApi(_BaseApiPerm):
             return True
         return False
 
-class HasRepoGroupPermissionAllApi(_BaseApiPerm):
-    def check_permissions(self, perm_defs, repo_name=None, group_name=None):
-        try:
-            _user_perms = set([perm_defs['repositories_groups'][group_name]])
-        except KeyError:
-            log.warning(traceback.format_exc())
-            return False
-        if self.required_perms.issubset(_user_perms):
-            return True
-        return False
 
 def check_ip_access(source_ip, allowed_ips=None):
     """

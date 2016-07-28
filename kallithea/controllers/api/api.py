@@ -33,7 +33,7 @@ from sqlalchemy import or_
 from kallithea import EXTERN_TYPE_INTERNAL
 from kallithea.controllers.api import JSONRPCController, JSONRPCError
 from kallithea.lib.auth import (
-    PasswordGenerator, AuthUser, HasPermissionAllDecorator,
+    PasswordGenerator, AuthUser, HasPermissionAnyDecorator,
     HasPermissionAnyDecorator, HasPermissionAnyApi, HasRepoPermissionAnyApi,
     HasRepoGroupPermissionAnyApi, HasUserGroupPermissionAny)
 from kallithea.lib.utils import map_groups, repo2db_mapper
@@ -159,11 +159,11 @@ class ApiController(JSONRPCController):
 
     """
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def test(self, apiuser, args):
         return args
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def pull(self, apiuser, repoid):
         """
         Triggers a pull from remote location on given repo. Can be used to
@@ -209,7 +209,7 @@ class ApiController(JSONRPCController):
                 'Unable to pull changes from `%s`' % repo.repo_name
             )
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def rescan_repos(self, apiuser, remove_obsolete=Optional(False)):
         """
         Triggers rescan repositories action. If remove_obsolete is set
@@ -470,7 +470,7 @@ class ApiController(JSONRPCController):
 
         return ret
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def get_ip(self, apiuser, userid=Optional(OAttr('apiuser'))):
         """
         Shows IP address as seen from Kallithea server, together with all
@@ -511,7 +511,7 @@ class ApiController(JSONRPCController):
     # alias for old
     show_ip = get_ip
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def get_server_info(self, apiuser):
         """
         return server info, including Kallithea version and installed packages
@@ -592,7 +592,7 @@ class ApiController(JSONRPCController):
         data['permissions'] = AuthUser(user_id=user.user_id).permissions
         return data
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def get_users(self, apiuser):
         """
         Lists all existing users. This command can be executed only using api_key
@@ -616,7 +616,7 @@ class ApiController(JSONRPCController):
             result.append(user.get_api_data())
         return result
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def create_user(self, apiuser, username, email, password=Optional(''),
                     firstname=Optional(''), lastname=Optional(''),
                     active=Optional(True), admin=Optional(False),
@@ -702,7 +702,7 @@ class ApiController(JSONRPCController):
             log.error(traceback.format_exc())
             raise JSONRPCError('failed to create user `%s`' % (username,))
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def update_user(self, apiuser, userid, username=Optional(None),
                     email=Optional(None), password=Optional(None),
                     firstname=Optional(None), lastname=Optional(None),
@@ -785,7 +785,7 @@ class ApiController(JSONRPCController):
             log.error(traceback.format_exc())
             raise JSONRPCError('failed to update user `%s`' % (userid,))
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def delete_user(self, apiuser, userid):
         """
         deletes given user if such user exists. This command can
@@ -1767,7 +1767,7 @@ class ApiController(JSONRPCController):
                 'failed to delete repository `%s`' % (repo.repo_name,)
             )
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def grant_user_permission(self, apiuser, repoid, userid, perm):
         """
         Grant permission for user on given repository, or update existing one
@@ -1814,7 +1814,7 @@ class ApiController(JSONRPCController):
                 )
             )
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def revoke_user_permission(self, apiuser, repoid, userid):
         """
         Revoke permission for user on given repository. This command can be executed
@@ -1985,7 +1985,7 @@ class ApiController(JSONRPCController):
                 )
             )
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def get_repo_group(self, apiuser, repogroupid):
         """
         Returns given repo group together with permissions, and repositories
@@ -2023,7 +2023,7 @@ class ApiController(JSONRPCController):
         data["members"] = members
         return data
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def get_repo_groups(self, apiuser):
         """
         Returns all repository groups
@@ -2036,7 +2036,7 @@ class ApiController(JSONRPCController):
             result.append(repo_group.get_api_data())
         return result
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def create_repo_group(self, apiuser, group_name, description=Optional(''),
                           owner=Optional(OAttr('apiuser')),
                           parent=Optional(None),
@@ -2105,7 +2105,7 @@ class ApiController(JSONRPCController):
             log.error(traceback.format_exc())
             raise JSONRPCError('failed to create repo group `%s`' % (group_name,))
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def update_repo_group(self, apiuser, repogroupid, group_name=Optional(''),
                           description=Optional(''),
                           owner=Optional(OAttr('apiuser')),
@@ -2131,7 +2131,7 @@ class ApiController(JSONRPCController):
             raise JSONRPCError('failed to update repository group `%s`'
                                % (repogroupid,))
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def delete_repo_group(self, apiuser, repogroupid):
         """
 

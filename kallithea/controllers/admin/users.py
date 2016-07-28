@@ -39,7 +39,7 @@ import kallithea
 from kallithea.lib.exceptions import DefaultUserException, \
     UserOwnsReposException, UserCreationError
 from kallithea.lib import helpers as h
-from kallithea.lib.auth import LoginRequired, HasPermissionAllDecorator, \
+from kallithea.lib.auth import LoginRequired, HasPermissionAnyDecorator, \
     AuthUser
 from kallithea.lib import auth_modules
 from kallithea.lib.auth_modules import auth_internal
@@ -61,7 +61,7 @@ class UsersController(BaseController):
     """REST Controller styled on the Atom Publishing Protocol"""
 
     @LoginRequired()
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def __before__(self):
         super(UsersController, self).__before__()
         c.available_permissions = config['available_permissions']

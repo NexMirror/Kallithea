@@ -36,8 +36,7 @@ from webob.exc import HTTPFound, HTTPInternalServerError, HTTPForbidden, HTTPNot
 
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import LoginRequired, \
-    HasRepoPermissionAllDecorator, NotAnonymous, HasPermissionAny, \
-    HasRepoPermissionAnyDecorator
+    HasRepoPermissionAnyDecorator, NotAnonymous, HasPermissionAny
 from kallithea.lib.base import BaseRepoController, render
 from kallithea.lib.utils import action_logger, jsonify
 from kallithea.lib.vcs import RepositoryError
@@ -226,7 +225,7 @@ class ReposController(BaseRepoController):
             return {'result': True}
         return {'result': False}
 
-    @HasRepoPermissionAllDecorator('repository.admin')
+    @HasRepoPermissionAnyDecorator('repository.admin')
     def update(self, repo_name):
         """
         PUT /repos/repo_name: Update an existing item"""
@@ -283,7 +282,7 @@ class ReposController(BaseRepoController):
                     % repo_name, category='error')
         raise HTTPFound(location=url('edit_repo', repo_name=changed_name))
 
-    @HasRepoPermissionAllDecorator('repository.admin')
+    @HasRepoPermissionAnyDecorator('repository.admin')
     def delete(self, repo_name):
         """
         DELETE /repos/repo_name: Delete an existing item"""
@@ -329,7 +328,7 @@ class ReposController(BaseRepoController):
             raise HTTPFound(location=url('repos_group_home', group_name=repo.group.group_name))
         raise HTTPFound(location=url('repos'))
 
-    @HasRepoPermissionAllDecorator('repository.admin')
+    @HasRepoPermissionAnyDecorator('repository.admin')
     def edit(self, repo_name):
         """GET /repo_name/settings: Form to edit an existing item"""
         # url('edit_repo', repo_name=ID)
@@ -345,7 +344,7 @@ class ReposController(BaseRepoController):
             encoding="UTF-8",
             force_defaults=False)
 
-    @HasRepoPermissionAllDecorator('repository.admin')
+    @HasRepoPermissionAnyDecorator('repository.admin')
     def edit_permissions(self, repo_name):
         """GET /repo_name/settings: Form to edit an existing item"""
         # url('edit_repo', repo_name=ID)
@@ -398,7 +397,7 @@ class ReposController(BaseRepoController):
                     category='error')
             raise HTTPInternalServerError()
 
-    @HasRepoPermissionAllDecorator('repository.admin')
+    @HasRepoPermissionAnyDecorator('repository.admin')
     def edit_fields(self, repo_name):
         """GET /repo_name/settings: Form to edit an existing item"""
         # url('edit_repo', repo_name=ID)
@@ -411,7 +410,7 @@ class ReposController(BaseRepoController):
             raise HTTPFound(location=url('repo_edit_fields'))
         return render('admin/repos/repo_edit.html')
 
-    @HasRepoPermissionAllDecorator('repository.admin')
+    @HasRepoPermissionAnyDecorator('repository.admin')
     def create_repo_field(self, repo_name):
         try:
             form_result = RepoFieldForm()().to_python(dict(request.POST))
@@ -432,7 +431,7 @@ class ReposController(BaseRepoController):
             h.flash(msg, category='error')
         raise HTTPFound(location=url('edit_repo_fields', repo_name=repo_name))
 
-    @HasRepoPermissionAllDecorator('repository.admin')
+    @HasRepoPermissionAnyDecorator('repository.admin')
     def delete_repo_field(self, repo_name, field_id):
         field = RepositoryField.get_or_404(field_id)
         try:
@@ -444,7 +443,7 @@ class ReposController(BaseRepoController):
             h.flash(msg, category='error')
         raise HTTPFound(location=url('edit_repo_fields', repo_name=repo_name))
 
-    @HasRepoPermissionAllDecorator('repository.admin')
+    @HasRepoPermissionAnyDecorator('repository.admin')
     def edit_advanced(self, repo_name):
         """GET /repo_name/settings: Form to edit an existing item"""
         # url('edit_repo', repo_name=ID)
@@ -474,7 +473,7 @@ class ReposController(BaseRepoController):
             encoding="UTF-8",
             force_defaults=False)
 
-    @HasRepoPermissionAllDecorator('repository.admin')
+    @HasRepoPermissionAnyDecorator('repository.admin')
     def edit_advanced_journal(self, repo_name):
         """
         Sets this repository to be visible in public journal,
@@ -497,7 +496,7 @@ class ReposController(BaseRepoController):
         raise HTTPFound(location=url('edit_repo_advanced', repo_name=repo_name))
 
 
-    @HasRepoPermissionAllDecorator('repository.admin')
+    @HasRepoPermissionAnyDecorator('repository.admin')
     def edit_advanced_fork(self, repo_name):
         """
         Mark given repository as a fork of another
@@ -522,7 +521,7 @@ class ReposController(BaseRepoController):
 
         raise HTTPFound(location=url('edit_repo_advanced', repo_name=repo_name))
 
-    @HasRepoPermissionAllDecorator('repository.admin')
+    @HasRepoPermissionAnyDecorator('repository.admin')
     def edit_advanced_locking(self, repo_name):
         """
         Unlock repository when it is locked !
@@ -568,7 +567,7 @@ class ReposController(BaseRepoController):
                     category='error')
         raise HTTPFound(location=url('summary_home', repo_name=repo_name))
 
-    @HasRepoPermissionAllDecorator('repository.admin')
+    @HasRepoPermissionAnyDecorator('repository.admin')
     def edit_caches(self, repo_name):
         """GET /repo_name/settings: Form to edit an existing item"""
         # url('edit_repo', repo_name=ID)
@@ -588,7 +587,7 @@ class ReposController(BaseRepoController):
             raise HTTPFound(location=url('edit_repo_caches', repo_name=c.repo_name))
         return render('admin/repos/repo_edit.html')
 
-    @HasRepoPermissionAllDecorator('repository.admin')
+    @HasRepoPermissionAnyDecorator('repository.admin')
     def edit_remote(self, repo_name):
         """GET /repo_name/settings: Form to edit an existing item"""
         # url('edit_repo', repo_name=ID)
@@ -605,7 +604,7 @@ class ReposController(BaseRepoController):
             raise HTTPFound(location=url('edit_repo_remote', repo_name=c.repo_name))
         return render('admin/repos/repo_edit.html')
 
-    @HasRepoPermissionAllDecorator('repository.admin')
+    @HasRepoPermissionAnyDecorator('repository.admin')
     def edit_statistics(self, repo_name):
         """GET /repo_name/settings: Form to edit an existing item"""
         # url('edit_repo', repo_name=ID)

@@ -835,9 +835,8 @@ def action_parser(user_log, feed=False, parse_cs=False):
 #==============================================================================
 # PERMS
 #==============================================================================
-from kallithea.lib.auth import HasPermissionAny, HasPermissionAll, \
-HasRepoPermissionAny, HasRepoPermissionAll, HasRepoGroupPermissionAll, \
-HasRepoGroupPermissionAny
+from kallithea.lib.auth import HasPermissionAny, \
+    HasRepoPermissionAny, HasRepoGroupPermissionAny
 
 
 #==============================================================================

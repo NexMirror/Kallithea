@@ -50,7 +50,7 @@ from kallithea.lib import helpers as h
 from kallithea.lib.utils2 import safe_str, safe_unicode, get_server_url, \
     _set_extras
 from kallithea.lib.auth import HasRepoPermissionAny, HasRepoGroupPermissionAny, \
-    HasUserGroupPermissionAny, HasPermissionAny, HasPermissionAll
+    HasUserGroupPermissionAny, HasPermissionAny, HasPermissionAny
 from kallithea.lib.utils import get_filesystem_repos, make_ui, \
     action_logger
 from kallithea.model import BaseModel
@@ -794,7 +794,7 @@ def AvailableRepoGroupChoices(top_perms, repo_group_perms, extras=()):
     Top level is -1.
     """
     groups = RepoGroup.query().all()
-    if HasPermissionAll('hg.admin')('available repo groups'):
+    if HasPermissionAny('hg.admin')('available repo groups'):
         groups.append(None)
     else:
         groups = list(RepoGroupList(groups, perm_set=repo_group_perms))
