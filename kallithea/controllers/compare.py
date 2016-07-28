@@ -54,6 +54,26 @@ class CompareController(BaseRepoController):
     def __before__(self):
         super(CompareController, self).__before__()
 
+        # The base repository has already been retrieved.
+        c.a_repo = c.db_repo
+
+        # Retrieve the "changeset" repository (default: same as base).
+        other_repo = request.GET.get('other_repo', None)
+        if other_repo is None:
+            c.cs_repo = c.a_repo
+        else:
+            c.cs_repo = Repository.get_by_repo_name(other_repo)
+            if c.cs_repo is None:
+                msg = _('Could not find other repository %s') % other_repo
+                h.flash(msg, category='error')
+                raise HTTPFound(location=url('compare_home', repo_name=c.a_repo.repo_name))
+
+        # Verify that it's even possible to compare these two repositories.
+        if c.a_repo.scm_instance.alias != c.cs_repo.scm_instance.alias:
+            msg = _('Cannot compare repositories of different types')
+            h.flash(msg, category='error')
+            raise HTTPFound(location=url('compare_home', repo_name=c.a_repo.repo_name))
+
     @staticmethod
     def _get_changesets(alias, org_repo, org_rev, other_repo, other_rev):
         """
@@ -158,10 +178,6 @@ class CompareController(BaseRepoController):
                                    'repository.admin')
     def index(self, repo_name):
         c.compare_home = True
-        org_repo = c.db_repo.repo_name
-        other_repo = request.GET.get('other_repo', org_repo)
-        c.a_repo = Repository.get_by_repo_name(org_repo)
-        c.cs_repo = Repository.get_by_repo_name(other_repo)
         c.a_ref_name = c.cs_ref_name = _('Select changeset')
         return render('compare/compare_diff.html')
 
@@ -172,8 +188,6 @@ class CompareController(BaseRepoController):
         org_ref_name = org_ref_name.strip()
         other_ref_name = other_ref_name.strip()
 
-        org_repo = c.db_repo.repo_name
-        other_repo = request.GET.get('other_repo', org_repo)
         # If merge is True:
         #   Show what org would get if merged with other:
         #   List changesets that are ancestors of other but not of org.
@@ -191,9 +205,9 @@ class CompareController(BaseRepoController):
         c.as_form = partial and request.GET.get('as_form')
         # swap url for compare_diff page - never partial and never as_form
         c.swap_url = h.url('compare_url',
-            repo_name=other_repo,
+            repo_name=c.cs_repo.repo_name,
             org_ref_type=other_ref_type, org_ref_name=other_ref_name,
-            other_repo=org_repo,
+            other_repo=c.a_repo.repo_name,
             other_ref_type=org_ref_type, other_ref_name=org_ref_name,
             merge=merge or '')
 
@@ -203,51 +217,32 @@ class CompareController(BaseRepoController):
         ignore_whitespace = request.GET.get('ignorews') == '1'
         line_context = safe_int(request.GET.get('context'), 3)
 
-        org_repo = Repository.get_by_repo_name(org_repo)
-        other_repo = Repository.get_by_repo_name(other_repo)
-
-        if org_repo is None:
-            msg = 'Could not find org repo %s' % org_repo
-            log.error(msg)
-            h.flash(msg, category='error')
-            raise HTTPFound(location=url('compare_home', repo_name=c.repo_name))
-
-        if other_repo is None:
-            msg = 'Could not find other repo %s' % other_repo
-            log.error(msg)
-            h.flash(msg, category='error')
-            raise HTTPFound(location=url('compare_home', repo_name=c.repo_name))
-
-        if org_repo.scm_instance.alias != other_repo.scm_instance.alias:
-            msg = 'compare of two different kind of remote repos not available'
-            log.error(msg)
-            h.flash(msg, category='error')
-            raise HTTPFound(location=url('compare_home', repo_name=c.repo_name))
-
-        c.a_rev = self._get_ref_rev(org_repo, org_ref_type, org_ref_name,
+        c.a_rev = self._get_ref_rev(c.a_repo, org_ref_type, org_ref_name,
             returnempty=True)
-        c.cs_rev = self._get_ref_rev(other_repo, other_ref_type, other_ref_name)
+        c.cs_rev = self._get_ref_rev(c.cs_repo, other_ref_type, other_ref_name)
 
         c.compare_home = False
-        c.a_repo = org_repo
         c.a_ref_name = org_ref_name
         c.a_ref_type = org_ref_type
-        c.cs_repo = other_repo
         c.cs_ref_name = other_ref_name
         c.cs_ref_type = other_ref_type
 
         c.cs_ranges, c.cs_ranges_org, c.ancestor = self._get_changesets(
-            org_repo.scm_instance.alias, org_repo.scm_instance, c.a_rev,
-            other_repo.scm_instance, c.cs_rev)
+            c.a_repo.scm_instance.alias, c.a_repo.scm_instance, c.a_rev,
+            c.cs_repo.scm_instance, c.cs_rev)
         raw_ids = [x.raw_id for x in c.cs_ranges]
-        c.cs_comments = other_repo.get_comments(raw_ids)
-        c.statuses = other_repo.statuses(raw_ids)
+        c.cs_comments = c.cs_repo.get_comments(raw_ids)
+        c.statuses = c.cs_repo.statuses(raw_ids)
 
         revs = [ctx.revision for ctx in reversed(c.cs_ranges)]
         c.jsdata = json.dumps(graph_data(c.cs_repo.scm_instance, revs))
 
         if partial:
             return render('compare/compare_cs.html')
+
+        org_repo = c.a_repo
+        other_repo = c.cs_repo
+
         if merge and c.ancestor:
             # case we want a simple diff without incoming changesets,
             # previewing what will be merged.
