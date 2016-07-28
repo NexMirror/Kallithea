@@ -111,7 +111,7 @@ class ChangelogController(BaseRepoController):
             c.size = int(session.get('changelog_size', default))
         # min size must be 1
         c.size = max(c.size, 1)
-        p = safe_int(request.GET.get('page', 1), 1)
+        p = safe_int(request.GET.get('page'), 1)
         branch_name = request.GET.get('branch', None)
         if (branch_name and
             branch_name not in c.db_repo_scm_instance.branches and

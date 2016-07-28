@@ -97,7 +97,7 @@ class GistsController(BaseController):
             gists = gists.filter(Gist.gist_type == Gist.GIST_PUBLIC)
 
         c.gists = gists
-        p = safe_int(request.GET.get('page', 1), 1)
+        p = safe_int(request.GET.get('page'), 1)
         c.gists_pager = Page(c.gists, page=p, items_per_page=10)
         return render('admin/gists/index.html')
 

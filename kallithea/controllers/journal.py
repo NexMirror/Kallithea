@@ -192,7 +192,7 @@ class JournalController(BaseController):
     @NotAnonymous()
     def index(self):
         # Return a rendered template
-        p = safe_int(request.GET.get('page', 1), 1)
+        p = safe_int(request.GET.get('page'), 1)
         c.user = User.get(self.authuser.user_id)
         c.following = self.sa.query(UserFollowing) \
             .filter(UserFollowing.user_id == self.authuser.user_id) \
@@ -328,7 +328,7 @@ class JournalController(BaseController):
     @LoginRequired()
     def public_journal(self):
         # Return a rendered template
-        p = safe_int(request.GET.get('page', 1), 1)
+        p = safe_int(request.GET.get('page'), 1)
 
         c.following = self.sa.query(UserFollowing) \
             .filter(UserFollowing.user_id == self.authuser.user_id) \

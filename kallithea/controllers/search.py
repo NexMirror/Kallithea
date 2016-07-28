@@ -85,7 +85,7 @@ class SearchController(BaseRepoController):
             log.debug(cur_query)
 
         if c.cur_query:
-            p = safe_int(request.GET.get('page', 1), 1)
+            p = safe_int(request.GET.get('page'), 1)
             highlight_items = set()
             try:
                 idx = open_dir(config['app_conf']['index_dir'],

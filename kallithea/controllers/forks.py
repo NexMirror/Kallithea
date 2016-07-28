@@ -112,7 +112,7 @@ class ForksController(BaseRepoController):
     @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
                                    'repository.admin')
     def forks(self, repo_name):
-        p = safe_int(request.GET.get('page', 1), 1)
+        p = safe_int(request.GET.get('page'), 1)
         repo_id = c.db_repo.repo_id
         d = []
         for r in Repository.get_repo_forks(repo_id):

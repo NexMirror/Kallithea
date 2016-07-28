@@ -197,7 +197,7 @@ class PullrequestsController(BaseRepoController):
         c.closed = request.GET.get('closed') or ''
         c.pull_requests = PullRequestModel().get_all(repo_name, from_=c.from_, closed=c.closed)
         c.repo_name = repo_name
-        p = safe_int(request.GET.get('page', 1), 1)
+        p = safe_int(request.GET.get('page'), 1)
 
         c.pullrequests_pager = Page(c.pull_requests, page=p, items_per_page=100)
 
