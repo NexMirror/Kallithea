@@ -1,4 +1,5 @@
 import os
+import re
 
 import mock
 import routes.util
@@ -170,17 +171,19 @@ class TestNotifications(TestController):
         l = []
 
         def send_email(recipients, subject, body='', html_body='', headers=None, author=None):
-            l.append('\n\n<h1>%s</h1>\n' % desc) # desc is from outer scope
-            l.append('<pre>\n\n')
+            l.append('<hr/>\n')
+            l.append('<h1>%s</h1>\n' % desc) # desc is from outer scope
+            l.append('<pre>\n')
             l.append('From: %s\n' % author.username)
             l.append('To: %s\n' % ' '.join(recipients))
             l.append('Subject: %s\n' % subject)
-            l.append('\n--------------------\n%s\n--------------------' % body)
             l.append('</pre>\n')
-            l.append('\n%s\n' % html_body)
-            l.append('<pre>--------------------</pre>\n')
+            l.append('<hr/>\n')
+            l.append('<pre>%s</pre>\n' % body)
+            l.append('<hr/>\n')
+            l.append(html_body)
+            l.append('<hr/>\n')
 
-        l.append('<html><body>\n')
         with mock.patch.object(kallithea.lib.celerylib.tasks, 'send_email', send_email):
             pr_kwargs = dict(
                 pr_nice_id='#7',
@@ -268,8 +271,8 @@ class TestNotifications(TestController):
                 EmailNotificationModel().get_email_tmpl(EmailNotificationModel.TYPE_PASSWORD_RESET, 'html', **kwargs),
                 author=User.get(self.u1))
 
-        l.append('\n</body></html>\n')
-        out = ''.join(l)
+        out = '<!doctype html>\n<html lang="en">\n<head><title>Notifications</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head>\n<body>\n%s\n</body>\n</html>\n' % \
+            re.sub(r'<(/?(?:!doctype|html|head|title|meta|body)\b[^>]*)>', r'<!--\1-->', ''.join(l))
 
         outfn = os.path.join(os.path.dirname(__file__), 'test_dump_html_mails.out.html')
         reffn = os.path.join(os.path.dirname(__file__), 'test_dump_html_mails.ref.html')
