@@ -32,6 +32,7 @@ import sys
 
 from kallithea.model.meta import Session
 from kallithea.lib.utils import BasePasterCommand
+from kallithea.lib.utils2 import safe_str
 from kallithea.model.db import CacheInvalidation
 
 # Add location of top level folder to sys.path
@@ -58,11 +59,11 @@ class Command(BasePasterCommand):
         _caches = CacheInvalidation.query().order_by(CacheInvalidation.cache_key).all()
         if self.options.show:
             for c_obj in _caches:
-                print 'key:%s active:%s' % (c_obj.cache_key, c_obj.cache_active)
+                print 'key:%s active:%s' % (safe_str(c_obj.cache_key), c_obj.cache_active)
         elif self.options.cleanup:
             for c_obj in _caches:
                 Session().delete(c_obj)
-                print 'Removing key: %s' % (c_obj.cache_key)
+                print 'Removing key: %s' % (safe_str(c_obj.cache_key))
                 Session().commit()
         else:
             print 'Nothing done, exiting...'
