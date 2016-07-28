@@ -163,7 +163,7 @@ Here's a typical LDAP setup::
  Host                 = host.example.com
  Account              = <account>
  Password             = <password>
- Connection Security  = LDAPS connection
+ Connection Security  = LDAPS
  Certificate Checks   = DEMAND
 
  Search settings
@@ -457,7 +457,7 @@ could set the request headers however you want.
     from mod_python import apache
     import ldap
 
-    LDAP_SERVER = "ldap://server.mydomain.com:389"
+    LDAP_SERVER = "ldaps://server.mydomain.com:636"
     LDAP_USER = ""
     LDAP_PASS = ""
     LDAP_ROOT = "dc=mydomain,dc=com"

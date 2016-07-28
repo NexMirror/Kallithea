@@ -50,7 +50,7 @@ except ImportError:
 class AuthLdap(object):
 
     def __init__(self, server, base_dn, port=None, bind_dn='', bind_pass='',
-                 tls_kind='PLAIN', tls_reqcert='DEMAND', cacertdir=None, ldap_version=3,
+                 tls_kind='LDAPS', tls_reqcert='DEMAND', cacertdir=None, ldap_version=3,
                  ldap_filter='(&(objectClass=user)(!(objectClass=computer)))',
                  search_scope='SUBTREE', attr_login='uid'):
         if ldap is None:
@@ -215,7 +215,7 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
                 "type": "select",
                 "values": self._tls_kind_values,
                 "description": "TLS Type",
-                "default": 'PLAIN',
+                "default": 'LDAPS',
                 "formname": "Connection Security"
             },
             {
