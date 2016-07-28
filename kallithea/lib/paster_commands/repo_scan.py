@@ -58,7 +58,9 @@ class Command(BasePasterCommand):
                                         remove_obsolete=rm_obsolete)
         added = ', '.join(added) or '-'
         removed = ', '.join(removed) or '-'
-        print 'Scan completed added: %s removed: %s' % (added, removed)
+        print 'Scan completed.'
+        print 'Added: %s' % added
+        print 'Removed: %s' % removed
 
     def update_parser(self):
         self.parser.add_option(
