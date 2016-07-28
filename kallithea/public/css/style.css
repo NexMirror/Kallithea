@@ -171,6 +171,10 @@ div.formatted-fixed {
     line-height: 14px;
 }
 
+.changeset_hash {
+    font-family: Lucida Console, Consolas, Monaco, Inconsolata, Liberation Mono, monospace;
+}
+
 .top-left-rounded-corner {
     border-top-left-radius: 8px;
 }
