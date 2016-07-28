@@ -3862,17 +3862,6 @@ div#legend_choices table td {
     padding-left: 3px;
 }
 
-
-.group_members_wrap {
-    min-height: 85px;
-    padding-left: 20px;
-}
-
-.group_members .group_member {
-    height: 30px;
-    padding: 0px 0px 0px 0px;
-}
-
 .reviewer_status {
     float: left;
 }
