@@ -153,6 +153,7 @@ class PullRequestModel(BaseModel):
             )
         body = pr.description
         _org_ref_type, org_ref_name, _org_rev = pr.org_ref.split(':')
+        _other_ref_type, other_ref_name, _other_rev = pr.other_ref.split(':')
         email_kwargs = {
             'pr_title': pr.title,
             'pr_user_created': user.full_name_and_username,
@@ -162,7 +163,13 @@ class PullRequestModel(BaseModel):
             'repo_name': pr.other_repo.repo_name,
             'org_repo_name': pr.org_repo.repo_name,
             'pr_nice_id': pr.nice_id(),
-            'ref': org_ref_name,
+            'pr_target_repo': h.canonical_url('summary_home',
+                               repo_name=pr.other_repo.repo_name),
+            'pr_target_branch': other_ref_name,
+            'pr_source_repo': h.canonical_url('summary_home',
+                               repo_name=pr.org_repo.repo_name),
+            'pr_source_branch': org_ref_name,
+            'pr_owner': pr.owner,
             'pr_username': user.username,
             'threading': threading,
             'is_mention': False,

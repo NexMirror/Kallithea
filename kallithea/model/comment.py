@@ -88,6 +88,7 @@ class ChangesetCommentsModel(BaseModel):
             cs_author = User.get_from_cs_author(cs.author)
             if not cs_author:
                 #use repo owner if we cannot extract the author correctly
+                # FIXME: just use committer name even if not a user
                 cs_author = repo.user
             recipients += [cs_author]
             email_kwargs = {
@@ -97,6 +98,7 @@ class ChangesetCommentsModel(BaseModel):
                 'cs_comment_url': comment_url,
                 'raw_id': revision,
                 'message': cs.message,
+                'cs_author': cs_author,
                 'repo_name': repo.repo_name,
                 'short_id': h.short_id(revision),
                 'branch': cs.branch,
@@ -108,6 +110,7 @@ class ChangesetCommentsModel(BaseModel):
             notification_type = Notification.TYPE_PULL_REQUEST_COMMENT
             desc = comment.pull_request.title
             _org_ref_type, org_ref_name, _org_rev = comment.pull_request.org_ref.split(':')
+            _other_ref_type, other_ref_name, _other_rev = comment.pull_request.other_ref.split(':')
             threading = ['%s-pr-%s@%s' % (pull_request.other_repo.repo_name,
                                           pull_request.pull_request_id,
                                           h.canonical_hostname())]
@@ -143,8 +146,12 @@ class ChangesetCommentsModel(BaseModel):
                 'pr_comment_user': user.full_name_and_username,
                 'pr_target_repo': h.canonical_url('summary_home',
                                    repo_name=pull_request.other_repo.repo_name),
+                'pr_target_branch': other_ref_name,
+                'pr_source_repo': h.canonical_url('summary_home',
+                                   repo_name=pull_request.org_repo.repo_name),
+                'pr_source_branch': org_ref_name,
+                'pr_owner': pull_request.owner,
                 'repo_name': pull_request.other_repo.repo_name,
-                'ref': org_ref_name,
                 'comment_username': user.username,
                 'threading': threading,
             }
