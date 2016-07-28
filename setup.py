@@ -97,15 +97,12 @@ keywords = ' '.join([
 
 # long description
 README_FILE = 'README.rst'
-CHANGELOG_FILE = 'docs/changelog.rst'
 try:
-    long_description = open(README_FILE).read() + '\n\n' + \
-        open(CHANGELOG_FILE).read()
-
+    long_description = open(README_FILE).read()
 except IOError as err:
     sys.stderr.write(
-        "[WARNING] Cannot find file specified as long_description (%s)\n or "
-        "changelog (%s) skipping that file" % (README_FILE, CHANGELOG_FILE)
+        "[WARNING] Cannot find file specified as long_description (%s)\n"
+        % README_FILE
     )
     long_description = description
 

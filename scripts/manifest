@@ -23,7 +23,6 @@ docs/Makefile
 docs/api/
 docs/api/api.rst
 docs/api/models.rst
-docs/changelog.rst
 docs/conf.py
 docs/contributing.rst
 docs/images/
