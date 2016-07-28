@@ -412,7 +412,7 @@ class PullrequestsController(BaseRepoController):
             for r in old_pull_request.revisions:
                 if r in lost:
                     rev_desc = org_repo.get_changeset(r).message.split('\n')[0]
-                    infos.append('  %s "%s"' % (h.short_id(r), rev_desc))
+                    infos.append('  %s %s' % (h.short_id(r), rev_desc))
 
         if new_revisions:
             infos.append(_('New changesets on %s %s since the previous iteration:') % (org_ref_type, org_ref_name))
