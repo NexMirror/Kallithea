@@ -99,7 +99,7 @@ def pre_push(ui, repo, **kwargs):
         _http_ret = HTTPLockedRC(ex.repository, locked_by)
         if str(_http_ret.code).startswith('2'):
             #2xx Codes don't raise exceptions
-            ui.status(_http_ret.title)
+            ui.status(safe_str(_http_ret.title))
         else:
             raise _http_ret
 
@@ -114,7 +114,7 @@ def pre_pull(ui, repo, **kwargs):
         _http_ret = HTTPLockedRC(ex.repository, locked_by)
         if str(_http_ret.code).startswith('2'):
             #2xx Codes don't raise exceptions
-            ui.status(_http_ret.title)
+            ui.status(safe_str(_http_ret.title))
         else:
             raise _http_ret
 
@@ -149,7 +149,7 @@ def log_pull_action(ui, repo, **kwargs):
         _http_ret = HTTPLockedRC(ex.repository, locked_by)
         if str(_http_ret.code).startswith('2'):
             #2xx Codes don't raise exceptions
-            ui.status(_http_ret.title)
+            ui.status(safe_str(_http_ret.title))
     return 0
 
 
@@ -204,7 +204,7 @@ def log_push_action(ui, repo, **kwargs):
         _http_ret = HTTPLockedRC(ex.repository, locked_by)
         if str(_http_ret.code).startswith('2'):
             #2xx Codes don't raise exceptions
-            ui.status(_http_ret.title)
+            ui.status(safe_str(_http_ret.title))
 
     return 0
 
