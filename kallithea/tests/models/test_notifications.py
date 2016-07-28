@@ -185,14 +185,14 @@ class TestNotifications(TestController):
             pr_kwargs = dict(pr_nice_id='7', ref='ref', org_repo_name='repo_org', pr_title='The Title', pr_url='http://pr.org')
 
             for type_, body, kwargs in [
-                (Notification.TYPE_CHANGESET_COMMENT, 'This is the new comment.\n\n - and here it ends indented.', dict(short_id='cafe', raw_id='c0ffeecafe', branch='brunch', cs_comment_user='Commenter Name', cs_comment_url='http://comment.org', is_mention=[False, True], message='This changeset did something clever which is hard to explain', status_change=[None, 'Approved'], cs_target_repo='repo_target', cs_url='http://changeset.com')),
-                (Notification.TYPE_MESSAGE, 'This is the body of the test message\n - nothing interesting here except indentation.', dict()),
+                (Notification.TYPE_CHANGESET_COMMENT, u'This is the new comment.\n\n - and here it ends indented.', dict(short_id='cafe', raw_id='c0ffeecafe', branch='brunch', cs_comment_user='Commenter Name', cs_comment_url='http://comment.org', is_mention=[False, True], message='This changeset did something clever which is hard to explain', status_change=[None, 'Approved'], cs_target_repo='repo_target', cs_url='http://changeset.com')),
+                (Notification.TYPE_MESSAGE, u'This is the body of the test message\n - nothing interesting here except indentation.', dict()),
                 #(Notification.TYPE_MENTION, '$body', None), # not used
-                (Notification.TYPE_REGISTRATION, 'Registration body', dict(new_username='newbie', registered_user_url='http://newbie.org', new_email='new@email.com', new_full_name='New Full Name')),
-                (Notification.TYPE_PULL_REQUEST, 'This PR is awesome because it does stuff\n - please approve indented!', dict(pr_user_created='Requester Name', is_mention=[False, True], pr_revisions=[('123abc', 'Introduce one and two'), ('567fed', 'Make one plus two equal tree')], **pr_kwargs)),
-                (Notification.TYPE_PULL_REQUEST_COMMENT, 'Me too!\n\n - and indented on second line', dict(closing_pr=[False, True], pr_comment_user='Commenter Name', pr_comment_url='http://pr.org/comment', status_change=[None, 'Under Review'], pr_target_repo='http://target.com/repo', **pr_kwargs)),
+                (Notification.TYPE_REGISTRATION, u'Registration body', dict(new_username='newbie', registered_user_url='http://newbie.org', new_email='new@email.com', new_full_name='New Full Name')),
+                (Notification.TYPE_PULL_REQUEST, u'This PR is awesome because it does stuff\n - please approve indented!', dict(pr_user_created='Requester Name', is_mention=[False, True], pr_revisions=[('123abc', 'Introduce one and two'), ('567fed', 'Make one plus two equal tree')], **pr_kwargs)),
+                (Notification.TYPE_PULL_REQUEST_COMMENT, u'Me too!\n\n - and indented on second line', dict(closing_pr=[False, True], pr_comment_user='Commenter Name', pr_comment_url='http://pr.org/comment', status_change=[None, 'Under Review'], pr_target_repo='http://target.com/repo', **pr_kwargs)),
                 ]:
-                kwargs['repo_name'] = 'repo/name'
+                kwargs['repo_name'] = u'repo/name'
                 params = [(type_, type_, body, kwargs)]
                 for param_name in ['is_mention', 'status_change', 'closing_pr']: # TODO: inline/general
                     if not isinstance(kwargs.get(param_name), list):
@@ -208,7 +208,7 @@ class TestNotifications(TestController):
                 for desc, type_, body, kwargs in params:
                     # desc is used as "global" variable
                     notification = NotificationModel().create(created_by=self.u1,
-                                                       subject='unused', body=body, email_kwargs=kwargs,
+                                                       subject=u'unused', body=body, email_kwargs=kwargs,
                                                        recipients=[self.u2], type_=type_)
 
             # Email type TYPE_PASSWORD_RESET has no corresponding notification type - test it directly:
