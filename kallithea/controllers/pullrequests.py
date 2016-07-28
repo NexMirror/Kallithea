@@ -659,7 +659,7 @@ class PullrequestsController(BaseRepoController):
         c.statuses = c.cs_repo.statuses(raw_ids)
 
         ignore_whitespace = request.GET.get('ignorews') == '1'
-        line_context = request.GET.get('context', 3)
+        line_context = safe_int(request.GET.get('context'), 3)
         c.ignorews_url = _ignorews_url
         c.context_url = _context_url
         c.fulldiff = request.GET.get('fulldiff')

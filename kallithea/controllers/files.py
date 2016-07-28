@@ -42,7 +42,7 @@ from kallithea.lib import helpers as h
 
 from kallithea.lib.compat import OrderedDict
 from kallithea.lib.utils2 import convert_line_endings, detect_mode, safe_str, \
-    str2bool
+    str2bool, safe_int
 from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator
 from kallithea.lib.base import BaseRepoController, render
 from kallithea.lib.vcs.backends.base import EmptyChangeset
@@ -598,7 +598,7 @@ class FilesController(BaseRepoController):
                                    'repository.admin')
     def diff(self, repo_name, f_path):
         ignore_whitespace = request.GET.get('ignorews') == '1'
-        line_context = request.GET.get('context', 3)
+        line_context = safe_int(request.GET.get('context'), 3)
         diff2 = request.GET.get('diff2', '')
         diff1 = request.GET.get('diff1', '') or diff2
         c.action = request.GET.get('diff')

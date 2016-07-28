@@ -34,7 +34,7 @@ from pylons import request, tmpl_context as c, url
 from pylons.i18n.translation import _
 from webob.exc import HTTPFound, HTTPBadRequest
 
-from kallithea.lib.utils2 import safe_str
+from kallithea.lib.utils2 import safe_str, safe_int
 from kallithea.lib.vcs.utils.hgcompat import unionrepo
 from kallithea.lib import helpers as h
 from kallithea.lib.base import BaseRepoController, render
@@ -201,7 +201,7 @@ class CompareController(BaseRepoController):
         c.ignorews_url = _ignorews_url
         c.context_url = _context_url
         ignore_whitespace = request.GET.get('ignorews') == '1'
-        line_context = request.GET.get('context', 3)
+        line_context = safe_int(request.GET.get('context'), 3)
 
         org_repo = Repository.get_by_repo_name(org_repo)
         other_repo = Repository.get_by_repo_name(other_repo)
