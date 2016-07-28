@@ -147,7 +147,7 @@ class LoginController(BaseController):
                                                  error_dict=error_dict)
 
                 UserModel().create_registration(form_result)
-                h.flash(_('You have successfully registered into Kallithea'),
+                h.flash(_('You have successfully registered with %s') % (c.site_name or 'Kallithea'),
                         category='success')
                 Session().commit()
                 raise HTTPFound(location=url('login_home'))

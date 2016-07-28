@@ -297,8 +297,8 @@ msgid "Bad captcha"
 msgstr "キャプチャが一致しません"
 
 #: kallithea/controllers/login.py:150
-msgid "You have successfully registered into Kallithea"
-msgstr "Kallitheaへの登録を受け付けました"
+msgid "You have successfully registered with %s"
+msgstr "%sへの登録を受け付けました"
 
 #: kallithea/controllers/login.py:195
 msgid "A password reset confirmation code has been sent"

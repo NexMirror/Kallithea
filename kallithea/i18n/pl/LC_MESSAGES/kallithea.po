@@ -302,8 +302,8 @@ msgid "Bad captcha"
 msgstr ""
 
 #: kallithea/controllers/login.py:150
-msgid "You have successfully registered into Kallithea"
-msgstr "Udało Ci się zarejestrować na stronie"
+msgid "You have successfully registered with %s"
+msgstr "Udało Ci się zarejestrować w %s"
 
 #: kallithea/controllers/login.py:195
 #, fuzzy

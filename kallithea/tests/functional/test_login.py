@@ -327,7 +327,7 @@ class TestLoginController(TestController):
                                              'lastname': lastname,
                                              'admin': True})  # This should be overridden
         assert response.status == '302 Found'
-        self.checkSessionFlash(response, 'You have successfully registered into Kallithea')
+        self.checkSessionFlash(response, 'You have successfully registered with Kallithea')
 
         ret = Session().query(User).filter(User.username == 'test_regular4').one()
         assert ret.username == username
