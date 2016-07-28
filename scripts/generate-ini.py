@@ -55,6 +55,11 @@ ini_files = [
                 'show_revision_number': 'true',
                 'beaker.cache.sql_cache_short.expire': '1',
                 'beaker.session.secret': '{74e0cd75-b339-478b-b129-07dd221def1f}',
+                'cache_dir': '%(here)s/../../data/test/cache',
+                'index_dir': '%(here)s/../../data/test/index',
+                'archive_cache_dir': '%(here)s/../../data/test/tarballcache',
+                'beaker.cache.data_dir': '%(here)s/../../data/test/cache/data',
+                'beaker.cache.lock_dir': '%(here)s/../../data/test/cache/lock',
                 'sqlalchemy.db1.url': 'sqlite:///%(here)s/kallithea_test.sqlite',
             },
             '[logger_root]': {
