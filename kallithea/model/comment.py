@@ -153,6 +153,7 @@ class ChangesetCommentsModel(BaseModel):
                                    repo_name=pull_request.org_repo.repo_name),
                 'pr_source_branch': org_ref_name,
                 'pr_owner': pull_request.owner,
+                'pr_owner_username': pull_request.owner.username,
                 'repo_name': pull_request.other_repo.repo_name,
                 'comment_username': user.username,
                 'threading': threading,

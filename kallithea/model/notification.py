@@ -304,8 +304,8 @@ class EmailNotificationModel(BaseModel):
             # self.TYPE_PASSWORD_RESET
             self.TYPE_REGISTRATION: _('New user %(new_username)s registered'),
             # self.TYPE_DEFAULT
-            self.TYPE_PULL_REQUEST: _('[Added] %(repo_name)s pull request %(pr_nice_id)s "%(pr_title_short)s" from %(pr_source_branch)s'),
-            self.TYPE_PULL_REQUEST_COMMENT: _('[Comment] %(repo_name)s pull request %(pr_nice_id)s "%(pr_title_short)s" from %(pr_source_branch)s'),
+            self.TYPE_PULL_REQUEST: _('[Review] %(repo_name)s PR %(pr_nice_id)s "%(pr_title_short)s" from %(pr_source_branch)s by %(pr_owner_username)s'),
+            self.TYPE_PULL_REQUEST_COMMENT: _('[Comment] %(repo_name)s PR %(pr_nice_id)s "%(pr_title_short)s" from %(pr_source_branch)s by %(pr_owner_username)s'),
         }
 
     def get_email_description(self, type_, **kwargs):

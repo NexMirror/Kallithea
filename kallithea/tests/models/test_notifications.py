@@ -192,6 +192,7 @@ class TestNotifications(TestController):
                 pr_source_repo='https://dev.org/repo',
                 pr_source_branch='devbranch',
                 pr_owner=User.get(self.u2),
+                pr_owner_username='u2'
                 )
 
             for type_, body, kwargs in [

@@ -171,6 +171,7 @@ class PullRequestModel(BaseModel):
                                repo_name=pr.org_repo.repo_name),
             'pr_source_branch': org_ref_name,
             'pr_owner': pr.owner,
+            'pr_owner_username': pr.owner.username,
             'pr_username': user.username,
             'threading': threading,
             'is_mention': False,
