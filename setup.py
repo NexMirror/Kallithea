@@ -4,7 +4,7 @@ import os
 import sys
 import platform
 
-if sys.version_info < (2, 6):
+if sys.version_info < (2, 6) or sys.version_info >= (3,):
     raise Exception('Kallithea requires python 2.6 or 2.7')
 
 
@@ -109,12 +109,7 @@ except IOError as err:
     )
     long_description = description
 
-try:
-    from setuptools import setup, find_packages
-except ImportError:
-    from ez_setup import use_setuptools
-    use_setuptools()
-    from setuptools import setup, find_packages
+import setuptools
 
 # monkey patch setuptools to use distutils owner/group functionality
 from setuptools.command import sdist
@@ -125,10 +120,9 @@ class sdist_new(sdist_org):
         self.owner = self.group = 'root'
 sdist.sdist = sdist_new
 
-# packages
-packages = find_packages(exclude=['ez_setup'])
+packages = setuptools.find_packages(exclude=['ez_setup'])
 
-setup(
+setuptools.setup(
     name='Kallithea',
     version=__version__,
     description=description,
