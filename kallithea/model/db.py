@@ -969,9 +969,9 @@ class Repository(Base, BaseModel):
     DEFAULT_CLONE_URI = '{scheme}://{user}@{netloc}/{repo}'
     DEFAULT_CLONE_URI_ID = '{scheme}://{user}@{netloc}/_{repoid}'
 
-    STATE_CREATED = 'repo_state_created'
-    STATE_PENDING = 'repo_state_pending'
-    STATE_ERROR = 'repo_state_error'
+    STATE_CREATED = u'repo_state_created'
+    STATE_PENDING = u'repo_state_pending'
+    STATE_ERROR = u'repo_state_error'
 
     repo_id = Column(Integer(), primary_key=True)
     repo_name = Column(Unicode(255), nullable=False, unique=True)
