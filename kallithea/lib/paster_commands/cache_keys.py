@@ -64,7 +64,7 @@ class Command(BasePasterCommand):
             for c_obj in _caches:
                 Session().delete(c_obj)
                 print 'Removing key: %s' % (safe_str(c_obj.cache_key))
-                Session().commit()
+            Session().commit()
         else:
             print 'Nothing done, exiting...'
 
