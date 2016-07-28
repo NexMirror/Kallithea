@@ -4,10 +4,10 @@ ${h.form(url('edit_repo_group_perms', group_name=c.repo_group.group_name),method
         <div class="field">
             <table id="permissions_manage" class="noborder">
                 <tr>
-                    <td>${_('None')}</td>
-                    <td>${_('Read')}</td>
-                    <td>${_('Write')}</td>
-                    <td>${_('Admin')}</td>
+                    <td>${_('None')}<br />(${_('Not visible')})</td>
+                    <td>${_('Read')}<br />(${_('Visible')})</td>
+                    <td>${_('Write')}<br />(${_('Add repos')})</td>
+                    <td>${_('Admin')}<br />(${_('Add/Edit groups')})</td>
                     <td>${_('User/User Group')}</td>
                     <td></td>
                 </tr>
