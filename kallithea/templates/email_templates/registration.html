@@ -1,6 +1,23 @@
 ## -*- coding: utf-8 -*-
-<%inherit file="main.html"/>
-
-${body}
-
-${_('View this user here')}: <a href="${registered_user_url}">${registered_user_url}</a>
+<%inherit file="main.html"/>\
+\
+<%block name="header">\
+<%include file="header.html" args="title=_('New User Registration'),link=registered_user_url"/>\
+</%block>\
+\
+        <p>
+            ${_('Username')}:
+            <br/>
+            ${new_username}
+        </p>
+        <p>
+            ${_('Full Name')}:
+            <br/>
+            ${new_full_name}
+        </p>
+        <p>
+            ${_('Email')}:
+            <br/>
+            ${new_email}
+        </p>
+<%include file="button.html" args="url=registered_user_url,title=_('View User Profile'),padding_bottom=False"/>\

@@ -1,0 +1,12 @@
+<%page args="title,link" />\
+\
+##<!-- header -->
+    <h1>
+        %if link is not None:
+            <a href="${link}"
+               target="_blank">${title}</a>
+        %else:
+            ${title}
+        %endif
+    </h1>
+##<!-- /header -->

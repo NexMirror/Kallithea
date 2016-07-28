@@ -1,22 +1,37 @@
-## -*- coding: utf-8 -*-
-<%inherit file="main.html"/>
-
-%if is_mention:
-<p>${_('%s mentioned you on %s pull request "%s"') % (pr_user_created, repo_name, pr_title)}</p>
-%else:
-<p>${_('%s requested your review of %s pull request "%s"') % (pr_user_created, repo_name, pr_title)}</p>
-%endif
-
-<p>${_('URL')}: <a href="${pr_url}">${pr_url}</a></p>
-
-<p>${_('Description')}:</p>
-<p style="white-space: pre-wrap; font-family: monospace">${body}</p>
-
-<p>${_('Changesets')}:</p>
-<p style="white-space: pre-wrap">
-%for r,r_msg in pr_revisions:
-<i><a href="${h.canonical_url('changeset_home', repo_name=org_repo_name, revision=r)}">${h.short_id(r)}</a></i>:
-${h.shorter(r_msg, 256)}
-
-%endfor
-</p>
+<%inherit file="main.html"/>\
+\
+<%block name="header">\
+<% title = _('Mention on Pull Request %s "%s" by %s') % (pr_nice_id, pr_title, pr_user_created) if is_mention else _('Added as Reviewer of Pull Request %s "%s" by %s') % (pr_nice_id, pr_title, pr_user_created) %>\
+<%include file="header.html" args="title=title,link=pr_url"/>\
+</%block>\
+\
+            <p>
+                ${_('Pull request from')}
+                <a href="${pr_source_repo}">${pr_source_repo}</a>
+                ${_('at')}
+                ${pr_source_branch}
+                ${_('to')}
+                <a href="${pr_target_repo}">${pr_target_repo}</a>
+                ${_('at')}
+                ${pr_target_branch}:
+                <br/>
+                <a href="${pr_url}">${pr_nice_id}</a>
+                "${pr_title}"
+                ${_('by')}
+                ${pr_owner.full_name_and_username}.
+            </p>
+            <p>
+                ${_('Description')}:
+            </p>
+            <div style="font-family:monospace;white-space:pre-wrap">${body}</div>
+            <p>${_('Changesets')}:</p>
+            <ul>
+                %for revision, desc in pr_revisions:
+                    <li>
+                        <a href="${h.canonical_url('changeset_home', repo_name=org_repo_name, revision=revision)}">
+                            ${h.shorter(desc, 80, firstline=True)}
+                        </a>
+                    </li>
+                %endfor
+            </ul>
+<%include file="button.html" args="url=pr_url,title=_('View Pull Request'),padding_bottom=False"/>\

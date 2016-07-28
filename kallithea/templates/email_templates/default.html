@@ -1,4 +1,7 @@
-## -*- coding: utf-8 -*-
-<%inherit file="main.html"/>
-
-${body}
+<%inherit file="main.html"/>\
+\
+<%block name="header">\
+<%include file="header.html" args="title=_('Message'),link=None"/>\
+</%block>\
+\
+        <div style="font-family:monospace;white-space:pre-wrap">${body}</div>

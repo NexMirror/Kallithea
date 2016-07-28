@@ -49,7 +49,7 @@ class TestNotifications(TestController):
         def send_email(recipients, subject, body='', html_body='', headers=None, author=None):
             assert recipients == ['u2@example.com']
             assert subject == 'Test Message'
-            assert body == "\n\nhi there\n\n\n-- \nThis is an automatic notification. Don't reply to this mail.\n"
+            assert body == u"hi there"
             assert '>hi there<' in html_body
             assert author.username == 'u1'
         with mock.patch.object(kallithea.lib.celerylib.tasks, 'send_email', send_email):

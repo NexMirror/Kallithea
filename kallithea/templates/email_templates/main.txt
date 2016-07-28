@@ -1,4 +1,0 @@
-${self.body()|n,unicode}
-
--- 
-${_("This is an automatic notification. Don't reply to this mail.")|n,unicode}

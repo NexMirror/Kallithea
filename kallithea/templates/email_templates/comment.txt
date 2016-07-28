@@ -1,0 +1,15 @@
+<%page args="author,text,status,close=False" />\
+${author|n,unicode}:
+
+%if status:
+${_('Status change:')|n,unicode} \
+${status|n,unicode}
+
+%endif
+%if close:
+${_('The pull request has been closed.')|n,unicode}
+
+%endif
+${text|n,unicode}
+
+## Trailing empty line

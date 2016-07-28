@@ -198,7 +198,9 @@ class UserModel(BaseModel):
         edit_url = h.canonical_url('edit_user', id=new_user.user_id)
         email_kwargs = {
             'registered_user_url': edit_url,
-            'new_username': new_user.username}
+            'new_username': new_user.username,
+            'new_email': new_user.email,
+            'new_full_name': new_user.full_name}
         NotificationModel().create(created_by=new_user, subject=subject,
                                    body=body, recipients=None,
                                    type_=Notification.TYPE_REGISTRATION,

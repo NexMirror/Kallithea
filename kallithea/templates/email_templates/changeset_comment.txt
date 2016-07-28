@@ -1,19 +1,16 @@
-## -*- coding: utf-8 -*-
-<%inherit file="main.txt"/>
+<%block name="header">\
+<% title = _('Mention in Comment on Changeset "%s"') % h.shorter(message, 200, firstline=True) if is_mention else _('Comment on Changeset "%s"') % h.shorter(message, 200, firstline=True) %>\
+<%include file="header.txt" args="title=title,link=cs_comment_url"/>\
+</%block>\
 
-%if is_mention:
-${_('Comment from %s on %s changeset %s mentioned you') % (cs_comment_user, cs_target_repo, h.short_id(raw_id))|n,unicode}:
-%else:
-${_('Comment from %s on %s changeset %s') % (cs_comment_user, cs_target_repo, h.short_id(raw_id))|n,unicode}:
-%endif
-${body|n,unicode}
+<%include file="comment.txt" args="text=body,author=cs_comment_user,status=status_change"/>\
 
-%if status_change:
-${_('The changeset status was changed to')|n,unicode}: ${status_change|n,unicode}
-%endif
+${_('Changeset on')|n,unicode} \
+${cs_target_repo|n,unicode} \
+${_('branch')|n,unicode} \
+${branch|n,unicode}:
+"${h.shorter(message, 60, firstline=True)|n,unicode}" \
+${_('by')|n,unicode} \
+${cs_author.full_name_and_username|n,unicode}.
 
-${_('URL')|n,unicode}: ${cs_comment_url|n,unicode}
-
-${_('Changeset')|n,unicode}: ${h.short_id(raw_id)|n,unicode}
-${_('Description')|n,unicode}:
-${h.shorter(message, 256)|n,unicode}
+<%include file="button.txt" args="url=cs_comment_url,title=_('View Comment')"/>\

@@ -1,0 +1,17 @@
+<%page args="author,text,status,close=False" />\
+\
+##<!-- comment ->
+            <h2>${author}</h2>
+                %if status:
+                    <p>
+                        ${_('Status change:')}
+                        ${status}
+                    </p>
+                %endif
+                %if close:
+                    <p>
+                        ${_('The pull request has been closed.')}
+                    </p>
+                %endif
+                <div style="font-family:monospace;white-space:pre-wrap">${text}</div>
+##<!-- /comment ->
