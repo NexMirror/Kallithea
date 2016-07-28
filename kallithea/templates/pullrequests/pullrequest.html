@@ -202,6 +202,7 @@ ${self.repo_context_bar('showpullrequest')}
 
       $("#org_ref").select2({
           dropdownAutoWidth: true,
+          maxResults: 50,
           sortResults: branchSort
       });
       $("#org_ref").on("change", function(e){
@@ -217,6 +218,7 @@ ${self.repo_context_bar('showpullrequest')}
 
       $("#other_ref").select2({
           dropdownAutoWidth: true,
+          maxResults: 50,
           sortResults: branchSort
       });
       $("#other_ref").on("change", function(e){

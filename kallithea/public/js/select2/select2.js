@@ -1097,7 +1097,13 @@ the specific language governing permissions and limitations under the Apache Lic
 
                         // collect the created nodes for bulk append
                         var nodes = [];
-                        for (i = 0, l = results.length; i < l; i = i + 1) {
+
+                        // Kallithea customization: maxResults
+                        l = results.length;
+                        if (query.term.length == 0 && l > opts.maxResults) {
+                            l = opts.maxResults;
+                        }
+                        for (i = 0; i < l; i = i + 1) {
 
                             result=results[i];
 
@@ -1138,6 +1144,10 @@ the specific language governing permissions and limitations under the Apache Lic
                             nodes.push(node[0]);
                         }
 
+                        if (results.length >= opts.maxResults) {
+                            nodes.push($('<li class="select2-no-results"><div class="select2-result-label">Too many matches found</div></li>'));
+                        }
+
                         // bulk append the created nodes
                         container.append(nodes);
                         liveRegion.text(opts.formatMatches(results.length));
@@ -1161,16 +1171,25 @@ the specific language governing permissions and limitations under the Apache Lic
 
             if (select) {
                 opts.query = this.bind(function (query) {
+                    // Kallithea customization: maxResults
                     var data = { results: [], more: false },
                         term = query.term,
-                        children, placeholderOption, process;
+                        children, placeholderOption, process,
+                        maxResults = opts.maxResults || -1,
+                        termLower = term.toLowerCase();
 
                     process=function(element, collection) {
                         var group;
                         if (element.is("option")) {
+                          if (collection.length < maxResults) {
                             if (query.matcher(term, element.text(), element)) {
                                 collection.push(self.optionToData(element));
                             }
+                          } else {
+                            if (element.text().toLowerCase().indexOf(termLower) == 0) {
+                                collection.push(self.optionToData(element));
+                            }
+                          }
                         } else if (element.is("optgroup")) {
                             group=self.optionToData(element);
                             element.children().each2(function(i, elm) { process(elm, group.children); });
