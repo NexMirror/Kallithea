@@ -1,0 +1,6 @@
+pytest>=2.7.0,<3.0
+pytest-runner
+pytest-sugar>=0.7.0,<1.0.0
+webtest==1.4.3
+mock
+sphinx

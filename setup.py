@@ -38,7 +38,6 @@ requirements = [
     "alembic>=0.8.0,<0.9",
     "waitress==0.8.8",
     "webob>=1.0.8,<=1.1.1",
-    "webtest==1.4.3",
     "Pylons>=1.0.0,<=1.0.2",
     "Beaker==1.6.4",
     "WebHelpers==1.3",
@@ -52,23 +51,18 @@ requirements = [
     "python-dateutil>=1.5.0,<2.0.0",
     "markdown==2.2.1",
     "docutils>=0.8.1,<=0.11",
-    "mock",
     "URLObject==2.3.4",
     "Routes==1.13",
-    "pytest>=2.7.0,<3.0",
-    "pytest-sugar>=0.7.0,<1.0.0",
     "dulwich>=0.14.1",
     "mercurial>=2.9,<3.9",
 ]
 
 if sys.version_info < (2, 7):
     requirements.append("importlib==1.0.1")
-    requirements.append("unittest2")
     requirements.append("argparse")
 
 if not is_windows:
     requirements.append("bcrypt>=2.0.0")
-
 
 dependency_links = [
 ]
@@ -147,9 +141,7 @@ setup(
     url=__url__,
     install_requires=requirements,
     classifiers=classifiers,
-    setup_requires=['PasteScript>=1.6.3',
-                    'pytest-runner'],
-    tests_require=['pytest'],
+    setup_requires=['PasteScript>=1.6.3'],
     data_files=data_files,
     packages=packages,
     include_package_data=True,

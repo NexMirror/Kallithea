@@ -48,10 +48,14 @@ on Bitbucket_ and create a local clone of your own fork.
 Running tests
 -------------
 
-After finishing your changes make sure all tests pass cleanly. You can run
-the testsuite by running ``py.test`` from the project root::
+After finishing your changes make sure all tests pass cleanly. Install the test
+dependencies, then run the testsuite by invoking ``py.test`` from the
+project root::
 
+    pip install -r dev_requirements.txt
     py.test
+
+Note that testing on Python 2.6 also requires ``unittest2``.
 
 You can also use ``tox`` to run the tests with all supported Python versions
 (currently Python 2.6--2.7).
