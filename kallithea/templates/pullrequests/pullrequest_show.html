@@ -133,6 +133,7 @@ ${self.repo_context_bar('showpullrequest')}
               <label>${_('Pull changes')}:</label>
           </div>
           <div class="input">
+            %if c.cs_ranges:
               <div>
                ## TODO: use cs_ranges[-1] or org_ref_parts[1] in both cases?
                %if h.is_hg(c.pull_request.org_repo):
@@ -141,6 +142,7 @@ ${self.repo_context_bar('showpullrequest')}
                  <span style="font-family: monospace">git pull ${c.pull_request.org_repo.clone_url()} ${c.pull_request.org_ref_parts[1]}</span>
                %endif
               </div>
+            %endif
           </div>
         </div>
         <div class="field">
@@ -180,7 +182,7 @@ ${self.repo_context_bar('showpullrequest')}
                 <table id="updaterevs-table" class="noborder" style="padding-left:50px">
                   %for cnt, cs in enumerate(c.avail_cs):
                     <tr id="chg_available_${cnt+1}">
-                      %if cs.revision == c.cs_ranges[-1].revision:
+                      %if c.cs_ranges and cs.revision == c.cs_ranges[-1].revision:
                         <td>
                           %if editable:
                             ${h.radio(name='updaterev', value='', checked=True)}

@@ -576,6 +576,8 @@ class PullrequestsController(BaseRepoController):
                            for x in c.pull_request.revisions]
         except ChangesetDoesNotExistError:
             c.cs_ranges = []
+            h.flash(_('Revision %s not found in %s') % (x, c.cs_repo.repo_name),
+                'error')
         c.cs_ranges_org = None # not stored and not important and moving target - could be calculated ...
         revs = [ctx.revision for ctx in reversed(c.cs_ranges)]
         c.jsdata = json.dumps(graph_data(org_scm_instance, revs))
@@ -600,7 +602,9 @@ class PullrequestsController(BaseRepoController):
         c.update_msg = ""
         c.update_msg_other = ""
         try:
-            if org_scm_instance.alias == 'hg' and c.a_ref_name != 'ancestor':
+            if not c.cs_ranges:
+                c.update_msg = _('Error: changesets not found when displaying pull request from %s.') % c.cs_rev
+            elif org_scm_instance.alias == 'hg' and c.a_ref_name != 'ancestor':
                 if c.cs_ref_type != 'branch':
                     c.cs_branch_name = org_scm_instance.get_changeset(c.cs_ref_name).branch # use ref_type ?
                 c.a_branch_name = c.a_ref_name
@@ -654,7 +658,7 @@ class PullrequestsController(BaseRepoController):
                 c.cs_repo.scm_instance.get_changeset(c.cs_rev) # check it exists - raise ChangesetDoesNotExistError if not
                 c.update_msg = _("Git pull requests don't support iterating yet.")
         except ChangesetDoesNotExistError:
-            c.update_msg = _('Error: revision %s was not found. Please create a new pull request!') % c.cs_rev
+            c.update_msg = _('Error: some changesets not found when displaying pull request from %s.') % c.cs_rev
 
         c.avail_revs = avail_revs
         c.avail_cs = [org_scm_instance.get_changeset(r) for r in avail_show]
