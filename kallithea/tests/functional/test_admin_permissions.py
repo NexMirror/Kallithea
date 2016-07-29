@@ -16,7 +16,7 @@ class TestAdminPermissionsController(TestController):
         # Test response...
         response.mustcontain('All IP addresses are allowed')
 
-    def test_add_ips(self):
+    def test_add_ips(self, auto_clear_ip_permissions):
         self.log_user()
         default_user_id = User.get_default_user().user_id
         response = self.app.post(url('edit_user_ips_update', id=default_user_id),

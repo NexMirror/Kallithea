@@ -9,7 +9,8 @@ from pylons.i18n.translation import _get_translator
 import pytest
 from kallithea.model.user import UserModel
 from kallithea.model.meta import Session
-from kallithea.model.db import Setting, User
+from kallithea.model.db import Setting, User, UserIpMap
+from kallithea.tests import invalidate_all_caches
 
 
 def pytest_configure():
@@ -84,3 +85,19 @@ def set_test_settings():
         s = Setting.create_or_update(k, v, t)
         session.add(s)
     session.commit()
+
+@pytest.yield_fixture
+def auto_clear_ip_permissions():
+    """Fixture that provides nothing but clearing IP permissions upon test
+    exit. This clearing is needed to avoid other test failing to make fake http
+    accesses."""
+    yield
+    # cleanup
+    user_model = UserModel()
+    default_user_id = User.get_default_user().user_id
+    for ip in UserIpMap.query().filter(UserIpMap.user_id ==
+                                       default_user_id):
+        user_model.delete_extra_ip(default_user_id, ip.ip_id)
+
+    # IP permissions are cached, need to invalidate this cache explicitly
+    invalidate_all_caches()
