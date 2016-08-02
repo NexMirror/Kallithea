@@ -43,60 +43,6 @@ from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.compat import json
 
 
-def __get_lem():
-    """
-    Get language extension map based on what's inside pygments lexers
-    """
-    from pygments import lexers
-    from string import lower
-    from collections import defaultdict
-
-    d = defaultdict(lambda: [])
-
-    def __clean(s):
-        s = s.lstrip('*')
-        s = s.lstrip('.')
-
-        if s.find('[') != -1:
-            exts = []
-            start, stop = s.find('['), s.find(']')
-
-            for suffix in s[start + 1:stop]:
-                exts.append(s[:s.find('[')] + suffix)
-            return map(lower, exts)
-        else:
-            return map(lower, [s])
-
-    for lx, t in sorted(lexers.LEXERS.items()):
-        m = map(__clean, t[-2])
-        if m:
-            m = reduce(lambda x, y: x + y, m)
-            for ext in m:
-                desc = lx.replace('Lexer', '')
-                d[ext].append(desc)
-
-    return dict(d)
-
-
-def __get_index_filenames():
-    """
-    Get list of known indexable filenames from pygment lexer internals
-    """
-    from pygments import lexers
-    from itertools import ifilter
-
-    filenames = []
-
-    def likely_filename(s):
-        return s.find('*') == -1 and s.find('[') == -1
-
-    for lx, t in sorted(lexers.LEXERS.items()):
-        for f in ifilter(likely_filename, t[-2]):
-            filenames.append(f)
-
-    return filenames
-
-
 def str2bool(_str):
     """
     returns True/False value from given string, it tries to translate the
