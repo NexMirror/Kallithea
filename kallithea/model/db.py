@@ -134,11 +134,6 @@ class BaseModel(object):
         return res
 
     @classmethod
-    def getAll(cls):
-        # deprecated and left for backward compatibility
-        return cls.get_all()
-
-    @classmethod
     def get_all(cls):
         return cls.query().all()
 

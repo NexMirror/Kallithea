@@ -527,7 +527,7 @@ class TestVCSOperations(TestController):
             assert 'abort: HTTP Error 403: Forbidden' in stderr
         finally:
             #release IP restrictions
-            for ip in UserIpMap.getAll():
+            for ip in UserIpMap.get_all():
                 UserIpMap.delete(ip.ip_id)
             Session().commit()
 
@@ -553,7 +553,7 @@ class TestVCSOperations(TestController):
             assert re.search(r'\b403\b', stderr)
         finally:
             #release IP restrictions
-            for ip in UserIpMap.getAll():
+            for ip in UserIpMap.get_all():
                 UserIpMap.delete(ip.ip_id)
             Session().commit()
 

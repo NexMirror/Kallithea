@@ -457,7 +457,7 @@ class ApiController(JSONRPCController):
             user = get_user_or_error(userid)
 
         # show all locks
-        for r in Repository.getAll():
+        for r in Repository.get_all():
             userid, time_ = r.locked
             if time_:
                 _api_data = r.get_api_data()

@@ -138,4 +138,4 @@ class BaseModel(object):
         """
         Returns all instances of what is defined in `cls` class variable
         """
-        return cls.cls.getAll()
+        return cls.cls.get_all()

@@ -17,7 +17,7 @@ class TestHomeController(TestController):
         #if global permission is set
         response.mustcontain('Add Repository')
         # html in javascript variable:
-        response.mustcontain('var data = {"totalRecords": %s' % len(Repository.getAll()))
+        response.mustcontain('var data = {"totalRecords": %s' % len(Repository.get_all()))
         response.mustcontain(r'href=\"/%s\"' % HG_REPO)
 
         response.mustcontain(r'<span class="repotag">git')

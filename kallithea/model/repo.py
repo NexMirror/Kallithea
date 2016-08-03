@@ -180,7 +180,7 @@ class RepoModel(BaseModel):
     @classmethod
     def update_repoinfo(cls, repositories=None):
         if repositories is None:
-            repositories = Repository.getAll()
+            repositories = Repository.get_all()
         for repo in repositories:
             repo.update_changeset_cache()
 
