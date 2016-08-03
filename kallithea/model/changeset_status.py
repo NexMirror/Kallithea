@@ -39,12 +39,6 @@ class ChangesetStatusModel(BaseModel):
 
     cls = ChangesetStatus
 
-    def __get_changeset_status(self, changeset_status):
-        return self._get_instance(ChangesetStatus, changeset_status)
-
-    def __get_pull_request(self, pull_request):
-        return self._get_instance(PullRequest, pull_request)
-
     def _get_status_query(self, repo, revision, pull_request,
                           with_revisions=False):
         repo = self._get_repo(repo)
@@ -58,7 +52,7 @@ class ChangesetStatusModel(BaseModel):
         if revision:
             q = q.filter(ChangesetStatus.revision == revision)
         elif pull_request:
-            pull_request = self.__get_pull_request(pull_request)
+            pull_request = self._get_instance(PullRequest, pull_request)
             q = q.filter(ChangesetStatus.pull_request == pull_request)
         else:
             raise Exception('Please specify revision or pull_request')
@@ -167,7 +161,7 @@ class ChangesetStatusModel(BaseModel):
             revisions = [revision]
         else:
             assert pull_request is not None
-            pull_request = self.__get_pull_request(pull_request)
+            pull_request = self._get_instance(PullRequest, pull_request)
             repo = pull_request.org_repo
             q = q.filter(ChangesetStatus.repo == repo)
             q = q.filter(ChangesetStatus.revision.in_(pull_request.revisions))

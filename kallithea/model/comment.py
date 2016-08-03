@@ -45,12 +45,6 @@ class ChangesetCommentsModel(BaseModel):
 
     cls = ChangesetComment
 
-    def __get_changeset_comment(self, changeset_comment):
-        return self._get_instance(ChangesetComment, changeset_comment)
-
-    def __get_pull_request(self, pull_request):
-        return self._get_instance(PullRequest, pull_request)
-
     def _get_notification_data(self, repo, comment, user, comment_text,
                                line_no=None, revision=None, pull_request=None,
                                status_change=None, closing_pr=False):
@@ -186,7 +180,7 @@ class ChangesetCommentsModel(BaseModel):
         if revision is not None:
             comment.revision = revision
         elif pull_request is not None:
-            pull_request = self.__get_pull_request(pull_request)
+            pull_request = self._get_instance(PullRequest, pull_request)
             comment.pull_request = pull_request
         else:
             raise Exception('Please specify revision or pull_request_id')
@@ -227,7 +221,7 @@ class ChangesetCommentsModel(BaseModel):
         return comment
 
     def delete(self, comment):
-        comment = self.__get_changeset_comment(comment)
+        comment = self._get_instance(ChangesetComment, comment)
         Session().delete(comment)
 
         return comment
@@ -272,7 +266,7 @@ class ChangesetCommentsModel(BaseModel):
             q = q.filter(ChangesetComment.revision == revision) \
                 .filter(ChangesetComment.repo_id == repo_id)
         elif pull_request is not None:
-            pull_request = self.__get_pull_request(pull_request)
+            pull_request = self._get_instance(PullRequest, pull_request)
             q = q.filter(ChangesetComment.pull_request == pull_request)
         else:
             raise Exception('Please specify either revision or pull_request')

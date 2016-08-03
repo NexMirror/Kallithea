@@ -47,16 +47,6 @@ class NotificationModel(BaseModel):
 
     cls = Notification
 
-    def __get_notification(self, notification):
-        if isinstance(notification, Notification):
-            return notification
-        elif isinstance(notification, (int, long)):
-            return Notification.get(notification)
-        else:
-            if notification is not None:
-                raise Exception('notification must be int, long or Instance'
-                                ' of Notification got %s' % type(notification))
-
     def create(self, created_by, subject, body, recipients=None,
                type_=Notification.TYPE_MESSAGE, with_email=True,
                email_kwargs=None, repo_name=None):
@@ -152,7 +142,7 @@ class NotificationModel(BaseModel):
     def delete(self, user, notification):
         # we don't want to remove actual notification just the assignment
         try:
-            notification = self.__get_notification(notification)
+            notification = self._get_instance(Notification, notification)
             user = self._get_user(user)
             if notification and user:
                 obj = UserNotification.query() \
@@ -190,7 +180,7 @@ class NotificationModel(BaseModel):
 
     def mark_read(self, user, notification):
         try:
-            notification = self.__get_notification(notification)
+            notification = self._get_instance(Notification, notification)
             user = self._get_user(user)
             if notification and user:
                 obj = UserNotification.query() \
@@ -235,7 +225,7 @@ class NotificationModel(BaseModel):
 
     def get_user_notification(self, user, notification):
         user = self._get_user(user)
-        notification = self.__get_notification(notification)
+        notification = self._get_instance(Notification, notification)
 
         return UserNotification.query() \
             .filter(UserNotification.notification == notification) \

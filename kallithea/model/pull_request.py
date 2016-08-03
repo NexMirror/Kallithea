@@ -49,9 +49,6 @@ class PullRequestModel(BaseModel):
 
     cls = PullRequest
 
-    def __get_pull_request(self, pull_request):
-        return self._get_instance(PullRequest, pull_request)
-
     def get_pullrequest_cnt_for_user(self, user):
         return PullRequest.query() \
                                 .join(PullRequestReviewers) \
@@ -202,7 +199,7 @@ class PullRequestModel(BaseModel):
 
     def update_reviewers(self, user, pull_request, reviewers_ids):
         reviewers_ids = set(reviewers_ids)
-        pull_request = self.__get_pull_request(pull_request)
+        pull_request = self._get_instance(PullRequest, pull_request)
         current_reviewers = PullRequestReviewers.query() \
             .options(joinedload('user')) \
             .filter_by(pull_request=pull_request) \
@@ -225,11 +222,11 @@ class PullRequestModel(BaseModel):
                 Session().delete(prr)
 
     def delete(self, pull_request):
-        pull_request = self.__get_pull_request(pull_request)
+        pull_request = self._get_instance(PullRequest, pull_request)
         Session().delete(pull_request)
 
     def close_pull_request(self, pull_request):
-        pull_request = self.__get_pull_request(pull_request)
+        pull_request = self._get_instance(PullRequest, pull_request)
         pull_request.status = PullRequest.STATUS_CLOSED
         pull_request.updated_on = datetime.datetime.now()
         Session().add(pull_request)
