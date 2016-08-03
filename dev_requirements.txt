@@ -2,6 +2,6 @@ pytest>=2.7.0,<3.0
 pytest-runner
 pytest-sugar>=0.7.0,<1.0.0
 pytest-catchlog
-webtest==1.4.3
+WebTest<2 # this is also a Pylons dependency and pinned in setup.py to avoid version conflicts for WebOb
 mock
 sphinx
