@@ -46,7 +46,7 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 from kallithea.model import meta
-from kallithea.lib.utils2 import safe_str, obfuscate_url_pw
+from kallithea.lib.utils2 import obfuscate_url_pw
 
 log = logging.getLogger(__name__)
 
@@ -78,29 +78,6 @@ class BaseModel(object):
         else:
             self.sa = meta.Session()
 
-    def _get_instance(self, cls, instance, callback=None):
-        """
-        Gets instance of given cls using some simple lookup mechanism.
-
-        :param cls: class to fetch
-        :param instance: int or Instance
-        :param callback: callback to call if all lookups failed
-        """
-
-        if isinstance(instance, cls):
-            return instance
-        elif isinstance(instance, (int, long)) or safe_str(instance).isdigit():
-            return cls.get(instance)
-        else:
-            if instance is not None:
-                if callback is None:
-                    raise Exception(
-                        'given object must be int, long or Instance of %s '
-                        'got %s, no callback provided' % (cls, type(instance))
-                    )
-                else:
-                    return callback(instance)
-
     def _get_user(self, user):
         """
         Helper method to get user by ID, or username fallback
@@ -108,7 +85,7 @@ class BaseModel(object):
         :param user: UserID, username, or User instance
         """
         from kallithea.model.db import User
-        return self._get_instance(User, user,
+        return User.guess_instance(user,
                                   callback=User.get_by_username)
 
     def _get_repo(self, repository):
@@ -118,7 +95,7 @@ class BaseModel(object):
         :param repository: RepoID, repository name or Repository Instance
         """
         from kallithea.model.db import Repository
-        return self._get_instance(Repository, repository,
+        return Repository.guess_instance(repository,
                                   callback=Repository.get_by_repo_name)
 
     def _get_perm(self, permission):
@@ -128,5 +105,5 @@ class BaseModel(object):
         :param permission: PermissionID, permission_name or Permission instance
         """
         from kallithea.model.db import Permission
-        return self._get_instance(Permission, permission,
+        return Permission.guess_instance(permission,
                                   callback=Permission.get_by_key)

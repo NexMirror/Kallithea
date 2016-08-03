@@ -44,11 +44,11 @@ log = logging.getLogger(__name__)
 class RepoGroupModel(BaseModel):
 
     def _get_user_group(self, users_group):
-        return self._get_instance(UserGroup, users_group,
+        return UserGroup.guess_instance(users_group,
                                   callback=UserGroup.get_by_group_name)
 
     def _get_repo_group(self, repo_group):
-        return self._get_instance(RepoGroup, repo_group,
+        return RepoGroup.guess_instance(repo_group,
                                   callback=RepoGroup.get_by_group_name)
 
     @LazyProperty

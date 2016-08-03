@@ -122,6 +122,32 @@ class BaseModel(object):
             return cls.query().get(id_)
 
     @classmethod
+    def guess_instance(cls, value, callback=None):
+        """Haphazardly attempt to convert `value` to a `cls` instance.
+
+        If `value` is None or already a `cls` instance, return it. If `value`
+        is a number (or looks like one if you squint just right), assume it's
+        a database primary key and let SQLAlchemy sort things out. Otherwise,
+        fall back to resolving it using `callback` (if specified); this could
+        e.g. be a function that looks up instances by name (though that won't
+        work if the name begins with a digit). Otherwise, raise Exception.
+        """
+
+        if value is None:
+            return None
+        if isinstance(value, cls):
+            return value
+        if isinstance(value, (int, long)) or safe_str(value).isdigit():
+            return cls.get(value)
+        if callback is not None:
+            return callback(value)
+
+        raise Exception(
+            'given object must be int, long or Instance of %s '
+            'got %s, no callback provided' % (cls, type(value))
+        )
+
+    @classmethod
     def get_or_404(cls, id_):
         try:
             id_ = int(id_)

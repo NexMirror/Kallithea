@@ -40,7 +40,7 @@ log = logging.getLogger(__name__)
 class UserGroupModel(BaseModel):
 
     def _get_user_group(self, user_group):
-        return self._get_instance(UserGroup, user_group,
+        return UserGroup.guess_instance(user_group,
                                   callback=UserGroup.get_by_group_name)
 
     def _create_default_perms(self, user_group):

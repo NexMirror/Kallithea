@@ -53,7 +53,7 @@ class GistModel(BaseModel):
 
         :param gist: GistID, gist_access_id, or Gist instance
         """
-        return self._get_instance(Gist, gist, callback=Gist.get_by_access_id)
+        return Gist.guess_instance(gist, callback=Gist.get_by_access_id)
 
     def __delete_gist(self, gist):
         """

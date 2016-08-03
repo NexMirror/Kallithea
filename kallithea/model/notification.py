@@ -140,7 +140,7 @@ class NotificationModel(BaseModel):
     def delete(self, user, notification):
         # we don't want to remove actual notification just the assignment
         try:
-            notification = self._get_instance(Notification, notification)
+            notification = Notification.guess_instance(notification)
             user = self._get_user(user)
             if notification and user:
                 obj = UserNotification.query() \
@@ -178,7 +178,7 @@ class NotificationModel(BaseModel):
 
     def mark_read(self, user, notification):
         try:
-            notification = self._get_instance(Notification, notification)
+            notification = Notification.guess_instance(notification)
             user = self._get_user(user)
             if notification and user:
                 obj = UserNotification.query() \
@@ -223,7 +223,7 @@ class NotificationModel(BaseModel):
 
     def get_user_notification(self, user, notification):
         user = self._get_user(user)
-        notification = self._get_instance(Notification, notification)
+        notification = Notification.guess_instance(notification)
 
         return UserNotification.query() \
             .filter(UserNotification.notification == notification) \

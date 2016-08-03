@@ -178,7 +178,7 @@ class ChangesetCommentsModel(BaseModel):
         if revision is not None:
             comment.revision = revision
         elif pull_request is not None:
-            pull_request = self._get_instance(PullRequest, pull_request)
+            pull_request = PullRequest.guess_instance(pull_request)
             comment.pull_request = pull_request
         else:
             raise Exception('Please specify revision or pull_request_id')
@@ -219,7 +219,7 @@ class ChangesetCommentsModel(BaseModel):
         return comment
 
     def delete(self, comment):
-        comment = self._get_instance(ChangesetComment, comment)
+        comment = ChangesetComment.guess_instance(comment)
         Session().delete(comment)
 
         return comment
@@ -264,7 +264,7 @@ class ChangesetCommentsModel(BaseModel):
             q = q.filter(ChangesetComment.revision == revision) \
                 .filter(ChangesetComment.repo_id == repo_id)
         elif pull_request is not None:
-            pull_request = self._get_instance(PullRequest, pull_request)
+            pull_request = PullRequest.guess_instance(pull_request)
             q = q.filter(ChangesetComment.pull_request == pull_request)
         else:
             raise Exception('Please specify either revision or pull_request')
