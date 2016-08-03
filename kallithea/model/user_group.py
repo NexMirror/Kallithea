@@ -39,8 +39,6 @@ log = logging.getLogger(__name__)
 
 class UserGroupModel(BaseModel):
 
-    cls = UserGroup
-
     def _get_user_group(self, user_group):
         return self._get_instance(UserGroup, user_group,
                                   callback=UserGroup.get_by_group_name)

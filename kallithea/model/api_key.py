@@ -38,7 +38,6 @@ log = logging.getLogger(__name__)
 
 
 class ApiKeyModel(BaseModel):
-    cls = UserApiKeys
 
     def create(self, user, description, lifetime=-1):
         """

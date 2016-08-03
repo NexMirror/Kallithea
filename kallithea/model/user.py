@@ -54,8 +54,6 @@ log = logging.getLogger(__name__)
 class UserModel(BaseModel):
     password_reset_token_lifetime = 86400 # 24 hours
 
-    cls = User
-
     def get(self, user_id, cache=False):
         user = self.sa.query(User)
         if cache:

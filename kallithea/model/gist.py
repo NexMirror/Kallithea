@@ -46,7 +46,6 @@ GIST_METADATA_FILE = '.rc_gist_metadata'
 
 
 class GistModel(BaseModel):
-    cls = Gist
 
     def _get_gist(self, gist):
         """

@@ -45,8 +45,6 @@ log = logging.getLogger(__name__)
 
 class NotificationModel(BaseModel):
 
-    cls = Notification
-
     def create(self, created_by, subject, body, recipients=None,
                type_=Notification.TYPE_MESSAGE, with_email=True,
                email_kwargs=None, repo_name=None):

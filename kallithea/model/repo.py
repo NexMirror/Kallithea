@@ -56,7 +56,6 @@ log = logging.getLogger(__name__)
 
 class RepoModel(BaseModel):
 
-    cls = Repository
     URL_SEPARATOR = Repository.url_sep()
 
     def _get_user_group(self, users_group):

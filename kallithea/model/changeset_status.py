@@ -37,8 +37,6 @@ log = logging.getLogger(__name__)
 
 class ChangesetStatusModel(BaseModel):
 
-    cls = ChangesetStatus
-
     def _get_status_query(self, repo, revision, pull_request,
                           with_revisions=False):
         repo = self._get_repo(repo)

@@ -72,8 +72,6 @@ class BaseModel(object):
     :param sa: If passed it reuses this session instead of creating a new one
     """
 
-    cls = None  # override in child class
-
     def __init__(self, sa=None):
         if sa is not None:
             self.sa = sa

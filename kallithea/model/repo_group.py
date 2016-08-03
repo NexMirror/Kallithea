@@ -43,8 +43,6 @@ log = logging.getLogger(__name__)
 
 class RepoGroupModel(BaseModel):
 
-    cls = RepoGroup
-
     def _get_user_group(self, users_group):
         return self._get_instance(UserGroup, users_group,
                                   callback=UserGroup.get_by_group_name)

@@ -47,8 +47,6 @@ log = logging.getLogger(__name__)
 
 class PullRequestModel(BaseModel):
 
-    cls = PullRequest
-
     def get_pullrequest_cnt_for_user(self, user):
         return PullRequest.query() \
                                 .join(PullRequestReviewers) \

@@ -43,8 +43,6 @@ log = logging.getLogger(__name__)
 
 class ChangesetCommentsModel(BaseModel):
 
-    cls = ChangesetComment
-
     def _get_notification_data(self, repo, comment, user, comment_text,
                                line_no=None, revision=None, pull_request=None,
                                status_change=None, closing_pr=False):

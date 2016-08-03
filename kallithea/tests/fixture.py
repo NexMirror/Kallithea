@@ -237,7 +237,7 @@ class Fixture(object):
         form_data = {
             'description': u'new-gist',
             'owner': TEST_USER_ADMIN_LOGIN,
-            'gist_type': GistModel.cls.GIST_PUBLIC,
+            'gist_type': Gist.GIST_PUBLIC,
             'lifetime': -1,
             'gist_mapping': {'filename1.txt':{'content':'hello world'},}
         }

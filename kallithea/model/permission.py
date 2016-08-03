@@ -44,8 +44,6 @@ class PermissionModel(BaseModel):
     Permissions model for Kallithea
     """
 
-    cls = Permission
-
     def create_permissions(self):
         """
         Create permissions for whole system
