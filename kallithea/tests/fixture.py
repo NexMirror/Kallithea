@@ -18,7 +18,7 @@ Helpers for fixture generation
 import os
 import time
 from kallithea.tests import *
-from kallithea.model.db import Repository, User, RepoGroup, UserGroup
+from kallithea.model.db import Repository, User, RepoGroup, UserGroup, Gist
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
 from kallithea.model.user import UserModel
@@ -252,7 +252,7 @@ class Fixture(object):
         return gist
 
     def destroy_gists(self, gistid=None):
-        for g in GistModel.cls.get_all():
+        for g in Gist.get_all():
             if gistid:
                 if gistid == g.gist_access_id:
                     GistModel().delete(g)

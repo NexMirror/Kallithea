@@ -48,7 +48,7 @@ from kallithea.model.user_group import UserGroupModel
 from kallithea.model.gist import GistModel
 from kallithea.model.db import (
     Repository, Setting, UserIpMap, Permission, User, Gist,
-    RepoGroup)
+    RepoGroup, UserGroup)
 from kallithea.lib.compat import json
 from kallithea.lib.exceptions import (
     DefaultUserException, UserGroupsAssignedException)
@@ -885,7 +885,7 @@ class ApiController(JSONRPCController):
         result = []
         _perms = ('usergroup.read', 'usergroup.write', 'usergroup.admin',)
         extras = {'user': apiuser}
-        for user_group in UserGroupList(UserGroupModel().get_all(),
+        for user_group in UserGroupList(UserGroup.get_all(),
                                         perm_set=_perms, extra_kwargs=extras):
             result.append(user_group.get_api_data())
         return result
@@ -1323,7 +1323,7 @@ class ApiController(JSONRPCController):
         if not HasPermissionAnyApi('hg.admin')(user=apiuser):
             repos = RepoModel().get_all_user_repos(user=apiuser)
         else:
-            repos = RepoModel().get_all()
+            repos = Repository.get_all()
 
         for repo in repos:
             result.append(repo.get_api_data())

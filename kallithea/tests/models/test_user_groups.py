@@ -1,4 +1,4 @@
-from kallithea.model.db import User
+from kallithea.model.db import User, UserGroup
 
 from kallithea.tests import *
 from kallithea.tests.fixture import Fixture
@@ -14,7 +14,7 @@ class TestUserGroups(TestController):
 
     def teardown_method(self, method):
         # delete all groups
-        for gr in UserGroupModel.get_all():
+        for gr in UserGroup.get_all():
             fixture.destroy_user_group(gr)
         Session().commit()
 
@@ -30,7 +30,7 @@ class TestUserGroups(TestController):
     def test_enforce_groups(self, pre_existing, regular_should_be,
                             external_should_be, groups, expected):
         # delete all groups
-        for gr in UserGroupModel.get_all():
+        for gr in UserGroup.get_all():
             fixture.destroy_user_group(gr)
         Session().commit()
 

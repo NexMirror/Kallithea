@@ -880,7 +880,7 @@ class _BaseTestApi(object):
         response = api_call(self, params)
 
         result = []
-        for repo in RepoModel().get_all():
+        for repo in Repository.get_all():
             result.append(repo.get_api_data())
         ret = jsonify(result)
 
