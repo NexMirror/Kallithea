@@ -202,8 +202,8 @@ def make_map(config):
 
         m.connect("edit_user_emails", "/users/{id}/edit/emails",
                   action="edit_emails", conditions=dict(method=["GET"]))
-        m.connect("edit_user_emails", "/users/{id}/edit/emails",
-                  action="add_email", conditions=dict(method=["PUT"]))
+        m.connect("edit_user_emails_update", "/users/{id}/edit/emails",
+                  action="add_email", conditions=dict(method=["POST"]))
         m.connect("edit_user_emails_delete", "/users/{id}/edit/emails/delete",
                   action="delete_email", conditions=dict(method=["POST"]))
 
