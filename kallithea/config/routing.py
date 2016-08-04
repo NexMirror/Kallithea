@@ -540,7 +540,7 @@ def make_map(config):
                  conditions=dict(method=["GET"], function=check_repo))
     rmap.connect("edit_repo_perms_update", "/{repo_name:.*?}/settings/permissions",
                  controller='admin/repos', action="edit_permissions_update",
-                 conditions=dict(method=["PUT"], function=check_repo))
+                 conditions=dict(method=["POST"], function=check_repo))
     rmap.connect("edit_repo_perms_revoke", "/{repo_name:.*?}/settings/permissions/delete",
                  controller='admin/repos', action="edit_permissions_revoke",
                  conditions=dict(method=["POST"], function=check_repo))
