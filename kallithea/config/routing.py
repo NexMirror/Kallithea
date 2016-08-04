@@ -154,9 +154,9 @@ def make_map(config):
         m.connect("edit_repo_group_perms", "/repo_groups/{group_name:.*?}/edit/permissions",
                   action="edit_repo_group_perms",
                   conditions=dict(method=["GET"], function=check_group))
-        m.connect("edit_repo_group_perms", "/repo_groups/{group_name:.*?}/edit/permissions",
+        m.connect("edit_repo_group_perms_update", "/repo_groups/{group_name:.*?}/edit/permissions",
                   action="update_perms",
-                  conditions=dict(method=["PUT"], function=check_group))
+                  conditions=dict(method=["POST"], function=check_group))
         m.connect("edit_repo_group_perms_delete", "/repo_groups/{group_name:.*?}/edit/permissions/delete",
                   action="delete_perms",
                   conditions=dict(method=["POST"], function=check_group))
