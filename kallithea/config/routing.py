@@ -579,9 +579,9 @@ def make_map(config):
     rmap.connect("edit_repo_caches", "/{repo_name:.*?}/settings/caches",
                  controller='admin/repos', action="edit_caches",
                  conditions=dict(method=["GET"], function=check_repo))
-    rmap.connect("edit_repo_caches", "/{repo_name:.*?}/settings/caches",
+    rmap.connect("update_repo_caches", "/{repo_name:.*?}/settings/caches",
                  controller='admin/repos', action="edit_caches",
-                 conditions=dict(method=["PUT"], function=check_repo))
+                 conditions=dict(method=["POST"], function=check_repo))
 
 
     rmap.connect("edit_repo_remote", "/{repo_name:.*?}/settings/remote",
