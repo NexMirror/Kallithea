@@ -314,8 +314,8 @@ def make_map(config):
 
         m.connect("admin_settings_hooks", "/settings/hooks",
                   action="settings_hooks", conditions=dict(method=["POST"]))
-        m.connect("admin_settings_hooks", "/settings/hooks",
-                  action="settings_hooks", conditions=dict(method=["DELETE"]))
+        m.connect("admin_settings_hooks_delete", "/settings/hooks/delete",
+                  action="settings_hooks", conditions=dict(method=["POST"]))
         m.connect("admin_settings_hooks", "/settings/hooks",
                   action="settings_hooks", conditions=dict(method=["GET"]))
 

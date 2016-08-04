@@ -59,14 +59,14 @@ ${h.end_form()}
 
 <script type="text/javascript">
 function delete_hook(hook_id, field_id) {
-    var sUrl = "${h.url('admin_settings_hooks')}";
+    var sUrl = "${h.url('admin_settings_hooks_delete')}";
     var success = function (o) {
             $('#' + field_id).remove();
         };
     var failure = function (o) {
             alert("${_('Failed to remove hook')}");
         };
-    var postData = {'_method': 'delete', 'hook_id': hook_id};
+    var postData = {'hook_id': hook_id};
     ajaxPOST(sUrl, postData, success, failure);
 };
 </script>
