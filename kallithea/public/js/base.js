@@ -1403,9 +1403,7 @@ function ajaxActionRevokePermission(url, obj_id, obj_type, field_id, extra_data)
     var failure = function (o) {
             alert(_TM['Failed to revoke permission'] + ": " + o.status);
         };
-    var query_params = {
-        '_method': 'delete'
-    }
+    var query_params = {};
     // put extra data into POST
     if (extra_data !== undefined && (typeof extra_data === 'object')){
         for(var k in extra_data){

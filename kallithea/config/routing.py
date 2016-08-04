@@ -158,9 +158,9 @@ def make_map(config):
         m.connect("edit_repo_group_perms", "/repo_groups/{group_name:.*?}/edit/permissions",
                   action="update_perms",
                   conditions=dict(method=["PUT"], function=check_group))
-        m.connect("edit_repo_group_perms", "/repo_groups/{group_name:.*?}/edit/permissions",
+        m.connect("edit_repo_group_perms_delete", "/repo_groups/{group_name:.*?}/edit/permissions/delete",
                   action="delete_perms",
-                  conditions=dict(method=["DELETE"], function=check_group))
+                  conditions=dict(method=["POST"], function=check_group))
 
         m.connect("delete_repo_group", "/repo_groups/{group_name:.*?}",
                   action="delete", conditions=dict(method=["DELETE"],
@@ -243,8 +243,8 @@ def make_map(config):
                   action="edit_perms", conditions=dict(method=["GET"]))
         m.connect("edit_user_group_perms", "/user_groups/{id}/edit/perms",
                   action="update_perms", conditions=dict(method=["PUT"]))
-        m.connect("edit_user_group_perms", "/user_groups/{id}/edit/perms",
-                  action="delete_perms", conditions=dict(method=["DELETE"]))
+        m.connect("edit_user_group_perms_delete", "/user_groups/{id}/edit/perms/delete",
+                  action="delete_perms", conditions=dict(method=["POST"]))
 
         m.connect("edit_user_group_advanced", "/user_groups/{id}/edit/advanced",
                   action="edit_advanced", conditions=dict(method=["GET"]))
@@ -542,9 +542,9 @@ def make_map(config):
     rmap.connect("edit_repo_perms_update", "/{repo_name:.*?}/settings/permissions",
                  controller='admin/repos', action="edit_permissions_update",
                  conditions=dict(method=["PUT"], function=check_repo))
-    rmap.connect("edit_repo_perms_revoke", "/{repo_name:.*?}/settings/permissions",
+    rmap.connect("edit_repo_perms_revoke", "/{repo_name:.*?}/settings/permissions/delete",
                  controller='admin/repos', action="edit_permissions_revoke",
-                 conditions=dict(method=["DELETE"], function=check_repo))
+                 conditions=dict(method=["POST"], function=check_repo))
 
     rmap.connect("edit_repo_fields", "/{repo_name:.*?}/settings/fields",
                  controller='admin/repos', action="edit_fields",
