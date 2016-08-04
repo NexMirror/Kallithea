@@ -397,8 +397,8 @@ def make_map(config):
                   action="new", conditions=dict(method=["GET"]))
 
 
-        m.connect("/gists/{gist_id}",
-                  action="delete", conditions=dict(method=["DELETE"]))
+        m.connect("gist_delete", "/gists/{gist_id}/delete",
+                  action="delete", conditions=dict(method=["POST"]))
         m.connect("edit_gist", "/gists/{gist_id}/edit",
                   action="edit", conditions=dict(method=["GET", "POST"]))
         m.connect("edit_gist_check_revision", "/gists/{gist_id}/edit/check_revision",

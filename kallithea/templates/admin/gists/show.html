@@ -52,7 +52,7 @@
 
                        %if h.HasPermissionAny('hg.admin')() or c.gist.gist_owner == c.authuser.user_id:
                         <div style="float:right">
-                            ${h.form(url('gist', gist_id=c.gist.gist_id),method='delete')}
+                            ${h.form(url('gist_delete', gist_id=c.gist.gist_id))}
                                 ${h.submit('remove_gist', _('Delete'),class_="btn btn-mini btn-danger",onclick="return confirm('"+_('Confirm to delete this Gist')+"');")}
                             ${h.end_form()}
                         </div>
