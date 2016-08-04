@@ -357,7 +357,7 @@ class _BaseTestCase(TestController):
             pytest.fail('no repo %s in filesystem' % repo_name)
 
         response = self.app.post(url('delete_repo', repo_name=repo_name),
-            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
+            params={'_authentication_token': self.authentication_token()})
 
         self.checkSessionFlash(response, 'Deleted repository %s' % (repo_name))
 
@@ -409,7 +409,7 @@ class _BaseTestCase(TestController):
             pytest.fail('no repo %s in filesystem' % repo_name)
 
         response = self.app.post(url('delete_repo', repo_name=repo_name),
-            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
+            params={'_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Deleted repository %s' % (repo_name_unicode))
         response.follow()
 
@@ -427,7 +427,7 @@ class _BaseTestCase(TestController):
 
     def test_delete_browser_fakeout(self):
         response = self.app.post(url('delete_repo', repo_name=self.REPO),
-                                 params=dict(_method='delete', _authentication_token=self.authentication_token()))
+                                 params=dict(_authentication_token=self.authentication_token()))
 
     def test_show(self):
         self.log_user()

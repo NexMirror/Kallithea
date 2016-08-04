@@ -194,7 +194,7 @@ class TestAdminUsersController(TestController):
                                '%s' % (username, reponame))
 
         response = self.app.post(url('delete_repo', repo_name=reponame),
-            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
+            params={'_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Deleted repository %s' % reponame)
 
         response = self.app.post(url('delete_user', id=new_user.user_id),

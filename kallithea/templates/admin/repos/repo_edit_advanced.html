@@ -73,7 +73,7 @@ ${h.form(url('edit_repo_advanced_locking', repo_name=c.repo_info.repo_name), met
 ${h.end_form()}
 
 <h3>${_('Delete')}</h3>
-${h.form(url('delete_repo', repo_name=c.repo_name), method='delete')}
+${h.form(url('delete_repo', repo_name=c.repo_name))}
 <div class="form">
     <button class="btn btn-small btn-danger" type="submit"
             onclick="return confirm('${_('Confirm to delete this repository: %s') % c.repo_name}');">

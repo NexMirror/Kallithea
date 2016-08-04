@@ -122,9 +122,8 @@ def make_map(config):
         m.connect("put_repo", "/repos/{repo_name:.*?}",
                   action="update", conditions=dict(method=["PUT"],
                   function=check_repo))
-        m.connect("delete_repo", "/repos/{repo_name:.*?}",
-                  action="delete", conditions=dict(method=["DELETE"],
-                  ))
+        m.connect("delete_repo", "/repos/{repo_name:.*?}/delete",
+                  action="delete", conditions=dict(method=["POST"]))
 
     #ADMIN REPOSITORY GROUPS ROUTES
     with rmap.submapper(path_prefix=ADMIN_PREFIX,
