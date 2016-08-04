@@ -240,8 +240,8 @@ def make_map(config):
 
         m.connect("edit_user_group_perms", "/user_groups/{id}/edit/perms",
                   action="edit_perms", conditions=dict(method=["GET"]))
-        m.connect("edit_user_group_perms", "/user_groups/{id}/edit/perms",
-                  action="update_perms", conditions=dict(method=["PUT"]))
+        m.connect("edit_user_group_perms_update", "/user_groups/{id}/edit/perms",
+                  action="update_perms", conditions=dict(method=["POST"]))
         m.connect("edit_user_group_perms_delete", "/user_groups/{id}/edit/perms/delete",
                   action="delete_perms", conditions=dict(method=["POST"]))
 
