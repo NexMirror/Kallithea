@@ -627,9 +627,9 @@ def make_map(config):
                 conditions=dict(function=check_repo))
 
     rmap.connect('changeset_comment_delete',
-                 '/{repo_name:.*?}/changeset-comment-delete/{comment_id}',
+                 '/{repo_name:.*?}/changeset-comment/{comment_id}/delete',
                 controller='changeset', action='delete_comment',
-                conditions=dict(function=check_repo, method=["DELETE"]))
+                conditions=dict(function=check_repo, method=["POST"]))
 
     rmap.connect('changeset_info', '/changeset_info/{repo_name:.*?}/{revision}',
                  controller='changeset', action='changeset_info')
@@ -699,7 +699,7 @@ def make_map(config):
     rmap.connect('pullrequest_comment_delete',
                  '/{repo_name:.*?}/pull-request-comment/{comment_id}/delete',
                 controller='pullrequests', action='delete_comment',
-                conditions=dict(function=check_repo, method=["DELETE"]))
+                conditions=dict(function=check_repo, method=["POST"]))
 
     rmap.connect('summary_home_summary', '/{repo_name:.*?}/summary',
                 controller='summary', conditions=dict(function=check_repo))

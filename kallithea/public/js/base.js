@@ -758,7 +758,7 @@ function _comment_div_append_form($comment_div, f_path, line_no) {
 
 function deleteComment(comment_id) {
     var url = AJAX_COMMENT_DELETE_URL.replace('__COMMENT_ID__', comment_id);
-    var postData = {'_method': 'delete'};
+    var postData = {};
     var success = function(o) {
         $('#comment-'+comment_id).remove();
         // Ignore that this might leave a stray Add button (or have a pending form with another comment) ...

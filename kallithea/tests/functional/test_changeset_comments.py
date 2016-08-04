@@ -127,11 +127,10 @@ class TestChangeSetCommentsController(TestController):
         assert len(comments) == 1
         comment_id = comments[0].comment_id
 
-        self.app.post(url(controller='changeset',
-                                    action='delete_comment',
+        self.app.post(url("changeset_comment_delete",
                                     repo_name=HG_REPO,
                                     comment_id=comment_id),
-            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
+            params={'_authentication_token': self.authentication_token()})
 
         comments = ChangesetComment.query().all()
         assert len(comments) == 0
