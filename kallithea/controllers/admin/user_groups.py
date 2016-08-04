@@ -88,8 +88,6 @@ class UserGroupsController(BaseController):
         return data
 
     def index(self, format='html'):
-        """GET /users_groups: All items in the collection"""
-        # url('users_groups')
         _list = UserGroup.query() \
                         .order_by(func.lower(UserGroup.users_group_name)) \
                         .all()
@@ -132,9 +130,6 @@ class UserGroupsController(BaseController):
 
     @HasPermissionAnyDecorator('hg.admin', 'hg.usergroup.create.true')
     def create(self):
-        """POST /users_groups: Create a new item"""
-        # url('users_groups')
-
         users_group_form = UserGroupForm()()
         try:
             form_result = users_group_form.to_python(dict(request.POST))
@@ -167,20 +162,10 @@ class UserGroupsController(BaseController):
 
     @HasPermissionAnyDecorator('hg.admin', 'hg.usergroup.create.true')
     def new(self, format='html'):
-        """GET /user_groups/new: Form to create a new item"""
-        # url('new_users_group')
         return render('admin/user_groups/user_group_add.html')
 
     @HasUserGroupPermissionAnyDecorator('usergroup.admin')
     def update(self, id):
-        """PUT /user_groups/id: Update an existing item"""
-        # Forms posted to this method should contain a hidden field:
-        #    <input type="hidden" name="_method" value="PUT" />
-        # Or using helpers:
-        #    h.form(url('users_group', id=ID),
-        #           method='put')
-        # url('users_group', id=ID)
-
         c.user_group = UserGroup.get_or_404(id)
         c.active = 'settings'
         self.__load_data(id)
@@ -228,13 +213,6 @@ class UserGroupsController(BaseController):
 
     @HasUserGroupPermissionAnyDecorator('usergroup.admin')
     def delete(self, id):
-        """DELETE /user_groups/id: Delete an existing item"""
-        # Forms posted to this method should contain a hidden field:
-        #    <input type="hidden" name="_method" value="DELETE" />
-        # Or using helpers:
-        #    h.form(url('users_group', id=ID),
-        #           method='delete')
-        # url('users_group', id=ID)
         usr_gr = UserGroup.get_or_404(id)
         try:
             UserGroupModel().delete(usr_gr)
@@ -254,9 +232,6 @@ class UserGroupsController(BaseController):
 
     @HasUserGroupPermissionAnyDecorator('usergroup.admin')
     def edit(self, id, format='html'):
-        """GET /user_groups/id/edit: Form to edit an existing item"""
-        # url('edit_users_group', id=ID)
-
         c.user_group = UserGroup.get_or_404(id)
         c.active = 'settings'
         self.__load_data(id)
@@ -322,11 +297,6 @@ class UserGroupsController(BaseController):
 
     @HasUserGroupPermissionAnyDecorator('usergroup.admin')
     def delete_perms(self, id):
-        """
-        DELETE an existing repository group permission user
-
-        :param group_name:
-        """
         try:
             obj_type = request.POST.get('obj_type')
             obj_id = None
@@ -404,9 +374,6 @@ class UserGroupsController(BaseController):
 
     @HasUserGroupPermissionAnyDecorator('usergroup.admin')
     def update_default_perms(self, id):
-        """PUT /users_perm/id: Update an existing item"""
-        # url('users_group_perm', id=ID, method='put')
-
         user_group = UserGroup.get_or_404(id)
 
         try:

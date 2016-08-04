@@ -68,9 +68,6 @@ class UsersController(BaseController):
         c.EXTERN_TYPE_INTERNAL = kallithea.EXTERN_TYPE_INTERNAL
 
     def index(self, format='html'):
-        """GET /users: All items in the collection"""
-        # url('users')
-
         c.users_list = User.query().order_by(User.username) \
                         .filter(User.username != User.DEFAULT_USER) \
                         .order_by(func.lower(User.username)) \
@@ -118,8 +115,6 @@ class UsersController(BaseController):
         return render('admin/users/users.html')
 
     def create(self):
-        """POST /users: Create a new item"""
-        # url('users')
         c.default_extern_type = auth_internal.KallitheaAuthPlugin.name
         c.default_extern_name = auth_internal.KallitheaAuthPlugin.name
         user_model = UserModel()
@@ -150,20 +145,11 @@ class UsersController(BaseController):
         raise HTTPFound(location=url('users'))
 
     def new(self, format='html'):
-        """GET /users/new: Form to create a new item"""
-        # url('new_user')
         c.default_extern_type = auth_internal.KallitheaAuthPlugin.name
         c.default_extern_name = auth_internal.KallitheaAuthPlugin.name
         return render('admin/users/user_add.html')
 
     def update(self, id):
-        """PUT /users/id: Update an existing item"""
-        # Forms posted to this method should contain a hidden field:
-        #    <input type="hidden" name="_method" value="PUT" />
-        # Or using helpers:
-        #    h.form(url('update_user', id=ID),
-        #           method='put')
-        # url('user', id=ID)
         user_model = UserModel()
         user = user_model.get(id)
         _form = UserForm(edit=True, old_data={'user_id': id,
@@ -203,13 +189,6 @@ class UsersController(BaseController):
         raise HTTPFound(location=url('edit_user', id=id))
 
     def delete(self, id):
-        """DELETE /users/id: Delete an existing item"""
-        # Forms posted to this method should contain a hidden field:
-        #    <input type="hidden" name="_method" value="DELETE" />
-        # Or using helpers:
-        #    h.form(url('delete_user', id=ID),
-        #           method='delete')
-        # url('user', id=ID)
         usr = User.get_or_404(id)
         try:
             UserModel().delete(usr)
@@ -245,8 +224,6 @@ class UsersController(BaseController):
         return render('admin/users/user_edit.html')
 
     def edit(self, id, format='html'):
-        """GET /users/id/edit: Form to edit an existing item"""
-        # url('edit_user', id=ID)
         user = self._get_user_or_raise_if_default(id)
         defaults = user.get_dict()
 
@@ -349,8 +326,6 @@ class UsersController(BaseController):
             force_defaults=False)
 
     def update_perms(self, id):
-        """PUT /users_perm/id: Update an existing item"""
-        # url('user_perm', id=ID, method='put')
         user = self._get_user_or_raise_if_default(id)
 
         try:
@@ -402,8 +377,6 @@ class UsersController(BaseController):
             force_defaults=False)
 
     def add_email(self, id):
-        """POST /user_emails:Add an existing item"""
-        # url('user_emails', id=ID, method='put')
         user = self._get_user_or_raise_if_default(id)
         email = request.POST.get('new_email')
         user_model = UserModel()
@@ -422,8 +395,6 @@ class UsersController(BaseController):
         raise HTTPFound(location=url('edit_user_emails', id=id))
 
     def delete_email(self, id):
-        """DELETE /user_emails_delete/id: Delete an existing item"""
-        # url('user_emails_delete', id=ID, method='delete')
         user = self._get_user_or_raise_if_default(id)
         email_id = request.POST.get('del_email_id')
         user_model = UserModel()
@@ -450,9 +421,6 @@ class UsersController(BaseController):
             force_defaults=False)
 
     def add_ip(self, id):
-        """POST /user_ips:Add an existing item"""
-        # url('user_ips', id=ID, method='put')
-
         ip = request.POST.get('new_ip')
         user_model = UserModel()
 
@@ -473,8 +441,6 @@ class UsersController(BaseController):
         raise HTTPFound(location=url('edit_user_ips', id=id))
 
     def delete_ip(self, id):
-        """DELETE /user_ips_delete/id: Delete an existing item"""
-        # url('user_ips_delete', id=ID, method='delete')
         ip_id = request.POST.get('del_ip_id')
         user_model = UserModel()
         user_model.delete_extra_ip(id, ip_id)

@@ -91,10 +91,6 @@ class MyAccountController(BaseController):
         return json.dumps(repos_data)
 
     def my_account(self):
-        """
-        GET /_admin/my_account Displays info about my account
-        """
-        # url('my_account')
         c.active = 'profile'
         self.__load_data()
         c.perm_user = AuthUser(user_id=self.authuser.user_id)

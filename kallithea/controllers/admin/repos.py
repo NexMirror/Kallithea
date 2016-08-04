@@ -99,8 +99,6 @@ class ReposController(BaseRepoController):
         return defaults
 
     def index(self, format='html'):
-        """GET /repos: All items in the collection"""
-        # url('repos')
         _list = Repository.query() \
                         .order_by(func.lower(Repository.repo_name)) \
                         .all()
@@ -116,10 +114,6 @@ class ReposController(BaseRepoController):
 
     @NotAnonymous()
     def create(self):
-        """
-        POST /repos: Create a new item"""
-        # url('repos')
-
         self.__load_defaults()
         form_result = {}
         task_id = None
@@ -158,7 +152,6 @@ class ReposController(BaseRepoController):
 
     @NotAnonymous()
     def create_repository(self):
-        """GET /_admin/create_repository: Form to create a new item"""
         self.__load_defaults()
         if not c.repo_groups:
             raise HTTPForbidden
@@ -227,14 +220,6 @@ class ReposController(BaseRepoController):
 
     @HasRepoPermissionAnyDecorator('repository.admin')
     def update(self, repo_name):
-        """
-        PUT /repos/repo_name: Update an existing item"""
-        # Forms posted to this method should contain a hidden field:
-        #    <input type="hidden" name="_method" value="PUT" />
-        # Or using helpers:
-        #    h.form(url('put_repo', repo_name=ID),
-        #           method='put')
-        # url('put_repo', repo_name=ID)
         c.repo_info = self._load_repo(repo_name)
         self.__load_defaults(c.repo_info)
         c.active = 'settings'
@@ -284,15 +269,6 @@ class ReposController(BaseRepoController):
 
     @HasRepoPermissionAnyDecorator('repository.admin')
     def delete(self, repo_name):
-        """
-        DELETE /repos/repo_name: Delete an existing item"""
-        # Forms posted to this method should contain a hidden field:
-        #    <input type="hidden" name="_method" value="DELETE" />
-        # Or using helpers:
-        #    h.form(url('delete_repo', repo_name=ID),
-        #           method='delete')
-        # url('delete_repo', repo_name=ID)
-
         repo_model = RepoModel()
         repo = repo_model.get_by_repo_name(repo_name)
         if not repo:
@@ -330,8 +306,6 @@ class ReposController(BaseRepoController):
 
     @HasRepoPermissionAnyDecorator('repository.admin')
     def edit(self, repo_name):
-        """GET /repo_name/settings: Form to edit an existing item"""
-        # url('edit_repo', repo_name=ID)
         defaults = self.__load_data(repo_name)
         c.repo_fields = RepositoryField.query() \
             .filter(RepositoryField.repository == c.repo_info).all()
@@ -346,8 +320,6 @@ class ReposController(BaseRepoController):
 
     @HasRepoPermissionAnyDecorator('repository.admin')
     def edit_permissions(self, repo_name):
-        """GET /repo_name/settings: Form to edit an existing item"""
-        # url('edit_repo', repo_name=ID)
         c.repo_info = self._load_repo(repo_name)
         repo_model = RepoModel()
         c.users_array = repo_model.get_users_js()
@@ -399,8 +371,6 @@ class ReposController(BaseRepoController):
 
     @HasRepoPermissionAnyDecorator('repository.admin')
     def edit_fields(self, repo_name):
-        """GET /repo_name/settings: Form to edit an existing item"""
-        # url('edit_repo', repo_name=ID)
         c.repo_info = self._load_repo(repo_name)
         c.repo_fields = RepositoryField.query() \
             .filter(RepositoryField.repository == c.repo_info).all()
@@ -445,8 +415,6 @@ class ReposController(BaseRepoController):
 
     @HasRepoPermissionAnyDecorator('repository.admin')
     def edit_advanced(self, repo_name):
-        """GET /repo_name/settings: Form to edit an existing item"""
-        # url('edit_repo', repo_name=ID)
         c.repo_info = self._load_repo(repo_name)
         c.default_user_id = User.get_default_user().user_id
         c.in_public_journal = UserFollowing.query() \
@@ -544,12 +512,6 @@ class ReposController(BaseRepoController):
 
     @HasRepoPermissionAnyDecorator('repository.write', 'repository.admin')
     def toggle_locking(self, repo_name):
-        """
-        Toggle locking of repository by simple GET call to url
-
-        :param repo_name:
-        """
-
         try:
             repo = Repository.get_by_repo_name(repo_name)
 
@@ -569,8 +531,6 @@ class ReposController(BaseRepoController):
 
     @HasRepoPermissionAnyDecorator('repository.admin')
     def edit_caches(self, repo_name):
-        """GET /repo_name/settings: Form to edit an existing item"""
-        # url('edit_repo', repo_name=ID)
         c.repo_info = self._load_repo(repo_name)
         c.active = 'caches'
         if request.POST:
@@ -589,8 +549,6 @@ class ReposController(BaseRepoController):
 
     @HasRepoPermissionAnyDecorator('repository.admin')
     def edit_remote(self, repo_name):
-        """GET /repo_name/settings: Form to edit an existing item"""
-        # url('edit_repo', repo_name=ID)
         c.repo_info = self._load_repo(repo_name)
         c.active = 'remote'
         if request.POST:
@@ -606,8 +564,6 @@ class ReposController(BaseRepoController):
 
     @HasRepoPermissionAnyDecorator('repository.admin')
     def edit_statistics(self, repo_name):
-        """GET /repo_name/settings: Form to edit an existing item"""
-        # url('edit_repo', repo_name=ID)
         c.repo_info = self._load_repo(repo_name)
         repo = c.repo_info.scm_instance
 

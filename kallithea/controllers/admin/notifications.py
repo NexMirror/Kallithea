@@ -58,8 +58,6 @@ class NotificationsController(BaseController):
         super(NotificationsController, self).__before__()
 
     def index(self, format='html'):
-        """GET /_admin/notifications: All items in the collection"""
-        # url('notifications')
         c.user = self.authuser
         notif = NotificationModel().query_for_user(self.authuser.user_id,
                                             filter_=request.GET.getall('type'))
@@ -101,13 +99,6 @@ class NotificationsController(BaseController):
         # url('new_notification')
 
     def update(self, notification_id):
-        """PUT /_admin/notifications/id: Update an existing item"""
-        # Forms posted to this method should contain a hidden field:
-        #    <input type="hidden" name="_method" value="PUT" />
-        # Or using helpers:
-        #    h.form(url('notification', notification_id=ID),
-        #           method='put')
-        # url('notification', notification_id=ID)
         try:
             no = Notification.get(notification_id)
             owner = all(un.user.user_id == c.authuser.user_id
@@ -123,13 +114,6 @@ class NotificationsController(BaseController):
         raise HTTPBadRequest()
 
     def delete(self, notification_id):
-        """DELETE /_admin/notifications/id: Delete an existing item"""
-        # Forms posted to this method should contain a hidden field:
-        #    <input type="hidden" name="_method" value="DELETE" />
-        # Or using helpers:
-        #    h.form(url('notification', notification_id=ID),
-        #           method='delete')
-        # url('notification', notification_id=ID)
         try:
             no = Notification.get(notification_id)
             owner = any(un.user.user_id == c.authuser.user_id
@@ -145,8 +129,6 @@ class NotificationsController(BaseController):
         raise HTTPBadRequest()
 
     def show(self, notification_id, format='html'):
-        """GET /_admin/notifications/id: Show a specific item"""
-        # url('notification', notification_id=ID)
         notification = Notification.get_or_404(notification_id)
 
         unotification = NotificationModel() \

@@ -108,8 +108,6 @@ class RepoGroupsController(BaseController):
         return False
 
     def index(self, format='html'):
-        """GET /repo_groups: All items in the collection"""
-        # url('repos_groups')
         _list = RepoGroup.query() \
                     .order_by(func.lower(RepoGroup.group_name)) \
                     .all()
@@ -155,9 +153,6 @@ class RepoGroupsController(BaseController):
         return render('admin/repo_groups/repo_groups.html')
 
     def create(self):
-        """POST /repo_groups: Create a new item"""
-        # url('repos_groups')
-
         self.__load_defaults()
 
         # permissions for can create group based on parent_id are checked
@@ -194,8 +189,6 @@ class RepoGroupsController(BaseController):
         raise HTTPFound(location=url('repos_group_home', group_name=gr.group_name))
 
     def new(self):
-        """GET /repo_groups/new: Form to create a new item"""
-        # url('new_repos_group')
         if HasPermissionAny('hg.admin')('group create'):
             #we're global admin, we're ok and we can create TOP level groups
             pass
@@ -215,14 +208,6 @@ class RepoGroupsController(BaseController):
 
     @HasRepoGroupPermissionAnyDecorator('group.admin')
     def update(self, group_name):
-        """PUT /repo_groups/group_name: Update an existing item"""
-        # Forms posted to this method should contain a hidden field:
-        #    <input type="hidden" name="_method" value="PUT" />
-        # Or using helpers:
-        #    h.form(url('repos_group', group_name=GROUP_NAME),
-        #           method='put')
-        # url('repos_group', group_name=GROUP_NAME)
-
         c.repo_group = RepoGroupModel()._get_repo_group(group_name)
         self.__load_defaults(extras=[c.repo_group.parent_group],
                              exclude=[c.repo_group])
@@ -269,14 +254,6 @@ class RepoGroupsController(BaseController):
 
     @HasRepoGroupPermissionAnyDecorator('group.admin')
     def delete(self, group_name):
-        """DELETE /repo_groups/group_name: Delete an existing item"""
-        # Forms posted to this method should contain a hidden field:
-        #    <input type="hidden" name="_method" value="DELETE" />
-        # Or using helpers:
-        #    h.form(url('repos_group', group_name=GROUP_NAME),
-        #           method='delete')
-        # url('repos_group', group_name=GROUP_NAME)
-
         gr = c.repo_group = RepoGroupModel()._get_repo_group(group_name)
         repos = gr.repositories.all()
         if repos:
@@ -319,8 +296,6 @@ class RepoGroupsController(BaseController):
     @HasRepoGroupPermissionAnyDecorator('group.read', 'group.write',
                                          'group.admin')
     def show(self, group_name):
-        """GET /repo_groups/group_name: Show a specific item"""
-        # url('repos_group', group_name=GROUP_NAME)
         c.active = 'settings'
 
         c.group = c.repo_group = RepoGroupModel()._get_repo_group(group_name)
@@ -347,8 +322,6 @@ class RepoGroupsController(BaseController):
 
     @HasRepoGroupPermissionAnyDecorator('group.admin')
     def edit(self, group_name):
-        """GET /repo_groups/group_name/edit: Form to edit an existing item"""
-        # url('edit_repo_group', group_name=GROUP_NAME)
         c.active = 'settings'
 
         c.repo_group = RepoGroupModel()._get_repo_group(group_name)
@@ -365,8 +338,6 @@ class RepoGroupsController(BaseController):
 
     @HasRepoGroupPermissionAnyDecorator('group.admin')
     def edit_repo_group_advanced(self, group_name):
-        """GET /repo_groups/group_name/edit: Form to edit an existing item"""
-        # url('edit_repo_group', group_name=GROUP_NAME)
         c.active = 'advanced'
         c.repo_group = RepoGroupModel()._get_repo_group(group_name)
 
@@ -374,8 +345,6 @@ class RepoGroupsController(BaseController):
 
     @HasRepoGroupPermissionAnyDecorator('group.admin')
     def edit_repo_group_perms(self, group_name):
-        """GET /repo_groups/group_name/edit: Form to edit an existing item"""
-        # url('edit_repo_group', group_name=GROUP_NAME)
         c.active = 'perms'
         c.repo_group = RepoGroupModel()._get_repo_group(group_name)
         self.__load_defaults()
@@ -421,11 +390,6 @@ class RepoGroupsController(BaseController):
 
     @HasRepoGroupPermissionAnyDecorator('group.admin')
     def delete_perms(self, group_name):
-        """
-        DELETE an existing repository group permission user
-
-        :param group_name:
-        """
         try:
             obj_type = request.POST.get('obj_type')
             obj_id = None

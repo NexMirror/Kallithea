@@ -67,8 +67,6 @@ class GistsController(BaseController):
 
     @LoginRequired()
     def index(self):
-        """GET /admin/gists: All items in the collection"""
-        # url('gists')
         not_default_user = not c.authuser.is_default_user
         c.show_private = request.GET.get('private') and not_default_user
         c.show_public = request.GET.get('public') and not_default_user
@@ -104,8 +102,6 @@ class GistsController(BaseController):
     @LoginRequired()
     @NotAnonymous()
     def create(self):
-        """POST /admin/gists: Create a new item"""
-        # url('gists')
         self.__load_defaults()
         gist_form = GistForm([x[0] for x in c.lifetime_values])()
         try:
@@ -149,8 +145,6 @@ class GistsController(BaseController):
     @LoginRequired()
     @NotAnonymous()
     def new(self, format='html'):
-        """GET /admin/gists/new: Form to create a new item"""
-        # url('new_gist')
         self.__load_defaults()
         return render('admin/gists/new.html')
 
@@ -168,13 +162,6 @@ class GistsController(BaseController):
     @LoginRequired()
     @NotAnonymous()
     def delete(self, gist_id):
-        """DELETE /admin/gists/gist_id: Delete an existing item"""
-        # Forms posted to this method should contain a hidden field:
-        #    <input type="hidden" name="_method" value="DELETE" />
-        # Or using helpers:
-        #    h.form(url('gist', gist_id=ID),
-        #           method='delete')
-        # url('gist', gist_id=ID)
         gist = GistModel().get_gist(gist_id)
         owner = gist.gist_owner == c.authuser.user_id
         if h.HasPermissionAny('hg.admin')() or owner:
@@ -188,8 +175,6 @@ class GistsController(BaseController):
 
     @LoginRequired()
     def show(self, gist_id, revision='tip', format='html', f_path=None):
-        """GET /admin/gists/gist_id: Show a specific item"""
-        # url('gist', gist_id=ID)
         c.gist = Gist.get_or_404(gist_id)
 
         #check if this gist is not expired
@@ -213,8 +198,6 @@ class GistsController(BaseController):
     @LoginRequired()
     @NotAnonymous()
     def edit(self, gist_id, format='html'):
-        """GET /admin/gists/gist_id/edit: Form to edit an existing item"""
-        # url('edit_gist', gist_id=ID)
         c.gist = Gist.get_or_404(gist_id)
 
         #check if this gist is not expired

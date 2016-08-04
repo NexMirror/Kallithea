@@ -84,8 +84,6 @@ class SettingsController(BaseController):
 
     @HasPermissionAnyDecorator('hg.admin')
     def settings_vcs(self):
-        """GET /admin/settings: All items in the collection"""
-        # url('admin_settings')
         c.active = 'vcs'
         if request.POST:
             application_form = ApplicationUiSettingsForm()()
@@ -162,8 +160,6 @@ class SettingsController(BaseController):
 
     @HasPermissionAnyDecorator('hg.admin')
     def settings_mapping(self):
-        """GET /admin/settings/mapping: All items in the collection"""
-        # url('admin_settings_mapping')
         c.active = 'mapping'
         if request.POST:
             rm_obsolete = request.POST.get('destroy', False)
@@ -202,8 +198,6 @@ class SettingsController(BaseController):
 
     @HasPermissionAnyDecorator('hg.admin')
     def settings_global(self):
-        """GET /admin/settings/global: All items in the collection"""
-        # url('admin_settings_global')
         c.active = 'global'
         if request.POST:
             application_form = ApplicationSettingsForm()()
@@ -262,8 +256,6 @@ class SettingsController(BaseController):
 
     @HasPermissionAnyDecorator('hg.admin')
     def settings_visual(self):
-        """GET /admin/settings/visual: All items in the collection"""
-        # url('admin_settings_visual')
         c.active = 'visual'
         if request.POST:
             application_form = ApplicationVisualisationForm()()
@@ -320,8 +312,6 @@ class SettingsController(BaseController):
 
     @HasPermissionAnyDecorator('hg.admin')
     def settings_email(self):
-        """GET /admin/settings/email: All items in the collection"""
-        # url('admin_settings_email')
         c.active = 'email'
         if request.POST:
             test_email = request.POST.get('test_email')
@@ -361,8 +351,6 @@ class SettingsController(BaseController):
 
     @HasPermissionAnyDecorator('hg.admin')
     def settings_hooks(self):
-        """GET /admin/settings/hooks: All items in the collection"""
-        # url('admin_settings_hooks')
         c.active = 'hooks'
         if request.POST:
             if c.visual.allow_custom_hooks_settings:
@@ -412,8 +400,6 @@ class SettingsController(BaseController):
 
     @HasPermissionAnyDecorator('hg.admin')
     def settings_search(self):
-        """GET /admin/settings/search: All items in the collection"""
-        # url('admin_settings_search')
         c.active = 'search'
         if request.POST:
             repo_location = self._get_hg_ui_settings()['paths_root_path']
@@ -433,8 +419,6 @@ class SettingsController(BaseController):
 
     @HasPermissionAnyDecorator('hg.admin')
     def settings_system(self):
-        """GET /admin/settings/system: All items in the collection"""
-        # url('admin_settings_system')
         c.active = 'system'
 
         defaults = Setting.get_app_settings()
@@ -455,8 +439,6 @@ class SettingsController(BaseController):
 
     @HasPermissionAnyDecorator('hg.admin')
     def settings_system_update(self):
-        """GET /admin/settings/system/updates: All items in the collection"""
-        # url('admin_settings_system_update')
         import json
         import urllib2
         from kallithea.lib.verlib import NormalizedVersion
