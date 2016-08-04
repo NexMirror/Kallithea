@@ -44,7 +44,7 @@ ${h.form(url('edit_repo_advanced_journal', repo_name=c.repo_info.repo_name))}
 ${h.end_form()}
 
 <h3>${_('Change Locking')}</h3>
-${h.form(url('edit_repo_advanced_locking', repo_name=c.repo_info.repo_name), method='put')}
+${h.form(url('edit_repo_advanced_locking', repo_name=c.repo_info.repo_name))}
 <div class="form">
       %if c.repo_info.locked[0]:
         ${h.hidden('set_unlock', '1')}

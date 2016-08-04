@@ -562,7 +562,7 @@ def make_map(config):
 
     rmap.connect("edit_repo_advanced_locking", "/{repo_name:.*?}/settings/advanced/locking",
                  controller='admin/repos', action="edit_advanced_locking",
-                 conditions=dict(method=["PUT"], function=check_repo))
+                 conditions=dict(method=["POST"], function=check_repo))
     rmap.connect('toggle_locking', "/{repo_name:.*?}/settings/advanced/locking_toggle",
                  controller='admin/repos', action="toggle_locking",
                  conditions=dict(method=["GET"], function=check_repo))
