@@ -1015,7 +1015,7 @@ var readNotification = function(url, notification_id, callbacks){
     var failure = function(o){
             alert("readNotification failure");
         };
-    var postData = {'_method': 'put'};
+    var postData = {};
     var sUrl = url.replace('__NOTIFICATION_ID__',notification_id);
     ajaxPOST(sUrl, postData, success, failure);
 };

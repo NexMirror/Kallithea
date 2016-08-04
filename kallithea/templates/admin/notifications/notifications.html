@@ -36,7 +36,7 @@
 </div>
 <script type="text/javascript">
 var url_delete = "${url('notification_delete', notification_id='__NOTIFICATION_ID__')}";
-var url_action = "${url('notification', notification_id='__NOTIFICATION_ID__')}";
+var url_read = "${url('notification_update', notification_id='__NOTIFICATION_ID__')}";
 var run = function(){
   $('.delete-notification').click(function(e){
     var notification_id = e.currentTarget.id;
@@ -44,7 +44,7 @@ var run = function(){
   });
   $('.read-notification').click(function(e){
     var notification_id = e.currentTarget.id;
-    readNotification(url_action,notification_id);
+    readNotification(url_read,notification_id);
   });
 }
 run();
