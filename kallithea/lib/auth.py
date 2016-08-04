@@ -753,19 +753,14 @@ class LoginRequired(object):
                 log.warning('API access to %s is not allowed', loc)
                 raise HTTPForbidden()
 
-        # Only allow the following HTTP request methods. (We sometimes use POST
-        # requests with a '_method' set to 'PUT' or 'DELETE'; but that is only
-        # used for the route lookup, and does not affect request.method.)
-        if request.method not in ['GET', 'HEAD', 'POST', 'PUT']:
+        # Only allow the following HTTP request methods.
+        if request.method not in ['GET', 'HEAD', 'POST']:
             raise HTTPMethodNotAllowed()
 
-        # Also verify the _method override. This is only permitted in POST
-        # requests, and can specify PUT or DELETE.
+        # Also verify the _method override - no longer allowed
         _method = request.params.get('_method')
         if _method is None:
             pass # no override, no problem
-        elif request.method == 'POST' and _method.upper() in ['PUT', 'DELETE']:
-            pass # permitted override
         else:
             raise HTTPMethodNotAllowed()
 
