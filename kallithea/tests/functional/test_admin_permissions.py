@@ -19,7 +19,7 @@ class TestAdminPermissionsController(TestController):
     def test_add_ips(self):
         self.log_user()
         default_user_id = User.get_default_user().user_id
-        response = self.app.put(url('edit_user_ips', id=default_user_id),
+        response = self.app.post(url('edit_user_ips_update', id=default_user_id),
                                  params=dict(new_ip='127.0.0.0/24',
                                  _authentication_token=self.authentication_token()))
 
