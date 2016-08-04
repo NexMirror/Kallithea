@@ -61,8 +61,8 @@ class TestNotificationsController(TestController):
         cur_usr_id = cur_user.user_id
 
         response = self.app.post(
-            url('notification', notification_id=notification.notification_id),
-            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
+            url('notification_delete', notification_id=notification.notification_id),
+            params={'_authentication_token': self.authentication_token()})
         assert response.body == 'ok'
 
         cur_user = User.get(cur_usr_id)

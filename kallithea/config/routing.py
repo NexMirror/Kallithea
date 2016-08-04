@@ -379,8 +379,8 @@ def make_map(config):
                   action="index", conditions=dict(method=["GET"]))
         m.connect("/notifications/{notification_id}",
                   action="update", conditions=dict(method=["PUT"]))
-        m.connect("/notifications/{notification_id}",
-                  action="delete", conditions=dict(method=["DELETE"]))
+        m.connect("notification_delete", "/notifications/{notification_id}/delete",
+                  action="delete", conditions=dict(method=["POST"]))
         m.connect("notification", "/notifications/{notification_id}",
                   action="show", conditions=dict(method=["GET"]))
         m.connect("formatted_notification", "/notifications/{notification_id}.{format}",

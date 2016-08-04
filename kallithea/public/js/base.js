@@ -1000,7 +1000,7 @@ var deleteNotification = function(url, notification_id, callbacks){
     var failure = function(o){
             alert("deleteNotification failure");
         };
-    var postData = {'_method': 'delete'};
+    var postData = {};
     var sUrl = url.replace('__NOTIFICATION_ID__',notification_id);
     ajaxPOST(sUrl, postData, success, failure);
 };
