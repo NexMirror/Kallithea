@@ -569,7 +569,7 @@ def make_map(config):
 
     rmap.connect("edit_repo_advanced_journal", "/{repo_name:.*?}/settings/advanced/journal",
                  controller='admin/repos', action="edit_advanced_journal",
-                 conditions=dict(method=["PUT"], function=check_repo))
+                 conditions=dict(method=["POST"], function=check_repo))
 
     rmap.connect("edit_repo_advanced_fork", "/{repo_name:.*?}/settings/advanced/fork",
                  controller='admin/repos', action="edit_advanced_fork",

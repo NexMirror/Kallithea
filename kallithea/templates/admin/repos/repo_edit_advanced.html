@@ -20,7 +20,7 @@ ${h.end_form()}
 </script>
 
 <h3>${_('Public Journal Visibility')}</h3>
-${h.form(url('edit_repo_advanced_journal', repo_name=c.repo_info.repo_name), method='put')}
+${h.form(url('edit_repo_advanced_journal', repo_name=c.repo_info.repo_name))}
 <div class="form">
   <div class="field">
   %if c.in_public_journal:
