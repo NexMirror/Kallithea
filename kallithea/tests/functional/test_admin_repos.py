@@ -492,7 +492,7 @@ class _BaseTestCase(TestController):
         fixture.create_repo(other_repo, repo_type=self.REPO_TYPE)
         repo = Repository.get_by_repo_name(self.REPO)
         repo2 = Repository.get_by_repo_name(other_repo)
-        response = self.app.put(url('edit_repo_advanced_fork', repo_name=self.REPO),
+        response = self.app.post(url('edit_repo_advanced_fork', repo_name=self.REPO),
                                 params=dict(id_fork_of=repo2.repo_id, _authentication_token=self.authentication_token()))
         repo = Repository.get_by_repo_name(self.REPO)
         repo2 = Repository.get_by_repo_name(other_repo)
@@ -513,7 +513,7 @@ class _BaseTestCase(TestController):
         self.log_user()
         repo = Repository.get_by_repo_name(self.REPO)
         repo2 = Repository.get_by_repo_name(self.OTHER_TYPE_REPO)
-        response = self.app.put(url('edit_repo_advanced_fork', repo_name=self.REPO),
+        response = self.app.post(url('edit_repo_advanced_fork', repo_name=self.REPO),
                                 params=dict(id_fork_of=repo2.repo_id, _authentication_token=self.authentication_token()))
         repo = Repository.get_by_repo_name(self.REPO)
         repo2 = Repository.get_by_repo_name(self.OTHER_TYPE_REPO)
@@ -523,7 +523,7 @@ class _BaseTestCase(TestController):
     def test_set_fork_of_none(self):
         self.log_user()
         ## mark it as None
-        response = self.app.put(url('edit_repo_advanced_fork', repo_name=self.REPO),
+        response = self.app.post(url('edit_repo_advanced_fork', repo_name=self.REPO),
                                 params=dict(id_fork_of=None, _authentication_token=self.authentication_token()))
         repo = Repository.get_by_repo_name(self.REPO)
         repo2 = Repository.get_by_repo_name(self.OTHER_TYPE_REPO)
@@ -535,7 +535,7 @@ class _BaseTestCase(TestController):
     def test_set_fork_of_same_repo(self):
         self.log_user()
         repo = Repository.get_by_repo_name(self.REPO)
-        response = self.app.put(url('edit_repo_advanced_fork', repo_name=self.REPO),
+        response = self.app.post(url('edit_repo_advanced_fork', repo_name=self.REPO),
                                 params=dict(id_fork_of=repo.repo_id, _authentication_token=self.authentication_token()))
         self.checkSessionFlash(response,
                                'An error occurred during this operation')

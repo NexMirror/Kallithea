@@ -1,5 +1,5 @@
 <h3>${_('Parent')}</h3>
-${h.form(url('edit_repo_advanced_fork', repo_name=c.repo_info.repo_name), method='put')}
+${h.form(url('edit_repo_advanced_fork', repo_name=c.repo_info.repo_name))}
 <div class="form">
        ${h.select('id_fork_of','',c.repos_list,class_="medium")}
        ${h.submit('set_as_fork_%s' % c.repo_info.repo_name,_('Set'),class_="btn btn-small")}
