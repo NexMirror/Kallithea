@@ -38,9 +38,8 @@ class TestAdminPermissionsController(TestController):
         del_ip_id = UserIpMap.query().filter(UserIpMap.user_id ==
                                              default_user_id).first().ip_id
 
-        response = self.app.post(url('edit_user_ips', id=default_user_id),
-                                 params=dict(_method='delete',
-                                             del_ip_id=del_ip_id,
+        response = self.app.post(url('edit_user_ips_delete', id=default_user_id),
+                                 params=dict(del_ip_id=del_ip_id,
                                              _authentication_token=self.authentication_token()),
                                  extra_environ={'REMOTE_ADDR': '127.0.0.1'})
 

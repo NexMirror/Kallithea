@@ -434,8 +434,8 @@ class TestAdminUsersController(TestController):
         response.mustcontain(ip)
         response.mustcontain(ip_range)
 
-        self.app.post(url('edit_user_ips', id=user_id),
-                      params=dict(_method='delete', del_ip_id=new_ip_id, _authentication_token=self.authentication_token()))
+        self.app.post(url('edit_user_ips_delete', id=user_id),
+                      params=dict(del_ip_id=new_ip_id, _authentication_token=self.authentication_token()))
 
         response = self.app.get(url('edit_user_ips', id=user_id))
         response.mustcontain('All IP addresses are allowed')
