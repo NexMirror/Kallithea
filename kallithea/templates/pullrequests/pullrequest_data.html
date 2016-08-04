@@ -60,7 +60,7 @@
       </td>
       <td style="text-align:right">
         %if pr.owner.user_id == c.authuser.user_id:
-          ${h.form(url('pullrequest_delete', repo_name=pr.other_repo.repo_name, pull_request_id=pr.pull_request_id),method='delete', style="display:inline-block")}
+          ${h.form(url('pullrequest_delete', repo_name=pr.other_repo.repo_name, pull_request_id=pr.pull_request_id), style="display:inline-block")}
           <button class="action_button"
                   id="remove_${pr.pull_request_id}"
                   name="remove_${pr.pull_request_id}"

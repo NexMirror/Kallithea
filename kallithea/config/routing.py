@@ -673,10 +673,10 @@ def make_map(config):
                  action='post', conditions=dict(function=check_repo,
                                                 method=["POST"]))
     rmap.connect('pullrequest_delete',
-                 '/{repo_name:.*?}/pull-request/{pull_request_id}',
+                 '/{repo_name:.*?}/pull-request/{pull_request_id}/delete',
                  controller='pullrequests',
                  action='delete', conditions=dict(function=check_repo,
-                                                method=["DELETE"]))
+                                                  method=["POST"]))
 
     rmap.connect('pullrequest_show_all',
                  '/{repo_name:.*?}/pull-request',
