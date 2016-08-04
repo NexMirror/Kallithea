@@ -551,9 +551,9 @@ def make_map(config):
     rmap.connect('create_repo_fields', "/{repo_name:.*?}/settings/fields/new",
                  controller='admin/repos', action="create_repo_field",
                  conditions=dict(method=["PUT"], function=check_repo))
-    rmap.connect('delete_repo_fields', "/{repo_name:.*?}/settings/fields/{field_id}",
+    rmap.connect('delete_repo_fields', "/{repo_name:.*?}/settings/fields/{field_id}/delete",
                  controller='admin/repos', action="delete_repo_field",
-                 conditions=dict(method=["DELETE"], function=check_repo))
+                 conditions=dict(method=["POST"], function=check_repo))
 
 
     rmap.connect("edit_repo_advanced", "/{repo_name:.*?}/settings/advanced",
