@@ -487,8 +487,8 @@ class TestAdminUsersController(TestController):
         keys = UserApiKeys.query().filter(UserApiKeys.user_id == user_id).all()
         assert 1 == len(keys)
 
-        response = self.app.post(url('edit_user_api_keys', id=user_id),
-                 {'_method': 'delete', 'del_api_key': keys[0].api_key, '_authentication_token': self.authentication_token()})
+        response = self.app.post(url('edit_user_api_keys_delete', id=user_id),
+                 {'del_api_key': keys[0].api_key, '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'API key successfully deleted')
         keys = UserApiKeys.query().filter(UserApiKeys.user_id == user_id).all()
         assert 0 == len(keys)
@@ -502,8 +502,8 @@ class TestAdminUsersController(TestController):
         response.mustcontain(api_key)
         response.mustcontain('Expires: Never')
 
-        response = self.app.post(url('edit_user_api_keys', id=user_id),
-                 {'_method': 'delete', 'del_api_key_builtin': api_key, '_authentication_token': self.authentication_token()})
+        response = self.app.post(url('edit_user_api_keys_delete', id=user_id),
+                 {'del_api_key_builtin': api_key, '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'API key successfully reset')
         response = response.follow()
         response.mustcontain(no=[api_key])
@@ -557,8 +557,8 @@ class TestAdminUsersControllerForDefaultUser(TestController):
     def test_delete_api_keys_default_user(self):
         self.log_user()
         user = User.get_default_user()
-        response = self.app.post(url('edit_user_api_keys', id=user.user_id),
-                 {'_method': 'delete', '_authentication_token': self.authentication_token()}, status=404)
+        response = self.app.post(url('edit_user_api_keys_delete', id=user.user_id),
+                 {'_authentication_token': self.authentication_token()}, status=404)
 
     # Permissions
     def test_edit_perms_default_user(self):

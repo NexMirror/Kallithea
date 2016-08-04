@@ -193,8 +193,8 @@ def make_map(config):
                   action="edit_api_keys", conditions=dict(method=["GET"]))
         m.connect("edit_user_api_keys", "/users/{id}/edit/api_keys",
                   action="add_api_key", conditions=dict(method=["POST"]))
-        m.connect("edit_user_api_keys", "/users/{id}/edit/api_keys",
-                  action="delete_api_key", conditions=dict(method=["DELETE"]))
+        m.connect("edit_user_api_keys_delete", "/users/{id}/edit/api_keys/delete",
+                  action="delete_api_key", conditions=dict(method=["POST"]))
 
         m.connect("edit_user_perms", "/users/{id}/edit/permissions",
                   action="edit_perms", conditions=dict(method=["GET"]))
