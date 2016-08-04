@@ -194,7 +194,6 @@ class UserGroupsController(BaseController):
                                                       'hg.create.repository'),
                 'fork_repo_perm': ug_model.has_perm(id,
                                                     'hg.fork.repository'),
-                '_method': 'put'
             })
 
             return htmlfill.render(

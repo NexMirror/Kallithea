@@ -32,11 +32,11 @@ class TestAdminUsersGroupsController(TestController):
         response = self.app.get(url('new_users_group'))
 
     def test_update(self):
-        response = self.app.put(url('users_group', id=1), status=403)
+        response = self.app.post(url('update_users_group', id=1), status=403)
 
     def test_update_browser_fakeout(self):
-        response = self.app.post(url('users_group', id=1),
-                                 params=dict(_method='put', _authentication_token=self.authentication_token()))
+        response = self.app.post(url('update_users_group', id=1),
+                                 params=dict(_authentication_token=self.authentication_token()))
 
     def test_delete(self):
         self.log_user()
