@@ -587,9 +587,9 @@ def make_map(config):
     rmap.connect("edit_repo_remote", "/{repo_name:.*?}/settings/remote",
                  controller='admin/repos', action="edit_remote",
                  conditions=dict(method=["GET"], function=check_repo))
-    rmap.connect("edit_repo_remote", "/{repo_name:.*?}/settings/remote",
+    rmap.connect("edit_repo_remote_update", "/{repo_name:.*?}/settings/remote",
                  controller='admin/repos', action="edit_remote",
-                 conditions=dict(method=["PUT"], function=check_repo))
+                 conditions=dict(method=["POST"], function=check_repo))
 
     rmap.connect("edit_repo_statistics", "/{repo_name:.*?}/settings/statistics",
                  controller='admin/repos', action="edit_statistics",
