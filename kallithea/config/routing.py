@@ -269,9 +269,13 @@ def make_map(config):
                   action="permission_perms", conditions=dict(method=["GET"]))
 
 
-    #ADMIN DEFAULTS REST ROUTES
-    rmap.resource('default', 'defaults',
-                  controller='admin/defaults', path_prefix=ADMIN_PREFIX)
+    #ADMIN DEFAULTS ROUTES
+    with rmap.submapper(path_prefix=ADMIN_PREFIX,
+                        controller='admin/defaults') as m:
+        m.connect('defaults', 'defaults',
+                  action="index")
+        m.connect('defaults_update', 'defaults/{id}/update',
+                  action="update", conditions=dict(method=["POST"]))
 
     #ADMIN AUTH SETTINGS
     rmap.connect('auth_settings', '%s/auth' % ADMIN_PREFIX,

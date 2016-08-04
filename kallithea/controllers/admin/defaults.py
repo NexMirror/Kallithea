@@ -46,10 +46,6 @@ log = logging.getLogger(__name__)
 
 
 class DefaultsController(BaseController):
-    """REST Controller styled on the Atom Publishing Protocol"""
-    # To properly map this controller, ensure your config/routing.py
-    # file has a resource setup:
-    #     map.resource('default', 'defaults')
 
     @LoginRequired()
     @HasPermissionAnyDecorator('hg.admin')
@@ -57,8 +53,6 @@ class DefaultsController(BaseController):
         super(DefaultsController, self).__before__()
 
     def index(self, format='html'):
-        """GET /defaults: All items in the collection"""
-        # url('defaults')
         c.backends = BACKENDS.keys()
         defaults = Setting.get_default_repo_settings()
 
@@ -70,14 +64,6 @@ class DefaultsController(BaseController):
         )
 
     def update(self, id):
-        """PUT /defaults/id: Update an existing item"""
-        # Forms posted to this method should contain a hidden field:
-        #    <input type="hidden" name="_method" value="PUT" />
-        # Or using helpers:
-        #    h.form(url('default', id=ID),
-        #           method='put')
-        # url('default', id=ID)
-
         _form = DefaultsForm()()
 
         try:
