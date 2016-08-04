@@ -171,8 +171,8 @@ class TestAdminUsersController(TestController):
 
         new_user = Session().query(User) \
             .filter(User.username == username).one()
-        response = self.app.post(url('user', id=new_user.user_id),
-            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
+        response = self.app.post(url('delete_user', id=new_user.user_id),
+            params={'_authentication_token': self.authentication_token()})
 
         self.checkSessionFlash(response, 'Successfully deleted user')
 
@@ -186,8 +186,8 @@ class TestAdminUsersController(TestController):
 
         new_user = Session().query(User) \
             .filter(User.username == username).one()
-        response = self.app.post(url('user', id=new_user.user_id),
-            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
+        response = self.app.post(url('delete_user', id=new_user.user_id),
+            params={'_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'User "%s" still '
                                'owns 1 repositories and cannot be removed. '
                                'Switch owners or remove those repositories: '
@@ -197,8 +197,8 @@ class TestAdminUsersController(TestController):
             params={'_method': 'delete', '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Deleted repository %s' % reponame)
 
-        response = self.app.post(url('user', id=new_user.user_id),
-            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
+        response = self.app.post(url('delete_user', id=new_user.user_id),
+            params={'_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Successfully deleted user')
 
     def test_delete_repo_group_err(self):
@@ -211,8 +211,8 @@ class TestAdminUsersController(TestController):
 
         new_user = Session().query(User) \
             .filter(User.username == username).one()
-        response = self.app.post(url('user', id=new_user.user_id),
-            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
+        response = self.app.post(url('delete_user', id=new_user.user_id),
+            params={'_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'User "%s" still '
                                'owns 1 repository groups and cannot be removed. '
                                'Switch owners or remove those repository groups: '
@@ -226,8 +226,8 @@ class TestAdminUsersController(TestController):
             params={'_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Removed repository group %s' % groupname)
 
-        response = self.app.post(url('user', id=new_user.user_id),
-            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
+        response = self.app.post(url('delete_user', id=new_user.user_id),
+            params={'_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Successfully deleted user')
 
     def test_delete_user_group_err(self):
@@ -240,8 +240,8 @@ class TestAdminUsersController(TestController):
 
         new_user = Session().query(User) \
             .filter(User.username == username).one()
-        response = self.app.post(url('user', id=new_user.user_id),
-            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
+        response = self.app.post(url('delete_user', id=new_user.user_id),
+            params={'_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'User "%s" still '
                                'owns 1 user groups and cannot be removed. '
                                'Switch owners or remove those user groups: '
@@ -253,8 +253,8 @@ class TestAdminUsersController(TestController):
 
         fixture.destroy_user_group(ug.users_group_id)
 
-        response = self.app.post(url('user', id=new_user.user_id),
-            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
+        response = self.app.post(url('delete_user', id=new_user.user_id),
+            params={'_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Successfully deleted user')
 
     def test_edit(self):

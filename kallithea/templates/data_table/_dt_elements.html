@@ -152,7 +152,7 @@
    </a>
  </div>
  <div style="float:left" class="grid_delete">
-  ${h.form(h.url('delete_user', id=user_id),method='delete')}
+  ${h.form(h.url('delete_user', id=user_id))}
     <i class="icon-minus-circled" style="color:#FF4444"></i>
     ${h.submit('remove_',_('Delete'),id="remove_user_%s" % user_id, class_="action_button",
     onclick="return confirm('"+_('Confirm to delete this user: %s') % username+"');")}
