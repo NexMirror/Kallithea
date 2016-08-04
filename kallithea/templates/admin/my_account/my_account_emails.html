@@ -17,7 +17,7 @@
             %endif
             <td><div class="email">${em.email}</div></td>
             <td>
-                ${h.form(url('my_account_emails'),method='delete')}
+                ${h.form(url('my_account_emails_delete'))}
                     ${h.hidden('del_email_id',em.email_id)}
                     <i class="icon-minus-circled" style="color:#FF4444"></i>
                     ${h.submit('remove_',_('Delete'),id="remove_email_%s" % em.email_id,

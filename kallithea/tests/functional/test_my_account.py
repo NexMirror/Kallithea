@@ -79,8 +79,8 @@ class TestMyAccountController(TestController):
         response.mustcontain('barz@example.com')
         response.mustcontain('<input id="del_email_id" name="del_email_id" type="hidden" value="%s" />' % email_id)
 
-        response = self.app.post(url('my_account_emails'),
-                                 {'del_email_id': email_id, '_method': 'delete', '_authentication_token': self.authentication_token()})
+        response = self.app.post(url('my_account_emails_delete'),
+                                 {'del_email_id': email_id, '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Removed email from user')
         response = self.app.get(url('my_account_emails'))
         response.mustcontain('No additional emails specified')

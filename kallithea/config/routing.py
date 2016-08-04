@@ -357,8 +357,8 @@ def make_map(config):
                   action="my_account_emails", conditions=dict(method=["GET"]))
         m.connect("my_account_emails", "/my_account/emails",
                   action="my_account_emails_add", conditions=dict(method=["POST"]))
-        m.connect("my_account_emails", "/my_account/emails",
-                  action="my_account_emails_delete", conditions=dict(method=["DELETE"]))
+        m.connect("my_account_emails_delete", "/my_account/emails/delete",
+                  action="my_account_emails_delete", conditions=dict(method=["POST"]))
 
         m.connect("my_account_api_keys", "/my_account/api_keys",
                   action="my_account_api_keys", conditions=dict(method=["GET"]))
