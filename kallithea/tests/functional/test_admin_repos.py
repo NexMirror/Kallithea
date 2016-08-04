@@ -444,7 +444,7 @@ class _BaseTestCase(TestController):
         assert perm[0].permission.permission_name == 'repository.read'
         assert Repository.get_by_repo_name(self.REPO).private == False
 
-        response = self.app.put(url('put_repo', repo_name=self.REPO),
+        response = self.app.post(url('update_repo', repo_name=self.REPO),
                         fixture._get_repo_create_params(repo_private=1,
                                                 repo_name=self.REPO,
                                                 repo_type=self.REPO_TYPE,
@@ -459,7 +459,7 @@ class _BaseTestCase(TestController):
         assert len(perm), 1
         assert perm[0].permission.permission_name == 'repository.none'
 
-        response = self.app.put(url('put_repo', repo_name=self.REPO),
+        response = self.app.post(url('update_repo', repo_name=self.REPO),
                         fixture._get_repo_create_params(repo_private=False,
                                                 repo_name=self.REPO,
                                                 repo_type=self.REPO_TYPE,

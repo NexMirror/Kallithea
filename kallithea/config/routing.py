@@ -119,8 +119,8 @@ def make_map(config):
                   action="index", conditions=dict(method=["GET"]))
         m.connect("new_repo", "/create_repository",
                   action="create_repository", conditions=dict(method=["GET"]))
-        m.connect("put_repo", "/repos/{repo_name:.*?}",
-                  action="update", conditions=dict(method=["PUT"],
+        m.connect("update_repo", "/repos/{repo_name:.*?}",
+                  action="update", conditions=dict(method=["POST"],
                   function=check_repo))
         m.connect("delete_repo", "/repos/{repo_name:.*?}/delete",
                   action="delete", conditions=dict(method=["POST"]))
