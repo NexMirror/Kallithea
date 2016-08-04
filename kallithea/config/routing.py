@@ -135,7 +135,7 @@ def make_map(config):
         m.connect("new_repos_group", "/repo_groups/new",
                   action="new", conditions=dict(method=["GET"]))
         m.connect("update_repos_group", "/repo_groups/{group_name:.*?}",
-                  action="update", conditions=dict(method=["PUT"],
+                  action="update", conditions=dict(method=["POST"],
                                                    function=check_group))
 
         m.connect("repos_group", "/repo_groups/{group_name:.*?}",
