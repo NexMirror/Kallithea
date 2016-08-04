@@ -225,8 +225,8 @@ def make_map(config):
                   action="new", conditions=dict(method=["GET"]))
         m.connect("update_users_group", "/user_groups/{id}",
                   action="update", conditions=dict(method=["PUT"]))
-        m.connect("delete_users_group", "/user_groups/{id}",
-                  action="delete", conditions=dict(method=["DELETE"]))
+        m.connect("delete_users_group", "/user_groups/{id}/delete",
+                  action="delete", conditions=dict(method=["POST"]))
         m.connect("edit_users_group", "/user_groups/{id}/edit",
                   action="edit", conditions=dict(method=["GET"]),
                   function=check_user_group)

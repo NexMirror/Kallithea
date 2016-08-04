@@ -14,7 +14,7 @@
 %endfor
 </dl>
 
-${h.form(h.url('users_group', id=c.user_group.users_group_id),method='delete')}
+${h.form(h.url('delete_users_group', id=c.user_group.users_group_id))}
     <button class="btn btn-small btn-danger" type="submit"
             onclick="return confirm('${_('Confirm to delete this user group: %s') % c.user_group.users_group_name}');">
         <i class="icon-minus-circled"></i>

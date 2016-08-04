@@ -168,7 +168,7 @@
     </a>
  </div>
  <div style="float:left" class="grid_delete">
-    ${h.form(h.url('users_group', id=user_group_id),method='delete')}
+    ${h.form(h.url('delete_users_group', id=user_group_id))}
       <i class="icon-minus-circled" style="color:#FF4444"></i>
       ${h.submit('remove_',_('Delete'),id="remove_group_%s" % user_group_id, class_="action_button",
       onclick="return confirm('"+_('Confirm to delete this user group: %s') % user_group_name+"');")}
