@@ -202,11 +202,6 @@ class UsersController(BaseController):
                     category='error')
         raise HTTPFound(location=url('users'))
 
-    def show(self, id, format='html'):
-        """GET /users/id: Show a specific item"""
-        # url('user', id=ID)
-        User.get_or_404(-1)
-
     def _get_user_or_raise_if_default(self, id):
         try:
             return User.get_or_404(id, allow_default=False)

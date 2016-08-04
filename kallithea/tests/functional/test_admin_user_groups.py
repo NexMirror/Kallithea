@@ -202,18 +202,3 @@ class TestAdminUsersGroupsController(TestController):
     def test_delete_browser_fakeout(self):
         response = self.app.post(url('users_group', id=1),
                                  params=dict(_method='delete', _authentication_token=self.authentication_token()))
-
-    def test_show(self):
-        response = self.app.get(url('users_group', id=1))
-
-    def test_edit(self):
-        response = self.app.get(url('edit_users_group', id=1))
-
-    def test_assign_members(self):
-        pass
-
-    def test_add_create_permission(self):
-        pass
-
-    def test_revoke_members(self):
-        pass

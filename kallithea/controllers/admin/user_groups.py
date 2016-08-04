@@ -226,10 +226,6 @@ class UserGroupsController(BaseController):
                     category='error')
         raise HTTPFound(location=url('users_groups'))
 
-    def show(self, id, format='html'):
-        """GET /user_groups/id: Show a specific item"""
-        # url('users_group', id=ID)
-
     @HasUserGroupPermissionAnyDecorator('usergroup.admin')
     def edit(self, id, format='html'):
         c.user_group = UserGroup.get_or_404(id)

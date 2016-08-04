@@ -190,8 +190,6 @@ def make_map(config):
                   action="delete", conditions=dict(method=["DELETE"]))
         m.connect("edit_user", "/users/{id}/edit",
                   action="edit", conditions=dict(method=["GET"]))
-        m.connect("user", "/users/{id}",
-                  action="show", conditions=dict(method=["GET"]))
 
         #EXTRAS USER ROUTES
         m.connect("edit_user_advanced", "/users/{id}/edit/advanced",
@@ -241,8 +239,6 @@ def make_map(config):
         m.connect("edit_users_group", "/user_groups/{id}/edit",
                   action="edit", conditions=dict(method=["GET"]),
                   function=check_user_group)
-        m.connect("users_group", "/user_groups/{id}",
-                  action="show", conditions=dict(method=["GET"]))
 
         #EXTRAS USER GROUP ROUTES
         m.connect("edit_user_group_default_perms", "/user_groups/{id}/edit/default_perms",
@@ -275,12 +271,8 @@ def make_map(config):
                   action="permission_globals", conditions=dict(method=["GET"]))
 
         m.connect("admin_permissions_ips", "/permissions/ips",
-                  action="permission_ips", conditions=dict(method=["POST"]))
-        m.connect("admin_permissions_ips", "/permissions/ips",
                   action="permission_ips", conditions=dict(method=["GET"]))
 
-        m.connect("admin_permissions_perms", "/permissions/perms",
-                  action="permission_perms", conditions=dict(method=["POST"]))
         m.connect("admin_permissions_perms", "/permissions/perms",
                   action="permission_perms", conditions=dict(method=["GET"]))
 
@@ -384,26 +376,15 @@ def make_map(config):
     with rmap.submapper(path_prefix=ADMIN_PREFIX,
                         controller='admin/notifications') as m:
         m.connect("notifications", "/notifications",
-                  action="create", conditions=dict(method=["POST"]))
-        m.connect("notifications", "/notifications",
                   action="index", conditions=dict(method=["GET"]))
         m.connect("notifications_mark_all_read", "/notifications/mark_all_read",
                   action="mark_all_read", conditions=dict(method=["GET"]))
         m.connect("formatted_notifications", "/notifications.{format}",
                   action="index", conditions=dict(method=["GET"]))
-        m.connect("new_notification", "/notifications/new",
-                  action="new", conditions=dict(method=["GET"]))
-        m.connect("formatted_new_notification", "/notifications/new.{format}",
-                  action="new", conditions=dict(method=["GET"]))
         m.connect("/notifications/{notification_id}",
                   action="update", conditions=dict(method=["PUT"]))
         m.connect("/notifications/{notification_id}",
                   action="delete", conditions=dict(method=["DELETE"]))
-        m.connect("edit_notification", "/notifications/{notification_id}/edit",
-                  action="edit", conditions=dict(method=["GET"]))
-        m.connect("formatted_edit_notification",
-                  "/notifications/{notification_id}.{format}/edit",
-                  action="edit", conditions=dict(method=["GET"]))
         m.connect("notification", "/notifications/{notification_id}",
                   action="show", conditions=dict(method=["GET"]))
         m.connect("formatted_notification", "/notifications/{notification_id}.{format}",

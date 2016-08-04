@@ -257,9 +257,6 @@ class TestAdminUsersController(TestController):
             params={'_method': 'delete', '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Successfully deleted user')
 
-    def test_show(self):
-        response = self.app.get(url('user', id=1))
-
     def test_edit(self):
         self.log_user()
         user = User.get_by_username(TEST_USER_ADMIN_LOGIN)

@@ -90,14 +90,6 @@ class NotificationsController(BaseController):
             c.notifications = Page(notif, page=1, items_per_page=10)
             return render('admin/notifications/notifications_data.html')
 
-    def create(self):
-        """POST /_admin/notifications: Create a new item"""
-        # url('notifications')
-
-    def new(self, format='html'):
-        """GET /_admin/notifications/new: Form to create a new item"""
-        # url('new_notification')
-
     def update(self, notification_id):
         try:
             no = Notification.get(notification_id)
@@ -146,7 +138,3 @@ class NotificationsController(BaseController):
         c.notification = notification
         c.user = self.authuser
         return render('admin/notifications/show_notification.html')
-
-    def edit(self, notification_id, format='html'):
-        """GET /_admin/notifications/id/edit: Form to edit an existing item"""
-        # url('edit_notification', notification_id=ID)
