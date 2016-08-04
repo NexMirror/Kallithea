@@ -173,7 +173,6 @@ class UsersController(BaseController):
                 'create_repo_perm': user_model.has_perm(id,
                                                         'hg.create.repository'),
                 'fork_repo_perm': user_model.has_perm(id, 'hg.fork.repository'),
-                '_method': 'put'
             })
             return htmlfill.render(
                 self._render_edit_profile(user),

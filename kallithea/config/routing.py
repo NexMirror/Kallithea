@@ -178,7 +178,7 @@ def make_map(config):
         m.connect("new_user", "/users/new",
                   action="new", conditions=dict(method=["GET"]))
         m.connect("update_user", "/users/{id}",
-                  action="update", conditions=dict(method=["PUT"]))
+                  action="update", conditions=dict(method=["POST"]))
         m.connect("delete_user", "/users/{id}/delete",
                   action="delete", conditions=dict(method=["POST"]))
         m.connect("edit_user", "/users/{id}/edit",

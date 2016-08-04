@@ -152,7 +152,7 @@ class TestAdminUsersController(TestController):
                                           # so we use creation data
 
         params.update({'_authentication_token': self.authentication_token()})
-        response = self.app.put(url('user', id=usr.user_id), params)
+        response = self.app.post(url('update_user', id=usr.user_id), params)
         self.checkSessionFlash(response, 'User updated successfully')
         params.pop('_authentication_token')
 
