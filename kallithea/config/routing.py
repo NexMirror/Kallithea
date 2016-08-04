@@ -594,9 +594,9 @@ def make_map(config):
     rmap.connect("edit_repo_statistics", "/{repo_name:.*?}/settings/statistics",
                  controller='admin/repos', action="edit_statistics",
                  conditions=dict(method=["GET"], function=check_repo))
-    rmap.connect("edit_repo_statistics", "/{repo_name:.*?}/settings/statistics",
+    rmap.connect("edit_repo_statistics_update", "/{repo_name:.*?}/settings/statistics",
                  controller='admin/repos', action="edit_statistics",
-                 conditions=dict(method=["PUT"], function=check_repo))
+                 conditions=dict(method=["POST"], function=check_repo))
 
     #still working url for backward compat.
     rmap.connect('raw_changeset_home_depraced',
