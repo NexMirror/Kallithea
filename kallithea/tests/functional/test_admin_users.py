@@ -278,9 +278,8 @@ class TestAdminUsersController(TestController):
             assert UserModel().has_perm(user, perm_none) == False
             assert UserModel().has_perm(user, perm_create) == False
 
-            response = self.app.post(url('edit_user_perms', id=uid),
-                                     params=dict(_method='put',
-                                                 create_repo_perm=True,
+            response = self.app.post(url('edit_user_perms_update', id=uid),
+                                     params=dict(create_repo_perm=True,
                                                  _authentication_token=self.authentication_token()))
 
             perm_none = Permission.get_by_key('hg.create.none')
@@ -309,8 +308,8 @@ class TestAdminUsersController(TestController):
             assert UserModel().has_perm(user, perm_none) == False
             assert UserModel().has_perm(user, perm_create) == False
 
-            response = self.app.post(url('edit_user_perms', id=uid),
-                                     params=dict(_method='put', _authentication_token=self.authentication_token()))
+            response = self.app.post(url('edit_user_perms_update', id=uid),
+                                     params=dict(_authentication_token=self.authentication_token()))
 
             perm_none = Permission.get_by_key('hg.create.none')
             perm_create = Permission.get_by_key('hg.create.repository')
@@ -338,9 +337,8 @@ class TestAdminUsersController(TestController):
             assert UserModel().has_perm(user, perm_none) == False
             assert UserModel().has_perm(user, perm_fork) == False
 
-            response = self.app.post(url('edit_user_perms', id=uid),
-                                     params=dict(_method='put',
-                                                 create_repo_perm=True,
+            response = self.app.post(url('edit_user_perms_update', id=uid),
+                                     params=dict(create_repo_perm=True,
                                                  _authentication_token=self.authentication_token()))
 
             perm_none = Permission.get_by_key('hg.create.none')
@@ -369,8 +367,8 @@ class TestAdminUsersController(TestController):
             assert UserModel().has_perm(user, perm_none) == False
             assert UserModel().has_perm(user, perm_fork) == False
 
-            response = self.app.post(url('edit_user_perms', id=uid),
-                                     params=dict(_method='put', _authentication_token=self.authentication_token()))
+            response = self.app.post(url('edit_user_perms_update', id=uid),
+                                     params=dict(_authentication_token=self.authentication_token()))
 
             perm_none = Permission.get_by_key('hg.create.none')
             perm_create = Permission.get_by_key('hg.create.repository')
@@ -569,8 +567,8 @@ class TestAdminUsersControllerForDefaultUser(TestController):
     def test_update_perms_default_user(self):
         self.log_user()
         user = User.get_default_user()
-        response = self.app.post(url('edit_user_perms', id=user.user_id),
-                 {'_method': 'put', '_authentication_token': self.authentication_token()}, status=404)
+        response = self.app.post(url('edit_user_perms_update', id=user.user_id),
+                 {'_authentication_token': self.authentication_token()}, status=404)
 
     # Emails
     def test_edit_emails_default_user(self):

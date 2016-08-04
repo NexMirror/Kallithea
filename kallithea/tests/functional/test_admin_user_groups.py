@@ -76,8 +76,8 @@ class TestAdminUsersGroupsController(TestController):
         self.checkSessionFlash(response,
                                'Created user group ')
         ## ENABLE REPO CREATE ON A GROUP
-        response = self.app.put(url('edit_user_group_default_perms',
-                                    id=ug.users_group_id),
+        response = self.app.post(url('edit_user_group_default_perms_update',
+                                     id=ug.users_group_id),
                                  {'create_repo_perm': True,
                                   '_authentication_token': self.authentication_token()})
         response.follow()
@@ -95,8 +95,8 @@ class TestAdminUsersGroupsController(TestController):
                     [ug.users_group_id, p3.permission_id]])
 
         ## DISABLE REPO CREATE ON A GROUP
-        response = self.app.put(
-            url('edit_user_group_default_perms', id=ug.users_group_id),
+        response = self.app.post(
+            url('edit_user_group_default_perms_update', id=ug.users_group_id),
             params={'_authentication_token': self.authentication_token()})
 
         response.follow()
@@ -145,9 +145,9 @@ class TestAdminUsersGroupsController(TestController):
         self.checkSessionFlash(response,
                                'Created user group ')
         ## ENABLE REPO CREATE ON A GROUP
-        response = self.app.put(url('edit_user_group_default_perms',
-                                    id=ug.users_group_id),
-                                {'fork_repo_perm': True, '_authentication_token': self.authentication_token()})
+        response = self.app.post(url('edit_user_group_default_perms_update',
+                                     id=ug.users_group_id),
+                                 {'fork_repo_perm': True, '_authentication_token': self.authentication_token()})
 
         response.follow()
         ug = UserGroup.get_by_group_name(users_group_name)
@@ -164,7 +164,7 @@ class TestAdminUsersGroupsController(TestController):
                     [ug.users_group_id, p3.permission_id]])
 
         ## DISABLE REPO CREATE ON A GROUP
-        response = self.app.put(url('edit_user_group_default_perms', id=ug.users_group_id),
+        response = self.app.post(url('edit_user_group_default_perms_update', id=ug.users_group_id),
             params={'_authentication_token': self.authentication_token()})
 
         response.follow()

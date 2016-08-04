@@ -197,8 +197,8 @@ def make_map(config):
 
         m.connect("edit_user_perms", "/users/{id}/edit/permissions",
                   action="edit_perms", conditions=dict(method=["GET"]))
-        m.connect("edit_user_perms", "/users/{id}/edit/permissions",
-                  action="update_perms", conditions=dict(method=["PUT"]))
+        m.connect("edit_user_perms_update", "/users/{id}/edit/permissions",
+                  action="update_perms", conditions=dict(method=["POST"]))
 
         m.connect("edit_user_emails", "/users/{id}/edit/emails",
                   action="edit_emails", conditions=dict(method=["GET"]))
@@ -234,8 +234,8 @@ def make_map(config):
         #EXTRAS USER GROUP ROUTES
         m.connect("edit_user_group_default_perms", "/user_groups/{id}/edit/default_perms",
                   action="edit_default_perms", conditions=dict(method=["GET"]))
-        m.connect("edit_user_group_default_perms", "/user_groups/{id}/edit/default_perms",
-                  action="update_default_perms", conditions=dict(method=["PUT"]))
+        m.connect("edit_user_group_default_perms_update", "/user_groups/{id}/edit/default_perms",
+                  action="update_default_perms", conditions=dict(method=["POST"]))
 
 
         m.connect("edit_user_group_perms", "/user_groups/{id}/edit/perms",
