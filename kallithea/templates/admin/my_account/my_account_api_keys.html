@@ -7,7 +7,7 @@
         </td>
         <td>${_('Expires')}: ${_('Never')}</td>
         <td>
-            ${h.form(url('my_account_api_keys'),method='delete')}
+            ${h.form(url('my_account_api_keys_delete'))}
                 ${h.hidden('del_api_key',c.user.api_key)}
                 ${h.hidden('del_api_key_builtin',1)}
                 <button class="btn btn-mini btn-danger" type="submit"
@@ -34,7 +34,7 @@
                  %endif
             </td>
             <td>
-                ${h.form(url('my_account_api_keys'),method='delete')}
+                ${h.form(url('my_account_api_keys_delete'))}
                     ${h.hidden('del_api_key',api_key.api_key)}
                     <button class="btn btn-mini btn-danger" type="submit"
                             onclick="return confirm('${_('Confirm to remove this API key: %s') % api_key.api_key}');">

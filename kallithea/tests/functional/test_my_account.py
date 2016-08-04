@@ -225,8 +225,8 @@ class TestMyAccountController(TestController):
         keys = UserApiKeys.query().all()
         assert 1 == len(keys)
 
-        response = self.app.post(url('my_account_api_keys'),
-                 {'_method': 'delete', 'del_api_key': keys[0].api_key, '_authentication_token': self.authentication_token()})
+        response = self.app.post(url('my_account_api_keys_delete'),
+                 {'del_api_key': keys[0].api_key, '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'API key successfully deleted')
         keys = UserApiKeys.query().all()
         assert 0 == len(keys)
@@ -240,8 +240,8 @@ class TestMyAccountController(TestController):
         response.mustcontain(api_key)
         response.mustcontain('Expires: Never')
 
-        response = self.app.post(url('my_account_api_keys'),
-                 {'_method': 'delete', 'del_api_key_builtin': api_key, '_authentication_token': self.authentication_token()})
+        response = self.app.post(url('my_account_api_keys_delete'),
+                 {'del_api_key_builtin': api_key, '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'API key successfully reset')
         response = response.follow()
         response.mustcontain(no=[api_key])

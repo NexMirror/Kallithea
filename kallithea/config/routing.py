@@ -364,8 +364,8 @@ def make_map(config):
                   action="my_account_api_keys", conditions=dict(method=["GET"]))
         m.connect("my_account_api_keys", "/my_account/api_keys",
                   action="my_account_api_keys_add", conditions=dict(method=["POST"]))
-        m.connect("my_account_api_keys", "/my_account/api_keys",
-                  action="my_account_api_keys_delete", conditions=dict(method=["DELETE"]))
+        m.connect("my_account_api_keys_delete", "/my_account/api_keys/delete",
+                  action="my_account_api_keys_delete", conditions=dict(method=["POST"]))
 
     #NOTIFICATION REST ROUTES
     with rmap.submapper(path_prefix=ADMIN_PREFIX,
