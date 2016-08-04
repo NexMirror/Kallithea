@@ -69,14 +69,6 @@ class DefaultsController(BaseController):
             force_defaults=False
         )
 
-    def create(self):
-        """POST /defaults: Create a new item"""
-        # url('defaults')
-
-    def new(self, format='html'):
-        """GET /defaults/new: Form to create a new item"""
-        # url('new_default')
-
     def update(self, id):
         """PUT /defaults/id: Update an existing item"""
         # Forms posted to this method should contain a hidden field:
@@ -113,20 +105,3 @@ class DefaultsController(BaseController):
                     category='error')
 
         raise HTTPFound(location=url('defaults'))
-
-    def delete(self, id):
-        """DELETE /defaults/id: Delete an existing item"""
-        # Forms posted to this method should contain a hidden field:
-        #    <input type="hidden" name="_method" value="DELETE" />
-        # Or using helpers:
-        #    h.form(url('default', id=ID),
-        #           method='delete')
-        # url('default', id=ID)
-
-    def show(self, id, format='html'):
-        """GET /defaults/id: Show a specific item"""
-        # url('default', id=ID)
-
-    def edit(self, id, format='html'):
-        """GET /defaults/id/edit: Form to edit an existing item"""
-        # url('edit_default', id=ID)
