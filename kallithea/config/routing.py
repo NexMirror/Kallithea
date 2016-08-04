@@ -162,8 +162,8 @@ def make_map(config):
                   action="delete_perms",
                   conditions=dict(method=["POST"], function=check_group))
 
-        m.connect("delete_repo_group", "/repo_groups/{group_name:.*?}",
-                  action="delete", conditions=dict(method=["DELETE"],
+        m.connect("delete_repo_group", "/repo_groups/{group_name:.*?}/delete",
+                  action="delete", conditions=dict(method=["POST"],
                                                    function=check_group_skip_path))
 
 

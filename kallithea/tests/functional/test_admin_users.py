@@ -223,7 +223,7 @@ class TestAdminUsersController(TestController):
         # response = self.app.get(url('repos_groups', id=rg.group_id))
 
         response = self.app.post(url('delete_repo_group', group_name=groupname),
-            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
+            params={'_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Removed repository group %s' % groupname)
 
         response = self.app.post(url('user', id=new_user.user_id),
