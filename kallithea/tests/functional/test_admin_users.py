@@ -587,8 +587,8 @@ class TestAdminUsersControllerForDefaultUser(TestController):
     def test_delete_emails_default_user(self):
         self.log_user()
         user = User.get_default_user()
-        response = self.app.post(url('edit_user_emails', id=user.user_id),
-                 {'_method': 'delete', '_authentication_token': self.authentication_token()}, status=404)
+        response = self.app.post(url('edit_user_emails_delete', id=user.user_id),
+                 {'_authentication_token': self.authentication_token()}, status=404)
 
     # IP addresses
     # Add/delete of IP addresses for the default user is used to maintain
