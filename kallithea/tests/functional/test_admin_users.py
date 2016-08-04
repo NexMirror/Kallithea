@@ -458,7 +458,7 @@ class TestAdminUsersController(TestController):
         user = User.get_by_username(TEST_USER_REGULAR_LOGIN)
         user_id = user.user_id
 
-        response = self.app.post(url('edit_user_api_keys', id=user_id),
+        response = self.app.post(url('edit_user_api_keys_update', id=user_id),
                  {'description': desc, 'lifetime': lifetime, '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'API key successfully created')
         try:
@@ -476,7 +476,7 @@ class TestAdminUsersController(TestController):
         user = User.get_by_username(TEST_USER_REGULAR_LOGIN)
         user_id = user.user_id
 
-        response = self.app.post(url('edit_user_api_keys', id=user_id),
+        response = self.app.post(url('edit_user_api_keys_update', id=user_id),
                 {'description': 'desc', 'lifetime': -1, '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'API key successfully created')
         response = response.follow()
@@ -549,8 +549,8 @@ class TestAdminUsersControllerForDefaultUser(TestController):
     def test_add_api_keys_default_user(self):
         self.log_user()
         user = User.get_default_user()
-        response = self.app.post(url('edit_user_api_keys', id=user.user_id),
-                 {'_method': 'put', '_authentication_token': self.authentication_token()}, status=404)
+        response = self.app.post(url('edit_user_api_keys_update', id=user.user_id),
+                 {'_authentication_token': self.authentication_token()}, status=404)
 
     def test_delete_api_keys_default_user(self):
         self.log_user()
