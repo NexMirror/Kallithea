@@ -150,17 +150,6 @@ class GistsController(BaseController):
 
     @LoginRequired()
     @NotAnonymous()
-    def update(self, gist_id):
-        """PUT /admin/gists/gist_id: Update an existing item"""
-        # Forms posted to this method should contain a hidden field:
-        #    <input type="hidden" name="_method" value="PUT" />
-        # Or using helpers:
-        #    h.form(url('gist', gist_id=ID),
-        #           method='put')
-        # url('gist', gist_id=ID)
-
-    @LoginRequired()
-    @NotAnonymous()
     def delete(self, gist_id):
         gist = GistModel().get_gist(gist_id)
         owner = gist.gist_owner == c.authuser.user_id

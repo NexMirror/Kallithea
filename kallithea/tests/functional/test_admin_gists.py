@@ -129,10 +129,6 @@ class TestGistsController(TestController):
         self.log_user()
         response = self.app.get(url('new_gist'))
 
-    # Functionality currently not implemented
-    #def test_update(self):
-    #    response = self.app.put(url('gist', gist_id=1))
-
     def test_delete(self):
         self.log_user()
         gist = _create_gist('delete-me')

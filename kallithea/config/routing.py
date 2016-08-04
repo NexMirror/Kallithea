@@ -147,16 +147,10 @@ def make_map(config):
         m.connect("edit_repo_group", "/repo_groups/{group_name:.*?}/edit",
                   action="edit",
                   conditions=dict(method=["GET"], function=check_group))
-        m.connect("edit_repo_group", "/repo_groups/{group_name:.*?}/edit",
-                  action="edit",
-                  conditions=dict(method=["PUT"], function=check_group))
 
         m.connect("edit_repo_group_advanced", "/repo_groups/{group_name:.*?}/edit/advanced",
                   action="edit_repo_group_advanced",
                   conditions=dict(method=["GET"], function=check_group))
-        m.connect("edit_repo_group_advanced", "/repo_groups/{group_name:.*?}/edit/advanced",
-                  action="edit_repo_group_advanced",
-                  conditions=dict(method=["PUT"], function=check_group))
 
         m.connect("edit_repo_group_perms", "/repo_groups/{group_name:.*?}/edit/permissions",
                   action="edit_repo_group_perms",
@@ -194,8 +188,6 @@ def make_map(config):
         #EXTRAS USER ROUTES
         m.connect("edit_user_advanced", "/users/{id}/edit/advanced",
                   action="edit_advanced", conditions=dict(method=["GET"]))
-        m.connect("edit_user_advanced", "/users/{id}/edit/advanced",
-                  action="update_advanced", conditions=dict(method=["PUT"]))
 
         m.connect("edit_user_api_keys", "/users/{id}/edit/api_keys",
                   action="edit_api_keys", conditions=dict(method=["GET"]))
@@ -401,8 +393,6 @@ def make_map(config):
                   action="new", conditions=dict(method=["GET"]))
 
 
-        m.connect("/gists/{gist_id}",
-                  action="update", conditions=dict(method=["PUT"]))
         m.connect("/gists/{gist_id}",
                   action="delete", conditions=dict(method=["DELETE"]))
         m.connect("edit_gist", "/gists/{gist_id}/edit",
