@@ -166,10 +166,6 @@ class FilesController(BaseRepoController):
 
             if c.file.is_file():
                 c.load_full_history = False
-                file_last_cs = c.file.last_changeset
-                c.file_changeset = (c.changeset
-                                    if c.changeset.revision < file_last_cs.revision
-                                    else file_last_cs)
                 #determine if we're on branch head
                 _branches = c.db_repo_scm_instance.branches
                 c.on_branch_head = revision in _branches.keys() + _branches.values()
