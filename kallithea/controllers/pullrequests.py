@@ -772,8 +772,6 @@ class PullrequestsController(BaseRepoController):
             raise HTTPForbidden()
 
         text = request.POST.get('text', '').strip()
-        if close_pr:
-            text = _('Closing.') + '\n' + text
 
         comment = create_comment(
             text,
