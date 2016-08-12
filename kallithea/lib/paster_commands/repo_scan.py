@@ -61,7 +61,10 @@ class Command(BasePasterCommand):
         removed = ', '.join(removed) or '-'
         print 'Scan completed.'
         print 'Added: %s' % added
-        print 'Removed: %s' % removed
+        if rm_obsolete:
+            print 'Removed: %s' % removed
+        else:
+            print 'Missing: %s' % removed
 
     def update_parser(self):
         self.parser.add_option(
