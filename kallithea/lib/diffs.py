@@ -283,15 +283,13 @@ class DiffProcessor(object):
             self.removes += 1
         return safe_unicode(l)
 
-    def _highlight_line_difflib(self, line, next_):
+    def _highlight_line_difflib(self, old, new):
         """
         Highlight inline changes in both lines.
         """
 
-        if line['action'] == 'del':
-            old, new = line, next_
-        else:
-            old, new = next_, line
+        assert old['action'] == 'del'
+        assert new['action'] == 'add'
 
         oldwords = self._token_re.split(old['line'])
         newwords = self._token_re.split(new['line'])
@@ -484,19 +482,34 @@ class DiffProcessor(object):
         if not inline_diff:
             return diff_container(_files)
 
-        # highlight inline changes
+        # highlight inline changes when one del is followed by one add
         for diff_data in _files:
             for chunk in diff_data['chunks']:
                 lineiter = iter(chunk)
                 try:
-                    while 1:
-                        line = lineiter.next()
-                        if line['action'] not in ['unmod', 'context']:
-                            nextline = lineiter.next()
-                            if nextline['action'] in ['unmod', 'context'] or \
-                               nextline['action'] == line['action']:
-                                continue
-                            self.differ(line, nextline)
+                    peekline = lineiter.next()
+                    while True:
+                        # find a first del line
+                        while peekline['action'] != 'del':
+                            peekline = lineiter.next()
+                        delline = peekline
+                        peekline = lineiter.next()
+                        # if not followed by add, eat all following del lines
+                        if peekline['action'] != 'add':
+                            while peekline['action'] == 'del':
+                                peekline = lineiter.next()
+                            continue
+                        # found an add - make sure it is the only one
+                        addline = peekline
+                        try:
+                            peekline = lineiter.next()
+                        except StopIteration:
+                            # add was last line - ok
+                            self.differ(delline, addline)
+                            raise
+                        if peekline['action'] != 'add':
+                            # there was only one add line - ok
+                            self.differ(delline, addline)
                 except StopIteration:
                     pass
 
