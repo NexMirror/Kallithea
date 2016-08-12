@@ -365,14 +365,12 @@ def make_ui(read_from='file', path=None, checkpaths=True, clear_session=True):
                           ui_.ui_key, ui_val)
                 baseui.setconfig(safe_str(ui_.ui_section), safe_str(ui_.ui_key),
                                  ui_val)
-            if ui_.ui_key == 'push_ssl':
-                # force set push_ssl requirement to False, kallithea
-                # handles that
-                baseui.setconfig(safe_str(ui_.ui_section), safe_str(ui_.ui_key),
-                                 False)
         if clear_session:
             meta.Session.remove()
 
+        # force set push_ssl requirement to False, Kallithea handles that
+        baseui.setconfig('web', 'push_ssl', False)
+        baseui.setconfig('web', 'allow_push', '*')
         # prevent interactive questions for ssh password / passphrase
         ssh = baseui.config('ui', 'ssh', default='ssh')
         baseui.setconfig('ui', 'ssh', '%s -oBatchMode=yes -oIdentitiesOnly=yes' % ssh)

@@ -71,9 +71,6 @@ class SettingsController(BaseController):
             if k == 'paths_/':
                 k = 'paths_root_path'
 
-            if k == 'web_push_ssl':
-                v = str2bool(v)
-
             k = k.replace('.', '_')
 
             if each.ui_section in ['hooks', 'extensions']:
@@ -99,9 +96,6 @@ class SettingsController(BaseController):
                      force_defaults=False)
 
             try:
-                sett = Ui.get_by_key('web', 'push_ssl')
-                sett.ui_value = form_result['web_push_ssl']
-
                 if c.visual.allow_repo_location_change:
                     sett = Ui.get_by_key('paths', '/')
                     sett.ui_value = form_result['paths_root_path']

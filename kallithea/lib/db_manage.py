@@ -424,9 +424,7 @@ class DbManage(object):
         self.create_ui_settings(path)
 
         ui_config = [
-            ('web', 'push_ssl', 'false'),
             ('web', 'allow_archive', 'gz zip bz2'),
-            ('web', 'allow_push', '*'),
             ('web', 'baseurl', '/'),
             ('paths', '/', path),
             #('phases', 'publish', 'false')

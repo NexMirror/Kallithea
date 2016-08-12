@@ -373,7 +373,6 @@ def ApplicationUiSettingsForm():
     class _ApplicationUiSettingsForm(formencode.Schema):
         allow_extra_fields = True
         filter_extra_fields = False
-        web_push_ssl = v.StringBoolean(if_missing=False)
         paths_root_path = All(
             v.ValidPath(),
             v.UnicodeString(strip=True, min=1, not_empty=True)
