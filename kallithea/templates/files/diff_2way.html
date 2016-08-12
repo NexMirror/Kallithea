@@ -31,8 +31,8 @@ ${self.repo_context_bar('changelog')}
         ${self.breadcrumbs()}
     </div>
 
-    <div class="diff-container" style="overflow-x: hidden">
-        <div class="diffblock comm" style="margin:3px; padding:1px">
+    <div class="diff-container">
+        <div class="diffblock comm twoway">
             <div class="code-header">
                 <div class="changeset_header">
                     <div class="changeset_file">
@@ -68,7 +68,7 @@ var orig2_url = '${h.url('files_raw_home',repo_name=c.repo_name,f_path=h.safe_un
 $(document).ready(function () {
     $('#compare').mergely({
         width: 'auto',
-        height: '600',
+        height: $(window).height() - $('#compare').offset().top - $('#footer').height() - 35,
         fgcolor: {a:'#ddffdd',c:'#cccccc',d:'#ffdddd'},
         bgcolor: '#fff',
         viewport: true,
@@ -91,6 +91,9 @@ $(document).ready(function () {
             }
         }
     });
+    // recompute width - avoids overflow and horizontal scrollbar
+    $('#compare').mergely('resize');
+
     $('#ignorews').change(function(e){
         var val = e.currentTarget.checked;
         $('#compare').mergely('options', {ignorews: val});

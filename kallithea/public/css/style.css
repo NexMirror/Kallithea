@@ -2953,6 +2953,17 @@ table.code-browser .browser-file {
     padding: 2px 0px 0px 2px;
     float: left;
 }
+.diffblock.twoway {
+    overflow: visible;
+}
+.diffblock.twoway .diff-actions {
+    padding-top: 0;
+}
+.diffblock.twoway .diff-actions label input {
+    margin: -5px 5px 0 10px;
+    position: relative;
+    top: 3px;
+}
 .diffblock .diff-menu ul li {
     padding: 0px 0px 0px 0px !important;
 }
