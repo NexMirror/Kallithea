@@ -3417,12 +3417,6 @@ input[disabled].btn,
     color: #999;
 }
 
-.btn.btn-danger.disabled {
-    color: #eee;
-    background-color: #c77;
-    border-color: #b66
-}
-
 .btn.btn-small {
     padding: 2px 6px;
 }
