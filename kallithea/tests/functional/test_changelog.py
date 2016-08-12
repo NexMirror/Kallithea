@@ -17,7 +17,7 @@ class TestChangelogController(TestController):
         )
         #rev 640: code garden
         response.mustcontain(
-            """<span class="changeset_hash">r640:0a4e54a44604</span>"""
+            """<a class="changeset_hash" href="/%s/changeset/0a4e54a4460401d6dbbd6a3604b17cd2b3606b82">r640:0a4e54a44604</a>""" % HG_REPO
         )
         response.mustcontain("""code garden""")
 
@@ -48,7 +48,7 @@ class TestChangelogController(TestController):
         )
 
         response.mustcontain(
-            """<span class="changeset_hash">r539:22baf968d547</span>"""
+            """<a class="changeset_hash" href="/vcs_test_hg/changeset/22baf968d547386b9516965ce89d189665003a31">r539:22baf968d547</a>"""
         )
 
     def test_index_git(self):
@@ -65,7 +65,7 @@ class TestChangelogController(TestController):
         )
 
         response.mustcontain(
-            """<span class="changeset_hash">r613:95f9a91d775b</span>"""
+            """<a class="changeset_hash" href="/vcs_test_git/changeset/95f9a91d775b0084b2368ae7779e44931c849c0e">r613:95f9a91d775b</a>"""
         )
 
         response.mustcontain("""fixing stupid typo in context for mercurial""")
@@ -104,7 +104,7 @@ class TestChangelogController(TestController):
         )
 
         response.mustcontain(
-            """<span class="changeset_hash">r515:636ed213f2f1</span>"""
+            """<a class="changeset_hash" href="/vcs_test_git/changeset/636ed213f2f11ef91071b9c24f2d5e6bd01a6ed5">r515:636ed213f2f1</a>"""
         )
 
     def test_index_hg_with_filenode(self):

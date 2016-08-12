@@ -106,9 +106,7 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                             <span title="${cs.author}" class="user">${h.shorter(h.person(cs.author),22)}</span>
                         </td>
                         <td class="hash" style="width:${len(h.show_id(cs))*6.5}px">
-                            <a href="${h.url('changeset_home',repo_name=c.repo_name,revision=cs.raw_id)}">
-                                <span class="changeset_hash">${h.show_id(cs)}</span>
-                            </a>
+                            ${h.link_to(h.show_id(cs),h.url('changeset_home',repo_name=c.repo_name,revision=cs.raw_id), class_='changeset_hash')}
                         </td>
                         <td class="date">
                             <div class="date tooltip" title="${h.fmt_date(cs.date)}">${h.age(cs.date,True)}</div>
