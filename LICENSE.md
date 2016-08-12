@@ -98,22 +98,6 @@ It is Copyright 2008-2015 SpryMedia Ltd. and is under an
 
 
 
-Mousetrap
----------
-
-Kallithea incorporates parts of the Javascript system called
-[Mousetrap](http://craig.is/killing/mice/), which is:
-
-   Copyright 2013 Craig Campbell
-
-and licensed under
-[the Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
-
-A [copy of the Apache License 2.0](Apache-License-2.0.txt) is also included
-in this distribution.
-
-
-
 Mergely
 -------
 

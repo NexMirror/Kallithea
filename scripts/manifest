@@ -641,7 +641,6 @@ kallithea/public/js/codemirror_loadmode.js
 kallithea/public/js/graph.js
 kallithea/public/js/jquery.min.js
 kallithea/public/js/mergely.js
-kallithea/public/js/mousetrap.js
 kallithea/public/js/native.history.js
 kallithea/public/js/select2/
 kallithea/public/js/select2/select2-bootstrap.css
