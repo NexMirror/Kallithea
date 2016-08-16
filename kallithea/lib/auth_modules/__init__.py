@@ -363,8 +363,8 @@ def authenticate(username, password, environ=None):
         try:
             plugin = loadplugin(module)
         except (ImportError, AttributeError, TypeError) as e:
-            raise ImportError('Failed to load authentication module %s : %s'
-                              % (module, str(e)))
+            log.error('Failed to load authentication module %s : %s' % (module, str(e)))
+            continue
         log.debug('Trying authentication using ** %s **', module)
         # load plugin settings from Kallithea database
         plugin_name = plugin.name
