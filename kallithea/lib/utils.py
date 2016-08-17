@@ -551,34 +551,6 @@ def repo2db_mapper(initial_repo_list, remove_obsolete=False,
     return added, removed
 
 
-# set cache regions for beaker so celery can utilise it
-def add_cache(settings):
-    cache_settings = {'regions': None}
-    for key in settings.keys():
-        for prefix in ['beaker.cache.', 'cache.']:
-            if key.startswith(prefix):
-                name = key.split(prefix)[1].strip()
-                cache_settings[name] = settings[key].strip()
-    if cache_settings['regions']:
-        for region in cache_settings['regions'].split(','):
-            region = region.strip()
-            region_settings = {}
-            for key, value in cache_settings.items():
-                if key.startswith(region):
-                    region_settings[key.split('.')[1]] = value
-            region_settings['expire'] = int(region_settings.get('expire',
-                                                                60))
-            region_settings.setdefault('lock_dir',
-                                       cache_settings.get('lock_dir'))
-            region_settings.setdefault('data_dir',
-                                       cache_settings.get('data_dir'))
-
-            if 'type' not in region_settings:
-                region_settings['type'] = cache_settings.get('type',
-                                                             'memory')
-            beaker.cache.cache_regions[region] = region_settings
-
-
 def load_rcextensions(root_path):
     import kallithea
     from kallithea.config import conf
@@ -768,6 +740,38 @@ def jsonify(func, *args, **kwargs):
         log.warning(msg)
     log.debug("Returning JSON wrapped action output")
     return json.dumps(data, encoding='utf-8')
+
+
+#===============================================================================
+# CACHE RELATED METHODS
+#===============================================================================
+
+# set cache regions for beaker so celery can utilise it
+def add_cache(settings):
+    cache_settings = {'regions': None}
+    for key in settings.keys():
+        for prefix in ['beaker.cache.', 'cache.']:
+            if key.startswith(prefix):
+                name = key.split(prefix)[1].strip()
+                cache_settings[name] = settings[key].strip()
+    if cache_settings['regions']:
+        for region in cache_settings['regions'].split(','):
+            region = region.strip()
+            region_settings = {}
+            for key, value in cache_settings.items():
+                if key.startswith(region):
+                    region_settings[key.split('.')[1]] = value
+            region_settings['expire'] = int(region_settings.get('expire',
+                                                                60))
+            region_settings.setdefault('lock_dir',
+                                       cache_settings.get('lock_dir'))
+            region_settings.setdefault('data_dir',
+                                       cache_settings.get('data_dir'))
+
+            if 'type' not in region_settings:
+                region_settings['type'] = cache_settings.get('type',
+                                                             'memory')
+            beaker.cache.cache_regions[region] = region_settings
 
 
 def conditional_cache(region, prefix, condition, func):
