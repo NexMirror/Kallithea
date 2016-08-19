@@ -62,15 +62,16 @@ ini_files = [
                 'beaker.cache.lock_dir': '%(here)s/../../data/test/cache/lock',
                 'sqlalchemy.db1.url': 'sqlite:///%(here)s/kallithea_test.sqlite',
             },
-            '[logger_root]': {
-                'level': 'DEBUG',
-            },
-            '[logger_sqlalchemy]': {
-                'level': 'ERROR',
-                'handlers': 'console',
-            },
             '[handler_console]': {
-                'level': 'NOTSET',
+                'level': 'DEBUG',
+                'formatter': 'color_formatter',
+            },
+            # The 'handler_console_sql' block is very similar to the one in
+            # development.ini, but without the explicit 'level=DEBUG' setting:
+            # it causes duplicate sqlalchemy debug logs, one through
+            # handler_console_sql and another through another path.
+            '[handler_console_sql]': {
+                'formatter': 'color_formatter_sql',
             },
         },
     ),
