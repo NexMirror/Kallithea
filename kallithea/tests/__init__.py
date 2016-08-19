@@ -60,7 +60,7 @@ parametrize = pytest.mark.parametrize
 
 __all__ = [
     'skipif', 'parametrize', 'environ', 'url', 'TestController',
-    'ldap_lib_installed', 'pam_lib_installed',
+    'ldap_lib_installed', 'pam_lib_installed', 'invalidate_all_caches',
     'TESTS_TMP_PATH', 'HG_REPO', 'GIT_REPO', 'NEW_HG_REPO', 'NEW_GIT_REPO',
     'HG_FORK', 'GIT_FORK', 'TEST_USER_ADMIN_LOGIN', 'TEST_USER_ADMIN_PASS',
     'TEST_USER_ADMIN_EMAIL', 'TEST_USER_REGULAR_LOGIN', 'TEST_USER_REGULAR_PASS',
@@ -141,6 +141,16 @@ try:
     pam_lib_installed = True
 except ImportError:
     pam_lib_installed = False
+
+def invalidate_all_caches():
+    """Invalidate all beaker caches currently configured.
+    Useful when manipulating IP permissions in a test and changes need to take
+    effect immediately.
+    Note: Any use of this function is probably a workaround - it should be
+    replaced with a more specific cache invalidation in code or test."""
+    from beaker.cache import cache_managers
+    for cache in cache_managers.values():
+        cache.clear()
 
 class NullHandler(logging.Handler):
     def emit(self, record):

@@ -60,7 +60,7 @@ class Fixture(object):
                 anon.active = status
                 Session().add(anon)
                 Session().commit()
-                time.sleep(1.5)  # hack: wait for beaker sql_cache_short to expire
+                invalidate_all_caches()
 
             def __exit__(self, exc_type, exc_val, exc_tb):
                 anon = User.get_default_user()

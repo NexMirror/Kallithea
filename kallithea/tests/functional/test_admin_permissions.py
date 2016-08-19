@@ -23,8 +23,9 @@ class TestAdminPermissionsController(TestController):
                                  params=dict(new_ip='127.0.0.0/24',
                                  _authentication_token=self.authentication_token()))
 
-        # sleep more than beaker.cache.sql_cache_short.expire to expire user cache
-        time.sleep(1.5)
+        # IP permissions are cached, need to invalidate this cache explicitly
+        invalidate_all_caches()
+
         self.app.get(url('admin_permissions_ips'), status=302)
 
         # REMOTE_ADDR must match 127.0.0.0/24
@@ -43,8 +44,8 @@ class TestAdminPermissionsController(TestController):
                                              _authentication_token=self.authentication_token()),
                                  extra_environ={'REMOTE_ADDR': '127.0.0.1'})
 
-        # sleep more than beaker.cache.sql_cache_short.expire to expire user cache
-        time.sleep(1.5)
+        # IP permissions are cached, need to invalidate this cache explicitly
+        invalidate_all_caches()
 
         response = self.app.get(url('admin_permissions_ips'))
         response.mustcontain('All IP addresses are allowed')
