@@ -12,7 +12,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.orm.exc import NoResultFound, ObjectDeletedError
 
 import pytest
 from kallithea.tests import *
@@ -28,6 +28,19 @@ from webob.exc import HTTPNotFound
 
 fixture = Fixture()
 
+@pytest.yield_fixture
+def user_and_repo_group_fail():
+    username = 'repogrouperr'
+    groupname = u'repogroup_fail'
+    user = fixture.create_user(name=username)
+    repo_group = fixture.create_repo_group(name=groupname, cur_user=username)
+    yield user, repo_group
+    # cleanup
+    try:
+        fixture.destroy_repo_group(repo_group)
+    except ObjectDeletedError:
+        # delete already succeeded in test body
+        pass
 
 class TestAdminUsersController(TestController):
     test_user_1 = 'testme'
@@ -201,13 +214,10 @@ class TestAdminUsersController(TestController):
             params={'_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Successfully deleted user')
 
-    def test_delete_repo_group_err(self):
+    def test_delete_repo_group_err(self, user_and_repo_group_fail):
         self.log_user()
         username = 'repogrouperr'
         groupname = u'repogroup_fail'
-
-        fixture.create_user(name=username)
-        fixture.create_repo_group(name=groupname, cur_user=username)
 
         new_user = Session().query(User) \
             .filter(User.username == username).one()
