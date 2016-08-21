@@ -44,7 +44,7 @@ from kallithea.lib.celerylib import run_task, locked_task, dbsession, \
     str2bool, __get_lockkey, LockHeld, DaemonLock, get_session
 from kallithea.lib.helpers import person
 from kallithea.lib.rcmail.smtp_mailer import SmtpMailer
-from kallithea.lib.utils import add_cache, action_logger
+from kallithea.lib.utils import setup_cache_regions, action_logger
 from kallithea.lib.vcs.utils import author_email
 from kallithea.lib.compat import json, OrderedDict
 from kallithea.lib.hooks import log_create_repository
@@ -52,7 +52,7 @@ from kallithea.lib.hooks import log_create_repository
 from kallithea.model.db import Statistics, Repository, User
 
 
-add_cache(config)  # pragma: no cover
+setup_cache_regions(config)  # pragma: no cover
 
 __all__ = ['whoosh_index', 'get_commits_stats', 'send_email']
 

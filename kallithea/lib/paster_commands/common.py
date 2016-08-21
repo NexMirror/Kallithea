@@ -31,7 +31,7 @@ import logging
 import paste
 from paste.script.command import Command, BadCommand
 
-from kallithea.lib.utils import add_cache
+from kallithea.lib.utils import setup_cache_regions
 
 
 def ask_ok(prompt, retries=4, complaint='Yes or no please!'):
@@ -108,6 +108,6 @@ class BasePasterCommand(Command):
         from pylons import config
         from kallithea.model import init_model
         from kallithea.lib.utils2 import engine_from_config
-        add_cache(config)
+        setup_cache_regions(config)
         engine = engine_from_config(config, 'sqlalchemy.db1.')
         init_model(engine)

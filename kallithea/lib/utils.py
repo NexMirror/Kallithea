@@ -747,7 +747,7 @@ def jsonify(func, *args, **kwargs):
 #===============================================================================
 
 # set cache regions for beaker so celery can utilise it
-def add_cache(settings):
+def setup_cache_regions(settings):
     cache_settings = {'regions': None}
     for key in settings.keys():
         for prefix in ['beaker.cache.', 'cache.']:

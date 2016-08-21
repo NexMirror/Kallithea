@@ -38,7 +38,7 @@ from subprocess import Popen, PIPE
 from paste.deploy import appconfig
 from sqlalchemy import engine_from_config
 
-from kallithea.lib.utils import add_cache
+from kallithea.lib.utils import setup_cache_regions
 from kallithea.model import init_model
 from kallithea.model import meta
 from kallithea.model.db import User, Repository, Ui
@@ -51,7 +51,7 @@ rel_path = dirname(dirname(dirname(dirname(os.path.abspath(__file__)))))
 conf = appconfig('config:development.ini', relative_to=rel_path)
 load_environment(conf.global_conf, conf.local_conf)
 
-add_cache(conf)
+setup_cache_regions(conf)
 
 USER = TEST_USER_ADMIN_LOGIN
 PASS = TEST_USER_ADMIN_PASS
