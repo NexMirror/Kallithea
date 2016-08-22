@@ -65,7 +65,7 @@ temp=$(readlink -f "$(mktemp --tmpdir -d 'dbmigrate-test.XXXXXX')")
 cat <<EOD
 Config file:    $config_file
 EOD
-sed -n -e 's/^sqlalchemy\.db1\.url *= */Database URL:   /p' "$config_file"
+sed -n -e 's/^sqlalchemy\.url *= */Database URL:   /p' "$config_file"
 cat <<EOD
 Working dir:    $temp
 Repository:     $source_repo

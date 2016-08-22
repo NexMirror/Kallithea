@@ -37,7 +37,7 @@ log = logging.getLogger(__name__)
 
 def setup_app(command, conf, vars):
     """Place any commands to setup kallithea here"""
-    dbconf = conf['sqlalchemy.db1.url']
+    dbconf = conf['sqlalchemy.url']
     dbmanage = DbManage(log_sql=True, dbconf=dbconf, root=conf['here'],
                         tests=False, cli_args=command.options.__dict__)
     dbmanage.create_tables(override=True)

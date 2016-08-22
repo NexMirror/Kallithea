@@ -632,7 +632,7 @@ def create_test_env(repos_test_path, config):
     from kallithea.tests import HG_REPO, GIT_REPO, TESTS_TMP_PATH
 
     # PART ONE create db
-    dbconf = config['sqlalchemy.db1.url']
+    dbconf = config['sqlalchemy.url']
     log.debug('making test db %s', dbconf)
 
     # create test dir if it doesn't exist

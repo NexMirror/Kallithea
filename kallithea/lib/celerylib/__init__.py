@@ -122,7 +122,7 @@ def locked_task(func):
 
 def get_session():
     if CELERY_ON:
-        engine = engine_from_config(config, 'sqlalchemy.db1.')
+        engine = engine_from_config(config, 'sqlalchemy.')
         init_model(engine)
     sa = meta.Session()
     return sa

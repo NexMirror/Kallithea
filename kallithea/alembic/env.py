@@ -31,7 +31,7 @@ config = context.config
 # [alembic] sqlalchemy.url.
 database_url = (
     config.get_main_option('sqlalchemy.url') or
-    config.get_section_option('app:main', 'sqlalchemy.db1.url')
+    config.get_section_option('app:main', 'sqlalchemy.url')
 )
 
 # Configure default logging for Alembic. (This can be overriden by the

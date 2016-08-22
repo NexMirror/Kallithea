@@ -54,7 +54,7 @@ utility.
 If using MySQL, please consult the documentation for the ``mysqldump``
 utility.
 
-Look for ``sqlalchemy.db1.url`` in your configuration file to determine
+Look for ``sqlalchemy.url`` in your configuration file to determine
 database type, settings, location, etc.
 
 

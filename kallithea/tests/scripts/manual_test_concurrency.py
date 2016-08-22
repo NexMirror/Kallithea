@@ -82,7 +82,7 @@ class Command(object):
 
 
 def get_session():
-    engine = engine_from_config(conf, 'sqlalchemy.db1.')
+    engine = engine_from_config(conf, 'sqlalchemy.')
     init_model(engine)
     sa = meta.Session
     return sa

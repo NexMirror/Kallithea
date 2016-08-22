@@ -103,5 +103,5 @@ class BasePasterCommand(Command):
         from kallithea.model import init_model
         from kallithea.lib.utils2 import engine_from_config
         setup_cache_regions(config)
-        engine = engine_from_config(config, 'sqlalchemy.db1.')
+        engine = engine_from_config(config, 'sqlalchemy.')
         init_model(engine)

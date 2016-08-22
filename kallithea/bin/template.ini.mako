@@ -484,21 +484,21 @@ logview.pylons.util = #eee
 
 %if database_engine == 'sqlite':
 # SQLITE [default]
-sqlalchemy.db1.url = sqlite:///${here}/kallithea.db?timeout=60
+sqlalchemy.url = sqlite:///${here}/kallithea.db?timeout=60
 
 %elif database_engine == 'postgres':
 # POSTGRESQL
-sqlalchemy.db1.url = postgresql://user:pass@localhost/kallithea
+sqlalchemy.url = postgresql://user:pass@localhost/kallithea
 
 %elif database_engine == 'mysql':
 # MySQL
-sqlalchemy.db1.url = mysql://user:pass@localhost/kallithea?charset=utf8
+sqlalchemy.url = mysql://user:pass@localhost/kallithea?charset=utf8
 
 %endif
 # see sqlalchemy docs for others
 
-sqlalchemy.db1.echo = false
-sqlalchemy.db1.pool_recycle = 3600
+sqlalchemy.echo = false
+sqlalchemy.pool_recycle = 3600
 
 <%text>################################</%text>
 <%text>### ALEMBIC CONFIGURATION   ####</%text>

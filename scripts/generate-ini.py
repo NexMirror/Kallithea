@@ -60,7 +60,7 @@ ini_files = [
                 'archive_cache_dir': '%(here)s/../../data/test/tarballcache',
                 'beaker.cache.data_dir': '%(here)s/../../data/test/cache/data',
                 'beaker.cache.lock_dir': '%(here)s/../../data/test/cache/lock',
-                'sqlalchemy.db1.url': 'sqlite:///%(here)s/kallithea_test.sqlite',
+                'sqlalchemy.url': 'sqlite:///%(here)s/kallithea_test.sqlite',
             },
             '[handler_console]': {
                 'level': 'DEBUG',
