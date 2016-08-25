@@ -29,7 +29,7 @@ from webob.exc import HTTPNotFound
 
 fixture = Fixture()
 
-@pytest.yield_fixture
+@pytest.fixture
 def user_and_repo_group_fail():
     username = 'repogrouperr'
     groupname = u'repogroup_fail'

@@ -30,7 +30,7 @@ def pytest_configure():
     return pylons.test.pylonsapp
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def create_test_user():
     """Provide users that automatically disappear after test is over."""
     test_user_ids = []
@@ -55,7 +55,7 @@ def _set_settings(*kvtseq):
     session.commit()
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def set_test_settings():
     """Restore settings after test is over."""
     # Save settings.
@@ -75,7 +75,7 @@ def set_test_settings():
         Setting.create_or_update(k, v, t)
     session.commit()
 
-@pytest.yield_fixture
+@pytest.fixture
 def auto_clear_ip_permissions():
     """Fixture that provides nothing but clearing IP permissions upon test
     exit. This clearing is needed to avoid other test failing to make fake http
