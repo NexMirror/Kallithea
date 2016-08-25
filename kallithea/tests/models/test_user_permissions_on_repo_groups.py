@@ -65,13 +65,13 @@ def test_user_permissions_on_group_without_recursive_mode():
     expected = 0
     assert len(items) == expected, ' %s != %s' % (len(items), expected)
     for name, perm in items:
-        yield check_tree_perms, name, perm, group, 'repository.read'
+        check_tree_perms(name, perm, group, 'repository.read')
 
     items = [x for x in _get_group_perms(group, recursive)]
     expected = 1
     assert len(items) == expected, ' %s != %s' % (len(items), expected)
     for name, perm in items:
-        yield check_tree_perms, name, perm, group, 'group.write'
+        check_tree_perms(name, perm, group, 'group.write')
 
 
 def test_user_permissions_on_group_without_recursive_mode_subgroup():
@@ -84,13 +84,13 @@ def test_user_permissions_on_group_without_recursive_mode_subgroup():
     expected = 0
     assert len(items) == expected, ' %s != %s' % (len(items), expected)
     for name, perm in items:
-        yield check_tree_perms, name, perm, group, 'repository.read'
+        check_tree_perms(name, perm, group, 'repository.read')
 
     items = [x for x in _get_group_perms(group, recursive)]
     expected = 1
     assert len(items) == expected, ' %s != %s' % (len(items), expected)
     for name, perm in items:
-        yield check_tree_perms, name, perm, group, 'group.write'
+        check_tree_perms(name, perm, group, 'group.write')
 
 
 def test_user_permissions_on_group_with_recursive_mode():
@@ -106,10 +106,10 @@ def test_user_permissions_on_group_with_recursive_mode():
     _check_expected_count(items, repo_items, expected_count(group, True))
 
     for name, perm in repo_items:
-        yield check_tree_perms, name, perm, group, 'repository.write'
+        check_tree_perms(name, perm, group, 'repository.write')
 
     for name, perm in items:
-        yield check_tree_perms, name, perm, group, 'group.write'
+        check_tree_perms(name, perm, group, 'group.write')
 
 
 def test_user_permissions_on_group_with_recursive_mode_for_default_user():
@@ -133,10 +133,10 @@ def test_user_permissions_on_group_with_recursive_mode_for_default_user():
     _check_expected_count(items, repo_items, expected_count(group, True))
 
     for name, perm in repo_items:
-        yield check_tree_perms, name, perm, group, 'repository.write'
+        check_tree_perms(name, perm, group, 'repository.write')
 
     for name, perm in items:
-        yield check_tree_perms, name, perm, group, 'group.write'
+        check_tree_perms(name, perm, group, 'group.write')
 
 
 def test_user_permissions_on_group_with_recursive_mode_inner_group():
@@ -150,10 +150,10 @@ def test_user_permissions_on_group_with_recursive_mode_inner_group():
     _check_expected_count(items, repo_items, expected_count(group, True))
 
     for name, perm in repo_items:
-        yield check_tree_perms, name, perm, group, 'repository.none'
+        check_tree_perms(name, perm, group, 'repository.none')
 
     for name, perm in items:
-        yield check_tree_perms, name, perm, group, 'group.none'
+        check_tree_perms(name, perm, group, 'group.none')
 
 
 def test_user_permissions_on_group_with_recursive_mode_deepest():
@@ -167,10 +167,10 @@ def test_user_permissions_on_group_with_recursive_mode_deepest():
     _check_expected_count(items, repo_items, expected_count(group, True))
 
     for name, perm in repo_items:
-        yield check_tree_perms, name, perm, group, 'repository.write'
+        check_tree_perms(name, perm, group, 'repository.write')
 
     for name, perm in items:
-        yield check_tree_perms, name, perm, group, 'group.write'
+        check_tree_perms(name, perm, group, 'group.write')
 
 
 def test_user_permissions_on_group_with_recursive_mode_only_with_repos():
@@ -184,10 +184,10 @@ def test_user_permissions_on_group_with_recursive_mode_only_with_repos():
     _check_expected_count(items, repo_items, expected_count(group, True))
 
     for name, perm in repo_items:
-        yield check_tree_perms, name, perm, group, 'repository.admin'
+        check_tree_perms(name, perm, group, 'repository.admin')
 
     for name, perm in items:
-        yield check_tree_perms, name, perm, group, 'group.admin'
+        check_tree_perms(name, perm, group, 'group.admin')
 
 
 def test_user_permissions_on_group_with_recursive_repo_mode_for_default_user():
@@ -212,7 +212,7 @@ def test_user_permissions_on_group_with_recursive_repo_mode_for_default_user():
     _check_expected_count(items, repo_items, expected_count(group, True))
 
     for name, perm in repo_items:
-        yield check_tree_perms, name, perm, group, 'repository.none'
+        check_tree_perms(name, perm, group, 'repository.none')
 
     for name, perm in items:
         # permission is set with repos only mode, but we also change the permission
@@ -221,7 +221,7 @@ def test_user_permissions_on_group_with_recursive_repo_mode_for_default_user():
         old_perm = 'group.read'
         if name == group:
             old_perm = perm
-        yield check_tree_perms, name, perm, group, old_perm
+        check_tree_perms(name, perm, group, old_perm)
 
 
 def test_user_permissions_on_group_with_recursive_repo_mode_inner_group():
@@ -236,7 +236,7 @@ def test_user_permissions_on_group_with_recursive_repo_mode_inner_group():
     _check_expected_count(items, repo_items, expected_count(group, True))
 
     for name, perm in repo_items:
-        yield check_tree_perms, name, perm, group, 'repository.none'
+        check_tree_perms(name, perm, group, 'repository.none')
 
     for name, perm in items:
         # permission is set with repos only mode, but we also change the permission
@@ -245,7 +245,7 @@ def test_user_permissions_on_group_with_recursive_repo_mode_inner_group():
         old_perm = 'group.read'
         if name == group:
             old_perm = perm
-        yield check_tree_perms, name, perm, group, old_perm
+        check_tree_perms(name, perm, group, old_perm)
 
 
 def test_user_permissions_on_group_with_recursive_group_mode_for_default_user():
@@ -269,10 +269,10 @@ def test_user_permissions_on_group_with_recursive_group_mode_for_default_user():
     _check_expected_count(items, repo_items, expected_count(group, True))
 
     for name, perm in repo_items:
-        yield check_tree_perms, name, perm, group, 'repository.read'
+        check_tree_perms(name, perm, group, 'repository.read')
 
     for name, perm in items:
-        yield check_tree_perms, name, perm, group, 'group.write'
+        check_tree_perms(name, perm, group, 'group.write')
 
 
 def test_user_permissions_on_group_with_recursive_group_mode_inner_group():
@@ -286,7 +286,7 @@ def test_user_permissions_on_group_with_recursive_group_mode_inner_group():
     _check_expected_count(items, repo_items, expected_count(group, True))
 
     for name, perm in repo_items:
-        yield check_tree_perms, name, perm, group, 'repository.read'
+        check_tree_perms(name, perm, group, 'repository.read')
 
     for name, perm in items:
-        yield check_tree_perms, name, perm, group, 'group.none'
+        check_tree_perms(name, perm, group, 'group.none')
