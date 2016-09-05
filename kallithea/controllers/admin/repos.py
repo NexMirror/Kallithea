@@ -116,7 +116,6 @@ class ReposController(BaseRepoController):
     def create(self):
         self.__load_defaults()
         form_result = {}
-        task_id = None
         try:
             # CanWriteGroup validators checks permissions of this POST
             form_result = RepoForm(repo_groups=c.repo_groups,
@@ -126,9 +125,7 @@ class ReposController(BaseRepoController):
             # create is done sometimes async on celery, db transaction
             # management is handled there.
             task = RepoModel().create(form_result, self.authuser.user_id)
-            from celery.result import BaseAsyncResult
-            if isinstance(task, BaseAsyncResult):
-                task_id = task.task_id
+            task_id = task.task_id
         except formencode.Invalid as errors:
             log.info(errors)
             return htmlfill.render(

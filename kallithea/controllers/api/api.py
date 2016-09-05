@@ -1504,10 +1504,7 @@ class ApiController(JSONRPCController):
             )
 
             task = RepoModel().create(form_data=data, cur_user=owner)
-            from celery.result import BaseAsyncResult
-            task_id = None
-            if isinstance(task, BaseAsyncResult):
-                task_id = task.task_id
+            task_id = task.task_id
             # no commit, it's done in RepoModel, or async via celery
             return dict(
                 msg="Created new repository `%s`" % (repo_name,),
@@ -1690,10 +1687,7 @@ class ApiController(JSONRPCController):
             )
             task = RepoModel().create_fork(form_data, cur_user=owner)
             # no commit, it's done in RepoModel, or async via celery
-            from celery.result import BaseAsyncResult
-            task_id = None
-            if isinstance(task, BaseAsyncResult):
-                task_id = task.task_id
+            task_id = task.task_id
             return dict(
                 msg='Created fork of `%s` as `%s`' % (repo.repo_name,
                                                       fork_name),

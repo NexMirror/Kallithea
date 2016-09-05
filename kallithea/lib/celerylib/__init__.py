@@ -36,7 +36,6 @@ from pylons import config
 from hashlib import md5
 from decorator import decorator
 
-from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea import CELERY_ON, CELERY_EAGER
 from kallithea.lib.utils2 import str2bool, safe_str
 from kallithea.lib.pidlock import DaemonLock, LockHeld
@@ -49,13 +48,18 @@ from sqlalchemy import engine_from_config
 log = logging.getLogger(__name__)
 
 
-class ResultWrapper(object):
-    def __init__(self, task):
-        self.task = task
+class FakeTask(object):
+    """Fake a sync result to make it look like a finished task"""
 
-    @LazyProperty
-    def result(self):
-        return self.task
+    def __init__(self, result):
+        self.result = result
+
+    def failed(self):
+        return False
+
+    traceback = None # if failed
+
+    task_id = None
 
 
 def run_task(task, *args, **kwargs):
@@ -78,7 +82,12 @@ def run_task(task, *args, **kwargs):
             log.error(traceback.format_exc())
 
     log.debug('executing task %s in sync mode', task)
-    return ResultWrapper(task(*args, **kwargs))
+    try:
+        result = task(*args, **kwargs)
+    except Exception as e:
+        log.error('exception running sync task %s: %s', task, e)
+        raise # TODO: return this in FakeTask as with async tasks?
+    return FakeTask(result)
 
 
 def __get_lockkey(func, *fargs, **fkwargs):
