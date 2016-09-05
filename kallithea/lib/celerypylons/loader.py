@@ -3,6 +3,7 @@
 from celery.loaders.base import BaseLoader
 from pylons import config
 
+# TODO: drop this mangling and just use a separate celery config section
 to_pylons = lambda x: x.replace('_', '.').lower()
 to_celery = lambda x: x.replace('.', '_').upper()
 
@@ -12,29 +13,35 @@ LIST_PARAMS = """CELERY_IMPORTS ADMINS ROUTES""".split()
 class PylonsSettingsProxy(object):
     """Pylons Settings Proxy
 
-    Proxies settings from pylons.config
-
+    Make settings from pylons.config appear the way Celery expects them.
     """
-    def __getattr__(self, key):
-        pylons_key = to_pylons(key)
-        try:
-            value = config[pylons_key]
-            if key in LIST_PARAMS:return value.split()
-            return self.type_converter(value)
-        except KeyError:
-            raise AttributeError(pylons_key)
 
-    def get(self, key):
+    def __getattr__(self, key):
         try:
-            return self.__getattr__(key)
-        except AttributeError:
-            return None
+            return self[key]
+        except KeyError:
+            raise AttributeError(key)
+
+    def get(self, key, default=None):
+        try:
+            return self[key]
+        except KeyError:
+            return default
 
     def __getitem__(self, key):
+        pylons_key = to_pylons(key)
+        value = config[pylons_key]
+        if key in LIST_PARAMS:
+            return value.split()
+        return self.type_converter(value)
+
+    def __contains__(self, key):
+        pylons_key = to_pylons(key)
         try:
-            return self.__getattr__(key)
-        except AttributeError:
-            raise KeyError()
+            config[pylons_key]
+        except KeyError:
+            return False
+        return True
 
     def __setattr__(self, key, value):
         pylons_key = to_pylons(key)
