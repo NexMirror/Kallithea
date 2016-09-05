@@ -311,14 +311,12 @@ allow_custom_hooks_settings = True
 <%text>####################################</%text>
 
 use_celery = false
-broker.host = localhost
-broker.vhost = rabbitmqhost
-broker.port = 5672
-broker.user = rabbitmq
-broker.password = qweqwe
+
+<%text>## Example: connect to the virtual host 'rabbitmqhost' on localhost as rabbitmq:</%text>
+broker.url = amqp://rabbitmq:qewqew@localhost:5672/rabbitmqhost
 
 celery.imports = kallithea.lib.celerylib.tasks
-
+celery.accept.content = pickle
 celery.result.backend = amqp
 celery.result.dburi = amqp://
 celery.result.serialier = json
@@ -327,11 +325,9 @@ celery.result.serialier = json
 #celery.amqp.task.result.expires = 18000
 
 celeryd.concurrency = 2
-#celeryd.log.file = celeryd.log
-celeryd.log.level = DEBUG
 celeryd.max.tasks.per.child = 1
 
-<%text>## tasks will never be sent to the queue, but executed locally instead.</%text>
+<%text>## If true, tasks will never be sent to the queue, but executed locally instead.</%text>
 celery.always.eager = false
 
 <%text>####################################</%text>

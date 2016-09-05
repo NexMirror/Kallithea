@@ -7,7 +7,7 @@ from pylons import config
 to_pylons = lambda x: x.replace('_', '.').lower()
 to_celery = lambda x: x.replace('.', '_').upper()
 
-LIST_PARAMS = """CELERY_IMPORTS ADMINS ROUTES""".split()
+LIST_PARAMS = """CELERY_IMPORTS ADMINS ROUTES CELERY_ACCEPT_CONTENT""".split()
 
 
 class PylonsSettingsProxy(object):
