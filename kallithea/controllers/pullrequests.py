@@ -35,7 +35,7 @@ from pylons.i18n.translation import _
 from webob.exc import HTTPFound, HTTPNotFound, HTTPForbidden, HTTPBadRequest
 
 from kallithea.lib.vcs.utils.hgcompat import unionrepo
-from kallithea.lib.compat import json
+from kallithea.lib.compat import json, OrderedDict
 from kallithea.lib.base import BaseRepoController, render
 from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator, \
     NotAnonymous
@@ -695,8 +695,7 @@ class PullrequestsController(BaseRepoController):
         if isinstance(_parsed, LimitedDiffContainer):
             c.limited_diff = True
 
-        c.files = []
-        c.changes = {}
+        c.file_diff_data = OrderedDict()
         c.lines_added = 0
         c.lines_deleted = 0
 
@@ -706,10 +705,9 @@ class PullrequestsController(BaseRepoController):
             c.lines_deleted += st['deleted']
             filename = f['filename']
             fid = h.FID('', filename)
-            c.files.append([fid, f['operation'], filename, f['stats']])
-            htmldiff = diff_processor.as_html(enable_comments=True,
-                                              parsed_lines=[f])
-            c.changes[fid] = [f['operation'], filename, htmldiff]
+            diff = diff_processor.as_html(enable_comments=True,
+                                          parsed_lines=[f])
+            c.file_diff_data[fid] = (None, f['operation'], filename, diff, st)
 
         # inline comments
         c.inline_cnt = 0

@@ -44,7 +44,7 @@ from kallithea.model.db import Repository
 from kallithea.lib.diffs import LimitedDiffContainer
 from kallithea.controllers.changeset import _ignorews_url, _context_url
 from kallithea.lib.graphmod import graph_data
-from kallithea.lib.compat import json
+from kallithea.lib.compat import json, OrderedDict
 
 log = logging.getLogger(__name__)
 
@@ -277,8 +277,7 @@ class CompareController(BaseRepoController):
         if isinstance(_parsed, LimitedDiffContainer):
             c.limited_diff = True
 
-        c.files = []
-        c.changes = {}
+        c.file_diff_data = OrderedDict()
         c.lines_added = 0
         c.lines_deleted = 0
         for f in _parsed:
@@ -287,8 +286,8 @@ class CompareController(BaseRepoController):
             c.lines_deleted += st['deleted']
             filename = f['filename']
             fid = h.FID('', filename)
-            c.files.append([fid, f['operation'], filename, f['stats']])
-            htmldiff = diff_processor.as_html(enable_comments=False, parsed_lines=[f])
-            c.changes[fid] = [f['operation'], filename, htmldiff]
+            diff = diff_processor.as_html(enable_comments=False,
+                                          parsed_lines=[f])
+            c.file_diff_data[fid] = (None, f['operation'], filename, diff, st)
 
         return render('compare/compare_diff.html')
