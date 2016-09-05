@@ -66,9 +66,9 @@ pdebug = false
 <%text>## PASTE ##</%text>
 use = egg:Paste#http
 <%text>## nr of worker threads to spawn</%text>
-threadpool_workers = 5
+threadpool_workers = 1
 <%text>## max request before thread respawn</%text>
-threadpool_max_requests = 10
+threadpool_max_requests = 100
 <%text>## option to use threads of process</%text>
 use_threadpool = true
 
@@ -76,7 +76,7 @@ use_threadpool = true
 <%text>## WAITRESS ##</%text>
 use = egg:waitress#main
 <%text>## number of worker threads</%text>
-threads = 5
+threads = 1
 <%text>## MAX BODY SIZE 100GB</%text>
 max_request_body_size = 107374182400
 <%text>## use poll instead of select, fixes fd limits, may not work on old</%text>
