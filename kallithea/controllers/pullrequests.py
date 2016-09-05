@@ -139,8 +139,7 @@ class PullrequestsController(BaseRepoController):
                 continue
             n = 'tag:%s:%s' % (tag, tagrev)
             tags.append((n, tag))
-            if rev == tagrev:
-                selected = n
+            # note: even if rev == tagrev, don't select the static tag - it must be chosen explicitly
 
         # prio 1: rev was selected as existing entry above
 
