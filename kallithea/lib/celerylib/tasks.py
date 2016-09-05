@@ -235,7 +235,7 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
             log.debug('Breaking recursive mode due to reach of recurse limit')
         return True
     except LockHeld:
-        log.info('LockHeld')
+        log.info('Task with key %s already running', lockkey)
         return 'Task with key %s already running' % lockkey
 
 
@@ -407,10 +407,6 @@ def create_repo(form_data, cur_user):
             RepoModel(DBS)._delete_filesystem_repo(repo)
         raise
 
-    # it's an odd fix to make celery fail task when exception occurs
-    def on_failure(self, *args, **kwargs):
-        pass
-
     return True
 
 
@@ -490,10 +486,6 @@ def create_repo_fork(form_data, cur_user):
             DBS.commit()
             RepoModel(DBS)._delete_filesystem_repo(repo)
         raise
-
-    # it's an odd fix to make celery fail task when exception occurs
-    def on_failure(self, *args, **kwargs):
-        pass
 
     return True
 
