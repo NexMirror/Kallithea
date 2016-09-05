@@ -24,39 +24,49 @@
         <div class="code-header">
             <div class="changeset_header">
                 <div class="changeset_file">
-                    ${h.safe_unicode(cs_filename)} |
-                    %if op == 'A':
-                      ${_('Added')}
-                      <a class="spantag" href="${h.url('files_home', repo_name=cs_repo_name, f_path=cs_filename, revision=cs_rev)}">${h.short_ref(cs_ref_type, cs_ref_name)}</a>
-                    %elif op == 'M':
-                      <a class="spantag" href="${h.url('files_home', repo_name=a_repo_name, f_path=a_filename, revision=a_rev)}">${h.short_ref(a_ref_type, a_ref_name)}</a>
-                      <i class="icon-right"></i>
-                      <a class="spantag" href="${h.url('files_home', repo_name=cs_repo_name, f_path=cs_filename, revision=cs_rev)}">${h.short_ref(cs_ref_type, cs_ref_name)}</a>
-                    %elif op == 'D':
-                      ${_('Deleted')}
-                      <a class="spantag" href="${h.url('files_home', repo_name=a_repo_name, f_path=cs_filename, revision=a_rev)}">${h.short_ref(a_ref_type, a_ref_name)}</a>
-                    %elif op == 'R':
-                      ${_('Renamed')}
-                      <a class="spantag" href="${h.url('files_home', repo_name=a_repo_name, f_path=a_filename, revision=a_rev)}">${h.short_ref(a_ref_type, a_ref_name)}</a>
-                      <i class="icon-right"></i>
-                      <a class="spantag" href="${h.url('files_home', repo_name=cs_repo_name, f_path=cs_filename, revision=cs_rev)}">${h.short_ref(cs_ref_type, cs_ref_name)}</a>
-                    %else:
-                      ${op}???
-                    %endif
+                    ${h.safe_unicode(cs_filename)}
                 </div>
                 <div class="diff-actions">
+                  <span style="margin: 0 10px">
+                    %if op == 'A':
+                      <span class="no-file tooltip" title="${_("No file before")}">
+                        <i class="icon-minus-circled"></i></span>
+                    %else:
+                      <a href="${h.url('files_home', repo_name=a_repo_name, f_path=a_filename, revision=a_rev)}" class="tooltip" title="${_("File before")}">
+                        <i class="icon-doc"></i></a>
+                    %endif
+
+                    %if op == 'A':
+                      <span class="arrow tooltip" title="${_("Added")}">&#10142;</span>
+                    %elif op == 'M':
+                      <span class="arrow tooltip" title="${_("Modified")}">&#10142;</span>
+                    %elif op == 'D':
+                      <span class="arrow tooltip" title="${_("Deleted")}">&#10142;</span>
+                    %elif op == 'R':
+                      <span class="arrow tooltip" title="${_("Renamed")}">&#10142;</span>
+                    %elif op is None:
+                      <span class="arrow tooltip" title="${_("No change")}">&#10142;</span>
+                    %else:
+                      <span class="arrow tooltip" title="${_("Unknown operation: %r") % op}">&#10142;</span>
+                    %endif
+
+                    %if op == 'D':
+                      <span class="no-file tooltip" title="${_("No file after")}">
+                        <i class="icon-minus-circled"></i></span>
+                    %else:
+                      <a href="${h.url('files_home', repo_name=cs_repo_name, f_path=cs_filename, revision=cs_rev)}" class="tooltip" title="${_("File after")}">
+                        <i class="icon-doc"></i></a>
+                    %endif
+                  </span>
+
                   <a href="${h.url('files_diff_home',repo_name=cs_repo_name,f_path=h.safe_unicode(cs_filename),diff2=cs_rev,diff1=a_rev,diff='diff',fulldiff=1)}" class="tooltip" title="${_('Show full diff for this file')}">
-                      <i class="icon-file-code"></i>
-                  </a>
+                      <i class="icon-file-code"></i></a>
                   <a href="${h.url('files_diff_2way_home',repo_name=cs_repo_name,f_path=h.safe_unicode(cs_filename),diff2=cs_rev,diff1=a_rev,diff='diff',fulldiff=1)}" class="tooltip" title="${_('Show full side-by-side diff for this file')}">
-                      <i class="icon-docs"></i>
-                  </a>
+                      <i class="icon-docs"></i></a>
                   <a href="${h.url('files_diff_home',repo_name=cs_repo_name,f_path=h.safe_unicode(cs_filename),diff2=cs_rev,diff1=a_rev,diff='raw')}" class="tooltip" title="${_('Raw diff')}">
-                      <i class="icon-diff"></i>
-                  </a>
+                      <i class="icon-diff"></i></a>
                   <a href="${h.url('files_diff_home',repo_name=cs_repo_name,f_path=h.safe_unicode(cs_filename),diff2=cs_rev,diff1=a_rev,diff='download')}" class="tooltip" title="${_('Download diff')}">
-                      <i class="icon-floppy"></i>
-                  </a>
+                      <i class="icon-floppy"></i></a>
                   ${c.ignorews_url(request.GET, url_fid)}
                   ${c.context_url(request.GET, url_fid)}
                 </div>

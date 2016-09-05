@@ -2679,8 +2679,17 @@ table.code-browser .browser-file {
 
 }
 .diffblock .diff-actions {
-    padding: 2px 0px 0px 2px;
     float: left;
+}
+.diffblock .diff-actions span.no-file,
+.diffblock .diff-actions span.arrow {
+    opacity: 0.5;
+}
+.diffblock .diff-actions span.arrow {
+    margin: 0 -3px;
+}
+.diffblock .diff-actions a i {
+    margin: 0 2px;
 }
 .diffblock.twoway {
     overflow: visible;
