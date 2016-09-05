@@ -32,11 +32,6 @@ import pkg_resources
 
 from kallithea.lib.paster_commands.common import ask_ok, BasePasterCommand
 
-# Add location of top level folder to sys.path
-from os.path import dirname
-rc_path = dirname(dirname(dirname(os.path.realpath(__file__))))
-sys.path.append(rc_path)
-
 
 class Command(BasePasterCommand):
 
