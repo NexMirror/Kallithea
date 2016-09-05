@@ -50,12 +50,6 @@ def ask_ok(prompt, retries=4, complaint='Yes or no please!'):
 class BasePasterCommand(Command):
     """
     Abstract Base Class for paster commands.
-
-    The celery commands are somewhat aggressive about loading
-    celery.conf, and since our module sets the `CELERY_LOADER`
-    environment variable to our loader, we have to bootstrap a bit and
-    make sure we've had a chance to load the pylons config off of the
-    command line, otherwise everything fails.
     """
     min_args = 1
     min_args_error = "Please provide a paster config file as an argument."

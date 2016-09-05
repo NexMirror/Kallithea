@@ -189,9 +189,9 @@ class ReposController(BaseRepoController):
 
         if task_id and task_id not in ['None']:
             from kallithea import CELERY_ON
-            from celery.result import AsyncResult
+            from kallithea.lib import celerypylons
             if CELERY_ON:
-                task = AsyncResult(task_id)
+                task = celerypylons.result.AsyncResult(task_id)
                 if task.failed():
                     raise HTTPInternalServerError(task.traceback)
 

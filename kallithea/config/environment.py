@@ -25,9 +25,6 @@ import mako.lookup
 import beaker
 import formencode
 
-# don't remove this import it does magic for celery
-from kallithea.lib import celerypylons
-
 import kallithea.lib.app_globals as app_globals
 
 from kallithea.config.routing import make_map

@@ -3,8 +3,7 @@
 import kallithea
 from kallithea.lib.paster_commands.common import BasePasterCommand
 from kallithea.lib.utils import Command, load_rcextensions
-from celery.app import app_or_default
-from celery.bin import camqadm, celerybeat, celeryd, celeryev
+
 
 from kallithea.lib.utils2 import str2bool
 
@@ -26,12 +25,13 @@ class CeleryCommand(BasePasterCommand):
         allow options/arguments to be passed through to the underlying
         celery command.
         """
-
-        cmd = self.celery_command(app_or_default())
+        from kallithea.lib import celerypylons
+        cmd = self.celery_command(celerypylons.app.app_or_default())
         for x in cmd.get_options():
             self.parser.add_option(x)
 
     def command(self):
+        from kallithea.lib import celerypylons
         from pylons import config
         try:
             CELERY_ON = str2bool(config['app_conf'].get('use_celery'))
@@ -43,7 +43,7 @@ class CeleryCommand(BasePasterCommand):
                             'file before running celeryd')
         kallithea.CELERY_ON = CELERY_ON
         load_rcextensions(config['here'])
-        cmd = self.celery_command(app_or_default())
+        cmd = self.celery_command(celerypylons.app.app_or_default())
         return cmd.run(**vars(self.options))
 
 
@@ -58,7 +58,7 @@ class CeleryDaemonCommand(CeleryCommand):
     description = "".join(__doc__.splitlines()[2:])
 
     parser = Command.standard_parser(quiet=True)
-    celery_command = celeryd.WorkerCommand
+    celery_command = celerypylons.celeryd.WorkerCommand
 
 
 class CeleryBeatCommand(CeleryCommand):
@@ -72,7 +72,7 @@ class CeleryBeatCommand(CeleryCommand):
     description = "".join(__doc__.splitlines()[2:])
 
     parser = Command.standard_parser(quiet=True)
-    celery_command = celerybeat.BeatCommand
+    celery_command = celerypylons.celerybeat.BeatCommand
 
 
 class CAMQPAdminCommand(CeleryCommand):
@@ -85,7 +85,7 @@ class CAMQPAdminCommand(CeleryCommand):
     description = "".join(__doc__.splitlines()[2:])
 
     parser = Command.standard_parser(quiet=True)
-    celery_command = camqadm.AMQPAdminCommand
+    celery_command = celerypylons.camqadm.AMQPAdminCommand
 
 
 class CeleryEventCommand(CeleryCommand):
@@ -98,4 +98,4 @@ class CeleryEventCommand(CeleryCommand):
     description = "".join(__doc__.splitlines()[2:])
 
     parser = Command.standard_parser(quiet=True)
-    celery_command = celeryev.EvCommand
+    celery_command = celerypylons.celeryev.EvCommand
