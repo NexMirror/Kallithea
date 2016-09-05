@@ -168,7 +168,6 @@ div.formatted-fixed,
 
 div.formatted-fixed {
     white-space: pre-wrap;
-    line-height: 14px;
 }
 
 .changeset_hash {
