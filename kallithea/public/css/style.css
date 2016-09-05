@@ -4458,6 +4458,10 @@ table.code-difftable .lineno a {
     width: 100%;
 }
 
+table.code-difftable .line:hover .lineno a {
+    color: #333 !important;
+}
+
 table.code-difftable .lineno-inline {
     background: none repeat scroll 0 0 #FFF !important;
     padding-left: 2px;
