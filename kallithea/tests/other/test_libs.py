@@ -290,7 +290,7 @@ class TestLibs(TestController):
       ("",
        ""),
       ("git-svn-id: https://svn.apache.org/repos/asf/libcloud/trunk@1441655 13f79535-47bb-0310-9956-ffa450edef68",
-       """git-svn-id: https://svn.apache.org/repos/asf/libcloud/trunk@1441655 13f79535-47bb-0310-9956-ffa450edef68"""),
+       """git-svn-id: <a href="https://svn.apache.org/repos/asf/libcloud/trunk@1441655">https://svn.apache.org/repos/asf/libcloud/trunk@1441655</a> 13f79535-47bb-0310-9956-ffa450edef68"""),
       ("from rev 000000000000",
        """from rev url[000000000000]"""),
       ("from rev 000000000000123123 also rev 000000000000",
@@ -321,8 +321,8 @@ class TestLibs(TestController):
         expected = self._quick_url(expected)
 
         with mock.patch('pylons.url', fake_url):
-            from kallithea.lib.helpers import urlify_changesets
-            assert urlify_changesets(sample, 'repo_name') == expected
+            from kallithea.lib.helpers import urlify_text
+            assert urlify_text(sample, 'repo_name') == expected
 
     @parametrize('sample,expected,url_', [
       ("",
