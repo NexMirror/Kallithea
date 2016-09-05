@@ -29,6 +29,12 @@ Original author and date, and relevant copyright and licensing information is be
 import os
 import sys
 
+# imports, used in IPython shell
+import time
+import shutil
+import datetime
+from kallithea.model.db import *
+
 from kallithea.lib.paster_commands.common import BasePasterCommand
 
 
@@ -47,14 +53,6 @@ class Command(BasePasterCommand):
         #get SqlAlchemy session
         self._init_session()
 
-        # imports, used in IPython shell
-        import os
-        import sys
-        import time
-        import shutil
-        import datetime
-        from kallithea.model.db import *
-
         try:
             from IPython import embed
             from IPython.config.loader import Config
@@ -62,7 +60,7 @@ class Command(BasePasterCommand):
             cfg.InteractiveShellEmbed.confirm_exit = False
             embed(config=cfg, banner1="Kallithea IShell.")
         except ImportError:
-            print 'IPython installation is required for ishell'
+            print 'Kallithea ishell requires the IPython Python package'
             sys.exit(-1)
 
     def update_parser(self):
