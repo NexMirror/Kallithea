@@ -311,8 +311,7 @@ class TestLibs(TestController):
        """Multi line\n"""
        """       url[123123123123]\n"""
        """       some text url[123123123123]\n"""
-       """       sometimes !\n"""
-       """       """),
+       """       sometimes !"""),
     ])
     def test_urlify_changesets(self, sample, expected):
         def fake_url(self, *args, **kwargs):
@@ -348,7 +347,7 @@ class TestLibs(TestController):
        """       some text lalala""",
        "https://foo.bar.example.com"),
       ("@mention @someone",
-       """@mention @someone""",
+       """<b>@mention</b> <b>@someone</b>""",
        ""),
       ("deadbeefcafe 123412341234",
        """<a class="revision-link" href="/repo_name/changeset/deadbeefcafe">deadbeefcafe</a> <a class="revision-link" href="/repo_name/changeset/123412341234">123412341234</a>""",
@@ -365,7 +364,7 @@ class TestLibs(TestController):
       ("deadbeefcafe @mention, and http://foo.bar/ yo",
        """<a class="message-link" href="#the-link"></a>"""
        """<a class="revision-link" href="/repo_name/changeset/deadbeefcafe">deadbeefcafe</a>"""
-       """<a class="message-link" href="#the-link"> @mention, and </a>"""
+       """<a class="message-link" href="#the-link"> <b>@mention</b>, and </a>"""
        """<a href="http://foo.bar/">http://foo.bar/</a>"""
        """<a class="message-link" href="#the-link"> yo</a>"""),
     ])

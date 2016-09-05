@@ -1289,7 +1289,9 @@ def urlify_text(s, repo_name=None, link_=None, truncate=None, stylize=False, tru
     Issues are linked to given issue-server.
     If link_ is provided, all text not already linking somewhere will link there.
     """
-    if truncate is not None:
+    if truncate is None:
+        s = s.rstrip()
+    else:
         s = truncatef(s, truncate, whole_word=True)
     s = html_escape(s)
     if repo_name is not None:
@@ -1299,6 +1301,7 @@ def urlify_text(s, repo_name=None, link_=None, truncate=None, stylize=False, tru
     s = _urlify_text(s)
     if repo_name is not None:
         s = urlify_issues(s, repo_name, link_)
+    s = MENTIONS_REGEX.sub(_mentions_replace, s)
     return literal(s)
 
 
@@ -1411,17 +1414,8 @@ def render_w_mentions(source, repo_name=None):
     Render plain text with revision hashes and issue references urlified
     and with @mention highlighting.
     """
-    s = source.rstrip()
-    s = safe_unicode(s)
-    s = '\n'.join(s.splitlines())
-    s = html_escape(s)
-    # this sequence of html-ifications seems to be safe and non-conflicting
-    # if the issues regexp is sane
-    s = _urlify_text(s)
-    if repo_name is not None:
-        s = urlify_changesets(s, repo_name)
-    s = urlify_issues(s, repo_name)
-    s = MENTIONS_REGEX.sub(_mentions_replace, s)
+    s = safe_unicode(source)
+    s = urlify_text(s, repo_name=repo_name)
     return literal('<div class="formatted-fixed">%s</div>' % s)
 
 
