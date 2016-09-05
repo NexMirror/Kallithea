@@ -62,27 +62,32 @@ def wrapped_diff(filenode_old, filenode_new, cut_off_limit=None,
     if filenode_old is None:
         filenode_old = FileNode(filenode_new.path, '', EmptyChangeset())
 
+    op = None
     if filenode_old.is_binary or filenode_new.is_binary:
         diff = wrap_to_table(_('Binary file'))
         stats = (0, 0)
-        size = 0
 
-    elif cut_off_limit != -1 and (cut_off_limit is None or
-    (filenode_old.size < cut_off_limit and filenode_new.size < cut_off_limit)):
+    elif cut_off_limit != -1 and (
+            cut_off_limit is None or
+            (filenode_old.size < cut_off_limit and filenode_new.size < cut_off_limit)):
 
         f_gitdiff = get_gitdiff(filenode_old, filenode_new,
                                 ignore_whitespace=ignore_whitespace,
                                 context=line_context)
         diff_processor = DiffProcessor(f_gitdiff, format='gitdiff')
+        _parsed = diff_processor.prepare()
+        if _parsed: # there should be exactly one element, for the specified file
+            f = _parsed[0]
+            op = f['operation']
 
         diff = diff_processor.as_html(enable_comments=enable_comments)
         stats = diff_processor.stat()
-        size = len(diff or '')
+
     else:
         diff = wrap_to_table(_('Changeset was too big and was cut off, use '
                                'diff menu to display this diff'))
         stats = (0, 0)
-        size = 0
+
     if not diff:
         submodules = filter(lambda o: isinstance(o, SubModuleNode),
                             [filenode_new, filenode_old])
@@ -94,7 +99,7 @@ def wrapped_diff(filenode_old, filenode_new, cut_off_limit=None,
     cs1 = filenode_old.changeset.raw_id
     cs2 = filenode_new.changeset.raw_id
 
-    return size, cs1, cs2, diff, stats
+    return cs1, cs2, op, diff, stats
 
 
 def get_gitdiff(filenode_old, filenode_new, ignore_whitespace=True, context=3):
