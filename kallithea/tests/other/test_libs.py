@@ -351,7 +351,7 @@ class TestLibs(TestController):
        """@mention @someone""",
        ""),
       ("deadbeefcafe 123412341234",
-       """deadbeefcafe 123412341234""",
+       """<a class="revision-link" href="/repo_name/changeset/deadbeefcafe">deadbeefcafe</a> <a class="revision-link" href="/repo_name/changeset/123412341234">123412341234</a>""",
        ""),
       # tags are covered by test_tag_extractor
     ])
@@ -359,7 +359,19 @@ class TestLibs(TestController):
         from kallithea.lib.helpers import urlify_text
         expected = self._quick_url(expected,
                                    tmpl="""<a href="%s">%s</a>""", url_=url_)
-        assert urlify_text(sample, stylize=True) == expected
+        assert urlify_text(sample, 'repo_name', stylize=True) == expected
+
+    @parametrize('sample,expected', [
+      ("deadbeefcafe @mention, and http://foo.bar/ yo",
+       """<a class="message-link" href="#the-link"></a>"""
+       """<a class="revision-link" href="/repo_name/changeset/deadbeefcafe">deadbeefcafe</a>"""
+       """<a class="message-link" href="#the-link"> @mention, and </a>"""
+       """<a href="http://foo.bar/">http://foo.bar/</a>"""
+       """<a class="message-link" href="#the-link"> yo</a>"""),
+    ])
+    def test_urlify_link(self, sample, expected):
+        from kallithea.lib.helpers import urlify_text
+        assert urlify_text(sample, 'repo_name', link_='#the-link') == expected
 
     @parametrize('test,expected', [
       ("", None),

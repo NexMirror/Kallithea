@@ -1279,16 +1279,26 @@ def _urlify_text(s):
     """
     return url_re.sub(_urlify_text_replace, s)
 
-def urlify_text(s, truncate=None, stylize=False, truncatef=truncate):
+
+def urlify_text(s, repo_name=None, link_=None, truncate=None, stylize=False, truncatef=truncate):
     """
-    Extract urls from text and make literal html links out of them
+    Parses given text message and make literal html with markup.
+    The text will be truncated to the specified length.
+    Hashes are turned into changeset links to specified repository.
+    URLs links to what they say.
+    Issues are linked to given issue-server.
+    If link_ is provided, all text not already linking somewhere will link there.
     """
     if truncate is not None:
         s = truncatef(s, truncate, whole_word=True)
     s = html_escape(s)
+    if repo_name is not None:
+        s = urlify_changesets(s, repo_name)
     if stylize:
         s = desc_stylize(s)
     s = _urlify_text(s)
+    if repo_name is not None:
+        s = urlify_issues(s, repo_name, link_)
     return literal(s)
 
 
@@ -1327,24 +1337,6 @@ def linkify_others(t, l):
             links.append(e)
 
     return ''.join(links)
-
-def urlify_commit(text_, repo_name, link_=None):
-    """
-    Parses given text message and makes proper links.
-    Issues are linked to given issue-server. If link_ is provided, all other
-    text will link there.
-    """
-    newtext = html_escape(text_)
-
-    # urlify changesets - extract revisions and make link out of them
-    newtext = urlify_changesets(newtext, repo_name)
-
-    # extract http/https links and make them real urls
-    newtext = _urlify_text(newtext)
-
-    newtext = urlify_issues(newtext, repo_name, link_)
-
-    return literal(newtext)
 
 
 def _urlify_issues_replace_f(repo_name, ISSUE_SERVER_LNK, ISSUE_PREFIX):

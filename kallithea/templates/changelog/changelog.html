@@ -116,7 +116,7 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                         </td>
                         <td class="mid">
                             <div class="log-container">
-                                <div class="message" id="C-${cs.raw_id}">${h.urlify_commit(cs.message, c.repo_name,h.url('changeset_home',repo_name=c.repo_name,revision=cs.raw_id))}</div>
+                                <div class="message" id="C-${cs.raw_id}">${h.urlify_text(cs.message, c.repo_name,h.url('changeset_home',repo_name=c.repo_name,revision=cs.raw_id))}</div>
                                 <div class="extra-container">
                                     %if c.comments.get(cs.raw_id):
                                         <div class="comments-container">

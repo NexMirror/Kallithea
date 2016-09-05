@@ -51,7 +51,7 @@
             ${h.gravatar_div(h.email_or_none(c.changeset.author), size=16)}
             <div title="${c.changeset.author}" class="user">${h.person(c.changeset.author)}</div>
         </div>
-        <div class="commit">${h.urlify_commit(c.changeset.message,c.repo_name)}</div>
+        <div class="commit">${h.urlify_text(c.changeset.message,c.repo_name)}</div>
     </div>
     <div class="code-body">
       %if c.file.is_browser_compatible_image():

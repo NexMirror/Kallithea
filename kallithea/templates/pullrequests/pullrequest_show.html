@@ -43,7 +43,7 @@ ${self.repo_context_bar('showpullrequest')}
             %endif
           </div>
           <div class="input">
-            <div class="formatted-fixed">${h.urlify_commit(c.pull_request.description, c.pull_request.org_repo.repo_name)}</div>
+            <div class="formatted-fixed">${h.urlify_text(c.pull_request.description, c.pull_request.org_repo.repo_name)}</div>
           </div>
         </div>
 
@@ -205,7 +205,7 @@ ${self.repo_context_bar('showpullrequest')}
                               </div>
                             %endfor
                           </div>
-                          <div class="message" style="white-space:normal; height:1.1em; max-width: 500px; padding:0">${h.urlify_commit(cs.message, c.repo_name)}</div>
+                          <div class="message" style="white-space:normal; height:1.1em; max-width: 500px; padding:0">${h.urlify_text(cs.message, c.repo_name)}</div>
                         </td>
                       %endif
                     </tr>

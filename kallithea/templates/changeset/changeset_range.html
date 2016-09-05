@@ -50,7 +50,7 @@ ${self.repo_context_bar('changelog')}
                     <div title="${_('Changeset status')}" class="changeset-status-ico"><i class="icon-circle changeset-status-${c.statuses[cnt]}"></i></div>
                   %endif
                 </td>
-                <td><div class="message">${h.urlify_commit(h.wrap_paragraphs(cs.message),c.repo_name)}</div></td>
+                <td><div class="message">${h.urlify_text(h.wrap_paragraphs(cs.message),c.repo_name)}</div></td>
                 </tr>
             %endfor
             </table>

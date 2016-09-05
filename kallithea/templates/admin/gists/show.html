@@ -70,7 +70,7 @@
                         ${h.gravatar_div(h.email_or_none(c.file_changeset.author), size=16)}
                         <div title="${c.file_changeset.author}" class="user">${h.person(c.file_changeset.author)} - ${_('created')} ${h.age(c.file_changeset.date)}</div>
                     </div>
-                    <div class="commit">${h.urlify_commit(c.file_changeset.message,c.repo_name)}</div>
+                    <div class="commit">${h.urlify_text(c.file_changeset.message,c.repo_name)}</div>
                 </div>
             </div>
 

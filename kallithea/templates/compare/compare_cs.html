@@ -73,7 +73,7 @@
                     </div>
                 %endfor
             </div>
-            <div id="C-${cs.raw_id}" class="message">${h.urlify_commit(cs.message, c.repo_name)}</div>
+            <div id="C-${cs.raw_id}" class="message">${h.urlify_text(cs.message, c.repo_name)}</div>
         </td>
         </tr>
     %endfor

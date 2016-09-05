@@ -21,7 +21,7 @@
                     <pre>${h.literal(sr['message_hl'])}</pre>
                 </div>
                 %else:
-                <div class="message">${h.urlify_commit(sr['message'], sr['repository'])}</div>
+                <div class="message">${h.urlify_text(sr['message'], sr['repository'])}</div>
                 %endif
             </div>
         </div>
