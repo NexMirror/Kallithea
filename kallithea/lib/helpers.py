@@ -1254,6 +1254,12 @@ _URLIFY_RE = re.compile(r'''
 (?<!\w|[-_])
   (?P<hash>[0-9a-f]{12,40})
 (?!\w|[-_]) |
+# Markup of *bold text*
+(?:
+  (?:^|(?<=\s))
+  (?P<bold> [*] (?!\s) [^*\n]* (?<!\s) [*] )
+  (?![*\w])
+) |
 # "Stylize" markup
 \[see\ \=&gt;\ *(?P<seen>[a-zA-Z0-9\/\=\?\&\ \:\/\.\-]*)\] |
 \[license\ \=&gt;\ *(?P<license>[a-zA-Z0-9\/\=\?\&\ \:\/\.\-]*)\] |
@@ -1289,6 +1295,9 @@ def urlify_text(s, repo_name=None, link_=None, truncate=None, stylize=False, tru
                  'url': url('changeset_home', repo_name=repo_name, revision=hash_),
                  'hash': hash_,
                 }
+        bold = match_obj.group('bold')
+        if bold is not None:
+            return '<b>*%s*</b>' % _urlify(bold[1:-1])
         if stylize:
             seen = match_obj.group('seen')
             if seen:

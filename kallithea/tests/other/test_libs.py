@@ -352,6 +352,19 @@ class TestLibs(TestController):
       ("deadbeefcafe 123412341234",
        """<a class="revision-link" href="/repo_name/changeset/deadbeefcafe">deadbeefcafe</a> <a class="revision-link" href="/repo_name/changeset/123412341234">123412341234</a>""",
        ""),
+      ("We support * markup for *bold* markup of *single or multiple* words, "
+       "*a bit @like http://slack.com*. "
+       "The first * must come after whitespace and not be followed by whitespace, "
+       "contain anything but * and newline until the next *, "
+       "which must not come after whitespace "
+       "and not be followed by * or alphanumerical *characters*.",
+       """We support * markup for <b>*bold*</b> markup of <b>*single or multiple*</b> words, """
+       """<b>*a bit <b>@like</b> <a href="http://slack.com">http://slack.com</a>*</b>. """
+       """The first * must come after whitespace and not be followed by whitespace, """
+       """contain anything but * and newline until the next *, """
+       """which must not come after whitespace """
+       """and not be followed by * or alphanumerical <b>*characters*</b>.""",
+       "-"),
       # tags are covered by test_tag_extractor
     ])
     def test_urlify_test(self, sample, expected, url_):
