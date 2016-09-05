@@ -44,7 +44,7 @@ from kallithea.model.scm import ScmModel
 log = logging.getLogger(__name__)
 
 
-def load_environment(global_conf, app_conf, initial=False,
+def load_environment(global_conf, app_conf,
                      test_env=None, test_index=None):
     """
     Configure the Pylons environment via the ``pylons.config``
