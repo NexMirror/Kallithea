@@ -74,10 +74,12 @@ class DbManage(object):
         self.cli_args = cli_args or {}
         self.init_db(SESSION=SESSION)
 
+    def _ask_ok(self, msg):
+        """Invoke ask_ok unless the force_ask option provides the answer"""
         force_ask = self.cli_args.get('force_ask')
         if force_ask is not None:
-            global ask_ok
-            ask_ok = lambda *args, **kwargs: force_ask
+            return force_ask
+        return ask_ok(msg)
 
     def init_db(self, SESSION=None):
         if SESSION:
@@ -97,7 +99,7 @@ class DbManage(object):
         if self.tests:
             destroy = True
         else:
-            destroy = ask_ok('Are you sure to destroy old database ? [y/n]')
+            destroy = self._ask_ok('Are you sure to destroy old database ? [y/n]')
         if not destroy:
             print 'Nothing done.'
             sys.exit(0)
@@ -164,11 +166,9 @@ class DbManage(object):
         if not self.tests:
             import getpass
 
-            # defaults
-            defaults = self.cli_args
-            username = defaults.get('username')
-            password = defaults.get('password')
-            email = defaults.get('email')
+            username = self.cli_args.get('username')
+            password = self.cli_args.get('password')
+            email = self.cli_args.get('email')
 
             def get_password():
                 password = getpass.getpass('Specify admin password '
@@ -366,8 +366,7 @@ class DbManage(object):
         RepoModel.update_repoinfo()
 
     def config_prompt(self, test_repo_path='', retries=3):
-        defaults = self.cli_args
-        _path = defaults.get('repos_location')
+        _path = self.cli_args.get('repos_location')
         if retries == 3:
             log.info('Setting up repositories config')
 
@@ -399,7 +398,7 @@ class DbManage(object):
         # check write access, warn user about non writeable paths
         elif not os.access(path, os.W_OK) and path_ok:
             log.warning('No write permission to given path %s', path)
-            if not ask_ok('Given path %s is not writeable, do you want to '
+            if not self._ask_ok('Given path %s is not writeable, do you want to '
                           'continue with read only mode ? [y/n]' % (path,)):
                 log.error('Canceled by user')
                 sys.exit(-1)
