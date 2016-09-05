@@ -290,29 +290,29 @@ class TestLibs(TestController):
       ("",
        ""),
       ("git-svn-id: https://svn.apache.org/repos/asf/libcloud/trunk@1441655 13f79535-47bb-0310-9956-ffa450edef68",
-       "git-svn-id: https://svn.apache.org/repos/asf/libcloud/trunk@1441655 13f79535-47bb-0310-9956-ffa450edef68"),
+       """git-svn-id: https://svn.apache.org/repos/asf/libcloud/trunk@1441655 13f79535-47bb-0310-9956-ffa450edef68"""),
       ("from rev 000000000000",
-       "from rev url[000000000000]"),
+       """from rev url[000000000000]"""),
       ("from rev 000000000000123123 also rev 000000000000",
-       "from rev url[000000000000123123] also rev url[000000000000]"),
+       """from rev url[000000000000123123] also rev url[000000000000]"""),
       ("this should-000 00",
-       "this should-000 00"),
+       """this should-000 00"""),
       ("longtextffffffffff rev 123123123123",
-       "longtextffffffffff rev url[123123123123]"),
+       """longtextffffffffff rev url[123123123123]"""),
       ("rev ffffffffffffffffffffffffffffffffffffffffffffffffff",
-       "rev ffffffffffffffffffffffffffffffffffffffffffffffffff"),
+       """rev ffffffffffffffffffffffffffffffffffffffffffffffffff"""),
       ("ffffffffffff some text traalaa",
-       "url[ffffffffffff] some text traalaa"),
+       """url[ffffffffffff] some text traalaa"""),
        ("""Multi line
        123123123123
        some text 123123123123
        sometimes !
        """,
-       """Multi line
-       url[123123123123]
-       some text url[123123123123]
-       sometimes !
-       """)
+       """Multi line\n"""
+       """       url[123123123123]\n"""
+       """       some text url[123123123123]\n"""
+       """       sometimes !\n"""
+       """       """),
     ])
     def test_urlify_changesets(self, sample, expected):
         def fake_url(self, *args, **kwargs):
@@ -329,27 +329,37 @@ class TestLibs(TestController):
        "",
        ""),
       ("https://svn.apache.org/repos",
-       "url[https://svn.apache.org/repos]",
+       """url[https://svn.apache.org/repos]""",
        "https://svn.apache.org/repos"),
       ("http://svn.apache.org/repos",
-       "url[http://svn.apache.org/repos]",
+       """url[http://svn.apache.org/repos]""",
        "http://svn.apache.org/repos"),
       ("from rev a also rev http://google.com",
-       "from rev a also rev url[http://google.com]",
+       """from rev a also rev url[http://google.com]""",
        "http://google.com"),
-       ("""Multi line
+      ("http://imgur.com/foo.gif inline http://imgur.com/foo.gif ending http://imgur.com/foo.gif",
+       """url[http://imgur.com/foo.gif] inline url[http://imgur.com/foo.gif] ending url[http://imgur.com/foo.gif]""",
+       "http://imgur.com/foo.gif"),
+      ("""Multi line
        https://foo.bar.example.com
        some text lalala""",
-       """Multi line
-       url[https://foo.bar.example.com]
-       some text lalala""",
-       "https://foo.bar.example.com")
+       """Multi line\n"""
+       """       url[https://foo.bar.example.com]\n"""
+       """       some text lalala""",
+       "https://foo.bar.example.com"),
+      ("@mention @someone",
+       """@mention @someone""",
+       ""),
+      ("deadbeefcafe 123412341234",
+       """deadbeefcafe 123412341234""",
+       ""),
+      # tags are covered by test_tag_extractor
     ])
     def test_urlify_test(self, sample, expected, url_):
         from kallithea.lib.helpers import urlify_text
         expected = self._quick_url(expected,
                                    tmpl="""<a href="%s">%s</a>""", url_=url_)
-        assert urlify_text(sample) == expected
+        assert urlify_text(sample, stylize=True) == expected
 
     @parametrize('test,expected', [
       ("", None),
