@@ -2032,7 +2032,7 @@ class ApiController(JSONRPCController):
         :type apiuser: AuthUser
         """
         result = []
-        for repo_group in RepoGroupModel().get_all():
+        for repo_group in RepoGroup.get_all():
             result.append(repo_group.get_api_data())
         return result
 
