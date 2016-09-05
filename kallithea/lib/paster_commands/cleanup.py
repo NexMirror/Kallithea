@@ -90,6 +90,8 @@ class Command(BasePasterCommand):
                                       self._extract_date(loc)])
                 else:
                     dirs.append(loc)
+            if dirs:
+                print 'Scanning: %s' % dn_
 
         #filter older than (if present)!
         now = datetime.datetime.now()
