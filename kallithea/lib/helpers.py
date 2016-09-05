@@ -1248,13 +1248,15 @@ def fancy_file_stats(stats):
 _URLIFY_RE = re.compile(r'''
 # URL markup
 (?P<url>%s) |
+# @mention markup
+(?P<mention>%s) |
 # "Stylize" markup
 \[see\ \=&gt;\ *(?P<seen>[a-zA-Z0-9\/\=\?\&\ \:\/\.\-]*)\] |
 \[license\ \=&gt;\ *(?P<license>[a-zA-Z0-9\/\=\?\&\ \:\/\.\-]*)\] |
 \[(?P<tagtype>requires|recommends|conflicts|base)\ \=&gt;\ *(?P<tagvalue>[a-zA-Z0-9\-\/]*)\] |
 \[(?:lang|language)\ \=&gt;\ *(?P<lang>[a-zA-Z\-\/\#\+]*)\] |
 \[(?P<tag>[a-z]+)\]
-''' % (url_re.pattern),
+''' % (url_re.pattern, MENTIONS_REGEX.pattern),
     re.VERBOSE | re.MULTILINE | re.IGNORECASE)
 
 
@@ -1273,6 +1275,9 @@ def urlify_text(s, repo_name=None, link_=None, truncate=None, stylize=False, tru
         url = match_obj.group('url')
         if url is not None:
             return '<a href="%(url)s">%(url)s</a>' % {'url': url}
+        mention = match_obj.group('mention')
+        if mention is not None:
+            return '<b>%s</b>' % mention
         if stylize:
             seen = match_obj.group('seen')
             if seen:
@@ -1308,7 +1313,6 @@ def urlify_text(s, repo_name=None, link_=None, truncate=None, stylize=False, tru
     s = _urlify(s)
     if repo_name is not None:
         s = urlify_issues(s, repo_name, link_)
-    s = MENTIONS_REGEX.sub(_mentions_replace, s)
     s = s.replace('\r\n', '<br/>').replace('\n', '<br/>')
     return literal(s)
 
@@ -1411,10 +1415,6 @@ def urlify_issues(newtext, repo_name, link_=None):
         # wrap not links into final link => link_
         newtext = linkify_others(newtext, link_)
     return newtext
-
-
-def _mentions_replace(match_obj):
-    return '<b>@%s</b>' % match_obj.group(1)
 
 
 def render_w_mentions(source, repo_name=None):

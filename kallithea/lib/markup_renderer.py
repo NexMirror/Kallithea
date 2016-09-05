@@ -190,10 +190,9 @@ class MarkupRenderer(object):
 
     @classmethod
     def rst_with_mentions(cls, source):
-        mention_pat = re.compile(MENTIONS_REGEX)
 
         def wrapp(match_obj):
             uname = match_obj.groups()[0]
             return '\ **@%(uname)s**\ ' % {'uname': uname}
-        mention_hl = mention_pat.sub(wrapp, source).strip()
+        mention_hl = MENTIONS_REGEX.sub(wrapp, source).strip()
         return cls.rst(mention_hl)
