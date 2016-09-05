@@ -1355,9 +1355,8 @@ def _urlify_issues_replace_f(repo_name, ISSUE_SERVER_LNK, ISSUE_PREFIX):
 
         issue_id = ''.join(match_obj.groups())
         issue_url = ISSUE_SERVER_LNK.replace('{id}', issue_id)
-        if repo_name:
-            issue_url = issue_url.replace('{repo}', repo_name)
-            issue_url = issue_url.replace('{repo_name}', repo_name.split(URL_SEP)[-1])
+        issue_url = issue_url.replace('{repo}', repo_name)
+        issue_url = issue_url.replace('{repo_name}', repo_name.split(URL_SEP)[-1])
 
         return (
             '%(pref)s<a class="%(cls)s" href="%(url)s">'
