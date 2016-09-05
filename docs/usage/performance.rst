@@ -31,8 +31,26 @@ Follow these few steps to improve performance of Kallithea system.
 
     Scaling horizontally can give huge performance benefits when dealing with
     large amounts of traffic (many users, CI servers, etc.). Kallithea can be
-    scaled horizontally on one (recommended) or multiple machines. In order
-    to scale horizontally you need to do the following:
+    scaled horizontally on one (recommended) or multiple machines.
+
+    It is generally possible to run WSGI applications multithreaded, so that
+    several HTTP requests are served from the same Python process at once. That
+    can in principle give better utilization of internal caches and less
+    process overhead.
+    
+    One danger of running multithreaded is that program execution becomes much
+    more complex; programs must be written to consider all combinations of
+    events and problems might depend on timing and be impossible to reproduce.
+
+    Kallithea can't promise to be thread-safe, just like the embedded Mercurial
+    backend doesn't make any strong promises when used as Kallithea uses it.
+    Instead, we recommend scaling by using multiple server processes.
+
+    Web servers with multiple worker processes (such as ``mod_wsgi`` with the
+    ``WSGIDaemonProcess`` ``processes`` parameter) will work out of the box.
+
+    In order to scale horizontally on multiple machines, you need to do the
+    following:
 
     - Each instance's ``data`` storage needs to be configured to be stored on a
       shared disk storage, preferably together with repositories. This ``data``
@@ -40,7 +58,7 @@ Follow these few steps to improve performance of Kallithea system.
       task locking (so it is safe across multiple instances). Set the
       ``cache_dir``, ``index_dir``, ``beaker.cache.data_dir``, ``beaker.cache.lock_dir``
       variables in each .ini file to a shared location across Kallithea instances
-    - If celery is used each instance should run a separate Celery instance, but
+    - If using several Celery instances,
       the message broker should be common to all of them (e.g.,  one
       shared RabbitMQ server)
     - Load balance using round robin or IP hash, recommended is writing LB rules

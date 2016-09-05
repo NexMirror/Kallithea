@@ -785,8 +785,7 @@ Here is a sample excerpt from an Apache Virtual Host configuration file:
 
 .. code-block:: apache
 
-    WSGIDaemonProcess kallithea \
-        threads=4 \
+    WSGIDaemonProcess kallithea processes=5 threads=1 maximum-requests=100 \
         python-home=/srv/kallithea/venv
     WSGIProcessGroup kallithea
     WSGIScriptAlias / /srv/kallithea/dispatch.wsgi
@@ -796,7 +795,7 @@ Or if using a dispatcher WSGI script with proper virtualenv activation:
 
 .. code-block:: apache
 
-    WSGIDaemonProcess kallithea threads=4
+    WSGIDaemonProcess kallithea processes=5 threads=1 maximum-requests=100
     WSGIProcessGroup kallithea
     WSGIScriptAlias / /srv/kallithea/dispatch.wsgi
     WSGIPassAuthorization On
