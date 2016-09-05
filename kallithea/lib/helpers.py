@@ -1314,7 +1314,10 @@ def urlify_changesets(text_, repo_name):
 
 
 def linkify_others(t, l):
-    # attempt at fixing double quoting?
+    """Add a default link to html with links.
+    HTML doesn't allow nesting of links, so the outer link must be broken up
+    in pieces and give space for other links.
+    """
     urls = re.compile(r'(\<a.*?\<\/a\>)',)
     links = []
     for e in urls.split(t):
@@ -1328,8 +1331,8 @@ def linkify_others(t, l):
 def urlify_commit(text_, repo_name, link_=None):
     """
     Parses given text message and makes proper links.
-    issues are linked to given issue-server, and rest is a changeset link
-    if link_ is given, in other case it's a plain text
+    Issues are linked to given issue-server. If link_ is provided, all other
+    text will link there.
     """
     newtext = html_escape(text_)
 
