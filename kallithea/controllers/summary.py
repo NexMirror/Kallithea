@@ -49,7 +49,6 @@ from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator, \
 from kallithea.lib.base import BaseRepoController, render
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.markup_renderer import MarkupRenderer
-from kallithea.lib.celerylib import run_task
 from kallithea.lib.celerylib.tasks import get_commits_stats
 from kallithea.lib.compat import json
 from kallithea.lib.vcs.nodes import FileNode
@@ -225,6 +224,5 @@ class SummaryController(BaseRepoController):
             c.no_data = True
 
         recurse_limit = 500  # don't recurse more than 500 times when parsing
-        run_task(get_commits_stats, c.db_repo.repo_name, ts_min_y,
-                 ts_max_y, recurse_limit)
+        get_commits_stats(c.db_repo.repo_name, ts_min_y, ts_max_y, recurse_limit)
         return render('summary/statistics.html')

@@ -62,7 +62,7 @@ class NotificationModel(BaseModel):
         :param with_email: send email with this notification
         :param email_kwargs: additional dict to pass as args to email template
         """
-        from kallithea.lib.celerylib import tasks, run_task
+        from kallithea.lib.celerylib import tasks
         email_kwargs = email_kwargs or {}
         if recipients and not getattr(recipients, '__iter__', False):
             raise Exception('recipients must be a list or iterable')
@@ -132,7 +132,7 @@ class NotificationModel(BaseModel):
             email_html_body = EmailNotificationModel() \
                                 .get_email_tmpl(type_, 'html', **html_kwargs)
 
-            run_task(tasks.send_email, [rec.email], email_subject, email_txt_body,
+            tasks.send_email([rec.email], email_subject, email_txt_body,
                      email_html_body, headers, author=created_by_obj)
 
         return notif

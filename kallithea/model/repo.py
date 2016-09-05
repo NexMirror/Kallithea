@@ -473,8 +473,8 @@ class RepoModel(BaseModel):
         :param form_data:
         :param cur_user:
         """
-        from kallithea.lib.celerylib import tasks, run_task
-        return run_task(tasks.create_repo, form_data, cur_user)
+        from kallithea.lib.celerylib import tasks
+        return tasks.create_repo(form_data, cur_user)
 
     def _update_permissions(self, repo, perms_new=None, perms_updates=None,
                             check_perms=True):
@@ -522,8 +522,8 @@ class RepoModel(BaseModel):
         :param form_data:
         :param cur_user:
         """
-        from kallithea.lib.celerylib import tasks, run_task
-        return run_task(tasks.create_repo_fork, form_data, cur_user)
+        from kallithea.lib.celerylib import tasks
+        return tasks.create_repo_fork(form_data, cur_user)
 
     def delete(self, repo, forks=None, fs_remove=True, cur_user=None):
         """

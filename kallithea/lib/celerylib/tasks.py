@@ -26,8 +26,6 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-from celery.task import task
-
 import os
 import traceback
 import logging
@@ -40,7 +38,8 @@ from string import lower
 from pylons import config
 
 from kallithea import CELERY_ON
-from kallithea.lib.celerylib import run_task, locked_task, dbsession, \
+from kallithea.lib import celerylib
+from kallithea.lib.celerylib import locked_task, dbsession, \
     str2bool, __get_lockkey, LockHeld, DaemonLock, get_session
 from kallithea.lib.helpers import person
 from kallithea.lib.rcmail.smtp_mailer import SmtpMailer
@@ -60,7 +59,7 @@ __all__ = ['whoosh_index', 'get_commits_stats', 'send_email']
 log = logging.getLogger(__name__)
 
 
-@task(ignore_result=True)
+@celerylib.task
 @locked_task
 @dbsession
 def whoosh_index(repo_location, full_index):
@@ -73,7 +72,7 @@ def whoosh_index(repo_location, full_index):
                          .run(full_index=full_index)
 
 
-@task(ignore_result=True)
+@celerylib.task
 @dbsession
 def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
     DBS = get_session()
@@ -228,18 +227,17 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
 
         # execute another task if celery is enabled
         if len(repo.revisions) > 1 and CELERY_ON and recurse_limit > 0:
-            recurse_limit -= 1
-            run_task(get_commits_stats, repo_name, ts_min_y, ts_max_y,
-                     recurse_limit)
-        if recurse_limit <= 0:
-            log.debug('Breaking recursive mode due to reach of recurse limit')
-        return True
+            get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit - 1)
+        elif recurse_limit <= 0:
+            log.debug('Not recursing - limit has been reached')
+        else:
+            log.debug('Not recursing')
     except LockHeld:
         log.info('Task with key %s already running', lockkey)
         return 'Task with key %s already running' % lockkey
 
 
-@task(ignore_result=True)
+@celerylib.task
 @dbsession
 def send_email(recipients, subject, body='', html_body='', headers=None, author=None):
     """
@@ -326,7 +324,7 @@ def send_email(recipients, subject, body='', html_body='', headers=None, author=
         return False
     return True
 
-@task(ignore_result=False)
+@celerylib.task
 @dbsession
 def create_repo(form_data, cur_user):
     from kallithea.model.repo import RepoModel
@@ -410,7 +408,7 @@ def create_repo(form_data, cur_user):
     return True
 
 
-@task(ignore_result=False)
+@celerylib.task
 @dbsession
 def create_repo_fork(form_data, cur_user):
     """

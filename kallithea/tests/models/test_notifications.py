@@ -265,7 +265,7 @@ class TestNotifications(TestController):
             # Email type TYPE_PASSWORD_RESET has no corresponding notification type - test it directly:
             desc = 'TYPE_PASSWORD_RESET'
             kwargs = dict(user='John Doe', reset_token='decbf64715098db5b0bd23eab44bd792670ab746', reset_url='http://reset.com/decbf64715098db5b0bd23eab44bd792670ab746')
-            kallithea.lib.celerylib.run_task(kallithea.lib.celerylib.tasks.send_email, ['john@doe.com'],
+            kallithea.lib.celerylib.tasks.send_email(['john@doe.com'],
                 "Password reset link",
                 EmailNotificationModel().get_email_tmpl(EmailNotificationModel.TYPE_PASSWORD_RESET, 'txt', **kwargs),
                 EmailNotificationModel().get_email_tmpl(EmailNotificationModel.TYPE_PASSWORD_RESET, 'html', **kwargs),

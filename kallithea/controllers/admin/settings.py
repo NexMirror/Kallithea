@@ -37,7 +37,7 @@ from webob.exc import HTTPFound
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import LoginRequired, HasPermissionAnyDecorator
 from kallithea.lib.base import BaseController, render
-from kallithea.lib.celerylib import tasks, run_task
+from kallithea.lib.celerylib import tasks
 from kallithea.lib.exceptions import HgsubversionImportError
 from kallithea.lib.utils import repo2db_mapper, set_app_settings
 from kallithea.model.db import Ui, Repository, Setting
@@ -325,8 +325,8 @@ class SettingsController(BaseController):
 
             recipients = [test_email] if test_email else None
 
-            run_task(tasks.send_email, recipients, test_email_subj,
-                     test_email_txt_body, test_email_html_body)
+            tasks.send_email(recipients, test_email_subj,
+                             test_email_txt_body, test_email_html_body)
 
             h.flash(_('Send email task created'), category='success')
             raise HTTPFound(location=url('admin_settings_email'))
@@ -398,7 +398,7 @@ class SettingsController(BaseController):
         if request.POST:
             repo_location = self._get_hg_ui_settings()['paths_root_path']
             full_index = request.POST.get('full_index', False)
-            run_task(tasks.whoosh_index, repo_location, full_index)
+            tasks.whoosh_index(repo_location, full_index)
             h.flash(_('Whoosh reindex task scheduled'), category='success')
             raise HTTPFound(location=url('admin_settings_search'))
 

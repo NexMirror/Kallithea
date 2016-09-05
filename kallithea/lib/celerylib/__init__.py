@@ -27,8 +27,6 @@ Original author and date, and relevant copyright and licensing information is be
 
 
 import os
-import socket
-import traceback
 import logging
 
 from pylons import config
@@ -62,32 +60,35 @@ class FakeTask(object):
     task_id = None
 
 
-def run_task(task, *args, **kwargs):
-    global CELERY_ON
+def task(f_org):
+    """Wrapper of celery.task.task, running async if CELERY_ON
+    """
+
     if CELERY_ON:
-        try:
-            t = task.apply_async(args=args, kwargs=kwargs)
-            log.info('running task %s:%s', t.task_id, task)
+        def f_async(*args, **kwargs):
+            log.info('executing %s task', f_org.__name__)
+            try:
+                f_org(*args, **kwargs)
+            finally:
+                log.info('executed %s task', f_org.__name__)
+        f_async.__name__ = f_org.__name__
+        import celery.task
+        runner = celery.task.task(ignore_result=True)(f_async)
+        def f_wrapped(*args, **kwargs):
+            t = runner.apply_async(args=args, kwargs=kwargs)
+            log.info('executing task %s in async mode - id %s', f_org, t.task_id)
             return t
+    else:
+        def f_wrapped(*args, **kwargs):
+            log.info('executing task %s in sync', f_org.__name__)
+            try:
+                result = f_org(*args, **kwargs)
+            except Exception as e:
+                log.error('exception executing sync task %s in sync', f_org.__name__, e)
+                raise # TODO: return this in FakeTask as with async tasks?
+            return FakeTask(result)
 
-        except socket.error as e:
-            if isinstance(e, IOError) and e.errno == 111:
-                log.debug('Unable to connect to celeryd. Sync execution')
-                CELERY_ON = False
-            else:
-                log.error(traceback.format_exc())
-        except KeyError as e:
-                log.debug('Unable to connect to celeryd. Sync execution')
-        except Exception as e:
-            log.error(traceback.format_exc())
-
-    log.debug('executing task %s in sync mode', task)
-    try:
-        result = task(*args, **kwargs)
-    except Exception as e:
-        log.error('exception running sync task %s: %s', task, e)
-        raise # TODO: return this in FakeTask as with async tasks?
-    return FakeTask(result)
+    return f_wrapped
 
 
 def __get_lockkey(func, *fargs, **fkwargs):
