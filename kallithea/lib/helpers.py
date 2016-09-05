@@ -1321,7 +1321,10 @@ def urlify_text(s, repo_name=None, link_=None, truncate=None, stylize=False, tru
     s = html_escape(s)
     s = _urlify(s)
     if repo_name is not None:
-        s = urlify_issues(s, repo_name, link_)
+        s = urlify_issues(s, repo_name)
+    if link_ is not None:
+        # make href around everything that isn't a href already
+        s = linkify_others(s, link_)
     s = s.replace('\r\n', '<br/>').replace('\n', '<br/>')
     return literal(s)
 
@@ -1368,7 +1371,7 @@ def _urlify_issues_replace_f(repo_name, ISSUE_SERVER_LNK, ISSUE_PREFIX):
     return urlify_issues_replace
 
 
-def urlify_issues(newtext, repo_name, link_=None):
+def urlify_issues(newtext, repo_name):
     from kallithea import CONFIG as conf
 
     # allow multiple issue servers to be used
@@ -1398,10 +1401,6 @@ def urlify_issues(newtext, repo_name, link_=None):
         newtext = URL_PAT.sub(urlify_issues_replace, newtext)
         log.debug('processed prefix:`%s` => %s', pattern_index, newtext)
 
-    # if we actually did something above
-    if link_:
-        # wrap not links into final link => link_
-        newtext = linkify_others(newtext, link_)
     return newtext
 
 
