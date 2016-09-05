@@ -308,9 +308,9 @@ class TestLibs(TestController):
        some text 123123123123
        sometimes !
        """,
-       """Multi line\n"""
-       """       url[123123123123]\n"""
-       """       some text url[123123123123]\n"""
+       """Multi line<br/>"""
+       """       url[123123123123]<br/>"""
+       """       some text url[123123123123]<br/>"""
        """       sometimes !"""),
     ])
     def test_urlify_changesets(self, sample, expected):
@@ -342,8 +342,8 @@ class TestLibs(TestController):
       ("""Multi line
        https://foo.bar.example.com
        some text lalala""",
-       """Multi line\n"""
-       """       url[https://foo.bar.example.com]\n"""
+       """Multi line<br/>"""
+       """       url[https://foo.bar.example.com]<br/>"""
        """       some text lalala""",
        "https://foo.bar.example.com"),
       ("@mention @someone",

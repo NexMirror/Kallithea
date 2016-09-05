@@ -1302,6 +1302,7 @@ def urlify_text(s, repo_name=None, link_=None, truncate=None, stylize=False, tru
     if repo_name is not None:
         s = urlify_issues(s, repo_name, link_)
     s = MENTIONS_REGEX.sub(_mentions_replace, s)
+    s = s.replace('\r\n', '<br/>').replace('\n', '<br/>')
     return literal(s)
 
 

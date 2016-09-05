@@ -99,11 +99,11 @@ class TestFilesController(TestController):
                                     revision='8911406ad776fdd3d0b9932a2e89677e57405a48',
                                     f_path='vcs/nodes.py'))
 
-        response.mustcontain("""<div class="commit">Partially implemented <a class="issue-tracker-link" href="https://issues.example.com/vcs_test_hg/issue/16">#16</a>. filecontent/commit message/author/node name are safe_unicode now.
-In addition some other __str__ are unicode as well
-Added test for unicode
-Improved test to clone into uniq repository.
-removed extra unicode conversion in diff.</div>
+        response.mustcontain("""<div class="commit">Partially implemented <a class="issue-tracker-link" href="https://issues.example.com/vcs_test_hg/issue/16">#16</a>. filecontent/commit message/author/node name are safe_unicode now.<br/>"""
+"""In addition some other __str__ are unicode as well<br/>"""
+"""Added test for unicode<br/>"""
+"""Improved test to clone into uniq repository.<br/>"""
+"""removed extra unicode conversion in diff.</div>
 """)
 
         response.mustcontain("""<option selected="selected" value="8911406ad776fdd3d0b9932a2e89677e57405a48">default at 8911406ad776</option>""")
