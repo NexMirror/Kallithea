@@ -149,22 +149,30 @@ var callbacks = function(State){
     $("#diff1").select2({
         placeholder: _TM['Select changeset'],
         dropdownAutoWidth: true,
+        maxResults: 50,
         query: function(query){
           var key = 'cache';
           var cached = cache[key] ;
           if(cached) {
             var data = {results: []};
+            var queryLower = query.term.toLowerCase();
             //filter results
             $.each(cached.results, function(){
                 var section = this.text;
                 var children = [];
                 $.each(this.children, function(){
-                    if(query.term.length == 0 || this.text.toUpperCase().indexOf(query.term.toUpperCase()) >= 0 ){
-                        children.push({'id': this.id, 'text': this.text});
+                    if(children.length < 50 ?
+                       ((queryLower.length == 0) || (this.text.toLowerCase().indexOf(queryLower) >= 0)) :
+                       ((queryLower.length != 0) && (this.text.toLowerCase().indexOf(queryLower) == 0))) {
+                        children.push(this);
                     }
                 });
+                children = branchSort(children, undefined, query)
                 data.results.push({'text': section, 'children': children});
             });
+            //push the typed in changeset
+            data.results.push({'text':_TM['Specify changeset'],
+                               'children': [{'id': query.term, 'text': query.term, 'type': 'rev'}]});
             query.callback(data);
           }else{
               $.ajax({
@@ -174,7 +182,7 @@ var callbacks = function(State){
                 type: 'GET',
                 success: function(data) {
                   cache[key] = data;
-                  query.callback({results: data.results});
+                  query.callback(data);
                 }
               });
           }
