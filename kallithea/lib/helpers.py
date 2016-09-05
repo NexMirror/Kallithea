@@ -1268,16 +1268,12 @@ def fancy_file_stats(stats):
     return literal('<div style="width:%spx">%s%s</div>' % (width, d_a, d_d))
 
 
-def _urlify_text_replace(match_obj):
-    url_full = match_obj.group(1)
-    return '<a href="%(url)s">%(url)s</a>' % {'url': url_full}
+_URLIFY_RE = re.compile(r'''
+# URL markup
+(?P<url>%s)
+''' % (url_re.pattern),
+    re.VERBOSE | re.MULTILINE | re.IGNORECASE)
 
-
-def _urlify_text(s):
-    """
-    Extract urls from text and make html links out of them
-    """
-    return url_re.sub(_urlify_text_replace, s)
 
 
 def urlify_text(s, repo_name=None, link_=None, truncate=None, stylize=False, truncatef=truncate):
@@ -1289,6 +1285,19 @@ def urlify_text(s, repo_name=None, link_=None, truncate=None, stylize=False, tru
     Issues are linked to given issue-server.
     If link_ is provided, all text not already linking somewhere will link there.
     """
+
+    def _replace(match_obj):
+        url = match_obj.group('url')
+        if url is not None:
+            return '<a href="%(url)s">%(url)s</a>' % {'url': url}
+        return match_obj.group(0)
+
+    def _urlify(s):
+        """
+        Extract urls from text and make html links out of them
+        """
+        return _URLIFY_RE.sub(_replace, s)
+
     if truncate is None:
         s = s.rstrip()
     else:
@@ -1298,7 +1307,7 @@ def urlify_text(s, repo_name=None, link_=None, truncate=None, stylize=False, tru
         s = urlify_changesets(s, repo_name)
     if stylize:
         s = desc_stylize(s)
-    s = _urlify_text(s)
+    s = _urlify(s)
     if repo_name is not None:
         s = urlify_issues(s, repo_name, link_)
     s = MENTIONS_REGEX.sub(_mentions_replace, s)

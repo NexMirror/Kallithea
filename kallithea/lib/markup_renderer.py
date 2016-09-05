@@ -35,8 +35,9 @@ from kallithea.lib.utils2 import safe_unicode, MENTIONS_REGEX
 log = logging.getLogger(__name__)
 
 
-url_re = re.compile(r'''(\bhttps?://(?:[\da-zA-Z0-9@:.-]+)'''
-                    r'''(?:[/a-zA-Z0-9_=@#~&+%.,:;?!*()-]*[/a-zA-Z0-9_=@#~])?)''')
+url_re = re.compile(r'''\bhttps?://(?:[\da-zA-Z0-9@:.-]+)'''
+                    r'''(?:[/a-zA-Z0-9_=@#~&+%.,:;?!*()-]*[/a-zA-Z0-9_=@#~])?''')
+
 
 class MarkupRenderer(object):
     RESTRUCTUREDTEXT_DISALLOWED_DIRECTIVES = ['include', 'meta', 'raw']
@@ -132,7 +133,7 @@ class MarkupRenderer(object):
             source = newline.join(source.splitlines())
 
         def url_func(match_obj):
-            url_full = match_obj.groups()[0]
+            url_full = match_obj.group(0)
             return '<a href="%(url)s">%(url)s</a>' % ({'url': url_full})
         source = url_re.sub(url_func, source)
         return '<br />' + source.replace("\n", '<br />')
