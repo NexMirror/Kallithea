@@ -1,14 +1,16 @@
 ## -*- coding: utf-8 -*-
 
-<%def name="diff_block(change)">
+<%def name="diff_block(a_repo_name, a_ref_type, a_ref_name, a_rev,
+                       cs_repo_name, cs_ref_name, cs_ref_type, cs_rev,
+                       file_diff_data)">
 <div class="diff-collapse">
-    <span target="${'diff-container-%s' % (id(change))}" class="diff-collapse-button">&uarr; ${_('Collapse Diff')} &uarr;</span>
+    <span target="${'diff-container-%s' % (id(file_diff_data))}" class="diff-collapse-button">&uarr; ${_('Collapse Diff')} &uarr;</span>
 </div>
-<div class="diff-container" id="${'diff-container-%s' % (id(change))}">
-%for id_fid, (a_rev, cs_rev, op, filename, diff, stats) in change.iteritems():
-    ${diff_block_diffblock(id_fid, h.FID(cs_rev, filename), op, filename, diff,
-        c.repo_name, a_rev, 'rev', a_rev,
-        c.repo_name, cs_rev, 'rev', cs_rev)}
+<div class="diff-container" id="${'diff-container-%s' % (id(file_diff_data))}">
+%for id_fid, (url_fid, op, filename, diff, stats) in file_diff_data.iteritems():
+    ${diff_block_diffblock(id_fid, url_fid, op, filename, diff,
+        a_repo_name, a_rev, a_ref_type, a_ref_name,
+        cs_repo_name, cs_rev, cs_ref_type, cs_ref_name)}
 %endfor
 </div>
 </%def>

@@ -160,18 +160,19 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
                 </div>
             </div>
             <div class="changes_txt">
+              <% a_rev, cs_rev, file_diff_data = c.changes[c.changeset.raw_id] %>
               % if c.limited_diff:
-                  ${ungettext('%s file changed', '%s files changed', len(c.changeset.affected_files)) % (len(c.changeset.affected_files))}:
+                  ${ungettext('%s file changed', '%s files changed', len(file_diff_data)) % len(file_diff_data)}:
               % else:
-                  ${ungettext('%s file changed with %s insertions and %s deletions', '%s files changed with %s insertions and %s deletions', len(c.changeset.affected_files)) % (len(c.changeset.affected_files), c.lines_added, c.lines_deleted)}:
+                  ${ungettext('%s file changed with %s insertions and %s deletions', '%s files changed with %s insertions and %s deletions', len(file_diff_data)) % (len(file_diff_data), c.lines_added, c.lines_deleted)}:
               %endif
               </div>
               <div class="cs_files">
-                %for fid, (cs1, cs2, op, path, diff, stats) in c.changes[c.changeset.raw_id].iteritems():
+                %for fid, (url_fid, op, path, diff, stats) in file_diff_data.iteritems():
                     <div class="cs_${op}">
                       <div class="node">
                           <i class="icon-diff-${op}"></i>
-                          <a href="#${fid}">${h.safe_unicode(path)}</a>
+                          ${h.link_to(h.safe_unicode(path), '#%s' % fid)}
                       </div>
                       <div class="changes">${h.fancy_file_stats(stats)}</div>
                     </div>
@@ -188,7 +189,9 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
     <div class="commentable-diff">
     <%namespace name="diff_block" file="/changeset/diff_block.html"/>
     ${diff_block.diff_block_js()}
-    ${diff_block.diff_block(c.changes[c.changeset.raw_id])}
+    <% a_rev, cs_rev, file_diff_data = c.changes[c.changeset.raw_id] %>
+    ${diff_block.diff_block(c.repo_name, 'rev', a_rev, a_rev,
+                            c.repo_name, 'rev', cs_rev, cs_rev, file_diff_data)}
     % if c.limited_diff:
       <h4>${_('Changeset was too big and was cut off...')} <a href="${h.url.current(fulldiff=1, **request.GET.mixed())}">${_('Show full diff anyway')}</a></h4>
     % endif

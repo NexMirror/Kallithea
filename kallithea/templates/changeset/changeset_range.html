@@ -59,11 +59,12 @@ ${self.repo_context_bar('changelog')}
             <div class="cs_files">
                 %for cs in c.cs_ranges:
                     <div class="cur_cs">${h.link_to(h.show_id(cs),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}</div>
-                    %for FID, (cs1, cs2, op, path, diff, stats) in c.changes[cs.raw_id].iteritems():
+                    <% a_rev, cs_rev, file_diff_data = c.changes[cs.raw_id] %>
+                    %for fid, (url_fid, op, path, diff, stats) in file_diff_data.iteritems():
                         <div class="cs_${op}">
                             <div class="node">
                                 <i class="icon-diff-${op}"></i>
-                                ${h.link_to(h.safe_unicode(path),h.url.current(anchor=FID))}
+                                ${h.link_to(h.safe_unicode(path), '#%s' % fid)}
                             </div>
                             <div class="changes">${h.fancy_file_stats(stats)}</div>
                         </div>
@@ -105,7 +106,9 @@ ${self.repo_context_bar('changelog')}
               </span>
             </div>
            </div>
-          ${diff_block.diff_block(c.changes[cs.raw_id])}
+          <% a_rev, cs_rev, file_diff_data = c.changes[cs.raw_id] %>
+          ${diff_block.diff_block(c.repo_name, 'rev', a_rev, a_rev,
+                                  c.repo_name, 'rev', cs_rev, cs_rev, file_diff_data)}
     %endfor
 </div>
 </%def>

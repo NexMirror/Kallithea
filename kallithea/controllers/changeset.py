@@ -269,8 +269,6 @@ class ChangesetController(BaseRepoController):
                                                  revision=changeset.raw_id)
                 c.inline_comments.extend(inlines)
 
-            c.changes[changeset.raw_id] = []
-
             cs2 = changeset.raw_id
             cs1 = changeset.parents[0].raw_id if changeset.parents else EmptyChangeset().raw_id
             context_lcl = get_line_ctx('', request.GET)
@@ -283,7 +281,7 @@ class ChangesetController(BaseRepoController):
                                                  vcs=c.db_repo_scm_instance.alias,
                                                  format='gitdiff',
                                                  diff_limit=diff_limit)
-            cs_changes = OrderedDict()
+            file_diff_data = OrderedDict()
             if method == 'show':
                 _parsed = diff_processor.prepare()
                 c.limited_diff = False
@@ -295,15 +293,15 @@ class ChangesetController(BaseRepoController):
                     c.lines_deleted += st['deleted']
                     filename = f['filename']
                     fid = h.FID(changeset.raw_id, filename)
+                    url_fid = h.FID('', filename)
                     diff = diff_processor.as_html(enable_comments=enable_comments,
                                                   parsed_lines=[f])
-                    cs_changes[fid] = [cs1, cs2, f['operation'], filename,
-                                       diff, st]
+                    file_diff_data[fid] = (url_fid, f['operation'], filename, diff, st)
             else:
                 # downloads/raw we only need RAW diff nothing else
                 diff = diff_processor.as_raw()
-                cs_changes[''] = [None, None, None, None, diff, None]
-            c.changes[changeset.raw_id] = cs_changes
+                file_diff_data[''] = (None, None, None, diff, None)
+            c.changes[changeset.raw_id] = (cs1, cs2, file_diff_data)
 
         #sort comments in creation order
         c.comments = [com for com_id, com in sorted(comments.items())]

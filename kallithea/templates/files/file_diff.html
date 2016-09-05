@@ -23,7 +23,8 @@ ${self.repo_context_bar('changelog')}
     ## diff block
     <%namespace name="diff_block" file="/changeset/diff_block.html"/>
     ${diff_block.diff_block_js()}
-    ${diff_block.diff_block(c.changes)}
+    ${diff_block.diff_block(c.repo_name, 'rev', c.a_rev, c.a_rev,
+                            c.repo_name, 'rev', c.cs_rev, c.cs_rev, c.file_diff_data)}
     </div>
 </div>
 </%def>
