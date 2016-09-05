@@ -313,7 +313,7 @@ class TestLibs(TestController):
        """       some text url[123123123123]<br/>"""
        """       sometimes !"""),
     ])
-    def test_urlify_changesets(self, sample, expected):
+    def test_urlify_text(self, sample, expected):
         def fake_url(self, *args, **kwargs):
             return '/some-url'
 

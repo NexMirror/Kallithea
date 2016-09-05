@@ -1250,6 +1250,10 @@ _URLIFY_RE = re.compile(r'''
 (?P<url>%s) |
 # @mention markup
 (?P<mention>%s) |
+# Changeset hash markup
+(?<!\w|[-_])
+  (?P<hash>[0-9a-f]{12,40})
+(?!\w|[-_]) |
 # "Stylize" markup
 \[see\ \=&gt;\ *(?P<seen>[a-zA-Z0-9\/\=\?\&\ \:\/\.\-]*)\] |
 \[license\ \=&gt;\ *(?P<license>[a-zA-Z0-9\/\=\?\&\ \:\/\.\-]*)\] |
@@ -1278,6 +1282,13 @@ def urlify_text(s, repo_name=None, link_=None, truncate=None, stylize=False, tru
         mention = match_obj.group('mention')
         if mention is not None:
             return '<b>%s</b>' % mention
+        hash_ = match_obj.group('hash')
+        if hash_ is not None and repo_name is not None:
+            from pylons import url  # doh, we need to re-import url to mock it later
+            return '<a class="revision-link" href="%(url)s">%(hash)s</a>' % {
+                 'url': url('changeset_home', repo_name=repo_name, revision=hash_),
+                 'hash': hash_,
+                }
         if stylize:
             seen = match_obj.group('seen')
             if seen:
@@ -1308,34 +1319,11 @@ def urlify_text(s, repo_name=None, link_=None, truncate=None, stylize=False, tru
     else:
         s = truncatef(s, truncate, whole_word=True)
     s = html_escape(s)
-    if repo_name is not None:
-        s = urlify_changesets(s, repo_name)
     s = _urlify(s)
     if repo_name is not None:
         s = urlify_issues(s, repo_name, link_)
     s = s.replace('\r\n', '<br/>').replace('\n', '<br/>')
     return literal(s)
-
-
-def _urlify_changeset_replace_f(repo_name):
-    from pylons import url  # doh, we need to re-import url to mock it later
-    def urlify_changeset_replace(match_obj):
-        rev = match_obj.group(0)
-        return '<a class="revision-link" href="%(url)s">%(rev)s</a>' % {
-         'url': url('changeset_home', repo_name=repo_name, revision=rev),
-         'rev': rev,
-        }
-    return urlify_changeset_replace
-
-
-urilify_changeset_re = r'(?:^|(?<=[\s(),]))([0-9a-fA-F]{12,40})(?=$|\s|[.,:()])'
-
-def urlify_changesets(text_, repo_name):
-    """
-    Extract revision ids from changeset and make link from them
-    """
-    urlify_changeset_replace = _urlify_changeset_replace_f(repo_name)
-    return re.sub(urilify_changeset_re, urlify_changeset_replace, text_)
 
 
 def linkify_others(t, l):
