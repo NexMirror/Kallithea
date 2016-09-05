@@ -76,9 +76,13 @@ class TestAdminUsersController(TestController):
              'extern_type': 'internal',
              'email': email,
              '_authentication_token': self.authentication_token()})
+        # 302 Found
+        # The resource was found at http://localhost/_admin/users/5/edit; you should be redirected automatically.
 
-        self.checkSessionFlash(response, '''Created user <a href="/_admin/users/''')
-        self.checkSessionFlash(response, '''/edit">%s</a>''' % (username))
+        self.checkSessionFlash(response, '''Created user %s''' % username)
+
+        response = response.follow()
+        response.mustcontain("""%s user settings""" % username) # in <title>
 
         new_user = Session().query(User). \
             filter(User.username == username).one()
@@ -88,10 +92,6 @@ class TestAdminUsersController(TestController):
         assert new_user.name == name
         assert new_user.lastname == lastname
         assert new_user.email == email
-
-        response.follow()
-        response = response.follow()
-        response.mustcontain("""newtestuser""")
 
     def test_create_err(self):
         self.log_user()

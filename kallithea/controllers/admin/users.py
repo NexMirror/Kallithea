@@ -122,10 +122,9 @@ class UsersController(BaseController):
         try:
             form_result = user_form.to_python(dict(request.POST))
             user = user_model.create(form_result)
-            usr = form_result['username']
-            action_logger(self.authuser, 'admin_created_user:%s' % usr,
+            action_logger(self.authuser, 'admin_created_user:%s' % user.username,
                           None, self.ip_addr, self.sa)
-            h.flash(h.literal(_('Created user %s') % h.link_to(h.escape(usr), url('edit_user', id=user.user_id))),
+            h.flash(_('Created user %s') % user.username,
                     category='success')
             Session().commit()
         except formencode.Invalid as errors:
@@ -142,7 +141,7 @@ class UsersController(BaseController):
             log.error(traceback.format_exc())
             h.flash(_('Error occurred during creation of user %s') \
                     % request.POST.get('username'), category='error')
-        raise HTTPFound(location=url('users'))
+        raise HTTPFound(location=url('edit_user', id=user.user_id))
 
     def new(self, format='html'):
         c.default_extern_type = auth_internal.KallitheaAuthPlugin.name
