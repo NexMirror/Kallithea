@@ -339,6 +339,10 @@ class PullrequestsController(BaseRepoController):
         (other_ref_type,
          other_ref_name,
          other_rev) = other_ref.split(':')
+        if other_ref_type == 'rev':
+            cs = other_repo.scm_instance.get_changeset(other_rev)
+            other_ref_name = cs.raw_id[:12]
+            other_ref = '%s:%s:%s' % (other_ref_type, other_ref_name, cs.raw_id)
 
         cs_ranges, _cs_ranges_not, ancestor_rev = \
             CompareController._get_changesets(org_repo.scm_instance.alias,
