@@ -65,11 +65,11 @@ class ReposController(BaseRepoController):
     def __before__(self):
         super(ReposController, self).__before__()
 
-    def _load_repo(self, repo_name):
-        repo_obj = Repository.get_by_repo_name(repo_name)
+    def _load_repo(self):
+        repo_obj = c.db_repo
 
         if repo_obj is None:
-            h.not_mapped_error(repo_name)
+            h.not_mapped_error(c.repo_name)
             raise HTTPFound(location=url('repos'))
 
         return repo_obj
@@ -85,16 +85,14 @@ class ReposController(BaseRepoController):
 
         c.landing_revs_choices, c.landing_revs = ScmModel().get_repo_landing_revs(repo)
 
-    def __load_data(self, repo_name=None):
+    def __load_data(self):
         """
         Load defaults settings for edit, and update
-
-        :param repo_name:
         """
-        c.repo_info = self._load_repo(repo_name)
+        c.repo_info = self._load_repo()
         self.__load_defaults(c.repo_info)
 
-        defaults = RepoModel()._get_defaults(repo_name)
+        defaults = RepoModel()._get_defaults(c.repo_name)
         defaults['clone_uri'] = c.repo_info.clone_uri_hidden # don't show password
 
         return defaults
@@ -218,7 +216,7 @@ class ReposController(BaseRepoController):
 
     @HasRepoPermissionAnyDecorator('repository.admin')
     def update(self, repo_name):
-        c.repo_info = self._load_repo(repo_name)
+        c.repo_info = self._load_repo()
         self.__load_defaults(c.repo_info)
         c.active = 'settings'
         c.repo_fields = RepositoryField.query() \
@@ -248,7 +246,7 @@ class ReposController(BaseRepoController):
             Session().commit()
         except formencode.Invalid as errors:
             log.info(errors)
-            defaults = self.__load_data(repo_name)
+            defaults = self.__load_data()
             defaults.update(errors.value)
             c.users_array = repo_model.get_users_js()
             return htmlfill.render(
@@ -304,7 +302,7 @@ class ReposController(BaseRepoController):
 
     @HasRepoPermissionAnyDecorator('repository.admin')
     def edit(self, repo_name):
-        defaults = self.__load_data(repo_name)
+        defaults = self.__load_data()
         c.repo_fields = RepositoryField.query() \
             .filter(RepositoryField.repository == c.repo_info).all()
         repo_model = RepoModel()
@@ -318,7 +316,7 @@ class ReposController(BaseRepoController):
 
     @HasRepoPermissionAnyDecorator('repository.admin')
     def edit_permissions(self, repo_name):
-        c.repo_info = self._load_repo(repo_name)
+        c.repo_info = self._load_repo()
         repo_model = RepoModel()
         c.users_array = repo_model.get_users_js()
         c.user_groups_array = repo_model.get_user_groups_js()
@@ -369,7 +367,7 @@ class ReposController(BaseRepoController):
 
     @HasRepoPermissionAnyDecorator('repository.admin')
     def edit_fields(self, repo_name):
-        c.repo_info = self._load_repo(repo_name)
+        c.repo_info = self._load_repo()
         c.repo_fields = RepositoryField.query() \
             .filter(RepositoryField.repository == c.repo_info).all()
         c.active = 'fields'
@@ -413,7 +411,7 @@ class ReposController(BaseRepoController):
 
     @HasRepoPermissionAnyDecorator('repository.admin')
     def edit_advanced(self, repo_name):
-        c.repo_info = self._load_repo(repo_name)
+        c.repo_info = self._load_repo()
         c.default_user_id = User.get_default_user().user_id
         c.in_public_journal = UserFollowing.query() \
             .filter(UserFollowing.user_id == c.default_user_id) \
@@ -529,7 +527,7 @@ class ReposController(BaseRepoController):
 
     @HasRepoPermissionAnyDecorator('repository.admin')
     def edit_caches(self, repo_name):
-        c.repo_info = self._load_repo(repo_name)
+        c.repo_info = self._load_repo()
         c.active = 'caches'
         if request.POST:
             try:
@@ -547,7 +545,7 @@ class ReposController(BaseRepoController):
 
     @HasRepoPermissionAnyDecorator('repository.admin')
     def edit_remote(self, repo_name):
-        c.repo_info = self._load_repo(repo_name)
+        c.repo_info = self._load_repo()
         c.active = 'remote'
         if request.POST:
             try:
@@ -562,7 +560,7 @@ class ReposController(BaseRepoController):
 
     @HasRepoPermissionAnyDecorator('repository.admin')
     def edit_statistics(self, repo_name):
-        c.repo_info = self._load_repo(repo_name)
+        c.repo_info = self._load_repo()
         repo = c.repo_info.scm_instance
 
         if c.repo_info.stats:

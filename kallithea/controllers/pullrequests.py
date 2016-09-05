@@ -196,7 +196,6 @@ class PullrequestsController(BaseRepoController):
         c.from_ = request.GET.get('from_') or ''
         c.closed = request.GET.get('closed') or ''
         c.pull_requests = PullRequestModel().get_all(repo_name, from_=c.from_, closed=c.closed)
-        c.repo_name = repo_name
         p = safe_int(request.GET.get('page'), 1)
 
         c.pullrequests_pager = Page(c.pull_requests, page=p, items_per_page=100)
@@ -298,7 +297,7 @@ class PullrequestsController(BaseRepoController):
                                    'repository.admin')
     @jsonify
     def repo_info(self, repo_name):
-        repo = RepoModel()._get_repo(repo_name)
+        repo = c.db_repo
         refs, selected_ref = self._get_repo_refs(repo.scm_instance)
         return {
             'description': repo.description.split('\n', 1)[0],
@@ -311,7 +310,7 @@ class PullrequestsController(BaseRepoController):
     @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
                                    'repository.admin')
     def create(self, repo_name):
-        repo = RepoModel()._get_repo(repo_name)
+        repo = c.db_repo
         try:
             _form = PullRequestForm(repo.repo_id)().to_python(request.POST)
         except formencode.Invalid as errors:

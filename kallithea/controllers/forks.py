@@ -65,19 +65,17 @@ class ForksController(BaseRepoController):
 
         c.can_update = Ui.get_by_key('hooks', Ui.HOOK_UPDATE).ui_active
 
-    def __load_data(self, repo_name=None):
+    def __load_data(self):
         """
         Load defaults settings for edit, and update
-
-        :param repo_name:
         """
         self.__load_defaults()
 
-        c.repo_info = db_repo = Repository.get_by_repo_name(repo_name)
-        repo = db_repo.scm_instance
+        c.repo_info = c.db_repo
+        repo = c.db_repo.scm_instance
 
         if c.repo_info is None:
-            h.not_mapped_error(repo_name)
+            h.not_mapped_error(c.repo_name)
             raise HTTPFound(location=url('repos'))
 
         c.default_user_id = User.get_default_user().user_id
@@ -99,7 +97,7 @@ class ForksController(BaseRepoController):
             c.stats_percentage = '%.2f' % ((float((last_rev)) /
                                             c.repo_last_rev) * 100)
 
-        defaults = RepoModel()._get_defaults(repo_name)
+        defaults = RepoModel()._get_defaults(c.repo_name)
         # alter the description to indicate a fork
         defaults['description'] = ('fork of repository: %s \n%s'
                                    % (defaults['repo_name'],
@@ -140,7 +138,7 @@ class ForksController(BaseRepoController):
             h.not_mapped_error(repo_name)
             raise HTTPFound(location=url('home'))
 
-        defaults = self.__load_data(repo_name)
+        defaults = self.__load_data()
 
         return htmlfill.render(
             render('forks/fork.html'),

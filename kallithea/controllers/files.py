@@ -426,7 +426,7 @@ class FilesController(BaseRepoController):
     @HasRepoPermissionAnyDecorator('repository.write', 'repository.admin')
     def add(self, repo_name, revision, f_path):
 
-        repo = Repository.get_by_repo_name(repo_name)
+        repo = c.db_repo
         if repo.enable_locking and repo.locked[0]:
             h.flash(_('This repository has been locked by %s on %s')
                 % (h.person_by_id(repo.locked[0]),
