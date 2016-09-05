@@ -293,10 +293,11 @@ class ChangesetController(BaseRepoController):
                     st = f['stats']
                     c.lines_added += st['added']
                     c.lines_deleted += st['deleted']
-                    fid = h.FID(changeset.raw_id, f['filename'])
+                    filename = f['filename']
+                    fid = h.FID(changeset.raw_id, filename)
                     diff = diff_processor.as_html(enable_comments=enable_comments,
                                                   parsed_lines=[f])
-                    cs_changes[fid] = [cs1, cs2, f['operation'], f['filename'],
+                    cs_changes[fid] = [cs1, cs2, f['operation'], filename,
                                        diff, st]
             else:
                 # downloads/raw we only need RAW diff nothing else

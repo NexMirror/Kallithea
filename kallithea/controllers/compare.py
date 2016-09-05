@@ -283,12 +283,12 @@ class CompareController(BaseRepoController):
         c.lines_deleted = 0
         for f in _parsed:
             st = f['stats']
-            if not st['binary']:
-                c.lines_added += st['added']
-                c.lines_deleted += st['deleted']
-            fid = h.FID('', f['filename'])
-            c.files.append([fid, f['operation'], f['filename'], f['stats']])
+            c.lines_added += st['added']
+            c.lines_deleted += st['deleted']
+            filename = f['filename']
+            fid = h.FID('', filename)
+            c.files.append([fid, f['operation'], filename, f['stats']])
             htmldiff = diff_processor.as_html(enable_comments=False, parsed_lines=[f])
-            c.changes[fid] = [f['operation'], f['filename'], htmldiff]
+            c.changes[fid] = [f['operation'], filename, htmldiff]
 
         return render('compare/compare_diff.html')

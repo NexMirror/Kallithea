@@ -704,11 +704,12 @@ class PullrequestsController(BaseRepoController):
             st = f['stats']
             c.lines_added += st['added']
             c.lines_deleted += st['deleted']
-            fid = h.FID('', f['filename'])
-            c.files.append([fid, f['operation'], f['filename'], f['stats']])
+            filename = f['filename']
+            fid = h.FID('', filename)
+            c.files.append([fid, f['operation'], filename, f['stats']])
             htmldiff = diff_processor.as_html(enable_comments=True,
                                               parsed_lines=[f])
-            c.changes[fid] = [f['operation'], f['filename'], htmldiff]
+            c.changes[fid] = [f['operation'], filename, htmldiff]
 
         # inline comments
         c.inline_cnt = 0

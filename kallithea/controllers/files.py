@@ -695,7 +695,7 @@ class FilesController(BaseRepoController):
             }
             c.changes = cs_changes
 
-        return render('files/file_diff.html')
+            return render('files/file_diff.html')
 
     @LoginRequired()
     @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',

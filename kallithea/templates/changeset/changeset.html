@@ -160,25 +160,25 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
                 </div>
             </div>
             <div class="changes_txt">
-            % if c.limited_diff:
-            ${ungettext('%s file changed','%s files changed',len(c.changeset.affected_files)) % (len(c.changeset.affected_files))}:
-            % else:
-            ${ungettext('%s file changed with %s insertions and %s deletions','%s files changed with %s insertions and %s deletions', len(c.changeset.affected_files)) % (len(c.changeset.affected_files),c.lines_added,c.lines_deleted)}:
-            %endif
-            </div>
-            <div class="cs_files">
-              %for FID, (cs1, cs2, change, path, diff, stats) in c.changes[c.changeset.raw_id].iteritems():
-                  <div class="cs_${change}">
-                        <div class="node">
-                            <i class="icon-diff-${change}"></i>
-                            <a href="#${FID}">${h.safe_unicode(path)}</a>
-                        </div>
-                    <div class="changes">${h.fancy_file_stats(stats)}</div>
-                  </div>
-              %endfor
               % if c.limited_diff:
-                <h5>${_('Changeset was too big and was cut off...')} <a href="${h.url.current(fulldiff=1, **request.GET.mixed())}">${_('Show full diff anyway')}</a></h5>
-              % endif
+                  ${ungettext('%s file changed', '%s files changed', len(c.changeset.affected_files)) % (len(c.changeset.affected_files))}:
+              % else:
+                  ${ungettext('%s file changed with %s insertions and %s deletions', '%s files changed with %s insertions and %s deletions', len(c.changeset.affected_files)) % (len(c.changeset.affected_files), c.lines_added, c.lines_deleted)}:
+              %endif
+              </div>
+              <div class="cs_files">
+                %for fid, (cs1, cs2, op, path, diff, stats) in c.changes[c.changeset.raw_id].iteritems():
+                    <div class="cs_${op}">
+                      <div class="node">
+                          <i class="icon-diff-${op}"></i>
+                          <a href="#${fid}">${h.safe_unicode(path)}</a>
+                      </div>
+                      <div class="changes">${h.fancy_file_stats(stats)}</div>
+                    </div>
+                %endfor
+                %if c.limited_diff:
+                  <h5>${_('Changeset was too big and was cut off...')} <a href="${h.url.current(fulldiff=1, **request.GET.mixed())}">${_('Show full diff anyway')}</a></h5>
+                %endif
             </div>
         </div>
 
