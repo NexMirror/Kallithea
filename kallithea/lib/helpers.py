@@ -1337,7 +1337,7 @@ def linkify_others(t, l):
     urls = re.compile(r'(\<a.*?\<\/a\>)',)
     links = []
     for e in urls.split(t):
-        if not urls.match(e):
+        if e.strip() and not urls.match(e):
             links.append('<a class="message-link" href="%s">%s</a>' % (l, e))
         else:
             links.append(e)

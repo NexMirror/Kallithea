@@ -362,7 +362,6 @@ class TestLibs(TestController):
 
     @parametrize('sample,expected', [
       ("deadbeefcafe @mention, and http://foo.bar/ yo",
-       """<a class="message-link" href="#the-link"></a>"""
        """<a class="revision-link" href="/repo_name/changeset/deadbeefcafe">deadbeefcafe</a>"""
        """<a class="message-link" href="#the-link"> <b>@mention</b>, and </a>"""
        """<a href="http://foo.bar/">http://foo.bar/</a>"""
