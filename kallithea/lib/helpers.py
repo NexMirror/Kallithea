@@ -540,29 +540,6 @@ def person_by_id(id_, show_attr="username"):
     return id_
 
 
-def desc_stylize(value):
-    """
-    converts tags from value into html equivalent
-
-    :param value:
-    """
-    if not value:
-        return ''
-
-    value = re.sub(r'\[see\ \=&gt;\ *([a-zA-Z0-9\/\=\?\&\ \:\/\.\-]*)\]',
-                   '<div class="metatag" tag="see">see =&gt; \\1 </div>', value)
-    value = re.sub(r'\[license\ \=&gt;\ *([a-zA-Z0-9\/\=\?\&\ \:\/\.\-]*)\]',
-                   '<div class="metatag" tag="license"><a href="http:\/\/www.opensource.org/licenses/\\1">\\1</a></div>', value)
-    value = re.sub(r'\[(requires|recommends|conflicts|base)\ \=&gt;\ *([a-zA-Z0-9\-\/]*)\]',
-                   '<div class="metatag" tag="\\1">\\1 =&gt; <a href="/\\2">\\2</a></div>', value)
-    value = re.sub(r'\[(lang|language)\ \=&gt;\ *([a-zA-Z\-\/\#\+]*)\]',
-                   '<div class="metatag" tag="lang">\\2</div>', value)
-    value = re.sub(r'\[([a-z]+)\]',
-                  '<div class="metatag" tag="\\1">\\1</div>', value)
-
-    return value
-
-
 def boolicon(value):
     """Returns boolean value of a value, represented as small html image of true/false
     icons
@@ -1270,7 +1247,13 @@ def fancy_file_stats(stats):
 
 _URLIFY_RE = re.compile(r'''
 # URL markup
-(?P<url>%s)
+(?P<url>%s) |
+# "Stylize" markup
+\[see\ \=&gt;\ *(?P<seen>[a-zA-Z0-9\/\=\?\&\ \:\/\.\-]*)\] |
+\[license\ \=&gt;\ *(?P<license>[a-zA-Z0-9\/\=\?\&\ \:\/\.\-]*)\] |
+\[(?P<tagtype>requires|recommends|conflicts|base)\ \=&gt;\ *(?P<tagvalue>[a-zA-Z0-9\-\/]*)\] |
+\[(?:lang|language)\ \=&gt;\ *(?P<lang>[a-zA-Z\-\/\#\+]*)\] |
+\[(?P<tag>[a-z]+)\]
 ''' % (url_re.pattern),
     re.VERBOSE | re.MULTILINE | re.IGNORECASE)
 
@@ -1290,6 +1273,23 @@ def urlify_text(s, repo_name=None, link_=None, truncate=None, stylize=False, tru
         url = match_obj.group('url')
         if url is not None:
             return '<a href="%(url)s">%(url)s</a>' % {'url': url}
+        if stylize:
+            seen = match_obj.group('seen')
+            if seen:
+                return '<div class="metatag" tag="see">see =&gt; %s</div>' % seen
+            license = match_obj.group('license')
+            if license:
+                return '<div class="metatag" tag="license"><a href="http:\/\/www.opensource.org/licenses/%s">%s</a></div>' % (license, license)
+            tagtype = match_obj.group('tagtype')
+            if tagtype:
+                tagvalue = match_obj.group('tagvalue')
+                return '<div class="metatag" tag="%s">%s =&gt; <a href="/%s">%s</a></div>' % (tagtype, tagtype, tagvalue, tagvalue)
+            lang = match_obj.group('lang')
+            if lang:
+                return '<div class="metatag" tag="lang">%s</div>' % lang
+            tag = match_obj.group('tag')
+            if tag:
+                return '<div class="metatag" tag="%s">%s</div>' % (tag, tag)
         return match_obj.group(0)
 
     def _urlify(s):
@@ -1305,8 +1305,6 @@ def urlify_text(s, repo_name=None, link_=None, truncate=None, stylize=False, tru
     s = html_escape(s)
     if repo_name is not None:
         s = urlify_changesets(s, repo_name)
-    if stylize:
-        s = desc_stylize(s)
     s = _urlify(s)
     if repo_name is not None:
         s = urlify_issues(s, repo_name, link_)
