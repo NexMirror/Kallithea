@@ -296,7 +296,7 @@ class ChangesetController(BaseRepoController):
                     url_fid = h.FID('', filename)
                     diff = diff_processor.as_html(enable_comments=enable_comments,
                                                   parsed_lines=[f])
-                    file_diff_data[fid] = (url_fid, f['operation'], filename, diff, st)
+                    file_diff_data[fid] = (url_fid, f['operation'], f['old_filename'], filename, diff, st)
             else:
                 # downloads/raw we only need RAW diff nothing else
                 diff = diff_processor.as_raw()

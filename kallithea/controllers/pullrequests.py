@@ -707,7 +707,7 @@ class PullrequestsController(BaseRepoController):
             fid = h.FID('', filename)
             diff = diff_processor.as_html(enable_comments=True,
                                           parsed_lines=[f])
-            c.file_diff_data[fid] = (None, f['operation'], filename, diff, st)
+            c.file_diff_data[fid] = (None, f['operation'], f['old_filename'], filename, diff, st)
 
         # inline comments
         c.inline_cnt = 0

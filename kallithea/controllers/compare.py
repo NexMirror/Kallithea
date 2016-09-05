@@ -288,6 +288,6 @@ class CompareController(BaseRepoController):
             fid = h.FID('', filename)
             diff = diff_processor.as_html(enable_comments=False,
                                           parsed_lines=[f])
-            c.file_diff_data[fid] = (None, f['operation'], filename, diff, st)
+            c.file_diff_data[fid] = (None, f['operation'], f['old_filename'], filename, diff, st)
 
         return render('compare/compare_diff.html')

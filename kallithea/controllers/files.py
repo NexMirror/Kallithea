@@ -683,13 +683,13 @@ class FilesController(BaseRepoController):
             ign_whitespace_lcl = get_ignore_ws(fid, request.GET)
 
             lim = request.GET.get('fulldiff') or self.cut_off_limit
-            c.a_rev, c.cs_rev, op, diff, st = diffs.wrapped_diff(filenode_old=node1,
+            c.a_rev, c.cs_rev, a_path, diff, st, op = diffs.wrapped_diff(filenode_old=node1,
                                          filenode_new=node2,
                                          cut_off_limit=lim,
                                          ignore_whitespace=ign_whitespace_lcl,
                                          line_context=line_context_lcl,
                                          enable_comments=False)
-            c.file_diff_data = {fid: (fid, op, node1.path, diff, st)}
+            c.file_diff_data = {fid: (fid, op, a_path, node2.path, diff, st)}
 
             return render('files/file_diff.html')
 

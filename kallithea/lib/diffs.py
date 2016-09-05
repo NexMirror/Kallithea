@@ -63,6 +63,7 @@ def wrapped_diff(filenode_old, filenode_new, cut_off_limit=None,
         filenode_old = FileNode(filenode_new.path, '', EmptyChangeset())
 
     op = None
+    a_path = filenode_old.path # default, might be overriden by actual rename in diff
     if filenode_old.is_binary or filenode_new.is_binary:
         diff = wrap_to_table(_('Binary file'))
         stats = (0, 0)
@@ -79,6 +80,7 @@ def wrapped_diff(filenode_old, filenode_new, cut_off_limit=None,
         if _parsed: # there should be exactly one element, for the specified file
             f = _parsed[0]
             op = f['operation']
+            a_path = f['old_filename']
 
         diff = diff_processor.as_html(enable_comments=enable_comments)
         stats = diff_processor.stat()
@@ -99,7 +101,7 @@ def wrapped_diff(filenode_old, filenode_new, cut_off_limit=None,
     cs1 = filenode_old.changeset.raw_id
     cs2 = filenode_new.changeset.raw_id
 
-    return cs1, cs2, op, diff, stats
+    return cs1, cs2, a_path, diff, stats, op
 
 
 def get_gitdiff(filenode_old, filenode_new, ignore_whitespace=True, context=3):
@@ -476,6 +478,7 @@ class DiffProcessor(object):
                   if _op not in [MOD_FILENODE]])
 
             _files.append({
+                'old_filename':     head['a_path'],
                 'filename':         head['b_path'],
                 'old_revision':     head['a_blob_id'],
                 'new_revision':     head['b_blob_id'],
