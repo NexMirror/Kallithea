@@ -166,7 +166,7 @@ setuptools.setup(
     ishell=kallithea.lib.paster_commands.ishell:Command
     make-index=kallithea.lib.paster_commands.make_index:Command
     upgrade-db=kallithea.lib.dbmigrate:UpgradeDb
-    celeryd=kallithea.lib.celerypylons.commands:CeleryDaemonCommand
+    celeryd=kallithea.lib.paster_commands.celeryd:Command
     install-iis=kallithea.lib.paster_commands.install_iis:Command
     """,
 )

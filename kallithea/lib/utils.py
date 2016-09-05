@@ -39,8 +39,6 @@ import warnings
 from os.path import abspath
 from os.path import dirname
 
-from paste.script.command import Command, BadCommand
-
 from webhelpers.text import collapse, remove_formatting, strip_tags
 from beaker.cache import _cache_decorate
 
