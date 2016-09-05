@@ -33,4 +33,4 @@ os.environ['CELERY_LOADER'] = CELERYPYLONS_LOADER
 import celery.app as app
 import celery.result as result
 from celery.task import task
-from celery.bin import celeryd
+from celery.bin import worker

@@ -24,7 +24,7 @@ class Command(BasePasterCommand):
 
     def update_parser(self):
         from kallithea.lib import celerypylons
-        cmd = celerypylons.celeryd.WorkerCommand(celerypylons.app.app_or_default())
+        cmd = celerypylons.worker.worker(celerypylons.app.app_or_default())
         for x in cmd.get_options():
             self.parser.add_option(x)
 
@@ -42,5 +42,5 @@ class Command(BasePasterCommand):
         kallithea.CELERY_ON = CELERY_ON
 
         load_rcextensions(config['here'])
-        cmd = celerypylons.celeryd.WorkerCommand(celerypylons.app.app_or_default())
+        cmd = celerypylons.worker.worker(celerypylons.app.app_or_default())
         return cmd.run(**vars(self.options))
