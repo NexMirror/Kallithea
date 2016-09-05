@@ -35,7 +35,7 @@ from hashlib import md5
 from decorator import decorator
 
 from kallithea import CELERY_ON, CELERY_EAGER
-from kallithea.lib.utils2 import str2bool, safe_str
+from kallithea.lib.utils2 import safe_str
 from kallithea.lib.pidlock import DaemonLock, LockHeld
 from kallithea.model import init_model
 from kallithea.model import meta

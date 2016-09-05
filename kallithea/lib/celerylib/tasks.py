@@ -39,11 +39,10 @@ from pylons import config
 
 from kallithea import CELERY_ON
 from kallithea.lib import celerylib
-from kallithea.lib.celerylib import locked_task, dbsession, \
-    str2bool, __get_lockkey, LockHeld, DaemonLock, get_session
 from kallithea.lib.helpers import person
 from kallithea.lib.rcmail.smtp_mailer import SmtpMailer
 from kallithea.lib.utils import setup_cache_regions, action_logger
+from kallithea.lib.utils2 import str2bool
 from kallithea.lib.vcs.utils import author_email
 from kallithea.lib.compat import json, OrderedDict
 from kallithea.lib.hooks import log_create_repository
@@ -60,11 +59,11 @@ log = logging.getLogger(__name__)
 
 
 @celerylib.task
-@locked_task
-@dbsession
+@celerylib.locked_task
+@celerylib.dbsession
 def whoosh_index(repo_location, full_index):
     from kallithea.lib.indexers.daemon import WhooshIndexingDaemon
-    DBS = get_session()
+    DBS = celerylib.get_session()
 
     index_location = config['index_dir']
     WhooshIndexingDaemon(index_location=index_location,
@@ -73,17 +72,17 @@ def whoosh_index(repo_location, full_index):
 
 
 @celerylib.task
-@dbsession
+@celerylib.dbsession
 def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
-    DBS = get_session()
-    lockkey = __get_lockkey('get_commits_stats', repo_name, ts_min_y,
+    DBS = celerylib.get_session()
+    lockkey = celerylib.__get_lockkey('get_commits_stats', repo_name, ts_min_y,
                             ts_max_y)
     lockkey_path = config['app_conf']['cache_dir']
 
     log.info('running task with lockkey %s', lockkey)
 
     try:
-        lock = l = DaemonLock(file_=os.path.join(lockkey_path, lockkey))
+        lock = l = celerylib.DaemonLock(file_=os.path.join(lockkey_path, lockkey))
 
         # for js data compatibility cleans the key for person from '
         akc = lambda k: person(k).replace('"', "")
@@ -232,13 +231,13 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
             log.debug('Not recursing - limit has been reached')
         else:
             log.debug('Not recursing')
-    except LockHeld:
+    except celerylib.LockHeld:
         log.info('Task with key %s already running', lockkey)
         return 'Task with key %s already running' % lockkey
 
 
 @celerylib.task
-@dbsession
+@celerylib.dbsession
 def send_email(recipients, subject, body='', html_body='', headers=None, author=None):
     """
     Sends an email with defined parameters from the .ini files.
@@ -325,13 +324,13 @@ def send_email(recipients, subject, body='', html_body='', headers=None, author=
     return True
 
 @celerylib.task
-@dbsession
+@celerylib.dbsession
 def create_repo(form_data, cur_user):
     from kallithea.model.repo import RepoModel
     from kallithea.model.user import UserModel
     from kallithea.model.db import Setting
 
-    DBS = get_session()
+    DBS = celerylib.get_session()
 
     cur_user = UserModel(DBS)._get_user(cur_user)
 
@@ -409,7 +408,7 @@ def create_repo(form_data, cur_user):
 
 
 @celerylib.task
-@dbsession
+@celerylib.dbsession
 def create_repo_fork(form_data, cur_user):
     """
     Creates a fork of repository using interval VCS methods
@@ -420,7 +419,7 @@ def create_repo_fork(form_data, cur_user):
     from kallithea.model.repo import RepoModel
     from kallithea.model.user import UserModel
 
-    DBS = get_session()
+    DBS = celerylib.get_session()
 
     base_path = Repository.base_path()
     cur_user = UserModel(DBS)._get_user(cur_user)
