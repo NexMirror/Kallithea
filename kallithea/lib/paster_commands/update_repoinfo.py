@@ -66,7 +66,9 @@ class Command(BasePasterCommand):
         if self.options.invalidate_cache:
             for r in repo_list:
                 r.set_invalidate()
-        print 'Updated cache for %s repositories' % (len(repo_list))
+            print 'Updated repo info and invalidated cache for %s repositories' % (len(repo_list))
+        else:
+            print 'Updated repo info for %s repositories' % (len(repo_list))
 
     def update_parser(self):
         self.parser.add_option('--update-only',
