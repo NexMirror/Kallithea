@@ -57,13 +57,7 @@ setup_cache_regions(config)  # pragma: no cover
 __all__ = ['whoosh_index', 'get_commits_stats', 'send_email']
 
 
-def get_logger(cls):
-    if CELERY_ON:
-        try:
-            return cls.get_logger()
-        except AttributeError:
-            pass
-    return logging.getLogger(__name__)
+log = logging.getLogger(__name__)
 
 
 @task(ignore_result=True)
@@ -82,7 +76,6 @@ def whoosh_index(repo_location, full_index):
 @task(ignore_result=True)
 @dbsession
 def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
-    log = get_logger(get_commits_stats)
     DBS = get_session()
     lockkey = __get_lockkey('get_commits_stats', repo_name, ts_min_y,
                             ts_max_y)
@@ -260,7 +253,6 @@ def send_email(recipients, subject, body='', html_body='', headers=None, author=
     :param headers: dictionary of prepopulated e-mail headers
     :param author: User object of the author of this mail, if known and relevant
     """
-    log = get_logger(send_email)
     assert isinstance(recipients, list), recipients
     if headers is None:
         headers = {}
@@ -341,7 +333,6 @@ def create_repo(form_data, cur_user):
     from kallithea.model.user import UserModel
     from kallithea.model.db import Setting
 
-    log = get_logger(create_repo)
     DBS = get_session()
 
     cur_user = UserModel(DBS)._get_user(cur_user)
@@ -435,7 +426,6 @@ def create_repo_fork(form_data, cur_user):
     from kallithea.model.repo import RepoModel
     from kallithea.model.user import UserModel
 
-    log = get_logger(create_repo_fork)
     DBS = get_session()
 
     base_path = Repository.base_path()
