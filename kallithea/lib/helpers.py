@@ -1292,12 +1292,12 @@ def urlify_text(s, truncate=None, stylize=False, truncatef=truncate):
     return literal(s)
 
 
-def _urlify_changeset_replace_f(repository):
+def _urlify_changeset_replace_f(repo_name):
     from pylons import url  # doh, we need to re-import url to mock it later
     def urlify_changeset_replace(match_obj):
         rev = match_obj.group(0)
         return '<a class="revision-link" href="%(url)s">%(rev)s</a>' % {
-         'url': url('changeset_home', repo_name=repository, revision=rev),
+         'url': url('changeset_home', repo_name=repo_name, revision=rev),
          'rev': rev,
         }
     return urlify_changeset_replace
@@ -1305,14 +1305,11 @@ def _urlify_changeset_replace_f(repository):
 
 urilify_changeset_re = r'(?:^|(?<=[\s(),]))([0-9a-fA-F]{12,40})(?=$|\s|[.,:()])'
 
-def urlify_changesets(text_, repository):
+def urlify_changesets(text_, repo_name):
     """
     Extract revision ids from changeset and make link from them
-
-    :param text_:
-    :param repository: repo name to build the URL with
     """
-    urlify_changeset_replace = _urlify_changeset_replace_f(repository)
+    urlify_changeset_replace = _urlify_changeset_replace_f(repo_name)
     return re.sub(urilify_changeset_re, urlify_changeset_replace, text_)
 
 
@@ -1328,30 +1325,26 @@ def linkify_others(t, l):
 
     return ''.join(links)
 
-def urlify_commit(text_, repository, link_=None):
+def urlify_commit(text_, repo_name, link_=None):
     """
     Parses given text message and makes proper links.
     issues are linked to given issue-server, and rest is a changeset link
     if link_ is given, in other case it's a plain text
-
-    :param text_:
-    :param repository:
-    :param link_: changeset link
     """
     newtext = html_escape(text_)
 
     # urlify changesets - extract revisions and make link out of them
-    newtext = urlify_changesets(newtext, repository)
+    newtext = urlify_changesets(newtext, repo_name)
 
     # extract http/https links and make them real urls
     newtext = _urlify_text(newtext)
 
-    newtext = urlify_issues(newtext, repository, link_)
+    newtext = urlify_issues(newtext, repo_name, link_)
 
     return literal(newtext)
 
 
-def _urlify_issues_replace_f(repository, ISSUE_SERVER_LNK, ISSUE_PREFIX):
+def _urlify_issues_replace_f(repo_name, ISSUE_SERVER_LNK, ISSUE_PREFIX):
     def urlify_issues_replace(match_obj):
         pref = ''
         if match_obj.group().startswith(' '):
@@ -1359,10 +1352,9 @@ def _urlify_issues_replace_f(repository, ISSUE_SERVER_LNK, ISSUE_PREFIX):
 
         issue_id = ''.join(match_obj.groups())
         issue_url = ISSUE_SERVER_LNK.replace('{id}', issue_id)
-        if repository:
-            issue_url = issue_url.replace('{repo}', repository)
-            repo_name = repository.split(URL_SEP)[-1]
-            issue_url = issue_url.replace('{repo_name}', repo_name)
+        if repo_name:
+            issue_url = issue_url.replace('{repo}', repo_name)
+            issue_url = issue_url.replace('{repo_name}', repo_name.split(URL_SEP)[-1])
 
         return (
             '%(pref)s<a class="%(cls)s" href="%(url)s">'
@@ -1379,7 +1371,7 @@ def _urlify_issues_replace_f(repository, ISSUE_SERVER_LNK, ISSUE_PREFIX):
     return urlify_issues_replace
 
 
-def urlify_issues(newtext, repository, link_=None):
+def urlify_issues(newtext, repo_name, link_=None):
     from kallithea import CONFIG as conf
 
     # allow multiple issue servers to be used
@@ -1405,7 +1397,7 @@ def urlify_issues(newtext, repository, link_=None):
 
         URL_PAT = re.compile(ISSUE_PATTERN)
 
-        urlify_issues_replace = _urlify_issues_replace_f(repository, ISSUE_SERVER_LNK, ISSUE_PREFIX)
+        urlify_issues_replace = _urlify_issues_replace_f(repo_name, ISSUE_SERVER_LNK, ISSUE_PREFIX)
         newtext = URL_PAT.sub(urlify_issues_replace, newtext)
         log.debug('processed prefix:`%s` => %s', pattern_index, newtext)
 
