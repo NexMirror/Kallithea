@@ -20,3 +20,7 @@ Refer to docs/contributing.rst for details on running the test suite.
 
 import pytest
 
+if getattr(pytest, 'register_assert_rewrite', None):
+    # make sure that all asserts under kallithea/tests benefit from advanced
+    # assert reporting with pytest-3.0.0+.
+    pytest.register_assert_rewrite('kallithea.tests.')
