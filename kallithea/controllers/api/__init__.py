@@ -34,6 +34,7 @@ import itertools
 
 from paste.response import replace_header
 from pylons.controllers import WSGIController
+from pylons import request
 
 from webob.exc import HTTPError
 
@@ -190,7 +191,7 @@ class JSONRPCController(WSGIController):
         # this is little trick to inject logged in user for
         # perms decorators to work they expect the controller class to have
         # authuser attribute set
-        self.authuser = auth_u
+        self.authuser = request.user = auth_u
 
         # This attribute will need to be first param of a method that uses
         # api_key, which is translated to instance of user at that name

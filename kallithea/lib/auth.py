@@ -940,22 +940,18 @@ class PermsFunction(object):
         raise AssertionError(self.__class__.__name__ + ' is not a bool and must be called!')
 
     def __call__(self, check_location='unspecified location', user=None):
-        if not user:
-            #TODO: remove this someday,put as user as attribute here
-            user = request.user
+        if user:
+            assert user.user_id == request.user.user_id, (user, request.user)
 
-        # init auth user if not already given
-        if not isinstance(user, AuthUser):
-            user = AuthUser(user.user_id)
+        user = request.user
+        assert user
+        assert isinstance(user, AuthUser), user
 
         cls_name = self.__class__.__name__
         check_scope = self._scope()
         log.debug('checking cls:%s %s usr:%s %s @ %s', cls_name,
                   self.required_perms, user, check_scope,
                   check_location)
-        if not user:
-            log.debug('Empty request user')
-            return False
         self.user_perms = user.permissions
 
         result = self.check_permissions()
@@ -1081,6 +1077,13 @@ class _BaseApiPerm(object):
 
     def __call__(self, check_location=None, user=None, repo_name=None,
                  group_name=None):
+        assert user
+        assert user.user_id == request.user.user_id, (user, request.user)
+
+        user = request.user
+        assert user
+        assert isinstance(user, AuthUser), user
+
         cls_name = self.__class__.__name__
         check_scope = 'user:%s' % (user)
         if repo_name:
@@ -1091,13 +1094,8 @@ class _BaseApiPerm(object):
 
         log.debug('checking cls:%s %s %s @ %s',
                   cls_name, self.required_perms, check_scope, check_location)
-        if not user:
-            log.debug('Empty User passed into arguments')
-            return False
 
         ## process user
-        if not isinstance(user, AuthUser):
-            user = AuthUser(user.user_id)
         if not check_location:
             check_location = 'unspecified'
         if self.check_permissions(user.permissions, repo_name, group_name):
