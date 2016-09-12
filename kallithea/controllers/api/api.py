@@ -30,7 +30,6 @@ import traceback
 import logging
 from sqlalchemy import or_
 
-from kallithea import EXTERN_TYPE_INTERNAL
 from kallithea.controllers.api import JSONRPCController, JSONRPCError
 from kallithea.lib.auth import (
     PasswordGenerator, AuthUser, HasPermissionAnyDecorator,
@@ -620,8 +619,8 @@ class ApiController(JSONRPCController):
     def create_user(self, apiuser, username, email, password=Optional(''),
                     firstname=Optional(''), lastname=Optional(''),
                     active=Optional(True), admin=Optional(False),
-                    extern_name=Optional(EXTERN_TYPE_INTERNAL),
-                    extern_type=Optional(EXTERN_TYPE_INTERNAL)):
+                    extern_type=Optional(User.DEFAULT_AUTH_TYPE),
+                    extern_name=Optional('')):
         """
         Creates new user. Returns new user object. This command can
         be executed only using api_key belonging to user with admin rights.

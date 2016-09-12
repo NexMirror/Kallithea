@@ -51,8 +51,6 @@ except ImportError:
 else:
     assert False, 'Database rebranding is no longer supported; see README.'
 
-# Users.extern_type and .extern_name value for local users
-EXTERN_TYPE_INTERNAL = 'internal'
 
 __version__ = '.'.join(str(each) for each in VERSION)
 __dbversion__ = 31  # defines current db version for migrations

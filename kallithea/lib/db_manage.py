@@ -36,7 +36,7 @@ from os.path import dirname
 import alembic.config
 import alembic.command
 
-from kallithea import __dbversion__, __py_version__, EXTERN_TYPE_INTERNAL
+from kallithea import __dbversion__, __py_version__
 from kallithea.lib.paster_commands.common import ask_ok
 from kallithea.model.user import UserModel
 from kallithea.model import init_model
@@ -464,7 +464,7 @@ class DbManage(object):
         UserModel().create_or_update(username, password, email,
                                      firstname=u'Kallithea', lastname=u'Admin',
                                      active=True, admin=admin,
-                                     extern_type=EXTERN_TYPE_INTERNAL)
+                                     extern_type=User.DEFAULT_AUTH_TYPE)
 
     def create_default_user(self):
         log.info('creating default user')

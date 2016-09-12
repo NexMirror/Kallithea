@@ -42,7 +42,6 @@ from kallithea.lib import helpers as h
 from kallithea.lib.auth import LoginRequired, HasPermissionAnyDecorator, \
     AuthUser
 from kallithea.lib import auth_modules
-from kallithea.lib.auth_modules import auth_internal
 from kallithea.lib.base import BaseController, render
 from kallithea.model.api_key import ApiKeyModel
 
@@ -65,7 +64,6 @@ class UsersController(BaseController):
     def __before__(self):
         super(UsersController, self).__before__()
         c.available_permissions = config['available_permissions']
-        c.EXTERN_TYPE_INTERNAL = kallithea.EXTERN_TYPE_INTERNAL
 
     def index(self, format='html'):
         c.users_list = User.query().order_by(User.username) \
@@ -115,8 +113,8 @@ class UsersController(BaseController):
         return render('admin/users/users.html')
 
     def create(self):
-        c.default_extern_type = auth_internal.KallitheaAuthPlugin.name
-        c.default_extern_name = auth_internal.KallitheaAuthPlugin.name
+        c.default_extern_type = User.DEFAULT_AUTH_TYPE
+        c.default_extern_name = ''
         user_model = UserModel()
         user_form = UserForm()()
         try:
@@ -144,8 +142,8 @@ class UsersController(BaseController):
         raise HTTPFound(location=url('edit_user', id=user.user_id))
 
     def new(self, format='html'):
-        c.default_extern_type = auth_internal.KallitheaAuthPlugin.name
-        c.default_extern_name = auth_internal.KallitheaAuthPlugin.name
+        c.default_extern_type = User.DEFAULT_AUTH_TYPE
+        c.default_extern_name = ''
         return render('admin/users/user_add.html')
 
     def update(self, id):

@@ -427,6 +427,8 @@ class User(Base, BaseModel):
 
     DEFAULT_USER = 'default'
     DEFAULT_GRAVATAR_URL = 'https://secure.gravatar.com/avatar/{md5email}?d=identicon&s={size}'
+    # The name of the default auth type in extern_type, 'internal' lives in auth_internal.py
+    DEFAULT_AUTH_TYPE = 'internal'
 
     user_id = Column(Integer(), primary_key=True)
     username = Column(String(255), nullable=False, unique=True)

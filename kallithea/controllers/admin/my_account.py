@@ -35,7 +35,6 @@ from pylons import request, tmpl_context as c, url
 from pylons.i18n.translation import _
 from webob.exc import HTTPFound
 
-from kallithea import EXTERN_TYPE_INTERNAL
 from kallithea.lib import helpers as h
 from kallithea.lib import auth_modules
 from kallithea.lib.auth import LoginRequired, NotAnonymous, AuthUser
@@ -70,7 +69,6 @@ class MyAccountController(BaseController):
             h.flash(_("You can't edit this user since it's"
                       " crucial for entire application"), category='warning')
             raise HTTPFound(location=url('users'))
-        c.EXTERN_TYPE_INTERNAL = EXTERN_TYPE_INTERNAL
 
     def _load_my_repos_data(self, watched=False):
         if watched:

@@ -18,7 +18,6 @@ Authentication modules
 import logging
 import traceback
 
-from kallithea import EXTERN_TYPE_INTERNAL
 from kallithea.lib.compat import importlib
 from kallithea.lib.utils2 import str2bool
 from kallithea.lib.compat import formatted_json, hybrid_property
@@ -314,8 +313,6 @@ def importplugin(plugin):
         parts = plugin.split(u'.lib.auth_modules.auth_', 1)
         if len(parts) == 2:
             _module, pn = parts
-            if pn == EXTERN_TYPE_INTERNAL:
-                pn = "internal"
             plugin = u'kallithea.lib.auth_modules.auth_' + pn
     PLUGIN_CLASS_NAME = "KallitheaAuthPlugin"
     try:
