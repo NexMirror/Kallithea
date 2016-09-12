@@ -181,7 +181,7 @@ ${self.repo_context_bar('showpullrequest')}
                 </div>
                 <table id="updaterevs-table" class="noborder" style="padding-left:50px">
                   %for cnt, cs in enumerate(c.avail_cs):
-                    <tr id="chg_available_${cnt+1}">
+                    <tr id="chg_available_${cnt+1}" class="${'mergerow' if len(cs.parents) > 1 and not (editable and cs.revision in c.avail_revs) else ''}">
                       %if c.cs_ranges and cs.revision == c.cs_ranges[-1].revision:
                         <td>
                           %if editable:

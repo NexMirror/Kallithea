@@ -2120,9 +2120,12 @@ BIN_FILENODE = 6
     border-color: #cdcdcd;
 }
 
+#updaterevs-table tr.mergerow,
+#graph_content_pr tr.mergerow,
+#shortlog_data tr.mergerow,
 #graph_content #changesets tr.out-of-range,
 #graph_content #changesets tr.mergerow {
-    opacity: 0.5;
+    opacity: 0.6;
 }
 
 #graph_content #changesets td {
