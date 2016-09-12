@@ -24,10 +24,11 @@ If not, see <http://www.gnu.org/licenses/>.
 """
 import os
 import subprocess
-from kallithea.lib.vcs.utils.compat import deque, Event, Thread, _bytes, _bytearray
+import collections
+import threading
 
 
-class StreamFeeder(Thread):
+class StreamFeeder(threading.Thread):
     """
     Normal writing into pipe-like is blocking once the buffer is filled.
     This thread allows a thread to seep data from a file-like into a pipe
@@ -39,9 +40,9 @@ class StreamFeeder(Thread):
         super(StreamFeeder, self).__init__()
         self.daemon = True
         filelike = False
-        self.bytes = _bytes()
-        if type(source) in (type(''), _bytes, _bytearray):  # string-like
-            self.bytes = _bytes(source)
+        self.bytes = bytes()
+        if type(source) in (type(''), bytes, bytearray):  # string-like
+            self.bytes = bytes(source)
         else:  # can be either file pointer or file-like
             if type(source) in (int, long):  # file pointer it is
                 ## converting file descriptor (int) stdin into file-like
@@ -71,7 +72,7 @@ class StreamFeeder(Thread):
         return self.readiface
 
 
-class InputStreamChunker(Thread):
+class InputStreamChunker(threading.Thread):
     def __init__(self, source, target, buffer_size, chunk_size):
 
         super(InputStreamChunker, self).__init__()
@@ -83,16 +84,16 @@ class InputStreamChunker(Thread):
         self.chunk_count_max = int(buffer_size / chunk_size) + 1
         self.chunk_size = chunk_size
 
-        self.data_added = Event()
+        self.data_added = threading.Event()
         self.data_added.clear()
 
-        self.keep_reading = Event()
+        self.keep_reading = threading.Event()
         self.keep_reading.set()
 
-        self.EOF = Event()
+        self.EOF = threading.Event()
         self.EOF.clear()
 
-        self.go = Event()
+        self.go = threading.Event()
         self.go.set()
 
     def stop(self):
@@ -163,7 +164,7 @@ class BufferedGenerator(object):
         else:
             maxlen = None
 
-        self.data = deque(starting_values, maxlen)
+        self.data = collections.deque(starting_values, maxlen)
         self.worker = InputStreamChunker(source, self.data, buffer_size,
                                          chunk_size)
         if starting_values:
@@ -183,7 +184,7 @@ class BufferedGenerator(object):
             self.worker.data_added.wait(0.2)
         if len(self.data):
             self.worker.keep_reading.set()
-            return _bytes(self.data.popleft())
+            return bytes(self.data.popleft())
         elif self.worker.EOF.is_set():
             raise StopIteration
 
@@ -233,7 +234,7 @@ class BufferedGenerator(object):
         Iterator might have done reading from underlying source, but the read
         chunks might still be available for serving through .next() method.
 
-        :returns: An Event class instance.
+        :returns: An threading.Event class instance.
         """
         return self.worker.EOF
 

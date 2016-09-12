@@ -27,10 +27,9 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 
+import sys
 import os
 import functools
-import importlib
-from kallithea import __py_version__, is_windows
 
 #==============================================================================
 # json
@@ -40,37 +39,18 @@ from kallithea.lib.ext_json import json
 # alias for formatted json
 formatted_json = functools.partial(json.dumps, indent=4, sort_keys=True)
 
-if __py_version__ >= (2, 7):
+
+#==============================================================================
+# unittest
+#==============================================================================
+if sys.version_info >= (2, 7):
     import unittest
 else:
     import unittest2 as unittest
 
-#==============================================================================
-# izip_longest
-#==============================================================================
-try:
-    from itertools import izip_longest
-except ImportError:
-    import itertools
-
-    def izip_longest(*args, **kwds):
-        fillvalue = kwds.get("fillvalue")
-
-        def sentinel(counter=([fillvalue] * (len(args) - 1)).pop):
-            yield counter()  # yields the fillvalue, or raises IndexError
-
-        fillers = itertools.repeat(fillvalue)
-        iters = [itertools.chain(it, sentinel(), fillers)
-                    for it in args]
-        try:
-            for tup in itertools.izip(*iters):
-                yield tup
-        except IndexError:
-            pass
-
 
 #==============================================================================
-# OrderedDict
+# OrderedDict - Python 2.7 could perhaps use collections.OrderedDict
 #==============================================================================
 
 # Python Software Foundation License
@@ -377,13 +357,13 @@ from sqlalchemy.util import OrderedSet
 #==============================================================================
 # Hybrid property/method
 #==============================================================================
-from sqlalchemy.ext.hybrid import hybrid_method, hybrid_property
+from sqlalchemy.ext.hybrid import hybrid_property
 
 
 #==============================================================================
-# kill FUNCTIONS
+# kill
 #==============================================================================
-if is_windows:
+if os.name == 'nt': # Windows
     import ctypes
 
     def kill(pid, sig):
@@ -394,177 +374,3 @@ if is_windows:
 
 else:
     kill = os.kill
-
-
-#==============================================================================
-# itertools.product
-#==============================================================================
-
-try:
-    from itertools import product
-except ImportError:
-    def product(*args, **kwds):
-        # product('ABCD', 'xy') --> Ax Ay Bx By Cx Cy Dx Dy
-        # product(range(2), repeat=3) --> 000 001 010 011 100 101 110 111
-        pools = map(tuple, args) * kwds.get('repeat', 1)
-        result = [[]]
-        for pool in pools:
-            result = [x + [y] for x in result for y in pool]
-        for prod in result:
-            yield tuple(prod)
-
-
-#==============================================================================
-# BytesIO
-#==============================================================================
-
-try:
-    from io import BytesIO
-except ImportError:
-    from cStringIO import StringIO as BytesIO
-
-
-#==============================================================================
-# bytes
-#==============================================================================
-if __py_version__ >= (2, 6):
-    _bytes = bytes
-else:
-    # in py2.6 bytes is a synonym for str
-    _bytes = str
-
-if __py_version__ >= (2, 6):
-    _bytearray = bytearray
-else:
-    import array
-    # no idea if this is correct but all integration tests are passing
-    # i think we never use bytearray anyway
-    _bytearray = array
-
-
-#==============================================================================
-# deque
-#==============================================================================
-
-if __py_version__ >= (2, 6):
-    from collections import deque
-else:
-    #need to implement our own deque with maxlen
-    class deque(object):
-
-        def __init__(self, iterable=(), maxlen= -1):
-            if not hasattr(self, 'data'):
-                self.left = self.right = 0
-                self.data = {}
-            self.maxlen = maxlen or -1
-            self.extend(iterable)
-
-        def append(self, x):
-            self.data[self.right] = x
-            self.right += 1
-            if self.maxlen != -1 and len(self) > self.maxlen:
-                self.popleft()
-
-        def appendleft(self, x):
-            self.left -= 1
-            self.data[self.left] = x
-            if self.maxlen != -1 and len(self) > self.maxlen:
-                self.pop()
-
-        def pop(self):
-            if self.left == self.right:
-                raise IndexError('cannot pop from empty deque')
-            self.right -= 1
-            elem = self.data[self.right]
-            del self.data[self.right]
-            return elem
-
-        def popleft(self):
-            if self.left == self.right:
-                raise IndexError('cannot pop from empty deque')
-            elem = self.data[self.left]
-            del self.data[self.left]
-            self.left += 1
-            return elem
-
-        def clear(self):
-            self.data.clear()
-            self.left = self.right = 0
-
-        def extend(self, iterable):
-            for elem in iterable:
-                self.append(elem)
-
-        def extendleft(self, iterable):
-            for elem in iterable:
-                self.appendleft(elem)
-
-        def rotate(self, n=1):
-            if self:
-                n %= len(self)
-                for i in xrange(n):
-                    self.appendleft(self.pop())
-
-        def __getitem__(self, i):
-            if i < 0:
-                i += len(self)
-            try:
-                return self.data[i + self.left]
-            except KeyError:
-                raise IndexError
-
-        def __setitem__(self, i, value):
-            if i < 0:
-                i += len(self)
-            try:
-                self.data[i + self.left] = value
-            except KeyError:
-                raise IndexError
-
-        def __delitem__(self, i):
-            size = len(self)
-            if not (-size <= i < size):
-                raise IndexError
-            data = self.data
-            if i < 0:
-                i += size
-            for j in xrange(self.left + i, self.right - 1):
-                data[j] = data[j + 1]
-            self.pop()
-
-        def __len__(self):
-            return self.right - self.left
-
-        def __cmp__(self, other):
-            if type(self) != type(other):
-                return cmp(type(self), type(other))
-            return cmp(list(self), list(other))
-
-        def __repr__(self, _track=None):
-            _track = _track or []
-            if id(self) in _track:
-                return '...'
-            _track.append(id(self))
-            r = 'deque(%r, maxlen=%s)' % (list(self), self.maxlen)
-            _track.remove(id(self))
-            return r
-
-        def __getstate__(self):
-            return (tuple(self),)
-
-        def __setstate__(self, s):
-            self.__init__(s[0])
-
-        def __hash__(self):
-            raise TypeError
-
-        def __copy__(self):
-            return self.__class__(self)
-
-        def __deepcopy__(self, memo=None):
-            from copy import deepcopy
-            memo = memo or {}
-            result = self.__class__()
-            memo[id(self)] = result
-            result.__init__(deepcopy(tuple(self), memo))
-            return result

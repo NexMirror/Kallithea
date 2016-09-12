@@ -17,8 +17,8 @@ Authentication modules
 
 import logging
 import traceback
+import importlib
 
-from kallithea.lib.compat import importlib
 from kallithea.lib.utils2 import str2bool
 from kallithea.lib.compat import formatted_json, hybrid_property
 from kallithea.lib.auth import PasswordGenerator

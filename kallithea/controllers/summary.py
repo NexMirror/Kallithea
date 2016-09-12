@@ -28,6 +28,7 @@ Original author and date, and relevant copyright and licensing information is be
 import traceback
 import calendar
 import logging
+import itertools
 from time import mktime
 from datetime import timedelta, date
 
@@ -37,7 +38,6 @@ from webob.exc import HTTPBadRequest
 
 from beaker.cache import cache_region, region_invalidate
 
-from kallithea.lib.compat import product
 from kallithea.lib.vcs.exceptions import ChangesetError, EmptyRepositoryError, \
     NodeDoesNotExistError
 from kallithea.config.conf import ALL_READMES, ALL_EXTS, LANGUAGES_EXTENSIONS_MAP
@@ -57,7 +57,7 @@ from kallithea.controllers.changelog import _load_changelog_summary
 log = logging.getLogger(__name__)
 
 README_FILES = [''.join([x[0][0], x[1][0]]) for x in
-                    sorted(list(product(ALL_READMES, ALL_EXTS)),
+                    sorted(list(itertools.product(ALL_READMES, ALL_EXTS)),
                            key=lambda y:y[0][1] + y[1][1])]
 
 

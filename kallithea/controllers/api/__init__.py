@@ -30,6 +30,7 @@ import logging
 import types
 import traceback
 import time
+import itertools
 
 from paste.response import replace_header
 from pylons.controllers import WSGIController
@@ -38,7 +39,7 @@ from webob.exc import HTTPError
 
 from kallithea.model.db import User
 from kallithea.model import meta
-from kallithea.lib.compat import izip_longest, json
+from kallithea.lib.compat import json
 from kallithea.lib.auth import AuthUser
 from kallithea.lib.base import _get_ip_addr as _get_ip, _get_access_path
 from kallithea.lib.utils2 import safe_unicode, safe_str
@@ -183,8 +184,8 @@ class JSONRPCController(WSGIController):
         default_empty = types.NotImplementedType
 
         # kw arguments required by this method
-        func_kwargs = dict(izip_longest(reversed(arglist), reversed(defaults),
-                                        fillvalue=default_empty))
+        func_kwargs = dict(itertools.izip_longest(reversed(arglist), reversed(defaults),
+                                                  fillvalue=default_empty))
 
         # this is little trick to inject logged in user for
         # perms decorators to work they expect the controller class to have
