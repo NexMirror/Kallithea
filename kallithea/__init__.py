@@ -54,15 +54,7 @@ else:
 # Users.extern_type and .extern_name value for local users
 EXTERN_TYPE_INTERNAL = 'internal'
 
-try:
-    from kallithea.lib import get_current_revision
-    _rev = get_current_revision(quiet=True)
-    if _rev and len(VERSION) > 3:
-        VERSION += (_rev[0],)
-except ImportError:
-    pass
-
-__version__ = ('.'.join((str(each) for each in VERSION[:3])))
+__version__ = '.'.join(str(each) for each in VERSION)
 __dbversion__ = 31  # defines current db version for migrations
 __platform__ = platform.system()
 __license__ = 'GPLv3'
@@ -73,13 +65,6 @@ __url__ = 'https://kallithea-scm.org/'
 is_windows = __platform__ in ['Windows']
 is_unix = not is_windows
 
-if len(VERSION) > 3:
-    __version__ += '.'+VERSION[3]
-
-    if len(VERSION) > 4:
-        __version__ += VERSION[4]
-    else:
-        __version__ += '0'
 
 # Hack for making the celery dependency kombu==1.5.1 compatible with Python
 # 2.7.11 which has https://hg.python.org/releases/2.7.11/rev/24bdc4940e81
