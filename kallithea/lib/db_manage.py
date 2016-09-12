@@ -36,7 +36,7 @@ from os.path import dirname
 import alembic.config
 import alembic.command
 
-from kallithea import __dbversion__, __py_version__
+from kallithea import __py_version__
 from kallithea.lib.paster_commands.common import ask_ok
 from kallithea.model.user import UserModel
 from kallithea.model import init_model

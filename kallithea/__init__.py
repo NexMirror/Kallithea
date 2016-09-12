@@ -53,7 +53,6 @@ else:
 
 
 __version__ = '.'.join(str(each) for each in VERSION)
-__dbversion__ = 31  # defines current db version for migrations
 __platform__ = platform.system()
 __license__ = 'GPLv3'
 __py_version__ = sys.version_info
