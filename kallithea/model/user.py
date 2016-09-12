@@ -163,7 +163,7 @@ class UserModel(BaseModel):
                 reason = 'new password' if edit else 'new user'
                 log.debug('Updating password reason=>%s', reason)
                 new_user.password = get_crypt_password(password) \
-                    if password else None
+                    if password else ''
 
             self.sa.add(new_user)
 
