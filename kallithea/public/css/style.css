@@ -1931,10 +1931,6 @@ h3.files_location {
     text-align: right;
 }
 
-.changeset_hash {
-    color: #000000;
-}
-
 #changeset_content {
     border-left: 1px solid #CCC;
     border-right: 1px solid #CCC;
