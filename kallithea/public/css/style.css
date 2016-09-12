@@ -161,6 +161,7 @@ code,
 div.readme .readme_box pre,
 div.rst-block pre,
 div.formatted-fixed,
+#changeset_content div.message,
 .CodeMirror .CodeMirror-code pre {
     font-size: 12px;
     font-family: Lucida Console, Consolas, Monaco, Inconsolata, Liberation Mono, monospace;
@@ -699,6 +700,9 @@ div.header img {
     margin: 0;
     padding: 5px 0;
     white-space: pre-wrap;
+}
+#content div.box #changeset_content div.message {
+    padding: 15px 0;
 }
 #content div.box div.expand {
     width: 110%;
