@@ -939,10 +939,7 @@ class PermsFunction(object):
         """
         raise AssertionError(self.__class__.__name__ + ' is not a bool and must be called!')
 
-    def __call__(self, check_location='unspecified location', user=None):
-        if user:
-            assert user.user_id == request.user.user_id, (user, request.user)
-
+    def __call__(self, check_location='unspecified location'):
         user = request.user
         assert user
         assert isinstance(user, AuthUser), user
@@ -976,9 +973,9 @@ class HasPermissionAny(PermsFunction):
 
 
 class HasRepoPermissionAny(PermsFunction):
-    def __call__(self, repo_name=None, check_location='', user=None):
+    def __call__(self, repo_name=None, check_location=''):
         self.repo_name = repo_name
-        return super(HasRepoPermissionAny, self).__call__(check_location, user)
+        return super(HasRepoPermissionAny, self).__call__(check_location)
 
     def check_permissions(self):
         if not self.repo_name:
@@ -999,9 +996,9 @@ class HasRepoPermissionAny(PermsFunction):
 
 
 class HasRepoGroupPermissionAny(PermsFunction):
-    def __call__(self, group_name=None, check_location='', user=None):
+    def __call__(self, group_name=None, check_location=''):
         self.group_name = group_name
-        return super(HasRepoGroupPermissionAny, self).__call__(check_location, user)
+        return super(HasRepoGroupPermissionAny, self).__call__(check_location)
 
     def check_permissions(self):
         try:
@@ -1019,9 +1016,9 @@ class HasRepoGroupPermissionAny(PermsFunction):
 
 
 class HasUserGroupPermissionAny(PermsFunction):
-    def __call__(self, user_group_name=None, check_location='', user=None):
+    def __call__(self, user_group_name=None, check_location=''):
         self.user_group_name = user_group_name
-        return super(HasUserGroupPermissionAny, self).__call__(check_location, user)
+        return super(HasUserGroupPermissionAny, self).__call__(check_location)
 
     def check_permissions(self):
         try:
@@ -1075,11 +1072,7 @@ class _BaseApiPerm(object):
     def __init__(self, *perms):
         self.required_perms = set(perms)
 
-    def __call__(self, check_location=None, user=None, repo_name=None,
-                 group_name=None):
-        assert user
-        assert user.user_id == request.user.user_id, (user, request.user)
-
+    def __call__(self, check_location=None, repo_name=None, group_name=None):
         user = request.user
         assert user
         assert isinstance(user, AuthUser), user
