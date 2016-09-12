@@ -155,6 +155,7 @@ setuptools.setup(
     main = pylons.util:PylonsInstaller
 
     [gearbox.commands]
+    make-config=kallithea.lib.paster_commands.make_config:Command
     setup-db=kallithea.lib.paster_commands.setup_db:Command
     cleanup-repos=kallithea.lib.paster_commands.cleanup:Command
     update-repoinfo=kallithea.lib.paster_commands.update_repoinfo:Command

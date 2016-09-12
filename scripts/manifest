@@ -75,11 +75,9 @@ kallithea/bin/kallithea_gist.py
 kallithea/bin/ldap_sync.conf
 kallithea/bin/ldap_sync.py
 kallithea/bin/rebranddb.py
-kallithea/bin/template.ini.mako
 kallithea/config/
 kallithea/config/__init__.py
 kallithea/config/conf.py
-kallithea/config/deployment.ini_tmpl
 kallithea/config/environment.py
 kallithea/config/middleware.py
 kallithea/config/post_receive_tmpl.py
@@ -355,6 +353,7 @@ kallithea/lib/paster_commands/make_index.py
 kallithea/lib/paster_commands/make_rcextensions.py
 kallithea/lib/paster_commands/repo_scan.py
 kallithea/lib/paster_commands/setup_db.py
+kallithea/lib/paster_commands/template.ini.mako
 kallithea/lib/paster_commands/update_repoinfo.py
 kallithea/lib/pidlock.py
 kallithea/lib/profiler.py

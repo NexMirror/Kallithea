@@ -11,7 +11,7 @@ Setting up Kallithea
 First, you will need to create a Kallithea configuration file. Run the
 following command to do so::
 
-    TODO make-config Kallithea my.ini
+    gearbox make-config my.ini
 
 This will create the file ``my.ini`` in the current directory. This
 configuration file contains the various settings for Kallithea, e.g.

@@ -166,7 +166,7 @@ it, reopen it following the same commands (including the "activate"
 one). When ready, type::
 
   cd C:\Kallithea\Bin
-  TODO make-config Kallithea production.ini
+  gearbox make-config production.ini
 
 Then you must edit production.ini to fit your needs (IP address, IP
 port, mail settings, database, etc.). `NotePad++`__ or a similar text

@@ -204,7 +204,7 @@ if you closed it reopen it following the same commands (including the
 "activate" one). When ready, just type::
 
   cd C:\Kallithea\Bin
-  TODO make-config Kallithea production.ini
+  gearbox make-config production.ini
 
 Then, you must edit production.ini to fit your needs (network address and
 port, mail settings, database, whatever). I recommend using NotePad++

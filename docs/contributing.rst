@@ -36,7 +36,7 @@ To get started with development::
         source ../kallithea-venv/bin/activate
         pip install --upgrade pip setuptools
         pip install -e .
-        TODO make-config Kallithea my.ini
+        gearbox make-config my.ini
         gearbox setup-db -c my.ini --user=user --email=user@example.com --password=password --repos=/tmp
         gearbox serve -c my.ini --reload &
         firefox http://127.0.0.1:5000/

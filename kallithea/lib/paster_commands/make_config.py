@@ -1,5 +1,3 @@
-#!/usr/bin/env python2
-
 # -*- coding: utf-8 -*-
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,16 +12,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-kallithea.bin.kallithea_config
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kallithea.lib.paster_commands.make_config
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-configuration generator for Kallithea
+make-config gearbox command for Kallithea
 
-This file was forked by the Kallithea project in July 2014.
-Original author and date, and relevant copyright and licensing information is below:
-:created_on: Jun 18, 2013
-:author: marcink
-:copyright: (c) 2013 RhodeCode GmbH, and others.
 :license: GPLv3, see LICENSE.md for more details.
 """
 
@@ -36,31 +29,36 @@ from mako.template import Template
 TMPL = 'template.ini.mako'
 here = os.path.dirname(os.path.abspath(__file__))
 
-def argparser(argv):
-    usage = (
-      "kallithea-config [-h] [--filename=FILENAME] [--template=TEMPLATE] \n"
-      "VARS optional specify extra template variable that will be available in "
-      "template. Use comma separated key=val format eg.\n"
-      "key1=val1,port=5000,host=127.0.0.1,elements='a\,b\,c'\n"
-    )
+from kallithea.lib.paster_commands.common import ask_ok, BasePasterCommand
 
-    parser = argparse.ArgumentParser(
-        description='Kallithea CONFIG generator with variable replacement',
-        usage=usage
-    )
 
-    ## config
-    group = parser.add_argument_group('CONFIG')
-    group.add_argument('--filename', help='Output ini filename.')
-    group.add_argument('--template', help='Mako template file to use instead of '
-                                          'the default builtin template')
-    group.add_argument('--raw', help='Store given mako template as raw without '
-                                     'parsing. Use this to create custom template '
-                                     'initially', action='store_true')
-    group.add_argument('--show-defaults', help='Show all default variables for '
-                                               'builtin template', action='store_true')
-    args, other = parser.parse_known_args()
-    return parser, args, other
+class Command(BasePasterCommand):
+    """Kallithea: Create a new config file
+
+    make-config is part of a two-phase installation process (the
+    second phase is setup-app). make-config creates a bare configuration
+    file (possibly filling in defaults from the extra
+    variables you give).
+    """
+
+    takes_config_file = False # at least not an existing one ...
+
+    def take_action(self, args):
+        _run(args)
+
+    def get_parser(self, prog_name):
+        parser = super(Command, self).get_parser(prog_name)
+
+        parser.add_argument('config_file', nargs='?',
+            help='application config file to write')
+
+        parser.add_argument('custom', nargs=argparse.REMAINDER,
+            help='custom values to write to config file')
+
+        parser.add_argument('--show-defaults', action='store_true',
+            help="Show the default values that can be overridden")
+
+        return parser
 
 
 def _escape_split(text, sep):
@@ -90,11 +88,15 @@ def _escape_split(text, sep):
 
     return startlist + [unfinished] + endlist[1:]  # put together all the parts
 
-def _run(argv):
-    parser, args, other = argparser(argv)
-    if not len(sys.argv) > 1:
-        print parser.print_help()
-        sys.exit(0)
+
+def _run(args):
+    if args.config_file is None:
+        if not args.show_defaults:
+            raise ValueError("Missing argument: config_file")
+    else:
+        if args.show_defaults:
+            raise ValueError("Can't specify both config_file and --show_defaults")
+
     # defaults that can be overwritten by arguments
     tmpl_stored_args = {
         'http_server': 'waitress',
@@ -104,10 +106,10 @@ def _run(argv):
         'port': 5000,
         'error_aggregation_service': None,
     }
-    if other:
-        # parse arguments, we assume only first is correct
+    for custom in args.custom:
+        # parse arguments
         kwargs = {}
-        for el in _escape_split(other[0], ','):
+        for el in _escape_split(custom, ','):
             kv = _escape_split(el, '=')
             if len(kv) == 2:
                 k, v = kv
@@ -115,46 +117,27 @@ def _run(argv):
         # update our template stored args
         tmpl_stored_args.update(kwargs)
 
-    # use default that cannot be replaced
-    tmpl_stored_args.update({
-        'uuid': lambda: uuid.uuid4().hex,
-        'here': os.path.abspath(os.curdir),
-    })
     if args.show_defaults:
         for k,v in tmpl_stored_args.iteritems():
             print '%s=%s' % (k, v)
         sys.exit(0)
+
+    # use default that cannot be replaced
+    tmpl_stored_args.update({
+        'uuid': lambda: uuid.uuid4().hex,
+        'here': os.path.dirname(os.path.abspath(args.config_file)),
+    })
     try:
         # built in template
         tmpl_file = os.path.join(here, TMPL)
-        if args.template:
-            tmpl_file = args.template
 
         with open(tmpl_file, 'rb') as f:
             tmpl_data = f.read().decode('utf-8')
-            if args.raw:
-                tmpl = tmpl_data
-            else:
-                tmpl = Template(tmpl_data).render(**tmpl_stored_args)
-        with open(args.filename, 'wb') as f:
+            tmpl = Template(tmpl_data).render(**tmpl_stored_args)
+        with open(args.config_file, 'wb') as f:
             f.write(tmpl.encode('utf-8'))
-        print 'Wrote new config file in %s' % (os.path.abspath(args.filename))
+        print 'Wrote new config file in %s' % (os.path.abspath(args.config_file))
 
     except Exception:
         from mako import exceptions
         print exceptions.text_error_template().render()
-
-def main(argv=None):
-    """
-    Main execution function for cli
-
-    :param argv:
-    """
-    if argv is None:
-        argv = sys.argv
-
-    return _run(argv)
-
-
-if __name__ == '__main__':
-    sys.exit(main(sys.argv))

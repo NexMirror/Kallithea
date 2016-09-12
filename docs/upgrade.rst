@@ -91,13 +91,11 @@ If you originally installed from version control, it is as simple as::
 5. Upgrade your configuration
 -----------------------------
 
-Run the following command to upgrade your configuration (``.ini``) file::
+Run the following command to create a new configuration (``.ini``) file::
 
-    TODO make-config Kallithea my.ini
+    gearbox make-config new.ini
 
-This will display any changes made by the new version of Kallithea to your
-current configuration, and attempt an automatic merge. It is recommended
-that you check the contents after the merge.
+Then compare it with your old config file and see what changed.
 
 .. note::
     Please always make sure your ``.ini`` files are up to date. Errors

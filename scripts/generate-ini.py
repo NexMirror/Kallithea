@@ -1,14 +1,13 @@
 #!/usr/bin/env python2
 """
-Based on kallithea/bin/template.ini.mako, generate
-  kallithea/config/deployment.ini_tmpl
+Based on kallithea/lib/paster_commands/template.ini.mako, generate
   development.ini
   kallithea/tests/test.ini
 """
 
 import re
 
-makofile = 'kallithea/bin/template.ini.mako'
+makofile = 'kallithea/lib/paster_commands/template.ini.mako'
 
 # the mako conditionals used in all other ini files and templates
 selected_mako_conditionals = set([
@@ -28,14 +27,6 @@ mako_variable_values = {
 
 # files to be generated from the mako template
 ini_files = [
-    ('kallithea/config/deployment.ini_tmpl',
-        '''
-        Kallithea - Example config
-
-        The %(here)s variable will be replaced with the parent directory of this file
-        ''',
-        {}, # exactly the same settings as template.ini.mako
-    ),
     ('kallithea/tests/test.ini',
         '''
         Kallithea - config for tests:
