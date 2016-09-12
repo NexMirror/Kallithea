@@ -1143,8 +1143,6 @@ class _BaseTestApi(object):
     @parametrize('changing_attr,updates', [
         ('owner', {'owner': TEST_USER_REGULAR_LOGIN}),
         ('description', {'description': u'new description'}),
-        ('active', {'active': True}),
-        ('active', {'active': False}),
         ('clone_uri', {'clone_uri': 'http://example.com/repo'}),
         ('clone_uri', {'clone_uri': None}),
         ('landing_rev', {'landing_rev': 'branch:master'}),
@@ -1181,8 +1179,6 @@ class _BaseTestApi(object):
     @parametrize('changing_attr,updates', [
         ('owner', {'owner': TEST_USER_REGULAR_LOGIN}),
         ('description', {'description': u'new description'}),
-        ('active', {'active': True}),
-        ('active', {'active': False}),
         ('clone_uri', {'clone_uri': 'http://example.com/repo'}),
         ('clone_uri', {'clone_uri': None}),
         ('landing_rev', {'landing_rev': 'branch:master'}),
@@ -1235,7 +1231,7 @@ class _BaseTestApi(object):
     def test_api_update_repo_regular_user_not_allowed(self):
         repo_name = u'admin_owned'
         fixture.create_repo(repo_name)
-        updates = {'active': False}
+        updates = {'description': 'something else'}
         id_, params = _build_data(self.apikey_regular, 'update_repo',
                                   repoid=repo_name, **updates)
         response = api_call(self, params)
@@ -1714,8 +1710,7 @@ class _BaseTestApi(object):
         gr_id = ugroup.users_group_id
         try:
             id_, params = _build_data(self.apikey, 'delete_user_group',
-                                      usergroupid=gr_name,
-                                      userid=TEST_USER_ADMIN_LOGIN)
+                                      usergroupid=gr_name)
             response = api_call(self, params)
             expected = {
                 'user_group': None,
@@ -1736,8 +1731,7 @@ class _BaseTestApi(object):
 
         try:
             id_, params = _build_data(self.apikey, 'delete_user_group',
-                                      usergroupid=gr_name,
-                                      userid=TEST_USER_ADMIN_LOGIN)
+                                      usergroupid=gr_name)
             response = api_call(self, params)
             expected = msg
             self._compare_error(id_, expected, given=response.body)
@@ -1750,8 +1744,7 @@ class _BaseTestApi(object):
         ugroup = fixture.create_user_group(gr_name)
         gr_id = ugroup.users_group_id
         id_, params = _build_data(self.apikey, 'delete_user_group',
-                                  usergroupid=gr_name,
-                                  userid=TEST_USER_ADMIN_LOGIN)
+                                  usergroupid=gr_name)
 
         try:
             with mock.patch.object(UserGroupModel, 'delete', crash):

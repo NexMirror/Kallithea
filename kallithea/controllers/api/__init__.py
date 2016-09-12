@@ -214,6 +214,14 @@ class JSONRPCController(WSGIController):
                     )
                 )
 
+        extra = set(self._request_params).difference(func_kwargs)
+        if extra:
+                return jsonrpc_error(
+                    retid=self._req_id,
+                    message=('Unknown %s arg in JSON DATA' %
+                             ', '.join('`%s`' % arg for arg in extra)),
+                )
+
         self._rpc_args = {}
 
         self._rpc_args.update(self._request_params)
