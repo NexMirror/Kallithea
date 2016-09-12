@@ -358,8 +358,8 @@ def make_ui(read_from='file', path=None, checkpaths=True, clear_session=True):
         hg_ui = ret
         for ui_ in hg_ui:
             if ui_.ui_active:
-                ui_val = safe_str(ui_.ui_value)
-                log.debug('settings ui from db: [%s] %s=%s', ui_.ui_section,
+                ui_val = '' if ui_.ui_value is None else safe_str(ui_.ui_value)
+                log.debug('settings ui from db: [%s] %s=%r', ui_.ui_section,
                           ui_.ui_key, ui_val)
                 baseui.setconfig(safe_str(ui_.ui_section), safe_str(ui_.ui_key),
                                  ui_val)
