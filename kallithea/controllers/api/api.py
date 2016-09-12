@@ -677,10 +677,6 @@ class ApiController(JSONRPCController):
         if User.get_by_email(email):
             raise JSONRPCError("email `%s` already exist" % (email,))
 
-        if Optional.extract(extern_name):
-            # generate temporary password if user is external
-            password = PasswordGenerator().gen_password(length=8)
-
         try:
             user = UserModel().create_or_update(
                 username=Optional.extract(username),
