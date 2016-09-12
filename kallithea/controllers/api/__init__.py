@@ -197,14 +197,6 @@ class JSONRPCController(WSGIController):
         # api_key, which is translated to instance of user at that name
         USER_SESSION_ATTR = 'apiuser'
 
-        if USER_SESSION_ATTR not in arglist:
-            return jsonrpc_error(
-                retid=self._req_id,
-                message='This method [%s] does not support '
-                         'authentication (missing %s param)' % (
-                                    self._func.__name__, USER_SESSION_ATTR)
-            )
-
         # get our arglist and check if we provided them as args
         for arg, default in func_kwargs.iteritems():
             if arg == USER_SESSION_ATTR:
@@ -222,7 +214,7 @@ class JSONRPCController(WSGIController):
                     )
                 )
 
-        self._rpc_args = {USER_SESSION_ATTR: u}
+        self._rpc_args = {}
 
         self._rpc_args.update(self._request_params)
 

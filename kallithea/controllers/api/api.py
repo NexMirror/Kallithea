@@ -145,32 +145,28 @@ class ApiController(JSONRPCController):
     """
     API Controller
 
-    Each method takes USER as first argument. This is then, based on given
-    API_KEY propagated as instance of user object who's making the call.
+    The authenticated user can be found as self.authuser.
 
-    example function::
+    Example function::
 
-        def func(apiuser,arg1, arg2,...):
+        def func(arg1, arg2,...):
             pass
 
     Each function should also **raise** JSONRPCError for any
     errors that happens.
-
     """
 
     @HasPermissionAnyDecorator('hg.admin')
-    def test(self, apiuser, args):
+    def test(self, args):
         return args
 
     @HasPermissionAnyDecorator('hg.admin')
-    def pull(self, apiuser, repoid):
+    def pull(self, repoid):
         """
         Triggers a pull from remote location on given repo. Can be used to
         automatically keep remote repos up to date. This command can be executed
         only using api_key belonging to user with admin rights
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param repoid: repository name or repository id
         :type repoid: str or int
 
@@ -209,15 +205,13 @@ class ApiController(JSONRPCController):
             )
 
     @HasPermissionAnyDecorator('hg.admin')
-    def rescan_repos(self, apiuser, remove_obsolete=Optional(False)):
+    def rescan_repos(self, remove_obsolete=Optional(False)):
         """
         Triggers rescan repositories action. If remove_obsolete is set
         than also delete repos that are in database but not in the filesystem.
         aka "clean zombies". This command can be executed only using api_key
         belonging to user with admin rights.
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param remove_obsolete: deletes repositories from
             database that are not found on the filesystem
         :type remove_obsolete: Optional(bool)
@@ -252,14 +246,12 @@ class ApiController(JSONRPCController):
                 'Error occurred during rescan repositories action'
             )
 
-    def invalidate_cache(self, apiuser, repoid):
+    def invalidate_cache(self, repoid):
         """
         Invalidate cache for repository.
         This command can be executed only using api_key belonging to user with admin
         rights or regular user that have write or admin or write access to repository.
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param repoid: repository name or repository id
         :type repoid: str or int
 
@@ -302,7 +294,7 @@ class ApiController(JSONRPCController):
             )
 
     # permission check inside
-    def lock(self, apiuser, repoid, locked=Optional(None),
+    def lock(self, repoid, locked=Optional(None),
              userid=Optional(OAttr('apiuser'))):
         """
         Set locking state on given repository by given user. If userid param
@@ -312,8 +304,6 @@ class ApiController(JSONRPCController):
         to user with admin rights or regular user that have admin or write
         access to repository.
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param repoid: repository name or repository id
         :type repoid: str or int
         :param locked: lock state to be set
@@ -354,7 +344,7 @@ class ApiController(JSONRPCController):
                                      'repository.write')(repo_name=repo.repo_name):
             # make sure normal user does not pass someone else userid,
             # he is not allowed to do that
-            if not isinstance(userid, Optional) and userid != apiuser.user_id:
+            if not isinstance(userid, Optional) and userid != self.authuser.user_id:
                 raise JSONRPCError(
                     'userid is not the same as your user'
                 )
@@ -362,7 +352,7 @@ class ApiController(JSONRPCController):
             raise JSONRPCError('repository `%s` does not exist' % (repoid,))
 
         if isinstance(userid, Optional):
-            userid = apiuser.user_id
+            userid = self.authuser.user_id
 
         user = get_user_or_error(userid)
 
@@ -420,14 +410,12 @@ class ApiController(JSONRPCController):
                     'Error occurred locking repository `%s`' % repo.repo_name
                 )
 
-    def get_locks(self, apiuser, userid=Optional(OAttr('apiuser'))):
+    def get_locks(self, userid=Optional(OAttr('apiuser'))):
         """
         Get all repositories with locks for given userid, if
         this command is run by non-admin account userid is set to user
         who is calling this method, thus returning locks for himself.
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param userid: User to get locks for
         :type userid: Optional(str or int)
 
@@ -443,7 +431,7 @@ class ApiController(JSONRPCController):
         if not HasPermissionAnyApi('hg.admin')():
             # make sure normal user does not pass someone else userid,
             # he is not allowed to do that
-            if not isinstance(userid, Optional) and userid != apiuser.user_id:
+            if not isinstance(userid, Optional) and userid != self.authuser.user_id:
                 raise JSONRPCError(
                     'userid is not the same as your user'
                 )
@@ -469,7 +457,7 @@ class ApiController(JSONRPCController):
         return ret
 
     @HasPermissionAnyDecorator('hg.admin')
-    def get_ip(self, apiuser, userid=Optional(OAttr('apiuser'))):
+    def get_ip(self, userid=Optional(OAttr('apiuser'))):
         """
         Shows IP address as seen from Kallithea server, together with all
         defined IP addresses for given user. If userid is not passed data is
@@ -477,8 +465,6 @@ class ApiController(JSONRPCController):
         This command can be executed only using api_key belonging to user with
         admin rights.
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param userid: username to show ips for
         :type userid: Optional(str or int)
 
@@ -498,7 +484,7 @@ class ApiController(JSONRPCController):
 
         """
         if isinstance(userid, Optional):
-            userid = apiuser.user_id
+            userid = self.authuser.user_id
         user = get_user_or_error(userid)
         ips = UserIpMap.query().filter(UserIpMap.user == user).all()
         return dict(
@@ -510,12 +496,10 @@ class ApiController(JSONRPCController):
     show_ip = get_ip
 
     @HasPermissionAnyDecorator('hg.admin')
-    def get_server_info(self, apiuser):
+    def get_server_info(self):
         """
         return server info, including Kallithea version and installed packages
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
 
         OUTPUT::
 
@@ -530,7 +514,7 @@ class ApiController(JSONRPCController):
         """
         return Setting.get_server_info()
 
-    def get_user(self, apiuser, userid=Optional(OAttr('apiuser'))):
+    def get_user(self, userid=Optional(OAttr('apiuser'))):
         """
         Gets a user by username or user_id, Returns empty result if user is
         not found. If userid param is skipped it is set to id of user who is
@@ -538,8 +522,6 @@ class ApiController(JSONRPCController):
         belonging to user with admin rights, or regular users that cannot
         specify different userid than theirs
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param userid: user to get data for
         :type userid: Optional(str or int)
 
@@ -577,13 +559,13 @@ class ApiController(JSONRPCController):
         if not HasPermissionAnyApi('hg.admin')():
             # make sure normal user does not pass someone else userid,
             # he is not allowed to do that
-            if not isinstance(userid, Optional) and userid != apiuser.user_id:
+            if not isinstance(userid, Optional) and userid != self.authuser.user_id:
                 raise JSONRPCError(
                     'userid is not the same as your user'
                 )
 
         if isinstance(userid, Optional):
-            userid = apiuser.user_id
+            userid = self.authuser.user_id
 
         user = get_user_or_error(userid)
         data = user.get_api_data()
@@ -591,13 +573,11 @@ class ApiController(JSONRPCController):
         return data
 
     @HasPermissionAnyDecorator('hg.admin')
-    def get_users(self, apiuser):
+    def get_users(self):
         """
         Lists all existing users. This command can be executed only using api_key
         belonging to user with admin rights.
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
 
         OUTPUT::
 
@@ -615,7 +595,7 @@ class ApiController(JSONRPCController):
         return result
 
     @HasPermissionAnyDecorator('hg.admin')
-    def create_user(self, apiuser, username, email, password=Optional(''),
+    def create_user(self, username, email, password=Optional(''),
                     firstname=Optional(''), lastname=Optional(''),
                     active=Optional(True), admin=Optional(False),
                     extern_type=Optional(User.DEFAULT_AUTH_TYPE),
@@ -624,8 +604,6 @@ class ApiController(JSONRPCController):
         Creates new user. Returns new user object. This command can
         be executed only using api_key belonging to user with admin rights.
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param username: new username
         :type username: str or int
         :param email: email
@@ -697,7 +675,7 @@ class ApiController(JSONRPCController):
             raise JSONRPCError('failed to create user `%s`' % (username,))
 
     @HasPermissionAnyDecorator('hg.admin')
-    def update_user(self, apiuser, userid, username=Optional(None),
+    def update_user(self, userid, username=Optional(None),
                     email=Optional(None), password=Optional(None),
                     firstname=Optional(None), lastname=Optional(None),
                     active=Optional(None), admin=Optional(None),
@@ -706,8 +684,6 @@ class ApiController(JSONRPCController):
         updates given user if such user exists. This command can
         be executed only using api_key belonging to user with admin rights.
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param userid: userid to update
         :type userid: str or int
         :param username: new username
@@ -780,13 +756,11 @@ class ApiController(JSONRPCController):
             raise JSONRPCError('failed to update user `%s`' % (userid,))
 
     @HasPermissionAnyDecorator('hg.admin')
-    def delete_user(self, apiuser, userid):
+    def delete_user(self, userid):
         """
         deletes given user if such user exists. This command can
         be executed only using api_key belonging to user with admin rights.
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param userid: user to delete
         :type userid: str or int
 
@@ -824,14 +798,12 @@ class ApiController(JSONRPCController):
                                % (user.user_id, user.username))
 
     # permission check inside
-    def get_user_group(self, apiuser, usergroupid):
+    def get_user_group(self, usergroupid):
         """
         Gets an existing user group. This command can be executed only using api_key
         belonging to user with admin rights or user who has at least
         read access to user group.
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param usergroupid: id of user_group to edit
         :type usergroupid: str or int
 
@@ -860,14 +832,12 @@ class ApiController(JSONRPCController):
         return data
 
     # permission check inside
-    def get_user_groups(self, apiuser):
+    def get_user_groups(self):
         """
         Lists all existing user groups. This command can be executed only using
         api_key belonging to user with admin rights or user who has at least
         read access to user group.
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
 
         OUTPUT::
 
@@ -884,15 +854,13 @@ class ApiController(JSONRPCController):
         return result
 
     @HasPermissionAnyDecorator('hg.admin', 'hg.usergroup.create.true')
-    def create_user_group(self, apiuser, group_name, description=Optional(''),
+    def create_user_group(self, group_name, description=Optional(''),
                           owner=Optional(OAttr('apiuser')), active=Optional(True)):
         """
         Creates new user group. This command can be executed only using api_key
         belonging to user with admin rights or an user who has create user group
         permission
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param group_name: name of new user group
         :type group_name: str
         :param description: group description
@@ -928,7 +896,7 @@ class ApiController(JSONRPCController):
 
         try:
             if isinstance(owner, Optional):
-                owner = apiuser.user_id
+                owner = self.authuser.user_id
 
             owner = get_user_or_error(owner)
             active = Optional.extract(active)
@@ -945,15 +913,13 @@ class ApiController(JSONRPCController):
             raise JSONRPCError('failed to create group `%s`' % (group_name,))
 
     # permission check inside
-    def update_user_group(self, apiuser, usergroupid, group_name=Optional(''),
+    def update_user_group(self, usergroupid, group_name=Optional(''),
                           description=Optional(''), owner=Optional(None),
                           active=Optional(True)):
         """
         Updates given usergroup.  This command can be executed only using api_key
         belonging to user with admin rights or an admin of given user group
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param usergroupid: id of user group to update
         :type usergroupid: str or int
         :param group_name: name of new user group
@@ -1012,14 +978,12 @@ class ApiController(JSONRPCController):
             raise JSONRPCError('failed to update user group `%s`' % (usergroupid,))
 
     # permission check inside
-    def delete_user_group(self, apiuser, usergroupid):
+    def delete_user_group(self, usergroupid):
         """
         Delete given user group by user group id or name.
         This command can be executed only using api_key
         belonging to user with admin rights or an admin of given user group
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param usergroupid:
         :type usergroupid: int
 
@@ -1069,14 +1033,12 @@ class ApiController(JSONRPCController):
                                )
 
     # permission check inside
-    def add_user_to_user_group(self, apiuser, usergroupid, userid):
+    def add_user_to_user_group(self, usergroupid, userid):
         """
         Adds a user to a user group. If user exists in that group success will be
         `false`. This command can be executed only using api_key
         belonging to user with admin rights  or an admin of given user group
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param usergroupid:
         :type usergroupid: int
         :param userid:
@@ -1133,14 +1095,12 @@ class ApiController(JSONRPCController):
             )
 
     # permission check inside
-    def remove_user_from_user_group(self, apiuser, usergroupid, userid):
+    def remove_user_from_user_group(self, usergroupid, userid):
         """
         Removes a user from a user group. If user is not in given group success will
         be `false`. This command can be executed only
         using api_key belonging to user with admin rights or an admin of given user group
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param usergroupid:
         :param userid:
 
@@ -1182,15 +1142,13 @@ class ApiController(JSONRPCController):
             )
 
     # permission check inside
-    def get_repo(self, apiuser, repoid):
+    def get_repo(self, repoid):
         """
         Gets an existing repository by it's name or repository_id. Members will return
         either users_group or user associated to that repository. This command can be
         executed only using api_key belonging to user with admin
         rights or regular user that have at least read access to repository.
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param repoid: repository name or repository id
         :type repoid: str or int
 
@@ -1280,14 +1238,12 @@ class ApiController(JSONRPCController):
         return data
 
     # permission check inside
-    def get_repos(self, apiuser):
+    def get_repos(self):
         """
         Lists all existing repositories. This command can be executed only using
         api_key belonging to user with admin rights or regular user that have
         admin, write or read access to repository.
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
 
         OUTPUT::
 
@@ -1314,7 +1270,7 @@ class ApiController(JSONRPCController):
         """
         result = []
         if not HasPermissionAnyApi('hg.admin')():
-            repos = RepoModel().get_all_user_repos(user=apiuser)
+            repos = RepoModel().get_all_user_repos(user=self.authuser.user_id)
         else:
             repos = Repository.get_all()
 
@@ -1323,7 +1279,7 @@ class ApiController(JSONRPCController):
         return result
 
     # permission check inside
-    def get_repo_nodes(self, apiuser, repoid, revision, root_path,
+    def get_repo_nodes(self, repoid, revision, root_path,
                        ret_type=Optional('all')):
         """
         returns a list of nodes and it's children in a flat list for a given path
@@ -1331,8 +1287,6 @@ class ApiController(JSONRPCController):
         `dirs`.  This command can be executed only using api_key belonging to
         user with admin rights or regular user that have at least read access to repository.
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param repoid: repository name or repository id
         :type repoid: str or int
         :param revision: revision for which listing should be done
@@ -1384,7 +1338,7 @@ class ApiController(JSONRPCController):
             )
 
     @HasPermissionAnyDecorator('hg.admin', 'hg.create.repository')
-    def create_repo(self, apiuser, repo_name, owner=Optional(OAttr('apiuser')),
+    def create_repo(self, repo_name, owner=Optional(OAttr('apiuser')),
                     repo_type=Optional('hg'), description=Optional(''),
                     private=Optional(False), clone_uri=Optional(None),
                     landing_rev=Optional('rev:tip'),
@@ -1400,8 +1354,6 @@ class ApiController(JSONRPCController):
         belonging to user with admin rights or regular user that have create
         repository permission. Regular users cannot specify owner parameter
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param repo_name: repository name
         :type repo_name: str
         :param owner: user_id or username
@@ -1452,7 +1404,7 @@ class ApiController(JSONRPCController):
                     'Only Kallithea admin can specify `owner` param'
                 )
         if isinstance(owner, Optional):
-            owner = apiuser.user_id
+            owner = self.authuser.user_id
 
         owner = get_user_or_error(owner)
 
@@ -1511,7 +1463,7 @@ class ApiController(JSONRPCController):
                 'failed to create repository `%s`' % (repo_name,))
 
     # permission check inside
-    def update_repo(self, apiuser, repoid, name=Optional(None),
+    def update_repo(self, repoid, name=Optional(None),
                     owner=Optional(OAttr('apiuser')),
                     group=Optional(None),
                     description=Optional(''), private=Optional(False),
@@ -1523,8 +1475,6 @@ class ApiController(JSONRPCController):
         """
         Updates repo
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param repoid: repository name or repository id
         :type repoid: str or int
         :param name:
@@ -1583,7 +1533,7 @@ class ApiController(JSONRPCController):
             raise JSONRPCError('failed to update repo `%s`' % repoid)
 
     @HasPermissionAnyDecorator('hg.admin', 'hg.fork.repository')
-    def fork_repo(self, apiuser, repoid, fork_name,
+    def fork_repo(self, repoid, fork_name,
                   owner=Optional(OAttr('apiuser')),
                   description=Optional(''), copy_permissions=Optional(False),
                   private=Optional(False), landing_rev=Optional('rev:tip')):
@@ -1594,8 +1544,6 @@ class ApiController(JSONRPCController):
         user with admin rights or regular user that have fork permission, and at least
         read access to forking repository. Regular users cannot specify owner parameter.
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param repoid: repository name or repository id
         :type repoid: str or int
         :param fork_name:
@@ -1655,7 +1603,7 @@ class ApiController(JSONRPCController):
             raise JSONRPCError('repository `%s` does not exist' % (repoid,))
 
         if isinstance(owner, Optional):
-            owner = apiuser.user_id
+            owner = self.authuser.user_id
 
         owner = get_user_or_error(owner)
 
@@ -1694,15 +1642,13 @@ class ApiController(JSONRPCController):
             )
 
     # permission check inside
-    def delete_repo(self, apiuser, repoid, forks=Optional('')):
+    def delete_repo(self, repoid, forks=Optional('')):
         """
         Deletes a repository. This command can be executed only using api_key belonging
         to user with admin rights or regular user that have admin access to repository.
         When `forks` param is set it's possible to detach or delete forks of deleting
         repository
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param repoid: repository name or repository id
         :type repoid: str or int
         :param forks: `detach` or `delete`, what do do with attached forks for repo
@@ -1752,14 +1698,12 @@ class ApiController(JSONRPCController):
             )
 
     @HasPermissionAnyDecorator('hg.admin')
-    def grant_user_permission(self, apiuser, repoid, userid, perm):
+    def grant_user_permission(self, repoid, userid, perm):
         """
         Grant permission for user on given repository, or update existing one
         if found. This command can be executed only using api_key belonging to user
         with admin rights.
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param repoid: repository name or repository id
         :type repoid: str or int
         :param userid:
@@ -1799,13 +1743,11 @@ class ApiController(JSONRPCController):
             )
 
     @HasPermissionAnyDecorator('hg.admin')
-    def revoke_user_permission(self, apiuser, repoid, userid):
+    def revoke_user_permission(self, repoid, userid):
         """
         Revoke permission for user on given repository. This command can be executed
         only using api_key belonging to user with admin rights.
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param repoid: repository name or repository id
         :type repoid: str or int
         :param userid:
@@ -1841,14 +1783,12 @@ class ApiController(JSONRPCController):
             )
 
     # permission check inside
-    def grant_user_group_permission(self, apiuser, repoid, usergroupid, perm):
+    def grant_user_group_permission(self, repoid, usergroupid, perm):
         """
         Grant permission for user group on given repository, or update
         existing one if found. This command can be executed only using
         api_key belonging to user with admin rights.
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param repoid: repository name or repository id
         :type repoid: str or int
         :param usergroupid: id of usergroup
@@ -1914,13 +1854,11 @@ class ApiController(JSONRPCController):
             )
 
     # permission check inside
-    def revoke_user_group_permission(self, apiuser, repoid, usergroupid):
+    def revoke_user_group_permission(self, repoid, usergroupid):
         """
         Revoke permission for user group on given repository. This command can be
         executed only using api_key belonging to user with admin rights.
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param repoid: repository name or repository id
         :type repoid: str or int
         :param usergroupid:
@@ -1970,13 +1908,11 @@ class ApiController(JSONRPCController):
             )
 
     @HasPermissionAnyDecorator('hg.admin')
-    def get_repo_group(self, apiuser, repogroupid):
+    def get_repo_group(self, repogroupid):
         """
         Returns given repo group together with permissions, and repositories
         inside the group
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param repogroupid: id/name of repository group
         :type repogroupid: str or int
         """
@@ -2008,12 +1944,10 @@ class ApiController(JSONRPCController):
         return data
 
     @HasPermissionAnyDecorator('hg.admin')
-    def get_repo_groups(self, apiuser):
+    def get_repo_groups(self):
         """
         Returns all repository groups
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         """
         result = []
         for repo_group in RepoGroup.get_all():
@@ -2021,7 +1955,7 @@ class ApiController(JSONRPCController):
         return result
 
     @HasPermissionAnyDecorator('hg.admin')
-    def create_repo_group(self, apiuser, group_name, description=Optional(''),
+    def create_repo_group(self, group_name, description=Optional(''),
                           owner=Optional(OAttr('apiuser')),
                           parent=Optional(None),
                           copy_permissions=Optional(False)):
@@ -2029,8 +1963,6 @@ class ApiController(JSONRPCController):
         Creates a repository group. This command can be executed only using
         api_key belonging to user with admin rights.
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param group_name:
         :type group_name:
         :param description:
@@ -2064,7 +1996,7 @@ class ApiController(JSONRPCController):
             raise JSONRPCError("repo group `%s` already exist" % (group_name,))
 
         if isinstance(owner, Optional):
-            owner = apiuser.user_id
+            owner = self.authuser.user_id
         group_description = Optional.extract(description)
         parent_group = Optional.extract(parent)
         if not isinstance(parent, Optional):
@@ -2090,7 +2022,7 @@ class ApiController(JSONRPCController):
             raise JSONRPCError('failed to create repo group `%s`' % (group_name,))
 
     @HasPermissionAnyDecorator('hg.admin')
-    def update_repo_group(self, apiuser, repogroupid, group_name=Optional(''),
+    def update_repo_group(self, repogroupid, group_name=Optional(''),
                           description=Optional(''),
                           owner=Optional(OAttr('apiuser')),
                           parent=Optional(None), enable_locking=Optional(False)):
@@ -2116,11 +2048,9 @@ class ApiController(JSONRPCController):
                                % (repogroupid,))
 
     @HasPermissionAnyDecorator('hg.admin')
-    def delete_repo_group(self, apiuser, repogroupid):
+    def delete_repo_group(self, repogroupid):
         """
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param repogroupid: name or id of repository group
         :type repogroupid: str or int
 
@@ -2159,7 +2089,7 @@ class ApiController(JSONRPCController):
                                )
 
     # permission check inside
-    def grant_user_permission_to_repo_group(self, apiuser, repogroupid, userid,
+    def grant_user_permission_to_repo_group(self, repogroupid, userid,
                                             perm, apply_to_children=Optional('none')):
         """
         Grant permission for user on given repository group, or update existing
@@ -2167,8 +2097,6 @@ class ApiController(JSONRPCController):
         to user with admin rights, or user who has admin right to given repository
         group.
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param repogroupid: name or id of repository group
         :type repogroupid: str or int
         :param userid:
@@ -2227,15 +2155,13 @@ class ApiController(JSONRPCController):
                     userid, repo_group.name))
 
     # permission check inside
-    def revoke_user_permission_from_repo_group(self, apiuser, repogroupid, userid,
+    def revoke_user_permission_from_repo_group(self, repogroupid, userid,
                                                apply_to_children=Optional('none')):
         """
         Revoke permission for user on given repository group. This command can
         be executed only using api_key belonging to user with admin rights, or
         user who has admin right to given repository group.
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param repogroupid: name or id of repository group
         :type repogroupid: str or int
         :param userid:
@@ -2293,7 +2219,7 @@ class ApiController(JSONRPCController):
 
     # permission check inside
     def grant_user_group_permission_to_repo_group(
-            self, apiuser, repogroupid, usergroupid, perm,
+            self, repogroupid, usergroupid, perm,
             apply_to_children=Optional('none')):
         """
         Grant permission for user group on given repository group, or update
@@ -2301,8 +2227,6 @@ class ApiController(JSONRPCController):
         api_key belonging to user with admin rights, or user who has admin
         right to given repository group.
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param repogroupid: name or id of repository group
         :type repogroupid: str or int
         :param usergroupid: id of usergroup
@@ -2376,15 +2300,13 @@ class ApiController(JSONRPCController):
 
     # permission check inside
     def revoke_user_group_permission_from_repo_group(
-            self, apiuser, repogroupid, usergroupid,
+            self, repogroupid, usergroupid,
             apply_to_children=Optional('none')):
         """
         Revoke permission for user group on given repository. This command can be
         executed only using api_key belonging to user with admin rights, or
         user who has admin right to given repository group.
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param repogroupid: name or id of repository group
         :type repogroupid: str or int
         :param usergroupid:
@@ -2449,41 +2371,37 @@ class ApiController(JSONRPCController):
                 )
             )
 
-    def get_gist(self, apiuser, gistid):
+    def get_gist(self, gistid):
         """
         Get given gist by id
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param gistid: id of private or public gist
         :type gistid: str
         """
         gist = get_gist_or_error(gistid)
         if not HasPermissionAnyApi('hg.admin')():
-            if gist.gist_owner != apiuser.user_id:
+            if gist.gist_owner != self.authuser.user_id:
                 raise JSONRPCError('gist `%s` does not exist' % (gistid,))
         return gist.get_api_data()
 
-    def get_gists(self, apiuser, userid=Optional(OAttr('apiuser'))):
+    def get_gists(self, userid=Optional(OAttr('apiuser'))):
         """
         Get all gists for given user. If userid is empty returned gists
         are for user who called the api
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param userid: user to get gists for
         :type userid: Optional(str or int)
         """
         if not HasPermissionAnyApi('hg.admin')():
             # make sure normal user does not pass someone else userid,
             # he is not allowed to do that
-            if not isinstance(userid, Optional) and userid != apiuser.user_id:
+            if not isinstance(userid, Optional) and userid != self.authuser.user_id:
                 raise JSONRPCError(
                     'userid is not the same as your user'
                 )
 
         if isinstance(userid, Optional):
-            user_id = apiuser.user_id
+            user_id = self.authuser.user_id
         else:
             user_id = get_user_or_error(userid).user_id
 
@@ -2496,15 +2414,13 @@ class ApiController(JSONRPCController):
             gists.append(gist.get_api_data())
         return gists
 
-    def create_gist(self, apiuser, files, owner=Optional(OAttr('apiuser')),
+    def create_gist(self, files, owner=Optional(OAttr('apiuser')),
                     gist_type=Optional(Gist.GIST_PUBLIC), lifetime=Optional(-1),
                     description=Optional('')):
 
         """
         Creates new Gist
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param files: files to be added to gist
             {'filename': {'content':'...', 'lexer': null},
              'filename2': {'content':'...', 'lexer': null}}
@@ -2538,7 +2454,7 @@ class ApiController(JSONRPCController):
         """
         try:
             if isinstance(owner, Optional):
-                owner = apiuser.user_id
+                owner = self.authuser.user_id
 
             owner = get_user_or_error(owner)
             description = Optional.extract(description)
@@ -2559,19 +2475,17 @@ class ApiController(JSONRPCController):
             log.error(traceback.format_exc())
             raise JSONRPCError('failed to create gist')
 
-    # def update_gist(self, apiuser, gistid, files, owner=Optional(OAttr('apiuser')),
+    # def update_gist(self, gistid, files, owner=Optional(OAttr('apiuser')),
     #                 gist_type=Optional(Gist.GIST_PUBLIC),
     #                 gist_lifetime=Optional(-1), gist_description=Optional('')):
     #     gist = get_gist_or_error(gistid)
     #     updates = {}
 
     # permission check inside
-    def delete_gist(self, apiuser, gistid):
+    def delete_gist(self, gistid):
         """
         Deletes existing gist
 
-        :param apiuser: filled automatically from apikey
-        :type apiuser: AuthUser
         :param gistid: id of gist to delete
         :type gistid: str
 
@@ -2595,7 +2509,7 @@ class ApiController(JSONRPCController):
         """
         gist = get_gist_or_error(gistid)
         if not HasPermissionAnyApi('hg.admin')():
-            if gist.gist_owner != apiuser.user_id:
+            if gist.gist_owner != self.authuser.user_id:
                 raise JSONRPCError('gist `%s` does not exist' % (gistid,))
 
         try:
