@@ -36,7 +36,6 @@ from os.path import dirname
 import alembic.config
 import alembic.command
 
-from kallithea import __py_version__
 from kallithea.lib.paster_commands.common import ask_ok
 from kallithea.model.user import UserModel
 from kallithea.model import init_model
@@ -498,13 +497,3 @@ class DbManage(object):
         """
         log.info('creating default user permissions')
         PermissionModel(self.sa).create_default_permissions(user=User.DEFAULT_USER)
-
-    @staticmethod
-    def check_waitress():
-        """
-        Function executed at the end of setup
-        """
-        if not __py_version__ >= (2, 6):
-            notify('Python2.5 detected, please switch '
-                   'egg:waitress#main -> egg:Paste#http '
-                   'in your .ini file')

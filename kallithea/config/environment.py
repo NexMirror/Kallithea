@@ -105,7 +105,6 @@ def load_environment(global_conf, app_conf,
         if test_index:
             create_test_index(TESTS_TMP_PATH, config, True)
 
-    DbManage.check_waitress()
     # MULTIPLE DB configs
     # Setup the SQLAlchemy database engine
     sa_engine_db1 = engine_from_config(config, 'sqlalchemy.db1.')
