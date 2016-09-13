@@ -378,7 +378,7 @@ def make_ui(read_from='file', path=None, checkpaths=True, clear_session=True):
 
 def set_app_settings(config):
     """
-    Updates pylons config with new settings from database
+    Updates app config with new settings from database
 
     :param config:
     """

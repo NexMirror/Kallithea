@@ -15,8 +15,9 @@
 kallithea
 ~~~~~~~~~
 
-Kallithea, a web based repository management based on pylons
-versioning implementation: http://www.python.org/dev/peps/pep-0386/
+Kallithea, a web based repository management system.
+
+Versioning implementation: http://www.python.org/dev/peps/pep-0386/
 
 This file was forked by the Kallithea project in July 2014.
 Original author and date, and relevant copyright and licensing information is below:
@@ -38,7 +39,6 @@ BACKENDS = {
 CELERY_ON = False
 CELERY_EAGER = False
 
-# link to config for pylons
 CONFIG = {}
 
 # Linked module for extensions

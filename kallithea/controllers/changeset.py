@@ -15,8 +15,7 @@
 kallithea.controllers.changeset
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-changeset controller for pylons showing changes between
-revisions
+changeset controller showing changes between revisions
 
 This file was forked by the Kallithea project in July 2014.
 Original author and date, and relevant copyright and licensing information is below:

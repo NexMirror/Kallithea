@@ -15,7 +15,7 @@
 kallithea.controllers.compare
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-compare controller for pylons showing differences between two
+compare controller showing differences between two
 repos, branches, bookmarks or tips
 
 This file was forked by the Kallithea project in July 2014.

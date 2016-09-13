@@ -13,12 +13,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-Pylons application test package
-
-This package assumes the Pylons environment is already loaded.
-
-This module initializes the application via ``websetup`` (`paster
-setup-app`) and provides the base testing objects.
+Kallithea test package
 
 Refer to docs/contributing.rst for details on running the test suite.
 """

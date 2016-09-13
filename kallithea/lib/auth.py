@@ -679,12 +679,12 @@ class AuthUser(object):
 
 def set_available_permissions(config):
     """
-    This function will propagate pylons globals with all available defined
+    This function will propagate globals with all available defined
     permission given in db. We don't want to check each time from db for new
     permissions since adding a new permission also requires application restart
     ie. to decorate new views with the newly created permission
 
-    :param config: current pylons config instance
+    :param config: current config instance
 
     """
     log.info('getting information about all available permissions')

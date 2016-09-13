@@ -85,7 +85,7 @@ class BasePasterCommand(Command):
 
     def bootstrap_config(self, conf):
         """
-        Loads the pylons configuration.
+        Loads the app configuration.
         """
         from pylons import config as pylonsconfig
 
