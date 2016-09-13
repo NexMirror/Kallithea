@@ -28,7 +28,6 @@ Original author and date, and relevant copyright and licensing information is be
 import os
 import cgi
 import logging
-import paste.fileapp
 
 from pylons import tmpl_context as c, request, config
 from pylons.i18n.translation import _
@@ -72,21 +71,6 @@ class ErrorController(BaseController):
             c.error_explanation = _('Unknown error')
 
         return render('/errors/error_document.html')
-
-    def img(self, id):
-        """Serve Pylons' stock images"""
-        return self._serve_file(os.path.join(media_path, 'img', id))
-
-    def style(self, id):
-        """Serve Pylons' stock stylesheets"""
-        return self._serve_file(os.path.join(media_path, 'style', id))
-
-    def _serve_file(self, path):
-        """Call Paste's FileApp (a WSGI application) to serve the file
-        at the specified path
-        """
-        fapp = paste.fileapp.FileApp(path)
-        return fapp(request.environ, self.start_response)
 
     def get_error_explanation(self, code):
         """ get the error explanations of int codes
