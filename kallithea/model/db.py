@@ -271,6 +271,7 @@ class Setting(Base, BaseModel):
             val = Optional.extract(val)
             type = Optional.extract(type)
             res = cls(key, val, type)
+            Session().add(res)
         else:
             res.app_settings_name = key
             if not isinstance(val, Optional):

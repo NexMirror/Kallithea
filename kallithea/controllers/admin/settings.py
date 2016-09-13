@@ -208,25 +208,14 @@ class SettingsController(BaseController):
                     force_defaults=False)
 
             try:
-                sett1 = Setting.create_or_update('title',
-                                            form_result['title'])
-                Session().add(sett1)
-
-                sett2 = Setting.create_or_update('realm',
-                                            form_result['realm'])
-                Session().add(sett2)
-
-                sett3 = Setting.create_or_update('ga_code',
-                                            form_result['ga_code'])
-                Session().add(sett3)
-
-                sett4 = Setting.create_or_update('captcha_public_key',
-                                    form_result['captcha_public_key'])
-                Session().add(sett4)
-
-                sett5 = Setting.create_or_update('captcha_private_key',
-                                    form_result['captcha_private_key'])
-                Session().add(sett5)
+                for setting in (
+                    'title',
+                    'realm',
+                    'ga_code',
+                    'captcha_public_key',
+                    'captcha_private_key',
+                ):
+                    Setting.create_or_update(setting, form_result[setting])
 
                 Session().commit()
                 set_app_settings(config)
@@ -279,9 +268,7 @@ class SettingsController(BaseController):
                     ('clone_uri_tmpl', 'clone_uri_tmpl', 'unicode'),
                 ]
                 for setting, form_key, type_ in settings:
-                    sett = Setting.create_or_update(setting,
-                                        form_result[form_key], type_)
-                    Session().add(sett)
+                    Setting.create_or_update(setting, form_result[form_key], type_)
 
                 Session().commit()
                 set_app_settings(config)

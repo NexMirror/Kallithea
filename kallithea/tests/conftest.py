@@ -60,8 +60,7 @@ def _set_settings(*kvtseq):
         k = kvt[0]
         v = kvt[1]
         t = kvt[2] if len(kvt) == 3 else 'unicode'
-        setting = Setting.create_or_update(k, v, t)
-        session.add(setting)
+        Setting.create_or_update(k, v, t)
     session.commit()
 
 
@@ -82,8 +81,7 @@ def set_test_settings():
     for k, v, t in settings_snapshot:
         if t == 'list' and hasattr(v, '__iter__'):
             v = ','.join(v) # Quirk: must format list value manually.
-        s = Setting.create_or_update(k, v, t)
-        session.add(s)
+        Setting.create_or_update(k, v, t)
     session.commit()
 
 @pytest.yield_fixture

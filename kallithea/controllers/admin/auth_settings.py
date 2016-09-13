@@ -131,7 +131,6 @@ class AuthSettingsController(BaseController):
                     v = ','.join(v)
                 log.debug("%s = %s", k, str(v))
                 setting = Setting.create_or_update(k, v)
-                Session().add(setting)
             Session().commit()
             h.flash(_('Auth settings updated successfully'),
                        category='success')
