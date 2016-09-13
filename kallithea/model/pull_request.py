@@ -206,4 +206,3 @@ class PullRequestModel(BaseModel):
         pull_request = PullRequest.guess_instance(pull_request)
         pull_request.status = PullRequest.STATUS_CLOSED
         pull_request.updated_on = datetime.datetime.now()
-        Session().add(pull_request)

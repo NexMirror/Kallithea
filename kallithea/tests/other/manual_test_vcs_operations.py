@@ -160,7 +160,6 @@ def _add_files_and_push(vcs, DEST, **kwargs):
 def set_anonymous_access(enable=True):
     user = User.get_by_username(User.DEFAULT_USER)
     user.active = enable
-    Session().add(user)
     Session().commit()
     print '\tanonymous access is now:', enable
     if enable != User.get_by_username(User.DEFAULT_USER).active:
@@ -191,13 +190,11 @@ class TestVCSOperations(TestController):
         r = Repository.get_by_repo_name(GIT_REPO)
         Repository.unlock(r)
         r.enable_locking = False
-        Session().add(r)
         Session().commit()
 
         r = Repository.get_by_repo_name(HG_REPO)
         Repository.unlock(r)
         r.enable_locking = False
-        Session().add(r)
         Session().commit()
 
     def test_clone_hg_repo_by_admin(self):
@@ -280,9 +277,9 @@ class TestVCSOperations(TestController):
                                                ==HG_REPO).scalar()
         if not key:
             key = CacheInvalidation(HG_REPO, HG_REPO)
+            Session().add(key)
 
         key.cache_active = True
-        Session().add(key)
         Session().commit()
 
         DEST = _get_tmp_dir()
@@ -303,9 +300,9 @@ class TestVCSOperations(TestController):
                                                ==GIT_REPO).scalar()
         if not key:
             key = CacheInvalidation(GIT_REPO, GIT_REPO)
+            Session().add(key)
 
         key.cache_active = True
-        Session().add(key)
         Session().commit()
 
         DEST = _get_tmp_dir()
@@ -367,7 +364,6 @@ class TestVCSOperations(TestController):
         # enable locking
         r = Repository.get_by_repo_name(HG_REPO)
         r.enable_locking = True
-        Session().add(r)
         Session().commit()
         # clone
         clone_url = _construct_url(HG_REPO)
@@ -381,7 +377,6 @@ class TestVCSOperations(TestController):
         # enable locking
         r = Repository.get_by_repo_name(GIT_REPO)
         r.enable_locking = True
-        Session().add(r)
         Session().commit()
         # clone
         clone_url = _construct_url(GIT_REPO)
@@ -469,7 +464,6 @@ class TestVCSOperations(TestController):
         fixture.create_fork(HG_REPO, fork_name)
         r = Repository.get_by_repo_name(fork_name)
         r.enable_locking = True
-        Session().add(r)
         Session().commit()
         #clone some temp
         DEST = _get_tmp_dir()
@@ -496,7 +490,6 @@ class TestVCSOperations(TestController):
         fixture.create_fork(GIT_REPO, fork_name)
         r = Repository.get_by_repo_name(fork_name)
         r.enable_locking = True
-        Session().add(r)
         Session().commit()
         #clone some temp
         DEST = _get_tmp_dir()

@@ -147,7 +147,6 @@ class TestPullrequestsGetRepoRefs(TestController):
 
     def setup_method(self, method):
         self.main = fixture.create_repo(u'main', repo_type='hg')
-        Session.add(self.main)
         Session.commit()
         self.c = PullrequestsController()
 

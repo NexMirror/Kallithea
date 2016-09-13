@@ -496,7 +496,6 @@ class TestLoginController(TestController):
             Session().commit()
             #patch the API key and make it expired
             new_api_key.expires = 0
-            Session().add(new_api_key)
             Session().commit()
             with fixture.anon_access(False):
                 self.app.get(url(controller='changeset',

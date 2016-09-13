@@ -58,14 +58,12 @@ class Fixture(object):
                 anon = User.get_default_user()
                 self._before = anon.active
                 anon.active = status
-                Session().add(anon)
                 Session().commit()
                 invalidate_all_caches()
 
             def __exit__(self, exc_type, exc_val, exc_tb):
                 anon = User.get_default_user()
                 anon.active = self._before
-                Session().add(anon)
                 Session().commit()
 
         return context()

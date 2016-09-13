@@ -22,7 +22,6 @@ GIT_NODE_HISTORY = fixture.load_resource('git_node_history_response.json')
 def _set_downloads(repo_name, set_to):
     repo = Repository.get_by_repo_name(repo_name)
     repo.enable_downloads = set_to
-    Session().add(repo)
     Session().commit()
 
 

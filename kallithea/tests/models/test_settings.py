@@ -32,7 +32,6 @@ def test_list_valued_setting_creation_requires_manual_value_formatting():
 def test_list_valued_setting_update():
     assert Setting.get_by_name(name) is None
     setting = Setting.create_or_update(name, 'spam', type='list')
-    Session().add(setting)
     Session().flush()
     try:
         assert setting.app_settings_value == [u'spam']

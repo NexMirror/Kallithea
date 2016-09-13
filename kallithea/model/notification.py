@@ -187,7 +187,6 @@ class NotificationModel(BaseModel):
                                 == notification) \
                         .one()
                 obj.read = True
-                Session().add(obj)
                 return True
         except Exception:
             log.error(traceback.format_exc())
@@ -205,9 +204,8 @@ class NotificationModel(BaseModel):
 
         # this is a little inefficient but sqlalchemy doesn't support
         # update on joined tables :(
-        for obj in q.all():
+        for obj in q:
             obj.read = True
-            Session().add(obj)
 
     def get_unread_cnt_for_user(self, user):
         user = self._get_user(user)

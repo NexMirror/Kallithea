@@ -326,7 +326,6 @@ class UsersController(BaseController):
 
             inherit_perms = form_result['inherit_default_permissions']
             user.inherit_default_permissions = inherit_perms
-            Session().add(user)
             user_model = UserModel()
 
             defs = UserToPerm.query() \

@@ -406,7 +406,6 @@ class UserModel(BaseModel):
             if not self.can_change_password(user):
                 raise Exception('trying to change password for external user')
             user.password = auth.get_crypt_password(new_passwd)
-            Session().add(user)
             Session().commit()
             log.info('change password for %s', user_email)
         if new_passwd is None:

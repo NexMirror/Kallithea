@@ -476,7 +476,6 @@ class _BaseTestCase(TestController):
 
         #update this permission back
         perm[0].permission = Permission.get_by_key('repository.read')
-        Session().add(perm[0])
         Session().commit()
 
     def test_set_repo_fork_has_no_self_id(self):

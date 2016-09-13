@@ -90,7 +90,6 @@ class TestGistsController(TestController):
         self.log_user()
         gist = _create_gist('never-see-me')
         gist.gist_expires = 0  # 1970
-        Session().add(gist)
         Session().commit()
 
         response = self.app.get(url('gist', gist_id=gist.gist_access_id), status=404)

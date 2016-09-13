@@ -112,7 +112,6 @@ class TestSummaryController(TestController):
     def _enable_stats(self, repo):
         r = Repository.get_by_repo_name(repo)
         r.enable_statistics = True
-        Session().add(r)
         Session().commit()
 
     def test_index_trending(self):

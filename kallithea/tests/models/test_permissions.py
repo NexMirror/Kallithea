@@ -690,7 +690,6 @@ class TestPermissions(TestController):
                 .filter(UserToPerm.permission == old) \
                 .one()
         p.permission = new
-        Session().add(p)
         Session().commit()
 
         PermissionModel().create_default_permissions(user=self.u1)

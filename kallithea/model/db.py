@@ -667,7 +667,6 @@ class User(Base, BaseModel):
     def update_lastlogin(self):
         """Update user lastlogin"""
         self.last_login = datetime.datetime.now()
-        Session().add(self)
         log.debug('updated user %s lastlogin', self.username)
 
     @classmethod
@@ -1288,13 +1287,11 @@ class Repository(Base, BaseModel):
         if lock_time is not None:
             lock_time = time.time()
         repo.locked = [user_id, lock_time]
-        Session().add(repo)
         Session().commit()
 
     @classmethod
     def unlock(cls, repo):
         repo.locked = None
-        Session().add(repo)
         Session().commit()
 
     @classmethod
@@ -1346,7 +1343,7 @@ class Repository(Base, BaseModel):
 
     def set_state(self, state):
         self.repo_state = state
-        Session().add(self)
+
     #==========================================================================
     # SCM PROPERTIES
     #==========================================================================
@@ -1395,7 +1392,6 @@ class Repository(Base, BaseModel):
                       self.repo_name, cs_cache)
             self.updated_on = last_change
             self.changeset_cache = cs_cache
-            Session().add(self)
             Session().commit()
         else:
             log.debug('changeset_cache for %s already up to date with %s',
@@ -2177,10 +2173,10 @@ class CacheInvalidation(Base, BaseModel):
         inv_obj = cls.query().filter(cls.cache_key == cache_key).scalar()
         if inv_obj is None:
             inv_obj = cls(cache_key, repo_name)
+            Session().add(inv_obj)
         elif inv_obj.cache_active:
             return True
         inv_obj.cache_active = True
-        Session().add(inv_obj)
         try:
             Session().commit()
         except sqlalchemy.exc.IntegrityError:
@@ -2535,7 +2531,6 @@ class UserNotification(Base, BaseModel):
 
     def mark_as_read(self):
         self.read = True
-        Session().add(self)
 
 
 class Gist(Base, BaseModel):

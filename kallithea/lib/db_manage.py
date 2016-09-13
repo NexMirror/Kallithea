@@ -479,7 +479,6 @@ class DbManage(object):
         if self.cli_args.get('public_access') is False:
             log.info('Public access disabled')
             user.active = False
-            Session().add(user)
             Session().commit()
 
     def create_permissions(self):
