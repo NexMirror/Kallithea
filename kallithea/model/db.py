@@ -1090,6 +1090,19 @@ class Repository(Base, BaseModel):
             log.error(traceback.format_exc())
 
     @classmethod
+    def query(cls, sorted=False):
+        """Add Repository-specific helpers for common query constructs.
+
+        sorted: if True, apply the default ordering (name, case insensitive).
+        """
+        q = super(Repository, cls).query()
+
+        if sorted:
+            q = q.order_by(func.lower(Repository.repo_name))
+
+        return q
+
+    @classmethod
     def url_sep(cls):
         return URL_SEP
 

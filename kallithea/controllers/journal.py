@@ -211,10 +211,8 @@ class JournalController(BaseController):
         if request.environ.get('HTTP_X_PARTIAL_XHR'):
             return render('journal/journal_data.html')
 
-        repos_list = Session().query(Repository) \
-                     .filter(Repository.user_id ==
-                             self.authuser.user_id) \
-                     .order_by(func.lower(Repository.repo_name)).all()
+        repos_list = Repository.query(sorted=True) \
+            .filter_by(user_id=self.authuser.user_id).all()
 
         repos_data = RepoModel().get_repos_as_dict(repos_list=repos_list,
                                                    admin=True)

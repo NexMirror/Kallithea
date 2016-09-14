@@ -98,9 +98,7 @@ class ReposController(BaseRepoController):
         return defaults
 
     def index(self, format='html'):
-        _list = Repository.query() \
-                        .order_by(func.lower(Repository.repo_name)) \
-                        .all()
+        _list = Repository.query(sorted=True).all()
 
         c.repos_list = RepoList(_list, perm_set=['repository.admin'])
         repos_data = RepoModel().get_repos_as_dict(repos_list=c.repos_list,

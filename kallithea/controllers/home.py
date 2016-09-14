@@ -57,10 +57,7 @@ class HomeController(BaseController):
         c.groups = self.scm_model.get_repo_groups()
         c.group = None
 
-        c.repos_list = Repository.query() \
-                        .filter(Repository.group_id == None) \
-                        .order_by(func.lower(Repository.repo_name)) \
-                        .all()
+        c.repos_list = Repository.query(sorted=True).filter_by(group=None).all()
 
         repos_data = RepoModel().get_repos_as_dict(repos_list=c.repos_list,
                                                    admin=False, short_name=True)

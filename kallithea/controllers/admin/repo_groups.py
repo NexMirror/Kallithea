@@ -309,10 +309,7 @@ class RepoGroupsController(BaseController):
             .filter(RepoGroup.group_parent_id == c.group.group_id).all()
         c.groups = self.scm_model.get_repo_groups(groups)
 
-        c.repos_list = Repository.query() \
-                        .filter(Repository.group_id == c.group.group_id) \
-                        .order_by(func.lower(Repository.repo_name)) \
-                        .all()
+        c.repos_list = Repository.query(sorted=True).filter_by(group=c.group).all()
 
         repos_data = RepoModel().get_repos_as_dict(repos_list=c.repos_list,
                                                    admin=False, short_name=True)
