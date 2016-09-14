@@ -2212,7 +2212,7 @@ class ChangesetComment(Base, BaseModel):
     pull_request_id = Column(Integer(), ForeignKey('pull_requests.pull_request_id'), nullable=True)
     line_no = Column(Unicode(10), nullable=True)
     f_path = Column(Unicode(1000), nullable=True)
-    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
+    author_id = Column('user_id', Integer(), ForeignKey('users.user_id'), nullable=False)
     text = Column(UnicodeText(), nullable=False)
     created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
     modified_at = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)

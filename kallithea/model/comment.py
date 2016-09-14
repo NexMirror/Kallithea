@@ -43,7 +43,7 @@ log = logging.getLogger(__name__)
 
 class ChangesetCommentsModel(BaseModel):
 
-    def _get_notification_data(self, repo, comment, user, comment_text,
+    def _get_notification_data(self, repo, comment, author, comment_text,
                                line_no=None, revision=None, pull_request=None,
                                status_change=None, closing_pr=False):
         """
@@ -85,7 +85,7 @@ class ChangesetCommentsModel(BaseModel):
             recipients += [cs_author]
             email_kwargs = {
                 'status_change': status_change,
-                'cs_comment_user': user.full_name_and_username,
+                'cs_comment_user': author.full_name_and_username,
                 'cs_target_repo': h.canonical_url('summary_home', repo_name=repo.repo_name),
                 'cs_comment_url': comment_url,
                 'cs_url': h.canonical_url('changeset_home', repo_name=repo.repo_name, revision=revision),
@@ -96,7 +96,7 @@ class ChangesetCommentsModel(BaseModel):
                 'repo_name': repo.repo_name,
                 'short_id': h.short_id(revision),
                 'branch': cs.branch,
-                'comment_username': user.username,
+                'comment_username': author.username,
                 'threading': threading,
             }
         #pull request
@@ -139,7 +139,7 @@ class ChangesetCommentsModel(BaseModel):
                 'closing_pr': closing_pr,
                 'pr_comment_url': comment_url,
                 'pr_url': pull_request.url(canonical=True),
-                'pr_comment_user': user.full_name_and_username,
+                'pr_comment_user': author.full_name_and_username,
                 'pr_target_repo': h.canonical_url('summary_home',
                                    repo_name=pull_request.other_repo.repo_name),
                 'pr_target_branch': other_ref_name,
@@ -149,13 +149,13 @@ class ChangesetCommentsModel(BaseModel):
                 'pr_owner': pull_request.owner,
                 'pr_owner_username': pull_request.owner.username,
                 'repo_name': pull_request.other_repo.repo_name,
-                'comment_username': user.username,
+                'comment_username': author.username,
                 'threading': threading,
             }
 
         return subj, body, recipients, notification_type, email_kwargs
 
-    def create(self, text, repo, user, revision=None, pull_request=None,
+    def create(self, text, repo, author, revision=None, pull_request=None,
                f_path=None, line_no=None, status_change=None, closing_pr=False,
                send_email=True):
         """
@@ -169,10 +169,10 @@ class ChangesetCommentsModel(BaseModel):
             return None
 
         repo = self._get_repo(repo)
-        user = self._get_user(user)
+        author = self._get_user(author)
         comment = ChangesetComment()
         comment.repo = repo
-        comment.author = user
+        comment.author = author
         comment.text = text
         comment.f_path = f_path
         comment.line_no = line_no
@@ -191,7 +191,7 @@ class ChangesetCommentsModel(BaseModel):
         if send_email:
             (subj, body, recipients, notification_type,
              email_kwargs) = self._get_notification_data(
-                                repo, comment, user,
+                                repo, comment, author,
                                 comment_text=text,
                                 line_no=line_no,
                                 revision=revision,
@@ -201,7 +201,7 @@ class ChangesetCommentsModel(BaseModel):
             email_kwargs['is_mention'] = False
             # create notification objects, and emails
             NotificationModel().create(
-                created_by=user, subject=subj, body=body,
+                created_by=author, subject=subj, body=body,
                 recipients=recipients, type_=notification_type,
                 email_kwargs=email_kwargs,
             )
@@ -212,7 +212,7 @@ class ChangesetCommentsModel(BaseModel):
                 subj = _('[Mention]') + ' ' + subj
                 # FIXME: this subject is wrong and unused!
                 NotificationModel().create(
-                    created_by=user, subject=subj, body=body,
+                    created_by=author, subject=subj, body=body,
                     recipients=mention_recipients,
                     type_=notification_type,
                     email_kwargs=email_kwargs

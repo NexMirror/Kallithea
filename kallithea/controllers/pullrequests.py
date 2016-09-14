@@ -474,7 +474,7 @@ class PullrequestsController(BaseRepoController):
         ChangesetCommentsModel().create(
             text=_('Closed, next iteration: %s .') % pull_request.url(canonical=True),
             repo=old_pull_request.other_repo.repo_id,
-            user=c.authuser.user_id,
+            author=c.authuser.user_id,
             pull_request=old_pull_request.pull_request_id,
             closing_pr=True)
         PullRequestModel().close_pull_request(old_pull_request.pull_request_id)

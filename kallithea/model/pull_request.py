@@ -83,7 +83,7 @@ class PullRequestModel(BaseModel):
         comment = ChangesetCommentsModel().create(
             text=u'',
             repo=org_repo,
-            user=new.owner,
+            author=new.owner,
             pull_request=new,
             send_email=False,
             status_change=ChangesetStatus.STATUS_UNDER_REVIEW,
