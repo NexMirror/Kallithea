@@ -181,7 +181,7 @@ class PullrequestsController(BaseRepoController):
         if pull_request.is_closed():
             return False
 
-        owner = self.authuser.user_id == pull_request.user_id
+        owner = self.authuser.user_id == pull_request.owner_id
         reviewer = PullRequestReviewers.query() \
             .filter(PullRequestReviewers.pull_request == pull_request) \
             .filter(PullRequestReviewers.user_id == self.authuser.user_id) \
@@ -216,7 +216,7 @@ class PullrequestsController(BaseRepoController):
         c.my_pull_requests = PullRequest.query(
             include_closed=c.closed,
             sorted=True,
-        ).filter_by(user_id=self.authuser.user_id).all()
+        ).filter_by(owner_id=self.authuser.user_id).all()
 
         c.participate_in_pull_requests = []
         c.participate_in_pull_requests_todo = []
@@ -496,7 +496,7 @@ class PullrequestsController(BaseRepoController):
             raise HTTPForbidden()
         assert pull_request.other_repo.repo_name == repo_name
         #only owner or admin can update it
-        owner = pull_request.owner.user_id == c.authuser.user_id
+        owner = pull_request.owner_id == c.authuser.user_id
         repo_admin = h.HasRepoPermissionAny('repository.admin')(c.repo_name)
         if not (h.HasPermissionAny('hg.admin')() or repo_admin or owner):
             raise HTTPForbidden()

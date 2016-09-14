@@ -41,7 +41,7 @@ def _crrepohook(*args, **kwargs):
      :param created_on:
      :param enable_downloads:
      :param repo_id:
-     :param user_id:
+     :param owner_id:
      :param enable_statistics:
      :param clone_uri:
      :param fork_id:
@@ -123,7 +123,7 @@ def _dlrepohook(*args, **kwargs):
      :param created_on:
      :param enable_downloads:
      :param repo_id:
-     :param user_id:
+     :param owner_id:
      :param enable_statistics:
      :param clone_uri:
      :param fork_id:

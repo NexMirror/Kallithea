@@ -448,7 +448,7 @@ class _BaseTestCase(TestController):
                         fixture._get_repo_create_params(repo_private=1,
                                                 repo_name=self.REPO,
                                                 repo_type=self.REPO_TYPE,
-                                                user=TEST_USER_ADMIN_LOGIN,
+                                                owner=TEST_USER_ADMIN_LOGIN,
                                                 _authentication_token=self.authentication_token()))
         self.checkSessionFlash(response,
                                msg='Repository %s updated successfully' % (self.REPO))
@@ -463,7 +463,7 @@ class _BaseTestCase(TestController):
                         fixture._get_repo_create_params(repo_private=False,
                                                 repo_name=self.REPO,
                                                 repo_type=self.REPO_TYPE,
-                                                user=TEST_USER_ADMIN_LOGIN,
+                                                owner=TEST_USER_ADMIN_LOGIN,
                                                 _authentication_token=self.authentication_token()))
         self.checkSessionFlash(response,
                                msg='Repository %s updated successfully' % (self.REPO))

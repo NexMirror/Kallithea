@@ -212,7 +212,7 @@ class JournalController(BaseController):
             return render('journal/journal_data.html')
 
         repos_list = Repository.query(sorted=True) \
-            .filter_by(user_id=self.authuser.user_id).all()
+            .filter_by(owner_id=self.authuser.user_id).all()
 
         repos_data = RepoModel().get_repos_as_dict(repos_list=repos_list,
                                                    admin=True)

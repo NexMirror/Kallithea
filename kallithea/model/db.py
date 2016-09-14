@@ -844,7 +844,7 @@ class UserGroup(Base, BaseModel):
     user_group_description = Column(Unicode(10000), nullable=True) # FIXME: not nullable?
     users_group_active = Column(Boolean(), nullable=False)
     inherit_default_permissions = Column("users_group_inherit_default_permissions", Boolean(), nullable=False, default=True)
-    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
+    owner_id = Column('user_id', Integer(), ForeignKey('users.user_id'), nullable=False)
     created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
     _group_data = Column("group_data", LargeBinary(), nullable=True)  # JSON data # FIXME: not nullable?
 
@@ -855,7 +855,7 @@ class UserGroup(Base, BaseModel):
     user_user_group_to_perm = relationship('UserUserGroupToPerm ', cascade='all')
     user_group_user_group_to_perm = relationship('UserGroupUserGroupToPerm ', primaryjoin="UserGroupUserGroupToPerm.target_user_group_id==UserGroup.users_group_id", cascade='all')
 
-    user = relationship('User')
+    owner = relationship('User')
 
     @hybrid_property
     def group_data(self):
@@ -910,7 +910,7 @@ class UserGroup(Base, BaseModel):
             group_name=user_group.users_group_name,
             group_description=user_group.user_group_description,
             active=user_group.users_group_active,
-            owner=user_group.user.username,
+            owner=user_group.owner.username,
         )
         if with_members:
             members = []
@@ -998,7 +998,7 @@ class Repository(Base, BaseModel):
 
     clone_uri = Column(String(255), nullable=True) # FIXME: not nullable?
     repo_type = Column(String(255), nullable=False)
-    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
+    owner_id = Column('user_id', Integer(), ForeignKey('users.user_id'), nullable=False)
     private = Column(Boolean(), nullable=False)
     enable_statistics = Column("statistics", Boolean(), nullable=False, default=True)
     enable_downloads = Column("downloads", Boolean(), nullable=False, default=True)
@@ -1013,7 +1013,7 @@ class Repository(Base, BaseModel):
     fork_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=True)
     group_id = Column(Integer(), ForeignKey('groups.group_id'), nullable=True)
 
-    user = relationship('User')
+    owner = relationship('User')
     fork = relationship('Repository', remote_side=repo_id)
     group = relationship('RepoGroup')
     repo_to_perm = relationship('UserRepoToPerm', cascade='all', order_by='UserRepoToPerm.repo_to_perm_id')
@@ -1121,7 +1121,7 @@ class Repository(Base, BaseModel):
     def get_by_repo_name(cls, repo_name):
         q = Session().query(cls).filter(cls.repo_name == repo_name)
         q = q.options(joinedload(Repository.fork)) \
-                .options(joinedload(Repository.user)) \
+                .options(joinedload(Repository.owner)) \
                 .options(joinedload(Repository.group))
         return q.scalar()
 
@@ -1263,7 +1263,7 @@ class Repository(Base, BaseModel):
             created_on=repo.created_on,
             description=repo.description,
             landing_rev=repo.landing_rev,
-            owner=repo.user.username,
+            owner=repo.owner.username,
             fork_of=repo.fork.repo_name if repo.fork else None,
             enable_statistics=repo.enable_statistics,
             enable_locking=repo.enable_locking,
@@ -1524,13 +1524,13 @@ class RepoGroup(Base, BaseModel):
     group_parent_id = Column(Integer(), ForeignKey('groups.group_id'), nullable=True)
     group_description = Column(Unicode(10000), nullable=False)
     enable_locking = Column(Boolean(), nullable=False, default=False)
-    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
+    owner_id = Column('user_id', Integer(), ForeignKey('users.user_id'), nullable=False)
     created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
 
     repo_group_to_perm = relationship('UserRepoGroupToPerm', cascade='all', order_by='UserRepoGroupToPerm.group_to_perm_id')
     users_group_to_perm = relationship('UserGroupRepoGroupToPerm', cascade='all')
     parent_group = relationship('RepoGroup', remote_side=group_id)
-    user = relationship('User')
+    owner = relationship('User')
 
     @classmethod
     def query(cls, sorted=False):
@@ -1694,7 +1694,7 @@ class RepoGroup(Base, BaseModel):
             group_description=group.group_description,
             parent_group=group.parent_group.group_name if group.parent_group else None,
             repositories=[x.repo_name for x in group.repositories],
-            owner=group.user.username
+            owner=group.owner.username
         )
         return data
 
@@ -2329,7 +2329,7 @@ class PullRequest(Base, BaseModel):
     status = Column(Unicode(255), nullable=False, default=STATUS_NEW) # only for closedness, not approve/reject/etc
     created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
     updated_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
-    user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
+    owner_id = Column('user_id', Integer(), ForeignKey('users.user_id'), nullable=False)
     _revisions = Column('revisions', UnicodeText(), nullable=False)
     org_repo_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=False)
     org_ref = Column(Unicode(255), nullable=False)

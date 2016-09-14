@@ -453,7 +453,7 @@ def map_groups(path):
                       lvl, group_name)
             group = RepoGroup(group_name, parent)
             group.group_description = desc
-            group.user = owner
+            group.owner = owner
             sa.add(group)
             perm_obj = rgm._create_default_perms(group)
             sa.add(perm_obj)

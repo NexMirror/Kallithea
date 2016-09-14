@@ -143,10 +143,10 @@ class RepoGroupModel(BaseModel):
     def create(self, group_name, group_description, owner, parent=None,
                just_db=False, copy_permissions=False):
         try:
-            user = self._get_user(owner)
+            owner = self._get_user(owner)
             parent_group = self._get_repo_group(parent)
             new_repo_group = RepoGroup()
-            new_repo_group.user = user
+            new_repo_group.owner = owner
             new_repo_group.group_description = group_description or group_name
             new_repo_group.parent_group = parent_group
             new_repo_group.group_name = new_repo_group.get_new_name(group_name)
@@ -155,7 +155,7 @@ class RepoGroupModel(BaseModel):
 
             # create an ADMIN permission for owner except if we're super admin,
             # later owner should go into the owner field of groups
-            if not user.is_admin:
+            if not owner.is_admin:
                 self.grant_user_permission(repo_group=new_repo_group,
                                            user=owner, perm='group.admin')
 
@@ -171,7 +171,7 @@ class RepoGroupModel(BaseModel):
                     # don't copy over the permission for user who is creating
                     # this group, if he is not super admin he get's admin
                     # permission set above
-                    if perm.user != user or user.is_admin:
+                    if perm.user != owner or owner.is_admin:
                         UserRepoGroupToPerm.create(perm.user, new_repo_group, perm.permission)
 
                 for perm in group_perms:

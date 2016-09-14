@@ -107,7 +107,7 @@ class UserGroupModel(BaseModel):
     def create(self, name, description, owner, active=True, group_data=None):
         try:
             new_user_group = UserGroup()
-            new_user_group.user = self._get_user(owner)
+            new_user_group.owner = self._get_user(owner)
             new_user_group.users_group_name = name
             new_user_group.user_group_description = description
             new_user_group.users_group_active = active

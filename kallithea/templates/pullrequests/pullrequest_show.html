@@ -238,7 +238,7 @@ ${self.repo_context_bar('showpullrequest')}
                   ${h.gravatar_div(member.email, size=14, div_class="reviewer_gravatar gravatar")}
                   <div style="float:left;">
                     ${member.full_name_and_username}
-                    %if c.pull_request.user_id == member.user_id:
+                    %if c.pull_request.owner_id == member.user_id:
                       (${_('Owner')})
                     %endif
                   </div>
@@ -270,7 +270,7 @@ ${self.repo_context_bar('showpullrequest')}
             ${_('Click to add the repository owner as reviewer:')}
           </div>
           <ul style="margin-top: 10px">
-            %for u in [c.pull_request.other_repo.user]:
+            %for u in [c.pull_request.other_repo.owner]:
               <li>
                 <a class="missing_reviewer missing_reviewer_${u.user_id}"
                   user_id="${u.user_id}"

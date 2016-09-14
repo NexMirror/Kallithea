@@ -963,7 +963,7 @@ class ApiController(JSONRPCController):
         updates = {}
         store_update(updates, group_name, 'users_group_name')
         store_update(updates, description, 'user_group_description')
-        store_update(updates, owner, 'user')
+        store_update(updates, owner, 'owner')
         store_update(updates, active, 'users_group_active')
         try:
             UserGroupModel().update(user_group, updates)
@@ -1513,7 +1513,7 @@ class ApiController(JSONRPCController):
         try:
             store_update(updates, name, 'repo_name')
             store_update(updates, repo_group, 'repo_group')
-            store_update(updates, owner, 'user')
+            store_update(updates, owner, 'owner')
             store_update(updates, description, 'repo_description')
             store_update(updates, private, 'repo_private')
             store_update(updates, clone_uri, 'clone_uri')

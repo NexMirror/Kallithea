@@ -81,7 +81,7 @@ class MyAccountController(BaseController):
         else:
             admin = True
             repos_list = Session().query(Repository) \
-                         .filter(Repository.user_id ==
+                         .filter(Repository.owner_id ==
                                  self.authuser.user_id).all()
 
         repos_data = RepoModel().get_repos_as_dict(repos_list=repos_list,

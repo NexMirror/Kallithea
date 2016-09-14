@@ -28,7 +28,7 @@ class TestMyAccountController(TestController):
     def test_my_account_my_repos(self):
         self.log_user()
         response = self.app.get(url('my_account_repos'))
-        cnt = Repository.query().filter(Repository.user ==
+        cnt = Repository.query().filter(Repository.owner ==
                            User.get_by_username(TEST_USER_ADMIN_LOGIN)).count()
         response.mustcontain('"totalRecords": %s' % cnt)
 

@@ -81,7 +81,7 @@ class ChangesetCommentsModel(BaseModel):
             if not cs_author:
                 #use repo owner if we cannot extract the author correctly
                 # FIXME: just use committer name even if not a user
-                cs_author = repo.user
+                cs_author = repo.owner
             recipients += [cs_author]
             email_kwargs = {
                 'status_change': status_change,

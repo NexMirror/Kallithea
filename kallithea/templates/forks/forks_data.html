@@ -4,9 +4,9 @@
     % for f in c.forks_pager:
         <div>
             <div class="fork_user">
-                ${h.gravatar_div(f.user.email, size=24)}
+                ${h.gravatar_div(f.owner.email, size=24)}
                 <span style="font-size: 20px">
-                 <b>${f.user.username}</b> (${f.user.name} ${f.user.lastname}) /
+                 <b>${f.owner.username}</b> (${f.owner.name} ${f.owner.lastname}) /
                   ${h.link_to(f.repo_name,h.url('summary_home',repo_name=f.repo_name))}
                 </span>
                 <div style="padding:5px 3px 3px 42px;">${f.description}</div>

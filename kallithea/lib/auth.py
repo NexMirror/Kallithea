@@ -215,10 +215,10 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
     # defaults for repositories, taken from default user
     for perm in default_repo_perms:
         r_k = perm.UserRepoToPerm.repository.repo_name
-        if perm.Repository.private and not (perm.Repository.user_id == user_id):
+        if perm.Repository.private and not (perm.Repository.owner_id == user_id):
             # disable defaults for private repos,
             p = 'repository.none'
-        elif perm.Repository.user_id == user_id:
+        elif perm.Repository.owner_id == user_id:
             # set admin if owner
             p = 'repository.admin'
         else:
@@ -325,7 +325,7 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
         p = perm.Permission.permission_name
         cur_perm = permissions[RK][r_k]
 
-        if perm.Repository.user_id == user_id:
+        if perm.Repository.owner_id == user_id:
             # set admin if owner
             p = 'repository.admin'
         else:
@@ -340,7 +340,7 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
         r_k = perm.UserRepoToPerm.repository.repo_name
         cur_perm = permissions[RK][r_k]
         # set admin if owner
-        if perm.Repository.user_id == user_id:
+        if perm.Repository.owner_id == user_id:
             p = 'repository.admin'
         else:
             p = perm.Permission.permission_name

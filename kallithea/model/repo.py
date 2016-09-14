@@ -211,8 +211,8 @@ class RepoModel(BaseModel):
         def repo_actions(repo_name):
             return _render('repo_actions', repo_name, super_user_actions)
 
-        def owner_actions(user_id, username):
-            return _render('user_name', user_id, username)
+        def owner_actions(owner_id, username):
+            return _render('user_name', owner_id, username)
 
         repos_data = []
         for repo in repos_list:
@@ -234,7 +234,7 @@ class RepoModel(BaseModel):
                 "last_changeset": last_rev(repo.repo_name, cs_cache),
                 "last_rev_raw": cs_cache.get('revision'),
                 "desc": desc(repo.description),
-                "owner": h.person(repo.user),
+                "owner": h.person(repo.owner),
                 "state": state(repo.repo_state),
                 "rss": rss_lnk(repo.repo_name),
                 "atom": atom_lnk(repo.repo_name),
@@ -243,8 +243,8 @@ class RepoModel(BaseModel):
             if admin:
                 row.update({
                     "action": repo_actions(repo.repo_name),
-                    "owner": owner_actions(repo.user.user_id,
-                                           h.person(repo.user))
+                    "owner": owner_actions(repo.owner_id,
+                                           h.person(repo.owner))
                 })
             repos_data.append(row)
 
@@ -291,12 +291,12 @@ class RepoModel(BaseModel):
                 defaults['clone_uri_hidden'] = repo_info.clone_uri_hidden
 
         # fill owner
-        if repo_info.user:
-            defaults.update({'user': repo_info.user.username})
+        if repo_info.owner:
+            defaults.update({'owner': repo_info.owner.username})
         else:
             replacement_user = User.query().filter(User.admin ==
                                                    True).first().username
-            defaults.update({'user': replacement_user})
+            defaults.update({'owner': replacement_user})
 
         # fill repository users
         for p in repo_info.repo_to_perm:
@@ -314,8 +314,8 @@ class RepoModel(BaseModel):
         try:
             cur_repo = self._get_repo(repo)
             org_repo_name = cur_repo.repo_name
-            if 'user' in kwargs:
-                cur_repo.user = User.get_by_username(kwargs['user'])
+            if 'owner' in kwargs:
+                cur_repo.owner = User.get_by_username(kwargs['owner'])
 
             if 'repo_group' in kwargs:
                 cur_repo.group = RepoGroup.get(kwargs['repo_group'])
@@ -392,7 +392,7 @@ class RepoModel(BaseModel):
             new_repo.enable_statistics = False
             new_repo.repo_name = repo_name_full
             new_repo.repo_type = repo_type
-            new_repo.user = owner
+            new_repo.owner = owner
             new_repo.group = repo_group
             new_repo.description = description or repo_name
             new_repo.private = private

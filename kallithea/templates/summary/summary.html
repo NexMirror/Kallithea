@@ -131,9 +131,9 @@ summary = lambda n:{False:'summary-short'}.get(n)
         <div id="summary-menu-stats">
           <ul>
             <li>
-               <a title="${_('Owner')} ${c.db_repo.user.email}">
-                <i class="icon-user"></i> ${c.db_repo.user.username}
-                ${h.gravatar_div(c.db_repo.user.email, size=18, div_style="float: right; margin: 0px 0px 0px 0px", div_title=c.db_repo.user.full_name)}
+               <a title="${_('Owner')} ${c.db_repo.owner.email}">
+                <i class="icon-user"></i> ${c.db_repo.owner.username}
+                ${h.gravatar_div(c.db_repo.owner.email, size=18, div_style="float: right; margin: 0px 0px 0px 0px", div_title=c.db_repo.owner.full_name)}
               </a>
             </li>
             <li>
