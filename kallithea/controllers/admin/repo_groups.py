@@ -109,9 +109,7 @@ class RepoGroupsController(BaseController):
         return False
 
     def index(self, format='html'):
-        _list = RepoGroup.query() \
-                    .order_by(func.lower(RepoGroup.group_name)) \
-                    .all()
+        _list = RepoGroup.query(sorted=True).all()
         group_iter = RepoGroupList(_list, perm_set=['group.admin'])
         repo_groups_data = []
         total_records = len(group_iter)

@@ -1535,6 +1535,19 @@ class RepoGroup(Base, BaseModel):
     parent_group = relationship('RepoGroup', remote_side=group_id)
     user = relationship('User')
 
+    @classmethod
+    def query(cls, sorted=False):
+        """Add RepoGroup-specific helpers for common query constructs.
+
+        sorted: if True, apply the default ordering (name, case insensitive).
+        """
+        q = super(RepoGroup, cls).query()
+
+        if sorted:
+            q = q.order_by(func.lower(RepoGroup.group_name))
+
+        return q
+
     def __init__(self, group_name='', parent_group=None):
         self.group_name = group_name
         self.parent_group = parent_group
