@@ -255,14 +255,11 @@ class MyAccountController(BaseController):
 
     def my_account_api_keys_delete(self):
         api_key = request.POST.get('del_api_key')
-        user_id = self.authuser.user_id
         if request.POST.get('del_api_key_builtin'):
-            user = User.get(user_id)
-            if user is not None:
-                user.api_key = generate_api_key()
-                Session().add(user)
-                Session().commit()
-                h.flash(_("API key successfully reset"), category='success')
+            user = User.get(self.authuser.user_id)
+            user.api_key = generate_api_key()
+            Session().commit()
+            h.flash(_("API key successfully reset"), category='success')
         elif api_key:
             ApiKeyModel().delete(api_key, self.authuser.user_id)
             Session().commit()
