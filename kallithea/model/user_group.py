@@ -202,7 +202,7 @@ class UserGroupModel(BaseModel):
 
         user_group_member = None
         for m in user_group.members:
-            if m.user.user_id == user.user_id:
+            if m.user_id == user.user_id:
                 # Found this user's membership row
                 user_group_member = m
                 break

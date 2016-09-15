@@ -78,10 +78,10 @@ class JournalController(BaseController):
         return groups
 
     def _get_journal_data(self, following_repos):
-        repo_ids = [x.follows_repository.repo_id for x in following_repos
-                    if x.follows_repository is not None]
-        user_ids = [x.follows_user.user_id for x in following_repos
-                    if x.follows_user is not None]
+        repo_ids = [x.follows_repo_id for x in following_repos
+                    if x.follows_repo_id is not None]
+        user_ids = [x.follows_user_id for x in following_repos
+                    if x.follows_user_id is not None]
 
         filtering_criterion = None
 

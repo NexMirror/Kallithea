@@ -473,7 +473,7 @@ class PullrequestsController(BaseRepoController):
 
         ChangesetCommentsModel().create(
             text=_('Closed, next iteration: %s .') % pull_request.url(canonical=True),
-            repo=old_pull_request.other_repo.repo_id,
+            repo=old_pull_request.other_repo_id,
             author=c.authuser.user_id,
             pull_request=old_pull_request.pull_request_id,
             closing_pr=True)
@@ -536,7 +536,7 @@ class PullrequestsController(BaseRepoController):
     def delete(self, repo_name, pull_request_id):
         pull_request = PullRequest.get_or_404(pull_request_id)
         #only owner can delete it !
-        if pull_request.owner.user_id == c.authuser.user_id:
+        if pull_request.owner_id == c.authuser.user_id:
             PullRequestModel().delete(pull_request)
             Session().commit()
             h.flash(_('Successfully deleted pull request'),
@@ -758,7 +758,7 @@ class PullrequestsController(BaseRepoController):
                 raise HTTPForbidden()
 
         if delete == "delete":
-            if (pull_request.owner.user_id == c.authuser.user_id or
+            if (pull_request.owner_id == c.authuser.user_id or
                 h.HasPermissionAny('hg.admin')() or
                 h.HasRepoPermissionAny('repository.admin')(pull_request.org_repo.repo_name) or
                 h.HasRepoPermissionAny('repository.admin')(pull_request.other_repo.repo_name)
@@ -830,7 +830,7 @@ class PullrequestsController(BaseRepoController):
             #don't allow deleting comments on closed pull request
             raise HTTPForbidden()
 
-        owner = co.author.user_id == c.authuser.user_id
+        owner = co.author_id == c.authuser.user_id
         repo_admin = h.HasRepoPermissionAny('repository.admin')(c.repo_name)
         if h.HasPermissionAny('hg.admin')() or repo_admin or owner:
             ChangesetCommentsModel().delete(comment=co)

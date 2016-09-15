@@ -15,7 +15,7 @@
 </%block>
 
 <%def name="main()">
-<% editable = not c.pull_request.is_closed() and (h.HasPermissionAny('hg.admin')() or h.HasRepoPermissionAny('repository.admin')(c.repo_name) or c.pull_request.owner.user_id == c.authuser.user_id) %>
+<% editable = not c.pull_request.is_closed() and (h.HasPermissionAny('hg.admin')() or h.HasRepoPermissionAny('repository.admin')(c.repo_name) or c.pull_request.owner_id == c.authuser.user_id) %>
 ${self.repo_context_bar('showpullrequest')}
 <div class="box">
   <!-- box / title -->

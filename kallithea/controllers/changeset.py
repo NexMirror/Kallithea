@@ -422,7 +422,7 @@ class ChangesetController(BaseRepoController):
         co = ChangesetComment.get_or_404(comment_id)
         if co.repo.repo_name != repo_name:
             raise HTTPNotFound()
-        owner = co.author.user_id == c.authuser.user_id
+        owner = co.author_id == c.authuser.user_id
         repo_admin = h.HasRepoPermissionAny('repository.admin')(repo_name)
         if h.HasPermissionAny('hg.admin')() or repo_admin or owner:
             ChangesetCommentsModel().delete(comment=co)

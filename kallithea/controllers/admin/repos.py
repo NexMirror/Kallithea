@@ -423,7 +423,7 @@ class ReposController(BaseRepoController):
                          if x.repo_id != c.repo_info.repo_id]
 
         defaults = {
-            'id_fork_of': c.repo_info.fork.repo_id if c.repo_info.fork else ''
+            'id_fork_of': c.repo_info.fork_id if c.repo_info.fork_id else ''
         }
 
         c.active = 'advanced'

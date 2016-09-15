@@ -93,7 +93,7 @@ class NotificationsController(BaseController):
     def update(self, notification_id):
         try:
             no = Notification.get(notification_id)
-            owner = all(un.user.user_id == c.authuser.user_id
+            owner = all(un.user_id == c.authuser.user_id
                         for un in no.notifications_to_users)
             if h.HasPermissionAny('hg.admin')() or owner:
                 # deletes only notification2user
@@ -108,7 +108,7 @@ class NotificationsController(BaseController):
     def delete(self, notification_id):
         try:
             no = Notification.get(notification_id)
-            owner = any(un.user.user_id == c.authuser.user_id
+            owner = any(un.user_id == c.authuser.user_id
                         for un in no.notifications_to_users)
             if h.HasPermissionAny('hg.admin')() or owner:
                 # deletes only notification2user

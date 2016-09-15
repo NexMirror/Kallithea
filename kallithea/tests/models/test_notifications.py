@@ -70,7 +70,7 @@ class TestNotifications(TestController):
             .filter(UserNotification.notification == notification).all()
 
         assert len(unotification) == len(usrs)
-        assert set([x.user.user_id for x in unotification]) == set(usrs)
+        assert set([x.user_id for x in unotification]) == set(usrs)
 
     def test_user_notifications(self):
         notification1 = NotificationModel().create(created_by=self.u1,
