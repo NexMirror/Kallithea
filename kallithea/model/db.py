@@ -1619,9 +1619,7 @@ class RepoGroup(Base, BaseModel):
 
     @property
     def repositories(self):
-        return Repository.query() \
-                .filter(Repository.group == self) \
-                .order_by(Repository.repo_name)
+        return Repository.query(sorted=True).filter_by(group=self)
 
     @property
     def repositories_recursive_count(self):
@@ -2058,7 +2056,7 @@ class UserFollowing(Base, BaseModel):
     user = relationship('User', primaryjoin='User.user_id==UserFollowing.user_id')
 
     follows_user = relationship('User', primaryjoin='User.user_id==UserFollowing.follows_user_id')
-    follows_repository = relationship('Repository', order_by='Repository.repo_name')
+    follows_repository = relationship('Repository', order_by=lambda: func.lower(Repository.repo_name))
 
     @classmethod
     def get_repo_followers(cls, repo_id):

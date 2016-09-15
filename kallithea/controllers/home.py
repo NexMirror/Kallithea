@@ -72,7 +72,7 @@ class HomeController(BaseController):
         #wrapper for conditional cache
         def _c():
             log.debug('generating switcher repo/groups list')
-            all_repos = Repository.query().order_by(Repository.repo_name).all()
+            all_repos = Repository.query(sorted=True).all()
             repo_iter = self.scm_model.get_repos(all_repos)
             all_groups = RepoGroup.query().order_by(RepoGroup.group_name).all()
             repo_groups_iter = self.scm_model.get_repo_groups(all_groups)

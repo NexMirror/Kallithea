@@ -415,7 +415,7 @@ class ReposController(BaseRepoController):
             .filter(UserFollowing.user_id == c.default_user_id) \
             .filter(UserFollowing.follows_repository == c.repo_info).scalar()
 
-        _repos = Repository.query().order_by(Repository.repo_name).all()
+        _repos = Repository.query(sorted=True).all()
         read_access_repos = RepoList(_repos)
         c.repos_list = [(None, _('-- Not a fork --'))]
         c.repos_list += [(x.repo_id, x.repo_name)
