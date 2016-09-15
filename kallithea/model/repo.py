@@ -123,7 +123,7 @@ class RepoModel(BaseModel):
         """
         from kallithea.lib.auth import AuthUser
         user = self._get_user(user)
-        repos = AuthUser(user_id=user.user_id).permissions['repositories']
+        repos = AuthUser(dbuser=user).permissions['repositories']
         access_check = lambda r: r[1] in ['repository.read',
                                           'repository.write',
                                           'repository.admin']

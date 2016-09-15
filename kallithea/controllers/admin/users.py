@@ -228,7 +228,7 @@ class UsersController(BaseController):
     def edit_advanced(self, id):
         c.user = self._get_user_or_raise_if_default(id)
         c.active = 'advanced'
-        c.perm_user = AuthUser(user_id=id)
+        c.perm_user = AuthUser(dbuser=c.user)
         c.ip_addr = self.ip_addr
 
         umodel = UserModel()
@@ -281,12 +281,9 @@ class UsersController(BaseController):
 
         api_key = request.POST.get('del_api_key')
         if request.POST.get('del_api_key_builtin'):
-            user = User.get(c.user.user_id)
-            if user is not None:
-                user.api_key = generate_api_key()
-                Session().add(user)
-                Session().commit()
-                h.flash(_("API key successfully reset"), category='success')
+            c.user.api_key = generate_api_key()
+            Session().commit()
+            h.flash(_("API key successfully reset"), category='success')
         elif api_key:
             ApiKeyModel().delete(api_key, c.user.user_id)
             Session().commit()
@@ -300,7 +297,7 @@ class UsersController(BaseController):
     def edit_perms(self, id):
         c.user = self._get_user_or_raise_if_default(id)
         c.active = 'perms'
-        c.perm_user = AuthUser(user_id=id)
+        c.perm_user = AuthUser(dbuser=c.user)
         c.ip_addr = self.ip_addr
 
         umodel = UserModel()
