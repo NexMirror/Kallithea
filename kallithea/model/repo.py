@@ -176,13 +176,6 @@ class RepoModel(BaseModel):
         kwargs.update(dict(_=_, h=h, c=c))
         return tmpl.render(*args, **kwargs)
 
-    @classmethod
-    def update_repoinfo(cls, repositories=None):
-        if repositories is None:
-            repositories = Repository.query()
-        for repo in repositories:
-            repo.update_changeset_cache()
-
     def get_repos_as_dict(self, repos_list=None, admin=False, perm_check=True,
                           super_user_actions=False, short_name=False):
         _render = self._render_datatable

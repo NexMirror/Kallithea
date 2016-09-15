@@ -60,7 +60,8 @@ class Command(BasePasterCommand):
                           for n in self.options.repo_update_list.split(',')]
             repo_list = list(Repository.query()
                 .filter(Repository.repo_name.in_(repo_names)))
-        RepoModel.update_repoinfo(repositories=repo_list)
+        for repo in repo_list:
+            repo.update_changeset_cache()
         Session().commit()
 
         if self.options.invalidate_cache:

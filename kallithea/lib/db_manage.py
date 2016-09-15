@@ -362,7 +362,8 @@ class DbManage(object):
         return fixed
 
     def update_repo_info(self):
-        RepoModel.update_repoinfo()
+        for repo in Repository.query():
+            repo.update_changeset_cache()
 
     def config_prompt(self, test_repo_path='', retries=3):
         _path = self.cli_args.get('repos_location')
