@@ -2340,6 +2340,29 @@ class PullRequest(Base, BaseModel):
     comments = relationship('ChangesetComment', order_by='ChangesetComment.comment_id',
                              cascade="all, delete-orphan")
 
+    @classmethod
+    def query(cls, reviewer_id=None, include_closed=True, sorted=False):
+        """Add PullRequest-specific helpers for common query constructs.
+
+        reviewer_id: only PRs with the specified user added as reviewer.
+
+        include_closed: if False, do not include closed PRs.
+
+        sorted: if True, apply the default ordering (newest first).
+        """
+        q = super(PullRequest, cls).query()
+
+        if reviewer_id is not None:
+            q = q.join(PullRequestReviewers).filter(PullRequestReviewers.user_id == reviewer_id)
+
+        if not include_closed:
+            q = q.filter(PullRequest.status != PullRequest.STATUS_CLOSED)
+
+        if sorted:
+            q = q.order_by(PullRequest.created_on.desc())
+
+        return q
+
     def get_reviewer_users(self):
         """Like .reviewers, but actually returning the users"""
         return User.query() \

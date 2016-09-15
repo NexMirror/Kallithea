@@ -47,27 +47,6 @@ log = logging.getLogger(__name__)
 
 class PullRequestModel(BaseModel):
 
-    def get_pullrequest_cnt_for_user(self, user):
-        return PullRequest.query() \
-                                .join(PullRequestReviewers) \
-                                .filter(PullRequestReviewers.user_id == user) \
-                                .filter(PullRequest.status != PullRequest.STATUS_CLOSED) \
-                                .count()
-
-    def get_all(self, repo_name, from_=False, closed=False):
-        """Get all PRs for repo.
-        Default is all PRs to the repo, PRs from the repo if from_.
-        Closed PRs are only included if closed is true."""
-        repo = self._get_repo(repo_name)
-        q = PullRequest.query()
-        if from_:
-            q = q.filter(PullRequest.org_repo == repo)
-        else:
-            q = q.filter(PullRequest.other_repo == repo)
-        if not closed:
-            q = q.filter(PullRequest.status != PullRequest.STATUS_CLOSED)
-        return q.order_by(PullRequest.created_on.desc()).all()
-
     def _get_valid_reviewers(self, seq):
         """ Generate User objects from a sequence of user IDs, usernames or
         User objects. Raises UserInvalidException if the DEFAULT user is

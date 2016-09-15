@@ -55,10 +55,9 @@ from kallithea.lib.exceptions import UserCreationError
 from kallithea.lib.vcs.exceptions import RepositoryError, EmptyRepositoryError, ChangesetDoesNotExistError
 from kallithea.model import meta
 
-from kallithea.model.db import Repository, Ui, User, Setting
+from kallithea.model.db import PullRequest, Repository, Ui, User, Setting
 from kallithea.model.notification import NotificationModel
 from kallithea.model.scm import ScmModel
-from kallithea.model.pull_request import PullRequestModel
 
 log = logging.getLogger(__name__)
 
@@ -359,7 +358,7 @@ class BaseController(WSGIController):
 
         self.cut_off_limit = safe_int(config.get('cut_off_limit'))
 
-        c.my_pr_count = PullRequestModel().get_pullrequest_cnt_for_user(c.authuser.user_id)
+        c.my_pr_count = PullRequest.query(reviewer_id=c.authuser.user_id, include_closed=False).count()
 
         self.sa = meta.Session
         self.scm_model = ScmModel(self.sa)

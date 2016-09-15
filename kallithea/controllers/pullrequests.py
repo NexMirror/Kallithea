@@ -195,8 +195,14 @@ class PullrequestsController(BaseRepoController):
     def show_all(self, repo_name):
         c.from_ = request.GET.get('from_') or ''
         c.closed = request.GET.get('closed') or ''
-        c.pull_requests = PullRequestModel().get_all(repo_name, from_=c.from_, closed=c.closed)
         p = safe_int(request.GET.get('page'), 1)
+
+        q = PullRequest.query(include_closed=c.closed, sorted=True)
+        if c.from_:
+            q = q.filter_by(org_repo=c.db_repo)
+        else:
+            q = q.filter_by(other_repo=c.db_repo)
+        c.pull_requests = q.all()
 
         c.pullrequests_pager = Page(c.pull_requests, page=p, items_per_page=100)
 
@@ -207,25 +213,19 @@ class PullrequestsController(BaseRepoController):
     def show_my(self):
         c.closed = request.GET.get('closed') or ''
 
-        def _filter(pr):
-            s = sorted(pr, key=lambda o: o.created_on, reverse=True)
-            if not c.closed:
-                s = filter(lambda p: p.status != PullRequest.STATUS_CLOSED, s)
-            return s
-
-        c.my_pull_requests = _filter(PullRequest.query() \
-                                .filter(PullRequest.user_id ==
-                                        self.authuser.user_id) \
-                                .all())
+        c.my_pull_requests = PullRequest.query(
+            include_closed=c.closed,
+            sorted=True,
+        ).filter_by(user_id=self.authuser.user_id).all()
 
         c.participate_in_pull_requests = []
         c.participate_in_pull_requests_todo = []
         done_status = set([ChangesetStatus.STATUS_APPROVED, ChangesetStatus.STATUS_REJECTED])
-        for pr in _filter(PullRequest.query()
-                                .join(PullRequestReviewers)
-                                .filter(PullRequestReviewers.user_id ==
-                                        self.authuser.user_id)
-                         ):
+        for pr in PullRequest.query(
+            include_closed=c.closed,
+            reviewer_id=self.authuser.user_id,
+            sorted=True,
+        ):
             status = pr.user_review_status(c.authuser.user_id) # very inefficient!!!
             if status in done_status:
                 c.participate_in_pull_requests.append(pr)
