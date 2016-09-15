@@ -303,8 +303,7 @@ class RepoGroupsController(BaseController):
         #overwrite our cached list with current filter
         c.repo_cnt = 0
 
-        groups = RepoGroup.query().order_by(RepoGroup.group_name) \
-            .filter(RepoGroup.group_parent_id == c.group.group_id).all()
+        groups = RepoGroup.query(sorted=True).filter_by(parent_group=c.group).all()
         c.groups = self.scm_model.get_repo_groups(groups)
 
         c.repos_list = Repository.query(sorted=True).filter_by(group=c.group).all()

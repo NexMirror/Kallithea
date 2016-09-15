@@ -1518,7 +1518,7 @@ class RepoGroup(Base, BaseModel):
         CheckConstraint('group_id != group_parent_id', name='ck_groups_no_self_parent'),
         _table_args_default_dict,
     )
-    __mapper_args__ = {'order_by': 'group_name'}
+    __mapper_args__ = {'order_by': 'group_name'} # TODO: Deprecated as of SQLAlchemy 1.1.
 
     SEP = ' &raquo; '
 
