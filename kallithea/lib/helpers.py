@@ -487,9 +487,7 @@ def user_or_none(author):
     """Try to match email part of VCS committer string with a local user - or return None"""
     email = author_email(author)
     if email:
-        user = User.get_by_email(email, cache=True) # cache will only use sql_cache_short
-        if user is not None:
-            return user
+        return User.get_by_email(email, cache=True) # cache will only use sql_cache_short
     return None
 
 def email_or_none(author):
