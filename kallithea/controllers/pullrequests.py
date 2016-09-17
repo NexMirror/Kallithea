@@ -30,10 +30,11 @@ import traceback
 import formencode
 import re
 
-from pylons import request, tmpl_context as c, url
+from pylons import request, tmpl_context as c
 from pylons.i18n.translation import _
 from webob.exc import HTTPFound, HTTPNotFound, HTTPForbidden, HTTPBadRequest
 
+from kallithea.config.routing import url
 from kallithea.lib.vcs.utils.hgcompat import unionrepo
 from kallithea.lib.compat import json, OrderedDict
 from kallithea.lib.base import BaseRepoController, render

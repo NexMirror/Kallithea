@@ -28,11 +28,12 @@ Original author and date, and relevant copyright and licensing information is be
 import logging
 import traceback
 
-from pylons import request, url, session, tmpl_context as c
+from pylons import request, session, tmpl_context as c
 from pylons.i18n.translation import _
 from webob.exc import HTTPFound, HTTPNotFound, HTTPBadRequest
 
 import kallithea.lib.helpers as h
+from kallithea.config.routing import url
 from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator
 from kallithea.lib.base import BaseRepoController, render
 from kallithea.lib.helpers import RepoPage

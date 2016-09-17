@@ -28,7 +28,6 @@ import textwrap
 from beaker.cache import cache_region
 from pygments.formatters.html import HtmlFormatter
 from pygments import highlight as code_highlight
-from pylons import url
 from pylons.i18n.translation import _, ungettext
 
 from webhelpers.html import literal, HTML, escape
@@ -52,6 +51,7 @@ from webhelpers.paginate import Page as _Page
 from webhelpers.html.tags import _set_input_attrs, _set_id_attr, \
     convert_boolean_attrs, NotGiven, _make_safe_id_component
 
+from kallithea.config.routing import url
 from kallithea.lib.annotate import annotate_highlight
 from kallithea.lib.utils import repo_name_slug, get_custom_lexer
 from kallithea.lib.utils2 import str2bool, safe_unicode, safe_str, \
@@ -866,7 +866,7 @@ def gravatar(email_address, cls='', size=30):
 
 def gravatar_url(email_address, size=30, default=''):
     # doh, we need to re-import those to mock it later
-    from pylons import url
+    from kallithea.config.routing import url
     from pylons import tmpl_context as c
     if not c.visual.use_gravatar:
         return ""
@@ -1290,7 +1290,7 @@ def urlify_text(s, repo_name=None, link_=None, truncate=None, stylize=False, tru
             return '<b>%s</b>' % mention
         hash_ = match_obj.group('hash')
         if hash_ is not None and repo_name is not None:
-            from pylons import url  # doh, we need to re-import url to mock it later
+            from kallithea.config.routing import url  # doh, we need to re-import url to mock it later
             return '<a class="revision-link" href="%(url)s">%(hash)s</a>' % {
                  'url': url('changeset_home', repo_name=repo_name, revision=hash_),
                  'hash': hash_,

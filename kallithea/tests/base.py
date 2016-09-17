@@ -219,4 +219,3 @@ class TestController(object):
 
     def checkSessionFlashRegex(self, response, regex, skip=0):
         self.checkSessionFlash(response, regex, skip=skip, _matcher=re.search)
-

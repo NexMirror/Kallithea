@@ -32,10 +32,11 @@ import traceback
 import tempfile
 import shutil
 
-from pylons import request, response, tmpl_context as c, url
+from pylons import request, response, tmpl_context as c
 from pylons.i18n.translation import _
 from webob.exc import HTTPFound
 
+from kallithea.config.routing import url
 from kallithea.lib.utils import jsonify, action_logger
 from kallithea.lib import diffs
 from kallithea.lib import helpers as h

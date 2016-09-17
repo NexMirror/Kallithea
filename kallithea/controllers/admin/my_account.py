@@ -31,10 +31,11 @@ import formencode
 
 from sqlalchemy import func
 from formencode import htmlfill
-from pylons import request, tmpl_context as c, url
+from pylons import request, tmpl_context as c
 from pylons.i18n.translation import _
 from webob.exc import HTTPFound
 
+from kallithea.config.routing import url
 from kallithea.lib import helpers as h
 from kallithea.lib import auth_modules
 from kallithea.lib.auth import LoginRequired, NotAnonymous, AuthUser

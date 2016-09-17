@@ -32,10 +32,11 @@ import formencode
 
 from formencode import htmlfill
 from pylons.i18n.translation import _
-from pylons import request, session, tmpl_context as c, url
+from pylons import request, session, tmpl_context as c
 from webob.exc import HTTPFound, HTTPBadRequest
 
 import kallithea.lib.helpers as h
+from kallithea.config.routing import url
 from kallithea.lib.auth import AuthUser, HasPermissionAnyDecorator
 from kallithea.lib.base import BaseController, log_in_user, render
 from kallithea.lib.exceptions import UserCreationError

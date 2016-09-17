@@ -27,10 +27,11 @@ import logging
 import formencode.htmlfill
 import traceback
 
-from pylons import request, tmpl_context as c, url
+from pylons import request, tmpl_context as c
 from pylons.i18n.translation import _
 from webob.exc import HTTPFound
 
+from kallithea.config.routing import url
 from kallithea.lib import helpers as h
 from kallithea.lib.compat import formatted_json
 from kallithea.lib.base import BaseController, render

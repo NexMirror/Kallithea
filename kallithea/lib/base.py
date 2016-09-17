@@ -38,13 +38,14 @@ import paste.httpexceptions
 import paste.auth.basic
 import paste.httpheaders
 
-from pylons import config, tmpl_context as c, request, session, url
+from pylons import config, tmpl_context as c, request, session
 from pylons.controllers import WSGIController
 from pylons.templating import render_mako as render  # don't remove this import
 from pylons.i18n.translation import _
 
 from kallithea import __version__, BACKENDS
 
+from kallithea.config.routing import url
 from kallithea.lib.utils2 import str2bool, safe_unicode, AttributeDict, \
     safe_str, safe_int
 from kallithea.lib import auth_modules

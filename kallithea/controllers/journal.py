@@ -37,9 +37,10 @@ from sqlalchemy.sql.expression import func
 from webhelpers.feedgenerator import Atom1Feed, Rss201rev2Feed
 
 from webob.exc import HTTPBadRequest
-from pylons import request, tmpl_context as c, response, url
+from pylons import request, tmpl_context as c, response
 from pylons.i18n.translation import _
 
+from kallithea.config.routing import url
 from kallithea.controllers.admin.admin import _journal_filter
 from kallithea.model.db import UserLog, UserFollowing, Repository, User
 from kallithea.model.meta import Session

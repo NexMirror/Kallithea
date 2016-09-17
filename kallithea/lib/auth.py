@@ -34,7 +34,7 @@ import collections
 
 from decorator import decorator
 
-from pylons import url, request, session
+from pylons import request, session
 from pylons.i18n.translation import _
 from webhelpers.pylonslib import secure_form
 from sqlalchemy import or_
@@ -43,6 +43,7 @@ from sqlalchemy.orm import joinedload
 from webob.exc import HTTPFound, HTTPBadRequest, HTTPForbidden, HTTPMethodNotAllowed
 
 from kallithea import __platform__, is_windows, is_unix
+from kallithea.config.routing import url
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.model import meta
 from kallithea.model.meta import Session

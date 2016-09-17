@@ -30,12 +30,13 @@ import traceback
 import formencode
 
 from formencode import htmlfill
-from pylons import request, tmpl_context as c, url, config
+from pylons import request, tmpl_context as c, config
 from pylons.i18n.translation import _
 from sqlalchemy.sql.expression import func
 from webob.exc import HTTPFound, HTTPNotFound
 
 import kallithea
+from kallithea.config.routing import url
 from kallithea.lib.exceptions import DefaultUserException, \
     UserOwnsReposException, UserCreationError
 from kallithea.lib import helpers as h

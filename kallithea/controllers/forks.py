@@ -30,12 +30,13 @@ import formencode
 import traceback
 from formencode import htmlfill
 
-from pylons import tmpl_context as c, request, url
+from pylons import tmpl_context as c, request
 from pylons.i18n.translation import _
 from webob.exc import HTTPFound
 
 import kallithea.lib.helpers as h
 
+from kallithea.config.routing import url
 from kallithea.lib.helpers import Page
 from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator, \
     NotAnonymous, HasRepoPermissionAny, HasPermissionAnyDecorator, HasPermissionAny

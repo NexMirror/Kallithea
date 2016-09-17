@@ -32,11 +32,12 @@ import itertools
 
 from formencode import htmlfill
 
-from pylons import request, tmpl_context as c, url
+from pylons import request, tmpl_context as c
 from pylons.i18n.translation import _, ungettext
 from webob.exc import HTTPFound, HTTPForbidden, HTTPNotFound, HTTPInternalServerError
 
 import kallithea
+from kallithea.config.routing import url
 from kallithea.lib import helpers as h
 from kallithea.lib.compat import json
 from kallithea.lib.auth import LoginRequired, \

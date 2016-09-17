@@ -30,10 +30,11 @@ import logging
 import traceback
 import formencode.htmlfill
 
-from pylons import request, response, tmpl_context as c, url
+from pylons import request, response, tmpl_context as c
 from pylons.i18n.translation import _
 from webob.exc import HTTPFound, HTTPNotFound, HTTPForbidden
 
+from kallithea.config.routing import url
 from kallithea.model.forms import GistForm
 from kallithea.model.gist import GistModel
 from kallithea.model.meta import Session
