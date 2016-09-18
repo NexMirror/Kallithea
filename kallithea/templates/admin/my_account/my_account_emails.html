@@ -6,7 +6,7 @@
     %endif
     <td><div class="email">${c.user.email}</div></td>
     <td>
-        <span class="btn btn-mini btn-success disabled">${_('Primary')}</span>
+        <span class="btn btn-success btn-xs disabled">${_('Primary')}</span>
     </td>
     </tr>
     %if c.user_email_map:
@@ -46,8 +46,8 @@
                 </div>
              </div>
             <div class="buttons">
-              ${h.submit('save',_('Add'),class_="btn")}
-              ${h.reset('reset',_('Reset'),class_="btn")}
+              ${h.submit('save',_('Add'),class_="btn btn-default")}
+              ${h.reset('reset',_('Reset'),class_="btn btn-default")}
             </div>
         </div>
     </div>

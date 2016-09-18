@@ -38,7 +38,7 @@ ${self.repo_context_bar('showpullrequest')}
             <label>${_('Description')}:</label>
             %if editable:
             <div style="margin: 5px">
-              <a class="btn btn-small" onclick="$('.pr-do-edit').show();$('.pr-not-edit').hide()">${_("Edit")}</a>
+              <a class="btn btn-default btn-sm" onclick="$('.pr-do-edit').show();$('.pr-not-edit').hide()">${_("Edit")}</a>
             </div>
             %endif
           </div>
@@ -290,9 +290,9 @@ ${self.repo_context_bar('showpullrequest')}
       <div class="fields">
         %if editable:
           <div class="buttons">
-            ${h.submit('pr-form-save',_('Save Changes'),class_="btn btn-small")}
-            ${h.submit('pr-form-clone',_('Create New Iteration with Changes'),class_="btn btn-small",disabled='disabled')}
-            ${h.reset('pr-form-reset',_('Cancel Changes'),class_="btn btn-small")}
+            ${h.submit('pr-form-save',_('Save Changes'),class_="btn btn-default btn-sm")}
+            ${h.submit('pr-form-clone',_('Create New Iteration with Changes'),class_="btn btn-default btn-sm",disabled='disabled')}
+            ${h.reset('pr-form-reset',_('Cancel Changes'),class_="btn btn-default btn-sm")}
           </div>
         %endif
       </div>

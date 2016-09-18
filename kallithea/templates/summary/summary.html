@@ -75,8 +75,8 @@ summary = lambda n:{False:'summary-short'}.get(n)
                   ${self.repotag(c.db_repo)}
                   <input style="width:80%" type="text" id="clone_url" readonly="readonly" value="${c.clone_repo_url}"/>
                   <input style="display:none;width:80%" type="text" id="clone_url_id" readonly="readonly" value="${c.clone_repo_url_id}"/>
-                  <div style="display:none" id="clone_by_name" class="btn btn-small">${_('Show by Name')}</div>
-                  <div id="clone_by_id" class="btn btn-small">${_('Show by ID')}</div>
+                  <div style="display:none" id="clone_by_name" class="btn btn-default btn-sm">${_('Show by Name')}</div>
+                  <div id="clone_by_id" class="btn btn-default btn-sm">${_('Show by ID')}</div>
                 </div>
             </div>
 
@@ -97,7 +97,7 @@ summary = lambda n:{False:'summary-short'}.get(n)
                 %else:
                    ${_('Statistics are disabled for this repository')}
                    %if h.HasPermissionAny('hg.admin')('enable stats on from summary'):
-                        ${h.link_to(_('Enable'),h.url('edit_repo',repo_name=c.repo_name, anchor='repo_enable_statistics'),class_="btn btn-mini")}
+                        ${h.link_to(_('Enable'),h.url('edit_repo',repo_name=c.repo_name, anchor='repo_enable_statistics'),class_="btn btn-default btn-xs")}
                    %endif
                 %endif
               </div>
@@ -113,11 +113,11 @@ summary = lambda n:{False:'summary-short'}.get(n)
                 %elif not c.enable_downloads:
                   ${_('Downloads are disabled for this repository')}
                     %if h.HasPermissionAny('hg.admin')('enable downloads on from summary'):
-                        ${h.link_to(_('Enable'),h.url('edit_repo',repo_name=c.repo_name, anchor='repo_enable_downloads'),class_="btn btn-mini")}
+                        ${h.link_to(_('Enable'),h.url('edit_repo',repo_name=c.repo_name, anchor='repo_enable_downloads'),class_="btn btn-default btn-xs")}
                     %endif
                 %else:
                     <span id="${'zip_link'}">
-                        <a class="btn btn-small" href="${h.url('files_archive_home',repo_name=c.db_repo.repo_name,fname='tip.zip')}"><i class="icon-file-zip"></i> ${_('Download as zip')}</a>
+                        <a class="btn btn-default btn-sm" href="${h.url('files_archive_home',repo_name=c.db_repo.repo_name,fname='tip.zip')}"><i class="icon-file-zip"></i> ${_('Download as zip')}</a>
                     </span>
                     ${h.hidden('download_options')}
                     <span style="vertical-align: bottom">
@@ -304,7 +304,7 @@ $(document).ready(function(){
 
     var tmpl_links = {};
     %for cnt,archive in enumerate(c.db_repo_scm_instance._get_archives()):
-      tmpl_links["${archive['type']}"] = '${h.link_to('__NAME__', h.url('files_archive_home',repo_name=c.db_repo.repo_name, fname='__CS__'+archive['extension'],subrepos='__SUB__'),class_='btn btn-small')}';
+      tmpl_links["${archive['type']}"] = '${h.link_to('__NAME__', h.url('files_archive_home',repo_name=c.db_repo.repo_name, fname='__CS__'+archive['extension'],subrepos='__SUB__'),class_='btn btn-default btn-sm')}';
     %endfor
 });
 </script>

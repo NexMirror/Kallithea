@@ -26,7 +26,7 @@
 
           %if co.author_id == c.authuser.user_id or h.HasRepoPermissionAny('repository.admin')(c.repo_name):
             %if co.deletable():
-              <div onClick="confirm('${_("Delete comment?")}') && deleteComment(${co.comment_id})" class="buttons delete-comment btn btn-mini" style="margin:0 5px">${_('Delete')}</div>
+              <div onClick="confirm('${_("Delete comment?")}') && deleteComment(${co.comment_id})" class="buttons delete-comment btn btn-default btn-xs" style="margin:0 5px">${_('Delete')}</div>
             %endif
           %endif
       </div>
@@ -99,8 +99,8 @@
       </div>
       <div class="comment-button">
         <div class="submitting-overlay">${_('Submitting ...')}</div>
-        ${h.submit('save', _('Comment'), class_='btn btn-small save-inline-form')}
-        ${h.reset('hide-inline-form', _('Cancel'), class_='btn btn-small hide-inline-form')}
+        ${h.submit('save', _('Comment'), class_='btn btn-default btn-sm save-inline-form')}
+        ${h.reset('hide-inline-form', _('Cancel'), class_='btn btn-default btn-sm hide-inline-form')}
       </div>
     ${h.end_form()}
   %else:
@@ -111,7 +111,7 @@
           </div>
       </div>
       <div class="comment-button">
-      ${h.reset('hide-inline-form', _('Hide'), class_='btn btn-small hide-inline-form')}
+      ${h.reset('hide-inline-form', _('Hide'), class_='btn btn-default btn-sm hide-inline-form')}
       </div>
       ${h.end_form()}
   %endif

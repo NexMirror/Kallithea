@@ -2,7 +2,7 @@
 ${h.form(url('edit_repo_advanced_fork', repo_name=c.repo_info.repo_name))}
 <div class="form">
        ${h.select('id_fork_of','',c.repos_list,class_="medium")}
-       ${h.submit('set_as_fork_%s' % c.repo_info.repo_name,_('Set'),class_="btn btn-small")}
+       ${h.submit('set_as_fork_%s' % c.repo_info.repo_name,_('Set'),class_="btn btn-default btn-sm")}
        <div class="field" style="border:none;color:#888">
        <ul>
             <li>${_('''Manually set this repository as a fork of another from the list.''')}</li>
@@ -24,12 +24,12 @@ ${h.form(url('edit_repo_advanced_journal', repo_name=c.repo_info.repo_name))}
 <div class="form">
   <div class="field">
   %if c.in_public_journal:
-    <button class="btn btn-small" type="submit">
+    <button class="btn btn-default btn-sm" type="submit">
         <i class="icon-minus"></i>
         ${_('Remove from public journal')}
     </button>
   %else:
-    <button class="btn btn-small" type="submit">
+    <button class="btn btn-default btn-sm" type="submit">
         <i class="icon-plus"></i>
         ${_('Add to Public Journal')}
     </button>
@@ -48,7 +48,7 @@ ${h.form(url('edit_repo_advanced_locking', repo_name=c.repo_info.repo_name))}
 <div class="form">
       %if c.repo_info.locked[0]:
         ${h.hidden('set_unlock', '1')}
-        <button class="btn btn-small" type="submit"
+        <button class="btn btn-default btn-sm" type="submit"
                 onclick="return confirm('${_('Confirm to unlock repository.')}');">
             <i class="icon-lock-open-alt"></i>
             ${_('Unlock Repository')}
@@ -56,7 +56,7 @@ ${h.form(url('edit_repo_advanced_locking', repo_name=c.repo_info.repo_name))}
        ${_('Locked by %s on %s') % (h.person_by_id(c.repo_info.locked[0]),h.fmt_date(h.time_to_datetime(c.repo_info.locked[1])))}
       %else:
         ${h.hidden('set_lock', '1')}
-        <button class="btn btn-small" type="submit"
+        <button class="btn btn-default btn-sm" type="submit"
                 onclick="return confirm('${_('Confirm to lock repository.')}');">
             <i class="icon-lock"></i>
             ${_('Lock Repository')}
@@ -75,7 +75,7 @@ ${h.end_form()}
 <h3>${_('Delete')}</h3>
 ${h.form(url('delete_repo', repo_name=c.repo_name))}
 <div class="form">
-    <button class="btn btn-small btn-danger" type="submit"
+    <button class="btn btn-danger btn-sm" type="submit"
             onclick="return confirm('${_('Confirm to delete this repository: %s') % c.repo_name}');">
         <i class="icon-minus-circled"></i>
         ${_('Delete this Repository')}

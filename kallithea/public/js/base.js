@@ -671,7 +671,7 @@ function comment_div_state($comment_div, f_path, line_no, show_form_opt) {
 // append an Add button to $comment_div and hook it up to show form
 function _comment_div_append_add($comment_div, f_path, line_no) {
     var addlabel = TRANSLATION_MAP['Add Another Comment'];
-    var $add = $('<div class="add-button-row"><span class="btn btn-mini add-button">{0}</span></div>'.format(addlabel));
+    var $add = $('<div class="add-button-row"><span class="btn btn-default btn-xs add-button">{0}</span></div>'.format(addlabel));
     $comment_div.append($add);
     $add.children('.add-button').click(function(e) {
         comment_div_state($comment_div, f_path, line_no, true);

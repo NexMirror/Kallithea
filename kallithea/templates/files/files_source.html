@@ -4,11 +4,11 @@
         ${h.form(h.url('files_diff_home',repo_name=c.repo_name,f_path=c.f_path),method='get')}
         ${h.hidden('diff2',c.changeset.raw_id)}
         ${h.hidden('diff1')}
-        ${h.submit('diff',_('Diff to Revision'),class_="btn btn-small")}
-        ${h.submit('show_rev',_('Show at Revision'),class_="btn btn-small")}
+        ${h.submit('diff',_('Diff to Revision'),class_="btn btn-default btn-sm")}
+        ${h.submit('show_rev',_('Show at Revision'),class_="btn btn-default btn-sm")}
         ${h.hidden('annotate', c.annotate)}
-        ${h.link_to(_('Show Full History'),h.url('changelog_file_home',repo_name=c.repo_name, revision=c.changeset.raw_id, f_path=c.f_path),class_="btn btn-small")}
-        ${h.link_to(_('Show Authors'),'#',class_="btn btn-small" ,id="show_authors")}
+        ${h.link_to(_('Show Full History'),h.url('changelog_file_home',repo_name=c.repo_name, revision=c.changeset.raw_id, f_path=c.f_path),class_="btn btn-default btn-sm")}
+        ${h.link_to(_('Show Authors'),'#',class_="btn btn-default btn-sm" ,id="show_authors")}
 
         ${h.end_form()}
         </div>
@@ -27,22 +27,22 @@
             <div class="left item last"><pre>${c.file.mimetype}</pre></div>
             <div class="buttons">
               %if c.annotate:
-                ${h.link_to(_('Show Source'),    h.url('files_home',         repo_name=c.repo_name,revision=c.changeset.raw_id,f_path=c.f_path),class_="btn btn-mini")}
+                ${h.link_to(_('Show Source'),    h.url('files_home',         repo_name=c.repo_name,revision=c.changeset.raw_id,f_path=c.f_path),class_="btn btn-default btn-xs")}
               %else:
-                ${h.link_to(_('Show Annotation'),h.url('files_annotate_home',repo_name=c.repo_name,revision=c.changeset.raw_id,f_path=c.f_path),class_="btn btn-mini")}
+                ${h.link_to(_('Show Annotation'),h.url('files_annotate_home',repo_name=c.repo_name,revision=c.changeset.raw_id,f_path=c.f_path),class_="btn btn-default btn-xs")}
               %endif
-              ${h.link_to(_('Show as Raw'),h.url('files_raw_home',repo_name=c.repo_name,revision=c.changeset.raw_id,f_path=c.f_path),class_="btn btn-mini")}
-              ${h.link_to(_('Download as Raw'),h.url('files_rawfile_home',repo_name=c.repo_name,revision=c.changeset.raw_id,f_path=c.f_path),class_="btn btn-mini")}
+              ${h.link_to(_('Show as Raw'),h.url('files_raw_home',repo_name=c.repo_name,revision=c.changeset.raw_id,f_path=c.f_path),class_="btn btn-default btn-xs")}
+              ${h.link_to(_('Download as Raw'),h.url('files_rawfile_home',repo_name=c.repo_name,revision=c.changeset.raw_id,f_path=c.f_path),class_="btn btn-default btn-xs")}
               % if h.HasRepoPermissionAny('repository.write','repository.admin')(c.repo_name):
                %if c.on_branch_head and not c.file.is_binary:
-                ${h.link_to(_('Edit on Branch: %s') % c.changeset.branch, h.url('files_edit_home',repo_name=c.repo_name,revision=c.changeset.raw_id,f_path=c.f_path, anchor='edit'),class_="btn btn-mini")}
-                ${h.link_to(_('Delete'), h.url('files_delete_home',repo_name=c.repo_name,revision=c.changeset.raw_id,f_path=c.f_path, anchor='edit'),class_="btn btn-mini btn-danger")}
+                ${h.link_to(_('Edit on Branch: %s') % c.changeset.branch, h.url('files_edit_home',repo_name=c.repo_name,revision=c.changeset.raw_id,f_path=c.f_path, anchor='edit'),class_="btn btn-default btn-xs")}
+                ${h.link_to(_('Delete'), h.url('files_delete_home',repo_name=c.repo_name,revision=c.changeset.raw_id,f_path=c.f_path, anchor='edit'),class_="btn btn-danger btn-xs")}
                %elif c.on_branch_head and c.file.is_binary:
-                ${h.link_to(_('Edit'), '#', class_="btn btn-mini disabled tooltip", title=_('Editing binary files not allowed'))}
-                ${h.link_to(_('Delete'), h.url('files_delete_home',repo_name=c.repo_name,revision=c.changeset.raw_id,f_path=c.f_path, anchor='edit'),class_="btn btn-mini btn-danger")}
+                ${h.link_to(_('Edit'), '#', class_="btn btn-default btn-xs disabled tooltip", title=_('Editing binary files not allowed'))}
+                ${h.link_to(_('Delete'), h.url('files_delete_home',repo_name=c.repo_name,revision=c.changeset.raw_id,f_path=c.f_path, anchor='edit'),class_="btn btn-danger btn-xs")}
                %else:
-                ${h.link_to(_('Edit'), '#', class_="btn btn-mini disabled tooltip", title=_('Editing files allowed only when on branch head revision'))}
-                ${h.link_to(_('Delete'), '#', class_="btn btn-mini btn-danger disabled tooltip", title=_('Deleting files allowed only when on branch head revision'))}
+                ${h.link_to(_('Edit'), '#', class_="btn btn-default btn-xs disabled tooltip", title=_('Editing files allowed only when on branch head revision'))}
+                ${h.link_to(_('Delete'), '#', class_="btn btn-danger btn-xs disabled tooltip", title=_('Deleting files allowed only when on branch head revision'))}
                % endif
               % endif
             </div>

@@ -17,7 +17,7 @@
 </dl>
 
 ${h.form(h.url('delete_repos_group', group_name=c.repo_group.group_name))}
-    <button class="btn btn-small btn-danger" type="submit"
+    <button class="btn btn-danger btn-sm" type="submit"
             onclick="return confirm('${ungettext('Confirm to delete this group: %s with %s repository',
           'Confirm to delete this group: %s with %s repositories',
  c.repo_group.repositories_recursive_count) % (c.repo_group.group_name, c.repo_group.repositories_recursive_count)}');">

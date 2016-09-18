@@ -136,11 +136,11 @@
 <%def name="repo_state(repo_state)">
   <div>
     %if repo_state == u'repo_state_pending':
-        <div class="btn btn-mini btn-info disabled">${_('Creating')}</div>
+        <div class="btn btn-default btn-xs btn-info disabled">${_('Creating')}</div>
     %elif repo_state == u'repo_state_created':
-        <div class="btn btn-mini btn-success disabled">${_('Created')}</div>
+        <div class="btn btn-success btn-xs disabled">${_('Created')}</div>
     %else:
-        <div class="btn btn-mini btn-danger disabled" title="${repo_state}">invalid</div>
+        <div class="btn btn-danger btn-xs disabled" title="${repo_state}">invalid</div>
     %endif
   </div>
 </%def>

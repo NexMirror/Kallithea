@@ -7,7 +7,7 @@ ${h.form(url('edit_repo_remote_update', repo_name=c.repo_name))}
     <div class="fields">
         ${h.submit('remote_pull_%s' % c.repo_info.repo_name,
             _('Pull Changes from Remote Repository'),
-            class_="btn btn-small",
+            class_="btn btn-default btn-sm",
             onclick="return confirm('"+_('Confirm to pull changes from remote repository.')+"');")}
     </div>
 </div>

@@ -3,14 +3,14 @@
     <tr>
         <td style="width: 450px"><div class="truncate autoexpand" style="width:120px;font-size:16px;font-family: monospace">${c.user.api_key}</div></td>
         <td>
-            <span class="btn btn-mini btn-success disabled">${_('Built-in')}</span>
+            <span class="btn btn-success btn-xs disabled">${_('Built-in')}</span>
         </td>
         <td>${_('Expires')}: ${_('Never')}</td>
         <td>
             ${h.form(url('my_account_api_keys_delete'))}
                 ${h.hidden('del_api_key',c.user.api_key)}
                 ${h.hidden('del_api_key_builtin',1)}
-                <button class="btn btn-mini btn-danger" type="submit"
+                <button class="btn btn-danger btn-xs" type="submit"
                         onclick="return confirm('${_('Confirm to reset this API key: %s') % c.user.api_key}');">
                     ${_('Reset')}
                 </button>
@@ -36,7 +36,7 @@
             <td>
                 ${h.form(url('my_account_api_keys_delete'))}
                     ${h.hidden('del_api_key',api_key.api_key)}
-                    <button class="btn btn-mini btn-danger" type="submit"
+                    <button class="btn btn-danger btn-xs" type="submit"
                             onclick="return confirm('${_('Confirm to remove this API key: %s') % api_key.api_key}');">
                         <i class="icon-minus-circled"></i>
                         ${_('Remove')}
@@ -66,8 +66,8 @@
                 </div>
              </div>
             <div class="buttons">
-              ${h.submit('save',_('Add'),class_="btn")}
-              ${h.reset('reset',_('Reset'),class_="btn")}
+              ${h.submit('save',_('Add'),class_="btn btn-default")}
+              ${h.reset('reset',_('Reset'),class_="btn btn-default")}
             </div>
         </div>
     </div>

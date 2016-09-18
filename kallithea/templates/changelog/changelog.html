@@ -39,19 +39,19 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                     <div class="container_header">
                         <div style="float:left; margin-left:20px;">
                           ${h.form(h.url.current(),method='get',style="display:inline")}
-                            ${h.submit('set',_('Show'),class_="btn btn-small")}
+                            ${h.submit('set',_('Show'),class_="btn btn-default btn-sm")}
                             ${h.text('size',size=3,value=c.size)}
                             ${_('revisions')}
                             %if c.branch_name:
                             ${h.hidden('branch', c.branch_name)}
                             %endif
                           ${h.end_form()}
-                          <a href="#" class="btn btn-small" id="rev_range_clear" style="display:none">${_('Clear selection')}</a>
+                          <a href="#" class="btn btn-default btn-sm" id="rev_range_clear" style="display:none">${_('Clear selection')}</a>
                         </div>
                         <div style="float: right; margin: 0px 0px 0px 4px">
-                            <a href="#" class="btn btn-small" id="rev_range_container" style="display:none"></a>
+                            <a href="#" class="btn btn-default btn-sm" id="rev_range_container" style="display:none"></a>
                             %if c.revision:
-                                <a class="btn btn-small" href="${h.url('changelog_home', repo_name=c.repo_name)}">
+                                <a class="btn btn-default btn-sm" href="${h.url('changelog_home', repo_name=c.repo_name)}">
                                     ${_('Go to tip of repository')}
                                 </a>
                             %endif
@@ -59,10 +59,10 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                                 <a id="compare_fork"
                                    title="${_('Compare fork with %s' % c.db_repo.fork.repo_name)}"
                                    href="${h.url('compare_url',repo_name=c.db_repo.fork.repo_name,org_ref_type=c.db_repo.landing_rev[0],org_ref_name=c.db_repo.landing_rev[1],other_repo=c.repo_name,other_ref_type='branch' if request.GET.get('branch') else c.db_repo.landing_rev[0],other_ref_name=request.GET.get('branch') or c.db_repo.landing_rev[1], merge=1)}"
-                                   class="btn btn-small"><i class="icon-git-compare"></i> ${_('Compare fork with parent repository (%s)' % c.db_repo.fork.repo_name)}</a>
+                                   class="btn btn-default btn-sm"><i class="icon-git-compare"></i> ${_('Compare fork with parent repository (%s)' % c.db_repo.fork.repo_name)}</a>
                             %endif
                             ## text and href of open_new_pr is controlled from javascript
-                            <a id="open_new_pr" class="btn btn-small"></a>
+                            <a id="open_new_pr" class="btn btn-default btn-sm"></a>
                             ${_("Branch filter:")} ${h.select('branch_filter',c.branch_name,c.branch_filters)}
                         </div>
                     </div>

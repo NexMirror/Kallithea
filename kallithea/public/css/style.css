@@ -3169,11 +3169,11 @@ input[disabled].btn,
     color: #999;
 }
 
-.btn.btn-small {
+.btn.btn-sm {
     padding: 2px 6px;
 }
 
-.btn.btn-mini {
+.btn.btn-xs {
     padding: 0px 4px;
 }
 

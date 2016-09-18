@@ -30,9 +30,9 @@
             ${h.form(h.url.current())}
             <div class="info_box">
               <div class="info_box_elem rev">${_('Revision')}</div>
-              <div class="info_box_elem"><a class="btn btn-mini ypjax-link" href="${c.url_prev}" title="${_('Previous revision')}"><i class="icon-left-open"></i></a></div>
+              <div class="info_box_elem"><a class="btn btn-default btn-xs ypjax-link" href="${c.url_prev}" title="${_('Previous revision')}"><i class="icon-left-open"></i></a></div>
               <div class="info_box_elem">${h.text('at_rev',value=c.changeset.revision,size=5)}</div>
-              <div class="info_box_elem"><a class="btn btn-mini ypjax-link" href="${c.url_next}" title="${_('Next revision')}"><i class="icon-right-open"></i></a></div>
+              <div class="info_box_elem"><a class="btn btn-default btn-xs ypjax-link" href="${c.url_next}" title="${_('Next revision')}"><i class="icon-right-open"></i></a></div>
             </div>
             ${h.end_form()}
         </div>
@@ -41,7 +41,7 @@
            <label>${_('Follow current branch')}</label>
         </div>
         <div id="search_activate_id" class="search_activate">
-           <a class="btn btn-mini" id="filter_activate" href="#">${_('Search File List')}</a>
+           <a class="btn btn-default btn-xs" id="filter_activate" href="#">${_('Search File List')}</a>
         </div>
         <div class="browser-search">
             <div>
