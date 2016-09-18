@@ -27,7 +27,7 @@
 
 <%def name="main()">
 ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision else None)}
-<div class="box">
+<div class="panel panel-primary">
     <!-- box / title -->
     <div class="title">
         ${self.breadcrumbs()}

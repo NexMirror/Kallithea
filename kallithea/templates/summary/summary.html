@@ -59,7 +59,7 @@ ${self.repo_context_bar('summary')}
 <%
 summary = lambda n:{False:'summary-short'}.get(n)
 %>
-<div class="box">
+<div class="panel panel-primary">
     <!-- box / title -->
     <div class="title">
         ${self.breadcrumbs()}
@@ -177,7 +177,7 @@ summary = lambda n:{False:'summary-short'}.get(n)
 </div>
 
 
-<div class="box">
+<div class="panel panel-primary">
     <div class="title">
         <div class="breadcrumbs">
         %if c.repo_changesets:
@@ -196,7 +196,7 @@ summary = lambda n:{False:'summary-short'}.get(n)
 
 %if c.readme_data:
 <div id="readme" class="anchor">
-<div class="box" style="background-color: #FAFAFA">
+<div class="panel panel-primary" style="background-color: #FAFAFA">
     <div class="title" title="${_('Readme file from revision %s:%s') % (c.db_repo.landing_rev[0], c.db_repo.landing_rev[1])}">
         <div class="breadcrumbs">
             <a href="${h.url('files_home',repo_name=c.repo_name,revision='tip',f_path=c.readme_file)}">${c.readme_file}</a>
