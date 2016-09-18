@@ -61,7 +61,7 @@ summary = lambda n:{False:'summary-short'}.get(n)
 %>
 <div class="panel panel-primary">
     <!-- box / title -->
-    <div class="title">
+    <div class="panel-heading">
         ${self.breadcrumbs()}
     </div>
     <!-- end box / title -->
@@ -178,7 +178,7 @@ summary = lambda n:{False:'summary-short'}.get(n)
 
 
 <div class="panel panel-primary">
-    <div class="title">
+    <div class="panel-heading">
         <div class="breadcrumbs">
         %if c.repo_changesets:
             ${h.link_to(_('Latest Changes'),h.url('changelog_home',repo_name=c.repo_name))}
@@ -197,7 +197,7 @@ summary = lambda n:{False:'summary-short'}.get(n)
 %if c.readme_data:
 <div id="readme" class="anchor">
 <div class="panel panel-primary" style="background-color: #FAFAFA">
-    <div class="title" title="${_('Readme file from revision %s:%s') % (c.db_repo.landing_rev[0], c.db_repo.landing_rev[1])}">
+    <div class="panel-heading" title="${_('Readme file from revision %s:%s') % (c.db_repo.landing_rev[0], c.db_repo.landing_rev[1])}">
         <div class="breadcrumbs">
             <a href="${h.url('files_home',repo_name=c.repo_name,revision='tip',f_path=c.readme_file)}">${c.readme_file}</a>
         </div>

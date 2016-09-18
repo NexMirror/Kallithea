@@ -14,7 +14,7 @@
 <%def name="main()">
 <div class="panel panel-primary">
 
-    <div class="title">
+    <div class="panel-heading">
         ${self.breadcrumbs()}
         <ul class="links">
          %if h.HasPermissionAny('hg.admin','hg.create.repository')():
