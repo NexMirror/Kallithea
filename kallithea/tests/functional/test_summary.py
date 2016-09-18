@@ -12,7 +12,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from kallithea.tests import *
+from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
 from kallithea.model.db import Repository
 from kallithea.model.repo import RepoModel

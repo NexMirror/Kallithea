@@ -84,4 +84,4 @@ shutil.copy(os.path.join(THIS, 'aconfig'), _dest)
 TEST_USER_CONFIG_FILE = _dest
 
 #overide default configurations with kallithea ones
-from kallithea.tests import *
+from kallithea.tests.base import *

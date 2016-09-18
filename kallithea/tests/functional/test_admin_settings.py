@@ -3,7 +3,7 @@
 import tempfile
 
 from kallithea.model.db import Setting, Ui
-from kallithea.tests import *
+from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
 
 fixture = Fixture()

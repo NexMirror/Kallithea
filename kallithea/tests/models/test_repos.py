@@ -1,5 +1,5 @@
 import pytest
-from kallithea.tests import *
+from kallithea.tests.base import *
 
 from kallithea.model.meta import Session
 from kallithea.tests.fixture import Fixture

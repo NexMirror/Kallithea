@@ -10,7 +10,7 @@ import pytest
 from kallithea.model.user import UserModel
 from kallithea.model.meta import Session
 from kallithea.model.db import Setting, User, UserIpMap
-from kallithea.tests import invalidate_all_caches, TEST_USER_REGULAR_LOGIN
+from kallithea.tests.base import invalidate_all_caches, TEST_USER_REGULAR_LOGIN
 
 
 def pytest_configure():

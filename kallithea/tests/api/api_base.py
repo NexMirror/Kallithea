@@ -20,7 +20,7 @@ import os
 import random
 import mock
 
-from kallithea.tests import *
+from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
 from kallithea.lib.compat import json
 from kallithea.lib.auth import AuthUser

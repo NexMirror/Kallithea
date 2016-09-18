@@ -196,7 +196,7 @@ class DbManage(object):
             self.create_user(username, password, email, True)
         else:
             log.info('creating admin and regular test users')
-            from kallithea.tests import TEST_USER_ADMIN_LOGIN, \
+            from kallithea.tests.base import TEST_USER_ADMIN_LOGIN, \
             TEST_USER_ADMIN_PASS, TEST_USER_ADMIN_EMAIL, \
             TEST_USER_REGULAR_LOGIN, TEST_USER_REGULAR_PASS, \
             TEST_USER_REGULAR_EMAIL, TEST_USER_REGULAR2_LOGIN, \

@@ -1,6 +1,6 @@
 import mock
 import os
-from kallithea.tests import *
+from kallithea.tests.base import *
 
 
 class TestSearchController(TestController):

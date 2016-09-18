@@ -629,7 +629,7 @@ def create_test_env(repos_test_path, config):
     install test repository into tmp dir
     """
     from kallithea.lib.db_manage import DbManage
-    from kallithea.tests import HG_REPO, GIT_REPO, TESTS_TMP_PATH
+    from kallithea.tests.base import HG_REPO, GIT_REPO, TESTS_TMP_PATH
 
     # PART ONE create db
     dbconf = config['sqlalchemy.url']

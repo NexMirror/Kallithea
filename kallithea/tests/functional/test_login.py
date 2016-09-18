@@ -5,7 +5,7 @@ import urlparse
 
 import mock
 
-from kallithea.tests import *
+from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
 from kallithea.lib.utils2 import generate_api_key
 from kallithea.lib.auth import check_password

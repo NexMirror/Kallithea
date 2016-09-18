@@ -3,7 +3,7 @@ import formencode
 import pytest
 import tempfile
 
-from kallithea.tests import *
+from kallithea.tests.base import *
 
 from kallithea.model import validators as v
 from kallithea.model.user_group import UserGroupModel

@@ -17,7 +17,7 @@ Helpers for fixture generation
 """
 import os
 import time
-from kallithea.tests import *
+from kallithea.tests.base import *
 from kallithea.model.db import Repository, User, RepoGroup, UserGroup, Gist
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel

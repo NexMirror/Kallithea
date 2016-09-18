@@ -1,7 +1,7 @@
 import os
 import csv
 import datetime
-from kallithea.tests import *
+from kallithea.tests.base import *
 from kallithea.model.db import UserLog
 from kallithea.model.meta import Session
 from kallithea.lib.utils2 import safe_unicode

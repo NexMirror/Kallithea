@@ -1,5 +1,5 @@
 import pytest
-from kallithea.tests import *
+from kallithea.tests.base import *
 
 from kallithea.model.db import User, UserGroup, UserGroupMember, UserEmailMap, \
     Permission

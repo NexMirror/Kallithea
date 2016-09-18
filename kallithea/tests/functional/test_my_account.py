@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from kallithea.model.db import User, UserFollowing, Repository, UserApiKeys
-from kallithea.tests import *
+from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
 from kallithea.lib import helpers as h
 from kallithea.model.user import UserModel

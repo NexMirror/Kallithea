@@ -1,4 +1,4 @@
-from kallithea.tests import *
+from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
 
 from kallithea.model.repo_group import RepoGroupModel

@@ -11,7 +11,7 @@ from kallithea.lib.utils2 import safe_str, safe_unicode
 from kallithea.model.db import Repository, RepoGroup, UserRepoToPerm, User, \
     Permission, Ui
 from kallithea.model.user import UserModel
-from kallithea.tests import *
+from kallithea.tests.base import *
 from kallithea.model.repo_group import RepoGroupModel
 from kallithea.model.repo import RepoModel
 from kallithea.model.meta import Session

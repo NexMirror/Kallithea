@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from kallithea.tests import *
+from kallithea.tests.base import *
 from kallithea.model.db import UserGroup, UserGroupToPerm, Permission
 from kallithea.model.meta import Session
 

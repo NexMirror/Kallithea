@@ -1,4 +1,4 @@
-from kallithea.tests import *
+from kallithea.tests.base import *
 from kallithea.lib.diffs import DiffProcessor, NEW_FILENODE, DEL_FILENODE, \
     MOD_FILENODE, RENAMED_FILENODE, CHMOD_FILENODE, BIN_FILENODE, COPIED_FILENODE
 from kallithea.tests.fixture import Fixture

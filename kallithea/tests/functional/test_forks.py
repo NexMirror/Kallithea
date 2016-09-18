@@ -2,7 +2,7 @@
 
 import unittest
 
-from kallithea.tests import *
+from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
 
 from kallithea.model.db import Repository

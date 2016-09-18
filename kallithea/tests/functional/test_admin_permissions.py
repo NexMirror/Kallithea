@@ -3,7 +3,7 @@ import time
 from kallithea.model.db import User, UserIpMap
 from kallithea.model.user import UserModel
 from kallithea.model.meta import Session
-from kallithea.tests import *
+from kallithea.tests.base import *
 
 class TestAdminPermissionsController(TestController):
 

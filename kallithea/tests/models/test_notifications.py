@@ -4,7 +4,7 @@ import re
 import mock
 import routes.util
 
-from kallithea.tests import *
+from kallithea.tests.base import *
 from kallithea.lib import helpers as h
 from kallithea.model.db import User, Notification, UserNotification
 from kallithea.model.user import UserModel

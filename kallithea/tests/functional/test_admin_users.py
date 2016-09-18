@@ -15,7 +15,7 @@
 from sqlalchemy.orm.exc import NoResultFound, ObjectDeletedError
 
 import pytest
-from kallithea.tests import *
+from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
 from kallithea.controllers.admin.users import UsersController
 from kallithea.model.db import User, Permission, UserIpMap, UserApiKeys

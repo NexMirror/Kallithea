@@ -23,7 +23,7 @@ from kallithea.lib.vcs.utils.compat import unittest
 from kallithea.tests.vcs.conf import *
 from kallithea.tests.vcs.utils import SCMFetcher
 
-from kallithea.tests import *
+from kallithea.tests.base import *
 
 
 def setup_package():

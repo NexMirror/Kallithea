@@ -96,7 +96,7 @@ def load_environment(global_conf, app_conf,
             config['sqlalchemy.url'] = os.environ.get('TEST_DB')
 
         from kallithea.lib.utils import create_test_env, create_test_index
-        from kallithea.tests import TESTS_TMP_PATH
+        from kallithea.tests.base import TESTS_TMP_PATH
         #set KALLITHEA_NO_TMP_PATH=1 to disable re-creating the database and
         #test repos
         if test_env:

@@ -1,4 +1,4 @@
-from kallithea.tests import *
+from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
 from kallithea.model.meta import Session
 from kallithea.model.db import Repository

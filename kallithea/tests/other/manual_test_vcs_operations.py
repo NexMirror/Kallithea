@@ -40,7 +40,7 @@ import time
 from tempfile import _RandomNameSequence
 from subprocess import Popen, PIPE
 
-from kallithea.tests import *
+from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
 from kallithea.model.db import User, Repository, UserIpMap, CacheInvalidation
 from kallithea.model.meta import Session
