@@ -37,7 +37,7 @@ Follow these few steps to improve performance of Kallithea system.
     several HTTP requests are served from the same Python process at once. That
     can in principle give better utilization of internal caches and less
     process overhead.
-    
+
     One danger of running multithreaded is that program execution becomes much
     more complex; programs must be written to consider all combinations of
     events and problems might depend on timing and be impossible to reproduce.
