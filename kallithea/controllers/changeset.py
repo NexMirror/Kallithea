@@ -257,11 +257,11 @@ class ChangesetController(BaseRepoController):
                                               revision=changeset.raw_id))
 
                 # Status change comments - mostly from pull requests
-                comments.update((st.changeset_comment_id, st.comment)
+                comments.update((st.comment_id, st.comment)
                                 for st in ChangesetStatusModel()
                                 .get_statuses(c.db_repo.repo_id,
                                               changeset.raw_id, with_revisions=True)
-                                if st.changeset_comment_id is not None)
+                                if st.comment_id is not None)
 
                 inlines = ChangesetCommentsModel() \
                             .get_inline_comments(c.db_repo.repo_id,
