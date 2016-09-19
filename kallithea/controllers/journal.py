@@ -78,8 +78,8 @@ class JournalController(BaseController):
         return groups
 
     def _get_journal_data(self, following_repos):
-        repo_ids = [x.follows_repo_id for x in following_repos
-                    if x.follows_repo_id is not None]
+        repo_ids = [x.follows_repository_id for x in following_repos
+                    if x.follows_repository_id is not None]
         user_ids = [x.follows_user_id for x in following_repos
                     if x.follows_user_id is not None]
 
@@ -311,7 +311,7 @@ class JournalController(BaseController):
                 log.error(traceback.format_exc())
                 raise HTTPBadRequest()
 
-        repo_id = request.POST.get('follows_repo_id')
+        repo_id = request.POST.get('follows_repository_id')
         if repo_id:
             try:
                 self.scm_model.toggle_following_repo(repo_id,

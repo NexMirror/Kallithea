@@ -451,8 +451,8 @@ var _onSuccessFollow = function(target){
     }
 }
 
-var toggleFollowingRepo = function(target, follows_repo_id){
-    var args = 'follows_repo_id=' + follows_repo_id;
+var toggleFollowingRepo = function(target, follows_repository_id){
+    var args = 'follows_repository_id=' + follows_repository_id;
     args += '&amp;_authentication_token=' + _authentication_token;
     $.post(TOGGLE_FOLLOW_URL, args, function(data){
             _onSuccessFollow(target);

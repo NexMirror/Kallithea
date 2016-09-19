@@ -1021,7 +1021,7 @@ class Repository(Base, BaseDbModel):
     stats = relationship('Statistics', cascade='all', uselist=False)
 
     followers = relationship('UserFollowing',
-                             primaryjoin='UserFollowing.follows_repo_id==Repository.repo_id',
+                             primaryjoin='UserFollowing.follows_repository_id==Repository.repo_id',
                              cascade='all')
     extra_fields = relationship('RepositoryField',
                                 cascade="all, delete-orphan")
@@ -2036,7 +2036,7 @@ class UserFollowing(Base, BaseDbModel):
 
     user_following_id = Column(Integer(), primary_key=True)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
-    follows_repo_id = Column("follows_repository_id", Integer(), ForeignKey('repositories.repo_id'), nullable=True)
+    follows_repository_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=True)
     follows_user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=True)
     follows_from = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
 
@@ -2047,7 +2047,7 @@ class UserFollowing(Base, BaseDbModel):
 
     @classmethod
     def get_repo_followers(cls, repo_id):
-        return cls.query().filter(cls.follows_repo_id == repo_id)
+        return cls.query().filter(cls.follows_repository_id == repo_id)
 
 
 class CacheInvalidation(Base, BaseDbModel):

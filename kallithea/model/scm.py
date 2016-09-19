@@ -241,7 +241,7 @@ class ScmModel(BaseModel):
     def toggle_following_repo(self, follow_repo_id, user_id):
 
         f = self.sa.query(UserFollowing) \
-            .filter(UserFollowing.follows_repo_id == follow_repo_id) \
+            .filter(UserFollowing.follows_repository_id == follow_repo_id) \
             .filter(UserFollowing.user_id == user_id).scalar()
 
         if f is not None:
@@ -258,7 +258,7 @@ class ScmModel(BaseModel):
         try:
             f = UserFollowing()
             f.user_id = user_id
-            f.follows_repo_id = follow_repo_id
+            f.follows_repository_id = follow_repo_id
             self.sa.add(f)
 
             action_logger(UserTemp(user_id),
