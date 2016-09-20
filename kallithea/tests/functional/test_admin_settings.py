@@ -174,4 +174,4 @@ class TestAdminSettingsController(TestController):
             assert Setting.get_app_settings()['title'] == new_title.decode('utf-8')
 
             response = response.follow()
-            response.mustcontain("""<div class="branding">%s</div>""" % new_title)
+            response.mustcontain("""<span class="branding">%s</span>""" % new_title)

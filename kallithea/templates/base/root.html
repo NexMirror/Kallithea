@@ -105,21 +105,27 @@
         <%block name="head_extra"/>
     </head>
     <body>
-      <div id="header">
-        <div id="header-inner" class="title">
-          <div id="logo">
-            <a href="${h.url('home')}" style="display: block;">
-              <div class="header">
-                <img src="${h.url('/images/kallithea-logo.svg')}" alt="Kallithea"/>
-              </div>
-              %if c.site_name:
-                <div class="branding">${c.site_name}</div>
-              %endif
+      <nav class="navbar navbar-inverse">
+        <div>
+          <div class="navbar-header" id="logo">
+            <a class="navbar-brand" href="${h.url('home')}">
+                <img class="pull-left" src="${h.url('/images/kallithea-logo.svg')}" alt="Kallithea"/>
+                  %if c.site_name:
+                    <span class="branding">${c.site_name}</span>
+                  %endif
             </a>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
           </div>
-          <%block name="header_menu"/>
+          <div id="navbar" class="navbar-collapse collapse">
+            <%block name="header_menu"/>
+          </div>
         </div>
-      </div>
+      </nav>
 
       ${next.body()}
 

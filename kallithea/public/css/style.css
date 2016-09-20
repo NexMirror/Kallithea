@@ -265,25 +265,33 @@ div:hover > span > a.permalink {
     visibility: visible;
 }
 
-#header #logo {
+nav.navbar #logo {
     padding-left: 10px;
 }
 
-div.header img {
-    padding-top: 5px;
+#content nav.navbar #logo {
+    padding-left: inherit;
 }
 
-#header #logo div.header,
-#header #logo div.branding {
+nav.navbar #logo .navbar-brand img {
+    padding-top: 5px;
+    margin-right: 5px;
+}
+
+nav.navbar #logo .navbar-brand {
     font-size: 20px;
     color: white;
     float: left;
     height: 44px;
     line-height: 44px;
-    margin-right: 5px;
 }
 
-#header ul#logged-user {
+#content nav.navbar #logo .navbar-brand {
+    height: inherit;
+    line-height: inherit;
+}
+
+nav.navbar ul#logged-user {
     margin-bottom: 5px !important;
     border-radius: 0px 0px 8px 8px;
     height: 37px;
@@ -293,7 +301,7 @@ div.header img {
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.6);
 }
 
-#header ul#logged-user li {
+nav.navbar ul#logged-user li {
     list-style: none;
     float: left;
     margin: 8px 0 0;
@@ -301,58 +309,42 @@ div.header img {
     border-left: 1px solid #576622;
 }
 
-#header ul#logged-user li.first {
+nav.navbar ul#logged-user li.first {
     border-left: none;
     margin: 4px;
 }
 
-#header ul#logged-user li.first div.gravatar {
+nav.navbar ul#logged-user li.first div.gravatar {
     margin-top: -2px;
 }
 
-#header ul#logged-user li.first div.account {
+nav.navbar ul#logged-user li.first div.account {
     padding-top: 4px;
     float: left;
 }
 
-#header ul#logged-user li.last {
+nav.navbar ul#logged-user li.last {
     border-right: none;
 }
 
-#header ul#logged-user li a {
+nav.navbar ul#logged-user li a {
     color: #fff;
     font-weight: 700;
     text-decoration: none;
 }
 
-#header ul#logged-user li a:hover {
+nav.navbar ul#logged-user li a:hover {
     text-decoration: underline;
 }
 
-#header ul#logged-user li.highlight a {
+nav.navbar ul#logged-user li.highlight a {
     color: #fff;
 }
 
-#header ul#logged-user li.highlight a:hover {
+nav.navbar ul#logged-user li.highlight a:hover {
     color: #FFF;
 }
-#header-dd {
-    clear: both;
-    position: fixed !important;
-    background-color: #577632;
-    opacity: 0.01;
-    cursor: pointer;
-    min-height: 10px;
-    width: 100% !important;
-    border-radius: 0px 0px 4px 4px;
-}
-
-#header-dd:hover {
-    opacity: 0.2;
-    transition: opacity 0.5s ease-in-out;
-}
-
-#header #header-inner {
+nav.navbar {
     min-height: 44px;
     clear: both;
     position: relative;
@@ -365,19 +357,14 @@ div.header img {
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.6);
     border-radius: 0px 0px 4px 4px;
 }
-#header #header-inner.hover {
-    width: 100% !important;
-    border-radius: 0px 0px 0px 0px;
-    position: fixed !important;
-    z-index: 10000;
-}
 
-.header-pos-fix, .anchor {
+.header-pos-fix,
+.anchor {
     margin-top: -46px;
     padding-top: 46px;
 }
 
-#header #header-inner #home a {
+nav.navbar #home a {
     height: 40px;
     width: 46px;
     display: block;
@@ -386,32 +373,32 @@ div.header img {
     padding: 0;
 }
 
-#header #header-inner #home a:hover {
+nav.navbar #home a:hover {
     background-position: 0 -40px;
 }
 
-#header #header-inner #logo {
+nav.navbar #logo {
     float: left;
     position: absolute;
 }
 
-#header #header-inner #logo h1 {
+nav.navbar #logo h1 {
     color: #FFF;
     font-size: 20px;
     margin: 12px 0 0 13px;
     padding: 0;
 }
 
-#header #header-inner #logo a {
+nav.navbar #logo a {
     color: #fff;
     text-decoration: none;
 }
 
-#header #header-inner #logo a:hover {
+nav.navbar #logo a:hover {
     color: #bfe3ff;
 }
 
-#header #header-inner #quick {
+nav.navbar #quick {
     position: relative;
     float: right;
     list-style-type: none;
@@ -421,61 +408,57 @@ div.header img {
     border-radius: 4px;
 }
 
-#header #header-inner #quick li span.short {
+nav.navbar #quick li span.short {
     padding: 9px 6px 8px 6px;
 }
 
-#header #header-inner #quick li span {
+nav.navbar #quick li span {
     display: inline;
     margin: 0;
 }
 
-#header #header-inner #quick li span.normal {
+nav.navbar #quick li span.normal {
     border: none;
     padding: 10px 12px 8px;
 }
 
-#header #header-inner #quick li .icon {
+nav.navbar #quick li .icon {
     border-left: none;
     padding-left: 10px;
+    display: inline;
 }
 
-#header #header-inner #quick li .icon_short {
-    top: 0;
-    left: 0;
-    border-left: none;
-    border-right: 1px solid #2e5c89;
-    padding: 8px 6px 4px;
-}
-
-#header #header-inner #quick li .icon img,
-#header #header-inner #quick li .icon_short img {
+nav.navbar #quick li .icon img {
     vertical-align: middle;
     margin-bottom: 2px;
 }
 
-#header #header-inner #quick ul.repo_switcher {
+nav.navbar #quick ul.repo_switcher {
     max-height: 275px;
     overflow-x: hidden;
     overflow-y: auto;
 }
 
-#header #header-inner #quick ul.repo_switcher li.qfilter_rs {
+nav.navbar #quick ul.repo_switcher li.qfilter_rs {
     padding: 2px 3px;
     padding-right: 17px;
 }
 
-#header #header-inner #quick ul.repo_switcher li.qfilter_rs input {
+nav.navbar #quick ul.repo_switcher li.qfilter_rs input {
     width: 100%;
     border-radius: 10px;
     padding: 2px 7px;
 }
 
-#header #header-inner #quick .repo_switcher_type {
+nav.navbar #quick .repo_switcher_type {
     position: absolute;
     left: 0;
     top: 9px;
     margin: 0px 2px 0px 2px;
+}
+
+.navbar-toggle {
+    display: none;
 }
 
 .groups_breadcrumbs a {
@@ -522,6 +505,7 @@ div.header img {
     margin: 0 60px 10px 290px;
 }
 
+#content nav.navbar,
 #content div.panel {
     clear: both;
     background: #fff;
@@ -2906,7 +2890,7 @@ div.gravatar img {
     border-radius: 2px;
 }
 
-#header, #content, #footer {
+nav.navbar, #content, #footer {
     min-width: 978px;
 }
 
@@ -3114,7 +3098,7 @@ ins, div.options a:hover {
 }
 
 img,
-#header #header-inner #quick li a:hover span.normal,
+nav.navbar #quick li a:hover span.normal,
 #clone_url,
 #clone_url_id
 {
@@ -3125,7 +3109,7 @@ img.icon, .right .merge img {
     vertical-align: bottom;
 }
 
-#header ul#logged-user,
+nav.navbar ul#logged-user,
 #content div.panel div.panel-heading ul.links,
 #content div.panel div.message div.dismiss,
 #content div.panel div.traffic div.legend ul {
@@ -3134,8 +3118,8 @@ img.icon, .right .merge img {
     padding: 0;
 }
 
-#header #header-inner #home,
-#header #header-inner #logo,
+nav.navbar #home,
+nav.navbar #logo,
 #content div.panel ul.left,
 #content div.panel ol.left,
 div#commit_history,
@@ -3143,7 +3127,7 @@ div#legend_data, div#legend_container, div#legend_choices {
     float: left;
 }
 
-#header #header-inner #quick li #quick_login,
+nav.navbar #quick li #quick_login,
 #content #left #menu ul.closed,
 #content #left #menu li ul.collapsed,
 .yui-tt-shadow {
@@ -3161,12 +3145,16 @@ div#legend_data, div#legend_container, div#legend_choices {
     content: ' \23f7';           /* triangle-down */
 }
 
+.branch-switcher .select2-choice,
 .repo-switcher .select2-choice {
     padding: 0px 8px 1px !important;
     display: block;
     height: 100%;
 }
 
+.branch-switcher .select2-container,
+.branch-switcher .select2-choice,
+.branch-switcher .select2-choice span,
 .repo-switcher .select2-container,
 .repo-switcher .select2-choice,
 .repo-switcher .select2-choice span {
@@ -3176,16 +3164,19 @@ div#legend_data, div#legend_container, div#legend_choices {
     color: #FFFFFF !important;
 }
 
+.branch-switcher .select2-arrow,
 .repo-switcher .select2-arrow {
     display: none !important;
 }
 
+.branch-switcher-dropdown.select2-drop.select2-drop-active,
 .repo-switcher-dropdown.select2-drop.select2-drop-active {
     box-shadow: none;
     color: #fff;
     background-color: #576622;
 }
 
+.branch-switcher-dropdown.select2-drop.select2-drop-active .select2-results .select2-highlighted,
 .repo-switcher-dropdown.select2-drop.select2-drop-active .select2-results .select2-highlighted {
     background-color: #6388ad;
 }

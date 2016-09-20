@@ -93,8 +93,9 @@
 <%def name="repo_context_bar(current=None, rev=None)">
   <% rev = None if rev == 'tip' else rev %>
   <!--- CONTEXT BAR -->
-  <div id="context-bar" class="panel panel-primary">
-      <h2>
+  <nav id="context-bar" class="navbar navbar-inverse">
+    <div class="navbar-header" id="logo">
+      <div class="navbar-brand">
         ${repotag(c.db_repo)}
 
         ## public/private
@@ -104,27 +105,28 @@
           <i class="icon-globe"></i>
         %endif
         %for group in c.db_repo.groups_with_parents:
-          ${h.link_to(group.name, url('repos_group_home', group_name=group.group_name))}
+          ${h.link_to(group.name, url('repos_group_home', group_name=group.group_name), class_='navbar-link')}
           &raquo;
         %endfor
-        ${h.link_to(c.db_repo.just_name, url('summary_home', repo_name=c.db_repo.repo_name))}
+        ${h.link_to(c.db_repo.just_name, url('summary_home', repo_name=c.db_repo.repo_name), class_='navbar-link')}
 
         %if current == 'createfork':
          - ${_('Create Fork')}
         %endif
-      </h2>
-      <ul id="context-pages" class="horizontal-list">
-        <li class="${'current' if current == 'summary' else ''}" data-context="summary"><a href="${h.url('summary_home', repo_name=c.repo_name)}"><i class="icon-doc-text"></i> ${_('Summary')}</a></li>
+      </div>
+    </div>
+    <ul id="context-pages" class="nav navbar-nav navbar-right navbar-collapse collapse">
+        <li class="${'active' if current == 'summary' else ''}" data-context="summary"><a href="${h.url('summary_home', repo_name=c.repo_name)}"><i class="icon-doc-text"></i> ${_('Summary')}</a></li>
         %if rev:
-        <li class="${'current' if current == 'changelog' else ''}" data-context="changelog"><a href="${h.url('changelog_file_home', repo_name=c.repo_name, revision=rev, f_path='')}"><i class="icon-clock"></i> ${_('Changelog')}</a></li>
+        <li class="${'active' if current == 'changelog' else ''}" data-context="changelog"><a href="${h.url('changelog_file_home', repo_name=c.repo_name, revision=rev, f_path='')}"><i class="icon-clock"></i> ${_('Changelog')}</a></li>
         %else:
-        <li class="${'current' if current == 'changelog' else ''}" data-context="changelog"><a href="${h.url('changelog_home', repo_name=c.repo_name)}"><i class="icon-clock"></i> ${_('Changelog')}</a></li>
+        <li class="${'active' if current == 'changelog' else ''}" data-context="changelog"><a href="${h.url('changelog_home', repo_name=c.repo_name)}"><i class="icon-clock"></i> ${_('Changelog')}</a></li>
         %endif
-        <li class="${'current' if current == 'files' else ''}" data-context="files"><a href="${h.url('files_home', repo_name=c.repo_name, revision=rev or 'tip')}"><i class="icon-doc-inv"></i> ${_('Files')}</a></li>
-        <li class="${'current' if current == 'switch-to' else ''}" data-context="switch-to">
+        <li class="${'active' if current == 'files' else ''}" data-context="files"><a href="${h.url('files_home', repo_name=c.repo_name, revision=rev or 'tip')}"><i class="icon-doc-inv"></i> ${_('Files')}</a></li>
+        <li class="${'active' if current == 'switch-to' else ''}" data-context="switch-to">
           <input id="branch_switcher" name="branch_switcher" type="hidden">
         </li>
-        <li class="${'current' if current == 'options' else ''} dropdown" data-context="options">
+        <li class="${'active' if current == 'options' else ''} dropdown" data-context="options">
              %if h.HasRepoPermissionAny('repository.admin')(c.repo_name):
                <a href="${h.url('edit_repo',repo_name=c.repo_name)}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true"><i class="icon-wrench"></i> ${_('Options')} <i class="caret"></i></a>
              %else:
@@ -153,9 +155,9 @@
               ## also it feels like a job for the controller
               %if c.authuser.username != 'default':
                   <li>
-                   <a class="${'following' if c.repository_following else 'follow'}" onclick="toggleFollowingRepo(this, ${c.db_repo.repo_id});">
-                    <span class="show-follow"><i class="icon-heart-empty"></i> ${_('Follow')}</span>
-                    <span class="show-following"><i class="icon-heart"></i> ${_('Unfollow')}</span>
+                   <a href="#" class="${'following' if c.repository_following else 'follow'}" onclick="toggleFollowingRepo(this, ${c.db_repo.repo_id});">
+                    <span class="show-follow ${'hidden' if c.repository_following else ''}"><i class="icon-heart-empty"></i> ${_('Follow')}</span>
+                    <span class="show-following ${'' if c.repository_following else 'hidden'}"><i class="icon-heart"></i> ${_('Unfollow')}</span>
                    </a>
                   </li>
                   <li><a href="${h.url('repo_fork_home',repo_name=c.repo_name)}"><i class="icon-git-pull-request"></i> ${_('Fork')}</a></li>
@@ -163,21 +165,21 @@
               %endif
              </ul>
         </li>
-        <li class="${'current' if current == 'showpullrequest' else ''}" data-context="showpullrequest">
+        <li class="${'active' if current == 'showpullrequest' else ''}" data-context="showpullrequest">
           <a href="${h.url('pullrequest_show_all',repo_name=c.repo_name)}" title="${_('Show Pull Requests for %s') % c.repo_name}"> <i class="icon-git-pull-request"></i> ${_('Pull Requests')}
             %if c.repository_pull_requests:
               <span class="badge">${c.repository_pull_requests}</span>
             %endif
           </a>
         </li>
-      </ul>
-  </div>
+    </ul>
+  </nav>
   <script type="text/javascript">
     $(document).ready(function() {
       var bcache = {};
 
       $("#branch_switcher").select2({
-          placeholder: '<i class="icon-exchange"></i> ${_('Switch To')} <span class="caret"></span>',
+          placeholder: '<span class="navbar-text"> <i class="icon-exchange"></i> ${_('Switch To')} <span class="caret"></span></span>',
           dropdownAutoWidth: true,
           sortResults: prefixFirstSort,
           formatResult: function(obj) {
@@ -191,13 +193,13 @@
           },
           escapeMarkup: function(m) {
               // don't escape our custom placeholder
-              if (m.substr(0, 29) == '<i class="icon-exchange"></i>') {
+              if (m.substr(0, 25) == '<span class="navbar-text"') {
                   return m;
               }
 
               return Select2.util.escapeMarkup(m);
           },
-          containerCssClass: "repo-switcher",
+          containerCssClass: "branch-switcher",
           dropdownCssClass: "repo-switcher-dropdown",
           query: function(query) {
               var key = 'cache';
@@ -248,7 +250,7 @@
 
       $("#branch_switcher").on('select2-selecting', function(e) {
           e.preventDefault();
-          var context = $('#context-bar .current').data('context');
+          var context = $('#context-bar .active').data('context');
           if (context == 'files') {
               window.location = pyroutes.url('files_home', {
                   'repo_name': REPO_NAME,
@@ -274,27 +276,27 @@
 </%def>
 
 <%def name="menu(current=None)">
-  <ul id="quick" class="horizontal-list">
+  <ul id="quick" class="nav navbar-nav navbar-right">
     <!-- repo switcher -->
-    <li class="${'current' if current == 'repositories' else ''}">
+    <li class="${'active' if current == 'repositories' else ''}">
       <input id="repo_switcher" name="repo_switcher" type="hidden">
     </li>
 
     ##ROOT MENU
     %if c.authuser.username != 'default':
-      <li class="${'current' if current == 'journal' else ''}">
+      <li class="${'active' if current == 'journal' else ''}">
         <a class="menu_link" title="${_('Show recent activity')}"  href="${h.url('journal')}">
           <i class="icon-book"></i> ${_('Journal')}
         </a>
       </li>
     %else:
-      <li class="${'current' if current == 'journal' else ''}">
+      <li class="${'active' if current == 'journal' else ''}">
         <a class="menu_link" title="${_('Public journal')}"  href="${h.url('public_journal')}">
           <i class="icon-book"></i> ${_('Public journal')}
         </a>
       </li>
     %endif
-      <li class="${'current' if current == 'gists' else ''} dropdown">
+      <li class="${'active' if current == 'gists' else ''} dropdown">
         <a class="menu_link dropdown-toggle" data-toggle="dropdown" role="button" title="${_('Show public gists')}"  href="${h.url('gists')}">
           <i class="icon-clippy"></i> ${_('Gists')} <span class="caret"></span>
         </a>
@@ -307,20 +309,20 @@
             %endif
           </ul>
       </li>
-    <li class="${'current' if current == 'search' else ''}">
+    <li class="${'active' if current == 'search' else ''}">
         <a class="menu_link" title="${_('Search in repositories')}"  href="${h.url('search')}">
           <i class="icon-search"></i> ${_('Search')}
         </a>
     </li>
     % if h.HasPermissionAny('hg.admin')('access admin main page'):
-      <li class="${'current' if current == 'admin' else ''} dropdown">
+      <li class="${'active' if current == 'admin' else ''} dropdown">
         <a class="menu_link dropdown-toggle" data-toggle="dropdown" role="button" title="${_('Admin')}" href="${h.url('admin_home')}">
           <i class="icon-gear"></i> ${_('Admin')} <span class="caret"></span>
         </a>
         ${admin_menu()}
       </li>
     % elif c.authuser.repositories_admin or c.authuser.repository_groups_admin or c.authuser.user_groups_admin:
-    <li class="${'current' if current == 'admin' else ''} dropdown">
+    <li class="${'active' if current == 'admin' else ''} dropdown">
         <a class="menu_link dropdown-toggle" data-toggle="dropdown" role="button" title="${_('Admin')}">
           <i class="icon-gear"></i> ${_('Admin')}
         </a>
@@ -330,7 +332,7 @@
     </li>
     % endif
 
-    <li class="${'current' if current == 'my_pullrequests' else ''}">
+    <li class="${'active' if current == 'my_pullrequests' else ''}">
       <a class="menu_link" title="${_('My Pull Requests')}" href="${h.url('my_pullrequests')}">
         <i class="icon-git-pull-request"></i> ${_('My Pull Requests')}
         %if c.my_pr_count != 0:
@@ -349,7 +351,7 @@
           href="#"
         %endif
       >
-          ${h.gravatar_div(c.authuser.email, size=20, div_class="icon", div_style="display:inline", div_aria_hidden="true")}
+          ${h.gravatar_div(c.authuser.email, size=20, div_class="icon")}
           %if c.authuser.username != 'default':
             <span class="menu_link_user">${c.authuser.username}</span>
             %if c.unread_notifications != 0:
@@ -360,8 +362,8 @@
           %endif
       </a>
 
-      <div class="user-menu" role="menu">
-        <div id="quick_login" role="form" aria-describedby="quick_login_h" aria-hidden="true" class="dropdown-menu">
+      <div class="dropdown-menu user-menu" role="menu">
+        <div id="quick_login" role="form" aria-describedby="quick_login_h" aria-hidden="true" class="container-fluid">
           %if c.authuser.username == 'default' or c.authuser.user_id is None:
             <h4 id="quick_login_h">${_('Login to Your Account')}</h4>
             ${h.form(h.url('login_home', came_from=request.path_qs))}
@@ -399,20 +401,18 @@
             </div>
             ${h.end_form()}
           %else:
-            <div class="pull-left links_left">
+            <div class="pull-left">
                 ${h.gravatar_div(c.authuser.email, size=48, div_class="big_gravatar")}
-                <div class="full_name">${c.authuser.full_name_or_username}</div>
+                <b class="full_name">${c.authuser.full_name_or_username}</b>
                 <div class="email">${c.authuser.email}</div>
             </div>
-            <div class="pull-right links_right" id="quick_login_h">
-            <ol class="links">
-              <li><a href="${h.url('notifications')}">${_('Notifications')}: ${c.unread_notifications}</a></li>
-              <li>${h.link_to(_('My Account'),h.url('my_account'))}</li>
+            <div class="pull-right list-group text-right">
+              <a class="list-group-item" href="${h.url('notifications')}">${_('Notifications')}: ${c.unread_notifications}</a>
+              ${h.link_to(_('My Account'),h.url('my_account'),class_='list-group-item')}
               %if not c.authuser.is_external_auth:
                 ## Cannot log out if using external (container) authentication.
-                <li class="logout">${h.link_to(_('Log Out'), h.url('logout_home'))}</li>
+                ${h.link_to(_('Log Out'), h.url('logout_home'),class_='list-group-item')}
               %endif
-            </ol>
             </div>
           %endif
         </div>
@@ -456,7 +456,7 @@
             }
 
             $("#repo_switcher").select2({
-                placeholder: '<i class="icon-database"></i> ${_('Repositories')} <span class="caret"></span>',
+                placeholder: '<span class="navbar-text"><i class="icon-database"></i> ${_('Repositories')} <span class="caret"></span></span>',
                 dropdownAutoWidth: true,
                 sortResults: prefixFirstSort,
                 formatResult: format,
@@ -468,7 +468,7 @@
                 dropdownCssClass: "repo-switcher-dropdown",
                 escapeMarkup: function(m){
                     // don't escape our custom placeholder
-                    if(m.substr(0,29) == '<i class="icon-database"></i>'){
+                    if(m.substr(0,55) == '<span class="navbar-text"><i class="icon-database"></i>'){
                         return m;
                     }
 
