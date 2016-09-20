@@ -182,9 +182,9 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
 
                 </div>
 
-                <div class="pagination-wh pagination-left">
-                    ${c.pagination.pager('$link_previous ~2~ $link_next')}
-                </div>
+                <ul class="pagination">
+                    ${c.pagination.pager()}
+                </ul>
             </div>
         </div>
 

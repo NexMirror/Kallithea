@@ -1119,75 +1119,7 @@ div.form div.form-horizontal div.form-group div.button {
     padding: 0;
 }
 
-#content div.panel div.pagination {
-    height: 1%;
-    clear: both;
-    overflow: hidden;
-    margin: 10px 0 0;
-    padding: 0;
-}
-
-#content div.panel div.pagination ul.pager {
-    float: right;
-    text-align: right;
-    margin: 0;
-    padding: 0;
-}
-
-#content div.panel div.pagination ul.pager li {
-    height: 1%;
-    float: left;
-    list-style: none;
-    background: #ebebeb url("../images/pager.png") repeat-x;
-    border-top: 1px solid #dedede;
-    border-left: 1px solid #cfcfcf;
-    border-right: 1px solid #c4c4c4;
-    border-bottom: 1px solid #c4c4c4;
-    color: #4A4A4A;
-    font-weight: 700;
-    margin: 0 0 0 4px;
-    padding: 0;
-}
-
-#content div.panel div.pagination ul.pager li.separator {
-    padding: 6px;
-}
-
-#content div.panel div.pagination ul.pager li.current {
-    background: #b4b4b4 url("../images/pager_selected.png") repeat-x;
-    border-top: 1px solid #ccc;
-    border-left: 1px solid #bebebe;
-    border-right: 1px solid #b1b1b1;
-    border-bottom: 1px solid #afafaf;
-    color: #515151;
-    padding: 6px;
-}
-
-#content div.panel div.pagination ul.pager li a {
-    height: 1%;
-    display: block;
-    float: left;
-    color: #515151;
-    text-decoration: none;
-    margin: 0;
-    padding: 6px;
-}
-
-#content div.panel div.pagination ul.pager li a:hover,
-#content div.panel div.pagination ul.pager li a:active {
-    background: #b4b4b4 url("../images/pager_selected.png") repeat-x;
-    border-top: 1px solid #ccc;
-    border-left: 1px solid #bebebe;
-    border-right: 1px solid #b1b1b1;
-    border-bottom: 1px solid #afafaf;
-    margin: -1px;
-}
-
-#content div.panel div.pagination-right {
-    float: right;
-}
-
-#content div.panel div.pagination-wh {
+#content div.panel ul.pagination {
     height: 1%;
     overflow: hidden;
     text-align: right;
@@ -1195,21 +1127,20 @@ div.form div.form-horizontal div.form-group div.button {
     padding: 0;
 }
 
-#content div.panel div.pagination-wh > :first-child {
+#content div.panel ul.pagination > li {
+    display: inline;
+}
+
+#content div.panel ul.pagination > :first-child {
     border-radius: 4px 0px 0px 4px;
 }
 
-#content div.panel div.pagination-wh > :last-child {
+#content div.panel ul.pagination > :last-child {
     border-radius: 0px 4px 4px 0px;
     border-right: 1px solid #cfcfcf;
 }
 
-#content div.panel div.pagination-wh a,
-#content div.panel div.pagination-wh span.pager_dotdot,
-#content div.panel div.pagination-wh span.yui-pg-previous,
-#content div.panel div.pagination-wh span.yui-pg-last,
-#content div.panel div.pagination-wh span.yui-pg-next,
-#content div.panel div.pagination-wh span.yui-pg-first {
+#content div.panel ul.pagination > li {
     height: 1%;
     float: left;
     background: #ebebeb url("../images/pager.png") repeat-x;
@@ -1221,25 +1152,26 @@ div.form div.form-horizontal div.form-group div.button {
     padding: 6px;
 }
 
-#content div.panel div.pagination-wh span.pager_curpage {
-    height: 1%;
-    float: left;
+#content div.panel ul.pagination > li.active {
     background: #b4b4b4 url("../images/pager_selected.png") repeat-x;
     border-top: 1px solid #ccc;
     border-left: 1px solid #bebebe;
     border-bottom: 1px solid #afafaf;
     color: #515151;
-    font-weight: 700;
-    padding: 6px;
 }
 
-#content div.panel div.pagination-wh a:hover,
-#content div.panel div.pagination-wh a:active {
+#content div.panel ul.pagination > a:hover,
+#content div.panel ul.pagination > a:active {
     background: #b4b4b4 url("../images/pager_selected.png") repeat-x;
     border-top: 1px solid #ccc;
     border-left: 1px solid #bebebe;
     border-bottom: 1px solid #afafaf;
     text-decoration: none;
+}
+
+#content div.panel ul.pagination > li a {
+    color: inherit;
+    text-decoration: inherit;
 }
 
 #content div.panel div.traffic div.legend {
@@ -3465,36 +3397,6 @@ div.form div.form-horizontal div.buttons {
     padding: 0;
 }
 
-#content div.panel div.pagination div.results,
-#content div.panel div.pagination-wh div.results {
-    text-align: left;
-    float: left;
-    margin: 0;
-    padding: 0;
-}
-
-#content div.panel div.pagination div.results span,
-#content div.panel div.pagination-wh div.results span {
-    height: 1%;
-    display: block;
-    float: left;
-    background: #ebebeb url("../images/pager.png") repeat-x;
-    border-top: 1px solid #dedede;
-    border-left: 1px solid #cfcfcf;
-    border-right: 1px solid #c4c4c4;
-    border-bottom: 1px solid #c4c4c4;
-    color: #4A4A4A;
-    font-weight: 700;
-    margin: 0;
-    padding: 6px 8px;
-}
-
-#content div.panel div.pagination ul.pager li.disabled,
-#content div.panel div.pagination-wh a.disabled {
-    color: #B4B4B4;
-    padding: 6px;
-}
-
 #login, #register {
     width: 520px;
     margin: 10% auto 0;
@@ -4082,10 +3984,6 @@ form.comment-inline-form {
 input.status_change_radio {
     margin: 2px 0 5px 15px;
     vertical-align: middle;
-}
-
-.notification-paginator {
-    padding: 0px 0px 4px 16px;
 }
 
 .badge {

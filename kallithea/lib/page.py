@@ -72,7 +72,7 @@ class Page(_Page):
         # Create a link to the first page (unless we are on the first page
         # or there would be no need to insert '..' spacers)
         if self.page != self.first_page and self.first_page < leftmost_page:
-            nav_items.append(self._pagerlink(self.first_page, self.first_page))
+            nav_items.append(HTML.li(self._pagerlink(self.first_page, self.first_page)))
 
         # Insert dots if there are pages between the first page
         # and the currently displayed page range
@@ -81,7 +81,7 @@ class Page(_Page):
             text_ = '..'
             if self.dotdot_attr:
                 text_ = HTML.span(c=text_, **self.dotdot_attr)
-            nav_items.append(text_)
+            nav_items.append(HTML.li(text_))
 
         for thispage in xrange(leftmost_page, rightmost_page + 1):
             # Highlight the current page number and do not use a link
@@ -89,11 +89,11 @@ class Page(_Page):
             if thispage == self.page:
                 # Wrap in a SPAN tag if nolink_attr is set
                 if self.curpage_attr:
-                    text_ = HTML.span(c=text_, **self.curpage_attr)
+                    text_ = HTML.li(HTML.span(c=text_), **self.curpage_attr)
                 nav_items.append(text_)
             # Otherwise create just a link to that page
             else:
-                nav_items.append(self._pagerlink(thispage, text_))
+                nav_items.append(HTML.li(self._pagerlink(thispage, text_)))
 
         # Insert dots if there are pages between the displayed
         # page numbers and the end of the page range
@@ -102,26 +102,26 @@ class Page(_Page):
             # Wrap in a SPAN tag if nolink_attr is set
             if self.dotdot_attr:
                 text_ = HTML.span(c=text_, **self.dotdot_attr)
-            nav_items.append(text_)
+            nav_items.append(HTML.li(text_))
 
         # Create a link to the very last page (unless we are on the last
         # page or there would be no need to insert '..' spacers)
         if self.page != self.last_page and rightmost_page < self.last_page:
-            nav_items.append(self._pagerlink(self.last_page, self.last_page))
+            nav_items.append(HTML.li(self._pagerlink(self.last_page, self.last_page)))
 
         #_page_link = url.current()
         #nav_items.append(literal('<link rel="prerender" href="%s?page=%s">' % (_page_link, str(int(self.page)+1))))
         #nav_items.append(literal('<link rel="prefetch" href="%s?page=%s">' % (_page_link, str(int(self.page)+1))))
         return self.separator.join(nav_items)
 
-    def pager(self, format='~2~', page_param='page', partial_param='partial',
+    def pager(self, format='$link_previous ~2~ $link_next', page_param='page', partial_param='partial',
         show_if_single_page=False, separator=' ', onclick=None,
         symbol_first='<<', symbol_last='>>',
         symbol_previous='<', symbol_next='>',
         link_attr=None,
         curpage_attr=None,
         dotdot_attr=None, **kwargs):
-        self.curpage_attr = curpage_attr or {'class': 'pager_curpage'}
+        self.curpage_attr = curpage_attr or {'class': 'active'}
         self.separator = separator
         self.pager_kwargs = kwargs
         self.page_param = page_param
@@ -152,12 +152,12 @@ class Page(_Page):
                     self._pagerlink(self.first_page, symbol_first) or '',
             'link_last': self.page < self.last_page and \
                     self._pagerlink(self.last_page, symbol_last) or '',
-            'link_previous': self.previous_page and \
+            'link_previous': HTML.li(self.previous_page and \
                     self._pagerlink(self.previous_page, symbol_previous) \
-                    or HTML.span(symbol_previous, class_="yui-pg-previous"),
-            'link_next': self.next_page and \
+                    or HTML.a(symbol_previous)),
+            'link_next': HTML.li(self.next_page and \
                     self._pagerlink(self.next_page, symbol_next) \
-                    or HTML.span(symbol_next, class_="yui-pg-next")
+                    or HTML.a(symbol_next))
         })
 
         return literal(result)

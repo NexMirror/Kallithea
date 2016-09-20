@@ -13,6 +13,6 @@
     </div>
 % endfor
 
-<div class="pagination-wh pagination-left">
-${c.followers_pager.pager('$link_previous ~2~ $link_next')}
-</div>
+<ul class="pagination">
+    ${c.followers_pager.pager()}
+</ul>

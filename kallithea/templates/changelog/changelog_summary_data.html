@@ -75,9 +75,9 @@
 
 </table>
 
-<div class="pagination-wh pagination-left">
-${c.repo_changesets.pager('$link_previous ~2~ $link_next')}
-</div>
+<ul class="pagination">
+    ${c.repo_changesets.pager()}
+</ul>
 %else:
 
 %if h.HasRepoPermissionAny('repository.write','repository.admin')(c.repo_name):

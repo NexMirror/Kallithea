@@ -21,9 +21,9 @@
             <div style="border-bottom: 1px solid #DDD;margin:10px 0px 10px 0px"></div>
         </div>
     % endfor
-  <div class="pagination-wh pagination-left">
-  ${c.forks_pager.pager('$link_previous ~2~ $link_next')}
-  </div>
+    <ul class="pagination">
+        ${c.forks_pager.pager()}
+    </ul>
 % else:
     ${_('There are no forks yet')}
 % endif

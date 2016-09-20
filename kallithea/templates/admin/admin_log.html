@@ -56,8 +56,9 @@
   });
 </script>
 
-<div class="pagination-wh pagination-left">
-${c.users_log.pager('$link_previous ~2~ $link_next')}
+<ul class="pagination">
+    ${c.users_log.pager()}
+</ul>
 </div>
 %else:
     ${_('No actions yet')}
