@@ -38,16 +38,17 @@ and licensed under the MIT-permissive license, which is
 Bootstrap
 ---------
 
-Kallithea incorporates parts of the Javascript system called
+Kallithea incorporates the web framework called
 [Bootstrap](http://getbootstrap.com/), which is:
 
-Copyright &copy; 2012 Twitter, Inc.
+Copyright &copy; 2011-2016 Twitter, Inc.
+Copyright &copy; 2011-2016 The Bootstrap Authors
 
-and licensed under
-[the Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
-
-A copy of the Apache License 2.0 is also included in this distribution in its
-entirety in the file Apache-License-2.0.txt
+and licensed under the MIT-permissive license, which is
+[included in this distribution](MIT-Permissive-License.txt),
+which can be found together with its Corresponding Source in
+https://github.com/twbs/bootstrap at tag v3.3.7 (mirrored at
+https://kallithea-scm.org/repos/mirror/bootstrap/ ).
 
 
 
