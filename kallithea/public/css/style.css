@@ -2634,42 +2634,13 @@ div.rst-block pre {
 
 
 /** comment main **/
-.comments {
+
+.comment .panel {
     max-width: 978px;
 }
 
-.comments .comment .comment-wrapp {
-    border: 1px solid #ddd;
-    margin-top: 10px;
-    border-radius: 4px;
-}
-
-.comments .comment .meta {
-    background: #f8f8f8;
-    padding: 4px;
-    border-bottom: 1px solid #ddd;
-    min-height: 18px;
-    overflow: auto;
-}
-
-.comments .comment .meta img {
-    vertical-align: middle;
-}
-
-.comments .comment .meta .user {
-    font-weight: bold;
-    float: left;
-    padding: 4px 2px 2px 2px;
-}
-
-.comments .comment .meta .date {
-    float: left;
-    padding: 4px 4px 0px 4px;
-}
-
-.comments .comment .text {
+.comment .panel-body {
     background-color: #FAFAFA;
-    margin: 6px;
 }
 
 .comments-number {
@@ -2732,11 +2703,6 @@ form.comment-form {
     margin-left: 10px;
     margin-top: 10px;
     margin-bottom: 10px;
-}
-
-.comment .buttons {
-    float: right;
-    margin: -1px 0px 0px 0px;
 }
 
 .panel-heading .pull-left input[type=checkbox],
@@ -2817,43 +2783,8 @@ form.comment-inline-form {
     margin-left: 0;
 }
 
-.inline-comments .comment .comment-wrapp {
-    max-width: 978px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: #FAFAFA;
-}
-
 .inline-comments .add-button-row {
     padding: 2px 4px 8px 5px;
-}
-
-.inline-comments .comment .meta {
-    background: #f8f8f8;
-    padding: 4px;
-    border-bottom: 1px solid #ddd;
-    min-height: 15px;
-    overflow: auto;
-}
-
-.inline-comments .comment .meta img {
-    vertical-align: middle;
-}
-
-.inline-comments .comment .meta .user {
-    font-weight: bold;
-    float: left;
-    padding: 3px;
-}
-
-.inline-comments .comment .meta .date {
-    float: left;
-    padding: 3px;
-}
-
-.inline-comments .comment .text {
-    background-color: #FAFAFA;
-    margin: 6px;
 }
 
 .inline-comments .comments-number {
@@ -3209,9 +3140,8 @@ div.comment:target:before {
   content: "";
 }
 
-div.comment:target>.comment-wrapp {
+div.comment:target>.panel {
     border: solid 2px #ee0 !important;
-    margin: 2px 2px 4px 4px;
 }
 
 .lineno:target a {

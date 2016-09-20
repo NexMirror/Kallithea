@@ -6,12 +6,12 @@
 <%def name="comment_block(co)">
   <div class="comment" id="comment-${co.comment_id}">
     <div class="comment-prev-next-links"></div>
-    <div class="comment-wrapp">
-      <div class="meta">
+    <div class="panel panel-default">
+      <div class="panel-heading">
           ${h.gravatar_div(co.author.email, size=20)}
-          <div class="user">
+          <span class="user">
               ${co.author.full_name_and_username}
-          </div>
+          </span>
 
           <span>
               ${h.age(co.modified_at)}
@@ -26,11 +26,11 @@
 
           %if co.author_id == request.authuser.user_id or h.HasRepoPermissionLevel('admin')(c.repo_name):
             %if co.deletable():
-              <div onClick="confirm('${_('Delete comment?')}') && deleteComment(${co.comment_id})" class="buttons delete-comment btn btn-default btn-xs">${_('Delete')}</div>
+              <div onClick="confirm('${_('Delete comment?')}') && deleteComment(${co.comment_id})" class="pull-right buttons delete-comment btn btn-default btn-xs">${_('Delete')}</div>
             %endif
           %endif
       </div>
-      <div class="text">
+      <div class="panel-body">
         %if co.status_change:
            <div class="automatic-comment">
              <p>
