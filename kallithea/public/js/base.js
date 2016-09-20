@@ -411,25 +411,6 @@ var show_more_event = function(){
     });
 };
 
-/**
- * activate .lazy-cs mouseover for showing changeset tooltip
- */
-var show_changeset_tooltip = function(){
-    $('.lazy-cs').mouseover(function(e){
-        var $target = $(e.currentTarget);
-        var rid = $target.data('raw_id');
-        var repo_name = $target.data('repo_name');
-        if(rid && !$target.hasClass('tooltip')){
-            _show_tooltip(e, _TM['loading ...']);
-            var url = pyroutes.url('changeset_info', {"repo_name": repo_name, "revision": rid});
-            ajaxGET(url, function(json){
-                    $target.addClass('tooltip');
-                    _show_tooltip(e, json['message']);
-                    _activate_tooltip($target);
-                });
-        }
-    });
-};
 
 var _onSuccessFollow = function(target){
     var $target = $(target);
@@ -475,76 +456,56 @@ var showRepoSize = function(target, repo_name){
 };
 
 /**
- * tooltips
+ * load tooltips dynamically based on data attributes, used for .lazy-cs changeset links
  */
+var get_changeset_tooltip = function() {
+    var $target = $(this);
+    var tooltip = $target.data('tooltip');
+    if (!tooltip) {
+        var raw_id = $target.data('raw_id');
+        var repo_name = $target.data('repo_name');
+        var url = pyroutes.url('changeset_info', {"repo_name": repo_name, "revision": raw_id});
 
+        $.ajax(url, {
+            async: false,
+            success: function(data) {
+                tooltip = data["message"];
+            }
+        });
+        $target.data('tooltip', tooltip);
+    }
+    return tooltip;
+};
+
+/**
+ * activate tooltips and popups
+ */
 var tooltip_activate = function(){
-    $(document).ready(_init_tooltip);
-};
-
-var _activate_tooltip = function($tt){
-    $tt.mouseover(_show_tooltip);
-    $tt.mousemove(_move_tooltip);
-    $tt.mouseout(_close_tooltip);
-};
-
-var _init_tooltip = function(){
-    var $tipBox = $('#tip-box');
-    if(!$tipBox.length){
-        $tipBox = $('<div id="tip-box"></div>');
-        $(document.body).append($tipBox);
-    }
-
-    $tipBox.hide();
-    $tipBox.css('position', 'absolute');
-    $tipBox.css('max-width', '600px');
-
-    _activate_tooltip($('[data-toggle="tooltip"]'));
-};
-
-var _show_tooltip = function(e, tipText, safe){
-    e.stopImmediatePropagation();
-    var el = e.currentTarget;
-    var $el = $(el);
-    if(tipText){
-        // just use it
-    } else if(el.tagName.toLowerCase() === 'img'){
-        tipText = el.alt ? el.alt : '';
-    } else {
-        tipText = el.title ? el.title : '';
-        safe = safe || $el.hasClass("safe-html-title");
-    }
-
-    if(tipText !== ''){
-        // save org title
-        $el.attr('tt_title', tipText);
-        // reset title to not show org tooltips
-        $el.prop('title', '');
-
-        var $tipBox = $('#tip-box');
-        if (safe) {
-            $tipBox.html(tipText);
-        } else {
-            $tipBox.text(tipText);
+    function placement(p, e){
+        if(e.getBoundingClientRect().top > 2*$(window).height()/3){
+            return 'top';
+        }else{
+            return 'bottom';
         }
-        $tipBox.css('display', 'block');
     }
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip({
+            placement: placement
+        });
+        $('[data-toggle="popover"]').popover({
+            html: true,
+            container: 'body',
+            placement: placement,
+            trigger: 'hover',
+            template: '<div class="popover cs-popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+        });
+        $('.lazy-cs').tooltip({
+            title: get_changeset_tooltip,
+            placement: placement
+        });
+    });
 };
 
-var _move_tooltip = function(e){
-    e.stopImmediatePropagation();
-    var $tipBox = $('#tip-box');
-    $tipBox.css('top', (e.pageY + 15) + 'px');
-    $tipBox.css('left', (e.pageX + 15) + 'px');
-};
-
-var _close_tooltip = function(e){
-    e.stopImmediatePropagation();
-    var $tipBox = $('#tip-box');
-    $tipBox.hide();
-    var el = e.currentTarget;
-    $(el).prop('title', $(el).attr('tt_title'));
-};
 
 /**
  * Quick filter widget

@@ -62,7 +62,6 @@
         asynchtml("${h.url.current(filter=c.search_term)}", $("#journal"), function(){
             show_more_event();
             tooltip_activate();
-            show_changeset_tooltip();
             });
         e.preventDefault();
     });
@@ -76,7 +75,6 @@
             asynchtml(e.target.href, $journal, function(){
                 show_more_event();
                 tooltip_activate();
-                show_changeset_tooltip();
             });
             e.preventDefault();
         });

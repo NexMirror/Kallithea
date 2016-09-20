@@ -108,7 +108,7 @@ def _ignorews_url(GET, fileid=None):
 
     params['anchor'] = fileid
     icon = h.literal('<i class="icon-strike"></i>')
-    return h.link_to(icon, h.url.current(**params), title=lbl, class_='tooltip')
+    return h.link_to(icon, h.url.current(**params), title=lbl, **{'data-toggle': 'tooltip'})
 
 
 def get_line_ctx(fid, GET):
@@ -168,7 +168,7 @@ def _context_url(GET, fileid=None):
 
     params['anchor'] = fileid
     icon = h.literal('<i class="icon-sort"></i>')
-    return h.link_to(icon, h.url.current(**params), title=lbl, class_='tooltip')
+    return h.link_to(icon, h.url.current(**params), title=lbl, **{'data-toggle': 'tooltip'})
 
 
 # Could perhaps be nice to have in the model but is too high level ...

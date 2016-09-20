@@ -311,9 +311,9 @@ def pygmentize_annotation(repo_name, filenode, **kwargs):
             author = escape(changeset.author)
             date = changeset.date
             message = escape(changeset.message)
-            tooltip_html = ("<div style='font-size:0.8em'><b>Author:</b>"
-                            " %s<br/><b>Date:</b> %s</b><br/><b>Message:"
-                            "</b> %s<br/></div>") % (author, date, message)
+            tooltip_html = ("<b>Author:</b> %s<br/>"
+                            "<b>Date:</b> %s</b><br/>"
+                            "<b>Message:</b> %s") % (author, date, message)
 
             lnk_format = show_id(changeset)
             uri = link_to(
@@ -321,9 +321,8 @@ def pygmentize_annotation(repo_name, filenode, **kwargs):
                     url('changeset_home', repo_name=repo_name,
                         revision=changeset.raw_id),
                     style=get_color_string(changeset.raw_id),
-                    class_='safe-html-title',
-                    title=tooltip_html,
-                    **{'data-toggle': 'tooltip'}
+                    **{'data-toggle': 'popover',
+                       'data-content': tooltip_html}
                   )
 
             uri += '\n'
@@ -568,7 +567,7 @@ def action_parser(user_log, feed=False, parse_cs=False):
                 lbl = rev[:12]
                 title_ = _('Changeset %s not found') % lbl
             if parse_cs:
-                return link_to(lbl, url_, title=title_, class_='tooltip')
+                return link_to(lbl, url_, title=title_, **{'data-toggle': 'tooltip'})
             return link_to(lbl, url_, class_='lazy-cs' if lazy_cs else '',
                            **{'data-raw_id':rev.raw_id, 'data-repo_name':repo_name})
 
