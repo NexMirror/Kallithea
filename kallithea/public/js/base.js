@@ -633,7 +633,7 @@ function show_comment_form($bubble) {
     var children = $bubble.closest('tr.line').children('[id]');
     var line_td_id = children[children.length - 1].id;
     var $comment_div = _get_add_comment_div(line_td_id);
-    var f_path = $bubble.closest('div.full_f_path').data('f_path');
+    var f_path = $bubble.closest('[data-f_path]').data('f_path');
     var parts = line_td_id.split('_');
     var line_no = parts[parts.length-1];
     comment_div_state($comment_div, f_path, line_no, true);
