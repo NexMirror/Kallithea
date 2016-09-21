@@ -1699,7 +1699,7 @@ a.metatag[data-tag="license"]:hover {
     border-spacing: 1px;
 }
 
-.trending_language {
+#lang_stats .progress-bar {
     background-color: #577632;
     color: #FFF;
     display: block;
@@ -1710,6 +1710,13 @@ a.metatag[data-tag="license"]:hover {
     margin-left: 5px;
     white-space: pre;
     padding: 3px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+#lang_stats table td {
+    border-bottom: none !important;
+    padding: 1px 0 !important;
 }
 
 h3.files_location {

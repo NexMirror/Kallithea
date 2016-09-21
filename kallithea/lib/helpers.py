@@ -883,26 +883,6 @@ def fancy_file_stats(stats):
     from kallithea.lib.diffs import NEW_FILENODE, DEL_FILENODE, \
         MOD_FILENODE, RENAMED_FILENODE, CHMOD_FILENODE, BIN_FILENODE
 
-    def cgen(l_type, a_v, d_v):
-        mapping = {'tr': 'top-right-rounded-corner-mid',
-                   'tl': 'top-left-rounded-corner-mid',
-                   'br': 'bottom-right-rounded-corner-mid',
-                   'bl': 'bottom-left-rounded-corner-mid'}
-        map_getter = lambda x: mapping[x]
-
-        if l_type == 'a' and d_v:
-            #case when added and deleted are present
-            return ' '.join(map(map_getter, ['tl', 'bl']))
-
-        if l_type == 'a' and not d_v:
-            return ' '.join(map(map_getter, ['tr', 'br', 'tl', 'bl']))
-
-        if l_type == 'd' and a_v:
-            return ' '.join(map(map_getter, ['tr', 'br']))
-
-        if l_type == 'd' and not a_v:
-            return ' '.join(map(map_getter, ['tr', 'br', 'tl', 'bl']))
-
     a, d = stats['added'], stats['deleted']
     width = 100
 
@@ -933,9 +913,9 @@ def fancy_file_stats(stats):
             lbl += _org_lbl if lbl.endswith('+') else '+%s' % _org_lbl
 
         #import ipdb;ipdb.set_trace()
-        b_d = '<div class="bin bin%s %s" style="width:100%%">%s</div>' % (bin_op, cgen('a', a_v='', d_v=0), lbl)
+        b_d = '<div class="bin bin%s progress-bar" style="width:100%%">%s</div>' % (bin_op, lbl)
         b_a = '<div class="bin bin1" style="width:0%"></div>'
-        return literal('<div style="width:%spx">%s%s</div>' % (width, b_a, b_d))
+        return literal('<div style="width:%spx" class="progress">%s%s</div>' % (width, b_a, b_d))
 
     t = stats['added'] + stats['deleted']
     unit = float(width) / (t or 1)
@@ -955,13 +935,13 @@ def fancy_file_stats(stats):
     a_v = a if a > 0 else ''
     d_v = d if d > 0 else ''
 
-    d_a = '<div class="added %s" style="width:%s%%">%s</div>' % (
-        cgen('a', a_v, d_v), a_p, a_v
+    d_a = '<div class="added progress-bar" style="width:%s%%">%s</div>' % (
+        a_p, a_v
     )
-    d_d = '<div class="deleted %s" style="width:%s%%">%s</div>' % (
-        cgen('d', a_v, d_v), d_p, d_v
+    d_d = '<div class="deleted progress-bar" style="width:%s%%">%s</div>' % (
+        d_p, d_v
     )
-    return literal('<div style="width:%spx">%s%s</div>' % (width, d_a, d_d))
+    return literal('<div class="pull-right progress" style="width:%spx">%s%s</div>' % (width, d_a, d_d))
 
 
 _URLIFY_RE = re.compile(r'''
