@@ -154,7 +154,7 @@ ${self.repo_context_bar('showpullrequest')}
               <div class="msg-div">${c.update_msg}</div>
               %if c.avail_revs:
               <div id="updaterevs" style="max-height:200px; overflow-y:auto; overflow-x:hidden; margin-bottom: 10px; padding: 1px 0">
-                <div style="height:0">
+                <div style="height:0;width:40px">
                   <canvas id="avail_graph_canvas" style="width:0"></canvas>
                 </div>
                 <table id="updaterevs-table" class="noborder" style="padding-left:50px">
@@ -373,7 +373,7 @@ ${self.repo_context_bar('showpullrequest')}
 
           var avail_jsdata = ${c.avail_jsdata|n};
           var avail_r = new BranchRenderer('avail_graph_canvas', 'updaterevs-table', 'chg_available_');
-          avail_r.render(avail_jsdata,40);
+          avail_r.render(avail_jsdata);
 
           move_comments($(".comments .comments-list-chunk"));
 

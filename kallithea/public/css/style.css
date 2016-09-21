@@ -2064,6 +2064,7 @@ BIN_FILENODE = 6
 
 #graph_nodes {
     position: absolute;
+    width: 100px;
 }
 
 #graph_content,

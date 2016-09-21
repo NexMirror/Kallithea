@@ -272,14 +272,14 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                 checkbox_checker();
                 $checkboxes.click(function() {
                     checkbox_checker();
-                    r.render(jsdata,100);
+                    r.render(jsdata);
                 });
                 $('#singlerange').click(checkbox_checker);
 
                 $('#rev_range_clear').click(function(e){
                     $checkboxes.prop('checked', false);
                     checkbox_checker();
-                    r.render(jsdata,100);
+                    r.render(jsdata);
                 });
 
                 var $msgs = $('.message');
@@ -302,7 +302,7 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                     $('#C-'+cid).toggleClass('expanded');
 
                     //redraw the graph, r and jsdata are bound outside function
-                    r.render(jsdata,100);
+                    r.render(jsdata);
                 });
 
                 // change branch filter
@@ -325,7 +325,7 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
 
                 var jsdata = ${c.jsdata|n};
                 var r = new BranchRenderer('graph_canvas', 'graph_content', 'chg_');
-                r.render(jsdata,100);
+                r.render(jsdata);
             });
 
         </script>

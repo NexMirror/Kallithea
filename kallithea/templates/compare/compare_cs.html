@@ -127,13 +127,13 @@
 %if not c.as_form:
         var jsdata = ${c.jsdata|n};
         var r = new BranchRenderer('graph_canvas', 'graph_content_pr', 'chg_');
-        r.render(jsdata,100);
+        r.render(jsdata);
 %endif
 
         $('.expand_commit').click(function(e){
             var cid = $(this).attr('commit_id');
             $('#C-'+cid).toggleClass('expanded');
-            r.render(jsdata,100);
+            r.render(jsdata);
         });
 
         $('.gravatar').click(function(e){
