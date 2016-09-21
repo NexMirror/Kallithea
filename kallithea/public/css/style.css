@@ -1766,12 +1766,6 @@ a.metatag[tag="license"]:hover {
     width: 95px;
 }
 
-.journal_highlight {
-    font-weight: bold;
-    padding: 0 2px;
-    vertical-align: bottom;
-}
-
 .trending_language_tbl, .trending_language_tbl td {
     border: 0 !important;
     margin: 0 !important;

@@ -750,8 +750,8 @@ def action_parser(user_log, feed=False, parse_cs=False):
         action = action_str[0].replace('[', '').replace(']', '')
     else:
         action = action_str[0] \
-            .replace('[', '<span class="journal_highlight">') \
-            .replace(']', '</span>')
+            .replace('[', '<b>') \
+            .replace(']', '</b>')
 
     action_params_func = lambda: ""
 
