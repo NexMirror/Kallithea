@@ -49,16 +49,12 @@
                           ##<th class="left">${_('Number of Repositories')}</th>
                       </tr>
                   </thead>
-
-                  ## REPO GROUPS
                   % for gr in c.groups:
                     <tr>
                         <td>
                             <div class="dt_repo">
-                              <a href="${url('repos_group_home',group_name=gr.group_name)}">
                                 <i class="icon-folder"></i>
-                                <span class="dt_repo_name">${gr.name}</span>
-                              </a>
+                                <a href="${url('repos_group_home',group_name=gr.group_name)}">${gr.name}</a>
                             </div>
                         </td>
                         <td>${h.urlify_text(gr.group_description, stylize=c.visual.stylify_metatags)}</td>
