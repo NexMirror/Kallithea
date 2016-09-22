@@ -742,26 +742,6 @@ class LoginRequired(object):
                 log.warning('API access to %s is not allowed', loc)
                 raise HTTPForbidden()
 
-        # Only allow the following HTTP request methods.
-        if request.method not in ['GET', 'HEAD', 'POST']:
-            raise HTTPMethodNotAllowed()
-
-        # Also verify the _method override - no longer allowed
-        _method = request.params.get('_method')
-        if _method is None:
-            pass # no override, no problem
-        else:
-            raise HTTPMethodNotAllowed()
-
-        # Make sure CSRF token never appears in the URL. If so, invalidate it.
-        if secure_form.token_key in request.GET:
-            log.error('CSRF key leak detected')
-            session.pop(secure_form.token_key, None)
-            session.save()
-            from kallithea.lib import helpers as h
-            h.flash(_("CSRF token leak has been detected - all form tokens have been expired"),
-                    category='error')
-
         # CSRF protection: Whenever a request has ambient authority (whether
         # through a session cookie or its origin IP address), it must include
         # the correct token, unless the HTTP method is GET or HEAD (and thus
@@ -773,13 +753,6 @@ class LoginRequired(object):
             if not token or token != secure_form.authentication_token():
                 log.error('CSRF check failed')
                 raise HTTPForbidden()
-
-        # WebOb already ignores request payload parameters for anything other
-        # than POST/PUT, but double-check since other Kallithea code relies on
-        # this assumption.
-        if request.method not in ['POST', 'PUT'] and request.POST:
-            log.error('%r request with payload parameters; WebOb should have stopped this', request.method)
-            raise HTTPBadRequest()
 
         # regular user authentication
         if user.is_authenticated or user.is_default_user:

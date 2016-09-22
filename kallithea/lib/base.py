@@ -37,6 +37,7 @@ import webob.exc
 import paste.httpexceptions
 import paste.auth.basic
 import paste.httpheaders
+from webhelpers.pylonslib import secure_form
 
 from pylons import config, tmpl_context as c, request, session
 from pylons.controllers import WSGIController
@@ -412,6 +413,36 @@ class BaseController(WSGIController):
         # User is anonymous
         return AuthUser()
 
+    @staticmethod
+    def _basic_security_checks():
+        """Perform basic security/sanity checks before processing the request."""
+
+        # Only allow the following HTTP request methods.
+        if request.method not in ['GET', 'HEAD', 'POST']:
+            raise webob.exc.HTTPMethodNotAllowed()
+
+        # Also verify the _method override - no longer allowed.
+        if request.params.get('_method') is None:
+            pass # no override, no problem
+        else:
+            raise webob.exc.HTTPMethodNotAllowed()
+
+        # Make sure CSRF token never appears in the URL. If so, invalidate it.
+        if secure_form.token_key in request.GET:
+            log.error('CSRF key leak detected')
+            session.pop(secure_form.token_key, None)
+            session.save()
+            from kallithea.lib import helpers as h
+            h.flash(_('CSRF token leak has been detected - all form tokens have been expired'),
+                    category='error')
+
+        # WebOb already ignores request payload parameters for anything other
+        # than POST/PUT, but double-check since other Kallithea code relies on
+        # this assumption.
+        if request.method not in ['POST', 'PUT'] and request.POST:
+            log.error('%r request with payload parameters; WebOb should have stopped this', request.method)
+            raise webob.exc.HTTPBadRequest()
+
     def __call__(self, environ, start_response):
         """Invoke the Controller"""
 
@@ -421,6 +452,8 @@ class BaseController(WSGIController):
         try:
             self.ip_addr = _get_ip_addr(environ)
             # make sure that we update permissions each time we call controller
+
+            self._basic_security_checks()
 
             #set globals for auth user
             self.authuser = c.authuser = request.user = self._determine_auth_user(
@@ -433,6 +466,8 @@ class BaseController(WSGIController):
                 safe_unicode(_get_access_path(environ)),
             )
             return WSGIController.__call__(self, environ, start_response)
+        except webob.exc.HTTPException as e:
+            return e(environ, start_response)
         finally:
             meta.Session.remove()
 
