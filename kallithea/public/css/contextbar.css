@@ -139,7 +139,6 @@ ul.horizontal-list li a {
 #context-actions a,
 #context-pages a {
     background-repeat: no-repeat;
-    background-position: 10px 50%;
     padding-left: 30px;
 }
 
@@ -178,12 +177,14 @@ ul#context-actions {
     padding: 11px 10px 12px 30px;
 }
 
+ul.dropdown-menu li a:focus,
 #header #header-inner #quick li:hover,
 #revision-changer:hover,
 #context-pages li:hover,
 #context-actions li:hover,
 #content #context-actions li:hover,
 #header #header-inner #quick li.current,
+#header #header-inner #quick li a.menu_link:focus,
 #context-pages li.current {
     background: #6388ad; /* Old browsers */
     background: linear-gradient(to bottom, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 100%); /* W3C */
