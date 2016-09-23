@@ -364,6 +364,8 @@
         aria-expanded="false" aria-controls="quick_login"
         %if c.authuser.username != 'default':
           href="${h.url('notifications')}"
+        %else:
+          href="#"
         %endif
       >
           ${h.gravatar_div(c.authuser.email, size=20, div_class="icon", div_style="display:inline", div_aria_hidden="true")}
