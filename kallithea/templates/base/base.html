@@ -139,11 +139,11 @@
         </li>
         <li ${is_current('options')} data-context="options" class="dropdown">
              %if h.HasRepoPermissionAny('repository.admin')(c.repo_name):
-               <a href="${h.url('edit_repo',repo_name=c.repo_name)}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"><i class="icon-wrench"></i> ${_('Options')} <i class="caret"></i></a>
+               <a href="${h.url('edit_repo',repo_name=c.repo_name)}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true"><i class="icon-wrench"></i> ${_('Options')} <i class="caret"></i></a>
              %else:
-               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"><i class="icon-wrench"></i> ${_('Options')} <i class="caret"></i></a>
+               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true"><i class="icon-wrench"></i> ${_('Options')} <i class="caret"></i></a>
              %endif
-          <ul class="dropdown-menu" role="menu">
+          <ul class="dropdown-menu" role="menu" aria-hidden="yes">
              %if h.HasRepoPermissionAny('repository.admin')(c.repo_name):
                    <li><a href="${h.url('edit_repo',repo_name=c.repo_name)}"><i class="icon-gear"></i> ${_('Settings')}</a></li>
              %endif
@@ -361,11 +361,12 @@
     ## USER MENU
     <li class="dropdown">
       <a class="menu_link dropdown-toggle" data-toggle="dropdown" role="button" id="quick_login_link"
+        aria-expanded="false" aria-controls="quick_login"
         %if c.authuser.username != 'default':
           href="${h.url('notifications')}"
         %endif
       >
-          ${h.gravatar_div(c.authuser.email, size=20, div_class="icon", div_style="display:inline")}
+          ${h.gravatar_div(c.authuser.email, size=20, div_class="icon", div_style="display:inline", div_aria_hidden="true")}
           %if c.authuser.username != 'default':
             <span class="menu_link_user">${c.authuser.username}</span>
             %if c.unread_notifications != 0:
@@ -376,10 +377,10 @@
           %endif
       </a>
 
-      <div class="user-menu">
-        <div id="quick_login" class="dropdown-menu">
+      <div class="user-menu" role="menu">
+        <div id="quick_login" role="form" aria-describedby="quick_login_h" aria-hidden="true" class="dropdown-menu">
           %if c.authuser.username == 'default' or c.authuser.user_id is None:
-            <h4>${_('Login to Your Account')}</h4>
+            <h4 id="quick_login_h">${_('Login to Your Account')}</h4>
             ${h.form(h.url('login_home', came_from=request.path_qs))}
             <div class="form">
                 <div class="fields">
@@ -528,6 +529,20 @@
             $("#repo_switcher").on('select2-selecting', function(e){
                 e.preventDefault();
                 window.location = pyroutes.url('summary_home', {'repo_name': e.val});
+            });
+
+            $(document).on('shown.bs.dropdown', function(event) {
+                var dropdown = $(event.target);
+
+                dropdown.attr('aria-expanded', true);
+                dropdown.find('.dropdown-menu').attr('aria-hidden', false);
+            });
+
+            $(document).on('hidden.bs.dropdown', function(event) {
+                var dropdown = $(event.target);
+
+                dropdown.attr('aria-expanded', false);
+                dropdown.find('.dropdown-menu').attr('aria-hidden', true);
             });
         });
     </script>
