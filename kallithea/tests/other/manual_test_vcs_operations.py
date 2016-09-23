@@ -272,7 +272,7 @@ class TestVCSOperations(TestController):
         fixture.create_fork(GIT_REPO, fork_name)
         clone_url = _construct_url(fork_name).split()[0]
         stdout, stderr = _add_files_and_push('git', DEST, clone_url=clone_url)
-        print [(x.repo_full_path,x.repo_path) for x in Repository.get_all()] # TODO: what is this for
+        print [(x.repo_full_path,x.repo_path) for x in Repository.query()] # TODO: what is this for
         _check_proper_git_push(stdout, stderr)
 
     def test_push_invalidates_cache_hg(self):
@@ -527,7 +527,7 @@ class TestVCSOperations(TestController):
             assert 'abort: HTTP Error 403: Forbidden' in stderr
         finally:
             #release IP restrictions
-            for ip in UserIpMap.get_all():
+            for ip in UserIpMap.query():
                 UserIpMap.delete(ip.ip_id)
             Session().commit()
 
@@ -555,7 +555,7 @@ class TestVCSOperations(TestController):
             assert re.search(r'\b403\b', stderr)
         finally:
             #release IP restrictions
-            for ip in UserIpMap.get_all():
+            for ip in UserIpMap.query():
                 UserIpMap.delete(ip.ip_id)
             Session().commit()
 

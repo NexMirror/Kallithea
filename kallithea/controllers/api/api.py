@@ -443,7 +443,7 @@ class ApiController(JSONRPCController):
             user = get_user_or_error(userid)
 
         # show all locks
-        for r in Repository.get_all():
+        for r in Repository.query():
             userid, time_ = r.locked
             if time_:
                 _api_data = r.get_api_data()
@@ -848,7 +848,7 @@ class ApiController(JSONRPCController):
 
         result = []
         _perms = ('usergroup.read', 'usergroup.write', 'usergroup.admin',)
-        for user_group in UserGroupList(UserGroup.get_all(),
+        for user_group in UserGroupList(UserGroup.query().all(),
                                         perm_set=_perms):
             result.append(user_group.get_api_data())
         return result
@@ -1272,7 +1272,7 @@ class ApiController(JSONRPCController):
         if not HasPermissionAny('hg.admin')():
             repos = RepoModel().get_all_user_repos(user=self.authuser.user_id)
         else:
-            repos = Repository.get_all()
+            repos = Repository.query()
 
         for repo in repos:
             result.append(repo.get_api_data())
@@ -1950,7 +1950,7 @@ class ApiController(JSONRPCController):
 
         """
         result = []
-        for repo_group in RepoGroup.get_all():
+        for repo_group in RepoGroup.query():
             result.append(repo_group.get_api_data())
         return result
 

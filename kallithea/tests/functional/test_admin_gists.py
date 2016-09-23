@@ -21,7 +21,7 @@ def _create_gist(f_name, content='some gist', lifetime=-1,
 class TestGistsController(TestController):
 
     def teardown_method(self, method):
-        for g in Gist.get_all():
+        for g in Gist.query():
             GistModel().delete(g)
         Session().commit()
 

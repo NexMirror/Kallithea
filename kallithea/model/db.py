@@ -160,10 +160,6 @@ class BaseModel(object):
         return res
 
     @classmethod
-    def get_all(cls):
-        return cls.query().all()
-
-    @classmethod
     def delete(cls, id_):
         obj = cls.query().get(id_)
         Session().delete(obj)

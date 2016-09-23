@@ -179,7 +179,7 @@ class RepoModel(BaseModel):
     @classmethod
     def update_repoinfo(cls, repositories=None):
         if repositories is None:
-            repositories = Repository.get_all()
+            repositories = Repository.query()
         for repo in repositories:
             repo.update_changeset_cache()
 

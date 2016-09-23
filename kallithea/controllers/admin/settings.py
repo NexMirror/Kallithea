@@ -167,7 +167,7 @@ class SettingsController(BaseController):
 
             if invalidate_cache:
                 log.debug('invalidating all repositories cache')
-                for repo in Repository.get_all():
+                for repo in Repository.query():
                     ScmModel().mark_for_invalidation(repo.repo_name)
 
             filesystem_repos = ScmModel().repo_scan()

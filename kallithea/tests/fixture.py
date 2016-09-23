@@ -252,7 +252,7 @@ class Fixture(object):
         return gist
 
     def destroy_gists(self, gistid=None):
-        for g in Gist.get_all():
+        for g in Gist.query():
             if gistid:
                 if gistid == g.gist_access_id:
                     GistModel().delete(g)

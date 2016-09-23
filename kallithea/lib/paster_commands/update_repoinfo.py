@@ -54,7 +54,7 @@ class Command(BasePasterCommand):
 
 
         if self.options.repo_update_list is None:
-            repo_list = Repository.get_all()
+            repo_list = Repository.query().all()
         else:
             repo_names = [safe_unicode(n.strip())
                           for n in self.options.repo_update_list.split(',')]
