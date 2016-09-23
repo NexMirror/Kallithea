@@ -433,25 +433,35 @@ class TestLoginController(TestController):
         config = {'api_access_controllers_whitelist': values or []}
         return config
 
-    @parametrize('test_name,api_key', [
-        ('none', None),
-        ('empty_string', ''),
-        ('fake_number', '123456'),
-        ('proper_api_key', None)
+    def _api_key_test(self, api_key, status):
+        """Verifies HTTP status code for accessing an auth-requiring page,
+        using the given api_key URL parameter. If api_key is None, no api_key
+        parameter is passed at all. If api_key is True, a real, working API key
+        is used.
+        """
+        with fixture.anon_access(False):
+            if api_key is None:
+                params = {}
+            else:
+                if api_key is True:
+                    api_key = User.get_first_admin().api_key
+                params = {'api_key': api_key}
+
+            self.app.get(url(controller='changeset', action='changeset_raw',
+                             repo_name=HG_REPO, revision='tip', **params),
+                         status=status)
+
+    @parametrize('test_name,api_key,code', [
+        ('none', None, 302),
+        ('empty_string', '', 403),
+        ('fake_number', '123456', 403),
+        ('proper_api_key', True, 403)
     ])
-    def test_access_not_whitelisted_page_via_api_key(self, test_name, api_key):
+    def test_access_not_whitelisted_page_via_api_key(self, test_name, api_key, code):
         whitelist = self._get_api_whitelist([])
         with mock.patch('kallithea.CONFIG', whitelist):
             assert [] == whitelist['api_access_controllers_whitelist']
-            if test_name == 'proper_api_key':
-                #use builtin if api_key is None
-                api_key = User.get_first_admin().api_key
-
-            with fixture.anon_access(False):
-                self.app.get(url(controller='changeset',
-                                 action='changeset_raw',
-                                 repo_name=HG_REPO, revision='tip', api_key=api_key),
-                             status=403)
+            self._api_key_test(api_key, code)
 
     @parametrize('test_name,api_key,code', [
         ('none', None, 302),
@@ -459,20 +469,13 @@ class TestLoginController(TestController):
         ('fake_number', '123456', 302),
         ('fake_not_alnum', 'a-z', 302),
         ('fake_api_key', '0123456789abcdef0123456789ABCDEF01234567', 302),
-        ('proper_api_key', None, 200)
+        ('proper_api_key', True, 200)
     ])
     def test_access_whitelisted_page_via_api_key(self, test_name, api_key, code):
         whitelist = self._get_api_whitelist(['ChangesetController:changeset_raw'])
         with mock.patch('kallithea.CONFIG', whitelist):
             assert ['ChangesetController:changeset_raw'] == whitelist['api_access_controllers_whitelist']
-            if test_name == 'proper_api_key':
-                api_key = User.get_first_admin().api_key
-
-            with fixture.anon_access(False):
-                self.app.get(url(controller='changeset',
-                                 action='changeset_raw',
-                                 repo_name=HG_REPO, revision='tip', api_key=api_key),
-                             status=code)
+            self._api_key_test(api_key, code)
 
     def test_access_page_via_extra_api_key(self):
         whitelist = self._get_api_whitelist(['ChangesetController:changeset_raw'])
@@ -481,11 +484,7 @@ class TestLoginController(TestController):
 
             new_api_key = ApiKeyModel().create(TEST_USER_ADMIN_LOGIN, u'test')
             Session().commit()
-            with fixture.anon_access(False):
-                self.app.get(url(controller='changeset',
-                                 action='changeset_raw',
-                                 repo_name=HG_REPO, revision='tip', api_key=new_api_key.api_key),
-                             status=200)
+            self._api_key_test(new_api_key.api_key, status=200)
 
     def test_access_page_via_expired_api_key(self):
         whitelist = self._get_api_whitelist(['ChangesetController:changeset_raw'])
@@ -497,9 +496,4 @@ class TestLoginController(TestController):
             #patch the API key and make it expired
             new_api_key.expires = 0
             Session().commit()
-            with fixture.anon_access(False):
-                self.app.get(url(controller='changeset',
-                                 action='changeset_raw',
-                                 repo_name=HG_REPO, revision='tip',
-                                 api_key=new_api_key.api_key),
-                             status=302)
+            self._api_key_test(new_api_key.api_key, status=302)
