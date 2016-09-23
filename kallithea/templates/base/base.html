@@ -137,7 +137,7 @@
         <li ${is_current('switch-to')} data-context="switch-to">
           <input id="branch_switcher" name="branch_switcher" type="hidden">
         </li>
-        <li ${is_current('options')} data-context="options">
+        <li ${is_current('options')} data-context="options" class="dropdown">
              %if h.HasRepoPermissionAny('repository.admin')(c.repo_name):
                <a href="${h.url('edit_repo',repo_name=c.repo_name)}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"><i class="icon-wrench"></i> ${_('Options')} <i class="caret"></i></a>
              %else:
@@ -377,7 +377,7 @@
       </a>
 
       <div class="user-menu">
-        <div id="quick_login">
+        <div id="quick_login" class="dropdown-menu">
           %if c.authuser.username == 'default' or c.authuser.user_id is None:
             <h4>${_('Login to Your Account')}</h4>
             ${h.form(h.url('login_home', came_from=request.path_qs))}

@@ -92,11 +92,6 @@ ul.horizontal-list > li ul {
     z-index: 999;
 }
 
-#header #header-inner #quick li:hover > ul,
-ul.horizontal-list li:hover > ul {
-    display: block;
-}
-
 #header #header-inner #quick li ul li,
 ul.horizontal-list ul li {
     position: relative;

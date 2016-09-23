@@ -3276,23 +3276,16 @@ div#legend_data, div#legend_container, div#legend_choices {
 }
 
 #header #header-inner #quick li #quick_login,
-#header #header-inner #quick li:hover ul ul,
-#header #header-inner #quick li:hover ul ul ul,
-#header #header-inner #quick li:hover ul ul ul ul,
 #content #left #menu ul.closed,
 #content #left #menu li ul.collapsed,
 .yui-tt-shadow {
     display: none;
 }
 
-#header #header-inner #quick li:hover #quick_login,
-#header #header-inner #quick li:hover ul,
-#header #header-inner #quick li li:hover ul,
-#header #header-inner #quick li li li:hover ul,
-#header #header-inner #quick li li li li:hover ul,
+.dropdown.open .dropdown-menu,
 #content #left #menu ul.opened,
 #content #left #menu li ul.expanded {
-    display: block;
+    display: block !important;
 }
 
 .caret:after {
