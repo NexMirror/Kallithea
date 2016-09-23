@@ -820,7 +820,8 @@ from kallithea.lib.auth import HasPermissionAny, \
 def gravatar_div(email_address, cls='', size=30, **div_attributes):
     """Return an html literal with a div around a gravatar if they are enabled.
     Extra keyword parameters starting with 'div_' will get the prefix removed
-    and be used as attributes on the div. The default class is 'gravatar'.
+    and '_' changed to '-' and be used as attributes on the div. The default
+    class is 'gravatar'.
     """
     from pylons import tmpl_context as c
     if not c.visual.use_gravatar:
@@ -830,7 +831,7 @@ def gravatar_div(email_address, cls='', size=30, **div_attributes):
     attributes = []
     for k, v in sorted(div_attributes.items()):
         assert k.startswith('div_'), k
-        attributes.append(' %s="%s"' % (k[4:], escape(v)))
+        attributes.append(' %s="%s"' % (k[4:].replace('_', '-'), escape(v)))
     return literal("""<div%s>%s</div>""" %
                    (''.join(attributes),
                     gravatar(email_address, cls=cls, size=size)))
