@@ -32,7 +32,7 @@ from collections import defaultdict
 
 from kallithea.lib.utils2 import extract_mentioned_users, safe_unicode
 from kallithea.lib import helpers as h
-from kallithea.model import BaseModel
+from kallithea.model.base import BaseModel
 from kallithea.model.db import ChangesetComment, User, \
     Notification, PullRequest
 from kallithea.model.notification import NotificationModel

@@ -38,7 +38,7 @@ import alembic.command
 
 from kallithea.lib.paster_commands.common import ask_ok
 from kallithea.model.user import UserModel
-from kallithea.model import init_model
+from kallithea.model.base import init_model
 from kallithea.model.db import User, Permission, Ui, \
     Setting, UserToPerm, RepoGroup, \
     UserRepoGroupToPerm, CacheInvalidation, Repository

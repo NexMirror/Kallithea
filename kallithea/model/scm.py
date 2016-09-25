@@ -53,7 +53,7 @@ from kallithea.lib.auth import HasRepoPermissionAny, HasRepoGroupPermissionAny, 
     HasUserGroupPermissionAny, HasPermissionAny, HasPermissionAny
 from kallithea.lib.utils import get_filesystem_repos, make_ui, \
     action_logger
-from kallithea.model import BaseModel
+from kallithea.model.base import BaseModel
 from kallithea.model.db import Repository, Ui, CacheInvalidation, \
     UserFollowing, UserLog, User, RepoGroup, PullRequest
 from kallithea.lib.hooks import log_push_action

@@ -39,7 +39,7 @@ from sqlalchemy.exc import DatabaseError
 
 from kallithea.lib.utils2 import safe_str, generate_api_key, get_current_authuser
 from kallithea.lib.caching_query import FromCache
-from kallithea.model import BaseModel
+from kallithea.model.base import BaseModel
 from kallithea.model.db import User, UserToPerm, Notification, \
     UserEmailMap, UserIpMap
 from kallithea.lib.exceptions import DefaultUserException, \

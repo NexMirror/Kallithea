@@ -30,7 +30,7 @@ import logging
 from sqlalchemy import or_
 
 from kallithea.lib.utils2 import generate_api_key
-from kallithea.model import BaseModel
+from kallithea.model.base import BaseModel
 from kallithea.model.db import UserApiKeys
 from kallithea.model.meta import Session
 

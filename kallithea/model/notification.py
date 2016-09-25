@@ -36,7 +36,7 @@ from sqlalchemy.orm import joinedload, subqueryload
 import kallithea
 from kallithea.lib import helpers as h
 from kallithea.lib.utils2 import safe_unicode
-from kallithea.model import BaseModel
+from kallithea.model.base import BaseModel
 from kallithea.model.db import Notification, User, UserNotification
 from kallithea.model.meta import Session
 

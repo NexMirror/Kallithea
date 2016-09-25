@@ -384,7 +384,7 @@ def handle_git_receive(repo_path, revs, env, hook_type):
     from paste.deploy import appconfig
     from sqlalchemy import engine_from_config
     from kallithea.config.environment import load_environment
-    from kallithea.model import init_model
+    from kallithea.model.base import init_model
     from kallithea.model.db import Ui
     from kallithea.lib.utils import make_ui
     extras = _extract_extras(env)

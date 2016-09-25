@@ -34,7 +34,7 @@ import datetime
 
 from kallithea.lib.utils2 import LazyProperty
 
-from kallithea.model import BaseModel
+from kallithea.model.base import BaseModel
 from kallithea.model.db import RepoGroup, Ui, UserRepoGroupToPerm, \
     User, Permission, UserGroupRepoGroupToPerm, UserGroup, Repository
 

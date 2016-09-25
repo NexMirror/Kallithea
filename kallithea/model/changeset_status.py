@@ -28,7 +28,7 @@ Original author and date, and relevant copyright and licensing information is be
 import logging
 from sqlalchemy.orm import joinedload
 
-from kallithea.model import BaseModel
+from kallithea.model.base import BaseModel
 from kallithea.model.db import ChangesetStatus, PullRequest
 from kallithea.lib.exceptions import StatusChangeOnClosedPullRequestError
 

@@ -31,7 +31,7 @@ import traceback
 
 from sqlalchemy.exc import DatabaseError
 
-from kallithea.model import BaseModel
+from kallithea.model.base import BaseModel
 from kallithea.model.db import User, Permission, UserToPerm, UserRepoToPerm, \
     UserRepoGroupToPerm, UserUserGroupToPerm
 from kallithea.lib.utils2 import str2bool

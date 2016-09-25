@@ -39,7 +39,7 @@ from paste.deploy import appconfig
 from sqlalchemy import engine_from_config
 
 from kallithea.lib.utils import setup_cache_regions
-from kallithea.model import init_model
+from kallithea.model.base import init_model
 from kallithea.model import meta
 from kallithea.model.db import User, Repository, Ui
 from kallithea.lib.auth import get_crypt_password

@@ -34,7 +34,7 @@ import shutil
 from kallithea.lib.utils2 import safe_unicode, unique_id, safe_int, \
     time_to_datetime, AttributeDict
 from kallithea.lib.compat import json
-from kallithea.model import BaseModel
+from kallithea.model.base import BaseModel
 from kallithea.model.db import Gist
 from kallithea.model.repo import RepoModel
 from kallithea.model.scm import ScmModel

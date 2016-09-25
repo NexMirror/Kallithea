@@ -24,7 +24,7 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 import logging
-from kallithea.model import BaseModel
+from kallithea.model.base import BaseModel
 from kallithea.model.db import UserRepoToPerm, UserGroupRepoToPerm, \
     Permission
 

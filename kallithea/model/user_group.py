@@ -27,7 +27,7 @@ Original author and date, and relevant copyright and licensing information is be
 import logging
 import traceback
 
-from kallithea.model import BaseModel
+from kallithea.model.base import BaseModel
 from kallithea.model.db import UserGroupMember, UserGroup, \
     UserGroupRepoToPerm, Permission, UserGroupToPerm, User, UserUserGroupToPerm, \
     UserGroupUserGroupToPerm

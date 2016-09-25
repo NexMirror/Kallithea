@@ -100,7 +100,7 @@ class BasePasterCommand(Command):
         logging.config.fileConfig(self.path_to_ini_file)
 
         from pylons import config
-        from kallithea.model import init_model
+        from kallithea.model.base import init_model
         from kallithea.lib.utils2 import engine_from_config
         setup_cache_regions(config)
         engine = engine_from_config(config, 'sqlalchemy.')

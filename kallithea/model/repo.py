@@ -41,7 +41,7 @@ from kallithea.lib.utils2 import LazyProperty, safe_str, safe_unicode, \
 from kallithea.lib.caching_query import FromCache
 from kallithea.lib.hooks import log_delete_repository
 
-from kallithea.model import BaseModel
+from kallithea.model.base import BaseModel
 from kallithea.model.db import Repository, UserRepoToPerm, UserGroupRepoToPerm, \
     UserRepoGroupToPerm, UserGroupRepoGroupToPerm, User, Permission, \
     Statistics, UserGroup, Ui, RepoGroup, RepositoryField

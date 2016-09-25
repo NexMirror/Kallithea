@@ -35,7 +35,7 @@ from sqlalchemy.orm import joinedload
 from kallithea.model.meta import Session
 from kallithea.lib import helpers as h
 from kallithea.lib.exceptions import UserInvalidException
-from kallithea.model import BaseModel
+from kallithea.model.base import BaseModel
 from kallithea.model.db import PullRequest, PullRequestReviewers, Notification, \
     ChangesetStatus, User
 from kallithea.model.notification import NotificationModel

@@ -37,7 +37,7 @@ from decorator import decorator
 from kallithea import CELERY_ON, CELERY_EAGER
 from kallithea.lib.utils2 import safe_str
 from kallithea.lib.pidlock import DaemonLock, LockHeld
-from kallithea.model import init_model
+from kallithea.model.base import init_model
 from kallithea.model import meta
 
 from sqlalchemy import engine_from_config
