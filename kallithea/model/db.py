@@ -67,7 +67,7 @@ log = logging.getLogger(__name__)
 _hash_key = lambda k: hashlib.md5(safe_str(k)).hexdigest()
 
 
-class BaseModel(object):
+class BaseDbModel(object):
     """
     Base Model for all classes
     """
@@ -180,7 +180,7 @@ _table_args_default_dict = {'extend_existing': True,
                             'sqlite_autoincrement': True,
                            }
 
-class Setting(Base, BaseModel):
+class Setting(Base, BaseDbModel):
     __tablename__ = 'settings'
     __table_args__ = (
         _table_args_default_dict,
@@ -344,7 +344,7 @@ class Setting(Base, BaseModel):
         return info
 
 
-class Ui(Base, BaseModel):
+class Ui(Base, BaseDbModel):
     __tablename__ = 'ui'
     __table_args__ = (
         # FIXME: ui_key as key is wrong and should be removed when the corresponding
@@ -414,7 +414,7 @@ class Ui(Base, BaseModel):
                                     self.ui_key, self.ui_value)
 
 
-class User(Base, BaseModel):
+class User(Base, BaseDbModel):
     __tablename__ = 'users'
     __table_args__ = (
         Index('u_username_idx', 'username'),
@@ -562,7 +562,7 @@ class User(Base, BaseModel):
     @classmethod
     def get_or_404(cls, id_, allow_default=True):
         '''
-        Overridden version of BaseModel.get_or_404, with an extra check on
+        Overridden version of BaseDbModel.get_or_404, with an extra check on
         the default user.
         '''
         user = super(User, cls).get_or_404(id_)
@@ -720,7 +720,7 @@ class User(Base, BaseModel):
         return data
 
 
-class UserApiKeys(Base, BaseModel):
+class UserApiKeys(Base, BaseDbModel):
     __tablename__ = 'user_api_keys'
     __table_args__ = (
         Index('uak_api_key_idx', 'api_key'),
@@ -745,7 +745,7 @@ class UserApiKeys(Base, BaseModel):
         return time.time() > self.expires
 
 
-class UserEmailMap(Base, BaseModel):
+class UserEmailMap(Base, BaseDbModel):
     __tablename__ = 'user_email_map'
     __table_args__ = (
         Index('uem_email_idx', 'email'),
@@ -775,7 +775,7 @@ class UserEmailMap(Base, BaseModel):
         self._email = val.lower() if val else None
 
 
-class UserIpMap(Base, BaseModel):
+class UserIpMap(Base, BaseDbModel):
     __tablename__ = 'user_ip_map'
     __table_args__ = (
         UniqueConstraint('user_id', 'ip_addr'),
@@ -805,7 +805,7 @@ class UserIpMap(Base, BaseModel):
         return u"<%s('user_id:%s=>%s')>" % (self.__class__.__name__,
                                             self.user_id, self.ip_addr)
 
-class UserLog(Base, BaseModel):
+class UserLog(Base, BaseDbModel):
     __tablename__ = 'user_logs'
     __table_args__ = (
         _table_args_default_dict,
@@ -833,7 +833,7 @@ class UserLog(Base, BaseModel):
     repository = relationship('Repository', cascade='')
 
 
-class UserGroup(Base, BaseModel):
+class UserGroup(Base, BaseDbModel):
     __tablename__ = 'users_groups'
     __table_args__ = (
         _table_args_default_dict,
@@ -922,7 +922,7 @@ class UserGroup(Base, BaseModel):
         return data
 
 
-class UserGroupMember(Base, BaseModel):
+class UserGroupMember(Base, BaseDbModel):
     __tablename__ = 'users_groups_members'
     __table_args__ = (
         _table_args_default_dict,
@@ -940,7 +940,7 @@ class UserGroupMember(Base, BaseModel):
         self.user_id = u_id
 
 
-class RepositoryField(Base, BaseModel):
+class RepositoryField(Base, BaseDbModel):
     __tablename__ = 'repositories_fields'
     __table_args__ = (
         UniqueConstraint('repository_id', 'field_key'),  # no-multi field
@@ -978,7 +978,7 @@ class RepositoryField(Base, BaseModel):
         return row
 
 
-class Repository(Base, BaseModel):
+class Repository(Base, BaseDbModel):
     __tablename__ = 'repositories'
     __table_args__ = (
         Index('r_repo_name_idx', 'repo_name'),
@@ -1509,7 +1509,7 @@ class Repository(Base, BaseModel):
     def __json__(self):
         return dict(landing_rev = self.landing_rev)
 
-class RepoGroup(Base, BaseModel):
+class RepoGroup(Base, BaseDbModel):
     __tablename__ = 'groups'
     __table_args__ = (
         CheckConstraint('group_id != group_parent_id', name='ck_groups_no_self_parent'),
@@ -1699,7 +1699,7 @@ class RepoGroup(Base, BaseModel):
         return data
 
 
-class Permission(Base, BaseModel):
+class Permission(Base, BaseDbModel):
     __tablename__ = 'permissions'
     __table_args__ = (
         Index('p_perm_name_idx', 'permission_name'),
@@ -1831,7 +1831,7 @@ class Permission(Base, BaseModel):
         return q.all()
 
 
-class UserRepoToPerm(Base, BaseModel):
+class UserRepoToPerm(Base, BaseDbModel):
     __tablename__ = 'repo_to_perm'
     __table_args__ = (
         UniqueConstraint('user_id', 'repository_id', 'permission_id'),
@@ -1860,7 +1860,7 @@ class UserRepoToPerm(Base, BaseModel):
         return u'<%s => %s >' % (self.user, self.repository)
 
 
-class UserUserGroupToPerm(Base, BaseModel):
+class UserUserGroupToPerm(Base, BaseDbModel):
     __tablename__ = 'user_user_group_to_perm'
     __table_args__ = (
         UniqueConstraint('user_id', 'user_group_id', 'permission_id'),
@@ -1889,7 +1889,7 @@ class UserUserGroupToPerm(Base, BaseModel):
         return u'<%s => %s >' % (self.user, self.user_group)
 
 
-class UserToPerm(Base, BaseModel):
+class UserToPerm(Base, BaseDbModel):
     __tablename__ = 'user_to_perm'
     __table_args__ = (
         UniqueConstraint('user_id', 'permission_id'),
@@ -1907,7 +1907,7 @@ class UserToPerm(Base, BaseModel):
         return u'<%s => %s >' % (self.user, self.permission)
 
 
-class UserGroupRepoToPerm(Base, BaseModel):
+class UserGroupRepoToPerm(Base, BaseDbModel):
     __tablename__ = 'users_group_repo_to_perm'
     __table_args__ = (
         UniqueConstraint('repository_id', 'users_group_id', 'permission_id'),
@@ -1936,7 +1936,7 @@ class UserGroupRepoToPerm(Base, BaseModel):
         return u'<UserGroupRepoToPerm:%s => %s >' % (self.users_group, self.repository)
 
 
-class UserGroupUserGroupToPerm(Base, BaseModel):
+class UserGroupUserGroupToPerm(Base, BaseDbModel):
     __tablename__ = 'user_group_user_group_to_perm'
     __table_args__ = (
         UniqueConstraint('target_user_group_id', 'user_group_id', 'permission_id'),
@@ -1966,7 +1966,7 @@ class UserGroupUserGroupToPerm(Base, BaseModel):
         return u'<UserGroupUserGroup:%s => %s >' % (self.target_user_group, self.user_group)
 
 
-class UserGroupToPerm(Base, BaseModel):
+class UserGroupToPerm(Base, BaseDbModel):
     __tablename__ = 'users_group_to_perm'
     __table_args__ = (
         UniqueConstraint('users_group_id', 'permission_id',),
@@ -1981,7 +1981,7 @@ class UserGroupToPerm(Base, BaseModel):
     permission = relationship('Permission')
 
 
-class UserRepoGroupToPerm(Base, BaseModel):
+class UserRepoGroupToPerm(Base, BaseDbModel):
     __tablename__ = 'user_repo_group_to_perm'
     __table_args__ = (
         UniqueConstraint('user_id', 'group_id', 'permission_id'),
@@ -2007,7 +2007,7 @@ class UserRepoGroupToPerm(Base, BaseModel):
         return n
 
 
-class UserGroupRepoGroupToPerm(Base, BaseModel):
+class UserGroupRepoGroupToPerm(Base, BaseDbModel):
     __tablename__ = 'users_group_repo_group_to_perm'
     __table_args__ = (
         UniqueConstraint('users_group_id', 'group_id'),
@@ -2033,7 +2033,7 @@ class UserGroupRepoGroupToPerm(Base, BaseModel):
         return n
 
 
-class Statistics(Base, BaseModel):
+class Statistics(Base, BaseDbModel):
     __tablename__ = 'statistics'
     __table_args__ = (
          _table_args_default_dict,
@@ -2049,7 +2049,7 @@ class Statistics(Base, BaseModel):
     repository = relationship('Repository', single_parent=True)
 
 
-class UserFollowing(Base, BaseModel):
+class UserFollowing(Base, BaseDbModel):
     __tablename__ = 'user_followings'
     __table_args__ = (
         UniqueConstraint('user_id', 'follows_repository_id', name='uq_user_followings_user_repo'),
@@ -2073,7 +2073,7 @@ class UserFollowing(Base, BaseModel):
         return cls.query().filter(cls.follows_repo_id == repo_id)
 
 
-class CacheInvalidation(Base, BaseModel):
+class CacheInvalidation(Base, BaseDbModel):
     __tablename__ = 'cache_invalidation'
     __table_args__ = (
         Index('key_idx', 'cache_key'),
@@ -2198,7 +2198,7 @@ class CacheInvalidation(Base, BaseModel):
         return set(inv_obj.cache_key for inv_obj in cls.query().filter(cls.cache_active).all())
 
 
-class ChangesetComment(Base, BaseModel):
+class ChangesetComment(Base, BaseDbModel):
     __tablename__ = 'changeset_comments'
     __table_args__ = (
         Index('cc_revision_idx', 'revision'),
@@ -2255,7 +2255,7 @@ class ChangesetComment(Base, BaseModel):
         return self.created_on > datetime.datetime.now() - datetime.timedelta(minutes=5)
 
 
-class ChangesetStatus(Base, BaseModel):
+class ChangesetStatus(Base, BaseDbModel):
     __tablename__ = 'changeset_statuses'
     __table_args__ = (
         Index('cs_revision_idx', 'revision'),
@@ -2311,7 +2311,7 @@ class ChangesetStatus(Base, BaseModel):
         return ChangesetStatus.get_status_lbl(self.status)
 
 
-class PullRequest(Base, BaseModel):
+class PullRequest(Base, BaseDbModel):
     __tablename__ = 'pull_requests'
     __table_args__ = (
         Index('pr_org_repo_id_idx', 'org_repo_id'),
@@ -2434,7 +2434,7 @@ class PullRequest(Base, BaseModel):
         return h.url('pullrequest_show', repo_name=self.other_repo.repo_name,
                      pull_request_id=self.pull_request_id, **kwargs)
 
-class PullRequestReviewers(Base, BaseModel):
+class PullRequestReviewers(Base, BaseDbModel):
     __tablename__ = 'pull_request_reviewers'
     __table_args__ = (
         Index('pull_request_reviewers_user_id_idx', 'user_id'),
@@ -2453,7 +2453,7 @@ class PullRequestReviewers(Base, BaseModel):
     pull_request = relationship('PullRequest')
 
 
-class Notification(Base, BaseModel):
+class Notification(Base, BaseDbModel):
     __tablename__ = 'notifications'
     __table_args__ = (
         Index('notification_type_idx', 'type'),
@@ -2514,7 +2514,7 @@ class Notification(Base, BaseModel):
         return NotificationModel().make_description(self)
 
 
-class UserNotification(Base, BaseModel):
+class UserNotification(Base, BaseDbModel):
     __tablename__ = 'user_to_notification'
     __table_args__ = (
         UniqueConstraint('user_id', 'notification_id'),
@@ -2533,7 +2533,7 @@ class UserNotification(Base, BaseModel):
         self.read = True
 
 
-class Gist(Base, BaseModel):
+class Gist(Base, BaseDbModel):
     __tablename__ = 'gists'
     __table_args__ = (
         Index('g_gist_access_id_idx', 'gist_access_id'),
