@@ -731,7 +731,7 @@ class DiffProcessor(object):
                     })
 
                     _html.append('''%(link)s''' % {
-                        'link': _link_to_if(True, change['old_lineno'],
+                        'link': _link_to_if(not no_lineno, change['old_lineno'],
                                             '#%s' % anchor_old)
                     })
                     _html.append('''</td>\n''')
