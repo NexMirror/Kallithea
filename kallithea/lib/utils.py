@@ -49,7 +49,6 @@ from kallithea.lib.vcs.exceptions import VCSError
 from kallithea.model import meta
 from kallithea.model.db import Repository, User, Ui, \
     UserLog, RepoGroup, Setting, UserGroup
-from kallithea.model.meta import Session
 from kallithea.model.repo_group import RepoGroupModel
 from kallithea.lib.utils2 import safe_str, safe_unicode, get_current_authuser
 from kallithea.lib.vcs.utils.fakemod import create_module
@@ -649,7 +648,7 @@ def create_test_env(repos_test_path, config):
     dbmanage.admin_prompt()
     dbmanage.create_permissions()
     dbmanage.populate_default_permissions()
-    Session().commit()
+    meta.Session().commit()
     # PART TWO make test repo
     log.debug('making test vcs repositories')
 
