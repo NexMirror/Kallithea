@@ -1131,16 +1131,9 @@ def changed_tooltip(nodes):
         return ': ' + _('No files')
 
 
-def repo_link(groups_and_repos, link_class=None):
+def repo_breadcrumbs(groups_and_repos, link_class=None):
     """
-    Makes a breadcrumbs link to repo within a group
-    joins &raquo; on each group to create a fancy link
-
-    ex::
-        group >> subgroup >> repo
-
-    :param groups_and_repos:
-    :param last_url:
+    Makes breadcrumb links to a repo within its groups, like 'group >> subgroup >> repo'.
     """
     groups, just_name, repo_name = groups_and_repos
     last_url = url('summary_home', repo_name=repo_name)

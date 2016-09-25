@@ -113,7 +113,7 @@
         %else:
           <i class="icon-globe"></i>
         %endif
-        ${h.repo_link(c.db_repo.groups_and_repo)}
+        ${h.repo_breadcrumbs(c.db_repo.groups_and_repo)}
 
         %if current == 'createfork':
          - ${_('Create Fork')}
@@ -123,7 +123,7 @@
       <div id="breadcrumbs">
         ${h.link_to(_('Repositories'),h.url('home'))}
         &raquo;
-        ${h.repo_link(c.db_repo.groups_and_repo)}
+        ${h.repo_breadcrumbs(c.db_repo.groups_and_repo)}
       </div>
       -->
       <ul id="context-pages" class="horizontal-list">
