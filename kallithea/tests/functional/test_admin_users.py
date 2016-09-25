@@ -54,7 +54,7 @@ class TestAdminUsersController(TestController):
     def test_index(self):
         self.log_user()
         response = self.app.get(url('users'))
-        # Test response...
+        # TODO: Test response...
 
     def test_create(self):
         self.log_user()
@@ -65,7 +65,7 @@ class TestAdminUsersController(TestController):
         lastname = u'lastname'
         email = 'mail@example.com'
 
-        response = self.app.post(url('users'),
+        response = self.app.post(url('new_user'),
             {'username': username,
              'password': password,
              'password_confirmation': password_confirmation,
@@ -101,13 +101,14 @@ class TestAdminUsersController(TestController):
         lastname = u'lastname'
         email = 'errmail.example.com'
 
-        response = self.app.post(url('users'), {'username': username,
-                                               'password': password,
-                                               'name': name,
-                                               'active': False,
-                                               'lastname': lastname,
-                                               'email': email,
-                                               '_authentication_token': self.authentication_token()})
+        response = self.app.post(url('new_user'),
+            {'username': username,
+             'password': password,
+             'name': name,
+             'active': False,
+             'lastname': lastname,
+             'email': email,
+             '_authentication_token': self.authentication_token()})
 
         msg = validators.ValidUsername(False, {})._messages['system_invalid_username']
         msg = h.html_escape(msg % {'username': 'new_user'})

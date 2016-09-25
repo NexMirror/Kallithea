@@ -170,7 +170,7 @@ def make_map(config):
     #ADMIN USER ROUTES
     with rmap.submapper(path_prefix=ADMIN_PREFIX,
                         controller='admin/users') as m:
-        m.connect("users", "/users",
+        m.connect("new_user", "/users/new",
                   action="create", conditions=dict(method=["POST"]))
         m.connect("users", "/users",
                   action="index", conditions=dict(method=["GET"]))
