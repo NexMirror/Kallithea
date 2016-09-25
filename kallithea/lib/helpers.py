@@ -1352,63 +1352,65 @@ def linkify_others(t, l):
     return ''.join(links)
 
 
-def _urlify_issues_replace_f(repo_name, ISSUE_SERVER_LNK, ISSUE_PREFIX):
-    def urlify_issues_replace(match_obj):
-        pref = ''
-        if match_obj.group().startswith(' '):
-            pref = ' '
-
-        issue_id = ''.join(match_obj.groups())
-        issue_url = ISSUE_SERVER_LNK.replace('{id}', issue_id)
-        issue_url = issue_url.replace('{repo}', repo_name)
-        issue_url = issue_url.replace('{repo_name}', repo_name.split(URL_SEP)[-1])
-
-        return (
-            '%(pref)s<a class="%(cls)s" href="%(url)s">'
-            '%(issue-prefix)s%(id-repr)s'
-            '</a>'
-            ) % {
-             'pref': pref,
-             'cls': 'issue-tracker-link',
-             'url': issue_url,
-             'id-repr': issue_id,
-             'issue-prefix': ISSUE_PREFIX,
-             'serv': ISSUE_SERVER_LNK,
-            }
-    return urlify_issues_replace
+# Global variable that will hold the actual urlify_issues function body.
+# Will be set on first use when the global configuration has been read.
+_urlify_issues_f = None
 
 
 def urlify_issues(newtext, repo_name):
-    from kallithea import CONFIG as conf
+    """Urlify issue references according to .ini configuration"""
+    global _urlify_issues_f
+    if _urlify_issues_f is None:
+        from kallithea import CONFIG
+        assert CONFIG['sqlalchemy.url'] # make sure config has been loaded
 
-    # allow multiple issue servers to be used
-    valid_indices = [
-        x.group(1)
-        for x in map(lambda x: re.match(r'issue_pat(.*)', x), conf.keys())
-        if x and 'issue_server_link%s' % x.group(1) in conf
-        and 'issue_prefix%s' % x.group(1) in conf
-    ]
+        # Build chain of urlify functions, starting with not doing any transformation
+        tmp_urlify_issues_f = lambda s: s
 
-    if valid_indices:
-        log.debug('found issue server suffixes `%s` during valuation of: %s',
-                  ','.join(valid_indices), newtext)
+        issue_pat_re = re.compile(r'issue_pat(.*)')
+        for k in CONFIG.keys():
+            # Find all issue_pat* settings that also have corresponding server_link and prefix configuration
+            m = issue_pat_re.match(k)
+            if m is None:
+                continue
+            suffix = m.group(1)
+            issue_pat = CONFIG.get(k)
+            issue_server_link = CONFIG.get('issue_server_link%s' % suffix)
+            issue_prefix = CONFIG.get('issue_prefix%s' % suffix)
+            if issue_pat and issue_server_link and issue_prefix:
+                log.debug('issue pattern %r: %r -> %r %r', suffix, issue_pat, issue_server_link, issue_prefix)
+            else:
+                log.error('skipping incomplete issue pattern %r: %r -> %r %r', suffix, issue_pat, issue_server_link, issue_prefix)
+                continue
 
-    for pattern_index in valid_indices:
-        ISSUE_PATTERN = conf.get('issue_pat%s' % pattern_index)
-        ISSUE_SERVER_LNK = conf.get('issue_server_link%s' % pattern_index)
-        ISSUE_PREFIX = conf.get('issue_prefix%s' % pattern_index)
+            # Wrap tmp_urlify_issues_f with substitution of this pattern, while making sure all loop variables (and compiled regexpes) are bound
+            issue_re = re.compile(issue_pat)
+            def issues_replace(match_obj,
+                               issue_server_link=issue_server_link, issue_prefix=issue_prefix):
+                leadingspace = ' ' if match_obj.group().startswith(' ') else ''
+                issue_id = ''.join(match_obj.groups())
+                issue_url = issue_server_link.replace('{id}', issue_id)
+                issue_url = issue_url.replace('{repo}', repo_name)
+                issue_url = issue_url.replace('{repo_name}', repo_name.split(URL_SEP)[-1])
+                return (
+                    '%(leadingspace)s<a class="issue-tracker-link" href="%(url)s">'
+                    '%(issue-prefix)s%(id-repr)s'
+                    '</a>'
+                    ) % {
+                     'leadingspace': leadingspace,
+                     'url': issue_url,
+                     'id-repr': issue_id,
+                     'issue-prefix': issue_prefix,
+                     'serv': issue_server_link,
+                    }
+            tmp_urlify_issues_f = (lambda s,
+                                          issue_re=issue_re, issues_replace=issues_replace, chain_f=tmp_urlify_issues_f:
+                                   issue_re.sub(issues_replace, chain_f(s)))
 
-        log.debug('pattern suffix `%s` PAT:%s SERVER_LINK:%s PREFIX:%s',
-                  pattern_index, ISSUE_PATTERN, ISSUE_SERVER_LNK,
-                  ISSUE_PREFIX)
+        # Set tmp function globally - atomically
+        _urlify_issues_f = tmp_urlify_issues_f
 
-        URL_PAT = re.compile(ISSUE_PATTERN)
-
-        urlify_issues_replace = _urlify_issues_replace_f(repo_name, ISSUE_SERVER_LNK, ISSUE_PREFIX)
-        newtext = URL_PAT.sub(urlify_issues_replace, newtext)
-        log.debug('processed prefix:`%s` => %s', pattern_index, newtext)
-
-    return newtext
+    return _urlify_issues_f(newtext)
 
 
 def render_w_mentions(source, repo_name=None):

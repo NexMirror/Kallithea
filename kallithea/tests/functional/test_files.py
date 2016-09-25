@@ -92,6 +92,10 @@ class TestFilesController(TestController):
             response.mustcontain("""@ r%s:%s""" % (r[0], r[1][:12]))
 
     def test_file_source(self):
+        # Force the global cache to be populated now when we know the right .ini has been loaded.
+        # (Without this, the test would fail.)
+        import kallithea.lib.helpers
+        kallithea.lib.helpers._urlify_issues_f = None
         self.log_user()
         response = self.app.get(url(controller='files', action='index',
                                     repo_name=HG_REPO,
