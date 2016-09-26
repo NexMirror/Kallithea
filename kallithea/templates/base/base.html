@@ -113,19 +113,16 @@
         %else:
           <i class="icon-globe"></i>
         %endif
-        ${h.repo_breadcrumbs(c.db_repo.groups_and_repo)}
+        %for group in c.db_repo.groups_with_parents:
+          ${h.link_to(group.name, url('repos_group_home', group_name=group.group_name))}
+          &raquo;
+        %endfor
+        ${h.link_to(c.db_repo.just_name, url('summary_home', repo_name=c.db_repo.repo_name))}
 
         %if current == 'createfork':
          - ${_('Create Fork')}
         %endif
       </h2>
-      <!--
-      <div id="breadcrumbs">
-        ${h.link_to(_('Repositories'),h.url('home'))}
-        &raquo;
-        ${h.repo_breadcrumbs(c.db_repo.groups_and_repo)}
-      </div>
-      -->
       <ul id="context-pages" class="horizontal-list">
         <li ${is_current('summary')} data-context="summary"><a href="${h.url('summary_home', repo_name=c.repo_name)}"><i class="icon-doc-text"></i> ${_('Summary')}</a></li>
         %if rev:
