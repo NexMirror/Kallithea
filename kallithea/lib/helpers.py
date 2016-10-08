@@ -362,10 +362,6 @@ def pygmentize_annotation(repo_name, filenode, **kwargs):
     return literal(markup_whitespace(annotate_highlight(filenode, url_func(repo_name), **kwargs)))
 
 
-def is_following_repo(repo_name, user_id):
-    from kallithea.model.scm import ScmModel
-    return ScmModel().is_following_repo(repo_name, user_id)
-
 class _Message(object):
     """A message returned by ``Flash.pop_messages()``.
 
