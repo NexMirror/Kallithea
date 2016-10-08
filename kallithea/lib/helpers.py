@@ -135,22 +135,6 @@ def FID(raw_id, path):
     return 'C-%s-%s' % (short_id(raw_id), hashlib.md5(safe_str(path)).hexdigest()[:12])
 
 
-class _GetError(object):
-    """Get error from form_errors, and represent it as span wrapped error
-    message
-
-    :param field_name: field to fetch errors for
-    :param form_errors: form errors dict
-    """
-
-    def __call__(self, field_name, form_errors):
-        tmpl = """<span class="error_msg">%s</span>"""
-        if form_errors and field_name in form_errors:
-            return literal(tmpl % form_errors.get(field_name))
-
-get_error = _GetError()
-
-
 class _FilesBreadCrumbs(object):
 
     def __call__(self, repo_name, rev, paths):
