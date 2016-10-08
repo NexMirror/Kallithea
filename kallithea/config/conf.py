@@ -67,7 +67,3 @@ MARKDOWN_EXTS = [
 PLAIN_EXTS = [('.text', 2), ('.TEXT', 2)]
 
 ALL_EXTS = MARKDOWN_EXTS + RST_EXTS + PLAIN_EXTS
-
-DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
-
-DATE_FORMAT = "%Y-%m-%d"
