@@ -40,9 +40,9 @@ from kallithea.lib.auth import LoginRequired
 from kallithea.lib.base import BaseRepoController, render
 from kallithea.lib.indexers import CHGSETS_SCHEMA, SCHEMA, CHGSET_IDX_NAME, \
     IDX_NAME, WhooshResultWrapper
-from kallithea.model.repo import RepoModel
+from kallithea.lib.page import Page
 from kallithea.lib.utils2 import safe_str, safe_int
-from kallithea.lib.helpers import Page
+from kallithea.model.repo import RepoModel
 
 log = logging.getLogger(__name__)
 

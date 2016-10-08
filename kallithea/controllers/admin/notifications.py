@@ -38,7 +38,7 @@ from kallithea.model.meta import Session
 from kallithea.lib.auth import LoginRequired, NotAnonymous
 from kallithea.lib.base import BaseController, render
 from kallithea.lib import helpers as h
-from kallithea.lib.helpers import Page
+from kallithea.lib.page import Page
 from kallithea.lib.utils2 import safe_int
 
 

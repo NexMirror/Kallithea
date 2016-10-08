@@ -37,15 +37,15 @@ from webob.exc import HTTPFound
 import kallithea.lib.helpers as h
 
 from kallithea.config.routing import url
-from kallithea.lib.helpers import Page
 from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator, \
     NotAnonymous, HasRepoPermissionAny, HasPermissionAnyDecorator, HasPermissionAny
 from kallithea.lib.base import BaseRepoController, render
+from kallithea.lib.page import Page
+from kallithea.lib.utils2 import safe_int
 from kallithea.model.db import Repository, UserFollowing, User, Ui
 from kallithea.model.repo import RepoModel
 from kallithea.model.forms import RepoForkForm
 from kallithea.model.scm import ScmModel, AvailableRepoGroupChoices
-from kallithea.lib.utils2 import safe_int
 
 log = logging.getLogger(__name__)
 

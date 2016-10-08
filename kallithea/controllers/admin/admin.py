@@ -41,7 +41,7 @@ from kallithea.lib.auth import LoginRequired, HasPermissionAnyDecorator
 from kallithea.lib.base import BaseController, render
 from kallithea.lib.utils2 import safe_int, remove_prefix, remove_suffix
 from kallithea.lib.indexers import JOURNAL_SCHEMA
-from kallithea.lib.helpers import Page
+from kallithea.lib.page import Page
 
 
 log = logging.getLogger(__name__)

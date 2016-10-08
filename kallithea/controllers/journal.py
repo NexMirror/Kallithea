@@ -46,11 +46,11 @@ from kallithea.model.db import UserLog, UserFollowing, Repository, User
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
 import kallithea.lib.helpers as h
-from kallithea.lib.helpers import Page
 from kallithea.lib.auth import LoginRequired, NotAnonymous
 from kallithea.lib.base import BaseController, render
-from kallithea.lib.utils2 import safe_int, AttributeDict
 from kallithea.lib.compat import json
+from kallithea.lib.page import Page
+from kallithea.lib.utils2 import safe_int, AttributeDict
 
 log = logging.getLogger(__name__)
 

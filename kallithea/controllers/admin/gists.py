@@ -44,7 +44,7 @@ from kallithea.lib.base import BaseController, render
 from kallithea.lib.auth import LoginRequired, NotAnonymous
 from kallithea.lib.utils import jsonify
 from kallithea.lib.utils2 import safe_int, safe_unicode, time_to_datetime
-from kallithea.lib.helpers import Page
+from kallithea.lib.page import Page
 from sqlalchemy.sql.expression import or_
 from kallithea.lib.vcs.exceptions import VCSError, NodeNotChangedError
 

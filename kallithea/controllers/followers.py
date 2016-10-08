@@ -29,11 +29,11 @@ import logging
 
 from pylons import tmpl_context as c, request
 
-from kallithea.lib.helpers import Page
 from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator
 from kallithea.lib.base import BaseRepoController, render
-from kallithea.model.db import UserFollowing
+from kallithea.lib.page import Page
 from kallithea.lib.utils2 import safe_int
+from kallithea.model.db import UserFollowing
 
 log = logging.getLogger(__name__)
 
