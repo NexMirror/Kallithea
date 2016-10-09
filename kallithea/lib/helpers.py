@@ -47,8 +47,6 @@ from kallithea.lib.utils2 import str2bool, safe_unicode, safe_str, \
 from kallithea.lib.markup_renderer import url_re
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError
 from kallithea.lib.vcs.backends.base import BaseChangeset, EmptyChangeset
-from kallithea.model.changeset_status import ChangesetStatusModel
-from kallithea.model.db import URL_SEP, Permission
 
 log = logging.getLogger(__name__)
 
@@ -394,7 +392,6 @@ flash = Flash()
 #==============================================================================
 from kallithea.lib.vcs.utils import author_name, author_email
 from kallithea.lib.utils2 import credentials_filter, age as _age
-from kallithea.model.db import User, ChangesetStatus, PullRequest
 
 age = lambda  x, y=False: _age(x, y)
 capitalize = lambda x: x.capitalize()
@@ -451,6 +448,7 @@ def is_hg(repository):
 @cache_region('long_term', 'user_or_none')
 def user_or_none(author):
     """Try to match email part of VCS committer string with a local user - or return None"""
+    from kallithea.model.db import User
     email = author_email(author)
     if email:
         return User.get_by_email(email, cache=True) # cache will only use sql_cache_short
@@ -476,6 +474,7 @@ def email_or_none(author):
 def person(author, show_attr="username"):
     """Find the user identified by 'author', return one of the users attributes,
     default to the username attribute, None if there is no user"""
+    from kallithea.model.db import User
     # attr to return from fetched user
     person_getter = lambda usr: getattr(usr, show_attr)
 
@@ -492,6 +491,7 @@ def person(author, show_attr="username"):
 
 
 def person_by_id(id_, show_attr="username"):
+    from kallithea.model.db import User
     # attr to return from fetched user
     person_getter = lambda usr: getattr(usr, show_attr)
 
@@ -676,6 +676,7 @@ def action_parser(user_log, feed=False, parse_cs=False):
         return group_name
 
     def get_pull_request():
+        from kallithea.model.db import PullRequest
         pull_request_id = action_params
         nice_id = PullRequest.make_nice_id(pull_request_id)
 
@@ -832,6 +833,7 @@ def gravatar(email_address, cls='', size=30):
 def gravatar_url(email_address, size=30, default=''):
     # doh, we need to re-import those to mock it later
     from kallithea.config.routing import url
+    from kallithea.model.db import User
     from pylons import tmpl_context as c
     if not c.visual.use_gravatar:
         return ""
@@ -1080,6 +1082,7 @@ def urlify_issues(newtext, repo_name):
     global _urlify_issues_f
     if _urlify_issues_f is None:
         from kallithea import CONFIG
+        from kallithea.model.db import URL_SEP
         assert CONFIG['sqlalchemy.url'] # make sure config has been loaded
 
         # Build chain of urlify functions, starting with not doing any transformation
@@ -1164,14 +1167,17 @@ def link_to_ref(repo_name, ref_type, ref_name, rev=None):
     return l
 
 def changeset_status(repo, revision):
+    from kallithea.model.changeset_status import ChangesetStatusModel
     return ChangesetStatusModel().get_status(repo, revision)
 
 
 def changeset_status_lbl(changeset_status):
+    from kallithea.model.db import ChangesetStatus
     return ChangesetStatus.get_status_lbl(changeset_status)
 
 
 def get_permission_name(key):
+    from kallithea.model.db import Permission
     return dict(Permission.PERMS).get(key)
 
 
