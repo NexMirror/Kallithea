@@ -48,7 +48,7 @@ def annotate_highlight(filenode, annotate_from_changeset_func=None,
     :param headers: dictionary with headers (keys are whats in ``order``
       parameter)
     """
-    from kallithea.lib.utils import get_custom_lexer
+    from kallithea.lib.pygmentsutils import get_custom_lexer
     options['linenos'] = True
     formatter = AnnotateHtmlFormatter(filenode=filenode, order=order,
         headers=headers,

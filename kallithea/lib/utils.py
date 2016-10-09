@@ -580,19 +580,6 @@ def load_rcextensions(root_path):
         #        setattr(EXT, k, getattr(rcextensions, k))
 
 
-def get_custom_lexer(extension):
-    """
-    returns a custom lexer if it's defined in rcextensions module, or None
-    if there's no custom lexer defined
-    """
-    import kallithea
-    from pygments import lexers
-    #check if we didn't define this extension as other lexer
-    if kallithea.EXTENSIONS and extension in kallithea.EXTENSIONS.EXTRA_LEXERS:
-        _lexer_name = kallithea.EXTENSIONS.EXTRA_LEXERS[extension]
-        return lexers.get_lexer_by_name(_lexer_name)
-
-
 #==============================================================================
 # TEST FUNCTIONS AND CREATORS
 #==============================================================================

@@ -41,7 +41,7 @@ from webhelpers.html.tags import _set_input_attrs, _set_id_attr, \
 
 from kallithea.config.routing import url
 from kallithea.lib.annotate import annotate_highlight
-from kallithea.lib.utils import get_custom_lexer
+from kallithea.lib.pygmentsutils import get_custom_lexer
 from kallithea.lib.utils2 import str2bool, safe_unicode, safe_str, \
     time_to_datetime, AttributeDict, safe_int, MENTIONS_REGEX
 from kallithea.lib.markup_renderer import url_re
