@@ -27,38 +27,26 @@ import textwrap
 from beaker.cache import cache_region
 from pygments.formatters.html import HtmlFormatter
 from pygments import highlight as code_highlight
-from pylons.i18n.translation import _, ungettext
+from pylons.i18n.translation import _
 
 from webhelpers.html import literal, HTML, escape
-from webhelpers.html.tools import *
-from webhelpers.html.builder import make_tag
-from webhelpers.html.tags import auto_discovery_link, checkbox, css_classes, \
-    end_form, file, hidden, image, javascript_link, link_to, \
-    link_to_if, link_to_unless, ol, required_legend, select, stylesheet_link, \
-    submit, text, password, textarea, title, ul, xml_declaration, radio, \
-    form as insecure_form
-from webhelpers.html.tools import auto_link, button_to, highlight, \
-    js_obfuscate, mail_to, strip_links, strip_tags, tag_re
-from webhelpers.number import format_byte_size, format_bit_size
+from webhelpers.html.tags import checkbox, end_form, hidden, link_to, \
+    select, submit, text, password, textarea, radio, form as insecure_form
+from webhelpers.number import format_byte_size
 from webhelpers.pylonslib import Flash as _Flash
 from webhelpers.pylonslib.secure_form import secure_form, authentication_token
-from webhelpers.text import chop_at, collapse, convert_accented_entities, \
-    convert_misc_entities, lchop, plural, rchop, remove_formatting, \
-    replace_whitespace, urlify, truncate, wrap_paragraphs
-from webhelpers.date import time_ago_in_words
+from webhelpers.text import chop_at, truncate, wrap_paragraphs
 from webhelpers.html.tags import _set_input_attrs, _set_id_attr, \
     convert_boolean_attrs, NotGiven, _make_safe_id_component
 
 from kallithea.config.routing import url
 from kallithea.lib.annotate import annotate_highlight
-from kallithea.lib.utils import repo_name_slug, get_custom_lexer
+from kallithea.lib.utils import get_custom_lexer
 from kallithea.lib.utils2 import str2bool, safe_unicode, safe_str, \
-    get_changeset_safe, datetime_to_time, time_to_datetime, AttributeDict, \
-    safe_int, MENTIONS_REGEX
-from kallithea.lib.markup_renderer import MarkupRenderer, url_re
+    time_to_datetime, AttributeDict, safe_int, MENTIONS_REGEX
+from kallithea.lib.markup_renderer import url_re
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError
 from kallithea.lib.vcs.backends.base import BaseChangeset, EmptyChangeset
-from kallithea.config.conf import DATE_FORMAT, DATETIME_FORMAT
 from kallithea.model.changeset_status import ChangesetStatusModel
 from kallithea.model.db import URL_SEP, Permission
 
