@@ -59,48 +59,43 @@ class PullRequestModel(BaseModel):
             yield user
 
     def create(self, created_by, org_repo, org_ref, other_repo, other_ref,
-               revisions, reviewers, title, description=None):
-        from kallithea.model.changeset_status import ChangesetStatusModel
-
-        created_by_user = self._get_user(created_by)
-        org_repo = self._get_repo(org_repo)
-        other_repo = self._get_repo(other_repo)
-
-        new = PullRequest()
-        new.org_repo = org_repo
-        new.org_ref = org_ref
-        new.other_repo = other_repo
-        new.other_ref = other_ref
-        new.revisions = revisions
-        new.title = title
-        new.description = description
-        new.owner = created_by_user
-        Session().add(new)
-        Session().flush()
+               revisions, title, description, reviewers):
+        pr = PullRequest()
+        pr.org_repo = org_repo
+        pr.org_ref = org_ref
+        pr.other_repo = other_repo
+        pr.other_ref = other_ref
+        pr.revisions = revisions
+        pr.title = title
+        pr.description = description
+        pr.owner = created_by
+        Session().add(pr)
+        Session().flush() # make database assign pull_request_id
 
         #reset state to under-review
+        from kallithea.model.changeset_status import ChangesetStatusModel
         from kallithea.model.comment import ChangesetCommentsModel
         comment = ChangesetCommentsModel().create(
             text=u'',
             repo=org_repo,
-            author=new.owner,
-            pull_request=new,
+            author=created_by,
+            pull_request=pr,
             send_email=False,
             status_change=ChangesetStatus.STATUS_UNDER_REVIEW,
         )
         ChangesetStatusModel().set_status(
             org_repo,
             ChangesetStatus.STATUS_UNDER_REVIEW,
-            new.owner,
+            created_by,
             comment,
-            pull_request=new
+            pull_request=pr,
         )
 
         reviewers = set(self._get_valid_reviewers(reviewers))
-        mention_recipients = extract_mentioned_users(new.description)
-        self.add_reviewers(created_by_user, new, reviewers, mention_recipients)
+        mention_recipients = extract_mentioned_users(description)
+        self.add_reviewers(created_by, pr, reviewers, mention_recipients)
 
-        return new
+        return pr
 
     def add_reviewers(self, user, pr, reviewers, mention_recipients=None):
         """Add reviewer and send notification to them.

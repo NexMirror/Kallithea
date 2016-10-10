@@ -381,10 +381,10 @@ class PullrequestsController(BaseRepoController):
                                             other_repo_name, h.short_ref(other_ref_type, other_ref_name))
         description = _form['pullrequest_desc'].strip() or _('No description')
         try:
+            created_by = User.get(self.authuser.user_id)
             pull_request = PullRequestModel().create(
-                self.authuser.user_id, org_repo_name, org_ref, other_repo_name,
-                other_ref, revisions, reviewer_ids, title, description
-            )
+                created_by, org_repo, org_ref, other_repo, other_ref, revisions,
+                title, description, reviewer_ids)
             Session().commit()
             h.flash(_('Successfully opened new pull request'),
                     category='success')
@@ -483,12 +483,10 @@ class PullrequestsController(BaseRepoController):
             description += '\n\n' + descriptions[1].strip()
 
         try:
+            created_by = User.get(self.authuser.user_id)
             pull_request = PullRequestModel().create(
-                self.authuser.user_id,
-                old_pull_request.org_repo.repo_name, new_org_ref,
-                old_pull_request.other_repo.repo_name, new_other_ref,
-                revisions, reviewer_ids, title, description
-            )
+                created_by, org_repo, new_org_ref, other_repo, new_other_ref, revisions,
+                title, description, reviewer_ids)
         except UserInvalidException as u:
             h.flash(_('Invalid reviewer "%s" specified') % u, category='error')
             raise HTTPBadRequest()
