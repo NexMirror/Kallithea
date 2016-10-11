@@ -102,9 +102,10 @@ class NotificationModel(BaseModel):
         #don't send email to person who created this comment
         rec_objs = set(recipients_objs).difference(set([created_by_obj]))
 
-        headers = None
+        headers = {}
+        headers['X-Kallithea-Notification-Type'] = type_
         if 'threading' in email_kwargs:
-            headers = {'References': ' '.join('<%s>' % x for x in email_kwargs['threading'])}
+            headers['References'] = ' '.join('<%s>' % x for x in email_kwargs['threading'])
 
         # send email with notification to all other participants
         for rec in rec_objs:
