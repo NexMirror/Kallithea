@@ -276,7 +276,7 @@ class ScmModel(BaseModel):
         baseui = make_ui('db')
         repos = {}
 
-        for name, path in get_filesystem_repos(repos_path, recursive=True):
+        for name, path in get_filesystem_repos(repos_path):
             # name need to be decomposed and put back together using the /
             # since this is internal storage separator for kallithea
             name = Repository.normalize_repo_name(name)

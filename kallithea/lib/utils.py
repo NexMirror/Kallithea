@@ -206,7 +206,7 @@ def action_logger(user, action, repo, ipaddr='', sa=None, commit=False):
         sa.commit()
 
 
-def get_filesystem_repos(path, recursive=False, skip_removed_repos=True):
+def get_filesystem_repos(path):
     """
     Scans given path for repos and return (name,(type,path)) tuple
 
@@ -216,40 +216,50 @@ def get_filesystem_repos(path, recursive=False, skip_removed_repos=True):
 
     # remove ending slash for better results
     path = safe_str(path.rstrip(os.sep))
-    log.debug('now scanning in %s location recursive:%s...', path, recursive)
+    log.debug('now scanning in %s', path)
 
-    def _get_repos(p):
-        if not os.access(p, os.R_OK) or not os.access(p, os.X_OK):
-            log.warning('ignoring repo path without access: %s', p)
-            return
-        if not os.access(p, os.W_OK):
-            log.warning('repo path without write access: %s', p)
-        for dirpath in os.listdir(p):
-            if os.path.isfile(os.path.join(p, dirpath)):
-                continue
-            cur_path = os.path.join(p, dirpath)
+    def isdir(*n):
+        return os.path.isdir(os.path.join(*n))
 
+    for root, dirs, _files in os.walk(path):
+        recurse_dirs = []
+        for subdir in dirs:
             # skip removed repos
-            if skip_removed_repos and REMOVED_REPO_PAT.match(dirpath):
+            if REMOVED_REPO_PAT.match(subdir):
                 continue
 
             #skip .<something> dirs TODO: rly? then we should prevent creating them ...
-            if dirpath.startswith('.'):
+            if subdir.startswith('.'):
                 continue
 
-            try:
-                scm_info = get_scm(cur_path)
-                yield scm_info[1].split(path, 1)[-1].lstrip(os.sep), scm_info
-            except VCSError:
-                if not recursive:
-                    continue
-                #check if this dir containts other repos for recursive scan
-                rec_path = os.path.join(p, dirpath)
-                if not os.path.islink(rec_path) and os.path.isdir(rec_path):
-                    for inner_scm in _get_repos(rec_path):
-                        yield inner_scm
+            cur_path = os.path.join(root, subdir)
+            if (isdir(cur_path, '.hg') or
+                isdir(cur_path, '.git') or
+                isdir(cur_path, '.svn') or
+                isdir(cur_path, 'objects') and (isdir(cur_path, 'refs') or
+                                                os.path.isfile(os.path.join(cur_path, 'packed-refs')))):
 
-    return _get_repos(path)
+                if not os.access(cur_path, os.R_OK) or not os.access(cur_path, os.X_OK):
+                    log.warning('ignoring repo path without access: %s', cur_path)
+                    continue
+
+                if not os.access(cur_path, os.W_OK):
+                    log.warning('repo path without write access: %s', cur_path)
+
+                try:
+                    scm_info = get_scm(cur_path)
+                    assert cur_path.startswith(path)
+                    repo_path = cur_path[len(path) + 1:]
+                    yield repo_path, scm_info
+                    continue # no recursion
+                except VCSError:
+                    # We should perhaps ignore such broken repos, but especially
+                    # the bare git detection is unreliable so we dive into it
+                    pass
+
+            recurse_dirs.append(subdir)
+
+        dirs[:] = recurse_dirs
 
 
 def is_valid_repo(repo_name, base_path, scm=None):
