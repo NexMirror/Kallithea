@@ -231,7 +231,8 @@ def get_filesystem_repos(path):
             if (isdir(cur_path, '.hg') or
                 isdir(cur_path, '.git') or
                 isdir(cur_path, '.svn') or
-                isdir(cur_path, 'objects') and (isdir(cur_path, 'refs') or isfile(cur_path, 'packed-refs'))):
+                isdir(cur_path, 'objects') and (isdir(cur_path, 'refs') or
+                                                os.path.isfile(os.path.join(cur_path, 'packed-refs')))):
 
                 if not os.access(cur_path, os.R_OK) or not os.access(cur_path, os.X_OK):
                     log.warning('ignoring repo path without access: %s', cur_path)
