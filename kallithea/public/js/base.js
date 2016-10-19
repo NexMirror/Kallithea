@@ -584,7 +584,7 @@ function move_comments($anchorcomments) {
                 _comment_div_append_form($comment_div, f_path, line_no);
             }
         } else {
-            $anchorcomment.before("Comment to {0} line {1} which is outside the diff context:".format(f_path || '?', line_no || '?'));
+            $anchorcomment.before("<span class='bg-warning'>Comment to {0} line {1} which is outside the diff context:</span>".format(f_path || '?', line_no || '?'));
         }
     });
     linkInlineComments($('.firstlink'), $('.comment:first-child'));
