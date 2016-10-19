@@ -63,7 +63,7 @@ ${self.repo_context_bar('showpullrequest')}
         %endif
 
         <div class="form-group">
-          <label>${_('Reviewer voting result')}:</label>
+          <label>${_('Voting Result')}:</label>
           <div>
             %if c.current_voting_result:
               <i class="icon-circle changeset-status-${c.current_voting_result}" title="${_('Pull request status calculated from votes')}"></i>
@@ -193,7 +193,7 @@ ${self.repo_context_bar('showpullrequest')}
     </div>
     ## REVIEWERS
     <div class="pull-left">
-        <h4 class="pr-details-title">${_('Pull Request Reviewers')}</h4>
+        <h4 class="pr-details-title">${_('Reviewers')}</h4>
         <div id="reviewers">
           ## members goes here !
           <div>
