@@ -111,8 +111,8 @@ An additional benefit of virtualenv_ is that it doesn't require root privileges.
 
     pip install .
 
-- This will install Kallithea together with pylons_ and all other required
-  python libraries into the activated virtualenv.
+- This will install Kallithea together with all other required
+  Python libraries into the activated virtualenv.
 
 You can now proceed to :ref:`setup`.
 
@@ -137,4 +137,3 @@ You can now proceed to :ref:`setup`.
 
 
 .. _virtualenv: http://pypi.python.org/pypi/virtualenv
-.. _pylons: http://www.pylonsproject.org/

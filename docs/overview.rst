@@ -136,6 +136,5 @@ continuous hammering from the internet.
 .. _iis: http://en.wikipedia.org/wiki/Internet_Information_Services
 .. _pip: http://en.wikipedia.org/wiki/Pip_%28package_manager%29
 .. _WSGI: http://en.wikipedia.org/wiki/Web_Server_Gateway_Interface
-.. _pylons: http://www.pylonsproject.org/
 .. _HAProxy: http://www.haproxy.org/
 .. _Varnish: https://www.varnish-cache.org/

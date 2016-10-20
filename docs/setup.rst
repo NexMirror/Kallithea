@@ -722,7 +722,7 @@ Here is a sample configuration file for Apache using proxy:
             </Proxy>
 
             #important !
-            #Directive to properly generate url (clone url) for pylons
+            #Directive to properly generate url (clone url) for Kallithea
             ProxyPreserveHost On
 
             #kallithea instance
