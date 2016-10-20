@@ -3191,7 +3191,7 @@ input[disabled].btn,
     box-shadow: none !important;
 }
 
-.btn.red {
+.btn.btn-danger {
     color: #fff;
     background-color: #c43c35;
     background-repeat: repeat-x;
@@ -3200,8 +3200,7 @@ input[disabled].btn,
     border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }
 
-
-.btn.blue {
+.btn.btn-primary {
     color: #fff;
     background-color: #339bb9;
     background-repeat: repeat-x;
@@ -3210,7 +3209,7 @@ input[disabled].btn,
     border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }
 
-.btn.green {
+.btn.btn-success {
     color: #fff;
     background-color: #57a957;
     background-repeat: repeat-x;
@@ -3219,7 +3218,7 @@ input[disabled].btn,
     border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }
 
-.btn.yellow {
+.btn.btn-warning {
     color: #fff;
     background-color: #faa732;
     background-repeat: repeat-x;

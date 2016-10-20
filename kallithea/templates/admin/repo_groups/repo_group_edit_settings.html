@@ -50,7 +50,7 @@ ${h.form(url('delete_repo_group', group_name=c.repo_group.group_name))}
 <div class="form">
     <div class="form-horizontal">
         <div class="buttons">
-            ${h.submit('remove_%s' % c.repo_group.group_name,_('Remove this group'),class_="btn red",onclick="return confirm('"+_('Confirm to delete this group')+"');")}
+            ${h.submit('remove_%s' % c.repo_group.group_name,_('Remove this group'),class_="btn btn-danger",onclick="return confirm('"+_('Confirm to delete this group')+"');")}
         </div>
     </div>
 </div>
