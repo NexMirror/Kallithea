@@ -3126,6 +3126,7 @@ div.gravatar img {
     cursor: pointer !important;
     padding: 3px 3px 3px 3px;
     display: inline-block;
+    white-space: nowrap;
 }
 
 ul.nav-stacked {
@@ -3165,11 +3166,11 @@ input[disabled].btn,
 }
 
 .btn.btn-sm {
-    padding: 2px 6px;
+    padding: 3px 8px;
 }
 
 .btn.btn-xs {
-    padding: 0px 4px;
+    padding: 1px 5px;
 }
 
 .btn:focus {

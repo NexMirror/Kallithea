@@ -141,8 +141,8 @@
             %endfor
 
             <div style="padding-top: 5px">
-            ${h.submit('update',_('Update Gist'),class_="btn btn-success btn-xs")}
-            <a class="btn btn-default btn-xs" href="${h.url('gist', gist_id=c.gist.gist_access_id)}">${_('Cancel')}</a>
+            ${h.submit('update',_('Update Gist'),class_="btn btn-success")}
+            <a class="btn btn-default" href="${h.url('gist', gist_id=c.gist.gist_access_id)}">${_('Cancel')}</a>
             </div>
           ${h.end_form()}
           <script>
