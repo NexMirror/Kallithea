@@ -1313,17 +1313,17 @@ var addReviewMember = function(id,fname,lname,nname,gravatar_link,gravatar_size)
     var element = (
         '     <li id="reviewer_{2}">\n'+
         '       <div class="reviewers_member">\n'+
-        '           <div class="reviewer_status tooltip" title="not_reviewed">\n'+
+        '         <div class="reviewer_status tooltip" title="not_reviewed">\n'+
         '             <i class="icon-circle changeset-status-not_reviewed"></i>\n'+
-        '           </div>\n'+
+        '         </div>\n'+
         (gravatarelm ?
         '         <div class="reviewer_gravatar gravatar">{0}</div>\n' :
         '')+
         '         <div style="float:left;">{1}</div>\n'+
         '         <input type="hidden" value="{2}" name="review_members" />\n'+
-        '         <div class="reviewer_member_remove action_button" onclick="removeReviewMember({2})">\n'+
+        '         <a href="#" class="reviewer_member_remove" onclick="removeReviewMember({2})">\n'+
         '             <i class="icon-minus-circled"></i>\n'+
-        '         </div> (add not saved)\n'+
+        '         </a> (add not saved)\n'+
         '       </div>\n'+
         '     </li>\n'
         ).format(gravatarelm, displayname, id);

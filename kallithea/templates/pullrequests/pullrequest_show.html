@@ -247,9 +247,9 @@ ${self.repo_context_bar('showpullrequest')}
                   </div>
                   <input type="hidden" value="${member.user_id}" name="review_members" />
                   %if editable:
-                  <div class="reviewer_member_remove action_button" onclick="removeReviewMember(${member.user_id})" title="${_('Remove reviewer')}">
+                  <a href="#" class="reviewer_member_remove" onclick="removeReviewMember(${member.user_id})" title="${_('Remove reviewer')}">
                       <i class="icon-minus-circled"></i>
-                  </div>
+                  </a>
                   %endif
                 </div>
               </li>
