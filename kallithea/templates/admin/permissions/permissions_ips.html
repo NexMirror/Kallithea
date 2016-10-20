@@ -10,7 +10,7 @@
                     ${h.hidden('del_ip_id',ip.ip_id)}
                     ${h.hidden('default_user', 'True')}
                     <i class="icon-minus-circled" style="color:#FF4444"></i> ${h.submit('remove_',_('Delete'),id="remove_ip_%s" % ip.ip_id,
-                    class_="action_button", onclick="return confirm('"+_('Confirm to delete this IP address: %s') % ip.ip_addr+"');")}
+                    class_="btn btn-default btn-xs", onclick="return confirm('"+_('Confirm to delete this IP address: %s') % ip.ip_addr+"');")}
                 ${h.end_form()}
               </td>
           </tr>

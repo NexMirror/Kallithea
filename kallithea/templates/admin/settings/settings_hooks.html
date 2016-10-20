@@ -30,7 +30,7 @@ ${h.form(url('admin_settings_hooks'), method='post')}
             ${h.hidden('hook_ui_key',hook.ui_key)}
             ${h.hidden('hook_ui_value',hook.ui_value)}
             ${h.text('hook_ui_value_new',hook.ui_value,size=60)}
-            <span class="action_button"
+            <span class="btn btn-default btn-xs"
                 onclick="delete_hook(${hook.ui_id},'${'id%s' % hook.ui_id }')">
             <i class="icon-minus-circled" style="color:#FF4444"></i>
             ${_('Delete')}
