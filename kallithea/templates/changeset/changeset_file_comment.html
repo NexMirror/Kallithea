@@ -13,7 +13,7 @@
               ${co.author.full_name_and_username}
           </span>
 
-          <span>
+          <span data-toggle="tooltip" title="${h.fmt_date(co.modified_at)}">
               ${h.age(co.modified_at)}
               %if co.pull_request:
                 ${_('on pull request')}
