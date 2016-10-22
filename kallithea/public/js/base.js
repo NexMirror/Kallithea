@@ -749,7 +749,9 @@ function _comment_div_append_form($comment_div, f_path, line_no) {
     });
 
     tooltip_activate();
-    MentionsAutoComplete($textarea, $mentions_container, _USERS_AC_DATA);
+    if ($textarea.length > 0) {
+        MentionsAutoComplete($textarea, $mentions_container, _USERS_AC_DATA);
+    }
     if (f_path) {
         $textarea.focus();
     }
