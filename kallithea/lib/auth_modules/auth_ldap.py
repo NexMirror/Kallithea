@@ -353,12 +353,13 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
             log.info('user %s authenticated correctly', user_data['username'])
             return user_data
 
-        except (LdapUsernameError, LdapPasswordError, LdapImportError):
-            log.error(traceback.format_exc())
-            return None
-        except Exception:
-            log.error(traceback.format_exc())
-            return None
+        except LdapUsernameError:
+            log.info('Error authenticating %s with LDAP: User not found', username)
+        except LdapPasswordError:
+            log.info('Error authenticating %s with LDAP: Password error', username)
+        except LdapImportError:
+            log.error('Error authenticating %s with LDAP: LDAP not available', username)
+        return None
 
     def get_managed_fields(self):
         return ['username', 'firstname', 'lastname', 'email', 'password']
