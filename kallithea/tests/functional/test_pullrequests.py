@@ -2,6 +2,7 @@ import re
 
 from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
+from kallithea.model.db import User
 from kallithea.model.meta import Session
 
 from kallithea.controllers.pullrequests import PullrequestsController
@@ -26,9 +27,8 @@ class TestPullrequestsController(TestController):
                                   'pullrequest_title': 'title',
                                   'pullrequest_desc': 'description',
                                   '_authentication_token': self.authentication_token(),
-                                 }
-                                )
-        assert response.status == '302 Found'
+                                 },
+                                 status=302)
         response = response.follow()
         assert response.status == '200 OK'
         response.mustcontain('This pull request has already been merged to default.')
@@ -47,9 +47,8 @@ class TestPullrequestsController(TestController):
                                   'pullrequest_title': 'title',
                                   'pullrequest_desc': 'description',
                                   '_authentication_token': self.authentication_token(),
-                                 }
-                                )
-        assert response.status == '302 Found'
+                                 },
+                                status=302)
         # location is of the form:
         # http://localhost/vcs_test_hg/pull-request/54/_/title
         m = re.search('/pull-request/(\d+)/', response.location)
@@ -65,7 +64,7 @@ class TestPullrequestsController(TestController):
                                   'pullrequest_desc': 'description',
                                   'owner': TEST_USER_ADMIN_LOGIN,
                                   '_authentication_token': self.authentication_token(),
-                                  'review_members': invalid_user_id,
+                                  'review_members': [str(invalid_user_id)],
                                  },
                                  status=400)
         response.mustcontain('Invalid reviewer &#34;%s&#34; specified' % invalid_user_id)
@@ -84,9 +83,8 @@ class TestPullrequestsController(TestController):
                                   'pullrequest_title': 'title',
                                   'pullrequest_desc': 'description',
                                   '_authentication_token': self.authentication_token(),
-                                 }
-                                )
-        assert response.status == '302 Found'
+                                 },
+                                status=302)
         # location is of the form:
         # http://localhost/vcs_test_hg/pull-request/54/_/title
         m = re.search('/pull-request/(\d+)/', response.location)
@@ -101,7 +99,7 @@ class TestPullrequestsController(TestController):
                                   'pullrequest_desc': 'description',
                                   'owner': TEST_USER_ADMIN_LOGIN,
                                   '_authentication_token': self.authentication_token(),
-                                  'review_members': invalid_user_id,
+                                  'review_members': [str(invalid_user_id)],
                                  },
                                  status=400)
         response.mustcontain('Invalid reviewer &#34;%s&#34; specified' % invalid_user_id)
