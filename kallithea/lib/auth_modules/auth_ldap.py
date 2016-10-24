@@ -148,26 +148,27 @@ class AuthLdap(object):
                 try:
                     log.debug('Trying simple bind with %s', dn)
                     server.simple_bind_s(dn, safe_str(password))
-                    attrs = server.search_ext_s(dn, ldap.SCOPE_BASE,
-                                                '(objectClass=*)')[0][1]
-                    break
+                    results = server.search_ext_s(dn, ldap.SCOPE_BASE,
+                                                  '(objectClass=*)')
+                    if len(results) == 1:
+                        dn_, attrs = results[0]
+                        assert dn_ == dn
+                        return dn, attrs
 
                 except ldap.INVALID_CREDENTIALS:
                     log.debug("LDAP rejected password for user '%s' (%s): %s",
                               uid, username, dn)
+                    continue # accept authentication as another ldap user with same username
 
-            else:
-                log.debug("No matching LDAP objects for authentication "
-                          "of '%s' (%s)", uid, username)
-                raise LdapPasswordError()
+            log.debug("No matching LDAP objects for authentication "
+                      "of '%s' (%s)", uid, username)
+            raise LdapPasswordError()
 
         except ldap.NO_SUCH_OBJECT:
             log.debug("LDAP says no such user '%s' (%s)", uid, username)
             raise LdapUsernameError()
         except ldap.SERVER_DOWN:
             raise LdapConnectionError("LDAP can't access authentication server")
-
-        return dn, attrs
 
 
 class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
