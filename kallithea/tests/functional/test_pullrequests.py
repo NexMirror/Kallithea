@@ -33,43 +33,6 @@ class TestPullrequestsController(TestController):
         assert response.status == '200 OK'
         response.mustcontain('This pull request has already been merged to default.')
 
-    def test_create_with_existing_reviewer(self):
-        self.log_user()
-        response = self.app.post(url(controller='pullrequests', action='create',
-                                     repo_name=HG_REPO),
-                                 {'org_repo': HG_REPO,
-                                  'org_ref': 'branch:default:default',
-                                  'other_repo': HG_REPO,
-                                  'other_ref': 'branch:default:default',
-                                  'pullrequest_title': 'title',
-                                  'pullrequest_desc': 'description',
-                                  '_authentication_token': self.authentication_token(),
-                                  'review_members': TEST_USER_ADMIN_LOGIN,
-                                 }
-                                )
-        assert response.status == '302 Found'
-        response = response.follow()
-        assert response.status == '200 OK'
-        response.mustcontain('This pull request has already been merged to default.')
-
-    def test_create_with_invalid_reviewer(self):
-        invalid_user_name = 'invalid_user'
-        self.log_user()
-        response = self.app.post(url(controller='pullrequests', action='create',
-                                     repo_name=HG_REPO),
-                                 {
-                                  'org_repo': HG_REPO,
-                                  'org_ref': 'branch:default:default',
-                                  'other_repo': HG_REPO,
-                                  'other_ref': 'branch:default:default',
-                                  'pullrequest_title': 'title',
-                                  'pullrequest_desc': 'description',
-                                  '_authentication_token': self.authentication_token(),
-                                  'review_members': invalid_user_name,
-                                 },
-                                 status=400)
-        response.mustcontain('Invalid reviewer &#34;%s&#34; specified' % invalid_user_name)
-
     def test_update_with_invalid_reviewer(self):
         invalid_user_id = 99999
         self.log_user()

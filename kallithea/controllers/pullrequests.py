@@ -356,7 +356,7 @@ class PullrequestsController(BaseRepoController):
         # requested destination and have the exact ancestor
         other_ref = '%s:%s:%s' % (other_ref_type, other_ref_name, ancestor_rev)
 
-        reviewers = _form['review_members']
+        reviewers = []
 
         title = _form['pullrequest_title']
         if not title:
