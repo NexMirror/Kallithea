@@ -9,8 +9,6 @@ The three new concepts introduced here are:
    retrieves results in/from Beaker.
  * FromCache - a query option that establishes caching
    parameters on a Query
- * RelationshipCache - a variant of FromCache which is specific
-   to a query invoked during a lazy load.
  * _params_from_query - extracts value parameters from
    a Query.
 
@@ -54,7 +52,7 @@ class CachingQuery(Query):
     by this query, which are usually literals defined in the
     WHERE clause.
 
-    The FromCache and RelationshipCache mapper options below represent
+    The FromCache mapper option below represent
     the "public" method of configuring this state upon the CachingQuery.
 
     """
@@ -210,65 +208,6 @@ class FromCache(MapperOption):
 
         _set_cache_parameters(query, self.region, self.namespace,
                               self.cache_key)
-
-
-class RelationshipCache(MapperOption):
-    """Specifies that a Query as called within a "lazy load"
-       should load results from a cache."""
-
-    propagate_to_loaders = True
-
-    def __init__(self, region, namespace, attribute):
-        """Construct a new RelationshipCache.
-
-        :param region: the cache region.  Should be a
-        region configured in the Beaker CacheManager.
-
-        :param namespace: the cache namespace.  Should
-        be a name uniquely describing the target Query's
-        lexical structure.
-
-        :param attribute: A Class.attribute which
-        indicates a particular class relationship() whose
-        lazy loader should be pulled from the cache.
-
-        """
-        self.region = region
-        self.namespace = namespace
-        self._relationship_options = {
-            (attribute.property.parent.class_, attribute.property.key): self
-        }
-
-    def process_query_conditionally(self, query):
-        """Process a Query that is used within a lazy loader.
-
-        (the process_query_conditionally() method is a SQLAlchemy
-        hook invoked only within lazyload.)
-
-        """
-        if query._current_path:
-            mapper, key = query._current_path[-2:]
-
-            for cls in mapper.class_.__mro__:
-                if (cls, key) in self._relationship_options:
-                    relationship_option = \
-                        self._relationship_options[(cls, key)]
-                    _set_cache_parameters(
-                            query,
-                            relationship_option.region,
-                            relationship_option.namespace,
-                            None)
-
-    def and_(self, option):
-        """Chain another RelationshipCache option to this one.
-
-        While many RelationshipCache objects can be specified on a single
-        Query separately, chaining them together allows for a more efficient
-        lookup during load.
-
-        """
-        self._relationship_options.update(option._relationship_options)
-        return self
 
 
 def _params_from_query(query):
