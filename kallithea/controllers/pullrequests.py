@@ -356,7 +356,7 @@ class PullrequestsController(BaseRepoController):
         # requested destination and have the exact ancestor
         other_ref = '%s:%s:%s' % (other_ref_type, other_ref_name, ancestor_rev)
 
-        reviewers = []
+        reviewer_ids = []
 
         title = _form['pullrequest_title']
         if not title:
@@ -370,7 +370,7 @@ class PullrequestsController(BaseRepoController):
         try:
             pull_request = PullRequestModel().create(
                 self.authuser.user_id, org_repo_name, org_ref, other_repo_name,
-                other_ref, revisions, reviewers, title, description
+                other_ref, revisions, reviewer_ids, title, description
             )
             Session().commit()
             h.flash(_('Successfully opened new pull request'),
@@ -386,7 +386,7 @@ class PullrequestsController(BaseRepoController):
 
         raise HTTPFound(location=pull_request.url())
 
-    def create_new_iteration(self, old_pull_request, new_rev, title, description, reviewers_ids):
+    def create_new_iteration(self, old_pull_request, new_rev, title, description, reviewer_ids):
         org_repo = RepoModel()._get_repo(old_pull_request.org_repo.repo_name)
         org_ref_type, org_ref_name, org_rev = old_pull_request.org_ref.split(':')
         new_org_rev = self._get_ref_rev(org_repo, 'rev', new_rev)
@@ -460,7 +460,7 @@ class PullrequestsController(BaseRepoController):
                 self.authuser.user_id,
                 old_pull_request.org_repo.repo_name, new_org_ref,
                 old_pull_request.other_repo.repo_name, new_other_ref,
-                revisions, reviewers_ids, title, description
+                revisions, reviewer_ids, title, description
             )
         except UserInvalidException as u:
             h.flash(_('Invalid reviewer "%s" specified') % u, category='error')
@@ -502,14 +502,14 @@ class PullrequestsController(BaseRepoController):
             raise HTTPForbidden()
 
         _form = PullRequestPostForm()().to_python(request.POST)
-        reviewers_ids = [int(s) for s in _form['review_members']]
+        reviewer_ids = set(int(s) for s in _form['review_members'])
 
         if _form['updaterev']:
             return self.create_new_iteration(pull_request,
                                       _form['updaterev'],
                                       _form['pullrequest_title'],
                                       _form['pullrequest_desc'],
-                                      reviewers_ids)
+                                      reviewer_ids)
 
         old_description = pull_request.description
         pull_request.title = _form['pullrequest_title']
@@ -518,7 +518,7 @@ class PullrequestsController(BaseRepoController):
         user = User.get(c.authuser.user_id)
         try:
             PullRequestModel().mention_from_description(user, pull_request, old_description)
-            PullRequestModel().update_reviewers(user, pull_request_id, reviewers_ids)
+            PullRequestModel().update_reviewers(user, pull_request_id, reviewer_ids)
         except UserInvalidException as u:
             h.flash(_('Invalid reviewer "%s" specified') % u, category='error')
             raise HTTPBadRequest()

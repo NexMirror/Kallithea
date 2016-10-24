@@ -174,15 +174,16 @@ class PullRequestModel(BaseModel):
         log.debug("Mentioning %s", mention_recipients)
         self.__add_reviewers(user, pr, set(), mention_recipients)
 
-    def update_reviewers(self, user, pull_request, reviewers_ids):
-        reviewers_ids = set(reviewers_ids)
+    def update_reviewers(self, user, pull_request, reviewers):
+        """Set PR reviewers to exactly the given list of users"""
         pull_request = PullRequest.guess_instance(pull_request)
         current_reviewers = PullRequestReviewers.query() \
             .options(joinedload('user')) \
             .filter_by(pull_request=pull_request) \
             .all()
         current_reviewer_users = set(x.user for x in current_reviewers)
-        new_reviewer_users = set(self._get_valid_reviewers(reviewers_ids))
+
+        new_reviewer_users = set(self._get_valid_reviewers(reviewers))
 
         to_add = new_reviewer_users - current_reviewer_users
         to_remove = current_reviewer_users - new_reviewer_users

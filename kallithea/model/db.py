@@ -2389,7 +2389,7 @@ class PullRequest(Base, BaseDbModel):
         return User.query() \
             .join(PullRequestReviewers) \
             .filter(PullRequestReviewers.pull_request == self) \
-            .order_by(PullRequestReviewers.pull_requests_reviewers_id) \
+            .order_by(PullRequestReviewers.pull_request_reviewers_id) \
             .all()
 
     def is_closed(self):
@@ -2445,7 +2445,7 @@ class PullRequestReviewers(Base, BaseDbModel):
         self.user = user
         self.pull_request = pull_request
 
-    pull_requests_reviewers_id = Column(Integer(), primary_key=True)
+    pull_request_reviewers_id = Column('pull_requests_reviewers_id', Integer(), primary_key=True)
     pull_request_id = Column(Integer(), ForeignKey('pull_requests.pull_request_id'), nullable=False)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
 
