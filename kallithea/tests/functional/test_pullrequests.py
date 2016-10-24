@@ -33,6 +33,62 @@ class TestPullrequestsController(TestController):
         assert response.status == '200 OK'
         response.mustcontain('This pull request has already been merged to default.')
 
+    def test_update_reviewers(self):
+        self.log_user()
+        regular_user = User.get_by_username(TEST_USER_REGULAR_LOGIN)
+        regular_user2 = User.get_by_username(TEST_USER_REGULAR2_LOGIN)
+
+        # create initial PR
+        response = self.app.post(url(controller='pullrequests', action='create',
+                                     repo_name=HG_REPO),
+                                 {'org_repo': HG_REPO,
+                                  'org_ref': 'branch:default:default',
+                                  'other_repo': HG_REPO,
+                                  'other_ref': 'branch:default:default',
+                                  'pullrequest_title': 'title',
+                                  'pullrequest_desc': 'description',
+                                  '_authentication_token': self.authentication_token(),
+                                 },
+                                 status=302)
+        pull_request1_id = re.search('/pull-request/(\d+)/', response.location).group(1)
+        assert response.location == 'http://localhost/%s/pull-request/%s/_/title' % (HG_REPO, pull_request1_id)
+
+        # create new iteration
+        response = self.app.post(url(controller='pullrequests', action='post',
+                                     repo_name=HG_REPO, pull_request_id=pull_request1_id),
+                                 {
+                                  'updaterev': 'default',
+                                  'pullrequest_title': 'title',
+                                  'pullrequest_desc': 'description',
+                                  'owner': TEST_USER_ADMIN_LOGIN,
+                                  '_authentication_token': self.authentication_token(),
+                                  'review_members': [regular_user.user_id],
+                                 },
+                                 status=302)
+        pull_request2_id = re.search('/pull-request/(\d+)/', response.location).group(1)
+        assert pull_request2_id != pull_request1_id
+        assert response.location == 'http://localhost/%s/pull-request/%s/_/title_v2' % (HG_REPO, pull_request2_id)
+        response = response.follow()
+        # verify reviewer was added
+        response.mustcontain('<input type="hidden" value="%s" name="review_members" />' % regular_user.user_id)
+
+        # update without creating new iteration
+        response = self.app.post(url(controller='pullrequests', action='post',
+                                     repo_name=HG_REPO, pull_request_id=pull_request2_id),
+                                 {
+                                  'pullrequest_title': 'Title',
+                                  'pullrequest_desc': 'description',
+                                  'owner': TEST_USER_ADMIN_LOGIN,
+                                  '_authentication_token': self.authentication_token(),
+                                  'review_members': [regular_user2.user_id],
+                                 },
+                                 status=302)
+        assert response.location == 'http://localhost/%s/pull-request/%s/_/Title' % (HG_REPO, pull_request2_id)
+        response = response.follow()
+        # verify reviewers were added / removed
+        response.mustcontain(no='<input type="hidden" value="%s" name="review_members" />' % regular_user.user_id)
+        response.mustcontain('<input type="hidden" value="%s" name="review_members" />' % regular_user2.user_id)
+
     def test_update_with_invalid_reviewer(self):
         invalid_user_id = 99999
         self.log_user()
