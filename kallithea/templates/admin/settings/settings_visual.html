@@ -73,7 +73,7 @@ ${h.form(url('admin_settings_visual'), method='post')}
                 </div>
             </div>
 
-             <div class="form-group">
+            <div class="form-group">
                 <div class="label label-checkbox">
                     <label>${_('Icons')}:</label>
                 </div>
@@ -88,9 +88,9 @@ ${h.form(url('admin_settings_visual'), method='post')}
                     </div>
                     <span class="help-block">${_('Show public/private icons next to repository names.')}</span>
                  </div>
-             </div>
+            </div>
 
-             <div class="form-group">
+            <div class="form-group">
                 <div class="label label-checkbox">
                     <label>${_('Meta Tagging')}:</label>
                 </div>
@@ -113,12 +113,14 @@ ${h.form(url('admin_settings_visual'), method='post')}
                     </div>
                     <span class="help-block">${_('Parses meta tags from the repository description field and turns them into colored tags.')}</span>
                  </div>
-             </div>
+            </div>
 
-             <div class="buttons">
-                 ${h.submit('save',_('Save Settings'),class_="btn btn-default")}
-                 ${h.reset('reset',_('Reset'),class_="btn btn-default")}
-             </div>
+            <div class="form-group">
+                <div class="buttons">
+                    ${h.submit('save',_('Save Settings'),class_="btn btn-default")}
+                    ${h.reset('reset',_('Reset'),class_="btn btn-default")}
+                </div>
+            </div>
 
         </div>
     </div>

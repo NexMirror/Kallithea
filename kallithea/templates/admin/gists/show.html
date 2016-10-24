@@ -48,7 +48,7 @@
                          %else:
                           ${_('Expires')}: ${h.age(h.time_to_datetime(c.gist.gist_expires))}
                          %endif
-                       </div>
+                        </div>
 
                        %if h.HasPermissionAny('hg.admin')() or c.gist.gist_owner == c.authuser.user_id:
                         <div style="float:right">

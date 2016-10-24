@@ -108,9 +108,11 @@ ${h.form(url('admin_permissions'), method='post')}
                     ${h.select('default_extern_activate','',c.extern_activate_choices)}
                 </div>
              </div>
-            <div class="buttons">
-              ${h.submit('save',_('Save'),class_="btn btn-default")}
-              ${h.reset('reset',_('Reset'),class_="btn btn-default")}
+            <div class="form-group">
+                <div class="buttons">
+                    ${h.submit('save',_('Save'),class_="btn btn-default")}
+                    ${h.reset('reset',_('Reset'),class_="btn btn-default")}
+                </div>
             </div>
         </div>
     </div>

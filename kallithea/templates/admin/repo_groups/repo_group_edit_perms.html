@@ -1,6 +1,6 @@
 ${h.form(url('edit_repo_group_perms', group_name=c.repo_group.group_name))}
 <div class="form">
-   <div class="fields">
+    <div class="fields">
         <div class="field">
             <table id="permissions_manage" class="noborder">
                 <tr>
@@ -111,10 +111,10 @@ ${h.form(url('edit_repo_group_perms', group_name=c.repo_group.group_name))}
             </table>
         </div>
         <div class="buttons">
-          ${h.submit('save',_('Save'),class_="btn btn-default")}
-          ${h.reset('reset',_('Reset'),class_="btn btn-default")}
+            ${h.submit('save',_('Save'),class_="btn btn-default")}
+            ${h.reset('reset',_('Reset'),class_="btn btn-default")}
         </div>
-   </div>
+    </div>
 </div>
 ${h.end_form()}
 

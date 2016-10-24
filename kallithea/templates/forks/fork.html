@@ -72,6 +72,7 @@ ${self.repo_context_bar('createfork')}
                     <span class="help-block">${_('Private repositories are only visible to people explicitly added as collaborators.')}</span>
                 </div>
             </div>
+
             <div class="form-group">
                 <div class="label label-checkbox">
                     <label class="control-label" for="private">${_('Copy permissions')}:</label>
@@ -81,6 +82,7 @@ ${self.repo_context_bar('createfork')}
                     <span class="help-block">${_('Copy permissions from forked repository')}</span>
                 </div>
             </div>
+
             %if c.can_update:
             <div class="form-group">
                 <div class="label label-checkbox">
@@ -92,8 +94,11 @@ ${self.repo_context_bar('createfork')}
                 </div>
             </div>
             %endif
-            <div class="buttons">
-                ${h.submit('',_('Fork this Repository'),class_="btn btn-default")}
+
+            <div class="form-group">
+                <div class="buttons">
+                    ${h.submit('',_('Fork this Repository'),class_="btn btn-default")}
+                </div>
             </div>
         </div>
     </div>

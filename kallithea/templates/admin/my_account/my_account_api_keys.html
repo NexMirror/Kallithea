@@ -56,7 +56,7 @@
     <div class="form">
         <!-- fields -->
         <div class="form-horizontal">
-             <div class="form-group">
+            <div class="form-group">
                 <div class="label">
                     <label for="description">${_('New API key')}:</label>
                 </div>
@@ -64,10 +64,12 @@
                     ${h.text('description', class_='medium', placeholder=_('Description'))}
                     ${h.select('lifetime', '', c.lifetime_options)}
                 </div>
-             </div>
-            <div class="buttons">
-              ${h.submit('save',_('Add'),class_="btn btn-default")}
-              ${h.reset('reset',_('Reset'),class_="btn btn-default")}
+            </div>
+            <div class="form-group">
+                <div class="buttons">
+                    ${h.submit('save',_('Add'),class_="btn btn-default")}
+                    ${h.reset('reset',_('Reset'),class_="btn btn-default")}
+                </div>
             </div>
         </div>
     </div>

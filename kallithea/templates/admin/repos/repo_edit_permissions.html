@@ -97,9 +97,9 @@ ${h.form(url('edit_repo_perms_update', repo_name=c.repo_name))}
                 </tr>
             </table>
         </div>
-        <div class="buttons">
-          ${h.submit('save',_('Save'),class_="btn btn-default")}
-          ${h.reset('reset',_('Reset'),class_="btn btn-default")}
+        <div class="form-group">
+            ${h.submit('save',_('Save'),class_="btn btn-default")}
+            ${h.reset('reset',_('Reset'),class_="btn btn-default")}
         </div>
    </div>
 </div>

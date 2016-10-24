@@ -63,9 +63,11 @@ ${h.form(url('admin_settings'), method='post')}
             ## form still requires this but we cannot internally change it anyway
             ${h.hidden('paths_root_path',size=30,readonly="readonly")}
             %endif
-            <div class="buttons">
-                ${h.submit('save',_('Save Settings'),class_="btn btn-default")}
-                ${h.reset('reset',_('Reset'),class_="btn btn-default")}
+            <div class="form-group">
+                <div class="buttons">
+                    ${h.submit('save',_('Save Settings'),class_="btn btn-default")}
+                    ${h.reset('reset',_('Reset'),class_="btn btn-default")}
+                </div>
            </div>
         </div>
     </div>

@@ -9,7 +9,7 @@ ${h.form(form_url)}
     <div class="form">
         <!-- fields -->
         <div class="form-horizontal">
-             <div class="form-group">
+            <div class="form-group">
                 <div class="label label-checkbox">
                     <label class="control-label" for="inherit_default_permissions">${_('Inherit defaults')}:</label>
                 </div>
@@ -20,10 +20,10 @@ ${h.form(form_url)}
                                 % h.link_to('default permissions', url('admin_permissions')))}
                     </span>
                 </div>
-             </div>
+            </div>
 
-             <div id="inherit_overlay">
-             <div class="form-group">
+            <div id="inherit_overlay">
+            <div class="form-group">
                 <div class="label label-checkbox">
                     <label class="control-label" for="create_repo_perm">${_('Create repositories')}:</label>
                 </div>
@@ -33,9 +33,9 @@ ${h.form(form_url)}
                     ${h.literal(_('Select this option to allow repository creation for this user'))}
                     </span>
                 </div>
-             </div>
+            </div>
 
-             <div class="form-group">
+            <div class="form-group">
                 <div class="label label-checkbox">
                     <label class="control-label" for="create_user_group_perm">${_('Create user groups')}:</label>
                 </div>
@@ -45,9 +45,9 @@ ${h.form(form_url)}
                         ${h.literal(_('Select this option to allow user group creation for this user'))}
                     </span>
                 </div>
-             </div>
+            </div>
 
-             <div class="form-group">
+            <div class="form-group">
                 <div class="label label-checkbox">
                     <label class="control-label" for="fork_repo_perm">${_('Fork repositories')}:</label>
                 </div>
@@ -57,12 +57,15 @@ ${h.form(form_url)}
                         ${h.literal(_('Select this option to allow repository forking for this user'))}
                     </span>
                 </div>
-             </div>
+            </div>
 
             </div>
-            <div class="buttons">
-              ${h.submit('save',_('Save'),class_="btn btn-default")}
-              ${h.reset('reset',_('Reset'),class_="btn btn-default")}
+
+            <div class="form-group">
+                <div class="buttons">
+                    ${h.submit('save',_('Save'),class_="btn btn-default")}
+                    ${h.reset('reset',_('Reset'),class_="btn btn-default")}
+                </div>
             </div>
         </div>
     </div>

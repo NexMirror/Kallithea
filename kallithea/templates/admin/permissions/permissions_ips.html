@@ -34,9 +34,11 @@ ${h.form(url('edit_user_ips_update', id=c.user.user_id))}
                     ${h.text('new_ip', class_='medium')}
                 </div>
              </div>
-            <div class="buttons">
-              ${h.submit('save',_('Add'),class_="btn btn-default")}
-              ${h.reset('reset',_('Reset'),class_="btn btn-default")}
+            <div class="form-group">
+                <div class="buttons">
+                    ${h.submit('save',_('Add'),class_="btn btn-default")}
+                    ${h.reset('reset',_('Reset'),class_="btn btn-default")}
+                </div>
             </div>
         </div>
     </div>
