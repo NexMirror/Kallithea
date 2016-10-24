@@ -538,6 +538,7 @@ def PullRequestPostForm():
 
         pullrequest_title = v.UnicodeString(strip=True, required=True)
         pullrequest_desc = v.UnicodeString(strip=True, required=False)
+        org_review_members = v.Set()
         review_members = v.Set()
         updaterev = v.UnicodeString(strip=True, required=False, if_missing=None)
         owner = All(v.UnicodeString(strip=True, required=True),

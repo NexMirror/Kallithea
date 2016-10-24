@@ -37,6 +37,7 @@ class TestPullrequestsController(TestController):
         self.log_user()
         regular_user = User.get_by_username(TEST_USER_REGULAR_LOGIN)
         regular_user2 = User.get_by_username(TEST_USER_REGULAR2_LOGIN)
+        admin_user = User.get_by_username(TEST_USER_ADMIN_LOGIN)
 
         # create initial PR
         response = self.app.post(url(controller='pullrequests', action='create',
@@ -80,14 +81,18 @@ class TestPullrequestsController(TestController):
                                   'pullrequest_desc': 'description',
                                   'owner': TEST_USER_ADMIN_LOGIN,
                                   '_authentication_token': self.authentication_token(),
-                                  'review_members': [regular_user2.user_id],
+                                  'org_review_members': [admin_user.user_id], # fake - just to get some 'meanwhile' warning ... but it is also added ...
+                                  'review_members': [regular_user2.user_id, admin_user.user_id],
                                  },
                                  status=302)
         assert response.location == 'http://localhost/%s/pull-request/%s/_/Title' % (HG_REPO, pull_request2_id)
         response = response.follow()
         # verify reviewers were added / removed
+        response.mustcontain('Meanwhile, the following reviewers have been added: test_regular')
+        response.mustcontain('Meanwhile, the following reviewers have been removed: test_admin')
         response.mustcontain(no='<input type="hidden" value="%s" name="review_members" />' % regular_user.user_id)
         response.mustcontain('<input type="hidden" value="%s" name="review_members" />' % regular_user2.user_id)
+        response.mustcontain('<input type="hidden" value="%s" name="review_members" />' % admin_user.user_id)
 
     def test_update_with_invalid_reviewer(self):
         invalid_user_id = 99999

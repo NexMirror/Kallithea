@@ -504,6 +504,19 @@ class PullrequestsController(BaseRepoController):
         _form = PullRequestPostForm()().to_python(request.POST)
         reviewer_ids = set(int(s) for s in _form['review_members'])
 
+        org_reviewer_ids = set(int(s) for s in _form['org_review_members'])
+        current_reviewer_ids = set(prr.user_id for prr in pull_request.reviewers)
+        other_added = [User.get(u) for u in current_reviewer_ids - org_reviewer_ids]
+        other_removed = [User.get(u) for u in org_reviewer_ids - current_reviewer_ids]
+        if other_added:
+            h.flash(_('Meanwhile, the following reviewers have been added: %s') %
+                    (', '.join(u.username for u in other_added)),
+                    category='warning')
+        if other_removed:
+            h.flash(_('Meanwhile, the following reviewers have been removed: %s') %
+                    (', '.join(u.username for u in other_removed)),
+                    category='warning')
+
         if _form['updaterev']:
             return self.create_new_iteration(pull_request,
                                       _form['updaterev'],
