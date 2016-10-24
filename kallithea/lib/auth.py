@@ -972,6 +972,9 @@ class HasPermissionAny(PermsFunction):
             return True
         return False
 
+    def _scope(self):
+        return 'global'
+
 
 class HasRepoPermissionAny(PermsFunction):
     def __call__(self, repo_name=None, check_location=''):
