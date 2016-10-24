@@ -529,9 +529,12 @@ class PullrequestsController(BaseRepoController):
         pull_request.description = _form['pullrequest_desc'].strip() or _('No description')
         pull_request.owner = User.get_by_username(_form['owner'])
         user = User.get(c.authuser.user_id)
+        add_reviewer_ids = reviewer_ids - org_reviewer_ids - current_reviewer_ids
+        remove_reviewer_ids = (org_reviewer_ids - reviewer_ids) & current_reviewer_ids
         try:
             PullRequestModel().mention_from_description(user, pull_request, old_description)
-            PullRequestModel().update_reviewers(user, pull_request_id, reviewer_ids)
+            PullRequestModel().add_reviewers(user, pull_request, add_reviewer_ids)
+            PullRequestModel().remove_reviewers(user, pull_request, remove_reviewer_ids)
         except UserInvalidException as u:
             h.flash(_('Invalid reviewer "%s" specified') % u, category='error')
             raise HTTPBadRequest()

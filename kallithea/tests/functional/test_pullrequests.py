@@ -90,9 +90,9 @@ class TestPullrequestsController(TestController):
         # verify reviewers were added / removed
         response.mustcontain('Meanwhile, the following reviewers have been added: test_regular')
         response.mustcontain('Meanwhile, the following reviewers have been removed: test_admin')
-        response.mustcontain(no='<input type="hidden" value="%s" name="review_members" />' % regular_user.user_id)
+        response.mustcontain('<input type="hidden" value="%s" name="review_members" />' % regular_user.user_id)
         response.mustcontain('<input type="hidden" value="%s" name="review_members" />' % regular_user2.user_id)
-        response.mustcontain('<input type="hidden" value="%s" name="review_members" />' % admin_user.user_id)
+        response.mustcontain(no='<input type="hidden" value="%s" name="review_members" />' % admin_user.user_id)
 
     def test_update_with_invalid_reviewer(self):
         invalid_user_id = 99999

@@ -98,19 +98,18 @@ class PullRequestModel(BaseModel):
 
         reviewers = set(self._get_valid_reviewers(reviewers))
         mention_recipients = extract_mentioned_users(new.description)
-        self.__add_reviewers(created_by_user, new, reviewers, mention_recipients)
+        self.add_reviewers(created_by_user, new, reviewers, mention_recipients)
 
         return new
 
-    def __add_reviewers(self, user, pr, reviewers, mention_recipients):
-        # reviewers and mention_recipients should be sets of User objects.
+    def add_reviewers(self, user, pr, reviewers, mention_recipients=None):
+        """Add reviewer and send notification to them.
+        """
+        reviewer_users = set(self._get_valid_reviewers(reviewers))
         #members
-        for reviewer in reviewers:
-            reviewer = PullRequestReviewers(reviewer, pr)
-            Session().add(reviewer)
-
-        revision_data = [(x.raw_id, x.message)
-                         for x in map(pr.org_repo.get_changeset, pr.revisions)]
+        for reviewer in reviewer_users:
+            prr = PullRequestReviewers(reviewer, pr)
+            Session().add(prr)
 
         #notification to reviewers
         pr_url = pr.url(canonical=True)
@@ -128,6 +127,8 @@ class PullRequestModel(BaseModel):
         body = pr.description
         _org_ref_type, org_ref_name, _org_rev = pr.org_ref.split(':')
         _other_ref_type, other_ref_name, _other_rev = pr.other_ref.split(':')
+        revision_data = [(x.raw_id, x.message)
+                         for x in map(pr.org_repo.get_changeset, pr.revisions)]
         email_kwargs = {
             'pr_title': pr.title,
             'pr_title_short': h.shorter(pr.title, 50),
@@ -156,14 +157,16 @@ class PullRequestModel(BaseModel):
                                        type_=Notification.TYPE_PULL_REQUEST,
                                        email_kwargs=email_kwargs)
 
+        mention_recipient_users = set()
         if mention_recipients:
-            mention_recipients.difference_update(reviewers)
-        if mention_recipients:
+            mention_recipient_users = set(self._get_valid_reviewers(mention_recipients))
+            mention_recipient_users.difference_update(reviewers)
+        if mention_recipient_users:
             email_kwargs['is_mention'] = True
             subject = _('[Mention]') + ' ' + subject
             # FIXME: this subject is wrong and unused!
             NotificationModel().create(created_by=user, subject=subject, body=body,
-                                       recipients=mention_recipients,
+                                       recipients=mention_recipient_users,
                                        type_=Notification.TYPE_PULL_REQUEST,
                                        email_kwargs=email_kwargs)
 
@@ -172,32 +175,15 @@ class PullRequestModel(BaseModel):
                               extract_mentioned_users(old_description))
 
         log.debug("Mentioning %s", mention_recipients)
-        self.__add_reviewers(user, pr, set(), mention_recipients)
+        self.add_reviewers(user, pr, set(), mention_recipients)
 
-    def update_reviewers(self, user, pull_request, reviewers):
-        """Set PR reviewers to exactly the given list of users"""
-        pull_request = PullRequest.guess_instance(pull_request)
-        current_reviewers = PullRequestReviewers.query() \
-            .options(joinedload('user')) \
+    def remove_reviewers(self, user, pull_request, reviewer_ids):
+        """Remove users in the given user_id list from being reviewers of the PR."""
+
+        PullRequestReviewers.query() \
             .filter_by(pull_request=pull_request) \
-            .all()
-        current_reviewer_users = set(x.user for x in current_reviewers)
-
-        new_reviewer_users = set(self._get_valid_reviewers(reviewers))
-
-        to_add = new_reviewer_users - current_reviewer_users
-        to_remove = current_reviewer_users - new_reviewer_users
-
-        if not to_add and not to_remove:
-            return # all done
-
-        log.debug("Adding %s reviewers", to_add)
-        self.__add_reviewers(user, pull_request, to_add, set())
-
-        log.debug("Removing %s reviewers", to_remove)
-        for prr in current_reviewers:
-            if prr.user in to_remove:
-                Session().delete(prr)
+            .filter(PullRequestReviewers.user_id.in_(reviewer_ids)) \
+            .delete(synchronize_session='fetch') # the default of 'evaluate' is not available
 
     def delete(self, pull_request):
         pull_request = PullRequest.guess_instance(pull_request)
