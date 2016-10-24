@@ -129,46 +129,46 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                                         </div>
                                     %endif
                                     %if cs.bumped:
-                                        <div class="bumpedtag" title="Bumped">
+                                        <span class="bumpedtag" title="Bumped">
                                             Bumped
-                                        </div>
+                                        </span>
                                     %endif
                                     %if cs.divergent:
-                                        <div class="divergenttag" title="Divergent">
+                                        <span class="divergenttag" title="Divergent">
                                             Divergent
-                                        </div>
+                                        </span>
                                     %endif
                                     %if cs.extinct:
-                                        <div class="extincttag" title="Extinct">
+                                        <span class="extincttag" title="Extinct">
                                             Extinct
-                                        </div>
+                                        </span>
                                     %endif
                                     %if cs.unstable:
-                                        <div class="unstabletag" title="Unstable">
+                                        <span class="unstabletag" title="Unstable">
                                             Unstable
-                                        </div>
+                                        </span>
                                     %endif
                                     %if cs.phase:
-                                        <div class="phasetag" title="Phase">
+                                        <span class="phasetag" title="Phase">
                                             ${cs.phase}
-                                        </div>
+                                        </span>
                                     %endif
                                     %if h.is_hg(c.db_repo_scm_instance):
                                         %for book in cs.bookmarks:
-                                            <div class="booktag" title="${_('Bookmark %s') % book}">
+                                            <span class="booktag" title="${_('Bookmark %s') % book}">
                                                 ${h.link_to(book,h.url('changeset_home',repo_name=c.repo_name,revision=cs.raw_id))}
-                                            </div>
+                                            </span>
                                         %endfor
                                     %endif
                                     %for tag in cs.tags:
-                                        <div class="tagtag" title="${_('Tag %s') % tag}">
+                                        <span class="tagtag" title="${_('Tag %s') % tag}">
                                             ${h.link_to(tag,h.url('changeset_home',repo_name=c.repo_name,revision=cs.raw_id))}
-                                        </div>
+                                        </span>
                                     %endfor
                                     %if (not c.branch_name) and cs.branch:
-                                        <div class="branchtag" title="${_('Branch %s' % cs.branch)}">
+                                        <span class="branchtag" title="${_('Branch %s' % cs.branch)}">
                                             ${h.link_to(cs.branch,h.url('changelog_home',repo_name=c.repo_name,branch=cs.branch))}
-                                        </div>
+                                        </span>
                                     %endif
                                 </div>
                             </div>

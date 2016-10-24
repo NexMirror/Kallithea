@@ -2452,6 +2452,7 @@ BIN_FILENODE = 6
 .tagtag,
 .booktag {
     float: left;
+    display: inline-block;
 }
 
 .right .logtags .phasetag,

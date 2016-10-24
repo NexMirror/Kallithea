@@ -54,20 +54,20 @@
         <td>
             %if h.is_hg(c.db_repo_scm_instance):
                 %for book in cs.bookmarks:
-                    <div class="booktag" title="${_('Bookmark %s') % book}">
+                    <span class="booktag" title="${_('Bookmark %s') % book}">
                         ${h.link_to(book,h.url('changeset_home',repo_name=c.repo_name,revision=cs.raw_id))}
-                    </div>
+                    </span>
                 %endfor
             %endif
             %for tag in cs.tags:
-             <div class="tagtag" title="${_('Tag %s') % tag}">
+             <span class="tagtag" title="${_('Tag %s') % tag}">
                  ${h.link_to(tag,h.url('changeset_home',repo_name=c.repo_name,revision=cs.raw_id))}
-             </div>
+             </span>
             %endfor
             %if cs.branch:
-             <div class="branchtag" title="${_('Branch %s' % cs.branch)}">
+             <span class="branchtag" title="${_('Branch %s' % cs.branch)}">
                  ${h.link_to(cs.branch,h.url('changelog_home',repo_name=c.repo_name,branch=cs.branch))}
-             </div>
+             </span>
             %endif
         </td>
     </tr>
