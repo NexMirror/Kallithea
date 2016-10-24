@@ -27,28 +27,28 @@
     ${h.form(url('repos_groups'))}
     <div class="form">
         <!-- fields -->
-        <div class="fields">
-             <div class="field">
+        <div class="form-horizontal">
+             <div class="form-group">
                 <div class="label">
-                    <label for="group_name">${_('Group name')}:</label>
+                    <label class="control-label" for="group_name">${_('Group name')}:</label>
                 </div>
                 <div class="input">
                     ${h.text('group_name',class_='small')}
                 </div>
              </div>
 
-            <div class="field">
+            <div class="form-group">
                 <div class="label label-textarea">
-                    <label for="group_description">${_('Description')}:</label>
+                    <label class="control-label" for="group_description">${_('Description')}:</label>
                 </div>
                 <div class="textarea-repo editor">
                     ${h.textarea('group_description',cols=23,rows=5,class_="medium")}
                 </div>
             </div>
 
-            <div class="field">
+            <div class="form-group">
                  <div class="label">
-                     <label for="group_parent_id">${_('Group parent')}:</label>
+                     <label class="control-label" for="group_parent_id">${_('Group parent')}:</label>
                  </div>
                  <div class="input">
                      ${h.select('group_parent_id',request.GET.get('parent_group'),c.repo_groups,class_="medium")}
@@ -57,7 +57,7 @@
 
             <div id="copy_perms" class="field">
                 <div class="label label-checkbox">
-                    <label for="group_copy_permissions">${_('Copy parent group permissions')}:</label>
+                    <label class="control-label" for="group_copy_permissions">${_('Copy parent group permissions')}:</label>
                 </div>
                 <div class="checkboxes">
                     ${h.checkbox('group_copy_permissions',value="True")}

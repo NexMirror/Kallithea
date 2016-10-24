@@ -1,10 +1,10 @@
 ${h.form(url('admin_settings_email'), method='post')}
     <div class="form">
 
-        <div class="fields">
-            <div class="field">
+        <div class="form-horizontal">
+            <div class="form-group">
                 <div class="label">
-                    <label for="test_email">${_('Send test email to')}:</label>
+                    <label class="control-label" for="test_email">${_('Send test email to')}:</label>
                 </div>
                 <div class="input">
                     ${h.text('test_email',size=30)}

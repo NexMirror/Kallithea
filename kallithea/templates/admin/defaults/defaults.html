@@ -26,20 +26,20 @@
     <div class="form">
         <!-- fields -->
 
-        <div class="fields">
+        <div class="form-horizontal">
 
-            <div class="field">
+            <div class="form-group">
                 <div class="label">
-                    <label for="default_repo_type">${_('Type')}:</label>
+                    <label class="control-label" for="default_repo_type">${_('Type')}:</label>
                 </div>
                 <div class="input">
                     ${h.select('default_repo_type','hg',c.backends,class_="medium")}
                 </div>
             </div>
 
-            <div class="field">
+            <div class="form-group">
                 <div class="label label-checkbox">
-                    <label for="default_repo_private">${_('Private repository')}:</label>
+                    <label class="control-label" for="default_repo_private">${_('Private repository')}:</label>
                 </div>
                 <div class="checkboxes">
                     ${h.checkbox('default_repo_private',value="True")}
@@ -48,9 +48,9 @@
             </div>
 
 
-            <div class="field">
+            <div class="form-group">
                 <div class="label label-checkbox">
-                    <label for="default_repo_enable_statistics">${_('Enable statistics')}:</label>
+                    <label class="control-label" for="default_repo_enable_statistics">${_('Enable statistics')}:</label>
                 </div>
                 <div class="checkboxes">
                     ${h.checkbox('default_repo_enable_statistics',value="True")}
@@ -58,9 +58,9 @@
                 </div>
             </div>
 
-            <div class="field">
+            <div class="form-group">
                 <div class="label label-checkbox">
-                    <label for="default_repo_enable_downloads">${_('Enable downloads')}:</label>
+                    <label class="control-label" for="default_repo_enable_downloads">${_('Enable downloads')}:</label>
                 </div>
                 <div class="checkboxes">
                     ${h.checkbox('default_repo_enable_downloads',value="True")}
@@ -68,9 +68,9 @@
                 </div>
             </div>
 
-            <div class="field">
+            <div class="form-group">
                 <div class="label label-checkbox">
-                    <label for="default_repo_enable_locking">${_('Enable locking')}:</label>
+                    <label class="control-label" for="default_repo_enable_locking">${_('Enable locking')}:</label>
                 </div>
                 <div class="checkboxes">
                     ${h.checkbox('default_repo_enable_locking',value="True")}

@@ -1,11 +1,11 @@
 ${h.form(url('admin_settings_global'), method='post')}
     <div class="form">
 
-        <div class="fields">
+        <div class="form-horizontal">
 
-             <div class="field">
+             <div class="form-group">
                 <div class="label">
-                    <label for="title">${_('Site branding')}:</label>
+                    <label class="control-label" for="title">${_('Site branding')}:</label>
                 </div>
                 <div class="input">
                     ${h.text('title',size=30)}
@@ -13,18 +13,18 @@ ${h.form(url('admin_settings_global'), method='post')}
                 </div>
              </div>
 
-            <div class="field">
+            <div class="form-group">
                 <div class="label">
-                    <label for="realm">${_('HTTP authentication realm')}:</label>
+                    <label class="control-label" for="realm">${_('HTTP authentication realm')}:</label>
                 </div>
                 <div class="input">
                     ${h.text('realm',size=30)}
                 </div>
             </div>
 
-            <div class="field">
+            <div class="form-group">
                 <div class="label">
-                    <label for="ga_code">${_('HTML/JavaScript/CSS customization block')}:</label>
+                    <label class="control-label" for="ga_code">${_('HTML/JavaScript/CSS customization block')}:</label>
                 </div>
                 <div class="input">
                     ${h.textarea('ga_code', cols=80, rows=10)}
@@ -37,9 +37,9 @@ ${h.form(url('admin_settings_global'), method='post')}
                 </div>
             </div>
 
-            <div class="field">
+            <div class="form-group">
                 <div class="label">
-                    <label for="captcha_public_key">${_('ReCaptcha public key')}:</label>
+                    <label class="control-label" for="captcha_public_key">${_('ReCaptcha public key')}:</label>
                 </div>
                 <div class="input">
                     ${h.text('captcha_public_key',size=60)}
@@ -47,9 +47,9 @@ ${h.form(url('admin_settings_global'), method='post')}
                 </div>
             </div>
 
-            <div class="field">
+            <div class="form-group">
                 <div class="label">
-                    <label for="captcha_private_key">${_('ReCaptcha private key')}:</label>
+                    <label class="control-label" for="captcha_private_key">${_('ReCaptcha private key')}:</label>
                 </div>
                 <div class="input">
                     ${h.text('captcha_private_key',size=60)}

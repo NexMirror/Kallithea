@@ -1,10 +1,10 @@
 ${h.form(url('update_repo', repo_name=c.repo_info.repo_name))}
     <div class="form">
         <!-- fields -->
-        <div class="fields">
-            <div class="field">
+        <div class="form-horizontal">
+            <div class="form-group">
                 <div class="label">
-                    <label for="repo_name">${_('Name')}:</label>
+                    <label class="control-label" for="repo_name">${_('Name')}:</label>
                 </div>
                 <div class="input">
                     ${h.text('repo_name',class_="medium")}
@@ -16,9 +16,9 @@ ${h.form(url('update_repo', repo_name=c.repo_info.repo_name))}
                                This is useful for CI systems, or any other cases that you need to hardcode the URL into a 3rd party service.''')}</span>
                 </div>
             </div>
-            <div class="field">
+            <div class="form-group">
                 <div class="label">
-                    <label for="clone_uri">${_('Remote repository')}:</label>
+                    <label class="control-label" for="clone_uri">${_('Remote repository')}:</label>
                 </div>
                 <div class="input">
                   <div id="alter_clone_uri">
@@ -30,27 +30,27 @@ ${h.form(url('update_repo', repo_name=c.repo_info.repo_name))}
                   </span>
                 </div>
             </div>
-            <div class="field">
+            <div class="form-group">
                 <div class="label">
-                    <label for="repo_group">${_('Repository group')}:</label>
+                    <label class="control-label" for="repo_group">${_('Repository group')}:</label>
                 </div>
                 <div class="input">
                     ${h.select('repo_group','',c.repo_groups,class_="medium")}
                     <span class="help-block">${_('Optionally select a group to put this repository into.')}</span>
                 </div>
             </div>
-            <div class="field">
+            <div class="form-group">
                 <div class="label">
-                    <label for="repo_landing_rev">${_('Landing revision')}:</label>
+                    <label class="control-label" for="repo_landing_rev">${_('Landing revision')}:</label>
                 </div>
                 <div class="input">
                     ${h.select('repo_landing_rev','',c.landing_revs,class_="medium")}
                     <span class="help-block">${_('Default revision for files page, downloads, whoosh and readme')}</span>
                 </div>
             </div>
-            <div class="field">
+            <div class="form-group">
                 <div class="label">
-                    <label for="owner">${_('Owner')}:</label>
+                    <label class="control-label" for="owner">${_('Owner')}:</label>
                 </div>
                 <div class="input input-medium ac">
                     <div class="perm_ac">
@@ -60,9 +60,9 @@ ${h.form(url('update_repo', repo_name=c.repo_info.repo_name))}
                     </div>
                 </div>
              </div>
-            <div class="field">
+            <div class="form-group">
                 <div class="label label-textarea">
-                    <label for="repo_description">${_('Description')}:</label>
+                    <label class="control-label" for="repo_description">${_('Description')}:</label>
                 </div>
                 <div class="textarea text-area editor">
                     ${h.textarea('repo_description', style="height:165px")}
@@ -70,36 +70,36 @@ ${h.form(url('update_repo', repo_name=c.repo_info.repo_name))}
                 </div>
             </div>
 
-            <div class="field">
+            <div class="form-group">
                 <div class="label label-checkbox">
-                    <label for="repo_private">${_('Private repository')}:</label>
+                    <label class="control-label" for="repo_private">${_('Private repository')}:</label>
                 </div>
                 <div class="checkboxes">
                     ${h.checkbox('repo_private',value="True")}
                     <span class="help-block">${_('Private repositories are only visible to people explicitly added as collaborators.')}</span>
                 </div>
             </div>
-            <div class="field">
+            <div class="form-group">
                 <div class="label label-checkbox">
-                    <label for="repo_enable_statistics">${_('Enable statistics')}:</label>
+                    <label class="control-label" for="repo_enable_statistics">${_('Enable statistics')}:</label>
                 </div>
                 <div class="checkboxes">
                     ${h.checkbox('repo_enable_statistics',value="True")}
                     <span class="help-block">${_('Enable statistics window on summary page.')}</span>
                 </div>
             </div>
-            <div class="field">
+            <div class="form-group">
                 <div class="label label-checkbox">
-                    <label for="repo_enable_downloads">${_('Enable downloads')}:</label>
+                    <label class="control-label" for="repo_enable_downloads">${_('Enable downloads')}:</label>
                 </div>
                 <div class="checkboxes">
                     ${h.checkbox('repo_enable_downloads',value="True")}
                     <span class="help-block">${_('Enable download menu on summary page.')}</span>
                 </div>
             </div>
-            <div class="field">
+            <div class="form-group">
                 <div class="label label-checkbox">
-                    <label for="repo_enable_locking">${_('Enable locking')}:</label>
+                    <label class="control-label" for="repo_enable_locking">${_('Enable locking')}:</label>
                 </div>
                 <div class="checkboxes">
                     ${h.checkbox('repo_enable_locking',value="True")}
@@ -110,9 +110,9 @@ ${h.form(url('update_repo', repo_name=c.repo_info.repo_name))}
             %if c.visual.repository_fields:
               ## EXTRA FIELDS
               %for field in c.repo_fields:
-                <div class="field">
+                <div class="form-group">
                     <div class="label">
-                        <label for="${field.field_key_prefixed}">${field.field_label} (${field.field_key}):</label>
+                        <label class="control-label" for="${field.field_key_prefixed}">${field.field_label} (${field.field_key}):</label>
                     </div>
                     <div class="input input-medium">
                         ${h.text(field.field_key_prefixed, field.field_value, class_='medium')}

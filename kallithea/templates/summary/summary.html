@@ -66,8 +66,8 @@ summary = lambda n:{False:'summary-short'}.get(n)
     </div>
     <!-- end box / title -->
     <div class="form">
-        <div id="summary" class="fields">
-            <div class="field">
+        <div id="summary" class="form-horizontal">
+            <div class="form-group">
                 <div class="label-summary">
                   <label>${_('Clone URL')}:</label>
                 </div>
@@ -80,14 +80,14 @@ summary = lambda n:{False:'summary-short'}.get(n)
                 </div>
             </div>
 
-            <div class="field">
+            <div class="form-group">
               <div class="label-summary">
                   <label>${_('Description')}:</label>
               </div>
               <div class="input ${summary(c.show_stats)} desc">${h.urlify_text(c.db_repo.description, stylize=c.visual.stylify_metatags)}</div>
             </div>
 
-            <div class="field">
+            <div class="form-group">
               <div class="label-summary">
                   <label>${_('Trending files')}:</label>
               </div>
@@ -103,7 +103,7 @@ summary = lambda n:{False:'summary-short'}.get(n)
               </div>
             </div>
 
-            <div class="field">
+            <div class="form-group">
               <div class="label-summary">
                   <label>${_('Download')}:</label>
               </div>

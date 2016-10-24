@@ -1,38 +1,38 @@
 ${h.form(url('update_users_group', id=c.user_group.users_group_id), id='edit_users_group')}
     <div class="form">
         <!-- fields -->
-            <div class="fields">
-                 <div class="field">
+            <div class="form-horizontal">
+                 <div class="form-group">
                     <div class="label">
-                        <label for="users_group_name">${_('Group name')}:</label>
+                        <label class="control-label" for="users_group_name">${_('Group name')}:</label>
                     </div>
                     <div class="input">
                         ${h.text('users_group_name',class_='large')}
                     </div>
                  </div>
-                 <div class="field">
+                 <div class="form-group">
                     <div class="label label-textarea">
-                        <label for="user_group_description">${_('Description')}:</label>
+                        <label class="control-label" for="user_group_description">${_('Description')}:</label>
                     </div>
                     <div class="textarea-small editor">
                         ${h.textarea('user_group_description')}
                         <span class="help-block">${_('Short, optional description for this user group.')}</span>
                     </div>
                  </div>
-                 <div class="field">
+                 <div class="form-group">
                     <div class="label label-checkbox">
-                        <label for="users_group_active">${_('Active')}:</label>
+                        <label class="control-label" for="users_group_active">${_('Active')}:</label>
                     </div>
                     <div class="checkboxes">
                         ${h.checkbox('users_group_active',value=True)}
                     </div>
                  </div>
-                <div class="field">
+                <div class="form-group">
                     <div class="label">
-                        <label for="users_group_active">${_('Members')}:</label>
+                        <label class="control-label" for="users_group_active">${_('Members')}:</label>
                     </div>
                     <div class="select">
-                        <table>
+                        <table class="table">
                                 <tr>
                                     <td>
                                         <div>

@@ -1,7 +1,7 @@
 ${h.form(url('admin_settings'), method='post')}
     <div class="form">
-        <div class="fields">
-             <div class="field">
+        <div class="form-horizontal">
+             <div class="form-group">
                 <div class="label label-checkbox">
                     <label>${_('Hooks')}:</label>
                 </div>
@@ -24,7 +24,7 @@ ${h.form(url('admin_settings'), method='post')}
                     </div>
                 </div>
              </div>
-             <div class="field">
+             <div class="form-group">
                 <div class="label label-checkbox">
                     <label>${_('Mercurial extensions')}:</label>
                 </div>
@@ -46,9 +46,9 @@ ${h.form(url('admin_settings'), method='post')}
                 </div>
             </div>
             %if c.visual.allow_repo_location_change:
-            <div class="field">
+            <div class="form-group">
                 <div class="label">
-                    <label for="paths_root_path">${_('Location of repositories')}:</label>
+                    <label class="control-label" for="paths_root_path">${_('Location of repositories')}:</label>
                 </div>
                 <div class="input">
                     ${h.text('paths_root_path',size=60,readonly="readonly")}

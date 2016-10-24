@@ -55,10 +55,10 @@
     ${h.form(url('edit_user_api_keys_update', id=c.user.user_id))}
     <div class="form">
         <!-- fields -->
-        <div class="fields">
-             <div class="field">
+        <div class="form-horizontal">
+             <div class="form-group">
                 <div class="label">
-                    <label for="description">${_('New API key')}:</label>
+                    <label class="control-label" for="description">${_('New API key')}:</label>
                 </div>
                 <div class="input">
                     ${h.text('description', class_='medium', placeholder=_('Description'))}

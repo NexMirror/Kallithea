@@ -18,55 +18,55 @@
         ${h.form(url('register'))}
         <div class="form">
             <!-- fields -->
-            <div class="fields">
-                <div class="field">
+            <div class="form-horizontal">
+                <div class="form-group">
                     <div class="label">
-                        <label for="username">${_('Username')}:</label>
+                        <label class="control-label" for="username">${_('Username')}:</label>
                     </div>
                     <div class="input">
                         ${h.text('username',class_="medium")}
                     </div>
                 </div>
 
-                <div class="field">
+                <div class="form-group">
                     <div class="label">
-                        <label for="password">${_('Password')}:</label>
+                        <label class="control-label" for="password">${_('Password')}:</label>
                     </div>
                     <div class="input">
                         ${h.password('password',class_="medium")}
                     </div>
                 </div>
 
-                <div class="field">
+                <div class="form-group">
                     <div class="label">
-                        <label for="password_confirmation">${_('Re-enter password')}:</label>
+                        <label class="control-label" for="password_confirmation">${_('Re-enter password')}:</label>
                     </div>
                     <div class="input">
                         ${h.password('password_confirmation',class_="medium")}
                     </div>
                 </div>
 
-                <div class="field">
+                <div class="form-group">
                     <div class="label">
-                        <label for="firstname">${_('First Name')}:</label>
+                        <label class="control-label" for="firstname">${_('First Name')}:</label>
                     </div>
                     <div class="input">
                         ${h.text('firstname',class_="medium")}
                     </div>
                 </div>
 
-                <div class="field">
+                <div class="form-group">
                     <div class="label">
-                        <label for="lastname">${_('Last Name')}:</label>
+                        <label class="control-label" for="lastname">${_('Last Name')}:</label>
                     </div>
                     <div class="input">
                         ${h.text('lastname',class_="medium")}
                     </div>
                 </div>
 
-                <div class="field">
+                <div class="form-group">
                     <div class="label">
-                        <label for="email">${_('Email')}:</label>
+                        <label class="control-label" for="email">${_('Email')}:</label>
                     </div>
                     <div class="input">
                         ${h.text('email',class_="medium")}
@@ -74,9 +74,9 @@
                 </div>
 
                 %if c.captcha_active:
-                <div class="field">
+                <div class="form-group">
                     <div class="label">
-                        <label for="email">${_('Captcha')}:</label>
+                        <label class="control-label" for="email">${_('Captcha')}:</label>
                     </div>
                     <div class="input">
                         ${h.hidden('recaptcha_field')}

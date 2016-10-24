@@ -26,64 +26,64 @@
     ${h.form(url('new_user'))}
     <div class="form">
         <!-- fields -->
-        <div class="fields">
-             <div class="field">
+        <div class="form-horizontal">
+             <div class="form-group">
                 <div class="label">
-                    <label for="username">${_('Username')}:</label>
+                    <label class="control-label" for="username">${_('Username')}:</label>
                 </div>
                 <div class="input">
                     ${h.text('username',class_='small')}
                 </div>
              </div>
 
-             <div class="field">
+             <div class="form-group">
                 <div class="label">
-                    <label for="password">${_('Password')}:</label>
+                    <label class="control-label" for="password">${_('Password')}:</label>
                 </div>
                 <div class="input">
                     ${h.password('password',class_='small')}
                 </div>
              </div>
 
-             <div class="field">
+             <div class="form-group">
                 <div class="label">
-                    <label for="password_confirmation">${_('Password confirmation')}:</label>
+                    <label class="control-label" for="password_confirmation">${_('Password confirmation')}:</label>
                 </div>
                 <div class="input">
                     ${h.password('password_confirmation',class_="small")}
                 </div>
              </div>
 
-             <div class="field">
+             <div class="form-group">
                 <div class="label">
-                    <label for="firstname">${_('First Name')}:</label>
+                    <label class="control-label" for="firstname">${_('First Name')}:</label>
                 </div>
                 <div class="input">
                     ${h.text('firstname',class_='small')}
                 </div>
              </div>
 
-             <div class="field">
+             <div class="form-group">
                 <div class="label">
-                    <label for="lastname">${_('Last Name')}:</label>
+                    <label class="control-label" for="lastname">${_('Last Name')}:</label>
                 </div>
                 <div class="input">
                     ${h.text('lastname',class_='small')}
                 </div>
              </div>
 
-             <div class="field">
+             <div class="form-group">
                 <div class="label">
-                    <label for="email">${_('Email')}:</label>
+                    <label class="control-label" for="email">${_('Email')}:</label>
                 </div>
                 <div class="input">
                     ${h.text('email',class_='small')}
                 </div>
              </div>
 
-             <div class="field">
+             <div class="form-group">
                 <div class="label label-checkbox">
-                    <label for="active">${_('Active')}:</label>
+                    <label class="control-label" for="active">${_('Active')}:</label>
                 </div>
                 <div class="checkboxes">
                     ${h.checkbox('active',value=True,checked='checked')}

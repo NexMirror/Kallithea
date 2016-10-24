@@ -36,10 +36,10 @@
     ${h.form(url('my_account_emails'), method='post')}
     <div class="form">
         <!-- fields -->
-        <div class="fields">
-             <div class="field">
+        <div class="form-horizontal">
+             <div class="form-group">
                 <div class="label">
-                    <label for="new_email">${_('New email address')}:</label>
+                    <label class="control-label" for="new_email">${_('New email address')}:</label>
                 </div>
                 <div class="input">
                     ${h.text('new_email', class_='medium')}

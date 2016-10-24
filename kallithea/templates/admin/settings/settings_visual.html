@@ -1,9 +1,9 @@
 ${h.form(url('admin_settings_visual'), method='post')}
     <div class="form">
 
-        <div class="fields">
+        <div class="form-horizontal">
 
-             <div class="field">
+             <div class="form-group">
                 <div class="label label-checkbox">
                     <label>${_('General')}:</label>
                 </div>
@@ -53,9 +53,9 @@ ${h.form(url('admin_settings_visual'), method='post')}
                 </div>
              </div>
 
-            <div class="field">
+            <div class="form-group">
                 <div class="label">
-                    <label for="dashboard_items">${_('Dashboard items')}:</label>
+                    <label class="control-label" for="dashboard_items">${_('Dashboard items')}:</label>
                 </div>
                 <div class="input">
                     ${h.text('dashboard_items',size=5)}
@@ -63,9 +63,9 @@ ${h.form(url('admin_settings_visual'), method='post')}
                 </div>
             </div>
 
-            <div class="field">
+            <div class="form-group">
                 <div class="label">
-                    <label for="admin_grid_items">${_('Admin pages items')}:</label>
+                    <label class="control-label" for="admin_grid_items">${_('Admin pages items')}:</label>
                 </div>
                 <div class="input">
                     ${h.text('admin_grid_items',size=5)}
@@ -73,7 +73,7 @@ ${h.form(url('admin_settings_visual'), method='post')}
                 </div>
             </div>
 
-             <div class="field">
+             <div class="form-group">
                 <div class="label label-checkbox">
                     <label>${_('Icons')}:</label>
                 </div>
@@ -90,7 +90,7 @@ ${h.form(url('admin_settings_visual'), method='post')}
                  </div>
              </div>
 
-             <div class="field">
+             <div class="form-group">
                 <div class="label label-checkbox">
                     <label>${_('Meta Tagging')}:</label>
                 </div>

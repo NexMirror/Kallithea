@@ -2,36 +2,36 @@
 ${h.form(url('update_repos_group',group_name=c.repo_group.group_name))}
 <div class="form">
     <!-- fields -->
-    <div class="fields">
-        <div class="field">
+    <div class="form-horizontal">
+        <div class="form-group">
             <div class="label">
-                <label for="group_name">${_('Group name')}:</label>
+                <label class="control-label" for="group_name">${_('Group name')}:</label>
             </div>
             <div class="input">
                 ${h.text('group_name',class_='medium')}
             </div>
         </div>
 
-        <div class="field">
+        <div class="form-group">
             <div class="label label-textarea">
-                <label for="group_description">${_('Description')}:</label>
+                <label class="control-label" for="group_description">${_('Description')}:</label>
             </div>
             <div class="textarea text-area editor">
                 ${h.textarea('group_description',cols=23,rows=5,class_="medium")}
             </div>
         </div>
 
-        <div class="field">
+        <div class="form-group">
             <div class="label">
-                <label for="group_parent_id">${_('Group parent')}:</label>
+                <label class="control-label" for="group_parent_id">${_('Group parent')}:</label>
             </div>
             <div class="input">
                 ${h.select('group_parent_id','',c.repo_groups,class_="medium")}
             </div>
         </div>
-        <div class="field">
+        <div class="form-group">
             <div class="label label-checkbox">
-                <label for="enable_locking">${_('Enable locking')}:</label>
+                <label class="control-label" for="enable_locking">${_('Enable locking')}:</label>
             </div>
             <div class="checkboxes">
                 ${h.checkbox('enable_locking',value="True")}
@@ -48,8 +48,8 @@ ${h.end_form()}
 
 ${h.form(url('delete_repo_group', group_name=c.repo_group.group_name))}
 <div class="form">
-    <div class="fields">
-        <div class="field" style="border:none;color:#888">
+    <div class="form-horizontal">
+        <div class="buttons">
             ${h.submit('remove_%s' % c.repo_group.group_name,_('Remove this group'),class_="btn red",onclick="return confirm('"+_('Confirm to delete this group')+"');")}
         </div>
     </div>

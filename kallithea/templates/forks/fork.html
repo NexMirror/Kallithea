@@ -20,11 +20,11 @@ ${self.repo_context_bar('createfork')}
     ${h.form(url('repo_fork_create_home',repo_name=c.repo_info.repo_name))}
     <div class="form">
         <!-- fields -->
-        <div class="fields">
+        <div class="form-horizontal">
 
-            <div class="field">
+            <div class="form-group">
               <div class="label">
-                  <label for="repo_name">${_('Fork name')}:</label>
+                  <label class="control-label" for="repo_name">${_('Fork name')}:</label>
               </div>
               <div class="input">
                   ${h.text('repo_name',class_="small")}
@@ -33,9 +33,9 @@ ${self.repo_context_bar('createfork')}
               </div>
             </div>
 
-            <div class="field">
+            <div class="form-group">
                 <div class="label label-textarea">
-                    <label for="description">${_('Description')}:</label>
+                    <label class="control-label" for="description">${_('Description')}:</label>
                 </div>
                 <div class="textarea editor">
                     ${h.textarea('description')}
@@ -43,9 +43,9 @@ ${self.repo_context_bar('createfork')}
                 </div>
             </div>
 
-            <div class="field">
+            <div class="form-group">
                  <div class="label">
-                     <label for="repo_group">${_('Repository group')}:</label>
+                     <label class="control-label" for="repo_group">${_('Repository group')}:</label>
                  </div>
                  <div class="input">
                      ${h.select('repo_group','',c.repo_groups,class_="medium")}
@@ -53,9 +53,9 @@ ${self.repo_context_bar('createfork')}
                  </div>
             </div>
 
-             <div class="field">
+             <div class="form-group">
                 <div class="label">
-                    <label for="landing_rev">${_('Landing revision')}:</label>
+                    <label class="control-label" for="landing_rev">${_('Landing revision')}:</label>
                 </div>
                 <div class="input">
                     ${h.select('landing_rev','',c.landing_revs,class_="medium")}
@@ -63,18 +63,18 @@ ${self.repo_context_bar('createfork')}
                 </div>
             </div>
 
-            <div class="field">
+            <div class="form-group">
                 <div class="label label-checkbox">
-                    <label for="private">${_('Private')}:</label>
+                    <label class="control-label" for="private">${_('Private')}:</label>
                 </div>
                 <div class="checkboxes">
                     ${h.checkbox('private',value="True")}
                     <span class="help-block">${_('Private repositories are only visible to people explicitly added as collaborators.')}</span>
                 </div>
             </div>
-            <div class="field">
+            <div class="form-group">
                 <div class="label label-checkbox">
-                    <label for="private">${_('Copy permissions')}:</label>
+                    <label class="control-label" for="private">${_('Copy permissions')}:</label>
                 </div>
                 <div class="checkboxes">
                     ${h.checkbox('copy_permissions',value="True", checked="checked")}
@@ -82,9 +82,9 @@ ${self.repo_context_bar('createfork')}
                 </div>
             </div>
             %if c.can_update:
-            <div class="field">
+            <div class="form-group">
                 <div class="label label-checkbox">
-                    <label for="private">${_('Update after clone')}:</label>
+                    <label class="control-label" for="private">${_('Update after clone')}:</label>
                 </div>
                 <div class="checkboxes">
                     ${h.checkbox('update_after_clone',value="True")}

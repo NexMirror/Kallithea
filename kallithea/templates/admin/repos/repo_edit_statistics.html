@@ -1,6 +1,6 @@
 ${h.form(url('edit_repo_statistics_update', repo_name=c.repo_info.repo_name))}
 <div class="form">
-    <div class="fields">
+    <div class="form-horizontal">
        <div class="field" style="border:none;color:#888">
         <ul>
             <li>${_('Processed commits')}: ${c.stats_revision}/${c.repo_last_rev}</li>
