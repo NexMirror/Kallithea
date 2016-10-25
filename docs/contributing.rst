@@ -94,13 +94,47 @@ are::
                           printed immediately)
 
 
-Coding/contribution guidelines
-------------------------------
+Contribution guidelines
+-----------------------
 
 Kallithea is GPLv3 and we assume all contributions are made by the
 committer/contributor and under GPLv3 unless explicitly stated. We do care a
 lot about preservation of copyright and license information for existing code
 that is brought into the project.
+
+Contributions will be accepted in most formats -- such as pull requests on
+Bitbucket, something hosted on your own Kallithea instance, or patches sent by
+email to the `kallithea-general`_ mailing list.
+
+When contributing via Bitbucket, please make your fork of
+https://bitbucket.org/conservancy/kallithea/ `non-publishing`_ -- it is one of
+the settings on "Repository details" page. This ensures your commits are in
+"draft" phase and makes it easier for you to address feedback and for project
+maintainers to integrate your changes.
+
+.. _non-publishing: https://www.mercurial-scm.org/wiki/Phases#Publishing_Repository
+
+Make sure to test your changes both manually and with the automatic tests
+before posting.
+
+We care about quality and review and keeping a clean repository history. We
+might give feedback that requests polishing contributions until they are
+"perfect". We might also rebase and collapse and make minor adjustments to your
+changes when we apply them.
+
+We try to make sure we have consensus on the direction the project is taking.
+Everything non-sensitive should be discussed in public -- preferably on the
+mailing list.  We aim at having all non-trivial changes reviewed by at least
+one other core developer before pushing. Obvious non-controversial changes will
+be handled more casually.
+
+For now we just have one official branch ("default") and will keep it so stable
+that it can be (and is) used in production. Experimental changes should live
+elsewhere (for example in a pull request) until they are ready.
+
+
+Coding guidelines
+-----------------
 
 We don't have a formal coding/formatting standard. We are currently using a mix
 of Mercurial (http://mercurial.selenic.com/wiki/CodingStyle), pep8, and
@@ -133,36 +167,6 @@ Use American English grammar and spelling overall. Use `English title case`_ for
 page titles, button labels, headers, and 'labels' for fields in forms.
 
 .. _English title case: https://en.wikipedia.org/wiki/Capitalization#Title_case
-
-Contributions will be accepted in most formats -- such as pull requests on
-Bitbucket, something hosted on your own Kallithea instance, or patches sent by
-email to the `kallithea-general`_ mailing list.
-
-When contributing via Bitbucket, please make your fork of
-https://bitbucket.org/conservancy/kallithea/ `non-publishing`_ -- it is one of
-the settings on "Repository details" page. This ensures your commits are in
-"draft" phase and makes it easier for you to address feedback and for project
-maintainers to integrate your changes.
-
-.. _non-publishing: https://www.mercurial-scm.org/wiki/Phases#Publishing_Repository
-
-Make sure to test your changes both manually and with the automatic tests
-before posting.
-
-We care about quality and review and keeping a clean repository history. We
-might give feedback that requests polishing contributions until they are
-"perfect". We might also rebase and collapse and make minor adjustments to your
-changes when we apply them.
-
-We try to make sure we have consensus on the direction the project is taking.
-Everything non-sensitive should be discussed in public -- preferably on the
-mailing list.  We aim at having all non-trivial changes reviewed by at least
-one other core developer before pushing. Obvious non-controversial changes will
-be handled more casually.
-
-For now we just have one official branch ("default") and will keep it so stable
-that it can be (and is) used in production. Experimental changes should live
-elsewhere (for example in a pull request) until they are ready.
 
 
 "Roadmap"
