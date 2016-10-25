@@ -15,7 +15,7 @@ or access the repository.
 
 There is a special command for cleaning up such archived repositories::
 
-    paster cleanup-repos --older-than=30d my.ini
+    gearbox cleanup-repos --older-than=30d -c my.ini
 
 This command scans for archived repositories that are older than
 30 days, displays them, and asks if you want to delete them (unless given

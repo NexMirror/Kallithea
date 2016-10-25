@@ -40,7 +40,7 @@ logging.getLogger('alembic').setLevel(logging.INFO)
 
 # Setup Python loggers based on the config file provided to the alembic
 # command. If we're being invoked via the Alembic API (presumably for
-# stamping during "paster setup-db"), config_file_name is not available,
+# stamping during "gearbox setup-db"), config_file_name is not available,
 # and loggers are assumed to already have been configured.
 if config.config_file_name:
     fileConfig(config.config_file_name, disable_existing_loggers=False)

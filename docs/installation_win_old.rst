@@ -204,7 +204,7 @@ if you closed it reopen it following the same commands (including the
 "activate" one). When ready, just type::
 
   cd C:\Kallithea\Bin
-  paster make-config Kallithea production.ini
+  TODO make-config Kallithea production.ini
 
 Then, you must edit production.ini to fit your needs (network address and
 port, mail settings, database, whatever). I recommend using NotePad++
@@ -215,7 +215,7 @@ character differences between Unix and Windows
 For the sake of simplicity lets run it with the default settings. After
 your edits (if any), in the previous Command Prompt, type::
 
- paster setup-db production.ini
+ gearbox setup-db -c production.ini
 
 .. warning:: This time a *new* database will be installed. You must
              follow a different process to later :ref:`upgrade <upgrade>`
@@ -239,7 +239,7 @@ Step 9 -- Running Kallithea
 In the previous command prompt, being in the C:\\Kallithea\\Bin folder,
 just type::
 
- paster serve production.ini
+ gearbox serve -c production.ini
 
 Open yout web server, and go to http://127.0.0.1:5000
 

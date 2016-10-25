@@ -16,13 +16,13 @@ PYTHON_PATH="/home/$APP_HOMEDIR/v-env"
 
 RUN_AS="username"
 
-DAEMON="$PYTHON_PATH/bin/paster"
+DAEMON="$PYTHON_PATH/bin/gearbox"
 
 DAEMON_OPTS="serve --daemon \
 --user=$RUN_AS \
 --group=$RUN_AS \
 --pid-file=$PID_PATH \
---log-file=$LOG_PATH  $APP_PATH/$CONF_NAME"
+--log-file=$LOG_PATH -c $APP_PATH/$CONF_NAME"
 
 #extra options
 opts="${opts} restartdelay"

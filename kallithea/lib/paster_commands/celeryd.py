@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import argparse
+
 import kallithea
 from kallithea.lib.paster_commands.common import BasePasterCommand
 from kallithea.lib.utils import load_rcextensions
@@ -9,26 +11,14 @@ __all__ = ['Command']
 
 
 class Command(BasePasterCommand):
-    """Start the celery worker
+    """Kallithea: Celery worker for asynchronous tasks"""
 
-    Starts the celery worker that uses a paste.deploy configuration
-    file.
-    """
+    # Starts the celery worker using configuration from a paste.deploy
+    # configuration file.
 
-    usage = 'CONFIG_FILE [celeryd options...]'
-    summary = __doc__.splitlines()[0]
-    description = "".join(__doc__.splitlines()[2:])
-    group_name = "Kallithea"
+    requires_db_session = False # will start session on demand
 
-    parser = BasePasterCommand.standard_parser(quiet=True)
-
-    def update_parser(self):
-        from kallithea.lib import celerypylons
-        cmd = celerypylons.worker.worker(celerypylons.app.app_or_default())
-        for x in cmd.get_options():
-            self.parser.add_option(x)
-
-    def command(self):
+    def take_action(self, args):
         from kallithea.lib import celerypylons
         from tg import config
         try:
@@ -43,4 +33,18 @@ class Command(BasePasterCommand):
 
         load_rcextensions(config['here'])
         cmd = celerypylons.worker.worker(celerypylons.app.app_or_default())
-        return cmd.run(**vars(self.options))
+
+        celery_args = args.celery_args
+        if '--' in celery_args:
+            celery_args.remove('--')
+
+        return cmd.run_from_argv('kallithea celery worker', celery_args)
+
+    def get_parser(self, prog_name):
+        parser = super(Command, self).get_parser(prog_name)
+
+        parser.add_argument('celery_args', nargs=argparse.REMAINDER,
+            help="Pass extra options to Celery after a '--' separator",
+            )
+
+        return parser

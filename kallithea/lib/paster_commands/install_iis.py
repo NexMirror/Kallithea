@@ -22,37 +22,21 @@ IIS installation tools for Kallithea
 import os
 import sys
 from paste.script.appinstall import AbstractInstallCommand
-from paste.script.command import BadCommand
+
+from kallithea.lib.paster_commands.common import BasePasterCommand
 
 
-class Command(AbstractInstallCommand):
-    default_verbosity = 1
-    max_args = 1
-    min_args = 1
-    summary = 'Setup IIS given a config file'
-    usage = 'CONFIG_FILE'
+class Command(BasePasterCommand):
+    '''Kallithea: Install into IIS using isapi-wsgi'''
 
-    description = '''
-    Script for installing into IIS using isapi-wsgi.
-    '''
-    parser = AbstractInstallCommand.standard_parser(
-        simulate=True, quiet=True, interactive=True)
-    parser.add_option('--virtualdir',
-                      action='store',
-                      dest='virtualdir',
-                      default='/',
-                      help='The virtual folder to install into on IIS')
+    requires_db_session = False
 
-    def command(self):
-        config_spec = self.args[0]
-        if not config_spec.startswith('config:'):
-            config_spec = 'config:' + config_spec
-        config_file = config_spec[len('config:'):].split('#', 1)[0]
-        config_file = os.path.join(os.getcwd(), config_file)
+    def take_action(self, args):
+        config_file = os.path.abspath(args.config_file)
         try:
             import isapi_wsgi
         except ImportError:
-            raise BadCommand('missing requirement: isapi-wsgi not installed')
+            self.error('missing requirement: isapi-wsgi not installed')
 
         file = '''\
 # Created by Kallithea install_iis
@@ -92,7 +76,7 @@ if __name__=='__main__':
 
         outdata = file % {
                 'inifile': config_file.replace('\\', '\\\\'),
-                'virtualdir': self.options.virtualdir
+                'virtualdir': args.virtualdir,
                 }
 
         dispatchfile = os.path.join(os.getcwd(), 'dispatch.py')
@@ -102,3 +86,14 @@ if __name__=='__main__':
         print ('Run \'python "%s" install\' with administrative privileges '
             'to generate the _dispatch.dll file and install it into the '
             'default web site') % (dispatchfile,)
+
+    def get_parser(self, prog_name):
+        parser = super(Command, self).get_parser(prog_name)
+
+        parser.add_argument('--virtualdir',
+                      action='store',
+                      dest='virtualdir',
+                      default='/',
+                      help='The virtual folder to install into on IIS')
+
+        return parser

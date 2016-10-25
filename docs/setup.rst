@@ -11,7 +11,7 @@ Setting up Kallithea
 First, you will need to create a Kallithea configuration file. Run the
 following command to do so::
 
-    paster make-config Kallithea my.ini
+    TODO make-config Kallithea my.ini
 
 This will create the file ``my.ini`` in the current directory. This
 configuration file contains the various settings for Kallithea, e.g.
@@ -25,7 +25,7 @@ configuration file to use this other database. Kallithea currently supports
 PostgreSQL, SQLite and MySQL databases. Create the database by running
 the following command::
 
-    paster setup-db my.ini
+    gearbox setup-db -c my.ini
 
 This will prompt you for a "root" path. This "root" path is the location where
 Kallithea will store all of its repositories on the current machine. After
@@ -36,7 +36,7 @@ up for you.
 The ``setup-db`` values can also be given on the command line.
 Example::
 
-    paster setup-db my.ini --user=nn --password=secret --email=nn@example.com --repos=/srv/repos
+    gearbox setup-db -c my.ini --user=nn --password=secret --email=nn@example.com --repos=/srv/repos
 
 The ``setup-db`` command will create all needed tables and an
 admin account. When choosing a root path you can either use a new
@@ -54,7 +54,7 @@ path to the root).
 
 You are now ready to use Kallithea. To run it simply execute::
 
-    paster serve my.ini
+    gearbox serve -c my.ini
 
 - This command runs the Kallithea server. The web app should be available at
   http://127.0.0.1:5000. The IP address and port is configurable via the
@@ -111,23 +111,23 @@ Kallithea provides full text search of repositories using `Whoosh`__.
 
 For an incremental index build, run::
 
-    paster make-index my.ini
+    gearbox make-index -c my.ini
 
 For a full index rebuild, run::
 
-    paster make-index my.ini -f
+    gearbox make-index -c my.ini -f
 
 The ``--repo-location`` option allows the location of the repositories to be overridden;
 usually, the location is retrieved from the Kallithea database.
 
 The ``--index-only`` option can be used to limit the indexed repositories to a comma-separated list::
 
-    paster make-index my.ini --index-only=vcs,kallithea
+    gearbox make-index -c my.ini --index-only=vcs,kallithea
 
 To keep your index up-to-date it is necessary to do periodic index builds;
 for this, it is recommended to use a crontab entry. Example::
 
-    0  3  *  *  *  /path/to/virtualenv/bin/paster make-index /path/to/kallithea/my.ini
+    0  3  *  *  *  /path/to/virtualenv/bin/gearbox make-index -c /path/to/kallithea/my.ini
 
 When using incremental mode (the default), Whoosh will check the last
 modification date of each file and add it to be reindexed if a newer file is
@@ -592,7 +592,10 @@ Celery. So for example setting `BROKER_HOST` in Celery means setting
 
 To start the Celery process, run::
 
- paster celeryd <configfile.ini>
+ gearbox celeryd -c <configfile.ini>
+
+Extra options to the Celery worker can be passed after ``--`` - see ``-- -h``
+for more info.
 
 .. note::
    Make sure you run this command from the same virtualenv, and with the same

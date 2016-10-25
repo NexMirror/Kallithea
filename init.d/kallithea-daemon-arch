@@ -12,7 +12,7 @@ APP_PATH="$APP_HOMEDIR/$DAEMON"
 CONF_NAME="production.ini"
 LOG_FILE="/var/log/$DAEMON.log"
 PID_FILE="/run/daemons/$DAEMON"
-APPL=/usr/bin/paster
+APPL=/usr/bin/gearbox
 RUN_AS="*****"
 
 ARGS="serve --daemon \
@@ -20,7 +20,7 @@ ARGS="serve --daemon \
 --group=$RUN_AS \
 --pid-file=$PID_FILE \
 --log-file=$LOG_FILE \
-$APP_PATH/$CONF_NAME"
+-c $APP_PATH/$CONF_NAME"
 
 [ -r /etc/conf.d/$DAEMON ] && . /etc/conf.d/$DAEMON
 

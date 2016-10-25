@@ -18,7 +18,7 @@ changes, you should make a matching Alembic database migration script:
 2. Create a separate throwaway configuration for iterating on the actual
    database changes::
 
-    paster make-config Kallithea temp.ini
+    TODO make-config Kallithea temp.ini
 
    Edit the file to change database settings. SQLite is typically fine,
    but make sure to change the path to e.g. ``temp.db``, to avoid
@@ -30,8 +30,8 @@ changes, you should make a matching Alembic database migration script:
    to test the changes::
 
     rm temp.db
-    paster setup-db temp.ini --repos=/var/repos --user=doe --email doe@example.com --password=123456 --no-public-access --force-yes
-    paster repo-scan temp.ini
+    gearbox setup-db -c temp.ini --repos=/var/repos --user=doe --email doe@example.com --password=123456 --no-public-access --force-yes
+    gearbox repo-scan -c temp.ini
 
 5. Once satisfied with the schema changes, auto-generate a draft Alembic
    script using the development database that has *not* been upgraded.

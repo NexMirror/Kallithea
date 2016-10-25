@@ -61,15 +61,19 @@ pdebug = false
 #smtp_use_tls = false
 
 [server:main]
-%if http_server == 'paste':
-<%text>## PASTE ##</%text>
-use = egg:Paste#http
+%if http_server == 'gearbox':
+<%text>## Gearbox default web server ##</%text>
+use = egg:gearbox#wsgiref
 <%text>## nr of worker threads to spawn</%text>
 threadpool_workers = 1
 <%text>## max request before thread respawn</%text>
 threadpool_max_requests = 100
 <%text>## option to use threads of process</%text>
 use_threadpool = true
+
+%elif http_server == 'gevent':
+<%text>## Gearbox gevent web server ##</%text>
+use = egg:gearbox#gevent
 
 %elif http_server == 'waitress':
 <%text>## WAITRESS ##</%text>
@@ -512,7 +516,7 @@ script_location = kallithea:alembic
 <%text>################################</%text>
 
 [loggers]
-keys = root, routes, kallithea, sqlalchemy, beaker, templates, whoosh_indexer
+keys = root, routes, kallithea, sqlalchemy, gearbox, beaker, templates, whoosh_indexer
 
 [handlers]
 keys = console, console_sql
@@ -551,6 +555,12 @@ propagate = 1
 level = DEBUG
 handlers =
 qualname = kallithea
+propagate = 1
+
+[logger_gearbox]
+level = DEBUG
+handlers =
+qualname = gearbox
 propagate = 1
 
 [logger_sqlalchemy]

@@ -36,6 +36,7 @@ is_windows = __platform__ in ['Windows']
 
 requirements = [
     "alembic>=0.8.0,<0.9",
+    "GearBox<1",
     "waitress>=0.8.8,<1.0",
     "webob>=1.7,<2",
     "Pylons>=1.0.0,<=1.0.2",
@@ -132,7 +133,6 @@ setuptools.setup(
     url=__url__,
     install_requires=requirements,
     classifiers=classifiers,
-    setup_requires=['PasteScript>=1.6.3'],
     data_files=data_files,
     packages=packages,
     include_package_data=True,
@@ -142,7 +142,6 @@ setuptools.setup(
             ('templates/**.html', 'mako', {'input_encoding': 'utf-8'}),
             ('public/**', 'ignore', None)]},
     zip_safe=False,
-    paster_plugins=['PasteScript', 'Pylons'],
     entry_points="""
     [console_scripts]
     kallithea-api =    kallithea.bin.kallithea_api:main
@@ -155,7 +154,7 @@ setuptools.setup(
     [paste.app_install]
     main = pylons.util:PylonsInstaller
 
-    [paste.global_paster_command]
+    [gearbox.commands]
     setup-db=kallithea.lib.paster_commands.setup_db:Command
     cleanup-repos=kallithea.lib.paster_commands.cleanup:Command
     update-repoinfo=kallithea.lib.paster_commands.update_repoinfo:Command

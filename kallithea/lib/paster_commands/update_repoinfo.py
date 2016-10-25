@@ -15,7 +15,7 @@
 kallithea.lib.paster_commands.update_repoinfo
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-update-repoinfo paster command for Kallithea
+update-repoinfo gearbox command for Kallithea
 
 This file was forked by the Kallithea project in July 2014.
 Original author and date, and relevant copyright and licensing information is below:
@@ -38,47 +38,39 @@ from kallithea.model.meta import Session
 
 
 class Command(BasePasterCommand):
+    "Kallithea: Update database cache of repository data"
 
-    max_args = 1
-    min_args = 1
-
-    usage = "CONFIG_FILE"
-    group_name = "Kallithea"
-    takes_config_file = -1
-    parser = BasePasterCommand.standard_parser(verbose=True)
-    summary = "Updates repositories caches for last changeset"
-
-    def command(self):
-        #get SqlAlchemy session
-        self._init_session()
-
-
-        if self.options.repo_update_list is None:
+    def take_action(self, args):
+        if args.repo_update_list is None:
             repo_list = Repository.query().all()
         else:
             repo_names = [safe_unicode(n.strip())
-                          for n in self.options.repo_update_list.split(',')]
+                          for n in args.repo_update_list.split(',')]
             repo_list = list(Repository.query()
                 .filter(Repository.repo_name.in_(repo_names)))
         for repo in repo_list:
             repo.update_changeset_cache()
         Session().commit()
 
-        if self.options.invalidate_cache:
+        if args.invalidate_cache:
             for r in repo_list:
                 r.set_invalidate()
             print 'Updated repo info and invalidated cache for %s repositories' % (len(repo_list))
         else:
             print 'Updated repo info for %s repositories' % (len(repo_list))
 
-    def update_parser(self):
-        self.parser.add_option('--update-only',
+    def get_parser(self, prog_name):
+        parser = super(Command, self).get_parser(prog_name)
+
+        parser.add_argument('--update-only',
                            action='store',
                            dest='repo_update_list',
                            help="Specifies a comma separated list of repositories "
                                 "to update last commit info for. OPTIONAL")
-        self.parser.add_option('--invalidate-cache',
+        parser.add_argument('--invalidate-cache',
                            action='store_true',
                            dest='invalidate_cache',
                            help="Trigger cache invalidation event for repos. "
                                 "OPTIONAL")
+
+        return parser

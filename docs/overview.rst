@@ -84,17 +84,17 @@ to use web server authentication.
 
 There are several web server options:
 
-- Kallithea uses the Paste_ tool as command line interface. Paste provides
-  ``paster serve`` as a convenient way to launch a Python WSGI / web server
+- Kallithea uses the Gearbox_ tool as command line interface. Gearbox provides
+  ``gearbox serve`` as a convenient way to launch a Python WSGI / web server
   from the command line. That is perfect for development and evaluation.
   Actual use in production might have different requirements and need extra
   work to make it manageable as a scalable system service.
 
-  Paste comes with its own built-in web server but Kallithea defaults to use
+  Gearbox comes with its own built-in web server but Kallithea defaults to use
   Waitress_. Gunicorn_ is also an option. These web servers have different
   limited feature sets.
 
-  The web server used by ``paster`` is configured in the ``.ini`` file passed
+  The web server used by ``gearbox`` is configured in the ``.ini`` file passed
   to it. The entry point for the WSGI application is configured
   in ``setup.py`` as ``kallithea.config.middleware:make_app``.
 
@@ -113,7 +113,7 @@ There are several web server options:
   encryption or special authentication or for other security reasons, to
   provide caching of static files, or to provide load balancing or fail-over.
   Nginx_, Varnish_ and HAProxy_ are often used for this purpose, often in front
-  of a ``paster`` server that somehow is wrapped as a service.
+  of a ``gearbox serve`` that somehow is wrapped as a service.
 
 The best option depends on what you are familiar with and the requirements for
 performance and stability. Also, keep in mind that Kallithea mainly is serving
@@ -126,7 +126,7 @@ continuous hammering from the internet.
 .. _Gunicorn: http://gunicorn.org/
 .. _Waitress: http://waitress.readthedocs.org/en/latest/
 .. _virtualenv: http://pypi.python.org/pypi/virtualenv
-.. _Paste: http://pythonpaste.org/
+.. _Gearbox: http://turbogears.readthedocs.io/en/latest/turbogears/gearbox.html
 .. _PyPI: https://pypi.python.org/pypi
 .. _Apache httpd: http://httpd.apache.org/
 .. _mod_wsgi: https://code.google.com/p/modwsgi/

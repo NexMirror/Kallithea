@@ -15,7 +15,7 @@
 kallithea.lib.paster_commands.ishell
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-interactive shell paster command for Kallithea
+interactive shell gearbox command for Kallithea
 
 This file was forked by the Kallithea project in July 2014.
 Original author and date, and relevant copyright and licensing information is below:
@@ -39,20 +39,9 @@ from kallithea.lib.paster_commands.common import BasePasterCommand
 
 
 class Command(BasePasterCommand):
+    "Kallithea: Interactive Python shell"
 
-    max_args = 1
-    min_args = 1
-
-    usage = "CONFIG_FILE"
-    group_name = "Kallithea"
-    takes_config_file = -1
-    parser = BasePasterCommand.standard_parser(verbose=True)
-    summary = "Interactive shell"
-
-    def command(self):
-        #get SqlAlchemy session
-        self._init_session()
-
+    def take_action(self, args):
         try:
             from IPython import embed
             from IPython.config.loader import Config
@@ -62,6 +51,3 @@ class Command(BasePasterCommand):
         except ImportError:
             print 'Kallithea ishell requires the IPython Python package'
             sys.exit(-1)
-
-    def update_parser(self):
-        pass

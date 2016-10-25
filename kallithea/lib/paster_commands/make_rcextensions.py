@@ -15,7 +15,7 @@
 kallithea.lib.paster_commands.make_rcextensions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-make-rcext paster command for Kallithea
+make-rcext gearbox command for Kallithea
 
 This file was forked by the Kallithea project in July 2014.
 Original author and date, and relevant copyright and licensing information is below:
@@ -34,23 +34,17 @@ from kallithea.lib.paster_commands.common import ask_ok, BasePasterCommand
 
 
 class Command(BasePasterCommand):
+    """Kallithea: Write template file for extending Kallithea in Python
 
-    max_args = 1
-    min_args = 1
+    A rcextensions directory with a __init__.py file will be created next to
+    the ini file. Local customizations in that file will survive upgrades.
+    The file contains instructions on how it can be customized.
+    """
 
-    group_name = "Kallithea"
-    takes_config_file = -1
-    parser = BasePasterCommand.standard_parser(verbose=True)
-    summary = "Write template file for extending Kallithea in Python."
-    usage = "CONFIG_FILE"
-    description = '''\
-        A rcextensions directory with a __init__.py file will be created next to
-        the ini file. Local customizations in that file will survive upgrades.
-        The file contains instructions on how it can be customized.
-        '''
+    takes_config_file = False
 
-    def command(self):
-        from tg import config
+    def take_action(self, args):
+        from pylons import config
 
         here = config['here']
         content = pkg_resources.resource_string(
@@ -70,6 +64,3 @@ class Command(BasePasterCommand):
         with open(ext_file, 'wb') as f:
             f.write(content)
             print 'Wrote new extensions file to %s' % ext_file
-
-    def update_parser(self):
-        pass

@@ -15,7 +15,7 @@
 kallithea.lib.paster_commands.common
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Common code for Paster commands.
+Common code for gearbox commands.
 
 This file was forked by the Kallithea project in July 2014.
 Original author and date, and relevant copyright and licensing information is below:
@@ -26,12 +26,11 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 import os
-import logging
+import sys
+import logging.config
 
-import paste
-from paste.script.command import Command, BadCommand
-
-from kallithea.lib.utils import setup_cache_regions
+import paste.deploy
+import gearbox.command
 
 
 def ask_ok(prompt, retries=4, complaint='Yes or no please!'):
@@ -47,14 +46,14 @@ def ask_ok(prompt, retries=4, complaint='Yes or no please!'):
         print complaint
 
 
-class BasePasterCommand(Command):
+class BasePasterCommand(gearbox.command.Command):
     """
-    Abstract Base Class for paster commands.
+    Abstract Base Class for gearbox commands.
     """
-    min_args = 1
-    min_args_error = "Please provide a paster config file as an argument."
-    takes_config_file = 1
-    requires_config_file = True
+
+    # override to control how much get_parser and run should do:
+    takes_config_file = True
+    requires_db_session = True
 
     def run(self, args):
         """
@@ -62,46 +61,48 @@ class BasePasterCommand(Command):
 
         Checks for a config file argument and loads it.
         """
-        if len(args) < self.min_args:
-            raise BadCommand(
-                self.min_args_error % {'min_args': self.min_args,
-                                       'actual_args': len(args)})
+        if self.takes_config_file:
+             self._bootstrap_config(args.config_file)
+             if self.requires_db_session:
+                  self._init_session()
 
-        # Decrement because we're going to lob off the first argument.
-        # @@ This is hacky
-        self.min_args -= 1
-        self.bootstrap_config(args[0])
-        self.update_parser()
-        return super(BasePasterCommand, self).run(args[1:])
+        return super(BasePasterCommand, self).run(args)
 
-    def update_parser(self):
-        """
-        Abstract method.  Allows for the class's parser to be updated
-        before the superclass's `run` method is called.  Necessary to
-        allow options/arguments to be passed through to the underlying
-        celery command.
-        """
-        raise NotImplementedError("Abstract Method.")
+    def get_parser(self, prog_name):
+        parser = super(BasePasterCommand, self).get_parser(prog_name)
 
-    def bootstrap_config(self, conf):
+        if self.takes_config_file:
+            parser.add_argument("-c", "--config",
+                help='Kallithea .ini file with configuration of database etc',
+                dest='config_file', required=True)
+
+        return parser
+
+    def _bootstrap_config(self, config_file):
         """
-        Loads the app configuration.
+        Read the config file and initialize logging and the application.
         """
         from tg import config as pylonsconfig
 
-        self.path_to_ini_file = os.path.realpath(conf)
-        conf = paste.deploy.appconfig('config:' + self.path_to_ini_file)
+        path_to_ini_file = os.path.realpath(config_file)
+        conf = paste.deploy.appconfig('config:' + path_to_ini_file)
+        logging.config.fileConfig(path_to_ini_file)
         pylonsconfig.init_app(conf.global_conf, conf.local_conf)
 
     def _init_session(self):
         """
-        Inits SqlAlchemy Session
+        Initialize SqlAlchemy Session from global config.
         """
-        logging.config.fileConfig(self.path_to_ini_file)
 
         from tg import config
         from kallithea.model.base import init_model
         from kallithea.lib.utils2 import engine_from_config
+        from kallithea.lib.utils import setup_cache_regions
         setup_cache_regions(config)
         engine = engine_from_config(config, 'sqlalchemy.')
         init_model(engine)
+
+    def error(self, msg, exitcode=1):
+        """Write error message and exit"""
+        sys.stderr.write('%s\n' % msg)
+        raise SystemExit(exitcode)

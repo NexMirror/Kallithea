@@ -15,7 +15,7 @@
 kallithea.lib.paster_commands.make_index
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-make-index paster command for Kallithea
+make-index gearbox command for Kallithea
 
 This file was forked by the Kallithea project in July 2014.
 Original author and date, and relevant copyright and licensing information is below:
@@ -37,30 +37,20 @@ from kallithea.lib.utils import load_rcextensions
 
 
 class Command(BasePasterCommand):
+    "Kallithea: Create or update full text search index"
 
-    max_args = 1
-    min_args = 1
-
-    usage = "CONFIG_FILE"
-    group_name = "Kallithea"
-    takes_config_file = -1
-    parser = BasePasterCommand.standard_parser(verbose=True)
-    summary = "Creates or updates full text search index"
-
-    def command(self):
-        #get SqlAlchemy session
-        self._init_session()
-        from tg import config
+    def take_action(self, args):
+        from pylons import config
         index_location = config['index_dir']
         load_rcextensions(config['here'])
 
-        repo_location = self.options.repo_location \
-            if self.options.repo_location else RepoModel().repos_path
-        repo_list = map(strip, self.options.repo_list.split(',')) \
-            if self.options.repo_list else None
+        repo_location = args.repo_location \
+            if args.repo_location else RepoModel().repos_path
+        repo_list = map(strip, args.repo_list.split(',')) \
+            if args.repo_list else None
 
-        repo_update_list = map(strip, self.options.repo_update_list.split(',')) \
-            if self.options.repo_update_list else None
+        repo_update_list = map(strip, args.repo_update_list.split(',')) \
+            if args.repo_update_list else None
 
         #======================================================================
         # WHOOSH DAEMON
@@ -74,33 +64,37 @@ class Command(BasePasterCommand):
                                  repo_location=repo_location,
                                  repo_list=repo_list,
                                  repo_update_list=repo_update_list) \
-                .run(full_index=self.options.full_index)
+                .run(full_index=args.full_index)
             l.release()
         except LockHeld:
             sys.exit(1)
 
-    def update_parser(self):
-        self.parser.add_option('--repo-location',
+    def get_parser(self, prog_name):
+        parser = super(Command, self).get_parser(prog_name)
+
+        parser.add_argument('--repo-location',
                           action='store',
                           dest='repo_location',
                           help="Specifies repositories location to index OPTIONAL",
                           )
-        self.parser.add_option('--index-only',
+        parser.add_argument('--index-only',
                           action='store',
                           dest='repo_list',
                           help="Specifies a comma separated list of repositories "
                                 "to build index on. If not given all repositories "
                                 "are scanned for indexing. OPTIONAL",
                           )
-        self.parser.add_option('--update-only',
+        parser.add_argument('--update-only',
                           action='store',
                           dest='repo_update_list',
                           help="Specifies a comma separated list of repositories "
                                 "to re-build index on. OPTIONAL",
                           )
-        self.parser.add_option('-f',
+        parser.add_argument('-f',
                           action='store_true',
                           dest='full_index',
                           help="Specifies that index should be made full i.e"
                                 " destroy old and build from scratch",
                           default=False)
+
+        return parser

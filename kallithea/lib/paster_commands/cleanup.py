@@ -15,7 +15,7 @@
 kallithea.lib.paster_commands.cleanup
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-cleanup-repos paster command for Kallithea
+cleanup-repos gearbox command for Kallithea
 
 
 This file was forked by the Kallithea project in July 2014.
@@ -40,15 +40,7 @@ from kallithea.model.db import Ui
 
 
 class Command(BasePasterCommand):
-
-    max_args = 1
-    min_args = 1
-
-    usage = "CONFIG_FILE"
-    group_name = "Kallithea"
-    takes_config_file = -1
-    parser = BasePasterCommand.standard_parser(verbose=True)
-    summary = "Cleanup deleted repos"
+    """Kallithea: Cleanup of backup files of deleted repositories"""
 
     def _parse_older_than(self, val):
         regex = re.compile(r'((?P<days>\d+?)d)?((?P<hours>\d+?)h)?((?P<minutes>\d+?)m)?((?P<seconds>\d+?)s)?')
@@ -72,10 +64,7 @@ class Command(BasePasterCommand):
         date_part = name[4:19]  # 4:19 since we don't parse milliseconds
         return datetime.datetime.strptime(date_part, '%Y%m%d_%H%M%S')
 
-    def command(self):
-        #get SqlAlchemy session
-        self._init_session()
-
+    def take_action(self, args):
         repos_location = Ui.get_repos_location()
         to_remove = []
         for dn_, dirs, f in os.walk(safe_str(repos_location)):
@@ -97,7 +86,7 @@ class Command(BasePasterCommand):
 
         #filter older than (if present)!
         now = datetime.datetime.now()
-        older_than = self.options.older_than
+        older_than = args.older_than
         if older_than:
             to_remove_filtered = []
             older_than_date = self._parse_older_than(older_than)
@@ -111,7 +100,7 @@ class Command(BasePasterCommand):
                 % (len(to_remove), older_than, older_than_date)
         else:
             print 'Removing all %s deleted repos' % len(to_remove)
-        if self.options.dont_ask or not to_remove:
+        if args.dont_ask or not to_remove:
             # don't ask just remove !
             remove = True
         else:
@@ -127,8 +116,10 @@ class Command(BasePasterCommand):
         else:
             print 'Nothing done, exiting...'
 
-    def update_parser(self):
-        self.parser.add_option(
+    def get_parser(self, prog_name):
+        parser = super(Command, self).get_parser(prog_name)
+
+        parser.add_argument(
             '--older-than',
             action='store',
             dest='older_than',
@@ -141,9 +132,11 @@ class Command(BasePasterCommand):
                  "removed more than 30 days ago.")
             )
 
-        self.parser.add_option(
+        parser.add_argument(
             '--dont-ask',
             action="store_true",
             dest="dont_ask",
             help="remove repositories without asking for confirmation."
         )
+
+        return parser

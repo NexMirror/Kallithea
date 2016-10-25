@@ -28,10 +28,10 @@ Web server with chunked encoding
 Large Git pushes require an HTTP server with support for
 chunked encoding for POST. The Python web servers waitress_ and
 gunicorn_ (Linux only) can be used. By default, Kallithea uses
-waitress_ for `paster serve` instead of the built-in `paste` WSGI
+waitress_ for `gearbox serve` instead of the built-in `paste` WSGI
 server.
 
-The paster server is controlled in the .ini file::
+The web server used by gearbox is controlled in the .ini file::
 
     use = egg:waitress#main
 

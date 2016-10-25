@@ -15,7 +15,7 @@
 kallithea.lib.paster_commands.repo_scan
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-repo-scan paster command for Kallithea
+repo-scan gearbox command for Kallithea
 
 This file was forked by the Kallithea project in July 2014.
 Original author and date, and relevant copyright and licensing information is below:
@@ -35,20 +35,14 @@ from kallithea.lib.utils import repo2db_mapper
 
 
 class Command(BasePasterCommand):
+    """Kallithea: Scan file system for repositories
 
-    max_args = 1
-    min_args = 1
+    Search under the repository root configured in the database,
+    all new repositories, and report missing ones with an option of removing them.
+    """
 
-    usage = "CONFIG_FILE"
-    group_name = "Kallithea"
-    takes_config_file = -1
-    parser = BasePasterCommand.standard_parser(verbose=True)
-    summary = "Rescan default location for new repositories"
-
-    def command(self):
-        #get SqlAlchemy session
-        self._init_session()
-        rm_obsolete = self.options.delete_obsolete
+    def take_action(self, args):
+        rm_obsolete = args.delete_obsolete
         print 'Now scanning root location for new repos ...'
         added, removed = repo2db_mapper(ScmModel().repo_scan(),
                                         remove_obsolete=rm_obsolete)
@@ -61,10 +55,14 @@ class Command(BasePasterCommand):
         else:
             print 'Missing: %s' % removed
 
-    def update_parser(self):
-        self.parser.add_option(
+    def get_parser(self, prog_name):
+        parser = super(Command, self).get_parser(prog_name)
+
+        parser.add_argument(
             '--delete-obsolete',
             action='store_true',
             help="Use this flag do delete repositories that are "
                  "present in Kallithea database but not on the filesystem",
         )
+
+        return parser

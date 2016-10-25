@@ -1,8 +1,9 @@
-from paste.script.command import Command
+from gearbox.command import Command
 
 class UpgradeDb(Command):
-    hidden = True
-    summary = '(removed)'
+    '''(removed)'''
+
+    deprecated = True
 
     def run(self, args):
         raise SystemExit(

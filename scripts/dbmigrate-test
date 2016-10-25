@@ -104,7 +104,7 @@ install_kallithea "$temp/from" "$from_rev_hash"
     cd "$temp/from"
     . "$temp/from-env/bin/activate"
     announce "Initializing database..."
-    quiet_if_ok paster setup-db "$config_file" --repos="$temp/repos" --user=doe --email=doe@example.com --password=123456 --no-public-access --force-yes
+    quiet_if_ok gearbox setup-db -c "$config_file" --repos="$temp/repos" --user=doe --email=doe@example.com --password=123456 --no-public-access --force-yes
     alembic -c "$config_file" current -v
 )
 

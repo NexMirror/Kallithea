@@ -93,7 +93,7 @@ If you originally installed from version control, it is as simple as::
 
 Run the following command to upgrade your configuration (``.ini``) file::
 
-    paster make-config Kallithea my.ini
+    TODO make-config Kallithea my.ini
 
 This will display any changes made by the new version of Kallithea to your
 current configuration, and attempt an automatic merge. It is recommended

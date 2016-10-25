@@ -15,7 +15,7 @@
 kallithea.lib.paster_commands.cache_keys
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-cleanup-keys paster command for Kallithea
+cleanup-keys gearbox command for Kallithea
 
 
 This file was forked by the Kallithea project in July 2014.
@@ -37,25 +37,14 @@ from kallithea.model.db import CacheInvalidation
 
 
 class Command(BasePasterCommand):
+    "Kallithea: Utilities for managing caching of database content"
 
-    max_args = 1
-    min_args = 1
-
-    usage = "CONFIG_FILE"
-    group_name = "Kallithea"
-    takes_config_file = -1
-    parser = BasePasterCommand.standard_parser(verbose=True)
-    summary = "Cache keys utils"
-
-    def command(self):
-        #get SqlAlchemy session
-        self._init_session()
-
+    def take_action(self, args):
         _caches = CacheInvalidation.query().order_by(CacheInvalidation.cache_key).all()
-        if self.options.show:
+        if args.show:
             for c_obj in _caches:
                 print 'key:%s active:%s' % (safe_str(c_obj.cache_key), c_obj.cache_active)
-        elif self.options.cleanup:
+        elif args.cleanup:
             for c_obj in _caches:
                 Session().delete(c_obj)
                 print 'Removing key: %s' % (safe_str(c_obj.cache_key))
@@ -63,17 +52,21 @@ class Command(BasePasterCommand):
         else:
             print 'Nothing done, exiting...'
 
-    def update_parser(self):
-        self.parser.add_option(
+    def get_parser(self, prog_name):
+        parser = super(Command, self).get_parser(prog_name)
+
+        parser.add_argument(
             '--show',
             action='store_true',
             dest='show',
-            help=("show existing cache keys with together with status")
+            help="show existing cache keys with together with status",
         )
 
-        self.parser.add_option(
+        parser.add_argument(
             '--cleanup',
             action="store_true",
             dest="cleanup",
-            help="cleanup existing cache keys"
+            help="cleanup existing cache keys",
         )
+
+        return parser

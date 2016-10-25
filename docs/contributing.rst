@@ -36,9 +36,9 @@ To get started with development::
         source ../kallithea-venv/bin/activate
         pip install --upgrade pip setuptools
         pip install -e .
-        paster make-config Kallithea my.ini
-        paster setup-db my.ini --user=user --email=user@example.com --password=password --repos=/tmp
-        paster serve my.ini --reload &
+        TODO make-config Kallithea my.ini
+        gearbox setup-db -c my.ini --user=user --email=user@example.com --password=password --repos=/tmp
+        gearbox serve -c my.ini --reload &
         firefox http://127.0.0.1:5000/
 
 You can also start out by forking https://bitbucket.org/conservancy/kallithea
@@ -66,7 +66,7 @@ SQLite database specified there.
 It is possible to avoid recreating the full test database on each invocation of
 the tests, thus eliminating the initial delay. To achieve this, run the tests as::
 
-    paster serve kallithea/tests/test.ini --pid-file=test.pid --daemon
+    gearbox serve -c kallithea/tests/test.ini --pid-file=test.pid --daemon
     KALLITHEA_WHOOSH_TEST_DISABLE=1 KALLITHEA_NO_TMP_PATH=1 py.test
     kill -9 $(cat test.pid)
 
