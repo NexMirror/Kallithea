@@ -3084,6 +3084,7 @@ div.gravatar img {
     border: 1px solid #576622;
 }
 
+.label,
 .btn {
     color: #515151;
     background-color: #DADADA;
@@ -3097,10 +3098,15 @@ div.gravatar img {
     outline: none;
     margin: 0px 3px 3px 0px;
     border-radius: 4px 4px 4px 4px !important;
-    cursor: pointer !important;
     padding: 3px 3px 3px 3px;
     display: inline-block;
     white-space: nowrap;
+}
+.btn {
+    cursor: pointer !important;
+}
+.label {
+    cursor: default !important;
 }
 
 ul.nav-stacked {
@@ -3139,6 +3145,7 @@ input[disabled].btn,
     color: #999;
 }
 
+.label,
 .btn.btn-sm {
     padding: 3px 8px;
 }
@@ -3165,6 +3172,7 @@ input[disabled].btn,
     box-shadow: none !important;
 }
 
+.label.label-danger,
 .btn.btn-danger {
     color: #fff;
     background-color: #c43c35;
@@ -3174,6 +3182,7 @@ input[disabled].btn,
     border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }
 
+.label.label-primary,
 .btn.btn-primary {
     color: #fff;
     background-color: #339bb9;
@@ -3183,6 +3192,7 @@ input[disabled].btn,
     border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }
 
+.label.label-success,
 .btn.btn-success {
     color: #fff;
     background-color: #57a957;
@@ -3192,6 +3202,7 @@ input[disabled].btn,
     border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }
 
+.label.label-warning,
 .btn.btn-warning {
     color: #fff;
     background-color: #faa732;
@@ -4203,7 +4214,7 @@ span.pr-closed-tag {
 }
 
 #perms .perm_tag {
-    padding: 1px 3px 1px 3px;
+    padding: 3px 3px 1px 3px;
     font-size: 10px;
     font-weight: bold;
     text-transform: uppercase;

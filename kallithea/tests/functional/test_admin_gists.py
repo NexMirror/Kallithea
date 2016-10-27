@@ -73,7 +73,7 @@ class TestGistsController(TestController):
         response = response.follow()
         response.mustcontain('added file: foo')
         response.mustcontain('gist test')
-        response.mustcontain('<div class="btn btn-success btn-xs disabled">Public Gist</div>')
+        response.mustcontain('<div class="label label-success">Public Gist</div>')
 
     def test_create_with_path_with_dirs(self):
         self.log_user()
@@ -106,7 +106,7 @@ class TestGistsController(TestController):
         response = response.follow()
         response.mustcontain('added file: private-foo<')
         response.mustcontain('private gist test')
-        response.mustcontain('<div class="btn btn-warning btn-xs disabled">Private Gist</div>')
+        response.mustcontain('<div class="label label-warning">Private Gist</div>')
 
     def test_create_with_description(self):
         self.log_user()
@@ -122,7 +122,7 @@ class TestGistsController(TestController):
         response.mustcontain('added file: foo-desc')
         response.mustcontain('gist test')
         response.mustcontain('gist-desc')
-        response.mustcontain('<div class="btn btn-success btn-xs disabled">Public Gist</div>')
+        response.mustcontain('<div class="label label-success">Public Gist</div>')
 
     def test_new(self):
         self.log_user()
@@ -152,7 +152,7 @@ class TestGistsController(TestController):
         response.mustcontain('added file: gist-show-me<')
         response.mustcontain('%s - created' % TEST_USER_ADMIN_LOGIN)
         response.mustcontain('gist-desc')
-        response.mustcontain('<div class="btn btn-success btn-xs disabled">Public Gist</div>')
+        response.mustcontain('<div class="label label-success">Public Gist</div>')
 
     def test_show_as_raw(self):
         gist = _create_gist('gist-show-me', content='GIST CONTENT')
