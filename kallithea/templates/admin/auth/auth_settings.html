@@ -28,7 +28,7 @@
     <h1>${_('Authentication Plugins')}</h1>
     <div class="form-horizontal">
        <div class="form-group">
-           <div class="label"><label class="control-label" for="auth_plugins">${_("Enabled Plugins")}</label></div>
+           <label class="control-label" for="auth_plugins">${_("Enabled Plugins")}</label>
            <div class="input">${h.text("auth_plugins", class_='large')}
            <span class="help-block">${_('Comma-separated list of plugins; Kallithea will try user authentication in plugin order')}</span>
                <div style="padding:10px 0px 10px 0px;font-weight: bold">${_('Available built-in plugins')}</div>
@@ -58,7 +58,7 @@
             <% displayname = (setting["formname"] if ("formname" in setting) else setting["name"]) %>
             %if setting["type"] == "password":
             <div class="form-group">
-                <div class="label"><label class="control-label" for="${fullsetting}">${_(displayname)}</label></div>
+                <label class="control-label" for="${fullsetting}">${_(displayname)}</label>
                 <div class="input">
                     ${h.password(fullsetting,class_='small')}
                     <span class="help-block">${setting["description"]}</span>
@@ -66,7 +66,7 @@
             </div>
             %elif setting["type"] in ["string", "int"]:
             <div class="form-group">
-                <div class="label"><label class="control-label" for="${fullsetting}">${_(displayname)}</label></div>
+                <label class="control-label" for="${fullsetting}">${_(displayname)}</label>
                 <div class="input">
                     ${h.text(fullsetting,class_='small')}
                     <span class="help-block">${setting["description"]}</span>
@@ -74,7 +74,7 @@
             </div>
             %elif setting["type"] == "bool":
             <div class="form-group">
-                <div class="label label-checkbox"><label class="control-label" for="${fullsetting}">${_(displayname)}</label></div>
+                <label class="control-label" for="${fullsetting}">${_(displayname)}</label>
                 <div class="checkboxes">
                     <div class="checkbox">${h.checkbox(fullsetting,True,class_='small')}</div>
                     <span class="help-block">${setting["description"]}</span>
@@ -82,7 +82,7 @@
             </div>
             %elif setting["type"] == "select":
             <div class="form-group">
-                <div class="label"><label class="control-label" for="${fullsetting}">${_(displayname)}</label></div>
+                <label class="control-label" for="${fullsetting}">${_(displayname)}</label>
                 <div class="select">
                     ${h.select(fullsetting,setting['values'][0],setting['values'],class_='small')}
                     <span class="help-block">${setting["description"]}</span>
@@ -90,7 +90,7 @@
             </div>
             %else:
             <div class="form-group">
-                <div class="label"><label class="control-label" for="${fullsetting}">${_(displayname)}</label></div>
+                <label class="control-label" for="${fullsetting}">${_(displayname)}</label>
                 <div class="input">This field is of type ${setting['type']}, which cannot be displayed. Must be one of [string|int|bool|select].</div>
                 <span class="help-block">${setting["description"]}</span>
             </div>

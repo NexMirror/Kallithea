@@ -3,9 +3,7 @@
     <div class="form-horizontal">
       % for hook in c.hooks:
         <div class="form-group">
-            <div class="label label">
-                <label class="control-label" for="${hook.ui_key}">${hook.ui_key}</label>
-            </div>
+            <label class="control-label" for="${hook.ui_key}">${hook.ui_key}</label>
             <div class="input" style="margin-left:280px">
               ${h.text(hook.ui_key,hook.ui_value,size=60,readonly="readonly")}
             </div>
@@ -23,9 +21,7 @@ ${h.form(url('admin_settings_hooks'), method='post')}
 
       % for hook in c.custom_hooks:
       <div class="field"  id="${'id%s' % hook.ui_id }">
-        <div class="label label">
-            <label class="control-label" for="${hook.ui_key}">${hook.ui_key}</label>
-        </div>
+        <label class="control-label" for="${hook.ui_key}">${hook.ui_key}</label>
         <div class="input" style="margin-left:280px">
             ${h.hidden('hook_ui_key',hook.ui_key)}
             ${h.hidden('hook_ui_value',hook.ui_value)}

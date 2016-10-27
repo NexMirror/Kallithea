@@ -34,14 +34,12 @@ ${self.repo_context_bar('showpullrequest')}
       <div id="pr-summary" class="fields">
 
         <div class="field pr-not-edit" style="min-height:37px">
-          <div class="label-summary">
             <label>${_('Description')}:</label>
             %if editable:
-            <div style="margin: 5px">
+            <div style="margin: 25px 5px; position: absolute">
               <a class="btn btn-default btn-xs" onclick="$('.pr-do-edit').show();$('.pr-not-edit').hide()">${_("Edit")}</a>
             </div>
             %endif
-          </div>
           <div class="input">
             <div class="formatted-fixed">${h.urlify_text(c.pull_request.description, c.pull_request.org_repo.repo_name)}</div>
           </div>
@@ -50,18 +48,14 @@ ${self.repo_context_bar('showpullrequest')}
         %if editable:
         <div class="pr-do-edit" style="display:none">
           <div class="field">
-              <div class="label-summary">
-                  <label for="pullrequest_title">${_('Title')}:</label>
-              </div>
+              <label for="pullrequest_title">${_('Title')}:</label>
               <div class="input">
                   ${h.text('pullrequest_title',class_="large",value=c.pull_request.title,placeholder=_('Summarize the changes'))}
               </div>
           </div>
 
           <div class="field">
-              <div class="label-summary label-textarea">
-                  <label for="pullrequest_desc">${_('Description')}:</label>
-              </div>
+              <label for="pullrequest_desc">${_('Description')}:</label>
               <div class="textarea text-area editor">
                   ${h.textarea('pullrequest_desc',size=30,content=c.pull_request.description,placeholder=_('Write a short description on this pull request'))}
               </div>
@@ -70,9 +64,7 @@ ${self.repo_context_bar('showpullrequest')}
         %endif
 
         <div class="field">
-          <div class="label-summary">
-              <label>${_('Reviewer voting result')}:</label>
-          </div>
+          <label>${_('Reviewer voting result')}:</label>
           <div class="input">
             <div class="changeset-status-container" style="float:none;clear:both">
             %if c.current_voting_result:
@@ -89,9 +81,7 @@ ${self.repo_context_bar('showpullrequest')}
           </div>
         </div>
         <div class="field">
-          <div class="label-summary">
-              <label>${_('Still not reviewed by')}:</label>
-          </div>
+          <label>${_('Still not reviewed by')}:</label>
           <div class="input">
             % if len(c.pull_request_pending_reviewers) > 0:
                 <div class="tooltip" title="${', '.join([x.username for x in c.pull_request_pending_reviewers])}">${ungettext('%d reviewer', '%d reviewers',len(c.pull_request_pending_reviewers)) % len(c.pull_request_pending_reviewers)}</div>
@@ -103,9 +93,7 @@ ${self.repo_context_bar('showpullrequest')}
           </div>
         </div>
         <div class="field">
-          <div class="label-summary">
-              <label>${_('Origin')}:</label>
-          </div>
+          <label>${_('Origin')}:</label>
           <div class="input">
             <div>
               ${h.link_to_ref(c.pull_request.org_repo.repo_name, c.cs_ref_type, c.cs_ref_name, c.cs_rev)}
@@ -116,9 +104,7 @@ ${self.repo_context_bar('showpullrequest')}
           </div>
         </div>
         <div class="field">
-          <div class="label-summary">
-              <label>${_('Target')}:</label>
-          </div>
+          <label>${_('Target')}:</label>
           <div class="input">
             %if c.is_range:
               ${_("This is just a range of changesets and doesn't have a target or a real merge ancestor.")}
@@ -129,9 +115,7 @@ ${self.repo_context_bar('showpullrequest')}
           </div>
         </div>
         <div class="field">
-          <div class="label-summary">
-              <label>${_('Pull changes')}:</label>
-          </div>
+          <label>${_('Pull changes')}:</label>
           <div class="input">
             %if c.cs_ranges:
               <div>
@@ -146,17 +130,13 @@ ${self.repo_context_bar('showpullrequest')}
           </div>
         </div>
         <div class="field">
-          <div class="label-summary">
-              <label>${_('Created on')}:</label>
-          </div>
+          <label>${_('Created on')}:</label>
           <div class="input">
               <div>${h.fmt_date(c.pull_request.created_on)}</div>
           </div>
         </div>
         <div class="field">
-          <div class="label-summary">
-              <label>${_('Owner')}:</label>
-          </div>
+          <label>${_('Owner')}:</label>
           <div class="input pr-not-edit">
                   ${h.gravatar_div(c.pull_request.owner.email, size=20)}
                   <span>${c.pull_request.owner.full_name_and_username}</span><br/>
@@ -169,9 +149,7 @@ ${self.repo_context_bar('showpullrequest')}
         </div>
 
         <div class="field">
-            <div class="label-summary">
-              <label>${_('Next iteration')}:</label>
-            </div>
+          <label>${_('Next iteration')}:</label>
             <div class="input">
               <div class="msg-div">${c.update_msg}</div>
               %if c.avail_revs:

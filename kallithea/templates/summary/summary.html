@@ -68,9 +68,7 @@ summary = lambda n:{False:'summary-short'}.get(n)
     <div class="form">
         <div id="summary" class="form-horizontal">
             <div class="form-group">
-                <div class="label-summary">
-                  <label>${_('Clone URL')}:</label>
-                </div>
+              <label>${_('Clone URL')}:</label>
                 <div class="input ${summary(c.show_stats)}">
                   ${self.repotag(c.db_repo)}
                   <input style="width:80%" type="text" id="clone_url" readonly="readonly" value="${c.clone_repo_url}"/>
@@ -81,16 +79,12 @@ summary = lambda n:{False:'summary-short'}.get(n)
             </div>
 
             <div class="form-group">
-              <div class="label-summary">
-                  <label>${_('Description')}:</label>
-              </div>
+              <label>${_('Description')}:</label>
               <div class="input ${summary(c.show_stats)} desc">${h.urlify_text(c.db_repo.description, stylize=c.visual.stylify_metatags)}</div>
             </div>
 
             <div class="form-group">
-              <div class="label-summary">
-                  <label>${_('Trending files')}:</label>
-              </div>
+              <label>${_('Trending files')}:</label>
               <div class="input ${summary(c.show_stats)}">
                 %if c.show_stats:
                 <div id="lang_stats"></div>
@@ -104,9 +98,7 @@ summary = lambda n:{False:'summary-short'}.get(n)
             </div>
 
             <div class="form-group">
-              <div class="label-summary">
-                  <label>${_('Download')}:</label>
-              </div>
+              <label>${_('Download')}:</label>
               <div class="input ${summary(c.show_stats)}">
                 %if len(c.db_repo_scm_instance.revisions) == 0:
                   ${_('There are no downloads yet')}

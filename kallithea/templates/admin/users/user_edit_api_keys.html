@@ -57,9 +57,7 @@
         <!-- fields -->
         <div class="form-horizontal">
             <div class="form-group">
-                <div class="label">
-                    <label class="control-label" for="description">${_('New API key')}:</label>
-                </div>
+                <label class="control-label" for="description">${_('New API key')}:</label>
                 <div class="input">
                     ${h.text('description', class_='medium', placeholder=_('Description'))}
                     ${h.select('lifetime', '', c.lifetime_options)}

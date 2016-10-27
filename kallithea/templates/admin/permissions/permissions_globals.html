@@ -3,9 +3,7 @@ ${h.form(url('admin_permissions'), method='post')}
         <!-- fields -->
         <div class="form-horizontal">
             <div class="form-group">
-                <div class="label label-checkbox">
-                    <label class="control-label" for="anonymous">${_('Anonymous access')}:</label>
-                </div>
+                <label class="control-label" for="anonymous">${_('Anonymous access')}:</label>
                 <div class="checkboxes">
                     <div class="checkbox">
                         ${h.checkbox('anonymous',True)}
@@ -14,9 +12,7 @@ ${h.form(url('admin_permissions'), method='post')}
                 </div>
             </div>
             <div class="form-group">
-                <div class="label">
-                    <label class="control-label" for="default_repo_perm">${_('Repository')}:</label>
-                </div>
+                <label class="control-label" for="default_repo_perm">${_('Repository')}:</label>
                 <div class="select">
                     ${h.select('default_repo_perm','',c.repo_perms_choices)}
                     ${h.checkbox('overwrite_default_repo','true')}
@@ -28,9 +24,7 @@ ${h.form(url('admin_permissions'), method='post')}
                 </div>
             </div>
             <div class="form-group">
-                <div class="label">
-                    <label class="control-label" for="default_group_perm">${_('Repository group')}:</label>
-                </div>
+                <label class="control-label" for="default_group_perm">${_('Repository group')}:</label>
                 <div class="select">
                     ${h.select('default_group_perm','',c.group_perms_choices)}
                     ${h.checkbox('overwrite_default_group','true')}
@@ -42,9 +36,7 @@ ${h.form(url('admin_permissions'), method='post')}
                 </div>
             </div>
             <div class="form-group">
-                <div class="label">
-                    <label class="control-label" for="default_group_perm">${_('User group')}:</label>
-                </div>
+                <label class="control-label" for="default_group_perm">${_('User group')}:</label>
                 <div class="select">
                     ${h.select('default_user_group_perm','',c.user_group_perms_choices)}
                     ${h.checkbox('overwrite_default_user_group','true')}
@@ -56,9 +48,7 @@ ${h.form(url('admin_permissions'), method='post')}
                 </div>
             </div>
              <div class="form-group">
-                <div class="label">
-                    <label class="control-label" for="default_repo_create">${_('Top level repository creation')}:</label>
-                </div>
+                <label class="control-label" for="default_repo_create">${_('Top level repository creation')}:</label>
                 <div class="select">
                     ${h.select('default_repo_create','',c.repo_create_choices)}
                     <span class="help-block">${_('Enable this to allow non-admins to create repositories at the top level.')}</span>
@@ -66,44 +56,34 @@ ${h.form(url('admin_permissions'), method='post')}
                 </div>
              </div>
             <div class="form-group">
-                <div class="label label-checkbox">
-                    <label class="control-label" for="create_on_write">${_('Repository creation with group write access')}:</label>
-                </div>
+                <label class="control-label" for="create_on_write">${_('Repository creation with group write access')}:</label>
                 <div class="select">
                     ${h.select('create_on_write','',c.repo_create_on_write_choices)}
                     <span class="help-block">${_('With this, write permission to a repository group allows creating repositories inside that group. Without this, group write permissions mean nothing.')}</span>
                 </div>
             </div>
              <div class="form-group">
-                <div class="label">
-                    <label class="control-label" for="default_user_group_create">${_('User group creation')}:</label>
-                </div>
+                <label class="control-label" for="default_user_group_create">${_('User group creation')}:</label>
                 <div class="select">
                     ${h.select('default_user_group_create','',c.user_group_create_choices)}
                     <span class="help-block">${_('Enable this to allow non-admins to create user groups.')}</span>
                 </div>
              </div>
              <div class="form-group">
-                <div class="label">
-                    <label class="control-label" for="default_fork">${_('Repository forking')}:</label>
-                </div>
+                <label class="control-label" for="default_fork">${_('Repository forking')}:</label>
                 <div class="select">
                     ${h.select('default_fork','',c.fork_choices)}
                     <span class="help-block">${_('Enable this to allow non-admins to fork repositories.')}</span>
                 </div>
              </div>
              <div class="form-group">
-                <div class="label">
-                    <label class="control-label" for="default_register">${_('Registration')}:</label>
-                </div>
+                <label class="control-label" for="default_register">${_('Registration')}:</label>
                 <div class="select">
                     ${h.select('default_register','',c.register_choices)}
                 </div>
              </div>
              <div class="form-group">
-                <div class="label">
-                    <label class="control-label" for="default_extern_activate">${_('External auth account activation')}:</label>
-                </div>
+                <label class="control-label" for="default_extern_activate">${_('External auth account activation')}:</label>
                 <div class="select">
                     ${h.select('default_extern_activate','',c.extern_activate_choices)}
                 </div>

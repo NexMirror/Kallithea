@@ -29,36 +29,28 @@
         <!-- fields -->
         <div class="form-horizontal">
              <div class="form-group">
-                <div class="label">
-                    <label class="control-label" for="group_name">${_('Group name')}:</label>
-                </div>
+                <label class="control-label" for="group_name">${_('Group name')}:</label>
                 <div class="input">
                     ${h.text('group_name',class_='small')}
                 </div>
              </div>
 
             <div class="form-group">
-                <div class="label label-textarea">
-                    <label class="control-label" for="group_description">${_('Description')}:</label>
-                </div>
+                <label class="control-label" for="group_description">${_('Description')}:</label>
                 <div class="textarea-repo editor">
                     ${h.textarea('group_description',cols=23,rows=5,class_="medium")}
                 </div>
             </div>
 
             <div class="form-group">
-                 <div class="label">
-                     <label class="control-label" for="group_parent_id">${_('Group parent')}:</label>
-                 </div>
+                 <label class="control-label" for="group_parent_id">${_('Group parent')}:</label>
                  <div class="input">
                      ${h.select('group_parent_id',request.GET.get('parent_group'),c.repo_groups,class_="medium")}
                  </div>
             </div>
 
             <div id="copy_perms" class="field">
-                <div class="label label-checkbox">
-                    <label class="control-label" for="group_copy_permissions">${_('Copy parent group permissions')}:</label>
-                </div>
+                <label class="control-label" for="group_copy_permissions">${_('Copy parent group permissions')}:</label>
                 <div class="checkboxes">
                     ${h.checkbox('group_copy_permissions',value="True")}
                     <span class="help-block">${_('Copy permission set from parent repository group.')}</span>

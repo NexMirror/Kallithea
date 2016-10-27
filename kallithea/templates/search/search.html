@@ -46,9 +46,7 @@ ${self.repo_context_bar('options')}
     <div class="form">
         <div class="form-horizontal">
             <div class="field field-first field-noborder">
-             <div class="label">
-                 <label class="control-label" for="q">${_('Search term')}:</label>
-             </div>
+             <label class="control-label" for="q">${_('Search term')}:</label>
                 <div class="input">${h.text('q',c.cur_query,class_="small")}
                     <div class="button highlight">
                         <input type="submit" value="${_('Search')}" class="btn btn-default"/>
@@ -58,9 +56,7 @@ ${self.repo_context_bar('options')}
             </div>
 
             <div class="form-group">
-                <div class="label">
-                    <label for="type">${_('Search in')}:</label>
-                </div>
+                <label for="type">${_('Search in')}:</label>
                 <div class="select">
                     ${h.select('type',c.cur_type,[('content',_('File contents')),
                         ('commit',_('Commit messages')),

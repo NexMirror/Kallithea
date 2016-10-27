@@ -23,9 +23,7 @@ ${self.repo_context_bar('createfork')}
         <div class="form-horizontal">
 
             <div class="form-group">
-              <div class="label">
-                  <label class="control-label" for="repo_name">${_('Fork name')}:</label>
-              </div>
+              <label class="control-label" for="repo_name">${_('Fork name')}:</label>
               <div class="input">
                   ${h.text('repo_name',class_="small")}
                   ${h.hidden('repo_type',c.repo_info.repo_type)}
@@ -34,9 +32,7 @@ ${self.repo_context_bar('createfork')}
             </div>
 
             <div class="form-group">
-                <div class="label label-textarea">
-                    <label class="control-label" for="description">${_('Description')}:</label>
-                </div>
+                <label class="control-label" for="description">${_('Description')}:</label>
                 <div class="textarea editor">
                     ${h.textarea('description')}
                     <span class="help-block">${_('Keep it short and to the point. Use a README file for longer descriptions.')}</span>
@@ -44,9 +40,7 @@ ${self.repo_context_bar('createfork')}
             </div>
 
             <div class="form-group">
-                 <div class="label">
-                     <label class="control-label" for="repo_group">${_('Repository group')}:</label>
-                 </div>
+                 <label class="control-label" for="repo_group">${_('Repository group')}:</label>
                  <div class="input">
                      ${h.select('repo_group','',c.repo_groups,class_="medium")}
                      <span class="help-block">${_('Optionally select a group to put this repository into.')}</span>
@@ -54,9 +48,7 @@ ${self.repo_context_bar('createfork')}
             </div>
 
              <div class="form-group">
-                <div class="label">
-                    <label class="control-label" for="landing_rev">${_('Landing revision')}:</label>
-                </div>
+                <label class="control-label" for="landing_rev">${_('Landing revision')}:</label>
                 <div class="input">
                     ${h.select('landing_rev','',c.landing_revs,class_="medium")}
                     <span class="help-block">${_('Default revision for files page, downloads, whoosh, and readme.')}</span>
@@ -64,9 +56,7 @@ ${self.repo_context_bar('createfork')}
             </div>
 
             <div class="form-group">
-                <div class="label label-checkbox">
-                    <label class="control-label" for="private">${_('Private')}:</label>
-                </div>
+                <label class="control-label" for="private">${_('Private')}:</label>
                 <div class="checkboxes">
                     ${h.checkbox('private',value="True")}
                     <span class="help-block">${_('Private repositories are only visible to people explicitly added as collaborators.')}</span>
@@ -74,9 +64,7 @@ ${self.repo_context_bar('createfork')}
             </div>
 
             <div class="form-group">
-                <div class="label label-checkbox">
-                    <label class="control-label" for="private">${_('Copy permissions')}:</label>
-                </div>
+                <label class="control-label" for="private">${_('Copy permissions')}:</label>
                 <div class="checkboxes">
                     ${h.checkbox('copy_permissions',value="True", checked="checked")}
                     <span class="help-block">${_('Copy permissions from forked repository')}</span>
@@ -85,9 +73,7 @@ ${self.repo_context_bar('createfork')}
 
             %if c.can_update:
             <div class="form-group">
-                <div class="label label-checkbox">
-                    <label class="control-label" for="private">${_('Update after clone')}:</label>
-                </div>
+                <label class="control-label" for="private">${_('Update after clone')}:</label>
                 <div class="checkboxes">
                     ${h.checkbox('update_after_clone',value="True")}
                     <span class="help-block">${_('Checkout source after making a clone')}</span>

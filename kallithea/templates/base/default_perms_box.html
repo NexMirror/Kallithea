@@ -10,9 +10,7 @@ ${h.form(form_url)}
         <!-- fields -->
         <div class="form-horizontal">
             <div class="form-group">
-                <div class="label label-checkbox">
-                    <label class="control-label" for="inherit_default_permissions">${_('Inherit defaults')}:</label>
-                </div>
+                <label class="control-label" for="inherit_default_permissions">${_('Inherit defaults')}:</label>
                 <div class="checkboxes">
                     ${h.checkbox('inherit_default_permissions',value=True)}
                     <span class="help-block">
@@ -24,9 +22,7 @@ ${h.form(form_url)}
 
             <div id="inherit_overlay">
             <div class="form-group">
-                <div class="label label-checkbox">
-                    <label class="control-label" for="create_repo_perm">${_('Create repositories')}:</label>
-                </div>
+                <label class="control-label" for="create_repo_perm">${_('Create repositories')}:</label>
                 <div class="checkboxes">
                     ${h.checkbox('create_repo_perm',value=True)}
                     <span class="help-block">
@@ -36,9 +32,7 @@ ${h.form(form_url)}
             </div>
 
             <div class="form-group">
-                <div class="label label-checkbox">
-                    <label class="control-label" for="create_user_group_perm">${_('Create user groups')}:</label>
-                </div>
+                <label class="control-label" for="create_user_group_perm">${_('Create user groups')}:</label>
                 <div class="checkboxes">
                     ${h.checkbox('create_user_group_perm',value=True)}
                     <span class="help-block">
@@ -48,9 +42,7 @@ ${h.form(form_url)}
             </div>
 
             <div class="form-group">
-                <div class="label label-checkbox">
-                    <label class="control-label" for="fork_repo_perm">${_('Fork repositories')}:</label>
-                </div>
+                <label class="control-label" for="fork_repo_perm">${_('Fork repositories')}:</label>
                 <div class="checkboxes">
                     ${h.checkbox('fork_repo_perm',value=True)}
                     <span class="help-block">

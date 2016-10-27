@@ -5,17 +5,13 @@ ${h.form(url('repos'))}
     <!-- fields -->
     <div class="form-horizontal">
         <div class="form-group">
-            <div class="label">
-                <label class="control-label" for="repo_name">${_('Name')}:</label>
-            </div>
+            <label class="control-label" for="repo_name">${_('Name')}:</label>
             <div class="input">
                 ${h.text('repo_name',class_="small")}
             </div>
          </div>
         <div id="remote_clone" class="field">
-            <div class="label">
-                <label class="control-label" for="clone_uri">${_('Clone remote repository')}:</label>
-            </div>
+            <label class="control-label" for="clone_uri">${_('Clone remote repository')}:</label>
             <div class="input">
                 ${h.text('clone_uri',class_="small")}
                 <span class="help-block">
@@ -24,54 +20,42 @@ ${h.form(url('repos'))}
             </div>
         </div>
         <div class="form-group">
-            <div class="label label-textarea">
-                <label class="control-label" for="repo_description">${_('Description')}:</label>
-            </div>
+            <label class="control-label" for="repo_description">${_('Description')}:</label>
             <div class="textarea-repo editor">
                 ${h.textarea('repo_description')}
                 <span class="help-block">${_('Keep it short and to the point. Use a README file for longer descriptions.')}</span>
             </div>
         </div>
         <div class="form-group">
-             <div class="label">
-                 <label class="control-label" for="repo_group">${_('Repository group')}:</label>
-             </div>
+             <label class="control-label" for="repo_group">${_('Repository group')}:</label>
              <div class="input">
                  ${h.select('repo_group',request.GET.get('parent_group'),c.repo_groups,class_="medium")}
                  <span class="help-block">${_('Optionally select a group to put this repository into.')}</span>
              </div>
         </div>
         <div id="copy_perms" class="field">
-            <div class="label label-checkbox">
-                <label class="control-label" for="repo_copy_permissions">${_('Copy parent group permissions')}:</label>
-            </div>
+            <label class="control-label" for="repo_copy_permissions">${_('Copy parent group permissions')}:</label>
             <div class="checkboxes">
                 ${h.checkbox('repo_copy_permissions',value="True")}
                 <span class="help-block">${_('Copy permission set from parent repository group.')}</span>
             </div>
         </div>
         <div class="form-group">
-            <div class="label">
-                <label class="control-label" for="repo_type">${_('Type')}:</label>
-            </div>
+            <label class="control-label" for="repo_type">${_('Type')}:</label>
             <div class="input">
                 ${h.select('repo_type','hg',c.backends,class_="small")}
                 <span class="help-block">${_('Type of repository to create.')}</span>
             </div>
         </div>
         <div class="form-group">
-            <div class="label">
-                <label class="control-label" for="repo_landing_rev">${_('Landing revision')}:</label>
-            </div>
+            <label class="control-label" for="repo_landing_rev">${_('Landing revision')}:</label>
             <div class="input">
                 ${h.select('repo_landing_rev','',c.landing_revs,class_="medium")}
                 <span class="help-block">${_('Default revision for files page, downloads, full text search index and readme generation')}</span>
             </div>
         </div>
         <div class="form-group">
-            <div class="label label-checkbox">
-                <label class="control-label" for="repo_private">${_('Private repository')}:</label>
-            </div>
+            <label class="control-label" for="repo_private">${_('Private repository')}:</label>
             <div class="checkboxes">
                 ${h.checkbox('repo_private',value="True")}
                 <span class="help-block">${_('Private repositories are only visible to people explicitly added as collaborators.')}</span>

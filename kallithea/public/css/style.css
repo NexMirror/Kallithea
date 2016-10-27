@@ -836,41 +836,25 @@ div.header img {
     padding: 0;
 }
 
-#content div.panel div.form div.fields div.field div.label,
-#content div.panel div.form div.form-horizontal div.form-group div.label {
-    left: 70px;
-    width: 155px;
-    position: absolute;
+#content div.panel div.form div.fields div.field > p,
+#content div.panel div.form div.form-horizontal div.form-group > label {
     margin: 0;
-    padding: 5px 0 0 0px;
 }
 
-#content div.panel div.form div.fields div.field div.label-summary,
-#content div.panel div.form div.form-horizontal div.form-group div.label-summary {
-    left: 30px;
+#content div.panel div.form div.fields div.field > label,
+#content div.panel div.form div.form-horizontal div.form-group > label {
     width: 155px;
     position: absolute;
     margin: 0;
     padding: 0px 0 0 0px;
 }
 
-#content div.panel div.form div.fields div.field div.label-select,
-#content div.panel div.form div.form-horizontal div.form-group div.label-select {
-    padding: 5px 0 0 5px;
+#content div.panel div.form div.fields div.field > label,
+#content div.panel div.form div.form-horizontal div.form-group > label {
+    color: #393939;
+    font-weight: 700;
 }
 
-#content div.panel div.form div.fields div.field div.label label,
-#content div.panel div.form div.form-horizontal div.form-group div.label label,
-div.label label {
-    color: #393939;
-    font-weight: 700;
-}
-#content div.panel div.form div.fields div.field div.label label,
-#content div.panel div.form div.form-horizontal div.form-group div.label label,
-div.label-summary label {
-    color: #393939;
-    font-weight: 700;
-}
 #content div.panel div.form div.fields div.field div.input,
 #content div.panel div.form div.form-horizontal div.form-group div.input {
     margin: 0 0 0 200px;
@@ -1658,8 +1642,8 @@ a.metatag[tag="license"]:hover {
     padding: 5px;
 }
 
-#quick_login div.form div.fields div.field div.label label,
-#quick_login div.form div.form-horizontal div.form-group div.label label {
+#quick_login div.form div.fields div.field > label,
+#quick_login div.form div.form-horizontal div.form-group > label {
     color: #fff;
     padding-bottom: 3px;
 }
@@ -1737,8 +1721,8 @@ a.metatag[tag="license"]:hover {
     padding: 20px;
 }
 
-#register div.form div.fields div.field div.label,
-#register div.form div.form-horizontal div.form-group div.label {
+#register div.form div.fields div.field > label,
+#register div.form div.form-horizontal div.form-group > label {
     width: 135px;
     float: left;
     text-align: right;
@@ -3343,18 +3327,6 @@ div#legend_data, div#legend_container, div#legend_choices {
     padding: 0;
 }
 
-#content div.panel div.form div.fields div.field div.label span,
-#content div.panel div.form div.form-horizontal div.form-group div.label span,
-#login div.form div.form-horizontal div.form-group div.label span,
-#register div.form div.fields div.field div.label span,
-#register div.form div.form-horizontal div.form-group div.label span {
-    height: 1%;
-    display: block;
-    color: #363636;
-    margin: 0;
-    padding: 2px 0 0;
-}
-
 #content div.panel div.form div.fields div.field div.input input.error,
 #content div.panel div.form div.form-horizontal div.form-group div.input input.error,
 #login div.form div.form-horizontal div.form-group div.input input.error,
@@ -3564,8 +3536,8 @@ div.form div.form-horizontal div.buttons {
 }
 
 #login div.form div.form-horizontal div.form-group label,
-#register div.form div.fields div.field div.label label,
-#register div.form div.form-horizontal div.form-group div.label label {
+#register div.form div.fields div.field > label,
+#register div.form div.form-horizontal div.form-group > label {
     color: #000;
     font-weight: 700;
 }

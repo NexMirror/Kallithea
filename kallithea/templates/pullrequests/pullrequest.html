@@ -27,27 +27,21 @@ ${self.repo_context_bar('showpullrequest')}
         <div class="form-horizontal" style="float:left;width:50%;padding-right:30px;">
 
              <div class="form-group">
-                <div class="label">
-                    <label class="control-label" for="pullrequest_title">${_('Title')}:</label>
-                </div>
+                <label class="control-label" for="pullrequest_title">${_('Title')}:</label>
                 <div class="input">
                     ${h.text('pullrequest_title',class_="large",placeholder=_('Summarize the changes - or leave empty'))}
                 </div>
              </div>
 
             <div class="form-group">
-                <div class="label label-textarea">
-                    <label class="control-label" for="pullrequest_desc">${_('Description')}:</label>
-                </div>
+                <label class="control-label" for="pullrequest_desc">${_('Description')}:</label>
                 <div class="textarea text-area editor">
                     ${h.textarea('pullrequest_desc',size=30,placeholder=_('Write a short description on this pull request'))}
                 </div>
             </div>
 
             <div class="form-group">
-                <div class="label label-textarea">
-                    <label class="control-label" for="pullrequest_desc">${_('Changeset flow')}:</label>
-                </div>
+                <label class="control-label" for="pullrequest_desc">${_('Changeset flow')}:</label>
                 <div class="input">
                     ##ORG
                     <div>
