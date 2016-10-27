@@ -400,11 +400,11 @@ class PullrequestsController(BaseRepoController):
         raise HTTPFound(location=pull_request.url())
 
     def create_new_iteration(self, old_pull_request, new_rev, title, description, reviewer_ids):
-        org_repo = RepoModel()._get_repo(old_pull_request.org_repo.repo_name)
+        org_repo = old_pull_request.org_repo
         org_ref_type, org_ref_name, org_rev = old_pull_request.org_ref.split(':')
         new_org_rev = self._get_ref_rev(org_repo, 'rev', new_rev)
 
-        other_repo = RepoModel()._get_repo(old_pull_request.other_repo.repo_name)
+        other_repo = old_pull_request.other_repo
         other_ref_type, other_ref_name, other_rev = old_pull_request.other_ref.split(':') # other_rev is ancestor
         #assert other_ref_type == 'branch', other_ref_type # TODO: what if not?
         new_other_rev = self._get_ref_rev(other_repo, other_ref_type, other_ref_name)
