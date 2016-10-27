@@ -118,7 +118,7 @@ class GistModel(BaseModel):
         gist = Gist()
         gist.gist_description = description
         gist.gist_access_id = gist_id
-        gist.gist_owner = owner.user_id
+        gist.owner_id = owner.user_id
         gist.gist_expires = gist_expires
         gist.gist_type = safe_unicode(gist_type)
         self.sa.add(gist)

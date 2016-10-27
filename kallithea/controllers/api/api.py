@@ -2380,7 +2380,7 @@ class ApiController(JSONRPCController):
         """
         gist = get_gist_or_error(gistid)
         if not HasPermissionAny('hg.admin')():
-            if gist.gist_owner != self.authuser.user_id:
+            if gist.owner_id != self.authuser.user_id:
                 raise JSONRPCError('gist `%s` does not exist' % (gistid,))
         return gist.get_api_data()
 
@@ -2408,7 +2408,7 @@ class ApiController(JSONRPCController):
         gists = []
         _gists = Gist().query() \
             .filter(or_(Gist.gist_expires == -1, Gist.gist_expires >= time.time())) \
-            .filter(Gist.gist_owner == user_id) \
+            .filter(Gist.owner_id == user_id) \
             .order_by(Gist.created_on.desc())
         for gist in _gists:
             gists.append(gist.get_api_data())
@@ -2509,7 +2509,7 @@ class ApiController(JSONRPCController):
         """
         gist = get_gist_or_error(gistid)
         if not HasPermissionAny('hg.admin')():
-            if gist.gist_owner != self.authuser.user_id:
+            if gist.owner_id != self.authuser.user_id:
                 raise JSONRPCError('gist `%s` does not exist' % (gistid,))
 
         try:

@@ -79,17 +79,17 @@ class GistsController(BaseController):
         # MY private
         if c.show_private and not c.show_public:
             gists = gists.filter(Gist.gist_type == Gist.GIST_PRIVATE) \
-                             .filter(Gist.gist_owner == c.authuser.user_id)
+                             .filter(Gist.owner_id == c.authuser.user_id)
         # MY public
         elif c.show_public and not c.show_private:
             gists = gists.filter(Gist.gist_type == Gist.GIST_PUBLIC) \
-                             .filter(Gist.gist_owner == c.authuser.user_id)
+                             .filter(Gist.owner_id == c.authuser.user_id)
 
         # MY public+private
         elif c.show_private and c.show_public:
             gists = gists.filter(or_(Gist.gist_type == Gist.GIST_PUBLIC,
                                      Gist.gist_type == Gist.GIST_PRIVATE)) \
-                             .filter(Gist.gist_owner == c.authuser.user_id)
+                             .filter(Gist.owner_id == c.authuser.user_id)
 
         # default show ALL public gists
         if not c.show_public and not c.show_private:
@@ -153,7 +153,7 @@ class GistsController(BaseController):
     @NotAnonymous()
     def delete(self, gist_id):
         gist = GistModel().get_gist(gist_id)
-        owner = gist.gist_owner == c.authuser.user_id
+        owner = gist.owner_id == c.authuser.user_id
         if h.HasPermissionAny('hg.admin')() or owner:
             GistModel().delete(gist)
             Session().commit()

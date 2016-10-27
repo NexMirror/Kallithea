@@ -50,7 +50,7 @@
                          %endif
                         </div>
 
-                       %if h.HasPermissionAny('hg.admin')() or c.gist.gist_owner == c.authuser.user_id:
+                       %if h.HasPermissionAny('hg.admin')() or c.gist.owner_id == c.authuser.user_id:
                         <div style="float:right">
                             ${h.form(url('gist_delete', gist_id=c.gist.gist_id))}
                                 ${h.submit('remove_gist', _('Delete'),class_="btn btn-danger btn-xs",onclick="return confirm('"+_('Confirm to delete this Gist')+"');")}
@@ -59,7 +59,7 @@
                        %endif
                         <div class="buttons">
                           ## only owner should see that
-                          %if h.HasPermissionAny('hg.admin')() or c.gist.gist_owner == c.authuser.user_id:
+                          %if h.HasPermissionAny('hg.admin')() or c.gist.owner_id == c.authuser.user_id:
                             ${h.link_to(_('Edit'),h.url('edit_gist', gist_id=c.gist.gist_access_id),class_="btn btn-default btn-xs")}
                           %endif
                           ${h.link_to(_('Show as Raw'),h.url('formatted_gist', gist_id=c.gist.gist_access_id, format='raw'),class_="btn btn-default btn-xs")}
