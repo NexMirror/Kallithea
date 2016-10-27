@@ -36,7 +36,7 @@ from kallithea.model.meta import Session
 from kallithea.lib import helpers as h
 from kallithea.lib.exceptions import UserInvalidException
 from kallithea.model.base import BaseModel
-from kallithea.model.db import PullRequest, PullRequestReviewers, Notification, \
+from kallithea.model.db import PullRequest, PullRequestReviewer, Notification, \
     ChangesetStatus, User
 from kallithea.model.notification import NotificationModel
 from kallithea.lib.utils2 import extract_mentioned_users, safe_unicode
@@ -108,7 +108,7 @@ class PullRequestModel(BaseModel):
         reviewer_users = set(self._get_valid_reviewers(reviewers))
         #members
         for reviewer in reviewer_users:
-            prr = PullRequestReviewers(reviewer, pr)
+            prr = PullRequestReviewer(reviewer, pr)
             Session().add(prr)
 
         #notification to reviewers
@@ -180,9 +180,9 @@ class PullRequestModel(BaseModel):
     def remove_reviewers(self, user, pull_request, reviewer_ids):
         """Remove users in the given user_id list from being reviewers of the PR."""
 
-        PullRequestReviewers.query() \
+        PullRequestReviewer.query() \
             .filter_by(pull_request=pull_request) \
-            .filter(PullRequestReviewers.user_id.in_(reviewer_ids)) \
+            .filter(PullRequestReviewer.user_id.in_(reviewer_ids)) \
             .delete(synchronize_session='fetch') # the default of 'evaluate' is not available
 
     def delete(self, pull_request):

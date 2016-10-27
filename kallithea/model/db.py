@@ -2330,7 +2330,7 @@ class PullRequest(Base, BaseDbModel):
         return self.other_ref.split(':')
 
     owner = relationship('User')
-    reviewers = relationship('PullRequestReviewers',
+    reviewers = relationship('PullRequestReviewer',
                              cascade="all, delete-orphan")
     org_repo = relationship('Repository', primaryjoin='PullRequest.org_repo_id==Repository.repo_id')
     other_repo = relationship('Repository', primaryjoin='PullRequest.other_repo_id==Repository.repo_id')
@@ -2351,7 +2351,7 @@ class PullRequest(Base, BaseDbModel):
         q = super(PullRequest, cls).query()
 
         if reviewer_id is not None:
-            q = q.join(PullRequestReviewers).filter(PullRequestReviewers.user_id == reviewer_id)
+            q = q.join(PullRequestReviewer).filter(PullRequestReviewer.user_id == reviewer_id)
 
         if not include_closed:
             q = q.filter(PullRequest.status != PullRequest.STATUS_CLOSED)
@@ -2364,9 +2364,9 @@ class PullRequest(Base, BaseDbModel):
     def get_reviewer_users(self):
         """Like .reviewers, but actually returning the users"""
         return User.query() \
-            .join(PullRequestReviewers) \
-            .filter(PullRequestReviewers.pull_request == self) \
-            .order_by(PullRequestReviewers.pull_request_reviewers_id) \
+            .join(PullRequestReviewer) \
+            .filter(PullRequestReviewer.pull_request == self) \
+            .order_by(PullRequestReviewer.pull_request_reviewers_id) \
             .all()
 
     def is_closed(self):
@@ -2411,7 +2411,7 @@ class PullRequest(Base, BaseDbModel):
         return h.url('pullrequest_show', repo_name=self.other_repo.repo_name,
                      pull_request_id=self.pull_request_id, **kwargs)
 
-class PullRequestReviewers(Base, BaseDbModel):
+class PullRequestReviewer(Base, BaseDbModel):
     __tablename__ = 'pull_request_reviewers'
     __table_args__ = (
         Index('pull_request_reviewers_user_id_idx', 'user_id'),

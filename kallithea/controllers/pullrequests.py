@@ -49,7 +49,7 @@ from kallithea.lib.vcs.exceptions import EmptyRepositoryError, ChangesetDoesNotE
 from kallithea.lib.vcs.utils import safe_str
 from kallithea.lib.vcs.utils.hgcompat import unionrepo
 from kallithea.model.db import PullRequest, ChangesetStatus, ChangesetComment, \
-    PullRequestReviewers, User
+    PullRequestReviewer, User
 from kallithea.model.pull_request import PullRequestModel
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
@@ -182,9 +182,9 @@ class PullrequestsController(BaseRepoController):
             return False
 
         owner = self.authuser.user_id == pull_request.owner_id
-        reviewer = PullRequestReviewers.query() \
-            .filter(PullRequestReviewers.pull_request == pull_request) \
-            .filter(PullRequestReviewers.user_id == self.authuser.user_id) \
+        reviewer = PullRequestReviewer.query() \
+            .filter(PullRequestReviewer.pull_request == pull_request) \
+            .filter(PullRequestReviewer.user_id == self.authuser.user_id) \
             .count() != 0
 
         return self.authuser.admin or owner or reviewer
