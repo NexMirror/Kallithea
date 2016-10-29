@@ -47,14 +47,14 @@ ${h.form(url('admin_permissions'), method='post')}
                     <span class="help-block">${_('Permissions for the Default user on new user groups.')}</span>
                 </div>
             </div>
-             <div class="form-group">
+            <div class="form-group">
                 <label class="control-label" for="default_repo_create">${_('Top level repository creation')}:</label>
                 <div class="select">
                     ${h.select('default_repo_create','',c.repo_create_choices)}
                     <span class="help-block">${_('Enable this to allow non-admins to create repositories at the top level.')}</span>
                     <span class="help-block">${_('Note: This will also give all users API access to create repositories everywhere. That might change in future versions.')}</span>
                 </div>
-             </div>
+            </div>
             <div class="form-group">
                 <label class="control-label" for="create_on_write">${_('Repository creation with group write access')}:</label>
                 <div class="select">
@@ -62,32 +62,32 @@ ${h.form(url('admin_permissions'), method='post')}
                     <span class="help-block">${_('With this, write permission to a repository group allows creating repositories inside that group. Without this, group write permissions mean nothing.')}</span>
                 </div>
             </div>
-             <div class="form-group">
+            <div class="form-group">
                 <label class="control-label" for="default_user_group_create">${_('User group creation')}:</label>
                 <div class="select">
                     ${h.select('default_user_group_create','',c.user_group_create_choices)}
                     <span class="help-block">${_('Enable this to allow non-admins to create user groups.')}</span>
                 </div>
-             </div>
-             <div class="form-group">
+            </div>
+            <div class="form-group">
                 <label class="control-label" for="default_fork">${_('Repository forking')}:</label>
                 <div class="select">
                     ${h.select('default_fork','',c.fork_choices)}
                     <span class="help-block">${_('Enable this to allow non-admins to fork repositories.')}</span>
                 </div>
-             </div>
-             <div class="form-group">
+            </div>
+            <div class="form-group">
                 <label class="control-label" for="default_register">${_('Registration')}:</label>
                 <div class="select">
                     ${h.select('default_register','',c.register_choices)}
                 </div>
-             </div>
-             <div class="form-group">
+            </div>
+            <div class="form-group">
                 <label class="control-label" for="default_extern_activate">${_('External auth account activation')}:</label>
                 <div class="select">
                     ${h.select('default_extern_activate','',c.extern_activate_choices)}
                 </div>
-             </div>
+            </div>
             <div class="form-group">
                 <div class="buttons">
                     ${h.submit('save',_('Save'),class_="btn btn-default")}

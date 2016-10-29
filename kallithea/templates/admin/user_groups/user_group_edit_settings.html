@@ -2,25 +2,25 @@ ${h.form(url('update_users_group', id=c.user_group.users_group_id), id='edit_use
     <div class="form">
         <!-- fields -->
             <div class="form-horizontal">
-                 <div class="form-group">
+                <div class="form-group">
                     <label class="control-label" for="users_group_name">${_('Group name')}:</label>
                     <div class="input">
                         ${h.text('users_group_name',class_='large')}
                     </div>
-                 </div>
-                 <div class="form-group">
+                </div>
+                <div class="form-group">
                     <label class="control-label" for="user_group_description">${_('Description')}:</label>
                     <div class="textarea-small editor">
                         ${h.textarea('user_group_description')}
                         <span class="help-block">${_('Short, optional description for this user group.')}</span>
                     </div>
-                 </div>
-                 <div class="form-group">
+                </div>
+                <div class="form-group">
                     <label class="control-label" for="users_group_active">${_('Active')}:</label>
                     <div class="checkboxes">
                         ${h.checkbox('users_group_active',value=True)}
                     </div>
-                 </div>
+                </div>
                 <div class="form-group">
                     <label class="control-label" for="users_group_active">${_('Members')}:</label>
                     <div class="select">
@@ -46,7 +46,6 @@ ${h.form(url('update_users_group', id=c.user_group.users_group_id), id='edit_use
                                 </tr>
                         </table>
                     </div>
-
                 </div>
                 <div class="form-group">
                     <div class="buttons">

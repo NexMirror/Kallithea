@@ -73,12 +73,12 @@
 
                 <div class="buttons">
                     <div class="nohighlight">
-                      ${h.submit('sign_up',_('Sign Up'),class_="btn btn-default")}
-                      %if c.auto_active:
-                          <div class="activation_msg">${_('Registered accounts are ready to use and need no further action.')}</div>
-                      %else:
-                          <div class="activation_msg">${_('Please wait for an administrator to activate your account.')}</div>
-                      %endif
+                        ${h.submit('sign_up',_('Sign Up'),class_="btn btn-default")}
+                        %if c.auto_active:
+                            <div class="activation_msg">${_('Registered accounts are ready to use and need no further action.')}</div>
+                        %else:
+                            <div class="activation_msg">${_('Please wait for an administrator to activate your account.')}</div>
+                        %endif
                     </div>
                 </div>
             </div>

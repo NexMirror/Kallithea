@@ -23,12 +23,12 @@ ${self.repo_context_bar('createfork')}
         <div class="form-horizontal">
 
             <div class="form-group">
-              <label class="control-label" for="repo_name">${_('Fork name')}:</label>
-              <div class="input">
-                  ${h.text('repo_name',class_="small")}
-                  ${h.hidden('repo_type',c.repo_info.repo_type)}
-                  ${h.hidden('fork_parent_id',c.repo_info.repo_id)}
-              </div>
+                <label class="control-label" for="repo_name">${_('Fork name')}:</label>
+                <div class="input">
+                    ${h.text('repo_name',class_="small")}
+                    ${h.hidden('repo_type',c.repo_info.repo_type)}
+                    ${h.hidden('fork_parent_id',c.repo_info.repo_id)}
+                </div>
             </div>
 
             <div class="form-group">
@@ -40,14 +40,14 @@ ${self.repo_context_bar('createfork')}
             </div>
 
             <div class="form-group">
-                 <label class="control-label" for="repo_group">${_('Repository group')}:</label>
-                 <div class="input">
-                     ${h.select('repo_group','',c.repo_groups,class_="medium")}
-                     <span class="help-block">${_('Optionally select a group to put this repository into.')}</span>
-                 </div>
+                <label class="control-label" for="repo_group">${_('Repository group')}:</label>
+                <div class="input">
+                    ${h.select('repo_group','',c.repo_groups,class_="medium")}
+                    <span class="help-block">${_('Optionally select a group to put this repository into.')}</span>
+                </div>
             </div>
 
-             <div class="form-group">
+            <div class="form-group">
                 <label class="control-label" for="landing_rev">${_('Landing revision')}:</label>
                 <div class="input">
                     ${h.select('landing_rev','',c.landing_revs,class_="medium")}

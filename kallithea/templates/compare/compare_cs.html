@@ -18,7 +18,7 @@
 
     <table class="compare_view_commits noborder">
     %for cnt, cs in enumerate(reversed(c.cs_ranges)):
-        <tr id="chg_${cnt+1}" class="${'mergerow' if len(cs.parents) > 1 else ''}">
+      <tr id="chg_${cnt+1}" class="${'mergerow' if len(cs.parents) > 1 else ''}">
         <td style="width:50px">
           %if cs.raw_id in c.statuses:
             <div title="${_('Changeset status: %s') % c.statuses[cs.raw_id][1]}" class="changeset-status-ico">
@@ -75,7 +75,7 @@
             </div>
             <div id="C-${cs.raw_id}" class="message">${h.urlify_text(cs.message, c.repo_name)}</div>
         </td>
-        </tr>
+      </tr>
     %endfor
     </table>
 

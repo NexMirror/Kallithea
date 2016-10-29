@@ -213,9 +213,9 @@ ${self.repo_context_bar('showpullrequest')}
               ## If you change something here it should be reflected in the template too.
               <li id="reviewer_${member.user_id}">
                 <div class="reviewers_member">
-                    <div class="reviewer_status tooltip" title="${h.changeset_status_lbl(status)}">
+                  <div class="reviewer_status tooltip" title="${h.changeset_status_lbl(status)}">
                       <i class="icon-circle changeset-status-${status}"></i>
-                    </div>
+                  </div>
                   ${h.gravatar_div(member.email, size=14, div_class="reviewer_gravatar gravatar")}
                   <div style="float:left;">
                     ${member.full_name_and_username}

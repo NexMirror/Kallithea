@@ -26,12 +26,12 @@ ${self.repo_context_bar('showpullrequest')}
 
         <div class="form-horizontal" style="float:left;width:50%;padding-right:30px;">
 
-             <div class="form-group">
+            <div class="form-group">
                 <label class="control-label" for="pullrequest_title">${_('Title')}:</label>
                 <div class="input">
                     ${h.text('pullrequest_title',class_="large",placeholder=_('Summarize the changes - or leave empty'))}
                 </div>
-             </div>
+            </div>
 
             <div class="form-group">
                 <label class="control-label" for="pullrequest_desc">${_('Description')}:</label>
@@ -81,7 +81,7 @@ ${self.repo_context_bar('showpullrequest')}
                 <div class="buttons">
                     ${h.submit('save',_('Create Pull Request'),class_="btn btn-default")}
                     ${h.reset('reset',_('Reset'),class_="btn btn-default")}
-               </div>
+                </div>
             </div>
 
         </div>

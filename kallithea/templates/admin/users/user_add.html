@@ -27,54 +27,54 @@
     <div class="form">
         <!-- fields -->
         <div class="form-horizontal">
-             <div class="form-group">
+            <div class="form-group">
                 <label class="control-label" for="username">${_('Username')}:</label>
                 <div class="input">
                     ${h.text('username',class_='small')}
                 </div>
-             </div>
+            </div>
 
-             <div class="form-group">
+            <div class="form-group">
                 <label class="control-label" for="password">${_('Password')}:</label>
                 <div class="input">
                     ${h.password('password',class_='small')}
                 </div>
-             </div>
+            </div>
 
-             <div class="form-group">
+            <div class="form-group">
                 <label class="control-label" for="password_confirmation">${_('Password confirmation')}:</label>
                 <div class="input">
                     ${h.password('password_confirmation',class_="small")}
                 </div>
-             </div>
+            </div>
 
-             <div class="form-group">
+            <div class="form-group">
                 <label class="control-label" for="firstname">${_('First Name')}:</label>
                 <div class="input">
                     ${h.text('firstname',class_='small')}
                 </div>
-             </div>
+            </div>
 
-             <div class="form-group">
+            <div class="form-group">
                 <label class="control-label" for="lastname">${_('Last Name')}:</label>
                 <div class="input">
                     ${h.text('lastname',class_='small')}
                 </div>
-             </div>
+            </div>
 
-             <div class="form-group">
+            <div class="form-group">
                 <label class="control-label" for="email">${_('Email')}:</label>
                 <div class="input">
                     ${h.text('email',class_='small')}
                 </div>
-             </div>
+            </div>
 
-             <div class="form-group">
+            <div class="form-group">
                 <label class="control-label" for="active">${_('Active')}:</label>
                 <div class="checkboxes">
                     ${h.checkbox('active',value=True,checked='checked')}
                 </div>
-             </div>
+            </div>
 
             ${h.hidden('extern_type', c.default_extern_type)}
             ${h.hidden('extern_name', c.default_extern_name)}

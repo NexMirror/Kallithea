@@ -4,8 +4,7 @@
 unread = lambda n:{False:'unread'}.get(n)
 %>
 
-
-<div class="notification-list  notification-table">
+<div class="notification-list notification-table">
 %for notification in c.notifications:
   <div id="notification_${notification.notification.notification_id}" class="container ${unread(notification.read)}">
     <div class="notification-header">

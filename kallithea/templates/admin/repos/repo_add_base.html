@@ -27,11 +27,11 @@ ${h.form(url('repos'))}
             </div>
         </div>
         <div class="form-group">
-             <label class="control-label" for="repo_group">${_('Repository group')}:</label>
-             <div class="input">
-                 ${h.select('repo_group',request.GET.get('parent_group'),c.repo_groups,class_="medium")}
-                 <span class="help-block">${_('Optionally select a group to put this repository into.')}</span>
-             </div>
+            <label class="control-label" for="repo_group">${_('Repository group')}:</label>
+            <div class="input">
+                ${h.select('repo_group',request.GET.get('parent_group'),c.repo_groups,class_="medium")}
+                <span class="help-block">${_('Optionally select a group to put this repository into.')}</span>
+            </div>
         </div>
         <div id="copy_perms" class="field">
             <label class="control-label" for="repo_copy_permissions">${_('Copy parent group permissions')}:</label>

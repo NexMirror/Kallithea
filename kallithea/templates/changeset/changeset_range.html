@@ -35,10 +35,10 @@ ${self.repo_context_bar('changelog')}
             </div>
         </div>
         <div id="changeset_compare_view_content">
-            <div class="container">
+          <div class="container">
             <table class="compare_view_commits noborder">
             %for cnt,cs in enumerate(c.cs_ranges):
-                <tr>
+              <tr>
                 %if c.visual.use_gravatar:
                 <td>${h.gravatar_div(h.email_or_none(cs.author), size=14)}</td>
                 %endif
@@ -51,12 +51,12 @@ ${self.repo_context_bar('changelog')}
                   %endif
                 </td>
                 <td><div class="message">${h.urlify_text(h.wrap_paragraphs(cs.message),c.repo_name)}</div></td>
-                </tr>
+              </tr>
             %endfor
             </table>
-            </div>
-            <div style="font-size:1.1em;font-weight: bold;clear:both;padding-top:10px">${_('Files affected')}</div>
-            <div class="cs_files">
+          </div>
+          <div style="font-size:1.1em;font-weight: bold;clear:both;padding-top:10px">${_('Files affected')}</div>
+          <div class="cs_files">
                 %for cs in c.cs_ranges:
                     <div class="cur_cs">${h.link_to(h.show_id(cs),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}</div>
                     <% a_rev, cs_rev, file_diff_data = c.changes[cs.raw_id] %>
@@ -70,7 +70,7 @@ ${self.repo_context_bar('changelog')}
                         </div>
                     %endfor
                 %endfor
-            </div>
+          </div>
         </div>
 
     </div>
@@ -81,8 +81,8 @@ ${self.repo_context_bar('changelog')}
           ## diff block
           <div class="h3">
           <a class="tooltip" title="${cs.message}" href="${h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id)}">${h.show_id(cs)}</a>
-             ${h.gravatar_div(h.email_or_none(cs.author), size=20)}
-             <div class="right">
+            ${h.gravatar_div(h.email_or_none(cs.author), size=20)}
+            <div class="right">
               <span class="logtags">
                 %if len(cs.parents)>1:
                 <span class="merge">${_('Merge')}</span>
@@ -105,7 +105,7 @@ ${self.repo_context_bar('changelog')}
                 %endif
               </span>
             </div>
-           </div>
+          </div>
           <% a_rev, cs_rev, file_diff_data = c.changes[cs.raw_id] %>
           ${diff_block.diff_block(c.repo_name, 'rev', a_rev, a_rev,
                                   c.repo_name, 'rev', cs_rev, cs_rev, file_diff_data)}

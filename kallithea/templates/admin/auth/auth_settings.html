@@ -27,13 +27,13 @@
     ## enabled auth plugins
     <h1>${_('Authentication Plugins')}</h1>
     <div class="form-horizontal">
-       <div class="form-group">
-           <label class="control-label" for="auth_plugins">${_("Enabled Plugins")}</label>
-           <div class="input">${h.text("auth_plugins", class_='large')}
-           <span class="help-block">${_('Comma-separated list of plugins; Kallithea will try user authentication in plugin order')}</span>
-               <div style="padding:10px 0px 10px 0px;font-weight: bold">${_('Available built-in plugins')}</div>
-               <ul>
-               %for plugin_path in c.available_plugins:
+        <div class="form-group">
+            <label class="control-label" for="auth_plugins">${_("Enabled Plugins")}</label>
+            <div class="input">${h.text("auth_plugins", class_='large')}
+            <span class="help-block">${_('Comma-separated list of plugins; Kallithea will try user authentication in plugin order')}</span>
+                <div style="padding:10px 0px 10px 0px;font-weight: bold">${_('Available built-in plugins')}</div>
+                <ul>
+                %for plugin_path in c.available_plugins:
                     <li>
                       <div style="padding:3px 0px 3px 0px">
                         <span style="margin: 0px 10px 0px 0px" plugin_id="${plugin_path}" class="toggle-plugin btn btn-default btn-xs ${'active' if plugin_path in c.enabled_plugins else ''}">
@@ -42,10 +42,10 @@
                         ${plugin_path}
                       </div>
                     </li>
-               %endfor
-               </ul>
-           </div>
-       </div>
+                %endfor
+                </ul>
+            </div>
+        </div>
     </div>
 
     %for cnt, module in enumerate(c.enabled_plugins):

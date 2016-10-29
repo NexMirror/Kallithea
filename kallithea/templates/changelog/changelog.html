@@ -33,20 +33,20 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
         ${self.breadcrumbs()}
     </div>
     <div class="table">
-        % if c.pagination:
+        %if c.pagination:
             <div>
                 <div style="overflow:auto; ${'display:none' if c.changelog_for_path else ''}">
                     <div class="container_header">
                         <div style="float:left; margin-left:20px;">
-                          ${h.form(h.url.current(),method='get',style="display:inline")}
-                            ${h.submit('set',_('Show'),class_="btn btn-default btn-sm")}
-                            ${h.text('size',size=3,value=c.size)}
-                            ${_('revisions')}
-                            %if c.branch_name:
-                            ${h.hidden('branch', c.branch_name)}
-                            %endif
-                          ${h.end_form()}
-                          <a href="#" class="btn btn-default btn-sm" id="rev_range_clear" style="display:none">${_('Clear selection')}</a>
+                            ${h.form(h.url.current(),method='get',style="display:inline")}
+                                ${h.submit('set',_('Show'),class_="btn btn-default btn-sm")}
+                                ${h.text('size',size=3,value=c.size)}
+                                ${_('revisions')}
+                                %if c.branch_name:
+                                    ${h.hidden('branch', c.branch_name)}
+                                %endif
+                            ${h.end_form()}
+                            <a href="#" class="btn btn-default btn-sm" id="rev_range_clear" style="display:none">${_('Clear selection')}</a>
                         </div>
                         <div style="float: right; margin: 0px 0px 0px 4px">
                             <a href="#" class="btn btn-default btn-sm" id="rev_range_container" style="display:none"></a>
