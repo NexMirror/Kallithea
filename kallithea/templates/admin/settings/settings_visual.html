@@ -11,6 +11,7 @@ ${h.form(url('admin_settings_visual'), method='post')}
                         <label for="repository_fields">${_('Use repository extra fields')}</label>
                     </div>
                     <span class="help-block">${_('Allows storing additional customized fields per repository.')}</span>
+
                     <div class="checkbox">
                         ${h.checkbox('show_version','True')}
                         <label for="show_version">${_('Show Kallithea version')}</label>
@@ -22,8 +23,7 @@ ${h.form(url('admin_settings_visual'), method='post')}
                         <label for="use_gravatar">${_('Use Gravatars in Kallithea')}</label>
                     </div>
                 </div>
-                <div class="field">
-                    <div class="input">
+                <div class="input">
                         ${h.text('gravatar_url', size=80)}
                         <span class="help-block">${_('''Gravatar URL allows you to use another avatar server application.
                                                         The following variables of the URL will be replaced accordingly.
@@ -32,11 +32,12 @@ ${h.form(url('admin_settings_visual'), method='post')}
                                                         {md5email}  md5 hash of the user email (like at gravatar.com),
                                                         {size}      size of the image that is expected from the server application,
                                                         {netloc}    network location/server host of running Kallithea server''')}</span>
-                    </div>
                 </div>
+            </div>
+
+            <div class="form-group">
                 <label>${_('Clone URL')}:</label>
-                <div class="field">
-                    <div class="input">
+                <div class="input">
                         ${h.text('clone_uri_tmpl', size=80)}
                         <span class="help-block">${_('''Schema of clone URL construction eg. '{scheme}://{user}@{netloc}/{repo}'.
                                                         The following variables are available:
@@ -45,7 +46,6 @@ ${h.form(url('admin_settings_visual'), method='post')}
                                                         {netloc} network location/server host of running Kallithea server,
                                                         {repo}   full repository name,
                                                         {repoid} ID of repository, can be used to construct clone-by-id''')}</span>
-                    </div>
                 </div>
              </div>
 
