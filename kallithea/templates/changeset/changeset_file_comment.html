@@ -68,9 +68,9 @@
                 %endif
                 <span class="general-only cs-only">
                 </span>
-                <input type="radio" class="status_change_radio" name="changeset_status" id="changeset_status_unchanged" value="" checked="checked" />
-                <label for="changeset_status_unchanged">
-                  ${_('No change')}
+                <label>
+                    <input type="radio" class="status_change_radio" name="changeset_status" id="changeset_status_unchanged" value="" checked="checked" />
+                    ${_('No change')}
                 </label>
                 %for status, lbl in c.changeset_statuses:
                     <label>

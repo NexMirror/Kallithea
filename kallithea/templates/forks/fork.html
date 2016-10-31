@@ -64,7 +64,7 @@ ${self.repo_context_bar('createfork')}
             </div>
 
             <div class="form-group">
-                <label class="control-label" for="private">${_('Copy permissions')}:</label>
+                <label class="control-label" for="copy_permissions">${_('Copy permissions')}:</label>
                 <div class="checkboxes">
                     ${h.checkbox('copy_permissions',value="True", checked="checked")}
                     <span class="help-block">${_('Copy permissions from forked repository')}</span>
@@ -73,7 +73,7 @@ ${self.repo_context_bar('createfork')}
 
             %if c.can_update:
             <div class="form-group">
-                <label class="control-label" for="private">${_('Update after clone')}:</label>
+                <label class="control-label" for="update_after_clone">${_('Update after clone')}:</label>
                 <div class="checkboxes">
                     ${h.checkbox('update_after_clone',value="True")}
                     <span class="help-block">${_('Checkout source after making a clone')}</span>

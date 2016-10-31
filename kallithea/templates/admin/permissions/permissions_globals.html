@@ -36,7 +36,7 @@ ${h.form(url('admin_permissions'), method='post')}
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label" for="default_group_perm">${_('User group')}:</label>
+                <label class="control-label" for="default_user_group_perm">${_('User group')}:</label>
                 <div class="select">
                     ${h.select('default_user_group_perm','',c.user_group_perms_choices)}
                     ${h.checkbox('overwrite_default_user_group','true')}
