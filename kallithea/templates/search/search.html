@@ -45,14 +45,11 @@ ${self.repo_context_bar('options')}
     %endif
     <div class="form">
         <div class="form-horizontal">
-            <div class="field field-first field-noborder">
-             <label class="control-label" for="q">${_('Search term')}:</label>
-                <div class="input">${h.text('q',c.cur_query,class_="small")}
-                    <div class="button highlight">
-                        <input type="submit" value="${_('Search')}" class="btn btn-default"/>
-                    </div>
+            <div class="form-group">
+                <label class="control-label" for="q">${_('Search term')}:</label>
+                <div class="input">
+                    ${h.text('q',c.cur_query,class_="small")}
                 </div>
-                <div style="font-weight: bold;clear:both;margin-left:200px">${c.runtime}</div>
             </div>
 
             <div class="form-group">
@@ -66,6 +63,16 @@ ${self.repo_context_bar('options')}
                 </div>
              </div>
 
+            <div class="form-group">
+                <div class="buttons">
+                    <input type="submit" value="${_('Search')}" class="btn btn-default"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                ## <label>${_('Status')}:</label>
+                <div style="font-weight: bold;clear:both">${c.runtime}</div>
+            </div>
         </div>
     </div>
     ${h.end_form()}
