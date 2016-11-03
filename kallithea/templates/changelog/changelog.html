@@ -32,7 +32,7 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
         ${self.breadcrumbs()}
     </div>
     <div class="panel-body changelog-panel">
-        %if c.pagination:
+        %if c.cs_pagination:
                 <div class="changelog-heading clearfix" style="${'display:none' if c.changelog_for_path else ''}">
                     <div class="pull-left">
                         ${h.form(h.url.current(),method='get',class_="form-inline")}
@@ -71,7 +71,7 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
 
                 <table class="table" id="changesets">
                 <tbody>
-                %for cnt,cs in enumerate(c.pagination):
+                %for cnt,cs in enumerate(c.cs_pagination):
                     <tr id="chg_${cnt+1}" class="${'mergerow' if len(cs.parents) > 1 else ''}">
                         <td class="checkbox-column">
                             %if c.changelog_for_path:
@@ -181,7 +181,7 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
 
                 </div>
 
-                ${c.pagination.pager()}
+                ${c.cs_pagination.pager()}
 
         <script type="text/javascript" src="${h.url('/js/graph.js', ver=c.kallithea_version)}"></script>
         <script type="text/javascript">

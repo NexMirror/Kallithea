@@ -47,7 +47,7 @@ log = logging.getLogger(__name__)
 
 
 def _load_changelog_summary():
-    # also used from summary ...
+    # only used from summary ...
     p = safe_int(request.GET.get('page'), 1)
     size = safe_int(request.GET.get('size'), 10)
 
@@ -57,10 +57,10 @@ def _load_changelog_summary():
 
     collection = c.db_repo_scm_instance
 
-    c.repo_changesets = RepoPage(collection, page=p,
+    c.cs_pagination = RepoPage(collection, page=p,
                                  items_per_page=size,
                                  url=url_generator)
-    page_revisions = [x.raw_id for x in list(c.repo_changesets)]
+    page_revisions = [x.raw_id for x in list(c.cs_pagination)]
     c.cs_comments = c.db_repo.get_comments(page_revisions)
     c.cs_statuses = c.db_repo.statuses(page_revisions)
 
@@ -146,10 +146,10 @@ class ChangelogController(BaseRepoController):
                                                         branch_name=branch_name)
             c.total_cs = len(collection)
 
-            c.pagination = RepoPage(collection, page=p, item_count=c.total_cs,
+            c.cs_pagination = RepoPage(collection, page=p, item_count=c.total_cs,
                                     items_per_page=c.size, branch=branch_name,)
 
-            page_revisions = [x.raw_id for x in c.pagination]
+            page_revisions = [x.raw_id for x in c.cs_pagination]
             c.cs_comments = c.db_repo.get_comments(page_revisions)
             c.cs_statuses = c.db_repo.statuses(page_revisions)
         except EmptyRepositoryError as e:
@@ -169,11 +169,11 @@ class ChangelogController(BaseRepoController):
                 [(k, prefix + k) for k in c.db_repo_scm_instance.closed_branches.keys()]
         revs = []
         if not f_path:
-            revs = [x.revision for x in c.pagination]
+            revs = [x.revision for x in c.cs_pagination]
         c.jsdata = graph_data(c.db_repo_scm_instance, revs)
 
         c.revision = revision # requested revision ref
-        c.first_revision = c.pagination[0] # pagination is never empty here!
+        c.first_revision = c.cs_pagination[0] # pagination is never empty here!
         return render('changelog/changelog.html')
 
     @LoginRequired()

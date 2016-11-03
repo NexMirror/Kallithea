@@ -170,7 +170,7 @@ ${self.repo_context_bar('summary')}
 <div class="panel panel-primary">
     <div class="panel-heading">
         <div class="breadcrumbs panel-title">
-        %if c.repo_changesets:
+        %if c.cs_pagination:
             ${h.link_to(_('Latest Changes'),h.url('changelog_home',repo_name=c.repo_name))}
         %else:
             ${_('Quick Start')}

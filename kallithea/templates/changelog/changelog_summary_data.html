@@ -1,5 +1,5 @@
 ## -*- coding: utf-8 -*-
-%if c.repo_changesets:
+%if c.cs_pagination:
 <table class="table">
     <tr>
         <th class="left"></th>
@@ -10,7 +10,7 @@
         <th class="left">${_('Author')}</th>
         <th class="left">${_('Refs')}</th>
     </tr>
-%for cnt,cs in enumerate(c.repo_changesets):
+%for cnt,cs in enumerate(c.cs_pagination):
     <tr class="parity${cnt%2} ${'mergerow' if len(cs.parents) > 1 else ''}">
         <td class="compact">
               %if c.cs_statuses.get(cs.raw_id):
@@ -71,7 +71,7 @@
 
 </table>
 
-${c.repo_changesets.pager()}
+${c.cs_pagination.pager()}
 
 %else:
 
