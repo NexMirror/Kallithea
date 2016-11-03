@@ -1,4 +1,5 @@
 <%inherit file="/base/base.html"/>
+<%namespace name="changelog_table" file="/changelog/changelog_table.html"/>
 
 <%block name="title">
     ${_('%s Summary') % c.repo_name}
@@ -179,7 +180,37 @@ ${self.repo_context_bar('summary')}
     </div>
     <div class="panel-body">
         <div id="shortlog_data">
-            <%include file='../changelog/changelog_summary_data.html'/>
+            %if c.cs_pagination:
+                ${changelog_table.changelog(c.repo_name, c.cs_pagination, c.cs_statuses, c.cs_comments, show_checkbox=False)}
+                ${c.cs_pagination.pager()}
+            %else:
+                %if h.HasRepoPermissionLevel('write')(c.repo_name):
+                <h4>${_('Add or upload files directly via Kallithea')}</h4>
+                <div>
+                  <div id="add_node_id" class="add_node">
+                      <a class="btn btn-default btn-xs" href="${h.url('files_add_home',repo_name=c.repo_name,revision=0,f_path='', anchor='edit')}">${_('Add New File')}</a>
+                  </div>
+                </div>
+                %endif
+
+                <h4>${_('Push new repository')}</h4>
+                <pre>
+                    ${c.db_repo_scm_instance.alias} clone ${c.clone_repo_url}
+                    ${c.db_repo_scm_instance.alias} add README # add first file
+                    ${c.db_repo_scm_instance.alias} commit -m "Initial" # commit with message
+                    ${c.db_repo_scm_instance.alias} push ${'origin master' if h.is_git(c.db_repo_scm_instance) else ''} # push changes back
+                </pre>
+
+                <h4>${_('Existing repository?')}</h4>
+                <pre>
+                %if h.is_git(c.db_repo_scm_instance):
+                    git remote add origin ${c.clone_repo_url}
+                    git push -u origin master
+                %else:
+                    hg push ${c.clone_repo_url}
+                %endif
+                </pre>
+            %endif
         </div>
     </div>
 </div>
