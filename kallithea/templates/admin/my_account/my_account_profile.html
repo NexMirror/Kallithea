@@ -1,10 +1,10 @@
 ${h.form(url('my_account'), method='post')}
     <div class="form">
-
-        <div class="form-group">
-            <div class="gravatar_box">
-                ${h.gravatar_div(c.user.email)}
-                <p>
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="gravatar_box">
+                    ${h.gravatar_div(c.user.email)}
+                    <p>
                     %if c.visual.use_gravatar:
                         <strong>${_('Change your avatar at')} <a href="http://gravatar.com">gravatar.com</a></strong>
                         <br/>${_('Using')} ${c.user.email}
@@ -13,11 +13,10 @@ ${h.form(url('my_account'), method='post')}
                         <br/>${c.user.email or _('Missing email, please update your user email address.')}
                         [${_('Current IP')}: ${c.ip_addr}]
                     %endif
-                </p>
+                    </p>
+                </div>
             </div>
-        </div>
 
-        <div class="form-horizontal">
             <div class="form-group">
                 <label class="control-label" for="username">${_('Username')}:</label>
                 <div class="input">
