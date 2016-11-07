@@ -94,7 +94,7 @@ class Fixture(object):
         defs = dict(
             group_name=None,
             group_description=u'DESC',
-            group_parent_id=None,
+            parent_group_id=None,
             perms_updates=[],
             perms_new=[],
             enable_locking=False,
@@ -185,7 +185,7 @@ class Fixture(object):
         gr = RepoGroupModel().create(
             group_name=form_data['group_name'],
             group_description=form_data['group_name'],
-            owner=owner, parent=form_data['group_parent_id'])
+            owner=owner, parent=form_data['parent_group_id'])
         Session().commit()
         gr = RepoGroup.get_by_group_name(gr.group_name)
         return gr

@@ -96,7 +96,7 @@ class TestRepoGroups(TestController):
         with pytest.raises(formencode.Invalid):
             validator.to_python({
                                         'group_name': gr.group_name + 'n',
-                                        'group_parent_id': gr.group_id
+                                        'parent_group_id': gr.group_id
                                         })
         model.delete(gr)
 

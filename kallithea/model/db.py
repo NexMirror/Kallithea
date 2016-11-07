@@ -1511,7 +1511,7 @@ class RepoGroup(Base, BaseDbModel):
 
     group_id = Column(Integer(), primary_key=True)
     group_name = Column(Unicode(255), nullable=False, unique=True) # full path
-    group_parent_id = Column(Integer(), ForeignKey('groups.group_id'), nullable=True)
+    parent_group_id = Column('group_parent_id', Integer(), ForeignKey('groups.group_id'), nullable=True)
     group_description = Column(Unicode(10000), nullable=False)
     enable_locking = Column(Boolean(), nullable=False, default=False)
     owner_id = Column('user_id', Integer(), ForeignKey('users.user_id'), nullable=False)

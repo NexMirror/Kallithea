@@ -17,7 +17,7 @@ fixture = Fixture()
 def _update_group(id_, group_name, desc=u'desc', parent_id=None):
     form_data = fixture._get_group_create_params(group_name=group_name,
                                                  group_desc=desc,
-                                                 group_parent_id=parent_id)
+                                                 parent_group_id=parent_id)
     gr = RepoGroupModel().update(id_, form_data)
     return gr
 
@@ -71,12 +71,12 @@ class TestRepoGroups(TestController):
         Session().rollback()
 
     def test_same_subgroup(self):
-        sg1 = fixture.create_repo_group(u'sub1', group_parent_id=self.g1.group_id)
+        sg1 = fixture.create_repo_group(u'sub1', parent_group_id=self.g1.group_id)
         assert sg1.parent_group == self.g1
         assert sg1.full_path == 'test1/sub1'
         assert self.__check_path('test1', 'sub1')
 
-        ssg1 = fixture.create_repo_group(u'subsub1', group_parent_id=sg1.group_id)
+        ssg1 = fixture.create_repo_group(u'subsub1', parent_group_id=sg1.group_id)
         assert ssg1.parent_group == sg1
         assert ssg1.full_path == 'test1/sub1/subsub1'
         assert self.__check_path('test1', 'sub1', 'subsub1')
@@ -88,7 +88,7 @@ class TestRepoGroups(TestController):
         assert RepoGroup.get(sg1.group_id) == None
         assert not self.__check_path('deteteme')
 
-        sg1 = fixture.create_repo_group(u'deleteme', group_parent_id=self.g1.group_id)
+        sg1 = fixture.create_repo_group(u'deleteme', parent_group_id=self.g1.group_id)
         self.__delete_group(sg1.group_id)
 
         assert RepoGroup.get(sg1.group_id) == None
@@ -103,7 +103,7 @@ class TestRepoGroups(TestController):
 
     def test_update_group_parent(self):
 
-        sg1 = fixture.create_repo_group(u'initial', group_parent_id=self.g1.group_id)
+        sg1 = fixture.create_repo_group(u'initial', parent_group_id=self.g1.group_id)
 
         new_sg1 = _update_group(sg1.group_id, u'after', parent_id=self.g1.group_id)
         assert self.__check_path('test1', 'after')
@@ -140,7 +140,7 @@ class TestRepoGroups(TestController):
 
     def test_move_to_root(self):
         g1 = fixture.create_repo_group(u't11')
-        g2 = fixture.create_repo_group(u't22', group_parent_id=g1.group_id)
+        g2 = fixture.create_repo_group(u't22', parent_group_id=g1.group_id)
 
         assert g2.full_path == 't11/t22'
         assert self.__check_path('t11', 't22')
@@ -156,8 +156,8 @@ class TestRepoGroups(TestController):
 
     def test_rename_top_level_group_in_nested_setup(self):
         g1 = fixture.create_repo_group(u'L1')
-        g2 = fixture.create_repo_group(u'L2', group_parent_id=g1.group_id)
-        g3 = fixture.create_repo_group(u'L3', group_parent_id=g2.group_id)
+        g2 = fixture.create_repo_group(u'L2', parent_group_id=g1.group_id)
+        g3 = fixture.create_repo_group(u'L3', parent_group_id=g2.group_id)
 
         r = fixture.create_repo(u'L1/L2/L3/L3_REPO', repo_group=g3.group_id)
 
@@ -171,8 +171,8 @@ class TestRepoGroups(TestController):
 
     def test_change_parent_of_top_level_group_in_nested_setup(self):
         g1 = fixture.create_repo_group(u'R1')
-        g2 = fixture.create_repo_group(u'R2', group_parent_id=g1.group_id)
-        g3 = fixture.create_repo_group(u'R3', group_parent_id=g2.group_id)
+        g2 = fixture.create_repo_group(u'R2', parent_group_id=g1.group_id)
+        g3 = fixture.create_repo_group(u'R3', parent_group_id=g2.group_id)
         g4 = fixture.create_repo_group(u'R1_NEW')
 
         r = fixture.create_repo(u'R1/R2/R3/R3_REPO', repo_group=g3.group_id)
@@ -186,8 +186,8 @@ class TestRepoGroups(TestController):
 
     def test_change_parent_of_top_level_group_in_nested_setup_with_rename(self):
         g1 = fixture.create_repo_group(u'X1')
-        g2 = fixture.create_repo_group(u'X2', group_parent_id=g1.group_id)
-        g3 = fixture.create_repo_group(u'X3', group_parent_id=g2.group_id)
+        g2 = fixture.create_repo_group(u'X2', parent_group_id=g1.group_id)
+        g3 = fixture.create_repo_group(u'X3', parent_group_id=g2.group_id)
         g4 = fixture.create_repo_group(u'X1_NEW')
 
         r = fixture.create_repo(u'X1/X2/X3/X3_REPO', repo_group=g3.group_id)

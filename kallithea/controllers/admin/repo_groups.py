@@ -162,7 +162,7 @@ class RepoGroupsController(BaseController):
             gr = RepoGroupModel().create(
                 group_name=form_result['group_name'],
                 group_description=form_result['group_description'],
-                parent=form_result['group_parent_id'],
+                parent=form_result['parent_group_id'],
                 owner=self.authuser.user_id, # TODO: make editable
                 copy_permissions=form_result['group_copy_permissions']
             )
@@ -180,7 +180,7 @@ class RepoGroupsController(BaseController):
             log.error(traceback.format_exc())
             h.flash(_('Error occurred during creation of repository group %s') \
                     % request.POST.get('group_name'), category='error')
-            parent_group_id = form_result['group_parent_id']
+            parent_group_id = form_result['parent_group_id']
             #TODO: maybe we should get back to the main view, not the admin one
             raise HTTPFound(location=url('repos_groups', parent_group=parent_group_id))
         h.flash(_('Created repository group %s') % gr.group_name,

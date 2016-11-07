@@ -290,10 +290,10 @@ class RepoGroupModel(BaseModel):
 
             # change properties
             repo_group.group_description = form_data['group_description']
-            repo_group.group_parent_id = form_data['group_parent_id']
+            repo_group.parent_group_id = form_data['parent_group_id']
             repo_group.enable_locking = form_data['enable_locking']
 
-            repo_group.parent_group = RepoGroup.get(form_data['group_parent_id'])
+            repo_group.parent_group = RepoGroup.get(form_data['parent_group_id'])
             repo_group.group_name = repo_group.get_new_name(form_data['group_name'])
             new_path = repo_group.full_path
             self.sa.add(repo_group)

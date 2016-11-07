@@ -172,7 +172,7 @@ def RepoGroupForm(edit=False, old_data=None, repo_groups=None,
             #its children
             pass
 
-        group_parent_id = All(v.CanCreateGroup(can_create_in_root),
+        parent_group_id = All(v.CanCreateGroup(can_create_in_root),
                               v.OneOf(repo_group_ids, hideList=False,
                                       testValueList=True,
                                       if_missing=None, not_empty=True),

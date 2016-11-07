@@ -43,9 +43,9 @@
             </div>
 
             <div class="form-group">
-                <label class="control-label" for="group_parent_id">${_('Group parent')}:</label>
+                <label class="control-label" for="parent_group_id">${_('Group parent')}:</label>
                 <div class="input">
-                    ${h.select('group_parent_id',request.GET.get('parent_group'),c.repo_groups,class_="medium")}
+                    ${h.select('parent_group_id',request.GET.get('parent_group'),c.repo_groups,class_="medium")}
                 </div>
             </div>
 
@@ -76,11 +76,11 @@
                 $('#copy_perms').hide();
             }
         }
-        $("#group_parent_id").select2({
+        $("#parent_group_id").select2({
             'dropdownAutoWidth': true
         });
-        setCopyPermsOption($('#group_parent_id').val());
-        $("#group_parent_id").on("change", function(e) {
+        setCopyPermsOption($('#parent_group_id').val());
+        $("#parent_group_id").on("change", function(e) {
             setCopyPermsOption(e.val);
         });
         $('#group_name').focus();

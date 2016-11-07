@@ -194,7 +194,7 @@ def ValidRepoGroup(edit=False, old_data=None):
 
     class _validator(formencode.validators.FancyValidator):
         messages = {
-            'group_parent_id': _('Cannot assign this group as parent'),
+            'parent_group_id': _('Cannot assign this group as parent'),
             'group_exists': _('Group "%(group_name)s" already exists'),
             'repo_exists':
                 _('Repository with name "%(group_name)s" already exists')
@@ -203,20 +203,20 @@ def ValidRepoGroup(edit=False, old_data=None):
         def validate_python(self, value, state):
             # TODO WRITE VALIDATIONS
             group_name = value.get('group_name')
-            group_parent_id = value.get('group_parent_id')
+            parent_group_id = value.get('parent_group_id')
 
             # slugify repo group just in case :)
             slug = repo_name_slug(group_name)
 
             # check for parent of self
             parent_of_self = lambda: (
-                old_data['group_id'] == group_parent_id
-                if group_parent_id else False
+                old_data['group_id'] == parent_group_id
+                if parent_group_id else False
             )
             if edit and parent_of_self():
-                msg = M(self, 'group_parent_id', state)
+                msg = M(self, 'parent_group_id', state)
                 raise formencode.Invalid(msg, value, state,
-                    error_dict=dict(group_parent_id=msg)
+                    error_dict=dict(parent_group_id=msg)
                 )
 
             old_gname = None
@@ -228,7 +228,7 @@ def ValidRepoGroup(edit=False, old_data=None):
                 # check group
                 gr = RepoGroup.query() \
                       .filter(RepoGroup.group_name == slug) \
-                      .filter(RepoGroup.group_parent_id == group_parent_id) \
+                      .filter(RepoGroup.parent_group_id == parent_group_id) \
                       .scalar()
 
                 if gr is not None:
@@ -584,7 +584,7 @@ def CanCreateGroup(can_create_in_root=False):
             if forbidden_in_root or forbidden:
                 msg = M(self, 'permission_denied', state)
                 raise formencode.Invalid(msg, value, state,
-                    error_dict=dict(group_parent_id=msg)
+                    error_dict=dict(parent_group_id=msg)
                 )
 
     return _validator
