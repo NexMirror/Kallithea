@@ -50,7 +50,7 @@ ${self.repo_context_bar('showpullrequest')}
           <div class="field">
               <label for="pullrequest_title">${_('Title')}:</label>
               <div class="input">
-                  ${h.text('pullrequest_title',class_="large",value=c.pull_request.title,placeholder=_('Summarize the changes'))}
+                  ${h.text('pullrequest_title',class_='form-control',value=c.pull_request.title,placeholder=_('Summarize the changes'))}
               </div>
           </div>
 
@@ -143,7 +143,7 @@ ${self.repo_context_bar('showpullrequest')}
                   <span><a href="mailto:${c.pull_request.owner.email}">${c.pull_request.owner.email}</a></span><br/>
           </div>
           <div class="input pr-do-edit ac" style="display:none">
-               ${h.text('owner', class_="large", value=c.pull_request.owner.username, placeholder=_('Username'))}
+               ${h.text('owner', class_='form-control', value=c.pull_request.owner.username, placeholder=_('Username'))}
                <div id="owner_completion_container"></div>
           </div>
         </div>

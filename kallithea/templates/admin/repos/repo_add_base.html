@@ -7,13 +7,13 @@ ${h.form(url('repos'))}
         <div class="form-group">
             <label class="control-label" for="repo_name">${_('Name')}:</label>
             <div class="input">
-                ${h.text('repo_name',class_="small")}
+                ${h.text('repo_name',class_='form-control')}
             </div>
          </div>
         <div id="remote_clone" class="form-group">
             <label class="control-label" for="clone_uri">${_('Clone remote repository')}:</label>
             <div class="input">
-                ${h.text('clone_uri',class_="small")}
+                ${h.text('clone_uri',class_='form-control')}
                 <span class="help-block">
                     ${_('Optional: URL of a remote repository. If set, the repository will be created as a clone from this URL.')}
                 </span>
@@ -29,7 +29,7 @@ ${h.form(url('repos'))}
         <div class="form-group">
             <label class="control-label" for="repo_group">${_('Repository group')}:</label>
             <div class="input">
-                ${h.select('repo_group',request.GET.get('parent_group'),c.repo_groups,class_="medium")}
+                ${h.select('repo_group',request.GET.get('parent_group'),c.repo_groups,class_='form-control')}
                 <span class="help-block">${_('Optionally select a group to put this repository into.')}</span>
             </div>
         </div>
@@ -43,14 +43,14 @@ ${h.form(url('repos'))}
         <div class="form-group">
             <label class="control-label" for="repo_type">${_('Type')}:</label>
             <div class="input">
-                ${h.select('repo_type','hg',c.backends,class_="small")}
+                ${h.select('repo_type','hg',c.backends,class_='form-control')}
                 <span class="help-block">${_('Type of repository to create.')}</span>
             </div>
         </div>
         <div class="form-group">
             <label class="control-label" for="repo_landing_rev">${_('Landing revision')}:</label>
             <div class="input">
-                ${h.select('repo_landing_rev','',c.landing_revs,class_="medium")}
+                ${h.select('repo_landing_rev','',c.landing_revs,class_='form-control')}
                 <span class="help-block">${_('Default revision for files page, downloads, full text search index and readme generation')}</span>
             </div>
         </div>

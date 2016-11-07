@@ -9,7 +9,7 @@ class TestSearchController(TestController):
         self.log_user()
         response = self.app.get(url(controller='search', action='index'))
 
-        response.mustcontain('class="small" id="q" name="q" type="text"')
+        response.mustcontain('class="form-control" id="q" name="q" type="text"')
         # Test response...
 
     def test_empty_search(self, tmpdir):

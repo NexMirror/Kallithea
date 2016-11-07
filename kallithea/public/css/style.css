@@ -917,19 +917,9 @@ input.disabled {
     background-color: #F5F5F5 !important;
 }
 
-#content div.panel div.form div.fields div.field div.input input.small,
-#content div.panel div.form div.form-horizontal div.form-group div.input input.small {
-    width: 30%;
-}
-
-#content div.panel div.form div.fields div.field div.input input.medium,
-#content div.panel div.form div.form-horizontal div.form-group div.input input.medium {
-    width: 55%;
-}
-
-#content div.panel div.form div.fields div.field div.input input.large,
-#content div.panel div.form div.form-horizontal div.form-group div.input input.large {
-    width: 85%;
+#content div.panel div.form div.fields div.field div.input input.form-control,
+#content div.panel div.form div.form-horizontal div.form-group div.input input.form-control {
+    width: 100%;
 }
 
 #content div.panel div.form div.fields div.field div.input input.date,
@@ -3487,10 +3477,6 @@ div.form div.form-horizontal div.buttons {
     float: left;
     margin: 0;
     padding: 0;
-}
-
-#login div.form div.form-horizontal div.form-group div input.large {
-    width: 250px;
 }
 
 #login div.form div.form-horizontal div.form-group div.checkbox,
