@@ -718,9 +718,14 @@ def jsonify(func, *args, **kwargs):
     pylons.response.headers['Content-Type'] = 'application/json; charset=utf-8'
     data = func(*args, **kwargs)
     if isinstance(data, (list, tuple)):
+        # A JSON list response is syntactically valid JavaScript and can be
+        # loaded and executed as JavaScript by a malicious third-party site
+        # using <script>, which can lead to cross-site data leaks.
+        # JSON responses should therefore be scalars or objects (i.e. Python
+        # dicts), because a JSON object is a syntax error if intepreted as JS.
         msg = "JSON responses with Array envelopes are susceptible to " \
               "cross-site data leak attacks, see " \
-              "http://wiki.pylonshq.com/display/pylonsfaq/Warnings"
+              "https://web.archive.org/web/20120519231904/http://wiki.pylonshq.com/display/pylonsfaq/Warnings"
         warnings.warn(msg, Warning, 2)
         log.warning(msg)
     log.debug("Returning JSON wrapped action output")
