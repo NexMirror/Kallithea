@@ -168,6 +168,42 @@ page titles, button labels, headers, and 'labels' for fields in forms.
 
 .. _English title case: https://en.wikipedia.org/wiki/Capitalization#Title_case
 
+Template helpers (that is, everything in ``kallithea.lib.helpers``)
+should only be referenced from templates. If you need to call a
+helper from the Python code, consider moving the function somewhere
+else (e.g. to the model).
+
+Notes on the SQLAlchemy session
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Each HTTP request runs inside an independent SQLAlchemy session (as well
+as in an independent database transaction). Database model objects
+(almost) always belong to a particular SQLAlchemy session, which means
+that SQLAlchemy will ensure that they're kept in sync with the database
+(but also means that they cannot be shared across requests).
+
+Objects can be added to the session using ``Session().add``, but this is
+rarely needed:
+
+* When creating a database object by calling the constructor directly,
+  it must explicitly be added to the session.
+
+* When creating an object using a factory function (like
+  ``create_repo``), the returned object has already (by convention)
+  been added to the session, and should not be added again.
+
+* When getting an object from the session (via ``Session().query`` or
+  any of the utility functions that look up objects in the database),
+  it's already part of the session, and should not be added again.
+  SQLAlchemy monitors attribute modifications automatically for all
+  objects it knows about and syncs them to the database.
+
+SQLAlchemy also flushes changes to the database automatically; manually
+calling ``Session().flush`` is usually only necessary when the Python
+code needs the database to assign an "auto-increment" primary key ID to
+a freshly created model object (before flushing, the ID attribute will
+be ``None``).
+
 
 "Roadmap"
 ---------
