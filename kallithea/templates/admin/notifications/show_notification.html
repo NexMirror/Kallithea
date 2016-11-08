@@ -25,18 +25,18 @@
       <div id="notification_${c.notification.notification_id}">
         <div class="notification-header">
           ${h.gravatar_div(c.notification.created_by_user.email, size=24)}
-          <div class="desc">
+          <span class="desc">
               ${c.notification.description}
-          </div>
-          <div class="delete-notifications">
+          </span>
+          <span class="delete-notifications">
             <span id="${c.notification.notification_id}" class="delete-notification action"><i class="icon-minus-circled"></i></span>
-          </div>
+          </span>
         </div>
         <div class="notification-body">
-        <div class="notification-subject">${h.literal(c.notification.subject)}</div>
-        %if c.notification.body:
-            ${h.render_w_mentions(c.notification.body)}
-        %endif
+            <div class="notification-subject">${h.literal(c.notification.subject)}</div>
+            %if c.notification.body:
+                ${h.render_w_mentions(c.notification.body)}
+            %endif
         </div>
       </div>
     </div>
