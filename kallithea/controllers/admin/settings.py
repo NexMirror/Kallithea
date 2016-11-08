@@ -431,7 +431,7 @@ class SettingsController(BaseController):
         _update_url = defaults.get('update_url', '')
         _update_url = "" # FIXME: disabled
 
-        _err = lambda s: '<div style="color:#ff8888; padding:4px 0px">%s</div>' % (s)
+        _err = lambda s: '<div class="alert alert-danger">%s</div>' % (s)
         try:
             import kallithea
             ver = kallithea.__version__
