@@ -44,7 +44,7 @@ ${self.repo_context_bar('changelog')}
                 %endif
                 <td>${h.link_to('r%s:%s' % (cs.revision,h.short_id(cs.raw_id)),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}</td>
                 <td><div class="author">${h.person(cs.author)}</div></td>
-                <td><span class="tooltip" title="${h.age(cs.date)}">${cs.date}</span></td>
+                <td><span data-toggle="tooltip" title="${h.age(cs.date)}">${cs.date}</span></td>
                 <td>
                   %if c.statuses:
                     <div title="${_('Changeset status')}" class="changeset-status-ico"><i class="icon-circle changeset-status-${c.statuses[cnt]}"></i></div>
@@ -80,7 +80,7 @@ ${self.repo_context_bar('changelog')}
     %for cs in c.cs_ranges:
           ## diff block
           <div class="h3">
-          <a class="tooltip" title="${cs.message}" href="${h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id)}">${h.show_id(cs)}</a>
+          <a data-toggle="tooltip" title="${cs.message}" href="${h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id)}">${h.show_id(cs)}</a>
             ${h.gravatar_div(h.email_or_none(cs.author), size=20)}
             <div class="right">
               <span class="logtags">

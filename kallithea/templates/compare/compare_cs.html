@@ -47,11 +47,11 @@
               else:
                   title = _('Position in this list of changesets')
           %>
-          <span class="tooltip" title="${title}">
+          <span data-toggle="tooltip" title="${title}">
             ${index}
           </span>
         </td>
-        <td style="width: 140px"><span class="tooltip" title="${h.age(cs.date)}">${cs.date}</span></td>
+        <td style="width: 140px"><span data-toggle="tooltip" title="${h.age(cs.date)}">${cs.date}</span></td>
         %if c.visual.use_gravatar:
         <td>${h.gravatar_div(h.email_or_none(cs.author), size=14, div_commit_id="${cs.raw_id}")}</td>
         %endif

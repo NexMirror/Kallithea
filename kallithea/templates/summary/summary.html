@@ -10,9 +10,9 @@
     ## locking icon
     %if c.db_repo.enable_locking:
      %if c.db_repo.locked[0]:
-       <span class="locking_locked tooltip icon-block" title="${_('Repository locked by %s') % h.person_by_id(c.db_repo.locked[0])}"></span>
+       <span class="locking_locked icon-block" data-toggle="tooltip" title="${_('Repository locked by %s') % h.person_by_id(c.db_repo.locked[0])}"></span>
      %else:
-       <span class="locking_unlocked tooltip icon-ok" title="${_('Repository unlocked')}"></span>
+       <span class="locking_unlocked icon-ok" data-toggle="tooltip" title="${_('Repository unlocked')}"></span>
      %endif
     %endif
 
@@ -114,7 +114,7 @@ summary = lambda n:{False:'summary-short'}.get(n)
                     ${h.hidden('download_options')}
                     <span style="vertical-align: bottom">
                       <input id="archive_subrepos" type="checkbox" name="subrepos" />
-                      <label for="archive_subrepos" class="tooltip" title="${_('Check this to download archive with subrepos')}" >${_('With subrepos')}</label>
+                      <label for="archive_subrepos" data-toggle="tooltip" title="${_('Check this to download archive with subrepos')}" >${_('With subrepos')}</label>
                     </span>
                 %endif
               </div>

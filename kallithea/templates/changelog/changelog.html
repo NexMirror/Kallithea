@@ -89,11 +89,11 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                           %if c.statuses.get(cs.raw_id):
                             <div class="changeset-status-ico">
                             %if c.statuses.get(cs.raw_id)[2]:
-                              <a class="tooltip" title="${_('Changeset status: %s by %s\nClick to open associated pull request %s') % (c.statuses.get(cs.raw_id)[1], c.statuses.get(cs.raw_id)[5].username, c.statuses.get(cs.raw_id)[4])}" href="${h.url('pullrequest_show',repo_name=c.statuses.get(cs.raw_id)[3],pull_request_id=c.statuses.get(cs.raw_id)[2])}">
+                              <a data-toggle="tooltip" title="${_('Changeset status: %s by %s\nClick to open associated pull request %s') % (c.statuses.get(cs.raw_id)[1], c.statuses.get(cs.raw_id)[5].username, c.statuses.get(cs.raw_id)[4])}" href="${h.url('pullrequest_show',repo_name=c.statuses.get(cs.raw_id)[3],pull_request_id=c.statuses.get(cs.raw_id)[2])}">
                                 <i class="icon-circle changeset-status-${c.statuses.get(cs.raw_id)[0]}"></i>
                               </a>
                             %else:
-                              <a class="tooltip" title="${_('Changeset status: %s by %s') % (c.statuses.get(cs.raw_id)[1], c.statuses.get(cs.raw_id)[5].username)}"
+                              <a data-toggle="tooltip" title="${_('Changeset status: %s by %s') % (c.statuses.get(cs.raw_id)[1], c.statuses.get(cs.raw_id)[5].username)}"
                                  href="${c.comments[cs.raw_id][0].url()}">
                                   <i class="icon-circle changeset-status-${c.statuses.get(cs.raw_id)[0]}"></i>
                               </a>
@@ -103,13 +103,13 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                         </td>
                         <td class="author">
                             ${h.gravatar(h.email_or_none(cs.author), size=16)}
-                            <span title="${cs.author}" class="user">${h.shorter(h.person(cs.author),22)}</span>
+                            <span data-toggle="tooltip" title="${cs.author}" class="user">${h.shorter(h.person(cs.author),22)}</span>
                         </td>
                         <td class="hash" style="width:${len(h.show_id(cs))*6.5}px">
                             ${h.link_to(h.show_id(cs),h.url('changeset_home',repo_name=c.repo_name,revision=cs.raw_id), class_='changeset_hash')}
                         </td>
                         <td class="date">
-                            <div class="date tooltip" title="${h.fmt_date(cs.date)}">${h.age(cs.date,True)}</div>
+                            <div class="date" data-toggle="tooltip" title="${h.fmt_date(cs.date)}">${h.age(cs.date,True)}</div>
                         </td>
                         <td class="expand_commit" commit_id="${cs.raw_id}" title="${_('Expand commit message')}">
                             <i class="icon-align-left" style="color:#999"></i>
@@ -120,7 +120,7 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                                 <div class="extra-container">
                                     %if c.comments.get(cs.raw_id):
                                         <div class="comments-container">
-                                            <div class="comments-cnt" title="${_('Changeset has comments')}">
+                                            <div class="comments-cnt" data-toggle="tooltip" title="${_('Changeset has comments')}">
                                                 <a href="${c.comments[cs.raw_id][0].url()}">
                                                     ${len(c.comments[cs.raw_id])}
                                                     <i class="icon-comment-discussion"></i>

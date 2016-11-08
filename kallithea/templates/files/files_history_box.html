@@ -1,7 +1,7 @@
 <div class="file_author" style="clear:both">
     <div class="item">${h.literal(ungettext(u'%s author',u'%s authors',len(c.authors)) % ('<b>%s</b>' % len(c.authors))) }</div>
     %for email, user in c.authors:
-      <div class="contributor tooltip" style="float:left" title="${user}">
+      <div class="contributor" style="float:left" data-toggle="tooltip" title="${user}">
         ${h.gravatar_div(email, size=20, div_style="margin:1px")}
       </div>
     %endfor

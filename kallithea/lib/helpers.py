@@ -321,8 +321,9 @@ def pygmentize_annotation(repo_name, filenode, **kwargs):
                     url('changeset_home', repo_name=repo_name,
                         revision=changeset.raw_id),
                     style=get_color_string(changeset.raw_id),
-                    class_='tooltip safe-html-title',
-                    title=tooltip_html
+                    class_='safe-html-title',
+                    title=tooltip_html,
+                    **{'data-toggle': 'tooltip'}
                   )
 
             uri += '\n'
@@ -612,7 +613,7 @@ def action_parser(user_log, feed=False, parse_cs=False):
         _rev = '%s...%s' % (_name1, _name2)
 
         compare_view = (
-            ' <div class="compare_view tooltip" title="%s">'
+            ' <div class="compare_view" data-toggle="tooltip" title="%s">'
             '<a href="%s">%s</a> </div>' % (
                 _('Show all combined changesets %s->%s') % (
                     revs_ids[0][:12], revs_ids[-1][:12]

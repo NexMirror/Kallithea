@@ -17,11 +17,11 @@
               %if c.statuses.get(cs.raw_id):
                 <span class="changeset-status-ico shortlog">
                 %if c.statuses.get(cs.raw_id)[2]:
-                  <a class="tooltip" title="${_('Changeset status: %s by %s\nClick to open associated pull request %s') % (c.statuses.get(cs.raw_id)[1], c.statuses.get(cs.raw_id)[5].username, c.statuses.get(cs.raw_id)[4])}" href="${h.url('pullrequest_show',repo_name=c.statuses.get(cs.raw_id)[3],pull_request_id=c.statuses.get(cs.raw_id)[2])}">
+                  <a data-toggle="tooltip" title="${_('Changeset status: %s by %s\nClick to open associated pull request %s') % (c.statuses.get(cs.raw_id)[1], c.statuses.get(cs.raw_id)[5].username, c.statuses.get(cs.raw_id)[4])}" href="${h.url('pullrequest_show',repo_name=c.statuses.get(cs.raw_id)[3],pull_request_id=c.statuses.get(cs.raw_id)[2])}">
                     <i class="icon-circle changeset-status-${c.statuses.get(cs.raw_id)[0]}"></i>
                   </a>
                 %else:
-                  <a class="tooltip" title="${_('Changeset status: %s by %s') % (c.statuses.get(cs.raw_id)[1], c.statuses.get(cs.raw_id)[5].username)}"
+                  <a data-toggle="tooltip" title="${_('Changeset status: %s by %s') % (c.statuses.get(cs.raw_id)[1], c.statuses.get(cs.raw_id)[5].username)}"
                      href="${c.comments[cs.raw_id][0].url()}">
                     <i class="icon-circle changeset-status-${c.statuses.get(cs.raw_id)[0]}"></i>
                   </a>
@@ -47,7 +47,7 @@
         <td>
             ${h.urlify_text(h.chop_at(cs.message,'\n'),c.repo_name, h.url('changeset_home',repo_name=c.repo_name,revision=cs.raw_id))}
         </td>
-        <td><span class="tooltip" title="${h.fmt_date(cs.date)}">
+        <td><span data-toggle="tooltip" title="${h.fmt_date(cs.date)}">
                       ${h.age(cs.date)}</span>
         </td>
         <td title="${cs.author}">${h.person(cs.author)}</td>

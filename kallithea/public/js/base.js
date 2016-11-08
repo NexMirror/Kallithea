@@ -499,7 +499,7 @@ var _init_tooltip = function(){
     $tipBox.css('position', 'absolute');
     $tipBox.css('max-width', '600px');
 
-    _activate_tooltip($('.tooltip'));
+    _activate_tooltip($('[data-toggle="tooltip"]'));
 };
 
 var _show_tooltip = function(e, tipText, safe){
@@ -1313,7 +1313,7 @@ var addReviewMember = function(id,fname,lname,nname,gravatar_link,gravatar_size)
     var element = (
         '     <li id="reviewer_{2}">\n'+
         '       <div class="reviewers_member">\n'+
-        '         <div class="reviewer_status tooltip" title="not_reviewed">\n'+
+        '         <div class="reviewer_status" data-toggle="tooltip" title="not_reviewed">\n'+
         '             <i class="icon-circle changeset-status-not_reviewed"></i>\n'+
         '         </div>\n'+
         (gravatarelm ?

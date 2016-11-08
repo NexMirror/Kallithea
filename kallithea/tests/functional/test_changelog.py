@@ -74,7 +74,7 @@ class TestChangelogController(TestController):
 
 #        response.mustcontain(
 #            """<div id="changed_total_5e204e7583b9c8e7b93a020bd036564b1e731dae" """
-#            """style="float:right;" class="changed_total tooltip" """
+#            """style="float:right;" class="changed_total" data-toggle="tooltip" """
 #            """title="Affected number of files, click to show """
 #            """more details">3</div>"""
 #        )
