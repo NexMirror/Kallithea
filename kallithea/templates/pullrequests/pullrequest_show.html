@@ -212,24 +212,24 @@ ${self.repo_context_bar('showpullrequest')}
               ## kallithea/public/js/base.js
               ## If you change something here it should be reflected in the template too.
               <li id="reviewer_${member.user_id}">
-                <div class="reviewers_member">
-                  <div class="reviewer_status" data-toggle="tooltip" title="${h.changeset_status_lbl(status)}">
+                <span class="reviewers_member">
+                  <span class="reviewer_status" data-toggle="tooltip" title="${h.changeset_status_lbl(status)}">
                       <i class="icon-circle changeset-status-${status}"></i>
-                  </div>
-                  ${h.gravatar_div(member.email, size=14, div_class="reviewer_gravatar gravatar")}
-                  <div style="float:left;">
+                  </span>
+                  ${h.gravatar(member.email, size=14)}
+                  <span>
                     ${member.full_name_and_username}
                     %if c.pull_request.owner_id == member.user_id:
                       (${_('Owner')})
                     %endif
-                  </div>
+                  </span>
                   <input type="hidden" value="${member.user_id}" name="review_members" />
                   %if editable:
                   <a href="#" class="reviewer_member_remove" onclick="removeReviewMember(${member.user_id})" title="${_('Remove reviewer')}">
                       <i class="icon-minus-circled"></i>
                   </a>
                   %endif
-                </div>
+                </span>
               </li>
             %endfor
             </ul>

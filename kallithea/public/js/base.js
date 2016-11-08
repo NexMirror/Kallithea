@@ -1312,19 +1312,19 @@ var addReviewMember = function(id,fname,lname,nname,gravatar_link,gravatar_size)
     // If you change something here it should be reflected in the template too.
     var element = (
         '     <li id="reviewer_{2}">\n'+
-        '       <div class="reviewers_member">\n'+
-        '         <div class="reviewer_status" data-toggle="tooltip" title="not_reviewed">\n'+
+        '       <span class="reviewers_member">\n'+
+        '         <span class="reviewer_status" data-toggle="tooltip" title="not_reviewed">\n'+
         '             <i class="icon-circle changeset-status-not_reviewed"></i>\n'+
-        '         </div>\n'+
+        '         </span>\n'+
         (gravatarelm ?
-        '         <div class="reviewer_gravatar gravatar">{0}</div>\n' :
+        '         {0}\n' :
         '')+
-        '         <div style="float:left;">{1}</div>\n'+
+        '         <span>{1}</span>\n'+
         '         <input type="hidden" value="{2}" name="review_members" />\n'+
         '         <a href="#" class="reviewer_member_remove" onclick="removeReviewMember({2})">\n'+
         '             <i class="icon-minus-circled"></i>\n'+
         '         </a> (add not saved)\n'+
-        '       </div>\n'+
+        '       </span>\n'+
         '     </li>\n'
         ).format(gravatarelm, displayname, id);
     // check if we don't have this ID already in
