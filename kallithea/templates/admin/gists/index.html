@@ -50,7 +50,7 @@
             </div>
             <div style="padding: 4px 0px 0px 0px">
                 ${_('Created')} ${h.age(gist.created_on)} /
-                <span style="color: #AAA">
+                <span class="text-muted">
                   %if gist.gist_expires == -1:
                    ${_('Expires')}: ${_('Never')}
                   %else:
@@ -59,7 +59,7 @@
                 </span>
             </div>
 
-            <div style="border:0px;padding:10px 0px 0px 40px;color:#AAA">${gist.gist_description}</div>
+            <div class="text-muted" style="border:0px;padding:10px 0px 0px 40px">${gist.gist_description}</div>
           </div>
         % endfor
 

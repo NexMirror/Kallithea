@@ -4537,3 +4537,7 @@ body table.dataTable thead .sorting_desc::after {
 .dataTables_wrapper .dataTables_filter {
   float: left !important;
 }
+
+.text-muted {
+    color: #777777;
+}

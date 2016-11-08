@@ -54,7 +54,7 @@
                 <div style="padding:0px 0px 0px 42px">
                     <label for='lifetime'>${_('Gist lifetime')}</label>
                     ${h.select('lifetime', '0', c.lifetime_options)}
-                    <span class="" style="color: #AAA">
+                    <span class="text-muted">
                      %if c.gist.gist_expires == -1:
                       ${_('Expires')}: ${_('Never')}
                      %else:
