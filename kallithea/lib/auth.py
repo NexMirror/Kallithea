@@ -94,52 +94,40 @@ class PasswordGenerator(object):
         return ''.join(l)
 
 
-class KallitheaCrypto(object):
-
-    @classmethod
-    def hash_string(cls, str_):
-        """
-        Cryptographic function used for password hashing based on pybcrypt
-        or Python's own OpenSSL wrapper on windows
-
-        :param password: password to hash
-        """
-        if is_windows:
-            return hashlib.sha256(str_).hexdigest()
-        elif is_unix:
-            import bcrypt
-            return bcrypt.hashpw(safe_str(str_), bcrypt.gensalt(10))
-        else:
-            raise Exception('Unknown or unsupported platform %s' \
-                            % __platform__)
-
-    @classmethod
-    def hash_check(cls, password, hashed):
-        """
-        Checks matching password with it's hashed value, runs different
-        implementation based on platform it runs on
-
-        :param password: password
-        :param hashed: password in hashed form
-        """
-
-        if is_windows:
-            return hashlib.sha256(password).hexdigest() == hashed
-        elif is_unix:
-            import bcrypt
-            return bcrypt.checkpw(safe_str(password), safe_str(hashed))
-        else:
-            raise Exception('Unknown or unsupported platform %s' \
-                            % __platform__)
-
-
 def get_crypt_password(password):
-    return KallitheaCrypto.hash_string(password)
+    """
+    Cryptographic function used for password hashing based on pybcrypt
+    or Python's own OpenSSL wrapper on windows
+
+    :param password: password to hash
+    """
+    if is_windows:
+        return hashlib.sha256(password).hexdigest()
+    elif is_unix:
+        import bcrypt
+        return bcrypt.hashpw(safe_str(password), bcrypt.gensalt(10))
+    else:
+        raise Exception('Unknown or unsupported platform %s' \
+                        % __platform__)
 
 
 def check_password(password, hashed):
-    return KallitheaCrypto.hash_check(password, hashed)
+    """
+    Checks matching password with it's hashed value, runs different
+    implementation based on platform it runs on
 
+    :param password: password
+    :param hashed: password in hashed form
+    """
+
+    if is_windows:
+        return hashlib.sha256(password).hexdigest() == hashed
+    elif is_unix:
+        import bcrypt
+        return bcrypt.checkpw(safe_str(password), safe_str(hashed))
+    else:
+        raise Exception('Unknown or unsupported platform %s' \
+                        % __platform__)
 
 
 def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
