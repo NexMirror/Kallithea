@@ -288,7 +288,6 @@ class KallitheaExternalAuthPlugin(KallitheaAuthPluginBase):
                 extern_name=user_data["extern_name"],
                 extern_type=self.name
             )
-            Session().flush()
             # enforce user is just in given groups, all of them has to be ones
             # created from plugins. We store this info in _group_data JSON field
             groups = user_data['groups'] or []

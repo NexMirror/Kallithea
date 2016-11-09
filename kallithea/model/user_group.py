@@ -132,18 +132,19 @@ class UserGroupModel(BaseModel):
 
             for k, v in form_data.items():
                 if k == 'users_group_members':
-                    user_group.members = []
-                    self.sa.flush()
                     members_list = []
                     if v:
                         v = [v] if isinstance(v, basestring) else v
                         for u_id in set(v):
                             member = UserGroupMember(user_group.users_group_id, u_id)
                             members_list.append(member)
-                    setattr(user_group, 'members', members_list)
+                            self.sa.add(member)
+                    user_group.members = members_list
                 setattr(user_group, k, v)
 
-            self.sa.add(user_group)
+            # Flush to make db assign users_group_member_id to newly
+            # created UserGroupMembers.
+            self.sa.flush()
         except Exception:
             log.error(traceback.format_exc())
             raise

@@ -92,7 +92,8 @@ class UserModel(BaseModel):
             setattr(new_user, k, v)
 
         new_user.api_key = generate_api_key()
-        self.sa.add(new_user)
+        Session().add(new_user)
+        Session().flush() # make database assign new_user.user_id
 
         log_create_user(new_user.get_dict(), cur_user)
         return new_user
@@ -164,10 +165,13 @@ class UserModel(BaseModel):
                 new_user.password = get_crypt_password(password) \
                     if password else ''
 
-            self.sa.add(new_user)
+            if user is None:
+                Session().add(new_user)
+                Session().flush() # make database assign new_user.user_id
 
             if not edit:
                 log_create_user(new_user.get_dict(), cur_user)
+
             return new_user
         except (DatabaseError,):
             log.error(traceback.format_exc())
@@ -181,9 +185,6 @@ class UserModel(BaseModel):
         form_data['extern_type'] = User.DEFAULT_AUTH_TYPE
         form_data['extern_name'] = ''
         new_user = self.create(form_data)
-
-        self.sa.add(new_user)
-        self.sa.flush()
 
         # notification to admins
         subject = _('New user registration')

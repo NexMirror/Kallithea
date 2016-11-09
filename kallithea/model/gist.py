@@ -122,7 +122,7 @@ class GistModel(BaseModel):
         gist.gist_expires = gist_expires
         gist.gist_type = safe_unicode(gist_type)
         self.sa.add(gist)
-        self.sa.flush()
+        self.sa.flush() # make database assign gist.gist_id
         if gist_type == Gist.GIST_PUBLIC:
             # use DB ID for easy to use GIST ID
             gist_id = safe_unicode(gist.gist_id)
@@ -211,8 +211,6 @@ class GistModel(BaseModel):
         gist.gist_expires = gist_expires
         gist.owner = owner
         gist.gist_type = gist_type
-        self.sa.add(gist)
-        self.sa.flush()
 
         message = 'updated file'
         message += 's: ' if len(gist_mapping) > 1 else ': '
