@@ -45,6 +45,7 @@
             {data: "action", title: "${_('Action')}", sortable: false, searchable: false}
         ],
         drawCallback: updateRowCountCallback($("#repo_group_count")),
+        dom: '<"dataTables_left"f><"dataTables_right"ilp>t',
         pageLength: 100
     });
 

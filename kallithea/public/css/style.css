@@ -4560,13 +4560,30 @@ body table.dataTable thead .sorting_desc::after {
   content: "\23f7";
 }
 
-
-.dataTables_wrapper .dataTables_length {
-  float: right !important;
+.dataTables_wrapper .dataTables_left {
+  float: left !important;
 }
 
-.dataTables_wrapper .dataTables_filter {
-  float: left !important;
+.dataTables_wrapper .dataTables_right {
+  float: right;
+}
+
+.dataTables_wrapper .dataTables_right > div {
+  padding-left: 30px;
+}
+
+.dataTables_wrapper .dataTables_info {
+  clear: none;
+  padding-top: 1em;
+}
+
+.dataTables_wrapper .dataTables_paginate {
+  padding-top: 0;
+}
+
+.dataTables_wrapper .dataTables_paginate > a.paginate_button {
+  padding-top: 1em;
+  border: 0 !important;
 }
 
 .text-muted {

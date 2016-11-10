@@ -43,8 +43,8 @@
             %endif
         </div>
         <!-- end box / title -->
+        %if c.groups:
         <div class="table">
-           % if c.groups:
             <div id='groups_list_wrap'>
               <table id="groups_list">
                   <thead>
@@ -74,15 +74,18 @@
                   % endfor
               </table>
             </div>
-            <hr/>
-            % endif
-
+        </div>
+        %endif
+        <div class="table">
             <table id="repos_list_wrap"></table>
         </div>
     </div>
 
       <script>
-        $('#groups_list').DataTable({pageLength: 100});
+        $('#groups_list').DataTable({
+            dom: '<"dataTables_left"f><"dataTables_right"ilp>t',
+            pageLength: 100
+        });
 
         var data = ${c.data|n},
             $dataTable = $("#repos_list_wrap").DataTable({
@@ -103,6 +106,7 @@
                     {data: "atom", sortable: false}
                 ],
                 order: [[1, "asc"]],
+                dom: '<"dataTables_left"f><"dataTables_right"ilp>t',
                 pageLength: 100
             });
       </script>
