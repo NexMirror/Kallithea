@@ -96,12 +96,6 @@
 
 <%def name="repo_context_bar(current=None, rev=None)">
   <% rev = None if rev == 'tip' else rev %>
-  <%
-    def is_current(selected):
-        if selected == current:
-            return h.literal('class="current"')
-    %>
-
   <!--- CONTEXT BAR -->
   <div id="context-bar" class="panel panel-primary">
       <h2>
@@ -124,17 +118,17 @@
         %endif
       </h2>
       <ul id="context-pages" class="horizontal-list">
-        <li ${is_current('summary')} data-context="summary"><a href="${h.url('summary_home', repo_name=c.repo_name)}"><i class="icon-doc-text"></i> ${_('Summary')}</a></li>
+        <li class="${'current' if current == 'summary' else ''}" data-context="summary"><a href="${h.url('summary_home', repo_name=c.repo_name)}"><i class="icon-doc-text"></i> ${_('Summary')}</a></li>
         %if rev:
-        <li ${is_current('changelog')} data-context="changelog"><a href="${h.url('changelog_file_home', repo_name=c.repo_name, revision=rev, f_path='')}"><i class="icon-clock"></i> ${_('Changelog')}</a></li>
+        <li class="${'current' if current == 'changelog' else ''}" data-context="changelog"><a href="${h.url('changelog_file_home', repo_name=c.repo_name, revision=rev, f_path='')}"><i class="icon-clock"></i> ${_('Changelog')}</a></li>
         %else:
-        <li ${is_current('changelog')} data-context="changelog"><a href="${h.url('changelog_home', repo_name=c.repo_name)}"><i class="icon-clock"></i> ${_('Changelog')}</a></li>
+        <li class="${'current' if current == 'changelog' else ''}" data-context="changelog"><a href="${h.url('changelog_home', repo_name=c.repo_name)}"><i class="icon-clock"></i> ${_('Changelog')}</a></li>
         %endif
-        <li ${is_current('files')} data-context="files"><a href="${h.url('files_home', repo_name=c.repo_name, revision=rev or 'tip')}"><i class="icon-doc-inv"></i> ${_('Files')}</a></li>
-        <li ${is_current('switch-to')} data-context="switch-to">
+        <li class="${'current' if current == 'files' else ''}" data-context="files"><a href="${h.url('files_home', repo_name=c.repo_name, revision=rev or 'tip')}"><i class="icon-doc-inv"></i> ${_('Files')}</a></li>
+        <li class="${'current' if current == 'switch-to' else ''}" data-context="switch-to">
           <input id="branch_switcher" name="branch_switcher" type="hidden">
         </li>
-        <li ${is_current('options')} data-context="options" class="dropdown">
+        <li class="${'current' if current == 'options' else ''} dropdown" data-context="options">
              %if h.HasRepoPermissionAny('repository.admin')(c.repo_name):
                <a href="${h.url('edit_repo',repo_name=c.repo_name)}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true"><i class="icon-wrench"></i> ${_('Options')} <i class="caret"></i></a>
              %else:
@@ -173,7 +167,7 @@
               %endif
              </ul>
         </li>
-        <li ${is_current('showpullrequest')} data-context="showpullrequest">
+        <li class="${'current' if current == 'showpullrequest' else ''}" data-context="showpullrequest">
           <a href="${h.url('pullrequest_show_all',repo_name=c.repo_name)}" title="${_('Show Pull Requests for %s') % c.repo_name}"> <i class="icon-git-pull-request"></i> ${_('Pull Requests')}
             %if c.repository_pull_requests:
               <span class="badge">${c.repository_pull_requests}</span>
@@ -284,33 +278,27 @@
 </%def>
 
 <%def name="menu(current=None)">
-  <%
-  def is_current(selected):
-      if selected == current:
-          return h.literal('class="current"')
-  %>
-
   <ul id="quick" class="horizontal-list">
     <!-- repo switcher -->
-    <li ${is_current('repositories')}>
+    <li class="${'current' if current == 'repositories' else ''}">
       <input id="repo_switcher" name="repo_switcher" type="hidden">
     </li>
 
     ##ROOT MENU
     %if c.authuser.username != 'default':
-      <li ${is_current('journal')}>
+      <li class="${'current' if current == 'journal' else ''}">
         <a class="menu_link" title="${_('Show recent activity')}"  href="${h.url('journal')}">
           <i class="icon-book"></i> ${_('Journal')}
         </a>
       </li>
     %else:
-      <li ${is_current('journal')}>
+      <li class="${'current' if current == 'journal' else ''}">
         <a class="menu_link" title="${_('Public journal')}"  href="${h.url('public_journal')}">
           <i class="icon-book"></i> ${_('Public journal')}
         </a>
       </li>
     %endif
-      <li ${is_current('gists')} class="dropdown">
+      <li class="${'current' if current == 'gists' else ''} dropdown">
         <a class="menu_link dropdown-toggle" data-toggle="dropdown" role="button" title="${_('Show public gists')}"  href="${h.url('gists')}">
           <i class="icon-clippy"></i> ${_('Gists')} <span class="caret"></span>
         </a>
@@ -323,20 +311,20 @@
             %endif
           </ul>
       </li>
-    <li ${is_current('search')}>
+    <li class="${'current' if current == 'search' else ''}">
         <a class="menu_link" title="${_('Search in repositories')}"  href="${h.url('search')}">
           <i class="icon-search"></i> ${_('Search')}
         </a>
     </li>
     % if h.HasPermissionAny('hg.admin')('access admin main page'):
-      <li ${is_current('admin')} class="dropdown">
+      <li class="${'current' if current == 'admin' else ''} dropdown">
         <a class="menu_link dropdown-toggle" data-toggle="dropdown" role="button" title="${_('Admin')}" href="${h.url('admin_home')}">
           <i class="icon-gear"></i> ${_('Admin')} <span class="caret"></span>
         </a>
         ${admin_menu()}
       </li>
     % elif c.authuser.repositories_admin or c.authuser.repository_groups_admin or c.authuser.user_groups_admin:
-    <li ${is_current('admin')} class="dropdown">
+    <li class="${'current' if current == 'admin' else ''} dropdown">
         <a class="menu_link dropdown-toggle" data-toggle="dropdown" role="button" title="${_('Admin')}">
           <i class="icon-gear"></i> ${_('Admin')}
         </a>
@@ -346,7 +334,7 @@
     </li>
     % endif
 
-    <li ${is_current('my_pullrequests')}>
+    <li class="${'current' if current == 'my_pullrequests' else ''}">
       <a class="menu_link" title="${_('My Pull Requests')}" href="${h.url('my_pullrequests')}">
         <i class="icon-git-pull-request"></i> ${_('My Pull Requests')}
         %if c.my_pr_count != 0:
