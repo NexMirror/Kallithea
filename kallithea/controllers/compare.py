@@ -146,9 +146,8 @@ class CompareController(BaseRepoController):
                     # no changesets from other repo, ancestor is the other_rev
                     ancestors = [other_rev]
 
-                # dulwich 0.9.9 doesn't have a Repo.close() so we have to mess with internals:
-                gitrepo.object_store.close()
-                gitrepo_remote.object_store.close()
+                gitrepo.close()
+                gitrepo_remote.close()
 
             else:
                 so, se = org_repo.run_git_command(
