@@ -49,7 +49,7 @@
               <table id="groups_list">
                   <thead>
                       <tr>
-                          <th class="left">${_('Repository Group Name')}</th>
+                          <th class="left">${_('Repository Group')}</th>
                           <th class="left">${_('Description')}</th>
                           ##<th class="left">${_('Number of Repositories')}</th>
                       </tr>
@@ -92,7 +92,7 @@
                 data: data.records,
                 columns: [
                     {data: "raw_name", visible: false, searchable: false},
-                    {title: "${_('Repository Name')}", data: "name", orderData: 1, render: {
+                    {title: "${_('Repository')}", data: "name", orderData: 1, render: {
                         filter: function(data) {
                             return $(data).find(".dt_repo_name").text();
                         }
