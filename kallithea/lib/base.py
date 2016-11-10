@@ -513,7 +513,8 @@ class BaseRepoController(BaseController):
                     category='error')
             raise webob.exc.HTTPNotFound()
         except ChangesetDoesNotExistError as e:
-            h.flash(h.literal(_('Changeset not found')),
+            h.flash(h.literal(_('Changeset for %s %s not found in %s') %
+                              (ref_type, ref_name, repo.repo_name)),
                     category='error')
             raise webob.exc.HTTPNotFound()
         except RepositoryError as e:

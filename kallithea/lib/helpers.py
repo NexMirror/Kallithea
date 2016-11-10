@@ -620,7 +620,7 @@ def action_parser(user_log, feed=False, parse_cs=False):
             else:
                 # changeset cannot be found - it might have been stripped or removed
                 lbl = rev[:12]
-                title_ = _('Changeset not found')
+                title_ = _('Changeset %s not found') % lbl
             if parse_cs:
                 return link_to(lbl, url_, title=title_, class_='tooltip')
             return link_to(lbl, url_, raw_id=rev.raw_id, repo_name=repo_name,
