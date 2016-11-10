@@ -48,6 +48,19 @@ configuration setting disregarded).
 The subject of these emails can optionally be prefixed with the value of
 ``email_prefix`` in the configuration file.
 
+A Kallithea-specific header indicating the email type will be added to each
+email. This header can be used for email filtering. The header is of the form:
+
+    X-Kallithea-Notification-Type: <type>
+
+where ``<type>`` is one of:
+
+- ``pull_request``: you are invited as reviewer in a pull request
+- ``pull_request_comment``: a comment was given on a pull request
+- ``cs_comment``: a comment was given on a changeset
+- ``registration``: a new user was registered
+- ``message``: another type of email
+
 
 Error emails
 ------------
