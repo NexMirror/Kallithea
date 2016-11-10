@@ -372,10 +372,13 @@ class BaseController(WSGIController):
         """
 
         # Authenticate by API key
-        if api_key:
-            # when using API_KEY we are sure user exists.
-            return AuthUser(dbuser=User.get_by_api_key(api_key),
-                            is_external_auth=True)
+        if api_key is not None:
+            au = AuthUser(dbuser=User.get_by_api_key(api_key),
+                authenticating_api_key=api_key, is_external_auth=True)
+            if au.is_anonymous:
+                log.warning('API key ****%s is NOT valid', api_key[-4:])
+                raise webob.exc.HTTPForbidden(_('Invalid API key'))
+            return au
 
         # Authenticate by session cookie
         # In ancient login sessions, 'authuser' may not be a dict.

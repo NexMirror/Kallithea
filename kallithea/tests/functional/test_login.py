@@ -465,10 +465,10 @@ class TestLoginController(TestController):
 
     @parametrize('test_name,api_key,code', [
         ('none', None, 302),
-        ('empty_string', '', 302),
-        ('fake_number', '123456', 302),
-        ('fake_not_alnum', 'a-z', 302),
-        ('fake_api_key', '0123456789abcdef0123456789ABCDEF01234567', 302),
+        ('empty_string', '', 403),
+        ('fake_number', '123456', 403),
+        ('fake_not_alnum', 'a-z', 403),
+        ('fake_api_key', '0123456789abcdef0123456789ABCDEF01234567', 403),
         ('proper_api_key', True, 200)
     ])
     def test_access_whitelisted_page_via_api_key(self, test_name, api_key, code):
@@ -496,4 +496,4 @@ class TestLoginController(TestController):
             #patch the API key and make it expired
             new_api_key.expires = 0
             Session().commit()
-            self._api_key_test(new_api_key.api_key, status=302)
+            self._api_key_test(new_api_key.api_key, status=403)

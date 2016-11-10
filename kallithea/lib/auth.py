@@ -473,11 +473,12 @@ class AuthUser(object):
     "default". Use `is_anonymous` to check for both "default" and "no user".
     """
 
-    def __init__(self, user_id=None, dbuser=None,
+    def __init__(self, user_id=None, dbuser=None, authenticating_api_key=None,
             is_external_auth=False):
 
         self.is_authenticated = False
         self.is_external_auth = is_external_auth
+        self.authenticating_api_key = authenticating_api_key
 
         user_model = UserModel()
         self._default_user = User.get_default_user(cache=True)
@@ -738,22 +739,18 @@ class LoginRequired(object):
         if not AuthUser.check_ip_allowed(user, controller.ip_addr):
             raise _redirect_to_login(_('IP %s not allowed') % controller.ip_addr)
 
-        # check if we used an API key and it's a valid one
-        api_key = request.GET.get('api_key')
+        # Check if we used an API key to authenticate.
+        api_key = user.authenticating_api_key
         if api_key is not None:
-            # explicit controller is enabled or API is in our whitelist
-            if self.api_access or allowed_api_access(loc, api_key=api_key):
-                if api_key in user.api_keys:
-                    log.info('user %s authenticated with API key ****%s @ %s',
-                             user, api_key[-4:], loc)
-                    return func(*fargs, **fkwargs)
-                else:
-                    log.warning('API key ****%s is NOT valid', api_key[-4:])
-                    raise _redirect_to_login(_('Invalid API key'))
-            else:
+            # Check that controller is enabled for API key usage.
+            if not self.api_access and not allowed_api_access(loc, api_key=api_key):
                 # controller does not allow API access
                 log.warning('API access to %s is not allowed', loc)
                 raise HTTPForbidden()
+
+            log.info('user %s authenticated with API key ****%s @ %s',
+                     user, api_key[-4:], loc)
+            return func(*fargs, **fkwargs)
 
         # CSRF protection: Whenever a request has ambient authority (whether
         # through a session cookie or its origin IP address), it must include
