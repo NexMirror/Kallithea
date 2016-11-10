@@ -48,6 +48,7 @@ log = logging.getLogger(__name__)
 
 
 def _load_changelog_summary():
+    # also used from summary ...
     p = safe_int(request.GET.get('page'), 1)
     size = safe_int(request.GET.get('size'), 10)
 

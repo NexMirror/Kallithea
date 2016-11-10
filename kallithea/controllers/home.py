@@ -57,9 +57,9 @@ class HomeController(BaseController):
         c.groups = self.scm_model.get_repo_groups()
         c.group = None
 
-        c.repos_list = Repository.query(sorted=True).filter_by(group=None).all()
+        repos_list = Repository.query(sorted=True).filter_by(group=None).all()
 
-        repos_data = RepoModel().get_repos_as_dict(repos_list=c.repos_list,
+        repos_data = RepoModel().get_repos_as_dict(repos_list=repos_list,
                                                    admin=False, short_name=True)
         #json used to render the grid
         c.data = json.dumps(repos_data)

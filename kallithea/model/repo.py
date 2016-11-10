@@ -270,10 +270,8 @@ class RepoModel(BaseModel):
             return None
 
         defaults = repo_info.get_dict()
-        group, repo_name, repo_name_full = repo_info.groups_and_repo
-        defaults['repo_name'] = repo_name
-        defaults['repo_group'] = getattr(group[-1] if group else None,
-                                         'group_id', None)
+        defaults['repo_name'] = repo_info.just_name
+        defaults['repo_group'] = repo_info.group_id
 
         for strip, k in [(0, 'repo_type'), (1, 'repo_enable_downloads'),
                          (1, 'repo_description'), (1, 'repo_enable_locking'),

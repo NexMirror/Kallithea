@@ -298,17 +298,12 @@ class RepoGroupsController(BaseController):
         c.active = 'settings'
 
         c.group = c.repo_group = RepoGroupModel()._get_repo_group(group_name)
-        c.group_repos = c.group.repositories.all()
-
-        #overwrite our cached list with current filter
-        c.repo_cnt = 0
 
         groups = RepoGroup.query(sorted=True).filter_by(parent_group=c.group).all()
         c.groups = self.scm_model.get_repo_groups(groups)
 
-        c.repos_list = Repository.query(sorted=True).filter_by(group=c.group).all()
-
-        repos_data = RepoModel().get_repos_as_dict(repos_list=c.repos_list,
+        repos_list = Repository.query(sorted=True).filter_by(group=c.group).all()
+        repos_data = RepoModel().get_repos_as_dict(repos_list=repos_list,
                                                    admin=False, short_name=True)
         #json used to render the grid
         c.data = json.dumps(repos_data)

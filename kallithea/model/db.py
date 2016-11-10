@@ -1171,23 +1171,13 @@ class Repository(Base, BaseDbModel):
     @property
     def groups_with_parents(self):
         groups = []
-        if self.group is None:
-            return groups
-
-        cur_gr = self.group
-        groups.insert(0, cur_gr)
-        while 1:
-            gr = getattr(cur_gr, 'parent_group', None)
-            cur_gr = cur_gr.parent_group
-            if gr is None:
-                break
-            groups.insert(0, gr)
-
+        group = self.group
+        while group is not None:
+            groups.append(group)
+            group = group.parent_group
+            assert group not in groups, group # avoid recursion on bad db content
+        groups.reverse()
         return groups
-
-    @property
-    def groups_and_repo(self):
-        return self.groups_with_parents, self.just_name, self.repo_name
 
     @LazyProperty
     def repo_path(self):
@@ -1589,26 +1579,13 @@ class RepoGroup(Base, BaseDbModel):
 
     @property
     def parents(self):
-        parents_recursion_limit = 10
         groups = []
-        if self.parent_group is None:
-            return groups
-        cur_gr = self.parent_group
-        groups.insert(0, cur_gr)
-        cnt = 0
-        while 1:
-            cnt += 1
-            gr = getattr(cur_gr, 'parent_group', None)
-            cur_gr = cur_gr.parent_group
-            if gr is None:
-                break
-            if cnt == parents_recursion_limit:
-                # this will prevent accidental infinite loops
-                log.error(('more than %s parents found for group %s, stopping '
-                           'recursive parent fetching' % (parents_recursion_limit, self)))
-                break
-
-            groups.insert(0, gr)
+        group = self.parent_group
+        while group is not None:
+            groups.append(group)
+            group = group.parent_group
+            assert group not in groups, group # avoid recursion on bad db content
+        groups.reverse()
         return groups
 
     @property
