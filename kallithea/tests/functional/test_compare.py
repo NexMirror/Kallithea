@@ -467,7 +467,6 @@ class TestCompareController(TestController):
         self.r2_id = repo2.repo_id
         r2_name = repo2.repo_name
 
-
         cs1 = fixture.commit_change(repo=r2_name, filename='file1-fork',
                 content='file1-line1-from-fork', message='commit1-fork',
                 vcs_type='hg', parent=repo2.scm_instance[-1], newfile=True)
@@ -486,9 +485,9 @@ class TestCompareController(TestController):
         response = self.app.get(url('compare_url',
                                     repo_name=r2_name,
                                     org_ref_type="branch",
-                                    org_ref_name=rev1,
+                                    org_ref_name=rev2,
                                     other_ref_type="branch",
-                                    other_ref_name=rev2,
+                                    other_ref_name=rev1,
                                     other_repo=r1_name,
                                     merge='1',))
 
@@ -507,9 +506,9 @@ class TestCompareController(TestController):
         response = self.app.get(url('compare_url',
                                     repo_name=r2_name,
                                     org_ref_type="branch",
-                                    org_ref_name=rev1,
+                                    org_ref_name=rev2,
                                     other_ref_type="branch",
-                                    other_ref_name=rev2,
+                                    other_ref_name=rev1,
                                     other_repo=r1_name,
                                     merge='1',
                                     ))

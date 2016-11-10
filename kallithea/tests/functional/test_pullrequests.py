@@ -21,9 +21,9 @@ class TestPullrequestsController(TestController):
         response = self.app.post(url(controller='pullrequests', action='create',
                                      repo_name=HG_REPO),
                                  {'org_repo': HG_REPO,
-                                  'org_ref': 'branch:default:default',
+                                  'org_ref': 'branch:stable:4f7e2131323e0749a740c0a56ab68ae9269c562a',
                                   'other_repo': HG_REPO,
-                                  'other_ref': 'branch:default:default',
+                                  'other_ref': 'branch:default:96507bd11ecc815ebc6270fdf6db110928c09c1e',
                                   'pullrequest_title': 'title',
                                   'pullrequest_desc': 'description',
                                   '_authentication_token': self.authentication_token(),
@@ -31,7 +31,47 @@ class TestPullrequestsController(TestController):
                                  status=302)
         response = response.follow()
         assert response.status == '200 OK'
-        response.mustcontain('This pull request has already been merged to default.')
+        response.mustcontain('Successfully opened new pull request')
+        response.mustcontain('No additional changesets found for iterating on this pull request')
+        response.mustcontain('href="/vcs_test_hg/changeset/4f7e2131323e0749a740c0a56ab68ae9269c562a"')
+
+    def test_available(self):
+        self.log_user()
+        response = self.app.post(url(controller='pullrequests', action='create',
+                                     repo_name=HG_REPO),
+                                 {'org_repo': HG_REPO,
+                                  'org_ref': 'rev:94f45ed825a1:94f45ed825a113e61af7e141f44ca578374abef0',
+                                  'other_repo': HG_REPO,
+                                  'other_ref': 'branch:default:96507bd11ecc815ebc6270fdf6db110928c09c1e',
+                                  'pullrequest_title': 'title',
+                                  'pullrequest_desc': 'description',
+                                  '_authentication_token': self.authentication_token(),
+                                 },
+                                 status=302)
+        response = response.follow()
+        assert response.status == '200 OK'
+        response.mustcontain(no='No additional changesets found for iterating on this pull request')
+        response.mustcontain('The following additional changes are available on stable:')
+        response.mustcontain('<input id="updaterev_4f7e2131323e0749a740c0a56ab68ae9269c562a" name="updaterev" type="radio" value="4f7e2131323e0749a740c0a56ab68ae9269c562a" />')
+        response.mustcontain('href="/vcs_test_hg/changeset/4f7e2131323e0749a740c0a56ab68ae9269c562a"') # as update
+
+    def test_range(self):
+        self.log_user()
+        response = self.app.post(url(controller='pullrequests', action='create',
+                                     repo_name=HG_REPO),
+                                 {'org_repo': HG_REPO,
+                                  'org_ref': 'branch:stable:4f7e2131323e0749a740c0a56ab68ae9269c562a',
+                                  'other_repo': HG_REPO,
+                                  'other_ref': 'rev:94f45ed825a1:94f45ed825a113e61af7e141f44ca578374abef0',
+                                  'pullrequest_title': 'title',
+                                  'pullrequest_desc': 'description',
+                                  '_authentication_token': self.authentication_token(),
+                                 },
+                                 status=302)
+        response = response.follow()
+        assert response.status == '200 OK'
+        response.mustcontain('No additional changesets found for iterating on this pull request')
+        response.mustcontain('href="/vcs_test_hg/changeset/4f7e2131323e0749a740c0a56ab68ae9269c562a"')
 
     def test_update_reviewers(self):
         self.log_user()
@@ -43,22 +83,22 @@ class TestPullrequestsController(TestController):
         response = self.app.post(url(controller='pullrequests', action='create',
                                      repo_name=HG_REPO),
                                  {'org_repo': HG_REPO,
-                                  'org_ref': 'branch:default:default',
+                                  'org_ref': 'rev:94f45ed825a1:94f45ed825a113e61af7e141f44ca578374abef0',
                                   'other_repo': HG_REPO,
-                                  'other_ref': 'branch:default:default',
+                                  'other_ref': 'branch:default:96507bd11ecc815ebc6270fdf6db110928c09c1e',
                                   'pullrequest_title': 'title',
                                   'pullrequest_desc': 'description',
                                   '_authentication_token': self.authentication_token(),
                                  },
                                  status=302)
         pull_request1_id = re.search('/pull-request/(\d+)/', response.location).group(1)
-        assert response.location == 'http://localhost/%s/pull-request/%s/_/title' % (HG_REPO, pull_request1_id)
+        assert response.location == 'http://localhost/%s/pull-request/%s/_/stable' % (HG_REPO, pull_request1_id)
 
         # create new iteration
         response = self.app.post(url(controller='pullrequests', action='post',
                                      repo_name=HG_REPO, pull_request_id=pull_request1_id),
                                  {
-                                  'updaterev': 'default',
+                                  'updaterev': '4f7e2131323e0749a740c0a56ab68ae9269c562a',
                                   'pullrequest_title': 'title',
                                   'pullrequest_desc': 'description',
                                   'owner': TEST_USER_ADMIN_LOGIN,
@@ -68,7 +108,7 @@ class TestPullrequestsController(TestController):
                                  status=302)
         pull_request2_id = re.search('/pull-request/(\d+)/', response.location).group(1)
         assert pull_request2_id != pull_request1_id
-        assert response.location == 'http://localhost/%s/pull-request/%s/_/title_v2' % (HG_REPO, pull_request2_id)
+        assert response.location == 'http://localhost/%s/pull-request/%s/_/stable' % (HG_REPO, pull_request2_id)
         response = response.follow()
         # verify reviewer was added
         response.mustcontain('<input type="hidden" value="%s" name="review_members" />' % regular_user.user_id)
@@ -85,7 +125,7 @@ class TestPullrequestsController(TestController):
                                   'review_members': [regular_user2.user_id, admin_user.user_id],
                                  },
                                  status=302)
-        assert response.location == 'http://localhost/%s/pull-request/%s/_/Title' % (HG_REPO, pull_request2_id)
+        assert response.location == 'http://localhost/%s/pull-request/%s/_/stable' % (HG_REPO, pull_request2_id)
         response = response.follow()
         # verify reviewers were added / removed
         response.mustcontain('Meanwhile, the following reviewers have been added: test_regular')
@@ -102,9 +142,9 @@ class TestPullrequestsController(TestController):
                                      repo_name=HG_REPO),
                                  {
                                   'org_repo': HG_REPO,
-                                  'org_ref': 'branch:default:default',
+                                  'org_ref': 'rev:94f45ed825a1:94f45ed825a113e61af7e141f44ca578374abef0',
                                   'other_repo': HG_REPO,
-                                  'other_ref': 'branch:default:default',
+                                  'other_ref': 'branch:default:96507bd11ecc815ebc6270fdf6db110928c09c1e',
                                   'pullrequest_title': 'title',
                                   'pullrequest_desc': 'description',
                                   '_authentication_token': self.authentication_token(),
@@ -120,7 +160,7 @@ class TestPullrequestsController(TestController):
         response = self.app.post(url(controller='pullrequests', action='post',
                                      repo_name=HG_REPO, pull_request_id=pull_request_id),
                                  {
-                                  'updaterev': 'default',
+                                  'updaterev': '4f7e2131323e0749a740c0a56ab68ae9269c562a',
                                   'pullrequest_title': 'title',
                                   'pullrequest_desc': 'description',
                                   'owner': TEST_USER_ADMIN_LOGIN,
@@ -138,9 +178,9 @@ class TestPullrequestsController(TestController):
                                      repo_name=HG_REPO),
                                  {
                                   'org_repo': HG_REPO,
-                                  'org_ref': 'branch:default:default',
+                                  'org_ref': 'branch:stable:4f7e2131323e0749a740c0a56ab68ae9269c562a',
                                   'other_repo': HG_REPO,
-                                  'other_ref': 'branch:default:default',
+                                  'other_ref': 'branch:default:96507bd11ecc815ebc6270fdf6db110928c09c1e',
                                   'pullrequest_title': 'title',
                                   'pullrequest_desc': 'description',
                                   '_authentication_token': self.authentication_token(),
