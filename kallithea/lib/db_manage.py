@@ -442,7 +442,7 @@ class DbManage(object):
             ('show_public_icon', True, 'bool'),
             ('show_private_icon', True, 'bool'),
             ('stylify_metatags', False, 'bool'),
-            ('dashboard_items', 100, 'int'),
+            ('dashboard_items', 100, 'int'), # TODO: call it page_size
             ('admin_grid_items', 25, 'int'),
             ('show_version', True, 'bool'),
             ('use_gravatar', True, 'bool'),

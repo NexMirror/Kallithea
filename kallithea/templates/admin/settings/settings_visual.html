@@ -50,15 +50,15 @@ ${h.form(url('admin_settings_visual'), method='post')}
             </div>
 
             <div class="form-group">
-                <label class="control-label" for="dashboard_items">${_('Dashboard items')}:</label>
+                <label class="control-label" for="page_size">${_('Repository page size')}:</label>
                 <div class="input">
-                    ${h.text('dashboard_items',size=5)}
-                    <span class="help-block">${_('Number of items displayed in the main page dashboard before pagination is shown.')}</span>
+                    ${h.text('page_size',size=5)}
+                    <span class="help-block">${_('Number of items displayed in the repository pages before pagination is shown.')}</span>
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="control-label" for="admin_grid_items">${_('Admin pages items')}:</label>
+                <label class="control-label" for="admin_grid_items">${_('Admin page size')}:</label>
                 <div class="input">
                     ${h.text('admin_grid_items',size=5)}
                     <span class="help-block">${_('Number of items displayed in the admin pages grids before pagination is shown.')}</span>

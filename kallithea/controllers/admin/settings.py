@@ -260,7 +260,7 @@ class SettingsController(BaseController):
                     ('show_private_icon', 'show_private_icon', 'bool'),
                     ('stylify_metatags', 'stylify_metatags', 'bool'),
                     ('repository_fields', 'repository_fields', 'bool'),
-                    ('dashboard_items', 'dashboard_items', 'int'),
+                    ('dashboard_items', 'page_size', 'int'),
                     ('admin_grid_items', 'admin_grid_items', 'int'),
                     ('show_version', 'show_version', 'bool'),
                     ('use_gravatar', 'use_gravatar', 'bool'),

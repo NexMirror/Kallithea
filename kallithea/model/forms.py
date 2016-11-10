@@ -358,7 +358,7 @@ def ApplicationVisualisationForm():
 
         repository_fields = v.StringBoolean(if_missing=False)
         lightweight_journal = v.StringBoolean(if_missing=False)
-        dashboard_items = v.Int(min=5, not_empty=True)
+        page_size = v.Int(min=5, not_empty=True)
         admin_grid_items = v.Int(min=5, not_empty=True)
         show_version = v.StringBoolean(if_missing=False)
         use_gravatar = v.StringBoolean(if_missing=False)
