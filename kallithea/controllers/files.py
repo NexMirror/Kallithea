@@ -690,7 +690,7 @@ class FilesController(BaseRepoController):
                                          ignore_whitespace=ign_whitespace_lcl,
                                          line_context=line_context_lcl,
                                          enable_comments=False)
-            c.file_diff_data = {fid: (fid, op, a_path, node2.path, diff, st)}
+            c.file_diff_data = [(fid, fid, op, a_path, node2.path, diff, st)]
 
             return render('files/file_diff.html')
 

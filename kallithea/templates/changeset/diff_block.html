@@ -7,7 +7,7 @@
     <span target="${'diff-container-%s' % (id(file_diff_data))}" class="diff-collapse-button">&uarr; ${_('Collapse Diff')} &uarr;</span>
 </div>
 <div class="diff-container" id="${'diff-container-%s' % (id(file_diff_data))}">
-%for id_fid, (url_fid, op, a_filename, cs_filename, diff, stats) in file_diff_data.iteritems():
+%for id_fid, url_fid, op, a_filename, cs_filename, diff, stats in file_diff_data:
     ${diff_block_diffblock(id_fid, url_fid, op, diff,
         a_repo_name, a_rev, a_ref_type, a_ref_name, a_filename,
         cs_repo_name, cs_rev, cs_ref_type, cs_ref_name, cs_filename)}

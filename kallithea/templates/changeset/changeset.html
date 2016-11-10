@@ -168,7 +168,7 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
               %endif
               </div>
               <div class="cs_files">
-                %for fid, (url_fid, op, a_path, path, diff, stats) in file_diff_data.iteritems():
+                %for fid, url_fid, op, a_path, path, diff, stats in file_diff_data:
                     <div class="cs_${op}">
                       <div class="node">
                           <i class="icon-diff-${op}"></i>

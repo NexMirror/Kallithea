@@ -738,7 +738,7 @@ class PullrequestsController(BaseRepoController):
         if isinstance(_parsed, LimitedDiffContainer):
             c.limited_diff = True
 
-        c.file_diff_data = OrderedDict()
+        c.file_diff_data = []
         c.lines_added = 0
         c.lines_deleted = 0
 
@@ -750,7 +750,7 @@ class PullrequestsController(BaseRepoController):
             fid = h.FID('', filename)
             diff = diff_processor.as_html(enable_comments=True,
                                           parsed_lines=[f])
-            c.file_diff_data[fid] = (None, f['operation'], f['old_filename'], filename, diff, st)
+            c.file_diff_data.append((fid, None, f['operation'], f['old_filename'], filename, diff, st))
 
         # inline comments
         c.inline_cnt = 0

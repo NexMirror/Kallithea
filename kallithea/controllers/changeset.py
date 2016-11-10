@@ -280,7 +280,7 @@ class ChangesetController(BaseRepoController):
                                                  vcs=c.db_repo_scm_instance.alias,
                                                  format='gitdiff',
                                                  diff_limit=diff_limit)
-            file_diff_data = OrderedDict()
+            file_diff_data = []
             if method == 'show':
                 _parsed = diff_processor.prepare()
                 c.limited_diff = False
@@ -295,11 +295,11 @@ class ChangesetController(BaseRepoController):
                     url_fid = h.FID('', filename)
                     diff = diff_processor.as_html(enable_comments=enable_comments,
                                                   parsed_lines=[f])
-                    file_diff_data[fid] = (url_fid, f['operation'], f['old_filename'], filename, diff, st)
+                    file_diff_data.append((fid, url_fid, f['operation'], f['old_filename'], filename, diff, st))
             else:
                 # downloads/raw we only need RAW diff nothing else
                 diff = diff_processor.as_raw()
-                file_diff_data[''] = (None, None, None, diff, None)
+                file_diff_data.append(('', None, None, None, diff, None))
             c.changes[changeset.raw_id] = (cs1, cs2, file_diff_data)
 
         #sort comments in creation order
