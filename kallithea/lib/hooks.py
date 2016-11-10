@@ -79,7 +79,7 @@ def repo_size(ui, repo, hooktype=None, **kwargs):
 
     last_cs = repo[len(repo) - 1]
 
-    msg = ('Repository size .hg:%s repo:%s total:%s\n'
+    msg = ('Repository size .hg: %s Checkout: %s Total: %s\n'
            'Last revision is now r%s:%s\n') % (
         size_hg_f, size_root_f, size_total_f, last_cs.rev(), last_cs.hex()[:12]
     )
