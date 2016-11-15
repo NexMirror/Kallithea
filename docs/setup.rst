@@ -161,7 +161,6 @@ Here's a typical LDAP setup::
  Connection settings
  Enable LDAP          = checked
  Host                 = host.example.com
- Port                 = 389
  Account              = <account>
  Password             = <password>
  Connection Security  = LDAPS connection
@@ -198,8 +197,9 @@ Host : required
 
 .. _Port:
 
-Port : required
-    389 for un-encrypted LDAP, 636 for SSL-encrypted LDAP.
+Port : optional
+    Defaults to 389 for PLAIN un-encrypted LDAP and START_TLS.
+    Defaults to 636 for LDAPS.
 
 .. _ldap_account:
 
@@ -219,16 +219,19 @@ Password : optional
 Connection Security : required
     Defines the connection to LDAP server
 
-    No encryption
-        Plain non encrypted connection
+    PLAIN
+        Plain unencrypted LDAP connection.
+        This will by default use `Port`_ 389.
 
-    LDAPS connection
-        Enable LDAPS connections. It will likely require `Port`_ to be set to
-        a different value (standard LDAPS port is 636). When LDAPS is enabled
-        then `Certificate Checks`_ is required.
+    LDAPS
+        Use secure LDAPS connections according to `Certificate
+        Checks`_ configuration.
+        This will by default use `Port`_ 636.
 
-    START_TLS on LDAP connection
-        START TLS connection
+    START_TLS
+        Use START TLS according to `Certificate Checks`_ configuration on an
+        apparently "plain" LDAP connection.
+        This will by default use `Port`_ 389.
 
 .. _Certificate Checks:
 

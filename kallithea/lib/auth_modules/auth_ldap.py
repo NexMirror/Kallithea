@@ -48,7 +48,7 @@ except ImportError:
 
 class AuthLdap(object):
 
-    def __init__(self, server, base_dn, port=389, bind_dn='', bind_pass='',
+    def __init__(self, server, base_dn, port=None, bind_dn='', bind_pass='',
                  tls_kind='PLAIN', tls_reqcert='DEMAND', cacertdir=None, ldap_version=3,
                  ldap_filter='(&(objectClass=user)(!(objectClass=computer)))',
                  search_scope='SUBTREE', attr_login='uid'):
@@ -56,32 +56,25 @@ class AuthLdap(object):
             raise LdapImportError
 
         self.ldap_version = ldap_version
-        ldap_server_type = 'ldap'
 
         self.TLS_KIND = tls_kind
-
-        if self.TLS_KIND == 'LDAPS':
-            port = port or 689
-            ldap_server_type = ldap_server_type + 's'
-
         OPT_X_TLS_DEMAND = 2
         self.TLS_REQCERT = getattr(ldap, 'OPT_X_TLS_%s' % tls_reqcert,
                                    OPT_X_TLS_DEMAND)
         self.cacertdir = cacertdir
 
-        # split server into list
-        self.LDAP_SERVER_ADDRESS = server.split(',')
-        self.LDAP_SERVER_PORT = port
+        protocol = 'ldaps' if self.TLS_KIND == 'LDAPS' else 'ldap'
+        if not port:
+            port = 636 if self.TLS_KIND == 'LDAPS' else 389
+        self.LDAP_SERVER = str(', '.join(
+            "%s://%s:%s" % (protocol,
+                            host.strip(),
+                            port)
+            for host in server.split(',')))
 
-        # USE FOR READ ONLY BIND TO LDAP SERVER
         self.LDAP_BIND_DN = safe_str(bind_dn)
         self.LDAP_BIND_PASS = safe_str(bind_pass)
-        _LDAP_SERVERS = []
-        for host in self.LDAP_SERVER_ADDRESS:
-            _LDAP_SERVERS.append("%s://%s:%s" % (ldap_server_type,
-                                                     host.replace(' ', ''),
-                                                     self.LDAP_SERVER_PORT))
-        self.LDAP_SERVER = str(', '.join(s for s in _LDAP_SERVERS))
+
         self.BASE_DN = safe_str(base_dn)
         self.LDAP_FILTER = safe_str(ldap_filter)
         self.SEARCH_SCOPE = getattr(ldap, 'SCOPE_%s' % search_scope)
@@ -97,10 +90,6 @@ class AuthLdap(object):
         :param username: username
         :param password: password
         """
-
-        from kallithea.lib.helpers import chop_at
-
-        uid = chop_at(username, "@%s" % self.LDAP_SERVER_ADDRESS)
 
         if not password:
             log.debug("Attempt to authenticate LDAP user "
@@ -160,16 +149,16 @@ class AuthLdap(object):
                         return dn, attrs
 
                 except ldap.INVALID_CREDENTIALS:
-                    log.debug("LDAP rejected password for user '%s' (%s): %s",
-                              uid, username, dn)
+                    log.debug("LDAP rejected password for user '%s': %s",
+                              username, dn)
                     continue # accept authentication as another ldap user with same username
 
             log.debug("No matching LDAP objects for authentication "
-                      "of '%s' (%s)", uid, username)
+                      "of '%s'", username)
             raise LdapPasswordError()
 
         except ldap.NO_SUCH_OBJECT:
-            log.debug("LDAP says no such user '%s' (%s)", uid, username)
+            log.debug("LDAP says no such user '%s'", username)
             raise LdapUsernameError()
         except ldap.SERVER_DOWN:
             # [0] might be {'info': "TLS error -8179:Peer's Certificate issuer is not recognized.", 'desc': "Can't contact LDAP server"}
@@ -198,11 +187,11 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
             },
             {
                 "name": "port",
-                "validator": self.validators.Number(strip=True, not_empty=True),
+                "validator": self.validators.Number(strip=True),
                 "type": "string",
-                "description": "Port that the LDAP server is listening on",
-                "default": 389,
-                "formname": "Port"
+                "description": "Port that the LDAP server is listening on. Defaults to 389 for PLAIN/START_TLS and 636 for LDAPS.",
+                "default": "",
+                "formname": "Custom LDAP Port"
             },
             {
                 "name": "dn_user",
