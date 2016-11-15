@@ -1563,6 +1563,7 @@ class RepoGroup(Base, BaseDbModel):
 
     @classmethod
     def get_by_group_name(cls, group_name, cache=False, case_insensitive=False):
+        group_name = group_name.rstrip('/')
         if case_insensitive:
             gr = cls.query() \
                 .filter(func.lower(cls.group_name) == func.lower(group_name))

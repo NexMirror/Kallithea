@@ -64,6 +64,10 @@ class TestRepoGroupsController(TestController):
         response = self.app.get(url('repos_group', group_name=group_name))
         response.mustcontain('href="/_admin/repo_groups/%s/edit"' % group_name)
 
+        # show ignores extra trailing slashes in the URL
+        response = self.app.get(url('repos_group', group_name='%s//' % group_name))
+        response.mustcontain('href="/_admin/repo_groups/%s/edit"' % group_name)
+
         # delete
         response = self.app.post(url('delete_repo_group', group_name=group_name),
                                  {'_authentication_token': self.authentication_token()})
