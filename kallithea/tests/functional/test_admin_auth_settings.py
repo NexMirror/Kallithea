@@ -30,6 +30,7 @@ class TestAuthSettingsController(TestController):
                        'auth_ldap_port': '999',
                        'auth_ldap_tls_kind': 'PLAIN',
                        'auth_ldap_tls_reqcert': 'NEVER',
+                       'auth_ldap_cacertdir': '',
                        'auth_ldap_dn_user': 'test_user',
                        'auth_ldap_dn_pass': 'test_pass',
                        'auth_ldap_base_dn': 'test_base_dn',

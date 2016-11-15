@@ -235,10 +235,8 @@ Connection Security : required
 Certificate Checks : optional
     How SSL certificates verification is handled -- this is only useful when
     `Enable LDAPS`_ is enabled.  Only DEMAND or HARD offer full SSL security
-    while the other options are susceptible to man-in-the-middle attacks.  SSL
-    certificates can be installed to /etc/openldap/cacerts so that the
-    DEMAND or HARD options can be used with self-signed certificates or
-    certificates that do not have traceable certificates of authority.
+    with mandatory certificate validation, while the other options are
+    susceptible to man-in-the-middle attacks.
 
     NEVER
         A serve certificate will never be requested or checked.
@@ -259,6 +257,16 @@ Certificate Checks : optional
 
     HARD
         The same as DEMAND.
+
+.. _Custom CA Certificates:
+
+Custom CA Certificates : optional
+    Directory used by OpenSSL to find CAs for validating the LDAP server certificate.
+    Python 2.7.10 and later default to using the system certificate store, and
+    this should thus not be necessary when using certificates signed by a CA
+    trusted by the system.
+    It can be set to something like `/etc/openldap/cacerts` on older systems or
+    if using self-signed certificates.
 
 .. _Base DN:
 

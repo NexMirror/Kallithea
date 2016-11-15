@@ -49,7 +49,7 @@ except ImportError:
 class AuthLdap(object):
 
     def __init__(self, server, base_dn, port=389, bind_dn='', bind_pass='',
-                 tls_kind='PLAIN', tls_reqcert='DEMAND', ldap_version=3,
+                 tls_kind='PLAIN', tls_reqcert='DEMAND', cacertdir=None, ldap_version=3,
                  ldap_filter='(&(objectClass=user)(!(objectClass=computer)))',
                  search_scope='SUBTREE', attr_login='uid'):
         if ldap is None:
@@ -67,6 +67,8 @@ class AuthLdap(object):
         OPT_X_TLS_DEMAND = 2
         self.TLS_REQCERT = getattr(ldap, 'OPT_X_TLS_%s' % tls_reqcert,
                                    OPT_X_TLS_DEMAND)
+        self.cacertdir = cacertdir
+
         # split server into list
         self.LDAP_SERVER_ADDRESS = server.split(',')
         self.LDAP_SERVER_PORT = port
@@ -107,9 +109,11 @@ class AuthLdap(object):
         if "," in username:
             raise LdapUsernameError("invalid character in username: ,")
         try:
-            if hasattr(ldap, 'OPT_X_TLS_CACERTDIR'):
-                ldap.set_option(ldap.OPT_X_TLS_CACERTDIR,
-                                '/etc/openldap/cacerts')
+            if self.cacertdir:
+                if hasattr(ldap, 'OPT_X_TLS_CACERTDIR'):
+                    ldap.set_option(ldap.OPT_X_TLS_CACERTDIR, self.cacertdir)
+                else:
+                    log.debug("OPT_X_TLS_CACERTDIR is not available - can't set %s", self.cacertdir)
             ldap.set_option(ldap.OPT_REFERRALS, ldap.OPT_OFF)
             ldap.set_option(ldap.OPT_RESTART, ldap.OPT_ON)
             ldap.set_option(ldap.OPT_TIMEOUT, 20)
@@ -168,7 +172,8 @@ class AuthLdap(object):
             log.debug("LDAP says no such user '%s' (%s)", uid, username)
             raise LdapUsernameError()
         except ldap.SERVER_DOWN:
-            raise LdapConnectionError("LDAP can't access authentication server")
+            # [0] might be {'info': "TLS error -8179:Peer's Certificate issuer is not recognized.", 'desc': "Can't contact LDAP server"}
+            raise LdapConnectionError("LDAP can't connect to authentication server")
 
 
 class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
@@ -229,6 +234,13 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
                 "values": self._tls_reqcert_values,
                 "description": "Require Cert over TLS?",
                 "formname": "Certificate Checks"
+            },
+            {
+                "name": "cacertdir",
+                "validator": self.validators.UnicodeString(strip=True),
+                "type": "string",
+                "description": "Optional: Custom CA certificate directory for validating LDAPS",
+                "formname": "Custom CA Certificates"
             },
             {
                 "name": "base_dn",
@@ -314,6 +326,7 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
             'bind_pass': settings.get('dn_pass'),
             'tls_kind': settings.get('tls_kind'),
             'tls_reqcert': settings.get('tls_reqcert'),
+            'cacertdir': settings.get('cacertdir'),
             'ldap_filter': settings.get('filter'),
             'search_scope': settings.get('search_scope'),
             'attr_login': settings.get('attr_login'),
