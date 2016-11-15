@@ -41,6 +41,7 @@ log = logging.getLogger(__name__)
 
 try:
     import ldap
+    import ldap.filter
 except ImportError:
     # means that python-ldap is not installed
     ldap = None
@@ -124,8 +125,9 @@ class AuthLdap(object):
                           self.LDAP_BIND_DN)
                 server.simple_bind_s(self.LDAP_BIND_DN, self.LDAP_BIND_PASS)
 
-            filter_ = '(&%s(%s=%s))' % (self.LDAP_FILTER, self.attr_login,
-                                        username)
+            filter_ = '(&%s(%s=%s))' % (self.LDAP_FILTER,
+                                        ldap.filter.escape_filter_chars(self.attr_login),
+                                        ldap.filter.escape_filter_chars(username))
             log.debug("Authenticating %r filter %s at %s", self.BASE_DN,
                       filter_, self.LDAP_SERVER)
             lobjects = server.search_ext_s(self.BASE_DN, self.SEARCH_SCOPE,
