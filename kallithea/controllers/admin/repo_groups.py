@@ -236,7 +236,7 @@ class RepoGroupsController(BaseController):
             group_name = new_gr.group_name
             #TODO: in future action_logger(, '', '', '', self.sa)
         except formencode.Invalid as errors:
-
+            c.active = 'settings'
             return htmlfill.render(
                 render('admin/repo_groups/repo_group_edit.html'),
                 defaults=errors.value,

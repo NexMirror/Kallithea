@@ -17,6 +17,13 @@ class TestRepoGroupsController(TestController):
 
         group_name = 'foo'
 
+        # creation with form error
+        response = self.app.post(url('repos_groups'),
+                                         {'group_name': group_name,
+                                          '_authentication_token': self.authentication_token()})
+        response.mustcontain('name="group_name" type="text" value="%s"' % group_name)
+        response.mustcontain('<!-- for: group_description -->')
+
         # creation
         response = self.app.post(url('repos_groups'),
                                          {'group_name': group_name,
@@ -30,6 +37,13 @@ class TestRepoGroupsController(TestController):
         response = self.app.get(url('edit_repo_group', group_name=group_name))
         response.mustcontain('>lala<')
 
+        # edit with form error
+        response = self.app.post(url('update_repos_group', group_name=group_name),
+                                         {'group_name': group_name,
+                                          '_authentication_token': self.authentication_token()})
+        response.mustcontain('name="group_name" type="text" value="%s"' % group_name)
+        response.mustcontain('<!-- for: group_description -->')
+
         # edit
         response = self.app.post(url('update_repos_group', group_name=group_name),
                                          {'group_name': group_name,
@@ -38,6 +52,7 @@ class TestRepoGroupsController(TestController):
         self.checkSessionFlash(response, 'Updated repository group %s' % group_name)
         response = response.follow()
         response.mustcontain('name="group_name" type="text" value="%s"' % group_name)
+        response.mustcontain(no='<!-- for: group_description -->')
         response.mustcontain('>lolo<')
 
         # listing
