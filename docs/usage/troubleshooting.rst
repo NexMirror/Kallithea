@@ -69,7 +69,7 @@ Troubleshooting
 
 .. _virtualenv: http://pypi.python.org/pypi/virtualenv
 .. _python: http://www.python.org/
-.. _mercurial: http://mercurial.selenic.com/
+.. _mercurial: https://www.mercurial-scm.org/
 .. _celery: http://celeryproject.org/
 .. _rabbitmq: http://www.rabbitmq.com/
 .. _python-ldap: http://www.python-ldap.org/

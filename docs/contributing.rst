@@ -81,7 +81,7 @@ lot about preservation of copyright and license information for existing code
 that is brought into the project.
 
 We don't have a formal coding/formatting standard. We are currently using a mix
-of Mercurial (http://mercurial.selenic.com/wiki/CodingStyle), pep8, and
+of Mercurial's (https://www.mercurial-scm.org/wiki/CodingStyle), pep8, and
 consistency with existing code. Run whitespacecleanup.sh to avoid stupid
 whitespace noise in your patches.
 
