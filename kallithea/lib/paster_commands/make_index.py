@@ -28,6 +28,7 @@ Original author and date, and relevant copyright and licensing information is be
 
 import os
 import sys
+from os.path import dirname
 
 from string import strip
 from kallithea.model.repo import RepoModel
