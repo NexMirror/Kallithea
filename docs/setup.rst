@@ -864,11 +864,11 @@ the ``init.d`` directory of the Kallithea source.
 
 .. _virtualenv: http://pypi.python.org/pypi/virtualenv
 .. _python: http://www.python.org/
-.. _Mercurial: http://mercurial.selenic.com/
+.. _Mercurial: https://www.mercurial-scm.org/
 .. _Celery: http://celeryproject.org/
 .. _Celery documentation: http://docs.celeryproject.org/en/latest/getting-started/index.html
 .. _RabbitMQ: http://www.rabbitmq.com/
 .. _Redis: http://redis.io/
 .. _python-ldap: http://www.python-ldap.org/
 .. _mercurial-server: http://www.lshift.net/mercurial-server.html
-.. _PublishingRepositories: http://mercurial.selenic.com/wiki/PublishingRepositories
+.. _PublishingRepositories: https://www.mercurial-scm.org/wiki/PublishingRepositories

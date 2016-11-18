@@ -137,7 +137,7 @@ Coding guidelines
 -----------------
 
 We don't have a formal coding/formatting standard. We are currently using a mix
-of Mercurial (http://mercurial.selenic.com/wiki/CodingStyle), pep8, and
+of Mercurial's (https://www.mercurial-scm.org/wiki/CodingStyle), pep8, and
 consistency with existing code. Run ``scripts/run-all-cleanup`` before
 committing to ensure some basic code formatting consistency.
 
