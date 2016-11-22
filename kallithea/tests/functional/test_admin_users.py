@@ -17,6 +17,7 @@ from sqlalchemy.orm.exc import NoResultFound, ObjectDeletedError
 import pytest
 from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
+from kallithea.tests.test_context import test_context
 from kallithea.controllers.admin.users import UsersController
 from kallithea.model.db import User, Permission, UserIpMap, UserApiKeys
 from kallithea.lib.auth import check_password
@@ -513,22 +514,23 @@ class TestAdminUsersController(TestController):
         response.mustcontain(no=[api_key])
 
 
-class TestAdminUsersController_unittest(object):
+class TestAdminUsersController_unittest(TestController):
     """ Unit tests for the users controller """
 
     def test_get_user_or_raise_if_default(self, monkeypatch):
-        # flash complains about an non-existing session
-        def flash_mock(*args, **kwargs):
-            pass
-        monkeypatch.setattr(h, 'flash', flash_mock)
+        with test_context(self.app):
+            # flash complains about an non-existing session
+            def flash_mock(*args, **kwargs):
+                pass
+            monkeypatch.setattr(h, 'flash', flash_mock)
 
-        u = UsersController()
-        # a regular user should work correctly
-        user = User.get_by_username(TEST_USER_REGULAR_LOGIN)
-        assert u._get_user_or_raise_if_default(user.user_id) == user
-        # the default user should raise
-        with pytest.raises(HTTPNotFound):
-            u._get_user_or_raise_if_default(User.get_default_user().user_id)
+            u = UsersController()
+            # a regular user should work correctly
+            user = User.get_by_username(TEST_USER_REGULAR_LOGIN)
+            assert u._get_user_or_raise_if_default(user.user_id) == user
+            # the default user should raise
+            with pytest.raises(HTTPNotFound):
+                u._get_user_or_raise_if_default(User.get_default_user().user_id)
 
 
 class TestAdminUsersControllerForDefaultUser(TestController):

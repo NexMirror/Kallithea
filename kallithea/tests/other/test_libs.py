@@ -31,6 +31,7 @@ import mock
 from kallithea.tests.base import *
 from kallithea.lib.utils2 import AttributeDict
 from kallithea.model.db import Repository
+from kallithea.tests.test_context import test_context
 
 proto = 'http'
 TEST_URLS = [
@@ -154,9 +155,10 @@ class TestLibs(TestController):
     def test_age(self, age_args, expected):
         from kallithea.lib.utils2 import age
         from dateutil import relativedelta
-        n = datetime.datetime(year=2012, month=5, day=17)
-        delt = lambda *args, **kwargs: relativedelta.relativedelta(*args, **kwargs)
-        assert age(n + delt(**age_args), now=n) == expected
+        with test_context(self.app):
+            n = datetime.datetime(year=2012, month=5, day=17)
+            delt = lambda *args, **kwargs: relativedelta.relativedelta(*args, **kwargs)
+            assert age(n + delt(**age_args), now=n) == expected
 
     @parametrize('age_args,expected', [
         (dict(), u'just now'),
@@ -178,9 +180,10 @@ class TestLibs(TestController):
     def test_age_short(self, age_args, expected):
         from kallithea.lib.utils2 import age
         from dateutil import relativedelta
-        n = datetime.datetime(year=2012, month=5, day=17)
-        delt = lambda *args, **kwargs: relativedelta.relativedelta(*args, **kwargs)
-        assert age(n + delt(**age_args), show_short_version=True, now=n) == expected
+        with test_context(self.app):
+            n = datetime.datetime(year=2012, month=5, day=17)
+            delt = lambda *args, **kwargs: relativedelta.relativedelta(*args, **kwargs)
+            assert age(n + delt(**age_args), show_short_version=True, now=n) == expected
 
     @parametrize('age_args,expected', [
         (dict(), u'just now'),
@@ -196,9 +199,10 @@ class TestLibs(TestController):
     def test_age_in_future(self, age_args, expected):
         from kallithea.lib.utils2 import age
         from dateutil import relativedelta
-        n = datetime.datetime(year=2012, month=5, day=17)
-        delt = lambda *args, **kwargs: relativedelta.relativedelta(*args, **kwargs)
-        assert age(n + delt(**age_args), now=n) == expected
+        with test_context(self.app):
+            n = datetime.datetime(year=2012, month=5, day=17)
+            delt = lambda *args, **kwargs: relativedelta.relativedelta(*args, **kwargs)
+            assert age(n + delt(**age_args), now=n) == expected
 
     def test_tag_extractor(self):
         sample = (
