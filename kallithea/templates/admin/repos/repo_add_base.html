@@ -10,7 +10,7 @@ ${h.form(url('repos'))}
                 ${h.text('repo_name',class_="small")}
             </div>
          </div>
-        <div id="remote_clone" class="field">
+        <div id="remote_clone" class="form-group">
             <label class="control-label" for="clone_uri">${_('Clone remote repository')}:</label>
             <div class="input">
                 ${h.text('clone_uri',class_="small")}
@@ -33,7 +33,7 @@ ${h.form(url('repos'))}
                 <span class="help-block">${_('Optionally select a group to put this repository into.')}</span>
             </div>
         </div>
-        <div id="copy_perms" class="field">
+        <div id="copy_perms" class="form-group">
             <label class="control-label" for="repo_copy_permissions">${_('Copy parent group permissions')}:</label>
             <div class="checkboxes">
                 ${h.checkbox('repo_copy_permissions',value="True")}
