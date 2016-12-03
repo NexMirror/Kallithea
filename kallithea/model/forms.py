@@ -46,30 +46,32 @@ from kallithea.model import validators as v
 log = logging.getLogger(__name__)
 
 
-class LoginForm(formencode.Schema):
-    allow_extra_fields = True
-    filter_extra_fields = True
-    username = v.UnicodeString(
-        strip=True,
-        min=1,
-        not_empty=True,
-        messages={
-           'empty': _('Please enter a login'),
-           'tooShort': _('Enter a value %(min)i characters long or more')}
-    )
+def LoginForm():
+    class _LoginForm(formencode.Schema):
+        allow_extra_fields = True
+        filter_extra_fields = True
+        username = v.UnicodeString(
+            strip=True,
+            min=1,
+            not_empty=True,
+            messages={
+               'empty': _('Please enter a login'),
+               'tooShort': _('Enter a value %(min)i characters long or more')}
+        )
 
-    password = v.UnicodeString(
-        strip=False,
-        min=3,
-        not_empty=True,
-        messages={
-            'empty': _('Please enter a password'),
-            'tooShort': _('Enter %(min)i characters or more')}
-    )
+        password = v.UnicodeString(
+            strip=False,
+            min=3,
+            not_empty=True,
+            messages={
+                'empty': _('Please enter a password'),
+                'tooShort': _('Enter %(min)i characters or more')}
+        )
 
-    remember = v.StringBoolean(if_missing=False)
+        remember = v.StringBoolean(if_missing=False)
 
-    chained_validators = [v.ValidAuth()]
+        chained_validators = [v.ValidAuth()]
+    return _LoginForm
 
 
 def PasswordChangeForm(username):

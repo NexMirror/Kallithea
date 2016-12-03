@@ -87,7 +87,7 @@ class LoginController(BaseController):
 
         if request.POST:
             # import Login Form validator class
-            login_form = LoginForm()
+            login_form = LoginForm()()
             try:
                 c.form_result = login_form.to_python(dict(request.POST))
                 # form checks for username/password, now we're authenticated
