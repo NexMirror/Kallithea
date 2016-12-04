@@ -37,8 +37,10 @@
             ${h.end_form()}
         </div>
         <div class="browser-branch">
-            ${h.checkbox('stay_at_branch',c.changeset.branch,c.changeset.branch==c.branch)}
-            <label>${_('Follow current branch')}</label>
+            <label>
+                ${h.checkbox('stay_at_branch',c.changeset.branch,c.changeset.branch==c.branch)}
+                ${_('Follow current branch')}
+            </label>
         </div>
         <div id="search_activate_id" class="search_activate">
             <a class="btn btn-default btn-xs" id="filter_activate" href="#">${_('Search File List')}</a>

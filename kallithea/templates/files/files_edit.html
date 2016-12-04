@@ -55,8 +55,10 @@ ${self.repo_context_bar('files')}
                       % endif
                     </div>
                 </div>
-                <label class="commit" for="mimetype">${_('Editing file')}: ${c.file.unicode_path}</label>
-                <select class="form-control" id="mimetype" name="mimetype"/>
+                <label class="commit">
+                    ${_('Editing file')}: ${c.file.unicode_path}
+                    <select class="form-control" id="mimetype" name="mimetype"/>
+                </label>
             </div>
                 <pre id="editor_pre"></pre>
                 <textarea id="editor" name="content" style="display:none">${h.escape(c.file.content)|n}</textarea>

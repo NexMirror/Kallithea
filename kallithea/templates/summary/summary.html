@@ -113,8 +113,10 @@ summary = lambda n:{False:'summary-short'}.get(n)
                     </span>
                     ${h.hidden('download_options')}
                     <span style="vertical-align: bottom">
-                      <input id="archive_subrepos" type="checkbox" name="subrepos" />
-                      <label for="archive_subrepos" data-toggle="tooltip" title="${_('Check this to download archive with subrepos')}" >${_('With subrepos')}</label>
+                      <label data-toggle="tooltip" title="${_('Check this to download archive with subrepos')}">
+                          <input id="archive_subrepos" type="checkbox" name="subrepos" />
+                          ${_('With subrepos')}
+                      </label>
                     </span>
                 %endif
               </div>

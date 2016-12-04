@@ -5,25 +5,33 @@ ${h.form(url('admin_settings_mapping'), method='post')}
                 <label class="control-label" for="destroy">${_('Rescan options')}:</label>
                 <div>
                     <div class="checkbox">
-                        ${h.checkbox('destroy',True)}
-                        <label for="destroy">${_('Delete records of missing repositories')}</label>
+                        <label>
+                            ${h.checkbox('destroy',True)}
+                            ${_('Delete records of missing repositories')}
+                        </label>
                     </div>
                     <span class="help-block">${_('Check this option to remove all comments, pull requests and other records related to repositories that no longer exist in the filesystem.')}</span>
 
                     <div class="checkbox">
-                        ${h.checkbox('invalidate',True)}
-                        <label for="invalidate"> ${_('Invalidate cache for all repositories')}</label>
+                        <label>
+                            ${h.checkbox('invalidate',True)}
+                            ${_('Invalidate cache for all repositories')}
+                        </label>
                     </div>
                     <span class="help-block">${_('Check this to reload data and clear cache keys for all repositories.')}</span>
 
                     <div class="checkbox">
-                        ${h.checkbox('hooks',True)}
-                        <label for="hooks"> ${_('Install Git hooks')} </label>
+                        <label>
+                            ${h.checkbox('hooks',True)}
+                            ${_('Install Git hooks')}
+                        </label>
                     </div>
                     <span class="help-block">${_("Verify if Kallithea's Git hooks are installed for each repository. Current hooks will be updated to the latest version.")}</span>
                     <div class="checkbox">
-                        ${h.checkbox('hooks_overwrite', True)}
-                        <label for="hooks_overwrite"> ${_('Overwrite existing Git hooks')}</label>
+                        <label>
+                            ${h.checkbox('hooks_overwrite', True)}
+                            ${_('Overwrite existing Git hooks')}
+                        </label>
                     </div>
                     <span class="help-block">${_("If installing Git hooks, overwrite any existing hooks, even if they do not seem to come from Kallithea. WARNING: This operation will destroy any custom git hooks you may have deployed by hand!")}</span>
                 </div>

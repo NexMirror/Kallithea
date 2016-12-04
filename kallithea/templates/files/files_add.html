@@ -50,8 +50,10 @@ ${self.repo_context_bar('files')}
           </h3>
             <div id="body" class="codeblock">
             <div class="code-header" id="mimetype_header">
-                <label class="commit" for="mimetype">${_('New file type')}</label>
-                <select class="form-control" id="mimetype" name="mimetype"/>
+                <label class="commit">
+                    ${_('New file type')}
+                    <select class="form-control" id="mimetype" name="mimetype"/>
+                </label>
             </div>
                 <div id="editor_container">
                     <pre id="editor_pre"></pre>

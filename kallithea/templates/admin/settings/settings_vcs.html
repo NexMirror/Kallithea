@@ -5,20 +5,28 @@ ${h.form(url('admin_settings'), method='post')}
                 <label>${_('Hooks')}:</label>
                 <div>
                     <div class="checkbox">
-                        ${h.checkbox('hooks_changegroup_repo_size','True')}
-                        <label for="hooks_changegroup_repo_size">${_('Show repository size after push')}</label>
+                        <label>
+                            ${h.checkbox('hooks_changegroup_repo_size','True')}
+                            ${_('Show repository size after push')}
+                        </label>
                     </div>
                     <div class="checkbox">
-                        ${h.checkbox('hooks_changegroup_push_logger','True')}
-                        <label for="hooks_changegroup_push_logger">${_('Log user push commands')}</label>
+                        <label>
+                            ${h.checkbox('hooks_changegroup_push_logger','True')}
+                            ${_('Log user push commands')}
+                        </label>
                     </div>
                     <div class="checkbox">
-                        ${h.checkbox('hooks_outgoing_pull_logger','True')}
-                        <label for="hooks_outgoing_pull_logger">${_('Log user pull commands')}</label>
+                        <label>
+                            ${h.checkbox('hooks_outgoing_pull_logger','True')}
+                            ${_('Log user pull commands')}
+                        </label>
                     </div>
                     <div class="checkbox">
-                        ${h.checkbox('hooks_changegroup_update','True')}
-                        <label for="hooks_changegroup_update">${_('Update repository after push (hg update)')}</label>
+                        <label>
+                            ${h.checkbox('hooks_changegroup_update','True')}
+                            ${_('Update repository after push (hg update)')}
+                        </label>
                     </div>
                 </div>
             </div>
@@ -26,17 +34,23 @@ ${h.form(url('admin_settings'), method='post')}
                 <label>${_('Mercurial extensions')}:</label>
                 <div>
                     <div class="checkbox">
-                        ${h.checkbox('extensions_largefiles','True')}
-                        <label for="extensions_largefiles">${_('Enable largefiles extension')}</label>
+                        <label>
+                            ${h.checkbox('extensions_largefiles','True')}
+                            ${_('Enable largefiles extension')}
+                        </label>
                     </div>
                     <div class="checkbox">
-                        ${h.checkbox('extensions_hgsubversion','True')}
-                        <label for="extensions_hgsubversion">${_('Enable hgsubversion extension')}</label>
+                        <label>
+                            ${h.checkbox('extensions_hgsubversion','True')}
+                            ${_('Enable hgsubversion extension')}
+                        </label>
                     </div>
                     <span class="help-block">${_('Requires hgsubversion library to be installed. Enables cloning of remote Subversion repositories while converting them to Mercurial.')}</span>
                     ##<div class="checkbox">
-                    ##    ${h.checkbox('extensions_hggit','True')}
-                    ##    <label for="extensions_hggit">${_('Enable hg-git extension')}</label>
+                    ##    <label>
+                    ##        ${h.checkbox('extensions_hggit','True')}
+                    ##        ${_('Enable hg-git extension')}
+                    ##    </label>
                     ##</div>
                     ##<span class="help-block">${_('Requires hg-git library to be installed. Enables cloning of remote Git repositories while converting them to Mercurial.')}</span>
                 </div>

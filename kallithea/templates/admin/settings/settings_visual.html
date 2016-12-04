@@ -7,23 +7,28 @@ ${h.form(url('admin_settings_visual'), method='post')}
                 <label>${_('General')}:</label>
                 <div>
                     <div class="checkbox">
-                        ${h.checkbox('repository_fields','True')}
-                        <label for="repository_fields">${_('Use repository extra fields')}</label>
+                        <label>
+                            ${h.checkbox('repository_fields','True')}
+                            ${_('Use repository extra fields')}
+                        </label>
+                        <span class="help-block">${_('Allows storing additional customized fields per repository.')}</span>
                     </div>
-                    <span class="help-block">${_('Allows storing additional customized fields per repository.')}</span>
 
                     <div class="checkbox">
-                        ${h.checkbox('show_version','True')}
-                        <label for="show_version">${_('Show Kallithea version')}</label>
+                        <label>
+                            ${h.checkbox('show_version','True')}
+                            ${_('Show Kallithea version')}
+                        </label>
                     </div>
                     <span class="help-block">${_('Shows or hides a version number of Kallithea displayed in the footer.')}</span>
 
                     <div class="checkbox">
-                        ${h.checkbox('use_gravatar','True')}
-                        <label for="use_gravatar">${_('Use Gravatars in Kallithea')}</label>
+                        <label>
+                            ${h.checkbox('use_gravatar','True')}
+                            ${_('Use Gravatars in Kallithea')}
+                        </label>
                     </div>
-                </div>
-                <div>
+                    <div>
                         ${h.text('gravatar_url', size=80, class_='form-control')}
                         <span class="help-block">${_('''Gravatar URL allows you to use another avatar server application.
                                                         The following variables of the URL will be replaced accordingly.
@@ -32,6 +37,7 @@ ${h.form(url('admin_settings_visual'), method='post')}
                                                         {md5email}  md5 hash of the user email (like at gravatar.com),
                                                         {size}      size of the image that is expected from the server application,
                                                         {netloc}    network location/server host of running Kallithea server''')}</span>
+                    </div>
                 </div>
             </div>
 
@@ -69,12 +75,16 @@ ${h.form(url('admin_settings_visual'), method='post')}
                 <label>${_('Icons')}:</label>
                 <div>
                     <div class="checkbox">
-                        ${h.checkbox('show_public_icon','True')}
-                        <label for="show_public_icon">${_('Show public repository icon on repositories')}</label>
+                        <label>
+                            ${h.checkbox('show_public_icon','True')}
+                            ${_('Show public repository icon on repositories')}
+                        </label>
                     </div>
                     <div class="checkbox">
-                        ${h.checkbox('show_private_icon','True')}
-                        <label for="show_private_icon">${_('Show private repository icon on repositories')}</label>
+                        <label>
+                            ${h.checkbox('show_private_icon','True')}
+                            ${_('Show private repository icon on repositories')}
+                        </label>
                     </div>
                     <span class="help-block">${_('Show public/private icons next to repository names.')}</span>
                  </div>
@@ -85,9 +95,9 @@ ${h.form(url('admin_settings_visual'), method='post')}
                 <div>
                     <div class="checkbox">
                         ${h.checkbox('stylify_metatags','True')}
-                        <label for="stylify_metatags">${_('Stylify recognised meta tags:')}</label>
                     </div>
-                    <div style="padding-left: 20px;">
+                    <div>
+                        ${_('Stylify recognised meta tags:')}
                         <ul> <!-- Fix style here -->
                             <li>[featured] <span class="metatag" tag="featured">featured</span></li>
                             <li>[stale] <span class="metatag" tag="stale">stale</span></li>

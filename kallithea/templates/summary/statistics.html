@@ -209,8 +209,8 @@ function SummaryPlot(from,to,dataset,overview_dataset) {
             i++;
             if(data[pos].label != ''){
                 choiceContainerTable.innerHTML +=
-                    '<tr><td><input type="checkbox" id="id_user_{0}" name="{0}" checked="checked" /> \
-                     <label for="id_user_{0}">{0}</label></td></tr>'.format(data[pos].label);
+                    '<tr><td><label><input type="checkbox" id="id_user_{0}" name="{0}" checked="checked" /> \
+                     {0}</label></td></tr>'.format(data[pos].label);
             }
         }
     }

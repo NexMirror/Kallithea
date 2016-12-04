@@ -15,11 +15,12 @@ ${h.form(url('admin_permissions'), method='post')}
                 <label class="control-label" for="default_repo_perm">${_('Repository')}:</label>
                 <div class="form-inline">
                     ${h.select('default_repo_perm','',c.repo_perms_choices,class_='form-control')}
-                    ${h.checkbox('overwrite_default_repo','true')}
-                    <label for="overwrite_default_repo">
-                    <span data-toggle="tooltip"
-                        title="${_('All default permissions on each repository will be reset to chosen permission, note that all custom default permission on repositories will be lost')}">
-                    ${_('Apply to all existing repositories')}</span> </label>
+                    <label>
+                        ${h.checkbox('overwrite_default_repo','true')}
+                        <span data-toggle="tooltip" title="${_('All default permissions on each repository will be reset to chosen permission, note that all custom default permission on repositories will be lost')}">
+                            ${_('Apply to all existing repositories')}
+                        </span>
+                    </label>
                     <span class="help-block">${_('Permissions for the Default user on new repositories.')}</span>
                 </div>
             </div>
@@ -27,11 +28,12 @@ ${h.form(url('admin_permissions'), method='post')}
                 <label class="control-label" for="default_group_perm">${_('Repository group')}:</label>
                 <div class="form-inline">
                     ${h.select('default_group_perm','',c.group_perms_choices,class_='form-control')}
-                    ${h.checkbox('overwrite_default_group','true')}
-                    <label for="overwrite_default_group">
-                    <span data-toggle="tooltip"
-                        title="${_('All default permissions on each repository group will be reset to chosen permission, note that all custom default permission on repository groups will be lost')}">
-                    ${_('Apply to all existing repository groups')}</span> </label>
+                    <label>
+                        ${h.checkbox('overwrite_default_group','true')}
+                        <span data-toggle="tooltip" title="${_('All default permissions on each repository group will be reset to chosen permission, note that all custom default permission on repository groups will be lost')}">
+                            ${_('Apply to all existing repository groups')}
+                        </span>
+                    </label>
                     <span class="help-block">${_('Permissions for the Default user on new repository groups.')}</span>
                 </div>
             </div>
@@ -39,11 +41,12 @@ ${h.form(url('admin_permissions'), method='post')}
                 <label class="control-label" for="default_user_group_perm">${_('User group')}:</label>
                 <div class="form-inline">
                     ${h.select('default_user_group_perm','',c.user_group_perms_choices,class_='form-control')}
-                    ${h.checkbox('overwrite_default_user_group','true')}
-                    <label for="overwrite_default_user_group">
-                    <span data-toggle="tooltip"
-                        title="${_('All default permissions on each user group will be reset to chosen permission, note that all custom default permission on user groups will be lost')}">
-                    ${_('Apply to all existing user groups')}</span></label>
+                    <label>
+                        ${h.checkbox('overwrite_default_user_group','true')}
+                        <span data-toggle="tooltip" title="${_('All default permissions on each user group will be reset to chosen permission, note that all custom default permission on user groups will be lost')}">
+                            ${_('Apply to all existing user groups')}
+                        </span>
+                    </label>
                     <span class="help-block">${_('Permissions for the Default user on new user groups.')}</span>
                 </div>
             </div>

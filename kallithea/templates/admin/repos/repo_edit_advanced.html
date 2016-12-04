@@ -82,8 +82,14 @@ ${h.form(url('delete_repo', repo_name=c.repo_name))}
     </button>
     %if c.repo_info.forks.count():
         ${ungettext('This repository has %s fork', 'This repository has %s forks', c.repo_info.forks.count()) % c.repo_info.forks.count()}
-        <input type="radio" name="forks" value="detach_forks" checked="checked"/> <label for="forks">${_('Detach forks')}</label>
-        <input type="radio" name="forks" value="delete_forks" /> <label for="forks">${_('Delete forks')}</label>
+        <label>
+            <input type="radio" name="forks" value="detach_forks" checked="checked"/>
+            ${_('Detach forks')}
+        </label>
+        <label>
+            <input type="radio" name="forks" value="delete_forks" />
+            ${_('Delete forks')}
+        </label>
     %endif
     <div class="text-muted" style="border:none">
         <ul>

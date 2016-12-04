@@ -36,8 +36,10 @@
                 ${h.gravatar_div(c.authuser.email, size=32)}
                 <textarea style="resize:vertical; width:400px;border: 1px solid #ccc;border-radius: 3px;" id="description" name="description" placeholder="${_('Gist description ...')}"></textarea>
                 <div style="padding:0px 0px 0px 42px">
-                <label for='lifetime'>${_('Gist lifetime')}</label>
-                ${h.select('lifetime', '', c.lifetime_options)}
+                    <label>
+                        ${_('Gist lifetime')}
+                        ${h.select('lifetime', '', c.lifetime_options)}
+                    </label>
                 </div>
             </div>
             <div id="body" class="codeblock">

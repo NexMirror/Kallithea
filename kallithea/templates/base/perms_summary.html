@@ -11,10 +11,10 @@
             %if section != 'global':
                 <div style="float: right">
                 ${_('Show')}:
-                ${h.checkbox('perms_filter_none_%s' % section, 'none', 'checked', class_='perm_filter filter_%s' % section, section=section, perm_type='none')} <label for="${'perms_filter_none_%s' % section}"><span class="perm_tag none">${_('None')}</span></label>
-                ${h.checkbox('perms_filter_read_%s' % section, 'read', 'checked', class_='perm_filter filter_%s' % section, section=section, perm_type='read')} <label for="${'perms_filter_read_%s' % section}"><span class="perm_tag read">${_('Read')}</span></label>
-                ${h.checkbox('perms_filter_write_%s' % section, 'write', 'checked', class_='perm_filter filter_%s' % section, section=section, perm_type='write')} <label for="${'perms_filter_write_%s' % section}"> <span class="perm_tag write">${_('Write')}</span></label>
-                ${h.checkbox('perms_filter_admin_%s' % section, 'admin', 'checked', class_='perm_filter filter_%s' % section, section=section, perm_type='admin')} <label for="${'perms_filter_admin_%s' % section}"><span class="perm_tag admin">${_('Admin')}</span></label>
+                <label>${h.checkbox('perms_filter_none_%s' % section, 'none', 'checked', class_='perm_filter filter_%s' % section, section=section, perm_type='none')}<span class="perm_tag none">${_('None')}</span></label>
+                <label>${h.checkbox('perms_filter_read_%s' % section, 'read', 'checked', class_='perm_filter filter_%s' % section, section=section, perm_type='read')}<span class="perm_tag read">${_('Read')}</span></label>
+                <label>${h.checkbox('perms_filter_write_%s' % section, 'write', 'checked', class_='perm_filter filter_%s' % section, section=section, perm_type='write')}<span class="perm_tag write">${_('Write')}</span></label>
+                <label>${h.checkbox('perms_filter_admin_%s' % section, 'admin', 'checked', class_='perm_filter filter_%s' % section, section=section, perm_type='admin')}<span class="perm_tag admin">${_('Admin')}</span></label>
                 </div>
             %endif
         </div>
