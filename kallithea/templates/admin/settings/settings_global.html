@@ -5,7 +5,7 @@ ${h.form(url('admin_settings_global'), method='post')}
 
              <div class="form-group">
                 <label class="control-label" for="title">${_('Site branding')}:</label>
-                <div class="input">
+                <div>
                     ${h.text('title',size=30)}
                     <span class="help-block">${_('Set a custom title for your Kallithea Service.')}</span>
                 </div>
@@ -13,14 +13,14 @@ ${h.form(url('admin_settings_global'), method='post')}
 
             <div class="form-group">
                 <label class="control-label" for="realm">${_('HTTP authentication realm')}:</label>
-                <div class="input">
+                <div>
                     ${h.text('realm',size=30)}
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="control-label" for="ga_code">${_('HTML/JavaScript/CSS customization block')}:</label>
-                <div class="input">
+                <div>
                     ${h.textarea('ga_code', cols=80, rows=10)}
                     <span class="help-block">${_('HTML (possibly with \
                         JavaScript and/or CSS) that will be added to the bottom \
@@ -33,7 +33,7 @@ ${h.form(url('admin_settings_global'), method='post')}
 
             <div class="form-group">
                 <label class="control-label" for="captcha_public_key">${_('ReCaptcha public key')}:</label>
-                <div class="input">
+                <div>
                     ${h.text('captcha_public_key',size=60)}
                     <span class="help-block">${_('Public key for reCaptcha system.')}</span>
                 </div>
@@ -41,7 +41,7 @@ ${h.form(url('admin_settings_global'), method='post')}
 
             <div class="form-group">
                 <label class="control-label" for="captcha_private_key">${_('ReCaptcha private key')}:</label>
-                <div class="input">
+                <div>
                     ${h.text('captcha_private_key',size=60)}
                     <span class="help-block">${_('Private key for reCaptcha system. Setting this value will enable captcha on registration.')}</span>
                 </div>

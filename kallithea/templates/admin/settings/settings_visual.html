@@ -23,7 +23,7 @@ ${h.form(url('admin_settings_visual'), method='post')}
                         <label for="use_gravatar">${_('Use Gravatars in Kallithea')}</label>
                     </div>
                 </div>
-                <div class="input">
+                <div>
                         ${h.text('gravatar_url', size=80)}
                         <span class="help-block">${_('''Gravatar URL allows you to use another avatar server application.
                                                         The following variables of the URL will be replaced accordingly.
@@ -37,7 +37,7 @@ ${h.form(url('admin_settings_visual'), method='post')}
 
             <div class="form-group">
                 <label>${_('Clone URL')}:</label>
-                <div class="input">
+                <div>
                         ${h.text('clone_uri_tmpl', size=80)}
                         <span class="help-block">${_('''Schema of clone URL construction eg. '{scheme}://{user}@{netloc}/{repo}'.
                                                         The following variables are available:
@@ -51,7 +51,7 @@ ${h.form(url('admin_settings_visual'), method='post')}
 
             <div class="form-group">
                 <label class="control-label" for="page_size">${_('Repository page size')}:</label>
-                <div class="input">
+                <div>
                     ${h.text('page_size',size=5)}
                     <span class="help-block">${_('Number of items displayed in the repository pages before pagination is shown.')}</span>
                 </div>
@@ -59,7 +59,7 @@ ${h.form(url('admin_settings_visual'), method='post')}
 
             <div class="form-group">
                 <label class="control-label" for="admin_grid_items">${_('Admin page size')}:</label>
-                <div class="input">
+                <div>
                     ${h.text('admin_grid_items',size=5)}
                     <span class="help-block">${_('Number of items displayed in the admin pages grids before pagination is shown.')}</span>
                 </div>

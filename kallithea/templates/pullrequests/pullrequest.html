@@ -28,7 +28,7 @@ ${self.repo_context_bar('showpullrequest')}
 
             <div class="form-group">
                 <label class="control-label" for="pullrequest_title">${_('Title')}:</label>
-                <div class="input">
+                <div>
                     ${h.text('pullrequest_title',class_='form-control',placeholder=_('Summarize the changes - or leave empty'))}
                 </div>
             </div>
@@ -42,7 +42,7 @@ ${self.repo_context_bar('showpullrequest')}
 
             <div class="form-group">
                 <label class="control-label">${_('Changeset flow')}:</label>
-                <div class="input">
+                <div>
                     ##ORG
                     <div>
                         <div>

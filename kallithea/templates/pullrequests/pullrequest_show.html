@@ -40,7 +40,7 @@ ${self.repo_context_bar('showpullrequest')}
               <a class="btn btn-default btn-xs" onclick="$('.pr-do-edit').show();$('.pr-not-edit').hide()">${_("Edit")}</a>
             </div>
             %endif
-          <div class="input">
+          <div>
             <div class="formatted-fixed">${h.urlify_text(c.pull_request.description, c.pull_request.org_repo.repo_name)}</div>
           </div>
         </div>
@@ -49,7 +49,7 @@ ${self.repo_context_bar('showpullrequest')}
         <div class="pr-do-edit" style="display:none">
           <div>
               <label for="pullrequest_title">${_('Title')}:</label>
-              <div class="input">
+              <div>
                   ${h.text('pullrequest_title',class_='form-control',value=c.pull_request.title,placeholder=_('Summarize the changes'))}
               </div>
           </div>
@@ -65,7 +65,7 @@ ${self.repo_context_bar('showpullrequest')}
 
         <div>
           <label>${_('Reviewer voting result')}:</label>
-          <div class="input">
+          <div>
             <div class="changeset-status-container" style="float:none;clear:both">
             %if c.current_voting_result:
               <span class="changeset-status-ico" style="padding:0px 4px 0px 0px">
@@ -82,7 +82,7 @@ ${self.repo_context_bar('showpullrequest')}
         </div>
         <div>
           <label>${_('Still not reviewed by')}:</label>
-          <div class="input">
+          <div>
             % if len(c.pull_request_pending_reviewers) > 0:
                 <div data-toggle="tooltip" title="${', '.join([x.username for x in c.pull_request_pending_reviewers])}">${ungettext('%d reviewer', '%d reviewers',len(c.pull_request_pending_reviewers)) % len(c.pull_request_pending_reviewers)}</div>
             % elif len(c.pull_request_reviewers) > 0:
@@ -94,7 +94,7 @@ ${self.repo_context_bar('showpullrequest')}
         </div>
         <div>
           <label>${_('Origin')}:</label>
-          <div class="input">
+          <div>
             <div>
               ${h.link_to_ref(c.pull_request.org_repo.repo_name, c.cs_ref_type, c.cs_ref_name, c.cs_rev)}
               %if c.cs_ref_type != 'branch':
@@ -105,7 +105,7 @@ ${self.repo_context_bar('showpullrequest')}
         </div>
         <div>
           <label>${_('Target')}:</label>
-          <div class="input">
+          <div>
             %if c.is_range:
               ${_("This is just a range of changesets and doesn't have a target or a real merge ancestor.")}
             %else:
@@ -116,7 +116,7 @@ ${self.repo_context_bar('showpullrequest')}
         </div>
         <div>
           <label>${_('Pull changes')}:</label>
-          <div class="input">
+          <div>
             %if c.cs_ranges:
               <div>
                ## TODO: use cs_ranges[-1] or org_ref_parts[1] in both cases?
@@ -131,18 +131,18 @@ ${self.repo_context_bar('showpullrequest')}
         </div>
         <div>
           <label>${_('Created on')}:</label>
-          <div class="input">
+          <div>
               <div>${h.fmt_date(c.pull_request.created_on)}</div>
           </div>
         </div>
         <div>
           <label>${_('Owner')}:</label>
-          <div class="input pr-not-edit">
+          <div class="pr-not-edit">
                   ${h.gravatar_div(c.pull_request.owner.email, size=20)}
                   <span>${c.pull_request.owner.full_name_and_username}</span><br/>
                   <span><a href="mailto:${c.pull_request.owner.email}">${c.pull_request.owner.email}</a></span><br/>
           </div>
-          <div class="input pr-do-edit ac" style="display:none">
+          <div class="pr-do-edit ac" style="display:none">
                ${h.text('owner', class_='form-control', value=c.pull_request.owner.username, placeholder=_('Username'))}
                <div id="owner_completion_container"></div>
           </div>
@@ -150,7 +150,7 @@ ${self.repo_context_bar('showpullrequest')}
 
         <div>
           <label>${_('Next iteration')}:</label>
-            <div class="input">
+            <div>
               <div class="msg-div">${c.update_msg}</div>
               %if c.avail_revs:
               <div id="updaterevs" style="max-height:200px; overflow-y:auto; overflow-x:hidden; margin-bottom: 10px; padding: 1px 0">

@@ -44,7 +44,7 @@ ${h.form(url('admin_settings'), method='post')}
             %if c.visual.allow_repo_location_change:
             <div class="form-group">
                 <label class="control-label" for="paths_root_path">${_('Location of repositories')}:</label>
-                <div class="input">
+                <div>
                     ${h.text('paths_root_path',size=60,readonly="readonly")}
                     <span id="path_unlock" data-toggle="tooltip" style="cursor: pointer"
                             title="${_('Click to unlock. You must restart Kallithea in order to make this setting take effect.')}">

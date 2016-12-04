@@ -30,7 +30,7 @@
         <div class="form-horizontal">
             <div class="form-group">
                 <label class="control-label" for="group_name">${_('Group name')}:</label>
-                <div class="input">
+                <div>
                     ${h.text('group_name',class_='form-control')}
                 </div>
             </div>
@@ -44,7 +44,7 @@
 
             <div class="form-group">
                 <label class="control-label" for="parent_group_id">${_('Group parent')}:</label>
-                <div class="input">
+                <div>
                     ${h.select('parent_group_id',request.GET.get('parent_group'),c.repo_groups,class_='form-control')}
                 </div>
             </div>

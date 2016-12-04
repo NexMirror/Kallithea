@@ -846,28 +846,26 @@ div.header img {
     font-weight: 700;
 }
 
-#content div.panel div.form div.form-horizontal div.form-group div.input {
+#content div.panel div.form div.form-horizontal div.form-group > div {
     margin: 0 20px 0 200px;
 }
 
-#content div.panel div.form div.form-horizontal div.form-group div.input.summary {
-    margin: 0 0 0 110px;
-}
-#content div.panel div.form div.form-horizontal div.form-group div.input.summary-short {
+#content div.panel div.form div.form-horizontal div.form-group > div.summary,
+#content div.panel div.form div.form-horizontal div.form-group > div.summary-short {
     margin: 10px 20px 10px 110px;
 }
 #content div.panel div.form div.form-horizontal div.form-group > div.summary-short input {
     margin: 0;
 }
-#content div.panel div.form div.form-horizontal div.form-group div.file {
+#content div.panel div.form div.form-horizontal div.form-group > div.file {
     margin: 0 20px 0 200px;
 }
-#content div.panel div.form div.form-horizontal div.form-group div.editor {
+#content div.panel div.form div.form-horizontal div.form-group > div.editor {
     margin: 0 10px 0 200px;
 }
 
 #content div.panel div.form div.form-horizontal div.form-group > label > input,
-#content div.panel div.form div.form-horizontal div.form-group div.input input,
+#content div.panel div.form div.form-horizontal div.form-group > div input,
 .reviewer_ac input {
     background: #FFF;
     border-top: 1px solid #b3b3b3;
@@ -880,8 +878,8 @@ div.header img {
     padding: 7px 7px 6px;
 }
 
-#content div.panel div.form div.form-horizontal div.form-group div.input input#clone_url,
-#content div.panel div.form div.form-horizontal div.form-group div.input input#clone_url_id
+#content div.panel div.form div.form-horizontal div.form-group > div input#clone_url,
+#content div.panel div.form div.form-horizontal div.form-group > div input#clone_url_id
 {
     font-size: 14px;
     padding: 0 2px;
@@ -905,16 +903,16 @@ input.disabled {
 
 #content div.panel div.form div.form-horizontal div.form-group > div select.form-control,
 #content div.panel div.form div.form-horizontal div.form-group > div div.form-control.select2-container,
-#content div.panel div.form div.form-horizontal div.form-group div.input input.form-control {
+#content div.panel div.form div.form-horizontal div.form-group > div input.form-control {
     width: 100%;
     margin: 5px 0 10px;
 }
 
-#content div.panel div.form div.form-horizontal div.form-group div.input input.date {
+#content div.panel div.form div.form-horizontal div.form-group > div input.date {
     width: 177px;
 }
 
-#content div.panel div.form div.form-horizontal div.form-group div.input input.button {
+#content div.panel div.form div.form-horizontal div.form-group > div input.button {
     background: #D4D0C8;
     border-top: 1px solid #FFF;
     border-left: 1px solid #FFF;
@@ -1541,7 +1539,7 @@ a.metatag[tag="license"]:hover {
     padding-bottom: 3px;
 }
 
-#quick_login div.form div.form-horizontal div.form-group div.input input {
+#quick_login div.form div.form-horizontal div.form-group > div input {
     width: 236px;
     background: #FFF;
     border-top: 1px solid #b3b3b3;
@@ -1621,7 +1619,7 @@ a.metatag[tag="license"]:hover {
     padding: 5px 0 0 5px;
 }
 
-#register div.form div.form-horizontal div.form-group div.input input {
+#register div.form div.form-horizontal div.form-group > div input {
     width: 300px;
     background: #FFF;
     border-top: 1px solid #b3b3b3;
@@ -2964,7 +2962,7 @@ div.gravatar img {
     border-left: 1px solid #576622;
 }
 
-#content div.panel div.panel-heading div.search div.input input {
+#content div.panel div.panel-heading div.search > div input {
     border: 1px solid #576622;
 }
 
@@ -3252,9 +3250,9 @@ div#legend_data, div#legend_container, div#legend_choices {
     padding: 0;
 }
 
-#content div.panel div.form div.form-horizontal div.form-group div.input input.error,
-#login div.form div.form-horizontal div.form-group div.input input.error,
-#register div.form div.form-horizontal div.form-group div.input input.error {
+#content div.panel div.form div.form-horizontal div.form-group > div input.error,
+#login div.form div.form-horizontal div.form-group > div input.error,
+#register div.form div.form-horizontal div.form-group > div input.error {
     background: #FBE3E4;
     border-top: 1px solid #e1b2b3;
     border-left: 1px solid #e1b2b3;
@@ -3262,9 +3260,9 @@ div#legend_data, div#legend_container, div#legend_choices {
     border-bottom: 1px solid #FBC2C4;
 }
 
-#content div.panel div.form div.form-horizontal div.form-group div.input input.success,
-#login div.form div.form-horizontal div.form-group div.input input.success,
-#register div.form div.form-horizontal div.form-group div.input input.success {
+#content div.panel div.form div.form-horizontal div.form-group > div input.success,
+#login div.form div.form-horizontal div.form-group > div input.success,
+#register div.form div.form-horizontal div.form-group > div input.success {
     background: #E6EFC2;
     border-top: 1px solid #cebb98;
     border-left: 1px solid #cebb98;
@@ -3351,8 +3349,8 @@ div.form div.form-horizontal div.buttons {
 }
 
 #content div.panel div.action div.button,
-#login div.form div.form-horizontal div.form-group div.input div.link,
-#register div.form div.form-horizontal div.form-group div.input div.link {
+#login div.form div.form-horizontal div.form-group > div div.link,
+#register div.form div.form-horizontal div.form-group > div div.link {
     text-align: right;
     margin: 6px 0 0;
     padding: 0;
@@ -3415,7 +3413,7 @@ div.form div.form-horizontal div.buttons {
 }
 
 #login div.form div.form-horizontal div.form-group div,
-#register div.form div.form-horizontal div.form-group div.input {
+#register div.form div.form-horizontal div.form-group > div {
     float: left;
     margin: 0;
     padding: 0;

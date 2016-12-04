@@ -29,7 +29,7 @@
     <div class="form-horizontal">
         <div class="form-group">
             <label class="control-label" for="auth_plugins">${_("Enabled Plugins")}</label>
-            <div class="input">${h.text("auth_plugins", class_='form-control')}
+            <div>${h.text("auth_plugins", class_='form-control')}
             <span class="help-block">${_('Comma-separated list of plugins; Kallithea will try user authentication in plugin order')}</span>
                 <div style="padding:10px 0px 10px 0px;font-weight: bold">${_('Available built-in plugins')}</div>
                 <ul>
@@ -59,7 +59,7 @@
             %if setting["type"] == "password":
             <div class="form-group">
                 <label class="control-label" for="${fullsetting}">${_(displayname)}</label>
-                <div class="input">
+                <div>
                     ${h.password(fullsetting,class_='form-control')}
                     <span class="help-block">${setting["description"]}</span>
                 </div>
@@ -67,7 +67,7 @@
             %elif setting["type"] in ["string", "int"]:
             <div class="form-group">
                 <label class="control-label" for="${fullsetting}">${_(displayname)}</label>
-                <div class="input">
+                <div>
                     ${h.text(fullsetting,class_='form-control')}
                     <span class="help-block">${setting["description"]}</span>
                 </div>
@@ -91,7 +91,7 @@
             %else:
             <div class="form-group">
                 <label class="control-label" for="${fullsetting}">${_(displayname)}</label>
-                <div class="input">This field is of type ${setting['type']}, which cannot be displayed. Must be one of [string|int|bool|select].</div>
+                <div>This field is of type ${setting['type']}, which cannot be displayed. Must be one of [string|int|bool|select].</div>
                 <span class="help-block">${setting["description"]}</span>
             </div>
             %endif

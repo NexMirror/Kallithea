@@ -4,7 +4,7 @@ ${h.form(url('update_repo', repo_name=c.repo_info.repo_name))}
         <div class="form-horizontal">
             <div class="form-group">
                 <label class="control-label" for="repo_name">${_('Name')}:</label>
-                <div class="input">
+                <div>
                     ${h.text('repo_name',class_='form-control')}
                     <span class="help-block">${_('Permanent Repository ID')}: `_${c.repo_info.repo_id}` <span><a id="show_more_clone_id" href="#">${_('What is that?')}</a></span></span>
                     <span id="clone_id" class="help-block" style="display: none">
@@ -16,7 +16,7 @@ ${h.form(url('update_repo', repo_name=c.repo_info.repo_name))}
             </div>
             <div class="form-group">
                 <label class="control-label" for="clone_uri">${_('Remote repository')}:</label>
-                <div class="input">
+                <div>
                   <div id="alter_clone_uri">
                         ${h.text('clone_uri',class_='form-control', placeholder=_('Repository URL'))}
                         ${h.hidden('clone_uri_hidden', c.repo_info.clone_uri_hidden)}
@@ -28,21 +28,21 @@ ${h.form(url('update_repo', repo_name=c.repo_info.repo_name))}
             </div>
             <div class="form-group">
                 <label class="control-label" for="repo_group">${_('Repository group')}:</label>
-                <div class="input">
+                <div>
                     ${h.select('repo_group','',c.repo_groups,class_='form-control')}
                     <span class="help-block">${_('Optionally select a group to put this repository into.')}</span>
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label" for="repo_landing_rev">${_('Landing revision')}:</label>
-                <div class="input">
+                <div>
                     ${h.select('repo_landing_rev','',c.landing_revs,class_='form-control')}
                     <span class="help-block">${_('Default revision for files page, downloads, whoosh and readme')}</span>
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label" for="owner">${_('Owner')}:</label>
-                <div class="input input-medium ac">
+                <div class="ac">
                     <div class="perm_ac">
                        ${h.text('owner',class_='yui-ac-input')}
                        <span class="help-block">${_('Change owner of this repository.')}</span>
@@ -92,7 +92,7 @@ ${h.form(url('update_repo', repo_name=c.repo_info.repo_name))}
               %for field in c.repo_fields:
                 <div class="form-group">
                     <label class="control-label" for="${field.field_key_prefixed}">${field.field_label} (${field.field_key}):</label>
-                    <div class="input input-medium">
+                    <div>
                         ${h.text(field.field_key_prefixed, field.field_value, class_='form-control')}
                         %if field.field_desc:
                           <span class="help-block">${field.field_desc}</span>
