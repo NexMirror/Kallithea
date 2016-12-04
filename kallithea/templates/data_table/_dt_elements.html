@@ -163,8 +163,7 @@
 <%def name="user_group_actions(user_group_id, user_group_name)">
  <div style="float:left" class="grid_edit">
     <a href="${h.url('edit_users_group', id=user_group_id)}" title="${_('Edit')}">
-    <i class="icon-pencil"></i>
-     ${h.submit('edit_%s' % user_group_name,_('Edit'),class_="btn btn-default btn-xs", id_="submit_user_group_edit")}
+    <i class="icon-pencil"></i> ${h.submit('edit_%s' % user_group_name,_('Edit'),class_="btn btn-default btn-xs", id_="submit_user_group_edit")}
     </a>
  </div>
  <div style="float:left" class="grid_delete">
@@ -179,8 +178,7 @@
 <%def name="repo_group_actions(repo_group_id, repo_group_name, gr_count)">
  <div style="float:left" class="grid_edit">
     <a href="${h.url('edit_repo_group',group_name=repo_group_name)}" title="${_('Edit')}">
-    <i class="icon-pencil"></i>
-     ${h.submit('edit_%s' % repo_group_name, _('Edit'),class_="btn btn-default btn-xs")}
+    <i class="icon-pencil"></i> ${h.submit('edit_%s' % repo_group_name, _('Edit'),class_="btn btn-default btn-xs")}
     </a>
  </div>
  <div style="float:left" class="grid_delete">

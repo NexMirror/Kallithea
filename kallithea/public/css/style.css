@@ -210,8 +210,7 @@ div.formatted-fixed {
 .help-block {
     color: #999999;
     display: block;
-    margin-bottom: 0;
-    margin-top: 5px;
+    margin: 0 0 10px;
 }
 
 .empty_data {
@@ -804,8 +803,8 @@ div.header img {
     min-height: 12px;
     border-bottom: 1px solid #DDD;
     clear: both;
-    margin: 0;
-    padding: 10px 0;
+    padding: 0;
+    margin: 10px 0;
 }
 
 #content div.panel div.form div.fields div.field-first,
@@ -857,7 +856,7 @@ div.header img {
 
 #content div.panel div.form div.fields div.field div.input,
 #content div.panel div.form div.form-horizontal div.form-group div.input {
-    margin: 0 0 0 200px;
+    margin: 0 20px 0 200px;
 }
 
 #content div.panel div.form div.fields div.field div.input.summary,
@@ -866,18 +865,22 @@ div.header img {
 }
 #content div.panel div.form div.fields div.field div.input.summary-short,
 #content div.panel div.form div.form-horizontal div.form-group div.input.summary-short {
-    margin: 0 0 0 110px;
+    margin: 10px 20px 10px 110px;
+}
+#content div.panel div.form div.form-horizontal div.form-group > div.summary-short input {
+    margin: 0;
 }
 #content div.panel div.form div.fields div.field div.file,
 #content div.panel div.form div.form-horizontal div.form-group div.file {
-    margin: 0 0 0 200px;
+    margin: 0 20px 0 200px;
 }
 #content div.panel div.form div.fields div.field div.editor,
 #content div.panel div.form div.form-horizontal div.form-group div.editor {
-    margin: 0 0 0 200px;
+    margin: 0 10px 0 200px;
 }
 
 #content div.panel div.form div.fields div.field div.input input,
+#content div.panel div.form div.form-horizontal div.form-group > label > input,
 #content div.panel div.form div.form-horizontal div.form-group div.input input,
 .reviewer_ac input {
     background: #FFF;
@@ -887,7 +890,7 @@ div.header img {
     border-bottom: 1px solid #eaeaea;
     color: #000;
     font-size: 12px;
-    margin: 0;
+    margin: 5px 0 10px;
     padding: 7px 7px 6px;
 }
 
@@ -918,8 +921,11 @@ input.disabled {
 }
 
 #content div.panel div.form div.fields div.field div.input input.form-control,
+#content div.panel div.form div.form-horizontal div.form-group > div select.form-control,
+#content div.panel div.form div.form-horizontal div.form-group > div div.form-control.select2-container,
 #content div.panel div.form div.form-horizontal div.form-group div.input input.form-control {
     width: 100%;
+    margin: 5px 0 10px;
 }
 
 #content div.panel div.form div.fields div.field div.input input.date,
@@ -945,7 +951,7 @@ input.disabled {
     border-left: 1px solid #b3b3b3;
     border-right: 1px solid #eaeaea;
     border-bottom: 1px solid #eaeaea;
-    margin: 0 0 0 200px;
+    margin: 0 20px 0 200px;
     padding: 7px 7px 6px;
 }
 
@@ -2969,7 +2975,6 @@ table#permissions_manage tr#add_perm_input td {
 
 div.gravatar {
     background-color: #FFF;
-    float: left;
     margin-right: 0.7em;
     padding: 1px 1px 1px 1px;
     line-height: 0;
@@ -3323,7 +3328,7 @@ div#legend_data, div#legend_container, div#legend_choices {
 #content div.panel div.form div.form-horizontal div.form-group div.checkboxes,
 #content div.panel div.form div.fields div.field div.radios,
 #content div.panel div.form div.form-horizontal div.form-group div.radios {
-    margin: 0 0 0 200px;
+    margin: 10px 20px 10px 200px;
     padding: 0;
 }
 
@@ -3347,9 +3352,9 @@ div#legend_data, div#legend_container, div#legend_choices {
 #content div.panel div.form div.fields div.field div.radios div.radio,
 #content div.panel div.form div.form-horizontal div.form-group div.radios div.radio {
     clear: both;
-    overflow: hidden;
-    margin: 0;
-    padding: 8px 0 2px;
+    min-height: 12px;
+    padding: 0;
+    margin: 14px 0 10px;
 }
 
 #content div.panel div.form div.fields div.field div.checkboxes div.checkbox input,
@@ -3357,7 +3362,7 @@ div#legend_data, div#legend_container, div#legend_choices {
 #content div.panel div.form div.fields div.field div.radios div.radio input,
 #content div.panel div.form div.form-horizontal div.form-group div.radios div.radio input {
     float: left;
-    margin: 0;
+    margin: -4px 5px 0px 0px;
 }
 
 #content div.panel div.form div.fields div.field div.checkboxes div.checkbox label,
@@ -3393,7 +3398,7 @@ div.form div.form-horizontal div.form-group div.highlight,
 #content div.panel div.form div.form-horizontal div.buttons,
 div.form div.fields div.buttons,
 div.form div.form-horizontal div.buttons {
-    margin: 10px 0 0 200px;
+    margin: 10px 10px 0 200px;
     padding: 0;
 }
 
@@ -4568,4 +4573,8 @@ body table.dataTable thead .sorting_desc::after {
 
 .text-muted {
     color: #777777;
+}
+
+.grid_edit a {
+    text-decoration: none;
 }
