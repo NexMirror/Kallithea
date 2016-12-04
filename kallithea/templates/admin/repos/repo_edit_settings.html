@@ -52,7 +52,7 @@ ${h.form(url('update_repo', repo_name=c.repo_info.repo_name))}
              </div>
             <div class="form-group">
                 <label class="control-label" for="repo_description">${_('Description')}:</label>
-                <div class="textarea text-area editor">
+                <div>
                     ${h.textarea('repo_description', style="height:165px")}
                     <span class="help-block">${_('Keep it short and to the point. Use a README file for longer descriptions.')}</span>
                 </div>

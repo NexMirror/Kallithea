@@ -56,7 +56,7 @@ ${self.repo_context_bar('showpullrequest')}
 
           <div>
               <label for="pullrequest_desc">${_('Description')}:</label>
-              <div class="textarea text-area editor">
+              <div>
                   ${h.textarea('pullrequest_desc',size=30,content=c.pull_request.description,placeholder=_('Write a short description on this pull request'))}
               </div>
           </div>

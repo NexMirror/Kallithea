@@ -860,12 +860,11 @@ div.header img {
 #content div.panel div.form div.form-horizontal div.form-group > div.file {
     margin: 0 20px 0 200px;
 }
-#content div.panel div.form div.form-horizontal div.form-group > div.editor {
-    margin: 0 10px 0 200px;
-}
 
 #content div.panel div.form div.form-horizontal div.form-group > label > input,
 #content div.panel div.form div.form-horizontal div.form-group > div input,
+#content div.panel div.form div.form-horizontal div.form-group > label > textarea,
+#content div.panel div.form div.form-horizontal div.form-group > div textarea,
 .reviewer_ac input {
     background: #FFF;
     border-top: 1px solid #b3b3b3;
@@ -923,56 +922,11 @@ input.disabled {
     padding: 4px 8px;
 }
 
-#content div.panel div.form div.form-horizontal div.form-group div.textarea {
-    border-top: 1px solid #b3b3b3;
-    border-left: 1px solid #b3b3b3;
-    border-right: 1px solid #eaeaea;
-    border-bottom: 1px solid #eaeaea;
-    margin: 0 20px 0 200px;
-    padding: 7px 7px 6px;
-}
-
-#content div.panel div.form div.form-horizontal div.form-group div.textarea-editor {
-    border: 1px solid #ddd;
-    padding: 0;
-}
-
-#content div.panel div.form div.form-horizontal div.form-group div.textarea textarea {
+#content div.panel div.form div.form-horizontal div.form-group > div textarea {
     width: 100%;
     height: 220px;
     overflow-y: auto;
-    background: #FFF;
-    color: #000;
-    font-size: 12px;
     outline: none;
-    border-width: 0;
-    margin: 0;
-    padding: 0;
-}
-
-#content div.panel div.form div.form-horizontal div.form-group div.textarea table {
-    width: 100%;
-    border: none;
-    margin: 0;
-    padding: 0;
-}
-
-#content div.panel div.form div.form-horizontal div.form-group div.textarea table td {
-    background: #DDD;
-    border: none;
-    padding: 0;
-}
-
-#content div.panel div.form div.form-horizontal div.form-group div.textarea table td table {
-    width: auto;
-    border: none;
-    margin: 0;
-    padding: 0;
-}
-
-#content div.panel div.form div.form-horizontal div.form-group div.textarea table td table td {
-    font-size: 11px;
-    padding: 5px 5px 5px 0;
 }
 
 #content div.panel div.form div.form-horizontal div.form-group input[type=text]:focus,
@@ -3139,7 +3093,6 @@ ins, div.options a:hover {
 
 img,
 #header #header-inner #quick li a:hover span.normal,
-#content div.panel div.form div.form-horizontal div.form-group div.textarea table td table td a,
 #clone_url,
 #clone_url_id
 {
