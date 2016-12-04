@@ -5,7 +5,7 @@
         <div class="form-group">
             <label class="control-label" for="${hook.ui_key}">${hook.ui_key}</label>
             <div style="margin-left:280px">
-              ${h.text(hook.ui_key,hook.ui_value,size=60,readonly="readonly")}
+              ${h.text(hook.ui_key,hook.ui_value,size=60,readonly="readonly",class_='form-control')}
             </div>
         </div>
       % endfor
@@ -25,7 +25,7 @@ ${h.form(url('admin_settings_hooks'), method='post')}
                 <div style="margin-left:280px">
                     ${h.hidden('hook_ui_key',hook.ui_key)}
                     ${h.hidden('hook_ui_value',hook.ui_value)}
-                    ${h.text('hook_ui_value_new',hook.ui_value,size=60)}
+                    ${h.text('hook_ui_value_new',hook.ui_value,size=60,class_='form-control')}
                     <span class="btn btn-default btn-xs"
                         onclick="delete_hook(${hook.ui_id},'${'id%s' % hook.ui_id }')">
                         <i class="icon-minus-circled" style="color:#FF4444"></i>
@@ -37,10 +37,10 @@ ${h.form(url('admin_settings_hooks'), method='post')}
 
         <div class="form-group form-inline">
             <label>
-                ${h.text('new_hook_ui_key',size=20)}
+                ${h.text('new_hook_ui_key',size=20,class_='form-control')}
             </label>
             <div style="margin-left:280px">
-                ${h.text('new_hook_ui_value',size=60)}
+                ${h.text('new_hook_ui_value',size=60,class_='form-control')}
             </div>
         </div>
         <div class="form-group">

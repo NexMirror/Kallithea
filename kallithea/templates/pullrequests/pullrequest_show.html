@@ -57,7 +57,7 @@ ${self.repo_context_bar('showpullrequest')}
           <div>
               <label for="pullrequest_desc">${_('Description')}:</label>
               <div>
-                  ${h.textarea('pullrequest_desc',size=30,content=c.pull_request.description,placeholder=_('Write a short description on this pull request'))}
+                  ${h.textarea('pullrequest_desc',size=30,content=c.pull_request.description,placeholder=_('Write a short description on this pull request'),class_='form-control')}
               </div>
           </div>
         </div>
@@ -237,7 +237,7 @@ ${self.repo_context_bar('showpullrequest')}
           %if editable:
           <div class='ac'>
             <div class="reviewer_ac">
-               ${h.text('user', class_='yui-ac-input',placeholder=_('Type name of reviewer to add'))}
+               ${h.text('user', class_='yui-ac-input form-control',placeholder=_('Type name of reviewer to add'))}
                <div id="reviewers_container"></div>
             </div>
           </div>

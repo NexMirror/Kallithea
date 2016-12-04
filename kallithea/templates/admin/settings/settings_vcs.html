@@ -45,7 +45,7 @@ ${h.form(url('admin_settings'), method='post')}
             <div class="form-group">
                 <label class="control-label" for="paths_root_path">${_('Location of repositories')}:</label>
                 <div>
-                    ${h.text('paths_root_path',size=60,readonly="readonly")}
+                    ${h.text('paths_root_path',size=60,readonly="readonly",class_='form-control')}
                     <span id="path_unlock" data-toggle="tooltip" style="cursor: pointer"
                             title="${_('Click to unlock. You must restart Kallithea in order to make this setting take effect.')}">
                         <div class="btn btn-default btn-sm"><i id="path_unlock_icon" class="icon-lock"></i></div>

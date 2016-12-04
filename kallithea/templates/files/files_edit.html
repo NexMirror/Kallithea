@@ -56,12 +56,12 @@ ${self.repo_context_bar('files')}
                     </div>
                 </div>
                 <label class="commit" for="mimetype">${_('Editing file')}: ${c.file.unicode_path}</label>
-                <select id="mimetype" name="mimetype"/>
+                <select class="form-control" id="mimetype" name="mimetype"/>
             </div>
                 <pre id="editor_pre"></pre>
                 <textarea id="editor" name="content" style="display:none">${h.escape(c.file.content)|n}</textarea>
                 <div class="text-muted" style="padding: 10px">${_('Commit Message')}</div>
-                <textarea id="commit" name="message" style="height: 60px;width: 99%;margin-left:4px" placeholder="${c.default_message}"></textarea>
+                <textarea class="form-control" id="commit" name="message" style="height: 60px;width: 99%;margin-left:4px" placeholder="${c.default_message}"></textarea>
             </div>
             <div style="text-align: left;padding-top: 5px">
             ${h.submit('commit',_('Commit Changes'),class_="btn btn-success")}

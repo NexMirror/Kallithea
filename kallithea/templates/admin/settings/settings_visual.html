@@ -24,7 +24,7 @@ ${h.form(url('admin_settings_visual'), method='post')}
                     </div>
                 </div>
                 <div>
-                        ${h.text('gravatar_url', size=80)}
+                        ${h.text('gravatar_url', size=80, class_='form-control')}
                         <span class="help-block">${_('''Gravatar URL allows you to use another avatar server application.
                                                         The following variables of the URL will be replaced accordingly.
                                                         {scheme}    'http' or 'https' sent from running Kallithea server,
@@ -38,21 +38,21 @@ ${h.form(url('admin_settings_visual'), method='post')}
             <div class="form-group">
                 <label>${_('Clone URL')}:</label>
                 <div>
-                        ${h.text('clone_uri_tmpl', size=80)}
-                        <span class="help-block">${_('''Schema of clone URL construction eg. '{scheme}://{user}@{netloc}/{repo}'.
-                                                        The following variables are available:
-                                                        {scheme} 'http' or 'https' sent from running Kallithea server,
-                                                        {user}   current user username,
-                                                        {netloc} network location/server host of running Kallithea server,
-                                                        {repo}   full repository name,
-                                                        {repoid} ID of repository, can be used to construct clone-by-id''')}</span>
+                    ${h.text('clone_uri_tmpl', size=80, class_='form-control')}
+                    <span class="help-block">${_('''Schema of clone URL construction eg. '{scheme}://{user}@{netloc}/{repo}'.
+                                                    The following variables are available:
+                                                    {scheme} 'http' or 'https' sent from running Kallithea server,
+                                                    {user}   current user username,
+                                                    {netloc} network location/server host of running Kallithea server,
+                                                    {repo}   full repository name,
+                                                    {repoid} ID of repository, can be used to construct clone-by-id''')}</span>
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="control-label" for="page_size">${_('Repository page size')}:</label>
                 <div>
-                    ${h.text('page_size',size=5)}
+                    ${h.text('page_size',size=5,class_='form-control')}
                     <span class="help-block">${_('Number of items displayed in the repository pages before pagination is shown.')}</span>
                 </div>
             </div>
@@ -60,7 +60,7 @@ ${h.form(url('admin_settings_visual'), method='post')}
             <div class="form-group">
                 <label class="control-label" for="admin_grid_items">${_('Admin page size')}:</label>
                 <div>
-                    ${h.text('admin_grid_items',size=5)}
+                    ${h.text('admin_grid_items',size=5,class_='form-control')}
                     <span class="help-block">${_('Number of items displayed in the admin pages grids before pagination is shown.')}</span>
                 </div>
             </div>

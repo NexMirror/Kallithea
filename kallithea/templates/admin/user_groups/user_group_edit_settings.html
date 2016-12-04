@@ -11,7 +11,7 @@ ${h.form(url('update_users_group', id=c.user_group.users_group_id), id='edit_use
                 <div class="form-group">
                     <label class="control-label" for="user_group_description">${_('Description')}:</label>
                     <div>
-                        ${h.textarea('user_group_description')}
+                        ${h.textarea('user_group_description',class_='form-control')}
                         <span class="help-block">${_('Short, optional description for this user group.')}</span>
                     </div>
                 </div>
@@ -30,7 +30,7 @@ ${h.form(url('update_users_group', id=c.user_group.users_group_id), id='edit_use
                                         <div>
                                             <div style="float:left">
                                                 <div class="text" style="padding: 0px 0px 6px;">${_('Chosen group members')}</div>
-                                                ${h.select('users_group_members',[],c.group_members,multiple=True,size=8,style="min-width:210px")}
+                                                ${h.select('users_group_members',[],c.group_members,multiple=True,size=8,style="min-width:210px",class_='form-control')}
                                             </div>
                                             <div style="float:left;width:20px;padding-top:50px">
                                                 <i style="cursor:pointer; font-size: 16px" id="add_element" class="icon-left-open" title="Choose selected available"></i>
@@ -39,7 +39,7 @@ ${h.form(url('update_users_group', id=c.user_group.users_group_id), id='edit_use
                                             </div>
                                             <div style="float:left">
                                                  <div class="text" style="padding: 0px 0px 6px;">${_('Available members')}</div>
-                                                 ${h.select('available_members',[],c.available_members,multiple=True,size=8,style="min-width:210px")}
+                                                 ${h.select('available_members',[],c.available_members,multiple=True,size=8,style="min-width:210px",class_='form-control')}
                                             </div>
                                         </div>
                                     </td>

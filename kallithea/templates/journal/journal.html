@@ -6,7 +6,7 @@
 <%def name="breadcrumbs()">
     <h5>
     <form id="filter_form" class="form-inline">
-    <input class="q_filter_box ${'' if c.search_term else 'initial'}" id="j_filter" size="15" type="text" name="filter" value="${c.search_term or _('quick filter...')}"/>
+    <input class="form-control q_filter_box ${'' if c.search_term else 'initial'}" id="j_filter" size="15" type="text" name="filter" value="${c.search_term or _('quick filter...')}"/>
     <span data-toggle="tooltip" title="${h.journal_filter_help()}">?</span>
     <input type='submit' value="${_('Filter')}" class="btn btn-default btn-xs"/>
     ${_('Journal')} - ${ungettext('%s Entry', '%s Entries', c.journal_pager.item_count) % (c.journal_pager.item_count)}
