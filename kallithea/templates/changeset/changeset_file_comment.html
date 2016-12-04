@@ -68,12 +68,12 @@
                 %endif
                 <span class="general-only cs-only">
                 </span>
-                <label>
+                <label class="radio-inline">
                     <input type="radio" class="status_change_radio" name="changeset_status" id="changeset_status_unchanged" value="" checked="checked" />
                     ${_('No change')}
                 </label>
                 %for status, lbl in c.changeset_statuses:
-                    <label>
+                    <label class="radio-inline">
                         <input type="radio" class="status_change_radio" name="changeset_status" id="${status}" value="${status}">
                         ${lbl}<i class="icon-circle changeset-status-${status}" /></i>
                     </label>
@@ -84,11 +84,11 @@
                     or c.pull_request.owner_id == c.authuser.user_id):
                 <div>
                   ${_('Finish pull request')}:
-                  <label>
+                  <label class="checkbox-inline">
                     <input id="save_close" type="checkbox" name="save_close">
                     ${_("Close")}
                   </label>
-                  <label>
+                  <label class="checkbox-inline">
                     <input id="save_delete" type="checkbox" name="save_delete" value="delete">
                     ${_("Delete")}
                   </label>
