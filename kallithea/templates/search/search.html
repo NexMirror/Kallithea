@@ -53,7 +53,7 @@ ${self.repo_context_bar('options')}
             </div>
 
             <div class="form-group">
-                <label for="type">${_('Search in')}:</label>
+                <label class="control-label" for="type">${_('Search in')}:</label>
                 <div>
                     ${h.select('type',c.cur_type,[('content',_('File contents')),
                         ('commit',_('Commit messages')),

@@ -4,15 +4,15 @@ ${h.form(url('admin_settings_visual'), method='post')}
         <div class="form-horizontal">
 
             <div class="form-group">
-                <label>${_('General')}:</label>
+                <label class="control-label">${_('General')}:</label>
                 <div>
                     <div class="checkbox">
                         <label>
                             ${h.checkbox('repository_fields','True')}
                             ${_('Use repository extra fields')}
                         </label>
-                        <span class="help-block">${_('Allows storing additional customized fields per repository.')}</span>
                     </div>
+                    <span class="help-block">${_('Allows storing additional customized fields per repository.')}</span>
 
                     <div class="checkbox">
                         <label>
@@ -28,21 +28,19 @@ ${h.form(url('admin_settings_visual'), method='post')}
                             ${_('Use Gravatars in Kallithea')}
                         </label>
                     </div>
-                    <div>
-                        ${h.text('gravatar_url', size=80, class_='form-control')}
-                        <span class="help-block">${_('''Gravatar URL allows you to use another avatar server application.
+                    ${h.text('gravatar_url', size=80, class_='form-control')}
+                    <span class="help-block">${_('''Gravatar URL allows you to use another avatar server application.
                                                         The following variables of the URL will be replaced accordingly.
                                                         {scheme}    'http' or 'https' sent from running Kallithea server,
                                                         {email}     user email,
                                                         {md5email}  md5 hash of the user email (like at gravatar.com),
                                                         {size}      size of the image that is expected from the server application,
                                                         {netloc}    network location/server host of running Kallithea server''')}</span>
-                    </div>
                 </div>
             </div>
 
             <div class="form-group">
-                <label>${_('Clone URL')}:</label>
+                <label class="control-label">${_('Clone URL')}:</label>
                 <div>
                     ${h.text('clone_uri_tmpl', size=80, class_='form-control')}
                     <span class="help-block">${_('''Schema of clone URL construction eg. '{scheme}://{user}@{netloc}/{repo}'.
@@ -72,7 +70,7 @@ ${h.form(url('admin_settings_visual'), method='post')}
             </div>
 
             <div class="form-group">
-                <label>${_('Icons')}:</label>
+                <label class="control-label">${_('Icons')}:</label>
                 <div>
                     <div class="checkbox">
                         <label>
@@ -91,11 +89,12 @@ ${h.form(url('admin_settings_visual'), method='post')}
             </div>
 
             <div class="form-group">
-                <label>${_('Meta Tagging')}:</label>
+                <label class="control-label" for="stylify_metatags">${_('Meta Tagging')}:</label>
                 <div>
                     <div class="checkbox">
                         ${h.checkbox('stylify_metatags','True')}
                     </div>
+                    <span class="help-block">${_('Parses meta tags from the repository description field and turns them into colored tags.')}</span>
                     <div>
                         ${_('Stylify recognised meta tags:')}
                         <ul> <!-- Fix style here -->
@@ -109,7 +108,6 @@ ${h.form(url('admin_settings_visual'), method='post')}
                             <li>[see =&gt; URI] <span class="metatag" tag="see">see =&gt; <a href="#">URI</a> </span></li>
                         </ul>
                     </div>
-                    <span class="help-block">${_('Parses meta tags from the repository description field and turns them into colored tags.')}</span>
                  </div>
             </div>
 
