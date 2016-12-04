@@ -20,7 +20,7 @@ ${h.form(url('admin_settings_hooks'), method='post')}
     <div class="form-horizontal">
 
         %for hook in c.custom_hooks:
-            <div class="form-group" id="${'id%s' % hook.ui_id }">
+            <div class="form-group form-inline" id="${'id%s' % hook.ui_id }">
                 <label class="control-label" for="${hook.ui_key}">${hook.ui_key}</label>
                 <div style="margin-left:280px">
                     ${h.hidden('hook_ui_key',hook.ui_key)}
@@ -35,7 +35,7 @@ ${h.form(url('admin_settings_hooks'), method='post')}
             </div>
         %endfor
 
-        <div class="form-group">
+        <div class="form-group form-inline">
             <label>
                 ${h.text('new_hook_ui_key',size=20)}
             </label>

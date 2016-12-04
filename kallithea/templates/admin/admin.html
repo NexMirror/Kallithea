@@ -6,7 +6,7 @@
 </%block>
 
 <%def name="breadcrumbs_links()">
-    <form id="filter_form">
+    <form id="filter_form" class="form-inline">
     <input class="q_filter_box ${'' if c.search_term else 'initial'}" id="j_filter" size="15" type="text" name="filter" value="${c.search_term or _('journal filter...')}"/>
     <span data-toggle="tooltip" title="${h.journal_filter_help()}">?</span>
     <input type='submit' value="${_('Filter')}" class="btn btn-default btn-xs"/>

@@ -36,7 +36,7 @@ ${self.repo_context_bar('files')}
     <div class="table" id="edit">
         <div id="files_data">
             <h3 class="files_location">${_('Location')}: ${h.files_breadcrumbs(c.repo_name,c.cs.raw_id,c.file.path)}</h3>
-            ${h.form(h.url.current(),method='post',id='eform')}
+            ${h.form(h.url.current(),method='post',id='eform',class_='form-inline')}
             <div id="body" class="codeblock">
             <div class="code-header">
                 <div class="stats">

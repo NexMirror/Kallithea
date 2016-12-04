@@ -67,7 +67,7 @@ summary = lambda n:{False:'summary-short'}.get(n)
     <!-- end box / title -->
     <div class="form">
         <div id="summary" class="form-horizontal">
-            <div class="form-group clearfix">
+            <div class="form-group form-inline clearfix">
               <label>${_('Clone URL')}:</label>
                 <div class="${summary(c.show_stats)}">
                   ${self.repotag(c.db_repo)}
