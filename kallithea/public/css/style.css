@@ -3277,8 +3277,7 @@ div#legend_data, div#legend_container, div#legend_choices {
 }
 
 #content div.panel div.form div.form-horizontal div.form-group div.select,
-#content div.panel div.form div.form-horizontal div.form-group div.checkboxes,
-#content div.panel div.form div.form-horizontal div.form-group div.radios {
+#content div.panel div.form div.form-horizontal div.form-group > div {
     margin: 10px 20px 10px 200px;
     padding: 0;
 }
@@ -3295,26 +3294,16 @@ div#legend_data, div#legend_container, div#legend_choices {
     border: 1px solid #666;
 }
 
-#content div.panel div.form div.form-horizontal div.form-group div.checkboxes div.checkbox,
-#content div.panel div.form div.form-horizontal div.form-group div.radios div.radio {
+#content div.panel div.form div.form-horizontal div.form-group > div div.checkbox {
     clear: both;
     min-height: 12px;
     padding: 0;
     margin: 14px 0 10px;
 }
 
-#content div.panel div.form div.form-horizontal div.form-group div.checkboxes div.checkbox input,
-#content div.panel div.form div.form-horizontal div.form-group div.radios div.radio input {
+#content div.panel div.form div.form-horizontal div.form-group > div div.checkbox input {
     float: left;
     margin: -4px 5px 0px 0px;
-}
-
-#content div.panel div.form div.form-horizontal div.form-group div.checkboxes div.checkbox label,
-#content div.panel div.form div.form-horizontal div.form-group div.radios div.radio label {
-    height: 1%;
-    display: block;
-    float: left;
-    margin: 2px 0 0 4px;
 }
 
 div.form div.form-horizontal div.form-group div.button input,

@@ -5,7 +5,7 @@ ${h.form(url('admin_settings_visual'), method='post')}
 
             <div class="form-group">
                 <label>${_('General')}:</label>
-                <div class="checkboxes">
+                <div>
                     <div class="checkbox">
                         ${h.checkbox('repository_fields','True')}
                         <label for="repository_fields">${_('Use repository extra fields')}</label>
@@ -67,7 +67,7 @@ ${h.form(url('admin_settings_visual'), method='post')}
 
             <div class="form-group">
                 <label>${_('Icons')}:</label>
-                <div class="checkboxes">
+                <div>
                     <div class="checkbox">
                         ${h.checkbox('show_public_icon','True')}
                         <label for="show_public_icon">${_('Show public repository icon on repositories')}</label>
@@ -82,7 +82,7 @@ ${h.form(url('admin_settings_visual'), method='post')}
 
             <div class="form-group">
                 <label>${_('Meta Tagging')}:</label>
-                <div class="checkboxes">
+                <div>
                     <div class="checkbox">
                         ${h.checkbox('stylify_metatags','True')}
                         <label for="stylify_metatags">${_('Stylify recognised meta tags:')}</label>

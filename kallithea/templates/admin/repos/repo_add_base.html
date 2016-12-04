@@ -35,7 +35,7 @@ ${h.form(url('repos'))}
         </div>
         <div id="copy_perms" class="form-group">
             <label class="control-label" for="repo_copy_permissions">${_('Copy parent group permissions')}:</label>
-            <div class="checkboxes">
+            <div>
                 ${h.checkbox('repo_copy_permissions',value="True")}
                 <span class="help-block">${_('Copy permission set from parent repository group.')}</span>
             </div>
@@ -56,7 +56,7 @@ ${h.form(url('repos'))}
         </div>
         <div class="form-group">
             <label class="control-label" for="repo_private">${_('Private repository')}:</label>
-            <div class="checkboxes">
+            <div>
                 ${h.checkbox('repo_private',value="True")}
                 <span class="help-block">${_('Private repositories are only visible to people explicitly added as collaborators.')}</span>
             </div>

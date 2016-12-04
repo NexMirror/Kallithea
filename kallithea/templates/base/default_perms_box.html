@@ -11,7 +11,7 @@ ${h.form(form_url)}
         <div class="form-horizontal">
             <div class="form-group">
                 <label class="control-label" for="inherit_default_permissions">${_('Inherit defaults')}:</label>
-                <div class="checkboxes">
+                <div>
                     ${h.checkbox('inherit_default_permissions',value=True)}
                     <span class="help-block">
                         ${h.literal(_('Select to inherit global settings, IP whitelist and permissions from the %s.')
@@ -23,7 +23,7 @@ ${h.form(form_url)}
             <div id="inherit_overlay">
             <div class="form-group">
                 <label class="control-label" for="create_repo_perm">${_('Create repositories')}:</label>
-                <div class="checkboxes">
+                <div>
                     ${h.checkbox('create_repo_perm',value=True)}
                     <span class="help-block">
                         ${h.literal(_('Select this option to allow repository creation for this user'))}
@@ -33,7 +33,7 @@ ${h.form(form_url)}
 
             <div class="form-group">
                 <label class="control-label" for="create_user_group_perm">${_('Create user groups')}:</label>
-                <div class="checkboxes">
+                <div>
                     ${h.checkbox('create_user_group_perm',value=True)}
                     <span class="help-block">
                         ${h.literal(_('Select this option to allow user group creation for this user'))}
@@ -43,7 +43,7 @@ ${h.form(form_url)}
 
             <div class="form-group">
                 <label class="control-label" for="fork_repo_perm">${_('Fork repositories')}:</label>
-                <div class="checkboxes">
+                <div>
                     ${h.checkbox('fork_repo_perm',value=True)}
                     <span class="help-block">
                         ${h.literal(_('Select this option to allow repository forking for this user'))}

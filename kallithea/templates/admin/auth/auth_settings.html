@@ -75,8 +75,8 @@
             %elif setting["type"] == "bool":
             <div class="form-group">
                 <label class="control-label" for="${fullsetting}">${_(displayname)}</label>
-                <div class="checkboxes">
-                    <div class="checkbox">${h.checkbox(fullsetting,True)}</div>
+                <div>
+                    ${h.checkbox(fullsetting,True)}
                     <span class="help-block">${setting["description"]}</span>
                 </div>
             </div>

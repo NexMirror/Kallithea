@@ -37,7 +37,7 @@
 
             <div class="form-group">
                 <label class="control-label" for="default_repo_private">${_('Private repository')}:</label>
-                <div class="checkboxes">
+                <div>
                     ${h.checkbox('default_repo_private',value="True")}
                     <span class="help-block">${_('Private repositories are only visible to people explicitly added as collaborators.')}</span>
                 </div>
@@ -45,7 +45,7 @@
 
             <div class="form-group">
                 <label class="control-label" for="default_repo_enable_statistics">${_('Enable statistics')}:</label>
-                <div class="checkboxes">
+                <div>
                     ${h.checkbox('default_repo_enable_statistics',value="True")}
                     <span class="help-block">${_('Enable statistics window on summary page.')}</span>
                 </div>
@@ -53,7 +53,7 @@
 
             <div class="form-group">
                 <label class="control-label" for="default_repo_enable_downloads">${_('Enable downloads')}:</label>
-                <div class="checkboxes">
+                <div>
                     ${h.checkbox('default_repo_enable_downloads',value="True")}
                     <span class="help-block">${_('Enable download menu on summary page.')}</span>
                 </div>
@@ -61,7 +61,7 @@
 
             <div class="form-group">
                 <label class="control-label" for="default_repo_enable_locking">${_('Enable locking')}:</label>
-                <div class="checkboxes">
+                <div>
                     ${h.checkbox('default_repo_enable_locking',value="True")}
                     <span class="help-block">${_('Enable lock-by-pulling on repository.')}</span>
                 </div>
