@@ -27,7 +27,7 @@
           </tr>
         %endfor
     %else:
-    <tr><td><div class="ip">${_('No additional emails specified.')}</div></td></tr>
+    <tr><td colspan="${3 if c.visual.use_gravatar else 2}"><div class="ip">${_('No additional emails specified.')}</div></td></tr>
     %endif
   </table>
 </div>
