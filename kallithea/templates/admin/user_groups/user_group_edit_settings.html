@@ -24,28 +24,21 @@ ${h.form(url('update_users_group', id=c.user_group.users_group_id), id='edit_use
                 <div class="form-group">
                     <label class="control-label">${_('Members')}:</label>
                     <div>
-                        <table class="table">
-                                <tr>
-                                    <td>
-                                        <div>
-                                            <div style="float:left">
-                                                <div class="text" style="padding: 0px 0px 6px;">${_('Chosen group members')}</div>
-                                                ${h.select('users_group_members',[],c.group_members,multiple=True,size=8,style="min-width:210px",class_='form-control')}
-                                            </div>
-                                            <div style="float:left;width:20px;padding-top:50px">
-                                                <i style="cursor:pointer; font-size: 16px" id="add_element" class="icon-left-open" title="Choose selected available"></i>
-                                                <div style="height:50px"></div>
-                                                <i style="cursor:pointer; font-size: 16px" id="remove_element" class="icon-right-open" title="Remove selected chosen"></i>
-                                            </div>
-                                            <div style="float:left">
-                                                 <div class="text" style="padding: 0px 0px 6px;">${_('Available members')}</div>
-                                                 ${h.select('available_members',[],c.available_members,multiple=True,size=8,style="min-width:210px",class_='form-control')}
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                        </table>
+                        <div style="float:left">
+                            <div class="text" style="padding: 0px 0px 6px;">${_('Chosen group members')}</div>
+                            ${h.select('users_group_members',[],c.group_members,multiple=True,size=8,style="min-width:210px",class_='form-control')}
+                        </div>
+                        <div style="float:left;width:20px;padding-top:50px">
+                            <i style="cursor:pointer; font-size: 16px" id="add_element" class="icon-left-open" title="Choose selected available"></i>
+                            <div style="height:50px"></div>
+                            <i style="cursor:pointer; font-size: 16px" id="remove_element" class="icon-right-open" title="Remove selected chosen"></i>
+                        </div>
+                        <div style="float:left">
+                            <div class="text" style="padding: 0px 0px 6px;">${_('Available members')}</div>
+                            ${h.select('available_members',[],c.available_members,multiple=True,size=8,style="min-width:210px",class_='form-control')}
+                        </div>
                     </div>
+                    <div style="clear:both"></div>
                 </div>
                 <div class="form-group">
                     <div class="buttons">
