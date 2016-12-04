@@ -83,7 +83,7 @@
             %elif setting["type"] == "select":
             <div class="form-group">
                 <label class="control-label" for="${fullsetting}">${_(displayname)}</label>
-                <div class="select">
+                <div>
                     ${h.select(fullsetting,setting['values'][0],setting['values'],class_='form-control')}
                     <span class="help-block">${setting["description"]}</span>
                 </div>

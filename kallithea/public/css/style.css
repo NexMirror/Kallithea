@@ -3270,26 +3270,25 @@ div#legend_data, div#legend_container, div#legend_choices {
     border-bottom: 1px solid #c6d880;
 }
 
-#content div.panel div.form div.form-horizontal div.form-group div.select select,
+#content div.panel div.form div.form-horizontal div.form-group > div select,
 #content div.panel table th.selected input,
 #content div.panel table td.selected input {
     margin: 0;
 }
 
-#content div.panel div.form div.form-horizontal div.form-group div.select,
 #content div.panel div.form div.form-horizontal div.form-group > div {
     margin: 10px 20px 10px 200px;
     padding: 0;
 }
 
-#content div.panel div.form div.form-horizontal div.form-group div.select a:hover,
-#content div.panel div.form div.form-horizontal div.form-group div.select a.ui-selectmenu:hover,
+#content div.panel div.form div.form-horizontal div.form-group > div a:hover,
+#content div.panel div.form div.form-horizontal div.form-group > div a.ui-selectmenu:hover,
 #content div.panel div.action a:hover {
     color: #000;
     text-decoration: none;
 }
 
-#content div.panel div.form div.form-horizontal div.form-group div.select a.ui-selectmenu-focus,
+#content div.panel div.form div.form-horizontal div.form-group > div a.ui-selectmenu-focus,
 #content div.panel div.action a.ui-selectmenu-focus {
     border: 1px solid #666;
 }
