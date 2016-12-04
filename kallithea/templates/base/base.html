@@ -371,14 +371,14 @@
             ${h.form(h.url('login_home', came_from=request.path_qs))}
             <div class="form">
                 <div class="fields">
-                    <div class="field">
+                    <div>
                         <label for="username">${_('Username')}:</label>
                         <div class="input">
                             ${h.text('username',class_='form-control')}
                         </div>
 
                     </div>
-                    <div class="field">
+                    <div>
                         <label for="password">${_('Password')}:</label>
                         <div class="input">
                             ${h.password('password',class_='form-control')}
