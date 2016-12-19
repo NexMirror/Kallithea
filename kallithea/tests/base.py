@@ -149,7 +149,6 @@ class TestController(object):
         self.wsgiapp = pylons.test.pylonsapp
         self.init_stack(self.wsgiapp.config)
         self.app = TestApp(self.wsgiapp)
-        self.index_location = config['app_conf']['index_dir']
         return self.app
 
     def init_stack(self, config=None):
