@@ -109,7 +109,6 @@ class _BaseTestApi(object):
         pass
 
     def setup_method(self, method):
-        self.maxDiff = None
         make_user_group()
         make_repo_group()
 
