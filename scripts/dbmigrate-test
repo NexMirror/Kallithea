@@ -119,4 +119,3 @@ install_kallithea "$temp/to" "$to_rev_hash"
     announce "Upgrade complete, now at the shown Alembic revision:"
     alembic -c "$config_file" current -v
 )
-

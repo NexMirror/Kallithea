@@ -3,7 +3,7 @@ python:
   - "2.6"
   - "2.7"
 
-env:  
+env:
   - TEST_DB=sqlite:////tmp/kallithea_test.sqlite
   - TEST_DB=mysql://root@127.0.0.1/kallithea_test
   - TEST_DB=postgresql://postgres@127.0.0.1/kallithea_test

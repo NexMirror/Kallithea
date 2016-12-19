@@ -47,7 +47,7 @@ start)
     ;;
 stop)
     stat_busy "Stopping $DAEMON"
-    [ -n "$PID" ] && kill $PID &>/dev/null 
+    [ -n "$PID" ] && kill $PID &>/dev/null
     if [ $? = 0 ]; then
         rm_daemon $DAEMON
         stat_done
