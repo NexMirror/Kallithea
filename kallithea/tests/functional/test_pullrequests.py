@@ -1,4 +1,7 @@
 import re
+import pytest
+
+from kallithea.tests.test_context import test_context
 
 from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
@@ -206,6 +209,12 @@ class TestPullrequestsController(TestController):
         response.mustcontain('Invalid reviewer &#34;%s&#34; specified' % invalid_user_id)
 
 class TestPullrequestsGetRepoRefs(TestController):
+
+    # this tests need test_context in addition to app_fixture
+    @pytest.fixture(autouse=True)
+    def app_test_context_fixture(self, app_fixture):
+        with test_context(self.app):
+            yield
 
     def setup_method(self, method):
         self.repo_name = u'main'
