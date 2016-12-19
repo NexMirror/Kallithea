@@ -31,39 +31,37 @@ ${self.repo_context_bar('showpullrequest')}
               (${_('Closed')})
           %endif
       </div>
-      <div id="pr-summary" class="fields">
+      <div id="pr-summary" class="form-horizontal">
 
-        <div class="pr-not-edit" style="min-height:37px">
+        <div class="pr-not-edit form-group" style="min-height:47px">
             <label>${_('Description')}:</label>
             %if editable:
-            <div style="margin: 25px 5px; position: absolute">
+            <div style="margin: 20px 0; position: absolute">
               <a class="btn btn-default btn-xs" onclick="$('.pr-do-edit').show();$('.pr-not-edit').hide()">${_("Edit")}</a>
             </div>
             %endif
-          <div>
-            <div class="formatted-fixed">${h.urlify_text(c.pull_request.description, c.pull_request.org_repo.repo_name)}</div>
-          </div>
+            <div>
+              <div class="form-control formatted-fixed">${h.urlify_text(c.pull_request.description, c.pull_request.org_repo.repo_name)}</div>
+            </div>
         </div>
 
         %if editable:
-        <div class="pr-do-edit" style="display:none">
-          <div>
+        <div class="pr-do-edit form-group" style="display:none">
               <label for="pullrequest_title">${_('Title')}:</label>
               <div>
                   ${h.text('pullrequest_title',class_='form-control',value=c.pull_request.title,placeholder=_('Summarize the changes'))}
               </div>
-          </div>
+        </div>
 
-          <div>
+        <div class="pr-do-edit form-group" style="display:none">
               <label for="pullrequest_desc">${_('Description')}:</label>
               <div>
                   ${h.textarea('pullrequest_desc',size=30,content=c.pull_request.description,placeholder=_('Write a short description on this pull request'),class_='form-control')}
               </div>
-          </div>
         </div>
         %endif
 
-        <div>
+        <div class="form-group">
           <label>${_('Reviewer voting result')}:</label>
           <div>
             <div class="changeset-status-container" style="float:none;clear:both">
@@ -80,7 +78,7 @@ ${self.repo_context_bar('showpullrequest')}
             </div>
           </div>
         </div>
-        <div>
+        <div class="form-group">
           <label>${_('Still not reviewed by')}:</label>
           <div>
             % if len(c.pull_request_pending_reviewers) > 0:
@@ -92,7 +90,7 @@ ${self.repo_context_bar('showpullrequest')}
             %endif
           </div>
         </div>
-        <div>
+        <div class="form-group">
           <label>${_('Origin')}:</label>
           <div>
             <div>
@@ -103,7 +101,7 @@ ${self.repo_context_bar('showpullrequest')}
             </div>
           </div>
         </div>
-        <div>
+        <div class="form-group">
           <label>${_('Target')}:</label>
           <div>
             %if c.is_range:
@@ -114,7 +112,7 @@ ${self.repo_context_bar('showpullrequest')}
             %endif
           </div>
         </div>
-        <div>
+        <div class="form-group">
           <label>${_('Pull changes')}:</label>
           <div>
             %if c.cs_ranges:
@@ -129,13 +127,13 @@ ${self.repo_context_bar('showpullrequest')}
             %endif
           </div>
         </div>
-        <div>
+        <div class="form-group">
           <label>${_('Created on')}:</label>
           <div>
               <div>${h.fmt_date(c.pull_request.created_on)}</div>
           </div>
         </div>
-        <div>
+        <div class="form-group">
           <label>${_('Owner')}:</label>
           <div class="pr-not-edit">
                   ${h.gravatar_div(c.pull_request.owner.email, size=20)}
@@ -148,7 +146,7 @@ ${self.repo_context_bar('showpullrequest')}
           </div>
         </div>
 
-        <div>
+        <div class="form-group">
           <label>${_('Next iteration')}:</label>
             <div>
               <div class="msg-div">${c.update_msg}</div>
@@ -195,6 +193,15 @@ ${self.repo_context_bar('showpullrequest')}
               <div class="msg-div">${c.update_msg_other}</div>
             </div>
         </div>
+        %if editable:
+        <div class="form-group">
+          <div class="buttons">
+            ${h.submit('pr-form-save',_('Save Changes'),class_="btn btn-default btn-sm")}
+            ${h.submit('pr-form-clone',_('Create New Iteration with Changes'),class_="btn btn-default btn-sm",disabled='disabled')}
+            ${h.reset('pr-form-reset',_('Cancel Changes'),class_="btn btn-default btn-sm")}
+          </div>
+        </div>
+        %endif
       </div>
     </div>
     ## REVIEWERS
@@ -267,16 +274,7 @@ ${self.repo_context_bar('showpullrequest')}
         </div>
         %endif
     </div>
-    <div class="form" style="clear:both">
-      <div class="fields">
-        %if editable:
-          <div class="buttons">
-            ${h.submit('pr-form-save',_('Save Changes'),class_="btn btn-default btn-sm")}
-            ${h.submit('pr-form-clone',_('Create New Iteration with Changes'),class_="btn btn-default btn-sm",disabled='disabled')}
-            ${h.reset('pr-form-reset',_('Cancel Changes'),class_="btn btn-default btn-sm")}
-          </div>
-        %endif
-      </div>
+    <div style="clear:both">
     </div>
   ${h.end_form()}
 </div>
