@@ -208,7 +208,9 @@ class TestPullrequestsController(TestController):
 class TestPullrequestsGetRepoRefs(TestController):
 
     def setup_method(self, method):
-        self.main = fixture.create_repo(u'main', repo_type='hg')
+        self.repo_name = u'main'
+        repo = fixture.create_repo(self.repo_name, repo_type='hg')
+        self.repo_scm_instance = repo.scm_instance
         Session.commit()
         self.c = PullrequestsController()
 
@@ -219,76 +221,76 @@ class TestPullrequestsGetRepoRefs(TestController):
 
     def test_repo_refs_empty_repo(self):
         # empty repo with no commits, no branches, no bookmarks, just one tag
-        refs, default = self.c._get_repo_refs(self.main.scm_instance)
+        refs, default = self.c._get_repo_refs(self.repo_scm_instance)
         assert default == 'tag:null:0000000000000000000000000000000000000000'
 
     def test_repo_refs_one_commit_no_hints(self):
-        cs0 = fixture.commit_change(self.main.repo_name, filename='file1',
+        cs0 = fixture.commit_change(self.repo_name, filename='file1',
                 content='line1\n', message='commit1', vcs_type='hg',
                 parent=None, newfile=True)
 
-        refs, default = self.c._get_repo_refs(self.main.scm_instance)
+        refs, default = self.c._get_repo_refs(self.repo_scm_instance)
         assert default == 'branch:default:%s' % cs0.raw_id
         assert ([('branch:default:%s' % cs0.raw_id, 'default (current tip)')],
                 'Branches') in refs
 
     def test_repo_refs_one_commit_rev_hint(self):
-        cs0 = fixture.commit_change(self.main.repo_name, filename='file1',
+        cs0 = fixture.commit_change(self.repo_name, filename='file1',
                 content='line1\n', message='commit1', vcs_type='hg',
                 parent=None, newfile=True)
 
-        refs, default = self.c._get_repo_refs(self.main.scm_instance, rev=cs0.raw_id)
+        refs, default = self.c._get_repo_refs(self.repo_scm_instance, rev=cs0.raw_id)
         expected = 'branch:default:%s' % cs0.raw_id
         assert default == expected
         assert ([(expected, 'default (current tip)')], 'Branches') in refs
 
     def test_repo_refs_two_commits_no_hints(self):
-        cs0 = fixture.commit_change(self.main.repo_name, filename='file1',
+        cs0 = fixture.commit_change(self.repo_name, filename='file1',
                 content='line1\n', message='commit1', vcs_type='hg',
                 parent=None, newfile=True)
-        cs1 = fixture.commit_change(self.main.repo_name, filename='file2',
+        cs1 = fixture.commit_change(self.repo_name, filename='file2',
                 content='line2\n', message='commit2', vcs_type='hg',
                 parent=None, newfile=True)
 
-        refs, default = self.c._get_repo_refs(self.main.scm_instance)
+        refs, default = self.c._get_repo_refs(self.repo_scm_instance)
         expected = 'branch:default:%s' % cs1.raw_id
         assert default == expected
         assert ([(expected, 'default (current tip)')], 'Branches') in refs
 
     def test_repo_refs_two_commits_rev_hints(self):
-        cs0 = fixture.commit_change(self.main.repo_name, filename='file1',
+        cs0 = fixture.commit_change(self.repo_name, filename='file1',
                 content='line1\n', message='commit1', vcs_type='hg',
                 parent=None, newfile=True)
-        cs1 = fixture.commit_change(self.main.repo_name, filename='file2',
+        cs1 = fixture.commit_change(self.repo_name, filename='file2',
                 content='line2\n', message='commit2', vcs_type='hg',
                 parent=None, newfile=True)
 
-        refs, default = self.c._get_repo_refs(self.main.scm_instance, rev=cs0.raw_id)
+        refs, default = self.c._get_repo_refs(self.repo_scm_instance, rev=cs0.raw_id)
         expected = 'rev:%s:%s' % (cs0.raw_id, cs0.raw_id)
         assert default == expected
         assert ([(expected, 'Changeset: %s' % cs0.raw_id[0:12])], 'Special') in refs
         assert ([('branch:default:%s' % cs1.raw_id, 'default (current tip)')], 'Branches') in refs
 
-        refs, default = self.c._get_repo_refs(self.main.scm_instance, rev=cs1.raw_id)
+        refs, default = self.c._get_repo_refs(self.repo_scm_instance, rev=cs1.raw_id)
         expected = 'branch:default:%s' % cs1.raw_id
         assert default == expected
         assert ([(expected, 'default (current tip)')], 'Branches') in refs
 
     def test_repo_refs_two_commits_branch_hint(self):
-        cs0 = fixture.commit_change(self.main.repo_name, filename='file1',
+        cs0 = fixture.commit_change(self.repo_name, filename='file1',
                 content='line1\n', message='commit1', vcs_type='hg',
                 parent=None, newfile=True)
-        cs1 = fixture.commit_change(self.main.repo_name, filename='file2',
+        cs1 = fixture.commit_change(self.repo_name, filename='file2',
                 content='line2\n', message='commit2', vcs_type='hg',
                 parent=None, newfile=True)
 
-        refs, default = self.c._get_repo_refs(self.main.scm_instance, branch='default')
+        refs, default = self.c._get_repo_refs(self.repo_scm_instance, branch='default')
         expected = 'branch:default:%s' % cs1.raw_id
         assert default == expected
         assert ([(expected, 'default (current tip)')], 'Branches') in refs
 
     def test_repo_refs_one_branch_no_hints(self):
-        cs0 = fixture.commit_change(self.main.repo_name, filename='file1',
+        cs0 = fixture.commit_change(self.repo_name, filename='file1',
                 content='line1\n', message='commit1', vcs_type='hg',
                 parent=None, newfile=True)
         # TODO
