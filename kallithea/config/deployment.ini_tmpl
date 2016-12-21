@@ -381,59 +381,59 @@ beaker.session.secret = ${app_instance_uuid}
 ############################
 
 ####################
-### [errormator] ###
+### [appenlight] ###
 ####################
 
-## Errormator is tailored to work with Kallithea, see
-## http://errormator.com for details how to obtain an account
-## you must install python package `errormator_client` to make it work
+## AppEnlight is tailored to work with Kallithea, see
+## http://appenlight.com for details how to obtain an account
+## you must install python package `appenlight_client` to make it work
 
-## errormator enabled
-errormator = false
+## appenlight enabled
+appenlight = false
 
-errormator.server_url = https://api.errormator.com
-errormator.api_key = YOUR_API_KEY
+appenlight.server_url = https://api.appenlight.com
+appenlight.api_key = YOUR_API_KEY
 
 ## TWEAK AMOUNT OF INFO SENT HERE
 
 ## enables 404 error logging (default False)
-errormator.report_404 = false
+appenlight.report_404 = false
 
 ## time in seconds after request is considered being slow (default 1)
-errormator.slow_request_time = 1
+appenlight.slow_request_time = 1
 
 ## record slow requests in application
 ## (needs to be enabled for slow datastore recording and time tracking)
-errormator.slow_requests = true
+appenlight.slow_requests = true
 
 ## enable hooking to application loggers
-#errormator.logging = true
+#appenlight.logging = true
 
 ## minimum log level for log capture
-#errormator.logging.level = WARNING
+#appenlight.logging.level = WARNING
 
 ## send logs only from erroneous/slow requests
 ## (saves API quota for intensive logging)
-errormator.logging_on_error = false
+appenlight.logging_on_error = false
 
 ## list of additonal keywords that should be grabbed from environ object
 ## can be string with comma separated list of words in lowercase
 ## (by default client will always send following info:
 ## 'REMOTE_USER', 'REMOTE_ADDR', 'SERVER_NAME', 'CONTENT_TYPE' + all keys that
 ## start with HTTP* this list be extended with additional keywords here
-errormator.environ_keys_whitelist =
+appenlight.environ_keys_whitelist =
 
 ## list of keywords that should be blanked from request object
 ## can be string with comma separated list of words in lowercase
 ## (by default client will always blank keys that contain following words
 ## 'password', 'passwd', 'pwd', 'auth_tkt', 'secret', 'csrf'
 ## this list be extended with additional keywords set here
-errormator.request_keys_blacklist =
+appenlight.request_keys_blacklist =
 
 ## list of namespaces that should be ignores when gathering log entries
 ## can be string with comma separated list of namespaces
-## (by default the client ignores own entries: errormator_client.client)
-errormator.log_namespace_blacklist =
+## (by default the client ignores own entries: appenlight_client.client)
+appenlight.log_namespace_blacklist =
 
 ################
 ### [sentry] ###

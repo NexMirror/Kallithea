@@ -12,10 +12,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-kallithea.lib.middleware.errormator
+kallithea.lib.middleware.appenlight
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-middleware to handle errormator publishing of errors
+middleware to handle appenlight publishing of errors
 
 This file was forked by the Kallithea project in July 2014.
 Original author and date, and relevant copyright and licensing information is below:
@@ -27,8 +27,8 @@ Original author and date, and relevant copyright and licensing information is be
 
 
 try:
-    from errormator_client import make_errormator_middleware
+    from appenlight_client import make_appenlight_middleware
 except ImportError:
-    Errormator = None
+    AppEnlight = None
 else:
-    Errormator = make_errormator_middleware
+    AppEnlight = make_appenlight_middleware

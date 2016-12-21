@@ -70,9 +70,9 @@ def make_app(global_conf, full_stack=True, static_files=True, **app_conf):
     if asbool(full_stack):
 
         from kallithea.lib.middleware.sentry import Sentry
-        from kallithea.lib.middleware.errormator import Errormator
-        if Errormator and asbool(config['app_conf'].get('errormator')):
-            app = Errormator(app, config)
+        from kallithea.lib.middleware.appenlight import AppEnlight
+        if AppEnlight and asbool(config['app_conf'].get('appenlight')):
+            app = AppEnlight(app, config)
         elif Sentry:
             app = Sentry(app, config)
 
