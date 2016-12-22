@@ -223,6 +223,7 @@ class RepoModel(BaseModel):
             cs_cache = repo.changeset_cache
             row = {
                 "raw_name": repo.repo_name,
+                "just_name": repo.just_name,
                 "name": repo_lnk(repo.repo_name, repo.repo_type,
                                  repo.repo_state, repo.private, repo.fork),
                 "last_change_iso": repo.last_db_change.isoformat(),

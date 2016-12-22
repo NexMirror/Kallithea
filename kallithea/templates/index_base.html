@@ -89,8 +89,8 @@
                 columns: [
                     {data: "raw_name", visible: false, searchable: false},
                     {title: "${_('Repository')}", data: "name", orderData: 1, render: {
-                        filter: function(data) {
-                            return $(data).find(".dt_repo_name").text();
+                        filter: function(data, type, row, meta) {
+                            return row.just_name;
                         }
                     }},
                     {data: "desc", title: "${_('Description')}", searchable: false},
