@@ -34,6 +34,7 @@ import itertools
 
 from paste.response import replace_header
 from pylons.controllers import WSGIController
+from pylons.controllers.util import Response
 from pylons import request
 
 from webob.exc import HTTPError
@@ -58,20 +59,16 @@ class JSONRPCError(BaseException):
         return safe_str(self.message)
 
 
-def jsonrpc_error(message, retid=None, code=None):
+class JSONRPCErrorResponse(Response, Exception):
     """
     Generate a Response object with a JSON-RPC error body
-
-    :param code:
-    :param retid:
-    :param message:
     """
-    from pylons.controllers.util import Response
-    return Response(
-        body=json.dumps(dict(id=retid, result=None, error=message)),
-        status=code,
-        content_type='application/json'
-    )
+
+    def __init__(self, message=None, retid=None, code=None):
+        Response.__init__(self,
+                          body=json.dumps(dict(id=retid, result=None, error=message)),
+                          status=code,
+                          content_type='application/json')
 
 
 class JSONRPCController(WSGIController):
@@ -105,6 +102,8 @@ class JSONRPCController(WSGIController):
         """
         try:
             return self._handle_request(environ, start_response)
+        except JSONRPCErrorResponse as e:
+            return e
         finally:
             meta.Session.remove()
 
@@ -114,16 +113,16 @@ class JSONRPCController(WSGIController):
         self._req_id = None
         if 'CONTENT_LENGTH' not in environ:
             log.debug("No Content-Length")
-            return jsonrpc_error(retid=self._req_id,
-                                 message="No Content-Length in request")
+            raise JSONRPCErrorResponse(retid=self._req_id,
+                                       message="No Content-Length in request")
         else:
             length = environ['CONTENT_LENGTH'] or 0
             length = int(environ['CONTENT_LENGTH'])
             log.debug('Content-Length: %s', length)
 
         if length == 0:
-            return jsonrpc_error(retid=self._req_id,
-                                 message="Content-Length is 0")
+            raise JSONRPCErrorResponse(retid=self._req_id,
+                                       message="Content-Length is 0")
 
         raw_body = environ['wsgi.input'].read(length)
 
@@ -131,9 +130,9 @@ class JSONRPCController(WSGIController):
             json_body = json.loads(raw_body)
         except ValueError as e:
             # catch JSON errors Here
-            return jsonrpc_error(retid=self._req_id,
-                                 message="JSON parse error ERR:%s RAW:%r"
-                                 % (e, raw_body))
+            raise JSONRPCErrorResponse(retid=self._req_id,
+                                       message="JSON parse error ERR:%s RAW:%r"
+                                                % (e, raw_body))
 
         # check AUTH based on API key
         try:
@@ -144,38 +143,36 @@ class JSONRPCController(WSGIController):
             if not isinstance(self._request_params, dict):
                 self._request_params = {}
 
-            log.debug(
-                'method: %s, params: %s', self._req_method,
-                                            self._request_params
-            )
+            log.debug('method: %s, params: %s',
+                      self._req_method, self._request_params)
         except KeyError as e:
-            return jsonrpc_error(retid=self._req_id,
-                                 message='Incorrect JSON query missing %s' % e)
+            raise JSONRPCErrorResponse(retid=self._req_id,
+                                       message='Incorrect JSON query missing %s' % e)
 
         # check if we can find this session using api_key
         try:
             u = User.get_by_api_key(self._req_api_key)
             if u is None:
-                return jsonrpc_error(retid=self._req_id,
-                                     message='Invalid API key')
+                raise JSONRPCErrorResponse(retid=self._req_id,
+                                           message='Invalid API key')
 
             auth_u = AuthUser(dbuser=u)
             if not AuthUser.check_ip_allowed(auth_u, ip_addr):
-                return jsonrpc_error(retid=self._req_id,
-                        message='request from IP:%s not allowed' % (ip_addr,))
+                raise JSONRPCErrorResponse(retid=self._req_id,
+                                           message='request from IP:%s not allowed' % (ip_addr,))
             else:
                 log.info('Access for IP:%s allowed', ip_addr)
 
         except Exception as e:
-            return jsonrpc_error(retid=self._req_id,
-                                 message='Invalid API key')
+            raise JSONRPCErrorResponse(retid=self._req_id,
+                                       message='Invalid API key')
 
         self._error = None
         try:
             self._func = self._find_method()
         except AttributeError as e:
-            return jsonrpc_error(retid=self._req_id,
-                                 message=str(e))
+            raise JSONRPCErrorResponse(retid=self._req_id,
+                                       message=str(e))
 
         # now that we have a method, add self._req_params to
         # self.kargs and dispatch control to WGIController
@@ -207,19 +204,17 @@ class JSONRPCController(WSGIController):
             # skip the required param check if it's default value is
             # NotImplementedType (default_empty)
             if default == default_empty and arg not in self._request_params:
-                return jsonrpc_error(
+                raise JSONRPCErrorResponse(
                     retid=self._req_id,
-                    message=(
-                        'Missing non optional `%s` arg in JSON DATA' % arg
-                    )
+                    message='Missing non optional `%s` arg in JSON DATA' % arg,
                 )
 
         extra = set(self._request_params).difference(func_kwargs)
         if extra:
-                return jsonrpc_error(
+                raise JSONRPCErrorResponse(
                     retid=self._req_id,
-                    message=('Unknown %s arg in JSON DATA' %
-                             ', '.join('`%s`' % arg for arg in extra)),
+                    message='Unknown %s arg in JSON DATA' %
+                            ', '.join('`%s`' % arg for arg in extra),
                 )
 
         self._rpc_args = {}
