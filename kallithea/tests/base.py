@@ -146,14 +146,7 @@ class TestController(object):
 
     @pytest.fixture(autouse=True)
     def app_fixture(self):
-        self.wsgiapp = pylons.test.pylonsapp
-        self.init_stack(self.wsgiapp.config)
-        self.app = TestApp(self.wsgiapp)
-        return self.app
-
-    def init_stack(self, config=None):
-        if not config:
-            config = pylons.test.pylonsapp.config
+        config = pylons.test.pylonsapp.config
         url._push_object(URLGenerator(config['routes.map'], environ))
         pylons.app_globals._push_object(config['pylons.app_globals'])
         pylons.config._push_object(config)
@@ -163,6 +156,8 @@ class TestController(object):
         pylons.translator._push_object(translator)
         h = NullHandler()
         logging.getLogger("kallithea").addHandler(h)
+        self.app = TestApp(pylons.test.pylonsapp)
+        return self.app
 
     def remove_all_notifications(self):
         # query().delete() does not (by default) trigger cascades
