@@ -383,65 +383,65 @@ beaker.session.secret = ${uuid()}
 #beaker.session.sa.url = postgresql://postgres:qwe@localhost/kallithea
 #beaker.session.table_name = db_session
 
-%if error_aggregation_service == 'errormator':
+%if error_aggregation_service == 'appenlight':
 <%text>############################</%text>
 <%text>## ERROR HANDLING SYSTEMS ##</%text>
 <%text>############################</%text>
 
 <%text>####################</%text>
-<%text>### [errormator] ###</%text>
+<%text>### [appenlight] ###</%text>
 <%text>####################</%text>
 
-<%text>## Errormator is tailored to work with Kallithea, see</%text>
-<%text>## http://errormator.com for details how to obtain an account</%text>
-<%text>## you must install python package `errormator_client` to make it work</%text>
+<%text>## AppEnlight is tailored to work with Kallithea, see</%text>
+<%text>## http://appenlight.com for details how to obtain an account</%text>
+<%text>## you must install python package `appenlight_client` to make it work</%text>
 
-<%text>## errormator enabled</%text>
-errormator = false
+<%text>## appenlight enabled</%text>
+appenlight = false
 
-errormator.server_url = https://api.errormator.com
-errormator.api_key = YOUR_API_KEY
+appenlight.server_url = https://api.appenlight.com
+appenlight.api_key = YOUR_API_KEY
 
 <%text>## TWEAK AMOUNT OF INFO SENT HERE</%text>
 
 <%text>## enables 404 error logging (default False)</%text>
-errormator.report_404 = false
+appenlight.report_404 = false
 
 <%text>## time in seconds after request is considered being slow (default 1)</%text>
-errormator.slow_request_time = 1
+appenlight.slow_request_time = 1
 
 <%text>## record slow requests in application</%text>
 <%text>## (needs to be enabled for slow datastore recording and time tracking)</%text>
-errormator.slow_requests = true
+appenlight.slow_requests = true
 
 <%text>## enable hooking to application loggers</%text>
-#errormator.logging = true
+#appenlight.logging = true
 
 <%text>## minimum log level for log capture</%text>
-#errormator.logging.level = WARNING
+#appenlight.logging.level = WARNING
 
 <%text>## send logs only from erroneous/slow requests</%text>
 <%text>## (saves API quota for intensive logging)</%text>
-errormator.logging_on_error = false
+appenlight.logging_on_error = false
 
 <%text>## list of additional keywords that should be grabbed from environ object</%text>
 <%text>## can be string with comma separated list of words in lowercase</%text>
 <%text>## (by default client will always send following info:</%text>
 <%text>## 'REMOTE_USER', 'REMOTE_ADDR', 'SERVER_NAME', 'CONTENT_TYPE' + all keys that</%text>
 <%text>## start with HTTP* this list be extended with additional keywords here</%text>
-errormator.environ_keys_whitelist =
+appenlight.environ_keys_whitelist =
 
 <%text>## list of keywords that should be blanked from request object</%text>
 <%text>## can be string with comma separated list of words in lowercase</%text>
 <%text>## (by default client will always blank keys that contain following words</%text>
 <%text>## 'password', 'passwd', 'pwd', 'auth_tkt', 'secret', 'csrf'</%text>
 <%text>## this list be extended with additional keywords set here</%text>
-errormator.request_keys_blacklist =
+appenlight.request_keys_blacklist =
 
 <%text>## list of namespaces that should be ignores when gathering log entries</%text>
 <%text>## can be string with comma separated list of namespaces</%text>
-<%text>## (by default the client ignores own entries: errormator_client.client)</%text>
-errormator.log_namespace_blacklist =
+<%text>## (by default the client ignores own entries: appenlight_client.client)</%text>
+appenlight.log_namespace_blacklist =
 
 %elif error_aggregation_service == 'sentry':
 <%text>################</%text>

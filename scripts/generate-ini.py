@@ -14,7 +14,7 @@ makofile = 'kallithea/bin/template.ini.mako'
 selected_mako_conditionals = set([
     "database_engine == 'sqlite'",
     "http_server == 'waitress'",
-    "error_aggregation_service == 'errormator'",
+    "error_aggregation_service == 'appenlight'",
     "error_aggregation_service == 'sentry'",
 ])
 

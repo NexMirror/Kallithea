@@ -337,7 +337,7 @@ kallithea/lib/ipaddr.py
 kallithea/lib/markup_renderer.py
 kallithea/lib/middleware/
 kallithea/lib/middleware/__init__.py
-kallithea/lib/middleware/errormator.py
+kallithea/lib/middleware/appenlight.py
 kallithea/lib/middleware/https_fixup.py
 kallithea/lib/middleware/pygrack.py
 kallithea/lib/middleware/sentry.py
