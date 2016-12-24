@@ -38,12 +38,12 @@ ${self.repo_context_bar('files')}
             ${h.form(h.url.current(),method='post',id='eform',class_='form-inline')}
             <div id="body" class="codeblock">
             <div class="code-header">
-                <div class="stats">
+                <div class="pull-left stats">
                     <div class="left"><i class="icon-doc-inv"></i></div>
                     <div class="left item">${h.link_to(h.show_id(c.file.changeset),h.url('changeset_home',repo_name=c.repo_name,revision=c.file.changeset.raw_id))}</div>
                     <div class="left item">${h.format_byte_size(c.file.size,binary=True)}</div>
                     <div class="left item last">${c.file.mimetype}</div>
-                    <div class="buttons">
+                    <div class="pull-right buttons">
                       ${h.link_to(_('Show Annotation'),h.url('files_annotate_home',repo_name=c.repo_name,revision=c.cs.raw_id,f_path=c.f_path),class_="btn btn-default btn-xs")}
                       ${h.link_to(_('Show as Raw'),h.url('files_raw_home',repo_name=c.repo_name,revision=c.cs.raw_id,f_path=c.f_path),class_="btn btn-default btn-xs")}
                       ${h.link_to(_('Download as Raw'),h.url('files_rawfile_home',repo_name=c.repo_name,revision=c.cs.raw_id,f_path=c.f_path),class_="btn btn-default btn-xs")}

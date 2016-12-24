@@ -14,10 +14,10 @@
 <div id="footer">
    <div id="footer-inner" class="title">
        <div>
-           <p class="footer-link">
+           <p class="footer-link pull-left">
                ${_('Server instance: %s') % c.instance_id if c.instance_id else ''}
            </p>
-           <p class="footer-link-right">
+           <p class="footer-link pull-right">
                This site is powered by
                %if c.visual.show_version:
                    <a href="${h.url('kallithea_project_url')}" target="_blank">Kallithea</a> ${c.kallithea_version},
@@ -403,12 +403,12 @@
             </div>
             ${h.end_form()}
           %else:
-            <div class="links_left">
+            <div class="pull-left links_left">
                 ${h.gravatar_div(c.authuser.email, size=48, div_class="big_gravatar")}
                 <div class="full_name">${c.authuser.full_name_or_username}</div>
                 <div class="email">${c.authuser.email}</div>
             </div>
-            <div class="links_right">
+            <div class="pull-right links_right">
             <ol class="links">
               <li><a href="${h.url('notifications')}">${_('Notifications')}: ${c.unread_notifications}</a></li>
               <li>${h.link_to(_('My Account'),h.url('my_account'))}</li>

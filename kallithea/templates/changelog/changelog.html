@@ -36,7 +36,7 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
             <div>
                 <div style="overflow:auto; ${'display:none' if c.changelog_for_path else ''}">
                     <div class="container_header">
-                        <div style="float:left; margin-left:20px;">
+                        <div class="pull-left">
                             ${h.form(h.url.current(),method='get',class_="form-inline")}
                                 ${h.submit('set',_('Show'),class_="btn btn-default btn-sm")}
                                 ${h.text('size',size=3,value=c.size,class_='form-control')}
@@ -47,7 +47,7 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                             ${h.end_form()}
                             <a href="#" class="btn btn-default btn-sm" id="rev_range_clear" style="display:none">${_('Clear selection')}</a>
                         </div>
-                        <div style="float: right; margin: 0px 0px 0px 4px">
+                        <div class="pull-right">
                             <a href="#" class="btn btn-default btn-sm" id="rev_range_container" style="display:none"></a>
                             %if c.revision:
                                 <a class="btn btn-default btn-sm" href="${h.url('changelog_home', repo_name=c.repo_name)}">

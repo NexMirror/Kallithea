@@ -13,20 +13,26 @@
                 %endif
                 <div class="journal_action_container">
                 % for entry in entries:
-                    <div class="journal_icon"> ${h.action_parser(entry)[2]()}</div>
-                    <div class="journal_action">${h.action_parser(entry)[0]()}</div>
-                    <div class="journal_repo">
-                        <span class="journal_repo_name">
-                        %if entry.repository is not None:
-                          ${h.link_to(entry.repository.repo_name,
-                                      h.url('summary_home',repo_name=entry.repository.repo_name))}
-                        %else:
-                          ${entry.repository_name}
-                        %endif
-                        </span>
+                  <div class="container-fluid">
+                    <div class="pull-left">
+                      <div class="journal_icon"> ${h.action_parser(entry)[2]()}</div>
                     </div>
-                    <div class="journal_action_params">${h.literal(h.action_parser(entry)[1]())}</div>
-                    <div class="date"><span data-toggle="tooltip" title="${h.fmt_date(entry.action_date)}">${h.age(entry.action_date)}</span></div>
+                    <div class="pull-left">
+                      <div class="journal_action">${h.action_parser(entry)[0]()}</div>
+                      <div class="journal_repo">
+                          <span class="journal_repo_name">
+                          %if entry.repository is not None:
+                            ${h.link_to(entry.repository.repo_name,
+                                        h.url('summary_home',repo_name=entry.repository.repo_name))}
+                          %else:
+                            ${entry.repository_name}
+                          %endif
+                          </span>
+                      </div>
+                      <div class="journal_action_params">${h.literal(h.action_parser(entry)[1]())}</div>
+                      <div class="date"><span data-toggle="tooltip" title="${h.fmt_date(entry.action_date)}">${h.age(entry.action_date)}</span></div>
+                    </div>
+                  </div>
                 %endfor
                 </div>
             </div>

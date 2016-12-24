@@ -36,20 +36,20 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
                 </div>
             </div>
 
-            <div class="children">
+            <div class="pull-right children">
                 <div id="child_link" class="changeset_hash">
                     <a href="#">${_('Child rev.')}</a> <i style="color:#036185" class="icon-right-open"></i>
                 </div>
             </div>
 
             <div class="code-header banner">
-                <div class="changeset-status-container">
+                <div class="pull-left changeset-status-container">
                     %if c.statuses:
                         <span class="changeset-status-ico"><i class="icon-circle changeset-status-${c.statuses[0]}"></i></span>
                         <span title="${_('Changeset status')}" class="changeset-status-lbl">[${h.changeset_status_lbl(c.statuses[0])}]</span>
                     %endif
                 </div>
-                <div class="diff-actions">
+                <div class="diff-actions pull-left">
                   <a href="${h.url('changeset_raw_home',repo_name=c.repo_name,revision=c.changeset.raw_id)}" data-toggle="tooltip" title="${_('Raw diff')}">
                       <i class="icon-diff"></i>
                   </a>
@@ -108,7 +108,7 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
                         % endif
                     </div>
                 </div>
-                <div class="left">
+                <div class="pull-left">
                      <div class="author">
                          ${h.gravatar_div(h.email_or_none(c.changeset.author), size=20)}
                          <span><b>${h.person(c.changeset.author,'full_name_and_username')}</b> - ${h.age(c.changeset.date,True)} ${h.fmt_date(c.changeset.date)}</span><br/>
@@ -167,12 +167,12 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
               </div>
               <div class="cs_files">
                 %for fid, url_fid, op, a_path, path, diff, stats in file_diff_data:
-                    <div class="cs_${op}">
-                      <div class="node">
+                    <div class="cs_${op} clearfix">
+                      <div class="node pull-left">
                           <i class="icon-diff-${op}"></i>
                           ${h.link_to(h.safe_unicode(path), '#%s' % fid)}
                       </div>
-                      <div class="changes">${h.fancy_file_stats(stats)}</div>
+                      <div class="changes pull-right">${h.fancy_file_stats(stats)}</div>
                     </div>
                 %endfor
                 %if c.limited_diff:
