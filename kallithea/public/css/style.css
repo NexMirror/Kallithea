@@ -1484,7 +1484,6 @@ a.metatag[data-tag="license"]:hover {
 #quick_login .links .logout {
 }
 
-#quick_login div.form div.fields,
 #quick_login div.form div.form-horizontal {
     padding-top: 2px;
     padding-left: 10px;
@@ -1512,7 +1511,6 @@ a.metatag[data-tag="license"]:hover {
     padding: 5px 7px 4px;
 }
 
-#quick_login div.form div.fields div.buttons,
 #quick_login div.form div.form-horizontal div.buttons {
     clear: both;
     overflow: hidden;
@@ -1592,7 +1590,6 @@ a.metatag[data-tag="license"]:hover {
     padding: 7px 7px 6px;
 }
 
-#register div.form div.fields div.buttons,
 #register div.form div.form-horizontal div.buttons {
     clear: both;
     overflow: hidden;
@@ -3196,12 +3193,10 @@ div#legend_data, div#legend_container, div#legend_choices {
     padding: 0 20px 10px;
 }
 
-#content div.panel div.form div.fields,
 #content div.panel div.form div.form-horizontal,
 #login div.form-horizontal,
 #login div.form-horizontal div.form-group,
 #register div.form,
-#register div.form div.fields,
 #register div.form div.form-horizontal {
     clear: both;
     overflow: hidden;
@@ -3265,9 +3260,7 @@ div#legend_data, div#legend_container, div#legend_choices {
 }
 
 div.form div.form-horizontal div.form-group div.button input,
-#content div.panel div.form div.fields div.buttons input
-#content div.panel div.form div.form-horizontal div.buttons input
-div.form div.fields div.buttons input,
+#content div.panel div.form div.form-horizontal div.buttons input,
 div.form div.form-horizontal div.buttons input,
 #content div.panel div.action div.button input {
     font-size: 11px;
@@ -3276,14 +3269,11 @@ div.form div.form-horizontal div.buttons input,
 }
 
 div.form div.form-horizontal div.form-group div.highlight,
-#content div.panel div.form div.fields div.buttons div.highlight,
 #content div.panel div.form div.form-horizontal div.buttons div.highlight {
     display: inline;
 }
 
-#content div.panel div.form div.fields div.buttons,
 #content div.panel div.form div.form-horizontal div.buttons,
-div.form div.fields div.buttons,
 div.form div.form-horizontal div.buttons {
     margin: 10px 10px 0 200px;
     padding: 0;
@@ -3379,7 +3369,6 @@ div.form div.form-horizontal div.buttons {
 }
 
 #login div.form div.buttons input,
-#register div.form div.fields div.buttons input,
 #register div.form div.form-horizontal div.buttons input {
     color: #000;
     font-size: 1em;
