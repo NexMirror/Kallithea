@@ -988,6 +988,7 @@ div.form div.form-horizontal div.form-group div.button {
     margin: 0;
     padding: 0 0 0 8px;
 }
+
 #content div.panel table.noborder {
     border: 1px solid transparent;
 }
@@ -2911,10 +2912,6 @@ div#legend_choices table {
     width: auto !important;
 }
 
-table#permissions_manage {
-    width: 0 !important;
-}
-
 table#permissions_manage span.private_repo_msg {
     font-size: 0.8em;
     opacity: 0.6;
@@ -4483,4 +4480,8 @@ body table.dataTable thead .sorting_desc::after {
 
 .changes_txt {
     clear: both;
+}
+
+.text-nowrap {
+    white-space: nowrap;
 }

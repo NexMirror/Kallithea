@@ -147,14 +147,14 @@
 </%def>
 
 <%def name="repo_group_name(repo_group_name, children_groups)">
-  <div style="white-space: nowrap">
+  <div class="text-nowrap">
   <a href="${h.url('repos_group_home',group_name=repo_group_name)}">
     <i class="icon-folder" title="${_('Repository group')}"></i> ${h.literal(' &raquo; '.join(children_groups))}</a>
   </div>
 </%def>
 
 <%def name="user_group_name(user_group_id, user_group_name)">
-  <div style="white-space: nowrap">
+  <div class="text-nowrap">
   <a href="${h.url('edit_users_group', id=user_group_id)}">
     <i class="icon-users" title="${_('User group')}"></i> ${user_group_name}</a>
   </div>

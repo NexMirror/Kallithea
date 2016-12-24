@@ -20,7 +20,7 @@ ${h.form(url('edit_user_group_perms_update', id=c.user_group.users_group_id))}
                         <td>${h.radio('u_perm_%s' % r2p.user.username,'usergroup.read')}</td>
                         <td>${h.radio('u_perm_%s' % r2p.user.username,'usergroup.write')}</td>
                         <td>${h.radio('u_perm_%s' % r2p.user.username,'usergroup.admin')}</td>
-                        <td style="white-space: nowrap;">
+                        <td>
                             ${h.gravatar(r2p.user.email, cls="perm-gravatar", size=14)}
                             %if h.HasPermissionAny('hg.admin')() and r2p.user.username != 'default':
                              <a href="${h.url('edit_user',id=r2p.user.user_id)}">${r2p.user.username}</a>
@@ -40,7 +40,7 @@ ${h.form(url('edit_user_group_perms_update', id=c.user_group.users_group_id))}
                         <td>${h.radio('u_perm_%s' % r2p.user.username,'usergroup.read', disabled="disabled")}</td>
                         <td>${h.radio('u_perm_%s' % r2p.user.username,'usergroup.write', disabled="disabled")}</td>
                         <td>${h.radio('u_perm_%s' % r2p.user.username,'usergroup.admin', disabled="disabled")}</td>
-                        <td style="white-space: nowrap;">
+                        <td>
                             ${h.gravatar(r2p.user.email, cls="perm-gravatar", size=14)}
                             ${r2p.user.username if r2p.user.username != 'default' else _('Default')}
                         </td>
@@ -56,7 +56,7 @@ ${h.form(url('edit_user_group_perms_update', id=c.user_group.users_group_id))}
                         <td>${h.radio('g_perm_%s' % g2p.user_group.users_group_name,'usergroup.read')}</td>
                         <td>${h.radio('g_perm_%s' % g2p.user_group.users_group_name,'usergroup.write')}</td>
                         <td>${h.radio('g_perm_%s' % g2p.user_group.users_group_name,'usergroup.admin')}</td>
-                        <td style="white-space: nowrap;">
+                        <td>
                             <i class="icon-users"></i>
                             %if h.HasPermissionAny('hg.admin')():
                              <a href="${h.url('edit_users_group',id=g2p.user_group.users_group_id)}">

@@ -29,7 +29,7 @@ ${h.form(url('edit_repo_perms_update', repo_name=c.repo_name))}
                         <td>${h.radio('u_perm_%s' % r2p.user.username,'repository.read')}</td>
                         <td>${h.radio('u_perm_%s' % r2p.user.username,'repository.write')}</td>
                         <td>${h.radio('u_perm_%s' % r2p.user.username,'repository.admin')}</td>
-                        <td style="white-space: nowrap;">
+                        <td>
                             ${h.gravatar(r2p.user.email, size=14)}
                             %if h.HasPermissionAny('hg.admin')() and r2p.user.username != 'default':
                              <a href="${h.url('edit_user',id=r2p.user.user_id)}">${r2p.user.username}</a>
@@ -55,7 +55,7 @@ ${h.form(url('edit_repo_perms_update', repo_name=c.repo_name))}
                         <td>${h.radio('g_perm_%s' % g2p.users_group.users_group_name,'repository.read')}</td>
                         <td>${h.radio('g_perm_%s' % g2p.users_group.users_group_name,'repository.write')}</td>
                         <td>${h.radio('g_perm_%s' % g2p.users_group.users_group_name,'repository.admin')}</td>
-                        <td style="white-space: nowrap;">
+                        <td>
                             <i class="icon-users"></i>
                             %if h.HasPermissionAny('hg.admin')():
                              <a href="${h.url('edit_users_group',id=g2p.users_group.users_group_id)}">${g2p.users_group.users_group_name}</a>
