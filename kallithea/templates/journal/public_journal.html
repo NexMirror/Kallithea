@@ -17,14 +17,12 @@
 
 <div class="panel panel-primary">
   <div class="panel-heading clearfix">
-    <h5>${_('Public Journal')}</h5>
-    <ul class="links icon-only-links">
-      <li>
-        <span>
-          <a href="${h.url('public_journal_atom')}"><i class="icon-rss-squared"></i></a>
-        </span>
-      </li>
-    </ul>
+    <div class="pull-left">
+      ${_('Public Journal')}
+    </div>
+    <div class="pull-right">
+        <a href="${h.url('public_journal_atom')}"><i class="icon-rss-squared"></i></a>
+    </div>
   </div>
 
   <div id="journal">

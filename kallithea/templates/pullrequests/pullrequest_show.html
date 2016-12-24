@@ -18,7 +18,7 @@
 <% editable = not c.pull_request.is_closed() and (h.HasPermissionAny('hg.admin')() or h.HasRepoPermissionAny('repository.admin')(c.repo_name) or c.pull_request.owner_id == c.authuser.user_id) %>
 ${self.repo_context_bar('showpullrequest')}
 <div class="panel panel-primary">
-  <div class="panel-heading">
+  <div class="panel-heading clearfix">
     ${self.breadcrumbs()}
   </div>
 
@@ -282,7 +282,7 @@ ${self.repo_context_bar('showpullrequest')}
 </div>
 
 <div class="panel panel-primary">
-    <div class="panel-heading">
+    <div class="panel-heading clearfix">
       <div class="breadcrumbs">${_('Pull Request Content')}</div>
     </div>
     <div class="table">

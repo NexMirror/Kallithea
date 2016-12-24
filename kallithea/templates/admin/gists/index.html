@@ -29,13 +29,13 @@
 <%def name="main()">
 <div class="panel panel-primary">
     <div class="panel-heading clearfix">
-        ${self.breadcrumbs()}
+        <div class="pull-left">
+            ${self.breadcrumbs()}
+        </div>
         %if c.authuser.username != 'default':
-        <ul class="links">
-          <li>
+        <div class="pull-right">
              <a href="${h.url('new_gist')}" class="btn btn-success btn-xs"><i class="icon-plus"></i> ${_('Create New Gist')}</a>
-          </li>
-        </ul>
+        </div>
         %endif
     </div>
     %if c.gists_pager.item_count>0:

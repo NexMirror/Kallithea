@@ -22,12 +22,12 @@
 ${self.repo_context_bar('files', c.revision)}
 <div class="panel panel-primary">
     <div class="panel-heading clearfix">
-        ${self.breadcrumbs()}
-        <ul class="links">
-            <li style="color:white">
+        <div class="pull-left">
+            ${self.breadcrumbs()}
+        </div>
+        <div class="pull-right">
               ${_("Branch filter:")} ${h.select('branch_selector',c.changeset.raw_id,c.revision_options)}
-            </li>
-        </ul>
+        </div>
     </div>
     <div class="table">
         <div id="files_data">

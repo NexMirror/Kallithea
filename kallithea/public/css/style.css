@@ -576,11 +576,42 @@ div.header img {
     float: left;
     color: #fff;
     margin: 0;
-    padding: 11px 10px 11px 10px;
+    padding: 0 10px;
+    line-height: 18px;
 }
 
-#content div.panel div.panel-heading .links.icon-only-links {
-   float: right;
+.clearfix::before, .clearfix::after, .dl-horizontal dd::before, .dl-horizontal dd::after, .container::before, .container::after, .container-fluid::before, .container-fluid::after, .row::before, .row::after, .form-horizontal .form-group::before, .form-horizontal .form-group::after, .btn-toolbar::before, .btn-toolbar::after, .btn-group-vertical > .btn-group::before, .btn-group-vertical > .btn-group::after, .nav::before, .nav::after, .navbar::before, .navbar::after, .navbar-header::before, .navbar-header::after, .navbar-collapse::before, .navbar-collapse::after, .pager::before, .pager::after, .panel::before, .panel::after, .panel-body::before, .panel-body::after, .modal-header::before, .modal-header::after, .modal-footer::before, .modal-footer::after, td.inline-comments::before, td.inline-comments::after {
+    content: " ";
+    display: table;
+}
+
+.clearfix::after, .dl-horizontal dd::after, .container::after, .container-fluid::after, .row::after, .form-horizontal .form-group::after, .btn-toolbar::after, .btn-group-vertical > .btn-group::after, .nav::after, .navbar::after, .navbar-header::after, .navbar-collapse::after, .pager::after, .panel::after, .panel-body::after, .modal-header::after, .modal-footer::after, td.inline-comments::after {
+    clear: both;
+}
+
+/* avoid conflict with .container in changeset tables */
+#content div.panel table .container::before,
+#content div.panel table .container::after {
+    content: inherit;
+    display: inherit;
+}
+
+.pull-left {
+    float: left;
+}
+
+.pull-right {
+    float: right;
+}
+
+#content div.panel div.panel-heading .pull-left {
+    margin: 10px;
+    color: white;
+}
+
+#content div.panel div.panel-heading .pull-right {
+    margin: 5px;
+    color: white;
 }
 
 #content div.panel h1,
@@ -1452,7 +1483,6 @@ a.metatag[data-tag="license"]:hover {
     width: 170px;
 }
 #quick_login .links_right {
-
     position: absolute;
     right: 0;
 }
@@ -2776,8 +2806,11 @@ table.code-browser i[class^='icon-'] {
     float: left;
     font-weight: 700;
     font-size: 14px;
+    margin: 10px;
+}
+
+.pull-left .breadcrumbs {
     margin: 0;
-    padding: 11px 0 11px 10px;
 }
 
 .breadcrumbs .hash {

@@ -22,8 +22,10 @@
 <%def name="main()">
     <div class="panel panel-primary">
         <div class="panel-heading clearfix">
-            ${self.breadcrumbs()}
-            <div class="links icon-only-links panel-title">
+            <div class="pull-left">
+                ${self.breadcrumbs()}
+            </div>
+            <div class="pull-right links icon-only-links panel-title">
                 <a href="${h.url('my_account_watched')}"><i class="icon-eye"></i> ${_('Watched Repositories')}</a>
                 <a href="${h.url('my_account_repos')}"><i class="icon-database"></i> ${_('My Repositories')}</a>
                 <a id="refresh" href="${h.url('journal')}"><i class="icon-arrows-cw"></i></a>

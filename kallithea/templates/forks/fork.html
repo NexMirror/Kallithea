@@ -16,6 +16,9 @@
 <%def name="main()">
 ${self.repo_context_bar('createfork')}
 <div class="panel panel-primary">
+    <div class="panel-heading clearfix">
+        ${self.breadcrumbs()}
+    </div>
     ${h.form(url('repo_fork_create_home',repo_name=c.repo_info.repo_name))}
     <div class="form">
         <div class="form-horizontal">
