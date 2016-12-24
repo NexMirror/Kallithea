@@ -2,7 +2,7 @@
 <%inherit file="/base/base.html"/>
 
 <%block name="title">
-    ${_('My Notifications')} ${c.authuser.username}
+    ${_('My Notifications')} ${request.authuser.username}
 </%block>
 
 <%def name="breadcrumbs_links()">

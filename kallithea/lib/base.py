@@ -188,7 +188,6 @@ class BaseVCSController(object):
         # authenticate this VCS request using the authentication modules
         self.authenticate = BasicAuth('', auth_modules.authenticate,
                                       config.get('auth_ret_code'))
-        self.ip_addr = '0.0.0.0'
 
     def _handle_request(self, environ, start_response):
         raise NotImplementedError()
@@ -358,11 +357,11 @@ class BaseController(WSGIController):
         c.repo_name = get_repo_slug(request)  # can be empty
         c.backends = BACKENDS.keys()
         c.unread_notifications = NotificationModel() \
-                        .get_unread_cnt_for_user(c.authuser.user_id)
+                        .get_unread_cnt_for_user(request.authuser.user_id)
 
         self.cut_off_limit = safe_int(config.get('cut_off_limit'))
 
-        c.my_pr_count = PullRequest.query(reviewer_id=c.authuser.user_id, include_closed=False).count()
+        c.my_pr_count = PullRequest.query(reviewer_id=request.authuser.user_id, include_closed=False).count()
 
         self.sa = meta.Session
         self.scm_model = ScmModel(self.sa)
@@ -460,7 +459,7 @@ class BaseController(WSGIController):
         # the request is routed to. This routing information is
         # available in environ['pylons.routes_dict']
         try:
-            self.ip_addr = _get_ip_addr(environ)
+            request.ip_addr = _get_ip_addr(environ)
             # make sure that we update permissions each time we call controller
 
             self._basic_security_checks()
@@ -477,14 +476,14 @@ class BaseController(WSGIController):
                 if type.lower() == 'bearer':
                     bearer_token = params
 
-            self.authuser = c.authuser = request.user = self._determine_auth_user(
+            request.authuser = request.user = self._determine_auth_user(
                 request.GET.get('api_key'),
                 bearer_token,
                 session.get('authuser'),
             )
 
             log.info('IP: %s User: %s accessed %s',
-                self.ip_addr, self.authuser,
+                request.ip_addr, request.authuser,
                 safe_unicode(_get_access_path(environ)),
             )
             return WSGIController.__call__(self, environ, start_response)
@@ -542,7 +541,7 @@ class BaseRepoController(BaseController):
             c.repository_forks = self.scm_model.get_forks(dbr)
             c.repository_pull_requests = self.scm_model.get_pull_requests(dbr)
             c.repository_following = self.scm_model.is_following_repo(
-                                    c.repo_name, self.authuser.user_id)
+                                    c.repo_name, request.authuser.user_id)
 
     @staticmethod
     def _get_ref_rev(repo, ref_type, ref_name, returnempty=False):

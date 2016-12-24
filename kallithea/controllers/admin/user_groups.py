@@ -136,13 +136,13 @@ class UserGroupsController(BaseController):
             form_result = users_group_form.to_python(dict(request.POST))
             ug = UserGroupModel().create(name=form_result['users_group_name'],
                                          description=form_result['user_group_description'],
-                                         owner=self.authuser.user_id,
+                                         owner=request.authuser.user_id,
                                          active=form_result['users_group_active'])
 
             gr = form_result['users_group_name']
-            action_logger(self.authuser,
+            action_logger(request.authuser,
                           'admin_created_users_group:%s' % gr,
-                          None, self.ip_addr, self.sa)
+                          None, request.ip_addr, self.sa)
             h.flash(h.literal(_('Created user group %s') % h.link_to(h.escape(gr), url('edit_users_group', id=ug.users_group_id))),
                 category='success')
             Session().commit()
@@ -181,9 +181,9 @@ class UserGroupsController(BaseController):
             form_result = users_group_form.to_python(request.POST)
             UserGroupModel().update(c.user_group, form_result)
             gr = form_result['users_group_name']
-            action_logger(self.authuser,
+            action_logger(request.authuser,
                           'admin_updated_users_group:%s' % gr,
-                          None, self.ip_addr, self.sa)
+                          None, request.ip_addr, self.sa)
             h.flash(_('Updated user group %s') % gr, category='success')
             Session().commit()
         except formencode.Invalid as errors:
@@ -285,8 +285,8 @@ class UserGroupsController(BaseController):
             h.flash(_('Target group cannot be the same'), category='error')
             raise HTTPFound(location=url('edit_user_group_perms', id=id))
         #TODO: implement this
-        #action_logger(self.authuser, 'admin_changed_repo_permissions',
-        #              repo_name, self.ip_addr, self.sa)
+        #action_logger(request.authuser, 'admin_changed_repo_permissions',
+        #              repo_name, request.ip_addr, self.sa)
         Session().commit()
         h.flash(_('User group permissions updated'), category='success')
         raise HTTPFound(location=url('edit_user_group_perms', id=id))
@@ -301,8 +301,8 @@ class UserGroupsController(BaseController):
             elif obj_type == 'user_group':
                 obj_id = safe_int(request.POST.get('user_group_id'))
 
-            if not c.authuser.is_admin:
-                if obj_type == 'user' and c.authuser.user_id == obj_id:
+            if not request.authuser.is_admin:
+                if obj_type == 'user' and request.authuser.user_id == obj_id:
                     msg = _('Cannot revoke permission for yourself as admin')
                     h.flash(msg, category='warning')
                     raise Exception('revoke admin permission on self')

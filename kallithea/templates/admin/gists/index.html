@@ -3,9 +3,9 @@
 
 <%block name="title">
     %if c.show_private:
-        ${_('Private Gists for User %s') % c.authuser.username}
+        ${_('Private Gists for User %s') % request.authuser.username}
     %elif c.show_public:
-        ${_('Public Gists for User %s') % c.authuser.username}
+        ${_('Public Gists for User %s') % request.authuser.username}
     %else:
         ${_('Public Gists')}
     %endif
@@ -13,9 +13,9 @@
 
 <%def name="breadcrumbs_links()">
     %if c.show_private:
-        ${_('Private Gists for User %s') % c.authuser.username}
+        ${_('Private Gists for User %s') % request.authuser.username}
     %elif c.show_public:
-        ${_('Public Gists for User %s') % c.authuser.username}
+        ${_('Public Gists for User %s') % request.authuser.username}
     %else:
         ${_('Public Gists')}
     %endif
@@ -32,7 +32,7 @@
         <div class="pull-left">
             ${self.breadcrumbs()}
         </div>
-        %if c.authuser.username != 'default':
+        %if request.authuser.username != 'default':
         <div class="pull-right">
              <a href="${h.url('new_gist')}" class="btn btn-success btn-xs"><i class="icon-plus"></i> ${_('Create New Gist')}</a>
         </div>

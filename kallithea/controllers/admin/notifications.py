@@ -58,8 +58,8 @@ class NotificationsController(BaseController):
         super(NotificationsController, self).__before__()
 
     def index(self, format='html'):
-        c.user = self.authuser
-        notif = NotificationModel().query_for_user(self.authuser.user_id,
+        c.user = request.authuser
+        notif = NotificationModel().query_for_user(request.authuser.user_id,
                                             filter_=request.GET.getall('type'))
 
         p = safe_int(request.GET.get('page'), 1)
@@ -81,11 +81,11 @@ class NotificationsController(BaseController):
         if request.environ.get('HTTP_X_PARTIAL_XHR'):
             nm = NotificationModel()
             # mark all read
-            nm.mark_all_read_for_user(self.authuser.user_id,
+            nm.mark_all_read_for_user(request.authuser.user_id,
                                       filter_=request.GET.getall('type'))
             Session().commit()
-            c.user = self.authuser
-            notif = nm.query_for_user(self.authuser.user_id,
+            c.user = request.authuser
+            notif = nm.query_for_user(request.authuser.user_id,
                                       filter_=request.GET.getall('type'))
             c.notifications = Page(notif, page=1, items_per_page=10)
             return render('admin/notifications/notifications_data.html')
@@ -93,11 +93,11 @@ class NotificationsController(BaseController):
     def update(self, notification_id):
         try:
             no = Notification.get(notification_id)
-            owner = all(un.user_id == c.authuser.user_id
+            owner = all(un.user_id == request.authuser.user_id
                         for un in no.notifications_to_users)
             if h.HasPermissionAny('hg.admin')() or owner:
                 # deletes only notification2user
-                NotificationModel().mark_read(c.authuser.user_id, no)
+                NotificationModel().mark_read(request.authuser.user_id, no)
                 Session().commit()
                 return 'ok'
         except Exception:
@@ -108,11 +108,11 @@ class NotificationsController(BaseController):
     def delete(self, notification_id):
         try:
             no = Notification.get(notification_id)
-            owner = any(un.user_id == c.authuser.user_id
+            owner = any(un.user_id == request.authuser.user_id
                         for un in no.notifications_to_users)
             if h.HasPermissionAny('hg.admin')() or owner:
                 # deletes only notification2user
-                NotificationModel().delete(c.authuser.user_id, no)
+                NotificationModel().delete(request.authuser.user_id, no)
                 Session().commit()
                 return 'ok'
         except Exception:
@@ -124,7 +124,7 @@ class NotificationsController(BaseController):
         notification = Notification.get_or_404(notification_id)
 
         unotification = NotificationModel() \
-            .get_user_notification(self.authuser.user_id, notification)
+            .get_user_notification(request.authuser.user_id, notification)
 
         # if this association to user is not valid, we don't want to show
         # this message
@@ -136,5 +136,5 @@ class NotificationsController(BaseController):
             Session().commit()
 
         c.notification = notification
-        c.user = self.authuser
+        c.user = request.authuser
         return render('admin/notifications/show_notification.html')

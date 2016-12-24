@@ -181,13 +181,13 @@ class PullrequestsController(BaseRepoController):
         if pull_request.is_closed():
             return False
 
-        owner = self.authuser.user_id == pull_request.owner_id
+        owner = request.authuser.user_id == pull_request.owner_id
         reviewer = PullRequestReviewer.query() \
             .filter(PullRequestReviewer.pull_request == pull_request) \
-            .filter(PullRequestReviewer.user_id == self.authuser.user_id) \
+            .filter(PullRequestReviewer.user_id == request.authuser.user_id) \
             .count() != 0
 
-        return self.authuser.admin or owner or reviewer
+        return request.authuser.admin or owner or reviewer
 
     @LoginRequired()
     @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
@@ -216,17 +216,17 @@ class PullrequestsController(BaseRepoController):
         c.my_pull_requests = PullRequest.query(
             include_closed=c.closed,
             sorted=True,
-        ).filter_by(owner_id=self.authuser.user_id).all()
+        ).filter_by(owner_id=request.authuser.user_id).all()
 
         c.participate_in_pull_requests = []
         c.participate_in_pull_requests_todo = []
         done_status = set([ChangesetStatus.STATUS_APPROVED, ChangesetStatus.STATUS_REJECTED])
         for pr in PullRequest.query(
             include_closed=c.closed,
-            reviewer_id=self.authuser.user_id,
+            reviewer_id=request.authuser.user_id,
             sorted=True,
         ):
-            status = pr.user_review_status(c.authuser.user_id) # very inefficient!!!
+            status = pr.user_review_status(request.authuser.user_id) # very inefficient!!!
             if status in done_status:
                 c.participate_in_pull_requests.append(pr)
             else:
@@ -380,7 +380,7 @@ class PullrequestsController(BaseRepoController):
                                             other_repo_name, h.short_ref(other_ref_type, other_ref_name))
         description = _form['pullrequest_desc'].strip() or _('No description')
         try:
-            created_by = User.get(self.authuser.user_id)
+            created_by = User.get(request.authuser.user_id)
             pull_request = PullRequestModel().create(
                 created_by, org_repo, org_ref, other_repo, other_ref, revisions,
                 title, description, reviewer_ids)
@@ -482,7 +482,7 @@ class PullrequestsController(BaseRepoController):
             description += '\n\n' + descriptions[1].strip()
 
         try:
-            created_by = User.get(self.authuser.user_id)
+            created_by = User.get(request.authuser.user_id)
             pull_request = PullRequestModel().create(
                 created_by, org_repo, new_org_ref, other_repo, new_other_ref, revisions,
                 title, description, reviewer_ids)
@@ -498,7 +498,7 @@ class PullrequestsController(BaseRepoController):
         ChangesetCommentsModel().create(
             text=_('Closed, next iteration: %s .') % pull_request.url(canonical=True),
             repo=old_pull_request.other_repo_id,
-            author=c.authuser.user_id,
+            author=request.authuser.user_id,
             pull_request=old_pull_request.pull_request_id,
             closing_pr=True)
         PullRequestModel().close_pull_request(old_pull_request.pull_request_id)
@@ -520,7 +520,7 @@ class PullrequestsController(BaseRepoController):
             raise HTTPForbidden()
         assert pull_request.other_repo.repo_name == repo_name
         #only owner or admin can update it
-        owner = pull_request.owner_id == c.authuser.user_id
+        owner = pull_request.owner_id == request.authuser.user_id
         repo_admin = h.HasRepoPermissionAny('repository.admin')(c.repo_name)
         if not (h.HasPermissionAny('hg.admin')() or repo_admin or owner):
             raise HTTPForbidden()
@@ -552,7 +552,7 @@ class PullrequestsController(BaseRepoController):
         pull_request.title = _form['pullrequest_title']
         pull_request.description = _form['pullrequest_desc'].strip() or _('No description')
         pull_request.owner = User.get_by_username(_form['owner'])
-        user = User.get(c.authuser.user_id)
+        user = User.get(request.authuser.user_id)
         add_reviewer_ids = reviewer_ids - org_reviewer_ids - current_reviewer_ids
         remove_reviewer_ids = (org_reviewer_ids - reviewer_ids) & current_reviewer_ids
         try:
@@ -576,7 +576,7 @@ class PullrequestsController(BaseRepoController):
     def delete(self, repo_name, pull_request_id):
         pull_request = PullRequest.get_or_404(pull_request_id)
         #only owner can delete it !
-        if pull_request.owner_id == c.authuser.user_id:
+        if pull_request.owner_id == request.authuser.user_id:
             PullRequestModel().delete(pull_request)
             Session().commit()
             h.flash(_('Successfully deleted pull request'),
@@ -798,7 +798,7 @@ class PullrequestsController(BaseRepoController):
                 raise HTTPForbidden()
 
         if delete == "delete":
-            if (pull_request.owner_id == c.authuser.user_id or
+            if (pull_request.owner_id == request.authuser.user_id or
                 h.HasPermissionAny('hg.admin')() or
                 h.HasRepoPermissionAny('repository.admin')(pull_request.org_repo.repo_name) or
                 h.HasRepoPermissionAny('repository.admin')(pull_request.other_repo.repo_name)
@@ -824,24 +824,24 @@ class PullrequestsController(BaseRepoController):
             closing_pr=close_pr,
         )
 
-        action_logger(self.authuser,
+        action_logger(request.authuser,
                       'user_commented_pull_request:%s' % pull_request_id,
-                      c.db_repo, self.ip_addr, self.sa)
+                      c.db_repo, request.ip_addr, self.sa)
 
         if status:
             ChangesetStatusModel().set_status(
                 c.db_repo.repo_id,
                 status,
-                c.authuser.user_id,
+                request.authuser.user_id,
                 comment,
                 pull_request=pull_request_id
             )
 
         if close_pr:
             PullRequestModel().close_pull_request(pull_request_id)
-            action_logger(self.authuser,
+            action_logger(request.authuser,
                           'user_closed_pull_request:%s' % pull_request_id,
-                          c.db_repo, self.ip_addr, self.sa)
+                          c.db_repo, request.ip_addr, self.sa)
 
         Session().commit()
 
@@ -870,7 +870,7 @@ class PullrequestsController(BaseRepoController):
             #don't allow deleting comments on closed pull request
             raise HTTPForbidden()
 
-        owner = co.author_id == c.authuser.user_id
+        owner = co.author_id == request.authuser.user_id
         repo_admin = h.HasRepoPermissionAny('repository.admin')(c.repo_name)
         if h.HasPermissionAny('hg.admin')() or repo_admin or owner:
             ChangesetCommentsModel().delete(comment=co)

@@ -11,7 +11,7 @@ ${h.form(url('my_account'), method='post')}
                     %else:
                         <strong>${_('Avatars are disabled')}</strong>
                         <br/>${c.user.email or _('Missing email, please update your user email address.')}
-                        [${_('Current IP')}: ${c.ip_addr}]
+                        [${_('Current IP')}: ${request.ip_addr}]
                     %endif
                     </p>
                 </div>

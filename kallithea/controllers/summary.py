@@ -112,10 +112,10 @@ class SummaryController(BaseRepoController):
     def index(self, repo_name):
         _load_changelog_summary()
 
-        if self.authuser.is_default_user:
+        if request.authuser.is_default_user:
             username = ''
         else:
-            username = safe_str(self.authuser.username)
+            username = safe_str(request.authuser.username)
 
         _def_clone_uri = _def_clone_uri_by_id = c.clone_uri_tmpl
         if '{repo}' in _def_clone_uri:

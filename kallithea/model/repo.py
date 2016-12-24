@@ -166,14 +166,14 @@ class RepoModel(BaseModel):
     @classmethod
     def _render_datatable(cls, tmpl, *args, **kwargs):
         import kallithea
-        from pylons import tmpl_context as c
+        from pylons import tmpl_context as c, request
         from pylons.i18n.translation import _
 
         _tmpl_lookup = kallithea.CONFIG['pylons.app_globals'].mako_lookup
         template = _tmpl_lookup.get_template('data_table/_dt_elements.html')
 
         tmpl = template.get_def(tmpl)
-        kwargs.update(dict(_=_, h=h, c=c))
+        kwargs.update(dict(_=_, h=h, c=c, request=request))
         return tmpl.render(*args, **kwargs)
 
     def get_repos_as_dict(self, repos_list=None, admin=False, perm_check=True,

@@ -24,7 +24,7 @@
               <a class="permalink" href="${co.url()}">&para;</a>
           </span>
 
-          %if co.author_id == c.authuser.user_id or h.HasRepoPermissionAny('repository.admin')(c.repo_name):
+          %if co.author_id == request.authuser.user_id or h.HasRepoPermissionAny('repository.admin')(c.repo_name):
             %if co.deletable():
               <div onClick="confirm('${_('Delete comment?')}') && deleteComment(${co.comment_id})" class="buttons delete-comment btn btn-default btn-xs" style="margin:0 5px">${_('Delete')}</div>
             %endif
@@ -51,7 +51,7 @@
 <%def name="comment_inline_form()">
 <div id='comment-inline-form-template' style="display:none">
   <div class="ac">
-  %if c.authuser.username != 'default':
+  %if request.authuser.username != 'default':
     ${h.form('#', class_='inline-form')}
       <div class="well well-sm clearfix">
         <div class="comment-help">${_('Commenting on line.')}
@@ -81,7 +81,7 @@
 
                 %if c.pull_request is not None and ( \
                     h.HasPermissionAny('hg.admin')() or h.HasRepoPermissionAny('repository.admin')(c.repo_name) \
-                    or c.pull_request.owner_id == c.authuser.user_id):
+                    or c.pull_request.owner_id == request.authuser.user_id):
                 <div>
                   ${_('Finish pull request')}:
                   <label class="checkbox-inline">

@@ -30,6 +30,8 @@ import traceback
 import logging
 from sqlalchemy import or_
 
+from pylons import request
+
 from kallithea.controllers.api import JSONRPCController, JSONRPCError
 from kallithea.lib.auth import (
     PasswordGenerator, AuthUser, HasPermissionAnyDecorator,
@@ -145,7 +147,7 @@ class ApiController(JSONRPCController):
     """
     API Controller
 
-    The authenticated user can be found as self.authuser.
+    The authenticated user can be found as request.authuser.
 
     Example function::
 
@@ -193,7 +195,7 @@ class ApiController(JSONRPCController):
 
         try:
             ScmModel().pull_changes(repo.repo_name,
-                                    self.authuser.username)
+                                    request.authuser.username)
             return dict(
                 msg='Pulled from `%s`' % repo.repo_name,
                 repository=repo.repo_name
@@ -344,7 +346,7 @@ class ApiController(JSONRPCController):
                                   'repository.write')(repo_name=repo.repo_name):
             # make sure normal user does not pass someone else userid,
             # he is not allowed to do that
-            if not isinstance(userid, Optional) and userid != self.authuser.user_id:
+            if not isinstance(userid, Optional) and userid != request.authuser.user_id:
                 raise JSONRPCError(
                     'userid is not the same as your user'
                 )
@@ -352,7 +354,7 @@ class ApiController(JSONRPCController):
             raise JSONRPCError('repository `%s` does not exist' % (repoid,))
 
         if isinstance(userid, Optional):
-            userid = self.authuser.user_id
+            userid = request.authuser.user_id
 
         user = get_user_or_error(userid)
 
@@ -431,7 +433,7 @@ class ApiController(JSONRPCController):
         if not HasPermissionAny('hg.admin')():
             # make sure normal user does not pass someone else userid,
             # he is not allowed to do that
-            if not isinstance(userid, Optional) and userid != self.authuser.user_id:
+            if not isinstance(userid, Optional) and userid != request.authuser.user_id:
                 raise JSONRPCError(
                     'userid is not the same as your user'
                 )
@@ -484,11 +486,11 @@ class ApiController(JSONRPCController):
 
         """
         if isinstance(userid, Optional):
-            userid = self.authuser.user_id
+            userid = request.authuser.user_id
         user = get_user_or_error(userid)
         ips = UserIpMap.query().filter(UserIpMap.user == user).all()
         return dict(
-            server_ip_addr=self.ip_addr,
+            server_ip_addr=request.ip_addr,
             user_ips=ips
         )
 
@@ -559,13 +561,13 @@ class ApiController(JSONRPCController):
         if not HasPermissionAny('hg.admin')():
             # make sure normal user does not pass someone else userid,
             # he is not allowed to do that
-            if not isinstance(userid, Optional) and userid != self.authuser.user_id:
+            if not isinstance(userid, Optional) and userid != request.authuser.user_id:
                 raise JSONRPCError(
                     'userid is not the same as your user'
                 )
 
         if isinstance(userid, Optional):
-            userid = self.authuser.user_id
+            userid = request.authuser.user_id
 
         user = get_user_or_error(userid)
         data = user.get_api_data()
@@ -896,7 +898,7 @@ class ApiController(JSONRPCController):
 
         try:
             if isinstance(owner, Optional):
-                owner = self.authuser.user_id
+                owner = request.authuser.user_id
 
             owner = get_user_or_error(owner)
             active = Optional.extract(active)
@@ -1270,7 +1272,7 @@ class ApiController(JSONRPCController):
         """
         result = []
         if not HasPermissionAny('hg.admin')():
-            repos = RepoModel().get_all_user_repos(user=self.authuser.user_id)
+            repos = RepoModel().get_all_user_repos(user=request.authuser.user_id)
         else:
             repos = Repository.query()
 
@@ -1404,7 +1406,7 @@ class ApiController(JSONRPCController):
                     'Only Kallithea admin can specify `owner` param'
                 )
         if isinstance(owner, Optional):
-            owner = self.authuser.user_id
+            owner = request.authuser.user_id
 
         owner = get_user_or_error(owner)
 
@@ -1603,7 +1605,7 @@ class ApiController(JSONRPCController):
             raise JSONRPCError('repository `%s` does not exist' % (repoid,))
 
         if isinstance(owner, Optional):
-            owner = self.authuser.user_id
+            owner = request.authuser.user_id
 
         owner = get_user_or_error(owner)
 
@@ -1996,7 +1998,7 @@ class ApiController(JSONRPCController):
             raise JSONRPCError("repo group `%s` already exist" % (group_name,))
 
         if isinstance(owner, Optional):
-            owner = self.authuser.user_id
+            owner = request.authuser.user_id
         group_description = Optional.extract(description)
         parent_group = Optional.extract(parent)
         if not isinstance(parent, Optional):
@@ -2380,7 +2382,7 @@ class ApiController(JSONRPCController):
         """
         gist = get_gist_or_error(gistid)
         if not HasPermissionAny('hg.admin')():
-            if gist.owner_id != self.authuser.user_id:
+            if gist.owner_id != request.authuser.user_id:
                 raise JSONRPCError('gist `%s` does not exist' % (gistid,))
         return gist.get_api_data()
 
@@ -2395,13 +2397,13 @@ class ApiController(JSONRPCController):
         if not HasPermissionAny('hg.admin')():
             # make sure normal user does not pass someone else userid,
             # he is not allowed to do that
-            if not isinstance(userid, Optional) and userid != self.authuser.user_id:
+            if not isinstance(userid, Optional) and userid != request.authuser.user_id:
                 raise JSONRPCError(
                     'userid is not the same as your user'
                 )
 
         if isinstance(userid, Optional):
-            user_id = self.authuser.user_id
+            user_id = request.authuser.user_id
         else:
             user_id = get_user_or_error(userid).user_id
 
@@ -2454,7 +2456,7 @@ class ApiController(JSONRPCController):
         """
         try:
             if isinstance(owner, Optional):
-                owner = self.authuser.user_id
+                owner = request.authuser.user_id
 
             owner = get_user_or_error(owner)
             description = Optional.extract(description)
@@ -2509,7 +2511,7 @@ class ApiController(JSONRPCController):
         """
         gist = get_gist_or_error(gistid)
         if not HasPermissionAny('hg.admin')():
-            if gist.owner_id != self.authuser.user_id:
+            if gist.owner_id != request.authuser.user_id:
                 raise JSONRPCError('gist `%s` does not exist' % (gistid,))
 
         try:

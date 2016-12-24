@@ -179,7 +179,7 @@ def create_comment(text, status, f_path, line_no, revision=None, pull_request_id
     comment = ChangesetCommentsModel().create(
         text=text,
         repo=c.db_repo.repo_id,
-        author=c.authuser.user_id,
+        author=request.authuser.user_id,
         revision=revision,
         pull_request=pull_request_id,
         f_path=f_path,
@@ -387,7 +387,7 @@ class ChangesetController(BaseRepoController):
                 ChangesetStatusModel().set_status(
                     c.db_repo.repo_id,
                     status,
-                    c.authuser.user_id,
+                    request.authuser.user_id,
                     c.comment,
                     revision=revision,
                     dont_allow_on_closed_pull_request=True,
@@ -396,9 +396,9 @@ class ChangesetController(BaseRepoController):
                 log.debug('cannot change status on %s with closed pull request', revision)
                 raise HTTPBadRequest()
 
-        action_logger(self.authuser,
+        action_logger(request.authuser,
                       'user_commented_revision:%s' % revision,
-                      c.db_repo, self.ip_addr, self.sa)
+                      c.db_repo, request.ip_addr, self.sa)
 
         Session().commit()
 
@@ -421,7 +421,7 @@ class ChangesetController(BaseRepoController):
         co = ChangesetComment.get_or_404(comment_id)
         if co.repo.repo_name != repo_name:
             raise HTTPNotFound()
-        owner = co.author_id == c.authuser.user_id
+        owner = co.author_id == request.authuser.user_id
         repo_admin = h.HasRepoPermissionAny('repository.admin')(repo_name)
         if h.HasPermissionAny('hg.admin')() or repo_admin or owner:
             ChangesetCommentsModel().delete(comment=co)

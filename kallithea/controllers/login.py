@@ -79,10 +79,10 @@ class LoginController(BaseController):
         else:
             c.came_from = url('home')
 
-        ip_allowed = AuthUser.check_ip_allowed(self.authuser, self.ip_addr)
+        ip_allowed = AuthUser.check_ip_allowed(request.authuser, request.ip_addr)
 
         # redirect if already logged in
-        if self.authuser.is_authenticated and ip_allowed:
+        if request.authuser.is_authenticated and ip_allowed:
             raise HTTPFound(location=c.came_from)
 
         if request.POST:
@@ -139,7 +139,7 @@ class LoginController(BaseController):
                     response = submit(request.POST.get('recaptcha_challenge_field'),
                                       request.POST.get('recaptcha_response_field'),
                                       private_key=captcha_private_key,
-                                      remoteip=self.ip_addr)
+                                      remoteip=request.ip_addr)
                     if c.captcha_active and not response.is_valid:
                         _value = form_result
                         _msg = _('Bad captcha')
@@ -185,7 +185,7 @@ class LoginController(BaseController):
                     response = submit(request.POST.get('recaptcha_challenge_field'),
                                       request.POST.get('recaptcha_response_field'),
                                       private_key=captcha_private_key,
-                                      remoteip=self.ip_addr)
+                                      remoteip=request.ip_addr)
                     if c.captcha_active and not response.is_valid:
                         _value = form_result
                         _msg = _('Bad captcha')

@@ -327,7 +327,7 @@ class FilesController(BaseRepoController):
         c.default_message = _('Deleted file %s via Kallithea') % (f_path)
         c.f_path = f_path
         node_path = f_path
-        author = self.authuser.full_contact
+        author = request.authuser.full_contact
 
         if r_post:
             message = r_post.get('message') or c.default_message
@@ -339,7 +339,7 @@ class FilesController(BaseRepoController):
                     }
                 }
                 self.scm_model.delete_nodes(
-                    user=c.authuser.user_id, repo=c.db_repo,
+                    user=request.authuser.user_id, repo=c.db_repo,
                     message=message,
                     nodes=nodes,
                     parent_cs=c.cs,
@@ -400,7 +400,7 @@ class FilesController(BaseRepoController):
             content = convert_line_endings(r_post.get('content', ''), mode)
 
             message = r_post.get('message') or c.default_message
-            author = self.authuser.full_contact
+            author = request.authuser.full_contact
 
             if content == old_content:
                 h.flash(_('No changes'), category='warning')
@@ -409,7 +409,7 @@ class FilesController(BaseRepoController):
             try:
                 self.scm_model.commit_change(repo=c.db_repo_scm_instance,
                                              repo_name=repo_name, cs=c.cs,
-                                             user=self.authuser.user_id,
+                                             user=request.authuser.user_id,
                                              author=author, message=message,
                                              content=content, f_path=f_path)
                 h.flash(_('Successfully committed to %s') % f_path,
@@ -470,7 +470,7 @@ class FilesController(BaseRepoController):
             #strip all crap out of file, just leave the basename
             filename = os.path.basename(filename)
             node_path = posixpath.join(location, filename)
-            author = self.authuser.full_contact
+            author = request.authuser.full_contact
 
             try:
                 nodes = {
@@ -479,7 +479,7 @@ class FilesController(BaseRepoController):
                     }
                 }
                 self.scm_model.create_nodes(
-                    user=c.authuser.user_id, repo=c.db_repo,
+                    user=request.authuser.user_id, repo=c.db_repo,
                     message=message,
                     nodes=nodes,
                     parent_cs=c.cs,
@@ -582,9 +582,9 @@ class FilesController(BaseRepoController):
                 log.debug('Destroying temp archive %s', archive_path)
                 os.remove(archive_path)
 
-        action_logger(user=c.authuser,
+        action_logger(user=request.authuser,
                       action='user_downloaded_archive:%s' % (archive_name),
-                      repo=repo_name, ipaddr=self.ip_addr, commit=True)
+                      repo=repo_name, ipaddr=request.ip_addr, commit=True)
 
         response.content_disposition = str('attachment; filename=%s' % (archive_name))
         response.content_type = str(content_type)

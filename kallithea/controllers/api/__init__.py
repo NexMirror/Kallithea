@@ -109,7 +109,7 @@ class JSONRPCController(WSGIController):
 
     def _handle_request(self, environ, start_response):
         start = time.time()
-        ip_addr = self.ip_addr = self._get_ip_addr(environ)
+        ip_addr = request.ip_addr = self._get_ip_addr(environ)
         self._req_id = None
         if 'CONTENT_LENGTH' not in environ:
             log.debug("No Content-Length")
@@ -188,7 +188,7 @@ class JSONRPCController(WSGIController):
         # this is little trick to inject logged in user for
         # perms decorators to work they expect the controller class to have
         # authuser attribute set
-        self.authuser = request.user = auth_u
+        request.authuser = request.user = auth_u
 
         # This attribute will need to be first param of a method that uses
         # api_key, which is translated to instance of user at that name

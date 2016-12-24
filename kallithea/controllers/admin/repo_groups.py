@@ -100,9 +100,9 @@ class RepoGroupsController(BaseController):
         return data
 
     def _revoke_perms_on_yourself(self, form_result):
-        _up = filter(lambda u: c.authuser.username == u[0],
+        _up = filter(lambda u: request.authuser.username == u[0],
                      form_result['perms_updates'])
-        _new = filter(lambda u: c.authuser.username == u[0],
+        _new = filter(lambda u: request.authuser.username == u[0],
                       form_result['perms_new'])
         if _new and _new[0][1] != 'group.admin' or _up and _up[0][1] != 'group.admin':
             return True
@@ -163,7 +163,7 @@ class RepoGroupsController(BaseController):
                 group_name=form_result['group_name'],
                 group_description=form_result['group_description'],
                 parent=form_result['parent_group_id'],
-                owner=self.authuser.user_id, # TODO: make editable
+                owner=request.authuser.user_id, # TODO: make editable
                 copy_permissions=form_result['group_copy_permissions']
             )
             Session().commit()
@@ -358,7 +358,7 @@ class RepoGroupsController(BaseController):
         c.repo_group = RepoGroupModel()._get_repo_group(group_name)
         valid_recursive_choices = ['none', 'repos', 'groups', 'all']
         form_result = RepoGroupPermsForm(valid_recursive_choices)().to_python(request.POST)
-        if not c.authuser.is_admin:
+        if not request.authuser.is_admin:
             if self._revoke_perms_on_yourself(form_result):
                 msg = _('Cannot revoke permission for yourself as admin')
                 h.flash(msg, category='warning')
@@ -372,8 +372,8 @@ class RepoGroupsController(BaseController):
                                              form_result['perms_updates'],
                                              recursive)
         #TODO: implement this
-        #action_logger(self.authuser, 'admin_changed_repo_permissions',
-        #              repo_name, self.ip_addr, self.sa)
+        #action_logger(request.authuser, 'admin_changed_repo_permissions',
+        #              repo_name, request.ip_addr, self.sa)
         Session().commit()
         h.flash(_('Repository group permissions updated'), category='success')
         raise HTTPFound(location=url('edit_repo_group_perms', group_name=group_name))
@@ -388,8 +388,8 @@ class RepoGroupsController(BaseController):
             elif obj_type == 'user_group':
                 obj_id = safe_int(request.POST.get('user_group_id'))
 
-            if not c.authuser.is_admin:
-                if obj_type == 'user' and c.authuser.user_id == obj_id:
+            if not request.authuser.is_admin:
+                if obj_type == 'user' and request.authuser.user_id == obj_id:
                     msg = _('Cannot revoke permission for yourself as admin')
                     h.flash(msg, category='warning')
                     raise Exception('revoke admin permission on self')

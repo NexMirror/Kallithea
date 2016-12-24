@@ -121,8 +121,8 @@ class UsersController(BaseController):
         try:
             form_result = user_form.to_python(dict(request.POST))
             user = user_model.create(form_result)
-            action_logger(self.authuser, 'admin_created_user:%s' % user.username,
-                          None, self.ip_addr, self.sa)
+            action_logger(request.authuser, 'admin_created_user:%s' % user.username,
+                          None, request.ip_addr, self.sa)
             h.flash(_('Created user %s') % user.username,
                     category='success')
             Session().commit()
@@ -160,8 +160,8 @@ class UsersController(BaseController):
 
             user_model.update(id, form_result, skip_attrs=skip_attrs)
             usr = form_result['username']
-            action_logger(self.authuser, 'admin_updated_user:%s' % usr,
-                          None, self.ip_addr, self.sa)
+            action_logger(request.authuser, 'admin_updated_user:%s' % usr,
+                          None, request.ip_addr, self.sa)
             h.flash(_('User updated successfully'), category='success')
             Session().commit()
         except formencode.Invalid as errors:
@@ -210,7 +210,6 @@ class UsersController(BaseController):
         c.user = user
         c.active = 'profile'
         c.perm_user = AuthUser(dbuser=user)
-        c.ip_addr = self.ip_addr
         managed_fields = auth_modules.get_managed_fields(user)
         c.readonly = lambda n: 'readonly' if n in managed_fields else None
         return render('admin/users/user_edit.html')
@@ -229,7 +228,6 @@ class UsersController(BaseController):
         c.user = self._get_user_or_raise_if_default(id)
         c.active = 'advanced'
         c.perm_user = AuthUser(dbuser=c.user)
-        c.ip_addr = self.ip_addr
 
         umodel = UserModel()
         defaults = c.user.get_dict()
@@ -298,7 +296,6 @@ class UsersController(BaseController):
         c.user = self._get_user_or_raise_if_default(id)
         c.active = 'perms'
         c.perm_user = AuthUser(dbuser=c.user)
-        c.ip_addr = self.ip_addr
 
         umodel = UserModel()
         defaults = c.user.get_dict()

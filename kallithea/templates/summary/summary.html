@@ -36,8 +36,8 @@
 </%block>
 
 <%block name="head_extra">
-  <link href="${h.url('atom_feed_home',repo_name=c.db_repo.repo_name,api_key=c.authuser.api_key)}" rel="alternate" title="${_('%s ATOM feed') % c.repo_name}" type="application/atom+xml" />
-  <link href="${h.url('rss_feed_home',repo_name=c.db_repo.repo_name,api_key=c.authuser.api_key)}" rel="alternate" title="${_('%s RSS feed') % c.repo_name}" type="application/rss+xml" />
+  <link href="${h.url('atom_feed_home',repo_name=c.db_repo.repo_name,api_key=request.authuser.api_key)}" rel="alternate" title="${_('%s ATOM feed') % c.repo_name}" type="application/atom+xml" />
+  <link href="${h.url('rss_feed_home',repo_name=c.db_repo.repo_name,api_key=request.authuser.api_key)}" rel="alternate" title="${_('%s RSS feed') % c.repo_name}" type="application/rss+xml" />
 
   <script>
   redirect_hash_branch = function(){
@@ -141,7 +141,7 @@ summary = lambda n:{False:'summary-short'}.get(n)
               </a>
             </li>
 
-            %if c.authuser.username != 'default':
+            %if request.authuser.username != 'default':
             <li class="repo_size clearfix">
               <a href="#" onclick="javascript:showRepoSize('repo_size_2','${c.db_repo.repo_name}')"><i class="icon-ruler"></i> ${_('Repository Size')}</a>
               <span  class="stats-bullet" id="repo_size_2"></span>
@@ -149,8 +149,8 @@ summary = lambda n:{False:'summary-short'}.get(n)
             %endif
 
             <li>
-            %if c.authuser.username != 'default':
-              <a href="${h.url('atom_feed_home',repo_name=c.db_repo.repo_name,api_key=c.authuser.api_key)}"><i class="icon-rss-squared"></i> ${_('Feed')}</a>
+            %if request.authuser.username != 'default':
+              <a href="${h.url('atom_feed_home',repo_name=c.db_repo.repo_name,api_key=request.authuser.api_key)}"><i class="icon-rss-squared"></i> ${_('Feed')}</a>
             %else:
               <a href="${h.url('atom_feed_home',repo_name=c.db_repo.repo_name)}"><i class="icon-rss-squared"></i> ${_('Feed')}</a>
             %endif

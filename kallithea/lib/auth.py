@@ -732,12 +732,12 @@ class LoginRequired(object):
 
     def __wrapper(self, func, *fargs, **fkwargs):
         controller = fargs[0]
-        user = controller.authuser
+        user = request.authuser
         loc = "%s:%s" % (controller.__class__.__name__, func.__name__)
         log.debug('Checking access for user %s @ %s', user, loc)
 
-        if not AuthUser.check_ip_allowed(user, controller.ip_addr):
-            raise _redirect_to_login(_('IP %s not allowed') % controller.ip_addr)
+        if not AuthUser.check_ip_allowed(user, request.ip_addr):
+            raise _redirect_to_login(_('IP %s not allowed') % request.ip_addr)
 
         # Check if we used an API key to authenticate.
         api_key = user.authenticating_api_key
@@ -782,7 +782,7 @@ class NotAnonymous(object):
 
     def __wrapper(self, func, *fargs, **fkwargs):
         cls = fargs[0]
-        self.user = cls.authuser
+        self.user = request.authuser
 
         log.debug('Checking if user is not anonymous @%s', cls)
 
@@ -805,7 +805,7 @@ class PermsDecorator(object):
 
     def __wrapper(self, func, *fargs, **fkwargs):
         cls = fargs[0]
-        self.user = cls.authuser
+        self.user = request.authuser
         self.user_perms = self.user.permissions
         log.debug('checking %s permissions %s for %s %s',
           self.__class__.__name__, self.required_perms, cls, self.user)

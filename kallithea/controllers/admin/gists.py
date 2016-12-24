@@ -67,7 +67,7 @@ class GistsController(BaseController):
 
     @LoginRequired()
     def index(self):
-        not_default_user = not c.authuser.is_default_user
+        not_default_user = not request.authuser.is_default_user
         c.show_private = request.GET.get('private') and not_default_user
         c.show_public = request.GET.get('public') and not_default_user
 
@@ -78,17 +78,17 @@ class GistsController(BaseController):
         # MY private
         if c.show_private and not c.show_public:
             gists = gists.filter(Gist.gist_type == Gist.GIST_PRIVATE) \
-                             .filter(Gist.owner_id == c.authuser.user_id)
+                             .filter(Gist.owner_id == request.authuser.user_id)
         # MY public
         elif c.show_public and not c.show_private:
             gists = gists.filter(Gist.gist_type == Gist.GIST_PUBLIC) \
-                             .filter(Gist.owner_id == c.authuser.user_id)
+                             .filter(Gist.owner_id == request.authuser.user_id)
 
         # MY public+private
         elif c.show_private and c.show_public:
             gists = gists.filter(or_(Gist.gist_type == Gist.GIST_PUBLIC,
                                      Gist.gist_type == Gist.GIST_PRIVATE)) \
-                             .filter(Gist.owner_id == c.authuser.user_id)
+                             .filter(Gist.owner_id == request.authuser.user_id)
 
         # default show ALL public gists
         if not c.show_public and not c.show_private:
@@ -118,7 +118,7 @@ class GistsController(BaseController):
             gist_type = Gist.GIST_PUBLIC if _public else Gist.GIST_PRIVATE
             gist = GistModel().create(
                 description=form_result['description'],
-                owner=c.authuser.user_id,
+                owner=request.authuser.user_id,
                 gist_mapping=nodes,
                 gist_type=gist_type,
                 lifetime=form_result['lifetime']
@@ -152,7 +152,7 @@ class GistsController(BaseController):
     @NotAnonymous()
     def delete(self, gist_id):
         gist = GistModel().get_gist(gist_id)
-        owner = gist.owner_id == c.authuser.user_id
+        owner = gist.owner_id == request.authuser.user_id
         if h.HasPermissionAny('hg.admin')() or owner:
             GistModel().delete(gist)
             Session().commit()

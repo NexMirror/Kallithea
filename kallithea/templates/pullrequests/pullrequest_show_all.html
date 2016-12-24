@@ -27,7 +27,7 @@ ${self.repo_context_bar('showpullrequest')}
             ${self.breadcrumbs()}
         </div>
         <div class="pull-right">
-            %if c.authuser.username != 'default':
+            %if request.authuser.username != 'default':
                 <a id="open_new_pr" class="btn btn-success btn-xs" href="${h.url('pullrequest_home',repo_name=c.repo_name)}"><i class="icon-plus"></i> ${_('Open New Pull Request')}</a>
             %endif
             %if c.from_:

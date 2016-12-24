@@ -6,7 +6,7 @@
 </%block>
 
 <%def name="breadcrumbs_links()">
-    %if c.authuser.is_admin:
+    %if request.authuser.is_admin:
     ${h.link_to(_('Admin'),h.url('admin_home'))}
     &raquo;
     ${h.link_to(_('Repositories'),h.url('repos'))}

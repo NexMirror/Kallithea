@@ -45,7 +45,7 @@
         <div id="files_data">
           ${h.form(h.url('edit_gist', gist_id=c.gist.gist_access_id), method='post', id='eform')}
             <div>
-                ${h.gravatar_div(c.authuser.email, size=32)}
+                ${h.gravatar_div(request.authuser.email, size=32)}
                 <input type="hidden" value="${c.file_changeset.raw_id}" name="parent_hash">
                 <textarea style="resize:vertical; width:400px;border: 1px solid #ccc;border-radius: 3px;"
                           id="description" name="description"

@@ -65,7 +65,7 @@ class MyAccountController(BaseController):
         super(MyAccountController, self).__before__()
 
     def __load_data(self):
-        c.user = User.get(self.authuser.user_id)
+        c.user = User.get(request.authuser.user_id)
         if c.user.username == User.DEFAULT_USER:
             h.flash(_("You can't edit this user since it's"
                       " crucial for entire application"), category='warning')
@@ -77,12 +77,12 @@ class MyAccountController(BaseController):
             repos_list = Session().query(Repository) \
                          .join(UserFollowing) \
                          .filter(UserFollowing.user_id ==
-                                 self.authuser.user_id).all()
+                                 request.authuser.user_id).all()
         else:
             admin = True
             repos_list = Session().query(Repository) \
                          .filter(Repository.owner_id ==
-                                 self.authuser.user_id).all()
+                                 request.authuser.user_id).all()
 
         repos_data = RepoModel().get_repos_as_dict(repos_list=repos_list,
                                                    admin=admin)
@@ -92,8 +92,7 @@ class MyAccountController(BaseController):
     def my_account(self):
         c.active = 'profile'
         self.__load_data()
-        c.perm_user = AuthUser(user_id=self.authuser.user_id)
-        c.ip_addr = self.ip_addr
+        c.perm_user = AuthUser(user_id=request.authuser.user_id)
         managed_fields = auth_modules.get_managed_fields(c.user)
         def_user_perms = User.get_default_user().AuthUser.permissions['global']
         if 'hg.register.none' in def_user_perms:
@@ -105,8 +104,8 @@ class MyAccountController(BaseController):
         update = False
         if request.POST:
             _form = UserForm(edit=True,
-                             old_data={'user_id': self.authuser.user_id,
-                                       'email': self.authuser.email})()
+                             old_data={'user_id': request.authuser.user_id,
+                                       'email': request.authuser.email})()
             form_result = {}
             try:
                 post_data = dict(request.POST)
@@ -118,7 +117,7 @@ class MyAccountController(BaseController):
                               'new_password', 'password_confirmation',
                              ] + managed_fields
 
-                UserModel().update(self.authuser.user_id, form_result,
+                UserModel().update(request.authuser.user_id, form_result,
                                    skip_attrs=skip_attrs)
                 h.flash(_('Your account was updated successfully'),
                         category='success')
@@ -153,10 +152,10 @@ class MyAccountController(BaseController):
         c.can_change_password = 'password' not in managed_fields
 
         if request.POST and c.can_change_password:
-            _form = PasswordChangeForm(self.authuser.username)()
+            _form = PasswordChangeForm(request.authuser.username)()
             try:
                 form_result = _form.to_python(request.POST)
-                UserModel().update(self.authuser.user_id, form_result)
+                UserModel().update(request.authuser.user_id, form_result)
                 Session().commit()
                 h.flash(_("Successfully updated password"), category='success')
             except formencode.Invalid as errors:
@@ -192,8 +191,7 @@ class MyAccountController(BaseController):
     def my_account_perms(self):
         c.active = 'perms'
         self.__load_data()
-        c.perm_user = AuthUser(user_id=self.authuser.user_id)
-        c.ip_addr = self.ip_addr
+        c.perm_user = AuthUser(user_id=request.authuser.user_id)
 
         return render('admin/my_account/my_account.html')
 
@@ -209,7 +207,7 @@ class MyAccountController(BaseController):
         email = request.POST.get('new_email')
 
         try:
-            UserModel().add_extra_email(self.authuser.user_id, email)
+            UserModel().add_extra_email(request.authuser.user_id, email)
             Session().commit()
             h.flash(_("Added email %s to user") % email, category='success')
         except formencode.Invalid as error:
@@ -224,7 +222,7 @@ class MyAccountController(BaseController):
     def my_account_emails_delete(self):
         email_id = request.POST.get('del_email_id')
         user_model = UserModel()
-        user_model.delete_extra_email(self.authuser.user_id, email_id)
+        user_model.delete_extra_email(request.authuser.user_id, email_id)
         Session().commit()
         h.flash(_("Removed email from user"), category='success')
         raise HTTPFound(location=url('my_account_emails'))
@@ -241,14 +239,14 @@ class MyAccountController(BaseController):
             (str(60 * 24 * 30), _('1 month')),
         ]
         c.lifetime_options = [(c.lifetime_values, _("Lifetime"))]
-        c.user_api_keys = ApiKeyModel().get_api_keys(self.authuser.user_id,
+        c.user_api_keys = ApiKeyModel().get_api_keys(request.authuser.user_id,
                                                      show_expired=show_expired)
         return render('admin/my_account/my_account.html')
 
     def my_account_api_keys_add(self):
         lifetime = safe_int(request.POST.get('lifetime'), -1)
         description = request.POST.get('description')
-        ApiKeyModel().create(self.authuser.user_id, description, lifetime)
+        ApiKeyModel().create(request.authuser.user_id, description, lifetime)
         Session().commit()
         h.flash(_("API key successfully created"), category='success')
         raise HTTPFound(location=url('my_account_api_keys'))
@@ -256,12 +254,12 @@ class MyAccountController(BaseController):
     def my_account_api_keys_delete(self):
         api_key = request.POST.get('del_api_key')
         if request.POST.get('del_api_key_builtin'):
-            user = User.get(self.authuser.user_id)
+            user = User.get(request.authuser.user_id)
             user.api_key = generate_api_key()
             Session().commit()
             h.flash(_("API key successfully reset"), category='success')
         elif api_key:
-            ApiKeyModel().delete(api_key, self.authuser.user_id)
+            ApiKeyModel().delete(api_key, request.authuser.user_id)
             Session().commit()
             h.flash(_("API key successfully deleted"), category='success')
 

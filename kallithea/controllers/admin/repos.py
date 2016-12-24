@@ -121,7 +121,7 @@ class ReposController(BaseRepoController):
 
             # create is done sometimes async on celery, db transaction
             # management is handled there.
-            task = RepoModel().create(form_result, self.authuser.user_id)
+            task = RepoModel().create(form_result, request.authuser.user_id)
             task_id = task.task_id
         except formencode.Invalid as errors:
             log.info(errors)
@@ -239,8 +239,8 @@ class ReposController(BaseRepoController):
             h.flash(_('Repository %s updated successfully') % repo_name,
                     category='success')
             changed_name = repo.repo_name
-            action_logger(self.authuser, 'admin_updated_repo',
-                              changed_name, self.ip_addr, self.sa)
+            action_logger(request.authuser, 'admin_updated_repo',
+                              changed_name, request.ip_addr, self.sa)
             Session().commit()
         except formencode.Invalid as errors:
             log.info(errors)
@@ -280,8 +280,8 @@ class ReposController(BaseRepoController):
                     handle_forks = 'delete'
                     h.flash(_('Deleted %s forks') % _forks, category='success')
             repo_model.delete(repo, forks=handle_forks)
-            action_logger(self.authuser, 'admin_deleted_repo',
-                  repo_name, self.ip_addr, self.sa)
+            action_logger(request.authuser, 'admin_deleted_repo',
+                  repo_name, request.ip_addr, self.sa)
             ScmModel().mark_for_invalidation(repo_name)
             h.flash(_('Deleted repository %s') % repo_name, category='success')
             Session().commit()
@@ -332,8 +332,8 @@ class ReposController(BaseRepoController):
         RepoModel()._update_permissions(repo_name, form['perms_new'],
                                         form['perms_updates'])
         #TODO: implement this
-        #action_logger(self.authuser, 'admin_changed_repo_permissions',
-        #              repo_name, self.ip_addr, self.sa)
+        #action_logger(request.authuser, 'admin_changed_repo_permissions',
+        #              repo_name, request.ip_addr, self.sa)
         Session().commit()
         h.flash(_('Repository permissions updated'), category='success')
         raise HTTPFound(location=url('edit_repo_perms', repo_name=repo_name))
@@ -354,8 +354,8 @@ class ReposController(BaseRepoController):
                     repo=repo_name, group_name=obj_id
                 )
             #TODO: implement this
-            #action_logger(self.authuser, 'admin_revoked_repo_permissions',
-            #              repo_name, self.ip_addr, self.sa)
+            #action_logger(request.authuser, 'admin_revoked_repo_permissions',
+            #              repo_name, request.ip_addr, self.sa)
             Session().commit()
         except Exception:
             log.error(traceback.format_exc())
@@ -468,7 +468,7 @@ class ReposController(BaseRepoController):
         try:
             fork_id = request.POST.get('id_fork_of')
             repo = ScmModel().mark_as_fork(repo_name, fork_id,
-                                           self.authuser.username)
+                                           request.authuser.username)
             fork = repo.fork.repo_name if repo.fork else _('Nothing')
             Session().commit()
             h.flash(_('Marked repository %s as fork of %s') % (repo_name, fork),
@@ -493,7 +493,7 @@ class ReposController(BaseRepoController):
         try:
             repo = Repository.get_by_repo_name(repo_name)
             if request.POST.get('set_lock'):
-                Repository.lock(repo, c.authuser.user_id)
+                Repository.lock(repo, request.authuser.user_id)
                 h.flash(_('Repository has been locked'), category='success')
             elif request.POST.get('set_unlock'):
                 Repository.unlock(repo)
@@ -514,7 +514,7 @@ class ReposController(BaseRepoController):
                     Repository.unlock(repo)
                     h.flash(_('Repository has been unlocked'), category='success')
                 else:
-                    Repository.lock(repo, c.authuser.user_id)
+                    Repository.lock(repo, request.authuser.user_id)
                     h.flash(_('Repository has been locked'), category='success')
 
         except Exception as e:
@@ -547,7 +547,7 @@ class ReposController(BaseRepoController):
         c.active = 'remote'
         if request.POST:
             try:
-                ScmModel().pull_changes(repo_name, self.authuser.username)
+                ScmModel().pull_changes(repo_name, request.authuser.username)
                 h.flash(_('Pulled from remote location'), category='success')
             except Exception as e:
                 log.error(traceback.format_exc())
