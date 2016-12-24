@@ -18,7 +18,6 @@
 <% editable = not c.pull_request.is_closed() and (h.HasPermissionAny('hg.admin')() or h.HasRepoPermissionAny('repository.admin')(c.repo_name) or c.pull_request.owner_id == c.authuser.user_id) %>
 ${self.repo_context_bar('showpullrequest')}
 <div class="panel panel-primary">
-  <!-- box / title -->
   <div class="panel-heading">
     ${self.breadcrumbs()}
   </div>

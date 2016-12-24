@@ -7,7 +7,6 @@
 
 <div id="login" class="panel panel-default">
     <%include file="/base/flash_msg.html"/>
-    <!-- login -->
     <div class="panel-heading title withlogo">
         %if c.site_name:
             <h5>${_('Log In to %s') % c.site_name}</h5>
@@ -19,7 +18,6 @@
         ${h.form(url('login_home', came_from=c.came_from))}
         <div class="form">
             <i class="icon-lock"></i>
-            <!-- fields -->
 
             <div class="form-horizontal">
                 <div class="form-group">
@@ -27,14 +25,12 @@
                     <div class="col-sm-7">
                         ${h.text('username',class_='form-control')}
                     </div>
-
                 </div>
                 <div class="form-group">
                     <label class="control-label col-sm-5" for="password">${_('Password')}:</label>
                     <div class="col-sm-7">
                         ${h.password('password',class_='form-control')}
                     </div>
-
                 </div>
                 <div class="form-group">
                     <div class="col-sm-offset-5 col-sm-7">
@@ -47,8 +43,7 @@
                     </div>
                 </div>
             </div>
-            <!-- end fields -->
-            <!-- links -->
+
             <div class="links">
                 ${h.link_to(_('Forgot your password ?'),h.url('reset_password'))}
                 %if h.HasPermissionAny('hg.admin', 'hg.register.auto_activate', 'hg.register.manual_activate')():
@@ -59,8 +54,6 @@
                     ${h.submit('sign_in',_('Sign In'),class_="btn btn-default")}
                 </span>
             </div>
-
-            <!-- end links -->
         </div>
         ${h.end_form()}
         <script type="text/javascript">
@@ -69,5 +62,4 @@
         });
         </script>
     </div>
-    <!-- end login -->
 </div>

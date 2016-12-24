@@ -1,6 +1,5 @@
 <%page args="parent,group_name=''" />
     <div class="panel panel-primary">
-        <!-- box / title -->
         <div class="panel-heading clearfix">
             <div class="breadcrumbs">
                 %if c.group is not None:
@@ -42,7 +41,6 @@
               </ul>
             %endif
         </div>
-        <!-- end box / title -->
         %if c.groups:
         <div class="table">
             <div id='groups_list_wrap'>

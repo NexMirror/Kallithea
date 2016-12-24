@@ -19,14 +19,11 @@
 
 <%def name="main()">
 <div class="panel panel-primary">
-    <!-- box / title -->
     <div class="panel-heading">
         ${self.breadcrumbs()}
     </div>
-    <!-- end box / title -->
     ${h.form(url('repos_groups'))}
     <div class="form">
-        <!-- fields -->
         <div class="form-horizontal">
             <div class="form-group">
                 <label class="control-label" for="group_name">${_('Group name')}:</label>
