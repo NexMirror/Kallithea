@@ -20,7 +20,7 @@ import os
 import warnings
 
 # Verify Pylons configuration has been loaded
-from pylons import config
+from tg import config
 assert config['celery.imports'] == 'kallithea.lib.celerylib.tasks', 'Kallithea Celery configuration has not been loaded'
 
 # Prepare environment to point at Kallithea Pylons loader

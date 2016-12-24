@@ -87,7 +87,7 @@ class BasePasterCommand(Command):
         """
         Loads the app configuration.
         """
-        from pylons import config as pylonsconfig
+        from tg import config as pylonsconfig
 
         self.path_to_ini_file = os.path.realpath(conf)
         conf = paste.deploy.appconfig('config:' + self.path_to_ini_file)
@@ -99,7 +99,7 @@ class BasePasterCommand(Command):
         """
         logging.config.fileConfig(self.path_to_ini_file)
 
-        from pylons import config
+        from tg import config
         from kallithea.model.base import init_model
         from kallithea.lib.utils2 import engine_from_config
         setup_cache_regions(config)

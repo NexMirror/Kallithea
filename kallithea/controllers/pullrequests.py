@@ -29,8 +29,8 @@ import logging
 import traceback
 import formencode
 
-from pylons import request, tmpl_context as c
-from pylons.i18n.translation import _
+from tg import request, tmpl_context as c
+from tg.i18n import ugettext as _
 from webob.exc import HTTPFound, HTTPNotFound, HTTPForbidden, HTTPBadRequest
 
 from kallithea.config.routing import url

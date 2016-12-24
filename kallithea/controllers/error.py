@@ -29,8 +29,8 @@ import os
 import cgi
 import logging
 
-from pylons import tmpl_context as c, request, config
-from pylons.i18n.translation import _
+from tg import tmpl_context as c, request, config
+from tg.i18n import ugettext as _
 from pylons.middleware import media_path
 
 from kallithea.lib.base import BaseController, render

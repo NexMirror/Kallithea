@@ -31,7 +31,7 @@ import logging
 
 from itertools import tee, imap
 
-from pylons.i18n.translation import _
+from tg.i18n import ugettext as _
 
 from kallithea.lib.vcs.exceptions import VCSError
 from kallithea.lib.vcs.nodes import FileNode, SubModuleNode

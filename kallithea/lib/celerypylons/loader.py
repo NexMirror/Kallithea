@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from celery.loaders.base import BaseLoader
-from pylons import config
+from tg import config
 
 # TODO: drop this mangling and just use a separate celery config section
 to_pylons = lambda x: x.replace('_', '.').lower()

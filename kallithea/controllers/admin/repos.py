@@ -29,8 +29,8 @@ import logging
 import traceback
 import formencode
 from formencode import htmlfill
-from pylons import request, tmpl_context as c
-from pylons.i18n.translation import _
+from tg import request, tmpl_context as c
+from tg.i18n import ugettext as _
 from sqlalchemy.sql.expression import func
 from webob.exc import HTTPFound, HTTPInternalServerError, HTTPForbidden, HTTPNotFound
 

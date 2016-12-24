@@ -28,8 +28,8 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 
-from pylons import tmpl_context as c, request
-from pylons.i18n.translation import _
+from tg import tmpl_context as c, request
+from tg.i18n import ugettext as _
 from webob.exc import HTTPBadRequest
 from sqlalchemy.sql.expression import func
 

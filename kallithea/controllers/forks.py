@@ -30,8 +30,8 @@ import formencode
 import traceback
 from formencode import htmlfill
 
-from pylons import tmpl_context as c, request
-from pylons.i18n.translation import _
+from tg import tmpl_context as c, request
+from tg.i18n import ugettext as _
 from webob.exc import HTTPFound
 
 import kallithea.lib.helpers as h

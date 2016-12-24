@@ -29,8 +29,8 @@ import logging
 import datetime
 import re
 
-from pylons import request
-from pylons.i18n.translation import _
+from tg import request
+from tg.i18n import ugettext as _
 
 from sqlalchemy.orm import joinedload
 

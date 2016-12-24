@@ -32,8 +32,8 @@ import itertools
 
 from formencode import htmlfill
 
-from pylons import request, tmpl_context as c
-from pylons.i18n.translation import _, ungettext
+from tg import request, tmpl_context as c
+from tg.i18n import ugettext as _, ungettext
 from webob.exc import HTTPFound, HTTPForbidden, HTTPNotFound, HTTPInternalServerError
 
 import kallithea

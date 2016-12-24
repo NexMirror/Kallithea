@@ -28,7 +28,7 @@ import textwrap
 from beaker.cache import cache_region
 from pygments.formatters.html import HtmlFormatter
 from pygments import highlight as code_highlight
-from pylons.i18n.translation import _
+from tg.i18n import ugettext as _
 
 from webhelpers.html import literal, HTML, escape
 from webhelpers.html.tags import checkbox, end_form, hidden, link_to, \
@@ -425,7 +425,7 @@ class Flash(_Flash):
 
         The return value is a list of ``Message`` objects.
         """
-        from pylons import session
+        from tg import session
         messages = session.pop(self.session_key, [])
         session.save()
         return [_Message(*m) for m in messages]
@@ -835,7 +835,7 @@ def gravatar_div(email_address, cls='', size=30, **div_attributes):
     and '_' changed to '-' and be used as attributes on the div. The default
     class is 'gravatar'.
     """
-    from pylons import tmpl_context as c
+    from tg import tmpl_context as c
     if not c.visual.use_gravatar:
         return ''
     if 'div_class' not in div_attributes:
@@ -856,7 +856,7 @@ def gravatar(email_address, cls='', size=30):
     empty then we fallback to using an icon.
 
     """
-    from pylons import tmpl_context as c
+    from tg import tmpl_context as c
     if not c.visual.use_gravatar:
         return ''
 
@@ -879,7 +879,7 @@ def gravatar_url(email_address, size=30, default=''):
     # doh, we need to re-import those to mock it later
     from kallithea.config.routing import url
     from kallithea.model.db import User
-    from pylons import tmpl_context as c
+    from tg import tmpl_context as c
     if not c.visual.use_gravatar:
         return ""
 

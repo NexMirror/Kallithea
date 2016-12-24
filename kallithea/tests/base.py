@@ -20,8 +20,9 @@ import re
 import tempfile
 import time
 
+from tg import config
 import pylons
-from pylons import config, url
+from pylons import url
 from pylons.i18n.translation import _get_translator
 from pylons.util import ContextObj
 from routes.util import URLGenerator

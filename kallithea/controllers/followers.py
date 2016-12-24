@@ -27,7 +27,7 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 
-from pylons import tmpl_context as c, request
+from tg import tmpl_context as c, request
 
 from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator
 from kallithea.lib.base import BaseRepoController, render

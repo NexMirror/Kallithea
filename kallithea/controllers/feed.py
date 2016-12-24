@@ -28,8 +28,8 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 
-from pylons import response, tmpl_context as c
-from pylons.i18n.translation import _
+from tg import response, tmpl_context as c
+from tg.i18n import ugettext as _
 
 from beaker.cache import cache_region, region_invalidate
 from webhelpers.feedgenerator import Atom1Feed, Rss201rev2Feed

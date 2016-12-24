@@ -20,7 +20,7 @@ import re
 import formencode
 import logging
 from collections import defaultdict
-from pylons.i18n.translation import _
+from tg.i18n import ugettext as _
 from webhelpers.pylonslib.secure_form import authentication_token
 import sqlalchemy
 

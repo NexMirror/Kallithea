@@ -32,8 +32,8 @@ import itertools
 from time import mktime
 from datetime import timedelta, date
 
-from pylons import tmpl_context as c, request
-from pylons.i18n.translation import _
+from tg import tmpl_context as c, request
+from tg.i18n import ugettext as _
 from webob.exc import HTTPBadRequest
 
 from beaker.cache import cache_region, region_invalidate

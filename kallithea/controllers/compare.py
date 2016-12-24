@@ -30,8 +30,8 @@ Original author and date, and relevant copyright and licensing information is be
 import logging
 import re
 
-from pylons import request, tmpl_context as c
-from pylons.i18n.translation import _
+from tg import request, tmpl_context as c
+from tg.i18n import ugettext as _
 from webob.exc import HTTPFound, HTTPBadRequest, HTTPNotFound
 
 from kallithea.config.routing import url

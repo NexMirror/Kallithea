@@ -28,7 +28,7 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 
-from pylons import request, tmpl_context as c
+from tg import request, tmpl_context as c
 from sqlalchemy.orm import joinedload
 from whoosh.qparser.default import QueryParser
 from whoosh.qparser.dateparse import DateParserPlugin

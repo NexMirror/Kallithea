@@ -30,7 +30,7 @@ class Command(BasePasterCommand):
 
     def command(self):
         from kallithea.lib import celerypylons
-        from pylons import config
+        from tg import config
         try:
             CELERY_ON = str2bool(config['app_conf'].get('use_celery'))
         except KeyError:

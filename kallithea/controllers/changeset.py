@@ -29,8 +29,8 @@ import logging
 import traceback
 from collections import defaultdict
 
-from pylons import tmpl_context as c, request, response
-from pylons.i18n.translation import _
+from tg import tmpl_context as c, request, response
+from tg.i18n import ugettext as _
 from webob.exc import HTTPFound, HTTPForbidden, HTTPBadRequest, HTTPNotFound
 
 from kallithea.lib.vcs.exceptions import RepositoryError, \

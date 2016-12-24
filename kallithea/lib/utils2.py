@@ -38,7 +38,7 @@ import binascii
 import webob
 import urlobject
 
-from pylons.i18n.translation import _, ungettext
+from tg.i18n import ugettext as _, ungettext
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.compat import json
 
@@ -623,7 +623,7 @@ def get_current_authuser():
     Gets kallithea user from threadlocal tmpl_context variable if it's
     defined, else returns None.
     """
-    from pylons import tmpl_context
+    from tg import tmpl_context
     if hasattr(tmpl_context, 'authuser'):
         return tmpl_context.authuser
 

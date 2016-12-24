@@ -30,8 +30,8 @@ import traceback
 import formencode
 
 from formencode import htmlfill
-from pylons import request, tmpl_context as c, config
-from pylons.i18n.translation import _
+from tg import request, tmpl_context as c, config
+from tg.i18n import ugettext as _
 from webob.exc import HTTPFound
 
 from sqlalchemy.orm import joinedload

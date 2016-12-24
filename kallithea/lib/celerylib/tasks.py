@@ -35,7 +35,7 @@ from time import mktime
 from operator import itemgetter
 from string import lower
 
-from pylons import config
+from tg import config
 
 from kallithea import CELERY_ON
 from kallithea.lib import celerylib

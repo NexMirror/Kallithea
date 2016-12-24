@@ -29,8 +29,8 @@ Original author and date, and relevant copyright and licensing information is be
 import logging
 import traceback
 
-from pylons import tmpl_context as c
-from pylons.i18n.translation import _
+from tg import tmpl_context as c
+from tg.i18n import ugettext as _
 from sqlalchemy.orm import joinedload, subqueryload
 
 import kallithea

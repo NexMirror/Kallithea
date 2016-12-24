@@ -41,10 +41,10 @@ import paste.auth.basic
 import paste.httpheaders
 from webhelpers.pylonslib import secure_form
 
-from pylons import config, tmpl_context as c, request, response, session
+from tg import config, tmpl_context as c, request, response, session
 from pylons.controllers import WSGIController
 from pylons.templating import render_mako as render  # don't remove this import
-from pylons.i18n.translation import _
+from tg.i18n import ugettext as _
 
 from kallithea import __version__, BACKENDS
 

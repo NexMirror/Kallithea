@@ -27,7 +27,7 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 
-from pylons.i18n.translation import _
+from tg.i18n import ugettext as _
 from collections import defaultdict
 
 from kallithea.lib.utils2 import extract_mentioned_users, safe_unicode

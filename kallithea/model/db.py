@@ -41,7 +41,7 @@ from sqlalchemy.orm import relationship, joinedload, class_mapper, validates
 from beaker.cache import cache_region, region_invalidate
 from webob.exc import HTTPNotFound
 
-from pylons.i18n.translation import lazy_ugettext as _
+from tg.i18n import lazy_ugettext as _
 
 from kallithea.lib.exceptions import DefaultUserException
 from kallithea.lib.vcs import get_backend
@@ -1327,7 +1327,7 @@ class Repository(Base, BaseDbModel):
         if not uri_tmpl:
             uri_tmpl = self.DEFAULT_CLONE_URI
             try:
-                from pylons import tmpl_context as c
+                from tg import tmpl_context as c
                 uri_tmpl = c.clone_uri_tmpl
             except AttributeError:
                 # in any case if we call this outside of request context,

@@ -38,7 +38,7 @@ import logging
 import formencode
 from formencode import All
 
-from pylons.i18n.translation import _
+from tg.i18n import ugettext as _
 
 from kallithea import BACKENDS
 from kallithea.model import validators as v

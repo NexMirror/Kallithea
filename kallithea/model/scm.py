@@ -36,7 +36,7 @@ import cStringIO
 import pkg_resources
 
 from sqlalchemy import func
-from pylons.i18n.translation import _
+from tg.i18n import ugettext as _
 
 import kallithea
 from kallithea.lib.vcs import get_backend
@@ -333,7 +333,7 @@ class ScmModel(object):
         from kallithea import CONFIG
         from kallithea.lib.base import _get_ip_addr
         try:
-            from pylons import request
+            from tg import request
             environ = request.environ
         except TypeError:
             # we might use this outside of request context, let's fake the

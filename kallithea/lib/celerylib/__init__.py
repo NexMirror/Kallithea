@@ -29,7 +29,7 @@ Original author and date, and relevant copyright and licensing information is be
 import os
 import logging
 
-from pylons import config
+from tg import config
 
 from hashlib import md5
 from decorator import decorator

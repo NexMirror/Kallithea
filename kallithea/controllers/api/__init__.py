@@ -35,7 +35,7 @@ import itertools
 from paste.response import replace_header
 from pylons.controllers import WSGIController
 from pylons.controllers.util import Response
-from pylons import request
+from tg import request
 
 from webob.exc import HTTPError
 

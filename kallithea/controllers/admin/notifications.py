@@ -28,8 +28,8 @@ Original author and date, and relevant copyright and licensing information is be
 import logging
 import traceback
 
-from pylons import request
-from pylons import tmpl_context as c
+from tg import request
+from tg import tmpl_context as c
 from webob.exc import HTTPBadRequest, HTTPForbidden
 
 from kallithea.model.db import Notification

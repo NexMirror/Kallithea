@@ -28,8 +28,8 @@ Original author and date, and relevant copyright and licensing information is be
 import logging
 import traceback
 import urllib
-from pylons.i18n.translation import _
-from pylons import request, config, tmpl_context as c
+from tg.i18n import ugettext as _
+from tg import request, config, tmpl_context as c
 
 from whoosh.index import open_dir, EmptyIndexError
 from whoosh.qparser import QueryParser, QueryParserError

@@ -50,7 +50,7 @@ class Command(BasePasterCommand):
         '''
 
     def command(self):
-        from pylons import config
+        from tg import config
 
         here = config['here']
         content = pkg_resources.resource_string(

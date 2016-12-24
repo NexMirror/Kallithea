@@ -32,8 +32,8 @@ import logging
 import time
 import traceback
 
-from pylons import config
-from pylons.i18n.translation import _
+from tg import config
+from tg.i18n import ugettext as _
 
 from sqlalchemy.exc import DatabaseError
 

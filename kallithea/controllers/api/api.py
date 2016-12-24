@@ -30,7 +30,7 @@ import traceback
 import logging
 from sqlalchemy import or_
 
-from pylons import request
+from tg import request
 
 from kallithea.controllers.api import JSONRPCController, JSONRPCError
 from kallithea.lib.auth import (

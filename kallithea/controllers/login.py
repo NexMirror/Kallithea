@@ -31,8 +31,8 @@ import re
 import formencode
 
 from formencode import htmlfill
-from pylons.i18n.translation import _
-from pylons import request, session, tmpl_context as c
+from tg.i18n import ugettext as _
+from tg import request, session, tmpl_context as c
 from webob.exc import HTTPFound, HTTPBadRequest
 
 import kallithea.lib.helpers as h
