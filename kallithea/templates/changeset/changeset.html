@@ -68,24 +68,12 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
             </div>
         </div>
         <div id="changeset_content">
-            <div class="container">
+            <div class="form-group container">
 
                 <div class="right">
-                    <div class="changes">
-                        % if (len(c.changeset.affected_files) <= c.affected_files_cut_off) or c.fulldiff:
-                         <span class="removed" title="${_('Removed')}">${len(c.changeset.removed)}</span>
-                         <span class="changed" title="${_('Changed')}">${len(c.changeset.changed)}</span>
-                         <span class="added" title="${_('Added')}">${len(c.changeset.added)}</span>
-                        % else:
-                         <span class="removed" title="${_('Affected %s files') % len(c.changeset.affected_files)}">!</span>
-                         <span class="changed" title="${_('Affected %s files') % len(c.changeset.affected_files)}">!</span>
-                         <span class="added"   title="${_('Affected %s files') % len(c.changeset.affected_files)}">!</span>
-                        % endif
-                    </div>
-
                     <span class="logtags">
                         %if len(c.changeset.parents)>1:
-                        <span class="merge">${_('Merge')}</span>
+                        <span class="mergetag">${_('Merge')}</span>
                         %endif
 
                         %if h.is_hg(c.db_repo_scm_instance):
@@ -107,6 +95,18 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
                          </span>
                         %endif
                     </span>
+
+                    <div class="changes">
+                        % if (len(c.changeset.affected_files) <= c.affected_files_cut_off) or c.fulldiff:
+                         <span class="removed" title="${_('Removed')}">${len(c.changeset.removed)}</span>
+                         <span class="changed" title="${_('Changed')}">${len(c.changeset.changed)}</span>
+                         <span class="added" title="${_('Added')}">${len(c.changeset.added)}</span>
+                        % else:
+                         <span class="removed" title="${_('Affected %s files') % len(c.changeset.affected_files)}">!</span>
+                         <span class="changed" title="${_('Affected %s files') % len(c.changeset.affected_files)}">!</span>
+                         <span class="added"   title="${_('Affected %s files') % len(c.changeset.affected_files)}">!</span>
+                        % endif
+                    </div>
                 </div>
                 <div class="left">
                      <div class="author">
@@ -154,10 +154,9 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
                        % endfor
                      </div>
                      % endif
-
-                     <div class="message">${h.urlify_text(c.changeset.message, c.repo_name)}</div>
                 </div>
             </div>
+            <div class="message form-group">${h.urlify_text(c.changeset.message, c.repo_name)}</div>
             <div class="changes_txt">
               <% a_rev, cs_rev, file_diff_data = c.changes[c.changeset.raw_id] %>
               % if c.limited_diff:
