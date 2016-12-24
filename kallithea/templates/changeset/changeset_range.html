@@ -34,44 +34,43 @@ ${self.repo_context_bar('changelog')}
             </div>
         </div>
         <div id="changeset_compare_view_content">
-          <div class="container">
-            <table class="compare_view_commits noborder">
-            %for cnt,cs in enumerate(c.cs_ranges):
-              <tr>
-                %if c.visual.use_gravatar:
-                <td>${h.gravatar_div(h.email_or_none(cs.author), size=14)}</td>
-                %endif
-                <td>${h.link_to('r%s:%s' % (cs.revision,h.short_id(cs.raw_id)),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}</td>
-                <td><div class="author">${h.person(cs.author)}</div></td>
-                <td><span data-toggle="tooltip" title="${h.age(cs.date)}">${cs.date}</span></td>
-                <td>
-                  %if c.statuses:
-                    <div title="${_('Changeset status')}" class="changeset-status-ico"><i class="icon-circle changeset-status-${c.statuses[cnt]}"></i></div>
-                  %endif
-                </td>
-                <td><div class="message">${h.urlify_text(h.wrap_paragraphs(cs.message),c.repo_name)}</div></td>
-              </tr>
-            %endfor
-            </table>
-          </div>
-          <div style="font-size:1.1em;font-weight: bold;clear:both;padding-top:10px">${_('Files affected')}</div>
-          <div class="cs_files">
-                %for cs in c.cs_ranges:
-                    <div class="cur_cs">${h.link_to(h.show_id(cs),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}</div>
-                    <% a_rev, cs_rev, file_diff_data = c.changes[cs.raw_id] %>
-                    %for fid, url_fid, op, a_path, path, diff, stats in file_diff_data:
-                        <div class="cs_${op}">
-                            <div class="node">
-                                <i class="icon-diff-${op}"></i>
-                                ${h.link_to(h.safe_unicode(path), '#%s' % fid)}
-                            </div>
-                            <div class="changes">${h.fancy_file_stats(stats)}</div>
-                        </div>
-                    %endfor
+              <div class="container">
+                <table class="compare_view_commits noborder">
+                %for cnt,cs in enumerate(c.cs_ranges):
+                  <tr>
+                    %if c.visual.use_gravatar:
+                    <td>${h.gravatar_div(h.email_or_none(cs.author), size=14)}</td>
+                    %endif
+                    <td>${h.link_to('r%s:%s' % (cs.revision,h.short_id(cs.raw_id)),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}</td>
+                    <td><div class="author">${h.person(cs.author)}</div></td>
+                    <td><span data-toggle="tooltip" title="${h.age(cs.date)}">${cs.date}</span></td>
+                    <td>
+                      %if c.statuses:
+                        <div title="${_('Changeset status')}" class="changeset-status-ico"><i class="icon-circle changeset-status-${c.statuses[cnt]}"></i></div>
+                      %endif
+                    </td>
+                    <td><div class="message">${h.urlify_text(h.wrap_paragraphs(cs.message),c.repo_name)}</div></td>
+                  </tr>
                 %endfor
-          </div>
+                </table>
+              </div>
+              <div style="font-size:1.1em;font-weight: bold;clear:both;padding-top:10px">${_('Files affected')}</div>
+              <div class="cs_files">
+                    %for cs in c.cs_ranges:
+                        <div class="cur_cs">${h.link_to(h.show_id(cs),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}</div>
+                        <% a_rev, cs_rev, file_diff_data = c.changes[cs.raw_id] %>
+                        %for fid, url_fid, op, a_path, path, diff, stats in file_diff_data:
+                            <div class="cs_${op}">
+                                <div class="node">
+                                    <i class="icon-diff-${op}"></i>
+                                    ${h.link_to(h.safe_unicode(path), '#%s' % fid)}
+                                </div>
+                                <div class="changes">${h.fancy_file_stats(stats)}</div>
+                            </div>
+                        %endfor
+                    %endfor
+              </div>
         </div>
-
     </div>
     <%namespace name="comment" file="/changeset/changeset_file_comment.html"/>
     <%namespace name="diff_block" file="/changeset/diff_block.html"/>
