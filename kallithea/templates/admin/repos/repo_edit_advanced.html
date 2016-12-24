@@ -3,10 +3,8 @@ ${h.form(url('edit_repo_advanced_fork', repo_name=c.repo_info.repo_name))}
 <div class="form">
        ${h.select('id_fork_of','',c.repos_list)}
        ${h.submit('set_as_fork_%s' % c.repo_info.repo_name,_('Set'),class_="btn btn-default btn-sm")}
-       <div class="text-muted" style="border:none">
-       <ul>
-            <li>${_('''Manually set this repository as a fork of another from the list.''')}</li>
-       </ul>
+       <div class="text-muted">
+       ${_('''Manually set this repository as a fork of another from the list.''')}
        </div>
 </div>
 ${h.end_form()}
@@ -35,10 +33,8 @@ ${h.form(url('edit_repo_advanced_journal', repo_name=c.repo_info.repo_name))}
     </button>
   %endif
   </div>
- <div class="text-muted" style="border:none">
- <ul>
-      <li>${_('All actions done in this repository will be visible to everyone in the public journal.')}</li>
- </ul>
+ <div class="text-muted">
+ ${_('All actions done in this repository will be visible to everyone in the public journal.')}
  </div>
 </div>
 ${h.end_form()}
@@ -63,11 +59,8 @@ ${h.form(url('edit_repo_advanced_locking', repo_name=c.repo_info.repo_name))}
         </button>
         ${_('Repository is not locked')}
       %endif
-   <div class="text-muted" style="border:none">
-   <ul>
-        <li>${_('Force locking on the repository. Works only when anonymous access is disabled. Triggering a pull locks the repository.  The user who is pulling locks the repository; only the user who pulled and locked it can unlock it by doing a push.')}
-        </li>
-   </ul>
+   <div class="text-muted">
+   ${_('Force locking on the repository. Works only when anonymous access is disabled. Triggering a pull locks the repository.  The user who is pulling locks the repository; only the user who pulled and locked it can unlock it by doing a push.')}
    </div>
 </div>
 ${h.end_form()}
@@ -91,10 +84,8 @@ ${h.form(url('delete_repo', repo_name=c.repo_name))}
             ${_('Delete forks')}
         </label>
     %endif
-    <div class="text-muted" style="border:none">
-        <ul>
-        <li>${_('The deleted repository will be moved away and hidden until the administrator expires it. The administrator can both permanently delete it or restore it.')}</li>
-        </ul>
+    <div class="text-muted">
+        ${_('The deleted repository will be moved away and hidden until the administrator expires it. The administrator can both permanently delete it or restore it.')}
     </div>
 </div>
 ${h.end_form()}

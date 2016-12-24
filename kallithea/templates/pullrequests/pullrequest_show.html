@@ -214,7 +214,7 @@ ${self.repo_context_bar('showpullrequest')}
             %for member,status in c.pull_request_reviewers:
               <input type="hidden" value="${member.user_id}" name="org_review_members" />
             %endfor
-            <ul id="review_members">
+            <ul id="review_members" class="list-unstyled">
             %for member,status in c.pull_request_reviewers:
               ## WARNING: the HTML below is duplicate with
               ## kallithea/public/js/base.js

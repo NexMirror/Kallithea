@@ -2,13 +2,10 @@ ${h.form(url('update_repo_caches', repo_name=c.repo_name))}
 <div class="form">
    <div>
        ${h.submit('reset_cache_%s' % c.repo_info.repo_name,_('Invalidate Repository Cache'),class_="btn btn-default btn-sm")}
-      <div class="text-muted" style="border:none">
-      <ul>
-          <li>${_('Manually invalidate cache for this repository. On first access, the repository will be cached again.')}
-          </li>
-      </ul>
+      <div class="text-muted">
+        ${_('Manually invalidate cache for this repository. On first access, the repository will be cached again.')}
       </div>
-      <div style="border:none;">
+      <div>
         <h5>${_('List of Cached Values')}</h5>
         <table class="table">
           <tr>

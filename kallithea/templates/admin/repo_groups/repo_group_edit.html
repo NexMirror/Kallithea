@@ -15,14 +15,6 @@
     &raquo; ${h.link_to(c.repo_group.name,h.url('repos_group_home',group_name=c.repo_group.group_name))}
 </%def>
 
-<%def name="breadcrumbs_side_links()">
-    <ul class="links">
-      <li>
-          <a href="${h.url('new_repos_group', parent_group=c.repo_group.group_id)}" class="btn btn-success btn-xs"><i class="icon-plus"></i> ${_('Add Child Group')}</a>
-      </li>
-    </ul>
-</%def>
-
 <%block name="header_menu">
     ${self.menu('admin')}
 </%block>
@@ -31,7 +23,11 @@
 <div class="panel panel-primary" style="overflow:auto">
     <div class="panel-heading clearfix">
         ${self.breadcrumbs()}
-        ${self.breadcrumbs_side_links()}
+        <ul class="links">
+          <li>
+            <a href="${h.url('new_repos_group', parent_group=c.repo_group.group_id)}" class="btn btn-success btn-xs"><i class="icon-plus"></i> ${_('Add Child Group')}</a>
+          </li>
+        </ul>
     </div>
 
     ##main
