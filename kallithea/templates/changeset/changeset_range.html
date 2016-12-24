@@ -54,10 +54,10 @@ ${self.repo_context_bar('changelog')}
                 %endfor
                 </table>
               </div>
-              <div style="font-size:1.1em;font-weight: bold;clear:both;padding-top:10px">${_('Files affected')}</div>
+              <h4>${_('Files affected')}</h4>
               <div class="cs_files">
                     %for cs in c.cs_ranges:
-                        <div class="cur_cs">${h.link_to(h.show_id(cs),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}</div>
+                        <h6 class="cur_cs">${h.link_to(h.show_id(cs),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}</h6>
                         <% a_rev, cs_rev, file_diff_data = c.changes[cs.raw_id] %>
                         %for fid, url_fid, op, a_path, path, diff, stats in file_diff_data:
                             <div class="cs_${op}">

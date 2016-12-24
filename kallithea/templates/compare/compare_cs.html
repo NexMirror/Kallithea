@@ -95,7 +95,7 @@
     </div>
 
     %if c.as_form:
-      <div style="font-size:1.1em;font-weight: bold;clear:both;padding-top:10px">
+      <h5>
       ## links should perhaps use ('rev', c.a_rev) instead ...
       ${h.link_to(_('Show merge diff'),
         h.url('compare_url',
@@ -105,7 +105,7 @@
           other_ref_type=c.cs_ref_type, other_ref_name=c.cs_ref_name,
           merge='1')
         )}
-      </div>
+      </h5>
     %endif
     %if c.cs_ranges_org is not None:
       ## TODO: list actual changesets?

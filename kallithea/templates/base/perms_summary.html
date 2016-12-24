@@ -7,7 +7,7 @@
 <div id="perms" class="table">
      %for section in sorted(permissions.keys()):
         <div class="perms_section_head">
-            ${section.replace("_"," ").capitalize()}
+            <h4>${section.replace("_"," ").capitalize()}</h4>
             %if section != 'global':
               <div style="float: right">
                 ${_('Show')}:

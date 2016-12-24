@@ -8,7 +8,7 @@ class TestJournalController(TestController):
         self.log_user()
         response = self.app.get(url(controller='journal', action='index'))
 
-        response.mustcontain("""<div class="journal_day">%s</div>""" % datetime.date.today())
+        response.mustcontain("""<h4>%s</h4>""" % datetime.date.today())
 
     def test_stop_following_repository(self):
         session = self.log_user()

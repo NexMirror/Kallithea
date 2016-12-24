@@ -1,7 +1,7 @@
 %if c.repo_info.clone_uri:
-<div style="font-size: 20px; padding: 0px 0px 10px 0px">
+<h4>
    ${_('Remote repository URL')}: <a href="${c.repo_info.clone_uri}">${c.repo_info.clone_uri_hidden}</a></li>
-</div>
+</h4>
 ${h.form(url('edit_repo_remote_update', repo_name=c.repo_name))}
 <div class="form">
     <div>
@@ -13,7 +13,7 @@ ${h.form(url('edit_repo_remote_update', repo_name=c.repo_name))}
 </div>
 ${h.end_form()}
 %else:
-  <div style="font-size: 20px">
+  <h3>
     ${_('This repository does not have a remote repository URL.')}
-  </div>
+  </h3>
 %endif

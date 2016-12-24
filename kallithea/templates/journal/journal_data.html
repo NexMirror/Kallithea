@@ -2,7 +2,7 @@
 
 %if c.journal_day_aggregate:
     %for day,items in c.journal_day_aggregate:
-     <div class="journal_day">${day}</div>
+        <h4>${day}</h4>
         % for user,entries in items:
             <div class="journal_container">
                 ${h.gravatar_div(user.email if user else 'anonymous@kallithea-scm.org', size=24)}
