@@ -89,10 +89,10 @@ DataTables
 ----------
 
 Kallithea incorporates the Javascript system called
-[DataTables](http://www.datatables.net/) (jquery.dataTables.min.js and .css)
+[DataTables](http://www.datatables.net/)
 which can be found together with their Corresponding Source in
-https://github.com/DataTables/DataTables at tag 1.10.11 (mirrored at
-https://kallithea-scm.org/repos/mirror/DataTables/files/1.10.11/ ).
+https://github.com/DataTables/DataTables at tag 1.10.13 (mirrored at
+https://kallithea-scm.org/repos/mirror/DataTables/files/1.10.13/ ).
 
 It is Copyright 2008-2015 SpryMedia Ltd. and is under an
 [MIT-permissive license](MIT-Permissive-License.txt).
