@@ -4,6 +4,7 @@
 
 files=`hg mani | egrep -v '/codemirror/|/fontello/|/email_templates/|(/lockfiles.py|^LICENSE-MERGELY.html|^docs/Makefile|^scripts/whitespacecleanup.sh|/(graph|mergely|native.history|select2/select2|yui.flot|yui.2.9|jquery.dataTables)\.js|/test_dump_html_mails.ref.html|\.png|\.gif|\.ico|\.pot|\.po|\.mo|\.tar\.gz|\.diff)$'`
 
+sed -i "s/`printf '\r'`//g" $files
 sed -i -e "s,`printf '\t'`,    ,g" $files
 sed -i -e "s,  *$,,g" $files
 sed -i -e 's,\([^ ]\)\\$,\1 \\,g' -e 's,\(["'"'"']["'"'"']["'"'"']\) \\$,\1\\,g' $files
