@@ -42,7 +42,6 @@ Kallithea incorporates the web framework called
 [Bootstrap](http://getbootstrap.com/), which is:
 
 Copyright &copy; 2011-2016 Twitter, Inc.
-Copyright &copy; 2011-2016 The Bootstrap Authors
 
 and licensed under the MIT-permissive license, which is
 [included in this distribution](MIT-Permissive-License.txt),
