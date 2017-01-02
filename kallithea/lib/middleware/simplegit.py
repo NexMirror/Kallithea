@@ -96,7 +96,7 @@ class SimpleGit(BaseVCSController):
         # CHECK PERMISSIONS
         #======================================================================
         anonymous_user = User.get_default_user(cache=True)
-        username = anonymous_user.username
+        user = anonymous_user
         if anonymous_user.active:
             # ONLY check permissions if the user is activated
             anonymous_perm = self._check_permission(action, anonymous_user,
@@ -145,7 +145,6 @@ class SimpleGit(BaseVCSController):
                 user = User.get_by_username_or_email(username)
                 if user is None or not user.active:
                     return HTTPForbidden()(environ, start_response)
-                username = user.username
             except Exception:
                 log.error(traceback.format_exc())
                 return HTTPInternalServerError()(environ, start_response)
@@ -161,7 +160,7 @@ class SimpleGit(BaseVCSController):
         server_url = get_server_url(environ)
         extras = {
             'ip': ip_addr,
-            'username': username,
+            'username': user.username,
             'action': action,
             'repository': repo_name,
             'scm': 'git',
@@ -178,7 +177,7 @@ class SimpleGit(BaseVCSController):
         log.debug('Repository path is %s', repo_path)
 
         # CHECK LOCKING only if it's not ANONYMOUS USER
-        if username != User.DEFAULT_USER:
+        if user.username != User.DEFAULT_USER:
             log.debug('Checking locking on repository')
             (make_lock,
              locked,
@@ -198,7 +197,7 @@ class SimpleGit(BaseVCSController):
         try:
             self._handle_githooks(repo_name, action, baseui, environ)
             log.info('%s action on Git repo "%s" by "%s" from %s',
-                     action, str_repo_name, safe_str(username), ip_addr)
+                     action, str_repo_name, safe_str(user.username), ip_addr)
             app = self.__make_app(repo_name, repo_path, extras)
             result = app(environ, start_response)
             if action == 'push':
