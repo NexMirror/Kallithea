@@ -365,11 +365,15 @@ class BaseController(WSGIController):
         self.scm_model = ScmModel(self.sa)
 
     @staticmethod
-    def _determine_auth_user(api_key, session_authuser):
+    def _determine_auth_user(api_key, bearer_token, session_authuser):
         """
-        Create an `AuthUser` object given the API key (if any) and the
-        value of the authuser session cookie.
+        Create an `AuthUser` object given the API key/bearer token
+        (if any) and the value of the authuser session cookie.
         """
+
+        # Authenticate by bearer token
+        if bearer_token is not None:
+            api_key = bearer_token
 
         # Authenticate by API key
         if api_key is not None:
@@ -459,8 +463,20 @@ class BaseController(WSGIController):
             self._basic_security_checks()
 
             #set globals for auth user
+
+            bearer_token = None
+            try:
+                # Request.authorization may raise ValueError on invalid input
+                type, params = request.authorization
+            except (ValueError, TypeError):
+                pass
+            else:
+                if type.lower() == 'bearer':
+                    bearer_token = params
+
             self.authuser = c.authuser = request.user = self._determine_auth_user(
                 request.GET.get('api_key'),
+                bearer_token,
                 session.get('authuser'),
             )
 

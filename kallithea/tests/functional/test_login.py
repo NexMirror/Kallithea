@@ -435,20 +435,29 @@ class TestLoginController(TestController):
 
     def _api_key_test(self, api_key, status):
         """Verifies HTTP status code for accessing an auth-requiring page,
-        using the given api_key URL parameter. If api_key is None, no api_key
-        parameter is passed at all. If api_key is True, a real, working API key
-        is used.
+        using the given api_key URL parameter as well as using the API key
+        with bearer authentication.
+
+        If api_key is None, no api_key is passed at all. If api_key is True,
+        a real, working API key is used.
         """
         with fixture.anon_access(False):
             if api_key is None:
                 params = {}
+                headers = {}
             else:
                 if api_key is True:
                     api_key = User.get_first_admin().api_key
                 params = {'api_key': api_key}
+                headers = {'Authorization': 'Bearer ' + str(api_key)}
 
             self.app.get(url(controller='changeset', action='changeset_raw',
                              repo_name=HG_REPO, revision='tip', **params),
+                         status=status)
+
+            self.app.get(url(controller='changeset', action='changeset_raw',
+                             repo_name=HG_REPO, revision='tip'),
+                         headers=headers,
                          status=status)
 
     @parametrize('test_name,api_key,code', [

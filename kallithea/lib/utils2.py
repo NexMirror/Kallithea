@@ -131,7 +131,14 @@ def detect_mode(line, default):
 def generate_api_key():
     """
     Generates a random (presumably unique) API key.
+
+    This value is used in URLs and "Bearer" HTTP Authorization headers,
+    which in practice means it should only contain URL-safe characters
+    (RFC 3986):
+
+        unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
     """
+    # Hexadecimal certainly qualifies as URL-safe.
     return binascii.hexlify(os.urandom(20))
 
 

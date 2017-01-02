@@ -1019,8 +1019,14 @@ For example, to enable API access to patch/diff, raw file and archive::
         FilesController:raw,
         FilesController:archivefile
 
-After this change, a Kallithea view can be accessed without login by adding a
-GET parameter ``?api_key=<api_key>`` to the URL.
+After this change, a Kallithea view can be accessed without login using
+bearer authentication, by including this header with the request::
+
+    Authentication: Bearer <api_key>
+
+Alternatively, the API key can be passed in the URL query string using
+``?api_key=<api_key>``, though this is not recommended due to the increased
+risk of API key leaks, and support will likely be removed in the future.
 
 Exposing raw diffs is a good way to integrate with
 third-party services like code review, or build farms that can download archives.
