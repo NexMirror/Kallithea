@@ -822,8 +822,7 @@ class PermsDecorator(object):
                 raise HTTPForbidden()
 
     def check_permissions(self):
-        """Dummy function for overriding"""
-        raise Exception('You have to write this function in child class')
+        raise NotImplementedError()
 
 
 class HasPermissionAnyDecorator(PermsDecorator):
@@ -930,8 +929,7 @@ class PermsFunction(object):
         return result
 
     def check_permissions(self):
-        """Dummy function for overriding"""
-        raise Exception('You have to write this function in child class')
+        raise NotImplementedError()
 
     def _scope(self):
         return '(unknown scope)'
