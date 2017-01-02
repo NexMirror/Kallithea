@@ -459,6 +459,18 @@ class AuthUser(object):
     so, set `is_authenticated` to True.
 
     However, `AuthUser` does refuse to load a user that is not `active`.
+
+    Note that Kallithea distinguishes between the default user (an actual
+    user in the database with username "default") and "no user" (no actual
+    User object, AuthUser filled with blank values and username "None").
+
+    If the default user is active, that will always be used instead of
+    "no user". On the other hand, if the default user is disabled (and
+    there is no login information), we instead get "no user"; this should
+    only happen on the login page (as all other requests are redirected).
+
+    `is_default_user` specifically checks if the AuthUser is the user named
+    "default". Use `is_anonymous` to check for both "default" and "no user".
     """
 
     def __init__(self, user_id=None, dbuser=None,
@@ -468,7 +480,7 @@ class AuthUser(object):
         self.is_external_auth = is_external_auth
 
         user_model = UserModel()
-        self.anonymous_user = User.get_default_user(cache=True)
+        self._default_user = User.get_default_user(cache=True)
 
         # These attributes will be overridden by fill_data, below, unless the
         # requested user cannot be found and the default anonymous user is
@@ -494,9 +506,10 @@ class AuthUser(object):
 
         # If user cannot be found, try falling back to anonymous.
         if not is_user_loaded:
-            is_user_loaded =  self._fill_data(self.anonymous_user)
+            is_user_loaded =  self._fill_data(self._default_user)
 
-        self.is_default_user = (self.user_id == self.anonymous_user.user_id)
+        self.is_default_user = (self.user_id == self._default_user.user_id)
+        self.is_anonymous = not is_user_loaded or self.is_default_user
 
         if not self.username:
             self.username = 'None'
@@ -702,12 +715,12 @@ def _redirect_to_login(message=None):
 
 
 class LoginRequired(object):
-    """
-    Must be logged in to execute this function else
-    redirect to login page
+    """Client must be logged in as a valid User (but the "default" user,
+    if enabled, is considered valid), or we'll redirect to the login page.
 
-    :param api_access: if enabled this checks only for valid auth token
-        and grants access based on valid token
+    Also checks that IP address is allowed, and if using API key instead
+    of regular cookie authentication, checks that API key access is allowed
+    (based on `api_access` parameter and the API view whitelist).
     """
 
     def __init__(self, api_access=False):
@@ -763,9 +776,9 @@ class LoginRequired(object):
             raise _redirect_to_login()
 
 class NotAnonymous(object):
-    """
-    Must be logged in to execute this function else
-    redirect to login page"""
+    """Ensures that client is not logged in as the "default" user, and
+    redirects to the login page otherwise. Must be used together with
+    LoginRequired."""
 
     def __call__(self, func):
         return decorator(self.__wrapper, func)
