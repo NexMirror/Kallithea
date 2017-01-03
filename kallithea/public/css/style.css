@@ -861,8 +861,10 @@ div.header img {
     margin: 0 20px 0 200px;
 }
 
-#content div.panel div.form div.form-horizontal div.form-group > label > input,
-#content div.panel div.form div.form-horizontal div.form-group > div input,
+#content div.panel div.form div.form-horizontal div.form-group > label > input[type=text],
+#content div.panel div.form div.form-horizontal div.form-group > label > input[type=password],
+#content div.panel div.form div.form-horizontal div.form-group > div input[type=text],
+#content div.panel div.form div.form-horizontal div.form-group > div input[type=password],
 #content div.panel div.form div.form-horizontal div.form-group > label > textarea,
 #content div.panel div.form div.form-horizontal div.form-group > div textarea,
 .reviewer_ac input {
