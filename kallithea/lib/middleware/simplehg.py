@@ -32,7 +32,6 @@ import os
 import logging
 import traceback
 
-from paste.httpheaders import REMOTE_USER, AUTH_TYPE
 from webob.exc import HTTPNotFound, HTTPForbidden, HTTPInternalServerError, \
     HTTPNotAcceptable, HTTPBadRequest
 from kallithea.model.db import User
@@ -43,7 +42,6 @@ from kallithea.lib.base import BaseVCSController, WSGIResultCloseCallback
 from kallithea.lib.utils import make_ui, is_valid_repo, ui_sections
 from kallithea.lib.vcs.utils.hgcompat import RepoError, hgweb_mod
 from kallithea.lib.exceptions import HTTPLockedRC
-from kallithea.lib import auth_modules
 
 log = logging.getLogger(__name__)
 
@@ -103,64 +101,9 @@ class SimpleHg(BaseVCSController):
         #======================================================================
         # CHECK PERMISSIONS
         #======================================================================
-        anonymous_user = User.get_default_user(cache=True)
-        user = anonymous_user
-        if anonymous_user.active:
-            # ONLY check permissions if the user is activated
-            anonymous_perm = self._check_permission(action, anonymous_user,
-                                                    repo_name, ip_addr)
-        else:
-            anonymous_perm = False
-
-        if not anonymous_user.active or not anonymous_perm:
-            if not anonymous_user.active:
-                log.debug('Anonymous access is disabled, running '
-                          'authentication')
-
-            if not anonymous_perm:
-                log.debug('Not enough credentials to access this '
-                          'repository as anonymous user')
-
-            username = None
-            #==============================================================
-            # DEFAULT PERM FAILED OR ANONYMOUS ACCESS IS DISABLED SO WE
-            # NEED TO AUTHENTICATE AND ASK FOR AUTH USER PERMISSIONS
-            #==============================================================
-
-            # try to auth based on environ, container auth methods
-            log.debug('Running PRE-AUTH for container based authentication')
-            pre_auth = auth_modules.authenticate('', '', environ)
-            if pre_auth is not None and pre_auth.get('username'):
-                username = pre_auth['username']
-            log.debug('PRE-AUTH got %s as username', username)
-
-            # If not authenticated by the container, running basic auth
-            if not username:
-                self.authenticate.realm = \
-                    safe_str(self.config['realm'])
-                result = self.authenticate(environ)
-                if isinstance(result, str):
-                    AUTH_TYPE.update(environ, 'basic')
-                    REMOTE_USER.update(environ, result)
-                    username = result
-                else:
-                    return result.wsgi_application(environ, start_response)
-
-            #==============================================================
-            # CHECK PERMISSIONS FOR THIS REQUEST USING GIVEN USERNAME
-            #==============================================================
-            try:
-                user = User.get_by_username_or_email(username)
-                if user is None or not user.active:
-                    return HTTPForbidden()(environ, start_response)
-            except Exception:
-                log.error(traceback.format_exc())
-                return HTTPInternalServerError()(environ, start_response)
-
-            #check permissions for this repository
-            perm = self._check_permission(action, user, repo_name, ip_addr)
-            if not perm:
-                return HTTPForbidden()(environ, start_response)
+        user, response_app = self._authorize(environ, start_response, action, repo_name, ip_addr)
+        if response_app is not None:
+            return response_app(environ, start_response)
 
         # extras are injected into mercurial UI object and later available
         # in hg hooks executed by kallithea
