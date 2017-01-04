@@ -34,7 +34,7 @@ import traceback
 
 from paste.httpheaders import REMOTE_USER, AUTH_TYPE
 from webob.exc import HTTPNotFound, HTTPForbidden, HTTPInternalServerError, \
-    HTTPNotAcceptable
+    HTTPNotAcceptable, HTTPBadRequest
 from kallithea.model.db import User
 
 from kallithea.lib.utils2 import safe_str, safe_unicode, fix_PATH, get_server_url, \
@@ -64,7 +64,6 @@ def is_mercurial(environ):
         path_info, ishg_path
     )
     return ishg_path
-
 
 class SimpleHg(BaseVCSController):
 
@@ -97,7 +96,10 @@ class SimpleHg(BaseVCSController):
         #======================================================================
         # GET ACTION PULL or PUSH
         #======================================================================
-        action = self.__get_action(environ)
+        try:
+            action = self.__get_action(environ)
+        except HTTPBadRequest as e:
+            return e(environ, start_response)
 
         #======================================================================
         # CHECK ANONYMOUS PERMISSION
@@ -259,27 +261,19 @@ class SimpleHg(BaseVCSController):
 
     def __get_action(self, environ):
         """
-        Maps mercurial request commands into a clone,pull or push command.
-        This should always return a valid command string
+        Maps mercurial request commands into a pull or push command.
 
-        :param environ:
+        Raises HTTPBadRequest if the request environment doesn't look like a hg client.
         """
-        mapping = {'changegroup': 'pull',
-                   'changegroupsubset': 'pull',
-                   'stream_out': 'pull',
-                   'listkeys': 'pull',
-                   'unbundle': 'push',
-                   'pushkey': 'push', }
+        mapping = {'unbundle': 'push',
+                   'pushkey': 'push'}
         for qry in environ['QUERY_STRING'].split('&'):
             if qry.startswith('cmd'):
                 cmd = qry.split('=')[-1]
-                if cmd in mapping:
-                    return mapping[cmd]
+                return mapping.get(cmd, 'pull')
 
-                return 'pull'
-
-        raise Exception('Unable to detect pull/push action !!'
-                        'Are you using non standard command or client ?')
+        # Note: the client doesn't get the helpful error message
+        raise HTTPBadRequest('Unable to detect pull/push action! Are you using non standard command or client?')
 
     def __inject_extras(self, repo_path, baseui, extras=None):
         """

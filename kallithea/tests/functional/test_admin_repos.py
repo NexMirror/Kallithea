@@ -612,6 +612,6 @@ class TestAdminReposControllerHG(_BaseTestCase):
     OTHER_TYPE = 'git'
 
     def test_permanent_url_protocol_access(self):
-        with pytest.raises(Exception) as e:
-            self.app.get(url('summary_home', repo_name='_1'), extra_environ={'HTTP_ACCEPT': 'application/mercurial'})
-        assert 'Unable to detect pull/push action' in str(e)
+        # 400 Bad Request - Unable to detect pull/push action
+        self.app.get(url('summary_home', repo_name='_1'), extra_environ={'HTTP_ACCEPT': 'application/mercurial'},
+                     status=400)
