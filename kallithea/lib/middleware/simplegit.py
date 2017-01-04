@@ -68,7 +68,6 @@ class SimpleGit(BaseVCSController):
             return self.application(environ, start_response)
 
         ip_addr = self._get_ip_addr(environ)
-        username = None
         self._git_first_op = False
         # skip passing error to error controller
         environ['pylons.status_code_redirect'] = True
@@ -94,68 +93,67 @@ class SimpleGit(BaseVCSController):
         action = self.__get_action(environ)
 
         #======================================================================
-        # CHECK ANONYMOUS PERMISSION
+        # CHECK PERMISSIONS
         #======================================================================
-        if action in ['pull', 'push']:
-            anonymous_user = User.get_default_user(cache=True)
-            username = anonymous_user.username
-            if anonymous_user.active:
-                # ONLY check permissions if the user is activated
-                anonymous_perm = self._check_permission(action, anonymous_user,
-                                                        repo_name, ip_addr)
-            else:
-                anonymous_perm = False
+        anonymous_user = User.get_default_user(cache=True)
+        username = anonymous_user.username
+        if anonymous_user.active:
+            # ONLY check permissions if the user is activated
+            anonymous_perm = self._check_permission(action, anonymous_user,
+                                                    repo_name, ip_addr)
+        else:
+            anonymous_perm = False
 
-            if not anonymous_user.active or not anonymous_perm:
-                if not anonymous_user.active:
-                    log.debug('Anonymous access is disabled, running '
-                              'authentication')
+        if not anonymous_user.active or not anonymous_perm:
+            if not anonymous_user.active:
+                log.debug('Anonymous access is disabled, running '
+                          'authentication')
 
-                if not anonymous_perm:
-                    log.debug('Not enough credentials to access this '
-                              'repository as anonymous user')
+            if not anonymous_perm:
+                log.debug('Not enough credentials to access this '
+                          'repository as anonymous user')
 
-                username = None
-                #==============================================================
-                # DEFAULT PERM FAILED OR ANONYMOUS ACCESS IS DISABLED SO WE
-                # NEED TO AUTHENTICATE AND ASK FOR AUTH USER PERMISSIONS
-                #==============================================================
+            username = None
+            #==============================================================
+            # DEFAULT PERM FAILED OR ANONYMOUS ACCESS IS DISABLED SO WE
+            # NEED TO AUTHENTICATE AND ASK FOR AUTH USER PERMISSIONS
+            #==============================================================
 
-                # try to auth based on environ, container auth methods
-                log.debug('Running PRE-AUTH for container based authentication')
-                pre_auth = auth_modules.authenticate('', '', environ)
-                if pre_auth is not None and pre_auth.get('username'):
-                    username = pre_auth['username']
-                log.debug('PRE-AUTH got %s as username', username)
+            # try to auth based on environ, container auth methods
+            log.debug('Running PRE-AUTH for container based authentication')
+            pre_auth = auth_modules.authenticate('', '', environ)
+            if pre_auth is not None and pre_auth.get('username'):
+                username = pre_auth['username']
+            log.debug('PRE-AUTH got %s as username', username)
 
-                # If not authenticated by the container, running basic auth
-                if not username:
-                    self.authenticate.realm = \
-                        safe_str(self.config['realm'])
-                    result = self.authenticate(environ)
-                    if isinstance(result, str):
-                        AUTH_TYPE.update(environ, 'basic')
-                        REMOTE_USER.update(environ, result)
-                        username = result
-                    else:
-                        return result.wsgi_application(environ, start_response)
+            # If not authenticated by the container, running basic auth
+            if not username:
+                self.authenticate.realm = \
+                    safe_str(self.config['realm'])
+                result = self.authenticate(environ)
+                if isinstance(result, str):
+                    AUTH_TYPE.update(environ, 'basic')
+                    REMOTE_USER.update(environ, result)
+                    username = result
+                else:
+                    return result.wsgi_application(environ, start_response)
 
-                #==============================================================
-                # CHECK PERMISSIONS FOR THIS REQUEST USING GIVEN USERNAME
-                #==============================================================
-                try:
-                    user = User.get_by_username_or_email(username)
-                    if user is None or not user.active:
-                        return HTTPForbidden()(environ, start_response)
-                    username = user.username
-                except Exception:
-                    log.error(traceback.format_exc())
-                    return HTTPInternalServerError()(environ, start_response)
-
-                #check permissions for this repository
-                perm = self._check_permission(action, user, repo_name, ip_addr)
-                if not perm:
+            #==============================================================
+            # CHECK PERMISSIONS FOR THIS REQUEST USING GIVEN USERNAME
+            #==============================================================
+            try:
+                user = User.get_by_username_or_email(username)
+                if user is None or not user.active:
                     return HTTPForbidden()(environ, start_response)
+                username = user.username
+            except Exception:
+                log.error(traceback.format_exc())
+                return HTTPInternalServerError()(environ, start_response)
+
+            #check permissions for this repository
+            perm = self._check_permission(action, user, repo_name, ip_addr)
+            if not perm:
+                return HTTPForbidden()(environ, start_response)
 
         # extras are injected into UI object and later available
         # in hooks executed by kallithea
