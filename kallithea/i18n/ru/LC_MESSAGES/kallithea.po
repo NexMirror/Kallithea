@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2016-03-14 16:51+0100\n"
-"PO-Revision-Date: 2016-02-22 19:33+0100\n"
+"PO-Revision-Date: 2017-01-05 14:58+0000\n"
 "Last-Translator: Andrew Shadura <andrew@shadura.me>\n"
 "Language-Team: Russian "
 "<https://hosted.weblate.org/projects/kallithea/kallithea/ru/>\n"
@@ -29,7 +29,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
 "4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 2.3-dev\n"
+"X-Generator: Weblate 2.11-dev\n"
 
 #: kallithea/controllers/changelog.py:85
 #: kallithea/controllers/pullrequests.py:240 kallithea/lib/base.py:515
@@ -311,11 +311,11 @@ msgstr "Регистрация в %s прошла успешно"
 
 #: kallithea/controllers/login.py:195
 msgid "A password reset confirmation code has been sent"
-msgstr "Код для сброса пароля отправлен"
+msgstr "Код для сброса пароля отправлена"
 
 #: kallithea/controllers/login.py:244
 msgid "Invalid password reset token"
-msgstr "Неверный код для сброса пароля"
+msgstr "Неверный код сброса пароля"
 
 #: kallithea/controllers/login.py:249
 #: kallithea/controllers/admin/my_account.py:167
@@ -380,7 +380,7 @@ msgstr "Отсутствующие ревизии относительно пр�
 #: kallithea/controllers/pullrequests.py:410
 #, python-format
 msgid "New changesets on %s %s since the previous pull request:"
-msgstr "Новые ревизии на %s %s относительно предыдущего pull-запроса"
+msgstr "Новые ревизии на %s %s относительно предыдущего pull-запроса:"
 
 #: kallithea/controllers/pullrequests.py:417
 msgid "Ancestor didn't change - show diff since previous version:"
@@ -391,7 +391,7 @@ msgstr ""
 msgid ""
 "This pull request is based on another %s revision and there is no simple "
 "diff."
-msgstr "Этот pull-запрос основан на другой ревизии %s, простой diff невозможен"
+msgstr "Этот pull-запрос основан на другой ревизии %s, простой diff невозможен."
 
 #: kallithea/controllers/pullrequests.py:426
 #, python-format
@@ -540,9 +540,8 @@ msgid "Deleted gist %s"
 msgstr "Gist-запись %s удалена"
 
 #: kallithea/controllers/admin/gists.py:232
-#, fuzzy
 msgid "Unmodified"
-msgstr "Последнее изменение"
+msgstr "Неизменный"
 
 #: kallithea/controllers/admin/gists.py:261
 msgid "Successfully updated gist content"
@@ -824,9 +823,9 @@ msgid "Deleted repository %s"
 msgstr "Репозиторий %s удалён"
 
 #: kallithea/controllers/admin/repos.py:320
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot delete repository %s which still has forks"
-msgstr "Невозможно удалить %s, он всё-ещё содержит форки"
+msgstr "Невозможно удалить %s, у него всё ещё есть форки"
 
 #: kallithea/controllers/admin/repos.py:325
 #, python-format
@@ -872,15 +871,13 @@ msgstr "Произошла ошибка при выполнении операц
 
 #: kallithea/controllers/admin/repos.py:536
 #: kallithea/controllers/admin/repos.py:563
-#, fuzzy
 msgid "Repository has been locked"
-msgstr "Репозиторий не заблокирован"
+msgstr "Репозиторий заблокирован"
 
 #: kallithea/controllers/admin/repos.py:539
 #: kallithea/controllers/admin/repos.py:560
-#, fuzzy
 msgid "Repository has been unlocked"
-msgstr "Репозиторий не заблокирован"
+msgstr "Репозиторий разблокирован"
 
 #: kallithea/controllers/admin/repos.py:542
 #: kallithea/controllers/admin/repos.py:567
@@ -1134,9 +1131,9 @@ msgid "Fork name %s"
 msgstr "имя форка %s"
 
 #: kallithea/lib/helpers.py:743
-#, fuzzy, python-format
+#, python-format
 msgid "Pull request %s"
-msgstr "Pull-запрос #%s"
+msgstr "Pull-запрос %s"
 
 #: kallithea/lib/helpers.py:753
 msgid "[deleted] repository"
@@ -1777,14 +1774,12 @@ msgid "Default user has no access to new repositories"
 msgstr ""
 
 #: kallithea/model/db.py:1672
-#, fuzzy
 msgid "Default user has read access to new repositories"
-msgstr "Несанкционированный доступ к ресурсу"
+msgstr "Неавторизованные пользователи имеют право чтения новых репозиториев"
 
 #: kallithea/model/db.py:1673
-#, fuzzy
 msgid "Default user has write access to new repositories"
-msgstr "Несанкционированный доступ к ресурсу"
+msgstr "Неавторизованные пользователи имеют право записи в новые репозитории"
 
 #: kallithea/model/db.py:1674
 msgid "Default user has admin access to new repositories"
@@ -1823,9 +1818,8 @@ msgid "Default user has admin access to new user groups"
 msgstr ""
 
 #: kallithea/model/db.py:1686
-#, fuzzy
 msgid "Only admins can create repository groups"
-msgstr "Создана новая группа репозиториев %s"
+msgstr "Только администраторы могут создавать группы"
 
 #: kallithea/model/db.py:1687
 #, fuzzy
@@ -2466,13 +2460,13 @@ msgstr "Сброс пароля"
 #: kallithea/templates/password_reset_confirmation.html:12
 #, python-format
 msgid "Reset Your Password to %s"
-msgstr "Забыли пароль для %s?"
+msgstr "Сброс пароля для %s"
 
 #: kallithea/templates/password_reset.html:14
 #: kallithea/templates/password_reset_confirmation.html:5
 #: kallithea/templates/password_reset_confirmation.html:14
 msgid "Reset Your Password"
-msgstr "Забыли пароль?"
+msgstr "Сброс пароля"
 
 #: kallithea/templates/password_reset.html:25
 msgid "Email Address"
@@ -3077,7 +3071,7 @@ msgstr "Подтвердите удаление E-mail: %s"
 #: kallithea/templates/admin/my_account/my_account_emails.html:26
 #: kallithea/templates/admin/users/user_edit_emails.html:26
 msgid "No additional emails specified."
-msgstr "Дополнительные адреса e-mail не указаны"
+msgstr "Нет дополнительных адресов e-mail."
 
 #: kallithea/templates/admin/my_account/my_account_emails.html:38
 #: kallithea/templates/admin/users/user_edit_emails.html:38
@@ -3341,7 +3335,7 @@ msgstr "Подтвердите удаление IP %s"
 #: kallithea/templates/admin/permissions/permissions_ips.html:19
 #: kallithea/templates/admin/users/user_edit_ips.html:30
 msgid "All IP addresses are allowed."
-msgstr "Разрешены любые IP-адреса"
+msgstr "Все IP-адреса разрешены."
 
 #: kallithea/templates/admin/permissions/permissions_ips.html:30
 #: kallithea/templates/admin/users/user_edit_ips.html:42
@@ -3630,7 +3624,7 @@ msgstr "Набор"
 #: kallithea/templates/admin/repos/repo_edit_advanced.html:8
 #: kallithea/templates/admin/repos/repo_edit_fork.html:9
 msgid "Manually set this repository as a fork of another from the list."
-msgstr "Вручную сделать этот репозиторий форком выбранного из списка"
+msgstr "Вручную сделать этот репозиторий форком выбранного из списка."
 
 #: kallithea/templates/admin/repos/repo_edit_advanced.html:22
 msgid "Public Journal Visibility"
@@ -3649,8 +3643,8 @@ msgid ""
 "All actions done in this repository will be visible to everyone in the "
 "public journal."
 msgstr ""
-"Все производимые с этим репозиторием действия будут отображаться в "
-"публичном журнале"
+"Все производимые с этим репозиторием действия будут отображаться в публичном "
+"журнале."
 
 #: kallithea/templates/admin/repos/repo_edit_advanced.html:46
 msgid "Change Locking"
@@ -6151,6 +6145,8 @@ msgstr "Сравнить теги"
 #~ msgstr "Файлов нет"
 
 #~ msgid ""
+#~ "_: \n"
+#~ ""
 #~ msgstr ""
 
 #~ msgid "Username \"%(username)s\" is forbidden"
@@ -6374,4 +6370,3 @@ msgstr "Сравнить теги"
 
 #~ msgid "Created by"
 #~ msgstr "Создано"
-
