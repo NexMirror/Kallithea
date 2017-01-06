@@ -542,14 +542,6 @@ div.header img {
     border-radius: 4px 4px 0 0;
 }
 
-#content div.panel div.panel-heading h5 {
-    float: left;
-    border: none;
-    color: #fff;
-    margin: 0;
-    padding: 11px 0 11px 10px;
-}
-
 #content div.panel div.panel-heading .link-white {
     color: #FFFFFF;
 }

@@ -3,15 +3,13 @@
 <%block name="title">
     ${_('Journal')}
 </%block>
-<%def name="breadcrumbs()">
-    <h5>
+<%def name="breadcrumbs_links()">
     <form id="filter_form" class="form-inline">
     <input class="form-control q_filter_box ${'' if c.search_term else 'initial'}" id="j_filter" size="15" type="text" name="filter" value="${c.search_term or _('quick filter...')}"/>
     <span data-toggle="tooltip" title="${h.journal_filter_help()}">?</span>
     <input type='submit' value="${_('Filter')}" class="btn btn-default btn-xs"/>
     ${_('Journal')} - ${ungettext('%s Entry', '%s Entries', c.journal_pager.item_count) % (c.journal_pager.item_count)}
     </form>
-    </h5>
 </%def>
 <%block name="header_menu">
     ${self.menu('journal')}
