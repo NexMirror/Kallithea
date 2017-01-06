@@ -4,54 +4,6 @@
 
 <%namespace name="base" file="/base/base.html"/>
 
-<%def name="quick_menu(repo_name)">
-  <ul class="menu_items hidden">
-  ##<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
-
-    <li style="border-top:1px solid #577632; margin-left: 21px; padding-left: -99px;"></li>
-    <li>
-       <a title="${_('Summary')}" href="${h.url('summary_home',repo_name=repo_name)}">
-       <span class="icon">
-           <i class="icon-doc-text-inv"></i>
-       </span>
-       <span>${_('Summary')}</span>
-       </a>
-    </li>
-    <li>
-       <a title="${_('Changelog')}" href="${h.url('changelog_home',repo_name=repo_name)}">
-       <span class="icon">
-           <i class="icon-clock"></i>
-       </span>
-       <span>${_('Changelog')}</span>
-       </a>
-    </li>
-    <li>
-       <a title="${_('Files')}" href="${h.url('files_home',repo_name=repo_name)}">
-       <span class="icon">
-           <i class="icon-docs"></i>
-       </span>
-       <span>${_('Files')}</span>
-       </a>
-    </li>
-    <li>
-       <a title="${_('Fork')}" href="${h.url('repo_fork_home',repo_name=repo_name)}">
-       <span class="icon">
-           <i class="icon-fork"></i>
-       </span>
-       <span>${_('Fork')}</span>
-       </a>
-    </li>
-    <li>
-       <a title="${_('Settings')}" href="${h.url('edit_repo',repo_name=repo_name)}">
-       <span class="icon">
-           <i class="icon-gear"></i>
-       </span>
-       <span>${_('Settings')}</span>
-       </a>
-    </li>
-  </ul>
-</%def>
-
 <%def name="repo_name(name,rtype,rstate,private,fork_of,short_name=False,admin=False)">
     <%
     def get_name(name,short_name=short_name):

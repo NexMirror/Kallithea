@@ -181,9 +181,6 @@ class RepoModel(BaseModel):
         _render = self._render_datatable
         from pylons import tmpl_context as c
 
-        def quick_menu(repo_name):
-            return _render('quick_menu', repo_name)
-
         def repo_lnk(name, rtype, rstate, private, fork_of):
             return _render('repo_name', name, rtype, rstate, private, fork_of,
                            short_name=short_name, admin=False)
@@ -225,7 +222,6 @@ class RepoModel(BaseModel):
                     continue
             cs_cache = repo.changeset_cache
             row = {
-                "menu": quick_menu(repo.repo_name),
                 "raw_name": repo.repo_name,
                 "name": repo_lnk(repo.repo_name, repo.repo_type,
                                  repo.repo_state, repo.private, repo.fork),
