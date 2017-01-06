@@ -27,7 +27,7 @@
           %if section == 'global':
               <thead>
                 <tr>
-                  <th colspan="2" class="left">${_('Permission')}</th>
+                  <th class="left">${_('Permission')}</th>
                   %if actions:
                   <th class="left">${_('Edit Permission')}</th>
                   %endif
@@ -36,7 +36,7 @@
               <tbody>
               %for k in permissions[section]:
                   <tr>
-                      <td colspan="2">
+                      <td>
                           ${h.get_permission_name(k)}
                       </td>
                       %if actions:
@@ -89,7 +89,7 @@
                   </tr>
                   %endif
               %endfor
-              <tr id="empty_${section}" style="display: none"><td colspan="6">${_('No permission defined')}</td></tr>
+              <tr id="empty_${section}" style="display: none"><td colspan="${3 if actions else 2}">${_('No permission defined')}</td></tr>
               </tbody>
           %endif
          </table>
