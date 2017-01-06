@@ -261,12 +261,12 @@ ${self.repo_context_bar('showpullrequest')}
             %for u in [c.pull_request.other_repo.owner]:
               <li>
                 <a class="missing_reviewer missing_reviewer_${u.user_id}"
-                  user_id="${u.user_id}"
-                  fname="${u.name}"
-                  lname="${u.lastname}"
-                  nname="${u.username}"
-                  gravatar_lnk="${h.gravatar_url(u.email, size=28, default='default')}"
-                  gravatar_size="14"
+                  data-user_id="${u.user_id}"
+                  data-fname="${u.name}"
+                  data-lname="${u.lastname}"
+                  data-nname="${u.username}"
+                  data-gravatar_lnk="${h.gravatar_url(u.email, size=28, default='default')}"
+                  data-gravatar_size="14"
                   title="Click to add reviewer to the list, then Save Changes.">${u.full_name}</a>
               </li>
             %endfor
@@ -396,7 +396,7 @@ ${self.repo_context_bar('showpullrequest')}
 
           $('.missing_reviewer').click(function(){
             var $this = $(this);
-            addReviewMember($this.attr('user_id'), $this.attr('fname'), $this.attr('lname'), $this.attr('nname'), $this.attr('gravatar_lnk'), $this.attr('gravatar_size'));
+            addReviewMember($this.data('user_id'), $this.data('fname'), $this.data('lname'), $this.data('nname'), $this.data('gravatar_lnk'), $this.data('gravatar_size'));
           });
       });
     </script>

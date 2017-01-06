@@ -40,7 +40,7 @@
                 <ul class="list-group">
                 %for plugin_path in c.available_plugins:
                     <li class="list-group-item">
-                        <span plugin_id="${plugin_path}" class="toggle-plugin btn btn-default btn-xs ${'active' if plugin_path in c.enabled_plugins else ''}">
+                        <span data-plugin_id="${plugin_path}" class="toggle-plugin btn btn-default btn-xs ${'active' if plugin_path in c.enabled_plugins else ''}">
                             ${_('Enabled') if plugin_path in c.enabled_plugins else _('Disabled')}
                         </span>
                         ${plugin_path}
@@ -120,7 +120,7 @@
         }
         var elems = $auth_plugins_input.val().split(',').filter(notEmpty);
         var $cur_button = $(e.currentTarget);
-        var plugin_id = $cur_button.attr('plugin_id');
+        var plugin_id = $cur_button.data('plugin_id');
 
         if($cur_button.hasClass('active')){
             elems.splice(elems.indexOf(plugin_id), 1);

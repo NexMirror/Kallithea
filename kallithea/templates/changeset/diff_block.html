@@ -4,7 +4,7 @@
                        cs_repo_name, cs_ref_name, cs_ref_type, cs_rev,
                        file_diff_data)">
 <div class="diff-collapse">
-    <span target="${'diff-container-%s' % (id(file_diff_data))}" class="diff-collapse-button">&uarr; ${_('Collapse Diff')} &uarr;</span>
+    <span data-target="${'diff-container-%s' % (id(file_diff_data))}" class="diff-collapse-button">&uarr; ${_('Collapse Diff')} &uarr;</span>
 </div>
 <div class="diff-container" id="${'diff-container-%s' % (id(file_diff_data))}">
 %for id_fid, url_fid, op, a_filename, cs_filename, diff, stats in file_diff_data:
@@ -73,7 +73,7 @@
                 <span style="float:right;margin-top:-3px">
                     <label>
                         ${_('Show inline comments')}
-                        ${h.checkbox('',checked="checked",class_="show-inline-comments",id_for=url_fid)}
+                        ${h.checkbox('checkbox-show-inline-' + id_fid, checked="checked",class_="show-inline-comments",**{'data-id_for':id_fid})}
                     </label>
                 </span>
             </div>
@@ -126,7 +126,7 @@ $(document).ready(function(){
 
     $('.diff-collapse-button').click(function(e) {
         var $button = $(e.currentTarget);
-        var $target = $('#' + $button.attr('target'));
+        var $target = $('#' + $button.data('target'));
         if($target.hasClass('hidden')){
             $target.removeClass('hidden');
             $button.html("&uarr; {0} &uarr;".format(_TM['Collapse Diff']));
@@ -141,7 +141,7 @@ $(document).ready(function(){
         if(target == null){
             target = this;
         }
-        var boxid = $(target).attr('id_for');
+        var boxid = $(target).data('id_for');
         if(target.checked){
             $('#{0} .inline-comments'.format(boxid)).show();
         }else{

@@ -111,7 +111,7 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                         <td class="date">
                             <div class="date" data-toggle="tooltip" title="${h.fmt_date(cs.date)}">${h.age(cs.date,True)}</div>
                         </td>
-                        <td class="expand_commit" commit_id="${cs.raw_id}" title="${_('Expand commit message')}">
+                        <td class="expand_commit" data-commit_id="${cs.raw_id}" title="${_('Expand commit message')}">
                             <i class="icon-align-left" style="color:#999"></i>
                         </td>
                         <td class="mid">
@@ -298,7 +298,7 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                 });
 
                 $('.expand_commit').on('click',function(e){
-                    var cid = $(this).attr('commit_id');
+                    var cid = $(this).data('commit_id');
                     $('#C-'+cid).toggleClass('expanded');
 
                     //redraw the graph, r and jsdata are bound outside function

@@ -11,10 +11,10 @@
             %if section != 'global':
               <div style="float: right">
                 ${_('Show')}:
-                <label>${h.checkbox('perms_filter_none_%s' % section, 'none', 'checked', class_='perm_filter filter_%s' % section, section=section, perm_type='none')}<span class="perm_tag none">${_('None')}</span></label>
-                <label>${h.checkbox('perms_filter_read_%s' % section, 'read', 'checked', class_='perm_filter filter_%s' % section, section=section, perm_type='read')}<span class="perm_tag read">${_('Read')}</span></label>
-                <label>${h.checkbox('perms_filter_write_%s' % section, 'write', 'checked', class_='perm_filter filter_%s' % section, section=section, perm_type='write')}<span class="perm_tag write">${_('Write')}</span></label>
-                <label>${h.checkbox('perms_filter_admin_%s' % section, 'admin', 'checked', class_='perm_filter filter_%s' % section, section=section, perm_type='admin')}<span class="perm_tag admin">${_('Admin')}</span></label>
+                <label>${h.checkbox('perms_filter_none_%s' % section, 'none', 'checked', class_='perm_filter filter_%s' % section, **{'data-section':section, 'data-perm_type':'none'})}<span class="perm_tag none">${_('None')}</span></label>
+                <label>${h.checkbox('perms_filter_read_%s' % section, 'read', 'checked', class_='perm_filter filter_%s' % section, **{'data-section':section, 'data-perm_type':'read'})}<span class="perm_tag read">${_('Read')}</span></label>
+                <label>${h.checkbox('perms_filter_write_%s' % section, 'write', 'checked', class_='perm_filter filter_%s' % section, **{'data-section':section, 'data-perm_type':'write'})}<span class="perm_tag write">${_('Write')}</span></label>
+                <label>${h.checkbox('perms_filter_admin_%s' % section, 'admin', 'checked', class_='perm_filter filter_%s' % section, **{'data-section':section, 'data-perm_type':'admin'})}<span class="perm_tag admin">${_('Admin')}</span></label>
               </div>
             %endif
         </div>
@@ -109,10 +109,10 @@
             }
         }
         var update_show = function($checkbox){
-            var section = $checkbox.attr('section');
+            var section = $checkbox.data('section');
 
             var elems = $('.filter_' + section).each(function(el){
-                var perm_type = $checkbox.attr('perm_type');
+                var perm_type = $checkbox.data('perm_type');
                 var checked = $checkbox.prop('checked');
                 if(checked){
                     $('.'+section+'_'+perm_type).show();
