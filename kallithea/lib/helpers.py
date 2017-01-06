@@ -766,9 +766,9 @@ def action_parser(user_log, feed=False, parse_cs=False):
         if len(x) > 1:
             action, action_params = x
 
-        tmpl = """<i class="%s" alt="%s"></i>"""
         ico = action_map.get(action, ['', '', ''])[2]
-        return literal(tmpl % (ico, action))
+        html = """<i class="%s"></i>""" % ico
+        return literal(html)
 
     # returned callbacks we need to call to get
     return [lambda: literal(action), action_params_func, action_parser_icon]
