@@ -219,58 +219,6 @@ class JournalController(BaseController):
         #json used to render the grid
         c.data = json.dumps(repos_data)
 
-        watched_repos_data = []
-
-        ## watched repos
-        _render = RepoModel._render_datatable
-
-        def quick_menu(repo_name):
-            return _render('quick_menu', repo_name)
-
-        def repo_lnk(name, rtype, rstate, private, fork_of):
-            return _render('repo_name', name, rtype, rstate, private, fork_of,
-                           short_name=False, admin=False)
-
-        def last_rev(repo_name, cs_cache):
-            return _render('revision', repo_name, cs_cache.get('revision'),
-                           cs_cache.get('raw_id'), cs_cache.get('author'),
-                           cs_cache.get('message'))
-
-        def desc(desc):
-            from pylons import tmpl_context as c
-            return h.urlify_text(desc, truncate=60, stylize=c.visual.stylify_metatags)
-
-        def repo_actions(repo_name):
-            return _render('repo_actions', repo_name)
-
-        def owner_actions(user_id, username):
-            return _render('user_name', user_id, username)
-
-        def toogle_follow(repo_id):
-            return  _render('toggle_follow', repo_id)
-
-        for entry in c.following:
-            repo = entry.follows_repository
-            cs_cache = repo.changeset_cache
-            row = {
-                "menu": quick_menu(repo.repo_name),
-                "raw_name": repo.repo_name,
-                "name": repo_lnk(repo.repo_name, repo.repo_type,
-                                 repo.repo_state, repo.private, repo.fork),
-                "last_changeset": last_rev(repo.repo_name, cs_cache),
-                "last_rev_raw": cs_cache.get('revision'),
-                "action": toogle_follow(repo.repo_id)
-            }
-
-            watched_repos_data.append(row)
-
-        c.watched_data = json.dumps({
-            "totalRecords": len(c.following),
-            "startIndex": 0,
-            "sort": "name",
-            "dir": "asc",
-            "records": watched_repos_data
-        })
         return render('journal/journal.html')
 
     @LoginRequired(api_access=True)

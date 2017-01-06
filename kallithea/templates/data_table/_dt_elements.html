@@ -207,9 +207,3 @@
     <i class="icon-users" title="${_('User group')}"></i> ${user_group_name}</a>
   </div>
 </%def>
-
-<%def name="toggle_follow(repo_id)">
-  <span id="follow_toggle_${repo_id}" class="following" title="${_('Stop following this repository')}"
-        onclick="toggleFollowingRepo(this, ${repo_id})">
-  </span>
-</%def>
