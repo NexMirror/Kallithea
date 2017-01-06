@@ -327,6 +327,7 @@ class PullrequestsController(BaseRepoController):
         (org_ref_type,
          org_ref_name,
          org_rev) = org_ref.split(':')
+        org_display = h.short_ref(org_ref_type, org_ref_name)
         if org_ref_type == 'rev':
             cs = org_repo.scm_instance.get_changeset(org_rev)
             org_ref = 'branch:%s:%s' % (cs.branch, cs.raw_id)
@@ -341,6 +342,7 @@ class PullrequestsController(BaseRepoController):
             cs = other_repo.scm_instance.get_changeset(other_rev)
             other_ref_name = cs.raw_id[:12]
             other_ref = '%s:%s:%s' % (other_ref_type, other_ref_name, cs.raw_id)
+        other_display = h.short_ref(other_ref_type, other_ref_name)
 
         cs_ranges, _cs_ranges_not, ancestor_revs = \
             CompareController._get_changesets(org_repo.scm_instance.alias,
@@ -373,11 +375,10 @@ class PullrequestsController(BaseRepoController):
         title = _form['pullrequest_title']
         if not title:
             if org_repo_name == other_repo_name:
-                title = '%s to %s' % (h.short_ref(org_ref_type, org_ref_name),
-                                      h.short_ref(other_ref_type, other_ref_name))
+                title = '%s to %s' % (org_display, other_display)
             else:
-                title = '%s#%s to %s#%s' % (org_repo_name, h.short_ref(org_ref_type, org_ref_name),
-                                            other_repo_name, h.short_ref(other_ref_type, other_ref_name))
+                title = '%s#%s to %s#%s' % (org_repo_name, org_display,
+                                            other_repo_name, other_display)
         description = _form['pullrequest_desc'].strip() or _('No description')
         try:
             created_by = User.get(request.authuser.user_id)
