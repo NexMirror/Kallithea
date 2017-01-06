@@ -569,8 +569,8 @@ def action_parser(user_log, feed=False, parse_cs=False):
                 title_ = _('Changeset %s not found') % lbl
             if parse_cs:
                 return link_to(lbl, url_, title=title_, class_='tooltip')
-            return link_to(lbl, url_, raw_id=rev.raw_id, repo_name=repo_name,
-                           class_='lazy-cs' if lazy_cs else '')
+            return link_to(lbl, url_, class_='lazy-cs' if lazy_cs else '',
+                           **{'data-raw_id':rev.raw_id, 'data-repo_name':repo_name})
 
         def _get_op(rev_txt):
             _op = None

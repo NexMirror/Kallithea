@@ -417,8 +417,8 @@ var show_more_event = function(){
 var show_changeset_tooltip = function(){
     $('.lazy-cs').mouseover(function(e){
         var $target = $(e.currentTarget);
-        var rid = $target.attr('raw_id');
-        var repo_name = $target.attr('repo_name');
+        var rid = $target.data('raw_id');
+        var repo_name = $target.data('repo_name');
         if(rid && !$target.hasClass('tooltip')){
             _show_tooltip(e, _TM['loading ...']);
             var url = pyroutes.url('changeset_info', {"repo_name": repo_name, "revision": rid});
