@@ -159,7 +159,7 @@ class CodeHtmlFormatter(HtmlFormatter):
     def _wrap_code(self, source):
         for cnt, it in enumerate(source):
             i, t = it
-            t = '<div id="L%s">%s</div>' % (cnt + 1, t)
+            t = '<span id="L%s">%s</span>' % (cnt + 1, t)
             yield i, t
 
     def _wrap_tablelinenos(self, inner):
