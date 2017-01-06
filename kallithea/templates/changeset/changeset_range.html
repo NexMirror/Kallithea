@@ -7,9 +7,9 @@
 
 <%def name="breadcrumbs_links()">
     ${_('Changesets')} -
-    ${h.link_to(h.show_id(c.cs_ranges[0]),h.url('changeset_home',repo_name=c.repo_name,revision=c.cs_ranges[0].raw_id))}</td>
+    ${h.link_to(h.show_id(c.cs_ranges[0]),h.url('changeset_home',repo_name=c.repo_name,revision=c.cs_ranges[0].raw_id))}
     <i class="icon-right"></i>
-    ${h.link_to(h.show_id(c.cs_ranges[-1]),h.url('changeset_home',repo_name=c.repo_name,revision=c.cs_ranges[-1].raw_id))}</td>
+    ${h.link_to(h.show_id(c.cs_ranges[-1]),h.url('changeset_home',repo_name=c.repo_name,revision=c.cs_ranges[-1].raw_id))}
 </%def>
 
 <%block name="header_menu">
