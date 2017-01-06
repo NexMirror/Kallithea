@@ -40,7 +40,7 @@ ${self.repo_context_bar('files')}
             ${_('Location')}: ${h.files_breadcrumbs(c.repo_name,c.cs.raw_id,c.f_path)} /
               <span id="filename_container" class="file reviewer_ac">
                   <input class="form-control input-small" type="text" value="" size="30" name="filename" id="filename" placeholder="${_('Enter filename...')}">
-                  <input type="hidden" value="${c.f_path}" size="30" name="location" id="location">
+                  <input type="hidden" value="${c.f_path}" name="location" id="location">
                   ${_('or')} <div class="btn btn-default btn-sm" id="upload_file_enable">${_('Upload File')}</div>
               </span>
               <span id="upload_file_container" class="reviewer_ac" style="display:none">

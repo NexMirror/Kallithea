@@ -56,7 +56,7 @@ ${self.repo_context_bar('showpullrequest')}
         <div class="pr-do-edit form-group" style="display:none">
               <label for="pullrequest_desc">${_('Description')}:</label>
               <div>
-                  ${h.textarea('pullrequest_desc',size=30,content=c.pull_request.description,placeholder=_('Write a short description on this pull request'),class_='form-control')}
+                  ${h.textarea('pullrequest_desc',content=c.pull_request.description,placeholder=_('Write a short description on this pull request'),class_='form-control')}
               </div>
         </div>
         %endif
