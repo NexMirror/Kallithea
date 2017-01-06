@@ -5,7 +5,7 @@
         <title><%block name="title"/><%block name="branding_title"/></title>
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
         <meta name="robots" content="index, nofollow"/>
-        <link rel="icon" href="${h.url('/images/favicon.ico')}" type="image/png" />
+        <link rel="icon" href="${h.url('/images/favicon.ico')}" type="image/x-icon" />
 
         ## CSS ###
         <link rel="stylesheet" type="text/css" href="${h.url('/css/jquery.dataTables.css', ver=c.kallithea_version)}"/>
@@ -110,7 +110,7 @@
           <div id="logo">
             <a href="${h.url('home')}" style="display: block;">
               <div class="header">
-                <img src="${h.url('/images/kallithea-logo.svg')}" onerror="this.onerror='';this.src='${h.url('/images/kallithea-logo.png')}'" alt="Kallithea"/>
+                <img src="${h.url('/images/kallithea-logo.svg')}" alt="Kallithea"/>
               </div>
               %if c.site_name:
                 <div class="branding">${c.site_name}</div>
