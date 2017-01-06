@@ -60,7 +60,7 @@ ${self.repo_context_bar('files')}
                     <textarea id="editor" name="content" style="display:none"></textarea>
                 </div>
                 <div style="padding: 10px;color:#666666">${_('Commit Message')}</div>
-                <textarea class="form-control" id="commit" name="message" style="height: 100px;width: 99%;margin-left:4px" placeholder="${c.default_message}"></textarea>
+                <textarea class="form-control" name="message" style="height: 100px;width: 99%;margin-left:4px" placeholder="${c.default_message}"></textarea>
             </div>
             <div style="text-align: left;padding-top: 5px">
             ${h.submit('commit',_('Commit Changes'),class_="btn btn-success btn-sm")}
