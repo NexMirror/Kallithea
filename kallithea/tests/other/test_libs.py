@@ -213,12 +213,12 @@ class TestLibs(TestController):
         )
         from kallithea.lib.helpers import urlify_text
         res = urlify_text(sample, stylize=True)
-        assert '<div class="metatag" tag="tag">tag</div>' in res
-        assert '<div class="metatag" tag="obsolete">obsolete</div>' in res
-        assert '<div class="metatag" tag="stale">stale</div>' in res
-        assert '<div class="metatag" tag="lang">python</div>' in res
-        assert '<div class="metatag" tag="requires">requires =&gt; <a href="/url">url</a></div>' in res
-        assert '<div class="metatag" tag="tag">tag</div>' in res
+        assert '<div class="metatag" data-tag="tag">tag</div>' in res
+        assert '<div class="metatag" data-tag="obsolete">obsolete</div>' in res
+        assert '<div class="metatag" data-tag="stale">stale</div>' in res
+        assert '<div class="metatag" data-tag="lang">python</div>' in res
+        assert '<div class="metatag" data-tag="requires">requires =&gt; <a href="/url">url</a></div>' in res
+        assert '<div class="metatag" data-tag="tag">tag</div>' in res
 
     def test_alternative_gravatar(self):
         from kallithea.lib.helpers import gravatar_url

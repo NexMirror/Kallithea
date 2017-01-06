@@ -1238,40 +1238,40 @@ div.form div.form-horizontal div.form-group div.button {
     background-color: #DEF;
 }
 
-.metatag[tag="dead"] {
+.metatag[data-tag="dead"] {
     background-color: #E44;
 }
 
-.metatag[tag="stale"] {
+.metatag[data-tag="stale"] {
     background-color: #EA4;
 }
 
-.metatag[tag="featured"] {
+.metatag[data-tag="featured"] {
     background-color: #AEA;
 }
 
-.metatag[tag="requires"] {
+.metatag[data-tag="requires"] {
     background-color: #9CF;
 }
 
-.metatag[tag="recommends"] {
+.metatag[data-tag="recommends"] {
     background-color: #BDF;
 }
 
-.metatag[tag="lang"] {
+.metatag[data-tag="lang"] {
     background-color: #FAF474;
 }
 
-.metatag[tag="license"] {
+.metatag[data-tag="license"] {
     border: solid 1px #9CF;
     background-color: #DEF;
 }
-.metatag[tag="see"] {
+.metatag[data-tag="see"] {
     border: solid 1px #CBD;
     background-color: #EDF;
 }
 
-a.metatag[tag="license"]:hover {
+a.metatag[data-tag="license"]:hover {
     background-color: #577632;
     color: #FFF;
     text-decoration: none;
