@@ -4,7 +4,7 @@
 ##    ${p.perms_summary(c.perm_user.permissions)}
 
 <%def name="perms_summary(permissions, show_all=False, actions=True)">
-<div id="perms" class="table">
+<div id="perms">
      %for section in sorted(permissions.keys()):
         <div class="perms_section_head">
             <h4>${section.replace("_"," ").capitalize()}</h4>

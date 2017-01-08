@@ -23,7 +23,7 @@ class TestNotificationsController(TestController):
         Session().commit()
 
         response = self.app.get(url('notifications'))
-        response.mustcontain('<div class="table">No notifications here yet</div>')
+        response.mustcontain('<div>No notifications here yet</div>')
 
         with test_context(self.app):
             cur_user = self._get_logged_user()

@@ -1926,10 +1926,6 @@ BIN_FILENODE = 6
     text-align: left;
 }
 
-.table {
-    position: relative;
-}
-
 #graph {
     position: relative;
     overflow: hidden;
@@ -2141,10 +2137,10 @@ BIN_FILENODE = 6
     text-decoration: none;
 }
 
-#compare_branches + .table .revision-link,
-#compare_tags + .table .revision-link,
-#compare_bookmarks + .table .revision-link,
-.table #files_data .revision-link,
+#compare_branches + div.panel-body .revision-link,
+#compare_tags + div.panel-body .revision-link,
+#compare_bookmarks + div.panel-body .revision-link,
+div.panel-body #files_data .revision-link,
 #repos_list_wrap .revision-link,
 #shortlog_data .revision-link {
     font-weight: normal !important;
@@ -3220,7 +3216,7 @@ div#legend_data, div#legend_container, div#legend_choices {
 }
 
 #content div.panel div.form,
-#content div.panel div.table,
+#content div.panel div.panel-body,
 #content div.panel div.traffic {
     position: relative;
     clear: both;

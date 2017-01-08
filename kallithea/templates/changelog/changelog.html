@@ -31,7 +31,7 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
     <div class="panel-heading clearfix">
         ${self.breadcrumbs()}
     </div>
-    <div class="table">
+    <div class="panel-body">
         %if c.pagination:
             <div>
                 <div style="overflow:auto; ${'display:none' if c.changelog_for_path else ''}">

@@ -2,7 +2,6 @@
 
 %for cnt,sr in enumerate(c.formated_results):
     %if h.HasRepoPermissionAny('repository.write','repository.read','repository.admin')(sr['repository'],'search results check'):
-    <div class="table">
         <div id="body${cnt}" class="codeblock">
             <div class="code-header">
                 <div class="search-path">${h.link_to(h.literal('%s &raquo; %s' % (sr['repository'],sr['f_path'])),
@@ -13,10 +12,9 @@
                 <pre>${h.literal(sr['content_short_hl'])}</pre>
             </div>
         </div>
-    </div>
     %else:
         %if cnt == 0:
-        <div class="table">
+        <div>
             <div id="body${cnt}" class="codeblock">
                 <div class="error">${_('Permission denied')}</div>
             </div>
