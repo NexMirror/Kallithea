@@ -315,7 +315,7 @@ msgstr "Регистрация в Kallithea прошла успешно"
 
 #: kallithea/controllers/login.py:202
 msgid "A password reset confirmation code has been sent"
-msgstr "Код для сброса пароля отправлена"
+msgstr "Код для сброса пароля отправлен"
 
 #: kallithea/controllers/login.py:251
 msgid "Invalid password reset token"
@@ -540,7 +540,7 @@ msgstr "Gist-запись %s удалена"
 
 #: kallithea/controllers/admin/gists.py:233
 msgid "Unmodified"
-msgstr "Неизменный"
+msgstr "Без изменений"
 
 #: kallithea/controllers/admin/gists.py:262
 msgid "Successfully updated gist content"
