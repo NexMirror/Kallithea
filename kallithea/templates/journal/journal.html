@@ -25,14 +25,14 @@
             <div class="pull-left">
                 ${self.breadcrumbs()}
             </div>
-            <div class="pull-right links icon-only-links panel-title">
+            <div class="pull-right panel-title">
                 <a href="${h.url('my_account_watched')}"><i class="icon-eye"></i> ${_('Watched Repositories')}</a>
                 <a href="${h.url('my_account_repos')}"><i class="icon-database"></i> ${_('My Repositories')}</a>
                 <a id="refresh" href="${h.url('journal')}"><i class="icon-arrows-cw"></i></a>
                 <a href="${h.url('journal_atom', api_key=c.authuser.api_key)}"><i class="icon-rss-squared"></i></a>
             </div>
         </div>
-        <div id="journal">
+        <div id="journal" class="panel-body">
             <%include file='journal_data.html'/>
         </div>
     </div>

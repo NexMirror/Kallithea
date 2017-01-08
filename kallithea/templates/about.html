@@ -12,10 +12,11 @@
 <%def name="main()">
 
 <div class="panel panel-primary">
-  <div class="panel-heading clearfix">
-    <h5>${_('About')} Kallithea</h5>
+  <div class="panel-heading">
+    <h5 class="panel-title">${_('About')} Kallithea</h5>
   </div>
 
+  <div class="panel-body">
   <p><a href="https://kallithea-scm.org/">Kallithea</a> is a project of the
   <a href="http://sfconservancy.org/">Software Freedom Conservancy, Inc.</a>
   and is released under the terms of the
@@ -143,15 +144,16 @@
 ## Stefan Engel <mail@engel-stefan.de> in 2012
 ## Ton Plomp <tcplomp@gmail.com> in 2013
 ##
-</ul></p>
+  </ul></p>
 
-<p>The above are the copyright holders who have submitted direct
+  <p>The above are the copyright holders who have submitted direct
   contributions to the Kallithea repository.  In
   the <a href="https://kallithea-scm.org/repos/kallithea">Kallithea source
   code</a>, there is
   a <a href="https://kallithea-scm.org/repos/kallithea/files/tip/LICENSE.md">list
   of third-party libraries and code that Kallithea incorporates</a>.</p>
 
+  </div>
 </div>
 
 </%def>

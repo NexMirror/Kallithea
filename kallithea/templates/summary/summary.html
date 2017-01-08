@@ -63,7 +63,7 @@ summary = lambda n:{False:'summary-short'}.get(n)
     <div class="panel-heading clearfix">
         ${self.breadcrumbs()}
     </div>
-    <div class="form">
+    <div id="summary-panel-body" class="form panel-body">
         <div id="summary" class="form-horizontal">
             <div class="form-group form-inline clearfix">
               <label>${_('Clone URL')}:</label>
@@ -170,7 +170,7 @@ summary = lambda n:{False:'summary-short'}.get(n)
 
 
 <div class="panel panel-primary">
-    <div class="panel-heading clearfix">
+    <div class="panel-heading">
         <div class="breadcrumbs panel-title">
         %if c.repo_changesets:
             ${h.link_to(_('Latest Changes'),h.url('changelog_home',repo_name=c.repo_name))}

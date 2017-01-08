@@ -5,16 +5,16 @@
     ${_('Log In')}
 </%block>
 
-<div id="login" class="panel panel-default">
-    <%include file="/base/flash_msg.html"/>
-    <div class="panel-heading clearfix">
+<%include file="/base/flash_msg.html"/>
+<div id="login" class="panel panel-primary">
+    <div class="panel-heading">
         %if c.site_name:
             <h5>${_('Log In to %s') % c.site_name}</h5>
         %else:
             <h5>${_('Log In')}</h5>
         %endif
     </div>
-    <div class="panel-body inner">
+    <div class="panel-body">
         ${h.form(url('login_home', came_from=c.came_from))}
         <div class="form">
             <i class="icon-lock"></i>

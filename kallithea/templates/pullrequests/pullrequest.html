@@ -20,9 +20,9 @@ ${self.repo_context_bar('showpullrequest')}
     </div>
 
     ${h.form(url('pullrequest', repo_name=c.repo_name), method='post', id='pull_request_form')}
-    <div class="form">
-
-        <div class="form-horizontal" style="float:left;width:50%;padding-right:30px;">
+    <div class="form panel-body">
+        <div class="settings clearfix">
+          <div class="form-horizontal">
 
             <div class="form-group">
                 <label class="control-label" for="pullrequest_title">${_('Title')}:</label>
@@ -40,7 +40,7 @@ ${self.repo_context_bar('showpullrequest')}
 
             <div class="form-group">
                 <label class="control-label">${_('Changeset flow')}:</label>
-                <div>
+                <div class="clearfix">
                     ##ORG
                     <div>
                         <div>
@@ -71,7 +71,6 @@ ${self.repo_context_bar('showpullrequest')}
                             </div>
                         </div>
                     </div>
-                    <div style="clear:both"></div>
                 </div>
             </div>
 
@@ -82,12 +81,13 @@ ${self.repo_context_bar('showpullrequest')}
                 </div>
             </div>
 
+          </div>
         </div>
 
         <div style="clear:both;padding: 0 0 30px 0;"></div>
 
-        <h4>${_('Changesets')}</h4>
         <div style="float:left;padding:0px 30px 30px 30px">
+           <h4>${_('Changesets')}</h4>
            ## overview pulled by ajax
            <div style="float:left" id="pull_request_overview"></div>
         </div>

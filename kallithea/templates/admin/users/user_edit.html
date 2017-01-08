@@ -18,13 +18,13 @@
 </%block>
 
 <%def name="main()">
-<div class="panel panel-primary" style="overflow:auto">
+<div class="panel panel-primary">
     <div class="panel-heading clearfix">
         ${self.breadcrumbs()}
     </div>
 
     ##main
-    <div style="width: 150px; float:left">
+    <div class="panel-body settings">
       <ul class="nav nav-pills nav-stacked">
         <li class="${'active' if c.active=='profile' else ''}"><a href="${h.url('edit_user', id=c.user.user_id)}">${_('Profile')}</a></li>
         <li class="${'active' if c.active=='emails' else ''}"><a href="${h.url('edit_user_emails', id=c.user.user_id)}">${_('Emails')}</a></li>
@@ -33,10 +33,10 @@
         <li class="${'active' if c.active=='advanced' else ''}"><a href="${h.url('edit_user_advanced', id=c.user.user_id)}">${_('Advanced')}</a></li>
         <li class="${'active' if c.active=='perms' else ''}"><a href="${h.url('edit_user_perms', id=c.user.user_id)}">${_('Show Permissions')}</a></li>
       </ul>
-    </div>
 
-    <div style="width:750px; float:left; padding: 10px 0px 0px 20px;margin: 0px 0px 0px 10px; border-left: 1px solid #DDDDDD">
-        <%include file="/admin/users/user_edit_${c.active}.html"/>
+      <div>
+          <%include file="/admin/users/user_edit_${c.active}.html"/>
+      </div>
     </div>
 </div>
 

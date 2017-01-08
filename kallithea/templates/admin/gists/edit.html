@@ -50,7 +50,7 @@
                 <textarea style="resize:vertical; width:400px;border: 1px solid #ccc;border-radius: 3px;"
                           id="description" name="description"
                           placeholder="${_('Gist description ...')}">${c.gist.gist_description}</textarea>
-                <div style="padding:0px 0px 0px 42px">
+                <div>
                     <label>
                         ${_('Gist lifetime')}
                         ${h.select('lifetime', '0', c.lifetime_options)}

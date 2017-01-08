@@ -21,7 +21,8 @@
         ${self.breadcrumbs()}
     </div>
 
-    <div class="normal-indent">
+    <div class="panel-body">
+      <div>
         <div>
         %if c.closed:
             ${h.link_to(_('Hide closed pull requests (only show open pull requests)'), h.url('my_pullrequests'))}
@@ -38,6 +39,7 @@
 
         <h4>${_('Pull Requests I Participate In')}</h4>
         ${pullrequest_data.pullrequest_overview(c.participate_in_pull_requests)}
+      </div>
     </div>
 </div>
 </%def>

@@ -1,5 +1,4 @@
-<div class="apikeys_wrap">
-  <table class="table">
+<table class="table">
     <tr>
         <td style="width: 450px"><div class="truncate autoexpand" style="width:120px;font-size:16px;font-family: monospace">${c.user.api_key}</div></td>
         <td>
@@ -48,8 +47,7 @@
     %else:
     <tr><td><div class="ip">${_('No additional API keys specified')}</div></td></tr>
     %endif
-  </table>
-</div>
+</table>
 
 <div>
     ${h.form(url('my_account_api_keys'), method='post')}

@@ -16,13 +16,13 @@
 </%block>
 
 <%def name="main()">
-<div class="panel panel-primary" style="overflow:auto">
+<div class="panel panel-primary">
     <div class="panel-heading clearfix">
         ${self.breadcrumbs()}
     </div>
 
     ##main
-    <div style="width: 150px; float:left">
+    <div class="panel-body settings">
       <ul class="nav nav-pills nav-stacked">
         <li class="${'active' if c.active=='vcs' else ''}"><a href="${h.url('admin_settings')}">${_('VCS')}</a></li>
         <li class="${'active' if c.active=='mapping' else ''}"><a href="${h.url('admin_settings_mapping')}">${_('Remap and Rescan')}</a></li>
@@ -33,10 +33,10 @@
         <li class="${'active' if c.active=='search' else ''}"><a href="${h.url('admin_settings_search')}">${_('Full Text Search')}</a></li>
         <li class="${'active' if c.active=='system' else ''}"><a href="${h.url('admin_settings_system')}">${_('System Info')}</a></li>
       </ul>
-    </div>
 
-    <div style="width:750px; float:left; padding: 10px 0px 0px 20px;margin: 0px 0px 0px 10px; border-left: 1px solid #DDDDDD">
-        <%include file="/admin/settings/settings_${c.active}.html"/>
+      <div>
+          <%include file="/admin/settings/settings_${c.active}.html"/>
+      </div>
     </div>
 </div>
 

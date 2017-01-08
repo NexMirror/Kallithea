@@ -38,10 +38,10 @@
         </div>
         %endif
     </div>
-    %if c.gists_pager.item_count>0:
+    <div class="panel-body">
+      %if c.gists_pager.item_count>0:
         % for gist in c.gists_pager:
-          <div class="gist-item" style="padding:10px 20px 10px 15px">
-
+          <div class="gist-item clearfix" style="padding:10px 20px 10px 15px">
             ${h.gravatar_div(gist.owner.email, size=28)}
             <div title="${gist.owner.full_contact}" class="user" style="font-size: 16px">
                 <b>${h.person(gist.owner.full_contact)}</b> /
@@ -65,8 +65,9 @@
         <ul class="pagination">
             ${c.gists_pager.pager(**request.GET.mixed())}
         </ul>
-    %else:
+      %else:
         <div>${_('There are no gists yet')}</div>
-    %endif
+      %endif
+    </div>
 </div>
 </%def>

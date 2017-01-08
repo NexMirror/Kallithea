@@ -38,7 +38,7 @@ ${self.repo_context_bar('showpullrequest')}
         </div>
     </div>
 
-    <div class="normal-indent">
+    <div class="panel-body">
         <div>
         %if c.closed:
             ${h.link_to(_('Hide closed pull requests (only show open pull requests)'), h.url('pullrequest_show_all',repo_name=c.repo_name,from_=c.from_))}
@@ -46,9 +46,9 @@ ${self.repo_context_bar('showpullrequest')}
             ${h.link_to(_('Show closed pull requests (in addition to open pull requests)'), h.url('pullrequest_show_all',repo_name=c.repo_name,from_=c.from_,closed=1))}
         %endif
         </div>
-    </div>
 
-    ${pullrequest_data.pullrequest_overview(c.pullrequests_pager)}
+        ${pullrequest_data.pullrequest_overview(c.pullrequests_pager)}
+    </div>
 
 </div>
 </%def>

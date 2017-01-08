@@ -33,42 +33,39 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
     </div>
     <div class="panel-body">
         %if c.pagination:
-            <div>
-                <div style="overflow:auto; ${'display:none' if c.changelog_for_path else ''}">
-                    <div class="container_header">
-                        <div class="pull-left">
-                            ${h.form(h.url.current(),method='get',class_="form-inline")}
-                                ${h.submit('set',_('Show'),class_="btn btn-default btn-sm")}
-                                ${h.text('size',size=3,value=c.size,class_='form-control')}
-                                ${_('revisions')}
-                                %if c.branch_name:
-                                    ${h.hidden('branch', c.branch_name)}
-                                %endif
-                            ${h.end_form()}
+            <div class="panel">
+                <div class="panel-heading clearfix" style="${'display:none' if c.changelog_for_path else ''}">
+                    <div class="pull-left">
+                        ${h.form(h.url.current(),method='get',class_="form-inline")}
+                            ${h.submit('set',_('Show'),class_="btn btn-default btn-sm")}
+                            ${h.text('size',size=3,value=c.size,class_='form-control')}
+                            ${_('revisions')}
+                            %if c.branch_name:
+                                ${h.hidden('branch', c.branch_name)}
+                            %endif
                             <a href="#" class="btn btn-default btn-sm" id="rev_range_clear" style="display:none">${_('Clear selection')}</a>
-                        </div>
-                        <div class="pull-right">
-                            <a href="#" class="btn btn-default btn-sm" id="rev_range_container" style="display:none"></a>
-                            %if c.revision:
-                                <a class="btn btn-default btn-sm" href="${h.url('changelog_home', repo_name=c.repo_name)}">
-                                    ${_('Go to tip of repository')}
-                                </a>
-                            %endif
-                            %if c.db_repo.fork:
-                                <a id="compare_fork"
-                                   title="${_('Compare fork with %s' % c.db_repo.fork.repo_name)}"
-                                   href="${h.url('compare_url',repo_name=c.db_repo.fork.repo_name,org_ref_type=c.db_repo.landing_rev[0],org_ref_name=c.db_repo.landing_rev[1],other_repo=c.repo_name,other_ref_type='branch' if request.GET.get('branch') else c.db_repo.landing_rev[0],other_ref_name=request.GET.get('branch') or c.db_repo.landing_rev[1], merge=1)}"
-                                   class="btn btn-default btn-sm"><i class="icon-git-compare"></i> ${_('Compare fork with parent repository (%s)' % c.db_repo.fork.repo_name)}</a>
-                            %endif
-                            ## text and href of open_new_pr is controlled from javascript
-                            <a id="open_new_pr" class="btn btn-default btn-sm"></a>
-                            ${_("Branch filter:")} ${h.select('branch_filter',c.branch_name,c.branch_filters)}
-                        </div>
+                        ${h.end_form()}
+                    </div>
+                    <div class="pull-right">
+                        <a href="#" class="btn btn-default btn-sm" id="rev_range_container" style="display:none"></a>
+                        %if c.revision:
+                            <a class="btn btn-default btn-sm" href="${h.url('changelog_home', repo_name=c.repo_name)}">
+                                ${_('Go to tip of repository')}
+                            </a>
+                        %endif
+                        %if c.db_repo.fork:
+                            <a id="compare_fork"
+                               title="${_('Compare fork with %s' % c.db_repo.fork.repo_name)}"
+                               href="${h.url('compare_url',repo_name=c.db_repo.fork.repo_name,org_ref_type=c.db_repo.landing_rev[0],org_ref_name=c.db_repo.landing_rev[1],other_repo=c.repo_name,other_ref_type='branch' if request.GET.get('branch') else c.db_repo.landing_rev[0],other_ref_name=request.GET.get('branch') or c.db_repo.landing_rev[1], merge=1)}"
+                               class="btn btn-default btn-sm"><i class="icon-git-compare"></i> ${_('Compare fork with parent repository (%s)' % c.db_repo.fork.repo_name)}</a>
+                        %endif
+                        ## text and href of open_new_pr is controlled from javascript
+                        <a id="open_new_pr" class="btn btn-default btn-sm"></a>
+                        ${_("Branch filter:")} ${h.select('branch_filter',c.branch_name,c.branch_filters)}
                     </div>
                 </div>
 
-                <div id="changelog" style="clear:both">
-
+              <div class="panel-body">
                 <div id="graph_nodes">
                     <canvas id="graph_canvas" style="width:0"></canvas>
                 </div>
@@ -184,8 +181,8 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                 <ul class="pagination">
                     ${c.pagination.pager()}
                 </ul>
+              </div>
             </div>
-        </div>
 
         <script type="text/javascript" src="${h.url('/js/graph.js', ver=c.kallithea_version)}"></script>
         <script type="text/javascript">

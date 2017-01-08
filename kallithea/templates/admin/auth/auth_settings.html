@@ -20,8 +20,8 @@
     <div class="panel-heading clearfix">
         ${self.breadcrumbs()}
     </div>
+    <div class="form panel-body settings">
     ${h.form(url('auth_settings'))}
-    <div class="form">
 
     ## enabled auth plugins
     <h1>${_('Authentication Plugins')}</h1>
@@ -107,8 +107,8 @@
                 </div>
             </div>
         </div>
-    </div>
     ${h.end_form()}
+    </div>
 </div>
 
 <script>

@@ -23,6 +23,7 @@ ${self.repo_context_bar('changelog')}
         ${self.breadcrumbs()}
     </div>
     <div class="panel-body">
+      <div>
         <div id="body" class="diffblock">
             <div class="code-header">
                 <div>
@@ -71,11 +72,13 @@ ${self.repo_context_bar('changelog')}
                     %endfor
               </div>
         </div>
+      </div>
     </div>
     <%namespace name="comment" file="/changeset/changeset_file_comment.html"/>
     <%namespace name="diff_block" file="/changeset/diff_block.html"/>
     ${diff_block.diff_block_js()}
     %for cs in c.cs_ranges:
+        <div class="panel-body">
           ## diff block
           <div class="h3">
           <a data-toggle="tooltip" title="${cs.message}" href="${h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id)}">${h.show_id(cs)}</a>
@@ -107,6 +110,7 @@ ${self.repo_context_bar('changelog')}
           <% a_rev, cs_rev, file_diff_data = c.changes[cs.raw_id] %>
           ${diff_block.diff_block(c.repo_name, 'rev', a_rev, a_rev,
                                   c.repo_name, 'rev', cs_rev, cs_rev, file_diff_data)}
+        </div>
     %endfor
 </div>
 </%def>

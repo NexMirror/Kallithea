@@ -1,7 +1,7 @@
 <%page args="parent,group_name=''" />
     <div class="panel panel-primary">
         <div class="panel-heading clearfix">
-            <div class="breadcrumbs">
+            <div class="pull-left breadcrumbs">
                 %if c.group is not None:
                     %for group in c.group.parents:
                         ${h.link_to(group.name, url('repos_group_home', group_name=group.group_name))}
@@ -12,7 +12,7 @@
             </div>
 
             %if c.authuser.username != 'default':
-              <ul class="links">
+              <ul class="pull-right links">
                 <li>
                 <%
                     gr_name = c.group.group_name if c.group else None
@@ -43,7 +43,6 @@
         </div>
         %if c.groups:
         <div class="panel-body">
-            <div id='groups_list_wrap'>
               <table id="groups_list" class="table">
                   <thead>
                       <tr>
@@ -71,10 +70,9 @@
                     </tr>
                   % endfor
               </table>
-            </div>
         </div>
         %endif
-        <div>
+        <div class="panel-body">
             <table class="table" id="repos_list_wrap"></table>
         </div>
     </div>

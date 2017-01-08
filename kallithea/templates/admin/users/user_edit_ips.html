@@ -1,5 +1,4 @@
-<div class="ips_wrap">
-  <table class="table">
+<table class="table">
     %if c.default_user_ip_map and c.inherit_default_ips:
         %for ip in c.default_user_ip_map:
           <tr>
@@ -29,8 +28,7 @@
     %if not c.default_user_ip_map and not c.user_ip_map:
         <tr><td><div class="ip">${_('All IP addresses are allowed.')}</div></td></tr>
     %endif
-  </table>
-</div>
+</table>
 
 <div>
     ${h.form(url('edit_user_ips_update', id=c.user.user_id))}

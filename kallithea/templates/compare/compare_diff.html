@@ -24,6 +24,7 @@ ${self.repo_context_bar('changelog')}
         ${self.breadcrumbs()}
     </div>
     <div class="panel-body">
+      <div>
         <div id="body" class="diffblock">
             <div class="compare-revision-selector">
                 ## divs are "inline-block" and cannot have whitespace between them.
@@ -80,7 +81,7 @@ ${self.repo_context_bar('changelog')}
                     <h5>${_('Changeset was too big and was cut off...')} <a href="${h.url.current(fulldiff=1, **request.GET.mixed())}">${_('Show full diff anyway')}</a></h5>
                   %endif
                 </div>
-         </div>
+        </div>
 
         ## diff block
         <%namespace name="diff_block" file="/changeset/diff_block.html"/>
@@ -90,6 +91,7 @@ ${self.repo_context_bar('changelog')}
         % if c.limited_diff:
           <h4>${_('Changeset was too big and was cut off...')} <a href="${h.url.current(fulldiff=1, **request.GET.mixed())}">${_('Show full diff')}</a></h4>
         % endif
+      <div>
     %endif
     </div>
 

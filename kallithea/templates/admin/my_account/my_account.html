@@ -14,13 +14,13 @@
 </%block>
 
 <%def name="main()">
-<div class="panel panel-primary" style="overflow:auto">
-    <div class="panel-heading clearfix">
+<div class="panel panel-primary">
+    <div class="panel-heading">
         ${self.breadcrumbs()}
     </div>
 
     ##main
-    <div style="width: 150px; float:left">
+    <div class="panel-body settings">
         <ul class="nav nav-pills nav-stacked">
             <li>
               <div class="gravatar_box" style="height: 26px">
@@ -38,10 +38,10 @@
             <li class="${'active' if c.active=='watched' else ''}"><a href="${h.url('my_account_watched')}">${_('Watched Repositories')}</a></li>
             <li class="${'active' if c.active=='perms' else ''}"><a href="${h.url('my_account_perms')}">${_('Show Permissions')}</a></li>
         </ul>
-    </div>
 
-    <div style="min-width:750px; float:left; padding: 10px 0px 0px 20px;margin: 0px 0px 0px 10px; border-left: 1px solid #DDDDDD">
-        <%include file="/admin/my_account/my_account_${c.active}.html"/>
+        <div>
+            <%include file="/admin/my_account/my_account_${c.active}.html"/>
+        </div>
     </div>
 </div>
 

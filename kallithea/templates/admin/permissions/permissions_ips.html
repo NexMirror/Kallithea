@@ -1,5 +1,4 @@
-<div class="ips_wrap">
-      <table class="table">
+<table class="table">
       %if c.user_ip_map:
         %for ip in c.user_ip_map:
           <tr>
@@ -18,8 +17,7 @@
        %else:
         <tr><td><div class="ip">${_('All IP addresses are allowed.')}</div></td></tr>
        %endif
-      </table>
-</div>
+</table>
 
 ${h.form(url('edit_user_ips_update', id=c.user.user_id))}
     <div class="form">

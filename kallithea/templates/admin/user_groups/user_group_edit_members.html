@@ -1,5 +1,5 @@
 % if c.group_members_obj:
-  <ul>
+  <ul class="user_group_member">
   %for user in c.group_members_obj:
     <li>
         ${h.gravatar_div(user.email, size=24)}
@@ -7,6 +7,6 @@
     </li>
   %endfor
   </ul>
-  %else:
+%else:
     <span class="empty_data">${_('No members yet')}</span>
-  %endif
+%endif

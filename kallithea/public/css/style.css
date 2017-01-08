@@ -538,16 +538,12 @@ div.header img {
     background-repeat: repeat-x;
     background-image: linear-gradient(to bottom, #577632, #577632);
     margin: 0 0 20px;
-    padding: 0;
+    padding: 10px 20px;
     border-radius: 4px 4px 0 0;
 }
 
-#content div.panel div.panel-heading .link-white {
+#content div.panel div.panel-heading a {
     color: #FFFFFF;
-}
-
-#content div.panel div.panel-heading .link-white.current {
-    color: #BFE3FF;
 }
 
 #content div.panel div.panel-heading ul.links li {
@@ -561,7 +557,6 @@ div.header img {
     font-size: 13px;
     font-weight: 700;
     height: 1%;
-    margin: 4px;
     text-decoration: none;
 }
 
@@ -570,14 +565,6 @@ div.header img {
     color: #fff;
     margin: 0;
     padding: 11px 10px 11px 10px;
-}
-
-#content div.panel div.panel-heading .links.icon-only-links a {
-    float: left;
-    color: #fff;
-    margin: 0;
-    padding: 0 10px;
-    line-height: 18px;
 }
 
 .clearfix::before, .clearfix::after, .dl-horizontal dd::before, .dl-horizontal dd::after, .container::before, .container::after, .container-fluid::before, .container-fluid::after, .row::before, .row::after, .form-horizontal .form-group::before, .form-horizontal .form-group::after, .btn-toolbar::before, .btn-toolbar::after, .btn-group-vertical > .btn-group::before, .btn-group-vertical > .btn-group::after, .nav::before, .nav::after, .navbar::before, .navbar::after, .navbar-header::before, .navbar-header::after, .navbar-collapse::before, .navbar-collapse::after, .pager::before, .pager::after, .panel::before, .panel::after, .panel-body::before, .panel-body::after, .modal-header::before, .modal-header::after, .modal-footer::before, .modal-footer::after, td.inline-comments::before, td.inline-comments::after {
@@ -604,13 +591,10 @@ div.header img {
     float: right;
 }
 
-#content div.panel div.panel-heading .pull-left {
-    margin: 10px;
-    color: white;
-}
-
-#content div.panel div.panel-heading .pull-right {
-    margin: 5px;
+#content div.panel div.panel-heading .pull-left,
+#content div.panel div.panel-heading .pull-left a,
+#content div.panel div.panel-heading .pull-right,
+#content div.panel div.panel-heading .pull-right a {
     color: white;
 }
 
@@ -628,12 +612,8 @@ div.header img {
 #content div.panel div.h6 {
     clear: both;
     overflow: hidden;
-    margin: 8px 20px 3px;
+    margin: 8px 0 3px;
     padding-bottom: 2px;
-}
-
-#content div.panel div.normal-indent {
-    margin: 0 20px 10px 20px;
 }
 
 #content div.panel p {
@@ -1176,6 +1156,10 @@ div.form div.form-horizontal div.form-group div.button {
     padding: 0 3px 2px;
 }
 
+#content div.panel #summary-panel-body {
+    position: relative;
+}
+
 #content div.panel #summary {
     margin-right: 200px;
     min-height: 240px;
@@ -1190,7 +1174,6 @@ div.form div.form-horizontal div.form-group div.button {
 }
 
 #summary-menu-stats ul {
-    margin: 0 10px;
     display: block;
     background-color: #f9f9f9;
     border: 1px solid #d1d1d1;
@@ -1322,7 +1305,7 @@ a.metatag[data-tag="license"]:hover {
     overflow: hidden;
     text-align: right;
     margin: 0;
-    padding: 0 10px 4px;
+    padding: 10px 20px;
     margin: -10px 0 0;
     background-color: #577632;
     background-repeat: repeat-x;
@@ -1332,7 +1315,6 @@ a.metatag[data-tag="license"]:hover {
 }
 
 #footer > span {
-    padding: 15px 25px 15px 0;
     color: #FFF;
     font-weight: 700;
 }
@@ -1630,6 +1612,10 @@ a.metatag[data-tag="license"]:hover {
     padding-bottom: 4px;
 }
 
+#journal {
+    margin-left: 20px;
+}
+
 #journal .journal_day {
     font-size: 20px;
     padding: 10px 0px;
@@ -1639,13 +1625,11 @@ a.metatag[data-tag="license"]:hover {
 }
 
 #journal .journal_container {
-    padding: 5px;
     clear: both;
-    margin: 0px 5px 0px 10px;
 }
 
 #journal .journal_action_container {
-    padding-left: 38px;
+    padding-left: 18px;
 }
 
 #journal .journal_user {
@@ -2791,23 +2775,13 @@ table.code-browser i[class^='icon-'] {
 .breadcrumbs {
     border: medium none;
     color: #FFF;
-    float: left;
     font-weight: 700;
     font-size: 14px;
-    margin: 10px;
-}
-
-.pull-left .breadcrumbs {
-    margin: 0;
 }
 
 .breadcrumbs .hash {
     text-transform: none;
     color: #fff;
-}
-
-.breadcrumbs a {
-    color: #FFF;
 }
 
 .flash_msg {
@@ -2913,6 +2887,7 @@ table#permissions_manage tr#add_perm_input td {
 }
 
 div.gravatar {
+    float: left;
     background-color: #FFF;
     margin-right: 0.7em;
     padding: 1px 1px 1px 1px;
@@ -2947,7 +2922,7 @@ div.gravatar img {
 
 .label,
 .btn {
-    color: #515151;
+    color: #515151 !important;
     background-color: #DADADA;
     background-repeat: repeat-x;
     background-image: linear-gradient(to bottom, #F4F4F4, #DADADA);
@@ -2957,7 +2932,7 @@ div.gravatar img {
     border-right: 1px solid #DDD;
     border-bottom: 1px solid #c6c6c6;
     outline: none;
-    margin: 0px 3px 3px 0px;
+    margin: 0 3px 0 0;
     border-radius: 4px 4px 4px 4px !important;
     padding: 3px 3px 3px 3px;
     display: inline-block;
@@ -2970,18 +2945,33 @@ div.gravatar img {
     cursor: default !important;
 }
 
-ul.nav-stacked {
+.panel-body.settings > ul.nav-stacked {
+    float: left;
+    width: 150px;
     margin: 20px;
     color: #393939;
     font-weight: 700;
 }
 
-ul.nav-stacked a {
+.panel-body.settings > ul.nav-stacked a {
     color: inherit;
 }
 
-ul.nav-stacked li.active {
+.panel-body.settings > ul.nav-stacked li.active {
     list-style-type: disc
+}
+
+.panel-body.settings > div,
+.panel-body.settings > form {
+    float: left;
+    width: 750px;
+    margin: 10px 0 0 0;
+    border-left: 1px solid #DDDDDD;
+}
+
+.panel-body > div,
+.panel-body > form {
+    padding: 0 20px 10px;
 }
 
 /* make .btn inputs and buttons and divs look the same */
@@ -3035,7 +3025,7 @@ input[disabled].btn,
 
 .label.label-danger,
 .btn.btn-danger {
-    color: #fff;
+    color: #fff !important;
     background-color: #c43c35;
     background-repeat: repeat-x;
     background-image: linear-gradient(to bottom, #ee5f5b, #c43c35);
@@ -3045,7 +3035,7 @@ input[disabled].btn,
 
 .label.label-primary,
 .btn.btn-primary {
-    color: #fff;
+    color: #fff !important;
     background-color: #339bb9;
     background-repeat: repeat-x;
     background-image: linear-gradient(to bottom, #5bc0de, #339bb9);
@@ -3055,7 +3045,7 @@ input[disabled].btn,
 
 .label.label-success,
 .btn.btn-success {
-    color: #fff;
+    color: #fff !important;
     background-color: #57a957;
     background-repeat: repeat-x;
     background-image: linear-gradient(to bottom, #62c462, #57a957);
@@ -3065,7 +3055,7 @@ input[disabled].btn,
 
 .label.label-warning,
 .btn.btn-warning {
-    color: #fff;
+    color: #fff !important;
     background-color: #faa732;
     background-repeat: repeat-x;
     background-image: linear-gradient(to bottom, #fbb450, #f89406);
@@ -3074,7 +3064,7 @@ input[disabled].btn,
 }
 
 label.disabled {
-    color: #aaa;
+    color: #aaa !important;
 }
 
 .btn.active {
@@ -3204,26 +3194,6 @@ div#legend_data, div#legend_container, div#legend_choices {
 #content div.panel ol.upper-alpha,
 #content div.panel ol.decimal {
     margin: 10px 24px 10px 44px;
-}
-
-#content div.panel div.form,
-#content div.panel div.panel-body,
-#content div.panel div.traffic {
-    position: relative;
-    clear: both;
-    margin: 0;
-    padding: 0 20px 10px;
-}
-
-#content div.panel div.form div.form-horizontal,
-#login div.form-horizontal,
-#login div.form-horizontal div.form-group,
-#register div.form,
-#register div.form div.form-horizontal {
-    clear: both;
-    overflow: hidden;
-    margin: 0;
-    padding: 0;
 }
 
 #content div.panel div.form div.form-horizontal div.form-group > div input.error,
@@ -3440,10 +3410,6 @@ div#legend_choices table td {
     padding: 0px 0px 0px 10px;
 }
 
-.emails_wrap {
-    padding: 0px 20px;
-}
-
 .emails_wrap .email_entry {
     height: 30px;
     padding: 0px 0px 0px 10px;
@@ -3453,10 +3419,6 @@ div#legend_choices table td {
 }
 .emails_wrap .email_entry .email_action {
     float: left
-}
-
-.ips_wrap {
-    padding: 0px 20px;
 }
 
 .ips_wrap .ip_entry {
@@ -3920,12 +3882,6 @@ input.status_change_radio {
     font-weight: bold;
     font-size: 17px;
 }
-.notification-table {
-    border: 1px solid #ccc;
-    border-radius: 6px 6px 6px 6px;
-    clear: both;
-    margin: 0px 20px 0px 20px;
-}
 .notification-header .delete-notifications {
     float: right;
     padding-top: 8px;
@@ -3939,7 +3895,7 @@ input.status_change_radio {
 .notification-subject {
     clear: both;
     border-bottom: 1px solid #eee;
-    padding: 5px 0px 5px 38px;
+    padding: 5px 0px;
 }
 
 .notification-body {
@@ -4014,7 +3970,13 @@ span.pr-closed-tag {
     text-transform: capitalize;
 }
 
+#perms .perms_section_head label {
+    margin-left: 10px;
+}
+
 #perms .perm_tag {
+    position: relative;
+    top: -2px;
     padding: 3px 3px 1px 3px;
     font-size: 10px;
     font-weight: bold;
@@ -4041,6 +4003,11 @@ span.pr-closed-tag {
 #perms .perm_tag.none {
     background-color: #bfbfbf;
     color: #ffffff;
+}
+
+input.perm_filter {
+    position: relative;
+    top: 2px;
 }
 
 .perm-gravatar {
@@ -4095,9 +4062,7 @@ div.diffblock {
     line-height: 125%;
     border-radius: 6px 6px 0px 0px;
 }
-div.diffblock.margined {
-    margin: 0px 20px 0px 20px;
-}
+
 .compare-revision-selector,
 div.diffblock .code-header {
     border-bottom: 1px solid #CCCCCC;
@@ -4397,15 +4362,6 @@ div.comment-prev-next-links div.next-comment {
     margin: 3px 6px;
 }
 
-#help_kb {
-    display: none;
-}
-
-.icon-only-links i {
-    color: white;
-}
-
-
 body table.dataTable thead .sorting {
   background-image: none;
 }
@@ -4471,4 +4427,13 @@ body table.dataTable thead .sorting_desc::after {
 
 .text-nowrap {
     white-space: nowrap;
+}
+
+div.codeblock div.code-header div.author {
+    height: auto;
+    min-height: 25px;
+}
+
+ul.user_group_member li {
+    clear: both;
 }

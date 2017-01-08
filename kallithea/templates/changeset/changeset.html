@@ -29,6 +29,7 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
     AJAX_COMMENT_DELETE_URL = "${url('changeset_comment_delete',repo_name=c.repo_name,comment_id='__COMMENT_ID__')}";
   </script>
   <div class="panel-body">
+    <div>
         <div class="diffblock">
             <div class="parents">
                 <div id="parent_link" class="changeset_hash">
@@ -182,9 +183,11 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
         </div>
 
     </div>
+  </div>
 
-    ## diff block
-    <div class="commentable-diff">
+  ## diff block
+  <div class="panel-body">
+  <div class="commentable-diff">
     <%namespace name="diff_block" file="/changeset/diff_block.html"/>
     ${diff_block.diff_block_js()}
     <% a_rev, cs_rev, file_diff_data = c.changes[c.changeset.raw_id] %>
@@ -299,5 +302,6 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
 
     </script>
 
+  </div>
   </div>
 </%def>
