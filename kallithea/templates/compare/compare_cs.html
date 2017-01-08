@@ -29,7 +29,7 @@
 
     <div id="graph_content_pr" style="margin-left: 100px;">
 
-    <table class="compare_view_commits noborder">
+    <table class="table compare_view_commits">
     %for cnt, cs in enumerate(reversed(c.cs_ranges)):
       <tr id="chg_${cnt+1}" class="${'mergerow' if len(cs.parents) > 1 else ''}">
         <td style="width:50px">

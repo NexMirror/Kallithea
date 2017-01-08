@@ -3,7 +3,7 @@ ${h.form(url('edit_repo_perms_update', repo_name=c.repo_name))}
     <div class="form-horizontal">
         <div class="form-group">
             ${h.hidden('repo_private')}
-            <table id="permissions_manage" class="noborder">
+            <table id="permissions_manage" class="table table-condensed">
                 <tr>
                     <td>${_('None')}</td>
                     <td>${_('Read')}</td>

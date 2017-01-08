@@ -74,7 +74,7 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                 </div>
                 <div id="graph_content" style="${'margin: 0px' if c.changelog_for_path else ''}">
 
-                <table id="changesets">
+                <table class="table" id="changesets">
                 <tbody>
                 %for cnt,cs in enumerate(c.pagination):
                     <tr id="chg_${cnt+1}" class="container ${'mergerow' if len(cs.parents) > 1 else ''}">
