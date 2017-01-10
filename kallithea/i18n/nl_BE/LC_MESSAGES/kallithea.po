@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2015-09-08 10:34+0200\n"
-"PO-Revision-Date: 2015-05-28 22:41+0200\n"
+"PO-Revision-Date: 2017-01-10 07:35+0000\n"
 "Last-Translator: Sam Jaques <sam.jaques@me.com>\n"
 "Language-Team: Dutch (Belgium) "
-"<https://hosted.weblate.org/projects/kallithea/kallithea/nl_BE/>\n"
+"<https://hosted.weblate.org/projects/kallithea/stable/nl_BE/>\n"
 "Language: nl_BE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Weblate 2.3-dev\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2.11-dev\n"
 
 #: kallithea/controllers/changelog.py:86
 #: kallithea/controllers/pullrequests.py:238 kallithea/lib/base.py:512
@@ -78,11 +78,11 @@ msgstr ""
 
 #: kallithea/controllers/error.py:71
 msgid "No response"
-msgstr ""
+msgstr "Geen antwoord"
 
 #: kallithea/controllers/error.py:72
 msgid "Unknown error"
-msgstr ""
+msgstr "Onbekende fout"
 
 #: kallithea/controllers/error.py:100
 msgid "The request could not be understood by the server due to malformed syntax."
@@ -94,7 +94,7 @@ msgstr ""
 
 #: kallithea/controllers/error.py:105
 msgid "You don't have permission to view this page"
-msgstr ""
+msgstr "Je hebt geen toegang tot deze pagina"
 
 #: kallithea/controllers/error.py:107
 msgid "The resource could not be found"
@@ -6006,6 +6006,8 @@ msgstr ""
 #~ msgstr ""
 
 #~ msgid ""
+#~ "_: \n"
+#~ ""
 #~ msgstr ""
 
 #~ msgid "%(user)s wants you to review pull request #%(pr_id)s: %(pr_title)s"
@@ -6331,4 +6333,3 @@ msgstr ""
 
 #~ msgid "Created by"
 #~ msgstr ""
-
