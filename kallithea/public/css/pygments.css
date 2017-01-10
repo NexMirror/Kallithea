@@ -59,6 +59,9 @@ div.codeblock .code-header .commit {
     font-weight: normal;
     white-space: pre;
 }
+div.codeblock .code-header .editing-files {
+    margin-left: 15px;
+}
 
 .code-highlighttable,
 div.codeblock .code-body table {

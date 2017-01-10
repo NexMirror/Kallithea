@@ -19,7 +19,8 @@
 
 <div id="body" class="codeblock">
     <div class="code-header">
-        <div class="pull-left stats">
+        <div class="stats">
+        <div class="pull-left">
             <div class="left img"><i class="icon-doc-inv"></i></div>
             <div class="left item"><pre data-toggle="tooltip" title="${h.fmt_date(c.changeset.date)}">${h.link_to(h.show_id(c.changeset),h.url('changeset_home',repo_name=c.repo_name,revision=c.changeset.raw_id))}</pre></div>
             <div class="left item"><pre>${h.format_byte_size(c.file.size,binary=True)}</pre></div>
@@ -45,6 +46,7 @@
                 ${h.link_to(_('Delete'), '#', class_="btn btn-danger btn-xs disabled tooltip", title=_('Deleting files allowed only when on branch head revision'))}
                %endif
               %endif
+        </div>
         </div>
         <div class="author">
             ${h.gravatar_div(h.email_or_none(c.changeset.author), size=16)}

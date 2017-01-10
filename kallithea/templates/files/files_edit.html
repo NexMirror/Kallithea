@@ -38,7 +38,8 @@ ${self.repo_context_bar('files')}
             ${h.form(h.url.current(),method='post',id='eform',class_='form-inline')}
             <div id="body" class="codeblock">
             <div class="code-header">
-                <div class="pull-left stats">
+                <div class="stats">
+                <div class="pull-left">
                     <div class="left"><i class="icon-doc-inv"></i></div>
                     <div class="left item">${h.link_to(h.show_id(c.file.changeset),h.url('changeset_home',repo_name=c.repo_name,revision=c.file.changeset.raw_id))}</div>
                     <div class="left item">${h.format_byte_size(c.file.size,binary=True)}</div>
@@ -54,7 +55,8 @@ ${self.repo_context_bar('files')}
                       % endif
                     </div>
                 </div>
-                <label class="commit">
+                </div>
+                <label class="editing-files">
                     ${_('Editing file')}: ${c.file.unicode_path}
                     <select class="form-control" id="mimetype" name="mimetype"></select>
                 </label>
