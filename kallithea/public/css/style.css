@@ -3127,7 +3127,7 @@ div#legend_data, div#legend_container, div#legend_choices {
     float: left;
 }
 
-nav.navbar #quick li #quick_login,
+nav.navbar #quick li .dropdown-menu,
 #content #left #menu ul.closed,
 #content #left #menu li ul.collapsed,
 .yui-tt-shadow {
