@@ -62,7 +62,7 @@ ${h.form(url('admin_settings'), method='post')}
                     ${h.text('paths_root_path',size=60,readonly="readonly",class_='form-control')}
                     <span id="path_unlock" data-toggle="tooltip" style="cursor: pointer"
                             title="${_('Click to unlock. You must restart Kallithea in order to make this setting take effect.')}">
-                        <div class="btn btn-default btn-sm"><i id="path_unlock_icon" class="icon-lock"></i></div>
+                        <span class="btn btn-default btn-sm"><i id="path_unlock_icon" class="icon-lock"></i></span>
                     </span>
                     <span class="help-block">${_('Filesystem location where repositories are stored. After changing this value, a restart and rescan of the repository folder are both required.')}</span>
                 </div>

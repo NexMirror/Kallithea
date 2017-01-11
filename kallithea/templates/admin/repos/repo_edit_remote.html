@@ -1,6 +1,6 @@
 %if c.repo_info.clone_uri:
 <h4>
-   ${_('Remote repository URL')}: <a href="${c.repo_info.clone_uri}">${c.repo_info.clone_uri_hidden}</a></li>
+   ${_('Remote repository URL')}: <a href="${c.repo_info.clone_uri}">${c.repo_info.clone_uri_hidden}</a>
 </h4>
 ${h.form(url('edit_repo_remote_update', repo_name=c.repo_name))}
 <div class="form">

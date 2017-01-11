@@ -2,11 +2,12 @@
     %if c.repo_fields:
     <div class="emails_wrap">
       <table class="table">
-        <th>${_('Label')}</th>
-        <th>${_('Key')}</th>
-        <th>${_('Type')}</th>
-        <th>${_('Action')}</th>
-
+        <tr>
+          <th>${_('Label')}</th>
+          <th>${_('Key')}</th>
+          <th>${_('Type')}</th>
+          <th>${_('Action')}</th>
+        </tr>
       %for field in c.repo_fields:
         <tr>
             <td>${field.field_label}</td>

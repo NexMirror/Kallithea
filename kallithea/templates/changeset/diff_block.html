@@ -29,32 +29,32 @@
                 <div class="diff-actions">
                   <span style="margin: 0 10px">
                     %if op == 'A':
-                      <span class="no-file" data-toggle="tooltip" title="${_("No file before")}">
+                      <span class="no-file" data-toggle="tooltip" title="${_('No file before')}">
                         <i class="icon-minus-circled"></i></span>
                     %else:
-                      <a href="${h.url('files_home', repo_name=a_repo_name, f_path=a_filename, revision=a_rev)}" data-toggle="tooltip" title="${_("File before")}">
+                      <a href="${h.url('files_home', repo_name=a_repo_name, f_path=a_filename, revision=a_rev)}" data-toggle="tooltip" title="${_('File before')}">
                         <i class="icon-doc"></i></a>
                     %endif
 
                     %if op == 'A':
-                      <span class="arrow" data-toggle="tooltip" title="${_("Added")}">&#10142;</span>
+                      <span class="arrow" data-toggle="tooltip" title="${_('Added')}">&#10142;</span>
                     %elif op == 'M':
-                      <span class="arrow" data-toggle="tooltip" title="${_("Modified")}">&#10142;</span>
+                      <span class="arrow" data-toggle="tooltip" title="${_('Modified')}">&#10142;</span>
                     %elif op == 'D':
-                      <span class="arrow" data-toggle="tooltip" title="${_("Deleted")}">&#10142;</span>
+                      <span class="arrow" data-toggle="tooltip" title="${_('Deleted')}">&#10142;</span>
                     %elif op == 'R':
-                      <span class="arrow" data-toggle="tooltip" title="${_("Renamed")}">&#10142;</span>
+                      <span class="arrow" data-toggle="tooltip" title="${_('Renamed')}">&#10142;</span>
                     %elif op is None:
-                      <span class="arrow" data-toggle="tooltip" title="${_("No change")}">&#10142;</span>
+                      <span class="arrow" data-toggle="tooltip" title="${_('No change')}">&#10142;</span>
                     %else:
-                      <span class="arrow" data-toggle="tooltip" title="${_("Unknown operation: %r") % op}">&#10142;</span>
+                      <span class="arrow" data-toggle="tooltip" title="${_('Unknown operation: %r') % op}">&#10142;</span>
                     %endif
 
                     %if op == 'D':
-                      <span class="no-file" data-toggle="tooltip" title="${_("No file after")}">
+                      <span class="no-file" data-toggle="tooltip" title="${_('No file after')}">
                         <i class="icon-minus-circled"></i></span>
                     %else:
-                      <a href="${h.url('files_home', repo_name=cs_repo_name, f_path=cs_filename, revision=cs_rev)}" data-toggle="tooltip" title="${_("File after")}">
+                      <a href="${h.url('files_home', repo_name=cs_repo_name, f_path=cs_filename, revision=cs_rev)}" data-toggle="tooltip" title="${_('File after')}">
                         <i class="icon-doc"></i></a>
                     %endif
                   </span>
