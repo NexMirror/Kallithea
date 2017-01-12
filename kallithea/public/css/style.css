@@ -1384,6 +1384,7 @@ a.metatag[data-tag="license"]:hover {
     background-color: #FDF784 !important;
 }
 #quick_login {
+    width: 300px;
     min-height: 110px;
     padding: 4px;
     position: absolute;
@@ -1435,14 +1436,11 @@ a.metatag[data-tag="license"]:hover {
     right: 15px;
 }
 
-#quick_login .links_left {
-    float: left;
-    margin-right: 130px;
+#quick_login > .pull-left {
     width: 170px;
 }
-#quick_login .links_right {
-    position: absolute;
-    right: 0;
+#quick_login > .pull-right {
+    width: 110px;
 }
 #quick_login .full_name {
     color: #FFFFFF;

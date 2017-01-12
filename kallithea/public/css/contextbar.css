@@ -187,6 +187,7 @@ ul#context-actions {
 
 ul.dropdown-menu li a:focus,
 nav.navbar #quick li:hover,
+#quick_login > .pull-right .list-group-item:hover,
 #revision-changer:hover,
 #context-pages li:hover,
 #context-actions li:hover,
@@ -232,6 +233,7 @@ nav.navbar #quick li a.menu_link:focus,
 }
 
 nav.navbar #quick li,
+nav.navbar #quick_login .pull-right,
 #content #context-pages li {
     border-right: 1px solid rgba(0,0,0,0.1);
     border-left: 1px solid rgba(255,255,255,0.1);
