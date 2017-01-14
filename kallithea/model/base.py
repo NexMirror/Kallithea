@@ -23,24 +23,6 @@ Original author and date, and relevant copyright and licensing information is be
 :author: marcink
 :copyright: (c) 2013 RhodeCode GmbH, and others.
 :license: GPLv3, see LICENSE.md for more details.
-
-
-:example:
-
-    .. code-block:: python
-
-       from paste.deploy import appconfig
-       from pylons import config
-       from sqlalchemy import engine_from_config
-       from kallithea.config.environment import load_environment
-
-       conf = appconfig('config:development.ini', relative_to = './../../')
-       load_environment(conf.global_conf, conf.local_conf)
-
-       engine = engine_from_config(config, 'sqlalchemy.')
-       init_model(engine)
-       # RUN YOUR CODE HERE
-
 """
 
 
