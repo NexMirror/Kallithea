@@ -42,11 +42,10 @@ from kallithea.lib.vcs.exceptions import ChangesetError, EmptyRepositoryError, \
     NodeDoesNotExistError
 from kallithea.config.conf import ALL_READMES, ALL_EXTS, LANGUAGES_EXTENSIONS_MAP
 from kallithea.model.db import Statistics, CacheInvalidation, User
-from kallithea.lib.utils import jsonify
 from kallithea.lib.utils2 import safe_str
 from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator, \
     NotAnonymous
-from kallithea.lib.base import BaseRepoController, render
+from kallithea.lib.base import BaseRepoController, render, jsonify
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.markup_renderer import MarkupRenderer
 from kallithea.lib.celerylib.tasks import get_commits_stats

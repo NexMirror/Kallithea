@@ -40,9 +40,8 @@ from kallithea.model.gist import GistModel
 from kallithea.model.meta import Session
 from kallithea.model.db import Gist, User
 from kallithea.lib import helpers as h
-from kallithea.lib.base import BaseController, render
+from kallithea.lib.base import BaseController, render, jsonify
 from kallithea.lib.auth import LoginRequired, NotAnonymous
-from kallithea.lib.utils import jsonify
 from kallithea.lib.utils2 import safe_int, safe_unicode, time_to_datetime
 from kallithea.lib.page import Page
 from sqlalchemy.sql.expression import or_

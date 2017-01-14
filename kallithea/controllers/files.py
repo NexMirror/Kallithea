@@ -37,7 +37,7 @@ from pylons.i18n.translation import _
 from webob.exc import HTTPFound
 
 from kallithea.config.routing import url
-from kallithea.lib.utils import jsonify, action_logger
+from kallithea.lib.utils import action_logger
 from kallithea.lib import diffs
 from kallithea.lib import helpers as h
 
@@ -45,7 +45,7 @@ from kallithea.lib.compat import OrderedDict
 from kallithea.lib.utils2 import convert_line_endings, detect_mode, safe_str, \
     str2bool, safe_int
 from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator
-from kallithea.lib.base import BaseRepoController, render
+from kallithea.lib.base import BaseRepoController, render, jsonify
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.conf import settings
 from kallithea.lib.vcs.exceptions import RepositoryError, \

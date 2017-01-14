@@ -29,9 +29,11 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 import datetime
+import decorator
 import logging
 import time
 import traceback
+import warnings
 
 import webob.exc
 import paste.httpexceptions
@@ -39,7 +41,7 @@ import paste.auth.basic
 import paste.httpheaders
 from webhelpers.pylonslib import secure_form
 
-from pylons import config, tmpl_context as c, request, session
+from pylons import config, tmpl_context as c, request, response, session
 from pylons.controllers import WSGIController
 from pylons.templating import render_mako as render  # don't remove this import
 from pylons.i18n.translation import _
@@ -51,6 +53,7 @@ from kallithea.lib.utils2 import str2bool, safe_unicode, AttributeDict, \
     safe_str, safe_int
 from kallithea.lib import auth_modules
 from kallithea.lib.auth import AuthUser, HasPermissionAnyMiddleware
+from kallithea.lib.compat import json
 from kallithea.lib.utils import get_repo_slug
 from kallithea.lib.exceptions import UserCreationError
 from kallithea.lib.vcs.exceptions import RepositoryError, EmptyRepositoryError, ChangesetDoesNotExistError
@@ -581,3 +584,28 @@ class WSGIResultCloseCallback(object):
         if hasattr(self._result, 'close'):
             self._result.close()
         self._close()
+
+
+@decorator.decorator
+def jsonify(func, *args, **kwargs):
+    """Action decorator that formats output for JSON
+
+    Given a function that will return content, this decorator will turn
+    the result into JSON, with a content-type of 'application/json' and
+    output it.
+    """
+    response.headers['Content-Type'] = 'application/json; charset=utf-8'
+    data = func(*args, **kwargs)
+    if isinstance(data, (list, tuple)):
+        # A JSON list response is syntactically valid JavaScript and can be
+        # loaded and executed as JavaScript by a malicious third-party site
+        # using <script>, which can lead to cross-site data leaks.
+        # JSON responses should therefore be scalars or objects (i.e. Python
+        # dicts), because a JSON object is a syntax error if intepreted as JS.
+        msg = "JSON responses with Array envelopes are susceptible to " \
+              "cross-site data leak attacks, see " \
+              "https://web.archive.org/web/20120519231904/http://wiki.pylonshq.com/display/pylonsfaq/Warnings"
+        warnings.warn(msg, Warning, 2)
+        log.warning(msg)
+    log.debug("Returning JSON wrapped action output")
+    return json.dumps(data, encoding='utf-8')

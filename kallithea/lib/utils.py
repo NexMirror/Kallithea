@@ -34,8 +34,6 @@ import paste
 import beaker
 import tarfile
 import shutil
-import decorator
-import warnings
 from os.path import abspath
 from os.path import dirname
 
@@ -704,35 +702,6 @@ def check_git_version():
                     'for the system to function properly. '
                     'Please upgrade to version %s or later.' % (ver, req_ver))
     return ver
-
-
-@decorator.decorator
-def jsonify(func, *args, **kwargs):
-    """Action decorator that formats output for JSON
-
-    Given a function that will return content, this decorator will turn
-    the result into JSON, with a content-type of 'application/json' and
-    output it.
-
-    """
-    from pylons.decorators.util import get_pylons
-    from kallithea.lib.compat import json
-    pylons = get_pylons(args)
-    pylons.response.headers['Content-Type'] = 'application/json; charset=utf-8'
-    data = func(*args, **kwargs)
-    if isinstance(data, (list, tuple)):
-        # A JSON list response is syntactically valid JavaScript and can be
-        # loaded and executed as JavaScript by a malicious third-party site
-        # using <script>, which can lead to cross-site data leaks.
-        # JSON responses should therefore be scalars or objects (i.e. Python
-        # dicts), because a JSON object is a syntax error if intepreted as JS.
-        msg = "JSON responses with Array envelopes are susceptible to " \
-              "cross-site data leak attacks, see " \
-              "https://web.archive.org/web/20120519231904/http://wiki.pylonshq.com/display/pylonsfaq/Warnings"
-        warnings.warn(msg, Warning, 2)
-        log.warning(msg)
-    log.debug("Returning JSON wrapped action output")
-    return json.dumps(data, encoding='utf-8')
 
 
 #===============================================================================

@@ -39,12 +39,12 @@ from kallithea.lib import helpers as h
 from kallithea.lib import diffs
 from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator, \
     NotAnonymous
-from kallithea.lib.base import BaseRepoController, render
+from kallithea.lib.base import BaseRepoController, render, jsonify
 from kallithea.lib.compat import json, OrderedDict
 from kallithea.lib.diffs import LimitedDiffContainer
 from kallithea.lib.exceptions import UserInvalidException
 from kallithea.lib.page import Page
-from kallithea.lib.utils import action_logger, jsonify
+from kallithea.lib.utils import action_logger
 from kallithea.lib.vcs.exceptions import EmptyRepositoryError, ChangesetDoesNotExistError
 from kallithea.lib.vcs.utils import safe_str
 from kallithea.lib.vcs.utils.hgcompat import unionrepo

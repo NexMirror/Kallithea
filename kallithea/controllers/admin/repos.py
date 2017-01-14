@@ -38,8 +38,8 @@ from kallithea.config.routing import url
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import LoginRequired, \
     HasRepoPermissionAnyDecorator, NotAnonymous, HasPermissionAny
-from kallithea.lib.base import BaseRepoController, render
-from kallithea.lib.utils import action_logger, jsonify
+from kallithea.lib.base import BaseRepoController, render, jsonify
+from kallithea.lib.utils import action_logger
 from kallithea.lib.vcs import RepositoryError
 from kallithea.model.meta import Session
 from kallithea.model.db import User, Repository, UserFollowing, RepoGroup, \
