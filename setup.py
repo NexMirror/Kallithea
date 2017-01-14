@@ -51,7 +51,7 @@ requirements = [
     "babel>=0.9.6,<=1.3",
     "python-dateutil>=1.5.0,<2.0.0",
     "markdown==2.2.1",
-    "docutils>=0.8.1,<=0.11",
+    "docutils>=0.8.1",
     "URLObject==2.3.4",
     "Routes==1.13",
     "dulwich>=0.14.1",
