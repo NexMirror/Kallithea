@@ -48,7 +48,7 @@ requirements = [
     "pygments>=1.5",
     "whoosh>=2.4.0,<=2.5.7",
     "celery>=3.1,<3.2",
-    "babel>=0.9.6,<=1.3",
+    "babel>=0.9.6,<2.4",
     "python-dateutil>=1.5.0,<2.0.0",
     "markdown==2.2.1",
     "docutils>=0.8.1",
