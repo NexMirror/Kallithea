@@ -7,6 +7,8 @@ from kallithea.lib import helpers as h
 from kallithea.model.user import UserModel
 from kallithea.model.meta import Session
 
+from kallithea.tests.test_context import test_context
+
 fixture = Fixture()
 
 
@@ -180,8 +182,9 @@ class TestMyAccountController(TestController):
 
         response.mustcontain('An email address must contain a single @')
         from kallithea.model import validators
-        msg = validators.ValidUsername(edit=False, old_data={}) \
-                ._messages['username_exists']
+        with test_context(self.app):
+            msg = validators.ValidUsername(edit=False, old_data={}) \
+                    ._messages['username_exists']
         msg = h.html_escape(msg % {'username': TEST_USER_ADMIN_LOGIN})
         response.mustcontain(msg)
 

@@ -5,6 +5,9 @@ from kallithea.model.user import UserModel
 from kallithea.model.meta import Session
 from kallithea.tests.base import *
 
+from kallithea.tests.test_context import test_context
+
+
 class TestAdminPermissionsController(TestController):
 
     def test_index(self):
@@ -42,9 +45,10 @@ class TestAdminPermissionsController(TestController):
 
         ## first add
         new_ip = '127.0.0.0/24'
-        user_model = UserModel()
-        ip_obj = user_model.add_extra_ip(default_user_id, new_ip)
-        Session().commit()
+        with test_context(self.app):
+            user_model = UserModel()
+            ip_obj = user_model.add_extra_ip(default_user_id, new_ip)
+            Session().commit()
 
         ## double check that add worked
         # IP permissions are cached, need to invalidate this cache explicitly

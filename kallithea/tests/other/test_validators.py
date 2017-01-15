@@ -15,6 +15,7 @@ from kallithea.tests.fixture import Fixture
 fixture = Fixture()
 
 
+@pytest.mark.usefixtures("test_context_fixture") # apply fixture for all test methods
 class TestRepoGroups(TestController):
 
     def teardown_method(self, method):

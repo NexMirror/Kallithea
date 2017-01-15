@@ -111,7 +111,8 @@ class TestAdminUsersController(TestController):
              'email': email,
              '_authentication_token': self.authentication_token()})
 
-        msg = validators.ValidUsername(False, {})._messages['system_invalid_username']
+        with test_context(self.app):
+            msg = validators.ValidUsername(False, {})._messages['system_invalid_username']
         msg = h.html_escape(msg % {'username': 'new_user'})
         response.mustcontain("""<span class="error-message">%s</span>""" % msg)
         response.mustcontain("""<span class="error-message">Please enter a value</span>""")
@@ -431,8 +432,9 @@ class TestAdminUsersController(TestController):
         user_id = user.user_id
         ip = '127.0.0.1/32'
         ip_range = '127.0.0.1 - 127.0.0.1'
-        new_ip = UserModel().add_extra_ip(user_id, ip)
-        Session().commit()
+        with test_context(self.app):
+            new_ip = UserModel().add_extra_ip(user_id, ip)
+            Session().commit()
         new_ip_id = new_ip.ip_id
 
         response = self.app.get(url('edit_user_ips', id=user_id))
@@ -517,20 +519,19 @@ class TestAdminUsersController(TestController):
 class TestAdminUsersController_unittest(TestController):
     """ Unit tests for the users controller """
 
-    def test_get_user_or_raise_if_default(self, monkeypatch):
-        with test_context(self.app):
-            # flash complains about an non-existing session
-            def flash_mock(*args, **kwargs):
-                pass
-            monkeypatch.setattr(h, 'flash', flash_mock)
+    def test_get_user_or_raise_if_default(self, monkeypatch, test_context_fixture):
+        # flash complains about an non-existing session
+        def flash_mock(*args, **kwargs):
+            pass
+        monkeypatch.setattr(h, 'flash', flash_mock)
 
-            u = UsersController()
-            # a regular user should work correctly
-            user = User.get_by_username(TEST_USER_REGULAR_LOGIN)
-            assert u._get_user_or_raise_if_default(user.user_id) == user
-            # the default user should raise
-            with pytest.raises(HTTPNotFound):
-                u._get_user_or_raise_if_default(User.get_default_user().user_id)
+        u = UsersController()
+        # a regular user should work correctly
+        user = User.get_by_username(TEST_USER_REGULAR_LOGIN)
+        assert u._get_user_or_raise_if_default(user.user_id) == user
+        # the default user should raise
+        with pytest.raises(HTTPNotFound):
+            u._get_user_or_raise_if_default(User.get_default_user().user_id)
 
 
 class TestAdminUsersControllerForDefaultUser(TestController):

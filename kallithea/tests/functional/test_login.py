@@ -16,6 +16,8 @@ from kallithea.model.db import User, Notification
 from kallithea.model.meta import Session
 from kallithea.model.user import UserModel
 
+from kallithea.tests.test_context import test_context
+
 fixture = Fixture()
 
 
@@ -219,7 +221,8 @@ class TestLoginController(TestController):
                                              'firstname': 'test',
                                              'lastname': 'test'})
 
-        msg = validators.ValidUsername()._messages['username_exists']
+        with test_context(self.app):
+            msg = validators.ValidUsername()._messages['username_exists']
         msg = h.html_escape(msg % {'username': uname})
         response.mustcontain(msg)
 
@@ -232,7 +235,8 @@ class TestLoginController(TestController):
                                              'firstname': 'test',
                                              'lastname': 'test'})
 
-        msg = validators.UniqSystemEmail()()._messages['email_taken']
+        with test_context(self.app):
+            msg = validators.UniqSystemEmail()()._messages['email_taken']
         response.mustcontain(msg)
 
     def test_register_err_same_email_case_sensitive(self):
@@ -243,7 +247,8 @@ class TestLoginController(TestController):
                                              'email': TEST_USER_ADMIN_EMAIL.title(),
                                              'firstname': 'test',
                                              'lastname': 'test'})
-        msg = validators.UniqSystemEmail()()._messages['email_taken']
+        with test_context(self.app):
+            msg = validators.UniqSystemEmail()()._messages['email_taken']
         response.mustcontain(msg)
 
     def test_register_err_wrong_data(self):
@@ -284,7 +289,8 @@ class TestLoginController(TestController):
                                              'lastname': 'test'})
 
         response.mustcontain('An email address must contain a single @')
-        msg = validators.ValidUsername()._messages['username_exists']
+        with test_context(self.app):
+            msg = validators.ValidUsername()._messages['username_exists']
         msg = h.html_escape(msg % {'username': usr})
         response.mustcontain(msg)
 
@@ -297,7 +303,8 @@ class TestLoginController(TestController):
                                          'firstname': 'test',
                                          'lastname': 'test'})
 
-        msg = validators.ValidPassword()._messages['invalid_password']
+        with test_context(self.app):
+            msg = validators.ValidPassword()._messages['invalid_password']
         response.mustcontain(msg)
 
     def test_register_password_mismatch(self):
@@ -308,7 +315,8 @@ class TestLoginController(TestController):
                                              'email': 'goodmailm@test.plxa',
                                              'firstname': 'test',
                                              'lastname': 'test'})
-        msg = validators.ValidPasswordsMatch('password', 'password_confirmation')._messages['password_mismatch']
+        with test_context(self.app):
+            msg = validators.ValidPasswordsMatch('password', 'password_confirmation')._messages['password_mismatch']
         response.mustcontain(msg)
 
     def test_register_ok(self):
