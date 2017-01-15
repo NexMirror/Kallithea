@@ -208,13 +208,8 @@ class TestPullrequestsController(TestController):
                                  status=400)
         response.mustcontain('Invalid reviewer &#34;%s&#34; specified' % invalid_user_id)
 
+@pytest.mark.usefixtures("test_context_fixture") # apply fixture for all test methods
 class TestPullrequestsGetRepoRefs(TestController):
-
-    # this tests need test_context in addition to app_fixture
-    @pytest.fixture(autouse=True)
-    def app_test_context_fixture(self, app_fixture):
-        with test_context(self.app):
-            yield
 
     def setup_method(self, method):
         self.repo_name = u'main'

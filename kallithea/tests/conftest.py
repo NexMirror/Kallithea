@@ -12,6 +12,7 @@ from kallithea.model.meta import Session
 from kallithea.model.db import Setting, User, UserIpMap
 from kallithea.tests.base import invalidate_all_caches, TEST_USER_REGULAR_LOGIN
 
+from kallithea.tests.test_context import test_context
 
 def pytest_configure():
     path = os.getcwd()
@@ -94,3 +95,30 @@ def auto_clear_ip_permissions():
 
     # IP permissions are cached, need to invalidate this cache explicitly
     invalidate_all_caches()
+
+@pytest.fixture
+def test_context_fixture(app_fixture):
+    """
+    Encompass the entire test using this fixture in a test_context,
+    making sure that certain functionality still works even if no call to
+    self.app.get/post has been made.
+    The typical error message indicating you need a test_context is:
+        TypeError: No object (name: context) has been registered for this thread
+
+    The standard way to fix this is simply using the test_context context
+    manager directly inside your test:
+        with test_context(self.app):
+            <actions>
+    but if test setup code (xUnit-style or pytest fixtures) also needs to be
+    executed inside the test context, that method is not possible.
+    Even if there is no such setup code, the fixture may reduce code complexity
+    if the entire test needs to run inside a test context.
+
+    To apply this fixture (like any other fixture) to all test methods of a
+    class, use the following class decorator:
+        @pytest.mark.usefixtures("test_context_fixture")
+        class TestFoo(TestController):
+            ...
+    """
+    with test_context(app_fixture):
+        yield
