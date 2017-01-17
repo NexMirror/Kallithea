@@ -30,12 +30,7 @@ import re
 import logging
 import datetime
 import traceback
-import paste
 import beaker
-import tarfile
-import shutil
-from os.path import abspath
-from os.path import dirname
 
 from webhelpers.text import collapse, remove_formatting, strip_tags
 from beaker.cache import _cache_decorate
@@ -582,90 +577,8 @@ def load_rcextensions(root_path):
 
 
 #==============================================================================
-# TEST FUNCTIONS AND CREATORS
+# MISC
 #==============================================================================
-def create_test_index(repo_location, config, full_index):
-    """
-    Makes default test index
-
-    :param config: test config
-    :param full_index:
-    """
-
-    from kallithea.lib.indexers.daemon import WhooshIndexingDaemon
-    from kallithea.lib.pidlock import DaemonLock, LockHeld
-
-    index_location = os.path.join(config['app_conf']['index_dir'])
-    if not os.path.exists(index_location):
-        os.makedirs(index_location)
-
-    try:
-        l = DaemonLock(file_=os.path.join(dirname(index_location), 'make_index.lock'))
-        WhooshIndexingDaemon(index_location=index_location,
-                             repo_location=repo_location) \
-            .run(full_index=full_index)
-        l.release()
-    except LockHeld:
-        pass
-
-
-def create_test_env(repos_test_path, config):
-    """
-    Makes a fresh database and
-    install test repository into tmp dir
-    """
-    from kallithea.lib.db_manage import DbManage
-    from kallithea.tests.base import HG_REPO, GIT_REPO, TESTS_TMP_PATH
-
-    # PART ONE create db
-    dbconf = config['sqlalchemy.url']
-    log.debug('making test db %s', dbconf)
-
-    # create test dir if it doesn't exist
-    if not os.path.isdir(repos_test_path):
-        log.debug('Creating testdir %s', repos_test_path)
-        os.makedirs(repos_test_path)
-
-    dbmanage = DbManage(log_sql=True, dbconf=dbconf, root=config['here'],
-                        tests=True)
-    dbmanage.create_tables(override=True)
-    # for tests dynamically set new root paths based on generated content
-    dbmanage.create_settings(dbmanage.config_prompt(repos_test_path))
-    dbmanage.create_default_user()
-    dbmanage.admin_prompt()
-    dbmanage.create_permissions()
-    dbmanage.populate_default_permissions()
-    meta.Session().commit()
-    # PART TWO make test repo
-    log.debug('making test vcs repositories')
-
-    idx_path = config['app_conf']['index_dir']
-    data_path = config['app_conf']['cache_dir']
-
-    #clean index and data
-    if idx_path and os.path.exists(idx_path):
-        log.debug('remove %s', idx_path)
-        shutil.rmtree(idx_path)
-
-    if data_path and os.path.exists(data_path):
-        log.debug('remove %s', data_path)
-        shutil.rmtree(data_path)
-
-    #CREATE DEFAULT TEST REPOS
-    cur_dir = dirname(dirname(abspath(__file__)))
-    tar = tarfile.open(os.path.join(cur_dir, 'tests', 'fixtures', "vcs_test_hg.tar.gz"))
-    tar.extractall(os.path.join(TESTS_TMP_PATH, HG_REPO))
-    tar.close()
-
-    cur_dir = dirname(dirname(abspath(__file__)))
-    tar = tarfile.open(os.path.join(cur_dir, 'tests', 'fixtures', "vcs_test_git.tar.gz"))
-    tar.extractall(os.path.join(TESTS_TMP_PATH, GIT_REPO))
-    tar.close()
-
-    #LOAD VCS test stuff
-    from kallithea.tests.vcs import setup_package
-    setup_package()
-
 
 def check_git_version():
     """

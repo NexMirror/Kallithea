@@ -15,9 +15,13 @@
 """
 Helpers for fixture generation
 """
+
+import logging
 import os
-import time
-from kallithea.tests.base import *
+import shutil
+import tarfile
+from os.path import dirname
+
 from kallithea.model.db import Repository, User, RepoGroup, UserGroup, Gist
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
@@ -26,8 +30,12 @@ from kallithea.model.repo_group import RepoGroupModel
 from kallithea.model.user_group import UserGroupModel
 from kallithea.model.gist import GistModel
 from kallithea.model.scm import ScmModel
+from kallithea.lib.db_manage import DbManage
 from kallithea.lib.vcs.backends.base import EmptyChangeset
-from os.path import dirname
+from kallithea.tests.base import invalidate_all_caches, GIT_REPO, HG_REPO, TESTS_TMP_PATH, TEST_USER_ADMIN_LOGIN
+
+
+log = logging.getLogger(__name__)
 
 FIXTURES = os.path.join(dirname(dirname(os.path.abspath(__file__))), 'tests', 'fixtures')
 
@@ -295,3 +303,83 @@ class Fixture(object):
                 f_path=filename
             )
         return cs
+
+
+#==============================================================================
+# Global test environment setup
+#==============================================================================
+
+def create_test_env(repos_test_path, config):
+    """
+    Makes a fresh database and
+    install test repository into tmp dir
+    """
+
+    # PART ONE create db
+    dbconf = config['sqlalchemy.url']
+    log.debug('making test db %s', dbconf)
+
+    # create test dir if it doesn't exist
+    if not os.path.isdir(repos_test_path):
+        log.debug('Creating testdir %s', repos_test_path)
+        os.makedirs(repos_test_path)
+
+    dbmanage = DbManage(log_sql=True, dbconf=dbconf, root=config['here'],
+                        tests=True)
+    dbmanage.create_tables(override=True)
+    # for tests dynamically set new root paths based on generated content
+    dbmanage.create_settings(dbmanage.config_prompt(repos_test_path))
+    dbmanage.create_default_user()
+    dbmanage.admin_prompt()
+    dbmanage.create_permissions()
+    dbmanage.populate_default_permissions()
+    Session().commit()
+    # PART TWO make test repo
+    log.debug('making test vcs repositories')
+
+    idx_path = config['app_conf']['index_dir']
+    data_path = config['app_conf']['cache_dir']
+
+    #clean index and data
+    if idx_path and os.path.exists(idx_path):
+        log.debug('remove %s', idx_path)
+        shutil.rmtree(idx_path)
+
+    if data_path and os.path.exists(data_path):
+        log.debug('remove %s', data_path)
+        shutil.rmtree(data_path)
+
+    #CREATE DEFAULT TEST REPOS
+    tar = tarfile.open(os.path.join(FIXTURES, 'vcs_test_hg.tar.gz'))
+    tar.extractall(os.path.join(TESTS_TMP_PATH, HG_REPO))
+    tar.close()
+
+    tar = tarfile.open(os.path.join(FIXTURES, 'vcs_test_git.tar.gz'))
+    tar.extractall(os.path.join(TESTS_TMP_PATH, GIT_REPO))
+    tar.close()
+
+    #LOAD VCS test stuff
+    from kallithea.tests.vcs import setup_package
+    setup_package()
+
+
+def create_test_index(repo_location, config, full_index):
+    """
+    Makes default test index
+    """
+
+    from kallithea.lib.indexers.daemon import WhooshIndexingDaemon
+    from kallithea.lib.pidlock import DaemonLock, LockHeld
+
+    index_location = os.path.join(config['app_conf']['index_dir'])
+    if not os.path.exists(index_location):
+        os.makedirs(index_location)
+
+    try:
+        l = DaemonLock(file_=os.path.join(dirname(index_location), 'make_index.lock'))
+        WhooshIndexingDaemon(index_location=index_location,
+                             repo_location=repo_location) \
+            .run(full_index=full_index)
+        l.release()
+    except LockHeld:
+        pass
