@@ -278,9 +278,10 @@ nav.navbar .navbar-brand img {
     margin-right: 5px;
 }
 
+nav.navbar .navbar-brand:hover,
 nav.navbar .navbar-brand {
     font-size: 20px;
-    color: white;
+    color: white !important;
     float: left;
     height: 44px;
     line-height: 44px;
