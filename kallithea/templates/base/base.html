@@ -406,7 +406,7 @@
                 <b class="full_name">${c.authuser.full_name_or_username}</b>
                 <div class="email">${c.authuser.email}</div>
             </div>
-            <div class="pull-right list-group text-right">
+            <div id="quick_login_h" class="pull-right list-group text-right">
               <a class="list-group-item" href="${h.url('notifications')}">${_('Notifications')}: ${c.unread_notifications}</a>
               ${h.link_to(_('My Account'),h.url('my_account'),class_='list-group-item')}
               %if not c.authuser.is_external_auth:
