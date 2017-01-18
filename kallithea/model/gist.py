@@ -47,14 +47,6 @@ GIST_METADATA_FILE = '.rc_gist_metadata'
 
 class GistModel(BaseModel):
 
-    def _get_gist(self, gist):
-        """
-        Helper method to get gist by ID, or gist_access_id as a fallback
-
-        :param gist: GistID, gist_access_id, or Gist instance
-        """
-        return Gist.guess_instance(gist)
-
     def __delete_gist(self, gist):
         """
         removes gist from filesystem
@@ -85,7 +77,7 @@ class GistModel(BaseModel):
             f.write(json.dumps(metadata))
 
     def get_gist(self, gist):
-        return self._get_gist(gist)
+        return Gist.guess_instance(gist)
 
     def get_gist_files(self, gist_access_id, revision=None):
         """
@@ -171,7 +163,7 @@ class GistModel(BaseModel):
         return gist
 
     def delete(self, gist, fs_remove=True):
-        gist = self._get_gist(gist)
+        gist = Gist.guess_instance(gist)
         try:
             self.sa.delete(gist)
             if fs_remove:
@@ -184,7 +176,7 @@ class GistModel(BaseModel):
 
     def update(self, gist, description, owner, gist_mapping, gist_type,
                lifetime):
-        gist = self._get_gist(gist)
+        gist = Gist.guess_instance(gist)
         gist_repo = gist.scm_instance
 
         lifetime = safe_int(lifetime, -1)
