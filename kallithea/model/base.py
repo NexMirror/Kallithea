@@ -67,8 +67,7 @@ class BaseModel(object):
         :param user: UserID, username, or User instance
         """
         from kallithea.model.db import User
-        return User.guess_instance(user,
-                                  callback=User.get_by_username)
+        return User.guess_instance(user)
 
     def _get_repo(self, repository):
         """
@@ -77,8 +76,7 @@ class BaseModel(object):
         :param repository: RepoID, repository name or Repository Instance
         """
         from kallithea.model.db import Repository
-        return Repository.guess_instance(repository,
-                                  callback=Repository.get_by_repo_name)
+        return Repository.guess_instance(repository)
 
     def _get_perm(self, permission):
         """
@@ -87,5 +85,4 @@ class BaseModel(object):
         :param permission: PermissionID, permission_name or Permission instance
         """
         from kallithea.model.db import Permission
-        return Permission.guess_instance(permission,
-                                  callback=Permission.get_by_key)
+        return Permission.guess_instance(permission)

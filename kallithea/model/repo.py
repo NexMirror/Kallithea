@@ -59,12 +59,10 @@ class RepoModel(BaseModel):
     URL_SEPARATOR = Repository.url_sep()
 
     def _get_user_group(self, users_group):
-        return UserGroup.guess_instance(users_group,
-                                  callback=UserGroup.get_by_group_name)
+        return UserGroup.guess_instance(users_group)
 
     def _get_repo_group(self, repo_group):
-        return RepoGroup.guess_instance(repo_group,
-                                  callback=RepoGroup.get_by_group_name)
+        return RepoGroup.guess_instance(repo_group)
 
     def _create_default_perms(self, repository, private):
         # create default permission

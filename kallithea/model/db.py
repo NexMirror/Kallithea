@@ -560,6 +560,10 @@ class User(Base, BaseDbModel):
                                       self.user_id, self.username)
 
     @classmethod
+    def guess_instance(cls, value):
+        return super(User, cls).guess_instance(value, User.get_by_username)
+
+    @classmethod
     def get_or_404(cls, id_, allow_default=True):
         '''
         Overridden version of BaseDbModel.get_or_404, with an extra check on
@@ -880,6 +884,10 @@ class UserGroup(Base, BaseDbModel):
                                       self.users_group_name)
 
     @classmethod
+    def guess_instance(cls, value):
+        return super(UserGroup, cls).guess_instance(value, UserGroup.get_by_group_name)
+
+    @classmethod
     def get_by_group_name(cls, group_name, cache=False,
                           case_insensitive=False):
         if case_insensitive:
@@ -1116,6 +1124,10 @@ class Repository(Base, BaseDbModel):
         :param repo_name:
         """
         return cls.url_sep().join(repo_name.split(os.sep))
+
+    @classmethod
+    def guess_instance(cls, value):
+        return super(Repository, cls).guess_instance(value, Repository.get_by_repo_name)
 
     @classmethod
     def get_by_repo_name(cls, repo_name):
@@ -1562,6 +1574,10 @@ class RepoGroup(Base, BaseDbModel):
         return URL_SEP
 
     @classmethod
+    def guess_instance(cls, value):
+        return super(RepoGroup, cls).guess_instance(value, RepoGroup.get_by_group_name)
+
+    @classmethod
     def get_by_group_name(cls, group_name, cache=False, case_insensitive=False):
         group_name = group_name.rstrip('/')
         if case_insensitive:
@@ -1776,6 +1792,10 @@ class Permission(Base, BaseDbModel):
         return u"<%s('%s:%s')>" % (
             self.__class__.__name__, self.permission_id, self.permission_name
         )
+
+    @classmethod
+    def guess_instance(cls, value):
+        return super(Permission, cls).guess_instance(value, Permission.get_by_key)
 
     @classmethod
     def get_by_key(cls, key):
@@ -2536,6 +2556,10 @@ class Gist(Base, BaseDbModel):
 
     def __repr__(self):
         return '<Gist:[%s]%s>' % (self.gist_type, self.gist_access_id)
+
+    @classmethod
+    def guess_instance(cls, value):
+        return super(Gist, cls).guess_instance(value, Gist.get_by_access_id)
 
     @classmethod
     def get_or_404(cls, id_):

@@ -44,12 +44,10 @@ log = logging.getLogger(__name__)
 class RepoGroupModel(BaseModel):
 
     def _get_user_group(self, users_group):
-        return UserGroup.guess_instance(users_group,
-                                  callback=UserGroup.get_by_group_name)
+        return UserGroup.guess_instance(users_group)
 
     def _get_repo_group(self, repo_group):
-        return RepoGroup.guess_instance(repo_group,
-                                  callback=RepoGroup.get_by_group_name)
+        return RepoGroup.guess_instance(repo_group)
 
     @LazyProperty
     def repos_path(self):
