@@ -310,18 +310,18 @@ class ScmModel(BaseModel):
         return f is not None
 
     def get_followers(self, repo):
-        repo = self._get_repo(repo)
+        repo = Repository.guess_instance(repo)
 
         return self.sa.query(UserFollowing) \
                 .filter(UserFollowing.follows_repository == repo).count()
 
     def get_forks(self, repo):
-        repo = self._get_repo(repo)
+        repo = Repository.guess_instance(repo)
         return self.sa.query(Repository) \
                 .filter(Repository.fork == repo).count()
 
     def get_pull_requests(self, repo):
-        repo = self._get_repo(repo)
+        repo = Repository.guess_instance(repo)
         return self.sa.query(PullRequest) \
                 .filter(PullRequest.other_repo == repo) \
                 .filter(PullRequest.status != PullRequest.STATUS_CLOSED).count()

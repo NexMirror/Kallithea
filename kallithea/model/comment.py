@@ -34,7 +34,7 @@ from kallithea.lib.utils2 import extract_mentioned_users, safe_unicode
 from kallithea.lib import helpers as h
 from kallithea.model.base import BaseModel
 from kallithea.model.db import ChangesetComment, User, \
-    Notification, PullRequest
+    Notification, PullRequest, Repository
 from kallithea.model.notification import NotificationModel
 from kallithea.model.meta import Session
 
@@ -168,7 +168,7 @@ class ChangesetCommentsModel(BaseModel):
             log.warning('Missing text for comment, skipping...')
             return None
 
-        repo = self._get_repo(repo)
+        repo = Repository.guess_instance(repo)
         author = User.guess_instance(author)
         comment = ChangesetComment()
         comment.repo = repo

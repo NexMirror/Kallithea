@@ -102,7 +102,7 @@ class RepoModel(BaseModel):
         return repo.scalar()
 
     def get_repo(self, repository):
-        return self._get_repo(repository)
+        return Repository.guess_instance(repository)
 
     def get_by_repo_name(self, repo_name, cache=False):
         repo = self.sa.query(Repository) \
@@ -305,7 +305,7 @@ class RepoModel(BaseModel):
 
     def update(self, repo, **kwargs):
         try:
-            cur_repo = self._get_repo(repo)
+            cur_repo = Repository.guess_instance(repo)
             org_repo_name = cur_repo.repo_name
             if 'owner' in kwargs:
                 cur_repo.owner = User.get_by_username(kwargs['owner'])
@@ -369,7 +369,7 @@ class RepoModel(BaseModel):
         from kallithea.model.scm import ScmModel
 
         owner = User.guess_instance(owner)
-        fork_of = self._get_repo(fork_of)
+        fork_of = Repository.guess_instance(fork_of)
         repo_group = self._get_repo_group(repo_group)
         try:
             repo_name = safe_unicode(repo_name)
@@ -523,7 +523,7 @@ class RepoModel(BaseModel):
         """
         if not cur_user:
             cur_user = getattr(get_current_authuser(), 'username', None)
-        repo = self._get_repo(repo)
+        repo = Repository.guess_instance(repo)
         if repo is not None:
             if forks == 'detach':
                 for r in repo.forks:
@@ -558,7 +558,7 @@ class RepoModel(BaseModel):
         :param perm: Instance of Permission, or permission_name
         """
         user = User.guess_instance(user)
-        repo = self._get_repo(repo)
+        repo = Repository.guess_instance(repo)
         permission = self._get_perm(perm)
 
         # check if we have that permission already
@@ -585,7 +585,7 @@ class RepoModel(BaseModel):
         """
 
         user = User.guess_instance(user)
-        repo = self._get_repo(repo)
+        repo = Repository.guess_instance(repo)
 
         obj = self.sa.query(UserRepoToPerm) \
             .filter(UserRepoToPerm.repository == repo) \
@@ -605,7 +605,7 @@ class RepoModel(BaseModel):
             or user group name
         :param perm: Instance of Permission, or permission_name
         """
-        repo = self._get_repo(repo)
+        repo = Repository.guess_instance(repo)
         group_name = self._get_user_group(group_name)
         permission = self._get_perm(perm)
 
@@ -634,7 +634,7 @@ class RepoModel(BaseModel):
         :param group_name: Instance of UserGroup, users_group_id,
             or user group name
         """
-        repo = self._get_repo(repo)
+        repo = Repository.guess_instance(repo)
         group_name = self._get_user_group(group_name)
 
         obj = self.sa.query(UserGroupRepoToPerm) \
@@ -651,7 +651,7 @@ class RepoModel(BaseModel):
 
         :param repo_name:
         """
-        repo = self._get_repo(repo_name)
+        repo = Repository.guess_instance(repo_name)
         try:
             obj = self.sa.query(Statistics) \
                 .filter(Statistics.repository == repo).scalar()

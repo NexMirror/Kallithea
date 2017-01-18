@@ -49,7 +49,7 @@ from kallithea.lib.vcs.exceptions import EmptyRepositoryError, ChangesetDoesNotE
 from kallithea.lib.vcs.utils import safe_str
 from kallithea.lib.vcs.utils.hgcompat import unionrepo
 from kallithea.model.db import PullRequest, ChangesetStatus, ChangesetComment, \
-    PullRequestReviewer, User
+    PullRequestReviewer, Repository, User
 from kallithea.model.pull_request import PullRequestModel
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
@@ -323,7 +323,7 @@ class PullrequestsController(BaseRepoController):
         # heads up: org and other might seem backward here ...
         org_repo_name = _form['org_repo']
         org_ref = _form['org_ref'] # will have merge_rev as rev but symbolic name
-        org_repo = RepoModel()._get_repo(org_repo_name)
+        org_repo = Repository.guess_instance(org_repo_name)
         (org_ref_type,
          org_ref_name,
          org_rev) = org_ref.split(':')
@@ -334,7 +334,7 @@ class PullrequestsController(BaseRepoController):
 
         other_repo_name = _form['other_repo']
         other_ref = _form['other_ref'] # will have symbolic name and head revision
-        other_repo = RepoModel()._get_repo(other_repo_name)
+        other_repo = Repository.guess_instance(other_repo_name)
         (other_ref_type,
          other_ref_name,
          other_rev) = other_ref.split(':')

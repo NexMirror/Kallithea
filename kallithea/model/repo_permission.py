@@ -26,7 +26,7 @@ Original author and date, and relevant copyright and licensing information is be
 import logging
 from kallithea.model.base import BaseModel
 from kallithea.model.db import User, UserRepoToPerm, UserGroupRepoToPerm, \
-    Permission
+    Permission, Repository
 
 log = logging.getLogger(__name__)
 
@@ -34,7 +34,7 @@ log = logging.getLogger(__name__)
 class RepositoryPermissionModel(BaseModel):
 
     def get_user_permission(self, repository, user):
-        repository = self._get_repo(repository)
+        repository = Repository.guess_instance(repository)
         user = User.guess_instance(user)
 
         return UserRepoToPerm.query() \

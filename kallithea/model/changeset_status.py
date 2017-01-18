@@ -29,7 +29,7 @@ import logging
 from sqlalchemy.orm import joinedload
 
 from kallithea.model.base import BaseModel
-from kallithea.model.db import ChangesetStatus, PullRequest, User
+from kallithea.model.db import ChangesetStatus, PullRequest, Repository, User
 from kallithea.lib.exceptions import StatusChangeOnClosedPullRequestError
 
 log = logging.getLogger(__name__)
@@ -39,7 +39,7 @@ class ChangesetStatusModel(BaseModel):
 
     def _get_status_query(self, repo, revision, pull_request,
                           with_revisions=False):
-        repo = self._get_repo(repo)
+        repo = Repository.guess_instance(repo)
 
         q = ChangesetStatus.query() \
             .filter(ChangesetStatus.repo == repo)
@@ -149,7 +149,7 @@ class ChangesetStatusModel(BaseModel):
             if last status was for pull request and it's closed. We shouldn't
             mess around this manually
         """
-        repo = self._get_repo(repo)
+        repo = Repository.guess_instance(repo)
 
         q = ChangesetStatus.query()
         if revision is not None:
@@ -185,7 +185,7 @@ class ChangesetStatusModel(BaseModel):
             new_status = ChangesetStatus()
             new_status.version = 0 # default
             new_status.author = User.guess_instance(user)
-            new_status.repo = self._get_repo(repo)
+            new_status.repo = Repository.guess_instance(repo)
             new_status.status = status
             new_status.comment = comment
             new_status.revision = rev

@@ -60,15 +60,6 @@ class BaseModel(object):
         else:
             self.sa = meta.Session()
 
-    def _get_repo(self, repository):
-        """
-        Helper method to get repository by ID, or repository name
-
-        :param repository: RepoID, repository name or Repository Instance
-        """
-        from kallithea.model.db import Repository
-        return Repository.guess_instance(repository)
-
     def _get_perm(self, permission):
         """
         Helper method to get permission by ID, or permission name

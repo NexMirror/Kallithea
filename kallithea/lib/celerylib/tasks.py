@@ -434,7 +434,7 @@ def create_repo_fork(form_data, cur_user):
     copy_fork_permissions = form_data.get('copy_permissions')
 
     try:
-        fork_of = RepoModel(DBS)._get_repo(form_data.get('fork_parent_id'))
+        fork_of = Repository.guess_instance(form_data.get('fork_parent_id'))
 
         RepoModel(DBS)._create_repo(
             repo_name=repo_name_full,
