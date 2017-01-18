@@ -338,7 +338,7 @@ class RepoGroupModel(BaseModel):
     def add_permission(self, repo_group, obj, obj_type, perm, recursive):
         from kallithea.model.repo import RepoModel
         repo_group = self._get_repo_group(repo_group)
-        perm = self._get_perm(perm)
+        perm = Permission.guess_instance(perm)
 
         for el in repo_group.recursive_groups_and_repos():
             # iterated obj is an instance of a repos group or repository in
@@ -448,7 +448,7 @@ class RepoGroupModel(BaseModel):
 
         repo_group = self._get_repo_group(repo_group)
         user = User.guess_instance(user)
-        permission = self._get_perm(perm)
+        permission = Permission.guess_instance(perm)
 
         # check if we have that permission already
         obj = self.sa.query(UserRepoGroupToPerm) \
@@ -498,7 +498,7 @@ class RepoGroupModel(BaseModel):
         """
         repo_group = self._get_repo_group(repo_group)
         group_name = self._get_user_group(group_name)
-        permission = self._get_perm(perm)
+        permission = Permission.guess_instance(perm)
 
         # check if we have that permission already
         obj = self.sa.query(UserGroupRepoGroupToPerm) \

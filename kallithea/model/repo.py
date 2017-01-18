@@ -559,7 +559,7 @@ class RepoModel(BaseModel):
         """
         user = User.guess_instance(user)
         repo = Repository.guess_instance(repo)
-        permission = self._get_perm(perm)
+        permission = Permission.guess_instance(perm)
 
         # check if we have that permission already
         obj = self.sa.query(UserRepoToPerm) \
@@ -607,7 +607,7 @@ class RepoModel(BaseModel):
         """
         repo = Repository.guess_instance(repo)
         group_name = self._get_user_group(group_name)
-        permission = self._get_perm(perm)
+        permission = Permission.guess_instance(perm)
 
         # check if we have that permission already
         obj = self.sa.query(UserGroupRepoToPerm) \

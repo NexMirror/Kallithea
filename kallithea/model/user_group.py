@@ -220,7 +220,7 @@ class UserGroupModel(BaseModel):
 
     def has_perm(self, user_group, perm):
         user_group = self._get_user_group(user_group)
-        perm = self._get_perm(perm)
+        perm = Permission.guess_instance(perm)
 
         return UserGroupToPerm.query() \
             .filter(UserGroupToPerm.users_group == user_group) \
@@ -228,7 +228,7 @@ class UserGroupModel(BaseModel):
 
     def grant_perm(self, user_group, perm):
         user_group = self._get_user_group(user_group)
-        perm = self._get_perm(perm)
+        perm = Permission.guess_instance(perm)
 
         # if this permission is already granted skip it
         _perm = UserGroupToPerm.query() \
@@ -246,7 +246,7 @@ class UserGroupModel(BaseModel):
 
     def revoke_perm(self, user_group, perm):
         user_group = self._get_user_group(user_group)
-        perm = self._get_perm(perm)
+        perm = Permission.guess_instance(perm)
 
         obj = UserGroupToPerm.query() \
             .filter(UserGroupToPerm.users_group == user_group) \
@@ -267,7 +267,7 @@ class UserGroupModel(BaseModel):
 
         user_group = self._get_user_group(user_group)
         user = User.guess_instance(user)
-        permission = self._get_perm(perm)
+        permission = Permission.guess_instance(perm)
 
         # check if we have that permission already
         obj = self.sa.query(UserUserGroupToPerm) \
@@ -314,7 +314,7 @@ class UserGroupModel(BaseModel):
         """
         target_user_group = self._get_user_group(target_user_group)
         user_group = self._get_user_group(user_group)
-        permission = self._get_perm(perm)
+        permission = Permission.guess_instance(perm)
         # forbid assigning same user group to itself
         if target_user_group == user_group:
             raise RepoGroupAssignmentError('target repo:%s cannot be '

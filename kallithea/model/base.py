@@ -59,12 +59,3 @@ class BaseModel(object):
             self.sa = sa
         else:
             self.sa = meta.Session()
-
-    def _get_perm(self, permission):
-        """
-        Helper method to get permission by ID, or permission name
-
-        :param permission: PermissionID, permission_name or Permission instance
-        """
-        from kallithea.model.db import Permission
-        return Permission.guess_instance(permission)
