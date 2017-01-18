@@ -47,7 +47,7 @@ from kallithea.lib.vcs.utils import author_email
 from kallithea.lib.compat import json, OrderedDict
 from kallithea.lib.hooks import log_create_repository
 
-from kallithea.model.db import Statistics, Repository, User
+from kallithea.model.db import Statistics, RepoGroup, Repository, User
 
 
 setup_cache_regions(config)  # pragma: no cover
@@ -380,7 +380,7 @@ def create_repo(form_data, cur_user):
         RepoModel(DBS)._create_filesystem_repo(
             repo_name=repo_name,
             repo_type=repo_type,
-            repo_group=RepoModel(DBS)._get_repo_group(repo_group),
+            repo_group=RepoGroup.guess_instance(repo_group),
             clone_uri=clone_uri,
         )
         repo = Repository.get_by_repo_name(repo_name_full)
@@ -459,7 +459,7 @@ def create_repo_fork(form_data, cur_user):
         RepoModel(DBS)._create_filesystem_repo(
             repo_name=repo_name,
             repo_type=repo_type,
-            repo_group=RepoModel(DBS)._get_repo_group(repo_group),
+            repo_group=RepoGroup.guess_instance(repo_group),
             clone_uri=source_repo_path,
         )
         repo = Repository.get_by_repo_name(repo_name_full)

@@ -96,7 +96,7 @@ def get_repo_group_or_error(repogroupid):
 
     :param repogroupid:
     """
-    repo_group = RepoGroupModel()._get_repo_group(repogroupid)
+    repo_group = RepoGroup.guess_instance(repogroupid)
     if repo_group is None:
         raise JSONRPCError(
             'repository group `%s` does not exist' % (repogroupid,))

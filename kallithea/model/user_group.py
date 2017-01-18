@@ -39,9 +39,6 @@ log = logging.getLogger(__name__)
 
 class UserGroupModel(BaseModel):
 
-    def _get_user_group(self, user_group):
-        return UserGroup.guess_instance(user_group)
-
     def _create_default_perms(self, user_group):
         # create default permission
         default_perm = 'usergroup.read'
@@ -98,7 +95,7 @@ class UserGroupModel(BaseModel):
         return UserGroup.get(user_group_id)
 
     def get_group(self, user_group):
-        return self._get_user_group(user_group)
+        return UserGroup.guess_instance(user_group)
 
     def get_by_name(self, name, cache=False, case_insensitive=False):
         return UserGroup.get_by_group_name(name, cache, case_insensitive)
@@ -127,7 +124,7 @@ class UserGroupModel(BaseModel):
     def update(self, user_group, form_data):
 
         try:
-            user_group = self._get_user_group(user_group)
+            user_group = UserGroup.guess_instance(user_group)
 
             for k, v in form_data.items():
                 if k == 'users_group_members':
@@ -157,7 +154,7 @@ class UserGroupModel(BaseModel):
         :param user_group:
         :param force:
         """
-        user_group = self._get_user_group(user_group)
+        user_group = UserGroup.guess_instance(user_group)
         try:
             # check if this group is not assigned to repo
             assigned_groups = UserGroupRepoToPerm.query() \
@@ -173,7 +170,7 @@ class UserGroupModel(BaseModel):
             raise
 
     def add_user_to_group(self, user_group, user):
-        user_group = self._get_user_group(user_group)
+        user_group = UserGroup.guess_instance(user_group)
         user = User.guess_instance(user)
 
         for m in user_group.members:
@@ -197,7 +194,7 @@ class UserGroupModel(BaseModel):
             raise
 
     def remove_user_from_group(self, user_group, user):
-        user_group = self._get_user_group(user_group)
+        user_group = UserGroup.guess_instance(user_group)
         user = User.guess_instance(user)
 
         user_group_member = None
@@ -219,7 +216,7 @@ class UserGroupModel(BaseModel):
             return False
 
     def has_perm(self, user_group, perm):
-        user_group = self._get_user_group(user_group)
+        user_group = UserGroup.guess_instance(user_group)
         perm = Permission.guess_instance(perm)
 
         return UserGroupToPerm.query() \
@@ -227,7 +224,7 @@ class UserGroupModel(BaseModel):
             .filter(UserGroupToPerm.permission == perm).scalar() is not None
 
     def grant_perm(self, user_group, perm):
-        user_group = self._get_user_group(user_group)
+        user_group = UserGroup.guess_instance(user_group)
         perm = Permission.guess_instance(perm)
 
         # if this permission is already granted skip it
@@ -245,7 +242,7 @@ class UserGroupModel(BaseModel):
         return new
 
     def revoke_perm(self, user_group, perm):
-        user_group = self._get_user_group(user_group)
+        user_group = UserGroup.guess_instance(user_group)
         perm = Permission.guess_instance(perm)
 
         obj = UserGroupToPerm.query() \
@@ -265,7 +262,7 @@ class UserGroupModel(BaseModel):
         :param perm: Instance of Permission, or permission_name
         """
 
-        user_group = self._get_user_group(user_group)
+        user_group = UserGroup.guess_instance(user_group)
         user = User.guess_instance(user)
         permission = Permission.guess_instance(perm)
 
@@ -293,7 +290,7 @@ class UserGroupModel(BaseModel):
         :param user: Instance of User, user_id or username
         """
 
-        user_group = self._get_user_group(user_group)
+        user_group = UserGroup.guess_instance(user_group)
         user = User.guess_instance(user)
 
         obj = self.sa.query(UserUserGroupToPerm) \
@@ -312,8 +309,8 @@ class UserGroupModel(BaseModel):
         :param user_group:
         :param perm:
         """
-        target_user_group = self._get_user_group(target_user_group)
-        user_group = self._get_user_group(user_group)
+        target_user_group = UserGroup.guess_instance(target_user_group)
+        user_group = UserGroup.guess_instance(user_group)
         permission = Permission.guess_instance(perm)
         # forbid assigning same user group to itself
         if target_user_group == user_group:
@@ -342,8 +339,8 @@ class UserGroupModel(BaseModel):
         :param target_user_group:
         :param user_group:
         """
-        target_user_group = self._get_user_group(target_user_group)
-        user_group = self._get_user_group(user_group)
+        target_user_group = UserGroup.guess_instance(target_user_group)
+        user_group = UserGroup.guess_instance(user_group)
 
         obj = self.sa.query(UserGroupUserGroupToPerm) \
             .filter(UserGroupUserGroupToPerm.target_user_group == target_user_group) \

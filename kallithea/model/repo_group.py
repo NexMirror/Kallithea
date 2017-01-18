@@ -43,12 +43,6 @@ log = logging.getLogger(__name__)
 
 class RepoGroupModel(BaseModel):
 
-    def _get_user_group(self, users_group):
-        return UserGroup.guess_instance(users_group)
-
-    def _get_repo_group(self, repo_group):
-        return RepoGroup.guess_instance(repo_group)
-
     @LazyProperty
     def repos_path(self):
         """
@@ -142,7 +136,7 @@ class RepoGroupModel(BaseModel):
                just_db=False, copy_permissions=False):
         try:
             owner = User.guess_instance(owner)
-            parent_group = self._get_repo_group(parent)
+            parent_group = RepoGroup.guess_instance(parent)
             new_repo_group = RepoGroup()
             new_repo_group.owner = owner
             new_repo_group.group_description = group_description or group_name
@@ -283,7 +277,7 @@ class RepoGroupModel(BaseModel):
     def update(self, repo_group, form_data):
 
         try:
-            repo_group = self._get_repo_group(repo_group)
+            repo_group = RepoGroup.guess_instance(repo_group)
             old_path = repo_group.full_path
 
             # change properties
@@ -327,7 +321,7 @@ class RepoGroupModel(BaseModel):
             raise
 
     def delete(self, repo_group, force_delete=False):
-        repo_group = self._get_repo_group(repo_group)
+        repo_group = RepoGroup.guess_instance(repo_group)
         try:
             self.sa.delete(repo_group)
             self._delete_group(repo_group, force_delete)
@@ -337,7 +331,7 @@ class RepoGroupModel(BaseModel):
 
     def add_permission(self, repo_group, obj, obj_type, perm, recursive):
         from kallithea.model.repo import RepoModel
-        repo_group = self._get_repo_group(repo_group)
+        repo_group = RepoGroup.guess_instance(repo_group)
         perm = Permission.guess_instance(perm)
 
         for el in repo_group.recursive_groups_and_repos():
@@ -393,7 +387,7 @@ class RepoGroupModel(BaseModel):
         :param recursive: recurse to all children of group
         """
         from kallithea.model.repo import RepoModel
-        repo_group = self._get_repo_group(repo_group)
+        repo_group = RepoGroup.guess_instance(repo_group)
 
         for el in repo_group.recursive_groups_and_repos():
             # iterated obj is an instance of a repos group or repository in
@@ -446,7 +440,7 @@ class RepoGroupModel(BaseModel):
         :param perm: Instance of Permission, or permission_name
         """
 
-        repo_group = self._get_repo_group(repo_group)
+        repo_group = RepoGroup.guess_instance(repo_group)
         user = User.guess_instance(user)
         permission = Permission.guess_instance(perm)
 
@@ -474,7 +468,7 @@ class RepoGroupModel(BaseModel):
         :param user: Instance of User, user_id or username
         """
 
-        repo_group = self._get_repo_group(repo_group)
+        repo_group = RepoGroup.guess_instance(repo_group)
         user = User.guess_instance(user)
 
         obj = self.sa.query(UserRepoGroupToPerm) \
@@ -496,8 +490,8 @@ class RepoGroupModel(BaseModel):
             or user group name
         :param perm: Instance of Permission, or permission_name
         """
-        repo_group = self._get_repo_group(repo_group)
-        group_name = self._get_user_group(group_name)
+        repo_group = RepoGroup.guess_instance(repo_group)
+        group_name = UserGroup.guess_instance(group_name)
         permission = Permission.guess_instance(perm)
 
         # check if we have that permission already
@@ -526,8 +520,8 @@ class RepoGroupModel(BaseModel):
         :param group_name: Instance of UserGroup, users_group_id,
             or user group name
         """
-        repo_group = self._get_repo_group(repo_group)
-        group_name = self._get_user_group(group_name)
+        repo_group = RepoGroup.guess_instance(repo_group)
+        group_name = UserGroup.guess_instance(group_name)
 
         obj = self.sa.query(UserGroupRepoGroupToPerm) \
             .filter(UserGroupRepoGroupToPerm.group == repo_group) \

@@ -58,12 +58,6 @@ class RepoModel(BaseModel):
 
     URL_SEPARATOR = Repository.url_sep()
 
-    def _get_user_group(self, users_group):
-        return UserGroup.guess_instance(users_group)
-
-    def _get_repo_group(self, repo_group):
-        return RepoGroup.guess_instance(repo_group)
-
     def _create_default_perms(self, repository, private):
         # create default permission
         default = 'repository.read'
@@ -370,7 +364,7 @@ class RepoModel(BaseModel):
 
         owner = User.guess_instance(owner)
         fork_of = Repository.guess_instance(fork_of)
-        repo_group = self._get_repo_group(repo_group)
+        repo_group = RepoGroup.guess_instance(repo_group)
         try:
             repo_name = safe_unicode(repo_name)
             description = safe_unicode(description)
@@ -606,7 +600,7 @@ class RepoModel(BaseModel):
         :param perm: Instance of Permission, or permission_name
         """
         repo = Repository.guess_instance(repo)
-        group_name = self._get_user_group(group_name)
+        group_name = UserGroup.guess_instance(group_name)
         permission = Permission.guess_instance(perm)
 
         # check if we have that permission already
@@ -635,7 +629,7 @@ class RepoModel(BaseModel):
             or user group name
         """
         repo = Repository.guess_instance(repo)
-        group_name = self._get_user_group(group_name)
+        group_name = UserGroup.guess_instance(group_name)
 
         obj = self.sa.query(UserGroupRepoToPerm) \
             .filter(UserGroupRepoToPerm.repository == repo) \
