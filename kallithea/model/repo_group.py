@@ -141,7 +141,7 @@ class RepoGroupModel(BaseModel):
     def create(self, group_name, group_description, owner, parent=None,
                just_db=False, copy_permissions=False):
         try:
-            owner = self._get_user(owner)
+            owner = User.guess_instance(owner)
             parent_group = self._get_repo_group(parent)
             new_repo_group = RepoGroup()
             new_repo_group.owner = owner
@@ -447,7 +447,7 @@ class RepoGroupModel(BaseModel):
         """
 
         repo_group = self._get_repo_group(repo_group)
-        user = self._get_user(user)
+        user = User.guess_instance(user)
         permission = self._get_perm(perm)
 
         # check if we have that permission already
@@ -475,7 +475,7 @@ class RepoGroupModel(BaseModel):
         """
 
         repo_group = self._get_repo_group(repo_group)
-        user = self._get_user(user)
+        user = User.guess_instance(user)
 
         obj = self.sa.query(UserRepoGroupToPerm) \
             .filter(UserRepoGroupToPerm.user == user) \

@@ -120,7 +120,7 @@ class RepoModel(BaseModel):
         :param user:
         """
         from kallithea.lib.auth import AuthUser
-        user = self._get_user(user)
+        user = User.guess_instance(user)
         repos = AuthUser(dbuser=user).permissions['repositories']
         access_check = lambda r: r[1] in ['repository.read',
                                           'repository.write',
@@ -368,7 +368,7 @@ class RepoModel(BaseModel):
         """
         from kallithea.model.scm import ScmModel
 
-        owner = self._get_user(owner)
+        owner = User.guess_instance(owner)
         fork_of = self._get_repo(fork_of)
         repo_group = self._get_repo_group(repo_group)
         try:
@@ -557,7 +557,7 @@ class RepoModel(BaseModel):
         :param user: Instance of User, user_id or username
         :param perm: Instance of Permission, or permission_name
         """
-        user = self._get_user(user)
+        user = User.guess_instance(user)
         repo = self._get_repo(repo)
         permission = self._get_perm(perm)
 
@@ -584,7 +584,7 @@ class RepoModel(BaseModel):
         :param user: Instance of User, user_id or username
         """
 
-        user = self._get_user(user)
+        user = User.guess_instance(user)
         repo = self._get_repo(repo)
 
         obj = self.sa.query(UserRepoToPerm) \

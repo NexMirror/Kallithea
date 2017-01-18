@@ -60,15 +60,6 @@ class BaseModel(object):
         else:
             self.sa = meta.Session()
 
-    def _get_user(self, user):
-        """
-        Helper method to get user by ID, or username fallback
-
-        :param user: UserID, username, or User instance
-        """
-        from kallithea.model.db import User
-        return User.guess_instance(user)
-
     def _get_repo(self, repository):
         """
         Helper method to get repository by ID, or repository name

@@ -106,7 +106,7 @@ class UserGroupModel(BaseModel):
     def create(self, name, description, owner, active=True, group_data=None):
         try:
             new_user_group = UserGroup()
-            new_user_group.owner = self._get_user(owner)
+            new_user_group.owner = User.guess_instance(owner)
             new_user_group.users_group_name = name
             new_user_group.user_group_description = description
             new_user_group.users_group_active = active
@@ -174,7 +174,7 @@ class UserGroupModel(BaseModel):
 
     def add_user_to_group(self, user_group, user):
         user_group = self._get_user_group(user_group)
-        user = self._get_user(user)
+        user = User.guess_instance(user)
 
         for m in user_group.members:
             u = m.user
@@ -198,7 +198,7 @@ class UserGroupModel(BaseModel):
 
     def remove_user_from_group(self, user_group, user):
         user_group = self._get_user_group(user_group)
-        user = self._get_user(user)
+        user = User.guess_instance(user)
 
         user_group_member = None
         for m in user_group.members:
@@ -266,7 +266,7 @@ class UserGroupModel(BaseModel):
         """
 
         user_group = self._get_user_group(user_group)
-        user = self._get_user(user)
+        user = User.guess_instance(user)
         permission = self._get_perm(perm)
 
         # check if we have that permission already
@@ -294,7 +294,7 @@ class UserGroupModel(BaseModel):
         """
 
         user_group = self._get_user_group(user_group)
-        user = self._get_user(user)
+        user = User.guess_instance(user)
 
         obj = self.sa.query(UserUserGroupToPerm) \
             .filter(UserUserGroupToPerm.user == user) \
@@ -354,7 +354,7 @@ class UserGroupModel(BaseModel):
             log.debug('Revoked perm on %s on %s', target_user_group, user_group)
 
     def enforce_groups(self, user, groups, extern_type=None):
-        user = self._get_user(user)
+        user = User.guess_instance(user)
         log.debug('Enforcing groups %s on user %s', user, groups)
         current_groups = user.group_member
         # find the external created groups

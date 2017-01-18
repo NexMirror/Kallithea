@@ -327,12 +327,11 @@ def send_email(recipients, subject, body='', html_body='', headers=None, author=
 @celerylib.dbsession
 def create_repo(form_data, cur_user):
     from kallithea.model.repo import RepoModel
-    from kallithea.model.user import UserModel
     from kallithea.model.db import Setting
 
     DBS = celerylib.get_session()
 
-    cur_user = UserModel(DBS)._get_user(cur_user)
+    cur_user = User.guess_instance(cur_user)
 
     owner = cur_user
     repo_name = form_data['repo_name']
@@ -417,12 +416,11 @@ def create_repo_fork(form_data, cur_user):
     :param cur_user:
     """
     from kallithea.model.repo import RepoModel
-    from kallithea.model.user import UserModel
 
     DBS = celerylib.get_session()
 
     base_path = Repository.base_path()
-    cur_user = UserModel(DBS)._get_user(cur_user)
+    cur_user = User.guess_instance(cur_user)
 
     repo_name = form_data['repo_name']  # fork in this case
     repo_name_full = form_data['repo_name_full']

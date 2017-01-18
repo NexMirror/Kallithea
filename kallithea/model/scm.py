@@ -438,7 +438,7 @@ class ScmModel(BaseModel):
 
         :param repo: a db_repo.scm_instance
         """
-        user = self._get_user(user)
+        user = User.guess_instance(user)
         IMC = self._get_IMC_module(repo.alias)
 
         # decoding here will force that we have proper encoded values
@@ -519,7 +519,7 @@ class ScmModel(BaseModel):
         :returns: new committed changeset
         """
 
-        user = self._get_user(user)
+        user = User.guess_instance(user)
         scm_instance = repo.scm_instance_no_cache()
 
         processed_nodes = []
@@ -577,7 +577,7 @@ class ScmModel(BaseModel):
         """
         Commits specified nodes to repo. Again.
         """
-        user = self._get_user(user)
+        user = User.guess_instance(user)
         scm_instance = repo.scm_instance_no_cache()
 
         message = safe_unicode(message)
@@ -647,7 +647,7 @@ class ScmModel(BaseModel):
         :returns: new committed changeset after deletion
         """
 
-        user = self._get_user(user)
+        user = User.guess_instance(user)
         scm_instance = repo.scm_instance_no_cache()
 
         processed_nodes = []

@@ -53,7 +53,7 @@ class PullRequestModel(BaseModel):
         specified, or if a given ID or username does not match any user.
         """
         for user_spec in seq:
-            user = self._get_user(user_spec)
+            user = User.guess_instance(user_spec)
             if user is None or user.username == User.DEFAULT_USER:
                 raise UserInvalidException(user_spec)
             yield user

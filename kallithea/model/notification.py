@@ -67,12 +67,12 @@ class NotificationModel(BaseModel):
         if recipients and not getattr(recipients, '__iter__', False):
             raise Exception('recipients must be a list or iterable')
 
-        created_by_obj = self._get_user(created_by)
+        created_by_obj = User.guess_instance(created_by)
 
         recipients_objs = []
         if recipients:
             for u in recipients:
-                obj = self._get_user(u)
+                obj = User.guess_instance(u)
                 if obj is not None:
                     recipients_objs.append(obj)
                 else:
@@ -142,7 +142,7 @@ class NotificationModel(BaseModel):
         # we don't want to remove actual notification just the assignment
         try:
             notification = Notification.guess_instance(notification)
-            user = self._get_user(user)
+            user = User.guess_instance(user)
             if notification and user:
                 obj = UserNotification.query() \
                         .filter(UserNotification.user == user) \
@@ -162,7 +162,7 @@ class NotificationModel(BaseModel):
         :param user:
         :param filter:
         """
-        user = self._get_user(user)
+        user = User.guess_instance(user)
 
         q = UserNotification.query() \
             .filter(UserNotification.user == user) \
@@ -180,7 +180,7 @@ class NotificationModel(BaseModel):
     def mark_read(self, user, notification):
         try:
             notification = Notification.guess_instance(notification)
-            user = self._get_user(user)
+            user = User.guess_instance(user)
             if notification and user:
                 obj = UserNotification.query() \
                         .filter(UserNotification.user == user) \
@@ -194,7 +194,7 @@ class NotificationModel(BaseModel):
             raise
 
     def mark_all_read_for_user(self, user, filter_=None):
-        user = self._get_user(user)
+        user = User.guess_instance(user)
         q = UserNotification.query() \
             .filter(UserNotification.user == user) \
             .filter(UserNotification.read == False) \
@@ -209,19 +209,19 @@ class NotificationModel(BaseModel):
             obj.read = True
 
     def get_unread_cnt_for_user(self, user):
-        user = self._get_user(user)
+        user = User.guess_instance(user)
         return UserNotification.query() \
                 .filter(UserNotification.read == False) \
                 .filter(UserNotification.user == user).count()
 
     def get_unread_for_user(self, user):
-        user = self._get_user(user)
+        user = User.guess_instance(user)
         return [x.notification for x in UserNotification.query() \
                 .filter(UserNotification.read == False) \
                 .filter(UserNotification.user == user).all()]
 
     def get_user_notification(self, user, notification):
-        user = self._get_user(user)
+        user = User.guess_instance(user)
         notification = Notification.guess_instance(notification)
 
         return UserNotification.query() \

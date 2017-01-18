@@ -169,7 +169,7 @@ class ChangesetCommentsModel(BaseModel):
             return None
 
         repo = self._get_repo(repo)
-        author = self._get_user(author)
+        author = User.guess_instance(author)
         comment = ChangesetComment()
         comment.repo = repo
         comment.author = author

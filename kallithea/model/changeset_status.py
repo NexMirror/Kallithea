@@ -29,7 +29,7 @@ import logging
 from sqlalchemy.orm import joinedload
 
 from kallithea.model.base import BaseModel
-from kallithea.model.db import ChangesetStatus, PullRequest
+from kallithea.model.db import ChangesetStatus, PullRequest, User
 from kallithea.lib.exceptions import StatusChangeOnClosedPullRequestError
 
 log = logging.getLogger(__name__)
@@ -184,7 +184,7 @@ class ChangesetStatusModel(BaseModel):
         for rev in revisions:
             new_status = ChangesetStatus()
             new_status.version = 0 # default
-            new_status.author = self._get_user(user)
+            new_status.author = User.guess_instance(user)
             new_status.repo = self._get_repo(repo)
             new_status.status = status
             new_status.comment = comment

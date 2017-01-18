@@ -35,7 +35,7 @@ from kallithea.lib.utils2 import safe_unicode, unique_id, safe_int, \
     time_to_datetime, AttributeDict
 from kallithea.lib.compat import json
 from kallithea.model.base import BaseModel
-from kallithea.model.db import Gist
+from kallithea.model.db import Gist, User
 from kallithea.model.repo import RepoModel
 from kallithea.model.scm import ScmModel
 
@@ -107,7 +107,7 @@ class GistModel(BaseModel):
         :param gist_type: type of gist private/public
         :param lifetime: in minutes, -1 == forever
         """
-        owner = self._get_user(owner)
+        owner = User.guess_instance(owner)
         gist_id = safe_unicode(unique_id(20))
         lifetime = safe_int(lifetime, -1)
         gist_expires = time.time() + (lifetime * 60) if lifetime != -1 else -1

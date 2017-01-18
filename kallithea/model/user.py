@@ -61,7 +61,7 @@ class UserModel(BaseModel):
         return user.get(user_id)
 
     def get_user(self, user):
-        return self._get_user(user)
+        return User.guess_instance(user)
 
     def create(self, form_data, cur_user=None):
         if not cur_user:
@@ -231,7 +231,7 @@ class UserModel(BaseModel):
     def update_user(self, user, **kwargs):
         from kallithea.lib.auth import get_crypt_password
 
-        user = self._get_user(user)
+        user = User.guess_instance(user)
         if user.username == User.DEFAULT_USER:
             raise DefaultUserException(
                 _("You can't edit this user since it's"
@@ -249,7 +249,7 @@ class UserModel(BaseModel):
     def delete(self, user, cur_user=None):
         if cur_user is None:
             cur_user = getattr(get_current_authuser(), 'username', None)
-        user = self._get_user(user)
+        user = User.guess_instance(user)
 
         if user.username == User.DEFAULT_USER:
             raise DefaultUserException(
@@ -421,7 +421,7 @@ class UserModel(BaseModel):
 
     def has_perm(self, user, perm):
         perm = self._get_perm(perm)
-        user = self._get_user(user)
+        user = User.guess_instance(user)
 
         return UserToPerm.query().filter(UserToPerm.user == user) \
             .filter(UserToPerm.permission == perm).scalar() is not None
@@ -433,7 +433,7 @@ class UserModel(BaseModel):
         :param user:
         :param perm:
         """
-        user = self._get_user(user)
+        user = User.guess_instance(user)
         perm = self._get_perm(perm)
         # if this permission is already granted skip it
         _perm = UserToPerm.query() \
@@ -455,7 +455,7 @@ class UserModel(BaseModel):
         :param user:
         :param perm:
         """
-        user = self._get_user(user)
+        user = User.guess_instance(user)
         perm = self._get_perm(perm)
 
         UserToPerm.query().filter(
@@ -473,7 +473,7 @@ class UserModel(BaseModel):
         from kallithea.model import forms
         form = forms.UserExtraEmailForm()()
         data = form.to_python(dict(email=email))
-        user = self._get_user(user)
+        user = User.guess_instance(user)
 
         obj = UserEmailMap()
         obj.user = user
@@ -488,7 +488,7 @@ class UserModel(BaseModel):
         :param user:
         :param email_id:
         """
-        user = self._get_user(user)
+        user = User.guess_instance(user)
         obj = UserEmailMap.query().get(email_id)
         if obj is not None:
             self.sa.delete(obj)
@@ -503,7 +503,7 @@ class UserModel(BaseModel):
         from kallithea.model import forms
         form = forms.UserExtraIpForm()()
         data = form.to_python(dict(ip=ip))
-        user = self._get_user(user)
+        user = User.guess_instance(user)
 
         obj = UserIpMap()
         obj.user = user
@@ -518,7 +518,7 @@ class UserModel(BaseModel):
         :param user:
         :param ip_id:
         """
-        user = self._get_user(user)
+        user = User.guess_instance(user)
         obj = UserIpMap.query().get(ip_id)
         if obj:
             self.sa.delete(obj)

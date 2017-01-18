@@ -62,7 +62,7 @@ class PermissionModel(BaseModel):
 
         :param user:
         """
-        user = self._get_user(user)
+        user = User.guess_instance(user)
 
         def _make_perm(perm):
             new_perm = UserToPerm()
