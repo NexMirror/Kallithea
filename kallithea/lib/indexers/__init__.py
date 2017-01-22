@@ -82,7 +82,7 @@ JOURNAL_SCHEMA = Schema(
     username=TEXT(),
     date=DATETIME(),
     action=TEXT(),
-    repository=TEXT(),
+    repository=ID(),
     ip=TEXT(),
 )
 

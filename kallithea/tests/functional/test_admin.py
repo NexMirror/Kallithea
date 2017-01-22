@@ -151,12 +151,12 @@ class TestAdminController(TestController):
     @parametrize('filter,hit', [
         #### "repository:" filtering
         # "/" is used for grouping
-        ('repository:group/test', 0),
+        ('repository:group/test', 4),
         # "-" is often used for "-fork"
-        ('repository:fork-test1', 0),
+        ('repository:fork-test1', 5),
         # using "stop words"
-        ('repository:this', 2036),
-        ('repository:this/is-it', 2036),
+        ('repository:this', 1),
+        ('repository:this/is-it', 1),
 
         ## additional tests to quickly find out regression in the future
         ## (and check case-insensitive search, too)
