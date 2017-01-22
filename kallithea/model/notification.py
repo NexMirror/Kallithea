@@ -339,6 +339,7 @@ class EmailNotificationModel(BaseModel):
             _kwargs.update({
                 "default_style": "%(sans_style)s;font-weight:200;font-size:14px;line-height:17px;color:%(color_text)s" % _kwargs,
                 "comment_style": "%(monospace_style)s;white-space:pre-wrap" % _kwargs,
+                "emph_style": "font-weight:600;color:%(color_emph)s" % _kwargs,
                 })
 
         log.debug('rendering tmpl %s with kwargs %s', base, _kwargs)

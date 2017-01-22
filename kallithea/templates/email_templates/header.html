@@ -10,10 +10,10 @@
         <td width="30px"></td>
         <td style="${sans_style};font-size:19px;line-height:24px">
         %if link is not None:
-            <a style="text-decoration:none;color:${color_emph}" href="${link}"
+            <a style="text-decoration:none;${emph_style}" href="${link}"
                target="_blank">${title}</a>
         %else:
-            <span style="color:${color_emph}">${title}</span>
+            <span style="${emph_style}">${title}</span>
         %endif
         </td>
         <td width="30px"></td>
