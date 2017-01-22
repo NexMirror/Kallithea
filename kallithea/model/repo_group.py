@@ -240,7 +240,7 @@ class RepoGroupModel(BaseModel):
             # iterated obj is an instance of a repos group or repository in
             # that group, recursive option can be: none, repos, groups, all
             if recursive == 'all':
-                obj = obj
+                pass
             elif recursive == 'repos':
                 # skip groups, other than this one
                 if isinstance(obj, RepoGroup) and not obj == repo_group:
@@ -346,7 +346,7 @@ class RepoGroupModel(BaseModel):
             # iterated obj is an instance of a repos group or repository in
             # that group, recursive option can be: none, repos, groups, all
             if recursive == 'all':
-                el = el
+                pass
             elif recursive == 'repos':
                 # skip groups, other than this one
                 if isinstance(el, RepoGroup) and not el == repo_group:
@@ -401,7 +401,7 @@ class RepoGroupModel(BaseModel):
             # iterated obj is an instance of a repos group or repository in
             # that group, recursive option can be: none, repos, groups, all
             if recursive == 'all':
-                el = el
+                pass
             elif recursive == 'repos':
                 # skip groups, other than this one
                 if isinstance(el, RepoGroup) and not el == repo_group:

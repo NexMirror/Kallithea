@@ -613,7 +613,6 @@ class PullrequestsController(BaseRepoController):
          c.a_rev) = c.pull_request.other_ref.split(':') # a_rev is ancestor
 
         org_scm_instance = c.cs_repo.scm_instance # property with expensive cache invalidation check!!!
-        c.cs_repo = c.cs_repo
         try:
             c.cs_ranges = [org_scm_instance.get_changeset(x)
                            for x in c.pull_request.revisions]

@@ -204,7 +204,6 @@ class FilesController(BaseRepoController):
     @jsonify
     def history(self, repo_name, revision, f_path):
         changeset = self.__get_cs(revision)
-        f_path = f_path
         _file = changeset.get_node(f_path)
         if _file.is_file():
             file_history, _hist = self._get_node_history(changeset, f_path)
@@ -227,7 +226,6 @@ class FilesController(BaseRepoController):
                                    'repository.admin')
     def authors(self, repo_name, revision, f_path):
         changeset = self.__get_cs(revision)
-        f_path = f_path
         _file = changeset.get_node(f_path)
         if _file.is_file():
             file_history, _hist = self._get_node_history(changeset, f_path)

@@ -595,8 +595,6 @@ def create_test_index(repo_location, config, full_index):
     from kallithea.lib.indexers.daemon import WhooshIndexingDaemon
     from kallithea.lib.pidlock import DaemonLock, LockHeld
 
-    repo_location = repo_location
-
     index_location = os.path.join(config['app_conf']['index_dir'])
     if not os.path.exists(index_location):
         os.makedirs(index_location)
