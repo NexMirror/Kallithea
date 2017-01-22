@@ -34,6 +34,7 @@ from pylons.i18n.translation import _
 from beaker.cache import cache_region, region_invalidate
 from webhelpers.feedgenerator import Atom1Feed, Rss201rev2Feed
 
+from kallithea import CONFIG
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator
 from kallithea.lib.base import BaseRepoController
@@ -44,6 +45,10 @@ from kallithea.lib.utils2 import safe_int, str2bool, safe_unicode
 log = logging.getLogger(__name__)
 
 
+language = 'en-us'
+ttl = "5"
+
+
 class FeedController(BaseRepoController):
 
     @LoginRequired(api_access=True)
@@ -51,26 +56,15 @@ class FeedController(BaseRepoController):
                                    'repository.admin')
     def __before__(self):
         super(FeedController, self).__before__()
-        #common values for feeds
-        self.description = _('Changes on %s repository')
-        self.title = self.title = _('%s %s feed') % (c.site_name, '%s')
-        self.language = 'en-us'
-        self.ttl = "5"
-        import kallithea
-        CONF = kallithea.CONFIG
-        self.include_diff = str2bool(CONF.get('rss_include_diff', False))
-        self.feed_nr = safe_int(CONF.get('rss_items_per_page', 20))
-        # we need to protect from parsing huge diffs here other way
-        # we can kill the server
-        self.feed_diff_limit = safe_int(CONF.get('rss_cut_off_limit', 32 * 1024))
 
     def _get_title(self, cs):
         return h.shorter(cs.message, 160)
 
     def __changes(self, cs):
         changes = []
+        rss_cut_off_limit = safe_int(CONFIG.get('rss_cut_off_limit', 32 * 1024))
         diff_processor = DiffProcessor(cs.diff(),
-                                       diff_limit=self.feed_diff_limit)
+                                       diff_limit=rss_cut_off_limit)
         _parsed = diff_processor.prepare(inline_diff=False)
         limited_diff = False
         if isinstance(_parsed, LimitedDiffContainer):
@@ -108,7 +102,7 @@ class FeedController(BaseRepoController):
         desc_msg.append(h.urlify_text(cs.message))
         desc_msg.append('\n')
         desc_msg.extend(changes)
-        if self.include_diff:
+        if str2bool(CONFIG.get('rss_include_diff', False)):
             desc_msg.append('\n\n')
             desc_msg.append(diff_processor.as_raw())
         desc_msg.append('</pre>')
@@ -120,14 +114,15 @@ class FeedController(BaseRepoController):
         @cache_region('long_term', '_get_feed_from_cache')
         def _get_feed_from_cache(key, kind):
             feed = Atom1Feed(
-                 title=self.title % repo_name,
-                 link=h.canonical_url('summary_home', repo_name=repo_name),
-                 description=self.description % repo_name,
-                 language=self.language,
-                 ttl=self.ttl
+                title=_('%s %s feed') % (c.site_name, repo_name),
+                link=h.canonical_url('summary_home', repo_name=repo_name),
+                description=_('Changes on %s repository') % repo_name,
+                language=language,
+                ttl=ttl
             )
 
-            for cs in reversed(list(c.db_repo_scm_instance[-self.feed_nr:])):
+            rss_items_per_page = safe_int(CONFIG.get('rss_items_per_page', 20))
+            for cs in reversed(list(c.db_repo_scm_instance[-rss_items_per_page:])):
                 feed.add_item(title=self._get_title(cs),
                               link=h.canonical_url('changeset_home', repo_name=repo_name,
                                        revision=cs.raw_id),
@@ -151,14 +146,15 @@ class FeedController(BaseRepoController):
         @cache_region('long_term', '_get_feed_from_cache')
         def _get_feed_from_cache(key, kind):
             feed = Rss201rev2Feed(
-                title=self.title % repo_name,
+                title=_('%s %s feed') % (c.site_name, repo_name),
                 link=h.canonical_url('summary_home', repo_name=repo_name),
-                description=self.description % repo_name,
-                language=self.language,
-                ttl=self.ttl
+                description=_('Changes on %s repository') % repo_name,
+                language=language,
+                ttl=ttl
             )
 
-            for cs in reversed(list(c.db_repo_scm_instance[-self.feed_nr:])):
+            rss_items_per_page = safe_int(CONFIG.get('rss_items_per_page', 20))
+            for cs in reversed(list(c.db_repo_scm_instance[-rss_items_per_page:])):
                 feed.add_item(title=self._get_title(cs),
                               link=h.canonical_url('changeset_home', repo_name=repo_name,
                                        revision=cs.raw_id),

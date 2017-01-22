@@ -55,13 +55,15 @@ from kallithea.lib.utils2 import safe_int, AttributeDict
 log = logging.getLogger(__name__)
 
 
+language = 'en-us'
+ttl = "5"
+feed_nr = 20
+
+
 class JournalController(BaseController):
 
     def __before__(self):
         super(JournalController, self).__before__()
-        self.language = 'en-us'
-        self.ttl = "5"
-        self.feed_nr = 20
         c.search_term = request.GET.get('filter')
 
     def _get_daily_aggregate(self, journal):
@@ -118,10 +120,10 @@ class JournalController(BaseController):
         feed = Atom1Feed(title=_desc,
                          link=_link,
                          description=_desc,
-                         language=self.language,
-                         ttl=self.ttl)
+                         language=language,
+                         ttl=ttl)
 
-        for entry in journal[:self.feed_nr]:
+        for entry in journal[:feed_nr]:
             user = entry.user
             if user is None:
                 #fix deleted users
@@ -160,10 +162,10 @@ class JournalController(BaseController):
         feed = Rss201rev2Feed(title=_desc,
                          link=_link,
                          description=_desc,
-                         language=self.language,
-                         ttl=self.ttl)
+                         language=language,
+                         ttl=ttl)
 
-        for entry in journal[:self.feed_nr]:
+        for entry in journal[:feed_nr]:
             user = entry.user
             if user is None:
                 #fix deleted users
