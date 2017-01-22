@@ -89,6 +89,8 @@ class Command(BasePasterCommand):
             alldirs = list(dirs)
             del dirs[:]
             if ('.hg' in alldirs or
+                '.git' in alldirs or
+                '.svn' in alldirs or
                 'objects' in alldirs and ('refs' in alldirs or 'packed-refs' in f)):
                 continue
             for loc in alldirs:
