@@ -79,7 +79,7 @@ CHGSET_IDX_NAME = 'CHGSET_INDEX'
 
 # used only to generate queries in journal
 JOURNAL_SCHEMA = Schema(
-    username=TEXT(),
+    username=ID(),
     date=DATETIME(),
     action=TEXT(),
     repository=ID(),

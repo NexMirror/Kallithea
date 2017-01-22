@@ -171,9 +171,9 @@ class TestAdminController(TestController):
 
         #### "username:" filtering
         # "-" is valid character
-        ('username:peso-xxx', 0),
+        ('username:peso-xxx', 4),
         # using "stop words"
-        ('username:this-is-it', 2036),
+        ('username:this-is-it', 2),
 
         ## additional tests to quickly find out regression in the future
         ## (and check case-insensitive search, too)
