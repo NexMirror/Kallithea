@@ -228,8 +228,11 @@ def get_filesystem_repos(path):
                 continue
 
             cur_path = os.path.join(root, subdir)
+            if isdir(cur_path, '.git'):
+                log.warning('ignoring non-bare Git repo: %s', cur_path)
+                continue
+
             if (isdir(cur_path, '.hg') or
-                isdir(cur_path, '.git') or
                 isdir(cur_path, '.svn') or
                 isdir(cur_path, 'objects') and (isdir(cur_path, 'refs') or
                                                 os.path.isfile(os.path.join(cur_path, 'packed-refs')))):
