@@ -126,9 +126,9 @@ class TestSearchControllerIndexing(TestController):
         response.mustcontain('>%d results' % hit)
 
     @parametrize('searchtype,query,hit', [
-        ('content', 'this_should_be_unique_content', 2),
+        ('content', 'this_should_be_unique_content', 1),
         ('commit', 'this_should_be_unique_commit_log', 1),
-        ('path', 'this_should_be_unique_filename.txt', 2),
+        ('path', 'this_should_be_unique_filename.txt', 1),
     ])
     def test_repository_case_sensitivity(self, searchtype, query, hit):
         self.log_user()
@@ -142,7 +142,7 @@ class TestSearchControllerIndexing(TestController):
         response = self.app.get(url(controller='search', action='index'),
                                 {'q': q, 'type': searchtype})
 
-        response.mustcontain('>%d results' % hit)
+        response.mustcontain('>%d results' % (hit * 2))
 
         # (2) on the other hand, searching under the specific
         # repository should return results only for that repository,

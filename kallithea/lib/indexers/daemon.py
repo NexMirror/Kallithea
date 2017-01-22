@@ -203,6 +203,7 @@ class WhooshIndexingDaemon(object):
         writer.add_document(
             fileid=p,
             owner=unicode(repo.contact),
+            repository_rawname=repo.name_unicode,
             repository=safe_unicode(repo_name),
             path=p,
             content=u_content,
@@ -241,6 +242,7 @@ class WhooshIndexingDaemon(object):
                 raw_id=unicode(cs.raw_id),
                 owner=unicode(repo.contact),
                 date=cs._timestamp,
+                repository_rawname=repo.name_unicode,
                 repository=safe_unicode(repo_name),
                 author=cs.author,
                 message=cs.message,

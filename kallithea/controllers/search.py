@@ -94,7 +94,9 @@ class SearchController(BaseRepoController):
 
                 qp = QueryParser(search_type, schema=schema_defn)
                 if c.repo_name:
-                    cur_query = u'repository:%s %s' % (c.repo_name, cur_query)
+                    # use "repository_rawname:" instead of "repository:"
+                    # for case-sensitive matching
+                    cur_query = u'repository_rawname:%s %s' % (c.repo_name, cur_query)
                 try:
                     query = qp.parse(unicode(cur_query))
                     # extract words for highlight

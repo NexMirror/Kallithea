@@ -53,10 +53,20 @@ ANALYZER = RegexTokenizer(expression=r"\w+") | LowercaseFilter()
 #
 ICASEIDANALYZER = IDTokenizer() | LowercaseFilter()
 
+# CUSTOM ANALYZER raw-string
+#
+# This is useful to:
+# - avoid tokenization
+# - avoid removing "stop words" from text
+#
+IDANALYZER = IDTokenizer()
+
 #INDEX SCHEMA DEFINITION
 SCHEMA = Schema(
     fileid=ID(unique=True),
     owner=TEXT(),
+    # this field preserves case of repository name for exact matching
+    repository_rawname=TEXT(analyzer=IDANALYZER),
     repository=TEXT(stored=True, analyzer=ICASEIDANALYZER),
     path=TEXT(stored=True),
     content=FieldType(format=Characters(), analyzer=ANALYZER,
@@ -74,7 +84,10 @@ CHGSETS_SCHEMA = Schema(
     date=NUMERIC(stored=True),
     last=BOOLEAN(),
     owner=TEXT(),
-    repository=ID(unique=True, stored=True),
+    # this field preserves case of repository name for exact matching
+    # and unique-ness in index table
+    repository_rawname=ID(unique=True),
+    repository=ID(stored=True, analyzer=ICASEIDANALYZER),
     author=TEXT(stored=True),
     message=FieldType(format=Characters(), analyzer=ANALYZER,
                       scorable=True, stored=True),
