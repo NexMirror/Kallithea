@@ -55,7 +55,7 @@ requirements = [
     "URLObject==2.3.4",
     "Routes==1.13",
     "dulwich>=0.14.1",
-    "mercurial>=2.9,<4.0",
+    "mercurial>=2.9,<4.2",
 ]
 
 if sys.version_info < (2, 7):
