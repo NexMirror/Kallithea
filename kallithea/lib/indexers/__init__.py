@@ -61,6 +61,14 @@ ICASEIDANALYZER = IDTokenizer() | LowercaseFilter()
 #
 IDANALYZER = IDTokenizer()
 
+# CUSTOM ANALYZER wordsplit + lowercase filter, for pathname-like text
+#
+# This is useful to:
+# - avoid removing "stop words" from text
+# - search case-insensitively
+#
+PATHANALYZER = RegexTokenizer() | LowercaseFilter()
+
 #INDEX SCHEMA DEFINITION
 SCHEMA = Schema(
     fileid=ID(unique=True),
@@ -68,11 +76,11 @@ SCHEMA = Schema(
     # this field preserves case of repository name for exact matching
     repository_rawname=TEXT(analyzer=IDANALYZER),
     repository=TEXT(stored=True, analyzer=ICASEIDANALYZER),
-    path=TEXT(stored=True),
+    path=TEXT(stored=True, analyzer=PATHANALYZER),
     content=FieldType(format=Characters(), analyzer=ANALYZER,
                       scorable=True, stored=True),
     modtime=STORED(),
-    extension=TEXT(stored=True)
+    extension=TEXT(stored=True, analyzer=PATHANALYZER)
 )
 
 IDX_NAME = 'HG_INDEX'
@@ -92,9 +100,9 @@ CHGSETS_SCHEMA = Schema(
     message=FieldType(format=Characters(), analyzer=ANALYZER,
                       scorable=True, stored=True),
     parents=TEXT(),
-    added=TEXT(),
-    removed=TEXT(),
-    changed=TEXT(),
+    added=TEXT(analyzer=PATHANALYZER),
+    removed=TEXT(analyzer=PATHANALYZER),
+    changed=TEXT(analyzer=PATHANALYZER),
 )
 
 CHGSET_IDX_NAME = 'CHGSET_INDEX'

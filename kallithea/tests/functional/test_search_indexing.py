@@ -156,19 +156,19 @@ class TestSearchControllerIndexing(TestController):
 
         # confirm that there is no matching against lower name repository
         assert uname in response
-        #assert lname not in response
+        assert lname not in response
 
     @parametrize('searchtype,query,hit', [
-        ('content', 'path:this/is/it def test', 37),
-        ('commit', 'added:this/is/it bother to ask where', 4),
+        ('content', 'path:this/is/it def test', 1),
+        ('commit', 'added:this/is/it bother to ask where', 1),
         # this condition matches against files below, because
         # "path:" condition is also applied on "repository path".
         # - "this/is/it" in "stopword_test" repo
         # - "this_should_be_unique_filename.txt" in "this-is-it" repo
-        ('path', 'this/is/it', 0),
+        ('path', 'this/is/it', 2),
 
-        ('content', 'extension:us', 0),
-        ('path', 'extension:us', 0),
+        ('content', 'extension:us', 1),
+        ('path', 'extension:us', 1),
     ])
     def test_filename_stopword(self, searchtype, query, hit):
         response = self.app.get(url(controller='search', action='index'),
