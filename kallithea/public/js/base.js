@@ -614,7 +614,7 @@ function _get_add_comment_div(target_id) {
 
 // Set $comment_div state - showing or not showing form and Add button.
 // An Add button is shown on non-empty forms when no form is shown.
-// The form is controlled by show_form - if undefined, form is only shown for general comments.
+// The form is controlled by show_form_opt - if undefined, form is only shown for general comments.
 function comment_div_state($comment_div, f_path, line_no, show_form_opt) {
     var show_form = show_form_opt !== undefined ? show_form_opt : !f_path && !line_no;
     var $forms = $comment_div.children('.comment-inline-form');
@@ -626,6 +626,8 @@ function comment_div_state($comment_div, f_path, line_no, show_form_opt) {
         _comment_div_append_form($comment_div, f_path, line_no);
     } else if ($comments.length) {
         _comment_div_append_add($comment_div, f_path, line_no);
+    } else {
+        $comment_div.parent('tr').remove();
     }
 }
 
@@ -704,7 +706,7 @@ function _comment_div_append_form($comment_div, f_path, line_no) {
         ajaxPOST(AJAX_COMMENT_URL, postData, success);
     });
 
-    // create event for hide button
+    // add event handler for hide/cancel buttons
     $form.find('.hide-inline-form').click(function(e) {
         comment_div_state($comment_div, f_path, line_no);
     });
