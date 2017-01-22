@@ -113,9 +113,9 @@ class TestSearchControllerIndexing(TestController):
         (u'group/*'),
     ])
     @parametrize('searchtype,query,hit', [
-        #('content', 'this_should_be_unique_content', 1),
+        ('content', 'this_should_be_unique_content', 1),
         ('commit', 'this_should_be_unique_commit_log', 1),
-        #('path', 'this_should_be_unique_filename.txt', 1),
+        ('path', 'this_should_be_unique_filename.txt', 1),
     ])
     def test_repository_tokenization(self, reponame, searchtype, query, hit):
         self.log_user()

@@ -33,7 +33,7 @@ from os.path import dirname
 # Add location of top level folder to sys.path
 sys.path.append(dirname(dirname(dirname(os.path.realpath(__file__)))))
 
-from whoosh.analysis import RegexTokenizer, LowercaseFilter
+from whoosh.analysis import RegexTokenizer, LowercaseFilter, IDTokenizer
 from whoosh.fields import TEXT, ID, STORED, NUMERIC, BOOLEAN, Schema, FieldType, DATETIME
 from whoosh.formats import Characters
 from whoosh.highlight import highlight as whoosh_highlight, HtmlFormatter, ContextFragmenter
@@ -44,11 +44,20 @@ log = logging.getLogger(__name__)
 # CUSTOM ANALYZER wordsplit + lowercase filter
 ANALYZER = RegexTokenizer(expression=r"\w+") | LowercaseFilter()
 
+# CUSTOM ANALYZER raw-string + lowercase filter
+#
+# This is useful to:
+# - avoid tokenization
+# - avoid removing "stop words" from text
+# - search case-insensitively
+#
+ICASEIDANALYZER = IDTokenizer() | LowercaseFilter()
+
 #INDEX SCHEMA DEFINITION
 SCHEMA = Schema(
     fileid=ID(unique=True),
     owner=TEXT(),
-    repository=TEXT(stored=True),
+    repository=TEXT(stored=True, analyzer=ICASEIDANALYZER),
     path=TEXT(stored=True),
     content=FieldType(format=Characters(), analyzer=ANALYZER,
                       scorable=True, stored=True),
