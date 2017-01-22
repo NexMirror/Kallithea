@@ -91,13 +91,13 @@ class GitRepository(object):
         assert path.startswith('/' + self.repo_name + '/')
         return path[len(self.repo_name) + 2:].strip('/')
 
-    def inforefs(self, request, environ):
+    def inforefs(self, req, environ):
         """
         WSGI Response producer for HTTP GET Git Smart
         HTTP /info/refs request.
         """
 
-        git_command = request.GET.get('service')
+        git_command = req.GET.get('service')
         if git_command not in self.commands:
             log.debug('command %s not allowed', git_command)
             return exc.HTTPMethodNotAllowed()
@@ -131,7 +131,7 @@ class GitRepository(object):
         resp.app_iter = out
         return resp
 
-    def backend(self, request, environ):
+    def backend(self, req, environ):
         """
         WSGI Response producer for HTTP POST Git Smart HTTP requests.
         Reads commands and data from HTTP POST's body.
@@ -139,14 +139,14 @@ class GitRepository(object):
         response to stdout
         """
         _git_path = kallithea.CONFIG.get('git_path', 'git')
-        git_command = self._get_fixedpath(request.path_info)
+        git_command = self._get_fixedpath(req.path_info)
         if git_command not in self.commands:
             log.debug('command %s not allowed', git_command)
             return exc.HTTPMethodNotAllowed()
 
         if 'CONTENT_LENGTH' in environ:
             inputstream = FileWrapper(environ['wsgi.input'],
-                                      request.content_length)
+                                      req.content_length)
         else:
             inputstream = environ['wsgi.input']
 
@@ -182,14 +182,14 @@ class GitRepository(object):
         return resp
 
     def __call__(self, environ, start_response):
-        request = Request(environ)
-        _path = self._get_fixedpath(request.path_info)
+        req = Request(environ)
+        _path = self._get_fixedpath(req.path_info)
         if _path.startswith('info/refs'):
             app = self.inforefs
-        elif [a for a in self.valid_accepts if a in request.accept]:
+        elif [a for a in self.valid_accepts if a in req.accept]:
             app = self.backend
         try:
-            resp = app(request, environ)
+            resp = app(req, environ)
         except exc.HTTPException as e:
             resp = e
             log.error(traceback.format_exc())

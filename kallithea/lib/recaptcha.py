@@ -76,7 +76,7 @@ def submit(recaptcha_challenge_field, recaptcha_response_field, private_key,
         'response': encode_if_necessary(recaptcha_response_field),
     })
 
-    request = urllib2.Request(
+    req = urllib2.Request(
         url="http://%s/recaptcha/api/verify" % VERIFY_SERVER,
         data=params,
         headers={
@@ -85,7 +85,7 @@ def submit(recaptcha_challenge_field, recaptcha_response_field, private_key,
         }
     )
 
-    httpresp = urllib2.urlopen(request)
+    httpresp = urllib2.urlopen(req)
 
     return_values = httpresp.read().splitlines()
     httpresp.close()

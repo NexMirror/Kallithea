@@ -88,14 +88,14 @@ class CrowdServer(object):
         log.debug("Sent crowd: \n%s",
                   formatted_json({"url": url, "body": body,
                                            "headers": _headers}))
-        request = urllib2.Request(url, body, _headers)
+        req = urllib2.Request(url, body, _headers)
         if method:
-            request.get_method = lambda: method
+            req.get_method = lambda: method
 
         global msg
         msg = ""
         try:
-            rdoc = self.opener.open(request)
+            rdoc = self.opener.open(req)
             msg = "".join(rdoc.readlines())
             if not msg and empty_response_ok:
                 rval = {}
