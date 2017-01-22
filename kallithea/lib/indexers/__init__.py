@@ -44,6 +44,14 @@ log = logging.getLogger(__name__)
 # CUSTOM ANALYZER wordsplit + lowercase filter
 ANALYZER = RegexTokenizer(expression=r"\w+") | LowercaseFilter()
 
+# CUSTOM ANALYZER wordsplit + lowercase filter, for emailaddr-like text
+#
+# This is useful to:
+# - avoid removing "stop words" from text
+# - search case-insensitively
+#
+EMAILADDRANALYZER =  RegexTokenizer() | LowercaseFilter()
+
 # CUSTOM ANALYZER raw-string + lowercase filter
 #
 # This is useful to:
@@ -72,7 +80,7 @@ PATHANALYZER = RegexTokenizer() | LowercaseFilter()
 #INDEX SCHEMA DEFINITION
 SCHEMA = Schema(
     fileid=ID(unique=True),
-    owner=TEXT(),
+    owner=TEXT(analyzer=EMAILADDRANALYZER),
     # this field preserves case of repository name for exact matching
     repository_rawname=TEXT(analyzer=IDANALYZER),
     repository=TEXT(stored=True, analyzer=ICASEIDANALYZER),
@@ -91,12 +99,12 @@ CHGSETS_SCHEMA = Schema(
     raw_id=ID(unique=True, stored=True),
     date=NUMERIC(stored=True),
     last=BOOLEAN(),
-    owner=TEXT(),
+    owner=TEXT(analyzer=EMAILADDRANALYZER),
     # this field preserves case of repository name for exact matching
     # and unique-ness in index table
     repository_rawname=ID(unique=True),
     repository=ID(stored=True, analyzer=ICASEIDANALYZER),
-    author=TEXT(stored=True),
+    author=TEXT(stored=True, analyzer=EMAILADDRANALYZER),
     message=FieldType(format=Characters(), analyzer=ANALYZER,
                       scorable=True, stored=True),
     parents=TEXT(),

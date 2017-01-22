@@ -188,8 +188,8 @@ class TestSearchControllerIndexing(TestController):
         ('commit', 'owner:"this-is-it"', 0),
 
         # matching against only 1 revision
-        ('commit', 'author:"this is it"', 0),
-        ('commit', 'author:"this-is-it"', 0),
+        ('commit', 'author:"this is it"', 1),
+        ('commit', 'author:"this-is-it"', 1),
     ])
     def test_mailaddr_stopword(self, searchtype, query, hit):
         response = self.app.get(url(controller='search', action='index'),
