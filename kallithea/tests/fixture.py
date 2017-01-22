@@ -274,11 +274,14 @@ class Fixture(object):
 
         return source
 
-    def commit_change(self, repo, filename, content, message, vcs_type, parent=None, newfile=False):
+    def commit_change(self, repo, filename, content, message, vcs_type,
+                      parent=None, newfile=False, author=None):
         repo = Repository.get_by_repo_name(repo)
         _cs = parent
-        if not parent:
+        if parent is None:
             _cs = EmptyChangeset(alias=vcs_type)
+        if author is None:
+            author = TEST_USER_ADMIN_LOGIN
 
         if newfile:
             nodes = {
@@ -291,13 +294,13 @@ class Fixture(object):
                 message=message,
                 nodes=nodes,
                 parent_cs=_cs,
-                author=TEST_USER_ADMIN_LOGIN,
+                author=author,
             )
         else:
             cs = ScmModel().commit_change(
                 repo=repo.scm_instance, repo_name=repo.repo_name,
                 cs=parent, user=TEST_USER_ADMIN_LOGIN,
-                author=TEST_USER_ADMIN_LOGIN,
+                author=author,
                 message=message,
                 content=content,
                 f_path=filename
