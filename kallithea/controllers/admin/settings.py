@@ -165,11 +165,6 @@ class SettingsController(BaseController):
                       'install git hooks=%s and '
                       'overwrite git hooks=%s' % (rm_obsolete, install_git_hooks, overwrite_git_hooks))
 
-            if invalidate_cache:
-                log.debug('invalidating all repositories cache')
-                for repo in Repository.query():
-                    ScmModel().mark_for_invalidation(repo.repo_name)
-
             filesystem_repos = ScmModel().repo_scan()
             added, removed = repo2db_mapper(filesystem_repos, rm_obsolete,
                                             install_git_hooks=install_git_hooks,
@@ -180,6 +175,18 @@ class SettingsController(BaseController):
                  for repo_name in added) or '-',
                  ', '.join(h.escape(safe_unicode(repo_name)) for repo_name in removed) or '-')),
                 category='success')
+
+            if invalidate_cache:
+                log.debug('invalidating all repositories cache')
+                i = 0
+                for repo in Repository.query():
+                    try:
+                        ScmModel().mark_for_invalidation(repo.repo_name)
+                        i += 1
+                    except VCSError as e:
+                        log.warning('VCS error invalidating %s: %s', repo.repo_name, e)
+                h.flash(_('Invalidated %s repositories') % i, category='success')
+
             raise HTTPFound(location=url('admin_settings_mapping'))
 
         defaults = Setting.get_app_settings()
