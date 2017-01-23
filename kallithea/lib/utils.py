@@ -631,11 +631,12 @@ def setup_cache_regions(settings):
     # Find all regions, apply defaults, and apply to beaker
     if cache_settings['regions']:
         for region in cache_settings['regions'].split(','):
-            region = region.strip() + '.'
+            region = region.strip()
+            prefix = region + '.'
             region_settings = {}
             for key in cache_settings:
-                if key.startswith(region):
-                    name = key[len(region):]
+                if key.startswith(prefix):
+                    name = key[len(prefix):]
                     region_settings[name] = cache_settings[key]
             region_settings.setdefault('expire',
                                        cache_settings.get('expire', '60'))
