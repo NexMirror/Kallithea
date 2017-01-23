@@ -621,29 +621,30 @@ def check_git_version():
 
 # set cache regions for beaker so celery can utilise it
 def setup_cache_regions(settings):
+    # Create dict with just beaker cache configs with prefix stripped
     cache_settings = {'regions': None}
-    for key in settings.keys():
-        for prefix in ['beaker.cache.', 'cache.']:
-            if key.startswith(prefix):
-                name = key.split(prefix)[1].strip()
-                cache_settings[name] = settings[key].strip()
+    prefix = 'beaker.cache.'
+    for key in settings:
+        if key.startswith(prefix):
+            name = key[len(prefix):]
+            cache_settings[name] = settings[key]
+    # Find all regions, apply defaults, and apply to beaker
     if cache_settings['regions']:
         for region in cache_settings['regions'].split(','):
-            region = region.strip()
+            region = region.strip() + '.'
             region_settings = {}
-            for key, value in cache_settings.items():
+            for key in cache_settings:
                 if key.startswith(region):
-                    region_settings[key.split('.')[1]] = value
-            region_settings['expire'] = int(region_settings.get('expire',
-                                                                60))
+                    name = key[len(region):]
+                    region_settings[name] = cache_settings[key]
+            region_settings.setdefault('expire',
+                                       cache_settings.get('expire', '60'))
             region_settings.setdefault('lock_dir',
                                        cache_settings.get('lock_dir'))
             region_settings.setdefault('data_dir',
                                        cache_settings.get('data_dir'))
-
-            if 'type' not in region_settings:
-                region_settings['type'] = cache_settings.get('type',
-                                                             'memory')
+            region_settings.setdefault('type',
+                                       cache_settings.get('type', 'memory'))
             beaker.cache.cache_regions[region] = region_settings
 
 
