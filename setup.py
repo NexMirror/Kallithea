@@ -40,7 +40,7 @@ requirements = [
     "webob>=1.0.8,<=1.1.1",
     "Pylons>=1.0.0,<=1.0.2",
     "WebTest<2.0", # make the Pylons dependency pick a version that supports our WebOb version
-    "Beaker==1.6.4,<2",
+    "Beaker>=1.7.0,<2",
     "WebHelpers==1.3",
     "formencode>=1.2.4,<=1.2.6",
     "SQLAlchemy>=1.0,<1.1",
