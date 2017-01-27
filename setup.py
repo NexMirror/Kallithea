@@ -39,7 +39,7 @@ requirements = [
     "GearBox<1",
     "waitress>=0.8.8,<1.0",
     "webob>=1.7,<2",
-    "backlash >= 0.1.1, < 1.0.0",
+    "backlash >= 0.1.2, < 1.0.0",
     "TurboGears2 >= 2.3.10, < 3.0.0",
     "tgext.routes >= 0.2.0, < 1.0.0",
     "Beaker>=1.7.0,<2",

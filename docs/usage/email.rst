@@ -85,10 +85,6 @@ contain only an email address, like `kallithea-noreply@example.com`, or both
 a name and an address in the following format: `Kallithea Errors
 <kallithea-noreply@example.com>`.
 
-*Note:* The WebError_ package does not respect ``smtp_port`` and assumes the
-standard SMTP port (25). If you have a remote SMTP server with a different port,
-you could set up a local forwarding SMTP server on port 25.
-
 
 References
 ----------
