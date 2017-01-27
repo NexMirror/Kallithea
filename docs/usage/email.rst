@@ -76,9 +76,8 @@ Error emails
 
 When an exception occurs in Kallithea -- and unless interactive debugging is
 enabled using ``set debug = true`` in the ``[app:main]`` section of the
-configuration file -- an email with exception details is sent by WebError_'s
-``ErrorMiddleware`` to the addresses specified in ``email_to`` in the
-configuration file.
+configuration file -- an email with exception details is sent by backlash_
+to the addresses specified in ``email_to`` in the configuration file.
 
 Recipients will see these emails originating from the sender specified in the
 ``error_email_from`` setting in the configuration file. This setting can either
