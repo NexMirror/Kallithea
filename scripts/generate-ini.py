@@ -72,7 +72,7 @@ ini_files = [
         listening on *:5000
         sqlite and kallithea.db
         initial_repo_scan = true
-        set debug = true
+        debug = true
         verbose and colorful logging
 
         The %(here)s variable will be replaced with the parent directory of this file
@@ -83,7 +83,7 @@ ini_files = [
             },
             '[app:main]': {
                 'initial_repo_scan': 'true',
-                'set debug': 'true',
+                'debug': 'true',
                 'app_instance_uuid': 'development-not-secret',
                 'beaker.session.secret': 'development-not-secret',
             },

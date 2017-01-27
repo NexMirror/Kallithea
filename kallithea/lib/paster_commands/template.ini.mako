@@ -6,7 +6,6 @@
 <%text>################################################################################</%text>
 
 [DEFAULT]
-debug = true
 
 <%text>################################################################################</%text>
 <%text>## Email settings                                                             ##</%text>
@@ -467,11 +466,11 @@ sentry.exclude_paths =
 
 %endif
 <%text>################################################################################</%text>
-<%text>## WARNING: *THE LINE BELOW MUST BE UNCOMMENTED ON A PRODUCTION ENVIRONMENT*  ##</%text>
+<%text>## WARNING: *DEBUG MODE MUST BE OFF IN A PRODUCTION ENVIRONMENT*              ##</%text>
 <%text>## Debug mode will enable the interactive debugging tool, allowing ANYONE to  ##</%text>
 <%text>## execute malicious code after an exception is raised.                       ##</%text>
 <%text>################################################################################</%text>
-set debug = false
+debug = false
 
 <%text>##################################</%text>
 <%text>###       LOGVIEW CONFIG       ###</%text>
