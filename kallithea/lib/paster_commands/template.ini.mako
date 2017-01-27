@@ -7,7 +7,6 @@
 
 [DEFAULT]
 debug = true
-pdebug = false
 
 <%text>################################################################################</%text>
 <%text>## Email settings                                                             ##</%text>
