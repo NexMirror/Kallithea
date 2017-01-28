@@ -204,6 +204,25 @@ code needs the database to assign an "auto-increment" primary key ID to
 a freshly created model object (before flushing, the ID attribute will
 be ``None``).
 
+TurboGears2 DebugBar
+^^^^^^^^^^^^^^^^^^^^
+
+It is possible to enable the TurboGears2-provided DebugBar_, a toolbar overlayed
+over the Kallithea web interface, allowing you to see:
+
+* timing information of the current request, including profiling information
+* request data, including GET data, POST data, cookies, headers and environment
+  variables
+* a list of executed database queries, including timing and result values
+
+DebugBar is only activated when ``debug = true`` is set in the configuration
+file. This is important, because the DebugBar toolbar will be visible for all
+users, and allow them to see information they should not be allowed to see. Like
+is anyway the case for ``debug = true``, do not use this in production!
+
+To enable DebugBar, install ``tgext.debugbar`` and ``kajiki`` (typically via
+``pip``) and restart Kallithea (in debug mode).
+
 
 "Roadmap"
 ---------
@@ -225,3 +244,4 @@ Thank you for your contribution!
 .. _kallithea-general: http://lists.sfconservancy.org/mailman/listinfo/kallithea-general
 .. _Hosted Weblate: https://hosted.weblate.org/projects/kallithea/kallithea/
 .. _wiki: https://bitbucket.org/conservancy/kallithea/wiki/Home
+.. _DebugBar: https://github.com/TurboGears/tgext.debugbar

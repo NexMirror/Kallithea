@@ -96,6 +96,21 @@ base_config = KallitheaAppConfig()
 # TODO still needed as long as we use pylonslib
 sys.modules['pylons'] = tg
 
+# DebugBar, a debug toolbar for TurboGears2.
+# (https://github.com/TurboGears/tgext.debugbar)
+# To enable it, install 'tgext.debugbar' and 'kajiki', and run Kallithea with
+# 'debug = true' (not in production!)
+# See the Kallithea documentation for more information.
+try:
+    from tgext.debugbar import enable_debugbar
+    import kajiki # only to check its existence
+except ImportError:
+    pass
+else:
+    base_config['renderers'].append('kajiki')
+    enable_debugbar(base_config)
+
+
 def setup_configuration(app):
     config = app.config
 
