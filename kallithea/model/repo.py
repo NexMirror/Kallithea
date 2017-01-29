@@ -153,10 +153,10 @@ class RepoModel(object):
     @classmethod
     def _render_datatable(cls, tmpl, *args, **kwargs):
         import kallithea
-        from tg import tmpl_context as c, request
+        from tg import tmpl_context as c, request, app_globals
         from tg.i18n import ugettext as _
 
-        _tmpl_lookup = kallithea.CONFIG['pylons.app_globals'].mako_lookup
+        _tmpl_lookup = app_globals.mako_lookup
         template = _tmpl_lookup.get_template('data_table/_dt_elements.html')
 
         tmpl = template.get_def(tmpl)

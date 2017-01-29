@@ -32,12 +32,9 @@ import traceback
 import time
 import itertools
 
-from paste.response import replace_header
-from pylons.controllers import WSGIController
-from pylons.controllers.util import Response
-from tg import request
+from tg import Response, response, request, TGController
 
-from webob.exc import HTTPError
+from webob.exc import HTTPError, HTTPException, WSGIHTTPException
 
 from kallithea.model.db import User
 from kallithea.model import meta
@@ -59,19 +56,20 @@ class JSONRPCError(BaseException):
         return safe_str(self.message)
 
 
-class JSONRPCErrorResponse(Response, Exception):
+class JSONRPCErrorResponse(Response, HTTPException):
     """
     Generate a Response object with a JSON-RPC error body
     """
 
     def __init__(self, message=None, retid=None, code=None):
+        HTTPException.__init__(self, message, self)
         Response.__init__(self,
-                          body=json.dumps(dict(id=retid, result=None, error=message)),
+                          json_body=dict(id=retid, result=None, error=message),
                           status=code,
                           content_type='application/json')
 
 
-class JSONRPCController(WSGIController):
+class JSONRPCController(TGController):
     """
      A WSGI-speaking JSON-RPC controller class
 
@@ -95,19 +93,15 @@ class JSONRPCController(WSGIController):
         """
         return self._rpc_args
 
-    def __call__(self, environ, start_response):
+    def _dispatch(self, state, remainder=None):
         """
         Parse the request body as JSON, look up the method on the
         controller and if it exists, dispatch to it.
         """
-        try:
-            return self._handle_request(environ, start_response)
-        except JSONRPCErrorResponse as e:
-            return e
-        finally:
-            meta.Session.remove()
+        # Since we are here we should respond as JSON
+        response.content_type = 'application/json'
 
-    def _handle_request(self, environ, start_response):
+        environ = state.request.environ
         start = time.time()
         ip_addr = request.ip_addr = self._get_ip_addr(environ)
         self._req_id = None
@@ -218,39 +212,26 @@ class JSONRPCController(WSGIController):
                 )
 
         self._rpc_args = {}
-
         self._rpc_args.update(self._request_params)
-
         self._rpc_args['action'] = self._req_method
         self._rpc_args['environ'] = environ
-        self._rpc_args['start_response'] = start_response
 
-        status = []
-        headers = []
-        exc_info = []
-
-        def change_content(new_status, new_headers, new_exc_info=None):
-            status.append(new_status)
-            headers.extend(new_headers)
-            exc_info.append(new_exc_info)
-
-        output = WSGIController.__call__(self, environ, change_content)
-        output = list(output) # expand iterator - just to ensure exact timing
-        replace_header(headers, 'Content-Type', 'application/json')
-        start_response(status[0], headers, exc_info[0])
         log.info('IP: %s Request to %s time: %.3fs' % (
             self._get_ip_addr(environ),
             safe_unicode(_get_access_path(environ)), time.time() - start)
         )
-        return output
 
-    def _dispatch_call(self):
+        state.set_action(self._rpc_call, [])
+        state.set_params(self._rpc_args)
+        return state
+
+    def _rpc_call(self, action, environ, **rpc_args):
         """
-        Implement dispatch interface specified by WSGIController
+        Call the specified RPC Method
         """
         raw_response = ''
         try:
-            raw_response = self._inspect_call(self._func)
+            raw_response = getattr(self, action)(**rpc_args)
             if isinstance(raw_response, HTTPError):
                 self._error = str(raw_response)
         except JSONRPCError as e:

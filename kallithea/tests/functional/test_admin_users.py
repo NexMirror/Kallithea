@@ -17,7 +17,6 @@ from sqlalchemy.orm.exc import NoResultFound, ObjectDeletedError
 import pytest
 from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
-from kallithea.tests.test_context import test_context
 from kallithea.controllers.admin.users import UsersController
 from kallithea.model.db import User, Permission, UserIpMap, UserApiKeys
 from kallithea.lib.auth import check_password
@@ -26,6 +25,8 @@ from kallithea.model import validators
 from kallithea.lib import helpers as h
 from kallithea.model.meta import Session
 from webob.exc import HTTPNotFound
+
+from tg.util.webtest import test_context
 
 fixture = Fixture()
 

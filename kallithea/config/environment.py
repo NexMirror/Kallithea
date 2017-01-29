@@ -11,34 +11,11 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-"""
-    Pylons environment configuration
-"""
+"""WSGI environment setup for Kallithea."""
 
-import os
-import kallithea
-import pylons
+from kallithea.config.app_cfg import base_config
 
-from kallithea.config.app_cfg import setup_configuration
+__all__ = ['load_environment']
 
-def load_environment(global_conf, app_conf,
-                     test_env=None, test_index=None):
-    """
-    Configure the Pylons environment via the ``pylons.config``
-    object
-    """
-    config = pylons.configuration.PylonsConfig()
-
-    # Pylons paths
-    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    paths = dict(
-        root=root,
-        controllers=os.path.join(root, 'controllers'),
-        static_files=os.path.join(root, 'public'),
-        templates=[os.path.join(root, 'templates')]
-    )
-
-    # Initialize config with the basic options
-    config.init_app(global_conf, app_conf, package='kallithea', paths=paths)
-
-    return setup_configuration(config, paths, app_conf, test_env, test_index)
+# Use base_config to setup the environment loader function
+load_environment = base_config.make_load_environment()

@@ -44,7 +44,7 @@ class Command(BasePasterCommand):
     takes_config_file = False
 
     def take_action(self, args):
-        from pylons import config
+        from tg import config
 
         here = config['here']
         content = pkg_resources.resource_string(

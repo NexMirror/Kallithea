@@ -11,76 +11,112 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
+Global configuration file for TurboGears2 specific settings in Kallithea.
 
-import os
-import kallithea
+This file complements the .ini file.
+"""
+
 import platform
+import os, sys
 
-import pylons
-import mako.lookup
-import formencode
+import tg
+from tg import hooks
+from tg.configuration import AppConfig
+from tg.support.converters import asbool
 
-import kallithea.lib.app_globals as app_globals
-
+from kallithea.lib.middleware.https_fixup import HttpsFixup
+from kallithea.lib.middleware.simplegit import SimpleGit
+from kallithea.lib.middleware.simplehg import SimpleHg
 from kallithea.config.routing import make_map
-
-from kallithea.lib import helpers
 from kallithea.lib.auth import set_available_permissions
-from kallithea.lib.utils import repo2db_mapper, make_ui, set_app_settings, \
-    load_rcextensions, check_git_version, set_vcs_config, set_indexer_config
-from kallithea.lib.utils2 import engine_from_config, str2bool
-from kallithea.model.base import init_model
+from kallithea.lib.db_manage import DbManage
+from kallithea.lib.utils import load_rcextensions, make_ui, set_app_settings, set_vcs_config, \
+    set_indexer_config, check_git_version, repo2db_mapper
+from kallithea.lib.utils2 import str2bool
 from kallithea.model.scm import ScmModel
 
-from routes.middleware import RoutesMiddleware
-from paste.cascade import Cascade
-from paste.registry import RegistryManager
-from paste.urlparser import StaticURLParser
-from paste.deploy.converters import asbool
+import formencode
+import kallithea
 
-from pylons.middleware import ErrorHandler, StatusCodeRedirect
-from pylons.wsgiapp import PylonsApp
 
-from kallithea.lib.middleware.simplehg import SimpleHg
-from kallithea.lib.middleware.simplegit import SimpleGit
-from kallithea.lib.middleware.https_fixup import HttpsFixup
-from kallithea.lib.middleware.sessionmiddleware import SecureSessionMiddleware
-from kallithea.lib.middleware.wrapper import RequestWrapper
+class KallitheaAppConfig(AppConfig):
+    # Note: AppConfig has a misleading name, as it's not the application
+    # configuration, but the application configurator. The AppConfig values are
+    # used as a template to create the actual configuration, which might
+    # overwrite or extend the one provided by the configurator template.
 
-def setup_configuration(config, paths, app_conf, test_env, test_index):
+    # To make it clear, AppConfig creates the config and sets into it the same
+    # values that AppConfig itself has. Then the values from the config file and
+    # gearbox options are loaded and merged into the configuration. Then an
+    # after_init_config(conf) method of AppConfig is called for any change that
+    # might depend on options provided by configuration files.
+
+    def __init__(self):
+        super(KallitheaAppConfig, self).__init__()
+
+        self['package'] = kallithea
+
+        self['prefer_toscawidgets2'] = False
+        self['use_toscawidgets'] = False
+
+        self['renderers'] = []
+
+        # Enable json in expose
+        self['renderers'].append('json')
+
+        # Configure template rendering
+        self['renderers'].append('mako')
+        self['default_renderer'] = 'mako'
+        self['use_dotted_templatenames'] = False
+
+        # Configure Sessions, store data as JSON to avoid pickle security issues
+        self['session.enabled'] = True
+        self['session.data_serializer'] = 'json'
+
+        # Configure the base SQLALchemy Setup
+        self['use_sqlalchemy'] = True
+        self['model'] = kallithea.model.base
+        self['DBSession'] = kallithea.model.meta.Session
+
+        # Configure App without an authentication backend.
+        self['auth_backend'] = None
+
+        # Use custom error page for these errors. By default, Turbogears2 does not add
+        # 400 in this list.
+        # Explicitly listing all is considered more robust than appending to defaults,
+        # in light of possible future framework changes.
+        self['errorpage.status_codes'] = [400, 401, 403, 404]
+
+        # Disable transaction manager -- currently Kallithea takes care of transactions itself
+        self['tm.enabled'] = False
+
+base_config = KallitheaAppConfig()
+
+# TODO still needed as long as we use pylonslib
+sys.modules['pylons'] = tg
+
+def setup_configuration(app):
+    config = app.config
 
     # store some globals into kallithea
     kallithea.CELERY_ON = str2bool(config['app_conf'].get('use_celery'))
     kallithea.CELERY_EAGER = str2bool(config['app_conf'].get('celery.always.eager'))
-
-    config['routes.map'] = make_map(config)
-    config['pylons.app_globals'] = app_globals.Globals(config)
-    config['pylons.h'] = helpers
     kallithea.CONFIG = config
+
+    # Provide routes mapper to the RoutedController
+    root_controller = app.find_controller('root')
+    root_controller.mapper = config['routes.map'] = make_map(config)
 
     load_rcextensions(root_path=config['here'])
 
-    # Setup cache object as early as possible
-    pylons.cache._push_object(config['pylons.app_globals'].cache)
-
-    # Create the Mako TemplateLookup, with the default auto-escaping
-    config['pylons.app_globals'].mako_lookup = mako.lookup.TemplateLookup(
-        directories=paths['templates'],
-        strict_undefined=True,
-        module_directory=os.path.join(app_conf['cache_dir'], 'templates'),
-        input_encoding='utf-8', default_filters=['escape'],
-        imports=['from webhelpers.html import escape'])
-
-    # sets the c attribute access when don't existing attribute are accessed
-    config['pylons.strict_tmpl_context'] = True
+    # FIXME move test setup code out of here
     test = os.path.split(config['__file__'])[-1] == 'test.ini'
     if test:
-        if test_env is None:
-            test_env = not int(os.environ.get('KALLITHEA_NO_TMP_PATH', 0))
-        if test_index is None:
-            test_index = not int(os.environ.get('KALLITHEA_WHOOSH_TEST_DISABLE', 0))
+        test_env = not int(os.environ.get('KALLITHEA_NO_TMP_PATH', 0))
+        test_index = not int(os.environ.get('KALLITHEA_WHOOSH_TEST_DISABLE', 0))
         if os.environ.get('TEST_DB'):
-            # swap config if we pass enviroment variable
+            # swap config if we pass environment variable
             config['sqlalchemy.url'] = os.environ.get('TEST_DB')
 
         from kallithea.tests.fixture import create_test_env, create_test_index
@@ -93,11 +129,6 @@ def setup_configuration(config, paths, app_conf, test_env, test_index):
         if test_index:
             create_test_index(TESTS_TMP_PATH, config, True)
 
-    # MULTIPLE DB configs
-    # Setup the SQLAlchemy database engine
-    sa_engine = engine_from_config(config, 'sqlalchemy.')
-    init_model(sa_engine)
-
     set_available_permissions(config)
     repos_path = make_ui('db').configitems('paths')[0][1]
     config['base_path'] = repos_path
@@ -108,78 +139,37 @@ def setup_configuration(config, paths, app_conf, test_env, test_index):
         instance_id = '%s-%s' % (platform.uname()[1], os.getpid())
         kallithea.CONFIG['instance_id'] = instance_id
 
-    # CONFIGURATION OPTIONS HERE (note: all config options will override
-    # any Pylons config options)
-
-    # store config reference into our module to skip import magic of
-    # pylons
+    # update kallithea.CONFIG with the meanwhile changed 'config'
     kallithea.CONFIG.update(config)
+
+    # configure vcs and indexer libraries (they are supposed to be independent
+    # as much as possible and thus avoid importing tg.config or
+    # kallithea.CONFIG).
     set_vcs_config(kallithea.CONFIG)
     set_indexer_config(kallithea.CONFIG)
 
-    #check git version
     check_git_version()
 
     if str2bool(config.get('initial_repo_scan', True)):
         repo2db_mapper(ScmModel().repo_scan(repos_path),
                        remove_obsolete=False, install_git_hooks=False)
+
     formencode.api.set_stdtranslation(languages=[config.get('lang')])
 
-    return config
+hooks.register('configure_new_app', setup_configuration)
 
-def setup_application(config, global_conf, full_stack, static_files):
 
-    # The Pylons WSGI app
-    app = PylonsApp(config=config)
+def setup_application(app):
+    config = app.config
 
-    # Routing/Session/Cache Middleware
-    app = RoutesMiddleware(app, config['routes.map'], use_method_override=False)
-    app = SecureSessionMiddleware(app, config)
+    # we want our low level middleware to get to the request ASAP. We don't
+    # need any stack middleware in them - especially no StatusCodeRedirect buffering
+    app = SimpleHg(app, config)
+    app = SimpleGit(app, config)
 
-    # CUSTOM MIDDLEWARE HERE (filtered by error handling middlewares)
-    if asbool(config['pdebug']):
-        from kallithea.lib.profiler import ProfilingMiddleware
-        app = ProfilingMiddleware(app)
-
-    if asbool(full_stack):
-
-        from kallithea.lib.middleware.sentry import Sentry
-        from kallithea.lib.middleware.appenlight import AppEnlight
-        if AppEnlight and asbool(config['app_conf'].get('appenlight')):
-            app = AppEnlight(app, config)
-        elif Sentry:
-            app = Sentry(app, config)
-
-        # Handle Python exceptions
-        app = ErrorHandler(app, global_conf, **config['pylons.errorware'])
-
-        # Display error documents for 401, 403, 404 status codes (and
-        # 500 when debug is disabled)
-        # Note: will buffer the output in memory!
-        if asbool(config['debug']):
-            app = StatusCodeRedirect(app)
-        else:
-            app = StatusCodeRedirect(app, [400, 401, 403, 404, 500])
-
-        # we want our low level middleware to get to the request ASAP. We don't
-        # need any pylons stack middleware in them - especially no StatusCodeRedirect buffering
-        app = SimpleHg(app, config)
-        app = SimpleGit(app, config)
-
-        # Enable https redirects based on HTTP_X_URL_SCHEME set by proxy
-        if any(asbool(config.get(x)) for x in ['https_fixup', 'force_https', 'use_htsts']):
-            app = HttpsFixup(app, config)
-
-        app = RequestWrapper(app, config) # logging
-
-    # Establish the Registry for this application
-    app = RegistryManager(app) # thread / request-local module globals / variables
-
-    if asbool(static_files):
-        # Serve static files
-        static_app = StaticURLParser(config['pylons.paths']['static_files'])
-        app = Cascade([static_app, app])
-
-    app.config = config
-
+    # Enable https redirects based on HTTP_X_URL_SCHEME set by proxy
+    if any(asbool(config.get(x)) for x in ['https_fixup', 'force_https', 'use_htsts']):
+        app = HttpsFixup(app, config)
     return app
+
+hooks.register('before_config', setup_application)

@@ -32,6 +32,7 @@ import datetime
 import traceback
 import beaker
 
+from tg import request, response
 from webhelpers.text import collapse, remove_formatting, strip_tags
 from beaker.cache import _cache_decorate
 

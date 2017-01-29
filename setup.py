@@ -39,7 +39,9 @@ requirements = [
     "GearBox<1",
     "waitress>=0.8.8,<1.0",
     "webob>=1.7,<2",
-    "Pylons>=1.0.0,<=1.0.2",
+    "backlash >= 0.1.1, < 1.0.0",
+    "TurboGears2 >= 2.3.10, < 3.0.0",
+    "tgext.routes >= 0.2.0, < 1.0.0",
     "Beaker>=1.7.0,<2",
     "WebHelpers==1.3",
     "formencode>=1.2.4,<=1.2.6",
@@ -56,6 +58,8 @@ requirements = [
     "Routes==1.13",
     "dulwich>=0.14.1",
     "mercurial>=2.9,<4.2",
+    "decorator >= 3.3.2",
+    "Paste >= 2.0.3, < 3.0",
 ]
 
 if sys.version_info < (2, 7):
@@ -150,9 +154,6 @@ setuptools.setup(
 
     [paste.app_factory]
     main = kallithea.config.middleware:make_app
-
-    [paste.app_install]
-    main = pylons.util:PylonsInstaller
 
     [gearbox.commands]
     make-config=kallithea.lib.paster_commands.make_config:Command

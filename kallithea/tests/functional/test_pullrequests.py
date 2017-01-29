@@ -1,7 +1,7 @@
 import re
 import pytest
 
-from kallithea.tests.test_context import test_context
+from tg.util.webtest import test_context
 
 from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture

@@ -30,7 +30,7 @@ import traceback
 import formencode
 
 from formencode import htmlfill
-from tg import request, tmpl_context as c, config
+from tg import request, tmpl_context as c, config, app_globals
 from tg.i18n import ugettext as _
 from sqlalchemy.sql.expression import func
 from webob.exc import HTTPFound, HTTPNotFound
@@ -73,7 +73,7 @@ class UsersController(BaseController):
 
         users_data = []
         total_records = len(c.users_list)
-        _tmpl_lookup = kallithea.CONFIG['pylons.app_globals'].mako_lookup
+        _tmpl_lookup = app_globals.mako_lookup
         template = _tmpl_lookup.get_template('data_table/_dt_elements.html')
 
         grav_tmpl = '<div class="gravatar">%s</div>'

@@ -7,7 +7,7 @@ from kallithea.lib import helpers as h
 from kallithea.model.user import UserModel
 from kallithea.model.meta import Session
 
-from kallithea.tests.test_context import test_context
+from tg.util.webtest import test_context
 
 fixture = Fixture()
 

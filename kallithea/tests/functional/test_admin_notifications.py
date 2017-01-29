@@ -6,7 +6,7 @@ from kallithea.model.notification import NotificationModel
 from kallithea.model.meta import Session
 from kallithea.lib import helpers as h
 
-from kallithea.tests.test_context import test_context
+from tg.util.webtest import test_context
 
 class TestNotificationsController(TestController):
     def setup_method(self, method):

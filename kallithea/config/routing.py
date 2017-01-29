@@ -28,7 +28,7 @@ ADMIN_PREFIX = '/_admin'
 
 def make_map(config):
     """Create, configure and return the routes Mapper"""
-    rmap = Mapper(directory=config['pylons.paths']['controllers'],
+    rmap = Mapper(directory=config['paths']['controllers'],
                   always_scan=config['debug'])
     rmap.minimization = False
     rmap.explicit = False
@@ -46,7 +46,7 @@ def make_map(config):
         repo_name = match_dict.get('repo_name')
 
         if match_dict.get('f_path'):
-            #fix for multiple initial slashes that causes errors
+            # fix for multiple initial slashes that causes errors
             match_dict['f_path'] = match_dict['f_path'].lstrip('/')
 
         by_id_match = get_repo_by_id(repo_name)
@@ -89,11 +89,6 @@ def make_map(config):
 
     def check_int(environ, match_dict):
         return match_dict.get('id').isdigit()
-
-    # The ErrorController route (handles 404/500 error pages); it should
-    # likely stay at the top, ensuring it can always be resolved
-    rmap.connect('/error/{action}', controller='error')
-    rmap.connect('/error/{action}/{id}', controller='error')
 
     #==========================================================================
     # CUSTOM ROUTES HERE
@@ -426,8 +421,8 @@ def make_map(config):
     #==========================================================================
     # API V2
     #==========================================================================
-    with rmap.submapper(path_prefix=ADMIN_PREFIX,
-                        controller='api/api') as m:
+    with rmap.submapper(path_prefix=ADMIN_PREFIX, controller='api/api',
+                        action='_dispatch') as m:
         m.connect('api', '/api')
 
     #USER JOURNAL

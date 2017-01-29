@@ -21,14 +21,9 @@ import tempfile
 import time
 
 from tg import config
-import pylons
-from pylons import url
-from pylons.i18n.translation import _get_translator
-from pylons.util import ContextObj
-from routes.util import URLGenerator
 from webtest import TestApp
 
-from kallithea import is_windows
+from kallithea import is_windows, model
 from kallithea.model.db import Notification, User, UserNotification
 from kallithea.model.meta import Session
 from kallithea.lib.utils2 import safe_str
@@ -41,6 +36,10 @@ log = logging.getLogger(__name__)
 
 skipif = pytest.mark.skipif
 parametrize = pytest.mark.parametrize
+
+# Hack: These module global values MUST be set to actual values before running any tests. This is currently done by conftest.py.
+url = None
+testapp = None
 
 __all__ = [
     'skipif', 'parametrize', 'environ', 'url', 'TestController',
@@ -147,17 +146,9 @@ class TestController(object):
 
     @pytest.fixture(autouse=True)
     def app_fixture(self):
-        config = pylons.test.pylonsapp.config
-        url._push_object(URLGenerator(config['routes.map'], environ))
-        pylons.app_globals._push_object(config['pylons.app_globals'])
-        pylons.config._push_object(config)
-        pylons.tmpl_context._push_object(ContextObj())
-        # Initialize a translator for tests that utilize i18n
-        translator = _get_translator(pylons.config.get('lang'))
-        pylons.translator._push_object(translator)
         h = NullHandler()
         logging.getLogger("kallithea").addHandler(h)
-        self.app = TestApp(pylons.test.pylonsapp)
+        self.app = TestApp(testapp)
         return self.app
 
     def remove_all_notifications(self):

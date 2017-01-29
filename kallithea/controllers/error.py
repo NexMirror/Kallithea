@@ -29,9 +29,8 @@ import os
 import cgi
 import logging
 
-from tg import tmpl_context as c, request, config
+from tg import tmpl_context as c, request, config, expose
 from tg.i18n import ugettext as _
-from pylons.middleware import media_path
 
 from kallithea.lib.base import BaseController, render
 
@@ -52,8 +51,9 @@ class ErrorController(BaseController):
         # disable all base actions since we don't need them here
         pass
 
-    def document(self):
-        resp = request.environ.get('pylons.original_response')
+    @expose('/errors/error_document.html')
+    def document(self, *args, **kwargs):
+        resp = request.environ.get('tg.original_response')
         c.site_name = config.get('title')
 
         log.debug('### %s ###', resp and resp.status or 'no response')
@@ -70,7 +70,7 @@ class ErrorController(BaseController):
             c.error_message = _('No response')
             c.error_explanation = _('Unknown error')
 
-        return render('/errors/error_document.html')
+        return dict()
 
     def get_error_explanation(self, code):
         """ get the error explanations of int codes

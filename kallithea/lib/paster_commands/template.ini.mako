@@ -516,7 +516,7 @@ script_location = kallithea:alembic
 <%text>################################</%text>
 
 [loggers]
-keys = root, routes, kallithea, sqlalchemy, gearbox, beaker, templates, whoosh_indexer
+keys = root, routes, kallithea, sqlalchemy, tg, gearbox, beaker, templates, whoosh_indexer
 
 [handlers]
 keys = console, console_sql
@@ -555,6 +555,12 @@ propagate = 1
 level = DEBUG
 handlers =
 qualname = kallithea
+propagate = 1
+
+[logger_tg]
+level = DEBUG
+handlers =
+qualname = tg
 propagate = 1
 
 [logger_gearbox]

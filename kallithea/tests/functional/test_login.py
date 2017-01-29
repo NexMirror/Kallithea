@@ -16,7 +16,7 @@ from kallithea.model.db import User, Notification
 from kallithea.model.meta import Session
 from kallithea.model.user import UserModel
 
-from kallithea.tests.test_context import test_context
+from tg.util.webtest import test_context
 
 fixture = Fixture()
 

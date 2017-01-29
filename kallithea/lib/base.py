@@ -41,9 +41,8 @@ import paste.auth.basic
 import paste.httpheaders
 from webhelpers.pylonslib import secure_form
 
-from tg import config, tmpl_context as c, request, response, session
-from pylons.controllers import WSGIController
-from pylons.templating import render_mako as render  # don't remove this import
+from tg import config, tmpl_context as c, request, response, session, render_template
+from tg import TGController
 from tg.i18n import ugettext as _
 
 from kallithea import __version__, BACKENDS
@@ -64,6 +63,10 @@ from kallithea.model.notification import NotificationModel
 from kallithea.model.scm import ScmModel
 
 log = logging.getLogger(__name__)
+
+
+def render(template_path):
+    return render_template({'url': url}, 'mako', template_path)
 
 
 def _filter_proxy(ip):
@@ -101,7 +104,7 @@ def _get_ip_addr(environ):
 
 def _get_access_path(environ):
     path = environ.get('PATH_INFO')
-    org_req = environ.get('pylons.original_request')
+    org_req = environ.get('tg.original_request')
     if org_req:
         path = org_req.environ.get('PATH_INFO')
     return path
@@ -375,14 +378,11 @@ class BaseVCSController(object):
             meta.Session.remove()
 
 
-class BaseController(WSGIController):
+class BaseController(TGController):
 
     def _before(self, *args, **kwargs):
-        pass
-
-    def __before__(self):
         """
-        __before__ is called before controller methods and after __call__
+        _before is called before controller methods and after __call__
         """
         c.kallithea_version = __version__
         rc_config = Setting.get_app_settings()
@@ -436,13 +436,6 @@ class BaseController(WSGIController):
         c.my_pr_count = PullRequest.query(reviewer_id=request.authuser.user_id, include_closed=False).count()
 
         self.scm_model = ScmModel()
-
-        # __before__ in Pylons is called _before in TurboGears2. As preparation
-        # to the migration to TurboGears2, all __before__ methods were already
-        # renamed to _before.  We call them from here to keep the behavior.
-        # This is a temporary call that will be removed in the real TurboGears2
-        # migration commit.
-        self._before()
 
     @staticmethod
     def _determine_auth_user(api_key, bearer_token, session_authuser):
@@ -530,12 +523,7 @@ class BaseController(WSGIController):
             log.error('%r request with payload parameters; WebOb should have stopped this', request.method)
             raise webob.exc.HTTPBadRequest()
 
-    def __call__(self, environ, start_response):
-        """Invoke the Controller"""
-
-        # WSGIController.__call__ dispatches to the Controller method
-        # the request is routed to. This routing information is
-        # available in environ['pylons.routes_dict']
+    def __call__(self, environ, context):
         try:
             request.ip_addr = _get_ip_addr(environ)
             # make sure that we update permissions each time we call controller
@@ -564,11 +552,9 @@ class BaseController(WSGIController):
                 request.ip_addr, request.authuser,
                 safe_unicode(_get_access_path(environ)),
             )
-            return WSGIController.__call__(self, environ, start_response)
+            return super(BaseController, self).__call__(environ, context)
         except webob.exc.HTTPException as e:
-            return e(environ, start_response)
-        finally:
-            meta.Session.remove()
+            return e
 
 
 class BaseRepoController(BaseController):

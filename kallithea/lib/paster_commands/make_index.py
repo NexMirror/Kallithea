@@ -40,7 +40,7 @@ class Command(BasePasterCommand):
     "Kallithea: Create or update full text search index"
 
     def take_action(self, args):
-        from pylons import config
+        from tg import config
         index_location = config['index_dir']
         load_rcextensions(config['here'])
 

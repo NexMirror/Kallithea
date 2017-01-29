@@ -11,33 +11,35 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-"""
-    Pylons middleware initialization
-"""
+"""WSGI middleware initialization for the Kallithea application."""
 
-from kallithea.config.app_cfg import setup_application
+from kallithea.config.app_cfg import base_config
 from kallithea.config.environment import load_environment
 
-def make_app(global_conf, full_stack=True, static_files=True, **app_conf):
-    """Create a Pylons WSGI application and return it
+__all__ = ['make_app']
 
-    ``global_conf``
-        The inherited configuration for this application. Normally from
-        the [DEFAULT] section of the Paste ini file.
+# Use base_config to setup the necessary PasteDeploy application factory.
+# make_base_app will wrap the TurboGears2 app with all the middleware it needs.
+make_base_app = base_config.setup_tg_wsgi_app(load_environment)
 
-    ``full_stack``
-        Whether or not this application provides a full WSGI stack (by
-        default, meaning it handles its own exceptions and errors).
-        Disable full_stack when this application is "managed" by
-        another WSGI middleware.
 
-    ``app_conf``
-        The application's local configuration. Normally specified in
-        the [app:<name>] section of the Paste ini file (where <name>
-        defaults to main).
-
+def make_app(global_conf, full_stack=True, **app_conf):
     """
-    # Configure the Pylons environment
-    config = load_environment(global_conf, app_conf)
+    Set up Kallithea with the settings found in the PasteDeploy configuration
+    file used.
 
-    return setup_application(config, global_conf, full_stack, static_files)
+    :param global_conf: The global settings for Kallithea (those
+        defined under the ``[DEFAULT]`` section).
+    :type global_conf: dict
+    :param full_stack: Should the whole TurboGears2 stack be set up?
+    :type full_stack: str or bool
+    :return: The Kallithea application with all the relevant middleware
+        loaded.
+
+    This is the PasteDeploy factory for the Kallithea application.
+
+    ``app_conf`` contains all the application-specific settings (those defined
+    under ``[app:main]``.
+    """
+    app = make_base_app(global_conf, full_stack=full_stack, **app_conf)
+    return app

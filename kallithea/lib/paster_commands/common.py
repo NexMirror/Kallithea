@@ -82,12 +82,12 @@ class BasePasterCommand(gearbox.command.Command):
         """
         Read the config file and initialize logging and the application.
         """
-        from tg import config as pylonsconfig
+        from kallithea.config.middleware import make_app
 
         path_to_ini_file = os.path.realpath(config_file)
         conf = paste.deploy.appconfig('config:' + path_to_ini_file)
         logging.config.fileConfig(path_to_ini_file)
-        pylonsconfig.init_app(conf.global_conf, conf.local_conf)
+        make_app(conf.global_conf, **conf.local_conf)
 
     def _init_session(self):
         """

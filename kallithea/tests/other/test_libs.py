@@ -31,7 +31,7 @@ import mock
 from kallithea.tests.base import *
 from kallithea.lib.utils2 import AttributeDict
 from kallithea.model.db import Repository
-from kallithea.tests.test_context import test_context
+from tg.util.webtest import test_context
 
 proto = 'http'
 TEST_URLS = [
@@ -224,7 +224,7 @@ class TestLibs(TestController):
         from kallithea.lib.helpers import gravatar_url
         _md5 = lambda s: hashlib.md5(s).hexdigest()
 
-        #mock pylons.tmpl_context
+        # mock tg.tmpl_context
         def fake_tmpl_context(_url):
             _c = AttributeDict()
             _c.visual = AttributeDict()
@@ -236,31 +236,31 @@ class TestLibs(TestController):
         fake_url = FakeUrlGenerator(current_url='https://example.com')
         with mock.patch('kallithea.config.routing.url', fake_url):
             fake = fake_tmpl_context(_url='http://example.com/{email}')
-            with mock.patch('pylons.tmpl_context', fake):
+            with mock.patch('tg.tmpl_context', fake):
                     from kallithea.config.routing import url
                     assert url.current() == 'https://example.com'
                     grav = gravatar_url(email_address='test@example.com', size=24)
                     assert grav == 'http://example.com/test@example.com'
 
             fake = fake_tmpl_context(_url='http://example.com/{email}')
-            with mock.patch('pylons.tmpl_context', fake):
+            with mock.patch('tg.tmpl_context', fake):
                 grav = gravatar_url(email_address='test@example.com', size=24)
                 assert grav == 'http://example.com/test@example.com'
 
             fake = fake_tmpl_context(_url='http://example.com/{md5email}')
-            with mock.patch('pylons.tmpl_context', fake):
+            with mock.patch('tg.tmpl_context', fake):
                 em = 'test@example.com'
                 grav = gravatar_url(email_address=em, size=24)
                 assert grav == 'http://example.com/%s' % (_md5(em))
 
             fake = fake_tmpl_context(_url='http://example.com/{md5email}/{size}')
-            with mock.patch('pylons.tmpl_context', fake):
+            with mock.patch('tg.tmpl_context', fake):
                 em = 'test@example.com'
                 grav = gravatar_url(email_address=em, size=24)
                 assert grav == 'http://example.com/%s/%s' % (_md5(em), 24)
 
             fake = fake_tmpl_context(_url='{scheme}://{netloc}/{md5email}/{size}')
-            with mock.patch('pylons.tmpl_context', fake):
+            with mock.patch('tg.tmpl_context', fake):
                 em = 'test@example.com'
                 grav = gravatar_url(email_address=em, size=24)
                 assert grav == 'https://example.com/%s/%s' % (_md5(em), 24)

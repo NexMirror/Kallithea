@@ -1,18 +1,20 @@
 import os
 import sys
 import logging
-
 import pkg_resources
+
 from paste.deploy import loadapp
-import pylons.test
-from pylons.i18n.translation import _get_translator
+from routes.util import URLGenerator
+from tg import config
+
 import pytest
 from kallithea.model.user import UserModel
 from kallithea.model.meta import Session
 from kallithea.model.db import Setting, User, UserIpMap
 from kallithea.tests.base import invalidate_all_caches, TEST_USER_REGULAR_LOGIN
+import kallithea.tests.base # FIXME: needed for setting testapp instance!!!
 
-from kallithea.tests.test_context import test_context
+from tg.util.webtest import test_context
 
 def pytest_configure():
     path = os.getcwd()
@@ -21,14 +23,10 @@ def pytest_configure():
 
     # Disable INFO logging of test database creation, restore with NOTSET
     logging.disable(logging.INFO)
-    pylons.test.pylonsapp = loadapp('config:kallithea/tests/test.ini', relative_to=path)
+    kallithea.tests.base.testapp = loadapp('config:kallithea/tests/test.ini', relative_to=path)
     logging.disable(logging.NOTSET)
 
-    # Initialize a translator for tests that utilize i18n
-    translator = _get_translator(pylons.config.get('lang'))
-    pylons.translator._push_object(translator)
-
-    return pylons.test.pylonsapp
+    kallithea.tests.base.url = URLGenerator(config['routes.map'], kallithea.tests.base.environ)
 
 
 @pytest.fixture

@@ -30,7 +30,7 @@ import traceback
 import formencode
 
 from formencode import htmlfill
-from tg import request, tmpl_context as c, config
+from tg import request, tmpl_context as c, config, app_globals
 from tg.i18n import ugettext as _
 from webob.exc import HTTPFound
 
@@ -94,7 +94,7 @@ class UserGroupsController(BaseController):
         group_iter = UserGroupList(_list, perm_level='admin')
         user_groups_data = []
         total_records = len(group_iter)
-        _tmpl_lookup = kallithea.CONFIG['pylons.app_globals'].mako_lookup
+        _tmpl_lookup = app_globals.mako_lookup
         template = _tmpl_lookup.get_template('data_table/_dt_elements.html')
 
         user_group_name = lambda user_group_id, user_group_name: (

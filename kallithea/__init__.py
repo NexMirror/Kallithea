@@ -30,10 +30,6 @@ Original author and date, and relevant copyright and licensing information is be
 import sys
 import platform
 
-# temporary aliasing to allow early introduction of imports like 'from tg import request'
-import pylons
-sys.modules['tg'] = pylons
-
 VERSION = (0, 3, 99)
 BACKENDS = {
     'hg': 'Mercurial repository',

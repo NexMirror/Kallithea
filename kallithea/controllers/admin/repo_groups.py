@@ -32,7 +32,7 @@ import itertools
 
 from formencode import htmlfill
 
-from tg import request, tmpl_context as c
+from tg import request, tmpl_context as c, app_globals
 from tg.i18n import ugettext as _, ungettext
 from webob.exc import HTTPFound, HTTPForbidden, HTTPNotFound, HTTPInternalServerError
 
@@ -112,7 +112,7 @@ class RepoGroupsController(BaseController):
         group_iter = RepoGroupList(_list, perm_level='admin')
         repo_groups_data = []
         total_records = len(group_iter)
-        _tmpl_lookup = kallithea.CONFIG['pylons.app_globals'].mako_lookup
+        _tmpl_lookup = app_globals.mako_lookup
         template = _tmpl_lookup.get_template('data_table/_dt_elements.html')
 
         repo_group_name = lambda repo_group_name, children_groups: (

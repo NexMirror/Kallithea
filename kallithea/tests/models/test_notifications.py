@@ -14,7 +14,7 @@ from kallithea.model.notification import NotificationModel, EmailNotificationMod
 import kallithea.lib.celerylib
 import kallithea.lib.celerylib.tasks
 
-from kallithea.tests.test_context import test_context
+from tg.util.webtest import test_context
 
 class TestNotifications(TestController):
 
