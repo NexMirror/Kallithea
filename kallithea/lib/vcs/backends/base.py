@@ -165,9 +165,8 @@ class BaseRepository(object):
     def get_changesets(self, start=None, end=None, start_date=None,
                        end_date=None, branch_name=None, reverse=False):
         """
-        Returns iterator of ``MercurialChangeset`` objects from start to end
-        not inclusive This should behave just like a list, ie. end is not
-        inclusive
+        Returns iterator of ``BaseChangeset`` objects from start to end,
+        both inclusive.
 
         :param start: None or str
         :param end: None or str
