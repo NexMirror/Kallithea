@@ -97,6 +97,9 @@ class BaseRepository(object):
 
     @LazyProperty
     def name(self):
+        """
+        Return repository name (without group name)
+        """
         raise NotImplementedError
 
     @property

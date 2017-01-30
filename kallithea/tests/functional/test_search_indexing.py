@@ -125,6 +125,25 @@ class TestSearchControllerIndexing(TestController):
                                 {'q': q, 'type': searchtype})
         response.mustcontain('>%d results' % hit)
 
+    @parametrize('reponame', [
+        (u'indexing_test'),
+        (u'indexing_test-fork'),
+        (u'group/indexing_test'),
+        (u'this-is-it'),
+    ])
+    @parametrize('searchtype,query,hit', [
+        ('content', 'this_should_be_unique_content', 1),
+        ('commit', 'this_should_be_unique_commit_log', 1),
+        ('path', 'this_should_be_unique_filename.txt', 1),
+    ])
+    def test_searching_under_repository(self, reponame, searchtype, query, hit):
+        self.log_user()
+
+        response = self.app.get(url(controller='search', action='index',
+                                    repo_name=reponame),
+                                {'q': query, 'type': searchtype})
+        response.mustcontain('>%d results' % hit)
+
     @parametrize('searchtype,query,hit', [
         ('content', 'this_should_be_unique_content', 1),
         ('commit', 'this_should_be_unique_commit_log', 1),
