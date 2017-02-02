@@ -258,7 +258,7 @@ ${self.repo_context_bar('showpullrequest')}
           <div>
             ${_('Click to add the repository owner as reviewer:')}
           </div>
-          <ul style="margin-top: 10px">
+          <ul class="list-unstyled">
             %for u in [c.pull_request.other_repo.owner]:
               <li>
                 <a class="missing_reviewer missing_reviewer_${u.user_id}"
