@@ -114,6 +114,12 @@
          - ${_('Create Fork')}
         %endif
       </div>
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#context-pages" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
     </div>
     <ul id="context-pages" class="nav navbar-nav navbar-right navbar-collapse collapse">
         <li class="${'active' if current == 'summary' else ''}" data-context="summary"><a href="${h.url('summary_home', repo_name=c.repo_name)}"><i class="icon-doc-text"></i> ${_('Summary')}</a></li>
