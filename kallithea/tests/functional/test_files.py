@@ -207,7 +207,7 @@ class TestFilesController(TestController):
                 ('Pragma', 'no-cache'),
                 ('Cache-Control', 'no-cache'),
                 ('Content-Disposition', 'attachment; filename=%s' % filename),
-                ('Content-Type', '%s; charset=utf-8' % info[0]),
+                ('Content-Type', info[0]),
             ]
             assert response.response._headers.items() == heads
 
