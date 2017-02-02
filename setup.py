@@ -46,7 +46,7 @@ requirements = [
     "SQLAlchemy>=1.0,<1.1",
     "Mako>=0.9.0,<=1.0.0",
     "pygments>=1.5",
-    "whoosh>=2.4.0,<=2.5.7",
+    "whoosh>=2.5.0,<=2.5.7",
     "celery>=3.1,<3.2",
     "babel>=0.9.6,<2.4",
     "python-dateutil>=1.5.0,<2.0.0",
@@ -63,7 +63,7 @@ if sys.version_info < (2, 7):
     requirements.append("argparse")
 
 if not is_windows:
-    requirements.append("bcrypt>=2.0.0")
+    requirements.append("bcrypt>=3.1.0")
 
 dependency_links = [
 ]
