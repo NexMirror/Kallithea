@@ -903,7 +903,7 @@ class HasPermissionAny(_PermsFunction):
         global_permissions = request.user.permissions['global'] # usually very short
         ok = any(p in global_permissions for p in self.required_perms)
 
-        log.error('Check %s for global %s (%s): %s' %
+        log.debug('Check %s for global %s (%s): %s' %
             (request.user.username, self.required_perms, purpose, ok))
         return ok
 
@@ -916,7 +916,7 @@ class HasRepoPermissionAny(_PermsFunction):
         except KeyError:
             ok = False
 
-        log.error('Check %s for %s for repo %s (%s): %s' %
+        log.debug('Check %s for %s for repo %s (%s): %s' %
             (request.user.username, self.required_perms, repo_name, purpose, ok))
         return ok
 
@@ -929,7 +929,7 @@ class HasRepoGroupPermissionAny(_PermsFunction):
         except KeyError:
             ok = False
 
-        log.error('Check %s for %s for repo group %s (%s): %s' %
+        log.debug('Check %s for %s for repo group %s (%s): %s' %
             (request.user.username, self.required_perms, group_name, purpose, ok))
         return ok
 
@@ -942,7 +942,7 @@ class HasUserGroupPermissionAny(_PermsFunction):
         except KeyError:
             ok = False
 
-        log.error('Check %s %s for user group %s (%s): %s' %
+        log.debug('Check %s %s for user group %s (%s): %s' %
             (request.user.username, self.required_perms, user_group_name, purpose, ok))
         return ok
 
