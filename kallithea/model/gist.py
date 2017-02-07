@@ -26,12 +26,13 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 import os
+import random
 import time
 import logging
 import traceback
 import shutil
 
-from kallithea.lib.utils2 import safe_unicode, unique_id, safe_int, \
+from kallithea.lib.utils2 import safe_unicode, safe_int, \
     time_to_datetime, AttributeDict
 from kallithea.lib.compat import json
 from kallithea.model.base import BaseModel
@@ -43,6 +44,14 @@ log = logging.getLogger(__name__)
 
 GIST_STORE_LOC = '.rc_gist_store'
 GIST_METADATA_FILE = '.rc_gist_metadata'
+
+
+def make_gist_id():
+    """Generate a random, URL safe, almost certainly unique gist identifier."""
+    rnd = random.SystemRandom() # use cryptographically secure system PRNG
+    alphabet = '23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjklmnpqrstuvwxyz'
+    length = 20
+    return u''.join(rnd.choice(alphabet) for _ in xrange(length))
 
 
 class GistModel(BaseModel):
@@ -100,7 +109,7 @@ class GistModel(BaseModel):
         :param lifetime: in minutes, -1 == forever
         """
         owner = User.guess_instance(owner)
-        gist_id = safe_unicode(unique_id(20))
+        gist_id = make_gist_id()
         lifetime = safe_int(lifetime, -1)
         gist_expires = time.time() + (lifetime * 60) if lifetime != -1 else -1
         log.debug('set GIST expiration date to: %s',
