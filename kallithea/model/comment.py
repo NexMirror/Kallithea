@@ -41,6 +41,19 @@ from kallithea.model.meta import Session
 log = logging.getLogger(__name__)
 
 
+def _list_changeset_commenters(revision):
+    return (Session().query(User)
+        .join(ChangesetComment.author)
+        .filter(ChangesetComment.revision == revision)
+        .all())
+
+def _list_pull_request_commenters(pull_request):
+    return (Session().query(User)
+        .join(ChangesetComment.author)
+        .filter(ChangesetComment.pull_request_id == pull_request.pull_request_id)
+        .all())
+
+
 class ChangesetCommentsModel(BaseModel):
 
     def _get_notification_data(self, repo, comment, author, comment_text,
@@ -75,14 +88,15 @@ class ChangesetCommentsModel(BaseModel):
                           comment_url)
             )
             # get the current participants of this changeset
-            recipients = ChangesetComment.get_users(revision=revision)
+            recipients = _list_changeset_commenters(revision)
             # add changeset author if it's known locally
             cs_author = User.get_from_cs_author(cs.author)
             if not cs_author:
                 #use repo owner if we cannot extract the author correctly
                 # FIXME: just use committer name even if not a user
                 cs_author = repo.owner
-            recipients += [cs_author]
+            recipients.append(cs_author)
+
             email_kwargs = {
                 'status_change': status_change,
                 'cs_comment_user': author.full_name_and_username,
@@ -122,12 +136,8 @@ class ChangesetCommentsModel(BaseModel):
                           comment_url)
             )
             # get the current participants of this pull request
-            recipients = ChangesetComment.get_users(pull_request_id=
-                                                pull_request.pull_request_id)
-            # add pull request author
-            recipients += [pull_request.owner]
-
-            # add the reviewers to notification
+            recipients = _list_pull_request_commenters(pull_request)
+            recipients.append(pull_request.owner)
             recipients += pull_request.get_reviewer_users()
 
             #set some variables for email notification

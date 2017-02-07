@@ -2224,23 +2224,6 @@ class ChangesetComment(Base, BaseDbModel):
                                  cascade="all, delete-orphan", lazy='joined')
     pull_request = relationship('PullRequest')
 
-    @classmethod
-    def get_users(cls, revision=None, pull_request_id=None):
-        """
-        Returns user associated with this ChangesetComment. ie those
-        who actually commented
-
-        :param cls:
-        :param revision:
-        """
-        q = Session().query(User) \
-                .join(ChangesetComment.author)
-        if revision is not None:
-            q = q.filter(cls.revision == revision)
-        elif pull_request_id is not None:
-            q = q.filter(cls.pull_request_id == pull_request_id)
-        return q.all()
-
     def url(self):
         anchor = "comment-%s" % self.comment_id
         import kallithea.lib.helpers as h
