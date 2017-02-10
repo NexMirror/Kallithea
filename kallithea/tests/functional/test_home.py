@@ -16,18 +16,20 @@ class TestHomeController(TestController):
         response = self.app.get(url(controller='home', action='index'))
         #if global permission is set
         response.mustcontain('Add Repository')
+
+        response.mustcontain('<span class="repotag">git')
+
         # html in javascript variable:
         response.mustcontain('var data = {"totalRecords": %s' % Repository.query().count())
         response.mustcontain(r'href=\"/%s\"' % HG_REPO)
 
-        response.mustcontain(r'<span class="repotag">git')
         response.mustcontain(r'<i class=\"icon-globe\"')
 
-        response.mustcontain("""fixes issue with having custom format for git-log""")
-        response.mustcontain("""/%s/changeset/5f2c6ee195929b0be80749243c18121c9864a3b3""" % GIT_REPO)
+        response.mustcontain(r'\"fixes issue with having custom format for git-log\n\"')
+        response.mustcontain(r'\"/%s/changeset/5f2c6ee195929b0be80749243c18121c9864a3b3\"' % GIT_REPO)
 
-        response.mustcontain("""disable security checks on hg clone for travis""")
-        response.mustcontain("""/%s/changeset/96507bd11ecc815ebc6270fdf6db110928c09c1e""" % HG_REPO)
+        response.mustcontain(r'\"disable security checks on hg clone for travis\"')
+        response.mustcontain(r'\"/%s/changeset/96507bd11ecc815ebc6270fdf6db110928c09c1e\"' % HG_REPO)
 
     def test_repo_summary_with_anonymous_access_disabled(self):
         with fixture.anon_access(False):
