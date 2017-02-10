@@ -101,9 +101,9 @@ ${self.repo_context_bar('changelog')}
    $(document).ready(function(){
     var cache = {};
 
-    function make_revision_dropdown(css_selector, placeholder, repo_name, cache_key) {
+    function make_revision_dropdown(css_selector, repo_name, ref_name, cache_key) {
       $(css_selector).select2({
-        placeholder: placeholder,
+        placeholder: '{0}@{1}'.format(repo_name, ref_name || ${h.jshtml(_('Select changeset'))}),
         formatSelection: function(obj){
             return '{0}@{1}'.format(repo_name, obj.text);
         },
@@ -149,8 +149,8 @@ ${self.repo_context_bar('changelog')}
     });
     }
 
-    make_revision_dropdown("#compare_org",   ${h.jshtml('%s@%s' % (c.a_repo.repo_name, c.a_ref_name))},   ${h.jshtml(c.a_repo.repo_name)},  'cache');
-    make_revision_dropdown("#compare_other", ${h.jshtml('%s@%s' % (c.cs_repo.repo_name, c.cs_ref_name))}, ${h.jshtml(c.cs_repo.repo_name)}, 'cache2');
+    make_revision_dropdown("#compare_org",   ${h.jshtml(c.a_repo.repo_name)},  ${h.jshtml(c.a_ref_name)},  'cache');
+    make_revision_dropdown("#compare_other", ${h.jshtml(c.cs_repo.repo_name)}, ${h.jshtml(c.cs_ref_name)}, 'cache2');
 
     var values_changed = function() {
         var values = $('#compare_org').select2('data') && $('#compare_other').select2('data');

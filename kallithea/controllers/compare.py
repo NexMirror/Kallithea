@@ -170,7 +170,7 @@ class CompareController(BaseRepoController):
     @HasRepoPermissionLevelDecorator('read')
     def index(self, repo_name):
         c.compare_home = True
-        c.a_ref_name = c.cs_ref_name = _('Select changeset')
+        c.a_ref_name = c.cs_ref_name = None
         return render('compare/compare_diff.html')
 
     @LoginRequired()
