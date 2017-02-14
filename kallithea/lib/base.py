@@ -203,64 +203,58 @@ class BaseVCSController(object):
         Returns (user, None) on successful authentication and authorization.
         Returns (None, wsgi_app) to send the wsgi_app response to the client.
         """
-        anonymous_user = User.get_default_user(cache=True)
-        user = anonymous_user
-        if anonymous_user.active:
-            # ONLY check permissions if the user is activated
-            anonymous_perm = self._check_permission(action, anonymous_user,
-                                                    repo_name, ip_addr)
+        # Check if anonymous access is allowed.
+        default_user = User.get_default_user(cache=True)
+        is_default_user_allowed = (default_user.active and
+            self._check_permission(action, default_user, repo_name, ip_addr))
+        if is_default_user_allowed:
+            return default_user, None
+
+        if not default_user.active:
+            log.debug('Anonymous access is disabled')
         else:
-            anonymous_perm = False
+            log.debug('Not authorized to access this '
+                      'repository as anonymous user')
 
-        if not anonymous_user.active or not anonymous_perm:
-            if not anonymous_user.active:
-                log.debug('Anonymous access is disabled, running '
-                          'authentication')
+        username = None
+        #==============================================================
+        # DEFAULT PERM FAILED OR ANONYMOUS ACCESS IS DISABLED SO WE
+        # NEED TO AUTHENTICATE AND ASK FOR AUTH USER PERMISSIONS
+        #==============================================================
 
-            if not anonymous_perm:
-                log.debug('Not enough credentials to access this '
-                          'repository as anonymous user')
+        # try to auth based on environ, container auth methods
+        log.debug('Running PRE-AUTH for container based authentication')
+        pre_auth = auth_modules.authenticate('', '', environ)
+        if pre_auth is not None and pre_auth.get('username'):
+            username = pre_auth['username']
+        log.debug('PRE-AUTH got %s as username', username)
 
-            username = None
-            #==============================================================
-            # DEFAULT PERM FAILED OR ANONYMOUS ACCESS IS DISABLED SO WE
-            # NEED TO AUTHENTICATE AND ASK FOR AUTH USER PERMISSIONS
-            #==============================================================
+        # If not authenticated by the container, running basic auth
+        if not username:
+            self.authenticate.realm = safe_str(self.config['realm'])
+            result = self.authenticate(environ)
+            if isinstance(result, str):
+                paste.httpheaders.AUTH_TYPE.update(environ, 'basic')
+                paste.httpheaders.REMOTE_USER.update(environ, result)
+                username = result
+            else:
+                return None, result.wsgi_application
 
-            # try to auth based on environ, container auth methods
-            log.debug('Running PRE-AUTH for container based authentication')
-            pre_auth = auth_modules.authenticate('', '', environ)
-            if pre_auth is not None and pre_auth.get('username'):
-                username = pre_auth['username']
-            log.debug('PRE-AUTH got %s as username', username)
-
-            # If not authenticated by the container, running basic auth
-            if not username:
-                self.authenticate.realm = \
-                    safe_str(self.config['realm'])
-                result = self.authenticate(environ)
-                if isinstance(result, str):
-                    paste.httpheaders.AUTH_TYPE.update(environ, 'basic')
-                    paste.httpheaders.REMOTE_USER.update(environ, result)
-                    username = result
-                else:
-                    return None, result.wsgi_application
-
-            #==============================================================
-            # CHECK PERMISSIONS FOR THIS REQUEST USING GIVEN USERNAME
-            #==============================================================
-            try:
-                user = User.get_by_username_or_email(username)
-                if user is None or not user.active:
-                    return None, webob.exc.HTTPForbidden()
-            except Exception:
-                log.error(traceback.format_exc())
-                return None, webob.exc.HTTPInternalServerError()
-
-            #check permissions for this repository
-            perm = self._check_permission(action, user, repo_name, ip_addr)
-            if not perm:
+        #==============================================================
+        # CHECK PERMISSIONS FOR THIS REQUEST USING GIVEN USERNAME
+        #==============================================================
+        try:
+            user = User.get_by_username_or_email(username)
+            if user is None or not user.active:
                 return None, webob.exc.HTTPForbidden()
+        except Exception:
+            log.error(traceback.format_exc())
+            return None, webob.exc.HTTPInternalServerError()
+
+        #check permissions for this repository
+        perm = self._check_permission(action, user, repo_name, ip_addr)
+        if not perm:
+            return None, webob.exc.HTTPForbidden()
 
         return user, None
 
