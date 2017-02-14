@@ -844,7 +844,7 @@ div.panel div.panel-heading {
 
 #content div.panel div.form div.form-horizontal div.form-group > div.summary,
 #content div.panel div.form div.form-horizontal div.form-group > div.summary-short {
-    margin: 10px 20px 10px 110px;
+    margin: 0 20px 10px 110px;
 }
 #content div.panel div.form div.form-horizontal div.form-group > div.summary-short input {
     margin: 0;
@@ -3190,7 +3190,7 @@ nav.navbar #quick li .dropdown-menu,
 }
 
 #content div.panel div.form div.form-horizontal div.form-group > div {
-    margin: 10px 20px 10px 200px;
+    margin: 0 20px 10px 200px;
     padding: 0;
 }
 
