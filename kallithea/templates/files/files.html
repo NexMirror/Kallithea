@@ -43,8 +43,6 @@ var CACHE_EXPIRE = 5*60*1000; //cache for 5*60s
 var url_base = '${h.url("files_home",repo_name=c.repo_name,revision='__REV__',f_path='__FPATH__')}';
 //send the nodelist request to this url
 var node_list_url = '${h.url("files_nodelist_home",repo_name=c.repo_name,revision='__REV__',f_path='__FPATH__')}';
-// send the node history requst to this url
-var node_history_url = '${h.url("files_history_home",repo_name=c.repo_name,revision='__REV__',f_path='__FPATH__')}';
 
 ## new pyroutes URLs
 pyroutes.register('files_nodelist_home', "${h.url('files_nodelist_home', repo_name=c.repo_name,revision='%(revision)s',f_path='%(f_path)s')}", ['revision', 'f_path']);
