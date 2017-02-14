@@ -1051,12 +1051,13 @@ class CollectionGenerator(object):
         for rev in self.revs:
             yield self.repo.get_changeset(rev)
 
-    def __getslice__(self, i, j):
-        """
-        Returns a iterator of sliced repository
-        """
-        sliced_revs = self.revs[i:j]
-        return CollectionGenerator(self.repo, sliced_revs)
+    def __getitem__(self, what):
+        """Return either a single element by index, or a sliced collection."""
+        if isinstance(what, slice):
+            return CollectionGenerator(self.repo, self.revs[what])
+        else:
+            # single item
+            return self.repo.get_changeset(self.revs[what])
 
     def __repr__(self):
         return '<CollectionGenerator[len:%s]>' % (len(self))
