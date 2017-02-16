@@ -23,7 +23,7 @@ ${self.repo_context_bar('showpullrequest')}
   </div>
 
   ${h.form(url('pullrequest_post', repo_name=c.repo_name, pull_request_id=c.pull_request.pull_request_id), method='post', id='pull_request_form',class_='panel-body')}
-    <div class="form pr-box" style="float: left">
+    <div class="form pr-box">
       <div class="pr-details-title ${'closed' if c.pull_request.is_closed() else ''}">
         <h3>
           ${_('Title')}: ${c.pull_request.title}
@@ -65,7 +65,7 @@ ${self.repo_context_bar('showpullrequest')}
         <div class="form-group">
           <label>${_('Reviewer voting result')}:</label>
           <div>
-            <div class="changeset-status-container" style="float:none;clear:both">
+            <div class="changeset-status-container">
             %if c.current_voting_result:
               <span class="changeset-status-ico" style="padding:0px 4px 0px 0px">
                   <i class="icon-circle changeset-status-${c.current_voting_result}" title="${_('Pull request status calculated from votes')}"></i></span>
@@ -175,7 +175,7 @@ ${self.repo_context_bar('showpullrequest')}
                         <td style="width: 120px"><span data-toggle="tooltip" title="${h.age(cs.date)}">${cs.date}</span></td>
                         <td>${h.link_to(h.show_id(cs),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id), class_='changeset_hash')}</td>
                         <td>
-                          <div style="float: right; margin-top: -4px;">
+                          <div class="pull-right" style="margin-top: -4px;">
                             %for tag in cs.tags:
                               <span class="tagtag" title="${_('Tag %s') % tag}">
                                 ${h.link_to(tag,h.url('changeset_home',repo_name=c.repo_name,revision=cs.raw_id))}
@@ -206,7 +206,7 @@ ${self.repo_context_bar('showpullrequest')}
       </div>
     </div>
     ## REVIEWERS
-    <div style="float:left">
+    <div class="pull-left">
         <h4 class="pr-details-title">${_('Pull Request Reviewers')}</h4>
         <div id="reviewers" style="padding:0px 0px 5px 10px">
           ## members goes here !

@@ -31,7 +31,7 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
   <div class="panel-body">
     <div>
         <div class="diffblock">
-            <div class="parents">
+            <div class="parents pull-left">
                 <div id="parent_link" class="changeset_hash">
                     <i style="color:#036185" class="icon-left-open"></i> <a href="#">${_('Parent rev.')}</a>
                 </div>
@@ -43,7 +43,7 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
                 </div>
             </div>
 
-            <div class="code-header banner">
+            <div class="pull-left code-header banner">
                 <div class="pull-left changeset-status-container">
                     %if c.statuses:
                         <span class="changeset-status-ico"><i class="icon-circle changeset-status-${c.statuses[0]}"></i></span>
@@ -63,7 +63,7 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
                   ${c.ignorews_url(request.GET)}
                   ${c.context_url(request.GET)}
                 </div>
-                <div class="comments-number" style="float:right;padding-right:5px">
+                <div class="text-right pull-right comments-number" style="padding-right:5px">
                     ${comment.comment_count(c.inline_cnt, len(c.comments))}
                 </div>
             </div>
@@ -71,7 +71,7 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
         <div id="changeset_content">
             <div class="form-group container">
 
-                <div class="right">
+                <div class="pull-right">
                     <span class="logtags">
                         %if len(c.changeset.parents)>1:
                         <span class="mergetag">${_('Merge')}</span>

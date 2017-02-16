@@ -129,26 +129,26 @@ summary = lambda n:{False:'summary-short'}.get(n)
             <li class="list-group-item">
                <a title="${_('Owner')} ${c.db_repo.owner.email}">
                 <i class="icon-user"></i> ${c.db_repo.owner.username}
-                ${h.gravatar_div(c.db_repo.owner.email, size=18, div_style="float: right; margin: 0px 0px 0px 0px", div_title=c.db_repo.owner.full_name)}
+                ${h.gravatar_div(c.db_repo.owner.email, size=18, div_class="pull-right", div_style="margin: 0", div_title=c.db_repo.owner.full_name)}
               </a>
             </li>
             <li class="list-group-item">
                <a title="${_('Followers')}" href="${h.url('repo_followers_home',repo_name=c.repo_name)}">
                 <i class="icon-heart"></i> ${_('Followers')}
-                <span class="badge" id="current_followers_count">${c.repository_followers}</span>
+                <span class="badge pull-right" id="current_followers_count">${c.repository_followers}</span>
               </a>
             </li>
             <li class="list-group-item">
               <a title="${_('Forks')}" href="${h.url('repo_forks_home',repo_name=c.repo_name)}">
                 <i class="icon-fork"></i> ${_('Forks')}
-                <span class="badge">${c.repository_forks}</span>
+                <span class="badge pull-right">${c.repository_forks}</span>
               </a>
             </li>
 
             %if request.authuser.username != 'default':
             <li class="list-group-item clearfix">
               <a href="#" onclick="javascript:showRepoSize('repo_size_2','${c.db_repo.repo_name}')"><i class="icon-ruler"></i> ${_('Repository Size')}</a>
-              <span  class="stats-bullet" id="repo_size_2"></span>
+              <span  class="badge pull-right" id="repo_size_2"></span>
             </li>
             %endif
 

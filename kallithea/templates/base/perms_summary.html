@@ -9,7 +9,7 @@
         <div class="perms_section_head">
             <h4>${section.replace("_"," ").capitalize()}</h4>
             %if section != 'global':
-              <div style="float: right">
+              <div class="pull-right">
                 ${_('Show')}:
                 <label>${h.checkbox('perms_filter_none_%s' % section, 'none', 'checked', class_='perm_filter filter_%s' % section, **{'data-section':section, 'data-perm_type':'none'})}<span class="perm_tag none">${_('None')}</span></label>
                 <label>${h.checkbox('perms_filter_read_%s' % section, 'read', 'checked', class_='perm_filter filter_%s' % section, **{'data-section':section, 'data-perm_type':'read'})}<span class="perm_tag read">${_('Read')}</span></label>

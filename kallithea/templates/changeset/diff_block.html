@@ -70,7 +70,7 @@
                   ${c.ignorews_url(request.GET, url_fid)}
                   ${c.context_url(request.GET, url_fid)}
                 </div>
-                <span style="float:right;margin-top:-3px">
+                <span class="pull-right" style="margin-top:-3px">
                     <label>
                         ${_('Show inline comments')}
                         ${h.checkbox('checkbox-show-inline-' + id_fid, checked="checked",class_="show-inline-comments",**{'data-id_for':id_fid})}

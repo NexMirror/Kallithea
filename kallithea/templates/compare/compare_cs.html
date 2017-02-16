@@ -79,7 +79,7 @@
             <i class="icon-align-left" style="color:#999"></i>
         </td>
         <td>
-            <div style="float: right; margin-top: -4px;">
+            <div class="pull-right" style="margin-top: -4px;">
                 %for tag in cs.tags:
                     <span class="tagtag" title="${_('Tag %s') % tag}">
                         ${h.link_to(tag,h.url('changeset_home',repo_name=c.repo_name,revision=cs.raw_id))}
