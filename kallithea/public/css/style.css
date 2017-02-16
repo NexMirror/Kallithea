@@ -964,6 +964,9 @@ div.form div.form-horizontal div.form-group div.button {
     border: 1px solid #eee;
     border-radius: 4px;
 }
+#content div.panel table#permissions_manage {
+    width: auto;
+}
 
 #content div.panel table th {
     background: #eee;
