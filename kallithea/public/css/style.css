@@ -577,9 +577,7 @@ div.panel div.panel-heading {
 }
 
 #content div.panel div.panel-heading .pull-left,
-#content div.panel div.panel-heading .pull-left a,
-#content div.panel div.panel-heading .pull-right,
-#content div.panel div.panel-heading .pull-right a {
+#content div.panel div.panel-heading .pull-right {
     color: white;
 }
 
