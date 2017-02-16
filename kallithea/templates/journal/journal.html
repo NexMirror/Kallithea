@@ -1,19 +1,23 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="/base/base.html"/>
+
 <%block name="title">
     ${_('Journal')}
 </%block>
+
 <%def name="breadcrumbs_links()">
-    <form id="filter_form" class="pull-left form-inline">
-      <input class="form-control q_filter_box ${'' if c.search_term else 'initial'}" id="j_filter" size="15" type="text" name="filter" value="${c.search_term or _('quick filter...')}"/>
-      <span data-toggle="tooltip" title="${h.journal_filter_help()}">?</span>
-      <input type='submit' value="${_('Filter')}" class="btn btn-default btn-xs"/>
-      ${_('Journal')} - ${ungettext('%s Entry', '%s Entries', c.journal_pager.item_count) % (c.journal_pager.item_count)}
+    <form id="filter_form" class="pull-left form-inline input-group-sm">
+        <input class="form-control q_filter_box ${'' if c.search_term else 'initial'}" id="j_filter" size="15" type="text" name="filter" value="${c.search_term or _('journal filter...')}"/>
+        <span data-toggle="popover" data-content="${h.journal_filter_help()}">?</span>
+        <input type='submit' value="${_('Filter')}" class="btn btn-default btn-xs"/>
+        ${_('Journal')} - ${ungettext('%s Entry', '%s Entries', c.journal_pager.item_count) % (c.journal_pager.item_count)}
     </form>
 </%def>
+
 <%block name="header_menu">
     ${self.menu('journal')}
 </%block>
+
 <%block name="head_extra">
   <link href="${h.url('journal_atom', api_key=request.authuser.api_key)}" rel="alternate" title="${_('ATOM journal feed')}" type="application/atom+xml" />
   <link href="${h.url('journal_rss', api_key=request.authuser.api_key)}" rel="alternate" title="${_('RSS journal feed')}" type="application/rss+xml" />
