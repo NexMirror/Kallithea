@@ -4543,3 +4543,13 @@ ul.user_group_member li {
     border-bottom-color: #999;
     border-bottom-color: rgba(0,0,0,.25);
 }
+
+#clone_by_name.input-group > span,
+#clone_by_id.input-group > span {
+    display: inline-block;
+}
+
+#clone_by_name.input-group > input,
+#clone_by_id.input-group > input {
+    width: 80% !important;
+}

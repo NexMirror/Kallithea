@@ -24,7 +24,7 @@ fixture = Fixture()
 
 class TestSummaryController(TestController):
 
-    def test_index(self):
+    def test_index_hg(self):
         self.log_user()
         ID = Repository.get_by_repo_name(HG_REPO).repo_id
         response = self.app.get(url(controller='summary',
@@ -41,8 +41,14 @@ class TestSummaryController(TestController):
         )
 
         # clone url...
-        response.mustcontain('''id="clone_url" readonly="readonly" value="http://%s@localhost:80/%s"''' % (TEST_USER_ADMIN_LOGIN, HG_REPO))
-        response.mustcontain('''id="clone_url_id" readonly="readonly" value="http://%s@localhost:80/_%s"''' % (TEST_USER_ADMIN_LOGIN, ID))
+        response.mustcontain(
+            '''<input class="form-control" size="80" readonly="readonly" value="http://%s@localhost:80/%s"/>''' %
+            (TEST_USER_ADMIN_LOGIN, HG_REPO)
+        )
+        response.mustcontain(
+            '''<input class="form-control" size="80" readonly="readonly" value="http://%s@localhost:80/_%s"/>''' %
+            (TEST_USER_ADMIN_LOGIN, ID)
+        )
 
     def test_index_git(self):
         self.log_user()
@@ -61,8 +67,13 @@ class TestSummaryController(TestController):
         )
 
         # clone url...
-        response.mustcontain('''id="clone_url" readonly="readonly" value="http://%s@localhost:80/%s"''' % (TEST_USER_ADMIN_LOGIN, GIT_REPO))
-        response.mustcontain('''id="clone_url_id" readonly="readonly" value="http://%s@localhost:80/_%s"''' % (TEST_USER_ADMIN_LOGIN, ID))
+        response.mustcontain(
+            '''<input class="form-control" size="80" readonly="readonly" value="http://%s@localhost:80/%s"/>''' %
+            (TEST_USER_ADMIN_LOGIN, GIT_REPO))
+        response.mustcontain(
+            '''<input class="form-control" size="80" readonly="readonly" value="http://%s@localhost:80/_%s"/>''' %
+            (TEST_USER_ADMIN_LOGIN, ID)
+        )
 
     def test_index_by_id_hg(self):
         self.log_user()

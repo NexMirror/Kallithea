@@ -66,13 +66,18 @@ summary = lambda n:{False:'summary-short'}.get(n)
     <div id="summary-panel-body" class="form panel-body">
         <div id="summary" class="form-horizontal">
             <div class="form-group form-inline clearfix">
-              <label>${_('Clone URL')}:</label>
-                <div class="${summary(c.show_stats)}">
-                  ${self.repotag(c.db_repo)}
-                  <input style="width:80%" type="text" id="clone_url" readonly="readonly" value="${c.clone_repo_url}"/>
-                  <input style="display:none;width:80%" type="text" id="clone_url_id" readonly="readonly" value="${c.clone_repo_url_id}"/>
-                  <div style="display:none" id="clone_by_name" class="btn btn-default btn-sm">${_('Show by Name')}</div>
-                  <div id="clone_by_id" class="btn btn-default btn-sm">${_('Show by ID')}</div>
+                <label>${_('Clone URL')}:</label>
+                <div id="clone-url">
+                  <div id="clone_by_name" class="input-group">
+                    <span class="input-group-addon">${self.repotag(c.db_repo)}</span>
+                    <input class="form-control" size="80" readonly="readonly" value="${c.clone_repo_url}"/>
+                    <span class="input-group-addon btn">${_('Show by ID')}</span>
+                  </div>
+                  <div id="clone_by_id" class="input-group" style="display:none">
+                    <span class="input-group-addon">${self.repotag(c.db_repo)}</span>
+                    <input class="form-control" size="80" readonly="readonly" value="${c.clone_repo_url_id}"/>
+                    <span class="input-group-addon btn">${_('Show by Name')}</span>
+                  </div>
                 </div>
             </div>
 
@@ -203,37 +208,25 @@ summary = lambda n:{False:'summary-short'}.get(n)
 
 <script type="text/javascript">
 $(document).ready(function(){
-    var $clone_url = $('#clone_url');
-    var $clone_url_id = $('#clone_url_id');
-    var $clone_by_name = $('#clone_by_name');
-    var $clone_by_id = $('#clone_by_id');
-    $clone_url.click(function(e){
-        if($clone_url.hasClass('selected')){
+    $('#clone-url input').click(function(e){
+        if($(this).hasClass('selected')){
+            $(this).removeClass('selected');
             return ;
         }else{
-            $clone_url.addClass('selected');
-            $clone_url.select();
+            $(this).addClass('selected');
+            $(this).select();
         }
     });
 
-    $clone_by_name.click(function(e){
-        // show url by name and hide name button
-        $clone_url.show();
+    var $clone_by_name = $('#clone_by_name');
+    var $clone_by_id = $('#clone_by_id');
+    $clone_by_name.find('.btn').click(function(e){
         $clone_by_name.hide();
-
-        // hide url by id and show name button
         $clone_by_id.show();
-        $clone_url_id.hide();
     });
-
-    $clone_by_id.click(function(e){
-        // show url by id and hide id button
+    $clone_by_id.find('.btn').click(function(e){
         $clone_by_id.hide();
-        $clone_url_id.show();
-
-        // hide url by name and show id button
         $clone_by_name.show();
-        $clone_url.hide();
     });
 
     var cache = {}
