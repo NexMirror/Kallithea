@@ -507,7 +507,7 @@ nav.navbar #quick .repo_switcher_type {
 }
 
 #content nav.navbar,
-div.panel {
+#main > div.panel {
     clear: both;
     background: #fff;
     margin: 0 0 10px;
