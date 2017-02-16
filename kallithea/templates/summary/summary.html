@@ -120,21 +120,20 @@ summary = lambda n:{False:'summary-short'}.get(n)
               </div>
             </div>
         </div>
-        <div id="summary-menu-stats">
-          <ul>
-            <li>
+        <ul id="summary-menu-stats" class="list-group">
+            <li class="list-group-item">
                <a title="${_('Owner')} ${c.db_repo.owner.email}">
                 <i class="icon-user"></i> ${c.db_repo.owner.username}
                 ${h.gravatar_div(c.db_repo.owner.email, size=18, div_style="float: right; margin: 0px 0px 0px 0px", div_title=c.db_repo.owner.full_name)}
               </a>
             </li>
-            <li>
+            <li class="list-group-item">
                <a title="${_('Followers')}" href="${h.url('repo_followers_home',repo_name=c.repo_name)}">
                 <i class="icon-heart"></i> ${_('Followers')}
                 <span class="badge" id="current_followers_count">${c.repository_followers}</span>
               </a>
             </li>
-            <li>
+            <li class="list-group-item">
               <a title="${_('Forks')}" href="${h.url('repo_forks_home',repo_name=c.repo_name)}">
                 <i class="icon-fork"></i> ${_('Forks')}
                 <span class="badge">${c.repository_forks}</span>
@@ -142,13 +141,13 @@ summary = lambda n:{False:'summary-short'}.get(n)
             </li>
 
             %if request.authuser.username != 'default':
-            <li class="repo_size clearfix">
+            <li class="list-group-item clearfix">
               <a href="#" onclick="javascript:showRepoSize('repo_size_2','${c.db_repo.repo_name}')"><i class="icon-ruler"></i> ${_('Repository Size')}</a>
               <span  class="stats-bullet" id="repo_size_2"></span>
             </li>
             %endif
 
-            <li>
+            <li class="list-group-item">
             %if request.authuser.username != 'default':
               <a href="${h.url('atom_feed_home',repo_name=c.db_repo.repo_name,api_key=request.authuser.api_key)}"><i class="icon-rss-squared"></i> ${_('Feed')}</a>
             %else:
@@ -157,14 +156,13 @@ summary = lambda n:{False:'summary-short'}.get(n)
             </li>
 
             %if c.show_stats:
-            <li>
+            <li class="list-group-item">
               <a title="${_('Statistics')}" href="${h.url('repo_stats_home',repo_name=c.repo_name)}">
                 <i class="icon-graph"></i> ${_('Statistics')}
               </a>
             </li>
             %endif
-          </ul>
-        </div>
+        </ul>
     </div>
 </div>
 

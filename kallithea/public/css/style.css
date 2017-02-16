@@ -1150,19 +1150,17 @@ div.form div.form-horizontal div.form-group div.button {
     min-height: 240px;
 }
 
-#summary-menu-stats {
+ul#summary-menu-stats {
     float: left;
     width: 180px;
     position: absolute;
     top: 0;
     right: 0;
-}
-
-#summary-menu-stats ul {
     display: block;
     background-color: #f9f9f9;
     border: 1px solid #d1d1d1;
     border-radius: 4px;
+    margin: 10px 20px;
 }
 
 #content #summary-menu-stats li {

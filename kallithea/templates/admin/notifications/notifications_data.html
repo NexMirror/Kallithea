@@ -4,20 +4,20 @@
 unread = lambda n:{False:'unread'}.get(n)
 %>
 
-<div class="notification-list notification-table">
+<div class="notification-list notification-table list-group">
 %for notification in c.notifications:
-  <div id="notification_${notification.notification.notification_id}" class="container ${unread(notification.read)}">
-    <div class="notification-header">
+  <div id="notification_${notification.notification.notification_id}" class="list-group-item ${unread(notification.read)}">
+    <div>
       ${h.gravatar_div(notification.notification.created_by_user.email, size=24)}
       <span class="desc ${unread(notification.read)}">
         <a href="${url('notification', notification_id=notification.notification.notification_id)}">${notification.notification.description}</a>
       </span>
       <span class="delete-notifications">
-        <span id="${notification.notification.notification_id}" class="delete-notification"><i class="icon-minus-circled" style="color: #b94a48; padding: 2px;"></i></span>
+        <span id="${notification.notification.notification_id}" class="delete-notification"><i class="btn icon-minus-circled"></i></span>
       </span>
       %if not notification.read:
       <span class="read-notifications">
-        <span id="${notification.notification.notification_id}" class="read-notification"><i class="icon-ok" style="color: #4CBB17; padding: 2px;"></i></span>
+        <span id="${notification.notification.notification_id}" class="read-notification"><i class="btn icon-ok"></i></span>
       </span>
       %endif
     </div>
