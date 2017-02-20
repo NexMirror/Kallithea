@@ -37,8 +37,8 @@ from webob.exc import HTTPFound
 import kallithea.lib.helpers as h
 
 from kallithea.config.routing import url
-from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator, \
-    NotAnonymous, HasRepoPermissionAny, HasPermissionAnyDecorator, HasPermissionAny
+from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator, \
+    NotAnonymous, HasRepoPermissionLevel, HasPermissionAnyDecorator, HasPermissionAny
 from kallithea.lib.base import BaseRepoController, render
 from kallithea.lib.page import Page
 from kallithea.lib.utils2 import safe_int
@@ -108,16 +108,13 @@ class ForksController(BaseRepoController):
         return defaults
 
     @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     def forks(self, repo_name):
         p = safe_int(request.GET.get('page'), 1)
         repo_id = c.db_repo.repo_id
         d = []
         for r in Repository.get_repo_forks(repo_id):
-            if not HasRepoPermissionAny(
-                'repository.read', 'repository.write', 'repository.admin'
-            )(r.repo_name, 'get forks check'):
+            if not HasRepoPermissionLevel('read')(r.repo_name, 'get forks check'):
                 continue
             d.append(r)
         c.forks_pager = Page(d, page=p, items_per_page=20)
@@ -130,8 +127,7 @@ class ForksController(BaseRepoController):
     @LoginRequired()
     @NotAnonymous()
     @HasPermissionAnyDecorator('hg.admin', 'hg.fork.repository')
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     def fork(self, repo_name):
         c.repo_info = Repository.get_by_repo_name(repo_name)
         if not c.repo_info:
@@ -149,8 +145,7 @@ class ForksController(BaseRepoController):
     @LoginRequired()
     @NotAnonymous()
     @HasPermissionAnyDecorator('hg.admin', 'hg.fork.repository')
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     def fork_create(self, repo_name):
         self.__load_defaults()
         c.repo_info = Repository.get_by_repo_name(repo_name)

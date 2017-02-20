@@ -37,7 +37,7 @@ from webob.exc import HTTPFound, HTTPInternalServerError, HTTPForbidden, HTTPNot
 from kallithea.config.routing import url
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import LoginRequired, \
-    HasRepoPermissionAnyDecorator, NotAnonymous, HasPermissionAny
+    HasRepoPermissionLevelDecorator, NotAnonymous, HasPermissionAny
 from kallithea.lib.base import BaseRepoController, render, jsonify
 from kallithea.lib.utils import action_logger
 from kallithea.lib.vcs import RepositoryError
@@ -100,7 +100,7 @@ class ReposController(BaseRepoController):
     def index(self, format='html'):
         _list = Repository.query(sorted=True).all()
 
-        c.repos_list = RepoList(_list, perm_set=['repository.admin'])
+        c.repos_list = RepoList(_list, perm_level='admin')
         repos_data = RepoModel().get_repos_as_dict(repos_list=c.repos_list,
                                                    admin=True,
                                                    super_user_actions=True)
@@ -212,7 +212,7 @@ class ReposController(BaseRepoController):
             return {'result': True}
         return {'result': False}
 
-    @HasRepoPermissionAnyDecorator('repository.admin')
+    @HasRepoPermissionLevelDecorator('admin')
     def update(self, repo_name):
         c.repo_info = self._load_repo()
         self.__load_defaults(c.repo_info)
@@ -261,7 +261,7 @@ class ReposController(BaseRepoController):
                     % repo_name, category='error')
         raise HTTPFound(location=url('edit_repo', repo_name=changed_name))
 
-    @HasRepoPermissionAnyDecorator('repository.admin')
+    @HasRepoPermissionLevelDecorator('admin')
     def delete(self, repo_name):
         repo_model = RepoModel()
         repo = repo_model.get_by_repo_name(repo_name)
@@ -298,7 +298,7 @@ class ReposController(BaseRepoController):
             raise HTTPFound(location=url('repos_group_home', group_name=repo.group.group_name))
         raise HTTPFound(location=url('repos'))
 
-    @HasRepoPermissionAnyDecorator('repository.admin')
+    @HasRepoPermissionLevelDecorator('admin')
     def edit(self, repo_name):
         defaults = self.__load_data()
         c.repo_fields = RepositoryField.query() \
@@ -312,7 +312,7 @@ class ReposController(BaseRepoController):
             encoding="UTF-8",
             force_defaults=False)
 
-    @HasRepoPermissionAnyDecorator('repository.admin')
+    @HasRepoPermissionLevelDecorator('admin')
     def edit_permissions(self, repo_name):
         c.repo_info = self._load_repo()
         repo_model = RepoModel()
@@ -363,7 +363,7 @@ class ReposController(BaseRepoController):
                     category='error')
             raise HTTPInternalServerError()
 
-    @HasRepoPermissionAnyDecorator('repository.admin')
+    @HasRepoPermissionLevelDecorator('admin')
     def edit_fields(self, repo_name):
         c.repo_info = self._load_repo()
         c.repo_fields = RepositoryField.query() \
@@ -374,7 +374,7 @@ class ReposController(BaseRepoController):
             raise HTTPFound(location=url('repo_edit_fields'))
         return render('admin/repos/repo_edit.html')
 
-    @HasRepoPermissionAnyDecorator('repository.admin')
+    @HasRepoPermissionLevelDecorator('admin')
     def create_repo_field(self, repo_name):
         try:
             form_result = RepoFieldForm()().to_python(dict(request.POST))
@@ -395,7 +395,7 @@ class ReposController(BaseRepoController):
             h.flash(msg, category='error')
         raise HTTPFound(location=url('edit_repo_fields', repo_name=repo_name))
 
-    @HasRepoPermissionAnyDecorator('repository.admin')
+    @HasRepoPermissionLevelDecorator('admin')
     def delete_repo_field(self, repo_name, field_id):
         field = RepositoryField.get_or_404(field_id)
         try:
@@ -407,7 +407,7 @@ class ReposController(BaseRepoController):
             h.flash(msg, category='error')
         raise HTTPFound(location=url('edit_repo_fields', repo_name=repo_name))
 
-    @HasRepoPermissionAnyDecorator('repository.admin')
+    @HasRepoPermissionLevelDecorator('admin')
     def edit_advanced(self, repo_name):
         c.repo_info = self._load_repo()
         c.default_user_id = User.get_default_user().user_id
@@ -416,7 +416,7 @@ class ReposController(BaseRepoController):
             .filter(UserFollowing.follows_repository == c.repo_info).scalar()
 
         _repos = Repository.query(sorted=True).all()
-        read_access_repos = RepoList(_repos)
+        read_access_repos = RepoList(_repos, perm_level='read')
         c.repos_list = [(None, _('-- Not a fork --'))]
         c.repos_list += [(x.repo_id, x.repo_name)
                          for x in read_access_repos
@@ -435,7 +435,7 @@ class ReposController(BaseRepoController):
             encoding="UTF-8",
             force_defaults=False)
 
-    @HasRepoPermissionAnyDecorator('repository.admin')
+    @HasRepoPermissionLevelDecorator('admin')
     def edit_advanced_journal(self, repo_name):
         """
         Sets this repository to be visible in public journal,
@@ -458,7 +458,7 @@ class ReposController(BaseRepoController):
         raise HTTPFound(location=url('edit_repo_advanced', repo_name=repo_name))
 
 
-    @HasRepoPermissionAnyDecorator('repository.admin')
+    @HasRepoPermissionLevelDecorator('admin')
     def edit_advanced_fork(self, repo_name):
         """
         Mark given repository as a fork of another
@@ -483,7 +483,7 @@ class ReposController(BaseRepoController):
 
         raise HTTPFound(location=url('edit_repo_advanced', repo_name=repo_name))
 
-    @HasRepoPermissionAnyDecorator('repository.admin')
+    @HasRepoPermissionLevelDecorator('admin')
     def edit_advanced_locking(self, repo_name):
         """
         Unlock repository when it is locked !
@@ -504,7 +504,7 @@ class ReposController(BaseRepoController):
                     category='error')
         raise HTTPFound(location=url('edit_repo_advanced', repo_name=repo_name))
 
-    @HasRepoPermissionAnyDecorator('repository.write', 'repository.admin')
+    @HasRepoPermissionLevelDecorator('write')
     def toggle_locking(self, repo_name):
         try:
             repo = Repository.get_by_repo_name(repo_name)
@@ -523,7 +523,7 @@ class ReposController(BaseRepoController):
                     category='error')
         raise HTTPFound(location=url('summary_home', repo_name=repo_name))
 
-    @HasRepoPermissionAnyDecorator('repository.admin')
+    @HasRepoPermissionLevelDecorator('admin')
     def edit_caches(self, repo_name):
         c.repo_info = self._load_repo()
         c.active = 'caches'
@@ -541,7 +541,7 @@ class ReposController(BaseRepoController):
             raise HTTPFound(location=url('edit_repo_caches', repo_name=c.repo_name))
         return render('admin/repos/repo_edit.html')
 
-    @HasRepoPermissionAnyDecorator('repository.admin')
+    @HasRepoPermissionLevelDecorator('admin')
     def edit_remote(self, repo_name):
         c.repo_info = self._load_repo()
         c.active = 'remote'
@@ -556,7 +556,7 @@ class ReposController(BaseRepoController):
             raise HTTPFound(location=url('edit_repo_remote', repo_name=c.repo_name))
         return render('admin/repos/repo_edit.html')
 
-    @HasRepoPermissionAnyDecorator('repository.admin')
+    @HasRepoPermissionLevelDecorator('admin')
     def edit_statistics(self, repo_name):
         c.repo_info = self._load_repo()
         repo = c.repo_info.scm_instance

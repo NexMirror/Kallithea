@@ -39,7 +39,7 @@ from kallithea.lib.utils2 import safe_str, safe_int
 from kallithea.lib.vcs.utils.hgcompat import unionrepo
 from kallithea.lib import helpers as h
 from kallithea.lib.base import BaseRepoController, render
-from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator
+from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator
 from kallithea.lib import diffs
 from kallithea.model.db import Repository
 from kallithea.lib.diffs import LimitedDiffContainer
@@ -168,16 +168,14 @@ class CompareController(BaseRepoController):
         return other_changesets, org_changesets, ancestors
 
     @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     def index(self, repo_name):
         c.compare_home = True
         c.a_ref_name = c.cs_ref_name = _('Select changeset')
         return render('compare/compare_diff.html')
 
     @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     def compare(self, repo_name, org_ref_type, org_ref_name, other_ref_type, other_ref_name):
         org_ref_name = org_ref_name.strip()
         other_ref_name = other_ref_name.strip()

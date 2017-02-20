@@ -24,7 +24,7 @@
               <a class="permalink" href="${co.url()}">&para;</a>
           </span>
 
-          %if co.author_id == request.authuser.user_id or h.HasRepoPermissionAny('repository.admin')(c.repo_name):
+          %if co.author_id == request.authuser.user_id or h.HasRepoPermissionLevel('admin')(c.repo_name):
             %if co.deletable():
               <div onClick="confirm('${_('Delete comment?')}') && deleteComment(${co.comment_id})" class="buttons delete-comment btn btn-default btn-xs" style="margin:0 5px">${_('Delete')}</div>
             %endif
@@ -80,7 +80,7 @@
                 %endfor
 
                 %if c.pull_request is not None and ( \
-                    h.HasPermissionAny('hg.admin')() or h.HasRepoPermissionAny('repository.admin')(c.repo_name) \
+                    h.HasPermissionAny('hg.admin')() or h.HasRepoPermissionLevel('admin')(c.repo_name) \
                     or c.pull_request.owner_id == request.authuser.user_id):
                 <div>
                   ${_('Finish pull request')}:

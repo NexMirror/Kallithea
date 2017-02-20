@@ -47,7 +47,7 @@ from kallithea.model.db import Repository, UserRepoToPerm, UserGroupRepoToPerm, 
     Statistics, UserGroup, Ui, RepoGroup, RepositoryField
 
 from kallithea.lib import helpers as h
-from kallithea.lib.auth import HasRepoPermissionAny, HasUserGroupPermissionAny
+from kallithea.lib.auth import HasRepoPermissionLevel, HasUserGroupPermissionAny
 from kallithea.lib.exceptions import AttachedForksError
 from kallithea.model.scm import UserGroupList
 
@@ -207,10 +207,7 @@ class RepoModel(BaseModel):
         for repo in repos_list:
             if perm_check:
                 # check permission at this level
-                if not HasRepoPermissionAny(
-                        'repository.read', 'repository.write',
-                        'repository.admin'
-                )(repo.repo_name, 'get_repos_as_dict check'):
+                if not HasRepoPermissionLevel('read')(repo.repo_name, 'get_repos_as_dict check'):
                     continue
             cs_cache = repo.changeset_cache
             row = {

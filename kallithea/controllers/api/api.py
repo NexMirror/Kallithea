@@ -35,7 +35,7 @@ from pylons import request
 from kallithea.controllers.api import JSONRPCController, JSONRPCError
 from kallithea.lib.auth import (
     PasswordGenerator, AuthUser, HasPermissionAnyDecorator,
-    HasPermissionAnyDecorator, HasPermissionAny, HasRepoPermissionAny,
+    HasPermissionAnyDecorator, HasPermissionAny, HasRepoPermissionLevel,
     HasRepoGroupPermissionAny, HasUserGroupPermissionAny)
 from kallithea.lib.utils import map_groups, repo2db_mapper
 from kallithea.lib.utils2 import (
@@ -277,10 +277,7 @@ class ApiController(JSONRPCController):
         """
         repo = get_repo_or_error(repoid)
         if not HasPermissionAny('hg.admin')():
-            # check if we have admin permission for this repo !
-            if not HasRepoPermissionAny('repository.admin',
-                                        'repository.write')(
-                    repo_name=repo.repo_name):
+            if not HasRepoPermissionLevel('write')(repo.repo_name):
                 raise JSONRPCError('repository `%s` does not exist' % (repoid,))
 
         try:
@@ -342,8 +339,7 @@ class ApiController(JSONRPCController):
         repo = get_repo_or_error(repoid)
         if HasPermissionAny('hg.admin')():
             pass
-        elif HasRepoPermissionAny('repository.admin',
-                                  'repository.write')(repo_name=repo.repo_name):
+        elif HasRepoPermissionLevel('write')(repo.repo_name):
             # make sure normal user does not pass someone else userid,
             # he is not allowed to do that
             if not isinstance(userid, Optional) and userid != request.authuser.user_id:
@@ -1204,9 +1200,7 @@ class ApiController(JSONRPCController):
         repo = get_repo_or_error(repoid)
 
         if not HasPermissionAny('hg.admin')():
-            # check if we have admin permission for this repo !
-            perms = ('repository.admin', 'repository.write', 'repository.read')
-            if not HasRepoPermissionAny(*perms)(repo_name=repo.repo_name):
+            if not HasRepoPermissionLevel('read')(repo.repo_name):
                 raise JSONRPCError('repository `%s` does not exist' % (repoid,))
 
         members = []
@@ -1314,9 +1308,7 @@ class ApiController(JSONRPCController):
         repo = get_repo_or_error(repoid)
 
         if not HasPermissionAny('hg.admin')():
-            # check if we have admin permission for this repo !
-            perms = ('repository.admin', 'repository.write', 'repository.read')
-            if not HasRepoPermissionAny(*perms)(repo_name=repo.repo_name):
+            if not HasRepoPermissionLevel('read')(repo.repo_name):
                 raise JSONRPCError('repository `%s` does not exist' % (repoid,))
 
         ret_type = Optional.extract(ret_type)
@@ -1492,8 +1484,7 @@ class ApiController(JSONRPCController):
         """
         repo = get_repo_or_error(repoid)
         if not HasPermissionAny('hg.admin')():
-            # check if we have admin permission for this repo !
-            if not HasRepoPermissionAny('repository.admin')(repo_name=repo.repo_name):
+            if not HasRepoPermissionLevel('admin')(repo.repo_name):
                 raise JSONRPCError('repository `%s` does not exist' % (repoid,))
 
             if (name != repo.repo_name and
@@ -1590,9 +1581,7 @@ class ApiController(JSONRPCController):
 
         if HasPermissionAny('hg.admin')():
             pass
-        elif HasRepoPermissionAny('repository.admin',
-                                  'repository.write',
-                                  'repository.read')(repo_name=repo.repo_name):
+        elif HasRepoPermissionLevel('read')(repo.repo_name):
             if not isinstance(owner, Optional):
                 # forbid setting owner for non-admins
                 raise JSONRPCError(
@@ -1669,8 +1658,7 @@ class ApiController(JSONRPCController):
         repo = get_repo_or_error(repoid)
 
         if not HasPermissionAny('hg.admin')():
-            # check if we have admin permission for this repo !
-            if not HasRepoPermissionAny('repository.admin')(repo_name=repo.repo_name):
+            if not HasRepoPermissionLevel('admin')(repo.repo_name):
                 raise JSONRPCError('repository `%s` does not exist' % (repoid,))
 
         try:
@@ -1821,10 +1809,7 @@ class ApiController(JSONRPCController):
         perm = get_perm_or_error(perm)
         user_group = get_user_group_or_error(usergroupid)
         if not HasPermissionAny('hg.admin')():
-            # check if we have admin permission for this repo !
-            _perms = ('repository.admin',)
-            if not HasRepoPermissionAny(*_perms)(
-                    repo_name=repo.repo_name):
+            if not HasRepoPermissionLevel('admin')(repo.repo_name):
                 raise JSONRPCError('repository `%s` does not exist' % (repoid,))
 
             # check if we have at least read permission for this user group !
@@ -1877,10 +1862,7 @@ class ApiController(JSONRPCController):
         repo = get_repo_or_error(repoid)
         user_group = get_user_group_or_error(usergroupid)
         if not HasPermissionAny('hg.admin')():
-            # check if we have admin permission for this repo !
-            _perms = ('repository.admin',)
-            if not HasRepoPermissionAny(*_perms)(
-                    repo_name=repo.repo_name):
+            if not HasRepoPermissionLevel('admin')(repo.repo_name):
                 raise JSONRPCError('repository `%s` does not exist' % (repoid,))
 
             # check if we have at least read permission for this user group !

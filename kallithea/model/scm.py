@@ -49,7 +49,7 @@ from kallithea import BACKENDS
 from kallithea.lib import helpers as h
 from kallithea.lib.utils2 import safe_str, safe_unicode, get_server_url, \
     _set_extras
-from kallithea.lib.auth import HasRepoPermissionAny, HasRepoGroupPermissionAny, \
+from kallithea.lib.auth import HasRepoPermissionLevel, HasRepoGroupPermissionAny, \
     HasUserGroupPermissionAny, HasPermissionAny, HasPermissionAny
 from kallithea.lib.utils import get_filesystem_repos, make_ui, \
     action_logger
@@ -114,13 +114,10 @@ class _PermCheckIterator(object):
 
 class RepoList(_PermCheckIterator):
 
-    def __init__(self, db_repo_list, perm_set=None, extra_kwargs=None):
-        if not perm_set:
-            perm_set = ['repository.read', 'repository.write', 'repository.admin']
-
+    def __init__(self, db_repo_list, perm_level, extra_kwargs=None):
         super(RepoList, self).__init__(obj_list=db_repo_list,
-                    obj_attr='repo_name', perm_set=perm_set,
-                    perm_checker=HasRepoPermissionAny,
+                    obj_attr='repo_name', perm_set=[perm_level],
+                    perm_checker=HasRepoPermissionLevel,
                     extra_kwargs=extra_kwargs)
 
 
@@ -216,7 +213,7 @@ class ScmModel(BaseModel):
 
     def get_repos(self, repos):
         """Return the repos the user has access to"""
-        return RepoList(repos)
+        return RepoList(repos, perm_level='read')
 
     def get_repo_groups(self, groups=None):
         """Return the repo groups the user has access to

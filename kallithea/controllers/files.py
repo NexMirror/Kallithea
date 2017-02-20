@@ -44,7 +44,7 @@ from kallithea.lib import helpers as h
 from kallithea.lib.compat import OrderedDict
 from kallithea.lib.utils2 import convert_line_endings, detect_mode, safe_str, \
     str2bool, safe_int
-from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator
+from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator
 from kallithea.lib.base import BaseRepoController, render, jsonify
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.conf import settings
@@ -125,8 +125,7 @@ class FilesController(BaseRepoController):
         return file_node
 
     @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     def index(self, repo_name, revision, f_path, annotate=False):
         # redirect to given revision from form if given
         post_revision = request.POST.get('at_rev', None)
@@ -199,8 +198,7 @@ class FilesController(BaseRepoController):
         return render('files/files.html')
 
     @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     @jsonify
     def history(self, repo_name, revision, f_path):
         changeset = self.__get_cs(revision)
@@ -222,8 +220,7 @@ class FilesController(BaseRepoController):
             return data
 
     @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     def authors(self, repo_name, revision, f_path):
         changeset = self.__get_cs(revision)
         _file = changeset.get_node(f_path)
@@ -235,8 +232,7 @@ class FilesController(BaseRepoController):
             return render('files/files_history_box.html')
 
     @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     def rawfile(self, repo_name, revision, f_path):
         cs = self.__get_cs(revision)
         file_node = self.__get_filenode(cs, f_path)
@@ -248,8 +244,7 @@ class FilesController(BaseRepoController):
         return file_node.content
 
     @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     def raw(self, repo_name, revision, f_path):
         cs = self.__get_cs(revision)
         file_node = self.__get_filenode(cs, f_path)
@@ -295,7 +290,7 @@ class FilesController(BaseRepoController):
         return file_node.content
 
     @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.write', 'repository.admin')
+    @HasRepoPermissionLevelDecorator('write')
     def delete(self, repo_name, revision, f_path):
         repo = c.db_repo
         if repo.enable_locking and repo.locked[0]:
@@ -355,7 +350,7 @@ class FilesController(BaseRepoController):
         return render('files/files_delete.html')
 
     @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.write', 'repository.admin')
+    @HasRepoPermissionLevelDecorator('write')
     def edit(self, repo_name, revision, f_path):
         repo = c.db_repo
         if repo.enable_locking and repo.locked[0]:
@@ -421,7 +416,7 @@ class FilesController(BaseRepoController):
         return render('files/files_edit.html')
 
     @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.write', 'repository.admin')
+    @HasRepoPermissionLevelDecorator('write')
     def add(self, repo_name, revision, f_path):
 
         repo = c.db_repo
@@ -502,8 +497,7 @@ class FilesController(BaseRepoController):
         return render('files/files_add.html')
 
     @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     def archivefile(self, repo_name, fname):
         fileformat = None
         revision = None
@@ -589,8 +583,7 @@ class FilesController(BaseRepoController):
         return get_chunked_archive(archive_path)
 
     @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     def diff(self, repo_name, f_path):
         ignore_whitespace = request.GET.get('ignorews') == '1'
         line_context = safe_int(request.GET.get('context'), 3)
@@ -693,8 +686,7 @@ class FilesController(BaseRepoController):
             return render('files/file_diff.html')
 
     @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     def diff_2way(self, repo_name, f_path):
         diff1 = request.GET.get('diff1', '')
         diff2 = request.GET.get('diff2', '')
@@ -781,8 +773,7 @@ class FilesController(BaseRepoController):
         return hist_l, changesets
 
     @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     @jsonify
     def nodelist(self, repo_name, revision, f_path):
         if request.environ.get('HTTP_X_PARTIAL_XHR'):

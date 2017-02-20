@@ -29,7 +29,7 @@ import logging
 
 from pylons import tmpl_context as c, request
 
-from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator
+from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator
 from kallithea.lib.base import BaseRepoController, render
 from kallithea.lib.page import Page
 from kallithea.lib.utils2 import safe_int
@@ -44,8 +44,7 @@ class FollowersController(BaseRepoController):
         super(FollowersController, self).__before__()
 
     @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     def followers(self, repo_name):
         p = safe_int(request.GET.get('page'), 1)
         repo_id = c.db_repo.repo_id

@@ -133,13 +133,13 @@
           <input id="branch_switcher" name="branch_switcher" type="hidden">
         </li>
         <li class="${'active' if current == 'options' else ''} dropdown" data-context="options">
-             %if h.HasRepoPermissionAny('repository.admin')(c.repo_name):
+             %if h.HasRepoPermissionLevel('admin')(c.repo_name):
                <a href="${h.url('edit_repo',repo_name=c.repo_name)}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true"><i class="icon-wrench"></i> ${_('Options')} <i class="caret"></i></a>
              %else:
                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true"><i class="icon-wrench"></i> ${_('Options')} <i class="caret"></i></a>
              %endif
           <ul class="dropdown-menu" role="menu" aria-hidden="true">
-             %if h.HasRepoPermissionAny('repository.admin')(c.repo_name):
+             %if h.HasRepoPermissionLevel('admin')(c.repo_name):
                    <li><a href="${h.url('edit_repo',repo_name=c.repo_name)}"><i class="icon-gear"></i> ${_('Settings')}</a></li>
              %endif
               %if c.db_repo.fork:
@@ -150,7 +150,7 @@
 
               <li><a href="${h.url('search_repo',repo_name=c.repo_name)}"><i class="icon-search"></i> ${_('Search')}</a></li>
 
-              %if h.HasRepoPermissionAny('repository.write','repository.admin')(c.repo_name) and c.db_repo.enable_locking:
+              %if h.HasRepoPermissionLevel('write')(c.repo_name) and c.db_repo.enable_locking:
                 %if c.db_repo.locked[0]:
                   <li><a href="${h.url('toggle_locking', repo_name=c.repo_name)}"><i class="icon-lock"></i> ${_('Unlock')}</a></li>
                 %else:

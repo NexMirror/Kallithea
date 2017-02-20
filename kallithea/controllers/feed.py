@@ -36,7 +36,7 @@ from webhelpers.feedgenerator import Atom1Feed, Rss201rev2Feed
 
 from kallithea import CONFIG
 from kallithea.lib import helpers as h
-from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator
+from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator
 from kallithea.lib.base import BaseRepoController
 from kallithea.lib.diffs import DiffProcessor, LimitedDiffContainer
 from kallithea.model.db import CacheInvalidation
@@ -52,8 +52,7 @@ ttl = "5"
 class FeedController(BaseRepoController):
 
     @LoginRequired(api_access=True)
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     def __before__(self):
         super(FeedController, self).__before__()
 

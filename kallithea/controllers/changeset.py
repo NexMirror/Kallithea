@@ -38,7 +38,7 @@ from kallithea.lib.vcs.exceptions import RepositoryError, \
 
 from kallithea.lib.compat import json
 import kallithea.lib.helpers as h
-from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator, \
+from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator, \
     NotAnonymous
 from kallithea.lib.base import BaseRepoController, render, jsonify
 from kallithea.lib.utils import action_logger
@@ -337,33 +337,28 @@ class ChangesetController(BaseRepoController):
                 return render('changeset/changeset_range.html')
 
     @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     def index(self, revision, method='show'):
         return self._index(revision, method=method)
 
     @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     def changeset_raw(self, revision):
         return self._index(revision, method='raw')
 
     @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     def changeset_patch(self, revision):
         return self._index(revision, method='patch')
 
     @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     def changeset_download(self, revision):
         return self._index(revision, method='download')
 
     @LoginRequired()
     @NotAnonymous()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     @jsonify
     def comment(self, repo_name, revision):
         assert request.environ.get('HTTP_X_PARTIAL_XHR')
@@ -414,15 +409,14 @@ class ChangesetController(BaseRepoController):
 
     @LoginRequired()
     @NotAnonymous()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     @jsonify
     def delete_comment(self, repo_name, comment_id):
         co = ChangesetComment.get_or_404(comment_id)
         if co.repo.repo_name != repo_name:
             raise HTTPNotFound()
         owner = co.author_id == request.authuser.user_id
-        repo_admin = h.HasRepoPermissionAny('repository.admin')(repo_name)
+        repo_admin = h.HasRepoPermissionLevel('admin')(repo_name)
         if h.HasPermissionAny('hg.admin')() or repo_admin or owner:
             ChangesetCommentsModel().delete(comment=co)
             Session().commit()
@@ -431,8 +425,7 @@ class ChangesetController(BaseRepoController):
             raise HTTPForbidden()
 
     @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     @jsonify
     def changeset_info(self, repo_name, revision):
         if request.is_xhr:
@@ -444,8 +437,7 @@ class ChangesetController(BaseRepoController):
             raise HTTPBadRequest()
 
     @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     @jsonify
     def changeset_children(self, repo_name, revision):
         if request.is_xhr:
@@ -458,8 +450,7 @@ class ChangesetController(BaseRepoController):
             raise HTTPBadRequest()
 
     @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     @jsonify
     def changeset_parents(self, repo_name, revision):
         if request.is_xhr:

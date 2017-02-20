@@ -1,7 +1,7 @@
 ##path search
 
 %for cnt,sr in enumerate(c.formated_results):
-    %if h.HasRepoPermissionAny('repository.write','repository.read','repository.admin')(sr['repository'],'search results check'):
+    %if h.HasRepoPermissionLevel('read')(sr['repository'],'search results check'):
         <div class="panel panel-default">
             <div class="panel-heading">
                 ${h.link_to(h.literal('%s &raquo; %s' % (sr['repository'],sr['f_path'])),

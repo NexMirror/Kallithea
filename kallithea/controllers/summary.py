@@ -43,7 +43,7 @@ from kallithea.lib.vcs.exceptions import ChangesetError, EmptyRepositoryError, \
 from kallithea.config.conf import ALL_READMES, ALL_EXTS, LANGUAGES_EXTENSIONS_MAP
 from kallithea.model.db import Statistics, CacheInvalidation, User
 from kallithea.lib.utils2 import safe_str
-from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator, \
+from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator, \
     NotAnonymous
 from kallithea.lib.base import BaseRepoController, render, jsonify
 from kallithea.lib.vcs.backends.base import EmptyChangeset
@@ -107,8 +107,7 @@ class SummaryController(BaseRepoController):
         return _get_readme_from_cache(repo_name, kind)
 
     @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     def index(self, repo_name):
         _load_changelog_summary()
 
@@ -161,8 +160,7 @@ class SummaryController(BaseRepoController):
 
     @LoginRequired()
     @NotAnonymous()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     @jsonify
     def repo_size(self, repo_name):
         if request.is_xhr:
@@ -171,8 +169,7 @@ class SummaryController(BaseRepoController):
             raise HTTPBadRequest()
 
     @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     def statistics(self, repo_name):
         if c.db_repo.enable_statistics:
             c.show_stats = True

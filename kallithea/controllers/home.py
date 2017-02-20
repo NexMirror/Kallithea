@@ -35,7 +35,7 @@ from sqlalchemy.sql.expression import func
 
 from kallithea.lib.utils import conditional_cache
 from kallithea.lib.compat import json
-from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator
+from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator
 from kallithea.lib.base import BaseController, render, jsonify
 from kallithea.model.db import Repository, RepoGroup
 from kallithea.model.repo import RepoModel
@@ -113,8 +113,7 @@ class HomeController(BaseController):
             raise HTTPBadRequest()
 
     @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     @jsonify
     def repo_refs_data(self, repo_name):
         repo = Repository.get_by_repo_name(repo_name).scm_instance

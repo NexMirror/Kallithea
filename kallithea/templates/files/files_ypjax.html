@@ -5,7 +5,7 @@
         - ${_('annotation')}
         %endif
         %if c.file.is_dir():
-          % if h.HasRepoPermissionAny('repository.write','repository.admin')(c.repo_name):
+          % if h.HasRepoPermissionLevel('write')(c.repo_name):
              / <span title="${_('Add New File')}">
                <a href="${h.url('files_add_home',repo_name=c.repo_name,revision=c.changeset.raw_id,f_path=c.f_path, anchor='edit')}">
                    <i class="icon-plus-circled" style="color:#5bb75b; font-size: 16px"></i></a>

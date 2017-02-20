@@ -34,7 +34,7 @@ from webob.exc import HTTPFound, HTTPNotFound, HTTPBadRequest
 
 import kallithea.lib.helpers as h
 from kallithea.config.routing import url
-from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator
+from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator
 from kallithea.lib.base import BaseRepoController, render
 from kallithea.lib.compat import json
 from kallithea.lib.graphmod import graph_data
@@ -92,8 +92,7 @@ class ChangelogController(BaseRepoController):
         raise HTTPBadRequest()
 
     @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     def index(self, repo_name, revision=None, f_path=None):
         # Fix URL after page size form submission via GET
         # TODO: Somehow just don't send this extra junk in the GET URL
@@ -179,8 +178,7 @@ class ChangelogController(BaseRepoController):
         return render('changelog/changelog.html')
 
     @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     def changelog_details(self, cs):
         if request.environ.get('HTTP_X_PARTIAL_XHR'):
             c.cs = c.db_repo_scm_instance.get_changeset(cs)
@@ -188,8 +186,7 @@ class ChangelogController(BaseRepoController):
         raise HTTPNotFound()
 
     @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     def changelog_summary(self, repo_name):
         if request.environ.get('HTTP_X_PARTIAL_XHR'):
             _load_changelog_summary()

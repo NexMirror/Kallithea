@@ -37,7 +37,7 @@ from webob.exc import HTTPFound, HTTPNotFound, HTTPForbidden, HTTPBadRequest
 from kallithea.config.routing import url
 from kallithea.lib import helpers as h
 from kallithea.lib import diffs
-from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator, \
+from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator, \
     NotAnonymous
 from kallithea.lib.base import BaseRepoController, render, jsonify
 from kallithea.lib.compat import json, OrderedDict
@@ -190,8 +190,7 @@ class PullrequestsController(BaseRepoController):
         return request.authuser.admin or owner or reviewer
 
     @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     def show_all(self, repo_name):
         c.from_ = request.GET.get('from_') or ''
         c.closed = request.GET.get('closed') or ''
@@ -236,8 +235,7 @@ class PullrequestsController(BaseRepoController):
 
     @LoginRequired()
     @NotAnonymous()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     def index(self):
         org_repo = c.db_repo
         org_scm_instance = org_repo.scm_instance
@@ -293,8 +291,7 @@ class PullrequestsController(BaseRepoController):
 
     @LoginRequired()
     @NotAnonymous()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     @jsonify
     def repo_info(self, repo_name):
         repo = c.db_repo
@@ -307,8 +304,7 @@ class PullrequestsController(BaseRepoController):
 
     @LoginRequired()
     @NotAnonymous()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     def create(self, repo_name):
         repo = c.db_repo
         try:
@@ -513,8 +509,7 @@ class PullrequestsController(BaseRepoController):
     # pullrequest_post for PR editing
     @LoginRequired()
     @NotAnonymous()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     def post(self, repo_name, pull_request_id):
         pull_request = PullRequest.get_or_404(pull_request_id)
         if pull_request.is_closed():
@@ -522,7 +517,7 @@ class PullrequestsController(BaseRepoController):
         assert pull_request.other_repo.repo_name == repo_name
         #only owner or admin can update it
         owner = pull_request.owner_id == request.authuser.user_id
-        repo_admin = h.HasRepoPermissionAny('repository.admin')(c.repo_name)
+        repo_admin = h.HasRepoPermissionLevel('admin')(c.repo_name)
         if not (h.HasPermissionAny('hg.admin')() or repo_admin or owner):
             raise HTTPForbidden()
 
@@ -571,8 +566,7 @@ class PullrequestsController(BaseRepoController):
 
     @LoginRequired()
     @NotAnonymous()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     @jsonify
     def delete(self, repo_name, pull_request_id):
         pull_request = PullRequest.get_or_404(pull_request_id)
@@ -586,8 +580,7 @@ class PullrequestsController(BaseRepoController):
         raise HTTPForbidden()
 
     @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     def show(self, repo_name, pull_request_id, extra=None):
         repo_model = RepoModel()
         c.users_array = repo_model.get_users_js()
@@ -775,8 +768,7 @@ class PullrequestsController(BaseRepoController):
 
     @LoginRequired()
     @NotAnonymous()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     @jsonify
     def comment(self, repo_name, pull_request_id):
         pull_request = PullRequest.get_or_404(pull_request_id)
@@ -800,8 +792,8 @@ class PullrequestsController(BaseRepoController):
         if delete == "delete":
             if (pull_request.owner_id == request.authuser.user_id or
                 h.HasPermissionAny('hg.admin')() or
-                h.HasRepoPermissionAny('repository.admin')(pull_request.org_repo.repo_name) or
-                h.HasRepoPermissionAny('repository.admin')(pull_request.other_repo.repo_name)
+                h.HasRepoPermissionLevel('admin')(pull_request.org_repo.repo_name) or
+                h.HasRepoPermissionLevel('admin')(pull_request.other_repo.repo_name)
                 ) and not pull_request.is_closed():
                 PullRequestModel().delete(pull_request)
                 Session().commit()
@@ -861,8 +853,7 @@ class PullrequestsController(BaseRepoController):
 
     @LoginRequired()
     @NotAnonymous()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     @jsonify
     def delete_comment(self, repo_name, comment_id):
         co = ChangesetComment.get(comment_id)
@@ -871,7 +862,7 @@ class PullrequestsController(BaseRepoController):
             raise HTTPForbidden()
 
         owner = co.author_id == request.authuser.user_id
-        repo_admin = h.HasRepoPermissionAny('repository.admin')(c.repo_name)
+        repo_admin = h.HasRepoPermissionLevel('admin')(c.repo_name)
         if h.HasPermissionAny('hg.admin')() or repo_admin or owner:
             ChangesetCommentsModel().delete(comment=co)
             Session().commit()
