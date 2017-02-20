@@ -49,7 +49,7 @@ from kallithea import BACKENDS
 from kallithea.lib import helpers as h
 from kallithea.lib.utils2 import safe_str, safe_unicode, get_server_url, \
     _set_extras
-from kallithea.lib.auth import HasRepoPermissionLevel, HasRepoGroupPermissionAny, \
+from kallithea.lib.auth import HasRepoPermissionLevel, HasRepoGroupPermissionLevel, \
     HasUserGroupPermissionAny, HasPermissionAny, HasPermissionAny
 from kallithea.lib.utils import get_filesystem_repos, make_ui, \
     action_logger
@@ -123,13 +123,10 @@ class RepoList(_PermCheckIterator):
 
 class RepoGroupList(_PermCheckIterator):
 
-    def __init__(self, db_repo_group_list, perm_set=None, extra_kwargs=None):
-        if not perm_set:
-            perm_set = ['group.read', 'group.write', 'group.admin']
-
+    def __init__(self, db_repo_group_list, perm_level, extra_kwargs=None):
         super(RepoGroupList, self).__init__(obj_list=db_repo_group_list,
-                    obj_attr='group_name', perm_set=perm_set,
-                    perm_checker=HasRepoGroupPermissionAny,
+                    obj_attr='group_name', perm_set=[perm_level],
+                    perm_checker=HasRepoGroupPermissionLevel,
                     extra_kwargs=extra_kwargs)
 
 
@@ -222,7 +219,7 @@ class ScmModel(BaseModel):
         if groups is None:
             groups = RepoGroup.query() \
                 .filter(RepoGroup.parent_group_id == None).all()
-        return RepoGroupList(groups)
+        return RepoGroupList(groups, perm_level='read')
 
     def mark_for_invalidation(self, repo_name):
         """
@@ -784,7 +781,7 @@ class ScmModel(BaseModel):
             else:
                 log.debug('skipping writing hook file')
 
-def AvailableRepoGroupChoices(top_perms, repo_group_perms, extras=()):
+def AvailableRepoGroupChoices(top_perms, repo_group_perm_level, extras=()):
     """Return group_id,string tuples with choices for all the repo groups where
     the user has the necessary permissions.
 
@@ -794,7 +791,7 @@ def AvailableRepoGroupChoices(top_perms, repo_group_perms, extras=()):
     if HasPermissionAny('hg.admin')('available repo groups'):
         groups.append(None)
     else:
-        groups = list(RepoGroupList(groups, perm_set=repo_group_perms))
+        groups = list(RepoGroupList(groups, perm_level=repo_group_perm_level))
         if top_perms and HasPermissionAny(*top_perms)('available repo groups'):
             groups.append(None)
         for extra in extras:

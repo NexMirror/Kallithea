@@ -41,7 +41,7 @@ from kallithea.config.routing import url
 from kallithea.lib import helpers as h
 from kallithea.lib.compat import json
 from kallithea.lib.auth import LoginRequired, \
-    HasRepoGroupPermissionAnyDecorator, HasRepoGroupPermissionAny, \
+    HasRepoGroupPermissionLevelDecorator, HasRepoGroupPermissionLevel, \
     HasPermissionAny
 from kallithea.lib.base import BaseController, render
 from kallithea.model.db import RepoGroup, Repository
@@ -68,7 +68,7 @@ class RepoGroupsController(BaseController):
         exclude is used for not moving group to itself TODO: also exclude descendants
         Note: only admin can create top level groups
         """
-        repo_groups = AvailableRepoGroupChoices([], ['group.admin'], extras)
+        repo_groups = AvailableRepoGroupChoices([], 'admin', extras)
         exclude_group_ids = set(rg.group_id for rg in exclude)
         c.repo_groups = [rg for rg in repo_groups
                          if rg[0] not in exclude_group_ids]
@@ -110,7 +110,7 @@ class RepoGroupsController(BaseController):
 
     def index(self, format='html'):
         _list = RepoGroup.query(sorted=True).all()
-        group_iter = RepoGroupList(_list, perm_set=['group.admin'])
+        group_iter = RepoGroupList(_list, perm_level='admin')
         repo_groups_data = []
         total_records = len(group_iter)
         _tmpl_lookup = kallithea.CONFIG['pylons.app_globals'].mako_lookup
@@ -197,7 +197,7 @@ class RepoGroupsController(BaseController):
             group_id = safe_int(request.GET.get('parent_group'))
             group = RepoGroup.get(group_id) if group_id else None
             group_name = group.group_name if group else None
-            if HasRepoGroupPermissionAny('group.admin')(group_name, 'group create'):
+            if HasRepoGroupPermissionLevel('admin')(group_name, 'group create'):
                 pass
             else:
                 raise HTTPForbidden()
@@ -205,7 +205,7 @@ class RepoGroupsController(BaseController):
         self.__load_defaults()
         return render('admin/repo_groups/repo_group_add.html')
 
-    @HasRepoGroupPermissionAnyDecorator('group.admin')
+    @HasRepoGroupPermissionLevelDecorator('admin')
     def update(self, group_name):
         c.repo_group = RepoGroup.guess_instance(group_name)
         self.__load_defaults(extras=[c.repo_group.parent_group],
@@ -251,7 +251,7 @@ class RepoGroupsController(BaseController):
 
         raise HTTPFound(location=url('edit_repo_group', group_name=group_name))
 
-    @HasRepoGroupPermissionAnyDecorator('group.admin')
+    @HasRepoGroupPermissionLevelDecorator('admin')
     def delete(self, group_name):
         gr = c.repo_group = RepoGroup.guess_instance(group_name)
         repos = gr.repositories.all()
@@ -292,8 +292,7 @@ class RepoGroupsController(BaseController):
             return self.show(group_name)
         raise HTTPNotFound
 
-    @HasRepoGroupPermissionAnyDecorator('group.read', 'group.write',
-                                         'group.admin')
+    @HasRepoGroupPermissionLevelDecorator('read')
     def show(self, group_name):
         c.active = 'settings'
 
@@ -310,7 +309,7 @@ class RepoGroupsController(BaseController):
 
         return render('admin/repo_groups/repo_group_show.html')
 
-    @HasRepoGroupPermissionAnyDecorator('group.admin')
+    @HasRepoGroupPermissionLevelDecorator('admin')
     def edit(self, group_name):
         c.active = 'settings'
 
@@ -326,14 +325,14 @@ class RepoGroupsController(BaseController):
             force_defaults=False
         )
 
-    @HasRepoGroupPermissionAnyDecorator('group.admin')
+    @HasRepoGroupPermissionLevelDecorator('admin')
     def edit_repo_group_advanced(self, group_name):
         c.active = 'advanced'
         c.repo_group = RepoGroup.guess_instance(group_name)
 
         return render('admin/repo_groups/repo_group_edit.html')
 
-    @HasRepoGroupPermissionAnyDecorator('group.admin')
+    @HasRepoGroupPermissionLevelDecorator('admin')
     def edit_repo_group_perms(self, group_name):
         c.active = 'perms'
         c.repo_group = RepoGroup.guess_instance(group_name)
@@ -347,7 +346,7 @@ class RepoGroupsController(BaseController):
             force_defaults=False
         )
 
-    @HasRepoGroupPermissionAnyDecorator('group.admin')
+    @HasRepoGroupPermissionLevelDecorator('admin')
     def update_perms(self, group_name):
         """
         Update permissions for given repository group
@@ -378,7 +377,7 @@ class RepoGroupsController(BaseController):
         h.flash(_('Repository group permissions updated'), category='success')
         raise HTTPFound(location=url('edit_repo_group_perms', group_name=group_name))
 
-    @HasRepoGroupPermissionAnyDecorator('group.admin')
+    @HasRepoGroupPermissionLevelDecorator('admin')
     def delete_perms(self, group_name):
         try:
             obj_type = request.POST.get('obj_type')

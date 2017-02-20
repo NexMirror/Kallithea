@@ -56,10 +56,11 @@ class ForksController(BaseRepoController):
         super(ForksController, self).__before__()
 
     def __load_defaults(self):
-        repo_group_perms = ['group.admin']
         if HasPermissionAny('hg.create.write_on_repogroup.true')():
-            repo_group_perms.append('group.write')
-        c.repo_groups = AvailableRepoGroupChoices(['hg.create.repository'], repo_group_perms)
+            repo_group_perm_level = 'write'
+        else:
+            repo_group_perm_level = 'admin'
+        c.repo_groups = AvailableRepoGroupChoices(['hg.create.repository'], repo_group_perm_level)
 
         c.landing_revs_choices, c.landing_revs = ScmModel().get_repo_landing_revs()
 

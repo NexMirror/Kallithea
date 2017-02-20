@@ -549,6 +549,18 @@ class AuthUser(object):
             self.username, level, repo_name, purpose, ok, actual_perm)
         return ok
 
+    def has_repository_group_permission_level(self, repo_group_name, level, purpose=None):
+        required_perms = {
+            'read': ['group.read', 'group.write', 'group.admin'],
+            'write': ['group.write', 'group.admin'],
+            'admin': ['group.admin'],
+        }[level]
+        actual_perm = self.permissions['repositories_groups'].get(repo_group_name)
+        ok = actual_perm in required_perms
+        log.debug('Checking if user %r can %r repo group %r (%s): %s (has %r)',
+            self.username, level, repo_group_name, purpose, ok, actual_perm)
+        return ok
+
     @property
     def api_keys(self):
         return self._get_api_keys()
@@ -859,17 +871,15 @@ class HasRepoPermissionLevelDecorator(_PermsDecorator):
         return user.has_repository_permission_level(repo_name, level)
 
 
-class HasRepoGroupPermissionAnyDecorator(_PermsDecorator):
+class HasRepoGroupPermissionLevelDecorator(_PermsDecorator):
     """
     Checks the user has any of given permissions for the requested repository group.
     """
 
     def check_permissions(self, user):
         repo_group_name = get_repo_group_slug(request)
-        try:
-            return user.permissions['repositories_groups'][repo_group_name] in self.required_perms
-        except KeyError:
-            return False
+        (level,) = self.required_perms
+        return user.has_repository_group_permission_level(repo_group_name, level)
 
 
 class HasUserGroupPermissionAnyDecorator(_PermsDecorator):
@@ -925,17 +935,11 @@ class HasRepoPermissionLevel(_PermsFunction):
         return request.user.has_repository_permission_level(repo_name, level, purpose)
 
 
-class HasRepoGroupPermissionAny(_PermsFunction):
+class HasRepoGroupPermissionLevel(_PermsFunction):
 
     def __call__(self, group_name, purpose=None):
-        try:
-            ok = request.user.permissions['repositories_groups'][group_name] in self.required_perms
-        except KeyError:
-            ok = False
-
-        log.debug('Check %s for %s for repo group %s (%s): %s' %
-            (request.user.username, self.required_perms, group_name, purpose, ok))
-        return ok
+        (level,) = self.required_perms
+        return request.user.has_repository_group_permission_level(group_name, level, purpose)
 
 
 class HasUserGroupPermissionAny(_PermsFunction):

@@ -35,7 +35,7 @@ from kallithea.lib.utils2 import str2bool, aslist
 from kallithea.model.db import RepoGroup, Repository, UserGroup, User
 from kallithea.lib.exceptions import LdapImportError
 from kallithea.config.routing import ADMIN_PREFIX
-from kallithea.lib.auth import HasRepoGroupPermissionAny, HasPermissionAny
+from kallithea.lib.auth import HasRepoGroupPermissionLevel, HasPermissionAny
 
 # silence warnings and pylint
 UnicodeString, OneOf, Int, Number, Regex, Email, Bool, StringBoolean, Set, \
@@ -502,9 +502,9 @@ def CanWriteGroup(old_data=None):
 
             # create repositories with write permission on group is set to true
             create_on_write = HasPermissionAny('hg.create.write_on_repogroup.true')()
-            group_admin = HasRepoGroupPermissionAny('group.admin')(gr_name,
+            group_admin = HasRepoGroupPermissionLevel('admin')(gr_name,
                                             'can write into group validator')
-            group_write = HasRepoGroupPermissionAny('group.write')(gr_name,
+            group_write = HasRepoGroupPermissionLevel('write')(gr_name,
                                             'can write into group validator')
             forbidden = not (group_admin or (group_write and create_on_write))
             can_create_repos = HasPermissionAny('hg.admin', 'hg.create.repository')
@@ -555,8 +555,7 @@ def CanCreateGroup(can_create_in_root=False):
                 return
 
             forbidden_in_root = gr is None and not can_create_in_root
-            val = HasRepoGroupPermissionAny('group.admin')
-            forbidden = not val(gr_name, 'can create group validator')
+            forbidden = not HasRepoGroupPermissionLevel('admin')(gr_name, 'can create group validator')
             if forbidden_in_root or forbidden:
                 msg = self.message('permission_denied', state)
                 raise formencode.Invalid(msg, value, state,

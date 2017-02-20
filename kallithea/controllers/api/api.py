@@ -36,7 +36,7 @@ from kallithea.controllers.api import JSONRPCController, JSONRPCError
 from kallithea.lib.auth import (
     PasswordGenerator, AuthUser, HasPermissionAnyDecorator,
     HasPermissionAnyDecorator, HasPermissionAny, HasRepoPermissionLevel,
-    HasRepoGroupPermissionAny, HasUserGroupPermissionAny)
+    HasRepoGroupPermissionLevel, HasUserGroupPermissionAny)
 from kallithea.lib.utils import map_groups, repo2db_mapper
 from kallithea.lib.utils2 import (
     str2bool, time_to_datetime, safe_int, Optional, OAttr)
@@ -2111,8 +2111,7 @@ class ApiController(JSONRPCController):
         repo_group = get_repo_group_or_error(repogroupid)
 
         if not HasPermissionAny('hg.admin')():
-            # check if we have admin permission for this repo group !
-            if not HasRepoGroupPermissionAny('group.admin')(group_name=repo_group.group_name):
+            if not HasRepoGroupPermissionLevel('admin')(repo_group.group_name):
                 raise JSONRPCError('repository group `%s` does not exist' % (repogroupid,))
 
         user = get_user_or_error(userid)
@@ -2175,8 +2174,7 @@ class ApiController(JSONRPCController):
         repo_group = get_repo_group_or_error(repogroupid)
 
         if not HasPermissionAny('hg.admin')():
-            # check if we have admin permission for this repo group !
-            if not HasRepoGroupPermissionAny('group.admin')(group_name=repo_group.group_name):
+            if not HasRepoGroupPermissionLevel('admin')(repo_group.group_name):
                 raise JSONRPCError('repository group `%s` does not exist' % (repogroupid,))
 
         user = get_user_or_error(userid)
@@ -2243,10 +2241,7 @@ class ApiController(JSONRPCController):
         perm = get_perm_or_error(perm, prefix='group.')
         user_group = get_user_group_or_error(usergroupid)
         if not HasPermissionAny('hg.admin')():
-            # check if we have admin permission for this repo group !
-            _perms = ('group.admin',)
-            if not HasRepoGroupPermissionAny(*_perms)(
-                    group_name=repo_group.group_name):
+            if not HasRepoGroupPermissionLevel('admin')(repo_group.group_name):
                 raise JSONRPCError(
                     'repository group `%s` does not exist' % (repogroupid,))
 
@@ -2319,10 +2314,7 @@ class ApiController(JSONRPCController):
         repo_group = get_repo_group_or_error(repogroupid)
         user_group = get_user_group_or_error(usergroupid)
         if not HasPermissionAny('hg.admin')():
-            # check if we have admin permission for this repo group !
-            _perms = ('group.admin',)
-            if not HasRepoGroupPermissionAny(*_perms)(
-                    group_name=repo_group.group_name):
+            if not HasRepoGroupPermissionLevel('admin')(repo_group.group_name):
                 raise JSONRPCError(
                     'repository group `%s` does not exist' % (repogroupid,))
 
