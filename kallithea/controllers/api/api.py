@@ -584,13 +584,12 @@ class ApiController(JSONRPCController):
             error:  null
         """
 
-        result = []
-        users_list = User.query().order_by(User.username) \
-            .filter(User.username != User.DEFAULT_USER) \
-            .all()
-        for user in users_list:
-            result.append(user.get_api_data())
-        return result
+        return [
+            user.get_api_data()
+            for user in User.query()
+                .order_by(User.username)
+                .filter(User.username != User.DEFAULT_USER)
+        ]
 
     @HasPermissionAnyDecorator('hg.admin')
     def create_user(self, username, email, password=Optional(''),
@@ -841,10 +840,10 @@ class ApiController(JSONRPCController):
             error : null
         """
 
-        result = []
-        for user_group in UserGroupList(UserGroup.query().all(), perm_level='read'):
-            result.append(user_group.get_api_data())
-        return result
+        return [
+            user_group.get_api_data()
+            for user_group in UserGroupList(UserGroup.query().all(), perm_level='read')
+        ]
 
     @HasPermissionAnyDecorator('hg.admin', 'hg.usergroup.create.true')
     def create_user_group(self, group_name, description=Optional(''),
@@ -1187,7 +1186,6 @@ class ApiController(JSONRPCController):
                 raise JSONRPCError('repository `%s` does not exist' % (repoid,))
 
         members = []
-        followers = []
         for user in repo.repo_to_perm:
             perm = user.permission.permission_name
             user = user.user
@@ -1208,8 +1206,10 @@ class ApiController(JSONRPCController):
             }
             members.append(user_group_data)
 
-        for user in repo.followers:
-            followers.append(user.user.get_api_data())
+        followers = [
+            uf.user.get_api_data()
+            for uf in repo.followers
+        ]
 
         data = repo.get_api_data()
         data['members'] = members
@@ -1247,15 +1247,15 @@ class ApiController(JSONRPCController):
                     ]
             error:  null
         """
-        result = []
         if not HasPermissionAny('hg.admin')():
             repos = RepoModel().get_all_user_repos(user=request.authuser.user_id)
         else:
             repos = Repository.query()
 
-        for repo in repos:
-            result.append(repo.get_api_data())
-        return result
+        return [
+            repo.get_api_data()
+            for repo in repos
+        ]
 
     # permission check inside
     def get_repo_nodes(self, repoid, revision, root_path,
@@ -1910,10 +1910,10 @@ class ApiController(JSONRPCController):
         Returns all repository groups
 
         """
-        result = []
-        for repo_group in RepoGroup.query():
-            result.append(repo_group.get_api_data())
-        return result
+        return [
+            repo_group.get_api_data()
+            for repo_group in RepoGroup.query()
+        ]
 
     @HasPermissionAnyDecorator('hg.admin')
     def create_repo_group(self, group_name, description=Optional(''),
@@ -2352,14 +2352,13 @@ class ApiController(JSONRPCController):
         else:
             user_id = get_user_or_error(userid).user_id
 
-        gists = []
-        _gists = Gist().query() \
-            .filter(or_(Gist.gist_expires == -1, Gist.gist_expires >= time.time())) \
-            .filter(Gist.owner_id == user_id) \
-            .order_by(Gist.created_on.desc())
-        for gist in _gists:
-            gists.append(gist.get_api_data())
-        return gists
+        return [
+            gist.get_api_data()
+            for gist in Gist().query()
+                .filter(or_(Gist.gist_expires == -1, Gist.gist_expires >= time.time()))
+                .filter(Gist.owner_id == user_id)
+                .order_by(Gist.created_on.desc())
+        ]
 
     def create_gist(self, files, owner=Optional(OAttr('apiuser')),
                     gist_type=Optional(Gist.GIST_PUBLIC), lifetime=Optional(-1),

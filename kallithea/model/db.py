@@ -100,10 +100,10 @@ class BaseDbModel(object):
         """return list with keys and values tuples corresponding
         to this model data """
 
-        l = []
-        for k in self._get_keys():
-            l.append((k, getattr(self, k),))
-        return l
+        return [
+            (k, getattr(self, k))
+            for k in self._get_keys()
+        ]
 
     def populate_obj(self, populate_dict):
         """populate model with data from given populate_dict"""
@@ -915,11 +915,10 @@ class UserGroup(Base, BaseDbModel):
             owner=user_group.owner.username,
         )
         if with_members:
-            members = []
-            for user in user_group.members:
-                user = user.user
-                members.append(user.get_api_data())
-            data['members'] = members
+            data['members'] = [
+                ugm.user.get_api_data()
+                for ugm in user_group.members
+            ]
 
         return data
 

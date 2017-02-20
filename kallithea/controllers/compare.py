@@ -134,11 +134,11 @@ class CompareController(BaseRepoController):
                 gitrepo_remote = Repo(other_repo.path)
                 SubprocessGitClient(thin_packs=False).fetch(safe_str(org_repo.path), gitrepo_remote)
 
-                revs = []
-                for x in gitrepo_remote.get_walker(include=[other_rev],
-                                                   exclude=[org_rev]):
-                    revs.append(x.commit.id)
-
+                revs = [
+                    x.commit.id
+                    for x in gitrepo_remote.get_walker(include=[other_rev],
+                                                       exclude=[org_rev])
+                ]
                 other_changesets = [other_repo.get_changeset(rev) for rev in reversed(revs)]
                 if other_changesets:
                     ancestors = [other_changesets[0].parents[0].raw_id]

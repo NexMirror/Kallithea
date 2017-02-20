@@ -877,24 +877,22 @@ class _BaseTestApi(object):
         id_, params = _build_data(self.apikey, 'get_repos')
         response = api_call(self, params)
 
-        result = []
-        for repo in Repository.query():
-            result.append(repo.get_api_data())
-        ret = jsonify(result)
+        expected = jsonify([
+            repo.get_api_data()
+            for repo in Repository.query()
+        ])
 
-        expected = ret
         self._compare_ok(id_, expected, given=response.body)
 
     def test_api_get_repos_non_admin(self):
         id_, params = _build_data(self.apikey_regular, 'get_repos')
         response = api_call(self, params)
 
-        result = []
-        for repo in RepoModel().get_all_user_repos(self.TEST_USER_LOGIN):
-            result.append(repo.get_api_data())
-        ret = jsonify(result)
+        expected = jsonify([
+            repo.get_api_data()
+            for repo in RepoModel().get_all_user_repos(self.TEST_USER_LOGIN)
+        ])
 
-        expected = ret
         self._compare_ok(id_, expected, given=response.body)
 
     @parametrize('name,ret_type', [
