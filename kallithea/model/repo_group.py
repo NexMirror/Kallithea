@@ -187,7 +187,7 @@ class RepoGroupModel(BaseModel):
                             perms_updates=None, recursive=None,
                             check_perms=True):
         from kallithea.model.repo import RepoModel
-        from kallithea.lib.auth import HasUserGroupPermissionAny
+        from kallithea.lib.auth import HasUserGroupPermissionLevel
 
         if not perms_new:
             perms_new = []
@@ -255,18 +255,16 @@ class RepoGroupModel(BaseModel):
                     _set_perm_user(obj, user=member, perm=perm)
                 ## set for user group
                 else:
-                    #check if we have permissions to alter this usergroup
-                    req_perms = ('usergroup.read', 'usergroup.write', 'usergroup.admin')
-                    if not check_perms or HasUserGroupPermissionAny(*req_perms)(member):
+                    #check if we have permissions to alter this usergroup's access
+                    if not check_perms or HasUserGroupPermissionLevel('read')(member):
                         _set_perm_group(obj, users_group=member, perm=perm)
             # set new permissions
             for member, perm, member_type in perms_new:
                 if member_type == 'user':
                     _set_perm_user(obj, user=member, perm=perm)
                 else:
-                    #check if we have permissions to alter this usergroup
-                    req_perms = ('usergroup.read', 'usergroup.write', 'usergroup.admin')
-                    if not check_perms or HasUserGroupPermissionAny(*req_perms)(member):
+                    #check if we have permissions to alter this usergroup's access
+                    if not check_perms or HasUserGroupPermissionLevel('read')(member):
                         _set_perm_group(obj, users_group=member, perm=perm)
             updates.append(obj)
             # if it's not recursive call for all,repos,groups

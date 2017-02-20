@@ -47,7 +47,7 @@ from kallithea.model.db import Repository, UserRepoToPerm, UserGroupRepoToPerm, 
     Statistics, UserGroup, Ui, RepoGroup, RepositoryField
 
 from kallithea.lib import helpers as h
-from kallithea.lib.auth import HasRepoPermissionLevel, HasUserGroupPermissionAny
+from kallithea.lib.auth import HasRepoPermissionLevel, HasUserGroupPermissionLevel
 from kallithea.lib.exceptions import AttachedForksError
 from kallithea.model.scm import UserGroupList
 
@@ -144,9 +144,7 @@ class RepoModel(BaseModel):
             .order_by(UserGroup.users_group_name) \
             .options(subqueryload(UserGroup.members)) \
             .all()
-        user_groups = UserGroupList(user_groups, perm_set=['usergroup.read',
-                                                           'usergroup.write',
-                                                           'usergroup.admin'])
+        user_groups = UserGroupList(user_groups, perm_level='read')
         return json.dumps([
             {
                 'id': gr.users_group_id,
@@ -468,11 +466,8 @@ class RepoModel(BaseModel):
                     repo=repo, user=member, perm=perm
                 )
             else:
-                #check if we have permissions to alter this usergroup
-                req_perms = (
-                    'usergroup.read', 'usergroup.write', 'usergroup.admin')
-                if not check_perms or HasUserGroupPermissionAny(*req_perms)(
-                        member):
+                #check if we have permissions to alter this usergroup's access
+                if not check_perms or HasUserGroupPermissionLevel('read')(member):
                     self.grant_user_group_permission(
                         repo=repo, group_name=member, perm=perm
                     )
@@ -483,11 +478,8 @@ class RepoModel(BaseModel):
                     repo=repo, user=member, perm=perm
                 )
             else:
-                #check if we have permissions to alter this usergroup
-                req_perms = (
-                    'usergroup.read', 'usergroup.write', 'usergroup.admin')
-                if not check_perms or HasUserGroupPermissionAny(*req_perms)(
-                        member):
+                #check if we have permissions to alter this usergroup's access
+                if not check_perms or HasUserGroupPermissionLevel('read')(member):
                     self.grant_user_group_permission(
                         repo=repo, group_name=member, perm=perm
                     )

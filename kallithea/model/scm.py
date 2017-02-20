@@ -50,7 +50,7 @@ from kallithea.lib import helpers as h
 from kallithea.lib.utils2 import safe_str, safe_unicode, get_server_url, \
     _set_extras
 from kallithea.lib.auth import HasRepoPermissionLevel, HasRepoGroupPermissionLevel, \
-    HasUserGroupPermissionAny, HasPermissionAny, HasPermissionAny
+    HasUserGroupPermissionLevel, HasPermissionAny, HasPermissionAny
 from kallithea.lib.utils import get_filesystem_repos, make_ui, \
     action_logger
 from kallithea.model.base import BaseModel
@@ -132,13 +132,10 @@ class RepoGroupList(_PermCheckIterator):
 
 class UserGroupList(_PermCheckIterator):
 
-    def __init__(self, db_user_group_list, perm_set=None, extra_kwargs=None):
-        if not perm_set:
-            perm_set = ['usergroup.read', 'usergroup.write', 'usergroup.admin']
-
+    def __init__(self, db_user_group_list, perm_level, extra_kwargs=None):
         super(UserGroupList, self).__init__(obj_list=db_user_group_list,
-                    obj_attr='users_group_name', perm_set=perm_set,
-                    perm_checker=HasUserGroupPermissionAny,
+                    obj_attr='users_group_name', perm_set=[perm_level],
+                    perm_checker=HasUserGroupPermissionLevel,
                     extra_kwargs=extra_kwargs)
 
 

@@ -57,7 +57,7 @@ class UserGroupModel(BaseModel):
 
     def _update_permissions(self, user_group, perms_new=None,
                             perms_updates=None):
-        from kallithea.lib.auth import HasUserGroupPermissionAny
+        from kallithea.lib.auth import HasUserGroupPermissionLevel
         if not perms_new:
             perms_new = []
         if not perms_updates:
@@ -71,9 +71,8 @@ class UserGroupModel(BaseModel):
                     user_group=user_group, user=member, perm=perm
                 )
             else:
-                #check if we have permissions to alter this usergroup
-                if HasUserGroupPermissionAny('usergroup.read', 'usergroup.write',
-                                             'usergroup.admin')(member):
+                #check if we have permissions to alter this usergroup's access
+                if HasUserGroupPermissionLevel('read')(member):
                     self.grant_user_group_permission(
                         target_user_group=user_group, user_group=member, perm=perm
                     )
@@ -84,9 +83,8 @@ class UserGroupModel(BaseModel):
                     user_group=user_group, user=member, perm=perm
                 )
             else:
-                #check if we have permissions to alter this usergroup
-                if HasUserGroupPermissionAny('usergroup.read', 'usergroup.write',
-                                             'usergroup.admin')(member):
+                #check if we have permissions to alter this usergroup's access
+                if HasUserGroupPermissionLevel('read')(member):
                     self.grant_user_group_permission(
                         target_user_group=user_group, user_group=member, perm=perm
                     )

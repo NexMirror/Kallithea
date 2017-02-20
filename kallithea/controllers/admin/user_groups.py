@@ -45,7 +45,7 @@ from kallithea.lib.exceptions import UserGroupsAssignedException, \
     RepoGroupAssignmentError
 from kallithea.lib.utils2 import safe_unicode, safe_int
 from kallithea.lib.auth import LoginRequired, \
-    HasUserGroupPermissionAnyDecorator, HasPermissionAnyDecorator
+    HasUserGroupPermissionLevelDecorator, HasPermissionAnyDecorator
 from kallithea.lib.base import BaseController, render
 from kallithea.model.scm import UserGroupList
 from kallithea.model.user_group import UserGroupModel
@@ -92,7 +92,7 @@ class UserGroupsController(BaseController):
         _list = UserGroup.query() \
                         .order_by(func.lower(UserGroup.users_group_name)) \
                         .all()
-        group_iter = UserGroupList(_list, perm_set=['usergroup.admin'])
+        group_iter = UserGroupList(_list, perm_level='admin')
         user_groups_data = []
         total_records = len(group_iter)
         _tmpl_lookup = kallithea.CONFIG['pylons.app_globals'].mako_lookup
@@ -165,7 +165,7 @@ class UserGroupsController(BaseController):
     def new(self, format='html'):
         return render('admin/user_groups/user_group_add.html')
 
-    @HasUserGroupPermissionAnyDecorator('usergroup.admin')
+    @HasUserGroupPermissionLevelDecorator('admin')
     def update(self, id):
         c.user_group = UserGroup.get_or_404(id)
         c.active = 'settings'
@@ -211,7 +211,7 @@ class UserGroupsController(BaseController):
 
         raise HTTPFound(location=url('edit_users_group', id=id))
 
-    @HasUserGroupPermissionAnyDecorator('usergroup.admin')
+    @HasUserGroupPermissionLevelDecorator('admin')
     def delete(self, id):
         usr_gr = UserGroup.get_or_404(id)
         try:
@@ -226,7 +226,7 @@ class UserGroupsController(BaseController):
                     category='error')
         raise HTTPFound(location=url('users_groups'))
 
-    @HasUserGroupPermissionAnyDecorator('usergroup.admin')
+    @HasUserGroupPermissionLevelDecorator('admin')
     def edit(self, id, format='html'):
         c.user_group = UserGroup.get_or_404(id)
         c.active = 'settings'
@@ -241,7 +241,7 @@ class UserGroupsController(BaseController):
             force_defaults=False
         )
 
-    @HasUserGroupPermissionAnyDecorator('usergroup.admin')
+    @HasUserGroupPermissionLevelDecorator('admin')
     def edit_perms(self, id):
         c.user_group = UserGroup.get_or_404(id)
         c.active = 'perms'
@@ -267,7 +267,7 @@ class UserGroupsController(BaseController):
             force_defaults=False
         )
 
-    @HasUserGroupPermissionAnyDecorator('usergroup.admin')
+    @HasUserGroupPermissionLevelDecorator('admin')
     def update_perms(self, id):
         """
         grant permission for given usergroup
@@ -291,7 +291,7 @@ class UserGroupsController(BaseController):
         h.flash(_('User group permissions updated'), category='success')
         raise HTTPFound(location=url('edit_user_group_perms', id=id))
 
-    @HasUserGroupPermissionAnyDecorator('usergroup.admin')
+    @HasUserGroupPermissionLevelDecorator('admin')
     def delete_perms(self, id):
         try:
             obj_type = request.POST.get('obj_type')
@@ -319,7 +319,7 @@ class UserGroupsController(BaseController):
                     category='error')
             raise HTTPInternalServerError()
 
-    @HasUserGroupPermissionAnyDecorator('usergroup.admin')
+    @HasUserGroupPermissionLevelDecorator('admin')
     def edit_default_perms(self, id):
         c.user_group = UserGroup.get_or_404(id)
         c.active = 'default_perms'
@@ -368,7 +368,7 @@ class UserGroupsController(BaseController):
             force_defaults=False
         )
 
-    @HasUserGroupPermissionAnyDecorator('usergroup.admin')
+    @HasUserGroupPermissionLevelDecorator('admin')
     def update_default_perms(self, id):
         user_group = UserGroup.get_or_404(id)
 
@@ -408,7 +408,7 @@ class UserGroupsController(BaseController):
 
         raise HTTPFound(location=url('edit_user_group_default_perms', id=id))
 
-    @HasUserGroupPermissionAnyDecorator('usergroup.admin')
+    @HasUserGroupPermissionLevelDecorator('admin')
     def edit_advanced(self, id):
         c.user_group = UserGroup.get_or_404(id)
         c.active = 'advanced'
@@ -417,7 +417,7 @@ class UserGroupsController(BaseController):
         return render('admin/user_groups/user_group_edit.html')
 
 
-    @HasUserGroupPermissionAnyDecorator('usergroup.admin')
+    @HasUserGroupPermissionLevelDecorator('admin')
     def edit_members(self, id):
         c.user_group = UserGroup.get_or_404(id)
         c.active = 'members'

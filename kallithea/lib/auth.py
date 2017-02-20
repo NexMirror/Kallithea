@@ -561,6 +561,18 @@ class AuthUser(object):
             self.username, level, repo_group_name, purpose, ok, actual_perm)
         return ok
 
+    def has_user_group_permission_level(self, user_group_name, level, purpose=None):
+        required_perms = {
+            'read': ['usergroup.read', 'usergroup.write', 'usergroup.admin'],
+            'write': ['usergroup.write', 'usergroup.admin'],
+            'admin': ['usergroup.admin'],
+        }[level]
+        actual_perm = self.permissions['user_groups'].get(user_group_name)
+        ok = actual_perm in required_perms
+        log.debug('Checking if user %r can %r user group %r (%s): %s (has %r)',
+            self.username, level, user_group_name, purpose, ok, actual_perm)
+        return ok
+
     @property
     def api_keys(self):
         return self._get_api_keys()
@@ -882,7 +894,7 @@ class HasRepoGroupPermissionLevelDecorator(_PermsDecorator):
         return user.has_repository_group_permission_level(repo_group_name, level)
 
 
-class HasUserGroupPermissionAnyDecorator(_PermsDecorator):
+class HasUserGroupPermissionLevelDecorator(_PermsDecorator):
     """
     Checks for access permission for any of given predicates for specific
     user group. In order to fulfill the request any of predicates must be meet
@@ -890,10 +902,8 @@ class HasUserGroupPermissionAnyDecorator(_PermsDecorator):
 
     def check_permissions(self, user):
         user_group_name = get_user_group_slug(request)
-        try:
-            return user.permissions['user_groups'][user_group_name] in self.required_perms
-        except KeyError:
-            return False
+        (level,) = self.required_perms
+        return user.has_user_group_permission_level(user_group_name, level)
 
 
 #==============================================================================
@@ -942,17 +952,11 @@ class HasRepoGroupPermissionLevel(_PermsFunction):
         return request.user.has_repository_group_permission_level(group_name, level, purpose)
 
 
-class HasUserGroupPermissionAny(_PermsFunction):
+class HasUserGroupPermissionLevel(_PermsFunction):
 
     def __call__(self, user_group_name, purpose=None):
-        try:
-            ok = request.user.permissions['user_groups'][user_group_name] in self.required_perms
-        except KeyError:
-            ok = False
-
-        log.debug('Check %s %s for user group %s (%s): %s' %
-            (request.user.username, self.required_perms, user_group_name, purpose, ok))
-        return ok
+        (level,) = self.required_perms
+        return request.user.has_user_group_permission_level(user_group_name, level, purpose)
 
 
 #==============================================================================
