@@ -72,7 +72,7 @@ class GistsController(BaseController):
         c.show_public = request.GET.get('public') and not_default_user
 
         gists = Gist().query() \
-            .filter(or_(Gist.gist_expires == -1, Gist.gist_expires >= time.time())) \
+            .filter_by(is_expired=False) \
             .order_by(Gist.created_on.desc())
 
         # MY private
@@ -166,12 +166,10 @@ class GistsController(BaseController):
     def show(self, gist_id, revision='tip', format='html', f_path=None):
         c.gist = Gist.get_or_404(gist_id)
 
-        #check if this gist is not expired
-        if c.gist.gist_expires != -1:
-            if time.time() > c.gist.gist_expires:
-                log.error('Gist expired at %s',
-                          time_to_datetime(c.gist.gist_expires))
-                raise HTTPNotFound()
+        if c.gist.is_expired:
+            log.error('Gist expired at %s',
+                      time_to_datetime(c.gist.gist_expires))
+            raise HTTPNotFound()
         try:
             c.file_changeset, c.files = GistModel().get_gist_files(gist_id,
                                                             revision=revision)
@@ -189,12 +187,10 @@ class GistsController(BaseController):
     def edit(self, gist_id, format='html'):
         c.gist = Gist.get_or_404(gist_id)
 
-        #check if this gist is not expired
-        if c.gist.gist_expires != -1:
-            if time.time() > c.gist.gist_expires:
-                log.error('Gist expired at %s',
-                          time_to_datetime(c.gist.gist_expires))
-                raise HTTPNotFound()
+        if c.gist.is_expired:
+            log.error('Gist expired at %s',
+                      time_to_datetime(c.gist.gist_expires))
+            raise HTTPNotFound()
         try:
             c.file_changeset, c.files = GistModel().get_gist_files(gist_id)
         except VCSError:

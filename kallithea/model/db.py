@@ -2533,6 +2533,10 @@ class Gist(Base, BaseDbModel):
 
     owner = relationship('User')
 
+    @hybrid_property
+    def is_expired(self):
+        return (self.gist_expires != -1) & (time.time() > self.gist_expires)
+
     def __repr__(self):
         return '<Gist:[%s]%s>' % (self.gist_type, self.gist_access_id)
 

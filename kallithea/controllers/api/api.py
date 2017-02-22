@@ -2355,7 +2355,7 @@ class ApiController(JSONRPCController):
         return [
             gist.get_api_data()
             for gist in Gist().query()
-                .filter(or_(Gist.gist_expires == -1, Gist.gist_expires >= time.time()))
+                .filter_by(is_expired=False)
                 .filter(Gist.owner_id == user_id)
                 .order_by(Gist.created_on.desc())
         ]
