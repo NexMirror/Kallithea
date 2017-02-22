@@ -18,14 +18,14 @@
     </tr>
     %if c.user_api_keys:
         %for api_key in c.user_api_keys:
-          <tr class="${'expired' if api_key.expired else ''}">
+          <tr class="${'expired' if api_key.is_expired else ''}">
             <td style="width: 450px"><div class="truncate autoexpand" style="width:120px;font-size:16px;font-family: monospace">${api_key.api_key}</div></td>
             <td>${api_key.description}</td>
             <td style="min-width: 80px">
                  %if api_key.expires == -1:
                   ${_('Expires')}: ${_('Never')}
                  %else:
-                    %if api_key.expired:
+                    %if api_key.is_expired:
                         ${_('Expired')}: ${h.age(h.time_to_datetime(api_key.expires))}
                     %else:
                         ${_('Expires')}: ${h.age(h.time_to_datetime(api_key.expires))}

@@ -24,7 +24,6 @@ Original author and date, and relevant copyright and licensing information is be
 :copyright: (c) 2013 RhodeCode GmbH, and others.
 :license: GPLv3, see LICENSE.md for more details.
 """
-import time
 import os
 import logging
 import traceback
@@ -37,7 +36,6 @@ from decorator import decorator
 from pylons import request, session
 from pylons.i18n.translation import _
 from webhelpers.pylonslib import secure_form
-from sqlalchemy import or_
 from sqlalchemy.orm.exc import ObjectDeletedError
 from sqlalchemy.orm import joinedload
 from webob.exc import HTTPFound, HTTPBadRequest, HTTPForbidden, HTTPMethodNotAllowed
@@ -606,9 +604,7 @@ class AuthUser(object):
     def _get_api_keys(self):
         api_keys = [self.api_key]
         for api_key in UserApiKeys.query() \
-                .filter(UserApiKeys.user_id == self.user_id) \
-                .filter(or_(UserApiKeys.expires == -1,
-                            UserApiKeys.expires >= time.time())).all():
+                .filter_by(user_id=self.user_id, is_expired=False):
             api_keys.append(api_key.api_key)
 
         return api_keys

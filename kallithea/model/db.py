@@ -618,11 +618,7 @@ class User(Base, BaseDbModel):
 
         if fallback and not res:
             #fallback to additional keys
-            _res = UserApiKeys.query() \
-                .filter(UserApiKeys.api_key == api_key) \
-                .filter(or_(UserApiKeys.expires == -1,
-                            UserApiKeys.expires >= time.time())) \
-                .first()
+            _res = UserApiKeys.query().filter_by(api_key=api_key, is_expired=False).first()
             if _res:
                 res = _res.user
         return res
@@ -742,11 +738,9 @@ class UserApiKeys(Base, BaseDbModel):
 
     user = relationship('User')
 
-    @property
-    def expired(self):
-        if self.expires == -1:
-            return False
-        return time.time() > self.expires
+    @hybrid_property
+    def is_expired(self):
+        return (self.expires != -1) & (time.time() > self.expires)
 
 
 class UserEmailMap(Base, BaseDbModel):
