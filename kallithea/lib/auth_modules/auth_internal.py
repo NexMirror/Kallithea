@@ -87,7 +87,7 @@ class KallitheaAuthPlugin(auth_modules.KallitheaAuthPluginBase):
         if userobj.active:
             from kallithea.lib import auth
             password_match = auth.check_password(password, userobj.password)
-            if userobj.username == User.DEFAULT_USER and userobj.active:
+            if userobj.is_default_user and userobj.active:
                 log.info('user %s authenticated correctly as anonymous user',
                          username)
                 return user_data

@@ -202,7 +202,7 @@ class RepoGroupModel(BaseModel):
 
                 # private repos will not allow to change the default permissions
                 # using recursive mode
-                if obj.private and user.username == User.DEFAULT_USER:
+                if obj.private and user.is_default_user:
                     return
 
                 # we set group permission but we have to switch to repo

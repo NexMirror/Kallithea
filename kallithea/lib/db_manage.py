@@ -140,9 +140,7 @@ class DbManage(object):
         Fixes a old default user with some 'nicer' default values,
         used mostly for anonymous access
         """
-        def_user = self.sa.query(User) \
-                .filter(User.username == User.DEFAULT_USER) \
-                .one()
+        def_user = self.sa.query(User).filter_by(is_default_user=True).one()
 
         def_user.name = 'Anonymous'
         def_user.lastname = 'User'

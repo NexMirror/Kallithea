@@ -68,7 +68,7 @@ class UsersController(BaseController):
 
     def index(self, format='html'):
         c.users_list = User.query().order_by(User.username) \
-                        .filter(User.username != User.DEFAULT_USER) \
+                        .filter_by(is_default_user=False) \
                         .order_by(func.lower(User.username)) \
                         .all()
 

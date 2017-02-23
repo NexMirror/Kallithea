@@ -216,7 +216,7 @@ class _BaseTestApi(object):
         id_, params = _build_data(self.apikey, 'get_users', )
         response = api_call(self, params)
         ret_all = []
-        _users = User.query().filter(User.username != User.DEFAULT_USER) \
+        _users = User.query().filter_by(is_default_user=False) \
             .order_by(User.username).all()
         for usr in _users:
             ret = usr.get_api_data()

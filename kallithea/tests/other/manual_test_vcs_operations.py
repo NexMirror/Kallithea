@@ -158,11 +158,11 @@ def _add_files_and_push(vcs, DEST, **kwargs):
 
 
 def set_anonymous_access(enable=True):
-    user = User.get_by_username(User.DEFAULT_USER)
+    user = User.get_default_user()
     user.active = enable
     Session().commit()
     print '\tanonymous access is now:', enable
-    if enable != User.get_by_username(User.DEFAULT_USER).active:
+    if enable != User.get_default_user().active:
         raise Exception('Cannot set anonymous access')
 
 

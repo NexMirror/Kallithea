@@ -66,7 +66,7 @@ class MyAccountController(BaseController):
 
     def __load_data(self):
         c.user = User.get(request.authuser.user_id)
-        if c.user.username == User.DEFAULT_USER:
+        if c.user.is_default_user:
             h.flash(_("You can't edit this user since it's"
                       " crucial for entire application"), category='warning')
             raise HTTPFound(location=url('users'))

@@ -546,7 +546,7 @@ def extract_mentioned_users(text):
     result = set()
     for name in extract_mentioned_usernames(text):
         user = User.get_by_username(name, case_insensitive=True)
-        if user is not None and user.username != User.DEFAULT_USER:
+        if user is not None and not user.is_default_user:
             result.add(user)
     return result
 

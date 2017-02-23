@@ -530,6 +530,10 @@ class User(Base, BaseDbModel):
     def is_admin(self):
         return self.admin
 
+    @hybrid_property
+    def is_default_user(self):
+        return self.username == User.DEFAULT_USER
+
     @property
     def AuthUser(self):
         """
@@ -570,9 +574,8 @@ class User(Base, BaseDbModel):
         the default user.
         '''
         user = super(User, cls).get_or_404(id_)
-        if allow_default == False:
-            if user.username == User.DEFAULT_USER:
-                raise DefaultUserException
+        if not allow_default and user.is_default_user:
+            raise DefaultUserException()
         return user
 
     @classmethod

@@ -210,7 +210,7 @@ class UserModel(BaseModel):
         from kallithea.lib.auth import get_crypt_password
         skip_attrs = skip_attrs or []
         user = self.get(user_id, cache=False)
-        if user.username == User.DEFAULT_USER:
+        if user.is_default_user:
             raise DefaultUserException(
                             _("You can't edit this user since it's "
                               "crucial for entire application"))
@@ -232,7 +232,7 @@ class UserModel(BaseModel):
         from kallithea.lib.auth import get_crypt_password
 
         user = User.guess_instance(user)
-        if user.username == User.DEFAULT_USER:
+        if user.is_default_user:
             raise DefaultUserException(
                 _("You can't edit this user since it's"
                   " crucial for entire application")
@@ -251,7 +251,7 @@ class UserModel(BaseModel):
             cur_user = getattr(get_current_authuser(), 'username', None)
         user = User.guess_instance(user)
 
-        if user.username == User.DEFAULT_USER:
+        if user.is_default_user:
             raise DefaultUserException(
                 _("You can't remove this user since it is"
                   " crucial for the entire application"))

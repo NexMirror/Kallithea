@@ -122,7 +122,7 @@ class SimpleGit(BaseVCSController):
         log.debug('Repository path is %s', repo_path)
 
         # CHECK LOCKING only if it's not ANONYMOUS USER
-        if user.username != User.DEFAULT_USER:
+        if not user.is_default_user:
             log.debug('Checking locking on repository')
             (make_lock,
              locked,

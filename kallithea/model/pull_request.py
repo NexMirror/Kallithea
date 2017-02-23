@@ -54,7 +54,7 @@ class PullRequestModel(BaseModel):
         """
         for user_spec in seq:
             user = User.guess_instance(user_spec)
-            if user is None or user.username == User.DEFAULT_USER:
+            if user is None or user.is_default_user:
                 raise UserInvalidException(user_spec)
             yield user
 

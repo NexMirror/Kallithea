@@ -99,7 +99,7 @@ class PermissionModel(BaseModel):
 
         try:
             # stage 1 set anonymous access
-            if perm_user.username == User.DEFAULT_USER:
+            if perm_user.is_default_user:
                 perm_user.active = str2bool(form_result['anonymous'])
                 self.sa.add(perm_user)
 

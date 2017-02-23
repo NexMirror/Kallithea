@@ -588,7 +588,7 @@ class ApiController(JSONRPCController):
             user.get_api_data()
             for user in User.query()
                 .order_by(User.username)
-                .filter(User.username != User.DEFAULT_USER)
+                .filter_by(is_default_user=False)
         ]
 
     @HasPermissionAnyDecorator('hg.admin')
