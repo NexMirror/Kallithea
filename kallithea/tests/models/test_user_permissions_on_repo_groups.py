@@ -1,7 +1,7 @@
 import functools
 
 from kallithea.model.repo_group import RepoGroupModel
-from kallithea.model.db import RepoGroup, User
+from kallithea.model.db import RepoGroup, Repository, User
 
 from kallithea.model.meta import Session
 from kallithea.tests.models.common import _create_project_tree, check_tree_perms, \
@@ -133,7 +133,9 @@ def test_user_permissions_on_group_with_recursive_mode_for_default_user():
     _check_expected_count(items, repo_items, expected_count(group, True))
 
     for name, perm in repo_items:
-        check_tree_perms(name, perm, group, 'repository.write')
+        # default user permissions do not "recurse into" private repos
+        is_private = Repository.get_by_repo_name(name).private
+        check_tree_perms(name, perm, group, 'repository.none' if is_private else 'repository.write')
 
     for name, perm in items:
         check_tree_perms(name, perm, group, 'group.write')

@@ -198,9 +198,11 @@ class RepoGroupModel(BaseModel):
             if isinstance(obj, RepoGroup):
                 self.grant_user_permission(repo_group=obj, user=user, perm=perm)
             elif isinstance(obj, Repository):
+                user = User.guess_instance(user)
+
                 # private repos will not allow to change the default permissions
                 # using recursive mode
-                if obj.private and user == User.DEFAULT_USER:
+                if obj.private and user.username == User.DEFAULT_USER:
                     return
 
                 # we set group permission but we have to switch to repo
