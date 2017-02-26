@@ -23,7 +23,7 @@ ${self.repo_context_bar('showpullrequest')}
   </div>
 
   ${h.form(url('pullrequest_post', repo_name=c.repo_name, pull_request_id=c.pull_request.pull_request_id), method='post', id='pull_request_form',class_='panel-body')}
-    <div class="form pr-box">
+    <div class="form pr-box pull-left">
       <div class="pr-details-title ${'closed' if c.pull_request.is_closed() else ''}">
         <h3>
           ${_('Title')}: ${c.pull_request.title}
@@ -353,7 +353,6 @@ ${self.repo_context_bar('showpullrequest')}
       <h4>${_('Changeset was too big and was cut off...')} <a href="${h.url.current(fulldiff=1, **request.GET.mixed())}">${_('Show full diff anyway')}</a></h4>
     % endif
     </div>
-    </div>
 
     ## template for inline comment form
     ${comment.comment_inline_form()}
@@ -404,6 +403,7 @@ ${self.repo_context_bar('showpullrequest')}
           });
       });
     </script>
+    </div>
 
 </div>
 

@@ -2126,7 +2126,6 @@ div.panel-body #files_data .revision-link,
 .changeset-status-container {
     padding-right: 5px;
     margin-top: 1px;
-    float: right;
     height: 14px;
 }
 .code-header .changeset-status-container {
@@ -3909,8 +3908,9 @@ span.pr-closed-tag {
     line-height: 1.5em;
 }
 
-.pr-box {
+.panel-body .pr-box {
     max-width: 978px;
+    margin-right: 20px;
 }
 
 #s2id_org_ref,
