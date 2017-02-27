@@ -128,7 +128,6 @@ class GistModel(BaseModel):
             # use DB ID for easy to use GIST ID
             gist_id = safe_unicode(gist.gist_id)
             gist.gist_access_id = gist_id
-            self.sa.add(gist)
 
         gist_repo_path = os.path.join(GIST_STORE_LOC, gist_id)
         log.debug('Creating new %s GIST repo in %s', gist_type, gist_repo_path)

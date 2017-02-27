@@ -327,7 +327,6 @@ class ScmModel(BaseModel):
             raise RepositoryError("Cannot set repository as fork of repository with other type")
 
         repo.fork = fork
-        self.sa.add(repo)
         return repo
 
     def _handle_rc_scm_extras(self, username, repo_name, repo_alias,

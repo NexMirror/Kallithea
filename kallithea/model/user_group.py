@@ -272,10 +272,10 @@ class UserGroupModel(BaseModel):
         if obj is None:
             # create new !
             obj = UserUserGroupToPerm()
+            self.sa.add(obj)
         obj.user_group = user_group
         obj.user = user
         obj.permission = permission
-        self.sa.add(obj)
         log.debug('Granted perm %s to %s on %s', perm, user, user_group)
         return obj
 
@@ -323,10 +323,10 @@ class UserGroupModel(BaseModel):
         if obj is None:
             # create new !
             obj = UserGroupUserGroupToPerm()
+            self.sa.add(obj)
         obj.user_group = user_group
         obj.target_user_group = target_user_group
         obj.permission = permission
-        self.sa.add(obj)
         log.debug('Granted perm %s to %s on %s', perm, target_user_group, user_group)
         return obj
 

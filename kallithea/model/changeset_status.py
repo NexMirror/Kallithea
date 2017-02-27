@@ -178,7 +178,6 @@ class ChangesetStatusModel(BaseModel):
         #update all current statuses with older version
         for st in cur_statuses:
             st.version += 1
-            self.sa.add(st)
 
         new_statuses = []
         for rev in revisions:

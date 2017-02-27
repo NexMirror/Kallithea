@@ -101,7 +101,6 @@ class PermissionModel(BaseModel):
             # stage 1 set anonymous access
             if perm_user.is_default_user:
                 perm_user.active = str2bool(form_result['anonymous'])
-                self.sa.add(perm_user)
 
             # stage 2 reset defaults and set them from form data
             def _make_new(usr, perm_name):
@@ -144,7 +143,6 @@ class PermissionModel(BaseModel):
                     #don't reset PRIVATE repositories
                     if not r2p.repository.private:
                         r2p.permission = _def
-                        self.sa.add(r2p)
 
             if form_result['overwrite_default_group']:
                 _def_name = form_result['default_group_perm'].split('group.')[-1]
@@ -154,7 +152,6 @@ class PermissionModel(BaseModel):
                                .filter(UserRepoGroupToPerm.user == perm_user) \
                                .all():
                     g2p.permission = _def
-                    self.sa.add(g2p)
 
             if form_result['overwrite_default_user_group']:
                 _def_name = form_result['default_user_group_perm'].split('usergroup.')[-1]
@@ -164,7 +161,6 @@ class PermissionModel(BaseModel):
                                .filter(UserUserGroupToPerm.user == perm_user) \
                                .all():
                     g2p.permission = _def
-                    self.sa.add(g2p)
 
             self.sa.commit()
         except (DatabaseError,):

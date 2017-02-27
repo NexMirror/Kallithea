@@ -226,7 +226,6 @@ class UserModel(BaseModel):
                 if k == 'firstname':
                     k = 'name'
                 setattr(user, k, v)
-        self.sa.add(user)
 
     def update_user(self, user, **kwargs):
         from kallithea.lib.auth import get_crypt_password
@@ -243,7 +242,6 @@ class UserModel(BaseModel):
                 v = get_crypt_password(v)
 
             setattr(user, k, v)
-        self.sa.add(user)
         return user
 
     def delete(self, user, cur_user=None):

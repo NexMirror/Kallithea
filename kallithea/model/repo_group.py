@@ -311,7 +311,6 @@ class RepoGroupModel(BaseModel):
                     log.debug('Fixing repo %s to new name %s' \
                                 % (obj.repo_name, new_name))
                     obj.repo_name = new_name
-                self.sa.add(obj)
 
             self._rename_group(old_path, new_path)
 
@@ -452,10 +451,10 @@ class RepoGroupModel(BaseModel):
         if obj is None:
             # create new !
             obj = UserRepoGroupToPerm()
+            self.sa.add(obj)
         obj.group = repo_group
         obj.user = user
         obj.permission = permission
-        self.sa.add(obj)
         log.debug('Granted perm %s to %s on %s', perm, user, repo_group)
         return obj
 
@@ -503,11 +502,11 @@ class RepoGroupModel(BaseModel):
         if obj is None:
             # create new
             obj = UserGroupRepoGroupToPerm()
+            self.sa.add(obj)
 
         obj.group = repo_group
         obj.users_group = group_name
         obj.permission = permission
-        self.sa.add(obj)
         log.debug('Granted perm %s to %s on %s', perm, group_name, repo_group)
         return obj
 

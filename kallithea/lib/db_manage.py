@@ -132,7 +132,6 @@ class DbManage(object):
 
         paths.ui_value = paths.ui_value.replace('*', '')
 
-        self.sa.add(paths)
         self.sa.commit()
 
     def fix_default_user(self):
@@ -146,7 +145,6 @@ class DbManage(object):
         def_user.lastname = 'User'
         def_user.email = 'anonymous@kallithea-scm.org'
 
-        self.sa.add(def_user)
         self.sa.commit()
 
     def fix_settings(self):
@@ -326,7 +324,6 @@ class DbManage(object):
         def_usr = User.get_default_user()
         for g in RepoGroup.query().all():
             g.group_name = g.get_new_name(g.name)
-            self.sa.add(g)
             # get default perm
             default = UserRepoGroupToPerm.query() \
                 .filter(UserRepoGroupToPerm.group == g) \

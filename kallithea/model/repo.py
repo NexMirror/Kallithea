@@ -333,8 +333,6 @@ class RepoModel(BaseModel):
                 ex_field = RepositoryField.get_by_key_name(key=k, repo=cur_repo)
                 if ex_field:
                     ex_field.field_value = kwargs[field]
-                    self.sa.add(ex_field)
-            self.sa.add(cur_repo)
 
             if org_repo_name != cur_repo.repo_name:
                 # rename repository
@@ -511,7 +509,6 @@ class RepoModel(BaseModel):
             if forks == 'detach':
                 for r in repo.forks:
                     r.fork = None
-                    self.sa.add(r)
             elif forks == 'delete':
                 for r in repo.forks:
                     self.delete(r, forks='delete')
@@ -552,10 +549,10 @@ class RepoModel(BaseModel):
         if obj is None:
             # create new !
             obj = UserRepoToPerm()
+            self.sa.add(obj)
         obj.repository = repo
         obj.user = user
         obj.permission = permission
-        self.sa.add(obj)
         log.debug('Granted perm %s to %s on %s', perm, user, repo)
         return obj
 
@@ -601,11 +598,11 @@ class RepoModel(BaseModel):
         if obj is None:
             # create new
             obj = UserGroupRepoToPerm()
+            self.sa.add(obj)
 
         obj.repository = repo
         obj.users_group = group_name
         obj.permission = permission
-        self.sa.add(obj)
         log.debug('Granted perm %s to %s on %s', perm, group_name, repo)
         return obj
 
