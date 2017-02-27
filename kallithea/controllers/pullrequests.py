@@ -317,9 +317,8 @@ class PullrequestsController(BaseRepoController):
             raise HTTPBadRequest
 
         # heads up: org and other might seem backward here ...
-        org_repo_name = _form['org_repo']
         org_ref = _form['org_ref'] # will have merge_rev as rev but symbolic name
-        org_repo = Repository.guess_instance(org_repo_name)
+        org_repo = Repository.guess_instance(_form['org_repo'])
         (org_ref_type,
          org_ref_name,
          org_rev) = org_ref.split(':')
@@ -328,9 +327,8 @@ class PullrequestsController(BaseRepoController):
             cs = org_repo.scm_instance.get_changeset(org_rev)
             org_ref = 'branch:%s:%s' % (cs.branch, cs.raw_id)
 
-        other_repo_name = _form['other_repo']
         other_ref = _form['other_ref'] # will have symbolic name and head revision
-        other_repo = Repository.guess_instance(other_repo_name)
+        other_repo = Repository.guess_instance(_form['other_repo'])
         (other_ref_type,
          other_ref_name,
          other_rev) = other_ref.split(':')
@@ -356,8 +354,7 @@ class PullrequestsController(BaseRepoController):
             msg = _('Cannot create pull request - criss cross merge detected, please merge a later %s revision to %s'
                     ) % (other_ref_name, org_ref_name)
         if ancestor_rev is None:
-            h.flash(msg, category='error')
-            log.error(msg)
+            h.flash(msg, category='error', logf=log.error)
             raise HTTPNotFound
 
         revisions = [cs_.raw_id for cs_ in cs_ranges]
@@ -370,11 +367,11 @@ class PullrequestsController(BaseRepoController):
 
         title = _form['pullrequest_title']
         if not title:
-            if org_repo_name == other_repo_name:
+            if org_repo == other_repo:
                 title = '%s to %s' % (org_display, other_display)
             else:
-                title = '%s#%s to %s#%s' % (org_repo_name, org_display,
-                                            other_repo_name, other_display)
+                title = '%s#%s to %s#%s' % (org_repo.repo_name, org_display,
+                                            other_repo.repo_name, other_display)
         description = _form['pullrequest_desc'].strip() or _('No description')
         try:
             created_by = User.get(request.authuser.user_id)
@@ -419,8 +416,7 @@ class PullrequestsController(BaseRepoController):
             msg = _('Cannot create pull request update - criss cross merge detected, please merge a later %s revision to %s'
                     ) % (other_ref_name, org_ref_name)
         if ancestor_rev is None:
-            h.flash(msg, category='error')
-            log.error(msg)
+            h.flash(msg, category='error', logf=log.error)
             raise HTTPNotFound
 
         old_revisions = set(old_pull_request.revisions)
