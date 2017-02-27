@@ -373,7 +373,7 @@ def create_repo(form_data, cur_user):
         )
 
         action_logger(cur_user, 'user_created_repo',
-                      form_data['repo_name_full'], '', DBS)
+                      form_data['repo_name_full'], '')
 
         DBS.commit()
         # now create this repo on Filesystem
@@ -449,7 +449,7 @@ def create_repo_fork(form_data, cur_user):
             copy_fork_permissions=copy_fork_permissions
         )
         action_logger(cur_user, 'user_forked_repo:%s' % repo_name_full,
-                      fork_of.repo_name, '', DBS)
+                      fork_of.repo_name, '')
         DBS.commit()
 
         update_after_clone = form_data['update_after_clone'] # FIXME - unused!

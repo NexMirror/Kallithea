@@ -122,7 +122,7 @@ class UsersController(BaseController):
             form_result = user_form.to_python(dict(request.POST))
             user = user_model.create(form_result)
             action_logger(request.authuser, 'admin_created_user:%s' % user.username,
-                          None, request.ip_addr, self.sa)
+                          None, request.ip_addr)
             h.flash(_('Created user %s') % user.username,
                     category='success')
             Session().commit()
@@ -161,7 +161,7 @@ class UsersController(BaseController):
             user_model.update(id, form_result, skip_attrs=skip_attrs)
             usr = form_result['username']
             action_logger(request.authuser, 'admin_updated_user:%s' % usr,
-                          None, request.ip_addr, self.sa)
+                          None, request.ip_addr)
             h.flash(_('User updated successfully'), category='success')
             Session().commit()
         except formencode.Invalid as errors:

@@ -818,7 +818,7 @@ class PullrequestsController(BaseRepoController):
 
         action_logger(request.authuser,
                       'user_commented_pull_request:%s' % pull_request_id,
-                      c.db_repo, request.ip_addr, self.sa)
+                      c.db_repo, request.ip_addr)
 
         if status:
             ChangesetStatusModel().set_status(
@@ -833,7 +833,7 @@ class PullrequestsController(BaseRepoController):
             PullRequestModel().close_pull_request(pull_request_id)
             action_logger(request.authuser,
                           'user_closed_pull_request:%s' % pull_request_id,
-                          c.db_repo, request.ip_addr, self.sa)
+                          c.db_repo, request.ip_addr)
 
         Session().commit()
 

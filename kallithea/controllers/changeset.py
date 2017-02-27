@@ -393,7 +393,7 @@ class ChangesetController(BaseRepoController):
 
         action_logger(request.authuser,
                       'user_commented_revision:%s' % revision,
-                      c.db_repo, request.ip_addr, self.sa)
+                      c.db_repo, request.ip_addr)
 
         Session().commit()
 

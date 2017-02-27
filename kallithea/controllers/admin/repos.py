@@ -241,7 +241,7 @@ class ReposController(BaseRepoController):
                     category='success')
             changed_name = repo.repo_name
             action_logger(request.authuser, 'admin_updated_repo',
-                              changed_name, request.ip_addr, self.sa)
+                changed_name, request.ip_addr)
             Session().commit()
         except formencode.Invalid as errors:
             log.info(errors)
@@ -282,7 +282,7 @@ class ReposController(BaseRepoController):
                     h.flash(_('Deleted %s forks') % _forks, category='success')
             repo_model.delete(repo, forks=handle_forks)
             action_logger(request.authuser, 'admin_deleted_repo',
-                  repo_name, request.ip_addr, self.sa)
+                repo_name, request.ip_addr)
             ScmModel().mark_for_invalidation(repo_name)
             h.flash(_('Deleted repository %s') % repo_name, category='success')
             Session().commit()
@@ -334,7 +334,7 @@ class ReposController(BaseRepoController):
                                         form['perms_updates'])
         #TODO: implement this
         #action_logger(request.authuser, 'admin_changed_repo_permissions',
-        #              repo_name, request.ip_addr, self.sa)
+        #              repo_name, request.ip_addr)
         Session().commit()
         h.flash(_('Repository permissions updated'), category='success')
         raise HTTPFound(location=url('edit_repo_perms', repo_name=repo_name))
@@ -356,7 +356,7 @@ class ReposController(BaseRepoController):
                 )
             #TODO: implement this
             #action_logger(request.authuser, 'admin_revoked_repo_permissions',
-            #              repo_name, request.ip_addr, self.sa)
+            #              repo_name, request.ip_addr)
             Session().commit()
         except Exception:
             log.error(traceback.format_exc())

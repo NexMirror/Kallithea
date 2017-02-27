@@ -142,7 +142,7 @@ class UserGroupsController(BaseController):
             gr = form_result['users_group_name']
             action_logger(request.authuser,
                           'admin_created_users_group:%s' % gr,
-                          None, request.ip_addr, self.sa)
+                          None, request.ip_addr)
             h.flash(h.literal(_('Created user group %s') % h.link_to(h.escape(gr), url('edit_users_group', id=ug.users_group_id))),
                 category='success')
             Session().commit()
@@ -183,7 +183,7 @@ class UserGroupsController(BaseController):
             gr = form_result['users_group_name']
             action_logger(request.authuser,
                           'admin_updated_users_group:%s' % gr,
-                          None, request.ip_addr, self.sa)
+                          None, request.ip_addr)
             h.flash(_('Updated user group %s') % gr, category='success')
             Session().commit()
         except formencode.Invalid as errors:
@@ -286,7 +286,7 @@ class UserGroupsController(BaseController):
             raise HTTPFound(location=url('edit_user_group_perms', id=id))
         #TODO: implement this
         #action_logger(request.authuser, 'admin_changed_repo_permissions',
-        #              repo_name, request.ip_addr, self.sa)
+        #              repo_name, request.ip_addr)
         Session().commit()
         h.flash(_('User group permissions updated'), category='success')
         raise HTTPFound(location=url('edit_user_group_perms', id=id))

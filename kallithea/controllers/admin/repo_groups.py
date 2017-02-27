@@ -167,7 +167,7 @@ class RepoGroupsController(BaseController):
                 copy_permissions=form_result['group_copy_permissions']
             )
             Session().commit()
-            #TODO: in futureaction_logger(, '', '', '', self.sa)
+            #TODO: in future action_logger(, '', '', '')
         except formencode.Invalid as errors:
             return htmlfill.render(
                 render('admin/repo_groups/repo_group_add.html'),
@@ -234,7 +234,7 @@ class RepoGroupsController(BaseController):
                     % form_result['group_name'], category='success')
             # we now have new name !
             group_name = new_gr.group_name
-            #TODO: in future action_logger(, '', '', '', self.sa)
+            #TODO: in future action_logger(, '', '', '')
         except formencode.Invalid as errors:
             c.active = 'settings'
             return htmlfill.render(
@@ -271,7 +271,7 @@ class RepoGroupsController(BaseController):
             Session().commit()
             h.flash(_('Removed repository group %s') % group_name,
                     category='success')
-            #TODO: in future action_logger(, '', '', '', self.sa)
+            #TODO: in future action_logger(, '', '', '')
         except Exception:
             log.error(traceback.format_exc())
             h.flash(_('Error occurred during deletion of repository group %s')
@@ -372,7 +372,7 @@ class RepoGroupsController(BaseController):
                                              recursive)
         #TODO: implement this
         #action_logger(request.authuser, 'admin_changed_repo_permissions',
-        #              repo_name, request.ip_addr, self.sa)
+        #              repo_name, request.ip_addr)
         Session().commit()
         h.flash(_('Repository group permissions updated'), category='success')
         raise HTTPFound(location=url('edit_repo_group_perms', group_name=group_name))

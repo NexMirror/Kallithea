@@ -137,7 +137,7 @@ def get_repo_by_id(repo_name):
     return None
 
 
-def action_logger(user, action, repo, ipaddr='', sa=None, commit=False):
+def action_logger(user, action, repo, ipaddr='', commit=False):
     """
     Action logger for various actions made by users
 
@@ -148,12 +148,9 @@ def action_logger(user, action, repo, ipaddr='', sa=None, commit=False):
     :param repo: string name of repository or object containing repo_id,
         that action was made on
     :param ipaddr: optional IP address from what the action was made
-    :param sa: optional sqlalchemy session
 
     """
 
-    if not sa:
-        sa = meta.Session()
     # if we don't get explicit IP address try to get one from registered user
     # in tmpl context var
     if not ipaddr:
@@ -186,12 +183,12 @@ def action_logger(user, action, repo, ipaddr='', sa=None, commit=False):
 
     user_log.action_date = datetime.datetime.now()
     user_log.user_ip = ipaddr
-    sa.add(user_log)
+    meta.Session().add(user_log)
 
     log.info('Logging action:%s on %s by user:%s ip:%s',
              action, safe_unicode(repo), user_obj, ipaddr)
     if commit:
-        sa.commit()
+        meta.Session().commit()
 
 
 def get_filesystem_repos(path):
