@@ -42,7 +42,6 @@ from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator, \
 from kallithea.lib.base import BaseRepoController, render, jsonify
 from kallithea.lib.compat import json, OrderedDict
 from kallithea.lib.diffs import LimitedDiffContainer
-from kallithea.lib.exceptions import UserInvalidException
 from kallithea.lib.page import Page
 from kallithea.lib.utils import action_logger
 from kallithea.lib.vcs.exceptions import EmptyRepositoryError, ChangesetDoesNotExistError
@@ -63,6 +62,20 @@ from kallithea.controllers.compare import CompareController
 from kallithea.lib.graphmod import graph_data
 
 log = logging.getLogger(__name__)
+
+
+def _get_reviewer(user_id):
+    """Look up user by ID and validate it as a potential reviewer."""
+    try:
+        user = User.get(int(user_id))
+    except ValueError:
+        user = None
+
+    if user is None or user.is_default_user:
+        h.flash(_('Invalid reviewer "%s" specified') % user_id, category='error')
+        raise HTTPBadRequest()
+
+    return user
 
 
 class PullrequestsController(BaseRepoController):
@@ -363,7 +376,7 @@ class PullrequestsController(BaseRepoController):
         # requested destination and have the exact ancestor
         other_ref = '%s:%s:%s' % (other_ref_type, other_ref_name, ancestor_rev)
 
-        reviewer_ids = []
+        reviewers = []
 
         title = _form['pullrequest_title']
         if not title:
@@ -377,13 +390,10 @@ class PullrequestsController(BaseRepoController):
             created_by = User.get(request.authuser.user_id)
             pull_request = PullRequestModel().create(
                 created_by, org_repo, org_ref, other_repo, other_ref, revisions,
-                title, description, reviewer_ids)
+                title, description, reviewers)
             Session().commit()
             h.flash(_('Successfully opened new pull request'),
                     category='success')
-        except UserInvalidException as u:
-            h.flash(_('Invalid reviewer "%s" specified') % u, category='error')
-            raise HTTPBadRequest()
         except Exception:
             h.flash(_('Error occurred while creating pull request'),
                     category='error')
@@ -392,7 +402,7 @@ class PullrequestsController(BaseRepoController):
 
         raise HTTPFound(location=pull_request.url())
 
-    def create_new_iteration(self, old_pull_request, new_rev, title, description, reviewer_ids):
+    def create_new_iteration(self, old_pull_request, new_rev, title, description, reviewers):
         org_repo = old_pull_request.org_repo
         org_ref_type, org_ref_name, org_rev = old_pull_request.org_ref.split(':')
         new_org_rev = self._get_ref_rev(org_repo, 'rev', new_rev)
@@ -478,10 +488,7 @@ class PullrequestsController(BaseRepoController):
             created_by = User.get(request.authuser.user_id)
             pull_request = PullRequestModel().create(
                 created_by, org_repo, new_org_ref, other_repo, new_other_ref, revisions,
-                title, description, reviewer_ids)
-        except UserInvalidException as u:
-            h.flash(_('Invalid reviewer "%s" specified') % u, category='error')
-            raise HTTPBadRequest()
+                title, description, reviewers)
         except Exception:
             h.flash(_('Error occurred while creating pull request'),
                     category='error')
@@ -518,12 +525,14 @@ class PullrequestsController(BaseRepoController):
             raise HTTPForbidden()
 
         _form = PullRequestPostForm()().to_python(request.POST)
-        reviewer_ids = set(int(s) for s in _form['review_members'])
 
-        org_reviewer_ids = set(int(s) for s in _form['org_review_members'])
-        current_reviewer_ids = set(prr.user_id for prr in pull_request.reviewers)
-        other_added = [User.get(u) for u in current_reviewer_ids - org_reviewer_ids]
-        other_removed = [User.get(u) for u in org_reviewer_ids - current_reviewer_ids]
+        cur_reviewers = set(pull_request.get_reviewer_users())
+        new_reviewers = set(_get_reviewer(s) for s in _form['review_members'])
+        old_reviewers = set(_get_reviewer(s) for s in _form['org_review_members'])
+
+        other_added = cur_reviewers - old_reviewers
+        other_removed = old_reviewers - cur_reviewers
+
         if other_added:
             h.flash(_('Meanwhile, the following reviewers have been added: %s') %
                     (', '.join(u.username for u in other_added)),
@@ -538,22 +547,20 @@ class PullrequestsController(BaseRepoController):
                                       _form['updaterev'],
                                       _form['pullrequest_title'],
                                       _form['pullrequest_desc'],
-                                      reviewer_ids)
+                                      new_reviewers)
+
+        added_reviewers = new_reviewers - old_reviewers - cur_reviewers
+        removed_reviewers = (old_reviewers - new_reviewers) & cur_reviewers
 
         old_description = pull_request.description
         pull_request.title = _form['pullrequest_title']
         pull_request.description = _form['pullrequest_desc'].strip() or _('No description')
         pull_request.owner = User.get_by_username(_form['owner'])
         user = User.get(request.authuser.user_id)
-        add_reviewer_ids = reviewer_ids - org_reviewer_ids - current_reviewer_ids
-        remove_reviewer_ids = (org_reviewer_ids - reviewer_ids) & current_reviewer_ids
-        try:
-            PullRequestModel().mention_from_description(user, pull_request, old_description)
-            PullRequestModel().add_reviewers(user, pull_request, add_reviewer_ids)
-            PullRequestModel().remove_reviewers(user, pull_request, remove_reviewer_ids)
-        except UserInvalidException as u:
-            h.flash(_('Invalid reviewer "%s" specified') % u, category='error')
-            raise HTTPBadRequest()
+
+        PullRequestModel().mention_from_description(user, pull_request, old_description)
+        PullRequestModel().add_reviewers(user, pull_request, added_reviewers)
+        PullRequestModel().remove_reviewers(user, pull_request, removed_reviewers)
 
         Session().commit()
         h.flash(_('Pull request updated'), category='success')
