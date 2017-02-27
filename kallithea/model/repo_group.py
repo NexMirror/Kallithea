@@ -66,6 +66,7 @@ class RepoGroupModel(BaseModel):
 
         repo_group_to_perm.group = new_group
         repo_group_to_perm.user_id = def_user.user_id
+        self.sa.add(repo_group_to_perm)
         return repo_group_to_perm
 
     def _create_group(self, group_name):
@@ -169,8 +170,7 @@ class RepoGroupModel(BaseModel):
                 for perm in group_perms:
                     UserGroupRepoGroupToPerm.create(perm.users_group, new_repo_group, perm.permission)
             else:
-                perm_obj = self._create_default_perms(new_repo_group)
-                self.sa.add(perm_obj)
+                self._create_default_perms(new_repo_group)
 
             if not just_db:
                 # we need to flush here, in order to check if database won't

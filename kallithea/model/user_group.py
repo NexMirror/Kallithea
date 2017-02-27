@@ -53,6 +53,7 @@ class UserGroupModel(BaseModel):
 
         user_group_to_perm.user_group = user_group
         user_group_to_perm.user_id = def_user.user_id
+        self.sa.add(user_group_to_perm)
         return user_group_to_perm
 
     def _update_permissions(self, user_group, perms_new=None,
@@ -108,8 +109,7 @@ class UserGroupModel(BaseModel):
             if group_data:
                 new_user_group.group_data = group_data
             self.sa.add(new_user_group)
-            perm_obj = self._create_default_perms(new_user_group)
-            self.sa.add(perm_obj)
+            self._create_default_perms(new_user_group)
 
             self.grant_user_permission(user_group=new_user_group,
                                        user=owner, perm='usergroup.admin')

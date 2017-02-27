@@ -335,8 +335,7 @@ class DbManage(object):
 
             if default is None:
                 log.debug('missing default permission for group %s adding', g)
-                perm_obj = RepoGroupModel()._create_default_perms(g)
-                self.sa.add(perm_obj)
+                RepoGroupModel()._create_default_perms(g)
 
     def reset_permissions(self, username):
         """

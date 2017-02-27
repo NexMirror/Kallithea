@@ -74,6 +74,7 @@ class RepoModel(BaseModel):
 
         repo_to_perm.repository = repository
         repo_to_perm.user_id = def_user.user_id
+        self.sa.add(repo_to_perm)
 
         return repo_to_perm
 
@@ -427,8 +428,7 @@ class RepoModel(BaseModel):
                     UserGroupRepoToPerm.create(perm.users_group, new_repo, perm_obj)
 
             else:
-                perm_obj = self._create_default_perms(new_repo, private)
-                self.sa.add(perm_obj)
+                self._create_default_perms(new_repo, private)
 
             # now automatically start following this repository as owner
             ScmModel(self.sa).toggle_following_repo(new_repo.repo_id,

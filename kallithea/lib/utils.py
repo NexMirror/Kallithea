@@ -448,8 +448,7 @@ def map_groups(path):
             group.group_description = desc
             group.owner = owner
             sa.add(group)
-            perm_obj = rgm._create_default_perms(group)
-            sa.add(perm_obj)
+            rgm._create_default_perms(group)
             sa.flush()
 
         parent = group
