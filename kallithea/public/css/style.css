@@ -507,7 +507,7 @@ nav.navbar #quick .repo_switcher_type {
 }
 
 #content nav.navbar,
-#main > div.panel {
+div.panel-primary {
     clear: both;
     background: #fff;
     margin: 0 0 10px;
@@ -3110,6 +3110,10 @@ nav.navbar #quick li .dropdown-menu,
 .caret:after {
     font-family: 'kallithea';
     content: ' \23f7';           /* triangle-down */
+}
+
+.select2-choice {
+    color: black !important;
 }
 
 .branch-switcher .select2-choice,
