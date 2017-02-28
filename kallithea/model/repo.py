@@ -41,9 +41,8 @@ from kallithea.lib.utils2 import LazyProperty, safe_str, safe_unicode, \
 from kallithea.lib.caching_query import FromCache
 from kallithea.lib.hooks import log_delete_repository
 
-from kallithea.model.base import BaseModel
 from kallithea.model.db import Repository, UserRepoToPerm, UserGroupRepoToPerm, \
-    UserRepoGroupToPerm, UserGroupRepoGroupToPerm, User, Permission, \
+    UserRepoGroupToPerm, UserGroupRepoGroupToPerm, User, Permission, Session, \
     Statistics, UserGroup, Ui, RepoGroup, RepositoryField
 
 from kallithea.lib import helpers as h
@@ -54,7 +53,7 @@ from kallithea.model.scm import UserGroupList
 log = logging.getLogger(__name__)
 
 
-class RepoModel(BaseModel):
+class RepoModel(object):
 
     URL_SEPARATOR = Repository.url_sep()
 
@@ -74,7 +73,7 @@ class RepoModel(BaseModel):
 
         repo_to_perm.repository = repository
         repo_to_perm.user_id = def_user.user_id
-        self.sa.add(repo_to_perm)
+        Session().add(repo_to_perm)
 
         return repo_to_perm
 
@@ -84,11 +83,11 @@ class RepoModel(BaseModel):
         Gets the repositories root path from database
         """
 
-        q = self.sa.query(Ui).filter(Ui.ui_key == '/').one()
+        q = Ui.query().filter(Ui.ui_key == '/').one()
         return q.ui_value
 
     def get(self, repo_id, cache=False):
-        repo = self.sa.query(Repository) \
+        repo = Repository.query() \
             .filter(Repository.repo_id == repo_id)
 
         if cache:
@@ -100,7 +99,7 @@ class RepoModel(BaseModel):
         return Repository.guess_instance(repository)
 
     def get_by_repo_name(self, repo_name, cache=False):
-        repo = self.sa.query(Repository) \
+        repo = Repository.query() \
             .filter(Repository.repo_name == repo_name)
 
         if cache:
@@ -124,7 +123,7 @@ class RepoModel(BaseModel):
         return Repository.query().filter(Repository.repo_name.in_(repos))
 
     def get_users_js(self):
-        users = self.sa.query(User) \
+        users = User.query() \
             .filter(User.active == True) \
             .order_by(User.name, User.lastname) \
             .all()
@@ -140,7 +139,7 @@ class RepoModel(BaseModel):
         )
 
     def get_user_groups_js(self):
-        user_groups = self.sa.query(UserGroup) \
+        user_groups = UserGroup.query() \
             .filter(UserGroup.users_group_active == True) \
             .order_by(UserGroup.users_group_name) \
             .options(subqueryload(UserGroup.members)) \
@@ -391,7 +390,7 @@ class RepoModel(BaseModel):
                 parent_repo = fork_of
                 new_repo.fork = parent_repo
 
-            self.sa.add(new_repo)
+            Session().add(new_repo)
 
             if fork_of and copy_fork_permissions:
                 repo = fork_of
@@ -429,11 +428,10 @@ class RepoModel(BaseModel):
                 self._create_default_perms(new_repo, private)
 
             # now automatically start following this repository as owner
-            ScmModel(self.sa).toggle_following_repo(new_repo.repo_id,
-                                                    owner.user_id)
+            ScmModel().toggle_following_repo(new_repo.repo_id, owner.user_id)
             # we need to flush here, in order to check if database won't
             # throw any exceptions, create filesystem dirs at the very end
-            self.sa.flush()
+            Session().flush()
             return new_repo
         except Exception:
             log.error(traceback.format_exc())
@@ -517,7 +515,7 @@ class RepoModel(BaseModel):
 
             old_repo_dict = repo.get_dict()
             try:
-                self.sa.delete(repo)
+                Session().delete(repo)
                 if fs_remove:
                     self._delete_filesystem_repo(repo)
                 else:
@@ -542,14 +540,14 @@ class RepoModel(BaseModel):
         permission = Permission.guess_instance(perm)
 
         # check if we have that permission already
-        obj = self.sa.query(UserRepoToPerm) \
+        obj = UserRepoToPerm.query() \
             .filter(UserRepoToPerm.user == user) \
             .filter(UserRepoToPerm.repository == repo) \
             .scalar()
         if obj is None:
             # create new !
             obj = UserRepoToPerm()
-            self.sa.add(obj)
+            Session().add(obj)
         obj.repository = repo
         obj.user = user
         obj.permission = permission
@@ -567,12 +565,12 @@ class RepoModel(BaseModel):
         user = User.guess_instance(user)
         repo = Repository.guess_instance(repo)
 
-        obj = self.sa.query(UserRepoToPerm) \
+        obj = UserRepoToPerm.query() \
             .filter(UserRepoToPerm.repository == repo) \
             .filter(UserRepoToPerm.user == user) \
             .scalar()
         if obj is not None:
-            self.sa.delete(obj)
+            Session().delete(obj)
             log.debug('Revoked perm on %s on %s', repo, user)
 
     def grant_user_group_permission(self, repo, group_name, perm):
@@ -590,7 +588,7 @@ class RepoModel(BaseModel):
         permission = Permission.guess_instance(perm)
 
         # check if we have that permission already
-        obj = self.sa.query(UserGroupRepoToPerm) \
+        obj = UserGroupRepoToPerm.query() \
             .filter(UserGroupRepoToPerm.users_group == group_name) \
             .filter(UserGroupRepoToPerm.repository == repo) \
             .scalar()
@@ -598,7 +596,7 @@ class RepoModel(BaseModel):
         if obj is None:
             # create new
             obj = UserGroupRepoToPerm()
-            self.sa.add(obj)
+            Session().add(obj)
 
         obj.repository = repo
         obj.users_group = group_name
@@ -617,12 +615,12 @@ class RepoModel(BaseModel):
         repo = Repository.guess_instance(repo)
         group_name = UserGroup.guess_instance(group_name)
 
-        obj = self.sa.query(UserGroupRepoToPerm) \
+        obj = UserGroupRepoToPerm.query() \
             .filter(UserGroupRepoToPerm.repository == repo) \
             .filter(UserGroupRepoToPerm.users_group == group_name) \
             .scalar()
         if obj is not None:
-            self.sa.delete(obj)
+            Session().delete(obj)
             log.debug('Revoked perm to %s on %s', repo, group_name)
 
     def delete_stats(self, repo_name):
@@ -633,10 +631,10 @@ class RepoModel(BaseModel):
         """
         repo = Repository.guess_instance(repo_name)
         try:
-            obj = self.sa.query(Statistics) \
+            obj = Statistics.query() \
                 .filter(Statistics.repository == repo).scalar()
             if obj is not None:
-                self.sa.delete(obj)
+                Session().delete(obj)
         except Exception:
             log.error(traceback.format_exc())
             raise

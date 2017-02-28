@@ -432,8 +432,7 @@ class BaseController(WSGIController):
 
         c.my_pr_count = PullRequest.query(reviewer_id=request.authuser.user_id, include_closed=False).count()
 
-        self.sa = meta.Session
-        self.scm_model = ScmModel(self.sa)
+        self.scm_model = ScmModel()
 
     @staticmethod
     def _determine_auth_user(api_key, bearer_token, session_authuser):

@@ -28,14 +28,13 @@ Original author and date, and relevant copyright and licensing information is be
 import logging
 from sqlalchemy.orm import joinedload
 
-from kallithea.model.base import BaseModel
-from kallithea.model.db import ChangesetStatus, PullRequest, Repository, User
+from kallithea.model.db import ChangesetStatus, PullRequest, Repository, User, Session
 from kallithea.lib.exceptions import StatusChangeOnClosedPullRequestError
 
 log = logging.getLogger(__name__)
 
 
-class ChangesetStatusModel(BaseModel):
+class ChangesetStatusModel(object):
 
     def _get_status_query(self, repo, revision, pull_request,
                           with_revisions=False):
@@ -190,5 +189,5 @@ class ChangesetStatusModel(BaseModel):
             new_status.revision = rev
             new_status.pull_request = pull_request
             new_statuses.append(new_status)
-            self.sa.add(new_status)
+            Session().add(new_status)
         return new_statuses

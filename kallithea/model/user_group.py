@@ -27,8 +27,7 @@ Original author and date, and relevant copyright and licensing information is be
 import logging
 import traceback
 
-from kallithea.model.base import BaseModel
-from kallithea.model.db import UserGroupMember, UserGroup, \
+from kallithea.model.db import Session, UserGroupMember, UserGroup, \
     UserGroupRepoToPerm, Permission, UserGroupToPerm, User, UserUserGroupToPerm, \
     UserGroupUserGroupToPerm
 from kallithea.lib.exceptions import UserGroupsAssignedException, \
@@ -37,7 +36,7 @@ from kallithea.lib.exceptions import UserGroupsAssignedException, \
 log = logging.getLogger(__name__)
 
 
-class UserGroupModel(BaseModel):
+class UserGroupModel(object):
 
     def _create_default_perms(self, user_group):
         # create default permission
@@ -53,7 +52,7 @@ class UserGroupModel(BaseModel):
 
         user_group_to_perm.user_group = user_group
         user_group_to_perm.user_id = def_user.user_id
-        self.sa.add(user_group_to_perm)
+        Session().add(user_group_to_perm)
         return user_group_to_perm
 
     def _update_permissions(self, user_group, perms_new=None,
@@ -108,7 +107,7 @@ class UserGroupModel(BaseModel):
             new_user_group.users_group_active = active
             if group_data:
                 new_user_group.group_data = group_data
-            self.sa.add(new_user_group)
+            Session().add(new_user_group)
             self._create_default_perms(new_user_group)
 
             self.grant_user_permission(user_group=new_user_group,
@@ -132,13 +131,13 @@ class UserGroupModel(BaseModel):
                         for u_id in set(v):
                             member = UserGroupMember(user_group.users_group_id, u_id)
                             members_list.append(member)
-                            self.sa.add(member)
+                            Session().add(member)
                     user_group.members = members_list
                 setattr(user_group, k, v)
 
             # Flush to make db assign users_group_member_id to newly
             # created UserGroupMembers.
-            self.sa.flush()
+            Session().flush()
         except Exception:
             log.error(traceback.format_exc())
             raise
@@ -162,7 +161,7 @@ class UserGroupModel(BaseModel):
             if assigned_groups and not force:
                 raise UserGroupsAssignedException(
                     'User Group assigned to %s' % ", ".join(assigned_groups))
-            self.sa.delete(user_group)
+            Session().delete(user_group)
         except Exception:
             log.error(traceback.format_exc())
             raise
@@ -185,7 +184,7 @@ class UserGroupModel(BaseModel):
             user_group.members.append(user_group_member)
             user.group_member.append(user_group_member)
 
-            self.sa.add(user_group_member)
+            Session().add(user_group_member)
             return user_group_member
         except Exception:
             log.error(traceback.format_exc())
@@ -204,7 +203,7 @@ class UserGroupModel(BaseModel):
 
         if user_group_member:
             try:
-                self.sa.delete(user_group_member)
+                Session().delete(user_group_member)
                 return True
             except Exception:
                 log.error(traceback.format_exc())
@@ -236,7 +235,7 @@ class UserGroupModel(BaseModel):
         new = UserGroupToPerm()
         new.users_group = user_group
         new.permission = perm
-        self.sa.add(new)
+        Session().add(new)
         return new
 
     def revoke_perm(self, user_group, perm):
@@ -247,7 +246,7 @@ class UserGroupModel(BaseModel):
             .filter(UserGroupToPerm.users_group == user_group) \
             .filter(UserGroupToPerm.permission == perm).scalar()
         if obj is not None:
-            self.sa.delete(obj)
+            Session().delete(obj)
 
     def grant_user_permission(self, user_group, user, perm):
         """
@@ -265,14 +264,14 @@ class UserGroupModel(BaseModel):
         permission = Permission.guess_instance(perm)
 
         # check if we have that permission already
-        obj = self.sa.query(UserUserGroupToPerm) \
+        obj = UserUserGroupToPerm.query() \
             .filter(UserUserGroupToPerm.user == user) \
             .filter(UserUserGroupToPerm.user_group == user_group) \
             .scalar()
         if obj is None:
             # create new !
             obj = UserUserGroupToPerm()
-            self.sa.add(obj)
+            Session().add(obj)
         obj.user_group = user_group
         obj.user = user
         obj.permission = permission
@@ -291,12 +290,12 @@ class UserGroupModel(BaseModel):
         user_group = UserGroup.guess_instance(user_group)
         user = User.guess_instance(user)
 
-        obj = self.sa.query(UserUserGroupToPerm) \
+        obj = UserUserGroupToPerm.query() \
             .filter(UserUserGroupToPerm.user == user) \
             .filter(UserUserGroupToPerm.user_group == user_group) \
             .scalar()
         if obj is not None:
-            self.sa.delete(obj)
+            Session().delete(obj)
             log.debug('Revoked perm on %s on %s', user_group, user)
 
     def grant_user_group_permission(self, target_user_group, user_group, perm):
@@ -316,14 +315,14 @@ class UserGroupModel(BaseModel):
                                            'assigned to itself' % target_user_group)
 
         # check if we have that permission already
-        obj = self.sa.query(UserGroupUserGroupToPerm) \
+        obj = UserGroupUserGroupToPerm.query() \
             .filter(UserGroupUserGroupToPerm.target_user_group == target_user_group) \
             .filter(UserGroupUserGroupToPerm.user_group == user_group) \
             .scalar()
         if obj is None:
             # create new !
             obj = UserGroupUserGroupToPerm()
-            self.sa.add(obj)
+            Session().add(obj)
         obj.user_group = user_group
         obj.target_user_group = target_user_group
         obj.permission = permission
@@ -340,12 +339,12 @@ class UserGroupModel(BaseModel):
         target_user_group = UserGroup.guess_instance(target_user_group)
         user_group = UserGroup.guess_instance(user_group)
 
-        obj = self.sa.query(UserGroupUserGroupToPerm) \
+        obj = UserGroupUserGroupToPerm.query() \
             .filter(UserGroupUserGroupToPerm.target_user_group == target_user_group) \
             .filter(UserGroupUserGroupToPerm.user_group == user_group) \
             .scalar()
         if obj is not None:
-            self.sa.delete(obj)
+            Session().delete(obj)
             log.debug('Revoked perm on %s on %s', target_user_group, user_group)
 
     def enforce_groups(self, user, groups, extern_type=None):

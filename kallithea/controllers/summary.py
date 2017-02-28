@@ -132,7 +132,7 @@ class SummaryController(BaseRepoController):
         else:
             c.show_stats = False
 
-        stats = self.sa.query(Statistics) \
+        stats = Statistics.query() \
             .filter(Statistics.repository == c.db_repo) \
             .scalar()
 
@@ -188,7 +188,7 @@ class SummaryController(BaseRepoController):
         c.ts_min = ts_min_m
         c.ts_max = ts_max_y
 
-        stats = self.sa.query(Statistics) \
+        stats = Statistics.query() \
             .filter(Statistics.repository == c.db_repo) \
             .scalar()
         c.stats_percentage = 0

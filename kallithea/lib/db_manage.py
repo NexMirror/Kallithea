@@ -126,7 +126,7 @@ class DbManage(object):
         Fixes a old kallithea version path into new one without a '*'
         """
 
-        paths = self.sa.query(Ui) \
+        paths = Ui.query() \
                 .filter(Ui.ui_key == '/') \
                 .scalar()
 
@@ -139,7 +139,7 @@ class DbManage(object):
         Fixes a old default user with some 'nicer' default values,
         used mostly for anonymous access
         """
-        def_user = self.sa.query(User).filter_by(is_default_user=True).one()
+        def_user = User.query().filter_by(is_default_user=True).one()
 
         def_user.name = 'Anonymous'
         def_user.lastname = 'User'
@@ -214,7 +214,7 @@ class DbManage(object):
 
         #HOOKS
         hooks1_key = Ui.HOOK_UPDATE
-        hooks1_ = self.sa.query(Ui) \
+        hooks1_ = Ui.query() \
             .filter(Ui.ui_key == hooks1_key).scalar()
 
         hooks1 = Ui() if hooks1_ is None else hooks1_
@@ -225,7 +225,7 @@ class DbManage(object):
         self.sa.add(hooks1)
 
         hooks2_key = Ui.HOOK_REPO_SIZE
-        hooks2_ = self.sa.query(Ui) \
+        hooks2_ = Ui.query() \
             .filter(Ui.ui_key == hooks2_key).scalar()
         hooks2 = Ui() if hooks2_ is None else hooks2_
         hooks2.ui_section = 'hooks'
@@ -482,7 +482,7 @@ class DbManage(object):
         # module.(access|create|change|delete)_[name]
         # module.(none|read|write|admin)
         log.info('creating permissions')
-        PermissionModel(self.sa).create_permissions()
+        PermissionModel().create_permissions()
 
     def populate_default_permissions(self):
         """
@@ -490,4 +490,4 @@ class DbManage(object):
         permissions that are missing, and not alter already defined ones
         """
         log.info('creating default user permissions')
-        PermissionModel(self.sa).create_default_permissions(user=User.DEFAULT_USER)
+        PermissionModel().create_default_permissions(user=User.DEFAULT_USER)

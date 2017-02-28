@@ -39,7 +39,6 @@ from sqlalchemy.exc import DatabaseError
 
 from kallithea.lib.utils2 import safe_str, generate_api_key, get_current_authuser
 from kallithea.lib.caching_query import FromCache
-from kallithea.model.base import BaseModel
 from kallithea.model.db import Permission, User, UserToPerm, Notification, \
     UserEmailMap, UserIpMap
 from kallithea.lib.exceptions import DefaultUserException, \
@@ -50,11 +49,11 @@ from kallithea.model.meta import Session
 log = logging.getLogger(__name__)
 
 
-class UserModel(BaseModel):
+class UserModel(object):
     password_reset_token_lifetime = 86400 # 24 hours
 
     def get(self, user_id, cache=False):
-        user = self.sa.query(User)
+        user = User.query()
         if cache:
             user = user.options(FromCache("sql_cache_short",
                                           "get_user_%s" % user_id))
@@ -271,7 +270,7 @@ class UserModel(BaseModel):
                 _('User "%s" still owns %s user groups and cannot be '
                   'removed. Switch owners or remove those user groups: %s')
                 % (user.username, len(usergroups), ', '.join(usergroups)))
-        self.sa.delete(user)
+        Session().delete(user)
 
         from kallithea.lib.hooks import log_delete_user
         log_delete_user(user.get_dict(), cur_user)
@@ -443,7 +442,7 @@ class UserModel(BaseModel):
         new = UserToPerm()
         new.user = user
         new.permission = perm
-        self.sa.add(new)
+        Session().add(new)
         return new
 
     def revoke_perm(self, user, perm):
@@ -476,7 +475,7 @@ class UserModel(BaseModel):
         obj = UserEmailMap()
         obj.user = user
         obj.email = data['email']
-        self.sa.add(obj)
+        Session().add(obj)
         return obj
 
     def delete_extra_email(self, user, email_id):
@@ -489,7 +488,7 @@ class UserModel(BaseModel):
         user = User.guess_instance(user)
         obj = UserEmailMap.query().get(email_id)
         if obj is not None:
-            self.sa.delete(obj)
+            Session().delete(obj)
 
     def add_extra_ip(self, user, ip):
         """
@@ -506,7 +505,7 @@ class UserModel(BaseModel):
         obj = UserIpMap()
         obj.user = user
         obj.ip_addr = data['ip']
-        self.sa.add(obj)
+        Session().add(obj)
         return obj
 
     def delete_extra_ip(self, user, ip_id):
@@ -519,4 +518,4 @@ class UserModel(BaseModel):
         user = User.guess_instance(user)
         obj = UserIpMap.query().get(ip_id)
         if obj:
-            self.sa.delete(obj)
+            Session().delete(obj)

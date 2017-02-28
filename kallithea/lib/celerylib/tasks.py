@@ -63,11 +63,11 @@ log = logging.getLogger(__name__)
 @celerylib.dbsession
 def whoosh_index(repo_location, full_index):
     from kallithea.lib.indexers.daemon import WhooshIndexingDaemon
-    DBS = celerylib.get_session()
+    celerylib.get_session() # initialize database connection
 
     index_location = config['index_dir']
     WhooshIndexingDaemon(index_location=index_location,
-                         repo_location=repo_location, sa=DBS) \
+                         repo_location=repo_location) \
                          .run(full_index=full_index)
 
 
@@ -354,7 +354,7 @@ def create_repo(form_data, cur_user):
     enable_downloads = defs.get('repo_enable_downloads')
 
     try:
-        repo = RepoModel(DBS)._create_repo(
+        repo = RepoModel()._create_repo(
             repo_name=repo_name_full,
             repo_type=repo_type,
             description=description,
@@ -377,7 +377,7 @@ def create_repo(form_data, cur_user):
 
         DBS.commit()
         # now create this repo on Filesystem
-        RepoModel(DBS)._create_filesystem_repo(
+        RepoModel()._create_filesystem_repo(
             repo_name=repo_name,
             repo_type=repo_type,
             repo_group=RepoGroup.guess_instance(repo_group),
@@ -400,7 +400,7 @@ def create_repo(form_data, cur_user):
         if repo:
             Repository.delete(repo.repo_id)
             DBS.commit()
-            RepoModel(DBS)._delete_filesystem_repo(repo)
+            RepoModel()._delete_filesystem_repo(repo)
         raise
 
     return True
@@ -436,7 +436,7 @@ def create_repo_fork(form_data, cur_user):
     try:
         fork_of = Repository.guess_instance(form_data.get('fork_parent_id'))
 
-        RepoModel(DBS)._create_repo(
+        RepoModel()._create_repo(
             repo_name=repo_name_full,
             repo_type=repo_type,
             description=form_data['description'],
@@ -456,7 +456,7 @@ def create_repo_fork(form_data, cur_user):
         source_repo_path = os.path.join(base_path, fork_of.repo_name)
 
         # now create this repo on Filesystem
-        RepoModel(DBS)._create_filesystem_repo(
+        RepoModel()._create_filesystem_repo(
             repo_name=repo_name,
             repo_type=repo_type,
             repo_group=RepoGroup.guess_instance(repo_group),
@@ -479,7 +479,7 @@ def create_repo_fork(form_data, cur_user):
         if repo:
             Repository.delete(repo.repo_id)
             DBS.commit()
-            RepoModel(DBS)._delete_filesystem_repo(repo)
+            RepoModel()._delete_filesystem_repo(repo)
         raise
 
     return True

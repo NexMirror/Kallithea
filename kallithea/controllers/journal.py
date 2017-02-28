@@ -95,7 +95,7 @@ class JournalController(BaseController):
         if not repo_ids and user_ids:
             filtering_criterion = UserLog.user_id.in_(user_ids)
         if filtering_criterion is not None:
-            journal = self.sa.query(UserLog) \
+            journal = UserLog.query() \
                 .options(joinedload(UserLog.user)) \
                 .options(joinedload(UserLog.repository))
             #filter
@@ -197,7 +197,7 @@ class JournalController(BaseController):
         # Return a rendered template
         p = safe_int(request.GET.get('page'), 1)
         c.user = User.get(request.authuser.user_id)
-        c.following = self.sa.query(UserFollowing) \
+        c.following = UserFollowing.query() \
             .filter(UserFollowing.user_id == request.authuser.user_id) \
             .options(joinedload(UserFollowing.follows_repository)) \
             .all()
@@ -229,7 +229,7 @@ class JournalController(BaseController):
         """
         Produce an atom-1.0 feed via feedgenerator module
         """
-        following = self.sa.query(UserFollowing) \
+        following = UserFollowing.query() \
             .filter(UserFollowing.user_id == request.authuser.user_id) \
             .options(joinedload(UserFollowing.follows_repository)) \
             .all()
@@ -241,7 +241,7 @@ class JournalController(BaseController):
         """
         Produce an rss feed via feedgenerator module
         """
-        following = self.sa.query(UserFollowing) \
+        following = UserFollowing.query() \
             .filter(UserFollowing.user_id == request.authuser.user_id) \
             .options(joinedload(UserFollowing.follows_repository)) \
             .all()
@@ -279,7 +279,7 @@ class JournalController(BaseController):
         # Return a rendered template
         p = safe_int(request.GET.get('page'), 1)
 
-        c.following = self.sa.query(UserFollowing) \
+        c.following = UserFollowing.query() \
             .filter(UserFollowing.user_id == request.authuser.user_id) \
             .options(joinedload(UserFollowing.follows_repository)) \
             .all()
@@ -300,7 +300,7 @@ class JournalController(BaseController):
         """
         Produce an atom-1.0 feed via feedgenerator module
         """
-        c.following = self.sa.query(UserFollowing) \
+        c.following = UserFollowing.query() \
             .filter(UserFollowing.user_id == request.authuser.user_id) \
             .options(joinedload(UserFollowing.follows_repository)) \
             .all()
@@ -312,7 +312,7 @@ class JournalController(BaseController):
         """
         Produce an rss2 feed via feedgenerator module
         """
-        c.following = self.sa.query(UserFollowing) \
+        c.following = UserFollowing.query() \
             .filter(UserFollowing.user_id == request.authuser.user_id) \
             .options(joinedload(UserFollowing.follows_repository)) \
             .all()

@@ -35,7 +35,6 @@ from sqlalchemy.orm import joinedload
 from kallithea.model.meta import Session
 from kallithea.lib import helpers as h
 from kallithea.lib.exceptions import UserInvalidException
-from kallithea.model.base import BaseModel
 from kallithea.model.db import PullRequest, PullRequestReviewer, Notification, \
     ChangesetStatus, User
 from kallithea.model.notification import NotificationModel
@@ -45,7 +44,7 @@ from kallithea.lib.utils2 import extract_mentioned_users, safe_unicode
 log = logging.getLogger(__name__)
 
 
-class PullRequestModel(BaseModel):
+class PullRequestModel(object):
 
     def _get_valid_reviewers(self, seq):
         """ Generate User objects from a sequence of user IDs, usernames or

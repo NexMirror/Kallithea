@@ -32,7 +32,6 @@ from collections import defaultdict
 
 from kallithea.lib.utils2 import extract_mentioned_users, safe_unicode
 from kallithea.lib import helpers as h
-from kallithea.model.base import BaseModel
 from kallithea.model.db import ChangesetComment, User, \
     Notification, PullRequest, Repository
 from kallithea.model.notification import NotificationModel
@@ -54,7 +53,7 @@ def _list_pull_request_commenters(pull_request):
         .all())
 
 
-class ChangesetCommentsModel(BaseModel):
+class ChangesetCommentsModel(object):
 
     def _get_notification_data(self, repo, comment, author, comment_text,
                                line_no=None, revision=None, pull_request=None,

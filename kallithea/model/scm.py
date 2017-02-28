@@ -53,8 +53,7 @@ from kallithea.lib.auth import HasRepoPermissionLevel, HasRepoGroupPermissionLev
     HasUserGroupPermissionLevel, HasPermissionAny, HasPermissionAny
 from kallithea.lib.utils import get_filesystem_repos, make_ui, \
     action_logger
-from kallithea.model.base import BaseModel
-from kallithea.model.db import Repository, Ui, CacheInvalidation, \
+from kallithea.model.db import Repository, Session, Ui, CacheInvalidation, \
     UserFollowing, UserLog, User, RepoGroup, PullRequest
 from kallithea.lib.hooks import log_push_action
 from kallithea.lib.exceptions import NonRelativePathError, IMCCommitError
@@ -139,7 +138,7 @@ class UserGroupList(_PermCheckIterator):
                     extra_kwargs=extra_kwargs)
 
 
-class ScmModel(BaseModel):
+class ScmModel(object):
     """
     Generic Scm Model
     """
@@ -162,7 +161,7 @@ class ScmModel(BaseModel):
         Gets the repositories root path from database
         """
 
-        q = self.sa.query(Ui).filter(Ui.ui_key == '/').one()
+        q = Ui.query().filter(Ui.ui_key == '/').one()
 
         return q.ui_value
 
@@ -231,13 +230,13 @@ class ScmModel(BaseModel):
 
     def toggle_following_repo(self, follow_repo_id, user_id):
 
-        f = self.sa.query(UserFollowing) \
+        f = UserFollowing.query() \
             .filter(UserFollowing.follows_repository_id == follow_repo_id) \
             .filter(UserFollowing.user_id == user_id).scalar()
 
         if f is not None:
             try:
-                self.sa.delete(f)
+                Session().delete(f)
                 action_logger(UserTemp(user_id),
                               'stopped_following_repo',
                               RepoTemp(follow_repo_id))
@@ -250,7 +249,7 @@ class ScmModel(BaseModel):
             f = UserFollowing()
             f.user_id = user_id
             f.follows_repository_id = follow_repo_id
-            self.sa.add(f)
+            Session().add(f)
 
             action_logger(UserTemp(user_id),
                           'started_following_repo',
@@ -260,13 +259,13 @@ class ScmModel(BaseModel):
             raise
 
     def toggle_following_user(self, follow_user_id, user_id):
-        f = self.sa.query(UserFollowing) \
+        f = UserFollowing.query() \
             .filter(UserFollowing.follows_user_id == follow_user_id) \
             .filter(UserFollowing.user_id == user_id).scalar()
 
         if f is not None:
             try:
-                self.sa.delete(f)
+                Session().delete(f)
                 return
             except Exception:
                 log.error(traceback.format_exc())
@@ -276,16 +275,16 @@ class ScmModel(BaseModel):
             f = UserFollowing()
             f.user_id = user_id
             f.follows_user_id = follow_user_id
-            self.sa.add(f)
+            Session().add(f)
         except Exception:
             log.error(traceback.format_exc())
             raise
 
     def is_following_repo(self, repo_name, user_id, cache=False):
-        r = self.sa.query(Repository) \
+        r = Repository.query() \
             .filter(Repository.repo_name == repo_name).scalar()
 
-        f = self.sa.query(UserFollowing) \
+        f = UserFollowing.query() \
             .filter(UserFollowing.follows_repository == r) \
             .filter(UserFollowing.user_id == user_id).scalar()
 
@@ -294,7 +293,7 @@ class ScmModel(BaseModel):
     def is_following_user(self, username, user_id, cache=False):
         u = User.get_by_username(username)
 
-        f = self.sa.query(UserFollowing) \
+        f = UserFollowing.query() \
             .filter(UserFollowing.follows_user == u) \
             .filter(UserFollowing.user_id == user_id).scalar()
 
@@ -303,17 +302,17 @@ class ScmModel(BaseModel):
     def get_followers(self, repo):
         repo = Repository.guess_instance(repo)
 
-        return self.sa.query(UserFollowing) \
+        return UserFollowing.query() \
                 .filter(UserFollowing.follows_repository == repo).count()
 
     def get_forks(self, repo):
         repo = Repository.guess_instance(repo)
-        return self.sa.query(Repository) \
+        return Repository.query() \
                 .filter(Repository.fork == repo).count()
 
     def get_pull_requests(self, repo):
         repo = Repository.guess_instance(repo)
-        return self.sa.query(PullRequest) \
+        return PullRequest.query() \
                 .filter(PullRequest.other_repo == repo) \
                 .filter(PullRequest.status != PullRequest.STATUS_CLOSED).count()
 
@@ -682,7 +681,7 @@ class ScmModel(BaseModel):
         return tip
 
     def get_unread_journal(self):
-        return self.sa.query(UserLog).count()
+        return UserLog.query().count()
 
     def get_repo_landing_revs(self, repo=None):
         """

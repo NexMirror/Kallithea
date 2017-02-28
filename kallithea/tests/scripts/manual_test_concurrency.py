@@ -135,7 +135,7 @@ def create_test_repo(force=True):
                      'repo_type': 'hg',
                      'private':False,
                      'clone_uri': '' }
-        rm = RepoModel(sa)
+        rm = RepoModel()
         rm.base_path = '/home/hg'
         rm.create(form_data, user)
 

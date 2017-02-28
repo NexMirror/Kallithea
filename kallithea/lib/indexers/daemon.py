@@ -63,7 +63,7 @@ class WhooshIndexingDaemon(object):
     """
 
     def __init__(self, indexname=IDX_NAME, index_location=None,
-                 repo_location=None, sa=None, repo_list=None,
+                 repo_location=None, repo_list=None,
                  repo_update_list=None):
         self.indexname = indexname
 
@@ -75,7 +75,7 @@ class WhooshIndexingDaemon(object):
         if not repo_location:
             raise Exception('You have to provide repositories location')
 
-        self.repo_paths = ScmModel(sa).repo_scan(self.repo_location)
+        self.repo_paths = ScmModel().repo_scan(self.repo_location)
 
         #filter repo list
         if repo_list:

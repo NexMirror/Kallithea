@@ -430,7 +430,7 @@ def map_groups(path):
 
     # last element is repo in nested groups structure
     groups = groups[:-1]
-    rgm = RepoGroupModel(sa)
+    rgm = RepoGroupModel()
     owner = User.get_first_admin()
     for lvl, group_name in enumerate(groups):
         group_name = u'/'.join(groups[:lvl] + [group_name])
@@ -531,7 +531,7 @@ def repo2db_mapper(initial_repo_list, remove_obsolete=False,
                 log.debug("Removing non-existing repository found in db `%s`",
                           repo.repo_name)
                 try:
-                    RepoModel(sa).delete(repo, forks='detach', fs_remove=False)
+                    RepoModel().delete(repo, forks='detach', fs_remove=False)
                     sa.commit()
                 except Exception:
                     #don't hold further removals on error

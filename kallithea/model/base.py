@@ -44,18 +44,3 @@ def init_model(engine):
     engine_str = obfuscate_url_pw(str(engine.url))
     log.info("initializing db for %s", engine_str)
     meta.Base.metadata.bind = engine
-
-
-class BaseModel(object):
-    """
-    Base Model for all Kallithea models, it adds sql alchemy session
-    into instance of model
-
-    :param sa: If passed it reuses this session instead of creating a new one
-    """
-
-    def __init__(self, sa=None):
-        if sa is not None:
-            self.sa = sa
-        else:
-            self.sa = meta.Session()

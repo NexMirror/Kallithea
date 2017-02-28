@@ -24,14 +24,13 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 import logging
-from kallithea.model.base import BaseModel
 from kallithea.model.db import User, UserRepoToPerm, UserGroupRepoToPerm, \
-    Permission, Repository
+    Permission, Repository, Session
 
 log = logging.getLogger(__name__)
 
 
-class RepositoryPermissionModel(BaseModel):
+class RepositoryPermissionModel(object):
 
     def get_user_permission(self, repository, user):
         repository = Repository.guess_instance(repository)
@@ -53,12 +52,12 @@ class RepositoryPermissionModel(BaseModel):
             p.user = user
             p.repository = repository
             p.permission = permission
-            self.sa.add(p)
+            Session().add(p)
 
     def delete_user_permission(self, repository, user):
         current = self.get_user_permission(repository, user)
         if current:
-            self.sa.delete(current)
+            Session().delete(current)
 
     def get_users_group_permission(self, repository, users_group):
         return UserGroupRepoToPerm.query() \
@@ -78,12 +77,12 @@ class RepositoryPermissionModel(BaseModel):
             p.users_group = users_group
             p.repository = repository
             p.permission = permission
-            self.sa.add(p)
+            Session().add(p)
 
     def delete_users_group_permission(self, repository, users_group):
         current = self.get_users_group_permission(repository, users_group)
         if current:
-            self.sa.delete(current)
+            Session().delete(current)
 
     def update_or_delete_user_permission(self, repository, user, permission):
         if permission:

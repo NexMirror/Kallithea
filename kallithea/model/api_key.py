@@ -29,14 +29,13 @@ import time
 import logging
 
 from kallithea.lib.utils2 import generate_api_key
-from kallithea.model.base import BaseModel
 from kallithea.model.db import User, UserApiKeys
 from kallithea.model.meta import Session
 
 log = logging.getLogger(__name__)
 
 
-class ApiKeyModel(BaseModel):
+class ApiKeyModel(object):
 
     def create(self, user, description, lifetime=-1):
         """

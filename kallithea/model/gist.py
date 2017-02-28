@@ -35,8 +35,7 @@ import shutil
 from kallithea.lib.utils2 import safe_unicode, safe_int, \
     time_to_datetime, AttributeDict
 from kallithea.lib.compat import json
-from kallithea.model.base import BaseModel
-from kallithea.model.db import Gist, User
+from kallithea.model.db import Gist, Session, User
 from kallithea.model.repo import RepoModel
 from kallithea.model.scm import ScmModel
 
@@ -54,7 +53,7 @@ def make_gist_id():
     return u''.join(rnd.choice(alphabet) for _ in xrange(length))
 
 
-class GistModel(BaseModel):
+class GistModel(object):
 
     def __delete_gist(self, gist):
         """
@@ -122,8 +121,8 @@ class GistModel(BaseModel):
         gist.owner_id = owner.user_id
         gist.gist_expires = gist_expires
         gist.gist_type = safe_unicode(gist_type)
-        self.sa.add(gist)
-        self.sa.flush() # make database assign gist.gist_id
+        Session().add(gist)
+        Session().flush() # make database assign gist.gist_id
         if gist_type == Gist.GIST_PUBLIC:
             # use DB ID for easy to use GIST ID
             gist_id = safe_unicode(gist.gist_id)
@@ -173,7 +172,7 @@ class GistModel(BaseModel):
     def delete(self, gist, fs_remove=True):
         gist = Gist.guess_instance(gist)
         try:
-            self.sa.delete(gist)
+            Session().delete(gist)
             if fs_remove:
                 self.__delete_gist(gist)
             else:

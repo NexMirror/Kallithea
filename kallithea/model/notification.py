@@ -36,14 +36,13 @@ from sqlalchemy.orm import joinedload, subqueryload
 import kallithea
 from kallithea.lib import helpers as h
 from kallithea.lib.utils2 import safe_unicode
-from kallithea.model.base import BaseModel
 from kallithea.model.db import Notification, User, UserNotification
 from kallithea.model.meta import Session
 
 log = logging.getLogger(__name__)
 
 
-class NotificationModel(BaseModel):
+class NotificationModel(object):
 
     def create(self, created_by, subject, body, recipients=None,
                type_=Notification.TYPE_MESSAGE, with_email=True,
@@ -262,7 +261,7 @@ class NotificationModel(BaseModel):
                 )
 
 
-class EmailNotificationModel(BaseModel):
+class EmailNotificationModel(object):
 
     TYPE_CHANGESET_COMMENT = Notification.TYPE_CHANGESET_COMMENT
     TYPE_MESSAGE = Notification.TYPE_MESSAGE # only used for testing
