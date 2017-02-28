@@ -36,7 +36,6 @@ from webob.exc import HTTPFound, HTTPForbidden, HTTPBadRequest, HTTPNotFound
 from kallithea.lib.vcs.exceptions import RepositoryError, \
     ChangesetDoesNotExistError, EmptyRepositoryError
 
-from kallithea.lib.compat import json
 import kallithea.lib.helpers as h
 from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator, \
     NotAnonymous
@@ -333,7 +332,7 @@ class ChangesetController(BaseRepoController):
                 c.cs_ranges_org = None
                 c.cs_comments = {}
                 revs = [ctx.revision for ctx in reversed(c.cs_ranges)]
-                c.jsdata = json.dumps(graph_data(c.db_repo_scm_instance, revs))
+                c.jsdata = graph_data(c.db_repo_scm_instance, revs)
                 return render('changeset/changeset_range.html')
 
     @LoginRequired()

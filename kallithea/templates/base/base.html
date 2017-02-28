@@ -185,7 +185,7 @@
       var bcache = {};
 
       $("#branch_switcher").select2({
-          placeholder: '<span class="navbar-text"> <i class="icon-exchange"></i> ${_('Switch To')} <span class="caret"></span></span>',
+          placeholder: '<span class="navbar-text"> <i class="icon-exchange"></i> ' + ${h.jshtml(_('Switch To'))} + ' <span class="caret"></span></span>',
           dropdownAutoWidth: true,
           sortResults: prefixFirstSort,
           formatResult: function(obj) {
@@ -195,7 +195,7 @@
               return obj.text;
           },
           formatNoMatches: function(term) {
-              return "${_('No matches found')}";
+              return ${h.jshtml(_('No matches found'))};
           },
           escapeMarkup: function(m) {
               // don't escape our custom placeholder
@@ -240,7 +240,7 @@
               } else {
                   $.ajax({
                       url: pyroutes.url('repo_refs_data', {
-                          'repo_name': '${c.repo_name}'
+                          'repo_name': ${h.js(c.repo_name)}
                       }),
                       data: {},
                       dataType: 'json',
@@ -271,7 +271,7 @@
               $("#branch_filter").val(e.choice.text).change();
           } else {
               window.location = pyroutes.url('changelog_home', {
-                  'repo_name': '${c.repo_name}',
+                  'repo_name': ${h.js(c.repo_name)},
                   'branch': e.choice.text
               });
           }
@@ -415,7 +415,7 @@
 
     <script type="text/javascript">
         $(document).ready(function(){
-            var visual_show_public_icon = "${c.visual.show_public_icon}" == "True";
+            var visual_show_public_icon = ${h.js(c.visual.show_public_icon)};
             var cache = {}
             /*format the look of items in the list*/
             var format = function(state){
@@ -449,13 +449,13 @@
             }
 
             $("#repo_switcher").select2({
-                placeholder: '<span class="navbar-text"><i class="icon-database"></i> ${_('Repositories')} <span class="caret"></span></span>',
+                placeholder: '<span class="navbar-text"><i class="icon-database"></i> ' + ${h.jshtml(_('Repositories'))} + ' <span class="caret"></span></span>',
                 dropdownAutoWidth: true,
                 sortResults: prefixFirstSort,
                 formatResult: format,
                 formatSelection: format,
                 formatNoMatches: function(term){
-                    return "${_('No matches found')}";
+                    return ${h.jshtml(_('No matches found'))};
                 },
                 containerCssClass: "repo-switcher",
                 dropdownCssClass: "repo-switcher-dropdown",
@@ -489,7 +489,7 @@
                     query.callback(data);
                   }else{
                       $.ajax({
-                        url: "${h.url('repo_switcher_data')}",
+                        url: ${h.js(h.url('repo_switcher_data'))},
                         data: {},
                         dataType: 'json',
                         type: 'GET',

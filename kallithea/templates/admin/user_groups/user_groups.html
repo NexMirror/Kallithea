@@ -30,17 +30,17 @@
     </div>
 </div>
 <script>
-    var data = ${c.data|n};
+    var data = ${h.js(c.data)};
     var $dataTable = $("#datatable_list_wrap").DataTable({
         data: data.records,
         columns: [
             {data: "raw_name", visible: false, searchable: false},
-            {data: "group_name", title: "${_('Name')}", orderData: 0},
-            {data: "desc", title: "${_('Description')}", searchable: false},
-            {data: "members", title: "${_('Members')}", searchable: false},
-            {data: "active", title: "${_('Active')}", searchable: false, 'sType': 'str'},
-            {data: "owner", title: "${_('Owner')}", searchable: false},
-            {data: "action", title: "${_('Action')}", searchable: false, sortable: false}
+            {data: "group_name", title: ${h.jshtml(_('Name'))}, orderData: 0},
+            {data: "desc", title: ${h.jshtml(_('Description'))}, searchable: false},
+            {data: "members", title: ${h.jshtml(_('Members'))}, searchable: false},
+            {data: "active", title: ${h.jshtml(_('Active'))}, searchable: false, 'sType': 'str'},
+            {data: "owner", title: ${h.jshtml(_('Owner'))}, searchable: false},
+            {data: "action", title: ${h.jshtml(_('Action'))}, searchable: false, sortable: false}
         ],
         order: [[1, "asc"]],
         dom: '<"dataTables_left"f><"dataTables_right"ilp>t',

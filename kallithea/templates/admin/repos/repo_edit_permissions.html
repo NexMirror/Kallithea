@@ -72,7 +72,7 @@ ${h.form(url('edit_repo_perms_update', repo_name=c.repo_name))}
                 %endfor
 
                 <%
-                _tmpl = h.literal("""'\
+                _tmpl = """\
                     <td><input type="radio" value="repository.none" name="perm_new_member_{0}" id="perm_new_member_{0}"></td> \
                     <td><input type="radio" value="repository.read" checked="checked" name="perm_new_member_{0}" id="perm_new_member_{0}"></td> \
                     <td><input type="radio" value="repository.write" name="perm_new_member_{0}" id="perm_new_member_{0}"></td> \
@@ -84,7 +84,7 @@ ${h.form(url('edit_repo_perms_update', repo_name=c.repo_name))}
                             <div id="perm_container_{0}"></div> \
                         </div> \
                     </td> \
-                    <td></td>'""")
+                    <td></td>"""
                 %>
                 ## ADD HERE DYNAMICALLY NEW INPUTS FROM THE '_tmpl'
                 <tr class="new_members last_new_member" id="add_perm_input"><td colspan="6"></td></tr>
@@ -107,7 +107,7 @@ ${h.end_form()}
 
 <script type="text/javascript">
     function ajaxActionRevoke(obj_id, obj_type, field_id, obj_name) {
-        url = "${h.url('edit_repo_perms_revoke',repo_name=c.repo_name)}";
+        url = ${h.js(h.url('edit_repo_perms_revoke',repo_name=c.repo_name))};
         var revoke_msg = _TM['Confirm to revoke permission for {0}: {1} ?'].format(obj_type.replace('_', ' '), obj_name);
         if (confirm(revoke_msg)){
             ajaxActionRevokePermission(url, obj_id, obj_type, field_id);
@@ -119,7 +119,7 @@ ${h.end_form()}
             $('#add_perm_input').hide();
         }
         $('#add_perm').click(function () {
-            addPermAction(${_tmpl}, ${c.users_array|n}, ${c.user_groups_array|n});
+            addPermAction(${h.jshtml(_tmpl)}, ${h.js(c.users_array)}, ${h.js(c.user_groups_array)});
         });
     });
 </script>

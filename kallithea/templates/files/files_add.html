@@ -68,8 +68,8 @@ ${self.repo_context_bar('files')}
             ${h.end_form()}
             <script type="text/javascript">
                 $(document).ready(function(){
-                    var reset_url = "${h.url('files_home',repo_name=c.repo_name,revision=c.cs.raw_id,f_path=c.f_path)}";
-                    var myCodeMirror = initCodeMirror('editor', "${request.script_name}", reset_url);
+                    var reset_url = ${h.jshtml(h.url('files_home',repo_name=c.repo_name,revision=c.cs.raw_id,f_path=c.f_path))};
+                    var myCodeMirror = initCodeMirror('editor', ${h.jshtml(request.script_name)}, reset_url);
 
                     //inject new modes, based on codeMirrors modeInfo object
                     var $mimetype_select = $('#mimetype');

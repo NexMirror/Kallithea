@@ -146,7 +146,7 @@ class TestSummaryController(TestController):
             '["js", {"count": 1, "desc": ["Javascript"]}], '
             '["cfg", {"count": 1, "desc": ["Ini"]}], '
             '["ini", {"count": 1, "desc": ["Ini"]}], '
-            '["html", {"count": 1, "desc": ["EvoqueHtml", "Html"]}]];'
+            '["html", {"count": 1, "desc": ["EvoqueHtml", "Html"]}]]'
         )
 
     def test_index_statistics(self):
@@ -179,7 +179,7 @@ class TestSummaryController(TestController):
             '["cfg", {"count": 1, "desc": ["Ini"]}], '
             '["ini", {"count": 1, "desc": ["Ini"]}], '
             '["html", {"count": 1, "desc": ["EvoqueHtml", "Html"]}], '
-            '["bat", {"count": 1, "desc": ["Batch"]}]];'
+            '["bat", {"count": 1, "desc": ["Batch"]}]]'
         )
 
     def test_index_statistics_git(self):

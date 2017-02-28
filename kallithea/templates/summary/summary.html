@@ -43,7 +43,7 @@
   redirect_hash_branch = function(){
     var branch = window.location.hash.replace(/^#(.*)/, '$1');
     if (branch){
-      window.location = "${h.url('changelog_home',repo_name=c.repo_name,branch='__BRANCH__')}"
+      window.location = ${h.js(h.url('changelog_home',repo_name=c.repo_name,branch='__BRANCH__'))}
         .replace('__BRANCH__',branch);
     }
   }
@@ -252,7 +252,7 @@ $(document).ready(function(){
             query.callback(data);
           }else{
               $.ajax({
-                url: pyroutes.url('repo_refs_data', {'repo_name': '${c.repo_name}'}),
+                url: pyroutes.url('repo_refs_data', {'repo_name': ${h.js(c.repo_name)}}),
                 data: {},
                 dataType: 'json',
                 type: 'GET',
@@ -271,7 +271,7 @@ $(document).ready(function(){
        for(k in tmpl_links){
            var s = $('#'+k+'_link');
            if(s){
-             var title_tmpl = "${_('Download %s as %s') % ('__CS_NAME__','__CS_EXT__')}";
+             var title_tmpl = ${h.jshtml(_('Download %s as %s') % ('__CS_NAME__','__CS_EXT__'))};
              title_tmpl= title_tmpl.replace('__CS_NAME__',new_cs.text);
              title_tmpl = title_tmpl.replace('__CS_EXT__',k);
              title_tmpl = '<i class="icon-file-zip"></i> '+ title_tmpl;
@@ -287,7 +287,7 @@ $(document).ready(function(){
 
     var tmpl_links = {};
     %for cnt,archive in enumerate(c.db_repo_scm_instance._get_archives()):
-      tmpl_links["${archive['type']}"] = '${h.link_to('__NAME__', h.url('files_archive_home',repo_name=c.db_repo.repo_name, fname='__CS__'+archive['extension'],subrepos='__SUB__'),class_='btn btn-default btn-sm')}';
+      tmpl_links[${h.jshtml(archive['type'])}] = ${h.js(h.link_to('__NAME__', h.url('files_archive_home',repo_name=c.db_repo.repo_name, fname='__CS__'+archive['extension'],subrepos='__SUB__'),class_='btn btn-default btn-sm'))};
     %endfor
 });
 </script>
@@ -295,7 +295,7 @@ $(document).ready(function(){
 %if c.show_stats:
 <script type="text/javascript">
 $(document).ready(function(){
-    var data = ${c.trending_languages|n};
+    var data = ${h.js(c.trending_languages)};
     var total = 0;
     var no_data = true;
     var tbl = document.createElement('table');
@@ -327,7 +327,7 @@ $(document).ready(function(){
         var td2 = document.createElement('td');
         td2.setAttribute('style','padding-right:14px !important');
         var trending_language = document.createElement('div');
-        var nr_files = obj.count+" ${_('files')}";
+        var nr_files = obj.count + ' ' + ${h.jshtml(_('files'))};
 
         trending_language.title = k+" "+nr_files;
 
@@ -353,7 +353,7 @@ $(document).ready(function(){
             lnk = document.createElement('a');
 
             lnk.href='#';
-            lnk.innerHTML = "${_('Show more')}";
+            lnk.innerHTML = ${h.jshtml(_('Show more'))};
             lnk.id='code_stats_show_more';
             td.appendChild(lnk);
 
@@ -364,7 +364,7 @@ $(document).ready(function(){
 
     }
     if (data.length == 0) {
-        tbl.innerHTML = "<tr><td>${_('No data ready yet')}</td></tr>";
+        tbl.innerHTML = '<tr><td>' + ${h.jshtml(_('No data ready yet'))} + '</td></tr>';
     }
 
     $('#lang_stats').append(tbl);

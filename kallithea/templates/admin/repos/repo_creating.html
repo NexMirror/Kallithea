@@ -45,11 +45,11 @@
 <script>
 (function worker() {
   $.ajax({
-    url: '${h.url('repo_check_home', repo_name=c.repo_name, repo=c.repo, task_id=c.task_id)}',
+    url: ${h.js(h.url('repo_check_home', repo_name=c.repo_name, repo=c.repo, task_id=c.task_id))},
     success: function(data) {
       if(data.result === true){
           //redirect to created fork if our ajax loop tells us to do so.
-          window.location = "${h.url('summary_home', repo_name = c.repo)}";
+          window.location = ${h.js(h.url('summary_home', repo_name = c.repo))};
       }
     },
     complete: function(resp, status) {

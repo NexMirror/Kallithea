@@ -41,7 +41,6 @@ from kallithea.lib import auth_modules
 from kallithea.lib.auth import LoginRequired, NotAnonymous, AuthUser
 from kallithea.lib.base import BaseController, render
 from kallithea.lib.utils2 import generate_api_key, safe_int
-from kallithea.lib.compat import json
 from kallithea.model.db import Repository, UserEmailMap, User, UserFollowing
 from kallithea.model.forms import UserForm, PasswordChangeForm
 from kallithea.model.user import UserModel
@@ -84,10 +83,8 @@ class MyAccountController(BaseController):
                          .filter(Repository.owner_id ==
                                  request.authuser.user_id).all()
 
-        repos_data = RepoModel().get_repos_as_dict(repos_list=repos_list,
+        return RepoModel().get_repos_as_dict(repos_list=repos_list,
                                                    admin=admin)
-        #json used to render the grid
-        return json.dumps(repos_data)
 
     def my_account(self):
         c.active = 'profile'
@@ -176,7 +173,7 @@ class MyAccountController(BaseController):
         c.active = 'repos'
         self.__load_data()
 
-        #json used to render the grid
+        #data used to render the grid
         c.data = self._load_my_repos_data()
         return render('admin/my_account/my_account.html')
 
@@ -184,7 +181,7 @@ class MyAccountController(BaseController):
         c.active = 'watched'
         self.__load_data()
 
-        #json used to render the grid
+        #data used to render the grid
         c.data = self._load_my_repos_data(watched=True)
         return render('admin/my_account/my_account.html')
 

@@ -51,7 +51,6 @@ from kallithea.model.forms import UserForm, CustomDefaultPermissionsForm
 from kallithea.model.user import UserModel
 from kallithea.model.meta import Session
 from kallithea.lib.utils import action_logger
-from kallithea.lib.compat import json
 from kallithea.lib.utils2 import datetime_to_time, safe_int, generate_api_key
 
 log = logging.getLogger(__name__)
@@ -103,13 +102,13 @@ class UsersController(BaseController):
                 "action": user_actions(user.user_id, user.username),
             })
 
-        c.data = json.dumps({
+        c.data = {
             "totalRecords": total_records,
             "startIndex": 0,
             "sort": None,
             "dir": "asc",
             "records": users_data
-        })
+        }
 
         return render('admin/users/users.html')
 

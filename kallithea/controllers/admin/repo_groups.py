@@ -39,7 +39,6 @@ from webob.exc import HTTPFound, HTTPForbidden, HTTPNotFound, HTTPInternalServer
 import kallithea
 from kallithea.config.routing import url
 from kallithea.lib import helpers as h
-from kallithea.lib.compat import json
 from kallithea.lib.auth import LoginRequired, \
     HasRepoGroupPermissionLevelDecorator, HasRepoGroupPermissionLevel, \
     HasPermissionAny
@@ -141,13 +140,13 @@ class RepoGroupsController(BaseController):
                                              repo_count)
             })
 
-        c.data = json.dumps({
+        c.data = {
             "totalRecords": total_records,
             "startIndex": 0,
             "sort": None,
             "dir": "asc",
             "records": repo_groups_data
-        })
+        }
 
         return render('admin/repo_groups/repo_groups.html')
 
@@ -304,8 +303,8 @@ class RepoGroupsController(BaseController):
         repos_list = Repository.query(sorted=True).filter_by(group=c.group).all()
         repos_data = RepoModel().get_repos_as_dict(repos_list=repos_list,
                                                    admin=False, short_name=True)
-        #json used to render the grid
-        c.data = json.dumps(repos_data)
+        # data used to render the grid
+        c.data = repos_data
 
         return render('admin/repo_groups/repo_group_show.html')
 

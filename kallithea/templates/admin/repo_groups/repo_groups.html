@@ -31,16 +31,16 @@
     </div>
 </div>
 <script>
-  var data = ${c.data|n};
+  var data = ${h.js(c.data)};
   var myDataTable = $("#datatable_list_wrap").DataTable({
         data: data.records,
         columns: [
             {data: "raw_name", visible: false, searchable: false},
-            {data: "group_name", orderData: 0, title: "${_('Name')}"},
-            {data: "desc", title: "${_('Description')}", searchable: false},
-            {data: "repos", title: "${_('Number of Top-level Repositories')}", searchable: false},
-            {data: "owner", title: "${_('Owner')}", searchable: false},
-            {data: "action", title: "${_('Action')}", sortable: false, searchable: false}
+            {data: "group_name", orderData: 0, title: ${h.jshtml(_('Name'))}},
+            {data: "desc", title: ${h.jshtml(_('Description'))}, searchable: false},
+            {data: "repos", title: ${h.jshtml(_('Number of Top-level Repositories'))}, searchable: false},
+            {data: "owner", title: ${h.jshtml(_('Owner'))}, searchable: false},
+            {data: "action", title: ${h.jshtml(_('Action'))}, sortable: false, searchable: false}
         ],
         drawCallback: updateRowCountCallback($("#repo_group_count")),
         dom: '<"dataTables_left"f><"dataTables_right"ilp>t',

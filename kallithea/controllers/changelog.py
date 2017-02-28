@@ -36,7 +36,6 @@ import kallithea.lib.helpers as h
 from kallithea.config.routing import url
 from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator
 from kallithea.lib.base import BaseRepoController, render
-from kallithea.lib.compat import json
 from kallithea.lib.graphmod import graph_data
 from kallithea.lib.page import RepoPage
 from kallithea.lib.vcs.exceptions import RepositoryError, ChangesetDoesNotExistError, \
@@ -171,7 +170,7 @@ class ChangelogController(BaseRepoController):
         revs = []
         if not f_path:
             revs = [x.revision for x in c.pagination]
-        c.jsdata = json.dumps(graph_data(c.db_repo_scm_instance, revs))
+        c.jsdata = graph_data(c.db_repo_scm_instance, revs)
 
         c.revision = revision # requested revision ref
         c.first_revision = c.pagination[0] # pagination is never empty here!

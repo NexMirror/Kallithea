@@ -34,7 +34,6 @@ from webob.exc import HTTPBadRequest
 from sqlalchemy.sql.expression import func
 
 from kallithea.lib.utils import conditional_cache
-from kallithea.lib.compat import json
 from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator
 from kallithea.lib.base import BaseController, render, jsonify
 from kallithea.model.db import Repository, RepoGroup
@@ -61,8 +60,8 @@ class HomeController(BaseController):
 
         repos_data = RepoModel().get_repos_as_dict(repos_list=repos_list,
                                                    admin=False, short_name=True)
-        #json used to render the grid
-        c.data = json.dumps(repos_data)
+        #data used to render the grid
+        c.data = repos_data
 
         return render('/index.html')
 

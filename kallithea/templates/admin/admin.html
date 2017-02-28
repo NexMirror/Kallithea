@@ -46,7 +46,7 @@ $(document).ready(function() {
   $('#filter_form').submit(function (e) {
       e.preventDefault();
       var val = $('#j_filter').val();
-      window.location = "${url.current(filter='__FILTER__')}".replace('__FILTER__',val);
+      window.location = ${h.js(url.current(filter='__FILTER__'))}.replace('__FILTER__',val);
   });
   fix_j_filter_width($('#j_filter').val().length);
 });

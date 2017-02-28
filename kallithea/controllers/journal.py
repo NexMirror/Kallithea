@@ -48,7 +48,6 @@ from kallithea.model.repo import RepoModel
 import kallithea.lib.helpers as h
 from kallithea.lib.auth import LoginRequired, NotAnonymous
 from kallithea.lib.base import BaseController, render
-from kallithea.lib.compat import json
 from kallithea.lib.page import Page
 from kallithea.lib.utils2 import safe_int, AttributeDict
 
@@ -218,8 +217,8 @@ class JournalController(BaseController):
 
         repos_data = RepoModel().get_repos_as_dict(repos_list=repos_list,
                                                    admin=True)
-        #json used to render the grid
-        c.data = json.dumps(repos_data)
+        #data used to render the grid
+        c.data = repos_data
 
         return render('journal/journal.html')
 

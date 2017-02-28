@@ -47,7 +47,6 @@ from kallithea.model.db import User, Repository, UserFollowing, RepoGroup, \
 from kallithea.model.forms import RepoForm, RepoFieldForm, RepoPermsForm
 from kallithea.model.scm import ScmModel, AvailableRepoGroupChoices, RepoList
 from kallithea.model.repo import RepoModel
-from kallithea.lib.compat import json
 from kallithea.lib.exceptions import AttachedForksError
 from kallithea.lib.utils2 import safe_int
 
@@ -105,8 +104,8 @@ class ReposController(BaseRepoController):
         repos_data = RepoModel().get_repos_as_dict(repos_list=c.repos_list,
                                                    admin=True,
                                                    super_user_actions=True)
-        #json used to render the grid
-        c.data = json.dumps(repos_data)
+        #data used to render the grid
+        c.data = repos_data
 
         return render('admin/repos/repos.html')
 

@@ -83,22 +83,22 @@
             pageLength: 100
         });
 
-        var data = ${c.data|n},
+        var data = ${h.js(c.data)},
             $dataTable = $("#repos_list_wrap").DataTable({
                 data: data.records,
                 columns: [
                     {data: "raw_name", visible: false, searchable: false},
-                    {title: "${_('Repository')}", data: "name", orderData: [0,], render: {
+                    {title: ${h.jshtml(_('Repository'))}, data: "name", orderData: [0,], render: {
                         filter: function(data, type, row, meta) {
                             return row.just_name;
                         }
                     }},
-                    {data: "desc", title: "${_('Description')}", searchable: false},
+                    {data: "desc", title: ${h.jshtml(_('Description'))}, searchable: false},
                     {data: "last_change_iso", visible: false, searchable: false},
-                    {data: "last_change", title: "${_('Last Change')}", orderData: [3,], searchable: false},
+                    {data: "last_change", title: ${h.jshtml(_('Last Change'))}, orderData: [3,], searchable: false},
                     {data: "last_rev_raw", visible: false, searchable: false},
-                    {data: "last_changeset", title: "${_('Tip')}", orderData: [5,], searchable: false},
-                    {data: "owner", title: "${_('Owner')}", searchable: false},
+                    {data: "last_changeset", title: ${h.jshtml(_('Tip'))}, orderData: [5,], searchable: false},
+                    {data: "owner", title: ${h.jshtml(_('Owner'))}, searchable: false},
                     {data: "atom", sortable: false}
                 ],
                 order: [[1, "asc"]],

@@ -59,7 +59,7 @@
           ${h.end_form()}
           <script type="text/javascript">
             $(document).ready(function(){
-                var myCodeMirror = initCodeMirror('editor', "${request.script_name}", '');
+                var myCodeMirror = initCodeMirror('editor', ${h.jshtml(request.script_name)}, '');
 
                 //inject new modes
                 var $mimetype_select = $('#mimetype');

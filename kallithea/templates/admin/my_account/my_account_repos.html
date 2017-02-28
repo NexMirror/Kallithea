@@ -5,15 +5,15 @@
 </div>
 
 <script>
-  var data = ${c.data|n};
+  var data = ${h.js(c.data)};
   var myDataTable = $("#datatable_list_wrap").DataTable({
         data: data.records,
         columns: [
             {data: "raw_name", "visible": false, searchable: false},
-            {data: "name", "orderData": 1, title: "${_('Name')}"},
+            {data: "name", "orderData": 1, title: ${h.jshtml(_('Name'))}},
             {data: "last_rev_raw", "visible": false, searchable: false},
-            {data: "last_changeset", "orderData": 3, title: "${_('Tip')}", searchable: false},
-            {data: "action", title: "${_('Action')}", sortable: false, searchable: false}
+            {data: "last_changeset", "orderData": 3, title: ${h.jshtml(_('Tip'))}, searchable: false},
+            {data: "action", title: ${h.jshtml(_('Action'))}, sortable: false, searchable: false}
         ],
         order: [[2, "asc"]],
         dom: '<"dataTables_left"f><"dataTables_right"ilp>t',

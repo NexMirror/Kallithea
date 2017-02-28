@@ -53,7 +53,7 @@ ${self.repo_context_bar('summary')}
 </div>
 
 <script type="text/javascript">
-var data = ${c.trending_languages|n};
+var data = ${h.js(c.trending_languages)};
 var total = 0;
 var no_data = true;
 var tbl = document.createElement('table');
@@ -85,7 +85,7 @@ for (var i=0;i<data.length;i++){
     var td2 = document.createElement('td');
     td2.setAttribute('style','padding-right:14px !important');
     var trending_language = document.createElement('div');
-    var nr_files = obj.count+" ${_('files')}";
+    var nr_files = obj.count + ' ' + ${h.jshtml(_('files'))};
 
     trending_language.title = k+" "+nr_files;
 
@@ -109,7 +109,7 @@ for (var i=0;i<data.length;i++){
         lnk = document.createElement('a');
 
         lnk.href='#';
-        lnk.innerHTML = "${_('Show more')}";
+        lnk.innerHTML = ${h.jshtml(_('Show more'))};
         lnk.id='code_stats_show_more';
         td.appendChild(lnk);
 
@@ -389,15 +389,15 @@ function SummaryPlot(from,to,dataset,overview_dataset) {
                 var changed = cur_data.changed;
                 var removed = cur_data.removed;
 
-                var nr_commits_suffix = " ${_('commits')} ";
-                var added_suffix = " ${_('files added')} ";
-                var changed_suffix = " ${_('files changed')} ";
-                var removed_suffix = " ${_('files removed')} ";
+                var nr_commits_suffix = ' ' + ${h.jshtml(_('commits'))} + ' ';
+                var added_suffix = ' ' + ${h.jshtml(_('files added'))} + ' ';
+                var changed_suffix = ' ' + ${h.jshtml(_('files changed'))} + ' ';
+                var removed_suffix = ' ' + ${h.jshtml(_('files removed'))} + ' ';
 
-                if(nr_commits == 1){nr_commits_suffix = " ${_('commit')} ";}
-                if(added==1){added_suffix=" ${_('file added')} ";}
-                if(changed==1){changed_suffix=" ${_('file changed')} ";}
-                if(removed==1){removed_suffix=" ${_('file removed')} ";}
+                if(nr_commits == 1){ nr_commits_suffix = ' ' + ${h.jshtml(_('commit'))} + ' '; }
+                if(added == 1) { added_suffix=' ' + ${h.jshtml(_('file added'))} + ' '; }
+                if(changed == 1) { changed_suffix=' ' + ${h.jshtml(_('file changed'))} + ' '; }
+                if(removed == 1) { removed_suffix=' ' + ${h.jshtml(_('file removed'))} + ' '; }
 
                 showTooltip(item.pageX, item.pageY, item.series.label + " on " + fd
                          +'<br/>'+
@@ -444,7 +444,7 @@ function SummaryPlot(from,to,dataset,overview_dataset) {
     // user choices on overview
     YUE.on(choiceContainer.getElementsByTagName("input"), "click", plotchoiced, [data, initial_ranges]);
 }
-    SummaryPlot(${c.ts_min},${c.ts_max},${c.commit_data|n},${c.overview_data|n});
+    SummaryPlot(${h.jshtml(c.ts_min)}, ${h.jshtml(c.ts_max)}, ${h.js(c.commit_data)}, ${h.js(c.overview_data)});
 </script>
 
 </%def>

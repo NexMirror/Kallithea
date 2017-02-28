@@ -43,8 +43,8 @@
     </div>
 </div>
 <script type="text/javascript">
-var url = "${url('notification_delete', notification_id='__NOTIFICATION_ID__')}";
-var main = "${url('notifications')}";
+var url = ${h.js(url('notification_delete', notification_id='__NOTIFICATION_ID__'))};
+var main = ${h.js(url('notifications'))};
    $('.delete-notification').click(function(e){
        var notification_id = e.currentTarget.id;
        deleteNotification(url,notification_id,[function(){window.location=main}]);

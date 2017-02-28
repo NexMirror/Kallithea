@@ -30,18 +30,18 @@
 
 </div>
 <script>
-  var data = ${c.data|n};
+  var data = ${h.js(c.data)};
   var myDataTable = $("#datatable_list_wrap").DataTable({
         data: data.records,
         columns: [
             {data: "raw_name", visible: false, searchable: false},
-            {data: "name", orderData: 1, title: "${_('Name')}"},
-            {data: "desc", title: "${_('Description')}", searchable: false},
+            {data: "name", orderData: 1, title: ${h.jshtml(_('Name'))}},
+            {data: "desc", title: ${h.jshtml(_('Description'))}, searchable: false},
             {data: "last_rev_raw", visible: false, searchable: false},
-            {data: "last_changeset", orderData: 4, title: "${_('Tip')}", searchable: false},
-            {data: "owner", title: "${_('Owner')}", searchable: false},
-            {data: "state", title: "${_('State')}", searchable: false},
-            {data: "action", title: "${_('Action')}", sortable: false, searchable: false}
+            {data: "last_changeset", orderData: 4, title: ${h.jshtml(_('Tip'))}, searchable: false},
+            {data: "owner", title: ${h.jshtml(_('Owner'))}, searchable: false},
+            {data: "state", title: ${h.jshtml(_('State'))}, searchable: false},
+            {data: "action", title: ${h.jshtml(_('Action'))}, sortable: false, searchable: false}
         ],
         drawCallback: updateRowCountCallback($("#repo_count")),
         dom: '<"dataTables_left"f><"dataTables_right"ilp>t',

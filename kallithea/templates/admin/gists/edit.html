@@ -81,10 +81,10 @@
                 ## dynamic edit box.
                 <script type="text/javascript">
                     $(document).ready(function(){
-                        var myCodeMirror = initCodeMirror("editor_${h.FID('f',file.path)}", "${request.script_name}", '');
+                        var myCodeMirror = initCodeMirror(${h.js('editor_' + h.FID('f',file.path))}, ${h.jshtml(request.script_name)}, '');
 
                         //inject new modes
-                        var $mimetype_select = $('#mimetype_${h.FID('f',file.path)}');
+                        var $mimetype_select = $(${h.js('#mimetype_' + h.FID('f',file.path))});
                         $mimetype_select.each(function(){
                             var modes_select = this;
                             var index = 1;
@@ -102,7 +102,7 @@
                             }
                         });
 
-                        var $filename_input = $('#filename_${h.FID('f',file.path)}');
+                        var $filename_input = $(${h.js('#filename_' + h.FID('f',file.path))});
                         // on select change set new mode
                         $mimetype_select.change(function(e){
                             var selected = e.currentTarget;
@@ -130,7 +130,7 @@
                         });
 
                         // set mode on page load
-                        var detected_mode = CodeMirror.findModeByExtension("${file.extension}");
+                        var detected_mode = CodeMirror.findModeByExtension(${h.js(file.extension)});
 
                         if (detected_mode){
                             setCodeMirrorMode(myCodeMirror, detected_mode);
@@ -152,8 +152,8 @@
 
                   // check for newer version.
                   $.ajax({
-                    url: "${h.url('edit_gist_check_revision', gist_id=c.gist.gist_access_id)}",
-                    data: {'revision': '${c.file_changeset.raw_id}', '_authentication_token': _authentication_token},
+                    url: ${h.js(h.url('edit_gist_check_revision', gist_id=c.gist.gist_access_id))},
+                    data: {'revision': ${h.js(c.file_changeset.raw_id)}, '_authentication_token': _authentication_token},
                     dataType: 'json',
                     type: 'POST',
                     success: function(data) {

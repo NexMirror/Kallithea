@@ -149,8 +149,8 @@ ${self.repo_context_bar('changelog')}
     });
     }
 
-    make_revision_dropdown("#compare_org",   "${'%s@%s' % (c.a_repo.repo_name, c.a_ref_name)}",   "${c.a_repo.repo_name}",  'cache');
-    make_revision_dropdown("#compare_other", "${'%s@%s' % (c.cs_repo.repo_name, c.cs_ref_name)}", "${c.cs_repo.repo_name}", 'cache2');
+    make_revision_dropdown("#compare_org",   ${h.jshtml('%s@%s' % (c.a_repo.repo_name, c.a_ref_name))},   ${h.jshtml(c.a_repo.repo_name)},  'cache');
+    make_revision_dropdown("#compare_other", ${h.jshtml('%s@%s' % (c.cs_repo.repo_name, c.cs_ref_name))}, ${h.jshtml(c.cs_repo.repo_name)}, 'cache2');
 
     var values_changed = function() {
         var values = $('#compare_org').select2('data') && $('#compare_other').select2('data');
@@ -172,7 +172,7 @@ ${self.repo_context_bar('changelog')}
             return;
         }
 
-        var compare_url = "${h.url('compare_url',repo_name=c.repo_name,org_ref_type='__other_ref_type__',org_ref_name='__org__',other_ref_type='__org_ref_type__',other_ref_name='__other__', other_repo=c.cs_repo.repo_name)}";
+        var compare_url = ${h.js(h.url('compare_url',repo_name=c.repo_name,org_ref_type='__other_ref_type__',org_ref_name='__org__',other_ref_type='__org_ref_type__',other_ref_name='__other__', other_repo=c.cs_repo.repo_name))};
         var u = compare_url.replace('__other_ref_type__',org.type)
                            .replace('__org__',org.text)
                            .replace('__org_ref_type__',other.type)

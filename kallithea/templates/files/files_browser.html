@@ -120,7 +120,7 @@
 <script>
     $(document).ready(function(){
         // init node filter if we pass GET param ?search=1
-        var search_GET = "${request.GET.get('search','')}";
+        var search_GET = ${h.js(request.GET.get('search',''))};
         if(search_GET == "1"){
             $("#filter_activate").click();
         }

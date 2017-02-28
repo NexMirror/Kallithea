@@ -146,12 +146,12 @@ class SummaryController(BaseRepoController):
                                "desc": LANGUAGES_EXTENSIONS_MAP.get(x)})
                           for x, y in lang_stats_d.items())
 
-            c.trending_languages = json.dumps(
+            c.trending_languages = (
                 sorted(lang_stats, reverse=True, key=lambda k: k[1])[:10]
             )
         else:
             c.no_data = True
-            c.trending_languages = json.dumps([])
+            c.trending_languages = []
 
         c.enable_downloads = c.db_repo.enable_downloads
         c.readme_data, c.readme_file = \
@@ -202,7 +202,7 @@ class SummaryController(BaseRepoController):
                                "desc": LANGUAGES_EXTENSIONS_MAP.get(x)})
                           for x, y in lang_stats_d.items())
 
-            c.trending_languages = json.dumps(
+            c.trending_languages = (
                 sorted(lang_stats, reverse=True, key=lambda k: k[1])[:10]
             )
             last_rev = stats.stat_on_revision + 1
@@ -214,9 +214,9 @@ class SummaryController(BaseRepoController):
                 c.stats_percentage = '%.2f' % ((float((last_rev)) /
                                                 c.repo_last_rev) * 100)
         else:
-            c.commit_data = json.dumps({})
-            c.overview_data = json.dumps([[ts_min_y, 0], [ts_max_y, 10]])
-            c.trending_languages = json.dumps({})
+            c.commit_data = {}
+            c.overview_data = ([[ts_min_y, 0], [ts_max_y, 10]])
+            c.trending_languages = {}
             c.no_data = True
 
         recurse_limit = 500  # don't recurse more than 500 times when parsing

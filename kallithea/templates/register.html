@@ -92,7 +92,7 @@
             $('#username').focus();
 
             %if c.captcha_active:
-            Recaptcha.create("${c.captcha_public_key}", "recaptcha",
+            Recaptcha.create(${h.js(c.captcha_public_key)}, "recaptcha",
                 {
                   theme: "white"
                 }

@@ -40,7 +40,6 @@ from kallithea.lib import diffs
 from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator, \
     NotAnonymous
 from kallithea.lib.base import BaseRepoController, render, jsonify
-from kallithea.lib.compat import json, OrderedDict
 from kallithea.lib.diffs import LimitedDiffContainer
 from kallithea.lib.page import Page
 from kallithea.lib.utils import action_logger
@@ -619,7 +618,7 @@ class PullrequestsController(BaseRepoController):
                 'error')
         c.cs_ranges_org = None # not stored and not important and moving target - could be calculated ...
         revs = [ctx.revision for ctx in reversed(c.cs_ranges)]
-        c.jsdata = json.dumps(graph_data(org_scm_instance, revs))
+        c.jsdata = graph_data(org_scm_instance, revs)
 
         c.is_range = False
         try:
@@ -701,7 +700,7 @@ class PullrequestsController(BaseRepoController):
 
         c.avail_revs = avail_revs
         c.avail_cs = [org_scm_instance.get_changeset(r) for r in avail_show]
-        c.avail_jsdata = json.dumps(graph_data(org_scm_instance, avail_show))
+        c.avail_jsdata = graph_data(org_scm_instance, avail_show)
 
         raw_ids = [x.raw_id for x in c.cs_ranges]
         c.cs_comments = c.cs_repo.get_comments(raw_ids)

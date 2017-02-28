@@ -121,7 +121,7 @@
 </div>
 
 %if c.as_form:
-<div id="jsdata" style="display:none">${c.jsdata|n}</div>
+<div id="jsdata" style="display:none">${h.js(c.jsdata)}</div>
 %else:
 <script type="text/javascript" src="${h.url('/js/graph.js', ver=c.kallithea_version)}"></script>
 %endif
@@ -130,7 +130,7 @@
 
     $(document).ready(function(){
 %if not c.as_form:
-        var jsdata = ${c.jsdata|n};
+        var jsdata = ${h.js(c.jsdata)};
         var r = new BranchRenderer('graph_canvas', 'graph_content_pr', 'chg_');
         r.render(jsdata);
 %endif

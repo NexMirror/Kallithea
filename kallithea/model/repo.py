@@ -35,7 +35,6 @@ from sqlalchemy.orm import subqueryload
 
 from kallithea.lib.utils import make_ui
 from kallithea.lib.vcs.backends import get_backend
-from kallithea.lib.compat import json
 from kallithea.lib.utils2 import LazyProperty, safe_str, safe_unicode, \
     remove_prefix, obfuscate_url_pw, get_current_authuser
 from kallithea.lib.caching_query import FromCache
@@ -127,7 +126,7 @@ class RepoModel(object):
             .filter(User.active == True) \
             .order_by(User.name, User.lastname) \
             .all()
-        return json.dumps([
+        return [
             {
                 'id': u.user_id,
                 'fname': h.escape(u.name),
@@ -136,7 +135,6 @@ class RepoModel(object):
                 'gravatar_lnk': h.gravatar_url(u.email, size=28, default='default'),
                 'gravatar_size': 14,
             } for u in users]
-        )
 
     def get_user_groups_js(self):
         user_groups = UserGroup.query() \
@@ -145,13 +143,12 @@ class RepoModel(object):
             .options(subqueryload(UserGroup.members)) \
             .all()
         user_groups = UserGroupList(user_groups, perm_level='read')
-        return json.dumps([
+        return [
             {
                 'id': gr.users_group_id,
                 'grname': gr.users_group_name,
                 'grmembers': len(gr.members),
             } for gr in user_groups]
-        )
 
     @classmethod
     def _render_datatable(cls, tmpl, *args, **kwargs):

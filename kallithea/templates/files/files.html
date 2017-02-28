@@ -40,14 +40,14 @@ ${self.repo_context_bar('files', c.revision)}
 var CACHE = {};
 var CACHE_EXPIRE = 5*60*1000; //cache for 5*60s
 //used to construct links from the search list
-var url_base = '${h.url("files_home",repo_name=c.repo_name,revision='__REV__',f_path='__FPATH__')}';
+var url_base = ${h.js(h.url("files_home",repo_name=c.repo_name,revision='__REV__',f_path='__FPATH__'))};
 //send the nodelist request to this url
-var node_list_url = '${h.url("files_nodelist_home",repo_name=c.repo_name,revision='__REV__',f_path='__FPATH__')}';
+var node_list_url = ${h.js(h.url("files_nodelist_home",repo_name=c.repo_name,revision='__REV__',f_path='__FPATH__'))};
 
 ## new pyroutes URLs
-pyroutes.register('files_nodelist_home', "${h.url('files_nodelist_home', repo_name=c.repo_name,revision='%(revision)s',f_path='%(f_path)s')}", ['revision', 'f_path']);
-pyroutes.register('files_history_home', "${h.url('files_history_home', repo_name=c.repo_name,revision='%(revision)s',f_path='%(f_path)s')}", ['revision', 'f_path']);
-pyroutes.register('files_authors_home', "${h.url('files_authors_home', repo_name=c.repo_name,revision='%(revision)s',f_path='%(f_path)s')}", ['revision', 'f_path']);
+pyroutes.register('files_nodelist_home', ${h.js(h.url('files_nodelist_home', repo_name=c.repo_name,revision='%(revision)s',f_path='%(f_path)s'))}, ['revision', 'f_path']);
+pyroutes.register('files_history_home', ${h.js(h.url('files_history_home', repo_name=c.repo_name,revision='%(revision)s',f_path='%(f_path)s'))}, ['revision', 'f_path']);
+pyroutes.register('files_authors_home', ${h.js(h.url('files_authors_home', repo_name=c.repo_name,revision='%(revision)s',f_path='%(f_path)s'))}, ['revision', 'f_path']);
 
 var ypjax_links = function(){
     $('.ypjax-link').click(function(e){
@@ -60,7 +60,7 @@ var ypjax_links = function(){
         var el = e.currentTarget;
         var url = el.href;
 
-        var _base_url = '${h.url("files_home",repo_name=c.repo_name,revision='',f_path='')}';
+        var _base_url = ${h.jshtml(h.url("files_home",repo_name=c.repo_name,revision='',f_path=''))};
         _base_url = _base_url.replace('//','/');
 
         //extract rev and the f_path from url.
@@ -74,7 +74,7 @@ var ypjax_links = function(){
         var f_path = parts2.join('/');
 
         //page title - make this consistent with title mako block above
-        var title = "${_('%s Files') % c.repo_name}" + " \u00B7 " + (f_path || '/') + " \u00B7 " + "${c.site_name}";
+        var title = ${h.jshtml(_('%s Files') % c.repo_name)} + " \u00B7 " + (f_path || '/') + " \u00B7 " + ${h.jshtml(c.site_name)};
 
         var _node_list_url = node_list_url.replace('__REV__',rev).replace('__FPATH__', f_path);
         var _url_base = url_base.replace('__REV__',rev);
@@ -225,12 +225,12 @@ $(document).ready(function(){
 
     // init the search filter
     var _State = {
-       url: "${h.url.current()}",
+       url: ${h.js(h.url.current())},
        data: {
-         node_list_url: node_list_url.replace('__REV__',"${c.changeset.raw_id}").replace('__FPATH__', "${h.safe_unicode(c.file.path)}"),
-         url_base: url_base.replace('__REV__',"${c.changeset.raw_id}"),
-         rev:"${c.changeset.raw_id}",
-         f_path: "${h.safe_unicode(c.file.path)}"
+         node_list_url: node_list_url.replace('__REV__',${h.js(c.changeset.raw_id)}).replace('__FPATH__', ${h.js(h.safe_unicode(c.file.path))}),
+         url_base: url_base.replace('__REV__',${h.js(c.changeset.raw_id)}),
+         rev:${h.js(c.changeset.raw_id)},
+         f_path: ${h.js(h.safe_unicode(c.file.path))}
        }
     }
     fileBrowserListeners(_State.url, _State.data.node_list_url, _State.data.url_base);
@@ -244,11 +244,11 @@ $(document).ready(function(){
 
     $("#branch_selector").change(function(e){
         var selected = e.currentTarget.options[e.currentTarget.selectedIndex].value;
-        if(selected && selected != "${c.changeset.raw_id}"){
-            window.location = pyroutes.url('files_home', {'repo_name': "${h.safe_unicode(c.repo_name)}", 'revision': selected, 'f_path': "${h.safe_unicode(c.file.path)}"});
+        if(selected && selected != ${h.js(c.changeset.raw_id)}){
+            window.location = pyroutes.url('files_home', {'repo_name': ${h.js(h.safe_unicode(c.repo_name))}, 'revision': selected, 'f_path': ${h.js(h.safe_unicode(c.file.path))}});
             $("#body.browserblock").hide();
         } else {
-            $("#branch_selector").val("${c.changeset.raw_id}");
+            $("#branch_selector").val(${h.js(c.changeset.raw_id)});
         }
     });
 

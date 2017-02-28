@@ -56,7 +56,6 @@ from kallithea.model.forms import UserGroupForm, UserGroupPermsForm, \
     CustomDefaultPermissionsForm
 from kallithea.model.meta import Session
 from kallithea.lib.utils import action_logger
-from kallithea.lib.compat import json
 
 log = logging.getLogger(__name__)
 
@@ -119,13 +118,13 @@ class UserGroupsController(BaseController):
                 "action": user_group_actions(user_gr.users_group_id, user_gr.users_group_name)
             })
 
-        c.data = json.dumps({
+        c.data = {
             "totalRecords": total_records,
             "startIndex": 0,
             "sort": None,
             "dir": "asc",
             "records": user_groups_data
-        })
+        }
 
         return render('admin/user_groups/user_groups.html')
 

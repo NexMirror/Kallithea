@@ -58,12 +58,12 @@
     $('#filter_form').submit(function(e){
         e.preventDefault();
         var val = $('#j_filter').val();
-        window.location = "${url.current(filter='__FILTER__')}".replace('__FILTER__',val);
+        window.location = ${h.js(url.current(filter='__FILTER__'))}.replace('__FILTER__',val);
     });
     fix_j_filter_width($('#j_filter').val().length);
 
     $('#refresh').click(function(e){
-        asynchtml("${h.url.current(filter=c.search_term)}", $("#journal"), function(){
+        asynchtml(${h.js(h.url.current(filter=c.search_term))}, $("#journal"), function(){
             show_more_event();
             tooltip_activate();
             });

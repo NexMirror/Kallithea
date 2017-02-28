@@ -97,7 +97,7 @@ ${self.repo_context_bar('showpullrequest')}
 
 <script type="text/javascript" src="${h.url('/js/graph.js', ver=c.kallithea_version)}"></script>
 <script type="text/javascript">
-  pyroutes.register('pullrequest_repo_info', "${url('pullrequest_repo_info',repo_name='%(repo_name)s')}", ['repo_name']);
+  pyroutes.register('pullrequest_repo_info', ${h.js(url('pullrequest_repo_info',repo_name='%(repo_name)s'))}, ['repo_name']);
 
   var pendingajax = undefined;
   var otherrepoChanged = function(){
@@ -140,7 +140,7 @@ ${self.repo_context_bar('showpullrequest')}
 
   var loadPreview = function(){
       //url template
-      var url = "${h.url('compare_url',
+      var url = ${h.js(h.url('compare_url',
                          repo_name='__other_repo__',
                          org_ref_type='rev',
                          org_ref_name='__other_ref_name__',
@@ -149,7 +149,7 @@ ${self.repo_context_bar('showpullrequest')}
                          other_ref_name='__org_ref_name__',
                          as_form=True,
                          merge=True,
-                         )}";
+                         ))};
       var org_repo = $('#pull_request_form #org_repo').val();
       var org_ref = $('#pull_request_form #org_ref').val().split(':');
       ## TODO: make nice link like link_to_ref() do

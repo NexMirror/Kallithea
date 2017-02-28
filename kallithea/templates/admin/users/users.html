@@ -29,20 +29,20 @@
 </div>
 
 <script>
-    var data = ${c.data|n};
+    var data = ${h.js(c.data)};
     var $dataTable = $("#datatable_list_wrap").DataTable({
         data: data.records,
         columns: [
             {data: "gravatar", sortable: false, searchable: false},
-            {data: "username", title: "${_('Username')}"},
-            {data: "firstname", title: "${_('First Name')}"},
-            {data: "lastname", title: "${_('Last Name')}"},
+            {data: "username", title: ${h.jshtml(_('Username'))}},
+            {data: "firstname", title: ${h.jshtml(_('First Name'))}},
+            {data: "lastname", title: ${h.jshtml(_('Last Name'))}},
             {data: "last_login_raw", visible: false, searchable: false},
-            {data: "last_login", title: "${_('Last Login')}", orderData: 4, searchable: false},
-            {data: "active", title: "${_('Active')}", searchable: false, 'sType': 'str'},
-            {data: "admin", title: "${_('Admin')}", searchable: false, 'sType': 'str'},
-            {data: "extern_type", title: "${_('Auth Type')}", searchable: false},
-            {data: "action", title: "${_('Action')}", searchable: false, sortable: false}
+            {data: "last_login", title: ${h.jshtml(_('Last Login'))}, orderData: 4, searchable: false},
+            {data: "active", title: ${h.jshtml(_('Active'))}, searchable: false, 'sType': 'str'},
+            {data: "admin", title: ${h.jshtml(_('Admin'))}, searchable: false, 'sType': 'str'},
+            {data: "extern_type", title: ${h.jshtml(_('Auth Type'))}, searchable: false},
+            {data: "action", title: ${h.jshtml(_('Action'))}, searchable: false, sortable: false}
         ],
         order: [[1, "asc"]],
         drawCallback: updateRowCountCallback($("#user_count")),

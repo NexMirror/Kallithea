@@ -20,10 +20,10 @@ class TestHomeController(TestController):
         response.mustcontain('<span class="repotag">git')
 
         # html in javascript variable:
-        response.mustcontain('var data = {"totalRecords": %s' % Repository.query().count())
+        response.mustcontain('var data = ({"totalRecords": %s' % Repository.query().count())
         response.mustcontain(r'href=\"/%s\"' % HG_REPO)
 
-        response.mustcontain(r'<i class=\"icon-globe\"')
+        response.mustcontain(r'\x3ci class=\"icon-globe\"')
 
         response.mustcontain(r'\"fixes issue with having custom format for git-log\n\"')
         response.mustcontain(r'\"/%s/changeset/5f2c6ee195929b0be80749243c18121c9864a3b3\"' % GIT_REPO)

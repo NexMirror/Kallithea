@@ -331,14 +331,14 @@ ${self.repo_context_bar('showpullrequest')}
         </div>
     </div>
     <script>
-    var _USERS_AC_DATA = ${c.users_array|n};
-    var _GROUPS_AC_DATA = ${c.user_groups_array|n};
+    var _USERS_AC_DATA = ${h.js(c.users_array)};
+    var _GROUPS_AC_DATA = ${h.js(c.user_groups_array)};
     // TODO: switch this to pyroutes
-    AJAX_COMMENT_URL = "${url('pullrequest_comment',repo_name=c.repo_name,pull_request_id=c.pull_request.pull_request_id)}";
-    AJAX_COMMENT_DELETE_URL = "${url('pullrequest_comment_delete',repo_name=c.repo_name,comment_id='__COMMENT_ID__')}";
+    AJAX_COMMENT_URL = ${h.js(url('pullrequest_comment',repo_name=c.repo_name,pull_request_id=c.pull_request.pull_request_id))};
+    AJAX_COMMENT_DELETE_URL = ${h.js(url('pullrequest_comment_delete',repo_name=c.repo_name,comment_id='__COMMENT_ID__'))};
 
-    pyroutes.register('pullrequest_comment', "${url('pullrequest_comment',repo_name='%(repo_name)s',pull_request_id='%(pull_request_id)s')}", ['repo_name', 'pull_request_id']);
-    pyroutes.register('pullrequest_comment_delete', "${url('pullrequest_comment_delete',repo_name='%(repo_name)s',comment_id='%(comment_id)s')}", ['repo_name', 'comment_id']);
+    pyroutes.register('pullrequest_comment', ${h.js(url('pullrequest_comment',repo_name='%(repo_name)s',pull_request_id='%(pull_request_id)s'))}, ['repo_name', 'pull_request_id']);
+    pyroutes.register('pullrequest_comment_delete', ${h.js(url('pullrequest_comment_delete',repo_name='%(repo_name)s',comment_id='%(comment_id)s'))}, ['repo_name', 'comment_id']);
 
     </script>
 
@@ -372,7 +372,7 @@ ${self.repo_context_bar('showpullrequest')}
               show_comment_form($(this));
           });
 
-          var avail_jsdata = ${c.avail_jsdata|n};
+          var avail_jsdata = ${h.js(c.avail_jsdata)};
           var avail_r = new BranchRenderer('avail_graph_canvas', 'updaterevs-table', 'chg_available_');
           avail_r.render(avail_jsdata);
 

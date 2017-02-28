@@ -18,6 +18,7 @@ Consists of functions to typically be used within templates, but also
 available to Controllers. This module is available to both as 'h'.
 """
 import hashlib
+import json
 import StringIO
 import logging
 import re
@@ -84,6 +85,50 @@ def html_escape(s):
         .replace('"', "&quot;")
         .replace("'", "&apos;")
         )
+
+def js(value):
+    """Convert Python value to the corresponding JavaScript representation.
+
+    This is necessary to safely insert arbitrary values into HTML <script>
+    sections e.g. using Mako template expression substitution.
+
+    Note: Rather than using this function, it's preferable to avoid the
+    insertion of values into HTML <script> sections altogether. Instead,
+    data should (to the extent possible) be passed to JavaScript using
+    data attributes or AJAX calls, eliminating the need for JS specific
+    escaping.
+
+    Note: This is not safe for use in attributes (e.g. onclick), because
+    quotes are not escaped.
+
+    Because the rules for parsing <script> varies between XHTML (where
+    normal rules apply for any special characters) and HTML (where
+    entities are not interpreted, but the literal string "</script>"
+    is forbidden), the function ensures that the result never contains
+    '&', '<' and '>', thus making it safe in both those contexts (but
+    not in attributes).
+    """
+    return literal(
+        ('(' + json.dumps(value) + ')')
+        # In JSON, the following can only appear in string literals.
+        .replace('&', r'\x26')
+        .replace('<', r'\x3c')
+        .replace('>', r'\x3e')
+    )
+
+def jshtml(val):
+    """HTML escapes a string value, then converts the resulting string
+    to its corresponding JavaScript representation (see `js`).
+
+    This is used when a plain-text string (possibly containing special
+    HTML characters) will be used by a script in an HTML context (e.g.
+    element.innerHTML or jQuery's 'html' method).
+
+    If in doubt, err on the side of using `jshtml` over `js`, since it's
+    better to escape too much than too little.
+    """
+    return js(escape(val))
+
 
 def shorter(s, size=20, firstline=False, postfix='...'):
     """Truncate s to size, including the postfix string if truncating.
