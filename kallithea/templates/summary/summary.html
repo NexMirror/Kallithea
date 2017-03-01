@@ -147,8 +147,10 @@ summary = lambda n:{False:'summary-short'}.get(n)
 
             %if request.authuser.username != 'default':
             <li class="list-group-item clearfix">
-              <a href="#" onclick="javascript:showRepoSize('repo_size_2','${c.db_repo.repo_name}')"><i class="icon-ruler"></i> ${_('Repository Size')}</a>
-              <span  class="badge pull-right" id="repo_size_2"></span>
+              <a href="#" onclick="javascript:showRepoSize('repo_size_2','${c.db_repo.repo_name}')">
+                <i class="icon-ruler"></i> ${_('Repository Size')}
+                <span class="badge pull-right" id="repo_size_2"></span>
+              </a>
             </li>
             %endif
 

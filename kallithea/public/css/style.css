@@ -1185,8 +1185,10 @@ ul#summary-menu-stats {
     padding-right: 10px;
 }
 
+#repo_size_2 {
+    display: none;
+}
 #repo_size_2.loaded {
-    margin-left: 30px;
     display: block;
     padding-right: 10px;
     padding-bottom: 7px;
