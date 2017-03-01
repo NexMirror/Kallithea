@@ -2909,12 +2909,27 @@ nav.navbar, #content, #footer {
     font-weight: 700;
 }
 
-.panel-body.settings > ul.nav-stacked a {
+.panel-body.settings .nav-pills > li {
+    padding: 0 !important;
+}
+
+.panel-body.settings .nav-pills > li > a {
+    border-radius: 4px;
+    padding: 10px;
+    display: block;
+    position: relative;
     color: inherit;
 }
 
-.panel-body.settings > ul.nav-stacked li.active {
-    list-style-type: disc
+.panel-body.settings > ul.nav-stacked li.active > a,
+.panel-body.settings > ul.nav-stacked li.active:hover > a {
+    color: #fff;
+    background-color: #577632;
+}
+
+.panel-body.settings > ul.nav-stacked li:hover > a {
+    text-decoration: none;
+    background-color: #eee;
 }
 
 .panel-body.settings > div,
