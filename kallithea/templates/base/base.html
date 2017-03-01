@@ -371,40 +371,27 @@
       <div class="dropdown-menu user-menu" role="menu">
         <div id="quick_login" role="form" aria-describedby="quick_login_h" aria-hidden="true" class="container-fluid">
           %if request.authuser.username == 'default' or request.authuser.user_id is None:
-            <h4 id="quick_login_h">${_('Login to Your Account')}</h4>
-            ${h.form(h.url('login_home', came_from=request.path_qs))}
-            <div class="form">
-                <div>
-                    <div>
-                        <div>
-                            <label for="username">${_('Username')}:</label>
-                        </div>
-                        <div>
-                            ${h.text('username',class_='form-control')}
-                        </div>
-                    </div>
-                    <div>
-                        <div>
-                            <label for="password">${_('Password')}:</label>
-                        </div>
-                        <div>
-                            ${h.password('password',class_='form-control')}
-                        </div>
-
-                    </div>
-                    <div class="buttons">
-                        <div class="password_forgoten">${h.link_to(_('Forgot password ?'),h.url('reset_password'))}</div>
-                        <div class="register">
-                        %if h.HasPermissionAny('hg.admin', 'hg.register.auto_activate', 'hg.register.manual_activate')():
-                         ${h.link_to(_("Don't have an account ?"),h.url('register'))}
-                        %endif
-                        </div>
-                        <div class="submit">
-                            ${h.submit('sign_in',_('Log In'),class_="btn btn-default btn-xs")}
-                        </div>
-                    </div>
+            ${h.form(h.url('login_home', came_from=request.path_qs), class_='form clearfix')}
+                <h4 id="quick_login_h">${_('Login to Your Account')}</h4>
+                <label>
+                    ${_('Username')}:
+                    ${h.text('username',class_='form-control')}
+                </label>
+                <label>
+                    ${_('Password')}:
+                    ${h.password('password',class_='form-control')}
+                </label>
+                <div class="password_forgotten">
+                    ${h.link_to(_('Forgot password?'),h.url('reset_password'))}
                 </div>
-            </div>
+                <div class="register">
+                    %if h.HasPermissionAny('hg.admin', 'hg.register.auto_activate', 'hg.register.manual_activate')():
+                        ${h.link_to(_("Don't have an account?"),h.url('register'))}
+                    %endif
+                </div>
+                <div class="submit">
+                    ${h.submit('sign_in',_('Log In'),class_="btn btn-default btn-xs")}
+                </div>
             ${h.end_form()}
           %else:
             <div class="pull-left">

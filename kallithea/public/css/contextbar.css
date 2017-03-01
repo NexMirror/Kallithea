@@ -97,6 +97,7 @@ ul.horizontal-list > li ul {
     z-index: 999;
 }
 
+nav.navbar #quick_login a.list-group-item,
 nav.navbar #quick li ul li,
 ul.navbar-nav ul li,
 ul.horizontal-list ul li {

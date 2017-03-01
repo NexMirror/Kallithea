@@ -1387,12 +1387,13 @@ a.metatag[data-tag="license"]:hover {
 .user-menu .gravatar:hover {
     background-color: #FDF784 !important;
 }
+
 #quick_login {
     width: 300px;
     min-height: 110px;
-    padding: 4px;
     position: absolute;
     right: 0;
+    color: #fff;
     background-color: #577632;
     background-repeat: repeat-x;
     background-image: linear-gradient(to bottom, #577632, #577632);
@@ -1403,41 +1404,36 @@ a.metatag[data-tag="license"]:hover {
 
     overflow: hidden;
 }
+
+#quick_login .form {
+    margin: 15px;
+}
+
 #quick_login h4 {
     color: #fff;
-    padding: 5px 0px 5px 14px;
+    margin-bottom: 10px;
 }
 
-#quick_login .password_forgoten {
-    padding-right: 0px;
-    padding-top: 0px;
-    text-align: left;
+#quick_login input#username,
+#quick_login input#password {
+    display: block;
+    margin: 5px 0 10px;
 }
 
-#quick_login .password_forgoten a {
-    font-size: 10px;
-    color: #fff;
-    padding: 0px !important;
-    line-height: 20px !important;
-}
-
-#quick_login .register {
-    padding-right: 10px;
-    padding-top: 5px;
-    text-align: left;
-}
-
+#quick_login .password_forgotten a,
 #quick_login .register a {
-    font-size: 10px;
-    color: #fff;
-    padding: 0px !important;
-    line-height: 20px !important;
+    padding: 0 !important;
+    line-height: 25px !important;
+    float: left;
+    clear: both;
 }
 
 #quick_login .submit {
-    margin: -20px 0 0 0px;
-    position: absolute;
-    right: 15px;
+    float: right;
+}
+
+#quick_login .submit input#sign_in {
+    margin-top: 5px;
 }
 
 #quick_login > .pull-left {
@@ -1449,13 +1445,13 @@ a.metatag[data-tag="license"]:hover {
 #quick_login .full_name {
     color: #FFFFFF;
     font-weight: bold;
-    padding: 3px 3px 3px 6px;
+    padding: 3px 3px 3px 15px;
 }
 #quick_login .big_gravatar {
-    padding: 4px 0px 0px 6px;
+    padding: 15px 0px 0px 15px;
 }
 #quick_login .notifications {
-    padding: 2px 0px 0px 6px;
+    padding: 2px 0px 0px 15px;
     color: #FFFFFF;
     font-weight: bold;
     line-height: 10px !important;
@@ -1473,7 +1469,7 @@ a.metatag[data-tag="license"]:hover {
 #quick_login .email,
 #quick_login .unread {
     color: #FFFFFF;
-    padding: 3px 3px 3px 6px;
+    padding: 3px 3px 3px 15px;
 }
 #quick_login .links .logout {
 }
