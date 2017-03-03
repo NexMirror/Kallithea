@@ -162,8 +162,8 @@
               %if request.authuser.username != 'default':
                   <li>
                    <a href="#" class="${'following' if c.repository_following else 'follow'}" onclick="toggleFollowingRepo(this, ${c.db_repo.repo_id});">
-                    <span class="show-follow ${'hidden' if c.repository_following else ''}"><i class="icon-heart-empty"></i> ${_('Follow')}</span>
-                    <span class="show-following ${'' if c.repository_following else 'hidden'}"><i class="icon-heart"></i> ${_('Unfollow')}</span>
+                    <span class="show-follow"><i class="icon-heart-empty"></i> ${_('Follow')}</span>
+                    <span class="show-following"><i class="icon-heart"></i> ${_('Unfollow')}</span>
                    </a>
                   </li>
                   <li><a href="${h.url('repo_fork_home',repo_name=c.repo_name)}"><i class="icon-git-pull-request"></i> ${_('Fork')}</a></li>
