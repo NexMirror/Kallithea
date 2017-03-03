@@ -28,7 +28,6 @@ Original author and date, and relevant copyright and licensing information is be
 import logging
 import traceback
 import formencode
-import re
 
 from pylons import request, tmpl_context as c
 from pylons.i18n.translation import _
@@ -48,7 +47,7 @@ from kallithea.lib.vcs.utils import safe_str
 from kallithea.lib.vcs.utils.hgcompat import unionrepo
 from kallithea.model.db import PullRequest, ChangesetStatus, ChangesetComment, \
     PullRequestReviewer, Repository, User
-from kallithea.model.pull_request import PullRequestModel
+from kallithea.model.pull_request import CreatePullRequestAction, CreatePullRequestIterationAction, PullRequestModel
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
 from kallithea.model.comment import ChangesetCommentsModel
@@ -331,181 +330,55 @@ class PullrequestsController(BaseRepoController):
         # heads up: org and other might seem backward here ...
         org_ref = _form['org_ref'] # will have merge_rev as rev but symbolic name
         org_repo = Repository.guess_instance(_form['org_repo'])
-        (org_ref_type,
-         org_ref_name,
-         org_rev) = org_ref.split(':')
-        org_display = h.short_ref(org_ref_type, org_ref_name)
-        if org_ref_type == 'rev':
-            cs = org_repo.scm_instance.get_changeset(org_rev)
-            org_ref = 'branch:%s:%s' % (cs.branch, cs.raw_id)
 
         other_ref = _form['other_ref'] # will have symbolic name and head revision
         other_repo = Repository.guess_instance(_form['other_repo'])
-        (other_ref_type,
-         other_ref_name,
-         other_rev) = other_ref.split(':')
-        if other_ref_type == 'rev':
-            cs = other_repo.scm_instance.get_changeset(other_rev)
-            other_ref_name = cs.raw_id[:12]
-            other_ref = '%s:%s:%s' % (other_ref_type, other_ref_name, cs.raw_id)
-        other_display = h.short_ref(other_ref_type, other_ref_name)
-
-        cs_ranges, _cs_ranges_not, ancestor_revs = \
-            CompareController._get_changesets(org_repo.scm_instance.alias,
-                                              other_repo.scm_instance, other_rev, # org and other "swapped"
-                                              org_repo.scm_instance, org_rev,
-                                              )
-        ancestor_rev = msg = None
-        if not cs_ranges:
-            msg = _('Cannot create empty pull request')
-        elif not ancestor_revs:
-            ancestor_rev = org_repo.scm_instance.EMPTY_CHANGESET
-        elif len(ancestor_revs) == 1:
-            ancestor_rev = ancestor_revs[0]
-        else:
-            msg = _('Cannot create pull request - criss cross merge detected, please merge a later %s revision to %s'
-                    ) % (other_ref_name, org_ref_name)
-        if ancestor_rev is None:
-            h.flash(msg, category='error', logf=log.error)
-            raise HTTPNotFound
-
-        revisions = [cs_.raw_id for cs_ in cs_ranges]
-
-        # hack: ancestor_rev is not an other_rev but we want to show the
-        # requested destination and have the exact ancestor
-        other_ref = '%s:%s:%s' % (other_ref_type, other_ref_name, ancestor_rev)
 
         reviewers = []
 
         title = _form['pullrequest_title']
-        if not title:
-            if org_repo == other_repo:
-                title = '%s to %s' % (org_display, other_display)
-            else:
-                title = '%s#%s to %s#%s' % (org_repo.repo_name, org_display,
-                                            other_repo.repo_name, other_display)
-        description = _form['pullrequest_desc'].strip() or _('No description')
+        description = _form['pullrequest_desc'].strip()
+        owner = User.get(request.authuser.user_id)
+
         try:
-            created_by = User.get(request.authuser.user_id)
-            pull_request = PullRequestModel().create(
-                created_by, org_repo, org_ref, other_repo, other_ref, revisions,
-                title, description, reviewers)
+            cmd = CreatePullRequestAction(org_repo, other_repo, org_ref, other_ref, title, description, owner, reviewers)
+        except CreatePullRequestAction.ValidationError as e:
+            h.flash(str(e), category='error', logf=log.error)
+            raise HTTPNotFound
+
+        try:
+            pull_request = cmd.execute()
             Session().commit()
-            h.flash(_('Successfully opened new pull request'),
-                    category='success')
         except Exception:
             h.flash(_('Error occurred while creating pull request'),
                     category='error')
             log.error(traceback.format_exc())
             raise HTTPFound(location=url('pullrequest_home', repo_name=repo_name))
 
+        h.flash(_('Successfully opened new pull request'),
+                category='success')
         raise HTTPFound(location=pull_request.url())
 
     def create_new_iteration(self, old_pull_request, new_rev, title, description, reviewers):
-        org_repo = old_pull_request.org_repo
-        org_ref_type, org_ref_name, org_rev = old_pull_request.org_ref.split(':')
-        new_org_rev = self._get_ref_rev(org_repo, 'rev', new_rev)
-
-        other_repo = old_pull_request.other_repo
-        other_ref_type, other_ref_name, other_rev = old_pull_request.other_ref.split(':') # other_rev is ancestor
-        #assert other_ref_type == 'branch', other_ref_type # TODO: what if not?
-        new_other_rev = self._get_ref_rev(other_repo, other_ref_type, other_ref_name)
-
-        cs_ranges, _cs_ranges_not, ancestor_revs = CompareController._get_changesets(org_repo.scm_instance.alias,
-            other_repo.scm_instance, new_other_rev, # org and other "swapped"
-            org_repo.scm_instance, new_org_rev)
-        ancestor_rev = msg = None
-        if not cs_ranges:
-            msg = _('Cannot create empty pull request update') # cannot happen!
-        elif not ancestor_revs:
-            msg = _('Cannot create pull request update - no common ancestor found') # cannot happen
-        elif len(ancestor_revs) == 1:
-            ancestor_rev = ancestor_revs[0]
-        else:
-            msg = _('Cannot create pull request update - criss cross merge detected, please merge a later %s revision to %s'
-                    ) % (other_ref_name, org_ref_name)
-        if ancestor_rev is None:
-            h.flash(msg, category='error', logf=log.error)
+        owner = User.get(request.authuser.user_id)
+        new_org_rev = self._get_ref_rev(old_pull_request.org_repo, 'rev', new_rev)
+        try:
+            cmd = CreatePullRequestIterationAction(old_pull_request, new_org_rev, title, description, owner, reviewers)
+        except CreatePullRequestAction.ValidationError as e:
+            h.flash(str(e), category='error', logf=log.error)
             raise HTTPNotFound
 
-        old_revisions = set(old_pull_request.revisions)
-        revisions = [cs.raw_id for cs in cs_ranges]
-        new_revisions = [r for r in revisions if r not in old_revisions]
-        lost = old_revisions.difference(revisions)
-
-        infos = ['This is a new iteration of %s "%s".' %
-                 (h.canonical_url('pullrequest_show', repo_name=old_pull_request.other_repo.repo_name,
-                      pull_request_id=old_pull_request.pull_request_id),
-                  old_pull_request.title)]
-
-        if lost:
-            infos.append(_('Missing changesets since the previous iteration:'))
-            for r in old_pull_request.revisions:
-                if r in lost:
-                    rev_desc = org_repo.get_changeset(r).message.split('\n')[0]
-                    infos.append('  %s %s' % (h.short_id(r), rev_desc))
-
-        if new_revisions:
-            infos.append(_('New changesets on %s %s since the previous iteration:') % (org_ref_type, org_ref_name))
-            for r in reversed(revisions):
-                if r in new_revisions:
-                    rev_desc = org_repo.get_changeset(r).message.split('\n')[0]
-                    infos.append('  %s %s' % (h.short_id(r), h.shorter(rev_desc, 80)))
-
-            if ancestor_rev == other_rev:
-                infos.append(_("Ancestor didn't change - diff since previous iteration:"))
-                infos.append(h.canonical_url('compare_url',
-                                 repo_name=org_repo.repo_name, # other_repo is always same as repo_name
-                                 org_ref_type='rev', org_ref_name=h.short_id(org_rev), # use old org_rev as base
-                                 other_ref_type='rev', other_ref_name=h.short_id(new_org_rev),
-                                 )) # note: linear diff, merge or not doesn't matter
-            else:
-                infos.append(_('This iteration is based on another %s revision and there is no simple diff.') % other_ref_name)
-        else:
-           infos.append(_('No changes found on %s %s since previous iteration.') % (org_ref_type, org_ref_name))
-           # TODO: fail?
-
-        # hack: ancestor_rev is not an other_ref but we want to show the
-        # requested destination and have the exact ancestor
-        new_other_ref = '%s:%s:%s' % (other_ref_type, other_ref_name, ancestor_rev)
-        new_org_ref = '%s:%s:%s' % (org_ref_type, org_ref_name, new_org_rev)
-
         try:
-            title, old_v = re.match(r'(.*)\(v(\d+)\)\s*$', title).groups()
-            v = int(old_v) + 1
-        except (AttributeError, ValueError):
-            v = 2
-        title = '%s (v%s)' % (title.strip(), v)
-
-        # using a mail-like separator, insert new iteration info in description with latest first
-        descriptions = description.replace('\r\n', '\n').split('\n-- \n', 1)
-        description = descriptions[0].strip() + '\n\n-- \n' + '\n'.join(infos)
-        if len(descriptions) > 1:
-            description += '\n\n' + descriptions[1].strip()
-
-        try:
-            created_by = User.get(request.authuser.user_id)
-            pull_request = PullRequestModel().create(
-                created_by, org_repo, new_org_ref, other_repo, new_other_ref, revisions,
-                title, description, reviewers)
+            pull_request = cmd.execute()
+            Session().commit()
         except Exception:
             h.flash(_('Error occurred while creating pull request'),
                     category='error')
             log.error(traceback.format_exc())
             raise HTTPFound(location=old_pull_request.url())
 
-        ChangesetCommentsModel().create(
-            text=_('Closed, next iteration: %s .') % pull_request.url(canonical=True),
-            repo=old_pull_request.other_repo_id,
-            author=request.authuser.user_id,
-            pull_request=old_pull_request.pull_request_id,
-            closing_pr=True)
-        PullRequestModel().close_pull_request(old_pull_request.pull_request_id)
-
-        Session().commit()
         h.flash(_('New pull request iteration created'),
                 category='success')
-
         raise HTTPFound(location=pull_request.url())
 
     # pullrequest_post for PR editing
