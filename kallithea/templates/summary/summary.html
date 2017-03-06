@@ -193,6 +193,7 @@ summary = lambda n:{False:'summary-short'}.get(n)
 
 %if c.readme_data:
 <div id="readme" class="anchor">
+</div>
 <div class="panel panel-primary">
     <div class="panel-heading" title="${_('Readme file from revision %s:%s') % (c.db_repo.landing_rev[0], c.db_repo.landing_rev[1])}">
         <div class="breadcrumbs panel-title">
@@ -200,11 +201,8 @@ summary = lambda n:{False:'summary-short'}.get(n)
         </div>
     </div>
     <div class="readme panel-body">
-      <div class="readme_box">
         ${c.readme_data|n}
-      </div>
     </div>
-</div>
 </div>
 %endif
 

@@ -33,8 +33,8 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
     </div>
     <div class="panel-body">
         %if c.pagination:
-            <div class="panel">
-                <div class="panel-heading clearfix" style="${'display:none' if c.changelog_for_path else ''}">
+            <div class="panel panel-primary">
+              <div class="panel-heading clearfix" style="${'display:none' if c.changelog_for_path else ''}">
                     <div class="pull-left">
                         ${h.form(h.url.current(),method='get',class_="form-inline")}
                             ${h.submit('set',_('Show'),class_="btn btn-default btn-sm")}
@@ -63,7 +63,7 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                         <a id="open_new_pr" class="btn btn-default btn-sm"></a>
                         ${_("Branch filter:")} ${h.select('branch_filter',c.branch_name,c.branch_filters)}
                     </div>
-                </div>
+              </div>
 
               <div class="panel-body">
                 <div id="graph_nodes">
