@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2015-09-08 10:34+0200\n"
-"PO-Revision-Date: 2015-08-21 15:52+0200\n"
-"Last-Translator: EriCSN Chang <ericsning@gmail.com>\n"
-"Language-Team: Chinese (Taiwan) "
-"<https://hosted.weblate.org/projects/kallithea/kallithea/zh_TW/>\n"
+"PO-Revision-Date: 2017-03-10 18:26+0000\n"
+"Last-Translator: mao <mao@lins.fju.edu.tw>\n"
+"Language-Team: Chinese (Traditional) "
+"<https://hosted.weblate.org/projects/kallithea/stable/zh_Hant/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2.4-dev\n"
+"X-Generator: Weblate 2.12\n"
 
 #: kallithea/controllers/changelog.py:86
 #: kallithea/controllers/pullrequests.py:238 kallithea/lib/base.py:512
@@ -50,9 +50,9 @@ msgid "Ignore whitespace"
 msgstr "忽略空格"
 
 #: kallithea/controllers/changeset.py:169
-#, fuzzy, python-format
+#, python-format
 msgid "Increase diff context to %(num)s lines"
-msgstr "增加 diff 上下文至 %(num) 行"
+msgstr "增加 diff 上下文至 %(num)s 行"
 
 #: kallithea/controllers/changeset.py:212 kallithea/controllers/files.py:96
 #: kallithea/controllers/files.py:116 kallithea/controllers/files.py:742
@@ -74,9 +74,8 @@ msgid "Cannot compare repositories without using common ancestor"
 msgstr ""
 
 #: kallithea/controllers/error.py:71
-#, fuzzy
 msgid "No response"
-msgstr "修訂"
+msgstr "未回應"
 
 #: kallithea/controllers/error.py:72
 msgid "Unknown error"
@@ -127,7 +126,7 @@ msgstr ""
 #: kallithea/controllers/feed.py:91
 #, python-format
 msgid "%s committed on %s"
-msgstr ""
+msgstr "%s 評論於 %s"
 
 #: kallithea/controllers/files.py:91
 msgid "Click here to add new file"
@@ -297,16 +296,12 @@ msgid "You have successfully registered into Kallithea"
 msgstr ""
 
 #: kallithea/controllers/login.py:202
-#, fuzzy
-#| msgid "Your password reset link was sent"
 msgid "A password reset confirmation code has been sent"
-msgstr "您的密碼重設連結已寄出"
+msgstr "密碼重設的確認碼已寄出"
 
 #: kallithea/controllers/login.py:251
-#, fuzzy
-#| msgid "Your password reset link was sent"
 msgid "Invalid password reset token"
-msgstr "您的密碼重設連結已寄出"
+msgstr "無效的密碼重設確認碼"
 
 #: kallithea/controllers/login.py:256
 #: kallithea/controllers/admin/my_account.py:167
@@ -345,9 +340,8 @@ msgstr ""
 
 #: kallithea/controllers/pullrequests.py:356
 #: kallithea/controllers/pullrequests.py:503
-#, fuzzy
 msgid "No description"
-msgstr "描述"
+msgstr "無描述"
 
 #: kallithea/controllers/pullrequests.py:363
 msgid "Successfully opened new pull request"
@@ -439,13 +433,12 @@ msgid "No permission to change pull request status"
 msgstr ""
 
 #: kallithea/controllers/pullrequests.py:727
-#, fuzzy
 msgid "Closing."
-msgstr "使用中"
+msgstr "關閉中。"
 
 #: kallithea/controllers/search.py:135
 msgid "Invalid search query. Try quoting it."
-msgstr "無效的查詢。請使用跳脫字元"
+msgstr "無效的查詢。請使用跳脫字元。"
 
 #: kallithea/controllers/search.py:140
 msgid "There is no index to search in. Please run whoosh indexer"
@@ -527,9 +520,8 @@ msgid "Deleted gist %s"
 msgstr ""
 
 #: kallithea/controllers/admin/gists.py:233
-#, fuzzy
 msgid "Unmodified"
-msgstr "最後修改"
+msgstr "未修改"
 
 #: kallithea/controllers/admin/gists.py:262
 msgid "Successfully updated gist content"
@@ -857,15 +849,13 @@ msgstr ""
 
 #: kallithea/controllers/admin/repos.py:537
 #: kallithea/controllers/admin/repos.py:564
-#, fuzzy
 msgid "Repository has been locked"
-msgstr ""
+msgstr "儲存所已被鎖定"
 
 #: kallithea/controllers/admin/repos.py:540
 #: kallithea/controllers/admin/repos.py:561
-#, fuzzy
 msgid "Repository has been unlocked"
-msgstr ""
+msgstr "儲存所已打開"
 
 #: kallithea/controllers/admin/repos.py:543
 #: kallithea/controllers/admin/repos.py:568
@@ -1103,14 +1093,14 @@ msgid "revisions"
 msgstr "修訂"
 
 #: kallithea/lib/helpers.py:722
-#, fuzzy, python-format
+#, python-format
 msgid "Fork name %s"
-msgstr "分支名稱"
+msgstr "分支名稱 %s"
 
 #: kallithea/lib/helpers.py:742
-#, fuzzy, python-format
+#, python-format
 msgid "Pull request %s"
-msgstr "文件內容"
+msgstr "提取要求 %s"
 
 #: kallithea/lib/helpers.py:752
 msgid "[deleted] repository"
@@ -1804,14 +1794,12 @@ msgid "Non-admins can create top level repositories"
 msgstr ""
 
 #: kallithea/model/db.py:1694
-#, fuzzy
 msgid "Only admins can fork repositories"
-msgstr "建立版本庫"
+msgstr "祗有管理者才能分歧版本庫"
 
 #: kallithea/model/db.py:1695
-#, fuzzy
 msgid "Non-admins can can fork repositories"
-msgstr "建立版本庫"
+msgstr "非管理者可以建立分歧版本庫"
 
 #: kallithea/model/db.py:1698
 msgid "User registration with manual account activation"
@@ -1822,14 +1810,12 @@ msgid "User registration with automatic account activation"
 msgstr ""
 
 #: kallithea/model/db.py:2228
-#, fuzzy
 msgid "Not reviewed"
-msgstr ""
+msgstr "未審核"
 
 #: kallithea/model/db.py:2231
-#, fuzzy
 msgid "Under review"
-msgstr ""
+msgstr "審核中"
 
 #: kallithea/model/forms.py:57
 msgid "Please enter a login"
@@ -1934,9 +1920,8 @@ msgid "[Comment] %(repo_name)s pull request %(pr_nice_id)s from %(ref)s"
 msgstr ""
 
 #: kallithea/model/notification.py:321
-#, fuzzy
 msgid "Closing"
-msgstr "使用中"
+msgstr "關閉中"
 
 #: kallithea/model/pull_request.py:137
 #, python-format
@@ -1952,9 +1937,8 @@ msgid "New user registration"
 msgstr ""
 
 #: kallithea/model/user.py:256
-#, fuzzy
 msgid "You can't remove this user since it is crucial for the entire application"
-msgstr "您無法移除這個使用者，因為他是系統帳號"
+msgstr "您無法移除這個使用者，因為係供整個應用使用"
 
 #: kallithea/model/user.py:261
 #, python-format
@@ -2034,7 +2018,7 @@ msgstr ""
 msgid ""
 "user group name may only contain alphanumeric characters underscores, "
 "periods or dashes and must begin with alphanumeric character"
-msgstr ""
+msgstr "使用者羣組名稱可以包括文數字字元、底線、句點或破折號，必須以文數字啟頭"
 
 #: kallithea/model/validators.py:193
 msgid "Cannot assign this group as parent"
@@ -2063,9 +2047,8 @@ msgid "Passwords do not match"
 msgstr "密碼不相符"
 
 #: kallithea/model/validators.py:300
-#, fuzzy
 msgid "Invalid username or password"
-msgstr "無效的密碼"
+msgstr "無效的用戶名稱或密碼"
 
 #: kallithea/model/validators.py:331
 msgid "Token mismatch"
@@ -2092,9 +2075,8 @@ msgid "Repository group with name \"%(repo)s\" already exists"
 msgstr ""
 
 #: kallithea/model/validators.py:465
-#, fuzzy
 msgid "Invalid repository URL"
-msgstr "私有版本庫"
+msgstr "無效的版本庫 URL"
 
 #: kallithea/model/validators.py:466
 msgid ""
@@ -2419,8 +2401,7 @@ msgstr ""
 
 #: kallithea/templates/password_reset.html:47
 #, fuzzy
-#| msgid "" "Password reset link will be sent to the email address matching
-#| your " "username."
+#| msgid "" "
 msgid ""
 "A password reset link will be sent to the specified email address if it "
 "is registered in the system."
@@ -6372,4 +6353,3 @@ msgstr ""
 
 #~ msgid "Created by"
 #~ msgstr ""
-
