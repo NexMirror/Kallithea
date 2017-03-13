@@ -2287,6 +2287,13 @@ class ChangesetStatus(Base, BaseDbModel):
     def status_lbl(self):
         return ChangesetStatus.get_status_lbl(self.status)
 
+    def __json__(self):
+        return dict(
+            status=self.status,
+            modified_at=self.modified_at,
+            reviewer=self.author.username,
+            )
+
 
 class PullRequest(Base, BaseDbModel):
     __tablename__ = 'pull_requests'

@@ -1007,6 +1007,75 @@ OUTPUT::
             }
     error:  null
 
+get_changeset
+^^^^^^^^^^^^^
+
+Get information and review status for a given changeset. This command can only
+be executed using the api_key of a user with read permissions to the
+repository.
+
+INPUT::
+
+    id : <id_for_response>
+    api_key : "<api_key>"
+    method  : "get_changeset"
+    args:     {
+                "repoid" : "<reponame or repo_id>",
+                "raw_id" : "<raw_id>",
+                "with_reviews": "<bool> = Optional(False)"
+              }
+
+OUTPUT::
+
+    id : <id_given_in_input>
+    result: {
+              "author":   "<full_author>",
+              "date":     "<date_time_of_commit>",
+              "message":  "<commit_message>",
+              "raw_id":   "<raw_id>",
+              "revision": "<numeric_revision>",
+              "short_id": "<short_id>",
+              "reviews": [{
+                    "reviewer":   "<username>",
+                    "modified_at": "<date_time_of_review>",  # iso 8601 date, server's timezone
+                    "status":   "<status_of_review>",        # "under_review", "approved" or "rejected"
+                 },
+                 ...
+              ]
+            }
+    error:  null
+
+Example output::
+
+    {
+      "id" : 1,
+      "error" : null,
+      "result" : {
+        "author" : {
+          "email" : "user@example.com",
+          "name" : "Kallithea Admin"
+        },
+        "changed" : [],
+        "short_id" : "e1022d3d28df",
+        "date" : "2017-03-28T09:09:03",
+        "added" : [
+          "README.rst"
+        ],
+        "removed" : [],
+        "revision" : 0,
+        "raw_id" : "e1022d3d28dfba02f626cde65dbe08f4ceb0e4e7",
+        "message" : "Added file via Kallithea",
+        "id" : "e1022d3d28dfba02f626cde65dbe08f4ceb0e4e7",
+        "reviews" : [
+          {
+            "status" : "under_review",
+            "modified_at" : "2017-03-28T09:17:08.618",
+            "reviewer" : "user"
+          }
+        ]
+      }
+    }
+
 
 API access for web views
 ------------------------

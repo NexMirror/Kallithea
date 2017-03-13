@@ -2449,3 +2449,51 @@ class _BaseTestApi(object):
         response = api_call(self, params)
         expected = Setting.get_server_info()
         self._compare_ok(id_, expected, given=response.body)
+
+    def test_api_get_changeset(self):
+        review = fixture.review_changeset(self.REPO, self.TEST_REVISION, "approved")
+        id_, params = _build_data(self.apikey, 'get_changeset',
+                                  repoid=self.REPO, raw_id = self.TEST_REVISION)
+        response = api_call(self, params)
+        result = json.loads(response.body)["result"]
+        assert result["raw_id"] == self.TEST_REVISION
+        assert not result.has_key("reviews")
+
+    def test_api_get_changeset_with_reviews(self):
+        reviewobjs = fixture.review_changeset(self.REPO, self.TEST_REVISION, "approved")
+        id_, params = _build_data(self.apikey, 'get_changeset',
+                                  repoid=self.REPO, raw_id = self.TEST_REVISION,
+                                  with_reviews = True)
+        response = api_call(self, params)
+        result = json.loads(response.body)["result"]
+        assert result["raw_id"] == self.TEST_REVISION
+        assert result.has_key("reviews")
+        assert len(result["reviews"]) == 1
+        review = result["reviews"][0]
+        expected = {
+            'status': 'approved',
+            'modified_at': reviewobjs[0].modified_at.isoformat()[:-3],
+            'reviewer': 'test_admin',
+        }
+        assert review == expected
+
+    def test_api_get_changeset_that_does_not_exist(self):
+        """ Fetch changeset status for non-existant changeset.
+        revision id is the above git hash used in the test above with the
+        last 3 nibbles replaced with 0xf.  Should not exist for git _or_ hg.
+        """
+        id_, params = _build_data(self.apikey, 'get_changeset',
+                                  repoid=self.REPO, raw_id = '7ab37bc680b4aa72c34d07b230c866c28e9fcfff')
+        response = api_call(self, params)
+        expected = u'Changeset %s does not exist' % ('7ab37bc680b4aa72c34d07b230c866c28e9fcfff',)
+        self._compare_error(id_, expected, given=response.body)
+
+    def test_api_get_changeset_without_permission(self):
+        review = fixture.review_changeset(self.REPO, self.TEST_REVISION, "approved")
+        RepoModel().revoke_user_permission(repo=self.REPO, user=self.TEST_USER_LOGIN)
+        RepoModel().revoke_user_permission(repo=self.REPO, user="default")
+        id_, params = _build_data(self.apikey_regular, 'get_changeset',
+                                  repoid=self.REPO, raw_id = self.TEST_REVISION)
+        response = api_call(self, params)
+        expected = u'Access denied to repo %s' % self.REPO
+        self._compare_error(id_, expected, given=response.body)

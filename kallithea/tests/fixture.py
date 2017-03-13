@@ -22,7 +22,7 @@ import shutil
 import tarfile
 from os.path import dirname
 
-from kallithea.model.db import Repository, User, RepoGroup, UserGroup, Gist
+from kallithea.model.db import Repository, User, RepoGroup, UserGroup, Gist, ChangesetStatus
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
 from kallithea.model.user import UserModel
@@ -30,6 +30,8 @@ from kallithea.model.repo_group import RepoGroupModel
 from kallithea.model.user_group import UserGroupModel
 from kallithea.model.gist import GistModel
 from kallithea.model.scm import ScmModel
+from kallithea.model.comment import ChangesetCommentsModel
+from kallithea.model.changeset_status import ChangesetStatusModel
 from kallithea.lib.db_manage import DbManage
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.tests.base import invalidate_all_caches, GIT_REPO, HG_REPO, TESTS_TMP_PATH, TEST_USER_ADMIN_LOGIN
@@ -308,6 +310,12 @@ class Fixture(object):
                 f_path=filename
             )
         return cs
+
+    def review_changeset(self, repo, revision, status, author=TEST_USER_ADMIN_LOGIN):
+        comment = ChangesetCommentsModel().create(u"review comment", repo, author, revision=revision, send_email=False)
+        csm = ChangesetStatusModel().set_status(repo, ChangesetStatus.STATUS_APPROVED, author, comment, revision=revision)
+        Session().commit()
+        return csm
 
 
 #==============================================================================

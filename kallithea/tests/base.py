@@ -48,7 +48,7 @@ __all__ = [
     'TEST_USER_REGULAR2_PASS', 'TEST_USER_REGULAR2_EMAIL', 'TEST_HG_REPO',
     'TEST_HG_REPO_CLONE', 'TEST_HG_REPO_PULL', 'TEST_GIT_REPO',
     'TEST_GIT_REPO_CLONE', 'TEST_GIT_REPO_PULL', 'HG_REMOTE_REPO',
-    'GIT_REMOTE_REPO', 'SCM_TESTS',
+    'GIT_REMOTE_REPO', 'SCM_TESTS', 'HG_TEST_REVISION', 'GIT_TEST_REVISION',
 ]
 
 # Invoke websetup with the current config file
@@ -79,6 +79,10 @@ NEW_GIT_REPO = u'vcs_test_git_new'
 
 HG_FORK = u'vcs_test_hg_fork'
 GIT_FORK = u'vcs_test_git_fork'
+
+HG_TEST_REVISION = u"a53d9201d4bc278910d416d94941b7ea007ecd52"
+GIT_TEST_REVISION = u"7ab37bc680b4aa72c34d07b230c866c28e9fc204"
+
 
 ## VCS
 SCM_TESTS = ['hg', 'git']

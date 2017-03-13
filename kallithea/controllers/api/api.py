@@ -47,12 +47,15 @@ from kallithea.model.repo import RepoModel
 from kallithea.model.user import UserModel
 from kallithea.model.user_group import UserGroupModel
 from kallithea.model.gist import GistModel
+from kallithea.model.changeset_status import ChangesetStatusModel
 from kallithea.model.db import (
     Repository, Setting, UserIpMap, Permission, User, Gist,
     RepoGroup, UserGroup)
 from kallithea.lib.compat import json
 from kallithea.lib.exceptions import (
     DefaultUserException, UserGroupsAssignedException)
+from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError
+from kallithea.lib.vcs.backends.base import EmptyChangeset
 
 log = logging.getLogger(__name__)
 
@@ -2469,3 +2472,22 @@ class ApiController(JSONRPCController):
             log.error(traceback.format_exc())
             raise JSONRPCError('failed to delete gist ID:%s'
                                % (gist.gist_access_id,))
+
+    # permission check inside
+    def get_changeset(self, repoid, raw_id, with_reviews=Optional(False)):
+        repo = get_repo_or_error(repoid)
+        if not HasRepoPermissionLevel('read')(repo.repo_name):
+            raise JSONRPCError('Access denied to repo %s' % repo.repo_name)
+        changeset = repo.get_changeset(raw_id)
+        if isinstance(changeset, EmptyChangeset):
+            raise JSONRPCError('Changeset %s does not exist' % raw_id)
+
+        info = dict(changeset.as_dict())
+
+        with_reviews = Optional.extract(with_reviews)
+        if with_reviews:
+                reviews = ChangesetStatusModel().get_statuses(
+                                    repo.repo_name, raw_id)
+                info["reviews"] = reviews
+
+        return info
