@@ -55,7 +55,7 @@ node {
         archiveArtifacts 'pylint.out'
         try {
             step([$class: 'WarningsPublisher', canComputeNew: false, canResolveRelativePaths: false, defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', messagesPattern: '', parserConfigurations: [[parserName: 'PyLint', pattern: 'pylint.out']], unHealthy: ''])
-        } catch (UnsupportedOperationException exc) {
+        } catch (java.lang.IllegalArgumentException exc) {
             echo "You need to install the 'Warnings Plug-in' to display the pylint report."
             currentBuild.result = 'UNSTABLE'
             echo "Caught: ${exc}"
@@ -79,7 +79,7 @@ node {
             junit 'pytest_sqlite.xml'
             try {
                 step([$class: 'CoberturaPublisher', autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: 'coverage.xml', failNoReports: false, failUnhealthy: false, failUnstable: false, maxNumberOfBuilds: 0, onlyStable: false, zoomCoverageChart: false])
-            } catch (UnsupportedOperationException exc) {
+            } catch (java.lang.IllegalArgumentException exc) {
                 echo "You need to install the pipeline compatible 'CoberturaPublisher Plug-in' to display the coverage report."
                 currentBuild.result = 'UNSTABLE'
                 echo "Caught: ${exc}"
