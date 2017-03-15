@@ -192,9 +192,9 @@ class CompareController(BaseRepoController):
         c.fulldiff = request.GET.get('fulldiff')
         # partial uses compare_cs.html template directly
         partial = request.environ.get('HTTP_X_PARTIAL_XHR')
-        # as_form puts hidden input field with changeset revisions
-        c.as_form = partial and request.GET.get('as_form')
-        # swap url for compare_diff page - never partial and never as_form
+        # is_ajax_preview puts hidden input field with changeset revisions
+        c.is_ajax_preview = partial and request.GET.get('is_ajax_preview')
+        # swap url for compare_diff page - never partial and never is_ajax_preview
         c.swap_url = h.url('compare_url',
             repo_name=c.cs_repo.repo_name,
             org_ref_type=other_ref_type, org_ref_name=other_ref_name,

@@ -189,7 +189,7 @@ class TestCompareController(TestController):
         ## files
         response.mustcontain("""<a href="#C--c8e92ef85cd1">.hgignore</a>""")
 
-    def test_compare_revisions_hg_as_form(self):
+    def test_compare_revisions_hg_is_ajax_preview(self):
         self.log_user()
         rev1 = 'b986218ba1c9'
         rev2 = '3d8f361e72ab'
@@ -200,7 +200,7 @@ class TestCompareController(TestController):
                                     org_ref_name=rev1,
                                     other_ref_type="rev",
                                     other_ref_name=rev2,
-                                    as_form=True,
+                                    is_ajax_preview=True,
                                     ),
                                 extra_environ={'HTTP_X_PARTIAL_XHR': '1'},)
 
@@ -210,7 +210,7 @@ class TestCompareController(TestController):
         response.mustcontain('Merge Ancestor')
         response.mustcontain("""<a class="changeset_hash" href="/%s/changeset/b986218ba1c9b0d6a259fac9b050b1724ed8e545">%s</a>""" % (HG_REPO, rev1))
 
-    def test_compare_revisions_git_as_form(self):
+    def test_compare_revisions_git_is_ajax_preview(self):
         self.log_user()
         rev1 = 'c1214f7e79e02fc37156ff215cd71275450cffc3'
         rev2 = '38b5fe81f109cb111f549bfe9bb6b267e10bc557'
@@ -221,7 +221,7 @@ class TestCompareController(TestController):
                                     org_ref_name=rev1,
                                     other_ref_type="rev",
                                     other_ref_name=rev2,
-                                    as_form=True,
+                                    is_ajax_preview=True,
                                     ),
                                 extra_environ={'HTTP_X_PARTIAL_XHR': '1'},)
         ## outgoing changesets between those revisions

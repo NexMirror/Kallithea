@@ -637,7 +637,7 @@ class PullrequestsController(BaseRepoController):
          ) = cs_model.calculate_pull_request_result(c.pull_request)
         c.changeset_statuses = ChangesetStatus.STATUSES
 
-        c.as_form = False
+        c.is_ajax_preview = False
         c.ancestors = None # [c.a_rev] ... but that is shown in an other way
         return render('/pullrequests/pullrequest_show.html')
 
