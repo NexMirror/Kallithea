@@ -1333,10 +1333,23 @@ var PullRequestAutoComplete = function ($inputElement, $container, users_list) {
 }
 
 
-var addPermAction = function(_html, users_list, groups_list){
+function addPermAction(perm_type, users_list, groups_list) {
+    var template =
+        '<td><input type="radio" value="{1}.none" name="perm_new_member_{0}" id="perm_new_member_{0}"></td>' +
+        '<td><input type="radio" value="{1}.read" checked="checked" name="perm_new_member_{0}" id="perm_new_member_{0}"></td>' +
+        '<td><input type="radio" value="{1}.write" name="perm_new_member_{0}" id="perm_new_member_{0}"></td>' +
+        '<td><input type="radio" value="{1}.admin" name="perm_new_member_{0}" id="perm_new_member_{0}"></td>' +
+        '<td class="ac">' +
+            '<div class="perm_ac" id="perm_ac_{0}">' +
+                '<input class="yui-ac-input" id="perm_new_member_name_{0}" name="perm_new_member_name_{0}" value="" type="text">' +
+                '<input id="perm_new_member_type_{0}" name="perm_new_member_type_{0}" value="" type="hidden">' +
+                '<div id="perm_container_{0}"></div>' +
+            '</div>' +
+        '</td>' +
+        '<td></td>';
     var $last_node = $('.last_new_member').last(); // empty tr between last and add
     var next_id = $('.new_members').length;
-    $last_node.before($('<tr class="new_members">').append(_html.format(next_id)));
+    $last_node.before($('<tr class="new_members">').append(template.format(next_id, perm_type)));
     MembersAutoComplete($("#perm_new_member_name_"+next_id),
             $("#perm_container_"+next_id), users_list, groups_list);
 }

@@ -70,23 +70,7 @@ ${h.form(url('edit_repo_perms_update', repo_name=c.repo_name))}
                         </td>
                     </tr>
                 %endfor
-
-                <%
-                _tmpl = """\
-                    <td><input type="radio" value="repository.none" name="perm_new_member_{0}" id="perm_new_member_{0}"></td> \
-                    <td><input type="radio" value="repository.read" checked="checked" name="perm_new_member_{0}" id="perm_new_member_{0}"></td> \
-                    <td><input type="radio" value="repository.write" name="perm_new_member_{0}" id="perm_new_member_{0}"></td> \
-                    <td><input type="radio" value="repository.admin" name="perm_new_member_{0}" id="perm_new_member_{0}"></td> \
-                    <td class="ac"> \
-                        <div class="perm_ac" id="perm_ac_{0}"> \
-                            <input class="yui-ac-input" id="perm_new_member_name_{0}" name="perm_new_member_name_{0}" value="" type="text"> \
-                            <input id="perm_new_member_type_{0}" name="perm_new_member_type_{0}" value="" type="hidden">  \
-                            <div id="perm_container_{0}"></div> \
-                        </div> \
-                    </td> \
-                    <td></td>"""
-                %>
-                ## ADD HERE DYNAMICALLY NEW INPUTS FROM THE '_tmpl'
+                ## New entries added by addPermAction here.
                 <tr class="new_members last_new_member" id="add_perm_input"><td colspan="6"></td></tr>
                 <tr>
                     <td colspan="6">
@@ -119,7 +103,7 @@ ${h.end_form()}
             $('#add_perm_input').hide();
         }
         $('#add_perm').click(function () {
-            addPermAction(${h.jshtml(_tmpl)}, ${h.js(c.users_array)}, ${h.js(c.user_groups_array)});
+            addPermAction('repository', ${h.js(c.users_array)}, ${h.js(c.user_groups_array)});
         });
     });
 </script>
