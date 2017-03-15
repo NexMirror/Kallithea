@@ -192,8 +192,8 @@ def create_comment(text, status, f_path, line_no, revision=None, pull_request_id
 
 class ChangesetController(BaseRepoController):
 
-    def __before__(self):
-        super(ChangesetController, self).__before__()
+    def _before(self, *args, **kwargs):
+        super(ChangesetController, self)._before(*args, **kwargs)
         c.affected_files_cut_off = 60
 
     def __load_data(self):

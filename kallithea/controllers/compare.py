@@ -51,8 +51,8 @@ log = logging.getLogger(__name__)
 
 class CompareController(BaseRepoController):
 
-    def __before__(self):
-        super(CompareController, self).__before__()
+    def _before(self, *args, **kwargs):
+        super(CompareController, self)._before(*args, **kwargs)
 
         # The base repository has already been retrieved.
         c.a_repo = c.db_repo

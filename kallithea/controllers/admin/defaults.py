@@ -50,8 +50,8 @@ class DefaultsController(BaseController):
 
     @LoginRequired()
     @HasPermissionAnyDecorator('hg.admin')
-    def __before__(self):
-        super(DefaultsController, self).__before__()
+    def _before(self, *args, **kwargs):
+        super(DefaultsController, self)._before(*args, **kwargs)
 
     def index(self, format='html'):
         c.backends = BACKENDS.keys()

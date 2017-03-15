@@ -61,8 +61,8 @@ feed_nr = 20
 
 class JournalController(BaseController):
 
-    def __before__(self):
-        super(JournalController, self).__before__()
+    def _before(self, *args, **kwargs):
+        super(JournalController, self)._before(*args, **kwargs)
         c.search_term = request.GET.get('filter')
 
     def _get_daily_aggregate(self, journal):

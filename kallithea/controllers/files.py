@@ -69,8 +69,8 @@ log = logging.getLogger(__name__)
 
 class FilesController(BaseRepoController):
 
-    def __before__(self):
-        super(FilesController, self).__before__()
+    def _before(self, *args, **kwargs):
+        super(FilesController, self)._before(*args, **kwargs)
         c.cut_off_limit = self.cut_off_limit
 
     def __get_cs(self, rev, silent_empty=False):

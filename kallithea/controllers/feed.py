@@ -53,8 +53,8 @@ class FeedController(BaseRepoController):
 
     @LoginRequired(api_access=True)
     @HasRepoPermissionLevelDecorator('read')
-    def __before__(self):
-        super(FeedController, self).__before__()
+    def _before(self, *args, **kwargs):
+        super(FeedController, self)._before(*args, **kwargs)
 
     def _get_title(self, cs):
         return h.shorter(cs.message, 160)

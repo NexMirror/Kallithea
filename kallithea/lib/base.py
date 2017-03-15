@@ -377,6 +377,9 @@ class BaseVCSController(object):
 
 class BaseController(WSGIController):
 
+    def _before(self, *args, **kwargs):
+        pass
+
     def __before__(self):
         """
         __before__ is called before controller methods and after __call__
@@ -433,6 +436,13 @@ class BaseController(WSGIController):
         c.my_pr_count = PullRequest.query(reviewer_id=request.authuser.user_id, include_closed=False).count()
 
         self.scm_model = ScmModel()
+
+        # __before__ in Pylons is called _before in TurboGears2. As preparation
+        # to the migration to TurboGears2, all __before__ methods were already
+        # renamed to _before.  We call them from here to keep the behavior.
+        # This is a temporary call that will be removed in the real TurboGears2
+        # migration commit.
+        self._before()
 
     @staticmethod
     def _determine_auth_user(api_key, bearer_token, session_authuser):
@@ -573,8 +583,8 @@ class BaseRepoController(BaseController):
     c.repository_following: weather the current user is following the current repo
     """
 
-    def __before__(self):
-        super(BaseRepoController, self).__before__()
+    def _before(self, *args, **kwargs):
+        super(BaseRepoController, self)._before(*args, **kwargs)
         if c.repo_name:  # extracted from routes
             _dbr = Repository.get_by_repo_name(c.repo_name)
             if not _dbr:

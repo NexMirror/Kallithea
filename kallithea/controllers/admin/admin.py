@@ -121,8 +121,8 @@ def _journal_filter(user_log, search_term):
 class AdminController(BaseController):
 
     @LoginRequired()
-    def __before__(self):
-        super(AdminController, self).__before__()
+    def _before(self, *args, **kwargs):
+        super(AdminController, self)._before(*args, **kwargs)
 
     @HasPermissionAnyDecorator('hg.admin')
     def index(self):

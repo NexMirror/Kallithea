@@ -64,8 +64,8 @@ class UserGroupsController(BaseController):
     """REST Controller styled on the Atom Publishing Protocol"""
 
     @LoginRequired()
-    def __before__(self):
-        super(UserGroupsController, self).__before__()
+    def _before(self, *args, **kwargs):
+        super(UserGroupsController, self)._before(*args, **kwargs)
         c.available_permissions = config['available_permissions']
 
     def __load_data(self, user_group_id):

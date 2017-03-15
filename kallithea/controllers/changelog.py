@@ -67,8 +67,8 @@ def _load_changelog_summary():
 
 class ChangelogController(BaseRepoController):
 
-    def __before__(self):
-        super(ChangelogController, self).__before__()
+    def _before(self, *args, **kwargs):
+        super(ChangelogController, self)._before(*args, **kwargs)
         c.affected_files_cut_off = 60
 
     @staticmethod

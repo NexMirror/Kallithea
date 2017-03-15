@@ -60,8 +60,8 @@ class MyAccountController(BaseController):
 
     @LoginRequired()
     @NotAnonymous()
-    def __before__(self):
-        super(MyAccountController, self).__before__()
+    def _before(self, *args, **kwargs):
+        super(MyAccountController, self)._before(*args, **kwargs)
 
     def __load_data(self):
         c.user = User.get(request.authuser.user_id)

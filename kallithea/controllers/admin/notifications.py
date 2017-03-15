@@ -54,8 +54,8 @@ class NotificationsController(BaseController):
 
     @LoginRequired()
     @NotAnonymous()
-    def __before__(self):
-        super(NotificationsController, self).__before__()
+    def _before(self, *args, **kwargs):
+        super(NotificationsController, self)._before(*args, **kwargs)
 
     def index(self, format='html'):
         c.user = request.authuser

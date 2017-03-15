@@ -48,8 +48,8 @@ class AuthSettingsController(BaseController):
 
     @LoginRequired()
     @HasPermissionAnyDecorator('hg.admin')
-    def __before__(self):
-        super(AuthSettingsController, self).__before__()
+    def _before(self, *args, **kwargs):
+        super(AuthSettingsController, self)._before(*args, **kwargs)
 
     def __load_defaults(self):
         c.available_plugins = [

@@ -48,7 +48,7 @@ class ErrorController(BaseController):
     ErrorDocuments middleware in your config/middleware.py file.
     """
 
-    def __before__(self):
+    def _before(self, *args, **kwargs):
         # disable all base actions since we don't need them here
         pass
 

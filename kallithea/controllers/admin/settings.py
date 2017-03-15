@@ -59,8 +59,8 @@ class SettingsController(BaseController):
     #         path_prefix='/admin', name_prefix='admin_')
 
     @LoginRequired()
-    def __before__(self):
-        super(SettingsController, self).__before__()
+    def _before(self, *args, **kwargs):
+        super(SettingsController, self)._before(*args, **kwargs)
 
     def _get_hg_ui_settings(self):
         ret = Ui.query().all()

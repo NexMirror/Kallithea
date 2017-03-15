@@ -61,8 +61,8 @@ class UsersController(BaseController):
 
     @LoginRequired()
     @HasPermissionAnyDecorator('hg.admin')
-    def __before__(self):
-        super(UsersController, self).__before__()
+    def _before(self, *args, **kwargs):
+        super(UsersController, self)._before(*args, **kwargs)
         c.available_permissions = config['available_permissions']
 
     def index(self, format='html'):

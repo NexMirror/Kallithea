@@ -59,8 +59,8 @@ log = logging.getLogger(__name__)
 class RepoGroupsController(BaseController):
 
     @LoginRequired()
-    def __before__(self):
-        super(RepoGroupsController, self).__before__()
+    def _before(self, *args, **kwargs):
+        super(RepoGroupsController, self)._before(*args, **kwargs)
 
     def __load_defaults(self, extras=(), exclude=()):
         """extras is used for keeping current parent ignoring permissions

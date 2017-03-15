@@ -61,8 +61,8 @@ class ReposController(BaseRepoController):
     #     map.resource('repo', 'repos')
 
     @LoginRequired()
-    def __before__(self):
-        super(ReposController, self).__before__()
+    def _before(self, *args, **kwargs):
+        super(ReposController, self)._before(*args, **kwargs)
 
     def _load_repo(self):
         repo_obj = c.db_repo

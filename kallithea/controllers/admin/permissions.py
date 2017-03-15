@@ -55,8 +55,8 @@ class PermissionsController(BaseController):
 
     @LoginRequired()
     @HasPermissionAnyDecorator('hg.admin')
-    def __before__(self):
-        super(PermissionsController, self).__before__()
+    def _before(self, *args, **kwargs):
+        super(PermissionsController, self)._before(*args, **kwargs)
 
     def __load_data(self):
         c.repo_perms_choices = [('repository.none', _('None'),),
