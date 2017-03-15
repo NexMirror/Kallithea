@@ -53,9 +53,6 @@ log = logging.getLogger(__name__)
 
 class LoginController(BaseController):
 
-    def __before__(self):
-        super(LoginController, self).__before__()
-
     def _validate_came_from(self, came_from,
             _re=re.compile(r"/(?!/)[-!#$%&'()*+,./:;=?@_~0-9A-Za-z]*$")):
         """Return True if came_from is valid and can and should be used.

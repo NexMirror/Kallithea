@@ -52,9 +52,6 @@ log = logging.getLogger(__name__)
 
 class ForksController(BaseRepoController):
 
-    def __before__(self):
-        super(ForksController, self).__before__()
-
     def __load_defaults(self):
         if HasPermissionAny('hg.create.write_on_repogroup.true')():
             repo_group_perm_level = 'write'

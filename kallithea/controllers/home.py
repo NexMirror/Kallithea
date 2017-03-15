@@ -45,9 +45,6 @@ log = logging.getLogger(__name__)
 
 class HomeController(BaseController):
 
-    def __before__(self):
-        super(HomeController, self).__before__()
-
     def about(self):
         return render('/about.html')
 

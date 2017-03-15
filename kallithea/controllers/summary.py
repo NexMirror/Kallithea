@@ -62,9 +62,6 @@ README_FILES = [''.join([x[0][0], x[1][0]]) for x in
 
 class SummaryController(BaseRepoController):
 
-    def __before__(self):
-        super(SummaryController, self).__before__()
-
     def __get_readme_data(self, db_repo):
         repo_name = db_repo.repo_name
         log.debug('Looking for README file')
