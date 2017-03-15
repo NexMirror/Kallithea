@@ -9,6 +9,14 @@ methods. Everything is available by sending JSON encoded http(s) requests to
 ``<your_server>/_admin/api``.
 
 
+API keys
+--------
+
+Every Kallithea user automatically receives an API key, which they can
+view under "My Account". On this page, API keys can also be revoked, and
+additional API keys can be generated.
+
+
 API access
 ----------
 

@@ -79,6 +79,19 @@
     ${h.end_form()}
 </div>
 
+<div class="alert alert-warning">
+<p>${_('''
+API keys are used to let scripts or services access %s using your
+account, as if you had provided the script or service with your actual
+password.
+''') % (c.site_name or 'Kallithea')}</p>
+<p>${_('''
+Like passwords, API keys should therefore never be shared with others,
+nor passed to untrusted scripts or services. If such sharing should
+happen anyway, reset the API key on this page to prevent further use.
+''')}</p>
+</div>
+
 <script>
     $(document).ready(function(){
         $("#lifetime").select2({
