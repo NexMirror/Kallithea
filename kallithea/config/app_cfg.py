@@ -32,6 +32,21 @@ from kallithea.lib.utils2 import engine_from_config, str2bool
 from kallithea.model.base import init_model
 from kallithea.model.scm import ScmModel
 
+from routes.middleware import RoutesMiddleware
+from paste.cascade import Cascade
+from paste.registry import RegistryManager
+from paste.urlparser import StaticURLParser
+from paste.deploy.converters import asbool
+
+from pylons.middleware import ErrorHandler, StatusCodeRedirect
+from pylons.wsgiapp import PylonsApp
+
+from kallithea.lib.middleware.simplehg import SimpleHg
+from kallithea.lib.middleware.simplegit import SimpleGit
+from kallithea.lib.middleware.https_fixup import HttpsFixup
+from kallithea.lib.middleware.sessionmiddleware import SecureSessionMiddleware
+from kallithea.lib.middleware.wrapper import RequestWrapper
+
 def setup_configuration(config, paths, app_conf, test_env, test_index):
 
     # store some globals into kallithea
@@ -111,3 +126,60 @@ def setup_configuration(config, paths, app_conf, test_env, test_index):
     formencode.api.set_stdtranslation(languages=[config.get('lang')])
 
     return config
+
+def setup_application(config, global_conf, full_stack, static_files):
+
+    # The Pylons WSGI app
+    app = PylonsApp(config=config)
+
+    # Routing/Session/Cache Middleware
+    app = RoutesMiddleware(app, config['routes.map'], use_method_override=False)
+    app = SecureSessionMiddleware(app, config)
+
+    # CUSTOM MIDDLEWARE HERE (filtered by error handling middlewares)
+    if asbool(config['pdebug']):
+        from kallithea.lib.profiler import ProfilingMiddleware
+        app = ProfilingMiddleware(app)
+
+    if asbool(full_stack):
+
+        from kallithea.lib.middleware.sentry import Sentry
+        from kallithea.lib.middleware.appenlight import AppEnlight
+        if AppEnlight and asbool(config['app_conf'].get('appenlight')):
+            app = AppEnlight(app, config)
+        elif Sentry:
+            app = Sentry(app, config)
+
+        # Handle Python exceptions
+        app = ErrorHandler(app, global_conf, **config['pylons.errorware'])
+
+        # Display error documents for 401, 403, 404 status codes (and
+        # 500 when debug is disabled)
+        # Note: will buffer the output in memory!
+        if asbool(config['debug']):
+            app = StatusCodeRedirect(app)
+        else:
+            app = StatusCodeRedirect(app, [400, 401, 403, 404, 500])
+
+        # we want our low level middleware to get to the request ASAP. We don't
+        # need any pylons stack middleware in them - especially no StatusCodeRedirect buffering
+        app = SimpleHg(app, config)
+        app = SimpleGit(app, config)
+
+        # Enable https redirects based on HTTP_X_URL_SCHEME set by proxy
+        if any(asbool(config.get(x)) for x in ['https_fixup', 'force_https', 'use_htsts']):
+            app = HttpsFixup(app, config)
+
+        app = RequestWrapper(app, config) # logging
+
+    # Establish the Registry for this application
+    app = RegistryManager(app) # thread / request-local module globals / variables
+
+    if asbool(static_files):
+        # Serve static files
+        static_app = StaticURLParser(config['pylons.paths']['static_files'])
+        app = Cascade([static_app, app])
+
+    app.config = config
+
+    return app
