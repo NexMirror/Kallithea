@@ -28,7 +28,6 @@ from tg.support.converters import asbool
 from kallithea.lib.middleware.https_fixup import HttpsFixup
 from kallithea.lib.middleware.simplegit import SimpleGit
 from kallithea.lib.middleware.simplehg import SimpleHg
-from kallithea.config.routing import make_map
 from kallithea.lib.auth import set_available_permissions
 from kallithea.lib.db_manage import DbManage
 from kallithea.lib.utils import load_rcextensions, make_ui, set_app_settings, set_vcs_config, \
@@ -118,10 +117,6 @@ def setup_configuration(app):
     kallithea.CELERY_ON = str2bool(config['app_conf'].get('use_celery'))
     kallithea.CELERY_EAGER = str2bool(config['app_conf'].get('celery.always.eager'))
     kallithea.CONFIG = config
-
-    # Provide routes mapper to the RoutedController
-    root_controller = app.find_controller('root')
-    root_controller.mapper = config['routes.map'] = make_map(config)
 
     load_rcextensions(root_path=config['here'])
 

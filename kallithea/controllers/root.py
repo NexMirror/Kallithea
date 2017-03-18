@@ -12,20 +12,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from tgext.routes import RoutedController
+from kallithea.config.routing import make_map
 from kallithea.lib.base import BaseController
 from kallithea.controllers.error import ErrorController
+from tg import config
 
-
-# With TurboGears, the RootController is the controller from which all routing
-# starts from. It is 'magically' found based on the fact that a controller
-# 'foo' is expected to have a class name FooController, located in a file
-# foo.py, inside config['paths']['controllers']. The name 'root' for the root
-# controller is the default name. The dictionary config['paths'] determines the
-# directories where templates, static files and controllers are found. It is
-# set up in tg.AppConfig based on AppConfig['package'] ('kallithea') and the
-# respective defaults 'templates', 'public' and 'controllers'.
-# Inherit from RoutedController to allow Kallithea to use regex-based routing.
+# This is the main Kallithea entry point; TurboGears will forward all requests
+# to an instance of 'controller.root.RootController' in the configured
+# 'application' module (set by app_cfg.py).  Requests are forwarded to
+# controllers based on the routing mapper that lives in this root instance.
+# The mapper is configured using routes defined in routing.py.  This use of the
+# 'mapper' attribute is a feature of tgext.routes, which is activated by
+# inheriting from its RoutedController class.
 class RootController(RoutedController, BaseController):
+
+    mapper = make_map(config)
 
     # the following assignment hooks in error handling
     error = ErrorController()

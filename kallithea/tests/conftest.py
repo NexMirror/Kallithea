@@ -8,6 +8,7 @@ from routes.util import URLGenerator
 from tg import config
 
 import pytest
+from kallithea.controllers.root import RootController
 from kallithea.model.user import UserModel
 from kallithea.model.meta import Session
 from kallithea.model.db import Setting, User, UserIpMap
@@ -26,7 +27,7 @@ def pytest_configure():
     kallithea.tests.base.testapp = loadapp('config:kallithea/tests/test.ini', relative_to=path)
     logging.disable(logging.NOTSET)
 
-    kallithea.tests.base.url = URLGenerator(config['routes.map'], kallithea.tests.base.environ)
+    kallithea.tests.base.url = URLGenerator(RootController().mapper, kallithea.tests.base.environ)
 
 
 @pytest.fixture
