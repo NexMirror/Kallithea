@@ -13,6 +13,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """WSGI middleware initialization for the Kallithea application."""
 
+import logging
 from kallithea.config.app_cfg import base_config
 from kallithea.config.environment import load_environment
 
@@ -41,5 +42,6 @@ def make_app(global_conf, full_stack=True, **app_conf):
     ``app_conf`` contains all the application-specific settings (those defined
     under ``[app:main]``.
     """
+    logging.config.fileConfig(global_conf['__file__'])
     app = make_base_app(global_conf, full_stack=full_stack, **app_conf)
     return app
