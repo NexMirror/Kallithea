@@ -31,6 +31,7 @@ import sys
 import time
 import uuid
 import logging
+import sqlalchemy
 from os.path import dirname
 
 import alembic.config
@@ -103,7 +104,29 @@ class DbManage(object):
             print 'Nothing done.'
             sys.exit(0)
         if destroy:
-            Base.metadata.drop_all()
+            # drop and re-create old schemas
+
+            url = sqlalchemy.engine.url.make_url(self.dburi)
+            database = url.database
+
+            # Some databases enforce foreign key constraints and Base.metadata.drop_all() doesn't work
+            if url.drivername == 'mysql':
+                url.database = None  # don't connect to the database (it might not exist)
+                engine = sqlalchemy.create_engine(url)
+                with engine.connect() as conn:
+                    conn.execute('DROP DATABASE IF EXISTS ' + database)
+                    conn.execute('CREATE DATABASE ' + database)
+            elif url.drivername == 'postgresql':
+                from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
+                url.database = 'postgres'  # connect to the system database (as the real one might not exist)
+                engine = sqlalchemy.create_engine(url)
+                with engine.connect() as conn:
+                    conn.connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+                    conn.execute('DROP DATABASE IF EXISTS ' + database)
+                    conn.execute('CREATE DATABASE ' + database)
+            else:
+                # known to work on SQLite - possibly not on other databases with strong referential integrity
+                Base.metadata.drop_all()
 
         checkfirst = not override
         Base.metadata.create_all(checkfirst=checkfirst)
