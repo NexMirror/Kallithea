@@ -146,16 +146,26 @@ def test_context_fixture(app_fixture):
         yield
 
 
+class MyWSGIServer(WSGIServer):
+    def repo_url(self, repo_name, username=TEST_USER_ADMIN_LOGIN, password=TEST_USER_ADMIN_PASS):
+        """Return URL to repo on this web server."""
+        host, port = self.server_address
+        proto = 'http' if self._server.ssl_context is None else 'https'
+        auth = ''
+        if username is not None:
+            auth = username
+            if password is not None:
+                auth += ':' + password
+        if auth:
+            auth += '@'
+        return '%s://%s%s:%s/%s' % (proto, auth, host, port, repo_name)
+
 @pytest.yield_fixture(scope="session")
 def webserver():
     """Start web server while tests are running.
     Useful for debugging and necessary for vcs operation tests."""
-    server = WSGIServer(application=kallithea.tests.base.testapp)
+    server = MyWSGIServer(application=kallithea.tests.base.testapp)
     server.start()
-
-    # temporary hack for using this server for the vcs tests:
-    from kallithea.tests.other import manual_test_vcs_operations
-    manual_test_vcs_operations.HOST = '%s:%s' % server.server_address
 
     yield server
 
