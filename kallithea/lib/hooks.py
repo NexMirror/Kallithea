@@ -392,7 +392,7 @@ def handle_git_receive(repo_path, revs, env, hook_type):
     repo_path = safe_unicode(repo_path)
     path, ini_name = os.path.split(extras['config'])
     conf = appconfig('config:%s' % ini_name, relative_to=path)
-    load_environment(conf.global_conf, conf.local_conf, test_env=False,
+    conf = load_environment(conf.global_conf, conf.local_conf, test_env=False,
                      test_index=False)
 
     engine = engine_from_config(conf, 'sqlalchemy.')
