@@ -1,9 +1,12 @@
 node {
+    def createvirtualenv = ''
     def activatevirtualenv = ''
     if (isUnix()) {
-        activatevirtualenv = '. venv/bin/activate'
+        createvirtualenv = 'rm -r $JENKINS_HOME/venv/$JOB_NAME || true && virtualenv $JENKINS_HOME/venv/$JOB_NAME'
+        activatevirtualenv = '. $JENKINS_HOME/venv/$JOB_NAME/bin/activate'
     } else {
-        activatevirtualenv = 'call venv\\Scripts\\activate.bat'
+        createvirtualenv = 'rmdir /s /q %JENKINS_HOME%\\venv\\%JOB_NAME% || true && virtualenv %JENKINS_HOME%\\venv\\%JOB_NAME%'
+        activatevirtualenv = 'call %JENKINS_HOME%\\venv\\%JOB_NAME%\\Scripts\\activate.bat'
     }
 
     stage('checkout') {
@@ -15,7 +18,7 @@ node {
         }
     }
     stage('virtual env') {
-        def virtualenvscript = """virtualenv venv
+        def virtualenvscript = """$createvirtualenv
             $activatevirtualenv
             python -m pip install --upgrade pip
             pip install --upgrade setuptools
