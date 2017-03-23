@@ -62,10 +62,8 @@ node {
     pytests['sqlite'] = {
         ws {
             unstash name: 'kallithea'
-            sh 'hg revert kallithea/tests/test.ini'
             if (isUnix()) {
                 sh script: """$activatevirtualenv
-                    hg revert kallithea/tests/test.ini
                     py.test -p no:sugar --cov-config .coveragerc --junit-xml=pytest_sqlite.xml --cov=kallithea --cov-report xml
                     """, returnStatus: true
             } else {
@@ -89,7 +87,6 @@ node {
         pytests['de'] = {
             ws {
                 unstash name: 'kallithea'
-                sh 'hg revert kallithea/tests/test.ini'
                 withEnv(['LANG=de_DE.UTF-8',
                     'LANGUAGE=de',
                     'LC_ADDRESS=de_DE.UTF-8',
@@ -114,7 +111,6 @@ node {
         pytests['mysql'] = {
             ws {
                 unstash name: 'kallithea'
-                sh 'hg revert kallithea/tests/test.ini'
                 sh """$activatevirtualenv
                     pip install --upgrade MySQL-python
                     """
@@ -137,8 +133,6 @@ node {
         pytests['postgresql'] = {
             ws {
                 unstash name: 'kallithea'
-                sh 'hg revert kallithea/tests/test.ini'
-                sh 'sed -i.bak s/^sqlalchemy\\.url.*$/sqlalchemy.url=postgresql:\\\\/\\\\/kallithea:kallithea@jenkins_postgresql\\\\/kallithea_test/g kallithea/tests/test.ini'
                 sh """$activatevirtualenv
                     pip install --upgrade psycopg2
                     """
