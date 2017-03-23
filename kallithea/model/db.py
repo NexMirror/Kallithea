@@ -1121,8 +1121,13 @@ class Repository(Base, BaseDbModel):
         return super(Repository, cls).guess_instance(value, Repository.get_by_repo_name)
 
     @classmethod
-    def get_by_repo_name(cls, repo_name):
-        q = Session().query(cls).filter(cls.repo_name == repo_name)
+    def get_by_repo_name(cls, repo_name, case_insensitive=False):
+        """Get the repo, defaulting to database case sensitivity.
+        case_insensitive will be slower and should only be specified if necessary."""
+        if case_insensitive:
+            q = Session().query(cls).filter(func.lower(cls.repo_name) == func.lower(repo_name))
+        else:
+            q = Session().query(cls).filter(cls.repo_name == repo_name)
         q = q.options(joinedload(Repository.fork)) \
                 .options(joinedload(Repository.owner)) \
                 .options(joinedload(Repository.group))

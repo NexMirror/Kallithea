@@ -41,7 +41,6 @@ repos = [
     (u'group/indexing_test', u'indexing_test',       u'group'),
     (u'this-is-it',          u'indexing_test',       None),
     (u'indexing_test-foo',   u'indexing_test',       None),
-    (u'indexing_test-FOO',   u'indexing_test',       None),
     (u'stopword_test',       init_stopword_test,     None),
 ]
 
@@ -143,39 +142,6 @@ class TestSearchControllerIndexing(TestController):
                                     repo_name=reponame),
                                 {'q': query, 'type': searchtype})
         response.mustcontain('>%d results' % hit)
-
-    @parametrize('searchtype,query,hit', [
-        ('content', 'this_should_be_unique_content', 1),
-        ('commit', 'this_should_be_unique_commit_log', 1),
-        ('path', 'this_should_be_unique_filename.txt', 1),
-    ])
-    def test_repository_case_sensitivity(self, searchtype, query, hit):
-        self.log_user()
-
-        lname = u'indexing_test-foo'
-        uname = u'indexing_test-FOO'
-
-        # (1) "repository:REPONAME" condition should match against
-        # repositories case-insensitively
-        q = 'repository:%s %s' % (lname, query)
-        response = self.app.get(url(controller='search', action='index'),
-                                {'q': q, 'type': searchtype})
-
-        response.mustcontain('>%d results' % (hit * 2))
-
-        # (2) on the other hand, searching under the specific
-        # repository should return results only for that repository,
-        # even if specified name matches against another repository
-        # case-insensitively.
-        response = self.app.get(url(controller='search', action='index',
-                                    repo_name=uname),
-                                {'q': query, 'type': searchtype})
-
-        response.mustcontain('>%d results' % hit)
-
-        # confirm that there is no matching against lower name repository
-        assert uname in response
-        assert lname not in response
 
     @parametrize('searchtype,query,hit', [
         ('content', 'path:this/is/it def test', 1),

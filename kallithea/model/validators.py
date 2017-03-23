@@ -21,6 +21,7 @@ import formencode
 import logging
 from collections import defaultdict
 from tg.i18n import ugettext as _
+from sqlalchemy import func
 from webhelpers.pylonslib.secure_form import authentication_token
 import sqlalchemy
 
@@ -203,10 +204,9 @@ def ValidRepoGroup(edit=False, old_data=None):
 
                 # check group
                 gr = RepoGroup.query() \
-                      .filter(RepoGroup.group_name == slug) \
+                      .filter(func.lower(RepoGroup.group_name) == func.lower(slug)) \
                       .filter(RepoGroup.parent_group_id == parent_group_id) \
                       .scalar()
-
                 if gr is not None:
                     msg = self.message('group_exists', state, group_name=slug)
                     raise formencode.Invalid(msg, value, state,
@@ -215,9 +215,8 @@ def ValidRepoGroup(edit=False, old_data=None):
 
                 # check for same repo
                 repo = Repository.query() \
-                      .filter(Repository.repo_name == slug) \
+                      .filter(func.lower(Repository.repo_name) == func.lower(slug)) \
                       .scalar()
-
                 if repo is not None:
                     msg = self.message('repo_exists', state, group_name=slug)
                     raise formencode.Invalid(msg, value, state,
@@ -369,24 +368,24 @@ def ValidRepoName(edit=False, old_data=None):
             rename = old_data.get('repo_name') != repo_name_full
             create = not edit
             if rename or create:
-
+                repo = Repository.get_by_repo_name(repo_name_full, case_insensitive=True)
+                repo_group = RepoGroup.get_by_group_name(repo_name_full, case_insensitive=True)
                 if group_path != '':
-                    if Repository.get_by_repo_name(repo_name_full):
+                    if repo is not None:
                         msg = self.message('repository_in_group_exists', state,
-                                repo=repo_name, group=group_name)
+                                repo=repo.repo_name, group=group_name)
                         raise formencode.Invalid(msg, value, state,
                             error_dict=dict(repo_name=msg)
                         )
-                elif RepoGroup.get_by_group_name(repo_name_full):
+                elif repo_group is not None:
                         msg = self.message('same_group_exists', state,
                                 repo=repo_name)
                         raise formencode.Invalid(msg, value, state,
                             error_dict=dict(repo_name=msg)
                         )
-
-                elif Repository.get_by_repo_name(repo_name_full):
+                elif repo is not None:
                         msg = self.message('repository_exists', state,
-                                repo=repo_name)
+                                repo=repo.repo_name)
                         raise formencode.Invalid(msg, value, state,
                             error_dict=dict(repo_name=msg)
                         )

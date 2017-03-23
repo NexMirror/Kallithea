@@ -5,6 +5,7 @@ import mock
 import urllib
 
 import pytest
+from sqlalchemy import func
 
 from kallithea.lib import vcs
 from kallithea.lib.utils2 import safe_str, safe_unicode
@@ -14,7 +15,7 @@ from kallithea.model.user import UserModel
 from kallithea.tests.base import *
 from kallithea.model.repo_group import RepoGroupModel
 from kallithea.model.repo import RepoModel
-from kallithea.model.meta import Session
+from kallithea.model.meta import Session, Base
 from kallithea.tests.fixture import Fixture, error_function
 
 fixture = Fixture()
@@ -77,6 +78,29 @@ class _BaseTestCase(TestController):
             vcs.get_repo(safe_str(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name)))
         except vcs.exceptions.VCSError:
             pytest.fail('no repo %s in filesystem' % repo_name)
+
+        RepoModel().delete(repo_name)
+        Session().commit()
+
+    def test_case_insensitivity(self):
+        self.log_user()
+        repo_name = self.NEW_REPO
+        description = u'description for newly created repo'
+        response = self.app.post(url('repos'),
+                                 fixture._get_repo_create_params(repo_private=False,
+                                                                 repo_name=repo_name,
+                                                                 repo_type=self.REPO_TYPE,
+                                                                 repo_description=description,
+                                                                 _authentication_token=self.authentication_token()))
+        # try to create repo with swapped case
+        swapped_repo_name = repo_name.swapcase()
+        response = self.app.post(url('repos'),
+                                 fixture._get_repo_create_params(repo_private=False,
+                                                                 repo_name=swapped_repo_name,
+                                                                 repo_type=self.REPO_TYPE,
+                                                                 repo_description=description,
+                                                                 _authentication_token=self.authentication_token()))
+        response.mustcontain('already exists')
 
         RepoModel().delete(repo_name)
         Session().commit()
