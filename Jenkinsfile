@@ -64,6 +64,7 @@ node {
     def pytests = [:]
     pytests['sqlite'] = {
         ws {
+            deleteDir()
             unstash name: 'kallithea'
             if (isUnix()) {
                 sh script: """$activatevirtualenv
@@ -89,6 +90,7 @@ node {
     if (isUnix()) {
         pytests['de'] = {
             ws {
+                deleteDir()
                 unstash name: 'kallithea'
                 withEnv(['LANG=de_DE.UTF-8',
                     'LANGUAGE=de',
@@ -113,6 +115,7 @@ node {
         }
         pytests['mysql'] = {
             ws {
+                deleteDir()
                 unstash name: 'kallithea'
                 sh """$activatevirtualenv
                     pip install --upgrade MySQL-python
@@ -135,6 +138,7 @@ node {
         }
         pytests['postgresql'] = {
             ws {
+                deleteDir()
                 unstash name: 'kallithea'
                 sh """$activatevirtualenv
                     pip install --upgrade psycopg2
