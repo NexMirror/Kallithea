@@ -67,12 +67,12 @@ def _journal_filter(user_log, search_term):
         if wc_term.startswith('*') and not wc_term.endswith('*'):
             #postfix == endswith
             wc_term = remove_prefix(wc_term, prefix='*')
-            return func.lower(col).endswith(wc_term)
+            return func.lower(col).endswith(func.lower(wc_term))
         elif wc_term.startswith('*') and wc_term.endswith('*'):
             #wildcard == ilike
             wc_term = remove_prefix(wc_term, prefix='*')
             wc_term = remove_suffix(wc_term, suffix='*')
-            return func.lower(col).contains(wc_term)
+            return func.lower(col).contains(func.lower(wc_term))
 
     def get_filterion(field, val, term):
 
