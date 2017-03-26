@@ -80,7 +80,13 @@ class ArchivesTestCaseMixin(_BackendTestMixin):
         self.tip.fill_archive(stream=mystream)
         mystream.seek(0)
         with open(tmppath, 'rb') as f:
-            self.assertEqual(f.read(), mystream.read())
+            file_content = f.read()
+            stringio_content = mystream.read()
+            # the gzip header contains a MTIME header
+            # because is takes a little bit of time from one fill_archive call to the next
+            # this part may differ so don't include that part in the comparison
+            self.assertEqual(file_content[:4], stringio_content[:4])
+            self.assertEqual(file_content[8:], stringio_content[8:])
 
     def test_archive_wrong_kind(self):
         with self.assertRaises(VCSError):
