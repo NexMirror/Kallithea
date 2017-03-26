@@ -97,6 +97,7 @@ def make_map(config):
     # MAIN PAGE
     rmap.connect('home', '/', controller='home', action='index')
     rmap.connect('about', '/about', controller='home', action='about')
+    rmap.redirect('/favicon.ico', '/images/favicon.ico')
     rmap.connect('repo_switcher_data', '/_repos', controller='home',
                  action='repo_switcher_data')
     rmap.connect('users_and_groups_data', '/_users_and_groups', controller='home',
