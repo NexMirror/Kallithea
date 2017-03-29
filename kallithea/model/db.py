@@ -1515,7 +1515,12 @@ class Repository(Base, BaseDbModel):
         return repo
 
     def __json__(self):
-        return dict(landing_rev = self.landing_rev)
+        return dict(
+            repo_id=self.repo_id,
+            repo_name=self.repo_name,
+            landing_rev=self.landing_rev,
+        )
+
 
 class RepoGroup(Base, BaseDbModel):
     __tablename__ = 'groups'
@@ -2238,6 +2243,13 @@ class ChangesetComment(Base, BaseDbModel):
         elif self.pull_request_id is not None:
             return self.pull_request.url(anchor=anchor)
 
+    def __json__(self):
+        return dict(
+            comment_id=self.comment_id,
+            username=self.author.username,
+            text=self.text,
+        )
+
     def deletable(self):
         return self.created_on > datetime.datetime.now() - datetime.timedelta(minutes=5)
 
@@ -2408,9 +2420,24 @@ class PullRequest(Base, BaseDbModel):
         '''Return the id of this pull request, nicely formatted for displaying'''
         return self.make_nice_id(self.pull_request_id)
 
+    def get_api_data(self):
+        return self.__json__()
+
     def __json__(self):
         return dict(
-            revisions=self.revisions
+            pull_request_id=self.pull_request_id,
+            url=self.url(),
+            reviewers=self.reviewers,
+            revisions=self.revisions,
+            owner=self.owner.username,
+            title=self.title,
+            description=self.description,
+            org_repo_url=self.org_repo.clone_url(),
+            org_ref_parts=self.org_ref_parts,
+            other_ref_parts=self.other_ref_parts,
+            status=self.status,
+            comments=self.comments,
+            statuses=self.statuses,
         )
 
     def url(self, **kwargs):
@@ -2445,6 +2472,11 @@ class PullRequestReviewer(Base, BaseDbModel):
 
     user = relationship('User')
     pull_request = relationship('PullRequest')
+
+    def __json__(self):
+        return dict(
+            username=self.user.username if self.user else None,
+        )
 
 
 class Notification(Base, BaseDbModel):

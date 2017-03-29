@@ -48,14 +48,17 @@ from kallithea.model.user import UserModel
 from kallithea.model.user_group import UserGroupModel
 from kallithea.model.gist import GistModel
 from kallithea.model.changeset_status import ChangesetStatusModel
+from kallithea.model.comment import ChangesetCommentsModel
+from kallithea.model.pull_request import PullRequestModel
 from kallithea.model.db import (
     Repository, Setting, UserIpMap, Permission, User, Gist,
-    RepoGroup, UserGroup)
+    RepoGroup, UserGroup, PullRequest, ChangesetStatus)
 from kallithea.lib.compat import json
 from kallithea.lib.exceptions import (
     DefaultUserException, UserGroupsAssignedException)
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError
 from kallithea.lib.vcs.backends.base import EmptyChangeset
+from kallithea.lib.utils import action_logger
 
 log = logging.getLogger(__name__)
 
@@ -2506,3 +2509,65 @@ class ApiController(JSONRPCController):
                 info["reviews"] = reviews
 
         return info
+
+    # permission check inside
+    def get_pullrequest(self, pullrequest_id):
+        """
+        Get given pull request by id
+        """
+        pull_request = PullRequest.get(pullrequest_id)
+        if pull_request is None:
+            raise JSONRPCError('pull request `%s` does not exist' % (pullrequest_id,))
+        if not HasRepoPermissionLevel('read')(pull_request.org_repo.repo_name):
+            raise JSONRPCError('not allowed')
+        return pull_request.get_api_data()
+
+    # permission check inside
+    def comment_pullrequest(self, pull_request_id, comment_msg='', status=None, close_pr=False):
+        """
+        Add comment, close and change status of pull request.
+        """
+        apiuser = get_user_or_error(request.authuser.user_id)
+        pull_request = PullRequest.get(pull_request_id)
+        if pull_request is None:
+            raise JSONRPCError('pull request `%s` does not exist' % (pull_request_id,))
+        if (not HasRepoPermissionLevel('read')(pull_request.org_repo.repo_name)):
+            raise JSONRPCError('No permission to add comment. User needs at least reading permissions'
+                               ' to the source repository.')
+        owner = apiuser.user_id == pull_request.owner_id
+        reviewer = apiuser.user_id in [reviewer.user_id for reviewer in pull_request.reviewers]
+        if close_pr and not (apiuser.admin or owner):
+            raise JSONRPCError('No permission to close pull request. User needs to be admin or owner.')
+        if status and not (apiuser.admin or owner or reviewer):
+            raise JSONRPCError('No permission to change pull request status. User needs to be admin, owner or reviewer.')
+        if pull_request.is_closed():
+            raise JSONRPCError('pull request is already closed')
+
+        comment = ChangesetCommentsModel().create(
+            text=comment_msg,
+            repo=pull_request.org_repo.repo_id,
+            author=apiuser.user_id,
+            pull_request=pull_request.pull_request_id,
+            f_path=None,
+            line_no=None,
+            status_change=(ChangesetStatus.get_status_lbl(status)),
+            closing_pr=close_pr
+        )
+        action_logger(apiuser,
+                      'user_commented_pull_request:%s' % pull_request_id,
+                      pull_request.org_repo, request.ip_addr)
+        if status:
+            ChangesetStatusModel().set_status(
+                pull_request.org_repo_id,
+                status,
+                apiuser.user_id,
+                comment,
+                pull_request=pull_request_id
+            )
+        if close_pr:
+            PullRequestModel().close_pull_request(pull_request_id)
+            action_logger(apiuser,
+                          'user_closed_pull_request:%s' % pull_request_id,
+                          pull_request.org_repo, request.ip_addr)
+        Session().commit()
+        return True

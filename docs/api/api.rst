@@ -1140,6 +1140,95 @@ Example output::
       }
     }
 
+get_pullrequest
+^^^^^^^^^^^^^^^
+
+Get information and review status for a given pull request. This command can only be executed
+using the api_key of a user with read permissions to the original repository.
+
+INPUT::
+
+    id : <id_for_response>
+    api_key : "<api_key>"
+    method  : "get_pullrequest"
+    args:     {
+                "pullrequest_id" : "<pullrequest_id>",
+              }
+
+OUTPUT::
+
+    id : <id_given_in_input>
+    result: {
+        "status": "<pull_request_status>",
+        "pull_request_id": <pull_request_id>,
+        "description": "<pull_request_description>",
+        "title": "<pull_request_title>",
+        "url": "<pull_request_url>",
+        "reviewers": [
+          {
+            "username": "<user_name>",
+          },
+          ...
+        ],
+        "org_repo_url": "<repo_url>",
+        "org_ref_parts": [
+          "<ref_type>",
+          "<ref_name>",
+          "<raw_id>"
+        ],
+        "other_ref_parts": [
+          "<ref_type>",
+          "<ref_name>",
+          "<raw_id>"
+        ],
+        "comments": [
+          {
+            "username": "<user_name>",
+            "text": "<comment text>",
+            "comment_id": "<comment_id>",
+          },
+          ...
+        ],
+        "owner": "<username>",
+        "statuses": [
+          {
+            "status": "<status_of_review>",        # "under_review", "approved" or "rejected"
+            "reviewer": "<user_name>",
+            "modified_at": "<date_time_of_review>" # iso 8601 date, server's timezone
+          },
+          ...
+        ],
+        "revisions": [
+          "<raw_id>",
+          ...
+        ]
+    },
+    error:  null
+
+comment_pullrequest
+^^^^^^^^^^^^^^^^^^^
+
+Add comment, change status or close a given pull request. This command can only be executed
+using the api_key of a user with read permissions to the original repository.
+
+INPUT::
+
+    id : <id_for_response>
+    api_key : "<api_key>"
+    method  : "comment_pullrequest"
+    args:     {
+                "pull_request_id":  "<pull_request_id>",
+                "comment_msg":      Optional(''),
+                "status":           Optional(None),     # "under_review", "approved" or "rejected"
+                "close_pr":         Optional(False)",
+              }
+
+OUTPUT::
+
+    id : <id_given_in_input>
+    result: True
+    error:  null
+
 
 API access for web views
 ------------------------

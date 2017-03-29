@@ -20,3 +20,9 @@ class TestGitApi(_BaseTestApi, TestController):
     REPO = GIT_REPO
     REPO_TYPE = 'git'
     TEST_REVISION = GIT_TEST_REVISION
+    TEST_PR_SRC = u'c60f01b77c42dce653d6b1d3b04689862c261929'
+    TEST_PR_DST = u'10cddef6b794696066fb346434014f0a56810218'
+    TEST_PR_REVISIONS = [u'1bead5880d2dbe831762bf7fb439ba2919b75fdd',
+                         u'9bcd3ecfc8832a8cd881c1c1bbe2d13ffa9d94c7',
+                         u'283de4dfca8479875a1befb8d4059f3bbb725145',
+                         u'c60f01b77c42dce653d6b1d3b04689862c261929']

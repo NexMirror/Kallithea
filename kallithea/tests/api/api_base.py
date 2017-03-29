@@ -19,6 +19,7 @@ Tests for the JSON-RPC web api.
 import os
 import random
 import mock
+import re
 
 from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
@@ -31,7 +32,8 @@ from kallithea.model.repo_group import RepoGroupModel
 from kallithea.model.meta import Session
 from kallithea.model.scm import ScmModel
 from kallithea.model.gist import GistModel
-from kallithea.model.db import Repository, User, Setting, Ui
+from kallithea.model.changeset_status import ChangesetStatusModel
+from kallithea.model.db import Repository, User, Setting, Ui, PullRequest, ChangesetStatus
 from kallithea.lib.utils2 import time_to_datetime
 
 
@@ -2506,3 +2508,89 @@ class _BaseTestApi(object):
         response = api_call(self, params)
         expected = u'Access denied to repo %s' % self.REPO
         self._compare_error(id_, expected, given=response.body)
+
+    def test_api_get_pullrequest(self):
+        pull_request_id = fixture.create_pullrequest(self, self.REPO, self.TEST_PR_SRC, self.TEST_PR_DST, 'get test')
+        random_id = random.randrange(1, 9999)
+        params = json.dumps({
+            "id": random_id,
+            "api_key": self.apikey,
+            "method": 'get_pullrequest',
+            "args": {"pullrequest_id": pull_request_id},
+        })
+        response = api_call(self, params)
+        pullrequest = PullRequest().get(pull_request_id)
+        expected = {
+            "status": "new",
+            "pull_request_id": pull_request_id,
+            "description": "No description",
+            "url": "/%s/pull-request/%s/_/%s" % (self.REPO, pull_request_id, "stable"),
+            "reviewers": [{"username": "test_regular"}],
+            "org_repo_url": "http://localhost:80/%s" % self.REPO,
+            "org_ref_parts": ["branch", "stable", self.TEST_PR_SRC],
+            "other_ref_parts": ["branch", "default", self.TEST_PR_DST],
+            "comments": [{"username": TEST_USER_ADMIN_LOGIN, "text": "",
+                         "comment_id": pullrequest.comments[0].comment_id}],
+            "owner": TEST_USER_ADMIN_LOGIN,
+            "statuses": [{"status": "under_review", "reviewer": TEST_USER_ADMIN_LOGIN, "modified_at": "2000-01-01T00:00:00.000"} for i in range(0, len(self.TEST_PR_REVISIONS))],
+            "title": "get test",
+            "revisions": self.TEST_PR_REVISIONS,
+        }
+        self._compare_ok(random_id, expected,
+                         given=re.sub("\d\d\d\d\-\d\d\-\d\dT\d\d\:\d\d\:\d\d\.\d\d\d",
+                                      "2000-01-01T00:00:00.000", response.body))
+
+    def test_api_close_pullrequest(self):
+        pull_request_id = fixture.create_pullrequest(self, self.REPO, self.TEST_PR_SRC, self.TEST_PR_DST, 'close test')
+        random_id = random.randrange(1, 9999)
+        params = json.dumps({
+            "id": random_id,
+            "api_key": self.apikey,
+            "method": "comment_pullrequest",
+            "args": {"pull_request_id": pull_request_id, "close_pr": True},
+        })
+        response = api_call(self, params)
+        self._compare_ok(random_id, True, given=response.body)
+        pullrequest = PullRequest().get(pull_request_id)
+        assert pullrequest.comments[-1].text == ''
+        assert pullrequest.status == PullRequest.STATUS_CLOSED
+        assert pullrequest.is_closed() == True
+
+    def test_api_status_pullrequest(self):
+        pull_request_id = fixture.create_pullrequest(self, self.REPO, self.TEST_PR_SRC, self.TEST_PR_DST, "status test")
+
+        random_id = random.randrange(1, 9999)
+        params = json.dumps({
+            "id": random_id,
+            "api_key": User.get_by_username(TEST_USER_REGULAR2_LOGIN).api_key,
+            "method": "comment_pullrequest",
+            "args": {"pull_request_id": pull_request_id, "status": ChangesetStatus.STATUS_APPROVED},
+        })
+        response = api_call(self, params)
+        pullrequest = PullRequest().get(pull_request_id)
+        self._compare_error(random_id, "No permission to change pull request status. User needs to be admin, owner or reviewer.", given=response.body)
+        assert ChangesetStatus.STATUS_UNDER_REVIEW == ChangesetStatusModel().calculate_pull_request_result(pullrequest)[2]
+        params = json.dumps({
+            "id": random_id,
+            "api_key": User.get_by_username(TEST_USER_REGULAR_LOGIN).api_key,
+            "method": "comment_pullrequest",
+            "args": {"pull_request_id": pull_request_id, "status": ChangesetStatus.STATUS_APPROVED},
+        })
+        response = api_call(self, params)
+        self._compare_ok(random_id, True, given=response.body)
+        pullrequest = PullRequest().get(pull_request_id)
+        assert ChangesetStatus.STATUS_APPROVED == ChangesetStatusModel().calculate_pull_request_result(pullrequest)[2]
+
+    def test_api_comment_pullrequest(self):
+        pull_request_id = fixture.create_pullrequest(self, self.REPO, self.TEST_PR_SRC, self.TEST_PR_DST, "comment test")
+        random_id = random.randrange(1, 9999)
+        params = json.dumps({
+            "id": random_id,
+            "api_key": self.apikey,
+            "method": "comment_pullrequest",
+            "args": {"pull_request_id": pull_request_id, "comment_msg": "Looks good to me"},
+        })
+        response = api_call(self, params)
+        self._compare_ok(random_id, True, given=response.body)
+        pullrequest = PullRequest().get(pull_request_id)
+        assert pullrequest.comments[-1].text == u'Looks good to me'
