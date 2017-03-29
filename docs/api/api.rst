@@ -588,6 +588,7 @@ INPUT::
     args:     {
                 "repoid" : "<reponame or repo_id>",
                 "with_revision_names": "<bool> = Optional(False)",
+                "with_pullrequests": "<bool> = Optional(False)",
               }
 
 OUTPUT::
@@ -672,6 +673,55 @@ OUTPUT::
                             "<bookmarkname>": "<raw_id>",
                             ...
                          },
+                <if with_pullrequests == True>
+                "pull_requests": [
+                  {
+                    "status": "<pull_request_status>",
+                    "pull_request_id": <pull_request_id>,
+                    "description": "<pull_request_description>",
+                    "title": "<pull_request_title>",
+                    "url": "<pull_request_url>",
+                    "reviewers": [
+                      {
+                        "username": "<user_id>",
+                      },
+                      ...
+                    ],
+                    "org_repo_url": "<repo_url>",
+                    "org_ref_parts": [
+                      "<ref_type>",
+                      "<ref_name>",
+                      "<raw_id>"
+                    ],
+                    "other_ref_parts": [
+                      "<ref_type>",
+                      "<ref_name>",
+                      "<raw_id>"
+                    ],
+                    "comments": [
+                      {
+                        "username": "<user_id>",
+                        "text": "<comment text>",
+                        "comment_id": "<comment_id>",
+                      },
+                      ...
+                    ],
+                    "owner": "<username>",
+                    "statuses": [
+                      {
+                        "status": "<status_of_review>",        # "under_review", "approved" or "rejected"
+                        "reviewer": "<user_id>",
+                        "modified_at": "<date_time_of_review>" # iso 8601 date, server's timezone
+                      },
+                      ...
+                    ],
+                    "revisions": [
+                      "<raw_id>",
+                      ...
+                    ]
+                  },
+                  ...
+                ]
             }
     error:  null
 

@@ -777,6 +777,7 @@ class _BaseTestApi(object):
                                   repoid=self.REPO)
         response = api_call(self, params)
         assert u"tags" not in response.json[u'result']
+        assert u'pull_requests' not in response.json[u'result']
 
         repo = RepoModel().get_by_repo_name(self.REPO)
         ret = repo.get_api_data()
@@ -808,9 +809,11 @@ class _BaseTestApi(object):
         fixture.destroy_user_group(new_group)
 
         id_, params = _build_data(self.apikey, 'get_repo', repoid=self.REPO,
-                                  with_revision_names=True)
+                                  with_revision_names=True,
+                                  with_pullrequests=True)
         response = api_call(self, params)
         assert u"v0.2.0" in response.json[u'result'][u'tags']
+        assert u'pull_requests' in response.json[u'result']
 
     @parametrize('grant_perm', [
         ('repository.admin'),

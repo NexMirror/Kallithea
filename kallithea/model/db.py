@@ -1246,10 +1246,11 @@ class Repository(Base, BaseDbModel):
 
         return is_valid_repo(repo_name, cls.base_path())
 
-    def get_api_data(self, with_revision_names=False):
+    def get_api_data(self, with_revision_names=False,
+                           with_pullrequests=False):
         """
         Common function for generating repo api data.
-        Optionally, also return tags, branches and bookmarks.
+        Optionally, also return tags, branches, bookmarks and PRs.
         """
         repo = self
         data = dict(
@@ -1279,6 +1280,8 @@ class Repository(Base, BaseDbModel):
                 branches=scm_repo.branches,
                 bookmarks=scm_repo.bookmarks,
             ))
+        if with_pullrequests:
+            data['pull_requests'] = repo.pull_requests_other
         rc_config = Setting.get_app_settings()
         repository_fields = str2bool(rc_config.get('repository_fields'))
         if repository_fields:
