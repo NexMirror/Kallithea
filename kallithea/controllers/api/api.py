@@ -1125,7 +1125,8 @@ class ApiController(JSONRPCController):
             )
 
     # permission check inside
-    def get_repo(self, repoid):
+    def get_repo(self, repoid,
+                 with_revision_names=Optional(False)):
         """
         Gets an existing repository by it's name or repository_id. Members will return
         either users_group or user associated to that repository. This command can be
@@ -1175,8 +1176,20 @@ class ApiController(JSONRPCController):
                                   },
                                   …
                                 ]
-                 "followers":   [<user_obj>, ...]
-                 ]
+                 "followers":   [<user_obj>, ...],
+                 <if with_revision_names == True>
+                 "tags": {
+                            "<tagname>": "<raw_id>",
+                            ...
+                         },
+                 "branches": {
+                            "<branchname>": "<raw_id>",
+                            ...
+                         },
+                 "bookmarks": {
+                            "<bookmarkname>": "<raw_id>",
+                            ...
+                         },
             }
           }
           error :  null
@@ -1214,7 +1227,7 @@ class ApiController(JSONRPCController):
             for uf in repo.followers
         ]
 
-        data = repo.get_api_data()
+        data = repo.get_api_data(with_revision_names=Optional.extract(with_revision_names))
         data['members'] = members
         data['followers'] = followers
         return data

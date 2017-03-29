@@ -586,7 +586,8 @@ INPUT::
     api_key : "<api_key>"
     method :  "get_repo"
     args:     {
-                "repoid" : "<reponame or repo_id>"
+                "repoid" : "<reponame or repo_id>",
+                "with_revision_names": "<bool> = Optional(False)",
               }
 
 OUTPUT::
@@ -612,7 +613,7 @@ OUTPUT::
                                        "raw_id":   "<raw_id>",
                                        "revision": "<numeric_revision>",
                                        "short_id": "<short_id>"
-                                     }
+                                     },
                 "owner":             "<repo_owner>",
                 "fork_of":           "<name_of_fork_parent>",
                 "members" :     [
@@ -640,7 +641,7 @@ OUTPUT::
                                     "permission" : "repository.(read|write|admin)"
                                   },
                                   …
-                                ]
+                                ],
                  "followers":   [
                                   {
                                     "user_id" :     "<user_id>",
@@ -657,7 +658,20 @@ OUTPUT::
                                     "last_login":   "<last_login>",
                                   },
                                   …
-                 ]
+                                ],
+                 <if with_revision_names == True>
+                 "tags": {
+                            "<tagname>": "<raw_id>",
+                            ...
+                         },
+                 "branches": {
+                            "<branchname>": "<raw_id>",
+                            ...
+                         },
+                 "bookmarks": {
+                            "<bookmarkname>": "<raw_id>",
+                            ...
+                         },
             }
     error:  null
 

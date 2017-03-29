@@ -1246,10 +1246,10 @@ class Repository(Base, BaseDbModel):
 
         return is_valid_repo(repo_name, cls.base_path())
 
-    def get_api_data(self):
+    def get_api_data(self, with_revision_names=False):
         """
-        Common function for generating repo api data
-
+        Common function for generating repo api data.
+        Optionally, also return tags, branches and bookmarks.
         """
         repo = self
         data = dict(
@@ -1272,6 +1272,13 @@ class Repository(Base, BaseDbModel):
             locked_date=time_to_datetime(self.locked[1]) \
                 if self.locked[1] else None
         )
+        if with_revision_names:
+            scm_repo = repo.scm_instance_no_cache()
+            data.update(dict(
+                tags=scm_repo.tags,
+                branches=scm_repo.branches,
+                bookmarks=scm_repo.bookmarks,
+            ))
         rc_config = Setting.get_app_settings()
         repository_fields = str2bool(rc_config.get('repository_fields'))
         if repository_fields:
