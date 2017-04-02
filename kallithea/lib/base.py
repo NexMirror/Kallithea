@@ -482,8 +482,8 @@ class BaseController(WSGIController):
 
         # Authenticate by auth_container plugin (if enabled)
         if any(
-            auth_modules.importplugin(name).is_container_auth
-            for name in Setting.get_auth_plugins()
+            plugin.is_container_auth
+            for plugin in auth_modules.get_auth_plugins()
         ):
             try:
                 user_info = auth_modules.authenticate('', '', request.environ)

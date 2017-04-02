@@ -300,11 +300,6 @@ class Setting(Base, BaseDbModel):
         return settings
 
     @classmethod
-    def get_auth_plugins(cls, cache=False):
-        auth_plugins = cls.get_by_name("auth_plugins").app_settings_value
-        return auth_plugins
-
-    @classmethod
     def get_auth_settings(cls, cache=False):
         ret = cls.query() \
                 .filter(cls.app_settings_name.startswith('auth_')).all()

@@ -296,10 +296,10 @@ class KallitheaExternalAuthPlugin(KallitheaAuthPluginBase):
         return user_data
 
 
-def importplugin(plugin):
+def loadplugin(plugin):
     """
-    Imports and returns the authentication plugin in the module named by plugin
-    (e.g., plugin='kallithea.lib.auth_modules.auth_internal'). Returns the
+    Imports, instantiates, and returns the authentication plugin in the module named by plugin
+    (e.g., plugin='kallithea.lib.auth_modules.auth_internal'). Returns an instance of the
     KallitheaAuthPluginBase subclass on success, raises exceptions on failure.
 
     raises:
@@ -329,21 +329,26 @@ def importplugin(plugin):
     if not issubclass(pluginclass, KallitheaAuthPluginBase):
         raise TypeError("Authentication class %s.KallitheaAuthPlugin is not "
                         "a subclass of %s" % (plugin, KallitheaAuthPluginBase))
-    return pluginclass
 
-
-def loadplugin(plugin):
-    """
-    Loads and returns an instantiated authentication plugin.
-
-        see: importplugin
-    """
-    plugin = importplugin(plugin)()
+    plugin = pluginclass()
     if plugin.plugin_settings.im_func != KallitheaAuthPluginBase.plugin_settings.im_func:
         raise TypeError("Authentication class %s.KallitheaAuthPluginBase "
                         "has overridden the plugin_settings method, which is "
                         "forbidden." % plugin)
     return plugin
+
+
+def get_auth_plugins():
+    """Return a list of instances of plugins that are available and enabled"""
+    auth_plugins = []
+    for plugin_name in Setting.get_by_name("auth_plugins").app_settings_value:
+        try:
+            plugin = loadplugin(plugin_name)
+        except ImportError as e:
+            log.exception('Failed to load authentication module %s' % (plugin_name))
+        else:
+            auth_plugins.append(plugin)
+    return auth_plugins
 
 
 def authenticate(username, password, environ=None):
@@ -357,14 +362,10 @@ def authenticate(username, password, environ=None):
     :returns: None if auth failed, user_data dict if auth is correct
     """
 
-    auth_plugins = Setting.get_auth_plugins()
+    auth_plugins = get_auth_plugins()
     log.debug('Authentication against %s plugins', auth_plugins)
-    for module in auth_plugins:
-        try:
-            plugin = loadplugin(module)
-        except (ImportError, AttributeError, TypeError) as e:
-            log.error('Failed to load authentication module %s : %s' % (module, str(e)))
-            continue
+    for plugin in auth_plugins:
+        module = plugin.__class__.__module__
         log.debug('Trying authentication using ** %s **', module)
         # load plugin settings from Kallithea database
         plugin_name = plugin.name
@@ -424,10 +425,10 @@ def get_managed_fields(user):
     """return list of fields that are managed by the user's auth source, usually some of
     'username', 'firstname', 'lastname', 'email', 'active', 'password'
     """
-    auth_plugins = Setting.get_auth_plugins()
-    for module in auth_plugins:
+    auth_plugins = get_auth_plugins()
+    for plugin in auth_plugins:
+        module = plugin.__class__.__module__
         log.debug('testing %s (%s) with auth plugin %s', user, user.extern_type, module)
-        plugin = loadplugin(module)
         if plugin.name == user.extern_type:
             return plugin.get_managed_fields()
     log.error('no auth plugin %s found for %s', user.extern_type, user)

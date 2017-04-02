@@ -59,20 +59,20 @@ class AuthSettingsController(BaseController):
             'kallithea.lib.auth_modules.auth_crowd',
             'kallithea.lib.auth_modules.auth_pam'
         ]
-        c.enabled_plugin_names = Setting.get_auth_plugins()
+        self.enabled_plugins = auth_modules.get_auth_plugins()
+        c.enabled_plugin_names = [plugin.__class__.__module__ for plugin in self.enabled_plugins]
 
     def __render(self, defaults, errors):
         c.defaults = {}
         c.plugin_settings = {}
         c.plugin_shortnames = {}
 
-        for module in c.enabled_plugin_names:
-            plugin = auth_modules.loadplugin(module)
-            plugin_name = plugin.name
-            c.plugin_shortnames[module] = plugin_name
+        for plugin in self.enabled_plugins:
+            module = plugin.__class__.__module__
+            c.plugin_shortnames[module] = plugin.name
             c.plugin_settings[module] = plugin.plugin_settings()
             for v in c.plugin_settings[module]:
-                fullname = "auth_%s_%s" % (plugin_name, v["name"])
+                fullname = "auth_%s_%s" % (plugin.name, v["name"])
                 if "default" in v:
                     c.defaults[fullname] = v["default"]
                 # Current values will be the default on the form, if there are any
