@@ -59,20 +59,20 @@ class AuthSettingsController(BaseController):
             'kallithea.lib.auth_modules.auth_crowd',
             'kallithea.lib.auth_modules.auth_pam'
         ]
-        c.enabled_plugins = Setting.get_auth_plugins()
+        c.enabled_plugin_names = Setting.get_auth_plugins()
 
     def __render(self, defaults, errors):
         c.defaults = {}
         c.plugin_settings = {}
         c.plugin_shortnames = {}
 
-        for module in c.enabled_plugins:
+        for module in c.enabled_plugin_names:
             plugin = auth_modules.loadplugin(module)
             plugin_name = plugin.name
             c.plugin_shortnames[module] = plugin_name
             c.plugin_settings[module] = plugin.plugin_settings()
             for v in c.plugin_settings[module]:
-                fullname = ("auth_" + plugin_name + "_" + v["name"])
+                fullname = "auth_%s_%s" % (plugin_name, v["name"])
                 if "default" in v:
                     c.defaults[fullname] = v["default"]
                 # Current values will be the default on the form, if there are any
@@ -80,7 +80,7 @@ class AuthSettingsController(BaseController):
                 if setting is not None:
                     c.defaults[fullname] = setting.app_settings_value
         # we want to show , separated list of enabled plugins
-        c.defaults['auth_plugins'] = ','.join(c.enabled_plugins)
+        c.defaults['auth_plugins'] = ','.join(c.enabled_plugin_names)
 
         if defaults:
             c.defaults.update(defaults)
@@ -118,10 +118,10 @@ class AuthSettingsController(BaseController):
             # (yet), since that'll cause validation errors and/or wrong
             # settings being applied (e.g. checkboxes being cleared),
             # since the plugin settings will not be in the POST data.
-            c.enabled_plugins = [ p for p in c.enabled_plugins if p in new_enabled_plugins ]
+            c.enabled_plugin_names = [p for p in c.enabled_plugin_names if p in new_enabled_plugins]
 
         # Next, parse everything including plugin settings.
-        _form = AuthSettingsForm(c.enabled_plugins)()
+        _form = AuthSettingsForm(c.enabled_plugin_names)()
 
         try:
             form_result = _form.to_python(dict(request.POST))

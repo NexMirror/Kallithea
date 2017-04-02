@@ -39,8 +39,8 @@
                 <ul class="list-group">
                 %for plugin_path in c.available_plugins:
                     <li class="list-group-item">
-                        <span data-plugin_id="${plugin_path}" class="toggle-plugin btn btn-default btn-xs ${'active' if plugin_path in c.enabled_plugins else ''}">
-                            ${_('Enabled') if plugin_path in c.enabled_plugins else _('Disabled')}
+                        <span data-plugin_id="${plugin_path}" class="toggle-plugin btn btn-default btn-xs ${'active' if plugin_path in c.enabled_plugin_names else ''}">
+                            ${_('Enabled') if plugin_path in c.enabled_plugin_names else _('Disabled')}
                         </span>
                         ${plugin_path}
                     </li>
@@ -50,7 +50,7 @@
         </div>
     </div>
 
-    %for cnt, module in enumerate(c.enabled_plugins):
+    %for cnt, module in enumerate(c.enabled_plugin_names):
         <% pluginName = c.plugin_shortnames[module] %>
         <h1>${_('Plugin')}: ${pluginName}</h1>
         <div class="form-horizontal">
