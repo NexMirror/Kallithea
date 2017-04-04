@@ -344,7 +344,7 @@ def get_auth_plugins():
     for plugin_name in Setting.get_by_name("auth_plugins").app_settings_value:
         try:
             plugin = loadplugin(plugin_name)
-        except ImportError as e:
+        except Exception:
             log.exception('Failed to load authentication module %s' % (plugin_name))
         else:
             auth_plugins.append(plugin)
