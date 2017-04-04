@@ -86,7 +86,7 @@ def get_custom_lexer(extension):
     if there's no custom lexer defined
     """
     import kallithea
-    #check if we didn't define this extension as other lexer
-    if kallithea.EXTENSIONS and extension in kallithea.EXTENSIONS.EXTRA_LEXERS:
-        _lexer_name = kallithea.EXTENSIONS.EXTRA_LEXERS[extension]
-        return lexers.get_lexer_by_name(_lexer_name)
+    lexer_name = getattr(kallithea.EXTENSIONS, 'EXTRA_LEXERS', {}).get(extension)
+    if lexer_name is None:
+        return None
+    return lexers.get_lexer_by_name(lexer_name)
