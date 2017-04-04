@@ -38,23 +38,24 @@
 <%text>## Examples:</%text>
 #email_to = admin@example.com
 #email_to = admin@example.com another_admin@example.com
+email_to =
 
 <%text>## 'From' header for error emails. You can optionally add a name.</%text>
-<%text>## Default:</%text>
-#error_email_from = pylons@yourapp.com
+<%text>## Default: (none)</%text>
 <%text>## Examples:</%text>
 #error_email_from = Kallithea Errors <kallithea-noreply@example.com>
-#error_email_from = paste_error@example.com
+#error_email_from = kallithea_errors@example.com
+error_email_from =
 
 <%text>## SMTP server settings</%text>
 <%text>## If specifying credentials, make sure to use secure connections.</%text>
 <%text>## Default: Send unencrypted unauthenticated mails to the specified smtp_server.</%text>
 <%text>## For "SSL", use smtp_use_ssl = true and smtp_port = 465.</%text>
 <%text>## For "STARTTLS", use smtp_use_tls = true and smtp_port = 587.</%text>
-#smtp_server = smtp.example.com
+smtp_server =
 #smtp_username =
 #smtp_password =
-#smtp_port = 25
+smtp_port =
 #smtp_use_ssl = false
 #smtp_use_tls = false
 
@@ -389,6 +390,13 @@ beaker.session.secret = ${uuid()}
 <%text>############################</%text>
 <%text>## ERROR HANDLING SYSTEMS ##</%text>
 <%text>############################</%text>
+
+# Propagate email settings to ErrorReporter of TurboGears2
+# You do not normally need to change these lines
+get trace_errors.error_email = email_to
+get trace_errors.smtp_server = smtp_server
+get trace_errors.smtp_port = smtp_port
+get trace_errors.from_address = error_email_from
 
 <%text>####################</%text>
 <%text>### [appenlight] ###</%text>
