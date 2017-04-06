@@ -18,12 +18,16 @@ This file complements the .ini file.
 """
 
 import platform
-import os, sys
+import os, sys, logging
 
 import tg
 from tg import hooks
 from tg.configuration import AppConfig
 from tg.support.converters import asbool
+import alembic
+from alembic.script.base import ScriptDirectory
+from alembic.migration import MigrationContext
+from sqlalchemy import create_engine
 
 from kallithea.lib.middleware.https_fixup import HttpsFixup
 from kallithea.lib.middleware.simplegit import SimpleGit
@@ -37,6 +41,8 @@ from kallithea.model.scm import ScmModel
 
 import formencode
 import kallithea
+
+log = logging.getLogger(__name__)
 
 
 class KallitheaAppConfig(AppConfig):
@@ -112,6 +118,30 @@ else:
 
 def setup_configuration(app):
     config = app.config
+
+    if config.get('ignore_alembic_revision', False):
+        log.warn('database alembic revision checking is disabled')
+    else:
+        dbconf = config['sqlalchemy.url']
+        alembic_cfg = alembic.config.Config()
+        alembic_cfg.set_main_option('script_location', 'kallithea:alembic')
+        alembic_cfg.set_main_option('sqlalchemy.url', dbconf)
+        script_dir = ScriptDirectory.from_config(alembic_cfg)
+        available_heads = sorted(script_dir.get_heads())
+
+        engine = create_engine(dbconf)
+        with engine.connect() as conn:
+            context = MigrationContext.configure(conn)
+            current_heads = sorted(str(s) for s in context.get_current_heads())
+        if current_heads != available_heads:
+            log.error('Failed to run Kallithea:\n\n'
+                      'The database version does not match the Kallithea version.\n'
+                      'Please read the documentation on how to upgrade or downgrade the database.\n'
+                      'Current database version id(s): %s\n'
+                      'Expected database version id(s): %s\n'
+                      'If you are a developer and you know what you are doing, you can add `ignore_alembic_revision = True` '
+                      'to your .ini file to skip the check.\n' % (' '.join(current_heads), ' '.join(available_heads)))
+            sys.exit(1)
 
     # store some globals into kallithea
     kallithea.CELERY_ON = str2bool(config['app_conf'].get('use_celery'))
