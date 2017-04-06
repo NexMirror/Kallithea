@@ -37,7 +37,7 @@ from webob.exc import HTTPNotFound, HTTPForbidden, HTTPInternalServerError, \
 
 from kallithea.lib.utils2 import safe_str, safe_unicode, fix_PATH, get_server_url, \
     _set_extras
-from kallithea.lib.base import BaseVCSController, WSGIResultCloseCallback
+from kallithea.lib.base import BaseVCSController, WSGIResultCloseCallback, check_locking_state
 from kallithea.lib.utils import make_ui, is_valid_repo, ui_sections
 from kallithea.lib.vcs.utils.hgcompat import RepoError, hgweb_mod
 from kallithea.lib.exceptions import HTTPLockedRC
@@ -133,7 +133,7 @@ class SimpleHg(BaseVCSController):
         # CHECK LOCKING only if it's not ANONYMOUS USER
         elif not user.is_default_user:
             log.debug('Checking locking on repository')
-            make_lock, locked, locked_by = self._check_locking_state(action, repo_name, user)
+            make_lock, locked, locked_by = check_locking_state(action, repo_name, user)
             # store the make_lock for later evaluation in hooks
             extras.update({'make_lock': make_lock,
                            'locked_by': locked_by})

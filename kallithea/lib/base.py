@@ -148,6 +148,42 @@ def log_in_user(user, remember, is_external_auth):
     return auth_user
 
 
+def check_locking_state(action, repo_name, user):
+    """
+    Checks locking on this repository, if locking is enabled, and if lock
+    is present. Returns a tuple of make_lock, locked, locked_by. make_lock
+    can have 3 states: None (do nothing), True (make lock), and False
+    (release lock). This value is later propagated to hooks, telling them
+    what to do.
+    """
+    locked = False  # defines that locked error should be thrown to user
+    make_lock = None
+    repo = Repository.get_by_repo_name(repo_name)
+    locked_by = repo.locked
+    if repo and repo.enable_locking:
+        if action == 'push':
+            # Check if repo already is locked !, if it is compare users
+            user_id, _date = locked_by
+            if user.user_id == user_id:
+                log.debug('Got push from user %s, now unlocking', user)
+                # Unlock if we have push from the user who locked
+                make_lock = False
+            else:
+                # Another used tried to push - deny access with something like 423 Locked!
+                locked = True
+        if action == 'pull':
+            if repo.locked[0] and repo.locked[1]:
+                locked = True
+            else:
+                log.debug('Setting lock on repo %s by %s', repo, user)
+                make_lock = True
+    else:
+        log.debug('Repository %s does not have locking enabled', repo)
+    log.debug('FINAL locking values make_lock:%s,locked:%s,locked_by:%s',
+              make_lock, locked, locked_by)
+    return make_lock, locked, locked_by
+
+
 class BasicAuth(paste.auth.basic.AuthBasicAuthenticator):
 
     def __init__(self, realm, authfunc, auth_http_code=None):
@@ -323,42 +359,6 @@ class BaseVCSController(object):
 
     def _get_ip_addr(self, environ):
         return _get_ip_addr(environ)
-
-    def _check_locking_state(self, action, repo_name, user):
-        """
-        Checks locking on this repository, if locking is enabled, and if lock
-        is present. Returns a tuple of make_lock, locked, locked_by. make_lock
-        can have 3 states: None (do nothing), True (make lock), and False
-        (release lock). This value is later propagated to hooks, telling them
-        what to do.
-        """
-        locked = False  # defines that locked error should be thrown to user
-        make_lock = None
-        repo = Repository.get_by_repo_name(repo_name)
-        locked_by = repo.locked
-        if repo and repo.enable_locking:
-            if action == 'push':
-                # Check if repo already is locked !, if it is compare users
-                user_id, _date = locked_by
-                if user.user_id == user_id:
-                    log.debug('Got push from user %s, now unlocking', user)
-                    # Unlock if we have push from the user who locked
-                    make_lock = False
-                else:
-                    # Another used tried to push - deny access with something like 423 Locked!
-                    locked = True
-            if action == 'pull':
-                if repo.locked[0] and repo.locked[1]:
-                    locked = True
-                else:
-                    log.debug('Setting lock on repo %s by %s', repo, user)
-                    make_lock = True
-
-        else:
-            log.debug('Repository %s does not have locking enabled', repo)
-        log.debug('FINAL locking values make_lock:%s,locked:%s,locked_by:%s',
-                  make_lock, locked, locked_by)
-        return make_lock, locked, locked_by
 
     def __call__(self, environ, start_response):
         start = time.time()

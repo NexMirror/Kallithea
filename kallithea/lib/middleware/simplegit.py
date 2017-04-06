@@ -40,7 +40,7 @@ from kallithea.model.db import Ui
 
 from kallithea.lib.utils2 import safe_str, safe_unicode, fix_PATH, get_server_url, \
     _set_extras
-from kallithea.lib.base import BaseVCSController, WSGIResultCloseCallback
+from kallithea.lib.base import BaseVCSController, WSGIResultCloseCallback, check_locking_state
 from kallithea.lib.utils import make_ui, is_valid_repo
 from kallithea.lib.exceptions import HTTPLockedRC
 from kallithea.lib.hooks import pre_pull
@@ -124,7 +124,7 @@ class SimpleGit(BaseVCSController):
         # CHECK LOCKING only if it's not ANONYMOUS USER
         if not user.is_default_user:
             log.debug('Checking locking on repository')
-            make_lock, locked, locked_by = self._check_locking_state(action, repo_name, user)
+            make_lock, locked, locked_by = check_locking_state(action, repo_name, user)
             # store the make_lock for later evaluation in hooks
             extras.update({'make_lock': make_lock,
                            'locked_by': locked_by})
