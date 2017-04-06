@@ -1,3 +1,5 @@
+babel >= 0.9.6, < 2.4
+waitress >= 0.8.8, < 1.0
 pytest ~= 3.0
 pytest-runner
 pytest-sugar>=0.7.0
