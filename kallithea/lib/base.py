@@ -324,7 +324,7 @@ class BaseVCSController(object):
     def _get_ip_addr(self, environ):
         return _get_ip_addr(environ)
 
-    def _check_locking_state(self, action, repo, user_id):
+    def _check_locking_state(self, action, repo_name, user):
         """
         Checks locking on this repository, if locking is enabled, and if lock
         is present. Returns a tuple of make_lock, locked, locked_by. make_lock
@@ -334,9 +334,7 @@ class BaseVCSController(object):
         """
         locked = False  # defines that locked error should be thrown to user
         make_lock = None
-        repo = Repository.get_by_repo_name(repo)
-        user = User.get(user_id)
-
+        repo = Repository.get_by_repo_name(repo_name)
         locked_by = repo.locked
         if repo and repo.enable_locking:
             if action == 'push':

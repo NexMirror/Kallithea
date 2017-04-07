@@ -36,7 +36,7 @@ import traceback
 from paste.httpheaders import REMOTE_USER, AUTH_TYPE
 from webob.exc import HTTPNotFound, HTTPForbidden, HTTPInternalServerError, \
     HTTPNotAcceptable
-from kallithea.model.db import User, Ui
+from kallithea.model.db import Ui
 
 from kallithea.lib.utils2 import safe_str, safe_unicode, fix_PATH, get_server_url, \
     _set_extras
@@ -124,9 +124,7 @@ class SimpleGit(BaseVCSController):
         # CHECK LOCKING only if it's not ANONYMOUS USER
         if not user.is_default_user:
             log.debug('Checking locking on repository')
-            (make_lock,
-             locked,
-             locked_by) = self._check_locking_state(action, repo_name, user.user_id)
+            make_lock, locked, locked_by = self._check_locking_state(action, repo_name, user)
             # store the make_lock for later evaluation in hooks
             extras.update({'make_lock': make_lock,
                            'locked_by': locked_by})
