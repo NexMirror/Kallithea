@@ -126,10 +126,7 @@ class SimpleGit(BaseVCSController):
             log.debug('Checking locking on repository')
             (make_lock,
              locked,
-             locked_by) = self._check_locking_state(
-                            environ=environ, action=action,
-                            repo=repo_name, user_id=user.user_id
-                       )
+             locked_by) = self._check_locking_state(action, repo_name, user.user_id)
             # store the make_lock for later evaluation in hooks
             extras.update({'make_lock': make_lock,
                            'locked_by': locked_by})

@@ -324,7 +324,7 @@ class BaseVCSController(object):
     def _get_ip_addr(self, environ):
         return _get_ip_addr(environ)
 
-    def _check_locking_state(self, environ, action, repo, user_id):
+    def _check_locking_state(self, action, repo, user_id):
         """
         Checks locking on this repository, if locking is enabled, and if lock
         is present. Returns a tuple of make_lock, locked, locked_by. make_lock
@@ -337,13 +337,8 @@ class BaseVCSController(object):
         repo = Repository.get_by_repo_name(repo)
         user = User.get(user_id)
 
-        # this is kind of hacky, but due to how mercurial handles client-server
-        # server see all operation on changeset; bookmarks, phases and
-        # obsolescence marker in different transaction, we don't want to check
-        # locking on those
-        obsolete_call = environ['QUERY_STRING'] in ['cmd=listkeys',]
         locked_by = repo.locked
-        if repo and repo.enable_locking and not obsolete_call:
+        if repo and repo.enable_locking:
             if action == 'push':
                 # Check if repo already is locked !, if it is compare users
                 user_id, _date = locked_by

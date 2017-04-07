@@ -126,15 +126,17 @@ class SimpleHg(BaseVCSController):
         repo_path = os.path.join(safe_str(self.basepath), str_repo_name)
         log.debug('Repository path is %s', repo_path)
 
+        # A Mercurial HTTP server will see listkeys operations (bookmarks,
+        # phases and obsolescence marker) in a different request - we don't
+        # want to check locking on those
+        if environ['QUERY_STRING'] == 'cmd=listkeys':
+            pass
         # CHECK LOCKING only if it's not ANONYMOUS USER
-        if not user.is_default_user:
+        elif not user.is_default_user:
             log.debug('Checking locking on repository')
             (make_lock,
              locked,
-             locked_by) = self._check_locking_state(
-                            environ=environ, action=action,
-                            repo=repo_name, user_id=user.user_id
-                       )
+             locked_by) = self._check_locking_state(action, repo_name, user.user_id)
             # store the make_lock for later evaluation in hooks
             extras.update({'make_lock': make_lock,
                            'locked_by': locked_by})
