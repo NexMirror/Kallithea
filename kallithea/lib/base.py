@@ -326,12 +326,11 @@ class BaseVCSController(object):
 
     def _check_locking_state(self, environ, action, repo, user_id):
         """
-        Checks locking on this repository, if locking is enabled and lock is
-        present returns a tuple of make_lock, locked, locked_by.
-        make_lock can have 3 states None (do nothing) True, make lock
-        False release lock, This value is later propagated to hooks, which
-        do the locking. Think about this as signals passed to hooks what to do.
-
+        Checks locking on this repository, if locking is enabled, and if lock
+        is present. Returns a tuple of make_lock, locked, locked_by. make_lock
+        can have 3 states: None (do nothing), True (make lock), and False
+        (release lock). This value is later propagated to hooks, telling them
+        what to do.
         """
         locked = False  # defines that locked error should be thrown to user
         make_lock = None
@@ -346,14 +345,14 @@ class BaseVCSController(object):
         locked_by = repo.locked
         if repo and repo.enable_locking and not obsolete_call:
             if action == 'push':
-                #check if it's already locked !, if it is compare users
-                user_id, _date = repo.locked
+                # Check if repo already is locked !, if it is compare users
+                user_id, _date = locked_by
                 if user.user_id == user_id:
                     log.debug('Got push from user %s, now unlocking', user)
-                    # unlock if we have push from user who locked
+                    # Unlock if we have push from the user who locked
                     make_lock = False
                 else:
-                    # we're not the same user who locked, ban with 423 !
+                    # Another used tried to push - deny access with something like 423 Locked!
                     locked = True
             if action == 'pull':
                 if repo.locked[0] and repo.locked[1]:
@@ -363,7 +362,7 @@ class BaseVCSController(object):
                     make_lock = True
 
         else:
-            log.debug('Repository %s do not have locking enabled', repo)
+            log.debug('Repository %s does not have locking enabled', repo)
         log.debug('FINAL locking values make_lock:%s,locked:%s,locked_by:%s',
                   make_lock, locked, locked_by)
         return make_lock, locked, locked_by
