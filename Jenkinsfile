@@ -1,6 +1,7 @@
+def createvirtualenv = ''
+def activatevirtualenv = ''
+
 node {
-    def createvirtualenv = ''
-    def activatevirtualenv = ''
     if (isUnix()) {
         createvirtualenv = 'rm -r $JENKINS_HOME/venv/$JOB_NAME || true && virtualenv $JENKINS_HOME/venv/$JOB_NAME'
         activatevirtualenv = '. $JENKINS_HOME/venv/$JOB_NAME/bin/activate'
@@ -61,8 +62,11 @@ node {
             echo "Caught: ${exc}"
         }
     }
-    def pytests = [:]
-    pytests['sqlite'] = {
+}
+
+def pytests = [:]
+pytests['sqlite'] = {
+    node {
         ws {
             deleteDir()
             unstash name: 'kallithea'
@@ -87,8 +91,11 @@ node {
             }
         }
     }
-    if (isUnix()) {
-        pytests['de'] = {
+}
+
+pytests['de'] = {
+    node {
+        if (isUnix()) {
             ws {
                 deleteDir()
                 unstash name: 'kallithea'
@@ -113,7 +120,11 @@ node {
                 junit 'pytest_de.xml'
             }
         }
-        pytests['mysql'] = {
+    }
+}
+pytests['mysql'] = {
+    node {
+        if (isUnix()) {
             ws {
                 deleteDir()
                 unstash name: 'kallithea'
@@ -136,7 +147,11 @@ node {
                 junit 'pytest_mysql.xml'
             }
         }
-        pytests['postgresql'] = {
+    }
+}
+pytests['postgresql'] = {
+    node {
+        if (isUnix()) {
             ws {
                 deleteDir()
                 unstash name: 'kallithea'
@@ -160,7 +175,7 @@ node {
             }
         }
     }
-    stage('Tests') {
-        parallel pytests
-    }
+}
+stage('Tests') {
+    parallel pytests
 }
