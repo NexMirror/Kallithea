@@ -367,8 +367,10 @@ def log_delete_user(user_dict, deleted_by, **kwargs):
 def handle_git_pre_receive(repo_path, revs, env):
     return handle_git_receive(repo_path, revs, env, hook_type='pre')
 
+
 def handle_git_post_receive(repo_path, revs, env):
     return handle_git_receive(repo_path, revs, env, hook_type='post')
+
 
 def handle_git_receive(repo_path, revs, env, hook_type):
     """
@@ -386,14 +388,15 @@ def handle_git_receive(repo_path, revs, env, hook_type):
     from kallithea.config.environment import load_environment
     from kallithea.model.base import init_model
     from kallithea.model.db import Ui
-    from kallithea.lib.utils import make_ui
+    from kallithea.lib.utils import make_ui, setup_cache_regions
     extras = _extract_extras(env)
 
     repo_path = safe_unicode(repo_path)
     path, ini_name = os.path.split(extras['config'])
     conf = appconfig('config:%s' % ini_name, relative_to=path)
-    conf = load_environment(conf.global_conf, conf.local_conf, test_env=False,
-                     test_index=False)
+    conf = load_environment(conf.global_conf, conf.local_conf)
+
+    setup_cache_regions(conf)
 
     engine = engine_from_config(conf, 'sqlalchemy.')
     init_model(engine)
@@ -413,7 +416,7 @@ def handle_git_receive(repo_path, revs, env, hook_type):
     if hook_type == 'pre':
         repo = repo.scm_instance
     else:
-        #post push shouldn't use the cached instance never
+        # post push shouldn't use the cached instance never
         repo = repo.scm_instance_no_cache()
 
     if hook_type == 'pre':
