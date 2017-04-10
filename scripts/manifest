@@ -395,7 +395,6 @@ kallithea/lib/vcs/utils/
 kallithea/lib/vcs/utils/__init__.py
 kallithea/lib/vcs/utils/annotate.py
 kallithea/lib/vcs/utils/archivers.py
-kallithea/lib/vcs/utils/baseui_config.py
 kallithea/lib/vcs/utils/compat.py
 kallithea/lib/vcs/utils/diffs.py
 kallithea/lib/vcs/utils/fakemod.py
