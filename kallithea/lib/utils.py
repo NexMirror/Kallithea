@@ -316,13 +316,12 @@ ui_sections = ['alias', 'auth',
                 'ui', 'web', ]
 
 
-def make_ui(read_from='file', path=None, checkpaths=True, clear_session=True):
+def make_ui(read_from='file', path=None, clear_session=True):
     """
     A function that will read python rc files or database
     and make an mercurial ui object from read options
 
     :param path: path to mercurial config file
-    :param checkpaths: check the path
     :param read_from: read from 'file' or 'db'
     """
 

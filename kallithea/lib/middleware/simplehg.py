@@ -226,7 +226,7 @@ class SimpleHg(BaseVCSController):
 
         hgrc = os.path.join(repo_path, '.hg', 'hgrc')
 
-        repoui = make_ui('file', hgrc, False)
+        repoui = make_ui('file', hgrc)
 
         if repoui:
             #overwrite our ui instance with the section from hgrc file
