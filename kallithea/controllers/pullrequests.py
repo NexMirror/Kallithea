@@ -362,8 +362,9 @@ class PullrequestsController(BaseRepoController):
     def create_new_iteration(self, old_pull_request, new_rev, title, description, reviewers):
         owner = User.get(request.authuser.user_id)
         new_org_rev = self._get_ref_rev(old_pull_request.org_repo, 'rev', new_rev)
+        new_other_rev = self._get_ref_rev(old_pull_request.other_repo, old_pull_request.other_ref_parts[0], old_pull_request.other_ref_parts[1])
         try:
-            cmd = CreatePullRequestIterationAction(old_pull_request, new_org_rev, title, description, owner, reviewers)
+            cmd = CreatePullRequestIterationAction(old_pull_request, new_org_rev, new_other_rev, title, description, owner, reviewers)
         except CreatePullRequestAction.ValidationError as e:
             h.flash(str(e), category='error', logf=log.error)
             raise HTTPNotFound

@@ -297,7 +297,7 @@ class CreatePullRequestIterationAction(object):
 
         return True
 
-    def __init__(self, old_pull_request, new_org_rev, title, description, owner, reviewers):
+    def __init__(self, old_pull_request, new_org_rev, new_other_rev, title, description, owner, reviewers):
         self.old_pull_request = old_pull_request
 
         org_repo = old_pull_request.org_repo
@@ -308,8 +308,9 @@ class CreatePullRequestIterationAction(object):
         #assert other_ref_type == 'branch', other_ref_type # TODO: what if not?
 
         new_org_ref = '%s:%s:%s' % (org_ref_type, org_ref_name, new_org_rev)
+        new_other_ref = '%s:%s:%s' % (other_ref_type, other_ref_name, new_other_rev)
 
-        self.create_action = CreatePullRequestAction(org_repo, other_repo, new_org_ref, old_pull_request.other_ref, None, None, owner, reviewers)
+        self.create_action = CreatePullRequestAction(org_repo, other_repo, new_org_ref, new_other_ref, None, None, owner, reviewers)
 
         # Generate complete title/description
 

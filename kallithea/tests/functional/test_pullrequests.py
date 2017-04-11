@@ -5,7 +5,7 @@ from tg.util.webtest import test_context
 
 from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
-from kallithea.model.db import User
+from kallithea.model.db import PullRequest, User
 from kallithea.model.meta import Session
 
 from kallithea.controllers.pullrequests import PullrequestsController
@@ -207,6 +207,87 @@ class TestPullrequestsController(TestController):
                                  },
                                  status=400)
         response.mustcontain('Invalid reviewer &#34;%s&#34; specified' % invalid_user_id)
+
+
+    def test_iteration_refs(self):
+        # Repo graph excerpt:
+        #   o   fb95b340e0d0 webvcs
+        #  /:
+        # o :   41d2568309a0 default
+        # : :
+        # : o   5ec21f21aafe webvcs
+        # : :
+        # : o   9e6119747791 webvcs
+        # : :
+        # o :   3d1091ee5a53 default
+        # :/
+        # o     948da46b29c1 default
+
+        self.log_user()
+
+        # create initial PR
+        response = self.app.post(
+            url(controller='pullrequests', action='create', repo_name=HG_REPO),
+            {
+                'org_repo': HG_REPO,
+                'org_ref': 'rev:9e6119747791:9e6119747791ff886a5abe1193a730b6bf874e1c',
+                'other_repo': HG_REPO,
+                'other_ref': 'branch:default:3d1091ee5a533b1f4577ec7d8a226bb315fb1336',
+                'pullrequest_title': 'title',
+                'pullrequest_desc': 'description',
+                '_authentication_token': self.authentication_token(),
+            },
+            status=302)
+        pr1_id = int(re.search('/pull-request/(\d+)/', response.location).group(1))
+        pr1 = PullRequest.get(pr1_id)
+
+        assert pr1.org_ref == 'branch:webvcs:9e6119747791ff886a5abe1193a730b6bf874e1c'
+        assert pr1.other_ref == 'branch:default:948da46b29c125838a717f6a8496eb409717078d'
+
+        Session().rollback() # invalidate loaded PR objects before issuing next request.
+
+        # create PR 2 (new iteration with same ancestor)
+        response = self.app.post(
+            url(controller='pullrequests', action='post', repo_name=HG_REPO, pull_request_id=pr1_id),
+            {
+                'updaterev': '5ec21f21aafe95220f1fc4843a4a57c378498b71',
+                'pullrequest_title': 'title',
+                'pullrequest_desc': 'description',
+                'owner': TEST_USER_REGULAR_LOGIN,
+                '_authentication_token': self.authentication_token(),
+             },
+             status=302)
+        pr2_id = int(re.search('/pull-request/(\d+)/', response.location).group(1))
+        pr1 = PullRequest.get(pr1_id)
+        pr2 = PullRequest.get(pr2_id)
+
+        assert pr2_id != pr1_id
+        assert pr1.status == PullRequest.STATUS_CLOSED
+        assert pr2.org_ref == 'branch:webvcs:5ec21f21aafe95220f1fc4843a4a57c378498b71'
+        assert pr2.other_ref == pr1.other_ref
+
+        Session().rollback() # invalidate loaded PR objects before issuing next request.
+
+        # create PR 3 (new iteration with new ancestor)
+        response = self.app.post(
+            url(controller='pullrequests', action='post', repo_name=HG_REPO, pull_request_id=pr2_id),
+            {
+                'updaterev': 'fb95b340e0d03fa51f33c56c991c08077c99303e',
+                'pullrequest_title': 'title',
+                'pullrequest_desc': 'description',
+                'owner': TEST_USER_REGULAR_LOGIN,
+                '_authentication_token': self.authentication_token(),
+             },
+             status=302)
+        pr3_id = int(re.search('/pull-request/(\d+)/', response.location).group(1))
+        pr2 = PullRequest.get(pr2_id)
+        pr3 = PullRequest.get(pr3_id)
+
+        assert pr3_id != pr2_id
+        assert pr2.status == PullRequest.STATUS_CLOSED
+        assert pr3.org_ref == 'branch:webvcs:fb95b340e0d03fa51f33c56c991c08077c99303e'
+        assert pr3.other_ref == 'branch:default:41d2568309a05f422cffb8008e599d385f8af439'
+
 
 @pytest.mark.usefixtures("test_context_fixture") # apply fixture for all test methods
 class TestPullrequestsGetRepoRefs(TestController):
