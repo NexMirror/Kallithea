@@ -36,6 +36,7 @@ import os
 import re
 import tempfile
 import time
+import pytest
 
 from tempfile import _RandomNameSequence
 from subprocess import Popen, PIPE
@@ -179,6 +180,7 @@ def _check_proper_git_push(stdout, stderr):
     assert 'master -> master' in stderr
 
 
+@pytest.mark.usefixtures("test_context_fixture")
 class TestVCSOperations(TestController):
 
     @classmethod
