@@ -31,6 +31,12 @@ import logging.config
 
 import paste.deploy
 import gearbox.command
+from tg import config
+
+import kallithea.config.middleware
+import kallithea.model.base
+import kallithea.lib.utils2
+import kallithea.lib.utils
 
 
 def ask_ok(prompt, retries=4, complaint='Yes or no please!'):
@@ -59,12 +65,18 @@ class BasePasterCommand(gearbox.command.Command):
         """
         Overrides Command.run
 
-        Checks for a config file argument and loads it.
+        If needed by the command, read config file and initialize database before running.
         """
         if self.takes_config_file:
-             self._bootstrap_config(args.config_file)
-             if self.requires_db_session:
-                  self._init_session()
+            path_to_ini_file = os.path.realpath(args.config_file)
+            conf = paste.deploy.appconfig('config:' + path_to_ini_file)
+            logging.config.fileConfig(path_to_ini_file)
+            kallithea.config.middleware.make_app(conf.global_conf, **conf.local_conf)
+
+            if self.requires_db_session:
+                kallithea.lib.utils.setup_cache_regions(config)
+                engine = kallithea.lib.utils2.engine_from_config(config, 'sqlalchemy.')
+                kallithea.model.base.init_model(engine)
 
         return super(BasePasterCommand, self).run(args)
 
@@ -77,30 +89,6 @@ class BasePasterCommand(gearbox.command.Command):
                 dest='config_file', required=True)
 
         return parser
-
-    def _bootstrap_config(self, config_file):
-        """
-        Read the config file and initialize logging and the application.
-        """
-        from kallithea.config.middleware import make_app
-
-        path_to_ini_file = os.path.realpath(config_file)
-        conf = paste.deploy.appconfig('config:' + path_to_ini_file)
-        logging.config.fileConfig(path_to_ini_file)
-        make_app(conf.global_conf, **conf.local_conf)
-
-    def _init_session(self):
-        """
-        Initialize SqlAlchemy Session from global config.
-        """
-
-        from tg import config
-        from kallithea.model.base import init_model
-        from kallithea.lib.utils2 import engine_from_config
-        from kallithea.lib.utils import setup_cache_regions
-        setup_cache_regions(config)
-        engine = engine_from_config(config, 'sqlalchemy.')
-        init_model(engine)
 
     def error(self, msg, exitcode=1):
         """Write error message and exit"""
