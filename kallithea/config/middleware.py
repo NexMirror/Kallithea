@@ -13,7 +13,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """WSGI middleware initialization for the Kallithea application."""
 
-import logging
+import logging.config
 from kallithea.config.app_cfg import base_config
 from kallithea.config.environment import load_environment
 

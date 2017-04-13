@@ -36,7 +36,6 @@ from os.path import dirname
 import alembic.config
 import alembic.command
 
-from kallithea.lib.paster_commands.common import ask_ok
 from kallithea.model.user import UserModel
 from kallithea.model.base import init_model
 from kallithea.model.db import User, Permission, Ui, \
@@ -78,6 +77,7 @@ class DbManage(object):
         force_ask = self.cli_args.get('force_ask')
         if force_ask is not None:
             return force_ask
+        from kallithea.lib.paster_commands.common import ask_ok
         return ask_ok(msg)
 
     def init_db(self, SESSION=None):
