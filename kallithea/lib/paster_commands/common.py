@@ -71,9 +71,9 @@ class BasePasterCommand(gearbox.command.Command):
             path_to_ini_file = os.path.realpath(args.config_file)
             conf = paste.deploy.appconfig('config:' + path_to_ini_file)
             logging.config.fileConfig(path_to_ini_file)
-            kallithea.config.middleware.make_app_without_logging(conf.global_conf, **conf.local_conf)
 
             if self.requires_db_session:
+                kallithea.config.middleware.make_app_without_logging(conf.global_conf, **conf.local_conf)
                 kallithea.lib.utils.setup_cache_regions(config)
                 engine = kallithea.lib.utils2.engine_from_config(config, 'sqlalchemy.')
                 kallithea.model.base.init_model(engine)
