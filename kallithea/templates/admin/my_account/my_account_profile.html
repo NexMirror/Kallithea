@@ -2,18 +2,16 @@ ${h.form(url('my_account'), method='post')}
     <div class="form">
         <div class="form-horizontal">
             <div class="form-group">
-                <div class="gravatar_box">
+                <label class="control-label">${_('Gravatar')}:</label>
+                <div class="gravatar_box clearfix">
                     ${h.gravatar_div(c.user.email)}
-                    <p>
+                </div>
+                <div>
                     %if c.visual.use_gravatar:
-                        <strong>${_('Change your avatar at')} <a href="http://gravatar.com">gravatar.com</a></strong>
-                        <br/>${_('Using')} ${c.user.email}
+                        ${_('Change %s avatar at') % c.user.email} <a href="http://gravatar.com">gravatar.com</a>
                     %else:
-                        <strong>${_('Avatars are disabled')}</strong>
-                        <br/>${c.user.email or _('Missing email, please update your user email address.')}
-                        [${_('Current IP')}: ${request.ip_addr}]
+                        ${_('Avatars are disabled')}
                     %endif
-                    </p>
                 </div>
             </div>
 

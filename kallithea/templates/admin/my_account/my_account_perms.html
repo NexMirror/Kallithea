@@ -1,5 +1,9 @@
 ## permissions overview
 <div id="perms_container">
+<h4>${_('Current IP')}</h4>
+<div>
+  ${request.ip_addr}
+</div>
 <%namespace name="p" file="/base/perms_summary.html"/>
 ${p.perms_summary(c.perm_user.permissions, actions=False)}
 </div>

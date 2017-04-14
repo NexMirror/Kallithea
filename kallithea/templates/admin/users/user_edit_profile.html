@@ -1,23 +1,19 @@
 ${h.form(url('update_user', id=c.user.user_id))}
     <div class="form">
-        <div class="form-group">
-            <div class="gravatar_box">
-                ${h.gravatar_div(c.user.email)}
-                <p>
-                %if c.visual.use_gravatar:
-                <strong>${_('Change avatar at')} <a href="http://gravatar.com">gravatar.com</a></strong>
-                <br/>${_('Using')} ${c.user.email}
-                %else:
-                <strong>${_('Avatars are disabled')}</strong>
-                <br/>${c.user.email or _('Missing email, please update this user email address.')}
-                        ##show current ip just if we show ourself
-                        %if request.authuser.username == c.user.username:
-                            [${_('Current IP')}: ${request.ip_addr}]
-                        %endif
-                %endif
-            </div>
-        </div>
         <div class="form-horizontal">
+            <div class="form-group">
+                <label class="control-label">${_('Gravatar')}:</label>
+                <div class="gravatar_box clearfix">
+                    ${h.gravatar_div(c.user.email)}
+                </div>
+                <div>
+                    %if c.visual.use_gravatar:
+                        ${_('Change %s avatar at') % c.user.email} <a href="http://gravatar.com">gravatar.com</a>
+                    %else:
+                        ${_('Avatars are disabled')}
+                    %endif
+                </div>
+            </div>
 
             <div class="form-group">
                 <label class="control-label" for="username">${_('Username')}:</label>
