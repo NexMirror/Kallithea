@@ -363,10 +363,9 @@ def authenticate(username, password, environ=None):
     """
 
     auth_plugins = get_auth_plugins()
-    log.debug('Authentication against %s plugins', auth_plugins)
     for plugin in auth_plugins:
         module = plugin.__class__.__module__
-        log.debug('Trying authentication using ** %s **', module)
+        log.debug('Trying authentication using %s', module)
         # load plugin settings from Kallithea database
         plugin_name = plugin.name
         plugin_settings = {}
@@ -374,7 +373,7 @@ def authenticate(username, password, environ=None):
             conf_key = "auth_%s_%s" % (plugin_name, v["name"])
             setting = Setting.get_by_name(conf_key)
             plugin_settings[v["name"]] = setting.app_settings_value if setting else None
-        log.debug('Plugin settings \n%s', formatted_json(plugin_settings))
+        log.debug('Settings for auth plugin %s:\n%s', plugin_name, formatted_json(plugin_settings))
 
         if not str2bool(plugin_settings["enabled"]):
             log.info("Authentication plugin %s is disabled, skipping for %s",
@@ -384,7 +383,7 @@ def authenticate(username, password, environ=None):
         # use plugin's method of user extraction.
         user = plugin.get_user(username, environ=environ,
                                settings=plugin_settings)
-        log.debug('Plugin %s extracted user is `%s`', module, user)
+        log.debug('Plugin %s extracted user `%s`', module, user)
         if not plugin.accepts(user):
             log.debug('Plugin %s does not accept user `%s` for authentication',
                       module, user)
@@ -399,7 +398,7 @@ def authenticate(username, password, environ=None):
             if user is not None:
                 username = user.username
 
-        log.info('Authenticating user using %s plugin', plugin.__module__)
+        log.info('Authenticating user using %s plugin', module)
 
         # _authenticate is a wrapper for .auth() method of plugin.
         # it checks if .auth() sends proper data. For KallitheaExternalAuthPlugin
@@ -409,7 +408,7 @@ def authenticate(username, password, environ=None):
         user_data = plugin._authenticate(user, username, password,
                                            plugin_settings,
                                            environ=environ or {})
-        log.debug('PLUGIN USER DATA: %s', user_data)
+        log.debug('Plugin user data: %s', user_data)
 
         if user_data is not None:
             log.debug('Plugin returned proper authentication data')
@@ -418,7 +417,7 @@ def authenticate(username, password, environ=None):
         # we failed to Auth because .auth() method didn't return the user
         if username:
             log.warning("User `%s` failed to authenticate against %s",
-                        username, plugin.__module__)
+                        username, module)
     return None
 
 def get_managed_fields(user):
