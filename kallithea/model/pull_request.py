@@ -39,7 +39,7 @@ from kallithea.lib import helpers as h
 from kallithea.model.db import PullRequest, PullRequestReviewer, Notification, \
     ChangesetStatus, User
 from kallithea.model.notification import NotificationModel
-from kallithea.lib.utils2 import extract_mentioned_users, safe_unicode
+from kallithea.lib.utils2 import extract_mentioned_users, safe_str, safe_unicode
 
 
 log = logging.getLogger(__name__)
@@ -139,6 +139,12 @@ class PullRequestModel(object):
     def delete(self, pull_request):
         pull_request = PullRequest.guess_instance(pull_request)
         Session().delete(pull_request)
+        if pull_request.org_repo.scm_instance.alias == 'git':
+            # remove a ref under refs/pull/ so that commits can be garbage-collected
+            try:
+                del pull_request.org_repo.scm_instance._repo["refs/pull/%d/head" % pull_request.pull_request_id]
+            except KeyError:
+                pass
 
     def close_pull_request(self, pull_request):
         pull_request = PullRequest.guess_instance(pull_request)
@@ -228,6 +234,7 @@ class CreatePullRequestAction(object):
         self.org_repo = org_repo
         self.other_repo = other_repo
         self.org_ref = org_ref
+        self.org_rev = org_rev
         self.other_ref = other_ref
         self.title = title
         self.description = description
@@ -251,6 +258,10 @@ class CreatePullRequestAction(object):
         pr.owner = self.owner
         Session().add(pr)
         Session().flush() # make database assign pull_request_id
+
+        if self.org_repo.scm_instance.alias == 'git':
+            # create a ref under refs/pull/ so that commits don't get garbage-collected
+            self.org_repo.scm_instance._repo["refs/pull/%d/head" % pr.pull_request_id] = safe_str(self.org_rev)
 
         #reset state to under-review
         from kallithea.model.changeset_status import ChangesetStatusModel
