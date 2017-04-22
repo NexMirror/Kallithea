@@ -8,17 +8,17 @@ msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2015-09-08 10:34+0200\n"
-"PO-Revision-Date: 2015-08-08 12:03+0300\n"
-"Last-Translator: Andrew Shadura <andrew@shadura.me>\n"
+"PO-Revision-Date: 2017-04-22 21:08+0000\n"
+"Last-Translator: Viktar Vauchkevich <victorenator@gmail.com>\n"
 "Language-Team: Belarusian "
-"<https://hosted.weblate.org/projects/kallithea/kallithea/be/>\n"
+"<https://hosted.weblate.org/projects/kallithea/stable/be/>\n"
 "Language: be\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
 "4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 2.4-dev\n"
+"X-Generator: Weblate 2.14-dev\n"
 
 #: kallithea/controllers/changelog.py:86
 #: kallithea/controllers/pullrequests.py:238 kallithea/lib/base.py:512
@@ -1284,9 +1284,9 @@ msgstr[2] "%d хвілін"
 #, python-format
 msgid "%d second"
 msgid_plural "%d seconds"
-msgstr[0] "%d секунды"
+msgstr[0] "%d секунда"
 msgstr[1] "%d секунды"
-msgstr[2] "%d секунды"
+msgstr[2] "%d секунд"
 
 #: kallithea/lib/utils2.py:436
 #, python-format
@@ -1956,8 +1956,7 @@ msgstr "Новы карыстач \"%(new_username)s\" зарэгістрава�
 
 #: kallithea/model/notification.py:307
 #, fuzzy, python-format
-#| msgid "%(user)s wants you to review pull request %(pr_nice_id)s:
-#| %(pr_title)s"
+#| msgid "%(user)s wants you to review pull request %(pr_nice_id)s:"
 msgid "[Added] %(repo_name)s pull request %(pr_nice_id)s from %(ref)s"
 msgstr "%(user)s просіць вас разгледзець pull request %(pr_nice_id)s: %(pr_title)s"
 
@@ -2474,8 +2473,7 @@ msgstr "Паслаць спасылку скіду пароля"
 
 #: kallithea/templates/password_reset.html:47
 #, fuzzy
-#| msgid "" "Password reset link will be sent to the email address matching
-#| your " "username."
+#| msgid "" "
 msgid ""
 "A password reset link will be sent to the specified email address if it "
 "is registered in the system."
@@ -3085,7 +3083,7 @@ msgstr "Змена пароля"
 
 #: kallithea/templates/admin/my_account/my_account_password.html:10
 msgid "Current password"
-msgstr "Бягучы пароль"
+msgstr "Дзейны пароль"
 
 #: kallithea/templates/admin/my_account/my_account_password.html:19
 #: kallithea/templates/admin/users/user_edit_profile.html:60
@@ -3121,9 +3119,8 @@ msgstr "Не паказаны email. Калі ласка, абновіце ва�
 
 #: kallithea/templates/admin/my_account/my_account_profile.html:16
 #: kallithea/templates/admin/users/user_edit_profile.html:15
-#, fuzzy
 msgid "Current IP"
-msgstr "бягучы IP-адрас"
+msgstr "Цяперашні IP"
 
 #: kallithea/templates/admin/my_account/my_account_repos.html:1
 msgid "Repositories You Own"
@@ -6357,4 +6354,3 @@ msgstr "Параўнаць тэгі"
 
 #~ msgid "Created by"
 #~ msgstr "Створана"
-
