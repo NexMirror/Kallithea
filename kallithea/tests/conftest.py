@@ -8,10 +8,12 @@ from routes.util import URLGenerator
 
 import pytest
 from kallithea.controllers.root import RootController
+from kallithea.lib.utils import repo2db_mapper
 from kallithea.model.user import UserModel
 from kallithea.model.meta import Session
 from kallithea.model.db import Setting, User, UserIpMap
-from kallithea.tests.base import invalidate_all_caches, TEST_USER_REGULAR_LOGIN
+from kallithea.model.scm import ScmModel
+from kallithea.tests.base import invalidate_all_caches, TEST_USER_REGULAR_LOGIN, TESTS_TMP_PATH
 import kallithea.tests.base # FIXME: needed for setting testapp instance!!!
 
 from tg.util.webtest import test_context
@@ -26,23 +28,24 @@ def pytest_configure():
 
     context = loadwsgi.loadcontext(loadwsgi.APP, 'config:kallithea/tests/test.ini', relative_to=path)
 
-    test_env = not int(os.environ.get('KALLITHEA_NO_TMP_PATH', 0))
-    test_index = not int(os.environ.get('KALLITHEA_WHOOSH_TEST_DISABLE', 0))
     if os.environ.get('TEST_DB'):
         # swap config if we pass environment variable
         context.local_conf['sqlalchemy.url'] = os.environ.get('TEST_DB')
 
     from kallithea.tests.fixture import create_test_env, create_test_index
-    from kallithea.tests.base import TESTS_TMP_PATH
-    # set KALLITHEA_NO_TMP_PATH=1 to disable re-creating the database and
-    # test repos
-    if test_env:
+
+    # set KALLITHEA_NO_TMP_PATH=1 to disable re-creating the database and test repos
+    if not int(os.environ.get('KALLITHEA_NO_TMP_PATH', 0)):
         create_test_env(TESTS_TMP_PATH, context.config())
+
     # set KALLITHEA_WHOOSH_TEST_DISABLE=1 to disable whoosh index during tests
-    if test_index:
+    if not int(os.environ.get('KALLITHEA_WHOOSH_TEST_DISABLE', 0)):
         create_test_index(TESTS_TMP_PATH, context.config(), True)
 
     kallithea.tests.base.testapp = context.create()
+    # do initial repo scan
+    repo2db_mapper(ScmModel().repo_scan(TESTS_TMP_PATH))
+
     logging.disable(logging.NOTSET)
 
     kallithea.tests.base.url = URLGenerator(RootController().mapper, kallithea.tests.base.environ)

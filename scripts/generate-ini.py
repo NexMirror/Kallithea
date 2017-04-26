@@ -30,7 +30,6 @@ ini_files = [
     ('kallithea/tests/test.ini',
         '''
         Kallithea - config for tests:
-        initial_repo_scan = true
         sqlalchemy and kallithea_test.sqlite
         custom logging
 
@@ -41,7 +40,6 @@ ini_files = [
                 'port': '4999',
             },
             '[app:main]': {
-                'initial_repo_scan': 'true',
                 'app_instance_uuid': 'test',
                 'show_revision_number': 'true',
                 'beaker.cache.sql_cache_short.expire': '1',
