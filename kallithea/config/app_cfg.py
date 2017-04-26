@@ -150,25 +150,6 @@ def setup_configuration(app):
 
     load_rcextensions(root_path=config['here'])
 
-    # FIXME move test setup code out of here
-    test = os.path.split(config['__file__'])[-1] == 'test.ini'
-    if test:
-        test_env = not int(os.environ.get('KALLITHEA_NO_TMP_PATH', 0))
-        test_index = not int(os.environ.get('KALLITHEA_WHOOSH_TEST_DISABLE', 0))
-        if os.environ.get('TEST_DB'):
-            # swap config if we pass environment variable
-            config['sqlalchemy.url'] = os.environ.get('TEST_DB')
-
-        from kallithea.tests.fixture import create_test_env, create_test_index
-        from kallithea.tests.base import TESTS_TMP_PATH
-        #set KALLITHEA_NO_TMP_PATH=1 to disable re-creating the database and
-        #test repos
-        if test_env:
-            create_test_env(TESTS_TMP_PATH, config)
-        #set KALLITHEA_WHOOSH_TEST_DISABLE=1 to disable whoosh index during tests
-        if test_index:
-            create_test_index(TESTS_TMP_PATH, config, True)
-
     set_available_permissions(config)
     repos_path = make_ui('db').configitems('paths')[0][1]
     config['base_path'] = repos_path

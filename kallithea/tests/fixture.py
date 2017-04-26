@@ -342,8 +342,8 @@ def create_test_env(repos_test_path, config):
     # PART TWO make test repo
     log.debug('making test vcs repositories')
 
-    idx_path = config['app_conf']['index_dir']
-    data_path = config['app_conf']['cache_dir']
+    idx_path = config['index_dir']
+    data_path = config['cache_dir']
 
     #clean index and data
     if idx_path and os.path.exists(idx_path):
@@ -376,7 +376,7 @@ def create_test_index(repo_location, config, full_index):
     from kallithea.lib.indexers.daemon import WhooshIndexingDaemon
     from kallithea.lib.pidlock import DaemonLock, LockHeld
 
-    index_location = os.path.join(config['app_conf']['index_dir'])
+    index_location = os.path.join(config['index_dir'])
     if not os.path.exists(index_location):
         os.makedirs(index_location)
 

@@ -3,9 +3,8 @@ import sys
 import logging
 import pkg_resources
 
-from paste.deploy import loadapp
+from paste.deploy import loadwsgi
 from routes.util import URLGenerator
-from tg import config
 
 import pytest
 from kallithea.controllers.root import RootController
@@ -24,7 +23,26 @@ def pytest_configure():
 
     # Disable INFO logging of test database creation, restore with NOTSET
     logging.disable(logging.INFO)
-    kallithea.tests.base.testapp = loadapp('config:kallithea/tests/test.ini', relative_to=path)
+
+    context = loadwsgi.loadcontext(loadwsgi.APP, 'config:kallithea/tests/test.ini', relative_to=path)
+
+    test_env = not int(os.environ.get('KALLITHEA_NO_TMP_PATH', 0))
+    test_index = not int(os.environ.get('KALLITHEA_WHOOSH_TEST_DISABLE', 0))
+    if os.environ.get('TEST_DB'):
+        # swap config if we pass environment variable
+        context.local_conf['sqlalchemy.url'] = os.environ.get('TEST_DB')
+
+    from kallithea.tests.fixture import create_test_env, create_test_index
+    from kallithea.tests.base import TESTS_TMP_PATH
+    # set KALLITHEA_NO_TMP_PATH=1 to disable re-creating the database and
+    # test repos
+    if test_env:
+        create_test_env(TESTS_TMP_PATH, context.config())
+    # set KALLITHEA_WHOOSH_TEST_DISABLE=1 to disable whoosh index during tests
+    if test_index:
+        create_test_index(TESTS_TMP_PATH, context.config(), True)
+
+    kallithea.tests.base.testapp = context.create()
     logging.disable(logging.NOTSET)
 
     kallithea.tests.base.url = URLGenerator(RootController().mapper, kallithea.tests.base.environ)
