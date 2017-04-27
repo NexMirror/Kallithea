@@ -113,9 +113,9 @@ def _add_files_and_push(vcs, DEST, **kwargs):
     :param DEST:
     """
     # commit some stuff into this repo
-    cwd = path = os.path.join(DEST)
-    #added_file = os.path.join(path, '%ssetupążźć.py' % _RandomNameSequence().next())
-    added_file = os.path.join(path, '%ssetup.py' % _RandomNameSequence().next())
+    cwd = os.path.join(DEST)
+    #added_file = '%ssetupążźć.py' % _RandomNameSequence().next()
+    added_file = '%ssetup.py' % _RandomNameSequence().next()
     Command(cwd).execute('touch %s' % added_file)
     Command(cwd).execute('%s add %s' % (vcs, added_file))
 
