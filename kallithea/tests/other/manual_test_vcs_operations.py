@@ -435,6 +435,9 @@ class TestVCSOperations(TestController):
         assert msg in stderr
 
     def test_push_on_locked_repo_by_other_user_git(self):
+        # Note: Git hooks must be executable on unix. This test will thus fail
+        # for example on Linux if /tmp is mounted noexec.
+
         #clone some temp
         DEST = _get_tmp_dir()
         clone_url = _construct_url(GIT_REPO)

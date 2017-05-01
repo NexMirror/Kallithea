@@ -57,6 +57,11 @@ project root::
 
 Note that testing on Python 2.6 also requires ``unittest2``.
 
+Note that on unix systems, the temporary directory (``/tmp`` or where
+``$TMPDIR`` points) must allow executable files; Git hooks must be executable,
+and the test suite creates repositories in the temporary directory. Linux
+systems with /tmp mounted noexec will thus fail.
+
 You can also use ``tox`` to run the tests with all supported Python versions
 (currently Python 2.6--2.7).
 
