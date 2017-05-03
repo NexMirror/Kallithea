@@ -444,7 +444,8 @@ function SummaryPlot(from,to,dataset,overview_dataset) {
     // user choices on overview
     YUE.on(choiceContainer.getElementsByTagName("input"), "click", plotchoiced, [data, initial_ranges]);
 }
-    SummaryPlot(${h.jshtml(c.ts_min)}, ${h.jshtml(c.ts_max)}, ${h.js(c.commit_data)}, ${h.js(c.overview_data)});
+
+SummaryPlot(${h.js(c.ts_min)}, ${h.js(c.ts_max)}, ${h.js(c.commit_data)}, ${h.js(c.overview_data)});
 </script>
 
 </%def>

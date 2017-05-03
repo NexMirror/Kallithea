@@ -192,8 +192,8 @@ class SummaryController(BaseRepoController):
         if stats and stats.languages:
             c.no_data = False is c.db_repo.enable_statistics
             lang_stats_d = json.loads(stats.languages)
-            c.commit_data = stats.commit_activity
-            c.overview_data = stats.commit_activity_combined
+            c.commit_data = json.loads(stats.commit_activity)
+            c.overview_data = json.loads(stats.commit_activity_combined)
 
             lang_stats = ((x, {"count": y,
                                "desc": LANGUAGES_EXTENSIONS_MAP.get(x)})
