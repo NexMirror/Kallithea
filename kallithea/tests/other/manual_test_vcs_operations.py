@@ -526,8 +526,8 @@ class TestVCSOperations(TestController):
                 UserIpMap.delete(ip.ip_id)
             Session().commit()
 
-        # IP permissions are cached, need to invalidate this cache explicitly
-        invalidate_all_caches()
+        # IP permissions are cached, need to wait for the cache in the server process to expire
+        time.sleep(1.5)
 
         clone_url = _construct_url(HG_REPO)
         stdout, stderr = Command(tempfile.gettempdir()).execute('hg clone', clone_url)
@@ -554,8 +554,8 @@ class TestVCSOperations(TestController):
                 UserIpMap.delete(ip.ip_id)
             Session().commit()
 
-        # IP permissions are cached, need to invalidate this cache explicitly
-        invalidate_all_caches()
+        # IP permissions are cached, need to wait for the cache in the server process to expire
+        time.sleep(1.5)
 
         clone_url = _construct_url(GIT_REPO)
         stdout, stderr = Command(tempfile.gettempdir()).execute('git clone', clone_url)
