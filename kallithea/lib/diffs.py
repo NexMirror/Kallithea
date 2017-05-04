@@ -31,10 +31,10 @@ import logging
 
 from tg.i18n import ugettext as _
 
+from kallithea.lib import helpers as h
 from kallithea.lib.vcs.exceptions import VCSError
 from kallithea.lib.vcs.nodes import FileNode, SubModuleNode
 from kallithea.lib.vcs.backends.base import EmptyChangeset
-from kallithea.lib.helpers import escape
 from kallithea.lib.utils2 import safe_unicode
 
 log = logging.getLogger(__name__)
@@ -218,7 +218,7 @@ def wrapped_diff(filenode_old, filenode_new, diff_limit=None,
         submodules = filter(lambda o: isinstance(o, SubModuleNode),
                             [filenode_new, filenode_old])
         if submodules:
-            html_diff = wrap_to_table(escape('Submodule %r' % submodules[0]))
+            html_diff = wrap_to_table(h.escape('Submodule %r' % submodules[0]))
         else:
             html_diff = wrap_to_table(_('No changes detected'))
 
@@ -257,8 +257,12 @@ def get_diff(scm_instance, rev1, rev2, path=None, ignore_whitespace=False, conte
     """
     A thin wrapper around vcs lib get_diff.
     """
-    return scm_instance.get_diff(rev1, rev2, path=path,
-                                 ignore_whitespace=ignore_whitespace, context=context)
+    try:
+        return scm_instance.get_diff(rev1, rev2, path=path,
+                                     ignore_whitespace=ignore_whitespace, context=context)
+    except MemoryError:
+        h.flash('MemoryError: Diff is too big', category='error')
+        return ''
 
 
 NEW_FILENODE = 1
