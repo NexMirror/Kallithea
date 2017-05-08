@@ -77,6 +77,7 @@ class Fixture(object):
         return context()
 
     def _get_repo_create_params(self, **custom):
+        """Return form values to be validated through RepoForm"""
         defs = dict(
             repo_name=None,
             repo_type='hg',
@@ -98,11 +99,12 @@ class Fixture(object):
 
         return defs
 
-    def _get_group_create_params(self, **custom):
+    def _get_repo_group_create_params(self, **custom):
+        """Return form values to be validated through RepoGroupForm"""
         defs = dict(
             group_name=None,
             group_description=u'DESC',
-            parent_group_id=None,
+            parent_group_id=u'-1',
             perms_updates=[],
             perms_new=[],
             enable_locking=False,
@@ -139,17 +141,18 @@ class Fixture(object):
 
         return defs
 
-    def create_repo(self, name, **kwargs):
+    def create_repo(self, name, repo_group=None, **kwargs):
         if 'skip_if_exists' in kwargs:
             del kwargs['skip_if_exists']
             r = Repository.get_by_repo_name(name)
             if r:
                 return r
 
-        if isinstance(kwargs.get('repo_group'), RepoGroup):
-            kwargs['repo_group'] = kwargs['repo_group'].group_id
+        if isinstance(repo_group, RepoGroup):
+            repo_group = repo_group.group_id
 
         form_data = self._get_repo_create_params(repo_name=name, **kwargs)
+        form_data['repo_group'] = repo_group # patch form dict so it can be used directly by model
         cur_user = kwargs.get('cur_user', TEST_USER_ADMIN_LOGIN)
         RepoModel().create(form_data, cur_user)
         Session().commit()
@@ -163,9 +166,7 @@ class Fixture(object):
                                             fork_parent_id=repo_to_fork,
                                             repo_type=repo_to_fork.repo_type,
                                             **kwargs)
-        form_data['update_after_clone'] = False
-
-        #TODO: fix it !!
+        # patch form dict so it can be used directly by model
         form_data['description'] = form_data['repo_description']
         form_data['private'] = form_data['repo_private']
         form_data['landing_rev'] = form_data['repo_landing_rev']
@@ -182,18 +183,19 @@ class Fixture(object):
         RepoModel().delete(repo_name, **kwargs)
         Session().commit()
 
-    def create_repo_group(self, name, **kwargs):
+    def create_repo_group(self, name, parent_group_id=None, **kwargs):
         if 'skip_if_exists' in kwargs:
             del kwargs['skip_if_exists']
             gr = RepoGroup.get_by_group_name(group_name=name)
             if gr:
                 return gr
-        form_data = self._get_group_create_params(group_name=name, **kwargs)
-        owner = kwargs.get('cur_user', TEST_USER_ADMIN_LOGIN)
+        form_data = self._get_repo_group_create_params(group_name=name, **kwargs)
         gr = RepoGroupModel().create(
             group_name=form_data['group_name'],
             group_description=form_data['group_name'],
-            owner=owner, parent=form_data['parent_group_id'])
+            parent=parent_group_id,
+            owner=kwargs.get('cur_user', TEST_USER_ADMIN_LOGIN),
+            )
         Session().commit()
         gr = RepoGroup.get_by_group_name(gr.group_name)
         return gr

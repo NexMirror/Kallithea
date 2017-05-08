@@ -273,19 +273,24 @@ class RepoGroupModel(object):
 
         return updates
 
-    def update(self, repo_group, form_data):
-
+    def update(self, repo_group, kwargs):
         try:
             repo_group = RepoGroup.guess_instance(repo_group)
             old_path = repo_group.full_path
 
             # change properties
-            repo_group.group_description = form_data['group_description']
-            repo_group.parent_group_id = form_data['parent_group_id']
-            repo_group.enable_locking = form_data['enable_locking']
+            if 'group_description' in kwargs:
+                repo_group.group_description = kwargs['group_description']
+            if 'parent_group_id' in kwargs:
+                repo_group.parent_group_id = kwargs['parent_group_id']
+            if 'enable_locking' in kwargs:
+                repo_group.enable_locking = kwargs['enable_locking']
 
-            repo_group.parent_group = RepoGroup.get(form_data['parent_group_id'])
-            repo_group.group_name = repo_group.get_new_name(form_data['group_name'])
+            if 'parent_group_id' in kwargs:
+                assert kwargs['parent_group_id'] != u'-1', kwargs # RepoGroupForm should have converted to None
+                repo_group.parent_group = RepoGroup.get(kwargs['parent_group_id'])
+            if 'group_name' in kwargs:
+                repo_group.group_name = repo_group.get_new_name(kwargs['group_name'])
             new_path = repo_group.full_path
             Session().add(repo_group)
 

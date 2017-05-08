@@ -452,7 +452,6 @@ def create_repo_fork(form_data, cur_user):
                       fork_of.repo_name, '')
         DBS.commit()
 
-        update_after_clone = form_data['update_after_clone'] # FIXME - unused!
         source_repo_path = os.path.join(base_path, fork_of.repo_name)
 
         # now create this repo on Filesystem

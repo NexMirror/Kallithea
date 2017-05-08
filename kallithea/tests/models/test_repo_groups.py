@@ -14,23 +14,23 @@ from kallithea.model.meta import Session
 fixture = Fixture()
 
 
-def _update_group(id_, group_name, desc=u'desc', parent_id=None):
-    form_data = fixture._get_group_create_params(group_name=group_name,
-                                                 group_desc=desc,
-                                                 parent_group_id=parent_id)
-    gr = RepoGroupModel().update(id_, form_data)
-    return gr
+def _update_repo_group(id_, group_name, desc=u'desc', parent_id=None):
+    form_data = dict(
+        group_name=group_name,
+        group_description=desc,
+        parent_group_id=parent_id,
+        )
+    return RepoGroupModel().update(id_, form_data)
 
 
 def _update_repo(name, **kwargs):
-    form_data = fixture._get_repo_create_params(**kwargs)
     if not 'repo_name' in kwargs:
-        form_data['repo_name'] = name
+        kwargs['repo_name'] = name
     if not 'perms_new' in kwargs:
-        form_data['perms_new'] = []
+        kwargs['perms_new'] = []
     if not 'perms_updates' in kwargs:
-        form_data['perms_updates'] = []
-    r = RepoModel().update(name, **form_data)
+        kwargs['perms_updates'] = []
+    r = RepoModel().update(name, **kwargs)
     return r
 
 
@@ -97,7 +97,7 @@ class TestRepoGroups(TestController):
     def test_rename_single_group(self):
         sg1 = fixture.create_repo_group(u'initial')
 
-        new_sg1 = _update_group(sg1.group_id, u'after')
+        new_sg1 = _update_repo_group(sg1.group_id, u'after')
         assert self.__check_path('after')
         assert RepoGroup.get_by_group_name(u'initial') == None
 
@@ -105,15 +105,15 @@ class TestRepoGroups(TestController):
 
         sg1 = fixture.create_repo_group(u'initial', parent_group_id=self.g1.group_id)
 
-        new_sg1 = _update_group(sg1.group_id, u'after', parent_id=self.g1.group_id)
+        new_sg1 = _update_repo_group(sg1.group_id, u'after', parent_id=self.g1.group_id)
         assert self.__check_path('test1', 'after')
         assert RepoGroup.get_by_group_name(u'test1/initial') == None
 
-        new_sg1 = _update_group(sg1.group_id, u'after', parent_id=self.g3.group_id)
+        new_sg1 = _update_repo_group(sg1.group_id, u'after', parent_id=self.g3.group_id)
         assert self.__check_path('test3', 'after')
         assert RepoGroup.get_by_group_name(u'test3/initial') == None
 
-        new_sg1 = _update_group(sg1.group_id, u'hello')
+        new_sg1 = _update_repo_group(sg1.group_id, u'hello')
         assert self.__check_path('hello')
 
         assert RepoGroup.get_by_group_name(u'hello') == new_sg1
@@ -131,7 +131,7 @@ class TestRepoGroups(TestController):
         Session().commit()
         assert r.repo_name == 'g1/john'
 
-        _update_group(g1.group_id, u'g1', parent_id=g2.group_id)
+        _update_repo_group(g1.group_id, u'g1', parent_id=g2.group_id)
         assert self.__check_path('g2', 'g1')
 
         # test repo
@@ -145,7 +145,7 @@ class TestRepoGroups(TestController):
         assert g2.full_path == 't11/t22'
         assert self.__check_path('t11', 't22')
 
-        g2 = _update_group(g2.group_id, u'g22', parent_id=None)
+        g2 = _update_repo_group(g2.group_id, u'g22', parent_id=None)
         Session().commit()
 
         assert g2.group_name == 'g22'
@@ -162,7 +162,7 @@ class TestRepoGroups(TestController):
         r = fixture.create_repo(u'L1/L2/L3/L3_REPO', repo_group=g3.group_id)
 
         ##rename L1 all groups should be now changed
-        _update_group(g1.group_id, u'L1_NEW')
+        _update_repo_group(g1.group_id, u'L1_NEW')
         Session().commit()
         assert g1.full_path == 'L1_NEW'
         assert g2.full_path == 'L1_NEW/L2'
@@ -177,7 +177,7 @@ class TestRepoGroups(TestController):
 
         r = fixture.create_repo(u'R1/R2/R3/R3_REPO', repo_group=g3.group_id)
         ##rename L1 all groups should be now changed
-        _update_group(g1.group_id, u'R1', parent_id=g4.group_id)
+        _update_repo_group(g1.group_id, u'R1', parent_id=g4.group_id)
         Session().commit()
         assert g1.full_path == 'R1_NEW/R1'
         assert g2.full_path == 'R1_NEW/R1/R2'
@@ -193,7 +193,7 @@ class TestRepoGroups(TestController):
         r = fixture.create_repo(u'X1/X2/X3/X3_REPO', repo_group=g3.group_id)
 
         ##rename L1 all groups should be now changed
-        _update_group(g1.group_id, u'X1_PRIM', parent_id=g4.group_id)
+        _update_repo_group(g1.group_id, u'X1_PRIM', parent_id=g4.group_id)
         Session().commit()
         assert g1.full_path == 'X1_NEW/X1_PRIM'
         assert g2.full_path == 'X1_NEW/X1_PRIM/X2'
