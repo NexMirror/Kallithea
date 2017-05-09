@@ -254,7 +254,7 @@ class JournalController(BaseController):
             try:
                 self.scm_model.toggle_following_user(user_id,
                                             request.authuser.user_id)
-                Session.commit()
+                Session().commit()
                 return 'ok'
             except Exception:
                 log.error(traceback.format_exc())
@@ -265,7 +265,7 @@ class JournalController(BaseController):
             try:
                 self.scm_model.toggle_following_repo(repo_id,
                                             request.authuser.user_id)
-                Session.commit()
+                Session().commit()
                 return 'ok'
             except Exception:
                 log.error(traceback.format_exc())

@@ -278,7 +278,7 @@ class _BaseTestApi(object):
         repo_name = u'test_pull'
         r = fixture.create_repo(repo_name, repo_type=self.REPO_TYPE)
         r.clone_uri = os.path.join(Ui.get_by_key('paths', '/').ui_value, self.REPO)
-        Session.commit()
+        Session().commit()
 
         id_, params = _build_data(self.apikey, 'pull',
                                   repoid=repo_name,)

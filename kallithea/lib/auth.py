@@ -43,7 +43,6 @@ from webob.exc import HTTPFound, HTTPBadRequest, HTTPForbidden, HTTPMethodNotAll
 from kallithea import __platform__, is_windows, is_unix
 from kallithea.config.routing import url
 from kallithea.lib.vcs.utils.lazy import LazyProperty
-from kallithea.model import meta
 from kallithea.model.meta import Session
 from kallithea.model.user import UserModel
 from kallithea.model.db import User, Repository, Permission, \
@@ -724,11 +723,10 @@ def set_available_permissions(config):
     """
     log.info('getting information about all available permissions')
     try:
-        sa = meta.Session
-        all_perms = sa.query(Permission).all()
+        all_perms = Session().query(Permission).all()
         config['available_permissions'] = [x.permission_name for x in all_perms]
     finally:
-        meta.Session.remove()
+        Session.remove()
 
 
 #==============================================================================
