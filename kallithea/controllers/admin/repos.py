@@ -387,12 +387,11 @@ class ReposController(BaseRepoController):
             new_field.field_label = form_result['new_field_label']
             Session().add(new_field)
             Session().commit()
+        except formencode.Invalid as e:
+            h.flash(_('Field validation error: %s') % e.msg, category='error')
         except Exception as e:
             log.error(traceback.format_exc())
-            msg = _('An error occurred during creation of field')
-            if isinstance(e, formencode.Invalid):
-                msg += ". " + e.msg
-            h.flash(msg, category='error')
+            h.flash(_('An error occurred during creation of field: %r') % e, category='error')
         raise HTTPFound(location=url('edit_repo_fields', repo_name=repo_name))
 
     @HasRepoPermissionLevelDecorator('admin')
