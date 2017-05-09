@@ -29,15 +29,3 @@ def get_version():
     Returns shorter version (digit parts only) as string.
     """
     return '.'.join((str(each) for each in VERSION[:3]))
-
-
-def main(argv=None):
-    if argv is None:
-        argv = sys.argv
-    from kallithea.lib.vcs.cli import ExecutionManager
-    manager = ExecutionManager(argv)
-    manager.execute()
-    return 0
-
-if __name__ == '__main__':
-    sys.exit(main(sys.argv))
