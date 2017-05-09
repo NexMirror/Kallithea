@@ -507,7 +507,6 @@ sqlalchemy.url = mysql://user:pass@localhost/kallithea?charset=utf8
 %endif
 # see sqlalchemy docs for others
 
-sqlalchemy.echo = false
 sqlalchemy.pool_recycle = 3600
 
 <%text>################################</%text>

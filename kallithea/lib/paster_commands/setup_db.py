@@ -95,7 +95,7 @@ class Command(BasePasterCommand):
         conf = paste.deploy.appconfig('config:' + path_to_ini_file)
 
         dbconf = conf['sqlalchemy.url']
-        dbmanage = DbManage(log_sql=True, dbconf=dbconf, root=conf['here'],
+        dbmanage = DbManage(dbconf=dbconf, root=conf['here'],
                             tests=False, cli_args=vars(opts))
         dbmanage.create_tables(override=True)
         opts = dbmanage.config_prompt(None)

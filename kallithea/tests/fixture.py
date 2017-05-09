@@ -329,7 +329,7 @@ def create_test_env(repos_test_path, config):
         log.debug('Creating testdir %s', repos_test_path)
         os.makedirs(repos_test_path)
 
-    dbmanage = DbManage(log_sql=True, dbconf=dbconf, root=config['here'],
+    dbmanage = DbManage(dbconf=dbconf, root=config['here'],
                         tests=True)
     dbmanage.create_tables(override=True)
     # for tests dynamically set new root paths based on generated content
