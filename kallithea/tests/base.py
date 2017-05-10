@@ -23,14 +23,11 @@ import time
 from tg import config
 from webtest import TestApp
 
-from kallithea import is_windows, model
+from kallithea import model
 from kallithea.model.db import Notification, User, UserNotification
 from kallithea.model.meta import Session
 from kallithea.lib.utils2 import safe_str
 
-os.environ['TZ'] = 'UTC'
-if not is_windows:
-    time.tzset()
 
 log = logging.getLogger(__name__)
 

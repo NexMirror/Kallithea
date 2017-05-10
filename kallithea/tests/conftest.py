@@ -2,6 +2,7 @@ import os
 import sys
 import logging
 import pkg_resources
+import time
 
 from paste.deploy import loadwsgi
 from routes.util import URLGenerator
@@ -21,6 +22,10 @@ import kallithea.tests.base # FIXME: needed for setting testapp instance!!!
 from tg.util.webtest import test_context
 
 def pytest_configure():
+    os.environ['TZ'] = 'UTC'
+    if not kallithea.is_windows:
+        time.tzset()
+
     path = os.getcwd()
     sys.path.insert(0, path)
     pkg_resources.working_set.add_entry(path)
