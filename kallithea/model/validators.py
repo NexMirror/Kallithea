@@ -34,7 +34,7 @@ from kallithea.lib import ipaddr
 from kallithea.lib.utils import repo_name_slug
 from kallithea.lib.utils2 import str2bool, aslist
 from kallithea.model.db import RepoGroup, Repository, UserGroup, User
-from kallithea.lib.exceptions import LdapImportError
+from kallithea.lib.exceptions import LdapImportError, HgsubversionImportError
 from kallithea.config.routing import ADMIN_PREFIX
 from kallithea.lib.auth import HasRepoGroupPermissionLevel, HasPermissionAny
 
@@ -420,7 +420,11 @@ def ValidCloneUri():
                 # or does it pass basic auth
                 MercurialRepository._check_url(url, ui)
             elif url.startswith('svn+http'):
-                from hgsubversion.svnrepo import svnremoterepo
+                try:
+                    from hgsubversion.svnrepo import svnremoterepo
+                except ImportError:
+                    raise HgsubversionImportError(_('Unable to activate hgsubversion support. '
+                          'The "hgsubversion" library is missing'))
                 svnremoterepo(ui, url).svn.uuid
             elif url.startswith('git+http'):
                 raise NotImplementedError()
