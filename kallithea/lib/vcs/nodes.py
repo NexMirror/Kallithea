@@ -315,18 +315,8 @@ class FileNode(Node):
 
     def get_mimetype(self):
         """
-        Mimetype is calculated based on the file's content. If ``_mimetype``
-        attribute is available, it will be returned (backends which store
-        mimetypes or can easily recognize them, should set this private
-        attribute to indicate that type should *NOT* be calculated).
+        Mimetype is calculated based on the file's content.
         """
-        if hasattr(self, '_mimetype'):
-            if (isinstance(self._mimetype, (tuple, list,)) and
-                len(self._mimetype) == 2):
-                return self._mimetype
-            else:
-                raise NodeError('given _mimetype attribute must be an 2 '
-                                'element list or tuple')
 
         mtype, encoding = mimetypes.guess_type(self.name)
 

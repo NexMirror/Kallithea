@@ -152,13 +152,11 @@ class NodeBasicTest(unittest.TestCase):
         py_node = FileNode('test.py')
         tar_node = FileNode('test.tar.gz')
 
-        ext = 'CustomExtension'
-
         my_node2 = FileNode('myfile2')
-        my_node2._mimetype = [ext]
+        my_node2._content = 'foobar'
 
         my_node3 = FileNode('myfile3')
-        my_node3._mimetype = [ext,ext]
+        my_node3._content = '\0foobar'
 
         self.assertEqual(py_node.mimetype, mimetypes.guess_type(py_node.name)[0])
         self.assertEqual(py_node.get_mimetype(), mimetypes.guess_type(py_node.name))
@@ -166,10 +164,11 @@ class NodeBasicTest(unittest.TestCase):
         self.assertEqual(tar_node.mimetype, mimetypes.guess_type(tar_node.name)[0])
         self.assertEqual(tar_node.get_mimetype(), mimetypes.guess_type(tar_node.name))
 
-        self.assertRaises(NodeError,my_node2.get_mimetype)
+        self.assertEqual(my_node2.mimetype, 'text/plain')
+        self.assertEqual(my_node2.get_mimetype(), ('text/plain', None))
 
-        self.assertEqual(my_node3.mimetype,ext)
-        self.assertEqual(my_node3.get_mimetype(),[ext,ext])
+        self.assertEqual(my_node3.mimetype, 'application/octet-stream')
+        self.assertEqual(my_node3.get_mimetype(), ('application/octet-stream', None))
 
 class NodeContentTest(unittest.TestCase):
 
