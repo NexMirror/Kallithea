@@ -575,7 +575,7 @@ qualname = gearbox
 propagate = 1
 
 [logger_sqlalchemy]
-level = INFO
+level = WARN
 handlers = console_sql
 qualname = sqlalchemy.engine
 propagate = 0
@@ -593,13 +593,11 @@ propagate = 1
 [handler_console]
 class = StreamHandler
 args = (sys.stderr,)
-level = INFO
 formatter = generic
 
 [handler_console_sql]
 class = StreamHandler
 args = (sys.stderr,)
-level = WARN
 formatter = generic
 
 <%text>################</%text>
