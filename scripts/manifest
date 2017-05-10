@@ -356,7 +356,6 @@ kallithea/lib/paster_commands/setup_db.py
 kallithea/lib/paster_commands/template.ini.mako
 kallithea/lib/paster_commands/update_repoinfo.py
 kallithea/lib/pidlock.py
-kallithea/lib/profiler.py
 kallithea/lib/rcmail/
 kallithea/lib/rcmail/__init__.py
 kallithea/lib/rcmail/exceptions.py
