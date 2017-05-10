@@ -207,7 +207,7 @@ class LdapSync(object):
         groups = self.ldap_client.get_groups()
         for group in groups:
             try:
-                self.kallithea_api.create_repo_group(group)
+                self.kallithea_api.create_group(group)
                 added += 1
             except Exception:
                 existing += 1
