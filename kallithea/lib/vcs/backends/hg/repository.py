@@ -421,11 +421,11 @@ class MercurialRepository(BaseRepository):
 
         try:
             revision = hex(self._repo.lookup(revision))
-        except (LookupError, ):
-            msg = ("Ambiguous identifier `%s` for %s" % (revision, self))
-            raise ChangesetDoesNotExistError(msg)
         except (IndexError, ValueError, RepoLookupError, TypeError):
             msg = ("Revision %s does not exist for %s" % (revision, self))
+            raise ChangesetDoesNotExistError(msg)
+        except (LookupError, ):
+            msg = ("Ambiguous identifier `%s` for %s" % (revision, self))
             raise ChangesetDoesNotExistError(msg)
 
         return revision
