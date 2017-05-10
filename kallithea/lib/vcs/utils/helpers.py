@@ -99,16 +99,6 @@ def get_scms_for_path(path):
     return result
 
 
-def run_command(cmd, *args):
-    """
-    Runs command on the system with given ``args``.
-    """
-    command = ' '.join((cmd, args))
-    p = Popen(command, shell=True, stdout=PIPE, stderr=PIPE)
-    stdout, stderr = p.communicate()
-    return p.retcode, stdout, stderr
-
-
 def get_highlighted_code(name, code, type='terminal'):
     """
     If pygments are available on the system
