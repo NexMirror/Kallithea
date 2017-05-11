@@ -24,7 +24,7 @@ import tg
 from tg import hooks
 from tg.configuration import AppConfig
 from tg.support.converters import asbool
-import alembic
+import alembic.config
 from alembic.script.base import ScriptDirectory
 from alembic.migration import MigrationContext
 from sqlalchemy import create_engine
@@ -33,14 +33,13 @@ from kallithea.lib.middleware.https_fixup import HttpsFixup
 from kallithea.lib.middleware.simplegit import SimpleGit
 from kallithea.lib.middleware.simplehg import SimpleHg
 from kallithea.lib.auth import set_available_permissions
-from kallithea.lib.db_manage import DbManage
 from kallithea.lib.utils import load_rcextensions, make_ui, set_app_settings, set_vcs_config, \
     set_indexer_config, check_git_version, repo2db_mapper
 from kallithea.lib.utils2 import str2bool
+import kallithea.model.base
 from kallithea.model.scm import ScmModel
 
 import formencode
-import kallithea
 
 log = logging.getLogger(__name__)
 
