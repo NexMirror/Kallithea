@@ -390,10 +390,10 @@ class ScmModel(object):
 
     def pull_changes(self, repo, username):
         """
-        Pull from "clone URL".
+        Pull from "clone URL" or fork origin.
         """
         dbrepo = self.__get_repo(repo)
-        clone_uri = dbrepo.clone_uri
+        clone_uri = dbrepo.clone_uri or dbrepo.fork and dbrepo.fork.repo_full_path
         if not clone_uri:
             raise Exception("This repository doesn't have a clone uri")
 

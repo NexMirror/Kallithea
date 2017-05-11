@@ -1,6 +1,12 @@
-%if c.repo_info.clone_uri:
+%if c.repo_info.clone_uri or c.repo_info.fork:
 <h4>
-   ${_('Remote repository URL')}: <a href="${c.repo_info.clone_uri}">${c.repo_info.clone_uri_hidden}</a>
+  %if c.repo_info.fork:
+    ${_('Fork of repository')}:
+    <a href="${h.url('summary_home',repo_name=c.repo_info.fork.repo_name)}">${c.repo_info.fork.repo_name}</a>
+  %else:
+    ${_('Remote repository URL')}:
+    <a href="${c.repo_info.clone_uri}">${c.repo_info.clone_uri_hidden}</a>
+  %endif
 </h4>
 ${h.form(url('edit_repo_remote_update', repo_name=c.repo_name))}
 <div class="form">
