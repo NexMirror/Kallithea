@@ -829,7 +829,7 @@ class NotAnonymous(object):
 
 
 class _PermsDecorator(object):
-    """Base class for controller decorators"""
+    """Base class for controller decorators with multiple permissions"""
 
     def __init__(self, *required_perms):
         self.required_perms = required_perms # usually very short - a list is thus fine
@@ -868,29 +868,35 @@ class HasPermissionAnyDecorator(_PermsDecorator):
         return any(p in global_permissions for p in self.required_perms)
 
 
-class HasRepoPermissionLevelDecorator(_PermsDecorator):
+class _PermDecorator(_PermsDecorator):
+    """Base class for controller decorators with a single permission"""
+
+    def __init__(self, required_perm):
+        _PermsDecorator.__init__(self, [required_perm])
+        self.required_perm = required_perm
+
+
+class HasRepoPermissionLevelDecorator(_PermDecorator):
     """
     Checks the user has at least the specified permission level for the requested repository.
     """
 
     def check_permissions(self, user):
         repo_name = get_repo_slug(request)
-        (level,) = self.required_perms
-        return user.has_repository_permission_level(repo_name, level)
+        return user.has_repository_permission_level(repo_name, self.required_perm)
 
 
-class HasRepoGroupPermissionLevelDecorator(_PermsDecorator):
+class HasRepoGroupPermissionLevelDecorator(_PermDecorator):
     """
     Checks the user has any of given permissions for the requested repository group.
     """
 
     def check_permissions(self, user):
         repo_group_name = get_repo_group_slug(request)
-        (level,) = self.required_perms
-        return user.has_repository_group_permission_level(repo_group_name, level)
+        return user.has_repository_group_permission_level(repo_group_name, self.required_perm)
 
 
-class HasUserGroupPermissionLevelDecorator(_PermsDecorator):
+class HasUserGroupPermissionLevelDecorator(_PermDecorator):
     """
     Checks for access permission for any of given predicates for specific
     user group. In order to fulfill the request any of predicates must be meet
@@ -898,8 +904,7 @@ class HasUserGroupPermissionLevelDecorator(_PermsDecorator):
 
     def check_permissions(self, user):
         user_group_name = get_user_group_slug(request)
-        (level,) = self.required_perms
-        return user.has_user_group_permission_level(user_group_name, level)
+        return user.has_user_group_permission_level(user_group_name, self.required_perm)
 
 
 #==============================================================================
@@ -907,7 +912,7 @@ class HasUserGroupPermissionLevelDecorator(_PermsDecorator):
 #==============================================================================
 
 class _PermsFunction(object):
-    """Base function for other check functions"""
+    """Base function for other check functions with multiple permissions"""
 
     def __init__(self, *required_perms):
         self.required_perms = required_perms # usually very short - a list is thus fine
@@ -934,25 +939,30 @@ class HasPermissionAny(_PermsFunction):
         return ok
 
 
-class HasRepoPermissionLevel(_PermsFunction):
+class _PermFunction(_PermsFunction):
+    """Base function for other check functions with a single permission"""
+
+    def __init__(self, required_perm):
+        _PermsFunction.__init__(self, [required_perm])
+        self.required_perm = required_perm
+
+
+class HasRepoPermissionLevel(_PermFunction):
 
     def __call__(self, repo_name, purpose=None):
-        (level,) = self.required_perms
-        return request.user.has_repository_permission_level(repo_name, level, purpose)
+        return request.user.has_repository_permission_level(repo_name, self.required_perm, purpose)
 
 
-class HasRepoGroupPermissionLevel(_PermsFunction):
+class HasRepoGroupPermissionLevel(_PermFunction):
 
     def __call__(self, group_name, purpose=None):
-        (level,) = self.required_perms
-        return request.user.has_repository_group_permission_level(group_name, level, purpose)
+        return request.user.has_repository_group_permission_level(group_name, self.required_perm, purpose)
 
 
-class HasUserGroupPermissionLevel(_PermsFunction):
+class HasUserGroupPermissionLevel(_PermFunction):
 
     def __call__(self, user_group_name, purpose=None):
-        (level,) = self.required_perms
-        return request.user.has_user_group_permission_level(user_group_name, level, purpose)
+        return request.user.has_user_group_permission_level(user_group_name, self.required_perm, purpose)
 
 
 #==============================================================================
