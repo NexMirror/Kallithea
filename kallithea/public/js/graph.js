@@ -112,8 +112,9 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 			extinct_node = cur[6];
 			unstable_node = cur[7];
 
-			var firstincell = $(row).find('td>:visible')[0];
-			var nextFirstincell = $(next).find('td>:visible')[0];
+			// center dots on the first element in a td (not necessarily the first one, but there must be one)
+			var firstincell = $(row).find('td>*')[0];
+			var nextFirstincell = $(next).find('td>*')[0];
 			var rowY = Math.floor(row.offsetTop + firstincell.offsetTop + firstincell.offsetHeight/2);
 			var nextY = Math.floor((next == null) ? rowY + row.offsetHeight/2 : next.offsetTop + nextFirstincell.offsetTop + nextFirstincell.offsetHeight/2);
 

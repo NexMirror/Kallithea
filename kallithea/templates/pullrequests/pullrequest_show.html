@@ -165,7 +165,7 @@ ${self.repo_context_bar('showpullrequest')}
                             ${h.radio(name='updaterev', value='', checked=True)}
                           %endif
                         </td>
-                        <td colspan="4">${_("Current revision - no change")}</td>
+                        <td colspan="4"><span>${_("Current revision - no change")}</span></td>
                       %else:
                         <td>
                           %if editable and cs.revision in c.avail_revs:
