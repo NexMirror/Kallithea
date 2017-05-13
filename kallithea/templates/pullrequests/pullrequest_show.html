@@ -160,18 +160,18 @@ ${self.repo_context_bar('showpullrequest')}
                   %for cnt, cs in enumerate(c.avail_cs):
                     <tr id="chg_available_${cnt+1}" class="${'mergerow' if len(cs.parents) > 1 and not (editable and cs.revision in c.avail_revs) else ''}">
                       %if c.cs_ranges and cs.revision == c.cs_ranges[-1].revision:
+                        %if editable:
                         <td>
-                          %if editable:
                             ${h.radio(name='updaterev', value='', checked=True)}
-                          %endif
                         </td>
+                        %endif
                         <td colspan="4"><span>${_("Current revision - no change")}</span></td>
                       %else:
+                        %if editable:
                         <td>
-                          %if editable and cs.revision in c.avail_revs:
-                            ${h.radio(name='updaterev', value=cs.raw_id)}
-                          %endif
+                          ${h.radio(name='updaterev', value=cs.raw_id, style=None if cs.revision in c.avail_revs else 'visibility: hidden')}
                         </td>
+                        %endif
                         <td style="width: 120px"><span data-toggle="tooltip" title="${h.age(cs.date)}">${cs.date}</span></td>
                         <td>${h.link_to(h.show_id(cs),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id), class_='changeset_hash')}</td>
                         <td>
