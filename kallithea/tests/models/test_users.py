@@ -29,7 +29,11 @@ class TestUser(TestController):
         Session().commit()
         assert User.get_by_username(u'test_user') == usr
         assert User.get_by_username(u'test_USER', case_insensitive=True) == usr
-        assert User.get_by_username(u'test_USER', case_insensitive=False) == None
+        # User.get_by_username without explicit request for case insensitivty
+        # will use database case sensitivity. The following will thus return
+        # None on for example PostgreSQL but find test_user on MySQL - we are
+        # fine with leaving that as undefined as long as it doesn't crash.
+        User.get_by_username(u'test_USER', case_insensitive=False)
 
         # make user group
         user_group = fixture.create_user_group(u'some_example_group')
