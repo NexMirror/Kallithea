@@ -34,7 +34,7 @@ To get started with development::
         cd kallithea
         virtualenv ../kallithea-venv
         source ../kallithea-venv/bin/activate
-        pip install --upgrade pip setuptools
+        pip install --upgrade pip "setuptools<34"
         pip install -e .
         paster make-config Kallithea my.ini
         paster setup-db my.ini --user=user --email=user@example.com --password=password --repos=/tmp

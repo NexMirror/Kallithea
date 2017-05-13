@@ -35,6 +35,7 @@ __platform__ = platform.system()
 is_windows = __platform__ in ['Windows']
 
 requirements = [
+    "setuptools<34", # setuptools==34 has an undeclared requirement of pyparsing >=2.1, but celery<2.3 requires pyparsing<2
     "waitress==0.8.8",
     "webob>=1.0.8,<=1.1.1",
     "webtest==1.4.3",
