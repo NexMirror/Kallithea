@@ -182,7 +182,13 @@ Notes on the SQLAlchemy session
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Each HTTP request runs inside an independent SQLAlchemy session (as well
-as in an independent database transaction). Database model objects
+as in an independent database transaction). ``Session`` is the session manager
+and factory. ``Session()`` will create a new session on-demand or return the
+current session for the active thread. Many database operations are methods on
+such session instances - only ``Session.remove()`` should be called directly on
+the manager.
+
+Database model objects
 (almost) always belong to a particular SQLAlchemy session, which means
 that SQLAlchemy will ensure that they're kept in sync with the database
 (but also means that they cannot be shared across requests).
