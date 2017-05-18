@@ -18,16 +18,12 @@
 
     ##FORK
     %if c.db_repo.fork:
-    <span>
         - <i class="icon-fork"></i> ${_('Fork of')} "<a href="${h.url('summary_home',repo_name=c.db_repo.fork.repo_name)}">${c.db_repo.fork.repo_name}</a>"
-    </span>
     %endif
 
     ##REMOTE
     %if c.db_repo.clone_uri:
-    <span>
        - <i class="icon-fork"></i> ${_('Clone from')} "<a href="${h.url(str(h.hide_credentials(c.db_repo.clone_uri)))}">${h.hide_credentials(c.db_repo.clone_uri)}</a>"
-    <span>
     %endif
 </%def>
 

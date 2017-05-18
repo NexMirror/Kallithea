@@ -12,8 +12,7 @@
             </div>
 
             %if request.authuser.username != 'default':
-              <ul class="pull-right links">
-                <li>
+              <div class="pull-right">
                 <%
                     gr_name = c.group.group_name if c.group else None
                     # create repositories with write permission on group is set to true
@@ -37,8 +36,7 @@
                 %if c.group and h.HasRepoGroupPermissionLevel('admin')(c.group.group_name):
                     <a href="${h.url('edit_repo_group',group_name=c.group.group_name)}" title="${_('You have admin right to this group, and can edit it')}" class="btn btn-default btn-xs"><i class="icon-pencil"></i> ${_('Edit Repository Group')}</a>
                 %endif
-                </li>
-              </ul>
+              </div>
             %endif
         </div>
         %if c.groups:

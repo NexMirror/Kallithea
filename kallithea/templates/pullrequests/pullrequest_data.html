@@ -11,18 +11,18 @@
   <table class="table">
     <thead>
       <tr>
-        <th class="left">${_('Vote')}</th>
-        <th class="left">${_('Title')}</th>
-        <th class="left">${_('Owner')}</th>
-        <th class="left">${_('Age')}</th>
-        <th class="left">${_('From')}</th>
-        <th class="left">${_('To')}</th>
-        <th class="left">${_('Delete')}</th>
+        <th>${_('Vote')}</th>
+        <th>${_('Title')}</th>
+        <th>${_('Owner')}</th>
+        <th>${_('Age')}</th>
+        <th>${_('From')}</th>
+        <th>${_('To')}</th>
+        <th>${_('Delete')}</th>
       </tr>
     </thead>
 % for pr in pullrequests:
     <tr class="${'pr-closed' if pr.is_closed() else ''}">
-      <td width="80px">
+      <td>
         <% status = pr.user_review_status(request.authuser.user_id) %>
         %if status:
           <i class="icon-circle changeset-status-${status}" title="${_('You voted: %s') % h.changeset_status_lbl(status)}"></i>
