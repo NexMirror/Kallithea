@@ -3183,11 +3183,6 @@ input.perm_filter {
     font-size: 16px;
 }
 
-.compare-revision-selector > div {
-    display: inline-block;
-    margin-right: 8px;
-}
-
 table.code-difftable {
     border-collapse: collapse;
     border-radius: 0px !important;

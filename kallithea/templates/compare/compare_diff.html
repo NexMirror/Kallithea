@@ -28,18 +28,18 @@ ${self.repo_context_bar('changelog')}
         <div id="body" class="panel-heading">
             <div class="compare-revision-selector">
                 ## divs are "inline-block" and cannot have whitespace between them.
-                <div>
+                <span>
                     ${h.hidden('compare_org')}
-                </div><div>
+                </span><span>
                     <i class="icon-right"></i>
-                </div><div>
+                </span><span>
                     ${h.hidden('compare_other')}
-                </div><div>
+                </span><span>
                     %if not c.compare_home:
                         <a class="btn btn-default btn-sm" href="${c.swap_url}"><i class="icon-arrows-cw"></i> ${_('Swap')}</a>
                     %endif
                     <div id="compare_revs" class="btn btn-default btn-sm"><i class="icon-git-compare"></i> ${_('Compare Revisions')}</div>
-                </div>
+                </span>
             </div>
         </div>
 
