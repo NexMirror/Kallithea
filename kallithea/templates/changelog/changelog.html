@@ -72,13 +72,14 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                 <table class="table" id="changesets">
                 <tbody>
                 %for cnt,cs in enumerate(c.pagination):
-                    <tr id="chg_${cnt+1}" class="container ${'mergerow' if len(cs.parents) > 1 else ''}">
+                    <tr id="chg_${cnt+1}" class="${'mergerow' if len(cs.parents) > 1 else ''}">
                         <td class="checkbox-column">
                             %if c.changelog_for_path:
                                 ${h.checkbox(cs.raw_id,class_="changeset_range", disabled="disabled")}
                             %else:
                                 ${h.checkbox(cs.raw_id,class_="changeset_range")}
                             %endif
+                        </td>
                         <td class="status">
                           %if c.statuses.get(cs.raw_id):
                             <div class="changeset-status-ico">
@@ -279,7 +280,7 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
 
                 var $msgs = $('.message');
                 // get first element height
-                var el = $('#graph_content .container')[0];
+                var el = $('#graph_content tr')[0];
                 var row_h = el.clientHeight;
                 $msgs.each(function() {
                     var m = this;

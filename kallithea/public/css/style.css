@@ -1512,46 +1512,46 @@ tr.out-of-range > td.mid .message > a {
     text-align: left;
 }
 
-#graph_content .container .checkbox-column {
+#graph_content tr .checkbox-column {
     width: 14px;
     font-size: 0.85em;
 }
 
-#graph_content .container .status {
+#graph_content tr .status {
     width: 14px;
     font-size: 0.85em;
 }
 
-#graph_content .container .author {
+#graph_content tr .author {
    width: 105px;
 }
 
-#graph_content .container .hash {
+#graph_content tr .hash {
     width: 100px;
     font-size: 0.85em;
 }
 
-#graph_content #changesets .container .date {
+#graph_content tr .date {
     width: 76px;
     color: #666;
     font-size: 10px;
 }
 
 #graph_content_pr .compare_view_commits .expand_commit,
-#graph_content .container .expand_commit {
+#graph_content tr .expand_commit {
     width: 24px;
     cursor: pointer;
     color: #999;
 }
 
-#graph_content #changesets .container .right {
+#graph_content tr .right {
     width: 120px;
     padding-right: 0px;
     overflow: visible;
     position: relative;
 }
 
-#graph_content .container .mid {
+#graph_content tr .mid {
     padding: 0;
 }
 
@@ -1560,21 +1560,21 @@ tr.out-of-range > td.mid .message > a {
     margin-top: 8px;
 }
 
-#graph_content .container #singlerange,
-#graph_content .container .changeset_range {
+#graph_content tr #singlerange,
+#graph_content tr .changeset_range {
     float: left;
     margin: 2px 0;
 }
 
-#graph_content .container .author img {
+#graph_content tr .author img {
     vertical-align: middle;
 }
 
-#graph_content .container .author .user {
+#graph_content tr .author .user {
     color: #444444;
 }
 
-#graph_content .container .mid .message,
+#graph_content tr td.mid .message,
 #graph_content_pr .compare_view_commits .message {
     white-space: pre-wrap;
     padding: 0;
@@ -1586,13 +1586,13 @@ tr.out-of-range > td.mid .message > a {
     padding: 0 !important;
 }
 
-#graph_content .container .mid .message.expanded,
+#graph_content tr td.mid .message.expanded,
 #graph_content_pr .compare_view_commits .message.expanded {
     height: auto;
     overflow: initial;
 }
 
-#graph_content .container .extra-container {
+#graph_content tr .extra-container {
     display: block;
     position: absolute;
     top: -15px;
@@ -1660,7 +1660,7 @@ tr.out-of-range > td.mid .message > a {
     font-size: 10px;
 }
 
-#graph_content .container .mid .message a:hover {
+#graph_content tr .mid .message a:hover {
     text-decoration: none;
 }
 
@@ -2471,7 +2471,7 @@ div.form div.form-horizontal div.buttons {
 }
 
 #changeset_content .container .wrapper,
-#graph_content .container .wrapper {
+#graph_content tr .wrapper {
     width: 600px;
 }
 
