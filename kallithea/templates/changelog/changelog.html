@@ -182,6 +182,9 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
 
         <script type="text/javascript" src="${h.url('/js/graph.js', ver=c.kallithea_version)}"></script>
         <script type="text/javascript">
+            var jsdata = ${h.js(c.jsdata)};
+            var graph = new BranchRenderer('graph_canvas', 'graph_content', 'chg_');
+
             $(document).ready(function(){
                 var $checkboxes = $('.changeset_range');
 
@@ -264,14 +267,14 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                 checkbox_checker();
                 $checkboxes.click(function() {
                     checkbox_checker();
-                    r.render(jsdata);
+                    graph.render(jsdata);
                 });
                 $('#singlerange').click(checkbox_checker);
 
                 $('#rev_range_clear').click(function(e){
                     $checkboxes.prop('checked', false);
                     checkbox_checker();
-                    r.render(jsdata);
+                    graph.render(jsdata);
                 });
 
                 var $msgs = $('.message');
@@ -294,7 +297,7 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                     $('#C-'+cid).toggleClass('expanded');
 
                     //redraw the graph, r and jsdata are bound outside function
-                    r.render(jsdata);
+                    graph.render(jsdata);
                 });
 
                 // change branch filter
@@ -315,11 +318,12 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                     $("#changelog").hide();
                 });
 
-                var jsdata = ${h.js(c.jsdata)};
-                var r = new BranchRenderer('graph_canvas', 'graph_content', 'chg_');
-                r.render(jsdata);
+                graph.render(jsdata);
             });
 
+            $(window).resize(function(){
+                graph.render(jsdata);
+            });
         </script>
         %else:
             ${_('There are no changes yet')}
