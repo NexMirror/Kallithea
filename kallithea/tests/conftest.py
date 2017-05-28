@@ -55,7 +55,7 @@ def pytest_configure():
 
     logging.disable(logging.NOTSET)
 
-    kallithea.tests.base.url = URLGenerator(RootController().mapper, kallithea.tests.base.environ)
+    kallithea.tests.base.url = URLGenerator(RootController().mapper, {'HTTP_HOST': 'example.com'})
 
 
 @pytest.fixture

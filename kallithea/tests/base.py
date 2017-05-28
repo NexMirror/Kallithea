@@ -39,7 +39,7 @@ url = None
 testapp = None
 
 __all__ = [
-    'skipif', 'parametrize', 'environ', 'url', 'TestController',
+    'skipif', 'parametrize', 'url', 'TestController',
     'ldap_lib_installed', 'pam_lib_installed', 'invalidate_all_caches',
     'TESTS_TMP_PATH', 'HG_REPO', 'GIT_REPO', 'NEW_HG_REPO', 'NEW_GIT_REPO',
     'HG_FORK', 'GIT_FORK', 'TEST_USER_ADMIN_LOGIN', 'TEST_USER_ADMIN_PASS',
@@ -53,8 +53,6 @@ __all__ = [
 
 # Invoke websetup with the current config file
 # SetupCommand('setup-app').run([config_file])
-
-environ = {}
 
 #SOME GLOBALS FOR TESTS
 
