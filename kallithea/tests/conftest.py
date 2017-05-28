@@ -24,7 +24,7 @@ from tg.util.webtest import test_context
 def pytest_configure():
     os.environ['TZ'] = 'UTC'
     if not kallithea.is_windows:
-        time.tzset()
+        time.tzset() # only available on Unix
 
     path = os.getcwd()
     sys.path.insert(0, path)
