@@ -4,7 +4,6 @@ import sys
 import mock
 import datetime
 import urllib2
-import tempfile
 
 import pytest
 
@@ -14,7 +13,7 @@ from kallithea.lib.vcs.nodes import NodeKind, FileNode, DirNode, NodeState
 from kallithea.lib.vcs.utils.compat import unittest
 from kallithea.model.scm import ScmModel
 from kallithea.tests.vcs.base import _BackendTestMixin
-from kallithea.tests.vcs.conf import TEST_GIT_REPO, TEST_GIT_REPO_CLONE, get_new_dir
+from kallithea.tests.vcs.conf import TEST_GIT_REPO, TEST_GIT_REPO_CLONE, TEST_TMP_PATH, get_new_dir
 
 
 class GitRepositoryTest(unittest.TestCase):
@@ -29,7 +28,7 @@ class GitRepositoryTest(unittest.TestCase):
         self.repo = GitRepository(TEST_GIT_REPO)
 
     def test_wrong_repo_path(self):
-        wrong_repo_path = os.path.join(tempfile.gettempdir(), 'errorrepo')
+        wrong_repo_path = os.path.join(TEST_TMP_PATH, 'errorrepo')
         self.assertRaises(RepositoryError, GitRepository, wrong_repo_path)
 
     def test_git_cmd_injection(self):

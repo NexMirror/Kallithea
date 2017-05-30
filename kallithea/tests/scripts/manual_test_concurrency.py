@@ -159,11 +159,8 @@ def get_anonymous_access():
 # TESTS
 #==============================================================================
 def test_clone_with_credentials(no_errors=False, repo=HG_REPO, method=METHOD,
-                                seq=None, backend='hg'):
+                                backend='hg'):
     cwd = path = os.path.join(Ui.get_by_key('paths', '/').ui_value, repo)
-
-    if seq is None:
-        seq = _RandomNameSequence().next()
 
     try:
         shutil.rmtree(path, ignore_errors=True)
@@ -178,12 +175,11 @@ def test_clone_with_credentials(no_errors=False, repo=HG_REPO, method=METHOD,
                    'host': HOST,
                    'cloned_repo': repo, }
 
-    dest = path + seq
+    dest = tempfile.mktemp(dir=path, prefix='dest-')
     if method == 'pull':
         stdout, stderr = Command(cwd).execute(backend, method, '--cwd', dest, clone_url)
     else:
         stdout, stderr = Command(cwd).execute(backend, method, clone_url, dest)
-        print stdout,'sdasdsadsa'
         if not no_errors:
             if backend == 'hg':
                 assert """adding file changes""" in stdout, 'no messages about cloning'
@@ -194,7 +190,6 @@ def test_clone_with_credentials(no_errors=False, repo=HG_REPO, method=METHOD,
 if __name__ == '__main__':
     try:
         create_test_user(force=False)
-        seq = None
         import time
 
         try:
@@ -210,12 +205,12 @@ if __name__ == '__main__':
         if METHOD == 'pull':
             seq = _RandomNameSequence().next()
             test_clone_with_credentials(repo=sys.argv[1], method='clone',
-                                        seq=seq, backend=backend)
+                                        backend=backend)
         s = time.time()
         for i in range(1, int(sys.argv[2]) + 1):
             print 'take', i
             test_clone_with_credentials(repo=sys.argv[1], method=METHOD,
-                                        seq=seq, backend=backend)
+                                        backend=backend)
         print 'time taken %.3f' % (time.time() - s)
     except Exception as e:
         sys.exit('stop on %s' % e)

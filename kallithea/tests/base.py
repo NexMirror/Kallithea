@@ -56,7 +56,9 @@ __all__ = [
 
 #SOME GLOBALS FOR TESTS
 
-TESTS_TMP_PATH = os.path.join(tempfile.gettempdir(), 'rc_test_%s' % tempfile._RandomNameSequence().next())
+TESTS_TMP_PATH = os.environ.get('KALLITHEA_TESTS_TMP_PATH', tempfile.mkdtemp(prefix='kallithea-test-'))
+os.environ['VCS_TEST_ROOT'] = TESTS_TMP_PATH
+
 TEST_USER_ADMIN_LOGIN = 'test_admin'
 TEST_USER_ADMIN_PASS = 'test12'
 TEST_USER_ADMIN_EMAIL = 'test_admin@example.com'
@@ -98,9 +100,6 @@ HG_REMOTE_REPO = 'http://bitbucket.org/marcinkuzminski/vcs'
 TEST_HG_REPO = os.path.join(TESTS_TMP_PATH, HG_REPO)
 TEST_HG_REPO_CLONE = os.path.join(TESTS_TMP_PATH, 'vcshgclone%s' % uniq_suffix)
 TEST_HG_REPO_PULL = os.path.join(TESTS_TMP_PATH, 'vcshgpull%s' % uniq_suffix)
-
-TEST_DIR = tempfile.gettempdir()
-TEST_REPO_PREFIX = 'vcs-test'
 
 # cached repos if any !
 # comment out to get some other repos from bb or github

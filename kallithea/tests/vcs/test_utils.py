@@ -4,8 +4,8 @@ import os
 import mock
 import time
 import shutil
-import tempfile
 import datetime
+
 from kallithea.lib.vcs.utils.compat import unittest
 from kallithea.lib.vcs.utils.paths import get_dirs_for_path
 from kallithea.lib.vcs.utils.helpers import get_dict_for_attrs
@@ -61,8 +61,7 @@ class PathsTest(unittest.TestCase):
         self.assertRaises(VCSError, get_scm, 'err')
 
     def test_get_scms_for_path(self):
-        dirpath = tempfile.gettempdir()
-        new = os.path.join(dirpath, 'vcs-scms-for-path-%s' % time.time())
+        new = os.path.join(TEST_TMP_PATH, 'vcs-scms-for-path-%s' % time.time())
         os.mkdir(new)
         self.assertEqual(get_scms_for_path(new), [])
 

@@ -1,12 +1,12 @@
-
 import os
 import tarfile
 import zipfile
 import datetime
 import tempfile
 import StringIO
+
 from kallithea.tests.vcs.base import _BackendTestMixin
-from kallithea.tests.vcs.conf import SCM_TESTS
+from kallithea.tests.vcs.conf import SCM_TESTS, TEST_TMP_PATH
 from kallithea.lib.vcs.exceptions import VCSError
 from kallithea.lib.vcs.nodes import FileNode
 from kallithea.lib.vcs.utils.compat import unittest
@@ -29,7 +29,7 @@ class ArchivesTestCaseMixin(_BackendTestMixin):
             }
 
     def test_archive_zip(self):
-        path = tempfile.mkstemp()[1]
+        path = tempfile.mkstemp(dir=TEST_TMP_PATH, prefix='test_archive_zip-')[1]
         with open(path, 'wb') as f:
             self.tip.fill_archive(stream=f, kind='zip', prefix='repo')
         out = zipfile.ZipFile(path)
@@ -43,10 +43,10 @@ class ArchivesTestCaseMixin(_BackendTestMixin):
                 self.tip.get_node(node_path).content)
 
     def test_archive_tgz(self):
-        path = tempfile.mkstemp()[1]
+        path = tempfile.mkstemp(dir=TEST_TMP_PATH, prefix='test_archive_tgz-')[1]
         with open(path, 'wb') as f:
             self.tip.fill_archive(stream=f, kind='tgz', prefix='repo')
-        outdir = tempfile.mkdtemp()
+        outdir = tempfile.mkdtemp(dir=TEST_TMP_PATH, prefix='test_archive_tgz-', suffix='-outdir')
 
         outfile = tarfile.open(path, 'r|gz')
         outfile.extractall(outdir)
@@ -58,10 +58,10 @@ class ArchivesTestCaseMixin(_BackendTestMixin):
                 self.tip.get_node(node_path).content)
 
     def test_archive_tbz2(self):
-        path = tempfile.mkstemp()[1]
+        path = tempfile.mkstemp(dir=TEST_TMP_PATH, prefix='test_archive_tbz2-')[1]
         with open(path, 'w+b') as f:
             self.tip.fill_archive(stream=f, kind='tbz2', prefix='repo')
-        outdir = tempfile.mkdtemp()
+        outdir = tempfile.mkdtemp(dir=TEST_TMP_PATH, prefix='test_archive_tbz2-', suffix='-outdir')
 
         outfile = tarfile.open(path, 'r|bz2')
         outfile.extractall(outdir)
@@ -73,7 +73,7 @@ class ArchivesTestCaseMixin(_BackendTestMixin):
                 self.tip.get_node(node_path).content)
 
     def test_archive_default_stream(self):
-        tmppath = tempfile.mkstemp()[1]
+        tmppath = tempfile.mkstemp(dir=TEST_TMP_PATH, prefix='test_archive_default_stream-')[1]
         with open(tmppath, 'wb') as stream:
             self.tip.fill_archive(stream=stream)
         mystream = StringIO.StringIO()

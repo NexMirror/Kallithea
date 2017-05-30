@@ -77,8 +77,8 @@ class Command(object):
         return stdout, stderr
 
 
-def _get_tmp_dir():
-    return tempfile.mkdtemp(prefix='rc_integration_test')
+def _get_tmp_dir(prefix='vcs_operations-', suffix=''):
+    return tempfile.mkdtemp(dir=TESTS_TMP_PATH, prefix=prefix, suffix=suffix)
 
 
 def _add_files_and_push(webserver, vcs, DEST, ignoreReturnCode=False, files_no=3,
@@ -178,7 +178,7 @@ class TestVCSOperations(TestController):
 
     def test_clone_hg_repo_by_admin(self, webserver):
         clone_url = webserver.repo_url(HG_REPO)
-        stdout, stderr = Command(tempfile.gettempdir()).execute('hg clone', clone_url, _get_tmp_dir())
+        stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, _get_tmp_dir())
 
         assert 'requesting all changes' in stdout
         assert 'adding changesets' in stdout
@@ -189,45 +189,45 @@ class TestVCSOperations(TestController):
 
     def test_clone_git_repo_by_admin(self, webserver):
         clone_url = webserver.repo_url(GIT_REPO)
-        stdout, stderr = Command(tempfile.gettempdir()).execute('git clone', clone_url, _get_tmp_dir())
+        stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, _get_tmp_dir())
 
         assert 'Cloning into' in stdout + stderr
         assert stderr == '' or stdout == ''
 
     def test_clone_wrong_credentials_hg(self, webserver):
         clone_url = webserver.repo_url(HG_REPO, password='bad!')
-        stdout, stderr = Command(tempfile.gettempdir()).execute('hg clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
+        stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
         assert 'abort: authorization failed' in stderr
 
     def test_clone_wrong_credentials_git(self, webserver):
         clone_url = webserver.repo_url(GIT_REPO, password='bad!')
-        stdout, stderr = Command(tempfile.gettempdir()).execute('git clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
+        stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
         assert 'fatal: Authentication failed' in stderr
 
     def test_clone_git_dir_as_hg(self, webserver):
         clone_url = webserver.repo_url(GIT_REPO)
-        stdout, stderr = Command(tempfile.gettempdir()).execute('hg clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
+        stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
         assert 'HTTP Error 404: Not Found' in stderr
 
     def test_clone_hg_repo_as_git(self, webserver):
         clone_url = webserver.repo_url(HG_REPO)
-        stdout, stderr = Command(tempfile.gettempdir()).execute('git clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
+        stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
         assert 'not found' in stderr
 
     def test_clone_non_existing_path_hg(self, webserver):
         clone_url = webserver.repo_url('trololo')
-        stdout, stderr = Command(tempfile.gettempdir()).execute('hg clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
+        stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
         assert 'HTTP Error 404: Not Found' in stderr
 
     def test_clone_non_existing_path_git(self, webserver):
         clone_url = webserver.repo_url('trololo')
-        stdout, stderr = Command(tempfile.gettempdir()).execute('git clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
+        stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
         assert 'not found' in stderr
 
     def test_push_new_file_hg(self, webserver):
         DEST = _get_tmp_dir()
         clone_url = webserver.repo_url(HG_REPO)
-        stdout, stderr = Command(tempfile.gettempdir()).execute('hg clone', clone_url, DEST)
+        stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, DEST)
 
         fork_name = '%s_fork%s' % (HG_REPO, _RandomNameSequence().next())
         fixture.create_fork(HG_REPO, fork_name)
@@ -241,7 +241,7 @@ class TestVCSOperations(TestController):
     def test_push_new_file_git(self, webserver):
         DEST = _get_tmp_dir()
         clone_url = webserver.repo_url(GIT_REPO)
-        stdout, stderr = Command(tempfile.gettempdir()).execute('git clone', clone_url, DEST)
+        stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, DEST)
 
         # commit some stuff into this repo
         fork_name = '%s_fork%s' % (GIT_REPO, _RandomNameSequence().next())
@@ -263,7 +263,7 @@ class TestVCSOperations(TestController):
 
         DEST = _get_tmp_dir()
         clone_url = webserver.repo_url(HG_REPO)
-        stdout, stderr = Command(tempfile.gettempdir()).execute('hg clone', clone_url, DEST)
+        stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, DEST)
 
         fork_name = '%s_fork%s' % (HG_REPO, _RandomNameSequence().next())
         fixture.create_fork(HG_REPO, fork_name)
@@ -286,7 +286,7 @@ class TestVCSOperations(TestController):
 
         DEST = _get_tmp_dir()
         clone_url = webserver.repo_url(GIT_REPO)
-        stdout, stderr = Command(tempfile.gettempdir()).execute('git clone', clone_url, DEST)
+        stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, DEST)
 
         # commit some stuff into this repo
         fork_name = '%s_fork%s' % (GIT_REPO, _RandomNameSequence().next())
@@ -302,7 +302,7 @@ class TestVCSOperations(TestController):
     def test_push_wrong_credentials_hg(self, webserver):
         DEST = _get_tmp_dir()
         clone_url = webserver.repo_url(HG_REPO)
-        stdout, stderr = Command(tempfile.gettempdir()).execute('hg clone', clone_url, DEST)
+        stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, DEST)
 
         stdout, stderr = _add_files_and_push(webserver, 'hg', DEST, username='bad',
                                              password='name', ignoreReturnCode=True)
@@ -312,7 +312,7 @@ class TestVCSOperations(TestController):
     def test_push_wrong_credentials_git(self, webserver):
         DEST = _get_tmp_dir()
         clone_url = webserver.repo_url(GIT_REPO)
-        stdout, stderr = Command(tempfile.gettempdir()).execute('git clone', clone_url, DEST)
+        stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, DEST)
 
         stdout, stderr = _add_files_and_push(webserver, 'git', DEST, username='bad',
                                              password='name', ignoreReturnCode=True)
@@ -322,7 +322,7 @@ class TestVCSOperations(TestController):
     def test_push_back_to_wrong_url_hg(self, webserver):
         DEST = _get_tmp_dir()
         clone_url = webserver.repo_url(HG_REPO)
-        stdout, stderr = Command(tempfile.gettempdir()).execute('hg clone', clone_url, DEST)
+        stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, DEST)
 
         stdout, stderr = _add_files_and_push(webserver, 'hg', DEST,
                                     clone_url='http://%s:%s/tmp' % (webserver.server_address[0], webserver.server_address[1]),
@@ -333,7 +333,7 @@ class TestVCSOperations(TestController):
     def test_push_back_to_wrong_url_git(self, webserver):
         DEST = _get_tmp_dir()
         clone_url = webserver.repo_url(GIT_REPO)
-        stdout, stderr = Command(tempfile.gettempdir()).execute('git clone', clone_url, DEST)
+        stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, DEST)
 
         stdout, stderr = _add_files_and_push(webserver, 'git', DEST,
                                     clone_url='http://%s:%s/tmp' % (webserver.server_address[0], webserver.server_address[1]),
@@ -348,7 +348,7 @@ class TestVCSOperations(TestController):
         Session().commit()
         # clone
         clone_url = webserver.repo_url(HG_REPO)
-        stdout, stderr = Command(tempfile.gettempdir()).execute('hg clone', clone_url, _get_tmp_dir())
+        stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, _get_tmp_dir())
 
         #check if lock was made
         r = Repository.get_by_repo_name(HG_REPO)
@@ -361,7 +361,7 @@ class TestVCSOperations(TestController):
         Session().commit()
         # clone
         clone_url = webserver.repo_url(GIT_REPO)
-        stdout, stderr = Command(tempfile.gettempdir()).execute('git clone', clone_url, _get_tmp_dir())
+        stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, _get_tmp_dir())
 
         #check if lock was made
         r = Repository.get_by_repo_name(GIT_REPO)
@@ -373,7 +373,7 @@ class TestVCSOperations(TestController):
         Repository.lock(r, User.get_by_username(TEST_USER_ADMIN_LOGIN).user_id)
         #pull fails since repo is locked
         clone_url = webserver.repo_url(HG_REPO)
-        stdout, stderr = Command(tempfile.gettempdir()).execute('hg clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
+        stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
         msg = ("""abort: HTTP Error 423: Repository `%s` locked by user `%s`"""
                 % (HG_REPO, TEST_USER_ADMIN_LOGIN))
         assert msg in stderr
@@ -384,7 +384,7 @@ class TestVCSOperations(TestController):
         Repository.lock(r, User.get_by_username(TEST_USER_ADMIN_LOGIN).user_id)
         #pull fails since repo is locked
         clone_url = webserver.repo_url(GIT_REPO)
-        stdout, stderr = Command(tempfile.gettempdir()).execute('git clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
+        stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
         msg = ("""The requested URL returned error: 423""")
         assert msg in stderr
 
@@ -392,7 +392,7 @@ class TestVCSOperations(TestController):
         #clone some temp
         DEST = _get_tmp_dir()
         clone_url = webserver.repo_url(HG_REPO)
-        stdout, stderr = Command(tempfile.gettempdir()).execute('hg clone', clone_url, DEST)
+        stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, DEST)
 
         #lock repo
         r = Repository.get_by_repo_name(HG_REPO)
@@ -418,7 +418,7 @@ class TestVCSOperations(TestController):
         #clone some temp
         DEST = _get_tmp_dir()
         clone_url = webserver.repo_url(GIT_REPO)
-        stdout, stderr = Command(tempfile.gettempdir()).execute('git clone', clone_url, DEST)
+        stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, DEST)
 
         #lock repo
         r = Repository.get_by_repo_name(GIT_REPO)
@@ -454,7 +454,7 @@ class TestVCSOperations(TestController):
         #clone some temp
         DEST = _get_tmp_dir()
         clone_url = webserver.repo_url(fork_name)
-        stdout, stderr = Command(tempfile.gettempdir()).execute('hg clone', clone_url, DEST)
+        stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, DEST)
 
         #check for lock repo after clone
         r = Repository.get_by_repo_name(fork_name)
@@ -480,7 +480,7 @@ class TestVCSOperations(TestController):
         #clone some temp
         DEST = _get_tmp_dir()
         clone_url = webserver.repo_url(fork_name)
-        stdout, stderr = Command(tempfile.gettempdir()).execute('git clone', clone_url, DEST)
+        stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, DEST)
 
         #check for lock repo after clone
         r = Repository.get_by_repo_name(fork_name)
@@ -502,7 +502,7 @@ class TestVCSOperations(TestController):
             user_model.add_extra_ip(TEST_USER_ADMIN_LOGIN, '10.10.10.10/32')
             Session().commit()
             clone_url = webserver.repo_url(HG_REPO)
-            stdout, stderr = Command(tempfile.gettempdir()).execute('hg clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
+            stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
             assert 'abort: HTTP Error 403: Forbidden' in stderr
         finally:
             #release IP restrictions
@@ -514,7 +514,7 @@ class TestVCSOperations(TestController):
         time.sleep(1.5)
 
         clone_url = webserver.repo_url(HG_REPO)
-        stdout, stderr = Command(tempfile.gettempdir()).execute('hg clone', clone_url, _get_tmp_dir())
+        stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, _get_tmp_dir())
 
         assert 'requesting all changes' in stdout
         assert 'adding changesets' in stdout
@@ -529,7 +529,7 @@ class TestVCSOperations(TestController):
             user_model.add_extra_ip(TEST_USER_ADMIN_LOGIN, '10.10.10.10/32')
             Session().commit()
             clone_url = webserver.repo_url(GIT_REPO)
-            stdout, stderr = Command(tempfile.gettempdir()).execute('git clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
+            stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
             # The message apparently changed in Git 1.8.3, so match it loosely.
             assert re.search(r'\b403\b', stderr)
         finally:
@@ -542,7 +542,7 @@ class TestVCSOperations(TestController):
         time.sleep(1.5)
 
         clone_url = webserver.repo_url(GIT_REPO)
-        stdout, stderr = Command(tempfile.gettempdir()).execute('git clone', clone_url, _get_tmp_dir())
+        stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, _get_tmp_dir())
 
         assert 'Cloning into' in stdout + stderr
         assert stderr == '' or stdout == ''

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import formencode
 import pytest
-import tempfile
 
 from kallithea.tests.base import *
 
@@ -205,7 +204,7 @@ class TestRepoGroups(TestController):
 
     def test_ValidPath(self):
             validator = v.ValidPath()
-            assert tempfile.gettempdir() == validator.to_python(tempfile.gettempdir())
+            assert TESTS_TMP_PATH == validator.to_python(TESTS_TMP_PATH)
             with pytest.raises(formencode.Invalid):
                 validator.to_python('/no_such_dir')
 
