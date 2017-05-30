@@ -349,7 +349,7 @@ class MercurialRepository(BaseRepository):
 
         try:
             if src_url:
-                url = str(self._get_url(src_url))
+                url = safe_str(self._get_url(src_url))
                 opts = {}
                 if not update_after_clone:
                     opts.update({'noupdate': True})
@@ -481,7 +481,7 @@ class MercurialRepository(BaseRepository):
         to filesystem
         (``file:///``) schema.
         """
-        url = str(url)
+        url = safe_str(url)
         if url != 'default' and not '://' in url:
             url = "file:" + urllib.pathname2url(url)
         return url

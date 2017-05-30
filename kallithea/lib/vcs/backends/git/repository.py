@@ -30,7 +30,7 @@ from kallithea.lib.vcs.exceptions import (
     BranchDoesNotExistError, ChangesetDoesNotExistError, EmptyRepositoryError,
     RepositoryError, TagAlreadyExistError, TagDoesNotExistError
 )
-from kallithea.lib.vcs.utils import safe_unicode, makedate, date_fromtimestamp
+from kallithea.lib.vcs.utils import safe_str, safe_unicode, makedate, date_fromtimestamp
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.vcs.utils.ordered_dict import OrderedDict
 from kallithea.lib.vcs.utils.paths import abspath, get_user_home
@@ -328,7 +328,7 @@ class GitRepository(BaseRepository):
         Returns normalized url. If schema is not given, would fall to
         filesystem (``file:///``) schema.
         """
-        url = str(url)
+        url = safe_str(url)
         if url != 'default' and not '://' in url:
             url = ':///'.join(('file', url))
         return url

@@ -161,7 +161,28 @@ class _BaseTestCase(TestController):
         fork_repo = Repository.get_by_repo_name(safe_unicode(fork_name))
         assert fork_repo
 
-        # remove this fork
+        # fork the fork
+        fork_name_2 = safe_str(self.REPO_FORK + u'-blåbærgrød')
+        creation_args = {
+            'repo_name': fork_name_2,
+            'repo_group': u'-1',
+            'fork_parent_id': fork_repo.repo_id,
+            'repo_type': self.REPO_TYPE,
+            'description': 'unicode repo 2',
+            'private': 'False',
+            'landing_rev': 'rev:tip',
+            '_authentication_token': self.authentication_token()}
+        self.app.post(url(controller='forks', action='fork_create',
+                          repo_name=fork_name), creation_args)
+        response = self.app.get(url(controller='forks', action='forks',
+                                    repo_name=fork_name))
+        response.mustcontain(
+            """<a href="/%s">%s</a>""" % (urllib.quote(fork_name_2), fork_name_2)
+        )
+
+        # remove these forks
+        response = self.app.post(url('delete_repo', repo_name=fork_name_2),
+            params={'_authentication_token': self.authentication_token()})
         response = self.app.post(url('delete_repo', repo_name=fork_name),
             params={'_authentication_token': self.authentication_token()})
 
