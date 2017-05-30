@@ -342,4 +342,4 @@ class EmailNotificationModel(object):
                 })
 
         log.debug('rendering tmpl %s with kwargs %s', base, _kwargs)
-        return email_template.render(**_kwargs)
+        return email_template.render_unicode(**_kwargs)
