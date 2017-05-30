@@ -21,7 +21,6 @@ selected_mako_conditionals = set([
 mako_variable_values = {
     'host': '127.0.0.1',
     'port': '5000',
-    'here': '%(here)s',
     'uuid()': '${app_instance_uuid}',
 }
 
@@ -32,8 +31,6 @@ ini_files = [
         Kallithea - config for tests:
         sqlalchemy and kallithea_test.sqlite
         custom logging
-
-        The %(here)s variable will be replaced with the parent directory of this file
         ''',
         {
             '[server:main]': {
@@ -72,8 +69,6 @@ ini_files = [
         initial_repo_scan = true
         debug = true
         verbose and colorful logging
-
-        The %(here)s variable will be replaced with the parent directory of this file
         ''',
         {
             '[server:main]': {

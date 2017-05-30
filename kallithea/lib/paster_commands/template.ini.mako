@@ -2,6 +2,8 @@
 <%text>################################################################################</%text>
 <%text>################################################################################</%text>
 # Kallithea - config file generated with kallithea-config                      #
+#                                                                              #
+# The %(here)s variable will be replaced with the parent directory of this file#
 <%text>################################################################################</%text>
 <%text>################################################################################</%text>
 
@@ -182,15 +184,15 @@ static_files = true
 <%text>## Available Languages:</%text>
 <%text>## cs de fr hu ja nl_BE pl pt_BR ru sk zh_CN zh_TW</%text>
 lang =
-cache_dir = ${here}/data
-index_dir = ${here}/data/index
+cache_dir = %(here)s/data
+index_dir = %(here)s/data/index
 
 <%text>## perform a full repository scan on each server start, this should be</%text>
 <%text>## set to false after first startup, to allow faster server restarts.</%text>
 initial_repo_scan = false
 
 <%text>## uncomment and set this path to use archive download cache</%text>
-archive_cache_dir = ${here}/tarballcache
+archive_cache_dir = %(here)s/tarballcache
 
 <%text>## change this to unique ID for security</%text>
 app_instance_uuid = ${uuid()}
@@ -337,8 +339,8 @@ celery.always.eager = false
 <%text>###         BEAKER CACHE        ####</%text>
 <%text>####################################</%text>
 
-beaker.cache.data_dir = ${here}/data/cache/data
-beaker.cache.lock_dir = ${here}/data/cache/lock
+beaker.cache.data_dir = %(here)s/data/cache/data
+beaker.cache.lock_dir = %(here)s/data/cache/lock
 
 beaker.cache.regions = short_term,long_term,sql_cache_short
 
@@ -494,7 +496,7 @@ logview.pylons.util = #eee
 
 %if database_engine == 'sqlite':
 # SQLITE [default]
-sqlalchemy.url = sqlite:///${here}/kallithea.db?timeout=60
+sqlalchemy.url = sqlite:///%(here)s/kallithea.db?timeout=60
 
 %elif database_engine == 'postgres':
 # POSTGRESQL

@@ -125,7 +125,6 @@ def _run(args):
     # use default that cannot be replaced
     tmpl_stored_args.update({
         'uuid': lambda: uuid.uuid4().hex,
-        'here': os.path.dirname(os.path.abspath(args.config_file)),
     })
     try:
         # built in template
