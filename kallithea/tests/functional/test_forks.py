@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
+import urllib
 import unittest
 
 from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
 
+from kallithea.lib.utils2 import safe_str, safe_unicode
 from kallithea.model.db import Repository
 from kallithea.model.repo import RepoModel
 from kallithea.model.user import UserModel
@@ -132,6 +134,36 @@ class _BaseTestCase(TestController):
 
         fixture.destroy_repo(fork_name_full)
         fixture.destroy_repo_group(group_id)
+
+    def test_fork_unicode(self):
+        self.log_user()
+
+        # create a fork
+        repo_name = self.REPO
+        org_repo = Repository.get_by_repo_name(repo_name)
+        fork_name = safe_str(self.REPO_FORK + u'-rødgrød')
+        creation_args = {
+            'repo_name': fork_name,
+            'repo_group': u'-1',
+            'fork_parent_id': org_repo.repo_id,
+            'repo_type': self.REPO_TYPE,
+            'description': 'unicode repo 1',
+            'private': 'False',
+            'landing_rev': 'rev:tip',
+            '_authentication_token': self.authentication_token()}
+        self.app.post(url(controller='forks', action='fork_create',
+                          repo_name=repo_name), creation_args)
+        response = self.app.get(url(controller='forks', action='forks',
+                                    repo_name=repo_name))
+        response.mustcontain(
+            """<a href="/%s">%s</a>""" % (urllib.quote(fork_name), fork_name)
+        )
+        fork_repo = Repository.get_by_repo_name(safe_unicode(fork_name))
+        assert fork_repo
+
+        # remove this fork
+        response = self.app.post(url('delete_repo', repo_name=fork_name),
+            params={'_authentication_token': self.authentication_token()})
 
     def test_z_fork_create(self):
         self.log_user()
