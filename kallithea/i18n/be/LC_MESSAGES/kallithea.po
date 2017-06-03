@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2016-03-14 16:51+0100\n"
-"PO-Revision-Date: 2016-02-24 16:36+0100\n"
-"Last-Translator: Andrew Shadura <andrew@shadura.me>\n"
+"PO-Revision-Date: 2017-06-03 21:48+0000\n"
+"Last-Translator: Viktar Vauchkevich <victorenator@gmail.com>\n"
 "Language-Team: Belarusian "
 "<https://hosted.weblate.org/projects/kallithea/kallithea/be/>\n"
 "Language: be\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
 "4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 2.5-dev\n"
+"X-Generator: Weblate 2.15-dev\n"
 
 #: kallithea/controllers/changelog.py:85
 #: kallithea/controllers/pullrequests.py:240 kallithea/lib/base.py:515
@@ -146,9 +146,8 @@ msgid "This repository has been locked by %s on %s"
 msgstr "Рэпазітар заблакаваў %s у %s"
 
 #: kallithea/controllers/files.py:319
-#, fuzzy
 msgid "You can only delete files with revision being a valid branch"
-msgstr "Вы можаце выдаляць файлы толькі ў рэвізіі, злучанай з існай галінай "
+msgstr "Вы можаце выдаляць файлы толькі ў рэвізіі, злучанай з існай галінай"
 
 #: kallithea/controllers/files.py:330
 #, python-format
@@ -166,9 +165,8 @@ msgid "Error occurred during commit"
 msgstr "Падчас каміта адбылася памылка"
 
 #: kallithea/controllers/files.py:379
-#, fuzzy
 msgid "You can only edit files with revision being a valid branch"
-msgstr "Вы можаце рэдагаваць файлы толькі ў рэвізіі, злучанай з існай галінай "
+msgstr "Вы можаце рэдагаваць файлы толькі ў рэвізіі, злучанай з існай галінай"
 
 #: kallithea/controllers/files.py:393
 #, python-format
@@ -2169,7 +2167,7 @@ msgstr "Гэты e-mail ужо ўжываецца"
 #: kallithea/model/validators.py:734
 #, python-format
 msgid "Email address \"%(email)s\" not found"
-msgstr "e-mail \"%(email)s\" не існуе."
+msgstr "Email-адрас \"%(email)s\" не знойдзены"
 
 #: kallithea/model/validators.py:771
 msgid ""
@@ -2458,11 +2456,12 @@ msgid "Send Password Reset Email"
 msgstr "Паслаць спасылку для скідання пароля"
 
 #: kallithea/templates/password_reset.html:47
-#, fuzzy
 msgid ""
 "A password reset link will be sent to the specified email address if it "
 "is registered in the system."
-msgstr "Спасылка для скіду пароля будзе адпраўленая на адпаведны e-mail."
+msgstr ""
+"Спасылка для скіду пароля будзе адпраўленая на адпаведны email-адрас, калі "
+"ён зарэгістраваны ў сістэме."
 
 #: kallithea/templates/password_reset_confirmation.html:19
 #, python-format
@@ -2630,7 +2629,6 @@ msgid "Enabled Plugins"
 msgstr "Уключаныя плагіны"
 
 #: kallithea/templates/admin/auth/auth_settings.html:33
-#, fuzzy
 msgid ""
 "Comma-separated list of plugins; Kallithea will try user authentication "
 "in plugin order"
@@ -2982,15 +2980,14 @@ msgstr "Убудаваны"
 
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:14
 #: kallithea/templates/admin/users/user_edit_api_keys.html:14
-#, fuzzy, python-format
+#, python-format
 msgid "Confirm to reset this API key: %s"
-msgstr "Пацвердзіце скіданне гэтага API-ключа: %s"
+msgstr "Пацвердзіць скіданне гэтага API-ключа: %s"
 
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:30
 #: kallithea/templates/admin/users/user_edit_api_keys.html:30
-#, fuzzy
 msgid "Expired"
-msgstr "мінае"
+msgstr "Ануляваны"
 
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:40
 #: kallithea/templates/admin/users/user_edit_api_keys.html:40
@@ -3005,9 +3002,8 @@ msgstr "Выдаліць"
 
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:49
 #: kallithea/templates/admin/users/user_edit_api_keys.html:49
-#, fuzzy
 msgid "No additional API keys specified"
-msgstr "Дадатковыя адрасы e-mail не пазначаны."
+msgstr "Дадатковыя API-ключы не пазначаныя"
 
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:61
 #: kallithea/templates/admin/users/user_edit_api_keys.html:61
@@ -4769,19 +4765,19 @@ msgstr "Адфільтраваць галіну:"
 
 #: kallithea/templates/changelog/changelog.html:92
 #: kallithea/templates/changelog/changelog_summary_data.html:20
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Changeset status: %s by %s\n"
 "Click to open associated pull request %s"
 msgstr ""
-"Статус набору змен: %s?\n"
-"Клікніце, каб перайсці да адпаведнага pull-запыту %s"
+"Статус набору змен: %s ад %s\n"
+"Клікніце, каб адкрыць адпаведны pull-запыт %s"
 
 #: kallithea/templates/changelog/changelog.html:96
 #: kallithea/templates/changelog/changelog_summary_data.html:24
-#, fuzzy, python-format
+#, python-format
 msgid "Changeset status: %s by %s"
-msgstr "Статус набору змен: %s"
+msgstr "Статус набору змен: %s ад %s"
 
 #: kallithea/templates/changelog/changelog.html:116
 #: kallithea/templates/compare/compare_cs.html:63
@@ -5017,9 +5013,8 @@ msgid "No change"
 msgstr "Без змен"
 
 #: kallithea/templates/changeset/changeset_file_comment.html:88
-#, fuzzy
 msgid "Finish pull request"
-msgstr "Каментар у pull-запыце"
+msgstr "Завяршыць pull-запыт"
 
 #: kallithea/templates/changeset/changeset_file_comment.html:91
 msgid "Close"
@@ -5338,7 +5333,6 @@ msgid "Create New File"
 msgstr "Стварыць новы файл"
 
 #: kallithea/templates/files/files_add.html:53
-#, fuzzy
 msgid "New file type"
 msgstr "Тып новага файла"
 
@@ -5472,19 +5466,16 @@ msgid "Binary file (%s)"
 msgstr "Бінарны файл (%s)"
 
 #: kallithea/templates/files/files_source.html:74
-#, fuzzy
 msgid "File is too big to display."
-msgstr "Файл занадта вялікі для адлюстравання"
+msgstr "Файл занадта вялікі для адлюстравання."
 
 #: kallithea/templates/files/files_source.html:76
-#, fuzzy
 msgid "Show full annotation anyway."
-msgstr "Паказаць поўны diff"
+msgstr "Паказаць поўныя анатацыі."
 
 #: kallithea/templates/files/files_source.html:78
-#, fuzzy
 msgid "Show as raw."
-msgstr "Паказаць толькі тэкст"
+msgstr "Паказаць сырым."
 
 #: kallithea/templates/files/files_ypjax.html:5
 msgid "annotation"
@@ -5780,9 +5771,8 @@ msgid "Save Changes"
 msgstr "Захаваць змены"
 
 #: kallithea/templates/pullrequests/pullrequest_show.html:296
-#, fuzzy
 msgid "Save Updates as New Pull Request"
-msgstr "Pull-запыт створаны паспяхова"
+msgstr "Захаваць абнаўленні як новы pull-запыт"
 
 #: kallithea/templates/pullrequests/pullrequest_show.html:297
 msgid "Cancel Changes"
@@ -6299,4 +6289,3 @@ msgstr "Параўнаць тэгі"
 
 #~ msgid "Save as New Pull Request"
 #~ msgstr ""
-
