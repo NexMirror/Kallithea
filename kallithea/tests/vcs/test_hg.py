@@ -8,13 +8,6 @@ from kallithea.tests.vcs.conf import TEST_HG_REPO, TEST_HG_REPO_CLONE, \
 from kallithea.lib.vcs.utils.compat import unittest
 
 
-# Use only clean mercurial's ui
-from kallithea.lib.vcs.utils.hgcompat import mercurial
-mercurial.scmutil.rcpath()
-if mercurial.scmutil._rcpath:
-    mercurial.scmutil._rcpath = mercurial.scmutil._rcpath[:1]
-
-
 class MercurialRepositoryTest(unittest.TestCase):
 
     def __check_for_existing_repo(self):
