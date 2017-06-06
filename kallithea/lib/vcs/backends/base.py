@@ -384,15 +384,28 @@ class BaseChangeset(object):
     def __eq__(self, other):
         return self.raw_id == other.raw_id
 
-    def __json__(self):
-        return dict(
-            short_id=self.short_id,
-            raw_id=self.raw_id,
-            revision=self.revision,
-            message=self.message,
-            date=self.date,
-            author=self.author,
-        )
+    def __json__(self, with_file_list=False):
+        if with_file_list:
+            return dict(
+                short_id=self.short_id,
+                raw_id=self.raw_id,
+                revision=self.revision,
+                message=self.message,
+                date=self.date,
+                author=self.author,
+                added=[el.path for el in self.added],
+                changed=[el.path for el in self.changed],
+                removed=[el.path for el in self.removed],
+            )
+        else:
+            return dict(
+                short_id=self.short_id,
+                raw_id=self.raw_id,
+                revision=self.revision,
+                message=self.message,
+                date=self.date,
+                author=self.author,
+            )
 
     @LazyProperty
     def last(self):

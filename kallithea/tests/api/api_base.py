@@ -2461,6 +2461,24 @@ class _BaseTestApi(object):
         expected = Setting.get_server_info()
         self._compare_ok(id_, expected, given=response.body)
 
+    def test_api_get_changesets(self):
+        id_, params = _build_data(self.apikey, 'get_changesets',
+                                  repoid=self.REPO, start=0, end=2)
+        response = api_call(self, params)
+        result = json.loads(response.body)["result"]
+        assert len(result) == 3
+        assert result[0].has_key('message')
+        assert not result[0].has_key('added')
+
+    def test_api_get_changesets_with_file_list(self):
+        id_, params = _build_data(self.apikey, 'get_changesets',
+                                  repoid=self.REPO, start_date="2010-04-07T23:30:30", end_date="2010-04-08T00:31:14", with_file_list=True)
+        response = api_call(self, params)
+        result = json.loads(response.body)["result"]
+        assert len(result) == 3
+        assert result[0].has_key('message')
+        assert result[0].has_key('added')
+
     def test_api_get_changeset(self):
         review = fixture.review_changeset(self.REPO, self.TEST_REVISION, "approved")
         id_, params = _build_data(self.apikey, 'get_changeset',

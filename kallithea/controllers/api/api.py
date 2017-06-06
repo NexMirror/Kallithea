@@ -28,6 +28,8 @@ Original author and date, and relevant copyright and licensing information is be
 import time
 import traceback
 import logging
+
+from datetime import datetime
 from sqlalchemy import or_
 
 from tg import request
@@ -56,7 +58,7 @@ from kallithea.model.db import (
 from kallithea.lib.compat import json
 from kallithea.lib.exceptions import (
     DefaultUserException, UserGroupsAssignedException)
-from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError
+from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, EmptyRepositoryError
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.utils import action_logger
 
@@ -2490,6 +2492,25 @@ class ApiController(JSONRPCController):
             log.error(traceback.format_exc())
             raise JSONRPCError('failed to delete gist ID:%s'
                                % (gist.gist_access_id,))
+
+    # permission check inside
+    def get_changesets(self, repoid, start=None, end=None, start_date=None,
+                       end_date=None, branch_name=None, reverse=False, with_file_list=False):
+        repo = get_repo_or_error(repoid)
+        if not HasRepoPermissionLevel('read')(repo.repo_name):
+            raise JSONRPCError('Access denied to repo %s' % repo.repo_name)
+
+        format = "%Y-%m-%dT%H:%M:%S"
+        try:
+            return [e.__json__(with_file_list) for e in
+                repo.scm_instance.get_changesets(start,
+                                                 end,
+                                                 datetime.strptime(start_date, format) if start_date else None,
+                                                 datetime.strptime(end_date, format) if end_date else None,
+                                                 branch_name,
+                                                 reverse)]
+        except EmptyRepositoryError as e:
+            raise JSONRPCError(e.message)
 
     # permission check inside
     def get_changeset(self, repoid, raw_id, with_reviews=Optional(False)):

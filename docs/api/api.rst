@@ -1071,6 +1071,48 @@ OUTPUT::
             }
     error:  null
 
+get_changesets
+^^^^^^^^^^^^^^
+
+Get changesets of a given repository. This command can only be executed using the api_key
+of a user with read permissions to the repository.
+
+INPUT::
+
+    id : <id_for_response>
+    api_key : "<api_key>"
+    method  : "get_changesets"
+    args:     {
+                "repoid" : "<reponame or repo_id>",
+                "start": "<revision number> = Optional(None)",
+                "end": "<revision number> = Optional(None)",
+                "start_date": "<date> = Optional(None)",    # in "%Y-%m-%dT%H:%M:%S" format
+                "end_date": "<date> = Optional(None)",      # in "%Y-%m-%dT%H:%M:%S" format
+                "branch_name": "<branch name filter> = Optional(None)",
+                "reverse": "<bool> = Optional(False)",
+                "with_file_list": "<bool> = Optional(False)"
+              }
+
+OUTPUT::
+
+    id : <id_given_in_input>
+    result: [
+    {
+      "raw_id": "<raw_id>",
+      "short_id": "short_id": "<short_id>",
+      "author": "<full_author>",
+      "date": "<date_time_of_commit>",
+      "message": "<commit_message>",
+      "revision": "<numeric_revision>",
+      <if with_file_list == True>
+      "added": [<list of added files>],
+      "changed": [<list of changed files>],
+      "removed": [<list of removed files>]
+    },
+    ...
+    ]
+    error:  null
+
 get_changeset
 ^^^^^^^^^^^^^
 
