@@ -121,7 +121,7 @@
         <span class="icon-bar"></span>
       </button>
     </div>
-    <ul id="context-pages" class="nav navbar-nav navbar-right navbar-collapse collapse">
+    <ul id="context-pages" class="nav navbar-nav navbar-right">
         <li class="${'active' if current == 'summary' else ''}" data-context="summary"><a href="${h.url('summary_home', repo_name=c.repo_name)}"><i class="icon-doc-text"></i> ${_('Summary')}</a></li>
         %if rev:
         <li class="${'active' if current == 'changelog' else ''}" data-context="changelog"><a href="${h.url('changelog_file_home', repo_name=c.repo_name, revision=rev, f_path='')}"><i class="icon-clock"></i> ${_('Changelog')}</a></li>
@@ -185,7 +185,7 @@
       var bcache = {};
 
       $("#branch_switcher").select2({
-          placeholder: '<span class="navbar-text"> <i class="icon-exchange"></i> ' + ${h.jshtml(_('Switch To'))} + ' <span class="navbar-caret"></span></span>',
+          placeholder: '<i class="icon-exchange"></i> ' + ${h.jshtml(_('Switch To'))} + ' <span class="navbar-caret"></span>',
           dropdownAutoWidth: true,
           sortResults: prefixFirstSort,
           formatResult: function(obj) {
@@ -199,7 +199,7 @@
           },
           escapeMarkup: function(m) {
               // don't escape our custom placeholder
-              if (m.substr(0, 25) == '<span class="navbar-text"') {
+              if (m.substr(0, 25) == '<i class="icon-exchange">') {
                   return m;
               }
 
@@ -449,7 +449,7 @@
             }
 
             $("#repo_switcher").select2({
-                placeholder: '<span class="navbar-text"><i class="icon-database"></i> ' + ${h.jshtml(_('Repositories'))} + ' <span class="navbar-caret"></span></span>',
+                placeholder: '<i class="icon-database"></i> ' + ${h.jshtml(_('Repositories'))} + ' <span class="navbar-caret"></span>',
                 dropdownAutoWidth: true,
                 sortResults: prefixFirstSort,
                 formatResult: format,
@@ -461,7 +461,7 @@
                 dropdownCssClass: "repo-switcher-dropdown",
                 escapeMarkup: function(m){
                     // don't escape our custom placeholder
-                    if(m.substr(0,55) == '<span class="navbar-text"><i class="icon-database"></i>'){
+                    if(m.substr(0,29) == '<i class="icon-database"></i>'){
                         return m;
                     }
 

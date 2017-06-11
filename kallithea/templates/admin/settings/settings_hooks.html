@@ -1,28 +1,27 @@
-<h4>${_('Built-in Mercurial Hooks (Read-Only)')}</h4>
 <div class="form">
     <div class="form-horizontal">
+      <div class="form-group">
+      <h4>${_('Built-in Mercurial Hooks (Read-Only)')}</h4>
       % for hook in c.hooks:
         <% input_id = hook.ui_key.replace('.', '_') %>
-        <div class="form-group">
             <label class="control-label" for="${input_id}">${hook.ui_key}</label>
             <div style="margin-left:280px">
               ${h.text(hook.ui_key,hook.ui_value,id=input_id,size=60,readonly="readonly",class_='form-control')}
             </div>
-        </div>
       % endfor
+      <span class="help-block">${_('Hooks can be used to trigger actions on certain events such as push / pull. They can trigger Python functions or external applications.')}</span>
+      </div>
     </div>
-    <span class="help-block">${_('Hooks can be used to trigger actions on certain events such as push / pull. They can trigger Python functions or external applications.')}</span>
 </div>
 
 % if c.visual.allow_custom_hooks_settings:
-<h4>${_('Custom Hooks')}</h4>
 ${h.form(url('admin_settings_hooks'), method='post')}
 <div class="form">
     <div class="form-horizontal">
-
+        <div class="form-group form-inline" id="${'id%s' % hook.ui_id }">
+        <h4>${_('Custom Hooks')}</h4>
         %for hook in c.custom_hooks:
             <% input_id = hook.ui_key.replace('.', '_') %>
-            <div class="form-group form-inline" id="${'id%s' % hook.ui_id }">
                 <label class="control-label" for="${input_id}">${hook.ui_key}</label>
                 <div style="margin-left:280px">
                     ${h.hidden('hook_ui_key',hook.ui_key,id='hook_ui_key_'+input_id)}
@@ -34,12 +33,12 @@ ${h.form(url('admin_settings_hooks'), method='post')}
                         ${_('Delete')}
                     </span>
                 </div>
-            </div>
         %endfor
+        </div>
 
         <div class="form-group form-inline">
             <label>
-                ${h.text('new_hook_ui_key',size=20,class_='form-control')}
+                ${h.text('new_hook_ui_key',size=15,class_='form-control')}
             </label>
             <div style="margin-left:280px">
                 ${h.text('new_hook_ui_value',size=60,class_='form-control')}

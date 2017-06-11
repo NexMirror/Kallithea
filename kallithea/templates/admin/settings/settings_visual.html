@@ -92,10 +92,12 @@ ${h.form(url('admin_settings_visual'), method='post')}
                 <label class="control-label" for="stylify_metatags">${_('Meta Tagging')}:</label>
                 <div>
                     <div class="checkbox">
-                        ${h.checkbox('stylify_metatags','True')}
+                        <label>
+                            ${h.checkbox('stylify_metatags','True')}
+                            ${_('Parses meta tags from the repository description field and turns them into colored tags.')}
+                        </label>
                     </div>
-                    <span class="help-block">${_('Parses meta tags from the repository description field and turns them into colored tags.')}</span>
-                    <div>
+                    <div class="help-block">
                         ${_('Stylify recognised meta tags:')}
                         <ul class="list-unstyled"> <!-- Fix style here -->
                             <li>[featured] <span class="metatag" data-tag="featured">featured</span></li>

@@ -4,7 +4,7 @@
 
 <%
  elems = [
-    (_('Kallithea version'), h.literal('%s <b><span style="color:#036185; text-decoration: underline;cursor: pointer" id="check_for_update" >%s</span></b>' % (c.kallithea_version, _('Check for updates'))), ''),
+    (_('Kallithea version'), h.literal('%s <b><span style="display:none; color:#036185; text-decoration: underline;cursor: pointer" id="check_for_update" >%s</span></b>' % (c.kallithea_version, _('Check for updates'))), ''),
     (_('Kallithea configuration file'), c.ini['__file__'], ''),
     (_('Python version'), c.py_version, ''),
     (_('Platform'), c.platform, ''),

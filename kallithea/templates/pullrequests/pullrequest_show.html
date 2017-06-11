@@ -37,12 +37,12 @@ ${self.repo_context_bar('showpullrequest')}
         <div class="pr-not-edit form-group" style="min-height:47px">
             <label>${_('Description')}:</label>
             %if editable:
-            <div style="margin: 20px 0; position: absolute">
+            <div id="pr-edit-btn">
               <a class="btn btn-default btn-xs" onclick="$('.pr-do-edit').show();$('.pr-not-edit').hide()">${_("Edit")}</a>
             </div>
             %endif
             <div>
-              <div class="form-control formatted-fixed">${h.urlify_text(c.pull_request.description, c.pull_request.org_repo.repo_name)}</div>
+              <div class="formatted-fixed">${h.urlify_text(c.pull_request.description, c.pull_request.org_repo.repo_name)}</div>
             </div>
         </div>
 

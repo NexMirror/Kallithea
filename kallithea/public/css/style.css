@@ -1980,7 +1980,7 @@ tr.out-of-range > td.mid > .message > a {
     text-align: left;
 }
 
-#graph_content .container .checkbox {
+#graph_content .container .checkbox-column {
     width: 14px;
     font-size: 0.85em;
 }
@@ -2951,6 +2951,10 @@ input[disabled].btn,
     border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }
 
+.text-danger {
+    color: #a94442;
+}
+
 label.disabled {
     color: #aaa !important;
 }
@@ -3740,6 +3744,7 @@ form.comment-inline-form {
     color: #666;
 }
 
+input.status_change_checkbox,
 input.status_change_radio {
     margin: 2px 0 5px 15px;
     vertical-align: middle;
@@ -3849,6 +3854,15 @@ span.pr-closed-tag {
 
 #pr-summary .msg-div {
     margin: 5px 0;
+}
+
+#pr-summary > .pr-not-edit {
+    min-height: 50px !important;
+}
+
+#pr-edit-btn {
+    margin: 20px 0 0 !important;
+    position: absolute;
 }
 
 /****
@@ -4243,6 +4257,17 @@ div.codeblock div.code-header div.author {
 
 ul.user_group_member li {
     clear: both;
+}
+
+select.pull-right-auto-width {
+    float: right;
+    width: auto;
+}
+
+span.expand-available {
+    display: block;
+    overflow: hidden;
+    padding-right: 15px;
 }
 
 .tooltip {

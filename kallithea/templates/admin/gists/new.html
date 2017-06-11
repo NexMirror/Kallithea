@@ -42,8 +42,10 @@
             </div>
             <div id="body" class="panel panel-default">
                 <div class="panel-heading">
-                    ${h.text('filename', size=30, placeholder=_('Name this gist ...'), class_='form-control')}
-                    <select class="form-control" id="mimetype" name="mimetype"></select>
+                    <select class="form-control pull-right-auto-width" id="mimetype" name="mimetype"></select>
+                    <span class="expand-available">
+                      ${h.text('filename', size=30, placeholder=_('Name this gist ...'), class_='form-control auto-width')}
+                    </span>
                 </div>
                 <div class="panel-body no-padding">
                         <textarea id="editor" name="content"></textarea>
