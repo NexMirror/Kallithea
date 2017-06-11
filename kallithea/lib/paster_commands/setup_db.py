@@ -91,11 +91,8 @@ class Command(BasePasterCommand):
         return parser
 
     def take_action(self, opts):
-        path_to_ini_file = os.path.realpath(opts.config_file)
-        conf = paste.deploy.appconfig('config:' + path_to_ini_file)
-
-        dbconf = conf['sqlalchemy.url']
-        dbmanage = DbManage(dbconf=dbconf, root=conf['here'],
+        dbconf = self.config['sqlalchemy.url']
+        dbmanage = DbManage(dbconf=dbconf, root=self.config['here'],
                             tests=False, cli_args=vars(opts))
         dbmanage.create_tables(override=True)
         opts = dbmanage.config_prompt(None)

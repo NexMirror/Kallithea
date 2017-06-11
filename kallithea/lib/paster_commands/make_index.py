@@ -40,9 +40,8 @@ class Command(BasePasterCommand):
     "Kallithea: Create or update full text search index"
 
     def take_action(self, args):
-        from tg import config
-        index_location = config['index_dir']
-        load_rcextensions(config['here'])
+        index_location = self.config['index_dir']
+        load_rcextensions(self.config['here'])
 
         repo_location = args.repo_location \
             if args.repo_location else RepoModel().repos_path

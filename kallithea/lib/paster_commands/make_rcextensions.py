@@ -44,9 +44,7 @@ class Command(BasePasterCommand):
     requires_db_session = False
 
     def take_action(self, args):
-        from tg import config
-
-        here = config['here']
+        here = self.config['here']
         content = pkg_resources.resource_string(
             'kallithea', os.path.join('config', 'rcextensions', '__init__.py')
         )

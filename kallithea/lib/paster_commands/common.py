@@ -31,7 +31,6 @@ import logging.config
 
 import paste.deploy
 import gearbox.command
-from tg import config
 
 import kallithea.config.middleware
 import kallithea.model.base
@@ -60,6 +59,7 @@ class BasePasterCommand(gearbox.command.Command):
     # override to control how much get_parser and run should do:
     takes_config_file = True
     requires_db_session = True
+    config = None # set to the actual config object in run if takes_config_file is true
 
     def run(self, args):
         """
@@ -69,13 +69,15 @@ class BasePasterCommand(gearbox.command.Command):
         """
         if self.takes_config_file:
             path_to_ini_file = os.path.realpath(args.config_file)
-            conf = paste.deploy.appconfig('config:' + path_to_ini_file)
+            self.config = paste.deploy.appconfig('config:' + path_to_ini_file)
+            # TODO: also initialize kallithea.CONFIG?
             logging.config.fileConfig(path_to_ini_file)
 
             if self.requires_db_session:
-                kallithea.config.middleware.make_app_without_logging(conf.global_conf, **conf.local_conf)
-                kallithea.lib.utils.setup_cache_regions(config)
-                engine = kallithea.lib.utils2.engine_from_config(config, 'sqlalchemy.')
+                kallithea.config.middleware.make_app_without_logging(self.config.global_conf, **self.config.local_conf)
+                # *now*, tg.config has been set and could be used ... but we just keep using self.config
+                kallithea.lib.utils.setup_cache_regions(self.config)
+                engine = kallithea.lib.utils2.engine_from_config(self.config, 'sqlalchemy.')
                 kallithea.model.base.init_model(engine)
 
         return super(BasePasterCommand, self).run(args)

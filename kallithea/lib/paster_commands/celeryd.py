@@ -20,9 +20,8 @@ class Command(BasePasterCommand):
 
     def take_action(self, args):
         from kallithea.lib import celerypylons
-        from tg import config
         try:
-            CELERY_ON = str2bool(config['app_conf'].get('use_celery'))
+            CELERY_ON = str2bool(self.config['app_conf'].get('use_celery'))
         except KeyError:
             CELERY_ON = False
 
@@ -31,7 +30,7 @@ class Command(BasePasterCommand):
                             'file before running celeryd')
         kallithea.CELERY_ON = CELERY_ON
 
-        load_rcextensions(config['here'])
+        load_rcextensions(self.config['here'])
         cmd = celerypylons.worker.worker(celerypylons.app.app_or_default())
 
         celery_args = args.celery_args
