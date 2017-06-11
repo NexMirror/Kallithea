@@ -121,7 +121,13 @@ def check_password(password, hashed):
         return hashlib.sha256(password).hexdigest() == hashed
     elif is_unix:
         import bcrypt
-        return bcrypt.checkpw(safe_str(password), safe_str(hashed))
+        print (safe_str(password), safe_str(hashed))
+        try:
+            return bcrypt.checkpw(safe_str(password), safe_str(hashed))
+        except ValueError as e:
+            # bcrypt will throw ValueError 'Invalid hashed_password salt' on all password errors
+            log.error('error from bcrypt checking password: %s', e)
+            return False
     else:
         raise Exception('Unknown or unsupported platform %s' \
                         % __platform__)
