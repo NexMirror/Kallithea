@@ -34,16 +34,19 @@ ${self.repo_context_bar('files')}
     </div>
     <div class="panel-body" id="edit">
         <div id="files_data">
-            <h3 class="files_location">${_('Location')}: ${h.files_breadcrumbs(c.repo_name,c.cs.raw_id,c.file.path)}</h3>
             ${h.form(h.url.current(),method='post',id='eform',class_='form-inline')}
-            <div id="body" class="codeblock">
-            <div class="code-header">
-                <div class="stats">
-                <div class="pull-left">
-                    <div class="left"><i class="icon-doc-inv"></i></div>
-                    <div class="left item">${h.link_to(h.show_id(c.file.changeset),h.url('changeset_home',repo_name=c.repo_name,revision=c.file.changeset.raw_id))}</div>
-                    <div class="left item">${h.format_byte_size(c.file.size,binary=True)}</div>
-                    <div class="left item last">${c.file.mimetype}</div>
+            <h3 class="files_location">
+              ${_('Location')}: ${h.files_breadcrumbs(c.repo_name,c.cs.raw_id,c.file.path)}
+            </h3>
+            <div id="body" class="panel panel-default">
+              <div class="panel-heading clearfix">
+                    <div class="pull-left">
+                        <div class="pull-left"><i class="icon-doc-inv"></i></div>
+                        <div class="pull-left">${h.link_to(h.show_id(c.file.changeset),h.url('changeset_home',repo_name=c.repo_name,revision=c.file.changeset.raw_id))}</div>
+                        <div class="pull-left">${h.format_byte_size(c.file.size,binary=True)}</div>
+                        <div class="pull-left">${c.file.mimetype}</div>
+                        <select class="form-control" id="mimetype" name="mimetype"></select>
+                    </div>
                     <div class="pull-right buttons">
                       ${h.link_to(_('Show Annotation'),h.url('files_annotate_home',repo_name=c.repo_name,revision=c.cs.raw_id,f_path=c.f_path),class_="btn btn-default btn-xs")}
                       ${h.link_to(_('Show as Raw'),h.url('files_raw_home',repo_name=c.repo_name,revision=c.cs.raw_id,f_path=c.f_path),class_="btn btn-default btn-xs")}
@@ -54,21 +57,20 @@ ${self.repo_context_bar('files')}
                        % endif
                       % endif
                     </div>
-                </div>
-                </div>
-                <label class="editing-files">
-                    ${_('Editing file')}: ${c.file.unicode_path}
-                    <select class="form-control" id="mimetype" name="mimetype"></select>
-                </label>
-            </div>
-                <pre id="editor_pre"></pre>
+              </div>
+              <div class="panel-body no-padding">
                 <textarea id="editor" name="content" style="display:none">${h.escape(c.file.content)|n}</textarea>
-                <div class="text-muted" style="padding: 10px">${_('Commit Message')}</div>
-                <textarea class="form-control" id="commit" name="message" style="height: 60px;width: 99%;margin-left:4px" placeholder="${c.default_message}"></textarea>
+              </div>
             </div>
-            <div style="text-align: left;padding-top: 5px">
-            ${h.submit('commit',_('Commit Changes'),class_="btn btn-success")}
-            ${h.reset('reset',_('Reset'),class_="btn btn-default")}
+            <div>
+              <div>
+                  <div>${_('Commit Message')}</div>
+                  <textarea class="form-control commit-message" id="commit" name="message" placeholder="${c.default_message}"></textarea>
+              </div>
+              <div class="buttons">
+                ${h.submit('commit',_('Commit Changes'),class_="btn btn-success")}
+                ${h.reset('reset',_('Reset'),class_="btn btn-default")}
+              </div>
             </div>
             ${h.end_form()}
         </div>

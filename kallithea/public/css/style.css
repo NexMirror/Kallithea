@@ -525,11 +525,6 @@ div.panel div.panel-heading {
     border-radius: 4px 4px 0 0;
 }
 
-#content div.panel div.panel-heading .panel-title,
-#content div.panel div.panel-heading a {
-    color: #FFFFFF;
-}
-
 #content div.panel div.panel-heading ul.links li {
     list-style: none;
     float: left;
@@ -549,6 +544,43 @@ div.panel div.panel-heading {
     color: #fff;
     margin: 0;
     padding: 11px 10px 11px 10px;
+}
+
+div.panel.panel-default {
+    border: 1px solid #ccc;
+    box-shadow: none;
+    border-radius: 6px 6px 0px 0px;
+    margin-bottom: 20px;
+}
+
+div.panel.panel-default:last-child {
+    margin-bottom: 0;
+}
+
+div.panel.panel-default > div.panel-heading {
+    background: #eee;
+    border-bottom: 1px solid #ccc;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+div.panel.panel-default div.panel-heading a,
+div.panel.panel-default div.panel-heading .pull-left,
+div.panel.panel-default div.panel-heading .pull-left a,
+div.panel.panel-default div.panel-heading .pull-right,
+div.panel.panel-default div.panel-heading .pull-right a {
+    color: black !important;
+}
+
+div.panel.panel-default div.panel-heading .diff-actions a,
+div.panel.panel-default div.panel-heading .diff-actions span.no-file,
+div.panel.panel-default div.panel-heading .diff-actions span.arrow {
+    color: #577632 !important;
+}
+
+div.panel.panel-default div.panel-heading .diff-actions span.no-file,
+div.panel.panel-default div.panel-heading .diff-actions span.arrow {
+    opacity: 0.5;
 }
 
 .clearfix::before, .clearfix::after, .dl-horizontal dd::before, .dl-horizontal dd::after, .container::before, .container::after, .container-fluid::before, .container-fluid::after, .row::before, .row::after, .form-horizontal .form-group::before, .form-horizontal .form-group::after, .btn-toolbar::before, .btn-toolbar::after, .btn-group-vertical > .btn-group::before, .btn-group-vertical > .btn-group::after, .nav::before, .nav::after, .navbar::before, .navbar::after, .navbar-header::before, .navbar-header::after, .navbar-collapse::before, .navbar-collapse::after, .pager::before, .pager::after, .panel::before, .panel::after, .panel-body::before, .panel-body::after, .modal-header::before, .modal-header::after, .modal-footer::before, .modal-footer::after, td.inline-comments::before, td.inline-comments::after {
@@ -575,9 +607,18 @@ div.panel div.panel-heading {
     float: right;
 }
 
+#content div.panel div.panel-heading a,
 #content div.panel div.panel-heading .pull-left,
 #content div.panel div.panel-heading .pull-right {
     color: white;
+}
+
+#content div.panel div.panel-heading .pull-left {
+    margin-right: 10px;
+}
+
+#content div.panel div.panel-heading .pull-right {
+    margin-left: 10px;
 }
 
 #content div.panel h1,
@@ -1753,11 +1794,6 @@ h3.files_location {
     padding: 5px;
 }
 
-#changeset_compare_view_content {
-    border: 1px solid #CCC;
-    padding: 5px;
-}
-
 #changeset_content .container {
     font-size: 1.2em;
     overflow: hidden;
@@ -1922,8 +1958,7 @@ BIN_FILENODE = 6
 #graph_content #changesets {
     table-layout: fixed;
     border-collapse: collapse;
-    border-left: none;
-    border-right: none;
+    border: none;
     border-color: #cdcdcd;
 }
 
@@ -2163,7 +2198,7 @@ div.panel-body #files_data .revision-link,
     clear: both;
 }
 
-.right .changes .changed_total {
+.pull-right .changes .changed_total {
     display: block;
     float: right;
     text-align: center;
@@ -2175,7 +2210,7 @@ div.panel-body #files_data .revision-link,
     padding: 1px;
 }
 
-.right .changes .added,
+.pull-right .changes .added,
 .changed, .removed {
     display: block;
     padding: 1px;
@@ -2185,15 +2220,15 @@ div.panel-body #files_data .revision-link,
     min-width: 15px;
 }
 
-.right .changes .added {
+.pull-right .changes .added {
     background: #CFC;
 }
 
-.right .changes .changed {
+.pull-right .changes .changed {
     background: #FEA;
 }
 
-.right .changes .removed {
+.pull-right .changes .removed {
     background: #FAA;
 }
 
@@ -2465,63 +2500,7 @@ table.code-browser .browser-file {
     padding-left: 5px;
     text-align: left;
 }
-.diffblock .changeset_header {
-    height: 16px;
-}
-.diffblock .changeset_file {
-    float: left;
-}
-.diffblock .diff-menu-wrapper {
-    float: left;
-}
 
-.diffblock .diff-menu {
-    position: absolute;
-    background: none repeat scroll 0 0 #FFFFFF;
-    border-color: #577632 #666666 #666666;
-    border-right: 1px solid #666666;
-    border-style: solid solid solid;
-    border-width: 1px;
-    box-shadow: 2px 8px 4px rgba(0, 0, 0, 0.2);
-    margin-top: 5px;
-    margin-left: 1px;
-
-}
-.diffblock .diff-actions {
-    float: left;
-}
-.diffblock .diff-actions span.no-file,
-.diffblock .diff-actions span.arrow {
-    opacity: 0.5;
-}
-.diffblock .diff-actions span.arrow {
-    margin: 0 -3px;
-}
-.diffblock .diff-actions a i {
-    margin: 0 2px;
-}
-.diffblock.twoway {
-    overflow: visible;
-}
-.diffblock.twoway .diff-actions {
-    padding-top: 0;
-}
-.diffblock.twoway .diff-actions label input {
-    margin: -5px 5px 0 10px;
-    position: relative;
-    top: 3px;
-}
-.diffblock .diff-menu ul li {
-    padding: 0px 0px 0px 0px !important;
-}
-.diffblock .diff-menu ul li a {
-    display: block;
-    padding: 3px 8px 3px 8px !important;
-}
-.diffblock .diff-menu ul li a:hover {
-    text-decoration: none;
-    background-color: #EEEEEE;
-}
 table.code-browser .browser-dir {
     height: 16px;
     padding-left: 5px;
@@ -2926,10 +2905,19 @@ nav.navbar, #content, #footer {
 
 .panel-body {
     padding: 20px;
+
+}
+
+.panel-body.no-padding {
+    padding: 0;
 }
 
 .panel-body ~ .panel-body {
     padding-top: 0;
+}
+
+.panel-body.no-padding ~ .panel-body {
+    padding-top: 20px;
 }
 
 .panel-body.settings .text-muted {
@@ -3148,7 +3136,8 @@ nav.navbar #quick li .dropdown-menu,
 .repo-switcher-dropdown.select2-drop.select2-drop-active {
     box-shadow: none;
     color: #fff;
-    background-color: #576622;
+    background-color: #577632;
+    border-color: #577632;
 }
 
 .branch-switcher-dropdown.select2-drop.select2-drop-active .select2-results .select2-highlighted,
@@ -3690,9 +3679,11 @@ form.comment-form {
     margin: -1px 0px 0px 0px;
 }
 
-.show-inline-comments {
+.panel-heading .pull-left input[type=checkbox],
+.panel-heading .pull-right input[type=checkbox] {
     position: relative;
-    top: 1px
+    top: 4px;
+    margin: -10px 2px 0;
 }
 
 /** comment inline form **/
@@ -3988,109 +3979,20 @@ input.perm_filter {
 ******************************************************************************/
 .diff-collapse {
     text-align: center;
-    margin: 0 0 -10px;
+    margin-bottom: 20px;
 }
+
 .diff-collapse-button {
     cursor: pointer;
     color: #666;
     font-size: 16px;
 }
-.diff-container {
 
-}
-
-.compare-revision-selector {
-    font-weight: bold;
-    font-size: 14px;
-}
 .compare-revision-selector > div {
     display: inline-block;
-    margin-left: 8px;
-    vertical-align: middle;
-}
-.compare-revision-selector .btn {
-    margin-bottom: 0;
+    margin-right: 8px;
 }
 
-
-div.diffblock {
-    overflow: auto;
-    padding: 0px;
-    border: 1px solid #ccc;
-    background: #f8f8f8;
-    font-size: 100%;
-    line-height: 100%;
-    /* new */
-    line-height: 125%;
-    border-radius: 6px 6px 0px 0px;
-}
-
-.compare-revision-selector,
-div.diffblock .code-header {
-    border-bottom: 1px solid #CCCCCC;
-    background: #EEEEEE;
-    padding: 10px 0 10px 0;
-    min-height: 14px;
-}
-
-div.diffblock .code-header.banner {
-    border-bottom: 1px solid #CCCCCC;
-    background: #EEEEEE;
-    height: 14px;
-    margin: 0;
-    padding: 3px 100px 11px 100px;
-}
-
-div.diffblock .code-header-title {
-    padding: 0px 0px 10px 5px !important;
-    margin: 0 !important;
-}
-div.diffblock .code-header .hash {
-    float: left;
-    padding: 2px 0 0 2px;
-}
-div.diffblock .code-header .date {
-    float: left;
-    text-transform: uppercase;
-    padding: 2px 0px 0px 2px;
-}
-div.diffblock .code-header div {
-    margin-left: 4px;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-div.diffblock .parents {
-    float: left;
-    min-height: 26px;
-    font-size: 10px;
-    font-weight: 400;
-    vertical-align: middle;
-    padding: 0px 2px 2px 2px;
-    background-color: #eeeeee;
-    border-bottom: 1px solid #CCCCCC;
-}
-
-div.diffblock .children {
-    float: right;
-    min-height: 26px;
-    font-size: 10px;
-    font-weight: 400;
-    vertical-align: middle;
-    text-align: right;
-    padding: 0px 2px 2px 2px;
-    background-color: #eeeeee;
-    border-bottom: 1px solid #CCCCCC;
-}
-
-div.diffblock .code-body {
-    background: #FFFFFF;
-    clear: both;
-}
-div.diffblock pre.raw {
-    background: #FFFFFF;
-    color: #000000;
-}
 table.code-difftable {
     border-collapse: collapse;
     width: 99%;
@@ -4554,4 +4456,14 @@ ul.user_group_member li {
 #clone_by_name.input-group > input,
 #clone_by_id.input-group > input {
     width: 80% !important;
+}
+
+#content div.panel .changelog-panel > .changelog-heading,
+#content div.panel .changelog-panel > ul.pagination {
+    margin-left: 100px;
+}
+
+textarea.commit-message {
+    width: 100%;
+    box-sizing: border-box;
 }

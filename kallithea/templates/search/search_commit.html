@@ -2,14 +2,13 @@
 
 %for cnt,sr in enumerate(c.formated_results):
     %if h.HasRepoPermissionLevel('read')(sr['repository'],'search results check'):
-        <div id="body${cnt}" class="codeblock">
-            <div class="code-header">
-                <div class="search-path">${h.link_to(h.literal('%s &raquo; %s' % (sr['repository'],sr['raw_id'])),
-                h.url('changeset_home',repo_name=sr['repository'],revision=sr['raw_id']))}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                ${h.link_to(h.literal('%s &raquo; %s' % (sr['repository'],sr['raw_id'])),
+                    h.url('changeset_home',repo_name=sr['repository'],revision=sr['raw_id']))}
                 ${h.fmt_date(h.time_to_datetime(sr['date']))}
-                </div>
             </div>
-            <div class="left">
+            <div class="panel-body">
                 <div class="author">
                     ${h.gravatar_div(h.email_or_none(sr['author']), size=20)}
                     <span>${h.person(sr['author'])}</span><br/>
@@ -26,8 +25,8 @@
         </div>
     %else:
         %if cnt == 0:
-            <div id="body${cnt}" class="codeblock">
-                <div class="error">${_('Permission denied')}</div>
+            <div class="alert alert-warning" role="alert">
+                ${_('Permission denied')}
             </div>
         %endif
     %endif

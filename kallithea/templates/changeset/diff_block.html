@@ -4,29 +4,27 @@
                        cs_repo_name, cs_ref_name, cs_ref_type, cs_rev,
                        file_diff_data)">
 <div class="diff-collapse">
-    <span data-target="${'diff-container-%s' % (id(file_diff_data))}" class="diff-collapse-button">&uarr; ${_('Collapse Diff')} &uarr;</span>
+    <span data-target="${'no-padding-%s' % (id(file_diff_data))}" class="diff-collapse-button">&uarr; ${_('Collapse Diff')} &uarr;</span>
 </div>
-<div class="diff-container" id="${'diff-container-%s' % (id(file_diff_data))}">
 %for id_fid, url_fid, op, a_filename, cs_filename, diff, stats in file_diff_data:
     ${diff_block_diffblock(id_fid, url_fid, op, diff,
         a_repo_name, a_rev, a_ref_type, a_ref_name, a_filename,
-        cs_repo_name, cs_rev, cs_ref_type, cs_ref_name, cs_filename)}
+        cs_repo_name, cs_rev, cs_ref_type, cs_ref_name, cs_filename,
+        'no-padding-%s' % id(file_diff_data))}
 %endfor
-</div>
 </%def>
 
 <%def name="diff_block_diffblock(id_fid, url_fid, op, diff,
     a_repo_name, a_rev, a_ref_type, a_ref_name, a_filename,
-    cs_repo_name, cs_rev, cs_ref_type, cs_ref_name, cs_filename)"
+    cs_repo_name, cs_rev, cs_ref_type, cs_ref_name, cs_filename, cls)"
 >
-    <div id="${id_fid}_target" style="clear:both;margin-top:25px"></div>
-    <div id="${id_fid}" class="diffblock margined comm">
-        <div class="code-header">
-            <div class="changeset_header">
-                <div class="changeset_file">
+    <div id="${id_fid}_target"></div>
+    <div id="${id_fid}" class="panel panel-default ${cls}">
+        <div class="panel-heading clearfix">
+                <div class="pull-left">
                     ${h.safe_unicode(cs_filename)}
                 </div>
-                <div class="diff-actions">
+                <div class="pull-left diff-actions">
                   <span style="margin: 0 10px">
                     %if op == 'A':
                       <span class="no-file" data-toggle="tooltip" title="${_('No file before')}">
@@ -70,22 +68,19 @@
                   ${c.ignorews_url(request.GET, url_fid)}
                   ${c.context_url(request.GET, url_fid)}
                 </div>
-                <span class="pull-right" style="margin-top:-3px">
-                    <label>
-                        ${_('Show inline comments')}
-                        ${h.checkbox('checkbox-show-inline-' + id_fid, checked="checked",class_="show-inline-comments",**{'data-id_for':id_fid})}
-                    </label>
-                </span>
-            </div>
+                <div class="pull-right">
+                    ${_('Show inline comments')}
+                    ${h.checkbox('checkbox-show-inline-' + id_fid, checked="checked",class_="show-inline-comments",**{'data-id_for':id_fid})}
+                </div>
         </div>
-        <div class="code-body" data-f_path="${h.safe_unicode(cs_filename)}">
+        <div class="no-padding panel-body" data-f_path="${h.safe_unicode(cs_filename)}">
             ${diff|n}
             %if cs_filename.rsplit('.')[-1] in ['png', 'gif', 'jpg', 'bmp']:
               <div class="btn btn-image-diff-show">Show images</div>
               %if op == 'M':
                 <div id="${id_fid}_image-diff" class="btn btn-image-diff-swap" style="display:none">Press to swap images</div>
               %endif
-              <div style="font-size: 0">
+              <div>
                 %if op in 'DM':
                   <img id="${id_fid}_image-diff-img-a" class="img-diff img-diff-swapable" style="display:none"
                       realsrc="${h.url('files_raw_home',repo_name=a_repo_name,revision=a_rev,f_path=a_filename)}" />
@@ -125,8 +120,9 @@ $(document).ready(function(){
     $('.btn-image-diff-swap').mouseleave(reset);
 
     $('.diff-collapse-button').click(function(e) {
+        $('.diff_block').toggleClass('hidden');
         var $button = $(e.currentTarget);
-        var $target = $('#' + $button.data('target'));
+        var $target = $('.' + $button.data('target'));
         if($target.hasClass('hidden')){
             $target.removeClass('hidden');
             $button.html("&uarr; {0} &uarr;".format(_TM['Collapse Diff']));

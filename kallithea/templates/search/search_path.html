@@ -10,13 +10,10 @@
         </div>
     %else:
         %if cnt == 0:
-            <div class="error">
-                <div class="link">
-                    ${_('Permission denied')}
-                </div>
+            <div class="alert alert-warning" role="alert">
+                ${_('Permission denied')}
             </div>
         %endif
-
     %endif
 %endfor
 %if c.cur_query and c.formated_results:

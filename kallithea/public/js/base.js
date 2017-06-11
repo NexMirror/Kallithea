@@ -880,17 +880,15 @@ var initCodeMirror = function(textarea_id, baseUrl, resetUrl){
         });
 
     $('#file_enable').click(function(){
-            $('#editor_container').show();
             $('#upload_file_container').hide();
             $('#filename_container').show();
-            $('#mimetype_header').show();
+            $('#body').show();
         });
 
     $('#upload_file_enable').click(function(){
-            $('#editor_container').hide();
             $('#upload_file_container').show();
             $('#filename_container').hide();
-            $('#mimetype_header').hide();
+            $('#body').hide();
         });
 
     return myCodeMirror

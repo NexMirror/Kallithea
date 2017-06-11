@@ -20,29 +20,22 @@
 ${self.repo_context_bar('changelog')}
 <div class="panel panel-primary">
     <div class="panel-heading clearfix">
-        ${self.breadcrumbs()}
+        <div class="pull-left">
+            ${self.breadcrumbs()}
+        </div>
+        <div class="pull-right">
+            <a href="${h.url('compare_url',repo_name=c.repo_name,org_ref_type='rev',org_ref_name=getattr(c.cs_ranges[0].parents[0] if c.cs_ranges[0].parents else h.EmptyChangeset(),'raw_id'),other_ref_type='rev',other_ref_name=c.cs_ranges[-1].raw_id)}" class="btn btn-default btn-sm"><i class="icon-git-compare"></i> Compare Revisions</a>
+        </div>
     </div>
     <div class="panel-body">
-      <div>
-        <div id="body" class="diffblock">
-            <div class="code-header">
-                <div>
-                    ${h.show_id(c.cs_ranges[0])}
-                    <i class="icon-right"></i>
-                    ${h.show_id(c.cs_ranges[-1])}
-                    <a style="font-weight: bold" href="${h.url('compare_url',repo_name=c.repo_name,org_ref_type='rev',org_ref_name=getattr(c.cs_ranges[0].parents[0] if c.cs_ranges[0].parents else h.EmptyChangeset(),'raw_id'),other_ref_type='rev',other_ref_name=c.cs_ranges[-1].raw_id)}" class="btn btn-default btn-sm"><i class="icon-git-compare"></i> Compare Revisions</a>
-                </div>
-            </div>
-        </div>
-        <div id="changeset_compare_view_content">
-              <div class="container">
+        <div>
                 <table class="table compare_view_commits">
                 %for cnt,cs in enumerate(c.cs_ranges):
                   <tr>
                     %if c.visual.use_gravatar:
                     <td>${h.gravatar_div(h.email_or_none(cs.author), size=14)}</td>
                     %endif
-                    <td>${h.link_to('r%s:%s' % (cs.revision,h.short_id(cs.raw_id)),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}</td>
+                    <td>${h.link_to(h.short_id(cs.raw_id),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}</td>
                     <td><div class="author">${h.person(cs.author)}</div></td>
                     <td><span data-toggle="tooltip" title="${h.age(cs.date)}">${cs.date}</span></td>
                     <td>
@@ -54,9 +47,8 @@ ${self.repo_context_bar('changelog')}
                   </tr>
                 %endfor
                 </table>
-              </div>
-              <h4>${_('Files affected')}</h4>
-              <div class="cs_files">
+                <h4>${_('Files affected')}</h4>
+                <div class="cs_files">
                     %for cs in c.cs_ranges:
                         <h6 class="cur_cs">${h.link_to(h.show_id(cs),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}</h6>
                         <% a_rev, cs_rev, file_diff_data = c.changes[cs.raw_id] %>
@@ -70,9 +62,8 @@ ${self.repo_context_bar('changelog')}
                             </div>
                         %endfor
                     %endfor
-              </div>
+                </div>
         </div>
-      </div>
     </div>
     <%namespace name="comment" file="/changeset/changeset_file_comment.html"/>
     <%namespace name="diff_block" file="/changeset/diff_block.html"/>

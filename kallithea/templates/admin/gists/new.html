@@ -32,8 +32,7 @@
         <div id="files_data">
           ${h.form(h.url('gists'), method='post',id='eform')}
             <div>
-                ${h.gravatar_div(request.authuser.email, size=32)}
-                <textarea style="resize:vertical; width:400px;border: 1px solid #ccc;border-radius: 3px;" id="description" name="description" placeholder="${_('Gist description ...')}"></textarea>
+                <textarea class="form-control commit-message" id="description" name="description" placeholder="${_('Gist description ...')}"></textarea>
                 <div>
                     <label>
                         ${_('Gist lifetime')}
@@ -41,17 +40,16 @@
                     </label>
                 </div>
             </div>
-            <div id="body" class="codeblock">
-                <div style="padding: 10px 10px 10px 26px;color:#666666">
-                    ${h.text('filename', size=30, placeholder=_('name this file...'))}
-                    <select id="mimetype" name="mimetype"></select>
+            <div id="body" class="panel panel-default">
+                <div class="panel-heading">
+                    ${h.text('filename', size=30, placeholder=_('Name this gist ...'), class_='form-control')}
+                    <select class="form-control" id="mimetype" name="mimetype"></select>
                 </div>
-                <div id="editor_container">
-                    <pre id="editor_pre"></pre>
-                    <textarea id="editor" name="content" style="display:none"></textarea>
+                <div class="panel-body no-padding">
+                        <textarea id="editor" name="content"></textarea>
                 </div>
             </div>
-            <div style="padding-top: 5px">
+            <div>
             ${h.submit('private',_('Create Private Gist'),class_="btn btn-success btn-xs")}
             ${h.submit('public',_('Create Public Gist'),class_="btn btn-default btn-xs")}
             ${h.reset('reset',_('Reset'),class_="btn btn-default btn-xs")}

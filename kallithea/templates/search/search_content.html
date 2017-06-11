@@ -2,25 +2,21 @@
 
 %for cnt,sr in enumerate(c.formated_results):
     %if h.HasRepoPermissionLevel('read')(sr['repository'],'search results check'):
-        <div id="body${cnt}" class="codeblock">
-            <div class="code-header">
-                <div class="search-path">${h.link_to(h.literal('%s &raquo; %s' % (sr['repository'],sr['f_path'])),
-                h.url('files_home',repo_name=sr['repository'],revision='tip',f_path=sr['f_path']))}
-                </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                ${h.link_to(h.literal('%s &raquo; %s' % (sr['repository'],sr['f_path'])),
+                    h.url('files_home',repo_name=sr['repository'],revision='tip',f_path=sr['f_path']))}
             </div>
-            <div class="search-code-body">
+            <div class="panel-body search-code-body">
                 <pre>${h.literal(sr['content_short_hl'])}</pre>
             </div>
         </div>
     %else:
         %if cnt == 0:
-        <div>
-            <div id="body${cnt}" class="codeblock">
-                <div class="error">${_('Permission denied')}</div>
+            <div class="alert alert-warning" role="alert">
+                ${_('Permission denied')}
             </div>
-        </div>
         %endif
-
     %endif
 %endfor
 %if c.cur_query and c.formated_results:

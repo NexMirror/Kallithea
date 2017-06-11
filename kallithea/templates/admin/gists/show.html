@@ -28,9 +28,8 @@
     </div>
     <div class="panel-body">
         <div id="files_data">
-            <div id="body" class="codeblock">
-                <div class="code-header">
-                    <div class="stats">
+            <div id="body" class="panel panel-default">
+                <div class="panel-heading clearfix">
                         <div class="pull-left">
                           %if c.gist.gist_type == 'public':
                             <div class="label label-success">${_('Public Gist')}</div>
@@ -63,34 +62,33 @@
                           %endif
                           ${h.link_to(_('Show as Raw'),h.url('formatted_gist', gist_id=c.gist.gist_access_id, format='raw'),class_="btn btn-default btn-xs")}
                         </div>
-                    </div>
-
+                </div>
+                <div class="panel-body">
                     <div class="author">
                         ${h.gravatar_div(h.email_or_none(c.file_changeset.author), size=16)}
                         <div title="${c.file_changeset.author}" class="user">${h.person(c.file_changeset.author)} - ${_('created')} ${h.age(c.file_changeset.date)}</div>
                     </div>
-                    <div class="commit">${h.urlify_text(c.file_changeset.message,c.repo_name)}</div>
+                    <div>${h.urlify_text(c.file_changeset.message,c.repo_name)}</div>
                 </div>
             </div>
 
-               ## iterate over the files
-               % for file in c.files:
-               <div style="border: 1px solid #EEE;margin-top:20px">
-                <div id="${h.FID('G', file.path)}" class="stats" style="border-bottom: 1px solid #DDD;padding: 8px 14px;">
-                    <a href="${c.gist.gist_url()}">¶</a>
-                    <b style="margin:0px 0px 0px 4px">${h.safe_unicode(file.path)}</b>
-                    <div class="pull-right" style="margin: -5px">
-                       ${h.link_to(_('Show as raw'),h.url('formatted_gist_file', gist_id=c.gist.gist_access_id, format='raw', revision=file.changeset.raw_id, f_path=h.safe_unicode(file.path)),class_="btn btn-default btn-xs")}
+            %for file in c.files:
+              <div class="panel panel-default">
+                <div id="${h.FID('G', file.path)}" class="panel-heading clearfix">
+                    <div class="pull-left">
+                      <b>${h.safe_unicode(file.path)}</b>
+                    </div>
+                    <div class="pull-right">
+                      ${h.link_to(_('Show as raw'),h.url('formatted_gist_file', gist_id=c.gist.gist_access_id, format='raw', revision=file.changeset.raw_id, f_path=h.safe_unicode(file.path)),class_="btn btn-default btn-xs")}
                     </div>
                 </div>
-                <div class="code-body">
+                <div class="panel-body no-padding">
                     ${h.pygmentize(file,linenos=True,anchorlinenos=True,lineanchors='L',cssclass="code-highlight")}
                 </div>
               </div>
-               %endfor
+            %endfor
         </div>
     </div>
-
 
 </div>
 </%def>

@@ -29,22 +29,22 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
     AJAX_COMMENT_DELETE_URL = ${h.js(url('changeset_comment_delete',repo_name=c.repo_name,comment_id='__COMMENT_ID__'))};
   </script>
   <div class="panel-body">
-    <div>
-        <div class="diffblock">
+    <div class="panel panel-default">
+        <div class="panel-heading clearfix">
             <div class="parents pull-left">
                 <div id="parent_link" class="changeset_hash">
-                    <i style="color:#036185" class="icon-left-open"></i> <a href="#">${_('Parent rev.')}</a>
+                    <i class="icon-left-open"></i> <a href="#">${_('Parent rev.')}</a>
                 </div>
             </div>
 
             <div class="pull-right children">
                 <div id="child_link" class="changeset_hash">
-                    <a href="#">${_('Child rev.')}</a> <i style="color:#036185" class="icon-right-open"></i>
+                    <a href="#">${_('Child rev.')}</a> <i class="icon-right-open"></i>
                 </div>
             </div>
 
-            <div class="pull-left code-header banner">
-                <div class="pull-left changeset-status-container">
+            <div class="pull-left">
+                <div class="pull-left">
                     %if c.statuses:
                         <span class="changeset-status-ico"><i class="icon-circle changeset-status-${c.statuses[0]}"></i></span>
                         <span title="${_('Changeset status')}" class="changeset-status-lbl">[${h.changeset_status_lbl(c.statuses[0])}]</span>
@@ -63,12 +63,9 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
                   ${c.ignorews_url(request.GET)}
                   ${c.context_url(request.GET)}
                 </div>
-                <div class="text-right pull-right comments-number" style="padding-right:5px">
-                    ${comment.comment_count(c.inline_cnt, len(c.comments))}
-                </div>
             </div>
         </div>
-        <div id="changeset_content">
+        <div class="panel-body">
             <div class="form-group container">
 
                 <div class="pull-right">
@@ -157,7 +154,7 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
                      % endif
                 </div>
             </div>
-            <div class="message form-group">${h.urlify_text(c.changeset.message, c.repo_name)}</div>
+            <div class="form-group">${h.urlify_text(c.changeset.message, c.repo_name)}</div>
             <div class="changes_txt">
               <% a_rev, cs_rev, file_diff_data = c.changes[c.changeset.raw_id] %>
               % if c.limited_diff:
@@ -180,14 +177,16 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
                   <h5>${_('Changeset was too big and was cut off...')} <a href="${h.url.current(fulldiff=1, **request.GET.mixed())}">${_('Show full diff anyway')}</a></h5>
                 %endif
             </div>
+            <div class="comments-number">
+                ${comment.comment_count(c.inline_cnt, len(c.comments))}
+            </div>
         </div>
 
     </div>
-  </div>
 
-  ## diff block
-  <div class="panel-body">
-  <div class="commentable-diff">
+    ## diff block
+
+    <div class="commentable-diff">
     <%namespace name="diff_block" file="/changeset/diff_block.html"/>
     ${diff_block.diff_block_js()}
     <% a_rev, cs_rev, file_diff_data = c.changes[c.changeset.raw_id] %>
@@ -206,6 +205,8 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
 
     ## main comment form and it status
     ${comment.comments()}
+
+    </div>
 
     ## FORM FOR MAKING JS ACTION AS CHANGESET COMMENTS
     <script type="text/javascript">
@@ -302,6 +303,5 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
 
     </script>
 
-  </div>
   </div>
 </%def>
