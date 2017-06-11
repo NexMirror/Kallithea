@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from celery.loaders.base import BaseLoader
 from tg import config
 
 # TODO: drop this mangling and just use a separate celery config section
@@ -59,19 +58,3 @@ class PylonsSettingsProxy(object):
         if value.lower() in ['true', 'false']:
             return value.lower() == 'true'
         return value
-
-class PylonsLoader(BaseLoader):
-    """Pylons celery loader
-
-    Maps the celery config onto pylons.config
-
-    """
-    def read_configuration(self):
-        self.configured = True
-        return PylonsSettingsProxy()
-
-    def on_worker_init(self):
-        """
-        Import task modules.
-        """
-        self.import_default_modules()
