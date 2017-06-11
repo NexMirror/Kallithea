@@ -365,7 +365,7 @@ function asynchtml(url, $target, success, args){
         .fail(function(jqXHR, textStatus, errorThrown) {
                 if (textStatus == "abort")
                     return;
-                $target.html('<span class="error_red">ERROR: {0}</span>'.format(textStatus));
+                $target.html('<span class="bg-danger">ERROR: {0}</span>'.format(textStatus));
                 $target.css('opacity','1.0');
             })
         ;

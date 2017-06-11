@@ -51,8 +51,12 @@ i[class^='icon-'] {
 #content #context-bar .navbar-header {
     display: inline-block;
     color: #FFF;
-    margin: 8px 20px 3px;
+    margin: 8px 15px 3px;
     padding-bottom: 2px;
+}
+
+#content #context-bar > .navbar-header > .navbar-brand {
+    padding: 0;
 }
 
 nav.navbar #quick a,
@@ -64,6 +68,7 @@ nav.navbar #quick a,
 nav.navbar #quick a:hover,
 #content #context-bar a:hover {
     text-decoration: none;
+    background: inherit;
 }
 
 #content #context-bar .icon {
@@ -73,54 +78,23 @@ nav.navbar #quick a:hover,
     vertical-align: text-bottom;
 }
 
-#content #context-bar li span {
-    margin: 0;
+.navbar-text {
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
-ul.navbar-nav,
-ul.horizontal-list {
-    display: block;
-}
-
-ul.navbar-nav > li,
-ul.horizontal-list > li {
-    float: left;
-    position: relative;
-}
-
-nav.navbar #quick ul,
-ul.navbar-nav > li ul,
-ul.horizontal-list > li ul {
-    position: absolute;
-    display: none;
-    right: 0;
-    z-index: 999;
-}
-
-nav.navbar #quick_login a.list-group-item,
-nav.navbar #quick li ul li,
-ul.navbar-nav ul li,
-ul.horizontal-list ul li {
-    position: relative;
+ul#quick ul.dropdown-menu > li,
+ul#context-pages ul.dropdown-menu > li {
     border-bottom: 1px solid rgba(0,0,0,0.1);
     border-top: 1px solid rgba(255,255,255,0.1);
 }
-
-ul.navbar-nav > li ul ul,
-ul.horizontal-list > li ul ul {
-    position: absolute;
-    right: 100%;
-    top: -1px;
-    min-width: 200px;
-    max-height: 400px;
-    overflow-x: hidden;
-    overflow-y: auto;
+ul#quick ul.dropdown-menu > li:first-child,
+ul#context-pages ul.dropdown-menu > li:first-child {
+    border-top: none;
 }
-
-nav.navbar #quick ul a,
-ul.navbar-nav li a,
-ul.horizontal-list li a {
-    white-space: nowrap;
+ul#quick ul.dropdown-menu > li:last-child,
+ul#context-pages ul.dropdown-menu > li:last-child {
+    border-bottom: none;
 }
 
 #breadcrumbs {
@@ -142,18 +116,6 @@ nav.navbar #quick ul,
 #context-pages ul {
     background: #3b6998; /* Old browsers */
     background: linear-gradient(to bottom, #577632 0%, #577632 100%); /* W3C */
-}
-
-nav.navbar #quick a,
-#context-actions a,
-#context-pages a {
-    background-repeat: no-repeat;
-    padding-left: 30px;
-}
-
-#quick a,
-#context-pages ul ul a {
-    padding-left: 10px;
 }
 
 ul#context-actions {
@@ -186,6 +148,7 @@ ul#context-actions {
     padding: 11px 10px 12px 30px;
 }
 
+.repo-switcher-dropdown.select2-drop.select2-drop-active .select2-results .select2-highlighted,
 ul.dropdown-menu li a:focus,
 nav.navbar #quick li:hover,
 #quick_login > .pull-right .list-group-item:hover,
@@ -196,10 +159,13 @@ nav.navbar #quick li:hover,
 nav.navbar #quick li.active,
 nav.navbar #quick li a.menu_link:focus,
 #context-pages li.active {
-    background: #6388ad; /* Old browsers */
     background: linear-gradient(to bottom, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 100%); /* W3C */
 }
 
+#quick_login > .pull-right .list-group-item {
+    background-color: #577632;
+    border: 0;
+}
 
 #content #context-actions li:first-child {
     border-left: none;
@@ -225,8 +191,8 @@ nav.navbar #quick li a.menu_link:focus,
 }
 
 #context-pages {
-    float: right;
     border-left: 1px solid rgba(0,0,0,0.1);
+    margin-right: 15px;
 }
 
 #content #context-pages .icon {
@@ -239,6 +205,10 @@ nav.navbar #quick_login .pull-right,
     border-right: 1px solid rgba(0,0,0,0.1);
     border-left: 1px solid rgba(255,255,255,0.1);
     padding: 0;
+}
+
+.nav .open > a {
+    background: inherit !important;
 }
 
 nav.navbar #quick li:last-child,
@@ -254,12 +224,13 @@ nav.navbar #quick > li:first-child > a {
     border-radius: 4px 0 0 4px;
 }
 
-nav.navbar #quick a,
-#context-pages a,
-#context-pages .dropdown-menu a {
-    display: block;
+nav.navbar #quick > li > a,
+nav.navbar #quick .select2-container .select2-choice .select2-chosen,
+#context-pages > li > a,
+#context-pages .select2-container .select2-choice .select2-chosen,
+x#context-pages .dropdown-menu a {
     padding: 0px 10px 1px 10px;
-    line-height: 35px;
+    line-height: 43px;
 }
 
 nav.navbar #quick a.thin,
@@ -290,10 +261,6 @@ nav.navbar #quick a {
     height: 25px;
     padding-top: 10px;
     padding-right: 10px;
-}
-
-#context-pages li:last-child a {
-    padding-right: 20px;
 }
 
 #context-bar #revision-changer {

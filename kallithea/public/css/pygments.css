@@ -96,22 +96,18 @@ div.annotatediv {
     margin-right: 4px;
 }
 .code-highlight {
-    padding: 0px;
-    margin-top: 5px;
-    margin-bottom: 5px;
     border-left: 1px solid #ccc;
 }
-.code-highlight pre, .linenodiv pre {
+.code-highlight pre,
+.linenodiv pre {
     padding: 5px 2px 0px 5px;
     margin: 0;
 }
 .code-highlight pre div:target {
     background-color: #FFFFBE !important;
 }
-.linenos { padding: 0px !important; border:0px !important;}
 .linenos a { text-decoration: none; }
 
-.code { display: block; border:0px !important; }
 .code-highlight .hll, .codehilite .hll { background-color: #ffffcc }
 .code-highlight .c, .codehilite .c { color: #408080; font-style: italic } /* Comment */
 .code-highlight .err, .codehilite .err { border: 1px solid #FF0000 } /* Error */
