@@ -1930,12 +1930,13 @@ BIN_FILENODE = 6
     border-color: #cdcdcd;
 }
 
-#updaterevs-table tr.mergerow,
-#graph_content_pr tr.mergerow,
-#shortlog_data tr.mergerow,
-#graph_content #changesets tr.out-of-range,
-#graph_content #changesets tr.mergerow {
-    opacity: 0.6;
+tr.mergerow > td.author .user,
+tr.mergerow > td.mid > .message,
+tr.mergerow > td.mid > .message > a,
+tr.out-of-range > td.author .user,
+tr.out-of-range > td.mid > .message,
+tr.out-of-range > td.mid > .message > a {
+    color: #aaa !important;
 }
 
 #graph_content #changesets td {
@@ -1987,10 +1988,6 @@ BIN_FILENODE = 6
 
 #graph_content .container .mid {
     padding: 0;
-}
-
-#graph_content .log-container {
-    position: relative;
 }
 
 #graph_content .container #singlerange,

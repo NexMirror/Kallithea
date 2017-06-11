@@ -65,10 +65,10 @@
           </span>
         </td>
         <td style="width: 140px"><span data-toggle="tooltip" title="${h.age(cs.date)}">${cs.date}</span></td>
-        %if c.visual.use_gravatar:
-        <td>${h.gravatar_div(h.email_or_none(cs.author), size=14)}</td>
-        %endif
-        <td><div class="author">${h.person(cs.author)}</div></td>
+        <td class="author">
+            ${h.gravatar(h.email_or_none(cs.author), size=16)}
+            <span data-toggle="tooltip" title="${cs.author}" class="user">${h.shorter(h.person(cs.author),22)}</span>
+        </td>
         <td>${h.link_to(h.show_id(cs),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id), class_='changeset_hash')}</td>
         <td>
         %if cs.branch:
@@ -78,7 +78,7 @@
         <td class="expand_commit" data-commit_id="${cs.raw_id}" title="${_('Expand commit message')}">
             <i class="icon-align-left" style="color:#999"></i>
         </td>
-        <td>
+        <td class="mid">
             <div class="pull-right" style="margin-top: -4px;">
                 %for tag in cs.tags:
                     <span class="tagtag" title="${_('Tag %s') % tag}">
