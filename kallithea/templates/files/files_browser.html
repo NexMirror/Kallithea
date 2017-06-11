@@ -24,38 +24,38 @@
     %>
     <%return h.literal('<i class="%s"></i><span>%s</span>' % (c, h.escape(node.name)))%>
 </%def>
-<div id="body" class="browserblock">
-    <div class="browser-header">
-        <div class="browser-nav">
+<div id="body" class="panel panel-default">
+    <div class="panel-heading clearfix">
+        <div class="browser-nav form-inline pull-left">
             ${h.form(h.url.current())}
             <div class="info_box">
               <div class="info_box_elem rev">${_('Revision')}</div>
               <div class="info_box_elem"><a class="btn btn-default btn-xs ypjax-link" href="${c.url_prev}" title="${_('Previous revision')}"><i class="icon-left-open"></i></a></div>
-              <div class="info_box_elem">${h.text('at_rev',value=c.changeset.revision,size=5)}</div>
+              <div class="info_box_elem">${h.text('at_rev',value=c.changeset.revision,size=5,class_='form-control input-sm')}</div>
               <div class="info_box_elem"><a class="btn btn-default btn-xs ypjax-link" href="${c.url_next}" title="${_('Next revision')}"><i class="icon-right-open"></i></a></div>
             </div>
             ${h.end_form()}
         </div>
-        <div class="browser-branch">
+        <div class="browser-branch form-inline pull-left">
             <label>
-                ${h.checkbox('stay_at_branch',c.changeset.branch,c.changeset.branch==c.branch)}
+                ${h.checkbox('stay_at_branch',c.changeset.branch,c.changeset.branch==c.branch,class_="form-control")}
                 ${_('Follow current branch')}
             </label>
         </div>
-        <div id="search_activate_id" class="search_activate">
+        <div id="search_activate_id" class="search_activate pull-left">
             <a class="btn btn-default btn-xs" id="filter_activate" href="#">${_('Search File List')}</a>
         </div>
-        <div class="browser-search">
+        <div class="browser-search form-inline pull-left">
             <div>
                 <div id="node_filter_box_loading" style="display:none">${_('Loading file list...')}</div>
                 <div id="node_filter_box" style="display:none">
-                ${h.files_breadcrumbs(c.repo_name,c.changeset.raw_id,c.file.path)}/<input class="init" type="text" value="type to search..." name="filter" size="25" id="node_filter">
+                ${h.files_breadcrumbs(c.repo_name,c.changeset.raw_id,c.file.path)}/<input class="init form-control" type="text" value="type to search..." name="filter" size="25" id="node_filter">
                 </div>
             </div>
         </div>
     </div>
 
-    <div>
+    <div class="panel-body">
         <table class="table code-browser">
             <thead>
                 <tr>

@@ -246,7 +246,7 @@ $(document).ready(function(){
         var selected = e.currentTarget.options[e.currentTarget.selectedIndex].value;
         if(selected && selected != ${h.js(c.changeset.raw_id)}){
             window.location = pyroutes.url('files_home', {'repo_name': ${h.js(h.safe_unicode(c.repo_name))}, 'revision': selected, 'f_path': ${h.js(h.safe_unicode(c.file.path))}});
-            $("#body.browserblock").hide();
+            $("#body").hide();
         } else {
             $("#branch_selector").val(${h.js(c.changeset.raw_id)});
         }

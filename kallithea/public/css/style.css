@@ -2409,68 +2409,6 @@ div.panel-body #files_data .revision-link,
     text-decoration: none;
     color: inherit;
 }
-div.browserblock {
-    overflow: hidden;
-    border: 1px solid #ccc;
-    background: #f8f8f8;
-    font-size: 100%;
-    line-height: 125%;
-    padding: 0;
-    border-radius: 6px 6px 0px 0px;
-}
-
-div.browserblock .browser-header {
-    background: #FFF;
-    padding: 10px 0px 15px 0px;
-    width: 100%;
-}
-
-div.browserblock .browser-nav {
-    float: left
-}
-
-div.browserblock .browser-branch {
-    float: left;
-}
-
-div.browserblock .browser-branch label {
-    color: #4A4A4A;
-    vertical-align: text-top;
-    padding-right: 2px;
-}
-
-div.browserblock .browser-header span {
-    margin-left: 5px;
-    font-weight: 700;
-}
-
-div.browserblock .browser-search {
-    clear: both;
-    padding: 8px 8px 0px 5px;
-    height: 20px;
-}
-
-div.browserblock #node_filter_box {
-}
-
-div.browserblock .search_activate {
-    float: left
-}
-
-div.browserblock .add_node {
-    float: left;
-    padding-left: 5px;
-}
-
-div.browserblock .search_activate a:hover,
-div.browserblock .add_node a:hover {
-    text-decoration: none !important;
-}
-
-div.browserblock .browser-body {
-    background: #EEE;
-    border-top: 1px solid #CCC;
-}
 
 table.code-browser {
     border-collapse: collapse;
