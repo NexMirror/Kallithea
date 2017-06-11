@@ -176,9 +176,6 @@ ${self.repo_context_bar('showpullrequest')}
       }
       pendingajax = asynchtml(url, $('#pull_request_overview'), function(o){
           pendingajax = undefined;
-          var jsdata = eval('('+$('#jsdata').html()+')'); // TODO: just get json
-          var r = new BranchRenderer('graph_canvas', 'graph_content_pr', 'chg_');
-          r.render(jsdata);
       });
   }
 

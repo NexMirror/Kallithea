@@ -129,11 +129,9 @@
 <script type="text/javascript">
 
     $(document).ready(function(){
-%if not c.is_ajax_preview:
         var jsdata = ${h.js(c.jsdata)};
         var r = new BranchRenderer('graph_canvas', 'graph_content_pr', 'chg_');
         r.render(jsdata);
-%endif
 
         $('.expand_commit').click(function(e){
             var cid = $(this).data('commit_id');
