@@ -21,7 +21,7 @@ class Command(BasePasterCommand):
                             'file before running celeryd')
 
         from kallithea.lib import celerypylons
-        cmd = celerypylons.worker.worker(celerypylons.app.app_or_default())
+        cmd = celerypylons.worker.worker(celerypylons.app)
 
         celery_args = args.celery_args
         if '--' in celery_args:
