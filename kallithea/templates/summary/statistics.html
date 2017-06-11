@@ -19,9 +19,6 @@
 
 <%def name="main()">
 ${self.repo_context_bar('summary')}
-    <%
-    summary = lambda n:{False:'summary-short'}.get(n)
-    %>
     <div class="panel panel-primary">
     <div class="panel-heading clearfix">
         ${self.breadcrumbs()}

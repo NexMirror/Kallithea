@@ -56,9 +56,6 @@
 
 <%def name="main()">
 ${self.repo_context_bar('summary')}
-<%
-summary = lambda n:{False:'summary-short'}.get(n)
-%>
 <div class="panel panel-primary">
     <div class="panel-heading clearfix">
         ${self.breadcrumbs()}
@@ -83,12 +80,12 @@ summary = lambda n:{False:'summary-short'}.get(n)
 
             <div class="form-group clearfix">
               <label>${_('Description')}:</label>
-              <div class="${summary(c.show_stats)} desc">${h.urlify_text(c.db_repo.description, stylize=c.visual.stylify_metatags)}</div>
+              <div class="desc">${h.urlify_text(c.db_repo.description, stylize=c.visual.stylify_metatags)}</div>
             </div>
 
             <div class="form-group clearfix">
               <label>${_('Trending files')}:</label>
-              <div class="${summary(c.show_stats)}">
+              <div>
                 %if c.show_stats:
                 <div id="lang_stats"></div>
                 %else:
@@ -102,7 +99,7 @@ summary = lambda n:{False:'summary-short'}.get(n)
 
             <div class="form-group clearfix">
               <label>${_('Download')}:</label>
-              <div class="${summary(c.show_stats)}">
+              <div>
                 %if len(c.db_repo_scm_instance.revisions) == 0:
                   ${_('There are no downloads yet')}
                 %elif not c.enable_downloads:

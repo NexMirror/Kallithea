@@ -842,13 +842,6 @@ div.panel div.panel-heading {
     margin: 0 20px 0 200px;
 }
 
-#content div.panel div.form div.form-horizontal div.form-group > div.summary,
-#content div.panel div.form div.form-horizontal div.form-group > div.summary-short {
-    margin: 0 20px 10px 110px;
-}
-#content div.panel div.form div.form-horizontal div.form-group > div.summary-short input {
-    margin: 0;
-}
 #content div.panel div.form div.form-horizontal div.form-group > div.file {
     margin: 0 20px 0 200px;
 }
@@ -1148,9 +1141,13 @@ div.form div.form-horizontal div.form-group div.button {
     position: relative;
 }
 
+#content div.panel div#summary-panel-body.form div.form-horizontal div.form-group > div {
+    margin: 0 20px 10px 110px;
+}
+
 #content div.panel #summary {
     margin-right: 200px;
-    min-height: 240px;
+    min-height: 220px;
 }
 
 ul#summary-menu-stats {
