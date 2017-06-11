@@ -7,10 +7,10 @@
     %if c.ancestors:
       <div class="ancestor">
         %if len(c.ancestors) > 1:
-        <div style="color:red; font-weight: bold">
+        <div class="text-danger">
           ${_('Criss cross merge situation with multiple merge ancestors detected!')}
         </div>
-        <div style="color:red">
+        <div>
           ${_('Please merge the target branch to your branch before creating a pull request.')}
         </div>
         %endif
@@ -24,15 +24,15 @@
     %endif
 
     <div id="graph_nodes">
-        <canvas id="graph_canvas" style="width:0"></canvas>
+        <canvas id="graph_canvas"></canvas>
     </div>
 
-    <div id="graph_content_pr" style="margin-left: 100px;">
+    <div id="graph_content_pr">
 
     <table class="table compare_view_commits">
     %for cnt, cs in enumerate(reversed(c.cs_ranges)):
       <tr id="chg_${cnt+1}" class="${'mergerow' if len(cs.parents) > 1 else ''}">
-        <td style="width:50px">
+        <td>
           %if cs.raw_id in c.statuses:
             <div title="${_('Changeset status: %s') % c.statuses[cs.raw_id][1]}" class="changeset-status-ico">
                 <i class="icon-circle changeset-status-${c.statuses[cs.raw_id][0]}"></i>
@@ -64,7 +64,7 @@
             ${index}
           </span>
         </td>
-        <td style="width: 140px"><span data-toggle="tooltip" title="${h.age(cs.date)}">${cs.date}</span></td>
+        <td><span data-toggle="tooltip" title="${h.age(cs.date)}">${cs.date}</span></td>
         <td class="author">
             ${h.gravatar(h.email_or_none(cs.author), size=16)}
             <span data-toggle="tooltip" title="${cs.author}" class="user">${h.shorter(h.person(cs.author),22)}</span>
@@ -76,10 +76,10 @@
         %endif
         </td>
         <td class="expand_commit" data-commit_id="${cs.raw_id}" title="${_('Expand commit message')}">
-            <i class="icon-align-left" style="color:#999"></i>
+            <i class="icon-align-left"></i>
         </td>
         <td class="mid">
-            <div class="pull-right" style="margin-top: -4px;">
+            <div class="pull-right">
                 %for tag in cs.tags:
                     <span class="tagtag" title="${_('Tag %s') % tag}">
                         ${h.link_to(tag,h.url('changeset_home',repo_name=c.repo_name,revision=cs.raw_id))}
@@ -109,7 +109,7 @@
     %endif
     %if c.cs_ranges_org is not None:
       ## TODO: list actual changesets?
-      <div style="font-size:1.1em;font-weight: bold;clear:both;padding-top:10px">
+      <div>
         ${h.link_to_ref(c.cs_repo.repo_name, c.cs_ref_type, c.cs_ref_name, c.cs_rev)}
         ${_('is')}
         <a href="${c.swap_url}">${_('%s changesets') % (len(c.cs_ranges_org))}</a>

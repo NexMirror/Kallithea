@@ -24,8 +24,6 @@
       <i class="icon-keyhole-circled" title="${_('Private repository')}"></i>
     %elif not private and c.visual.show_public_icon:
       <i class="icon-globe" title="${_('Public repository')}"></i>
-    %else:
-      <span style="margin: 0px 8px 0px 8px"></span>
     %endif
     <span class="dt_repo_name">${get_name(name)}</span>
     </a>
@@ -77,7 +75,7 @@
     </div>
     <div class="grid_delete pull-left">
       ${h.form(h.url('delete_repo', repo_name=repo_name))}
-        <i class="icon-minus-circled" style="color:#FF4444"></i>
+        <i class="icon-minus-circled"></i>
         ${h.submit('remove_%s' % repo_name,_('Delete'),class_="btn btn-default btn-xs",
         onclick="return confirm('"+_('Confirm to delete this repository: %s') % repo_name+"');")}
       ${h.end_form()}
@@ -105,7 +103,7 @@
  </div>
  <div class="grid_delete pull-left">
   ${h.form(h.url('delete_user', id=user_id))}
-    <i class="icon-minus-circled" style="color:#FF4444"></i>
+    <i class="icon-minus-circled"></i>
     ${h.submit('remove_',_('Delete'),id="remove_user_%s" % user_id, class_="btn btn-default btn-xs",
     onclick="return confirm('"+_('Confirm to delete this user: %s') % username+"');")}
   ${h.end_form()}
@@ -120,7 +118,7 @@
  </div>
  <div class="grid_delete pull-left">
     ${h.form(h.url('delete_users_group', id=user_group_id))}
-      <i class="icon-minus-circled" style="color:#FF4444"></i>
+      <i class="icon-minus-circled"></i>
       ${h.submit('remove_',_('Delete'),id="remove_group_%s" % user_group_id, class_="btn btn-default btn-xs",
       onclick="return confirm('"+_('Confirm to delete this user group: %s') % user_group_name+"');")}
     ${h.end_form()}
@@ -135,7 +133,7 @@
  </div>
  <div class="grid_delete pull-left">
     ${h.form(h.url('delete_repos_group', group_name=repo_group_name))}
-        <i class="icon-minus-circled" style="color:#FF4444"></i>
+        <i class="icon-minus-circled"></i>
         ${h.submit('remove_%s' % repo_group_name,_('Delete'),class_="btn btn-default btn-xs",
         onclick="return confirm('"+ungettext('Confirm to delete this group: %s with %s repository','Confirm to delete this group: %s with %s repositories',gr_count) % (repo_group_name, gr_count)+"');")}
     ${h.end_form()}

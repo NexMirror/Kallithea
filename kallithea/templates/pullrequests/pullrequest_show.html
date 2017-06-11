@@ -34,7 +34,7 @@ ${self.repo_context_bar('showpullrequest')}
       </div>
       <div id="pr-summary" class="form-horizontal">
 
-        <div class="pr-not-edit form-group" style="min-height:47px">
+        <div class="pr-not-edit form-group">
             <label>${_('Description')}:</label>
             %if editable:
             <div id="pr-edit-btn">
@@ -67,7 +67,7 @@ ${self.repo_context_bar('showpullrequest')}
           <div>
             <div class="changeset-status-container">
             %if c.current_voting_result:
-              <span class="changeset-status-ico" style="padding:0px 4px 0px 0px">
+              <span class="changeset-status-ico">
                   <i class="icon-circle changeset-status-${c.current_voting_result}" title="${_('Pull request status calculated from votes')}"></i></span>
               <span class="changeset-status-lbl" data-toggle="tooltip" title="${_('Pull request status calculated from votes')}">
                 %if c.pull_request.is_closed():
@@ -120,9 +120,9 @@ ${self.repo_context_bar('showpullrequest')}
               <div>
                ## TODO: use cs_ranges[-1] or org_ref_parts[1] in both cases?
                %if h.is_hg(c.pull_request.org_repo):
-                 <span style="font-family: monospace">hg pull ${c.pull_request.org_repo.clone_url()} -r ${h.short_id(c.cs_ranges[-1].raw_id)}</span>
+                 <span>hg pull ${c.pull_request.org_repo.clone_url()} -r ${h.short_id(c.cs_ranges[-1].raw_id)}</span>
                %elif h.is_git(c.pull_request.org_repo):
-                 <span style="font-family: monospace">git pull ${c.pull_request.org_repo.clone_url()} ${c.pull_request.org_ref_parts[1]}</span>
+                 <span>git pull ${c.pull_request.org_repo.clone_url()} ${c.pull_request.org_ref_parts[1]}</span>
                %endif
               </div>
             %endif
@@ -152,11 +152,11 @@ ${self.repo_context_bar('showpullrequest')}
             <div>
               <div class="msg-div">${c.update_msg}</div>
               %if c.avail_revs:
-              <div id="updaterevs" class="clearfix" style="max-height:200px; overflow-y:auto; overflow-x:hidden; margin-bottom: 10px; padding: 1px 0">
-                <div style="height:0;width:40px">
-                  <canvas id="avail_graph_canvas" style="width:0"></canvas>
+              <div id="updaterevs" class="clearfix">
+                <div>
+                  <canvas id="avail_graph_canvas"></canvas>
                 </div>
-                <table class="table" id="updaterevs-table" style="padding-left:50px">
+                <table class="table" id="updaterevs-table">
                   %for cnt, cs in enumerate(c.avail_cs):
                     <tr id="chg_available_${cnt+1}" class="${'mergerow' if len(cs.parents) > 1 and not (editable and cs.revision in c.avail_revs) else ''}">
                       %if c.cs_ranges and cs.revision == c.cs_ranges[-1].revision:
@@ -172,17 +172,17 @@ ${self.repo_context_bar('showpullrequest')}
                           ${h.radio(name='updaterev', value=cs.raw_id, style=None if cs.revision in c.avail_revs else 'visibility: hidden')}
                         </td>
                         %endif
-                        <td style="width: 120px"><span data-toggle="tooltip" title="${h.age(cs.date)}">${cs.date}</span></td>
+                        <td><span data-toggle="tooltip" title="${h.age(cs.date)}">${cs.date}</span></td>
                         <td>${h.link_to(h.show_id(cs),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id), class_='changeset_hash')}</td>
                         <td>
-                          <div class="pull-right" style="margin-top: -4px;">
+                          <div class="pull-right">
                             %for tag in cs.tags:
                               <span class="tagtag" title="${_('Tag %s') % tag}">
                                 ${h.link_to(tag,h.url('changeset_home',repo_name=c.repo_name,revision=cs.raw_id))}
                               </span>
                             %endfor
                           </div>
-                          <div class="message" style="white-space:normal; height:1.1em; max-width: 500px; padding:0">${h.urlify_text(cs.message, c.repo_name)}</div>
+                          <div class="message">${h.urlify_text(cs.message, c.repo_name)}</div>
                         </td>
                       %endif
                     </tr>
@@ -208,7 +208,7 @@ ${self.repo_context_bar('showpullrequest')}
     ## REVIEWERS
     <div class="pull-left">
         <h4 class="pr-details-title">${_('Pull Request Reviewers')}</h4>
-        <div id="reviewers" style="padding:0px 0px 5px 10px">
+        <div id="reviewers">
           ## members goes here !
           <div>
             %for member,status in c.pull_request_reviewers:
@@ -254,7 +254,7 @@ ${self.repo_context_bar('showpullrequest')}
 
         %if not c.pull_request_reviewers:
         <h4>${_('Potential Reviewers')}</h4>
-        <div style="margin: 10px 0 10px 10px; max-width: 250px">
+        <div>
           <div>
             ${_('Click to add the repository owner as reviewer:')}
           </div>
@@ -275,8 +275,6 @@ ${self.repo_context_bar('showpullrequest')}
           </ul>
         </div>
         %endif
-    </div>
-    <div style="clear:both">
     </div>
   ${h.end_form()}
 </div>

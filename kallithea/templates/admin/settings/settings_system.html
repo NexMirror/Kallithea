@@ -1,10 +1,10 @@
 <div id="update_notice" style="display: none">
-    <div style="padding: 5px 0px 5px 0px; color: #000000; font-weight: bold">${_('Checking for updates...')}</div>
+    <div>${_('Checking for updates...')}</div>
 </div>
 
 <%
  elems = [
-    (_('Kallithea version'), h.literal('%s <b><span style="display:none; color:#036185; text-decoration: underline;cursor: pointer" id="check_for_update" >%s</span></b>' % (c.kallithea_version, _('Check for updates'))), ''),
+    (_('Kallithea version'), h.literal('%s <b><span id="check_for_update" style="display:none">%s</span></b>' % (c.kallithea_version, _('Check for updates'))), ''),
     (_('Kallithea configuration file'), c.ini['__file__'], ''),
     (_('Python version'), c.py_version, ''),
     (_('Platform'), c.platform, ''),
@@ -15,21 +15,21 @@
 %>
 <dl class="dl-horizontal">
 %for dt, dd, tt in elems:
-  <dt style="width:150px; text-align: left">${dt}:</dt>
-  <dd style="margin-left: 160px" title="${tt}">${dd}</dd>
+  <dt>${dt}:</dt>
+  <dd title="${tt}">${dd}</dd>
 %endfor
 </dl>
 
 <h4>${_('Python Packages')}</h4>
-<table class="table" style="margin:0px 0px 0px 0px">
+<table class="table">
   <colgroup>
-      <col style="width:180px">
+      <col>
       <col>
   </colgroup>
   <tbody>
       %for key, value in c.modules:
           <tr>
-              <td style="padding-right:5px;">${key}</td>
+              <td>${key}</td>
               <td>${value}</td>
           </tr>
       %endfor

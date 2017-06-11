@@ -1931,6 +1931,7 @@ BIN_FILENODE = 6
 }
 
 #graph_content,
+#graph_content_pr,
 #graph .info_box,
 #graph .container_header {
     margin-left: 100px;
@@ -2009,6 +2010,7 @@ tr.out-of-range > td.mid > .message > a {
 #graph_content .container .expand_commit {
     width: 24px;
     cursor: pointer;
+    color: #999;
 }
 
 #graph_content #changesets .container .right {

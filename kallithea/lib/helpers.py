@@ -258,14 +258,14 @@ class CodeHtmlFormatter(HtmlFormatter):
         # some configurations seem to mess up the formatting...
         if nocls:
             yield 0, ('<table class="%stable">' % self.cssclass +
-                      '<tr><td><div class="linenodiv" '
-                      'style="background-color: #f0f0f0; padding-right: 10px">'
-                      '<pre style="line-height: 125%">' +
-                      ls + '</pre></div></td><td id="hlcode" class="code">')
+                      '<tr><td><div class="linenodiv">'
+                      '<pre>' + ls + '</pre></div></td>'
+                      '<td id="hlcode" class="code">')
         else:
             yield 0, ('<table class="%stable">' % self.cssclass +
-                      '<tr><td class="linenos"><div class="linenodiv"><pre>' +
-                      ls + '</pre></div></td><td id="hlcode" class="code">')
+                      '<tr><td class="linenos"><div class="linenodiv">'
+                      '<pre>' + ls + '</pre></div></td>'
+                      '<td id="hlcode" class="code">')
         yield 0, dummyoutfile.getvalue()
         yield 0, '</td></tr></table>'
 

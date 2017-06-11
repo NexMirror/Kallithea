@@ -1,6 +1,6 @@
 <table class="table">
     <tr>
-        <td style="width: 450px"><div class="truncate autoexpand" style="width:120px;font-size:16px;font-family: monospace">${c.user.api_key}</div></td>
+        <td><div class="truncate autoexpand">${c.user.api_key}</div></td>
         <td>
             <span class="label label-success">${_('Built-in')}</span>
         </td>
@@ -19,9 +19,9 @@
     %if c.user_api_keys:
         %for api_key in c.user_api_keys:
           <tr class="${'expired' if api_key.is_expired else ''}">
-            <td style="width: 450px"><div class="truncate autoexpand" style="width:120px;font-size:16px;font-family: monospace">${api_key.api_key}</div></td>
+            <td><div class="truncate autoexpand">${api_key.api_key}</div></td>
             <td>${api_key.description}</td>
-            <td style="min-width: 80px">
+            <td>
                  %if api_key.expires == -1:
                   ${_('Expires')}: ${_('Never')}
                  %else:

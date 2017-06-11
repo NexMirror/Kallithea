@@ -44,29 +44,29 @@ ${self.repo_context_bar('showpullrequest')}
                     ##ORG
                     <div>
                         <div>
-                            <div style="padding:5px 3px 3px 3px;">
+                            <div>
                             <b>${_('Origin repository')}:</b> <span id="org_repo_desc">${c.db_repo.description.split('\n')[0]}</span>
                             </div>
                             <div>
                             ${h.select('org_repo','',c.cs_repos,class_='refs')}:${h.select('org_ref',c.default_cs_ref,c.cs_refs,class_='refs')}
                             </div>
-                            <div style="padding:5px 3px 3px 3px;">
+                            <div>
                             <b>${_('Revision')}:</b> <span id="org_rev_span">-</span>
                             </div>
                         </div>
                     </div>
 
                     ##OTHER, most Probably the PARENT OF THIS FORK
-                    <div style="border-top: 1px solid #EEE; margin: 5px 0px 0px 0px">
+                    <div>
                         <div>
                             ## filled with JS
-                            <div style="padding:5px 3px 3px 3px;">
+                            <div>
                             <b>${_('Destination repository')}:</b> <span id="other_repo_desc">${c.a_repo.description.split('\n')[0]}</span>
                             </div>
                             <div>
                             ${h.select('other_repo',c.a_repo.repo_name,c.a_repos,class_='refs')}:${h.select('other_ref',c.default_a_ref,c.a_refs,class_='refs')}
                             </div>
-                            <div style="padding:5px 3px 3px 3px;">
+                            <div>
                             <b>${_('Revision')}:</b> <span id="other_rev_span">-</span>
                             </div>
                         </div>

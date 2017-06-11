@@ -241,12 +241,12 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
                           $('#child_link').addClass('disabled');
                           $('#child_link').addClass('double');
                           var _html = '';
-                          _html +='<a title="__title__" href="__url__">__rev__</a> <i style="color:#036185" class="icon-right-open"></i>'
+                          _html +='<a title="__title__" href="__url__">__rev__</a> <i class="icon-right-open"></i>'
                                   .replace('__rev__','r{0}:{1}'.format(data.results[0].revision, data.results[0].raw_id.substr(0,6)))
                                   .replace('__title__', data.results[0].message)
                                   .replace('__url__', pyroutes.url('changeset_home', {'repo_name': ${h.js(c.repo_name)},'revision': data.results[0].raw_id}));
                           _html +='<br/>'
-                          _html +='<a title="__title__" href="__url__">__rev__</a> <i style="color:#036185" class="icon-right-open"></i>'
+                          _html +='<a title="__title__" href="__url__">__rev__</a> <i class="icon-right-open"></i>'
                                   .replace('__rev__','r{0}:{1}'.format(data.results[1].revision, data.results[1].raw_id.substr(0,6)))
                                   .replace('__title__', data.results[1].message)
                                   .replace('__url__', pyroutes.url('changeset_home', {'repo_name': ${h.js(c.repo_name)},'revision': data.results[1].raw_id}));
@@ -278,12 +278,12 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
                           $('#parent_link').addClass('disabled');
                           $('#parent_link').addClass('double');
                           var _html = '';
-                          _html +='<i style="color:#036185" class="icon-left-open"></i> <a title="__title__" href="__url__">__rev__</a>'
+                          _html +='<i class="icon-left-open"></i> <a title="__title__" href="__url__">__rev__</a>'
                                   .replace('__rev__','r{0}:{1}'.format(data.results[0].revision, data.results[0].raw_id.substr(0,6)))
                                   .replace('__title__', data.results[0].message)
                                   .replace('__url__', pyroutes.url('changeset_home', {'repo_name': ${h.js(c.repo_name)},'revision': data.results[0].raw_id}));
                           _html +='<br/>'
-                          _html +='<i style="color:#036185" class="icon-left-open"></i> <a title="__title__" href="__url__">__rev__</a>'
+                          _html +='<i class="icon-left-open"></i> <a title="__title__" href="__url__">__rev__</a>'
                                   .replace('__rev__','r{0}:{1}'.format(data.results[1].revision, data.results[1].raw_id.substr(0,6)))
                                   .replace('__title__', data.results[1].message)
                                   .replace('__url__', pyroutes.url('changeset_home', {'repo_name': ${h.js(c.repo_name)},'revision': data.results[1].raw_id}));

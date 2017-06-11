@@ -41,13 +41,13 @@
     <div class="panel-body">
       %if c.gists_pager.item_count>0:
         % for gist in c.gists_pager:
-          <div class="gist-item clearfix" style="padding:10px 20px 10px 15px">
+          <div class="gist-item clearfix">
             ${h.gravatar_div(gist.owner.email, size=28)}
-            <div title="${gist.owner.full_contact}" class="user" style="font-size: 16px">
+            <div title="${gist.owner.full_contact}" class="user">
                 <b>${h.person(gist.owner.full_contact)}</b> /
                 <b><a href="${h.url('gist',gist_id=gist.gist_access_id)}">gist: ${gist.gist_access_id}</a></b>
             </div>
-            <div style="padding: 4px 0px 0px 0px">
+            <div>
                 ${_('Created')} ${h.age(gist.created_on)} /
                 <span class="text-muted">
                   %if gist.gist_expires == -1:
@@ -58,7 +58,7 @@
                 </span>
             </div>
 
-            <div class="text-muted" style="border:0px;padding:10px 0px 0px 40px">${gist.gist_description}</div>
+            <div class="text-muted">${gist.gist_description}</div>
           </div>
         % endfor
 

@@ -39,7 +39,7 @@ ${h.form(url('edit_repo_perms_update', repo_name=c.repo_name))}
                         </td>
                         <td>
                           %if r2p.user.username !='default':
-                            <span style="color:#da4f49" class="btn btn-default btn-xs" onclick="ajaxActionRevoke(${r2p.user.user_id}, 'user', '${'id%s'%id(r2p.user.username)}', '${r2p.user.username}')">
+                            <span class="btn btn-default btn-xs" onclick="ajaxActionRevoke(${r2p.user.user_id}, 'user', '${'id%s'%id(r2p.user.username)}', '${r2p.user.username}')">
                             <i class="icon-minus-circled"></i> ${_('Revoke')}
                             </span>
                           %endif
@@ -64,7 +64,7 @@ ${h.form(url('edit_repo_perms_update', repo_name=c.repo_name))}
                             %endif
                         </td>
                         <td>
-                            <span style="color:#da4f49" class="btn btn-default btn-xs" onclick="ajaxActionRevoke(${g2p.users_group.users_group_id}, 'user_group', '${'id%s'%id(g2p.users_group.users_group_name)}', '${g2p.users_group.users_group_name}')">
+                            <span class="btn btn-default btn-xs" onclick="ajaxActionRevoke(${g2p.users_group.users_group_id}, 'user_group', '${'id%s'%id(g2p.users_group.users_group_name)}', '${g2p.users_group.users_group_name}')">
                             <i class="icon-minus-circled"></i> ${_('Revoke')}
                             </span>
                         </td>
@@ -74,7 +74,7 @@ ${h.form(url('edit_repo_perms_update', repo_name=c.repo_name))}
                 <tr class="new_members last_new_member" id="add_perm_input"><td colspan="6"></td></tr>
                 <tr>
                     <td colspan="6">
-                        <span id="add_perm" style="cursor: pointer;">
+                        <span id="add_perm">
                             <i class="icon-plus"></i> ${_('Add new')}
                         </span>
                     </td>

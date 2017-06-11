@@ -244,7 +244,7 @@ class _BaseTestCase(TestController):
         response = self.app.get(url(controller='forks', action='forks',
                                     repo_name=repo_name))
 
-        response.mustcontain('<div style="padding:5px 3px 3px 42px;">fork of vcs test</div>')
+        response.mustcontain('<div>fork of vcs test</div>')
 
     def test_zzz_fork_permission_page(self):
         usr = self.log_user(self.username, self.password)['user_id']

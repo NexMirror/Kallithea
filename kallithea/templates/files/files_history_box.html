@@ -1,4 +1,4 @@
-<div class="file_author" style="clear:both">
+<div class="file_author">
     <div class="item">${h.literal(ungettext(u'%s author',u'%s authors',len(c.authors)) % ('<b>%s</b>' % len(c.authors))) }</div>
     %for email, user in c.authors:
       <div class="contributor pull-left" data-toggle="tooltip" title="${user}">

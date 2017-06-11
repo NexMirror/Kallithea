@@ -112,7 +112,7 @@ ${self.repo_context_bar('summary')}
                         <a class="btn btn-default btn-sm" href="${h.url('files_archive_home',repo_name=c.db_repo.repo_name,fname='tip.zip')}"><i class="icon-file-zip"></i> ${_('Download as zip')}</a>
                     </span>
                     ${h.hidden('download_options')}
-                    <span style="vertical-align: bottom">
+                    <span>
                       <label data-toggle="tooltip" title="${_('Check this to download archive with subrepos')}">
                           <input id="archive_subrepos" type="checkbox" name="subrepos" />
                           ${_('With subrepos')}

@@ -25,7 +25,7 @@ ${self.repo_context_bar('summary')}
     </div>
 
     <div class="graph panel-body">
-         <div style="padding:0 10px 10px 17px;">
+         <div>
          %if c.no_data:
            ${c.no_data_msg}
            %if h.HasPermissionAny('hg.admin')('enable stats on from summary'):
@@ -35,17 +35,16 @@ ${self.repo_context_bar('summary')}
             ${_('Stats gathered: ')} ${c.stats_percentage}%
         %endif
         </div>
-        <div id="commit_history" style="width:450px;height:300px;float:left"></div>
+        <div id="commit_history" class="pull-left"></div>
 
-        <div id="legend_data" style="float: left;">
+        <div id="legend_data" class="pull-left">
             <div id="legend_container"></div>
             <div id="legend_choices">
-                <table class="table" id="legend_choices_tables" style="font-size:smaller;color:#545454"></table>
+                <table class="table" id="legend_choices_tables"></table>
             </div>
         </div>
 
-        <div style="clear: both; height: 10px;"></div>
-        <div id="overview" style="width: 450px; height: 100px; float: left;"></div>
+        <div id="overview"></div>
     </div>
 </div>
 
