@@ -130,6 +130,8 @@ class PullRequestModel(object):
 
     def remove_reviewers(self, user, pull_request, reviewers):
         """Remove specified users from being reviewers of the PR."""
+        if not reviewers:
+            return # avoid SQLAlchemy warning about empty sequence for IN-predicate
 
         PullRequestReviewer.query() \
             .filter_by(pull_request=pull_request) \

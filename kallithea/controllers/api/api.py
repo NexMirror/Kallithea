@@ -599,7 +599,7 @@ class ApiController(JSONRPCController):
 
     @HasPermissionAnyDecorator('hg.admin')
     def create_user(self, username, email, password=Optional(''),
-                    firstname=Optional(''), lastname=Optional(''),
+                    firstname=Optional(u''), lastname=Optional(u''),
                     active=Optional(True), admin=Optional(False),
                     extern_type=Optional(User.DEFAULT_AUTH_TYPE),
                     extern_name=Optional('')):
@@ -852,7 +852,7 @@ class ApiController(JSONRPCController):
         ]
 
     @HasPermissionAnyDecorator('hg.admin', 'hg.usergroup.create.true')
-    def create_user_group(self, group_name, description=Optional(''),
+    def create_user_group(self, group_name, description=Optional(u''),
                           owner=Optional(OAttr('apiuser')), active=Optional(True)):
         """
         Creates new user group. This command can be executed only using api_key
@@ -2523,7 +2523,7 @@ class ApiController(JSONRPCController):
         return pull_request.get_api_data()
 
     # permission check inside
-    def comment_pullrequest(self, pull_request_id, comment_msg='', status=None, close_pr=False):
+    def comment_pullrequest(self, pull_request_id, comment_msg=u'', status=None, close_pr=False):
         """
         Add comment, close and change status of pull request.
         """

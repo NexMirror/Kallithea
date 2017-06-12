@@ -52,6 +52,9 @@ class TestPermissions(TestController):
         UserModel().delete(self.u2)
         UserModel().delete(self.u3)
         UserModel().delete(self.a1)
+
+        Session().commit() # commit early to avoid SQLAlchemy warning from double cascade delete to users_groups_members
+
         if hasattr(self, 'g1'):
             RepoGroupModel().delete(self.g1.group_id)
         if hasattr(self, 'g2'):

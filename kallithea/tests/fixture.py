@@ -325,7 +325,7 @@ class Fixture(object):
         Session().commit()
         return csm
 
-    def create_pullrequest(self, testcontroller, repo_name, pr_src_rev, pr_dst_rev, title='title'):
+    def create_pullrequest(self, testcontroller, repo_name, pr_src_rev, pr_dst_rev, title=u'title'):
         org_ref = 'branch:stable:%s' % pr_src_rev
         other_ref = 'branch:default:%s' % pr_dst_rev
         with test_context(testcontroller.app): # needed to be able to mock request user
@@ -335,7 +335,7 @@ class Fixture(object):
             request.authuser = request.user = AuthUser(dbuser=owner_user)
             # creating a PR sends a message with an absolute URL - without routing that requires mocking
             with mock.patch.object(helpers, 'url', (lambda arg, qualified=False, **kwargs: ('https://localhost' if qualified else '') + '/fake/' + arg)):
-                cmd = CreatePullRequestAction(org_repo, other_repo, org_ref, other_ref, title, 'No description', owner_user, reviewers)
+                cmd = CreatePullRequestAction(org_repo, other_repo, org_ref, other_ref, title, u'No description', owner_user, reviewers)
                 pull_request = cmd.execute()
             Session().commit()
         return pull_request.pull_request_id

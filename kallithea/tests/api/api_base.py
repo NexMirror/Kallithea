@@ -2510,7 +2510,7 @@ class _BaseTestApi(object):
         self._compare_error(id_, expected, given=response.body)
 
     def test_api_get_pullrequest(self):
-        pull_request_id = fixture.create_pullrequest(self, self.REPO, self.TEST_PR_SRC, self.TEST_PR_DST, 'get test')
+        pull_request_id = fixture.create_pullrequest(self, self.REPO, self.TEST_PR_SRC, self.TEST_PR_DST, u'get test')
         random_id = random.randrange(1, 9999)
         params = json.dumps({
             "id": random_id,
@@ -2541,7 +2541,7 @@ class _BaseTestApi(object):
                                       "2000-01-01T00:00:00.000", response.body))
 
     def test_api_close_pullrequest(self):
-        pull_request_id = fixture.create_pullrequest(self, self.REPO, self.TEST_PR_SRC, self.TEST_PR_DST, 'close test')
+        pull_request_id = fixture.create_pullrequest(self, self.REPO, self.TEST_PR_SRC, self.TEST_PR_DST, u'close test')
         random_id = random.randrange(1, 9999)
         params = json.dumps({
             "id": random_id,
@@ -2557,7 +2557,7 @@ class _BaseTestApi(object):
         assert pullrequest.is_closed() == True
 
     def test_api_status_pullrequest(self):
-        pull_request_id = fixture.create_pullrequest(self, self.REPO, self.TEST_PR_SRC, self.TEST_PR_DST, "status test")
+        pull_request_id = fixture.create_pullrequest(self, self.REPO, self.TEST_PR_SRC, self.TEST_PR_DST, u"status test")
 
         random_id = random.randrange(1, 9999)
         params = json.dumps({
@@ -2582,7 +2582,7 @@ class _BaseTestApi(object):
         assert ChangesetStatus.STATUS_APPROVED == ChangesetStatusModel().calculate_pull_request_result(pullrequest)[2]
 
     def test_api_comment_pullrequest(self):
-        pull_request_id = fixture.create_pullrequest(self, self.REPO, self.TEST_PR_SRC, self.TEST_PR_DST, "comment test")
+        pull_request_id = fixture.create_pullrequest(self, self.REPO, self.TEST_PR_SRC, self.TEST_PR_DST, u"comment test")
         random_id = random.randrange(1, 9999)
         params = json.dumps({
             "id": random_id,
