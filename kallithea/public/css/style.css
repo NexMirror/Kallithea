@@ -3191,6 +3191,7 @@ input.perm_filter {
 table.code-difftable {
     border-collapse: collapse;
     border-radius: 0px !important;
+    width: 100%;
 }
 table.code-difftable td {
     padding: 0 !important;
