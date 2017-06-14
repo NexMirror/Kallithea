@@ -1527,11 +1527,11 @@ BIN_FILENODE = 6
 }
 
 tr.mergerow > td.author .user,
-tr.mergerow > td.mid > .message,
-tr.mergerow > td.mid > .message > a,
+tr.mergerow > td.mid .message,
+tr.mergerow > td.mid .message > a,
 tr.out-of-range > td.author .user,
-tr.out-of-range > td.mid > .message,
-tr.out-of-range > td.mid > .message > a {
+tr.out-of-range > td.mid .message,
+tr.out-of-range > td.mid .message > a {
     color: #aaa !important;
 }
 
@@ -1585,6 +1585,11 @@ tr.out-of-range > td.mid > .message > a {
 
 #graph_content .container .mid {
     padding: 0;
+}
+
+#graph_content .log-container {
+    position: relative;
+    margin-top: 8px;
 }
 
 #graph_content .container #singlerange,
