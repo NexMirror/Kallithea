@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2016-03-14 16:51+0100\n"
-"PO-Revision-Date: 2016-02-10 12:01+0000\n"
+"PO-Revision-Date: 2017-06-14 18:51+0000\n"
 "Last-Translator: Asterios Dimitriou <steve@pci.gr>\n"
 "Language-Team: Greek "
 "<https://hosted.weblate.org/projects/kallithea/kallithea/el/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2.5-dev\n"
+"X-Generator: Weblate 2.15-dev\n"
 
 #: kallithea/controllers/changelog.py:85
 #: kallithea/controllers/pullrequests.py:240 kallithea/lib/base.py:515
@@ -171,11 +171,10 @@ msgid "Error occurred during commit"
 msgstr "Συνέβη λάθος κατά το commit"
 
 #: kallithea/controllers/files.py:379
-#, fuzzy
 msgid "You can only edit files with revision being a valid branch"
 msgstr ""
 "Μπορείτε να επεξεργαστείτε μόνο αρχεία σε αναθεώρηση που βρίσκονται σε "
-"έγκυρη διακλάδωση "
+"έγκυρη διακλάδωση"
 
 #: kallithea/controllers/files.py:393
 #, python-format
@@ -276,7 +275,7 @@ msgstr "Κλάδος"
 
 #: kallithea/controllers/home.py:145 kallithea/templates/switch_to_list.html:16
 msgid "Closed Branches"
-msgstr ""
+msgstr "Κλειστοί Κλάδοι"
 
 #: kallithea/controllers/home.py:151
 msgid "Tag"
@@ -427,7 +426,7 @@ msgstr "Αυτό το αίτημα έλξης έχει κλείσει και δ�
 #: kallithea/controllers/pullrequests.py:617
 #, python-format
 msgid "The following changes are available on %s:"
-msgstr ""
+msgstr "Οι ακόλουθες αλλαγές είναι διαθέσιμες στο %s:"
 
 #: kallithea/controllers/pullrequests.py:621
 msgid "No changesets found for updating this pull request."
@@ -447,9 +446,9 @@ msgid "No permission to change pull request status"
 msgstr "Χωρίς δικαιώματα αλλαγής της κατάστασης του αιτήματος έλξης"
 
 #: kallithea/controllers/pullrequests.py:738
-#, fuzzy, python-format
+#, python-format
 msgid "Successfully deleted pull request %s"
-msgstr "Επιτυχής διαγραφή αιτήματος έλξης"
+msgstr "Επιτυχής διαγραφή αιτήματος έλξης %s"
 
 #: kallithea/controllers/pullrequests.py:748
 msgid "Closing."
@@ -716,182 +715,184 @@ msgstr "Ενεργό"
 
 #: kallithea/controllers/admin/permissions.py:124
 msgid "Global permissions updated successfully"
-msgstr ""
+msgstr "Τα καθολικά δικαιώματα ενημερώθηκαν επιτυχώς"
 
 #: kallithea/controllers/admin/permissions.py:139
 msgid "Error occurred during update of permissions"
-msgstr ""
+msgstr "Συνέβει μια βλάβη κατά την ενημέρωση των δικαιωμάτων"
 
 #: kallithea/controllers/admin/repo_groups.py:187
 #, python-format
 msgid "Error occurred during creation of repository group %s"
-msgstr ""
+msgstr "Συνέβει μια βλάβη κατά την δημιουργία της ομάδας αποθετηρίου %s"
 
 #: kallithea/controllers/admin/repo_groups.py:192
 #, python-format
 msgid "Created repository group %s"
-msgstr ""
+msgstr "Δημιουργήθηκε η ομάδα αποθετηρίου %s"
 
 #: kallithea/controllers/admin/repo_groups.py:249
 #, python-format
 msgid "Updated repository group %s"
-msgstr ""
+msgstr "Ενημερώθηκε η ομάδα αποθετηρίου %s"
 
 #: kallithea/controllers/admin/repo_groups.py:265
 #, python-format
 msgid "Error occurred during update of repository group %s"
-msgstr ""
+msgstr "Συνέβει μια βλάβη κατά την ενημέρωση της ομάδας αποθετηρίου %s"
 
 #: kallithea/controllers/admin/repo_groups.py:283
 #, python-format
 msgid "This group contains %s repositories and cannot be deleted"
-msgstr ""
+msgstr "Αυτή η ομάδα περιέχει %s αποθετήρια και δε μπορεί να διαγραφεί"
 
 #: kallithea/controllers/admin/repo_groups.py:290
 #, python-format
 msgid "This group contains %s subgroups and cannot be deleted"
-msgstr ""
+msgstr "Αυτή η ομάδα περιέχει %s υποομάδες και δε μπορεί να διαγραφεί"
 
 #: kallithea/controllers/admin/repo_groups.py:296
 #, python-format
 msgid "Removed repository group %s"
-msgstr ""
+msgstr "Αφαιρέθηκε η ομάδα αποθετηρίου %s"
 
 #: kallithea/controllers/admin/repo_groups.py:301
 #, python-format
 msgid "Error occurred during deletion of repository group %s"
-msgstr ""
+msgstr "Συνέβει μια βλάβη κατά την διαγραφή της ομάδας αποθετηρίου %s"
 
 #: kallithea/controllers/admin/repo_groups.py:404
 #: kallithea/controllers/admin/repo_groups.py:439
 #: kallithea/controllers/admin/user_groups.py:340
 msgid "Cannot revoke permission for yourself as admin"
-msgstr ""
+msgstr "Δεν μπορείτε να ανακαλέσετε την άδεια σας ως διαχειριστής"
 
 #: kallithea/controllers/admin/repo_groups.py:419
 msgid "Repository group permissions updated"
-msgstr ""
+msgstr "Τα δικαιώματα της ομάδας αποθετηρίου ενημερώθηκαν"
 
 #: kallithea/controllers/admin/repo_groups.py:456
 #: kallithea/controllers/admin/repos.py:397
 #: kallithea/controllers/admin/user_groups.py:352
 msgid "An error occurred during revoking of permission"
-msgstr ""
+msgstr "Συνέβει μια βλάβη κατά την ανάκληση της άδειας"
 
 #: kallithea/controllers/admin/repos.py:151
 #, python-format
 msgid "Error creating repository %s"
-msgstr ""
+msgstr "Βλάβη κατά τη δημιουργία του αποθετηρίου %s"
 
 #: kallithea/controllers/admin/repos.py:212
 #, python-format
 msgid "Created repository %s from %s"
-msgstr ""
+msgstr "Δημιουργήθηκε το αποθετήριο %s από το %s"
 
 #: kallithea/controllers/admin/repos.py:221
 #, python-format
 msgid "Forked repository %s as %s"
-msgstr ""
+msgstr "Κλωνοποιήθηκε το αποθετηρίο %s ως %s"
 
 #: kallithea/controllers/admin/repos.py:224
 #, python-format
 msgid "Created repository %s"
-msgstr ""
+msgstr "Δημιουργήθηκε το αποθετήριο %s"
 
 #: kallithea/controllers/admin/repos.py:261
 #, python-format
 msgid "Repository %s updated successfully"
-msgstr ""
+msgstr "Το αποθετήριο %s ενημερώθηκε επιτυχώς"
 
 #: kallithea/controllers/admin/repos.py:282
 #, python-format
 msgid "Error occurred during update of repository %s"
-msgstr ""
+msgstr "Συνέβει μια βλάβη κατά την ενημέρωση του αποθετηρίου %s"
 
 #: kallithea/controllers/admin/repos.py:309
 #, python-format
 msgid "Detached %s forks"
-msgstr ""
+msgstr "Αποσυνδέθηκαν %s κλώνοι"
 
 #: kallithea/controllers/admin/repos.py:312
 #, python-format
 msgid "Deleted %s forks"
-msgstr ""
+msgstr "Διαγράφηκαν %s κλώνοι"
 
 #: kallithea/controllers/admin/repos.py:317
 #, python-format
 msgid "Deleted repository %s"
-msgstr ""
+msgstr "Διαγράφηκε το αποθετήριο %s"
 
 #: kallithea/controllers/admin/repos.py:320
 #, python-format
 msgid "Cannot delete repository %s which still has forks"
-msgstr ""
+msgstr "Δε μπορεί να διαγραφεί το αποθετήριο %s που ακόμα έχει κλώνους"
 
 #: kallithea/controllers/admin/repos.py:325
 #, python-format
 msgid "An error occurred during deletion of %s"
-msgstr ""
+msgstr "Συνέβει μια βλάβη κατά την διαγραφή του %s"
 
 #: kallithea/controllers/admin/repos.py:373
 msgid "Repository permissions updated"
-msgstr ""
+msgstr "Τα δικαιώματα του αποθετηρίου ενημερώθηκαν"
 
 #: kallithea/controllers/admin/repos.py:429
 msgid "An error occurred during creation of field"
-msgstr ""
+msgstr "Συνέβει μια βλάβη κατά τη δημιουργία του πεδίου"
 
 #: kallithea/controllers/admin/repos.py:443
 msgid "An error occurred during removal of field"
-msgstr ""
+msgstr "Συνέβει μια βλάβη κατά την απομάκρυνση του πεδίου"
 
 #: kallithea/controllers/admin/repos.py:459
 msgid "-- Not a fork --"
-msgstr ""
+msgstr "-- Όχι κλώνος --"
 
 #: kallithea/controllers/admin/repos.py:490
 msgid "Updated repository visibility in public journal"
-msgstr ""
+msgstr "Ενημερώθηκε η ορατότητα του αποθετηρίου στο δημόσιο ημερολόγιο"
 
 #: kallithea/controllers/admin/repos.py:494
 msgid "An error occurred during setting this repository in public journal"
 msgstr ""
+"Συνέβει μια βλάβη κατά την τοποθέτηση αυτού το αποθετηρίου στο δημόσιο "
+"ημερολόγιο"
 
 #: kallithea/controllers/admin/repos.py:511
 msgid "Nothing"
-msgstr ""
+msgstr "Χωρίς"
 
 #: kallithea/controllers/admin/repos.py:513
 #, python-format
 msgid "Marked repository %s as fork of %s"
-msgstr ""
+msgstr "Σημειώθηκε το αποθετήριο %s σαν κλώνος του %s"
 
 #: kallithea/controllers/admin/repos.py:520
 msgid "An error occurred during this operation"
-msgstr ""
+msgstr "Παρουσιάστηκε ένα σφάλμα κατά τη διάρκεια αυτής της λειτουργίας"
 
 #: kallithea/controllers/admin/repos.py:536
 #: kallithea/controllers/admin/repos.py:563
 msgid "Repository has been locked"
-msgstr ""
+msgstr "Το αποθετήριο έχει κλειδωθεί"
 
 #: kallithea/controllers/admin/repos.py:539
 #: kallithea/controllers/admin/repos.py:560
 msgid "Repository has been unlocked"
-msgstr ""
+msgstr "Το αποθετήριο έχει ξεκλειδωθεί"
 
 #: kallithea/controllers/admin/repos.py:542
 #: kallithea/controllers/admin/repos.py:567
 msgid "An error occurred during unlocking"
-msgstr ""
+msgstr "Παρουσιάστηκε ένα σφάλμα κατά το ξεκλείδωμα"
 
 #: kallithea/controllers/admin/repos.py:581
 msgid "Cache invalidation successful"
-msgstr ""
+msgstr "Η ακύρωση της cache ήταν επιτυχής"
 
 #: kallithea/controllers/admin/repos.py:585
 msgid "An error occurred during cache invalidation"
-msgstr ""
+msgstr "Παρουσιάστηκε ένα σφάλμα κατά τη διάρκεια ακύρωσης της cache"
 
 #: kallithea/controllers/admin/repos.py:600
 msgid "Pulled from remote location"
@@ -6012,4 +6013,3 @@ msgstr ""
 #~ "Changeset status: %s\n"
 #~ "Click to open associated pull request %s"
 #~ msgstr ""
-
