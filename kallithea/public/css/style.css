@@ -2380,6 +2380,8 @@ nav.navbar #quick .select2-container .select2-choice .select2-chosen {
     margin: 10px 24px 10px 44px;
 }
 
+
+/* formencode htmlfill adds 'error' to failing input fields */
 #content div.panel div.form div.form-horizontal div.form-group > div input.error,
 #login div.form div.form-horizontal div.form-group > div input.error,
 #register div.form div.form-horizontal div.form-group > div input.error {
@@ -2390,14 +2392,13 @@ nav.navbar #quick .select2-container .select2-choice .select2-chosen {
     border-bottom: 1px solid #FBC2C4;
 }
 
-#content div.panel div.form div.form-horizontal div.form-group > div input.success,
-#login div.form div.form-horizontal div.form-group > div input.success,
-#register div.form div.form-horizontal div.form-group > div input.success {
-    background: #E6EFC2;
-    border-top: 1px solid #cebb98;
-    border-left: 1px solid #cebb98;
-    border-right: 1px solid #c6d880;
-    border-bottom: 1px solid #c6d880;
+/* formencode htmlfill injects 'error-message' */
+#content div.panel div.form div.form-horizontal div.form-group span.error-message,
+#login div.form div.form-horizontal div.form-group span.error-message,
+#register div.form div.form-horizontal div.form-group span.error-message {
+    display: inline-block;
+    color: red;
+    margin: 4px 0 0;
 }
 
 #content div.panel table th.selected input,
