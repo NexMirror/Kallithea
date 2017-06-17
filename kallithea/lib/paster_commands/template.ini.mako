@@ -181,9 +181,13 @@ use = egg:kallithea
 
 full_stack = true
 static_files = true
-<%text>## Available Languages:</%text>
-<%text>## cs de fr hu ja nl_BE pl pt_BR ru sk zh_CN zh_TW</%text>
-lang =
+
+<%text>## Internationalization (see setup documentation for details)</%text>
+<%text>## By default, the language requested by the browser is used if available.</%text>
+#i18n.enable = false
+<%text>## Fallback language, empty for English (valid values are the names of subdirectories in kallithea/i18n):</%text>
+i18n.lang =
+
 cache_dir = %(here)s/data
 index_dir = %(here)s/data/index
 
