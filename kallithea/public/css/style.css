@@ -311,11 +311,6 @@ nav.navbar #quick li .icon {
     margin-left: 0 !important;
 }
 
-.panel-body > .container {
-    margin-left: 0;
-    padding: 0;
-}
-
 label {
     font-weight: inherit;
 }
@@ -978,11 +973,6 @@ a.metatag[data-tag="license"]:hover {
 
 .user-menu {
     padding: 0 !important;
-}
-
-.user-menu .container {
-    padding: 0px 4px 0px 4px;
-    margin: 0px 0px 0px 0px;
 }
 
 .user-menu .gravatar {
