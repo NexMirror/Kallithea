@@ -174,8 +174,6 @@ def setup_configuration(app):
         repo2db_mapper(ScmModel().repo_scan(repos_path),
                        remove_obsolete=False, install_git_hooks=False)
 
-    formencode.api.set_stdtranslation(languages=[config.get('lang')])
-
 hooks.register('configure_new_app', setup_configuration)
 
 
