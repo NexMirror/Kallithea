@@ -1,27 +1,18 @@
-
 %if c.notifications:
-<%
-unread = lambda n:{False:'unread'}.get(n)
-%>
 
-<div class="notification-list notification-table list-group">
+<div class="list-group">
 %for notification in c.notifications:
-  <div id="notification_${notification.notification.notification_id}" class="list-group-item ${unread(notification.read)}">
-    <div>
+  <div id="notification_${notification.notification.notification_id}" class="list-group-item ${'' if notification.read else 'list-group-item-warning'} clearfix">
       ${h.gravatar_div(notification.notification.created_by_user.email, size=24)}
-      <span class="desc ${unread(notification.read)}">
+      <span class="pull-left">
         <a href="${url('notification', notification_id=notification.notification.notification_id)}">${notification.notification.description}</a>
       </span>
-      <span class="delete-notifications" title="${_('Delete')}">
-        <span id="${notification.notification.notification_id}" class="delete-notification"><i class="btn icon-minus-circled"></i></span>
+      <span class="pull-right">
+        %if not notification.read:
+          <span id="${notification.notification.notification_id}" class="btn btn-default btn-xs read-notification"><i class="icon-ok"></i>${_('Mark as read')}</span>
+        %endif
+        <span id="${notification.notification.notification_id}" class="btn btn-default btn-xs delete-notification"><i class="icon-minus-circled"></i>${_('Delete')}</span>
       </span>
-      %if not notification.read:
-      <span class="read-notifications" title="${_('Mark as read')}">
-        <span id="${notification.notification.notification_id}" class="read-notification"><i class="btn icon-ok"></i></span>
-      </span>
-      %endif
-    </div>
-    <div class="notification-subject"></div>
   </div>
 %endfor
 </div>

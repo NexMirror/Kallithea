@@ -971,7 +971,7 @@ var deleteNotification = function(url, notification_id, callbacks){
 var readNotification = function(url, notification_id, callbacks){
     var success = function(o){
             var $obj = $("#notification_"+notification_id);
-            $obj.removeClass('unread');
+            $obj.removeClass('list-group-item-warning');
             $obj.find('.read-notification').remove();
             _run_callbacks(callbacks);
         };

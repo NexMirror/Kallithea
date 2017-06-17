@@ -21,9 +21,9 @@
 
     <div class="panel-body">
       <div class="pull-left">
-            <span id='all' class="btn btn-default btn-sm"><a href="${h.url.current()}">${_('All')}</a></span>
-            <span id='comment' class="btn btn-default btn-sm"><a href="${h.url.current(type=c.comment_type)}">${_('Comments')}</a></span>
-            <span id='pull_request' class="btn btn-default btn-sm"><a href="${h.url.current(type=c.pull_request_type)}">${_('Pull Requests')}</a></span>
+            <a class="btn btn-default btn-sm" href="${h.url.current()}">${_('All')}</a>
+            <a class="btn btn-default btn-sm" href="${h.url.current(type=c.comment_type)}">${_('Comments')}</a>
+            <a class="btn btn-default btn-sm" href="${h.url.current(type=c.pull_request_type)}">${_('Pull Requests')}</a>
       </div>
       %if c.notifications:
         <span id='mark_all_read' class="btn btn-default btn-sm pull-right">${_('Mark All Read')}</span>
