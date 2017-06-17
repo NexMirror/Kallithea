@@ -1320,7 +1320,7 @@ h3.files_location {
     padding: 5px;
 }
 
-#changeset_content .container {
+#changeset_content .changeset_content_header {
     font-size: 1.2em;
     overflow: hidden;
 }
@@ -1333,16 +1333,16 @@ h3.files_location {
     padding: 0px 0px 0px 12px !important;
 }
 
-#changeset_content .container .right {
+#changeset_content .changeset_content_header .right {
     float: right;
     width: 20%;
     text-align: right;
 }
 
-#changeset_content .container .message {
+#changeset_content .changeset_content_header .message {
     white-space: pre-wrap;
 }
-#changeset_content .container .message a:hover {
+#changeset_content .changeset_content_header .message a:hover {
     text-decoration: none;
 }
 
@@ -2470,12 +2470,12 @@ div.form div.form-horizontal div.buttons {
     max-width: 320px;
 }
 
-#changeset_content .container .wrapper,
+#changeset_content .changeset_content_header .wrapper,
 #graph_content tr .wrapper {
     width: 600px;
 }
 
-#changeset_content .container .date,
+#changeset_content .changeset_content_header .date,
 .ac .match {
     font-weight: 700;
     padding-top: 5px;
