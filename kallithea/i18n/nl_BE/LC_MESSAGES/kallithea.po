@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2016-03-14 16:51+0100\n"
-"PO-Revision-Date: 2015-05-28 22:41+0200\n"
-"Last-Translator: Sam Jaques <sam.jaques@me.com>\n"
+"PO-Revision-Date: 2017-06-18 15:04+0000\n"
+"Last-Translator: Thomas De Schampheleire <patrickdepinguin@gmail.com>\n"
 "Language-Team: Dutch (Belgium) "
 "<https://hosted.weblate.org/projects/kallithea/kallithea/nl_BE/>\n"
 "Language: nl_BE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Weblate 2.3-dev\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2.15-dev\n"
 
 #: kallithea/controllers/changelog.py:85
 #: kallithea/controllers/pullrequests.py:240 kallithea/lib/base.py:515
@@ -51,9 +51,9 @@ msgid "Ignore whitespace"
 msgstr "Negeer witruimtes"
 
 #: kallithea/controllers/changeset.py:168
-#, fuzzy, python-format
+#, python-format
 msgid "Increase diff context to %(num)s lines"
-msgstr "vergroot de diff context met %(num)s lijnen"
+msgstr "Vergroot de diff context tot %(num)s lijnen"
 
 #: kallithea/controllers/changeset.py:233 kallithea/controllers/files.py:97
 #: kallithea/controllers/files.py:117 kallithea/controllers/files.py:744
@@ -62,51 +62,54 @@ msgstr "Deze revisie bestaat niet in deze repository"
 
 #: kallithea/controllers/compare.py:161 kallithea/templates/base/root.html:41
 msgid "Select changeset"
-msgstr "Selecteer de changeset"
+msgstr "Selecteer een changeset"
 
 #: kallithea/controllers/compare.py:261
 msgid "Cannot compare repositories without using common ancestor"
 msgstr ""
+"Kan geen repositories vergelijken zonder een gemeenschappelijke voorouder te "
+"gebruiken"
 
 #: kallithea/controllers/error.py:71
 msgid "No response"
-msgstr ""
+msgstr "Geen antwoord"
 
 #: kallithea/controllers/error.py:72
 msgid "Unknown error"
-msgstr ""
+msgstr "Ongekende fout"
 
 #: kallithea/controllers/error.py:100
 msgid "The request could not be understood by the server due to malformed syntax."
 msgstr ""
+"De aanvraag kon niet door de server begrepen worden wegens incorrecte syntax."
 
 #: kallithea/controllers/error.py:103
 msgid "Unauthorized access to resource"
-msgstr ""
+msgstr "Ongeautoriseerde toegang tot resource"
 
 #: kallithea/controllers/error.py:105
 msgid "You don't have permission to view this page"
-msgstr ""
+msgstr "U hebt geen permissie om deze pagina te bekijken"
 
 #: kallithea/controllers/error.py:107
 msgid "The resource could not be found"
-msgstr ""
+msgstr "De resource kon niet gevonden worden"
 
 #: kallithea/controllers/error.py:109
 msgid ""
 "The server encountered an unexpected condition which prevented it from "
 "fulfilling the request."
-msgstr ""
+msgstr "De server kon de aanvraag niet voldoen wegens een onverwachte toestand."
 
 #: kallithea/controllers/feed.py:55
 #, python-format
 msgid "Changes on %s repository"
-msgstr ""
+msgstr "Veranderingen in %s repository"
 
 #: kallithea/controllers/feed.py:56
 #, python-format
 msgid "%s %s feed"
-msgstr ""
+msgstr "%s %s feed"
 
 #: kallithea/controllers/feed.py:87
 #: kallithea/templates/changeset/changeset.html:182
@@ -116,94 +119,95 @@ msgstr ""
 #: kallithea/templates/pullrequests/pullrequest_show.html:350
 #: kallithea/templates/pullrequests/pullrequest_show.html:372
 msgid "Changeset was too big and was cut off..."
-msgstr ""
+msgstr "De changeset was te groot en werd afgekort..."
 
 #: kallithea/controllers/feed.py:91
 #, python-format
 msgid "%s committed on %s"
-msgstr ""
+msgstr "%s committeerde op %s"
 
 #: kallithea/controllers/files.py:92
 msgid "Click here to add new file"
-msgstr ""
+msgstr "Klik hier om een nieuw bestand toe te voegen"
 
 #: kallithea/controllers/files.py:93
 #, python-format
 msgid "There are no files yet. %s"
-msgstr ""
+msgstr "Er zijn nog geen bestanden. %s"
 
 #: kallithea/controllers/files.py:195
 #, python-format
 msgid "%s at %s"
-msgstr ""
+msgstr "%s op %s"
 
 #: kallithea/controllers/files.py:307 kallithea/controllers/files.py:367
 #: kallithea/controllers/files.py:434
 #, python-format
 msgid "This repository has been locked by %s on %s"
-msgstr ""
+msgstr "Deze repository is gelocket door %s op %s"
 
 #: kallithea/controllers/files.py:319
 msgid "You can only delete files with revision being a valid branch"
 msgstr ""
+"Men kan enkel bestanden verwijderen als de revisie een geldige branch is"
 
 #: kallithea/controllers/files.py:330
 #, python-format
 msgid "Deleted file %s via Kallithea"
-msgstr ""
+msgstr "Bestand %s verwijderd via Kallithea"
 
 #: kallithea/controllers/files.py:352
 #, python-format
 msgid "Successfully deleted file %s"
-msgstr ""
+msgstr "Bestand %s succesvol verwijderd"
 
 #: kallithea/controllers/files.py:356 kallithea/controllers/files.py:422
 #: kallithea/controllers/files.py:503
 msgid "Error occurred during commit"
-msgstr ""
+msgstr "Er trad een fout op tijdens het committeren"
 
 #: kallithea/controllers/files.py:379
 msgid "You can only edit files with revision being a valid branch"
-msgstr ""
+msgstr "Men kan enkel bestanden wijzigen als de revisie een geldige branch is"
 
 #: kallithea/controllers/files.py:393
 #, python-format
 msgid "Edited file %s via Kallithea"
-msgstr ""
+msgstr "Bestand %s gewijzigd via Kallithea"
 
 #: kallithea/controllers/files.py:409
 msgid "No changes"
-msgstr ""
+msgstr "Geen wijzigingen"
 
 #: kallithea/controllers/files.py:418 kallithea/controllers/files.py:492
 #, python-format
 msgid "Successfully committed to %s"
-msgstr ""
+msgstr "Succesvol gecommitteerd naar %s"
 
 #: kallithea/controllers/files.py:445
 msgid "Added file via Kallithea"
-msgstr ""
+msgstr "Bestand toegevoegd via Kallithea"
 
 #: kallithea/controllers/files.py:466
 msgid "No content"
-msgstr ""
+msgstr "Geen inhoud"
 
 #: kallithea/controllers/files.py:470
 msgid "No filename"
-msgstr ""
+msgstr "Geen bestandsnaam"
 
 #: kallithea/controllers/files.py:495
 msgid "Location must be relative path and must not contain .. in path"
-msgstr ""
+msgstr "De locatie moet een relatief pad zijn en mag geen .. bevatten"
 
 #: kallithea/controllers/files.py:528
 msgid "Downloads disabled"
-msgstr ""
+msgstr "Downloads uitgeschakeld"
 
 #: kallithea/controllers/files.py:539
 #, python-format
 msgid "Unknown revision %s"
-msgstr ""
+msgstr "Ongekende revisie %s"
 
 #: kallithea/controllers/files.py:541
 msgid "Empty repository"
@@ -6367,4 +6371,3 @@ msgstr ""
 #~ "Changeset status: %s\n"
 #~ "Click to open associated pull request %s"
 #~ msgstr ""
-
