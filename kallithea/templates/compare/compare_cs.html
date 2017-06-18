@@ -34,9 +34,7 @@
       <tr id="chg_${cnt+1}" class="${'mergerow' if len(cs.parents) > 1 else ''}">
         <td>
           %if cs.raw_id in c.statuses:
-            <div title="${_('Changeset status: %s') % c.statuses[cs.raw_id][1]}" class="changeset-status-ico">
-                <i class="icon-circle changeset-status-${c.statuses[cs.raw_id][0]}"></i>
-            </div>
+              <i class="icon-circle changeset-status-${c.statuses[cs.raw_id][0]}" title="${_('Changeset status: %s') % c.statuses[cs.raw_id][1]}"></i>
           %endif
           %if c.cs_comments.get(cs.raw_id):
               <div class="comments-container">

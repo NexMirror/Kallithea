@@ -34,8 +34,8 @@
         %if co.status_change:
            <div class="automatic-comment">
              <p>
-               <span title="${_('Changeset status')}" class="changeset-status-lbl">${_("Status change")}: ${co.status_change[0].status_lbl}</span>
-               <span class="changeset-status-ico"><i class="icon-circle changeset-status-${co.status_change[0].status}"></i></span>
+               ${_("Status change")}: ${co.status_change[0].status_lbl}
+               <i class="icon-circle changeset-status-${co.status_change[0].status}"></i>
              </p>
            </div>
         %endif

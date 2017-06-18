@@ -40,7 +40,7 @@ ${self.repo_context_bar('changelog')}
                     <td><span data-toggle="tooltip" title="${h.age(cs.date)}">${cs.date}</span></td>
                     <td>
                       %if c.statuses:
-                        <div title="${_('Changeset status')}" class="changeset-status-ico"><i class="icon-circle changeset-status-${c.statuses[cnt]}"></i></div>
+                        <i class="icon-circle changeset-status-${c.statuses[cnt]}" title="${_('Changeset status: %s') % h.changeset_status_lbl(c.statuses[cnt])}"></i>
                       %endif
                     </td>
                     <td><div class="message">${h.urlify_text(h.wrap_paragraphs(cs.message),c.repo_name)}</div></td>

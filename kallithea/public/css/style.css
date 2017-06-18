@@ -679,7 +679,8 @@ div.panel.panel-default div.panel-heading .diff-actions span.arrow {
 }
 
 #content div.panel table td.compact {
-    padding: 0;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 #content div.panel table tr.selected td {
@@ -1684,27 +1685,6 @@ div.panel-body #files_data .revision-link,
 .issue-tracker-link {
     color: #3F6F9F;
     font-weight: bold !important;
-}
-
-.changeset-status-container {
-    padding-right: 5px;
-    margin-top: 1px;
-    height: 14px;
-}
-.code-header .changeset-status-container {
-    float: left;
-    padding: 2px 0px 0px 2px;
-}
-.code-header .changeset-status-container .changeset-status-lbl {
-    float: left;
-    padding: 0px 4px 0px 0px;
-}
-.changeset-status-container div.changeset-status-ico {
-    float: left;
-}
-.code-header .changeset-status-container .changeset-status-ico,
-.container .changeset-status-ico {
-    float: left;
 }
 
 /* changeset statuses (must be the same name as the status) */

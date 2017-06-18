@@ -44,10 +44,10 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
             </div>
 
             <div class="pull-left">
-                <div class="pull-left">
+                <div class="pull-left" title="${_('Changeset status')}">
                     %if c.statuses:
-                        <span class="changeset-status-ico"><i class="icon-circle changeset-status-${c.statuses[0]}"></i></span>
-                        <span title="${_('Changeset status')}" class="changeset-status-lbl">[${h.changeset_status_lbl(c.statuses[0])}]</span>
+                        <i class="icon-circle changeset-status-${c.statuses[0]}"></i>
+                        [${h.changeset_status_lbl(c.statuses[0])}]
                     %endif
                 </div>
                 <div class="diff-actions pull-left">
