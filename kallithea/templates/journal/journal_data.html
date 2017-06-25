@@ -36,10 +36,7 @@
             </div>
         %endfor
     %endfor
-
-    <ul class="pagination">
-        ${c.journal_pager.pager()}
-    </ul>
+    ${c.journal_pager.pager()}
 %else:
   <div>
       ${_('No entries yet')}

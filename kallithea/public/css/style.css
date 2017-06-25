@@ -677,6 +677,10 @@ div.panel.panel-default div.panel-heading .diff-actions span.arrow {
     padding: 0;
 }
 
+#content div.panel ul.pagination {
+    margin: 10px 0 0 0;
+}
+
 #content div.panel ul.pagination > li > a,
 #content div.panel ul.pagination > li > span {
     background: #ebebeb url("../images/pager.png") repeat-x;

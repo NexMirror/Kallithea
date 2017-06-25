@@ -19,9 +19,7 @@
             </div>
         </div>
     % endfor
-    <ul class="pagination">
-        ${c.forks_pager.pager()}
-    </ul>
+    ${c.forks_pager.pager()}
 % else:
     ${_('There are no forks yet')}
 % endif

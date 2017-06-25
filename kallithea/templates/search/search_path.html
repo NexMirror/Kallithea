@@ -17,7 +17,5 @@
     %endif
 %endfor
 %if c.cur_query and c.formated_results:
-    <ul class="pagination">
-        ${c.formated_results.pager()}
-    </ul>
+    ${c.formated_results.pager()}
 %endif

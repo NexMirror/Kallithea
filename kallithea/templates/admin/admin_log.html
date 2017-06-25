@@ -55,9 +55,8 @@
   });
 </script>
 
-<ul class="pagination">
-    ${c.users_log.pager()}
-</ul>
+${c.users_log.pager()}
+
 %else:
     ${_('No actions yet')}
 %endif

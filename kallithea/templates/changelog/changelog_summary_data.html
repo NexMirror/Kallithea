@@ -71,9 +71,8 @@
 
 </table>
 
-<ul class="pagination">
-    ${c.repo_changesets.pager()}
-</ul>
+${c.repo_changesets.pager()}
+
 %else:
 
 %if h.HasRepoPermissionLevel('write')(c.repo_name):

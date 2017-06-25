@@ -80,9 +80,7 @@
 </div>
 
 %if hasattr(pullrequests, 'pager'):
-    <ul class="pagination">
-        ${pullrequests.pager(**request.GET.mixed())}
-    </ul>
+    ${pullrequests.pager(**request.GET.mixed())}
 %endif
 
 </%def>

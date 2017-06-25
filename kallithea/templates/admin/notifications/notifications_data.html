@@ -16,11 +16,7 @@
   </div>
 %endfor
 </div>
-
-<ul class="pagination">
-    ${c.notifications.pager(controller='admin/notifications', **request.GET.mixed())}
-</ul>
-
+${c.notifications.pager(controller='admin/notifications', **request.GET.mixed())}
 %else:
     <div>${_('No notifications here yet')}</div>
 %endif

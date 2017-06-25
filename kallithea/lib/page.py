@@ -23,7 +23,7 @@ from webhelpers.paginate import Page as _Page
 
 class Page(_Page):
     """
-    Custom pager to match rendering style with YUI paginator
+    Custom pager to match rendering style with YUI paginator emitting Bootstrap paginators
     """
 
     def __init__(self, *args, **kwargs):
@@ -114,7 +114,7 @@ class Page(_Page):
         #nav_items.append(literal('<link rel="prefetch" href="%s?page=%s">' % (_page_link, str(int(self.page)+1))))
         return self.separator.join(nav_items)
 
-    def pager(self, format='$link_previous ~2~ $link_next', page_param='page', partial_param='partial',
+    def pager(self, format='<ul class="pagination">$link_previous ~2~ $link_next</ul>', page_param='page', partial_param='partial',
         show_if_single_page=False, separator=' ', onclick=None,
         symbol_first='<<', symbol_last='>>',
         symbol_previous='<', symbol_next='>',
