@@ -6,10 +6,9 @@
             ${h.gravatar_div(f.user.email, size=24)}
             <span> <b>${f.user.username}</b> (${f.user.name} ${f.user.lastname})</span>
         </div>
-        <div></div>
         <div class="follower_date">${_('Started following -')}
-        <span data-toggle="tooltip" title="${f.follows_from}"> ${h.age(f.follows_from)}</span></div>
-        <div></div>
+          <span data-toggle="tooltip" title="${f.follows_from}"> ${h.age(f.follows_from)}</span>
+        </div>
     </div>
 % endfor
 
