@@ -178,10 +178,9 @@ div:hover > span > a.permalink {
 nav.navbar .navbar-brand:hover,
 nav.navbar .navbar-brand {
     font-size: 20px;
+    padding-top: 12px;
     color: white !important;
-    float: left;
     height: 44px;
-    line-height: 44px;
 }
 
 nav.navbar ul#logged-user {
@@ -258,43 +257,9 @@ nav.navbar #home a {
     padding: 0;
 }
 
-nav.navbar #home a:hover {
-    background-position: 0 -40px;
-}
-
-nav.navbar #logo {
-    float: left;
-    position: absolute;
-    padding-left: 10px;
-}
-
-nav.navbar #logo > .navbar-brand {
-    padding: 0 15px;
-}
-
 nav.navbar #logo > .navbar-brand > img {
-    padding-top: 5px;
+    margin-top: -9px;
     margin-right: 5px;
-}
-
-nav.navbar #logo h1 {
-    color: #FFF;
-    font-size: 20px;
-    margin: 12px 0 0 13px;
-    padding: 0;
-}
-
-nav.navbar #logo a {
-    color: #fff;
-    text-decoration: none;
-}
-
-nav.navbar #logo a:hover {
-    color: #bfe3ff;
-}
-
-nav.navbar #quick {
-    margin-right: 10px;
 }
 
 nav.navbar #quick li .icon {
@@ -317,11 +282,6 @@ label {
 
 label.control-label {
     font-weight: bold;
-}
-
-#content nav.navbar .navbar-brand {
-    height: inherit;
-    line-height: inherit;
 }
 
 .groups_breadcrumbs a {

@@ -40,25 +40,6 @@ i[class^='icon-'] {
     color: #677a85;
 }
 
-#content #context-bar {
-    position: relative;
-    overflow: visible;
-    background-color: #577632;
-    padding: 0;
-    min-height: 36px;
-}
-
-#content #context-bar .navbar-header {
-    display: inline-block;
-    color: #FFF;
-    margin: 8px 15px 3px;
-    padding-bottom: 2px;
-}
-
-#content #context-bar > .navbar-header > .navbar-brand {
-    padding: 0;
-}
-
 nav.navbar #quick a,
 #content #context-bar,
 #content #context-bar a {
@@ -112,17 +93,15 @@ ul#context-pages ul.dropdown-menu > li:last-child {
 
 nav.navbar #quick ul,
 #revision-changer,
-#context-pages,
 #context-pages ul {
-    background: #3b6998; /* Old browsers */
-    background: linear-gradient(to bottom, #577632 0%, #577632 100%); /* W3C */
+    background: #577632;
 }
 
 ul#context-actions {
     display: inline-block;
     float: right;
     border-radius: 4px;
-    background-image: linear-gradient(to bottom, #577632 0%, #577632 100%);
+    background: #577632;
 }
 
 #content ul#context-actions li {
@@ -190,11 +169,6 @@ nav.navbar #quick li a.menu_link:focus,
     display: none;
 }
 
-#context-pages {
-    border-left: 1px solid rgba(0,0,0,0.1);
-    margin-right: 15px;
-}
-
 #content #context-pages .icon {
     margin-right: 5px;
 }
@@ -229,7 +203,7 @@ nav.navbar #quick .select2-container .select2-choice .select2-chosen,
 #context-pages > li > a,
 #context-pages .select2-container .select2-choice .select2-chosen,
 x#context-pages .dropdown-menu a {
-    padding: 0px 10px 1px 10px;
+    padding: 0px 15px 1px 15px;
     line-height: 43px;
 }
 
