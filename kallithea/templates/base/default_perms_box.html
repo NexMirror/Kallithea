@@ -7,7 +7,6 @@
 <%def name="default_perms_box(form_url)">
 ${h.form(form_url)}
     <div class="form">
-        <div class="form-horizontal">
             <div class="form-group">
                 <label class="control-label" for="inherit_default_permissions">${_('Inherit defaults')}:</label>
                 <div>
@@ -58,7 +57,6 @@ ${h.form(form_url)}
                     ${h.reset('reset',_('Reset'),class_="btn btn-default")}
                 </div>
             </div>
-        </div>
     </div>
 ${h.end_form()}
 

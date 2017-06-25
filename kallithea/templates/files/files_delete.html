@@ -25,7 +25,7 @@ ${self.repo_context_bar('files')}
     </div>
     <div class="panel-body" id="edit">
         <div id="files_data">
-            ${h.form(h.url.current(),method='post',class_="form-horizontal")}
+            ${h.form(h.url.current(),method='post')}
             <h3 class="files_location">
                 ${_('Delete file')}: ${h.files_breadcrumbs(c.repo_name,c.cs.raw_id,c.f_path)}
             </h3>

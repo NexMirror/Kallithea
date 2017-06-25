@@ -43,7 +43,6 @@ ${self.repo_context_bar('options')}
         ${h.form(h.url('search'),method='get')}
     %endif
 
-        <div class="form-horizontal">
             <div class="form-group">
                 <label class="control-label" for="q">${_('Search term')}:</label>
                 <div>
@@ -73,7 +72,6 @@ ${self.repo_context_bar('options')}
                 ## <label>${_('Status')}:</label>
                 <div>${c.runtime}</div>
             </div>
-        </div>
         ${h.end_form()}
     </div>
     <div class="panel-body">

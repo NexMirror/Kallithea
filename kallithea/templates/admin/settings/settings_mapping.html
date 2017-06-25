@@ -1,6 +1,5 @@
 ${h.form(url('admin_settings_mapping'), method='post')}
     <div class="form">
-        <div class="form-horizontal">
             <div class="form-group">
                 <label class="control-label" for="destroy">${_('Rescan options')}:</label>
                 <div>
@@ -42,6 +41,5 @@ ${h.form(url('admin_settings_mapping'), method='post')}
                     ${h.submit('rescan',_('Rescan Repositories'),class_="btn btn-default")}
                 </div>
             </div>
-        </div>
     </div>
 ${h.end_form()}

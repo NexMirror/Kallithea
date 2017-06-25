@@ -18,7 +18,6 @@
     <div class="panel-body">
         ${h.form(url('register'))}
         <div class="form">
-            <div class="form-horizontal">
                 <div class="form-group">
                     <label class="control-label" for="username">${_('Username')}:</label>
                     <div>
@@ -81,7 +80,6 @@
                         %endif
                     </div>
                 </div>
-            </div>
         </div>
         ${h.end_form()}
         %if c.captcha_active:

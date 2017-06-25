@@ -25,7 +25,6 @@
 
     ## enabled auth plugins
     <h1>${_('Authentication Plugins')}</h1>
-    <div class="form-horizontal">
         <div class="form-group">
             <label class="control-label" for="auth_plugins">${_("Enabled Plugins")}</label>
             <div>
@@ -48,12 +47,10 @@
                 </ul>
             </div>
         </div>
-    </div>
 
     %for cnt, module in enumerate(c.enabled_plugin_names):
         <% pluginName = c.plugin_shortnames[module] %>
         <h1>${_('Plugin')}: ${pluginName}</h1>
-        <div class="form-horizontal">
         ## autoform generation, based on plugin definition from it's settings
         %for setting in c.plugin_settings[module]:
             <% fullsetting = "auth_%s_%s" % (pluginName, setting["name"]) %>
@@ -98,15 +95,12 @@
             </div>
             %endif
         %endfor
-        </div>
     %endfor
-        <div class="form-horizontal">
             <div class="form-group">
                 <div class="buttons">
                     ${h.submit('save',_('Save'),class_="btn btn-default")}
                 </div>
             </div>
-        </div>
     ${h.end_form()}
     </div>
 </div>

@@ -23,8 +23,6 @@
 
     ${h.form(url('defaults_update', id='defaults'))}
     <div class="form panel-body settings">
-        <div class="form-horizontal">
-
             <div class="form-group">
                 <label class="control-label" for="default_repo_type">${_('Type')}:</label>
                 <div>
@@ -69,7 +67,6 @@
                     ${h.submit('save',_('Save'),class_="btn btn-default")}
                 </div>
             </div>
-        </div>
     </div>
     ${h.end_form()}
 

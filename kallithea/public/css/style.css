@@ -609,12 +609,12 @@ div.panel.panel-default div.panel-heading .diff-actions span.arrow {
     color: #4e6100;
 }
 
-#content div.panel div.form div.form-horizontal div.form-group {
+#content div.panel div.form div.form-group {
     border-bottom: 1px solid #DDD;
     clear: both;
 }
 
-#content div.panel div.form div.form-horizontal div.form-group > label {
+#content div.panel div.form div.form-group > label {
     color: #393939;
     font-weight: 700;
 }
@@ -789,7 +789,7 @@ div.panel.panel-default div.panel-heading .diff-actions span.arrow {
     position: relative;
 }
 
-#content div.panel div#summary-panel-body.form div.form-horizontal div.form-group > div {
+#content div.panel div#summary-panel-body.form div.form-group > div {
     margin: 0 0 10px 150px;
 }
 
@@ -1073,21 +1073,16 @@ a.metatag[data-tag="license"]:hover {
 #quick_login .links .logout {
 }
 
-#quick_login div.form div.form-horizontal {
-    padding-top: 2px;
-    padding-left: 10px;
-}
-
-#quick_login div.form div.form-horizontal div.form-group {
+#quick_login div.form div.form-group {
     padding: 5px;
 }
 
-#quick_login div.form div.form-horizontal div.form-group > label {
+#quick_login div.form div.form-group > label {
     color: #fff;
     padding-bottom: 3px;
 }
 
-#quick_login div.form div.form-horizontal div.form-group > div input {
+#quick_login div.form div.form-group > div input {
     width: 236px;
     background: #FFF;
     border-top: 1px solid #b3b3b3;
@@ -1100,7 +1095,7 @@ a.metatag[data-tag="license"]:hover {
     padding: 5px 7px 4px;
 }
 
-#quick_login div.form div.form-horizontal div.buttons {
+#quick_login div.form div.buttons {
     clear: both;
     overflow: hidden;
     text-align: right;
@@ -1139,7 +1134,7 @@ a.metatag[data-tag="license"]:hover {
     background-color: inherit !important;
 }
 
-#register div.form div.form-horizontal div.form-group > label {
+#register div.form div.form-group > label {
     width: 135px;
     float: left;
     text-align: right;
@@ -1147,11 +1142,11 @@ a.metatag[data-tag="license"]:hover {
     padding: 5px 0 0 5px;
 }
 
-#register div.form div.form-horizontal div.form-group > div input {
+#register div.form div.form-group > div input {
     width: 300px;
 }
 
-#register div.form div.form-horizontal div.buttons {
+#register div.form div.buttons {
     border-top: 1px solid #DDD;
     margin: 0;
     padding: 10px 0 0 145px;
@@ -2342,9 +2337,9 @@ nav.navbar #quick .select2-container .select2-choice .select2-chosen {
 
 
 /* formencode htmlfill adds 'error' to failing input fields */
-#content div.panel div.form div.form-horizontal div.form-group > div input.error,
-#login div.form div.form-horizontal div.form-group > div input.error,
-#register div.form div.form-horizontal div.form-group > div input.error {
+#content div.panel div.form div.form-group > div input.error,
+#login div.form div.form-group > div input.error,
+#register div.form div.form-group > div input.error {
     background: #FBE3E4;
     border-top: 1px solid #e1b2b3;
     border-left: 1px solid #e1b2b3;
@@ -2353,9 +2348,9 @@ nav.navbar #quick .select2-container .select2-choice .select2-chosen {
 }
 
 /* formencode htmlfill injects 'error-message' */
-#content div.panel div.form div.form-horizontal div.form-group span.error-message,
-#login div.form div.form-horizontal div.form-group span.error-message,
-#register div.form div.form-horizontal div.form-group span.error-message {
+#content div.panel div.form div.form-group span.error-message,
+#login div.form div.form-group span.error-message,
+#register div.form div.form-group span.error-message {
     display: inline-block;
     color: red;
     margin: 4px 0 0;
@@ -2366,38 +2361,38 @@ nav.navbar #quick .select2-container .select2-choice .select2-chosen {
     margin: 0;
 }
 
-#content div.panel div.form div.form-horizontal div.form-group > div {
+#content div.panel div.form div.form-group > div {
     margin: 0 0 10px 200px;
 }
 
-#content div.panel div.form div.form-horizontal div.form-group > div a:hover,
-#content div.panel div.form div.form-horizontal div.form-group > div a.ui-selectmenu:hover,
+#content div.panel div.form div.form-group > div a:hover,
+#content div.panel div.form div.form-group > div a.ui-selectmenu:hover,
 #content div.panel div.action a:hover {
     color: #000;
     text-decoration: none;
 }
 
-#content div.panel div.form div.form-horizontal div.form-group > div a.ui-selectmenu-focus,
+#content div.panel div.form div.form-group > div a.ui-selectmenu-focus,
 #content div.panel div.action a.ui-selectmenu-focus {
     border: 1px solid #666;
 }
 
-div.form div.form-horizontal div.form-group div.button input,
-#content div.panel div.form div.form-horizontal div.buttons input,
-div.form div.form-horizontal div.buttons input,
+div.form div.form-group div.button input,
+#content div.panel div.form div.buttons input,
+div.form div.buttons input,
 #content div.panel div.action div.button input {
     font-size: 11px;
     font-weight: 700;
     margin: 0;
 }
 
-div.form div.form-horizontal div.form-group div.highlight,
-#content div.panel div.form div.form-horizontal div.buttons div.highlight {
+div.form div.form-group div.highlight,
+#content div.panel div.form div.buttons div.highlight {
     display: inline;
 }
 
-#content div.panel div.form div.form-horizontal div.buttons,
-div.form div.form-horizontal div.buttons {
+#content div.panel div.form div.buttons,
+div.form div.buttons {
     margin: 10px 10px 0 200px;
     padding: 0;
 }
@@ -2421,7 +2416,7 @@ div.form div.form-horizontal div.buttons {
     padding: 0;
 }
 
-#register div.form div.form-horizontal div.form-group span.error-message {
+#register div.form div.form-group span.error-message {
     height: 1%;
     display: block;
     color: red;

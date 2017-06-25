@@ -1,5 +1,4 @@
 <div class="form">
-    <div class="form-horizontal">
       <div class="form-group">
       <h4>${_('Built-in Mercurial Hooks (Read-Only)')}</h4>
       % for hook in c.hooks:
@@ -11,13 +10,11 @@
       % endfor
       <span class="help-block">${_('Hooks can be used to trigger actions on certain events such as push / pull. They can trigger Python functions or external applications.')}</span>
       </div>
-    </div>
 </div>
 
 % if c.visual.allow_custom_hooks_settings:
 ${h.form(url('admin_settings_hooks'), method='post')}
 <div class="form">
-    <div class="form-horizontal">
         <div class="form-group form-inline" id="${'id%s' % hook.ui_id }">
         <h4>${_('Custom Hooks')}</h4>
         %for hook in c.custom_hooks:
@@ -49,7 +46,6 @@ ${h.form(url('admin_settings_hooks'), method='post')}
                 ${h.submit('save',_('Save'),class_="btn btn-default")}
             </div>
         </div>
-    </div>
 </div>
 ${h.end_form()}
 % endif

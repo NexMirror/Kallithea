@@ -1,6 +1,5 @@
 ${h.form(url('update_repo', repo_name=c.repo_info.repo_name))}
     <div class="form">
-        <div class="form-horizontal">
             <div class="form-group">
                 <label class="control-label" for="repo_name">${_('Name')}:</label>
                 <div>
@@ -106,7 +105,6 @@ ${h.form(url('update_repo', repo_name=c.repo_info.repo_name))}
                     ${h.reset('reset',_('Reset'),class_="btn btn-default")}
                 </div>
             </div>
-        </div>
     </div>
     ${h.end_form()}
 

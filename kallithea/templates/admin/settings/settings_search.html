@@ -1,7 +1,5 @@
 ${h.form(url('admin_settings_search'), method='post')}
     <div class="form">
-
-        <div class="form-horizontal">
             <div class="form-group">
                 <label class="control-label">${_('Index build option')}:</label>
                 <div>
@@ -20,6 +18,5 @@ ${h.form(url('admin_settings_search'), method='post')}
                     ${h.submit('reindex',_('Reindex'),class_="btn btn-default")}
                 </div>
             </div>
-        </div>
     </div>
 ${h.end_form()}

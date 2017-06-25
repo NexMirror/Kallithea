@@ -1,6 +1,5 @@
 ${h.form(url('admin_permissions'), method='post')}
     <div class="form">
-        <div class="form-horizontal">
             <div class="form-group">
                 <label class="control-label" for="anonymous">${_('Anonymous access')}:</label>
                 <div class="form-inline">
@@ -96,6 +95,5 @@ ${h.form(url('admin_permissions'), method='post')}
                     ${h.reset('reset',_('Reset'),class_="btn btn-default")}
                 </div>
             </div>
-        </div>
     </div>
 ${h.end_form()}

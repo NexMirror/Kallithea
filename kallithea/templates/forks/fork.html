@@ -21,8 +21,6 @@ ${self.repo_context_bar('createfork')}
     </div>
     ${h.form(url('repo_fork_create_home',repo_name=c.repo_info.repo_name))}
     <div class="form panel-body settings">
-        <div class="form-horizontal">
-
             <div class="form-group">
                 <label class="control-label" for="repo_name">${_('Fork name')}:</label>
                 <div>
@@ -87,7 +85,6 @@ ${self.repo_context_bar('createfork')}
                     ${h.submit('fork-submit',_('Fork this Repository'),class_="btn btn-default")}
                 </div>
             </div>
-        </div>
     </div>
     ${h.end_form()}
 </div>

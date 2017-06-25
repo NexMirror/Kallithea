@@ -35,7 +35,6 @@
 <div>
     ${h.form(url('my_account_emails'), method='post')}
     <div class="form">
-        <div class="form-horizontal">
             <div class="form-group">
                 <label class="control-label" for="new_email">${_('New email address')}:</label>
                 <div>
@@ -48,7 +47,6 @@
                     ${h.reset('reset',_('Reset'),class_="btn btn-default")}
                 </div>
             </div>
-        </div>
     </div>
     ${h.end_form()}
 </div>

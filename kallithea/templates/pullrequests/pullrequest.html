@@ -22,8 +22,6 @@ ${self.repo_context_bar('showpullrequest')}
     ${h.form(url('pullrequest', repo_name=c.repo_name), method='post', id='pull_request_form')}
     <div class="form panel-body">
         <div class="settings clearfix">
-          <div class="form-horizontal">
-
             <div class="form-group">
                 <label class="control-label" for="pullrequest_title">${_('Title')}:</label>
                 <div>
@@ -80,8 +78,6 @@ ${self.repo_context_bar('showpullrequest')}
                     ${h.reset('reset',_('Reset'),class_="btn btn-default")}
                 </div>
             </div>
-
-          </div>
         </div>
 
         <div>

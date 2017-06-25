@@ -1,6 +1,5 @@
 ${h.form(url('update_users_group', id=c.user_group.users_group_id), id='edit_users_group')}
     <div class="form">
-            <div class="form-horizontal">
                 <div class="form-group">
                     <label class="control-label" for="users_group_name">${_('Group name')}:</label>
                     <div>
@@ -47,7 +46,6 @@ ${h.form(url('update_users_group', id=c.user_group.users_group_id), id='edit_use
                         ${h.submit('Save',_('Save'),class_="btn btn-default")}
                     </div>
                 </div>
-            </div>
     </div>
 ${h.end_form()}
 <script type="text/javascript">
