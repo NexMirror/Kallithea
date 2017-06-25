@@ -2806,7 +2806,6 @@ form.comment-form {
 }
 
 .comment-inline-form .submitting-overlay {
-    display: none;
     height: 0;
     text-align: center;
     font-size: 16px;
