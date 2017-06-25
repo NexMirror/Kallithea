@@ -57,8 +57,8 @@ ${self.repo_context_bar('summary')}
         ${self.breadcrumbs()}
     </div>
     <div id="summary-panel-body" class="form panel-body">
-        <div id="summary" class="form-horizontal">
-            <div class="form-group form-inline clearfix">
+        <div id="summary" class="form-horizontal pull-left">
+            <div class="form-group form-inline">
                 <label>${_('Clone URL')}:</label>
                 <div id="clone-url">
                   <div id="clone_by_name" class="input-group">
@@ -74,12 +74,12 @@ ${self.repo_context_bar('summary')}
                 </div>
             </div>
 
-            <div class="form-group clearfix">
+            <div class="form-group">
               <label>${_('Description')}:</label>
               <div class="desc">${h.urlify_text(c.db_repo.description, stylize=c.visual.stylify_metatags)}</div>
             </div>
 
-            <div class="form-group clearfix">
+            <div class="form-group">
               <label>${_('Trending files')}:</label>
               <div>
                 %if c.show_stats:
@@ -93,7 +93,7 @@ ${self.repo_context_bar('summary')}
               </div>
             </div>
 
-            <div class="form-group clearfix">
+            <div class="form-group">
               <label>${_('Download')}:</label>
               <div>
                 %if len(c.db_repo_scm_instance.revisions) == 0:
@@ -118,7 +118,7 @@ ${self.repo_context_bar('summary')}
               </div>
             </div>
         </div>
-        <ul id="summary-menu-stats" class="list-group">
+        <ul id="summary-menu-stats" class="list-group pull-right">
             <li class="list-group-item">
                <a title="${_('Owner')} ${c.db_repo.owner.email}">
                 <i class="icon-user"></i> ${c.db_repo.owner.username}
