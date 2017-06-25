@@ -830,7 +830,7 @@ from kallithea.lib.auth import HasPermissionAny, \
 # GRAVATAR URL
 #==============================================================================
 def gravatar_div(email_address, cls='', size=30, **div_attributes):
-    """Return an html literal with a div around a gravatar if they are enabled.
+    """Return an html literal with a span around a gravatar if they are enabled.
     Extra keyword parameters starting with 'div_' will get the prefix removed
     and '_' changed to '-' and be used as attributes on the div. The default
     class is 'gravatar'.
@@ -844,7 +844,7 @@ def gravatar_div(email_address, cls='', size=30, **div_attributes):
     for k, v in sorted(div_attributes.items()):
         assert k.startswith('div_'), k
         attributes.append(' %s="%s"' % (k[4:].replace('_', '-'), escape(v)))
-    return literal("""<div%s>%s</div>""" %
+    return literal("""<span%s>%s</span>""" %
                    (''.join(attributes),
                     gravatar(email_address, cls=cls, size=size)))
 

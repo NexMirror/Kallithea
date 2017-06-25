@@ -43,10 +43,10 @@
         % for gist in c.gists_pager:
           <div class="gist-item clearfix">
             ${h.gravatar_div(gist.owner.email, size=28)}
-            <div title="${gist.owner.full_contact}" class="user">
+            <span title="${gist.owner.full_contact}" class="user">
                 <b>${h.person(gist.owner.full_contact)}</b> /
                 <b><a href="${h.url('gist',gist_id=gist.gist_access_id)}">gist: ${gist.gist_access_id}</a></b>
-            </div>
+            </span>
             <div>
                 ${_('Created')} ${h.age(gist.created_on)} /
                 <span class="text-muted">

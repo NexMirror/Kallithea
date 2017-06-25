@@ -1165,14 +1165,6 @@ a.metatag[data-tag="license"]:hover {
     margin-right: 10px;
 }
 
-#journal .journal_container {
-    clear: both;
-}
-
-#journal .journal_action_container {
-    padding-left: 18px;
-}
-
 #journal .journal_user {
     color: #747474;
     font-size: 14px;

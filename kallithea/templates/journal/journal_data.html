@@ -4,16 +4,15 @@
     %for day,items in c.journal_day_aggregate:
         <h4>${day}</h4>
         % for user,entries in items:
-            <div class="journal_container">
+            <div class="container-fluid">
                 ${h.gravatar_div(user.email if user else 'anonymous@kallithea-scm.org', size=24)}
                 %if user:
-                    <div class="journal_user">${user.name} ${user.lastname}</div>
+                    <span class="journal_user">${user.name} ${user.lastname}</span>
                 %else:
-                    <div class="journal_user deleted">${entries[0].username}</div>
+                    <span class="journal_user deleted">${entries[0].username}</span>
                 %endif
-                <div class="journal_action_container">
                 % for entry in entries:
-                  <div class="container-fluid">
+                  <div class="clearfix">
                     <div class="pull-left">
                       <div class="journal_icon"> ${h.action_parser(entry)[2]()}</div>
                     </div>
@@ -34,7 +33,6 @@
                     </div>
                   </div>
                 %endfor
-                </div>
             </div>
         %endfor
     %endfor

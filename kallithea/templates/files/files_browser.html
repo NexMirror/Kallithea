@@ -29,10 +29,10 @@
         <div class="browser-nav form-inline pull-left">
             ${h.form(h.url.current())}
             <div class="info_box">
-              <div class="info_box_elem rev">${_('Revision')}</div>
-              <div class="info_box_elem"><a class="btn btn-default btn-xs ypjax-link" href="${c.url_prev}" title="${_('Previous revision')}"><i class="icon-left-open"></i></a></div>
-              <div class="info_box_elem">${h.text('at_rev',value=c.changeset.revision,size=5,class_='form-control input-sm')}</div>
-              <div class="info_box_elem"><a class="btn btn-default btn-xs ypjax-link" href="${c.url_next}" title="${_('Next revision')}"><i class="icon-right-open"></i></a></div>
+              <span class="info_box_elem rev">${_('Revision')}</span>
+              <span class="info_box_elem"><a class="btn btn-default btn-xs ypjax-link" href="${c.url_prev}" title="${_('Previous revision')}"><i class="icon-left-open"></i></a></span>
+              <span class="info_box_elem">${h.text('at_rev',value=c.changeset.revision,size=5,class_='form-control input-sm')}</span>
+              <span class="info_box_elem"><a class="btn btn-default btn-xs ypjax-link" href="${c.url_next}" title="${_('Next revision')}"><i class="icon-right-open"></i></a></span>
             </div>
             ${h.end_form()}
         </div>

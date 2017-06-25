@@ -3,8 +3,8 @@
 <div class="list-group">
 %for notification in c.notifications:
   <div id="notification_${notification.notification.notification_id}" class="list-group-item ${'' if notification.read else 'list-group-item-warning'} clearfix">
-      ${h.gravatar_div(notification.notification.created_by_user.email, size=24)}
       <span class="pull-left">
+        ${h.gravatar_div(notification.notification.created_by_user.email, size=24)}
         <a href="${url('notification', notification_id=notification.notification.notification_id)}">${notification.notification.description}</a>
       </span>
       <span class="pull-right">
