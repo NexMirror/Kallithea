@@ -129,7 +129,7 @@
     </a>
  </div>
  <div class="grid_delete pull-left">
-    ${h.form(h.url('delete_repos_group', group_name=repo_group_name))}
+    ${h.form(h.url('delete_repo_group', group_name=repo_group_name))}
         <i class="icon-minus-circled"></i>
         ${h.submit('remove_%s' % repo_group_name,_('Delete'),class_="btn btn-default btn-xs",
         onclick="return confirm('"+ungettext('Confirm to delete this group: %s with %s repository','Confirm to delete this group: %s with %s repositories',gr_count) % (repo_group_name, gr_count)+"');")}
