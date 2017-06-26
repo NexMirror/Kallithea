@@ -256,21 +256,7 @@ div.panel-primary {
   color: @kallithea-theme-inverse-color;
   padding-bottom: 3px;
 }
-#register div.form div.form-group > label {
-  width: 135px;
-  float: left;
-  text-align: right;
-  margin: 2px 10px 0 0;
-  padding: 5px 0 0 5px;
-}
-#register div.form div.form-group > div input {
-  width: 300px;
-}
-#register div.form div.buttons {
-  border-top: 1px solid #DDD;
-  margin: 0;
-  padding: 10px 0 0 145px;
-}
+
 #journal .journal_user {
   color: #747474;
   font-size: 14px;
@@ -714,6 +700,24 @@ div.comment-prev-next-links div.next-comment {
 #graph_content_pr,
 #updaterevs-table {
   .make-xs-column(11);
+}
+
+/* use bootstrap grid columns for centered forms */
+#login,
+#register {
+  .form {
+    .form-horizontal;
+    .form-group > label {
+      .make-sm-column(4);
+    }
+    .form-group > div {
+      .make-sm-column(8);
+    }
+    .form-group > div:first-child { /* in case there is no label */
+      .make-sm-column-offset(4);
+      .make-sm-column(8);
+    }
+  }
 }
 
 /* use columns and form-horizontal for settings pages ... on wide screens */
