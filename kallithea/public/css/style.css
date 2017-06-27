@@ -2179,6 +2179,11 @@ body .btn.btn-default:hover {
     background-image: none;
 }
 
+/* use our link color for btn-link */
+.btn-link {
+    color: #577632;
+}
+
 ins, div.options a:hover {
     text-decoration: none;
 }
@@ -2976,12 +2981,6 @@ input.perm_filter {
 .diff-collapse {
     text-align: center;
     margin-bottom: 15px;
-}
-
-.diff-collapse-button {
-    cursor: pointer;
-    color: #666;
-    font-size: 16px;
 }
 
 table.code-difftable {
