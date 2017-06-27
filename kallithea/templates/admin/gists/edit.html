@@ -45,7 +45,6 @@
         <div id="files_data">
           ${h.form(h.url('edit_gist', gist_id=c.gist.gist_access_id), method='post', id='eform')}
             <div>
-                ${h.gravatar_div(request.authuser.email, size=32)}
                 <input type="hidden" value="${c.file_changeset.raw_id}" name="parent_hash">
                 <textarea class="form-control commit-message"
                           id="description" name="description"
@@ -72,7 +71,7 @@
                         <input class="form-control" id="filename_${h.FID('f',file.path)}" name="files" size="30" type="text" value="${h.safe_unicode(file.path)}">
                         <select class="form-control" id="mimetype_${h.FID('f',file.path)}" name="mimetypes"></select>
                     </div>
-                    <div class="panel-body">
+                    <div class="panel-body no-padding">
                         <div id="editor_container">
                             <textarea id="editor_${h.FID('f',file.path)}" name="contents" style="display:none">${file.content}</textarea>
                         </div>

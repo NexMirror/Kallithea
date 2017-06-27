@@ -3274,17 +3274,6 @@ ul.user_group_member li {
     clear: both;
 }
 
-select.pull-right-auto-width {
-    float: right;
-    width: auto;
-}
-
-span.expand-available {
-    display: block;
-    overflow: hidden;
-    padding-right: 15px;
-}
-
 #content div.panel .changelog-panel > .changelog-heading,
 #content div.panel .changelog-panel > ul.pagination {
     margin-left: 100px;
