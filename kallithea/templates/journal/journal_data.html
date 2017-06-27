@@ -17,8 +17,8 @@
                       <div class="journal_icon"> ${h.action_parser(entry)[2]()}</div>
                     </div>
                     <div class="pull-left">
-                      <div class="journal_action">${h.action_parser(entry)[0]()}</div>
-                      <div class="journal_repo">
+                      <div class="journal_action">
+                          ${h.action_parser(entry)[0]()}
                           <span class="journal_repo_name">
                           %if entry.repository is not None:
                             ${h.link_to(entry.repository.repo_name,

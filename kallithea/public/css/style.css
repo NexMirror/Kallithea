@@ -1158,12 +1158,6 @@ a.metatag[data-tag="license"]:hover {
     padding-left: 22px;
 }
 
-#journal .journal_repo {
-    float: left;
-    margin-left: 6px;
-    padding-top: 3px;
-}
-
 #journal .date {
     clear: both;
     color: #777777;
@@ -1171,7 +1165,7 @@ a.metatag[data-tag="license"]:hover {
     padding-left: 22px;
 }
 
-#journal .journal_repo .journal_repo_name {
+#journal .journal_repo_name {
     font-weight: bold;
     font-size: 1.1em;
 }
