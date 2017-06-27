@@ -26,7 +26,7 @@
             <a class="btn btn-default btn-sm" href="${h.url.current(type=c.pull_request_type)}">${_('Pull Requests')}</a>
       </div>
       %if c.notifications:
-        <span id='mark_all_read' class="btn btn-default btn-sm pull-right">${_('Mark All Read')}</span>
+        <button type="button" id='mark_all_read' class="btn btn-default btn-sm pull-right">${_('Mark All Read')}</button>
       %endif
     </div>
     <div id="notification_data" class="panel-body">

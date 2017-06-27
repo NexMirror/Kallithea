@@ -40,11 +40,11 @@ ${self.repo_context_bar('files')}
               <span id="filename_container" class="file reviewer_ac">
                   <input class="form-control input-small" type="text" value="" size="30" name="filename" id="filename" placeholder="${_('Enter filename...')}">
                   <input type="hidden" value="${c.f_path}" name="location" id="location">
-                  ${_('or')} <div class="btn btn-default btn-sm" id="upload_file_enable">${_('Upload File')}</div>
+                  ${_('or')} <button type="button" class="btn btn-default btn-sm" id="upload_file_enable">${_('Upload File')}</button>
               </span>
               <span id="upload_file_container" class="reviewer_ac" style="display:none">
                   <input class="form-control" type="file" size="20" name="upload_file" id="upload_file">
-                  ${_('or')} <span class="btn btn-default btn-sm" id="file_enable">${_('Create New File')}</span>
+                  ${_('or')} <button type="button" class="btn btn-default btn-sm" id="file_enable">${_('Create New File')}</button>
               </span>
             </h3>
             <div id="body" class="panel panel-default">

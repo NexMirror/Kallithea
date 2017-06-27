@@ -9,9 +9,9 @@
       </span>
       <span class="pull-right">
         %if not notification.read:
-          <span id="${notification.notification.notification_id}" class="btn btn-default btn-xs read-notification"><i class="icon-ok"></i>${_('Mark as read')}</span>
+          <button type="button" id="${notification.notification.notification_id}" class="btn btn-default btn-xs read-notification"><i class="icon-ok"></i> ${_('Mark as read')}</button>
         %endif
-        <span id="${notification.notification.notification_id}" class="btn btn-default btn-xs delete-notification"><i class="icon-minus-circled"></i>${_('Delete')}</span>
+        <button type="button" id="${notification.notification.notification_id}" class="btn btn-default btn-xs delete-notification"><i class="icon-minus-circled"></i> ${_('Delete')}</button>
       </span>
   </div>
 %endfor

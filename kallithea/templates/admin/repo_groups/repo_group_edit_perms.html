@@ -30,9 +30,9 @@ ${h.form(url('edit_repo_group_perms', group_name=c.repo_group.group_name))}
                         </td>
                         <td>
                           %if r2p.user.username !='default':
-                            <span class="btn btn-default btn-xs" onclick="ajaxActionRevoke(${r2p.user.user_id}, 'user', '${'id%s'%id(r2p.user.username)}', '${r2p.user.username}')">
+                            <button type="button" class="btn btn-default btn-xs" onclick="ajaxActionRevoke(${r2p.user.user_id}, 'user', '${'id%s'%id(r2p.user.username)}', '${r2p.user.username}')">
                              <i class="icon-minus-circled"></i> ${_('Revoke')}
-                            </span>
+                            </button>
                           %endif
                         </td>
                       %else:
@@ -67,9 +67,9 @@ ${h.form(url('edit_repo_group_perms', group_name=c.repo_group.group_name))}
                             %endif
                         </td>
                         <td>
-                            <span class="btn btn-default btn-xs" onclick="ajaxActionRevoke(${g2p.users_group.users_group_id}, 'user_group', '${'id%s'%id(g2p.users_group.users_group_name)}', '${g2p.users_group.users_group_name}')">
+                            <button type="button" class="btn btn-default btn-xs" onclick="ajaxActionRevoke(${g2p.users_group.users_group_id}, 'user_group', '${'id%s'%id(g2p.users_group.users_group_name)}', '${g2p.users_group.users_group_name}')">
                             <i class="icon-minus-circled"></i> ${_('Revoke')}
-                            </span>
+                            </button>
                         </td>
                     </tr>
                 %endfor
@@ -77,9 +77,9 @@ ${h.form(url('edit_repo_group_perms', group_name=c.repo_group.group_name))}
                 <tr class="new_members last_new_member" id="add_perm_input"><td colspan="6"></td></tr>
                 <tr>
                     <td colspan="6">
-                        <span id="add_perm">
+                        <button type="button" id="add_perm" class="btn btn-default btn-xs">
                             <i class="icon-plus"></i> ${_('Add new')}
-                        </span>
+                        </button>
                     </td>
                 </tr>
                 <tr>

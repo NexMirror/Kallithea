@@ -61,7 +61,7 @@
       <td>
         %if pr.owner_id == request.authuser.user_id:
           ${h.form(url('pullrequest_delete', repo_name=pr.other_repo.repo_name, pull_request_id=pr.pull_request_id))}
-          <div class="btn btn-default btn-xs"
+          <button type="button" class="btn btn-default btn-xs"
                   id="remove_${pr.pull_request_id}"
                   name="remove_${pr.pull_request_id}"
                   title="${_('Delete Pull Request')}"
@@ -69,8 +69,8 @@
                       && ((${len(pr.comments)} == 0) ||
                           confirm('${_('Confirm again to delete this pull request with %s comments') % len(pr.comments)}'))
                       ">
-            <i class="icon-minus-circled"></i>
-          </div>
+            <i class="icon-minus-circled text-danger"></i>
+          </button>
           ${h.end_form()}
         %endif
       </td>

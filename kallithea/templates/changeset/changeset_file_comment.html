@@ -26,7 +26,7 @@
 
           %if co.author_id == request.authuser.user_id or h.HasRepoPermissionLevel('admin')(c.repo_name):
             %if co.deletable():
-              <div onClick="confirm('${_('Delete comment?')}') && deleteComment(${co.comment_id})" class="pull-right buttons delete-comment btn btn-default btn-xs">${_('Delete')}</div>
+              <button type="button" onClick="confirm('${_('Delete comment?')}') && deleteComment(${co.comment_id})" class="pull-right buttons delete-comment btn btn-default btn-xs">${_('Delete')}</button>
             %endif
           %endif
       </div>
