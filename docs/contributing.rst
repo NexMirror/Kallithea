@@ -183,9 +183,11 @@ mailing list.  We aim at having all non-trivial changes reviewed by at least
 one other core developer before pushing. Obvious non-controversial changes will
 be handled more casually.
 
-For now we just have one official branch ("default") and will keep it so stable
-that it can be (and is) used in production. Experimental changes should live
-elsewhere (for example in a pull request) until they are ready.
+There is a main development branch ("default") which is generally stable so that
+it can be (and is) used in production. There is also a "stable" branch that is
+almost exclusively reserved for bug fixes or trivial changes. Experimental
+changes should live elsewhere (for example in a pull request) until they are
+ready.
 
 .. _coding-guidelines:
 
