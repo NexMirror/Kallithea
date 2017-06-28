@@ -37,7 +37,7 @@
         </span>
         <span class="browser-branch form-inline">
             <label class="checkbox">
-                ${h.checkbox('stay_at_branch',c.changeset.branch,c.changeset.branch==c.branch,class_="form-control")}
+                ${h.checkbox('stay_at_branch',c.changeset.branch,c.changeset.branch==c.branch)}
                 ${_('Follow current branch')}
             </label>
         </span>
@@ -49,7 +49,7 @@
             <div>
                 <div id="node_filter_box_loading" style="display:none">${_('Loading file list...')}</div>
                 <div id="node_filter_box" style="display:none">
-                ${h.files_breadcrumbs(c.repo_name,c.changeset.raw_id,c.file.path)}/<input class="init form-control" type="text" value="type to search..." name="filter" size="25" id="node_filter">
+                ${h.files_breadcrumbs(c.repo_name,c.changeset.raw_id,c.file.path)}/<input class="init" type="text" value="type to search..." name="filter" size="25" id="node_filter">
                 </div>
             </div>
         </div>
