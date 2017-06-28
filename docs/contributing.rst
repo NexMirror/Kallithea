@@ -28,7 +28,7 @@ for more details.
 Getting started
 ---------------
 
-To get started with development::
+To get started with Kallithea development::
 
         hg clone https://kallithea-scm.org/repos/kallithea
         cd kallithea
@@ -41,8 +41,41 @@ To get started with development::
         gearbox serve -c my.ini --reload &
         firefox http://127.0.0.1:5000/
 
-You can also start out by forking https://bitbucket.org/conservancy/kallithea
-on Bitbucket_ and create a local clone of your own fork.
+If you plan to use Bitbucket_ for sending contributions, you can also fork
+Kallithea on Bitbucket_ first (https://bitbucket.org/conservancy/kallithea) and
+then replace the clone step above by a clone of your fork. In this case, please
+see :ref:`contributing-guidelies` below for configuring your fork correctly.
+
+
+Contribution flow
+-----------------
+
+Starting from an existing Kallithea clone, make sure it is up to date with the
+latest upstream changes::
+
+        hg pull
+        hg update
+
+Review the :ref:`contributing-guidelines` and :ref:`coding-guidelines`.
+
+If you are new to Mercurial, refer to Mercurial `Quick Start`_ and `Beginners
+Guide`_ on the Mercurial wiki.
+
+Now, make some changes and test them (see :ref:`contributing-tests`). Don't
+forget to add new tests to cover new functionality or bug fixes.
+
+For documentation changes, run ``make html`` from the ``docs`` directory to
+generate the HTML result, then review them in your browser.
+
+Before submitting any changes, run the cleanup script::
+
+        ./scripts/run-all-cleanup
+
+When you are completely ready, you can send your changes to the community for
+review and inclusion. Most commonly used methods are sending patches to the
+mailing list (via ``hg email``) or by creating a pull request on Bitbucket_.
+
+.. _contributing-tests:
 
 
 Running tests
@@ -114,6 +147,8 @@ To analyze performance, you could install pytest-profiling_, which enables the
 
 .. _pytest-profiling: https://github.com/manahl/pytest-plugins/tree/master/pytest-profiling
 
+.. _contributing-guidelines:
+
 
 Contribution guidelines
 -----------------------
@@ -152,6 +187,8 @@ be handled more casually.
 For now we just have one official branch ("default") and will keep it so stable
 that it can be (and is) used in production. Experimental changes should live
 elsewhere (for example in a pull request) until they are ready.
+
+.. _coding-guidelines:
 
 
 Coding guidelines
@@ -272,3 +309,5 @@ Thank you for your contribution!
 .. _Hosted Weblate: https://hosted.weblate.org/projects/kallithea/kallithea/
 .. _wiki: https://bitbucket.org/conservancy/kallithea/wiki/Home
 .. _DebugBar: https://github.com/TurboGears/tgext.debugbar
+.. _Quick Start: https://www.mercurial-scm.org/wiki/QuickStart
+.. _Beginners Guide: https://www.mercurial-scm.org/wiki/BeginnersGuides
