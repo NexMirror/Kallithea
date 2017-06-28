@@ -69,6 +69,7 @@ You are now ready to use Kallithea. To run it simply execute::
 
 Internationalization (i18n support)
 -----------------------------------
+
 The Kallithea web interface is automatically displayed in the user's preferred
 language, as indicated by the browser. Thus, different users may see the
 application in different languages. If the requested language is not available
