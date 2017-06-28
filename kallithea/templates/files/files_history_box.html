@@ -1,5 +1,5 @@
 <div class="form-group">
-    <div class="item">${h.literal(ungettext(u'%s author',u'%s authors',len(c.authors)) % ('<b>%s</b>' % len(c.authors))) }</div>
+    <span>${h.literal(ungettext(u'%s author',u'%s authors',len(c.authors)) % ('<b>%s</b>' % len(c.authors))) }</span>
     %for email, user in c.authors:
       <span data-toggle="tooltip" title="${user}">
         ${h.gravatar_div(email, size=20)}

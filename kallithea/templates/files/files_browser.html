@@ -26,26 +26,26 @@
 </%def>
 <div id="body" class="panel panel-default">
     <div class="panel-heading clearfix">
-        <div class="browser-nav form-inline pull-left">
-            ${h.form(h.url.current())}
-            <div class="info_box">
+        ${h.form(h.url.current())}
+        <span class="browser-nav form-inline">
+            <span class="info_box">
               <span class="info_box_elem rev">${_('Revision')}</span>
               <span class="info_box_elem"><a class="btn btn-default btn-xs ypjax-link" href="${c.url_prev}" title="${_('Previous revision')}"><i class="icon-left-open"></i></a></span>
               <span class="info_box_elem">${h.text('at_rev',value=c.changeset.revision,size=5,class_='form-control input-sm')}</span>
               <span class="info_box_elem"><a class="btn btn-default btn-xs ypjax-link" href="${c.url_next}" title="${_('Next revision')}"><i class="icon-right-open"></i></a></span>
-            </div>
-            ${h.end_form()}
-        </div>
-        <div class="browser-branch form-inline pull-left">
+            </span>
+        </span>
+        <span class="browser-branch form-inline">
             <label>
                 ${h.checkbox('stay_at_branch',c.changeset.branch,c.changeset.branch==c.branch,class_="form-control")}
                 ${_('Follow current branch')}
             </label>
-        </div>
-        <div id="search_activate_id" class="search_activate pull-left">
+        </span>
+        <span id="search_activate_id" class="search_activate">
             <a class="btn btn-default btn-xs" id="filter_activate" href="#">${_('Search File List')}</a>
-        </div>
-        <div class="browser-search form-inline pull-left">
+        </span>
+        ${h.end_form()}
+        <div class="browser-search form-inline">
             <div>
                 <div id="node_filter_box_loading" style="display:none">${_('Loading file list...')}</div>
                 <div id="node_filter_box" style="display:none">

@@ -40,14 +40,14 @@ ${self.repo_context_bar('files')}
             </h3>
             <div id="body" class="panel panel-default">
               <div class="panel-heading clearfix">
-                    <div class="pull-left">
-                        <div class="pull-left"><i class="icon-doc-inv"></i></div>
-                        <div class="pull-left">${h.link_to(h.show_id(c.file.changeset),h.url('changeset_home',repo_name=c.repo_name,revision=c.file.changeset.raw_id))}</div>
-                        <div class="pull-left">${h.format_byte_size(c.file.size,binary=True)}</div>
-                        <div class="pull-left">${c.file.mimetype}</div>
+                    <span>
+                        <span><i class="icon-doc-inv"></i></span>
+                        <span>${h.link_to(h.show_id(c.file.changeset),h.url('changeset_home',repo_name=c.repo_name,revision=c.file.changeset.raw_id))}</span>
+                        <span>${h.format_byte_size(c.file.size,binary=True)}</span>
+                        <span>${c.file.mimetype}</span>
                         <select class="form-control" id="mimetype" name="mimetype"></select>
-                    </div>
-                    <div class="pull-right buttons">
+                    </span>
+                    <span class="pull-right buttons">
                       ${h.link_to(_('Show Annotation'),h.url('files_annotate_home',repo_name=c.repo_name,revision=c.cs.raw_id,f_path=c.f_path),class_="btn btn-default btn-xs")}
                       ${h.link_to(_('Show as Raw'),h.url('files_raw_home',repo_name=c.repo_name,revision=c.cs.raw_id,f_path=c.f_path),class_="btn btn-default btn-xs")}
                       ${h.link_to(_('Download as Raw'),h.url('files_rawfile_home',repo_name=c.repo_name,revision=c.cs.raw_id,f_path=c.f_path),class_="btn btn-default btn-xs")}
@@ -56,7 +56,7 @@ ${self.repo_context_bar('files')}
                         ${h.link_to(_('Source'),h.url('files_home',repo_name=c.repo_name,revision=c.cs.raw_id,f_path=c.f_path),class_="btn btn-default btn-xs")}
                        % endif
                       % endif
-                    </div>
+                    </span>
               </div>
               <div class="panel-body no-padding">
                 <textarea id="editor" name="content" style="display:none">${h.escape(c.file.content)|n}</textarea>
