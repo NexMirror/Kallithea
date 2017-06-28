@@ -1,5 +1,5 @@
 <div id="node_history" class="clearfix">
-    <div class="pull-left">
+    <div class="form-group">
         ${h.form(h.url('files_diff_home',repo_name=c.repo_name,f_path=c.f_path),method='get')}
         ${h.hidden('diff2',c.changeset.raw_id)}
         ${h.hidden('diff1')}
