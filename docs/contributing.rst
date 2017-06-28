@@ -36,6 +36,7 @@ To get started with Kallithea development::
         source ../kallithea-venv/bin/activate
         pip install --upgrade pip setuptools
         pip install -e .
+        pip install -r dev_requirements.txt
         gearbox make-config my.ini
         gearbox setup-db -c my.ini --user=user --email=user@example.com --password=password --repos=/tmp
         gearbox serve -c my.ini --reload &
@@ -81,11 +82,9 @@ mailing list (via ``hg email``) or by creating a pull request on Bitbucket_.
 Running tests
 -------------
 
-After finishing your changes make sure all tests pass cleanly. Install the test
-dependencies, then run the testsuite by invoking ``py.test`` from the
-project root::
+After finishing your changes make sure all tests pass cleanly. Run the testsuite
+by invoking ``py.test`` from the project root::
 
-    pip install -r dev_requirements.txt
     py.test
 
 Note that testing on Python 2.6 also requires ``unittest2``.
