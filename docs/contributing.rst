@@ -98,6 +98,17 @@ are::
     -s, --capture=no      don't capture stdout (any stdout output will be
                           printed immediately)
 
+Performance tests
+^^^^^^^^^^^^^^^^^
+
+A number of performance tests are present in the test suite, but they are
+not run in a standard test run. These tests are useful to
+evaluate the impact of certain code changes with respect to performance.
+
+To run these tests::
+
+    env TEST_PERFORMANCE=1 py.test kallithea/tests/performance
+
 
 Contribution guidelines
 -----------------------
