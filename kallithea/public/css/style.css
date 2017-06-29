@@ -1655,7 +1655,7 @@ div.panel-body #files_data .revision-link,
     padding: 3px 0;
 }
 
-.right .changes {
+.pull-right .changes {
     clear: both;
 }
 
@@ -1672,13 +1672,9 @@ div.panel-body #files_data .revision-link,
 }
 
 .pull-right .changes .added,
-.changed, .removed {
-    display: block;
-    padding: 1px;
+.pull-right .changes .changed,
+.pull-right .changes .removed {
     color: #444444;
-    float: right;
-    text-align: center;
-    min-width: 15px;
 }
 
 .pull-right .changes .added {
