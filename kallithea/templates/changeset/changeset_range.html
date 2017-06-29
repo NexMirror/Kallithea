@@ -72,8 +72,8 @@ ${self.repo_context_bar('changelog')}
         <div class="panel-body">
           ## diff block
           <div class="h3">
+          ${h.gravatar_div(h.email_or_none(cs.author), size=20)}
           <a data-toggle="tooltip" title="${cs.message}" href="${h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id)}">${h.show_id(cs)}</a>
-            ${h.gravatar_div(h.email_or_none(cs.author), size=20)}
             <div class="right">
               <span class="logtags">
                 %if len(cs.parents)>1:
