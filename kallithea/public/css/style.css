@@ -1673,7 +1673,7 @@ div.panel-body #files_data .revision-link,
 
 .pull-right .changes .added,
 .pull-right .changes .changed,
-.pull-right .changes .removed {
+.pull-right .changes .deleted {
     color: #444444;
 }
 
@@ -1685,7 +1685,7 @@ div.panel-body #files_data .revision-link,
     background: #FEA;
 }
 
-.pull-right .changes .removed {
+.pull-right .changes .deleted {
     background: #FAA;
 }
 

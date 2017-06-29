@@ -95,11 +95,11 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
 
                     <div class="changes">
                         % if (len(c.changeset.affected_files) <= c.affected_files_cut_off) or c.fulldiff:
-                         <span class="label removed" title="${_('Removed')}">${len(c.changeset.removed)}</span>
+                         <span class="label deleted" title="${_('Removed')}">${len(c.changeset.removed)}</span>
                          <span class="label changed" title="${_('Changed')}">${len(c.changeset.changed)}</span>
                          <span class="label added" title="${_('Added')}">${len(c.changeset.added)}</span>
                         % else:
-                         <span class="label removed" title="${_('Affected %s files') % len(c.changeset.affected_files)}">!</span>
+                         <span class="label deleted" title="${_('Affected %s files') % len(c.changeset.affected_files)}">!</span>
                          <span class="label changed" title="${_('Affected %s files') % len(c.changeset.affected_files)}">!</span>
                          <span class="label added"   title="${_('Affected %s files') % len(c.changeset.affected_files)}">!</span>
                         % endif
