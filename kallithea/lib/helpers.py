@@ -1034,7 +1034,7 @@ def urlify_text(s, repo_name=None, link_=None, truncate=None, stylize=False, tru
         hash_ = match_obj.group('hash')
         if hash_ is not None and repo_name is not None:
             from kallithea.config.routing import url  # doh, we need to re-import url to mock it later
-            return '<a class="revision-link" href="%(url)s">%(hash)s</a>' % {
+            return '<a class="changeset_hash" href="%(url)s">%(hash)s</a>' % {
                  'url': url('changeset_home', repo_name=repo_name, revision=hash_),
                  'hash': hash_,
                 }

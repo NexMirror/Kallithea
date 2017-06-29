@@ -287,7 +287,7 @@ class TestLibs(TestController):
                                   repo_name=repo_name, repo_id=23, **overrides)
         assert clone_url == expected
 
-    def _quick_url(self, text, tmpl="""<a class="revision-link" href="%s">%s</a>""", url_=None):
+    def _quick_url(self, text, tmpl="""<a class="changeset_hash" href="%s">%s</a>""", url_=None):
         """
         Changes `some text url[foo]` => `some text <a href="/">foo</a>
 
@@ -363,7 +363,7 @@ class TestLibs(TestController):
        """<b>@mention</b> <b>@someone</b>""",
        ""),
       ("deadbeefcafe 123412341234",
-       """<a class="revision-link" href="/repo_name/changeset/deadbeefcafe">deadbeefcafe</a> <a class="revision-link" href="/repo_name/changeset/123412341234">123412341234</a>""",
+       """<a class="changeset_hash" href="/repo_name/changeset/deadbeefcafe">deadbeefcafe</a> <a class="changeset_hash" href="/repo_name/changeset/123412341234">123412341234</a>""",
        ""),
       ("We support * markup for *bold* markup of *single or multiple* words, "
        "*a bit @like http://slack.com*. "
@@ -390,7 +390,7 @@ class TestLibs(TestController):
 
     @parametrize('sample,expected', [
       ("deadbeefcafe @mention, and http://foo.bar/ yo",
-       """<a class="revision-link" href="/repo_name/changeset/deadbeefcafe">deadbeefcafe</a>"""
+       """<a class="changeset_hash" href="/repo_name/changeset/deadbeefcafe">deadbeefcafe</a>"""
        """<a class="message-link" href="#the-link"> <b>@mention</b>, and </a>"""
        """<a href="http://foo.bar/">http://foo.bar/</a>"""
        """<a class="message-link" href="#the-link"> yo</a>"""),

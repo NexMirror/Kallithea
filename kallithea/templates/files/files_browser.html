@@ -92,7 +92,7 @@
                      </td>
                      <td>
                          %if node.is_file():
-                             <a data-toggle="tooltip" title="${node.last_changeset.message}" href="${h.url('changeset_home',repo_name=c.repo_name,revision=node.last_changeset.raw_id)}" class="revision-link">${h.show_id(node.last_changeset)}</a>
+                             <a data-toggle="tooltip" title="${node.last_changeset.message}" href="${h.url('changeset_home',repo_name=c.repo_name,revision=node.last_changeset.raw_id)}" class="changeset_hash">${h.show_id(node.last_changeset)}</a>
                          %endif
                      </td>
                      <td>

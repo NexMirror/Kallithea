@@ -40,7 +40,7 @@
 <%def name="revision(name,rev,tip,author,last_msg)">
   <div>
   %if rev >= 0:
-      <a data-toggle="popover" title="${author | entity}" data-content="${last_msg | entity}" class="hash" href="${h.url('changeset_home',repo_name=name,revision=tip)}">${'r%s:%s' % (rev,h.short_id(tip))}</a>
+      <a data-toggle="popover" title="${author | entity}" data-content="${last_msg | entity}" class="changeset_hash" href="${h.url('changeset_home',repo_name=name,revision=tip)}">${'r%s:%s' % (rev,h.short_id(tip))}</a>
   %else:
       ${_('No changesets yet')}
   %endif
