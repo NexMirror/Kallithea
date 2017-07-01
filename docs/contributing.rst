@@ -109,6 +109,11 @@ To run these tests::
 
     env TEST_PERFORMANCE=1 py.test kallithea/tests/performance
 
+To analyze performance, you could install pytest-profiling_, which enables the
+--profile and --profile-svg options to py.test.
+
+.. _pytest-profiling: https://github.com/manahl/pytest-plugins/tree/master/pytest-profiling
+
 
 Contribution guidelines
 -----------------------
