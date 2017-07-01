@@ -59,8 +59,8 @@ class GitRepository(BaseRepository):
                  update_after_clone=False, bare=False):
 
         self.path = safe_unicode(abspath(repo_path))
-        repo = self._get_repo(create, src_url, update_after_clone, bare)
-        self.bare = repo.bare
+        self.repo = self._get_repo(create, src_url, update_after_clone, bare)
+        self.bare = self.repo.bare
 
     @property
     def _config_files(self):
@@ -72,7 +72,7 @@ class GitRepository(BaseRepository):
 
     @property
     def _repo(self):
-        return Repo(self.path)
+        return self.repo
 
     @property
     def head(self):
@@ -239,7 +239,7 @@ class GitRepository(BaseRepository):
                 else:
                     return Repo.init(self.path)
             else:
-                return self._repo
+                return Repo(self.path)
         except (NotGitRepository, OSError) as err:
             raise RepositoryError(err)
 
