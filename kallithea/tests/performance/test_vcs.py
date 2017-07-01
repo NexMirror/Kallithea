@@ -29,7 +29,7 @@ class TestVCSPerformance(TestController):
         jsdata = graph_data(scm_inst, revs)
 
     def test_graphmod_hg(self, benchmark):
-        self.graphmod(HG_REPO)
+        benchmark(self.graphmod, HG_REPO)
 
     def test_graphmod_git(self, benchmark):
-        self.graphmod(GIT_REPO)
+        benchmark(self.graphmod, GIT_REPO)

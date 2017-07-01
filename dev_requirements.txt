@@ -3,6 +3,7 @@ waitress >= 0.8.8, < 1.0
 pytest ~= 3.0
 pytest-runner
 pytest-sugar>=0.7.0
+pytest-benchmark
 pytest-catchlog
 pytest-localserver
 mock
