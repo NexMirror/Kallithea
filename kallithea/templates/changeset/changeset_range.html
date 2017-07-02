@@ -36,7 +36,7 @@ ${self.repo_context_bar('changelog')}
                     <td>${h.gravatar_div(h.email_or_none(cs.author), size=14)}</td>
                     %endif
                     <td>${h.link_to(h.short_id(cs.raw_id),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}</td>
-                    <td><div class="author">${h.person(cs.author)}</div></td>
+                    <td class="author">${h.person(cs.author)}</td>
                     <td><span data-toggle="tooltip" title="${h.age(cs.date)}">${cs.date}</span></td>
                     <td>
                       %if c.statuses:

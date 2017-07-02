@@ -65,7 +65,7 @@
         <td><span data-toggle="tooltip" title="${h.age(cs.date)}">${cs.date}</span></td>
         <td class="author">
             ${h.gravatar(h.email_or_none(cs.author), size=16)}
-            <span data-toggle="tooltip" title="${cs.author}" class="user">${h.shorter(h.person(cs.author),22)}</span>
+            <span data-toggle="tooltip" title="${cs.author}" class="user">${h.person(cs.author)}</span>
         </td>
         <td>${h.link_to(h.show_id(cs),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id), class_='changeset_hash')}</td>
         <td>

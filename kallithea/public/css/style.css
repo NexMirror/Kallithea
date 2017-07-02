@@ -1282,6 +1282,13 @@ h3.files_location {
     text-decoration: none;
 }
 
+td.author {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 210px;
+}
+
 .cs_files .progress {
     margin-bottom: 0;
 }
@@ -1440,9 +1447,6 @@ tr.out-of-range > td.mid .message > a {
 }
 
 #graph_content #changesets td {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
     height: 31px;
     border-color: #cdcdcd;
     text-align: left;
@@ -1456,10 +1460,6 @@ tr.out-of-range > td.mid .message > a {
 #graph_content tr .status {
     width: 14px;
     font-size: 0.85em;
-}
-
-#graph_content tr .author {
-   width: 105px;
 }
 
 #graph_content tr .hash {
