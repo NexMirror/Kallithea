@@ -105,14 +105,20 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                             <div class="date" data-toggle="tooltip" title="${h.fmt_date(cs.date)}">${h.age(cs.date,True)}</div>
                         </td>
                         <% message_lines = cs.message.splitlines() %>
+                        %if len(message_lines) > 1:
                         <td class="expand_commit" title="${_('Expand commit message')}">
                             <i class="icon-align-left"></i>
                         </td>
+                        %else:
+                        <td></td>
+                        %endif
                         <td class="mid">
                             <div class="log-container">
                                 <div class="message">
                                     <div class="message-firstline">${h.urlify_text(message_lines[0], c.repo_name,h.url('changeset_home',repo_name=c.repo_name,revision=cs.raw_id))}</div>
+                                    %if len(message_lines) > 1:
                                     <div class="message-full hidden">${h.urlify_text(cs.message, c.repo_name)}</div>
+                                    %endif
                                 </div>
                                 <div class="extra-container">
                                     %if c.comments.get(cs.raw_id):
