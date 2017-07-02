@@ -125,22 +125,25 @@
 %endif
 
 <script type="text/javascript">
+    var jsdata = ${h.js(c.jsdata)};
+    var graph = new BranchRenderer('graph_canvas', 'graph_content_pr', 'chg_');
 
     $(document).ready(function(){
-        var jsdata = ${h.js(c.jsdata)};
-        var r = new BranchRenderer('graph_canvas', 'graph_content_pr', 'chg_');
-        r.render(jsdata);
+        graph.render(jsdata);
 
         $('.expand_commit').click(function(e){
             var cid = $(this).data('commit_id');
             $('#C-'+cid).toggleClass('expanded');
-            r.render(jsdata);
+            graph.render(jsdata);
         });
 
         $('.gravatar').click(function(e){
             var cid = $(this).data('commit_id');
             $('#row-'+cid).toggleClass('hl', !$('#row-'+cid).hasClass('hl'));
         });
+    });
+    $(window).resize(function(){
+        graph.render(jsdata);
     });
 
 </script>
