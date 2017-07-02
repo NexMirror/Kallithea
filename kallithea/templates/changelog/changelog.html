@@ -112,14 +112,10 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                                 <div class="message" id="C-${cs.raw_id}">${h.urlify_text(cs.message, c.repo_name,h.url('changeset_home',repo_name=c.repo_name,revision=cs.raw_id))}</div>
                                 <div class="extra-container">
                                     %if c.comments.get(cs.raw_id):
-                                        <div class="comments-container">
-                                            <div class="comments-cnt" data-toggle="tooltip" title="${_('Changeset has comments')}">
-                                                <a href="${c.comments[cs.raw_id][0].url()}">
-                                                    ${len(c.comments[cs.raw_id])}
-                                                    <i class="icon-comment-discussion"></i>
-                                                </a>
-                                            </div>
-                                        </div>
+                                        <a class="comments-container comments-cnt" href="${c.comments[cs.raw_id][0].url()}" data-toggle="tooltip" title="${_('Changeset has comments')}">
+                                            ${len(c.comments[cs.raw_id])}
+                                            <i class="icon-comment-discussion"></i>
+                                        </a>
                                     %endif
                                     %if cs.bumped:
                                         <span class="bumpedtag" title="Bumped">
