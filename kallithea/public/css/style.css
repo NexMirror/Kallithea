@@ -1510,10 +1510,9 @@ tr.out-of-range {
 
 #graph_content tr td.mid .message,
 #graph_content_pr .compare_view_commits .message {
-    white-space: pre-wrap;
+    white-space: nowrap;
     padding: 0;
     overflow: hidden;
-    height: 1.2em;
 }
 
 #graph_content_pr .compare_view_commits .message {

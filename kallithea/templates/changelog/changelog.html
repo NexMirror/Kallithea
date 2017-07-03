@@ -104,12 +104,16 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                         <td class="date">
                             <div class="date" data-toggle="tooltip" title="${h.fmt_date(cs.date)}">${h.age(cs.date,True)}</div>
                         </td>
+                        <% message_lines = cs.message.splitlines() %>
                         <td class="expand_commit" title="${_('Expand commit message')}">
                             <i class="icon-align-left"></i>
                         </td>
                         <td class="mid">
                             <div class="log-container">
-                                <div class="message">${h.urlify_text(cs.message, c.repo_name,h.url('changeset_home',repo_name=c.repo_name,revision=cs.raw_id))}</div>
+                                <div class="message">
+                                    <div class="message-firstline">${h.urlify_text(message_lines[0], c.repo_name,h.url('changeset_home',repo_name=c.repo_name,revision=cs.raw_id))}</div>
+                                    <div class="message-full hidden">${h.urlify_text(cs.message, c.repo_name)}</div>
+                                </div>
                                 <div class="extra-container">
                                     %if c.comments.get(cs.raw_id):
                                         <a class="comments-container comments-cnt" href="${c.comments[cs.raw_id][0].url()}" data-toggle="tooltip" title="${_('%s comments') % len(c.comments[cs.raw_id])}">
@@ -286,7 +290,7 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                 });
 
                 $('.expand_commit').on('click',function(e){
-                    $(this).next('.mid').find('.message').toggleClass('expanded');
+                    $(this).next('.mid').find('.message > div').toggleClass('hidden');
 
                     //redraw the graph, r and jsdata are bound outside function
                     graph.render(jsdata);
