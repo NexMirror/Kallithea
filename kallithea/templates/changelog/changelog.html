@@ -94,9 +94,9 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                             %endif
                           %endif
                         </td>
-                        <td class="author">
+                        <td class="author" data-toggle="tooltip" title="${cs.author}">
                             ${h.gravatar(h.email_or_none(cs.author), size=16)}
-                            <span data-toggle="tooltip" title="${cs.author}" class="user">${h.person(cs.author)}</span>
+                            <span class="user">${h.person(cs.author)}</span>
                         </td>
                         <td class="hash">
                             ${h.link_to(h.show_id(cs),h.url('changeset_home',repo_name=c.repo_name,revision=cs.raw_id), class_='changeset_hash')}
