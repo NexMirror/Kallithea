@@ -244,7 +244,7 @@ ${self.repo_context_bar('showpullrequest')}
           <ul class="list-unstyled">
             %for u in [c.pull_request.other_repo.owner]:
               <li>
-                <a class="missing_reviewer missing_reviewer_${u.user_id}"
+                <a class="btn btn-default btn-xs missing_reviewer missing_reviewer_${u.user_id}"
                   href="#"
                   data-user_id="${u.user_id}"
                   data-fname="${u.name}"
@@ -252,7 +252,7 @@ ${self.repo_context_bar('showpullrequest')}
                   data-nname="${u.username}"
                   data-gravatar_lnk="${h.gravatar_url(u.email, size=28, default='default')}"
                   data-gravatar_size="14"
-                  title="Click to add reviewer to the list, then Save Changes.">${u.full_name}</a>
+                  title="Click to add reviewer to the list, then Save Changes."><i class="icon-plus"></i>${u.full_name}</a>
               </li>
             %endfor
           </ul>
