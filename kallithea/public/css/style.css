@@ -1606,6 +1606,15 @@ tr.out-of-range > td.mid .message > a {
     text-decoration: none;
 }
 
+#updaterevs-graph {
+    position: absolute;
+    width: 40px;
+}
+
+#updaterevs-table {
+    margin-left: 40px !important;
+}
+
 #compare_branches + div.panel-body .revision-link,
 #compare_tags + div.panel-body .revision-link,
 #compare_bookmarks + div.panel-body .revision-link,
