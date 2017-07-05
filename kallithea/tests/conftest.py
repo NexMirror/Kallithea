@@ -4,6 +4,7 @@ import logging
 import pkg_resources
 import time
 
+import formencode
 from paste.deploy import loadwsgi
 from routes.util import URLGenerator
 import pytest
@@ -57,6 +58,8 @@ def pytest_configure():
 
     kallithea.tests.base.url = URLGenerator(RootController().mapper, {'HTTP_HOST': 'example.com'})
 
+    # set fixed language for form messages, regardless of environment settings
+    formencode.api.set_stdtranslation(languages=[])
 
 @pytest.fixture
 def create_test_user():
