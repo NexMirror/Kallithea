@@ -64,6 +64,8 @@ class Command(object):
         testenv = dict(os.environ)
         testenv['LANG'] = 'en_US.UTF-8'
         testenv['LANGUAGE'] = 'en_US:en'
+        testenv['HGPLAIN'] = ''
+        testenv['HGRCPATH'] = ''
         testenv.update(environ)
         p = Popen(command, shell=True, stdout=PIPE, stderr=PIPE, cwd=self.cwd, env=testenv)
         stdout, stderr = p.communicate()
