@@ -56,7 +56,7 @@ repository, follow the instructions below::
         virtualenv ../kallithea-venv
         . ../kallithea-venv/bin/activate
         pip install --upgrade pip setuptools
-        pip install -e .
+        pip install --upgrade -e .
         python2 setup.py compile_catalog   # for translation of the UI
 
 You can now proceed to :ref:`setup`.
@@ -91,8 +91,8 @@ An additional benefit of virtualenv_ is that it doesn't require root privileges.
 .. note:: Some dependencies are optional. If you need them, install them in
    the virtualenv too::
 
-     pip install psycopg2
-     pip install python-ldap
+     pip install --upgrade psycopg2
+     pip install --upgrade python-ldap
 
    This might require installation of development packages using your
    distribution's package manager.
@@ -104,12 +104,12 @@ An additional benefit of virtualenv_ is that it doesn't require root privileges.
 
 - Go into the created directory and run this command to install Kallithea::
 
-    pip install kallithea
+    pip install --upgrade kallithea
 
   Alternatively, download a .tar.gz from http://pypi.python.org/pypi/Kallithea,
   extract it and run::
 
-    pip install .
+    pip install --upgrade .
 
 - This will install Kallithea together with all other required
   Python libraries into the activated virtualenv.

@@ -85,7 +85,7 @@ If you originally installed from version control, it is as simple as::
 
     cd my-kallithea-clone
     hg pull -u
-    pip install -e .
+    pip install --upgrade -e .
 
 
 5. Upgrade your configuration

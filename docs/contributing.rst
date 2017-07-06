@@ -35,8 +35,8 @@ To get started with Kallithea development::
         virtualenv ../kallithea-venv
         source ../kallithea-venv/bin/activate
         pip install --upgrade pip setuptools
-        pip install -e .
-        pip install -r dev_requirements.txt
+        pip install --upgrade -e .
+        pip install --upgrade -r dev_requirements.txt
         gearbox make-config my.ini
         gearbox setup-db -c my.ini --user=user --email=user@example.com --password=password --repos=/tmp
         gearbox serve -c my.ini --reload &
