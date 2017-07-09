@@ -172,7 +172,7 @@ class MercurialChangeset(BaseChangeset):
         cs = self
         while True:
             try:
-                next_ = cs.revision + 1
+                next_ = cs.repository.revisions.index(cs.raw_id) + 1
                 next_rev = cs.repository.revisions[next_]
             except IndexError:
                 raise ChangesetDoesNotExistError
@@ -189,7 +189,7 @@ class MercurialChangeset(BaseChangeset):
         cs = self
         while True:
             try:
-                prev_ = cs.revision - 1
+                prev_ = cs.repository.revisions.index(cs.raw_id) - 1
                 if prev_ < 0:
                     raise IndexError
                 prev_rev = cs.repository.revisions[prev_]
