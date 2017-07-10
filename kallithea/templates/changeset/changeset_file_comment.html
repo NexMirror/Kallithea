@@ -34,14 +34,16 @@
         %if co.status_change:
            <div class="automatic-comment">
              <p>
-               ${_("Status change")}: ${co.status_change[0].status_lbl}
+               ${_("Status change")}: <span class="comment-status-label">${co.status_change[0].status_lbl}</span>
                <i class="icon-circle changeset-status-${co.status_change[0].status}"></i>
              </p>
            </div>
         %endif
+        <div class="comment-text">
         %if co.text:
           ${h.render_w_mentions(co.text, c.repo_name)|n}
         %endif
+        </div>
       </div>
     </div>
   </div>
@@ -49,7 +51,33 @@
 
 
 <%def name="comment_inline_form()">
-<div id='comment-inline-form-template' style="display:none">
+<div id='comment-inline-form-template' style="display: none;">
+  <div class="comment comment-preview submitting" style="display: none;">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+          ${h.gravatar_div(request.authuser.email, size=20)}
+          <span class="user">
+              ${request.authuser.full_name_or_username}
+          </span>
+
+          <span class="comment-submission-status">
+              ${_('Submitting ...')}
+          </span>
+      </div>
+      <div class="panel-body">
+           <div class="automatic-comment" style="display: none;">
+             <p>
+               ${_("Status change")}: <span class="comment-status-label"></span>
+               <i class="icon-circle"></i>
+             </p>
+           </div>
+           <div class="comment-text">
+             <div class="formatted-fixed">
+             </div>
+           </div>
+      </div>
+    </div>
+  </div>
   <div class="ac">
   %if request.authuser.username != 'default':
     ${h.form('#', class_='inline-form')}
@@ -97,7 +125,6 @@
 
       </div>
       <div class="comment-button">
-        <div class="submitting-overlay" style="display:none">${_('Submitting ...')}</div>
         ${h.submit('save', _('Comment'), class_='btn btn-default btn-sm save-inline-form')}
         ${h.reset('hide-inline-form', _('Cancel'), class_='btn btn-default btn-sm hide-inline-form')}
       </div>

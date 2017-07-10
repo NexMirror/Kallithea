@@ -647,6 +647,7 @@ function _comment_div_append_form($comment_div, f_path, line_no) {
         .clone()
         .addClass('comment-inline-form');
     $comment_div.append($form_div);
+    var $preview = $comment_div.find("div.comment-preview");
     var $form = $comment_div.find("form");
     var $textarea = $form.find('textarea');
 
@@ -678,7 +679,18 @@ function _comment_div_append_form($comment_div, f_path, line_no) {
             }
         }
 
-        $form.find('.submitting-overlay').show();
+        if (review_status) {
+            var $review_status = $preview.find('.automatic-comment');
+            var review_status_lbl = $("#comment-inline-form-template input.status_change_radio[value='" + review_status + "']").parent().text().strip();
+            $review_status.find('.comment-status-label').text(review_status_lbl);
+            $review_status.show();
+        }
+        $preview.find('.comment-text div').text(text);
+        $preview.show();
+        $textarea.val('');
+        if (f_path && line_no) {
+            $form.hide();
+        }
 
         var postData = {
             'text': text,
@@ -702,7 +714,33 @@ function _comment_div_append_form($comment_div, f_path, line_no) {
                 }
             }
         };
-        ajaxPOST(AJAX_COMMENT_URL, postData, success);
+        var failure = function(x, s, e) {
+            $preview.removeClass('submitting').addClass('failed');
+            var $status = $preview.find('.comment-submission-status');
+            $('<span>', {
+                'title': e,
+                text: _TM['Unable to post']
+            }).replaceAll($status.contents());
+            $('<div>', {
+                'class': 'btn-group'
+            }).append(
+                $('<button>', {
+                    'class': 'btn btn-default btn-xs',
+                    text: _TM['Retry']
+                }).click(function() {
+                    $status.text(_TM['Submitting ...']);
+                    $preview.addClass('submitting').removeClass('failed');
+                    ajaxPOST(AJAX_COMMENT_URL, postData, success, failure);
+                }),
+                $('<button>', {
+                    'class': 'btn btn-default btn-xs',
+                    text: _TM['Cancel']
+                }).click(function() {
+                    comment_div_state($comment_div, f_path, line_no);
+                })
+            ).appendTo($status);
+        };
+        ajaxPOST(AJAX_COMMENT_URL, postData, success, failure);
     });
 
     // add event handler for hide/cancel buttons
