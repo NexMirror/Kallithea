@@ -146,7 +146,7 @@ ${self.repo_context_bar('showpullrequest')}
         <div class="form-group">
           <label>${_('Next iteration')}:</label>
             <div>
-              <div class="msg-div">${c.update_msg}</div>
+              <p>${c.update_msg}</p>
               %if c.avail_revs:
               <div id="updaterevs" class="clearfix">
                 <div id="updaterevs-graph">
@@ -185,9 +185,11 @@ ${self.repo_context_bar('showpullrequest')}
                   %endfor
                 </table>
               </div>
-              <div class="msg-div">(${_("Pull request iterations do not change content once created. Select a revision and save to make a new iteration.")})</div>
+              <div class="alert alert-info">${_("Pull request iterations do not change content once created. Select a revision to create a new iteration.")}</div>
               %endif
-              <div class="msg-div">${c.update_msg_other}</div>
+              %if c.update_msg_other:
+                <div class="alert alert-info">${c.update_msg_other}</div>
+              %endif
             </div>
         </div>
         %if editable:
