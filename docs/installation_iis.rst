@@ -126,4 +126,4 @@ application itself) that are uncaught, will be printed here complete with stack
 traces, making it a lot easier to identify issues.
 
 
-.. _hgssoauthenticatio: https://bitbucket.org/domruf/hgssoauthentication
+.. _hgssoauthentication: https://bitbucket.org/domruf/hgssoauthentication
