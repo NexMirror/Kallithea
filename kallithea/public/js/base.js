@@ -490,6 +490,7 @@ var tooltip_activate = function(){
     }
     $(document).ready(function(){
         $('[data-toggle="tooltip"]').tooltip({
+            container: 'body',
             placement: placement
         });
         $('[data-toggle="popover"]').popover({
