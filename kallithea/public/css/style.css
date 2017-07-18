@@ -2184,16 +2184,6 @@ div#overview {
     display: block !important;
 }
 
-.navbar-caret {
-    margin-top: -2px;
-    display: inline-block;
-}
-
-.navbar-caret:after {
-    font-family: 'kallithea';
-    content: ' \23f7';           /* triangle-down */
-}
-
 #context-bar .select2-container .select2-choice .select2-chosen,
 nav.navbar #quick .select2-container .select2-choice .select2-chosen {
     margin-right: 0;
@@ -2212,10 +2202,10 @@ nav.navbar #quick .select2-container .select2-choice .select2-chosen {
 
 .branch-switcher .select2-container,
 .branch-switcher .select2-choice,
-.branch-switcher .select2-choice span,
+.branch-switcher .select2-choice > span,
 .repo-switcher .select2-container,
 .repo-switcher .select2-choice,
-.repo-switcher .select2-choice span {
+.repo-switcher .select2-choice > span {
     background: transparent !important;
     border: 0 !important;
     box-shadow: none !important;

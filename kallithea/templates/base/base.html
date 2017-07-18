@@ -136,9 +136,9 @@
         </li>
         <li class="${'active' if current == 'options' else ''} dropdown" data-context="options">
              %if h.HasRepoPermissionLevel('admin')(c.repo_name):
-               <a href="${h.url('edit_repo',repo_name=c.repo_name)}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true"><i class="icon-wrench"></i> ${_('Options')} <i class="navbar-caret"></i></a>
+               <a href="${h.url('edit_repo',repo_name=c.repo_name)}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true"><i class="icon-wrench"></i> ${_('Options')} <i class="caret"></i></a>
              %else:
-               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true"><i class="icon-wrench"></i> ${_('Options')} <i class="navbar-caret"></i></a>
+               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true"><i class="icon-wrench"></i> ${_('Options')} <i class="caret"></i></a>
              %endif
           <ul class="dropdown-menu" role="menu" aria-hidden="true">
              %if h.HasRepoPermissionLevel('admin')(c.repo_name):
@@ -189,7 +189,7 @@
       var bcache = {};
 
       $("#branch_switcher").select2({
-          placeholder: '<i class="icon-exchange"></i> ' + ${h.jshtml(_('Switch To'))} + ' <span class="navbar-caret"></span>',
+          placeholder: '<i class="icon-exchange"></i> ' + ${h.jshtml(_('Switch To'))} + ' <span class="caret"></span>',
           dropdownAutoWidth: true,
           sortResults: prefixFirstSort,
           formatResult: function(obj) {
@@ -308,7 +308,7 @@
     %endif
       <li class="${'active' if current == 'gists' else ''} dropdown">
         <a class="menu_link dropdown-toggle" data-toggle="dropdown" role="button" title="${_('Show public gists')}"  href="${h.url('gists')}">
-          <i class="icon-clippy"></i> ${_('Gists')} <span class="navbar-caret"></span>
+          <i class="icon-clippy"></i> ${_('Gists')} <span class="caret"></span>
         </a>
           <ul class="dropdown-menu" role="menu">
             <li><a href="${h.url('new_gist', public=1)}"><i class="icon-paste"></i> ${_('Create New Gist')}</a></li>
@@ -327,7 +327,7 @@
     % if h.HasPermissionAny('hg.admin')('access admin main page'):
       <li class="${'active' if current == 'admin' else ''} dropdown">
         <a class="menu_link dropdown-toggle" data-toggle="dropdown" role="button" title="${_('Admin')}" href="${h.url('admin_home')}">
-          <i class="icon-gear"></i> ${_('Admin')} <span class="navbar-caret"></span>
+          <i class="icon-gear"></i> ${_('Admin')} <span class="caret"></span>
         </a>
         ${admin_menu()}
       </li>
@@ -370,7 +370,7 @@
           %else:
               <span>${_('Not Logged In')}</span>
           %endif
-          <i class="navbar-caret"></i>
+          <i class="caret"></i>
       </a>
 
       <div class="dropdown-menu user-menu" role="menu">
@@ -454,7 +454,7 @@
             }
 
             $("#repo_switcher").select2({
-                placeholder: '<i class="icon-database"></i> ' + ${h.jshtml(_('Repositories'))} + ' <span class="navbar-caret"></span>',
+                placeholder: '<i class="icon-database"></i> ' + ${h.jshtml(_('Repositories'))} + ' <span class="caret"></span>',
                 dropdownAutoWidth: true,
                 sortResults: prefixFirstSort,
                 formatResult: format,
