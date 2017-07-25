@@ -45,7 +45,7 @@ To get started with Kallithea development::
 If you plan to use Bitbucket_ for sending contributions, you can also fork
 Kallithea on Bitbucket_ first (https://bitbucket.org/conservancy/kallithea) and
 then replace the clone step above by a clone of your fork. In this case, please
-see :ref:`contributing-guidelies` below for configuring your fork correctly.
+see :ref:`contributing-guidelines` below for configuring your fork correctly.
 
 
 Contribution flow
