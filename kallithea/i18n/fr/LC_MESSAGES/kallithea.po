@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2017-07-25 16:37+0200\n"
-"PO-Revision-Date: 2015-09-10 15:13+0200\n"
+"PO-Revision-Date: 2017-07-26 06:43+0000\n"
 "Last-Translator: Étienne Gilli <etienne.gilli@gmail.com>\n"
 "Language-Team: French "
 "<https://hosted.weblate.org/projects/kallithea/stable/fr/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 2.4-dev\n"
+"X-Generator: Weblate 2.16-dev\n"
 
 #: kallithea/controllers/changelog.py:86
 #: kallithea/controllers/pullrequests.py:238 kallithea/lib/base.py:512
@@ -155,12 +155,10 @@ msgid "This repository has been locked by %s on %s"
 msgstr "Ce dépôt a été verrouillé par %s sur %s"
 
 #: kallithea/controllers/files.py:317
-#, fuzzy
-#| msgid "You can only delete files with revision being a valid branch "
 msgid "You can only delete files with revision being a valid branch"
 msgstr ""
-"Vous pouvez supprimer uniquement les fichiers avec révision étant dans "
-"une branche valide "
+"Vous ne pouvez supprimer les fichiers que si la révision est une branche "
+"valide"
 
 #: kallithea/controllers/files.py:328
 #, python-format
@@ -178,12 +176,10 @@ msgid "Error occurred during commit"
 msgstr "Une erreur est survenue durant le commit"
 
 #: kallithea/controllers/files.py:377
-#, fuzzy
-#| msgid "You can only edit files with revision being a valid branch "
 msgid "You can only edit files with revision being a valid branch"
 msgstr ""
-"Vous pouvez modifier uniquement les fichiers dont la révision est dans "
-"une branche valide "
+"Vous ne pouvez modifier les fichiers que si la révision est une branche "
+"valide"
 
 #: kallithea/controllers/files.py:391
 #, python-format
@@ -937,10 +933,9 @@ msgid "Repositories successfully rescanned. Added: %s. Removed: %s."
 msgstr "Dépôts ré-analysés avec succès. Ajouté : %s. Supprimé : %s."
 
 #: kallithea/controllers/admin/settings.py:226
-#, fuzzy, python-format
-#| msgid "Invalidate cache for all repositories"
+#, python-format
 msgid "Invalidated %s repositories"
-msgstr "Invalider le cache pour tous les dépôts"
+msgstr "%s dépôts invalidés"
 
 #: kallithea/controllers/admin/settings.py:280
 msgid "Updated application settings"
@@ -1077,6 +1072,8 @@ msgstr "Clé d'API invalide"
 #: kallithea/lib/auth.py:785
 msgid "CSRF token leak has been detected - all form tokens have been expired"
 msgstr ""
+"Une fuite de jeton CSRF a été détectée - tous les jetons de formulaire sont "
+"considérés comme expirés"
 
 #: kallithea/lib/auth.py:832
 msgid "You need to be a registered user to perform this action"
@@ -1091,10 +1088,9 @@ msgid "Repository not found in the filesystem"
 msgstr "Dépôt non trouvé sur le système de fichiers"
 
 #: kallithea/lib/base.py:516
-#, fuzzy, python-format
-#| msgid "Changeset not found"
+#, python-format
 msgid "Changeset for %s %s not found in %s"
-msgstr "Ensemble de changements non trouvé"
+msgstr "Ensemble de changements pour %s %s non trouvé dans %s"
 
 #: kallithea/lib/diffs.py:66
 msgid "Binary file"
@@ -1121,10 +1117,9 @@ msgid "Created tag: %s"
 msgstr "Étiquette créée : %s"
 
 #: kallithea/lib/helpers.py:623
-#, fuzzy, python-format
-#| msgid "Changeset not found"
+#, python-format
 msgid "Changeset %s not found"
-msgstr "Ensemble de changements non trouvé"
+msgstr "Ensemble de changements %s non trouvé"
 
 #: kallithea/lib/helpers.py:672
 #, python-format
@@ -1883,8 +1878,6 @@ msgid "Only admins can fork repositories"
 msgstr "Seul un administrateur peut faire un fork de dépôt"
 
 #: kallithea/model/db.py:1696
-#, fuzzy
-#| msgid "Non-admins can can fork repositories"
 msgid "Non-admins can fork repositories"
 msgstr "Les utilisateurs non-administrateurs peuvent faire un fork de dépôt"
 
@@ -3719,7 +3712,7 @@ msgstr "Déverrouiller le dépôt"
 #: kallithea/templates/admin/repos/repo_edit_advanced.html:56
 #, python-format
 msgid "Locked by %s on %s"
-msgstr ""
+msgstr "Verrouillé par %s sur %s"
 
 #: kallithea/templates/admin/repos/repo_edit_advanced.html:60
 msgid "Confirm to lock repository."
@@ -5978,10 +5971,9 @@ msgid "%s Pull Requests"
 msgstr "Requêtes de pull pour %s"
 
 #: kallithea/templates/pullrequests/pullrequest_show_all.html:11
-#, fuzzy, python-format
-#| msgid "Pull Requests from %s'"
+#, python-format
 msgid "Pull Requests from '%s'"
-msgstr "Requête de pull depuis %s'"
+msgstr "Requêtes de pull depuis '%s'"
 
 #: kallithea/templates/pullrequests/pullrequest_show_all.html:13
 #, python-format
@@ -6469,4 +6461,3 @@ msgstr "Comparer les tags"
 
 #~ msgid "Created by"
 #~ msgstr "créé"
-
