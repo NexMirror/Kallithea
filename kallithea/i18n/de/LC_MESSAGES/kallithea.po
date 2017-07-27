@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2017-07-27 13:13+0200\n"
-"PO-Revision-Date: 2017-04-26 09:50+0000\n"
-"Last-Translator: Marko Semet (Marko10.000) <markosemet@googlemail.com>\n"
+"PO-Revision-Date: 2017-07-27 14:30+0000\n"
+"Last-Translator: Holger Schramm <info@schramm.by>\n"
 "Language-Team: German "
 "<https://hosted.weblate.org/projects/kallithea/kallithea/de/>\n"
 "Language: de\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2.14-dev\n"
+"X-Generator: Weblate 2.16-dev\n"
 
 #: kallithea/controllers/changelog.py:86
 #: kallithea/controllers/pullrequests.py:256 kallithea/lib/base.py:613
@@ -76,15 +76,15 @@ msgstr ""
 
 #: kallithea/controllers/compare.py:240
 msgid "Cannot show empty diff"
-msgstr ""
+msgstr "Kann leeren diff nicht anzeigen"
 
 #: kallithea/controllers/compare.py:242
 msgid "No ancestor found for merge diff"
-msgstr ""
+msgstr "Es konnte kein Vorfahre für den merge diff gefunden werden"
 
 #: kallithea/controllers/compare.py:246
 msgid "Multiple merge ancestors found for merge compare"
-msgstr ""
+msgstr "Es wurden mehrere merge Vorfahren für den merge Vergleich gefunden"
 
 #: kallithea/controllers/compare.py:262
 msgid "Cannot compare repositories without using common ancestor"
@@ -359,7 +359,7 @@ msgstr "Erfolgreich Kennwort geändert"
 #: kallithea/controllers/pullrequests.py:73
 #, python-format
 msgid "Invalid reviewer \"%s\" specified"
-msgstr ""
+msgstr "Ungültigen Begutachter \"%s\" angegeben"
 
 #: kallithea/controllers/pullrequests.py:135
 #, python-format
@@ -409,12 +409,12 @@ msgstr "Pull Request Update erstellt"
 #: kallithea/controllers/pullrequests.py:410
 #, python-format
 msgid "Meanwhile, the following reviewers have been added: %s"
-msgstr ""
+msgstr "Es wurden inzwischen folgende Begutachter hinzugefügt: %s"
 
 #: kallithea/controllers/pullrequests.py:414
 #, python-format
 msgid "Meanwhile, the following reviewers have been removed: %s"
-msgstr ""
+msgstr "Es wurden inzwischen folgende Begutachter entfernt: %s"
 
 #: kallithea/controllers/pullrequests.py:430
 #: kallithea/model/pull_request.py:234
@@ -432,7 +432,7 @@ msgstr "Erfolgreich Pull-Request gelöscht"
 #: kallithea/controllers/pullrequests.py:491
 #, python-format
 msgid "Revision %s not found in %s"
-msgstr ""
+msgstr "Die Revision %s konnte in %s nicht gefunden werden"
 
 #: kallithea/controllers/pullrequests.py:518
 #, fuzzy, python-format
@@ -483,6 +483,8 @@ msgstr "Keine Changesets gefunden, um den Pull Request zu aktualisieren."
 #: kallithea/controllers/pullrequests.py:598
 msgid "The diff can't be shown - the PR revisions could not be found."
 msgstr ""
+"Der diff kann nicht angezeigt werden. Die Pull Request Revisionen konnten "
+"nicht gefunden werden."
 
 #: kallithea/controllers/pullrequests.py:665
 msgid "No permission to change pull request status"
@@ -891,7 +893,7 @@ msgstr "Repositoriumsberechtigungen aktualisiert"
 #: kallithea/controllers/admin/repos.py:391
 #, python-format
 msgid "Field validation error: %s"
-msgstr ""
+msgstr "Feldvalidierung fehlgeschlagen: %s"
 
 #: kallithea/controllers/admin/repos.py:394
 #, fuzzy, python-format
@@ -1142,7 +1144,7 @@ msgstr "Ungültiger API Key"
 
 #: kallithea/lib/base.py:508
 msgid "CSRF token leak has been detected - all form tokens have been expired"
-msgstr ""
+msgstr "Es wurde ein CSRF Leck entdeckt. Alle Formular Token sind abgelaufen"
 
 #: kallithea/lib/base.py:591
 msgid "Repository not found in the filesystem"
@@ -1703,8 +1705,7 @@ msgstr "Vorgänger unverändert - zeige Diff zu lezter Version:"
 
 #: kallithea/model/pull_request.py:362
 #, fuzzy, python-format
-#| msgid "" "This pull request is based on another %s revision and there is no
-#| simple " "diff."
+#| msgid "" "
 msgid ""
 "This iteration is based on another %s revision and there is no simple "
 "diff."
@@ -7405,4 +7406,3 @@ msgstr "Repository Größe"
 
 #~ msgid "Compare Tags"
 #~ msgstr "Tags vergleichen"
-
