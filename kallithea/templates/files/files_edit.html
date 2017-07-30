@@ -34,12 +34,12 @@ ${self.repo_context_bar('files')}
     </div>
     <div class="panel-body" id="edit">
         <div id="files_data">
-            ${h.form(h.url.current(),method='post',id='eform',class_='form-inline')}
+            ${h.form(h.url.current(),method='post',id='eform')}
             <h3 class="files_location">
               ${_('Location')}: ${h.files_breadcrumbs(c.repo_name,c.cs.raw_id,c.file.path)}
             </h3>
             <div id="body" class="panel panel-default">
-              <div class="panel-heading clearfix">
+              <div class="panel-heading clearfix form-inline form-group-sm">
                     <span>
                         <span><i class="icon-doc-inv"></i></span>
                         <span>${h.link_to(h.show_id(c.file.changeset),h.url('changeset_home',repo_name=c.repo_name,revision=c.file.changeset.raw_id))}</span>
@@ -63,11 +63,11 @@ ${self.repo_context_bar('files')}
               </div>
             </div>
             <div>
-              <div>
-                  <div>${_('Commit Message')}</div>
+              <div class="form-group">
+                  <label>${_('Commit Message')}</label>
                   <textarea class="form-control commit-message" id="commit" name="message" placeholder="${c.default_message}"></textarea>
               </div>
-              <div class="buttons">
+              <div class="form-group buttons">
                 ${h.submit('commit',_('Commit Changes'),class_="btn btn-success")}
                 ${h.reset('reset',_('Reset'),class_="btn btn-default")}
               </div>
