@@ -360,10 +360,14 @@ $(document).ready(function(){
                 + "aria-valuemin='0' aria-valuemax='100' aria-valuenow='" + percentage
                 + "' style='width: " + percentage + "%;'>" + percentage + "%, " + nr_files + "</b>";
         }
-        else{
+        else if (percentage>5){
             trending_language.innerHTML = "<b class='progress-bar' role='progressbar'"
                 + "aria-valuemin='0' aria-valuemax='100' aria-valuenow='" + percentage
                 + "' style='width: " + percentage + "%;'>" + percentage + "%</b>";
+        }else{
+            trending_language.innerHTML = "<b class='progress-bar' role='progressbar'"
+                + "aria-valuemin='0' aria-valuemax='100' aria-valuenow='" + percentage
+                + "' style='width: " + percentage + "%;'>&nbsp;</b>&nbsp;" + percentage + "%";
         }
 
         td2.appendChild(trending_language);
