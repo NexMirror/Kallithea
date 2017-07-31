@@ -131,6 +131,13 @@
         <li class="${'active' if current == 'changelog' else ''}" data-context="changelog"><a href="${h.url('changelog_home', repo_name=c.repo_name)}"><i class="icon-clock"></i>${_('Changelog')}</a></li>
         %endif
         <li class="${'active' if current == 'files' else ''}" data-context="files"><a href="${h.url('files_home', repo_name=c.repo_name, revision=rev or 'tip')}"><i class="icon-doc-inv"></i>${_('Files')}</a></li>
+        <li class="${'active' if current == 'showpullrequest' else ''}" data-context="showpullrequest">
+          <a href="${h.url('pullrequest_show_all',repo_name=c.repo_name)}" title="${_('Show Pull Requests for %s') % c.repo_name}"> <i class="icon-git-pull-request"></i>${_('Pull Requests')}
+            %if c.repository_pull_requests:
+              <span class="badge">${c.repository_pull_requests}</span>
+            %endif
+          </a>
+        </li>
         <li class="${'active' if current == 'switch-to' else ''}" data-context="switch-to">
           <input id="branch_switcher" name="branch_switcher" type="hidden">
         </li>
@@ -172,13 +179,6 @@
                   <li><a href="${h.url('pullrequest_home',repo_name=c.repo_name)}"><i class="icon-git-pull-request"></i>${_('Create Pull Request')}</a></li>
               %endif
              </ul>
-        </li>
-        <li class="${'active' if current == 'showpullrequest' else ''}" data-context="showpullrequest">
-          <a href="${h.url('pullrequest_show_all',repo_name=c.repo_name)}" title="${_('Show Pull Requests for %s') % c.repo_name}"> <i class="icon-git-pull-request"></i>${_('Pull Requests')}
-            %if c.repository_pull_requests:
-              <span class="badge">${c.repository_pull_requests}</span>
-            %endif
-          </a>
         </li>
     </ul>
     </div>
