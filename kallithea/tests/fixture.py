@@ -411,11 +411,8 @@ def create_test_index(repo_location, config, full_index):
     if not os.path.exists(index_location):
         os.makedirs(index_location)
 
-    try:
-        l = DaemonLock(file_=os.path.join(dirname(index_location), 'make_index.lock'))
-        WhooshIndexingDaemon(index_location=index_location,
-                             repo_location=repo_location) \
-            .run(full_index=full_index)
-        l.release()
-    except LockHeld:
-        pass
+    l = DaemonLock(file_=os.path.join(dirname(index_location), 'make_index.lock'))
+    WhooshIndexingDaemon(index_location=index_location,
+                         repo_location=repo_location) \
+        .run(full_index=full_index)
+    l.release()
