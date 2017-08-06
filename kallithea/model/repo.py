@@ -140,14 +140,12 @@ class RepoModel(object):
         user_groups = UserGroup.query() \
             .filter(UserGroup.users_group_active == True) \
             .order_by(UserGroup.users_group_name) \
-            .options(subqueryload(UserGroup.members)) \
             .all()
         user_groups = UserGroupList(user_groups, perm_level='read')
         return [
             {
                 'id': gr.users_group_id,
                 'grname': gr.users_group_name,
-                'grmembers': len(gr.members),
             } for gr in user_groups]
 
     @classmethod

@@ -1109,11 +1109,9 @@ var autocompleteFormatter = function (oResultData, sQuery, sResultMatch) {
     // group
     if (oResultData.grname) {
         return autocompleteGravatar(
-            "{0}: {1} ({2} {3})".format(
+            "{0}: {1}".format(
                 _TM['Group'],
-                autocompleteHighlightMatch(oResultData.grname, query),
-                oResultData.grmembers,
-                _TM['members']),
+                autocompleteHighlightMatch(oResultData.grname, query)),
             null, null, true);
     }
 
