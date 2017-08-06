@@ -200,7 +200,7 @@ nav.navbar #quick > li:first-child > a {
 
 nav.navbar #quick > li > a,
 nav.navbar #quick .select2-container .select2-choice .select2-chosen,
-#context-pages > li > a,
+#context-pages > ul > li > a,
 #context-pages .select2-container .select2-choice .select2-chosen,
 x#context-pages .dropdown-menu a {
     padding: 0px 15px 1px 15px;
