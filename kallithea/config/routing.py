@@ -99,6 +99,8 @@ def make_map(config):
     rmap.connect('about', '/about', controller='home', action='about')
     rmap.connect('repo_switcher_data', '/_repos', controller='home',
                  action='repo_switcher_data')
+    rmap.connect('users_and_groups_data', '/_users_and_groups', controller='home',
+                 action='users_and_groups_data')
 
     rmap.connect('rst_help',
                  "http://docutils.sourceforge.net/docs/user/rst/quickref.html",

@@ -1094,7 +1094,7 @@ var autocompleteFormatter = function (oResultData, sQuery, sResultMatch) {
         query = sResultMatch.term.toLowerCase();
 
     // group
-    if (oResultData.grname) {
+    if (oResultData.type == "group") {
         return autocompleteGravatar(
             "{0}: {1}".format(
                 _TM['Group'],
@@ -1118,20 +1118,34 @@ var autocompleteFormatter = function (oResultData, sQuery, sResultMatch) {
     return '';
 };
 
-var SimpleUserAutoComplete = function ($inputElement, users_list) {
-    $inputElement.select2(
-    {
+var SimpleUserAutoComplete = function ($inputElement) {
+    $inputElement.select2({
         formatInputTooShort: $inputElement.attr('placeholder'),
         initSelection : function (element, callback) {
-            var val = $inputElement.val();
-            $.each(users_list, function(i, user) {
-                if (user.nname == val)
-                    callback(user);
+            $.ajax({
+                url: pyroutes.url('users_and_groups_data'),
+                dataType: 'json',
+                data: {
+                    key: element.val()
+                },
+                success: function(data){
+                  callback(data.results[0]);
+                }
             });
         },
         minimumInputLength: 1,
-        query: function (query) {
-            query.callback({results: autocompleteMatchUsers(query.term, users_list)});
+        ajax: {
+            url: pyroutes.url('users_and_groups_data'),
+            dataType: 'json',
+            data: function(term, page){
+              return {
+                query: term
+              };
+            },
+            results: function (data, page){
+              return data;
+            },
+            cache: true
         },
         formatSelection: autocompleteFormatter,
         formatResult: autocompleteFormatter,
@@ -1140,31 +1154,32 @@ var SimpleUserAutoComplete = function ($inputElement, users_list) {
     });
 }
 
-var MembersAutoComplete = function ($inputElement, $typeElement, users_list, groups_list) {
+var MembersAutoComplete = function ($inputElement, $typeElement) {
 
-    var matchAll = function (sQuery) {
-        var u = autocompleteMatchUsers(sQuery, users_list);
-        var g = autocompleteMatchGroups(sQuery, groups_list);
-        return u.concat(g);
-    };
-
-    $inputElement.select2(
-    {
+    $inputElement.select2({
         placeholder: $inputElement.attr('placeholder'),
         minimumInputLength: 1,
-        query: function (query) {
-            query.callback({results: matchAll(query.term)});
+        ajax: {
+            url: pyroutes.url('users_and_groups_data'),
+            dataType: 'json',
+            data: function(term, page){
+              return {
+                query: term,
+                types: 'users,groups'
+              };
+            },
+            results: function (data, page){
+              return data;
+            },
+            cache: true
         },
         formatSelection: autocompleteFormatter,
         formatResult: autocompleteFormatter,
         escapeMarkup: function(m) { return m; },
+        id: function(item) { return item.type == 'user' ? item.nname : item.grname },
     }).on("select2-selecting", function(e) {
         // e.choice.id is automatically used as selection value - just set the type of the selection
-        if (e.choice.nname != undefined) {
-            $typeElement.val('user');
-        } else {
-            $typeElement.val('users_group');
-        }
+        $typeElement.val(e.choice.type);
     });
 }
 
@@ -1292,13 +1307,23 @@ var removeReviewMember = function(reviewer_id, repo_name, pull_request_id){
 }
 
 /* activate auto completion of users as PR reviewers */
-var PullRequestAutoComplete = function ($inputElement, users_list) {
+var PullRequestAutoComplete = function ($inputElement) {
     $inputElement.select2(
     {
         placeholder: $inputElement.attr('placeholder'),
         minimumInputLength: 1,
-        query: function (query) {
-            query.callback({results: autocompleteMatchUsers(query.term, users_list)});
+        ajax: {
+            url: pyroutes.url('users_and_groups_data'),
+            dataType: 'json',
+            data: function(term, page){
+              return {
+                query: term
+              };
+            },
+            results: function (data, page){
+              return data;
+            },
+            cache: true
         },
         formatSelection: autocompleteFormatter,
         formatResult: autocompleteFormatter,
@@ -1312,7 +1337,7 @@ var PullRequestAutoComplete = function ($inputElement, users_list) {
 }
 
 
-function addPermAction(perm_type, users_list, groups_list) {
+function addPermAction(perm_type) {
     var template =
         '<td><input type="radio" value="{1}.none" name="perm_new_member_{0}" id="perm_new_member_{0}"></td>' +
         '<td><input type="radio" value="{1}.read" checked="checked" name="perm_new_member_{0}" id="perm_new_member_{0}"></td>' +
@@ -1326,7 +1351,7 @@ function addPermAction(perm_type, users_list, groups_list) {
     var $last_node = $('.last_new_member').last(); // empty tr between last and add
     var next_id = $('.new_members').length;
     $last_node.before($('<tr class="new_members">').append(template.format(next_id, perm_type, _TM['Type name of user or member to grant permission'])));
-    MembersAutoComplete($("#perm_new_member_name_"+next_id), $("#perm_new_member_type_"+next_id), users_list, groups_list);
+    MembersAutoComplete($("#perm_new_member_name_"+next_id), $("#perm_new_member_type_"+next_id));
 }
 
 function ajaxActionRevokePermission(url, obj_id, obj_type, field_id, extra_data) {

@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+import json
+
 from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
 from kallithea.model.meta import Session
@@ -61,3 +64,21 @@ class TestHomeController(TestController):
             RepoModel().delete(u'gr1/repo_in_group')
             RepoGroupModel().delete(repo_group=u'gr1', force_delete=True)
             Session().commit()
+
+    def test_users_and_groups_data(self):
+        fixture.create_user('evil', firstname=u'D\'o\'ct"o"r', lastname=u'Évíl')
+        fixture.create_user_group(u'grrrr', user_group_description=u"Groüp")
+        response = self.app.get(url('users_and_groups_data', query=u'evi'))
+        result = json.loads(response.body)['results']
+        assert result[0].get('fname') == u'D\'o\'ct"o"r'
+        assert result[0].get('lname') == u'Évíl'
+        response = self.app.get(url('users_and_groups_data', key=u'evil'))
+        result = json.loads(response.body)['results']
+        assert result[0].get('fname') == u'D\'o\'ct"o"r'
+        assert result[0].get('lname') == u'Évíl'
+        response = self.app.get(url('users_and_groups_data', query=u'rrrr'))
+        result = json.loads(response.body)['results']
+        assert not result
+        response = self.app.get(url('users_and_groups_data', types='users,groups', query=u'rrrr'))
+        result = json.loads(response.body)['results']
+        assert result[0].get('grname') == u'grrrr'

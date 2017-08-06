@@ -106,6 +106,7 @@
               pyroutes.register('changeset_home', ${h.js(h.url('changeset_home', repo_name='%(repo_name)s', revision='%(revision)s'))}, ['repo_name', 'revision']);
               pyroutes.register('repo_size', ${h.js(h.url('repo_size', repo_name='%(repo_name)s'))}, ['repo_name']);
               pyroutes.register('repo_refs_data', ${h.js(h.url('repo_refs_data', repo_name='%(repo_name)s'))}, ['repo_name']);
+              pyroutes.register('users_and_groups_data', ${h.js(h.url('users_and_groups_data'))}, []);
              });
         </script>
 
