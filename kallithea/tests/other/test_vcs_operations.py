@@ -96,7 +96,7 @@ def _add_files_and_push(webserver, vcs, DEST, ignoreReturnCode=False, files_no=3
     cwd = os.path.join(DEST)
     #added_file = '%ssetupążźć.py' % _RandomNameSequence().next()
     added_file = '%ssetup.py' % _RandomNameSequence().next()
-    Command(cwd).execute('touch %s' % added_file)
+    open(os.path.join(cwd, added_file), 'a').close()
     Command(cwd).execute('%s add %s' % (vcs, added_file))
 
     email = 'me@example.com'
