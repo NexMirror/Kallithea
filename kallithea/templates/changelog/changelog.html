@@ -38,7 +38,7 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                 <div class="changelog-heading clearfix" style="${'display:none' if c.changelog_for_path else ''}">
                     <div class="pull-left">
                         ${h.form(h.url.current(),method='get',class_="form-inline")}
-                            ${h.submit('set',_('Show'),class_="btn btn-default btn-sm")}
+                            ${h.submit(None,_('Show'),id='set_size_submit',class_="btn btn-default btn-sm")}
                             ${h.text('size',size=3,value=c.size,class_='form-control')}
                             ${_('revisions')}
                             %if c.branch_name:
