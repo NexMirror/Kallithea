@@ -2312,7 +2312,7 @@ class ChangesetStatus(Base, BaseDbModel):
     def __json__(self):
         return dict(
             status=self.status,
-            modified_at=self.modified_at,
+            modified_at=self.modified_at.replace(microsecond=0),
             reviewer=self.author.username,
             )
 

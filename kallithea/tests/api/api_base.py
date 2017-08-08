@@ -2501,7 +2501,7 @@ class _BaseTestApi(object):
         review = result["reviews"][0]
         expected = {
             'status': 'approved',
-            'modified_at': reviewobjs[0].modified_at.isoformat()[:-3],
+            'modified_at': reviewobjs[0].modified_at.replace(microsecond=0).isoformat(),
             'reviewer': 'test_admin',
         }
         assert review == expected
@@ -2550,13 +2550,13 @@ class _BaseTestApi(object):
             "comments": [{"username": TEST_USER_ADMIN_LOGIN, "text": "",
                          "comment_id": pullrequest.comments[0].comment_id}],
             "owner": TEST_USER_ADMIN_LOGIN,
-            "statuses": [{"status": "under_review", "reviewer": TEST_USER_ADMIN_LOGIN, "modified_at": "2000-01-01T00:00:00.000"} for i in range(0, len(self.TEST_PR_REVISIONS))],
+            "statuses": [{"status": "under_review", "reviewer": TEST_USER_ADMIN_LOGIN, "modified_at": "2000-01-01T00:00:00"} for i in range(0, len(self.TEST_PR_REVISIONS))],
             "title": "get test",
             "revisions": self.TEST_PR_REVISIONS,
         }
         self._compare_ok(random_id, expected,
-                         given=re.sub("\d\d\d\d\-\d\d\-\d\dT\d\d\:\d\d\:\d\d\.\d\d\d",
-                                      "2000-01-01T00:00:00.000", response.body))
+                         given=re.sub("\d\d\d\d\-\d\d\-\d\dT\d\d\:\d\d\:\d\d",
+                                      "2000-01-01T00:00:00", response.body))
 
     def test_api_close_pullrequest(self):
         pull_request_id = fixture.create_pullrequest(self, self.REPO, self.TEST_PR_SRC, self.TEST_PR_DST, u'close test')
