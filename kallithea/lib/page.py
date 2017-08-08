@@ -14,12 +14,14 @@
 """
 Custom paging classes
 """
-
+import logging
 import math
 import re
 from kallithea.config.routing import url
 from webhelpers.html import literal, HTML
 from webhelpers.paginate import Page as _Page
+
+log = logging.getLogger(__name__)
 
 
 class Page(_Page):
@@ -188,6 +190,7 @@ class RepoPage(Page):
         try:
             self.page = int(page)  # make it int() if we get it as a string
         except (ValueError, TypeError):
+            log.error("Invalid page value: %r" % page)
             self.page = 1
 
         self.items_per_page = items_per_page
