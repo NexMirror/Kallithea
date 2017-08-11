@@ -57,7 +57,6 @@
         <div class="comment-help">${_('Commenting on line.')}
           <span class="text-muted">${_('Comments are in plain text. Use @username inside this text to notify another user.')|n}</span>
         </div>
-        <div class="mentions-container"></div>
         <textarea name="text" class="form-control comment-block-ta yui-ac-input"></textarea>
 
         <div id="status_block_container" class="status-block general-only hidden">
@@ -158,10 +157,6 @@
 
 ## MAIN COMMENT FORM
 <%def name="comments(change_status=True)">
-
-## global, shared for all edit boxes
-<div class="mentions-container" id="mentions_container"></div>
-
 <div class="inline-comments inline-comments-general
             ${'show-general-status' if change_status else ''}">
   <div id="comments-general-comments" class="">

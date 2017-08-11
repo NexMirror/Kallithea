@@ -140,7 +140,6 @@ ${self.repo_context_bar('showpullrequest')}
           </div>
           <div class="pr-do-edit ac" style="display:none">
                ${h.text('owner', class_='form-control', value=c.pull_request.owner.username, placeholder=_('Username'))}
-               <div id="owner_completion_container"></div>
           </div>
         </div>
 
@@ -243,7 +242,6 @@ ${self.repo_context_bar('showpullrequest')}
           <div class='ac'>
             <div class="reviewer_ac">
                ${h.text('user', class_='yui-ac-input form-control',placeholder=_('Type name of reviewer to add'))}
-               <div id="reviewers_container"></div>
             </div>
           </div>
           %endif
@@ -360,8 +358,8 @@ ${self.repo_context_bar('showpullrequest')}
 
     <script type="text/javascript">
       $(document).ready(function(){
-          PullRequestAutoComplete($('#user'), $('#reviewers_container'), _USERS_AC_DATA);
-          SimpleUserAutoComplete($('#owner'), $('#owner_completion_container'), _USERS_AC_DATA);
+          PullRequestAutoComplete($('#user'), _USERS_AC_DATA);
+          SimpleUserAutoComplete($('#owner'), _USERS_AC_DATA);
 
           $('.code-difftable').on('click', '.add-bubble', function(e){
               show_comment_form($(this));

@@ -1951,14 +1951,6 @@ table.code-browser i[class^='icon-'] {
     z-index: 2;
 }
 
-
-.mentions-container {
-    width: 90% !important;
-}
-.mentions-container .yui-ac-content {
-    width: 100% !important;
-}
-
 .ac {
     vertical-align: top;
 }
