@@ -26,20 +26,8 @@ from paste.script.appinstall import AbstractInstallCommand
 from kallithea.lib.paster_commands.common import BasePasterCommand
 
 
-class Command(BasePasterCommand):
-    '''Kallithea: Install into IIS using isapi-wsgi'''
-
-    requires_db_session = False
-
-    def take_action(self, args):
-        config_file = os.path.abspath(args.config_file)
-        try:
-            import isapi_wsgi
-        except ImportError:
-            self.error('missing requirement: isapi-wsgi not installed')
-
-        file = '''\
-# Created by Kallithea install_iis
+dispath_py_template = '''\
+# Created by Kallithea 'gearbox install-iis'
 import sys
 
 if hasattr(sys, "isapidllhandle"):
@@ -74,14 +62,24 @@ if __name__=='__main__':
     HandleCommandLine(params)
 '''
 
-        outdata = file % {
-                'inifile': config_file.replace('\\', '\\\\'),
-                'virtualdir': args.virtualdir,
-                }
+class Command(BasePasterCommand):
+    '''Kallithea: Install into IIS using isapi-wsgi'''
+
+    requires_db_session = False
+
+    def take_action(self, args):
+        config_file = os.path.abspath(args.config_file)
+        try:
+            import isapi_wsgi
+        except ImportError:
+            self.error('missing requirement: isapi-wsgi not installed')
 
         dispatchfile = os.path.join(os.getcwd(), 'dispatch.py')
-        self.ensure_file(dispatchfile, outdata, False)
-        print 'Generating %s' % (dispatchfile,)
+        print 'Writing %s' % dispatchfile
+        self.ensure_file(dispatchfile, dispath_py_template % {
+                'inifile': config_file.replace('\\', '\\\\'),
+                'virtualdir': args.virtualdir,
+                }, False)
 
         print ('Run \'python "%s" install\' with administrative privileges '
             'to generate the _dispatch.dll file and install it into the '
