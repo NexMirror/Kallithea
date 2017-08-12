@@ -28,18 +28,16 @@ class DaemonLock(object):
     """daemon locking
     USAGE:
     try:
-        l = DaemonLock(file_='/path/tolockfile',desc='test lock')
+        l = DaemonLock('/path/tolockfile',desc='test lock')
         main()
         l.release()
     except LockHeld:
         sys.exit(1)
     """
 
-    def __init__(self, file_=None, callbackfn=None,
+    def __init__(self, file_, callbackfn=None,
                  desc='daemon lock', debug=False):
-
-        lock_name = os.path.join(os.path.dirname(__file__), 'running.lock')
-        self.pidfile = file_ if file_ else lock_name
+        self.pidfile = file_
         self.callbackfn = callbackfn
         self.desc = desc
         self.debug = debug

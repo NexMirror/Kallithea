@@ -109,7 +109,7 @@ def locked_task(func):
 
         log.info('running task with lockkey %s', lockkey)
         try:
-            l = DaemonLock(file_=os.path.join(lockkey_path, lockkey))
+            l = DaemonLock(os.path.join(lockkey_path, lockkey))
             ret = func(*fargs, **fkwargs)
             l.release()
             return ret

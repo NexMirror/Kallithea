@@ -82,7 +82,7 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
     log.info('running task with lockkey %s', lockkey)
 
     try:
-        lock = l = celerylib.DaemonLock(file_=os.path.join(lockkey_path, lockkey))
+        lock = celerylib.DaemonLock(os.path.join(lockkey_path, lockkey))
 
         # for js data compatibility cleans the key for person from '
         akc = lambda k: person(k).replace('"', "")
