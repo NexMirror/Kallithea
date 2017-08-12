@@ -52,8 +52,8 @@ class Command(BasePasterCommand):
         )
         ext_file = os.path.join(here, 'rcextensions', '__init__.py')
         if os.path.exists(ext_file):
-            msg = ('Extension file already exists, do you want '
-                   'to overwrite it ? [y/n]')
+            msg = ('Extension file %s already exists, do you want '
+                   'to overwrite it ? [y/n]') % ext_file
             if not ask_ok(msg):
                 print 'Nothing done, exiting...'
                 return
