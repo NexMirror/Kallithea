@@ -41,7 +41,7 @@ class Command(BasePasterCommand):
     The file contains instructions on how it can be customized.
     """
 
-    takes_config_file = False
+    requires_db_session = False
 
     def take_action(self, args):
         from tg import config
