@@ -21,7 +21,6 @@ IIS installation tools for Kallithea
 
 import os
 import sys
-from paste.script.appinstall import AbstractInstallCommand
 
 from kallithea.lib.paster_commands.common import BasePasterCommand
 
