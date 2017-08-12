@@ -57,8 +57,7 @@ class Command(BasePasterCommand):
         from kallithea.lib.pidlock import LockHeld, DaemonLock
         from kallithea.lib.indexers.daemon import WhooshIndexingDaemon
         try:
-            l = DaemonLock(file_=os.path.join(dirname(dirname(index_location)),
-                                              'make_index.lock'))
+            l = DaemonLock(file_=os.path.join(index_location, 'make_index.lock'))
             WhooshIndexingDaemon(index_location=index_location,
                                  repo_location=repo_location,
                                  repo_list=repo_list,
