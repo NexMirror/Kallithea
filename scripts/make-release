@@ -31,9 +31,7 @@ python2 setup.py compile_catalog
 python2 setup.py sdist
 
 echo "Verifying dist file content"
-tar tf dist/Kallithea-*.tar.gz | sed "s|^$namerel/||" | LANG=C sort > scripts/manifest
-hg diff
-hg up -c . # fail if manifest changed
+diff -u <(hg mani | grep -v '^\.hg' | LANG=C sort) <(tar tf dist/Kallithea-*.tar.gz | sed "s|^$namerel/||" | grep . | grep -v '^kallithea/i18n/.*/LC_MESSAGES/kallithea.mo$\|^Kallithea.egg-info/\|^PKG-INFO$\|/$' | LANG=C sort)
 
 echo "Now, make sure"
 echo "* the copyright and contributor lists have been updated"
