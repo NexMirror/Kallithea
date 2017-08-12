@@ -75,10 +75,11 @@ class Command(BasePasterCommand):
 
         dispatchfile = os.path.join(os.getcwd(), 'dispatch.py')
         print 'Writing %s' % dispatchfile
-        self.ensure_file(dispatchfile, dispath_py_template % {
+        with file(dispatchfile, 'w') as f:
+            f.write(dispath_py_template % {
                 'inifile': config_file.replace('\\', '\\\\'),
                 'virtualdir': args.virtualdir,
-                }, False)
+                })
 
         print ('Run \'python "%s" install\' with administrative privileges '
             'to generate the _dispatch.dll file and install it into the '
