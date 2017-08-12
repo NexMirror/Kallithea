@@ -4,7 +4,6 @@ import argparse
 
 import kallithea
 from kallithea.lib.paster_commands.common import BasePasterCommand
-from kallithea.lib.utils import load_rcextensions
 from kallithea.lib.utils2 import str2bool
 
 __all__ = ['Command']
@@ -16,21 +15,12 @@ class Command(BasePasterCommand):
     # Starts the celery worker using configuration from a paste.deploy
     # configuration file.
 
-    requires_db_session = False # will start session on demand
-
     def take_action(self, args):
-        from kallithea.lib import celerypylons
-        try:
-            CELERY_ON = str2bool(self.config['app_conf'].get('use_celery'))
-        except KeyError:
-            CELERY_ON = False
-
-        if not CELERY_ON:
+        if not kallithea.CELERY_ON:
             raise Exception('Please set use_celery = true in .ini config '
                             'file before running celeryd')
-        kallithea.CELERY_ON = CELERY_ON
 
-        load_rcextensions(self.config['here'])
+        from kallithea.lib import celerypylons
         cmd = celerypylons.worker.worker(celerypylons.app.app_or_default())
 
         celery_args = args.celery_args

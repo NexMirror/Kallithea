@@ -41,7 +41,7 @@ from kallithea import CELERY_ON
 from kallithea.lib import celerylib
 from kallithea.lib.helpers import person
 from kallithea.lib.rcmail.smtp_mailer import SmtpMailer
-from kallithea.lib.utils import setup_cache_regions, action_logger
+from kallithea.lib.utils import action_logger
 from kallithea.lib.utils2 import str2bool
 from kallithea.lib.vcs.utils import author_email
 from kallithea.lib.compat import json, OrderedDict
@@ -49,8 +49,6 @@ from kallithea.lib.hooks import log_create_repository
 
 from kallithea.model.db import Statistics, RepoGroup, Repository, User
 
-
-setup_cache_regions(config)  # pragma: no cover
 
 __all__ = ['whoosh_index', 'get_commits_stats', 'send_email']
 
