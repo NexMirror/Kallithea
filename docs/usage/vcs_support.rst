@@ -138,6 +138,7 @@ When the repositories are added correctly on the filesystem:
 * go to *Admin > Settings > Remap and Rescan* in the Kallithea web interface
 * select the *Install Git hooks* checkbox when importing Git repositories
 * click *Rescan Repositories*
+
 This step will scan the filesystem and create the appropriate repository groups
 and repositories in Kallithea.
 

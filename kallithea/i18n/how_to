@@ -95,3 +95,6 @@ Edit kallithea/tests/test.ini file and set lang attribute to::
 Run Kallithea tests by executing::
 
     py.test
+
+
+.. _Weblate: http://weblate.org/

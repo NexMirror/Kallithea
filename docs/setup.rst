@@ -763,9 +763,9 @@ Apache subdirectory part:
 
 .. code-block:: apache
 
-    <Location /<someprefix> >
-      ProxyPass http://127.0.0.1:5000/<someprefix>
-      ProxyPassReverse http://127.0.0.1:5000/<someprefix>
+    <Location /PREFIX >
+      ProxyPass http://127.0.0.1:5000/PREFIX
+      ProxyPassReverse http://127.0.0.1:5000/PREFIX
       SetEnvIf X-Url-Scheme https HTTPS=1
     </Location>
 
@@ -778,9 +778,9 @@ Add the following at the end of the .ini file::
 
     [filter:proxy-prefix]
     use = egg:PasteDeploy#prefix
-    prefix = /<someprefix>
+    prefix = /PREFIX
 
-then change ``<someprefix>`` into your chosen prefix
+then change ``PREFIX`` into your chosen prefix
 
 
 Apache with mod_wsgi
