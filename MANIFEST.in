@@ -1,20 +1,29 @@
+include           .coveragerc
 include           Apache-License-2.0.txt
 include           CONTRIBUTORS
 include           COPYING
+include           Jenkinsfile
 include           LICENSE-MERGELY.html
 include           LICENSE.md
 include           MIT-Permissive-License.txt
 include           README.rst
+include           dev_requirements.txt
 include           development.ini
+include           pytest.ini
+include           requirements.txt
+include           tox.ini
 recursive-include docs *
 recursive-include init.d *
 recursive-include kallithea/alembic *
 include           kallithea/bin/ldap_sync.conf
-include           kallithea/bin/template.ini.mako
+include           kallithea/lib/paster_commands/template.ini.mako
 recursive-include kallithea/i18n *
 recursive-include kallithea/public *
 recursive-include kallithea/templates *
 recursive-include kallithea/tests/fixtures *
 recursive-include kallithea/tests/scripts *
+include           kallithea/tests/models/test_dump_html_mails.ref.html
+include           kallithea/tests/performance/test_vcs.py
 include           kallithea/tests/test.ini
 include           kallithea/tests/vcs/aconfig
+recursive-include scripts *
