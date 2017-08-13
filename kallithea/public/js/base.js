@@ -1153,7 +1153,7 @@ var SimpleUserAutoComplete = function ($inputElement, users_list) {
     });
 }
 
-var MembersAutoComplete = function ($inputElement, users_list, groups_list) {
+var MembersAutoComplete = function ($inputElement, $typeElement, users_list, groups_list) {
 
     var matchAll = function (sQuery) {
         var u = autocompleteMatchUsers(sQuery, users_list);
@@ -1161,26 +1161,24 @@ var MembersAutoComplete = function ($inputElement, users_list, groups_list) {
         return u.concat(g);
     };
 
-    var membersAC = autocompleteCreate($inputElement, matchAll);
-
-    // Handler for selection of an entry
-    var itemSelectHandler = function (sType, aArgs) {
-        var nextId = $inputElement.prop('id').split('perm_new_member_name_')[1];
-        var myAC = aArgs[0]; // reference back to the AC instance
-        var elLI = aArgs[1]; // reference to the selected LI element
-        var oData = aArgs[2]; // object literal of selected item's result data
-        //fill the autocomplete with value
-        if (oData.nname != undefined) {
-            //users
-            myAC.getInputEl().value = oData.nname;
-            $('#perm_new_member_type_'+nextId).val('user');
+    $inputElement.select2(
+    {
+        placeholder: $inputElement.attr('placeholder'),
+        minimumInputLength: 1,
+        query: function (query) {
+            query.callback({results: matchAll(query.term)});
+        },
+        formatSelection: autocompleteFormatter,
+        formatResult: autocompleteFormatter,
+        escapeMarkup: function(m) { return m; },
+    }).on("select2-selecting", function(e) {
+        // e.choice.id is automatically used as selection value - just set the type of the selection
+        if (e.choice.nname != undefined) {
+            $typeElement.val('user');
         } else {
-            //groups
-            myAC.getInputEl().value = oData.grname;
-            $('#perm_new_member_type_'+nextId).val('users_group');
+            $typeElement.val('users_group');
         }
-    };
-    membersAC.itemSelectEvent.subscribe(itemSelectHandler);
+    });
 }
 
 var MentionsAutoComplete = function ($inputElement, users_list) {
@@ -1340,17 +1338,15 @@ function addPermAction(perm_type, users_list, groups_list) {
         '<td><input type="radio" value="{1}.read" checked="checked" name="perm_new_member_{0}" id="perm_new_member_{0}"></td>' +
         '<td><input type="radio" value="{1}.write" name="perm_new_member_{0}" id="perm_new_member_{0}"></td>' +
         '<td><input type="radio" value="{1}.admin" name="perm_new_member_{0}" id="perm_new_member_{0}"></td>' +
-        '<td class="ac">' +
-            '<div class="perm_ac" id="perm_ac_{0}">' +
-                '<input class="yui-ac-input" id="perm_new_member_name_{0}" name="perm_new_member_name_{0}" value="" type="text">' +
+        '<td>' +
+                '<input class="form-control" id="perm_new_member_name_{0}" name="perm_new_member_name_{0}" value="" type="text" placeholder="{2}">' +
                 '<input id="perm_new_member_type_{0}" name="perm_new_member_type_{0}" value="" type="hidden">' +
-            '</div>' +
         '</td>' +
         '<td></td>';
     var $last_node = $('.last_new_member').last(); // empty tr between last and add
     var next_id = $('.new_members').length;
-    $last_node.before($('<tr class="new_members">').append(template.format(next_id, perm_type)));
-    MembersAutoComplete($("#perm_new_member_name_"+next_id), users_list, groups_list);
+    $last_node.before($('<tr class="new_members">').append(template.format(next_id, perm_type, _TM['Type name of user or member to grant permission'])));
+    MembersAutoComplete($("#perm_new_member_name_"+next_id), $("#perm_new_member_type_"+next_id), users_list, groups_list);
 }
 
 function ajaxActionRevokePermission(url, obj_id, obj_type, field_id, extra_data) {
