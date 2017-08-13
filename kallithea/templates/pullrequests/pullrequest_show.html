@@ -138,8 +138,8 @@ ${self.repo_context_bar('showpullrequest')}
                   <span>${c.pull_request.owner.full_name_and_username}</span><br/>
                   <span><a href="mailto:${c.pull_request.owner.email}">${c.pull_request.owner.email}</a></span><br/>
           </div>
-          <div class="pr-do-edit ac" style="display:none">
-               ${h.text('owner', class_='form-control', value=c.pull_request.owner.username, placeholder=_('Username'))}
+          <div class="pr-do-edit" style="display:none">
+               ${h.text('owner', class_='form-control', value=c.pull_request.owner.username, placeholder=_('Type name of user'))}
           </div>
         </div>
 

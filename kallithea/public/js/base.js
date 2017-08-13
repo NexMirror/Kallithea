@@ -1132,21 +1132,25 @@ var autocompleteCreate = function ($inputElement, matchFunc) {
 }
 
 var SimpleUserAutoComplete = function ($inputElement, users_list) {
-
-    var matchUsers = function (sQuery) {
-        return autocompleteMatchUsers(sQuery, users_list);
-    }
-
-    var userAC = autocompleteCreate($inputElement, matchUsers);
-
-    // Handler for selection of an entry
-    var itemSelectHandler = function (sType, aArgs) {
-        var myAC = aArgs[0]; // reference back to the AC instance
-        var elLI = aArgs[1]; // reference to the selected LI element
-        var oData = aArgs[2]; // object literal of selected item's result data
-        myAC.getInputEl().value = oData.nname;
-    };
-    userAC.itemSelectEvent.subscribe(itemSelectHandler);
+    $inputElement.select2(
+    {
+        formatInputTooShort: $inputElement.attr('placeholder'),
+        initSelection : function (element, callback) {
+            var val = $inputElement.val();
+            $.each(users_list, function(i, user) {
+                if (user.nname == val)
+                    callback(user);
+            });
+        },
+        minimumInputLength: 1,
+        query: function (query) {
+            query.callback({results: autocompleteMatchUsers(query.term, users_list)});
+        },
+        formatSelection: autocompleteFormatter,
+        formatResult: autocompleteFormatter,
+        escapeMarkup: function(m) { return m; },
+        id: function(item) { return item.nname; },
+    });
 }
 
 var MembersAutoComplete = function ($inputElement, users_list, groups_list) {
