@@ -1055,7 +1055,11 @@ var autocompleteGravatar = function(res, gravatar_lnk, size, group) {
 
 // Custom formatter to highlight the matching letters
 var autocompleteFormatter = function (oResultData, sQuery, sResultMatch) {
-    var query = sQuery.toLowerCase();
+    var query;
+    if (sQuery && sQuery.toLowerCase) // YAHOO AutoComplete
+        query = sQuery.toLowerCase();
+    else if (sResultMatch && sResultMatch.term) // select2 - parameter names doesn't match
+        query = sResultMatch.term.toLowerCase();
 
     // group
     if (oResultData.grname != undefined) {
