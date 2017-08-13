@@ -3241,10 +3241,6 @@ body table.dataTable thead .sorting_desc::after {
     color: #777777;
 }
 
-.grid_edit a {
-    text-decoration: none;
-}
-
 .changes_txt {
     clear: both;
 }
