@@ -1315,25 +1315,22 @@ var removeReviewMember = function(reviewer_id, repo_name, pull_request_id){
 
 /* activate auto completion of users as PR reviewers */
 var PullRequestAutoComplete = function ($inputElement, users_list) {
-    var matchUsers = function (sQuery) {
-        return autocompleteMatchUsers(sQuery, users_list);
-    };
-
-    var reviewerAC = autocompleteCreate($inputElement, matchUsers);
-    reviewerAC.suppressInputUpdate = true;
-
-    // Handler for selection of an entry
-    if(reviewerAC.itemSelectEvent){
-        reviewerAC.itemSelectEvent.subscribe(function (sType, aArgs) {
-            var myAC = aArgs[0]; // reference back to the AC instance
-            var elLI = aArgs[1]; // reference to the selected LI element
-            var oData = aArgs[2]; // object literal of selected item's result data
-
-            addReviewMember(oData.id, oData.fname, oData.lname, oData.nname,
-                            oData.gravatar_lnk, oData.gravatar_size);
-            myAC.getInputEl().value = '';
-        });
-    }
+    $inputElement.select2(
+    {
+        placeholder: $inputElement.attr('placeholder'),
+        minimumInputLength: 1,
+        query: function (query) {
+            query.callback({results: autocompleteMatchUsers(query.term, users_list)});
+        },
+        formatSelection: autocompleteFormatter,
+        formatResult: autocompleteFormatter,
+        escapeMarkup: function(m) { return m; },
+    }).on("select2-selecting", function(e) {
+        addReviewMember(e.choice.id, e.choice.fname, e.choice.lname, e.choice.nname,
+                        e.choice.gravatar_lnk, e.choice.gravatar_size);
+        $inputElement.select2("close");
+        e.preventDefault();
+    });
 }
 
 

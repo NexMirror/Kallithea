@@ -239,10 +239,8 @@ ${self.repo_context_bar('showpullrequest')}
             </ul>
           </div>
           %if editable:
-          <div class='ac'>
-            <div class="reviewer_ac">
-               ${h.text('user', class_='yui-ac-input form-control',placeholder=_('Type name of reviewer to add'))}
-            </div>
+          <div>
+             ${h.text('user', class_='form-control',placeholder=_('Type name of reviewer to add'))}
           </div>
           %endif
         </div>
