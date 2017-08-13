@@ -878,8 +878,9 @@ def gravatar(email_address, cls='', size=30):
     if src:
         # here it makes sense to use style="width: ..." (instead of, say, a
         # stylesheet) because we using this to generate a high-res (retina) size
-        html = ('<img alt="" class="{cls}" style="width: {size}px; height: {size}px" src="{src}"/>'
-            .format(cls=cls, size=size, src=src))
+        html = ('<i class="icon-empty {cls}"'
+                ' style="font-size: {size}px;background-size: {size}px;background-image: url(\'{src}\')"'
+                '></i>').format(cls=cls, size=size, src=src)
 
     else:
         # if src is empty then there was no gravatar, so we use a font icon

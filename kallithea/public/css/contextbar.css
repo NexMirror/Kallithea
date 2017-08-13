@@ -11,6 +11,7 @@ i[class^='icon-'] {
     margin: -2px 0 -4px 0;
     /* background-color: red; /* for debugging */
 }
+/* Note: class 'icon-empty' can be used to get this styling without an actual glyph */
 
 /* css classes for diff file status ... it'd be nice if css had a way to
    inherit from another class but alas, we must make sure this content is the

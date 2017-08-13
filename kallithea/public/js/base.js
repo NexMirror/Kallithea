@@ -1083,7 +1083,9 @@ var gravatar = function(gravatar_lnk, size, cssclass) {
     if (gravatar_lnk == 'default') {
         return '<i class="icon-user {1}" style="font-size: {0}px;"></i>'.format(size, cssclass);
     }
-    return '<img alt="" class="{2}" style="width: {0}px; height: {0}px" src="{1}"/>'.format(size, gravatar_lnk, cssclass);
+    return ('<i class="icon-empty {2}"' +
+            ' style="font-size: {0}px;background-image: url(\'{1}\'); background-size: {0}px"' +
+            '></i>').format(size, gravatar_lnk, cssclass);
 }
 
 var autocompleteGravatar = function(res, gravatar_lnk, size, group) {
