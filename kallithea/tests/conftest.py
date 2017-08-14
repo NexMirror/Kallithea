@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 import logging
 import pkg_resources
@@ -34,12 +35,20 @@ def pytest_configure():
     # Disable INFO logging of test database creation, restore with NOTSET
     logging.disable(logging.INFO)
 
-    context = loadwsgi.loadcontext(loadwsgi.APP, 'config:kallithea/tests/test.ini', relative_to=path)
+    with open(os.path.join(path, 'kallithea/tests/test.ini'), 'r') as input_file:
+        test_ini = input_file.read()
 
     if os.environ.get('TEST_DB'):
-        # swap config if we pass environment variable
-        context.local_conf['sqlalchemy.url'] = os.environ.get('TEST_DB')
+        test_ini = re.sub('^\s*sqlalchemy.url\s*=.*$',
+                           'sqlalchemy.url = %s' % os.environ.get('TEST_DB'),
+                           test_ini,
+                           flags=re.M)
 
+    test_ini_file = os.path.join(TESTS_TMP_PATH, 'test.ini')
+    with open(test_ini_file, 'w') as output_file:
+        output_file.write(test_ini)
+
+    context = loadwsgi.loadcontext(loadwsgi.APP, 'config:%s' % test_ini_file)
     from kallithea.tests.fixture import create_test_env, create_test_index
 
     # set KALLITHEA_NO_TMP_PATH=1 to disable re-creating the database and test repos
