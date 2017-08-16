@@ -41,6 +41,7 @@
                 'Selection Link': ${h.jshtml(_('Selection Link'))},
                 'Collapse Diff': ${h.jshtml(_('Collapse Diff'))},
                 'Expand Diff': ${h.jshtml(_('Expand Diff'))},
+                'No revisions': ${h.jshtml(_('No revisions'))},
                 'Type name of user or member to grant permission': ${h.jshtml(_('Type name of user or member to grant permission'))},
                 'Failed to revoke permission': ${h.jshtml(_('Failed to revoke permission'))},
                 'Confirm to revoke permission for {0}: {1} ?': ${h.jshtml(_('Confirm to revoke permission for {0}: {1} ?'))},
@@ -102,6 +103,7 @@
 
               pyroutes.register('toggle_following', ${h.js(h.url('toggle_following'))});
               pyroutes.register('changeset_info', ${h.js(h.url('changeset_info', repo_name='%(repo_name)s', revision='%(revision)s'))}, ['repo_name', 'revision']);
+              pyroutes.register('changeset_home', ${h.js(h.url('changeset_home', repo_name='%(repo_name)s', revision='%(revision)s'))}, ['repo_name', 'revision']);
               pyroutes.register('repo_size', ${h.js(h.url('repo_size', repo_name='%(repo_name)s'))}, ['repo_name']);
               pyroutes.register('repo_refs_data', ${h.js(h.url('repo_refs_data', repo_name='%(repo_name)s'))}, ['repo_name']);
              });

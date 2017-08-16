@@ -1504,3 +1504,85 @@ var updateRowCountCallback = function updateRowCountCallback($elem, onlyDisplaye
         $elem.html(count);
     }
 };
+
+
+/**
+ * activate changeset parent/child navigation links
+ */
+var activate_parent_child_links = function(){
+    //next links
+    $('#child_link').on('click', function(e){
+        //fetch via ajax what is going to be the next link, if we have
+        //>1 links show them to user to choose
+        if(!$('#child_link').hasClass('disabled')){
+            $.ajax({
+                url: $('#child_link').data('ajax-url'),
+                success: function(data) {
+                    var repo_name = $('#child_link').data('reponame');
+                    if(data.results.length === 0){
+                        $('#child_link').addClass('disabled');
+                        $('#child_link').text(_TM['No revisions']);
+                    }
+                    if(data.results.length === 1){
+                        var commit = data.results[0];
+                        window.location = pyroutes.url('changeset_home', {'repo_name': repo_name, 'revision': commit.raw_id});
+                    }
+                    else if(data.results.length === 2){
+                        $('#child_link').addClass('disabled');
+                        $('#child_link').addClass('double');
+                        var _html = '';
+                        _html +='<a title="__title__" href="__url__">__rev__</a> <i class="icon-right-open"></i>'
+                                .replace('__rev__','r{0}:{1}'.format(data.results[0].revision, data.results[0].raw_id.substr(0,6)))
+                                .replace('__title__', data.results[0].message)
+                                .replace('__url__', pyroutes.url('changeset_home', {'repo_name': repo_name, 'revision': data.results[0].raw_id}));
+                        _html +='<br/>'
+                        _html +='<a title="__title__" href="__url__">__rev__</a> <i class="icon-right-open"></i>'
+                                .replace('__rev__','r{0}:{1}'.format(data.results[1].revision, data.results[1].raw_id.substr(0,6)))
+                                .replace('__title__', data.results[1].message)
+                                .replace('__url__', pyroutes.url('changeset_home', {'repo_name': repo_name, 'revision': data.results[1].raw_id}));
+                        $('#child_link').html(_html);
+                    }
+                }
+            });
+        e.preventDefault();
+        }
+    });
+
+    //prev links
+    $('#parent_link').on('click', function(e){
+        //fetch via ajax what is going to be the next link, if we have
+        //>1 links show them to user to choose
+        if(!$('#parent_link').hasClass('disabled')){
+            $.ajax({
+                url: $('#parent_link').data('ajax-url'),
+                success: function(data) {
+                    var repo_name = $('#parent_link').data('reponame');
+                    if(data.results.length === 0){
+                        $('#parent_link').addClass('disabled');
+                        $('#parent_link').text(_TM['No revisions']);
+                    }
+                    if(data.results.length === 1){
+                        var commit = data.results[0];
+                        window.location = pyroutes.url('changeset_home', {'repo_name': repo_name, 'revision': commit.raw_id});
+                    }
+                    else if(data.results.length === 2){
+                        $('#parent_link').addClass('disabled');
+                        $('#parent_link').addClass('double');
+                        var _html = '';
+                        _html +='<i class="icon-left-open"></i> <a title="__title__" href="__url__">__rev__</a>'
+                                .replace('__rev__','r{0}:{1}'.format(data.results[0].revision, data.results[0].raw_id.substr(0,6)))
+                                .replace('__title__', data.results[0].message)
+                                .replace('__url__', pyroutes.url('changeset_home', {'repo_name': repo_name, 'revision': data.results[0].raw_id}));
+                        _html +='<br/>'
+                        _html +='<i class="icon-left-open"></i> <a title="__title__" href="__url__">__rev__</a>'
+                                .replace('__rev__','r{0}:{1}'.format(data.results[1].revision, data.results[1].raw_id.substr(0,6)))
+                                .replace('__title__', data.results[1].message)
+                                .replace('__url__', pyroutes.url('changeset_home', {'repo_name': repo_name, 'revision': data.results[1].raw_id}));
+                        $('#parent_link').html(_html);
+                    }
+                }
+            });
+        e.preventDefault();
+        }
+    });
+}

@@ -31,17 +31,7 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
   <div class="panel-body">
     <div class="panel panel-default">
         <div class="panel-heading clearfix">
-            <div class="parents pull-left">
-                <div id="parent_link">
-                    <i class="icon-left-open"></i> <a href="#">${_('Parent rev.')}</a>
-                </div>
-            </div>
-
-            <div class="pull-right children">
-                <div id="child_link">
-                    <a href="#">${_('Child rev.')}</a> <i class="icon-right-open"></i>
-                </div>
-            </div>
+            ${self.parent_child_navigation()}
 
             <div class="pull-left">
                 <div class="pull-left" title="${_('Changeset status')}">
@@ -213,84 +203,6 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
           });
 
           move_comments($(".comments .comments-list-chunk"));
-
-          pyroutes.register('changeset_home',
-                            ${h.js(h.url('changeset_home', repo_name='%(repo_name)s', revision='%(revision)s'))},
-                            ['repo_name', 'revision']);
-
-          //next links
-          $('#child_link').on('click', function(e){
-              //fetch via ajax what is going to be the next link, if we have
-              //>1 links show them to user to choose
-              if(!$('#child_link').hasClass('disabled')){
-                  $.ajax({
-                    url: ${h.js(h.url('changeset_children',repo_name=c.repo_name, revision=c.changeset.raw_id))},
-                    success: function(data) {
-                      if(data.results.length === 0){
-                          $('#child_link').addClass('disabled');
-                          $('#child_link').html(${h.jshtml(_('No revisions'))});
-                      }
-                      if(data.results.length === 1){
-                          var commit = data.results[0];
-                          window.location = pyroutes.url('changeset_home', {'repo_name': ${h.js(c.repo_name)},'revision': commit.raw_id});
-                      }
-                      else if(data.results.length === 2){
-                          $('#child_link').addClass('disabled');
-                          $('#child_link').addClass('double');
-                          var _html = '';
-                          _html +='<a title="__title__" href="__url__">__rev__</a> <i class="icon-right-open"></i>'
-                                  .replace('__rev__','r{0}:{1}'.format(data.results[0].revision, data.results[0].raw_id.substr(0,6)))
-                                  .replace('__title__', data.results[0].message)
-                                  .replace('__url__', pyroutes.url('changeset_home', {'repo_name': ${h.js(c.repo_name)},'revision': data.results[0].raw_id}));
-                          _html +='<br/>'
-                          _html +='<a title="__title__" href="__url__">__rev__</a> <i class="icon-right-open"></i>'
-                                  .replace('__rev__','r{0}:{1}'.format(data.results[1].revision, data.results[1].raw_id.substr(0,6)))
-                                  .replace('__title__', data.results[1].message)
-                                  .replace('__url__', pyroutes.url('changeset_home', {'repo_name': ${h.js(c.repo_name)},'revision': data.results[1].raw_id}));
-                          $('#child_link').html(_html);
-                      }
-                    }
-                  });
-              e.preventDefault();
-              }
-          });
-
-          //prev links
-          $('#parent_link').on('click', function(e){
-              //fetch via ajax what is going to be the next link, if we have
-              //>1 links show them to user to choose
-              if(!$('#parent_link').hasClass('disabled')){
-                  $.ajax({
-                    url: ${h.js(h.url('changeset_parents',repo_name=c.repo_name, revision=c.changeset.raw_id))},
-                    success: function(data) {
-                      if(data.results.length === 0){
-                          $('#parent_link').addClass('disabled');
-                          $('#parent_link').html(${h.jshtml(_('No revisions'))});
-                      }
-                      if(data.results.length === 1){
-                          var commit = data.results[0];
-                          window.location = pyroutes.url('changeset_home', {'repo_name': ${h.js(c.repo_name)},'revision': commit.raw_id});
-                      }
-                      else if(data.results.length === 2){
-                          $('#parent_link').addClass('disabled');
-                          $('#parent_link').addClass('double');
-                          var _html = '';
-                          _html +='<i class="icon-left-open"></i> <a title="__title__" href="__url__">__rev__</a>'
-                                  .replace('__rev__','r{0}:{1}'.format(data.results[0].revision, data.results[0].raw_id.substr(0,6)))
-                                  .replace('__title__', data.results[0].message)
-                                  .replace('__url__', pyroutes.url('changeset_home', {'repo_name': ${h.js(c.repo_name)},'revision': data.results[0].raw_id}));
-                          _html +='<br/>'
-                          _html +='<i class="icon-left-open"></i> <a title="__title__" href="__url__">__rev__</a>'
-                                  .replace('__rev__','r{0}:{1}'.format(data.results[1].revision, data.results[1].raw_id.substr(0,6)))
-                                  .replace('__title__', data.results[1].message)
-                                  .replace('__url__', pyroutes.url('changeset_home', {'repo_name': ${h.js(c.repo_name)},'revision': data.results[1].raw_id}));
-                          $('#parent_link').html(_html);
-                      }
-                    }
-                  });
-              e.preventDefault();
-              }
-          });
 
           // hack: re-navigate to target after JS is done ... if a target is set and setting href thus won't reload
           if (window.location.hash != "") {
