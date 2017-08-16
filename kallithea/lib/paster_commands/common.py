@@ -77,8 +77,6 @@ class BasePasterCommand(gearbox.command.Command):
                 kallithea.config.middleware.make_app_without_logging(self.config.global_conf, **self.config.local_conf)
                 # *now*, tg.config has been set and could be used ... but we just keep using self.config
                 kallithea.lib.utils.setup_cache_regions(self.config)
-                engine = kallithea.lib.utils2.engine_from_config(self.config, 'sqlalchemy.')
-                kallithea.model.base.init_model(engine)
 
         return super(BasePasterCommand, self).run(args)
 

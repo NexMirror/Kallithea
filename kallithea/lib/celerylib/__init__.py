@@ -40,8 +40,6 @@ from kallithea.lib.pidlock import DaemonLock, LockHeld
 from kallithea.model.base import init_model
 from kallithea.model import meta
 
-from sqlalchemy import engine_from_config
-
 
 log = logging.getLogger(__name__)
 
