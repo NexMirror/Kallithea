@@ -1,3 +1,5 @@
+<%namespace name="base" file="/base/base.html"/>
+
 <%def name="file_class(node)">
     %if node.is_file():
         <%return "browser-file" %>
@@ -26,14 +28,7 @@
 </%def>
 <div id="body" class="panel panel-default">
     <div class="panel-heading clearfix">
-        <span class="browser-nav form-inline">
-            <span class="info_box">
-              <span class="info_box_elem rev">${_('Revision')}</span>
-              <span class="info_box_elem"><a class="btn btn-default btn-xs ypjax-link" href="${c.url_prev}" title="${_('Previous revision')}"><i class="icon-left-open"></i></a></span>
-              <span class="info_box_elem">${h.text('at_rev',value=c.changeset.revision,size=5,class_='form-control input-sm')}</span>
-              <span class="info_box_elem"><a class="btn btn-default btn-xs ypjax-link" href="${c.url_next}" title="${_('Next revision')}"><i class="icon-right-open"></i></a></span>
-            </span>
-        </span>
+        ${base.parent_child_navigation()}
     </div>
 
     <div class="panel-body">
