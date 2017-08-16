@@ -43,8 +43,6 @@ class TagsTestCaseMixin(_BackendTestMixin):
     def test_name_with_slash(self):
         self.repo.tag('19/10/11', 'joe')
         self.assertTrue('19/10/11' in self.repo.tags)
-        self.repo.tag('11', 'joe')
-        self.assertTrue('11' in self.repo.tags)
 
 
 # For each backend create test case class
