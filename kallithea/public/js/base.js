@@ -1063,8 +1063,12 @@ var autocompleteMatchGroups = function (sQuery, myGroups) {
     return matches;
 };
 
-// Helper highlight function for the formatter
-var autocompleteHighlightMatch = function (full, snippet, matchindex) {
+// Highlight the snippet if it is found in the full text.
+// Snippet must be lowercased already.
+var autocompleteHighlightMatch = function (full, snippet) {
+    var matchindex = full.toLowerCase().indexOf(snippet);
+    if (matchindex <0)
+        return full;
     return full.substring(0, matchindex)
         + "<span class='match'>"
         + full.substr(matchindex, snippet.length)
@@ -1104,14 +1108,10 @@ var autocompleteFormatter = function (oResultData, sQuery, sResultMatch) {
     if (oResultData.grname != undefined) {
         var grname = oResultData.grname;
         var grmembers = oResultData.grmembers;
-        var grnameMatchIndex = grname.toLowerCase().indexOf(query);
         var grprefix = "{0}: ".format(_TM['Group']);
         var grsuffix = " ({0} {1})".format(grmembers, _TM['members']);
 
-        if (grnameMatchIndex > -1) {
-            return autocompleteGravatar(grprefix + autocompleteHighlightMatch(grname, query, grnameMatchIndex) + grsuffix, null, null, true);
-        }
-        return autocompleteGravatar(grprefix + oResultData.grname + grsuffix, null, null, true);
+        return autocompleteGravatar(grprefix + autocompleteHighlightMatch(grname, query) + grsuffix, null, null, true);
 
     // users
     } else if (oResultData.nname != undefined) {
@@ -1120,30 +1120,13 @@ var autocompleteFormatter = function (oResultData, sQuery, sResultMatch) {
         var nname = oResultData.nname;
 
         // Guard against null value
-        var fnameMatchIndex = fname.toLowerCase().indexOf(query),
-            lnameMatchIndex = lname.toLowerCase().indexOf(query),
-            nnameMatchIndex = nname.toLowerCase().indexOf(query),
-            displayfname, displaylname, displaynname, displayname;
+        var displayfname = autocompleteHighlightMatch(fname, query);
 
-        if (fnameMatchIndex > -1) {
-            displayfname = autocompleteHighlightMatch(fname, query, fnameMatchIndex);
-        } else {
-            displayfname = fname;
-        }
+        var displaylname = autocompleteHighlightMatch(lname, query);
 
-        if (lnameMatchIndex > -1) {
-            displaylname = autocompleteHighlightMatch(lname, query, lnameMatchIndex);
-        } else {
-            displaylname = lname;
-        }
+        var displaynname = autocompleteHighlightMatch(nname, query);
 
-        if (nnameMatchIndex > -1) {
-            displaynname = autocompleteHighlightMatch(nname, query, nnameMatchIndex);
-        } else {
-            displaynname = nname;
-        }
-
-        displayname = displaynname;
+        var displayname = displaynname;
         if (displayfname && displaylname) {
             displayname = "{0} {1} ({2})".format(displayfname, displaylname, displayname);
         }
