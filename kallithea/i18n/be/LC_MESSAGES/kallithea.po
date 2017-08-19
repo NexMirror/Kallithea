@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2017-07-27 13:13+0200\n"
-"PO-Revision-Date: 2017-06-03 21:48+0000\n"
+"PO-Revision-Date: 2017-08-20 10:44+0000\n"
 "Last-Translator: Viktar Vauchkevich <victorenator@gmail.com>\n"
 "Language-Team: Belarusian "
 "<https://hosted.weblate.org/projects/kallithea/kallithea/be/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
 "4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 2.15-dev\n"
+"X-Generator: Weblate 2.17-dev\n"
 
 #: kallithea/controllers/changelog.py:86
 #: kallithea/controllers/pullrequests.py:256 kallithea/lib/base.py:613
@@ -62,16 +62,13 @@ msgid "Such revision does not exist for this repository"
 msgstr "Няма такой рэвізіі ў гэтым рэпазітары"
 
 #: kallithea/controllers/compare.py:67
-#, fuzzy, python-format
-#| msgid "Go to tip of repository"
+#, python-format
 msgid "Could not find other repository %s"
-msgstr "Перайсці на верхавіну рэпазітара"
+msgstr "Не атрымалася знайсці іншы рэпазітар %s"
 
 #: kallithea/controllers/compare.py:73
-#, fuzzy
-#| msgid "Cannot compare repositories without using common ancestor"
 msgid "Cannot compare repositories of different types"
-msgstr "Немагчыма параўноўваць рэпазітары без агульнага продка"
+msgstr "Немагчыма параўноўваць рэпазітары розных тыпаў"
 
 #: kallithea/controllers/compare.py:240
 msgid "Cannot show empty diff"
@@ -1686,8 +1683,7 @@ msgstr ""
 
 #: kallithea/model/pull_request.py:362
 #, fuzzy, python-format
-#| msgid "" "This pull request is based on another %s revision and there is no
-#| simple " "diff."
+#| msgid "" "
 msgid ""
 "This iteration is based on another %s revision and there is no simple "
 "diff."
@@ -4343,8 +4339,7 @@ msgstr "Памер рэпазітара"
 
 #: kallithea/templates/admin/settings/settings_visual.html:57
 #, fuzzy
-#| msgid "" "Number of items displayed in the main page dashboard before
-#| pagination is" " shown."
+#| msgid "" "
 msgid ""
 "Number of items displayed in the repository pages before pagination is "
 "shown."
@@ -7287,4 +7282,3 @@ msgstr "Памер рэпазітара"
 
 #~ msgid "Save as New Pull Request"
 #~ msgstr ""
-
