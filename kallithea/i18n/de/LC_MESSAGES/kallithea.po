@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2017-07-27 13:13+0200\n"
-"PO-Revision-Date: 2017-07-27 14:30+0000\n"
-"Last-Translator: Holger Schramm <info@schramm.by>\n"
+"PO-Revision-Date: 2017-08-20 10:46+0000\n"
+"Last-Translator: Lars <devel@sumpfralle.de>\n"
 "Language-Team: German "
 "<https://hosted.weblate.org/projects/kallithea/kallithea/de/>\n"
 "Language: de\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2.16-dev\n"
+"X-Generator: Weblate 2.17-dev\n"
 
 #: kallithea/controllers/changelog.py:86
 #: kallithea/controllers/pullrequests.py:256 kallithea/lib/base.py:613
@@ -2874,9 +2874,8 @@ msgstr "Profil"
 
 #: kallithea/templates/admin/my_account/my_account.html:26
 #: kallithea/tests/data/templates/admin/my_account/my_account.html.py:122
-#, fuzzy
 msgid "Email Addresses"
-msgstr "Neue E-Mailadresse"
+msgstr "E-Mail-Adressen"
 
 #: kallithea/templates/admin/my_account/my_account.html:28
 #: kallithea/templates/admin/users/user_edit.html:31
@@ -2887,17 +2886,15 @@ msgstr "API Keys"
 
 #: kallithea/templates/admin/my_account/my_account.html:29
 #: kallithea/tests/data/templates/admin/my_account/my_account.html.py:140
-#, fuzzy
 msgid "Owned Repositories"
-msgstr "Repositories"
+msgstr "Eigene Repositories"
 
 #: kallithea/templates/admin/my_account/my_account.html:30
 #: kallithea/templates/journal/journal.html:33
 #: kallithea/tests/data/templates/admin/my_account/my_account.html.py:146
 #: kallithea/tests/data/templates/journal/journal.html.py:196
-#, fuzzy
 msgid "Watched Repositories"
-msgstr "Repositories"
+msgstr "Beobachtete Repositories"
 
 #: kallithea/templates/admin/my_account/my_account.html:31
 #: kallithea/templates/admin/permissions/permissions.html:30
@@ -2907,9 +2904,8 @@ msgstr "Repositories"
 #: kallithea/tests/data/templates/admin/permissions/permissions.html.py:120
 #: kallithea/tests/data/templates/admin/user_groups/user_group_edit.html.py:130
 #: kallithea/tests/data/templates/admin/users/user_edit.html.py:142
-#, fuzzy
 msgid "Show Permissions"
-msgstr "Berechtigungen kopieren"
+msgstr "Berechtigungen anzeigen"
 
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:5
 #: kallithea/templates/admin/users/user_edit_api_keys.html:5
@@ -2922,49 +2918,45 @@ msgstr "Mitgeliefert"
 #: kallithea/templates/admin/users/user_edit_api_keys.html:13
 #: kallithea/tests/data/templates/admin/my_account/my_account_api_keys.html.py:52
 #: kallithea/tests/data/templates/admin/users/user_edit_api_keys.html.py:52
-#, fuzzy, python-format
+#, python-format
 msgid "Confirm to reset this API key: %s"
-msgstr "Zurücksetzen des API Keys \"%s\" bestätigen"
+msgstr "Zurücksetzen des API-Schlüssels \"%s\" bestätigen"
 
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:29
 #: kallithea/templates/admin/users/user_edit_api_keys.html:29
 #: kallithea/tests/data/templates/admin/my_account/my_account_api_keys.html.py:76
 #: kallithea/tests/data/templates/admin/users/user_edit_api_keys.html.py:76
-#, fuzzy
 msgid "Expired"
-msgstr "verfallen"
+msgstr "Verfallen"
 
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:39
 #: kallithea/templates/admin/users/user_edit_api_keys.html:39
 #: kallithea/tests/data/templates/admin/my_account/my_account_api_keys.html.py:91
 #: kallithea/tests/data/templates/admin/users/user_edit_api_keys.html.py:91
-#, fuzzy, python-format
+#, python-format
 msgid "Confirm to remove this API key: %s"
-msgstr "Entfernen des API Keys \"%s\" bestätigen"
+msgstr "Entfernen des API-Schlüssels \"%s\" bestätigen"
 
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:41
 #: kallithea/templates/admin/users/user_edit_api_keys.html:41
 #: kallithea/tests/data/templates/admin/my_account/my_account_api_keys.html.py:93
 #: kallithea/tests/data/templates/admin/users/user_edit_api_keys.html.py:93
-#, fuzzy
 msgid "Remove"
-msgstr "entfernen"
+msgstr "Entfernen"
 
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:48
 #: kallithea/templates/admin/users/user_edit_api_keys.html:48
 #: kallithea/tests/data/templates/admin/my_account/my_account_api_keys.html.py:99
 #: kallithea/tests/data/templates/admin/users/user_edit_api_keys.html.py:99
-#, fuzzy
 msgid "No additional API keys specified"
-msgstr "Keine weiteren API Keys spezifiziert"
+msgstr "Keine weiteren API-Schlüssel angegeben"
 
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:56
 #: kallithea/templates/admin/users/user_edit_api_keys.html:56
 #: kallithea/tests/data/templates/admin/my_account/my_account_api_keys.html.py:104
 #: kallithea/tests/data/templates/admin/users/user_edit_api_keys.html.py:104
-#, fuzzy
 msgid "New API key"
-msgstr "Neuer API Key"
+msgstr "Neuer API-Schlüssel"
 
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:72
 #: kallithea/templates/admin/my_account/my_account_emails.html:46
@@ -2991,6 +2983,10 @@ msgid ""
 "account, as if you had provided the script or service with your actual\n"
 "password.\n"
 msgstr ""
+"\n"
+"API-Schlüssel werden verwendet, um Skripten oder Diensten denselben\n"
+"Zugang zu %s zu gewähren, den Sie mit Eingabe Ihres Passworts\n"
+"erlangen würden.\n"
 
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:86
 msgid ""
@@ -2999,6 +2995,12 @@ msgid ""
 "nor passed to untrusted scripts or services. If such sharing should\n"
 "happen anyway, reset the API key on this page to prevent further use.\n"
 msgstr ""
+"\n"
+"Ebenso wie Passworte, sollten API-Schlüssel somit niemals mit anderen\n"
+"geteilt oder von nicht-vertrauenswürdigen Skripten oder Diensten\n"
+"verwendet werden. Falls ein solcher Zugriff zwischenzeitlich passiert sein\n"
+"sollte, dann können Sie hier den API-Schlüssel zurücksetzen, um weiteren\n"
+"Missbrauchen zu verhindern.\n"
 
 #: kallithea/templates/admin/my_account/my_account_emails.html:9
 #: kallithea/templates/admin/users/user_edit_emails.html:9
@@ -3047,6 +3049,8 @@ msgstr "Bestätige neues Passwort"
 #, python-format
 msgid "This account is managed with %s and the password cannot be changed here"
 msgstr ""
+"Dieser Account wird mit %s verwaltet - daher kann das Passwort nicht "
+"geändert werden"
 
 #: kallithea/templates/admin/my_account/my_account_perms.html:3
 #: kallithea/tests/data/templates/admin/my_account/my_account_profile.html.py:55
@@ -3058,14 +3062,13 @@ msgstr "Aktuelle IP-Adresse"
 #: kallithea/templates/admin/my_account/my_account_profile.html:4
 #: kallithea/templates/admin/users/user_edit_profile.html:4
 msgid "Gravatar"
-msgstr ""
+msgstr "Gravatar"
 
 #: kallithea/templates/admin/my_account/my_account_profile.html:10
 #: kallithea/templates/admin/users/user_edit_profile.html:10
-#, fuzzy, python-format
-#| msgid "Change your avatar at"
+#, python-format
 msgid "Change %s avatar at"
-msgstr "Benutzerbild ändern unter"
+msgstr "Benutzerbild %s ändern unter"
 
 #: kallithea/templates/admin/my_account/my_account_profile.html:12
 #: kallithea/templates/admin/users/user_edit_profile.html:12
@@ -3135,10 +3138,8 @@ msgid "Mark All Read"
 msgstr "Markiere alle als gelesen"
 
 #: kallithea/templates/admin/notifications/notifications_data.html:12
-#, fuzzy
-#| msgid "Mark All Read"
 msgid "Mark as read"
-msgstr "Markiere alle als gelesen"
+msgstr "Markiere als gelesen"
 
 #: kallithea/templates/admin/notifications/notifications_data.html:21
 #: kallithea/tests/data/templates/admin/notifications/notifications_data.html.py:76
@@ -3210,14 +3211,13 @@ msgstr ""
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:19
 #: kallithea/tests/data/templates/admin/permissions/permissions_globals.html.py:53
-#, fuzzy
 msgid "Apply to all existing repositories"
-msgstr "Bestehendes Repository importieren?"
+msgstr "Auf alle bestehenden Repositories anwenden"
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:23
 #: kallithea/tests/data/templates/admin/permissions/permissions_globals.html.py:55
 msgid "Permissions for the Default user on new repositories."
-msgstr ""
+msgstr "Berechtigungen für neue Repositories des Vorgabe-Benutzers."
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:26
 #: kallithea/templates/admin/repos/repo_add_base.html:28
@@ -3243,15 +3243,13 @@ msgstr ""
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:32
 #: kallithea/tests/data/templates/admin/permissions/permissions_globals.html.py:65
-#, fuzzy
 msgid "Apply to all existing repository groups"
-msgstr "Bestehendes Repository importieren?"
+msgstr "Auf alle bestehenden Repository-Gruppen anwenden"
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:36
 #: kallithea/tests/data/templates/admin/permissions/permissions_globals.html.py:67
-#, fuzzy
 msgid "Permissions for the Default user on new repository groups."
-msgstr "Rechte der übergeordneten Repositorygruppe kopieren."
+msgstr "Berechtigungen des Vorgabe-Benutzers für neue Repository-Gruppen."
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:39
 #: kallithea/templates/data_table/_dt_elements.html:154
@@ -3262,15 +3260,14 @@ msgstr "Benutzergruppe"
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:44
 #: kallithea/tests/data/templates/admin/permissions/permissions_globals.html.py:75
-#, fuzzy
 msgid ""
 "All default permissions on each user group will be reset to chosen "
 "permission, note that all custom default permission on user groups will "
 "be lost"
 msgstr ""
-"Alle Standardrechte jeder Benutzergruppe werden auf die gewählten Rechte "
-"gesetzt. Beachten Sie, dass alle spezifischen Standardrechte der "
-"Benutzergruppen verloren gehen"
+"Alle Vorgabe-Berechtigungen jeder Benutzergruppe werden auf die gewählten "
+"Berechtigungen zurückgesetzt. Beachten Sie, dass dabei alle Anpassungen von "
+"Vorgabe-Berechtigungen für Benutzergruppen verloren gehen"
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:45
 #: kallithea/tests/data/templates/admin/permissions/permissions_globals.html.py:77
@@ -3280,13 +3277,12 @@ msgstr "Auf alle bestehenden Benutzergruppen anwenden"
 #: kallithea/templates/admin/permissions/permissions_globals.html:49
 #: kallithea/tests/data/templates/admin/permissions/permissions_globals.html.py:79
 msgid "Permissions for the Default user on new user groups."
-msgstr ""
+msgstr "Berechtigungen für neue Benutzergruppen des den Vorgabe-Benutzer."
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:52
 #: kallithea/tests/data/templates/admin/permissions/permissions_globals.html.py:81
-#, fuzzy
 msgid "Top level repository creation"
-msgstr "Repository erstellung"
+msgstr "Erstellung eines übergeordneten Repositories"
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:55
 #: kallithea/tests/data/templates/admin/permissions/permissions_globals.html.py:85
@@ -3299,22 +3295,24 @@ msgid ""
 "Note: This will also give all users API access to create repositories "
 "everywhere. That might change in future versions."
 msgstr ""
+"Hinweis: Dies wird allen Nutzern API-Zugang für die Erstellung von "
+"Repositories überall gewähren. Dies kann sich in Zukunft ändern."
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:60
 #: kallithea/tests/data/templates/admin/permissions/permissions_globals.html.py:89
 msgid "Repository creation with group write access"
-msgstr ""
+msgstr "Repository-Erzeugung mit Gruppen-Schreibzugriff"
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:63
 #: kallithea/tests/data/templates/admin/permissions/permissions_globals.html.py:93
-#, fuzzy
 msgid ""
 "With this, write permission to a repository group allows creating "
 "repositories inside that group. Without this, group write permissions "
 "mean nothing."
 msgstr ""
-"Schreibrechte einer Repository Gruppe erlauben innerhalb der Gruppe neue "
-"Repositorys zu erstellen."
+"Falls aktiv, gewährt dies das Recht zum Erzeugen von Repositories in einer "
+"Repository-Gruppe. Falls inaktiv, sind Gruppen-Schreibberechtigungen "
+"wirkungslos."
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:67
 #: kallithea/tests/data/templates/admin/permissions/permissions_globals.html.py:95
@@ -3325,16 +3323,20 @@ msgstr "Benutzergruppen Erstellung"
 #: kallithea/tests/data/templates/admin/permissions/permissions_globals.html.py:99
 msgid "Enable this to allow non-admins to create user groups."
 msgstr ""
+"Aktiviere dies um auch nicht-Administrierenden das Erstellen von "
+"Nutzergruppen zu ermöglichen."
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:74
 #: kallithea/tests/data/templates/admin/permissions/permissions_globals.html.py:101
 msgid "Repository forking"
-msgstr ""
+msgstr "Repository forken"
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:77
 #: kallithea/tests/data/templates/admin/permissions/permissions_globals.html.py:105
 msgid "Enable this to allow non-admins to fork repositories."
 msgstr ""
+"Aktiviere dies um nicht-Administrierenden das Forken von Repositories zu "
+"erlauben."
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:81
 #: kallithea/tests/data/templates/admin/permissions/permissions_globals.html.py:107
@@ -3343,8 +3345,9 @@ msgstr "Registrierung"
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:87
 #: kallithea/tests/data/templates/admin/permissions/permissions_globals.html.py:111
+#, fuzzy
 msgid "External auth account activation"
-msgstr ""
+msgstr "Externe Authentifizierung für Accounts aktivieren"
 
 #: kallithea/templates/admin/permissions/permissions_ips.html:12
 #: kallithea/templates/admin/users/user_edit_ips.html:22
@@ -3463,7 +3466,7 @@ msgstr "Repositories oberster Ebene"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_advanced.html:7
 msgid "Total repositories"
-msgstr ""
+msgstr "Alle Repositories"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_advanced.html:8
 msgid "Children groups"
@@ -3492,13 +3495,11 @@ msgstr "Diese Repositorygruppe löschen"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:7
 msgid "Not visible"
-msgstr ""
+msgstr "Nicht sichtbar"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:8
-#, fuzzy
-#| msgid "disabled"
 msgid "Visible"
-msgstr "Deaktiviert"
+msgstr "Sichtbar"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:9
 #, fuzzy
@@ -3507,10 +3508,8 @@ msgid "Add repos"
 msgstr "Repository hinzufügen"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:10
-#, fuzzy
-#| msgid "Add user group"
 msgid "Add/Edit groups"
-msgstr "Benutzergruppe hinzufügen"
+msgstr "Benutzergruppen hinzufügen oder ändern"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:11
 #: kallithea/templates/admin/repos/repo_edit_permissions.html:11
@@ -3525,9 +3524,8 @@ msgstr "Benutzer/Benutzergruppe"
 #: kallithea/templates/admin/repos/repo_edit_permissions.html:36
 #: kallithea/templates/admin/user_groups/user_group_edit_perms.html:28
 #: kallithea/templates/admin/user_groups/user_group_edit_perms.html:45
-#, fuzzy
 msgid "Default"
-msgstr "standart"
+msgstr "Vorgabe"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:34
 #: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:71
@@ -3535,19 +3533,18 @@ msgstr "standart"
 #: kallithea/templates/admin/repos/repo_edit_permissions.html:67
 #: kallithea/templates/admin/user_groups/user_group_edit_perms.html:34
 #: kallithea/templates/admin/user_groups/user_group_edit_perms.html:71
-#, fuzzy
 msgid "Revoke"
-msgstr "entziehen"
+msgstr "Zurückziehen"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:81
 #: kallithea/templates/admin/repos/repo_edit_permissions.html:77
 #: kallithea/templates/admin/user_groups/user_group_edit_perms.html:81
 msgid "Add new"
-msgstr ""
+msgstr "Neues hinzufügen"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:87
 msgid "Apply to children"
-msgstr ""
+msgstr "Auf untergeordnete Elemente anwenden"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:91
 msgid "Both"
@@ -3558,12 +3555,17 @@ msgid ""
 "Set or revoke permission to all children of that group, including non-"
 "private repositories and other groups if selected."
 msgstr ""
+"Setzen oder zurückziehen von Berechtigungen bezüglich aller untergeordneten "
+"Elemente, einschließlich nicht-privater Repositories und anderer Gruppen, "
+"falls ausgewählt."
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_settings.html:29
 msgid ""
 "Enable lock-by-pulling on group. This option will be applied to all other"
 " groups and repositories inside"
 msgstr ""
+"Aktiviere die Sperre-bei-Pull für die Gruppe. Diese Option wird auf alle "
+"anderen enthaltenen Gruppen und Repositories angewandt"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_settings.html:46
 msgid "Remove this group"
@@ -3574,10 +3576,9 @@ msgid "Confirm to delete this group"
 msgstr "Löschen der Gruppe bestätigen"
 
 #: kallithea/templates/admin/repo_groups/repo_group_show.html:4
-#, fuzzy, python-format
-#| msgid "Repository Group: %s"
+#, python-format
 msgid "Repository group %s"
-msgstr "Repositorygruppe: %s"
+msgstr "Repository-Gruppe %s"
 
 #: kallithea/templates/admin/repo_groups/repo_group_show.html:9
 #: kallithea/tests/data/templates/admin/repo_groups/repo_group_show.html.py:101
@@ -3601,9 +3602,8 @@ msgstr "Anzahl der Repositories oberster Ebene"
 
 #: kallithea/templates/admin/repos/repo_add_base.html:12
 #: kallithea/tests/data/templates/admin/repos/repo_add_base.html.py:48
-#, fuzzy
 msgid "Clone remote repository"
-msgstr "[erstellt] Repository"
+msgstr "Entferntes Repository clonen"
 
 #: kallithea/templates/admin/repos/repo_add_base.html:16
 #: kallithea/tests/data/templates/admin/repos/repo_add_base.html.py:52
@@ -3611,6 +3611,8 @@ msgid ""
 "Optional: URL of a remote repository. If set, the repository will be "
 "created as a clone from this URL."
 msgstr ""
+"Optional: URL eines entfernten Repositories. Falls gesetzt, dann wird das "
+"Repository als Clon von dieser URL erstellt."
 
 #: kallithea/templates/admin/repos/repo_add_base.html:24
 #: kallithea/templates/admin/repos/repo_edit_settings.html:55
@@ -3627,6 +3629,7 @@ msgstr ""
 #: kallithea/tests/data/templates/admin/repos/repo_add_base.html.py:64
 msgid "Optionally select a group to put this repository into."
 msgstr ""
+"Wähle bei Bedarf eine Gruppe, der dieses Repository zugeordnet werden soll."
 
 #: kallithea/templates/admin/repos/repo_add_base.html:45
 #: kallithea/tests/data/templates/admin/repos/repo_add_base.html.py:76
@@ -3646,6 +3649,8 @@ msgid ""
 "Default revision for files page, downloads, full text search index and "
 "readme generation"
 msgstr ""
+"Vorgabe-Revision für Datei-Seiten, Downloads, Volltext-Indizierung und Doku-"
+"Erzeugung"
 
 #: kallithea/templates/admin/repos/repo_creating.html:9
 #, python-format
@@ -3654,7 +3659,7 @@ msgstr "%s Erstelle Repository"
 
 #: kallithea/templates/admin/repos/repo_creating.html:13
 msgid "Creating repository"
-msgstr ""
+msgstr "Repository erzeugen"
 
 #: kallithea/templates/admin/repos/repo_creating.html:27
 #, python-format
@@ -3662,12 +3667,17 @@ msgid ""
 "Repository \"%(repo_name)s\" is being created, you will be redirected "
 "when this process is finished.repo_name"
 msgstr ""
+"Repository \"%(repo_name)s\" wird erzeugt. Sie werden dorthin umgeleitet, "
+"sobald der Prozess abgeschlossen ist."
 
 #: kallithea/templates/admin/repos/repo_creating.html:39
 msgid ""
 "We're sorry but error occurred during this operation. Please check your "
 "Kallithea server logs, or contact administrator."
 msgstr ""
+"Bedauerlicherweise ist bei dieser Operation ein Fehler aufgetreten. Bitte "
+"prüfen Sie die Kallithea-Server-Logs or kontaktieren Sie die "
+"Administrierenden."
 
 #: kallithea/templates/admin/repos/repo_edit.html:8
 #: kallithea/tests/data/templates/admin/repos/repo_edit.html.py:192
@@ -3678,12 +3688,12 @@ msgstr "%s Repositoryeinstellungen"
 #: kallithea/templates/admin/repos/repo_edit.html:34
 #: kallithea/tests/data/templates/admin/repos/repo_edit.html.py:134
 msgid "Extra Fields"
-msgstr ""
+msgstr "Extra-Feld"
 
 #: kallithea/templates/admin/repos/repo_edit.html:37
 #: kallithea/tests/data/templates/admin/repos/repo_edit.html.py:140
 msgid "Caches"
-msgstr ""
+msgstr "Zwischenspeicher"
 
 #: kallithea/templates/admin/repos/repo_edit.html:40
 #: kallithea/tests/data/templates/admin/repos/repo_edit.html.py:146
@@ -3709,12 +3719,12 @@ msgstr "Übergeordnet"
 #: kallithea/templates/admin/repos/repo_edit_advanced.html:5
 #: kallithea/tests/data/templates/admin/repos/repo_edit_advanced.html.py:48
 msgid "Set"
-msgstr ""
+msgstr "Setzen"
 
 #: kallithea/templates/admin/repos/repo_edit_advanced.html:7
 #: kallithea/tests/data/templates/admin/repos/repo_edit_advanced.html.py:50
 msgid "Manually set this repository as a fork of another from the list."
-msgstr ""
+msgstr "Manuell dieses Repository als Fork einem anderen aus der List zuordnen."
 
 #: kallithea/templates/admin/repos/repo_edit_advanced.html:20
 #: kallithea/tests/data/templates/admin/repos/repo_edit_advanced.html.py:54
@@ -3743,7 +3753,7 @@ msgstr ""
 #: kallithea/templates/admin/repos/repo_edit_advanced.html:42
 #: kallithea/tests/data/templates/admin/repos/repo_edit_advanced.html.py:71
 msgid "Change Locking"
-msgstr ""
+msgstr "Ändere die Sperrung"
 
 #: kallithea/templates/admin/repos/repo_edit_advanced.html:48
 #: kallithea/tests/data/templates/admin/repos/repo_edit_advanced.html.py:79
@@ -3759,7 +3769,7 @@ msgstr "Repository entsperren"
 #: kallithea/tests/data/templates/admin/repos/repo_edit_advanced.html.py:83
 #, python-format
 msgid "Locked by %s on %s"
-msgstr ""
+msgstr "Gesperrt durch %s auf %s"
 
 #: kallithea/templates/admin/repos/repo_edit_advanced.html:56
 #: kallithea/tests/data/templates/admin/repos/repo_edit_advanced.html.py:89
@@ -3784,6 +3794,10 @@ msgid ""
 "pulling locks the repository; only the user who pulled and locked it can "
 "unlock it by doing a push."
 msgstr ""
+"Erzwinge die Sperre dieses Repositories. Dies funktioniert nur, falls "
+"anonymer Zugang abgeschaltet ist. Ein Pull führt zur Sperre des "
+"Repositories. Der pullende Nutzer sperrt das Repository; nur dieser Nutzer "
+"kann die Sperre durch eine Push-Operation wieder aufheben."
 
 #: kallithea/templates/admin/repos/repo_edit_advanced.html:72
 #: kallithea/templates/data_table/_dt_elements.html:77
@@ -3823,6 +3837,9 @@ msgid ""
 "administrator expires it. The administrator can both permanently delete "
 "it or restore it."
 msgstr ""
+"Das gelöschte Repository wird beiseitegelegt und versteckt, bis ein "
+"Administrierender es verfallen lässt. Der Administrierende kann es sowohl "
+"permanent löschen oder wiederherstellen."
 
 #: kallithea/templates/admin/repos/repo_edit_caches.html:4
 msgid "Invalidate Repository Cache"
@@ -3833,10 +3850,12 @@ msgid ""
 "Manually invalidate cache for this repository. On first access, the "
 "repository will be cached again."
 msgstr ""
+"Manuell den Zwischenspeicher für dieses Repository verfallen lassen. Beim "
+"ersten Zugriff wird der Zwischenspeicher erneut aufgefüllt."
 
 #: kallithea/templates/admin/repos/repo_edit_caches.html:9
 msgid "List of Cached Values"
-msgstr ""
+msgstr "Liste der zwischengespeicherten Werte"
 
 #: kallithea/templates/admin/repos/repo_edit_caches.html:12
 msgid "Prefix"
@@ -3863,7 +3882,7 @@ msgstr "Aktiv"
 
 #: kallithea/templates/admin/repos/repo_edit_fields.html:6
 msgid "Label"
-msgstr ""
+msgstr "Bezeichnung"
 
 #: kallithea/templates/admin/repos/repo_edit_fields.html:20
 #, python-format
@@ -3872,70 +3891,63 @@ msgstr "Löschen des Felds bestätigen: %s"
 
 #: kallithea/templates/admin/repos/repo_edit_fields.html:31
 msgid "New field key"
-msgstr ""
+msgstr "Eindeutiges Kennzeichen des neuen Felds"
 
 #: kallithea/templates/admin/repos/repo_edit_fields.html:38
 msgid "New field label"
-msgstr ""
+msgstr "Neue Bezeichnung des Felds"
 
 #: kallithea/templates/admin/repos/repo_edit_fields.html:40
 msgid "Enter short label"
-msgstr ""
+msgstr "Eingabe einer kurzen Bezeichnung"
 
 #: kallithea/templates/admin/repos/repo_edit_fields.html:45
 msgid "New field description"
-msgstr ""
+msgstr "Beschreibung des neuen Felds"
 
 #: kallithea/templates/admin/repos/repo_edit_fields.html:47
 msgid "Enter description of a field"
-msgstr ""
+msgstr "Beschreibung eines Felds eingeben"
 
 #: kallithea/templates/admin/repos/repo_edit_fields.html:61
 msgid "Extra fields are disabled."
 msgstr "Zusatzfelder sind deaktiviert."
 
 #: kallithea/templates/admin/repos/repo_edit_permissions.html:20
-#, fuzzy
 msgid "Private Repository"
-msgstr "privates Repository"
+msgstr "Privates Repository"
 
 #: kallithea/templates/admin/repos/repo_edit_remote.html:4
-#, fuzzy
-#| msgid "[forked] repository"
 msgid "Fork of repository"
-msgstr "[forked] Repository"
+msgstr "Fork des Repository"
 
 #: kallithea/templates/admin/repos/repo_edit_remote.html:7
-#, fuzzy
 msgid "Remote repository URL"
-msgstr "Repositorium erzeugt %s"
+msgstr "URL des entfernten Repository"
 
 #: kallithea/templates/admin/repos/repo_edit_remote.html:15
-#, fuzzy
 msgid "Pull Changes from Remote Repository"
-msgstr "[Pulled von Remote] in Repository"
+msgstr "Hole Änderungen vom entfernten Repository"
 
 #: kallithea/templates/admin/repos/repo_edit_remote.html:17
-#, fuzzy
 msgid "Confirm to pull changes from remote repository."
-msgstr "[Pulled von Remote] in Repository"
+msgstr "Bestätige die Abholung von Änderungen vom entfernten Repository."
 
 #: kallithea/templates/admin/repos/repo_edit_remote.html:23
 msgid "This repository does not have a remote repository URL."
-msgstr ""
+msgstr "Für dieses Repository ist keine nicht-lokale URL angegeben."
 
 #: kallithea/templates/admin/repos/repo_edit_settings.html:7
-#, fuzzy
 msgid "Permanent Repository ID"
-msgstr "privates Repository"
+msgstr "Dauerhafte Repository-Kennung"
 
 #: kallithea/templates/admin/repos/repo_edit_settings.html:7
 msgid "What is that?"
-msgstr ""
+msgstr "Was ist das?"
 
 #: kallithea/templates/admin/repos/repo_edit_settings.html:9
 msgid "URL by id"
-msgstr ""
+msgstr "URL nach Kennung"
 
 #: kallithea/templates/admin/repos/repo_edit_settings.html:10
 msgid ""
@@ -3946,22 +3958,28 @@ msgid ""
 "                               This is useful for CI systems, or any "
 "other cases that you need to hardcode the URL into a 3rd party service."
 msgstr ""
+"Falls dieses Repository umbenannt oder in eine andere Gruppe verschoben "
+"wird, ändert sich seine URL.\n"
+"Die Verwendung der permanenten URL garantiert, dass dieses Repository immer "
+"über diese URL erreichbar sein wird.\n"
+"Dies ist insbesondere für CI-Systeme oder in Fällen nützlich, in denen die "
+"URL des Repositories bei Dritten dauerhaft eingetragen wird."
 
 #: kallithea/templates/admin/repos/repo_edit_settings.html:16
-#, fuzzy
 msgid "Remote repository"
-msgstr "[erstellt] Repository"
+msgstr "Entferntes Repository"
 
 #: kallithea/templates/admin/repos/repo_edit_settings.html:19
-#, fuzzy
 msgid "Repository URL"
-msgstr "Repository"
+msgstr "Repository URL"
 
 #: kallithea/templates/admin/repos/repo_edit_settings.html:23
 msgid ""
 "Optional: URL of a remote repository. If set, the repository can be "
 "pulled from this URL."
 msgstr ""
+"Optional: URL eines entfernten Repositories. Falls gesetzt, dann kann das "
+"Repository von dieser URL bezogen werden."
 
 #: kallithea/templates/admin/repos/repo_edit_settings.html:38
 msgid "Default revision for files page, downloads, whoosh and readme"
