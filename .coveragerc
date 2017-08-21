@@ -12,3 +12,8 @@ omit =
     # the scm hooks are not run in the kallithea process
     kallithea/config/post_receive_tmpl.py
     kallithea/config/pre_receive_tmpl.py
+
+[paths]
+source =
+    kallithea/
+    **/workspace/*/kallithea
