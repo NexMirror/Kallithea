@@ -158,7 +158,13 @@ function SummaryPlot(from,to,dataset,overview_dataset) {
 
     var plot_options = {
         bars: {show:true, align: 'center', lineWidth: 4},
-        legend: {show:true, container: "#legend_container"},
+        legend: {show:true,
+                container: "#legend_container",
+                labelFormatter: function(label, series) {
+                        // series is the series object for the label
+                        return '<a href="javascript:void(0)"> ' + label + '</a>';
+                    }
+        },
         points: {show:true, radius: 0, fill: false},
         yaxis: {tickDecimals: 0},
         xaxis: {
@@ -216,7 +222,7 @@ function SummaryPlot(from,to,dataset,overview_dataset) {
             i++;
             if(data[pos].label != ''){
                 choiceContainerTable.innerHTML +=
-                    '<tr><td><label><input type="checkbox" id="id_user_{0}" name="{0}" checked="checked" /> \
+                    '<tr style="display:none"><td><label><input type="checkbox" id="id_user_{0}" name="{0}" checked="checked" /> \
                      {0}</label></td></tr>'.format(data[pos].label);
             }
         }
@@ -292,6 +298,7 @@ function SummaryPlot(from,to,dataset,overview_dataset) {
 
         var new_data = [];
         var inputs = choiceContainer.getElementsByTagName("input");
+        inputs[$(e.target).parents('tr').index()].click();
 
         //show only checked labels
         for(var i=0; i<inputs.length; i++) {
@@ -329,6 +336,9 @@ function SummaryPlot(from,to,dataset,overview_dataset) {
        //resubscribe plothover
        $plotContainer.on("plothover", plothover);
 
+       //resubscribe this function after plot update
+       $('#legend_container tr a').on("click", [cur_data, cur_ranges], plotchoiced);
+
        // don't fire event on the overview to prevent eternal loop
        overview.setSelection(cur_ranges, true);
 
@@ -364,7 +374,7 @@ function SummaryPlot(from,to,dataset,overview_dataset) {
         overview.setSelection(ranges, true);
 
         //resubscribe choiced
-        $(choiceContainer.getElementsByTagName("input")).on("click", [data, ranges], plotchoiced);
+        $('#legend_container tr a').on("click", [data, ranges], plotchoiced);
     }
 
     var previousPoint = null;
@@ -444,7 +454,7 @@ function SummaryPlot(from,to,dataset,overview_dataset) {
     });
 
     // user choices on overview
-    $(choiceContainer.getElementsByTagName("input")).on("click", [data, initial_ranges], plotchoiced);
+    $('#legend_container tr a').on("click", [data, initial_ranges], plotchoiced);
 }
 
 SummaryPlot(${h.js(c.ts_min)}, ${h.js(c.ts_max)}, ${h.js(c.commit_data)}, ${h.js(c.overview_data)});
