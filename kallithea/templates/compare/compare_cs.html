@@ -136,11 +136,6 @@
             $('#C-'+cid).toggleClass('expanded');
             graph.render(jsdata);
         });
-
-        $('.gravatar').click(function(e){
-            var cid = $(this).data('commit_id');
-            $('#row-'+cid).toggleClass('hl', !$('#row-'+cid).hasClass('hl'));
-        });
     });
     $(window).resize(function(){
         graph.render(jsdata);
