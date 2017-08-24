@@ -73,7 +73,7 @@
         <span class="branchtag">${h.link_to(cs.branch,h.url('changelog_home',repo_name=c.cs_repo.repo_name,branch=cs.branch))}</span>
         %endif
         </td>
-        <td class="expand_commit" data-commit_id="${cs.raw_id}" title="${_('Expand commit message')}">
+        <td class="expand_commit" title="${_('Expand commit message')}">
             <i class="icon-align-left"></i>
         </td>
         <td class="mid">
@@ -84,7 +84,7 @@
                     </span>
                 %endfor
             </div>
-            <div id="C-${cs.raw_id}" class="message">${h.urlify_text(cs.message, c.repo_name)}</div>
+            <div class="message">${h.urlify_text(cs.message, c.repo_name)}</div>
         </td>
       </tr>
     %endfor
@@ -132,8 +132,7 @@
         graph.render(jsdata);
 
         $('.expand_commit').click(function(e){
-            var cid = $(this).data('commit_id');
-            $('#C-'+cid).toggleClass('expanded');
+            $(this).next('.mid').find('.message').toggleClass('expanded');
             graph.render(jsdata);
         });
     });
