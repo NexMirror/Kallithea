@@ -273,9 +273,9 @@ class GitChangesetTest(unittest.TestCase):
         the revision. This test is somewhat hard to write as order of tests
         is a key here. Written by running command after command in a shell.
         """
-        hex = '2a13f185e4525f9d4b59882791a2d397b90d5ddc'
-        self.assertTrue(hex in self.repo.revisions)
-        chset = self.repo.get_changeset(hex)
+        commit_id = '2a13f185e4525f9d4b59882791a2d397b90d5ddc'
+        self.assertTrue(commit_id in self.repo.revisions)
+        chset = self.repo.get_changeset(commit_id)
         self.assertTrue(len(chset.nodes) == 0)
         root = chset.root
         self.assertTrue(len(chset.nodes) == 1)
@@ -296,8 +296,8 @@ class GitChangesetTest(unittest.TestCase):
         self.assertTrue(docs is chset.get_node('docs'))
 
     def test_nodes_with_changeset(self):
-        hex = '2a13f185e4525f9d4b59882791a2d397b90d5ddc'
-        chset = self.repo.get_changeset(hex)
+        commit_id = '2a13f185e4525f9d4b59882791a2d397b90d5ddc'
+        chset = self.repo.get_changeset(commit_id)
         root = chset.root
         docs = root.get_node('docs')
         self.assertTrue(docs is chset.get_node('docs'))
