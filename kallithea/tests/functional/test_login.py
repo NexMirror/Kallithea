@@ -343,7 +343,7 @@ class TestLoginController(TestController):
         assert ret.email == email
         assert ret.name == name
         assert ret.lastname == lastname
-        assert ret.api_key != None
+        assert ret.api_key is not None
         assert ret.admin == False
 
     #==========================================================================

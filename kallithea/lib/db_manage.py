@@ -319,8 +319,8 @@ class DbManage(object):
         """
 
         for k, v, t in [('auth_plugins', 'kallithea.lib.auth_modules.auth_internal', 'list'),
-                     ('auth_internal_enabled', 'True', 'bool')]:
-            if skip_existing and Setting.get_by_name(k) != None:
+                        ('auth_internal_enabled', 'True', 'bool')]:
+            if skip_existing and Setting.get_by_name(k) is not None:
                 log.debug('Skipping option %s', k)
                 continue
             setting = Setting(k, v, t)

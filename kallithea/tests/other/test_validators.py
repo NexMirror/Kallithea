@@ -103,7 +103,7 @@ class TestRepoGroups(TestController):
     def test_ValidPassword(self):
         validator = v.ValidPassword()
         assert 'lol' == validator.to_python('lol')
-        assert None == validator.to_python(None)
+        assert validator.to_python(None) is None
         with pytest.raises(formencode.Invalid):
             validator.to_python('ąćżź')
 

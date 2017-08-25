@@ -22,7 +22,7 @@ class TestRepos(TestController):
         RepoModel().delete(repo=repo)
         Session().commit()
 
-        assert None == Repository.get_by_repo_name(repo_name=u'test-repo-1')
+        assert Repository.get_by_repo_name(repo_name=u'test-repo-1') is None
 
     def test_remove_repo_repo_raises_exc_when_attached_forks(self):
         repo = fixture.create_repo(name=u'test-repo-1')
@@ -52,9 +52,9 @@ class TestRepos(TestController):
         RepoModel().delete(repo=repo, forks='delete')
         Session().commit()
 
-        assert None == Repository.get_by_repo_name(repo_name=u'test-repo-1')
-        assert None == Repository.get_by_repo_name(repo_name=u'test-repo-fork-1')
-        assert None == Repository.get_by_repo_name(repo_name=u'test-repo-fork-fork-1')
+        assert Repository.get_by_repo_name(repo_name=u'test-repo-1') is None
+        assert Repository.get_by_repo_name(repo_name=u'test-repo-fork-1') is None
+        assert Repository.get_by_repo_name(repo_name=u'test-repo-fork-fork-1') is None
 
     def test_remove_repo_detach_forks(self):
         repo = fixture.create_repo(name=u'test-repo-1')
@@ -71,9 +71,9 @@ class TestRepos(TestController):
         Session().commit()
 
         try:
-            assert None == Repository.get_by_repo_name(repo_name=u'test-repo-1')
-            assert None != Repository.get_by_repo_name(repo_name=u'test-repo-fork-1')
-            assert None != Repository.get_by_repo_name(repo_name=u'test-repo-fork-fork-1')
+            assert Repository.get_by_repo_name(repo_name=u'test-repo-1') is None
+            assert Repository.get_by_repo_name(repo_name=u'test-repo-fork-1') is not None
+            assert Repository.get_by_repo_name(repo_name=u'test-repo-fork-fork-1') is not None
         finally:
             RepoModel().delete(repo=u'test-repo-fork-fork-1')
             RepoModel().delete(repo=u'test-repo-fork-1')

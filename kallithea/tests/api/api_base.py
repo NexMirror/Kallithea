@@ -142,7 +142,7 @@ class _BaseTestApi(object):
 
         option1 = Optional(None)
         assert '<Optional:%s>' % None == repr(option1)
-        assert option1() == None
+        assert option1() is None
 
         assert 1 == Optional.extract(Optional(1))
         assert 'trololo' == Optional.extract('trololo')
@@ -998,7 +998,7 @@ class _BaseTestApi(object):
         response = api_call(self, params)
 
         repo = RepoModel().get_by_repo_name(repo_name)
-        assert repo != None
+        assert repo is not None
         ret = {
             'msg': 'Created new repository `%s`' % repo_name,
             'success': True,
@@ -1017,7 +1017,7 @@ class _BaseTestApi(object):
         response = api_call(self, params)
         print params
         repo = RepoModel().get_by_repo_name(repo_name)
-        assert repo != None
+        assert repo is not None
         ret = {
             'msg': 'Created new repository `%s`' % repo_name,
             'success': True,
@@ -1083,7 +1083,7 @@ class _BaseTestApi(object):
         response = api_call(self, params)
 
         repo = RepoModel().get_by_repo_name(repo_name)
-        assert repo != None
+        assert repo is not None
         ret = {
             'msg': 'Created new repository `%s`' % repo_name,
             'success': True,
@@ -1103,7 +1103,7 @@ class _BaseTestApi(object):
         response = api_call(self, params)
 
         repo = RepoModel().get_by_repo_name(repo_name)
-        assert repo != None
+        assert repo is not None
         ret = {
             'msg': 'Created new repository `%s`' % repo_name,
             'success': True,

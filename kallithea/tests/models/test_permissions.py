@@ -684,8 +684,8 @@ class TestPermissions(TestController):
 
         old = Permission.get_by_key(perm)
         new = Permission.get_by_key(modify_to)
-        assert old != None
-        assert new != None
+        assert old is not None
+        assert new is not None
 
         # now modify permissions
         p = UserToPerm.query() \

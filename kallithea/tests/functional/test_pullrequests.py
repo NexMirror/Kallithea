@@ -157,7 +157,7 @@ class TestPullrequestsController(TestController):
         # location is of the form:
         # http://localhost/vcs_test_hg/pull-request/54/_/title
         m = re.search('/pull-request/(\d+)/', response.location)
-        assert m != None
+        assert m is not None
         pull_request_id = m.group(1)
 
         # update it
@@ -193,7 +193,7 @@ class TestPullrequestsController(TestController):
         # location is of the form:
         # http://localhost/vcs_test_hg/pull-request/54/_/title
         m = re.search('/pull-request/(\d+)/', response.location)
-        assert m != None
+        assert m is not None
         pull_request_id = m.group(1)
 
         # edit it

@@ -85,13 +85,13 @@ class TestRepoGroups(TestController):
         sg1 = fixture.create_repo_group(u'deleteme')
         self.__delete_group(sg1.group_id)
 
-        assert RepoGroup.get(sg1.group_id) == None
+        assert RepoGroup.get(sg1.group_id) is None
         assert not self.__check_path('deteteme')
 
         sg1 = fixture.create_repo_group(u'deleteme', parent_group_id=self.g1.group_id)
         self.__delete_group(sg1.group_id)
 
-        assert RepoGroup.get(sg1.group_id) == None
+        assert RepoGroup.get(sg1.group_id) is None
         assert not self.__check_path('test1', 'deteteme')
 
     def test_rename_single_group(self):
@@ -99,7 +99,7 @@ class TestRepoGroups(TestController):
 
         new_sg1 = _update_repo_group(sg1.group_id, u'after')
         assert self.__check_path('after')
-        assert RepoGroup.get_by_group_name(u'initial') == None
+        assert RepoGroup.get_by_group_name(u'initial') is None
 
     def test_update_group_parent(self):
 
@@ -107,7 +107,7 @@ class TestRepoGroups(TestController):
 
         new_sg1 = _update_repo_group(sg1.group_id, u'after', parent_id=self.g1.group_id)
         assert self.__check_path('test1', 'after')
-        assert RepoGroup.get_by_group_name(u'test1/initial') == None
+        assert RepoGroup.get_by_group_name(u'test1/initial') is None
 
         new_sg1 = _update_repo_group(sg1.group_id, u'after', parent_id=self.g3.group_id)
         assert self.__check_path('test3', 'after')

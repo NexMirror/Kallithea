@@ -60,7 +60,7 @@ class TestAdminUsersGroupsController(TestController):
         gr = Session().query(UserGroup) \
             .filter(UserGroup.users_group_name == users_group_name).scalar()
 
-        assert gr == None
+        assert gr is None
 
     def test_default_perms_enable_repository_read_on_group(self):
         self.log_user()
@@ -123,7 +123,7 @@ class TestAdminUsersGroupsController(TestController):
         gr = Session().query(UserGroup) \
             .filter(UserGroup.users_group_name == users_group_name).scalar()
 
-        assert gr == None
+        assert gr is None
         p = Permission.get_by_key('hg.create.repository')
         perms = UserGroupToPerm.query() \
             .filter(UserGroupToPerm.users_group_id == ugid).all()
@@ -191,7 +191,7 @@ class TestAdminUsersGroupsController(TestController):
                            .filter(UserGroup.users_group_name ==
                                    users_group_name).scalar()
 
-        assert gr == None
+        assert gr is None
         p = Permission.get_by_key('hg.fork.repository')
         perms = UserGroupToPerm.query() \
             .filter(UserGroupToPerm.users_group_id == ugid).all()

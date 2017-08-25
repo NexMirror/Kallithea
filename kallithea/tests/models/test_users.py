@@ -90,13 +90,12 @@ class TestUser(TestController):
         assert usr.user_id == u.user_id
         assert usr.username == u.username
         u = User.get_by_email(email='main_email3@example.com')
-        assert None == u
+        assert u is None
 
         u = User.get_by_email(email='main_e%ail@example.com')
-        assert None == u
+        assert u is None
         u = User.get_by_email(email='main_emai_@example.com')
-        assert None == u
-
+        assert u is None
 
         UserModel().delete(usr.user_id)
         Session().commit()

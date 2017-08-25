@@ -769,18 +769,17 @@ class _BaseNet(_IPAddrBase):
                 s1, s2 = s2.subnet()
             else:
                 # If we got here, there's a bug somewhere.
-                assert True == False, ('Error performing exclusion: '
-                                       's1: %s s2: %s other: %s' %
-                                       (str(s1), str(s2), str(other)))
+                assert False, ('Error performing exclusion: '
+                               's1: %s s2: %s other: %s' %
+                               (str(s1), str(s2), str(other)))
         if s1 == other:
             ret_addrs.append(s2)
         elif s2 == other:
             ret_addrs.append(s1)
         else:
             # If we got here, there's a bug somewhere.
-            assert True == False, ('Error performing exclusion: '
-                                   's1: %s s2: %s other: %s' %
-                                   (str(s1), str(s2), str(other)))
+            assert False, ('Error performing exclusion: s1: %s s2: %s other: %s'
+                           % (str(s1), str(s2), str(other)))
 
         return sorted(ret_addrs, key=_BaseNet._get_networks_key)
 

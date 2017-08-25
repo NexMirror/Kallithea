@@ -389,7 +389,7 @@ class _BaseTestCase(TestController):
         deleted_repo = Session().query(Repository) \
             .filter(Repository.repo_name == repo_name).scalar()
 
-        assert deleted_repo == None
+        assert deleted_repo is None
 
         assert os.path.isdir(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name)) == False
 
@@ -439,7 +439,7 @@ class _BaseTestCase(TestController):
         deleted_repo = Session().query(Repository) \
             .filter(Repository.repo_name == repo_name_unicode).scalar()
 
-        assert deleted_repo == None
+        assert deleted_repo is None
 
         assert os.path.isdir(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name_unicode)) == False
 
@@ -612,7 +612,7 @@ class _BaseTestCase(TestController):
                                'Error creating repository %s' % repo_name)
         # repo must not be in db
         repo = Repository.get_by_repo_name(repo_name)
-        assert repo == None
+        assert repo is None
 
         # repo must not be in filesystem !
         assert not os.path.isdir(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name))
