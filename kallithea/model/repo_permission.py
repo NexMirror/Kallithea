@@ -45,7 +45,7 @@ class RepositoryPermissionModel(object):
         permission = Permission.get_by_key(permission)
         current = self.get_user_permission(repository, user)
         if current:
-            if not current.permission is permission:
+            if current.permission is not permission:
                 current.permission = permission
         else:
             p = UserRepoToPerm()
@@ -70,7 +70,7 @@ class RepositoryPermissionModel(object):
         permission = Permission.get_by_key(permission)
         current = self.get_users_group_permission(repository, users_group)
         if current:
-            if not current.permission is permission:
+            if current.permission is not permission:
                 current.permission = permission
         else:
             p = UserGroupRepoToPerm()
