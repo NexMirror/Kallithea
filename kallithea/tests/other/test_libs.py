@@ -297,12 +297,12 @@ class TestLibs(TestController):
         """
         import re
         # quickly change expected url[] into a link
-        URL_PAT = re.compile(r'(?:url\[)(.+?)(?:\])')
+        url_pattern = re.compile(r'(?:url\[)(.+?)(?:\])')
 
         def url_func(match_obj):
             _url = match_obj.groups()[0]
             return tmpl % (url_ or '/repo_name/changeset/%s' % _url, _url)
-        return URL_PAT.sub(url_func, text)
+        return url_pattern.sub(url_func, text)
 
     @parametrize('sample,expected', [
       ("",

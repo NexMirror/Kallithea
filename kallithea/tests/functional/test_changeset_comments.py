@@ -39,10 +39,11 @@ class TestChangeSetCommentsController(TestController):
 
         notification = Notification.query().all()[0]
 
-        ID = ChangesetComment.query().first().comment_id
+        commit_id = ChangesetComment.query().first().comment_id
         assert notification.type_ == Notification.TYPE_CHANGESET_COMMENT
         sbj = (u'/%s/changeset/'
-               '27cd5cce30c96924232dffcd24178a07ffeb5dfc#comment-%s' % (HG_REPO, ID))
+               '27cd5cce30c96924232dffcd24178a07ffeb5dfc#comment-%s'
+               % (HG_REPO, commit_id))
         print "%s vs %s" % (sbj, notification.subject)
         assert sbj in notification.subject
 
@@ -78,10 +79,11 @@ class TestChangeSetCommentsController(TestController):
         assert ChangesetComment.query().count() == 1
 
         notification = Notification.query().all()[0]
-        ID = ChangesetComment.query().first().comment_id
+        commit_id = ChangesetComment.query().first().comment_id
         assert notification.type_ == Notification.TYPE_CHANGESET_COMMENT
         sbj = (u'/%s/changeset/'
-               '27cd5cce30c96924232dffcd24178a07ffeb5dfc#comment-%s' % (HG_REPO, ID))
+               '27cd5cce30c96924232dffcd24178a07ffeb5dfc#comment-%s'
+               % (HG_REPO, commit_id))
         print "%s vs %s" % (sbj, notification.subject)
         assert sbj in notification.subject
 

@@ -236,7 +236,7 @@ class GitRepositoryTest(unittest.TestCase):
     def test_changeset10(self):
 
         chset10 = self.repo.get_changeset(self.repo.revisions[9])
-        README = """===
+        readme = """===
 VCS
 ===
 
@@ -250,7 +250,7 @@ TODO: To be written...
 """
         node = chset10.get_node('README.rst')
         self.assertEqual(node.kind, NodeKind.FILE)
-        self.assertEqual(node.content, README)
+        self.assertEqual(node.content, readme)
 
 
 class GitChangesetTest(unittest.TestCase):
