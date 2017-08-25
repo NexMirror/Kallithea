@@ -197,10 +197,10 @@ def insert_entries(
          for name, years in name_years.items()]
     l.sort(key=sortkey)
 
-    with file(filename) as f:
+    with open(filename) as f:
         pre, post = re.split(split_re, f.read())
 
-    with file(filename, 'w') as f:
+    with open(filename, 'w') as f:
         f.write(pre +
                 ''.join(format_f(years, name) for years, name in l) +
                 post)

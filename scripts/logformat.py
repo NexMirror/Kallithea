@@ -33,7 +33,7 @@ res = [
     ]
 
 for f in sys.argv[1:]:
-    s = file(f).read()
+    s = open(f).read()
     for r, t in res:
         s = r.sub(t, s)
-    file(f, 'w').write(s)
+    open(f, 'w').write(s)

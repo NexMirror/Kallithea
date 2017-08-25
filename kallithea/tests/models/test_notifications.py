@@ -283,9 +283,9 @@ class TestNotifications(TestController):
 
         outfn = os.path.join(os.path.dirname(__file__), 'test_dump_html_mails.out.html')
         reffn = os.path.join(os.path.dirname(__file__), 'test_dump_html_mails.ref.html')
-        with file(outfn, 'w') as f:
+        with open(outfn, 'w') as f:
             f.write(out)
-        with file(reffn) as f:
+        with open(reffn) as f:
             ref = f.read()
         assert ref == out # copy test_dump_html_mails.out.html to test_dump_html_mails.ref.html to update expectations
         os.unlink(outfn)

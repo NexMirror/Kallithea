@@ -32,7 +32,7 @@ headermatch = re.compile(r'''\n*(.+)\n([][!"#$%&'()*+,./:;<=>?@\\^_`{|}~-])\2{2,
 def main():
     for fn in subprocess.check_output(['hg', 'loc', 'set:**.rst+kallithea/i18n/how_to']).splitlines():
         print 'processing %s:' % fn
-        s = file(fn).read()
+        s = open(fn).read()
 
         # find levels and their styles
         lastpos = 0
@@ -71,7 +71,7 @@ def main():
         s = s.strip() + '\n'
         s = re.sub(r'''\n+((?:\.\. _[^\n]*\n)+)$''', r'\n\n\n\1', s)
 
-        file(fn, 'w').write(s)
+        open(fn, 'w').write(s)
         print subprocess.check_output(['hg', 'diff', fn])
         print
 

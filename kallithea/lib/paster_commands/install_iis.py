@@ -75,7 +75,7 @@ class Command(BasePasterCommand):
 
         dispatchfile = os.path.join(os.getcwd(), 'dispatch.py')
         print 'Writing %s' % dispatchfile
-        with file(dispatchfile, 'w') as f:
+        with open(dispatchfile, 'w') as f:
             f.write(dispath_py_template % {
                 'inifile': config_file.replace('\\', '\\\\'),
                 'virtualdir': args.virtualdir,

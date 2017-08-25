@@ -90,12 +90,12 @@ ini_files = [
 def main():
     # make sure all mako lines starting with '#' (the '##' comments) are marked up as <text>
     print 'reading:', makofile
-    mako_org = file(makofile).read()
+    mako_org = open(makofile).read()
     mako_no_text_markup = re.sub(r'</?%text>', '', mako_org)
     mako_marked_up = re.sub(r'\n(##.*)', r'\n<%text>\1</%text>', mako_no_text_markup, flags=re.MULTILINE)
     if mako_marked_up != mako_org:
         print 'writing:', makofile
-        file(makofile, 'w').write(mako_marked_up)
+        open(makofile, 'w').write(mako_marked_up)
 
     # select the right mako conditionals for the other less sophisticated formats
     def sub_conditionals(m):
@@ -149,7 +149,7 @@ def main():
                 lines = re.sub(r'^([^#\n].*) = ?(.*)', process_line, lines, flags=re.MULTILINE)
             return sectionname + '\n' + lines
         ini_lines = re.sub(r'^(\[.*\])\n((?:(?:[^[\n].*)?\n)*)', process_section, ini_lines, flags=re.MULTILINE)
-        file(fn, 'w').write(ini_lines)
+        open(fn, 'w').write(ini_lines)
 
 if __name__ == '__main__':
     main()
