@@ -1,7 +1,7 @@
 """
 Extended JSON encoder for json
 
-json.org do not specify how date time can be represented - monkeypatch it to do something.
+json.org does not specify how date time can be represented - monkeypatch it to do something.
 """
 
 import datetime
