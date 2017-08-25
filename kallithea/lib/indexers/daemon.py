@@ -353,7 +353,7 @@ class WhooshIndexingDaemon(object):
                     indexed_repo_path = fields['repository']
                     indexed_paths.add(indexed_path)
 
-                    if not indexed_repo_path in self.filtered_repo_update_paths:
+                    if indexed_repo_path not in self.filtered_repo_update_paths:
                         continue
 
                     repo = self.repo_paths[indexed_repo_path]

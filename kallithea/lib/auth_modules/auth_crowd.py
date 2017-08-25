@@ -52,7 +52,7 @@ class CrowdServer(object):
                                   passwd="some_passwd",
                                   version="1")
         """
-        if not "port" in kwargs:
+        if "port" not in kwargs:
             kwargs["port"] = "8095"
         self._logger = kwargs.get("logger", logging.getLogger(__name__))
         self._uri = "%s://%s:%s/crowd" % (kwargs.get("method", "http"),

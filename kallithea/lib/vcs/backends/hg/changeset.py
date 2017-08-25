@@ -377,7 +377,7 @@ class MercurialChangeset(BaseChangeset):
 
         path = self._fix_path(path)
 
-        if not path in self.nodes:
+        if path not in self.nodes:
             if path in self._file_paths:
                 node = FileNode(path, changeset=self)
             elif path in self._dir_paths or path in self._dir_paths:

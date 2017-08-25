@@ -110,7 +110,7 @@ class GitChangeset(BaseChangeset):
     def _get_id_for_path(self, path):
         path = safe_str(path)
         # FIXME: Please, spare a couple of minutes and make those codes cleaner;
-        if not path in self._paths:
+        if path not in self._paths:
             path = path.strip('/')
             # set root tree
             tree = self.repository._repo[self._tree_id]
@@ -155,7 +155,7 @@ class GitChangeset(BaseChangeset):
                         name = item
                     self._paths[name] = id
                     self._stat_modes[name] = stat
-            if not path in self._paths:
+            if path not in self._paths:
                 raise NodeDoesNotExistError("There is no file nor directory "
                     "at the given path '%s' at revision %s"
                     % (path, safe_str(self.short_id)))
@@ -423,7 +423,7 @@ class GitChangeset(BaseChangeset):
                                      "or Blob, is %r" % type(obj))
         nodes = dirnodes + filenodes
         for node in nodes:
-            if not node.path in self.nodes:
+            if node.path not in self.nodes:
                 self.nodes[node.path] = node
         nodes.sort()
         return nodes
@@ -432,7 +432,7 @@ class GitChangeset(BaseChangeset):
         if isinstance(path, unicode):
             path = path.encode('utf-8')
         path = self._fix_path(path)
-        if not path in self.nodes:
+        if path not in self.nodes:
             try:
                 id_ = self._get_id_for_path(path)
             except ChangesetError:

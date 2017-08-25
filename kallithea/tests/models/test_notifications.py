@@ -103,7 +103,7 @@ class TestNotifications(TestController):
             Session().commit()
 
             notifications = Notification.query().all()
-            assert not notification in notifications
+            assert notification not in notifications
 
             un = UserNotification.query().filter(UserNotification.notification
                                                  == notification).all()

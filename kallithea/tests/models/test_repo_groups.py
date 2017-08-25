@@ -24,11 +24,11 @@ def _update_repo_group(id_, group_name, desc=u'desc', parent_id=None):
 
 
 def _update_repo(name, **kwargs):
-    if not 'repo_name' in kwargs:
+    if 'repo_name' not in kwargs:
         kwargs['repo_name'] = name
-    if not 'perms_new' in kwargs:
+    if 'perms_new' not in kwargs:
         kwargs['perms_new'] = []
-    if not 'perms_updates' in kwargs:
+    if 'perms_updates' not in kwargs:
         kwargs['perms_updates'] = []
     r = RepoModel().update(name, **kwargs)
     return r

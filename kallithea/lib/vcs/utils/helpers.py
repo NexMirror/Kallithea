@@ -139,7 +139,7 @@ def parse_changesets(text):
     """
     text = text.strip()
     CID_RE = r'[a-zA-Z0-9]+'
-    if not '..' in text:
+    if '..' not in text:
         m = re.match(r'^(?P<cid>%s)$' % CID_RE, text)
         if m:
             return {

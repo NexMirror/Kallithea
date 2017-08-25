@@ -214,7 +214,7 @@ class GitRepository(BaseRepository):
 
         # now detect if it's proper git repo
         gitdata = resp.read()
-        if not 'service=git-upload-pack' in gitdata:
+        if 'service=git-upload-pack' not in gitdata:
             raise urllib2.URLError(
                 "url [%s] does not look like an git" % (cleaned_uri))
 
@@ -329,7 +329,7 @@ class GitRepository(BaseRepository):
         filesystem (``file:///``) schema.
         """
         url = safe_str(url)
-        if url != 'default' and not '://' in url:
+        if url != 'default' and '://' not in url:
             url = ':///'.join(('file', url))
         return url
 

@@ -482,7 +482,7 @@ class MercurialRepository(BaseRepository):
         (``file:///``) schema.
         """
         url = safe_str(url)
-        if url != 'default' and not '://' in url:
+        if url != 'default' and '://' not in url:
             url = "file:" + urllib.pathname2url(url)
         return url
 
