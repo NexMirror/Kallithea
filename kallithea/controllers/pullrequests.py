@@ -484,8 +484,9 @@ class PullrequestsController(BaseRepoController):
 
         org_scm_instance = c.cs_repo.scm_instance # property with expensive cache invalidation check!!!
         try:
-            c.cs_ranges = [org_scm_instance.get_changeset(x)
-                           for x in c.pull_request.revisions]
+            c.cs_ranges = []
+            for x in c.pull_request.revisions:
+                c.cs_ranges.append(org_scm_instance.get_changeset(x))
         except ChangesetDoesNotExistError:
             c.cs_ranges = []
             h.flash(_('Revision %s not found in %s') % (x, c.cs_repo.repo_name),
