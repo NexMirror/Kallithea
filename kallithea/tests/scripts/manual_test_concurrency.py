@@ -30,9 +30,8 @@ import os
 import sys
 import shutil
 import logging
+import tempfile
 from os.path import dirname
-
-from tempfile import _RandomNameSequence
 from subprocess import Popen, PIPE
 
 from paste.deploy import appconfig
@@ -203,7 +202,7 @@ if __name__ == '__main__':
             backend = 'hg'
 
         if METHOD == 'pull':
-            seq = _RandomNameSequence().next()
+            seq = tempfile._RandomNameSequence().next()
             test_clone_with_credentials(repo=sys.argv[1], method='clone',
                                         backend=backend)
         s = time.time()
