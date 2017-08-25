@@ -6,6 +6,7 @@ from kallithea.tests.fixture import Fixture
 
 fixture = Fixture()
 
+
 def _commit_ref(repo_name, sha, msg):
     return '''<div class="message-firstline"><a class="message-link" href="/%s/changeset/%s">%s</a></div>''' % (repo_name, sha, msg)
 
@@ -30,16 +31,16 @@ class TestCompareController(TestController):
                                     repo_description='diff-test',
                                     cur_user=TEST_USER_ADMIN_LOGIN)
         self.r1_id = repo1.repo_id
-        #commit something !
+        # commit something !
         cs0 = fixture.commit_change(repo1.repo_name, filename='file1',
                 content='line1\n', message='commit1', vcs_type='hg',
                 parent=None, newfile=True)
 
-        #fork this repo
+        # fork this repo
         repo2 = fixture.create_fork(u'one', u'one-fork')
         self.r2_id = repo2.repo_id
 
-        #add two extra commit into fork
+        # add two extra commit into fork
         cs1 = fixture.commit_change(repo2.repo_name, filename='file1',
                 content='line1\nline2\n', message='commit2', vcs_type='hg',
                 parent=cs0)
@@ -72,7 +73,7 @@ class TestCompareController(TestController):
         response.mustcontain("""<a class="changeset_hash" href="/%s/changeset/%s">r2:%s</a>""" % (repo2.repo_name, cs2.raw_id, cs2.short_id))
         ## files
         response.mustcontain("""<a href="#C--826e8142e6ba">file1</a>""")
-        #swap
+        # swap
         response.mustcontain("""<a class="btn btn-default btn-sm" href="/%s/compare/branch@%s...branch@%s?other_repo=%s&amp;merge=True"><i class="icon-arrows-cw"></i> Swap</a>""" % (repo2.repo_name, rev1, rev2, repo1.repo_name))
 
     def test_compare_forks_on_branch_extra_commits_git(self):
@@ -81,16 +82,16 @@ class TestCompareController(TestController):
                                     repo_description='diff-test',
                                     cur_user=TEST_USER_ADMIN_LOGIN)
         self.r1_id = repo1.repo_id
-        #commit something !
+        # commit something !
         cs0 = fixture.commit_change(repo1.repo_name, filename='file1',
                 content='line1\n', message='commit1', vcs_type='git',
                 parent=None, newfile=True)
 
-        #fork this repo
+        # fork this repo
         repo2 = fixture.create_fork(u'one-git', u'one-git-fork')
         self.r2_id = repo2.repo_id
 
-        #add two extra commit into fork
+        # add two extra commit into fork
         cs1 = fixture.commit_change(repo2.repo_name, filename='file1',
                 content='line1\nline2\n', message='commit2', vcs_type='git',
                 parent=cs0)
@@ -123,7 +124,7 @@ class TestCompareController(TestController):
         response.mustcontain("""<a class="changeset_hash" href="/%s/changeset/%s">r2:%s</a>""" % (repo2.repo_name, cs2.raw_id, cs2.short_id))
         ## files
         response.mustcontain("""<a href="#C--826e8142e6ba">file1</a>""")
-        #swap
+        # swap
         response.mustcontain("""<a class="btn btn-default btn-sm" href="/%s/compare/branch@%s...branch@%s?other_repo=%s&amp;merge=True"><i class="icon-arrows-cw"></i> Swap</a>""" % (repo2.repo_name, rev1, rev2, repo1.repo_name))
 
     def test_compare_forks_on_branch_extra_commits_origin_has_incoming_hg(self):
@@ -135,21 +136,21 @@ class TestCompareController(TestController):
 
         self.r1_id = repo1.repo_id
 
-        #commit something !
+        # commit something !
         cs0 = fixture.commit_change(repo1.repo_name, filename='file1',
                 content='line1\n', message='commit1', vcs_type='hg',
                 parent=None, newfile=True)
 
-        #fork this repo
+        # fork this repo
         repo2 = fixture.create_fork(u'one', u'one-fork')
         self.r2_id = repo2.repo_id
 
-        #now commit something to origin repo
+        # now commit something to origin repo
         cs1_prim = fixture.commit_change(repo1.repo_name, filename='file2',
                 content='line1file2\n', message='commit2', vcs_type='hg',
                 parent=cs0, newfile=True)
 
-        #add two extra commit into fork
+        # add two extra commit into fork
         cs1 = fixture.commit_change(repo2.repo_name, filename='file1',
                 content='line1\nline2\n', message='commit2', vcs_type='hg',
                 parent=cs0)
@@ -182,7 +183,7 @@ class TestCompareController(TestController):
         response.mustcontain("""<a class="changeset_hash" href="/%s/changeset/%s">r2:%s</a>""" % (repo2.repo_name, cs2.raw_id, cs2.short_id))
         ## files
         response.mustcontain("""<a href="#C--826e8142e6ba">file1</a>""")
-        #swap
+        # swap
         response.mustcontain("""<a class="btn btn-default btn-sm" href="/%s/compare/branch@%s...branch@%s?other_repo=%s&amp;merge=True"><i class="icon-arrows-cw"></i> Swap</a>""" % (repo2.repo_name, rev1, rev2, repo1.repo_name))
 
     def test_compare_forks_on_branch_extra_commits_origin_has_incoming_git(self):
@@ -194,21 +195,21 @@ class TestCompareController(TestController):
 
         self.r1_id = repo1.repo_id
 
-        #commit something !
+        # commit something !
         cs0 = fixture.commit_change(repo1.repo_name, filename='file1',
                 content='line1\n', message='commit1', vcs_type='git',
                 parent=None, newfile=True)
 
-        #fork this repo
+        # fork this repo
         repo2 = fixture.create_fork(u'one-git', u'one-git-fork')
         self.r2_id = repo2.repo_id
 
-        #now commit something to origin repo
+        # now commit something to origin repo
         cs1_prim = fixture.commit_change(repo1.repo_name, filename='file2',
                 content='line1file2\n', message='commit2', vcs_type='git',
                 parent=cs0, newfile=True)
 
-        #add two extra commit into fork
+        # add two extra commit into fork
         cs1 = fixture.commit_change(repo2.repo_name, filename='file1',
                 content='line1\nline2\n', message='commit2', vcs_type='git',
                 parent=cs0)
@@ -241,11 +242,11 @@ class TestCompareController(TestController):
         response.mustcontain("""<a class="changeset_hash" href="/%s/changeset/%s">r2:%s</a>""" % (repo2.repo_name, cs2.raw_id, cs2.short_id))
         ## files
         response.mustcontain("""<a href="#C--826e8142e6ba">file1</a>""")
-        #swap
+        # swap
         response.mustcontain("""<a class="btn btn-default btn-sm" href="/%s/compare/branch@%s...branch@%s?other_repo=%s&amp;merge=True"><i class="icon-arrows-cw"></i> Swap</a>""" % (repo2.repo_name, rev1, rev2, repo1.repo_name))
 
     def test_compare_cherry_pick_changesets_from_bottom(self):
-
+        pass
 #        repo1:
 #            cs0:
 #            cs1:
@@ -256,7 +257,7 @@ class TestCompareController(TestController):
 #            cs3: x
 #            cs4: x
 #            cs5:
-        #make repo1, and cs1+cs2
+        # make repo1, and cs1+cs2
         self.log_user()
 
         repo1 = fixture.create_repo(u'repo1', repo_type='hg',
@@ -264,17 +265,17 @@ class TestCompareController(TestController):
                                     cur_user=TEST_USER_ADMIN_LOGIN)
         self.r1_id = repo1.repo_id
 
-        #commit something !
+        # commit something !
         cs0 = fixture.commit_change(repo1.repo_name, filename='file1',
                 content='line1\n', message='commit1', vcs_type='hg',
                 parent=None, newfile=True)
         cs1 = fixture.commit_change(repo1.repo_name, filename='file1',
                 content='line1\nline2\n', message='commit2', vcs_type='hg',
                 parent=cs0)
-        #fork this repo
+        # fork this repo
         repo2 = fixture.create_fork(u'repo1', u'repo1-fork')
         self.r2_id = repo2.repo_id
-        #now make cs3-6
+        # now make cs3-6
         cs2 = fixture.commit_change(repo1.repo_name, filename='file1',
                 content='line1\nline2\nline3\n', message='commit3',
                 vcs_type='hg', parent=cs1)
@@ -313,6 +314,7 @@ class TestCompareController(TestController):
         response.mustcontain("""#C--826e8142e6ba">file1</a>""")
 
     def test_compare_cherry_pick_changesets_from_top(self):
+        pass
 #        repo1:
 #            cs0:
 #            cs1:
@@ -324,24 +326,24 @@ class TestCompareController(TestController):
 #            cs4: x
 #            cs5: x
 #
-        #make repo1, and cs1+cs2
+        # make repo1, and cs1+cs2
         self.log_user()
         repo1 = fixture.create_repo(u'repo1', repo_type='hg',
                                     repo_description='diff-test',
                                     cur_user=TEST_USER_ADMIN_LOGIN)
         self.r1_id = repo1.repo_id
 
-        #commit something !
+        # commit something !
         cs0 = fixture.commit_change(repo1.repo_name, filename='file1',
                 content='line1\n', message='commit1', vcs_type='hg',
                 parent=None, newfile=True)
         cs1 = fixture.commit_change(repo1.repo_name, filename='file1',
                 content='line1\nline2\n', message='commit2', vcs_type='hg',
                 parent=cs0)
-        #fork this repo
+        # fork this repo
         repo2 = fixture.create_fork(u'repo1', u'repo1-fork')
         self.r2_id = repo2.repo_id
-        #now make cs3-6
+        # now make cs3-6
         cs2 = fixture.commit_change(repo1.repo_name, filename='file1',
                 content='line1\nline2\nline3\n', message='commit3',
                 vcs_type='hg', parent=cs1)
@@ -379,7 +381,7 @@ class TestCompareController(TestController):
         response.mustcontain("""#C--826e8142e6ba">file1</a>""")
 
     def test_compare_cherry_pick_changeset_mixed_branches(self):
-        #TODO: write this
+        # TODO: write this
         assert 1
 
     def test_compare_remote_branches_hg(self):
@@ -456,7 +458,7 @@ class TestCompareController(TestController):
                 content='line1', message='commit1', vcs_type='hg', newfile=True)
         Session().commit()
         assert repo1.scm_instance.revisions == [cs0.raw_id]
-        #fork the repo1
+        # fork the repo1
         repo2 = fixture.create_repo(u'one-fork', repo_type='hg',
                                     repo_description='diff-test',
                                     cur_user=TEST_USER_ADMIN_LOGIN,
@@ -478,7 +480,7 @@ class TestCompareController(TestController):
         cs3 = fixture.commit_change(repo=r2_name, filename='file3-fork',
                 content='file3-line1-from-fork', message='commit3-fork',
                 vcs_type='hg', parent=cs2, newfile=True)
-        #compare !
+        # compare !
         rev1 = 'default'
         rev2 = 'default'
 
@@ -497,7 +499,7 @@ class TestCompareController(TestController):
                 content='line1-added-after-fork', message='commit2-parent',
                 vcs_type='hg', parent=None, newfile=True)
 
-        #compare !
+        # compare !
         rev1 = 'default'
         rev2 = 'default'
         response = self.app.get(url('compare_url',
@@ -532,7 +534,7 @@ class TestCompareController(TestController):
                 newfile=True)
         Session().commit()
         assert repo1.scm_instance.revisions == [cs0.raw_id]
-        #fork the repo1
+        # fork the repo1
         repo2 = fixture.create_repo(u'one-git-fork', repo_type='git',
                                     repo_description='diff-test',
                                     cur_user=TEST_USER_ADMIN_LOGIN,
@@ -555,7 +557,7 @@ class TestCompareController(TestController):
         cs3 = fixture.commit_change(repo=r2_name, filename='file3-fork',
                 content='file3-line1-from-fork', message='commit3-fork',
                 vcs_type='git', parent=cs2, newfile=True)
-        #compare !
+        # compare !
         rev1 = 'master'
         rev2 = 'master'
 
@@ -574,7 +576,7 @@ class TestCompareController(TestController):
                 content='line1-added-after-fork', message='commit2-parent',
                 vcs_type='git', parent=None, newfile=True)
 
-        #compare !
+        # compare !
         rev1 = 'master'
         rev2 = 'master'
         response = self.app.get(url('compare_url',

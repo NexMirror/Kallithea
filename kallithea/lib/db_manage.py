@@ -84,7 +84,7 @@ class DbManage(object):
         if SESSION:
             self.sa = SESSION
         else:
-            #init new sessions
+            # init new sessions
             engine = create_engine(self.dburi)
             init_model(engine)
             self.sa = Session()
@@ -205,7 +205,7 @@ class DbManage(object):
             if password is None:
                 password = get_password()
                 if not password:
-                    #second try
+                    # second try
                     password = get_password()
                     if not password:
                         sys.exit()
@@ -234,7 +234,7 @@ class DbManage(object):
         Creates ui settings, fills out hooks
         """
 
-        #HOOKS
+        # HOOKS
         hooks1_key = Ui.HOOK_UPDATE
         hooks1_ = Ui.query() \
             .filter(Ui.ui_key == hooks1_key).scalar()

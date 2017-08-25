@@ -158,7 +158,7 @@ class RcConf(object):
         """
         try:
             with open(self._conf_name, 'rb') as conf:
-                return  json.load(conf)
+                return json.load(conf)
         except IOError as e:
             #sys.stderr.write(str(e) + '\n')
             pass

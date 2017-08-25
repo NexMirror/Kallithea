@@ -2482,7 +2482,7 @@ class _BaseTestApi(object):
     def test_api_get_changeset(self):
         review = fixture.review_changeset(self.REPO, self.TEST_REVISION, "approved")
         id_, params = _build_data(self.apikey, 'get_changeset',
-                                  repoid=self.REPO, raw_id = self.TEST_REVISION)
+                                  repoid=self.REPO, raw_id=self.TEST_REVISION)
         response = api_call(self, params)
         result = json.loads(response.body)["result"]
         assert result["raw_id"] == self.TEST_REVISION
@@ -2491,8 +2491,8 @@ class _BaseTestApi(object):
     def test_api_get_changeset_with_reviews(self):
         reviewobjs = fixture.review_changeset(self.REPO, self.TEST_REVISION, "approved")
         id_, params = _build_data(self.apikey, 'get_changeset',
-                                  repoid=self.REPO, raw_id = self.TEST_REVISION,
-                                  with_reviews = True)
+                                  repoid=self.REPO, raw_id=self.TEST_REVISION,
+                                  with_reviews=True)
         response = api_call(self, params)
         result = json.loads(response.body)["result"]
         assert result["raw_id"] == self.TEST_REVISION
@@ -2522,7 +2522,7 @@ class _BaseTestApi(object):
         RepoModel().revoke_user_permission(repo=self.REPO, user=self.TEST_USER_LOGIN)
         RepoModel().revoke_user_permission(repo=self.REPO, user="default")
         id_, params = _build_data(self.apikey_regular, 'get_changeset',
-                                  repoid=self.REPO, raw_id = self.TEST_REVISION)
+                                  repoid=self.REPO, raw_id=self.TEST_REVISION)
         response = api_call(self, params)
         expected = u'Access denied to repo %s' % self.REPO
         self._compare_error(id_, expected, given=response.body)

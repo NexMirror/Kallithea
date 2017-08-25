@@ -300,7 +300,7 @@ class MercurialRepository(BaseRepository):
         cleaned_uri = str(url_obj)
 
         if authinfo:
-            #create a password manager
+            # create a password manager
             passmgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
             passmgr.add_password(*authinfo)
 
@@ -395,7 +395,7 @@ class MercurialRepository(BaseRepository):
         try:
             return time.mktime(self.get_changeset().date.timetuple())
         except RepositoryError:
-            #fallback to filesystem
+            # fallback to filesystem
             cl_path = os.path.join(self.path, '.hg', "00changelog.i")
             st_path = os.path.join(self.path, '.hg', "store")
             if os.path.exists(cl_path):
@@ -529,7 +529,7 @@ class MercurialRepository(BaseRepository):
             raise BranchDoesNotExistError(msg)
         if end_pos is not None:
             end_pos += 1
-        #filter branches
+        # filter branches
         filter_ = []
         if branch_name:
             filter_.append('branch("%s")' % (branch_name))

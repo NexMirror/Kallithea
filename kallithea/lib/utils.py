@@ -214,7 +214,7 @@ def get_filesystem_repos(path):
             if REMOVED_REPO_PAT.match(subdir):
                 continue
 
-            #skip .<something> dirs TODO: rly? then we should prevent creating them ...
+            # skip .<something> dirs TODO: rly? then we should prevent creating them ...
             if subdir.startswith('.'):
                 continue
 
@@ -303,7 +303,7 @@ def is_valid_repo_group(repo_group_name, base_path, skip_path_check=False):
     return False
 
 
-#propagated from mercurial documentation
+# propagated from mercurial documentation
 ui_sections = ['alias', 'auth',
                 'decode/encode', 'defaults',
                 'diff', 'email',
@@ -479,7 +479,7 @@ def repo2db_mapper(initial_repo_list, remove_obsolete=False,
         user = User.get_first_admin()
     added = []
 
-    ##creation defaults
+    # creation defaults
     defs = Setting.get_default_repo_settings(strip_prefix=True)
     enable_statistics = defs.get('repo_enable_statistics')
     enable_locking = defs.get('repo_enable_locking')
@@ -556,13 +556,13 @@ def load_rcextensions(root_path):
         # Additional mappings that are not present in the pygments lexers
         conf.LANGUAGES_EXTENSIONS_MAP.update(getattr(EXT, 'EXTRA_MAPPINGS', {}))
 
-        #OVERRIDE OUR EXTENSIONS FROM RC-EXTENSIONS (if present)
+        # OVERRIDE OUR EXTENSIONS FROM RC-EXTENSIONS (if present)
 
         if getattr(EXT, 'INDEX_EXTENSIONS', []):
             log.debug('settings custom INDEX_EXTENSIONS')
             conf.INDEX_EXTENSIONS = getattr(EXT, 'INDEX_EXTENSIONS', [])
 
-        #ADDITIONAL MAPPINGS
+        # ADDITIONAL MAPPINGS
         log.debug('adding extra into INDEX_EXTENSIONS')
         conf.INDEX_EXTENSIONS.extend(getattr(EXT, 'EXTRA_INDEX_EXTENSIONS', []))
 

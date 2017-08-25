@@ -10,6 +10,7 @@ from kallithea.tests.fixture import create_test_index, Fixture
 
 fixture = Fixture()
 
+
 def init_indexing_test(repo):
     prev = fixture.commit_change(repo.repo_name,
                                  filename='this_should_be_unique_filename.txt',
@@ -34,6 +35,7 @@ def init_stopword_test(repo):
                                  parent=prev,
                                  newfile=True)
 
+
 repos = [
     # reponame,              init func or fork base, groupname
     (u'indexing_test',       init_indexing_test,     None),
@@ -44,9 +46,11 @@ repos = [
     (u'stopword_test',       init_stopword_test,     None),
 ]
 
+
 # map: name => id
 repoids = {}
 groupids = {}
+
 
 def rebuild_index(full_index):
     with mock.patch('kallithea.lib.indexers.daemon.log.debug',

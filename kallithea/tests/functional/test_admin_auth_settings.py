@@ -164,7 +164,6 @@ class TestAuthSettingsController(TestController):
         assert response.form['firstname'].value == 'John'
         assert response.form['lastname'].value == 'Doe'
 
-
     def test_container_auth_login_fallback_header(self):
         self._container_auth_setup(
             auth_container_header='THE_USER_NAME',

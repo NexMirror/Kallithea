@@ -46,6 +46,7 @@ class TagsTestCaseMixin(_BackendTestMixin):
         self.repo.tag('11', 'joe')
         self.assertTrue('11' in self.repo.tags)
 
+
 # For each backend create test case class
 for alias in SCM_TESTS:
     attrs = {

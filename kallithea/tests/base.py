@@ -54,7 +54,7 @@ __all__ = [
 # Invoke websetup with the current config file
 # SetupCommand('setup-app').run([config_file])
 
-#SOME GLOBALS FOR TESTS
+## SOME GLOBALS FOR TESTS
 
 TESTS_TMP_PATH = os.environ.get('KALLITHEA_TESTS_TMP_PATH', tempfile.mkdtemp(prefix='kallithea-test-'))
 os.environ['VCS_TEST_ROOT'] = TESTS_TMP_PATH
@@ -106,7 +106,7 @@ TEST_HG_REPO_PULL = os.path.join(TESTS_TMP_PATH, 'vcshgpull%s' % uniq_suffix)
 GIT_REMOTE_REPO = os.path.join(TESTS_TMP_PATH, GIT_REPO)
 HG_REMOTE_REPO = os.path.join(TESTS_TMP_PATH, HG_REPO)
 
-#skip ldap tests if LDAP lib is not installed
+# skip ldap tests if LDAP lib is not installed
 ldap_lib_installed = False
 try:
     import ldap
@@ -123,6 +123,7 @@ try:
 except ImportError:
     pam_lib_installed = False
 
+
 def invalidate_all_caches():
     """Invalidate all beaker caches currently configured.
     Useful when manipulating IP permissions in a test and changes need to take
@@ -133,9 +134,11 @@ def invalidate_all_caches():
     for cache in cache_managers.values():
         cache.clear()
 
+
 class NullHandler(logging.Handler):
     def emit(self, record):
         pass
+
 
 class TestController(object):
     """Pytest-style test controller"""

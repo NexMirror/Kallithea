@@ -134,16 +134,16 @@ class TestMyAccountController(TestController):
         if name == 'email':
             params['emails'] = [attrs['email']]
         if name == 'extern_type':
-            #cannot update this via form, expected value is original one
+            # cannot update this via form, expected value is original one
             params['extern_type'] = "internal"
         if name == 'extern_name':
-            #cannot update this via form, expected value is original one
+            # cannot update this via form, expected value is original one
             params['extern_name'] = str(user_id)
         if name == 'active':
-            #my account cannot deactivate account
+            # my account cannot deactivate account
             params['active'] = True
         if name == 'admin':
-            #my account cannot make you an admin !
+            # my account cannot make you an admin !
             params['admin'] = False
 
         params.pop('_authentication_token')
@@ -224,7 +224,7 @@ class TestMyAccountController(TestController):
         self.checkSessionFlash(response, 'API key successfully created')
         response = response.follow()
 
-        #now delete our key
+        # now delete our key
         keys = UserApiKeys.query().all()
         assert 1 == len(keys)
 
@@ -233,7 +233,6 @@ class TestMyAccountController(TestController):
         self.checkSessionFlash(response, 'API key successfully deleted')
         keys = UserApiKeys.query().all()
         assert 0 == len(keys)
-
 
     def test_my_account_reset_main_api_key(self):
         usr = self.log_user(TEST_USER_REGULAR2_LOGIN, TEST_USER_REGULAR2_PASS)

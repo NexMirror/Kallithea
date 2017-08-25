@@ -116,13 +116,13 @@ class PermissionModel(object):
                 .all()
             for p in u2p:
                 Session().delete(p)
-            #create fresh set of permissions
+            # create fresh set of permissions
             for def_perm_key in ['default_repo_perm',
                                  'default_group_perm',
                                  'default_user_group_perm',
                                  'default_repo_create',
                                  'create_on_write', # special case for create repos on write access to group
-                                 #'default_repo_group_create', #not implemented yet
+                                 #'default_repo_group_create', # not implemented yet
                                  'default_user_group_create',
                                  'default_fork',
                                  'default_register',
@@ -130,7 +130,7 @@ class PermissionModel(object):
                 p = _make_new(perm_user, form_result[def_perm_key])
                 Session().add(p)
 
-            #stage 3 update all default permissions for repos if checked
+            # stage 3 update all default permissions for repos if checked
             if form_result['overwrite_default_repo']:
                 _def_name = form_result['default_repo_perm'].split('repository.')[-1]
                 _def = Permission.get_by_key('repository.' + _def_name)
@@ -139,7 +139,7 @@ class PermissionModel(object):
                                .filter(UserRepoToPerm.user == perm_user) \
                                .all():
 
-                    #don't reset PRIVATE repositories
+                    # don't reset PRIVATE repositories
                     if not r2p.repository.private:
                         r2p.permission = _def
 

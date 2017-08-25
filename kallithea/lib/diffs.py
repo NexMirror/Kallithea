@@ -130,6 +130,7 @@ def get_gitdiff(filenode_old, filenode_new, ignore_whitespace=True, context=3):
                                 ignore_whitespace, context)
     return vcs_gitdiff
 
+
 NEW_FILENODE = 1
 DEL_FILENODE = 2
 MOD_FILENODE = 3
@@ -204,7 +205,6 @@ class DiffProcessor(object):
     _token_re = re.compile(r'()(&amp;|&lt;|&gt;|<u>\t</u>|<u class="cr"></u>| <i></i>|\W+?)')
 
     _escape_re = re.compile(r'(&)|(<)|(>)|(\t)|(\r)|(?<=.)( \n| $)')
-
 
     def __init__(self, diff, vcs='hg', format='gitdiff', diff_limit=None):
         """
@@ -375,7 +375,7 @@ class DiffProcessor(object):
 
     def _clean_line(self, line, command):
         if command in ['+', '-', ' ']:
-            #only modify the line if it's actually a diff thing
+            # only modify the line if it's actually a diff thing
             line = line[1:]
         return line
 
@@ -383,7 +383,7 @@ class DiffProcessor(object):
         _files = []
         diff_container = lambda arg: arg
 
-        ##split the diff in chunks of separate --git a/file b/file chunks
+        # split the diff in chunks of separate --git a/file b/file chunks
         for raw_diff in ('\n' + self._diff).split('\ndiff --git')[1:]:
             head, diff = self._get_header(raw_diff)
 

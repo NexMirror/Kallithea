@@ -2,10 +2,12 @@ from kallithea.tests.base import *
 from kallithea.model.changeset_status import ChangesetStatusModel
 from kallithea.model.db import ChangesetStatus as CS
 
+
 class CSM(object): # ChangesetStatusMock
 
     def __init__(self, status):
         self.status = status
+
 
 class TestChangesetStatusCalculation(TestController):
 

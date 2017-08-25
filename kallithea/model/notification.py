@@ -98,7 +98,7 @@ class NotificationModel(object):
         if not with_email:
             return notif
 
-        #don't send email to person who created this comment
+        # don't send email to person who created this comment
         rec_objs = set(recipients_objs).difference(set([created_by_obj]))
 
         headers = {}
@@ -108,7 +108,7 @@ class NotificationModel(object):
 
         # send email with notification to all other participants
         for rec in rec_objs:
-            ## this is passed into template
+            # this is passed into template
             html_kwargs = {
                       'subject': subject,
                       'body': h.render_w_mentions(body, repo_name),
@@ -232,7 +232,7 @@ class NotificationModel(object):
         Creates a human readable description based on properties
         of notification object
         """
-        #alias
+        # alias
         _n = notification
 
         if show_age:

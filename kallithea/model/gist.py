@@ -114,7 +114,7 @@ class GistModel(object):
         log.debug('set GIST expiration date to: %s',
                   time_to_datetime(gist_expires)
                    if gist_expires != -1 else 'forever')
-        #create the Database version
+        # create the Database version
         gist = Gist()
         gist.gist_description = description
         gist.gist_access_id = gist_id
@@ -139,7 +139,7 @@ class GistModel(object):
                 raise Exception('Filename cannot be inside a directory')
 
             content = gist_mapping[filename]['content']
-            #TODO: expand support for setting explicit lexers
+            # TODO: expand support for setting explicit lexers
 #             if lexer is None:
 #                 try:
 #                     guess_lexer = pygments.lexers.guess_lexer_for_filename
@@ -153,7 +153,7 @@ class GistModel(object):
         message += 's: ' if len(processed_mapping) > 1 else ': '
         message += ', '.join([x for x in processed_mapping])
 
-        #fake Kallithea Repository object
+        # fake Kallithea Repository object
         fake_repo = AttributeDict(dict(
             repo_name=gist_repo_path,
             scm_instance_no_cache=lambda: repo,
@@ -192,7 +192,7 @@ class GistModel(object):
         else:
             gist_expires = time.time() + (lifetime * 60) if lifetime != -1 else -1
 
-        #calculate operation type based on given data
+        # calculate operation type based on given data
         gist_mapping_op = {}
         for k, v in gist_mapping.items():
             # add, mod, del
@@ -215,7 +215,7 @@ class GistModel(object):
         message += 's: ' if len(gist_mapping) > 1 else ': '
         message += ', '.join([x for x in gist_mapping])
 
-        #fake Kallithea Repository object
+        # fake Kallithea Repository object
         fake_repo = AttributeDict(dict(
             repo_name=gist_repo.path,
             scm_instance_no_cache=lambda: gist_repo,

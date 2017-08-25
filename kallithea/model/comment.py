@@ -67,7 +67,7 @@ class ChangesetCommentsModel(object):
         if line_no:
             line = _('on line %s') % line_no
 
-        #changeset
+        # changeset
         if revision:
             notification_type = Notification.TYPE_CHANGESET_COMMENT
             cs = repo.scm_instance.get_changeset(revision)
@@ -91,7 +91,7 @@ class ChangesetCommentsModel(object):
             # add changeset author if it's known locally
             cs_author = User.get_from_cs_author(cs.author)
             if not cs_author:
-                #use repo owner if we cannot extract the author correctly
+                # use repo owner if we cannot extract the author correctly
                 # FIXME: just use committer name even if not a user
                 cs_author = repo.owner
             recipients.append(cs_author)
@@ -112,7 +112,7 @@ class ChangesetCommentsModel(object):
                 'comment_username': author.username,
                 'threading': threading,
             }
-        #pull request
+        # pull request
         elif pull_request:
             notification_type = Notification.TYPE_PULL_REQUEST_COMMENT
             desc = comment.pull_request.title
@@ -128,7 +128,7 @@ class ChangesetCommentsModel(object):
             comment_url = pull_request.url(canonical=True,
                 anchor='comment-%s' % comment.comment_id)
             subj = safe_unicode(
-                h.link_to('Re pull request %(pr_nice_id)s: %(desc)s %(line)s' % \
+                h.link_to('Re pull request %(pr_nice_id)s: %(desc)s %(line)s' %
                           {'desc': desc,
                            'pr_nice_id': comment.pull_request.nice_id(),
                            'line': line},
@@ -139,7 +139,7 @@ class ChangesetCommentsModel(object):
             recipients.append(pull_request.owner)
             recipients += pull_request.get_reviewer_users()
 
-            #set some variables for email notification
+            # set some variables for email notification
             email_kwargs = {
                 'pr_title': pull_request.title,
                 'pr_title_short': h.shorter(pull_request.title, 50),

@@ -14,7 +14,7 @@ class TestHomeController(TestController):
     def test_index(self):
         self.log_user()
         response = self.app.get(url(controller='home', action='index'))
-        #if global permission is set
+        # if global permission is set
         response.mustcontain('Add Repository')
 
         response.mustcontain('<span class="repotag">git')

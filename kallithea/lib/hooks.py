@@ -98,7 +98,7 @@ def pre_push(ui, repo, **kwargs):
         # on that proper return code is server to client
         _http_ret = HTTPLockedRC(ex.repository, locked_by)
         if str(_http_ret.code).startswith('2'):
-            #2xx Codes don't raise exceptions
+            # 2xx Codes don't raise exceptions
             ui.status(safe_str(_http_ret.title))
         else:
             raise _http_ret
@@ -113,7 +113,7 @@ def pre_pull(ui, repo, **kwargs):
         # on that proper return code is server to client
         _http_ret = HTTPLockedRC(ex.repository, locked_by)
         if str(_http_ret.code).startswith('2'):
-            #2xx Codes don't raise exceptions
+            # 2xx Codes don't raise exceptions
             ui.status(safe_str(_http_ret.title))
         else:
             raise _http_ret
@@ -148,7 +148,7 @@ def log_pull_action(ui, repo, **kwargs):
         locked_by = User.get(ex.locked_by[0]).username
         _http_ret = HTTPLockedRC(ex.repository, locked_by)
         if str(_http_ret.code).startswith('2'):
-            #2xx Codes don't raise exceptions
+            # 2xx Codes don't raise exceptions
             ui.status(safe_str(_http_ret.title))
     return 0
 
@@ -203,7 +203,7 @@ def log_push_action(ui, repo, **kwargs):
         locked_by = User.get(ex.locked_by[0]).username
         _http_ret = HTTPLockedRC(ex.repository, locked_by)
         if str(_http_ret.code).startswith('2'):
-            #2xx Codes don't raise exceptions
+            # 2xx Codes don't raise exceptions
             ui.status(safe_str(_http_ret.title))
 
     return 0
@@ -446,7 +446,7 @@ def handle_git_receive(repo_path, revs, env, hook_type):
                         repo._repo.refs.set_symbolic_ref('HEAD',
                                             'refs/heads/%s' % push_ref['name'])
 
-                    cmd = ['for-each-ref', '--format=%(refname)','refs/heads/*']
+                    cmd = ['for-each-ref', '--format=%(refname)', 'refs/heads/*']
                     heads = repo.run_git_command(cmd)[0]
                     cmd = ['log', push_ref['new_rev'],
                            '--reverse', '--pretty=format:%H', '--not']
@@ -456,7 +456,7 @@ def handle_git_receive(repo_path, revs, env, hook_type):
                     git_revs += repo.run_git_command(cmd)[0].splitlines()
 
                 elif push_ref['new_rev'] == EmptyChangeset().raw_id:
-                    #delete branch case
+                    # delete branch case
                     git_revs += ['delete_branch=>%s' % push_ref['name']]
                 else:
                     cmd = ['log', '%(old_rev)s..%(new_rev)s' % push_ref,

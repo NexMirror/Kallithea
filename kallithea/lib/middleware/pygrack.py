@@ -72,7 +72,7 @@ class GitRepository(object):
 
     def __init__(self, repo_name, content_path, extras):
         files = set([f.lower() for f in os.listdir(content_path)])
-        if  not (self.git_folder_signature.intersection(files)
+        if not (self.git_folder_signature.intersection(files)
                 == self.git_folder_signature):
             raise OSError('%s missing git signature' % content_path)
         self.content_path = content_path

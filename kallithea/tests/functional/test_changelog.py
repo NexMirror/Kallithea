@@ -15,7 +15,7 @@ class TestChangelogController(TestController):
             """name="7b22a518347bb9bc19679f6af07cd0a61bfe16e7" """
             """type="checkbox" value="1" />"""
         )
-        #rev 640: code garden
+        # rev 640: code garden
         response.mustcontain(
             """<a class="changeset_hash" href="/%s/changeset/0a4e54a4460401d6dbbd6a3604b17cd2b3606b82">r640:0a4e54a44604</a>""" % HG_REPO
         )
@@ -25,7 +25,7 @@ class TestChangelogController(TestController):
 
     def test_index_pagination_hg(self):
         self.log_user()
-        #pagination
+        # pagination
         self.app.get(url(controller='changelog', action='index',
                                     repo_name=HG_REPO), {'page': 1})
         self.app.get(url(controller='changelog', action='index',
@@ -81,7 +81,7 @@ class TestChangelogController(TestController):
 
     def test_index_pagination_git(self):
         self.log_user()
-        #pagination
+        # pagination
         self.app.get(url(controller='changelog', action='index',
                                     repo_name=GIT_REPO), {'page': 1})
         self.app.get(url(controller='changelog', action='index',
@@ -112,7 +112,7 @@ class TestChangelogController(TestController):
         response = self.app.get(url(controller='changelog', action='index',
                                     revision='tip', f_path='/vcs/exceptions.py',
                                     repo_name=HG_REPO))
-        #history commits messages
+        # history commits messages
         response.mustcontain('Added exceptions module, this time for real')
         response.mustcontain('Added not implemented hg backend test case')
         response.mustcontain('Added BaseChangeset class')
@@ -123,7 +123,7 @@ class TestChangelogController(TestController):
         response = self.app.get(url(controller='changelog', action='index',
                                     revision='tip', f_path='/vcs/exceptions.py',
                                     repo_name=GIT_REPO))
-        #history commits messages
+        # history commits messages
         response.mustcontain('Added exceptions module, this time for real')
         response.mustcontain('Added not implemented hg backend test case')
         response.mustcontain('Added BaseChangeset class')

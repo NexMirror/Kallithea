@@ -65,11 +65,11 @@ def _journal_filter(user_log, search_term):
 
     def wildcard_handler(col, wc_term):
         if wc_term.startswith('*') and not wc_term.endswith('*'):
-            #postfix == endswith
+            # postfix == endswith
             wc_term = remove_prefix(wc_term, prefix='*')
             return func.lower(col).endswith(func.lower(wc_term))
         elif wc_term.startswith('*') and wc_term.endswith('*'):
-            #wildcard == ilike
+            # wildcard == ilike
             wc_term = remove_prefix(wc_term, prefix='*')
             wc_term = remove_suffix(wc_term, suffix='*')
             return func.lower(col).contains(func.lower(wc_term))
@@ -88,7 +88,7 @@ def _journal_filter(user_log, search_term):
             field = getattr(UserLog, field)
         log.debug('filter field: %s val=>%s', field, val)
 
-        #sql filtering
+        # sql filtering
         if isinstance(term, query.Wildcard):
             return wildcard_handler(field, val)
         elif isinstance(term, query.Prefix):
@@ -130,7 +130,7 @@ class AdminController(BaseController):
                 .options(joinedload(UserLog.user)) \
                 .options(joinedload(UserLog.repository))
 
-        #FILTERING
+        # FILTERING
         c.search_term = request.GET.get('filter')
         users_log = _journal_filter(users_log, c.search_term)
 

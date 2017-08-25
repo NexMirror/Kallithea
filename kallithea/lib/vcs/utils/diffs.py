@@ -160,7 +160,7 @@ class DiffProcessor(object):
             l.extend(output[1].splitlines(1))
             return map(line_decoder, l)
         elif size == 1:
-            return  map(line_decoder, output[0].splitlines(1))
+            return map(line_decoder, output[0].splitlines(1))
         elif size == 0:
             return []
 

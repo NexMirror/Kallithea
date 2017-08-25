@@ -61,12 +61,12 @@ class PullRequestModel(object):
             mention_recipients = set(mention_recipients) - reviewers
             _assert_valid_reviewers(mention_recipients)
 
-        #members
+        # members
         for reviewer in reviewers:
             prr = PullRequestReviewer(reviewer, pr)
             Session().add(prr)
 
-        #notification to reviewers
+        # notification to reviewers
         pr_url = pr.url(canonical=True)
         threading = ['%s-pr-%s@%s' % (pr.other_repo.repo_name,
                                       pr.pull_request_id,
@@ -265,7 +265,7 @@ class CreatePullRequestAction(object):
             # create a ref under refs/pull/ so that commits don't get garbage-collected
             self.org_repo.scm_instance._repo["refs/pull/%d/head" % pr.pull_request_id] = safe_str(self.org_rev)
 
-        #reset state to under-review
+        # reset state to under-review
         from kallithea.model.changeset_status import ChangesetStatusModel
         from kallithea.model.comment import ChangesetCommentsModel
         comment = ChangesetCommentsModel().create(

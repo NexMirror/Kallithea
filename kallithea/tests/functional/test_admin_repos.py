@@ -305,7 +305,7 @@ class _BaseTestCase(TestController):
             Session().commit()
             pytest.fail('no repo %s in filesystem' % repo_name)
 
-        #check if inherited permissiona are applied
+        # check if inherited permissiona are applied
         inherited_perms = UserRepoToPerm.query() \
             .filter(UserRepoToPerm.repository_id == new_repo_id).all()
         assert len(inherited_perms) == 2
@@ -332,7 +332,6 @@ class _BaseTestCase(TestController):
                                                 _authentication_token=self.authentication_token()))
         response.mustcontain('Invalid repository URL')
 
-
     def test_create_remote_repo_wrong_clone_uri_hg_svn(self):
         self.log_user()
         repo_name = self.NEW_REPO
@@ -345,7 +344,6 @@ class _BaseTestCase(TestController):
                                                 clone_uri='svn+http://127.0.0.1/repo',
                                                 _authentication_token=self.authentication_token()))
         response.mustcontain('Invalid repository URL')
-
 
     def test_delete(self):
         self.log_user()
@@ -387,7 +385,7 @@ class _BaseTestCase(TestController):
 
         response.follow()
 
-        #check if repo was deleted from db
+        # check if repo was deleted from db
         deleted_repo = Session().query(Repository) \
             .filter(Repository.repo_name == repo_name).scalar()
 
@@ -437,7 +435,7 @@ class _BaseTestCase(TestController):
         self.checkSessionFlash(response, 'Deleted repository %s' % (repo_name_unicode))
         response.follow()
 
-        #check if repo was deleted from db
+        # check if repo was deleted from db
         deleted_repo = Session().query(Repository) \
             .filter(Repository.repo_name == repo_name_unicode).scalar()
 
@@ -446,7 +444,7 @@ class _BaseTestCase(TestController):
         assert os.path.isdir(os.path.join(Ui.get_by_key('paths', '/').ui_value, repo_name_unicode)) == False
 
     def test_delete_repo_with_group(self):
-        #TODO:
+        # TODO:
         pass
 
     def test_delete_browser_fakeout(self):
@@ -462,7 +460,7 @@ class _BaseTestCase(TestController):
 
     def test_set_private_flag_sets_default_to_none(self):
         self.log_user()
-        #initially repository perm should be read
+        # initially repository perm should be read
         perm = _get_permission_for_user(user='default', repo=self.REPO)
         assert len(perm), 1
         assert perm[0].permission.permission_name == 'repository.read'
@@ -478,7 +476,7 @@ class _BaseTestCase(TestController):
                                msg='Repository %s updated successfully' % (self.REPO))
         assert Repository.get_by_repo_name(self.REPO).private == True
 
-        #now the repo default permission should be None
+        # now the repo default permission should be None
         perm = _get_permission_for_user(user='default', repo=self.REPO)
         assert len(perm), 1
         assert perm[0].permission.permission_name == 'repository.none'
@@ -493,12 +491,12 @@ class _BaseTestCase(TestController):
                                msg='Repository %s updated successfully' % (self.REPO))
         assert Repository.get_by_repo_name(self.REPO).private == False
 
-        #we turn off private now the repo default permission should stay None
+        # we turn off private now the repo default permission should stay None
         perm = _get_permission_for_user(user='default', repo=self.REPO)
         assert len(perm), 1
         assert perm[0].permission.permission_name == 'repository.none'
 
-        #update this permission back
+        # update this permission back
         perm[0].permission = Permission.get_by_key('repository.read')
         Session().commit()
 

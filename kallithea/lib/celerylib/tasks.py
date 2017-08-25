@@ -180,7 +180,7 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
                                         "schema": ["commits"],
                                         }
 
-            #gather all data by day
+            # gather all data by day
             if k in commits_by_day_aggregate:
                 commits_by_day_aggregate[k] += 1
             else:
@@ -320,6 +320,7 @@ def send_email(recipients, subject, body='', html_body='', headers=None, author=
         log.error(traceback.format_exc())
         return False
     return True
+
 
 @celerylib.task
 @celerylib.dbsession
@@ -471,7 +472,7 @@ def create_repo_fork(form_data, cur_user):
     except Exception as e:
         log.warning('Exception %s occurred when forking repository, '
                     'doing cleanup...' % e)
-        #rollback things manually !
+        # rollback things manually !
         repo = Repository.get_by_repo_name(repo_name_full)
         if repo:
             Repository.delete(repo.repo_id)

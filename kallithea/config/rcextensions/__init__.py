@@ -49,6 +49,8 @@ def _crrepohook(*args, **kwargs):
      :param created_by:
     """
     return 0
+
+
 CREATE_REPO_HOOK = _crrepohook
 
 
@@ -73,6 +75,8 @@ def _pre_cruserhook(*args, **kwargs):
     """
     reason = 'allowed'
     return True, reason
+
+
 PRE_CREATE_USER_HOOK = _pre_cruserhook
 
 #==============================================================================
@@ -105,6 +109,8 @@ def _cruserhook(*args, **kwargs):
       :param created_by:
     """
     return 0
+
+
 CREATE_USER_HOOK = _cruserhook
 
 
@@ -132,6 +138,8 @@ def _dlrepohook(*args, **kwargs):
      :param deleted_on:
     """
     return 0
+
+
 DELETE_REPO_HOOK = _dlrepohook
 
 
@@ -165,6 +173,8 @@ def _dluserhook(*args, **kwargs):
       :param deleted_by:
     """
     return 0
+
+
 DELETE_USER_HOOK = _dluserhook
 
 
@@ -189,6 +199,8 @@ def _pushhook(*args, **kwargs):
       :param pushed_revs: list of pushed revisions
     """
     return 0
+
+
 PUSH_HOOK = _pushhook
 
 
@@ -212,4 +224,6 @@ def _pullhook(*args, **kwargs):
       :param repository: repository name
     """
     return 0
+
+
 PULL_HOOK = _pullhook

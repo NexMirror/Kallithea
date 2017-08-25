@@ -21,6 +21,7 @@ from kallithea.config.routing import url
 from webhelpers.html import literal, HTML
 from webhelpers.paginate import Page as _Page
 
+
 class Page(_Page):
     """
     Custom pager to match rendering style with YUI paginator emitting Bootstrap paginators

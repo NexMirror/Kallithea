@@ -42,7 +42,7 @@ class TestAdminUsersGroupsController(TestController):
         self.log_user()
         users_group_name = TEST_USER_GROUP + 'another'
         response = self.app.post(url('users_groups'),
-                                 {'users_group_name':users_group_name,
+                                 {'users_group_name': users_group_name,
                                   'user_group_description': u'DESC',
                                   'active': True,
                                   '_authentication_token': self.authentication_token()})

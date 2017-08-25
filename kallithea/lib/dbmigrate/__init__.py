@@ -1,5 +1,6 @@
 from gearbox.command import Command
 
+
 class UpgradeDb(Command):
     '''(removed)'''
 

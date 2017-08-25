@@ -27,7 +27,9 @@ def celery_config(config):
     # Verify .ini file configuration has been loaded
     assert config['celery.imports'] == 'kallithea.lib.celerylib.tasks', 'Kallithea Celery configuration has not been loaded'
 
-    class CeleryConfig(object): pass
+    class CeleryConfig(object):
+        pass
+
     celery_config = CeleryConfig()
 
     PREFIXES = """ADMINS BROKER CASSANDRA CELERYBEAT CELERYD CELERYMON CELERY EMAIL SERVER""".split()

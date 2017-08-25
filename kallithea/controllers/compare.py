@@ -94,7 +94,7 @@ class CompareController(BaseRepoController):
             other_changesets = []
 
         elif alias == 'hg':
-            #case two independent repos
+            # case two independent repos
             if org_repo != other_repo:
                 hgrepo = unionrepo.unionrepository(other_repo.baseui,
                                                    other_repo.path,
@@ -102,7 +102,7 @@ class CompareController(BaseRepoController):
                 # all ancestors of other_rev will be in other_repo and
                 # rev numbers from hgrepo can be used in other_repo - org_rev ancestors cannot
 
-            #no remote compare do it on the same repository
+            # no remote compare do it on the same repository
             else:
                 hgrepo = other_repo._repo
 

@@ -18,6 +18,7 @@ from kallithea.lib.vcs.utils.hgcompat import archival, hex
 
 from mercurial import obsolete
 
+
 class MercurialChangeset(BaseChangeset):
     """
     Represents state of the repository at the single revision.
@@ -37,7 +38,7 @@ class MercurialChangeset(BaseChangeset):
 
     @LazyProperty
     def branch(self):
-        return  safe_unicode(self._ctx.branch())
+        return safe_unicode(self._ctx.branch())
 
     @LazyProperty
     def closesbranch(self):
@@ -411,7 +412,7 @@ class MercurialChangeset(BaseChangeset):
         """
         Returns list of modified ``FileNode`` objects.
         """
-        return ChangedFileNodesGenerator([n for n in  self.status[0]], self)
+        return ChangedFileNodesGenerator([n for n in self.status[0]], self)
 
     @property
     def removed(self):

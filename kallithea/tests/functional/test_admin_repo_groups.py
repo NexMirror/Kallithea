@@ -7,6 +7,7 @@ from kallithea.tests.fixture import Fixture
 
 fixture = Fixture()
 
+
 class TestRepoGroupsController(TestController):
 
     def test_case_insensitivity(self):

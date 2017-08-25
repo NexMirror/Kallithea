@@ -391,7 +391,7 @@ class PullrequestsController(BaseRepoController):
         if pull_request.is_closed():
             raise HTTPForbidden()
         assert pull_request.other_repo.repo_name == repo_name
-        #only owner or admin can update it
+        # only owner or admin can update it
         owner = pull_request.owner_id == request.authuser.user_id
         repo_admin = h.HasRepoPermissionLevel('admin')(c.repo_name)
         if not (h.HasPermissionAny('hg.admin')() or repo_admin or owner):
@@ -446,7 +446,7 @@ class PullrequestsController(BaseRepoController):
     @jsonify
     def delete(self, repo_name, pull_request_id):
         pull_request = PullRequest.get_or_404(pull_request_id)
-        #only owner can delete it !
+        # only owner can delete it !
         if pull_request.owner_id == request.authuser.user_id:
             PullRequestModel().delete(pull_request)
             Session().commit()
@@ -596,7 +596,7 @@ class PullrequestsController(BaseRepoController):
                                                 ignore_whitespace=ignore_whitespace,
                                                 context=line_context)
         except ChangesetDoesNotExistError:
-            txtdiff =  _("The diff can't be shown - the PR revisions could not be found.")
+            txtdiff = _("The diff can't be shown - the PR revisions could not be found.")
         diff_processor = diffs.DiffProcessor(txtdiff or '', format='gitdiff',
                                              diff_limit=diff_limit)
         _parsed = diff_processor.prepare()
@@ -734,7 +734,7 @@ class PullrequestsController(BaseRepoController):
     def delete_comment(self, repo_name, comment_id):
         co = ChangesetComment.get(comment_id)
         if co.pull_request.is_closed():
-            #don't allow deleting comments on closed pull request
+            # don't allow deleting comments on closed pull request
             raise HTTPForbidden()
 
         owner = co.author_id == request.authuser.user_id

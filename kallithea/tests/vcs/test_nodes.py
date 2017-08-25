@@ -170,6 +170,7 @@ class NodeBasicTest(unittest.TestCase):
         self.assertEqual(my_node3.mimetype, 'application/octet-stream')
         self.assertEqual(my_node3.get_mimetype(), ('application/octet-stream', None))
 
+
 class NodeContentTest(unittest.TestCase):
 
     def test_if_binary(self):

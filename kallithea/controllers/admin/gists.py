@@ -106,7 +106,7 @@ class GistsController(BaseController):
         gist_form = GistForm([x[0] for x in c.lifetime_values])()
         try:
             form_result = gist_form.to_python(dict(request.POST))
-            #TODO: multiple files support, from the form
+            # TODO: multiple files support, from the form
             filename = form_result['filename'] or Gist.DEFAULT_FILENAME
             nodes = {
                 filename: {
@@ -250,7 +250,7 @@ class GistsController(BaseController):
         success = True
         revision = request.POST.get('revision')
 
-        ##TODO: maybe move this to model ?
+        # TODO: maybe move this to model ?
         if revision != last_rev.raw_id:
             log.error('Last revision %s is different than submitted %s',
                       revision, last_rev)

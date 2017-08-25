@@ -64,6 +64,7 @@ def canonical_url(*args, **kargs):
         kargs['qualified'] = True
     return url(*args, **kargs)
 
+
 def canonical_hostname():
     '''Return canonical hostname of system'''
     from kallithea import CONFIG
@@ -73,6 +74,7 @@ def canonical_hostname():
     except IndexError:
         parts = url('home', qualified=True).split('://', 1)
         return parts[1].split('/', 1)[0]
+
 
 def html_escape(s):
     """Return string with all html escaped.
@@ -116,6 +118,7 @@ def js(value):
         .replace('>', r'\x3e')
     )
 
+
 def jshtml(val):
     """HTML escapes a string value, then converts the resulting string
     to its corresponding JavaScript representation (see `js`).
@@ -149,6 +152,7 @@ def _reset(name, value=None, id=NotGiven, type="reset", **attrs):
     _set_id_attr(attrs, id, name)
     convert_boolean_attrs(attrs, ["disabled"])
     return HTML.input(**attrs)
+
 
 reset = _reset
 safeid = _make_safe_id_component
@@ -189,6 +193,7 @@ class _FilesBreadCrumbs(object):
                              )
 
         return literal('/'.join(url_l))
+
 
 files_breadcrumbs = _FilesBreadCrumbs()
 
@@ -272,6 +277,7 @@ class CodeHtmlFormatter(HtmlFormatter):
 
 _whitespace_re = re.compile(r'(\t)|( )(?=\n|</div>)')
 
+
 def _markup_whitespace(m):
     groups = m.groups()
     if groups[0]:
@@ -279,8 +285,10 @@ def _markup_whitespace(m):
     if groups[1]:
         return ' <i></i>'
 
+
 def markup_whitespace(s):
     return _whitespace_re.sub(_markup_whitespace, s)
+
 
 def pygmentize(filenode, **kwargs):
     """
@@ -399,6 +407,7 @@ class _Message(object):
     def __html__(self):
         return escape(safe_unicode(self.message))
 
+
 class Flash(_Flash):
 
     def __call__(self, message, category=None, ignore_duplicate=False, logf=None):
@@ -430,6 +439,7 @@ class Flash(_Flash):
         session.save()
         return [_Message(*m) for m in messages]
 
+
 flash = Flash()
 
 #==============================================================================
@@ -438,7 +448,7 @@ flash = Flash()
 from kallithea.lib.vcs.utils import author_name, author_email
 from kallithea.lib.utils2 import credentials_filter, age as _age
 
-age = lambda  x, y=False: _age(x, y)
+age = lambda x, y=False: _age(x, y)
 capitalize = lambda x: x.capitalize()
 email = author_email
 short_id = lambda x: x[:12]
@@ -499,6 +509,7 @@ def user_or_none(author):
         return User.get_by_email(email, cache=True) # cache will only use sql_cache_short
     return None
 
+
 def email_or_none(author):
     """Try to match email part of VCS committer string with a local user.
     Return primary email of user, email part of the specified author name, or None."""
@@ -515,6 +526,7 @@ def email_or_none(author):
 
     # No valid email, not a valid user in the system, none!
     return None
+
 
 def person(author, show_attr="username"):
     """Find the user identified by 'author', return one of the users attributes,
@@ -540,7 +552,7 @@ def person_by_id(id_, show_attr="username"):
     # attr to return from fetched user
     person_getter = lambda usr: getattr(usr, show_attr)
 
-    #maybe it's an ID ?
+    # maybe it's an ID ?
     if str(id_).isdigit() or isinstance(id_, int):
         id_ = int(id_)
         user = User.get(id_)
@@ -614,7 +626,7 @@ def action_parser(user_log, feed=False, parse_cs=False):
             if parse_cs:
                 return link_to(lbl, url_, title=title_, **{'data-toggle': 'tooltip'})
             return link_to(lbl, url_, class_='lazy-cs' if lazy_cs else '',
-                           **{'data-raw_id':rev.raw_id, 'data-repo_name':repo_name})
+                           **{'data-raw_id': rev.raw_id, 'data-repo_name': repo_name})
 
         def _get_op(rev_txt):
             _op = None
@@ -848,6 +860,7 @@ def gravatar_div(email_address, cls='', size=30, **div_attributes):
                    (''.join(attributes),
                     gravatar(email_address, cls=cls, size=size)))
 
+
 def gravatar(email_address, cls='', size=30):
     """return html element of the gravatar
 
@@ -874,6 +887,7 @@ def gravatar(email_address, cls='', size=30):
             .format(cls=cls, size=size, src=src))
 
     return literal(html)
+
 
 def gravatar_url(email_address, size=30, default=''):
     # doh, we need to re-import those to mock it later
@@ -931,7 +945,7 @@ def fancy_file_stats(stats):
     width = 100
 
     if stats['binary']:
-        #binary mode
+        # binary mode
         lbl = ''
         bin_op = 1
 
@@ -951,7 +965,7 @@ def fancy_file_stats(stats):
             lbl += _('rename')
             bin_op = RENAMED_FILENODE
 
-        #chmod can go with other operations
+        # chmod can go with other operations
         if CHMOD_FILENODE in stats['ops']:
             _org_lbl = _('chmod')
             lbl += _org_lbl if lbl.endswith('+') else '+%s' % _org_lbl
@@ -970,7 +984,7 @@ def fancy_file_stats(stats):
     p_sum = a_p + d_p
 
     if p_sum > width:
-        #adjust the percentage to be == 100% since we adjusted to 9
+        # adjust the percentage to be == 100% since we adjusted to 9
         if a_p > d_p:
             a_p = a_p - (p_sum - width)
         else:
@@ -1011,7 +1025,6 @@ _URLIFY_RE = re.compile(r'''
 \[(?P<tag>[a-z]+)\]
 ''' % (url_re.pattern, MENTIONS_REGEX.pattern),
     re.VERBOSE | re.MULTILINE | re.IGNORECASE)
-
 
 
 def urlify_text(s, repo_name=None, link_=None, truncate=None, stylize=False, truncatef=truncate):
@@ -1131,6 +1144,7 @@ def urlify_issues(newtext, repo_name):
 
             # Wrap tmp_urlify_issues_f with substitution of this pattern, while making sure all loop variables (and compiled regexpes) are bound
             issue_re = re.compile(issue_pat)
+
             def issues_replace(match_obj,
                                issue_server_link=issue_server_link, issue_prefix=issue_prefix):
                 leadingspace = ' ' if match_obj.group().startswith(' ') else ''
@@ -1174,6 +1188,7 @@ def short_ref(ref_type, ref_name):
         return short_id(ref_name)
     return ref_name
 
+
 def link_to_ref(repo_name, ref_type, ref_name, rev=None):
     """
     Return full markup for a href to changeset_home for a changeset.
@@ -1190,6 +1205,7 @@ def link_to_ref(repo_name, ref_type, ref_name, rev=None):
     if rev and ref_type != 'rev':
         l = literal('%s (%s)' % (l, link_to(short_id(rev), url('changeset_home', repo_name=repo_name, revision=rev))))
     return l
+
 
 def changeset_status(repo, revision):
     from kallithea.model.changeset_status import ChangesetStatusModel

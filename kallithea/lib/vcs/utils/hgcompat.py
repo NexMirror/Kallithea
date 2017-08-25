@@ -4,7 +4,7 @@ Mercurial libs compatibility
 
 import mercurial
 import mercurial.demandimport
-## patch demandimport, due to bug in mercurial when it always triggers demandimport.enable()
+# patch demandimport, due to bug in mercurial when it always triggers demandimport.enable()
 mercurial.demandimport.enable = lambda *args, **kwargs: 1
 from mercurial import archival, merge as hg_merge, patch, ui
 from mercurial import discovery
@@ -37,7 +37,8 @@ from mercurial.url import httpbasicauthhandler, httpdigestauthhandler
 import inspect
 # Mercurial 3.1 503bb3af70fe
 if inspect.getargspec(memfilectx.__init__).args[1] != 'repo':
-    _org__init__=memfilectx.__init__
+    _org__init__ = memfilectx.__init__
+
     def _memfilectx__init__(self, repo, *a, **b):
         return _org__init__(self, *a, **b)
     memfilectx.__init__ = _memfilectx__init__

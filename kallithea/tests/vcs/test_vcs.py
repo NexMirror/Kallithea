@@ -1,4 +1,3 @@
-
 import os
 import shutil
 
@@ -7,7 +6,6 @@ from kallithea.lib.vcs import VCSError, get_repo, get_backend
 from kallithea.lib.vcs.backends.hg import MercurialRepository
 from kallithea.lib.vcs.utils.compat import unittest
 from kallithea.tests.vcs.conf import TEST_HG_REPO, TEST_GIT_REPO, TEST_TMP_PATH
-
 
 
 class VCSTest(unittest.TestCase):
@@ -24,14 +22,14 @@ class VCSTest(unittest.TestCase):
         path = TEST_HG_REPO
         backend = get_backend(alias)
         repo = backend(safe_str(path))
-        self.assertEqual('hg',repo.alias)
+        self.assertEqual('hg', repo.alias)
 
     def test_alias_detect_git(self):
         alias = 'git'
         path = TEST_GIT_REPO
         backend = get_backend(alias)
         repo = backend(safe_str(path))
-        self.assertEqual('git',repo.alias)
+        self.assertEqual('git', repo.alias)
 
     def test_wrong_alias(self):
         alias = 'wrong_alias'
@@ -63,7 +61,6 @@ class VCSTest(unittest.TestCase):
 
         self.assertEqual(repo.__class__, get_repo(safe_str(path)).__class__)
         self.assertEqual(repo.path, get_repo(safe_str(path)).path)
-
 
     def test_get_repo_err(self):
         blank_repo_path = os.path.join(TEST_TMP_PATH, 'blank-error-repo')

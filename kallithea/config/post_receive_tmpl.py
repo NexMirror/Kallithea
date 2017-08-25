@@ -25,5 +25,6 @@ def main():
     _handler(repo_path, push_data, os.environ)
     sys.exit(0)
 
+
 if __name__ == '__main__':
     main()

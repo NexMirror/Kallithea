@@ -137,7 +137,7 @@ class UsersController(BaseController):
             h.flash(e, 'error')
         except Exception:
             log.error(traceback.format_exc())
-            h.flash(_('Error occurred during creation of user %s') \
+            h.flash(_('Error occurred during creation of user %s')
                     % request.POST.get('username'), category='error')
         raise HTTPFound(location=url('edit_user', id=user.user_id))
 
@@ -180,7 +180,7 @@ class UsersController(BaseController):
                 force_defaults=False)
         except Exception:
             log.error(traceback.format_exc())
-            h.flash(_('Error occurred during update of user %s') \
+            h.flash(_('Error occurred during update of user %s')
                     % form_result.get('username'), category='error')
         raise HTTPFound(location=url('edit_user', id=id))
 

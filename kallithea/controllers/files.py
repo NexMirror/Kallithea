@@ -166,7 +166,7 @@ class FilesController(BaseRepoController):
 
             if c.file.is_file():
                 c.load_full_history = False
-                #determine if we're on branch head
+                # determine if we're on branch head
                 _branches = c.db_repo_scm_instance.branches
                 c.on_branch_head = revision in _branches.keys() + _branches.values()
                 _hist = []
@@ -460,7 +460,7 @@ class FilesController(BaseRepoController):
                 h.flash(_('No filename'), category='warning')
                 raise HTTPFound(location=url('changeset_home', repo_name=c.repo_name,
                                     revision='tip'))
-            #strip all crap out of file, just leave the basename
+            # strip all crap out of file, just leave the basename
             filename = os.path.basename(filename)
             node_path = posixpath.join(location, filename)
             author = request.authuser.full_contact
@@ -599,8 +599,8 @@ class FilesController(BaseRepoController):
         c.changes = OrderedDict()
         c.changes[diff2] = []
 
-        #special case if we want a show rev only, it's impl here
-        #to reduce JS and callbacks
+        # special case if we want a show rev only, it's impl here
+        # to reduce JS and callbacks
 
         if request.GET.get('show_rev'):
             if str2bool(request.GET.get('annotate', 'False')):
@@ -748,7 +748,7 @@ class FilesController(BaseRepoController):
             try:
                 changesets = tip_cs.get_file_history(f_path)
             except (NodeDoesNotExistError, ChangesetError):
-                #this node is not present at tip !
+                # this node is not present at tip !
                 changesets = cs.get_file_history(f_path)
         hist_l = []
 

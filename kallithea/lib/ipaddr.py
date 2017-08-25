@@ -367,8 +367,10 @@ def collapse_address_list(addresses):
     return _collapse_address_list_recursive(sorted(
         addrs + nets, key=_BaseNet._get_networks_key))
 
+
 # backwards compatibility
 CollapseAddrList = collapse_address_list
+
 
 # We need to distinguish between the string and packed-bytes representations
 # of an IP address.  For example, b'0::1' is the IPv4 address 48.58.58.49,

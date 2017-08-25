@@ -19,7 +19,7 @@ class TestPermissions(TestController):
 
     @classmethod
     def setup_class(cls):
-        #recreate default user to get a clean start
+        # recreate default user to get a clean start
         PermissionModel().create_default_permissions(user=User.DEFAULT_USER,
                                                      force=True)
         Session().commit()
@@ -218,7 +218,7 @@ class TestPermissions(TestController):
         a1_auth = AuthUser(user_id=self.anon.user_id)
         assert a1_auth.permissions['repositories_groups'] == {u'group1': u'group.read', u'group2': u'group.read'}
 
-        #Change perms to none for both groups
+        # Change perms to none for both groups
         RepoGroupModel().grant_user_permission(repo_group=self.g1,
                                                user=self.anon,
                                                perm='group.none')
@@ -245,14 +245,14 @@ class TestPermissions(TestController):
         a1_auth = AuthUser(user_id=self.anon.user_id)
         assert a1_auth.permissions['repositories_groups'] == {u'group1': u'group.none', u'group2': u'group.none'}
 
-        #grant permission for u2 !
+        # grant permission for u2 !
         RepoGroupModel().grant_user_permission(repo_group=self.g1, user=self.u2,
                                                perm='group.read')
         RepoGroupModel().grant_user_permission(repo_group=self.g2, user=self.u2,
                                                perm='group.read')
         Session().commit()
         assert self.u1 != self.u2
-        #u1 and anon should have not change perms while u2 should !
+        # u1 and anon should have not change perms while u2 should !
         u1_auth = AuthUser(user_id=self.u1.user_id)
         assert u1_auth.permissions['repositories_groups'] == {u'group1': u'group.none', u'group2': u'group.none'}
 
@@ -357,7 +357,7 @@ class TestPermissions(TestController):
         user_model.revoke_perm(usr, 'hg.fork.none')
         user_model.grant_perm(usr, 'hg.fork.repository')
 
-        #disable global perms on specific user
+        # disable global perms on specific user
         user_model.revoke_perm(self.u1, 'hg.create.repository')
         user_model.grant_perm(self.u1, 'hg.create.none')
         user_model.revoke_perm(self.u1, 'hg.fork.repository')
@@ -384,7 +384,7 @@ class TestPermissions(TestController):
         user_model.revoke_perm(usr, 'hg.fork.repository')
         user_model.grant_perm(usr, 'hg.fork.none')
 
-        #enable global perms on specific user
+        # enable global perms on specific user
         user_model.revoke_perm(self.u1, 'hg.create.none')
         user_model.grant_perm(self.u1, 'hg.create.repository')
         user_model.revoke_perm(self.u1, 'hg.fork.none')
@@ -609,15 +609,15 @@ class TestPermissions(TestController):
         assert u1_auth.permissions['user_groups'][u'G2'] == u'usergroup.admin'
 
     def test_owner_permissions_doesnot_get_overwritten_by_group(self):
-        #create repo as USER,
+        # create repo as USER,
         self.test_repo = fixture.create_repo(name=u'myownrepo',
                                              repo_type='hg',
                                              cur_user=self.u1)
 
-        #he has permissions of admin as owner
+        # he has permissions of admin as owner
         u1_auth = AuthUser(user_id=self.u1.user_id)
         assert u1_auth.permissions['repositories']['myownrepo'] == 'repository.admin'
-        #set his permission as user group, he should still be admin
+        # set his permission as user group, he should still be admin
         self.ug1 = fixture.create_user_group(u'G1')
         UserGroupModel().add_user_to_group(self.ug1, self.u1)
         RepoModel().grant_user_group_permission(self.test_repo,
@@ -629,15 +629,15 @@ class TestPermissions(TestController):
         assert u1_auth.permissions['repositories']['myownrepo'] == 'repository.admin'
 
     def test_owner_permissions_doesnot_get_overwritten_by_others(self):
-        #create repo as USER,
+        # create repo as USER,
         self.test_repo = fixture.create_repo(name=u'myownrepo',
                                              repo_type='hg',
                                              cur_user=self.u1)
 
-        #he has permissions of admin as owner
+        # he has permissions of admin as owner
         u1_auth = AuthUser(user_id=self.u1.user_id)
         assert u1_auth.permissions['repositories']['myownrepo'] == 'repository.admin'
-        #set his permission as user, he should still be admin
+        # set his permission as user, he should still be admin
         RepoModel().grant_user_permission(self.test_repo, user=self.u1,
                                           perm='repository.none')
         Session().commit()
@@ -657,7 +657,7 @@ class TestPermissions(TestController):
     def test_set_default_permissions_after_one_is_missing(self):
         PermissionModel().create_default_permissions(user=self.u1)
         self._test_def_perm_equal(user=self.u1)
-        #now we delete one, it should be re-created after another call
+        # now we delete one, it should be re-created after another call
         perms = UserToPerm.query() \
                 .filter(UserToPerm.user == self.u1) \
                 .all()
@@ -666,7 +666,7 @@ class TestPermissions(TestController):
 
         self._test_def_perm_equal(user=self.u1, change_factor=-1)
 
-        #create missing one !
+        # create missing one !
         PermissionModel().create_default_permissions(user=self.u1)
         self._test_def_perm_equal(user=self.u1)
 
@@ -687,7 +687,7 @@ class TestPermissions(TestController):
         assert old != None
         assert new != None
 
-        #now modify permissions
+        # now modify permissions
         p = UserToPerm.query() \
                 .filter(UserToPerm.user == self.u1) \
                 .filter(UserToPerm.permission == old) \

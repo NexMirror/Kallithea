@@ -161,7 +161,7 @@ class TestRepoGroups(TestController):
 
         r = fixture.create_repo(u'L1/L2/L3/L3_REPO', repo_group=g3.group_id)
 
-        ##rename L1 all groups should be now changed
+        ## rename L1 all groups should be now changed
         _update_repo_group(g1.group_id, u'L1_NEW')
         Session().commit()
         assert g1.full_path == 'L1_NEW'
@@ -176,7 +176,7 @@ class TestRepoGroups(TestController):
         g4 = fixture.create_repo_group(u'R1_NEW')
 
         r = fixture.create_repo(u'R1/R2/R3/R3_REPO', repo_group=g3.group_id)
-        ##rename L1 all groups should be now changed
+        ## rename L1 all groups should be now changed
         _update_repo_group(g1.group_id, u'R1', parent_id=g4.group_id)
         Session().commit()
         assert g1.full_path == 'R1_NEW/R1'
@@ -192,7 +192,7 @@ class TestRepoGroups(TestController):
 
         r = fixture.create_repo(u'X1/X2/X3/X3_REPO', repo_group=g3.group_id)
 
-        ##rename L1 all groups should be now changed
+        ## rename L1 all groups should be now changed
         _update_repo_group(g1.group_id, u'X1_PRIM', parent_id=g4.group_id)
         Session().commit()
         assert g1.full_path == 'X1_NEW/X1_PRIM'

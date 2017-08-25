@@ -90,6 +90,7 @@ def PasswordChangeForm(username):
 
 def UserForm(edit=False, old_data=None):
     old_data = old_data or {}
+
     class _UserForm(formencode.Schema):
         allow_extra_fields = True
         filter_extra_fields = True
@@ -131,6 +132,7 @@ def UserForm(edit=False, old_data=None):
 def UserGroupForm(edit=False, old_data=None, available_members=None):
     old_data = old_data or {}
     available_members = available_members or []
+
     class _UserGroupForm(formencode.Schema):
         allow_extra_fields = True
         filter_extra_fields = True
@@ -158,6 +160,7 @@ def RepoGroupForm(edit=False, old_data=None, repo_groups=None,
     old_data = old_data or {}
     repo_groups = repo_groups or []
     repo_group_ids = [rg[0] for rg in repo_groups]
+
     class _RepoGroupForm(formencode.Schema):
         allow_extra_fields = True
         filter_extra_fields = False
@@ -170,8 +173,8 @@ def RepoGroupForm(edit=False, old_data=None, repo_groups=None,
         group_copy_permissions = v.StringBoolean(if_missing=False)
 
         if edit:
-            #FIXME: do a special check that we cannot move a group to one of
-            #its children
+            # FIXME: do a special check that we cannot move a group to one of
+            # its children
             pass
 
         parent_group_id = All(v.CanCreateGroup(can_create_in_root),
@@ -219,6 +222,7 @@ def PasswordResetRequestForm():
         email = v.Email(not_empty=True)
     return _PasswordResetRequestForm
 
+
 def PasswordResetConfirmationForm():
     class _PasswordResetConfirmationForm(formencode.Schema):
         allow_extra_fields = True
@@ -234,12 +238,14 @@ def PasswordResetConfirmationForm():
                                                     'password_confirm')]
     return _PasswordResetConfirmationForm
 
+
 def RepoForm(edit=False, old_data=None, supported_backends=BACKENDS.keys(),
              repo_groups=None, landing_revs=None):
     old_data = old_data or {}
     repo_groups = repo_groups or []
     landing_revs = landing_revs or []
     repo_group_ids = [rg[0] for rg in repo_groups]
+
     class _RepoForm(formencode.Schema):
         allow_extra_fields = True
         filter_extra_fields = False
@@ -317,6 +323,7 @@ def RepoForkForm(edit=False, old_data=None, supported_backends=BACKENDS.keys(),
     repo_groups = repo_groups or []
     landing_revs = landing_revs or []
     repo_group_ids = [rg[0] for rg in repo_groups]
+
     class _RepoForkForm(formencode.Schema):
         allow_extra_fields = True
         filter_extra_fields = False
@@ -466,7 +473,7 @@ def AuthSettingsForm(current_active_modules):
                         validator = sv["validator"]
                         if isinstance(validator, LazyFormencode):
                             validator = validator()
-                        #init all lazy validators from formencode.All
+                        # init all lazy validators from formencode.All
                         if isinstance(validator, All):
                             init_validators = []
                             for validator in validator.validators:

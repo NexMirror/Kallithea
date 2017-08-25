@@ -95,6 +95,7 @@ class KallitheaAppConfig(AppConfig):
         # Disable transaction manager -- currently Kallithea takes care of transactions itself
         self['tm.enabled'] = False
 
+
 base_config = KallitheaAppConfig()
 
 # TODO still needed as long as we use pylonslib
@@ -174,6 +175,7 @@ def setup_configuration(app):
         repo2db_mapper(ScmModel().repo_scan(repos_path),
                        remove_obsolete=False, install_git_hooks=False)
 
+
 hooks.register('configure_new_app', setup_configuration)
 
 
@@ -189,5 +191,6 @@ def setup_application(app):
     if any(asbool(config.get(x)) for x in ['https_fixup', 'force_https', 'use_htsts']):
         app = HttpsFixup(app, config)
     return app
+
 
 hooks.register('before_config', setup_application)

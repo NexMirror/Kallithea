@@ -50,7 +50,7 @@ class TestGistsController(TestController):
         response = self.app.get(url('gists', private=1))
         # Test response...
 
-        #and privates
+        # and privates
         response.mustcontain('gist: %s' % gist.gist_access_id)
 
     def test_create_missing_description(self):

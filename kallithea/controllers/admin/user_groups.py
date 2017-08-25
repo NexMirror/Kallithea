@@ -155,7 +155,7 @@ class UserGroupsController(BaseController):
                 force_defaults=False)
         except Exception:
             log.error(traceback.format_exc())
-            h.flash(_('Error occurred during creation of user group %s') \
+            h.flash(_('Error occurred during creation of user group %s')
                     % request.POST.get('users_group_name'), category='error')
 
         raise HTTPFound(location=url('users_groups'))
@@ -205,7 +205,7 @@ class UserGroupsController(BaseController):
                 force_defaults=False)
         except Exception:
             log.error(traceback.format_exc())
-            h.flash(_('Error occurred during update of user group %s') \
+            h.flash(_('Error occurred during update of user group %s')
                     % request.POST.get('users_group_name'), category='error')
 
         raise HTTPFound(location=url('edit_users_group', id=id))
@@ -283,7 +283,7 @@ class UserGroupsController(BaseController):
         except RepoGroupAssignmentError:
             h.flash(_('Target group cannot be the same'), category='error')
             raise HTTPFound(location=url('edit_user_group_perms', id=id))
-        #TODO: implement this
+        # TODO: implement this
         #action_logger(request.authuser, 'admin_changed_repo_permissions',
         #              repo_name, request.ip_addr)
         Session().commit()
@@ -414,7 +414,6 @@ class UserGroupsController(BaseController):
         c.group_members_obj = sorted((x.user for x in c.user_group.members),
                                      key=lambda u: u.username.lower())
         return render('admin/user_groups/user_group_edit.html')
-
 
     @HasUserGroupPermissionLevelDecorator('admin')
     def edit_members(self, id):

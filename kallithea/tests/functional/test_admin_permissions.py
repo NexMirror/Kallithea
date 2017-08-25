@@ -74,7 +74,6 @@ class TestAdminPermissionsController(TestController):
         response.mustcontain(no=['127.0.0.0/24'])
         response.mustcontain(no=['127.0.0.0 - 127.0.0.255'])
 
-
     def test_index_overview(self):
         self.log_user()
         response = self.app.get(url('admin_permissions_perms'))

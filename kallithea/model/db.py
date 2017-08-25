@@ -457,11 +457,10 @@ class User(Base, BaseDbModel):
     user_created_notifications = relationship('Notification', cascade='all')
     # comments created by this user
     user_comments = relationship('ChangesetComment', cascade='all')
-    #extra emails for this user
+    # extra emails for this user
     user_emails = relationship('UserEmailMap', cascade='all')
-    #extra API keys
+    # extra API keys
     user_api_keys = relationship('UserApiKeys', cascade='all')
-
 
     @hybrid_property
     def email(self):
@@ -478,12 +477,12 @@ class User(Base, BaseDbModel):
 
     @property
     def emails(self):
-        other = UserEmailMap.query().filter(UserEmailMap.user==self).all()
+        other = UserEmailMap.query().filter(UserEmailMap.user == self).all()
         return [self.email] + [x.email for x in other]
 
     @property
     def api_keys(self):
-        other = UserApiKeys.query().filter(UserApiKeys.user==self).all()
+        other = UserApiKeys.query().filter(UserApiKeys.user == self).all()
         return [self.api_key] + [x.api_key for x in other]
 
     @property
@@ -615,7 +614,7 @@ class User(Base, BaseDbModel):
         res = q.scalar()
 
         if fallback and not res:
-            #fallback to additional keys
+            # fallback to additional keys
             _res = UserApiKeys.query().filter_by(api_key=api_key, is_expired=False).first()
             if _res:
                 res = _res.user
@@ -800,6 +799,7 @@ class UserIpMap(Base, BaseDbModel):
     def __unicode__(self):
         return u"<%s('user_id:%s=>%s')>" % (self.__class__.__name__,
                                             self.user_id, self.ip_addr)
+
 
 class UserLog(Base, BaseDbModel):
     __tablename__ = 'user_logs'
@@ -1752,7 +1752,7 @@ class Permission(Base, BaseDbModel):
         ('hg.extern_activate.auto', _('Automatic activation of external account')),
     ]
 
-    #definition of system default permissions for DEFAULT user
+    # definition of system default permissions for DEFAULT user
     DEFAULT_USER_PERMISSIONS = [
         'repository.read',
         'group.read',
@@ -2051,9 +2051,9 @@ class Statistics(Base, BaseDbModel):
     stat_id = Column(Integer(), primary_key=True)
     repository_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=False, unique=True)
     stat_on_revision = Column(Integer(), nullable=False)
-    commit_activity = Column(LargeBinary(1000000), nullable=False)#JSON data
-    commit_activity_combined = Column(LargeBinary(), nullable=False)#JSON data
-    languages = Column(LargeBinary(1000000), nullable=False)#JSON data
+    commit_activity = Column(LargeBinary(1000000), nullable=False) # JSON data
+    commit_activity_combined = Column(LargeBinary(), nullable=False) # JSON data
+    languages = Column(LargeBinary(1000000), nullable=False) # JSON data
 
     repository = relationship('Repository', single_parent=True)
 
@@ -2454,6 +2454,7 @@ class PullRequest(Base, BaseDbModel):
                                    pull_request_id=self.pull_request_id, **kwargs)
         return h.url('pullrequest_show', repo_name=self.other_repo.repo_name,
                      pull_request_id=self.pull_request_id, **kwargs)
+
 
 class PullRequestReviewer(Base, BaseDbModel):
     __tablename__ = 'pull_request_reviewers'

@@ -62,6 +62,7 @@ def is_mercurial(environ):
     )
     return ishg_path
 
+
 class SimpleHg(BaseVCSController):
 
     def _handle_request(self, environ, start_response):
@@ -229,7 +230,7 @@ class SimpleHg(BaseVCSController):
         repoui = make_ui('file', hgrc)
 
         if repoui:
-            #overwrite our ui instance with the section from hgrc file
+            # overwrite our ui instance with the section from hgrc file
             for section in ui_sections:
                 for k, v in repoui.configitems(section):
                     baseui.setconfig(section, k, v)

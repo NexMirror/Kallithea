@@ -8,6 +8,7 @@ from kallithea.lib import helpers as h
 
 from tg.util.webtest import test_context
 
+
 class TestNotificationsController(TestController):
     def setup_method(self, method):
         self.remove_all_notifications()

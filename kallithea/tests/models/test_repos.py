@@ -45,7 +45,7 @@ class TestRepos(TestController):
         fork = fixture.create_fork(repo.repo_name, u'test-repo-fork-1')
         Session().commit()
 
-        #fork of fork
+        # fork of fork
         fixture.create_fork(fork.repo_name, u'test-repo-fork-fork-1')
         Session().commit()
 
@@ -63,7 +63,7 @@ class TestRepos(TestController):
         fork = fixture.create_fork(repo.repo_name, u'test-repo-fork-1')
         Session().commit()
 
-        #fork of fork
+        # fork of fork
         fixture.create_fork(fork.repo_name, u'test-repo-fork-fork-1')
         Session().commit()
 

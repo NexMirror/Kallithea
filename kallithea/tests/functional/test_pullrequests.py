@@ -12,6 +12,7 @@ from kallithea.controllers.pullrequests import PullrequestsController
 
 fixture = Fixture()
 
+
 class TestPullrequestsController(TestController):
 
     def test_index(self):
@@ -207,7 +208,6 @@ class TestPullrequestsController(TestController):
                                  },
                                  status=400)
         response.mustcontain('Invalid reviewer &#34;%s&#34; specified' % invalid_user_id)
-
 
     def test_iteration_refs(self):
         # Repo graph excerpt:

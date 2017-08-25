@@ -220,8 +220,8 @@ def _params_from_query(query):
 
     """
     v = []
-    def visit_bindparam(bind):
 
+    def visit_bindparam(bind):
         if bind.key in query._params:
             value = query._params[bind.key]
         elif bind.callable:
@@ -234,7 +234,7 @@ def _params_from_query(query):
 
         v.append(value)
     if query._criterion is not None:
-        visitors.traverse(query._criterion, {}, {'bindparam':visit_bindparam})
+        visitors.traverse(query._criterion, {}, {'bindparam': visit_bindparam})
     for f in query._from_obj:
-        visitors.traverse(f, {}, {'bindparam':visit_bindparam})
+        visitors.traverse(f, {}, {'bindparam': visit_bindparam})
     return v

@@ -104,7 +104,7 @@ class GitRepositoryTest(unittest.TestCase):
             create=True, src_url=TEST_GIT_REPO, update_after_clone=True)
         self.assertEqual(len(repo.revisions), len(repo_clone.revisions))
 
-        #check if current workdir was updated
+        # check if current workdir was updated
         fpath = os.path.join(clone_path, 'MANIFEST.in')
         self.assertEqual(True, os.path.isfile(fpath),
             'Repo was cloned and updated but file %s could not be found'
@@ -116,7 +116,7 @@ class GitRepositoryTest(unittest.TestCase):
         repo_clone = GitRepository(clone_path,
             create=True, src_url=TEST_GIT_REPO, update_after_clone=False)
         self.assertEqual(len(repo.revisions), len(repo_clone.revisions))
-        #check if current workdir was *NOT* updated
+        # check if current workdir was *NOT* updated
         fpath = os.path.join(clone_path, 'MANIFEST.in')
         # Make sure it's not bare repo
         self.assertFalse(repo_clone._repo.bare)
@@ -170,17 +170,14 @@ class GitRepositoryTest(unittest.TestCase):
             'e686b958768ee96af8029fe19c6050b1a8dd3b2b'])
         self.assertTrue(subset.issubset(set(self.repo.revisions)))
 
-
-
     def test_slicing(self):
-        #4 1 5 10 95
+        # 4 1 5 10 95
         for sfrom, sto, size in [(0, 4, 4), (1, 2, 1), (10, 15, 5),
                                  (10, 20, 10), (5, 100, 95)]:
             revs = list(self.repo[sfrom:sto])
             self.assertEqual(len(revs), size)
             self.assertEqual(revs[0], self.repo.get_changeset(sfrom))
             self.assertEqual(revs[-1], self.repo.get_changeset(sto - 1))
-
 
     def test_branches(self):
         # TODO: Need more tests here
@@ -370,7 +367,6 @@ class GitChangesetTest(unittest.TestCase):
                 'vcs/backends/hg.py', 854),
             ('6e125e7c890379446e98980d8ed60fba87d0f6d1',
                 'setup.py', 1068),
-
             ('d955cd312c17b02143c04fa1099a352b04368118',
                 'vcs/backends/base.py', 2921),
             ('ca1eb7957a54bce53b12d1a51b13452f95bc7c7e',
@@ -548,7 +544,7 @@ class GitChangesetTest(unittest.TestCase):
                 self.assertEqual(l1_1, l1_2)
                 l1 = l1_1
                 l2 = files[fname][rev]['changesets']
-                self.assertTrue(l1 == l2 , "The lists of revision for %s@rev %s"
+                self.assertTrue(l1 == l2, "The lists of revision for %s@rev %s"
                                 "from annotation list should match each other, "
                                 "got \n%s \nvs \n%s " % (fname, rev, l1, l2))
 
@@ -766,7 +762,7 @@ class GitRegressionTest(_BackendTestMixin, unittest.TestCase):
 
     def test_similar_paths(self):
         cs = self.repo.get_changeset()
-        paths = lambda *n:[x.path for x in n]
+        paths = lambda *n: [x.path for x in n]
         self.assertEqual(paths(*cs.get_nodes('bot')), ['bot/build', 'bot/templates', 'bot/__init__.py'])
         self.assertEqual(paths(*cs.get_nodes('bot/build')), ['bot/build/migrations', 'bot/build/static', 'bot/build/templates'])
         self.assertEqual(paths(*cs.get_nodes('bot/build/static')), ['bot/build/static/templates'])

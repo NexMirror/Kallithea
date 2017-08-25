@@ -114,7 +114,7 @@ class ChangelogController(BaseRepoController):
                 try:
                     collection = tip_cs.get_file_history(f_path)
                 except (NodeDoesNotExistError, ChangesetError):
-                    #this node is not present at tip !
+                    # this node is not present at tip !
                     try:
                         cs = self.__get_cs(revision, repo_name)
                         collection = cs.get_file_history(f_path)

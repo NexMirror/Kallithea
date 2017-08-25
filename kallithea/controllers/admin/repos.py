@@ -104,7 +104,7 @@ class ReposController(BaseRepoController):
         repos_data = RepoModel().get_repos_as_dict(repos_list=c.repos_list,
                                                    admin=True,
                                                    super_user_actions=True)
-        #data used to render the grid
+        # data used to render the grid
         c.data = repos_data
 
         return render('admin/repos/repos.html')
@@ -257,7 +257,7 @@ class ReposController(BaseRepoController):
 
         except Exception:
             log.error(traceback.format_exc())
-            h.flash(_('Error occurred during update of repository %s') \
+            h.flash(_('Error occurred during update of repository %s')
                     % repo_name, category='error')
         raise HTTPFound(location=url('edit_repo', repo_name=changed_name))
 
@@ -331,7 +331,7 @@ class ReposController(BaseRepoController):
         form = RepoPermsForm()().to_python(request.POST)
         RepoModel()._update_permissions(repo_name, form['perms_new'],
                                         form['perms_updates'])
-        #TODO: implement this
+        # TODO: implement this
         #action_logger(request.authuser, 'admin_changed_repo_permissions',
         #              repo_name, request.ip_addr)
         Session().commit()
@@ -353,7 +353,7 @@ class ReposController(BaseRepoController):
                 RepoModel().revoke_user_group_permission(
                     repo=repo_name, group_name=obj_id
                 )
-            #TODO: implement this
+            # TODO: implement this
             #action_logger(request.authuser, 'admin_revoked_repo_permissions',
             #              repo_name, request.ip_addr)
             Session().commit()
@@ -455,7 +455,6 @@ class ReposController(BaseRepoController):
                       ' repository in public journal'),
                     category='error')
         raise HTTPFound(location=url('edit_repo_advanced', repo_name=repo_name))
-
 
     @HasRepoPermissionLevelDecorator('admin')
     def edit_advanced_fork(self, repo_name):

@@ -132,8 +132,8 @@ def create_test_repo(force=True):
 
         form_data = {'repo_name': HG_REPO,
                      'repo_type': 'hg',
-                     'private':False,
-                     'clone_uri': '' }
+                     'private': False,
+                     'clone_uri': ''}
         rm = RepoModel()
         rm.base_path = '/home/hg'
         rm.create(form_data, user)
@@ -182,9 +182,10 @@ def test_clone_with_credentials(no_errors=False, repo=HG_REPO, method=METHOD,
         if not no_errors:
             if backend == 'hg':
                 assert """adding file changes""" in stdout, 'no messages about cloning'
-                assert """abort""" not in stderr , 'got error from clone'
+                assert """abort""" not in stderr, 'got error from clone'
             elif backend == 'git':
                 assert """Cloning into""" in stdout, 'no messages about cloning'
+
 
 if __name__ == '__main__':
     try:

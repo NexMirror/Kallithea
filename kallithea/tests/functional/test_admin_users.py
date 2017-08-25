@@ -30,6 +30,7 @@ from tg.util.webtest import test_context
 
 fixture = Fixture()
 
+
 @pytest.fixture
 def user_and_repo_group_fail():
     username = 'repogrouperr'
@@ -43,6 +44,7 @@ def user_and_repo_group_fail():
     except ObjectDeletedError:
         # delete already succeeded in test body
         pass
+
 
 class TestAdminUsersController(TestController):
     test_user_1 = 'testme'
@@ -159,14 +161,13 @@ class TestAdminUsersController(TestController):
         if name == 'email':
             params['emails'] = [attrs['email']]
         if name == 'extern_type':
-            #cannot update this via form, expected value is original one
+            # cannot update this via form, expected value is original one
             params['extern_type'] = "internal"
         if name == 'extern_name':
-            #cannot update this via form, expected value is original one
+            # cannot update this via form, expected value is original one
             params['extern_name'] = self.test_user_1
-            # special case since this user is not
-                                          # logged in yet his data is not filled
-                                          # so we use creation data
+            # special case since this user is not logged in yet his data is
+            # not filled so we use creation data
 
         params.update({'_authentication_token': self.authentication_token()})
         response = self.app.post(url('update_user', id=usr.user_id), params)
@@ -288,7 +289,7 @@ class TestAdminUsersController(TestController):
         uid = user.user_id
 
         try:
-            #User should have None permission on creation repository
+            # User should have None permission on creation repository
             assert UserModel().has_perm(user, perm_none) == False
             assert UserModel().has_perm(user, perm_create) == False
 
@@ -299,7 +300,7 @@ class TestAdminUsersController(TestController):
             perm_none = Permission.get_by_key('hg.create.none')
             perm_create = Permission.get_by_key('hg.create.repository')
 
-            #User should have None permission on creation repository
+            # User should have None permission on creation repository
             assert UserModel().has_perm(uid, perm_none) == False
             assert UserModel().has_perm(uid, perm_create) == True
         finally:
@@ -318,7 +319,7 @@ class TestAdminUsersController(TestController):
         uid = user.user_id
 
         try:
-            #User should have None permission on creation repository
+            # User should have None permission on creation repository
             assert UserModel().has_perm(user, perm_none) == False
             assert UserModel().has_perm(user, perm_create) == False
 
@@ -328,7 +329,7 @@ class TestAdminUsersController(TestController):
             perm_none = Permission.get_by_key('hg.create.none')
             perm_create = Permission.get_by_key('hg.create.repository')
 
-            #User should have None permission on creation repository
+            # User should have None permission on creation repository
             assert UserModel().has_perm(uid, perm_none) == True
             assert UserModel().has_perm(uid, perm_create) == False
         finally:
@@ -347,7 +348,7 @@ class TestAdminUsersController(TestController):
         uid = user.user_id
 
         try:
-            #User should have None permission on creation repository
+            # User should have None permission on creation repository
             assert UserModel().has_perm(user, perm_none) == False
             assert UserModel().has_perm(user, perm_fork) == False
 
@@ -358,7 +359,7 @@ class TestAdminUsersController(TestController):
             perm_none = Permission.get_by_key('hg.create.none')
             perm_create = Permission.get_by_key('hg.create.repository')
 
-            #User should have None permission on creation repository
+            # User should have None permission on creation repository
             assert UserModel().has_perm(uid, perm_none) == False
             assert UserModel().has_perm(uid, perm_create) == True
         finally:
@@ -377,7 +378,7 @@ class TestAdminUsersController(TestController):
         uid = user.user_id
 
         try:
-            #User should have None permission on creation repository
+            # User should have None permission on creation repository
             assert UserModel().has_perm(user, perm_none) == False
             assert UserModel().has_perm(user, perm_fork) == False
 
@@ -387,7 +388,7 @@ class TestAdminUsersController(TestController):
             perm_none = Permission.get_by_key('hg.create.none')
             perm_create = Permission.get_by_key('hg.create.repository')
 
-            #User should have None permission on creation repository
+            # User should have None permission on creation repository
             assert UserModel().has_perm(uid, perm_none) == True
             assert UserModel().has_perm(uid, perm_create) == False
         finally:
@@ -491,7 +492,7 @@ class TestAdminUsersController(TestController):
         self.checkSessionFlash(response, 'API key successfully created')
         response = response.follow()
 
-        #now delete our key
+        # now delete our key
         keys = UserApiKeys.query().filter(UserApiKeys.user_id == user_id).all()
         assert 1 == len(keys)
 

@@ -600,7 +600,7 @@ class ScmModel(object):
                 imc.remove(filenode)
             elif op == 'mod':
                 if filename != old_filename:
-                    #TODO: handle renames, needs vcs lib changes
+                    # TODO: handle renames, needs vcs lib changes
                     imc.remove(filenode)
                     imc.add(FileNode(filename, content=content))
                 else:
@@ -775,6 +775,7 @@ class ScmModel(object):
                     log.error('error writing %s: %s', _hook_file, e)
             else:
                 log.debug('skipping writing hook file')
+
 
 def AvailableRepoGroupChoices(top_perms, repo_group_perm_level, extras=()):
     """Return group_id,string tuples with choices for all the repo groups where

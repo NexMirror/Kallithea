@@ -68,6 +68,7 @@ def UniqueListFromString():
 
 def ValidUsername(edit=False, old_data=None):
     old_data = old_data or {}
+
     class _validator(formencode.validators.FancyValidator):
         messages = {
             'username_exists': _('Username "%(username)s" already exists'),
@@ -83,7 +84,7 @@ def ValidUsername(edit=False, old_data=None):
             if value in ['default', 'new_user']:
                 msg = self.message('system_invalid_username', state, username=value)
                 raise formencode.Invalid(msg, value, state)
-            #check if user is unique
+            # check if user is unique
             old_un = None
             if edit:
                 old_un = User.get(old_data.get('user_id')).username
@@ -126,6 +127,7 @@ def ValidRepoUser():
 
 def ValidUserGroup(edit=False, old_data=None):
     old_data = old_data or {}
+
     class _validator(formencode.validators.FancyValidator):
         messages = {
             'invalid_group': _('Invalid user group name'),
@@ -142,7 +144,7 @@ def ValidUserGroup(edit=False, old_data=None):
                 raise formencode.Invalid(msg, value, state,
                     error_dict=dict(users_group_name=msg)
                 )
-            #check if group is unique
+            # check if group is unique
             old_ugname = None
             if edit:
                 old_id = old_data.get('users_group_id')
@@ -494,7 +496,7 @@ def CanWriteGroup(old_data=None):
         }
 
         def _to_python(self, value, state):
-            #root location
+            # root location
             if value == -1:
                 return None
             return value
@@ -520,7 +522,7 @@ def CanWriteGroup(old_data=None):
             # don't need to check permission if he didn't change the value of
             # groups in form box
             if value_changed or new:
-                #parent group need to be existing
+                # parent group need to be existing
                 if gr and forbidden:
                     msg = self.message('permission_denied', state)
                     raise formencode.Invalid(msg, value, state,
@@ -544,7 +546,7 @@ def CanCreateGroup(can_create_in_root=False):
         }
 
         def to_python(self, value, state):
-            #root location
+            # root location
             if value == -1:
                 return None
             return value
@@ -554,7 +556,7 @@ def CanCreateGroup(can_create_in_root=False):
             gr_name = gr.group_name if gr is not None else None # None means ROOT location
 
             if can_create_in_root and gr is None:
-                #we can create in root, we're fine no validations required
+                # we can create in root, we're fine no validations required
                 return
 
             forbidden_in_root = gr is None and not can_create_in_root
@@ -587,7 +589,7 @@ def ValidPerms(type_='repo'):
             perms_new = OrderedSet()
             # build a list of permission to update and new permission to create
 
-            #CLEAN OUT ORG VALUE FROM NEW MEMBERS, and group them using
+            # CLEAN OUT ORG VALUE FROM NEW MEMBERS, and group them using
             new_perms_group = defaultdict(dict)
             for k, v in value.copy().iteritems():
                 if k.startswith('perm_new_member'):
@@ -768,11 +770,11 @@ def ValidIp():
             v = v.strip()
             net = ipaddr.IPNetwork(address=v)
             if isinstance(net, ipaddr.IPv4Network):
-                #if IPv4 doesn't end with a mask, add /32
+                # if IPv4 doesn't end with a mask, add /32
                 if '/' not in value:
                     v += '/32'
             if isinstance(net, ipaddr.IPv6Network):
-                #if IPv6 doesn't end with a mask, add /128
+                # if IPv6 doesn't end with a mask, add /128
                 if '/' not in value:
                     v += '/128'
             return v
@@ -780,7 +782,7 @@ def ValidIp():
         def validate_python(self, value, state):
             try:
                 addr = value.strip()
-                #this raises an ValueError if address is not IPv4 or IPv6
+                # this raises an ValueError if address is not IPv4 or IPv6
                 ipaddr.IPNetwork(address=addr)
             except ValueError:
                 raise formencode.Invalid(self.message('badFormat', state),

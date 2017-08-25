@@ -100,7 +100,7 @@ class TestCompareController(TestController):
 
         response.mustcontain('11 files changed with 94 insertions and 64 deletions')
 
-        #files
+        # files
         response.mustcontain('''<a href="#C--1c5cf9e91c12">docs/api/utils/index.rst</a>''')
         response.mustcontain('''<a href="#C--e3305437df55">test_and_report.sh</a>''')
         response.mustcontain('''<a href="#C--c8e92ef85cd1">.hgignore</a>''')

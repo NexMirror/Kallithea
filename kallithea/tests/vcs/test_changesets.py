@@ -49,6 +49,7 @@ class TestBaseChangeset(unittest.TestCase):
             'removed': [],
         })
 
+
 class _ChangesetsWithCommitsTestCaseixin(_BackendTestMixin):
     recreate_repo_per_test = True
 
@@ -364,6 +365,7 @@ class _ChangesetsChangesTestCaseMixin(_BackendTestMixin):
         changeset = self.repo.get_changeset()
         self.assertEqual(33188, changeset.get_file_mode('foo/bał'))
         self.assertEqual(33188, changeset.get_file_mode(u'foo/bał'))
+
 
 # For each backend create test case class
 for alias in SCM_TESTS:

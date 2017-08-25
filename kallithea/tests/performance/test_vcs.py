@@ -13,6 +13,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import pytest
+
 from kallithea.model.db import Repository
 from kallithea.tests.base import *
 

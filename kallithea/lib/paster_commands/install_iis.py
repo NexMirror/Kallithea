@@ -61,6 +61,7 @@ if __name__=='__main__':
     HandleCommandLine(params)
 '''
 
+
 class Command(BasePasterCommand):
     '''Kallithea: Install into IIS using isapi-wsgi'''
 

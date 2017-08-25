@@ -125,7 +125,7 @@ class RepoGroupModel(object):
             if force_delete:
                 shutil.rmtree(rm_path)
             else:
-                #archive that group`
+                # archive that group
                 _now = datetime.datetime.now()
                 _ms = str(_now.microsecond).rjust(6, '0')
                 _d = 'rm__%s_GROUP_%s' % (_now.strftime('%Y%m%d_%H%M%S_' + _ms),
@@ -254,7 +254,7 @@ class RepoGroupModel(object):
                     _set_perm_user(obj, user=member, perm=perm)
                 ## set for user group
                 else:
-                    #check if we have permissions to alter this usergroup's access
+                    # check if we have permissions to alter this usergroup's access
                     if not check_perms or HasUserGroupPermissionLevel('read')(member):
                         _set_perm_group(obj, users_group=member, perm=perm)
             # set new permissions
@@ -262,7 +262,7 @@ class RepoGroupModel(object):
                 if member_type == 'user':
                     _set_perm_user(obj, user=member, perm=perm)
                 else:
-                    #check if we have permissions to alter this usergroup's access
+                    # check if we have permissions to alter this usergroup's access
                     if not check_perms or HasUserGroupPermissionLevel('read')(member):
                         _set_perm_group(obj, users_group=member, perm=perm)
             updates.append(obj)
@@ -301,7 +301,7 @@ class RepoGroupModel(object):
             # if obj is a Repo fix it's name
             # this can be potentially heavy operation
             for obj in repo_group.recursive_groups_and_repos():
-                #set the value from it's parent
+                # set the value from it's parent
                 obj.enable_locking = repo_group.enable_locking
                 if isinstance(obj, RepoGroup):
                     new_name = obj.get_new_name(obj.name)

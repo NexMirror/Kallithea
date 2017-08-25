@@ -152,7 +152,7 @@ def set_anonymous_access(enable=True):
 
 
 def _check_proper_git_push(stdout, stderr):
-    #WTF Git stderr is output ?!
+    # WTF Git stderr is output ?!
     assert 'fatal' not in stderr
     assert 'rejected' not in stderr
     assert 'Pushing to' in stderr
@@ -164,7 +164,7 @@ class TestVCSOperations(TestController):
 
     @classmethod
     def setup_class(cls):
-        #DISABLE ANONYMOUS ACCESS
+        # DISABLE ANONYMOUS ACCESS
         set_anonymous_access(False)
 
     def setup_method(self, method):
@@ -255,7 +255,7 @@ class TestVCSOperations(TestController):
 
     def test_push_invalidates_cache_hg(self, webserver):
         key = CacheInvalidation.query().filter(CacheInvalidation.cache_key
-                                               ==HG_REPO).scalar()
+                                               == HG_REPO).scalar()
         if not key:
             key = CacheInvalidation(HG_REPO, HG_REPO)
             Session().add(key)
@@ -273,12 +273,12 @@ class TestVCSOperations(TestController):
         stdout, stderr = _add_files_and_push(webserver, 'hg', DEST, files_no=1, clone_url=clone_url)
 
         key = CacheInvalidation.query().filter(CacheInvalidation.cache_key
-                                               ==fork_name).all()
+                                               == fork_name).all()
         assert key == []
 
     def test_push_invalidates_cache_git(self, webserver):
         key = CacheInvalidation.query().filter(CacheInvalidation.cache_key
-                                               ==GIT_REPO).scalar()
+                                               == GIT_REPO).scalar()
         if not key:
             key = CacheInvalidation(GIT_REPO, GIT_REPO)
             Session().add(key)
@@ -298,7 +298,7 @@ class TestVCSOperations(TestController):
         _check_proper_git_push(stdout, stderr)
 
         key = CacheInvalidation.query().filter(CacheInvalidation.cache_key
-                                               ==fork_name).all()
+                                               == fork_name).all()
         assert key == []
 
     def test_push_wrong_credentials_hg(self, webserver):
@@ -352,7 +352,7 @@ class TestVCSOperations(TestController):
         clone_url = webserver.repo_url(HG_REPO)
         stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, _get_tmp_dir())
 
-        #check if lock was made
+        # check if lock was made
         r = Repository.get_by_repo_name(HG_REPO)
         assert r.locked[0] == User.get_by_username(TEST_USER_ADMIN_LOGIN).user_id
 
@@ -365,15 +365,15 @@ class TestVCSOperations(TestController):
         clone_url = webserver.repo_url(GIT_REPO)
         stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, _get_tmp_dir())
 
-        #check if lock was made
+        # check if lock was made
         r = Repository.get_by_repo_name(GIT_REPO)
         assert r.locked[0] == User.get_by_username(TEST_USER_ADMIN_LOGIN).user_id
 
     def test_clone_after_repo_was_locked_hg(self, webserver):
-        #lock repo
+        # lock repo
         r = Repository.get_by_repo_name(HG_REPO)
         Repository.lock(r, User.get_by_username(TEST_USER_ADMIN_LOGIN).user_id)
-        #pull fails since repo is locked
+        # pull fails since repo is locked
         clone_url = webserver.repo_url(HG_REPO)
         stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
         msg = ("""abort: HTTP Error 423: Repository `%s` locked by user `%s`"""
@@ -381,22 +381,22 @@ class TestVCSOperations(TestController):
         assert msg in stderr
 
     def test_clone_after_repo_was_locked_git(self, webserver):
-        #lock repo
+        # lock repo
         r = Repository.get_by_repo_name(GIT_REPO)
         Repository.lock(r, User.get_by_username(TEST_USER_ADMIN_LOGIN).user_id)
-        #pull fails since repo is locked
+        # pull fails since repo is locked
         clone_url = webserver.repo_url(GIT_REPO)
         stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
         msg = ("""The requested URL returned error: 423""")
         assert msg in stderr
 
     def test_push_on_locked_repo_by_other_user_hg(self, webserver):
-        #clone some temp
+        # clone some temp
         DEST = _get_tmp_dir()
         clone_url = webserver.repo_url(HG_REPO)
         stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, DEST)
 
-        #lock repo
+        # lock repo
         r = Repository.get_by_repo_name(HG_REPO)
         # let this user actually push !
         RepoModel().grant_user_permission(repo=r, user=TEST_USER_REGULAR_LOGIN,
@@ -404,7 +404,7 @@ class TestVCSOperations(TestController):
         Session().commit()
         Repository.lock(r, User.get_by_username(TEST_USER_ADMIN_LOGIN).user_id)
 
-        #push fails repo is locked by other user !
+        # push fails repo is locked by other user !
         stdout, stderr = _add_files_and_push(webserver, 'hg', DEST,
                                              username=TEST_USER_REGULAR_LOGIN,
                                              password=TEST_USER_REGULAR_PASS,
@@ -417,12 +417,12 @@ class TestVCSOperations(TestController):
         # Note: Git hooks must be executable on unix. This test will thus fail
         # for example on Linux if /tmp is mounted noexec.
 
-        #clone some temp
+        # clone some temp
         DEST = _get_tmp_dir()
         clone_url = webserver.repo_url(GIT_REPO)
         stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, DEST)
 
-        #lock repo
+        # lock repo
         r = Repository.get_by_repo_name(GIT_REPO)
         # let this user actually push !
         RepoModel().grant_user_permission(repo=r, user=TEST_USER_REGULAR_LOGIN,
@@ -430,7 +430,7 @@ class TestVCSOperations(TestController):
         Session().commit()
         Repository.lock(r, User.get_by_username(TEST_USER_ADMIN_LOGIN).user_id)
 
-        #push fails repo is locked by other user !
+        # push fails repo is locked by other user !
         stdout, stderr = _add_files_and_push(webserver, 'git', DEST,
                                              username=TEST_USER_REGULAR_LOGIN,
                                              password=TEST_USER_REGULAR_PASS,
@@ -438,8 +438,8 @@ class TestVCSOperations(TestController):
         err = 'Repository `%s` locked by user `%s`' % (GIT_REPO, TEST_USER_ADMIN_LOGIN)
         assert err in stderr
 
-        #TODO: fix this somehow later on Git, Git is stupid and even if we throw
-        #back 423 to it, it makes ANOTHER request and we fail there with 405 :/
+        # TODO: fix this somehow later on Git, Git is stupid and even if we throw
+        # back 423 to it, it makes ANOTHER request and we fail there with 405 :/
 
         msg = ("""abort: HTTP Error 423: Repository `%s` locked by user `%s`"""
                 % (GIT_REPO, TEST_USER_ADMIN_LOGIN))
@@ -453,25 +453,25 @@ class TestVCSOperations(TestController):
         r = Repository.get_by_repo_name(fork_name)
         r.enable_locking = True
         Session().commit()
-        #clone some temp
+        # clone some temp
         DEST = _get_tmp_dir()
         clone_url = webserver.repo_url(fork_name)
         stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, DEST)
 
-        #check for lock repo after clone
+        # check for lock repo after clone
         r = Repository.get_by_repo_name(fork_name)
         uid = User.get_by_username(TEST_USER_ADMIN_LOGIN).user_id
         assert r.locked[0] == uid
 
-        #push is ok and repo is now unlocked
+        # push is ok and repo is now unlocked
         stdout, stderr = _add_files_and_push(webserver, 'hg', DEST, clone_url=clone_url)
         assert str('remote: Released lock on repo `%s`' % fork_name) in stdout
-        #we need to cleanup the Session Here !
+        # we need to cleanup the Session Here !
         Session.remove()
         r = Repository.get_by_repo_name(fork_name)
         assert r.locked == [None, None]
 
-    #TODO: fix me ! somehow during tests hooks don't get called on Git
+    # TODO: fix me ! somehow during tests hooks don't get called on Git
     def test_push_unlocks_repository_git(self, webserver):
         # enable locking
         fork_name = '%s_fork%s' % (GIT_REPO, _RandomNameSequence().next())
@@ -479,21 +479,21 @@ class TestVCSOperations(TestController):
         r = Repository.get_by_repo_name(fork_name)
         r.enable_locking = True
         Session().commit()
-        #clone some temp
+        # clone some temp
         DEST = _get_tmp_dir()
         clone_url = webserver.repo_url(fork_name)
         stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, DEST)
 
-        #check for lock repo after clone
+        # check for lock repo after clone
         r = Repository.get_by_repo_name(fork_name)
         assert r.locked[0] == User.get_by_username(TEST_USER_ADMIN_LOGIN).user_id
 
-        #push is ok and repo is now unlocked
+        # push is ok and repo is now unlocked
         stdout, stderr = _add_files_and_push(webserver, 'git', DEST, clone_url=clone_url)
         _check_proper_git_push(stdout, stderr)
 
         assert ('remote: Released lock on repo `%s`' % fork_name) in stderr
-        #we need to cleanup the Session Here !
+        # we need to cleanup the Session Here !
         Session.remove()
         r = Repository.get_by_repo_name(fork_name)
         assert r.locked == [None, None]
@@ -507,7 +507,7 @@ class TestVCSOperations(TestController):
             stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
             assert 'abort: HTTP Error 403: Forbidden' in stderr
         finally:
-            #release IP restrictions
+            # release IP restrictions
             for ip in UserIpMap.query():
                 UserIpMap.delete(ip.ip_id)
             Session().commit()
@@ -535,7 +535,7 @@ class TestVCSOperations(TestController):
             # The message apparently changed in Git 1.8.3, so match it loosely.
             assert re.search(r'\b403\b', stderr)
         finally:
-            #release IP restrictions
+            # release IP restrictions
             for ip in UserIpMap.query():
                 UserIpMap.delete(ip.ip_id)
             Session().commit()

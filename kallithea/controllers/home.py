@@ -57,7 +57,7 @@ class HomeController(BaseController):
 
         repos_data = RepoModel().get_repos_as_dict(repos_list=repos_list,
                                                    admin=False, short_name=True)
-        #data used to render the grid
+        # data used to render the grid
         c.data = repos_data
 
         return render('/index.html')
@@ -65,7 +65,7 @@ class HomeController(BaseController):
     @LoginRequired()
     @jsonify
     def repo_switcher_data(self):
-        #wrapper for conditional cache
+        # wrapper for conditional cache
         def _c():
             log.debug('generating switcher repo/groups list')
             all_repos = Repository.query(sorted=True).all()

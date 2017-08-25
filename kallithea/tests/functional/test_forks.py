@@ -14,6 +14,7 @@ from kallithea.model.meta import Session
 
 fixture = Fixture()
 
+
 class _BaseTestCase(TestController):
     """
     Write all tests here
@@ -33,7 +34,6 @@ class _BaseTestCase(TestController):
     def teardown_method(self, method):
         Session().delete(self.u1)
         Session().commit()
-
 
     def test_index(self):
         self.log_user()
@@ -114,12 +114,12 @@ class _BaseTestCase(TestController):
 
         ## run the check page that triggers the flash message
         response = self.app.get(url('repo_check_home', repo_name=fork_name_full))
-        #test if we have a message that fork is ok
+        # test if we have a message that fork is ok
         self.checkSessionFlash(response,
                 'Forked repository %s as <a href="/%s">%s</a>'
                 % (repo_name, fork_name_full, fork_name_full))
 
-        #test if the fork was created in the database
+        # test if the fork was created in the database
         fork_repo = Session().query(Repository) \
             .filter(Repository.repo_name == fork_name_full).one()
 
@@ -208,12 +208,12 @@ class _BaseTestCase(TestController):
 
         ## run the check page that triggers the flash message
         response = self.app.get(url('repo_check_home', repo_name=fork_name))
-        #test if we have a message that fork is ok
+        # test if we have a message that fork is ok
         self.checkSessionFlash(response,
                 'Forked repository %s as <a href="/%s">%s</a>'
                 % (repo_name, fork_name, fork_name))
 
-        #test if the fork was created in the database
+        # test if the fork was created in the database
         fork_repo = Session().query(Repository) \
             .filter(Repository.repo_name == fork_name).one()
 

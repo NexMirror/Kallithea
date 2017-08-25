@@ -69,7 +69,7 @@ class JournalController(BaseController):
         groups = []
         for k, g in groupby(journal, lambda x: x.action_as_day):
             user_group = []
-            #groupby username if it's a present value, else fallback to journal username
+            # groupby username if it's a present value, else fallback to journal username
             for _unused, g2 in groupby(list(g), lambda x: x.user.username if x.user else x.username):
                 l = list(g2)
                 user_group.append((l[0].user, l))
@@ -97,7 +97,7 @@ class JournalController(BaseController):
             journal = UserLog.query() \
                 .options(joinedload(UserLog.user)) \
                 .options(joinedload(UserLog.repository))
-            #filter
+            # filter
             journal = _journal_filter(journal, c.search_term)
             journal = journal.filter(filtering_criterion) \
                         .order_by(UserLog.action_date.desc())
@@ -125,7 +125,7 @@ class JournalController(BaseController):
         for entry in journal[:feed_nr]:
             user = entry.user
             if user is None:
-                #fix deleted users
+                # fix deleted users
                 user = AttributeDict({'short_contact': entry.username,
                                       'email': '',
                                       'full_contact': ''})
@@ -167,7 +167,7 @@ class JournalController(BaseController):
         for entry in journal[:feed_nr]:
             user = entry.user
             if user is None:
-                #fix deleted users
+                # fix deleted users
                 user = AttributeDict({'short_contact': entry.username,
                                       'email': '',
                                       'full_contact': ''})
@@ -217,7 +217,7 @@ class JournalController(BaseController):
 
         repos_data = RepoModel().get_repos_as_dict(repos_list=repos_list,
                                                    admin=True)
-        #data used to render the grid
+        # data used to render the grid
         c.data = repos_data
 
         return render('journal/journal.html')

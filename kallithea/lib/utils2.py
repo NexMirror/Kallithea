@@ -297,7 +297,7 @@ def engine_from_config(configuration, prefix='sqlalchemy.', **kwargs):
             return ''.join([COLOR_SEQ % COLOR_SQL, sql, normal])
 
         if configuration['debug']:
-            #attach events only for debug configuration
+            # attach events only for debug configuration
 
             def before_cursor_execute(conn, cursor, statement,
                                     parameters, context, executemany):
@@ -458,7 +458,7 @@ def credentials_filter(uri):
     """
 
     uri = uri_filter(uri)
-    #check if we have port
+    # check if we have port
     if len(uri) > 2 and uri[2]:
         uri[2] = ':' + uri[2]
 
@@ -531,6 +531,7 @@ def time_to_datetime(tm):
 # Matching is greedy so we don't have to look beyond the end.
 MENTIONS_REGEX = re.compile(r'(?:^|(?<=[^a-zA-Z0-9]))@([a-zA-Z0-9][-_.a-zA-Z0-9]*[a-zA-Z0-9])')
 
+
 def extract_mentioned_usernames(text):
     r"""
     Returns list of (possible) usernames @mentioned in given text.
@@ -539,6 +540,7 @@ def extract_mentioned_usernames(text):
     ['1-2.a_X', '1234', 'ddd', 'ee', 'ff', 'gg', 'hh', 'zz']
     """
     return MENTIONS_REGEX.findall(text)
+
 
 def extract_mentioned_users(text):
     """ Returns set of actual database Users @mentioned in given text. """
@@ -649,7 +651,8 @@ class OptionalAttr(object):
     def __call__(self):
         return self
 
-#alias
+
+# alias
 OAttr = OptionalAttr
 
 
@@ -696,6 +699,7 @@ class Optional(object):
         if isinstance(val, cls):
             return val.getval()
         return val
+
 
 def urlreadable(s, _cleanstringsub=re.compile('[^-a-zA-Z0-9./]+').sub):
     return _cleanstringsub('_', safe_str(s)).rstrip('_')

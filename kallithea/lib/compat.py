@@ -55,6 +55,7 @@ else:
 
 # Python Software Foundation License
 
+
 # XXX: it feels like using the class with "is" and "is not" instead of "==" and
 # "!=" should be faster.
 class _Nil(object):
@@ -73,6 +74,7 @@ class _Nil(object):
             return False
         else:
             return NotImplemented
+
 
 _nil = _Nil()
 

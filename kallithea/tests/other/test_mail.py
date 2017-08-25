@@ -4,6 +4,7 @@ import kallithea
 from kallithea.tests.base import *
 from kallithea.model.db import User
 
+
 class smtplib_mock(object):
 
     @classmethod
@@ -12,13 +13,16 @@ class smtplib_mock(object):
 
     def ehlo(self):
         pass
+
     def quit(self):
         pass
+
     def sendmail(self, sender, dest, msg):
         smtplib_mock.lastsender = sender
         smtplib_mock.lastdest = dest
         smtplib_mock.lastmsg = msg
         pass
+
 
 @mock.patch('kallithea.lib.rcmail.smtp_mailer.smtplib', smtplib_mock)
 class TestMail(TestController):

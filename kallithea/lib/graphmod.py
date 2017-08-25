@@ -19,6 +19,7 @@ It allows to have a shared codebase for DAG generation for hg and git repos
 
 nullrev = -1
 
+
 def _first_known_ancestors(parentrev_func, minrev, knownrevs, head):
     """
     Return the apparent parents of the head revision in a filtered DAG.
@@ -45,6 +46,7 @@ def _first_known_ancestors(parentrev_func, minrev, knownrevs, head):
             seen.add(r)
     return ancestors
 
+
 def graph_data(repo, revs):
     """Return a DAG with colored edge information for revs
 
@@ -60,6 +62,7 @@ def graph_data(repo, revs):
     """
     dag = _dagwalker(repo, revs)
     return list(_colored(repo, dag))
+
 
 def _dagwalker(repo, revs):
     """Iterate over revs, yielding revs (highest first) and parents to show in the graph."""
@@ -102,6 +105,7 @@ def _colored(repo, dag):
         parents.
     """
     branch_cache = {}
+
     def branch(rev):
         """Return branch for rev, using cache for efficiency.
         For Mercurial, always return the named branch name (which may be 'default').

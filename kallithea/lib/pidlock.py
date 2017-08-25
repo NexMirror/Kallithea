@@ -42,7 +42,7 @@ class DaemonLock(object):
         self.desc = desc
         self.debug = debug
         self.held = False
-        #run the lock automatically !
+        # run the lock automatically!
         self.lock()
         self._finalize = Finalize(self, DaemonLock._on_finalize,
                                   args=(self, debug), exitpriority=10)

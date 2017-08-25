@@ -79,6 +79,7 @@ class MarkupRenderer(object):
 
         # Extract pre blocks.
         extractions = {}
+
         def pre_extraction_callback(matchobj):
             digest = md5(matchobj.group(0)).hexdigest()
             extractions[digest] = matchobj.group(0)

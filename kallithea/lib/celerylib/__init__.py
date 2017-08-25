@@ -74,6 +74,7 @@ def task(f_org):
         f_async.__name__ = f_org.__name__
         from kallithea.lib import celerypylons
         runner = celerypylons.task(ignore_result=True)(f_async)
+
         def f_wrapped(*args, **kwargs):
             t = runner.apply_async(args=args, kwargs=kwargs)
             log.info('executing task %s in async mode - id %s', f_org, t.task_id)

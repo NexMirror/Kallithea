@@ -23,6 +23,7 @@ import kallithea.tests.base # FIXME: needed for setting testapp instance!!!
 
 from tg.util.webtest import test_context
 
+
 def pytest_configure():
     os.environ['TZ'] = 'UTC'
     if not kallithea.is_windows:
@@ -70,10 +71,12 @@ def pytest_configure():
     # set fixed language for form messages, regardless of environment settings
     formencode.api.set_stdtranslation(languages=[])
 
+
 @pytest.fixture
 def create_test_user():
     """Provide users that automatically disappear after test is over."""
     test_user_ids = []
+
     def _create_test_user(user_form):
         user = UserModel().create(user_form)
         test_user_ids.append(user.user_id)
@@ -115,6 +118,7 @@ def set_test_settings():
         Setting.create_or_update(k, v, t)
     session.commit()
 
+
 @pytest.fixture
 def auto_clear_ip_permissions():
     """Fixture that provides nothing but clearing IP permissions upon test
@@ -134,6 +138,7 @@ def auto_clear_ip_permissions():
 
     # IP permissions are cached, need to invalidate this cache explicitly
     invalidate_all_caches()
+
 
 @pytest.fixture
 def test_context_fixture(app_fixture):
@@ -176,6 +181,7 @@ class MyWSGIServer(WSGIServer):
         if auth:
             auth += '@'
         return '%s://%s%s:%s/%s' % (proto, auth, host, port, repo_name)
+
 
 @pytest.yield_fixture(scope="session")
 def webserver():

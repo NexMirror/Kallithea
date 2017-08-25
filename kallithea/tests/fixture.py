@@ -257,11 +257,11 @@ class Fixture(object):
             'owner': TEST_USER_ADMIN_LOGIN,
             'gist_type': Gist.GIST_PUBLIC,
             'lifetime': -1,
-            'gist_mapping': {'filename1.txt':{'content':'hello world'},}
+            'gist_mapping': {'filename1.txt': {'content': 'hello world'}}
         }
         form_data.update(kwargs)
         gist = GistModel().create(
-            description=form_data['description'],owner=form_data['owner'],
+            description=form_data['description'], owner=form_data['owner'],
             gist_mapping=form_data['gist_mapping'], gist_type=form_data['gist_type'],
             lifetime=form_data['lifetime']
         )
@@ -376,7 +376,7 @@ def create_test_env(repos_test_path, config):
     idx_path = config['index_dir']
     data_path = config['cache_dir']
 
-    #clean index and data
+    # clean index and data
     if idx_path and os.path.exists(idx_path):
         log.debug('remove %s', idx_path)
         shutil.rmtree(idx_path)
@@ -385,7 +385,7 @@ def create_test_env(repos_test_path, config):
         log.debug('remove %s', data_path)
         shutil.rmtree(data_path)
 
-    #CREATE DEFAULT TEST REPOS
+    # CREATE DEFAULT TEST REPOS
     tar = tarfile.open(os.path.join(FIXTURES, 'vcs_test_hg.tar.gz'))
     tar.extractall(os.path.join(TESTS_TMP_PATH, HG_REPO))
     tar.close()
@@ -394,7 +394,7 @@ def create_test_env(repos_test_path, config):
     tar.extractall(os.path.join(TESTS_TMP_PATH, GIT_REPO))
     tar.close()
 
-    #LOAD VCS test stuff
+    # LOAD VCS test stuff
     from kallithea.tests.vcs import setup_package
     setup_package()
 

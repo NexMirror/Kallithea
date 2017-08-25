@@ -43,7 +43,6 @@ class PathsTest(unittest.TestCase):
         for path, expected in paths_and_results:
             self._test_get_dirs_for_path(path, expected)
 
-
     def test_get_scm(self):
         self.assertEqual(('hg', TEST_HG_REPO), get_scm(TEST_HG_REPO))
         self.assertEqual(('git', TEST_GIT_REPO), get_scm(TEST_GIT_REPO))
@@ -209,13 +208,10 @@ class TestAuthorExtractors(unittest.TestCase):
                   ]
 
     def test_author_email(self):
-
         for test_str, result in self.TEST_AUTHORS:
             self.assertEqual(result[1], author_email(test_str))
 
-
     def test_author_name(self):
-
         for test_str, result in self.TEST_AUTHORS:
             self.assertEqual(result[0], author_name(test_str))
 

@@ -62,7 +62,7 @@ class TestChangeSetCommentsController(TestController):
 
         response = self.app.get(url(controller='changeset', action='index',
                                 repo_name=HG_REPO, revision=rev))
-        #test DB
+        # test DB
         assert ChangesetComment.query().count() == 1
         response.mustcontain(
             '''<div class="comments-number">'''

@@ -181,7 +181,7 @@ class TestLoginController(TestController):
     ])
     def test_redirection_after_successful_login_preserves_get_args(self, args, args_encoded):
         response = self.app.post(url(controller='login', action='index',
-                                     came_from = url('/_admin/users', **args)),
+                                     came_from=url('/_admin/users', **args)),
                                  {'username': TEST_USER_ADMIN_LOGIN,
                                   'password': TEST_USER_ADMIN_PASS})
         assert response.status == '302 Found'
@@ -510,7 +510,7 @@ class TestLoginController(TestController):
 
             new_api_key = ApiKeyModel().create(TEST_USER_ADMIN_LOGIN, u'test')
             Session().commit()
-            #patch the API key and make it expired
+            # patch the API key and make it expired
             new_api_key.expires = 0
             Session().commit()
             self._api_key_test(new_api_key.api_key, status=403)

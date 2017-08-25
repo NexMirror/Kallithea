@@ -104,7 +104,7 @@ def get_crypt_password(password):
         import bcrypt
         return bcrypt.hashpw(safe_str(password), bcrypt.gensalt(10))
     else:
-        raise Exception('Unknown or unsupported platform %s' \
+        raise Exception('Unknown or unsupported platform %s'
                         % __platform__)
 
 
@@ -121,7 +121,7 @@ def check_password(password, hashed):
         return hashlib.sha256(password).hexdigest() == hashed
     elif is_unix:
         import bcrypt
-        print (safe_str(password), safe_str(hashed))
+        print(safe_str(password), safe_str(hashed))
         try:
             return bcrypt.checkpw(safe_str(password), safe_str(hashed))
         except ValueError as e:
@@ -129,7 +129,7 @@ def check_password(password, hashed):
             log.error('error from bcrypt checking password: %s', e)
             return False
     else:
-        raise Exception('Unknown or unsupported platform %s' \
+        raise Exception('Unknown or unsupported platform %s'
                         % __platform__)
 
 
@@ -261,7 +261,7 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
     for gr, perms in _grouped:
         # since user can be in multiple groups iterate over them and
         # select the lowest permissions first (more explicit)
-        ##TODO: do this^^
+        # TODO: do this^^
         if not gr.inherit_default_permissions:
             # NEED TO IGNORE all configurable permissions and
             # replace them with explicitly set
@@ -409,7 +409,7 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
             p = _choose_perm(p, cur_perm)
         permissions[UK][g_k] = p
 
-    #user explicit permission for user groups
+    # user explicit permission for user groups
     user_user_groups_perms = Permission.get_default_user_group_perms(user_id)
     for perm in user_user_groups_perms:
         u_k = perm.UserUserGroupToPerm.user_group.users_group_name
@@ -437,7 +437,7 @@ def allowed_api_access(controller_name, whitelist=None, api_key=None):
     else:
         msg = 'controller: %s is *NOT* in API whitelist' % (controller_name)
         if api_key:
-            #if we use API key and don't have access it's a warning
+            # if we use API key and don't have access it's a warning
             log.warning(msg)
         else:
             log.debug(msg)
@@ -510,7 +510,7 @@ class AuthUser(object):
 
         # If user cannot be found, try falling back to anonymous.
         if not is_user_loaded:
-            is_user_loaded =  self._fill_data(self._default_user)
+            is_user_loaded = self._fill_data(self._default_user)
 
         self.is_default_user = (self.user_id == self._default_user.user_id)
         self.is_anonymous = not is_user_loaded or self.is_default_user

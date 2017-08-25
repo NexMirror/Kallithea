@@ -4,7 +4,6 @@ from kallithea.tests.base import *
 from kallithea.model.db import User, UserGroup, UserGroupMember, UserEmailMap, \
     Permission
 from kallithea.model.user import UserModel
-
 from kallithea.model.meta import Session
 from kallithea.model.user_group import UserGroupModel
 from kallithea.tests.fixture import Fixture
@@ -138,7 +137,7 @@ class TestUsers(TestController):
         Session().commit()
         assert UserModel().has_perm(self.u1, perm) == True
 
-        #revoke
+        # revoke
         UserModel().revoke_perm(self.u1, perm)
         Session().commit()
         assert UserModel().has_perm(self.u1, perm) == False

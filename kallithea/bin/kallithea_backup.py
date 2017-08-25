@@ -92,6 +92,7 @@ class BackupManager(object):
         logging.info('Removing file %s', self.backup_file_name)
         os.remove(os.path.join(self.backup_file_path, self.backup_file_name))
 
+
 if __name__ == "__main__":
 
     repo_location = '/home/repo_path'

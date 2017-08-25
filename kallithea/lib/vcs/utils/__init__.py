@@ -157,6 +157,7 @@ email_re = re.compile(
     r"""(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?""",
     re.IGNORECASE)
 
+
 def author_email(author):
     """
     Returns email address of given author string.

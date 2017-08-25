@@ -28,7 +28,7 @@ class MercurialRepositoryTest(unittest.TestCase):
         self.assertRaises(RepositoryError, MercurialRepository, wrong_repo_path)
 
     def test_unicode_path_repo(self):
-        self.assertRaises(VCSError,lambda:MercurialRepository(u'iShouldFail'))
+        self.assertRaises(VCSError, lambda: MercurialRepository(u'iShouldFail'))
 
     def test_repo_clone(self):
         self.__check_for_existing_repo()
@@ -47,7 +47,7 @@ class MercurialRepositoryTest(unittest.TestCase):
             src_url=TEST_HG_REPO, update_after_clone=True)
         self.assertEqual(len(repo.revisions), len(repo_clone.revisions))
 
-        #check if current workdir was updated
+        # check if current workdir was updated
         self.assertEqual(os.path.isfile(os.path.join(TEST_HG_REPO_CLONE \
                                                     + '_w_update',
                                                     'MANIFEST.in')), True,)
@@ -98,7 +98,6 @@ class MercurialRepositoryTest(unittest.TestCase):
                 ])
         self.assertTrue(subset.issubset(set(self.repo.revisions)))
 
-
         # check if we have the proper order of revisions
         org = ['b986218ba1c9b0d6a259fac9b050b1724ed8e545',
                 '3d8f361e72ab303da48d799ff1ac40d5ac37c67e',
@@ -139,7 +138,7 @@ class MercurialRepositoryTest(unittest.TestCase):
         self.assertEqual(sliced, itered)
 
     def test_slicing(self):
-        #4 1 5 10 95
+        # 4 1 5 10 95
         for sfrom, sto, size in [(0, 4, 4), (1, 2, 1), (10, 15, 5),
                                  (10, 20, 10), (5, 100, 95)]:
             revs = list(self.repo[sfrom:sto])
@@ -150,7 +149,7 @@ class MercurialRepositoryTest(unittest.TestCase):
     def test_branches(self):
         # TODO: Need more tests here
 
-        #active branches
+        # active branches
         self.assertTrue('default' in self.repo.branches)
         self.assertTrue('stable' in self.repo.branches)
 
@@ -201,13 +200,13 @@ class MercurialRepositoryTest(unittest.TestCase):
         self.assertEqual(node.kind, NodeKind.FILE)
 
     def test_not_existing_changeset(self):
-        #rawid
+        # rawid
         self.assertRaises(RepositoryError, self.repo.get_changeset,
             'abcd' * 10)
-        #shortid
+        # shortid
         self.assertRaises(RepositoryError, self.repo.get_changeset,
             'erro' * 4)
-        #numeric
+        # numeric
         self.assertRaises(RepositoryError, self.repo.get_changeset,
             self.repo.count() + 1)
 
@@ -414,7 +413,7 @@ class MercurialChangesetTest(unittest.TestCase):
                 self.assertEqual(l1_1, l1_2)
                 l1 = l1_2 = [x[2]().revision for x in cs.get_file_annotate(fname)]
                 l2 = files[fname][rev]['changesets']
-                self.assertTrue(l1 == l2 , "The lists of revision for %s@rev%s"
+                self.assertTrue(l1 == l2, "The lists of revision for %s@rev%s"
                                 "from annotation list should match each other,"
                                 "got \n%s \nvs \n%s " % (fname, rev, l1, l2))
 
@@ -462,7 +461,7 @@ class MercurialChangesetTest(unittest.TestCase):
         self.assertEqual(set((node.path for node in chset88.changed)),
             set(['.hgignore']))
         self.assertEqual(set((node.path for node in chset88.removed)), set())
-#
+
         # 85:
         #    added:   2 ['vcs/utils/diffs.py', 'vcs/web/simplevcs/views/diffs.py']
         #    changed: 4 ['vcs/web/simplevcs/models.py', ...]
@@ -536,13 +535,12 @@ class MercurialChangesetTest(unittest.TestCase):
         path = 'foo/bar/setup.py'
         self.assertRaises(VCSError, self.repo.get_changeset().get_node, path)
 
-
     def test_archival_file(self):
-        #TODO:
+        # TODO:
         pass
 
     def test_archival_as_generator(self):
-        #TODO:
+        # TODO:
         pass
 
     def test_archival_wrong_kind(self):
@@ -550,9 +548,8 @@ class MercurialChangesetTest(unittest.TestCase):
         self.assertRaises(VCSError, tip.fill_archive, kind='error')
 
     def test_archival_empty_prefix(self):
-        #TODO:
+        # TODO:
         pass
-
 
     def test_author_email(self):
         self.assertEqual('marcin@python-blog.com',

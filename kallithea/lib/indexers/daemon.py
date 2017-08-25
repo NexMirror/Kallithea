@@ -77,9 +77,9 @@ class WhooshIndexingDaemon(object):
 
         self.repo_paths = ScmModel().repo_scan(self.repo_location)
 
-        #filter repo list
+        # filter repo list
         if repo_list:
-            #Fix non-ascii repo names to unicode
+            # Fix non-ascii repo names to unicode
             repo_list = map(safe_unicode, repo_list)
             self.filtered_repo_paths = {}
             for repo_name, repo in self.repo_paths.items():
@@ -88,7 +88,7 @@ class WhooshIndexingDaemon(object):
 
             self.repo_paths = self.filtered_repo_paths
 
-        #filter update repo list
+        # filter update repo list
         self.filtered_repo_update_paths = {}
         if repo_update_list:
             self.filtered_repo_update_paths = {}

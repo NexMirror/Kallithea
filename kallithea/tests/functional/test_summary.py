@@ -31,11 +31,11 @@ class TestSummaryController(TestController):
                                     action='index',
                                     repo_name=HG_REPO))
 
-        #repo type
+        # repo type
         response.mustcontain(
             """<span class="repotag">hg"""
         )
-        #public/private
+        # public/private
         response.mustcontain(
             """<i class="icon-globe">"""
         )
@@ -57,11 +57,11 @@ class TestSummaryController(TestController):
                                     action='index',
                                     repo_name=GIT_REPO))
 
-        #repo type
+        # repo type
         response.mustcontain(
             """<span class="repotag">git"""
         )
-        #public/private
+        # public/private
         response.mustcontain(
             """<i class="icon-globe">"""
         )
@@ -82,11 +82,11 @@ class TestSummaryController(TestController):
                                     action='index',
                                     repo_name='_%s' % ID))
 
-        #repo type
+        # repo type
         response.mustcontain(
             """<span class="repotag">hg"""
         )
-        #public/private
+        # public/private
         response.mustcontain(
             """<i class="icon-globe">"""
         )
@@ -111,11 +111,11 @@ class TestSummaryController(TestController):
                                     action='index',
                                     repo_name='_%s' % ID))
 
-        #repo type
+        # repo type
         response.mustcontain(
             """<span class="repotag">git"""
         )
-        #public/private
+        # public/private
         response.mustcontain(
             """<i class="icon-globe">"""
         )
@@ -127,7 +127,7 @@ class TestSummaryController(TestController):
 
     def test_index_trending(self):
         self.log_user()
-        #codes stats
+        # codes stats
         self._enable_stats(HG_REPO)
 
         ScmModel().mark_for_invalidation(HG_REPO)
@@ -151,7 +151,7 @@ class TestSummaryController(TestController):
 
     def test_index_statistics(self):
         self.log_user()
-        #codes stats
+        # codes stats
         self._enable_stats(HG_REPO)
 
         ScmModel().mark_for_invalidation(HG_REPO)
@@ -160,7 +160,7 @@ class TestSummaryController(TestController):
 
     def test_index_trending_git(self):
         self.log_user()
-        #codes stats
+        # codes stats
         self._enable_stats(GIT_REPO)
 
         ScmModel().mark_for_invalidation(GIT_REPO)
@@ -184,7 +184,7 @@ class TestSummaryController(TestController):
 
     def test_index_statistics_git(self):
         self.log_user()
-        #codes stats
+        # codes stats
         self._enable_stats(GIT_REPO)
 
         ScmModel().mark_for_invalidation(GIT_REPO)

@@ -118,7 +118,7 @@ def _run(args):
         tmpl_stored_args.update(kwargs)
 
     if args.show_defaults:
-        for k,v in tmpl_stored_args.iteritems():
+        for k, v in tmpl_stored_args.iteritems():
             print '%s=%s' % (k, v)
         sys.exit(0)
 

@@ -102,7 +102,7 @@ class SettingsController(BaseController):
                     sett = Ui.get_by_key('paths', '/')
                     sett.ui_value = form_result['paths_root_path']
 
-                #HOOKS
+                # HOOKS
                 sett = Ui.get_by_key('hooks', Ui.HOOK_UPDATE)
                 sett.ui_active = form_result['hooks_changegroup_update']
 
@@ -160,7 +160,7 @@ class SettingsController(BaseController):
         if request.POST:
             rm_obsolete = request.POST.get('destroy', False)
             install_git_hooks = request.POST.get('hooks', False)
-            overwrite_git_hooks = request.POST.get('hooks_overwrite', False);
+            overwrite_git_hooks = request.POST.get('hooks_overwrite', False)
             invalidate_cache = request.POST.get('invalidate', False)
             log.debug('rescanning repo location with destroy obsolete=%s, '
                       'install git hooks=%s and '

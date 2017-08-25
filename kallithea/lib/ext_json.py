@@ -22,6 +22,7 @@ def _is_tz_aware(value):
     return (value.tzinfo is not None
             and value.tzinfo.utcoffset(value) is not None)
 
+
 def _obj_dump(obj):
     """
     Custom function for dumping objects to JSON, if obj has __json__ attribute

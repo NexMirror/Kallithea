@@ -23,9 +23,11 @@ __all__ = ['make_app']
 # make_base_app will wrap the TurboGears2 app with all the middleware it needs.
 make_base_app = base_config.setup_tg_wsgi_app(load_environment)
 
+
 def make_app_without_logging(global_conf, full_stack=True, **app_conf):
     """The core of make_app for use from gearbox commands (other than 'serve')"""
     return make_base_app(global_conf, full_stack=full_stack, **app_conf)
+
 
 def make_app(global_conf, full_stack=True, **app_conf):
     """

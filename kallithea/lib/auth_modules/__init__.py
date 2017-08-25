@@ -40,7 +40,7 @@ class LazyFormencode(object):
         from inspect import isfunction
         formencode_obj = self.formencode_obj
         if isfunction(formencode_obj):
-            #case we wrap validators into functions
+            # case we wrap validators into functions
             formencode_obj = self.formencode_obj(*args, **kwargs)
         return formencode_obj(*self.args, **self.kwargs)
 
@@ -75,7 +75,6 @@ class KallitheaAuthPluginBase(object):
                 obj = getattr(v, self.validator_name)
                 #log.debug('Initializing lazy formencode object: %s', obj)
                 return LazyFormencode(obj, *args, **kwargs)
-
 
         class ProxyGet(object):
             def __getattribute__(self, name):
@@ -419,6 +418,7 @@ def authenticate(username, password, environ=None):
             log.warning("User `%s` failed to authenticate against %s",
                         username, module)
     return None
+
 
 def get_managed_fields(user):
     """return list of fields that are managed by the user's auth source, usually some of

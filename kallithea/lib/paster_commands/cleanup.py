@@ -84,7 +84,7 @@ class Command(BasePasterCommand):
             if dirs:
                 print 'Scanning: %s' % dn_
 
-        #filter older than (if present)!
+        # filter older than (if present)!
         now = datetime.datetime.now()
         older_than = args.older_than
         if older_than:

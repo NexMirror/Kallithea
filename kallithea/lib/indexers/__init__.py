@@ -50,7 +50,7 @@ ANALYZER = RegexTokenizer(expression=r"\w+") | LowercaseFilter()
 # - avoid removing "stop words" from text
 # - search case-insensitively
 #
-EMAILADDRANALYZER =  RegexTokenizer() | LowercaseFilter()
+EMAILADDRANALYZER = RegexTokenizer() | LowercaseFilter()
 
 # CUSTOM ANALYZER raw-string + lowercase filter
 #
@@ -77,7 +77,7 @@ IDANALYZER = IDTokenizer()
 #
 PATHANALYZER = RegexTokenizer() | LowercaseFilter()
 
-#INDEX SCHEMA DEFINITION
+# INDEX SCHEMA DEFINITION
 SCHEMA = Schema(
     fileid=ID(unique=True),
     owner=TEXT(analyzer=EMAILADDRANALYZER),

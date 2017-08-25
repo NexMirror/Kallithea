@@ -165,7 +165,7 @@ class ChangesetStatusModel(object):
             revisions = pull_request.revisions
         cur_statuses = q.all()
 
-        #if statuses exists and last is associated with a closed pull request
+        # if statuses exists and last is associated with a closed pull request
         # we need to check if we can allow this status change
         if (dont_allow_on_closed_pull_request and cur_statuses
             and getattr(cur_statuses[0].pull_request, 'status', '')
@@ -174,7 +174,7 @@ class ChangesetStatusModel(object):
                 'Changing status on closed pull request is not allowed'
             )
 
-        #update all current statuses with older version
+        # update all current statuses with older version
         for st in cur_statuses:
             st.version += 1
 

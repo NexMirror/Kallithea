@@ -700,6 +700,7 @@ class BaseChangeset(object):
     def phase(self):
         return ''
 
+
 class BaseWorkdir(object):
     """
     Working directory representation of single repository.

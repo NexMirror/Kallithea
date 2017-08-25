@@ -328,7 +328,7 @@ class FileNode(Node):
                 mtype = 'text/plain'
                 encoding = None
 
-                #try with pygments
+                # try with pygments
                 try:
                     from pygments import lexers
                     mt = lexers.get_lexer_for_filename(self.name).mimetypes
@@ -609,7 +609,7 @@ class SubModuleNode(Node):
 
     def _extract_submodule_url(self):
         if self.alias == 'git':
-            #TODO: find a way to parse gits submodule file and extract the
+            # TODO: find a way to parse gits submodule file and extract the
             # linking URL
             return self.path
         if self.alias == 'hg':

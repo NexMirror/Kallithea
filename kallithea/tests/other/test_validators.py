@@ -162,7 +162,7 @@ class TestRepoGroups(TestController):
         with pytest.raises(formencode.Invalid):
             validator.to_python({'repo_name': gr.group_name})
 
-        #TODO: write an error case for that ie. create a repo withinh a group
+        # TODO: write an error case for that ie. create a repo withinh a group
 #        self.assertRaises(formencode.Invalid,
 #                          validator.to_python, {'repo_name': 'some',
 #                                                'repo_group': gr.group_id})
@@ -181,7 +181,7 @@ class TestRepoGroups(TestController):
         assert expected == validator.to_python(name)
 
     def test_ValidCloneUri(self):
-            #TODO: write this one
+            # TODO: write this one
             pass
 
     def test_ValidForkType(self):
@@ -191,7 +191,7 @@ class TestRepoGroups(TestController):
                 validator.to_python('git')
 
     def test_ValidPerms(self):
-            #TODO: write this one
+            # TODO: write this one
             pass
 
     def test_ValidSettings(self):

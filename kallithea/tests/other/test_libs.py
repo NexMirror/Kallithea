@@ -67,6 +67,7 @@ TEST_URLS += [
      '%s://example.com:8080' % proto),
 ]
 
+
 class FakeUrlGenerator(object):
 
     def __init__(self, current_url=None, default_route=None, **routes):
@@ -85,6 +86,7 @@ class FakeUrlGenerator(object):
 
     def current(self, *args, **kwargs):
         return self.current_url % kwargs
+
 
 class TestLibs(TestController):
 

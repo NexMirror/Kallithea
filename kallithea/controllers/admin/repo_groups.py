@@ -166,7 +166,7 @@ class RepoGroupsController(BaseController):
                 copy_permissions=form_result['group_copy_permissions']
             )
             Session().commit()
-            #TODO: in future action_logger(, '', '', '')
+            # TODO: in future action_logger(, '', '', '')
         except formencode.Invalid as errors:
             return htmlfill.render(
                 render('admin/repo_groups/repo_group_add.html'),
@@ -177,10 +177,10 @@ class RepoGroupsController(BaseController):
                 force_defaults=False)
         except Exception:
             log.error(traceback.format_exc())
-            h.flash(_('Error occurred during creation of repository group %s') \
+            h.flash(_('Error occurred during creation of repository group %s')
                     % request.POST.get('group_name'), category='error')
             parent_group_id = form_result['parent_group_id']
-            #TODO: maybe we should get back to the main view, not the admin one
+            # TODO: maybe we should get back to the main view, not the admin one
             raise HTTPFound(location=url('repos_groups', parent_group=parent_group_id))
         h.flash(_('Created repository group %s') % gr.group_name,
                 category='success')
@@ -188,7 +188,7 @@ class RepoGroupsController(BaseController):
 
     def new(self):
         if HasPermissionAny('hg.admin')('group create'):
-            #we're global admin, we're ok and we can create TOP level groups
+            # we're global admin, we're ok and we can create TOP level groups
             pass
         else:
             # we pass in parent group into creation form, thus we know
@@ -212,7 +212,7 @@ class RepoGroupsController(BaseController):
 
         # TODO: kill allow_empty_group - it is only used for redundant form validation!
         if HasPermissionAny('hg.admin')('group edit'):
-            #we're global admin, we're ok and we can create TOP level groups
+            # we're global admin, we're ok and we can create TOP level groups
             allow_empty_group = True
         elif not c.repo_group.parent_group:
             allow_empty_group = True
@@ -229,11 +229,11 @@ class RepoGroupsController(BaseController):
 
             new_gr = RepoGroupModel().update(group_name, form_result)
             Session().commit()
-            h.flash(_('Updated repository group %s') \
+            h.flash(_('Updated repository group %s')
                     % form_result['group_name'], category='success')
             # we now have new name !
             group_name = new_gr.group_name
-            #TODO: in future action_logger(, '', '', '')
+            # TODO: in future action_logger(, '', '', '')
         except formencode.Invalid as errors:
             c.active = 'settings'
             return htmlfill.render(
@@ -245,7 +245,7 @@ class RepoGroupsController(BaseController):
                 force_defaults=False)
         except Exception:
             log.error(traceback.format_exc())
-            h.flash(_('Error occurred during update of repository group %s') \
+            h.flash(_('Error occurred during update of repository group %s')
                     % request.POST.get('group_name'), category='error')
 
         raise HTTPFound(location=url('edit_repo_group', group_name=group_name))
@@ -270,7 +270,7 @@ class RepoGroupsController(BaseController):
             Session().commit()
             h.flash(_('Removed repository group %s') % group_name,
                     category='success')
-            #TODO: in future action_logger(, '', '', '')
+            # TODO: in future action_logger(, '', '', '')
         except Exception:
             log.error(traceback.format_exc())
             h.flash(_('Error occurred during deletion of repository group %s')
@@ -369,7 +369,7 @@ class RepoGroupsController(BaseController):
                                              form_result['perms_new'],
                                              form_result['perms_updates'],
                                              recursive)
-        #TODO: implement this
+        # TODO: implement this
         #action_logger(request.authuser, 'admin_changed_repo_permissions',
         #              repo_name, request.ip_addr)
         Session().commit()

@@ -100,6 +100,7 @@ class ArchivesTestCaseMixin(_BackendTestMixin):
         with self.assertRaises(VCSError):
             self.tip.fill_archive(prefix='/any')
 
+
 # For each backend create test case class
 for alias in SCM_TESTS:
     attrs = {

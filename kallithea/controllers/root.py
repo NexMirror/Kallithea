@@ -17,6 +17,7 @@ from kallithea.lib.base import BaseController
 from kallithea.controllers.error import ErrorController
 from tg import config
 
+
 # This is the main Kallithea entry point; TurboGears will forward all requests
 # to an instance of 'controller.root.RootController' in the configured
 # 'application' module (set by app_cfg.py).  Requests are forwarded to

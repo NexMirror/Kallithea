@@ -131,7 +131,7 @@ class MyAccountController(BaseController):
                     force_defaults=False)
             except Exception:
                 log.error(traceback.format_exc())
-                h.flash(_('Error occurred during update of user %s') \
+                h.flash(_('Error occurred during update of user %s')
                         % form_result.get('username'), category='error')
         if update:
             raise HTTPFound(location='my_account')
@@ -173,7 +173,7 @@ class MyAccountController(BaseController):
         c.active = 'repos'
         self.__load_data()
 
-        #data used to render the grid
+        # data used to render the grid
         c.data = self._load_my_repos_data()
         return render('admin/my_account/my_account.html')
 
@@ -181,7 +181,7 @@ class MyAccountController(BaseController):
         c.active = 'watched'
         self.__load_data()
 
-        #data used to render the grid
+        # data used to render the grid
         c.data = self._load_my_repos_data(watched=True)
         return render('admin/my_account/my_account.html')
 

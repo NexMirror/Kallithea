@@ -38,8 +38,8 @@ Session = scoped_session(session_factory)
 # Engine is injected when model.__init__.init_model() sets meta.Base.metadata.bind
 Base = declarative_base()
 
-#to use cache use this in query
-#.options(FromCache("sqlalchemy_cache_type", "cachekey"))
+# to use cache use this in query:
+#   .options(FromCache("sqlalchemy_cache_type", "cachekey"))
 
 
 # Define naming conventions for foreign keys, primary keys, indexes,

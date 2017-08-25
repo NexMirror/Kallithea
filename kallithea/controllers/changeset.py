@@ -115,7 +115,7 @@ def get_line_ctx(fid, GET):
         ln_ctx = filter(lambda k: k.startswith('C'), GET.getall(fid))
     else:
         _ln_ctx = filter(lambda k: k.startswith('C'), GET)
-        ln_ctx = GET.get(_ln_ctx[0]) if _ln_ctx  else ln_ctx_global
+        ln_ctx = GET.get(_ln_ctx[0]) if _ln_ctx else ln_ctx_global
         if ln_ctx:
             ln_ctx = [ln_ctx]
 
@@ -207,7 +207,7 @@ class ChangesetController(BaseRepoController):
         c.ignorews_url = _ignorews_url
         c.context_url = _context_url
         c.fulldiff = fulldiff = request.GET.get('fulldiff')
-        #get ranges of revisions if preset
+        # get ranges of revisions if preset
         rev_range = revision.split('...')[:2]
         enable_comments = True
         c.cs_repo = c.db_repo
@@ -300,7 +300,7 @@ class ChangesetController(BaseRepoController):
                 file_diff_data.append(('', None, None, None, diff, None))
             c.changes[changeset.raw_id] = (cs1, cs2, file_diff_data)
 
-        #sort comments in creation order
+        # sort comments in creation order
         c.comments = [com for com_id, com in sorted(comments.items())]
 
         # count inline comments

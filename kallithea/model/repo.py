@@ -317,13 +317,13 @@ class RepoModel(object):
             if 'repo_name' in kwargs:
                 cur_repo.repo_name = cur_repo.get_new_name(kwargs['repo_name'])
 
-            #if private flag is set, reset default permission to NONE
+            # if private flag is set, reset default permission to NONE
             if kwargs.get('repo_private'):
                 EMPTY_PERM = 'repository.none'
                 RepoModel().grant_user_permission(
                     repo=cur_repo, user='default', perm=EMPTY_PERM
                 )
-                #handle extra fields
+                # handle extra fields
             for field in filter(lambda k: k.startswith(RepositoryField.PREFIX),
                                 kwargs):
                 k = RepositoryField.un_prefix_key(field)
@@ -460,7 +460,7 @@ class RepoModel(object):
                     repo=repo, user=member, perm=perm
                 )
             else:
-                #check if we have permissions to alter this usergroup's access
+                # check if we have permissions to alter this usergroup's access
                 if not check_perms or HasUserGroupPermissionLevel('read')(member):
                     self.grant_user_group_permission(
                         repo=repo, group_name=member, perm=perm
@@ -472,7 +472,7 @@ class RepoModel(object):
                     repo=repo, user=member, perm=perm
                 )
             else:
-                #check if we have permissions to alter this usergroup's access
+                # check if we have permissions to alter this usergroup's access
                 if not check_perms or HasUserGroupPermissionLevel('read')(member):
                     self.grant_user_group_permission(
                         repo=repo, group_name=member, perm=perm

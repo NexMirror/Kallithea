@@ -290,7 +290,7 @@ class BaseVCSController(object):
             log.error(traceback.format_exc())
             return None, webob.exc.HTTPInternalServerError()
 
-        #check permissions for this repository
+        # check permissions for this repository
         perm = self._check_permission(action, user, repo_name, ip_addr)
         if not perm:
             return None, webob.exc.HTTPForbidden()
@@ -522,7 +522,7 @@ class BaseController(TGController):
 
             self._basic_security_checks()
 
-            #set globals for auth user
+            # set globals for auth user
 
             bearer_token = None
             try:

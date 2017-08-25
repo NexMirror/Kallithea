@@ -71,7 +71,7 @@ class UserGroupModel(object):
                     user_group=user_group, user=member, perm=perm
                 )
             else:
-                #check if we have permissions to alter this usergroup's access
+                # check if we have permissions to alter this usergroup's access
                 if HasUserGroupPermissionLevel('read')(member):
                     self.grant_user_group_permission(
                         target_user_group=user_group, user_group=member, perm=perm
@@ -83,7 +83,7 @@ class UserGroupModel(object):
                     user_group=user_group, user=member, perm=perm
                 )
             else:
-                #check if we have permissions to alter this usergroup's access
+                # check if we have permissions to alter this usergroup's access
                 if HasUserGroupPermissionLevel('read')(member):
                     self.grant_user_group_permission(
                         target_user_group=user_group, user_group=member, perm=perm

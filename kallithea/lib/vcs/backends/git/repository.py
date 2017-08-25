@@ -118,7 +118,7 @@ class GitRepository(BaseRepository):
             _copts = ['-c', 'core.quotepath=false', ]
         safe_call = False
         if '_safe' in opts:
-            #no exc on failure
+            # no exc on failure
             del opts['_safe']
             safe_call = True
 
@@ -189,7 +189,7 @@ class GitRepository(BaseRepository):
             test_uri = test_uri.rstrip('/') + '/info/refs'
 
         if authinfo:
-            #create a password manager
+            # create a password manager
             passmgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
             passmgr.add_password(*authinfo)
 
@@ -262,7 +262,7 @@ class GitRepository(BaseRepository):
         return so.splitlines()
 
     def _get_all_revisions2(self):
-        #alternate implementation using dulwich
+        # alternate implementation using dulwich
         includes = [x[1][0] for x in self._parsed_refs.iteritems()
                     if x[1][1] != 'T']
         return [c.commit.id for c in self._repo.get_walker(include=includes)]
@@ -527,7 +527,7 @@ class GitRepository(BaseRepository):
 
         """
         if branch_name and branch_name not in self.branches:
-            raise BranchDoesNotExistError("Branch '%s' not found" \
+            raise BranchDoesNotExistError("Branch '%s' not found"
                                           % branch_name)
         # actually we should check now if it's not an empty repo to not spaw
         # subprocess commands

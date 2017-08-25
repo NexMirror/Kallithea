@@ -16,6 +16,7 @@ import kallithea.lib.celerylib.tasks
 
 from tg.util.webtest import test_context
 
+
 class TestNotifications(TestController):
 
     def setup_method(self, method):
@@ -48,6 +49,7 @@ class TestNotifications(TestController):
     def test_create_notification(self):
         with test_context(self.app):
             usrs = [self.u1, self.u2]
+
             def send_email(recipients, subject, body='', html_body='', headers=None, author=None):
                 assert recipients == ['u2@example.com']
                 assert subject == 'Test Message'
@@ -137,7 +139,7 @@ class TestNotifications(TestController):
             # notification object is still there
             assert Notification.query().all() == [notification]
 
-            #u1 and u2 still have assignments
+            # u1 and u2 still have assignments
             u1notification = UserNotification.query() \
                                 .filter(UserNotification.notification ==
                                         notification) \
