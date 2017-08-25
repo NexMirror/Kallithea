@@ -2467,8 +2467,8 @@ class _BaseTestApi(object):
         response = api_call(self, params)
         result = json.loads(response.body)["result"]
         assert len(result) == 3
-        assert result[0].has_key('message')
-        assert not result[0].has_key('added')
+        assert 'message' in result[0]
+        assert 'added' not in result[0]
 
     def test_api_get_changesets_with_file_list(self):
         id_, params = _build_data(self.apikey, 'get_changesets',
@@ -2476,8 +2476,8 @@ class _BaseTestApi(object):
         response = api_call(self, params)
         result = json.loads(response.body)["result"]
         assert len(result) == 3
-        assert result[0].has_key('message')
-        assert result[0].has_key('added')
+        assert 'message' in result[0]
+        assert 'added' in result[0]
 
     def test_api_get_changeset(self):
         review = fixture.review_changeset(self.REPO, self.TEST_REVISION, "approved")
@@ -2486,7 +2486,7 @@ class _BaseTestApi(object):
         response = api_call(self, params)
         result = json.loads(response.body)["result"]
         assert result["raw_id"] == self.TEST_REVISION
-        assert not result.has_key("reviews")
+        assert "reviews" not in result
 
     def test_api_get_changeset_with_reviews(self):
         reviewobjs = fixture.review_changeset(self.REPO, self.TEST_REVISION, "approved")
@@ -2496,7 +2496,7 @@ class _BaseTestApi(object):
         response = api_call(self, params)
         result = json.loads(response.body)["result"]
         assert result["raw_id"] == self.TEST_REVISION
-        assert result.has_key("reviews")
+        assert "reviews" in result
         assert len(result["reviews"]) == 1
         review = result["reviews"][0]
         expected = {
