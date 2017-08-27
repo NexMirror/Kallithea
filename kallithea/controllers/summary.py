@@ -42,7 +42,7 @@ from kallithea.lib.vcs.exceptions import ChangesetError, EmptyRepositoryError, \
     NodeDoesNotExistError
 from kallithea.config.conf import ALL_READMES, ALL_EXTS, LANGUAGES_EXTENSIONS_MAP
 from kallithea.model.db import Statistics, CacheInvalidation, User
-from kallithea.lib.utils2 import safe_str
+from kallithea.lib.utils2 import safe_int, safe_str
 from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator, \
     NotAnonymous
 from kallithea.lib.base import BaseRepoController, render, jsonify
@@ -51,7 +51,7 @@ from kallithea.lib.markup_renderer import MarkupRenderer
 from kallithea.lib.celerylib.tasks import get_commits_stats
 from kallithea.lib.compat import json
 from kallithea.lib.vcs.nodes import FileNode
-from kallithea.controllers.changelog import _load_changelog_summary
+from kallithea.lib.page import RepoPage
 
 log = logging.getLogger(__name__)
 
@@ -106,7 +106,13 @@ class SummaryController(BaseRepoController):
     @LoginRequired()
     @HasRepoPermissionLevelDecorator('read')
     def index(self, repo_name):
-        _load_changelog_summary()
+        p = safe_int(request.GET.get('page'), 1)
+        size = safe_int(request.GET.get('size'), 10)
+        collection = c.db_repo_scm_instance
+        c.cs_pagination = RepoPage(collection, page=p, items_per_page=size)
+        page_revisions = [x.raw_id for x in list(c.cs_pagination)]
+        c.cs_comments = c.db_repo.get_comments(page_revisions)
+        c.cs_statuses = c.db_repo.statuses(page_revisions)
 
         if request.authuser.is_default_user:
             username = ''

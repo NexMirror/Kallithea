@@ -46,17 +46,6 @@ from kallithea.lib.utils2 import safe_int, safe_str
 log = logging.getLogger(__name__)
 
 
-def _load_changelog_summary():
-    # only used from summary ...
-    p = safe_int(request.GET.get('page'), 1)
-    size = safe_int(request.GET.get('size'), 10)
-    collection = c.db_repo_scm_instance
-    c.cs_pagination = RepoPage(collection, page=p, items_per_page=size)
-    page_revisions = [x.raw_id for x in list(c.cs_pagination)]
-    c.cs_comments = c.db_repo.get_comments(page_revisions)
-    c.cs_statuses = c.db_repo.statuses(page_revisions)
-
-
 class ChangelogController(BaseRepoController):
 
     def _before(self, *args, **kwargs):
