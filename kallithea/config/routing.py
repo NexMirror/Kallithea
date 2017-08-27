@@ -702,10 +702,6 @@ def make_map(config):
     rmap.connect('changelog_home', '/{repo_name:.*?}/changelog',
                 controller='changelog', conditions=dict(function=check_repo))
 
-    rmap.connect('changelog_summary_home', '/{repo_name:.*?}/changelog_summary',
-                controller='changelog', action='changelog_summary',
-                conditions=dict(function=check_repo))
-
     rmap.connect('changelog_file_home', '/{repo_name:.*?}/changelog/{revision}/{f_path:.*}',
                 controller='changelog', f_path=None,
                 conditions=dict(function=check_repo))

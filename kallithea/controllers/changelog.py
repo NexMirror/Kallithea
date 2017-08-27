@@ -50,16 +50,8 @@ def _load_changelog_summary():
     # only used from summary ...
     p = safe_int(request.GET.get('page'), 1)
     size = safe_int(request.GET.get('size'), 10)
-
-    def url_generator(**kw):
-        return url('changelog_summary_home',
-                   repo_name=c.db_repo.repo_name, size=size, **kw)
-
     collection = c.db_repo_scm_instance
-
-    c.cs_pagination = RepoPage(collection, page=p,
-                                 items_per_page=size,
-                                 url=url_generator)
+    c.cs_pagination = RepoPage(collection, page=p, items_per_page=size)
     page_revisions = [x.raw_id for x in list(c.cs_pagination)]
     c.cs_comments = c.db_repo.get_comments(page_revisions)
     c.cs_statuses = c.db_repo.statuses(page_revisions)
@@ -182,13 +174,4 @@ class ChangelogController(BaseRepoController):
         if request.environ.get('HTTP_X_PARTIAL_XHR'):
             c.cs = c.db_repo_scm_instance.get_changeset(cs)
             return render('changelog/changelog_details.html')
-        raise HTTPNotFound()
-
-    @LoginRequired()
-    @HasRepoPermissionLevelDecorator('read')
-    def changelog_summary(self, repo_name):
-        if request.environ.get('HTTP_X_PARTIAL_XHR'):
-            _load_changelog_summary()
-
-            return render('changelog/changelog_summary_data.html')
         raise HTTPNotFound()
