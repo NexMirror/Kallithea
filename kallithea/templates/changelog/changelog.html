@@ -73,13 +73,11 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                 <tbody>
                 %for cnt,cs in enumerate(c.cs_pagination):
                     <tr id="chg_${cnt+1}" class="${'mergerow' if len(cs.parents) > 1 else ''}">
+                        %if not c.changelog_for_path:
                         <td class="checkbox-column">
-                            %if c.changelog_for_path:
-                                ${h.checkbox(cs.raw_id,class_="changeset_range", disabled="disabled")}
-                            %else:
-                                ${h.checkbox(cs.raw_id,class_="changeset_range")}
-                            %endif
+                            ${h.checkbox(cs.raw_id,class_="changeset_range")}
                         </td>
+                        %endif
                         <td class="status">
                           %if c.cs_statuses.get(cs.raw_id):
                             %if c.cs_statuses.get(cs.raw_id)[2]:
