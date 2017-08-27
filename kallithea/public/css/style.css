@@ -1416,54 +1416,41 @@ BIN_FILENODE = 6
     position: relative;
 }
 
-#graph .container_header {
-    padding: 10px;
-    height: 25px;
-}
-
-#graph_content #rev_range_container {
-    float: left;
-    margin: 0px 0px 0px 3px;
-}
-
-#graph_content #rev_range_clear {
-    float: left;
-    margin: 0px 0px 0px 3px;
-}
-
-#graph_content #changesets {
+table#changesets {
     border-collapse: collapse;
     border: none;
     border-color: #cdcdcd;
 }
 
-tr.mergerow,
-tr.out-of-range {
+table#updaterevs-table tr.mergerow,
+table#updaterevs-table tr.out-of-range,
+table#changesets tr.mergerow,
+table#changesets tr.out-of-range {
     opacity: 0.6;
 }
 
-#graph_content #changesets td {
+table#changesets tr > td {
     height: 31px;
     border-color: #cdcdcd;
     text-align: left;
 }
 
-#graph_content tr .checkbox-column {
+table#changesets tr > td.checkbox-column {
     width: 14px;
     font-size: 0.85em;
 }
 
-#graph_content tr .status {
+table#changesets tr > td.status {
     width: 14px;
     font-size: 0.85em;
 }
 
-#graph_content tr .hash {
+table#changesets tr > td.hash {
     width: 100px;
     font-size: 0.85em;
 }
 
-#graph_content tr .date {
+table#changesets tr > td.date {
     width: auto !important;
     color: #666;
     font-size: 10px;
@@ -1471,44 +1458,37 @@ tr.out-of-range {
 }
 
 #graph_content_pr .compare_view_commits .expand_commit,
-#graph_content tr .expand_commit {
+table#changesets tr > td.expand_commit {
     width: 24px;
     cursor: pointer;
     color: #999;
 }
 
-#graph_content tr .right {
-    width: 120px;
-    padding-right: 0px;
-    overflow: visible;
-    position: relative;
-}
-
-#graph_content tr .mid {
+table#changesets tr > td.mid {
     width: 100%;
     padding: 0;
 }
 
-#graph_content .log-container {
+table#changesets .log-container {
     position: relative;
     margin-top: 8px;
 }
 
-#graph_content tr #singlerange,
-#graph_content tr .changeset_range {
+table#changesets tr #singlerange,
+table#changesets tr .changeset_range {
     float: left;
     margin: 2px 0;
 }
 
-#graph_content tr .author img {
+table#changesets tr > td.author img {
     vertical-align: middle;
 }
 
-#graph_content tr .author .user {
+table#changesets tr > td.author .user {
     color: #444444;
 }
 
-#graph_content tr td.mid .message,
+table#changesets tr > td.mid .message,
 #graph_content_pr .compare_view_commits .message {
     white-space: nowrap;
     padding: 0;
@@ -1519,13 +1499,13 @@ tr.out-of-range {
     padding: 0 !important;
 }
 
-#graph_content tr td.mid .message.expanded,
+table#changesets tr > td.mid .message.expanded,
 #graph_content_pr .compare_view_commits .message.expanded {
     height: auto;
     overflow: initial;
 }
 
-#graph_content tr .extra-container {
+table#changesets tr .extra-container {
     display: block;
     position: absolute;
     top: -15px;
@@ -1537,9 +1517,9 @@ tr.out-of-range {
 
 #pull_request_overview .comments-container,
 #changeset_compare_view_content .comments-container,
-#graph_content .comments-container,
+table#changesets .comments-container,
 #shortlog_data .comments-container,
-#graph_content .logtags {
+table#changesets .logtags {
     display: block;
     float: left;
     overflow: hidden;
@@ -1548,12 +1528,12 @@ tr.out-of-range {
     white-space: nowrap;
 }
 
-#graph_content .comments-container {
+table#changesets .comments-container {
     margin: 0.8em 0;
     margin-right: 0.5em;
 }
 
-#graph_content .tagcontainer {
+table#changesets .tagcontainer {
     width: 80px;
     position: relative;
     float: right;
@@ -1562,7 +1542,7 @@ tr.out-of-range {
     margin-left: 0.5em;
 }
 
-#graph_content .logtags {
+table#changesets .logtags {
     min-width: 80px;
     height: 1.1em;
     position: absolute;
@@ -1571,11 +1551,11 @@ tr.out-of-range {
     top: 0px;
 }
 
-#graph_content .logtags.tags {
+table#changesets .logtags.tags {
     top: 14px;
 }
 
-#graph_content .logtags:hover {
+table#changesets .logtags:hover {
     overflow: visible;
     position: absolute;
     width: auto;
@@ -1583,8 +1563,8 @@ tr.out-of-range {
     left: initial;
 }
 
-#graph_content .logtags .booktag,
-#graph_content .logtags .tagtag {
+table#changesets .logtags .booktag,
+table#changesets .logtags .tagtag {
     float: left;
     line-height: 1em;
     margin-bottom: 1px;
@@ -1593,7 +1573,7 @@ tr.out-of-range {
     font-size: 10px;
 }
 
-#graph_content tr .mid .message a:hover {
+table#changesets tr > td.mid .message a:hover {
     text-decoration: none;
 }
 
@@ -1640,16 +1620,6 @@ div.panel-body #files_data .revision-link,
 }
 .changeset-status-under_review {
     color: #ffc71e;
-}
-
-#graph_content .comments-cnt {
-    color: rgb(136, 136, 136);
-    padding: 5px 0;
-}
-
-#shortlog_data .comments-cnt {
-    color: rgb(136, 136, 136);
-    padding: 3px 0;
 }
 
 .pull-right .changes {
@@ -1728,14 +1698,14 @@ div.panel-body #files_data .revision-link,
     line-height: 1.5em;
 }
 
-#graph_content .phasetag,
-#graph_content .bumpedtag,
-#graph_content .divergenttag,
-#graph_content .extincttag,
-#graph_content .unstabletag,
-#graph_content .branchtag,
-#graph_content .tagtag,
-#graph_content .booktag {
+table#changesets .phasetag,
+table#changesets .bumpedtag,
+table#changesets .divergenttag,
+table#changesets .extincttag,
+table#changesets .unstabletag,
+table#changesets .branchtag,
+table#changesets .tagtag,
+table#changesets .booktag {
     margin: 1.1em 0;
     margin-right: 0.5em;
 }
@@ -2391,11 +2361,6 @@ div.form div.buttons {
     margin: 8px 0 0;
     padding: 0;
     max-width: 320px;
-}
-
-#changeset_content .changeset_content_header .wrapper,
-#graph_content tr .wrapper {
-    width: 600px;
 }
 
 #changeset_content .changeset_content_header .date,

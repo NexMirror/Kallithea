@@ -36,7 +36,7 @@
           ${h.link_to(h.show_id(cs),h.url('changeset_home',repo_name=repo_name,revision=cs.raw_id), class_='changeset_hash')}
         </td>
         <td class="date">
-          <div class="date" data-toggle="tooltip" title="${h.fmt_date(cs.date)}">${h.age(cs.date,True)}</div>
+          <div data-toggle="tooltip" title="${h.fmt_date(cs.date)}">${h.age(cs.date,True)}</div>
         </td>
         <% message_lines = cs.message.splitlines() %>
         %if len(message_lines) > 1:
