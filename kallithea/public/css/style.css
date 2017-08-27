@@ -1437,13 +1437,9 @@ BIN_FILENODE = 6
     border-color: #cdcdcd;
 }
 
-tr.mergerow > td.author .user,
-tr.mergerow > td.mid .message,
-tr.mergerow > td.mid .message > a,
-tr.out-of-range > td.author .user,
-tr.out-of-range > td.mid .message,
-tr.out-of-range > td.mid .message > a {
-    color: #aaa !important;
+tr.mergerow,
+tr.out-of-range {
+    opacity: 0.6;
 }
 
 #graph_content #changesets td {
