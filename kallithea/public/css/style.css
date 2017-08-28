@@ -1464,9 +1464,10 @@ tr.out-of-range {
 }
 
 #graph_content tr .date {
-    width: 76px;
+    width: auto !important;
     color: #666;
     font-size: 10px;
+    white-space: nowrap;
 }
 
 #graph_content_pr .compare_view_commits .expand_commit,
@@ -1484,6 +1485,7 @@ tr.out-of-range {
 }
 
 #graph_content tr .mid {
+    width: 100%;
     padding: 0;
 }
 
