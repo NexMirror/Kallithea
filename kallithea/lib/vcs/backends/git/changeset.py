@@ -50,6 +50,10 @@ class GitChangeset(BaseChangeset):
         self._paths = {}
 
     @LazyProperty
+    def bookmarks(self):
+        return ()
+
+    @LazyProperty
     def message(self):
         return safe_unicode(self._commit.message)
 

@@ -86,9 +86,8 @@ class FeedController(BaseRepoController):
         #branches, tags, bookmarks
         if cs.branch:
             desc_msg.append('branch: %s<br/>' % cs.branch)
-        if h.is_hg(c.db_repo_scm_instance):
-            for book in cs.bookmarks:
-                desc_msg.append('bookmark: %s<br/>' % book)
+        for book in cs.bookmarks:
+            desc_msg.append('bookmark: %s<br/>' % book)
         for tag in cs.tags:
             desc_msg.append('tag: %s<br/>' % tag)
         diff_processor, changes = self.__changes(cs)

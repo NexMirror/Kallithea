@@ -48,13 +48,11 @@
         </td>
         <td title="${cs.author}">${h.person(cs.author)}</td>
         <td>
-            %if h.is_hg(c.db_repo_scm_instance):
-                %for book in cs.bookmarks:
-                    <span class="booktag" title="${_('Bookmark %s') % book}">
-                        ${h.link_to(book,h.url('changeset_home',repo_name=c.repo_name,revision=cs.raw_id))}
-                    </span>
-                %endfor
-            %endif
+            %for book in cs.bookmarks:
+                <span class="booktag" title="${_('Bookmark %s') % book}">
+                    ${h.link_to(book,h.url('changeset_home',repo_name=c.repo_name,revision=cs.raw_id))}
+                </span>
+            %endfor
             %for tag in cs.tags:
              <span class="tagtag" title="${_('Tag %s') % tag}">
                  ${h.link_to(tag,h.url('changeset_home',repo_name=c.repo_name,revision=cs.raw_id))}
