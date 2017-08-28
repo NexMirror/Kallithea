@@ -6,8 +6,8 @@ from kallithea.tests.fixture import Fixture
 
 fixture = Fixture()
 
-def _commit_ref(sha, msg):
-    return '''<div class="message">%s</div>''' % msg
+def _commit_ref(repo_name, sha, msg):
+    return '''<div class="message-firstline"><a class="message-link" href="/%s/changeset/%s">%s</a></div>''' % (repo_name, sha, msg)
 
 
 class TestCompareController(TestController):
@@ -65,8 +65,8 @@ class TestCompareController(TestController):
         response.mustcontain("""Showing 2 commits""")
         response.mustcontain("""1 file changed with 2 insertions and 0 deletions""")
 
-        response.mustcontain(_commit_ref(cs1.raw_id, 'commit2'))
-        response.mustcontain(_commit_ref(cs2.raw_id, 'commit3'))
+        response.mustcontain(_commit_ref(repo2.repo_name, cs1.raw_id, 'commit2'))
+        response.mustcontain(_commit_ref(repo2.repo_name, cs2.raw_id, 'commit3'))
 
         response.mustcontain("""<a class="changeset_hash" href="/%s/changeset/%s">r1:%s</a>""" % (repo2.repo_name, cs1.raw_id, cs1.short_id))
         response.mustcontain("""<a class="changeset_hash" href="/%s/changeset/%s">r2:%s</a>""" % (repo2.repo_name, cs2.raw_id, cs2.short_id))
@@ -116,8 +116,8 @@ class TestCompareController(TestController):
         response.mustcontain("""Showing 2 commits""")
         response.mustcontain("""1 file changed with 2 insertions and 0 deletions""")
 
-        response.mustcontain(_commit_ref(cs1.raw_id, 'commit2'))
-        response.mustcontain(_commit_ref(cs2.raw_id, 'commit3'))
+        response.mustcontain(_commit_ref(repo2.repo_name, cs1.raw_id, 'commit2'))
+        response.mustcontain(_commit_ref(repo2.repo_name, cs2.raw_id, 'commit3'))
 
         response.mustcontain("""<a class="changeset_hash" href="/%s/changeset/%s">r1:%s</a>""" % (repo2.repo_name, cs1.raw_id, cs1.short_id))
         response.mustcontain("""<a class="changeset_hash" href="/%s/changeset/%s">r2:%s</a>""" % (repo2.repo_name, cs2.raw_id, cs2.short_id))
@@ -175,8 +175,8 @@ class TestCompareController(TestController):
         response.mustcontain("""Showing 2 commits""")
         response.mustcontain("""1 file changed with 2 insertions and 0 deletions""")
 
-        response.mustcontain(_commit_ref(cs1.raw_id, 'commit2'))
-        response.mustcontain(_commit_ref(cs2.raw_id, 'commit3'))
+        response.mustcontain(_commit_ref(repo2.repo_name, cs1.raw_id, 'commit2'))
+        response.mustcontain(_commit_ref(repo2.repo_name, cs2.raw_id, 'commit3'))
 
         response.mustcontain("""<a class="changeset_hash" href="/%s/changeset/%s">r1:%s</a>""" % (repo2.repo_name, cs1.raw_id, cs1.short_id))
         response.mustcontain("""<a class="changeset_hash" href="/%s/changeset/%s">r2:%s</a>""" % (repo2.repo_name, cs2.raw_id, cs2.short_id))
@@ -234,8 +234,8 @@ class TestCompareController(TestController):
         response.mustcontain("""Showing 2 commits""")
         response.mustcontain("""1 file changed with 2 insertions and 0 deletions""")
 
-        response.mustcontain(_commit_ref(cs1.raw_id, 'commit2'))
-        response.mustcontain(_commit_ref(cs2.raw_id, 'commit3'))
+        response.mustcontain(_commit_ref(repo2.repo_name, cs1.raw_id, 'commit2'))
+        response.mustcontain(_commit_ref(repo2.repo_name, cs2.raw_id, 'commit3'))
 
         response.mustcontain("""<a class="changeset_hash" href="/%s/changeset/%s">r1:%s</a>""" % (repo2.repo_name, cs1.raw_id, cs1.short_id))
         response.mustcontain("""<a class="changeset_hash" href="/%s/changeset/%s">r2:%s</a>""" % (repo2.repo_name, cs2.raw_id, cs2.short_id))
@@ -302,9 +302,9 @@ class TestCompareController(TestController):
         response.mustcontain("""Showing 3 commits""")
         response.mustcontain("""1 file changed with 3 insertions and 0 deletions""")
 
-        response.mustcontain(_commit_ref(cs2.raw_id, 'commit3'))
-        response.mustcontain(_commit_ref(cs3.raw_id, 'commit4'))
-        response.mustcontain(_commit_ref(cs4.raw_id, 'commit5'))
+        response.mustcontain(_commit_ref(repo1.repo_name, cs2.raw_id, 'commit3'))
+        response.mustcontain(_commit_ref(repo1.repo_name, cs3.raw_id, 'commit4'))
+        response.mustcontain(_commit_ref(repo1.repo_name, cs4.raw_id, 'commit5'))
 
         response.mustcontain("""<a class="changeset_hash" href="/%s/changeset/%s">r2:%s</a>""" % (repo1.repo_name, cs2.raw_id, cs2.short_id))
         response.mustcontain("""<a class="changeset_hash" href="/%s/changeset/%s">r3:%s</a>""" % (repo1.repo_name, cs3.raw_id, cs3.short_id))
@@ -368,9 +368,9 @@ class TestCompareController(TestController):
         response.mustcontain("""Showing 3 commits""")
         response.mustcontain("""1 file changed with 3 insertions and 0 deletions""")
 
-        response.mustcontain(_commit_ref(cs3.raw_id, 'commit4'))
-        response.mustcontain(_commit_ref(cs4.raw_id, 'commit5'))
-        response.mustcontain(_commit_ref(cs5.raw_id, 'commit6'))
+        response.mustcontain(_commit_ref(repo1.repo_name, cs3.raw_id, 'commit4'))
+        response.mustcontain(_commit_ref(repo1.repo_name, cs4.raw_id, 'commit5'))
+        response.mustcontain(_commit_ref(repo1.repo_name, cs5.raw_id, 'commit6'))
 
         response.mustcontain("""<a class="changeset_hash" href="/%s/changeset/%s">r3:%s</a>""" % (repo1.repo_name, cs3.raw_id, cs3.short_id))
         response.mustcontain("""<a class="changeset_hash" href="/%s/changeset/%s">r4:%s</a>""" % (repo1.repo_name, cs4.raw_id, cs4.short_id))

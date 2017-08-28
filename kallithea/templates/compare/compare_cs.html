@@ -1,4 +1,5 @@
-## Changesets table !
+## Changesets table with graph
+<%namespace name="changelog_table" file="/changelog/changelog_table.html"/>
 <div>
   %if not c.cs_ranges:
     <span class="empty_data">${_('No changesets')}</span>
@@ -28,68 +29,9 @@
     </div>
 
     <div id="graph_content_pr">
-
-    <table class="table compare_view_commits">
-    %for cnt, cs in enumerate(reversed(c.cs_ranges)):
-      <tr id="chg_${cnt+1}" class="${'mergerow' if len(cs.parents) > 1 else ''}">
-        <td>
-          %if cs.raw_id in c.cs_statuses:
-              <i class="icon-circle changeset-status-${c.cs_statuses[cs.raw_id][0]}" title="${_('Changeset status: %s') % c.cs_statuses[cs.raw_id][1]}"></i>
-          %endif
-          %if c.cs_comments.get(cs.raw_id):
-              <div class="comments-container">
-                  <div class="comments-cnt" title="${_('Changeset has comments')}">
-                      <a href="${c.cs_comments[cs.raw_id][0].url()}">
-                          ${len(c.cs_comments[cs.raw_id])}
-                          <i class="icon-comment"></i>
-                      </a>
-                  </div>
-              </div>
-          %endif
-        </td>
-        <td class="changeset-logical-index">
-          <%
-              num_cs = len(c.cs_ranges)
-              index = num_cs - cnt
-              if index == 1:
-                  title = _('First (oldest) changeset in this list')
-              elif index == num_cs:
-                  title = _('Last (most recent) changeset in this list')
-              else:
-                  title = _('Position in this list of changesets')
-          %>
-          <span data-toggle="tooltip" title="${title}">
-            ${index}
-          </span>
-        </td>
-        <td><span data-toggle="tooltip" title="${h.age(cs.date)}">${cs.date}</span></td>
-        <td class="author">
-            ${h.gravatar(h.email_or_none(cs.author), size=16)}
-            <span data-toggle="tooltip" title="${cs.author}" class="user">${h.person(cs.author)}</span>
-        </td>
-        <td>${h.link_to(h.show_id(cs),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id), class_='changeset_hash')}</td>
-        <td>
-        %if cs.branch:
-        <span class="branchtag">${h.link_to(cs.branch,h.url('changelog_home',repo_name=c.cs_repo.repo_name,branch=cs.branch))}</span>
-        %endif
-        </td>
-        <td class="expand_commit" title="${_('Expand commit message')}">
-            <i class="icon-align-left"></i>
-        </td>
-        <td class="mid">
-            <div class="pull-right">
-                %for tag in cs.tags:
-                    <span class="tagtag" title="${_('Tag %s') % tag}">
-                        ${h.link_to(tag,h.url('changeset_home',repo_name=c.repo_name,revision=cs.raw_id))}
-                    </span>
-                %endfor
-            </div>
-            <div class="message">${h.urlify_text(cs.message, c.repo_name)}</div>
-        </td>
-      </tr>
-    %endfor
-    </table>
-
+      ${changelog_table.changelog(c.cs_repo.repo_name, list(reversed(c.cs_ranges)), c.cs_statuses, c.cs_comments,
+                                  show_index=True,
+                                  resize_js='graph.render(jsdata)')}
     </div>
 
     %if c.is_ajax_preview:

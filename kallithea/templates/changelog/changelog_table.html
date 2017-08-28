@@ -1,7 +1,8 @@
 ## Render changelog table with id 'changesets' with the range of changesets,
 ## statuses, and comments.
 ## Optionally, pass a js snippet to run whenever a table resize is triggered.
-<%def name="changelog(repo_name, cs_range, cs_statuses, cs_comments, show_checkbox=False, show_branch=True, resize_js='')">
+<%def name="changelog(repo_name, cs_range, cs_statuses, cs_comments, show_checkbox=False, show_branch=True, show_index=False, resize_js='')">
+    <% num_cs = len(cs_range) %>
     <table class="table" id="changesets">
     <tbody>
       %for cnt,cs in enumerate(cs_range):
@@ -9,6 +10,22 @@
         %if show_checkbox:
         <td class="checkbox-column">
           ${h.checkbox(cs.raw_id,class_="changeset_range")}
+        </td>
+        %endif
+        %if show_index:
+        <td class="changeset-logical-index">
+          <%
+              index = num_cs - cnt
+              if index == 1:
+                  title = _('First (oldest) changeset in this list')
+              elif index == num_cs:
+                  title = _('Last (most recent) changeset in this list')
+              else:
+                  title = _('Position in this list of changesets')
+          %>
+          <span data-toggle="tooltip" title="${title}">
+            ${index}
+          </span>
         </td>
         %endif
         <td class="status">
