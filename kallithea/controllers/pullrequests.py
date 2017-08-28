@@ -578,7 +578,7 @@ class PullrequestsController(BaseRepoController):
 
         raw_ids = [x.raw_id for x in c.cs_ranges]
         c.cs_comments = c.cs_repo.get_comments(raw_ids)
-        c.statuses = c.cs_repo.statuses(raw_ids)
+        c.cs_statuses = c.cs_repo.statuses(raw_ids)
 
         ignore_whitespace = request.GET.get('ignorews') == '1'
         line_context = safe_int(request.GET.get('context'), 3)
@@ -628,8 +628,7 @@ class PullrequestsController(BaseRepoController):
             for comments in lines.values():
                 c.inline_cnt += len(comments)
         # comments
-        c.comments = cc_model.get_comments(c.db_repo.repo_id,
-                                           pull_request=pull_request_id)
+        c.comments = cc_model.get_comments(c.db_repo.repo_id, pull_request=pull_request_id)
 
         # (badly named) pull-request status calculation based on reviewer votes
         (c.pull_request_reviewers,

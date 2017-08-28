@@ -223,7 +223,7 @@ class CompareController(BaseRepoController):
             c.cs_repo.scm_instance, c.cs_rev)
         raw_ids = [x.raw_id for x in c.cs_ranges]
         c.cs_comments = c.cs_repo.get_comments(raw_ids)
-        c.statuses = c.cs_repo.statuses(raw_ids)
+        c.cs_statuses = c.cs_repo.statuses(raw_ids)
 
         revs = [ctx.revision for ctx in reversed(c.cs_ranges)]
         c.jsdata = graph_data(c.cs_repo.scm_instance, revs)

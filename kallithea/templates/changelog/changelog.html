@@ -81,15 +81,15 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                             %endif
                         </td>
                         <td class="status">
-                          %if c.statuses.get(cs.raw_id):
-                            %if c.statuses.get(cs.raw_id)[2]:
-                              <a data-toggle="tooltip" title="${_('Changeset status: %s by %s\nClick to open associated pull request %s') % (c.statuses.get(cs.raw_id)[1], c.statuses.get(cs.raw_id)[5].username, c.statuses.get(cs.raw_id)[4])}" href="${h.url('pullrequest_show',repo_name=c.statuses.get(cs.raw_id)[3],pull_request_id=c.statuses.get(cs.raw_id)[2])}">
-                                <i class="icon-circle changeset-status-${c.statuses.get(cs.raw_id)[0]}"></i>
+                          %if c.cs_statuses.get(cs.raw_id):
+                            %if c.cs_statuses.get(cs.raw_id)[2]:
+                              <a data-toggle="tooltip" title="${_('Changeset status: %s by %s\nClick to open associated pull request %s') % (c.cs_statuses.get(cs.raw_id)[1], c.cs_statuses.get(cs.raw_id)[5].username, c.cs_statuses.get(cs.raw_id)[4])}" href="${h.url('pullrequest_show',repo_name=c.cs_statuses.get(cs.raw_id)[3],pull_request_id=c.cs_statuses.get(cs.raw_id)[2])}">
+                                <i class="icon-circle changeset-status-${c.cs_statuses.get(cs.raw_id)[0]}"></i>
                               </a>
                             %else:
-                              <a data-toggle="tooltip" title="${_('Changeset status: %s by %s') % (c.statuses.get(cs.raw_id)[1], c.statuses.get(cs.raw_id)[5].username)}"
-                                 href="${c.comments[cs.raw_id][0].url()}">
-                                  <i class="icon-circle changeset-status-${c.statuses.get(cs.raw_id)[0]}"></i>
+                              <a data-toggle="tooltip" title="${_('Changeset status: %s by %s') % (c.cs_statuses.get(cs.raw_id)[1], c.cs_statuses.get(cs.raw_id)[5].username)}"
+                                 href="${c.cs_comments[cs.raw_id][0].url()}">
+                                  <i class="icon-circle changeset-status-${c.cs_statuses.get(cs.raw_id)[0]}"></i>
                               </a>
                             %endif
                           %endif
@@ -121,9 +121,9 @@ ${self.repo_context_bar('changelog', c.first_revision.raw_id if c.first_revision
                                     %endif
                                 </div>
                                 <div class="extra-container">
-                                    %if c.comments.get(cs.raw_id):
-                                        <a class="comments-container comments-cnt" href="${c.comments[cs.raw_id][0].url()}" data-toggle="tooltip" title="${_('%s comments') % len(c.comments[cs.raw_id])}">
-                                            ${len(c.comments[cs.raw_id])}
+                                    %if c.cs_comments.get(cs.raw_id):
+                                        <a class="comments-container comments-cnt" href="${c.cs_comments[cs.raw_id][0].url()}" data-toggle="tooltip" title="${_('%s comments') % len(c.cs_comments[cs.raw_id])}">
+                                            ${len(c.cs_comments[cs.raw_id])}
                                             <i class="icon-comment-discussion"></i>
                                         </a>
                                     %endif

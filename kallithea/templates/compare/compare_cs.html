@@ -33,8 +33,8 @@
     %for cnt, cs in enumerate(reversed(c.cs_ranges)):
       <tr id="chg_${cnt+1}" class="${'mergerow' if len(cs.parents) > 1 else ''}">
         <td>
-          %if cs.raw_id in c.statuses:
-              <i class="icon-circle changeset-status-${c.statuses[cs.raw_id][0]}" title="${_('Changeset status: %s') % c.statuses[cs.raw_id][1]}"></i>
+          %if cs.raw_id in c.cs_statuses:
+              <i class="icon-circle changeset-status-${c.cs_statuses[cs.raw_id][0]}" title="${_('Changeset status: %s') % c.cs_statuses[cs.raw_id][1]}"></i>
           %endif
           %if c.cs_comments.get(cs.raw_id):
               <div class="comments-container">

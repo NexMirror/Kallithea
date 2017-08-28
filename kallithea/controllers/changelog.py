@@ -61,8 +61,8 @@ def _load_changelog_summary():
                                  items_per_page=size,
                                  url=url_generator)
     page_revisions = [x.raw_id for x in list(c.repo_changesets)]
-    c.comments = c.db_repo.get_comments(page_revisions)
-    c.statuses = c.db_repo.statuses(page_revisions)
+    c.cs_comments = c.db_repo.get_comments(page_revisions)
+    c.cs_statuses = c.db_repo.statuses(page_revisions)
 
 
 class ChangelogController(BaseRepoController):
@@ -150,8 +150,8 @@ class ChangelogController(BaseRepoController):
                                     items_per_page=c.size, branch=branch_name,)
 
             page_revisions = [x.raw_id for x in c.pagination]
-            c.comments = c.db_repo.get_comments(page_revisions)
-            c.statuses = c.db_repo.statuses(page_revisions)
+            c.cs_comments = c.db_repo.get_comments(page_revisions)
+            c.cs_statuses = c.db_repo.statuses(page_revisions)
         except EmptyRepositoryError as e:
             h.flash(safe_str(e), category='warning')
             raise HTTPFound(location=url('summary_home', repo_name=c.repo_name))
