@@ -92,7 +92,7 @@ max_request_body_size = 107374182400
 use = egg:gunicorn#main
 <%text>## number of process workers. You must set `instance_id = *` when this option</%text>
 <%text>## is set to more than one worker</%text>
-workers = 1
+workers = 4
 <%text>## process name</%text>
 proc_name = kallithea
 <%text>## type of worker class, one of sync, eventlet, gevent, tornado</%text>
