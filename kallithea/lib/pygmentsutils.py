@@ -27,40 +27,32 @@ Original author and date, and relevant copyright and licensing information is be
 
 from collections import defaultdict
 from itertools import ifilter
-from string import lower
 
 from pygments import lexers
 
 
-def get_lem():
+def get_extension_descriptions():
     """
-    Get language extension map based on what's inside pygments lexers
+    Based on what's inside pygments lexers, return a mapping from lowercase
+    extensions to lists of very brief descriptions.
     """
-    d = defaultdict(lambda: [])
-
-    def __clean(s):
-        s = s.lstrip('*')
-        s = s.lstrip('.')
-
-        if s.find('[') != -1:
-            exts = []
-            start, stop = s.find('['), s.find(']')
-
-            for suffix in s[start + 1:stop]:
-                exts.append(s[:s.find('[')] + suffix)
-            return map(lower, exts)
-        else:
-            return map(lower, [s])
+    ext_descs = defaultdict(list)
 
     for lx, t in sorted(lexers.LEXERS.items()):
-        m = map(__clean, t[-2])
-        if m:
-            m = reduce(lambda x, y: x + y, m)
-            for ext in m:
-                desc = lx.replace('Lexer', '')
-                d[ext].append(desc)
+        desc = lx.replace('Lexer', '')
+        for glob in t[-2]:
+            s = glob.lstrip('*').lstrip('.').lower()
+            start = s.find('[')
+            if start > -1 and s.endswith(']'):
+                # expand trailing [] range
+                prefix = s[:start]
+                for char in s[start + 1:-1]:
+                    ext_descs[prefix + char].append(desc)
+            else:
+                # use stripped glob as extension
+                ext_descs[s].append(desc)
 
-    return dict(d)
+    return dict(ext_descs)
 
 
 def get_index_filenames():

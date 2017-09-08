@@ -30,7 +30,7 @@ from kallithea.lib import pygmentsutils
 
 # language map is also used by whoosh indexer, which for those specified
 # extensions will index it's content
-LANGUAGES_EXTENSIONS_MAP = pygmentsutils.get_lem()
+LANGUAGES_EXTENSIONS_MAP = pygmentsutils.get_extension_descriptions()
 
 # Whoosh index targets
 
