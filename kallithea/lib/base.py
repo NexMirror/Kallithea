@@ -191,8 +191,14 @@ class BasicAuth(paste.auth.basic.AuthBasicAuthenticator):
         self.authfunc = authfunc
         self._rc_auth_http_code = auth_http_code
 
-    def build_authentication(self):
+    def build_authentication(self, environ):
         head = paste.httpheaders.WWW_AUTHENTICATE.tuples('Basic realm="%s"' % self.realm)
+        # Consume the whole body before sending a response
+        try:
+            request_body_size = int(environ.get('CONTENT_LENGTH', 0))
+        except (ValueError):
+            request_body_size = 0
+        environ['wsgi.input'].read(request_body_size)
         if self._rc_auth_http_code and self._rc_auth_http_code == '403':
             # return 403 if alternative http return code is specified in
             # Kallithea config
@@ -202,17 +208,17 @@ class BasicAuth(paste.auth.basic.AuthBasicAuthenticator):
     def authenticate(self, environ):
         authorization = paste.httpheaders.AUTHORIZATION(environ)
         if not authorization:
-            return self.build_authentication()
+            return self.build_authentication(environ)
         (authmeth, auth) = authorization.split(' ', 1)
         if 'basic' != authmeth.lower():
-            return self.build_authentication()
+            return self.build_authentication(environ)
         auth = auth.strip().decode('base64')
         _parts = auth.split(':', 1)
         if len(_parts) == 2:
             username, password = _parts
             if self.authfunc(username, password, environ) is not None:
                 return username
-        return self.build_authentication()
+        return self.build_authentication(environ)
 
     __call__ = authenticate
 
