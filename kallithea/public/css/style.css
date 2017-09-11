@@ -577,7 +577,6 @@ a.metatag[data-tag="license"]:hover {
 #login .panel-body .icon-lock {
     font-size: 100px;
     color: #DDD;
-    position: absolute;
     margin-left: -15px;
     z-index: 1;
 }
