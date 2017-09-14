@@ -69,7 +69,6 @@ def expand(template, desc, selected_mako_conditionals, mako_variable_values, set
     [second-section]
     # Description                                                                  #
     # of this config file                                                          #
-    #some_variable = "never mind - option-b will not be used anyway ..."
     <BLANKLINE>
     """
     # select the right mako conditionals for the other less sophisticated formats
@@ -84,7 +83,7 @@ def expand(template, desc, selected_mako_conditionals, mako_variable_values, set
             """
             criteria, lines = m.groups()
             if criteria not in selected_mako_conditionals:
-                lines = '\n'.join((l if not l or l.startswith('#') else '#' + l) for l in lines.split('\n'))
+                lines = ''
             return lines
         conditional_lines = re.sub(r'^%(?:el)?if (.*):\n((?:^[^%\n].*\n|\n)*)',
             sub_conditional, conditional_lines, flags=re.MULTILINE)
