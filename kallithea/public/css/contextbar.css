@@ -52,89 +52,32 @@ nav.navbar #quick a:hover,
     background: inherit;
 }
 
-#content #context-bar .icon {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    vertical-align: text-bottom;
-}
-
 .navbar-text {
     margin-top: 0;
     margin-bottom: 0;
 }
 
-ul#quick ul.dropdown-menu > li,
-ul#context-pages ul.dropdown-menu > li {
+ul#quick ul.dropdown-menu > li {
     border-bottom: 1px solid rgba(0,0,0,0.1);
     border-top: 1px solid rgba(255,255,255,0.1);
 }
-ul#quick ul.dropdown-menu > li:first-child,
-ul#context-pages ul.dropdown-menu > li:first-child {
+ul#quick ul.dropdown-menu > li:first-child {
     border-top: none;
 }
-ul#quick ul.dropdown-menu > li:last-child,
-ul#context-pages ul.dropdown-menu > li:last-child {
+ul#quick ul.dropdown-menu > li:last-child {
     border-bottom: none;
 }
 
-#breadcrumbs {
-    float: left;
-    padding: 6px 0 5px 0;
-    padding-left: 5px;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-#breadcrumbs span {
-    font-weight: bold;
-    font-size: 1.4em;
-}
-
 nav.navbar #quick ul,
-#revision-changer,
 #context-pages ul {
     background: #577632;
-}
-
-ul#context-actions {
-    display: inline-block;
-    float: right;
-    border-radius: 4px;
-    background: #577632;
-}
-
-#content ul#context-actions li {
-    padding: 0px;
-    border-right: 1px solid rgba(0,0,0,0.1);
-    border-left: 1px solid rgba(255,255,255,0.1);
-}
-
-#context-actions a {
-    display: block;
-    cursor: pointer;
-    background: none;
-    border: none;
-    margin: 0px;
-    height: auto;
-    padding: 10px 10px 10px 30px;
-    background-repeat: no-repeat;
-    background-position: 10px 50%;
-    font-size: 1em;
-}
-
-#context-actions a {
-    padding: 11px 10px 12px 30px;
 }
 
 .repo-switcher-dropdown.select2-drop.select2-drop-active .select2-results .select2-highlighted,
 ul.dropdown-menu li a:focus,
 nav.navbar #quick li:hover,
 #quick_login > .pull-right .list-group-item:hover,
-#revision-changer:hover,
 #context-pages li:hover,
-#context-actions li:hover,
-#content #context-actions li:hover,
 nav.navbar #quick li.active,
 nav.navbar #quick li a.menu_link:focus,
 #context-pages li.active {
@@ -146,31 +89,9 @@ nav.navbar #quick li a.menu_link:focus,
     border: 0;
 }
 
-#content #context-actions li:first-child {
-    border-left: none;
-    border-radius: 4px 0 0px 4px;
-}
-
-#content #context-actions li:last-child {
-    border-right: none;
-    border-radius: 0 4px 4px 0;
-}
-
-#content #context-actions .icon {
-    margin: auto;
-    margin-bottom: 5px;
-    display: block;
-    clear: both;
-    float: none;
-}
-
 #content #context-pages .follow .show-following,
 #content #context-pages .following .show-follow {
     display: none;
-}
-
-#content #context-pages .icon {
-    margin-right: 5px;
 }
 
 nav.navbar #quick li,
@@ -201,16 +122,9 @@ nav.navbar #quick > li:first-child > a {
 nav.navbar #quick > li > a,
 nav.navbar #quick .select2-container .select2-choice .select2-chosen,
 #context-pages > ul > li > a,
-#context-pages .select2-container .select2-choice .select2-chosen,
-x#context-pages .dropdown-menu a {
+#context-pages .select2-container .select2-choice .select2-chosen {
     padding: 0px 15px 1px 15px;
     line-height: 43px;
-}
-
-nav.navbar #quick a.thin,
-#context-pages a.thin,
-#context-pages .dropdown-menu a.thin {
-    line-height: 28px !important;
 }
 
 nav.navbar #quick a#quick_login_link {
@@ -225,43 +139,4 @@ nav.navbar #quick a {
     float: right;
     padding-left: 5px;
     padding-right: 5px;
-}
-
-#revision-changer:before {
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    border-right: 1px solid rgba(0,0,0,0.1);
-    height: 25px;
-    padding-top: 10px;
-    padding-right: 10px;
-}
-
-#context-bar #revision-changer {
-    position: relative;
-    cursor: pointer;
-    border: none;
-    padding: 0;
-    margin: 0;
-    color: #FFFFFF;
-    font-size: 0.85em;
-    padding: 2px 15px;
-    padding-bottom: 3px;
-    padding-right: 30px;
-    border-right: 1px solid rgba(255,255,255,0.1);
-}
-
-#revision-changer .branch-name,
-#revision-changer .revision {
-    display: block;
-    text-align: center;
-    line-height: 1.5em;
-}
-
-#revision-changer .branch-name {
-    font-weight: bold;
-}
-
-#revision-changer .revision {
-    text-transform: uppercase;
 }
