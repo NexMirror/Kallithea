@@ -31,6 +31,46 @@ def expand(template, desc, selected_mako_conditionals, mako_variable_values, set
     """Expand mako template and tweak it.
     Not entirely stable for random templates as input, but good enough for our
     single template.
+
+    >>> template = '''
+    ... [first-section]
+    ...
+    ... variable=${mako_variable}
+    ... variable2  =\tvalue after tab
+    ... ## This section had some whitespace and stuff
+    ...
+    ...
+    ... # ${mako_function()}
+    ... [second-section]
+    ... %if conditional_options == 'option-a':
+    ... # Kallithea - config file generated with kallithea-config                      #
+    ... %elif conditional_options == 'option-b':
+    ... some_variable = "never mind - option-b will not be used anyway ..."
+    ... %endif
+    ... '''
+    >>> desc = 'Description\\nof this config file'
+    >>> selected_mako_conditionals = ["conditional_options == 'option-a'"]
+    >>> mako_variable_values = {'mako_variable': 'VALUE', 'mako_function()': 'FUNCTION RESULT'}
+    >>> settings = { # only partially used
+    ...     '[first-section]': {'variable2': 'VAL2', 'first_extra': 'EXTRA'},
+    ...     '[third-section]': {'third_extra': ' 3'},
+    ...     '[fourth-section]': {'fourth_extra': '4', 'fourth': '"four"'},
+    ... }
+    >>> print expand(template, desc, selected_mako_conditionals, mako_variable_values, settings)
+    <BLANKLINE>
+    [first-section]
+    <BLANKLINE>
+    variable=VALUE
+    variable2  =    value after tab
+    ## This section had some whitespace and stuff
+    <BLANKLINE>
+    <BLANKLINE>
+    # FUNCTION RESULT
+    [second-section]
+    # Description                                                                  #
+    # of this config file                                                          #
+    #some_variable = "never mind - option-b will not be used anyway ..."
+    <BLANKLINE>
     """
     # select the right mako conditionals for the other less sophisticated formats
     def sub_conditionals(m):
