@@ -22,11 +22,25 @@ other custom values.
 
 import logging
 import re
+import os
 
 import mako.template
 
 
 log = logging.getLogger(__name__)
+
+
+template_file = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
+    'kallithea/lib/paster_commands/template.ini.mako')
+
+default_variables = {
+    'database_engine': 'sqlite',
+    'http_server': 'waitress',
+    'host': '127.0.0.1',
+    'port': '5000',
+    'uuid': lambda: 'VERY-SECRET',
+}
 
 
 def expand(template, mako_variable_values, settings):
@@ -81,9 +95,11 @@ def expand(template, mako_variable_values, settings):
     third_extra =  3
     <BLANKLINE>
     """
+    mako_variables = dict(default_variables)
+    mako_variables.update(mako_variable_values or {})
     settings = dict((k, dict(v)) for k, v in settings.items()) # deep copy before mutating
 
-    ini_lines = mako.template.Template(template).render(**mako_variable_values)
+    ini_lines = mako.template.Template(template).render(**mako_variables)
 
     def process_section(m):
         """process a ini section, replacing values as necessary"""
@@ -131,3 +147,14 @@ def expand(template, mako_variable_values, settings):
             if section_settings)
 
     return ini_lines
+
+
+def create(dest_file, mako_variable_values, settings):
+    """Create an ini file at dest_file"""
+    with open(template_file, 'rb') as f:
+        template = f.read().decode('utf-8')
+
+    ini_lines = expand(template, mako_variable_values, settings)
+
+    with open(dest_file, 'wb') as f:
+        f.write(ini_lines.encode('utf-8'))

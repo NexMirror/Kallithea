@@ -9,17 +9,6 @@ import re
 
 from kallithea.lib import inifile
 
-makofile = 'kallithea/lib/paster_commands/template.ini.mako'
-
-# the mako variables used in all other ini files and templates
-mako_variable_values = {
-    'database_engine': 'sqlite',
-    'http_server': 'waitress',
-    'host': '127.0.0.1',
-    'port': '5000',
-    'uuid': lambda: 'VERY-SECRET',
-}
-
 # files to be generated from the mako template
 ini_files = [
     ('kallithea/tests/test.ini',
@@ -69,6 +58,7 @@ ini_files = [
 
 def main():
     # make sure all mako lines starting with '#' (the '##' comments) are marked up as <text>
+    makofile = inifile.template_file
     print 'reading:', makofile
     mako_org = open(makofile).read()
     mako_no_text_markup = re.sub(r'</?%text>', '', mako_org)
@@ -80,8 +70,8 @@ def main():
     # create ini files
     for fn, settings in ini_files:
         print 'updating:', fn
-        ini_lines = inifile.expand(mako_marked_up, mako_variable_values, settings)
-        open(fn, 'w').write(ini_lines)
+        inifile.create(fn, None, settings)
+
 
 if __name__ == '__main__':
     main()
