@@ -17,7 +17,7 @@ mako_variable_values = {
     'http_server': 'waitress',
     'host': '127.0.0.1',
     'port': '5000',
-    'uuid': lambda: '${app_instance_uuid}',
+    'uuid': lambda: 'VERY-SECRET',
 }
 
 # files to be generated from the mako template

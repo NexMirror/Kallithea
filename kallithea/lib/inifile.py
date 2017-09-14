@@ -64,7 +64,7 @@ def expand(template, desc, mako_variable_values, settings):
     [first-section]
     <BLANKLINE>
     variable=VALUE
-    #variable2 = value after tab
+    #variable2  =    value after tab
     variable2 = VAL2
     <BLANKLINE>
     <BLANKLINE>
@@ -92,9 +92,8 @@ def expand(template, desc, mako_variable_values, settings):
                 key, value = m.groups()
                 line = m.group(0)
                 if key in section_settings:
-                    line = '%s = %s' % (key, section_settings[key])
-                    if '$' not in value:
-                        line = '#%s = %s\n%s' % (key, value, line)
+                    # keep old entry as example - comments might refer to it
+                    line = '#%s\n%s = %s' % (line, key, section_settings[key])
                 return line.rstrip()
 
             # process lines that not are comments or empty and look like name=value
