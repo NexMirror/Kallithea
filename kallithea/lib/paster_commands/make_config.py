@@ -25,11 +25,14 @@ import os
 import sys
 import uuid
 import argparse
+
+import mako.exceptions
 from mako.template import Template
+
 TMPL = 'template.ini.mako'
 here = os.path.dirname(os.path.abspath(__file__))
 
-from kallithea.lib.paster_commands.common import ask_ok, BasePasterCommand
+from kallithea.lib.paster_commands.common import BasePasterCommand
 
 
 class Command(BasePasterCommand):
@@ -53,40 +56,12 @@ class Command(BasePasterCommand):
             help='application config file to write')
 
         parser.add_argument('custom', nargs=argparse.REMAINDER,
-            help='custom values to write to config file')
+            help='custom values for the config file')
 
         parser.add_argument('--show-defaults', action='store_true',
             help="Show the default values that can be overridden")
 
         return parser
-
-
-def _escape_split(text, sep):
-    """
-    Allows for escaping of the separator: e.g. arg='foo\, bar'
-
-    It should be noted that the way bash et. al. do command line parsing, those
-    single quotes are required. a shameless ripoff from fabric project.
-
-    """
-    escaped_sep = r'\%s' % sep
-
-    if escaped_sep not in text:
-        return text.split(sep)
-
-    before, _, after = text.partition(escaped_sep)
-    startlist = before.split(sep)  # a regular split is fine here
-    unfinished = startlist[-1]
-    startlist = startlist[:-1]
-
-    # recurse because there may be more escaped separators
-    endlist = _escape_split(after, sep)
-
-    # finish building the escaped value. we use endlist[0] because the first
-    # part of the string sent in recursion is the rest of the escaped value.
-    unfinished += sep + endlist[0]
-
-    return startlist + [unfinished] + endlist[1:]  # put together all the parts
 
 
 def _run(args):
@@ -106,16 +81,13 @@ def _run(args):
         'port': 5000,
         'error_aggregation_service': None,
     }
-    for custom in args.custom:
-        # parse arguments
-        kwargs = {}
-        for el in _escape_split(custom, ','):
-            kv = _escape_split(el, '=')
-            if len(kv) == 2:
-                k, v = kv
-                kwargs[k] = v
-        # update our template stored args
-        tmpl_stored_args.update(kwargs)
+    for parameter in args.custom:
+        kv = parameter.split('=', 1)
+        if len(kv) == 2:
+            k, v = kv
+            tmpl_stored_args[k] = v
+        else:
+            raise ValueError("Invalid name=value parameter %r" % parameter)
 
     if args.show_defaults:
         for k, v in tmpl_stored_args.iteritems():
@@ -138,5 +110,4 @@ def _run(args):
         print 'Wrote new config file in %s' % (os.path.abspath(args.config_file))
 
     except Exception:
-        from mako import exceptions
-        print exceptions.text_error_template().render()
+        print mako.exceptions.text_error_template().render()
