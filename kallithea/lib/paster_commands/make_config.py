@@ -27,12 +27,12 @@ import uuid
 import argparse
 
 import mako.exceptions
-from mako.template import Template
 
 TMPL = 'template.ini.mako'
 here = os.path.dirname(os.path.abspath(__file__))
 
 from kallithea.lib.paster_commands.common import BasePasterCommand
+from kallithea.lib import inifile
 
 
 class Command(BasePasterCommand):
@@ -72,42 +72,30 @@ def _run(args):
         if args.show_defaults:
             raise ValueError("Can't specify both config_file and --show_defaults")
 
-    # defaults that can be overwritten by arguments
-    tmpl_stored_args = {
-        'http_server': 'waitress',
-        'lang': 'en',
-        'database_engine': 'sqlite',
-        'host': '127.0.0.1',
-        'port': 5000,
-        'error_aggregation_service': None,
-    }
+    mako_variable_values = {}
+
     for parameter in args.custom:
-        kv = parameter.split('=', 1)
-        if len(kv) == 2:
-            k, v = kv
-            tmpl_stored_args[k] = v
+        parts = parameter.split('=', 1)
+        if len(parts) == 2:
+            key, value = parts
+            mako_variable_values[key] = value
         else:
             raise ValueError("Invalid name=value parameter %r" % parameter)
 
     if args.show_defaults:
-        for k, v in tmpl_stored_args.iteritems():
-            print '%s=%s' % (k, v)
+        for key, value in inifile.default_variables.items():
+            value = mako_variable_values.get(key, value)
+            print '%s=%s' % (key, value)
         sys.exit(0)
 
     # use default that cannot be replaced
-    tmpl_stored_args.update({
+    mako_variable_values.update({
         'uuid': lambda: uuid.uuid4().hex,
     })
     try:
-        # built in template
-        tmpl_file = os.path.join(here, TMPL)
-
-        with open(tmpl_file, 'rb') as f:
-            tmpl_data = f.read().decode('utf-8')
-            tmpl = Template(tmpl_data).render(**tmpl_stored_args)
-        with open(args.config_file, 'wb') as f:
-            f.write(tmpl.encode('utf-8'))
-        print 'Wrote new config file in %s' % (os.path.abspath(args.config_file))
+        config_file = os.path.abspath(args.config_file)
+        inifile.create(config_file, mako_variable_values, {})
+        print 'Wrote new config file in %s' % config_file
 
     except Exception:
         print mako.exceptions.text_error_template().render()
