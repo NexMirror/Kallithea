@@ -43,7 +43,6 @@ ini_files = [
                 'beaker.session.secret': '{74e0cd75-b339-478b-b129-07dd221def1f}',
             },
             '[handler_console]': {
-                'level': 'DEBUG',
                 'formatter': 'color_formatter',
             },
             # The 'handler_console_sql' block is very similar to the one in
@@ -75,11 +74,9 @@ ini_files = [
                 'beaker.session.secret': 'development-not-secret',
             },
             '[handler_console]': {
-                'level': 'DEBUG',
                 'formatter': 'color_formatter',
             },
             '[handler_console_sql]': {
-                'level': 'DEBUG',
                 'formatter': 'color_formatter_sql',
             },
         },
