@@ -12,6 +12,7 @@ import pytest
 from pytest_localserver.http import WSGIServer
 
 from kallithea.controllers.root import RootController
+from kallithea.lib import inifile
 from kallithea.lib.utils import repo2db_mapper
 from kallithea.model.user import UserModel
 from kallithea.model.meta import Session
@@ -36,18 +37,32 @@ def pytest_configure():
     # Disable INFO logging of test database creation, restore with NOTSET
     logging.disable(logging.INFO)
 
-    with open(os.path.join(path, 'kallithea/tests/test.ini'), 'r') as input_file:
-        test_ini = input_file.read()
-
+    ini_settings = {
+        '[server:main]': {
+            'port': '4999',
+        },
+        '[app:main]': {
+            'app_instance_uuid': 'test',
+            'show_revision_number': 'true',
+            'beaker.cache.sql_cache_short.expire': '1',
+            'beaker.session.secret': '{74e0cd75-b339-478b-b129-07dd221def1f}',
+        },
+        '[handler_console]': {
+            'formatter': 'color_formatter',
+        },
+        # The 'handler_console_sql' block is very similar to the one in
+        # development.ini, but without the explicit 'level=DEBUG' setting:
+        # it causes duplicate sqlalchemy debug logs, one through
+        # handler_console_sql and another through another path.
+        '[handler_console_sql]': {
+            'formatter': 'color_formatter_sql',
+        },
+    }
     if os.environ.get('TEST_DB'):
-        test_ini = re.sub('^\s*sqlalchemy.url\s*=.*$',
-                           'sqlalchemy.url = %s' % os.environ.get('TEST_DB'),
-                           test_ini,
-                           flags=re.M)
+        ini_settings['[app:main]']['sqlalchemy.url'] = os.environ.get('TEST_DB')
 
     test_ini_file = os.path.join(TESTS_TMP_PATH, 'test.ini')
-    with open(test_ini_file, 'w') as output_file:
-        output_file.write(test_ini)
+    inifile.create(test_ini_file, None, ini_settings)
 
     context = loadwsgi.loadcontext(loadwsgi.APP, 'config:%s' % test_ini_file)
     from kallithea.tests.fixture import create_test_env, create_test_index

@@ -11,29 +11,6 @@ from kallithea.lib import inifile
 
 # files to be generated from the mako template
 ini_files = [
-    ('kallithea/tests/test.ini',
-        {
-            '[server:main]': {
-                'port': '4999',
-            },
-            '[app:main]': {
-                'app_instance_uuid': 'test',
-                'show_revision_number': 'true',
-                'beaker.cache.sql_cache_short.expire': '1',
-                'beaker.session.secret': '{74e0cd75-b339-478b-b129-07dd221def1f}',
-            },
-            '[handler_console]': {
-                'formatter': 'color_formatter',
-            },
-            # The 'handler_console_sql' block is very similar to the one in
-            # development.ini, but without the explicit 'level=DEBUG' setting:
-            # it causes duplicate sqlalchemy debug logs, one through
-            # handler_console_sql and another through another path.
-            '[handler_console_sql]': {
-                'formatter': 'color_formatter_sql',
-            },
-        },
-    ),
     ('development.ini',
         {
             '[server:main]': {

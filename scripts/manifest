@@ -918,7 +918,6 @@ kallithea/tests/scripts/create_rc.sh
 kallithea/tests/scripts/manual_test_concurrency.py
 kallithea/tests/scripts/manual_test_crawler.py
 kallithea/tests/scripts/mem_watch
-kallithea/tests/test.ini
 kallithea/tests/vcs/
 kallithea/tests/vcs/__init__.py
 kallithea/tests/vcs/aconfig
