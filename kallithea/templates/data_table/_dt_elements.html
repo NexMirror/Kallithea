@@ -125,6 +125,13 @@
  </div>
 </%def>
 
+<%def name="group_name_html(group_name,name)">
+  <div class="dt_repo">
+    <i class="icon-folder"></i>
+    <a href="${h.url('repos_group_home',group_name=group_name)}">${name}</a>
+  </div>
+</%def>
+
 <%def name="repo_group_actions(repo_group_id, repo_group_name, gr_count)">
  <div class="pull-left">
     <a href="${h.url('edit_repo_group',group_name=repo_group_name)}" title="${_('Edit')}" class="btn btn-default btn-xs">

@@ -296,13 +296,12 @@ class RepoGroupsController(BaseController):
         c.group = c.repo_group = RepoGroup.guess_instance(group_name)
 
         groups = RepoGroup.query(sorted=True).filter_by(parent_group=c.group).all()
-        c.groups = self.scm_model.get_repo_groups(groups)
+        repo_groups_list = self.scm_model.get_repo_groups(groups)
 
         repos_list = Repository.query(sorted=True).filter_by(group=c.group).all()
-        repos_data = RepoModel().get_repos_as_dict(repos_list=repos_list,
-                                                   admin=False, short_name=True)
-        # data used to render the grid
-        c.data = repos_data
+        c.data = RepoModel().get_repos_as_dict(repos_list=repos_list,
+                                               repo_groups_list=repo_groups_list,
+                                               admin=False, short_name=True)
 
         return render('admin/repo_groups/repo_group_show.html')
 

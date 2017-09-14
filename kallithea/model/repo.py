@@ -163,7 +163,8 @@ class RepoModel(object):
         kwargs.update(dict(_=_, h=h, c=c, request=request))
         return tmpl.render(*args, **kwargs)
 
-    def get_repos_as_dict(self, repos_list=None, admin=False, perm_check=True,
+    def get_repos_as_dict(self, repos_list=None, repo_groups_list=None,
+                          admin=False, perm_check=True,
                           super_user_actions=False, short_name=False):
         _render = self._render_datatable
         from tg import tmpl_context as c
@@ -199,6 +200,14 @@ class RepoModel(object):
             return _render('user_name', owner_id, username)
 
         repos_data = []
+
+        for gr in repo_groups_list or []:
+            repos_data.append(dict(
+                raw_name='\0' + gr.name, # sort before repositories
+                just_name=gr.name,
+                name=_render('group_name_html', group_name=gr.group_name, name=gr.name),
+                desc=gr.group_description))
+
         for repo in repos_list:
             if perm_check:
                 # check permission at this level

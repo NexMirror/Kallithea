@@ -39,44 +39,12 @@
               </div>
             %endif
         </div>
-        %if c.groups:
-        <div class="panel-body">
-              <table id="groups_list" class="table" width="100%">
-                  <thead>
-                      <tr>
-                          <th class="left">${_('Repository Group')}</th>
-                          <th class="left">${_('Description')}</th>
-                          ##<th class="left">${_('Number of Repositories')}</th>
-                      </tr>
-                  </thead>
-                  % for gr in c.groups:
-                    <tr>
-                        <td>
-                            <div class="dt_repo">
-                                <i class="icon-folder"></i>
-                                <a href="${url('repos_group_home',group_name=gr.group_name)}">${gr.name}</a>
-                            </div>
-                        </td>
-                        <td>${h.urlify_text(gr.group_description, stylize=c.visual.stylify_metatags)}</td>
-                        ## this is commented out since for multi nested repos can be HEAVY!
-                        ## in number of executed queries during traversing uncomment at will
-                        ##<td><b>${gr.repositories_recursive_count}</b></td>
-                    </tr>
-                  % endfor
-              </table>
-        </div>
-        %endif
         <div class="panel-body">
             <table class="table" id="repos_list_wrap" width="100%"></table>
         </div>
     </div>
 
       <script>
-        $('#groups_list').DataTable({
-            dom: '<"dataTables_left"f><"dataTables_right"ilp>t',
-            pageLength: 100
-        });
-
         var data = ${h.js(c.data)},
             $dataTable = $("#repos_list_wrap").DataTable({
                 data: data.records,
@@ -88,12 +56,12 @@
                         }
                     }},
                     {data: "desc", title: ${h.jshtml(_('Description'))}, searchable: false},
-                    {data: "last_change_iso", visible: false, searchable: false},
-                    {data: "last_change", title: ${h.jshtml(_('Last Change'))}, orderData: [3,], searchable: false},
-                    {data: "last_rev_raw", visible: false, searchable: false},
-                    {data: "last_changeset", title: ${h.jshtml(_('Tip'))}, orderData: [5,], searchable: false},
-                    {data: "owner", title: ${h.jshtml(_('Owner'))}, searchable: false},
-                    {data: "atom", sortable: false}
+                    {data: "last_change_iso", defaultContent: '', visible: false, searchable: false},
+                    {data: "last_change", defaultContent: '', title: ${h.jshtml(_('Last Change'))}, orderData: [3,], searchable: false},
+                    {data: "last_rev_raw", defaultContent: '', visible: false, searchable: false},
+                    {data: "last_changeset", defaultContent: '', title: ${h.jshtml(_('Tip'))}, orderData: [5,], searchable: false},
+                    {data: "owner", defaultContent: '', title: ${h.jshtml(_('Owner'))}, searchable: false},
+                    {data: "atom", defaultContent: '', sortable: false}
                 ],
                 order: [[1, "asc"]],
                 dom: '<"dataTables_left"f><"dataTables_right"ilp>t',

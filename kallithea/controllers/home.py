@@ -50,15 +50,14 @@ class HomeController(BaseController):
 
     @LoginRequired()
     def index(self):
-        c.groups = self.scm_model.get_repo_groups()
         c.group = None
 
+        repo_groups_list = self.scm_model.get_repo_groups()
         repos_list = Repository.query(sorted=True).filter_by(group=None).all()
 
-        repos_data = RepoModel().get_repos_as_dict(repos_list=repos_list,
-                                                   admin=False, short_name=True)
-        # data used to render the grid
-        c.data = repos_data
+        c.data = RepoModel().get_repos_as_dict(repos_list=repos_list,
+                                               repo_groups_list=repo_groups_list,
+                                               admin=False, short_name=True)
 
         return render('/index.html')
 
