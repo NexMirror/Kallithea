@@ -23,11 +23,13 @@ other custom values.
 import logging
 import re
 
+import mako.template
+
 
 log = logging.getLogger(__name__)
 
 
-def expand(template, desc, selected_mako_conditionals, mako_variable_values, settings):
+def expand(template, desc, mako_variable_values, settings):
     """Expand mako template and tweak it.
     Not entirely stable for random templates as input, but good enough for our
     single template.
@@ -49,21 +51,21 @@ def expand(template, desc, selected_mako_conditionals, mako_variable_values, set
     ... %endif
     ... '''
     >>> desc = 'Description\\nof this config file'
-    >>> selected_mako_conditionals = ["conditional_options == 'option-a'"]
-    >>> mako_variable_values = {'mako_variable': 'VALUE', 'mako_function()': 'FUNCTION RESULT'}
+    >>> selected_mako_conditionals = []
+    >>> mako_variable_values = {'mako_variable': 'VALUE', 'mako_function': (lambda: 'FUNCTION RESULT'),
+    ...                         'conditional_options': 'option-a'}
     >>> settings = { # only partially used
     ...     '[first-section]': {'variable2': 'VAL2', 'first_extra': 'EXTRA'},
     ...     '[third-section]': {'third_extra': ' 3'},
     ...     '[fourth-section]': {'fourth_extra': '4', 'fourth': '"four"'},
     ... }
-    >>> print expand(template, desc, selected_mako_conditionals, mako_variable_values, settings)
+    >>> print expand(template, desc, mako_variable_values, settings)
     <BLANKLINE>
     [first-section]
     <BLANKLINE>
     variable=VALUE
     #variable2 = value after tab
     variable2 = VAL2
-    ## This section had some whitespace and stuff
     <BLANKLINE>
     <BLANKLINE>
     # FUNCTION RESULT
@@ -72,33 +74,7 @@ def expand(template, desc, selected_mako_conditionals, mako_variable_values, set
     # of this config file                                                          #
     <BLANKLINE>
     """
-    # select the right mako conditionals for the other less sophisticated formats
-    def sub_conditionals(m):
-        """given a %if...%endif match, replace with just the selected
-        conditional sections enabled and the rest as comments
-        """
-        conditional_lines = m.group(1)
-        def sub_conditional(m):
-            """given a conditional and the corresponding lines, return them raw
-            or commented out, based on whether conditional is selected
-            """
-            criteria, lines = m.groups()
-            if criteria not in selected_mako_conditionals:
-                lines = ''
-            return lines
-        conditional_lines = re.sub(r'^%(?:el)?if (.*):\n((?:^[^%\n].*\n|\n)*)',
-            sub_conditional, conditional_lines, flags=re.MULTILINE)
-        return conditional_lines
-    mako_no_conditionals = re.sub(r'^(%if .*\n(?:[^%\n].*\n|%elif .*\n|\n)*)%endif\n',
-        sub_conditionals, template, flags=re.MULTILINE)
-
-    # expand mako variables
-    def pyrepl(m):
-        return mako_variable_values.get(m.group(1), m.group(0))
-    mako_no_variables = re.sub(r'\${([^}]*)}', pyrepl, mako_no_conditionals)
-
-    # remove utf-8 coding header
-    ini_lines = re.sub(r'^## -\*- coding: utf-8 -\*-\n', '', mako_no_variables)
+    ini_lines = mako.template.Template(template).render(**mako_variable_values)
 
     ini_lines = re.sub(
         '# Kallithea - config file generated with kallithea-config *#\n',

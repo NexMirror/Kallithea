@@ -11,17 +11,13 @@ from kallithea.lib import inifile
 
 makofile = 'kallithea/lib/paster_commands/template.ini.mako'
 
-# the mako conditionals used in all other ini files and templates
-selected_mako_conditionals = set([
-    "database_engine == 'sqlite'",
-    "http_server == 'waitress'",
-])
-
 # the mako variables used in all other ini files and templates
 mako_variable_values = {
+    'database_engine': 'sqlite',
+    'http_server': 'waitress',
     'host': '127.0.0.1',
     'port': '5000',
-    'uuid()': '${app_instance_uuid}',
+    'uuid': lambda: '${app_instance_uuid}',
 }
 
 # files to be generated from the mako template
@@ -97,7 +93,7 @@ def main():
     # create ini files
     for fn, desc, settings in ini_files:
         print 'updating:', fn
-        ini_lines = inifile.expand(mako_no_text_markup, desc, selected_mako_conditionals, mako_variable_values, settings)
+        ini_lines = inifile.expand(mako_marked_up, desc, mako_variable_values, settings)
         open(fn, 'w').write(ini_lines)
 
 if __name__ == '__main__':
