@@ -15,8 +15,6 @@ makofile = 'kallithea/lib/paster_commands/template.ini.mako'
 selected_mako_conditionals = set([
     "database_engine == 'sqlite'",
     "http_server == 'waitress'",
-    "error_aggregation_service == 'appenlight'",
-    "error_aggregation_service == 'sentry'",
 ])
 
 # the mako variables used in all other ini files and templates
