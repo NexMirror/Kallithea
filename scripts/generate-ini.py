@@ -7,6 +7,8 @@ Based on kallithea/lib/paster_commands/template.ini.mako, generate
 
 import re
 
+from kallithea.lib import inifile
+
 makofile = 'kallithea/lib/paster_commands/template.ini.mako'
 
 # the mako conditionals used in all other ini files and templates
@@ -94,58 +96,10 @@ def main():
         print 'writing:', makofile
         open(makofile, 'w').write(mako_marked_up)
 
-    # select the right mako conditionals for the other less sophisticated formats
-    def sub_conditionals(m):
-        """given a %if...%endif match, replace with just the selected
-        conditional sections enabled and the rest as comments
-        """
-        conditional_lines = m.group(1)
-        def sub_conditional(m):
-            """given a conditional and the corresponding lines, return them raw
-            or commented out, based on whether conditional is selected
-            """
-            criteria, lines = m.groups()
-            if criteria not in selected_mako_conditionals:
-                lines = '\n'.join((l if not l or l.startswith('#') else '#' + l) for l in lines.split('\n'))
-            return lines
-        conditional_lines = re.sub(r'^%(?:el)?if (.*):\n((?:^[^%\n].*\n|\n)*)',
-            sub_conditional, conditional_lines, flags=re.MULTILINE)
-        return conditional_lines
-    mako_no_conditionals = re.sub(r'^(%if .*\n(?:[^%\n].*\n|%elif .*\n|\n)*)%endif\n',
-        sub_conditionals, mako_no_text_markup, flags=re.MULTILINE)
-
-    # expand mako variables
-    def pyrepl(m):
-        return mako_variable_values.get(m.group(1), m.group(0))
-    mako_no_variables = re.sub(r'\${([^}]*)}', pyrepl, mako_no_conditionals)
-
-    # remove utf-8 coding header
-    base_ini = re.sub(r'^## -\*- coding: utf-8 -\*-\n', '', mako_no_variables)
-
     # create ini files
     for fn, desc, settings in ini_files:
         print 'updating:', fn
-        ini_lines = re.sub(
-            '# Kallithea - config file generated with kallithea-config *#\n',
-            ''.join('# %-77s#\n' % l.strip() for l in desc.strip().split('\n')),
-            base_ini)
-        def process_section(m):
-            """process a ini section, replacing values as necessary"""
-            sectionname, lines = m.groups()
-            if sectionname in settings:
-                section_settings = settings[sectionname]
-                def process_line(m):
-                    """process a section line and update value if necessary"""
-                    setting, value = m.groups()
-                    line = m.group(0)
-                    if setting in section_settings:
-                        line = '%s = %s' % (setting, section_settings[setting])
-                        if '$' not in value:
-                            line = '#%s = %s\n%s' % (setting, value, line)
-                    return line.rstrip()
-                lines = re.sub(r'^([^#\n].*) = ?(.*)', process_line, lines, flags=re.MULTILINE)
-            return sectionname + '\n' + lines
-        ini_lines = re.sub(r'^(\[.*\])\n((?:(?:[^[\n].*)?\n)*)', process_section, ini_lines, flags=re.MULTILINE)
+        ini_lines = inifile.expand(mako_no_text_markup, desc, selected_mako_conditionals, mako_variable_values, settings)
         open(fn, 'w').write(ini_lines)
 
 if __name__ == '__main__':
