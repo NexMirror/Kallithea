@@ -61,7 +61,8 @@ def expand(template, desc, selected_mako_conditionals, mako_variable_values, set
     [first-section]
     <BLANKLINE>
     variable=VALUE
-    variable2  =    value after tab
+    #variable2 = value after tab
+    variable2 = VAL2
     ## This section had some whitespace and stuff
     <BLANKLINE>
     <BLANKLINE>
@@ -117,7 +118,7 @@ def expand(template, desc, selected_mako_conditionals, mako_variable_values, set
                     if '$' not in value:
                         line = '#%s = %s\n%s' % (key, value, line)
                 return line.rstrip()
-            lines = re.sub(r'^([^#\n].*) = ?(.*)', process_line, lines, flags=re.MULTILINE)
+            lines = re.sub(r'^([^#\n\s]*)[ \t]*=[ \t]*(.*)$', process_line, lines, flags=re.MULTILINE)
         return sectionname + '\n' + lines
     ini_lines = re.sub(r'^(\[.*\])\n((?:(?:[^[\n].*)?\n)*)', process_section, ini_lines, flags=re.MULTILINE)
 
