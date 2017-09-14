@@ -31,7 +31,7 @@ from kallithea.lib.vcs.utils.paths import abspath
 from kallithea.lib.vcs.utils.hgcompat import (
     ui, nullid, match, patch, diffopts, clone, get_contact,
     localrepository, RepoLookupError, Abort, RepoError, hex, scmutil, hg_url,
-    httpbasicauthhandler, httpdigestauthhandler, peer, httppeer, sshpeer
+    httpbasicauthhandler, httpdigestauthhandler, peer, httppeer, sshpeer, tag
 )
 
 from .changeset import MercurialChangeset
@@ -175,8 +175,7 @@ class MercurialRepository(BaseRepository):
             date = datetime.datetime.now().strftime('%a, %d %b %Y %H:%M:%S')
 
         try:
-            self._repo.tag(name, changeset._ctx.node(), message, local, user,
-                date)
+            tag(self._repo, name, changeset._ctx.node(), message, local, user, date)
         except Abort as e:
             raise RepositoryError(e.message)
 
@@ -206,7 +205,7 @@ class MercurialRepository(BaseRepository):
         local = False
 
         try:
-            self._repo.tag(name, nullid, message, local, user, date)
+            tag(self._repo, name, nullid, message, local, user, date)
             self.tags = self._get_tags()
         except Abort as e:
             raise RepositoryError(e.message)

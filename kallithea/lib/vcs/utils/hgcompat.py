@@ -12,6 +12,7 @@ from mercurial import localrepo
 from mercurial import unionrepo
 from mercurial import scmutil
 from mercurial import config
+from mercurial import tags as tagsmod
 from mercurial.commands import clone, nullid, pull
 from mercurial.context import memctx, memfilectx
 from mercurial.error import RepoError, RepoLookupError, Abort
@@ -47,3 +48,11 @@ if inspect.getargspec(memfilectx.__init__).args[1] != 'repo':
 localrepository._lfstatuswriters = [lambda *msg, **opts: None]
 # 3.5 7699d3212994 added the invariant that repo.lfstatus must exist before hitting overridearchive
 localrepository.lfstatus = False
+
+# Mercurial 4.2 moved tag from localrepo to the tags module
+def tag(repo, *args):
+    try:
+        tag_f  = tagsmod.tag
+    except AttributeError:
+        return repo.tag(*args)
+    tag_f(repo, *args)
