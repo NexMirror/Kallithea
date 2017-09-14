@@ -80,11 +80,13 @@ def expand(template, desc, mako_variable_values, settings):
         '# Kallithea - config file generated with kallithea-config *#\n',
         ''.join('# %-77s#\n' % l.strip() for l in desc.strip().split('\n')),
         ini_lines)
+
     def process_section(m):
         """process a ini section, replacing values as necessary"""
         sectionname, lines = m.groups()
         if sectionname in settings:
             section_settings = settings[sectionname]
+
             def process_line(m):
                 """process a section line and update value if necessary"""
                 key, value = m.groups()
@@ -94,8 +96,23 @@ def expand(template, desc, mako_variable_values, settings):
                     if '$' not in value:
                         line = '#%s = %s\n%s' % (key, value, line)
                 return line.rstrip()
+
+            # process lines that not are comments or empty and look like name=value
             lines = re.sub(r'^([^#\n\s]*)[ \t]*=[ \t]*(.*)$', process_line, lines, flags=re.MULTILINE)
+
         return sectionname + '\n' + lines
-    ini_lines = re.sub(r'^(\[.*\])\n((?:(?:[^[\n].*)?\n)*)', process_section, ini_lines, flags=re.MULTILINE)
+
+    # process sections until next section start or end
+    ini_lines = re.sub(r'''^
+        (\[.*\])\n
+        # after the section name, a number of chunks with:
+        (
+            (?:
+                # a number of empty or non-section-start lines
+                (?:[^\n[].*)?\n
+            )*
+        )
+        ''',
+        process_section, ini_lines, flags=re.MULTILINE|re.VERBOSE)
 
     return ini_lines
