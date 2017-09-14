@@ -23,11 +23,6 @@ mako_variable_values = {
 # files to be generated from the mako template
 ini_files = [
     ('kallithea/tests/test.ini',
-        '''
-        Kallithea - config for tests:
-        sqlalchemy and kallithea_test.sqlite
-        custom logging
-        ''',
         {
             '[server:main]': {
                 'port': '4999',
@@ -51,14 +46,6 @@ ini_files = [
         },
     ),
     ('development.ini',
-        '''
-        Kallithea - Development config:
-        listening on *:5000
-        sqlite and kallithea.db
-        initial_repo_scan = true
-        debug = true
-        verbose and colorful logging
-        ''',
         {
             '[server:main]': {
                 'host': '0.0.0.0',
@@ -91,9 +78,9 @@ def main():
         open(makofile, 'w').write(mako_marked_up)
 
     # create ini files
-    for fn, desc, settings in ini_files:
+    for fn, settings in ini_files:
         print 'updating:', fn
-        ini_lines = inifile.expand(mako_marked_up, desc, mako_variable_values, settings)
+        ini_lines = inifile.expand(mako_marked_up, mako_variable_values, settings)
         open(fn, 'w').write(ini_lines)
 
 if __name__ == '__main__':

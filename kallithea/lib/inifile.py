@@ -29,7 +29,7 @@ import mako.template
 log = logging.getLogger(__name__)
 
 
-def expand(template, desc, mako_variable_values, settings):
+def expand(template, mako_variable_values, settings):
     """Expand mako template and tweak it.
     Not entirely stable for random templates as input, but good enough for our
     single template.
@@ -45,12 +45,11 @@ def expand(template, desc, mako_variable_values, settings):
     ... # ${mako_function()}
     ... [second-section]
     ... %if conditional_options == 'option-a':
-    ... # Kallithea - config file generated with kallithea-config                      #
+    ... # option a was chosen
     ... %elif conditional_options == 'option-b':
     ... some_variable = "never mind - option-b will not be used anyway ..."
     ... %endif
     ... '''
-    >>> desc = 'Description\\nof this config file'
     >>> selected_mako_conditionals = []
     >>> mako_variable_values = {'mako_variable': 'VALUE', 'mako_function': (lambda: 'FUNCTION RESULT'),
     ...                         'conditional_options': 'option-a'}
@@ -59,7 +58,7 @@ def expand(template, desc, mako_variable_values, settings):
     ...     '[third-section]': {'third_extra': ' 3'},
     ...     '[fourth-section]': {'fourth_extra': '4', 'fourth': '"four"'},
     ... }
-    >>> print expand(template, desc, mako_variable_values, settings)
+    >>> print expand(template, mako_variable_values, settings)
     <BLANKLINE>
     [first-section]
     <BLANKLINE>
@@ -72,8 +71,7 @@ def expand(template, desc, mako_variable_values, settings):
     <BLANKLINE>
     # FUNCTION RESULT
     [second-section]
-    # Description                                                                  #
-    # of this config file                                                          #
+    # option a was chosen
     <BLANKLINE>
     [fourth-section]
     fourth = "four"
@@ -86,11 +84,6 @@ def expand(template, desc, mako_variable_values, settings):
     settings = dict((k, dict(v)) for k, v in settings.items()) # deep copy before mutating
 
     ini_lines = mako.template.Template(template).render(**mako_variable_values)
-
-    ini_lines = re.sub(
-        '# Kallithea - config file generated with kallithea-config *#\n',
-        ''.join('# %-77s#\n' % l.strip() for l in desc.strip().split('\n')),
-        ini_lines)
 
     def process_section(m):
         """process a ini section, replacing values as necessary"""
