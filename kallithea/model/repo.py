@@ -230,8 +230,6 @@ class RepoModel(object):
             repos_data.append(row)
 
         return {
-            "totalRecords": len(repos_list),
-            "startIndex": 0,
             "sort": "name",
             "dir": "asc",
             "records": repos_data

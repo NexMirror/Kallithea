@@ -103,8 +103,6 @@ class UsersController(BaseController):
             })
 
         c.data = {
-            "totalRecords": total_records,
-            "startIndex": 0,
             "sort": None,
             "dir": "asc",
             "records": users_data

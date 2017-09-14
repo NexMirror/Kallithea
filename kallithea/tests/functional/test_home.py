@@ -20,7 +20,6 @@ class TestHomeController(TestController):
         response.mustcontain('<span class="repotag">git')
 
         # html in javascript variable:
-        response.mustcontain('var data = ({"totalRecords": %s' % Repository.query().count())
         response.mustcontain(r'href=\"/%s\"' % HG_REPO)
 
         response.mustcontain(r'\x3ci class=\"icon-globe\"')

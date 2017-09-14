@@ -141,8 +141,6 @@ class RepoGroupsController(BaseController):
             })
 
         c.data = {
-            "totalRecords": total_records,
-            "startIndex": 0,
             "sort": None,
             "dir": "asc",
             "records": repo_groups_data

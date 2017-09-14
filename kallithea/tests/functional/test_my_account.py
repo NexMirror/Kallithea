@@ -32,7 +32,8 @@ class TestMyAccountController(TestController):
         response = self.app.get(url('my_account_repos'))
         cnt = Repository.query().filter(Repository.owner ==
                            User.get_by_username(TEST_USER_ADMIN_LOGIN)).count()
-        response.mustcontain('"totalRecords": %s' % cnt)
+        response.mustcontain('"raw_name": "%s"' % HG_REPO)
+        response.mustcontain('"just_name": "%s"' % GIT_REPO)
 
     def test_my_account_my_watched(self):
         self.log_user()
@@ -40,7 +41,8 @@ class TestMyAccountController(TestController):
 
         cnt = UserFollowing.query().filter(UserFollowing.user ==
                             User.get_by_username(TEST_USER_ADMIN_LOGIN)).count()
-        response.mustcontain('"totalRecords": %s' % cnt)
+        response.mustcontain('"raw_name": "%s"' % HG_REPO)
+        response.mustcontain('"just_name": "%s"' % GIT_REPO)
 
     def test_my_account_my_emails(self):
         self.log_user()

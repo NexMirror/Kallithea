@@ -6,7 +6,7 @@ class TestRepoGroupsController(TestController):
     def test_index(self):
         self.log_user()
         response = self.app.get(url('repos_groups'))
-        response.mustcontain('{"totalRecords": 0, "sort": null, "startIndex": 0, "dir": "asc", "records": []}')
+        response.mustcontain('"records": []')
 
     def test_new(self):
         self.log_user()
@@ -57,7 +57,6 @@ class TestRepoGroupsController(TestController):
 
         # listing
         response = self.app.get(url('repos_groups'))
-        response.mustcontain('"totalRecords": 1')
         response.mustcontain('raw_name": "%s"' % group_name)
 
         # show
