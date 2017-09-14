@@ -67,13 +67,24 @@ def expand(template, desc, mako_variable_values, settings):
     #variable2  =    value after tab
     variable2 = VAL2
     <BLANKLINE>
+    first_extra = EXTRA
+    <BLANKLINE>
     <BLANKLINE>
     # FUNCTION RESULT
     [second-section]
     # Description                                                                  #
     # of this config file                                                          #
     <BLANKLINE>
+    [fourth-section]
+    fourth = "four"
+    fourth_extra = 4
+    <BLANKLINE>
+    [third-section]
+    third_extra =  3
+    <BLANKLINE>
     """
+    settings = dict((k, dict(v)) for k, v in settings.items()) # deep copy before mutating
+
     ini_lines = mako.template.Template(template).render(**mako_variable_values)
 
     ini_lines = re.sub(
@@ -85,7 +96,7 @@ def expand(template, desc, mako_variable_values, settings):
         """process a ini section, replacing values as necessary"""
         sectionname, lines = m.groups()
         if sectionname in settings:
-            section_settings = settings[sectionname]
+            section_settings = settings.pop(sectionname)
 
             def process_line(m):
                 """process a section line and update value if necessary"""
@@ -93,25 +104,37 @@ def expand(template, desc, mako_variable_values, settings):
                 line = m.group(0)
                 if key in section_settings:
                     # keep old entry as example - comments might refer to it
-                    line = '#%s\n%s = %s' % (line, key, section_settings[key])
+                    line = '#%s\n%s = %s' % (line, key, section_settings.pop(key))
                 return line.rstrip()
 
             # process lines that not are comments or empty and look like name=value
             lines = re.sub(r'^([^#\n\s]*)[ \t]*=[ \t]*(.*)$', process_line, lines, flags=re.MULTILINE)
+            # add unused section settings
+            if section_settings:
+                lines += '\n' + ''.join('%s = %s\n' % (key, value) for key, value in sorted(section_settings.items()))
 
         return sectionname + '\n' + lines
 
-    # process sections until next section start or end
+    # process sections until comments before next section or end
     ini_lines = re.sub(r'''^
         (\[.*\])\n
         # after the section name, a number of chunks with:
         (
             (?:
-                # a number of empty or non-section-start lines
-                (?:[^\n[].*)?\n
+                # a number of comments or empty lines
+                (?:[#].*\n|\n)*
+                # one or more non-empty non-comments non-section-start lines
+                (?:[^\n#[].*\n)+
+                # a number of comments - not empty lines
+                (?:[#].*\n)*
             )*
         )
         ''',
-        process_section, ini_lines, flags=re.MULTILINE|re.VERBOSE)
+        process_section, ini_lines, flags=re.MULTILINE|re.VERBOSE) \
+        + \
+        ''.join(
+            '\n' + sectionname + '\n' + ''.join('%s = %s\n' % (key, value) for key, value in sorted(section_settings.items()))
+            for sectionname, section_settings in sorted(settings.items())
+            if section_settings)
 
     return ini_lines
