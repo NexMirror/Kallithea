@@ -1105,36 +1105,30 @@ var autocompleteFormatter = function (oResultData, sQuery, sResultMatch) {
         query = sResultMatch.term.toLowerCase();
 
     // group
-    if (oResultData.grname != undefined) {
-        var grname = oResultData.grname;
-        var grmembers = oResultData.grmembers;
-        var grprefix = "{0}: ".format(_TM['Group']);
-        var grsuffix = " ({0} {1})".format(grmembers, _TM['members']);
-
-        return autocompleteGravatar(grprefix + autocompleteHighlightMatch(grname, query) + grsuffix, null, null, true);
+    if (oResultData.grname) {
+        return autocompleteGravatar(
+            "{0}: {1} ({2} {3})".format(
+                _TM['Group'],
+                autocompleteHighlightMatch(oResultData.grname, query),
+                oResultData.grmembers,
+                _TM['members']),
+            null, null, true);
+    }
 
     // users
-    } else if (oResultData.nname != undefined) {
-        var fname = oResultData.fname || "";
-        var lname = oResultData.lname || "";
-        var nname = oResultData.nname;
-
-        // Guard against null value
-        var displayfname = autocompleteHighlightMatch(fname, query);
-
-        var displaylname = autocompleteHighlightMatch(lname, query);
-
-        var displaynname = autocompleteHighlightMatch(nname, query);
-
-        var displayname = displaynname;
-        if (displayfname && displaylname) {
-            displayname = "{0} {1} ({2})".format(displayfname, displaylname, displayname);
+    if (oResultData.nname) {
+        var displayname = autocompleteHighlightMatch(oResultData.nname, query);
+        if (oResultData.fname && oResultData.lname) {
+            displayname = "{0} {1} ({2})".format(
+                autocompleteHighlightMatch(oResultData.fname, query),
+                autocompleteHighlightMatch(oResultData.lname, query),
+                displayname);
         }
 
         return autocompleteGravatar(displayname, oResultData.gravatar_lnk, oResultData.gravatar_size);
-    } else {
-        return '';
     }
+
+    return '';
 };
 
 // Generate a basic autocomplete instance that can be tweaked further by the caller
