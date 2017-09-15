@@ -1070,9 +1070,9 @@ var autocompleteHighlightMatch = function (full, snippet) {
     if (matchindex <0)
         return full;
     return full.substring(0, matchindex)
-        + "<span class='match'>"
+        + '<span class="select2-match">'
         + full.substr(matchindex, snippet.length)
-        + "</span>" + full.substring(matchindex + snippet.length);
+        + '</span>' + full.substring(matchindex + snippet.length);
 };
 
 // Return html snippet for showing the provided gravatar url
