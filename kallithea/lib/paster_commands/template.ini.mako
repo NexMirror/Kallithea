@@ -126,7 +126,7 @@ memory-report = true
 log-5xx = true
 
 <%text>## Set the socket listen queue size.</%text>
-listen = 256
+listen = 128
 
 <%text>## Gracefully Reload workers after the specified amount of managed requests</%text>
 <%text>## (avoid memory leaks).</%text>
