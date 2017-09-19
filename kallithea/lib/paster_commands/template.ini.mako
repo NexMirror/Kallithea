@@ -109,9 +109,9 @@ timeout = 3600
 [uwsgi]
 socket = /tmp/uwsgi.sock
 master = true
-http = 127.0.0.1:5000
+http = ${host}:${port}
 
-<%text>## set as deamon and redirect all output to file</%text>
+<%text>## set as daemon and redirect all output to file</%text>
 #daemonize = ./uwsgi_kallithea.log
 
 <%text>## master process PID</%text>
@@ -165,10 +165,11 @@ workers = 4
 cheaper-step = 1
 
 %endif
-<%text>## COMMON ##</%text>
+%if http_server != 'uwsgi':
 host = ${host}
 port = ${port}
 
+%endif
 <%text>## middleware for hosting the WSGI application under a URL prefix</%text>
 #[filter:proxy-prefix]
 #use = egg:PasteDeploy#prefix
