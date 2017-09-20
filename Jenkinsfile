@@ -2,6 +2,12 @@ def createvirtualenv = ''
 def activatevirtualenv = ''
 
 node {
+    properties([[$class: 'BuildDiscarderProperty',
+                  strategy: [$class: 'LogRotator',
+                              artifactDaysToKeepStr: '',
+                              artifactNumToKeepStr: '10',
+                              daysToKeepStr: '',
+                              numToKeepStr: '']]]);
     if (isUnix()) {
         createvirtualenv = 'rm -r $JENKINS_HOME/venv/$JOB_NAME || true && virtualenv $JENKINS_HOME/venv/$JOB_NAME'
         activatevirtualenv = '. $JENKINS_HOME/venv/$JOB_NAME/bin/activate'
