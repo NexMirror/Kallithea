@@ -371,6 +371,7 @@ def ApplicationVisualisationForm():
         use_gravatar = v.StringBoolean(if_missing=False)
         gravatar_url = v.UnicodeString(min=3)
         clone_uri_tmpl = v.UnicodeString(min=3)
+        clone_ssh_tmpl = v.UnicodeString()
 
     return _ApplicationVisualisationForm
 

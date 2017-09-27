@@ -119,6 +119,7 @@ class SummaryController(BaseRepoController):
             username = request.authuser.username
         c.clone_repo_url = c.db_repo.clone_url(clone_uri_tmpl=c.clone_uri_tmpl, with_id=False, username=username)
         c.clone_repo_url_id = c.db_repo.clone_url(clone_uri_tmpl=c.clone_uri_tmpl, with_id=True, username=username)
+        c.ssh_repo_url = c.db_repo.clone_url(clone_uri_tmpl=c.clone_ssh_tmpl)
 
         if c.db_repo.enable_statistics:
             c.show_stats = True

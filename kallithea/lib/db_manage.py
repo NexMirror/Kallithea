@@ -375,6 +375,7 @@ class DbManage(object):
             ('use_gravatar', True, 'bool'),
             ('gravatar_url', User.DEFAULT_GRAVATAR_URL, 'unicode'),
             ('clone_uri_tmpl', Repository.DEFAULT_CLONE_URI, 'unicode'),
+            ('clone_ssh_tmpl', Repository.DEFAULT_CLONE_SSH, 'unicode'),
             ('update_url', Setting.DEFAULT_UPDATE_URL, 'unicode'),
         ]
         for key, val, type_ in settings:

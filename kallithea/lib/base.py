@@ -404,6 +404,7 @@ class BaseController(TGController):
             </script>''' % c.ga_code
         c.site_name = rc_config.get('title')
         c.clone_uri_tmpl = rc_config.get('clone_uri_tmpl') or Repository.DEFAULT_CLONE_URI
+        c.clone_ssh_tmpl = rc_config.get('clone_ssh_tmpl') or Repository.DEFAULT_CLONE_SSH
 
         ## INI stored
         c.visual.allow_repo_location_change = str2bool(config.get('allow_repo_location_change', True))

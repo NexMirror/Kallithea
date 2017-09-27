@@ -53,16 +53,33 @@ ${self.repo_context_bar('summary')}
             <div class="form-group form-inline">
                 <label>${_('Clone URL')}:</label>
                 <div id="clone-url">
-                  <div id="clone_by_name" class="input-group">
+                  <div id="clone_by_name" class="input-group"
+                    %if c.ssh_enabled:
+                        style="display:none"
+                    %endif
+                    >
                     <span class="input-group-addon">${self.repolabel(c.db_repo)}</span>
                     <input class="form-control" size="80" readonly="readonly" value="${c.clone_repo_url}"/>
-                    <span class="input-group-addon btn">${_('Show by ID')}</span>
+                    <span class="input-group-addon btn use-id">${_('Use ID')}</span>
+                    %if c.ssh_enabled:
+                    <span class="input-group-addon btn use-ssh">${_('Use SSH')}</span>
+                    %endif
                   </div>
                   <div id="clone_by_id" class="input-group" style="display:none">
                     <span class="input-group-addon">${self.repolabel(c.db_repo)}</span>
                     <input class="form-control" size="80" readonly="readonly" value="${c.clone_repo_url_id}"/>
-                    <span class="input-group-addon btn">${_('Show by Name')}</span>
+                    <span class="input-group-addon btn use-name">${_('Use Name')}</span>
+                    %if c.ssh_enabled:
+                    <span class="input-group-addon btn use-ssh">${_('Use SSH')}</span>
+                    %endif
                   </div>
+                  %if c.ssh_enabled:
+                  <div id="clone_ssh" class="input-group">
+                    <span class="input-group-addon">${self.repolabel(c.db_repo)}</span>
+                    <input id="ssh_url" class="form-control" size="80" readonly="readonly" value="${c.ssh_repo_url}"/>
+                    <span class="input-group-addon btn use-name">${_('Use HTTP')}</span>
+                  </div>
+                  %endif
                 </div>
             </div>
 
@@ -233,15 +250,24 @@ $(document).ready(function(){
         }
     });
 
+    var $clone_url = $('#clone-url');
     var $clone_by_name = $('#clone_by_name');
     var $clone_by_id = $('#clone_by_id');
-    $clone_by_name.find('.btn').click(function(e){
-        $clone_by_name.hide();
-        $clone_by_id.show();
-    });
-    $clone_by_id.find('.btn').click(function(e){
-        $clone_by_id.hide();
+    var $clone_ssh = $('#clone_ssh');
+    $clone_url.on('click', '.btn.use-name', function(e){
         $clone_by_name.show();
+        $clone_by_id.hide();
+        $clone_ssh.hide();
+    });
+    $clone_url.on('click', '.btn.use-id', function(e){
+        $clone_by_id.show();
+        $clone_by_name.hide();
+        $clone_ssh.hide();
+    });
+    $clone_url.on('click', '.btn.use-ssh', function(e){
+        $clone_by_id.hide();
+        $clone_by_name.hide();
+        $clone_ssh.show();
     });
 
     var cache = {}

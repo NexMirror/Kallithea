@@ -964,6 +964,7 @@ class Repository(Base, BaseDbModel):
     )
 
     DEFAULT_CLONE_URI = '{scheme}://{user}@{netloc}/{repo}'
+    DEFAULT_CLONE_SSH = 'ssh://{system_user}@{hostname}/{repo}'
 
     STATE_CREATED = u'repo_state_created'
     STATE_PENDING = u'repo_state_pending'

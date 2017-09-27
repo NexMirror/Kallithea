@@ -271,6 +271,7 @@ class SettingsController(BaseController):
                     ('use_gravatar', 'use_gravatar', 'bool'),
                     ('gravatar_url', 'gravatar_url', 'unicode'),
                     ('clone_uri_tmpl', 'clone_uri_tmpl', 'unicode'),
+                    ('clone_ssh_tmpl', 'clone_ssh_tmpl', 'unicode'),
                 ]
                 for setting, form_key, type_ in settings:
                     Setting.create_or_update(setting, form_result[form_key], type_)
