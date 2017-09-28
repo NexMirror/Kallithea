@@ -1,0 +1,12 @@
+{
+  "name": "kallithea",
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {
+    "less": "~2.7",
+    "less-plugin-clean-css": "~1.5"
+  },
+  "scripts": {
+    "less": "lessc style.less ../css/style.css"
+  }
+}
