@@ -1,7 +1,6 @@
 /**
  * Stylesheets for the context bar
  */
-
 i[class^='icon-'] {
     background-repeat: no-repeat;
     background-position: center;
@@ -12,52 +11,43 @@ i[class^='icon-'] {
     /* background-color: red; /* for debugging */
 }
 /* Note: class 'icon-empty' can be used to get this styling without an actual glyph */
-
 /* css classes for diff file status ... it'd be nice if css had a way to
    inherit from another class but alas, we must make sure this content is the
    same from the icon font file */
-
 .icon-diff-M:before {
     font-family: 'kallithea';
     content: '\22a1';
     color: #d0b44c;
 }
-
 .icon-diff-D:before {
     font-family: 'kallithea';
     content: '\229f';
     color: #bd2c00;
 }
-
 .icon-diff-A:before {
     font-family: 'kallithea';
     content: '\229e';
     color: #6cc644;
 }
-
 .icon-diff-R:before {
     font-family: 'kallithea';
     content: '\e81f';
     color: #677a85;
 }
-
 nav.navbar #quick a,
 #content #context-bar,
 #content #context-bar a {
     color: #FFFFFF;
 }
-
 nav.navbar #quick a:hover,
 #content #context-bar a:hover {
     text-decoration: none;
     background: inherit;
 }
-
 .navbar-text {
     margin-top: 0;
     margin-bottom: 0;
 }
-
 ul#quick ul.dropdown-menu > li {
     border-bottom: 1px solid rgba(0,0,0,0.1);
     border-top: 1px solid rgba(255,255,255,0.1);
@@ -68,12 +58,10 @@ ul#quick ul.dropdown-menu > li:first-child {
 ul#quick ul.dropdown-menu > li:last-child {
     border-bottom: none;
 }
-
 nav.navbar #quick ul,
 #context-pages ul {
     background: #577632;
 }
-
 .repo-switcher-dropdown.select2-drop.select2-drop-active .select2-results .select2-highlighted,
 ul.dropdown-menu li a:focus,
 nav.navbar #quick li:hover,
@@ -84,17 +72,14 @@ nav.navbar #quick li a.menu_link:focus,
 #context-pages li.active {
     background: linear-gradient(to bottom, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 100%); /* W3C */
 }
-
 #quick_login > .pull-right .list-group-item {
     background-color: #577632;
     border: 0;
 }
-
 #content #context-pages .follow .show-following,
 #content #context-pages .following .show-follow {
     display: none;
 }
-
 nav.navbar #quick li,
 nav.navbar #quick_login .pull-right,
 #content #context-pages li {
@@ -102,24 +87,19 @@ nav.navbar #quick_login .pull-right,
     border-left: 1px solid rgba(255,255,255,0.1);
     padding: 0;
 }
-
 .nav .open > a {
     background: inherit !important;
 }
-
 nav.navbar #quick li:last-child,
 #content #context-pages li:last-child {
     border-right: none;
 }
-
 nav.navbar #quick > li:first-child {
     border-left: none;
 }
-
 nav.navbar #quick > li:first-child > a {
     border-radius: 4px 0 0 4px;
 }
-
 nav.navbar #quick > li > a,
 nav.navbar #quick .select2-container .select2-choice .select2-chosen,
 #context-pages > ul > li > a,
@@ -127,11 +107,9 @@ nav.navbar #quick .select2-container .select2-choice .select2-chosen,
     padding: 0px 15px 1px 15px;
     line-height: 43px;
 }
-
 nav.navbar #quick a#quick_login_link {
     padding-left: 0px;
 }
-
 nav.navbar #quick a {
     overflow: hidden;
 }

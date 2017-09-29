@@ -16,7 +16,6 @@ div.codeblock .code-header {
     background: #EEEEEE;
     padding: 10px 0 5px 0;
 }
-
 div.codeblock .code-header .stats {
     clear: both;
     padding: 2px 8px 2px 14px;
@@ -24,7 +23,6 @@ div.codeblock .code-header .stats {
     height: 23px;
     margin-bottom: 6px;
 }
-
 div.codeblock .code-header .stats .left {
     float: left;
 }
@@ -45,7 +43,6 @@ div.codeblock .code-header .stats .buttons {
     float: right;
     padding-right: 4px;
 }
-
 div.codeblock .code-header .author {
     margin-left: 15px;
     font-weight: bold;
@@ -62,26 +59,21 @@ div.codeblock .code-header .commit {
 div.codeblock .code-header .editing-files {
     margin-left: 15px;
 }
-
 .code-highlighttable,
 div.codeblock .code-body table {
     width: 0 !important;
     border: 0px !important;
 }
-
 .code-highlighttable,
 div.codeblock .code-body table td {
     border: 0px !important;
 }
-
 div.code-body {
     background-color: #FFFFFF;
 }
-
 div.codeblock .code-header .search-path {
     padding: 0px 0px 0px 10px;
 }
-
 div.search-code-body pre .match {
     background-color: #FAFFA6;
 }
@@ -107,7 +99,6 @@ div.annotatediv {
     background-color: #FFFFBE !important;
 }
 .linenos a { text-decoration: none; }
-
 .code-highlight .hll, .codehilite .hll { background-color: #ffffcc }
 .code-highlight .c, .codehilite .c { color: #408080; font-style: italic } /* Comment */
 .code-highlight .err, .codehilite .err { border: 1px solid #FF0000 } /* Error */
