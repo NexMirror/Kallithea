@@ -2,29 +2,27 @@
 nav.navbar #quick .select2-container .select2-choice .select2-chosen {
   margin-right: 0;
 }
-.branch-switcher .select2-choice,
-.repo-switcher .select2-choice {
-  height: 100%;
-  padding: 0;
+.branch-switcher,
+.repo-switcher {
+  .select2-choice {
+    height: 100%;
+    padding: 0;
+  }
+  .select2-container,
+  .select2-choice,
+  .select2-choice > span {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    color: #FFFFFF !important;
+  }
+  .select2-arrow {
+    display: none !important;
+  }
 }
 .select2-container.form-control {
   padding: 0;
   border: none;
-}
-.branch-switcher .select2-container,
-.branch-switcher .select2-choice,
-.branch-switcher .select2-choice > span,
-.repo-switcher .select2-container,
-.repo-switcher .select2-choice,
-.repo-switcher .select2-choice > span {
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-  color: #FFFFFF !important;
-}
-.branch-switcher .select2-arrow,
-.repo-switcher .select2-arrow {
-  display: none !important;
 }
 .branch-switcher-dropdown.select2-drop.select2-drop-active,
 .repo-switcher-dropdown.select2-drop.select2-drop-active {

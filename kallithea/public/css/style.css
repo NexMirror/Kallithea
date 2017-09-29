@@ -1510,15 +1510,11 @@ nav.navbar #quick .select2-container .select2-choice .select2-chosen {
   height: 100%;
   padding: 0;
 }
-.select2-container.form-control {
-  padding: 0;
-  border: none;
-}
 .branch-switcher .select2-container,
-.branch-switcher .select2-choice,
-.branch-switcher .select2-choice > span,
 .repo-switcher .select2-container,
+.branch-switcher .select2-choice,
 .repo-switcher .select2-choice,
+.branch-switcher .select2-choice > span,
 .repo-switcher .select2-choice > span {
   background: transparent !important;
   border: 0 !important;
@@ -1528,6 +1524,10 @@ nav.navbar #quick .select2-container .select2-choice .select2-chosen {
 .branch-switcher .select2-arrow,
 .repo-switcher .select2-arrow {
   display: none !important;
+}
+.select2-container.form-control {
+  padding: 0;
+  border: none;
 }
 .branch-switcher-dropdown.select2-drop.select2-drop-active,
 .repo-switcher-dropdown.select2-drop.select2-drop-active {
