@@ -1501,47 +1501,9 @@ div#overview {
 #content #left #menu li ul.expanded {
   display: block !important;
 }
-#context-bar .select2-container .select2-choice .select2-chosen,
-nav.navbar #quick .select2-container .select2-choice .select2-chosen {
-  margin-right: 0;
-}
-.branch-switcher .select2-choice,
-.repo-switcher .select2-choice {
-  height: 100%;
-  padding: 0;
-}
-.select2-container.form-control {
-  padding: 0;
-  border: none;
-}
-.branch-switcher .select2-container,
-.branch-switcher .select2-choice,
-.branch-switcher .select2-choice > span,
-.repo-switcher .select2-container,
-.repo-switcher .select2-choice,
-.repo-switcher .select2-choice > span {
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-  color: #FFFFFF !important;
-}
-.branch-switcher .select2-arrow,
-.repo-switcher .select2-arrow {
-  display: none !important;
-}
-.branch-switcher-dropdown.select2-drop.select2-drop-active,
-.repo-switcher-dropdown.select2-drop.select2-drop-active {
-  box-shadow: none;
-  background-color: #577632;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-}
-.repo-switcher-dropdown.select2-drop.select2-drop-active {
-  color: black;
-}
-.repo-switcher-dropdown.select2-drop.select2-drop-active .select2-result-label {
-  color: white;
-}
+
+@import "kallithea-select2.less";
+
 #content div.panel ol.lower-roman,
 #content div.panel ol.upper-roman,
 #content div.panel ol.lower-alpha,
