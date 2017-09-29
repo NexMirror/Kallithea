@@ -408,45 +408,9 @@ ul#summary-menu-stats {
 #clone_by_id.input-group .form-control {
   height: 30px;
 }
-.metatag {
-  display: inline-block;
-  margin-right: 1px;
-  border-radius: 4px 4px 4px 4px;
-  border: solid 1px #9CF;
-  padding: 2px 3px 2px 3px !important;
-  background-color: #DEF;
-}
-.metatag[data-tag="dead"] {
-  background-color: #E44;
-}
-.metatag[data-tag="stale"] {
-  background-color: #EA4;
-}
-.metatag[data-tag="featured"] {
-  background-color: #AEA;
-}
-.metatag[data-tag="requires"] {
-  background-color: #9CF;
-}
-.metatag[data-tag="recommends"] {
-  background-color: #BDF;
-}
-.metatag[data-tag="lang"] {
-  background-color: #FAF474;
-}
-.metatag[data-tag="license"] {
-  border: solid 1px #9CF;
-  background-color: #DEF;
-}
-.metatag[data-tag="see"] {
-  border: solid 1px #CBD;
-  background-color: #EDF;
-}
-a.metatag[data-tag="license"]:hover {
-  background-color: #577632;
-  color: #FFF;
-  text-decoration: none;
-}
+
+@import "kallithea-tags.less";
+
 #summary .desc {
   white-space: pre;
   width: 100%;
