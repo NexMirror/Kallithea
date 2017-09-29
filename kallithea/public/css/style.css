@@ -59,9 +59,9 @@ div.formatted-fixed {
 }
 
 .truncate {
-       white-space: nowrap;
-       overflow: hidden;
-       text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     -o-text-overflow: ellipsis;
     -ms-text-overflow: ellipsis;
 }
@@ -166,8 +166,7 @@ label.control-label {
 }
 
 .dt_repo i.icon-keyhole-circled,
-.dt_repo i.icon-globe
-{
+.dt_repo i.icon-globe {
     font-size: 16px;
     vertical-align: -2px;
     margin: 0px 1px 0px 3px;
@@ -229,8 +228,6 @@ div.panel.panel-default div.panel-heading .diff-actions span.arrow {
     margin-left: 10px;
 }
 
-
-
 #content div.panel div.form div.form-group {
     border-bottom: 1px solid #DDD;
     clear: both;
@@ -242,7 +239,7 @@ div.panel.panel-default div.panel-heading .diff-actions span.arrow {
 }
 
 .reviewer_ac {
-    padding: 10px
+    padding: 10px;
 }
 
 #content div.panel table.table {
@@ -353,7 +350,6 @@ div.panel.panel-default div.panel-heading .diff-actions span.arrow {
     border-bottom: 1px solid #c4c4c4;
     border-right: 1px solid #cfcfcf;
 }
-
 
 #content div.panel ul.pagination > li.active > span,
 #content div.panel ul.pagination > li:hover > a,
@@ -503,7 +499,6 @@ ul#summary-menu-stats {
     display: inline-block;
     margin-right: 1px;
     border-radius: 4px 4px 4px 4px;
-
     border: solid 1px #9CF;
     padding: 2px 3px 2px 3px !important;
     background-color: #DEF;
@@ -606,11 +601,9 @@ a.metatag[data-tag="license"]:hover {
     background-color: #577632;
     background-repeat: repeat-x;
     background-image: linear-gradient(to bottom, #577632, #577632);
-
     z-index: 999;
     border-radius: 0px 0px 4px 4px;
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.6);
-
     overflow: hidden;
 }
 
@@ -679,8 +672,6 @@ a.metatag[data-tag="license"]:hover {
 #quick_login .unread {
     color: #FFFFFF;
     padding: 3px 3px 3px 15px;
-}
-#quick_login .links .logout {
 }
 
 #quick_login div.form div.form-group {
@@ -787,7 +778,7 @@ a.metatag[data-tag="license"]:hover {
 #journal .journal_action {
     padding-top: 4px;
     min-height: 2px;
-    float: left
+    float: left;
 }
 
 #journal .journal_action_params {
@@ -812,13 +803,15 @@ a.metatag[data-tag="license"]:hover {
     width: 95px;
 }
 
-.trending_language_tbl, .trending_language_tbl td {
+.trending_language_tbl,
+.trending_language_tbl td {
     border: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
 }
 
-.trending_language_tbl, .trending_language_tbl tr {
+.trending_language_tbl,
+.trending_language_tbl tr {
     border-spacing: 1px;
 }
 
@@ -1242,7 +1235,15 @@ table#changesets tr > td.mid .message a:hover {
 .right .logtags {
     line-height: 2.2em;
 }
-.phasetag, .bumpedtag, .divergenttag, .extincttag, .unstabletag, .repotag, .branchtag, .logtags .tagtag, .logtags .booktag {
+.phasetag,
+.bumpedtag,
+.divergenttag,
+.extincttag,
+.unstabletag,
+.repotag,
+.branchtag,
+.logtags .tagtag,
+.logtags .booktag {
     margin: 0px 2px;
 }
 
@@ -1479,7 +1480,8 @@ table.code-browser i[class^='icon-'] {
     display: inline-block;
 }
 
-.yui-overlay, .yui-panel-container {
+.yui-overlay,
+.yui-panel-container {
     visibility: hidden;
     position: absolute;
     z-index: 2;
@@ -1713,19 +1715,20 @@ body .btn.btn-default:hover {
     color: #577632;
 }
 
-ins, div.options a:hover {
+ins,
+div.options a:hover {
     text-decoration: none;
 }
 
 img,
 nav.navbar #quick li a:hover span.normal,
 #clone_url,
-#clone_url_id
-{
+#clone_url_id {
     border: none;
 }
 
-img.icon, .right .merge img {
+img.icon,
+.right .merge img {
     vertical-align: bottom;
 }
 
@@ -1741,13 +1744,15 @@ nav.navbar #home,
 #content div.panel ul.left,
 #content div.panel ol.left,
 div#commit_history,
-div#legend_data, div#legend_container, div#legend_choices {
+div#legend_data,
+div#legend_container,
+div#legend_choices {
     float: left;
 }
 
 div#commit_history {
     width: 450px;
-    height: 300px
+    height: 300px;
 }
 
 div#overview {
@@ -1804,8 +1809,8 @@ nav.navbar #quick .select2-container .select2-choice .select2-chosen {
 .repo-switcher-dropdown.select2-drop.select2-drop-active {
     box-shadow: none;
     background-color: #577632;
-    border: 1px solid rgba(0, 0, 0, .15);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 }
 
 .repo-switcher-dropdown.select2-drop.select2-drop-active {
@@ -1823,7 +1828,6 @@ nav.navbar #quick .select2-container .select2-choice .select2-chosen {
 #content div.panel ol.decimal {
     margin: 10px 24px 10px 44px;
 }
-
 
 /* formencode htmlfill adds 'error' to failing input fields */
 #content div.panel div.form div.form-group > div input.error,
@@ -1955,10 +1959,10 @@ div#legend_choices table td {
     padding: 0px 0px 0px 10px;
 }
 .emails_wrap .email_entry .email {
-    float: left
+    float: left;
 }
 .emails_wrap .email_entry .email_action {
-    float: left
+    float: left;
 }
 
 .ips_wrap .ip_entry {
@@ -1966,10 +1970,10 @@ div#legend_choices table td {
     padding: 0px 0px 0px 10px;
 }
 .ips_wrap .ip_entry .ip {
-    float: left
+    float: left;
 }
 .ips_wrap .ip_entry .ip_action {
-    float: left
+    float: left;
 }
 
 
@@ -1995,7 +1999,6 @@ div.readme h6 {
     padding: 0 !important;
     line-height: 1.5em !important;
 }
-
 
 div.readme h2,
 div.readme h3 {
@@ -2082,7 +2085,7 @@ div.readme table {
 
 .status-block {
     margin: 5px;
-    clear: both
+    clear: both;
 }
 
 .comment-form textarea {
@@ -2232,8 +2235,12 @@ input.status_change_radio {
 }
 
 @keyframes animated-comment-background {
-    0% { background-position: 0 0; }
-    100% { background-position: 20px 0; }
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 20px 0;
+    }
 }
 
 .comment-preview.failed .user,
@@ -2250,17 +2257,7 @@ input.status_change_radio {
 }
 
 .comment-preview.submitting .panel-body {
-    background-image: linear-gradient(
-        -45deg,
-        #FAFAFA,
-        #FAFAFA 25%,
-        #FFF 25%,
-        #FFF 50%,
-        #FAFAFA 50%,
-        #FAFAFA 75%,
-        #FFF 75%,
-        #FFF 100%
-    );
+    background-image: linear-gradient(-45deg, #FAFAFA, #FAFAFA 25%, #FFF 25%, #FFF 50%, #FAFAFA 50%, #FAFAFA 75%, #FFF 75%, #FFF 100%);
     background-size: 20px 20px;
     animation: animated-comment-background 0.4s linear infinite;
 }
@@ -2296,8 +2293,6 @@ span.pr-closed-tag {
     margin-bottom: 1px;
     margin-right: 1px;
     padding: 1px 3px;
-    font-size: 10px;
-    padding: 1px 3px 1px 3px;
     font-size: 10px;
     color: #577632;
     white-space: nowrap;
@@ -2411,7 +2406,7 @@ table.code-difftable td {
     padding: 0 !important;
     background: none !important;
     border: 0 !important;
-    vertical-align: baseline !important
+    vertical-align: baseline !important;
 }
 table.code-difftable .context {
     background: none repeat scroll 0 0 #DDE7EF;
@@ -2442,17 +2437,17 @@ table.code-highlighttable div.code-highlight pre u.cr:before,
 table.code-difftable td.code pre u.cr:before {
     content: "\21a4";
     display: inline-block;
-    color: rgba(0,0,0,0.5);
+    color: rgba(0, 0, 0, 0.5);
 }
 table.code-highlighttable div.code-highlight pre u,
 table.code-difftable td.code pre u {
-    color: rgba(0,0,0,0.15);
+    color: rgba(0, 0, 0, 0.15);
 }
 table.code-highlighttable div.code-highlight pre i,
 table.code-difftable td.code pre i {
     border-style: solid;
     border-width: 0 0 0 1px;
-    color: rgba(0,0,0,0.5);
+    color: rgba(0, 0, 0, 0.5);
 }
 
 /** LINE NUMBERS **/
@@ -2588,13 +2583,13 @@ table.code-difftable .unmod .code pre:before {
 /* show some context of link targets - but only works when the link target
    can be extended with any visual difference */
 div.comment:target:before {
-  display: block;
-  height: 100px;
-  margin: -100px 0 0;
-  content: "";
+    display: block;
+    height: 100px;
+    margin: -100px 0 0;
+    content: "";
 }
 
-div.comment:target>.panel {
+div.comment:target > .panel {
     border: solid 2px #ee0 !important;
 }
 
@@ -2613,11 +2608,7 @@ div.comment:target>.panel {
     height: auto;
     margin: 5px;
     /* http://lea.verou.me/demos/css3-patterns.html */
-    background-image:
-        linear-gradient(45deg, #888 25%, transparent 25%, transparent),
-        linear-gradient(-45deg, #888 25%, transparent 25%, transparent),
-        linear-gradient(45deg, transparent 75%, #888 75%),
-        linear-gradient(-45deg, transparent 75%, #888 75%);
+    background-image: linear-gradient(45deg, #888 25%, transparent 25%, transparent), linear-gradient(-45deg, #888 25%, transparent 25%, transparent), linear-gradient(45deg, transparent 75%, #888 75%), linear-gradient(-45deg, transparent 75%, #888 75%);
     background-size: 10px 10px;
     background-color: #999;
 }
@@ -2641,49 +2632,49 @@ div.comment-prev-next-links div.next-comment {
 }
 
 body table.dataTable thead .sorting {
-  background-image: none;
+    background-image: none;
 }
 body table.dataTable thead .sorting_asc {
-  background-image: none;
+    background-image: none;
 }
 body table.dataTable thead .sorting_desc {
-  background-image: none;
+    background-image: none;
 }
 body table.dataTable thead .sorting_asc_disabled {
-  background-image: none;
+    background-image: none;
 }
 body table.dataTable thead .sorting_desc_disabled {
-  background-image: none;
+    background-image: none;
 }
 
 body table.dataTable thead .sorting_asc::after {
-  font-family: "kallithea";
-  content: "\23f6";
+    font-family: "kallithea";
+    content: "\23f6";
 }
 body table.dataTable thead .sorting_desc::after {
-  font-family: "kallithea";
-  content: "\23f7";
+    font-family: "kallithea";
+    content: "\23f7";
 }
 
 .dataTables_wrapper .dataTables_left {
-  float: left !important;
+    float: left !important;
 }
 
 .dataTables_wrapper .dataTables_right {
-  float: right;
+    float: right;
 }
 
 .dataTables_wrapper .dataTables_right > div {
-  padding-left: 30px;
+    padding-left: 30px;
 }
 
 .dataTables_wrapper .dataTables_info {
-  clear: none;
-  padding-top: 3px;
+    clear: none;
+    padding-top: 3px;
 }
 
 .dataTables_wrapper .dataTables_paginate {
-  padding-top: 0;
+    padding-top: 0;
 }
 
 .dataTables_wrapper .dataTables_paginate .paginate_button {
@@ -2691,8 +2682,8 @@ body table.dataTable thead .sorting_desc::after {
 }
 
 .dataTables_wrapper .dataTables_paginate > a.paginate_button {
-  padding-top: 1px;
-  border: 0 !important;
+    padding-top: 1px;
+    border: 0 !important;
 }
 
 .dataTables_wrapper label {
