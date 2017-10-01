@@ -1,0 +1,264 @@
+.cs_files .progress {
+  margin-bottom: 0;
+}
+.cs_files .cur_cs {
+  margin: 10px 2px;
+  font-weight: bold;
+}
+.cs_files .node {
+  float: left;
+}
+.cs_files .changes {
+  float: right;
+  color: #577632;
+}
+.cs_files .changes .added {
+  color: inherit;
+  background-color: #BBFFBB;
+  float: left;
+  text-align: center;
+  font-size: 9px;
+  padding: 2px 0px 2px 0px;
+}
+.cs_files .changes .deleted {
+  background-color: #FF8888;
+  float: left;
+  text-align: center;
+  font-size: 9px;
+  padding: 2px 0px 2px 0px;
+}
+/*new binary
+NEW_FILENODE = 1
+DEL_FILENODE = 2
+MOD_FILENODE = 3
+RENAMED_FILENODE = 4
+CHMOD_FILENODE = 5
+BIN_FILENODE = 6
+*/
+.cs_files .changes .bin {
+  background-color: #BBFFBB;
+  float: left;
+  text-align: center;
+  font-size: 9px;
+  padding: 2px 0px 2px 0px;
+}
+.cs_files .changes .bin.bin1 {
+  background-color: #BBFFBB;
+}
+/*deleted binary*/
+.cs_files .changes .bin.bin2 {
+  background-color: #FF8888;
+}
+/*mod binary*/
+.cs_files .changes .bin.bin3 {
+  background-color: #DDDDDD;
+}
+/*rename file*/
+.cs_files .changes .bin.bin4 {
+  background-color: #6D99FF;
+}
+/*rename file*/
+.cs_files .changes .bin.bin4 {
+  background-color: #6D99FF;
+}
+/*chmod file*/
+.cs_files .changes .bin.bin5 {
+  background-color: #6D99FF;
+}
+.cs_files .cs_added,
+.cs_files .cs_A {
+  height: 16px;
+  margin-top: 7px;
+  text-align: left;
+}
+.cs_files .cs_changed,
+.cs_files .cs_M {
+  height: 16px;
+  margin-top: 7px;
+  text-align: left;
+}
+.cs_files .cs_removed,
+.cs_files .cs_D {
+  height: 16px;
+  margin-top: 7px;
+  text-align: left;
+}
+.cs_files .cs_renamed,
+.cs_files .cs_R {
+  height: 16px;
+  margin-top: 7px;
+  text-align: left;
+}
+.diff-collapse {
+  text-align: center;
+  margin-bottom: 15px;
+}
+table.code-difftable {
+  border-collapse: collapse;
+  border-radius: 0px !important;
+  width: 100%;
+}
+table.code-difftable td {
+  padding: 0 !important;
+  background: none !important;
+  border: 0 !important;
+  vertical-align: baseline !important;
+}
+table.code-difftable .context {
+  background: none repeat scroll 0 0 #DDE7EF;
+  color: #999;
+}
+table.code-difftable .add {
+  background: none repeat scroll 0 0 #DDFFDD;
+}
+table.code-difftable .add ins {
+  background: none repeat scroll 0 0 #AAFFAA;
+  text-decoration: none;
+}
+table.code-difftable .del {
+  background: none repeat scroll 0 0 #FFDDDD;
+}
+table.code-difftable .del del {
+  background: none repeat scroll 0 0 #FFAAAA;
+  text-decoration: none;
+}
+table.code-highlighttable div.code-highlight pre u:before,
+table.code-difftable td.code pre u:before {
+  content: "\21a6";
+  display: inline-block;
+  width: 0;
+}
+table.code-highlighttable div.code-highlight pre u.cr:before,
+table.code-difftable td.code pre u.cr:before {
+  content: "\21a4";
+  display: inline-block;
+  color: rgba(0, 0, 0, 0.5);
+}
+table.code-highlighttable div.code-highlight pre u,
+table.code-difftable td.code pre u {
+  color: rgba(0, 0, 0, 0.15);
+}
+table.code-highlighttable div.code-highlight pre i,
+table.code-difftable td.code pre i {
+  border-style: solid;
+  border-width: 0 0 0 1px;
+  color: rgba(0, 0, 0, 0.5);
+}
+/** LINE NUMBERS **/
+table.code-difftable .lineno {
+  padding-left: 2px;
+  padding-right: 2px !important;
+  width: 30px;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  border-right: 1px solid #CCC !important;
+  border-left: 0px solid #CCC !important;
+  border-top: 0px solid #CCC !important;
+  border-bottom: none !important;
+  vertical-align: middle !important;
+  text-align: center;
+}
+table.code-difftable .lineno.new {
+  text-align: right;
+}
+table.code-difftable .lineno.old {
+  text-align: right;
+}
+table.code-difftable .lineno a {
+  color: #aaa !important;
+  font: 11px Lucida Console, Consolas, Monaco, Inconsolata, Liberation Mono, monospace !important;
+  letter-spacing: -1px;
+  padding-left: 10px;
+  padding-right: 8px;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+}
+table.code-difftable .line:hover .lineno a {
+  color: #333 !important;
+}
+table.code-difftable .lineno-inline {
+  background: none repeat scroll 0 0 #FFF !important;
+  padding-left: 2px;
+  padding-right: 2px;
+  text-align: right;
+  width: 30px;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}
+/** CODE **/
+table.code-difftable .code {
+  display: block;
+  width: 100%;
+}
+table.code-difftable .code td {
+  margin: 0;
+  padding: 0;
+}
+table.code-difftable .code pre {
+  margin: 0 0 0 12px !important;
+  padding: 0;
+  min-height: 17px;
+  line-height: 17px;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+table.code-difftable .del .code pre:before {
+  content: "-";
+  color: #800;
+  float: left;
+  left: -1em;
+  position: relative;
+  width: 0;
+}
+table.code-difftable .add .code pre:before {
+  content: "+";
+  color: #080;
+  float: left;
+  left: -1em;
+  position: relative;
+  width: 0;
+}
+table.code-difftable .unmod .code pre:before {
+  content: " ";
+  float: left;
+  left: -1em;
+  position: relative;
+  width: 0;
+}
+.add-bubble {
+  position: relative;
+  display: none;
+  float: left;
+  width: 0px;
+  height: 0px;
+  left: -8px;
+  box-sizing: border-box;
+}
+/* comment bubble, only visible when in a commentable diff */
+.commentable-diff tr.line.add:hover td .add-bubble,
+.commentable-diff tr.line.del:hover td .add-bubble,
+.commentable-diff tr.line.unmod:hover td .add-bubble {
+  display: block;
+  z-index: 1;
+}
+.add-bubble div {
+  background: #577632;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  padding: 0 2px 2px 0.5px;
+  border: 1px solid #577632;
+  border-radius: 3px;
+  box-sizing: border-box;
+}
+.add-bubble div:before {
+  font-size: 14px;
+  color: #ffffff;
+  font-family: "kallithea";
+  content: '\1f5ea';
+}
+.add-bubble div:hover {
+  transform: scale(1.2, 1.2);
+}

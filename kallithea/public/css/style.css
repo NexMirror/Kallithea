@@ -932,97 +932,6 @@ td.author {
   white-space: nowrap;
   max-width: 210px;
 }
-.cs_files .progress {
-  margin-bottom: 0;
-}
-.cs_files .cur_cs {
-  margin: 10px 2px;
-  font-weight: bold;
-}
-.cs_files .node {
-  float: left;
-}
-.cs_files .changes {
-  float: right;
-  color: #577632;
-}
-.cs_files .changes .added {
-  color: inherit;
-  background-color: #BBFFBB;
-  float: left;
-  text-align: center;
-  font-size: 9px;
-  padding: 2px 0px 2px 0px;
-}
-.cs_files .changes .deleted {
-  background-color: #FF8888;
-  float: left;
-  text-align: center;
-  font-size: 9px;
-  padding: 2px 0px 2px 0px;
-}
-/*new binary
-NEW_FILENODE = 1
-DEL_FILENODE = 2
-MOD_FILENODE = 3
-RENAMED_FILENODE = 4
-CHMOD_FILENODE = 5
-BIN_FILENODE = 6
-*/
-.cs_files .changes .bin {
-  background-color: #BBFFBB;
-  float: left;
-  text-align: center;
-  font-size: 9px;
-  padding: 2px 0px 2px 0px;
-}
-.cs_files .changes .bin.bin1 {
-  background-color: #BBFFBB;
-}
-/*deleted binary*/
-.cs_files .changes .bin.bin2 {
-  background-color: #FF8888;
-}
-/*mod binary*/
-.cs_files .changes .bin.bin3 {
-  background-color: #DDDDDD;
-}
-/*rename file*/
-.cs_files .changes .bin.bin4 {
-  background-color: #6D99FF;
-}
-/*rename file*/
-.cs_files .changes .bin.bin4 {
-  background-color: #6D99FF;
-}
-/*chmod file*/
-.cs_files .changes .bin.bin5 {
-  background-color: #6D99FF;
-}
-.cs_files .cs_added,
-.cs_files .cs_A {
-  height: 16px;
-  margin-top: 7px;
-  text-align: left;
-}
-.cs_files .cs_changed,
-.cs_files .cs_M {
-  height: 16px;
-  margin-top: 7px;
-  text-align: left;
-}
-.cs_files .cs_removed,
-.cs_files .cs_D {
-  height: 16px;
-  margin-top: 7px;
-  text-align: left;
-}
-.cs_files .cs_renamed,
-.cs_files .cs_R {
-  height: 16px;
-  margin-top: 7px;
-  text-align: left;
-}
 #graph_nodes {
   position: absolute;
   width: 100px;
@@ -2015,9 +1924,97 @@ input.perm_filter {
   width: 14px;
   height: 14px;
 }
-/*****************************************************************************
-                                  DIFFS CSS
-******************************************************************************/
+.cs_files .progress {
+  margin-bottom: 0;
+}
+.cs_files .cur_cs {
+  margin: 10px 2px;
+  font-weight: bold;
+}
+.cs_files .node {
+  float: left;
+}
+.cs_files .changes {
+  float: right;
+  color: #577632;
+}
+.cs_files .changes .added {
+  color: inherit;
+  background-color: #BBFFBB;
+  float: left;
+  text-align: center;
+  font-size: 9px;
+  padding: 2px 0px 2px 0px;
+}
+.cs_files .changes .deleted {
+  background-color: #FF8888;
+  float: left;
+  text-align: center;
+  font-size: 9px;
+  padding: 2px 0px 2px 0px;
+}
+/*new binary
+NEW_FILENODE = 1
+DEL_FILENODE = 2
+MOD_FILENODE = 3
+RENAMED_FILENODE = 4
+CHMOD_FILENODE = 5
+BIN_FILENODE = 6
+*/
+.cs_files .changes .bin {
+  background-color: #BBFFBB;
+  float: left;
+  text-align: center;
+  font-size: 9px;
+  padding: 2px 0px 2px 0px;
+}
+.cs_files .changes .bin.bin1 {
+  background-color: #BBFFBB;
+}
+/*deleted binary*/
+.cs_files .changes .bin.bin2 {
+  background-color: #FF8888;
+}
+/*mod binary*/
+.cs_files .changes .bin.bin3 {
+  background-color: #DDDDDD;
+}
+/*rename file*/
+.cs_files .changes .bin.bin4 {
+  background-color: #6D99FF;
+}
+/*rename file*/
+.cs_files .changes .bin.bin4 {
+  background-color: #6D99FF;
+}
+/*chmod file*/
+.cs_files .changes .bin.bin5 {
+  background-color: #6D99FF;
+}
+.cs_files .cs_added,
+.cs_files .cs_A {
+  height: 16px;
+  margin-top: 7px;
+  text-align: left;
+}
+.cs_files .cs_changed,
+.cs_files .cs_M {
+  height: 16px;
+  margin-top: 7px;
+  text-align: left;
+}
+.cs_files .cs_removed,
+.cs_files .cs_D {
+  height: 16px;
+  margin-top: 7px;
+  text-align: left;
+}
+.cs_files .cs_renamed,
+.cs_files .cs_R {
+  height: 16px;
+  margin-top: 7px;
+  text-align: left;
+}
 .diff-collapse {
   text-align: center;
   margin-bottom: 15px;
