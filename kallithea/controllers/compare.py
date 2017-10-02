@@ -267,21 +267,20 @@ class CompareController(BaseRepoController):
 
         log.debug('running diff between %s and %s in %s',
                   rev1, c.cs_rev, org_repo.scm_instance.path)
-        txtdiff = org_repo.scm_instance.get_diff(rev1=rev1, rev2=c.cs_rev,
+        raw_diff = org_repo.scm_instance.get_diff(rev1=rev1, rev2=c.cs_rev,
                                       ignore_whitespace=ignore_whitespace,
                                       context=line_context)
 
-        diff_processor = diffs.DiffProcessor(txtdiff or '', diff_limit=diff_limit)
-        _parsed = diff_processor.prepare()
+        diff_processor = diffs.DiffProcessor(raw_diff or '', diff_limit=diff_limit)
 
         c.limited_diff = False
-        if isinstance(_parsed, LimitedDiffContainer):
+        if isinstance(diff_processor.parsed, LimitedDiffContainer):
             c.limited_diff = True
 
         c.file_diff_data = []
         c.lines_added = 0
         c.lines_deleted = 0
-        for f in _parsed:
+        for f in diff_processor.parsed:
             st = f['stats']
             c.lines_added += st['added']
             c.lines_deleted += st['deleted']

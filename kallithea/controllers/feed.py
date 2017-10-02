@@ -74,13 +74,13 @@ class FeedController(BaseRepoController):
         diff_limit = safe_int(CONFIG.get('rss_cut_off_limit', 32 * 1024))
         raw_diff = cs.diff()
         diff_processor = DiffProcessor(raw_diff,
-                                       diff_limit=diff_limit)
-        _parsed = diff_processor.prepare(inline_diff=False)
+                                       diff_limit=diff_limit,
+                                       inline_diff=False)
         limited_diff = False
-        if isinstance(_parsed, LimitedDiffContainer):
+        if isinstance(diff_processor.parsed, LimitedDiffContainer):
             limited_diff = True
 
-        for st in _parsed:
+        for st in diff_processor.parsed:
             st.update({'added': st['stats']['added'],
                        'removed': st['stats']['deleted']})
             changes.append('\n %(operation)s %(filename)s '

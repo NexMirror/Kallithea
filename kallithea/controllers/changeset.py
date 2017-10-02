@@ -279,11 +279,10 @@ class ChangesetController(BaseRepoController):
                 diff_processor = diffs.DiffProcessor(raw_diff,
                                                      vcs=c.db_repo_scm_instance.alias,
                                                      diff_limit=diff_limit)
-                _parsed = diff_processor.prepare()
                 c.limited_diff = False
-                if isinstance(_parsed, LimitedDiffContainer):
+                if isinstance(diff_processor.parsed, LimitedDiffContainer):
                     c.limited_diff = True
-                for f in _parsed:
+                for f in diff_processor.parsed:
                     st = f['stats']
                     c.lines_added += st['added']
                     c.lines_deleted += st['deleted']

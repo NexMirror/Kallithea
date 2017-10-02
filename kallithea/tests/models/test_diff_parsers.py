@@ -275,21 +275,19 @@ class TestDiffLib(TestController):
 
     @parametrize('diff_fixture', DIFF_FIXTURES)
     def test_diff(self, diff_fixture):
-        diff = fixture.load_resource(diff_fixture, strip=False)
+        raw_diff = fixture.load_resource(diff_fixture, strip=False)
         vcs = 'hg'
         if diff_fixture.startswith('git_'):
             vcs = 'git'
-        diff_proc = DiffProcessor(diff, vcs=vcs)
-        diff_proc_d = diff_proc.prepare()
-        data = [(x['filename'], x['operation'], x['stats']) for x in diff_proc_d]
+        diff_processor = DiffProcessor(raw_diff, vcs=vcs)
+        data = [(x['filename'], x['operation'], x['stats']) for x in diff_processor.parsed]
         expected_data = DIFF_FIXTURES[diff_fixture]
         assert expected_data == data
 
     def test_diff_markup(self):
-        diff = fixture.load_resource('markuptest.diff', strip=False)
-        diff_proc = DiffProcessor(diff)
-        diff_proc_d = diff_proc.prepare()
-        chunks = diff_proc_d[0]['chunks']
+        raw_diff = fixture.load_resource('markuptest.diff', strip=False)
+        diff_processor = DiffProcessor(raw_diff)
+        chunks = diff_processor.parsed[0]['chunks']
         assert not chunks[0]
         #from pprint import pprint; pprint(chunks[1])
         l = ['\n']

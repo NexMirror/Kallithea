@@ -72,13 +72,12 @@ def wrapped_diff(filenode_old, filenode_new, diff_limit=None,
             diff_limit is None or
             (filenode_old.size < diff_limit and filenode_new.size < diff_limit)):
 
-        f_gitdiff = get_gitdiff(filenode_old, filenode_new,
+        raw_diff = get_gitdiff(filenode_old, filenode_new,
                                 ignore_whitespace=ignore_whitespace,
                                 context=line_context)
-        diff_processor = DiffProcessor(f_gitdiff)
-        _parsed = diff_processor.prepare()
-        if _parsed: # there should be exactly one element, for the specified file
-            f = _parsed[0]
+        diff_processor = DiffProcessor(raw_diff)
+        if diff_processor.parsed: # there should be exactly one element, for the specified file
+            f = diff_processor.parsed[0]
             op = f['operation']
             a_path = f['old_filename']
 
@@ -203,7 +202,7 @@ class DiffProcessor(object):
 
     _escape_re = re.compile(r'(&)|(<)|(>)|(\t)|(\r)|(?<=.)( \n| $)')
 
-    def __init__(self, diff, vcs='hg', diff_limit=None):
+    def __init__(self, diff, vcs='hg', diff_limit=None, inline_diff=True):
         """
         :param diff:   a text in diff format
         :param vcs: type of version control hg or git
@@ -218,12 +217,10 @@ class DiffProcessor(object):
         self.adds = 0
         self.removes = 0
         # calculate diff size
-        self.diff_size = len(diff)
         self.diff_limit = diff_limit
         self.cur_diff_size = 0
-        self.parsed = False
-        self.parsed_diff = []
         self.vcs = vcs
+        self.parsed = self._parse_gitdiff(inline_diff=inline_diff)
 
     def _escaper(self, string):
         """
@@ -307,7 +304,7 @@ class DiffProcessor(object):
         diff_lines = (self._escaper(m.group(0)) for m in re.finditer(r'.*\n|.+$', rest)) # don't split on \r as str.splitlines do
         return meta_info, diff_lines
 
-    def _parse_gitdiff(self, inline_diff=True):
+    def _parse_gitdiff(self, inline_diff):
         """Parse self._diff and return a list of dicts with meta info and chunks for each file.
         If diff is truncated, wrap it in LimitedDiffContainer.
         Optionally, do an extra pass and to extra markup of one-liner changes.
@@ -575,16 +572,6 @@ class DiffProcessor(object):
         idstring = re.sub(r'(?!-)\W', "", idstring).lower()
         return idstring
 
-    def prepare(self, inline_diff=True):
-        """
-        Prepare the passed udiff for HTML rendering. It'll return a list
-        of dicts with diff information
-        """
-        parsed = self._parse_gitdiff(inline_diff=inline_diff)
-        self.parsed = True
-        self.parsed_diff = parsed
-        return parsed
-
     def as_html(self, table_class='code-difftable', line_class='line',
                 old_lineno_class='lineno old', new_lineno_class='lineno new',
                 no_lineno_class='lineno',
@@ -604,10 +591,8 @@ class DiffProcessor(object):
                 }
             else:
                 return label
-        if not self.parsed:
-            self.prepare()
 
-        diff_lines = self.parsed_diff
+        diff_lines = self.parsed
         if parsed_lines:
             diff_lines = parsed_lines
 
