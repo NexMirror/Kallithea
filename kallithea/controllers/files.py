@@ -71,7 +71,6 @@ class FilesController(BaseRepoController):
 
     def _before(self, *args, **kwargs):
         super(FilesController, self)._before(*args, **kwargs)
-        c.cut_off_limit = self.cut_off_limit
 
     def __get_cs(self, rev, silent_empty=False):
         """
@@ -138,6 +137,8 @@ class FilesController(BaseRepoController):
         c.f_path = f_path
         c.annotate = annotate
         cur_rev = c.changeset.revision
+        # used in files_source.html:
+        c.cut_off_limit = self.cut_off_limit
         c.fulldiff = request.GET.get('fulldiff')
 
         # prev link
@@ -593,6 +594,7 @@ class FilesController(BaseRepoController):
         c.no_changes = diff1 == diff2
         c.f_path = f_path
         c.big_diff = False
+        fulldiff = request.GET.get('fulldiff')
         c.anchor_url = anchor_url
         c.ignorews_url = _ignorews_url
         c.context_url = _context_url
@@ -674,10 +676,10 @@ class FilesController(BaseRepoController):
             line_context_lcl = get_line_ctx(fid, request.GET)
             ign_whitespace_lcl = get_ignore_ws(fid, request.GET)
 
-            lim = request.GET.get('fulldiff') or self.cut_off_limit
+            diff_limit = None if fulldiff else self.cut_off_limit
             c.a_rev, c.cs_rev, a_path, diff, st, op = diffs.wrapped_diff(filenode_old=node1,
                                          filenode_new=node2,
-                                         cut_off_limit=lim,
+                                         diff_limit=diff_limit,
                                          ignore_whitespace=ign_whitespace_lcl,
                                          line_context=line_context_lcl,
                                          enable_comments=False)

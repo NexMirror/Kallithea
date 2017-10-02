@@ -51,11 +51,11 @@ def wrap_to_table(str_):
               </table>''' % str_
 
 
-def wrapped_diff(filenode_old, filenode_new, cut_off_limit=None,
+def wrapped_diff(filenode_old, filenode_new, diff_limit=None,
                 ignore_whitespace=True, line_context=3,
                 enable_comments=False):
     """
-    returns a wrapped diff into a table, checks for cut_off_limit and presents
+    returns a wrapped diff into a table, checks for diff_limit and presents
     proper message
     """
 
@@ -68,9 +68,9 @@ def wrapped_diff(filenode_old, filenode_new, cut_off_limit=None,
         diff = wrap_to_table(_('Binary file'))
         stats = (0, 0)
 
-    elif cut_off_limit != -1 and (
-            cut_off_limit is None or
-            (filenode_old.size < cut_off_limit and filenode_new.size < cut_off_limit)):
+    elif diff_limit != -1 and (
+            diff_limit is None or
+            (filenode_old.size < diff_limit and filenode_new.size < diff_limit)):
 
         f_gitdiff = get_gitdiff(filenode_old, filenode_new,
                                 ignore_whitespace=ignore_whitespace,

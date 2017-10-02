@@ -206,7 +206,7 @@ class ChangesetController(BaseRepoController):
         c.anchor_url = anchor_url
         c.ignorews_url = _ignorews_url
         c.context_url = _context_url
-        c.fulldiff = fulldiff = request.GET.get('fulldiff')
+        c.fulldiff = request.GET.get('fulldiff') # for reporting number of changed files
         # get ranges of revisions if preset
         rev_range = revision.split('...')[:2]
         enable_comments = True
@@ -273,7 +273,7 @@ class ChangesetController(BaseRepoController):
 
             _diff = c.db_repo_scm_instance.get_diff(cs1, cs2,
                 ignore_whitespace=ign_whitespace_lcl, context=context_lcl)
-            diff_limit = self.cut_off_limit if not fulldiff else None
+            diff_limit = None if c.fulldiff else self.cut_off_limit
             diff_processor = diffs.DiffProcessor(_diff,
                                                  vcs=c.db_repo_scm_instance.alias,
                                                  format='gitdiff',

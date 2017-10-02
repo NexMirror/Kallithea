@@ -189,7 +189,7 @@ class CompareController(BaseRepoController):
         #   Changesets in one and not in the other will be ignored
         merge = bool(request.GET.get('merge'))
         # fulldiff disables cut_off_limit
-        c.fulldiff = request.GET.get('fulldiff')
+        fulldiff = request.GET.get('fulldiff')
         # partial uses compare_cs.html template directly
         partial = request.environ.get('HTTP_X_PARTIAL_XHR')
         # is_ajax_preview puts hidden input field with changeset revisions
@@ -263,7 +263,7 @@ class CompareController(BaseRepoController):
                 raise HTTPBadRequest
             rev1 = c.a_rev
 
-        diff_limit = self.cut_off_limit if not c.fulldiff else None
+        diff_limit = None if fulldiff else self.cut_off_limit
 
         log.debug('running diff between %s and %s in %s',
                   rev1, c.cs_rev, org_repo.scm_instance.path)

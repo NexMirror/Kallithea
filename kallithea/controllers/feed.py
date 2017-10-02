@@ -61,9 +61,9 @@ class FeedController(BaseRepoController):
 
     def __changes(self, cs):
         changes = []
-        rss_cut_off_limit = safe_int(CONFIG.get('rss_cut_off_limit', 32 * 1024))
+        diff_limit = safe_int(CONFIG.get('rss_cut_off_limit', 32 * 1024))
         diff_processor = DiffProcessor(cs.diff(),
-                                       diff_limit=rss_cut_off_limit)
+                                       diff_limit=diff_limit)
         _parsed = diff_processor.prepare(inline_diff=False)
         limited_diff = False
         if isinstance(_parsed, LimitedDiffContainer):

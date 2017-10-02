@@ -585,8 +585,8 @@ class PullrequestsController(BaseRepoController):
         line_context = safe_int(request.GET.get('context'), 3)
         c.ignorews_url = _ignorews_url
         c.context_url = _context_url
-        c.fulldiff = request.GET.get('fulldiff')
-        diff_limit = self.cut_off_limit if not c.fulldiff else None
+        fulldiff = request.GET.get('fulldiff')
+        diff_limit = None if fulldiff else self.cut_off_limit
 
         # we swap org/other ref since we run a simple diff on one repo
         log.debug('running diff between %s and %s in %s',
