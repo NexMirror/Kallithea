@@ -597,8 +597,7 @@ class PullrequestsController(BaseRepoController):
                                                 context=line_context)
         except ChangesetDoesNotExistError:
             txtdiff = _("The diff can't be shown - the PR revisions could not be found.")
-        diff_processor = diffs.DiffProcessor(txtdiff or '', format='gitdiff',
-                                             diff_limit=diff_limit)
+        diff_processor = diffs.DiffProcessor(txtdiff or '', diff_limit=diff_limit)
         _parsed = diff_processor.prepare()
 
         c.limited_diff = False

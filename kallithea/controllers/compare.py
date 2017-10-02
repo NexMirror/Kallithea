@@ -271,8 +271,7 @@ class CompareController(BaseRepoController):
                                       ignore_whitespace=ignore_whitespace,
                                       context=line_context)
 
-        diff_processor = diffs.DiffProcessor(txtdiff or '', format='gitdiff',
-                                             diff_limit=diff_limit)
+        diff_processor = diffs.DiffProcessor(txtdiff or '', diff_limit=diff_limit)
         _parsed = diff_processor.prepare()
 
         c.limited_diff = False

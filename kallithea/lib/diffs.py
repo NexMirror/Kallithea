@@ -77,7 +77,7 @@ def wrapped_diff(filenode_old, filenode_new, diff_limit=None,
         f_gitdiff = get_gitdiff(filenode_old, filenode_new,
                                 ignore_whitespace=ignore_whitespace,
                                 context=line_context)
-        diff_processor = DiffProcessor(f_gitdiff, format='gitdiff')
+        diff_processor = DiffProcessor(f_gitdiff)
         _parsed = diff_processor.prepare()
         if _parsed: # there should be exactly one element, for the specified file
             f = _parsed[0]
@@ -206,11 +206,10 @@ class DiffProcessor(object):
 
     _escape_re = re.compile(r'(&)|(<)|(>)|(\t)|(\r)|(?<=.)( \n| $)')
 
-    def __init__(self, diff, vcs='hg', format='gitdiff', diff_limit=None):
+    def __init__(self, diff, vcs='hg', diff_limit=None):
         """
         :param diff:   a text in diff format
         :param vcs: type of version control hg or git
-        :param format: format of diff passed, `udiff` or `gitdiff`
         :param diff_limit: define the size of diff that is considered "big"
             based on that parameter cut off will be triggered, set to None
             to show full diff
@@ -219,7 +218,6 @@ class DiffProcessor(object):
             raise Exception('Diff must be a basestring got %s instead' % type(diff))
 
         self._diff = diff
-        self._format = format
         self.adds = 0
         self.removes = 0
         # calculate diff size
@@ -229,13 +227,6 @@ class DiffProcessor(object):
         self.parsed = False
         self.parsed_diff = []
         self.vcs = vcs
-
-        if format == 'gitdiff':
-            self.differ = self._highlight_line_difflib
-            self._parser = self._parse_gitdiff
-        else:
-            self.differ = self._highlight_line_udiff
-            self._parser = self._parse_udiff
 
     def _escaper(self, string):
         """
@@ -266,7 +257,7 @@ class DiffProcessor(object):
 
         return self._escape_re.sub(substitute, safe_unicode(string))
 
-    def _highlight_line_difflib(self, old, new):
+    def _highlight_inline_diff(self, old, new):
         """
         Highlight simple add/remove in two lines given as info dicts. They are
         modified in place and given markup with <del>/<ins>.
@@ -292,36 +283,6 @@ class DiffProcessor(object):
 
         old['line'] = "".join(oldfragments)
         new['line'] = "".join(newfragments)
-
-    def _highlight_line_udiff(self, line, next_):
-        """
-        Highlight inline changes in both lines.
-        """
-        start = 0
-        limit = min(len(line['line']), len(next_['line']))
-        while start < limit and line['line'][start] == next_['line'][start]:
-            start += 1
-        end = -1
-        limit -= start
-        while -end <= limit and line['line'][end] == next_['line'][end]:
-            end -= 1
-        end += 1
-        if start or end:
-            def do(l):
-                last = end + len(l['line'])
-                if l['action'] == 'add':
-                    tag = 'ins'
-                else:
-                    tag = 'del'
-                l['line'] = '%s<%s>%s</%s>%s' % (
-                    l['line'][:start],
-                    tag,
-                    l['line'][start:last],
-                    tag,
-                    l['line'][last:]
-                )
-            do(line)
-            do(next_)
 
     def _get_header(self, diff_chunk):
         """
@@ -493,18 +454,15 @@ class DiffProcessor(object):
                             peekline = lineiter.next()
                         except StopIteration:
                             # add was last line - ok
-                            self.differ(delline, addline)
+                            self._highlight_inline_diff(delline, addline)
                             raise
                         if peekline['action'] != 'add':
                             # there was only one add line - ok
-                            self.differ(delline, addline)
+                            self._highlight_inline_diff(delline, addline)
                 except StopIteration:
                     pass
 
         return diff_container(_files)
-
-    def _parse_udiff(self, inline_diff=True):
-        raise NotImplementedError()
 
     def _parse_lines(self, diff):
         """
@@ -629,7 +587,7 @@ class DiffProcessor(object):
         Prepare the passed udiff for HTML rendering. It'll return a list
         of dicts with diff information
         """
-        parsed = self._parser(inline_diff=inline_diff)
+        parsed = self._parse_gitdiff(inline_diff=inline_diff)
         self.parsed = True
         self.parsed_diff = parsed
         return parsed

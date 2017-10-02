@@ -654,7 +654,7 @@ class FilesController(BaseRepoController):
             _diff = diffs.get_gitdiff(node1, node2,
                                       ignore_whitespace=ignore_whitespace,
                                       context=line_context)
-            diff = diffs.DiffProcessor(_diff, format='gitdiff')
+            diff = diffs.DiffProcessor(_diff)
 
             diff_name = '%s_vs_%s.diff' % (diff1, diff2)
             response.content_type = 'text/plain'
@@ -667,7 +667,7 @@ class FilesController(BaseRepoController):
             _diff = diffs.get_gitdiff(node1, node2,
                                       ignore_whitespace=ignore_whitespace,
                                       context=line_context)
-            diff = diffs.DiffProcessor(_diff, format='gitdiff')
+            diff = diffs.DiffProcessor(_diff)
             response.content_type = 'text/plain'
             return diff.as_raw()
 

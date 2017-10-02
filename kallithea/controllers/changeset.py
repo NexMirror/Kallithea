@@ -276,7 +276,6 @@ class ChangesetController(BaseRepoController):
             diff_limit = None if c.fulldiff else self.cut_off_limit
             diff_processor = diffs.DiffProcessor(_diff,
                                                  vcs=c.db_repo_scm_instance.alias,
-                                                 format='gitdiff',
                                                  diff_limit=diff_limit)
             file_diff_data = []
             if method == 'show':
