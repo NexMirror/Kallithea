@@ -592,12 +592,6 @@ class DiffProcessor(object):
         self.parsed_diff = parsed
         return parsed
 
-    def as_raw(self):
-        """
-        Returns raw string diff, exactly as it was passed in the first place.
-        """
-        return self._diff
-
     def as_html(self, table_class='code-difftable', line_class='line',
                 old_lineno_class='lineno old', new_lineno_class='lineno new',
                 no_lineno_class='lineno',

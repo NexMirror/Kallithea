@@ -59,10 +59,21 @@ class FeedController(BaseRepoController):
     def _get_title(self, cs):
         return h.shorter(cs.message, 160)
 
-    def __changes(self, cs):
+    def __get_desc(self, cs):
+        desc_msg = [(_('%s committed on %s')
+                     % (h.person(cs.author), h.fmt_date(cs.date))) + '<br/>']
+        # branches, tags, bookmarks
+        if cs.branch:
+            desc_msg.append('branch: %s<br/>' % cs.branch)
+        for book in cs.bookmarks:
+            desc_msg.append('bookmark: %s<br/>' % book)
+        for tag in cs.tags:
+            desc_msg.append('tag: %s<br/>' % tag)
+
         changes = []
         diff_limit = safe_int(CONFIG.get('rss_cut_off_limit', 32 * 1024))
-        diff_processor = DiffProcessor(cs.diff(),
+        raw_diff = cs.diff()
+        diff_processor = DiffProcessor(raw_diff,
                                        diff_limit=diff_limit)
         _parsed = diff_processor.prepare(inline_diff=False)
         limited_diff = False
@@ -78,19 +89,7 @@ class FeedController(BaseRepoController):
         if limited_diff:
             changes = changes + ['\n ' +
                                  _('Changeset was too big and was cut off...')]
-        return diff_processor, changes
 
-    def __get_desc(self, cs):
-        desc_msg = [(_('%s committed on %s')
-                     % (h.person(cs.author), h.fmt_date(cs.date))) + '<br/>']
-        # branches, tags, bookmarks
-        if cs.branch:
-            desc_msg.append('branch: %s<br/>' % cs.branch)
-        for book in cs.bookmarks:
-            desc_msg.append('bookmark: %s<br/>' % book)
-        for tag in cs.tags:
-            desc_msg.append('tag: %s<br/>' % tag)
-        diff_processor, changes = self.__changes(cs)
         # rev link
         _url = h.canonical_url('changeset_home', repo_name=c.db_repo.repo_name,
                    revision=cs.raw_id)
@@ -102,7 +101,7 @@ class FeedController(BaseRepoController):
         desc_msg.extend(changes)
         if str2bool(CONFIG.get('rss_include_diff', False)):
             desc_msg.append('\n\n')
-            desc_msg.append(diff_processor.as_raw())
+            desc_msg.append(raw_diff)
         desc_msg.append('</pre>')
         return map(safe_unicode, desc_msg)
 

@@ -651,25 +651,22 @@ class FilesController(BaseRepoController):
                                 f_path=f_path))
 
         if c.action == 'download':
-            _diff = diffs.get_gitdiff(node1, node2,
+            raw_diff = diffs.get_gitdiff(node1, node2,
                                       ignore_whitespace=ignore_whitespace,
                                       context=line_context)
-            diff = diffs.DiffProcessor(_diff)
-
             diff_name = '%s_vs_%s.diff' % (diff1, diff2)
             response.content_type = 'text/plain'
             response.content_disposition = (
                 'attachment; filename=%s' % diff_name
             )
-            return diff.as_raw()
+            return raw_diff
 
         elif c.action == 'raw':
-            _diff = diffs.get_gitdiff(node1, node2,
+            raw_diff = diffs.get_gitdiff(node1, node2,
                                       ignore_whitespace=ignore_whitespace,
                                       context=line_context)
-            diff = diffs.DiffProcessor(_diff)
             response.content_type = 'text/plain'
-            return diff.as_raw()
+            return raw_diff
 
         else:
             fid = h.FID(diff2, node2.path)

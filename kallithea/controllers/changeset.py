@@ -271,14 +271,14 @@ class ChangesetController(BaseRepoController):
             context_lcl = get_line_ctx('', request.GET)
             ign_whitespace_lcl = get_ignore_ws('', request.GET)
 
-            _diff = c.db_repo_scm_instance.get_diff(cs1, cs2,
+            raw_diff = c.db_repo_scm_instance.get_diff(cs1, cs2,
                 ignore_whitespace=ign_whitespace_lcl, context=context_lcl)
             diff_limit = None if c.fulldiff else self.cut_off_limit
-            diff_processor = diffs.DiffProcessor(_diff,
-                                                 vcs=c.db_repo_scm_instance.alias,
-                                                 diff_limit=diff_limit)
             file_diff_data = []
             if method == 'show':
+                diff_processor = diffs.DiffProcessor(raw_diff,
+                                                     vcs=c.db_repo_scm_instance.alias,
+                                                     diff_limit=diff_limit)
                 _parsed = diff_processor.prepare()
                 c.limited_diff = False
                 if isinstance(_parsed, LimitedDiffContainer):
@@ -295,8 +295,7 @@ class ChangesetController(BaseRepoController):
                     file_diff_data.append((fid, url_fid, f['operation'], f['old_filename'], filename, diff, st))
             else:
                 # downloads/raw we only need RAW diff nothing else
-                diff = diff_processor.as_raw()
-                file_diff_data.append(('', None, None, None, diff, None))
+                file_diff_data.append(('', None, None, None, raw_diff, None))
             c.changes[changeset.raw_id] = (cs1, cs2, file_diff_data)
 
         # sort comments in creation order
@@ -315,14 +314,14 @@ class ChangesetController(BaseRepoController):
             response.content_type = 'text/plain'
             response.content_disposition = 'attachment; filename=%s.diff' \
                                             % revision[:12]
-            return diff
+            return raw_diff
         elif method == 'patch':
             response.content_type = 'text/plain'
-            c.diff = safe_unicode(diff)
+            c.diff = safe_unicode(raw_diff)
             return render('changeset/patch_changeset.html')
         elif method == 'raw':
             response.content_type = 'text/plain'
-            return diff
+            return raw_diff
         elif method == 'show':
             self.__load_data()
             if len(c.cs_ranges) == 1:
