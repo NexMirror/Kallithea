@@ -137,10 +137,6 @@ CHMOD_FILENODE = 6
 BIN_FILENODE = 7
 
 
-class DiffLimitExceeded(Exception):
-    pass
-
-
 class DiffProcessor(object):
     """
     Give it a unified or git diff and it returns a list of the files that were
@@ -204,24 +200,15 @@ class DiffProcessor(object):
         self._diff = diff
         self.adds = 0
         self.removes = 0
-        # calculate diff size
         self.diff_limit = diff_limit
-        self.cur_diff_size = 0
         self.limited_diff = False
         self.vcs = vcs
         self.parsed = self._parse_gitdiff(inline_diff=inline_diff)
 
     def _escaper(self, string):
         """
-        Do HTML escaping/markup and check the diff limit
+        Do HTML escaping/markup
         """
-        self.cur_diff_size += len(string)
-
-        # escaper gets iterated on each .next() call and it checks if each
-        # parsed line doesn't exceed the diff limit
-        if self.diff_limit is not None and self.cur_diff_size > self.diff_limit:
-            raise DiffLimitExceeded('Diff Limit Exceeded')
-
         def substitute(m):
             groups = m.groups()
             if groups[0]:
@@ -304,6 +291,10 @@ class DiffProcessor(object):
         starts.append(len(self._diff))
 
         for start, end in zip(starts, starts[1:]):
+            if self.diff_limit and end > self.diff_limit:
+                self.limited_diff = True
+                continue
+
             head, diff_lines = self._get_header(buffer(self._diff, start, end - start))
 
             op = None
@@ -363,18 +354,13 @@ class DiffProcessor(object):
 
             # a real non-binary diff
             if head['a_file'] or head['b_file']:
-                try:
-                    chunks, added, deleted = self._parse_lines(diff_lines)
-                    stats['binary'] = False
-                    stats['added'] = added
-                    stats['deleted'] = deleted
-                    # explicit mark that it's a modified file
-                    if op == 'M':
-                        stats['ops'][MOD_FILENODE] = 'modified file'
-
-                except DiffLimitExceeded:
-                    self.limited_diff = True
-                    break
+                chunks, added, deleted = self._parse_lines(diff_lines)
+                stats['binary'] = False
+                stats['added'] = added
+                stats['deleted'] = deleted
+                # explicit mark that it's a modified file
+                if op == 'M':
+                    stats['ops'][MOD_FILENODE] = 'modified file'
             else:  # Git binary patch (or empty diff)
                 # Git binary patch
                 if head['bin_patch']:
