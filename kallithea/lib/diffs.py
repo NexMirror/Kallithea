@@ -29,8 +29,6 @@ import re
 import difflib
 import logging
 
-from itertools import imap
-
 from tg.i18n import ugettext as _
 
 from kallithea.lib.vcs.exceptions import VCSError
@@ -306,8 +304,8 @@ class DiffProcessor(object):
         rest = diff_chunk[match.end():]
         if rest and not rest.startswith('@') and not rest.startswith('literal ') and not rest.startswith('delta '):
             raise Exception('cannot parse %s diff header: %r followed by %r' % (self.vcs, diff_chunk[:match.end()], rest[:1000]))
-        difflines = imap(self._escaper, re.findall(r'.*\n|.+$', rest)) # don't split on \r as str.splitlines do
-        return meta_info, difflines
+        diff_lines = (self._escaper(m.group(0)) for m in re.finditer(r'.*\n|.+$', rest)) # don't split on \r as str.splitlines do
+        return meta_info, diff_lines
 
     def _parse_gitdiff(self, inline_diff=True):
         """Parse self._diff and return a list of dicts with meta info and chunks for each file.
@@ -321,7 +319,7 @@ class DiffProcessor(object):
         starts.append(len(self._diff))
 
         for start, end in zip(starts, starts[1:]):
-            head, diff = self._get_header(buffer(self._diff, start, end - start))
+            head, diff_lines = self._get_header(buffer(self._diff, start, end - start))
 
             op = None
             stats = {
@@ -381,7 +379,7 @@ class DiffProcessor(object):
             # a real non-binary diff
             if head['a_file'] or head['b_file']:
                 try:
-                    chunks, added, deleted = self._parse_lines(diff)
+                    chunks, added, deleted = self._parse_lines(diff_lines)
                     stats['binary'] = False
                     stats['added'] = added
                     stats['deleted'] = deleted
@@ -459,7 +457,7 @@ class DiffProcessor(object):
 
         return diff_container(_files)
 
-    def _parse_lines(self, diff):
+    def _parse_lines(self, diff_lines):
         """
         Given an iterator of diff body lines, parse them and return a dict per
         line and added/removed totals.
@@ -469,7 +467,7 @@ class DiffProcessor(object):
 
         try:
             chunks = []
-            line = diff.next()
+            line = diff_lines.next()
 
             while True:
                 lines = []
@@ -500,7 +498,7 @@ class DiffProcessor(object):
                             'line':       line,
                         })
 
-                line = diff.next()
+                line = diff_lines.next()
 
                 while old_line < old_end or new_line < new_end:
                     if not line:
@@ -533,7 +531,7 @@ class DiffProcessor(object):
                             'line':         line[1:],
                         })
 
-                    line = diff.next()
+                    line = diff_lines.next()
 
                     if self._newline_marker.match(line):
                         # we need to append to lines, since this is not
@@ -544,7 +542,7 @@ class DiffProcessor(object):
                             'action':       'context',
                             'line':         line,
                         })
-                        line = diff.next()
+                        line = diff_lines.next()
                 if old_line > old_end:
                     raise Exception('error parsing diff - more than %s "-" lines at -%s+%s' % (old_end, old_line, new_line))
                 if new_line > new_end:
