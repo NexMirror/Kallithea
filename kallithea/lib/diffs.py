@@ -310,12 +310,6 @@ class DiffProcessor(object):
         difflines = imap(self._escaper, re.findall(r'.*\n|.+$', rest)) # don't split on \r as str.splitlines do
         return meta_info, difflines
 
-    def _clean_line(self, line, command):
-        """Given a diff line, strip the leading character if it is a plus/minus/context line."""
-        if command in ['+', '-', ' ']:
-            line = line[1:]
-        return line
-
     def _parse_gitdiff(self, inline_diff=True):
         """Parse self._diff and return a list of dicts with meta info and chunks for each file.
         If diff is truncated, wrap it in LimitedDiffContainer.
@@ -535,7 +529,7 @@ class DiffProcessor(object):
                             'old_lineno':   affects_old and old_line or '',
                             'new_lineno':   affects_new and new_line or '',
                             'action':       action,
-                            'line':         self._clean_line(line, command)
+                            'line':         line[1:],
                         })
 
                     line = diff.next()
@@ -547,7 +541,7 @@ class DiffProcessor(object):
                             'old_lineno':   '...',
                             'new_lineno':   '...',
                             'action':       'context',
-                            'line':         self._clean_line(line, command)
+                            'line':         line,
                         })
                         line = diff.next()
                 if old_line > old_end:
