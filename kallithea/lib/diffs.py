@@ -29,7 +29,7 @@ import re
 import difflib
 import logging
 
-from itertools import tee, imap
+from itertools import imap
 
 from tg.i18n import ugettext as _
 
@@ -42,23 +42,25 @@ from kallithea.lib.utils2 import safe_unicode
 log = logging.getLogger(__name__)
 
 
-def wrap_to_table(str_):
-    return '''<table class="code-difftable">
+def wrap_to_table(html):
+    """Given a string with html, return it wrapped in a table, similar to what
+    DiffProcessor returns."""
+    return '''\
+              <table class="code-difftable">
                 <tr class="line no-comment">
                 <td class="lineno new"></td>
                 <td class="code no-comment"><pre>%s</pre></td>
                 </tr>
-              </table>''' % str_
+              </table>''' % html
 
 
 def wrapped_diff(filenode_old, filenode_new, diff_limit=None,
                 ignore_whitespace=True, line_context=3,
                 enable_comments=False):
     """
-    returns a wrapped diff into a table, checks for diff_limit and presents
-    proper message
+    Returns a file diff wrapped into a table.
+    Checks for diff_limit and presents a message if the diff is too big.
     """
-
     if filenode_old is None:
         filenode_old = FileNode(filenode_new.path, '', EmptyChangeset())
 
@@ -107,8 +109,6 @@ def wrapped_diff(filenode_old, filenode_new, diff_limit=None,
 def get_gitdiff(filenode_old, filenode_new, ignore_whitespace=True, context=3):
     """
     Returns git style diff between given ``filenode_old`` and ``filenode_new``.
-
-    :param ignore_whitespace: ignore whitespaces in diff
     """
     # make sure we pass in default context
     context = context or 3
@@ -237,22 +237,10 @@ class DiffProcessor(object):
             self.differ = self._highlight_line_udiff
             self._parser = self._parse_udiff
 
-    def _copy_iterator(self):
-        """
-        make a fresh copy of generator, we should not iterate thru
-        an original as it's needed for repeating operations on
-        this instance of DiffProcessor
-        """
-        self.__udiff, iterator_copy = tee(self.__udiff)
-        return iterator_copy
-
     def _escaper(self, string):
         """
-        Escaper for diff escapes special chars and checks the diff limit
-
-        :param string:
+        Do HTML escaping/markup and check the diff limit
         """
-
         self.cur_diff_size += len(string)
 
         # escaper gets iterated on each .next() call and it checks if each
@@ -278,23 +266,11 @@ class DiffProcessor(object):
 
         return self._escape_re.sub(substitute, safe_unicode(string))
 
-    def _line_counter(self, l):
-        """
-        Checks each line and bumps total adds/removes for this diff
-
-        :param l:
-        """
-        if l.startswith('+') and not l.startswith('+++'):
-            self.adds += 1
-        elif l.startswith('-') and not l.startswith('---'):
-            self.removes += 1
-        return safe_unicode(l)
-
     def _highlight_line_difflib(self, old, new):
         """
-        Highlight inline changes in both lines.
+        Highlight simple add/remove in two lines given as info dicts. They are
+        modified in place and given markup with <del>/<ins>.
         """
-
         assert old['action'] == 'del'
         assert new['action'] == 'add'
 
@@ -349,16 +325,16 @@ class DiffProcessor(object):
 
     def _get_header(self, diff_chunk):
         """
-        parses the diff header, and returns parts, and leftover diff
-        parts consists of 14 elements::
+        Parses a Git diff for a single file (header and chunks) and returns a tuple with:
+
+        1. A dict with meta info:
 
             a_path, b_path, similarity_index, rename_from, rename_to,
             old_mode, new_mode, new_file_mode, deleted_file_mode,
             a_blob_id, b_blob_id, b_mode, a_file, b_file
 
-        :param diff_chunk:
+        2. An iterator yielding lines with simple HTML markup.
         """
-
         match = None
         if self.vcs == 'git':
             match = self._git_header_re.match(diff_chunk)
@@ -366,21 +342,25 @@ class DiffProcessor(object):
             match = self._hg_header_re.match(diff_chunk)
         if match is None:
             raise Exception('diff not recognized as valid %s diff' % self.vcs)
-        groups = match.groupdict()
+        meta_info = match.groupdict()
         rest = diff_chunk[match.end():]
         if rest and not rest.startswith('@') and not rest.startswith('literal ') and not rest.startswith('delta '):
             raise Exception('cannot parse %s diff header: %r followed by %r' % (self.vcs, diff_chunk[:match.end()], rest[:1000]))
         difflines = imap(self._escaper, re.findall(r'.*\n|.+$', rest)) # don't split on \r as str.splitlines do
-        return groups, difflines
+        return meta_info, difflines
 
     def _clean_line(self, line, command):
+        """Given a diff line, strip the leading character if it is a plus/minus/context line."""
         if command in ['+', '-', ' ']:
-            # only modify the line if it's actually a diff thing
             line = line[1:]
         return line
 
     def _parse_gitdiff(self, inline_diff=True):
-        _files = []
+        """Parse self._diff and return a list of dicts with meta info and chunks for each file.
+        If diff is truncated, wrap it in LimitedDiffContainer.
+        Optionally, do an extra pass and to extra markup of one-liner changes.
+        """
+        _files = [] # list of dicts with meta info and chunks
         diff_container = lambda arg: arg
 
         # split the diff in chunks of separate --git a/file b/file chunks
@@ -445,10 +425,10 @@ class DiffProcessor(object):
             # a real non-binary diff
             if head['a_file'] or head['b_file']:
                 try:
-                    chunks, _stats = self._parse_lines(diff)
+                    chunks, added, deleted = self._parse_lines(diff)
                     stats['binary'] = False
-                    stats['added'] = _stats[0]
-                    stats['deleted'] = _stats[1]
+                    stats['added'] = added
+                    stats['deleted'] = deleted
                     # explicit mark that it's a modified file
                     if op == 'M':
                         stats['ops'][MOD_FILENODE] = 'modified file'
@@ -528,11 +508,11 @@ class DiffProcessor(object):
 
     def _parse_lines(self, diff):
         """
-        Parse the diff and return data for the template.
+        Given an iterator of diff body lines, parse them and return a dict per
+        line and added/removed totals.
         """
-
-        stats = [0, 0]
-        (old_line, old_end, new_line, new_end) = (None, None, None, None)
+        added = deleted = 0
+        old_line = old_end = new_line = new_end = None
 
         try:
             chunks = []
@@ -579,11 +559,11 @@ class DiffProcessor(object):
                     if command == '+':
                         affects_new = True
                         action = 'add'
-                        stats[0] += 1
+                        added += 1
                     elif command == '-':
                         affects_old = True
                         action = 'del'
-                        stats[1] += 1
+                        deleted += 1
                     elif command == ' ':
                         affects_old = affects_new = True
                         action = 'unmod'
@@ -613,15 +593,15 @@ class DiffProcessor(object):
                         })
                         line = diff.next()
                 if old_line > old_end:
-                        raise Exception('error parsing diff - more than %s "-" lines at -%s+%s' % (old_end, old_line, new_line))
+                    raise Exception('error parsing diff - more than %s "-" lines at -%s+%s' % (old_end, old_line, new_line))
                 if new_line > new_end:
-                        raise Exception('error parsing diff - more than %s "+" lines at -%s+%s' % (new_end, old_line, new_line))
+                    raise Exception('error parsing diff - more than %s "+" lines at -%s+%s' % (new_end, old_line, new_line))
         except StopIteration:
             pass
         if old_line != old_end or new_line != new_end:
             raise Exception('diff processing broken when old %s<>%s or new %s<>%s line %r' % (old_line, old_end, new_line, new_end, line))
 
-        return chunks, stats
+        return chunks, added, deleted
 
     def _safe_id(self, idstring):
         """Make a string safe for including in an id attribute.
@@ -654,12 +634,11 @@ class DiffProcessor(object):
         self.parsed_diff = parsed
         return parsed
 
-    def as_raw(self, diff_lines=None):
+    def as_raw(self):
         """
-        Returns raw string diff
+        Returns raw string diff, exactly as it was passed in the first place.
         """
         return self._diff
-        #return u''.join(imap(self._line_counter, self._diff.splitlines(1)))
 
     def as_html(self, table_class='code-difftable', line_class='line',
                 old_lineno_class='lineno old', new_lineno_class='lineno new',
