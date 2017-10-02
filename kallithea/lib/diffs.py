@@ -270,40 +270,6 @@ class DiffProcessor(object):
     _diff_git_re = re.compile('^diff --git', re.MULTILINE)
     _chunk_re = re.compile(r'^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@(.*)')
     _newline_marker = re.compile(r'^\\ No newline at end of file')
-    _git_header_re = re.compile(r"""
-        ^diff[ ]--git
-            [ ]a/(?P<a_path>.+?)[ ]b/(?P<b_path>.+?)\n
-        (?:^old[ ]mode[ ](?P<old_mode>\d+)\n
-           ^new[ ]mode[ ](?P<new_mode>\d+)(?:\n|$))?
-        (?:^similarity[ ]index[ ](?P<similarity_index>\d+)%\n
-           ^rename[ ]from[ ](?P<rename_from>.+)\n
-           ^rename[ ]to[ ](?P<rename_to>.+)(?:\n|$))?
-        (?:^new[ ]file[ ]mode[ ](?P<new_file_mode>.+)(?:\n|$))?
-        (?:^deleted[ ]file[ ]mode[ ](?P<deleted_file_mode>.+)(?:\n|$))?
-        (?:^index[ ](?P<a_blob_id>[0-9A-Fa-f]+)
-            \.\.(?P<b_blob_id>[0-9A-Fa-f]+)[ ]?(?P<b_mode>.+)?(?:\n|$))?
-        (?:^(?P<bin_patch>GIT[ ]binary[ ]patch)(?:\n|$))?
-        (?:^---[ ](a/(?P<a_file>.+?)|/dev/null)\t?(?:\n|$))?
-        (?:^\+\+\+[ ](b/(?P<b_file>.+?)|/dev/null)\t?(?:\n|$))?
-    """, re.VERBOSE | re.MULTILINE)
-    _hg_header_re = re.compile(r"""
-        ^diff[ ]--git
-            [ ]a/(?P<a_path>.+?)[ ]b/(?P<b_path>.+?)\n
-        (?:^old[ ]mode[ ](?P<old_mode>\d+)\n
-           ^new[ ]mode[ ](?P<new_mode>\d+)(?:\n|$))?
-        (?:^similarity[ ]index[ ](?P<similarity_index>\d+)%(?:\n|$))?
-        (?:^rename[ ]from[ ](?P<rename_from>.+)\n
-           ^rename[ ]to[ ](?P<rename_to>.+)(?:\n|$))?
-        (?:^copy[ ]from[ ](?P<copy_from>.+)\n
-           ^copy[ ]to[ ](?P<copy_to>.+)(?:\n|$))?
-        (?:^new[ ]file[ ]mode[ ](?P<new_file_mode>.+)(?:\n|$))?
-        (?:^deleted[ ]file[ ]mode[ ](?P<deleted_file_mode>.+)(?:\n|$))?
-        (?:^index[ ](?P<a_blob_id>[0-9A-Fa-f]+)
-            \.\.(?P<b_blob_id>[0-9A-Fa-f]+)[ ]?(?P<b_mode>.+)?(?:\n|$))?
-        (?:^(?P<bin_patch>GIT[ ]binary[ ]patch)(?:\n|$))?
-        (?:^---[ ](a/(?P<a_file>.+?)|/dev/null)\t?(?:\n|$))?
-        (?:^\+\+\+[ ](b/(?P<b_file>.+?)|/dev/null)\t?(?:\n|$))?
-    """, re.VERBOSE | re.MULTILINE)
 
     def __init__(self, diff, vcs='hg', diff_limit=None, inline_diff=True):
         """
@@ -324,32 +290,6 @@ class DiffProcessor(object):
         self.vcs = vcs
         self.parsed = self._parse_gitdiff(inline_diff=inline_diff)
 
-    def _get_header(self, diff_chunk):
-        """
-        Parses a Git diff for a single file (header and chunks) and returns a tuple with:
-
-        1. A dict with meta info:
-
-            a_path, b_path, similarity_index, rename_from, rename_to,
-            old_mode, new_mode, new_file_mode, deleted_file_mode,
-            a_blob_id, b_blob_id, b_mode, a_file, b_file
-
-        2. An iterator yielding lines with simple HTML markup.
-        """
-        match = None
-        if self.vcs == 'git':
-            match = self._git_header_re.match(diff_chunk)
-        elif self.vcs == 'hg':
-            match = self._hg_header_re.match(diff_chunk)
-        if match is None:
-            raise Exception('diff not recognized as valid %s diff' % self.vcs)
-        meta_info = match.groupdict()
-        rest = diff_chunk[match.end():]
-        if rest and not rest.startswith('@') and not rest.startswith('literal ') and not rest.startswith('delta '):
-            raise Exception('cannot parse %s diff header: %r followed by %r' % (self.vcs, diff_chunk[:match.end()], rest[:1000]))
-        diff_lines = (_escaper(m.group(0)) for m in re.finditer(r'.*\n|.+$', rest)) # don't split on \r as str.splitlines do
-        return meta_info, diff_lines
-
     def _parse_gitdiff(self, inline_diff):
         """Parse self._diff and return a list of dicts with meta info and chunks for each file.
         Might set limited_diff.
@@ -365,7 +305,7 @@ class DiffProcessor(object):
                 self.limited_diff = True
                 continue
 
-            head, diff_lines = self._get_header(buffer(self._diff, start, end - start))
+            head, diff_lines = _get_header(self.vcs, buffer(self._diff, start, end - start))
 
             op = None
             stats = {
@@ -625,6 +565,69 @@ def _escaper(string):
         assert False
 
     return _escape_re.sub(substitute, safe_unicode(string))
+
+
+_git_header_re = re.compile(r"""
+    ^diff[ ]--git[ ]a/(?P<a_path>.+?)[ ]b/(?P<b_path>.+?)\n
+    (?:^old[ ]mode[ ](?P<old_mode>\d+)\n
+       ^new[ ]mode[ ](?P<new_mode>\d+)(?:\n|$))?
+    (?:^similarity[ ]index[ ](?P<similarity_index>\d+)%\n
+       ^rename[ ]from[ ](?P<rename_from>.+)\n
+       ^rename[ ]to[ ](?P<rename_to>.+)(?:\n|$))?
+    (?:^new[ ]file[ ]mode[ ](?P<new_file_mode>.+)(?:\n|$))?
+    (?:^deleted[ ]file[ ]mode[ ](?P<deleted_file_mode>.+)(?:\n|$))?
+    (?:^index[ ](?P<a_blob_id>[0-9A-Fa-f]+)
+        \.\.(?P<b_blob_id>[0-9A-Fa-f]+)[ ]?(?P<b_mode>.+)?(?:\n|$))?
+    (?:^(?P<bin_patch>GIT[ ]binary[ ]patch)(?:\n|$))?
+    (?:^---[ ](a/(?P<a_file>.+?)|/dev/null)\t?(?:\n|$))?
+    (?:^\+\+\+[ ](b/(?P<b_file>.+?)|/dev/null)\t?(?:\n|$))?
+""", re.VERBOSE | re.MULTILINE)
+
+
+_hg_header_re = re.compile(r"""
+    ^diff[ ]--git[ ]a/(?P<a_path>.+?)[ ]b/(?P<b_path>.+?)\n
+    (?:^old[ ]mode[ ](?P<old_mode>\d+)\n
+       ^new[ ]mode[ ](?P<new_mode>\d+)(?:\n|$))?
+    (?:^similarity[ ]index[ ](?P<similarity_index>\d+)%(?:\n|$))?
+    (?:^rename[ ]from[ ](?P<rename_from>.+)\n
+       ^rename[ ]to[ ](?P<rename_to>.+)(?:\n|$))?
+    (?:^copy[ ]from[ ](?P<copy_from>.+)\n
+       ^copy[ ]to[ ](?P<copy_to>.+)(?:\n|$))?
+    (?:^new[ ]file[ ]mode[ ](?P<new_file_mode>.+)(?:\n|$))?
+    (?:^deleted[ ]file[ ]mode[ ](?P<deleted_file_mode>.+)(?:\n|$))?
+    (?:^index[ ](?P<a_blob_id>[0-9A-Fa-f]+)
+        \.\.(?P<b_blob_id>[0-9A-Fa-f]+)[ ]?(?P<b_mode>.+)?(?:\n|$))?
+    (?:^(?P<bin_patch>GIT[ ]binary[ ]patch)(?:\n|$))?
+    (?:^---[ ](a/(?P<a_file>.+?)|/dev/null)\t?(?:\n|$))?
+    (?:^\+\+\+[ ](b/(?P<b_file>.+?)|/dev/null)\t?(?:\n|$))?
+""", re.VERBOSE | re.MULTILINE)
+
+
+def _get_header(vcs, diff_chunk):
+    """
+    Parses a Git diff for a single file (header and chunks) and returns a tuple with:
+
+    1. A dict with meta info:
+
+        a_path, b_path, similarity_index, rename_from, rename_to,
+        old_mode, new_mode, new_file_mode, deleted_file_mode,
+        a_blob_id, b_blob_id, b_mode, a_file, b_file
+
+    2. An iterator yielding lines with simple HTML markup.
+    """
+    match = None
+    if vcs == 'git':
+        match = _git_header_re.match(diff_chunk)
+    elif vcs == 'hg':
+        match = _hg_header_re.match(diff_chunk)
+    if match is None:
+        raise Exception('diff not recognized as valid %s diff' % vcs)
+    meta_info = match.groupdict()
+    rest = diff_chunk[match.end():]
+    if rest and not rest.startswith('@') and not rest.startswith('literal ') and not rest.startswith('delta '):
+        raise Exception('cannot parse %s diff header: %r followed by %r' % (vcs, diff_chunk[:match.end()], rest[:1000]))
+    diff_lines = (_escaper(m.group(0)) for m in re.finditer(r'.*\n|.+$', rest)) # don't split on \r as str.splitlines do
+    return meta_info, diff_lines
 
 
 # Used for inline highlighter word split, must match the substitutions in _escaper
