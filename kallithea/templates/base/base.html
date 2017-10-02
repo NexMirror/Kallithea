@@ -530,16 +530,16 @@
 </%def>
 
 <%def name="parent_child_navigation()">
-    <div class="parents pull-left">
-        <div class="parent_link"
+    <div class="pull-left">
+        <div class="parent-child-link"
              data-ajax-url="${h.url('changeset_parents',repo_name=c.repo_name, revision=c.changeset.raw_id)}"
              data-reponame="${c.repo_name}">
             <i class="icon-left-open"></i> <a href="#">${_('Parent rev.')}</a>
         </div>
     </div>
 
-    <div class="children pull-right">
-        <div class="child_link"
+    <div class="pull-right">
+        <div class="parent-child-link"
              data-ajax-url="${h.url('changeset_children',repo_name=c.repo_name, revision=c.changeset.raw_id)}"
              data-reponame="${c.repo_name}">
             <a href="#">${_('Child rev.')}</a> <i class="icon-right-open"></i>
