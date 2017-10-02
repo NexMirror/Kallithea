@@ -305,8 +305,6 @@ class DiffProcessor(object):
         (?:^\+\+\+[ ](b/(?P<b_file>.+?)|/dev/null)\t?(?:\n|$))?
     """, re.VERBOSE | re.MULTILINE)
 
-    _escape_re = re.compile(r'(&)|(<)|(>)|(\t)|(\r)|(?<=.)( \n| $)')
-
     def __init__(self, diff, vcs='hg', diff_limit=None, inline_diff=True):
         """
         :param diff:   a text in diff format
@@ -325,28 +323,6 @@ class DiffProcessor(object):
         self.limited_diff = False
         self.vcs = vcs
         self.parsed = self._parse_gitdiff(inline_diff=inline_diff)
-
-    def _escaper(self, string):
-        """
-        Do HTML escaping/markup
-        """
-        def substitute(m):
-            groups = m.groups()
-            if groups[0]:
-                return '&amp;'
-            if groups[1]:
-                return '&lt;'
-            if groups[2]:
-                return '&gt;'
-            if groups[3]:
-                return '<u>\t</u>'
-            if groups[4]:
-                return '<u class="cr"></u>'
-            if groups[5]:
-                return ' <i></i>'
-            assert False
-
-        return self._escape_re.sub(substitute, safe_unicode(string))
 
     def _get_header(self, diff_chunk):
         """
@@ -371,7 +347,7 @@ class DiffProcessor(object):
         rest = diff_chunk[match.end():]
         if rest and not rest.startswith('@') and not rest.startswith('literal ') and not rest.startswith('delta '):
             raise Exception('cannot parse %s diff header: %r followed by %r' % (self.vcs, diff_chunk[:match.end()], rest[:1000]))
-        diff_lines = (self._escaper(m.group(0)) for m in re.finditer(r'.*\n|.+$', rest)) # don't split on \r as str.splitlines do
+        diff_lines = (_escaper(m.group(0)) for m in re.finditer(r'.*\n|.+$', rest)) # don't split on \r as str.splitlines do
         return meta_info, diff_lines
 
     def _parse_gitdiff(self, inline_diff):
@@ -622,6 +598,33 @@ class DiffProcessor(object):
         Returns tuple of added, and removed lines for this instance
         """
         return self.adds, self.removes
+
+
+_escape_re = re.compile(r'(&)|(<)|(>)|(\t)|(\r)|(?<=.)( \n| $)')
+
+
+def _escaper(string):
+    """
+    Do HTML escaping/markup
+    """
+
+    def substitute(m):
+        groups = m.groups()
+        if groups[0]:
+            return '&amp;'
+        if groups[1]:
+            return '&lt;'
+        if groups[2]:
+            return '&gt;'
+        if groups[3]:
+            return '<u>\t</u>'
+        if groups[4]:
+            return '<u class="cr"></u>'
+        if groups[5]:
+            return ' <i></i>'
+        assert False
+
+    return _escape_re.sub(substitute, safe_unicode(string))
 
 
 # Used for inline highlighter word split, must match the substitutions in _escaper
