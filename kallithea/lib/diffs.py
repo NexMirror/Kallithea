@@ -268,8 +268,6 @@ class DiffProcessor(object):
     can be used to render it in a HTML template.
     """
     _diff_git_re = re.compile('^diff --git', re.MULTILINE)
-    _chunk_re = re.compile(r'^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@(.*)')
-    _newline_marker = re.compile(r'^\\ No newline at end of file')
 
     def __init__(self, diff, vcs='hg', diff_limit=None, inline_diff=True):
         """
@@ -364,7 +362,7 @@ class DiffProcessor(object):
 
             # a real non-binary diff
             if head['a_file'] or head['b_file']:
-                chunks, added, deleted = self._parse_lines(diff_lines)
+                chunks, added, deleted = _parse_lines(diff_lines)
                 stats['binary'] = False
                 stats['added'] = added
                 stats['deleted'] = deleted
@@ -435,103 +433,6 @@ class DiffProcessor(object):
                     pass
 
         return _files
-
-    def _parse_lines(self, diff_lines):
-        """
-        Given an iterator of diff body lines, parse them and return a dict per
-        line and added/removed totals.
-        """
-        added = deleted = 0
-        old_line = old_end = new_line = new_end = None
-
-        try:
-            chunks = []
-            line = diff_lines.next()
-
-            while True:
-                lines = []
-                chunks.append(lines)
-
-                match = self._chunk_re.match(line)
-
-                if not match:
-                    raise Exception('error parsing diff @@ line %r' % line)
-
-                gr = match.groups()
-                (old_line, old_end,
-                 new_line, new_end) = [int(x or 1) for x in gr[:-1]]
-                old_line -= 1
-                new_line -= 1
-
-                context = len(gr) == 5
-                old_end += old_line
-                new_end += new_line
-
-                if context:
-                    # skip context only if it's first line
-                    if int(gr[0]) > 1:
-                        lines.append({
-                            'old_lineno': '...',
-                            'new_lineno': '...',
-                            'action':     'context',
-                            'line':       line,
-                        })
-
-                line = diff_lines.next()
-
-                while old_line < old_end or new_line < new_end:
-                    if not line:
-                        raise Exception('error parsing diff - empty line at -%s+%s' % (old_line, new_line))
-
-                    affects_old = affects_new = False
-
-                    command = line[0]
-                    if command == '+':
-                        affects_new = True
-                        action = 'add'
-                        added += 1
-                    elif command == '-':
-                        affects_old = True
-                        action = 'del'
-                        deleted += 1
-                    elif command == ' ':
-                        affects_old = affects_new = True
-                        action = 'unmod'
-                    else:
-                        raise Exception('error parsing diff - unknown command in line %r at -%s+%s' % (line, old_line, new_line))
-
-                    if not self._newline_marker.match(line):
-                        old_line += affects_old
-                        new_line += affects_new
-                        lines.append({
-                            'old_lineno':   affects_old and old_line or '',
-                            'new_lineno':   affects_new and new_line or '',
-                            'action':       action,
-                            'line':         line[1:],
-                        })
-
-                    line = diff_lines.next()
-
-                    if self._newline_marker.match(line):
-                        # we need to append to lines, since this is not
-                        # counted in the line specs of diff
-                        lines.append({
-                            'old_lineno':   '...',
-                            'new_lineno':   '...',
-                            'action':       'context',
-                            'line':         line,
-                        })
-                        line = diff_lines.next()
-                if old_line > old_end:
-                    raise Exception('error parsing diff - more than %s "-" lines at -%s+%s' % (old_end, old_line, new_line))
-                if new_line > new_end:
-                    raise Exception('error parsing diff - more than %s "+" lines at -%s+%s' % (new_end, old_line, new_line))
-        except StopIteration:
-            pass
-        if old_line != old_end or new_line != new_end:
-            raise Exception('diff processing broken when old %s<>%s or new %s<>%s line %r' % (old_line, old_end, new_line, new_end, line))
-
-        return chunks, added, deleted
 
     def stat(self):
         """
@@ -629,6 +530,107 @@ def _get_header(vcs, diff_chunk):
     diff_lines = (_escaper(m.group(0)) for m in re.finditer(r'.*\n|.+$', rest)) # don't split on \r as str.splitlines do
     return meta_info, diff_lines
 
+
+_chunk_re = re.compile(r'^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@(.*)')
+_newline_marker = re.compile(r'^\\ No newline at end of file')
+
+
+def _parse_lines(diff_lines):
+    """
+    Given an iterator of diff body lines, parse them and return a dict per
+    line and added/removed totals.
+    """
+    added = deleted = 0
+    old_line = old_end = new_line = new_end = None
+
+    try:
+        chunks = []
+        line = diff_lines.next()
+
+        while True:
+            lines = []
+            chunks.append(lines)
+
+            match = _chunk_re.match(line)
+
+            if not match:
+                raise Exception('error parsing diff @@ line %r' % line)
+
+            gr = match.groups()
+            (old_line, old_end,
+             new_line, new_end) = [int(x or 1) for x in gr[:-1]]
+            old_line -= 1
+            new_line -= 1
+
+            context = len(gr) == 5
+            old_end += old_line
+            new_end += new_line
+
+            if context:
+                # skip context only if it's first line
+                if int(gr[0]) > 1:
+                    lines.append({
+                        'old_lineno': '...',
+                        'new_lineno': '...',
+                        'action':     'context',
+                        'line':       line,
+                    })
+
+            line = diff_lines.next()
+
+            while old_line < old_end or new_line < new_end:
+                if not line:
+                    raise Exception('error parsing diff - empty line at -%s+%s' % (old_line, new_line))
+
+                affects_old = affects_new = False
+
+                command = line[0]
+                if command == '+':
+                    affects_new = True
+                    action = 'add'
+                    added += 1
+                elif command == '-':
+                    affects_old = True
+                    action = 'del'
+                    deleted += 1
+                elif command == ' ':
+                    affects_old = affects_new = True
+                    action = 'unmod'
+                else:
+                    raise Exception('error parsing diff - unknown command in line %r at -%s+%s' % (line, old_line, new_line))
+
+                if not _newline_marker.match(line):
+                    old_line += affects_old
+                    new_line += affects_new
+                    lines.append({
+                        'old_lineno':   affects_old and old_line or '',
+                        'new_lineno':   affects_new and new_line or '',
+                        'action':       action,
+                        'line':         line[1:],
+                    })
+
+                line = diff_lines.next()
+
+                if _newline_marker.match(line):
+                    # we need to append to lines, since this is not
+                    # counted in the line specs of diff
+                    lines.append({
+                        'old_lineno':   '...',
+                        'new_lineno':   '...',
+                        'action':       'context',
+                        'line':         line,
+                    })
+                    line = diff_lines.next()
+            if old_line > old_end:
+                raise Exception('error parsing diff - more than %s "-" lines at -%s+%s' % (old_end, old_line, new_line))
+            if new_line > new_end:
+                raise Exception('error parsing diff - more than %s "+" lines at -%s+%s' % (new_end, old_line, new_line))
+    except StopIteration:
+        pass
+    if old_line != old_end or new_line != new_end:
+        raise Exception('diff processing broken when old %s<>%s or new %s<>%s line %r' % (old_line, old_end, new_line, new_end, line))
+
+    return chunks, added, deleted
 
 # Used for inline highlighter word split, must match the substitutions in _escaper
 _token_re = re.compile(r'()(&amp;|&lt;|&gt;|<u>\t</u>|<u class="cr"></u>| <i></i>|\W+?)')
