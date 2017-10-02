@@ -162,11 +162,11 @@ class DiffProcessor(object):
     mentioned in the diff together with a dict of meta information that
     can be used to render it in a HTML template.
     """
+    _diff_git_re = re.compile('^diff --git', re.MULTILINE)
     _chunk_re = re.compile(r'^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@(.*)')
     _newline_marker = re.compile(r'^\\ No newline at end of file')
     _git_header_re = re.compile(r"""
-        # has already been split on this:
-        # ^diff[ ]--git
+        ^diff[ ]--git
             [ ]a/(?P<a_path>.+?)[ ]b/(?P<b_path>.+?)\n
         (?:^old[ ]mode[ ](?P<old_mode>\d+)\n
            ^new[ ]mode[ ](?P<new_mode>\d+)(?:\n|$))?
@@ -182,8 +182,7 @@ class DiffProcessor(object):
         (?:^\+\+\+[ ](b/(?P<b_file>.+?)|/dev/null)\t?(?:\n|$))?
     """, re.VERBOSE | re.MULTILINE)
     _hg_header_re = re.compile(r"""
-        # has already been split on this:
-        # ^diff[ ]--git
+        ^diff[ ]--git
             [ ]a/(?P<a_path>.+?)[ ]b/(?P<b_path>.+?)\n
         (?:^old[ ]mode[ ](?P<old_mode>\d+)\n
            ^new[ ]mode[ ](?P<new_mode>\d+)(?:\n|$))?
@@ -318,9 +317,11 @@ class DiffProcessor(object):
         _files = [] # list of dicts with meta info and chunks
         diff_container = lambda arg: arg
 
-        # split the diff in chunks of separate --git a/file b/file chunks
-        for raw_diff in ('\n' + self._diff).split('\ndiff --git')[1:]:
-            head, diff = self._get_header(raw_diff)
+        starts = [m.start() for m in self._diff_git_re.finditer(self._diff)]
+        starts.append(len(self._diff))
+
+        for start, end in zip(starts, starts[1:]):
+            head, diff = self._get_header(buffer(self._diff, start, end - start))
 
             op = None
             stats = {
