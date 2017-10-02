@@ -305,9 +305,6 @@ class DiffProcessor(object):
         (?:^\+\+\+[ ](b/(?P<b_file>.+?)|/dev/null)\t?(?:\n|$))?
     """, re.VERBOSE | re.MULTILINE)
 
-    # Used for inline highlighter word split, must match the substitutions in _escaper
-    _token_re = re.compile(r'()(&amp;|&lt;|&gt;|<u>\t</u>|<u class="cr"></u>| <i></i>|\W+?)')
-
     _escape_re = re.compile(r'(&)|(<)|(>)|(\t)|(\r)|(?<=.)( \n| $)')
 
     def __init__(self, diff, vcs='hg', diff_limit=None, inline_diff=True):
@@ -350,33 +347,6 @@ class DiffProcessor(object):
             assert False
 
         return self._escape_re.sub(substitute, safe_unicode(string))
-
-    def _highlight_inline_diff(self, old, new):
-        """
-        Highlight simple add/remove in two lines given as info dicts. They are
-        modified in place and given markup with <del>/<ins>.
-        """
-        assert old['action'] == 'del'
-        assert new['action'] == 'add'
-
-        oldwords = self._token_re.split(old['line'])
-        newwords = self._token_re.split(new['line'])
-        sequence = difflib.SequenceMatcher(None, oldwords, newwords)
-
-        oldfragments, newfragments = [], []
-        for tag, i1, i2, j1, j2 in sequence.get_opcodes():
-            oldfrag = ''.join(oldwords[i1:i2])
-            newfrag = ''.join(newwords[j1:j2])
-            if tag != 'equal':
-                if oldfrag:
-                    oldfrag = '<del>%s</del>' % oldfrag
-                if newfrag:
-                    newfrag = '<ins>%s</ins>' % newfrag
-            oldfragments.append(oldfrag)
-            newfragments.append(newfrag)
-
-        old['line'] = "".join(oldfragments)
-        new['line'] = "".join(newfragments)
 
     def _get_header(self, diff_chunk):
         """
@@ -540,11 +510,11 @@ class DiffProcessor(object):
                             peekline = lineiter.next()
                         except StopIteration:
                             # add was last line - ok
-                            self._highlight_inline_diff(delline, addline)
+                            _highlight_inline_diff(delline, addline)
                             raise
                         if peekline['action'] != 'add':
                             # there was only one add line - ok
-                            self._highlight_inline_diff(delline, addline)
+                            _highlight_inline_diff(delline, addline)
                 except StopIteration:
                     pass
 
@@ -652,3 +622,35 @@ class DiffProcessor(object):
         Returns tuple of added, and removed lines for this instance
         """
         return self.adds, self.removes
+
+
+# Used for inline highlighter word split, must match the substitutions in _escaper
+_token_re = re.compile(r'()(&amp;|&lt;|&gt;|<u>\t</u>|<u class="cr"></u>| <i></i>|\W+?)')
+
+
+def _highlight_inline_diff(old, new):
+    """
+    Highlight simple add/remove in two lines given as info dicts. They are
+    modified in place and given markup with <del>/<ins>.
+    """
+    assert old['action'] == 'del'
+    assert new['action'] == 'add'
+
+    oldwords = _token_re.split(old['line'])
+    newwords = _token_re.split(new['line'])
+    sequence = difflib.SequenceMatcher(None, oldwords, newwords)
+
+    oldfragments, newfragments = [], []
+    for tag, i1, i2, j1, j2 in sequence.get_opcodes():
+        oldfrag = ''.join(oldwords[i1:i2])
+        newfrag = ''.join(newwords[j1:j2])
+        if tag != 'equal':
+            if oldfrag:
+                oldfrag = '<del>%s</del>' % oldfrag
+            if newfrag:
+                newfrag = '<ins>%s</ins>' % newfrag
+        oldfragments.append(oldfrag)
+        newfragments.append(newfrag)
+
+    old['line'] = "".join(oldfragments)
+    new['line'] = "".join(newfragments)
