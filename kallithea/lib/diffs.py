@@ -40,6 +40,131 @@ from kallithea.lib.utils2 import safe_unicode
 log = logging.getLogger(__name__)
 
 
+def _safe_id(idstring):
+    """Make a string safe for including in an id attribute.
+
+    The HTML spec says that id attributes 'must begin with
+    a letter ([A-Za-z]) and may be followed by any number
+    of letters, digits ([0-9]), hyphens ("-"), underscores
+    ("_"), colons (":"), and periods (".")'. These regexps
+    are slightly over-zealous, in that they remove colons
+    and periods unnecessarily.
+
+    Whitespace is transformed into underscores, and then
+    anything which is not a hyphen or a character that
+    matches \w (alphanumerics and underscore) is removed.
+
+    """
+    # Transform all whitespace to underscore
+    idstring = re.sub(r'\s', "_", idstring)
+    # Remove everything that is not a hyphen or a member of \w
+    idstring = re.sub(r'(?!-)\W', "", idstring).lower()
+    return idstring
+
+
+def as_html(table_class='code-difftable', line_class='line',
+            old_lineno_class='lineno old', new_lineno_class='lineno new',
+            no_lineno_class='lineno',
+            code_class='code', enable_comments=False, parsed_lines=None):
+    """
+    Return given diff as html table with customized css classes
+    """
+    def _link_to_if(condition, label, url):
+        """
+        Generates a link if condition is meet or just the label if not.
+        """
+
+        if condition:
+            return '''<a href="%(url)s">%(label)s</a>''' % {
+                'url': url,
+                'label': label
+            }
+        else:
+            return label
+
+    _html_empty = True
+    _html = []
+    _html.append('''<table class="%(table_class)s">\n''' % {
+        'table_class': table_class
+    })
+
+    for diff in parsed_lines:
+        for line in diff['chunks']:
+            _html_empty = False
+            for change in line:
+                _html.append('''<tr class="%(lc)s %(action)s">\n''' % {
+                    'lc': line_class,
+                    'action': change['action']
+                })
+                anchor_old_id = ''
+                anchor_new_id = ''
+                anchor_old = "%(filename)s_o%(oldline_no)s" % {
+                    'filename': _safe_id(diff['filename']),
+                    'oldline_no': change['old_lineno']
+                }
+                anchor_new = "%(filename)s_n%(oldline_no)s" % {
+                    'filename': _safe_id(diff['filename']),
+                    'oldline_no': change['new_lineno']
+                }
+                cond_old = (change['old_lineno'] != '...' and
+                            change['old_lineno'])
+                cond_new = (change['new_lineno'] != '...' and
+                            change['new_lineno'])
+                no_lineno = (change['old_lineno'] == '...' and
+                             change['new_lineno'] == '...')
+                if cond_old:
+                    anchor_old_id = 'id="%s"' % anchor_old
+                if cond_new:
+                    anchor_new_id = 'id="%s"' % anchor_new
+                ###########################################################
+                # OLD LINE NUMBER
+                ###########################################################
+                _html.append('''\t<td %(a_id)s class="%(olc)s" %(colspan)s>''' % {
+                    'a_id': anchor_old_id,
+                    'olc': no_lineno_class if no_lineno else old_lineno_class,
+                    'colspan': 'colspan="2"' if no_lineno else ''
+                })
+
+                _html.append('''%(link)s''' % {
+                    'link': _link_to_if(not no_lineno, change['old_lineno'],
+                                        '#%s' % anchor_old)
+                })
+                _html.append('''</td>\n''')
+                ###########################################################
+                # NEW LINE NUMBER
+                ###########################################################
+
+                if not no_lineno:
+                    _html.append('''\t<td %(a_id)s class="%(nlc)s">''' % {
+                        'a_id': anchor_new_id,
+                        'nlc': new_lineno_class
+                    })
+
+                    _html.append('''%(link)s''' % {
+                        'link': _link_to_if(True, change['new_lineno'],
+                                            '#%s' % anchor_new)
+                    })
+                    _html.append('''</td>\n''')
+                ###########################################################
+                # CODE
+                ###########################################################
+                comments = '' if enable_comments else 'no-comment'
+                _html.append('''\t<td class="%(cc)s %(inc)s">''' % {
+                    'cc': code_class,
+                    'inc': comments
+                })
+                _html.append('''\n\t\t<div class="add-bubble"><div>&nbsp;</div></div><pre>%(code)s</pre>\n''' % {
+                    'code': change['line']
+                })
+
+                _html.append('''\t</td>''')
+                _html.append('''\n</tr>\n''')
+    _html.append('''</table>''')
+    if _html_empty:
+        return None
+    return ''.join(_html)
+
+
 def wrap_to_table(html):
     """Given a string with html, return it wrapped in a table, similar to what
     DiffProcessor returns."""
@@ -65,7 +190,7 @@ def wrapped_diff(filenode_old, filenode_new, diff_limit=None,
     op = None
     a_path = filenode_old.path # default, might be overriden by actual rename in diff
     if filenode_old.is_binary or filenode_new.is_binary:
-        diff = wrap_to_table(_('Binary file'))
+        html_diff = wrap_to_table(_('Binary file'))
         stats = (0, 0)
 
     elif diff_limit != -1 and (
@@ -81,26 +206,26 @@ def wrapped_diff(filenode_old, filenode_new, diff_limit=None,
             op = f['operation']
             a_path = f['old_filename']
 
-        diff = diff_processor.as_html(enable_comments=enable_comments)
+        html_diff = as_html(parsed_lines=diff_processor.parsed, enable_comments=enable_comments)
         stats = diff_processor.stat()
 
     else:
-        diff = wrap_to_table(_('Changeset was too big and was cut off, use '
+        html_diff = wrap_to_table(_('Changeset was too big and was cut off, use '
                                'diff menu to display this diff'))
         stats = (0, 0)
 
-    if not diff:
+    if not html_diff:
         submodules = filter(lambda o: isinstance(o, SubModuleNode),
                             [filenode_new, filenode_old])
         if submodules:
-            diff = wrap_to_table(escape('Submodule %r' % submodules[0]))
+            html_diff = wrap_to_table(escape('Submodule %r' % submodules[0]))
         else:
-            diff = wrap_to_table(_('No changes detected'))
+            html_diff = wrap_to_table(_('No changes detected'))
 
     cs1 = filenode_old.changeset.raw_id
     cs2 = filenode_new.changeset.raw_id
 
-    return cs1, cs2, a_path, diff, stats, op
+    return cs1, cs2, a_path, html_diff, stats, op
 
 
 def get_gitdiff(filenode_old, filenode_new, ignore_whitespace=True, context=3):
@@ -126,7 +251,6 @@ def get_gitdiff(filenode_old, filenode_new, ignore_whitespace=True, context=3):
     vcs_gitdiff = repo.get_diff(old_raw_id, new_raw_id, filenode_new.path,
                                 ignore_whitespace, context)
     return vcs_gitdiff
-
 
 NEW_FILENODE = 1
 DEL_FILENODE = 2
@@ -522,133 +646,6 @@ class DiffProcessor(object):
             raise Exception('diff processing broken when old %s<>%s or new %s<>%s line %r' % (old_line, old_end, new_line, new_end, line))
 
         return chunks, added, deleted
-
-    def _safe_id(self, idstring):
-        """Make a string safe for including in an id attribute.
-
-        The HTML spec says that id attributes 'must begin with
-        a letter ([A-Za-z]) and may be followed by any number
-        of letters, digits ([0-9]), hyphens ("-"), underscores
-        ("_"), colons (":"), and periods (".")'. These regexps
-        are slightly over-zealous, in that they remove colons
-        and periods unnecessarily.
-
-        Whitespace is transformed into underscores, and then
-        anything which is not a hyphen or a character that
-        matches \w (alphanumerics and underscore) is removed.
-
-        """
-        # Transform all whitespace to underscore
-        idstring = re.sub(r'\s', "_", idstring)
-        # Remove everything that is not a hyphen or a member of \w
-        idstring = re.sub(r'(?!-)\W', "", idstring).lower()
-        return idstring
-
-    def as_html(self, table_class='code-difftable', line_class='line',
-                old_lineno_class='lineno old', new_lineno_class='lineno new',
-                no_lineno_class='lineno',
-                code_class='code', enable_comments=False, parsed_lines=None):
-        """
-        Return given diff as html table with customized css classes
-        """
-        def _link_to_if(condition, label, url):
-            """
-            Generates a link if condition is meet or just the label if not.
-            """
-
-            if condition:
-                return '''<a href="%(url)s">%(label)s</a>''' % {
-                    'url': url,
-                    'label': label
-                }
-            else:
-                return label
-
-        diff_lines = self.parsed
-        if parsed_lines:
-            diff_lines = parsed_lines
-
-        _html_empty = True
-        _html = []
-        _html.append('''<table class="%(table_class)s">\n''' % {
-            'table_class': table_class
-        })
-
-        for diff in diff_lines:
-            for line in diff['chunks']:
-                _html_empty = False
-                for change in line:
-                    _html.append('''<tr class="%(lc)s %(action)s">\n''' % {
-                        'lc': line_class,
-                        'action': change['action']
-                    })
-                    anchor_old_id = ''
-                    anchor_new_id = ''
-                    anchor_old = "%(filename)s_o%(oldline_no)s" % {
-                        'filename': self._safe_id(diff['filename']),
-                        'oldline_no': change['old_lineno']
-                    }
-                    anchor_new = "%(filename)s_n%(oldline_no)s" % {
-                        'filename': self._safe_id(diff['filename']),
-                        'oldline_no': change['new_lineno']
-                    }
-                    cond_old = (change['old_lineno'] != '...' and
-                                change['old_lineno'])
-                    cond_new = (change['new_lineno'] != '...' and
-                                change['new_lineno'])
-                    no_lineno = (change['old_lineno'] == '...' and
-                                 change['new_lineno'] == '...')
-                    if cond_old:
-                        anchor_old_id = 'id="%s"' % anchor_old
-                    if cond_new:
-                        anchor_new_id = 'id="%s"' % anchor_new
-                    ###########################################################
-                    # OLD LINE NUMBER
-                    ###########################################################
-                    _html.append('''\t<td %(a_id)s class="%(olc)s" %(colspan)s>''' % {
-                        'a_id': anchor_old_id,
-                        'olc': no_lineno_class if no_lineno else old_lineno_class,
-                        'colspan': 'colspan="2"' if no_lineno else ''
-                    })
-
-                    _html.append('''%(link)s''' % {
-                        'link': _link_to_if(not no_lineno, change['old_lineno'],
-                                            '#%s' % anchor_old)
-                    })
-                    _html.append('''</td>\n''')
-                    ###########################################################
-                    # NEW LINE NUMBER
-                    ###########################################################
-
-                    if not no_lineno:
-                        _html.append('''\t<td %(a_id)s class="%(nlc)s">''' % {
-                            'a_id': anchor_new_id,
-                            'nlc': new_lineno_class
-                        })
-
-                        _html.append('''%(link)s''' % {
-                            'link': _link_to_if(True, change['new_lineno'],
-                                                '#%s' % anchor_new)
-                        })
-                        _html.append('''</td>\n''')
-                    ###########################################################
-                    # CODE
-                    ###########################################################
-                    comments = '' if enable_comments else 'no-comment'
-                    _html.append('''\t<td class="%(cc)s %(inc)s">''' % {
-                        'cc': code_class,
-                        'inc': comments
-                    })
-                    _html.append('''\n\t\t<div class="add-bubble"><div>&nbsp;</div></div><pre>%(code)s</pre>\n''' % {
-                        'code': change['line']
-                    })
-
-                    _html.append('''\t</td>''')
-                    _html.append('''\n</tr>\n''')
-        _html.append('''</table>''')
-        if _html_empty:
-            return None
-        return ''.join(_html)
 
     def stat(self):
         """

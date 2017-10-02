@@ -608,9 +608,8 @@ class PullrequestsController(BaseRepoController):
             c.lines_deleted += st['deleted']
             filename = f['filename']
             fid = h.FID('', filename)
-            diff = diff_processor.as_html(enable_comments=True,
-                                          parsed_lines=[f])
-            c.file_diff_data.append((fid, None, f['operation'], f['old_filename'], filename, diff, st))
+            html_diff = diffs.as_html(enable_comments=True, parsed_lines=[f])
+            c.file_diff_data.append((fid, None, f['operation'], f['old_filename'], filename, html_diff, st))
 
         # inline comments
         c.inline_cnt = 0
