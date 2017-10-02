@@ -44,8 +44,8 @@
             {data: "action", title: ${h.jshtml(_('Action'))}, sortable: false, searchable: false}
         ],
         drawCallback: updateRowCountCallback($("#repo_count")),
-        dom: '<"dataTables_left"f><"dataTables_right"i>t',
-        paging: false,
+        dom: '<"dataTables_left"f><"dataTables_right"ip>t',
+        pageLength: 100
     });
 </script>
 
