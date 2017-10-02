@@ -39,7 +39,6 @@ from kallithea.lib import diffs
 from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator, \
     NotAnonymous
 from kallithea.lib.base import BaseRepoController, render, jsonify
-from kallithea.lib.diffs import LimitedDiffContainer
 from kallithea.lib.page import Page
 from kallithea.lib.utils import action_logger
 from kallithea.lib.vcs.exceptions import EmptyRepositoryError, ChangesetDoesNotExistError
@@ -598,11 +597,7 @@ class PullrequestsController(BaseRepoController):
         except ChangesetDoesNotExistError:
             raw_diff = _("The diff can't be shown - the PR revisions could not be found.")
         diff_processor = diffs.DiffProcessor(raw_diff or '', diff_limit=diff_limit)
-
-        c.limited_diff = False
-        if isinstance(diff_processor.parsed, LimitedDiffContainer):
-            c.limited_diff = True
-
+        c.limited_diff = diff_processor.limited_diff
         c.file_diff_data = []
         c.lines_added = 0
         c.lines_deleted = 0

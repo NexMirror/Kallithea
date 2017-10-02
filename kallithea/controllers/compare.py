@@ -42,7 +42,6 @@ from kallithea.lib.base import BaseRepoController, render
 from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator
 from kallithea.lib import diffs
 from kallithea.model.db import Repository
-from kallithea.lib.diffs import LimitedDiffContainer
 from kallithea.controllers.changeset import _ignorews_url, _context_url
 from kallithea.lib.graphmod import graph_data
 
@@ -272,11 +271,7 @@ class CompareController(BaseRepoController):
                                       context=line_context)
 
         diff_processor = diffs.DiffProcessor(raw_diff or '', diff_limit=diff_limit)
-
-        c.limited_diff = False
-        if isinstance(diff_processor.parsed, LimitedDiffContainer):
-            c.limited_diff = True
-
+        c.limited_diff = diff_processor.limited_diff
         c.file_diff_data = []
         c.lines_added = 0
         c.lines_deleted = 0

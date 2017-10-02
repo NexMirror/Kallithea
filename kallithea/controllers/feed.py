@@ -38,7 +38,7 @@ from kallithea import CONFIG
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator
 from kallithea.lib.base import BaseRepoController
-from kallithea.lib.diffs import DiffProcessor, LimitedDiffContainer
+from kallithea.lib.diffs import DiffProcessor
 from kallithea.model.db import CacheInvalidation
 from kallithea.lib.utils2 import safe_int, str2bool, safe_unicode
 
@@ -76,9 +76,6 @@ class FeedController(BaseRepoController):
         diff_processor = DiffProcessor(raw_diff,
                                        diff_limit=diff_limit,
                                        inline_diff=False)
-        limited_diff = False
-        if isinstance(diff_processor.parsed, LimitedDiffContainer):
-            limited_diff = True
 
         for st in diff_processor.parsed:
             st.update({'added': st['stats']['added'],
@@ -86,7 +83,7 @@ class FeedController(BaseRepoController):
             changes.append('\n %(operation)s %(filename)s '
                            '(%(added)s lines added, %(removed)s lines removed)'
                             % st)
-        if limited_diff:
+        if diff_processor.limited_diff:
             changes = changes + ['\n ' +
                                  _('Changeset was too big and was cut off...')]
 

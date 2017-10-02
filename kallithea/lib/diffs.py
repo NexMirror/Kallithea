@@ -141,18 +141,6 @@ class DiffLimitExceeded(Exception):
     pass
 
 
-class LimitedDiffContainer(object):
-
-    def __init__(self, diff_limit, cur_diff_size, diff):
-        self.diff = diff
-        self.diff_limit = diff_limit
-        self.cur_diff_size = cur_diff_size
-
-    def __iter__(self):
-        for l in self.diff:
-            yield l
-
-
 class DiffProcessor(object):
     """
     Give it a unified or git diff and it returns a list of the files that were
@@ -219,6 +207,7 @@ class DiffProcessor(object):
         # calculate diff size
         self.diff_limit = diff_limit
         self.cur_diff_size = 0
+        self.limited_diff = False
         self.vcs = vcs
         self.parsed = self._parse_gitdiff(inline_diff=inline_diff)
 
@@ -306,11 +295,10 @@ class DiffProcessor(object):
 
     def _parse_gitdiff(self, inline_diff):
         """Parse self._diff and return a list of dicts with meta info and chunks for each file.
-        If diff is truncated, wrap it in LimitedDiffContainer.
+        Might set limited_diff.
         Optionally, do an extra pass and to extra markup of one-liner changes.
         """
         _files = [] # list of dicts with meta info and chunks
-        diff_container = lambda arg: arg
 
         starts = [m.start() for m in self._diff_git_re.finditer(self._diff)]
         starts.append(len(self._diff))
@@ -385,9 +373,7 @@ class DiffProcessor(object):
                         stats['ops'][MOD_FILENODE] = 'modified file'
 
                 except DiffLimitExceeded:
-                    diff_container = lambda _diff: \
-                        LimitedDiffContainer(self.diff_limit,
-                                            self.cur_diff_size, _diff)
+                    self.limited_diff = True
                     break
             else:  # Git binary patch (or empty diff)
                 # Git binary patch
@@ -419,7 +405,7 @@ class DiffProcessor(object):
             })
 
         if not inline_diff:
-            return diff_container(_files)
+            return _files
 
         # highlight inline changes when one del is followed by one add
         for diff_data in _files:
@@ -452,7 +438,7 @@ class DiffProcessor(object):
                 except StopIteration:
                     pass
 
-        return diff_container(_files)
+        return _files
 
     def _parse_lines(self, diff_lines):
         """

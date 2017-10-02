@@ -48,7 +48,6 @@ from kallithea.model.comment import ChangesetCommentsModel
 from kallithea.model.changeset_status import ChangesetStatusModel
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
-from kallithea.lib.diffs import LimitedDiffContainer
 from kallithea.lib.exceptions import StatusChangeOnClosedPullRequestError
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.utils2 import safe_unicode
@@ -279,9 +278,7 @@ class ChangesetController(BaseRepoController):
                 diff_processor = diffs.DiffProcessor(raw_diff,
                                                      vcs=c.db_repo_scm_instance.alias,
                                                      diff_limit=diff_limit)
-                c.limited_diff = False
-                if isinstance(diff_processor.parsed, LimitedDiffContainer):
-                    c.limited_diff = True
+                c.limited_diff = diff_processor.limited_diff
                 for f in diff_processor.parsed:
                     st = f['stats']
                     c.lines_added += st['added']
