@@ -14,16 +14,14 @@
     %>
   <div class="dt_repo ${'dt_repo_pending' if rstate == 'repo_state_pending' else ''}">
     ${base.repotag(rtype)}
+    <a href="${h.url('edit_repo' if admin else 'summary_home', repo_name=name)}">
+        ${get_name(name)}
+    </a>
     %if private and c.visual.show_private_icon:
       <i class="icon-keyhole-circled" title="${_('Private repository')}"></i>
     %elif not private and c.visual.show_public_icon:
       <i class="icon-globe" title="${_('Public repository')}"></i>
-    %else:
-      <i class="icon-empty"></i>
     %endif
-    <a href="${h.url('edit_repo' if admin else 'summary_home', repo_name=name)}">
-        ${get_name(name)}
-    </a>
     %if fork_of:
       <a href="${h.url('summary_home',repo_name=fork_of.repo_name)}"><i class="icon-fork"></i></a>
     %endif
