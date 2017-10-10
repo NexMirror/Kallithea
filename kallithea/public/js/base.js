@@ -1070,7 +1070,7 @@ var gravatar = function(gravatar_lnk, size, cssclass) {
     if (gravatar_lnk == 'default') {
         return '<i class="icon-user {1}" style="font-size: {0}px;"></i>'.format(size, cssclass);
     }
-    return ('<i class="icon-empty {2}"' +
+    return ('<i class="icon-gravatar {2}"' +
             ' style="font-size: {0}px;background-image: url(\'{1}\'); background-size: {0}px"' +
             '></i>').format(size, gravatar_lnk, cssclass);
 }
