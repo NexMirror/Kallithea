@@ -61,7 +61,12 @@ smtp_port =
 #smtp_use_ssl = false
 #smtp_use_tls = false
 
+%if http_server != 'uwsgi':
+<%text>## Entry point for 'gearbox serve'</%text>
 [server:main]
+host = ${host}
+port = ${port}
+
 %if http_server == 'gearbox':
 <%text>## Gearbox default web server ##</%text>
 use = egg:gearbox#wsgiref
@@ -103,7 +108,8 @@ max_requests = 1000
 <%text>## restarted</%text>
 timeout = 3600
 
-%elif http_server == 'uwsgi':
+%endif
+%else:
 <%text>## UWSGI ##</%text>
 <%text>## run with uwsgi --ini-paste-logged <inifile.ini></%text>
 [uwsgi]
@@ -163,11 +169,6 @@ workers = 4
 
 <%text>## how many workers should be spawned at a time</%text>
 cheaper-step = 1
-
-%endif
-%if http_server != 'uwsgi':
-host = ${host}
-port = ${port}
 
 %endif
 <%text>## middleware for hosting the WSGI application under a URL prefix</%text>
