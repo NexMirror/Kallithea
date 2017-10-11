@@ -243,10 +243,6 @@ class UserGroupsController(BaseController):
         c.user_group = UserGroup.get_or_404(id)
         c.active = 'perms'
 
-        repo_model = RepoModel()
-        c.users_array = repo_model.get_users_js()
-        c.user_groups_array = repo_model.get_user_groups_js()
-
         defaults = {}
         # fill user group users
         for p in c.user_group.user_user_group_to_perm:

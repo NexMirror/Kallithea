@@ -198,7 +198,6 @@ class ChangesetController(BaseRepoController):
     def __load_data(self):
         repo_model = RepoModel()
         c.users_array = repo_model.get_users_js()
-        c.user_groups_array = repo_model.get_user_groups_js()
 
     def _index(self, revision, method):
         c.pull_request = None

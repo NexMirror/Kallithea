@@ -136,18 +136,6 @@ class RepoModel(object):
                 'gravatar_size': 14,
             } for u in users]
 
-    def get_user_groups_js(self):
-        user_groups = UserGroup.query() \
-            .filter(UserGroup.users_group_active == True) \
-            .order_by(UserGroup.users_group_name) \
-            .all()
-        user_groups = UserGroupList(user_groups, perm_level='read')
-        return [
-            {
-                'id': gr.users_group_id,
-                'grname': gr.users_group_name,
-            } for gr in user_groups]
-
     @classmethod
     def _render_datatable(cls, tmpl, *args, **kwargs):
         import kallithea

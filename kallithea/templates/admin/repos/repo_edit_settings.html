@@ -120,7 +120,6 @@ ${h.form(url('update_repo', repo_name=c.repo_info.repo_name))}
         });
 
         // autocomplete
-        var _USERS_AC_DATA = ${h.js(c.users_array)};
-        SimpleUserAutoComplete($('#owner'), _USERS_AC_DATA);
+        SimpleUserAutoComplete($('#owner'));
     });
 </script>

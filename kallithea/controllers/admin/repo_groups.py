@@ -72,10 +72,6 @@ class RepoGroupsController(BaseController):
         c.repo_groups = [rg for rg in repo_groups
                          if rg[0] not in exclude_group_ids]
 
-        repo_model = RepoModel()
-        c.users_array = repo_model.get_users_js()
-        c.user_groups_array = repo_model.get_user_groups_js()
-
     def __load_data(self, group_id):
         """
         Load defaults settings for edit, and update

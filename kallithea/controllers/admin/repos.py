@@ -246,7 +246,6 @@ class ReposController(BaseRepoController):
             log.info(errors)
             defaults = self.__load_data()
             defaults.update(errors.value)
-            c.users_array = repo_model.get_users_js()
             return htmlfill.render(
                 render('admin/repos/repo_edit.html'),
                 defaults=defaults,
@@ -303,8 +302,6 @@ class ReposController(BaseRepoController):
         defaults = self.__load_data()
         c.repo_fields = RepositoryField.query() \
             .filter(RepositoryField.repository == c.repo_info).all()
-        repo_model = RepoModel()
-        c.users_array = repo_model.get_users_js()
         c.active = 'settings'
         return htmlfill.render(
             render('admin/repos/repo_edit.html'),
@@ -315,9 +312,6 @@ class ReposController(BaseRepoController):
     @HasRepoPermissionLevelDecorator('admin')
     def edit_permissions(self, repo_name):
         c.repo_info = self._load_repo()
-        repo_model = RepoModel()
-        c.users_array = repo_model.get_users_js()
-        c.user_groups_array = repo_model.get_user_groups_js()
         c.active = 'permissions'
         defaults = RepoModel()._get_defaults(repo_name)
 

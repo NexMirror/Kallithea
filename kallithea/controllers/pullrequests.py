@@ -459,7 +459,6 @@ class PullrequestsController(BaseRepoController):
     def show(self, repo_name, pull_request_id, extra=None):
         repo_model = RepoModel()
         c.users_array = repo_model.get_users_js()
-        c.user_groups_array = repo_model.get_user_groups_js()
         c.pull_request = PullRequest.get_or_404(pull_request_id)
         c.allowed_to_change_status = self._get_is_allowed_change_status(c.pull_request)
         cc_model = ChangesetCommentsModel()
