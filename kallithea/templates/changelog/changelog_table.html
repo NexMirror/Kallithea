@@ -78,6 +78,16 @@
                   <i class="icon-comment-discussion"></i>
                 </a>
               %endif
+              %for book in cs.bookmarks:
+                <span class="booktag" title="${_('Bookmark %s') % book}">
+                  ${h.link_to(book,h.url('changeset_home',repo_name=repo_name,revision=cs.raw_id))}
+                </span>
+              %endfor
+              %for tag in cs.tags:
+                <span class="tagtag" title="${_('Tag %s') % tag}">
+                  ${h.link_to(tag,h.url('changeset_home',repo_name=repo_name,revision=cs.raw_id))}
+                </span>
+              %endfor
               %if cs.bumped:
                 <span class="bumpedtag" title="Bumped">
                   Bumped
@@ -103,16 +113,6 @@
                   ${cs.phase}
                 </span>
               %endif
-              %for book in cs.bookmarks:
-                <span class="booktag" title="${_('Bookmark %s') % book}">
-                  ${h.link_to(book,h.url('changeset_home',repo_name=repo_name,revision=cs.raw_id))}
-                </span>
-              %endfor
-              %for tag in cs.tags:
-                <span class="tagtag" title="${_('Tag %s') % tag}">
-                  ${h.link_to(tag,h.url('changeset_home',repo_name=repo_name,revision=cs.raw_id))}
-                </span>
-              %endfor
               %if show_branch and cs.branch:
                 <span class="branchtag" title="${_('Branch %s' % cs.branch)}">
                   ${h.link_to(cs.branch,h.url('changelog_home',repo_name=repo_name,branch=cs.branch))}
