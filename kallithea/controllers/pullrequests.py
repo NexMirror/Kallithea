@@ -450,8 +450,6 @@ class PullrequestsController(BaseRepoController):
     @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')
     def show(self, repo_name, pull_request_id, extra=None):
-        repo_model = RepoModel()
-        c.users_array = repo_model.get_users_js()
         c.pull_request = PullRequest.get_or_404(pull_request_id)
         c.allowed_to_change_status = self._is_allowed_to_change_status(c.pull_request)
         cc_model = ChangesetCommentsModel()

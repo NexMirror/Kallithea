@@ -122,21 +122,6 @@ class RepoModel(object):
         repos = [x[0] for x in filter(access_check, repos.items())]
         return Repository.query().filter(Repository.repo_name.in_(repos))
 
-    def get_users_js(self):
-        users = User.query() \
-            .filter(User.active == True) \
-            .order_by(User.name, User.lastname) \
-            .all()
-        return [
-            {
-                'id': u.user_id,
-                'fname': h.escape(u.name),
-                'lname': h.escape(u.lastname),
-                'nname': u.username,
-                'gravatar_lnk': h.gravatar_url(u.email, size=28, default='default'),
-                'gravatar_size': 14,
-            } for u in users]
-
     @classmethod
     def _render_datatable(cls, tmpl, *args, **kwargs):
         import kallithea

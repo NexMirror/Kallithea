@@ -291,10 +291,6 @@ class ChangesetController(BaseRepoController):
         super(ChangesetController, self)._before(*args, **kwargs)
         c.affected_files_cut_off = 60
 
-    def __load_data(self):
-        repo_model = RepoModel()
-        c.users_array = repo_model.get_users_js()
-
     def _index(self, revision, method):
         c.pull_request = None
         c.anchor_url = anchor_url
@@ -413,7 +409,6 @@ class ChangesetController(BaseRepoController):
             response.content_type = 'text/plain'
             return raw_diff
         elif method == 'show':
-            self.__load_data()
             if len(c.cs_ranges) == 1:
                 return render('changeset/changeset.html')
             else:
