@@ -19,7 +19,7 @@
 ${h.form(h.url('delete_user', id=c.user.user_id))}
     <button class="btn btn-danger btn-sm" type="submit"
             onclick="return confirm('${_('Confirm to delete this user: %s') % c.user.username}');">
-        <i class="icon-minus-circled"></i>
+        <i class="icon-trashcan"></i>
         ${_('Delete this user')}
     </button>
 ${h.end_form()}

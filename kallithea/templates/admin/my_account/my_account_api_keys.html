@@ -37,7 +37,7 @@
                     ${h.hidden('del_api_key',api_key.api_key)}
                     <button class="btn btn-danger btn-xs" type="submit"
                             onclick="return confirm('${_('Confirm to remove this API key: %s') % api_key.api_key}');">
-                        <i class="icon-minus-circled"></i>
+                        <i class="icon-trashcan"></i>
                         ${_('Remove')}
                     </button>
                 ${h.end_form()}

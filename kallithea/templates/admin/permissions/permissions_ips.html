@@ -8,7 +8,7 @@
                 ${h.form(url('edit_user_ips_delete', id=c.user.user_id))}
                     ${h.hidden('del_ip_id',ip.ip_id)}
                     ${h.hidden('default_user', 'True')}
-                    <i class="icon-minus-circled"></i> ${h.submit('remove_',_('Delete'),id="remove_ip_%s" % ip.ip_id,
+                    <i class="icon-trashcan"></i> ${h.submit('remove_',_('Delete'),id="remove_ip_%s" % ip.ip_id,
                     class_="btn btn-default btn-xs", onclick="return confirm('"+_('Confirm to delete this IP address: %s') % ip.ip_addr+"');")}
                 ${h.end_form()}
               </td>

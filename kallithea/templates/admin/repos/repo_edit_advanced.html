@@ -70,7 +70,7 @@ ${h.form(url('delete_repo', repo_name=c.repo_name))}
 <div class="form">
     <button class="btn btn-danger btn-sm" type="submit"
             onclick="return confirm('${_('Confirm to delete this repository: %s') % c.repo_name}');">
-        <i class="icon-minus-circled"></i>
+        <i class="icon-trashcan"></i>
         ${_('Delete this Repository')}
     </button>
     %if c.repo_info.forks.count():

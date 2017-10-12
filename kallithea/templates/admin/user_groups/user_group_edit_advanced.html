@@ -17,7 +17,7 @@
 ${h.form(h.url('delete_users_group', id=c.user_group.users_group_id))}
     <button class="btn btn-danger btn-sm" type="submit"
             onclick="return confirm('${_('Confirm to delete this user group: %s') % c.user_group.users_group_name}');">
-        <i class="icon-minus-circled"></i>
+        <i class="icon-trashcan"></i>
         ${_('Delete this user group')}
     </button>
 ${h.end_form()}
