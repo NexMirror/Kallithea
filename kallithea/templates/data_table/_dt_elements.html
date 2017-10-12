@@ -18,7 +18,7 @@
         ${get_name(name)}
     </a>
     %if private and c.visual.show_private_icon:
-      <i class="icon-keyhole-circled" title="${_('Private repository')}"></i>
+      <i class="icon-lock" title="${_('Private repository')}"></i>
     %elif not private and c.visual.show_public_icon:
       <i class="icon-globe" title="${_('Public repository')}"></i>
     %endif
