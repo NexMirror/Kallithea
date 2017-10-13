@@ -17,7 +17,13 @@ class TestHomeController(TestController):
         # if global permission is set
         response.mustcontain('Add Repository')
 
-        response.mustcontain('<span class="repotag">git')
+        response.mustcontain(
+            """<span class="repotag" title="Git repository">git"""
+        )
+
+        response.mustcontain(
+            """<span class="repotag" title="Mercurial repository">hg"""
+        )
 
         # html in javascript variable:
         response.mustcontain(r'href=\"/%s\"' % HG_REPO)
