@@ -113,8 +113,10 @@ div.annotatediv {
 .code-highlight .err, .codehilite .err { border: 1px solid #FF0000 } /* Error */
 .code-highlight .k, .codehilite .k { color: #008000; font-weight: bold } /* Keyword */
 .code-highlight .o, .codehilite .o { color: #666666 } /* Operator */
+.code-highlight .ch, .codehilite .ch { color: #408080; font-style: italic } /* Comment.Hashbang */
 .code-highlight .cm, .codehilite .cm { color: #408080; font-style: italic } /* Comment.Multiline */
 .code-highlight .cp, .codehilite .cp { color: #BC7A00 } /* Comment.Preproc */
+.code-highlight .cpf, .codehilite .cpf { color: #408080; font-style: italic } /* Comment.PreprocFile */
 .code-highlight .c1, .codehilite .c1 { color: #408080; font-style: italic } /* Comment.Single */
 .code-highlight .cs, .codehilite .cs { color: #408080; font-style: italic } /* Comment.Special */
 .code-highlight .gd, .codehilite .gd { color: #A00000 } /* Generic.Deleted */
@@ -122,11 +124,11 @@ div.annotatediv {
 .code-highlight .gr, .codehilite .gr { color: #FF0000 } /* Generic.Error */
 .code-highlight .gh, .codehilite .gh { color: #000080; font-weight: bold } /* Generic.Heading */
 .code-highlight .gi, .codehilite .gi { color: #00A000 } /* Generic.Inserted */
-.code-highlight .go, .codehilite .go { color: #808080 } /* Generic.Output */
+.code-highlight .go, .codehilite .go { color: #888888 } /* Generic.Output */
 .code-highlight .gp, .codehilite .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
 .code-highlight .gs, .codehilite .gs { font-weight: bold } /* Generic.Strong */
 .code-highlight .gu, .codehilite .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.code-highlight .gt, .codehilite .gt { color: #0040D0 } /* Generic.Traceback */
+.code-highlight .gt, .codehilite .gt { color: #0044DD } /* Generic.Traceback */
 .code-highlight .kc, .codehilite .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
 .code-highlight .kd, .codehilite .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
 .code-highlight .kn, .codehilite .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
@@ -149,12 +151,15 @@ div.annotatediv {
 .code-highlight .nv, .codehilite .nv { color: #19177C } /* Name.Variable */
 .code-highlight .ow, .codehilite .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
 .code-highlight .w, .codehilite .w { color: #bbbbbb } /* Text.Whitespace */
+.code-highlight .mb, .codehilite .mb { color: #666666 } /* Literal.Number.Bin */
 .code-highlight .mf, .codehilite .mf { color: #666666 } /* Literal.Number.Float */
 .code-highlight .mh, .codehilite .mh { color: #666666 } /* Literal.Number.Hex */
 .code-highlight .mi, .codehilite .mi { color: #666666 } /* Literal.Number.Integer */
 .code-highlight .mo, .codehilite .mo { color: #666666 } /* Literal.Number.Oct */
+.code-highlight .sa, .codehilite .sa { color: #BA2121 } /* Literal.String.Affix */
 .code-highlight .sb, .codehilite .sb { color: #BA2121 } /* Literal.String.Backtick */
 .code-highlight .sc, .codehilite .sc { color: #BA2121 } /* Literal.String.Char */
+.code-highlight .dl, .codehilite .dl { color: #BA2121 } /* Literal.String.Delimiter */
 .code-highlight .sd, .codehilite .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
 .code-highlight .s2, .codehilite .s2 { color: #BA2121 } /* Literal.String.Double */
 .code-highlight .se, .codehilite .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
@@ -165,7 +170,9 @@ div.annotatediv {
 .code-highlight .s1, .codehilite .s1 { color: #BA2121 } /* Literal.String.Single */
 .code-highlight .ss, .codehilite .ss { color: #19177C } /* Literal.String.Symbol */
 .code-highlight .bp, .codehilite .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.code-highlight .fm, .codehilite .fm { color: #0000FF } /* Name.Function.Magic */
 .code-highlight .vc, .codehilite .vc { color: #19177C } /* Name.Variable.Class */
 .code-highlight .vg, .codehilite .vg { color: #19177C } /* Name.Variable.Global */
 .code-highlight .vi, .codehilite .vi { color: #19177C } /* Name.Variable.Instance */
+.code-highlight .vm, .codehilite .vm { color: #19177C } /* Name.Variable.Magic */
 .code-highlight .il, .codehilite .il { color: #666666 } /* Literal.Number.Integer.Long */
