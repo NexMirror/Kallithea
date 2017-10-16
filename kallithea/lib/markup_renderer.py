@@ -46,7 +46,7 @@ class MarkupRenderer(object):
     RST_PAT = re.compile(r're?st', re.IGNORECASE)
     PLAIN_PAT = re.compile(r'readme', re.IGNORECASE)
 
-    def _detect_renderer(self, source, filename=None):
+    def _detect_renderer(self, source, filename):
         """
         runs detection of what renderer should be used for generating html
         from a markup language
@@ -57,16 +57,13 @@ class MarkupRenderer(object):
         :param filename:
         """
 
-        if MarkupRenderer.MARKDOWN_PAT.findall(filename):
-            detected_renderer = 'markdown'
-        elif MarkupRenderer.RST_PAT.findall(filename):
-            detected_renderer = 'rst'
-        elif MarkupRenderer.PLAIN_PAT.findall(filename):
-            detected_renderer = 'rst'
-        else:
-            detected_renderer = 'plain'
-
-        return getattr(MarkupRenderer, detected_renderer)
+        if self.MARKDOWN_PAT.findall(filename):
+            return self.markdown
+        elif self.RST_PAT.findall(filename):
+            return self.rst
+        elif self.PLAIN_PAT.findall(filename):
+            return self.rst
+        return self.plain
 
     @classmethod
     def _flavored_markdown(cls, text):
