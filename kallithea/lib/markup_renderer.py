@@ -143,7 +143,7 @@ class MarkupRenderer(object):
             import markdown as __markdown
             if flavored:
                 source = cls._flavored_markdown(source)
-            return __markdown.markdown(source, ['codehilite', 'extra'])
+            return __markdown.markdown(source, extensions=['codehilite', 'extra'])
         except ImportError:
             log.warning('Install markdown to use this function')
             return cls.plain(source)
