@@ -393,9 +393,9 @@ class BaseChangeset(object):
                 message=self.message,
                 date=self.date,
                 author=self.author,
-                added=[el.path for el in self.added],
-                changed=[el.path for el in self.changed],
-                removed=[el.path for el in self.removed],
+                added=[safe_unicode(el.path) for el in self.added],
+                changed=[safe_unicode(el.path) for el in self.changed],
+                removed=[safe_unicode(el.path) for el in self.removed],
             )
         else:
             return dict(
@@ -667,9 +667,9 @@ class BaseChangeset(object):
         data = get_dict_for_attrs(self, ['id', 'raw_id', 'short_id',
             'revision', 'date', 'message'])
         data['author'] = {'name': self.author_name, 'email': self.author_email}
-        data['added'] = [node.path for node in self.added]
-        data['changed'] = [node.path for node in self.changed]
-        data['removed'] = [node.path for node in self.removed]
+        data['added'] = [safe_unicode(node.path) for node in self.added]
+        data['changed'] = [safe_unicode(node.path) for node in self.changed]
+        data['removed'] = [safe_unicode(node.path) for node in self.removed]
         return data
 
     @LazyProperty

@@ -30,7 +30,7 @@ class TestBaseChangeset(unittest.TestCase):
         changeset.date = datetime.datetime(2011, 1, 30, 1, 45)
         changeset.message = 'Message of a commit'
         changeset.author = 'Joe Doe <joe.doe@example.com>'
-        changeset.added = [FileNode('foo/bar/baz'), FileNode('foobar')]
+        changeset.added = [FileNode('foo/bar/baz'), FileNode(u'foobar'), FileNode(u'blåbærgrød')]
         changeset.changed = []
         changeset.removed = []
         self.assertEqual(changeset.as_dict(), {
@@ -44,7 +44,7 @@ class TestBaseChangeset(unittest.TestCase):
                 'name': 'Joe Doe',
                 'email': 'joe.doe@example.com',
             },
-            'added': ['foo/bar/baz', 'foobar'],
+            'added': ['foo/bar/baz', 'foobar', u'bl\xe5b\xe6rgr\xf8d'],
             'changed': [],
             'removed': [],
         })
@@ -341,6 +341,8 @@ class _ChangesetsChangesTestCaseMixin(_BackendTestMixin):
         ])
         self.assertItemsEqual(changeset.changed, [])
         self.assertItemsEqual(changeset.removed, [])
+        assert u'foo/ba\u0142' in changeset.as_dict()['added']
+        assert u'foo/ba\u0142' in changeset.__json__(with_file_list=True)['added']
 
     def test_head_added(self):
         changeset = self.repo.get_changeset()
@@ -373,17 +375,17 @@ for alias in SCM_TESTS:
         'backend_alias': alias,
     }
     # tests with additional commits
-    cls_name = ''.join(('%s changesets with commits test' % alias).title().split())
+    cls_name = alias.title() + 'ChangesetsWithCommitsTest'
     bases = (_ChangesetsWithCommitsTestCaseixin, unittest.TestCase)
     globals()[cls_name] = type(cls_name, bases, attrs)
 
     # tests without additional commits
-    cls_name = ''.join(('%s changesets test' % alias).title().split())
+    cls_name = alias.title() + 'ChangesetsTest'
     bases = (_ChangesetsTestCaseMixin, unittest.TestCase)
     globals()[cls_name] = type(cls_name, bases, attrs)
 
     # tests changes
-    cls_name = ''.join(('%s changesets changes test' % alias).title().split())
+    cls_name = alias.title() + 'ChangesetsChangesTest'
     bases = (_ChangesetsChangesTestCaseMixin, unittest.TestCase)
     globals()[cls_name] = type(cls_name, bases, attrs)
 
