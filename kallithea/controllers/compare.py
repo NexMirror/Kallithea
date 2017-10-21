@@ -266,7 +266,7 @@ class CompareController(BaseRepoController):
 
         log.debug('running diff between %s and %s in %s',
                   rev1, c.cs_rev, org_repo.scm_instance.path)
-        raw_diff = org_repo.scm_instance.get_diff(rev1=rev1, rev2=c.cs_rev,
+        raw_diff = diffs.get_diff(org_repo.scm_instance, rev1=rev1, rev2=c.cs_rev,
                                       ignore_whitespace=ignore_whitespace,
                                       context=line_context)
 

@@ -591,9 +591,8 @@ class PullrequestsController(BaseRepoController):
         log.debug('running diff between %s and %s in %s',
                   c.a_rev, c.cs_rev, org_scm_instance.path)
         try:
-            raw_diff = org_scm_instance.get_diff(rev1=safe_str(c.a_rev), rev2=safe_str(c.cs_rev),
-                                                ignore_whitespace=ignore_whitespace,
-                                                context=line_context)
+            raw_diff = diffs.get_diff(org_scm_instance, rev1=safe_str(c.a_rev), rev2=safe_str(c.cs_rev),
+                                      ignore_whitespace=ignore_whitespace, context=line_context)
         except ChangesetDoesNotExistError:
             raw_diff = _("The diff can't be shown - the PR revisions could not be found.")
         diff_processor = diffs.DiffProcessor(raw_diff or '', diff_limit=diff_limit)

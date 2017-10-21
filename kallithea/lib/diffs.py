@@ -248,9 +248,18 @@ def get_gitdiff(filenode_old, filenode_new, ignore_whitespace=True, context=3):
     old_raw_id = getattr(filenode_old.changeset, 'raw_id', repo.EMPTY_CHANGESET)
     new_raw_id = getattr(filenode_new.changeset, 'raw_id', repo.EMPTY_CHANGESET)
 
-    vcs_gitdiff = repo.get_diff(old_raw_id, new_raw_id, filenode_new.path,
-                                ignore_whitespace, context)
+    vcs_gitdiff = get_diff(repo, old_raw_id, new_raw_id, filenode_new.path,
+                           ignore_whitespace, context)
     return vcs_gitdiff
+
+
+def get_diff(scm_instance, rev1, rev2, path=None, ignore_whitespace=False, context=3):
+    """
+    A thin wrapper around vcs lib get_diff.
+    """
+    return scm_instance.get_diff(rev1, rev2, path=path,
+                                 ignore_whitespace=ignore_whitespace, context=context)
+
 
 NEW_FILENODE = 1
 DEL_FILENODE = 2

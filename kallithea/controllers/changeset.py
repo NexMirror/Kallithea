@@ -270,7 +270,7 @@ class ChangesetController(BaseRepoController):
             context_lcl = get_line_ctx('', request.GET)
             ign_whitespace_lcl = get_ignore_ws('', request.GET)
 
-            raw_diff = c.db_repo_scm_instance.get_diff(cs1, cs2,
+            raw_diff = diffs.get_diff(c.db_repo_scm_instance, cs1, cs2,
                 ignore_whitespace=ign_whitespace_lcl, context=context_lcl)
             diff_limit = None if c.fulldiff else self.cut_off_limit
             file_diff_data = []
