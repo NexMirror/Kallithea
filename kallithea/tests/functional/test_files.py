@@ -765,3 +765,19 @@ class TestFilesController(TestController):
                                    'Successfully deleted file %s' % posixpath.join(location, filename))
         finally:
             fixture.destroy_repo(repo.repo_name)
+
+    def test_png_diff_no_crash_hg(self):
+        self.log_user()
+        response = self.app.get(url('files_diff_home',
+                                    repo_name=HG_REPO,
+                                    f_path='docs/theme/ADC/static/documentation.png',
+                                    diff1='tip', diff2='tip'))
+        response.mustcontain("""<pre>Binary file</pre>""")
+
+    def test_png_diff_no_crash_git(self):
+        self.log_user()
+        response = self.app.get(url('files_diff_home',
+                                    repo_name=GIT_REPO,
+                                    f_path='docs/theme/ADC/static/documentation.png',
+                                    diff1='master', diff2='master'))
+        response.mustcontain("""<pre>Binary file</pre>""")

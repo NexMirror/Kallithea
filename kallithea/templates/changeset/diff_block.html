@@ -75,7 +75,7 @@
         </div>
         <div class="no-padding panel-body" data-f_path="${h.safe_unicode(cs_filename)}">
             ${diff|n}
-            %if cs_filename.rsplit('.')[-1] in ['png', 'gif', 'jpg', 'bmp']:
+            %if op and cs_filename.rsplit('.')[-1] in ['png', 'gif', 'jpg', 'bmp']:
               <div class="btn btn-image-diff-show">Show images</div>
               %if op == 'M':
                 <div id="${id_fid}_image-diff" class="btn btn-image-diff-swap" style="display:none">Press to swap images</div>
