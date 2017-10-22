@@ -294,10 +294,14 @@ class MercurialChangeset(BaseChangeset):
         """
 
         fctx = self._get_filectx(path)
-        for i, annotate_data in enumerate(fctx.annotate(linenumber=False)):
+        for i, (aline, l) in enumerate(fctx.annotate(linenumber=False)):
             ln_no = i + 1
-            sha = hex(annotate_data[0][0].node())
-            yield (ln_no, sha, lambda: self.repository.get_changeset(sha), annotate_data[1],)
+            try:
+                fctx = aline.fctx
+            except AttributeError: # aline.fctx was introduced in Mercurial 4.4
+                fctx = aline[0]
+            sha = hex(fctx.node())
+            yield (ln_no, sha, lambda: self.repository.get_changeset(sha), l)
 
     def fill_archive(self, stream=None, kind='tgz', prefix=None,
                      subrepos=False):
