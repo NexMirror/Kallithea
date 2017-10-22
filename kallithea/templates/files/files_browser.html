@@ -26,7 +26,6 @@
 </%def>
 <div id="body" class="panel panel-default">
     <div class="panel-heading clearfix">
-        ${h.form(h.url.current())}
         <span class="browser-nav form-inline">
             <span class="info_box">
               <span class="info_box_elem rev">${_('Revision')}</span>
@@ -35,15 +34,13 @@
               <span class="info_box_elem"><a class="btn btn-default btn-xs ypjax-link" href="${c.url_next}" title="${_('Next revision')}"><i class="icon-right-open"></i></a></span>
             </span>
         </span>
-        <span class="browser-branch form-inline">
-            <label class="checkbox">
-                ${h.checkbox('stay_at_branch',c.changeset.branch,c.changeset.branch==c.branch)}
-                ${_('Follow current branch')}
-            </label>
-        </span>
-        <span id="search_activate_id" class="search_activate">
+    </div>
+
+    <div class="panel-body">
+        ${h.form(h.url.current())}
+        <div id="search_activate_id" class="search_activate">
             <a class="btn btn-default btn-xs" id="filter_activate" href="#">${_('Search File List')}</a>
-        </span>
+        </div>
         ${h.end_form()}
         <div class="browser-search form-inline">
             <div>
@@ -53,9 +50,6 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="panel-body">
         <table class="table code-browser">
             <thead>
                 <tr>

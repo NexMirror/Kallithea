@@ -799,20 +799,7 @@ var linkInlineComments = function($firstlinks, $comments){
 }
 
 /* activate files.html stuff */
-var fileBrowserListeners = function(current_url, node_list_url, url_base){
-    var current_url_branch = "?branch=__BRANCH__";
-
-    $('#stay_at_branch').on('click',function(e){
-        if(e.currentTarget.checked){
-            var uri = current_url_branch;
-            uri = uri.replace('__BRANCH__',e.currentTarget.value);
-            window.location = uri;
-        }
-        else{
-            window.location = current_url;
-        }
-    });
-
+var fileBrowserListeners = function(node_list_url, url_base){
     var $node_filter = $('#node_filter');
 
     var filterTimeout = null;
