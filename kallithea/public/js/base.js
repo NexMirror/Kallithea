@@ -1515,24 +1515,24 @@ var activate_parent_child_links = function(){
                         var commit = data.results[0];
                         window.location = pyroutes.url('changeset_home', {'repo_name': repo_name, 'revision': commit.raw_id});
                     }
-                    else if(data.results.length === 2){
+                    else if(data.results.length > 1){
                         $this.addClass('disabled');
                         $this.addClass('double');
                         var template =
                             ($this.data('linktype') == 'parent' ? '<i class="icon-left-open"/> ' : '') +
                             '<a title="__title__" href="__url__">__rev__</a>' +
                             ($this.data('linktype') == 'child' ? ' <i class="icon-right-open"/>' : '');
-                        var _html = '';
-                        _html += template
-                                .replace('__rev__','r{0}:{1}'.format(data.results[0].revision, data.results[0].raw_id.substr(0,6)))
-                                .replace('__title__', data.results[0].message)
-                                .replace('__url__', pyroutes.url('changeset_home', {'repo_name': repo_name, 'revision': data.results[0].raw_id}));
-                        _html +='<br/>'
-                        _html += template
-                                .replace('__rev__','r{0}:{1}'.format(data.results[1].revision, data.results[1].raw_id.substr(0,6)))
-                                .replace('__title__', data.results[1].message)
-                                .replace('__url__', pyroutes.url('changeset_home', {'repo_name': repo_name, 'revision': data.results[1].raw_id}));
-                        $this.html(_html);
+                        var _html = [];
+                        for(var i = 0; i < data.results.length; i++){
+                            _html.push(template
+                                .replace('__rev__', 'r{0}:{1}'.format(data.results[i].revision, data.results[i].raw_id.substr(0, 6)))
+                                .replace('__title__', data.results[i].message)
+                                .replace('__url__', pyroutes.url('changeset_home', {
+                                    'repo_name': repo_name,
+                                    'revision': data.results[i].raw_id}))
+                                );
+                        }
+                        $this.html(_html.join('<br/>'));
                     }
                 }
             });
