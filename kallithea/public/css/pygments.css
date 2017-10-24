@@ -1,28 +1,3 @@
-div.search-code-body pre .match {
-  background-color: #FAFFA6;
-}
-div.search-code-body pre .break {
-  background-color: #DDE7EF;
-  width: 100%;
-  color: #747474;
-  display: block;
-}
-div.annotatediv {
-  margin-left: 2px;
-  margin-right: 4px;
-}
-.code-highlight {
-  border-left: 1px solid #ccc;
-}
-.code-highlight pre,
-.linenodiv pre {
-  padding: 5px 2px 0px 5px;
-  margin: 0;
-}
-.code-highlight pre div:target {
-  background-color: #FFFFBE !important;
-}
-.linenos a { text-decoration: none; }
 .code-highlight .hll, .codehilite .hll { background-color: #ffffcc }
 .code-highlight .c, .codehilite .c { color: #408080; font-style: italic } /* Comment */
 .code-highlight .err, .codehilite .err { border: 1px solid #FF0000 } /* Error */
