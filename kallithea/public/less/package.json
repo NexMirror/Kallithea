@@ -1,7 +1,9 @@
 {
   "name": "kallithea",
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "bootstrap": "3.3.7"
+  },
   "devDependencies": {
     "less": "~2.7",
     "less-plugin-clean-css": "~1.5"
