@@ -5,6 +5,22 @@ Setup
 =====
 
 
+Preparing front-end
+-------------------
+
+Temporarily, in the current Kallithea version, some extra steps are required to
+build front-end files:
+
+Find the right ``kallithea/public/less`` path with::
+
+    python -c "import os, kallithea; print os.path.join(os.path.dirname(os.path.abspath(kallithea.__file__)), 'public', 'less')"
+
+Then run::
+
+    npm --prefix kallithea/public/less install
+    npm --prefix kallithea/public/less run less
+
+
 Setting up Kallithea
 --------------------
 

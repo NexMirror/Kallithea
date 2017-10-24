@@ -69,6 +69,12 @@ installed.
   (``pip install kallithea`` from a source tree will do pretty much the same
   but build the Kallithea package itself locally instead of downloading it.)
 
+.. note:: The front-end code is built with Node. Currently, it must be built
+          locally after installing Kallithea. Assuming Node and the Node
+          Package Manager is available, other tools and source code will be
+          downloaded and installed. The front-end code can then be built from
+          source locally.
+
 
 Web server
 ----------

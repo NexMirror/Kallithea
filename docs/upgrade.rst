@@ -87,6 +87,18 @@ If you originally installed from version control, it is as simple as::
     hg pull -u
     pip install --upgrade -e .
 
+Temporarily, in the current version, an extra step is required to build
+front-end files:
+
+Find the right ``kallithea/public/less`` path with::
+
+    python -c "import os, kallithea; print os.path.join(os.path.dirname(os.path.abspath(kallithea.__file__)), 'public', 'less')"
+
+Then run::
+
+    npm --prefix kallithea/public/less install
+    npm --prefix kallithea/public/less run less
+
 
 5. Upgrade your configuration
 -----------------------------

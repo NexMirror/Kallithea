@@ -37,6 +37,8 @@ To get started with Kallithea development::
         pip install --upgrade pip setuptools
         pip install --upgrade -e .
         pip install --upgrade -r dev_requirements.txt
+        npm --prefix kallithea/public/less install     # install dependencies - both tools and data
+        npm --prefix kallithea/public/less run less    # for generating css from less
         gearbox make-config my.ini
         gearbox setup-db -c my.ini --user=user --email=user@example.com --password=password --repos=/tmp
         gearbox serve -c my.ini --reload &
