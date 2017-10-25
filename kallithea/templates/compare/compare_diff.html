@@ -70,10 +70,10 @@ ${self.repo_context_bar('changelog')}
                   %endif
                   %for fid, url_fid, op, a_path, path, diff, stats in c.file_diff_data:
                     <div class="cs_${op} clearfix">
-                      <div class="node">
+                      <span class="node">
                           <i class="icon-diff-${op}"></i>
                           ${h.link_to(h.safe_unicode(path), '#%s' % fid)}
-                      </div>
+                      </span>
                       <div class="changes">${h.fancy_file_stats(stats)}</div>
                     </div>
                   %endfor

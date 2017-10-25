@@ -1936,9 +1936,6 @@ input.perm_filter {
 .cs_files .progress {
   margin-bottom: 0;
 }
-.cs_files .node {
-  float: left;
-}
 .cs_files .changes {
   float: right;
   color: #577632;
