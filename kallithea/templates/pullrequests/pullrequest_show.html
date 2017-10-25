@@ -307,11 +307,11 @@ ${self.repo_context_bar('showpullrequest')}
                 %endif
                 %for fid, url_fid, op, a_path, path, diff, stats in c.file_diff_data:
                     <div class="cs_${op} clearfix">
-                      <div class="node pull-left">
+                      <div class="node">
                           <i class="icon-diff-${op}"></i>
                           ${h.link_to(h.safe_unicode(path), '#%s' % fid)}
                       </div>
-                      <div class="changes pull-right">${h.fancy_file_stats(stats)}</div>
+                      <div class="changes">${h.fancy_file_stats(stats)}</div>
                     </div>
                 %endfor
                 %if c.limited_diff:

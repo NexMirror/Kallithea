@@ -1000,7 +1000,7 @@ def fancy_file_stats(stats):
     d_d = '<div class="deleted progress-bar" style="width:%s%%">%s</div>' % (
         d_p, d_v
     )
-    return literal('<div class="pull-right progress" style="width:%spx">%s%s</div>' % (width, d_a, d_d))
+    return literal('<div class="progress" style="width:%spx">%s%s</div>' % (width, d_a, d_d))
 
 
 _URLIFY_RE = re.compile(r'''

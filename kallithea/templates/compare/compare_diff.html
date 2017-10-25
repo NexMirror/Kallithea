@@ -69,7 +69,7 @@ ${self.repo_context_bar('changelog')}
                      <span class="empty_data">${_('No files')}</span>
                   %endif
                   %for fid, url_fid, op, a_path, path, diff, stats in c.file_diff_data:
-                    <div class="cs_${op}">
+                    <div class="cs_${op} clearfix">
                       <div class="node">
                           <i class="icon-diff-${op}"></i>
                           ${h.link_to(h.safe_unicode(path), '#%s' % fid)}
