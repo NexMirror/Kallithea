@@ -18,6 +18,29 @@ you can enter HTML code (possibly with JavaScript and/or CSS) directly via the
 block*.
 
 
+Style sheet customization with Less
+-----------------------------------
+
+Kallithea uses `Bootstrap 3`_ and Less_ for its style definitions. If you want
+to make some customizations, we recommend to do so by creating a ``theme.less``
+file. When you create a file named ``theme.less`` in the Kallithea root
+directory, you can use this file to override the default style. For example,
+you can use this to override ``@kallithea-theme-main-color``,
+``@kallithea-logo-url`` or other `Bootstrap variables`_.
+
+After creating the ``theme.less`` file, you need to regenerate the CSS files.
+Install npm for your platform and run::
+
+    npm install
+    npm run less
+
+in the Kallithea root directory.
+
+.. _bootstrap 3: https://getbootstrap.com/docs/3.3/
+.. _bootstrap variables: https://getbootstrap.com/docs/3.3/customize/#less-variables
+.. _less: http://lesscss.org/
+
+
 Behavioral customization: rcextensions
 --------------------------------------
 
