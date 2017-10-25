@@ -22,7 +22,7 @@ syntax: regexp
 ^\.project$
 ^\.pydevproject$
 ^\.coverage$
-^kallithea/public/css/style\.css$
+^kallithea/public/css/style\.css(\.map)?$
 ^theme\.less$
 ^kallithea\.db$
 ^test\.db$

@@ -9,6 +9,6 @@
     "less-plugin-clean-css": "~1.5"
   },
   "scripts": {
-    "less": "lessc --relative-urls kallithea/public/less/main.less kallithea/public/css/style.css"
+    "less": "lessc --relative-urls --source-map --source-map-less-inline kallithea/public/less/main.less kallithea/public/css/style.css"
   }
 }
