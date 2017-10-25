@@ -1,3 +1,7 @@
+/* basic variables */
+@kallithea-theme-main-color:        #577632;
+@kallithea-theme-inverse-color:     #FFF;
+
 /* logo */
 @kallithea-logo-url:                "../images/kallithea-logo.svg";
 @kallithea-logo-width:              140px;
@@ -5,4 +9,6 @@
 @kallithea-logo-bottom:             4px;
 
 /* bootstrap override */
+@brand-primary:                     @kallithea-theme-main-color;
+@link-hover-color:                  darken(@kallithea-theme-main-color, 20.0%);
 @font-family-monospace:             Lucida Console, Consolas, Monaco, Inconsolata, Liberation Mono, monospace;
