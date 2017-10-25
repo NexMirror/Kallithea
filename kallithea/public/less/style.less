@@ -8,6 +8,8 @@
  *
  */
 
+@import "kallithea-variables.less";
+
 body {
   background: url("../images/background.png") repeat scroll 0 0 #B0B0B0;
 }
@@ -113,10 +115,10 @@ nav.navbar {
     content: "";
     display: inline-block;
     margin-right: .2em;
-    background-image: url("../images/kallithea-logo.svg");
-    width: 140px;
-    height: 30px;
-    margin-bottom: -4px;
+    background-image: url(@kallithea-logo-url);
+    width: @kallithea-logo-width;
+    height: @kallithea-logo-height;
+    margin-bottom: -@kallithea-logo-bottom;
     margin-top: -12px;
   }
 }
