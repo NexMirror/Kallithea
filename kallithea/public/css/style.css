@@ -1629,8 +1629,6 @@ table.code-difftable .code {
   display: block;
 }
 table.code-difftable .code pre {
-  margin: 0 0 0 12px !important;
-  padding: 0;
   min-height: 17px;
   line-height: 17px;
   white-space: pre-wrap;
@@ -1640,25 +1638,14 @@ table.code-difftable .code pre {
 table.code-difftable .del .code pre:before {
   content: "-";
   color: #800;
-  float: left;
-  left: -1em;
-  position: relative;
-  width: 0;
 }
 table.code-difftable .add .code pre:before {
   content: "+";
   color: #080;
-  float: left;
-  left: -1em;
-  position: relative;
-  width: 0;
 }
-table.code-difftable .unmod .code pre:before {
+table.code-difftable .code pre:before {
   content: " ";
-  float: left;
-  left: -1em;
-  position: relative;
-  width: 0;
+  margin: 0 2px;
 }
 /* comment bubble */
 .add-bubble {
