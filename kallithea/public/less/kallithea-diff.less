@@ -8,12 +8,15 @@
   color: @kallithea-theme-main-color;
 }
 
-/* colors for deleted/changed/added, for per file "diffstat" (rendered as Bootstrap progress-bar) */
-.cs_files .changes .added {
+/* colors for deleted/changed/added, both for 3 labels in top right corner with total count, and for per file "diffstat" (rendered as Bootstrap progress-bar) */
+.changes .added {
   color: inherit;
   background-color: @add-bg-color;
 }
-.cs_files .changes .deleted {
+.changes .changed {
+  background: @change-bg-color;
+}
+.changes .deleted {
   background-color: @delete-bg-color;
 }
 /* binary
