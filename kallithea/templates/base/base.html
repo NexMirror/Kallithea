@@ -81,12 +81,12 @@
   </ul>
 </%def>
 
-<%def name="repotag(repo)">
+<%def name="repolabel(repo)">
   %if h.is_hg(repo):
-    <span class="repotag" title="${_('Mercurial repository')}">hg</span>
+    <span class="label label-repo" title="${_('Mercurial repository')}">hg</span>
   %endif
   %if h.is_git(repo):
-    <span class="repotag" title="${_('Git repository')}">git</span>
+    <span class="label label-repo" title="${_('Git repository')}">git</span>
   %endif
 </%def>
 
@@ -97,7 +97,7 @@
     <div class="container-fluid">
     <div class="navbar-header">
       <div class="navbar-brand">
-        ${repotag(c.db_repo)}
+        ${repolabel(c.db_repo)}
 
         ## public/private
         %if c.db_repo.private:
@@ -433,10 +433,10 @@
                 if(obj_dict && state.type == 'repo'){
                     tmpl += '<span class="repo-icons">';
                     if(obj_dict['repo_type'] === 'hg'){
-                        tmpl += '<span class="repotag" title="${_('Mercurial repository')}">hg</span> ';
+                        tmpl += '<span class="label label-repo" title="${_('Mercurial repository')}">hg</span> ';
                     }
                     else if(obj_dict['repo_type'] === 'git'){
-                        tmpl += '<span class="repotag" title="${_('Git repository')}">git</span> ';
+                        tmpl += '<span class="label label-repo" title="${_('Git repository')}">git</span> ';
                     }
                     if(obj_dict['private']){
                         tmpl += '<i class="icon-keyhole-circled"></i>';

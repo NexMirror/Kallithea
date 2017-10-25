@@ -1058,20 +1058,20 @@ def urlify_text(s, repo_name=None, link_=None, truncate=None, stylize=False, tru
         if stylize:
             seen = match_obj.group('seen')
             if seen:
-                return '<div class="metatag" data-tag="see">see =&gt; %s</div>' % seen
+                return '<div class="label label-meta" data-tag="see">see =&gt; %s</div>' % seen
             license = match_obj.group('license')
             if license:
-                return '<div class="metatag" data-tag="license"><a href="http:\/\/www.opensource.org/licenses/%s">%s</a></div>' % (license, license)
+                return '<div class="label label-meta" data-tag="license"><a href="http:\/\/www.opensource.org/licenses/%s">%s</a></div>' % (license, license)
             tagtype = match_obj.group('tagtype')
             if tagtype:
                 tagvalue = match_obj.group('tagvalue')
-                return '<div class="metatag" data-tag="%s">%s =&gt; <a href="/%s">%s</a></div>' % (tagtype, tagtype, tagvalue, tagvalue)
+                return '<div class="label label-meta" data-tag="%s">%s =&gt; <a href="/%s">%s</a></div>' % (tagtype, tagtype, tagvalue, tagvalue)
             lang = match_obj.group('lang')
             if lang:
-                return '<div class="metatag" data-tag="lang">%s</div>' % lang
+                return '<div class="label label-meta" data-tag="lang">%s</div>' % lang
             tag = match_obj.group('tag')
             if tag:
-                return '<div class="metatag" data-tag="%s">%s</div>' % (tag, tag)
+                return '<div class="label label-meta" data-tag="%s">%s</div>' % (tag, tag)
         return match_obj.group(0)
 
     def _urlify(s):

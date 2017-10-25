@@ -391,7 +391,7 @@ class BaseController(TGController):
         ## DB stored
         c.visual.show_public_icon = str2bool(rc_config.get('show_public_icon'))
         c.visual.show_private_icon = str2bool(rc_config.get('show_private_icon'))
-        c.visual.stylify_metatags = str2bool(rc_config.get('stylify_metatags'))
+        c.visual.stylify_metalabels = str2bool(rc_config.get('stylify_metalabels'))
         c.visual.page_size = safe_int(rc_config.get('dashboard_items', 100))
         c.visual.admin_grid_items = safe_int(rc_config.get('admin_grid_items', 100))
         c.visual.repository_fields = str2bool(rc_config.get('repository_fields'))

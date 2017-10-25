@@ -457,7 +457,7 @@ class DbManage(object):
             ('ga_code', '', 'unicode'),
             ('show_public_icon', True, 'bool'),
             ('show_private_icon', True, 'bool'),
-            ('stylify_metatags', False, 'bool'),
+            ('stylify_metalabels', False, 'bool'),
             ('dashboard_items', 100, 'int'), # TODO: call it page_size
             ('admin_grid_items', 25, 'int'),
             ('show_version', True, 'bool'),

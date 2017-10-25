@@ -363,7 +363,7 @@ def ApplicationVisualisationForm():
         filter_extra_fields = False
         show_public_icon = v.StringBoolean(if_missing=False)
         show_private_icon = v.StringBoolean(if_missing=False)
-        stylify_metatags = v.StringBoolean(if_missing=False)
+        stylify_metalabels = v.StringBoolean(if_missing=False)
 
         repository_fields = v.StringBoolean(if_missing=False)
         lightweight_journal = v.StringBoolean(if_missing=False)

@@ -73,50 +73,32 @@
             </div>
             <div class="extra-container">
               %if cs_comments.get(cs.raw_id):
-                <a class="comments-container comments-cnt" href="${cs_comments[cs.raw_id][0].url()}" data-toggle="tooltip" title="${_('%s comments') % len(cs_comments[cs.raw_id])}">
-                  ${len(cs_comments[cs.raw_id])}
-                  <i class="icon-comment-discussion"></i>
+                <a class="comments-container comments-cnt" href="${cs_comments[cs.raw_id][0].url()}" data-toggle="tooltip" title="${_('%s comments') % len(cs_comments[cs.raw_id])}">${len(cs_comments[cs.raw_id])}<i class="icon-comment-discussion"></i>
                 </a>
               %endif
               %for book in cs.bookmarks:
-                <span class="booktag" title="${_('Bookmark %s') % book}">
-                  ${h.link_to(book,h.url('changeset_home',repo_name=repo_name,revision=cs.raw_id))}
-                </span>
+                <span class="label label-bookmark" title="${_('Bookmark %s') % book}">${h.link_to(book,h.url('changeset_home',repo_name=repo_name,revision=cs.raw_id))}</span>
               %endfor
               %for tag in cs.tags:
-                <span class="tagtag" title="${_('Tag %s') % tag}">
-                  ${h.link_to(tag,h.url('changeset_home',repo_name=repo_name,revision=cs.raw_id))}
-                </span>
+                <span class="label label-tag" title="${_('Tag %s') % tag}">${h.link_to(tag,h.url('changeset_home',repo_name=repo_name,revision=cs.raw_id))}</span>
               %endfor
               %if cs.bumped:
-                <span class="bumpedtag" title="Bumped">
-                  Bumped
-                </span>
+                <span class="label label-bumped" title="Bumped">Bumped</span>
               %endif
               %if cs.divergent:
-                <span class="divergenttag" title="Divergent">
-                  Divergent
-                </span>
+                <span class="label label-divergent" title="Divergent">Divergent</span>
               %endif
               %if cs.extinct:
-                <span class="extincttag" title="Extinct">
-                  Extinct
-                </span>
+                <span class="label label-extinct" title="Extinct">Extinct</span>
               %endif
               %if cs.unstable:
-                <span class="unstabletag" title="Unstable">
-                  Unstable
-                </span>
+                <span class="label label-unstable" title="Unstable">Unstable</span>
               %endif
               %if cs.phase:
-                <span class="phasetag" title="Phase">
-                  ${cs.phase}
-                </span>
+                <span class="label label-phase" title="Phase">${cs.phase}</span>
               %endif
               %if show_branch and cs.branch:
-                <span class="branchtag" title="${_('Branch %s' % cs.branch)}">
-                  ${h.link_to(cs.branch,h.url('changelog_home',repo_name=repo_name,branch=cs.branch))}
-                </span>
+                <span class="label label-branch" title="${_('Branch %s' % cs.branch)}">${h.link_to(cs.branch,h.url('changelog_home',repo_name=repo_name,branch=cs.branch))}</span>
               %endif
             </div>
           </div>

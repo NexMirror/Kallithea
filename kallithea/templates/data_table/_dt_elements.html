@@ -13,7 +13,7 @@
         return name
     %>
   <div class="dt_repo ${'dt_repo_pending' if rstate == 'repo_state_pending' else ''}">
-    ${base.repotag(rtype)}
+    ${base.repolabel(rtype)}
     <a href="${h.url('edit_repo' if admin else 'summary_home', repo_name=name)}">
         ${get_name(name)}
     </a>

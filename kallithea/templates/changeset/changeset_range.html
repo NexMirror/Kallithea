@@ -77,21 +77,21 @@ ${self.repo_context_bar('changelog')}
             <div class="right">
               <span class="logtags">
                 %if len(cs.parents)>1:
-                <span class="mergetag">${_('Merge')}</span>
+                <span class="label label-merge">${_('Merge')}</span>
                 %endif
                 %if h.is_hg(c.db_repo_scm_instance):
                   %for book in cs.bookmarks:
-                  <span class="booktag" title="${_('Bookmark %s') % book}">
+                  <span class="label label-bookmark" title="${_('Bookmark %s') % book}">
                      ${h.link_to(book,h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}
                   </span>
                   %endfor
                 %endif
                 %for tag in cs.tags:
-                    <span class="tagtag" title="${_('Tag %s') % tag}">
+                    <span class="label label-tag" title="${_('Tag %s') % tag}">
                     ${h.link_to(tag,h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}</span>
                 %endfor
                 %if cs.branch:
-                <span class="branchtag" title="${_('Branch %s') % cs.branch}">
+                <span class="label label-branch" title="${_('Branch %s') % cs.branch}">
                    ${h.link_to(cs.branch,h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}
                 </span>
                 %endif

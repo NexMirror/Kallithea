@@ -33,7 +33,7 @@ class TestSummaryController(TestController):
 
         # repo type
         response.mustcontain(
-            """<span class="repotag" title="Mercurial repository">hg"""
+            """<span class="label label-repo" title="Mercurial repository">hg"""
         )
         # public/private
         response.mustcontain(
@@ -59,7 +59,7 @@ class TestSummaryController(TestController):
 
         # repo type
         response.mustcontain(
-            """<span class="repotag" title="Git repository">git"""
+            """<span class="label label-repo" title="Git repository">git"""
         )
         # public/private
         response.mustcontain(
@@ -84,7 +84,7 @@ class TestSummaryController(TestController):
 
         # repo type
         response.mustcontain(
-            """<span class="repotag" title="Mercurial repository">hg"""
+            """<span class="label label-repo" title="Mercurial repository">hg"""
         )
         # public/private
         response.mustcontain(
@@ -113,7 +113,7 @@ class TestSummaryController(TestController):
 
         # repo type
         response.mustcontain(
-            """<span class="repotag" title="Git repository">git"""
+            """<span class="label label-repo" title="Git repository">git"""
         )
         # public/private
         response.mustcontain(

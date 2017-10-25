@@ -21,11 +21,11 @@ class TestHomeController(TestController):
         response.mustcontain('Add Repository')
 
         response.mustcontain(
-            """<span class="repotag" title="Git repository">git"""
+            """<span class="label label-repo" title="Git repository">git"""
         )
 
         response.mustcontain(
-            """<span class="repotag" title="Mercurial repository">hg"""
+            """<span class="label label-repo" title="Mercurial repository">hg"""
         )
 
         # html in javascript variable:

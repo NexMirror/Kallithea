@@ -11,10 +11,10 @@
             %if section != 'global':
               <div class="pull-right">
                 ${_('Show')}:
-                <label>${h.checkbox('perms_filter_none_%s' % section, 'none', 'checked', class_='perm_filter filter_%s' % section, **{'data-section':section, 'data-perm_type':'none'})}<span class="perm_tag none">${_('None')}</span></label>
-                <label>${h.checkbox('perms_filter_read_%s' % section, 'read', 'checked', class_='perm_filter filter_%s' % section, **{'data-section':section, 'data-perm_type':'read'})}<span class="perm_tag read">${_('Read')}</span></label>
-                <label>${h.checkbox('perms_filter_write_%s' % section, 'write', 'checked', class_='perm_filter filter_%s' % section, **{'data-section':section, 'data-perm_type':'write'})}<span class="perm_tag write">${_('Write')}</span></label>
-                <label>${h.checkbox('perms_filter_admin_%s' % section, 'admin', 'checked', class_='perm_filter filter_%s' % section, **{'data-section':section, 'data-perm_type':'admin'})}<span class="perm_tag admin">${_('Admin')}</span></label>
+                <label>${h.checkbox('perms_filter_none_%s' % section, 'none', 'checked', class_='perm_filter filter_%s' % section, **{'data-section':section, 'data-perm_type':'none'})}<span class="label label-none">${_('None')}</span></label>
+                <label>${h.checkbox('perms_filter_read_%s' % section, 'read', 'checked', class_='perm_filter filter_%s' % section, **{'data-section':section, 'data-perm_type':'read'})}<span class="label label-read">${_('Read')}</span></label>
+                <label>${h.checkbox('perms_filter_write_%s' % section, 'write', 'checked', class_='perm_filter filter_%s' % section, **{'data-section':section, 'data-perm_type':'write'})}<span class="label label-write">${_('Write')}</span></label>
+                <label>${h.checkbox('perms_filter_admin_%s' % section, 'admin', 'checked', class_='perm_filter filter_%s' % section, **{'data-section':section, 'data-perm_type':'admin'})}<span class="label label-admin">${_('Admin')}</span></label>
               </div>
             %endif
         </div>
@@ -73,7 +73,7 @@
                           %endif
                       </td>
                       <td>
-                           <span class="perm_tag ${section_perm.split('.')[-1]}">${section_perm}</span>
+                           <span class="label label-${section_perm.split('.')[-1]}">${section_perm}</span>
                       </td>
                       %if actions:
                       <td>

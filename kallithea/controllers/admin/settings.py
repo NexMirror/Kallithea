@@ -266,7 +266,7 @@ class SettingsController(BaseController):
                 settings = [
                     ('show_public_icon', 'show_public_icon', 'bool'),
                     ('show_private_icon', 'show_private_icon', 'bool'),
-                    ('stylify_metatags', 'stylify_metatags', 'bool'),
+                    ('stylify_metalabels', 'stylify_metalabels', 'bool'),
                     ('repository_fields', 'repository_fields', 'bool'),
                     ('dashboard_items', 'dashboard_items', 'int'),
                     ('admin_grid_items', 'admin_grid_items', 'int'),

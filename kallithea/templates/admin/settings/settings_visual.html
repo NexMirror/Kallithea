@@ -86,25 +86,25 @@ ${h.form(url('admin_settings_visual'), method='post')}
             </div>
 
             <div class="form-group">
-                <label class="control-label" for="stylify_metatags">${_('Meta Tagging')}:</label>
+                <label class="control-label" for="stylify_metalabels">${_('Meta Tagging')}:</label>
                 <div>
                     <div class="checkbox">
                         <label>
-                            ${h.checkbox('stylify_metatags','True')}
+                            ${h.checkbox('stylify_metalabels','True')}
                             ${_('Parses meta tags from the repository description field and turns them into colored tags.')}
                         </label>
                     </div>
                     <div class="help-block">
                         ${_('Stylify recognised meta tags:')}
                         <ul class="list-unstyled"> <!-- Fix style here -->
-                            <li>[featured] <span class="metatag" data-tag="featured">featured</span></li>
-                            <li>[stale] <span class="metatag" data-tag="stale">stale</span></li>
-                            <li>[dead] <span class="metatag" data-tag="dead">dead</span></li>
-                            <li>[lang =&gt; lang] <span class="metatag" data-tag="lang">lang</span></li>
-                            <li>[license =&gt; License] <span class="metatag" data-tag="license"><a href="http://www.opensource.org/licenses/License">License</a></span></li>
-                            <li>[requires =&gt; Repo] <span class="metatag" data-tag="requires">requires =&gt; <a href="#">Repo</a></span></li>
-                            <li>[recommends =&gt; Repo] <span class="metatag" data-tag="recommends">recommends =&gt; <a href="#">Repo</a></span></li>
-                            <li>[see =&gt; URI] <span class="metatag" data-tag="see">see =&gt; <a href="#">URI</a> </span></li>
+                            <li>[featured] <span class="label label-meta" data-tag="featured">featured</span></li>
+                            <li>[stale] <span class="label label-meta" data-tag="stale">stale</span></li>
+                            <li>[dead] <span class="label label-meta" data-tag="dead">dead</span></li>
+                            <li>[lang =&gt; lang] <span class="label label-meta" data-tag="lang">lang</span></li>
+                            <li>[license =&gt; License] <span class="label label-meta" data-tag="license"><a href="http://www.opensource.org/licenses/License">License</a></span></li>
+                            <li>[requires =&gt; Repo] <span class="label label-meta" data-tag="requires">requires =&gt; <a href="#">Repo</a></span></li>
+                            <li>[recommends =&gt; Repo] <span class="label label-meta" data-tag="recommends">recommends =&gt; <a href="#">Repo</a></span></li>
+                            <li>[see =&gt; URI] <span class="label label-meta" data-tag="see">see =&gt; <a href="#">URI</a> </span></li>
                         </ul>
                     </div>
                  </div>

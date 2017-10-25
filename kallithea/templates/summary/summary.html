@@ -63,12 +63,12 @@ ${self.repo_context_bar('summary')}
                 <label>${_('Clone URL')}:</label>
                 <div id="clone-url">
                   <div id="clone_by_name" class="input-group">
-                    <span class="input-group-addon">${self.repotag(c.db_repo)}</span>
+                    <span class="input-group-addon">${self.repolabel(c.db_repo)}</span>
                     <input class="form-control" size="80" readonly="readonly" value="${c.clone_repo_url}"/>
                     <span class="input-group-addon btn">${_('Show by ID')}</span>
                   </div>
                   <div id="clone_by_id" class="input-group" style="display:none">
-                    <span class="input-group-addon">${self.repotag(c.db_repo)}</span>
+                    <span class="input-group-addon">${self.repolabel(c.db_repo)}</span>
                     <input class="form-control" size="80" readonly="readonly" value="${c.clone_repo_url_id}"/>
                     <span class="input-group-addon btn">${_('Show by Name')}</span>
                   </div>
@@ -77,7 +77,7 @@ ${self.repo_context_bar('summary')}
 
             <div class="form-group">
               <label>${_('Description')}:</label>
-              <div class="formatted-fixed">${h.urlify_text(c.db_repo.description, stylize=c.visual.stylify_metatags)}</div>
+              <div class="formatted-fixed">${h.urlify_text(c.db_repo.description, stylize=c.visual.stylify_metalabels)}</div>
             </div>
 
             <div class="form-group">
