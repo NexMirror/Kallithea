@@ -1989,26 +1989,23 @@ BIN_FILENODE = 6
 .cs_files .changes .bin.bin5 {
   background-color: #6D99FF;
 }
-.cs_files .cs_added,
-.cs_files .cs_A {
+.cs_files .cs_added {
   height: 16px;
   margin-top: 7px;
   text-align: left;
 }
 .cs_files .cs_changed,
-.cs_files .cs_M {
+.cs_files .cs_modified {
   height: 16px;
   margin-top: 7px;
   text-align: left;
 }
-.cs_files .cs_removed,
-.cs_files .cs_D {
+.cs_files .cs_removed {
   height: 16px;
   margin-top: 7px;
   text-align: left;
 }
-.cs_files .cs_renamed,
-.cs_files .cs_R {
+.cs_files .cs_renamed {
   height: 16px;
   margin-top: 7px;
   text-align: left;
@@ -2173,6 +2170,19 @@ table.code-difftable .unmod .code pre:before {
 }
 .add-bubble div:hover {
   transform: scale(1.2, 1.2);
+}
+/* file diff icons */
+.icon-diff-modified:before {
+  color: #d0b44c;
+}
+.icon-diff-removed:before {
+  color: #bd2c00;
+}
+.icon-diff-added:before {
+  color: #6cc644;
+}
+.icon-diff-renamed:before {
+  color: #677a85;
 }
 /* show some context of link targets - but only works when the link target
    can be extended with any visual difference */

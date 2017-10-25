@@ -327,49 +327,49 @@ class DiffProcessor(object):
             }
 
             if head['deleted_file_mode']:
-                op = 'D'
+                op = 'removed'
                 stats['binary'] = True
                 stats['ops'][DEL_FILENODE] = 'deleted file'
 
             elif head['new_file_mode']:
-                op = 'A'
+                op = 'added'
                 stats['binary'] = True
                 stats['ops'][NEW_FILENODE] = 'new file %s' % head['new_file_mode']
             else:  # modify operation, can be cp, rename, chmod
                 # CHMOD
                 if head['new_mode'] and head['old_mode']:
-                    op = 'M'
+                    op = 'modified'
                     stats['binary'] = True
                     stats['ops'][CHMOD_FILENODE] = ('modified file chmod %s => %s'
                                         % (head['old_mode'], head['new_mode']))
                 # RENAME
                 if (head['rename_from'] and head['rename_to']
                       and head['rename_from'] != head['rename_to']):
-                    op = 'R'
+                    op = 'renamed'
                     stats['binary'] = True
                     stats['ops'][RENAMED_FILENODE] = ('file renamed from %s to %s'
                                     % (head['rename_from'], head['rename_to']))
                 # COPY
                 if head.get('copy_from') and head.get('copy_to'):
-                    op = 'M'
+                    op = 'modified'
                     stats['binary'] = True
                     stats['ops'][COPIED_FILENODE] = ('file copied from %s to %s'
                                         % (head['copy_from'], head['copy_to']))
                 # FALL BACK: detect missed old style add or remove
                 if op is None:
                     if not head['a_file'] and head['b_file']:
-                        op = 'A'
+                        op = 'added'
                         stats['binary'] = True
                         stats['ops'][NEW_FILENODE] = 'new file'
 
                     elif head['a_file'] and not head['b_file']:
-                        op = 'D'
+                        op = 'removed'
                         stats['binary'] = True
                         stats['ops'][DEL_FILENODE] = 'deleted file'
 
                 # it's not ADD not DELETE
                 if op is None:
-                    op = 'M'
+                    op = 'modified'
                     stats['binary'] = True
                     stats['ops'][MOD_FILENODE] = 'modified file'
 
@@ -380,7 +380,7 @@ class DiffProcessor(object):
                 stats['added'] = added
                 stats['deleted'] = deleted
                 # explicit mark that it's a modified file
-                if op == 'M':
+                if op == 'modified':
                     stats['ops'][MOD_FILENODE] = 'modified file'
             else:  # Git binary patch (or empty diff)
                 # Git binary patch
@@ -388,7 +388,7 @@ class DiffProcessor(object):
                     stats['ops'][BIN_FILENODE] = 'binary diff not shown'
                 chunks = []
 
-            if op == 'D' and chunks:
+            if op == 'removed' and chunks:
                 # a way of seeing deleted content could perhaps be nice - but
                 # not with the current UI
                 chunks = []

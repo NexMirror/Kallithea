@@ -11,29 +11,6 @@ i[class^='icon-'] {
   /* background-color: red; /* for debugging */
 }
 /* Note: class 'icon-empty' or 'icon-gravatar' can be used to get icon styling without an actual glyph */
-/* css classes for diff file status ... it'd be nice if css had a way to
-   inherit from another class but alas, we must make sure this content is the
-   same from the icon font file */
-.icon-diff-M:before {
-  font-family: 'kallithea';
-  content: '\22a1';
-  color: #d0b44c;
-}
-.icon-diff-D:before {
-  font-family: 'kallithea';
-  content: '\229f';
-  color: #bd2c00;
-}
-.icon-diff-A:before {
-  font-family: 'kallithea';
-  content: '\229e';
-  color: #6cc644;
-}
-.icon-diff-R:before {
-  font-family: 'kallithea';
-  content: '\e81f';
-  color: #677a85;
-}
 nav.navbar #quick a,
 #content #context-bar,
 #content #context-bar a {
