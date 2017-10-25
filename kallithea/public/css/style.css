@@ -1506,7 +1506,7 @@ RENAMED_FILENODE = 4
 CHMOD_FILENODE = 5
 BIN_FILENODE = 6
 */
-.cs_files .changes .bin {
+.changes .bin {
   background-color: #BBFFBB;
   float: left;
   text-align: center;
@@ -1514,23 +1514,23 @@ BIN_FILENODE = 6
   padding: 2px 0px 2px 0px;
 }
 /* added binary */
-.cs_files .changes .bin.bin1 {
+.changes .bin.bin1 {
   background-color: #BBFFBB;
 }
 /* deleted binary*/
-.cs_files .changes .bin.bin2 {
+.changes .bin.bin2 {
   background-color: #FF8888;
 }
 /* mod binary*/
-.cs_files .changes .bin.bin3 {
+.changes .bin.bin3 {
   background-color: #DDDDDD;
 }
 /* rename file*/
-.cs_files .changes .bin.bin4 {
+.changes .bin.bin4 {
   background-color: #6D99FF;
 }
 /* chmod file*/
-.cs_files .changes .bin.bin5 {
+.changes .bin.bin5 {
   background-color: #6D99FF;
 }
 /* center collapse button */
