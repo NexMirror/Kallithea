@@ -5,20 +5,20 @@
 /* progress bars should be aligned right */
 .cs_files .changes {
   float: right;
-  color: #577632;
+  color: @kallithea-theme-main-color;
 }
 
 /* colors for changes */
 .cs_files .changes .added {
   color: inherit;
-  background-color: #BBFFBB;
+  background-color: @add-bg-color;
   float: left;
   text-align: center;
   font-size: 9px;
   padding: 2px 0px 2px 0px;
 }
 .cs_files .changes .deleted {
-  background-color: #FF8888;
+  background-color: @delete-bg-color;
   float: left;
   text-align: center;
   font-size: 9px;
@@ -33,7 +33,7 @@ CHMOD_FILENODE = 5
 BIN_FILENODE = 6
 */
 .changes .bin {
-  background-color: #BBFFBB;
+  background-color: @add-bg-color;
   float: left;
   text-align: center;
   font-size: 9px;
@@ -41,15 +41,15 @@ BIN_FILENODE = 6
 }
 /* added binary */
 .changes .bin.bin1 {
-  background-color: #BBFFBB;
+  background-color: @add-bg-color;
 }
 /* deleted binary*/
 .changes .bin.bin2 {
-  background-color: #FF8888;
+  background-color: @delete-bg-color;
 }
 /* mod binary*/
 .changes .bin.bin3 {
-  background-color: #DDDDDD;
+  background-color: @change-bg-color;
 }
 /* rename file*/
 .changes .bin.bin4 {
@@ -74,7 +74,7 @@ BIN_FILENODE = 6
 
   /* line coloring */
   .context {
-    background: none repeat scroll 0 0 #DDE7EF;
+    background: none repeat scroll 0 0 @highlight-line-color;
     color: #999;
   }
   .add {
@@ -192,12 +192,12 @@ BIN_FILENODE = 6
   z-index: 1;
 }
 .add-bubble div {
-  background: #577632;
+  background: @kallithea-theme-main-color;
   width: 16px;
   height: 16px;
   cursor: pointer;
   padding: 0 2px 2px 0.5px;
-  border: 1px solid #577632;
+  border: 1px solid @kallithea-theme-main-color;
   border-radius: 3px;
   box-sizing: border-box;
 }
