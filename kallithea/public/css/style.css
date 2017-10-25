@@ -484,8 +484,7 @@ a.metatag[data-tag="license"]:hover {
   background-color: #bfbfbf;
   color: #ffffff;
 }
-.right .mergetag,
-.right .merge {
+.right .mergetag {
   padding: 1px 3px 1px 3px;
   background-color: #fca062;
   font-size: 10px;
