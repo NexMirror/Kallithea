@@ -8,21 +8,13 @@
   color: @kallithea-theme-main-color;
 }
 
-/* colors for changes */
+/* colors for deleted/changed/added, for per file "diffstat" (rendered as Bootstrap progress-bar) */
 .cs_files .changes .added {
   color: inherit;
   background-color: @add-bg-color;
-  float: left;
-  text-align: center;
-  font-size: 9px;
-  padding: 2px 0px 2px 0px;
 }
 .cs_files .changes .deleted {
   background-color: @delete-bg-color;
-  float: left;
-  text-align: center;
-  font-size: 9px;
-  padding: 2px 0px 2px 0px;
 }
 /* binary
 NEW_FILENODE = 1
@@ -34,10 +26,6 @@ BIN_FILENODE = 6
 */
 .changes .bin {
   background-color: @add-bg-color;
-  float: left;
-  text-align: center;
-  font-size: 9px;
-  padding: 2px 0px 2px 0px;
 }
 /* added binary */
 .changes .bin.bin1 {
