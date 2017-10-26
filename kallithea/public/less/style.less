@@ -67,24 +67,15 @@ div.formatted-fixed {
 .truncate.autoexpand:hover {
   overflow: visible;
 }
+
+/* show comment anchors when hovering over panel-heading */
 a.permalink {
   visibility: hidden;
-  position: absolute;
-  margin: 3px 4px;
 }
-a.permalink:hover {
-  text-decoration: none;
-}
-h1:hover > a.permalink,
-h2:hover > a.permalink,
-h3:hover > a.permalink,
-h4:hover > a.permalink,
-h5:hover > a.permalink,
-h6:hover > a.permalink,
-div:hover > a.permalink,
-div:hover > span > a.permalink {
+.panel-heading:hover .permalink {
   visibility: visible;
 }
+
 .radio-inline,
 .checkbox-inline {
   vertical-align: inherit;
