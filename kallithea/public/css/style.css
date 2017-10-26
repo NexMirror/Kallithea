@@ -1930,13 +1930,16 @@ input.perm_filter {
   width: 14px;
   height: 14px;
 }
+/* bootstrap progress bar has margin-bottom we don't want that in files list */
 .cs_files .progress {
   margin-bottom: 0;
 }
+/* progress bars should be aligned right */
 .cs_files .changes {
   float: right;
   color: #577632;
 }
+/* colors for changes */
 .cs_files .changes .added {
   color: inherit;
   background-color: #BBFFBB;
@@ -1952,7 +1955,7 @@ input.perm_filter {
   font-size: 9px;
   padding: 2px 0px 2px 0px;
 }
-/*new binary
+/* binary
 NEW_FILENODE = 1
 DEL_FILENODE = 2
 MOD_FILENODE = 3
@@ -1967,22 +1970,23 @@ BIN_FILENODE = 6
   font-size: 9px;
   padding: 2px 0px 2px 0px;
 }
+/* added binary */
 .cs_files .changes .bin.bin1 {
   background-color: #BBFFBB;
 }
-/*deleted binary*/
+/* deleted binary*/
 .cs_files .changes .bin.bin2 {
   background-color: #FF8888;
 }
-/*mod binary*/
+/* mod binary*/
 .cs_files .changes .bin.bin3 {
   background-color: #DDDDDD;
 }
-/*rename file*/
+/* rename file*/
 .cs_files .changes .bin.bin4 {
   background-color: #6D99FF;
 }
-/*chmod file*/
+/* chmod file*/
 .cs_files .changes .bin.bin5 {
   background-color: #6D99FF;
 }
@@ -2007,15 +2011,18 @@ BIN_FILENODE = 6
   margin-top: 7px;
   text-align: left;
 }
+/* center collapse button */
 .diff-collapse {
   text-align: center;
   margin-bottom: 15px;
 }
+/* the whole line should be colored */
 table.code-difftable {
   border-collapse: collapse;
   border-radius: 0px !important;
   width: 100%;
 }
+/* line coloring */
 table.code-difftable .context {
   background: none repeat scroll 0 0 #DDE7EF;
   color: #999;
@@ -2034,19 +2041,23 @@ table.code-difftable .del del {
   background: none repeat scroll 0 0 #FFAAAA;
   text-decoration: none;
 }
+/* tabs */
 table.code-difftable td.code pre u:before {
   content: "\21a6";
   display: inline-block;
   width: 0;
 }
+/* CR */
 table.code-difftable td.code pre u.cr:before {
   content: "\21a4";
   display: inline-block;
   color: rgba(0, 0, 0, 0.5);
 }
+/* whitespace characters */
 table.code-difftable td.code pre u {
   color: rgba(0, 0, 0, 0.15);
 }
+/* trailing spaces */
 table.code-difftable td.code pre i {
   border-style: solid;
   border-width: 0 0 0 1px;
@@ -2103,6 +2114,7 @@ table.code-difftable .code pre {
   white-space: pre-wrap;
   word-break: break-all;
 }
+/* leading +/- on changed lines */
 table.code-difftable .del .code pre:before {
   content: "-";
   color: #800;
@@ -2126,6 +2138,7 @@ table.code-difftable .unmod .code pre:before {
   position: relative;
   width: 0;
 }
+/* comment bubble */
 .add-bubble {
   position: relative;
   display: none;
