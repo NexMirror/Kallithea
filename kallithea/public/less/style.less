@@ -13,21 +13,6 @@
 body {
   background: url("../images/background.png") repeat scroll 0 0 #B0B0B0;
 }
-/* Undo unfortunate Bootstrap default styling */
-body pre {
-  display: inherit;
-  padding: inherit;
-  margin: inherit;
-  font-size: inherit;
-  line-height: inherit;
-  color: inherit;
-  word-break: inherit;
-  word-wrap: inherit;
-  background-color: inherit;
-  border: inherit;
-  border-radius: inherit;
-  overflow: inherit;
-}
 
 a {
   color: #577632;
@@ -121,6 +106,13 @@ nav.navbar {
     margin-bottom: -@kallithea-logo-bottom;
     margin-top: -12px;
   }
+}
+
+/* code highlighting */
+/* don't use bootstrap style for code blocks */
+.code-highlighttable pre {
+  background: inherit;
+  border: 0;
 }
 
 /* every direct child of a panel, that is not .panel-heading, should auto

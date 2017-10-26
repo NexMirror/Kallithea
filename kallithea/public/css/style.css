@@ -10,21 +10,6 @@
 body {
   background: url("../images/background.png") repeat scroll 0 0 #B0B0B0;
 }
-/* Undo unfortunate Bootstrap default styling */
-body pre {
-  display: inherit;
-  padding: inherit;
-  margin: inherit;
-  font-size: inherit;
-  line-height: inherit;
-  color: inherit;
-  word-break: inherit;
-  word-wrap: inherit;
-  background-color: inherit;
-  border: inherit;
-  border-radius: inherit;
-  overflow: inherit;
-}
 a {
   color: #577632;
   text-decoration: none;
@@ -108,6 +93,12 @@ nav.navbar {
   height: 30px;
   margin-bottom: -4px;
   margin-top: -12px;
+}
+/* code highlighting */
+/* don't use bootstrap style for code blocks */
+.code-highlighttable pre {
+  background: inherit;
+  border: 0;
 }
 /* every direct child of a panel, that is not .panel-heading, should auto
  * overflow to prevent overflowing of elements like text boxes and tables */
@@ -1639,6 +1630,10 @@ BIN_FILENODE = 6
   display: block;
 }
 .code-difftable .code pre {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: none;
   min-height: 17px;
   line-height: 17px;
   white-space: pre-wrap;
