@@ -1573,17 +1573,16 @@ table.code-difftable td.code pre u:before {
 table.code-difftable td.code pre u.cr:before {
   content: "\21a4";
   display: inline-block;
-  color: rgba(0, 0, 0, 0.5);
 }
 /* whitespace characters */
 table.code-difftable td.code pre u {
-  color: rgba(0, 0, 0, 0.15);
+  color: rgba(0, 0, 0, 0.3);
 }
 /* trailing spaces */
 table.code-difftable td.code pre i {
   border-style: solid;
   border-width: 0 0 0 1px;
-  color: rgba(0, 0, 0, 0.5);
+  border-color: rgba(0, 0, 0, 0.3);
 }
 /** LINE NUMBERS **/
 table.code-difftable .lineno {
