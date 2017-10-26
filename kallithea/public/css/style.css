@@ -2111,10 +2111,6 @@ table.code-difftable .code {
   display: block;
   width: 100%;
 }
-table.code-difftable .code td {
-  margin: 0;
-  padding: 0;
-}
 table.code-difftable .code pre {
   margin: 0 0 0 12px !important;
   padding: 0;
