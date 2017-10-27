@@ -1,7 +1,3 @@
-#context-bar .select2-container .select2-choice .select2-chosen,
-nav.navbar #quick .select2-container .select2-choice .select2-chosen {
-  margin-right: 0;
-}
 .branch-switcher,
 .repo-switcher {
   .select2-choice {
@@ -15,6 +11,10 @@ nav.navbar #quick .select2-container .select2-choice .select2-chosen {
     border: 0 !important;
     box-shadow: none !important;
     color: #FFFFFF !important;
+  }
+  .select2-choice .select2-chosen {
+    margin-right: 0;
+    line-height: @line-height-computed;
   }
   .select2-arrow {
     display: none !important;
@@ -33,7 +33,29 @@ nav.navbar #quick .select2-container .select2-choice .select2-chosen {
 }
 .repo-switcher-dropdown.select2-drop.select2-drop-active {
   color: black;
+  .select2-result.select2-highlighted {
+    color: @navbar-inverse-link-hover-color;
+    background-color: @navbar-inverse-link-hover-bg;
+  }
+  .select2-result-label {
+    color: white;
+  }
 }
-.repo-switcher-dropdown.select2-drop.select2-drop-active .select2-result-label {
-  color: white;
+
+/* fix padding of select2 entries in navbar to match .navbar-nav > li > a */
+.navbar-inverse {
+  .navbar-nav {
+    > li > .select2-container a {
+      padding: @nav-link-padding;
+      padding-top:    @navbar-padding-vertical;
+      padding-bottom: @navbar-padding-vertical;
+    }
+    li.active > .select2-container,
+    .select2-container:hover,
+    .select2-container:focus,
+    .select2-container-active {
+      color: @navbar-inverse-link-hover-color;
+      background-color: @navbar-inverse-link-hover-bg;
+    }
+  }
 }
