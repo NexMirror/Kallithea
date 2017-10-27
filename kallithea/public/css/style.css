@@ -157,9 +157,6 @@ div.panel.panel-default > div.panel-heading {
   border-bottom: 1px solid #DDD;
   clear: both;
 }
-.reviewer_ac {
-  padding: 10px;
-}
 #content div.panel table#permissions_manage {
   width: auto;
 }
