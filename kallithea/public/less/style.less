@@ -53,10 +53,6 @@ a.permalink {
 nav.navbar .navbar-brand {
   font-size: 20px;
   padding-top: 12px;
-  height: 44px;
-}
-nav.navbar {
-  min-height: 44px;
 }
 nav.navbar.mainmenu .navbar-brand .branding {
   &:before {
@@ -1050,6 +1046,7 @@ nav.navbar #quick > li > a,
 nav.navbar #quick .select2-container .select2-choice .select2-chosen,
 #context-pages > ul > li > a,
 #context-pages .select2-container .select2-choice .select2-chosen {
-  padding: 0px 15px 1px 15px;
-  line-height: 43px;
+  padding: 0 15px 0 15px;
+  line-height: @navbar-height;
+  height: @navbar-height;
 }
