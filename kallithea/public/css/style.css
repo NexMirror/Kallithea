@@ -147,15 +147,6 @@ div.panel.panel-default > div.panel-heading {
   font-size: 14px;
   font-weight: 700;
 }
-div.panel.panel-default div.panel-heading .diff-actions a,
-div.panel.panel-default div.panel-heading .diff-actions span.no-file,
-div.panel.panel-default div.panel-heading .diff-actions span.arrow {
-  color: #577632 !important;
-}
-div.panel.panel-default div.panel-heading .diff-actions span.no-file,
-div.panel.panel-default div.panel-heading .diff-actions span.arrow {
-  opacity: 0.5;
-}
 #content div.panel div.panel-heading .pull-left {
   margin-right: 10px;
 }
