@@ -58,21 +58,14 @@ a.permalink {
 .navbar-inverse {
   border: none;
 }
-.navbar-inverse .navbar-nav > .active > a,
-.navbar-inverse .navbar-nav > .active > a:hover,
-.navbar-inverse .navbar-nav > .active > a:focus {
-  background-color: inherit;
-}
 nav.navbar .navbar-brand:hover,
 nav.navbar .navbar-brand {
   font-size: 20px;
   padding-top: 12px;
-  color: white !important;
   height: 44px;
 }
 nav.navbar {
   min-height: 44px;
-  background-color: #577632;
 }
 
 /* logo */
@@ -197,15 +190,10 @@ div.panel.panel-default > div.panel-heading {
 }
 
 #footer {
-  background-color: #577632;
   margin-bottom: 0;
 }
 #footer > span {
-  color: #FFF;
   font-weight: 700;
-}
-#footer .navbar-link {
-  color: #FFF;
 }
 
 #login .panel-body .icon-lock {
@@ -295,8 +283,8 @@ div.panel.panel-default > div.panel-heading {
 #quick_login div.form div.form-group {
   padding: 5px;
 }
-#quick_login div.form div.form-group > label {
-  color: #fff;
+#quick_login :not(input) {
+  color: @kallithea-theme-inverse-color;
   padding-bottom: 3px;
 }
 #quick_login div.form div.form-group > div input {
