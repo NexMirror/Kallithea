@@ -96,12 +96,6 @@ nav.navbar #logo > .navbar-brand > img {
 .form-group > label {
   float: left;
 }
-label {
-  font-weight: inherit;
-}
-label.control-label {
-  font-weight: bold;
-}
 .groups_breadcrumbs a {
   color: #fff;
 }
