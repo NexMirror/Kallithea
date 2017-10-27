@@ -58,9 +58,6 @@ nav.navbar #quick .select2-container .select2-choice .select2-chosen,
   padding: 0px 15px 1px 15px;
   line-height: 43px;
 }
-nav.navbar #quick a#quick_login_link {
-  padding-left: 0px;
-}
 #context-pages a.dropdown-toggle:after {
   position: absolute;
   float: right;
