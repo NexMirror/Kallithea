@@ -1,10 +1,6 @@
 /**
  * Stylesheets for the context bar
  */
-nav.navbar #quick ul,
-#context-pages ul {
-  background: #577632;
-}
 .repo-switcher-dropdown.select2-drop.select2-drop-active .select2-results .select2-highlighted,
 ul.dropdown-menu li a:focus,
 nav.navbar #quick li:hover,
