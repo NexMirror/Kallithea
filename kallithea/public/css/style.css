@@ -183,12 +183,6 @@ div.panel.panel-default > div.panel-heading {
   padding: 5px 0px 5px 5px;
   text-align: left;
 }
-#content div.panel table td.linenos pre,
-#content div.panel table td.annotate pre,
-#content div.panel table td.code pre {
-  padding-top: inherit;
-  margin: inherit;
-}
 #content div.panel table td.compact {
   padding-left: 0;
   padding-right: 0;
