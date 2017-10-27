@@ -66,117 +66,117 @@ BIN_FILENODE = 6
   margin-bottom: 15px;
 }
 
-/* the whole line should be colored */
-table.code-difftable {
+.code-difftable {
+  /* the whole line should be colored */
   border-collapse: collapse;
   border-radius: 0px !important;
   width: 100%;
-}
 
-/* line coloring */
-table.code-difftable .context {
-  background: none repeat scroll 0 0 #DDE7EF;
-  color: #999;
-}
-table.code-difftable .add {
-  background: none repeat scroll 0 0 #DDFFDD;
-}
-table.code-difftable .add ins {
-  background: none repeat scroll 0 0 #AAFFAA;
-  text-decoration: none;
-}
-table.code-difftable .del {
-  background: none repeat scroll 0 0 #FFDDDD;
-}
-table.code-difftable .del del {
-  background: none repeat scroll 0 0 #FFAAAA;
-  text-decoration: none;
-}
+  /* line coloring */
+  .context {
+    background: none repeat scroll 0 0 #DDE7EF;
+    color: #999;
+  }
+  .add {
+    background: none repeat scroll 0 0 #DDFFDD;
+  }
+  .add ins {
+    background: none repeat scroll 0 0 #AAFFAA;
+    text-decoration: none;
+  }
+  .del {
+    background: none repeat scroll 0 0 #FFDDDD;
+  }
+  .del del {
+    background: none repeat scroll 0 0 #FFAAAA;
+    text-decoration: none;
+  }
 
-/* tabs */
-table.code-difftable td.code pre u:before {
-  content: "\21a6";
-  display: inline-block;
-  width: 0;
-}
-/* CR */
-table.code-difftable td.code pre u.cr:before {
-  content: "\21a4";
-  display: inline-block;
-}
-/* whitespace characters */
-table.code-difftable td.code pre u {
-  color: rgba(0, 0, 0, 0.3);
-}
-/* trailing spaces */
-table.code-difftable td.code pre i {
-  border-style: solid;
-  border-width: 0 0 0 1px;
-  border-color: rgba(0, 0, 0, 0.3);
-}
+  /* tabs */
+  td.code pre u:before {
+    content: "\21a6";
+    display: inline-block;
+    width: 0;
+  }
+  /* CR */
+  td.code pre u.cr:before {
+    content: "\21a4";
+    display: inline-block;
+  }
+  /* whitespace characters */
+  td.code pre u {
+    color: rgba(0, 0, 0, 0.3);
+  }
+  /* trailing spaces */
+  td.code pre i {
+    border-style: solid;
+    border-width: 0 0 0 1px;
+    border-color: rgba(0, 0, 0, 0.3);
+  }
 
-/** LINE NUMBERS **/
-table.code-difftable .lineno {
-  padding-left: 2px;
-  padding-right: 2px !important;
-  width: 30px;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  border-right: 1px solid #CCC !important;
-  border-left: 0px solid #CCC !important;
-  border-top: 0px solid #CCC !important;
-  border-bottom: none !important;
-  vertical-align: middle !important;
-  text-align: center;
-}
-table.code-difftable .lineno.new {
-  text-align: right;
-}
-table.code-difftable .lineno.old {
-  text-align: right;
-}
-table.code-difftable .lineno a {
-  color: #aaa !important;
-  font: 11px Lucida Console, Consolas, Monaco, Inconsolata, Liberation Mono, monospace !important;
-  padding-left: 6px;
-  padding-right: 6px;
-  display: block;
-}
-table.code-difftable .line:hover .lineno a {
-  color: #333 !important;
-}
-table.code-difftable .lineno-inline {
-  background: none repeat scroll 0 0 #FFF !important;
-  padding-left: 2px;
-  padding-right: 2px;
-  text-align: right;
-  width: 30px;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-}
-/** CODE **/
-table.code-difftable .code {
-  display: block;
-}
-table.code-difftable .code pre {
-  min-height: 17px;
-  line-height: 17px;
-  white-space: pre-wrap;
-  word-break: break-all;
-}
+  /** LINE NUMBERS **/
+  .lineno {
+    padding-left: 2px;
+    padding-right: 2px !important;
+    width: 30px;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    border-right: 1px solid #CCC !important;
+    border-left: 0px solid #CCC !important;
+    border-top: 0px solid #CCC !important;
+    border-bottom: none !important;
+    vertical-align: middle !important;
+    text-align: center;
+  }
+  .lineno.new {
+    text-align: right;
+  }
+  .lineno.old {
+    text-align: right;
+  }
+  .lineno a {
+    color: #aaa !important;
+    font: 11px Lucida Console, Consolas, Monaco, Inconsolata, Liberation Mono, monospace !important;
+    padding-left: 6px;
+    padding-right: 6px;
+    display: block;
+  }
+  .line:hover .lineno a {
+    color: #333 !important;
+  }
+  .lineno-inline {
+    background: none repeat scroll 0 0 #FFF !important;
+    padding-left: 2px;
+    padding-right: 2px;
+    text-align: right;
+    width: 30px;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+  }
+  /** CODE **/
+  .code {
+    display: block;
+  }
+  .code pre {
+    min-height: 17px;
+    line-height: 17px;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
 
-/* leading +/- on changed lines */
-table.code-difftable .del .code pre:before {
-  content: "-";
-  color: #800;
-}
-table.code-difftable .add .code pre:before {
-  content: "+";
-  color: #080;
-}
-table.code-difftable .code pre:before {
-  content: " ";
-  margin: 0 2px;
+  /* leading +/- on changed lines */
+  .del .code pre:before {
+    content: "-";
+    color: #800;
+  }
+  .add .code pre:before {
+    content: "+";
+    color: #080;
+  }
+  .code pre:before {
+    content: " ";
+    margin: 0 2px;
+  }
 }
 
 /* comment bubble */
