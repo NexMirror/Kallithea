@@ -21,10 +21,6 @@ nav.navbar #quick a:hover,
   text-decoration: none;
   background: inherit;
 }
-.navbar-text {
-  margin-top: 0;
-  margin-bottom: 0;
-}
 nav.navbar #quick ul,
 #context-pages ul {
   background: #577632;

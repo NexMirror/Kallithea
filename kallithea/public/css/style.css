@@ -636,9 +636,7 @@ table#changesets .booktag {
   width: 100%;
 }
 #footer {
-  padding: 10px 15px;
   background-color: #577632;
-  background-repeat: repeat-x;
 }
 #footer > span {
   color: #FFF;
@@ -646,10 +644,6 @@ table#changesets .booktag {
 }
 #footer .navbar-link {
   color: #FFF;
-}
-#footer.navbar {
-  min-height: inherit;
-  padding-bottom: 8px;
 }
 #login .panel-body .icon-lock {
   font-size: 100px;
