@@ -25,16 +25,6 @@ nav.navbar #quick a:hover,
   margin-top: 0;
   margin-bottom: 0;
 }
-ul#quick ul.dropdown-menu > li {
-  border-bottom: 1px solid rgba(0,0,0,0.1);
-  border-top: 1px solid rgba(255,255,255,0.1);
-}
-ul#quick ul.dropdown-menu > li:first-child {
-  border-top: none;
-}
-ul#quick ul.dropdown-menu > li:last-child {
-  border-bottom: none;
-}
 nav.navbar #quick ul,
 #context-pages ul {
   background: #577632;
@@ -57,25 +47,9 @@ nav.navbar #quick li a.menu_link:focus,
 #content #context-pages .following .show-follow {
   display: none;
 }
-nav.navbar #quick li,
-nav.navbar #quick_login .pull-right,
-#content #context-pages li {
-  border-right: 1px solid rgba(0,0,0,0.1);
-  border-left: 1px solid rgba(255,255,255,0.1);
-  padding: 0;
-}
+
 .nav .open > a {
   background: inherit !important;
-}
-nav.navbar #quick li:last-child,
-#content #context-pages li:last-child {
-  border-right: none;
-}
-nav.navbar #quick > li:first-child {
-  border-left: none;
-}
-nav.navbar #quick > li:first-child > a {
-  border-radius: 4px 0 0 4px;
 }
 nav.navbar #quick > li > a,
 nav.navbar #quick .select2-container .select2-choice .select2-chosen,
