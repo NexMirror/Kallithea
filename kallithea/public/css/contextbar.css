@@ -61,9 +61,6 @@ nav.navbar #quick .select2-container .select2-choice .select2-chosen,
 nav.navbar #quick a#quick_login_link {
   padding-left: 0px;
 }
-nav.navbar #quick a {
-  overflow: hidden;
-}
 #context-pages a.dropdown-toggle:after {
   position: absolute;
   float: right;
