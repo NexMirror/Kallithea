@@ -3,7 +3,7 @@
 <%def name="pullrequest_overview(pullrequests)">
 
 %if not len(pullrequests):
-    <div class="empty_data">${_('No entries')}</div>
+    <div class="text-muted">${_('No entries')}</div>
     <% return %>
 %endif
 

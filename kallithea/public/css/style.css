@@ -50,9 +50,6 @@ div.formatted-fixed,
 .changeset_hash {
   font-family: Lucida Console, Consolas, Monaco, Inconsolata, Liberation Mono, monospace;
 }
-.empty_data {
-  color: #B9B9B9;
-}
 .inline-comments-general.show-general-status .hidden.general-only {
   display: block !important;
 }

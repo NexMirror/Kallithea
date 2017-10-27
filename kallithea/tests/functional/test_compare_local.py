@@ -126,8 +126,8 @@ class TestCompareController(TestController):
         response.mustcontain('%s@default' % (HG_REPO))
         response.mustcontain('%s@default' % (HG_REPO))
         # branch are equal
-        response.mustcontain('<span class="empty_data">No files</span>')
-        response.mustcontain('<span class="empty_data">No changesets</span>')
+        response.mustcontain('<span class="text-muted">No files</span>')
+        response.mustcontain('<span class="text-muted">No changesets</span>')
 
     def test_index_branch_git(self):
         self.log_user()
@@ -142,8 +142,8 @@ class TestCompareController(TestController):
         response.mustcontain('%s@master' % (GIT_REPO))
         response.mustcontain('%s@master' % (GIT_REPO))
         # branch are equal
-        response.mustcontain('<span class="empty_data">No files</span>')
-        response.mustcontain('<span class="empty_data">No changesets</span>')
+        response.mustcontain('<span class="text-muted">No files</span>')
+        response.mustcontain('<span class="text-muted">No changesets</span>')
 
     def test_compare_revisions_hg(self):
         self.log_user()

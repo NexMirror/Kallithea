@@ -2,7 +2,7 @@
 <%namespace name="changelog_table" file="/changelog/changelog_table.html"/>
 <div>
   %if not c.cs_ranges:
-    <span class="empty_data">${_('No changesets')}</span>
+    <span class="text-muted">${_('No changesets')}</span>
   %else:
 
     %if c.ancestors:

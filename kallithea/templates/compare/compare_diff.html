@@ -66,7 +66,7 @@ ${self.repo_context_bar('changelog')}
                 </h5>
                 <div class="cs_files">
                   %if not c.file_diff_data:
-                     <span class="empty_data">${_('No files')}</span>
+                     <span class="text-muted">${_('No files')}</span>
                   %endif
                   %for fid, url_fid, op, a_path, path, diff, stats in c.file_diff_data:
                     <div class="cs_${op} clearfix">

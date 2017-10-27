@@ -19,7 +19,7 @@
             %endif
         </div>
         %if not permissions[section]:
-            <span class="empty_data">${_('No permissions defined yet')}</span>
+            <span class="text-muted">${_('No permissions defined yet')}</span>
         %else:
         <div id='tbl_list_wrap_${section}'>
          <table id="tbl_list_${section}" class="table">
