@@ -1,16 +1,6 @@
 /**
  * Stylesheets for the context bar
  */
-i[class^='icon-'] {
-  background-repeat: no-repeat;
-  background-position: center;
-  display: inline-block;
-  min-width: 16px;
-  min-height: 16px;
-  margin: -2px 0 -4px 0;
-  /* background-color: red; /* for debugging */
-}
-/* Note: class 'icon-empty' or 'icon-gravatar' can be used to get icon styling without an actual glyph */
 nav.navbar #quick a,
 #content #context-bar,
 #content #context-bar a {

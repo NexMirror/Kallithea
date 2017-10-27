@@ -49,6 +49,16 @@ div.formatted-fixed,
 .changeset_hash {
   font-family: Lucida Console, Consolas, Monaco, Inconsolata, Liberation Mono, monospace;
 }
+/* Note: class 'icon-empty' or 'icon-gravatar' can be used to get icon-ish styling without an actual glyph */
+i[class^='icon-empty'],
+i[class^='icon-gravatar'] {
+  background-repeat: no-repeat;
+  background-position: center;
+  display: inline-block;
+  min-width: 16px;
+  min-height: 16px;
+  margin: -2px 0 -4px 0;
+}
 .inline-comments-general.show-general-status .hidden.general-only {
   display: block !important;
 }
