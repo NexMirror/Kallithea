@@ -925,7 +925,8 @@ div.form div.buttons {
   padding-left: 3px;
 }
 /** comment main **/
-.comment .panel {
+.comment .panel,
+.comment-inline-form {
   max-width: 978px;
 }
 .comment .panel-body {
@@ -943,43 +944,6 @@ div.form div.buttons {
   margin: 5px;
   clear: both;
 }
-.comment-form textarea {
-  width: 100%;
-  height: 100px;
-  font-family: Lucida Console, Consolas, Monaco, Inconsolata, Liberation Mono, monospace;
-}
-form.comment-form {
-  margin-top: 10px;
-  margin-left: 10px;
-}
-.comment-inline-form .comment-block-ta,
-.comment-form .comment-block-ta {
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  box-sizing: border-box;
-}
-.comment-form-submit {
-  margin-top: 5px;
-  margin-left: 525px;
-}
-.file-comments {
-  display: none;
-}
-.comment-form .comment {
-  margin-left: 10px;
-}
-.comment-form .comment-help {
-  padding: 5px 5px 5px 5px;
-  color: #666;
-}
-.comment-form .comment-button {
-  padding-top: 5px;
-}
-.add-another-button {
-  margin-left: 10px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
 .panel-heading .pull-left input[type=checkbox],
 .panel-heading .pull-right input[type=checkbox] {
   position: relative;
@@ -987,68 +951,15 @@ form.comment-form {
   margin: -10px 2px 0;
 }
 /** comment inline form **/
-.comment-inline-form {
-  margin: 4px;
-  max-width: 978px;
-}
-#comments-general-comments .comment-inline-form {
-  margin: 0;
-}
-.comment-inline-form .submitting-overlay {
-  height: 0;
-  text-align: center;
-  font-size: 16px;
-  opacity: 0.5;
-}
-.comment-inline-form .clearfix,
-.comment-form .clearfix {
-  background: #EEE;
-  border-radius: 4px;
-  padding: 5px;
-  margin: 0px;
-}
-div.comment-inline-form {
-  padding: 4px 0px 6px 0px;
-}
-.comment-inline-form textarea {
-  width: 100%;
-  height: 100px;
-  font-family: Lucida Console, Consolas, Monaco, Inconsolata, Liberation Mono, monospace;
-}
-form.comment-inline-form {
-  margin-top: 10px;
-  margin-left: 10px;
-}
-.comment-inline-form-submit {
-  margin-top: 5px;
-  margin-left: 525px;
-}
-.file-comments {
-  display: none;
-}
-.comment-inline-form .comment {
-  margin-left: 10px;
-}
-.comment-inline-form .comment-help {
-  padding: 5px 5px 5px 5px;
-  color: #666;
-}
-.comment-inline-form .comment-button {
-  padding-top: 5px;
+.comment-inlines textarea {
+  font-family: @font-family-monospace;
 }
 /** comment inline **/
-.inline-comments .comment {
-  margin: 3px 3px 5px 5px;
-}
-.inline-comments #comments-general-comments .comment {
-  margin-left: 0;
-}
-.inline-comments .add-button-row {
-  padding: 2px 4px 8px 5px;
+.inline-comments {
+  padding: 5px;
 }
 .inline-comments .comments-number {
   padding: 0px 0px 10px 0px;
-  color: #666;
 }
 input.status_change_checkbox,
 input.status_change_radio {
