@@ -770,6 +770,20 @@ div.comment-prev-next-links div.next-comment {
   margin-left: 100px;
 }
 
+/* repo table icons */
+#repos_list_wrap_wrapper {
+  /* make icon-folder and repotag the same width */
+  .icon-folder:before {
+    margin: 0; // default margin would otherwise add to the total width 
+    width: 24px;
+    text-align: left;
+  }
+  .label-repo {
+    display: inline-block;
+    width: 24px;
+  }
+}
+
 /* changelog table columns */
 .table#changesets {
   table-layout: fixed;
