@@ -246,14 +246,6 @@ div.panel.panel-default > div.panel-heading {
   margin-right: 200px;
   min-height: 200px;
 }
-#repo_size_2 {
-  display: none;
-}
-#repo_size_2.loaded {
-  display: block;
-  padding-right: 10px;
-  padding-bottom: 7px;
-}
 #summary .metatag {
   display: inline-block;
   padding: 3px 5px;
