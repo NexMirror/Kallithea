@@ -32,7 +32,6 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
         <div class="panel-heading clearfix">
             ${self.parent_child_navigation()}
 
-            <div class="pull-left">
                 <div class="pull-left" title="${_('Changeset status')}">
                     %if c.statuses:
                         <i class="icon-circle changeset-status-${c.statuses[0]}"></i>
@@ -52,7 +51,6 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
                   ${c.ignorews_url(request.GET)}
                   ${c.context_url(request.GET)}
                 </div>
-            </div>
         </div>
         <div class="panel-body">
             <div class="form-group changeset_content_header clearfix">

@@ -132,35 +132,18 @@ table.changesets .comments {
   margin: 0px 1px 0px 3px;
 }
 div.panel-primary {
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.6);
   border: none;
 }
 div.panel div.panel-heading {
   background-color: #577632;
-  background-repeat: repeat-x;
-  background-image: linear-gradient(to bottom, #577632, #577632);
-  border-radius: 4px 4px 0 0;
-}
-#content div.panel div.panel-heading ul.links li {
-  list-style: none;
-  float: left;
-  margin: 0;
-  padding: 0;
-}
-div.panel.panel-default {
-  border: 1px solid #ccc;
-  box-shadow: none;
-  border-radius: 6px 6px 0px 0px;
-  margin-bottom: 15px;
+  font-size: 14px;
+  font-weight: 700;
 }
 div.panel.panel-default:last-child {
   margin-bottom: 0;
 }
 div.panel.panel-default > div.panel-heading {
   background: #eee;
-  border-bottom: 1px solid #ccc;
-  font-size: 14px;
-  font-weight: 700;
 }
 #content div.panel div.panel-heading .pull-left {
   margin-right: 10px;
