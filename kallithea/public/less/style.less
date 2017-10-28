@@ -832,13 +832,6 @@ input.status_change_checkbox,
 input.status_change_radio {
   margin: 0 0 5px 15px;
 }
-.badge {
-  padding: 4px 4px !important;
-  text-align: center;
-  color: #888 !important;
-  background-color: #DEDEDE !important;
-  border-radius: 4px !important;
-}
 @keyframes animated-comment-background {
   0% {
     background-position: 0 0;
@@ -1034,6 +1027,14 @@ body table.dataTable thead .sorting_desc::after {
 /* undo Bootstrap chrome/webkit blue outline on focus in navbar */
 .navbar-inverse .navbar-nav > li > a:focus {
   outline: 0;
+}
+
+/* use same badge coloring in navbar inverse as in panel-heading */
+.navbar-inverse {
+  .badge {
+    color: @navbar-inverse-bg;
+    background-color: @navbar-inverse-color;
+  }
 }
 
 /* pygments style */
