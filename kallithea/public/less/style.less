@@ -111,6 +111,13 @@ nav.navbar #logo > .navbar-brand > img {
   margin-right: 5px;
 }
 
+/* every direct child of a panel, that is not .panel-heading, should auto
+ * overflow to prevent overflowing of elements like text boxes and tables */
+.panel > :not(.panel-heading){
+  overflow-x: auto;
+  min-height: 0.01%;
+}
+
 /* language bars (summary page) */
 #lang_stats {
   .progress-bar {
