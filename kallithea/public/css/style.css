@@ -108,6 +108,11 @@ nav.navbar #logo > .navbar-brand > img {
   overflow-x: auto;
   min-height: 0.01%;
 }
+/* use pointer cursor for expand_commit */
+.expand_commit .icon-align-left {
+  cursor: pointer;
+  color: #999;
+}
 .form-group > label {
   float: left;
 }
@@ -854,12 +859,6 @@ table#changesets tr > td.date {
   color: #666;
   font-size: 10px;
   white-space: nowrap;
-}
-#graph_content_pr .compare_view_commits .expand_commit,
-table#changesets tr > td.expand_commit {
-  width: 24px;
-  cursor: pointer;
-  color: #999;
 }
 table#changesets tr > td.mid {
   width: 100%;
