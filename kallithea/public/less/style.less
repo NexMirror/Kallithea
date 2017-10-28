@@ -126,6 +126,15 @@ nav.navbar #logo > .navbar-brand > img {
   color: #999;
 }
 
+/* don't break author, date and comment cells into multiple lines in changeset table */
+table.changesets {
+  .author,
+  .date,
+  .comments {
+    white-space: nowrap;
+  }
+}
+
 .form-group > label {
   float: left;
 }
