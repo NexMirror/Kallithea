@@ -109,6 +109,44 @@ input.error {
   .alert-danger;
 }
 
+/* datatable */
+.dataTables_left {
+  .pull-left;
+}
+.dataTables_right {
+  .pull-right;
+}
+
+/* make all datatable paginations small */
+.dataTables_paginate .pagination {
+  .pagination-sm;
+}
+
+/* show column sort icons in our font ... and before column header */
+table.dataTable {
+  .sorting_asc:before {
+    font-family: "kallithea";
+    content: "\23f6";
+    padding-right: 8px;
+  }
+  .sorting_desc:before {
+    font-family: "kallithea";
+    content: "\23f7";
+    padding-right: 8px;
+  }
+  .sorting:before {
+    font-family: "kallithea";
+    content: "\2195";
+    padding-right: 8px;
+    opacity: 0.5;
+  }
+  .sorting_asc:after,
+  .sorting_desc:after,
+  .sorting:after {
+    content: "" !important;
+  }
+}
+
 /* language bars (summary page) */
 #lang_stats {
   .progress-bar {
@@ -171,28 +209,9 @@ div.panel div.panel-heading {
   font-weight: 700;
 }
 
+/* no extra vertical margin */
 #content div.panel ul.pagination {
-  margin: 10px 0 0 0;
-}
-#content div.panel ul.pagination > li > a,
-#content div.panel ul.pagination > li > span {
-  background: #ebebeb url("../images/pager.png") repeat-x;
-  color: #4A4A4A;
-  font-weight: 700;
-  border-top: 1px solid #dedede;
-  border-left: 1px solid #cfcfcf;
-  border-bottom: 1px solid #c4c4c4;
-  border-right: 1px solid #cfcfcf;
-}
-#content div.panel ul.pagination > li.active > span,
-#content div.panel ul.pagination > li:hover > a,
-#content div.panel ul.pagination > li:active > a {
-  background: #b4b4b4 url("../images/pager_selected.png") repeat-x;
-  border-top: 1px solid #ccc;
-  border-left: 1px solid #bebebe;
-  border-bottom: 1px solid #afafaf;
-  border-right: 1px solid #bebebe;
-  color: #515151;
+  margin: 0;
 }
 
 /* remove margin below footer */
@@ -915,56 +934,7 @@ div.comment-prev-next-links div.next-comment {
 #comments-general-comments div.comment-prev-next-links div.next-comment {
   margin-left: 0;
 }
-body table.dataTable thead .sorting {
-  background-image: none;
-}
-body table.dataTable thead .sorting_asc {
-  background-image: none;
-}
-body table.dataTable thead .sorting_desc {
-  background-image: none;
-}
-body table.dataTable thead .sorting_asc_disabled {
-  background-image: none;
-}
-body table.dataTable thead .sorting_desc_disabled {
-  background-image: none;
-}
-body table.dataTable thead .sorting_asc::after {
-  font-family: "kallithea";
-  content: "\23f6";
-}
-body table.dataTable thead .sorting_desc::after {
-  font-family: "kallithea";
-  content: "\23f7";
-}
-.dataTables_wrapper .dataTables_left {
-  float: left !important;
-}
-.dataTables_wrapper .dataTables_right {
-  float: right;
-}
-.dataTables_wrapper .dataTables_right > div {
-  padding-left: 30px;
-}
-.dataTables_wrapper .dataTables_info {
-  clear: none;
-  padding-top: 3px;
-}
-.dataTables_wrapper .dataTables_paginate {
-  padding-top: 0;
-}
-.dataTables_wrapper .dataTables_paginate .paginate_button {
-  padding: 3px 10px;
-}
-.dataTables_wrapper .dataTables_paginate > a.paginate_button {
-  padding-top: 1px;
-  border: 0 !important;
-}
-.dataTables_wrapper label {
-  margin-bottom: 0;
-  font-weight: inherit;
-}
+
 #content div.panel .changelog-panel > .changelog-heading,
 #content div.panel .changelog-panel > ul.pagination {
   margin-left: 100px;
@@ -981,11 +951,6 @@ body table.dataTable thead .sorting_desc::after {
     color: @navbar-inverse-bg;
     background-color: @navbar-inverse-color;
   }
-}
-
-/* make all datatable paginations small */
-.dataTables_paginate .pagination {
-  .pagination-sm;
 }
 
 /* pygments style */
