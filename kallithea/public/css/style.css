@@ -2130,7 +2130,3 @@ body table.dataTable thead .sorting_desc::after {
 #content div.panel .changelog-panel > ul.pagination {
   margin-left: 100px;
 }
-textarea.commit-message {
-  width: 100% !important;
-  box-sizing: border-box;
-}
