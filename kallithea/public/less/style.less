@@ -360,12 +360,6 @@ h3.files_location {
 #changeset_compare_view_content .compare_view_commits td {
   padding: 0px 0px 0px 12px !important;
 }
-td.author {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 210px;
-}
 #graph_nodes {
   position: absolute;
   width: 100px;
@@ -383,115 +377,6 @@ table#updaterevs-table tr.out-of-range,
 table#changesets tr.mergerow,
 table#changesets tr.out-of-range {
   opacity: 0.6;
-}
-table#changesets tr > td {
-  height: 31px;
-  border-color: #cdcdcd;
-  text-align: left;
-}
-table#changesets tr > td.checkbox-column {
-  width: 14px;
-  font-size: 0.85em;
-}
-table#changesets tr > td.status {
-  width: 14px;
-  font-size: 0.85em;
-}
-table#changesets tr > td.hash {
-  width: 100px;
-  font-size: 0.85em;
-}
-table#changesets tr > td.date {
-  width: auto !important;
-  color: #666;
-  font-size: 10px;
-  white-space: nowrap;
-}
-table#changesets tr > td.mid {
-  width: 100%;
-  padding: 0;
-}
-table#changesets .log-container {
-  position: relative;
-  margin-top: 8px;
-}
-table#changesets tr #singlerange,
-table#changesets tr .changeset_range {
-  float: left;
-  margin: 2px 0;
-}
-table#changesets tr > td.author img {
-  vertical-align: middle;
-}
-table#changesets tr > td.author .user {
-  color: #444444;
-}
-table#changesets tr > td.mid .message,
-#graph_content_pr .compare_view_commits .message {
-  white-space: nowrap;
-  padding: 0;
-  overflow: hidden;
-}
-#graph_content_pr .compare_view_commits .message {
-  padding: 0 !important;
-}
-table#changesets tr > td.mid .message.expanded,
-#graph_content_pr .compare_view_commits .message.expanded {
-  height: auto;
-  overflow: initial;
-}
-table#changesets tr .extra-container {
-  display: block;
-  position: absolute;
-  top: 0;
-  right: 0;
-}
-.comments-container,
-table#changesets .logtags {
-  display: block;
-  float: left;
-  overflow: hidden;
-  padding: 0;
-  margin: 0;
-  white-space: nowrap;
-}
-table#changesets .tagcontainer {
-  width: 80px;
-  position: relative;
-  float: right;
-  height: 100%;
-  top: 7px;
-  margin-left: 0.5em;
-}
-table#changesets .logtags {
-  min-width: 80px;
-  height: 1.1em;
-  position: absolute;
-  left: 0px;
-  width: auto;
-  top: 0px;
-}
-table#changesets .logtags.tags {
-  top: 14px;
-}
-table#changesets .logtags:hover {
-  overflow: visible;
-  position: absolute;
-  width: auto;
-  right: 0;
-  left: initial;
-}
-table#changesets .logtags .booktag,
-table#changesets .logtags .tagtag {
-  float: left;
-  line-height: 1em;
-  margin-bottom: 1px;
-  margin-right: 1px;
-  padding: 1px 3px;
-  font-size: 10px;
-}
-table#changesets tr > td.mid .message a:hover {
-  text-decoration: none;
 }
 #updaterevs-graph {
   position: relative;
@@ -890,6 +775,45 @@ div.comment-prev-next-links div.next-comment {
 #content div.panel .changelog-panel > .changelog-heading,
 #content div.panel .changelog-panel > ul.pagination {
   margin-left: 100px;
+}
+
+/* changelog table columns */
+.table#changesets {
+  table-layout: fixed;
+  td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .checkbox-column {
+    width: 24px;
+    /* the optional second checkbox will be inline-block but should wrap to a new line */
+    white-space: normal;
+  }
+  .changeset-logical-index,
+  .expand_commit,
+  .status {
+    width: 28px;
+  }
+  .author {
+    width: 200px;
+  }
+  .hash {
+    .small;
+    width: 110px;
+  }
+  .date {
+    .small;
+    width: 100px;
+  }
+  .mid > .log-container {
+    position: relative;
+    > .extra-container {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+  }
 }
 
 /* undo Bootstrap chrome/webkit blue outline on focus in navbar */
