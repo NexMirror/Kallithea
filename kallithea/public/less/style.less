@@ -195,9 +195,6 @@ textarea.form-control {
   padding-right: 0.3em;
 }
 
-.form-group > label {
-  float: left;
-}
 .dt_repo_pending {
   opacity: 0.5;
 }
@@ -415,21 +412,8 @@ div.gravatar {
 div.gravatar img {
   border-radius: 2px;
 }
-.panel-body.settings > ul.nav-stacked {
-  float: left;
-  width: 150px;
-  padding-right: 35px;
-  color: #393939;
-  font-weight: 700;
-}
 .panel-body.settings .nav-pills > :not(.active) > a {
   color: inherit;
-}
-.panel-body.settings > div,
-.panel-body.settings > form {
-  float: left;
-  width: 750px;
-  margin: 0;
 }
 .panel-body.no-padding {
   padding: 0;
@@ -504,9 +488,7 @@ div#legend_choices {
 #content div.panel ol.decimal {
   margin: 10px 24px 10px 44px;
 }
-#content div.panel div.form div.form-group > div {
-  margin: 0 0 10px 200px;
-}
+
 div.form div.form-group div.button input,
 #content div.panel div.form div.buttons input,
 div.form div.buttons input,
@@ -518,11 +500,6 @@ div.form div.buttons input,
 div.form div.form-group div.highlight,
 #content div.panel div.form div.buttons div.highlight {
   display: inline;
-}
-#content div.panel div.form div.buttons,
-div.form div.buttons {
-  margin: 10px 10px 0 200px;
-  padding: 0;
 }
 #content div.panel table td.user,
 #content div.panel table td.address {
@@ -647,10 +624,6 @@ span.pr-closed-tag {
   border: 1px solid #d9e8f8;
   line-height: 1.5em;
 }
-.panel-body .pr-box {
-  max-width: 978px;
-  margin-right: 15px;
-}
 #s2id_org_ref,
 #s2id_other_ref,
 #s2id_org_repo,
@@ -741,6 +714,77 @@ div.comment-prev-next-links div.next-comment {
 #graph_content_pr,
 #updaterevs-table {
   .make-xs-column(11);
+}
+
+/* use columns and form-horizontal for settings pages ... on wide screens */
+@media (min-width: @screen-sm-min) {
+  .settings {
+    max-width: @container-md;
+    > ul.nav-stacked {
+      .make-sm-column(2);
+      max-width: (@container-md/12)*2;
+    }
+    > div {
+      .make-sm-column(10);
+      max-width: (@container-md/12)*10;
+    }
+    .form {
+      .form-horizontal;
+    }
+    .form-group {
+      .clearfix;
+      > label {
+        .make-xs-column(3);
+        input {
+          width: 100%;
+        }
+      }
+      > div {
+        .make-xs-column(9);
+      }
+      .buttons {
+        .make-xs-column-offset(3);
+      }
+    }
+  }
+}
+
+/* use columns and form-horizontal for summary page */
+#summary {
+  max-width: @container-md;
+  .form-horizontal;
+  .make-sm-column(10);
+  .form-group > label {
+    .make-sm-column(2);
+  }
+  .form-group > div {
+    .make-sm-column(10);
+  }
+}
+#summary-menu-stats {
+  .make-sm-column(2);
+}
+
+/* use columns and form-horizontal for pull request page */
+.pr-box {
+  .make-sm-column(9);
+  #pr-summary {
+    max-width: @container-md;
+    .form-horizontal;
+    .form-group > label {
+      .make-sm-column(3);
+    }
+    .form-group > div {
+      .make-sm-column(9);
+    }
+    .form-group > .buttons {
+      .make-sm-column-offset(3);
+      .make-sm-column(9);
+    }
+  }
+}
+.pr-reviewers-box {
+  .make-sm-column(3);
 }
 
 /* repo table icons */
