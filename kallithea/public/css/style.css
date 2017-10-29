@@ -178,24 +178,6 @@ div.panel.panel-default > div.panel-heading {
   border-right: 1px solid #bebebe;
   color: #515151;
 }
-#clone_by_name.input-group,
-#clone_by_id.input-group {
-  width: 100%;
-}
-#clone_by_name.input-group > span,
-#clone_by_id.input-group > span {
-  display: inline-block;
-  float: left;
-  height: 30px;
-}
-#clone_by_name.input-group > input,
-#clone_by_id.input-group > input {
-  width: 50%;
-}
-#clone_by_name.input-group .form-control,
-#clone_by_id.input-group .form-control {
-  height: 30px;
-}
 .metatag {
   display: inline-block;
   margin-right: 1px;
