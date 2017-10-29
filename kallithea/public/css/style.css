@@ -1793,6 +1793,10 @@ body table.dataTable thead .sorting_desc::after {
 #content div.panel .changelog-panel > ul.pagination {
   margin-left: 100px;
 }
+/* undo Bootstrap chrome/webkit blue outline on focus in navbar */
+.navbar-inverse .navbar-nav > li > a:focus {
+  outline: 0;
+}
 /* pygments style */
 div.search-code-body pre .match {
   background-color: #FAFFA6;
