@@ -344,31 +344,11 @@ h3.files_location {
   padding: 5px;
   color: #888;
 }
-#graph_nodes {
-  position: absolute;
-  width: 100px;
-}
-#graph_content,
-#graph_content_pr,
-#graph .container_header {
-  margin-left: 100px;
-}
-#graph_content {
-  position: relative;
-}
 table#updaterevs-table tr.mergerow,
 table#updaterevs-table tr.out-of-range,
 table#changesets tr.mergerow,
 table#changesets tr.out-of-range {
   opacity: 0.6;
-}
-#updaterevs-graph {
-  position: relative;
-  width: 40px;
-  height: 0;
-}
-#updaterevs-table {
-  margin-left: 40px !important;
 }
 .issue-tracker-link {
   color: #3F6F9F;
@@ -756,9 +736,15 @@ div.comment-prev-next-links div.next-comment {
   margin-left: 0;
 }
 
-#content div.panel .changelog-panel > .changelog-heading,
-#content div.panel .changelog-panel > ul.pagination {
-  margin-left: 100px;
+/* changelog graph */
+#graph_nodes,
+#updaterevs-graph {
+  .make-xs-column(1);
+}
+#graph_content,
+#graph_content_pr,
+#updaterevs-table {
+  .make-xs-column(11);
 }
 
 /* repo table icons */
