@@ -336,23 +336,6 @@ h3.files_location {
   padding: 5px;
   color: #888;
 }
-.changeset_id {
-  color: #666666;
-  margin-right: -3px;
-}
-.changeset-logical-index {
-  color: #666666;
-  font-style: italic;
-  font-size: 85%;
-  padding-right: 0.5em;
-  text-align: right;
-}
-#changeset_compare_view_content .compare_view_commits {
-  width: auto !important;
-}
-#changeset_compare_view_content .compare_view_commits td {
-  padding: 0px 0px 0px 12px !important;
-}
 #graph_nodes {
   position: absolute;
   width: 100px;
@@ -796,6 +779,13 @@ div.comment-prev-next-links div.next-comment {
     width: 24px;
     /* the optional second checkbox will be inline-block but should wrap to a new line */
     white-space: normal;
+  }
+  .changeset-logical-index {
+    color: @gray-light;
+    font-style: italic;
+    font-size: 85%;
+    text-align: right;
+    overflow: visible;
   }
   .changeset-logical-index,
   .expand_commit,
