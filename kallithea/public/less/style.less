@@ -95,6 +95,16 @@ nav.navbar.mainmenu .navbar-brand .branding {
   min-height: 0.01%;
 }
 
+/* search highlighting */
+div.search-code-body pre .match {
+  background-color: @highlight-color;
+}
+div.search-code-body pre .break {
+  background-color: @highlight-line-color;
+  width: 100%;
+  display: block;
+}
+
 /* use @alert-danger-text for form error messages and .alert-danger for the input element */
 .form-group .error-message {
   color: @alert-danger-text;
@@ -542,22 +552,6 @@ table#changesets tr > td.mid .message a:hover {
 .pull-right .changes .deleted {
   background: #FAA;
 }
-.panel .search div.search_path {
-  background: none repeat scroll 0 0 #EEE;
-  border: 1px solid #CCC;
-  color: blue;
-  margin-bottom: 10px;
-  padding: 10px 0;
-}
-.panel .search div.search_path div.link {
-  font-weight: 700;
-  margin-left: 25px;
-}
-.panel .search div.search_path div.link a {
-  color: #577632;
-  cursor: pointer;
-  text-decoration: none;
-}
 
 #repo_size {
   display: block;
@@ -605,12 +599,6 @@ div.gravatar {
 }
 div.gravatar img {
   border-radius: 2px;
-}
-#content div.panel div.panel-heading div.search {
-  border-left: 1px solid #576622;
-}
-#content div.panel div.panel-heading div.search > div input {
-  border: 1px solid #576622;
 }
 .panel-body.settings > ul.nav-stacked {
   float: left;
