@@ -124,6 +124,12 @@ textarea.form-control {
   min-height: 100px;
   min-width: 400px;
 }
+/* add some space between the code-browser icons and the file names */
+.browser-dir > i[class^='icon-'],
+.submodule-dir > i[class^='icon-'],
+.browser-file > i[class^='icon-'] {
+  padding-right: 0.3em;
+}
 .form-group > label {
   float: left;
 }
@@ -864,45 +870,6 @@ table#changesets tr > td.mid .message a:hover {
 }
 .pull-right .changes .deleted {
   background: #FAA;
-}
-table.code-browser {
-  border-collapse: collapse;
-  width: 100%;
-}
-table.code-browser tr {
-  margin: 3px;
-}
-table.code-browser thead th {
-  background-color: #EEE;
-  height: 20px;
-  font-size: 1.1em;
-  font-weight: 700;
-  text-align: left;
-  padding-left: 10px;
-}
-table.code-browser tbody td {
-  padding-left: 10px;
-  height: 20px;
-}
-table.code-browser .browser-file {
-  height: 16px;
-  padding-left: 5px;
-  text-align: left;
-}
-table.code-browser .browser-dir {
-  height: 16px;
-  padding-left: 5px;
-  text-align: left;
-}
-table.code-browser .submodule-dir {
-  height: 16px;
-  padding-left: 5px;
-  text-align: left;
-}
-/* add some padding to the right of the file, folder, or submodule icon and
-before the text */
-table.code-browser i[class^='icon-'] {
-  padding-right: .3em;
 }
 .panel .search div.search_path {
   background: none repeat scroll 0 0 #EEE;
