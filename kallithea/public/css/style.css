@@ -687,7 +687,6 @@ td.author {
 }
 #graph_content,
 #graph_content_pr,
-#graph .info_box,
 #graph .container_header {
   margin-left: 100px;
 }
@@ -886,16 +885,6 @@ table#changesets tr > td.mid .message a:hover {
   color: #577632;
   cursor: pointer;
   text-decoration: none;
-}
-.info_box input#at_rev,
-.info_box input#size {
-  border-top: 1px solid #b3b3b3;
-  border-left: 1px solid #b3b3b3;
-  border-right: 1px solid #eaeaea;
-  border-bottom: 1px solid #eaeaea;
-}
-.info_box_elem {
-  display: inline-block;
 }
 .yui-overlay,
 .yui-panel-container {
