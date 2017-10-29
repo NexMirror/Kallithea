@@ -1905,6 +1905,15 @@ input.perm_filter {
   width: 14px;
   height: 14px;
 }
+/* avoid gaps between the navbar and browser */
+.navbar.mainmenu {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.navbar.footer {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
 /* bootstrap progress bar has margin-bottom we don't want that in files list */
 .cs_files .progress {
   margin-bottom: 0;

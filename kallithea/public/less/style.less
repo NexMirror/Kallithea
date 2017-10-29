@@ -1579,6 +1579,16 @@ input.perm_filter {
   height: 14px;
 }
 
+/* avoid gaps between the navbar and browser */
+.navbar.mainmenu {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.navbar.footer {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
 @import "kallithea-diff.less";
 
 /* show some context of link targets - but only works when the link target
