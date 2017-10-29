@@ -95,6 +95,19 @@ nav.navbar.mainmenu .navbar-brand .branding {
   min-height: 0.01%;
 }
 
+/* use @alert-danger-text for form error messages and .alert-danger for the input element */
+.form-group .error-message {
+  color: @alert-danger-text;
+  display: inline-block;
+  padding-top: 5px;
+  &:empty{
+    display: none;
+  }
+}
+input.error {
+  .alert-danger;
+}
+
 /* language bars (summary page) */
 #lang_stats {
   .progress-bar {
@@ -704,25 +717,6 @@ div#legend_choices {
 #content div.panel ol.decimal {
   margin: 10px 24px 10px 44px;
 }
-/* formencode htmlfill adds 'error' to failing input fields */
-#content div.panel div.form div.form-group > div input.error,
-#login div.form div.form-group > div input.error,
-#register div.form div.form-group > div input.error {
-  background: #FBE3E4;
-  border-top: 1px solid #e1b2b3;
-  border-left: 1px solid #e1b2b3;
-  border-right: 1px solid #FBC2C4;
-  border-bottom: 1px solid #FBC2C4;
-}
-/* formencode htmlfill injects 'error-message' */
-#content div.panel div.form div.form-group span.error-message,
-#login div.form div.form-group span.error-message,
-#register div.form div.form-group span.error-message {
-  display: inline-block;
-  color: red;
-  margin: 4px 0 0;
-}
-
 #content div.panel div.form div.form-group > div {
   margin: 0 0 10px 200px;
 }
@@ -758,14 +752,6 @@ div.form div.buttons {
   width: 520px;
   margin: 10% auto 0;
   padding: 0;
-}
-#register div.form div.form-group span.error-message {
-  height: 1%;
-  display: block;
-  color: red;
-  margin: 8px 0 0;
-  padding: 0;
-  max-width: 320px;
 }
 .ac .match {
   font-weight: 700;
