@@ -637,6 +637,7 @@ table#changesets .booktag {
 }
 #footer {
   background-color: #577632;
+  margin-bottom: 0;
 }
 #footer > span {
   color: #FFF;
