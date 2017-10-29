@@ -1183,10 +1183,6 @@ nav.navbar #quick .select2-container .select2-choice .select2-chosen {
   color: red;
   margin: 4px 0 0;
 }
-#content div.panel table th.selected input,
-#content div.panel table td.selected input {
-  margin: 0;
-}
 #content div.panel div.form div.form-group > div {
   margin: 0 0 10px 200px;
 }
