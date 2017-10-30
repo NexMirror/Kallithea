@@ -816,8 +816,9 @@ table#changesets tr > td.mid .message a:hover {
   text-decoration: none;
 }
 #updaterevs-graph {
-  position: absolute;
+  position: relative;
   width: 40px;
+  height: 0;
 }
 #updaterevs-table {
   margin-left: 40px !important;
@@ -1447,6 +1448,12 @@ span.pr-closed-tag {
 #pr-edit-btn {
   margin: 20px 0 0 !important;
   position: absolute;
+}
+/* make 'next iteration' changeset table smaller and scrollable */
+#pr-summary #updaterevs {
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 /****
   PERMS
