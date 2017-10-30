@@ -1251,33 +1251,6 @@ div.form div.buttons {
   color: #AAAAAA;
   padding-left: 3px;
 }
-.reviewer_status {
-  float: left;
-}
-.reviewers_member {
-  height: 15px;
-  padding: 0px 0px 0px 10px;
-}
-.emails_wrap .email_entry {
-  height: 30px;
-  padding: 0px 0px 0px 10px;
-}
-.emails_wrap .email_entry .email {
-  float: left;
-}
-.emails_wrap .email_entry .email_action {
-  float: left;
-}
-.ips_wrap .ip_entry {
-  height: 30px;
-  padding: 0px 0px 0px 10px;
-}
-.ips_wrap .ip_entry .ip {
-  float: left;
-}
-.ips_wrap .ip_entry .ip_action {
-  float: left;
-}
 /** comment main **/
 .comment .panel {
   max-width: 978px;
@@ -1441,12 +1414,6 @@ input.status_change_radio {
 /****
 PULL REQUESTS
 *****/
-.pullrequests_section_head {
-  padding: 10px 10px 10px 0px;
-  margin: 0 15px;
-  font-size: 16px;
-  font-weight: bold;
-}
 div.pr-details-title.closed {
   color: #555;
   background: #eee;
@@ -1454,9 +1421,6 @@ div.pr-details-title.closed {
 div.pr {
   margin: 0px 15px;
   padding: 4px 4px;
-}
-div.pr-desc {
-  margin: 0px 15px;
 }
 tr.pr-closed td {
   background-color: #eee !important;
@@ -1483,9 +1447,6 @@ span.pr-closed-tag {
 #s2id_other_repo {
   min-width: 150px;
   margin: 5px;
-}
-#pr-summary .msg-div {
-  margin: 5px 0;
 }
 #pr-summary > .pr-not-edit {
   min-height: 50px !important;
