@@ -1458,23 +1458,6 @@ span.pr-closed-tag {
 /****
   PERMS
 *****/
-#perms .perms_section_head {
-  padding: 10px 10px 10px 0px;
-  font-size: 16px;
-  font-weight: bold;
-  text-transform: capitalize;
-}
-#perms .perms_section_head label {
-  margin-left: 10px;
-}
-input.perm_filter {
-  position: relative;
-  top: 2px;
-}
-.perm-gravatar {
-  vertical-align: middle;
-  padding: 2px;
-}
 .perm-gravatar-ac {
   vertical-align: middle;
   padding: 2px;
