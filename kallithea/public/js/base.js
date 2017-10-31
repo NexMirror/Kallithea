@@ -1118,22 +1118,6 @@ var autocompleteFormatter = function (oResultData, sQuery, sResultMatch) {
     return '';
 };
 
-// Generate a basic autocomplete instance that can be tweaked further by the caller
-var autocompleteCreate = function ($inputElement, matchFunc) {
-    var $container = $('<div/>').insertAfter($inputElement);
-    var datasource = new YAHOO.util.FunctionDataSource(matchFunc);
-
-    var autocomplete = new YAHOO.widget.AutoComplete($inputElement[0], $container[0], datasource);
-    autocomplete.useShadow = false;
-    autocomplete.resultTypeList = false;
-    autocomplete.animVert = false;
-    autocomplete.animHoriz = false;
-    autocomplete.animSpeed = 0.1;
-    autocomplete.formatResult = autocompleteFormatter;
-
-    return autocomplete;
-}
-
 var SimpleUserAutoComplete = function ($inputElement, users_list) {
     $inputElement.select2(
     {
@@ -1185,24 +1169,28 @@ var MembersAutoComplete = function ($inputElement, $typeElement, users_list, gro
 }
 
 var MentionsAutoComplete = function ($inputElement, users_list) {
+    var $container = $('<div/>').insertAfter($inputElement);
+
     var matchUsers = function (sQuery) {
-            var org_sQuery = sQuery;
-            if(this.mentionQuery == null){
+            // use the search string from $inputElement instead of sQuery
+            if(!$container.data('search')){
+                // return empty list so the input list isn't shown
                 return []
             }
-            sQuery = this.mentionQuery;
-            return autocompleteMatchUsers(sQuery, users_list);
+            return autocompleteMatchUsers($container.data('search'), users_list);
     }
 
-    var mentionsAC = autocompleteCreate($inputElement, matchUsers);
+    var datasource = new YAHOO.util.FunctionDataSource(matchUsers);
+    var mentionsAC = new YAHOO.widget.AutoComplete($inputElement[0], $container[0], datasource);
+    mentionsAC.useShadow = false;
+    mentionsAC.resultTypeList = false;
+    mentionsAC.animVert = false;
+    mentionsAC.animHoriz = false;
+    mentionsAC.animSpeed = 0.1;
     mentionsAC.suppressInputUpdate = true;
-    // Overwrite formatResult to take into account mentionQuery
     mentionsAC.formatResult = function (oResultData, sQuery, sResultMatch) {
-        var org_sQuery = sQuery;
-        if (this.dataSource.mentionQuery != null) {
-            sQuery = this.dataSource.mentionQuery;
-        }
-        return autocompleteFormatter(oResultData, sQuery, sResultMatch);
+        // use the search string from $inputElement instead of sQuery
+        return autocompleteFormatter(oResultData, $container.data('search'), sResultMatch);
     }
 
     // Handler for selection of an entry
@@ -1211,62 +1199,32 @@ var MentionsAutoComplete = function ($inputElement, users_list) {
             var myAC = aArgs[0]; // reference back to the AC instance
             var elLI = aArgs[1]; // reference to the selected LI element
             var oData = aArgs[2]; // object literal of selected item's result data
-            //Replace the mention name with replaced
-            var re = new RegExp();
-            var org = myAC.getInputEl().value;
-            var chunks = myAC.dataSource.chunks
-            // replace middle chunk(the search term) with actuall  match
-            chunks[1] = chunks[1].replace('@'+myAC.dataSource.mentionQuery,
-                                          '@'+oData.nname+' ');
-            myAC.getInputEl().value = chunks.join('');
+            myAC.getInputEl().value = $container.data('before') + oData.nname + ' ' + $container.data('after');
             myAC.getInputEl().focus(); // Y U NO WORK !?
         });
     }
 
-    // in this keybuffer we will gather current value of search !
-    // since we need to get this just when someone does `@` then we do the
-    // search
-    mentionsAC.dataSource.chunks = [];
-    mentionsAC.dataSource.mentionQuery = null;
-
-    mentionsAC.get_mention = function(msg, max_pos) {
-        var org = msg;
-        // Must match utils2.py MENTIONS_REGEX.
-        // Only matching on string up to cursor, so it must end with $
-        var re = new RegExp('(?:^|[^a-zA-Z0-9])@([a-zA-Z0-9][-_.a-zA-Z0-9]*[a-zA-Z0-9])$');
-        var chunks  = [];
-
-        // cut first chunk until current pos
-        var to_max = msg.substr(0, max_pos);
-        var at_pos = Math.max(0,to_max.lastIndexOf('@')-1);
-        var msg2 = to_max.substr(at_pos);
-
-        chunks.push(org.substr(0,at_pos)); // prefix chunk
-        chunks.push(msg2);                 // search chunk
-        chunks.push(org.substr(max_pos));  // postfix chunk
-
-        // clean up msg2 for filtering and regex match
-        var msg2 = msg2.lstrip(' ').lstrip('\n');
-
-        if(re.test(msg2)){
-            var unam = re.exec(msg2)[1];
-            return [unam, chunks];
-        }
-        return [null, null];
-    };
+    // Must match utils2.py MENTIONS_REGEX.
+    // Operates on a string from char before @ up to cursor.
+    // Check that the char before @ doesn't look like an email address, and match to end of string.
+    var mentionRe = new RegExp('(?:^|[^a-zA-Z0-9])@([a-zA-Z0-9][-_.a-zA-Z0-9]*[a-zA-Z0-9])$');
 
     $inputElement.keyup(function(e){
             var currentMessage = $inputElement.val();
             var currentCaretPosition = $inputElement[0].selectionStart;
 
-            var unam = mentionsAC.get_mention(currentMessage, currentCaretPosition);
-            var curr_search = null;
-            if(unam[0]){
-                curr_search = unam[0];
+            $container.data('search', '');
+            var messageBeforeCaret = currentMessage.substr(0, currentCaretPosition);
+            var lastAtPos = messageBeforeCaret.lastIndexOf('@');
+            if(lastAtPos >= 0){
+                // Search from one char before last @ ... if possible
+                var m = mentionRe.exec(messageBeforeCaret.substr(Math.max(0, lastAtPos - 1)));
+                if(m){
+                    $container.data('before', currentMessage.substr(0, lastAtPos + 1));
+                    $container.data('search', currentMessage.substr(lastAtPos + 1, currentCaretPosition - lastAtPos - 1));
+                    $container.data('after', currentMessage.substr(currentCaretPosition));
+                }
             }
-
-            mentionsAC.dataSource.chunks = unam[1];
-            mentionsAC.dataSource.mentionQuery = curr_search;
         });
 }
 
