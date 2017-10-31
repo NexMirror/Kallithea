@@ -1200,7 +1200,7 @@ var MentionsAutoComplete = function ($inputElement, users_list) {
             var elLI = aArgs[1]; // reference to the selected LI element
             var oData = aArgs[2]; // object literal of selected item's result data
             myAC.getInputEl().value = $container.data('before') + oData.nname + ' ' + $container.data('after');
-            myAC.getInputEl().focus(); // Y U NO WORK !?
+            _setCaretPosition($(myAC.getInputEl()), myAC.dataSource.before.length + oData.nname.length + 1);
         });
     }
 
@@ -1227,6 +1227,25 @@ var MentionsAutoComplete = function ($inputElement, users_list) {
             }
         });
 }
+
+
+// Set caret at the given position in the input element
+function _setCaretPosition($inputElement, caretPos) {
+    $inputElement.each(function(){
+        if(this.createTextRange) { // IE
+            var range = this.createTextRange();
+            range.move('character', caretPos);
+            range.select();
+        }
+        else if(this.selectionStart) { // other recent browsers
+            this.focus();
+            this.setSelectionRange(caretPos, caretPos);
+        }
+        else // last resort - very old browser
+            this.focus();
+    });
+}
+
 
 var addReviewMember = function(id,fname,lname,nname,gravatar_link,gravatar_size){
     var displayname = nname;
