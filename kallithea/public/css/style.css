@@ -15,6 +15,7 @@ body pre {
   background-color: inherit;
   border: inherit;
   border-radius: inherit;
+  overflow: inherit;
 }
 del {
   text-decoration: line-through;
