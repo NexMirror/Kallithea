@@ -28,12 +28,12 @@ ${self.repo_context_bar('showpullrequest')}
         </div>
         <div class="pull-right">
             %if request.authuser.username != 'default':
-                <a id="open_new_pr" class="btn btn-success btn-xs" href="${h.url('pullrequest_home',repo_name=c.repo_name)}"><i class="icon-plus"></i> ${_('Open New Pull Request')}</a>
+                <a id="open_new_pr" class="btn btn-success btn-xs" href="${h.url('pullrequest_home',repo_name=c.repo_name)}"><i class="icon-plus"></i>${_('Open New Pull Request')}</a>
             %endif
             %if c.from_:
-                <a class="btn btn-default btn-xs" href="${h.url('pullrequest_show_all',repo_name=c.repo_name,closed=c.closed)}"><i class="icon-git-compare"></i> ${_('Show Pull Requests to %s') % c.repo_name}</a>
+                <a class="btn btn-default btn-xs" href="${h.url('pullrequest_show_all',repo_name=c.repo_name,closed=c.closed)}"><i class="icon-git-compare"></i>${_('Show Pull Requests to %s') % c.repo_name}</a>
             %else:
-                <a class="btn btn-default btn-xs" href="${h.url('pullrequest_show_all',repo_name=c.repo_name,closed=c.closed,from_=1)}"><i class="icon-git-compare"></i> ${_("Show Pull Requests from '%s'") % c.repo_name}</a>
+                <a class="btn btn-default btn-xs" href="${h.url('pullrequest_show_all',repo_name=c.repo_name,closed=c.closed,from_=1)}"><i class="icon-git-compare"></i>${_("Show Pull Requests from '%s'") % c.repo_name}</a>
             %endif
         </div>
     </div>

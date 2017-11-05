@@ -22,7 +22,7 @@
         </div>
         <div class="pull-right">
             %if h.HasPermissionAny('hg.admin')():
-               <a href="${h.url('new_repos_group')}" class="btn btn-success btn-xs"><i class="icon-plus"></i> ${_('Add Repository Group')}</a>
+               <a href="${h.url('new_repos_group')}" class="btn btn-success btn-xs"><i class="icon-plus"></i>${_('Add Repository Group')}</a>
             %endif
         </div>
     </div>

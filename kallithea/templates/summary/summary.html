@@ -19,12 +19,12 @@
 
     ##FORK
     %if c.db_repo.fork:
-        - <i class="icon-fork"></i> ${_('Fork of')} "<a href="${h.url('summary_home',repo_name=c.db_repo.fork.repo_name)}">${c.db_repo.fork.repo_name}</a>"
+        - <i class="icon-fork"></i>${_('Fork of')} "<a href="${h.url('summary_home',repo_name=c.db_repo.fork.repo_name)}">${c.db_repo.fork.repo_name}</a>"
     %endif
 
     ##REMOTE
     %if c.db_repo.clone_uri:
-       - <i class="icon-fork"></i> ${_('Clone from')} "<a href="${h.url(str(h.hide_credentials(c.db_repo.clone_uri)))}">${h.hide_credentials(c.db_repo.clone_uri)}</a>"
+       - <i class="icon-fork"></i>${_('Clone from')} "<a href="${h.url(str(h.hide_credentials(c.db_repo.clone_uri)))}">${h.hide_credentials(c.db_repo.clone_uri)}</a>"
     %endif
 </%def>
 
@@ -106,7 +106,7 @@ ${self.repo_context_bar('summary')}
                     %endif
                 %else:
                     <span id="${'zip_link'}">
-                        <a class="btn btn-default btn-sm" href="${h.url('files_archive_home',repo_name=c.db_repo.repo_name,fname='tip.zip')}"><i class="icon-file-zip"></i> ${_('Download as zip')}</a>
+                        <a class="btn btn-default btn-sm" href="${h.url('files_archive_home',repo_name=c.db_repo.repo_name,fname='tip.zip')}"><i class="icon-file-zip"></i>${_('Download as zip')}</a>
                     </span>
                     ${h.hidden('download_options')}
                     <span>
@@ -122,19 +122,19 @@ ${self.repo_context_bar('summary')}
         <ul id="summary-menu-stats" class="list-group pull-right">
             <li class="list-group-item">
                <a title="${_('Owner')} ${c.db_repo.owner.email}">
-                <i class="icon-user"></i> ${c.db_repo.owner.username}
+                <i class="icon-user"></i>${c.db_repo.owner.username}
                 ${h.gravatar_div(c.db_repo.owner.email, size=18, div_class="pull-right")}
               </a>
             </li>
             <li class="list-group-item">
                <a title="${_('Followers')}" href="${h.url('repo_followers_home',repo_name=c.repo_name)}">
-                <i class="icon-heart"></i> ${_('Followers')}
+                <i class="icon-heart"></i>${_('Followers')}
                 <span class="badge pull-right" id="current_followers_count">${c.repository_followers}</span>
               </a>
             </li>
             <li class="list-group-item">
               <a title="${_('Forks')}" href="${h.url('repo_forks_home',repo_name=c.repo_name)}">
-                <i class="icon-fork"></i> ${_('Forks')}
+                <i class="icon-fork"></i>${_('Forks')}
                 <span class="badge pull-right">${c.repository_forks}</span>
               </a>
             </li>
@@ -142,7 +142,7 @@ ${self.repo_context_bar('summary')}
             %if request.authuser.username != 'default':
             <li class="list-group-item clearfix">
               <a href="#" onclick="javascript:showRepoSize('repo_size_2','${c.db_repo.repo_name}')">
-                <i class="icon-ruler"></i> ${_('Size')}
+                <i class="icon-ruler"></i>${_('Size')}
                 <span class="badge pull-right" id="repo_size_2"></span>
               </a>
             </li>
@@ -150,16 +150,16 @@ ${self.repo_context_bar('summary')}
 
             <li class="list-group-item">
             %if request.authuser.username != 'default':
-              <a href="${h.url('atom_feed_home',repo_name=c.db_repo.repo_name,api_key=request.authuser.api_key)}"><i class="icon-rss-squared"></i> ${_('Feed')}</a>
+              <a href="${h.url('atom_feed_home',repo_name=c.db_repo.repo_name,api_key=request.authuser.api_key)}"><i class="icon-rss-squared"></i>${_('Feed')}</a>
             %else:
-              <a href="${h.url('atom_feed_home',repo_name=c.db_repo.repo_name)}"><i class="icon-rss-squared"></i> ${_('Feed')}</a>
+              <a href="${h.url('atom_feed_home',repo_name=c.db_repo.repo_name)}"><i class="icon-rss-squared"></i>${_('Feed')}</a>
             %endif
             </li>
 
             %if c.show_stats:
             <li class="list-group-item">
               <a title="${_('Statistics')}" href="${h.url('repo_stats_home',repo_name=c.repo_name)}">
-                <i class="icon-graph"></i> ${_('Statistics')}
+                <i class="icon-graph"></i>${_('Statistics')}
               </a>
             </li>
             %endif
@@ -298,7 +298,7 @@ $(document).ready(function(){
              var title_tmpl = ${h.jshtml(_('Download %s as %s') % ('__CS_NAME__','__CS_EXT__'))};
              title_tmpl= title_tmpl.replace('__CS_NAME__',new_cs.text);
              title_tmpl = title_tmpl.replace('__CS_EXT__',k);
-             title_tmpl = '<i class="icon-file-zip"></i> '+ title_tmpl;
+             title_tmpl = '<i class="icon-file-zip"></i>'+ title_tmpl;
              var url = tmpl_links[k].replace('__CS__',new_cs.id);
              var subrepos = $('#archive_subrepos').is(':checked');
              url = url.replace('__SUB__',subrepos);

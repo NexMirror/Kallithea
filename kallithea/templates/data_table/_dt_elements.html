@@ -65,14 +65,14 @@
   <div>
     <div class="pull-left">
       <a href="${h.url('edit_repo',repo_name=repo_name)}" title="${_('Edit')}" class="btn btn-default btn-xs">
-        <i class="icon-pencil"></i> ${_('Edit')}
+        <i class="icon-pencil"></i>${_('Edit')}
       </a>
     </div>
     <div class="pull-left">
       ${h.form(h.url('delete_repo', repo_name=repo_name))}
         <button name="${'remove_%s' % repo_name}" class="btn btn-default btn-xs"
             onclick="return confirm('${_('Confirm to delete this repository: %s') % repo_name}');">
-          <i class="icon-trashcan"></i> ${_('Delete')}
+          <i class="icon-trashcan"></i>${_('Delete')}
         </button>
       ${h.end_form()}
     </div>
@@ -94,14 +94,14 @@
 <%def name="user_actions(user_id, username)">
  <div class="pull-left">
    <a href="${h.url('edit_user',id=user_id)}" title="${_('Edit')}" class="btn btn-default btn-xs">
-     <i class="icon-pencil"></i> ${_('Edit')}
+     <i class="icon-pencil"></i>${_('Edit')}
    </a>
  </div>
  <div class="pull-left">
   ${h.form(h.url('delete_user', id=user_id))}
     <button id="${'remove_user_%s' % user_id}" name="${'remove_user_%s' % repo_name}" class="btn btn-default btn-xs" title="${_('Delete')}"
         onclick="return confirm('${_('Confirm to delete this user: %s') % username}');">
-      <i class="icon-trashcan"></i> ${_('Delete')}
+      <i class="icon-trashcan"></i>${_('Delete')}
     </button>
   ${h.end_form()}
  </div>
@@ -110,14 +110,14 @@
 <%def name="user_group_actions(user_group_id, user_group_name)">
  <div class="pull-left">
     <a href="${h.url('edit_users_group', id=user_group_id)}" title="${_('Edit')}" class="btn btn-default btn-xs">
-      <i class="icon-pencil"></i> ${_('Edit')}
+      <i class="icon-pencil"></i>${_('Edit')}
     </a>
  </div>
  <div class="pull-left">
     ${h.form(h.url('delete_users_group', id=user_group_id))}
       <button id="${'remove_group_%s' % user_group_id}" name="${'remove_user_%s' % repo_name}" class="btn btn-default btn-xs" title="${_('Delete')}"
           onclick="return confirm('${_('Confirm to delete this user group: %s') % user_group_name}');">
-        <i class="icon-trashcan"></i> ${_('Delete')}
+        <i class="icon-trashcan"></i>${_('Delete')}
       </button>
     ${h.end_form()}
  </div>
@@ -133,14 +133,14 @@
 <%def name="repo_group_actions(repo_group_id, repo_group_name, gr_count)">
  <div class="pull-left">
     <a href="${h.url('edit_repo_group',group_name=repo_group_name)}" title="${_('Edit')}" class="btn btn-default btn-xs">
-      <i class="icon-pencil"></i> ${_('Edit')}
+      <i class="icon-pencil"></i>${_('Edit')}
     </a>
  </div>
  <div class="pull-left">
     ${h.form(h.url('delete_repo_group', group_name=repo_group_name))}
       <button id="${'remove_%s' % repo_group_name}" name="${'remove_%s' % repo_group_name}" class="btn btn-default btn-xs" title="${_('Delete')}"
           onclick="return confirm('${ungettext('Confirm to delete this group: %s with %s repository','Confirm to delete this group: %s with %s repositories',gr_count) % (repo_group_name, gr_count)}')">
-        <i class="icon-trashcan"></i> ${_('Delete')}
+        <i class="icon-trashcan"></i>${_('Delete')}
       </button>
     ${h.end_form()}
  </div>
@@ -153,13 +153,13 @@
 <%def name="repo_group_name(repo_group_name, children_groups)">
   <div class="text-nowrap">
   <a href="${h.url('repos_group_home',group_name=repo_group_name)}">
-    <i class="icon-folder" title="${_('Repository group')}"></i> ${h.literal(' &raquo; '.join(children_groups))}</a>
+    <i class="icon-folder" title="${_('Repository group')}"></i>${h.literal(' &raquo; '.join(children_groups))}</a>
   </div>
 </%def>
 
 <%def name="user_group_name(user_group_id, user_group_name)">
   <div class="text-nowrap">
   <a href="${h.url('edit_users_group', id=user_group_id)}">
-    <i class="icon-users" title="${_('User group')}"></i> ${user_group_name}</a>
+    <i class="icon-users" title="${_('User group')}"></i>${user_group_name}</a>
   </div>
 </%def>

@@ -20,7 +20,7 @@
         </div>
         <div class="pull-right">
          %if h.HasPermissionAny('hg.admin','hg.create.repository')():
-            <a href="${h.url('new_repo')}" class="btn btn-success btn-xs"><i class="icon-plus"></i> ${_('Add Repository')}</a>
+            <a href="${h.url('new_repo')}" class="btn btn-success btn-xs"><i class="icon-plus"></i>${_('Add Repository')}</a>
          %endif
         </div>
     </div>

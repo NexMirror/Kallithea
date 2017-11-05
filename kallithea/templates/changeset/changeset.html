@@ -39,15 +39,15 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
                     %endif
                 </div>
                 <div class="diff-actions pull-left">
-                  <a href="${h.url('changeset_raw_home',repo_name=c.repo_name,revision=c.changeset.raw_id)}" data-toggle="tooltip" title="${_('Raw diff')}">
-                      <i class="icon-diff"></i>
-                  </a>
-                  <a href="${h.url('changeset_patch_home',repo_name=c.repo_name,revision=c.changeset.raw_id)}" data-toggle="tooltip" title="${_('Patch diff')}">
-                      <i class="icon-file-powerpoint"></i>
-                  </a>
-                  <a href="${h.url('changeset_download_home',repo_name=c.repo_name,revision=c.changeset.raw_id,diff='download')}" data-toggle="tooltip" title="${_('Download diff')}">
-                      <i class="icon-floppy"></i>
-                  </a>
+                  <a href="${h.url('changeset_raw_home',repo_name=c.repo_name,revision=c.changeset.raw_id)}"
+                     data-toggle="tooltip"
+                     title="${_('Raw diff')}"><i class="icon-diff"></i></a>
+                  <a href="${h.url('changeset_patch_home',repo_name=c.repo_name,revision=c.changeset.raw_id)}"
+                     data-toggle="tooltip"
+                     title="${_('Patch diff')}"><i class="icon-file-powerpoint"></i></a>
+                  <a href="${h.url('changeset_download_home',repo_name=c.repo_name,revision=c.changeset.raw_id,diff='download')}"
+                     data-toggle="tooltip"
+                     title="${_('Download diff')}"><i class="icon-floppy"></i></a>
                   ${c.ignorews_url(request.GET)}
                   ${c.context_url(request.GET)}
                 </div>
@@ -151,8 +151,7 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
                 %for fid, url_fid, op, a_path, path, diff, stats in file_diff_data:
                     <div class="cs_${op} clearfix">
                       <span class="node">
-                          <i class="icon-diff-${op}"></i>
-                          ${h.link_to(h.safe_unicode(path), '#%s' % fid)}
+                          <i class="icon-diff-${op}"></i>${h.link_to(h.safe_unicode(path), '#%s' % fid)}
                       </span>
                       <div class="changes">${h.fancy_file_stats(stats)}</div>
                     </div>

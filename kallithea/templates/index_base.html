@@ -22,19 +22,19 @@
                 %>
                 %if h.HasPermissionAny('hg.admin','hg.create.repository')() or (group_admin or (group_write and create_on_write)):
                   %if c.group:
-                        <a href="${h.url('new_repo',parent_group=c.group.group_id)}" class="btn btn-default btn-xs"><i class="icon-plus"></i> ${_('Add Repository')}</a>
+                        <a href="${h.url('new_repo',parent_group=c.group.group_id)}" class="btn btn-default btn-xs"><i class="icon-plus"></i>${_('Add Repository')}</a>
                         %if h.HasPermissionAny('hg.admin')() or h.HasRepoGroupPermissionLevel('admin')(c.group.group_name):
-                            <a href="${h.url('new_repos_group', parent_group=c.group.group_id)}" class="btn btn-default btn-xs"><i class="icon-plus"></i> ${_('Add Repository Group')}</a>
+                            <a href="${h.url('new_repos_group', parent_group=c.group.group_id)}" class="btn btn-default btn-xs"><i class="icon-plus"></i>${_('Add Repository Group')}</a>
                         %endif
                   %else:
-                    <a href="${h.url('new_repo')}" class="btn btn-default btn-xs"><i class="icon-plus"></i> ${_('Add Repository')}</a>
+                    <a href="${h.url('new_repo')}" class="btn btn-default btn-xs"><i class="icon-plus"></i>${_('Add Repository')}</a>
                     %if h.HasPermissionAny('hg.admin')():
-                        <a href="${h.url('new_repos_group')}" class="btn btn-default btn-xs"><i class="icon-plus"></i> ${_('Add Repository Group')}</a>
+                        <a href="${h.url('new_repos_group')}" class="btn btn-default btn-xs"><i class="icon-plus"></i>${_('Add Repository Group')}</a>
                     %endif
                   %endif
                 %endif
                 %if c.group and h.HasRepoGroupPermissionLevel('admin')(c.group.group_name):
-                    <a href="${h.url('edit_repo_group',group_name=c.group.group_name)}" title="${_('You have admin right to this group, and can edit it')}" class="btn btn-default btn-xs"><i class="icon-pencil"></i> ${_('Edit Repository Group')}</a>
+                    <a href="${h.url('edit_repo_group',group_name=c.group.group_name)}" title="${_('You have admin right to this group, and can edit it')}" class="btn btn-default btn-xs"><i class="icon-pencil"></i>${_('Edit Repository Group')}</a>
                 %endif
               </div>
             %endif

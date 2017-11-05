@@ -20,7 +20,7 @@ ${h.form(url('edit_repo_perms_update', repo_name=c.repo_name))}
                                 ${_('Private Repository')}
                                 </span>
                             </td>
-                            <td class="private_repo_msg"><i class="icon-user"></i> ${_('Default')}</td>
+                            <td class="private_repo_msg"><i class="icon-user"></i>${_('Default')}</td>
                         </tr>
                     %else:
                     <tr id="id${id(r2p.user.username)}">
@@ -39,7 +39,7 @@ ${h.form(url('edit_repo_perms_update', repo_name=c.repo_name))}
                         <td>
                           %if r2p.user.username !='default':
                             <button type="button" class="btn btn-default btn-xs" onclick="ajaxActionRevoke(${r2p.user.user_id}, 'user', '${'id%s'%id(r2p.user.username)}', '${r2p.user.username}')">
-                            <i class="icon-minus-circled"></i> ${_('Revoke')}
+                            <i class="icon-minus-circled"></i>${_('Revoke')}
                             </button>
                           %endif
                         </td>
@@ -64,7 +64,7 @@ ${h.form(url('edit_repo_perms_update', repo_name=c.repo_name))}
                         </td>
                         <td>
                             <button type="button" class="btn btn-default btn-xs" onclick="ajaxActionRevoke(${g2p.users_group.users_group_id}, 'user_group', '${'id%s'%id(g2p.users_group.users_group_name)}', '${g2p.users_group.users_group_name}')">
-                            <i class="icon-minus-circled"></i> ${_('Revoke')}
+                            <i class="icon-minus-circled"></i>${_('Revoke')}
                             </button>
                         </td>
                     </tr>
@@ -74,7 +74,7 @@ ${h.form(url('edit_repo_perms_update', repo_name=c.repo_name))}
                 <tr>
                     <td colspan="6">
                         <button type="button" id="add_perm" class="btn btn-link btn-xs">
-                            <i class="icon-plus"></i> ${_('Add new')}
+                            <i class="icon-plus"></i>${_('Add new')}
                         </button>
                     </td>
                 </tr>

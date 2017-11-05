@@ -34,7 +34,7 @@
         </div>
         %if request.authuser.username != 'default':
         <div class="pull-right">
-             <a href="${h.url('new_gist')}" class="btn btn-success btn-xs"><i class="icon-plus"></i> ${_('Create New Gist')}</a>
+             <a href="${h.url('new_gist')}" class="btn btn-success btn-xs"><i class="icon-plus"></i>${_('Create New Gist')}</a>
         </div>
         %endif
     </div>

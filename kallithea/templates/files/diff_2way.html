@@ -38,18 +38,20 @@ ${self.repo_context_bar('changelog')}
                         revision=c.cs2.raw_id,f_path=h.safe_unicode(c.node1.path)))}
                     </div>
                     <div class="pull-left diff-actions">
-                      <a href="${h.url('files_diff_home',repo_name=c.repo_name,f_path=h.safe_unicode(c.node1.path),diff2=c.cs2.raw_id,diff1=c.cs1.raw_id,diff='diff',fulldiff=1)}" data-toggle="tooltip" title="${_('Show full diff for this file')}">
-                          <i class="icon-file-code"></i>
-                      </a>
-                      <a href="${h.url('files_diff_2way_home',repo_name=c.repo_name,f_path=h.safe_unicode(c.node1.path),diff2=c.cs2.raw_id,diff1=c.cs1.raw_id,diff='diff',fulldiff=1)}" data-toggle="tooltip" title="${_('Show full side-by-side diff for this file')}">
-                          <i class="icon-docs"></i>
-                      </a>
-                      <a href="${h.url('files_diff_home',repo_name=c.repo_name,f_path=h.safe_unicode(c.node1.path),diff2=c.cs2.raw_id,diff1=c.cs1.raw_id,diff='raw')}" data-toggle="tooltip" title="${_('Raw diff')}">
-                          <i class="icon-diff"></i>
-                      </a>
-                      <a href="${h.url('files_diff_home',repo_name=c.repo_name,f_path=h.safe_unicode(c.node1.path),diff2=c.cs2.raw_id,diff1=c.cs1.raw_id,diff='download')}" data-toggle="tooltip" title="${_('Download diff')}">
-                          <i class="icon-floppy"></i>
-                      </a>
+                      <a href="${h.url('files_diff_home',repo_name=c.repo_name,f_path=h.safe_unicode(c.node1.path),diff2=c.cs2.raw_id,diff1=c.cs1.raw_id,diff='diff',fulldiff=1)}"
+                         data-toggle="tooltip"
+                         title="${_('Show full diff for this file')}">
+                          <i class="icon-file-code"></i></a>
+                      <a href="${h.url('files_diff_2way_home',repo_name=c.repo_name,f_path=h.safe_unicode(c.node1.path),diff2=c.cs2.raw_id,diff1=c.cs1.raw_id,diff='diff',fulldiff=1)}"
+                         data-toggle="tooltip"
+                         title="${_('Show full side-by-side diff for this file')}">
+                          <i class="icon-docs"></i></a>
+                      <a href="${h.url('files_diff_home',repo_name=c.repo_name,f_path=h.safe_unicode(c.node1.path),diff2=c.cs2.raw_id,diff1=c.cs1.raw_id,diff='raw')}"
+                         data-toggle="tooltip"
+                         title="${_('Raw diff')}"><i class="icon-diff"></i></a>
+                      <a href="${h.url('files_diff_home',repo_name=c.repo_name,f_path=h.safe_unicode(c.node1.path),diff2=c.cs2.raw_id,diff1=c.cs1.raw_id,diff='download')}"
+                         data-toggle="tooltip"
+                         title="${_('Download diff')}"><i class="icon-floppy"></i></a>
                       ${h.checkbox('ignorews', label=_('Ignore whitespace'))}
                       ${h.checkbox('edit_mode', label=_('Edit'))}
                     </div>

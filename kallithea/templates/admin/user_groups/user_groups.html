@@ -21,7 +21,7 @@
         </div>
         <div class="pull-right">
         %if h.HasPermissionAny('hg.admin', 'hg.usergroup.create.true')():
-            <a href="${h.url('new_users_group')}" class="btn btn-success btn-xs"><i class="icon-plus"></i> ${_('Add User Group')}</a>
+            <a href="${h.url('new_users_group')}" class="btn btn-success btn-xs"><i class="icon-plus"></i>${_('Add User Group')}</a>
         %endif
         </div>
     </div>
