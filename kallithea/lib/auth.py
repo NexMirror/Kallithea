@@ -121,7 +121,6 @@ def check_password(password, hashed):
         return hashlib.sha256(password).hexdigest() == hashed
     elif is_unix:
         import bcrypt
-        print(safe_str(password), safe_str(hashed))
         try:
             return bcrypt.checkpw(safe_str(password), safe_str(hashed))
         except ValueError as e:
