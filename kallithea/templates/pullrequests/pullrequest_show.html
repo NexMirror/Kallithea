@@ -217,6 +217,7 @@ ${self.repo_context_bar('showpullrequest')}
               ## If you change something here it should be reflected in the template too.
               <li id="reviewer_${member.user_id}">
                 <span class="reviewers_member">
+                  <input type="hidden" value="${member.user_id}" name="review_members" />
                   <span class="reviewer_status" data-toggle="tooltip" title="${h.changeset_status_lbl(status)}">
                       <i class="icon-circle changeset-status-${status}"></i>
                   </span>
@@ -227,7 +228,6 @@ ${self.repo_context_bar('showpullrequest')}
                       (${_('Owner')})
                     %endif
                   </span>
-                  <input type="hidden" value="${member.user_id}" name="review_members" />
                   %if editable:
                   <a href="#" class="reviewer_member_remove" onclick="removeReviewMember(${member.user_id})" title="${_('Remove reviewer')}">
                       <i class="icon-minus-circled"></i>

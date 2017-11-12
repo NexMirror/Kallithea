@@ -1274,6 +1274,7 @@ var addReviewMember = function(id,fname,lname,nname,gravatar_link,gravatar_size)
     var element = (
         '     <li id="reviewer_{2}">\n'+
         '       <span class="reviewers_member">\n'+
+        '         <input type="hidden" value="{2}" name="review_members" />\n'+
         '         <span class="reviewer_status" data-toggle="tooltip" title="not_reviewed">\n'+
         '             <i class="icon-circle changeset-status-not_reviewed"></i>\n'+
         '         </span>\n'+
@@ -1281,7 +1282,6 @@ var addReviewMember = function(id,fname,lname,nname,gravatar_link,gravatar_size)
         '         {0}\n' :
         '')+
         '         <span>{1}</span>\n'+
-        '         <input type="hidden" value="{2}" name="review_members" />\n'+
         '         <a href="#" class="reviewer_member_remove" onclick="removeReviewMember({2})">\n'+
         '             <i class="icon-minus-circled"></i>\n'+
         '         </a> (add not saved)\n'+
