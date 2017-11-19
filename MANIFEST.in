@@ -19,6 +19,8 @@ include           kallithea/bin/ldap_sync.conf
 include           kallithea/lib/paster_commands/template.ini.mako
 recursive-include kallithea/i18n *
 recursive-include kallithea/public *
+prune             kallithea/public/less/node_modules
+recursive-include kallithea/public/less/node_modules/bootstrap *
 recursive-include kallithea/templates *
 recursive-include kallithea/tests/fixtures *
 recursive-include kallithea/tests/scripts *
