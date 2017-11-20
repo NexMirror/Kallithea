@@ -666,3 +666,27 @@ class TestVCSOperations(TestController):
         stdout, stderr = _check_outgoing(repo_type, dest_dir, clone_url)
         assert stdout == ''
         assert stderr == ''
+
+    def test_add_submodule(self, webserver):
+        dest_dir = _get_tmp_dir()
+        clone_url = webserver.repo_url(GIT_REPO)
+
+        # GIT_REPO should be untouched for other tests so create a fork
+        fork_name = '%s_fork%s' % (GIT_REPO, _RandomNameSequence().next())
+        fixture.create_fork(GIT_REPO, fork_name)
+        fork_url = webserver.repo_url(fork_name)
+
+        # add submodule
+        stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', fork_url, dest_dir)
+        stdout, stderr = Command(dest_dir).execute('git submodule add', clone_url, 'testsubmodule')
+        stdout, stderr = Command(dest_dir).execute('git commit -am "added testsubmodule pointing to', clone_url, '"')
+        stdout, stderr = Command(dest_dir).execute('git push', fork_url, 'master')
+
+        # check for testsubmodule link in files page
+        self.log_user()
+        response = self.app.get(url(controller='files', action='index',
+                                    repo_name=fork_name,
+                                    revision='tip',
+                                    f_path='/'))
+        # BUG: the link to testsubmodule doesn't work - it should probably point at the submodule URL
+        response.mustcontain('<a class="submodule-dir ypjax-link" href="testsubmodule"><i class="icon-file-submodule"></i><span>testsubmodule @ ')
