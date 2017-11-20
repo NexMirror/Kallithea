@@ -594,26 +594,18 @@ class SubModuleNode(Node):
     is_binary = False
     size = 0
 
-    def __init__(self, name, url=None, changeset=None, alias=None):
+    def __init__(self, name, url, changeset=None, alias=None):
         self.path = name
         self.kind = NodeKind.SUBMODULE
         self.alias = alias
         # we have to use emptyChangeset here since this can point to svn/git/hg
         # submodules we cannot get from repository
         self.changeset = EmptyChangeset(str(changeset), alias=alias)
-        self.url = url or self._extract_submodule_url()
+        self.url = url
 
     def __repr__(self):
         return '<%s %r @ %s>' % (self.__class__.__name__, self.path,
                                  getattr(self.changeset, 'short_id', ''))
-
-    def _extract_submodule_url(self):
-        if self.alias == 'git':
-            # TODO: find a way to parse gits submodule file and extract the
-            # linking URL
-            return self.path
-        if self.alias == 'hg':
-            return self.path
 
     @LazyProperty
     def name(self):
