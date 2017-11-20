@@ -1,7 +1,9 @@
 import re
 from itertools import chain
 from dulwich import objects
+from dulwich.config import ConfigFile
 from subprocess import Popen, PIPE
+from io import BytesIO
 
 from kallithea.lib.vcs.conf import settings
 from kallithea.lib.vcs.backends.base import BaseChangeset, EmptyChangeset
@@ -409,7 +411,9 @@ class GitChangeset(BaseChangeset):
         als = self.repository.alias
         for name, stat, id in tree.iteritems():
             if objects.S_ISGITLINK(stat):
-                dirnodes.append(SubModuleNode(name, url=None, changeset=id,
+                cf = ConfigFile.from_file(BytesIO(self.repository._repo.get_object(tree['.gitmodules'][1]).data))
+                url = cf.get(('submodule', name), 'url')
+                dirnodes.append(SubModuleNode(name, url=url, changeset=id,
                                               alias=als))
                 continue
 
@@ -447,7 +451,10 @@ class GitChangeset(BaseChangeset):
 
             _GL = lambda m: m and objects.S_ISGITLINK(m)
             if _GL(self._stat_modes.get(path)):
-                node = SubModuleNode(path, url=None, changeset=id_,
+                tree = self.repository._repo[self._tree_id]
+                cf = ConfigFile.from_file(BytesIO(self.repository._repo.get_object(tree['.gitmodules'][1]).data))
+                url = cf.get(('submodule', path), 'url')
+                node = SubModuleNode(path, url=url, changeset=id_,
                                      alias=self.repository.alias)
             else:
                 obj = self.repository._repo.get_object(id_)

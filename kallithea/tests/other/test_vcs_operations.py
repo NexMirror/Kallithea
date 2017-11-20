@@ -688,8 +688,7 @@ class TestVCSOperations(TestController):
                                     repo_name=fork_name,
                                     revision='tip',
                                     f_path='/'))
-        # BUG: the link to testsubmodule doesn't work - it should probably point at the submodule URL
-        response.mustcontain('<a class="submodule-dir" href="testsubmodule"><i class="icon-file-submodule"></i><span>testsubmodule @ ')
+        response.mustcontain('<a class="submodule-dir" href="%s"><i class="icon-file-submodule"></i><span>testsubmodule @ ' % clone_url)
 
         # check that following a submodule link actually works - and redirects
         response = self.app.get(url(controller='files', action='index',
