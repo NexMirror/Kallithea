@@ -145,7 +145,7 @@ class HomeController(BaseController):
         }
         return data
 
-    @LoginRequired(allow_default_user=True)
+    @LoginRequired()
     @jsonify
     def users_and_groups_data(self):
         """
