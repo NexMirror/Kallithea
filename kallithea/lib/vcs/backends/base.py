@@ -163,7 +163,7 @@ class BaseRepository(object):
             yield self.get_changeset(revision)
 
     def get_changesets(self, start=None, end=None, start_date=None,
-                       end_date=None, branch_name=None, reverse=False):
+                       end_date=None, branch_name=None, reverse=False, max_revisions=None):
         """
         Returns iterator of ``BaseChangeset`` objects from start to end,
         both inclusive.

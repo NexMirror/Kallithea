@@ -2503,6 +2503,15 @@ class _BaseTestApi(object):
         assert 'message' in result[0]
         assert 'added' not in result[0]
 
+    def test_api_get_changesets_with_max_revisions(self):
+        id_, params = _build_data(self.apikey, 'get_changesets',
+                                  repoid=self.REPO, start_date="2011-02-24T00:00:00", max_revisions=10)
+        response = api_call(self, params)
+        result = json.loads(response.body)["result"]
+        assert len(result) == 10
+        assert 'message' in result[0]
+        assert 'added' not in result[0]
+
     def test_api_get_changesets_with_branch(self):
         if self.REPO == 'vcs_test_hg':
             branch = 'stable'

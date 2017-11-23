@@ -508,7 +508,7 @@ class MercurialRepository(BaseRepository):
         return changeset
 
     def get_changesets(self, start=None, end=None, start_date=None,
-                       end_date=None, branch_name=None, reverse=False):
+                       end_date=None, branch_name=None, reverse=False, max_revisions=None):
         """
         Returns iterator of ``MercurialChangeset`` objects from start to end
         (both are inclusive)
@@ -539,13 +539,17 @@ class MercurialRepository(BaseRepository):
         filter_ = []
         if branch_name:
             filter_.append('branch("%s")' % (branch_name))
-
         if start_date:
             filter_.append('date(">%s")' % start_date)
         if end_date:
             filter_.append('date("<%s")' % end_date)
-        if filter_:
-            revspec = ' and '.join(filter_)
+        if filter_ or max_revisions:
+            if filter_:
+                revspec = ' and '.join(filter_)
+            else:
+                revspec = 'all()'
+            if max_revisions:
+                revspec = 'limit(%s, %s)' % (revspec, max_revisions)
             revisions = scmutil.revrange(self._repo, [revspec])
         else:
             revisions = self.revisions

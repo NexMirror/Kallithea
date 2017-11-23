@@ -504,7 +504,7 @@ class GitRepository(BaseRepository):
         return changeset
 
     def get_changesets(self, start=None, end=None, start_date=None,
-           end_date=None, branch_name=None, reverse=False):
+           end_date=None, branch_name=None, reverse=False, max_revisions=None):
         """
         Returns iterator of ``GitChangeset`` objects from start to end (both
         are inclusive), in ascending date order (unless ``reverse`` is set).
@@ -537,6 +537,8 @@ class GitRepository(BaseRepository):
         # %H at format means (full) commit hash, initial hashes are retrieved
         # in ascending date order
         cmd = ['log', '--date-order', '--reverse', '--pretty=format:%H']
+        if max_revisions:
+            cmd += ['--max-count=%s' % max_revisions]
         if start_date:
             cmd += ['--since', start_date.strftime('%m/%d/%y %H:%M:%S')]
         if end_date:

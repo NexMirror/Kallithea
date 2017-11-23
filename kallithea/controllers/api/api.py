@@ -2498,7 +2498,7 @@ class ApiController(JSONRPCController):
 
     # permission check inside
     def get_changesets(self, repoid, start=None, end=None, start_date=None,
-                       end_date=None, branch_name=None, reverse=False, with_file_list=False):
+                       end_date=None, branch_name=None, reverse=False, with_file_list=False, max_revisions=None):
         repo = get_repo_or_error(repoid)
         if not HasRepoPermissionLevel('read')(repo.repo_name):
             raise JSONRPCError('Access denied to repo %s' % repo.repo_name)
@@ -2511,7 +2511,7 @@ class ApiController(JSONRPCController):
                                                  datetime.strptime(start_date, format) if start_date else None,
                                                  datetime.strptime(end_date, format) if end_date else None,
                                                  branch_name,
-                                                 reverse)]
+                                                 reverse, max_revisions)]
         except EmptyRepositoryError as e:
             raise JSONRPCError(e.message)
 
