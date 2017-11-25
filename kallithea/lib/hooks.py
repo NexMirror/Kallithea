@@ -86,7 +86,7 @@ def repo_size(ui, repo, hooktype=None, **kwargs):
     ui.status(msg)
 
 
-def pre_push(ui, repo, **kwargs):
+def push_lock_handling(ui, repo, **kwargs):
     # pre push function, currently used to ban pushing when
     # repository is locked
     ex = _extract_extras()
@@ -104,7 +104,7 @@ def pre_push(ui, repo, **kwargs):
             raise _http_ret
 
 
-def pre_pull(ui, repo, **kwargs):
+def pull_lock_handling(ui, repo, **kwargs):
     # pre pull function ...
     ex = _extract_extras()
     if ex.locked_by[0]:
@@ -420,10 +420,10 @@ def handle_git_receive(repo_path, git_stdin_lines, env, hook_type):
         repo = repo.scm_instance_no_cache()
 
     if hook_type == 'pre':
-        pre_push(baseui, repo)
+        push_lock_handling(baseui, repo)
 
     # if push hook is enabled via web interface
-    elif hook_type == 'post' and _hooks.get(Ui.HOOK_PUSH):
+    elif hook_type == 'post' and _hooks.get(Ui.HOOK_PUSH_LOG):
         rev_data = []
         for l in git_stdin_lines:
             old_rev, new_rev, ref = l.strip().split(' ')

@@ -109,10 +109,10 @@ class SettingsController(BaseController):
                 sett = Ui.get_by_key('hooks', Ui.HOOK_REPO_SIZE)
                 sett.ui_active = form_result['hooks_changegroup_repo_size']
 
-                sett = Ui.get_by_key('hooks', Ui.HOOK_PUSH)
+                sett = Ui.get_by_key('hooks', Ui.HOOK_PUSH_LOG)
                 sett.ui_active = form_result['hooks_changegroup_push_logger']
 
-                sett = Ui.get_by_key('hooks', Ui.HOOK_PULL)
+                sett = Ui.get_by_key('hooks', Ui.HOOK_PULL_LOG)
                 sett.ui_active = form_result['hooks_outgoing_pull_logger']
 
                 ## EXTENSIONS

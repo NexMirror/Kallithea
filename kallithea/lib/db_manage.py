@@ -257,26 +257,26 @@ class DbManage(object):
 
         hooks3 = Ui()
         hooks3.ui_section = 'hooks'
-        hooks3.ui_key = Ui.HOOK_PUSH
+        hooks3.ui_key = Ui.HOOK_PUSH_LOG
         hooks3.ui_value = 'python:kallithea.lib.hooks.log_push_action'
         self.sa.add(hooks3)
 
         hooks4 = Ui()
         hooks4.ui_section = 'hooks'
-        hooks4.ui_key = Ui.HOOK_PRE_PUSH
-        hooks4.ui_value = 'python:kallithea.lib.hooks.pre_push'
+        hooks4.ui_key = Ui.HOOK_PUSH_LOCK
+        hooks4.ui_value = 'python:kallithea.lib.hooks.push_lock_handling'
         self.sa.add(hooks4)
 
         hooks5 = Ui()
         hooks5.ui_section = 'hooks'
-        hooks5.ui_key = Ui.HOOK_PULL
+        hooks5.ui_key = Ui.HOOK_PULL_LOG
         hooks5.ui_value = 'python:kallithea.lib.hooks.log_pull_action'
         self.sa.add(hooks5)
 
         hooks6 = Ui()
         hooks6.ui_section = 'hooks'
-        hooks6.ui_key = Ui.HOOK_PRE_PULL
-        hooks6.ui_value = 'python:kallithea.lib.hooks.pre_pull'
+        hooks6.ui_key = Ui.HOOK_PULL_LOCK
+        hooks6.ui_value = 'python:kallithea.lib.hooks.pull_lock_handling'
         self.sa.add(hooks6)
 
         # enable largefiles

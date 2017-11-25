@@ -351,10 +351,10 @@ class Ui(Base, BaseDbModel):
 
     HOOK_UPDATE = 'changegroup.update'
     HOOK_REPO_SIZE = 'changegroup.repo_size'
-    HOOK_PUSH = 'changegroup.push_logger'
-    HOOK_PRE_PUSH = 'prechangegroup.pre_push'
-    HOOK_PULL = 'outgoing.pull_logger'
-    HOOK_PRE_PULL = 'preoutgoing.pre_pull'
+    HOOK_PUSH_LOG = 'changegroup.push_logger'
+    HOOK_PUSH_LOCK = 'prechangegroup.push_lock_handling'
+    HOOK_PULL_LOG = 'outgoing.pull_logger'
+    HOOK_PULL_LOCK = 'preoutgoing.pull_lock_handling'
 
     ui_id = Column(Integer(), primary_key=True)
     ui_section = Column(String(255), nullable=False)
@@ -380,8 +380,8 @@ class Ui(Base, BaseDbModel):
     def get_builtin_hooks(cls):
         q = cls.query()
         q = q.filter(cls.ui_key.in_([cls.HOOK_UPDATE, cls.HOOK_REPO_SIZE,
-                                     cls.HOOK_PUSH, cls.HOOK_PRE_PUSH,
-                                     cls.HOOK_PULL, cls.HOOK_PRE_PULL]))
+                                     cls.HOOK_PUSH_LOG, cls.HOOK_PUSH_LOCK,
+                                     cls.HOOK_PULL_LOG, cls.HOOK_PULL_LOCK]))
         q = q.filter(cls.ui_section == 'hooks')
         return q.all()
 
@@ -389,8 +389,8 @@ class Ui(Base, BaseDbModel):
     def get_custom_hooks(cls):
         q = cls.query()
         q = q.filter(~cls.ui_key.in_([cls.HOOK_UPDATE, cls.HOOK_REPO_SIZE,
-                                      cls.HOOK_PUSH, cls.HOOK_PRE_PUSH,
-                                      cls.HOOK_PULL, cls.HOOK_PRE_PULL]))
+                                      cls.HOOK_PUSH_LOG, cls.HOOK_PUSH_LOCK,
+                                      cls.HOOK_PULL_LOG, cls.HOOK_PULL_LOCK]))
         q = q.filter(cls.ui_section == 'hooks')
         return q.all()
 

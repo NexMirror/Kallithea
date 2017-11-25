@@ -43,7 +43,7 @@ from kallithea.lib.utils2 import safe_str, safe_unicode, fix_PATH, get_server_ur
 from kallithea.lib.base import BaseVCSController, WSGIResultCloseCallback, check_locking_state
 from kallithea.lib.utils import make_ui, is_valid_repo
 from kallithea.lib.exceptions import HTTPLockedRC
-from kallithea.lib.hooks import pre_pull
+from kallithea.lib.hooks import pull_lock_handling
 from kallithea.lib import auth_modules
 
 log = logging.getLogger(__name__)
@@ -222,8 +222,8 @@ class SimpleGit(BaseVCSController):
         _hooks = dict(baseui.configitems('hooks')) or {}
         if action == 'pull':
             # stupid git, emulate pre-pull hook !
-            pre_pull(ui=baseui, repo=_repo._repo)
-        if action == 'pull' and _hooks.get(Ui.HOOK_PULL):
+            pull_lock_handling(ui=baseui, repo=_repo._repo)
+        if action == 'pull' and _hooks.get(Ui.HOOK_PULL_LOG):
             log_pull_action(ui=baseui, repo=_repo._repo)
 
     def __inject_extras(self, repo_path, baseui, extras=None):
