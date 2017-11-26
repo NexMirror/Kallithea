@@ -416,3 +416,17 @@ def create_test_index(repo_location, config, full_index):
                          repo_location=repo_location) \
         .run(full_index=full_index)
     l.release()
+
+
+def failing_test_hook(ui, repo, **kwargs):
+    ui.write("failing_test_hook failed\n")
+    return 1
+
+
+def exception_test_hook(ui, repo, **kwargs):
+    raise Exception("exception_test_hook threw an exception")
+
+
+def passing_test_hook(ui, repo, **kwargs):
+    ui.write("passing_test_hook succeeded\n")
+    return 0

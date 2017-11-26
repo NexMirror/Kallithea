@@ -36,7 +36,7 @@ from subprocess import Popen, PIPE
 
 from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
-from kallithea.model.db import User, Repository, UserIpMap, CacheInvalidation
+from kallithea.model.db import User, Repository, UserIpMap, CacheInvalidation, Ui
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
 from kallithea.model.user import UserModel
@@ -136,6 +136,15 @@ def _add_files_and_push(webserver, vcs, dest_dir, ignoreReturnCode=False, files_
     return stdout, stderr
 
 
+def _check_outgoing(vcs, cwd, clone_url=''):
+    if vcs == 'hg':
+        # hg removes the password from default URLs, so we have to provide it here via the clone_url
+        return Command(cwd).execute('hg -q outgoing', clone_url, ignoreReturnCode=True)
+    elif vcs == 'git':
+        Command(cwd).execute('git remote update')
+        return Command(cwd).execute('git log origin/master..master')
+
+
 def set_anonymous_access(enable=True):
     user = User.get_default_user()
     user.active = enable
@@ -176,6 +185,25 @@ class TestVCSOperations(TestController):
         Repository.unlock(r)
         r.enable_locking = False
         Session().commit()
+
+    @pytest.fixture()
+    def testhook_cleanup(self):
+        yield
+        # remove hook
+        for hook in ['prechangegroup', 'pretxnchangegroup', 'preoutgoing', 'changegroup', 'outgoing', 'incoming']:
+            entry = Ui.get_by_key('hooks', '%s.testhook' % hook)
+            if entry:
+                Session().delete(entry)
+        Session().commit()
+
+    @pytest.fixture(scope="module")
+    def testfork(self):
+        # create fork so the repo stays untouched
+        git_fork_name = '%s_fork%s' % (GIT_REPO, _RandomNameSequence().next())
+        fixture.create_fork(GIT_REPO, git_fork_name)
+        hg_fork_name = '%s_fork%s' % (HG_REPO, _RandomNameSequence().next())
+        fixture.create_fork(HG_REPO, hg_fork_name)
+        return {'git': git_fork_name, 'hg': hg_fork_name}
 
     def test_clone_hg_repo_by_admin(self, webserver):
         clone_url = webserver.repo_url(HG_REPO)
@@ -569,3 +597,73 @@ class TestVCSOperations(TestController):
 
         assert 'Cloning into' in stdout + stderr
         assert stderr == '' or stdout == ''
+
+    @parametrize('repo_type, repo_name', [
+                #('git',      GIT_REPO), # git hooks doesn't work like hg hooks
+                ('hg',       HG_REPO),
+    ])
+    def test_custom_hooks_preoutgoing(self, testhook_cleanup, webserver, testfork, repo_type, repo_name):
+        # set prechangegroup to failing hook (returns True)
+        Ui.create_or_update_hook('preoutgoing.testhook', 'python:kallithea.tests.fixture.failing_test_hook')
+        Session().commit()
+        # clone repo
+        clone_url = webserver.repo_url(testfork[repo_type], username=TEST_USER_ADMIN_LOGIN, password=TEST_USER_ADMIN_PASS)
+        dest_dir = _get_tmp_dir()
+        stdout, stderr = Command(TESTS_TMP_PATH)\
+            .execute('%s clone' % repo_type, clone_url, dest_dir, ignoreReturnCode=True)
+        if repo_type == 'hg':
+            assert 'preoutgoing.testhook hook failed' in stdout
+        elif repo_type == 'git':
+            assert 'error: 406' in stderr
+
+    @parametrize('repo_type, repo_name', [
+                #('git',      GIT_REPO), # git hooks doesn't work like hg hooks
+                ('hg',       HG_REPO),
+    ])
+    def test_custom_hooks_prechangegroup(self, testhook_cleanup, webserver, testfork, repo_type, repo_name):
+
+        # set prechangegroup to failing hook (returns True)
+        Ui.create_or_update_hook('prechangegroup.testhook', 'python:kallithea.tests.fixture.failing_test_hook')
+        Session().commit()
+        # clone repo
+        clone_url = webserver.repo_url(testfork[repo_type], username=TEST_USER_ADMIN_LOGIN, password=TEST_USER_ADMIN_PASS)
+        dest_dir = _get_tmp_dir()
+        stdout, stderr = Command(TESTS_TMP_PATH).execute('%s clone' % repo_type, clone_url, dest_dir)
+
+        stdout, stderr = _add_files_and_push(webserver, repo_type, dest_dir,
+                                             username=TEST_USER_ADMIN_LOGIN,
+                                             password=TEST_USER_ADMIN_PASS,
+                                             ignoreReturnCode=True)
+        assert 'failing_test_hook failed' in stdout + stderr
+        assert 'Traceback' not in stdout + stderr
+        assert 'prechangegroup.testhook hook failed' in stdout + stderr
+        # there are still outgoing changesets
+        stdout, stderr = _check_outgoing(repo_type, dest_dir, clone_url)
+        assert stdout != ''
+
+        # set prechangegroup hook to exception throwing method
+        Ui.create_or_update_hook('prechangegroup.testhook', 'python:kallithea.tests.fixture.exception_test_hook')
+        Session().commit()
+        # re-try to push
+        stdout, stderr = Command(dest_dir).execute('%s push' % repo_type, clone_url, ignoreReturnCode=True)
+        if repo_type == 'hg':
+            # like with 'hg serve...' 'HTTP Error 500: INTERNAL SERVER ERROR' should be returned
+            assert 'HTTP Error 500: INTERNAL SERVER ERROR' in stderr
+        elif repo_type == 'git':
+            assert 'exception_test_hook threw an exception' in stderr
+        # there are still outgoing changesets
+        stdout, stderr = _check_outgoing(repo_type, dest_dir, clone_url)
+        assert stdout != ''
+
+        # set prechangegroup hook to method that returns False
+        Ui.create_or_update_hook('prechangegroup.testhook', 'python:kallithea.tests.fixture.passing_test_hook')
+        Session().commit()
+        # re-try to push
+        stdout, stderr = Command(dest_dir).execute('%s push' % repo_type, clone_url, ignoreReturnCode=True)
+        assert 'passing_test_hook succeeded' in stdout + stderr
+        assert 'Traceback' not in stdout + stderr
+        assert 'prechangegroup.testhook hook failed' not in stdout + stderr
+        # no more outgoing changesets
+        stdout, stderr = _check_outgoing(repo_type, dest_dir, clone_url)
+        assert stdout == ''
+        assert stderr == ''
