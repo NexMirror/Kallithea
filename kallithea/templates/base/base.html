@@ -333,7 +333,7 @@
       </li>
     % elif request.authuser.repositories_admin or request.authuser.repository_groups_admin or request.authuser.user_groups_admin:
     <li class="${'active' if current == 'admin' else ''} dropdown">
-        <a class="menu_link dropdown-toggle" data-toggle="dropdown" role="button" title="${_('Admin')}">
+        <a class="menu_link dropdown-toggle" data-toggle="dropdown" role="button" title="${_('Admin')}" href="">
           <i class="icon-gear"></i> ${_('Admin')}
         </a>
         ${admin_menu_simple(request.authuser.repositories_admin,
