@@ -66,6 +66,7 @@ class TestHomeController(TestController):
             Session().commit()
 
     def test_users_and_groups_data(self):
+        self.log_user()
         fixture.create_user('evil', firstname=u'D\'o\'ct"o"r', lastname=u'Évíl')
         fixture.create_user_group(u'grrrr', user_group_description=u"Groüp")
         response = self.app.get(url('users_and_groups_data', query=u'evi'))
