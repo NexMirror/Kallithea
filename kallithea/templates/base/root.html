@@ -116,10 +116,7 @@
       <nav class="navbar navbar-inverse mainmenu">
           <div class="navbar-header" id="logo">
             <a class="navbar-brand" href="${h.url('home')}">
-                <img class="pull-left" src="${h.url('/images/kallithea-logo.svg')}" alt="Kallithea"/>
-                  %if c.site_name:
-                    <span class="branding">${c.site_name}</span>
-                  %endif
+              <span class="branding">${c.site_name}</span>
             </a>
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
               <span class="sr-only">Toggle navigation</span>

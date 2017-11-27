@@ -106,9 +106,19 @@ nav.navbar {
   min-height: 44px;
   background-color: #577632;
 }
-nav.navbar #logo > .navbar-brand > img {
-  margin-top: -9px;
-  margin-right: 5px;
+
+/* logo */
+.navbar-brand .branding {
+  &:before {
+    content: "";
+    display: inline-block;
+    margin-right: .2em;
+    background-image: url("../images/kallithea-logo.svg");
+    width: 140px;
+    height: 30px;
+    margin-bottom: -4px;
+    margin-top: -12px;
+  }
 }
 
 /* every direct child of a panel, that is not .panel-heading, should auto
