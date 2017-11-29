@@ -22,8 +22,7 @@ def main():
     # runs git and later git executes this hook.
     # Environ gets some additional info from kallithea system
     # like IP or username from basic-auth
-    _handler(repo_path, git_stdin_lines, os.environ)
-    sys.exit(0)
+    sys.exit(_handler(repo_path, git_stdin_lines, os.environ))
 
 
 if __name__ == '__main__':
