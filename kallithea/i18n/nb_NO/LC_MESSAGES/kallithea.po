@@ -8,18 +8,21 @@ msgstr ""
 "Project-Id-Version: Kallithea 0.3.2\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2017-07-25 16:37+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2017-12-02 17:48+0000\n"
+"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
+"Language-Team: Norwegian Bokmål "
+"<https://hosted.weblate.org/projects/kallithea/stable/nb_NO/>\n"
 "Language: nb_NO\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2.18-dev\n"
 
 #: kallithea/controllers/changelog.py:86
 #: kallithea/controllers/pullrequests.py:238 kallithea/lib/base.py:512
 msgid "There are no changesets yet"
-msgstr ""
+msgstr "Ingen endringssett enda"
 
 #: kallithea/controllers/changelog.py:165
 #: kallithea/controllers/admin/permissions.py:61
@@ -31,80 +34,85 @@ msgstr ""
 #: kallithea/templates/admin/user_groups/user_group_edit_perms.html:7
 #: kallithea/templates/base/perms_summary.html:14
 msgid "None"
-msgstr ""
+msgstr "Ingen"
 
 #: kallithea/controllers/changelog.py:168 kallithea/controllers/files.py:196
 msgid "(closed)"
-msgstr ""
+msgstr "(lukket)"
 
 #: kallithea/controllers/changeset.py:89
 msgid "Show whitespace"
-msgstr ""
+msgstr "Vis blanktegn"
 
 #: kallithea/controllers/changeset.py:96 kallithea/controllers/changeset.py:103
 #: kallithea/templates/files/diff_2way.html:55
 msgid "Ignore whitespace"
-msgstr ""
+msgstr "Ignorer blanktegn"
 
 #: kallithea/controllers/changeset.py:169
 #, python-format
 msgid "Increase diff context to %(num)s lines"
-msgstr ""
+msgstr "Øk diff-bindeleddsinformasjon til %(nums) linjer"
 
 #: kallithea/controllers/changeset.py:212 kallithea/controllers/files.py:96
 #: kallithea/controllers/files.py:116 kallithea/controllers/files.py:742
 msgid "Such revision does not exist for this repository"
-msgstr ""
+msgstr "En slik revisjon funnes ikke for denne pakkebrønnen"
 
 #: kallithea/controllers/changeset.py:383
 msgid "Changing status on a changeset associated with a closed pull request is not allowed"
 msgstr ""
+"Endring av status for et endringssett tilknyttet en lukket "
+"innhentingsforespørsel tillates ikke"
 
 #: kallithea/controllers/compare.py:161 kallithea/templates/base/root.html:41
 msgid "Select changeset"
-msgstr ""
+msgstr "Velg endringssett"
 
 #: kallithea/controllers/compare.py:261
 msgid "Cannot compare repositories without using common ancestor"
-msgstr ""
+msgstr "Kan ikke sammenligne pakkebrønner uten bruk av felles opphav"
 
 #: kallithea/controllers/error.py:71
 msgid "No response"
-msgstr ""
+msgstr "Ingen respons"
 
 #: kallithea/controllers/error.py:72
 msgid "Unknown error"
-msgstr ""
+msgstr "Ukjent feil"
 
 #: kallithea/controllers/error.py:100
 msgid "The request could not be understood by the server due to malformed syntax."
 msgstr ""
+"Forespørselen kunne ikke forstås av tjeneren som følge av feilaktig syntaks."
 
 #: kallithea/controllers/error.py:103
 msgid "Unauthorized access to resource"
-msgstr ""
+msgstr "Uautorisert tilgang til ressurs"
 
 #: kallithea/controllers/error.py:105
 msgid "You don't have permission to view this page"
-msgstr ""
+msgstr "Du har ikke tilgang til å se denne siden"
 
 #: kallithea/controllers/error.py:107
 msgid "The resource could not be found"
-msgstr ""
+msgstr "Kunne ikke finne ressursen"
 
 #: kallithea/controllers/error.py:109
 msgid "The server encountered an unexpected condition which prevented it from fulfilling the request."
 msgstr ""
+"Tjeneren støtte på en uventet tilstand som forhindret utøvelse av "
+"forespørsel."
 
 #: kallithea/controllers/feed.py:55
-#, python-format
+#, fuzzy, python-format
 msgid "Changes on %s repository"
-msgstr ""
+msgstr "Endringer i %s-pakkebrønn"
 
 #: kallithea/controllers/feed.py:56
-#, python-format
+#, fuzzy, python-format
 msgid "%s %s feed"
-msgstr ""
+msgstr "%s %s kilde"
 
 #: kallithea/controllers/feed.py:87
 #: kallithea/templates/changeset/changeset.html:182
@@ -114,130 +122,131 @@ msgstr ""
 #: kallithea/templates/pullrequests/pullrequest_show.html:339
 #: kallithea/templates/pullrequests/pullrequest_show.html:363
 msgid "Changeset was too big and was cut off..."
-msgstr ""
+msgstr "Endringsettet var for stort og har blitt avskåret…"
 
 #: kallithea/controllers/feed.py:91
 #, python-format
 msgid "%s committed on %s"
-msgstr ""
+msgstr "%s sendte inn %s"
 
 #: kallithea/controllers/files.py:91
 msgid "Click here to add new file"
-msgstr ""
+msgstr "Klikk her for å legge til ny fil"
 
 #: kallithea/controllers/files.py:92
 #, python-format
 msgid "There are no files yet. %s"
-msgstr ""
+msgstr "Ingen filer enda. %s"
 
 #: kallithea/controllers/files.py:193
-#, python-format
+#, fuzzy, python-format
 msgid "%s at %s"
-msgstr ""
+msgstr "%s den %s"
 
 #: kallithea/controllers/files.py:305 kallithea/controllers/files.py:365
 #: kallithea/controllers/files.py:432
 #, python-format
 msgid "This repository has been locked by %s on %s"
-msgstr ""
+msgstr "Denne pakkebrønnen har blitt påst av %s den %s"
 
 #: kallithea/controllers/files.py:317
+#, fuzzy
 msgid "You can only delete files with revision being a valid branch"
-msgstr ""
+msgstr "Du kan bare slette filer med en revisjon som er en gyldig forgrening"
 
 #: kallithea/controllers/files.py:328
 #, python-format
 msgid "Deleted file %s via Kallithea"
-msgstr ""
+msgstr "Slettet filen %s via Kallithea"
 
 #: kallithea/controllers/files.py:350
 #, python-format
 msgid "Successfully deleted file %s"
-msgstr ""
+msgstr "Filen %s ble slettet"
 
 #: kallithea/controllers/files.py:354 kallithea/controllers/files.py:420
 #: kallithea/controllers/files.py:501
 msgid "Error occurred during commit"
-msgstr ""
+msgstr "Feil inntraff under innsendelse"
 
 #: kallithea/controllers/files.py:377
 msgid "You can only edit files with revision being a valid branch"
-msgstr ""
+msgstr "Du kan bare redigere filer med en revisjon som er en gyldig avgrening"
 
 #: kallithea/controllers/files.py:391
 #, python-format
 msgid "Edited file %s via Kallithea"
-msgstr ""
+msgstr "Filen %s ble endret via Kallithea"
 
 #: kallithea/controllers/files.py:407
 msgid "No changes"
-msgstr ""
+msgstr "Ingen endringer"
 
 #: kallithea/controllers/files.py:416 kallithea/controllers/files.py:490
 #, python-format
 msgid "Successfully committed to %s"
-msgstr ""
+msgstr "Innsendt til %s"
 
 #: kallithea/controllers/files.py:443
 msgid "Added file via Kallithea"
-msgstr ""
+msgstr "Fil lagt til via Kallithea"
 
 #: kallithea/controllers/files.py:464
 msgid "No content"
-msgstr ""
+msgstr "Inget innhold"
 
 #: kallithea/controllers/files.py:468
 msgid "No filename"
-msgstr ""
+msgstr "Inget filnavn"
 
 #: kallithea/controllers/files.py:493
 msgid "Location must be relative path and must not contain .. in path"
-msgstr ""
+msgstr "Plasseringen må være en relativ sti, og kan ikke inneholde .. i stien"
 
 #: kallithea/controllers/files.py:526
 msgid "Downloads disabled"
-msgstr ""
+msgstr "Nedlastinger avskrudd"
 
 #: kallithea/controllers/files.py:537
 #, python-format
 msgid "Unknown revision %s"
-msgstr ""
+msgstr "Ukjent revisjon %s"
 
 #: kallithea/controllers/files.py:539
 msgid "Empty repository"
-msgstr ""
+msgstr "Tom pakkebrønn"
 
 #: kallithea/controllers/files.py:541
 msgid "Unknown archive type"
-msgstr ""
+msgstr "Ukjent arkivtype"
 
 #: kallithea/controllers/files.py:771
 #: kallithea/templates/changeset/changeset_range.html:9
 #: kallithea/templates/email_templates/pull_request.html:15
 #: kallithea/templates/pullrequests/pullrequest.html:97
 msgid "Changesets"
-msgstr ""
+msgstr "Endringssett"
 
 #: kallithea/controllers/files.py:772 kallithea/controllers/pullrequests.py:176
 #: kallithea/model/scm.py:820 kallithea/templates/switch_to_list.html:3
 #: kallithea/templates/branches/branches.html:10
 msgid "Branches"
-msgstr ""
+msgstr "Forgreninger"
 
 #: kallithea/controllers/files.py:773 kallithea/controllers/pullrequests.py:177
 #: kallithea/model/scm.py:831 kallithea/templates/switch_to_list.html:25
 #: kallithea/templates/tags/tags.html:10
 msgid "Tags"
-msgstr ""
+msgstr "Etiketter"
 
 #: kallithea/controllers/forks.py:186
 #, python-format
 msgid "An error occurred during repository forking %s"
-msgstr ""
+msgstr "En uventet feil inntraff under forgrening av pakkebrønnen %s"
 
 #: kallithea/controllers/home.py:84
 msgid "Groups"
-msgstr ""
+msgstr "Grupper"
 
 #: kallithea/controllers/home.py:89
 #: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:106
@@ -250,332 +259,343 @@ msgstr ""
 #: kallithea/templates/base/base.html:390
 #: kallithea/templates/base/base.html:562
 msgid "Repositories"
-msgstr ""
+msgstr "Pakkebrønner"
 
 #: kallithea/controllers/home.py:130
 #: kallithea/templates/files/files_add.html:32
 #: kallithea/templates/files/files_delete.html:23
 #: kallithea/templates/files/files_edit.html:32
+#, fuzzy
 msgid "Branch"
-msgstr ""
+msgstr "Forgrening"
 
 #: kallithea/controllers/home.py:136
 msgid "Tag"
-msgstr ""
+msgstr "Etikett"
 
 #: kallithea/controllers/home.py:142
 msgid "Bookmark"
-msgstr ""
+msgstr "Bokmerke"
 
 #: kallithea/controllers/journal.py:111 kallithea/controllers/journal.py:153
 #: kallithea/templates/journal/public_journal.html:4
 #: kallithea/templates/journal/public_journal.html:21
 msgid "Public Journal"
-msgstr ""
+msgstr "Offentlig loggbok"
 
 #: kallithea/controllers/journal.py:115 kallithea/controllers/journal.py:157
 #: kallithea/templates/base/base.html:222
 #: kallithea/templates/journal/journal.html:4
 #: kallithea/templates/journal/journal.html:12
 msgid "Journal"
-msgstr ""
+msgstr "Loggbok"
 
 #: kallithea/controllers/login.py:146 kallithea/controllers/login.py:192
+#, fuzzy
 msgid "Bad captcha"
-msgstr ""
+msgstr "Feilaktig CAPTCHA"
 
 #: kallithea/controllers/login.py:152
+#, fuzzy
 msgid "You have successfully registered into Kallithea"
-msgstr ""
+msgstr "Du har registrert deg på Kallithea"
 
 #: kallithea/controllers/login.py:197
 msgid "A password reset confirmation code has been sent"
-msgstr ""
+msgstr "Passordbekreftelseskode sendt"
 
 #: kallithea/controllers/login.py:246
 msgid "Invalid password reset token"
-msgstr ""
+msgstr "Ugyldig passordtilbakestillingssymbol"
 
 #: kallithea/controllers/login.py:251
 #: kallithea/controllers/admin/my_account.py:167
 msgid "Successfully updated password"
-msgstr ""
+msgstr "Passord oppdatert"
 
 #: kallithea/controllers/pullrequests.py:124
 #, python-format
 msgid "%s (closed)"
-msgstr ""
+msgstr "%s (lukket)"
 
 #: kallithea/controllers/pullrequests.py:152
 #: kallithea/templates/changeset/changeset.html:12
 #: kallithea/templates/email_templates/changeset_comment.html:17
 msgid "Changeset"
-msgstr ""
+msgstr "Endringssett"
 
 #: kallithea/controllers/pullrequests.py:173
+#, fuzzy
 msgid "Special"
-msgstr ""
+msgstr "Spesiell"
 
 #: kallithea/controllers/pullrequests.py:174
 msgid "Peer branches"
-msgstr ""
+msgstr "Likemennsforgreninger"
 
 #: kallithea/controllers/pullrequests.py:175 kallithea/model/scm.py:826
 #: kallithea/templates/switch_to_list.html:38
 #: kallithea/templates/bookmarks/bookmarks.html:10
 msgid "Bookmarks"
-msgstr ""
+msgstr "Bokmerker"
 
 #: kallithea/controllers/pullrequests.py:310
 #, python-format
 msgid "Error creating pull request: %s"
-msgstr ""
+msgstr "Feil ved opprettelse av ny innsendelsesforespørsel: %s"
 
 #: kallithea/controllers/pullrequests.py:356
 #: kallithea/controllers/pullrequests.py:503
 msgid "No description"
-msgstr ""
+msgstr "Ingen beskrivelse"
 
 #: kallithea/controllers/pullrequests.py:363
 msgid "Successfully opened new pull request"
-msgstr ""
+msgstr "Åpnet en ny innsendelsesforespørsel"
 
 #: kallithea/controllers/pullrequests.py:366
 #: kallithea/controllers/pullrequests.py:453
 #: kallithea/controllers/pullrequests.py:510
-#, python-format
+#, fuzzy, python-format
 msgid "Invalid reviewer \"%s\" specified"
-msgstr ""
+msgstr "Ugyldig analytiker \"%s\" angitt"
 
 #: kallithea/controllers/pullrequests.py:369
 #: kallithea/controllers/pullrequests.py:456
 msgid "Error occurred while creating pull request"
-msgstr ""
+msgstr "Feil inntraff under opprettelse av innsendelsesforespørsel"
 
 #: kallithea/controllers/pullrequests.py:401
 msgid "Missing changesets since the previous pull request:"
-msgstr ""
+msgstr "Manglende endringssett siden forrige innsendingsforespørsel:"
 
 #: kallithea/controllers/pullrequests.py:408
 #, python-format
 msgid "New changesets on %s %s since the previous pull request:"
-msgstr ""
+msgstr "Nye endringssett på %s %s siden forrige innsendingsforespørsel:"
 
 #: kallithea/controllers/pullrequests.py:415
 msgid "Ancestor didn't change - show diff since previous version:"
-msgstr ""
+msgstr "Opphav endret seg ikke - vis diff siden forrige versjon:"
 
 #: kallithea/controllers/pullrequests.py:422
 #, python-format
 msgid "This pull request is based on another %s revision and there is no simple diff."
 msgstr ""
+"Denne innsendingsforespørselen er basert på en annen %s-revisjon, og det "
+"finnes ingen enkel diff."
 
 #: kallithea/controllers/pullrequests.py:424
 #, python-format
 msgid "No changes found on %s %s since previous version."
-msgstr ""
+msgstr "Ingen endringer funnet på %s %s siden forrige versjon."
 
 #: kallithea/controllers/pullrequests.py:462
 #, python-format
 msgid "Closed, replaced by %s ."
-msgstr ""
+msgstr "Lukket, erstattet av %s."
 
 #: kallithea/controllers/pullrequests.py:470
 msgid "Pull request update created"
-msgstr ""
+msgstr "Innsendingsforespørsel opprettet"
 
 #: kallithea/controllers/pullrequests.py:514
 msgid "Pull request updated"
-msgstr ""
+msgstr "Innsendingsforespørsel oppdatert"
 
 #: kallithea/controllers/pullrequests.py:529
 msgid "Successfully deleted pull request"
-msgstr ""
+msgstr "Slettet innsendingsforespørsel"
 
 #: kallithea/controllers/pullrequests.py:595
 #, python-format
 msgid "This pull request has already been merged to %s."
-msgstr ""
+msgstr "Denne innsendingsforespørselen har allerede blitt flettet inn i %s."
 
 #: kallithea/controllers/pullrequests.py:597
 msgid "This pull request has been closed and can not be updated."
 msgstr ""
+"Denne innsendingsforespørselen har blitt lukket, og kan ikke oppdateres."
 
 #: kallithea/controllers/pullrequests.py:615
 #, python-format
 msgid "This pull request can be updated with changes on %s:"
-msgstr ""
+msgstr "Denne innsendingsforespørselen kan ikke oppdateres med endringer på %s:"
 
 #: kallithea/controllers/pullrequests.py:619
 msgid "No changesets found for updating this pull request."
 msgstr ""
+"Ingen endringssett funnet for oppdatering av denne innsendingsforespørselen."
 
 #: kallithea/controllers/pullrequests.py:627
 #, python-format
 msgid "Note: Branch %s has another head: %s."
-msgstr ""
+msgstr "Merk: Forgreningen %s har et annet hode: %s."
 
 #: kallithea/controllers/pullrequests.py:633
 msgid "Git pull requests don't support updates yet."
-msgstr ""
+msgstr "Git-innsendingsforespørsler støtter ikke oppdateringer enda."
 
 #: kallithea/controllers/pullrequests.py:724
 msgid "No permission to change pull request status"
-msgstr ""
+msgstr "Ingen tilgang til endring av innsendingsforespørselsstatus"
 
 #: kallithea/controllers/pullrequests.py:729
 msgid "Closing."
-msgstr ""
+msgstr "Lukker."
 
 #: kallithea/controllers/search.py:135
 msgid "Invalid search query. Try quoting it."
-msgstr ""
+msgstr "Ugyldig søkespørring. Prøv å sette den i sistattegn."
 
 #: kallithea/controllers/search.py:140
 msgid "There is no index to search in. Please run whoosh indexer"
-msgstr ""
+msgstr "Det er ingen indeks å søke i. Kjør en annen whoosh-indekserer"
 
 #: kallithea/controllers/search.py:144
 msgid "An error occurred during search operation."
-msgstr ""
+msgstr "Feil inntraff under søkeoperasjon."
 
 #: kallithea/controllers/summary.py:180
 #: kallithea/templates/summary/summary.html:384
 msgid "No data ready yet"
-msgstr ""
+msgstr "Ingen data klar enda"
 
 #: kallithea/controllers/summary.py:183
 #: kallithea/templates/summary/summary.html:98
 msgid "Statistics are disabled for this repository"
-msgstr ""
+msgstr "Statistikk er avskrudd for denne pakkebrønnen"
 
 #: kallithea/controllers/admin/auth_settings.py:135
 msgid "Auth settings updated successfully"
-msgstr ""
+msgstr "Autentiseringsinnstillinger oppdatert"
 
 #: kallithea/controllers/admin/auth_settings.py:146
 msgid "error occurred during update of auth settings"
-msgstr ""
+msgstr "feil inntraff under oppdatering av autentiseringsinnstillinger"
 
 #: kallithea/controllers/admin/defaults.py:97
 msgid "Default settings updated successfully"
-msgstr ""
+msgstr "Forvalgte innstillinger oppdatert"
 
 #: kallithea/controllers/admin/defaults.py:112
 msgid "Error occurred during update of defaults"
-msgstr ""
+msgstr "Feil inntraff under oppdatering av forvalg"
 
 #: kallithea/controllers/admin/gists.py:59
 #: kallithea/controllers/admin/my_account.py:243
 #: kallithea/controllers/admin/users.py:285
 msgid "Forever"
-msgstr ""
+msgstr "For alltid"
 
 #: kallithea/controllers/admin/gists.py:60
 #: kallithea/controllers/admin/my_account.py:244
 #: kallithea/controllers/admin/users.py:286
 msgid "5 minutes"
-msgstr ""
+msgstr "Fem minutter"
 
 #: kallithea/controllers/admin/gists.py:61
 #: kallithea/controllers/admin/my_account.py:245
 #: kallithea/controllers/admin/users.py:287
 msgid "1 hour"
-msgstr ""
+msgstr "Én time"
 
 #: kallithea/controllers/admin/gists.py:62
 #: kallithea/controllers/admin/my_account.py:246
 #: kallithea/controllers/admin/users.py:288
 msgid "1 day"
-msgstr ""
+msgstr "Én dag"
 
 #: kallithea/controllers/admin/gists.py:63
 #: kallithea/controllers/admin/my_account.py:247
 #: kallithea/controllers/admin/users.py:289
 msgid "1 month"
-msgstr ""
+msgstr "Én måned"
 
 #: kallithea/controllers/admin/gists.py:67
 #: kallithea/controllers/admin/my_account.py:249
 #: kallithea/controllers/admin/users.py:291
 msgid "Lifetime"
-msgstr ""
+msgstr "Livstid"
 
 #: kallithea/controllers/admin/gists.py:146
 msgid "Error occurred during gist creation"
-msgstr ""
+msgstr "Feil inntraff under gist-opprettelse"
 
 #: kallithea/controllers/admin/gists.py:184
 #, python-format
 msgid "Deleted gist %s"
-msgstr ""
+msgstr "Slettet gist-en %s"
 
 #: kallithea/controllers/admin/gists.py:233
 msgid "Unmodified"
-msgstr ""
+msgstr "Uendret"
 
 #: kallithea/controllers/admin/gists.py:262
 msgid "Successfully updated gist content"
-msgstr ""
+msgstr "Oppdaterte gist-innhold"
 
 #: kallithea/controllers/admin/gists.py:267
 msgid "Successfully updated gist data"
-msgstr ""
+msgstr "Oppdaterte gist-data"
 
 #: kallithea/controllers/admin/gists.py:270
-#, python-format
+#, fuzzy, python-format
 msgid "Error occurred during update of gist %s"
-msgstr ""
+msgstr "Feil inntraff under oppdatering av gist-en %s"
 
 #: kallithea/controllers/admin/my_account.py:70 kallithea/model/user.py:215
 #: kallithea/model/user.py:237
 msgid "You can't edit this user since it's crucial for entire application"
 msgstr ""
+"Du kan ikke endre denne brukeren siden den er avgjørende for hele programmet"
 
 #: kallithea/controllers/admin/my_account.py:129
 msgid "Your account was updated successfully"
-msgstr ""
+msgstr "Kontoen din ble oppdatert"
 
 #: kallithea/controllers/admin/my_account.py:144
 #: kallithea/controllers/admin/users.py:202
-#, python-format
+#, fuzzy, python-format
 msgid "Error occurred during update of user %s"
-msgstr ""
+msgstr "Feil inntraff under oppdatering av brukeren %s"
 
 #: kallithea/controllers/admin/my_account.py:178
 msgid "Error occurred during update of user password"
-msgstr ""
+msgstr "Feil inntraff under oppdatering av brukerpassord"
 
 #: kallithea/controllers/admin/my_account.py:220
 #: kallithea/controllers/admin/users.py:415
-#, python-format
+#, fuzzy, python-format
 msgid "Added email %s to user"
-msgstr ""
+msgstr "La til e-postadressen %s for bruker"
 
 #: kallithea/controllers/admin/my_account.py:226
 #: kallithea/controllers/admin/users.py:421
+#, fuzzy
 msgid "An error occurred during email saving"
-msgstr ""
+msgstr "Feil inntraff under lagring av e-postadresse"
 
 #: kallithea/controllers/admin/my_account.py:235
 #: kallithea/controllers/admin/users.py:433
+#, fuzzy
 msgid "Removed email from user"
-msgstr ""
+msgstr "Fjernet e-postadresse fra bruker"
 
 #: kallithea/controllers/admin/my_account.py:259
 #: kallithea/controllers/admin/users.py:308
 msgid "API key successfully created"
-msgstr ""
+msgstr "API-nøkkel opprettet"
 
 #: kallithea/controllers/admin/my_account.py:271
 #: kallithea/controllers/admin/users.py:321
 msgid "API key successfully reset"
-msgstr ""
+msgstr "API-nøkkel tilbakestilt"
 
 #: kallithea/controllers/admin/my_account.py:275
 #: kallithea/controllers/admin/users.py:325
 msgid "API key successfully deleted"
-msgstr ""
+msgstr "API-nøkkel slettet"
 
 #: kallithea/controllers/admin/permissions.py:62
 #: kallithea/controllers/admin/permissions.py:66
@@ -585,7 +605,7 @@ msgstr ""
 #: kallithea/templates/admin/user_groups/user_group_edit_perms.html:8
 #: kallithea/templates/base/perms_summary.html:15
 msgid "Read"
-msgstr ""
+msgstr "LEs"
 
 #: kallithea/controllers/admin/permissions.py:63
 #: kallithea/controllers/admin/permissions.py:67
@@ -595,7 +615,7 @@ msgstr ""
 #: kallithea/templates/admin/user_groups/user_group_edit_perms.html:9
 #: kallithea/templates/base/perms_summary.html:16
 msgid "Write"
-msgstr ""
+msgstr "Skriv"
 
 #: kallithea/controllers/admin/permissions.py:64
 #: kallithea/controllers/admin/permissions.py:68
@@ -629,7 +649,7 @@ msgstr ""
 #: kallithea/templates/base/base.html:260
 #: kallithea/templates/base/perms_summary.html:17
 msgid "Admin"
-msgstr ""
+msgstr "Admin"
 
 #: kallithea/controllers/admin/permissions.py:75
 #: kallithea/controllers/admin/permissions.py:86
@@ -639,15 +659,15 @@ msgstr ""
 #: kallithea/controllers/admin/permissions.py:100
 #: kallithea/templates/admin/auth/auth_settings.html:40
 msgid "Disabled"
-msgstr ""
+msgstr "Avskrudd"
 
 #: kallithea/controllers/admin/permissions.py:77
 msgid "Allowed with manual account activation"
-msgstr ""
+msgstr "Tillatt med manuell kontoaktivering"
 
 #: kallithea/controllers/admin/permissions.py:79
 msgid "Allowed with automatic account activation"
-msgstr ""
+msgstr "Tillatt med automatisk kontoaktivering"
 
 #: kallithea/controllers/admin/permissions.py:82
 #: kallithea/lib/dbmigrate/schema/db_1_7_0.py:1439
@@ -659,7 +679,7 @@ msgstr ""
 #: kallithea/lib/dbmigrate/schema/db_2_2_0.py:1655
 #: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1682 kallithea/model/db.py:1702
 msgid "Manual activation of external account"
-msgstr ""
+msgstr "Manuell aktivering av ekstern konto"
 
 #: kallithea/controllers/admin/permissions.py:83
 #: kallithea/lib/dbmigrate/schema/db_1_7_0.py:1440
@@ -671,7 +691,7 @@ msgstr ""
 #: kallithea/lib/dbmigrate/schema/db_2_2_0.py:1656
 #: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1683 kallithea/model/db.py:1703
 msgid "Automatic activation of external account"
-msgstr ""
+msgstr "Automatisk aktivering av ekstern konto"
 
 #: kallithea/controllers/admin/permissions.py:87
 #: kallithea/controllers/admin/permissions.py:90
@@ -680,178 +700,182 @@ msgstr ""
 #: kallithea/controllers/admin/permissions.py:101
 #: kallithea/templates/admin/auth/auth_settings.html:40
 msgid "Enabled"
-msgstr ""
+msgstr "Påskrudd"
 
 #: kallithea/controllers/admin/permissions.py:124
+#, fuzzy
 msgid "Global permissions updated successfully"
-msgstr ""
+msgstr "Globale tilganger oppdatert"
 
 #: kallithea/controllers/admin/permissions.py:139
 msgid "Error occurred during update of permissions"
-msgstr ""
+msgstr "Feil inntraff under oppdatering av tilganger"
 
 #: kallithea/controllers/admin/repo_groups.py:188
 #, python-format
 msgid "Error occurred during creation of repository group %s"
-msgstr ""
+msgstr "Feil inntraff under opprettelse av pakkebrønnsgruppen %s"
 
 #: kallithea/controllers/admin/repo_groups.py:193
 #, python-format
 msgid "Created repository group %s"
-msgstr ""
+msgstr "Opprettet pakkebrønnsgruppen %s"
 
 #: kallithea/controllers/admin/repo_groups.py:250
 #, python-format
 msgid "Updated repository group %s"
-msgstr ""
+msgstr "Oppdaterte pakkebrønnsgruppen %s"
 
 #: kallithea/controllers/admin/repo_groups.py:266
 #, python-format
 msgid "Error occurred during update of repository group %s"
-msgstr ""
+msgstr "Feil inntraff under oppdatering av pakkebrønnsgruppen %s"
 
 #: kallithea/controllers/admin/repo_groups.py:284
 #, python-format
 msgid "This group contains %s repositories and cannot be deleted"
-msgstr ""
+msgstr "Denne gruppen inneholder %s pakkebrønner og kan ikke slettes"
 
 #: kallithea/controllers/admin/repo_groups.py:291
 #, python-format
 msgid "This group contains %s subgroups and cannot be deleted"
-msgstr ""
+msgstr "Denne grunnen inneholder %s undergrupper og kan ikke slettes"
 
 #: kallithea/controllers/admin/repo_groups.py:297
 #, python-format
 msgid "Removed repository group %s"
-msgstr ""
+msgstr "Fjernet pakkebrønnsgruppen %s"
 
 #: kallithea/controllers/admin/repo_groups.py:302
 #, python-format
 msgid "Error occurred during deletion of repository group %s"
-msgstr ""
+msgstr "Feil inntraff under sletting av pakkebrønnsgruppen %s"
 
 #: kallithea/controllers/admin/repo_groups.py:405
 #: kallithea/controllers/admin/repo_groups.py:440
 #: kallithea/controllers/admin/user_groups.py:340
+#, fuzzy
 msgid "Cannot revoke permission for yourself as admin"
-msgstr ""
+msgstr "Kan ikke tilbakekalle egen administratortilgang"
 
 #: kallithea/controllers/admin/repo_groups.py:420
 msgid "Repository group permissions updated"
-msgstr ""
+msgstr "Pakkebrønnsgruppetilganger oppdatert"
 
 #: kallithea/controllers/admin/repo_groups.py:457
 #: kallithea/controllers/admin/repos.py:398
 #: kallithea/controllers/admin/user_groups.py:352
 msgid "An error occurred during revoking of permission"
-msgstr ""
+msgstr "En feil inntraff under tilbakekalling av tilgang"
 
 #: kallithea/controllers/admin/repos.py:152
 #, python-format
 msgid "Error creating repository %s"
-msgstr ""
+msgstr "Feil under opprettelse av pakkebrønnen %s"
 
 #: kallithea/controllers/admin/repos.py:213
 #, python-format
 msgid "Created repository %s from %s"
-msgstr ""
+msgstr "Opprettet pakkebrønnen %s fra %s"
 
 #: kallithea/controllers/admin/repos.py:222
 #, python-format
 msgid "Forked repository %s as %s"
-msgstr ""
+msgstr "Forgrenet pakkebrønnen %s som %s"
 
 #: kallithea/controllers/admin/repos.py:225
 #, python-format
 msgid "Created repository %s"
-msgstr ""
+msgstr "Opprettet pakkebrønnen %s"
 
 #: kallithea/controllers/admin/repos.py:262
 #, python-format
 msgid "Repository %s updated successfully"
-msgstr ""
+msgstr "Pakkebrønnen %s ble oppdatert"
 
 #: kallithea/controllers/admin/repos.py:283
 #, python-format
 msgid "Error occurred during update of repository %s"
-msgstr ""
+msgstr "Feil under oppdatering av pakkebrønnen %s"
 
 #: kallithea/controllers/admin/repos.py:310
 #, python-format
 msgid "Detached %s forks"
-msgstr ""
+msgstr "Avhektet %s forgreninger"
 
 #: kallithea/controllers/admin/repos.py:313
 #, python-format
 msgid "Deleted %s forks"
-msgstr ""
+msgstr "Slettet %s forgreninger"
 
 #: kallithea/controllers/admin/repos.py:318
 #, python-format
 msgid "Deleted repository %s"
-msgstr ""
+msgstr "Slettet pakkebrønnen %s"
 
 #: kallithea/controllers/admin/repos.py:321
 #, python-format
 msgid "Cannot delete repository %s which still has forks"
-msgstr ""
+msgstr "Kan ikke slette pakkebrønne %s, som fremdeles har forgreninger"
 
 #: kallithea/controllers/admin/repos.py:326
 #, python-format
 msgid "An error occurred during deletion of %s"
-msgstr ""
+msgstr "En feil inntraff under sletting av %s"
 
 #: kallithea/controllers/admin/repos.py:374
 msgid "Repository permissions updated"
-msgstr ""
+msgstr "Pakkebrønnstilganger oppdatert"
 
 #: kallithea/controllers/admin/repos.py:430
 msgid "An error occurred during creation of field"
-msgstr ""
+msgstr "Feil inntraff under opprettelse av felt"
 
 #: kallithea/controllers/admin/repos.py:444
 msgid "An error occurred during removal of field"
-msgstr ""
+msgstr "Feil inntraff under fjerning av felt"
 
 #: kallithea/controllers/admin/repos.py:460
 msgid "-- Not a fork --"
-msgstr ""
+msgstr "-- Ikke en forgrening --"
 
 #: kallithea/controllers/admin/repos.py:491
 msgid "Updated repository visibility in public journal"
-msgstr ""
+msgstr "Oppdaterte pakkebrønnssynlighet i offentlig loggbok"
 
 #: kallithea/controllers/admin/repos.py:495
+#, fuzzy
 msgid "An error occurred during setting this repository in public journal"
 msgstr ""
+"En feil inntraff under innlemmelse av denne pakkebrønnen i offentlig loggbok"
 
 #: kallithea/controllers/admin/repos.py:512
 msgid "Nothing"
-msgstr ""
+msgstr "Ingenting"
 
 #: kallithea/controllers/admin/repos.py:514
 #, python-format
 msgid "Marked repository %s as fork of %s"
-msgstr ""
+msgstr "Markerte pakkebrønnen %s som en forgrening av %s"
 
 #: kallithea/controllers/admin/repos.py:521
 msgid "An error occurred during this operation"
-msgstr ""
+msgstr "En feil inntraff under denne operasjonen"
 
 #: kallithea/controllers/admin/repos.py:537
 #: kallithea/controllers/admin/repos.py:564
 msgid "Repository has been locked"
-msgstr ""
+msgstr "Pakkebrønnen har blitt låst"
 
 #: kallithea/controllers/admin/repos.py:540
 #: kallithea/controllers/admin/repos.py:561
 msgid "Repository has been unlocked"
-msgstr ""
+msgstr "Pakkebrønnen har blitt låst opp"
 
 #: kallithea/controllers/admin/repos.py:543
 #: kallithea/controllers/admin/repos.py:568
 msgid "An error occurred during unlocking"
-msgstr ""
+msgstr "En feil inntraff under opplåsning"
 
 #: kallithea/controllers/admin/repos.py:582
 msgid "Cache invalidation successful"
