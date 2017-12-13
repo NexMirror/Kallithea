@@ -8,16 +8,18 @@
 <%include file="/base/flash_msg.html"/>
 <div id="login" class="panel panel-primary">
     <div class="panel-heading">
+      <h5>
+        <i class="icon-lock"></i>
         %if c.site_name:
-            <h5>${_('Log In to %s') % c.site_name}</h5>
+            ${_('Log In to %s') % c.site_name}
         %else:
-            <h5>${_('Log In')}</h5>
+            ${_('Log In')}
         %endif
+      </h5>
     </div>
     <div class="panel-body">
         ${h.form(url('login_home', came_from=c.came_from))}
         <div class="form">
-            <i class="icon-lock"></i>
 
                 <div class="form-group">
                     <label class="control-label" for="username">${_('Username')}:</label>
