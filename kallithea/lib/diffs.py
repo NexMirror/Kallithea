@@ -75,7 +75,7 @@ def as_html(table_class='code-difftable', line_class='line',
         """
 
         if condition:
-            return '''<a href="%(url)s">%(label)s</a>''' % {
+            return '''<a href="%(url)s" data-pseudo-content="%(label)s"></a>''' % {
                 'url': url,
                 'label': label
             }

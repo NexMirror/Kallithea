@@ -2,6 +2,11 @@ body {
   background: url("../images/background.png") repeat scroll 0 0 #B0B0B0;
 }
 
+/* pseude content that should not be selected or copied by the user */
+[data-pseudo-content]:before {
+  content: attr(data-pseudo-content);
+}
+
 /* class for texts where newlines should be preserved, for very light-weight ascii art markup (like pull request descriptions) */
 .formatted-fixed {
   white-space: pre-wrap;
