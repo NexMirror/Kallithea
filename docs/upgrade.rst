@@ -96,8 +96,8 @@ Find the right ``kallithea/public/less`` path with::
 
 Then run::
 
-    npm --prefix kallithea/public/less install
-    npm --prefix kallithea/public/less run less
+    npm install
+    npm run less
 
 
 5. Upgrade your configuration
