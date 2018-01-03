@@ -423,16 +423,10 @@ table#changesets tr > td.mid .message.expanded,
 table#changesets tr .extra-container {
   display: block;
   position: absolute;
-  top: -15px;
+  top: 0;
   right: 0;
-  padding-left: 5px;
-  background: #FFFFFF;
-  height: 41px;
 }
-#pull_request_overview .comments-container,
-#changeset_compare_view_content .comments-container,
-table#changesets .comments-container,
-#shortlog_data .comments-container,
+.comments-container,
 table#changesets .logtags {
   display: block;
   float: left;
@@ -440,10 +434,6 @@ table#changesets .logtags {
   padding: 0;
   margin: 0;
   white-space: nowrap;
-}
-table#changesets .comments-container {
-  margin: 0.8em 0;
-  margin-right: 0.5em;
 }
 table#changesets .tagcontainer {
   width: 80px;
