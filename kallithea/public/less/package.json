@@ -9,6 +9,6 @@
     "less-plugin-clean-css": "~1.5"
   },
   "scripts": {
-    "less": "lessc main.less ../css/style.css"
+    "less": "lessc --relative-urls main.less ../css/style.css"
   }
 }
