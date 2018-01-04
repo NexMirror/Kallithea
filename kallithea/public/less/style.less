@@ -605,24 +605,8 @@ div.gravatar img {
   color: #393939;
   font-weight: 700;
 }
-.panel-body.settings .nav-pills > li {
-  padding: 0 !important;
-}
-.panel-body.settings .nav-pills > li > a {
-  border-radius: 4px;
-  padding: 10px;
-  display: block;
-  position: relative;
+.panel-body.settings .nav-pills > :not(.active) > a {
   color: inherit;
-}
-.panel-body.settings > ul.nav-stacked li.active > a,
-.panel-body.settings > ul.nav-stacked li.active:hover > a {
-  color: #fff;
-  background-color: #577632;
-}
-.panel-body.settings > ul.nav-stacked li:hover > a {
-  text-decoration: none;
-  background-color: #eee;
 }
 .panel-body.settings > div,
 .panel-body.settings > form {
