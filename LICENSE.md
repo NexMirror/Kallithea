@@ -289,7 +289,7 @@ Kallithea incorporates subsets of both
 [Font Awesome](http://fontawesome.io) and
 [GitHub Octicons](https://octicons.github.com) for icons. Font Awesome is:
 
-Copyright (c) 2012, Dave Gandy
+Copyright (c) 2016, Dave Gandy
 
 Octicons is:
 

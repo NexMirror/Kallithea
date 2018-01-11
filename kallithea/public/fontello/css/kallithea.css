@@ -2,11 +2,12 @@
 
  @font-face {
   font-family: 'kallithea';
-  src: url('../font/kallithea.eot?23730278');
-  src: url('../font/kallithea.eot?23730278#iefix') format('embedded-opentype'),
-       url('../font/kallithea.woff?23730278') format('woff'),
-       url('../font/kallithea.ttf?23730278') format('truetype'),
-       url('../font/kallithea.svg?23730278#kallithea') format('svg');
+  src: url('../font/kallithea.eot?96450582');
+  src: url('../font/kallithea.eot?96450582#iefix') format('embedded-opentype'),
+       url('../font/kallithea.woff2?96450582') format('woff2'),
+       url('../font/kallithea.woff?96450582') format('woff'),
+       url('../font/kallithea.ttf?96450582') format('truetype'),
+       url('../font/kallithea.svg?96450582#kallithea') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -16,7 +17,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'kallithea';
-    src: url('../font/kallithea.svg?23730278#kallithea') format('svg');
+    src: url('../font/kallithea.svg?96450582#kallithea') format('svg');
   }
 }
 */
