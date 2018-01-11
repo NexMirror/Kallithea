@@ -318,7 +318,7 @@ class InMemoryChangesetTestMixin(object):
         self.imc.add(node)
         date = datetime.datetime(1985, 1, 30, 1, 45)
         commit = self.imc.commit(u"Committed at time when I was born ;-)",
-            author=u'lb', date=date)
+            author=u'lb <lb@example.com>', date=date)
 
         self.assertEqual(commit.date, date)
 

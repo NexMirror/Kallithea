@@ -56,7 +56,7 @@ requirements = [
     "docutils>=0.8.1",
     "URLObject==2.3.4",
     "Routes==1.13",
-    "dulwich>=0.14.1,<0.18.6", # temporary workaround for not using 0.18.6 which cause test failure ... and perhaps also real failures
+    "dulwich>=0.14.1",
     "mercurial>=2.9,<4.5",
     "decorator >= 3.3.2",
     "Paste >= 2.0.3, < 3.0",

@@ -42,7 +42,7 @@ from kallithea.lib.auth import AuthUser
 from kallithea.lib.db_manage import DbManage
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.tests.base import invalidate_all_caches, GIT_REPO, HG_REPO, \
-    TESTS_TMP_PATH, TEST_USER_ADMIN_LOGIN, TEST_USER_REGULAR_LOGIN
+    TESTS_TMP_PATH, TEST_USER_ADMIN_LOGIN, TEST_USER_REGULAR_LOGIN, TEST_USER_ADMIN_EMAIL
 
 
 log = logging.getLogger(__name__)
@@ -293,7 +293,7 @@ class Fixture(object):
         if parent is None:
             _cs = EmptyChangeset(alias=vcs_type)
         if author is None:
-            author = TEST_USER_ADMIN_LOGIN
+            author = '%s <%s>' % (TEST_USER_ADMIN_LOGIN, TEST_USER_ADMIN_EMAIL)
 
         if newfile:
             nodes = {
