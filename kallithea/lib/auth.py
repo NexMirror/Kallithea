@@ -122,6 +122,11 @@ class KallitheaCrypto(object):
         :param hashed: password in hashed form
         """
 
+        try:
+            password = str(password)
+        except UnicodeEncodeError:
+            log.warning('rejecting non-ascii password')
+            return False
         if is_windows:
             return hashlib.sha256(password).hexdigest() == hashed
         elif is_unix:

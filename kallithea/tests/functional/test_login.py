@@ -133,6 +133,13 @@ class TestLoginController(TestController):
 
         response.mustcontain('Invalid username or password')
 
+    def test_login_non_ascii(self):
+        response = self.app.post(url(controller='login', action='index'),
+                                 {'username': TEST_USER_REGULAR_LOGIN,
+                                  'password': 'blåbærgrød'})
+
+        response.mustcontain('>Invalid username or password<')
+
     # verify that get arguments are correctly passed along login redirection
 
     @parameterized.expand([
