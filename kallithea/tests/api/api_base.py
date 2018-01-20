@@ -21,6 +21,8 @@ import random
 import mock
 import re
 
+import pytest
+
 from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
 from kallithea.lib.compat import json
@@ -2498,6 +2500,19 @@ class _BaseTestApi(object):
         response = api_call(self, params)
         result = json.loads(response.body)["result"]
         assert len(result) == 3
+        assert 'message' in result[0]
+        assert 'added' not in result[0]
+
+    def test_api_get_changesets_with_branch(self):
+        if self.REPO == 'vcs_test_hg':
+            branch = 'stable'
+        else:
+            pytest.skip("skipping due to missing branches in git test repo")
+        id_, params = _build_data(self.apikey, 'get_changesets',
+                                  repoid=self.REPO, branch_name=branch, start_date="2011-02-24T00:00:00")
+        response = api_call(self, params)
+        result = json.loads(response.body)["result"]
+        assert len(result) == 5
         assert 'message' in result[0]
         assert 'added' not in result[0]
 
