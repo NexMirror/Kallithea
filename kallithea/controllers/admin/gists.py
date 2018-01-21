@@ -41,7 +41,7 @@ from kallithea.model.meta import Session
 from kallithea.model.db import Gist, User
 from kallithea.lib import helpers as h
 from kallithea.lib.base import BaseController, render, jsonify
-from kallithea.lib.auth import LoginRequired, NotAnonymous
+from kallithea.lib.auth import LoginRequired
 from kallithea.lib.utils2 import safe_int, safe_unicode, time_to_datetime
 from kallithea.lib.page import Page
 from sqlalchemy.sql.expression import or_
@@ -65,7 +65,7 @@ class GistsController(BaseController):
             c.lifetime_values.append(extra_values)
         c.lifetime_options = [(c.lifetime_values, _("Lifetime"))]
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     def index(self):
         not_default_user = not request.authuser.is_default_user
         c.show_private = request.GET.get('private') and not_default_user
@@ -100,7 +100,6 @@ class GistsController(BaseController):
         return render('admin/gists/index.html')
 
     @LoginRequired()
-    @NotAnonymous()
     def create(self):
         self.__load_defaults()
         gist_form = GistForm([x[0] for x in c.lifetime_values])()
@@ -143,13 +142,11 @@ class GistsController(BaseController):
         raise HTTPFound(location=url('gist', gist_id=new_gist_id))
 
     @LoginRequired()
-    @NotAnonymous()
     def new(self, format='html'):
         self.__load_defaults()
         return render('admin/gists/new.html')
 
     @LoginRequired()
-    @NotAnonymous()
     def delete(self, gist_id):
         gist = GistModel().get_gist(gist_id)
         owner = gist.owner_id == request.authuser.user_id
@@ -162,7 +159,7 @@ class GistsController(BaseController):
 
         raise HTTPFound(location=url('gists'))
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     def show(self, gist_id, revision='tip', format='html', f_path=None):
         c.gist = Gist.get_or_404(gist_id)
 
@@ -183,7 +180,6 @@ class GistsController(BaseController):
         return render('admin/gists/show.html')
 
     @LoginRequired()
-    @NotAnonymous()
     def edit(self, gist_id, format='html'):
         c.gist = Gist.get_or_404(gist_id)
 
@@ -242,7 +238,6 @@ class GistsController(BaseController):
         return rendered
 
     @LoginRequired()
-    @NotAnonymous()
     @jsonify
     def check_revision(self, gist_id):
         c.gist = Gist.get_or_404(gist_id)

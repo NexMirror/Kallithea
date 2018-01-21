@@ -46,7 +46,7 @@ from kallithea.model.db import UserLog, UserFollowing, Repository, User
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
 import kallithea.lib.helpers as h
-from kallithea.lib.auth import LoginRequired, NotAnonymous
+from kallithea.lib.auth import LoginRequired
 from kallithea.lib.base import BaseController, render
 from kallithea.lib.page import Page
 from kallithea.lib.utils2 import safe_int, AttributeDict
@@ -191,7 +191,6 @@ class JournalController(BaseController):
         return feed.writeString('utf-8')
 
     @LoginRequired()
-    @NotAnonymous()
     def index(self):
         # Return a rendered template
         p = safe_int(request.GET.get('page'), 1)
@@ -223,7 +222,6 @@ class JournalController(BaseController):
         return render('journal/journal.html')
 
     @LoginRequired(api_access=True)
-    @NotAnonymous()
     def journal_atom(self):
         """
         Produce an atom-1.0 feed via feedgenerator module
@@ -235,7 +233,6 @@ class JournalController(BaseController):
         return self._atom_feed(following, public=False)
 
     @LoginRequired(api_access=True)
-    @NotAnonymous()
     def journal_rss(self):
         """
         Produce an rss feed via feedgenerator module
@@ -247,7 +244,6 @@ class JournalController(BaseController):
         return self._rss_feed(following, public=False)
 
     @LoginRequired()
-    @NotAnonymous()
     def toggle_following(self):
         user_id = request.POST.get('follows_user_id')
         if user_id:
@@ -273,7 +269,7 @@ class JournalController(BaseController):
 
         raise HTTPBadRequest()
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     def public_journal(self):
         # Return a rendered template
         p = safe_int(request.GET.get('page'), 1)
@@ -294,7 +290,7 @@ class JournalController(BaseController):
 
         return render('journal/public_journal.html')
 
-    @LoginRequired(api_access=True)
+    @LoginRequired(api_access=True, allow_default_user=True)
     def public_journal_atom(self):
         """
         Produce an atom-1.0 feed via feedgenerator module
@@ -306,7 +302,7 @@ class JournalController(BaseController):
 
         return self._atom_feed(c.following)
 
-    @LoginRequired(api_access=True)
+    @LoginRequired(api_access=True, allow_default_user=True)
     def public_journal_rss(self):
         """
         Produce an rss2 feed via feedgenerator module

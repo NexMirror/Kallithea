@@ -38,7 +38,7 @@ from webob.exc import HTTPFound
 from kallithea.config.routing import url
 from kallithea.lib import helpers as h
 from kallithea.lib import auth_modules
-from kallithea.lib.auth import LoginRequired, NotAnonymous, AuthUser
+from kallithea.lib.auth import LoginRequired, AuthUser
 from kallithea.lib.base import BaseController, render
 from kallithea.lib.utils2 import generate_api_key, safe_int
 from kallithea.model.db import Repository, UserEmailMap, User, UserFollowing
@@ -59,7 +59,6 @@ class MyAccountController(BaseController):
     #         path_prefix='/admin', name_prefix='admin_')
 
     @LoginRequired()
-    @NotAnonymous()
     def _before(self, *args, **kwargs):
         super(MyAccountController, self)._before(*args, **kwargs)
 

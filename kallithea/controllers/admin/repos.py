@@ -60,7 +60,7 @@ class ReposController(BaseRepoController):
     # file has a resource setup:
     #     map.resource('repo', 'repos')
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     def _before(self, *args, **kwargs):
         super(ReposController, self)._before(*args, **kwargs)
 
@@ -169,7 +169,6 @@ class ReposController(BaseRepoController):
             force_defaults=False)
 
     @LoginRequired()
-    @NotAnonymous()
     def repo_creating(self, repo_name):
         c.repo = repo_name
         c.task_id = request.GET.get('task_id')
@@ -178,7 +177,6 @@ class ReposController(BaseRepoController):
         return render('admin/repos/repo_creating.html')
 
     @LoginRequired()
-    @NotAnonymous()
     @jsonify
     def repo_check(self, repo_name):
         c.repo = repo_name

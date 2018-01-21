@@ -37,8 +37,7 @@ from kallithea.lib.vcs.exceptions import RepositoryError, \
     ChangesetDoesNotExistError, EmptyRepositoryError
 
 import kallithea.lib.helpers as h
-from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator, \
-    NotAnonymous
+from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator
 from kallithea.lib.base import BaseRepoController, render, jsonify
 from kallithea.lib.utils import action_logger
 from kallithea.lib.compat import OrderedDict
@@ -348,7 +347,6 @@ class ChangesetController(BaseRepoController):
         return self._index(revision, method='download')
 
     @LoginRequired()
-    @NotAnonymous()
     @HasRepoPermissionLevelDecorator('read')
     @jsonify
     def comment(self, repo_name, revision):
@@ -399,7 +397,6 @@ class ChangesetController(BaseRepoController):
         return data
 
     @LoginRequired()
-    @NotAnonymous()
     @HasRepoPermissionLevelDecorator('read')
     @jsonify
     def delete_comment(self, repo_name, comment_id):

@@ -35,7 +35,7 @@ from webob.exc import HTTPBadRequest, HTTPForbidden
 from kallithea.model.db import Notification
 from kallithea.model.notification import NotificationModel
 from kallithea.model.meta import Session
-from kallithea.lib.auth import LoginRequired, NotAnonymous
+from kallithea.lib.auth import LoginRequired
 from kallithea.lib.base import BaseController, render
 from kallithea.lib import helpers as h
 from kallithea.lib.page import Page
@@ -53,7 +53,6 @@ class NotificationsController(BaseController):
     #         path_prefix='/_admin', name_prefix='_admin_')
 
     @LoginRequired()
-    @NotAnonymous()
     def _before(self, *args, **kwargs):
         super(NotificationsController, self)._before(*args, **kwargs)
 

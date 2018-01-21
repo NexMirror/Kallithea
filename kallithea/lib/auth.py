@@ -752,16 +752,20 @@ def _redirect_to_login(message=None):
 
 # Use as decorator
 class LoginRequired(object):
-    """Client must be logged in as a valid User (but the "default" user,
-    if enabled, is considered valid), or we'll redirect to the login page.
+    """Client must be logged in as a valid User, or we'll redirect to the login
+    page.
+
+    If the "default" user is enabled and allow_default_user is true, that is
+    considered valid too.
 
     Also checks that IP address is allowed, and if using API key instead
     of regular cookie authentication, checks that API key access is allowed
     (based on `api_access` parameter and the API view whitelist).
     """
 
-    def __init__(self, api_access=False):
+    def __init__(self, api_access=False, allow_default_user=False):
         self.api_access = api_access
+        self.allow_default_user = allow_default_user
 
     def __call__(self, func):
         return decorator(self.__wrapper, func)
@@ -801,12 +805,17 @@ class LoginRequired(object):
                 raise HTTPForbidden()
 
         # regular user authentication
-        if user.is_authenticated or user.is_default_user:
+        if user.is_authenticated:
             log.info('user %s authenticated with regular auth @ %s', user, loc)
             return func(*fargs, **fkwargs)
+        elif user.is_default_user:
+            if self.allow_default_user:
+                log.info('default user @ %s', loc)
+                return func(*fargs, **fkwargs)
+            log.info('default user is not accepted here @ %s', loc)
         else:
             log.warning('user %s NOT authenticated with regular auth @ %s', user, loc)
-            raise _redirect_to_login()
+        raise _redirect_to_login()
 
 
 # Use as decorator

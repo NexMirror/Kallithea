@@ -58,7 +58,7 @@ log = logging.getLogger(__name__)
 
 class RepoGroupsController(BaseController):
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     def _before(self, *args, **kwargs):
         super(RepoGroupsController, self)._before(*args, **kwargs)
 

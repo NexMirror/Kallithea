@@ -36,8 +36,7 @@ from webob.exc import HTTPFound, HTTPNotFound, HTTPForbidden, HTTPBadRequest
 from kallithea.config.routing import url
 from kallithea.lib import helpers as h
 from kallithea.lib import diffs
-from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator, \
-    NotAnonymous
+from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator
 from kallithea.lib.base import BaseRepoController, render, jsonify
 from kallithea.lib.page import Page
 from kallithea.lib.utils import action_logger
@@ -218,7 +217,6 @@ class PullrequestsController(BaseRepoController):
         return render('/pullrequests/pullrequest_show_all.html')
 
     @LoginRequired()
-    @NotAnonymous()
     def show_my(self):
         c.closed = request.GET.get('closed') or ''
 
@@ -244,7 +242,6 @@ class PullrequestsController(BaseRepoController):
         return render('/pullrequests/pullrequest_show_my.html')
 
     @LoginRequired()
-    @NotAnonymous()
     @HasRepoPermissionLevelDecorator('read')
     def index(self):
         org_repo = c.db_repo
@@ -300,7 +297,6 @@ class PullrequestsController(BaseRepoController):
         return render('/pullrequests/pullrequest.html')
 
     @LoginRequired()
-    @NotAnonymous()
     @HasRepoPermissionLevelDecorator('read')
     @jsonify
     def repo_info(self, repo_name):
@@ -313,7 +309,6 @@ class PullrequestsController(BaseRepoController):
             }
 
     @LoginRequired()
-    @NotAnonymous()
     @HasRepoPermissionLevelDecorator('read')
     def create(self, repo_name):
         repo = c.db_repo
@@ -383,7 +378,6 @@ class PullrequestsController(BaseRepoController):
 
     # pullrequest_post for PR editing
     @LoginRequired()
-    @NotAnonymous()
     @HasRepoPermissionLevelDecorator('read')
     def post(self, repo_name, pull_request_id):
         pull_request = PullRequest.get_or_404(pull_request_id)
@@ -440,7 +434,6 @@ class PullrequestsController(BaseRepoController):
         raise HTTPFound(location=pull_request.url())
 
     @LoginRequired()
-    @NotAnonymous()
     @HasRepoPermissionLevelDecorator('read')
     @jsonify
     def delete(self, repo_name, pull_request_id):
@@ -633,7 +626,6 @@ class PullrequestsController(BaseRepoController):
         return render('/pullrequests/pullrequest_show.html')
 
     @LoginRequired()
-    @NotAnonymous()
     @HasRepoPermissionLevelDecorator('read')
     @jsonify
     def comment(self, repo_name, pull_request_id):
@@ -718,7 +710,6 @@ class PullrequestsController(BaseRepoController):
         return data
 
     @LoginRequired()
-    @NotAnonymous()
     @HasRepoPermissionLevelDecorator('read')
     @jsonify
     def delete_comment(self, repo_name, comment_id):

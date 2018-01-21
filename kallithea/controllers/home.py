@@ -50,7 +50,7 @@ class HomeController(BaseController):
     def about(self):
         return render('/about.html')
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     def index(self):
         c.group = None
 
@@ -63,7 +63,7 @@ class HomeController(BaseController):
 
         return render('/index.html')
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     @jsonify
     def repo_switcher_data(self):
         # wrapper for conditional cache
@@ -145,7 +145,7 @@ class HomeController(BaseController):
         }
         return data
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     @jsonify
     def users_and_groups_data(self):
         """

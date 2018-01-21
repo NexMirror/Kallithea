@@ -59,7 +59,7 @@ class SettingsController(BaseController):
     #     map.resource('setting', 'settings', controller='admin/settings',
     #         path_prefix='/admin', name_prefix='admin_')
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     def _before(self, *args, **kwargs):
         super(SettingsController, self)._before(*args, **kwargs)
 

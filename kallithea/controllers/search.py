@@ -49,7 +49,7 @@ log = logging.getLogger(__name__)
 
 class SearchController(BaseRepoController):
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     def index(self, repo_name=None):
         c.repo_name = repo_name
         c.formated_results = []

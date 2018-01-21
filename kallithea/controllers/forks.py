@@ -38,7 +38,7 @@ import kallithea.lib.helpers as h
 
 from kallithea.config.routing import url
 from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator, \
-    NotAnonymous, HasRepoPermissionLevel, HasPermissionAnyDecorator, HasPermissionAny
+    HasRepoPermissionLevel, HasPermissionAnyDecorator, HasPermissionAny
 from kallithea.lib.base import BaseRepoController, render
 from kallithea.lib.page import Page
 from kallithea.lib.utils2 import safe_int
@@ -123,7 +123,6 @@ class ForksController(BaseRepoController):
         return render('/forks/forks.html')
 
     @LoginRequired()
-    @NotAnonymous()
     @HasPermissionAnyDecorator('hg.admin', 'hg.fork.repository')
     @HasRepoPermissionLevelDecorator('read')
     def fork(self, repo_name):
@@ -141,7 +140,6 @@ class ForksController(BaseRepoController):
             force_defaults=False)
 
     @LoginRequired()
-    @NotAnonymous()
     @HasPermissionAnyDecorator('hg.admin', 'hg.fork.repository')
     @HasRepoPermissionLevelDecorator('read')
     def fork_create(self, repo_name):

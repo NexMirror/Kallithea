@@ -63,7 +63,7 @@ log = logging.getLogger(__name__)
 class UserGroupsController(BaseController):
     """REST Controller styled on the Atom Publishing Protocol"""
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     def _before(self, *args, **kwargs):
         super(UserGroupsController, self)._before(*args, **kwargs)
         c.available_permissions = config['available_permissions']

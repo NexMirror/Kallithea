@@ -120,7 +120,7 @@ def _journal_filter(user_log, search_term):
 
 class AdminController(BaseController):
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     def _before(self, *args, **kwargs):
         super(AdminController, self)._before(*args, **kwargs)
 

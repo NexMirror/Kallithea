@@ -43,8 +43,7 @@ from kallithea.lib.vcs.exceptions import ChangesetError, EmptyRepositoryError, \
 from kallithea.config.conf import ALL_READMES, ALL_EXTS, LANGUAGES_EXTENSIONS_MAP
 from kallithea.model.db import Statistics, CacheInvalidation, User
 from kallithea.lib.utils2 import safe_int, safe_str
-from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator, \
-    NotAnonymous
+from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator
 from kallithea.lib.base import BaseRepoController, render, jsonify
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.markup_renderer import MarkupRenderer
@@ -162,7 +161,6 @@ class SummaryController(BaseRepoController):
         return render('summary/summary.html')
 
     @LoginRequired()
-    @NotAnonymous()
     @HasRepoPermissionLevelDecorator('read')
     @jsonify
     def repo_size(self, repo_name):
