@@ -108,3 +108,5 @@ class Command(AbstractInstallCommand):
             self, config_file, section, self.sysconfig_install_vars(installer))
         self.call_sysconfig_functions(
             'post_setup_hook', installer, config_file)
+
+        print 'Database set up successfully.'
