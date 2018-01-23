@@ -75,7 +75,7 @@ ${self.repo_context_bar('changelog')}
           ${h.gravatar_div(h.email_or_none(cs.author), size=20)}
           <a data-toggle="tooltip" title="${cs.message}" href="${h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id)}">${h.show_id(cs)}</a>
             <div class="right">
-              <span class="logtags">
+              <span>
                 %if len(cs.parents)>1:
                 <span class="label label-merge">${_('Merge')}</span>
                 %endif
