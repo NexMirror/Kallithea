@@ -17,12 +17,12 @@ from kallithea.lib.hooks import handle_git_post_receive as _handler
 
 def main():
     repo_path = os.path.abspath('.')
-    push_data = sys.stdin.readlines()
+    git_stdin_lines = sys.stdin.readlines()
     # os.environ is modified here by a subprocess call that
     # runs git and later git executes this hook.
     # Environ gets some additional info from kallithea system
     # like IP or username from basic-auth
-    _handler(repo_path, push_data, os.environ)
+    _handler(repo_path, git_stdin_lines, os.environ)
     sys.exit(0)
 
 

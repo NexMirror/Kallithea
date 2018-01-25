@@ -364,15 +364,15 @@ def log_delete_user(user_dict, deleted_by, **kwargs):
     return 0
 
 
-def handle_git_pre_receive(repo_path, revs, env):
-    return handle_git_receive(repo_path, revs, env, hook_type='pre')
+def handle_git_pre_receive(repo_path, git_stdin_lines, env):
+    return handle_git_receive(repo_path, git_stdin_lines, env, hook_type='pre')
 
 
-def handle_git_post_receive(repo_path, revs, env):
-    return handle_git_receive(repo_path, revs, env, hook_type='post')
+def handle_git_post_receive(repo_path, git_stdin_lines, env):
+    return handle_git_receive(repo_path, git_stdin_lines, env, hook_type='post')
 
 
-def handle_git_receive(repo_path, revs, env, hook_type):
+def handle_git_receive(repo_path, git_stdin_lines, env, hook_type):
     """
     A really hacky method that is run by git post-receive hook and logs
     a push action together with pushed revisions. It's executed by subprocess
@@ -425,7 +425,7 @@ def handle_git_receive(repo_path, revs, env, hook_type):
     # if push hook is enabled via web interface
     elif hook_type == 'post' and _hooks.get(Ui.HOOK_PUSH):
         rev_data = []
-        for l in revs:
+        for l in git_stdin_lines:
             old_rev, new_rev, ref = l.strip().split(' ')
             _ref_data = ref.split('/')
             if _ref_data[1] in ['tags', 'heads']:
