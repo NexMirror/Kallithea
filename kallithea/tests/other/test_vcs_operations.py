@@ -321,6 +321,26 @@ class TestVCSOperations(TestController):
 
         assert 'fatal: Authentication failed' in stderr
 
+    def test_push_with_readonly_credentials_hg(self, webserver):
+        dest_dir = _get_tmp_dir()
+        clone_url = webserver.repo_url(HG_REPO, username=TEST_USER_REGULAR_LOGIN, password=TEST_USER_REGULAR_PASS)
+        stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, dest_dir)
+
+        stdout, stderr = _add_files_and_push(webserver, 'hg', dest_dir, username=TEST_USER_REGULAR_LOGIN,
+                                             password=TEST_USER_REGULAR_PASS, ignoreReturnCode=True)
+
+        assert 'abort: HTTP Error 403: Forbidden' in stderr
+
+    def test_push_with_readonly_credentials_git(self, webserver):
+        dest_dir = _get_tmp_dir()
+        clone_url = webserver.repo_url(GIT_REPO, username=TEST_USER_REGULAR_LOGIN, password=TEST_USER_REGULAR_PASS)
+        stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, dest_dir)
+
+        stdout, stderr = _add_files_and_push(webserver, 'git', dest_dir, username=TEST_USER_REGULAR_LOGIN,
+                                             password=TEST_USER_REGULAR_PASS, ignoreReturnCode=True)
+
+        assert 'The requested URL returned error: 403' in stderr
+
     def test_push_back_to_wrong_url_hg(self, webserver):
         dest_dir = _get_tmp_dir()
         clone_url = webserver.repo_url(HG_REPO)
