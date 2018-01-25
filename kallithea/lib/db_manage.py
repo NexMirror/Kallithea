@@ -229,88 +229,6 @@ class DbManage(object):
             self.create_user(TEST_USER_REGULAR2_LOGIN, TEST_USER_REGULAR2_PASS,
                              TEST_USER_REGULAR2_EMAIL, False)
 
-    def create_ui_settings(self, repo_store_path):
-        """
-        Creates ui settings, fills out hooks
-        """
-
-        # HOOKS
-        hooks1_key = Ui.HOOK_UPDATE
-        hooks1_ = Ui.query() \
-            .filter(Ui.ui_key == hooks1_key).scalar()
-
-        hooks1 = Ui() if hooks1_ is None else hooks1_
-        hooks1.ui_section = 'hooks'
-        hooks1.ui_key = hooks1_key
-        hooks1.ui_value = 'hg update >&2'
-        hooks1.ui_active = False
-        self.sa.add(hooks1)
-
-        hooks2_key = Ui.HOOK_REPO_SIZE
-        hooks2_ = Ui.query() \
-            .filter(Ui.ui_key == hooks2_key).scalar()
-        hooks2 = Ui() if hooks2_ is None else hooks2_
-        hooks2.ui_section = 'hooks'
-        hooks2.ui_key = hooks2_key
-        hooks2.ui_value = 'python:kallithea.lib.hooks.repo_size'
-        self.sa.add(hooks2)
-
-        hooks3 = Ui()
-        hooks3.ui_section = 'hooks'
-        hooks3.ui_key = Ui.HOOK_PUSH_LOG
-        hooks3.ui_value = 'python:kallithea.lib.hooks.log_push_action'
-        self.sa.add(hooks3)
-
-        hooks4 = Ui()
-        hooks4.ui_section = 'hooks'
-        hooks4.ui_key = Ui.HOOK_PUSH_LOCK
-        hooks4.ui_value = 'python:kallithea.lib.hooks.push_lock_handling'
-        self.sa.add(hooks4)
-
-        hooks5 = Ui()
-        hooks5.ui_section = 'hooks'
-        hooks5.ui_key = Ui.HOOK_PULL_LOG
-        hooks5.ui_value = 'python:kallithea.lib.hooks.log_pull_action'
-        self.sa.add(hooks5)
-
-        hooks6 = Ui()
-        hooks6.ui_section = 'hooks'
-        hooks6.ui_key = Ui.HOOK_PULL_LOCK
-        hooks6.ui_value = 'python:kallithea.lib.hooks.pull_lock_handling'
-        self.sa.add(hooks6)
-
-        # enable largefiles
-        largefiles = Ui()
-        largefiles.ui_section = 'extensions'
-        largefiles.ui_key = 'largefiles'
-        largefiles.ui_value = ''
-        self.sa.add(largefiles)
-
-        # set default largefiles cache dir, defaults to
-        # /repo location/.cache/largefiles
-        largefiles = Ui()
-        largefiles.ui_section = 'largefiles'
-        largefiles.ui_key = 'usercache'
-        largefiles.ui_value = os.path.join(repo_store_path, '.cache',
-                                           'largefiles')
-        self.sa.add(largefiles)
-
-        # enable hgsubversion disabled by default
-        hgsubversion = Ui()
-        hgsubversion.ui_section = 'extensions'
-        hgsubversion.ui_key = 'hgsubversion'
-        hgsubversion.ui_value = ''
-        hgsubversion.ui_active = False
-        self.sa.add(hgsubversion)
-
-        # enable hggit disabled by default
-        hggit = Ui()
-        hggit.ui_section = 'extensions'
-        hggit.ui_key = 'hggit'
-        hggit.ui_value = ''
-        hggit.ui_active = False
-        self.sa.add(hggit)
-
     def create_auth_plugin_options(self, skip_existing=False):
         """
         Create default auth plugin settings, and make it active
@@ -436,19 +354,28 @@ class DbManage(object):
 
     def create_settings(self, path):
 
-        self.create_ui_settings(path)
-
         ui_config = [
-            ('web', 'allow_archive', 'gz zip bz2'),
-            ('web', 'baseurl', '/'),
-            ('paths', '/', path),
-            #('phases', 'publish', 'false')
+            ('web', 'allow_archive', 'gz zip bz2', True),
+            ('web', 'baseurl', '/', True),
+            ('paths', '/', path, True),
+            #('phases', 'publish', 'false', False)
+            ('hooks', Ui.HOOK_UPDATE, 'hg update >&2', False),
+            ('hooks', Ui.HOOK_REPO_SIZE, 'python:kallithea.lib.hooks.repo_size', True),
+            ('hooks', Ui.HOOK_PUSH_LOG, 'python:kallithea.lib.hooks.log_push_action', True),
+            ('hooks', Ui.HOOK_PUSH_LOCK, 'python:kallithea.lib.hooks.push_lock_handling', True),
+            ('hooks', Ui.HOOK_PULL_LOG, 'python:kallithea.lib.hooks.log_pull_action', True),
+            ('hooks', Ui.HOOK_PULL_LOCK, 'python:kallithea.lib.hooks.pull_lock_handling', True),
+            ('extensions', 'largefiles', '', True),
+            ('largefiles', 'usercache', os.path.join(path, '.cache', 'largefiles'), True),
+            ('extensions', 'hgsubversion', '', False),
+            ('extensions', 'hggit', '', False),
         ]
-        for section, key, value in ui_config:
+        for section, key, value, active in ui_config:
             ui_conf = Ui()
             setattr(ui_conf, 'ui_section', section)
             setattr(ui_conf, 'ui_key', key)
             setattr(ui_conf, 'ui_value', value)
+            setattr(ui_conf, 'ui_active', active)
             self.sa.add(ui_conf)
 
         settings = [
