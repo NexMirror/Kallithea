@@ -83,8 +83,7 @@ def _get_tmp_dir(prefix='vcs_operations-', suffix=''):
     return tempfile.mkdtemp(dir=TESTS_TMP_PATH, prefix=prefix, suffix=suffix)
 
 
-def _add_files_and_push(webserver, vcs, dest_dir, ignoreReturnCode=False, files_no=3,
-                        clone_url=None, username=TEST_USER_ADMIN_LOGIN, password=TEST_USER_ADMIN_PASS):
+def _add_files(vcs, dest_dir, files_no=3):
     """
     Generate some files, add it to dest_dir repo and push back
     vcs is git or hg and defines what VCS we want to make those files for
@@ -115,6 +114,9 @@ def _add_files_and_push(webserver, vcs, dest_dir, ignoreReturnCode=False, files_
         # git commit needs EMAIL on some machines
         Command(dest_dir).execute(cmd, EMAIL=email)
 
+def _add_files_and_push(webserver, vcs, dest_dir, ignoreReturnCode=False, files_no=3,
+                            clone_url=None, username=TEST_USER_ADMIN_LOGIN, password=TEST_USER_ADMIN_PASS):
+    _add_files(vcs, dest_dir, files_no=files_no)
     # PUSH it back
     _REPO = None
     if vcs == 'hg':
