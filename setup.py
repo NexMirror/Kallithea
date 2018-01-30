@@ -39,7 +39,7 @@ requirements = [
     "waitress==0.8.8",
     "webob>=1.0.8,<=1.1.1",
     "webtest==1.4.3",
-    "Pylons>=1.0.0,<=1.0.2",
+    "Pylons>=1.0.0,<=1.0.3",
     "Beaker==1.6.4",
     "WebHelpers==1.3",
     "formencode>=1.2.4,<=1.2.6",
