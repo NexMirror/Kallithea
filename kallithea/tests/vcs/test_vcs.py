@@ -5,7 +5,7 @@ from kallithea.lib.utils2 import safe_str
 from kallithea.lib.vcs import VCSError, get_repo, get_backend
 from kallithea.lib.vcs.backends.hg import MercurialRepository
 from kallithea.lib.vcs.utils.compat import unittest
-from kallithea.tests.vcs.conf import TEST_HG_REPO, TEST_GIT_REPO, TEST_TMP_PATH
+from kallithea.tests.vcs.conf import TEST_HG_REPO, TEST_GIT_REPO, TESTS_TMP_PATH
 
 
 class VCSTest(unittest.TestCase):
@@ -63,7 +63,7 @@ class VCSTest(unittest.TestCase):
         self.assertEqual(repo.path, get_repo(safe_str(path)).path)
 
     def test_get_repo_err(self):
-        blank_repo_path = os.path.join(TEST_TMP_PATH, 'blank-error-repo')
+        blank_repo_path = os.path.join(TESTS_TMP_PATH, 'blank-error-repo')
         if os.path.isdir(blank_repo_path):
             shutil.rmtree(blank_repo_path)
 
@@ -72,7 +72,7 @@ class VCSTest(unittest.TestCase):
         self.assertRaises(VCSError, get_repo, blank_repo_path + 'non_existing')
 
     def test_get_repo_multialias(self):
-        multialias_repo_path = os.path.join(TEST_TMP_PATH, 'hg-git-repo')
+        multialias_repo_path = os.path.join(TESTS_TMP_PATH, 'hg-git-repo')
         if os.path.isdir(multialias_repo_path):
             shutil.rmtree(multialias_repo_path)
 

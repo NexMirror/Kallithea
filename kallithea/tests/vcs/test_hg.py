@@ -7,7 +7,7 @@ from kallithea.lib.vcs.backends.hg import MercurialRepository, MercurialChangese
 from kallithea.lib.vcs.exceptions import RepositoryError, VCSError, NodeDoesNotExistError
 from kallithea.lib.vcs.nodes import NodeKind, NodeState
 from kallithea.tests.vcs.conf import TEST_HG_REPO, TEST_HG_REPO_CLONE, \
-    TEST_HG_REPO_PULL, TEST_TMP_PATH
+    TEST_HG_REPO_PULL, TESTS_TMP_PATH
 from kallithea.lib.vcs.utils.compat import unittest
 
 
@@ -23,7 +23,7 @@ class MercurialRepositoryTest(unittest.TestCase):
         self.repo = MercurialRepository(safe_str(TEST_HG_REPO))
 
     def test_wrong_repo_path(self):
-        wrong_repo_path = os.path.join(TEST_TMP_PATH, 'errorrepo')
+        wrong_repo_path = os.path.join(TESTS_TMP_PATH, 'errorrepo')
         self.assertRaises(RepositoryError, MercurialRepository, wrong_repo_path)
 
     def test_unicode_path_repo(self):

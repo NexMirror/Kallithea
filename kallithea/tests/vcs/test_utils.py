@@ -18,7 +18,7 @@ from kallithea.lib.vcs.utils import author_email, author_name
 from kallithea.lib.vcs.utils.paths import get_user_home
 from kallithea.lib.vcs.exceptions import VCSError
 
-from kallithea.tests.vcs.conf import TEST_HG_REPO, TEST_GIT_REPO, TEST_TMP_PATH
+from kallithea.tests.vcs.conf import TEST_HG_REPO, TEST_GIT_REPO, TESTS_TMP_PATH
 
 
 class PathsTest(unittest.TestCase):
@@ -48,7 +48,7 @@ class PathsTest(unittest.TestCase):
         self.assertEqual(('git', TEST_GIT_REPO), get_scm(TEST_GIT_REPO))
 
     def test_get_two_scms_for_path(self):
-        multialias_repo_path = os.path.join(TEST_TMP_PATH, 'hg-git-repo-2')
+        multialias_repo_path = os.path.join(TESTS_TMP_PATH, 'hg-git-repo-2')
         if os.path.isdir(multialias_repo_path):
             shutil.rmtree(multialias_repo_path)
 
@@ -60,7 +60,7 @@ class PathsTest(unittest.TestCase):
         self.assertRaises(VCSError, get_scm, 'err')
 
     def test_get_scms_for_path(self):
-        new = os.path.join(TEST_TMP_PATH, 'vcs-scms-for-path-%s' % time.time())
+        new = os.path.join(TESTS_TMP_PATH, 'vcs-scms-for-path-%s' % time.time())
         os.mkdir(new)
         self.assertEqual(get_scms_for_path(new), [])
 
