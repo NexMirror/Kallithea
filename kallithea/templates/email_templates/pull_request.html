@@ -40,7 +40,21 @@
     <tr><td height="10px" style="height:10px"></td></tr>
     <tr>
         <td>
-            <div style="${comment_style};color:${color_link}">${body}</div>
+            <table cellpadding="0" cellspacing="0" width="100%" border="0" bgcolor="${color_background_grey}" style="border:1px solid ${color_border};border-radius:4px">
+                <tr>
+                    <td height="10px" style="height:10px" colspan="3"></td>
+                </tr>
+                <tr>
+                    <td width="20px" style="width:20px"></td>
+                    <td>
+                        <div style="${comment_style}">${body}</div>
+                    </td>
+                    <td width="20px" style="width:20px"></td>
+                </tr>
+                <tr>
+                    <td height="10px" style="height:10px" colspan="3"></td>
+                </tr>
+            </table>
         </td>
     </tr>
     <tr><td height="15px" style="height:15px"></td></tr>
