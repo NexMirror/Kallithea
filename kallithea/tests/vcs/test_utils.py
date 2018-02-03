@@ -6,7 +6,7 @@ import time
 import shutil
 import datetime
 
-from kallithea.lib.vcs.utils.compat import unittest
+import pytest
 
 from kallithea.lib.vcs.utils.paths import get_dirs_for_path
 from kallithea.lib.vcs.utils.helpers import get_dict_for_attrs
@@ -22,7 +22,7 @@ from kallithea.lib.vcs.exceptions import VCSError
 from kallithea.tests.vcs.conf import TEST_HG_REPO, TEST_GIT_REPO, TESTS_TMP_PATH
 
 
-class PathsTest(unittest.TestCase):
+class TestPaths(object):
 
     def _test_get_dirs_for_path(self, path, expected):
         """
@@ -30,9 +30,8 @@ class PathsTest(unittest.TestCase):
         """
         expected = sorted(expected)
         result = sorted(get_dirs_for_path(path))
-        self.assertEqual(result, expected,
-            msg="%s != %s which was expected result for path %s"
-            % (result, expected, path))
+        assert result == expected, \
+            "%s != %s which was expected result for path %s" % (result, expected, path)
 
     def test_get_dirs_for_path(self):
         path = 'foo/bar/baz/file'
@@ -45,8 +44,8 @@ class PathsTest(unittest.TestCase):
             self._test_get_dirs_for_path(path, expected)
 
     def test_get_scm(self):
-        self.assertEqual(('hg', TEST_HG_REPO), get_scm(TEST_HG_REPO))
-        self.assertEqual(('git', TEST_GIT_REPO), get_scm(TEST_GIT_REPO))
+        assert ('hg', TEST_HG_REPO) == get_scm(TEST_HG_REPO)
+        assert ('git', TEST_GIT_REPO) == get_scm(TEST_GIT_REPO)
 
     def test_get_two_scms_for_path(self):
         multialias_repo_path = os.path.join(TESTS_TMP_PATH, 'hg-git-repo-2')
@@ -55,135 +54,130 @@ class PathsTest(unittest.TestCase):
 
         os.mkdir(multialias_repo_path)
 
-        self.assertRaises(VCSError, get_scm, multialias_repo_path)
+        with pytest.raises(VCSError):
+            get_scm(multialias_repo_path)
 
     def test_get_scm_error_path(self):
-        self.assertRaises(VCSError, get_scm, 'err')
+        with pytest.raises(VCSError):
+            get_scm('err')
 
     def test_get_scms_for_path(self):
         new = os.path.join(TESTS_TMP_PATH, 'vcs-scms-for-path-%s' % time.time())
         os.mkdir(new)
-        self.assertEqual(get_scms_for_path(new), [])
+        assert get_scms_for_path(new) == []
 
         os.mkdir(os.path.join(new, '.tux'))
-        self.assertEqual(get_scms_for_path(new), [])
+        assert get_scms_for_path(new) == []
 
         os.mkdir(os.path.join(new, '.git'))
-        self.assertEqual(set(get_scms_for_path(new)), set(['git']))
+        assert set(get_scms_for_path(new)) == set(['git'])
 
         os.mkdir(os.path.join(new, '.hg'))
-        self.assertEqual(set(get_scms_for_path(new)), set(['git', 'hg']))
+        assert set(get_scms_for_path(new)) == set(['git', 'hg'])
 
 
-class TestParseChangesets(unittest.TestCase):
+class TestParseChangesets(object):
 
     def test_main_is_returned_correctly(self):
-        self.assertEqual(parse_changesets('123456'), {
+        assert parse_changesets('123456') == {
             'start': None,
             'main': '123456',
             'end': None,
-        })
+        }
 
     def test_start_is_returned_correctly(self):
-        self.assertEqual(parse_changesets('aaabbb..'), {
+        assert parse_changesets('aaabbb..') == {
             'start': 'aaabbb',
             'main': None,
             'end': None,
-        })
+        }
 
     def test_end_is_returned_correctly(self):
-        self.assertEqual(parse_changesets('..cccddd'), {
+        assert parse_changesets('..cccddd') == {
             'start': None,
             'main': None,
             'end': 'cccddd',
-        })
+        }
 
     def test_that_two_or_three_dots_are_allowed(self):
         text1 = 'a..b'
         text2 = 'a...b'
-        self.assertEqual(parse_changesets(text1), parse_changesets(text2))
+        assert parse_changesets(text1) == parse_changesets(text2)
 
     def test_that_input_is_stripped_first(self):
         text1 = 'a..bb'
         text2 = '  a..bb\t\n\t '
-        self.assertEqual(parse_changesets(text1), parse_changesets(text2))
+        assert parse_changesets(text1) == parse_changesets(text2)
 
     def test_that_exception_is_raised(self):
         text = '123456.789012' # single dot is not recognized
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             parse_changesets(text)
 
     def test_non_alphanumeric_raises_exception(self):
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             parse_changesets('aaa@bbb')
 
 
-class TestParseDatetime(unittest.TestCase):
+class TestParseDatetime(object):
 
     def test_datetime_text(self):
-        self.assertEqual(parse_datetime('2010-04-07 21:29:41'),
-            datetime.datetime(2010, 4, 7, 21, 29, 41))
+        assert parse_datetime('2010-04-07 21:29:41') == datetime.datetime(2010, 4, 7, 21, 29, 41)
 
     def test_no_seconds(self):
-        self.assertEqual(parse_datetime('2010-04-07 21:29'),
-            datetime.datetime(2010, 4, 7, 21, 29))
+        assert parse_datetime('2010-04-07 21:29') == datetime.datetime(2010, 4, 7, 21, 29)
 
     def test_date_only(self):
-        self.assertEqual(parse_datetime('2010-04-07'),
-            datetime.datetime(2010, 4, 7))
+        assert parse_datetime('2010-04-07') == datetime.datetime(2010, 4, 7)
 
     def test_another_format(self):
-        self.assertEqual(parse_datetime('04/07/10 21:29:41'),
-            datetime.datetime(2010, 4, 7, 21, 29, 41))
+        assert parse_datetime('04/07/10 21:29:41') == datetime.datetime(2010, 4, 7, 21, 29, 41)
 
     def test_now(self):
-        self.assertTrue(parse_datetime('now') - datetime.datetime.now() <
-            datetime.timedelta(seconds=1))
+        assert parse_datetime('now') - datetime.datetime.now() < datetime.timedelta(seconds=1)
 
     def test_today(self):
         today = datetime.date.today()
-        self.assertEqual(parse_datetime('today'),
-            datetime.datetime(*today.timetuple()[:3]))
+        assert parse_datetime('today') == datetime.datetime(*today.timetuple()[:3])
 
     def test_yesterday(self):
         yesterday = datetime.date.today() - datetime.timedelta(days=1)
-        self.assertEqual(parse_datetime('yesterday'),
-            datetime.datetime(*yesterday.timetuple()[:3]))
+        assert parse_datetime('yesterday') == datetime.datetime(*yesterday.timetuple()[:3])
 
     def test_tomorrow(self):
         tomorrow = datetime.date.today() + datetime.timedelta(days=1)
         args = tomorrow.timetuple()[:3] + (23, 59, 59)
-        self.assertEqual(parse_datetime('tomorrow'), datetime.datetime(*args))
+        assert parse_datetime('tomorrow') == datetime.datetime(*args)
 
     def test_days(self):
         timestamp = datetime.datetime.today() - datetime.timedelta(days=3)
         args = timestamp.timetuple()[:3] + (0, 0, 0, 0)
         expected = datetime.datetime(*args)
-        self.assertEqual(parse_datetime('3d'), expected)
-        self.assertEqual(parse_datetime('3 d'), expected)
-        self.assertEqual(parse_datetime('3 day'), expected)
-        self.assertEqual(parse_datetime('3 days'), expected)
+        assert parse_datetime('3d') == expected
+        assert parse_datetime('3 d') == expected
+        assert parse_datetime('3 day') == expected
+        assert parse_datetime('3 days') == expected
 
     def test_weeks(self):
         timestamp = datetime.datetime.today() - datetime.timedelta(days=3 * 7)
         args = timestamp.timetuple()[:3] + (0, 0, 0, 0)
         expected = datetime.datetime(*args)
-        self.assertEqual(parse_datetime('3w'), expected)
-        self.assertEqual(parse_datetime('3 w'), expected)
-        self.assertEqual(parse_datetime('3 week'), expected)
-        self.assertEqual(parse_datetime('3 weeks'), expected)
+        assert parse_datetime('3w') == expected
+        assert parse_datetime('3 w') == expected
+        assert parse_datetime('3 week') == expected
+        assert parse_datetime('3 weeks') == expected
 
     def test_mixed(self):
         timestamp = datetime.datetime.today() - datetime.timedelta(days=2 * 7 + 3)
         args = timestamp.timetuple()[:3] + (0, 0, 0, 0)
         expected = datetime.datetime(*args)
-        self.assertEqual(parse_datetime('2w3d'), expected)
-        self.assertEqual(parse_datetime('2w 3d'), expected)
-        self.assertEqual(parse_datetime('2w 3 days'), expected)
-        self.assertEqual(parse_datetime('2 weeks 3 days'), expected)
+        assert parse_datetime('2w3d') == expected
+        assert parse_datetime('2w 3d') == expected
+        assert parse_datetime('2w 3 days') == expected
+        assert parse_datetime('2 weeks 3 days') == expected
 
 
-class TestAuthorExtractors(unittest.TestCase):
+class TestAuthorExtractors(object):
     TEST_AUTHORS = [("Username Last'o'Name <username@example.com>",
                     ("Username Last'o'Name", "username@example.com")),
                   ("Username Last'o'Name Spaces < username@example.com >",
@@ -210,14 +204,14 @@ class TestAuthorExtractors(unittest.TestCase):
 
     def test_author_email(self):
         for test_str, result in self.TEST_AUTHORS:
-            self.assertEqual(result[1], author_email(test_str))
+            assert result[1] == author_email(test_str)
 
     def test_author_name(self):
         for test_str, result in self.TEST_AUTHORS:
-            self.assertEqual(result[0], author_name(test_str))
+            assert result[0] == author_name(test_str)
 
 
-class TestGetDictForAttrs(unittest.TestCase):
+class TestGetDictForAttrs(object):
 
     def test_returned_dict_has_expected_attrs(self):
         obj = mock.Mock()
@@ -228,23 +222,22 @@ class TestGetDictForAttrs(unittest.TestCase):
         obj.date = datetime.datetime(2010, 12, 31)
         obj.count = 1001
 
-        self.assertEqual(get_dict_for_attrs(obj, ['CONST', 'foo', 'attrs',
-            'date', 'count']), {
+        assert get_dict_for_attrs(obj, ['CONST', 'foo', 'attrs', 'date', 'count']) ==  {
             'CONST': True,
             'foo': 'aaa',
             'attrs': {'foo': 'bar'},
             'date': datetime.datetime(2010, 12, 31),
             'count': 1001,
-        })
+        }
 
 
-class TestGetTotalSeconds(unittest.TestCase):
+class TestGetTotalSeconds(object):
 
     def assertTotalSecondsEqual(self, timedelta, expected_seconds):
         result = get_total_seconds(timedelta)
-        self.assertEqual(result, expected_seconds,
-            "We computed %s seconds for %s but expected %s"
-            % (result, timedelta, expected_seconds))
+        assert result == expected_seconds, \
+            "We computed %s seconds for %s but expected %s" \
+            % (result, timedelta, expected_seconds)
 
     def test_get_total_seconds_returns_proper_value(self):
         self.assertTotalSecondsEqual(datetime.timedelta(seconds=1001), 1001)
@@ -253,21 +246,21 @@ class TestGetTotalSeconds(unittest.TestCase):
         self.assertTotalSecondsEqual(datetime.timedelta(seconds=50.65), 50.65)
 
 
-class TestGetUserHome(unittest.TestCase):
+class TestGetUserHome(object):
 
     @mock.patch.object(os, 'environ', {})
     def test_defaults_to_none(self):
-        self.assertEqual(get_user_home(), '')
+        assert get_user_home() == ''
 
     @mock.patch.object(os, 'environ', {'HOME': '/home/foobar'})
     def test_unix_like(self):
-        self.assertEqual(get_user_home(), '/home/foobar')
+        assert get_user_home() == '/home/foobar'
 
     @mock.patch.object(os, 'environ', {'USERPROFILE': '/Users/foobar'})
     def test_windows_like(self):
-        self.assertEqual(get_user_home(), '/Users/foobar')
+        assert get_user_home() == '/Users/foobar'
 
     @mock.patch.object(os, 'environ', {'HOME': '/home/foobar',
         'USERPROFILE': '/Users/foobar'})
     def test_prefers_home_over_userprofile(self):
-        self.assertEqual(get_user_home(), '/home/foobar')
+        assert get_user_home() == '/home/foobar'
