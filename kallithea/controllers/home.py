@@ -109,7 +109,7 @@ class HomeController(BaseController):
         else:
             raise HTTPBadRequest()
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')
     @jsonify
     def repo_refs_data(self, repo_name):

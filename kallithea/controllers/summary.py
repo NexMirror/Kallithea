@@ -102,7 +102,7 @@ class SummaryController(BaseRepoController):
             region_invalidate(_get_readme_from_cache, None, '_get_readme_from_cache', repo_name, kind)
         return _get_readme_from_cache(repo_name, kind)
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')
     def index(self, repo_name):
         p = safe_int(request.GET.get('page'), 1)
@@ -169,7 +169,7 @@ class SummaryController(BaseRepoController):
         else:
             raise HTTPBadRequest()
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')
     def statistics(self, repo_name):
         if c.db_repo.enable_statistics:

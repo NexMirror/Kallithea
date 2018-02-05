@@ -165,14 +165,14 @@ class CompareController(BaseRepoController):
 
         return other_changesets, org_changesets, ancestors
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')
     def index(self, repo_name):
         c.compare_home = True
         c.a_ref_name = c.cs_ref_name = None
         return render('compare/compare_diff.html')
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')
     def compare(self, repo_name, org_ref_type, org_ref_name, other_ref_type, other_ref_name):
         org_ref_name = org_ref_name.strip()

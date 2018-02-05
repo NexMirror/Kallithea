@@ -71,7 +71,7 @@ class ChangelogController(BaseRepoController):
             h.flash(safe_str(e), category='error')
         raise HTTPBadRequest()
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')
     def index(self, repo_name, revision=None, f_path=None):
         limit = 2000
@@ -149,7 +149,7 @@ class ChangelogController(BaseRepoController):
         c.first_revision = c.cs_pagination[0] # pagination is never empty here!
         return render('changelog/changelog.html')
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')
     def changelog_details(self, cs):
         if request.environ.get('HTTP_X_PARTIAL_XHR'):

@@ -40,7 +40,7 @@ log = logging.getLogger(__name__)
 
 class FollowersController(BaseRepoController):
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')
     def followers(self, repo_name):
         p = safe_int(request.GET.get('page'), 1)

@@ -105,7 +105,7 @@ class ForksController(BaseRepoController):
 
         return defaults
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')
     def forks(self, repo_name):
         p = safe_int(request.GET.get('page'), 1)

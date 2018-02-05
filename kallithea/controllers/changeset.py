@@ -326,22 +326,22 @@ class ChangesetController(BaseRepoController):
                 c.jsdata = graph_data(c.db_repo_scm_instance, revs)
                 return render('changeset/changeset_range.html')
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')
     def index(self, revision, method='show'):
         return self._index(revision, method=method)
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')
     def changeset_raw(self, revision):
         return self._index(revision, method='raw')
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')
     def changeset_patch(self, revision):
         return self._index(revision, method='patch')
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')
     def changeset_download(self, revision):
         return self._index(revision, method='download')
@@ -412,7 +412,7 @@ class ChangesetController(BaseRepoController):
         else:
             raise HTTPForbidden()
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')
     @jsonify
     def changeset_info(self, repo_name, revision):
@@ -424,7 +424,7 @@ class ChangesetController(BaseRepoController):
         else:
             raise HTTPBadRequest()
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')
     @jsonify
     def changeset_children(self, repo_name, revision):
@@ -437,7 +437,7 @@ class ChangesetController(BaseRepoController):
         else:
             raise HTTPBadRequest()
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')
     @jsonify
     def changeset_parents(self, repo_name, revision):

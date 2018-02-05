@@ -123,7 +123,7 @@ class FilesController(BaseRepoController):
 
         return file_node
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')
     def index(self, repo_name, revision, f_path, annotate=False):
         # redirect to given revision from form if given
@@ -198,7 +198,7 @@ class FilesController(BaseRepoController):
 
         return render('files/files.html')
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')
     @jsonify
     def history(self, repo_name, revision, f_path):
@@ -220,7 +220,7 @@ class FilesController(BaseRepoController):
             }
             return data
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')
     def authors(self, repo_name, revision, f_path):
         changeset = self.__get_cs(revision)
@@ -232,7 +232,7 @@ class FilesController(BaseRepoController):
                 c.authors.append((h.email(a), h.person(a)))
             return render('files/files_history_box.html')
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')
     def rawfile(self, repo_name, revision, f_path):
         cs = self.__get_cs(revision)
@@ -244,7 +244,7 @@ class FilesController(BaseRepoController):
         response.content_type = file_node.mimetype
         return file_node.content
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')
     def raw(self, repo_name, revision, f_path):
         cs = self.__get_cs(revision)
@@ -497,7 +497,7 @@ class FilesController(BaseRepoController):
 
         return render('files/files_add.html')
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')
     def archivefile(self, repo_name, fname):
         fileformat = None
@@ -583,7 +583,7 @@ class FilesController(BaseRepoController):
         response.content_type = str(content_type)
         return get_chunked_archive(archive_path)
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')
     def diff(self, repo_name, f_path):
         ignore_whitespace = request.GET.get('ignorews') == '1'
@@ -684,7 +684,7 @@ class FilesController(BaseRepoController):
 
             return render('files/file_diff.html')
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')
     def diff_2way(self, repo_name, f_path):
         diff1 = request.GET.get('diff1', '')
@@ -771,7 +771,7 @@ class FilesController(BaseRepoController):
 
         return hist_l, changesets
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')
     @jsonify
     def nodelist(self, repo_name, revision, f_path):

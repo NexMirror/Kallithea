@@ -198,7 +198,7 @@ class PullrequestsController(BaseRepoController):
 
         return request.authuser.admin or owner or reviewer
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')
     def show_all(self, repo_name):
         c.from_ = request.GET.get('from_') or ''
@@ -447,7 +447,7 @@ class PullrequestsController(BaseRepoController):
             raise HTTPFound(location=url('my_pullrequests'))
         raise HTTPForbidden()
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')
     def show(self, repo_name, pull_request_id, extra=None):
         repo_model = RepoModel()
