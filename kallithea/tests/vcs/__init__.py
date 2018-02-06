@@ -19,7 +19,7 @@ function at ``tests/__init__.py``.
 .. _unittest: http://pypi.python.org/pypi/unittest
 
 """
-from kallithea.tests.vcs.conf import *
+from kallithea.tests.base import TEST_HG_REPO, HG_REMOTE_REPO, TEST_GIT_REPO, GIT_REMOTE_REPO
 from kallithea.tests.vcs.utils import SCMFetcher
 
 from kallithea.tests.base import *

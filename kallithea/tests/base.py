@@ -88,23 +88,25 @@ GIT_TEST_REVISION = u"7ab37bc680b4aa72c34d07b230c866c28e9fc204"
 SCM_TESTS = ['hg', 'git']
 uniq_suffix = str(int(time.mktime(datetime.datetime.now().timetuple())))
 
-GIT_REMOTE_REPO = 'git://github.com/codeinn/vcs.git'
+GIT_REMOTE_REPO = os.path.join(TESTS_TMP_PATH, GIT_REPO)
 
 TEST_GIT_REPO = os.path.join(TESTS_TMP_PATH, GIT_REPO)
-TEST_GIT_REPO_CLONE = os.path.join(TESTS_TMP_PATH, 'vcsgitclone%s' % uniq_suffix)
-TEST_GIT_REPO_PULL = os.path.join(TESTS_TMP_PATH, 'vcsgitpull%s' % uniq_suffix)
+TEST_GIT_REPO_CLONE = os.path.join(TESTS_TMP_PATH, 'vcs-git-clone-%s' % uniq_suffix)
+TEST_GIT_REPO_PULL = os.path.join(TESTS_TMP_PATH, 'vcs-git-pull-%s' % uniq_suffix)
 
-
-HG_REMOTE_REPO = 'http://bitbucket.org/marcinkuzminski/vcs'
+HG_REMOTE_REPO = os.path.join(TESTS_TMP_PATH, HG_REPO)
 
 TEST_HG_REPO = os.path.join(TESTS_TMP_PATH, HG_REPO)
-TEST_HG_REPO_CLONE = os.path.join(TESTS_TMP_PATH, 'vcshgclone%s' % uniq_suffix)
-TEST_HG_REPO_PULL = os.path.join(TESTS_TMP_PATH, 'vcshgpull%s' % uniq_suffix)
+TEST_HG_REPO_CLONE = os.path.join(TESTS_TMP_PATH, 'vcs-hg-clone-%s' % uniq_suffix)
+TEST_HG_REPO_PULL = os.path.join(TESTS_TMP_PATH, 'vcs-hg-pull-%s' % uniq_suffix)
 
-# cached repos if any !
-# comment out to get some other repos from bb or github
-GIT_REMOTE_REPO = os.path.join(TESTS_TMP_PATH, GIT_REPO)
-HG_REMOTE_REPO = os.path.join(TESTS_TMP_PATH, HG_REPO)
+# By default, some of the tests will utilise locally available
+# repositories stored within tar.gz archives as source for
+# cloning. Should you wish to use some other, remote archive, simply
+# uncomment these entries and/or update the URLs to use.
+#
+# GIT_REMOTE_REPO = 'git://github.com/codeinn/vcs.git'
+# HG_REMOTE_REPO = 'http://bitbucket.org/marcinkuzminski/vcs'
 
 # skip ldap tests if LDAP lib is not installed
 ldap_lib_installed = False

@@ -2,37 +2,24 @@
 Unit tests configuration module for vcs.
 """
 import os
-import tempfile
 import shutil
 import uuid
+
+# Retrieve the necessary configuration options from the test base
+# module. Some of these configuration options are subsequently
+# consumed by the VCS test module.
+from kallithea.tests.base import (
+    TESTS_TMP_PATH, SCM_TESTS,
+    TEST_HG_REPO, HG_REMOTE_REPO,
+    TEST_GIT_REPO, GIT_REMOTE_REPO,
+)
 
 __all__ = (
     'TEST_HG_REPO', 'TEST_GIT_REPO', 'HG_REMOTE_REPO', 'GIT_REMOTE_REPO',
     'SCM_TESTS',
 )
 
-SCM_TESTS = ['hg', 'git']
-
 THIS = os.path.abspath(os.path.dirname(__file__))
-
-GIT_REMOTE_REPO = 'git://github.com/codeinn/vcs.git'
-
-TESTS_TMP_PATH = os.environ.get('VCS_TEST_ROOT', tempfile.gettempdir())
-
-TEST_GIT_REPO = os.environ.get('VCS_TEST_GIT_REPO',
-                               os.path.join(TESTS_TMP_PATH, 'vcs-git'))
-TEST_GIT_REPO_CLONE = os.environ.get('VCS_TEST_GIT_REPO_CLONE',
-                                     os.path.join(TESTS_TMP_PATH, 'vcs-git-clone'))
-TEST_GIT_REPO_PULL = os.environ.get('VCS_TEST_GIT_REPO_PULL',
-                                    os.path.join(TESTS_TMP_PATH, 'vcs-git-pull'))
-
-HG_REMOTE_REPO = 'http://bitbucket.org/marcinkuzminski/vcs'
-TEST_HG_REPO = os.environ.get('VCS_TEST_HG_REPO',
-                              os.path.join(TESTS_TMP_PATH, 'vcs-hg'))
-TEST_HG_REPO_CLONE = os.environ.get('VCS_TEST_HG_REPO_CLONE',
-                                    os.path.join(TESTS_TMP_PATH, 'vcs-hg-clone'))
-TEST_HG_REPO_PULL = os.environ.get('VCS_TEST_HG_REPO_PULL',
-                                   os.path.join(TESTS_TMP_PATH, 'vcs-hg-pull'))
 
 TEST_REPO_PREFIX = 'vcs-test'
 
