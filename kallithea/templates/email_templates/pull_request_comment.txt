@@ -7,11 +7,11 @@
 
 ${_('Pull request from')|n,unicode} \
 ${pr_source_repo|n,unicode} \
-${_('at')|n,unicode} \
+${_('branch')|n,unicode} \
 ${pr_source_branch|n,unicode} \
 ${_('to')|n,unicode} \
 ${pr_target_repo|n,unicode} \
-${_('at')|n,unicode} \
+${_('branch')|n,unicode} \
 ${pr_target_branch|n,unicode}:
 ${pr_nice_id|n,unicode} \
 "${pr_title|n,unicode}" \
