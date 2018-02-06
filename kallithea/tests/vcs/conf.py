@@ -2,10 +2,7 @@
 Unit tests configuration module for vcs.
 """
 import os
-import time
-import hashlib
 import tempfile
-import datetime
 import shutil
 import uuid
 

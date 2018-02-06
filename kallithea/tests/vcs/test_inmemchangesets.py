@@ -355,7 +355,6 @@ class BackendBaseTestCase(unittest.TestCase):
         """
         Returns newly created repository's directory.
         """
-        backend = self.get_backend()
         key = '%s-%s' % (self.backend_alias, str(time.time()))
         repo_path = get_new_dir(key)
         return repo_path

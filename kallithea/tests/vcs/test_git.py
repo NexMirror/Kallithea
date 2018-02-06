@@ -35,7 +35,7 @@ class GitRepositoryTest(unittest.TestCase):
         repo_inject_path = TEST_GIT_REPO + '; echo "Cake";'
         with self.assertRaises(urllib2.URLError):
             # Should fail because URL will contain the parts after ; too
-            urlerror_fail_repo = GitRepository(get_new_dir('injection-repo'), src_url=repo_inject_path, update_after_clone=True, create=True)
+            GitRepository(get_new_dir('injection-repo'), src_url=repo_inject_path, update_after_clone=True, create=True)
 
         with self.assertRaises(RepositoryError):
             # Should fail on direct clone call, which as of this writing does not happen outside of class
