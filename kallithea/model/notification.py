@@ -341,6 +341,7 @@ class EmailNotificationModel(object):
                 "data_style": "border:%(color_border)s 1px solid;background:%(color_background_grey)s" % _kwargs,
                 "emph_style": "font-weight:600;color:%(color_emph)s" % _kwargs,
                 "link_style": "color:%(color_link)s;text-decoration:none" % _kwargs,
+                "link_text_style": "color:%(color_text)s;text-decoration:none;border:%(color_border)s 1px solid;background:%(color_background_grey)s" % _kwargs,
                 })
 
         log.debug('rendering tmpl %s with kwargs %s', base, _kwargs)
