@@ -21,13 +21,13 @@
                 <a style="${link_style}"
                    href="${cs_target_repo}">${cs_target_repo}</a>
                 ${_('branch')}
-                <span style="color:${color_link}">${branch}</span>:
+                <span style="${data_style}">${branch}</span>:
             </div>
             <div>
                 "<a style="${link_style}"
                    href="${cs_url}">${h.shorter(message, 60, firstline=True)}</a>"
                 ${_('by')}
-                <span style="color:${color_link}">${cs_author.full_name_and_username}</span>.
+                <span style="${data_style}">${cs_author.full_name_and_username}</span>.
             </div>
         </td>
     </tr>

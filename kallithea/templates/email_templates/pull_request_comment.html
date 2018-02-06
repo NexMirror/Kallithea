@@ -21,19 +21,19 @@
                 <a style="${link_style}"
                    href="${pr_source_repo}">${pr_source_repo}</a>
                 ${_('branch')}
-                <span style="color:${color_link}">${pr_source_branch}</span>
+                <span style="${data_style}">${pr_source_branch}</span>
                 ${_('to')}
                 <a style="${link_style}"
                    href="${pr_target_repo}">${pr_target_repo}</a>
                 ${_('branch')}
-                <span style="color:${color_link}">${pr_target_branch}</span>:
+                <span style="${data_style}">${pr_target_branch}</span>:
             </div>
             <div>
                 <a style="${link_style}"
                    href="${pr_url}">${pr_nice_id}</a>
                 "<span style="color:${color_link}">${pr_title}</span>"
                 ${_('by')}
-                <span style="color:${color_link}">${pr_owner.full_name_and_username}</span>.
+                <span style="${data_style}">${pr_owner.full_name_and_username}</span>.
             </div>
         </td>
     </tr>

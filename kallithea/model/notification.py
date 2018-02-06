@@ -338,6 +338,7 @@ class EmailNotificationModel(object):
             _kwargs.update({
                 "default_style": "%(sans_style)s;font-weight:200;font-size:14px;line-height:17px;color:%(color_text)s" % _kwargs,
                 "comment_style": "%(monospace_style)s;white-space:pre-wrap" % _kwargs,
+                "data_style": "border:%(color_border)s 1px solid;background:%(color_background_grey)s" % _kwargs,
                 "emph_style": "font-weight:600;color:%(color_emph)s" % _kwargs,
                 "link_style": "color:%(color_link)s;text-decoration:none" % _kwargs,
                 })
