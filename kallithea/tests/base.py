@@ -57,7 +57,6 @@ __all__ = [
 ## SOME GLOBALS FOR TESTS
 
 TESTS_TMP_PATH = os.environ.get('KALLITHEA_TESTS_TMP_PATH', tempfile.mkdtemp(prefix='kallithea-test-'))
-os.environ['VCS_TEST_ROOT'] = TESTS_TMP_PATH
 
 TEST_USER_ADMIN_LOGIN = 'test_admin'
 TEST_USER_ADMIN_PASS = 'test12'

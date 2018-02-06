@@ -21,20 +21,16 @@ __all__ = (
 
 THIS = os.path.abspath(os.path.dirname(__file__))
 
-TEST_REPO_PREFIX = 'vcs-test'
-
-
 def get_new_dir(title=None):
     """
     Calculates a path for a new, non-existant, unique sub-directory in TESTS_TMP_PATH.
 
     Resulting directory name will have format:
 
-    prefix-[title-]hexuuid
+    vcs-test-[title-]hexuuid
 
-    Prefix is equal to value of variable TEST_REPO_PREFIX. The "hexuuid" is a
-    hexadecimal value of a randomly generated UUID. Title will be added if
-    specified.
+    The "hexuuid" is a hexadecimal value of a randomly generated
+    UUID. Title will be added if specified.
 
     Args:
         title: Custom title to include as part of the resulting sub-directory
@@ -45,10 +41,12 @@ def get_new_dir(title=None):
         Path to the new directory as a string.
     """
 
+    test_repo_prefix = 'vcs-test'
+
     if title:
-        name = "%s-%s" % (TEST_REPO_PREFIX, title)
+        name = "%s-%s" % (test_repo_prefix, title)
     else:
-        name = TEST_REPO_PREFIX
+        name = test_repo_prefix
 
     path = os.path.join(TESTS_TMP_PATH, name)
 
@@ -60,8 +58,6 @@ def get_new_dir(title=None):
     return "%s-%s" % (path, hex_uuid)
 
 
-PACKAGE_DIR = os.path.abspath(os.path.join(
-    os.path.dirname(__file__), '..'))
 _dest = os.path.join(TESTS_TMP_PATH, 'aconfig')
 shutil.copy(os.path.join(THIS, 'aconfig'), _dest)
 TEST_USER_CONFIG_FILE = _dest
