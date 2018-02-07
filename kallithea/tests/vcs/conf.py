@@ -2,7 +2,6 @@
 Unit tests configuration module for vcs.
 """
 import os
-import shutil
 import uuid
 
 # Retrieve the necessary configuration options from the test base
@@ -19,7 +18,6 @@ __all__ = (
     'SCM_TESTS',
 )
 
-THIS = os.path.abspath(os.path.dirname(__file__))
 
 def get_new_dir(title=None):
     """
@@ -57,10 +55,6 @@ def get_new_dir(title=None):
 
     return "%s-%s" % (path, hex_uuid)
 
-
-_dest = os.path.join(TESTS_TMP_PATH, 'aconfig')
-shutil.copy(os.path.join(THIS, 'aconfig'), _dest)
-TEST_USER_CONFIG_FILE = _dest
 
 # overide default configurations with kallithea ones
 from kallithea.tests.base import *
