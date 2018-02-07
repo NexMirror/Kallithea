@@ -220,7 +220,7 @@ class TestNotifications(TestController):
                         message='This changeset did something clever which is hard to explain',
                         message_short='This changeset did something cl...',
                         status_change=[None, 'Approved'],
-                        cs_target_repo='repo_target',
+                        cs_target_repo='http://example.com/repo_target',
                         cs_url='http://changeset.com',
                         cs_author=User.get(self.u2))),
                     (Notification.TYPE_MESSAGE,
