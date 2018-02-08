@@ -265,7 +265,7 @@ def send_email(recipients, subject, body='', html_body='', headers=None, author=
         recipients = [u.email for u in User.query()
                       .filter(User.admin == True).all()]
         if email_config.get('email_to') is not None:
-            recipients += [email_config.get('email_to')]
+            recipients += email_config.get('email_to').split(',')
 
         # If there are still no recipients, there are no admins and no address
         # configured in email_to, so return.

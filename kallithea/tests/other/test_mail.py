@@ -73,6 +73,30 @@ class TestMail(TestController):
         assert body in smtplib_mock.lastmsg
         assert html_body in smtplib_mock.lastmsg
 
+    def test_send_mail_no_recipients_multiple_email_to(self):
+        mailserver = 'smtp.mailserver.org'
+        recipients = []
+        envelope_from = 'noreply@mailserver.org'
+        email_to = 'admin@mailserver.org,admin2@example.com'
+        subject = 'subject'
+        body = 'body'
+        html_body = 'html_body'
+
+        config_mock = {
+            'smtp_server': mailserver,
+            'app_email_from': envelope_from,
+            'email_to': email_to,
+        }
+        with mock.patch('kallithea.lib.celerylib.tasks.config', config_mock):
+            kallithea.lib.celerylib.tasks.send_email(recipients, subject, body, html_body)
+
+        assert smtplib_mock.lastdest == set([TEST_USER_ADMIN_EMAIL] + email_to.split(','))
+        assert smtplib_mock.lastsender == envelope_from
+        assert 'From: %s' % envelope_from in smtplib_mock.lastmsg
+        assert 'Subject: %s' % subject in smtplib_mock.lastmsg
+        assert body in smtplib_mock.lastmsg
+        assert html_body in smtplib_mock.lastmsg
+
     def test_send_mail_no_recipients_no_email_to(self):
         mailserver = 'smtp.mailserver.org'
         recipients = []
