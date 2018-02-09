@@ -244,8 +244,15 @@ class MercurialRepository(BaseRepository):
         :param ignore_whitespace: If set to ``True``, would not show whitespace
           changes. Defaults to ``False``.
         :param context: How many lines before/after changed lines should be
-          shown. Defaults to ``3``.
+          shown. Defaults to ``3``. If negative value is passed-in, it will be
+          set to ``0`` instead.
         """
+
+        # Negative context values make no sense, and will result in
+        # errors. Ensure this does not happen.
+        if context < 0:
+            context = 0
+
         if hasattr(rev1, 'raw_id'):
             rev1 = getattr(rev1, 'raw_id')
 

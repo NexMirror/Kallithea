@@ -1,5 +1,8 @@
 
 import os
+
+import mock
+
 from kallithea.lib.vcs.backends.hg import MercurialRepository, MercurialChangeset
 from kallithea.lib.vcs.exceptions import RepositoryError, VCSError, NodeDoesNotExistError
 from kallithea.lib.vcs.nodes import NodeKind, NodeState
@@ -230,6 +233,23 @@ TODO: To be written...
         node = chset10.get_node('README.rst')
         self.assertEqual(node.kind, NodeKind.FILE)
         self.assertEqual(node.content, README)
+
+    @mock.patch('kallithea.lib.vcs.backends.hg.repository.diffopts')
+    def test_get_diff_does_not_sanitize_zero_context(self, mock_diffopts):
+        zero_context = 0
+
+        self.repo.get_diff(0, 1, 'foo', context=zero_context)
+
+        mock_diffopts.assert_called_once_with(git=True, showfunc=True, ignorews=False, context=zero_context)
+
+    @mock.patch('kallithea.lib.vcs.backends.hg.repository.diffopts')
+    def test_get_diff_sanitizes_negative_context(self, mock_diffopts):
+        negative_context = -10
+        zero_context = 0
+
+        self.repo.get_diff(0, 1, 'foo', context=negative_context)
+
+        mock_diffopts.assert_called_once_with(git=True, showfunc=True, ignorews=False, context=zero_context)
 
 
 class MercurialChangesetTest(unittest.TestCase):
