@@ -33,13 +33,13 @@
 #email_prefix = [Kallithea]
 
 <%text>## Recipients for error emails and fallback recipients of application mails.</%text>
-<%text>## Multiple addresses can be specified, space-separated.</%text>
+<%text>## Multiple addresses can be specified, comma-separated.</%text>
 <%text>## Only addresses are allowed, do not add any name part.</%text>
 <%text>## Default:</%text>
 #email_to =
 <%text>## Examples:</%text>
 #email_to = admin@example.com
-#email_to = admin@example.com another_admin@example.com
+#email_to = admin@example.com,another_admin@example.com
 email_to =
 
 <%text>## 'From' header for error emails. You can optionally add a name.</%text>
