@@ -268,7 +268,7 @@ default_encoding = utf8
 <%text>## default one used here is #<numbers> with a regex passive group for `#`</%text>
 <%text>## {id} will be all groups matched from this pattern</%text>
 
-issue_pat = (?:\s*#)(\d+)
+issue_pat = #(\d+)
 
 <%text>## server url to the issue, each {id} will be replaced with match</%text>
 <%text>## fetched from the regex and {repo} is replaced with full repository name</%text>
