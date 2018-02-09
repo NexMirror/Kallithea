@@ -171,7 +171,7 @@ class ApiController(JSONRPCController):
         return args
 
     @HasPermissionAnyDecorator('hg.admin')
-    def pull(self, repoid):
+    def pull(self, repoid, clone_uri=Optional(None)):
         """
         Triggers a pull from remote location on given repo. Can be used to
         automatically keep remote repos up to date. This command can be executed
@@ -179,6 +179,8 @@ class ApiController(JSONRPCController):
 
         :param repoid: repository name or repository id
         :type repoid: str or int
+        :param clone_uri: repository URI to pull from (optional)
+        :type clone_uri: str
 
         OUTPUT::
 
@@ -203,7 +205,8 @@ class ApiController(JSONRPCController):
 
         try:
             ScmModel().pull_changes(repo.repo_name,
-                                    request.authuser.username)
+                                    request.authuser.username,
+                                    clone_uri=Optional.extract(clone_uri))
             return dict(
                 msg='Pulled from `%s`' % repo.repo_name,
                 repository=repo.repo_name

@@ -388,12 +388,13 @@ class ScmModel(object):
         raise Exception('Invalid scm_type, must be one of hg,git got %s'
                         % (scm_type,))
 
-    def pull_changes(self, repo, username):
+    def pull_changes(self, repo, username, clone_uri=None):
         """
         Pull from "clone URL" or fork origin.
         """
         dbrepo = self.__get_repo(repo)
-        clone_uri = dbrepo.clone_uri or dbrepo.fork and dbrepo.fork.repo_full_path
+        if clone_uri is None:
+            clone_uri = dbrepo.clone_uri or dbrepo.fork and dbrepo.fork.repo_full_path
         if not clone_uri:
             raise Exception("This repository doesn't have a clone uri")
 
