@@ -587,8 +587,30 @@ class GitRepository(BaseRepository):
         :param ignore_whitespace: If set to ``True``, would not show whitespace
           changes. Defaults to ``False``.
         :param context: How many lines before/after changed lines should be
-          shown. Defaults to ``3``.
+          shown. Defaults to ``3``. Due to limitations in Git, if
+          value passed-in is greater than ``2**31-1``
+          (``2147483647``), it will be set to ``2147483647``
+          instead. If negative value is passed-in, it will be set to
+          ``0`` instead.
         """
+
+        # Git internally uses a signed long int for storing context
+        # size (number of lines to show before and after the
+        # differences). This can result in integer overflow, so we
+        # ensure the requested context is smaller by one than the
+        # number that would cause the overflow. It is highly unlikely
+        # that a single file will contain that many lines, so this
+        # kind of change should not cause any realistic consequences.
+        overflowed_long_int = 2**31
+
+        if context >= overflowed_long_int:
+            context = overflowed_long_int - 1
+
+        # Negative context values make no sense, and will result in
+        # errors. Ensure this does not happen.
+        if context < 0:
+            context = 0
+
         flags = ['-U%s' % context, '--full-index', '--binary', '-p', '-M', '--abbrev=40']
         if ignore_whitespace:
             flags.append('-w')

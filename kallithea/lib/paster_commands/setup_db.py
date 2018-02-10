@@ -102,3 +102,5 @@ class Command(BasePasterCommand):
         dbmanage.create_permissions()
         dbmanage.populate_default_permissions()
         Session().commit()
+
+        print 'Database set up successfully.'

@@ -709,6 +709,46 @@ class TestGitSpecificWithRepo(_BackendTestMixin):
             ['diff', '-U3', '--full-index', '--binary', '-p', '-M', '--abbrev=40',
              self.repo._get_revision(0), self.repo._get_revision(1), '--', 'foo'])
 
+    def test_get_diff_does_not_sanitize_valid_context(self):
+        almost_overflowed_long_int = 2**31-1
+
+        self.repo.run_git_command = mock.Mock(return_value=['', ''])
+        self.repo.get_diff(0, 1, 'foo', context=almost_overflowed_long_int)
+        self.repo.run_git_command.assert_called_once_with(
+            ['diff', '-U' + str(almost_overflowed_long_int), '--full-index', '--binary', '-p', '-M', '--abbrev=40',
+             self.repo._get_revision(0), self.repo._get_revision(1), '--', 'foo'])
+
+    def test_get_diff_sanitizes_overflowing_context(self):
+        overflowed_long_int = 2**31
+        sanitized_overflowed_long_int = overflowed_long_int-1
+
+        self.repo.run_git_command = mock.Mock(return_value=['', ''])
+        self.repo.get_diff(0, 1, 'foo', context=overflowed_long_int)
+
+        self.repo.run_git_command.assert_called_once_with(
+            ['diff', '-U' + str(sanitized_overflowed_long_int), '--full-index', '--binary', '-p', '-M', '--abbrev=40',
+             self.repo._get_revision(0), self.repo._get_revision(1), '--', 'foo'])
+
+    def test_get_diff_does_not_sanitize_zero_context(self):
+        zero_context = 0
+
+        self.repo.run_git_command = mock.Mock(return_value=['', ''])
+        self.repo.get_diff(0, 1, 'foo', context=zero_context)
+
+        self.repo.run_git_command.assert_called_once_with(
+            ['diff', '-U' + str(zero_context), '--full-index', '--binary', '-p', '-M', '--abbrev=40',
+             self.repo._get_revision(0), self.repo._get_revision(1), '--', 'foo'])
+
+    def test_get_diff_sanitizes_negative_context(self):
+        negative_context = -10
+
+        self.repo.run_git_command = mock.Mock(return_value=['', ''])
+        self.repo.get_diff(0, 1, 'foo', context=negative_context)
+
+        self.repo.run_git_command.assert_called_once_with(
+            ['diff', '-U0', '--full-index', '--binary', '-p', '-M', '--abbrev=40',
+             self.repo._get_revision(0), self.repo._get_revision(1), '--', 'foo'])
+
 
 class TestGitRegression(_BackendTestMixin):
     backend_alias = 'git'
