@@ -4,7 +4,6 @@ InMemoryChangeset class is working properly at backend class.
 """
 import os
 import time
-import shutil
 import datetime
 
 from kallithea.lib import vcs
@@ -81,20 +80,9 @@ class _BackendTestMixin(object):
                                      author=unicode(commit['author']),
                                      date=commit['date'])
 
-    @classmethod
-    def teardown_class(cls):
-        if not getattr(cls, 'recreate_repo_per_test', False) and \
-            'VCS_REMOVE_TEST_DIRS' in os.environ:
-            shutil.rmtree(cls.repo_path)
-
     def setup_method(self, method):
         if getattr(self, 'recreate_repo_per_test', False):
             self.__class__.setup_class()
-
-    def teardown_method(self, method):
-        if getattr(self, 'recreate_repo_per_test', False) and \
-            'VCS_REMOVE_TEST_DIRS' in os.environ:
-            shutil.rmtree(self.repo_path)
 
 
 # For each backend create test case class
