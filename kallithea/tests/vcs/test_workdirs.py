@@ -1,4 +1,3 @@
-
 import datetime
 from kallithea.lib.vcs.nodes import FileNode
 from kallithea.lib.vcs.utils.compat import unittest
@@ -91,7 +90,3 @@ for alias in SCM_TESTS:
     cls_name = ''.join(('%s branch test' % alias).title().split())
     bases = (WorkdirTestCaseMixin, unittest.TestCase)
     globals()[cls_name] = type(cls_name, bases, attrs)
-
-
-if __name__ == '__main__':
-    unittest.main()

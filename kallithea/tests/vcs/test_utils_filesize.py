@@ -1,4 +1,3 @@
-
 from kallithea.lib.vcs.utils.filesize import filesizeformat
 from kallithea.lib.vcs.utils.compat import unittest
 
@@ -19,7 +18,3 @@ class TestFilesizeformat(unittest.TestCase):
 
     def test_that_function_respects_sep_parameter(self):
         self.assertEqual(filesizeformat(1, ''), '1B')
-
-
-if __name__ == '__main__':
-    unittest.main()

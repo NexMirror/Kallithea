@@ -3,7 +3,6 @@
 
 import datetime
 from kallithea.lib.vcs.nodes import FileNode
-from kallithea.lib.vcs.utils.compat import unittest
 from kallithea.tests.vcs.test_inmemchangesets import BackendBaseTestCase
 from kallithea.tests.vcs.conf import SCM_TESTS
 
@@ -42,7 +41,3 @@ for alias in SCM_TESTS:
         .split())
     bases = (FileNodeUnicodePathTestsMixin, BackendBaseTestCase)
     globals()[cls_name] = type(cls_name, bases, attrs)
-
-
-if __name__ == '__main__':
-    unittest.main()

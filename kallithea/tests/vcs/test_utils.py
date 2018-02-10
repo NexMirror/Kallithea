@@ -270,7 +270,3 @@ class TestGetUserHome(unittest.TestCase):
         'USERPROFILE': '/Users/foobar'})
     def test_prefers_home_over_userprofile(self):
         self.assertEqual(get_user_home(), '/home/foobar')
-
-
-if __name__ == '__main__':
-    unittest.main()

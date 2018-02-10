@@ -1,4 +1,3 @@
-
 from kallithea.tests.vcs.base import _BackendTestMixin
 from kallithea.tests.vcs.conf import SCM_TESTS
 from kallithea.lib.vcs.exceptions import TagAlreadyExistError
@@ -53,7 +52,3 @@ for alias in SCM_TESTS:
     cls_name = ''.join(('%s tags test' % alias).title().split())
     bases = (TagsTestCaseMixin, unittest.TestCase)
     globals()[cls_name] = type(cls_name, bases, attrs)
-
-
-if __name__ == '__main__':
-    unittest.main()

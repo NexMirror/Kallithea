@@ -223,6 +223,3 @@ for alias in SCM_TESTS:
     cls_name = alias.capitalize() + RepositoryBaseTest.__name__
     bases = (RepositoryBaseTest, unittest.TestCase)
     globals()[cls_name] = type(cls_name, bases, attrs)
-
-if __name__ == '__main__':
-    unittest.main()

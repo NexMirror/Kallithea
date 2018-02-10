@@ -388,7 +388,3 @@ for alias in SCM_TESTS:
     cls_name = ''.join(('%s in memory changeset test' % alias).title().split())
     bases = (InMemoryChangesetTestMixin, unittest.TestCase)
     globals()[cls_name] = type(cls_name, bases, attrs)
-
-
-if __name__ == '__main__':
-    unittest.main()

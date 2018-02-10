@@ -19,7 +19,6 @@ function at ``tests/__init__.py``.
 .. _unittest: http://pypi.python.org/pypi/unittest
 
 """
-from kallithea.lib.vcs.utils.compat import unittest
 from kallithea.tests.vcs.conf import *
 from kallithea.tests.vcs.utils import SCMFetcher
 
@@ -49,18 +48,3 @@ def setup_package():
     for scm, fetcher_info in fetchers.items():
         fetcher = SCMFetcher(**fetcher_info)
         fetcher.setup()
-
-
-def collector():
-    setup_package()
-    start_dir = os.path.abspath(os.path.dirname(__file__))
-    return unittest.defaultTestLoader.discover(start_dir)
-
-
-def main():
-    collector()
-    unittest.main()
-
-
-#if __name__ == '__main__':
-#    main()

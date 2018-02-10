@@ -1,4 +1,3 @@
-
 import os
 import sys
 import mock
@@ -845,7 +844,3 @@ class GitHooksTest(unittest.TestCase):
         for hook, hook_path in self.kallithea_hooks.iteritems():
             with open(hook_path) as f:
                 self.assertIn("KALLITHEA_HOOK_VER", f.read())
-
-
-if __name__ == '__main__':
-    unittest.main()
