@@ -30,14 +30,14 @@ class FileNodeUnicodePathTestsMixin(object):
     def test_filenode_path(self):
         node = self.tip.get_node(self.fname)
         unode = self.tip.get_node(self.ufname)
-        self.assertEqual(node, unode)
+        assert node == unode
 
 
 for alias in SCM_TESTS:
     attrs = {
         'backend_alias': alias,
     }
-    cls_name = ''.join(('%s file node unicode path test' % alias).title()
+    cls_name = ''.join(('test %s file node unicode path' % alias).title()
         .split())
     bases = (FileNodeUnicodePathTestsMixin, BackendBaseTestCase)
     globals()[cls_name] = type(cls_name, bases, attrs)

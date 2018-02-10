@@ -5,7 +5,7 @@ import datetime
 import tempfile
 import StringIO
 
-from kallithea.lib.vcs.utils.compat import unittest
+import pytest
 
 from kallithea.lib.vcs.exceptions import VCSError
 from kallithea.lib.vcs.nodes import FileNode
@@ -40,9 +40,7 @@ class ArchivesTestCaseMixin(_BackendTestMixin):
             node_path = '%d/file_%d.txt' % (x, x)
             decompressed = StringIO.StringIO()
             decompressed.write(out.read('repo/' + node_path))
-            self.assertEqual(
-                decompressed.getvalue(),
-                self.tip.get_node(node_path).content)
+            assert decompressed.getvalue() == self.tip.get_node(node_path).content
 
     def test_archive_tgz(self):
         path = tempfile.mkstemp(dir=TESTS_TMP_PATH, prefix='test_archive_tgz-')[1]
@@ -55,9 +53,7 @@ class ArchivesTestCaseMixin(_BackendTestMixin):
 
         for x in xrange(5):
             node_path = '%d/file_%d.txt' % (x, x)
-            self.assertEqual(
-                open(os.path.join(outdir, 'repo/' + node_path)).read(),
-                self.tip.get_node(node_path).content)
+            assert open(os.path.join(outdir, 'repo/' + node_path)).read() == self.tip.get_node(node_path).content
 
     def test_archive_tbz2(self):
         path = tempfile.mkstemp(dir=TESTS_TMP_PATH, prefix='test_archive_tbz2-')[1]
@@ -70,9 +66,7 @@ class ArchivesTestCaseMixin(_BackendTestMixin):
 
         for x in xrange(5):
             node_path = '%d/file_%d.txt' % (x, x)
-            self.assertEqual(
-                open(os.path.join(outdir, 'repo/' + node_path)).read(),
-                self.tip.get_node(node_path).content)
+            assert open(os.path.join(outdir, 'repo/' + node_path)).read() == self.tip.get_node(node_path).content
 
     def test_archive_default_stream(self):
         tmppath = tempfile.mkstemp(dir=TESTS_TMP_PATH, prefix='test_archive_default_stream-')[1]
@@ -87,19 +81,19 @@ class ArchivesTestCaseMixin(_BackendTestMixin):
             # the gzip header contains a MTIME header
             # because is takes a little bit of time from one fill_archive call to the next
             # this part may differ so don't include that part in the comparison
-            self.assertEqual(file_content[:4], stringio_content[:4])
-            self.assertEqual(file_content[8:], stringio_content[8:])
+            assert file_content[:4] == stringio_content[:4]
+            assert file_content[8:] == stringio_content[8:]
 
     def test_archive_wrong_kind(self):
-        with self.assertRaises(VCSError):
+        with pytest.raises(VCSError):
             self.tip.fill_archive(kind='wrong kind')
 
     def test_archive_empty_prefix(self):
-        with self.assertRaises(VCSError):
+        with pytest.raises(VCSError):
             self.tip.fill_archive(prefix='')
 
     def test_archive_prefix_with_leading_slash(self):
-        with self.assertRaises(VCSError):
+        with pytest.raises(VCSError):
             self.tip.fill_archive(prefix='/any')
 
 
@@ -108,6 +102,5 @@ for alias in SCM_TESTS:
     attrs = {
         'backend_alias': alias,
     }
-    cls_name = ''.join(('%s archive test' % alias).title().split())
-    bases = (ArchivesTestCaseMixin, unittest.TestCase)
-    globals()[cls_name] = type(cls_name, bases, attrs)
+    cls_name = ''.join(('test %s archive' % alias).title().split())
+    globals()[cls_name] = type(cls_name, (ArchivesTestCaseMixin,), attrs)

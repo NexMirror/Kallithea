@@ -3,7 +3,6 @@ import datetime
 from kallithea.tests.vcs.base import _BackendTestMixin
 from kallithea.tests.vcs.conf import SCM_TESTS
 from kallithea.lib.vcs.nodes import FileNode
-from kallithea.lib.vcs.utils.compat import unittest
 
 
 class GetitemTestCaseMixin(_BackendTestMixin):
@@ -22,11 +21,11 @@ class GetitemTestCaseMixin(_BackendTestMixin):
             }
 
     def test__getitem__last_item_is_tip(self):
-        self.assertEqual(self.repo[-1], self.repo.get_changeset())
+        assert self.repo[-1] == self.repo.get_changeset()
 
     def test__getitem__returns_correct_items(self):
         changesets = [self.repo[x] for x in xrange(len(self.repo.revisions))]
-        self.assertEqual(changesets, list(self.repo.get_changesets()))
+        assert changesets == list(self.repo.get_changesets())
 
 
 # For each backend create test case class
@@ -34,6 +33,5 @@ for alias in SCM_TESTS:
     attrs = {
         'backend_alias': alias,
     }
-    cls_name = ''.join(('%s getitem test' % alias).title().split())
-    bases = (GetitemTestCaseMixin, unittest.TestCase)
-    globals()[cls_name] = type(cls_name, bases, attrs)
+    cls_name = ''.join(('test %s getitem' % alias).title().split())
+    globals()[cls_name] = type(cls_name, (GetitemTestCaseMixin,), attrs)

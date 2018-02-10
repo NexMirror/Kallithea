@@ -1,6 +1,6 @@
 import datetime
 
-from kallithea.lib.vcs.utils.compat import unittest
+import pytest
 
 from kallithea.lib.vcs.nodes import FileNode
 
@@ -39,8 +39,7 @@ class WorkdirTestCaseMixin(_BackendTestMixin):
         return commits
 
     def test_get_branch_for_default_branch(self):
-        self.assertEqual(self.repo.workdir.get_branch(),
-            self.repo.DEFAULT_BRANCH_NAME)
+        assert self.repo.workdir.get_branch() == self.repo.DEFAULT_BRANCH_NAME
 
     def test_get_branch_after_adding_one(self):
         self.imc.add(FileNode('docs/index.txt',
@@ -50,7 +49,7 @@ class WorkdirTestCaseMixin(_BackendTestMixin):
             author=u'joe',
             branch='foobar',
         )
-        self.assertEqual(self.repo.workdir.get_branch(), self.default_branch)
+        assert self.repo.workdir.get_branch() == self.default_branch
 
     def test_get_changeset(self):
         old_head = self.repo.get_changeset()
@@ -61,28 +60,28 @@ class WorkdirTestCaseMixin(_BackendTestMixin):
             author=u'joe',
             branch='foobar',
         )
-        self.assertEqual(self.repo.workdir.get_branch(), self.default_branch)
+        assert self.repo.workdir.get_branch() == self.default_branch
         self.repo.workdir.checkout_branch('foobar')
-        self.assertEqual(self.repo.workdir.get_changeset(), head)
+        assert self.repo.workdir.get_changeset() == head
 
         # Make sure that old head is still there after update to default branch
         self.repo.workdir.checkout_branch(self.default_branch)
-        self.assertEqual(self.repo.workdir.get_changeset(), old_head)
+        assert self.repo.workdir.get_changeset() == old_head
 
     def test_checkout_branch(self):
         from kallithea.lib.vcs.exceptions import BranchDoesNotExistError
         # first, 'foobranch' does not exist.
-        self.assertRaises(BranchDoesNotExistError, self.repo.workdir.checkout_branch,
-                          branch='foobranch')
+        with pytest.raises(BranchDoesNotExistError):
+            self.repo.workdir.checkout_branch(branch='foobranch')
         # create new branch 'foobranch'.
         self.imc.add(FileNode('file1', content='blah'))
         self.imc.commit(message=u'asd', author=u'john', branch='foobranch')
         # go back to the default branch
         self.repo.workdir.checkout_branch()
-        self.assertEqual(self.repo.workdir.get_branch(), self.backend_class.DEFAULT_BRANCH_NAME)
+        assert self.repo.workdir.get_branch() == self.backend_class.DEFAULT_BRANCH_NAME
         # checkout 'foobranch'
         self.repo.workdir.checkout_branch('foobranch')
-        self.assertEqual(self.repo.workdir.get_branch(), 'foobranch')
+        assert self.repo.workdir.get_branch() == 'foobranch'
 
 
 # For each backend create test case class
@@ -90,6 +89,5 @@ for alias in SCM_TESTS:
     attrs = {
         'backend_alias': alias,
     }
-    cls_name = ''.join(('%s branch test' % alias).title().split())
-    bases = (WorkdirTestCaseMixin, unittest.TestCase)
-    globals()[cls_name] = type(cls_name, bases, attrs)
+    cls_name = ''.join(('test %s branch' % alias).title().split())
+    globals()[cls_name] = type(cls_name, (WorkdirTestCaseMixin, ), attrs)

@@ -8,7 +8,6 @@ import shutil
 import datetime
 
 from kallithea.lib import vcs
-from kallithea.lib.vcs.utils.compat import unittest
 from kallithea.lib.vcs.nodes import FileNode
 
 from kallithea.tests.vcs.conf import SCM_TESTS, get_new_dir
@@ -62,7 +61,7 @@ class _BackendTestMixin(object):
         return commits
 
     @classmethod
-    def setUpClass(cls):
+    def setup_class(cls):
         Backend = cls.get_backend()
         cls.backend_class = Backend
         cls.repo_path = get_new_dir(str(time.time()))
@@ -83,16 +82,16 @@ class _BackendTestMixin(object):
                                      date=commit['date'])
 
     @classmethod
-    def tearDownClass(cls):
+    def teardown_class(cls):
         if not getattr(cls, 'recreate_repo_per_test', False) and \
             'VCS_REMOVE_TEST_DIRS' in os.environ:
             shutil.rmtree(cls.repo_path)
 
-    def setUp(self):
+    def setup_method(self, method):
         if getattr(self, 'recreate_repo_per_test', False):
-            self.__class__.setUpClass()
+            self.__class__.setup_class()
 
-    def tearDown(self):
+    def teardown_method(self, method):
         if getattr(self, 'recreate_repo_per_test', False) and \
             'VCS_REMOVE_TEST_DIRS' in os.environ:
             shutil.rmtree(self.repo_path)
@@ -104,5 +103,4 @@ for alias in SCM_TESTS:
         'backend_alias': alias,
     }
     cls_name = ''.join(('%s base backend test' % alias).title().split())
-    bases = (_BackendTestMixin, unittest.TestCase)
-    globals()[cls_name] = type(cls_name, bases, attrs)
+    globals()[cls_name] = type(cls_name, (_BackendTestMixin,), attrs)
