@@ -1,11 +1,13 @@
 import stat
 import mimetypes
+
+from kallithea.lib.vcs.utils.compat import unittest
+
 from kallithea.lib.vcs.nodes import DirNode
 from kallithea.lib.vcs.nodes import FileNode
 from kallithea.lib.vcs.nodes import Node
 from kallithea.lib.vcs.nodes import NodeError
 from kallithea.lib.vcs.nodes import NodeKind
-from kallithea.lib.vcs.utils.compat import unittest
 
 
 class NodeBasicTest(unittest.TestCase):

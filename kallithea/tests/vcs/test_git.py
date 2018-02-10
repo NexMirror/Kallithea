@@ -11,6 +11,7 @@ from kallithea.lib.vcs.exceptions import RepositoryError, VCSError, NodeDoesNotE
 from kallithea.lib.vcs.nodes import NodeKind, FileNode, DirNode, NodeState
 from kallithea.lib.vcs.utils.compat import unittest
 from kallithea.model.scm import ScmModel
+
 from kallithea.tests.vcs.base import _BackendTestMixin
 from kallithea.tests.vcs.conf import TEST_GIT_REPO, TEST_GIT_REPO_CLONE, TESTS_TMP_PATH, get_new_dir
 

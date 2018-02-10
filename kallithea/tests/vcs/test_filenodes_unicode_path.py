@@ -1,7 +1,7 @@
 # encoding: utf8
 
-
 import datetime
+
 from kallithea.lib.vcs.nodes import FileNode
 from kallithea.tests.vcs.test_inmemchangesets import BackendBaseTestCase
 from kallithea.tests.vcs.conf import SCM_TESTS

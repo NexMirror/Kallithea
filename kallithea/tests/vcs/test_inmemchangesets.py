@@ -6,8 +6,9 @@ Tests so called "in memory changesets" commit API of vcs.
 import time
 import datetime
 
+from kallithea.lib.vcs.utils.compat import unittest
+
 from kallithea.lib import vcs
-from kallithea.tests.vcs.conf import SCM_TESTS, get_new_dir
 from kallithea.lib.vcs.exceptions import EmptyRepositoryError
 from kallithea.lib.vcs.exceptions import NodeAlreadyAddedError
 from kallithea.lib.vcs.exceptions import NodeAlreadyExistsError
@@ -17,8 +18,9 @@ from kallithea.lib.vcs.exceptions import NodeDoesNotExistError
 from kallithea.lib.vcs.exceptions import NodeNotChangedError
 from kallithea.lib.vcs.nodes import DirNode
 from kallithea.lib.vcs.nodes import FileNode
-from kallithea.lib.vcs.utils.compat import unittest
 from kallithea.lib.vcs.utils import safe_unicode
+
+from kallithea.tests.vcs.conf import SCM_TESTS, get_new_dir
 
 
 class InMemoryChangesetTestMixin(object):

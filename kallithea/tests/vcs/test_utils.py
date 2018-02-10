@@ -7,6 +7,7 @@ import shutil
 import datetime
 
 from kallithea.lib.vcs.utils.compat import unittest
+
 from kallithea.lib.vcs.utils.paths import get_dirs_for_path
 from kallithea.lib.vcs.utils.helpers import get_dict_for_attrs
 from kallithea.lib.vcs.utils.helpers import get_scm

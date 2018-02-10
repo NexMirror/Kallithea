@@ -1,6 +1,9 @@
 import datetime
-from kallithea.lib.vcs.nodes import FileNode
+
 from kallithea.lib.vcs.utils.compat import unittest
+
+from kallithea.lib.vcs.nodes import FileNode
+
 from kallithea.tests.vcs.base import _BackendTestMixin
 from kallithea.tests.vcs.conf import SCM_TESTS
 

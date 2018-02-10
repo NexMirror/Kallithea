@@ -6,6 +6,7 @@ from kallithea.lib.utils2 import safe_str
 from kallithea.lib.vcs.backends.hg import MercurialRepository, MercurialChangeset
 from kallithea.lib.vcs.exceptions import RepositoryError, VCSError, NodeDoesNotExistError
 from kallithea.lib.vcs.nodes import NodeKind, NodeState
+
 from kallithea.tests.vcs.conf import TEST_HG_REPO, TEST_HG_REPO_CLONE, \
     TEST_HG_REPO_PULL, TESTS_TMP_PATH
 from kallithea.lib.vcs.utils.compat import unittest

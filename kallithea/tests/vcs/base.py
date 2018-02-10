@@ -6,11 +6,12 @@ import os
 import time
 import shutil
 import datetime
-from kallithea.tests.vcs.conf import SCM_TESTS, get_new_dir
 
 from kallithea.lib import vcs
 from kallithea.lib.vcs.utils.compat import unittest
 from kallithea.lib.vcs.nodes import FileNode
+
+from kallithea.tests.vcs.conf import SCM_TESTS, get_new_dir
 
 
 class _BackendTestMixin(object):

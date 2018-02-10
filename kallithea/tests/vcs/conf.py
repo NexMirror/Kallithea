@@ -10,11 +10,14 @@ import uuid
 from kallithea.tests.base import (
     TESTS_TMP_PATH, SCM_TESTS,
     TEST_HG_REPO, HG_REMOTE_REPO,
+    TEST_HG_REPO_CLONE, TEST_HG_REPO_PULL,
     TEST_GIT_REPO, GIT_REMOTE_REPO,
+    TEST_GIT_REPO_CLONE,
 )
 
 __all__ = (
     'TEST_HG_REPO', 'TEST_GIT_REPO', 'HG_REMOTE_REPO', 'GIT_REMOTE_REPO',
+    'TEST_HG_REPO_CLONE', 'TEST_GIT_REPO_CLONE', 'TEST_HG_REPO_PULL',
     'SCM_TESTS',
 )
 
@@ -54,7 +57,3 @@ def get_new_dir(title=None):
         hex_uuid = uuid.uuid4().hex
 
     return "%s-%s" % (path, hex_uuid)
-
-
-# overide default configurations with kallithea ones
-from kallithea.tests.base import *

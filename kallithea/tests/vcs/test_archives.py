@@ -5,11 +5,13 @@ import datetime
 import tempfile
 import StringIO
 
-from kallithea.tests.vcs.base import _BackendTestMixin
-from kallithea.tests.vcs.conf import SCM_TESTS, TESTS_TMP_PATH
+from kallithea.lib.vcs.utils.compat import unittest
+
 from kallithea.lib.vcs.exceptions import VCSError
 from kallithea.lib.vcs.nodes import FileNode
-from kallithea.lib.vcs.utils.compat import unittest
+
+from kallithea.tests.vcs.base import _BackendTestMixin
+from kallithea.tests.vcs.conf import SCM_TESTS, TESTS_TMP_PATH
 
 
 class ArchivesTestCaseMixin(_BackendTestMixin):

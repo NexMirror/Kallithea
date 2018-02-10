@@ -1,10 +1,12 @@
 import os
 import shutil
 
+from kallithea.lib.vcs.utils.compat import unittest
+
 from kallithea.lib.utils2 import safe_str
 from kallithea.lib.vcs import VCSError, get_repo, get_backend
 from kallithea.lib.vcs.backends.hg import MercurialRepository
-from kallithea.lib.vcs.utils.compat import unittest
+
 from kallithea.tests.vcs.conf import TEST_HG_REPO, TEST_GIT_REPO, TESTS_TMP_PATH
 
 

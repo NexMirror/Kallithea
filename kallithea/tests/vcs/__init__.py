@@ -6,27 +6,19 @@ run for each engine listed at ``conf.SCM_TESTS`` - keys are aliases from
 ``vcs.backends.BACKENDS``.
 
 For each SCM we run tests for, we need some repository. We would use
-repositories location from system environment variables or test suite defaults
-- see ``conf`` module for more detail. We simply try to check if repository at
-certain location exists, if not we would try to fetch them. At ``test_vcs`` or
-``test_common`` we run unit tests common for each repository type and for
-example specific mercurial tests are located at ``test_hg`` module.
-
-Oh, and tests are run with ``unittest.collector`` wrapped by ``collector``
-function at ``tests/__init__.py``.
-
-.. _vcs: http://bitbucket.org/marcinkuzminski/vcs
-.. _unittest: http://pypi.python.org/pypi/unittest
-
+repositories location provided in test suite defaults - see ``conf``
+module for more detail. We simply try to check if repository at
+certain location exists, if not we would try to fetch them. At
+``test_vcs`` or ``test_common`` we run unit tests common for each
+repository type and for example specific mercurial tests are located
+at ``test_hg`` module.
 """
 
 import os
 import shutil
 
-from kallithea.tests.base import TEST_HG_REPO, HG_REMOTE_REPO, TEST_GIT_REPO, GIT_REMOTE_REPO
+from kallithea.tests.base import TEST_HG_REPO, HG_REMOTE_REPO, TEST_GIT_REPO, GIT_REMOTE_REPO, TESTS_TMP_PATH
 from kallithea.tests.vcs.utils import SCMFetcher
-
-from kallithea.tests.base import *
 
 
 # Base directory for the VCS tests.
