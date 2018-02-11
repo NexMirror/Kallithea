@@ -314,6 +314,23 @@ class _BaseTestApi(object):
         expected = 'Unable to pull changes from `%s`' % self.REPO
         self._compare_error(id_, expected, given=response.body)
 
+    def test_api_pull_custom_remote(self):
+        repo_name = u'test_pull_custom_remote'
+        fixture.create_repo(repo_name, repo_type=self.REPO_TYPE)
+
+        custom_remote_path = os.path.join(Ui.get_by_key('paths', '/').ui_value, self.REPO)
+
+        id_, params = _build_data(self.apikey, 'pull',
+                                  repoid=repo_name,
+                                  clone_uri=custom_remote_path)
+        response = api_call(self, params)
+
+        expected = {'msg': 'Pulled from `%s`' % repo_name,
+                    'repository': repo_name}
+        self._compare_ok(id_, expected, given=response.body)
+
+        fixture.destroy_repo(repo_name)
+
     def test_api_rescan_repos(self):
         id_, params = _build_data(self.apikey, 'rescan_repos')
         response = api_call(self, params)
