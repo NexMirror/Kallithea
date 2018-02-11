@@ -276,7 +276,7 @@ class _BaseTestApi(object):
         expected = 'userid is not the same as your user'
         self._compare_error(id_, expected, given=response.body)
 
-    def test_api_pull(self):
+    def test_api_pull_remote(self):
         repo_name = u'test_pull'
         r = fixture.create_repo(repo_name, repo_type=self.REPO_TYPE)
         r.clone_uri = os.path.join(Ui.get_by_key('paths', '/').ui_value, self.REPO)
@@ -292,7 +292,21 @@ class _BaseTestApi(object):
 
         fixture.destroy_repo(repo_name)
 
-    def test_api_pull_error(self):
+    def test_api_pull_fork(self):
+        fork_name = u'fork'
+        fixture.create_fork(self.REPO, fork_name)
+        id_, params = _build_data(self.apikey, 'pull',
+                                  repoid=fork_name,)
+        response = api_call(self, params)
+
+        expected = {'msg': 'Pulled from `%s`' % fork_name,
+                    'repository': fork_name}
+        self._compare_ok(id_, expected, given=response.body)
+
+        fixture.destroy_repo(fork_name)
+
+    def test_api_pull_error_no_remote_no_fork(self):
+        # should fail because no clone_uri is set
         id_, params = _build_data(self.apikey, 'pull',
                                   repoid=self.REPO, )
         response = api_call(self, params)
