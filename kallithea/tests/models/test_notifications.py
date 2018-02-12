@@ -209,7 +209,7 @@ class TestNotifications(TestController):
 
                 for type_, body, kwargs in [
                     (Notification.TYPE_CHANGESET_COMMENT,
-                     u'This is the new comment.\n\n - and here it ends indented.',
+                     u'This is the new \'comment\'.\n\n - and here it ends indented.',
                      dict(
                         short_id='cafe1234',
                         raw_id='cafe1234c0ffeecafe',
@@ -224,7 +224,7 @@ class TestNotifications(TestController):
                         cs_url='http://changeset.com',
                         cs_author=User.get(self.u2))),
                     (Notification.TYPE_MESSAGE,
-                     u'This is the body of the test message\n - nothing interesting here except indentation.',
+                     u'This is the \'body\' of the "test" message\n - nothing interesting here except indentation.',
                      dict()),
                     #(Notification.TYPE_MENTION, '$body', None), # not used
                     (Notification.TYPE_REGISTRATION,
@@ -235,7 +235,7 @@ class TestNotifications(TestController):
                         new_email='new@email.com',
                         new_full_name='New Full Name')),
                     (Notification.TYPE_PULL_REQUEST,
-                     u'This PR is awesome because it does stuff\n - please approve indented!',
+                     u'This PR is \'awesome\' because it does <stuff>\n - please approve indented!',
                      dict(
                         pr_user_created='Requesting User (root)', # pr_owner should perhaps be used for @mention in description ...
                         is_mention=[False, True],
