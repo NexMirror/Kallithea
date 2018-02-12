@@ -85,7 +85,7 @@ def html_escape(s):
         .replace(">", "&gt;")
         .replace("<", "&lt;")
         .replace('"', "&quot;")
-        .replace("'", "&apos;")
+        .replace("'", "&#39;") # some mail readers use HTML 4 and doesn't support &apos;
         )
 
 def js(value):
