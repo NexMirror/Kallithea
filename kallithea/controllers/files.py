@@ -189,7 +189,7 @@ class FilesController(BaseRepoController):
 
         # TODO: tags and bookmarks?
         c.revision_options = [(c.changeset.raw_id,
-                              _('%s at %s') % (c.changeset.branch, h.short_id(c.changeset.raw_id)))] + \
+                              _('%s at %s') % (b, h.short_id(c.changeset.raw_id))) for b in c.changeset.branches] + \
             [(n, b) for b, n in c.db_repo_scm_instance.branches.items()]
         if c.db_repo_scm_instance.closed_branches:
             prefix = _('(closed)') + ' '
@@ -755,7 +755,7 @@ class FilesController(BaseRepoController):
         branches_group = ([], _("Branches"))
         tags_group = ([], _("Tags"))
         for chs in changesets:
-            #_branch = '(%s)' % chs.branch if (cs.repository.alias == 'hg') else ''
+            # TODO: loop over chs.branches ... but that will not give all the bogus None branches for Git ...
             _branch = chs.branch
             n_desc = '%s (%s)' % (h.show_id(chs), _branch)
             changesets_group[0].append((chs.raw_id, n_desc,))

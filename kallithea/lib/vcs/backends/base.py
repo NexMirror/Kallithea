@@ -1038,6 +1038,11 @@ class EmptyChangeset(BaseChangeset):
         return get_backend(self.alias).DEFAULT_BRANCH_NAME
 
     @LazyProperty
+    def branches(self):
+        from kallithea.lib.vcs.backends import get_backend
+        return [get_backend(self.alias).DEFAULT_BRANCH_NAME]
+
+    @LazyProperty
     def short_id(self):
         return self.raw_id[:12]
 

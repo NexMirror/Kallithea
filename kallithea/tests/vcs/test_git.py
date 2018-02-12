@@ -309,16 +309,19 @@ class TestGitChangeset(object):
         rev0 = self.repo.revisions[0]
         chset0 = self.repo.get_changeset(rev0)
         assert chset0.branch is None # should be 'master'?
+        assert chset0.branches == [] # should be 'master'?
         assert chset0.tags == []
 
         rev10 = self.repo.revisions[10]
         chset10 = self.repo.get_changeset(rev10)
         assert chset10.branch is None # should be 'master'?
+        assert chset10.branches == [] # should be 'master'?
         assert chset10.tags == []
 
         rev44 = self.repo.revisions[44]
         chset44 = self.repo.get_changeset(rev44)
         assert chset44.branch is None # should be 'web-branch'?
+        assert chset44.branches == [] # should be 'web-branch'?
 
         tip = self.repo.get_changeset('tip')
         assert 'tip' not in tip.tags # it should be?

@@ -97,8 +97,10 @@
               %if cs.phase:
                 <span class="label label-phase" title="Phase">${cs.phase}</span>
               %endif
-              %if show_branch and cs.branch:
-                <span class="label label-branch" title="${_('Branch %s' % cs.branch)}">${h.link_to(cs.branch,h.url('changelog_home',repo_name=repo_name,branch=cs.branch))}</span>
+              %if show_branch:
+                %for branch in cs.branches:
+                  <span class="label label-branch" title="${_('Branch %s' % branch)}">${h.link_to(branch,h.url('changelog_home',repo_name=repo_name,branch=branch))}</span>
+                %endfor
               %endif
             </div>
           </div>

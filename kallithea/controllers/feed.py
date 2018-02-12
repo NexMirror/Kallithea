@@ -63,8 +63,8 @@ class FeedController(BaseRepoController):
         desc_msg = [(_('%s committed on %s')
                      % (h.person(cs.author), h.fmt_date(cs.date))) + '<br/>']
         # branches, tags, bookmarks
-        if cs.branch:
-            desc_msg.append('branch: %s<br/>' % cs.branch)
+        for branch in cs.branches:
+            desc_msg.append('branch: %s<br/>' % branch)
         for book in cs.bookmarks:
             desc_msg.append('bookmark: %s<br/>' % book)
         for tag in cs.tags:

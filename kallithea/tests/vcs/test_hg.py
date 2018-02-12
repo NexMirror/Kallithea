@@ -320,14 +320,17 @@ class TestMercurialChangeset(object):
     def test_branch_and_tags(self):
         chset0 = self.repo.get_changeset(0)
         assert chset0.branch == 'default'
+        assert chset0.branches == ['default']
         assert chset0.tags == []
 
         chset10 = self.repo.get_changeset(10)
         assert chset10.branch == 'default'
+        assert chset10.branches == ['default']
         assert chset10.tags == []
 
         chset44 = self.repo.get_changeset(44)
         assert chset44.branch == 'web'
+        assert chset44.branches == ['web']
 
         tip = self.repo.get_changeset('tip')
         assert 'tip' in tip.tags

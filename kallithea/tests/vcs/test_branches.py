@@ -53,6 +53,7 @@ class BranchesTestCaseMixin(_BackendTestMixin):
         )
         assert 'foobar' in self.repo.branches
         assert foobar_tip.branch == 'foobar'
+        assert foobar_tip.branches == ['foobar']
 
     def test_new_head(self):
         tip = self.repo.get_changeset()
@@ -81,6 +82,7 @@ class BranchesTestCaseMixin(_BackendTestMixin):
         )
 
         assert newest_tip.branch == self.backend_class.DEFAULT_BRANCH_NAME
+        assert newest_tip.branches == [self.backend_class.DEFAULT_BRANCH_NAME]
 
     def test_branch_with_slash_in_name(self):
         self.imc.add(vcs.nodes.FileNode('extrafile', content='Some data\n'))

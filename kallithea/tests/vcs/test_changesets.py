@@ -78,6 +78,7 @@ class _ChangesetsWithCommitsTestCaseixin(_BackendTestMixin):
         )
         assert 'foobar' in self.repo.branches
         assert foobar_tip.branch == 'foobar'
+        assert foobar_tip.branches == ['foobar']
         # 'foobar' should be the only branch that contains the new commit
         branch_tips = self.repo.branches.values()
         assert branch_tips.count(str(foobar_tip.raw_id)) == 1
@@ -109,6 +110,7 @@ class _ChangesetsWithCommitsTestCaseixin(_BackendTestMixin):
         )
 
         assert newest_tip.branch == self.backend_class.DEFAULT_BRANCH_NAME
+        assert newest_tip.branches == [self.backend_class.DEFAULT_BRANCH_NAME]
 
     def test_get_changesets_respects_branch_name(self):
         tip = self.repo.get_changeset()

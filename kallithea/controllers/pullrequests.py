@@ -102,11 +102,11 @@ class PullrequestsController(BaseRepoController):
             for i in repo._repo.revs(
                 "sort(parents(branch(id(%s)) and merge()) - branch(id(%s)), -rev)",
                 branch_rev, branch_rev):
-                abranch = repo.get_changeset(i).branch
-                if abranch not in peerbranches:
-                    n = 'branch:%s:%s' % (abranch, repo.get_changeset(abranch).raw_id)
-                    peers.append((n, abranch))
-                    peerbranches.add(abranch)
+                for abranch in repo.get_changeset(i).branches:
+                    if abranch not in peerbranches:
+                        n = 'branch:%s:%s' % (abranch, repo.get_changeset(abranch).raw_id)
+                        peers.append((n, abranch))
+                        peerbranches.add(abranch)
 
         selected = None
         tiprev = repo.tags.get('tip')

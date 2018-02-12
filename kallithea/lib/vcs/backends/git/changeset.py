@@ -91,12 +91,18 @@ class GitChangeset(BaseChangeset):
 
     @LazyProperty
     def branch(self):
-
+        # Note: This function will return one branch name for the changeset -
+        # that might not make sense in Git where branches() is a better match
+        # for the basic model
         heads = self.repository._heads(reverse=False)
-
         ref = heads.get(self.raw_id)
         if ref:
             return safe_unicode(ref)
+
+    @LazyProperty
+    def branches(self):
+        heads = self.repository._heads(reverse=True)
+        return [b for b in heads if heads[b] == self.raw_id] # FIXME: Inefficient ... and returning None!
 
     def _fix_path(self, path):
         """

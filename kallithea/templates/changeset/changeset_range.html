@@ -90,11 +90,11 @@ ${self.repo_context_bar('changelog')}
                     <span class="label label-tag" title="${_('Tag %s') % tag}">
                     ${h.link_to(tag,h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}</span>
                 %endfor
-                %if cs.branch:
-                <span class="label label-branch" title="${_('Branch %s') % cs.branch}">
-                   ${h.link_to(cs.branch,h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}
-                </span>
-                %endif
+                %for branch in cs.branches:
+                  <span class="label label-branch" title="${_('Branch %s') % branch}">
+                    ${h.link_to(branch,h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}
+                  </span>
+                %endfor
               </span>
             </div>
           </div>

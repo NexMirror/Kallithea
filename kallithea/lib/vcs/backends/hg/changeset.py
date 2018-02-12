@@ -41,6 +41,10 @@ class MercurialChangeset(BaseChangeset):
         return safe_unicode(self._ctx.branch())
 
     @LazyProperty
+    def branches(self):
+        return [safe_unicode(self._ctx.branch())]
+
+    @LazyProperty
     def closesbranch(self):
         return self._ctx.closesbranch()
 
