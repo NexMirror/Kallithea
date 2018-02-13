@@ -415,7 +415,7 @@ class TestLibs(TestController):
         (r'BUG(\d{5})', 'https://bar/{repo}/', 'BUG',
             'silly me, the URL does not contain {id}, BUG12345.', 'silly me, the URL does not contain {id}, <a class="issue-tracker-link" href="https://bar/repo_name/">BUG12345</a>.'),
         (r'(PR-\d+)', 'http://foo/{repo}/issue/{id}', '',
-            'interesting issue #123, err PR-56', 'interesting issue #123, err PR-56'), # no match because empty prefix
+            'interesting issue #123, err PR-56', 'interesting issue #123, err <a class="issue-tracker-link" href="http://foo/repo_name/issue/PR-56">PR-56</a>'),
     ])
     def test_urlify_issues(self, issue_pat, issue_server, issue_prefix, sample, expected):
         from kallithea.lib.helpers import urlify_issues
@@ -436,7 +436,7 @@ class TestLibs(TestController):
         ('pull request7 #', '<a class="issue-tracker-link" href="http://pr/repo_name/pr/7">PR#7</a> #'),
         ('look PR9 and pr #11', 'look <a class="issue-tracker-link" href="http://pr/repo_name/pr/9">PR#9</a> and <a class="issue-tracker-link" href="http://pr/repo_name/pr/11">PR#11</a>'),
         ('pullrequest#10 solves issue 9', '<a class="issue-tracker-link" href="http://pr/repo_name/pr/10">PR#10</a> solves <a class="issue-tracker-link" href="http://bug/repo_name/bug/9">bug#9</a>'),
-        ('issue FAIL67', 'issue FAIL67'), # no match because empty prefix
+        ('issue FAIL67', 'issue <a class="issue-tracker-link" href="http://fail/repo_name/67">67</a>'),
         ('issue FAILMORE89', 'issue FAILMORE89'), # no match because absent prefix
     ])
     def test_urlify_issues_multiple_issue_patterns(self, sample, expected):

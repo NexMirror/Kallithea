@@ -1137,7 +1137,7 @@ def urlify_issues(newtext, repo_name):
             issue_pat = CONFIG.get(k)
             issue_server_link = CONFIG.get('issue_server_link%s' % suffix)
             issue_prefix = CONFIG.get('issue_prefix%s' % suffix)
-            if issue_pat and issue_server_link and issue_prefix:
+            if issue_pat and issue_server_link and issue_prefix is not None: # issue_prefix can be empty but should be present
                 log.debug('issue pattern %r: %r -> %r %r', suffix, issue_pat, issue_server_link, issue_prefix)
             else:
                 log.error('skipping incomplete issue pattern %r: %r -> %r %r', suffix, issue_pat, issue_server_link, issue_prefix)
