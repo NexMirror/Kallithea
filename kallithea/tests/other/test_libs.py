@@ -403,6 +403,66 @@ class TestLibs(TestController):
             from kallithea.lib.helpers import urlify_text
             assert urlify_text(sample, 'repo_name', link_='#the-link') == expected
 
+    @parametrize('issue_pat,issue_server,issue_prefix,sample,expected', [
+        (r'#(\d+)', 'http://foo/{repo}/issue/{id}', '#',
+            'issue #123', 'issue <a class="issue-tracker-link" href="http://foo/repo_name/issue/123">#123</a>'),
+        (r'#(\d+)', 'http://foo/{repo}/issue/{id}', '#',
+            'issue#456', 'issue<a class="issue-tracker-link" href="http://foo/repo_name/issue/456">#456</a>'),
+        (r'#(\d+)', 'http://foo/{repo}/issue/{id}', 'PR',
+            'interesting issue #123', 'interesting issue <a class="issue-tracker-link" href="http://foo/repo_name/issue/123">PR123</a>'),
+        (r'BUG\d{5}', 'https://bar/{repo}/{id}', 'BUG',
+            'silly me, I did not parenthesize the {id}, BUG12345.', 'silly me, I did not parenthesize the {id}, <a class="issue-tracker-link" href="https://bar/repo_name/">BUG</a>.'),
+        (r'BUG(\d{5})', 'https://bar/{repo}/', 'BUG',
+            'silly me, the URL does not contain {id}, BUG12345.', 'silly me, the URL does not contain {id}, <a class="issue-tracker-link" href="https://bar/repo_name/">BUG12345</a>.'),
+        (r'(PR-\d+)', 'http://foo/{repo}/issue/{id}', '',
+            'interesting issue #123, err PR-56', 'interesting issue #123, err PR-56'), # no match because empty prefix
+    ])
+    def test_urlify_issues(self, issue_pat, issue_server, issue_prefix, sample, expected):
+        from kallithea.lib.helpers import urlify_issues
+        config_stub = {
+            'sqlalchemy.url': 'foo',
+            'issue_pat': issue_pat,
+            'issue_server_link': issue_server,
+            'issue_prefix': issue_prefix,
+        }
+        # force recreation of lazy function
+        with mock.patch('kallithea.lib.helpers._urlify_issues_f', None):
+            with mock.patch('kallithea.CONFIG', config_stub):
+                assert urlify_issues(sample, 'repo_name') == expected
+
+    @parametrize('sample,expected', [
+        ('abc X5', 'abc <a class="issue-tracker-link" href="http://main/repo_name/main/5/">#5</a>'),
+        ('abc pullrequest #6 xyz', 'abc <a class="issue-tracker-link" href="http://pr/repo_name/pr/6">PR#6</a> xyz'),
+        ('pull request7 #', '<a class="issue-tracker-link" href="http://pr/repo_name/pr/7">PR#7</a> #'),
+        ('look PR9 and pr #11', 'look <a class="issue-tracker-link" href="http://pr/repo_name/pr/9">PR#9</a> and <a class="issue-tracker-link" href="http://pr/repo_name/pr/11">PR#11</a>'),
+        ('pullrequest#10 solves issue 9', '<a class="issue-tracker-link" href="http://pr/repo_name/pr/10">PR#10</a> solves <a class="issue-tracker-link" href="http://bug/repo_name/bug/9">bug#9</a>'),
+        ('issue FAIL67', 'issue FAIL67'), # no match because empty prefix
+        ('issue FAILMORE89', 'issue FAILMORE89'), # no match because absent prefix
+    ])
+    def test_urlify_issues_multiple_issue_patterns(self, sample, expected):
+        from kallithea.lib.helpers import urlify_issues
+        config_stub = {
+            'sqlalchemy.url': 'foo',
+            'issue_pat': 'X(\d+)',
+            'issue_server_link': 'http://main/{repo}/main/{id}/',
+            'issue_prefix': '#',
+            'issue_pat_pr': '(?:pullrequest|pull request|PR|pr) ?#?(\d+)',
+            'issue_server_link_pr': 'http://pr/{repo}/pr/{id}',
+            'issue_prefix_pr': 'PR#',
+            'issue_pat_bug': '(?:BUG|bug|issue) ?#?(\d+)',
+            'issue_server_link_bug': 'http://bug/{repo}/bug/{id}',
+            'issue_prefix_bug': 'bug#',
+            'issue_pat_empty_prefix': 'FAIL(\d+)',
+            'issue_server_link_empty_prefix': 'http://fail/{repo}/{id}',
+            'issue_prefix_empty_prefix': '',
+            'issue_pat_absent_prefix': 'FAILMORE(\d+)',
+            'issue_server_link_absent_prefix': 'http://failmore/{repo}/{id}',
+        }
+        # force recreation of lazy function
+        with mock.patch('kallithea.lib.helpers._urlify_issues_f', None):
+            with mock.patch('kallithea.CONFIG', config_stub):
+                assert urlify_issues(sample, 'repo_name') == expected
+
     @parametrize('test,expected', [
       ("", None),
       ("/_2", '2'),
