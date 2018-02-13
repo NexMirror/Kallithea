@@ -79,12 +79,25 @@ class RepositoryGetDiffTest(_BackendTestMixin):
                 ],
                 'removed': [FileNode('foobar')],
             },
+            {
+                'message': u'Commit that contains glob pattern in filename',
+                'author': 'Jane Doe <jane.doe@example.com>',
+                'date': datetime.datetime(2010, 1, 1, 22),
+                'added': [
+                    FileNode('README{', content='Strangely-named README file'),
+                ],
+            },
         ]
         return commits
 
     def test_raise_for_wrong(self):
         with self.assertRaises(ChangesetDoesNotExistError):
             self.repo.get_diff('a' * 40, 'b' * 40)
+
+    def test_glob_patterns_in_filename_do_not_raise_exception(self):
+        revs = self.repo.revisions
+
+        diff = self.repo.get_diff(revs[2], revs[3], path='README{') # should not raise
 
 
 class GitRepositoryGetDiffTest(RepositoryGetDiffTest, unittest.TestCase):
@@ -153,6 +166,18 @@ index c11c37d41d33fb47741cff93fa5f9d798c1535b0..f9324477362684ff692aaf5b9a81e01b
 +FOOBAR
 ''')
 
+    def test_fourth_changeset_diff(self):
+        revs = self.repo.revisions
+        self.assertEqual(self.repo.get_diff(revs[2], revs[3]), '''diff --git a/README{ b/README{
+new file mode 100644
+index 0000000000000000000000000000000000000000..cdc0c1b5d234feedb37bbac19cd1b6442061102d
+--- /dev/null
++++ b/README{
+@@ -0,0 +1 @@
++Strangely-named README file
+\ No newline at end of file
+''')
+
 
 class HgRepositoryGetDiffTest(RepositoryGetDiffTest, unittest.TestCase):
     backend_alias = 'hg'
@@ -212,6 +237,17 @@ diff --git a/foobar3 b/foobar3
 +FOOBAR
 +FOOBAR
 +FOOBAR
+''')
+
+    def test_fourth_changeset_diff(self):
+        revs = self.repo.revisions
+        self.assertEqual(self.repo.get_diff(revs[2], revs[3]), '''diff --git a/README{ b/README{
+new file mode 100644
+--- /dev/null
++++ b/README{
+@@ -0,0 +1,1 @@
++Strangely-named README file
+\ No newline at end of file
 ''')
 
 
