@@ -10,18 +10,18 @@
         <td>
             <div>
                 ${_('Pull request from')}
-                <a style="color:${color_link};text-decoration:none"
+                <a style="${link_style}"
                    href="${pr_source_repo}">${pr_source_repo}</a>
                 ${_('at')}
                 <span style="color:${color_link}">${pr_source_branch}</span>
                 ${_('to')}
-                <a style="color:${color_link};text-decoration:none"
+                <a style="${link_style}"
                    href="${pr_target_repo}">${pr_target_repo}</a>
                 ${_('at')}
                 <span style="color:${color_link}">${pr_target_branch}</span>:
             </div>
             <div>
-                <a style="color:${color_link};text-decoration:none"
+                <a style="${link_style}"
                    href="${pr_url}">${pr_nice_id}</a>
                 "<span style="color:${color_link}">${pr_title}</span>"
                 ${_('by')}
@@ -56,7 +56,7 @@
             <ul style="color:${color_link};padding-left:15px;margin:0">
                 %for revision, desc in pr_revisions:
                     <li style="mso-special-format:bullet">
-                        <a style="color:${color_link};text-decoration:none"
+                        <a style="${link_style}"
                            href="${h.canonical_url('changeset_home', repo_name=org_repo_name, revision=revision)}">
                             ${h.shorter(desc, 80, firstline=True)}
                         </a>
