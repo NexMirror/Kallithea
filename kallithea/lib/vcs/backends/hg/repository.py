@@ -264,7 +264,7 @@ class MercurialRepository(BaseRepository):
             self.get_changeset(rev1)
         self.get_changeset(rev2)
         if path:
-            file_filter = match(self.path, '', [path])
+            file_filter = match(self.path, '', [path], exact=True)
         else:
             file_filter = None
 
