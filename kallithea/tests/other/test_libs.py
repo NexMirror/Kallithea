@@ -380,6 +380,10 @@ class TestLibs(TestController):
        """which must not come after whitespace """
        """and not be followed by * or alphanumerical <b>*characters*</b>.""",
        "-"),
+      ("HTML escaping: <abc> 'single' \"double\" &pointer",
+       # problem: ' is encoded as &#39; which however is interpreted as #39 and expanded to a issue link
+       """HTML escaping: &lt;abc&gt; &<a class="issue-tracker-link" href="https://issues.example.com/repo_name/issue/39">#39</a>;single&<a class="issue-tracker-link" href="https://issues.example.com/repo_name/issue/39">#39</a>; &quot;double&quot; &amp;pointer""",
+       "-"),
       # tags are covered by test_tag_extractor
     ])
     def test_urlify_test(self, sample, expected, url_):
@@ -416,9 +420,14 @@ class TestLibs(TestController):
             'silly me, the URL does not contain {id}, BUG12345.', 'silly me, the URL does not contain {id}, <a class="issue-tracker-link" href="https://bar/repo_name/">BUG12345</a>.'),
         (r'(PR-\d+)', 'http://foo/{repo}/issue/{id}', '',
             'interesting issue #123, err PR-56', 'interesting issue #123, err <a class="issue-tracker-link" href="http://foo/repo_name/issue/PR-56">PR-56</a>'),
+        # problem: ' is encoded as &#39; which however is interpreted as #39 and expanded to a issue link
+        (r'#(\d+)', 'http://foo/{repo}/issue/{id}', '#',
+            "some 'standard' text with apostrophes", 'some &<a class="issue-tracker-link" href="http://foo/repo_name/issue/39">#39</a>;standard&<a class="issue-tracker-link" href="http://foo/repo_name/issue/39">#39</a>; text with apostrophes'),
+        (r'#(\d+)', 'http://foo/{repo}/issue/{id}', '#',
+            "some 'standard' issue #123", 'some &<a class="issue-tracker-link" href="http://foo/repo_name/issue/39">#39</a>;standard&<a class="issue-tracker-link" href="http://foo/repo_name/issue/39">#39</a>; issue <a class="issue-tracker-link" href="http://foo/repo_name/issue/123">#123</a>'),
     ])
     def test_urlify_issues(self, issue_pat, issue_server, issue_prefix, sample, expected):
-        from kallithea.lib.helpers import urlify_issues
+        from kallithea.lib.helpers import urlify_text
         config_stub = {
             'sqlalchemy.url': 'foo',
             'issue_pat': issue_pat,
@@ -428,7 +437,7 @@ class TestLibs(TestController):
         # force recreation of lazy function
         with mock.patch('kallithea.lib.helpers._urlify_issues_f', None):
             with mock.patch('kallithea.CONFIG', config_stub):
-                assert urlify_issues(sample, 'repo_name') == expected
+                assert urlify_text(sample, 'repo_name') == expected
 
     @parametrize('sample,expected', [
         ('abc X5', 'abc <a class="issue-tracker-link" href="http://main/repo_name/main/5/">#5</a>'),
@@ -440,7 +449,7 @@ class TestLibs(TestController):
         ('issue FAILMORE89', 'issue FAILMORE89'), # no match because absent prefix
     ])
     def test_urlify_issues_multiple_issue_patterns(self, sample, expected):
-        from kallithea.lib.helpers import urlify_issues
+        from kallithea.lib.helpers import urlify_text
         config_stub = {
             'sqlalchemy.url': 'foo',
             'issue_pat': 'X(\d+)',
@@ -461,7 +470,7 @@ class TestLibs(TestController):
         # force recreation of lazy function
         with mock.patch('kallithea.lib.helpers._urlify_issues_f', None):
             with mock.patch('kallithea.CONFIG', config_stub):
-                assert urlify_issues(sample, 'repo_name') == expected
+                assert urlify_text(sample, 'repo_name') == expected
 
     @parametrize('test,expected', [
       ("", None),
