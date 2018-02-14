@@ -381,8 +381,7 @@ class TestLibs(TestController):
        """and not be followed by * or alphanumerical <b>*characters*</b>.""",
        "-"),
       ("HTML escaping: <abc> 'single' \"double\" &pointer",
-       # problem: ' is encoded as &#39; which however is interpreted as #39 and expanded to a issue link
-       """HTML escaping: &lt;abc&gt; &<a class="issue-tracker-link" href="https://issues.example.com/repo_name/issue/39">#39</a>;single&<a class="issue-tracker-link" href="https://issues.example.com/repo_name/issue/39">#39</a>; &quot;double&quot; &amp;pointer""",
+       "HTML escaping: &lt;abc&gt; &#39;single&#39; &quot;double&quot; &amp;pointer",
        "-"),
       # tags are covered by test_tag_extractor
     ])
@@ -420,11 +419,10 @@ class TestLibs(TestController):
             'silly me, the URL does not contain {id}, BUG12345.', 'silly me, the URL does not contain {id}, <a class="issue-tracker-link" href="https://bar/repo_name/">BUG12345</a>.'),
         (r'(PR-\d+)', 'http://foo/{repo}/issue/{id}', '',
             'interesting issue #123, err PR-56', 'interesting issue #123, err <a class="issue-tracker-link" href="http://foo/repo_name/issue/PR-56">PR-56</a>'),
-        # problem: ' is encoded as &#39; which however is interpreted as #39 and expanded to a issue link
         (r'#(\d+)', 'http://foo/{repo}/issue/{id}', '#',
-            "some 'standard' text with apostrophes", 'some &<a class="issue-tracker-link" href="http://foo/repo_name/issue/39">#39</a>;standard&<a class="issue-tracker-link" href="http://foo/repo_name/issue/39">#39</a>; text with apostrophes'),
+            "some 'standard' text with apostrophes", 'some &#39;standard&#39; text with apostrophes'),
         (r'#(\d+)', 'http://foo/{repo}/issue/{id}', '#',
-            "some 'standard' issue #123", 'some &<a class="issue-tracker-link" href="http://foo/repo_name/issue/39">#39</a>;standard&<a class="issue-tracker-link" href="http://foo/repo_name/issue/39">#39</a>; issue <a class="issue-tracker-link" href="http://foo/repo_name/issue/123">#123</a>'),
+            "some 'standard' issue #123", 'some &#39;standard&#39; issue <a class="issue-tracker-link" href="http://foo/repo_name/issue/123">#123</a>'),
     ])
     def test_urlify_issues(self, issue_pat, issue_server, issue_prefix, sample, expected):
         from kallithea.lib.helpers import urlify_text

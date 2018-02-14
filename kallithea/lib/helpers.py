@@ -85,7 +85,7 @@ def html_escape(s):
         .replace(">", "&gt;")
         .replace("<", "&lt;")
         .replace('"', "&quot;")
-        .replace("'", "&#39;") # some mail readers use HTML 4 and doesn't support &apos;
+        .replace("'", "&apos;") # Note: this is HTML5 not HTML4 and might not work in mails
         )
 
 def js(value):
@@ -1092,6 +1092,10 @@ def urlify_text(s, repo_name=None, link_=None, truncate=None, stylize=False, tru
         # make href around everything that isn't a href already
         s = linkify_others(s, link_)
     s = s.replace('\r\n', '<br/>').replace('\n', '<br/>')
+    # Turn HTML5 into more valid HTML4 as required by some mail readers.
+    # (This is not done in one step in html_escape, because character codes like
+    # &#123; risk to be seen as an issue reference due to the presence of '#'.)
+    s = s.replace("&apos;", "&#39;")
     return literal(s)
 
 
