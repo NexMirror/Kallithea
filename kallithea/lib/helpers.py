@@ -1156,17 +1156,15 @@ def urlify_issues(newtext, repo_name):
 
             def issues_replace(match_obj,
                                issue_server_link=issue_server_link, issue_prefix=issue_prefix):
-                leadingspace = ' ' if match_obj.group().startswith(' ') else ''
                 issue_id = ''.join(match_obj.groups())
                 issue_url = issue_server_link.replace('{id}', issue_id)
                 issue_url = issue_url.replace('{repo}', repo_name)
                 issue_url = issue_url.replace('{repo_name}', repo_name.split(URL_SEP)[-1])
                 return (
-                    '%(leadingspace)s<a class="issue-tracker-link" href="%(url)s">'
+                    '<a class="issue-tracker-link" href="%(url)s">'
                     '%(issue-prefix)s%(id-repr)s'
                     '</a>'
                     ) % {
-                     'leadingspace': leadingspace,
                      'url': issue_url,
                      'id-repr': issue_id,
                      'issue-prefix': issue_prefix,

@@ -411,22 +411,34 @@ class TestLibs(TestController):
             'issue #123 and issue#456',
             """issue <a class="issue-tracker-link" href="http://foo/repo_name/issue/123">#123</a> and """
             """issue<a class="issue-tracker-link" href="http://foo/repo_name/issue/456">#456</a>"""),
+        # following test case shows the result of a backward incompatible change that was made: the
+        # space between 'issue' and '#123' is removed, because the space is part of the pattern.
         (r'(?:\s*#)(\d+)', 'http://foo/{repo}/issue/{id}', '#',
             'issue #123 and issue#456',
-            """issue <a class="issue-tracker-link" href="http://foo/repo_name/issue/123">#123</a> and """
+            """issue<a class="issue-tracker-link" href="http://foo/repo_name/issue/123">#123</a> and """
             """issue<a class="issue-tracker-link" href="http://foo/repo_name/issue/456">#456</a>"""),
+        # to require whitespace before the issue reference, one may be tempted to use \b...
         (r'\bPR(\d+)', 'http://foo/{repo}/issue/{id}', '#',
             'issue PR123 and issuePR456',
             """issue <a class="issue-tracker-link" href="http://foo/repo_name/issue/123">#123</a> and """
             """issuePR456"""),
-        # following test case shows that \b does not work well in combination with '#': the expectations
+        # ... but it turns out that \b does not work well in combination with '#': the expectations
         # are reversed from what is actually happening.
         (r'\b#(\d+)', 'http://foo/{repo}/issue/{id}', '#',
             'issue #123 and issue#456',
             """issue #123 and """
             """issue<a class="issue-tracker-link" href="http://foo/repo_name/issue/456">#456</a>"""),
-        (r'[ \t]#(\d+)', 'http://foo/{repo}/issue/{id}', '#',
-            'issue #123 and issue#456',
+        # ... so maybe try to be explicit? Unfortunately the whitespace before the issue
+        # reference is not retained, again, because it is part of the pattern.
+        (r'(?:^|\s)#(\d+)', 'http://foo/{repo}/issue/{id}', '#',
+            '#15 and issue #123 and issue#456',
+            """<a class="issue-tracker-link" href="http://foo/repo_name/issue/15">#15</a> and """
+            """issue<a class="issue-tracker-link" href="http://foo/repo_name/issue/123">#123</a> and """
+            """issue#456"""),
+        # ... instead, use lookbehind assertions.
+        (r'(?:^|(?<=\s))#(\d+)', 'http://foo/{repo}/issue/{id}', '#',
+            '#15 and issue #123 and issue#456',
+            """<a class="issue-tracker-link" href="http://foo/repo_name/issue/15">#15</a> and """
             """issue <a class="issue-tracker-link" href="http://foo/repo_name/issue/123">#123</a> and """
             """issue#456"""),
         (r'(?:pullrequest|pull request|PR|pr) ?#?(\d+)', 'http://foo/{repo}/issue/{id}', 'PR#',

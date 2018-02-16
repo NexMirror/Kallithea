@@ -267,6 +267,9 @@ default_encoding = utf8
 <%text>## pattern to get the issues from commit messages</%text>
 <%text>## default one used here is #<numbers> with a regex passive group for `#`</%text>
 <%text>## {id} will be all groups matched from this pattern</%text>
+<%text>## To require mandatory whitespace before the issue pattern, use:</%text>
+<%text>## (?:^|(?<=\s)) before the actual pattern, and for mandatory whitespace</%text>
+<%text>## behind the issue pattern, use (?:$|(?=\s)) after the actual pattern</%text>
 
 issue_pat = #(\d+)
 
