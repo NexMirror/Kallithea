@@ -408,21 +408,58 @@ class TestLibs(TestController):
 
     @parametrize('issue_pat,issue_server,issue_prefix,sample,expected', [
         (r'#(\d+)', 'http://foo/{repo}/issue/{id}', '#',
-            'issue #123', 'issue <a class="issue-tracker-link" href="http://foo/repo_name/issue/123">#123</a>'),
-        (r'#(\d+)', 'http://foo/{repo}/issue/{id}', '#',
-            'issue#456', 'issue<a class="issue-tracker-link" href="http://foo/repo_name/issue/456">#456</a>'),
+            'issue #123 and issue#456',
+            """issue <a class="issue-tracker-link" href="http://foo/repo_name/issue/123">#123</a> and """
+            """issue<a class="issue-tracker-link" href="http://foo/repo_name/issue/456">#456</a>"""),
+        (r'(?:\s*#)(\d+)', 'http://foo/{repo}/issue/{id}', '#',
+            'issue #123 and issue#456',
+            """issue <a class="issue-tracker-link" href="http://foo/repo_name/issue/123">#123</a> and """
+            """issue<a class="issue-tracker-link" href="http://foo/repo_name/issue/456">#456</a>"""),
+        (r'\bPR(\d+)', 'http://foo/{repo}/issue/{id}', '#',
+            'issue PR123 and issuePR456',
+            """issue <a class="issue-tracker-link" href="http://foo/repo_name/issue/123">#123</a> and """
+            """issuePR456"""),
+        # following test case shows that \b does not work well in combination with '#': the expectations
+        # are reversed from what is actually happening.
+        (r'\b#(\d+)', 'http://foo/{repo}/issue/{id}', '#',
+            'issue #123 and issue#456',
+            """issue #123 and """
+            """issue<a class="issue-tracker-link" href="http://foo/repo_name/issue/456">#456</a>"""),
+        (r'[ \t]#(\d+)', 'http://foo/{repo}/issue/{id}', '#',
+            'issue #123 and issue#456',
+            """issue <a class="issue-tracker-link" href="http://foo/repo_name/issue/123">#123</a> and """
+            """issue#456"""),
+        (r'(?:pullrequest|pull request|PR|pr) ?#?(\d+)', 'http://foo/{repo}/issue/{id}', 'PR#',
+            'fixed with pullrequest #1, pull request#2, PR 3, pr4',
+            """fixed with <a class="issue-tracker-link" href="http://foo/repo_name/issue/1">PR#1</a>, """
+            """<a class="issue-tracker-link" href="http://foo/repo_name/issue/2">PR#2</a>, """
+            """<a class="issue-tracker-link" href="http://foo/repo_name/issue/3">PR#3</a>, """
+            """<a class="issue-tracker-link" href="http://foo/repo_name/issue/4">PR#4</a>"""),
         (r'#(\d+)', 'http://foo/{repo}/issue/{id}', 'PR',
-            'interesting issue #123', 'interesting issue <a class="issue-tracker-link" href="http://foo/repo_name/issue/123">PR123</a>'),
+            'interesting issue #123',
+            """interesting issue <a class="issue-tracker-link" href="http://foo/repo_name/issue/123">PR123</a>"""),
         (r'BUG\d{5}', 'https://bar/{repo}/{id}', 'BUG',
-            'silly me, I did not parenthesize the {id}, BUG12345.', 'silly me, I did not parenthesize the {id}, <a class="issue-tracker-link" href="https://bar/repo_name/">BUG</a>.'),
+            'silly me, I did not parenthesize the {id}, BUG12345.',
+            """silly me, I did not parenthesize the {id}, <a class="issue-tracker-link" href="https://bar/repo_name/">BUG</a>."""),
         (r'BUG(\d{5})', 'https://bar/{repo}/', 'BUG',
-            'silly me, the URL does not contain {id}, BUG12345.', 'silly me, the URL does not contain {id}, <a class="issue-tracker-link" href="https://bar/repo_name/">BUG12345</a>.'),
+            'silly me, the URL does not contain {id}, BUG12345.',
+            """silly me, the URL does not contain {id}, <a class="issue-tracker-link" href="https://bar/repo_name/">BUG12345</a>."""),
         (r'(PR-\d+)', 'http://foo/{repo}/issue/{id}', '',
-            'interesting issue #123, err PR-56', 'interesting issue #123, err <a class="issue-tracker-link" href="http://foo/repo_name/issue/PR-56">PR-56</a>'),
+            'interesting issue #123, err PR-56',
+            """interesting issue #123, err <a class="issue-tracker-link" href="http://foo/repo_name/issue/PR-56">PR-56</a>"""),
         (r'#(\d+)', 'http://foo/{repo}/issue/{id}', '#',
-            "some 'standard' text with apostrophes", 'some &#39;standard&#39; text with apostrophes'),
+            "some 'standard' text with apostrophes",
+            """some &#39;standard&#39; text with apostrophes"""),
         (r'#(\d+)', 'http://foo/{repo}/issue/{id}', '#',
-            "some 'standard' issue #123", 'some &#39;standard&#39; issue <a class="issue-tracker-link" href="http://foo/repo_name/issue/123">#123</a>'),
+            "some 'standard' issue #123",
+            """some &#39;standard&#39; issue <a class="issue-tracker-link" href="http://foo/repo_name/issue/123">#123</a>"""),
+        (r'#(\d+)', 'http://foo/{repo}/issue/{id}', '#',
+            'an issue   #123       with extra whitespace',
+            """an issue   <a class="issue-tracker-link" href="http://foo/repo_name/issue/123">#123</a>       with extra whitespace"""),
+        # Note: whitespace is squashed
+        (r'(?:\s*#)(\d+)', 'http://foo/{repo}/issue/{id}', '#',
+            'an issue   #123       with extra whitespace',
+            """an issue <a class="issue-tracker-link" href="http://foo/repo_name/issue/123">#123</a>       with extra whitespace"""),
     ])
     def test_urlify_issues(self, issue_pat, issue_server, issue_prefix, sample, expected):
         from kallithea.lib.helpers import urlify_text
