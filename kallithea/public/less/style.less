@@ -789,14 +789,34 @@ div.comment-prev-next-links div.next-comment {
   }
   .author {
     width: 200px;
+    @media (max-width: @screen-sm-max) {
+      width: 120px;
+    }
+    @media (max-width: @screen-xs-max) {
+      width: 20px;
+      /* keep gravatar but hide name on tiny screens to give important columns more room */
+      span {
+        .hidden;
+      }
+    }
   }
   .hash {
     .small;
     width: 110px;
+    @media (max-width: @screen-xs-max) {
+      width: 48px;
+    }
   }
   .date {
     .small;
     width: 100px;
+  }
+  /* hide on small screens to give important columns more room */
+  .status,
+  .expand_commit,
+  .comments,
+  .extra-container {
+    .hidden-xs;
   }
   .mid > .log-container {
     position: relative;
