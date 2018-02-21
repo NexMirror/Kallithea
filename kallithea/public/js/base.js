@@ -620,7 +620,7 @@ function comment_div_state($comment_div, f_path, line_no, show_form_opt) {
     var show_form = show_form_opt !== undefined ? show_form_opt : !f_path && !line_no;
     var $forms = $comment_div.children('.comment-inline-form');
     var $buttonrow = $comment_div.children('.add-button-row');
-    var $comments = $comment_div.children('.comment');
+    var $comments = $comment_div.children('.comment:not(.submitting)');
     $forms.remove();
     $buttonrow.remove();
     if (show_form) {
