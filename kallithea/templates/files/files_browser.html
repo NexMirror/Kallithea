@@ -72,7 +72,7 @@
             %for cnt,node in enumerate(c.file):
                 <tr class="parity${cnt%2}">
                      <td>
-                         ${h.link_to(file_name(node),file_url(node,c),class_=file_class(node)+(" ypjax-link" if not node.is_submodule() else ""))}
+                         ${h.link_to(file_name(node),file_url(node,c),class_=file_class(node)+(" ypjax-link" if not node.is_submodule() else ""), target_="_blank" if node.is_submodule() else None)}
                      </td>
                      <td>
                      %if node.is_file():
