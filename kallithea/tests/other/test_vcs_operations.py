@@ -92,12 +92,9 @@ def _add_files_and_push(webserver, vcs, dest_dir, ignoreReturnCode=False, files_
     :param vcs:
     :param dest_dir:
     """
-    # commit some stuff into this repo
-    cwd = os.path.join(dest_dir)
-    #added_file = '%ssetupążźć.py' % _RandomNameSequence().next()
     added_file = '%ssetup.py' % _RandomNameSequence().next()
-    open(os.path.join(cwd, added_file), 'a').close()
-    Command(cwd).execute('%s add %s' % (vcs, added_file))
+    open(os.path.join(dest_dir, added_file), 'a').close()
+    Command(dest_dir).execute('%s add %s' % (vcs, added_file))
 
     email = 'me@example.com'
     if os.name == 'nt':
@@ -106,7 +103,7 @@ def _add_files_and_push(webserver, vcs, dest_dir, ignoreReturnCode=False, files_
         author_str = 'User ǝɯɐᴎ <%s>' % email
     for i in xrange(files_no):
         cmd = """echo "added_line%s" >> %s""" % (i, added_file)
-        Command(cwd).execute(cmd)
+        Command(dest_dir).execute(cmd)
         if vcs == 'hg':
             cmd = """hg commit -m "committed new %s" -u "%s" "%s" """ % (
                 i, author_str, added_file
@@ -116,7 +113,7 @@ def _add_files_and_push(webserver, vcs, dest_dir, ignoreReturnCode=False, files_
                 i, author_str, added_file
             )
         # git commit needs EMAIL on some machines
-        Command(cwd).execute(cmd, EMAIL=email)
+        Command(dest_dir).execute(cmd, EMAIL=email)
 
     # PUSH it back
     _REPO = None
@@ -130,9 +127,9 @@ def _add_files_and_push(webserver, vcs, dest_dir, ignoreReturnCode=False, files_
 
     stdout = stderr = None
     if vcs == 'hg':
-        stdout, stderr = Command(cwd).execute('hg push --verbose', clone_url, ignoreReturnCode=ignoreReturnCode)
+        stdout, stderr = Command(dest_dir).execute('hg push --verbose', clone_url, ignoreReturnCode=ignoreReturnCode)
     elif vcs == 'git':
-        stdout, stderr = Command(cwd).execute('git push --verbose', clone_url, "master", ignoreReturnCode=ignoreReturnCode)
+        stdout, stderr = Command(dest_dir).execute('git push --verbose', clone_url, "master", ignoreReturnCode=ignoreReturnCode)
 
     return stdout, stderr
 
