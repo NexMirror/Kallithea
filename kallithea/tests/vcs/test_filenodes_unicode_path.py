@@ -4,7 +4,6 @@ import datetime
 
 from kallithea.lib.vcs.nodes import FileNode
 from kallithea.tests.vcs.test_inmemchangesets import BackendBaseTestCase
-from kallithea.tests.vcs.conf import SCM_TESTS
 
 
 class FileNodeUnicodePathTestsMixin(object):
@@ -33,11 +32,9 @@ class FileNodeUnicodePathTestsMixin(object):
         assert node == unode
 
 
-for alias in SCM_TESTS:
-    attrs = {
-        'backend_alias': alias,
-    }
-    cls_name = ''.join(('test %s file node unicode path' % alias).title()
-        .split())
-    bases = (FileNodeUnicodePathTestsMixin, BackendBaseTestCase)
-    globals()[cls_name] = type(cls_name, bases, attrs)
+class TestGitFileNodeUnicodePath(FileNodeUnicodePathTestsMixin, BackendBaseTestCase):
+    backend_alias = 'git'
+
+
+class TestHgFileNodeUnicodePath(FileNodeUnicodePathTestsMixin, BackendBaseTestCase):
+    backend_alias = 'hg'

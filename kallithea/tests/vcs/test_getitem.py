@@ -1,7 +1,6 @@
 import datetime
 
 from kallithea.tests.vcs.base import _BackendTestMixin
-from kallithea.tests.vcs.conf import SCM_TESTS
 from kallithea.lib.vcs.nodes import FileNode
 
 
@@ -28,10 +27,9 @@ class GetitemTestCaseMixin(_BackendTestMixin):
         assert changesets == list(self.repo.get_changesets())
 
 
-# For each backend create test case class
-for alias in SCM_TESTS:
-    attrs = {
-        'backend_alias': alias,
-    }
-    cls_name = ''.join(('test %s getitem' % alias).title().split())
-    globals()[cls_name] = type(cls_name, (GetitemTestCaseMixin,), attrs)
+class TestGitGetitem(GetitemTestCaseMixin):
+    backend_alias = 'git'
+
+
+class TestHgGetitem(GetitemTestCaseMixin):
+    backend_alias = 'hg'

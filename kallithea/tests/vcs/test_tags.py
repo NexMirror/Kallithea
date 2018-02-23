@@ -4,7 +4,6 @@ from kallithea.lib.vcs.exceptions import TagAlreadyExistError
 from kallithea.lib.vcs.exceptions import TagDoesNotExistError
 
 from kallithea.tests.vcs.base import _BackendTestMixin
-from kallithea.tests.vcs.conf import SCM_TESTS
 
 
 class TagsTestCaseMixin(_BackendTestMixin):
@@ -46,10 +45,9 @@ class TagsTestCaseMixin(_BackendTestMixin):
         assert '19/10/11' in self.repo.tags
 
 
-# For each backend create test case class
-for alias in SCM_TESTS:
-    attrs = {
-        'backend_alias': alias,
-    }
-    cls_name = ''.join(('test %s tags' % alias).title().split())
-    globals()[cls_name] = type(cls_name, (TagsTestCaseMixin,), attrs)
+class TestGitTags(TagsTestCaseMixin):
+    backend_alias = 'git'
+
+
+class TestHgTags(TagsTestCaseMixin):
+    backend_alias = 'hg'

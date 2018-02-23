@@ -5,7 +5,6 @@ import pytest
 from kallithea.lib.vcs.nodes import FileNode
 
 from kallithea.tests.vcs.base import _BackendTestMixin
-from kallithea.tests.vcs.conf import SCM_TESTS
 
 
 class WorkdirTestCaseMixin(_BackendTestMixin):
@@ -84,10 +83,9 @@ class WorkdirTestCaseMixin(_BackendTestMixin):
         assert self.repo.workdir.get_branch() == 'foobranch'
 
 
-# For each backend create test case class
-for alias in SCM_TESTS:
-    attrs = {
-        'backend_alias': alias,
-    }
-    cls_name = ''.join(('test %s branch' % alias).title().split())
-    globals()[cls_name] = type(cls_name, (WorkdirTestCaseMixin, ), attrs)
+class TestGitBranch(WorkdirTestCaseMixin):
+    backend_alias = 'git'
+
+
+class TestHgBranch(WorkdirTestCaseMixin):
+    backend_alias = 'hg'

@@ -3,7 +3,6 @@ from kallithea.lib import vcs
 from kallithea.lib.vcs.nodes import FileNode
 
 from kallithea.tests.vcs.base import _BackendTestMixin
-from kallithea.tests.vcs.conf import SCM_TESTS
 
 
 class BranchesTestCaseMixin(_BackendTestMixin):
@@ -101,10 +100,9 @@ class BranchesTestCaseMixin(_BackendTestMixin):
         assert '123' in self.repo.branches
 
 
-# For each backend create test case class
-for alias in SCM_TESTS:
-    attrs = {
-        'backend_alias': alias,
-    }
-    cls_name = ''.join(('test %s branches' % alias).title().split())
-    globals()[cls_name] = type(cls_name, (BranchesTestCaseMixin,), attrs)
+class TestGitBranches(BranchesTestCaseMixin):
+    backend_alias = 'git'
+
+
+class TestHgBranches(BranchesTestCaseMixin):
+    backend_alias = 'hg'

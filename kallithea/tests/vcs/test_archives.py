@@ -11,7 +11,7 @@ from kallithea.lib.vcs.exceptions import VCSError
 from kallithea.lib.vcs.nodes import FileNode
 
 from kallithea.tests.vcs.base import _BackendTestMixin
-from kallithea.tests.vcs.conf import SCM_TESTS, TESTS_TMP_PATH
+from kallithea.tests.vcs.conf import TESTS_TMP_PATH
 
 
 class ArchivesTestCaseMixin(_BackendTestMixin):
@@ -97,10 +97,9 @@ class ArchivesTestCaseMixin(_BackendTestMixin):
             self.tip.fill_archive(prefix='/any')
 
 
-# For each backend create test case class
-for alias in SCM_TESTS:
-    attrs = {
-        'backend_alias': alias,
-    }
-    cls_name = ''.join(('test %s archive' % alias).title().split())
-    globals()[cls_name] = type(cls_name, (ArchivesTestCaseMixin,), attrs)
+class TestGitArchive(ArchivesTestCaseMixin):
+    backend_alias = 'git'
+
+
+class TestHgArchive(ArchivesTestCaseMixin):
+    backend_alias = 'hg'

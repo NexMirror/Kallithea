@@ -6,7 +6,6 @@ from kallithea.lib.vcs.nodes import FileNode
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError
 
 from kallithea.tests.vcs.base import _BackendTestMixin
-from kallithea.tests.vcs.conf import SCM_TESTS
 from kallithea.tests.vcs import TEST_USER_CONFIG_FILE
 
 
@@ -42,6 +41,14 @@ class RepositoryBaseTest(_BackendTestMixin):
         class dummy(object):
             path = self.repo.path
         assert self.repo != dummy()
+
+
+class TestGitRepositoryBase(RepositoryBaseTest):
+    backend_alias = 'git'
+
+
+class TestHgRepositoryBase(RepositoryBaseTest):
+    backend_alias = 'hg'
 
 
 class RepositoryGetDiffTest(_BackendTestMixin):
@@ -248,12 +255,3 @@ new file mode 100644
 +Strangely-named README file
 \ No newline at end of file
 '''
-
-
-# For each backend create test case class
-for alias in SCM_TESTS:
-    attrs = {
-        'backend_alias': alias,
-    }
-    cls_name = 'Test' + alias.capitalize() + RepositoryBaseTest.__name__
-    globals()[cls_name] = type(cls_name, (RepositoryBaseTest,), attrs)

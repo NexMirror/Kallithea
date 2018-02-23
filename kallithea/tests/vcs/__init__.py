@@ -1,9 +1,14 @@
 """
 Unit tests for vcs_ library.
 
-In order to run tests we need to prepare our environment first. Tests would be
-run for each engine listed at ``conf.SCM_TESTS`` - keys are aliases from
-``vcs.backends.BACKENDS``.
+While some tests are implemented for a specific backend, a huge number
+is completely independent of the underlying backend.
+
+For such independent tests a base testing class is implemented, and
+backend-specific test classes are defined. These sub-classes simply
+need to set the correct backend to use by setting the
+``backend_alias`` property, which should correspond to one of the keys
+from ``vcs.backends.BACKENDS``.
 
 For each SCM we run tests for, we need some repository. We would use
 repositories location provided in test suite defaults - see ``conf``

@@ -9,7 +9,7 @@ import datetime
 from kallithea.lib import vcs
 from kallithea.lib.vcs.nodes import FileNode
 
-from kallithea.tests.vcs.conf import SCM_TESTS, get_new_dir
+from kallithea.tests.vcs.conf import get_new_dir
 
 
 class _BackendTestMixin(object):
@@ -83,12 +83,3 @@ class _BackendTestMixin(object):
     def setup_method(self, method):
         if getattr(self, 'recreate_repo_per_test', False):
             self.__class__.setup_class()
-
-
-# For each backend create test case class
-for alias in SCM_TESTS:
-    attrs = {
-        'backend_alias': alias,
-    }
-    cls_name = ''.join(('%s base backend test' % alias).title().split())
-    globals()[cls_name] = type(cls_name, (_BackendTestMixin,), attrs)

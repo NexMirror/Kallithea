@@ -20,7 +20,7 @@ from kallithea.lib.vcs.nodes import DirNode
 from kallithea.lib.vcs.nodes import FileNode
 from kallithea.lib.vcs.utils import safe_unicode
 
-from kallithea.tests.vcs.conf import SCM_TESTS, get_new_dir
+from kallithea.tests.vcs.conf import get_new_dir
 
 
 class InMemoryChangesetTestMixin(object):
@@ -404,10 +404,9 @@ class BackendBaseTestCase(object):
         self.tip = self.repo.get_changeset()
 
 
-# For each backend create test case class
-for alias in SCM_TESTS:
-    attrs = {
-        'backend_alias': alias,
-    }
-    cls_name = ''.join(('test %s in memory changeset' % alias).title().split())
-    globals()[cls_name] = type(cls_name, (InMemoryChangesetTestMixin,), attrs)
+class TestGitInMemoryChangeset(InMemoryChangesetTestMixin):
+    backend_alias = 'git'
+
+
+class TestHgInMemoryChangeset(InMemoryChangesetTestMixin):
+    backend_alias = 'hg'

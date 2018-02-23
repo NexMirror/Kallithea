@@ -18,7 +18,7 @@ from kallithea.lib.vcs.exceptions import (
 )
 
 from kallithea.tests.vcs.base import _BackendTestMixin
-from kallithea.tests.vcs.conf import SCM_TESTS, get_new_dir
+from kallithea.tests.vcs.conf import get_new_dir
 
 
 class TestBaseChangeset(object):
@@ -374,19 +374,25 @@ class _ChangesetsChangesTestCaseMixin(_BackendTestMixin):
         assert 33188 == changeset.get_file_mode(u'foo/bał')
 
 
-# For each backend create test case class
-for alias in SCM_TESTS:
-    attrs = {
-        'backend_alias': alias,
-    }
-    # tests with additional commits
-    cls_name = 'Test' + alias.title() + 'ChangesetsWithCommits'
-    globals()[cls_name] = type(cls_name, (_ChangesetsWithCommitsTestCaseixin,), attrs)
+class TestGitChangesetsWithCommits(_ChangesetsWithCommitsTestCaseixin):
+    backend_alias = 'git'
 
-    # tests without additional commits
-    cls_name = 'Test' + alias.title() + 'Changesets'
-    globals()[cls_name] = type(cls_name, (_ChangesetsTestCaseMixin,), attrs)
 
-    # tests changes
-    cls_name = 'Test' + alias.title() + 'ChangesetsChanges'
-    globals()[cls_name] = type(cls_name, (_ChangesetsChangesTestCaseMixin,), attrs)
+class TestGitChangesets(_ChangesetsTestCaseMixin):
+    backend_alias = 'git'
+
+
+class TestGitChangesetsChanges(_ChangesetsChangesTestCaseMixin):
+    backend_alias = 'git'
+
+
+class TestHgChangesetsWithCommits(_ChangesetsWithCommitsTestCaseixin):
+    backend_alias = 'hg'
+
+
+class TestHgChangesets(_ChangesetsTestCaseMixin):
+    backend_alias = 'hg'
+
+
+class TestHgChangesetsChanges(_ChangesetsChangesTestCaseMixin):
+    backend_alias = 'hg'

@@ -3,7 +3,6 @@ import datetime
 from kallithea.lib.vcs.nodes import FileNode
 
 from kallithea.tests.vcs.base import _BackendTestMixin
-from kallithea.tests.vcs.conf import SCM_TESTS
 
 
 class GetsliceTestCaseMixin(_BackendTestMixin):
@@ -37,10 +36,9 @@ class GetsliceTestCaseMixin(_BackendTestMixin):
         assert list(self.repo[:-2]) == [self.repo.get_changeset(rev) for rev in self.repo.revisions[:-2]]
 
 
-# For each backend create test case class
-for alias in SCM_TESTS:
-    attrs = {
-        'backend_alias': alias,
-    }
-    cls_name = ''.join(('test %s getslice' % alias).title().split())
-    globals()[cls_name] = type(cls_name, (GetsliceTestCaseMixin,), attrs)
+class TestGitGetslice(GetsliceTestCaseMixin):
+    backend_alias = 'git'
+
+
+class TestHgGetslice(GetsliceTestCaseMixin):
+    backend_alias = 'hg'
