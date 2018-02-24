@@ -1141,14 +1141,18 @@ def urlify_issues(newtext, repo_name):
             issue_pat = CONFIG.get(k)
             issue_server_link = CONFIG.get('issue_server_link%s' % suffix)
             issue_prefix = CONFIG.get('issue_prefix%s' % suffix)
-            if issue_pat and issue_server_link and issue_prefix is not None: # issue_prefix can be empty but should be present
-                log.debug('issue pattern %r: %r -> %r %r', suffix, issue_pat, issue_server_link, issue_prefix)
-            else:
+            if not issue_pat or not issue_server_link or issue_prefix is None: # issue_prefix can be empty but should be present
                 log.error('skipping incomplete issue pattern %r: %r -> %r %r', suffix, issue_pat, issue_server_link, issue_prefix)
                 continue
 
             # Wrap tmp_urlify_issues_f with substitution of this pattern, while making sure all loop variables (and compiled regexpes) are bound
-            issue_re = re.compile(issue_pat)
+            try:
+                issue_re = re.compile(issue_pat)
+            except re.error as e:
+                log.error('skipping invalid issue pattern %r: %r -> %r %r. Error: %s', suffix, issue_pat, issue_server_link, issue_prefix, str(e))
+                continue
+
+            log.debug('issue pattern %r: %r -> %r %r', suffix, issue_pat, issue_server_link, issue_prefix)
 
             def issues_replace(match_obj,
                                issue_server_link=issue_server_link, issue_prefix=issue_prefix):

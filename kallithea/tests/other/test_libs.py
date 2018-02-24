@@ -460,6 +460,10 @@ class TestLibs(TestController):
         (r'(?:\s*#)(\d+)', 'http://foo/{repo}/issue/{id}', '#',
             'an issue   #123       with extra whitespace',
             """an issue <a class="issue-tracker-link" href="http://foo/repo_name/issue/123">#123</a>       with extra whitespace"""),
+        # invalid issue pattern
+        (r'(PR\d+', 'http://foo/{repo}/issue/{id}', '',
+            'PR135',
+            """PR135"""),
     ])
     def test_urlify_issues(self, issue_pat, issue_server, issue_prefix, sample, expected):
         from kallithea.lib.helpers import urlify_text
