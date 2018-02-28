@@ -73,7 +73,7 @@ name_fixes['nansenat16@null.tw'] = "nansenat16 <nansenat16@null.tw>"
 name_fixes['Peter Vitt'] = "Peter Vitt <petervitt@web.de>"
 name_fixes['philip.j@hostdime.com'] = "Philip Jameson <philip.j@hostdime.com>"
 name_fixes['Søren Løvborg'] = "Søren Løvborg <sorenl@unity3d.com>"
-name_fixes['Thomas De Schampheleire'] = "Thomas De Schampheleire <thomas.de.schampheleire@gmail.com>"
+name_fixes['Thomas De Schampheleire'] = "Thomas De Schampheleire <thomas.de_schampheleire@nokia.com>"
 name_fixes['Weblate'] = "<>"
 name_fixes['xpol'] = "xpol <xpolife@gmail.com>"
 
