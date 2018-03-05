@@ -199,9 +199,9 @@ class TestVCSOperations(TestController):
     @pytest.fixture(scope="module")
     def testfork(self):
         # create fork so the repo stays untouched
-        git_fork_name = '%s_fork%s' % (GIT_REPO, _RandomNameSequence().next())
+        git_fork_name = u'%s_fork%s' % (GIT_REPO, _RandomNameSequence().next())
         fixture.create_fork(GIT_REPO, git_fork_name)
-        hg_fork_name = '%s_fork%s' % (HG_REPO, _RandomNameSequence().next())
+        hg_fork_name = u'%s_fork%s' % (HG_REPO, _RandomNameSequence().next())
         fixture.create_fork(HG_REPO, hg_fork_name)
         return {'git': git_fork_name, 'hg': hg_fork_name}
 
@@ -258,7 +258,7 @@ class TestVCSOperations(TestController):
         clone_url = webserver.repo_url(HG_REPO)
         stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, dest_dir)
 
-        fork_name = '%s_fork%s' % (HG_REPO, _RandomNameSequence().next())
+        fork_name = u'%s_fork%s' % (HG_REPO, _RandomNameSequence().next())
         fixture.create_fork(HG_REPO, fork_name)
         clone_url = webserver.repo_url(fork_name)
         stdout, stderr = _add_files_and_push(webserver, 'hg', dest_dir, clone_url=clone_url)
@@ -273,7 +273,7 @@ class TestVCSOperations(TestController):
         stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, dest_dir)
 
         # commit some stuff into this repo
-        fork_name = '%s_fork%s' % (GIT_REPO, _RandomNameSequence().next())
+        fork_name = u'%s_fork%s' % (GIT_REPO, _RandomNameSequence().next())
         fixture.create_fork(GIT_REPO, fork_name)
         clone_url = webserver.repo_url(fork_name)
         stdout, stderr = _add_files_and_push(webserver, 'git', dest_dir, clone_url=clone_url)
@@ -294,7 +294,7 @@ class TestVCSOperations(TestController):
         clone_url = webserver.repo_url(HG_REPO)
         stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, dest_dir)
 
-        fork_name = '%s_fork%s' % (HG_REPO, _RandomNameSequence().next())
+        fork_name = u'%s_fork%s' % (HG_REPO, _RandomNameSequence().next())
         fixture.create_fork(HG_REPO, fork_name)
         clone_url = webserver.repo_url(fork_name)
         stdout, stderr = _add_files_and_push(webserver, 'hg', dest_dir, files_no=1, clone_url=clone_url)
@@ -318,7 +318,7 @@ class TestVCSOperations(TestController):
         stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, dest_dir)
 
         # commit some stuff into this repo
-        fork_name = '%s_fork%s' % (GIT_REPO, _RandomNameSequence().next())
+        fork_name = u'%s_fork%s' % (GIT_REPO, _RandomNameSequence().next())
         fixture.create_fork(GIT_REPO, fork_name)
         clone_url = webserver.repo_url(fork_name)
         stdout, stderr = _add_files_and_push(webserver, 'git', dest_dir, files_no=1, clone_url=clone_url)
@@ -497,7 +497,7 @@ class TestVCSOperations(TestController):
 
     def test_push_unlocks_repository_hg(self, webserver):
         # enable locking
-        fork_name = '%s_fork%s' % (HG_REPO, _RandomNameSequence().next())
+        fork_name = u'%s_fork%s' % (HG_REPO, _RandomNameSequence().next())
         fixture.create_fork(HG_REPO, fork_name)
         r = Repository.get_by_repo_name(fork_name)
         r.enable_locking = True
@@ -523,7 +523,7 @@ class TestVCSOperations(TestController):
     # TODO: fix me ! somehow during tests hooks don't get called on Git
     def test_push_unlocks_repository_git(self, webserver):
         # enable locking
-        fork_name = '%s_fork%s' % (GIT_REPO, _RandomNameSequence().next())
+        fork_name = u'%s_fork%s' % (GIT_REPO, _RandomNameSequence().next())
         fixture.create_fork(GIT_REPO, fork_name)
         r = Repository.get_by_repo_name(fork_name)
         r.enable_locking = True
