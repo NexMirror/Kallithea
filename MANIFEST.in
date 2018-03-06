@@ -12,6 +12,7 @@ include           development.ini
 include           pytest.ini
 include           requirements.txt
 include           tox.ini
+include           package.json
 recursive-include docs *
 recursive-include init.d *
 recursive-include kallithea/alembic *

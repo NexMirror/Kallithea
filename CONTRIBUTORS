@@ -1,24 +1,27 @@
 List of contributors to Kallithea project:
 
+    Dominik Ruf <dominikruf@gmail.com> 2012 2014-2018
+    Thomas De Schampheleire <thomas.de_schampheleire@nokia.com> 2014-2018
+    Branko Majic <branko@majic.rs> 2015 2018
+    Mads Kiilerich <mads@kiilerich.com> 2016-2018
     Mads Kiilerich <madski@unity3d.com> 2012-2017
     Unity Technologies 2012-2017
     Andrew Shadura <andrew@shadura.me> 2012 2014-2017
-    Dominik Ruf <dominikruf@gmail.com> 2012 2014-2017
-    Thomas De Schampheleire <thomas.de_schampheleire@nokia.com> 2014-2017
+    Étienne Gilli <etienne.gilli@gmail.com> 2015-2017
     Søren Løvborg <sorenl@unity3d.com> 2015-2017
     Sam Jaques <sam.jaques@me.com> 2015 2017
     Asterios Dimitriou <steve@pci.gr> 2016-2017
-    Mads Kiilerich <mads@kiilerich.com> 2016-2017
     Alessandro Molina <alessandro.molina@axant.it> 2017
     Anton Schur <tonich.sh@gmail.com> 2017
     Ching-Chen Mao <mao@lins.fju.edu.tw> 2017
     Eivind Tagseth <eivindt@gmail.com> 2017
     FUJIWARA Katsunori <foozy@lares.dti.ne.jp> 2017
+    Holger Schramm <info@schramm.by> 2017
     Karl Goetz <karl@kgoetz.id.au> 2017
+    Lars Kruse <devel@sumpfralle.de> 2017
     Marko Semet <markosemet@googlemail.com> 2017
     Viktar Vauchkevich <victorenator@gmail.com> 2017
     Takumi IINO <trot.thunder@gmail.com> 2012-2016
-    Étienne Gilli <etienne.gilli@gmail.com> 2015-2016
     Jan Heylen <heyleke@gmail.com> 2015-2016
     Robert Martinez <ntttq@inboxen.org> 2015-2016
     Robert Rauch <mail@robertrauch.de> 2015-2016
@@ -40,7 +43,6 @@ List of contributors to Kallithea project:
     Andrew Bartlett <abartlet@catalyst.net.nz> 2015
     Balázs Úr <urbalazs@gmail.com> 2015
     Ben Finney <ben@benfinney.id.au> 2015
-    Branko Majic <branko@majic.rs> 2015
     Daniel Hobley <danielh@unity3d.com> 2015
     David Avigni <david.avigni@ankapi.com> 2015
     Denis Blanchette <dblanchette@coveo.com> 2015

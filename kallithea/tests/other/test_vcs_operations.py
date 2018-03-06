@@ -609,7 +609,7 @@ class TestVCSOperations(TestController):
         # clone repo
         clone_url = webserver.repo_url(testfork[repo_type], username=TEST_USER_ADMIN_LOGIN, password=TEST_USER_ADMIN_PASS)
         dest_dir = _get_tmp_dir()
-        stdout, stderr = Command(TESTS_TMP_PATH)\
+        stdout, stderr = Command(TESTS_TMP_PATH) \
             .execute('%s clone' % repo_type, clone_url, dest_dir, ignoreReturnCode=True)
         if repo_type == 'hg':
             assert 'preoutgoing.testhook hook failed' in stdout
