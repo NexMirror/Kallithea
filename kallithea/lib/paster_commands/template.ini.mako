@@ -546,38 +546,38 @@ level = NOTSET
 handlers = console
 
 [logger_routes]
-level = DEBUG
+level = WARN
 handlers =
 qualname = routes.middleware
 <%text>## "level = DEBUG" logs the route matched and routing variables.</%text>
 propagate = 1
 
 [logger_beaker]
-level = DEBUG
+level = WARN
 handlers =
 qualname = beaker.container
 propagate = 1
 
 [logger_templates]
-level = INFO
+level = WARN
 handlers =
 qualname = pylons.templating
 propagate = 1
 
 [logger_kallithea]
-level = DEBUG
+level = WARN
 handlers =
 qualname = kallithea
 propagate = 1
 
 [logger_tg]
-level = DEBUG
+level = WARN
 handlers =
 qualname = tg
 propagate = 1
 
 [logger_gearbox]
-level = DEBUG
+level = WARN
 handlers =
 qualname = gearbox
 propagate = 1
@@ -589,7 +589,7 @@ qualname = sqlalchemy.engine
 propagate = 0
 
 [logger_whoosh_indexer]
-level = DEBUG
+level = WARN
 handlers =
 qualname = whoosh_indexer
 propagate = 1

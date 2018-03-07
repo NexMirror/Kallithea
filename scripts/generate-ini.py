@@ -28,6 +28,27 @@ ini_files = [
             '[handler_console_sql]': {
                 'formatter': 'color_formatter_sql',
             },
+            '[logger_routes]': {
+                'level': 'DEBUG',
+            },
+            '[logger_beaker]': {
+                'level': 'DEBUG',
+            },
+            '[logger_templates]': {
+                'level': 'INFO',
+            },
+            '[logger_kallithea]': {
+                'level': 'DEBUG',
+            },
+            '[logger_tg]': {
+                'level': 'DEBUG',
+            },
+            '[logger_gearbox]': {
+                'level': 'DEBUG',
+            },
+            '[logger_whoosh_indexer]': {
+                'level': 'DEBUG',
+            },
         },
     ),
 ]
