@@ -529,7 +529,7 @@ script_location = kallithea:alembic
 <%text>################################</%text>
 
 [loggers]
-keys = root, routes, kallithea, sqlalchemy, tg, gearbox, beaker, templates, whoosh_indexer
+keys = root, routes, kallithea, sqlalchemy, tg, gearbox, beaker, templates, whoosh_indexer, werkzeug, backlash
 
 [handlers]
 keys = console, console_sql
@@ -592,6 +592,18 @@ propagate = 0
 level = WARN
 handlers =
 qualname = whoosh_indexer
+propagate = 1
+
+[logger_werkzeug]
+level = WARN
+handlers =
+qualname = werkzeug
+propagate = 1
+
+[logger_backlash]
+level = WARN
+handlers =
+qualname = backlash
 propagate = 1
 
 <%text>##############</%text>
