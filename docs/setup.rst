@@ -535,36 +535,69 @@ Integration with issue trackers
 
 Kallithea provides a simple integration with issue trackers. It's possible
 to define a regular expression that will match an issue ID in commit messages,
-and have that replaced with a URL to the issue. To enable this simply
-uncomment the following variables in the ini file::
+and have that replaced with a URL to the issue.
 
-    issue_pat = (?:^#|\s#)(\w+)
-    issue_server_link = https://issues.example.com/{repo}/issue/{id}
-    issue_prefix = #
+This is achieved with following three variables in the ini file::
+
+    issue_pat = #(\d+)
+    issue_server_link = https://issues.example.com/{repo}/issue/\1
+    issue_sub =
 
 ``issue_pat`` is the regular expression describing which strings in
-commit messages will be treated as issue references. A match group in
-parentheses should be used to specify the actual issue id.
+commit messages will be treated as issue references. The expression can/should
+have one or more parenthesized groups that can later be referred to in
+``issue_server_link`` and ``issue_sub`` (see below). If you prefer, named groups
+can be used instead of simple parenthesized groups.
 
-The default expression matches issues in the format ``#<number>``, e.g., ``#300``.
+If the pattern should only match if it is preceded by whitespace, add the
+following string before the actual pattern: ``(?:^|(?<=\s))``.
+If the pattern should only match if it is followed by whitespace, add the
+following string after the actual pattern: ``(?:$|(?=\s))``.
+These expressions use lookbehind and lookahead assertions of the Python regular
+expression module to avoid the whitespace to be part of the actual pattern,
+otherwise the link text will also contain that whitespace.
 
 Matched issue references are replaced with the link specified in
-``issue_server_link``. ``{id}`` is replaced with the issue ID, and
-``{repo}`` with the repository name.  Since the # is stripped away,
-``issue_prefix`` is prepended to the link text.  ``issue_prefix`` doesn't
-necessarily need to be ``#``: if you set issue prefix to ``ISSUE-`` this will
-generate a URL in the format:
+``issue_server_link``, in which any backreferences are resolved. Backreferences
+can be ``\1``, ``\2``, ... or for named groups ``\g<groupname>``.
+The special token ``{repo}`` is replaced with the full repository path
+(including repository groups), while token ``{repo_name}`` is replaced with the
+repository name (without repository groups).
+
+The link text is determined by ``issue_sub``, which can be a string containing
+backreferences to the groups specified in ``issue_pat``. If ``issue_sub`` is
+empty, then the text matched by ``issue_pat`` is used verbatim.
+
+The example settings shown above match issues in the format ``#<number>``.
+This will cause the text ``#300`` to be transformed into a link:
 
 .. code-block:: html
 
-  <a href="https://issues.example.com/example_repo/issue/300">ISSUE-300</a>
+  <a href="https://issues.example.com/example_repo/issue/300">#300</a>
+
+The following example transforms a text starting with either of 'pullrequest',
+'pull request' or 'PR', followed by an optional space, then a pound character
+(#) and one or more digits, into a link with the text 'PR #' followed by the
+digits::
+
+    issue_pat = (pullrequest|pull request|PR) ?#(\d+)
+    issue_server_link = https://issues.example.com/\2
+    issue_sub = PR #\2
+
+The following example demonstrates how to require whitespace before the issue
+reference in order for it to be recognized, such that the text ``issue#123`` will
+not cause a match, but ``issue #123`` will::
+
+    issue_pat = (?:^|(?<=\s))#(\d+)
+    issue_server_link = https://issues.example.com/\1
+    issue_sub =
 
 If needed, more than one pattern can be specified by appending a unique suffix to
-the variables. For example::
+the variables. For example, also demonstrating the use of named groups::
 
-    issue_pat_wiki = (?:wiki-)(.+)
-    issue_server_link_wiki = https://wiki.example.com/{id}
-    issue_prefix_wiki = WIKI-
+    issue_pat_wiki = wiki-(?P<pagename>\S+)
+    issue_server_link_wiki = https://wiki.example.com/\g<pagename>
+    issue_sub_wiki = WIKI-\g<pagename>
 
 With these settings, wiki pages can be referenced as wiki-some-id, and every
 such reference will be transformed into:
@@ -572,6 +605,9 @@ such reference will be transformed into:
 .. code-block:: html
 
   <a href="https://wiki.example.com/some-id">WIKI-some-id</a>
+
+Refer to the `Python regular expression documentation`_ for more details about
+the supported syntax in ``issue_pat``, ``issue_server_link`` and ``issue_sub``.
 
 
 Hook management
@@ -901,6 +937,7 @@ the ``init.d`` directory of the Kallithea source.
 
 .. _virtualenv: http://pypi.python.org/pypi/virtualenv
 .. _python: http://www.python.org/
+.. _Python regular expression documentation: https://docs.python.org/2/library/re.html
 .. _Mercurial: https://www.mercurial-scm.org/
 .. _Celery: http://celeryproject.org/
 .. _Celery documentation: http://docs.celeryproject.org/en/latest/getting-started/index.html

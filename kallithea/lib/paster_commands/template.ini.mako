@@ -261,37 +261,44 @@ default_encoding = utf8
 <%text>## issue tracker for Kallithea (leave blank to disable, absent for default)</%text>
 #bugtracker = https://bitbucket.org/conservancy/kallithea/issues
 
-<%text>## issue tracking mapping for commits messages</%text>
-<%text>## comment out issue_pat, issue_server, issue_prefix to enable</%text>
+<%text>## issue tracking mapping for commit messages, comments, PR descriptions, ...</%text>
+<%text>## Refer to the documentation ("Integration with issue trackers") for more details.</%text>
 
-<%text>## pattern to get the issues from commit messages</%text>
-<%text>## default one used here is #<numbers> with a regex passive group for `#`</%text>
-<%text>## {id} will be all groups matched from this pattern</%text>
+<%text>## regular expression to match issue references</%text>
+<%text>## This pattern may/should contain parenthesized groups, that can</%text>
+<%text>## be referred to in issue_server_link or issue_sub using Python backreferences</%text>
+<%text>## (e.g. \1, \2, ...). You can also create named groups with '(?P<groupname>)'.</%text>
 <%text>## To require mandatory whitespace before the issue pattern, use:</%text>
 <%text>## (?:^|(?<=\s)) before the actual pattern, and for mandatory whitespace</%text>
-<%text>## behind the issue pattern, use (?:$|(?=\s)) after the actual pattern</%text>
+<%text>## behind the issue pattern, use (?:$|(?=\s)) after the actual pattern.</%text>
 
 issue_pat = #(\d+)
 
-<%text>## server url to the issue, each {id} will be replaced with match</%text>
-<%text>## fetched from the regex and {repo} is replaced with full repository name</%text>
-<%text>## including groups {repo_name} is replaced with just name of repo</%text>
+<%text>## server url to the issue</%text>
+<%text>## This pattern may/should contain backreferences to parenthesized groups in issue_pat.</%text>
+<%text>## A backreference can be \1, \2, ... or \g<groupname> if you specified a named group</%text>
+<%text>## called 'groupname' in issue_pat.</%text>
+<%text>## The special token {repo} is replaced with the full repository name</%text>
+<%text>## including repository groups, while {repo_name} is replaced with just</%text>
+<%text>## the name of the repository.</%text>
 
-issue_server_link = https://issues.example.com/{repo}/issue/{id}
+issue_server_link = https://issues.example.com/{repo}/issue/\1
 
-<%text>## prefix to add to link to indicate it's an url</%text>
-<%text>## #314 will be replaced by <issue_prefix><id></%text>
+<%text>## substitution pattern to use as the link text</%text>
+<%text>## If issue_sub is empty, the text matched by issue_pat is retained verbatim</%text>
+<%text>## for the link text. Otherwise, the link text is that of issue_sub, with any</%text>
+<%text>## backreferences to groups in issue_pat replaced.</%text>
 
-issue_prefix = #
+issue_sub =
 
-<%text>## issue_pat, issue_server_link, issue_prefix can have suffixes to specify</%text>
+<%text>## issue_pat, issue_server_link and issue_sub can have suffixes to specify</%text>
 <%text>## multiple patterns, to other issues server, wiki or others</%text>
 <%text>## below an example how to create a wiki pattern</%text>
 # wiki-some-id -> https://wiki.example.com/some-id
 
-#issue_pat_wiki = (?:wiki-)(.+)
-#issue_server_link_wiki = https://wiki.example.com/{id}
-#issue_prefix_wiki = WIKI-
+#issue_pat_wiki = wiki-(\S+)
+#issue_server_link_wiki = https://wiki.example.com/\1
+#issue_sub_wiki = WIKI-\1
 
 <%text>## alternative return HTTP header for failed authentication. Default HTTP</%text>
 <%text>## response is 401 HTTPUnauthorized. Currently Mercurial clients have trouble with</%text>

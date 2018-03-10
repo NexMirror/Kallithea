@@ -1140,35 +1140,46 @@ def urlify_issues(newtext, repo_name):
             suffix = m.group(1)
             issue_pat = CONFIG.get(k)
             issue_server_link = CONFIG.get('issue_server_link%s' % suffix)
-            issue_prefix = CONFIG.get('issue_prefix%s' % suffix)
-            if not issue_pat or not issue_server_link or issue_prefix is None: # issue_prefix can be empty but should be present
-                log.error('skipping incomplete issue pattern %r: %r -> %r %r', suffix, issue_pat, issue_server_link, issue_prefix)
+            issue_sub = CONFIG.get('issue_sub%s' % suffix)
+            if not issue_pat or not issue_server_link or issue_sub is None: # issue_sub can be empty but should be present
+                log.error('skipping incomplete issue pattern %r: %r -> %r %r', suffix, issue_pat, issue_server_link, issue_sub)
                 continue
 
             # Wrap tmp_urlify_issues_f with substitution of this pattern, while making sure all loop variables (and compiled regexpes) are bound
             try:
                 issue_re = re.compile(issue_pat)
             except re.error as e:
-                log.error('skipping invalid issue pattern %r: %r -> %r %r. Error: %s', suffix, issue_pat, issue_server_link, issue_prefix, str(e))
+                log.error('skipping invalid issue pattern %r: %r -> %r %r. Error: %s', suffix, issue_pat, issue_server_link, issue_sub, str(e))
                 continue
 
-            log.debug('issue pattern %r: %r -> %r %r', suffix, issue_pat, issue_server_link, issue_prefix)
+            log.debug('issue pattern %r: %r -> %r %r', suffix, issue_pat, issue_server_link, issue_sub)
 
             def issues_replace(match_obj,
-                               issue_server_link=issue_server_link, issue_prefix=issue_prefix):
-                issue_id = ''.join(match_obj.groups())
-                issue_url = issue_server_link.replace('{id}', issue_id)
+                               issue_server_link=issue_server_link, issue_sub=issue_sub):
+                try:
+                    issue_url = match_obj.expand(issue_server_link)
+                except (IndexError, re.error) as e:
+                    log.error('invalid issue_url setting %r -> %r %r. Error: %s', issue_pat, issue_server_link, issue_sub, str(e))
+                    issue_url = issue_server_link
                 issue_url = issue_url.replace('{repo}', repo_name)
                 issue_url = issue_url.replace('{repo_name}', repo_name.split(URL_SEP)[-1])
+                # if issue_sub is empty use the matched issue reference verbatim
+                if not issue_sub:
+                    issue_text = match_obj.group()
+                else:
+                    try:
+                        issue_text = match_obj.expand(issue_sub)
+                    except (IndexError, re.error) as e:
+                        log.error('invalid issue_sub setting %r -> %r %r. Error: %s', issue_pat, issue_server_link, issue_sub, str(e))
+                        issue_text = match_obj.group()
+
                 return (
                     '<a class="issue-tracker-link" href="%(url)s">'
-                    '%(issue-prefix)s%(id-repr)s'
+                    '%(text)s'
                     '</a>'
                     ) % {
                      'url': issue_url,
-                     'id-repr': issue_id,
-                     'issue-prefix': issue_prefix,
-                     'serv': issue_server_link,
+                     'text': issue_text,
                     }
             tmp_urlify_issues_f = (lambda s,
                                           issue_re=issue_re, issues_replace=issues_replace, chain_f=tmp_urlify_issues_f:

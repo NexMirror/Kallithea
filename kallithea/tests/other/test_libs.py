@@ -406,84 +406,91 @@ class TestLibs(TestController):
             from kallithea.lib.helpers import urlify_text
             assert urlify_text(sample, 'repo_name', link_='#the-link') == expected
 
-    @parametrize('issue_pat,issue_server,issue_prefix,sample,expected', [
-        (r'#(\d+)', 'http://foo/{repo}/issue/{id}', '#',
+    @parametrize('issue_pat,issue_server,issue_sub,sample,expected', [
+        (r'#(\d+)', 'http://foo/{repo}/issue/\\1', '#\\1',
             'issue #123 and issue#456',
             """issue <a class="issue-tracker-link" href="http://foo/repo_name/issue/123">#123</a> and """
             """issue<a class="issue-tracker-link" href="http://foo/repo_name/issue/456">#456</a>"""),
-        # following test case shows the result of a backward incompatible change that was made: the
-        # space between 'issue' and '#123' is removed, because the space is part of the pattern.
-        (r'(?:\s*#)(\d+)', 'http://foo/{repo}/issue/{id}', '#',
+        (r'(?:\s*#)(\d+)', 'http://foo/{repo}/issue/\\1', '#\\1',
             'issue #123 and issue#456',
             """issue<a class="issue-tracker-link" href="http://foo/repo_name/issue/123">#123</a> and """
             """issue<a class="issue-tracker-link" href="http://foo/repo_name/issue/456">#456</a>"""),
         # to require whitespace before the issue reference, one may be tempted to use \b...
-        (r'\bPR(\d+)', 'http://foo/{repo}/issue/{id}', '#',
+        (r'\bPR(\d+)', 'http://foo/{repo}/issue/\\1', '#\\1',
             'issue PR123 and issuePR456',
             """issue <a class="issue-tracker-link" href="http://foo/repo_name/issue/123">#123</a> and """
             """issuePR456"""),
         # ... but it turns out that \b does not work well in combination with '#': the expectations
         # are reversed from what is actually happening.
-        (r'\b#(\d+)', 'http://foo/{repo}/issue/{id}', '#',
+        (r'\b#(\d+)', 'http://foo/{repo}/issue/\\1', '#\\1',
             'issue #123 and issue#456',
             """issue #123 and """
             """issue<a class="issue-tracker-link" href="http://foo/repo_name/issue/456">#456</a>"""),
         # ... so maybe try to be explicit? Unfortunately the whitespace before the issue
         # reference is not retained, again, because it is part of the pattern.
-        (r'(?:^|\s)#(\d+)', 'http://foo/{repo}/issue/{id}', '#',
+        (r'(?:^|\s)#(\d+)', 'http://foo/{repo}/issue/\\1', '#\\1',
             '#15 and issue #123 and issue#456',
             """<a class="issue-tracker-link" href="http://foo/repo_name/issue/15">#15</a> and """
             """issue<a class="issue-tracker-link" href="http://foo/repo_name/issue/123">#123</a> and """
             """issue#456"""),
         # ... instead, use lookbehind assertions.
-        (r'(?:^|(?<=\s))#(\d+)', 'http://foo/{repo}/issue/{id}', '#',
+        (r'(?:^|(?<=\s))#(\d+)', 'http://foo/{repo}/issue/\\1', '#\\1',
             '#15 and issue #123 and issue#456',
             """<a class="issue-tracker-link" href="http://foo/repo_name/issue/15">#15</a> and """
             """issue <a class="issue-tracker-link" href="http://foo/repo_name/issue/123">#123</a> and """
             """issue#456"""),
-        (r'(?:pullrequest|pull request|PR|pr) ?#?(\d+)', 'http://foo/{repo}/issue/{id}', 'PR#',
+        (r'(?:pullrequest|pull request|PR|pr) ?#?(\d+)', 'http://foo/{repo}/issue/\\1', 'PR#\\1',
             'fixed with pullrequest #1, pull request#2, PR 3, pr4',
             """fixed with <a class="issue-tracker-link" href="http://foo/repo_name/issue/1">PR#1</a>, """
             """<a class="issue-tracker-link" href="http://foo/repo_name/issue/2">PR#2</a>, """
             """<a class="issue-tracker-link" href="http://foo/repo_name/issue/3">PR#3</a>, """
             """<a class="issue-tracker-link" href="http://foo/repo_name/issue/4">PR#4</a>"""),
-        (r'#(\d+)', 'http://foo/{repo}/issue/{id}', 'PR',
+        (r'#(\d+)', 'http://foo/{repo}/issue/\\1', 'PR\\1',
             'interesting issue #123',
             """interesting issue <a class="issue-tracker-link" href="http://foo/repo_name/issue/123">PR123</a>"""),
-        (r'BUG\d{5}', 'https://bar/{repo}/{id}', 'BUG',
-            'silly me, I did not parenthesize the {id}, BUG12345.',
-            """silly me, I did not parenthesize the {id}, <a class="issue-tracker-link" href="https://bar/repo_name/">BUG</a>."""),
-        (r'BUG(\d{5})', 'https://bar/{repo}/', 'BUG',
-            'silly me, the URL does not contain {id}, BUG12345.',
-            """silly me, the URL does not contain {id}, <a class="issue-tracker-link" href="https://bar/repo_name/">BUG12345</a>."""),
-        (r'(PR-\d+)', 'http://foo/{repo}/issue/{id}', '',
+        (r'BUG\d{5}', 'https://bar/{repo}/\\1', '\\1',
+            'silly me, I did not parenthesize the id, BUG12345.',
+            """silly me, I did not parenthesize the id, <a class="issue-tracker-link" href="https://bar/repo_name/\\1">BUG12345</a>."""),
+        (r'BUG(\d{5})', 'https://bar/{repo}/', 'BUG\\1',
+            'silly me, the URL does not contain id, BUG12345.',
+            """silly me, the URL does not contain id, <a class="issue-tracker-link" href="https://bar/repo_name/">BUG12345</a>."""),
+        (r'(PR-\d+)', 'http://foo/{repo}/issue/\\1', '',
             'interesting issue #123, err PR-56',
             """interesting issue #123, err <a class="issue-tracker-link" href="http://foo/repo_name/issue/PR-56">PR-56</a>"""),
-        (r'#(\d+)', 'http://foo/{repo}/issue/{id}', '#',
+        (r'#(\d+)', 'http://foo/{repo}/issue/\\1', '#\\1',
             "some 'standard' text with apostrophes",
             """some &#39;standard&#39; text with apostrophes"""),
-        (r'#(\d+)', 'http://foo/{repo}/issue/{id}', '#',
+        (r'#(\d+)', 'http://foo/{repo}/issue/\\1', '#\\1',
             "some 'standard' issue #123",
             """some &#39;standard&#39; issue <a class="issue-tracker-link" href="http://foo/repo_name/issue/123">#123</a>"""),
-        (r'#(\d+)', 'http://foo/{repo}/issue/{id}', '#',
+        (r'#(\d+)', 'http://foo/{repo}/issue/\\1', '#\\1',
             'an issue   #123       with extra whitespace',
             """an issue   <a class="issue-tracker-link" href="http://foo/repo_name/issue/123">#123</a>       with extra whitespace"""),
-        # Note: whitespace is squashed
-        (r'(?:\s*#)(\d+)', 'http://foo/{repo}/issue/{id}', '#',
+        (r'(?:\s*#)(\d+)', 'http://foo/{repo}/issue/\\1', '#\\1',
             'an issue   #123       with extra whitespace',
-            """an issue <a class="issue-tracker-link" href="http://foo/repo_name/issue/123">#123</a>       with extra whitespace"""),
+            """an issue<a class="issue-tracker-link" href="http://foo/repo_name/issue/123">#123</a>       with extra whitespace"""),
         # invalid issue pattern
         (r'(PR\d+', 'http://foo/{repo}/issue/{id}', '',
             'PR135',
             """PR135"""),
+        # other character than #
+        (r'(?:^|(?<=\s))\$(\d+)', 'http://foo/{repo}/issue/\\1', '',
+            'empty issue_sub $123 and issue$456',
+            """empty issue_sub <a class="issue-tracker-link" href="http://foo/repo_name/issue/123">$123</a> and """
+            """issue$456"""),
+        # named groups
+        (r'(PR|pullrequest|pull request) ?(?P<sitecode>BRU|CPH|BER)-(?P<id>\d+)', 'http://foo/\g<sitecode>/pullrequest/\g<id>/', 'PR-\g<sitecode>-\g<id>',
+            'pullrequest CPH-789 is similar to PRBRU-747',
+            """<a class="issue-tracker-link" href="http://foo/CPH/pullrequest/789/">PR-CPH-789</a> is similar to """
+            """<a class="issue-tracker-link" href="http://foo/BRU/pullrequest/747/">PR-BRU-747</a>"""),
     ])
-    def test_urlify_issues(self, issue_pat, issue_server, issue_prefix, sample, expected):
+    def test_urlify_issues(self, issue_pat, issue_server, issue_sub, sample, expected):
         from kallithea.lib.helpers import urlify_text
         config_stub = {
             'sqlalchemy.url': 'foo',
             'issue_pat': issue_pat,
             'issue_server_link': issue_server,
-            'issue_prefix': issue_prefix,
+            'issue_sub': issue_sub,
         }
         # force recreation of lazy function
         with mock.patch('kallithea.lib.helpers._urlify_issues_f', None):
@@ -496,7 +503,7 @@ class TestLibs(TestController):
         ('pull request7 #', '<a class="issue-tracker-link" href="http://pr/repo_name/pr/7">PR#7</a> #'),
         ('look PR9 and pr #11', 'look <a class="issue-tracker-link" href="http://pr/repo_name/pr/9">PR#9</a> and <a class="issue-tracker-link" href="http://pr/repo_name/pr/11">PR#11</a>'),
         ('pullrequest#10 solves issue 9', '<a class="issue-tracker-link" href="http://pr/repo_name/pr/10">PR#10</a> solves <a class="issue-tracker-link" href="http://bug/repo_name/bug/9">bug#9</a>'),
-        ('issue FAIL67', 'issue <a class="issue-tracker-link" href="http://fail/repo_name/67">67</a>'),
+        ('issue FAIL67', 'issue <a class="issue-tracker-link" href="http://fail/repo_name/67">FAIL67</a>'),
         ('issue FAILMORE89', 'issue FAILMORE89'), # no match because absent prefix
     ])
     def test_urlify_issues_multiple_issue_patterns(self, sample, expected):
@@ -504,19 +511,19 @@ class TestLibs(TestController):
         config_stub = {
             'sqlalchemy.url': 'foo',
             'issue_pat': 'X(\d+)',
-            'issue_server_link': 'http://main/{repo}/main/{id}/',
-            'issue_prefix': '#',
+            'issue_server_link': 'http://main/{repo}/main/\\1/',
+            'issue_sub': '#\\1',
             'issue_pat_pr': '(?:pullrequest|pull request|PR|pr) ?#?(\d+)',
-            'issue_server_link_pr': 'http://pr/{repo}/pr/{id}',
-            'issue_prefix_pr': 'PR#',
+            'issue_server_link_pr': 'http://pr/{repo}/pr/\\1',
+            'issue_sub_pr': 'PR#\\1',
             'issue_pat_bug': '(?:BUG|bug|issue) ?#?(\d+)',
-            'issue_server_link_bug': 'http://bug/{repo}/bug/{id}',
-            'issue_prefix_bug': 'bug#',
+            'issue_server_link_bug': 'http://bug/{repo}/bug/\\1',
+            'issue_sub_bug': 'bug#\\1',
             'issue_pat_empty_prefix': 'FAIL(\d+)',
-            'issue_server_link_empty_prefix': 'http://fail/{repo}/{id}',
-            'issue_prefix_empty_prefix': '',
+            'issue_server_link_empty_prefix': 'http://fail/{repo}/\\1',
+            'issue_sub_empty_prefix': '',
             'issue_pat_absent_prefix': 'FAILMORE(\d+)',
-            'issue_server_link_absent_prefix': 'http://failmore/{repo}/{id}',
+            'issue_server_link_absent_prefix': 'http://failmore/{repo}/\\1',
         }
         # force recreation of lazy function
         with mock.patch('kallithea.lib.helpers._urlify_issues_f', None):
