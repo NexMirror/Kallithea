@@ -19,8 +19,8 @@ ${h.form(url('admin_permissions'), method='post')}
                             ${_('Apply to all existing repositories')}
                         </span>
                     </label>
+                    <span class="help-block">${_('Permissions for the Default user on new repositories.')}</span>
                 </div>
-                <div class="help-block">${_('Permissions for the Default user on new repositories.')}</div>
             </div>
             <div class="form-group">
                 <label class="control-label" for="default_group_perm">${_('Repository group')}:</label>
@@ -32,8 +32,8 @@ ${h.form(url('admin_permissions'), method='post')}
                             ${_('Apply to all existing repository groups')}
                         </span>
                     </label>
+                    <span class="help-block">${_('Permissions for the Default user on new repository groups.')}</span>
                 </div>
-                <div class="help-block">${_('Permissions for the Default user on new repository groups.')}</div>
             </div>
             <div class="form-group">
                 <label class="control-label" for="default_user_group_perm">${_('User group')}:</label>
@@ -45,8 +45,8 @@ ${h.form(url('admin_permissions'), method='post')}
                             ${_('Apply to all existing user groups')}
                         </span>
                     </label>
+                    <span class="help-block">${_('Permissions for the Default user on new user groups.')}</span>
                 </div>
-                <div class="help-block">${_('Permissions for the Default user on new user groups.')}</div>
             </div>
             <div class="form-group">
                 <label class="control-label" for="default_repo_create">${_('Top level repository creation')}:</label>
