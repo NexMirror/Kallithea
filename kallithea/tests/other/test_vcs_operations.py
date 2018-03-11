@@ -149,7 +149,6 @@ def set_anonymous_access(enable=True):
     user = User.get_default_user()
     user.active = enable
     Session().commit()
-    print '\tanonymous access is now:', enable
     if enable != User.get_default_user().active:
         raise Exception('Cannot set anonymous access')
 
