@@ -112,8 +112,10 @@ def expand(template, mako_variable_values, settings):
                 key, value = m.groups()
                 line = m.group(0)
                 if key in section_settings:
-                    # keep old entry as example - comments might refer to it
-                    line = '#%s\n%s = %s' % (line, key, section_settings.pop(key))
+                    new_line = '%s = %s' % (key, section_settings.pop(key))
+                    if new_line != line:
+                        # keep old entry as example - comments might refer to it
+                        line = '#%s\n%s' % (line, new_line)
                 return line.rstrip()
 
             # process lines that not are comments or empty and look like name=value
