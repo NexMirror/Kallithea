@@ -3,9 +3,10 @@ ${h.form(url('admin_permissions'), method='post')}
             <div class="form-group">
                 <label class="control-label" for="anonymous">${_('Anonymous access')}:</label>
                 <div class="form-inline">
-                    <div class="checkbox">
+                    <label>
                         ${h.checkbox('anonymous',True)}
-                    </div>
+                        <span>${_('Allow anonymous access')}</span>
+                    </label>
                     <span class="help-block">${h.literal(_('Allow access to Kallithea without needing to log in. Anonymous users use %s user permissions.' % (h.link_to('*default*',h.url('admin_permissions_perms')))))}</span>
                 </div>
             </div>
