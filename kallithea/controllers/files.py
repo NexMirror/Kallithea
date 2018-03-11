@@ -165,7 +165,9 @@ class FilesController(BaseRepoController):
         try:
             c.file = c.changeset.get_node(f_path)
 
-            if c.file.is_file():
+            if c.file.is_submodule():
+                raise HTTPFound(location=c.file.url)
+            elif c.file.is_file():
                 c.load_full_history = False
                 # determine if we're on branch head
                 _branches = c.db_repo_scm_instance.branches

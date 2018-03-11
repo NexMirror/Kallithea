@@ -695,4 +695,5 @@ class TestVCSOperations(TestController):
                                     repo_name=fork_name,
                                     revision='tip',
                                     f_path='/testsubmodule'),
-                                status=500) # BUG
+                                status=302)
+        assert response.location == clone_url
