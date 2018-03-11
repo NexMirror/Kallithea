@@ -690,3 +690,10 @@ class TestVCSOperations(TestController):
                                     f_path='/'))
         # BUG: the link to testsubmodule doesn't work - it should probably point at the submodule URL
         response.mustcontain('<a class="submodule-dir ypjax-link" href="testsubmodule"><i class="icon-file-submodule"></i><span>testsubmodule @ ')
+
+        # check that following a submodule link actually works - and redirects
+        response = self.app.get(url(controller='files', action='index',
+                                    repo_name=fork_name,
+                                    revision='tip',
+                                    f_path='/testsubmodule'),
+                                status=500) # BUG
