@@ -252,34 +252,30 @@ class TestVCSOperations(TestController):
         stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
         assert 'not found' in stderr
 
-    def test_push_new_file_hg(self, webserver):
+    def test_push_new_file_hg(self, webserver, testfork):
         dest_dir = _get_tmp_dir()
         clone_url = webserver.repo_url(HG_REPO)
         stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, dest_dir)
 
-        fork_name = u'%s_fork%s' % (HG_REPO, _RandomNameSequence().next())
-        fixture.create_fork(HG_REPO, fork_name)
-        clone_url = webserver.repo_url(fork_name)
+        clone_url = webserver.repo_url(testfork['hg'])
         stdout, stderr = _add_files_and_push(webserver, 'hg', dest_dir, clone_url=clone_url)
 
         assert 'pushing to' in stdout
         assert 'Repository size' in stdout
         assert 'Last revision is now' in stdout
 
-    def test_push_new_file_git(self, webserver):
+    def test_push_new_file_git(self, webserver, testfork):
         dest_dir = _get_tmp_dir()
         clone_url = webserver.repo_url(GIT_REPO)
         stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, dest_dir)
 
         # commit some stuff into this repo
-        fork_name = u'%s_fork%s' % (GIT_REPO, _RandomNameSequence().next())
-        fixture.create_fork(GIT_REPO, fork_name)
-        clone_url = webserver.repo_url(fork_name)
+        clone_url = webserver.repo_url(testfork['git'])
         stdout, stderr = _add_files_and_push(webserver, 'git', dest_dir, clone_url=clone_url)
         print [(x.repo_full_path,x.repo_path) for x in Repository.query()] # TODO: what is this for
         _check_proper_git_push(stdout, stderr)
 
-    def test_push_invalidates_cache_hg(self, webserver):
+    def test_push_invalidates_cache_hg(self, webserver, testfork):
         key = CacheInvalidation.query().filter(CacheInvalidation.cache_key
                                                == HG_REPO).scalar()
         if not key:
@@ -290,19 +286,16 @@ class TestVCSOperations(TestController):
         Session().commit()
 
         dest_dir = _get_tmp_dir()
-        clone_url = webserver.repo_url(HG_REPO)
+        clone_url = webserver.repo_url(testfork['hg'])
         stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, dest_dir)
 
-        fork_name = u'%s_fork%s' % (HG_REPO, _RandomNameSequence().next())
-        fixture.create_fork(HG_REPO, fork_name)
-        clone_url = webserver.repo_url(fork_name)
         stdout, stderr = _add_files_and_push(webserver, 'hg', dest_dir, files_no=1, clone_url=clone_url)
 
         key = CacheInvalidation.query().filter(CacheInvalidation.cache_key
-                                               == fork_name).all()
+                                               == testfork['hg']).all()
         assert key == []
 
-    def test_push_invalidates_cache_git(self, webserver):
+    def test_push_invalidates_cache_git(self, webserver, testfork):
         key = CacheInvalidation.query().filter(CacheInvalidation.cache_key
                                                == GIT_REPO).scalar()
         if not key:
@@ -313,18 +306,15 @@ class TestVCSOperations(TestController):
         Session().commit()
 
         dest_dir = _get_tmp_dir()
-        clone_url = webserver.repo_url(GIT_REPO)
+        clone_url = webserver.repo_url(testfork['git'])
         stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, dest_dir)
 
         # commit some stuff into this repo
-        fork_name = u'%s_fork%s' % (GIT_REPO, _RandomNameSequence().next())
-        fixture.create_fork(GIT_REPO, fork_name)
-        clone_url = webserver.repo_url(fork_name)
         stdout, stderr = _add_files_and_push(webserver, 'git', dest_dir, files_no=1, clone_url=clone_url)
         _check_proper_git_push(stdout, stderr)
 
         key = CacheInvalidation.query().filter(CacheInvalidation.cache_key
-                                               == fork_name).all()
+                                               == testfork['git']).all()
         assert key == []
 
     def test_push_wrong_credentials_hg(self, webserver):
@@ -494,56 +484,52 @@ class TestVCSOperations(TestController):
         #msg = "405 Method Not Allowed"
         #assert msg in stderr
 
-    def test_push_unlocks_repository_hg(self, webserver):
+    def test_push_unlocks_repository_hg(self, webserver, testfork):
         # enable locking
-        fork_name = u'%s_fork%s' % (HG_REPO, _RandomNameSequence().next())
-        fixture.create_fork(HG_REPO, fork_name)
-        r = Repository.get_by_repo_name(fork_name)
+        r = Repository.get_by_repo_name(testfork['hg'])
         r.enable_locking = True
         Session().commit()
         # clone some temp
         dest_dir = _get_tmp_dir()
-        clone_url = webserver.repo_url(fork_name)
+        clone_url = webserver.repo_url(testfork['hg'])
         stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, dest_dir)
 
         # check for lock repo after clone
-        r = Repository.get_by_repo_name(fork_name)
+        r = Repository.get_by_repo_name(testfork['hg'])
         uid = User.get_by_username(TEST_USER_ADMIN_LOGIN).user_id
         assert r.locked[0] == uid
 
         # push is ok and repo is now unlocked
         stdout, stderr = _add_files_and_push(webserver, 'hg', dest_dir, clone_url=clone_url)
-        assert str('remote: Released lock on repo `%s`' % fork_name) in stdout
+        assert str('remote: Released lock on repo `%s`' % testfork['hg']) in stdout
         # we need to cleanup the Session Here !
         Session.remove()
-        r = Repository.get_by_repo_name(fork_name)
+        r = Repository.get_by_repo_name(testfork['hg'])
         assert r.locked == [None, None]
 
     # TODO: fix me ! somehow during tests hooks don't get called on Git
-    def test_push_unlocks_repository_git(self, webserver):
+    def test_push_unlocks_repository_git(self, webserver, testfork):
         # enable locking
-        fork_name = u'%s_fork%s' % (GIT_REPO, _RandomNameSequence().next())
-        fixture.create_fork(GIT_REPO, fork_name)
-        r = Repository.get_by_repo_name(fork_name)
+        r = Repository.get_by_repo_name(testfork['git'])
         r.enable_locking = True
         Session().commit()
         # clone some temp
         dest_dir = _get_tmp_dir()
-        clone_url = webserver.repo_url(fork_name)
+        clone_url = webserver.repo_url(testfork['git'])
         stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, dest_dir)
 
         # check for lock repo after clone
-        r = Repository.get_by_repo_name(fork_name)
+        r = Repository.get_by_repo_name(testfork['git'])
         assert r.locked[0] == User.get_by_username(TEST_USER_ADMIN_LOGIN).user_id
 
         # push is ok and repo is now unlocked
         stdout, stderr = _add_files_and_push(webserver, 'git', dest_dir, clone_url=clone_url)
         _check_proper_git_push(stdout, stderr)
 
-        assert ('remote: Released lock on repo `%s`' % fork_name) in stderr
+        assert ('remote: Released lock on repo `%s`' % testfork['git']) in stderr
         # we need to cleanup the Session Here !
         Session.remove()
-        r = Repository.get_by_repo_name(fork_name)
+        r = Repository.get_by_repo_name(testfork['git'])
         assert r.locked == [None, None]
 
     def test_ip_restriction_hg(self, webserver):
@@ -667,14 +653,11 @@ class TestVCSOperations(TestController):
         assert stdout == ''
         assert stderr == ''
 
-    def test_add_submodule(self, webserver):
+    def test_add_submodule(self, webserver, testfork):
         dest_dir = _get_tmp_dir()
         clone_url = webserver.repo_url(GIT_REPO)
 
-        # GIT_REPO should be untouched for other tests so create a fork
-        fork_name = '%s_fork%s' % (GIT_REPO, _RandomNameSequence().next())
-        fixture.create_fork(GIT_REPO, fork_name)
-        fork_url = webserver.repo_url(fork_name)
+        fork_url = webserver.repo_url(testfork['git'])
 
         # add submodule
         stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', fork_url, dest_dir)
@@ -685,14 +668,14 @@ class TestVCSOperations(TestController):
         # check for testsubmodule link in files page
         self.log_user()
         response = self.app.get(url(controller='files', action='index',
-                                    repo_name=fork_name,
+                                    repo_name=testfork['git'],
                                     revision='tip',
                                     f_path='/'))
         response.mustcontain('<a class="submodule-dir" href="%s" target="_blank"><i class="icon-file-submodule"></i><span>testsubmodule @ ' % clone_url)
 
         # check that following a submodule link actually works - and redirects
         response = self.app.get(url(controller='files', action='index',
-                                    repo_name=fork_name,
+                                    repo_name=testfork['git'],
                                     revision='tip',
                                     f_path='/testsubmodule'),
                                 status=302)
