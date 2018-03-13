@@ -49,17 +49,51 @@ HOST = '127.0.0.1:4999'  # test host
 fixture = Fixture()
 
 
+# Parameterize different kinds of VCS testing - both the kind of VCS and the
+# access method (HTTP/SSH)
+
+class HttpVcsTest(object):
+    @staticmethod
+    def repo_url_param(webserver, repo_name, **kwargs):
+        return webserver.repo_url(repo_name, **kwargs)
+
+class HgVcsTest(object):
+    repo_type = 'hg'
+    repo_name = HG_REPO
+
+class GitVcsTest(object):
+    repo_type = 'git'
+    repo_name = GIT_REPO
+
+class HgHttpVcsTest(HgVcsTest, HttpVcsTest):
+    pass
+
+class GitHttpVcsTest(GitVcsTest, HttpVcsTest):
+    pass
+
+parametrize_vcs_test = parametrize('vt', [
+    HgHttpVcsTest,
+    GitHttpVcsTest,
+])
+parametrize_vcs_test_hg = parametrize('vt', [
+    HgHttpVcsTest,
+])
+parametrize_vcs_test_http = parametrize('vt', [
+    HgHttpVcsTest,
+    GitHttpVcsTest,
+])
+
 class Command(object):
 
     def __init__(self, cwd):
         self.cwd = cwd
 
-    def execute(self, cmd, *args, **environ):
+    def execute(self, *args, **environ):
         """
-        Runs command on the system with given ``args``.
+        Runs command on the system with given ``args`` using simple space
+        join without safe quoting.
         """
-
-        command = cmd + ' ' + ' '.join(args)
+        command = ' '.join(args)
         ignoreReturnCode = environ.pop('ignoreReturnCode', False)
         if DEBUG:
             print '*** CMD %s ***' % command
@@ -95,7 +129,7 @@ def _add_files(vcs, dest_dir, files_no=3):
     """
     added_file = '%ssetup.py' % _RandomNameSequence().next()
     open(os.path.join(dest_dir, added_file), 'a').close()
-    Command(dest_dir).execute('%s add %s' % (vcs, added_file))
+    Command(dest_dir).execute(vcs, 'add', added_file)
 
     email = 'me@example.com'
     if os.name == 'nt':
@@ -195,33 +229,29 @@ class TestVCSOperations(TestController):
         fixture.create_fork(HG_REPO, hg_fork_name)
         return {'git': git_fork_name, 'hg': hg_fork_name}
 
-    def test_clone_hg_repo_by_admin(self, webserver):
-        clone_url = webserver.repo_url(HG_REPO)
-        stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, _get_tmp_dir())
+    @parametrize_vcs_test
+    def test_clone_repo_by_admin(self, webserver, vt):
+        clone_url = webserver.repo_url(vt.repo_name)
+        stdout, stderr = Command(TESTS_TMP_PATH).execute(vt.repo_type, 'clone', clone_url, _get_tmp_dir())
 
-        assert 'requesting all changes' in stdout
-        assert 'adding changesets' in stdout
-        assert 'adding manifests' in stdout
-        assert 'adding file changes' in stdout
+        if vt.repo_type == 'git':
+            assert 'Cloning into' in stdout + stderr
+            assert stderr == '' or stdout == ''
+        elif vt.repo_type == 'hg':
+            assert 'requesting all changes' in stdout
+            assert 'adding changesets' in stdout
+            assert 'adding manifests' in stdout
+            assert 'adding file changes' in stdout
+            assert stderr == ''
 
-        assert stderr == ''
-
-    def test_clone_git_repo_by_admin(self, webserver):
-        clone_url = webserver.repo_url(GIT_REPO)
-        stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, _get_tmp_dir())
-
-        assert 'Cloning into' in stdout + stderr
-        assert stderr == '' or stdout == ''
-
-    def test_clone_wrong_credentials_hg(self, webserver):
-        clone_url = webserver.repo_url(HG_REPO, password='bad!')
-        stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
-        assert 'abort: authorization failed' in stderr
-
-    def test_clone_wrong_credentials_git(self, webserver):
-        clone_url = webserver.repo_url(GIT_REPO, password='bad!')
-        stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
-        assert 'fatal: Authentication failed' in stderr
+    @parametrize_vcs_test_http
+    def test_clone_wrong_credentials(self, webserver, vt):
+        clone_url = webserver.repo_url(vt.repo_name, password='bad!')
+        stdout, stderr = Command(TESTS_TMP_PATH).execute(vt.repo_type, 'clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
+        if vt.repo_type == 'git':
+            assert 'fatal: Authentication failed' in stderr
+        elif vt.repo_type == 'hg':
+            assert 'abort: authorization failed' in stderr
 
     def test_clone_git_dir_as_hg(self, webserver):
         clone_url = webserver.repo_url(GIT_REPO)
@@ -233,16 +263,16 @@ class TestVCSOperations(TestController):
         stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
         assert 'not found' in stderr
 
-    def test_clone_non_existing_path_hg(self, webserver):
+    @parametrize_vcs_test
+    def test_clone_non_existing_path(self, webserver, vt):
         clone_url = webserver.repo_url('trololo')
-        stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
-        assert 'HTTP Error 404: Not Found' in stderr
+        stdout, stderr = Command(TESTS_TMP_PATH).execute(vt.repo_type, 'clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
+        if vt.repo_type == 'git':
+            assert 'not found' in stderr
+        elif vt.repo_type == 'hg':
+            assert 'HTTP Error 404: Not Found' in stderr
 
-    def test_clone_non_existing_path_git(self, webserver):
-        clone_url = webserver.repo_url('trololo')
-        stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
-        assert 'not found' in stderr
-
+    # TODO: use @parametrize_vcs_test and run on hg
     def test_push_new_repo_git(self, webserver):
         # Clear the log so we know what is added
         UserLog.query().delete()
@@ -294,174 +324,106 @@ class TestVCSOperations(TestController):
         assert uls[3].action.startswith(u'push:')
         assert uls[3].action.count(',') == 2 # expect 3 commits
 
-    def test_push_new_file_hg(self, webserver, testfork):
+    @parametrize_vcs_test
+    def test_push_new_file(self, webserver, testfork, vt):
         dest_dir = _get_tmp_dir()
-        clone_url = webserver.repo_url(HG_REPO)
-        stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, dest_dir)
+        clone_url = webserver.repo_url(vt.repo_name)
+        stdout, stderr = Command(TESTS_TMP_PATH).execute(vt.repo_type, 'clone', clone_url, dest_dir)
 
-        clone_url = webserver.repo_url(testfork['hg'])
-        stdout, stderr = _add_files_and_push(webserver, 'hg', dest_dir, clone_url=clone_url)
+        clone_url = webserver.repo_url(testfork[vt.repo_type])
+        stdout, stderr = _add_files_and_push(webserver, vt.repo_type, dest_dir, clone_url=clone_url)
 
-        assert 'pushing to' in stdout
-        assert 'Repository size' in stdout
-        assert 'Last revision is now' in stdout
+        if vt.repo_type == 'git':
+            print [(x.repo_full_path, x.repo_path) for x in Repository.query()]  # TODO: what is this for
+            _check_proper_git_push(stdout, stderr)
+        elif vt.repo_type == 'hg':
+            assert 'pushing to' in stdout
+            assert 'Repository size' in stdout
+            assert 'Last revision is now' in stdout
 
-    def test_push_new_file_git(self, webserver, testfork):
-        dest_dir = _get_tmp_dir()
-        clone_url = webserver.repo_url(GIT_REPO)
-        stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, dest_dir)
-
-        # commit some stuff into this repo
-        clone_url = webserver.repo_url(testfork['git'])
-        stdout, stderr = _add_files_and_push(webserver, 'git', dest_dir, clone_url=clone_url)
-        print [(x.repo_full_path,x.repo_path) for x in Repository.query()] # TODO: what is this for
-        _check_proper_git_push(stdout, stderr)
-
-    def test_push_invalidates_cache_hg(self, webserver, testfork):
+    @parametrize_vcs_test
+    def test_push_invalidates_cache(self, webserver, testfork, vt):
         key = CacheInvalidation.query().filter(CacheInvalidation.cache_key
-                                               == HG_REPO).scalar()
+                                               == vt.repo_name).scalar()
         if not key:
-            key = CacheInvalidation(HG_REPO, HG_REPO)
+            key = CacheInvalidation(vt.repo_name, vt.repo_name)
             Session().add(key)
 
         key.cache_active = True
         Session().commit()
 
         dest_dir = _get_tmp_dir()
-        clone_url = webserver.repo_url(testfork['hg'])
-        stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, dest_dir)
+        clone_url = webserver.repo_url(testfork[vt.repo_type])
+        stdout, stderr = Command(TESTS_TMP_PATH).execute(vt.repo_type, 'clone', clone_url, dest_dir)
 
-        stdout, stderr = _add_files_and_push(webserver, 'hg', dest_dir, files_no=1, clone_url=clone_url)
+        stdout, stderr = _add_files_and_push(webserver, vt.repo_type, dest_dir, files_no=1, clone_url=clone_url)
 
+        if vt.repo_type == 'git':
+            _check_proper_git_push(stdout, stderr)
         key = CacheInvalidation.query().filter(CacheInvalidation.cache_key
-                                               == testfork['hg']).all()
+                                               == testfork[vt.repo_type]).all()
         assert key == []
 
-    def test_push_invalidates_cache_git(self, webserver, testfork):
-        key = CacheInvalidation.query().filter(CacheInvalidation.cache_key
-                                               == GIT_REPO).scalar()
-        if not key:
-            key = CacheInvalidation(GIT_REPO, GIT_REPO)
-            Session().add(key)
-
-        key.cache_active = True
-        Session().commit()
-
+    @parametrize_vcs_test_http
+    def test_push_wrong_credentials(self, webserver, vt):
         dest_dir = _get_tmp_dir()
-        clone_url = webserver.repo_url(testfork['git'])
-        stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, dest_dir)
+        clone_url = webserver.repo_url(vt.repo_name)
+        stdout, stderr = Command(TESTS_TMP_PATH).execute(vt.repo_type, 'clone', clone_url, dest_dir)
 
-        # commit some stuff into this repo
-        stdout, stderr = _add_files_and_push(webserver, 'git', dest_dir, files_no=1, clone_url=clone_url)
-        _check_proper_git_push(stdout, stderr)
-
-        key = CacheInvalidation.query().filter(CacheInvalidation.cache_key
-                                               == testfork['git']).all()
-        assert key == []
-
-    def test_push_wrong_credentials_hg(self, webserver):
-        dest_dir = _get_tmp_dir()
-        clone_url = webserver.repo_url(HG_REPO)
-        stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, dest_dir)
-
-        stdout, stderr = _add_files_and_push(webserver, 'hg', dest_dir, username='bad',
+        stdout, stderr = _add_files_and_push(webserver, vt.repo_type, dest_dir, username='bad',
                                              password='name', ignoreReturnCode=True)
 
-        assert 'abort: authorization failed' in stderr
+        if vt.repo_type == 'git':
+            assert 'fatal: Authentication failed' in stderr
+        elif vt.repo_type == 'hg':
+            assert 'abort: authorization failed' in stderr
 
-    def test_push_wrong_credentials_git(self, webserver):
+    @parametrize_vcs_test
+    def test_push_with_readonly_credentials(self, webserver, vt):
         dest_dir = _get_tmp_dir()
-        clone_url = webserver.repo_url(GIT_REPO)
-        stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, dest_dir)
+        clone_url = webserver.repo_url(vt.repo_name, username=TEST_USER_REGULAR_LOGIN, password=TEST_USER_REGULAR_PASS)
+        stdout, stderr = Command(TESTS_TMP_PATH).execute(vt.repo_type, 'clone', clone_url, dest_dir)
 
-        stdout, stderr = _add_files_and_push(webserver, 'git', dest_dir, username='bad',
-                                             password='name', ignoreReturnCode=True)
-
-        assert 'fatal: Authentication failed' in stderr
-
-    def test_push_with_readonly_credentials_hg(self, webserver):
-        dest_dir = _get_tmp_dir()
-        clone_url = webserver.repo_url(HG_REPO, username=TEST_USER_REGULAR_LOGIN, password=TEST_USER_REGULAR_PASS)
-        stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, dest_dir)
-
-        stdout, stderr = _add_files_and_push(webserver, 'hg', dest_dir, username=TEST_USER_REGULAR_LOGIN,
+        stdout, stderr = _add_files_and_push(webserver, vt.repo_type, dest_dir, username=TEST_USER_REGULAR_LOGIN,
                                              password=TEST_USER_REGULAR_PASS, ignoreReturnCode=True)
 
-        assert 'abort: HTTP Error 403: Forbidden' in stderr
-
-    def test_push_with_readonly_credentials_git(self, webserver):
-        dest_dir = _get_tmp_dir()
-        clone_url = webserver.repo_url(GIT_REPO, username=TEST_USER_REGULAR_LOGIN, password=TEST_USER_REGULAR_PASS)
-        stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, dest_dir)
-
-        stdout, stderr = _add_files_and_push(webserver, 'git', dest_dir, username=TEST_USER_REGULAR_LOGIN,
-                                             password=TEST_USER_REGULAR_PASS, ignoreReturnCode=True)
-
-        assert 'The requested URL returned error: 403' in stderr
-
-    def test_push_back_to_wrong_url_hg(self, webserver):
-        dest_dir = _get_tmp_dir()
-        clone_url = webserver.repo_url(HG_REPO)
-        stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, dest_dir)
-
-        stdout, stderr = _add_files_and_push(
-            webserver, 'hg', dest_dir, clone_url='http://%s:%s/tmp' % (
-                webserver.server_address[0], webserver.server_address[1]),
-            ignoreReturnCode=True)
-
-        assert 'HTTP Error 404: Not Found' in stderr
-
-    def test_push_back_to_wrong_url_git(self, webserver):
-        dest_dir = _get_tmp_dir()
-        clone_url = webserver.repo_url(GIT_REPO)
-        stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, dest_dir)
-
-        stdout, stderr = _add_files_and_push(
-            webserver, 'git', dest_dir, clone_url='http://%s:%s/tmp' % (
-                webserver.server_address[0], webserver.server_address[1]),
-            ignoreReturnCode=True)
-
-        assert 'not found' in stderr
-
-    def test_ip_restriction_hg(self, webserver):
-        user_model = UserModel()
-        try:
-            user_model.add_extra_ip(TEST_USER_ADMIN_LOGIN, '10.10.10.10/32')
-            Session().commit()
-            # IP permissions are cached, need to wait for the cache in the server process to expire
-            time.sleep(1.5)
-            clone_url = webserver.repo_url(HG_REPO)
-            stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
+        if vt.repo_type == 'git':
+            assert 'The requested URL returned error: 403' in stderr
+        elif vt.repo_type == 'hg':
             assert 'abort: HTTP Error 403: Forbidden' in stderr
-        finally:
-            # release IP restrictions
-            for ip in UserIpMap.query():
-                UserIpMap.delete(ip.ip_id)
-            Session().commit()
-            # IP permissions are cached, need to wait for the cache in the server process to expire
-            time.sleep(1.5)
 
-        clone_url = webserver.repo_url(HG_REPO)
-        stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, _get_tmp_dir())
+    @parametrize_vcs_test
+    def test_push_back_to_wrong_url(self, webserver, vt):
+        dest_dir = _get_tmp_dir()
+        clone_url = webserver.repo_url(vt.repo_name)
+        stdout, stderr = Command(TESTS_TMP_PATH).execute(vt.repo_type, 'clone', clone_url, dest_dir)
 
-        assert 'requesting all changes' in stdout
-        assert 'adding changesets' in stdout
-        assert 'adding manifests' in stdout
-        assert 'adding file changes' in stdout
+        stdout, stderr = _add_files_and_push(
+            webserver, vt.repo_type, dest_dir, clone_url='http://%s:%s/tmp' % (
+                webserver.server_address[0], webserver.server_address[1]),
+            ignoreReturnCode=True)
 
-        assert stderr == ''
+        if vt.repo_type == 'git':
+            assert 'not found' in stderr
+        elif vt.repo_type == 'hg':
+            assert 'HTTP Error 404: Not Found' in stderr
 
-    def test_ip_restriction_git(self, webserver):
+    @parametrize_vcs_test
+    def test_ip_restriction(self, webserver, vt):
         user_model = UserModel()
         try:
+            # Add IP constraint that excludes the test context:
             user_model.add_extra_ip(TEST_USER_ADMIN_LOGIN, '10.10.10.10/32')
             Session().commit()
             # IP permissions are cached, need to wait for the cache in the server process to expire
             time.sleep(1.5)
-            clone_url = webserver.repo_url(GIT_REPO)
-            stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
-            # The message apparently changed in Git 1.8.3, so match it loosely.
-            assert re.search(r'\b403\b', stderr)
+            clone_url = webserver.repo_url(vt.repo_name)
+            stdout, stderr = Command(TESTS_TMP_PATH).execute(vt.repo_type, 'clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
+            if vt.repo_type == 'git':
+                # The message apparently changed in Git 1.8.3, so match it loosely.
+                assert re.search(r'\b403\b', stderr)
+            elif vt.repo_type == 'hg':
+                assert 'abort: HTTP Error 403: Forbidden' in stderr
         finally:
             # release IP restrictions
             for ip in UserIpMap.query():
@@ -470,45 +432,46 @@ class TestVCSOperations(TestController):
             # IP permissions are cached, need to wait for the cache in the server process to expire
             time.sleep(1.5)
 
-        clone_url = webserver.repo_url(GIT_REPO)
-        stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, _get_tmp_dir())
+        clone_url = webserver.repo_url(vt.repo_name)
+        stdout, stderr = Command(TESTS_TMP_PATH).execute(vt.repo_type, 'clone', clone_url, _get_tmp_dir())
 
-        assert 'Cloning into' in stdout + stderr
-        assert stderr == '' or stdout == ''
+        if vt.repo_type == 'git':
+            assert 'Cloning into' in stdout + stderr
+            assert stderr == '' or stdout == ''
+        elif vt.repo_type == 'hg':
+            assert 'requesting all changes' in stdout
+            assert 'adding changesets' in stdout
+            assert 'adding manifests' in stdout
+            assert 'adding file changes' in stdout
 
-    @parametrize('repo_type, repo_name', [
-                #('git',      GIT_REPO), # git hooks doesn't work like hg hooks
-                ('hg',       HG_REPO),
-    ])
-    def test_custom_hooks_preoutgoing(self, testhook_cleanup, webserver, testfork, repo_type, repo_name):
+            assert stderr == ''
+
+    @parametrize_vcs_test_hg # git hooks doesn't work like hg hooks
+    def test_custom_hooks_preoutgoing(self, testhook_cleanup, webserver, testfork, vt):
         # set prechangegroup to failing hook (returns True)
         Ui.create_or_update_hook('preoutgoing.testhook', 'python:kallithea.tests.fixture.failing_test_hook')
         Session().commit()
         # clone repo
-        clone_url = webserver.repo_url(testfork[repo_type], username=TEST_USER_ADMIN_LOGIN, password=TEST_USER_ADMIN_PASS)
+        clone_url = webserver.repo_url(testfork[vt.repo_type], username=TEST_USER_ADMIN_LOGIN, password=TEST_USER_ADMIN_PASS)
         dest_dir = _get_tmp_dir()
         stdout, stderr = Command(TESTS_TMP_PATH) \
-            .execute('%s clone' % repo_type, clone_url, dest_dir, ignoreReturnCode=True)
-        if repo_type == 'hg':
+            .execute(vt.repo_type, 'clone', clone_url, dest_dir, ignoreReturnCode=True)
+        if vt.repo_type == 'hg':
             assert 'preoutgoing.testhook hook failed' in stdout
-        elif repo_type == 'git':
+        elif vt.repo_type == 'git':
             assert 'error: 406' in stderr
 
-    @parametrize('repo_type, repo_name', [
-                #('git',      GIT_REPO), # git hooks doesn't work like hg hooks
-                ('hg',       HG_REPO),
-    ])
-    def test_custom_hooks_prechangegroup(self, testhook_cleanup, webserver, testfork, repo_type, repo_name):
-
+    @parametrize_vcs_test_hg # git hooks doesn't work like hg hooks
+    def test_custom_hooks_prechangegroup(self, testhook_cleanup, webserver, testfork, vt):
         # set prechangegroup to failing hook (returns True)
         Ui.create_or_update_hook('prechangegroup.testhook', 'python:kallithea.tests.fixture.failing_test_hook')
         Session().commit()
         # clone repo
-        clone_url = webserver.repo_url(testfork[repo_type], username=TEST_USER_ADMIN_LOGIN, password=TEST_USER_ADMIN_PASS)
+        clone_url = webserver.repo_url(testfork[vt.repo_type], username=TEST_USER_ADMIN_LOGIN, password=TEST_USER_ADMIN_PASS)
         dest_dir = _get_tmp_dir()
-        stdout, stderr = Command(TESTS_TMP_PATH).execute('%s clone' % repo_type, clone_url, dest_dir)
+        stdout, stderr = Command(TESTS_TMP_PATH).execute(vt.repo_type, 'clone', clone_url, dest_dir)
 
-        stdout, stderr = _add_files_and_push(webserver, repo_type, dest_dir,
+        stdout, stderr = _add_files_and_push(webserver, vt.repo_type, dest_dir,
                                              username=TEST_USER_ADMIN_LOGIN,
                                              password=TEST_USER_ADMIN_PASS,
                                              ignoreReturnCode=True)
@@ -516,37 +479,37 @@ class TestVCSOperations(TestController):
         assert 'Traceback' not in stdout + stderr
         assert 'prechangegroup.testhook hook failed' in stdout + stderr
         # there are still outgoing changesets
-        stdout, stderr = _check_outgoing(repo_type, dest_dir, clone_url)
+        stdout, stderr = _check_outgoing(vt.repo_type, dest_dir, clone_url)
         assert stdout != ''
 
         # set prechangegroup hook to exception throwing method
         Ui.create_or_update_hook('prechangegroup.testhook', 'python:kallithea.tests.fixture.exception_test_hook')
         Session().commit()
         # re-try to push
-        stdout, stderr = Command(dest_dir).execute('%s push' % repo_type, clone_url, ignoreReturnCode=True)
-        if repo_type == 'hg':
+        stdout, stderr = Command(dest_dir).execute('%s push' % vt.repo_type, clone_url, ignoreReturnCode=True)
+        if vt.repo_type == 'hg':
             # like with 'hg serve...' 'HTTP Error 500: INTERNAL SERVER ERROR' should be returned
             assert 'HTTP Error 500: INTERNAL SERVER ERROR' in stderr
-        elif repo_type == 'git':
+        elif vt.repo_type == 'git':
             assert 'exception_test_hook threw an exception' in stderr
         # there are still outgoing changesets
-        stdout, stderr = _check_outgoing(repo_type, dest_dir, clone_url)
+        stdout, stderr = _check_outgoing(vt.repo_type, dest_dir, clone_url)
         assert stdout != ''
 
         # set prechangegroup hook to method that returns False
         Ui.create_or_update_hook('prechangegroup.testhook', 'python:kallithea.tests.fixture.passing_test_hook')
         Session().commit()
         # re-try to push
-        stdout, stderr = Command(dest_dir).execute('%s push' % repo_type, clone_url, ignoreReturnCode=True)
+        stdout, stderr = Command(dest_dir).execute('%s push' % vt.repo_type, clone_url, ignoreReturnCode=True)
         assert 'passing_test_hook succeeded' in stdout + stderr
         assert 'Traceback' not in stdout + stderr
         assert 'prechangegroup.testhook hook failed' not in stdout + stderr
         # no more outgoing changesets
-        stdout, stderr = _check_outgoing(repo_type, dest_dir, clone_url)
+        stdout, stderr = _check_outgoing(vt.repo_type, dest_dir, clone_url)
         assert stdout == ''
         assert stderr == ''
 
-    def test_add_submodule(self, webserver, testfork):
+    def test_add_submodule_git(self, webserver, testfork):
         dest_dir = _get_tmp_dir()
         clone_url = webserver.repo_url(GIT_REPO)
 
