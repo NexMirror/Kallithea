@@ -662,7 +662,7 @@ class TestVCSOperations(TestController):
         # add submodule
         stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', fork_url, dest_dir)
         stdout, stderr = Command(dest_dir).execute('git submodule add', clone_url, 'testsubmodule')
-        stdout, stderr = Command(dest_dir).execute('git commit -am "added testsubmodule pointing to', clone_url, '"')
+        stdout, stderr = Command(dest_dir).execute('git commit -am "added testsubmodule pointing to', clone_url, '"', EMAIL=TEST_USER_ADMIN_EMAIL)
         stdout, stderr = Command(dest_dir).execute('git push', fork_url, 'master')
 
         # check for testsubmodule link in files page
