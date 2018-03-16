@@ -18,7 +18,7 @@ class _BackendTestMixin(object):
     This is a backend independent test case class which should be created
     with ``type`` method.
 
-    It is required to set following attributes at subclass:
+    It is possible to set following attributes at subclass:
 
     - ``backend_alias``: alias of used backend (see ``vcs.BACKENDS``)
     - ``recreate_repo_per_test``: If set to ``False``, repo would NOT be created

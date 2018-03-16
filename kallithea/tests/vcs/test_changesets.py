@@ -53,7 +53,6 @@ class TestBaseChangeset(object):
 
 
 class _ChangesetsWithCommitsTestCaseixin(_BackendTestMixin):
-    recreate_repo_per_test = True
 
     @classmethod
     def _get_commits(cls):
