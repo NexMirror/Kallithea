@@ -1,6 +1,5 @@
 """
-Module providing backend independent mixin class. It requires that
-InMemoryChangeset class is working properly at backend class.
+Module providing backend independent mixin class.
 """
 import os
 import time
@@ -15,8 +14,7 @@ from kallithea.tests.vcs.conf import get_new_dir
 
 class _BackendTestMixin(object):
     """
-    This is a backend independent test case class which should be created
-    with ``type`` method.
+    This is a backend independent test case class
 
     It is possible to set following attributes at subclass:
 
