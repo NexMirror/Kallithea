@@ -20,8 +20,6 @@ class _BackendTestMixin(object):
     It is required to set following attributes at subclass:
 
     - ``backend_alias``: alias of used backend (see ``vcs.BACKENDS``)
-    - ``repo_path``: path to the repository which would be created for set of
-      tests
     - ``recreate_repo_per_test``: If set to ``False``, repo would NOT be created
       before every single test. Defaults to ``True``.
     """
@@ -63,8 +61,17 @@ class _BackendTestMixin(object):
     def setup_class(cls):
         Backend = cls.get_backend()
         cls.backend_class = Backend
-        cls.repo_path = get_new_dir(str(time.time()))
-        cls.repo = Backend(cls.repo_path, create=True)
+        cls.setup_repo(Backend)
+
+    @classmethod
+    def setup_empty_repo(cls, backend):
+        repo_path = get_new_dir(str(time.time()))
+        repo = backend(repo_path, create=True)
+        return repo
+
+    @classmethod
+    def setup_repo(cls, backend):
+        cls.repo = cls.setup_empty_repo(backend)
         cls.imc = cls.repo.in_memory_changeset
         cls.default_branch = cls.repo.DEFAULT_BRANCH_NAME
 
@@ -82,4 +89,4 @@ class _BackendTestMixin(object):
 
     def setup_method(self, method):
         if getattr(self, 'recreate_repo_per_test', False):
-            self.__class__.setup_class()
+            self.setup_repo(self.backend_class)
