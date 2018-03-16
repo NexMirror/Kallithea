@@ -5,6 +5,7 @@ InMemoryChangeset class is working properly at backend class.
 import os
 import time
 import datetime
+import pytest
 
 from kallithea.lib import vcs
 from kallithea.lib.vcs.nodes import FileNode
@@ -24,10 +25,6 @@ class _BackendTestMixin(object):
       before every single test. Defaults to ``True``.
     """
     recreate_repo_per_test = True
-
-    @classmethod
-    def get_backend(cls):
-        return vcs.get_backend(cls.backend_alias)
 
     @classmethod
     def _get_commits(cls):
@@ -58,8 +55,10 @@ class _BackendTestMixin(object):
         return commits
 
     @classmethod
-    def setup_class(cls):
-        Backend = cls.get_backend()
+    @pytest.fixture(autouse=True,
+                    scope='class')
+    def _configure_backend(cls, request):
+        Backend = vcs.get_backend(cls.backend_alias)
         cls.backend_class = Backend
         cls.setup_repo(Backend)
 
@@ -87,6 +86,7 @@ class _BackendTestMixin(object):
                                      author=unicode(commit['author']),
                                      date=commit['date'])
 
-    def setup_method(self, method):
+    @pytest.fixture(autouse=True)
+    def _possibly_recreate_repo(self):
         if getattr(self, 'recreate_repo_per_test', False):
             self.setup_repo(self.backend_class)
