@@ -20,36 +20,27 @@ from kallithea.lib.vcs.nodes import DirNode
 from kallithea.lib.vcs.nodes import FileNode
 from kallithea.lib.vcs.utils import safe_unicode
 
-from kallithea.tests.vcs.conf import get_new_dir
+from kallithea.tests.vcs.base import _BackendTestMixin
 
 
-class InMemoryChangesetTestMixin(object):
-    """
-    This is a backend independent test case class which should be created
-    with ``type`` method.
+class InMemoryChangesetTestMixin(_BackendTestMixin):
 
-    It is required to set following attributes at subclass:
+    recreate_repo_per_test = True
 
-    - ``backend_alias``: alias of used backend (see ``vcs.BACKENDS``)
-    - ``repo_path``: path to the repository which would be created for set of
-      tests
-    """
-
-    def get_backend(self):
-        return vcs.get_backend(self.backend_alias)
-
-    def setup_method(self):
-        Backend = self.get_backend()
-        self.repo_path = get_new_dir(str(time.time()))
-        self.repo = Backend(self.repo_path, create=True)
-        self.imc = self.repo.in_memory_changeset
-        self.nodes = [
+    @classmethod
+    def _get_commits(cls):
+        # Note: this is slightly different than the regular _get_commits methods
+        # as we don't actually return any commits. The creation of commits is
+        # handled in the tests themselves.
+        cls.nodes = [
             FileNode('foobar', content='Foo & bar'),
             FileNode('foobar2', content='Foo & bar, doubled!'),
             FileNode('foo bar with spaces', content=''),
             FileNode('foo/bar/baz', content='Inside'),
             FileNode('foo/bar/file.bin', content='\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00;\x00\x03\x00\xfe\xff\t\x00\x06\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x1a\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x18\x00\x00\x00\x01\x00\x00\x00\xfe\xff\xff\xff\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff'),
         ]
+        commits = []
+        return commits
 
     def test_add(self):
         rev_count = len(self.repo.revisions)
@@ -333,9 +324,7 @@ class InMemoryChangesetTestMixin(object):
         assert len(self.repo.revisions) == N
 
         # Check commit number for recreated repo
-        backend = self.get_backend()
-        repo = backend(self.repo_path)
-        assert len(repo.revisions) == N
+        assert len(self.repo.revisions) == N
 
     def test_date_attr(self):
         node = FileNode('foobar.txt', content='Foobared!')
@@ -345,63 +334,6 @@ class InMemoryChangesetTestMixin(object):
             author=u'lb <lb@example.com>', date=date)
 
         assert commit.date == date
-
-
-class BackendBaseTestCase(object):
-    """
-    Base test class for tests which requires repository.
-    """
-    backend_alias = 'hg'
-    commits = [
-        {
-            'message': 'Initial commit',
-            'author': 'Joe Doe <joe.doe@example.com>',
-            'date': datetime.datetime(2010, 1, 1, 20),
-            'added': [
-                FileNode('foobar', content='Foobar'),
-                FileNode('foobar2', content='Foobar II'),
-                FileNode('foo/bar/baz', content='baz here!'),
-            ],
-        },
-    ]
-
-    def get_backend(self):
-        return vcs.get_backend(self.backend_alias)
-
-    def get_commits(self):
-        """
-        Returns list of commits which builds repository for each tests.
-        """
-        if hasattr(self, 'commits'):
-            return self.commits
-
-    def get_new_repo_path(self):
-        """
-        Returns newly created repository's directory.
-        """
-        key = '%s-%s' % (self.backend_alias, str(time.time()))
-        repo_path = get_new_dir(key)
-        return repo_path
-
-    def setup_method(self):
-        Backend = self.get_backend()
-        self.backend_class = Backend
-        self.repo_path = self.get_new_repo_path()
-        self.repo = Backend(self.repo_path, create=True)
-        self.imc = self.repo.in_memory_changeset
-
-        for commit in self.get_commits():
-            for node in commit.get('added', []):
-                self.imc.add(FileNode(node.path, content=node.content))
-            for node in commit.get('changed', []):
-                self.imc.change(FileNode(node.path, content=node.content))
-            for node in commit.get('removed', []):
-                self.imc.remove(FileNode(node.path))
-            self.imc.commit(message=unicode(commit['message']),
-                            author=unicode(commit['author']),
-                date=commit['date'])
-
-        self.tip = self.repo.get_changeset()
 
 
 class TestGitInMemoryChangeset(InMemoryChangesetTestMixin):
