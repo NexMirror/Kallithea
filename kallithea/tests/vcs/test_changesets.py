@@ -216,10 +216,7 @@ class _ChangesetsTestCaseMixin(_BackendTestMixin):
         assert len(changesets) == 2
 
     def test_get_changesets_on_empty_repo_raises_EmptyRepository_error(self):
-        Backend = self.get_backend()
-        repo_path = get_new_dir(str(time.time()))
-        repo = Backend(repo_path, create=True)
-
+        repo = self.setup_empty_repo(self.backend_class)
         with pytest.raises(EmptyRepositoryError):
             list(repo.get_changesets(start='foobar'))
 
