@@ -3,17 +3,18 @@
 import datetime
 
 from kallithea.lib.vcs.nodes import FileNode
-from kallithea.tests.vcs.test_inmemchangesets import BackendBaseTestCase
+from kallithea.tests.vcs.base import _BackendTestMixin
 
 
-class FileNodeUnicodePathTestsMixin(object):
+class FileNodeUnicodePathTestsMixin(_BackendTestMixin):
 
     fname = 'ąśðąęłąć.txt'
     ufname = (fname).decode('utf-8')
 
-    def get_commits(self):
-        self.nodes = [
-            FileNode(self.fname, content='Foobar'),
+    @classmethod
+    def _get_commits(cls):
+        cls.nodes = [
+            FileNode(cls.fname, content='Foobar'),
         ]
 
         commits = [
@@ -21,7 +22,7 @@ class FileNodeUnicodePathTestsMixin(object):
                 'message': 'Initial commit',
                 'author': 'Joe Doe <joe.doe@example.com>',
                 'date': datetime.datetime(2010, 1, 1, 20),
-                'added': self.nodes,
+                'added': cls.nodes,
             },
         ]
         return commits
@@ -32,9 +33,9 @@ class FileNodeUnicodePathTestsMixin(object):
         assert node == unode
 
 
-class TestGitFileNodeUnicodePath(FileNodeUnicodePathTestsMixin, BackendBaseTestCase):
+class TestGitFileNodeUnicodePath(FileNodeUnicodePathTestsMixin):
     backend_alias = 'git'
 
 
-class TestHgFileNodeUnicodePath(FileNodeUnicodePathTestsMixin, BackendBaseTestCase):
+class TestHgFileNodeUnicodePath(FileNodeUnicodePathTestsMixin):
     backend_alias = 'hg'
