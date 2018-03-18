@@ -39,7 +39,6 @@ python2 setup.py build_sphinx # not used yet ... but we want to make sure it bui
 cat - << EOT
 
 Now, make sure
-* the copyright and contributor lists have been updated
 * all tests are passing
 * release note is ready
 * announcement is ready
