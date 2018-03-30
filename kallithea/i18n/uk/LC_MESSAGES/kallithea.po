@@ -8,17 +8,17 @@ msgstr ""
 "Project-Id-Version: Kallithea 0.3.2\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2017-07-25 16:37+0200\n"
-"PO-Revision-Date: 2018-01-31 16:40+0000\n"
-"Last-Translator: Марс Ямбар <mjambarmeta@gmail.com>\n"
-"Language-Team: Ukrainian "
-"<https://hosted.weblate.org/projects/kallithea/stable/uk/>\n"
+"PO-Revision-Date: 2018-03-31 21:42+0000\n"
+"Last-Translator: Максим Якимчук <xpinovo@gmail.com>\n"
+"Language-Team: Ukrainian <https://hosted.weblate.org/projects/kallithea/"
+"stable/uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
 "4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 2.19-dev\n"
+"X-Generator: Weblate 2.20-dev\n"
 
 #: kallithea/controllers/changelog.py:86
 #: kallithea/controllers/pullrequests.py:238 kallithea/lib/base.py:512
@@ -35,7 +35,7 @@ msgstr ""
 #: kallithea/templates/admin/user_groups/user_group_edit_perms.html:7
 #: kallithea/templates/base/perms_summary.html:14
 msgid "None"
-msgstr ""
+msgstr "Нічого"
 
 #: kallithea/controllers/changelog.py:168 kallithea/controllers/files.py:196
 msgid "(closed)"
@@ -43,12 +43,12 @@ msgstr ""
 
 #: kallithea/controllers/changeset.py:89
 msgid "Show whitespace"
-msgstr ""
+msgstr "Відображати пробіли"
 
 #: kallithea/controllers/changeset.py:96 kallithea/controllers/changeset.py:103
 #: kallithea/templates/files/diff_2way.html:55
 msgid "Ignore whitespace"
-msgstr ""
+msgstr "Ігнорувати пробіли"
 
 #: kallithea/controllers/changeset.py:169
 #, python-format
@@ -78,7 +78,7 @@ msgstr ""
 
 #: kallithea/controllers/error.py:72
 msgid "Unknown error"
-msgstr ""
+msgstr "Невідома помилка"
 
 #: kallithea/controllers/error.py:100
 msgid "The request could not be understood by the server due to malformed syntax."
@@ -282,7 +282,7 @@ msgstr ""
 #: kallithea/templates/journal/journal.html:4
 #: kallithea/templates/journal/journal.html:12
 msgid "Journal"
-msgstr ""
+msgstr "Журнал"
 
 #: kallithea/controllers/login.py:146 kallithea/controllers/login.py:192
 msgid "Bad captcha"
@@ -338,7 +338,7 @@ msgstr ""
 #: kallithea/controllers/pullrequests.py:356
 #: kallithea/controllers/pullrequests.py:503
 msgid "No description"
-msgstr ""
+msgstr "Без опису"
 
 #: kallithea/controllers/pullrequests.py:363
 msgid "Successfully opened new pull request"
@@ -479,7 +479,7 @@ msgstr ""
 #: kallithea/controllers/admin/my_account.py:244
 #: kallithea/controllers/admin/users.py:286
 msgid "5 minutes"
-msgstr ""
+msgstr "5 хвилин"
 
 #: kallithea/controllers/admin/gists.py:61
 #: kallithea/controllers/admin/my_account.py:245
@@ -491,13 +491,13 @@ msgstr ""
 #: kallithea/controllers/admin/my_account.py:246
 #: kallithea/controllers/admin/users.py:288
 msgid "1 day"
-msgstr ""
+msgstr "1 день"
 
 #: kallithea/controllers/admin/gists.py:63
 #: kallithea/controllers/admin/my_account.py:247
 #: kallithea/controllers/admin/users.py:289
 msgid "1 month"
-msgstr ""
+msgstr "1 місяць"
 
 #: kallithea/controllers/admin/gists.py:67
 #: kallithea/controllers/admin/my_account.py:249
@@ -5699,12 +5699,12 @@ msgstr ""
 #: kallithea/templates/summary/statistics.html:89
 #: kallithea/templates/summary/summary.html:349
 msgid "files"
-msgstr ""
+msgstr "файли"
 
 #: kallithea/templates/summary/statistics.html:113
 #: kallithea/templates/summary/summary.html:373
 msgid "Show more"
-msgstr ""
+msgstr "Показати більше"
 
 #: kallithea/templates/summary/statistics.html:390
 msgid "commits"
@@ -5758,7 +5758,7 @@ msgstr ""
 
 #: kallithea/templates/summary/summary.html:29
 msgid "Clone from"
-msgstr ""
+msgstr "Клонувати з"
 
 #: kallithea/templates/summary/summary.html:72
 msgid "Clone URL"
@@ -5811,7 +5811,7 @@ msgstr ""
 
 #: kallithea/templates/summary/summary.html:186
 msgid "Latest Changes"
-msgstr ""
+msgstr "Останні зміни"
 
 #: kallithea/templates/summary/summary.html:188
 msgid "Quick Start"
