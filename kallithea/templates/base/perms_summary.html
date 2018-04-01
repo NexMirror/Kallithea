@@ -27,9 +27,9 @@
           %if section == 'global':
               <thead>
                 <tr>
-                  <th class="left">${_('Permission')}</th>
+                  <th class="left col-xs-9">${_('Permission')}</th>
                   %if actions:
-                  <th class="left">${_('Edit Permission')}</th>
+                  <th class="left col-xs-3">${_('Edit Permission')}</th>
                   %endif
                 </tr>
               </thead>
@@ -51,10 +51,10 @@
              ## none/read/write/admin permissions on groups/repos etc
               <thead>
                 <tr>
-                  <th class="left">${_('Name')}</th>
-                  <th class="left">${_('Permission')}</th>
+                  <th class="left col-xs-7">${_('Name')}</th>
+                  <th class="left col-xs-2">${_('Permission')}</th>
                   %if actions:
-                  <th class="left">${_('Edit Permission')}</th>
+                  <th class="left col-xs-3">${_('Edit Permission')}</th>
                   %endif
                 </tr>
               </thead>
