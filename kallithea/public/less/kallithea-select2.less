@@ -1,58 +1,43 @@
-.branch-switcher,
-.repo-switcher {
-  .select2-choice {
-    height: 100%;
-    padding: 0;
-  }
-  .select2-container,
-  .select2-choice,
-  .select2-choice > span {
-    background: transparent !important;
-    border: 0 !important;
-    box-shadow: none !important;
-    color: #FFFFFF !important;
-  }
-  .select2-choice .select2-chosen {
-    margin-right: 0;
+// Style these like Bootstrap ".navbar-inverse .navbar-nav > li"
+.branch-switcher.select2-container,
+.repo-switcher.select2-container {
+  > a.select2-choice.select2-default {
     line-height: @line-height-computed;
-  }
-  .select2-arrow {
-    display: none !important;
-  }
-}
-.branch-switcher-dropdown.select2-drop.select2-drop-active,
-.repo-switcher-dropdown.select2-drop.select2-drop-active {
-  box-shadow: none;
-  background-color: @kallithea-theme-main-color;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-}
-.repo-switcher-dropdown.select2-drop.select2-drop-active {
-  color: black;
-  .select2-result.select2-highlighted {
-    color: @navbar-inverse-link-hover-color;
-    background-color: @navbar-inverse-link-hover-bg;
-  }
-  .select2-result-label {
-    color: white;
+    height: @navbar-height;
+    padding: @nav-link-padding;
+    padding-top: @navbar-padding-vertical;
+    padding-bottom: @navbar-padding-vertical;
+    color: @navbar-inverse-link-color !important;
+    background: inherit;
+    &:hover {
+      color: @navbar-inverse-link-hover-color !important;
+      background-color: @navbar-inverse-link-hover-bg;
+    }
+    border: inherit;
+    border-radius: inherit;
+    box-shadow: inherit;
+    > .select2-chosen {
+      margin-right: inherit; // don't leave room for .select2-arrow
+      line-height: inherit;
+    }
+    > .select2-arrow {
+      display: none;
+    }
   }
 }
 
-/* fix padding of select2 entries in navbar to match .navbar-nav > li > a */
-.navbar-inverse {
-  .navbar-nav {
-    > li > .select2-container a {
-      padding: @nav-link-padding;
-      height: @navbar-height;
-      padding-top:    @navbar-padding-vertical;
-      padding-bottom: @navbar-padding-vertical;
-    }
-    li.active > .select2-container,
-    .select2-container:hover,
-    .select2-container:focus,
-    .select2-container-active {
-      color: @navbar-inverse-link-hover-color;
-      background-color: @navbar-inverse-link-hover-bg;
+// Style these like Bootstrap .dropdown-menu
+.branch-switcher-dropdown.select2-drop.select2-drop-active,
+.repo-switcher-dropdown.select2-drop.select2-drop-active {
+  color: inherit;
+  background-color: @dropdown-bg;
+  border: 1px solid @dropdown-border;
+  .box-shadow(0 6px 12px rgba(0,0,0,.175));
+  > .select2-results {
+    color: @dropdown-link-color;
+    .select2-highlighted {
+      color: @dropdown-link-hover-color;
+      background-color: @dropdown-link-hover-bg;
     }
   }
 }
