@@ -30,19 +30,7 @@ from mercurial.sshpeer import sshpeer
 from mercurial.util import url as hg_url
 from mercurial.scmutil import revrange
 from mercurial.node import nullrev
-
-# those authhandlers are patched for python 2.6.5 bug an
-# infinite looping when given invalid resources
 from mercurial.url import httpbasicauthhandler, httpdigestauthhandler
-
-import inspect
-# Mercurial 3.1 503bb3af70fe
-if inspect.getargspec(memfilectx.__init__).args[1] != 'repo':
-    _org__init__ = memfilectx.__init__
-
-    def _memfilectx__init__(self, repo, *a, **b):
-        return _org__init__(self, *a, **b)
-    memfilectx.__init__ = _memfilectx__init__
 
 # workaround for 3.3 94ac64bcf6fe and not calling largefiles reposetup correctly
 localrepository._lfstatuswriters = [lambda *msg, **opts: None]
