@@ -20,7 +20,9 @@
 @navbar-inverse-bg:                 @kallithea-theme-main-color;
 @navbar-inverse-border:             @kallithea-theme-main-color;
 @navbar-inverse-link-color:         @kallithea-theme-inverse-color;
+@navbar-inverse-link-hover-color:   tint(@kallithea-theme-inverse-color, 15.0%);
 @navbar-inverse-link-hover-bg:      tint(@kallithea-theme-main-color, 15.0%);
+@navbar-inverse-link-active-color:  @navbar-inverse-link-hover-color;
 @navbar-inverse-link-active-bg:     @navbar-inverse-link-hover-bg;
 @navbar-inverse-toggle-hover-bg:    @navbar-inverse-link-hover-bg;
 @navbar-inverse-toggle-border-color:@kallithea-theme-main-color;
@@ -29,6 +31,8 @@
 @nav-link-padding:                  8px 10px; /* default: 10px 15px */
 @dropdown-link-color:               @navbar-inverse-color;
 @dropdown-bg:                       @navbar-inverse-bg;
+@dropdown-link-hover-color:         @navbar-inverse-link-hover-color;
+@dropdown-link-hover-bg:            @navbar-inverse-link-hover-bg;
 @grid-gutter-width:                 2 * @kallithea-panel-margin; /* default: 30px */
 @panel-heading-padding:             5px 15px; /* default: 10px 15px */
 @headings-font-weight:              700;
