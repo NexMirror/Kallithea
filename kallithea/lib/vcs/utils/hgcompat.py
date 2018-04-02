@@ -32,6 +32,15 @@ from mercurial.scmutil import revrange
 from mercurial.node import nullrev
 from mercurial.url import httpbasicauthhandler, httpdigestauthhandler
 
+
+# Mercurial 4.5 8a0cac20a1ad introduced an extra memctx changectx argument
+# - introduce an optional wrapper factory that doesn't pass it on
+import inspect
+if inspect.getargspec(memfilectx.__init__).args[2] != 'changectx':
+    __org_memfilectx = memfilectx
+    memfilectx = lambda repo, changectx, *args, **kwargs: __org_memfilectx(repo, *args, **kwargs)
+
+
 # workaround for 3.3 94ac64bcf6fe and not calling largefiles reposetup correctly
 localrepository._lfstatuswriters = [lambda *msg, **opts: None]
 # 3.5 7699d3212994 added the invariant that repo.lfstatus must exist before hitting overridearchive
