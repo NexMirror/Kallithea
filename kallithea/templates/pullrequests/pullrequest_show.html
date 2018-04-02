@@ -357,6 +357,10 @@ ${self.repo_context_bar('showpullrequest')}
           var avail_r = new BranchRenderer('avail_graph_canvas', 'updaterevs-table', 'chg_available_');
           avail_r.render(avail_jsdata);
 
+          $(window).resize(function(){
+              avail_r.render(avail_jsdata);
+          });
+
           move_comments($(".comments .comments-list-chunk"));
 
           $('#updaterevs input').change(function(e){
