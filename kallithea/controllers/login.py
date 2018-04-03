@@ -133,11 +133,10 @@ class LoginController(BaseController):
 
                 if c.captcha_active:
                     from kallithea.lib.recaptcha import submit
-                    response = submit(request.POST.get('recaptcha_challenge_field'),
-                                      request.POST.get('recaptcha_response_field'),
+                    response = submit(request.POST.get('g-recaptcha-response'),
                                       private_key=captcha_private_key,
                                       remoteip=request.ip_addr)
-                    if c.captcha_active and not response.is_valid:
+                    if not response.is_valid:
                         _value = form_result
                         _msg = _('Bad captcha')
                         error_dict = {'recaptcha_field': _msg}
@@ -179,11 +178,10 @@ class LoginController(BaseController):
                 form_result = password_reset_form.to_python(dict(request.POST))
                 if c.captcha_active:
                     from kallithea.lib.recaptcha import submit
-                    response = submit(request.POST.get('recaptcha_challenge_field'),
-                                      request.POST.get('recaptcha_response_field'),
+                    response = submit(request.POST.get('g-recaptcha-response'),
                                       private_key=captcha_private_key,
                                       remoteip=request.ip_addr)
-                    if c.captcha_active and not response.is_valid:
+                    if not response.is_valid:
                         _value = form_result
                         _msg = _('Bad captcha')
                         error_dict = {'recaptcha_field': _msg}
