@@ -38,7 +38,7 @@ requirements = [
     "alembic>=0.8.0,<0.9",
     "GearBox<1",
     "waitress>=0.8.8,<1.0",
-    "webob>=1.7,<2",
+    "webob>=1.7,<1.8.0", # TurboGears2 doesn't support 1.8.0
     "backlash >= 0.1.2, < 1.0.0",
     "TurboGears2 >= 2.3.10, < 3.0.0",
     "tgext.routes >= 0.2.0, < 1.0.0",
