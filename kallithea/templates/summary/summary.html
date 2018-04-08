@@ -170,7 +170,7 @@ ${self.repo_context_bar('summary')}
 
 <div class="panel panel-primary">
     <div class="panel-heading">
-        <div class="breadcrumbs panel-title">
+        <div class="panel-title">
         %if c.cs_pagination:
             ${h.link_to(_('Latest Changes'),h.url('changelog_home',repo_name=c.repo_name))}
         %else:
@@ -220,7 +220,7 @@ ${self.repo_context_bar('summary')}
 </div>
 <div class="panel panel-primary">
     <div class="panel-heading" title="${_('Readme file from revision %s:%s') % (c.db_repo.landing_rev[0], c.db_repo.landing_rev[1])}">
-        <div class="breadcrumbs panel-title">
+        <div class="panel-title">
             <a href="${h.url('files_home',repo_name=c.repo_name,revision='tip',f_path=c.readme_file)}">${c.readme_file}</a>
         </div>
     </div>
