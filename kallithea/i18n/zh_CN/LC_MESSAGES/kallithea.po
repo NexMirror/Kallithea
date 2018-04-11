@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2017-07-27 13:13+0200\n"
-"PO-Revision-Date: 2018-04-05 04:34+0000\n"
+"PO-Revision-Date: 2018-04-12 03:35+0000\n"
 "Last-Translator: Pheng Heong Tan <phtan90@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "kallithea/kallithea/zh_Hans/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2.20-dev\n"
+"X-Generator: Weblate 2.20\n"
 "Generated-By: Babel 1.3\n"
 
 #: kallithea/controllers/changelog.py:86
@@ -66,7 +66,7 @@ msgstr "在此代码库内，此修改并不存在"
 #: kallithea/controllers/compare.py:67
 #, python-format
 msgid "Could not find other repository %s"
-msgstr "找不到该代码库 %s"
+msgstr "找不到那个版本库 %s"
 
 #: kallithea/controllers/compare.py:73
 msgid "Cannot compare repositories of different types"
