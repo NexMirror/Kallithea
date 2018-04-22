@@ -36,13 +36,11 @@
 </%def>
 
 <%def name="revision(name,rev,tip,author,last_msg)">
-  <div>
   %if rev >= 0:
       <a data-toggle="popover" title="${author | entity}" data-content="${last_msg | entity}" class="changeset_hash" href="${h.url('changeset_home',repo_name=name,revision=tip)}">${'r%s:%s' % (rev,h.short_id(tip))}</a>
   %else:
       ${_('No changesets yet')}
   %endif
-  </div>
 </%def>
 
 <%def name="rss(name)">
@@ -62,25 +60,18 @@
 </%def>
 
 <%def name="repo_actions(repo_name)">
-  <div>
-    <div class="pull-left">
       <a href="${h.url('edit_repo',repo_name=repo_name)}" title="${_('Edit')}" class="btn btn-default btn-xs">
         <i class="icon-pencil"></i>${_('Edit')}
       </a>
-    </div>
-    <div class="pull-left">
       ${h.form(h.url('delete_repo', repo_name=repo_name))}
         <button name="${'remove_%s' % repo_name}" class="btn btn-default btn-xs"
             onclick="return confirm('${_('Confirm to delete this repository: %s') % repo_name}');">
           <i class="icon-trashcan"></i>${_('Delete')}
         </button>
       ${h.end_form()}
-    </div>
-  </div>
 </%def>
 
 <%def name="repo_state(repo_state)">
-  <div>
     %if repo_state == u'repo_state_pending':
         <div class="label label-info">${_('Creating')}</div>
     %elif repo_state == u'repo_state_created':
@@ -88,39 +79,30 @@
     %else:
         <div class="label label-danger" title="${repo_state}">invalid</div>
     %endif
-  </div>
 </%def>
 
 <%def name="user_actions(user_id, username)">
- <div class="pull-left">
    <a href="${h.url('edit_user',id=user_id)}" title="${_('Edit')}" class="btn btn-default btn-xs">
      <i class="icon-pencil"></i>${_('Edit')}
    </a>
- </div>
- <div class="pull-left">
   ${h.form(h.url('delete_user', id=user_id))}
     <button id="${'remove_user_%s' % user_id}" name="${'remove_user_%s' % repo_name}" class="btn btn-default btn-xs" title="${_('Delete')}"
         onclick="return confirm('${_('Confirm to delete this user: %s') % username}');">
       <i class="icon-trashcan"></i>${_('Delete')}
     </button>
   ${h.end_form()}
- </div>
 </%def>
 
 <%def name="user_group_actions(user_group_id, user_group_name)">
- <div class="pull-left">
     <a href="${h.url('edit_users_group', id=user_group_id)}" title="${_('Edit')}" class="btn btn-default btn-xs">
       <i class="icon-pencil"></i>${_('Edit')}
     </a>
- </div>
- <div class="pull-left">
     ${h.form(h.url('delete_users_group', id=user_group_id))}
       <button id="${'remove_group_%s' % user_group_id}" name="${'remove_user_%s' % repo_name}" class="btn btn-default btn-xs" title="${_('Delete')}"
           onclick="return confirm('${_('Confirm to delete this user group: %s') % user_group_name}');">
         <i class="icon-trashcan"></i>${_('Delete')}
       </button>
     ${h.end_form()}
- </div>
 </%def>
 
 <%def name="group_name_html(group_name,name)">
@@ -131,19 +113,15 @@
 </%def>
 
 <%def name="repo_group_actions(repo_group_id, repo_group_name, gr_count)">
- <div class="pull-left">
     <a href="${h.url('edit_repo_group',group_name=repo_group_name)}" title="${_('Edit')}" class="btn btn-default btn-xs">
       <i class="icon-pencil"></i>${_('Edit')}
     </a>
- </div>
- <div class="pull-left">
     ${h.form(h.url('delete_repo_group', group_name=repo_group_name))}
       <button id="${'remove_%s' % repo_group_name}" name="${'remove_%s' % repo_group_name}" class="btn btn-default btn-xs" title="${_('Delete')}"
           onclick="return confirm('${ungettext('Confirm to delete this group: %s with %s repository','Confirm to delete this group: %s with %s repositories',gr_count) % (repo_group_name, gr_count)}')">
         <i class="icon-trashcan"></i>${_('Delete')}
       </button>
     ${h.end_form()}
- </div>
 </%def>
 
 <%def name="user_name(user_id, username)">

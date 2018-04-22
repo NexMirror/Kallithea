@@ -155,6 +155,15 @@ table.dataTable {
   }
 }
 
+/* _dt_elements.html styling - some submit buttons have their own form but should still be shown inline */
+table.dataTable td > .btn + form {
+  display: inline;
+}
+
+table.dataTable .dt_repo_pending {
+  opacity: 0.5;
+}
+
 /* language bars (summary page) */
 #lang_stats {
   .progress-bar {
@@ -193,10 +202,6 @@ textarea.form-control {
 .submodule-dir > i[class^='icon-'],
 .browser-file > i[class^='icon-'] {
   padding-right: 0.3em;
-}
-
-.dt_repo_pending {
-  opacity: 0.5;
 }
 
 div.panel-primary {
