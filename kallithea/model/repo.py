@@ -150,7 +150,7 @@ class RepoModel(object):
         return tmpl.render(*args, **kwargs)
 
     def get_repos_as_dict(self, repos_list=None, repo_groups_list=None,
-                          admin=False, perm_check=True,
+                          admin=False,
                           short_name=False):
         _render = self._render_datatable
         from tg import tmpl_context as c
@@ -195,10 +195,8 @@ class RepoModel(object):
                 desc=gr.group_description))
 
         for repo in repos_list:
-            if perm_check:
-                # check permission at this level
-                if not HasRepoPermissionLevel('read')(repo.repo_name, 'get_repos_as_dict check'):
-                    continue
+            if not HasRepoPermissionLevel('read')(repo.repo_name, 'get_repos_as_dict check'):
+                continue
             cs_cache = repo.changeset_cache
             row = {
                 "raw_name": repo.repo_name,
@@ -214,7 +212,6 @@ class RepoModel(object):
                 "state": state(repo.repo_state),
                 "rss": rss_lnk(repo.repo_name),
                 "atom": atom_lnk(repo.repo_name),
-
             }
             if admin:
                 row.update({
