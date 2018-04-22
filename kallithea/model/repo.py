@@ -149,9 +149,14 @@ class RepoModel(object):
         kwargs.update(dict(_=_, h=h, c=c, request=request))
         return tmpl.render(*args, **kwargs)
 
-    def get_repos_as_dict(self, repos_list=None, repo_groups_list=None,
+    def get_repos_as_dict(self, repos_list, repo_groups_list=None,
                           admin=False,
                           short_name=False):
+        """Return repository list for use by DataTable.
+        repos_list: list of repositories - but will be filtered for read permission.
+        repo_groups_list: added at top of list without permission check.
+        admin: return data for action column.
+        """
         _render = self._render_datatable
         from tg import tmpl_context as c
 

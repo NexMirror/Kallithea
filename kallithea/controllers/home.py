@@ -57,9 +57,9 @@ class HomeController(BaseController):
         repo_groups_list = self.scm_model.get_repo_groups()
         repos_list = Repository.query(sorted=True).filter_by(group=None).all()
 
-        c.data = RepoModel().get_repos_as_dict(repos_list=repos_list,
+        c.data = RepoModel().get_repos_as_dict(repos_list,
                                                repo_groups_list=repo_groups_list,
-                                               admin=False, short_name=True)
+                                               short_name=True)
 
         return render('/index.html')
 

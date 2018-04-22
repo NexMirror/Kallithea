@@ -214,8 +214,7 @@ class JournalController(BaseController):
         repos_list = Repository.query(sorted=True) \
             .filter_by(owner_id=request.authuser.user_id).all()
 
-        repos_data = RepoModel().get_repos_as_dict(repos_list=repos_list,
-                                                   admin=True)
+        repos_data = RepoModel().get_repos_as_dict(repos_list, admin=True)
         # data used to render the grid
         c.data = repos_data
 

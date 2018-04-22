@@ -102,7 +102,7 @@ class ReposController(BaseRepoController):
 
         c.repos_list = RepoList(_list, perm_level='admin')
         # the repo list will be filtered to only show repos where the user has read permissions
-        repos_data = RepoModel().get_repos_as_dict(repos_list=c.repos_list, admin=True)
+        repos_data = RepoModel().get_repos_as_dict(c.repos_list, admin=True)
         # data used to render the grid
         c.data = repos_data
 

@@ -82,8 +82,7 @@ class MyAccountController(BaseController):
                          .filter(Repository.owner_id ==
                                  request.authuser.user_id).all()
 
-        return RepoModel().get_repos_as_dict(repos_list=repos_list,
-                                                   admin=admin)
+        return RepoModel().get_repos_as_dict(repos_list, admin=admin)
 
     def my_account(self):
         c.active = 'profile'

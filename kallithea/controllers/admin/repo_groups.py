@@ -295,9 +295,9 @@ class RepoGroupsController(BaseController):
         repo_groups_list = self.scm_model.get_repo_groups(groups)
 
         repos_list = Repository.query(sorted=True).filter_by(group=c.group).all()
-        c.data = RepoModel().get_repos_as_dict(repos_list=repos_list,
+        c.data = RepoModel().get_repos_as_dict(repos_list,
                                                repo_groups_list=repo_groups_list,
-                                               admin=False, short_name=True)
+                                               short_name=True)
 
         return render('admin/repo_groups/repo_group_show.html')
 
