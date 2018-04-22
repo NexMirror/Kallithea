@@ -157,7 +157,7 @@ class RepoModel(object):
 
         def repo_lnk(name, rtype, rstate, private, fork_of):
             return _render('repo_name', name, rtype, rstate, private, fork_of,
-                           short_name=short_name, admin=False)
+                           short_name=short_name)
 
         def last_change(last_change):
             return _render("last_change", last_change)

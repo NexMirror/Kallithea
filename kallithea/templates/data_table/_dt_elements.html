@@ -4,7 +4,7 @@
 
 <%namespace name="base" file="/base/base.html"/>
 
-<%def name="repo_name(name,rtype,rstate,private,fork_of,short_name=False,admin=False)">
+<%def name="repo_name(name,rtype,rstate,private,fork_of,short_name=False)">
     <%
     def get_name(name,short_name=short_name):
       if short_name:
@@ -14,7 +14,7 @@
     %>
   <div class="dt_repo ${'dt_repo_pending' if rstate == 'repo_state_pending' else ''}">
     ${base.repolabel(rtype)}
-    <a href="${h.url('edit_repo' if admin else 'summary_home', repo_name=name)}">
+    <a href="${h.url('summary_home', repo_name=name)}">
         ${get_name(name)}
     </a>
     %if private and c.visual.show_private_icon:
