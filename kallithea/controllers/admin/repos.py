@@ -101,9 +101,7 @@ class ReposController(BaseRepoController):
         _list = Repository.query(sorted=True).all()
 
         c.repos_list = RepoList(_list, perm_level='admin')
-        repos_data = RepoModel().get_repos_as_dict(repos_list=c.repos_list,
-                                                   admin=True,
-                                                   super_user_actions=True)
+        repos_data = RepoModel().get_repos_as_dict(repos_list=c.repos_list, admin=True)
         # data used to render the grid
         c.data = repos_data
 

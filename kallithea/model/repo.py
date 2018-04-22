@@ -151,7 +151,7 @@ class RepoModel(object):
 
     def get_repos_as_dict(self, repos_list=None, repo_groups_list=None,
                           admin=False, perm_check=True,
-                          super_user_actions=False, short_name=False):
+                          short_name=False):
         _render = self._render_datatable
         from tg import tmpl_context as c
 
@@ -180,7 +180,7 @@ class RepoModel(object):
             return _render("repo_state", repo_state)
 
         def repo_actions(repo_name):
-            return _render('repo_actions', repo_name, super_user_actions)
+            return _render('repo_actions', repo_name)
 
         def owner_actions(owner_id, username):
             return _render('user_name', owner_id, username)
