@@ -79,11 +79,11 @@ class AuthSettingsController(BaseController):
                 setting = Setting.get_by_name(fullname)
                 if setting is not None:
                     c.defaults[fullname] = setting.app_settings_value
-        # we want to show , separated list of enabled plugins
-        c.defaults['auth_plugins'] = ','.join(c.enabled_plugin_names)
-
         if defaults:
             c.defaults.update(defaults)
+
+        # we want to show , separated list of enabled plugins
+        c.defaults['auth_plugins'] = ','.join(c.enabled_plugin_names)
 
         log.debug(formatted_json(defaults))
         return formencode.htmlfill.render(
