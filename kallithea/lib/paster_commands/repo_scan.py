@@ -46,14 +46,12 @@ class Command(BasePasterCommand):
         print 'Now scanning root location for new repos ...'
         added, removed = repo2db_mapper(ScmModel().repo_scan(),
                                         remove_obsolete=rm_obsolete)
-        added = ', '.join(added) or '-'
-        removed = ', '.join(removed) or '-'
         print 'Scan completed.'
-        print 'Added: %s' % added
-        if rm_obsolete:
-            print 'Removed: %s' % removed
-        else:
-            print 'Missing: %s' % removed
+        if added:
+            print 'Added: %s' % ', '.join(added)
+        if removed:
+            print '%s: %s' % ('Removed' if rm_obsolete else 'Missing',
+                              ', '.join(removed))
 
     def get_parser(self, prog_name):
         parser = super(Command, self).get_parser(prog_name)
