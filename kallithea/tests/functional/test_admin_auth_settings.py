@@ -229,6 +229,7 @@ class TestAuthSettingsController(TestController):
                        'auth_crowd_app_password': 'secret',
                        'auth_crowd_admin_groups': 'mygroup',
                        'auth_crowd_port': '123',
+                       'auth_crowd_method': 'https',
                        'auth_crowd_app_name': 'xyzzy'})
 
         test_url = url(controller='admin/auth_settings',

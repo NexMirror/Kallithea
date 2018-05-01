@@ -131,6 +131,8 @@ class CrowdServer(object):
 
 
 class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
+    def __init__(self):
+        self._protocol_values = ["http", "https"]
 
     @hybrid_property
     def name(self):
@@ -138,6 +140,14 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
 
     def settings(self):
         settings = [
+            {
+                "name": "method",
+                "validator": self.validators.OneOf(self._protocol_values),
+                "type": "select",
+                "values": self._protocol_values,
+                "description": "The protocol used to connect to the Atlassian CROWD server.",
+                "formname": "Protocol"
+            },
             {
                 "name": "host",
                 "validator": self.validators.UnicodeString(strip=True),
