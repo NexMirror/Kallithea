@@ -23,6 +23,7 @@ import os
 import sys
 import paste.deploy
 
+import kallithea
 from kallithea.lib.db_manage import DbManage
 from kallithea.lib.paster_commands.common import BasePasterCommand
 from kallithea.model.meta import Session
@@ -102,5 +103,15 @@ class Command(BasePasterCommand):
         dbmanage.create_permissions()
         dbmanage.populate_default_permissions()
         Session().commit()
+
+        # initial repository scan
+        kallithea.config.middleware.make_app_without_logging(
+                self.config.global_conf, **self.config.local_conf)
+        added, _ = kallithea.lib.utils.repo2db_mapper(kallithea.model.scm.ScmModel().repo_scan())
+        if added:
+            print 'Initial repository scan: added following repositories:'
+            print '\t','\n\t'.join(added)
+        else:
+            print 'Initial repository scan: no repositories found.'
 
         print 'Database set up successfully.'
