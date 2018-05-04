@@ -193,10 +193,6 @@ i18n.lang =
 cache_dir = %(here)s/data
 index_dir = %(here)s/data/index
 
-<%text>## perform a full repository scan on each server start, this should be</%text>
-<%text>## set to false after first startup, to allow faster server restarts.</%text>
-initial_repo_scan = false
-
 <%text>## uncomment and set this path to use archive download cache</%text>
 archive_cache_dir = %(here)s/tarballcache
 

@@ -171,10 +171,6 @@ def setup_configuration(app):
 
     check_git_version()
 
-    if str2bool(config.get('initial_repo_scan', True)):
-        repo2db_mapper(ScmModel().repo_scan(repos_path),
-                       remove_obsolete=False, install_git_hooks=False)
-
 
 hooks.register('configure_new_app', setup_configuration)
 

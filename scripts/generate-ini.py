@@ -17,7 +17,6 @@ ini_files = [
                 'host': '0.0.0.0',
             },
             '[app:main]': {
-                'initial_repo_scan': 'true',
                 'debug': 'true',
                 'app_instance_uuid': 'development-not-secret',
                 'beaker.session.secret': 'development-not-secret',
