@@ -363,6 +363,7 @@ class ReposController(BaseRepoController):
             encoding="UTF-8",
             force_defaults=False)
 
+    @HasRepoPermissionAllDecorator('repository.admin')
     def edit_permissions_update(self, repo_name):
         form = RepoPermsForm()().to_python(request.POST)
         RepoModel()._update_permissions(repo_name, form['perms_new'],
@@ -374,6 +375,7 @@ class ReposController(BaseRepoController):
         h.flash(_('Repository permissions updated'), category='success')
         return redirect(url('edit_repo_perms', repo_name=repo_name))
 
+    @HasRepoPermissionAllDecorator('repository.admin')
     def edit_permissions_revoke(self, repo_name):
         try:
             obj_type = request.POST.get('obj_type')
