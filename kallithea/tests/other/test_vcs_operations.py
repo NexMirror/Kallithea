@@ -537,6 +537,8 @@ class TestVCSOperations(TestController):
         try:
             user_model.add_extra_ip(TEST_USER_ADMIN_LOGIN, '10.10.10.10/32')
             Session().commit()
+            # IP permissions are cached, need to wait for the cache in the server process to expire
+            time.sleep(1.5)
             clone_url = webserver.repo_url(HG_REPO)
             stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
             assert 'abort: HTTP Error 403: Forbidden' in stderr
@@ -545,9 +547,8 @@ class TestVCSOperations(TestController):
             for ip in UserIpMap.query():
                 UserIpMap.delete(ip.ip_id)
             Session().commit()
-
-        # IP permissions are cached, need to wait for the cache in the server process to expire
-        time.sleep(1.5)
+            # IP permissions are cached, need to wait for the cache in the server process to expire
+            time.sleep(1.5)
 
         clone_url = webserver.repo_url(HG_REPO)
         stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, _get_tmp_dir())
@@ -564,6 +565,8 @@ class TestVCSOperations(TestController):
         try:
             user_model.add_extra_ip(TEST_USER_ADMIN_LOGIN, '10.10.10.10/32')
             Session().commit()
+            # IP permissions are cached, need to wait for the cache in the server process to expire
+            time.sleep(1.5)
             clone_url = webserver.repo_url(GIT_REPO)
             stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
             # The message apparently changed in Git 1.8.3, so match it loosely.
@@ -573,9 +576,8 @@ class TestVCSOperations(TestController):
             for ip in UserIpMap.query():
                 UserIpMap.delete(ip.ip_id)
             Session().commit()
-
-        # IP permissions are cached, need to wait for the cache in the server process to expire
-        time.sleep(1.5)
+            # IP permissions are cached, need to wait for the cache in the server process to expire
+            time.sleep(1.5)
 
         clone_url = webserver.repo_url(GIT_REPO)
         stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, _get_tmp_dir())
