@@ -82,8 +82,7 @@ class TestAdminPermissionsController(TestController):
     def test_edit_permissions_permissions(self):
         user = User.get_by_username(TEST_USER_REGULAR_LOGIN)
 
-        # Test unauthenticated access
-        # FIXME: access without authentication
+        # Test unauthenticated access - it will redirect to login page
         response = self.app.post(
             url('edit_repo_perms_update', repo_name=HG_REPO),
             params=dict(
@@ -93,17 +92,18 @@ class TestAdminPermissionsController(TestController):
                 _authentication_token=self.authentication_token()),
             status=302)
 
-        assert response.location.endswith(url('edit_repo_perms_update', repo_name=HG_REPO))
+        assert not response.location.endswith(url('edit_repo_perms_update', repo_name=HG_REPO))
+        assert response.location.endswith(url('login_home', came_from=url('edit_repo_perms_update', repo_name=HG_REPO)))
 
-        # FIXME: access without authentication
         response = self.app.post(
             url('edit_repo_perms_revoke', repo_name=HG_REPO),
             params=dict(
                 obj_type='user',
                 user_id=user.user_id,
                 _authentication_token=self.authentication_token()),
-            status=204) # success has no content
-        assert not response.body
+            status=302)
+
+        assert response.location.endswith(url('login_home', came_from=url('edit_repo_perms_revoke', repo_name=HG_REPO)))
 
         # Test authenticated access
         self.log_user()
