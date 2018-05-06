@@ -459,11 +459,8 @@ class TestCompareController(TestController):
         Session().commit()
         assert repo1.scm_instance.revisions == [cs0.raw_id]
         # fork the repo1
-        repo2 = fixture.create_repo(u'one-fork', repo_type='hg',
-                                    repo_description='diff-test',
-                                    cur_user=TEST_USER_ADMIN_LOGIN,
-                                    clone_uri=repo1.repo_full_path,
-                                    fork_of='one')
+        repo2 = fixture.create_fork(r1_name, u'one-fork',
+                                    cur_user=TEST_USER_ADMIN_LOGIN)
         Session().commit()
         assert repo2.scm_instance.revisions == [cs0.raw_id]
         self.r2_id = repo2.repo_id
@@ -535,11 +532,8 @@ class TestCompareController(TestController):
         Session().commit()
         assert repo1.scm_instance.revisions == [cs0.raw_id]
         # fork the repo1
-        repo2 = fixture.create_repo(u'one-git-fork', repo_type='git',
-                                    repo_description='diff-test',
-                                    cur_user=TEST_USER_ADMIN_LOGIN,
-                                    clone_uri=repo1.repo_full_path,
-                                    fork_of='one-git')
+        repo2 = fixture.create_fork(r1_name, u'one-git-fork',
+                                    cur_user=TEST_USER_ADMIN_LOGIN)
         Session().commit()
         assert repo2.scm_instance.revisions == [cs0.raw_id]
         self.r2_id = repo2.repo_id
