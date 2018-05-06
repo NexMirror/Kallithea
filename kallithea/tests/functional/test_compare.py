@@ -457,16 +457,12 @@ class TestCompareController(TestController):
         Session().commit()
         self.assertEqual(repo1.scm_instance.revisions, [cs0.raw_id])
         #fork the repo1
-        repo2 = fixture.create_repo('one-fork', repo_type='hg',
-                                    repo_description='diff-test',
-                                    cur_user=TEST_USER_ADMIN_LOGIN,
-                                    clone_uri=repo1.repo_full_path,
-                                    fork_of='one')
+        repo2 = fixture.create_fork(r1_name, 'one-fork',
+                                    cur_user=TEST_USER_ADMIN_LOGIN)
         Session().commit()
         self.assertEqual(repo2.scm_instance.revisions, [cs0.raw_id])
         self.r2_id = repo2.repo_id
         r2_name = repo2.repo_name
-
 
         cs1 = fixture.commit_change(repo=r2_name, filename='file1-fork',
                 content='file1-line1-from-fork', message='commit1-fork',
@@ -537,11 +533,8 @@ class TestCompareController(TestController):
         Session().commit()
         self.assertEqual(repo1.scm_instance.revisions, [cs0.raw_id])
         #fork the repo1
-        repo2 = fixture.create_repo('one-git-fork', repo_type='git',
-                                    repo_description='diff-test',
-                                    cur_user=TEST_USER_ADMIN_LOGIN,
-                                    clone_uri=repo1.repo_full_path,
-                                    fork_of='one-git')
+        repo2 = fixture.create_fork(r1_name, 'one-git-fork',
+                                    cur_user=TEST_USER_ADMIN_LOGIN)
         Session().commit()
         self.assertEqual(repo2.scm_instance.revisions, [cs0.raw_id])
         self.r2_id = repo2.repo_id
