@@ -45,3 +45,56 @@ class TestAdminPermissionsController(TestController):
         self.log_user()
         response = self.app.get(url('admin_permissions_perms'))
         # Test response...
+
+    def test_edit_permissions_permissions(self):
+        user = User.get_by_username(TEST_USER_REGULAR_LOGIN)
+
+        # Test unauthenticated access
+        # FIXME: access without authentication
+        response = self.app.post(
+            url('edit_repo_perms_update', repo_name=HG_REPO),
+            params=dict(
+                _method='put',
+                perm_new_member_1='repository.read',
+                perm_new_member_name_1=user.username,
+                perm_new_member_type_1='user',
+                _authentication_token=self.authentication_token()),
+            status=302)
+
+        assert response.location.endswith(url('edit_repo_perms_update', repo_name=HG_REPO))
+
+        # FIXME: access without authentication
+        response = self.app.post(
+            url('edit_repo_perms_revoke', repo_name=HG_REPO),
+            params=dict(
+                _method='delete',
+                obj_type='user',
+                user_id=user.user_id,
+                _authentication_token=self.authentication_token()),
+            status=200) # success has no content
+        assert not response.body
+
+        # Test authenticated access
+        self.log_user()
+
+        response = self.app.post(
+            url('edit_repo_perms_update', repo_name=HG_REPO),
+            params=dict(
+                _method='put',
+                perm_new_member_1='repository.read',
+                perm_new_member_name_1=user.username,
+                perm_new_member_type_1='user',
+                _authentication_token=self.authentication_token()),
+            status=302)
+
+        assert response.location.endswith(url('edit_repo_perms_update', repo_name=HG_REPO))
+
+        response = self.app.post(
+            url('edit_repo_perms_revoke', repo_name=HG_REPO),
+            params=dict(
+                _method='delete',
+                obj_type='user',
+                user_id=user.user_id,
+                _authentication_token=self.authentication_token()),
+            status=200) # success has no content
+        assert not response.body
