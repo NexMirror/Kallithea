@@ -1041,6 +1041,25 @@ class _BaseTestApi(object):
         self._compare_ok(id_, expected, given=response.body)
         fixture.destroy_repo(repo_name)
 
+    def test_api_create_repo_clone_uri_local(self):
+        # FIXME: cloning from local repo is a mis-feature - it will bypass access control
+        clone_uri = os.path.join(TESTS_TMP_PATH, self.REPO)
+        repo_name = u'api-repo'
+        id_, params = _build_data(self.apikey, 'create_repo',
+                                  repo_name=repo_name,
+                                  owner=TEST_USER_ADMIN_LOGIN,
+                                  repo_type=self.REPO_TYPE,
+                                  clone_uri=clone_uri,
+        )
+        response = api_call(self, params)
+        expected = {
+            'msg': 'Created new repository `%s`' % repo_name,
+            'success': True,
+            'task': None,
+        }
+        self._compare_ok(id_, expected, given=response.body)
+        fixture.destroy_repo(repo_name)
+
     def test_api_create_repo_and_repo_group(self):
         repo_name = u'my_gr/api-repo'
         id_, params = _build_data(self.apikey, 'create_repo',
@@ -1184,6 +1203,7 @@ class _BaseTestApi(object):
         ('owner', {'owner': TEST_USER_REGULAR_LOGIN}),
         ('description', {'description': u'new description'}),
         ('clone_uri', {'clone_uri': 'http://example.com/repo'}),
+        ('clone_uri', {'clone_uri': '/repo'}), # FIXME: pulling from local repo is a mis-feature - it will bypass access control
         ('clone_uri', {'clone_uri': None}),
         ('landing_rev', {'landing_rev': 'branch:master'}),
         ('enable_statistics', {'enable_statistics': True}),
@@ -1220,6 +1240,7 @@ class _BaseTestApi(object):
         ('owner', {'owner': TEST_USER_REGULAR_LOGIN}),
         ('description', {'description': u'new description'}),
         ('clone_uri', {'clone_uri': 'http://example.com/repo'}),
+        ('clone_uri', {'clone_uri': '/repo'}), # FIXME: pulling from local repo is a mis-feature - it will bypass access control
         ('clone_uri', {'clone_uri': None}),
         ('landing_rev', {'landing_rev': 'branch:master'}),
         ('enable_statistics', {'enable_statistics': True}),
