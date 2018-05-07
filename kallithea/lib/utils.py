@@ -265,6 +265,36 @@ def get_filesystem_repos(path):
         dirs[:] = recurse_dirs
 
 
+def is_valid_repo_uri(repo_type, url, ui):
+    """Check if the url seems like a valid remote repo location - raise an Exception if any problems"""
+    if repo_type == 'hg':
+        from kallithea.lib.vcs.backends.hg.repository import MercurialRepository
+        if url.startswith('http') or url.startswith('ssh'):
+            # initially check if it's at least the proper URL
+            # or does it pass basic auth
+            MercurialRepository._check_url(url, ui)
+        elif url.startswith('svn+http'):
+            from hgsubversion.svnrepo import svnremoterepo
+            svnremoterepo(ui, url).svn.uuid
+        elif url.startswith('git+http'):
+            raise NotImplementedError()
+        else:
+            raise Exception('URI %s not allowed' % (url,))
+
+    elif repo_type == 'git':
+        from kallithea.lib.vcs.backends.git.repository import GitRepository
+        if url.startswith('http') or url.startswith('git'):
+            # initially check if it's at least the proper URL
+            # or does it pass basic auth
+            GitRepository._check_url(url)
+        elif url.startswith('svn+http'):
+            raise NotImplementedError()
+        elif url.startswith('hg+http'):
+            raise NotImplementedError()
+        else:
+            raise Exception('URI %s not allowed' % (url))
+
+
 def is_valid_repo(repo_name, base_path, scm=None):
     """
     Returns True if given path is a valid repository False otherwise.
