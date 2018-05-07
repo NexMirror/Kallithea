@@ -33,7 +33,7 @@ import traceback
 from datetime import datetime
 from sqlalchemy.orm import subqueryload
 
-from kallithea.lib.utils import make_ui
+from kallithea.lib.utils import make_ui, is_valid_repo_uri
 from kallithea.lib.vcs.backends import get_backend
 from kallithea.lib.compat import json
 from kallithea.lib.utils2 import LazyProperty, safe_str, safe_unicode, \
@@ -335,6 +335,10 @@ class RepoModel(BaseModel):
                     setattr(cur_repo, remove_prefix(k, 'repo_'), kwargs[k])
             clone_uri = kwargs.get('clone_uri')
             if clone_uri is not None and clone_uri != cur_repo.clone_uri_hidden:
+                # clone_uri is modified - if given a value, check it is valid
+                if clone_uri != '':
+                    # will raise exception on error
+                    is_valid_repo_uri(cur_repo.repo_type, clone_uri, make_ui('db', clear_session=False))
                 cur_repo.clone_uri = clone_uri
 
             if 'repo_name' in kwargs:
@@ -399,6 +403,9 @@ class RepoModel(BaseModel):
             new_repo.group = repo_group
             new_repo.description = description or repo_name
             new_repo.private = private
+            if clone_uri:
+                # will raise exception on error
+                is_valid_repo_uri(repo_type, clone_uri, make_ui('db', clear_session=False))
             new_repo.clone_uri = clone_uri
             new_repo.landing_rev = landing_rev
 
@@ -677,11 +684,7 @@ class RepoModel(BaseModel):
         Makes repository on filesystem. Operation is group aware, meaning that it will create
         a repository within a group, and alter the paths accordingly to the group location.
 
-        :param repo_name:
-        :param alias:
-        :param parent:
-        :param clone_uri:
-        :param repo_store_location:
+        Note: clone_uri is low level and not validated - it might be a file system path used for validated cloning
         """
         from kallithea.lib.utils import is_valid_repo, is_valid_repo_group
         from kallithea.model.scm import ScmModel

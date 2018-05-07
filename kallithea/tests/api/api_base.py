@@ -278,8 +278,12 @@ class _BaseTestApi(object):
         self._compare_error(id_, expected, given=response.body)
 
     def test_api_pull(self):
+        # Note: pulling from local repos is a mis-feature - it will bypass access control
+        # ... but ok, if the path already has been set in the database
         repo_name = 'test_pull'
         r = fixture.create_repo(repo_name, repo_type=self.REPO_TYPE)
+        # hack around that clone_uri can't be set to to a local path
+        # (as shown by test_api_create_repo_clone_uri_local)
         r.clone_uri = os.path.join(TESTS_TMP_PATH, self.REPO)
         Session.add(r)
         Session.commit()
@@ -995,7 +999,8 @@ class _BaseTestApi(object):
         fixture.destroy_repo(repo_name)
 
     def test_api_create_repo_clone_uri_local(self):
-        # FIXME: cloning from local repo is a mis-feature - it will bypass access control
+        # cloning from local repo was a mis-feature - it would bypass access control
+        # TODO: introduce other test coverage of actual remote cloning
         clone_uri = os.path.join(TESTS_TMP_PATH, self.REPO)
         repo_name = u'api-repo'
         id_, params = _build_data(self.apikey, 'create_repo',
@@ -1005,12 +1010,8 @@ class _BaseTestApi(object):
                                   clone_uri=clone_uri,
         )
         response = api_call(self, params)
-        expected = {
-            'msg': 'Created new repository `%s`' % repo_name,
-            'success': True,
-            'task': None,
-        }
-        self._compare_ok(id_, expected, given=response.body)
+        expected = "failed to create repository `%s`" % repo_name
+        self._compare_error(id_, expected, given=response.body)
         fixture.destroy_repo(repo_name)
 
     def test_api_create_repo_and_repo_group(self):
@@ -1157,8 +1158,8 @@ class _BaseTestApi(object):
         ('description', {'description': 'new description'}),
         ('active', {'active': True}),
         ('active', {'active': False}),
-        ('clone_uri', {'clone_uri': 'http://example.com/repo'}),
-        ('clone_uri', {'clone_uri': '/repo'}), # FIXME: pulling from local repo is a mis-feature - it will bypass access control
+        ('clone_uri', {'clone_uri': 'http://example.com/repo'}), # will fail - pulling from non-existing repo should fail
+        ('clone_uri', {'clone_uri': '/repo'}), # will fail - pulling from local repo was a mis-feature - it would bypass access control
         ('clone_uri', {'clone_uri': None}),
         ('landing_rev', {'landing_rev': 'branch:master'}),
         ('enable_statistics', {'enable_statistics': True}),
@@ -1181,11 +1182,15 @@ class _BaseTestApi(object):
         if changing_attr == 'repo_group':
             repo_name = '/'.join([updates['group'], repo_name])
         try:
-            expected = {
-                'msg': 'updated repo ID:%s %s' % (repo.repo_id, repo_name),
-                'repository': repo.get_api_data()
-            }
-            self._compare_ok(id_, expected, given=response.body)
+            if changing_attr == 'clone_uri' and updates['clone_uri']:
+                expected = u'failed to update repo `%s`' % repo_name
+                self._compare_error(id_, expected, given=response.body)
+            else:
+                expected = {
+                    'msg': 'updated repo ID:%s %s' % (repo.repo_id, repo_name),
+                    'repository': repo.get_api_data()
+                }
+                self._compare_ok(id_, expected, given=response.body)
         finally:
             fixture.destroy_repo(repo_name)
             if changing_attr == 'repo_group':
@@ -1196,8 +1201,8 @@ class _BaseTestApi(object):
         ('description', {'description': u'new description'}),
         ('active', {'active': True}),
         ('active', {'active': False}),
-        ('clone_uri', {'clone_uri': 'http://example.com/repo'}),
-        ('clone_uri', {'clone_uri': '/repo'}), # FIXME: pulling from local repo is a mis-feature - it will bypass access control
+        ('clone_uri', {'clone_uri': 'http://example.com/repo'}), # will fail - pulling from non-existing repo should fail
+        ('clone_uri', {'clone_uri': '/repo'}), # will fail - pulling from local repo was a mis-feature - it would bypass access control
         ('clone_uri', {'clone_uri': None}),
         ('landing_rev', {'landing_rev': 'branch:master'}),
         ('enable_statistics', {'enable_statistics': True}),
@@ -1222,11 +1227,15 @@ class _BaseTestApi(object):
         if changing_attr == 'repo_group':
             repo_name = u'/'.join([updates['group'], repo_name.rsplit('/', 1)[-1]])
         try:
-            expected = {
-                'msg': 'updated repo ID:%s %s' % (repo.repo_id, repo_name),
-                'repository': repo.get_api_data()
-            }
-            self._compare_ok(id_, expected, given=response.body)
+            if changing_attr == 'clone_uri' and updates['clone_uri']:
+                expected = u'failed to update repo `%s`' % repo_name
+                self._compare_error(id_, expected, given=response.body)
+            else:
+                expected = {
+                    'msg': 'updated repo ID:%s %s' % (repo.repo_id, repo_name),
+                    'repository': repo.get_api_data()
+                }
+                self._compare_ok(id_, expected, given=response.body)
         finally:
             fixture.destroy_repo(repo_name)
             if changing_attr == 'repo_group':
