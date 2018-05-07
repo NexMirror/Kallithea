@@ -31,10 +31,10 @@ from formencode.validators import (
 )
 from kallithea.lib.compat import OrderedSet
 from kallithea.lib import ipaddr
-from kallithea.lib.utils import repo_name_slug
+from kallithea.lib.utils import repo_name_slug, is_valid_repo_uri
 from kallithea.lib.utils2 import str2bool, aslist
 from kallithea.model.db import RepoGroup, Repository, UserGroup, User
-from kallithea.lib.exceptions import LdapImportError, HgsubversionImportError
+from kallithea.lib.exceptions import LdapImportError
 from kallithea.config.routing import ADMIN_PREFIX
 from kallithea.lib.auth import HasRepoGroupPermissionLevel, HasPermissionAny
 
@@ -414,38 +414,6 @@ def SlugifyName():
 def ValidCloneUri():
     from kallithea.lib.utils import make_ui
 
-    def url_handler(repo_type, url, ui):
-        if repo_type == 'hg':
-            from kallithea.lib.vcs.backends.hg.repository import MercurialRepository
-            if url.startswith('http') or url.startswith('ssh'):
-                # initially check if it's at least the proper URL
-                # or does it pass basic auth
-                MercurialRepository._check_url(url, ui)
-            elif url.startswith('svn+http'):
-                try:
-                    from hgsubversion.svnrepo import svnremoterepo
-                except ImportError:
-                    raise HgsubversionImportError(_('Unable to activate hgsubversion support. '
-                          'The "hgsubversion" library is missing'))
-                svnremoterepo(ui, url).svn.uuid
-            elif url.startswith('git+http'):
-                raise NotImplementedError()
-            else:
-                raise Exception('clone from URI %s not allowed' % (url,))
-
-        elif repo_type == 'git':
-            from kallithea.lib.vcs.backends.git.repository import GitRepository
-            if url.startswith('http') or url.startswith('git'):
-                # initially check if it's at least the proper URL
-                # or does it pass basic auth
-                GitRepository._check_url(url)
-            elif url.startswith('svn+http'):
-                raise NotImplementedError()
-            elif url.startswith('hg+http'):
-                raise NotImplementedError()
-            else:
-                raise Exception('clone from URI %s not allowed' % (url))
-
     class _validator(formencode.validators.FancyValidator):
         messages = {
             'clone_uri': _('Invalid repository URL'),
@@ -459,7 +427,7 @@ def ValidCloneUri():
 
             if url and url != value.get('clone_uri_hidden'):
                 try:
-                    url_handler(repo_type, url, make_ui('db', clear_session=False))
+                    is_valid_repo_uri(repo_type, url, make_ui('db', clear_session=False))
                 except Exception:
                     log.exception('URL validation failed')
                     msg = self.message('clone_uri', state)

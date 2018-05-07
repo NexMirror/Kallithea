@@ -33,6 +33,7 @@ import traceback
 import beaker
 
 from tg import request, response
+from tg.i18n import ugettext as _
 from webhelpers.text import collapse, remove_formatting, strip_tags
 from beaker.cache import _cache_decorate
 
@@ -40,6 +41,7 @@ from kallithea.lib.vcs.utils.hgcompat import ui, config
 from kallithea.lib.vcs.utils.helpers import get_scm
 from kallithea.lib.vcs.exceptions import VCSError
 
+from kallithea.lib.exceptions import HgsubversionImportError
 from kallithea.model import meta
 from kallithea.model.db import Repository, User, Ui, \
     UserLog, RepoGroup, Setting, UserGroup
@@ -249,6 +251,40 @@ def get_filesystem_repos(path):
             recurse_dirs.append(subdir)
 
         dirs[:] = recurse_dirs
+
+
+def is_valid_repo_uri(repo_type, url, ui):
+    """Check if the url seems like a valid remote repo location - raise an Exception if any problems"""
+    if repo_type == 'hg':
+        from kallithea.lib.vcs.backends.hg.repository import MercurialRepository
+        if url.startswith('http') or url.startswith('ssh'):
+            # initially check if it's at least the proper URL
+            # or does it pass basic auth
+            MercurialRepository._check_url(url, ui)
+        elif url.startswith('svn+http'):
+            try:
+                from hgsubversion.svnrepo import svnremoterepo
+            except ImportError:
+                raise HgsubversionImportError(_('Unable to activate hgsubversion support. '
+                                                'The "hgsubversion" library is missing'))
+            svnremoterepo(ui, url).svn.uuid
+        elif url.startswith('git+http'):
+            raise NotImplementedError()
+        else:
+            raise Exception('URI %s not allowed' % (url,))
+
+    elif repo_type == 'git':
+        from kallithea.lib.vcs.backends.git.repository import GitRepository
+        if url.startswith('http') or url.startswith('git'):
+            # initially check if it's at least the proper URL
+            # or does it pass basic auth
+            GitRepository._check_url(url)
+        elif url.startswith('svn+http'):
+            raise NotImplementedError()
+        elif url.startswith('hg+http'):
+            raise NotImplementedError()
+        else:
+            raise Exception('URI %s not allowed' % (url))
 
 
 def is_valid_repo(repo_name, base_path, scm=None):
