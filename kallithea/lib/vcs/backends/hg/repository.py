@@ -520,7 +520,6 @@ class MercurialRepository(BaseRepository):
         :param branch_name:
         :param reversed: return changesets in reversed order
         """
-
         start_raw_id = self._get_revision(start)
         start_pos = self.revisions.index(start_raw_id) if start else None
         end_raw_id = self._get_revision(end)
@@ -538,7 +537,7 @@ class MercurialRepository(BaseRepository):
         # filter branches
         filter_ = []
         if branch_name:
-            filter_.append('branch("%s")' % (branch_name))
+            filter_.append('branch("%s")' % safe_str(branch_name))
         if start_date:
             filter_.append('date(">%s")' % start_date)
         if end_date:
