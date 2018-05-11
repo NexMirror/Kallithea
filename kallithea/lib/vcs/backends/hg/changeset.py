@@ -297,7 +297,9 @@ class MercurialChangeset(BaseChangeset):
             lineno, sha, changeset lazy loader and line
         """
         annotations = self._get_filectx(path).annotate()
-        if True:
+        try:
+            annotation_lines = [(annotateline.fctx, annotateline.text) for annotateline in annotations]
+        except AttributeError: # annotateline was introduced in Mercurial 4.6 (b33b91ca2ec2)
             try:
                 annotation_lines = [(aline.fctx, l) for aline, l in annotations]
             except AttributeError: # aline.fctx was introduced in Mercurial 4.4
