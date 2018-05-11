@@ -26,7 +26,10 @@ from mercurial.encoding import tolocal
 from mercurial.discovery import findcommonoutgoing
 from mercurial.hg import peer
 from mercurial.httppeer import httppeer
-from mercurial.sshpeer import sshpeer
+try: # sshpeer was renamed in Mercurial 4.6 (625038cb4b1d), but v1 is still good enough
+    from mercurial.sshpeer import sshv1peer as sshpeer
+except ImportError:
+    from mercurial.sshpeer import sshpeer
 from mercurial.util import url as hg_url
 from mercurial.scmutil import revrange
 from mercurial.node import nullrev
