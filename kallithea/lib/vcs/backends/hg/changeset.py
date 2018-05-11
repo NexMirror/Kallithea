@@ -296,13 +296,13 @@ class MercurialChangeset(BaseChangeset):
         Returns a generator of four element tuples with
             lineno, sha, changeset lazy loader and line
         """
-
         annotations = self._get_filectx(path).annotate(linenumber=False)
-        for i, (aline, l) in enumerate(annotations):
+        if True:
             try:
-                fctx = aline.fctx
+                annotation_lines = [(aline.fctx, l) for aline, l in annotations]
             except AttributeError: # aline.fctx was introduced in Mercurial 4.4
-                fctx = aline[0]
+                annotation_lines = [(aline[0], l) for aline, l in annotations]
+        for i, (fctx, l) in enumerate(annotation_lines):
             sha = fctx.hex()
             yield (i + 1, sha, lambda sha=sha, l=l: self.repository.get_changeset(sha), l)
 
