@@ -411,7 +411,7 @@ class MercurialRepository(BaseRepository):
 
     def _get_revision(self, revision):
         """
-        Gets an ID revision given as str. This will always return a fill
+        Gets an ID revision given as str. This will always return a full
         40 char revision number
 
         :param revision: str or int or None
@@ -426,7 +426,7 @@ class MercurialRepository(BaseRepository):
             revision = 'tip'
 
         try:
-            revision = hex(self._repo.lookup(revision))
+            revision = self._repo[revision].hex()
         except (IndexError, ValueError, RepoLookupError, TypeError):
             msg = ("Revision %s does not exist for %s" % (revision, self))
             raise ChangesetDoesNotExistError(msg)
