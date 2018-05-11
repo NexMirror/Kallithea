@@ -296,7 +296,7 @@ class MercurialChangeset(BaseChangeset):
         Returns a generator of four element tuples with
             lineno, sha, changeset lazy loader and line
         """
-        annotations = self._get_filectx(path).annotate(linenumber=False)
+        annotations = self._get_filectx(path).annotate()
         if True:
             try:
                 annotation_lines = [(aline.fctx, l) for aline, l in annotations]
