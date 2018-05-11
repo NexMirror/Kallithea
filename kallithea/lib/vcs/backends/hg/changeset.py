@@ -54,11 +54,17 @@ class MercurialChangeset(BaseChangeset):
 
     @LazyProperty
     def bumped(self):
-        return self._ctx.bumped()
+        try:
+            return self._ctx.phasedivergent()
+        except AttributeError: # renamed in Mercurial 4.6 (9fa874fb34e1)
+            return self._ctx.bumped()
 
     @LazyProperty
     def divergent(self):
-        return self._ctx.divergent()
+        try:
+            return self._ctx.contentdivergent()
+        except AttributeError: # renamed in Mercurial 4.6 (8b2d7684407b)
+            return self._ctx.divergent()
 
     @LazyProperty
     def extinct(self):
@@ -66,7 +72,10 @@ class MercurialChangeset(BaseChangeset):
 
     @LazyProperty
     def unstable(self):
-        return self._ctx.unstable()
+        try:
+            return self._ctx.orphan()
+        except AttributeError: # renamed in Mercurial 4.6 (03039ff3082b)
+            return self._ctx.unstable()
 
     @LazyProperty
     def phase(self):
