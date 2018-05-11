@@ -172,13 +172,21 @@ class SimpleHg(BaseVCSController):
         class HgWebWrapper(hgweb_mod.hgweb):
             # Work-around for Mercurial 3.6+ causing lock exceptions to be
             # thrown late
-            def _runwsgi(self, req, repo):
+            def _runwsgi(self, *args):
                 try:
-                    return super(HgWebWrapper, self)._runwsgi(req, repo)
+                    return super(HgWebWrapper, self)._runwsgi(*args)
                 except HTTPLockedRC as e:
                     log.debug('Locked, response %s: %s', e.code, e.title)
-                    req.respond(e.status, 'text/plain')
-                    return ''
+                    try:
+                        req, res, repo = args
+                        res.status = e.status
+                        res.headers['Content-Type'] = 'text/plain'
+                        res.setbodybytes('')
+                        return res.sendresponse()
+                    except ValueError: # wsgiresponse was introduced in Mercurial 4.6 (a88d68dc3ee8)
+                        req, repo = args
+                        req.respond(e.status, 'text/plain')
+                        return ''
 
         return HgWebWrapper(repo_name, name=repo_name, baseui=baseui)
 
