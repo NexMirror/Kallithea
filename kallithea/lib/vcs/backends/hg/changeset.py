@@ -305,7 +305,7 @@ class MercurialChangeset(BaseChangeset):
             except AttributeError: # aline.fctx was introduced in Mercurial 4.4
                 fctx = aline[0]
             sha = hex(fctx.node())
-            yield (ln_no, sha, lambda: self.repository.get_changeset(sha), l)
+            yield (ln_no, sha, lambda sha=sha, l=l: self.repository.get_changeset(sha), l)
 
     def fill_archive(self, stream=None, kind='tgz', prefix=None,
                      subrepos=False):
