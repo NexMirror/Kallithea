@@ -860,7 +860,7 @@ class _PermsDecorator(object):
             return func(*fargs, **fkwargs)
 
         else:
-            log.debug('Permission denied for %s %s', cls, user)
+            log.info('Permission denied for %s %s', cls, user)
             if user.is_default_user:
                 raise _redirect_to_login(_('You need to be signed in to view this page'))
             else:
