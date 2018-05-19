@@ -541,7 +541,10 @@ class PullrequestsController(BaseRepoController):
                             hgrepo = org_scm_instance._repo
                         show = set(hgrepo.revs('::%ld & !::parents(%s) & !::%s',
                                                avail_revs, revs[0], targethead))
-                        c.update_msg = _('The following additional changes are available on %s:') % c.cs_branch_name
+                        if show:
+                            c.update_msg = _('The following additional changes are available on %s:') % c.cs_branch_name
+                        else:
+                            c.update_msg = _('No additional changesets found for iterating on this pull request.')
                     else:
                         show = set()
                         avail_revs = set() # drop revs[0]
