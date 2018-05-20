@@ -88,6 +88,18 @@ class TestAdminSettingsController(TestController):
         response.mustcontain(no=['test_hooks_2'])
         response.mustcontain(no=['cd %s2' % TESTS_TMP_PATH])
 
+    def test_add_existing_builtin_hook(self):
+        self.log_user()
+        response = self.app.post(url('admin_settings_hooks'),
+                                params=dict(new_hook_ui_key='changegroup.update',
+                                            new_hook_ui_value='attempted_new_value',
+                                            _authentication_token=self.authentication_token()))
+
+        self.checkSessionFlash(response, 'Builtin hooks are read-only')
+        response = response.follow()
+        response.mustcontain('changegroup.update')
+        response.mustcontain('hg update &gt;&amp;2')
+
     def test_index_search(self):
         self.log_user()
         response = self.app.get(url('admin_settings_search'))
