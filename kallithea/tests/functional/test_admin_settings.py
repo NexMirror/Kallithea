@@ -40,6 +40,7 @@ class TestAdminSettingsController(TestController):
                                             new_hook_ui_value='cd %s' % TESTS_TMP_PATH,
                                             _authentication_token=self.authentication_token()))
 
+        self.checkSessionFlash(response, 'Added new hook')
         response = response.follow()
         response.mustcontain('test_hooks_1')
         response.mustcontain('cd %s' % TESTS_TMP_PATH)
@@ -51,6 +52,7 @@ class TestAdminSettingsController(TestController):
                                             new_hook_ui_value='cd %s2' % TESTS_TMP_PATH,
                                             _authentication_token=self.authentication_token()))
 
+        self.checkSessionFlash(response, 'Added new hook')
         response = response.follow()
         response.mustcontain('test_hooks_2')
         response.mustcontain('cd %s2' % TESTS_TMP_PATH)
