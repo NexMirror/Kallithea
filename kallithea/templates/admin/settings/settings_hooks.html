@@ -15,23 +15,23 @@
 % if c.visual.allow_custom_hooks_settings:
 ${h.form(url('admin_settings_hooks'), method='post')}
 <div class="form">
-        <div class="form-group form-inline" id="${'id%s' % hook.ui_id }">
         <h4>${_('Custom Hooks')}</h4>
         %for hook in c.custom_hooks:
-            <% input_id = hook.ui_key.replace('.', '_') %>
-                <label class="control-label" for="${input_id}">${hook.ui_key}</label>
-                <div>
-                    ${h.hidden('hook_ui_key',hook.ui_key,id='hook_ui_key_'+input_id)}
-                    ${h.hidden('hook_ui_value',hook.ui_value,id='hook_ui_value_'+input_id)}
-                    ${h.text('hook_ui_value_new',hook.ui_value,id=input_id,size=60,class_='form-control')}
-                    <button type="button" class="btn btn-default btn-xs"
-                        onclick="delete_hook(${hook.ui_id},'${'id%s' % hook.ui_id }')">
-                        <i class="icon-trashcan"></i>
-                        ${_('Delete')}
-                    </button>
-                </div>
+            <div class="form-group form-inline" id="${'id%s' % hook.ui_id }">
+                <% input_id = hook.ui_key.replace('.', '_') %>
+                    <label class="control-label" for="${input_id}">${hook.ui_key}</label>
+                    <div>
+                        ${h.hidden('hook_ui_key',hook.ui_key,id='hook_ui_key_'+input_id)}
+                        ${h.hidden('hook_ui_value',hook.ui_value,id='hook_ui_value_'+input_id)}
+                        ${h.text('hook_ui_value_new',hook.ui_value,id=input_id,size=60,class_='form-control')}
+                        <button type="button" class="btn btn-default btn-xs"
+                            onclick="delete_hook(${hook.ui_id},'${'id%s' % hook.ui_id }')">
+                            <i class="icon-trashcan"></i>
+                            ${_('Delete')}
+                        </button>
+                    </div>
+            </div>
         %endfor
-        </div>
 
         <div class="form-group form-inline">
             <label>
