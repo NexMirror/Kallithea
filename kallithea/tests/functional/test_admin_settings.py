@@ -49,6 +49,7 @@ class TestAdminSettingsController(TestController):
         self.log_user()
         response = self.app.post(url('admin_settings_hooks'),
                                 params=dict(hook_ui_key='test_hooks_1',
+                                            hook_ui_value='old_value_of_hook_1',
                                             hook_ui_value_new='new_value_of_hook_1',
                                             _authentication_token=self.authentication_token()))
 

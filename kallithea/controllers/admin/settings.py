@@ -365,10 +365,12 @@ class SettingsController(BaseController):
                     # check for edits
                     update = False
                     _d = request.POST.dict_of_lists()
-                    for k, v in zip(_d.get('hook_ui_key', []),
-                                    _d.get('hook_ui_value_new', [])):
-                        Ui.create_or_update_hook(k, v)
-                        update = True
+                    for k, v, ov in zip(_d.get('hook_ui_key', []),
+                                        _d.get('hook_ui_value_new', []),
+                                        _d.get('hook_ui_value', [])):
+                        if v != ov:
+                            Ui.create_or_update_hook(k, v)
+                            update = True
 
                     if update:
                         h.flash(_('Updated hooks'), category='success')
