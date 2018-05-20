@@ -56,6 +56,18 @@ class TestAdminSettingsController(TestController):
         response.mustcontain('test_hooks_1')
         response.mustcontain('new_value_of_hook_1')
 
+    def test_add_existing_custom_hook(self):
+        self.log_user()
+        response = self.app.post(url('admin_settings_hooks'),
+                                params=dict(new_hook_ui_key='test_hooks_1',
+                                            new_hook_ui_value='attempted_new_value',
+                                            _authentication_token=self.authentication_token()))
+
+        self.checkSessionFlash(response, 'Hook already exists')
+        response = response.follow()
+        response.mustcontain('test_hooks_1')
+        response.mustcontain('new_value_of_hook_1')
+
     def test_create_custom_hook_delete(self):
         self.log_user()
         response = self.app.post(url('admin_settings_hooks'),

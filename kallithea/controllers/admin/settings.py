@@ -351,7 +351,9 @@ class SettingsController(BaseController):
 
                 try:
                     ui_key = ui_key and ui_key.strip()
-                    if ui_value and ui_key:
+                    if ui_key in (x.ui_key for x in Ui.get_custom_hooks()):
+                        h.flash(_('Hook already exists'), category='error')
+                    elif ui_value and ui_key:
                         Ui.create_or_update_hook(ui_key, ui_value)
                         h.flash(_('Added new hook'), category='success')
                     elif hook_id:
