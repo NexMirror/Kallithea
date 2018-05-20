@@ -45,6 +45,17 @@ class TestAdminSettingsController(TestController):
         response.mustcontain('test_hooks_1')
         response.mustcontain('cd %s' % TESTS_TMP_PATH)
 
+    def test_edit_custom_hook(self):
+        self.log_user()
+        response = self.app.post(url('admin_settings_hooks'),
+                                params=dict(hook_ui_key='test_hooks_1',
+                                            hook_ui_value_new='new_value_of_hook_1',
+                                            _authentication_token=self.authentication_token()))
+
+        response = response.follow()
+        response.mustcontain('test_hooks_1')
+        response.mustcontain('new_value_of_hook_1')
+
     def test_create_custom_hook_delete(self):
         self.log_user()
         response = self.app.post(url('admin_settings_hooks'),
