@@ -23,7 +23,7 @@ ${h.form(url('admin_settings_hooks'), method='post')}
                     <div>
                         ${h.hidden('hook_ui_key',hook.ui_key,id='hook_ui_key_'+input_id)}
                         ${h.hidden('hook_ui_value',hook.ui_value,id='hook_ui_value_'+input_id)}
-                        ${h.text('hook_ui_value_new',hook.ui_value,id=input_id,size=60,class_='form-control')}
+                        ${h.text('hook_ui_value_new',hook.ui_value,id=input_id,size=50,class_='form-control')}
                         <button type="button" class="btn btn-default btn-xs"
                             onclick="delete_hook(${hook.ui_id},'${'id%s' % hook.ui_id }')">
                             <i class="icon-trashcan"></i>
@@ -38,7 +38,7 @@ ${h.form(url('admin_settings_hooks'), method='post')}
                 ${h.text('new_hook_ui_key',size=15,class_='form-control')}
             </label>
             <div>
-                ${h.text('new_hook_ui_value',size=60,class_='form-control')}
+                ${h.text('new_hook_ui_value',size=50,class_='form-control')}
             </div>
         </div>
         <div class="form-group">
