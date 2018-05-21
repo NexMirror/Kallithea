@@ -3,7 +3,7 @@
       <h4>${_('Built-in Mercurial Hooks (Read-Only)')}</h4>
       % for hook in c.hooks:
         <% input_id = hook.ui_key.replace('.', '_') %>
-            <label class="control-label" for="${input_id}">${hook.ui_key}</label>
+            <label class="control-label" for="${input_id}" title="${hook.ui_key}">${hook.ui_key}</label>
             <div>
               ${h.text(hook.ui_key,hook.ui_value,id=input_id,size=60,readonly="readonly",class_='form-control')}
             </div>
@@ -19,7 +19,7 @@ ${h.form(url('admin_settings_hooks'), method='post')}
         %for hook in c.custom_hooks:
             <div class="form-group form-inline" id="${'id%s' % hook.ui_id }">
                 <% input_id = hook.ui_key.replace('.', '_') %>
-                    <label class="control-label" for="${input_id}">${hook.ui_key}</label>
+                    <label class="control-label" for="${input_id}" title="${hook.ui_key}">${hook.ui_key}</label>
                     <div>
                         ${h.hidden('hook_ui_key',hook.ui_key,id='hook_ui_key_'+input_id)}
                         ${h.hidden('hook_ui_value',hook.ui_value,id='hook_ui_value_'+input_id)}
