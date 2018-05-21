@@ -8,7 +8,6 @@
               ${h.text(hook.ui_key,hook.ui_value,id=input_id,size=60,readonly="readonly",class_='form-control')}
             </div>
       % endfor
-      <span class="help-block">${_('Hooks can be used to trigger actions on certain events such as push / pull. They can trigger Python functions or external applications.')}</span>
       </div>
 </div>
 
@@ -16,6 +15,7 @@
 ${h.form(url('admin_settings_hooks'), method='post')}
 <div class="form">
         <h4>${_('Custom Hooks')}</h4>
+        <span class="help-block">${_('Hooks can be used to trigger actions on certain events such as push / pull. They can trigger Python functions or external applications.')}</span>
         %for hook in c.custom_hooks:
             <div class="form-group form-inline" id="${'id%s' % hook.ui_id }">
                 <% input_id = hook.ui_key.replace('.', '_') %>
