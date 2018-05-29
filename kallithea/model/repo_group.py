@@ -32,6 +32,7 @@ import traceback
 import shutil
 import datetime
 
+import kallithea.lib.utils
 from kallithea.lib.utils2 import LazyProperty
 
 from kallithea.model import BaseModel
@@ -145,6 +146,9 @@ class RepoGroupModel(BaseModel):
     def create(self, group_name, group_description, owner, parent=None,
                just_db=False, copy_permissions=False):
         try:
+            if kallithea.lib.utils.repo_name_slug(group_name) != group_name:
+                raise Exception('invalid repo group name %s' % group_name)
+
             user = self._get_user(owner)
             parent_group = self._get_repo_group(parent)
             new_repo_group = RepoGroup()
@@ -296,7 +300,10 @@ class RepoGroupModel(BaseModel):
             repo_group.enable_locking = form_data['enable_locking']
 
             repo_group.parent_group = RepoGroup.get(form_data['group_parent_id'])
-            repo_group.group_name = repo_group.get_new_name(form_data['group_name'])
+            group_name = form_data['group_name']
+            if kallithea.lib.utils.repo_name_slug(group_name) != group_name:
+                raise Exception('invalid repo group name %s' % group_name)
+            repo_group.group_name = repo_group.get_new_name(group_name)
             new_path = repo_group.full_path
             self.sa.add(repo_group)
 

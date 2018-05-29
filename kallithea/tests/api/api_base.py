@@ -1016,14 +1016,6 @@ class _BaseTestApi(object):
         if repo_name == '/':
             expected = "repo group `` not found"
             self._compare_error(id_, expected, given=response.body)
-        elif repo_name in [':', '<test>']:
-            # FIXME: special characters and XSS injection should not be allowed
-            expected = {
-                'msg': 'Created new repository `%s`' % repo_name,
-                'success': True,
-                'task': None,
-            }
-            self._compare_ok(id_, expected, given=response.body)
         else:
             expected = "failed to create repository `%s`" % repo_name
             self._compare_error(id_, expected, given=response.body)
