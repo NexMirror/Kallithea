@@ -1128,10 +1128,13 @@ class _BaseTestApi(object):
         fixture.destroy_repo_group(repo_group_name)
 
     def test_api_create_repo_in_repo_group_without_permission(self):
-        repo_group_name = u'%s/api-repo-repo' % TEST_REPO_GROUP
+        repo_group_basename = u'api-repo-repo'
+        repo_group_name = u'%s/%s' % (TEST_REPO_GROUP, repo_group_basename)
         repo_name = u'%s/api-repo' % repo_group_name
 
-        rg = fixture.create_repo_group(repo_group_name)
+        top_group = RepoGroup.get_by_group_name(TEST_REPO_GROUP)
+        assert top_group
+        rg = fixture.create_repo_group(repo_group_basename, group_parent_id=top_group)
         Session().commit()
         RepoGroupModel().grant_user_permission(repo_group_name,
                                                self.TEST_USER_LOGIN,

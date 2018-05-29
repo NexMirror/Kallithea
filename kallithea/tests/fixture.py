@@ -194,6 +194,7 @@ class Fixture(object):
         Session().commit()
 
     def create_repo_group(self, name, parent_group_id=None, **kwargs):
+        assert '/' not in name, (name, kwargs) # use group_parent_id to make nested groups
         if 'skip_if_exists' in kwargs:
             del kwargs['skip_if_exists']
             gr = RepoGroup.get_by_group_name(group_name=name)
