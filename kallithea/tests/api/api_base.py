@@ -1065,6 +1065,20 @@ class _BaseTestApi(object):
         repo_group_name = u'my_gr'
         repo_name = u'%s/api-repo' % repo_group_name
 
+        # repo creation can no longer also create repo group
+        id_, params = _build_data(self.apikey, 'create_repo',
+                                  repo_name=repo_name,
+                                  owner=TEST_USER_ADMIN_LOGIN,
+                                  repo_type=self.REPO_TYPE,)
+        response = api_call(self, params)
+        expected = u'repo group `%s` not found' % repo_group_name
+        self._compare_error(id_, expected, given=response.body)
+        assert RepoModel().get_by_repo_name(repo_name) is None
+
+        # create group before creating repo
+        rg = fixture.create_repo_group(repo_group_name)
+        Session().commit()
+
         id_, params = _build_data(self.apikey, 'create_repo',
                                   repo_name=repo_name,
                                   owner=TEST_USER_ADMIN_LOGIN,
@@ -1191,7 +1205,7 @@ class _BaseTestApi(object):
         self._compare_error(id_, expected, given=response.body)
 
     def test_api_create_repo_dot_dot(self):
-        # FIXME: it should only be possible to create repositories in existing repo groups - and '..' can't be used
+        # it is only possible to create repositories in existing repo groups - and '..' can't be used
         group_name = '%s/..' % TEST_REPO_GROUP
         repo_name = '%s/%s' % (group_name, 'could-be-outside')
         id_, params = _build_data(self.apikey, 'create_repo',
@@ -1199,12 +1213,8 @@ class _BaseTestApi(object):
                                   owner=TEST_USER_ADMIN_LOGIN,
                                   repo_type=self.REPO_TYPE,)
         response = api_call(self, params)
-        expected = {
-            u'msg': u"Created new repository `%s`" % repo_name,
-            u'success': True,
-            u'task': None,
-        }
-        self._compare_ok(id_, expected, given=response.body)
+        expected = u'repo group `%s` not found' % group_name
+        self._compare_error(id_, expected, given=response.body)
         fixture.destroy_repo(repo_name)
 
     @mock.patch.object(RepoModel, 'create', crash)
