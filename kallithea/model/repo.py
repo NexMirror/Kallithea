@@ -33,6 +33,7 @@ import traceback
 from datetime import datetime
 from sqlalchemy.orm import subqueryload
 
+import kallithea.lib.utils
 from kallithea.lib.utils import make_ui, is_valid_repo_uri
 from kallithea.lib.vcs.backends import get_backend
 from kallithea.lib.utils2 import LazyProperty, safe_str, safe_unicode, \
@@ -314,7 +315,10 @@ class RepoModel(object):
                 cur_repo.clone_uri = clone_uri
 
             if 'repo_name' in kwargs:
-                cur_repo.repo_name = cur_repo.get_new_name(kwargs['repo_name'])
+                repo_name = kwargs['repo_name']
+                if kallithea.lib.utils.repo_name_slug(repo_name) != repo_name:
+                    raise Exception('invalid repo name %s' % repo_name)
+                cur_repo.repo_name = cur_repo.get_new_name(repo_name)
 
             # if private flag is set, reset default permission to NONE
             if kwargs.get('repo_private'):
@@ -363,6 +367,8 @@ class RepoModel(object):
             # with name and path of group
             repo_name_full = repo_name
             repo_name = repo_name.split(self.URL_SEPARATOR)[-1]
+            if kallithea.lib.utils.repo_name_slug(repo_name) != repo_name:
+                raise Exception('invalid repo name %s' % repo_name)
 
             new_repo = Repository()
             new_repo.repo_state = state

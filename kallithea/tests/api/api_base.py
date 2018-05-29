@@ -1063,14 +1063,6 @@ class _BaseTestApi(object):
         if repo_name == '/':
             expected = "repo group `` not found"
             self._compare_error(id_, expected, given=response.body)
-        elif repo_name in [':', '<test>']:
-            # FIXME: special characters and XSS injection should not be allowed
-            expected = {
-                'msg': 'Created new repository `%s`' % repo_name,
-                'success': True,
-                'task': None,
-            }
-            self._compare_ok(id_, expected, given=response.body)
         else:
             expected = "failed to create repository `%s`" % repo_name
             self._compare_error(id_, expected, given=response.body)
@@ -1134,7 +1126,7 @@ class _BaseTestApi(object):
 
         top_group = RepoGroup.get_by_group_name(TEST_REPO_GROUP)
         assert top_group
-        rg = fixture.create_repo_group(repo_group_basename, group_parent_id=top_group)
+        rg = fixture.create_repo_group(repo_group_basename, parent_group_id=top_group)
         Session().commit()
         RepoGroupModel().grant_user_permission(repo_group_name,
                                                self.TEST_USER_LOGIN,
