@@ -1045,8 +1045,39 @@ class _BaseTestApi(object):
         self._compare_ok(id_, expected, given=response.body)
         fixture.destroy_repo(repo_name)
 
+    @parametrize('repo_name', [
+        u'',
+        u'.',
+        u'..',
+        u':',
+        u'/',
+        u'<test>',
+    ])
+    def test_api_create_repo_bad_names(self, repo_name):
+        id_, params = _build_data(self.apikey, 'create_repo',
+                                  repo_name=repo_name,
+                                  owner=TEST_USER_ADMIN_LOGIN,
+                                  repo_type=self.REPO_TYPE,
+        )
+        response = api_call(self, params)
+        if repo_name == '/':
+            expected = "repo group `` not found"
+            self._compare_error(id_, expected, given=response.body)
+        elif repo_name in [':', '<test>']:
+            # FIXME: special characters and XSS injection should not be allowed
+            expected = {
+                'msg': 'Created new repository `%s`' % repo_name,
+                'success': True,
+                'task': None,
+            }
+            self._compare_ok(id_, expected, given=response.body)
+        else:
+            expected = "failed to create repository `%s`" % repo_name
+            self._compare_error(id_, expected, given=response.body)
+        fixture.destroy_repo(repo_name)
+
     def test_api_create_repo_clone_uri_local(self):
-        # cloning from local repo was a mis-feature - it would bypass access control
+        # cloning from local repos was a mis-feature - it would bypass access control
         # TODO: introduce other test coverage of actual remote cloning
         clone_uri = os.path.join(TESTS_TMP_PATH, self.REPO)
         repo_name = u'api-repo'
