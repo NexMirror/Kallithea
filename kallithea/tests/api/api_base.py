@@ -35,7 +35,7 @@ from kallithea.model.meta import Session
 from kallithea.model.scm import ScmModel
 from kallithea.model.gist import GistModel
 from kallithea.model.changeset_status import ChangesetStatusModel
-from kallithea.model.db import Repository, User, Setting, Ui, PullRequest, ChangesetStatus
+from kallithea.model.db import Repository, User, Setting, Ui, PullRequest, ChangesetStatus, RepoGroup
 from kallithea.lib.utils2 import time_to_datetime
 
 
@@ -1062,24 +1062,25 @@ class _BaseTestApi(object):
         fixture.destroy_repo(repo_name)
 
     def test_api_create_repo_and_repo_group(self):
-        repo_name = u'my_gr/api-repo'
+        repo_group_name = u'my_gr'
+        repo_name = u'%s/api-repo' % repo_group_name
+
         id_, params = _build_data(self.apikey, 'create_repo',
                                   repo_name=repo_name,
                                   owner=TEST_USER_ADMIN_LOGIN,
                                   repo_type=self.REPO_TYPE,)
         response = api_call(self, params)
-        print params
-        repo = RepoModel().get_by_repo_name(repo_name)
-        assert repo is not None
-        ret = {
+        expected = {
             'msg': 'Created new repository `%s`' % repo_name,
             'success': True,
             'task': None,
         }
-        expected = ret
         self._compare_ok(id_, expected, given=response.body)
+        repo = RepoModel().get_by_repo_name(repo_name)
+        assert repo is not None
+
         fixture.destroy_repo(repo_name)
-        fixture.destroy_repo_group(u'my_gr')
+        fixture.destroy_repo_group(repo_group_name)
 
     def test_api_create_repo_in_repo_group_without_permission(self):
         repo_group_name = u'%s/api-repo-repo' % TEST_REPO_GROUP
@@ -1188,6 +1189,23 @@ class _BaseTestApi(object):
         response = api_call(self, params)
         expected = "repo `%s` already exist" % repo_name
         self._compare_error(id_, expected, given=response.body)
+
+    def test_api_create_repo_dot_dot(self):
+        # FIXME: it should only be possible to create repositories in existing repo groups - and '..' can't be used
+        group_name = '%s/..' % TEST_REPO_GROUP
+        repo_name = '%s/%s' % (group_name, 'could-be-outside')
+        id_, params = _build_data(self.apikey, 'create_repo',
+                                  repo_name=repo_name,
+                                  owner=TEST_USER_ADMIN_LOGIN,
+                                  repo_type=self.REPO_TYPE,)
+        response = api_call(self, params)
+        expected = {
+            u'msg': u"Created new repository `%s`" % repo_name,
+            u'success': True,
+            u'task': None,
+        }
+        self._compare_ok(id_, expected, given=response.body)
+        fixture.destroy_repo(repo_name)
 
     @mock.patch.object(RepoModel, 'create', crash)
     def test_api_create_repo_exception_occurred(self):
