@@ -1401,9 +1401,9 @@ class ApiController(JSONRPCController):
                     enable_downloads=Optional(False),
                     copy_permissions=Optional(False)):
         """
-        Creates a repository. If repository name contains "/", all needed repository
-        groups will be created. For example "foo/bar/baz" will create groups
-        "foo", "bar" (with "foo" as parent), and create "baz" repository with
+        Creates a repository. The repository name contains the full path, but the
+        parent repository group must exist. For example "foo/bar/baz" require the groups
+        "foo" and "bar" (with "foo" as parent), and create "baz" repository with
         "bar" as group. This command can be executed only using api_key
         belonging to user with admin rights or regular user that have create
         repository permission. Regular users cannot specify owner parameter
@@ -1485,11 +1485,15 @@ class ApiController(JSONRPCController):
         copy_permissions = Optional.extract(copy_permissions)
 
         try:
-            repo_name_cleaned = repo_name.split('/')[-1]
-            # create structure of groups and return the last group
-            repo_group = map_groups(repo_name)
+            repo_name_parts = repo_name.split('/')
+            repo_group = None
+            if len(repo_name_parts) > 1:
+                group_name = '/'.join(repo_name_parts[:-1])
+                repo_group = RepoGroup.get_by_group_name(group_name)
+                if repo_group is None:
+                    raise JSONRPCError("repo group `%s` not found" % group_name)
             data = dict(
-                repo_name=repo_name_cleaned,
+                repo_name=repo_name_parts[-1],
                 repo_name_full=repo_name,
                 repo_type=repo_type,
                 repo_description=description,
@@ -1673,14 +1677,18 @@ class ApiController(JSONRPCController):
         owner = get_user_or_error(owner)
 
         try:
-            # create structure of groups and return the last group
-            group = map_groups(fork_name)
-            fork_base_name = fork_name.rsplit('/', 1)[-1]
+            fork_name_parts = fork_name.split('/')
+            repo_group = None
+            if len(fork_name_parts) > 1:
+                group_name = '/'.join(fork_name_parts[:-1])
+                repo_group = RepoGroup.get_by_group_name(group_name)
+                if repo_group is None:
+                    raise JSONRPCError("repo group `%s` not found" % group_name)
 
             form_data = dict(
-                repo_name=fork_base_name,
+                repo_name=fork_name_parts[-1],
                 repo_name_full=fork_name,
-                repo_group=group,
+                repo_group=repo_group,
                 repo_type=repo.repo_type,
                 description=Optional.extract(description),
                 private=Optional.extract(private),

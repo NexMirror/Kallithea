@@ -750,10 +750,12 @@ OUTPUT::
 create_repo
 -----------
 
-Create a repository. If the repository name contains "/", all needed repository
-groups will be created. For example "foo/bar/baz" will create repository groups
-"foo", "bar" (with "foo" as parent), and create "baz" repository with
-"bar" as group.
+Create a repository. If the repository name contains "/", the repository will be
+created in the repository group indicated by that path. Any such repository
+groups need to exist before calling this method, or the call will fail.
+For example "foo/bar/baz" will create a repository "baz" inside the repository
+group "bar" which itself is in a repository group "foo", but both "foo" and
+"bar" already need to exist before calling this method.
 This command can only be executed using the api_key of a user with admin rights,
 or that of a regular user with create repository permission.
 Regular users cannot specify owner parameter.
