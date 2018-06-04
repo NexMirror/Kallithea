@@ -355,6 +355,7 @@ class ReposController(BaseRepoController):
             h.flash(_('An error occurred during revoking of permission'),
                     category='error')
             raise HTTPInternalServerError()
+        return []
 
     @HasRepoPermissionLevelDecorator('admin')
     def edit_fields(self, repo_name):

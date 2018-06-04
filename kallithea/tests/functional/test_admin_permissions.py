@@ -125,5 +125,5 @@ class TestAdminPermissionsController(TestController):
                 obj_type='user',
                 user_id=user.user_id,
                 _authentication_token=self.authentication_token()),
-            status=204) # success has no content
+            status=200)
         assert not response.body
