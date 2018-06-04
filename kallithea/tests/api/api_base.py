@@ -128,7 +128,7 @@ class _BaseTestApi(object):
             'result': expected
         })
         given = json.loads(given)
-        assert expected == given
+        assert expected == given, (expected, given)
 
     def _compare_error(self, id_, expected, given):
         expected = jsonify({
@@ -137,7 +137,7 @@ class _BaseTestApi(object):
             'result': None
         })
         given = json.loads(given)
-        assert expected == given
+        assert expected == given, (expected, given)
 
     def test_Optional_object(self):
         from kallithea.controllers.api.api import Optional
