@@ -2,6 +2,22 @@
 set -e
 set -x
 
+cleanup()
+{
+  echo "Removing venv $venv"
+  rm  -rf "$venv"
+}
+
+echo "Checking that you are NOT inside a virtualenv"
+[ -z "$VIRTUAL_ENV" ]
+
+venv=$(mktemp -d --tmpdir kallithea-release-XXXXX)
+trap cleanup EXIT
+
+echo "Setting up a fresh virtualenv in $venv"
+virtualenv -p python2 "$venv"
+. "$venv/bin/activate"
+
 echo "Install/verify tools needed for building and uploading stuff"
 pip install --upgrade -e .
 pip install --upgrade -r dev_requirements.txt Sphinx Sphinx-PyPI-upload
@@ -40,7 +56,6 @@ python2 setup.py build_sphinx # not used yet ... but we want to make sure it bui
 cat - << EOT
 
 Now, make sure
-* the copyright and contributor lists have been updated
 * all tests are passing
 * release note is ready
 * announcement is ready

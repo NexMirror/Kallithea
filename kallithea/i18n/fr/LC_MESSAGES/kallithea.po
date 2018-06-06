@@ -7,11 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
-"POT-Creation-Date: 2017-07-27 13:13+0200\n"
+"POT-Creation-Date: 2017-07-25 16:37+0200\n"
 "PO-Revision-Date: 2017-07-26 06:43+0000\n"
 "Last-Translator: Étienne Gilli <etienne.gilli@gmail.com>\n"
 "Language-Team: French "
-"<https://hosted.weblate.org/projects/kallithea/kallithea/fr/>\n"
+"<https://hosted.weblate.org/projects/kallithea/stable/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,12 +19,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Weblate 2.16-dev\n"
 
-#: kallithea/controllers/changelog.py:85
-#: kallithea/controllers/pullrequests.py:240 kallithea/lib/base.py:515
+#: kallithea/controllers/changelog.py:86
+#: kallithea/controllers/pullrequests.py:238 kallithea/lib/base.py:512
 msgid "There are no changesets yet"
 msgstr "Il n’y a aucun changement pour le moment"
 
-#: kallithea/controllers/changelog.py:164
+#: kallithea/controllers/changelog.py:165
 #: kallithea/controllers/admin/permissions.py:61
 #: kallithea/controllers/admin/permissions.py:65
 #: kallithea/controllers/admin/permissions.py:69
@@ -36,28 +36,36 @@ msgstr "Il n’y a aucun changement pour le moment"
 msgid "None"
 msgstr "Aucun"
 
-#: kallithea/controllers/changelog.py:167 kallithea/controllers/files.py:198
+#: kallithea/controllers/changelog.py:168 kallithea/controllers/files.py:196
 msgid "(closed)"
 msgstr "(fermé)"
 
-#: kallithea/controllers/changeset.py:88
+#: kallithea/controllers/changeset.py:89
 msgid "Show whitespace"
 msgstr "Afficher les espaces et tabulations"
 
-#: kallithea/controllers/changeset.py:95 kallithea/controllers/changeset.py:102
+#: kallithea/controllers/changeset.py:96 kallithea/controllers/changeset.py:103
 #: kallithea/templates/files/diff_2way.html:55
 msgid "Ignore whitespace"
 msgstr "Ignorer les espaces et tabulations"
 
-#: kallithea/controllers/changeset.py:168
+#: kallithea/controllers/changeset.py:169
 #, python-format
 msgid "Increase diff context to %(num)s lines"
 msgstr "Augmenter le contexte du diff à %(num)s lignes"
 
-#: kallithea/controllers/changeset.py:233 kallithea/controllers/files.py:97
-#: kallithea/controllers/files.py:117 kallithea/controllers/files.py:744
+#: kallithea/controllers/changeset.py:212 kallithea/controllers/files.py:96
+#: kallithea/controllers/files.py:116 kallithea/controllers/files.py:742
 msgid "Such revision does not exist for this repository"
 msgstr "Une telle révision n'existe pas pour ce dépôt"
+
+#: kallithea/controllers/changeset.py:383
+msgid ""
+"Changing status on a changeset associated with a closed pull request is "
+"not allowed"
+msgstr ""
+"La modification de l'état sur un ensemble de modifications associé à une "
+"demande de tirage fermé n'est pas autorisé"
 
 #: kallithea/controllers/compare.py:161 kallithea/templates/base/root.html:41
 msgid "Select changeset"
@@ -114,10 +122,10 @@ msgstr "Flux %s de %s"
 #: kallithea/controllers/feed.py:87
 #: kallithea/templates/changeset/changeset.html:182
 #: kallithea/templates/changeset/changeset.html:195
-#: kallithea/templates/compare/compare_diff.html:84
-#: kallithea/templates/compare/compare_diff.html:93
-#: kallithea/templates/pullrequests/pullrequest_show.html:350
-#: kallithea/templates/pullrequests/pullrequest_show.html:372
+#: kallithea/templates/compare/compare_diff.html:78
+#: kallithea/templates/compare/compare_diff.html:89
+#: kallithea/templates/pullrequests/pullrequest_show.html:339
+#: kallithea/templates/pullrequests/pullrequest_show.html:363
 msgid "Changeset was too big and was cut off..."
 msgstr "Cet ensemble de changements était trop important et a été découpé…"
 
@@ -126,117 +134,117 @@ msgstr "Cet ensemble de changements était trop important et a été découpé�
 msgid "%s committed on %s"
 msgstr "%s a commité, le %s"
 
-#: kallithea/controllers/files.py:92
+#: kallithea/controllers/files.py:91
 msgid "Click here to add new file"
 msgstr "Ajouter un nouveau fichier"
 
-#: kallithea/controllers/files.py:93
+#: kallithea/controllers/files.py:92
 #, python-format
 msgid "There are no files yet. %s"
 msgstr "Il n'y a actuellement pas de fichiers. %s"
 
-#: kallithea/controllers/files.py:195
+#: kallithea/controllers/files.py:193
 #, python-format
 msgid "%s at %s"
 msgstr "%s à %s"
 
-#: kallithea/controllers/files.py:307 kallithea/controllers/files.py:367
-#: kallithea/controllers/files.py:434
+#: kallithea/controllers/files.py:305 kallithea/controllers/files.py:365
+#: kallithea/controllers/files.py:432
 #, python-format
 msgid "This repository has been locked by %s on %s"
 msgstr "Ce dépôt a été verrouillé par %s sur %s"
 
-#: kallithea/controllers/files.py:319
+#: kallithea/controllers/files.py:317
 msgid "You can only delete files with revision being a valid branch"
 msgstr ""
 "Vous ne pouvez supprimer les fichiers que si la révision est une branche "
 "valide"
 
-#: kallithea/controllers/files.py:330
+#: kallithea/controllers/files.py:328
 #, python-format
 msgid "Deleted file %s via Kallithea"
 msgstr "Le fichier %s a été supprimé via Kallithea"
 
-#: kallithea/controllers/files.py:352
+#: kallithea/controllers/files.py:350
 #, python-format
 msgid "Successfully deleted file %s"
 msgstr "Suppression du fichier %s effectuée avec succès"
 
-#: kallithea/controllers/files.py:356 kallithea/controllers/files.py:422
-#: kallithea/controllers/files.py:503
+#: kallithea/controllers/files.py:354 kallithea/controllers/files.py:420
+#: kallithea/controllers/files.py:501
 msgid "Error occurred during commit"
 msgstr "Une erreur est survenue durant le commit"
 
-#: kallithea/controllers/files.py:379
+#: kallithea/controllers/files.py:377
 msgid "You can only edit files with revision being a valid branch"
 msgstr ""
 "Vous ne pouvez modifier les fichiers que si la révision est une branche "
 "valide"
 
-#: kallithea/controllers/files.py:393
+#: kallithea/controllers/files.py:391
 #, python-format
 msgid "Edited file %s via Kallithea"
 msgstr "%s édité via Kallithea"
 
-#: kallithea/controllers/files.py:409
+#: kallithea/controllers/files.py:407
 msgid "No changes"
 msgstr "Aucun changement"
 
-#: kallithea/controllers/files.py:418 kallithea/controllers/files.py:492
+#: kallithea/controllers/files.py:416 kallithea/controllers/files.py:490
 #, python-format
 msgid "Successfully committed to %s"
 msgstr "Commit réalisé avec succès sur %s"
 
-#: kallithea/controllers/files.py:445
+#: kallithea/controllers/files.py:443
 msgid "Added file via Kallithea"
 msgstr "%s ajouté par Kallithea"
 
-#: kallithea/controllers/files.py:466
+#: kallithea/controllers/files.py:464
 msgid "No content"
 msgstr "Aucun contenu"
 
-#: kallithea/controllers/files.py:470
+#: kallithea/controllers/files.py:468
 msgid "No filename"
 msgstr "Aucun nom de fichier"
 
-#: kallithea/controllers/files.py:495
+#: kallithea/controllers/files.py:493
 msgid "Location must be relative path and must not contain .. in path"
 msgstr ""
 "Le chemin doit être un chemin relatif et ne doit pas contenir .. dans le "
 "chemin"
 
-#: kallithea/controllers/files.py:528
+#: kallithea/controllers/files.py:526
 msgid "Downloads disabled"
 msgstr "Les téléchargements sont désactivés"
 
-#: kallithea/controllers/files.py:539
+#: kallithea/controllers/files.py:537
 #, python-format
 msgid "Unknown revision %s"
 msgstr "Révision %s inconnue"
 
-#: kallithea/controllers/files.py:541
+#: kallithea/controllers/files.py:539
 msgid "Empty repository"
 msgstr "Dépôt vide"
 
-#: kallithea/controllers/files.py:543
+#: kallithea/controllers/files.py:541
 msgid "Unknown archive type"
 msgstr "Type d’archive inconnu"
 
-#: kallithea/controllers/files.py:773
+#: kallithea/controllers/files.py:771
 #: kallithea/templates/changeset/changeset_range.html:9
 #: kallithea/templates/email_templates/pull_request.html:15
 #: kallithea/templates/pullrequests/pullrequest.html:97
 msgid "Changesets"
 msgstr "Changesets"
 
-#: kallithea/controllers/files.py:774 kallithea/controllers/pullrequests.py:175
-#: kallithea/model/scm.py:716 kallithea/templates/switch_to_list.html:3
+#: kallithea/controllers/files.py:772 kallithea/controllers/pullrequests.py:176
+#: kallithea/model/scm.py:820 kallithea/templates/switch_to_list.html:3
 #: kallithea/templates/branches/branches.html:10
 msgid "Branches"
 msgstr "Branches"
 
-#: kallithea/controllers/files.py:775 kallithea/controllers/pullrequests.py:176
-#: kallithea/model/scm.py:727 kallithea/templates/switch_to_list.html:25
+#: kallithea/controllers/files.py:773 kallithea/controllers/pullrequests.py:177
+#: kallithea/model/scm.py:831 kallithea/templates/switch_to_list.html:25
 #: kallithea/templates/tags/tags.html:10
 msgid "Tags"
 msgstr "Tags"
@@ -250,7 +258,7 @@ msgstr "Une erreur est survenue durant le fork du dépôt %s"
 msgid "Groups"
 msgstr "Groupes"
 
-#: kallithea/controllers/home.py:94
+#: kallithea/controllers/home.py:89
 #: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:106
 #: kallithea/templates/admin/repos/repo_add.html:12
 #: kallithea/templates/admin/repos/repo_add.html:16
@@ -258,27 +266,23 @@ msgstr "Groupes"
 #: kallithea/templates/admin/users/user_edit_advanced.html:6
 #: kallithea/templates/base/base.html:60 kallithea/templates/base/base.html:77
 #: kallithea/templates/base/base.html:124
-#: kallithea/templates/base/base.html:479
-#: kallithea/templates/base/base.html:653
+#: kallithea/templates/base/base.html:390
+#: kallithea/templates/base/base.html:562
 msgid "Repositories"
 msgstr "Dépôts"
 
-#: kallithea/controllers/home.py:139
+#: kallithea/controllers/home.py:130
 #: kallithea/templates/files/files_add.html:32
 #: kallithea/templates/files/files_delete.html:23
 #: kallithea/templates/files/files_edit.html:32
 msgid "Branch"
 msgstr "Branche"
 
-#: kallithea/controllers/home.py:145 kallithea/templates/switch_to_list.html:16
-msgid "Closed Branches"
-msgstr "Branches fermées"
-
-#: kallithea/controllers/home.py:151
+#: kallithea/controllers/home.py:136
 msgid "Tag"
 msgstr "Étiquette"
 
-#: kallithea/controllers/home.py:157
+#: kallithea/controllers/home.py:142
 msgid "Bookmark"
 msgstr "Signet"
 
@@ -289,100 +293,100 @@ msgid "Public Journal"
 msgstr "Journal public"
 
 #: kallithea/controllers/journal.py:115 kallithea/controllers/journal.py:157
-#: kallithea/templates/base/base.html:306
+#: kallithea/templates/base/base.html:222
 #: kallithea/templates/journal/journal.html:4
 #: kallithea/templates/journal/journal.html:12
 msgid "Journal"
 msgstr "Historique"
 
-#: kallithea/controllers/login.py:144 kallithea/controllers/login.py:190
+#: kallithea/controllers/login.py:146 kallithea/controllers/login.py:192
 msgid "Bad captcha"
 msgstr "Mauvais captcha"
 
-#: kallithea/controllers/login.py:150
-msgid "You have successfully registered with %s"
-msgstr "Vous vous êtes inscrits avec succès à %s"
+#: kallithea/controllers/login.py:152
+msgid "You have successfully registered into Kallithea"
+msgstr "Vous vous êtes inscrits avec succès à Kallithea"
 
-#: kallithea/controllers/login.py:195
+#: kallithea/controllers/login.py:197
 msgid "A password reset confirmation code has been sent"
 msgstr "Un lien de confirmation de réinitialisation de mot de passe a été envoyé"
 
-#: kallithea/controllers/login.py:244
+#: kallithea/controllers/login.py:246
 msgid "Invalid password reset token"
 msgstr "Clé de réinitialisation de mot de passe invalide"
 
-#: kallithea/controllers/login.py:249
+#: kallithea/controllers/login.py:251
 #: kallithea/controllers/admin/my_account.py:167
 msgid "Successfully updated password"
 msgstr "Mot de passe mis à jour avec succès"
 
-#: kallithea/controllers/pullrequests.py:123
+#: kallithea/controllers/pullrequests.py:124
 #, python-format
 msgid "%s (closed)"
 msgstr "%s (fermé)"
 
-#: kallithea/controllers/pullrequests.py:151
+#: kallithea/controllers/pullrequests.py:152
 #: kallithea/templates/changeset/changeset.html:12
 #: kallithea/templates/email_templates/changeset_comment.html:17
 msgid "Changeset"
 msgstr "Changements"
 
-#: kallithea/controllers/pullrequests.py:172
+#: kallithea/controllers/pullrequests.py:173
 msgid "Special"
 msgstr "Spécial"
 
-#: kallithea/controllers/pullrequests.py:173
+#: kallithea/controllers/pullrequests.py:174
 msgid "Peer branches"
 msgstr "Branches appairées"
 
-#: kallithea/controllers/pullrequests.py:174 kallithea/model/scm.py:722
+#: kallithea/controllers/pullrequests.py:175 kallithea/model/scm.py:826
 #: kallithea/templates/switch_to_list.html:38
 #: kallithea/templates/bookmarks/bookmarks.html:10
 msgid "Bookmarks"
 msgstr "Signets"
 
-#: kallithea/controllers/pullrequests.py:312
+#: kallithea/controllers/pullrequests.py:310
 #, python-format
 msgid "Error creating pull request: %s"
 msgstr "Erreur de création de la demande de pull : %s"
 
-#: kallithea/controllers/pullrequests.py:358
-#: kallithea/controllers/pullrequests.py:505
+#: kallithea/controllers/pullrequests.py:356
+#: kallithea/controllers/pullrequests.py:503
 msgid "No description"
 msgstr "Aucune description"
 
-#: kallithea/controllers/pullrequests.py:365
+#: kallithea/controllers/pullrequests.py:363
 msgid "Successfully opened new pull request"
 msgstr "La requête de pull a été ouverte avec succès"
 
-#: kallithea/controllers/pullrequests.py:368
-#: kallithea/controllers/pullrequests.py:455
-#: kallithea/controllers/pullrequests.py:512
+#: kallithea/controllers/pullrequests.py:366
+#: kallithea/controllers/pullrequests.py:453
+#: kallithea/controllers/pullrequests.py:510
 #, python-format
 msgid "Invalid reviewer \"%s\" specified"
 msgstr "Reviewer spécifié \"%s\" non valide"
 
-#: kallithea/controllers/pullrequests.py:371
-#: kallithea/controllers/pullrequests.py:458
+#: kallithea/controllers/pullrequests.py:369
+#: kallithea/controllers/pullrequests.py:456
 msgid "Error occurred while creating pull request"
 msgstr "Une erreur est survenue durant la création de la pull request"
 
-#: kallithea/controllers/pullrequests.py:403
+#: kallithea/controllers/pullrequests.py:401
 msgid "Missing changesets since the previous pull request:"
 msgstr "Changeset manquant depuis la précédente pull request :"
 
-#: kallithea/controllers/pullrequests.py:410
+#: kallithea/controllers/pullrequests.py:408
 #, python-format
 msgid "New changesets on %s %s since the previous pull request:"
 msgstr "Nouveau changeset sur %s %s depuis la précédente pull request :"
 
-#: kallithea/controllers/pullrequests.py:417
+#: kallithea/controllers/pullrequests.py:415
 msgid "Ancestor didn't change - show diff since previous version:"
 msgstr ""
 "L'ancêtre n'a pas changé - montrer les différences avec la version "
 "précédente :"
 
-#: kallithea/controllers/pullrequests.py:424
+#: kallithea/controllers/pullrequests.py:422
 #, python-format
 msgid ""
 "This pull request is based on another %s revision and there is no simple "
@@ -391,65 +395,60 @@ msgstr ""
 "Cette demande de pull est basée sur une autre révision %s et il n'y a pas"
 " de diff simple."
 
-#: kallithea/controllers/pullrequests.py:426
+#: kallithea/controllers/pullrequests.py:424
 #, python-format
 msgid "No changes found on %s %s since previous version."
 msgstr "Aucun changement constaté sur %s %s depuis la version précédente."
 
-#: kallithea/controllers/pullrequests.py:464
+#: kallithea/controllers/pullrequests.py:462
 #, python-format
 msgid "Closed, replaced by %s ."
 msgstr "Fermé, remplacé par %s."
 
-#: kallithea/controllers/pullrequests.py:472
+#: kallithea/controllers/pullrequests.py:470
 msgid "Pull request update created"
 msgstr "Mise à jour de la pull request créée"
 
-#: kallithea/controllers/pullrequests.py:516
+#: kallithea/controllers/pullrequests.py:514
 msgid "Pull request updated"
 msgstr "Pull request mise à jour"
 
-#: kallithea/controllers/pullrequests.py:531
+#: kallithea/controllers/pullrequests.py:529
 msgid "Successfully deleted pull request"
 msgstr "La requête de pull a été supprimée avec succès"
 
-#: kallithea/controllers/pullrequests.py:597
+#: kallithea/controllers/pullrequests.py:595
 #, python-format
 msgid "This pull request has already been merged to %s."
 msgstr "Cette pull request a déjà été fusionnée à %s."
 
-#: kallithea/controllers/pullrequests.py:599
+#: kallithea/controllers/pullrequests.py:597
 msgid "This pull request has been closed and can not be updated."
 msgstr "Cette pull request a été fermée et ne peut pas être mise à jour."
 
-#: kallithea/controllers/pullrequests.py:617
+#: kallithea/controllers/pullrequests.py:615
 #, python-format
-msgid "The following changes are available on %s:"
-msgstr "Les modifications suivantes sont disponibles sur %s :"
+msgid "This pull request can be updated with changes on %s:"
+msgstr "Cette demande de pull peut être mise à jour avec les modifications de %s :"
 
-#: kallithea/controllers/pullrequests.py:621
+#: kallithea/controllers/pullrequests.py:619
 msgid "No changesets found for updating this pull request."
 msgstr "Pas de changeset trouvé pour ce pull request."
 
-#: kallithea/controllers/pullrequests.py:629
+#: kallithea/controllers/pullrequests.py:627
 #, python-format
 msgid "Note: Branch %s has another head: %s."
 msgstr "Note: La branche %s a une autre tête: %s."
 
-#: kallithea/controllers/pullrequests.py:635
+#: kallithea/controllers/pullrequests.py:633
 msgid "Git pull requests don't support updates yet."
 msgstr "Le smises à jour des Git pull requests ne sont pas encore supportées."
 
-#: kallithea/controllers/pullrequests.py:727
+#: kallithea/controllers/pullrequests.py:724
 msgid "No permission to change pull request status"
 msgstr "Permission manquante pour changer le statut du pull request"
 
-#: kallithea/controllers/pullrequests.py:738
-#, python-format
-msgid "Successfully deleted pull request %s"
-msgstr "La requête de pull %s a été supprimée avec succès"
-
-#: kallithea/controllers/pullrequests.py:748
+#: kallithea/controllers/pullrequests.py:729
 msgid "Closing."
 msgstr "Fermeture."
 
@@ -467,12 +466,12 @@ msgstr ""
 msgid "An error occurred during search operation."
 msgstr "Une erreur est survenue pendant la recherche."
 
-#: kallithea/controllers/summary.py:181
+#: kallithea/controllers/summary.py:180
 #: kallithea/templates/summary/summary.html:384
 msgid "No data ready yet"
 msgstr "Aucune donnée actuellement disponible"
 
-#: kallithea/controllers/summary.py:184
+#: kallithea/controllers/summary.py:183
 #: kallithea/templates/summary/summary.html:98
 msgid "Statistics are disabled for this repository"
 msgstr "La mise à jour des statistiques est désactivée pour ce dépôt"
@@ -495,64 +494,64 @@ msgstr "Mise à jour des réglages par défaut effectuée avec succès"
 msgid "Error occurred during update of defaults"
 msgstr "Une erreur est survenue durant la mise à jour des réglages par défaut"
 
-#: kallithea/controllers/admin/gists.py:58
+#: kallithea/controllers/admin/gists.py:59
 #: kallithea/controllers/admin/my_account.py:243
-#: kallithea/controllers/admin/users.py:284
+#: kallithea/controllers/admin/users.py:285
 msgid "Forever"
 msgstr "Pour toujours"
 
-#: kallithea/controllers/admin/gists.py:59
+#: kallithea/controllers/admin/gists.py:60
 #: kallithea/controllers/admin/my_account.py:244
-#: kallithea/controllers/admin/users.py:285
+#: kallithea/controllers/admin/users.py:286
 msgid "5 minutes"
 msgstr "5 minute"
 
-#: kallithea/controllers/admin/gists.py:60
+#: kallithea/controllers/admin/gists.py:61
 #: kallithea/controllers/admin/my_account.py:245
-#: kallithea/controllers/admin/users.py:286
+#: kallithea/controllers/admin/users.py:287
 msgid "1 hour"
 msgstr "1 heure"
 
-#: kallithea/controllers/admin/gists.py:61
+#: kallithea/controllers/admin/gists.py:62
 #: kallithea/controllers/admin/my_account.py:246
-#: kallithea/controllers/admin/users.py:287
+#: kallithea/controllers/admin/users.py:288
 msgid "1 day"
 msgstr "1 jour"
 
-#: kallithea/controllers/admin/gists.py:62
+#: kallithea/controllers/admin/gists.py:63
 #: kallithea/controllers/admin/my_account.py:247
-#: kallithea/controllers/admin/users.py:288
+#: kallithea/controllers/admin/users.py:289
 msgid "1 month"
 msgstr "1 mois"
 
-#: kallithea/controllers/admin/gists.py:66
+#: kallithea/controllers/admin/gists.py:67
 #: kallithea/controllers/admin/my_account.py:249
-#: kallithea/controllers/admin/users.py:290
+#: kallithea/controllers/admin/users.py:291
 msgid "Lifetime"
 msgstr "Toujours"
 
-#: kallithea/controllers/admin/gists.py:145
+#: kallithea/controllers/admin/gists.py:146
 msgid "Error occurred during gist creation"
 msgstr "Une erreur est survenue lors de la création du gist"
 
-#: kallithea/controllers/admin/gists.py:183
+#: kallithea/controllers/admin/gists.py:184
 #, python-format
 msgid "Deleted gist %s"
 msgstr "Gist %s supprimé"
 
-#: kallithea/controllers/admin/gists.py:232
+#: kallithea/controllers/admin/gists.py:233
 msgid "Unmodified"
 msgstr "Non modifié"
 
-#: kallithea/controllers/admin/gists.py:261
+#: kallithea/controllers/admin/gists.py:262
 msgid "Successfully updated gist content"
 msgstr "Le contenu du gist a été mis à jour avec succès"
 
-#: kallithea/controllers/admin/gists.py:266
+#: kallithea/controllers/admin/gists.py:267
 msgid "Successfully updated gist data"
 msgstr "Les données du gist on été mises à jour avec succès"
 
-#: kallithea/controllers/admin/gists.py:269
+#: kallithea/controllers/admin/gists.py:270
 #, python-format
 msgid "Error occurred during update of gist %s"
 msgstr "Une erreur est survenue durant la mise à jour du gist %s"
@@ -569,7 +568,7 @@ msgid "Your account was updated successfully"
 msgstr "Votre compte a été mis à jour avec succès"
 
 #: kallithea/controllers/admin/my_account.py:144
-#: kallithea/controllers/admin/users.py:201
+#: kallithea/controllers/admin/users.py:202
 #, python-format
 msgid "Error occurred during update of user %s"
 msgstr "Une erreur est survenue durant la mise à jour de l'utilisateur %s"
@@ -581,33 +580,33 @@ msgstr ""
 "l'utilisateur"
 
 #: kallithea/controllers/admin/my_account.py:220
-#: kallithea/controllers/admin/users.py:414
+#: kallithea/controllers/admin/users.py:415
 #, python-format
 msgid "Added email %s to user"
 msgstr "L’e-mail « %s » a été ajouté à l’utilisateur"
 
 #: kallithea/controllers/admin/my_account.py:226
-#: kallithea/controllers/admin/users.py:420
+#: kallithea/controllers/admin/users.py:421
 msgid "An error occurred during email saving"
 msgstr "Une erreur est survenue durant l’enregistrement de l’e-mail"
 
 #: kallithea/controllers/admin/my_account.py:235
-#: kallithea/controllers/admin/users.py:432
+#: kallithea/controllers/admin/users.py:433
 msgid "Removed email from user"
 msgstr "L’e-mail a été enlevé de l’utilisateur"
 
 #: kallithea/controllers/admin/my_account.py:259
-#: kallithea/controllers/admin/users.py:307
+#: kallithea/controllers/admin/users.py:308
 msgid "API key successfully created"
 msgstr "Clé d'API créée avec succès"
 
 #: kallithea/controllers/admin/my_account.py:271
-#: kallithea/controllers/admin/users.py:320
+#: kallithea/controllers/admin/users.py:321
 msgid "API key successfully reset"
 msgstr "Clé d'API remise à zéro avec succès"
 
 #: kallithea/controllers/admin/my_account.py:275
-#: kallithea/controllers/admin/users.py:324
+#: kallithea/controllers/admin/users.py:325
 msgid "API key successfully deleted"
 msgstr "Clé d'API supprimée avec succès"
 
@@ -657,10 +656,10 @@ msgstr "Écrire"
 #: kallithea/templates/admin/users/user_edit_profile.html:105
 #: kallithea/templates/admin/users/users.html:10
 #: kallithea/templates/admin/users/users.html:55
-#: kallithea/templates/base/base.html:336
-#: kallithea/templates/base/base.html:337
-#: kallithea/templates/base/base.html:343
-#: kallithea/templates/base/base.html:344
+#: kallithea/templates/base/base.html:252
+#: kallithea/templates/base/base.html:253
+#: kallithea/templates/base/base.html:259
+#: kallithea/templates/base/base.html:260
 #: kallithea/templates/base/perms_summary.html:17
 msgid "Admin"
 msgstr "Administration"
@@ -691,7 +690,7 @@ msgstr "Autorisé avec activation de compte automatique"
 #: kallithea/lib/dbmigrate/schema/db_2_0_2.py:1564
 #: kallithea/lib/dbmigrate/schema/db_2_1_0.py:1603
 #: kallithea/lib/dbmigrate/schema/db_2_2_0.py:1655
-#: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1682 kallithea/model/db.py:1705
+#: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1682 kallithea/model/db.py:1702
 msgid "Manual activation of external account"
 msgstr "Activation manuelle du compte externe"
 
@@ -703,7 +702,7 @@ msgstr "Activation manuelle du compte externe"
 #: kallithea/lib/dbmigrate/schema/db_2_0_2.py:1565
 #: kallithea/lib/dbmigrate/schema/db_2_1_0.py:1604
 #: kallithea/lib/dbmigrate/schema/db_2_2_0.py:1656
-#: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1683 kallithea/model/db.py:1706
+#: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1683 kallithea/model/db.py:1703
 msgid "Automatic activation of external account"
 msgstr "Activation automatique du compte externe"
 
@@ -724,196 +723,196 @@ msgstr "Permissions globales mises à jour avec succès"
 msgid "Error occurred during update of permissions"
 msgstr "Une erreur est survenue durant la mise à jour des permissions"
 
-#: kallithea/controllers/admin/repo_groups.py:187
+#: kallithea/controllers/admin/repo_groups.py:188
 #, python-format
 msgid "Error occurred during creation of repository group %s"
 msgstr "Une erreur est survenue durant la création du groupe de dépôts %s"
 
-#: kallithea/controllers/admin/repo_groups.py:192
+#: kallithea/controllers/admin/repo_groups.py:193
 #, python-format
 msgid "Created repository group %s"
 msgstr "Groupe de dépôts %s créé"
 
-#: kallithea/controllers/admin/repo_groups.py:249
+#: kallithea/controllers/admin/repo_groups.py:250
 #, python-format
 msgid "Updated repository group %s"
 msgstr "Groupe de dépôts %s mis à jour"
 
-#: kallithea/controllers/admin/repo_groups.py:265
+#: kallithea/controllers/admin/repo_groups.py:266
 #, python-format
 msgid "Error occurred during update of repository group %s"
 msgstr "Une erreur est survenue durant la mise à jour du groupe de dépôts %s"
 
-#: kallithea/controllers/admin/repo_groups.py:283
+#: kallithea/controllers/admin/repo_groups.py:284
 #, python-format
 msgid "This group contains %s repositories and cannot be deleted"
 msgstr "Ce groupe contient %s dépôts et ne peut être supprimé"
 
-#: kallithea/controllers/admin/repo_groups.py:290
+#: kallithea/controllers/admin/repo_groups.py:291
 #, python-format
 msgid "This group contains %s subgroups and cannot be deleted"
 msgstr "Ce groupe contient %s sous-groupes et ne peut pas être supprimé"
 
-#: kallithea/controllers/admin/repo_groups.py:296
+#: kallithea/controllers/admin/repo_groups.py:297
 #, python-format
 msgid "Removed repository group %s"
 msgstr "Groupe de dépôts %s supprimé"
 
-#: kallithea/controllers/admin/repo_groups.py:301
+#: kallithea/controllers/admin/repo_groups.py:302
 #, python-format
 msgid "Error occurred during deletion of repository group %s"
 msgstr "Une erreur est survenue durant la suppression du groupe de dépôts %s"
 
-#: kallithea/controllers/admin/repo_groups.py:404
-#: kallithea/controllers/admin/repo_groups.py:439
+#: kallithea/controllers/admin/repo_groups.py:405
+#: kallithea/controllers/admin/repo_groups.py:440
 #: kallithea/controllers/admin/user_groups.py:340
 msgid "Cannot revoke permission for yourself as admin"
 msgstr "Impossible de révoquer votre permission d'administrateur"
 
-#: kallithea/controllers/admin/repo_groups.py:419
+#: kallithea/controllers/admin/repo_groups.py:420
 msgid "Repository group permissions updated"
 msgstr "Permissions du groupe de dépôts mises à jour"
 
-#: kallithea/controllers/admin/repo_groups.py:456
-#: kallithea/controllers/admin/repos.py:397
+#: kallithea/controllers/admin/repo_groups.py:457
+#: kallithea/controllers/admin/repos.py:398
 #: kallithea/controllers/admin/user_groups.py:352
 msgid "An error occurred during revoking of permission"
 msgstr "Une erreur est survenue durant la révocation de la permission"
 
-#: kallithea/controllers/admin/repos.py:151
+#: kallithea/controllers/admin/repos.py:152
 #, python-format
 msgid "Error creating repository %s"
 msgstr "Erreur de création du dépôt %s"
 
-#: kallithea/controllers/admin/repos.py:212
+#: kallithea/controllers/admin/repos.py:213
 #, python-format
 msgid "Created repository %s from %s"
 msgstr "Dépôt %s créé depuis %s"
 
-#: kallithea/controllers/admin/repos.py:221
+#: kallithea/controllers/admin/repos.py:222
 #, python-format
 msgid "Forked repository %s as %s"
 msgstr "dépôt %s forké en tant que %s"
 
-#: kallithea/controllers/admin/repos.py:224
+#: kallithea/controllers/admin/repos.py:225
 #, python-format
 msgid "Created repository %s"
 msgstr "Dépôt %s créé"
 
-#: kallithea/controllers/admin/repos.py:261
+#: kallithea/controllers/admin/repos.py:262
 #, python-format
 msgid "Repository %s updated successfully"
 msgstr "Dépôt %s mis à jour avec succès"
 
-#: kallithea/controllers/admin/repos.py:282
+#: kallithea/controllers/admin/repos.py:283
 #, python-format
 msgid "Error occurred during update of repository %s"
 msgstr "Une erreur est survenue durant la mise à jour du dépôt %s"
 
-#: kallithea/controllers/admin/repos.py:309
+#: kallithea/controllers/admin/repos.py:310
 #, python-format
 msgid "Detached %s forks"
 msgstr "%s forks détachés"
 
-#: kallithea/controllers/admin/repos.py:312
+#: kallithea/controllers/admin/repos.py:313
 #, python-format
 msgid "Deleted %s forks"
 msgstr "%s forks supprimés"
 
-#: kallithea/controllers/admin/repos.py:317
+#: kallithea/controllers/admin/repos.py:318
 #, python-format
 msgid "Deleted repository %s"
 msgstr "Dépôt %s supprimé"
 
-#: kallithea/controllers/admin/repos.py:320
+#: kallithea/controllers/admin/repos.py:321
 #, python-format
 msgid "Cannot delete repository %s which still has forks"
 msgstr "Impossible de supprimer le dépôt %s : des forks y sont attachés"
 
-#: kallithea/controllers/admin/repos.py:325
+#: kallithea/controllers/admin/repos.py:326
 #, python-format
 msgid "An error occurred during deletion of %s"
 msgstr "Erreur pendant la suppression de %s"
 
-#: kallithea/controllers/admin/repos.py:373
+#: kallithea/controllers/admin/repos.py:374
 msgid "Repository permissions updated"
 msgstr "Permissions du dépôt mises à jour"
 
-#: kallithea/controllers/admin/repos.py:429
+#: kallithea/controllers/admin/repos.py:430
 msgid "An error occurred during creation of field"
 msgstr "Une erreur est survenue durant la création du champ"
 
-#: kallithea/controllers/admin/repos.py:443
+#: kallithea/controllers/admin/repos.py:444
 msgid "An error occurred during removal of field"
 msgstr "Une erreur est survenue durant la suppression du champ"
 
-#: kallithea/controllers/admin/repos.py:459
+#: kallithea/controllers/admin/repos.py:460
 msgid "-- Not a fork --"
 msgstr "-- Pas un fork --"
 
-#: kallithea/controllers/admin/repos.py:490
+#: kallithea/controllers/admin/repos.py:491
 msgid "Updated repository visibility in public journal"
 msgstr "La visibilité du dépôt dans le journal public a été mise à jour"
 
-#: kallithea/controllers/admin/repos.py:494
+#: kallithea/controllers/admin/repos.py:495
 msgid "An error occurred during setting this repository in public journal"
 msgstr ""
 "Une erreur est survenue durant la configuration du journal public pour ce"
 " dépôt"
 
-#: kallithea/controllers/admin/repos.py:511
+#: kallithea/controllers/admin/repos.py:512
 msgid "Nothing"
 msgstr "[Aucun dépôt]"
 
-#: kallithea/controllers/admin/repos.py:513
+#: kallithea/controllers/admin/repos.py:514
 #, python-format
 msgid "Marked repository %s as fork of %s"
 msgstr "Le dépôt %s a été marké comme fork de %s"
 
-#: kallithea/controllers/admin/repos.py:520
+#: kallithea/controllers/admin/repos.py:521
 msgid "An error occurred during this operation"
 msgstr "Une erreur est survenue durant cette opération"
 
-#: kallithea/controllers/admin/repos.py:536
-#: kallithea/controllers/admin/repos.py:563
+#: kallithea/controllers/admin/repos.py:537
+#: kallithea/controllers/admin/repos.py:564
 msgid "Repository has been locked"
 msgstr "Ce dépôt a été verrouillé"
 
-#: kallithea/controllers/admin/repos.py:539
-#: kallithea/controllers/admin/repos.py:560
+#: kallithea/controllers/admin/repos.py:540
+#: kallithea/controllers/admin/repos.py:561
 msgid "Repository has been unlocked"
 msgstr "Ce dépôt a été déverrouillé"
 
-#: kallithea/controllers/admin/repos.py:542
-#: kallithea/controllers/admin/repos.py:567
+#: kallithea/controllers/admin/repos.py:543
+#: kallithea/controllers/admin/repos.py:568
 msgid "An error occurred during unlocking"
 msgstr "Une erreur est survenue durant le déverrouillage"
 
-#: kallithea/controllers/admin/repos.py:581
+#: kallithea/controllers/admin/repos.py:582
 msgid "Cache invalidation successful"
 msgstr "Invalidation du cache réalisée avec succès"
 
-#: kallithea/controllers/admin/repos.py:585
+#: kallithea/controllers/admin/repos.py:586
 msgid "An error occurred during cache invalidation"
 msgstr "Une erreur est survenue durant l’invalidation du cache"
 
-#: kallithea/controllers/admin/repos.py:600
+#: kallithea/controllers/admin/repos.py:601
 msgid "Pulled from remote location"
 msgstr "Les changements distants ont été récupérés"
 
-#: kallithea/controllers/admin/repos.py:603
+#: kallithea/controllers/admin/repos.py:604
 msgid "An error occurred during pull from remote location"
 msgstr "Une erreur est survenue durant le pull depuis la source distante"
 
-#: kallithea/controllers/admin/repos.py:636
+#: kallithea/controllers/admin/repos.py:637
 msgid "An error occurred during deletion of repository stats"
 msgstr "Une erreur est survenue durant la suppression des statistiques du dépôt"
 
-#: kallithea/controllers/admin/settings.py:141
+#: kallithea/controllers/admin/settings.py:170
 msgid "Updated VCS settings"
 msgstr "Réglages des gestionnaires de versions mis à jour"
 
-#: kallithea/controllers/admin/settings.py:145
+#: kallithea/controllers/admin/settings.py:174
 msgid ""
 "Unable to activate hgsubversion support. The \"hgsubversion\" library is "
 "missing"
@@ -921,53 +920,58 @@ msgstr ""
 "Impossible d'activer la prise en charge de hgsubversion. La bibliothèque "
 "« hgsubversion » est manquante"
 
-#: kallithea/controllers/admin/settings.py:151
-#: kallithea/controllers/admin/settings.py:248
+#: kallithea/controllers/admin/settings.py:180
+#: kallithea/controllers/admin/settings.py:284
 msgid "Error occurred while updating application settings"
 msgstr ""
 "Une erreur est survenue durant la mise à jour des réglages de "
 "l'application"
 
-#: kallithea/controllers/admin/settings.py:187
+#: kallithea/controllers/admin/settings.py:211
 #, python-format
 msgid "Repositories successfully rescanned. Added: %s. Removed: %s."
 msgstr "Dépôts ré-analysés avec succès. Ajouté : %s. Supprimé : %s."
 
-#: kallithea/controllers/admin/settings.py:244
+#: kallithea/controllers/admin/settings.py:226
+#, python-format
+msgid "Invalidated %s repositories"
+msgstr "%s dépôts invalidés"
+
+#: kallithea/controllers/admin/settings.py:280
 msgid "Updated application settings"
 msgstr "Réglages mis à jour"
 
-#: kallithea/controllers/admin/settings.py:301
+#: kallithea/controllers/admin/settings.py:337
 msgid "Updated visualisation settings"
 msgstr "Réglages d’affichage mis à jour"
 
-#: kallithea/controllers/admin/settings.py:306
+#: kallithea/controllers/admin/settings.py:342
 msgid "Error occurred during updating visualisation settings"
 msgstr ""
 "Une erreur est survenue durant la mise à jour des réglages de "
 "visualisation"
 
-#: kallithea/controllers/admin/settings.py:332
+#: kallithea/controllers/admin/settings.py:368
 msgid "Please enter email address"
 msgstr "Veuillez entrer votre adresse e-mail"
 
-#: kallithea/controllers/admin/settings.py:347
+#: kallithea/controllers/admin/settings.py:383
 msgid "Send email task created"
 msgstr "Tâche d'envoi d'e-mail créée"
 
-#: kallithea/controllers/admin/settings.py:378
+#: kallithea/controllers/admin/settings.py:414
 msgid "Added new hook"
 msgstr "Le nouveau hook a été ajouté"
 
-#: kallithea/controllers/admin/settings.py:392
+#: kallithea/controllers/admin/settings.py:428
 msgid "Updated hooks"
 msgstr "Hooks mis à jour"
 
-#: kallithea/controllers/admin/settings.py:396
+#: kallithea/controllers/admin/settings.py:432
 msgid "Error occurred during hook creation"
 msgstr "Une erreur est survenue durant la création du hook"
 
-#: kallithea/controllers/admin/settings.py:422
+#: kallithea/controllers/admin/settings.py:458
 msgid "Whoosh reindex task scheduled"
 msgstr "La tâche de réindexation Whoosh a été planifiée"
 
@@ -1008,84 +1012,85 @@ msgid "User group permissions updated"
 msgstr "Permissions du groupe d'utilisateurs mises à jour"
 
 #: kallithea/controllers/admin/user_groups.py:440
-#: kallithea/controllers/admin/users.py:383
+#: kallithea/controllers/admin/users.py:384
 msgid "Updated permissions"
 msgstr "Permissions mises à jour"
 
 #: kallithea/controllers/admin/user_groups.py:444
-#: kallithea/controllers/admin/users.py:387
+#: kallithea/controllers/admin/users.py:388
 msgid "An error occurred during permissions saving"
 msgstr "Une erreur est survenue durant l’enregistrement des permissions"
 
-#: kallithea/controllers/admin/users.py:133
+#: kallithea/controllers/admin/users.py:134
 #, python-format
 msgid "Created user %s"
 msgstr "Utilisateur %s créé"
 
-#: kallithea/controllers/admin/users.py:148
+#: kallithea/controllers/admin/users.py:149
 #, python-format
 msgid "Error occurred during creation of user %s"
 msgstr "Une erreur est survenue durant la création de l'utilisateur %s"
 
-#: kallithea/controllers/admin/users.py:181
+#: kallithea/controllers/admin/users.py:182
 msgid "User updated successfully"
 msgstr "L’utilisateur a été mis à jour avec succès"
 
-#: kallithea/controllers/admin/users.py:217
+#: kallithea/controllers/admin/users.py:218
 msgid "Successfully deleted user"
 msgstr "Utilisateur supprimé avec succès"
 
-#: kallithea/controllers/admin/users.py:222
+#: kallithea/controllers/admin/users.py:223
 msgid "An error occurred during deletion of user"
 msgstr "Une erreur est survenue durant la suppression de l’utilisateur"
 
-#: kallithea/controllers/admin/users.py:235
+#: kallithea/controllers/admin/users.py:236
 msgid "The default user cannot be edited"
 msgstr "L'utilisateur par défaut ne peut pas être modifié"
 
-#: kallithea/controllers/admin/users.py:462
+#: kallithea/controllers/admin/users.py:463
 #, python-format
 msgid "Added IP address %s to user whitelist"
 msgstr "L'adresse IP %s a été ajoutée à la liste blanche"
 
-#: kallithea/controllers/admin/users.py:468
+#: kallithea/controllers/admin/users.py:469
 msgid "An error occurred while adding IP address"
 msgstr "Une erreur est survenue durant la sauvegarde d'IP"
 
-#: kallithea/controllers/admin/users.py:482
+#: kallithea/controllers/admin/users.py:483
 msgid "Removed IP address from user whitelist"
 msgstr "L'adresse IP a été supprimée de la liste blanche"
 
-#: kallithea/lib/auth.py:737
+#: kallithea/lib/auth.py:744
 #, python-format
 msgid "IP %s not allowed"
 msgstr "IP %s non autorisée"
 
-#: kallithea/lib/auth.py:750
+#: kallithea/lib/auth.py:757
 msgid "Invalid API key"
 msgstr "Clé d'API invalide"
 
-#: kallithea/lib/auth.py:768
+#: kallithea/lib/auth.py:785
 msgid "CSRF token leak has been detected - all form tokens have been expired"
 msgstr ""
 "Une fuite de jeton CSRF a été détectée - tous les jetons de formulaire sont "
 "considérés comme expirés"
 
-#: kallithea/lib/auth.py:813
+#: kallithea/lib/auth.py:832
 msgid "You need to be a registered user to perform this action"
 msgstr "Vous devez être un utilisateur enregistré pour effectuer cette action"
 
-#: kallithea/lib/auth.py:843
+#: kallithea/lib/auth.py:864
 msgid "You need to be signed in to view this page"
 msgstr "Vous devez être connecté pour visualiser cette page"
 
-#: kallithea/lib/base.py:493
+#: kallithea/lib/base.py:490
 msgid "Repository not found in the filesystem"
 msgstr "Dépôt non trouvé sur le système de fichiers"
 
-#: kallithea/lib/base.py:519 kallithea/lib/helpers.py:623
-msgid "Changeset not found"
-msgstr "Ensemble de changements non trouvé"
+#: kallithea/lib/base.py:516
+#, python-format
+msgid "Changeset for %s %s not found in %s"
+msgstr "Ensemble de changements pour %s %s non trouvé dans %s"
 
 #: kallithea/lib/diffs.py:66
 msgid "Binary file"
@@ -1110,6 +1115,11 @@ msgstr "Branche supprimée : %s"
 #, python-format
 msgid "Created tag: %s"
 msgstr "Étiquette créée : %s"
+
+#: kallithea/lib/helpers.py:623
+#, python-format
+msgid "Changeset %s not found"
+msgstr "Ensemble de changements %s non trouvé"
 
 #: kallithea/lib/helpers.py:672
 #, python-format
@@ -1223,38 +1233,38 @@ msgstr "[suit maintenant] le dépôt"
 msgid "[stopped following] repository"
 msgstr "[ne suit plus] le dépôt"
 
-#: kallithea/lib/helpers.py:1124
+#: kallithea/lib/helpers.py:1125
 #, python-format
 msgid " and %s more"
 msgstr " et %s de plus"
 
-#: kallithea/lib/helpers.py:1128
-#: kallithea/templates/compare/compare_diff.html:71
-#: kallithea/templates/pullrequests/pullrequest_show.html:337
+#: kallithea/lib/helpers.py:1129
+#: kallithea/templates/compare/compare_diff.html:65
+#: kallithea/templates/pullrequests/pullrequest_show.html:326
 msgid "No files"
 msgstr "Aucun fichier"
 
-#: kallithea/lib/helpers.py:1194
+#: kallithea/lib/helpers.py:1195
 msgid "new file"
 msgstr "nouveau fichier"
 
-#: kallithea/lib/helpers.py:1197
+#: kallithea/lib/helpers.py:1198
 msgid "mod"
 msgstr "mod"
 
-#: kallithea/lib/helpers.py:1200
+#: kallithea/lib/helpers.py:1201
 msgid "del"
 msgstr "suppr."
 
-#: kallithea/lib/helpers.py:1203
+#: kallithea/lib/helpers.py:1204
 msgid "rename"
 msgstr "renommer"
 
-#: kallithea/lib/helpers.py:1208
+#: kallithea/lib/helpers.py:1209
 msgid "chmod"
 msgstr "chmod"
 
-#: kallithea/lib/helpers.py:1469
+#: kallithea/lib/helpers.py:1445
 #, python-format
 msgid ""
 "%s repository is not mapped to db perhaps it was created or renamed from "
@@ -1265,69 +1275,69 @@ msgstr ""
 "probablement été créé ou renommé manuellement. Veuillez relancer "
 "l’application pour rescanner les dépôts"
 
-#: kallithea/lib/utils2.py:434
+#: kallithea/lib/utils2.py:415
 #, python-format
 msgid "%d year"
 msgid_plural "%d years"
 msgstr[0] "%d an"
 msgstr[1] "%d ans"
 
-#: kallithea/lib/utils2.py:435
+#: kallithea/lib/utils2.py:416
 #, python-format
 msgid "%d month"
 msgid_plural "%d months"
 msgstr[0] "%d mois"
 msgstr[1] "%d mois"
 
-#: kallithea/lib/utils2.py:436
+#: kallithea/lib/utils2.py:417
 #, python-format
 msgid "%d day"
 msgid_plural "%d days"
 msgstr[0] "%d jour"
 msgstr[1] "%d jours"
 
-#: kallithea/lib/utils2.py:437
+#: kallithea/lib/utils2.py:418
 #, python-format
 msgid "%d hour"
 msgid_plural "%d hours"
 msgstr[0] "%d heure"
 msgstr[1] "%d heures"
 
-#: kallithea/lib/utils2.py:438
+#: kallithea/lib/utils2.py:419
 #, python-format
 msgid "%d minute"
 msgid_plural "%d minutes"
 msgstr[0] "%d minute"
 msgstr[1] "%d minutes"
 
-#: kallithea/lib/utils2.py:439
+#: kallithea/lib/utils2.py:420
 #, python-format
 msgid "%d second"
 msgid_plural "%d seconds"
 msgstr[0] "%d seconde"
 msgstr[1] "%d secondes"
 
-#: kallithea/lib/utils2.py:455
+#: kallithea/lib/utils2.py:436
 #, python-format
 msgid "in %s"
 msgstr "dans %s"
 
-#: kallithea/lib/utils2.py:457
+#: kallithea/lib/utils2.py:438
 #, python-format
 msgid "%s ago"
 msgstr "Il y a %s"
 
-#: kallithea/lib/utils2.py:459
+#: kallithea/lib/utils2.py:440
 #, python-format
 msgid "in %s and %s"
 msgstr "dans %s et %s"
 
-#: kallithea/lib/utils2.py:462
+#: kallithea/lib/utils2.py:443
 #, python-format
 msgid "%s and %s ago"
 msgstr "Il y a %s et %s"
 
-#: kallithea/lib/utils2.py:465
+#: kallithea/lib/utils2.py:446
 msgid "just now"
 msgstr "à l’instant"
 
@@ -1426,7 +1436,7 @@ msgstr "Accès administrateur au groupe de dépôts"
 #: kallithea/lib/dbmigrate/schema/db_2_0_2.py:1531
 #: kallithea/lib/dbmigrate/schema/db_2_1_0.py:1570
 #: kallithea/lib/dbmigrate/schema/db_2_2_0.py:1620
-#: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1647 kallithea/model/db.py:1669
+#: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1647 kallithea/model/db.py:1666
 msgid "Kallithea Administrator"
 msgstr "Administrateur Kallithea"
 
@@ -1537,7 +1547,7 @@ msgstr "Pas encore relue"
 #: kallithea/lib/dbmigrate/schema/db_2_0_2.py:2063
 #: kallithea/lib/dbmigrate/schema/db_2_1_0.py:2102
 #: kallithea/lib/dbmigrate/schema/db_2_2_0.py:2155
-#: kallithea/lib/dbmigrate/schema/db_2_2_3.py:2201 kallithea/model/db.py:2237
+#: kallithea/lib/dbmigrate/schema/db_2_2_3.py:2201 kallithea/model/db.py:2239
 msgid "Approved"
 msgstr "Approuvée"
 
@@ -1552,7 +1562,7 @@ msgstr "Approuvée"
 #: kallithea/lib/dbmigrate/schema/db_2_0_2.py:2064
 #: kallithea/lib/dbmigrate/schema/db_2_1_0.py:2103
 #: kallithea/lib/dbmigrate/schema/db_2_2_0.py:2156
-#: kallithea/lib/dbmigrate/schema/db_2_2_3.py:2202 kallithea/model/db.py:2238
+#: kallithea/lib/dbmigrate/schema/db_2_2_3.py:2202 kallithea/model/db.py:2240
 msgid "Rejected"
 msgstr "Rejetée"
 
@@ -1579,7 +1589,7 @@ msgstr "En cours de relecture"
 #: kallithea/lib/dbmigrate/schema/db_2_0_2.py:1379
 #: kallithea/lib/dbmigrate/schema/db_2_1_0.py:1418
 #: kallithea/lib/dbmigrate/schema/db_2_2_0.py:1471
-#: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1498 kallithea/model/db.py:1518
+#: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1498 kallithea/model/db.py:1515
 msgid "top level"
 msgstr "niveau supérieur"
 
@@ -1726,7 +1736,7 @@ msgstr "Création de groupes d'utilisateurs activée"
 #: kallithea/lib/dbmigrate/schema/db_2_0_2.py:1560
 #: kallithea/lib/dbmigrate/schema/db_2_1_0.py:1599
 #: kallithea/lib/dbmigrate/schema/db_2_2_0.py:1651
-#: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1678 kallithea/model/db.py:1701
+#: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1678 kallithea/model/db.py:1698
 msgid "Registration disabled"
 msgstr "Enregistrement désactivé"
 
@@ -1753,14 +1763,14 @@ msgid "User Registration with automatic account activation"
 msgstr "Enregistrement des utilisateurs avec activation de compte automatique"
 
 #: kallithea/lib/dbmigrate/schema/db_2_2_0.py:1645
-#: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1672 kallithea/model/db.py:1695
+#: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1672 kallithea/model/db.py:1692
 msgid "Repository creation enabled with write permission to a repository group"
 msgstr ""
 "Création de dépôts activée avec l'accès en écriture vers un groupe de "
 "dépôts"
 
 #: kallithea/lib/dbmigrate/schema/db_2_2_0.py:1646
-#: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1673 kallithea/model/db.py:1696
+#: kallithea/lib/dbmigrate/schema/db_2_2_3.py:1673 kallithea/model/db.py:1693
 msgid "Repository creation disabled with write permission to a repository group"
 msgstr ""
 "Création de dépôts désactivée avec l'accès en écriture vers un groupe de "
@@ -1771,119 +1781,119 @@ msgstr ""
 msgid "on line %s"
 msgstr "à la ligne %s"
 
-#: kallithea/model/comment.py:217 kallithea/model/pull_request.py:170
+#: kallithea/model/comment.py:217 kallithea/model/pull_request.py:169
 msgid "[Mention]"
 msgstr "[Mention]"
 
-#: kallithea/model/db.py:1671
+#: kallithea/model/db.py:1668
 msgid "Default user has no access to new repositories"
 msgstr "L'utilisateur par défaut n'a pas accès aux nouveaux dépôts"
 
-#: kallithea/model/db.py:1672
+#: kallithea/model/db.py:1669
 msgid "Default user has read access to new repositories"
 msgstr "L'utilisateur par défaut a un accès en lecture aux nouveaux dépôts"
 
-#: kallithea/model/db.py:1673
+#: kallithea/model/db.py:1670
 msgid "Default user has write access to new repositories"
 msgstr "L'utilisateur par défaut a un accès en écriture aux nouveaux dépôts"
 
-#: kallithea/model/db.py:1674
+#: kallithea/model/db.py:1671
 msgid "Default user has admin access to new repositories"
 msgstr "L'utilisateur par défaut a un accès administrateur aux nouveaux dépôts"
 
-#: kallithea/model/db.py:1676
+#: kallithea/model/db.py:1673
 msgid "Default user has no access to new repository groups"
 msgstr "L'utilisateur par défaut n'a pas accès aux nouveaux groupes de dépôts"
 
-#: kallithea/model/db.py:1677
+#: kallithea/model/db.py:1674
 msgid "Default user has read access to new repository groups"
 msgstr ""
 "L'utilisateur par défaut a accès en lecture seule aux nouveaux groupes de"
 " dépôts"
 
-#: kallithea/model/db.py:1678
+#: kallithea/model/db.py:1675
 msgid "Default user has write access to new repository groups"
 msgstr ""
 "L'utilisateur par défaut a accès en écriture aux nouveaux groupes de "
 "dépôts"
 
-#: kallithea/model/db.py:1679
+#: kallithea/model/db.py:1676
 msgid "Default user has admin access to new repository groups"
 msgstr ""
 "L'utilisateur par défaut a accès administrateur aux nouveaux groupes de "
 "dépôts"
 
-#: kallithea/model/db.py:1681
+#: kallithea/model/db.py:1678
 msgid "Default user has no access to new user groups"
 msgstr "L'utilisateur par défaut n'a pas accès aux nouveaux groupes d'utilisateurs"
 
-#: kallithea/model/db.py:1682
+#: kallithea/model/db.py:1679
 msgid "Default user has read access to new user groups"
 msgstr ""
 "L'utilisateur par défaut a accès en lecture seule aux nouveaux groupes "
 "d'utilisateurs"
 
-#: kallithea/model/db.py:1683
+#: kallithea/model/db.py:1680
 msgid "Default user has write access to new user groups"
 msgstr ""
 "L'utilisateur par défaut a accès en écriture aux nouveaux groupes "
 "d'utilisateurs"
 
-#: kallithea/model/db.py:1684
+#: kallithea/model/db.py:1681
 msgid "Default user has admin access to new user groups"
 msgstr ""
 "L'utilisateur par défaut a un accès administrateur aux nouveaux groupes "
 "d'utilisateurs"
 
-#: kallithea/model/db.py:1686
+#: kallithea/model/db.py:1683
 msgid "Only admins can create repository groups"
 msgstr "Seul un administrateur peut créer un groupe de dépôts"
 
-#: kallithea/model/db.py:1687
+#: kallithea/model/db.py:1684
 msgid "Non-admins can create repository groups"
 msgstr "Les utilisateurs non-administrateurs peuvent créer des groupes de dépôts"
 
-#: kallithea/model/db.py:1689
+#: kallithea/model/db.py:1686
 msgid "Only admins can create user groups"
 msgstr "Seul un administrateur peut créer des groupes d'utilisateurs"
 
-#: kallithea/model/db.py:1690
+#: kallithea/model/db.py:1687
 msgid "Non-admins can create user groups"
 msgstr ""
 "Les utilisateurs non-administrateurs peuvent créer des groupes "
 "d'utilisateurs"
 
-#: kallithea/model/db.py:1692
+#: kallithea/model/db.py:1689
 msgid "Only admins can create top level repositories"
 msgstr "Seul un administrateur peut créer des dépôts de niveau supérieur"
 
-#: kallithea/model/db.py:1693
+#: kallithea/model/db.py:1690
 msgid "Non-admins can create top level repositories"
 msgstr ""
 "Les utilisateurs non-administrateurs peuvent créer des dépôts de niveau "
 "supérieur"
 
-#: kallithea/model/db.py:1698
+#: kallithea/model/db.py:1695
 msgid "Only admins can fork repositories"
 msgstr "Seul un administrateur peut faire un fork de dépôt"
 
-#: kallithea/model/db.py:1699
+#: kallithea/model/db.py:1696
 msgid "Non-admins can fork repositories"
 msgstr "Les utilisateurs non-administrateurs peuvent faire un fork de dépôt"
 
-#: kallithea/model/db.py:1702
+#: kallithea/model/db.py:1699
 msgid "User registration with manual account activation"
 msgstr "Enregistrement des utilisateurs avec activation de compte manuelle"
 
-#: kallithea/model/db.py:1703
+#: kallithea/model/db.py:1700
 msgid "User registration with automatic account activation"
 msgstr "Enregistrement des utilisateurs avec activation de compte automatique"
 
-#: kallithea/model/db.py:2236
+#: kallithea/model/db.py:2238
 msgid "Not reviewed"
 msgstr "Pas encore relue"
 
-#: kallithea/model/db.py:2239
+#: kallithea/model/db.py:2241
 msgid "Under review"
 msgstr "En cours de relecture"
 
@@ -1905,95 +1915,95 @@ msgstr "Veuillez entrer un mot de passe"
 msgid "Enter %(min)i characters or more"
 msgstr "Entrez au moins %(min)i caractères"
 
-#: kallithea/model/forms.py:165
+#: kallithea/model/forms.py:160
 msgid "Name must not contain only digits"
 msgstr "Le nom ne doit pas contenir seulement des chiffres"
 
-#: kallithea/model/notification.py:254
+#: kallithea/model/notification.py:255
 #, python-format
 msgid "%(user)s commented on changeset %(age)s"
 msgstr "%(user)s a commenté sur le changeset %(age)s"
 
-#: kallithea/model/notification.py:255
+#: kallithea/model/notification.py:256
 #, python-format
 msgid "%(user)s sent message %(age)s"
 msgstr "%(user)s a envoyé un message %(age)s"
 
-#: kallithea/model/notification.py:256
+#: kallithea/model/notification.py:257
 #, python-format
 msgid "%(user)s mentioned you %(age)s"
 msgstr "%(user)s vous a mentionné %(age)s"
 
-#: kallithea/model/notification.py:257
+#: kallithea/model/notification.py:258
 #, python-format
 msgid "%(user)s registered in Kallithea %(age)s"
 msgstr "%(user)s s'est enregistré sur Kallithea %(age)s"
 
-#: kallithea/model/notification.py:258
+#: kallithea/model/notification.py:259
 #, python-format
 msgid "%(user)s opened new pull request %(age)s"
 msgstr "%(user)s a ouvert une nouvelle demande de pull %(age)s"
 
-#: kallithea/model/notification.py:259
+#: kallithea/model/notification.py:260
 #, python-format
 msgid "%(user)s commented on pull request %(age)s"
 msgstr "%(user)s a commenté la demande de pull %(age)s"
 
-#: kallithea/model/notification.py:266
+#: kallithea/model/notification.py:267
 #, python-format
 msgid "%(user)s commented on changeset at %(when)s"
 msgstr "%(user)s a commenté sur le changeset à %(when)s"
 
-#: kallithea/model/notification.py:267
+#: kallithea/model/notification.py:268
 #, python-format
 msgid "%(user)s sent message at %(when)s"
 msgstr "%(user)s a envoyé un message à %(when)s"
 
-#: kallithea/model/notification.py:268
+#: kallithea/model/notification.py:269
 #, python-format
 msgid "%(user)s mentioned you at %(when)s"
 msgstr "%(user)s vous a mentionné à %(when)s"
 
-#: kallithea/model/notification.py:269
+#: kallithea/model/notification.py:270
 #, python-format
 msgid "%(user)s registered in Kallithea at %(when)s"
 msgstr "%(user)s s'est enregistré sur Kallithea à %(when)s"
 
-#: kallithea/model/notification.py:270
+#: kallithea/model/notification.py:271
 #, python-format
 msgid "%(user)s opened new pull request at %(when)s"
 msgstr "%(user)s a ouvert une nouvelle demande de pull à %(when)s"
 
-#: kallithea/model/notification.py:271
+#: kallithea/model/notification.py:272
 #, python-format
 msgid "%(user)s commented on pull request at %(when)s"
 msgstr "%(user)s a commenté la demande de pull à %(when)s"
 
-#: kallithea/model/notification.py:302
+#: kallithea/model/notification.py:303
 #, python-format
 msgid "[Comment] %(repo_name)s changeset %(short_id)s on %(branch)s"
 msgstr "[Commentaire] Changeset %(short_id)s de %(repo_name)s dans %(branch)s"
 
-#: kallithea/model/notification.py:305
+#: kallithea/model/notification.py:306
 #, python-format
 msgid "New user %(new_username)s registered"
 msgstr "Nouvel utilisateur %(new_username)s enregistré"
 
-#: kallithea/model/notification.py:307
+#: kallithea/model/notification.py:308
 #, python-format
 msgid "[Added] %(repo_name)s pull request %(pr_nice_id)s from %(ref)s"
 msgstr ""
 "[Ajouté] Demande de pull %(pr_nice_id)s à partir de %(ref)s pour "
 "%(repo_name)s"
 
-#: kallithea/model/notification.py:308
+#: kallithea/model/notification.py:309
 #, python-format
 msgid "[Comment] %(repo_name)s pull request %(pr_nice_id)s from %(ref)s"
 msgstr ""
 "[Commentaire] Demande de pull %(pr_nice_id)s à partir de %(ref)s pour "
 "%(repo_name)s"
 
-#: kallithea/model/notification.py:321
+#: kallithea/model/notification.py:322
 msgid "Closing"
 msgstr "Fermeture"
 
@@ -2004,7 +2014,7 @@ msgstr ""
 "%(user)s veut que vous regardiez la demande de pull %(pr_nice_id)s : "
 "%(pr_title)s"
 
-#: kallithea/model/scm.py:708
+#: kallithea/model/scm.py:812
 msgid "latest tip"
 msgstr "Dernier sommet"
 
@@ -2046,15 +2056,15 @@ msgstr ""
 "être supprimé. Changez les propriétaires de ces groupes d'utilisateurs ou"
 " supprimez-les : %s"
 
-#: kallithea/model/user.py:368
+#: kallithea/model/user.py:360
 msgid "Password reset link"
 msgstr "Lien de remise à zéro du mot de passe"
 
-#: kallithea/model/user.py:418
+#: kallithea/model/user.py:408
 msgid "Password reset notification"
 msgstr "Notification de réinitialisation du mot de passe"
 
-#: kallithea/model/user.py:419
+#: kallithea/model/user.py:409
 #, python-format
 msgid ""
 "The password to your account %s has been changed using password reset "
@@ -2067,17 +2077,17 @@ msgstr ""
 msgid "Value cannot be an empty list"
 msgstr "Cette valeur ne peut être une liste vide"
 
-#: kallithea/model/validators.py:96
+#: kallithea/model/validators.py:95
 #, python-format
 msgid "Username \"%(username)s\" already exists"
 msgstr "Le nom d’utilisateur « %(username)s » existe déjà"
 
-#: kallithea/model/validators.py:98
+#: kallithea/model/validators.py:97
 #, python-format
 msgid "Username \"%(username)s\" cannot be used"
 msgstr "Le nom d’utilisateur « %(username)s » n’est pas valide"
 
-#: kallithea/model/validators.py:100
+#: kallithea/model/validators.py:99
 msgid ""
 "Username may only contain alphanumeric characters underscores, periods or"
 " dashes and must begin with an alphanumeric character or underscore"
@@ -2086,25 +2096,25 @@ msgstr ""
 " des underscores (_), points, traits d'union et doit commencer avec un "
 "caractère alphanumérique ou un underscore"
 
-#: kallithea/model/validators.py:127
+#: kallithea/model/validators.py:126
 msgid "The input is not valid"
 msgstr "L'entrée n'est pas valide"
 
-#: kallithea/model/validators.py:134
+#: kallithea/model/validators.py:133
 #, python-format
 msgid "Username %(username)s is not valid"
 msgstr "Le nom d’utilisateur « %(username)s » n’est pas valide"
 
-#: kallithea/model/validators.py:154
+#: kallithea/model/validators.py:152
 msgid "Invalid user group name"
 msgstr "Nom de groupe d'utilisateurs invalide"
 
-#: kallithea/model/validators.py:155
+#: kallithea/model/validators.py:153
 #, python-format
 msgid "User group \"%(usergroup)s\" already exists"
 msgstr "Le groupe d'utilisateurs « %(usergroup)s » existe déjà"
 
-#: kallithea/model/validators.py:157
+#: kallithea/model/validators.py:155
 msgid ""
 "user group name may only contain alphanumeric characters underscores, "
 "periods or dashes and must begin with alphanumeric character"
@@ -2113,65 +2123,65 @@ msgstr ""
 "alphanumériques, des tirets, des points, des traits d'union et doit "
 "commencer avec un caractère alphanumérique"
 
-#: kallithea/model/validators.py:197
+#: kallithea/model/validators.py:193
 msgid "Cannot assign this group as parent"
 msgstr "Impossible d’assigner ce groupe en tant que parent"
 
-#: kallithea/model/validators.py:198
+#: kallithea/model/validators.py:194
 #, python-format
 msgid "Group \"%(group_name)s\" already exists"
 msgstr "Le groupe « %(group_name)s » existe déjà"
 
-#: kallithea/model/validators.py:200
+#: kallithea/model/validators.py:196
 #, python-format
 msgid "Repository with name \"%(group_name)s\" already exists"
 msgstr "Un dépôt portant le nom « %(group_name)s » existe déjà"
 
-#: kallithea/model/validators.py:258
+#: kallithea/model/validators.py:254
 msgid "Invalid characters (non-ascii) in password"
 msgstr "Caractères incorrects (non-ASCII) dans le mot de passe"
 
-#: kallithea/model/validators.py:273
+#: kallithea/model/validators.py:269
 msgid "Invalid old password"
 msgstr "Ancien mot de passe invalide"
 
-#: kallithea/model/validators.py:289
+#: kallithea/model/validators.py:285
 msgid "Passwords do not match"
 msgstr "Les mots de passe ne correspondent pas"
 
-#: kallithea/model/validators.py:304
+#: kallithea/model/validators.py:300
 msgid "Invalid username or password"
 msgstr "Nom d'utilisateur ou mot de passe invalide"
 
-#: kallithea/model/validators.py:335
+#: kallithea/model/validators.py:331
 msgid "Token mismatch"
 msgstr "Jeton d’authentification incorrect"
 
-#: kallithea/model/validators.py:351
+#: kallithea/model/validators.py:345
 #, python-format
 msgid "Repository name %(repo)s is not allowed"
 msgstr "Le nom de dépôt « %(repo)s » n’est pas autorisé"
 
-#: kallithea/model/validators.py:353
+#: kallithea/model/validators.py:347
 #, python-format
 msgid "Repository named %(repo)s already exists"
 msgstr "Un dépôt portant le nom « %(repo)s » existe déjà"
 
-#: kallithea/model/validators.py:354
+#: kallithea/model/validators.py:348
 #, python-format
 msgid "Repository \"%(repo)s\" already exists in group \"%(group)s\""
 msgstr "Le dépôt « %(repo)s » existe déjà dans le groupe « %(group)s »"
 
-#: kallithea/model/validators.py:356
+#: kallithea/model/validators.py:350
 #, python-format
 msgid "Repository group with name \"%(repo)s\" already exists"
 msgstr "Un groupe de dépôts avec le nom « %(repo)s » existe déjà"
 
-#: kallithea/model/validators.py:470
+#: kallithea/model/validators.py:465
 msgid "Invalid repository URL"
 msgstr "URL de dépôt invalide"
 
-#: kallithea/model/validators.py:471
+#: kallithea/model/validators.py:466
 msgid ""
 "Invalid repository URL. It must be a valid http, https, ssh, svn+http or "
 "svn+https URL"
@@ -2179,40 +2189,40 @@ msgstr ""
 "URL de dépôt invalide. Ce doit être une URL valide de type http, https, "
 "ssh, svn+http ou svn+https"
 
-#: kallithea/model/validators.py:496
+#: kallithea/model/validators.py:489
 msgid "Fork has to be the same type as parent"
 msgstr "Le fork doit être du même type que le parent"
 
-#: kallithea/model/validators.py:511
+#: kallithea/model/validators.py:504
 msgid "You don't have permissions to create repository in this group"
 msgstr "Vous n’avez pas la permission de créer un dépôt dans ce"
 
-#: kallithea/model/validators.py:513
+#: kallithea/model/validators.py:506
 msgid "no permission to create repository in root location"
 msgstr "pas de permission de créer un dépôt dans la racine"
 
-#: kallithea/model/validators.py:563
+#: kallithea/model/validators.py:556
 msgid "You don't have permissions to create a group in this location"
 msgstr "Vous n'avez pas les permissions pour créer un groupe dans cet endroit"
 
-#: kallithea/model/validators.py:604
+#: kallithea/model/validators.py:597
 msgid "This username or user group name is not valid"
 msgstr "Ce nom d'utilisateur ou nom de groupe d'utilisateurs n'est pas valide"
 
-#: kallithea/model/validators.py:697
+#: kallithea/model/validators.py:690
 msgid "This is not a valid path"
 msgstr "Ceci n’est pas un chemin valide"
 
-#: kallithea/model/validators.py:714
+#: kallithea/model/validators.py:705
 msgid "This email address is already in use"
 msgstr "Cette adresse e-mail est déjà enregistrée"
 
-#: kallithea/model/validators.py:734
+#: kallithea/model/validators.py:725
 #, python-format
 msgid "Email address \"%(email)s\" not found"
 msgstr "L’adresse e-mail « %(email)s » n’existe pas"
 
-#: kallithea/model/validators.py:771
+#: kallithea/model/validators.py:762
 msgid ""
 "The LDAP Login attribute of the CN must be specified - this is the name "
 "of the attribute that is equivalent to \"username\""
@@ -2220,26 +2230,26 @@ msgstr ""
 "L’attribut Login du CN doit être spécifié. Cet attribut correspond au nom"
 " d’utilisateur"
 
-#: kallithea/model/validators.py:783
+#: kallithea/model/validators.py:774
 msgid "Please enter a valid IPv4 or IPv6 address"
 msgstr "Veuillez entrer une adresse IPv4 ou IPv6 valide"
 
-#: kallithea/model/validators.py:784
+#: kallithea/model/validators.py:775
 #, python-format
 msgid "The network size (bits) must be within the range of 0-32 (not %(bits)r)"
 msgstr "La taille du réseau (bits) doit être entre 0 et 32 (et non %(bits)r)"
 
-#: kallithea/model/validators.py:817
+#: kallithea/model/validators.py:808
 msgid "Key name can only consist of letters, underscore, dash or numbers"
 msgstr ""
 "Le nom de la clé ne peut consister que de letters, de traits d'union, de "
 "tirets ou de nombres"
 
-#: kallithea/model/validators.py:831
+#: kallithea/model/validators.py:822
 msgid "Filename cannot be inside a directory"
 msgstr "Le nom du fichier ne peut être à l'intérieur d'un répertoire"
 
-#: kallithea/model/validators.py:847
+#: kallithea/model/validators.py:838
 #, python-format
 msgid "Plugins %(loaded)s and %(next_to_load)s both export the same name"
 msgstr ""
@@ -2368,7 +2378,7 @@ msgstr "Sommet"
 #: kallithea/templates/admin/user_groups/user_groups.html:50
 #: kallithea/templates/pullrequests/pullrequest_data.html:16
 #: kallithea/templates/pullrequests/pullrequest_show.html:156
-#: kallithea/templates/pullrequests/pullrequest_show.html:244
+#: kallithea/templates/pullrequests/pullrequest_show.html:233
 #: kallithea/templates/summary/summary.html:134
 msgid "Owner"
 msgstr "Propriétaire"
@@ -2416,7 +2426,7 @@ msgstr "Erreur d’intégrité des données."
 #: kallithea/templates/index_base.html:144
 #: kallithea/templates/admin/my_account/my_account_repos.html:61
 #: kallithea/templates/admin/my_account/my_account_watched.html:61
-#: kallithea/templates/base/root.html:47
+#: kallithea/templates/base/base.html:140 kallithea/templates/base/root.html:47
 #: kallithea/templates/bookmarks/bookmarks.html:83
 #: kallithea/templates/branches/branches.html:83
 #: kallithea/templates/journal/journal.html:202
@@ -2426,7 +2436,7 @@ msgid "Loading..."
 msgstr "Chargement…"
 
 #: kallithea/templates/login.html:5 kallithea/templates/login.html:15
-#: kallithea/templates/base/base.html:414
+#: kallithea/templates/base/base.html:326
 msgid "Log In"
 msgstr "Connexion"
 
@@ -2441,7 +2451,7 @@ msgstr "Se connecter à %s"
 #: kallithea/templates/admin/users/user_add.html:32
 #: kallithea/templates/admin/users/user_edit_profile.html:24
 #: kallithea/templates/admin/users/users.html:50
-#: kallithea/templates/base/base.html:390
+#: kallithea/templates/base/base.html:302
 #: kallithea/templates/pullrequests/pullrequest_show.html:166
 msgid "Username"
 msgstr "Nom d’utilisateur"
@@ -2449,7 +2459,7 @@ msgstr "Nom d’utilisateur"
 #: kallithea/templates/login.html:33 kallithea/templates/register.html:33
 #: kallithea/templates/admin/my_account/my_account.html:37
 #: kallithea/templates/admin/users/user_add.html:41
-#: kallithea/templates/base/base.html:399
+#: kallithea/templates/base/base.html:311
 msgid "Password"
 msgstr "Mot de passe"
 
@@ -2461,7 +2471,7 @@ msgstr "Se souvenir de moi"
 msgid "Forgot your password ?"
 msgstr "Mot de passe oublié ?"
 
-#: kallithea/templates/login.html:56 kallithea/templates/base/base.html:410
+#: kallithea/templates/login.html:56 kallithea/templates/base/base.html:322
 msgid "Don't have an account ?"
 msgstr "Vous n’avez pas de compte ?"
 
@@ -2589,6 +2599,10 @@ msgstr "Merci d'attendre qu'un administrateur active votre compte."
 #: kallithea/templates/branches/branches_data.html:69
 msgid "There are no branches yet"
 msgstr "Aucune branche n’a été créée pour le moment"
+
+#: kallithea/templates/switch_to_list.html:16
+msgid "Closed Branches"
+msgstr "Branches fermées"
 
 #: kallithea/templates/switch_to_list.html:32
 #: kallithea/templates/tags/tags_data.html:44
@@ -2823,12 +2837,12 @@ msgstr "Expire le"
 msgid "Never"
 msgstr "Jamais"
 
-#: kallithea/templates/admin/gists/edit.html:146
+#: kallithea/templates/admin/gists/edit.html:145
 msgid "Update Gist"
 msgstr "Mettre à jour le gist"
 
-#: kallithea/templates/admin/gists/edit.html:147
-#: kallithea/templates/changeset/changeset_file_comment.html:105
+#: kallithea/templates/admin/gists/edit.html:146
+#: kallithea/templates/changeset/changeset_file_comment.html:81
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -2851,7 +2865,7 @@ msgstr "Gists publics"
 
 #: kallithea/templates/admin/gists/index.html:37
 #: kallithea/templates/admin/gists/show.html:25
-#: kallithea/templates/base/base.html:321
+#: kallithea/templates/base/base.html:237
 msgid "Create New Gist"
 msgstr "Créer un nouveau gist"
 
@@ -2939,8 +2953,7 @@ msgstr "Gist privé"
 #: kallithea/templates/admin/settings/settings_hooks.html:36
 #: kallithea/templates/admin/users/user_edit_emails.html:19
 #: kallithea/templates/admin/users/user_edit_ips.html:22
-#: kallithea/templates/changeset/changeset_file_comment.html:31
-#: kallithea/templates/changeset/changeset_file_comment.html:95
+#: kallithea/templates/changeset/changeset_file_comment.html:30
 #: kallithea/templates/data_table/_dt_elements.html:129
 #: kallithea/templates/data_table/_dt_elements.html:157
 #: kallithea/templates/data_table/_dt_elements.html:173
@@ -2960,6 +2973,8 @@ msgstr "Confirmer la supprisson de ce gist"
 #: kallithea/templates/base/perms_summary.html:43
 #: kallithea/templates/base/perms_summary.html:79
 #: kallithea/templates/base/perms_summary.html:81
+#: kallithea/templates/changeset/changeset_file_comment.html:83
+#: kallithea/templates/changeset/changeset_file_comment.html:192
 #: kallithea/templates/data_table/_dt_elements.html:122
 #: kallithea/templates/data_table/_dt_elements.html:123
 #: kallithea/templates/data_table/_dt_elements.html:150
@@ -2986,12 +3001,13 @@ msgid "created"
 msgstr "créé"
 
 #: kallithea/templates/admin/gists/show.html:86
+#: kallithea/templates/files/files_source.html:73
 msgid "Show as raw"
 msgstr "Montrer en brut"
 
 #: kallithea/templates/admin/my_account/my_account.html:5
 #: kallithea/templates/admin/my_account/my_account.html:9
-#: kallithea/templates/base/base.html:431
+#: kallithea/templates/base/base.html:343
 msgid "My Account"
 msgstr "Mon compte"
 
@@ -3172,7 +3188,7 @@ msgid "Comments"
 msgstr "Commentaires"
 
 #: kallithea/templates/admin/notifications/notifications.html:26
-#: kallithea/templates/base/base.html:180
+#: kallithea/templates/base/base.html:183
 msgid "Pull Requests"
 msgstr "Demandes de pull"
 
@@ -3190,7 +3206,7 @@ msgid "Show Notification"
 msgstr "Montrer Notification"
 
 #: kallithea/templates/admin/notifications/show_notification.html:9
-#: kallithea/templates/base/base.html:430
+#: kallithea/templates/base/base.html:342
 msgid "Notifications"
 msgstr "Notifications"
 
@@ -3414,7 +3430,7 @@ msgstr "Ajouter un groupe enfant"
 #: kallithea/templates/admin/repos/repo_edit.html:40
 #: kallithea/templates/admin/settings/settings.html:11
 #: kallithea/templates/admin/user_groups/user_group_edit.html:29
-#: kallithea/templates/base/base.html:67 kallithea/templates/base/base.html:148
+#: kallithea/templates/base/base.html:67 kallithea/templates/base/base.html:151
 #: kallithea/templates/data_table/_dt_elements.html:45
 #: kallithea/templates/data_table/_dt_elements.html:49
 msgid "Settings"
@@ -3760,6 +3776,10 @@ msgstr ""
 #: kallithea/templates/admin/repos/repo_edit_caches.html:4
 msgid "Invalidate Repository Cache"
 msgstr "Invalider le cache du dépôt"
+
+#: kallithea/templates/admin/repos/repo_edit_caches.html:4
+msgid "Confirm to invalidate repository cache."
+msgstr "Voulez-vous vraiment invalider le cache du dépôt ?"
 
 #: kallithea/templates/admin/repos/repo_edit_caches.html:7
 msgid ""
@@ -4571,17 +4591,21 @@ msgstr "Historique"
 msgid "Files"
 msgstr "Fichiers"
 
-#: kallithea/templates/base/base.html:142
-#: kallithea/templates/base/base.html:144
+#: kallithea/templates/base/base.html:138
+msgid "Switch To"
+msgstr "Basculer vers"
+
+#: kallithea/templates/base/base.html:145
+#: kallithea/templates/base/base.html:147
 msgid "Options"
 msgstr "Options"
 
-#: kallithea/templates/base/base.html:152
+#: kallithea/templates/base/base.html:155
 #: kallithea/templates/forks/forks_data.html:21
 msgid "Compare Fork"
 msgstr "Comparer le fork"
 
-#: kallithea/templates/base/base.html:154
+#: kallithea/templates/base/base.html:157
 #: kallithea/templates/bookmarks/bookmarks.html:56
 #: kallithea/templates/bookmarks/bookmarks_data.html:13
 #: kallithea/templates/branches/branches.html:56
@@ -4591,116 +4615,111 @@ msgstr "Comparer le fork"
 msgid "Compare"
 msgstr "Comparer"
 
-#: kallithea/templates/base/base.html:156
-#: kallithea/templates/base/base.html:331
+#: kallithea/templates/base/base.html:159
+#: kallithea/templates/base/base.html:247
 #: kallithea/templates/search/search.html:14
 #: kallithea/templates/search/search.html:54
 msgid "Search"
 msgstr "Rechercher"
 
-#: kallithea/templates/base/base.html:160
+#: kallithea/templates/base/base.html:163
 msgid "Unlock"
 msgstr "Déverrouiller"
 
-#: kallithea/templates/base/base.html:162
+#: kallithea/templates/base/base.html:165
 msgid "Lock"
 msgstr "Verrouiller"
 
-#: kallithea/templates/base/base.html:170
+#: kallithea/templates/base/base.html:173
 msgid "Follow"
 msgstr "Suivre"
 
-#: kallithea/templates/base/base.html:171
+#: kallithea/templates/base/base.html:174
 msgid "Unfollow"
 msgstr "Arrêter de suivre"
 
-#: kallithea/templates/base/base.html:174
+#: kallithea/templates/base/base.html:177
 #: kallithea/templates/data_table/_dt_elements.html:37
 #: kallithea/templates/data_table/_dt_elements.html:41
 #: kallithea/templates/forks/fork.html:9
 msgid "Fork"
 msgstr "Fork"
 
-#: kallithea/templates/base/base.html:175
+#: kallithea/templates/base/base.html:178
 #: kallithea/templates/pullrequests/pullrequest.html:88
 msgid "Create Pull Request"
 msgstr "Créer une requête de pull"
 
-#: kallithea/templates/base/base.html:180
+#: kallithea/templates/base/base.html:183
 #, python-format
 msgid "Show Pull Requests for %s"
 msgstr "Afficher les requêtes de pull pour %s"
 
-#: kallithea/templates/base/base.html:193
-msgid "Switch To"
-msgstr "Basculer vers"
-
-#: kallithea/templates/base/base.html:203
-#: kallithea/templates/base/base.html:485
-msgid "No matches found"
-msgstr "Aucune correspondance trouvée"
-
-#: kallithea/templates/base/base.html:305
+#: kallithea/templates/base/base.html:221
 msgid "Show recent activity"
 msgstr "Afficher l'activité récente"
 
-#: kallithea/templates/base/base.html:311
-#: kallithea/templates/base/base.html:312
+#: kallithea/templates/base/base.html:227
+#: kallithea/templates/base/base.html:228
 msgid "Public journal"
 msgstr "Journal public"
 
-#: kallithea/templates/base/base.html:317
+#: kallithea/templates/base/base.html:233
 msgid "Show public gists"
 msgstr "Afficher les gists publics"
 
-#: kallithea/templates/base/base.html:318
+#: kallithea/templates/base/base.html:234
 msgid "Gists"
 msgstr "Gists"
 
-#: kallithea/templates/base/base.html:322
+#: kallithea/templates/base/base.html:238
 msgid "All Public Gists"
 msgstr "Tous les Gists publics"
 
-#: kallithea/templates/base/base.html:324
+#: kallithea/templates/base/base.html:240
 msgid "My Public Gists"
 msgstr "Mes Gists publics"
 
-#: kallithea/templates/base/base.html:325
+#: kallithea/templates/base/base.html:241
 msgid "My Private Gists"
 msgstr "Mes Gist privés"
 
-#: kallithea/templates/base/base.html:330
+#: kallithea/templates/base/base.html:246
 msgid "Search in repositories"
 msgstr "Recherche dans les dépôts"
 
-#: kallithea/templates/base/base.html:353
-#: kallithea/templates/base/base.html:354
+#: kallithea/templates/base/base.html:269
+#: kallithea/templates/base/base.html:270
 #: kallithea/templates/pullrequests/pullrequest_show_my.html:6
 #: kallithea/templates/pullrequests/pullrequest_show_my.html:10
 msgid "My Pull Requests"
 msgstr "Mes requêtes de pull"
 
-#: kallithea/templates/base/base.html:377
+#: kallithea/templates/base/base.html:289
 msgid "Not Logged In"
 msgstr "Non connecté"
 
-#: kallithea/templates/base/base.html:384
+#: kallithea/templates/base/base.html:296
 msgid "Login to Your Account"
 msgstr "Connexion à votre compte"
 
-#: kallithea/templates/base/base.html:407
+#: kallithea/templates/base/base.html:319
 msgid "Forgot password ?"
 msgstr "Mot de passe oublié ?"
 
-#: kallithea/templates/base/base.html:434
+#: kallithea/templates/base/base.html:346
 msgid "Log Out"
 msgstr "Se déconnecter"
 
-#: kallithea/templates/base/base.html:615
+#: kallithea/templates/base/base.html:395
+msgid "No matches found"
+msgstr "Aucune correspondance trouvée"
+
+#: kallithea/templates/base/base.html:524
 msgid "Keyboard shortcuts"
 msgstr "Raccourcis clavier"
 
-#: kallithea/templates/base/base.html:624
+#: kallithea/templates/base/base.html:533
 msgid "Site-wide shortcuts"
 msgstr "Raccourcis globaux"
 
@@ -4825,7 +4844,6 @@ msgstr "Lien vers la sélection"
 
 #: kallithea/templates/base/root.html:35
 #: kallithea/templates/changeset/diff_block.html:8
-#: kallithea/templates/changeset/diff_block.html:21
 msgid "Collapse Diff"
 msgstr "Replier le Diff"
 
@@ -4933,58 +4951,54 @@ msgstr "Filtre de branche :"
 #: kallithea/templates/changelog/changelog.html:92
 #: kallithea/templates/changelog/changelog_summary_data.html:20
 #, python-format
-#| msgid "" "Changeset status: %s\n" "Click to open associated pull request %s"
 msgid ""
-"Changeset status: %s by %s\n"
+"Changeset status: %s\n"
 "Click to open associated pull request %s"
 msgstr ""
-"Statut du changeset : %s par %s\n"
+"Statut du changeset : %s\n"
 "Cliquer pour ouvrir la requête de pull %s associée"
 
 #: kallithea/templates/changelog/changelog.html:96
-#: kallithea/templates/changelog/changelog_summary_data.html:24
+#: kallithea/templates/compare/compare_cs.html:24
 #, python-format
-#| msgid "Changeset status: %s"
-msgid "Changeset status: %s by %s"
-msgstr "Statut de changeset : %s par %s"
+msgid "Changeset status: %s"
+msgstr "Statut de changeset : %s"
 
-#: kallithea/templates/changelog/changelog.html:116
+#: kallithea/templates/changelog/changelog.html:115
 #: kallithea/templates/compare/compare_cs.html:63
 msgid "Expand commit message"
 msgstr "Développer le message de commit"
 
-#: kallithea/templates/changelog/changelog.html:125
+#: kallithea/templates/changelog/changelog.html:124
 #: kallithea/templates/compare/compare_cs.html:30
 msgid "Changeset has comments"
 msgstr "Le changeset a des commentaires"
 
-#: kallithea/templates/changelog/changelog.html:135
-#: kallithea/templates/changelog/changelog_summary_data.html:57
+#: kallithea/templates/changelog/changelog.html:134
+#: kallithea/templates/changelog/changelog_summary_data.html:54
 #: kallithea/templates/changeset/changeset.html:94
 #: kallithea/templates/changeset/changeset_range.html:92
 #, python-format
 msgid "Bookmark %s"
 msgstr "Marque-page %s"
 
-#: kallithea/templates/changelog/changelog.html:141
-#: kallithea/templates/changelog/changelog_summary_data.html:63
+#: kallithea/templates/changelog/changelog.html:140
+#: kallithea/templates/changelog/changelog_summary_data.html:60
 #: kallithea/templates/changeset/changeset.html:101
 #: kallithea/templates/changeset/changeset_range.html:98
-#: kallithea/templates/compare/compare_cs.html:69
-#: kallithea/templates/pullrequests/pullrequest_show.html:203
 #, python-format
 msgid "Tag %s"
 msgstr "Tag %s"
 
-#: kallithea/templates/changelog/changelog.html:146
-#: kallithea/templates/changelog/changelog_summary_data.html:68
+#: kallithea/templates/changelog/changelog.html:145
+#: kallithea/templates/changelog/changelog_summary_data.html:65
 #: kallithea/templates/changeset/changeset.html:106
 #: kallithea/templates/changeset/changeset_range.html:102
 #, python-format
 msgid "Branch %s"
 msgstr "Branche %s"
 
-#: kallithea/templates/changelog/changelog.html:311
+#: kallithea/templates/changelog/changelog.html:309
 msgid "There are no changes yet"
 msgstr "Il n’y a aucun changement pour le moment"
 
@@ -5000,7 +5014,7 @@ msgstr "Modifié"
 
 #: kallithea/templates/changelog/changelog_details.html:6
 #: kallithea/templates/changeset/changeset.html:79
-#: kallithea/templates/changeset/diff_block.html:47
+#: kallithea/templates/changeset/diff_block.html:79
 msgid "Added"
 msgstr "Ajouté"
 
@@ -5030,21 +5044,21 @@ msgstr "Âge"
 msgid "Refs"
 msgstr "Refs"
 
-#: kallithea/templates/changelog/changelog_summary_data.html:84
+#: kallithea/templates/changelog/changelog_summary_data.html:81
 msgid "Add or upload files directly via Kallithea"
 msgstr "Ajouter ou téléverser des fichiers directement via Kallithea"
 
-#: kallithea/templates/changelog/changelog_summary_data.html:87
+#: kallithea/templates/changelog/changelog_summary_data.html:84
 #: kallithea/templates/files/files_add.html:21
 #: kallithea/templates/files/files_ypjax.html:9
 msgid "Add New File"
 msgstr "Ajouter un nouveau fichier"
 
-#: kallithea/templates/changelog/changelog_summary_data.html:93
+#: kallithea/templates/changelog/changelog_summary_data.html:90
 msgid "Push new repository"
 msgstr "Pusher le nouveau dépôt"
 
-#: kallithea/templates/changelog/changelog_summary_data.html:101
+#: kallithea/templates/changelog/changelog_summary_data.html:98
 msgid "Existing repository?"
 msgstr "Le dépôt existe déjà ?"
 
@@ -5062,13 +5076,13 @@ msgid "Child rev."
 msgstr "Révision fille"
 
 #: kallithea/templates/changeset/changeset.html:50
-#: kallithea/templates/changeset/changeset_file_comment.html:39
+#: kallithea/templates/changeset/changeset_file_comment.html:37
 #: kallithea/templates/changeset/changeset_range.html:48
 msgid "Changeset status"
 msgstr "Statut du changeset"
 
 #: kallithea/templates/changeset/changeset.html:54
-#: kallithea/templates/changeset/diff_block.html:72
+#: kallithea/templates/changeset/diff_block.html:27
 #: kallithea/templates/files/diff_2way.html:49
 msgid "Raw diff"
 msgstr "Diff brut"
@@ -5078,7 +5092,7 @@ msgid "Patch diff"
 msgstr "Diff patch"
 
 #: kallithea/templates/changeset/changeset.html:60
-#: kallithea/templates/changeset/diff_block.html:75
+#: kallithea/templates/changeset/diff_block.html:30
 #: kallithea/templates/files/diff_2way.html:52
 msgid "Download diff"
 msgstr "Télécharger le diff"
@@ -5105,8 +5119,8 @@ msgid "Preceded by:"
 msgstr "Précédé par :"
 
 #: kallithea/templates/changeset/changeset.html:166
-#: kallithea/templates/compare/compare_diff.html:60
-#: kallithea/templates/pullrequests/pullrequest_show.html:329
+#: kallithea/templates/compare/compare_diff.html:54
+#: kallithea/templates/pullrequests/pullrequest_show.html:318
 #, python-format
 msgid "%s file changed"
 msgid_plural "%s files changed"
@@ -5114,8 +5128,8 @@ msgstr[0] "%s fichier changé"
 msgstr[1] "%s fichiers changés"
 
 #: kallithea/templates/changeset/changeset.html:168
-#: kallithea/templates/compare/compare_diff.html:62
-#: kallithea/templates/pullrequests/pullrequest_show.html:331
+#: kallithea/templates/compare/compare_diff.html:56
+#: kallithea/templates/pullrequests/pullrequest_show.html:320
 #, python-format
 msgid "%s file changed with %s insertions and %s deletions"
 msgid_plural "%s files changed with %s insertions and %s deletions"
@@ -5124,13 +5138,13 @@ msgstr[1] "%s fichiers changés avec %s insertions et %s suppressions"
 
 #: kallithea/templates/changeset/changeset.html:182
 #: kallithea/templates/changeset/changeset.html:195
-#: kallithea/templates/pullrequests/pullrequest_show.html:350
-#: kallithea/templates/pullrequests/pullrequest_show.html:372
+#: kallithea/templates/pullrequests/pullrequest_show.html:339
+#: kallithea/templates/pullrequests/pullrequest_show.html:363
 msgid "Show full diff anyway"
 msgstr "Afficher le diff complet quand même"
 
-#: kallithea/templates/changeset/changeset.html:231
-#: kallithea/templates/changeset/changeset.html:268
+#: kallithea/templates/changeset/changeset.html:247
+#: kallithea/templates/changeset/changeset.html:284
 msgid "No revisions"
 msgstr "Aucune révision"
 
@@ -5146,86 +5160,105 @@ msgstr "Aucun titre"
 msgid "on this changeset"
 msgstr "sur ce changeset"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:31
+#: kallithea/templates/changeset/changeset_file_comment.html:30
 msgid "Delete comment?"
 msgstr "Supprimer le commentaire ?"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:39
+#: kallithea/templates/changeset/changeset_file_comment.html:37
 msgid "Status change"
 msgstr "Changement de statut"
 
 #: kallithea/templates/changeset/changeset_file_comment.html:59
-msgid "Commenting on line."
-msgstr "Création d’un commentaire sur la ligne."
+msgid "Commenting on line {1}."
+msgstr "Commentaire sur la ligne {1}."
 
 #: kallithea/templates/changeset/changeset_file_comment.html:60
-msgid ""
-"Comments are in plain text. Use @username inside this text to notify "
-"another user."
+#: kallithea/templates/changeset/changeset_file_comment.html:148
+#, python-format
+msgid "Comments parsed using %s syntax with %s support."
 msgstr ""
-"Les commentaires sont du texte brut. Utilisez @nomutilisateur dans ce texte "
-"pour envoyer une notification à un autre utilisateur."
+"Les commentaires sont analysés avec la syntaxe %s, avec le support de la "
+"commande %s."
 
-#: kallithea/templates/changeset/changeset_file_comment.html:67
-msgid "Set changeset status"
-msgstr "Modifier le statut du changeset"
+#: kallithea/templates/changeset/changeset_file_comment.html:62
+msgid "Use @username inside this text to notify another user"
+msgstr ""
+"Utilisez @nomutilisateur dans ce texte pour envoyer une notification à un"
+" autre utilisateur"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:69
-msgid "Vote for pull request status"
-msgstr "Voter pour le statut de la requête de pull"
+#: kallithea/templates/changeset/changeset_file_comment.html:72
+#: kallithea/templates/changeset/changeset_file_comment.html:184
+msgid "Comment preview"
+msgstr "Aperçu du commentaire"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:75
-msgid "No change"
-msgstr "Aucun changement"
-
-#: kallithea/templates/changeset/changeset_file_comment.html:88
-msgid "Finish pull request"
-msgstr "Terminer la requête de pull"
-
-#: kallithea/templates/changeset/changeset_file_comment.html:91
-msgid "Close"
-msgstr "Fermer"
-
-#: kallithea/templates/changeset/changeset_file_comment.html:103
+#: kallithea/templates/changeset/changeset_file_comment.html:77
 msgid "Submitting ..."
 msgstr "Envoi…"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:104
+#: kallithea/templates/changeset/changeset_file_comment.html:80
+#: kallithea/templates/changeset/changeset_file_comment.html:190
 msgid "Comment"
 msgstr "Commentaire"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:112
+#: kallithea/templates/changeset/changeset_file_comment.html:82
+#: kallithea/templates/changeset/changeset_file_comment.html:191
+msgid "Preview"
+msgstr "Aperçu"
+
+#: kallithea/templates/changeset/changeset_file_comment.html:90
 msgid "You need to be logged in to comment."
 msgstr "Vous devez être connecté pour poster des commentaires."
 
-#: kallithea/templates/changeset/changeset_file_comment.html:112
+#: kallithea/templates/changeset/changeset_file_comment.html:90
 msgid "Login now"
 msgstr "Se connecter maintenant"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:116
+#: kallithea/templates/changeset/changeset_file_comment.html:94
 msgid "Hide"
 msgstr "Masquer"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:128
+#: kallithea/templates/changeset/changeset_file_comment.html:106
 #, python-format
 msgid "%d comment"
 msgid_plural "%d comments"
 msgstr[0] "%d commentaire"
 msgstr[1] "%d commentaires"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:129
+#: kallithea/templates/changeset/changeset_file_comment.html:107
 #, python-format
 msgid "%d inline"
 msgid_plural "%d inline"
 msgstr[0] "%d de ligne"
 msgstr[1] "%d de ligne"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:130
+#: kallithea/templates/changeset/changeset_file_comment.html:108
 #, python-format
 msgid "%d general"
 msgid_plural "%d general"
 msgstr[0] "%d général"
 msgstr[1] "%d généraux"
+
+#: kallithea/templates/changeset/changeset_file_comment.html:150
+msgid "Use @username inside this text to notify another user."
+msgstr ""
+"Utilisez @nomutilisateur dans ce texte pour envoyer une notification à un"
+" autre utilisateur."
+
+#: kallithea/templates/changeset/changeset_file_comment.html:157
+msgid "Vote for pull request status"
+msgstr "Voter pour le statut de la requête de pull"
+
+#: kallithea/templates/changeset/changeset_file_comment.html:159
+msgid "Set changeset status"
+msgstr "Modifier le statut du changeset"
+
+#: kallithea/templates/changeset/changeset_file_comment.html:163
+msgid "No change"
+msgstr "Aucun changement"
+
+#: kallithea/templates/changeset/changeset_file_comment.html:176
+msgid "Close"
+msgstr "Fermer"
 
 #: kallithea/templates/changeset/changeset_range.html:5
 #, python-format
@@ -5236,27 +5269,28 @@ msgstr "Changesets de %s"
 msgid "Files affected"
 msgstr "Fichiers affectés"
 
-#: kallithea/templates/changeset/diff_block.html:54
-msgid "Deleted"
-msgstr "Supprimé"
-
-#: kallithea/templates/changeset/diff_block.html:57
-msgid "Renamed"
-msgstr "Renommé"
-
-#: kallithea/templates/changeset/diff_block.html:66
+#: kallithea/templates/changeset/diff_block.html:21
 #: kallithea/templates/files/diff_2way.html:43
 msgid "Show full diff for this file"
 msgstr "Afficher le diff complet pour ce fichier"
 
-#: kallithea/templates/changeset/diff_block.html:69
+#: kallithea/templates/changeset/diff_block.html:24
+#: kallithea/templates/changeset/diff_block.html:98
 #: kallithea/templates/files/diff_2way.html:46
 msgid "Show full side-by-side diff for this file"
 msgstr "Afficher le diff complet côte-à-côte pour ce fichier"
 
-#: kallithea/templates/changeset/diff_block.html:83
+#: kallithea/templates/changeset/diff_block.html:38
 msgid "Show inline comments"
 msgstr "Afficher les commentaires de ligne"
+
+#: kallithea/templates/changeset/diff_block.html:86
+msgid "Deleted"
+msgstr "Supprimé"
+
+#: kallithea/templates/changeset/diff_block.html:89
+msgid "Renamed"
+msgstr "Renommé"
 
 #: kallithea/templates/compare/compare_cs.html:4
 msgid "No changesets"
@@ -5265,11 +5299,6 @@ msgstr "Aucun changeset"
 #: kallithea/templates/compare/compare_cs.html:8
 msgid "Ancestor"
 msgstr "Ancêtre"
-
-#: kallithea/templates/compare/compare_cs.html:24
-#, python-format
-msgid "Changeset status: %s"
-msgstr "Statut de changeset : %s"
 
 #: kallithea/templates/compare/compare_cs.html:44
 msgid "First (oldest) changeset in this list"
@@ -5283,29 +5312,29 @@ msgstr "Dernier changeset dans cette liste (le plus récent)"
 msgid "Position in this list of changesets"
 msgstr "Position dans cette liste de changesets"
 
-#: kallithea/templates/compare/compare_cs.html:85
+#: kallithea/templates/compare/compare_cs.html:76
 msgid "Show merge diff"
 msgstr "Afficher le diff de fusion"
 
-#: kallithea/templates/compare/compare_cs.html:95
-#: kallithea/templates/pullrequests/pullrequest_show.html:321
+#: kallithea/templates/compare/compare_cs.html:86
+#: kallithea/templates/pullrequests/pullrequest_show.html:310
 msgid "Common ancestor"
 msgstr "Ancêtre commun"
 
-#: kallithea/templates/compare/compare_cs.html:99
+#: kallithea/templates/compare/compare_cs.html:90
 msgid "No common ancestor found - repositories are unrelated"
 msgstr "Aucun ancêtre commun trouvé - les dépôts n'ont aucun lien entre eux"
 
-#: kallithea/templates/compare/compare_cs.html:107
+#: kallithea/templates/compare/compare_cs.html:98
 msgid "is"
 msgstr "est"
 
-#: kallithea/templates/compare/compare_cs.html:108
+#: kallithea/templates/compare/compare_cs.html:99
 #, python-format
 msgid "%s changesets"
 msgstr "Changesets de %s"
 
-#: kallithea/templates/compare/compare_cs.html:109
+#: kallithea/templates/compare/compare_cs.html:100
 msgid "behind"
 msgstr "derrière"
 
@@ -5316,28 +5345,28 @@ msgid "%s Compare"
 msgstr "Comparaison de %s"
 
 #: kallithea/templates/compare/compare_diff.html:13
-#: kallithea/templates/compare/compare_diff.html:41
+#: kallithea/templates/compare/compare_diff.html:35
 msgid "Compare Revisions"
 msgstr "Comparer les révisions"
 
-#: kallithea/templates/compare/compare_diff.html:39
+#: kallithea/templates/compare/compare_diff.html:33
 msgid "Swap"
 msgstr "Échanger"
 
-#: kallithea/templates/compare/compare_diff.html:48
+#: kallithea/templates/compare/compare_diff.html:42
 msgid "Compare revisions, branches, bookmarks, or tags."
 msgstr "Comparer les révisions, les branches, les marque-pages ou les tags."
 
-#: kallithea/templates/compare/compare_diff.html:53
-#: kallithea/templates/pullrequests/pullrequest_show.html:316
+#: kallithea/templates/compare/compare_diff.html:47
+#: kallithea/templates/pullrequests/pullrequest_show.html:305
 #, python-format
 msgid "Showing %s commit"
 msgid_plural "Showing %s commits"
 msgstr[0] "Affichage de %s commit"
 msgstr[1] "Affichage de %s commits"
 
-#: kallithea/templates/compare/compare_diff.html:84
-#: kallithea/templates/compare/compare_diff.html:93
+#: kallithea/templates/compare/compare_diff.html:78
+#: kallithea/templates/compare/compare_diff.html:89
 msgid "Show full diff"
 msgstr "Afficher le diff complet"
 
@@ -5398,19 +5427,11 @@ msgstr ""
 "Nous avons reçu une demande de réinitialisation du mot de passe de votre "
 "compte."
 
-#: kallithea/templates/email_templates/password_reset.html:8
-msgid ""
-"This account is however managed outside this system and the password "
-"cannot be changed here."
-msgstr ""
-"Cependant, ce compte est géré hors de ce système et le mot de passe ne peut "
-"pas être changé ici."
-
-#: kallithea/templates/email_templates/password_reset.html:10
+#: kallithea/templates/email_templates/password_reset.html:7
 msgid "To set a new password, click the following link"
 msgstr "Pour choisir un nouveau mot de passe, cliquez sur le lien suivant"
 
-#: kallithea/templates/email_templates/password_reset.html:13
+#: kallithea/templates/email_templates/password_reset.html:10
 msgid ""
 "Should you not be able to use the link above, please type the following "
 "code into the password reset form"
@@ -5418,7 +5439,7 @@ msgstr ""
 "Si vous ne pouvez pas utiliser le lien ci-dessus, merci de saisir le code"
 " suivant dans le formulaire de réinitialisation de mot de passe"
 
-#: kallithea/templates/email_templates/password_reset.html:16
+#: kallithea/templates/email_templates/password_reset.html:12
 msgid ""
 "If it weren't you who requested the password reset, just disregard this "
 "message."
@@ -5503,8 +5524,8 @@ msgid "Create New File"
 msgstr "Créer un nouveau fichier"
 
 #: kallithea/templates/files/files_add.html:53
-msgid "New file type"
-msgstr "Nouveau type de fichier"
+msgid "New file mode"
+msgstr "Mode du nouveau fichier"
 
 #: kallithea/templates/files/files_add.html:64
 #: kallithea/templates/files/files_delete.html:43
@@ -5638,17 +5659,9 @@ msgstr ""
 msgid "Binary file (%s)"
 msgstr "Fichier binaire (%s)"
 
-#: kallithea/templates/files/files_source.html:74
-msgid "File is too big to display."
-msgstr "Ce fichier est trop gros pour être affiché."
-
-#: kallithea/templates/files/files_source.html:76
-msgid "Show full annotation anyway."
-msgstr "Afficher les annotations complètes quand même."
-
-#: kallithea/templates/files/files_source.html:78
-msgid "Show as raw."
-msgstr "Afficher en tant que texte brut."
+#: kallithea/templates/files/files_source.html:73
+msgid "File is too big to display"
+msgstr "Ce fichier est trop gros pour être affiché"
 
 #: kallithea/templates/files/files_ypjax.html:5
 msgid "annotation"
@@ -5916,49 +5929,39 @@ msgstr "Mettre à jour"
 msgid "Current revision - no change"
 msgstr "Révision courante - aucun changement"
 
-#: kallithea/templates/pullrequests/pullrequest_show.html:215
-msgid ""
-"Pull requests do not change once created. Select a revision and save to "
-"replace this pull request with a new one."
-msgstr ""
-"Les requêtes de pull ne peuvent pas changer après leur création. "
-"Sélectionner une révision puis sauvegarder afin de remplacer cette requête "
-"de pull par une nouvelle."
-
-#: kallithea/templates/pullrequests/pullrequest_show.html:224
+#: kallithea/templates/pullrequests/pullrequest_show.html:213
 msgid "Pull Request Reviewers"
 msgstr "Relecteurs de la requête de pull"
 
-#: kallithea/templates/pullrequests/pullrequest_show.html:249
+#: kallithea/templates/pullrequests/pullrequest_show.html:238
 msgid "Remove reviewer"
 msgstr "Supprimer le relecteur"
 
-#: kallithea/templates/pullrequests/pullrequest_show.html:261
+#: kallithea/templates/pullrequests/pullrequest_show.html:250
 msgid "Type name of reviewer to add"
 msgstr "Saisir le nom du relecteur à ajouter"
 
-#: kallithea/templates/pullrequests/pullrequest_show.html:269
+#: kallithea/templates/pullrequests/pullrequest_show.html:258
 msgid "Potential Reviewers"
 msgstr "Relecteurs potentiels"
 
-#: kallithea/templates/pullrequests/pullrequest_show.html:272
+#: kallithea/templates/pullrequests/pullrequest_show.html:261
 msgid "Click to add the repository owner as reviewer:"
 msgstr "Cliquer pour ajouter le propriétaire du dépôt comme relecteur :"
 
-#: kallithea/templates/pullrequests/pullrequest_show.html:295
+#: kallithea/templates/pullrequests/pullrequest_show.html:284
 msgid "Save Changes"
 msgstr "Enregistrer les changements"
 
-#: kallithea/templates/pullrequests/pullrequest_show.html:296
-msgid "Save Updates as New Pull Request"
-msgstr ""
-"Sauvegarder les modifications entrantes en tant que nouvelle requête de pull"
+#: kallithea/templates/pullrequests/pullrequest_show.html:285
+msgid "Save as New Pull Request"
+msgstr "Sauvegarder en tant que nouvelle requête de pull"
 
-#: kallithea/templates/pullrequests/pullrequest_show.html:297
+#: kallithea/templates/pullrequests/pullrequest_show.html:286
 msgid "Cancel Changes"
 msgstr "Annuler les modifications"
 
-#: kallithea/templates/pullrequests/pullrequest_show.html:307
+#: kallithea/templates/pullrequests/pullrequest_show.html:296
 msgid "Pull Request Content"
 msgstr "Contenu de la requête de pull"
 
@@ -6247,8 +6250,6 @@ msgstr "Comparer les tags"
 #~ msgstr "Aucun fichier"
 
 #~ msgid ""
-#~ "_: \n"
-#~ ""
 #~ msgstr ""
 
 #~ msgid "Username \"%(username)s\" is forbidden"
@@ -6460,24 +6461,3 @@ msgstr "Comparer les tags"
 
 #~ msgid "Created by"
 #~ msgstr "créé"
-
-#~ msgid "This pull request can be updated with changes on %s:"
-#~ msgstr ""
-
-#~ msgid "Confirm to invalidate repository cache."
-#~ msgstr "Voulez-vous vraiment invalider le cache du dépôt ?"
-
-#~ msgid "Comments parsed using %s syntax with %s support."
-#~ msgstr ""
-
-#~ msgid "Use @username inside this text to notify another user"
-#~ msgstr ""
-
-#~ msgid "Comment preview"
-#~ msgstr "Aperçu du commentaire"
-
-#~ msgid "Preview"
-#~ msgstr "Aperçu"
-
-#~ msgid "New file mode"
-#~ msgstr "Mode du nouveau fichier"
