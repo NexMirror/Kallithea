@@ -814,6 +814,10 @@ div.comment-prev-next-links div.next-comment {
     width: 24px;
     /* the optional second checkbox will be inline-block but should wrap to a new line */
     white-space: normal;
+    > input[type=checkbox] {
+      margin-top: inherit;
+      vertical-align: text-bottom;
+    }
   }
   .changeset-logical-index {
     color: @gray-light;
