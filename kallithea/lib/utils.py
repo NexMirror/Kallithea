@@ -34,7 +34,6 @@ import beaker
 
 from tg import request, response
 from tg.i18n import ugettext as _
-from webhelpers.text import collapse, remove_formatting, strip_tags
 from beaker.cache import _cache_decorate
 
 from kallithea.lib.vcs.utils.hgcompat import ui, config
@@ -52,42 +51,6 @@ from kallithea.lib.vcs.utils.fakemod import create_module
 log = logging.getLogger(__name__)
 
 REMOVED_REPO_PAT = re.compile(r'rm__\d{8}_\d{6}_\d{6}_.*')
-
-
-def recursive_replace(str_, replace=' '):
-    """
-    Recursive replace of given sign to just one instance
-
-    :param str_: given string
-    :param replace: char to find and replace multiple instances
-
-    Examples::
-    >>> recursive_replace("Mighty---Mighty-Bo--sstones",'-')
-    'Mighty-Mighty-Bo-sstones'
-    """
-
-    if str_.find(replace * 2) == -1:
-        return str_
-    else:
-        str_ = str_.replace(replace * 2, replace)
-        return recursive_replace(str_, replace)
-
-
-def repo_name_slug(value):
-    """
-    Return slug of name of repository
-    This function is called on each creation/modification
-    of repository to prevent bad names in repo
-    """
-
-    slug = remove_formatting(value)
-    slug = strip_tags(slug)
-
-    for c in """`?=[]\;'"<>,/~!@#$%^&*()+{}|: """:
-        slug = slug.replace(c, '-')
-    slug = recursive_replace(slug, '-')
-    slug = collapse(slug, '-')
-    return slug
 
 
 #==============================================================================

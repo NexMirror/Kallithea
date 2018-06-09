@@ -15,7 +15,9 @@
 kallithea.lib.utils2
 ~~~~~~~~~~~~~~~~~~~~
 
-Some simple helper functions
+Some simple helper functions.
+Note: all these functions should be independent of Kallithea classes, i.e.
+models, controllers, etc.  to prevent import cycles.
 
 This file was forked by the Kallithea project in July 2014.
 Original author and date, and relevant copyright and licensing information is below:
@@ -37,6 +39,7 @@ import binascii
 
 import webob
 import urlobject
+from webhelpers.text import collapse, remove_formatting, strip_tags
 
 from tg.i18n import ugettext as _, ungettext
 from kallithea.lib.vcs.utils.lazy import LazyProperty
@@ -646,3 +649,39 @@ class Optional(object):
 
 def urlreadable(s, _cleanstringsub=re.compile('[^-a-zA-Z0-9./]+').sub):
     return _cleanstringsub('_', safe_str(s)).rstrip('_')
+
+
+def recursive_replace(str_, replace=' '):
+    """
+    Recursive replace of given sign to just one instance
+
+    :param str_: given string
+    :param replace: char to find and replace multiple instances
+
+    Examples::
+    >>> recursive_replace("Mighty---Mighty-Bo--sstones",'-')
+    'Mighty-Mighty-Bo-sstones'
+    """
+
+    if str_.find(replace * 2) == -1:
+        return str_
+    else:
+        str_ = str_.replace(replace * 2, replace)
+        return recursive_replace(str_, replace)
+
+
+def repo_name_slug(value):
+    """
+    Return slug of name of repository
+    This function is called on each creation/modification
+    of repository to prevent bad names in repo
+    """
+
+    slug = remove_formatting(value)
+    slug = strip_tags(slug)
+
+    for c in """`?=[]\;'"<>,/~!@#$%^&*()+{}|: """:
+        slug = slug.replace(c, '-')
+    slug = recursive_replace(slug, '-')
+    slug = collapse(slug, '-')
+    return slug

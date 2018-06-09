@@ -31,8 +31,8 @@ from formencode.validators import (
 )
 from kallithea.lib.compat import OrderedSet
 from kallithea.lib import ipaddr
-from kallithea.lib.utils import repo_name_slug, is_valid_repo_uri
-from kallithea.lib.utils2 import str2bool, aslist
+from kallithea.lib.utils import is_valid_repo_uri
+from kallithea.lib.utils2 import str2bool, aslist, repo_name_slug
 from kallithea.model.db import RepoGroup, Repository, UserGroup, User
 from kallithea.lib.exceptions import LdapImportError
 from kallithea.config.routing import ADMIN_PREFIX

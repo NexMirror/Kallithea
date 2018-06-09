@@ -32,7 +32,7 @@ import traceback
 import shutil
 import datetime
 
-import kallithea.lib.utils
+import kallithea.lib.utils2
 from kallithea.lib.utils2 import LazyProperty
 
 from kallithea.model.db import RepoGroup, Session, Ui, UserRepoGroupToPerm, \
@@ -136,7 +136,7 @@ class RepoGroupModel(object):
     def create(self, group_name, group_description, owner, parent=None,
                just_db=False, copy_permissions=False):
         try:
-            if kallithea.lib.utils.repo_name_slug(group_name) != group_name:
+            if kallithea.lib.utils2.repo_name_slug(group_name) != group_name:
                 raise Exception('invalid repo group name %s' % group_name)
 
             owner = User.guess_instance(owner)
@@ -295,7 +295,7 @@ class RepoGroupModel(object):
                 repo_group.parent_group = RepoGroup.get(kwargs['parent_group_id'])
             if 'group_name' in kwargs:
                 group_name = kwargs['group_name']
-                if kallithea.lib.utils.repo_name_slug(group_name) != group_name:
+                if kallithea.lib.utils2.repo_name_slug(group_name) != group_name:
                     raise Exception('invalid repo group name %s' % group_name)
                 repo_group.group_name = repo_group.get_new_name(group_name)
             new_path = repo_group.full_path
