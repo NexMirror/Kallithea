@@ -28,6 +28,7 @@ import alembic.config
 from alembic.script.base import ScriptDirectory
 from alembic.migration import MigrationContext
 from sqlalchemy import create_engine
+import mercurial
 
 from kallithea.lib.middleware.https_fixup import HttpsFixup
 from kallithea.lib.middleware.simplegit import SimpleGit
@@ -118,6 +119,11 @@ else:
 
 def setup_configuration(app):
     config = app.config
+
+    # Mercurial sets encoding at module import time, so we have to monkey patch it
+    hgencoding = config.get('hgencoding')
+    if hgencoding:
+        mercurial.encoding.encoding = hgencoding
 
     if config.get('ignore_alembic_revision', False):
         log.warn('database alembic revision checking is disabled')

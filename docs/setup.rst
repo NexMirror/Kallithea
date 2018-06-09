@@ -633,6 +633,9 @@ encoding of commit messages. In addition Kallithea can detect if the ``chardet``
 library is installed. If ``chardet`` is detected Kallithea will fallback to it
 when there are encode/decode errors.
 
+The Mercurial encoding is configurable as ``hgencoding``. It is similar to
+setting the ``HGENCODING`` environment variable, but will override it.
+
 
 Celery configuration
 --------------------
@@ -894,7 +897,6 @@ Example WSGI dispatch script:
 .. code-block:: python
 
     import os
-    os.environ["HGENCODING"] = "UTF-8"
     os.environ['PYTHON_EGG_CACHE'] = '/srv/kallithea/.egg-cache'
 
     # sometimes it's needed to set the current dir

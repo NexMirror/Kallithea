@@ -254,6 +254,9 @@ api_access_controllers_whitelist =
 <%text>## can be also a comma separated list of encoding in case of mixed encodings</%text>
 default_encoding = utf8
 
+<%text>## Set Mercurial encoding, similar to setting HGENCODING before launching Kallithea</%text>
+hgencoding = utf-8
+
 <%text>## issue tracker for Kallithea (leave blank to disable, absent for default)</%text>
 #bugtracker = https://bitbucket.org/conservancy/kallithea/issues
 
