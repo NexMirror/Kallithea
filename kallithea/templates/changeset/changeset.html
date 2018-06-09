@@ -133,7 +133,7 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
                      % endif
                 </div>
             </div>
-            <div class="form-group">${h.urlify_text(c.changeset.message, c.repo_name)}</div>
+            <div class="form-group formatted-fixed">${h.urlify_text(c.changeset.message, c.repo_name)}</div>
             <div>
               <% a_rev, cs_rev, file_diff_data = c.changes[c.changeset.raw_id] %>
               % if c.limited_diff:
