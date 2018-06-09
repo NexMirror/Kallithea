@@ -46,7 +46,7 @@
           ${h.form(h.url('edit_gist', gist_id=c.gist.gist_access_id), method='post', id='eform')}
             <div>
                 <input type="hidden" value="${c.file_changeset.raw_id}" name="parent_hash">
-                <textarea class="form-control commit-message"
+                <textarea class="form-control"
                           id="description" name="description"
                           placeholder="${_('Gist description ...')}">${c.gist.gist_description}</textarea>
                 <div>
