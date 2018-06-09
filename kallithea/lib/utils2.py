@@ -176,7 +176,7 @@ def safe_unicode(str_, from_encoding=None):
     if not from_encoding:
         import kallithea
         DEFAULT_ENCODINGS = aslist(kallithea.CONFIG.get('default_encoding',
-                                                        'utf8'), sep=',')
+                                                        'utf-8'), sep=',')
         from_encoding = DEFAULT_ENCODINGS
 
     if not isinstance(from_encoding, (list, tuple)):
@@ -225,7 +225,7 @@ def safe_str(unicode_, to_encoding=None):
     if not to_encoding:
         import kallithea
         DEFAULT_ENCODINGS = aslist(kallithea.CONFIG.get('default_encoding',
-                                                        'utf8'), sep=',')
+                                                        'utf-8'), sep=',')
         to_encoding = DEFAULT_ENCODINGS
 
     if not isinstance(to_encoding, (list, tuple)):

@@ -176,7 +176,7 @@ class GitRepository(object):
                 update_server_info(repo._repo)
 
         resp = Response()
-        resp.content_type = 'application/x-%s-result' % git_command.encode('utf8')
+        resp.content_type = 'application/x-%s-result' % git_command.encode('utf-8')
         resp.charset = None
         resp.app_iter = out
         return resp

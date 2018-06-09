@@ -252,7 +252,7 @@ api_access_controllers_whitelist =
 
 <%text>## default encoding used to convert from and to unicode</%text>
 <%text>## can be also a comma separated list of encoding in case of mixed encodings</%text>
-default_encoding = utf8
+default_encoding = utf-8
 
 <%text>## Set Mercurial encoding, similar to setting HGENCODING before launching Kallithea</%text>
 hgencoding = utf-8

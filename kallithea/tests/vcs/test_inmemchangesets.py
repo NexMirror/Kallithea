@@ -1,4 +1,4 @@
-# encoding: utf8
+# encoding: utf-8
 """
 Tests so called "in memory changesets" commit API of vcs.
 """

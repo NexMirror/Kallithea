@@ -435,7 +435,7 @@ def set_vcs_config(config):
     conf.settings.GIT_EXECUTABLE_PATH = config.get('git_path', 'git')
     conf.settings.GIT_REV_FILTER = config.get('git_rev_filter', '--all').strip()
     conf.settings.DEFAULT_ENCODINGS = aslist(config.get('default_encoding',
-                                                        'utf8'), sep=',')
+                                                        'utf-8'), sep=',')
 
 
 def set_indexer_config(config):

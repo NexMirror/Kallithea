@@ -53,7 +53,7 @@ class MercurialInMemoryChangeset(BaseInMemoryChangeset):
             for node in self.added:
                 if node.path == path:
                     return memfilectx(_repo, memctx, path=node.path,
-                        data=(node.content.encode('utf8')
+                        data=(node.content.encode('utf-8')
                               if not node.is_binary else node.content),
                         islink=False,
                         isexec=node.is_executable,
@@ -63,7 +63,7 @@ class MercurialInMemoryChangeset(BaseInMemoryChangeset):
             for node in self.changed:
                 if node.path == path:
                     return memfilectx(_repo, memctx, path=node.path,
-                        data=(node.content.encode('utf8')
+                        data=(node.content.encode('utf-8')
                               if not node.is_binary else node.content),
                         islink=False,
                         isexec=node.is_executable,

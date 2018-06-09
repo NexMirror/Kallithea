@@ -143,7 +143,7 @@ def sortkey(x):
     return (x[0] and -int(x[0][-1]),
             x[0] and int(x[0][0]),
             -len(x[0]),
-            x[1].decode('utf8').lower().replace(u'\xe9', u'e').replace(u'\u0142', u'l')
+            x[1].decode('utf-8').lower().replace(u'\xe9', u'e').replace(u'\u0142', u'l')
         )
 
 
