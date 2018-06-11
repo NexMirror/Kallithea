@@ -141,7 +141,7 @@ Setting up Whoosh full text search
 
 Kallithea provides full text search of repositories using `Whoosh`__.
 
-.. __: https://pythonhosted.org/Whoosh/
+.. __: https://whoosh.readthedocs.io/en/latest/
 
 For an incremental index build, run::
 
