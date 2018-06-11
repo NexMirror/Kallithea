@@ -72,7 +72,6 @@ read answer
 echo "Upload docs to pypi"
 # See https://wiki.python.org/moin/PyPiDocumentationHosting
 python2 setup.py build_sphinx upload_sphinx
-xdg-open https://pythonhosted.org/Kallithea/
 xdg-open http://packages.python.org/Kallithea/installation.html
 
 echo "Rebuild readthedocs for docs.kallithea-scm.org"
