@@ -72,7 +72,7 @@ class TestAdminPermissionsController(TestController):
                 _authentication_token=self.authentication_token()),
             status=302)
 
-        assert response.location.endswith(url('login_home', came_from=url('edit_repo_perms_update', repo_name=HG_REPO)))
+        assert response.location.endswith(url('login_home', came_from=url('edit_repo_perms_revoke', repo_name=HG_REPO)))
 
         # Test authenticated access
         self.log_user()
