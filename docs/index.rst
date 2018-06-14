@@ -7,16 +7,18 @@ Kallithea Documentation
 * :ref:`genindex`
 * :ref:`search`
 
+
 Readme
-------
+******
 
 .. toctree::
    :maxdepth: 1
 
    readme
 
+
 Administrator guide
--------------------
+*******************
 
 **Installation and upgrade**
 
@@ -50,8 +52,9 @@ Administrator guide
    usage/debugging
    usage/troubleshooting
 
+
 User guide
-----------
+**********
 
 .. toctree::
    :maxdepth: 1
@@ -64,7 +67,7 @@ User guide
 
 
 Developer guide
----------------
+***************
 
 .. toctree::
    :maxdepth: 1
