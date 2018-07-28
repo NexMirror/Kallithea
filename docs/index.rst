@@ -39,6 +39,7 @@ Administrator guide
    :maxdepth: 1
 
    setup
+   administrator_guide/vcs_setup
    usage/email
    usage/customization
 
@@ -60,7 +61,7 @@ User guide
    :maxdepth: 1
 
    usage/general
-   usage/vcs_support
+   usage/vcs_notes
    usage/locking
    usage/statistics
    api/api
