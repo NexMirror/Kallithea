@@ -46,6 +46,15 @@ Also make sure to comment out the following options::
     threadpool_max_requests =
     use_threadpool =
 
+Increasing Git HTTP POST buffer size
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If Git pushes fail with HTTP error code 411 (Length Required), you may need to
+increase the Git HTTP POST buffer. Run the following command as the user that
+runs Kallithea to set a global Git variable to this effect::
+
+    git config --global http.postBuffer 524288000
+
 
 .. _waitress: http://pypi.python.org/pypi/waitress
 .. _gunicorn: http://pypi.python.org/pypi/gunicorn
