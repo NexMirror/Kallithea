@@ -39,6 +39,7 @@ Administrator guide
    :maxdepth: 1
 
    setup
+   administrator_guide/auth
    administrator_guide/vcs_setup
    usage/email
    usage/customization
