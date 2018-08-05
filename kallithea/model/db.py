@@ -1525,7 +1525,6 @@ class Repository(Base, BaseDbModel):
 class RepoGroup(Base, BaseDbModel):
     __tablename__ = 'groups'
     __table_args__ = (
-        CheckConstraint('group_id != group_parent_id', name='ck_groups_no_self_parent'),
         _table_args_default_dict,
     )
     __mapper_args__ = {'order_by': 'group_name'} # TODO: Deprecated as of SQLAlchemy 1.1.
@@ -1949,7 +1948,6 @@ class UserGroupUserGroupToPerm(Base, BaseDbModel):
     __tablename__ = 'user_group_user_group_to_perm'
     __table_args__ = (
         UniqueConstraint('target_user_group_id', 'user_group_id', 'permission_id'),
-        CheckConstraint('target_user_group_id != user_group_id', name='ck_user_group_user_group_to_perm_no_self_target'),
         _table_args_default_dict,
     )
 
