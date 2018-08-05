@@ -214,10 +214,9 @@ class MercurialChangeset(BaseChangeset):
             if not branch or branch == cs.branch:
                 return cs
 
-    def diff(self, ignore_whitespace=True, context=3):
-        return ''.join(self._ctx.diff(git=True,
-                                      ignore_whitespace=ignore_whitespace,
-                                      context=context))
+    def diff(self):
+        # Only used for feed diffstat
+        return ''.join(self._ctx.diff())
 
     def _fix_path(self, path):
         """
