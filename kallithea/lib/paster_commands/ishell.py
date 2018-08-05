@@ -44,7 +44,7 @@ class Command(BasePasterCommand):
     def take_action(self, args):
         try:
             from IPython import embed
-            from IPython.config.loader import Config
+            from traitlets.config.loader import Config
             cfg = Config()
             cfg.InteractiveShellEmbed.confirm_exit = False
             embed(config=cfg, banner1="Kallithea IShell.")
