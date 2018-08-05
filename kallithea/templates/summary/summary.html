@@ -195,19 +195,19 @@ ${self.repo_context_bar('summary')}
 
                 <h4>${_('Push new repository')}</h4>
                 <pre>
-                    ${c.db_repo_scm_instance.alias} clone ${c.clone_repo_url}
-                    ${c.db_repo_scm_instance.alias} add README # add first file
-                    ${c.db_repo_scm_instance.alias} commit -m "Initial" # commit with message
-                    ${c.db_repo_scm_instance.alias} push ${'origin master' if h.is_git(c.db_repo_scm_instance) else ''} # push changes back
+${c.db_repo_scm_instance.alias} clone ${c.clone_repo_url}
+${c.db_repo_scm_instance.alias} add README # add first file
+${c.db_repo_scm_instance.alias} commit -m "Initial" # commit with message
+${c.db_repo_scm_instance.alias} push ${'origin master' if h.is_git(c.db_repo_scm_instance) else ''} # push changes back
                 </pre>
 
                 <h4>${_('Existing repository?')}</h4>
                 <pre>
                 %if h.is_git(c.db_repo_scm_instance):
-                    git remote add origin ${c.clone_repo_url}
-                    git push -u origin master
+git remote add origin ${c.clone_repo_url}
+git push -u origin master
                 %else:
-                    hg push ${c.clone_repo_url}
+hg push ${c.clone_repo_url}
                 %endif
                 </pre>
             %endif
