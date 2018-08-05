@@ -422,19 +422,22 @@ class MercurialRepository(BaseRepository):
         if self._empty:
             raise EmptyRepositoryError("There are no changesets yet")
 
-        if revision in [-1, 'tip', None]:
+        if revision in [-1, None]:
             revision = 'tip'
 
         try:
-            revision = self._repo[revision].hex()
+            if isinstance(revision, int):
+                return self._repo[revision].hex()
+            try:
+                return scmutil.revsymbol(self._repo, revision).hex()
+            except AttributeError: # revsymbol was introduced in Mercurial 4.6
+                return self._repo[revision].hex()
         except (IndexError, ValueError, RepoLookupError, TypeError):
             msg = ("Revision %s does not exist for %s" % (revision, self))
             raise ChangesetDoesNotExistError(msg)
         except (LookupError, ):
             msg = ("Ambiguous identifier `%s` for %s" % (revision, self))
             raise ChangesetDoesNotExistError(msg)
-
-        return revision
 
     def get_ref_revision(self, ref_type, ref_name):
         """
