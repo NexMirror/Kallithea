@@ -380,9 +380,10 @@ def _hook_environment(repo_path):
     from kallithea.model.base import init_model
 
     extras = _extract_extras()
-    path, ini_name = os.path.split(extras['config'])
-    conf = appconfig('config:%s' % ini_name, relative_to=path)
-    conf = load_environment(conf.global_conf, conf.local_conf)
+    ini_file_path = extras['config']
+    #logging.config.fileConfig(ini_file_path) # Note: we are in a different process - don't use configured logging
+    app_conf = appconfig('config:%s' % ini_file_path)
+    conf = load_environment(app_conf.global_conf, app_conf.local_conf)
 
     setup_cache_regions(conf)
 
