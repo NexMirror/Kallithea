@@ -37,7 +37,7 @@ from webob.exc import HTTPNotFound, HTTPForbidden, HTTPInternalServerError, \
 
 from kallithea.lib.utils2 import safe_str, safe_unicode, fix_PATH, get_server_url, \
     _set_extras
-from kallithea.lib.base import BaseVCSController, WSGIResultCloseCallback, check_locking_state
+from kallithea.lib.base import BaseVCSController, check_locking_state
 from kallithea.lib.utils import make_ui, is_valid_repo, ui_sections
 from kallithea.lib.vcs.utils.hgcompat import RepoError, hgweb_mod
 from kallithea.lib.exceptions import HTTPLockedRC
@@ -149,11 +149,7 @@ class SimpleHg(BaseVCSController):
             log.info('%s action on Mercurial repo "%s" by "%s" from %s',
                      action, str_repo_name, safe_str(user.username), ip_addr)
             app = self.__make_app(repo_path, baseui, extras)
-            result = app(environ, start_response)
-            if action == 'push':
-                result = WSGIResultCloseCallback(result,
-                    lambda: self._invalidate_cache(repo_name))
-            return result
+            return app(environ, start_response)
         except RepoError as e:
             if str(e).find('not found') != -1:
                 return HTTPNotFound()(environ, start_response)

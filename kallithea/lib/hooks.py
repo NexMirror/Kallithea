@@ -148,9 +148,14 @@ def log_pull_action(ui, repo, **kwargs):
 
 def log_push_action(ui, repo, **kwargs):
     """
-    Register that changes have been pushed.
+    Register that changes have been pushed - log it *and* invalidate caches.
+    Note: It is not only logging, but also the side effect invalidating cahes!
+    The function should perhaps be renamed.
 
-    Called as Mercurial hook changegroup.push_logger or from the Git post-receive hook calling handle_git_post_receive ... or from scm _handle_push
+    Called as Mercurial hook changegroup.push_logger or from the Git
+    post-receive hook calling handle_git_post_receive ... or from scm _handle_push.
+
+    Revisions are passed in different hack-ish ways.
     """
     ex = _extract_extras()
 
@@ -179,6 +184,9 @@ def log_push_action(ui, repo, **kwargs):
 
     action = action_tmpl % ','.join(revs)
     action_logger(ex.username, action, ex.repository, ex.ip, commit=True)
+
+    from kallithea.model.scm import ScmModel
+    ScmModel().mark_for_invalidation(ex.repository)
 
     # extension hook call
     from kallithea import EXTENSIONS

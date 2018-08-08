@@ -323,14 +323,6 @@ class BaseVCSController(object):
 
         return '/'.join(data)
 
-    def _invalidate_cache(self, repo_name):
-        """
-        Sets cache for this repository for invalidation on next access
-
-        :param repo_name: full repo name, also a cache key
-        """
-        ScmModel().mark_for_invalidation(repo_name)
-
     def _check_permission(self, action, user, repo_name, ip_addr=None):
         """
         Checks permissions using action (push/pull) user and repository
@@ -628,23 +620,6 @@ class BaseRepoController(BaseController):
             log.error(traceback.format_exc())
             h.flash(safe_str(e), category='error')
             raise webob.exc.HTTPBadRequest()
-
-
-class WSGIResultCloseCallback(object):
-    """Wrap a WSGI result and let close call close after calling the
-    close method on the result.
-    """
-    def __init__(self, result, close):
-        self._result = result
-        self._close = close
-
-    def __iter__(self):
-        return iter(self._result)
-
-    def close(self):
-        if hasattr(self._result, 'close'):
-            self._result.close()
-        self._close()
 
 
 @decorator.decorator

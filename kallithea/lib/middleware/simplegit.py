@@ -40,7 +40,7 @@ from kallithea.model.db import Ui
 
 from kallithea.lib.utils2 import safe_str, safe_unicode, fix_PATH, get_server_url, \
     _set_extras
-from kallithea.lib.base import BaseVCSController, WSGIResultCloseCallback, check_locking_state
+from kallithea.lib.base import BaseVCSController, check_locking_state
 from kallithea.lib.utils import make_ui, is_valid_repo
 from kallithea.lib.exceptions import HTTPLockedRC
 from kallithea.lib.hooks import pull_lock_handling
@@ -139,11 +139,7 @@ class SimpleGit(BaseVCSController):
             log.info('%s action on Git repo "%s" by "%s" from %s',
                      action, str_repo_name, safe_str(user.username), ip_addr)
             app = self.__make_app(repo_name, repo_path, extras)
-            result = app(environ, start_response)
-            if action == 'push':
-                result = WSGIResultCloseCallback(result,
-                    lambda: self._invalidate_cache(repo_name))
-            return result
+            return app(environ, start_response)
         except HTTPLockedRC as e:
             log.debug('Locked, response %s: %s', e.code, e.title)
             return e(environ, start_response)
