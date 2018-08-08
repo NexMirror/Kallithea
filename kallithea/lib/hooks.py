@@ -443,14 +443,17 @@ def handle_git_post_receive(repo_path, git_stdin_lines):
                         scm_repo._repo.refs.set_symbolic_ref('HEAD',
                                             'refs/heads/%s' % push_ref['name'])
 
+                    # build exclude list without the ref
                     cmd = ['for-each-ref', '--format=%(refname)', 'refs/heads/*']
-                    heads = scm_repo.run_git_command(cmd)[0]
-                    cmd = ['log', push_ref['new_rev'],
-                           '--reverse', '--pretty=format:%H', '--not']
-                    heads = heads.replace(push_ref['ref'], '')
-                    for l in heads.splitlines():
-                        cmd.append(l.strip())
-                    git_revs += scm_repo.run_git_command(cmd)[0].splitlines()
+                    stdout, stderr = scm_repo.run_git_command(cmd)
+                    ref = push_ref['ref']
+                    heads = [head if head != ref else '' for head in stdout.splitlines()]
+                    # now list the git revs while excluding from the list
+                    cmd = ['log', push_ref['new_rev'], '--reverse', '--pretty=format:%H']
+                    cmd.append('--not')
+                    cmd.extend(heads)
+                    stdout, stderr = scm_repo.run_git_command(cmd)
+                    git_revs += stdout.splitlines()
 
                 elif push_ref['new_rev'] == EmptyChangeset().raw_id:
                     # delete branch case
@@ -458,7 +461,8 @@ def handle_git_post_receive(repo_path, git_stdin_lines):
                 else:
                     cmd = ['log', '%(old_rev)s..%(new_rev)s' % push_ref,
                            '--reverse', '--pretty=format:%H']
-                    git_revs += scm_repo.run_git_command(cmd)[0].splitlines()
+                    stdout, stderr = scm_repo.run_git_command(cmd)
+                    git_revs += stdout.splitlines()
 
             elif _type == 'tags':
                 git_revs += ['tag=>%s' % push_ref['name']]
