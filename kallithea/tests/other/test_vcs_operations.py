@@ -29,14 +29,16 @@ import os
 import re
 import tempfile
 import time
-import pytest
-
+import urllib2
+import json
 from tempfile import _RandomNameSequence
 from subprocess import Popen, PIPE
 
+import pytest
+
 from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
-from kallithea.model.db import User, Repository, UserIpMap, CacheInvalidation, Ui
+from kallithea.model.db import User, Repository, UserIpMap, CacheInvalidation, Ui, UserLog
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
 from kallithea.model.user import UserModel
@@ -251,6 +253,57 @@ class TestVCSOperations(TestController):
         clone_url = webserver.repo_url('trololo')
         stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
         assert 'not found' in stderr
+
+    def test_push_new_repo_git(self, webserver):
+        # Clear the log so we know what is added
+        UserLog.query().delete()
+        Session().commit()
+
+        # Create an empty server repo using the API
+        repo_name = u'new_git_%s' % _RandomNameSequence().next()
+        usr = User.get_by_username(TEST_USER_ADMIN_LOGIN)
+        params = {
+            "id": 7,
+            "api_key": usr.api_key,
+            "method": 'create_repo',
+            "args": dict(repo_name=repo_name,
+                         owner=TEST_USER_ADMIN_LOGIN,
+                         repo_type='git'),
+        }
+        req = urllib2.Request(
+            'http://%s:%s/_admin/api' % webserver.server_address,
+            data=json.dumps(params),
+            headers={'content-type': 'application/json'})
+        response = urllib2.urlopen(req)
+        result = json.loads(response.read())
+        # Expect something like:
+        # {u'result': {u'msg': u'Created new repository `new_git_XXX`', u'task': None, u'success': True}, u'id': 7, u'error': None}
+        assert result[u'result'][u'success']
+
+        # Create local clone of the empty server repo
+        local_clone_dir = _get_tmp_dir()
+        clone_url = webserver.repo_url(repo_name)
+        stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, local_clone_dir, ignoreReturnCode=True)
+
+        # Make 3 commits and push to the empty server repo.
+        # The server repo doesn't have any other heads than the
+        # refs/heads/master we are pushing, but the `git log` in the push hook
+        # should still list the 3 commits.
+        stdout, stderr = _add_files_and_push(webserver, 'git', local_clone_dir, clone_url=clone_url)
+        # FIXME: the push kind of failed with something like:
+        # remote: fatal: ambiguous argument '': unknown revision or path not in the working tree.
+        assert 'remote: fatal' in stderr
+
+        # Verify that we got the right events in UserLog. Expect something like:
+        # <UserLog('id:new_git_XXX:started_following_repo')>
+        # <UserLog('id:new_git_XXX:user_created_repo')>
+        # <UserLog('id:new_git_XXX:pull')>
+        # - but no push logging
+        uls = list(UserLog.query().order_by(UserLog.user_log_id))
+        assert len(uls) == 3
+        assert uls[0].action == 'started_following_repo'
+        assert uls[1].action == 'user_created_repo'
+        assert uls[2].action == 'pull'
 
     def test_push_new_file_hg(self, webserver, testfork):
         dest_dir = _get_tmp_dir()
