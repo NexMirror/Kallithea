@@ -549,21 +549,20 @@ def _extract_extras(env=None):
     try:
         extras = json.loads(env['KALLITHEA_EXTRAS'])
     except KeyError:
-        extras = {}
+        raise Exception("Environment variable KALLITHEA_EXTRAS not found")
 
     try:
         for k in ['username', 'repository', 'locked_by', 'scm', 'make_lock',
                   'action', 'ip']:
             extras[k]
-    except KeyError as e:
-        raise Exception('Missing key %s in os.environ %s' % (e, extras))
+    except KeyError:
+        raise Exception('Missing key %s in KALLITHEA_EXTRAS %s' % (k, extras))
 
     return AttributeDict(extras)
 
 
 def _set_extras(extras):
-    # RC_SCM_DATA can probably be removed in the future, but for compatibility now...
-    os.environ['KALLITHEA_EXTRAS'] = os.environ['RC_SCM_DATA'] = json.dumps(extras)
+    os.environ['KALLITHEA_EXTRAS'] = json.dumps(extras)
 
 
 def get_current_authuser():
