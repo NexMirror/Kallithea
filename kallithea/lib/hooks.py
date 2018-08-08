@@ -357,7 +357,7 @@ def log_delete_user(user_dict, deleted_by, **kwargs):
     return 0
 
 
-def _hook_environment(repo_path, env):
+def _hook_environment(repo_path):
     """
     Create a light-weight environment for stand-alone scripts and return an UI and the
     db repository.
@@ -371,7 +371,7 @@ def _hook_environment(repo_path, env):
     from kallithea.config.environment import load_environment
     from kallithea.model.base import init_model
 
-    extras = _extract_extras(env)
+    extras = _extract_extras()
     path, ini_name = os.path.split(extras['config'])
     conf = appconfig('config:%s' % ini_name, relative_to=path)
     conf = load_environment(conf.global_conf, conf.local_conf)
@@ -395,16 +395,16 @@ def _hook_environment(repo_path, env):
     return baseui, repo
 
 
-def handle_git_pre_receive(repo_path, git_stdin_lines, env):
+def handle_git_pre_receive(repo_path, git_stdin_lines):
     """Called from Git pre-receive hook"""
-    baseui, repo = _hook_environment(repo_path, env)
+    baseui, repo = _hook_environment(repo_path)
     scm_repo = repo.scm_instance
     push_lock_handling(baseui, scm_repo)
 
 
-def handle_git_post_receive(repo_path, git_stdin_lines, env):
+def handle_git_post_receive(repo_path, git_stdin_lines):
     """Called from Git post-receive hook"""
-    baseui, repo = _hook_environment(repo_path, env)
+    baseui, repo = _hook_environment(repo_path)
 
     # the post push hook should never use the cached instance
     scm_repo = repo.scm_instance_no_cache()

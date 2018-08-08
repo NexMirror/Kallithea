@@ -538,16 +538,13 @@ def get_server_url(environ):
     return req.host_url + req.script_name
 
 
-def _extract_extras(env=None):
+def _extract_extras():
     """
     Extracts the Kallithea extras data from os.environ, and wraps it into named
     AttributeDict object
     """
-    if not env:
-        env = os.environ
-
     try:
-        extras = json.loads(env['KALLITHEA_EXTRAS'])
+        extras = json.loads(os.environ['KALLITHEA_EXTRAS'])
     except KeyError:
         raise Exception("Environment variable KALLITHEA_EXTRAS not found")
 

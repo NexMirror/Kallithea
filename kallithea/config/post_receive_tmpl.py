@@ -28,7 +28,7 @@ import kallithea.lib.hooks
 def main():
     repo_path = os.path.abspath('.')
     git_stdin_lines = sys.stdin.readlines()
-    sys.exit(kallithea.lib.hooks.handle_git_post_receive(repo_path, git_stdin_lines, os.environ))
+    sys.exit(kallithea.lib.hooks.handle_git_post_receive(repo_path, git_stdin_lines))
 
 
 if __name__ == '__main__':
