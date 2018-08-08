@@ -290,20 +290,20 @@ class TestVCSOperations(TestController):
         # refs/heads/master we are pushing, but the `git log` in the push hook
         # should still list the 3 commits.
         stdout, stderr = _add_files_and_push(webserver, 'git', local_clone_dir, clone_url=clone_url)
-        # FIXME: the push kind of failed with something like:
-        # remote: fatal: ambiguous argument '': unknown revision or path not in the working tree.
-        assert 'remote: fatal' in stderr
+        _check_proper_git_push(stdout, stderr)
 
         # Verify that we got the right events in UserLog. Expect something like:
         # <UserLog('id:new_git_XXX:started_following_repo')>
         # <UserLog('id:new_git_XXX:user_created_repo')>
         # <UserLog('id:new_git_XXX:pull')>
-        # - but no push logging
+        # <UserLog('id:new_git_XXX:push:aed9d4c1732a1927da3be42c47eb9afdc200d427,d38b083a07af10a9f44193486959a96a23db78da,4841ff9a2b385bec995f4679ef649adb3f437622')>
         uls = list(UserLog.query().order_by(UserLog.user_log_id))
-        assert len(uls) == 3
+        assert len(uls) == 4
         assert uls[0].action == 'started_following_repo'
         assert uls[1].action == 'user_created_repo'
         assert uls[2].action == 'pull'
+        assert uls[3].action.startswith(u'push:')
+        assert uls[3].action.count(',') == 2 # expect 3 commits
 
     def test_push_new_file_hg(self, webserver, testfork):
         dest_dir = _get_tmp_dir()
