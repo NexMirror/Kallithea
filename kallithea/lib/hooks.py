@@ -400,6 +400,7 @@ def handle_git_pre_receive(repo_path, git_stdin_lines):
     baseui, repo = _hook_environment(repo_path)
     scm_repo = repo.scm_instance
     push_lock_handling(baseui, scm_repo)
+    return 0
 
 
 def handle_git_post_receive(repo_path, git_stdin_lines):
@@ -454,3 +455,4 @@ def handle_git_post_receive(repo_path, git_stdin_lines):
                 git_revs += ['tag=>%s' % push_ref['name']]
 
         log_push_action(baseui, scm_repo, _git_revs=git_revs)
+    return 0
