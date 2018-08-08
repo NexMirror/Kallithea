@@ -63,12 +63,13 @@ def is_git(environ):
 
 class SimpleGit(BaseVCSController):
 
+    _git_stored_op = 'pull' # most recent kind of command
+
     def _handle_request(self, environ, start_response):
         if not is_git(environ):
             return self.application(environ, start_response)
 
         ip_addr = self._get_ip_addr(environ)
-        self._git_first_op = False
         # skip passing error to error controller
         environ['pylons.status_code_redirect'] = True
 
@@ -194,12 +195,9 @@ class SimpleGit(BaseVCSController):
             }
             op = mapping[service_cmd]
             self._git_stored_op = op
-            return op
-        else:
             # try to fallback to stored variable as we don't know if the last
             # operation is pull/push
-            op = getattr(self, '_git_stored_op', 'pull')
-        return op
+        return self._git_stored_op
 
     def _handle_githooks(self, repo_name, action, baseui, environ):
         """
