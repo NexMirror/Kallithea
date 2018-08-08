@@ -132,7 +132,7 @@ class SimpleGit(BaseVCSController):
         fix_PATH()
         log.debug('HOOKS extras is %s', extras)
         baseui = make_ui('db')
-        self.__inject_extras(repo_path, baseui, extras)
+        _set_extras(extras or {})
 
         try:
             self._handle_githooks(repo_name, action, baseui, environ)
@@ -225,12 +225,3 @@ class SimpleGit(BaseVCSController):
             pull_lock_handling(ui=baseui, repo=_repo._repo)
         if action == 'pull' and _hooks.get(Ui.HOOK_PULL_LOG):
             log_pull_action(ui=baseui, repo=_repo._repo)
-
-    def __inject_extras(self, repo_path, baseui, extras=None):
-        """
-        Injects some extra params into baseui instance
-
-        :param baseui: baseui instance
-        :param extras: dict with extra params to put into baseui
-        """
-        _set_extras(extras or {})

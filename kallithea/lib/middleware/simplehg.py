@@ -142,7 +142,8 @@ class SimpleHg(BaseVCSController):
         fix_PATH()
         log.debug('HOOKS extras is %s', extras)
         baseui = make_ui('db')
-        self.__inject_extras(repo_path, baseui, extras)
+        self._augment_hgrc(repo_path, baseui)
+        _set_extras(extras or {})
 
         try:
             log.info('%s action on Mercurial repo "%s" by "%s" from %s',
@@ -223,23 +224,10 @@ class SimpleHg(BaseVCSController):
         # Note: the client doesn't get the helpful error message
         raise HTTPBadRequest('Unable to detect pull/push action! Are you using non standard command or client?')
 
-    def __inject_extras(self, repo_path, baseui, extras=None):
-        """
-        Injects some extra params into baseui instance
-
-        also overwrites global settings with those takes from local hgrc file
-
-        :param baseui: baseui instance
-        :param extras: dict with extra params to put into baseui
-        """
-
+    def _augment_hgrc(self, repo_path, baseui):
+        """Augment baseui with config settings from the repo_path repo"""
         hgrc = os.path.join(repo_path, '.hg', 'hgrc')
-
         repoui = make_ui('file', hgrc)
-
-        if repoui:
-            # overwrite our ui instance with the section from hgrc file
-            for section in ui_sections:
-                for k, v in repoui.configitems(section):
-                    baseui.setconfig(section, k, v)
-        _set_extras(extras or {})
+        for section in ui_sections:
+            for k, v in repoui.configitems(section):
+                baseui.setconfig(section, k, v)
