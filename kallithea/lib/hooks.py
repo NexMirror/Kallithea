@@ -34,8 +34,9 @@ from kallithea.lib import helpers as h
 from kallithea.lib.utils import action_logger
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.exceptions import HTTPLockedRC, UserCreationError
+from kallithea.lib.utils import make_ui, setup_cache_regions
 from kallithea.lib.utils2 import safe_str, safe_unicode, _extract_extras
-from kallithea.model.db import Repository, User
+from kallithea.model.db import Repository, User, Ui
 
 
 def _get_scm_size(alias, root_path):
@@ -366,23 +367,19 @@ def handle_git_post_receive(repo_path, git_stdin_lines, env):
     return handle_git_receive(repo_path, git_stdin_lines, env, hook_type='post')
 
 
-def handle_git_receive(repo_path, git_stdin_lines, env, hook_type):
+def _hook_environment(repo_path, env):
     """
-    A really hacky method that is run by git post-receive hook and logs
-    a push action together with pushed revisions. It's executed by subprocess
-    thus needs all info to be able to create an on the fly app environment,
-    connect to database and run the logging code. Hacky as sh*t but works.
+    Create a light-weight environment for stand-alone scripts and return an UI and the
+    db repository.
 
-    :param repo_path:
-    :param revs:
-    :param env:
+    Git hooks are executed as subprocess of Git while Kallithea is waiting, and
+    they thus need enough info to be able to create an app environment and
+    connect to the database.
     """
     from paste.deploy import appconfig
     from sqlalchemy import engine_from_config
     from kallithea.config.environment import load_environment
     from kallithea.model.base import init_model
-    from kallithea.model.db import Ui
-    from kallithea.lib.utils import make_ui, setup_cache_regions
 
     extras = _extract_extras(env)
     path, ini_name = os.path.split(extras['config'])
@@ -405,6 +402,20 @@ def handle_git_receive(repo_path, git_stdin_lines, env, hook_type):
                       % (safe_str(repo_path)))
 
     baseui = make_ui('db')
+    return baseui, repo
+
+def handle_git_receive(repo_path, git_stdin_lines, env, hook_type):
+    """
+    A really hacky method that is run by git post-receive hook and logs
+    a push action together with pushed revisions. It's executed by subprocess
+    thus needs all info to be able to create an on the fly app environment,
+    connect to database and run the logging code. Hacky as sh*t but works.
+
+    :param repo_path:
+    :param revs:
+    :param env:
+    """
+    baseui, repo = _hook_environment(repo_path, env)
 
     if hook_type == 'pre':
         scm_repo = repo.scm_instance
