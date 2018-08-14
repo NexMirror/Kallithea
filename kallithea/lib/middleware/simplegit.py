@@ -15,7 +15,7 @@
 kallithea.lib.middleware.simplegit
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-SimpleGit middleware for handling git protocol request (push/clone etc.)
+SimpleGit middleware for handling Git protocol requests (push/clone etc.)
 It's implemented with basic auth function
 
 This file was forked by the Kallithea project in July 2014.
@@ -44,7 +44,6 @@ from kallithea.lib.base import BaseVCSController, check_locking_state
 from kallithea.lib.utils import make_ui, is_valid_repo
 from kallithea.lib.exceptions import HTTPLockedRC
 from kallithea.lib.hooks import pull_lock_handling
-from kallithea.lib import auth_modules
 
 log = logging.getLogger(__name__)
 
@@ -100,8 +99,8 @@ class SimpleGit(BaseVCSController):
         if response_app is not None:
             return response_app(environ, start_response)
 
-        # extras are injected into UI object and later available
-        # in hooks executed by kallithea
+        # extras are injected into Mercurial UI object and later available
+        # in hooks executed by Kallithea
         from kallithea import CONFIG
         server_url = get_server_url(environ)
         extras = {
@@ -119,10 +118,9 @@ class SimpleGit(BaseVCSController):
         #===================================================================
         # GIT REQUEST HANDLING
         #===================================================================
-        repo_path = os.path.join(safe_str(self.basepath),str_repo_name)
+        repo_path = os.path.join(safe_str(self.basepath), str_repo_name)
         log.debug('Repository path is %s', repo_path)
 
-        # CHECK LOCKING only if it's not ANONYMOUS USER
         if not user.is_default_user:
             log.debug('Checking locking on repository')
             make_lock, locked, locked_by = check_locking_state(action, repo_name, user)
@@ -181,7 +179,7 @@ class SimpleGit(BaseVCSController):
 
     def __get_action(self, environ):
         """
-        Maps git request commands into a pull or push command.
+        Maps Git request commands into a pull or push command.
 
         :param environ:
         """

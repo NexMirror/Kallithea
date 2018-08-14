@@ -15,8 +15,8 @@
 kallithea.lib.middleware.simplehg
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-SimpleHg middleware for handling mercurial protocol request
-(push/clone etc.). It's implemented with basic auth function
+SimpleHg middleware for handling Mercurial protocol requests (push/clone etc.).
+It's implemented with basic auth function
 
 This file was forked by the Kallithea project in July 2014.
 Original author and date, and relevant copyright and licensing information is below:
@@ -77,10 +77,8 @@ class SimpleHg(BaseVCSController):
         # EXTRACT REPOSITORY NAME FROM ENV
         #======================================================================
         try:
-            str_repo_name = environ['REPO_NAME'] = self.__get_repository(environ)
-            assert isinstance(str_repo_name, str), str_repo_name
+            str_repo_name = self.__get_repository(environ)
             repo_name = safe_unicode(str_repo_name)
-            assert safe_str(repo_name) == str_repo_name, (str_repo_name, repo_name)
             log.debug('Extracted repo name is %s', repo_name)
         except Exception as e:
             log.error('error extracting repo_name: %r', e)
@@ -105,8 +103,8 @@ class SimpleHg(BaseVCSController):
         if response_app is not None:
             return response_app(environ, start_response)
 
-        # extras are injected into mercurial UI object and later available
-        # in hg hooks executed by kallithea
+        # extras are injected into Mercurial UI object and later available
+        # in hooks executed by Kallithea
         from kallithea import CONFIG
         server_url = get_server_url(environ)
         extras = {
@@ -148,6 +146,7 @@ class SimpleHg(BaseVCSController):
         try:
             log.info('%s action on Mercurial repo "%s" by "%s" from %s',
                      action, str_repo_name, safe_str(user.username), ip_addr)
+            environ['REPO_NAME'] = str_repo_name # used by hgweb_mod.hgweb
             app = self.__make_app(repo_path, baseui, extras)
             return app(environ, start_response)
         except RepoError as e:
@@ -206,7 +205,7 @@ class SimpleHg(BaseVCSController):
 
     def __get_action(self, environ):
         """
-        Maps mercurial request commands into a pull or push command.
+        Maps Mercurial request commands into a pull or push command.
 
         Raises HTTPBadRequest if the request environment doesn't look like a hg client.
         """
