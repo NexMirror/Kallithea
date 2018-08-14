@@ -357,16 +357,6 @@ def log_delete_user(user_dict, deleted_by, **kwargs):
     return 0
 
 
-def handle_git_pre_receive(repo_path, git_stdin_lines, env):
-    """Called from Git pre-receive hook"""
-    return handle_git_receive(repo_path, git_stdin_lines, env, hook_type='pre')
-
-
-def handle_git_post_receive(repo_path, git_stdin_lines, env):
-    """Called from Git post-receive hook"""
-    return handle_git_receive(repo_path, git_stdin_lines, env, hook_type='post')
-
-
 def _hook_environment(repo_path, env):
     """
     Create a light-weight environment for stand-alone scripts and return an UI and the
@@ -404,32 +394,24 @@ def _hook_environment(repo_path, env):
     baseui = make_ui('db')
     return baseui, repo
 
-def handle_git_receive(repo_path, git_stdin_lines, env, hook_type):
-    """
-    A really hacky method that is run by git post-receive hook and logs
-    a push action together with pushed revisions. It's executed by subprocess
-    thus needs all info to be able to create an on the fly app environment,
-    connect to database and run the logging code. Hacky as sh*t but works.
 
-    :param repo_path:
-    :param revs:
-    :param env:
-    """
+def handle_git_pre_receive(repo_path, git_stdin_lines, env):
+    """Called from Git pre-receive hook"""
+    baseui, repo = _hook_environment(repo_path, env)
+    scm_repo = repo.scm_instance
+    push_lock_handling(baseui, scm_repo)
+
+
+def handle_git_post_receive(repo_path, git_stdin_lines, env):
+    """Called from Git post-receive hook"""
     baseui, repo = _hook_environment(repo_path, env)
 
-    if hook_type == 'pre':
-        scm_repo = repo.scm_instance
-    else:
-        # post push should never use the cached instance
-        scm_repo = repo.scm_instance_no_cache()
+    # the post push hook should never use the cached instance
+    scm_repo = repo.scm_instance_no_cache()
 
     _hooks = dict(baseui.configitems('hooks')) or {}
-
-    if hook_type == 'pre':
-        push_lock_handling(baseui, scm_repo)
-
     # if push hook is enabled via web interface
-    elif hook_type == 'post' and _hooks.get(Ui.HOOK_PUSH_LOG):
+    if _hooks.get(Ui.HOOK_PUSH_LOG):
         rev_data = []
         for l in git_stdin_lines:
             old_rev, new_rev, ref = l.strip().split(' ')
