@@ -156,17 +156,17 @@ setuptools.setup(
     main = kallithea.config.middleware:make_app
 
     [gearbox.commands]
-    make-config=kallithea.lib.paster_commands.make_config:Command
-    setup-db=kallithea.lib.paster_commands.setup_db:Command
+    cache-keys=kallithea.lib.paster_commands.cache_keys:Command
+    celeryd=kallithea.lib.paster_commands.celeryd:Command
     cleanup-repos=kallithea.lib.paster_commands.cleanup:Command
-    update-repoinfo=kallithea.lib.paster_commands.update_repoinfo:Command
+    install-iis=kallithea.lib.paster_commands.install_iis:Command
+    ishell=kallithea.lib.paster_commands.ishell:Command
+    make-config=kallithea.lib.paster_commands.make_config:Command
+    make-index=kallithea.lib.paster_commands.make_index:Command
     make-rcext=kallithea.lib.paster_commands.make_rcextensions:Command
     repo-scan=kallithea.lib.paster_commands.repo_scan:Command
-    cache-keys=kallithea.lib.paster_commands.cache_keys:Command
-    ishell=kallithea.lib.paster_commands.ishell:Command
-    make-index=kallithea.lib.paster_commands.make_index:Command
+    setup-db=kallithea.lib.paster_commands.setup_db:Command
+    update-repoinfo=kallithea.lib.paster_commands.update_repoinfo:Command
     upgrade-db=kallithea.lib.dbmigrate:UpgradeDb
-    celeryd=kallithea.lib.paster_commands.celeryd:Command
-    install-iis=kallithea.lib.paster_commands.install_iis:Command
     """,
 )
