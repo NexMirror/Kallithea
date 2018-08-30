@@ -4,7 +4,6 @@ import argparse
 
 import kallithea
 from kallithea.lib.paster_commands.common import BasePasterCommand
-from kallithea.lib.utils2 import str2bool
 
 __all__ = ['Command']
 

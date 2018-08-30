@@ -26,8 +26,6 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 
-import os
-import sys
 
 from kallithea.model.scm import ScmModel
 from kallithea.lib.paster_commands.common import BasePasterCommand

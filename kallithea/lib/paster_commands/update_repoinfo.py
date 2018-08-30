@@ -26,14 +26,10 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 
-import os
-import sys
-import string
 
 from kallithea.lib.paster_commands.common import BasePasterCommand
 from kallithea.lib.utils2 import safe_unicode
 from kallithea.model.db import Repository
-from kallithea.model.repo import RepoModel
 from kallithea.model.meta import Session
 
 

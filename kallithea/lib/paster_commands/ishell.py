@@ -26,7 +26,6 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 
-import os
 import sys
 
 # imports, used in IPython shell

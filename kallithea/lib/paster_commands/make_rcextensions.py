@@ -27,7 +27,6 @@ Original author and date, and relevant copyright and licensing information is be
 
 
 import os
-import sys
 import pkg_resources
 
 from kallithea.lib.paster_commands.common import ask_ok, BasePasterCommand

@@ -20,7 +20,6 @@ IIS installation tools for Kallithea
 
 
 import os
-import sys
 
 from kallithea.lib.paster_commands.common import BasePasterCommand
 

@@ -28,7 +28,6 @@ Original author and date, and relevant copyright and licensing information is be
 
 
 import os
-import sys
 import re
 import shutil
 import datetime

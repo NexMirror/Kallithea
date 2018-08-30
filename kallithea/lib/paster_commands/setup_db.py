@@ -19,9 +19,6 @@ Databaset setup gearbox command for Kallithea
 """
 
 
-import os
-import sys
-import paste.deploy
 
 import kallithea
 from kallithea.lib.db_manage import DbManage
