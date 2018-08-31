@@ -43,10 +43,10 @@ class Command(BasePasterCommand):
     def take_action(self, args):
         try:
             from IPython import embed
-            from traitlets.config.loader import Config
-            cfg = Config()
-            cfg.InteractiveShellEmbed.confirm_exit = False
-            embed(config=cfg, banner1="Kallithea IShell.")
         except ImportError:
             print 'Kallithea ishell requires the IPython Python package'
             sys.exit(-1)
+        from traitlets.config.loader import Config
+        cfg = Config()
+        cfg.InteractiveShellEmbed.confirm_exit = False
+        embed(config=cfg, banner1="Kallithea IShell.")
