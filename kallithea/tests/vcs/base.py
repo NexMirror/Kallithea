@@ -52,13 +52,13 @@ class _BackendTestMixin(object):
         ]
         return commits
 
-    @classmethod
+    # Note: cannot use classmethod fixtures with pytest 3.7.1+
     @pytest.fixture(autouse=True,
                     scope='class')
-    def _configure_backend(cls, request):
-        Backend = vcs.get_backend(cls.backend_alias)
-        cls.backend_class = Backend
-        cls.setup_repo(Backend)
+    def _configure_backend(self, request):
+        Backend = vcs.get_backend(self.backend_alias)
+        type(self).backend_class = Backend
+        type(self).setup_repo(Backend)
 
     @classmethod
     def setup_empty_repo(cls, backend):
