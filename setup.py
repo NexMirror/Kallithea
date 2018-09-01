@@ -55,7 +55,7 @@ requirements = [
     "Markdown == 2.2.1",
     "docutils >= 0.8.1",
     "URLObject == 2.3.4",
-    "Routes == 1.13",
+    "Routes >= 1.13, < 2",
     "dulwich >= 0.14.1",
     "mercurial >= 4.1.1, < 4.8",
     "decorator >= 3.3.2",
