@@ -35,31 +35,31 @@ __platform__ = platform.system()
 is_windows = __platform__ in ['Windows']
 
 requirements = [
-    "alembic >= 0.8.0, < 0.9",
+    "alembic >= 0.8.0, < 1.1",
     "gearbox < 1",
-    "waitress >= 0.8.8, < 1.0",
-    "WebOb >= 1.7, < 1.8.0", # TurboGears2 doesn't support 1.8.0
-    "backlash >= 0.1.2, < 1.0.0",
-    "TurboGears2 >= 2.3.10, < 3.0.0",
-    "tgext.routes >= 0.2.0, < 1.0.0",
+    "waitress >= 0.8.8, < 1.2",
+    "WebOb >= 1.7, < 1.8", # turbogears2 2.3.12 requires WebOb<1.8.0
+    "backlash >= 0.1.2, < 1",
+    "TurboGears2 >= 2.3.10, < 3",
+    "tgext.routes >= 0.2.0, < 1",
     "Beaker >= 1.7.0, < 2",
-    "WebHelpers == 1.3",
-    "FormEncode >= 1.2.4, <= 1.2.6",
-    "SQLAlchemy >= 1.1, < 1.2",
-    "Mako >= 0.9.0, <= 1.0.0",
-    "Pygments >= 1.5",
-    "Whoosh >= 2.5.0, <= 2.5.7",
+    "WebHelpers >= 1.3, < 1.4",
+    "FormEncode >= 1.2.4, < 1.4",
+    "SQLAlchemy >= 1.1, < 1.3",
+    "Mako >= 0.9.0, < 1.1",
+    "Pygments >= 1.5, < 2.3",
+    "Whoosh >= 2.5.0, < 2.8",
     "celery >= 3.1, < 4.0", # celery 4 doesn't work
-    "Babel >= 0.9.6, < 2.4",
-    "python-dateutil >= 1.5.0, < 2.0.0",
-    "Markdown == 2.2.1",
-    "docutils >= 0.8.1",
-    "URLObject == 2.3.4",
+    "Babel >= 0.9.6, < 2.7",
+    "python-dateutil >= 1.5.0, < 2.8",
+    "Markdown >= 2.2.1, < 2.7",
+    "docutils >= 0.8.1, < 0.15",
+    "URLObject >= 2.3.4, < 2.5",
     "Routes >= 1.13, < 2",
-    "dulwich >= 0.14.1",
+    "dulwich >= 0.14.1, < 0.20",
     "mercurial >= 4.1.1, < 4.8",
-    "decorator >= 3.3.2",
-    "Paste >= 2.0.3, < 3.0",
+    "decorator >= 3.3.2, < 4.4",
+    "Paste >= 2.0.3, < 3",
 ]
 
 if sys.version_info < (2, 7):
@@ -67,7 +67,7 @@ if sys.version_info < (2, 7):
     requirements.append("argparse")
 
 if not is_windows:
-    requirements.append("bcrypt >= 3.1.0")
+    requirements.append("bcrypt >= 3.1.0, < 3.2")
 
 dependency_links = [
 ]
