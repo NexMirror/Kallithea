@@ -49,7 +49,7 @@ requirements = [
     "Mako >= 0.9.0, <= 1.0.0",
     "Pygments >= 1.5",
     "Whoosh >= 2.5.0, <= 2.5.7",
-    "celery >= 3.1, < 3.2",
+    "celery >= 3.1, < 4.0", # celery 4 doesn't work
     "Babel >= 0.9.6, < 2.4",
     "python-dateutil >= 1.5.0, < 2.0.0",
     "Markdown == 2.2.1",
