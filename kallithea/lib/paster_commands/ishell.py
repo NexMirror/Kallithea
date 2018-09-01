@@ -44,7 +44,7 @@ class Command(BasePasterCommand):
         try:
             from IPython import embed
         except ImportError:
-            print 'Kallithea ishell requires the IPython Python package'
+            print 'Kallithea ishell requires the Python package IPython 4 or later'
             sys.exit(-1)
         from traitlets.config.loader import Config
         cfg = Config()
