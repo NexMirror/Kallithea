@@ -363,7 +363,7 @@ class ScmModel(object):
         :param repo_name: name of repo
         :param revisions: list of revisions that we pushed
         """
-        self._handle_rc_scm_extras(username, repo_name, repo_alias=repo.alias)
+        self._handle_rc_scm_extras(username, repo_name, repo_alias=repo.alias, action=action)
         _scm_repo = repo._repo
         # trigger push hook
         if repo.alias == 'hg':
