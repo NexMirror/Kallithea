@@ -23,6 +23,7 @@ syntax: regexp
 ^\.pydevproject$
 ^\.coverage$
 ^kallithea/public/css/style\.css(\.map)?$
+^kallithea/public/css/pygments.css$
 ^theme\.less$
 ^kallithea\.db$
 ^test\.db$

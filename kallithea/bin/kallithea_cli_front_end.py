@@ -43,6 +43,12 @@ def front_end_build(install_deps, generate):
 
     if generate:
         click.echo("Generating CSS")
+        with open(os.path.join(rootdir, 'kallithea', 'public', 'css', 'pygments.css'), 'w') as f:
+            subprocess.check_call(['pygmentize',
+                    '-S', 'default',
+                    '-f', 'html',
+                    '-a', '.code-highlight'],
+                    stdout=f)
         lesscpath = os.path.join(rootdir, 'node_modules', '.bin', 'lessc')
         lesspath = os.path.join(rootdir, 'kallithea', 'public', 'less', 'main.less')
         csspath = os.path.join(rootdir, 'kallithea', 'public', 'css', 'style.css')
