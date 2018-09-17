@@ -551,3 +551,51 @@ class TestLibs(TestController):
         from kallithea.lib.utils import _extract_id_from_repo_name
         _test = _extract_id_from_repo_name(test)
         assert _test == expected, 'url:%s, got:`%s` expected: `%s`' % (test, _test, expected)
+
+
+    @parametrize('canonical,test,expected', [
+        ('http://www.example.org/', '/abc/xyz', 'http://www.example.org/abc/xyz'),
+        ('http://www.example.org', '/abc/xyz', 'http://www.example.org/abc/xyz'),
+        ('http://www.example.org', '/abc/xyz/', 'http://www.example.org/abc/xyz/'),
+        ('http://www.example.org', 'abc/xyz/', 'http://www.example.org/abc/xyz/'),
+        ('http://www.example.org', 'about', 'http://www.example.org/about-page'),
+    ])
+    def test_canonical_url(self, canonical, test, expected):
+        from kallithea.lib.helpers import canonical_url
+        from tg import request
+
+        # setup url(), used by canonical_url
+        import routes
+        m = routes.Mapper()
+        m.connect('about', '/about-page')
+        url = routes.URLGenerator(m, {'HTTP_HOST': 'http_host.example.org'})
+
+        config_mock = {
+            'canonical_url': canonical,
+        }
+
+        with test_context(self.app):
+            request.environ['routes.url'] = url
+            with mock.patch('kallithea.CONFIG', config_mock):
+                assert canonical_url(test) == expected
+
+    @parametrize('canonical,expected', [
+        ('http://www.example.org', 'www.example.org'),
+    ])
+    def test_canonical_hostname(self, canonical, expected):
+        from kallithea.lib.helpers import canonical_hostname
+        from tg import request
+
+        # setup url(), used by canonical_hostname
+        import routes
+        m = routes.Mapper()
+        url = routes.URLGenerator(m, {'HTTP_HOST': 'http_host.example.org'})
+
+        config_mock = {
+            'canonical_url': canonical,
+        }
+
+        with test_context(self.app):
+            request.environ['routes.url'] = url
+            with mock.patch('kallithea.CONFIG', config_mock):
+                assert canonical_hostname() == expected
