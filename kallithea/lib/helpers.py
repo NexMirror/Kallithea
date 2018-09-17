@@ -58,7 +58,7 @@ def canonical_url(*args, **kargs):
     from kallithea import CONFIG
     try:
         parts = CONFIG.get('canonical_url', '').split('://', 1)
-        kargs['host'] = parts[1].split('/', 1)[0]
+        kargs['host'] = parts[1]
         kargs['protocol'] = parts[0]
     except IndexError:
         kargs['qualified'] = True

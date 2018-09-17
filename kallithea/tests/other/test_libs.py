@@ -559,6 +559,8 @@ class TestLibs(TestController):
         ('http://www.example.org', '/abc/xyz/', 'http://www.example.org/abc/xyz/'),
         ('http://www.example.org', 'abc/xyz/', 'http://www.example.org/abc/xyz/'),
         ('http://www.example.org', 'about', 'http://www.example.org/about-page'),
+        ('http://www.example.org/repos/', 'abc/xyz/', 'http://www.example.org/repos/abc/xyz/'),
+        ('http://www.example.org/kallithea/repos/', 'abc/xyz/', 'http://www.example.org/kallithea/repos/abc/xyz/'),
     ])
     def test_canonical_url(self, canonical, test, expected):
         from kallithea.lib.helpers import canonical_url
@@ -581,6 +583,8 @@ class TestLibs(TestController):
 
     @parametrize('canonical,expected', [
         ('http://www.example.org', 'www.example.org'),
+        ('http://www.example.org/repos/', 'www.example.org'),
+        ('http://www.example.org/kallithea/repos/', 'www.example.org'),
     ])
     def test_canonical_hostname(self, canonical, expected):
         from kallithea.lib.helpers import canonical_hostname
