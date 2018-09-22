@@ -173,14 +173,32 @@ need to append the following lines to it::
 Your config file should now work with Alembic.
 
 
-7. Rebuild the Whoosh full-text index
+7. Update Git repository hooks
+------------------------------
+
+It is possible that an upgrade involves changes to the Git hooks installed by
+Kallithea. As these hooks are created inside the repositories on the server
+filesystem, they are not updated automatically when upgrading Kallithea itself.
+
+To update the hooks of your Git repositories:
+
+* Go to *Admin > Settings > Remap and Rescan*
+* Select the checkbox *Install Git hooks*
+* Click the button *Rescan repositories*
+
+.. note::
+    Kallithea does not use hooks on Mercurial repositories. This step is thus
+    not necessary if you only have Mercurial repositories.
+
+
+8. Rebuild the Whoosh full-text index
 -------------------------------------
 
 It is recommended that you rebuild the Whoosh index after upgrading since
 new Whoosh versions can introduce incompatible index changes.
 
 
-8. Start the Kallithea web application
+9. Start the Kallithea web application
 --------------------------------------
 
 This step once again depends entirely on the web server software used to
