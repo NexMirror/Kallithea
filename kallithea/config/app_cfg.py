@@ -120,6 +120,22 @@ else:
 def setup_configuration(app):
     config = app.config
 
+    # Verify that things work when Dulwich passes unicode paths to the file system layer.
+    # Note: UTF-8 is preferred, but for example ISO-8859-1 or mbcs should also work under the right cirumstances.
+    try:
+        u'\xe9'.encode(sys.getfilesystemencoding()) # Test using é (&eacute;)
+    except UnicodeEncodeError:
+        log.error("Cannot encode Unicode paths to file system encoding %r", sys.getfilesystemencoding())
+        for var in ['LC_CTYPE', 'LC_ALL', 'LANG']:
+            if var in os.environ:
+                val = os.environ[var]
+                log.error("Note: Environment variable %s is %r - perhaps change it to some other value from 'locale -a', like 'C.UTF-8' or 'en_US.UTF-8'", var, val)
+                break
+        else:
+            log.error("Note: No locale setting found in environment variables - perhaps set LC_CTYPE to some value from 'locale -a', like 'C.UTF-8' or 'en_US.UTF-8'")
+        log.error("Terminating ...")
+        sys.exit(1)
+
     # Mercurial sets encoding at module import time, so we have to monkey patch it
     hgencoding = config.get('hgencoding')
     if hgencoding:
