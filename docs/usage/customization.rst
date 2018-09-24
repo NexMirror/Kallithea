@@ -28,13 +28,10 @@ directory, you can use this file to override the default style. For example,
 you can use this to override ``@kallithea-theme-main-color``,
 ``@kallithea-logo-url`` or other `Bootstrap variables`_.
 
-After creating the ``theme.less`` file, you need to regenerate the CSS files.
-Install npm for your platform and run::
+After creating the ``theme.less`` file, you need to regenerate the CSS files, by
+running::
 
-    npm install
-    npm run less
-
-in the Kallithea root directory.
+    kallithea-cli front-end-build --no-install-deps
 
 .. _bootstrap 3: https://getbootstrap.com/docs/3.3/
 .. _bootstrap variables: https://getbootstrap.com/docs/3.3/customize/#less-variables

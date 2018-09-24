@@ -37,10 +37,9 @@ To get started with Kallithea development::
         pip install --upgrade pip setuptools
         pip install --upgrade -e .
         pip install --upgrade -r dev_requirements.txt
-        npm install     # install dependencies - both tools and data
-        npm run less    # for generating css from less
         kallithea-cli config-create my.ini
         kallithea-cli db-create -c my.ini --user=user --email=user@example.com --password=password --repos=/tmp
+        kallithea-cli front-end-build
         gearbox serve -c my.ini --reload &
         firefox http://127.0.0.1:5000/
 

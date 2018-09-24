@@ -5,22 +5,6 @@ Setup
 =====
 
 
-Preparing front-end
--------------------
-
-Temporarily, in the current Kallithea version, some extra steps are required to
-build front-end files:
-
-Find the right ``kallithea/public/less`` path with::
-
-    python -c "import os, kallithea; print os.path.join(os.path.dirname(os.path.abspath(kallithea.__file__)), 'public', 'less')"
-
-Then run::
-
-    npm install
-    npm run less
-
-
 Setting up Kallithea
 --------------------
 
@@ -69,6 +53,10 @@ path to the root).
           the Kallithea web interface will work without write access,
           but when trying to do a push it will fail with permission
           denied errors unless it has write access.
+
+Finally, prepare the front-end by running::
+
+    kallithea-cli front-end-build
 
 You are now ready to use Kallithea. To run it simply execute::
 

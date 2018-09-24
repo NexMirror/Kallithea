@@ -69,11 +69,9 @@ installed.
   (``pip install kallithea`` from a source tree will do pretty much the same
   but build the Kallithea package itself locally instead of downloading it.)
 
-.. note:: The front-end code is built with Node. Currently, it must be built
-          locally after installing Kallithea. Assuming Node and the Node
-          Package Manager is available, other tools and source code will be
-          downloaded and installed. The front-end code can then be built from
-          source locally.
+.. note:: Kallithea includes front-end code that needs to be processed first.
+The tool npm_ is used to download external dependencies and orchestrate the
+processing. The ``npm`` binary must thus be available.
 
 
 Web server
@@ -144,3 +142,4 @@ continuous hammering from the internet.
 .. _WSGI: http://en.wikipedia.org/wiki/Web_Server_Gateway_Interface
 .. _HAProxy: http://www.haproxy.org/
 .. _Varnish: https://www.varnish-cache.org/
+.. _npm: https://www.npmjs.com/
