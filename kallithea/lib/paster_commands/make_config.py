@@ -41,8 +41,8 @@ class Command(BasePasterCommand):
     file (possibly filling in defaults from the extra
     variables you give).
 
-    The first key=value arguments are used to customize the Mako variables that
-    are shown with --show-defaults. The following settings will be
+    The first key=value arguments are used to customize the Mako variables from
+    what is shown with --show-defaults. Any following key=value arguments will be
     patched/inserted in the [app:main] section ... until another section name
     is specified and change where the following values go.
     """
@@ -59,7 +59,7 @@ class Command(BasePasterCommand):
             help='application config file to write')
 
         parser.add_argument('custom', nargs=argparse.REMAINDER,
-            help='custom values for the config file')
+            help='"key=value" for customizing the config file')
 
         parser.add_argument('--show-defaults', action='store_true',
             help="Show the default values that can be overridden")
@@ -68,12 +68,14 @@ class Command(BasePasterCommand):
 
 
 def _run(args):
+    if args.show_defaults:
+        if args.config_file is not None:
+            raise ValueError("Can't specify both config file and --show-defaults")
+        for key, value in inifile.default_variables.items():
+            print '%s=%s' % (key, value)
+        sys.exit(0)
     if args.config_file is None:
-        if not args.show_defaults:
-            raise ValueError("Missing argument: config_file")
-    else:
-        if args.show_defaults:
-            raise ValueError("Can't specify both config_file and --show_defaults")
+        raise ValueError("Missing argument: config file")
 
     mako_variable_values = {}
     ini_settings = defaultdict(dict)
@@ -93,12 +95,6 @@ def _run(args):
                 ini_settings[section_name][key] = value
         else:
             raise ValueError("Invalid name=value parameter %r" % parameter)
-
-    if args.show_defaults:
-        for key, value in inifile.default_variables.items():
-            value = mako_variable_values.get(key, value)
-            print '%s=%s' % (key, value)
-        sys.exit(0)
 
     # use default that cannot be replaced
     mako_variable_values.update({
