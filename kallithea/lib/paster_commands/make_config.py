@@ -29,9 +29,6 @@ from collections import defaultdict
 
 import mako.exceptions
 
-TMPL = 'template.ini.mako'
-here = os.path.dirname(os.path.abspath(__file__))
-
 from kallithea.lib.paster_commands.common import BasePasterCommand
 from kallithea.lib import inifile
 
