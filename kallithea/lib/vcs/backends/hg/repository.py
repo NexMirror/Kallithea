@@ -602,8 +602,10 @@ class MercurialRepository(BaseRepository):
             config_file = [config_file]
 
         config = self._repo.ui
-        for path in config_file:
-            config.readconfig(path)
+        if config_file:
+            config = ui.ui()
+            for path in config_file:
+                config.readconfig(path)
         return config.config(section, name)
 
     def get_user_name(self, config_file=None):
