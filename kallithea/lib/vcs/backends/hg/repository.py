@@ -613,7 +613,7 @@ class MercurialRepository(BaseRepository):
         :param config_file: A path to file which should be used to retrieve
           configuration from (might also be a list of file paths)
         """
-        username = self.get_config_value('ui', 'username')
+        username = self.get_config_value('ui', 'username', config_file=config_file)
         if username:
             return author_name(username)
         return None
@@ -625,7 +625,7 @@ class MercurialRepository(BaseRepository):
         :param config_file: A path to file which should be used to retrieve
           configuration from (might also be a list of file paths)
         """
-        username = self.get_config_value('ui', 'username')
+        username = self.get_config_value('ui', 'username', config_file=config_file)
         if username:
             return author_email(username)
         return None
