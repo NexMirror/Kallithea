@@ -159,7 +159,6 @@ setuptools.setup(
     main = kallithea.config.middleware:make_app
 
     [gearbox.commands]
-    cache-keys=kallithea.lib.paster_commands.cache_keys:Command
     celeryd=kallithea.lib.paster_commands.celeryd:Command
     cleanup-repos=kallithea.lib.paster_commands.cleanup:Command
     install-iis=kallithea.lib.paster_commands.install_iis:Command
