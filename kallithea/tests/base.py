@@ -51,9 +51,6 @@ __all__ = [
     'GIT_REMOTE_REPO', 'HG_TEST_REVISION', 'GIT_TEST_REVISION',
 ]
 
-# Invoke websetup with the current config file
-# SetupCommand('setup-app').run([config_file])
-
 ## SOME GLOBALS FOR TESTS
 
 TESTS_TMP_PATH = os.environ.get('KALLITHEA_TESTS_TMP_PATH', tempfile.mkdtemp(prefix='kallithea-test-'))

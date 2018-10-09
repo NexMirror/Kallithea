@@ -36,15 +36,18 @@ from kallithea.lib import inifile
 class Command(BasePasterCommand):
     """Kallithea: Create a new config file
 
-    make-config is part of a two-phase installation process (the
-    second phase is setup-app). make-config creates a bare configuration
-    file (possibly filling in defaults from the extra
-    variables you give).
+    make-config is the first part of the two step setup process. This first
+    step creates a customized .ini configuration file. The next step is to run
+    setup-db to populate the database that is referenced in the configuration
+    file.
 
-    The first key=value arguments are used to customize the Mako variables from
-    what is shown with --show-defaults. Any following key=value arguments will be
-    patched/inserted in the [app:main] section ... until another section name
-    is specified and change where the following values go.
+    The primary high level configuration keys and their default values are
+    shown with --show-defaults . Custom values can be specified on the command
+    line as key=value arguments when creating a config file.
+
+    Additional key=value arguments will be patched/inserted in the [app:main]
+    section ... until another section name specifies where any following values
+    should go.
     """
 
     takes_config_file = False # at least not an existing one ...
