@@ -264,8 +264,7 @@ class SimpleHg(BaseVCSController):
 
     def __get_action(self, environ):
         """
-        Maps mercurial request commands into a clone,pull or push command.
-        This should always return a valid command string
+        Maps Mercurial request commands into 'pull' or 'push'.
 
         :param environ:
         """
@@ -276,12 +275,10 @@ class SimpleHg(BaseVCSController):
                    'unbundle': 'push',
                    'pushkey': 'push', }
         for qry in environ['QUERY_STRING'].split('&'):
-            if qry.startswith('cmd'):
-                cmd = qry.split('=')[-1]
-                if cmd in mapping:
-                    return mapping[cmd]
-
-                return 'pull'
+            parts = qry.split('=', 1)
+            if len(parts) == 2 and parts[0] == 'cmd':
+                cmd = parts[1]
+                return mapping.get(cmd, 'pull')
 
         raise Exception('Unable to detect pull/push action !!'
                         'Are you using non standard command or client ?')

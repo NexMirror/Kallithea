@@ -218,7 +218,7 @@ class BaseVCSController(object):
         Checks permissions using action (push/pull) user and repository
         name
 
-        :param action: push or pull action
+        :param action: 'push' or 'pull' action
         :param user: `User` instance
         :param repo_name: repository name
         """
