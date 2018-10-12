@@ -307,7 +307,7 @@ Celery. So for example setting `BROKER_HOST` in Celery means setting
 
 To start the Celery process, run::
 
- gearbox celeryd -c <configfile.ini>
+  gearbox celeryd -c my.ini
 
 Extra options to the Celery worker can be passed after ``--`` - see ``-- -h``
 for more info.

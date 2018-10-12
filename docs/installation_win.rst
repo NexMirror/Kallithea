@@ -166,9 +166,9 @@ it, reopen it following the same commands (including the "activate"
 one). When ready, type::
 
   cd C:\Kallithea\Bin
-  gearbox make-config production.ini
+  gearbox make-config my.ini
 
-Then you must edit production.ini to fit your needs (IP address, IP
+Then you must edit my.ini to fit your needs (IP address, IP
 port, mail settings, database, etc.). `NotePad++`__ or a similar text
 editor is recommended to properly handle the newline character
 differences between Unix and Windows.
@@ -177,7 +177,7 @@ __ http://notepad-plus-plus.org/
 
 For the sake of simplicity, run it with the default settings. After your edits (if any) in the previous command prompt, type::
 
-  gearbox setup-db -c production.ini
+  gearbox setup-db -c my.ini
 
 .. warning:: This time a *new* database will be installed. You must
              follow a different process to later :ref:`upgrade <upgrade>`
@@ -200,7 +200,7 @@ Step 10 -- Running Kallithea
 
 In the previous command prompt, being in the C:\\Kallithea\\Bin folder, type::
 
-  gearbox serve -c production.ini
+  gearbox serve -c my.ini
 
 Open your web server, and go to http://127.0.0.1:5000
 
