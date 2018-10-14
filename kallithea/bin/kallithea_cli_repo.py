@@ -144,9 +144,13 @@ def repo_purge_deleted(ask, older_than):
         if dirs:
             click.echo('Scanning: %s' % dn_)
 
+    if not to_remove:
+        click.echo('There are no deleted repositories.')
+        return
+
     # filter older than (if present)!
-    now = datetime.datetime.now()
     if older_than:
+        now = datetime.datetime.now()
         to_remove_filtered = []
         older_than_date = _parse_older_than(older_than)
         for name, date_ in to_remove:
@@ -155,13 +159,18 @@ def repo_purge_deleted(ask, older_than):
                 to_remove_filtered.append([name, date_])
 
         to_remove = to_remove_filtered
-        click.echo('Purging %s deleted repos older than %s (%s)'
+
+        if not to_remove:
+            click.echo('There are no deleted repositories older than %s (%s)'
+                    % (older_than, older_than_date))
+            return
+
+        click.echo('Considering %s deleted repositories older than %s (%s).'
             % (len(to_remove), older_than, older_than_date))
     else:
-        click.echo('Purging all %s deleted repos' % len(to_remove))
+        click.echo('Considering %s deleted repositories.' % len(to_remove))
 
-    if not ask or not to_remove:
-        # don't ask just remove !
+    if not ask:
         remove = True
     else:
         remove = ask_ok('The following repositories will be removed completely:\n%s\n'
