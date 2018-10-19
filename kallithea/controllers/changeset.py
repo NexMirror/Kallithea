@@ -399,10 +399,14 @@ class ChangesetController(BaseRepoController):
     @LoginRequired()
     @HasRepoPermissionLevelDecorator('read')
     @jsonify
-    def delete_comment(self, repo_name, comment_id):
+    def delete_comment(self, repo_name, comment_id, pr_comment=False):
         co = ChangesetComment.get_or_404(comment_id)
         if co.repo.repo_name != repo_name:
             raise HTTPNotFound()
+        if pr_comment and co.pull_request.is_closed():
+            # don't allow deleting comments on closed pull request
+            raise HTTPForbidden()
+
         owner = co.author_id == request.authuser.user_id
         repo_admin = h.HasRepoPermissionLevel('admin')(repo_name)
         if h.HasPermissionAny('hg.admin')() or repo_admin or owner:
