@@ -287,12 +287,35 @@ class SimpleHg(BaseVCSController):
 
         :param environ:
         """
-        mapping = {'changegroup': 'pull',
-                   'changegroupsubset': 'pull',
-                   'stream_out': 'pull',
-                   'listkeys': 'pull',
-                   'unbundle': 'push',
-                   'pushkey': 'push', }
+        mapping = {
+            # 'batch' is not in this list - it is handled explicitly
+            'between': 'pull',
+            'branches': 'pull',
+            'branchmap': 'pull',
+            'capabilities': 'pull',
+            'changegroup': 'pull',
+            'changegroupsubset': 'pull',
+            'changesetdata': 'pull',
+            'clonebundles': 'pull',
+            'debugwireargs': 'pull',
+            'filedata': 'pull',
+            'getbundle': 'pull',
+            'getlfile': 'pull',
+            'heads': 'pull',
+            'hello': 'pull',
+            'known': 'pull',
+            'lheads': 'pull',
+            'listkeys': 'pull',
+            'lookup': 'pull',
+            'manifestdata': 'pull',
+            'narrow_widen': 'pull',
+            'protocaps': 'pull',
+            'statlfile': 'pull',
+            'stream_out': 'pull',
+            'pushkey': 'push',
+            'putlfile': 'push',
+            'unbundle': 'push',
+            }
         for qry in environ['QUERY_STRING'].split('&'):
             parts = qry.split('=', 1)
             if len(parts) == 2 and parts[0] == 'cmd':
@@ -303,12 +326,12 @@ class SimpleHg(BaseVCSController):
                         return 'push' # paranoid and safe
                     for cmd_arg in hgarg[5:].split(';'):
                         cmd, _args = urllib.unquote_plus(cmd_arg).split(' ', 1)
-                        op = mapping.get(cmd, 'pull')
+                        op = mapping.get(cmd, 'push')
                         if op != 'pull':
                             assert op == 'push'
                             return 'push'
                     return 'pull'
-                return mapping.get(cmd, 'pull')
+                return mapping.get(cmd, 'push')
 
         raise Exception('Unable to detect pull/push action !!'
                         'Are you using non standard command or client ?')
