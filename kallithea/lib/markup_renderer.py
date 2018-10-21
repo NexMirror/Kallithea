@@ -30,6 +30,8 @@ import re
 import logging
 import traceback
 
+import markdown as markdown_mod
+
 from kallithea.lib.utils2 import safe_unicode, MENTIONS_REGEX
 
 log = logging.getLogger(__name__)
@@ -158,13 +160,10 @@ class MarkupRenderer(object):
         """
         source = safe_unicode(source)
         try:
-            import markdown as __markdown
             if flavored:
                 source = cls._flavored_markdown(source)
-            return __markdown.markdown(source, ['codehilite', 'extra'])
-        except ImportError:
-            log.warning('Install markdown to use this function')
-            return cls.plain(source)
+            markdown_html = markdown_mod.markdown(source, ['codehilite', 'extra'])
+            return markdown_html
         except Exception:
             log.error(traceback.format_exc())
             if safe:
