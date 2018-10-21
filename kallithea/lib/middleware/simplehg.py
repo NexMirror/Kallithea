@@ -31,6 +31,7 @@ Original author and date, and relevant copyright and licensing information is be
 import os
 import logging
 import traceback
+import urllib
 
 from paste.httpheaders import REMOTE_USER, AUTH_TYPE
 from webob.exc import HTTPNotFound, HTTPForbidden, HTTPInternalServerError, \
@@ -64,6 +65,24 @@ def is_mercurial(environ):
         path_info, ishg_path
     )
     return ishg_path
+
+
+def get_header_hgarg(environ):
+    """Decode the special Mercurial encoding of big requests over multiple headers.
+    >>> get_header_hgarg({})
+    ''
+    >>> get_header_hgarg({'HTTP_X_HGARG_0': ' ', 'HTTP_X_HGARG_1': 'a','HTTP_X_HGARG_2': '','HTTP_X_HGARG_3': 'b+c %20'})
+    'ab+c %20'
+    """
+    chunks = []
+    i = 1
+    while True:
+        v = environ.get('HTTP_X_HGARG_%d' % i)
+        if v is None:
+            break
+        chunks.append(v)
+        i += 1
+    return ''.join(chunks)
 
 
 class SimpleHg(BaseVCSController):
@@ -278,6 +297,17 @@ class SimpleHg(BaseVCSController):
             parts = qry.split('=', 1)
             if len(parts) == 2 and parts[0] == 'cmd':
                 cmd = parts[1]
+                if cmd == 'batch':
+                    hgarg = get_header_hgarg(environ)
+                    if not hgarg.startswith('cmds='):
+                        return 'push' # paranoid and safe
+                    for cmd_arg in hgarg[5:].split(';'):
+                        cmd, _args = urllib.unquote_plus(cmd_arg).split(' ', 1)
+                        op = mapping.get(cmd, 'pull')
+                        if op != 'pull':
+                            assert op == 'push'
+                            return 'push'
+                    return 'pull'
                 return mapping.get(cmd, 'pull')
 
         raise Exception('Unable to detect pull/push action !!'
