@@ -57,6 +57,7 @@ requirements = [
     "Routes==1.13",
     "dulwich>=0.9.9,<=0.9.9",
     "mercurial>=2.9,<4.3",
+    "bleach >= 3.0, < 3.1",
 ]
 
 if sys.version_info < (2, 7):

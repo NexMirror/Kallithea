@@ -31,6 +31,7 @@ import logging
 import traceback
 
 import markdown as markdown_mod
+import bleach
 
 from kallithea.lib.utils2 import safe_unicode, MENTIONS_REGEX
 
@@ -142,28 +143,40 @@ class MarkupRenderer(object):
     @classmethod
     def markdown(cls, source, safe=True, flavored=False):
         """
-        Convert Markdown (possibly GitHub Flavored) to HTML, possibly
+        Convert Markdown (possibly GitHub Flavored) to XSS safe HTML, possibly
         with "safe" fall-back to plaintext.
 
         >>> MarkupRenderer.markdown('''<img id="a" style="margin-top:-1000px;color:red" src="http://example.com/test.jpg">''')
-        u'<p><img id="a" style="margin-top:-1000px;color:red" src="http://example.com/test.jpg"></p>'
+        u'<p><img id="a" src="http://example.com/test.jpg" style="color: red;"></p>'
         >>> MarkupRenderer.markdown('''<img class="c d" src="file://localhost/test.jpg">''')
-        u'<p><img class="c d" src="file://localhost/test.jpg"></p>'
+        u'<p><img class="c d"></p>'
         >>> MarkupRenderer.markdown('''<a href="foo">foo</a>''')
         u'<p><a href="foo">foo</a></p>'
         >>> MarkupRenderer.markdown('''<script>alert(1)</script>''')
-        u'<script>alert(1)</script>'
+        u'&lt;script&gt;alert(1)&lt;/script&gt;'
         >>> MarkupRenderer.markdown('''<div onclick="alert(2)">yo</div>''')
-        u'<div onclick="alert(2)">yo</div>'
+        u'<div>yo</div>'
         >>> MarkupRenderer.markdown('''<a href="javascript:alert(3)">yo</a>''')
-        u'<p><a href="javascript:alert(3)">yo</a></p>'
+        u'<p><a>yo</a></p>'
         """
         source = safe_unicode(source)
         try:
             if flavored:
                 source = cls._flavored_markdown(source)
             markdown_html = markdown_mod.markdown(source, ['codehilite', 'extra'])
-            return markdown_html
+            # Allow most HTML, while preventing XSS issues:
+            # no <script> tags, no onclick attributes, no javascript
+            # "protocol", and also limit styling to prevent defacing.
+            return bleach.clean(markdown_html,
+                tags=['a', 'abbr', 'b', 'blockquote', 'br', 'code', 'dd',
+                      'div', 'dl', 'dt', 'em', 'h1', 'h2', 'h3', 'h4', 'h5',
+                      'h6', 'hr', 'i', 'img', 'li', 'ol', 'p', 'pre', 'span',
+                      'strong', 'sub', 'sup', 'table', 'tbody', 'td', 'th',
+                      'thead', 'tr', 'ul'],
+                attributes=['class', 'id', 'style', 'label', 'title', 'alt', 'href', 'src'],
+                styles=['color'],
+                protocols=['http', 'https', 'mailto'],
+                )
         except Exception:
             log.error(traceback.format_exc())
             if safe:
