@@ -139,6 +139,23 @@ class MarkupRenderer(object):
 
     @classmethod
     def markdown(cls, source, safe=True, flavored=False):
+        """
+        Convert Markdown (possibly GitHub Flavored) to HTML, possibly
+        with "safe" fall-back to plaintext.
+
+        >>> MarkupRenderer.markdown('''<img id="a" style="margin-top:-1000px;color:red" src="http://example.com/test.jpg">''')
+        u'<p><img id="a" style="margin-top:-1000px;color:red" src="http://example.com/test.jpg"></p>'
+        >>> MarkupRenderer.markdown('''<img class="c d" src="file://localhost/test.jpg">''')
+        u'<p><img class="c d" src="file://localhost/test.jpg"></p>'
+        >>> MarkupRenderer.markdown('''<a href="foo">foo</a>''')
+        u'<p><a href="foo">foo</a></p>'
+        >>> MarkupRenderer.markdown('''<script>alert(1)</script>''')
+        u'<script>alert(1)</script>'
+        >>> MarkupRenderer.markdown('''<div onclick="alert(2)">yo</div>''')
+        u'<div onclick="alert(2)">yo</div>'
+        >>> MarkupRenderer.markdown('''<a href="javascript:alert(3)">yo</a>''')
+        u'<p><a href="javascript:alert(3)">yo</a></p>'
+        """
         source = safe_unicode(source)
         try:
             import markdown as __markdown
