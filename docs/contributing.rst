@@ -99,13 +99,14 @@ systems with /tmp mounted noexec will thus fail.
 You can also use ``tox`` to run the tests with all supported Python versions
 (currently Python 2.6--2.7).
 
-When running tests, Kallithea uses `kallithea/tests/test.ini` and populates the
-SQLite database specified there.
+When running tests, Kallithea generates a `test.ini` based on template values
+in `kallithea/tests/conftest.py` and populates the SQLite database specified
+there.
 
 It is possible to avoid recreating the full test database on each invocation of
 the tests, thus eliminating the initial delay. To achieve this, run the tests as::
 
-    gearbox serve -c kallithea/tests/test.ini --pid-file=test.pid --daemon
+    gearbox serve -c /tmp/kallithea-test-XXX/test.ini --pid-file=test.pid --daemon
     KALLITHEA_WHOOSH_TEST_DISABLE=1 KALLITHEA_NO_TMP_PATH=1 py.test
     kill -9 $(cat test.pid)
 

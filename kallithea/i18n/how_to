@@ -88,11 +88,8 @@ new translation instructions
 Testing translations
 --------------------
 
-Edit kallithea/tests/test.ini file and set lang attribute to::
-
-    lang=<new_language_code>
-
-Run Kallithea tests by executing::
+Edit `kallithea/tests/conftest.py` and set `i18n.lang` to `<new_language_code>`
+and run Kallithea tests by executing::
 
     py.test
 

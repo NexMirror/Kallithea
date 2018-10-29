@@ -46,6 +46,7 @@ def pytest_configure():
             'show_revision_number': 'true',
             'beaker.cache.sql_cache_short.expire': '1',
             'beaker.session.secret': '{74e0cd75-b339-478b-b129-07dd221def1f}',
+            #'i18n.lang': '',
         },
         '[handler_console]': {
             'formatter': 'color_formatter',

@@ -1,8 +1,6 @@
 #!/usr/bin/env python2
 """
-Based on kallithea/lib/paster_commands/template.ini.mako, generate
-  development.ini
-  kallithea/tests/test.ini
+Based on kallithea/lib/paster_commands/template.ini.mako, generate development.ini
 """
 
 import re
