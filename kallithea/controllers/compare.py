@@ -95,9 +95,14 @@ class CompareController(BaseRepoController):
         elif alias == 'hg':
             # case two independent repos
             if org_repo != other_repo:
-                hgrepo = unionrepo.unionrepository(other_repo.baseui,
-                                                   other_repo.path,
-                                                   org_repo.path)
+                try:
+                    hgrepo = unionrepo.makeunionrepository(other_repo.baseui,
+                                                           other_repo.path,
+                                                           org_repo.path)
+                except AttributeError: # makeunionrepository was introduced in Mercurial 4.8 23f2299e9e53
+                    hgrepo = unionrepo.unionrepository(other_repo.baseui,
+                                                       other_repo.path,
+                                                       org_repo.path)
                 # all ancestors of other_rev will be in other_repo and
                 # rev numbers from hgrepo can be used in other_repo - org_rev ancestors cannot
 
