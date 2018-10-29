@@ -57,7 +57,7 @@ requirements = [
     "URLObject >= 2.3.4, < 2.5",
     "Routes >= 1.13, < 2",
     "dulwich >= 0.14.1, < 0.20",
-    "mercurial >= 4.1.1, < 4.8",
+    "mercurial >= 4.1.1, < 4.9",
     "decorator >= 3.3.2, < 4.4",
     "Paste >= 2.0.3, < 3",
 ]
