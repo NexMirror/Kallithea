@@ -18,7 +18,6 @@ from mercurial.context import memctx, memfilectx
 from mercurial.error import RepoError, RepoLookupError, Abort
 from mercurial.hgweb import hgweb_mod
 from mercurial.hgweb.common import get_contact
-from mercurial.localrepo import localrepository
 from mercurial.match import match
 from mercurial.mdiff import diffopts
 from mercurial.node import hex
@@ -45,9 +44,9 @@ if inspect.getargspec(memfilectx.__init__).args[2] != 'changectx':
 
 
 # workaround for 3.3 94ac64bcf6fe and not calling largefiles reposetup correctly
-localrepository._lfstatuswriters = [lambda *msg, **opts: None]
+localrepo.localrepository._lfstatuswriters = [lambda *msg, **opts: None]
 # 3.5 7699d3212994 added the invariant that repo.lfstatus must exist before hitting overridearchive
-localrepository.lfstatus = False
+localrepo.localrepository.lfstatus = False
 
 # Mercurial 4.2 moved tag from localrepo to the tags module
 def tag(repo, *args):

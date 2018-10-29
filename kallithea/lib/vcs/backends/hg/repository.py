@@ -30,7 +30,7 @@ from kallithea.lib.vcs.utils.ordered_dict import OrderedDict
 from kallithea.lib.vcs.utils.paths import abspath
 from kallithea.lib.vcs.utils.hgcompat import (
     ui, nullid, match, patch, diffopts, clone, get_contact,
-    localrepository, RepoLookupError, Abort, RepoError, hex, scmutil, hg_url,
+    localrepo, RepoLookupError, Abort, RepoError, hex, scmutil, hg_url,
     httpbasicauthhandler, httpdigestauthhandler, peer, httppeer, sshpeer, tag
 )
 
@@ -364,7 +364,7 @@ class MercurialRepository(BaseRepository):
 
                 # Don't try to create if we've already cloned repo
                 create = False
-            return localrepository(self.baseui, self.path, create=create)
+            return localrepo.localrepository(self.baseui, self.path, create=create)
         except (Abort, RepoError) as err:
             if create:
                 msg = "Cannot create repository at %s. Original error was %s" \
