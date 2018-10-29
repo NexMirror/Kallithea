@@ -364,7 +364,7 @@ class MercurialRepository(BaseRepository):
 
                 # Don't try to create if we've already cloned repo
                 create = False
-            return localrepo.localrepository(self.baseui, self.path, create=create)
+            return localrepo.instance(self.baseui, self.path, create=create)
         except (Abort, RepoError) as err:
             if create:
                 msg = "Cannot create repository at %s. Original error was %s" \
