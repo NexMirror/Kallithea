@@ -30,6 +30,9 @@ import re
 import logging
 import traceback
 
+import markdown as markdown_mod
+import bleach
+
 from kallithea.lib.utils2 import safe_unicode, MENTIONS_REGEX
 
 log = logging.getLogger(__name__)
@@ -138,17 +141,43 @@ class MarkupRenderer(object):
 
     @classmethod
     def markdown(cls, source, safe=True, flavored=False):
+        """
+        Convert Markdown (possibly GitHub Flavored) to XSS safe HTML, possibly
+        with "safe" fall-back to plaintext.
+
+        >>> MarkupRenderer.markdown('''<img id="a" style="margin-top:-1000px;color:red" src="http://example.com/test.jpg">''')
+        u'<p><img id="a" src="http://example.com/test.jpg" style="color: red;"></p>'
+        >>> MarkupRenderer.markdown('''<img class="c d" src="file://localhost/test.jpg">''')
+        u'<p><img class="c d"></p>'
+        >>> MarkupRenderer.markdown('''<a href="foo">foo</a>''')
+        u'<p><a href="foo">foo</a></p>'
+        >>> MarkupRenderer.markdown('''<script>alert(1)</script>''')
+        u'&lt;script&gt;alert(1)&lt;/script&gt;'
+        >>> MarkupRenderer.markdown('''<div onclick="alert(2)">yo</div>''')
+        u'<div>yo</div>'
+        >>> MarkupRenderer.markdown('''<a href="javascript:alert(3)">yo</a>''')
+        u'<p><a>yo</a></p>'
+        """
         source = safe_unicode(source)
         try:
-            import markdown as __markdown
             if flavored:
                 source = cls._flavored_markdown(source)
-            return __markdown.markdown(source,
+            markdown_html = markdown_mod.markdown(source,
                                        extensions=['codehilite', 'extra'],
                                        extension_configs={'codehilite': {'css_class': 'code-highlight'}})
-        except ImportError:
-            log.warning('Install markdown to use this function')
-            return cls.plain(source)
+            # Allow most HTML, while preventing XSS issues:
+            # no <script> tags, no onclick attributes, no javascript
+            # "protocol", and also limit styling to prevent defacing.
+            return bleach.clean(markdown_html,
+                tags=['a', 'abbr', 'b', 'blockquote', 'br', 'code', 'dd',
+                      'div', 'dl', 'dt', 'em', 'h1', 'h2', 'h3', 'h4', 'h5',
+                      'h6', 'hr', 'i', 'img', 'li', 'ol', 'p', 'pre', 'span',
+                      'strong', 'sub', 'sup', 'table', 'tbody', 'td', 'th',
+                      'thead', 'tr', 'ul'],
+                attributes=['class', 'id', 'style', 'label', 'title', 'alt', 'href', 'src'],
+                styles=['color'],
+                protocols=['http', 'https', 'mailto'],
+                )
         except Exception:
             log.error(traceback.format_exc())
             if safe:

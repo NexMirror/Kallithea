@@ -31,6 +31,7 @@ Original author and date, and relevant copyright and licensing information is be
 import os
 import logging
 import traceback
+import urllib
 
 from webob.exc import HTTPNotFound, HTTPForbidden, HTTPInternalServerError, \
     HTTPNotAcceptable, HTTPBadRequest
@@ -61,6 +62,24 @@ def is_mercurial(environ):
         path_info, ishg_path
     )
     return ishg_path
+
+
+def get_header_hgarg(environ):
+    """Decode the special Mercurial encoding of big requests over multiple headers.
+    >>> get_header_hgarg({})
+    ''
+    >>> get_header_hgarg({'HTTP_X_HGARG_0': ' ', 'HTTP_X_HGARG_1': 'a','HTTP_X_HGARG_2': '','HTTP_X_HGARG_3': 'b+c %20'})
+    'ab+c %20'
+    """
+    chunks = []
+    i = 1
+    while True:
+        v = environ.get('HTTP_X_HGARG_%d' % i)
+        if v is None:
+            break
+        chunks.append(v)
+        i += 1
+    return ''.join(chunks)
 
 
 class SimpleHg(BaseVCSController):
@@ -205,16 +224,55 @@ class SimpleHg(BaseVCSController):
 
     def __get_action(self, environ):
         """
-        Maps Mercurial request commands into a pull or push command.
+        Maps Mercurial request commands into 'pull' or 'push'.
 
         Raises HTTPBadRequest if the request environment doesn't look like a hg client.
         """
-        mapping = {'unbundle': 'push',
-                   'pushkey': 'push'}
+        mapping = {
+            # 'batch' is not in this list - it is handled explicitly
+            'between': 'pull',
+            'branches': 'pull',
+            'branchmap': 'pull',
+            'capabilities': 'pull',
+            'changegroup': 'pull',
+            'changegroupsubset': 'pull',
+            'changesetdata': 'pull',
+            'clonebundles': 'pull',
+            'debugwireargs': 'pull',
+            'filedata': 'pull',
+            'getbundle': 'pull',
+            'getlfile': 'pull',
+            'heads': 'pull',
+            'hello': 'pull',
+            'known': 'pull',
+            'lheads': 'pull',
+            'listkeys': 'pull',
+            'lookup': 'pull',
+            'manifestdata': 'pull',
+            'narrow_widen': 'pull',
+            'protocaps': 'pull',
+            'statlfile': 'pull',
+            'stream_out': 'pull',
+            'pushkey': 'push',
+            'putlfile': 'push',
+            'unbundle': 'push',
+            }
         for qry in environ['QUERY_STRING'].split('&'):
-            if qry.startswith('cmd'):
-                cmd = qry.split('=')[-1]
-                return mapping.get(cmd, 'pull')
+            parts = qry.split('=', 1)
+            if len(parts) == 2 and parts[0] == 'cmd':
+                cmd = parts[1]
+                if cmd == 'batch':
+                    hgarg = get_header_hgarg(environ)
+                    if not hgarg.startswith('cmds='):
+                        return 'push' # paranoid and safe
+                    for cmd_arg in hgarg[5:].split(';'):
+                        cmd, _args = urllib.unquote_plus(cmd_arg).split(' ', 1)
+                        op = mapping.get(cmd, 'push')
+                        if op != 'pull':
+                            assert op == 'push'
+                            return 'push'
+                    return 'pull'
+                return mapping.get(cmd, 'push')
 
         # Note: the client doesn't get the helpful error message
         raise HTTPBadRequest('Unable to detect pull/push action! Are you using non standard command or client?')
