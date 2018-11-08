@@ -43,7 +43,7 @@ from kallithea.lib.utils import action_logger
 from kallithea.lib.vcs.exceptions import EmptyRepositoryError, ChangesetDoesNotExistError
 from kallithea.lib.vcs.utils import safe_str
 from kallithea.lib.vcs.utils.hgcompat import unionrepo
-from kallithea.model.db import PullRequest, ChangesetStatus, ChangesetComment, \
+from kallithea.model.db import PullRequest, ChangesetStatus, \
     PullRequestReviewer, Repository, User
 from kallithea.model.pull_request import CreatePullRequestAction, CreatePullRequestIterationAction, PullRequestModel
 from kallithea.model.meta import Session
@@ -53,7 +53,7 @@ from kallithea.model.changeset_status import ChangesetStatusModel
 from kallithea.model.forms import PullRequestForm, PullRequestPostForm
 from kallithea.lib.utils2 import safe_int
 from kallithea.controllers.changeset import _ignorews_url, _context_url, \
-    create_comment
+    create_comment, delete_cs_pr_comment
 from kallithea.controllers.compare import CompareController
 from kallithea.lib.graphmod import graph_data
 
@@ -716,18 +716,4 @@ class PullrequestsController(BaseRepoController):
     @HasRepoPermissionLevelDecorator('read')
     @jsonify
     def delete_comment(self, repo_name, comment_id):
-        co = ChangesetComment.get_or_404(comment_id)
-        if co.repo.repo_name != repo_name:
-            raise HTTPNotFound()
-        if co.pull_request.is_closed():
-            # don't allow deleting comments on closed pull request
-            raise HTTPForbidden()
-
-        owner = co.author_id == request.authuser.user_id
-        repo_admin = h.HasRepoPermissionLevel('admin')(repo_name)
-        if h.HasPermissionAny('hg.admin')() or repo_admin or owner:
-            ChangesetCommentsModel().delete(comment=co)
-            Session().commit()
-            return True
-        else:
-            raise HTTPForbidden()
+        return delete_cs_pr_comment(repo_name, comment_id, pr_comment=True)

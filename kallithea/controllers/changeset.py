@@ -187,6 +187,22 @@ def create_comment(text, status, f_path, line_no, revision=None, pull_request_id
 
     return comment
 
+def delete_cs_pr_comment(repo_name, comment_id, pr_comment=False):
+    co = ChangesetComment.get_or_404(comment_id)
+    if co.repo.repo_name != repo_name:
+        raise HTTPNotFound()
+    if pr_comment and co.pull_request.is_closed():
+        # don't allow deleting comments on closed pull request
+        raise HTTPForbidden()
+
+    owner = co.author_id == request.authuser.user_id
+    repo_admin = h.HasRepoPermissionLevel('admin')(repo_name)
+    if h.HasPermissionAny('hg.admin')() or repo_admin or owner:
+        ChangesetCommentsModel().delete(comment=co)
+        Session().commit()
+        return True
+    else:
+        raise HTTPForbidden()
 
 class ChangesetController(BaseRepoController):
 
@@ -399,22 +415,8 @@ class ChangesetController(BaseRepoController):
     @LoginRequired()
     @HasRepoPermissionLevelDecorator('read')
     @jsonify
-    def delete_comment(self, repo_name, comment_id, pr_comment=False):
-        co = ChangesetComment.get_or_404(comment_id)
-        if co.repo.repo_name != repo_name:
-            raise HTTPNotFound()
-        if pr_comment and co.pull_request.is_closed():
-            # don't allow deleting comments on closed pull request
-            raise HTTPForbidden()
-
-        owner = co.author_id == request.authuser.user_id
-        repo_admin = h.HasRepoPermissionLevel('admin')(repo_name)
-        if h.HasPermissionAny('hg.admin')() or repo_admin or owner:
-            ChangesetCommentsModel().delete(comment=co)
-            Session().commit()
-            return True
-        else:
-            raise HTTPForbidden()
+    def delete_comment(self, repo_name, comment_id):
+        return delete_cs_pr_comment(repo_name, comment_id, pr_comment=False)
 
     @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')
