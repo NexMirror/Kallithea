@@ -29,7 +29,6 @@ import logging
 from sqlalchemy.orm import joinedload
 
 from kallithea.model.db import ChangesetStatus, PullRequest, Repository, User, Session
-from kallithea.lib.exceptions import StatusChangeOnClosedPullRequestError
 
 log = logging.getLogger(__name__)
 
@@ -133,7 +132,7 @@ class ChangesetStatusModel(object):
         return status
 
     def set_status(self, repo, status, user, comment, revision=None,
-                   pull_request=None, dont_allow_on_closed_pull_request=False):
+                   pull_request=None):
         """
         Creates new status for changeset or updates the old ones bumping their
         version, leaving the current status at the value of 'status'.
@@ -144,9 +143,6 @@ class ChangesetStatusModel(object):
         :param comment:
         :param revision:
         :param pull_request:
-        :param dont_allow_on_closed_pull_request: don't allow a status change
-            if last status was for pull request and it's closed. We shouldn't
-            mess around this manually
         """
         repo = Repository.guess_instance(repo)
 
@@ -164,15 +160,6 @@ class ChangesetStatusModel(object):
             q = q.filter(ChangesetStatus.revision.in_(pull_request.revisions))
             revisions = pull_request.revisions
         cur_statuses = q.all()
-
-        # if statuses exists and last is associated with a closed pull request
-        # we need to check if we can allow this status change
-        if (dont_allow_on_closed_pull_request and cur_statuses
-            and getattr(cur_statuses[0].pull_request, 'status', '')
-                == PullRequest.STATUS_CLOSED):
-            raise StatusChangeOnClosedPullRequestError(
-                'Changing status on closed pull request is not allowed'
-            )
 
         # update all current statuses with older version
         for st in cur_statuses:

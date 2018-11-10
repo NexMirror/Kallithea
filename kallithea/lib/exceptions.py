@@ -59,10 +59,6 @@ class UserGroupsAssignedException(Exception):
     pass
 
 
-class StatusChangeOnClosedPullRequestError(Exception):
-    pass
-
-
 class AttachedForksError(Exception):
     pass
 
