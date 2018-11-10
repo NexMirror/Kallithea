@@ -47,7 +47,6 @@ from kallithea.model.comment import ChangesetCommentsModel
 from kallithea.model.changeset_status import ChangesetStatusModel
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
-from kallithea.lib.exceptions import StatusChangeOnClosedPullRequestError
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.utils2 import safe_unicode
 from kallithea.lib.graphmod import graph_data
@@ -388,20 +387,13 @@ class ChangesetController(BaseRepoController):
 
         # get status if set !
         if status:
-            # if latest status was from pull request and it's closed
-            # disallow changing status ! RLY?
-            try:
-                ChangesetStatusModel().set_status(
-                    c.db_repo.repo_id,
-                    status,
-                    request.authuser.user_id,
-                    c.comment,
-                    revision=revision,
-                    dont_allow_on_closed_pull_request=True,
-                )
-            except StatusChangeOnClosedPullRequestError:
-                log.debug('cannot change status on %s with closed pull request', revision)
-                raise HTTPBadRequest()
+            ChangesetStatusModel().set_status(
+                c.db_repo.repo_id,
+                status,
+                request.authuser.user_id,
+                c.comment,
+                revision=revision,
+            )
 
         action_logger(request.authuser,
                       'user_commented_revision:%s' % revision,
