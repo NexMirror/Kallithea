@@ -186,7 +186,7 @@ class PullrequestsController(BaseRepoController):
                   ]
         return [g for g in groups if g[0]], selected
 
-    def _get_is_allowed_change_status(self, pull_request):
+    def _is_allowed_to_change_status(self, pull_request):
         if pull_request.is_closed():
             return False
 
@@ -453,7 +453,7 @@ class PullrequestsController(BaseRepoController):
         repo_model = RepoModel()
         c.users_array = repo_model.get_users_js()
         c.pull_request = PullRequest.get_or_404(pull_request_id)
-        c.allowed_to_change_status = self._get_is_allowed_change_status(c.pull_request)
+        c.allowed_to_change_status = self._is_allowed_to_change_status(c.pull_request)
         cc_model = ChangesetCommentsModel()
         cs_model = ChangesetStatusModel()
 
@@ -644,7 +644,7 @@ class PullrequestsController(BaseRepoController):
             # status votes and closing is only possible in general comments
             raise HTTPBadRequest()
 
-        allowed_to_change_status = self._get_is_allowed_change_status(pull_request)
+        allowed_to_change_status = self._is_allowed_to_change_status(pull_request)
         if not allowed_to_change_status:
             if status or close_pr:
                 h.flash(_('No permission to change pull request status'), 'error')
