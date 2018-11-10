@@ -369,14 +369,21 @@ class ChangesetController(BaseRepoController):
         assert request.environ.get('HTTP_X_PARTIAL_XHR')
 
         status = request.POST.get('changeset_status')
+        f_path = request.POST.get('f_path')
+        line_no = request.POST.get('line')
+
+        if status and (f_path or line_no):
+            # status votes are only possible in general comments
+            raise HTTPBadRequest()
+
         text = request.POST.get('text', '').strip()
 
         c.comment = create_comment(
             text,
             status,
             revision=revision,
-            f_path=request.POST.get('f_path'),
-            line_no=request.POST.get('line'),
+            f_path=f_path,
+            line_no=line_no,
         )
 
         # get status if set !
