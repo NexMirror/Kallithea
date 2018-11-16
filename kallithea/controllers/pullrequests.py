@@ -632,6 +632,7 @@ class PullrequestsController(BaseRepoController):
     @HasRepoPermissionLevelDecorator('read')
     @jsonify
     def comment(self, repo_name, pull_request_id):
+        assert request.environ.get('HTTP_X_PARTIAL_XHR')
         pull_request = PullRequest.get_or_404(pull_request_id)
 
         status = request.POST.get('changeset_status')
@@ -697,9 +698,6 @@ class PullrequestsController(BaseRepoController):
                           c.db_repo, request.ip_addr)
 
         Session().commit()
-
-        if not request.environ.get('HTTP_X_PARTIAL_XHR'):
-            raise HTTPFound(location=pull_request.url())
 
         data = {
            'target_id': h.safeid(h.safe_unicode(request.POST.get('f_path'))),
