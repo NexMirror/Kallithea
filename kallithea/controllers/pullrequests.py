@@ -633,7 +633,12 @@ class PullrequestsController(BaseRepoController):
     @jsonify
     def comment(self, repo_name, pull_request_id):
         assert request.environ.get('HTTP_X_PARTIAL_XHR')
-        pull_request = PullRequest.get_or_404(pull_request_id)
+
+        if pull_request_id is not None:
+            pull_request = PullRequest.get_or_404(pull_request_id)
+        else:
+            pull_request = None
+        revision = None
 
         status = request.POST.get('changeset_status')
         close_pr = request.POST.get('save_close')
@@ -648,10 +653,10 @@ class PullrequestsController(BaseRepoController):
         allowed_to_change_status = self._is_allowed_to_change_status(pull_request)
         if not allowed_to_change_status:
             if status or close_pr:
-                h.flash(_('No permission to change pull request status'), 'error')
+                h.flash(_('No permission to change status'), 'error')
                 raise HTTPForbidden()
 
-        if delete == "delete":
+        if pull_request and delete == "delete":
             if (pull_request.owner_id == request.authuser.user_id or
                 h.HasPermissionAny('hg.admin')() or
                 h.HasRepoPermissionLevel('admin')(pull_request.org_repo.repo_name) or
@@ -672,15 +677,12 @@ class PullrequestsController(BaseRepoController):
         comment = create_comment(
             text,
             status,
+            revision=revision,
             pull_request_id=pull_request_id,
             f_path=f_path,
             line_no=line_no,
             closing_pr=close_pr,
         )
-
-        action_logger(request.authuser,
-                      'user_commented_pull_request:%s' % pull_request_id,
-                      c.db_repo, request.ip_addr)
 
         if status:
             ChangesetStatusModel().set_status(
@@ -688,10 +690,17 @@ class PullrequestsController(BaseRepoController):
                 status,
                 request.authuser.user_id,
                 comment,
-                pull_request=pull_request_id
+                revision=revision,
+                pull_request=pull_request_id,
             )
 
-        if close_pr:
+        if pull_request:
+            action = 'user_commented_pull_request:%s' % pull_request_id
+        else:
+            action = 'user_commented_revision:%s' % revision
+        action_logger(request.authuser, action, c.db_repo, request.ip_addr)
+
+        if pull_request and close_pr:
             PullRequestModel().close_pull_request(pull_request_id)
             action_logger(request.authuser,
                           'user_closed_pull_request:%s' % pull_request_id,
