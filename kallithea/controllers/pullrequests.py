@@ -53,7 +53,7 @@ from kallithea.model.changeset_status import ChangesetStatusModel
 from kallithea.model.forms import PullRequestForm, PullRequestPostForm
 from kallithea.lib.utils2 import safe_int
 from kallithea.controllers.changeset import _ignorews_url, _context_url, \
-    create_comment, delete_cs_pr_comment
+    create_cs_pr_comment, delete_cs_pr_comment
 from kallithea.controllers.compare import CompareController
 from kallithea.lib.graphmod import graph_data
 
@@ -632,92 +632,10 @@ class PullrequestsController(BaseRepoController):
     @HasRepoPermissionLevelDecorator('read')
     @jsonify
     def comment(self, repo_name, pull_request_id):
-        assert request.environ.get('HTTP_X_PARTIAL_XHR')
-
-        if pull_request_id is not None:
-            pull_request = PullRequest.get_or_404(pull_request_id)
-        else:
-            pull_request = None
-        revision = None
-
-        status = request.POST.get('changeset_status')
-        close_pr = request.POST.get('save_close')
-        delete = request.POST.get('save_delete')
-        f_path = request.POST.get('f_path')
-        line_no = request.POST.get('line')
-
-        if (status or close_pr or delete) and (f_path or line_no):
-            # status votes and closing is only possible in general comments
-            raise HTTPBadRequest()
-
+        pull_request = PullRequest.get_or_404(pull_request_id)
         allowed_to_change_status = self._is_allowed_to_change_status(pull_request)
-        if not allowed_to_change_status:
-            if status or close_pr:
-                h.flash(_('No permission to change status'), 'error')
-                raise HTTPForbidden()
-
-        if pull_request and delete == "delete":
-            if (pull_request.owner_id == request.authuser.user_id or
-                h.HasPermissionAny('hg.admin')() or
-                h.HasRepoPermissionLevel('admin')(pull_request.org_repo.repo_name) or
-                h.HasRepoPermissionLevel('admin')(pull_request.other_repo.repo_name)
-                ) and not pull_request.is_closed():
-                PullRequestModel().delete(pull_request)
-                Session().commit()
-                h.flash(_('Successfully deleted pull request %s') % pull_request_id,
-                        category='success')
-                return {
-                   'location': url('my_pullrequests'), # or repo pr list?
-                }
-                raise HTTPFound(location=url('my_pullrequests')) # or repo pr list?
-            raise HTTPForbidden()
-
-        text = request.POST.get('text', '').strip()
-
-        comment = create_comment(
-            text,
-            status,
-            revision=revision,
-            pull_request_id=pull_request_id,
-            f_path=f_path,
-            line_no=line_no,
-            closing_pr=close_pr,
-        )
-
-        if status:
-            ChangesetStatusModel().set_status(
-                c.db_repo.repo_id,
-                status,
-                request.authuser.user_id,
-                comment,
-                revision=revision,
-                pull_request=pull_request_id,
-            )
-
-        if pull_request:
-            action = 'user_commented_pull_request:%s' % pull_request_id
-        else:
-            action = 'user_commented_revision:%s' % revision
-        action_logger(request.authuser, action, c.db_repo, request.ip_addr)
-
-        if pull_request and close_pr:
-            PullRequestModel().close_pull_request(pull_request_id)
-            action_logger(request.authuser,
-                          'user_closed_pull_request:%s' % pull_request_id,
-                          c.db_repo, request.ip_addr)
-
-        Session().commit()
-
-        data = {
-           'target_id': h.safeid(h.safe_unicode(request.POST.get('f_path'))),
-        }
-        if comment is not None:
-            c.comment = comment
-            data.update(comment.get_dict())
-            data.update({'rendered_text':
-                         render('changeset/changeset_comment_block.html')})
-
-        return data
+        return create_cs_pr_comment(repo_name, pull_request=pull_request,
+                allowed_to_change_status=allowed_to_change_status)
 
     @LoginRequired()
     @HasRepoPermissionLevelDecorator('read')
