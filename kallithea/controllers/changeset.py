@@ -166,26 +166,6 @@ def _context_url(GET, fileid=None):
     return h.link_to(icon, h.url.current(**params), title=lbl, **{'data-toggle': 'tooltip'})
 
 
-# Could perhaps be nice to have in the model but is too high level ...
-def create_comment(text, status, f_path, line_no, revision=None, pull_request_id=None, closing_pr=None):
-    """Comment functionality shared between changesets and pullrequests"""
-    f_path = f_path or None
-    line_no = line_no or None
-
-    comment = ChangesetCommentsModel().create(
-        text=text,
-        repo=c.db_repo.repo_id,
-        author=request.authuser.user_id,
-        revision=revision,
-        pull_request=pull_request_id,
-        f_path=f_path,
-        line_no=line_no,
-        status_change=ChangesetStatus.get_status_lbl(status) if status else None,
-        closing_pr=closing_pr,
-    )
-
-    return comment
-
 def create_cs_pr_comment(repo_name, revision=None, pull_request=None, allowed_to_change_status=True):
     assert request.environ.get('HTTP_X_PARTIAL_XHR')
     if pull_request:
@@ -226,13 +206,15 @@ def create_cs_pr_comment(repo_name, revision=None, pull_request=None, allowed_to
 
     text = request.POST.get('text', '').strip()
 
-    comment = create_comment(
-        text,
-        status,
+    comment = ChangesetCommentsModel().create(
+        text=text,
+        repo=c.db_repo.repo_id,
+        author=request.authuser.user_id,
         revision=revision,
-        pull_request_id=pull_request_id,
-        f_path=f_path,
-        line_no=line_no,
+        pull_request=pull_request_id,
+        f_path=f_path or None,
+        line_no=line_no or None,
+        status_change=ChangesetStatus.get_status_lbl(status) if status else None,
         closing_pr=close_pr,
     )
 
