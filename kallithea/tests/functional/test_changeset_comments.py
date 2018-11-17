@@ -16,7 +16,7 @@ class TestChangeSetCommentsController(TestController):
     def test_create(self):
         self.log_user()
         rev = '27cd5cce30c96924232dffcd24178a07ffeb5dfc'
-        text = u'CommentOnRevision'
+        text = u'general comment on changeset'
 
         params = {'text': text, '_authentication_token': self.authentication_token()}
         response = self.app.post(url(controller='changeset', action='comment',
@@ -27,30 +27,30 @@ class TestChangeSetCommentsController(TestController):
 
         response = self.app.get(url(controller='changeset', action='index',
                                 repo_name=HG_REPO, revision=rev))
-        # test DB
-        assert ChangesetComment.query().count() == 1
         response.mustcontain(
             '''<div class="comments-number">'''
             ''' 1 comment (0 inline, 1 general)'''
         )
+        response.mustcontain(text)
 
-        assert Notification.query().count() == 1
+        # test DB
         assert ChangesetComment.query().count() == 1
+        assert Notification.query().count() == 1
 
         notification = Notification.query().all()[0]
 
-        commit_id = ChangesetComment.query().first().comment_id
+        comment_id = ChangesetComment.query().first().comment_id
         assert notification.type_ == Notification.TYPE_CHANGESET_COMMENT
         sbj = (u'/%s/changeset/'
                '27cd5cce30c96924232dffcd24178a07ffeb5dfc#comment-%s'
-               % (HG_REPO, commit_id))
+               % (HG_REPO, comment_id))
         print "%s vs %s" % (sbj, notification.subject)
         assert sbj in notification.subject
 
     def test_create_inline(self):
         self.log_user()
         rev = '27cd5cce30c96924232dffcd24178a07ffeb5dfc'
-        text = u'CommentOnRevision'
+        text = u'inline comment on changeset'
         f_path = 'vcs/web/simplevcs/views/repository.py'
         line = 'n1'
 
@@ -63,8 +63,6 @@ class TestChangeSetCommentsController(TestController):
 
         response = self.app.get(url(controller='changeset', action='index',
                                 repo_name=HG_REPO, revision=rev))
-        # test DB
-        assert ChangesetComment.query().count() == 1
         response.mustcontain(
             '''<div class="comments-number">'''
             ''' 1 comment (1 inline, 0 general)'''
@@ -74,16 +72,18 @@ class TestChangeSetCommentsController(TestController):
             '''data-f_path="vcs/web/simplevcs/views/repository.py" '''
             '''data-line_no="n1" data-target-id="vcswebsimplevcsviewsrepositorypy_n1">'''
         )
+        response.mustcontain(text)
 
-        assert Notification.query().count() == 1
+        # test DB
         assert ChangesetComment.query().count() == 1
+        assert Notification.query().count() == 1
 
         notification = Notification.query().all()[0]
-        commit_id = ChangesetComment.query().first().comment_id
+        comment_id = ChangesetComment.query().first().comment_id
         assert notification.type_ == Notification.TYPE_CHANGESET_COMMENT
         sbj = (u'/%s/changeset/'
                '27cd5cce30c96924232dffcd24178a07ffeb5dfc#comment-%s'
-               % (HG_REPO, commit_id))
+               % (HG_REPO, comment_id))
         print "%s vs %s" % (sbj, notification.subject)
         assert sbj in notification.subject
 
@@ -102,13 +102,14 @@ class TestChangeSetCommentsController(TestController):
 
         response = self.app.get(url(controller='changeset', action='index',
                                 repo_name=HG_REPO, revision=rev))
-        # test DB
-        assert ChangesetComment.query().count() == 1
         response.mustcontain(
             '''<div class="comments-number">'''
             ''' 1 comment (0 inline, 1 general)'''
         )
+        response.mustcontain('<b>@%s</b> check CommentOnRevision' % TEST_USER_REGULAR_LOGIN)
 
+        # test DB
+        assert ChangesetComment.query().count() == 1
         assert Notification.query().count() == 2
         users = [x.user.username for x in UserNotification.query().all()]
 
@@ -118,7 +119,7 @@ class TestChangeSetCommentsController(TestController):
     def test_delete(self):
         self.log_user()
         rev = '27cd5cce30c96924232dffcd24178a07ffeb5dfc'
-        text = u'CommentOnRevision'
+        text = u'general comment on changeset to be deleted'
 
         params = {'text': text, '_authentication_token': self.authentication_token()}
         response = self.app.post(url(controller='changeset', action='comment',
@@ -143,3 +144,4 @@ class TestChangeSetCommentsController(TestController):
             '''<div class="comments-number">'''
             ''' 0 comments (0 inline, 0 general)'''
         )
+        response.mustcontain(no=text)
