@@ -12,41 +12,30 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-kallithea.lib.paster_commands.ishell
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-interactive shell gearbox command for Kallithea
-
-This file was forked by the Kallithea project in July 2014.
+This file was forked by the Kallithea project in July 2014 and later moved.
 Original author and date, and relevant copyright and licensing information is below:
 :created_on: Apr 4, 2013
 :author: marcink
 :copyright: (c) 2013 RhodeCode GmbH, and others.
 :license: GPLv3, see LICENSE.md for more details.
 """
-
+import click
+import kallithea.bin.kallithea_cli_base as cli_base
 
 import sys
 
-# imports, used in IPython shell
-import time
-import shutil
-import datetime
+# make following imports directly available inside the ishell
 from kallithea.model.db import *
 
-from kallithea.lib.paster_commands.common import BasePasterCommand
-
-
-class Command(BasePasterCommand):
-    "Kallithea: Interactive Python shell"
-
-    def take_action(self, args):
-        try:
-            from IPython import embed
-        except ImportError:
-            print 'Kallithea ishell requires the Python package IPython 4 or later'
-            sys.exit(-1)
-        from traitlets.config.loader import Config
-        cfg = Config()
-        cfg.InteractiveShellEmbed.confirm_exit = False
-        embed(config=cfg, banner1="Kallithea IShell.")
+@cli_base.register_command(config_file_initialize_app=True)
+def ishell():
+    """Interactive shell for Kallithea."""
+    try:
+        from IPython import embed
+    except ImportError:
+        print 'Kallithea ishell requires the Python package IPython 4 or later'
+        sys.exit(-1)
+    from traitlets.config.loader import Config
+    cfg = Config()
+    cfg.InteractiveShellEmbed.confirm_exit = False
+    embed(config=cfg, banner1="Kallithea IShell.")

@@ -163,7 +163,6 @@ setuptools.setup(
     celeryd=kallithea.lib.paster_commands.celeryd:Command
     cleanup-repos=kallithea.lib.paster_commands.cleanup:Command
     install-iis=kallithea.lib.paster_commands.install_iis:Command
-    ishell=kallithea.lib.paster_commands.ishell:Command
     make-index=kallithea.lib.paster_commands.make_index:Command
     make-rcext=kallithea.lib.paster_commands.make_rcextensions:Command
     repo-scan=kallithea.lib.paster_commands.repo_scan:Command
