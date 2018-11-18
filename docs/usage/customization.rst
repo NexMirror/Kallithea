@@ -55,7 +55,7 @@ overwrite an entire function, change a global variable, ...).
 
 To generate a skeleton extensions package, run::
 
-    gearbox make-rcext -c my.ini
+    kallithea-cli extensions-create -c my.ini
 
 This will create an ``rcextensions`` package next to the specified ``ini`` file.
 See the ``__init__.py`` file inside the generated ``rcextensions`` package

@@ -161,7 +161,6 @@ setuptools.setup(
     [gearbox.commands]
     celeryd=kallithea.lib.paster_commands.celeryd:Command
     make-index=kallithea.lib.paster_commands.make_index:Command
-    make-rcext=kallithea.lib.paster_commands.make_rcextensions:Command
     upgrade-db=kallithea.lib.dbmigrate:UpgradeDb
     """,
 )
