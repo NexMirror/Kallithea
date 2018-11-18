@@ -31,7 +31,7 @@ changes, you should make a matching Alembic database migration script:
 
     rm temp.db
     gearbox setup-db -c temp.ini --repos=/var/repos --user=doe --email doe@example.com --password=123456 --no-public-access --force-yes
-    gearbox repo-scan -c temp.ini
+    kallithea-cli repo-scan -c temp.ini
 
 5. Once satisfied with the schema changes, auto-generate a draft Alembic
    script using the development database that has *not* been upgraded.

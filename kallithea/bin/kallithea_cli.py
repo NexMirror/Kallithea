@@ -18,3 +18,4 @@ from kallithea.bin.kallithea_cli_base import cli
 # import commands (they will add themselves to the 'cli' object)
 import kallithea.bin.kallithea_cli_config
 import kallithea.bin.kallithea_cli_ishell
+import kallithea.bin.kallithea_cli_repo
