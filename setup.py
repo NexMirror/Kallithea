@@ -159,7 +159,6 @@ setuptools.setup(
     main = kallithea.config.middleware:make_app
 
     [gearbox.commands]
-    celeryd=kallithea.lib.paster_commands.celeryd:Command
     upgrade-db=kallithea.lib.dbmigrate:UpgradeDb
     """,
 )
