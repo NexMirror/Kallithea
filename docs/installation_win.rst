@@ -177,7 +177,7 @@ __ http://notepad-plus-plus.org/
 
 For the sake of simplicity, run it with the default settings. After your edits (if any) in the previous command prompt, type::
 
-  gearbox setup-db -c my.ini
+  kallithea-cli db-create -c my.ini
 
 .. warning:: This time a *new* database will be installed. You must
              follow a different process to later :ref:`upgrade <upgrade>`

@@ -162,7 +162,6 @@ setuptools.setup(
     celeryd=kallithea.lib.paster_commands.celeryd:Command
     make-index=kallithea.lib.paster_commands.make_index:Command
     make-rcext=kallithea.lib.paster_commands.make_rcextensions:Command
-    setup-db=kallithea.lib.paster_commands.setup_db:Command
     upgrade-db=kallithea.lib.dbmigrate:UpgradeDb
     """,
 )

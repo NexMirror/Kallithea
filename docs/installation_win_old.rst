@@ -215,7 +215,7 @@ character differences between Unix and Windows
 For the sake of simplicity lets run it with the default settings. After
 your edits (if any), in the previous Command Prompt, type::
 
- gearbox setup-db -c my.ini
+  kallithea-cli db-create -c my.ini
 
 .. warning:: This time a *new* database will be installed. You must
              follow a different process to later :ref:`upgrade <upgrade>`

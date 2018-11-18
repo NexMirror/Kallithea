@@ -43,20 +43,20 @@ configuration file to use this other database. Kallithea currently supports
 PostgreSQL, SQLite and MySQL databases. Create the database by running
 the following command::
 
-    gearbox setup-db -c my.ini
+    kallithea-cli db-create -c my.ini
 
 This will prompt you for a "root" path. This "root" path is the location where
 Kallithea will store all of its repositories on the current machine. After
-entering this "root" path ``setup-db`` will also prompt you for a username
-and password for the initial admin account which ``setup-db`` sets
+entering this "root" path ``db-create`` will also prompt you for a username
+and password for the initial admin account which ``db-create`` sets
 up for you.
 
-The ``setup-db`` values can also be given on the command line.
+The ``db-create`` values can also be given on the command line.
 Example::
 
-    gearbox setup-db -c my.ini --user=nn --password=secret --email=nn@example.com --repos=/srv/repos
+    kallithea-cli db-create -c my.ini --user=nn --password=secret --email=nn@example.com --repos=/srv/repos
 
-The ``setup-db`` command will create all needed tables and an
+The ``db-create`` command will create all needed tables and an
 admin account. When choosing a root path you can either use a new
 empty location, or a location which already contains existing
 repositories. If you choose a location which contains existing
@@ -77,7 +77,7 @@ You are now ready to use Kallithea. To run it simply execute::
 - This command runs the Kallithea server. The web app should be available at
   http://127.0.0.1:5000. The IP address and port is configurable via the
   configuration file created in the previous step.
-- Log in to Kallithea using the admin account created when running ``setup-db``.
+- Log in to Kallithea using the admin account created when running ``db-create``.
 - The default permissions on each repository is read, and the owner is admin.
   Remember to update these if needed.
 - In the admin panel you can toggle LDAP, anonymous, and permissions

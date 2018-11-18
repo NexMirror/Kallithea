@@ -30,7 +30,7 @@ changes, you should make a matching Alembic database migration script:
    to test the changes::
 
     rm temp.db
-    gearbox setup-db -c temp.ini --repos=/var/repos --user=doe --email doe@example.com --password=123456 --no-public-access --force-yes
+    kallithea-cli db-create -c temp.ini --repos=/var/repos --user=doe --email doe@example.com --password=123456 --no-public-access --force-yes
     kallithea-cli repo-scan -c temp.ini
 
 5. Once satisfied with the schema changes, auto-generate a draft Alembic

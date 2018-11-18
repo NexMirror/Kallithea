@@ -1,7 +1,7 @@
 #!/bin/sh
 psql -U postgres -h localhost -c 'drop database if exists kallithea;'
 psql -U postgres -h localhost -c 'create database kallithea;'
-gearbox setup-db -c server.ini --force-yes --user=username --password=qweqwe --email=username@example.com --repos=/home/username/repos --no-public-access
+kallithea-cli db-create -c server.ini --force-yes --user=username --password=qweqwe --email=username@example.com --repos=/home/username/repos --no-public-access
 API_KEY=`psql -R " " -A -U postgres -h localhost -c "select api_key from users where admin=TRUE" -d kallithea | awk '{print $2}'`
 echo "run those after running server"
 gearbox serve -c server.ini --pid-file=server.pid --daemon

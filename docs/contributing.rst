@@ -40,7 +40,7 @@ To get started with Kallithea development::
         npm install     # install dependencies - both tools and data
         npm run less    # for generating css from less
         kallithea-cli config-create my.ini
-        gearbox setup-db -c my.ini --user=user --email=user@example.com --password=password --repos=/tmp
+        kallithea-cli db-create -c my.ini --user=user --email=user@example.com --password=password --repos=/tmp
         gearbox serve -c my.ini --reload &
         firefox http://127.0.0.1:5000/
 

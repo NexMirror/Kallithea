@@ -44,7 +44,7 @@ repositories in the desired hierarchy on the filesystem and letting Kallithea
 scan that location.
 
 All repositories are stored in a central location on the filesystem. This
-location is specified during installation (via ``setup-db``) and can be reviewed
+location is specified during installation (via ``db-create``) and can be reviewed
 at *Admin > Settings > VCS > Location of repositories*. Repository groups
 (defined in *Admin > Repository Groups*) are represented by a directory in that
 repository location. Repositories of the repository group are nested under that
