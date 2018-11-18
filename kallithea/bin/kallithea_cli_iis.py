@@ -11,21 +11,15 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-"""
-kallithea.lib.paster_commands.install_iis
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-IIS installation tools for Kallithea
-"""
-
+import click
+import kallithea
+import kallithea.bin.kallithea_cli_base as cli_base
 
 import os
-
-from kallithea.lib.paster_commands.common import BasePasterCommand
-
+import sys
 
 dispath_py_template = '''\
-# Created by Kallithea 'gearbox install-iis'
+# Created by Kallithea 'kallithea-cli iis-install'
 import sys
 
 if hasattr(sys, "isapidllhandle"):
@@ -60,38 +54,28 @@ if __name__=='__main__':
     HandleCommandLine(params)
 '''
 
+@cli_base.register_command(config_file=True)
+@click.option('--virtualdir', default='/',
+        help='The virtual folder to install into on IIS.')
+def iis_install(virtualdir):
+    """Install into IIS using isapi-wsgi."""
 
-class Command(BasePasterCommand):
-    '''Kallithea: Install into IIS using isapi-wsgi'''
+    config_file_abs = kallithea.CONFIG['__file__']
 
-    requires_db_session = False
+    try:
+        import isapi_wsgi
+    except ImportError:
+        sys.stderr.write('missing requirement: isapi-wsgi not installed\n')
+        sys.exit(1)
 
-    def take_action(self, args):
-        config_file = os.path.abspath(args.config_file)
-        try:
-            import isapi_wsgi
-        except ImportError:
-            self.error('missing requirement: isapi-wsgi not installed')
+    dispatchfile = os.path.join(os.getcwd(), 'dispatch.py')
+    click.echo('Writing %s' % dispatchfile)
+    with open(dispatchfile, 'w') as f:
+        f.write(dispath_py_template % {
+            'inifile': config_file_abs.replace('\\', '\\\\'),
+            'virtualdir': virtualdir,
+            })
 
-        dispatchfile = os.path.join(os.getcwd(), 'dispatch.py')
-        print 'Writing %s' % dispatchfile
-        with open(dispatchfile, 'w') as f:
-            f.write(dispath_py_template % {
-                'inifile': config_file.replace('\\', '\\\\'),
-                'virtualdir': args.virtualdir,
-                })
-
-        print ('Run \'python "%s" install\' with administrative privileges '
-            'to generate the _dispatch.dll file and install it into the '
-            'default web site') % (dispatchfile,)
-
-    def get_parser(self, prog_name):
-        parser = super(Command, self).get_parser(prog_name)
-
-        parser.add_argument('--virtualdir',
-                      action='store',
-                      dest='virtualdir',
-                      default='/',
-                      help='The virtual folder to install into on IIS')
-
-        return parser
+    click.echo('Run \'python "%s" install\' with administrative privileges '
+        'to generate the _dispatch.dll file and install it into the '
+        'default web site' % dispatchfile)

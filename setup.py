@@ -160,7 +160,6 @@ setuptools.setup(
 
     [gearbox.commands]
     celeryd=kallithea.lib.paster_commands.celeryd:Command
-    install-iis=kallithea.lib.paster_commands.install_iis:Command
     make-index=kallithea.lib.paster_commands.make_index:Command
     make-rcext=kallithea.lib.paster_commands.make_rcextensions:Command
     setup-db=kallithea.lib.paster_commands.setup_db:Command

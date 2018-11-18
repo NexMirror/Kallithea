@@ -59,7 +59,7 @@ ISAPI handler
 
 The ISAPI handler can be generated using::
 
-    gearbox install-iis -c my.ini --virtualdir=/
+    kallithea-cli iis-install -c my.ini --virtualdir=/
 
 This will generate a ``dispatch.py`` file in the current directory that contains
 the necessary components to finalize an installation into IIS. Once this file
