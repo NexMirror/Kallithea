@@ -145,23 +145,23 @@ Kallithea provides full text search of repositories using `Whoosh`__.
 
 For an incremental index build, run::
 
-    gearbox make-index -c my.ini
+    kallithea-cli index-create -c my.ini
 
 For a full index rebuild, run::
 
-    gearbox make-index -c my.ini -f
+    kallithea-cli index-create -c my.ini --full
 
 The ``--repo-location`` option allows the location of the repositories to be overridden;
 usually, the location is retrieved from the Kallithea database.
 
 The ``--index-only`` option can be used to limit the indexed repositories to a comma-separated list::
 
-    gearbox make-index -c my.ini --index-only=vcs,kallithea
+    kallithea-cli index-create -c my.ini --index-only=vcs,kallithea
 
 To keep your index up-to-date it is necessary to do periodic index builds;
 for this, it is recommended to use a crontab entry. Example::
 
-    0  3  *  *  *  /path/to/virtualenv/bin/gearbox make-index -c /path/to/kallithea/my.ini
+    0  3  *  *  *  /path/to/virtualenv/bin/kallithea-cli index-create -c /path/to/kallithea/my.ini
 
 When using incremental mode (the default), Whoosh will check the last
 modification date of each file and add it to be reindexed if a newer file is

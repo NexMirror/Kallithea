@@ -20,5 +20,6 @@ import kallithea.bin.kallithea_cli_config
 import kallithea.bin.kallithea_cli_db
 import kallithea.bin.kallithea_cli_extensions
 import kallithea.bin.kallithea_cli_iis
+import kallithea.bin.kallithea_cli_index
 import kallithea.bin.kallithea_cli_ishell
 import kallithea.bin.kallithea_cli_repo
