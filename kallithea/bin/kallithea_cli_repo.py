@@ -22,9 +22,15 @@ Original author and date, and relevant copyright and licensing information is be
 import click
 import kallithea.bin.kallithea_cli_base as cli_base
 
-from kallithea.lib.utils import repo2db_mapper
-from kallithea.lib.utils2 import safe_unicode
-from kallithea.model.db import Repository
+import datetime
+import os
+import re
+import shutil
+
+from kallithea.lib.paster_commands.common import ask_ok
+from kallithea.lib.utils import repo2db_mapper, REMOVED_REPO_PAT
+from kallithea.lib.utils2 import safe_unicode, safe_str
+from kallithea.model.db import Repository, Ui
 from kallithea.model.meta import Session
 from kallithea.model.scm import ScmModel
 
@@ -83,3 +89,89 @@ def repo_update_metadata(repositories):
 
     click.echo('Updated database with information about latest change in the following %s repositories:' % (len(repo_list)))
     click.echo('\n'.join(repo.repo_name for repo in repo_list))
+
+@cli_base.register_command(config_file_initialize_app=True)
+@click.option('--ask/--no-ask', default=True, help='Ask for confirmation or not. Default is --ask.')
+@click.option('--older-than',
+        help="""Only purge repositories that have been removed at least the given time ago.
+        For example, '--older-than=30d' purges repositories deleted 30 days ago or longer.
+        Possible suffixes: d (days), h (hours), m (minutes), s (seconds).""")
+def repo_purge_deleted(ask, older_than):
+    """Purge backups of deleted repositories.
+
+    When a repository is deleted via the Kallithea web interface, the actual
+    data is still present on the filesystem but set aside using a special name.
+    This command allows to delete these files permanently.
+    """
+    def _parse_older_than(val):
+        regex = re.compile(r'((?P<days>\d+?)d)?((?P<hours>\d+?)h)?((?P<minutes>\d+?)m)?((?P<seconds>\d+?)s)?')
+        parts = regex.match(val)
+        if not parts:
+            return
+        parts = parts.groupdict()
+        time_params = {}
+        for (name, param) in parts.iteritems():
+            if param:
+                time_params[name] = int(param)
+        return datetime.timedelta(**time_params)
+
+    def _extract_date(name):
+        """
+        Extract the date part from rm__<date> pattern of removed repos,
+        and convert it to datetime object
+
+        :param name:
+        """
+        date_part = name[4:19]  # 4:19 since we don't parse milliseconds
+        return datetime.datetime.strptime(date_part, '%Y%m%d_%H%M%S')
+
+    repos_location = Ui.get_repos_location()
+    to_remove = []
+    for dn_, dirs, f in os.walk(safe_str(repos_location)):
+        alldirs = list(dirs)
+        del dirs[:]
+        if ('.hg' in alldirs or
+            '.git' in alldirs or
+            '.svn' in alldirs or
+            'objects' in alldirs and ('refs' in alldirs or 'packed-refs' in f)):
+            continue
+        for loc in alldirs:
+            if REMOVED_REPO_PAT.match(loc):
+                to_remove.append([os.path.join(dn_, loc),
+                                  _extract_date(loc)])
+            else:
+                dirs.append(loc)
+        if dirs:
+            click.echo('Scanning: %s' % dn_)
+
+    # filter older than (if present)!
+    now = datetime.datetime.now()
+    if older_than:
+        to_remove_filtered = []
+        older_than_date = _parse_older_than(older_than)
+        for name, date_ in to_remove:
+            repo_age = now - date_
+            if repo_age > older_than_date:
+                to_remove_filtered.append([name, date_])
+
+        to_remove = to_remove_filtered
+        click.echo('Purging %s deleted repos older than %s (%s)'
+            % (len(to_remove), older_than, older_than_date))
+    else:
+        click.echo('Purging all %s deleted repos' % len(to_remove))
+
+    if not ask or not to_remove:
+        # don't ask just remove !
+        remove = True
+    else:
+        remove = ask_ok('The following repositories will be removed completely:\n%s\n'
+                'Do you want to proceed? [y/n] '
+                % '\n'.join(['%s deleted on %s' % (safe_str(x[0]), safe_str(x[1]))
+                                     for x in to_remove]))
+
+    if remove:
+        for path, date_ in to_remove:
+            click.echo('Purging repository %s' % path)
+            shutil.rmtree(path)
+    else:
+        click.echo('Nothing done, exiting...')
