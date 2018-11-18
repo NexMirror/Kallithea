@@ -27,9 +27,8 @@ import os
 import re
 import shutil
 
-from kallithea.lib.paster_commands.common import ask_ok
 from kallithea.lib.utils import repo2db_mapper, REMOVED_REPO_PAT
-from kallithea.lib.utils2 import safe_unicode, safe_str
+from kallithea.lib.utils2 import safe_unicode, safe_str, ask_ok
 from kallithea.model.db import Repository, Ui
 from kallithea.model.meta import Session
 from kallithea.model.scm import ScmModel

@@ -77,7 +77,7 @@ class DbManage(object):
         force_ask = self.cli_args.get('force_ask')
         if force_ask is not None:
             return force_ask
-        from kallithea.lib.paster_commands.common import ask_ok
+        from kallithea.lib.utils2 import ask_ok
         return ask_ok(msg)
 
     def init_db(self, SESSION=None):

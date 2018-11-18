@@ -26,7 +26,7 @@ import os
 import pkg_resources
 
 import kallithea
-from kallithea.lib.paster_commands.common import ask_ok
+from kallithea.lib.utils2 import ask_ok
 
 @cli_base.register_command(config_file=True)
 def extensions_create():
