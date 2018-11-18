@@ -27,14 +27,14 @@ Setting up Kallithea
 First, you will need to create a Kallithea configuration file. Run the
 following command to do so::
 
-    gearbox make-config my.ini
+    kallithea-cli config-create my.ini
 
 This will create the file ``my.ini`` in the current directory. This
 configuration file contains the various settings for Kallithea, e.g.
 proxy port, email settings, usage of static files, cache, Celery
 settings, and logging. Extra settings can be specified like::
 
-    gearbox make-config my.ini host=8.8.8.8 "[handler_console]" formatter=color_formatter
+    kallithea-cli config-create my.ini host=8.8.8.8 "[handler_console]" formatter=color_formatter
 
 Next, you need to create the databases used by Kallithea. It is recommended to
 use PostgreSQL or SQLite (default). If you choose a database other than the

@@ -166,7 +166,7 @@ it, reopen it following the same commands (including the "activate"
 one). When ready, type::
 
   cd C:\Kallithea\Bin
-  gearbox make-config my.ini
+  kallithea-cli config-create my.ini
 
 Then you must edit my.ini to fit your needs (IP address, IP
 port, mail settings, database, etc.). `NotePad++`__ or a similar text

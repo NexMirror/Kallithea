@@ -204,7 +204,7 @@ if you closed it reopen it following the same commands (including the
 "activate" one). When ready, just type::
 
   cd C:\Kallithea\Bin
-  gearbox make-config my.ini
+  kallithea-cli config-create my.ini
 
 Then, you must edit my.ini to fit your needs (network address and
 port, mail settings, database, whatever). I recommend using NotePad++

@@ -18,7 +18,7 @@ changes, you should make a matching Alembic database migration script:
 2. Create a separate throwaway configuration for iterating on the actual
    database changes::
 
-    gearbox make-config temp.ini
+    kallithea-cli config-create temp.ini
 
    Edit the file to change database settings. SQLite is typically fine,
    but make sure to change the path to e.g. ``temp.db``, to avoid

@@ -105,7 +105,7 @@ Then run::
 
 Run the following command to create a new configuration (``.ini``) file::
 
-    gearbox make-config new.ini
+    kallithea-cli config-create new.ini
 
 Then compare it with your old config file and see what changed.
 
