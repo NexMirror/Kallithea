@@ -61,6 +61,7 @@ requirements = [
     "decorator >= 3.3.2, < 4.4",
     "Paste >= 2.0.3, < 3",
     "bleach >= 3.0, < 3.1",
+    "Click >= 7.0, < 8",
 ]
 
 if sys.version_info < (2, 7):
@@ -152,6 +153,7 @@ setuptools.setup(
     kallithea-api =    kallithea.bin.kallithea_api:main
     kallithea-gist =   kallithea.bin.kallithea_gist:main
     kallithea-config = kallithea.bin.kallithea_config:main
+    kallithea-cli =    kallithea.bin.kallithea_cli:cli
 
     [paste.app_factory]
     main = kallithea.config.middleware:make_app
