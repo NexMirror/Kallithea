@@ -1,6 +1,7 @@
 import re
 
 from kallithea.tests.base import *
+from kallithea.model.changeset_status import ChangesetStatusModel
 from kallithea.model.db import ChangesetComment, Notification, \
     UserNotification
 from kallithea.model.meta import Session
@@ -117,6 +118,45 @@ class TestChangeSetCommentsController(TestController):
 
         # test_regular gets notification by @mention
         assert sorted(users) == [TEST_USER_ADMIN_LOGIN, TEST_USER_REGULAR_LOGIN]
+
+    def test_create_status_change(self):
+        self.log_user()
+        rev = '27cd5cce30c96924232dffcd24178a07ffeb5dfc'
+        text = u'general comment on changeset'
+
+        params = {'text': text, 'changeset_status': 'rejected',
+                '_authentication_token': self.authentication_token()}
+        response = self.app.post(url(controller='changeset', action='comment',
+                                     repo_name=HG_REPO, revision=rev),
+                                     params=params, extra_environ={'HTTP_X_PARTIAL_XHR': '1'})
+        # Test response...
+        assert response.status == '200 OK'
+
+        response = self.app.get(url(controller='changeset', action='index',
+                                repo_name=HG_REPO, revision=rev))
+        response.mustcontain(
+            '''<div class="comments-number">'''
+            ''' 1 comment (0 inline, 1 general)'''
+        )
+        response.mustcontain(text)
+
+        # test DB
+        assert ChangesetComment.query().count() == 1
+        assert Notification.query().count() == 1
+
+        notification = Notification.query().all()[0]
+
+        comment_id = ChangesetComment.query().first().comment_id
+        assert notification.type_ == Notification.TYPE_CHANGESET_COMMENT
+        sbj = (u'/%s/changeset/'
+               '27cd5cce30c96924232dffcd24178a07ffeb5dfc#comment-%s'
+               % (HG_REPO, comment_id))
+        print "%s vs %s" % (sbj, notification.subject)
+        assert sbj in notification.subject
+
+        # check status
+        status = ChangesetStatusModel().get_status(repo=HG_REPO, revision=rev)
+        assert status == 'rejected'
 
     def test_delete(self):
         self.log_user()
@@ -274,6 +314,46 @@ class TestPullrequestsCommentsController(TestController):
 
         # test_regular gets notification by @mention
         assert sorted(users) == [TEST_USER_ADMIN_LOGIN, TEST_USER_REGULAR_LOGIN]
+
+    def test_create_status_change(self):
+        self.log_user()
+        pr_id = self._create_pr()
+
+        text = u'general comment on pullrequest'
+        params = {'text': text, 'changeset_status': 'rejected',
+                '_authentication_token': self.authentication_token()}
+        response = self.app.post(url(controller='pullrequests', action='comment',
+                                     repo_name=HG_REPO, pull_request_id=pr_id),
+                                     params=params, extra_environ={'HTTP_X_PARTIAL_XHR': '1'})
+        # Test response...
+        assert response.status == '200 OK'
+
+        response = self.app.get(url(controller='pullrequests', action='show',
+                                repo_name=HG_REPO, pull_request_id=pr_id, extra=''))
+        # PRs currently always have an initial 'Under Review' status change
+        # that counts as a general comment, hence '2' in the test below. That
+        # could be counted as a misfeature, to be reworked later.
+        response.mustcontain(
+            '''<div class="comments-number">'''
+            ''' 2 comments (0 inline, 2 general)'''
+        )
+        response.mustcontain(text)
+
+        # test DB
+        assert ChangesetComment.query().count() == 2
+        assert Notification.query().count() == 1
+
+        notification = Notification.query().all()[0]
+        comment_id = ChangesetComment.query().order_by(ChangesetComment.comment_id.desc()).first().comment_id
+        assert notification.type_ == Notification.TYPE_PULL_REQUEST_COMMENT
+        sbj = (u'/%s/pull-request/%s/_/stable#comment-%s'
+               % (HG_REPO, pr_id, comment_id))
+        print "%s vs %s" % (sbj, notification.subject)
+        assert sbj in notification.subject
+
+        # check status
+        status = ChangesetStatusModel().get_status(repo=HG_REPO, pull_request=pr_id)
+        assert status == 'rejected'
 
     def test_delete(self):
         self.log_user()
