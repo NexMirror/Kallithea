@@ -36,4 +36,4 @@ def celery_run(celery_args):
 
     from kallithea.lib import celerypylons
     cmd = celerypylons.worker.worker(celerypylons.app)
-    return cmd.run_from_argv('kallithea celery worker', list(celery_args))
+    return cmd.run_from_argv(None, command='celery-run -c CONFIG_FILE --', argv=list(celery_args))
