@@ -253,11 +253,11 @@ def create_cs_pr_comment(repo_name, revision=None, pull_request=None, allowed_to
 
     return data
 
-def delete_cs_pr_comment(repo_name, comment_id, pr_comment=False):
+def delete_cs_pr_comment(repo_name, comment_id):
     co = ChangesetComment.get_or_404(comment_id)
     if co.repo.repo_name != repo_name:
         raise HTTPNotFound()
-    if pr_comment and co.pull_request.is_closed():
+    if co.pull_request and co.pull_request.is_closed():
         # don't allow deleting comments on closed pull request
         raise HTTPForbidden()
 
@@ -438,7 +438,7 @@ class ChangesetController(BaseRepoController):
     @HasRepoPermissionLevelDecorator('read')
     @jsonify
     def delete_comment(self, repo_name, comment_id):
-        return delete_cs_pr_comment(repo_name, comment_id, pr_comment=False)
+        return delete_cs_pr_comment(repo_name, comment_id)
 
     @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')

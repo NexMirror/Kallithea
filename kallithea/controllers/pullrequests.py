@@ -641,4 +641,4 @@ class PullrequestsController(BaseRepoController):
     @HasRepoPermissionLevelDecorator('read')
     @jsonify
     def delete_comment(self, repo_name, comment_id):
-        return delete_cs_pr_comment(repo_name, comment_id, pr_comment=True)
+        return delete_cs_pr_comment(repo_name, comment_id)
