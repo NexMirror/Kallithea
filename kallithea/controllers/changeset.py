@@ -167,6 +167,20 @@ def _context_url(GET, fileid=None):
 
 
 def create_cs_pr_comment(repo_name, revision=None, pull_request=None, allowed_to_change_status=True):
+    """
+    Add a comment to the specified changeset or pull request, using POST values
+    from the request.
+
+    Comments can be inline (when a file path and line number is specified in
+    POST) or general comments.
+    A comment can be accompanied by a review status change (accepted, rejected,
+    etc.). Pull requests can be closed or deleted.
+
+    Parameter 'allowed_to_change_status' is used for both status changes and
+    closing of pull requests. For deleting of pull requests, more specific
+    checks are done.
+    """
+
     assert request.environ.get('HTTP_X_PARTIAL_XHR')
     if pull_request:
         pull_request_id = pull_request.pull_request_id
@@ -254,6 +268,7 @@ def create_cs_pr_comment(repo_name, revision=None, pull_request=None, allowed_to
     return data
 
 def delete_cs_pr_comment(repo_name, comment_id):
+    """Delete a comment from a changeset or pull request"""
     co = ChangesetComment.get_or_404(comment_id)
     if co.repo.repo_name != repo_name:
         raise HTTPNotFound()
