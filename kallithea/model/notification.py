@@ -68,16 +68,15 @@ class NotificationModel(object):
 
         created_by_obj = User.guess_instance(created_by)
 
-        recipients_objs = []
+        recipients_objs = set()
         if recipients:
             for u in recipients:
                 obj = User.guess_instance(u)
                 if obj is not None:
-                    recipients_objs.append(obj)
+                    recipients_objs.add(obj)
                 else:
                     # TODO: inform user that requested operation couldn't be completed
                     log.error('cannot email unknown user %r', u)
-            recipients_objs = set(recipients_objs)
             log.debug('sending notifications %s to %s',
                 type_, recipients_objs
             )
