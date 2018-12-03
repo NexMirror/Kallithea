@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2017-07-25 16:37+0200\n"
-"PO-Revision-Date: 2015-09-08 10:56+0200\n"
-"Last-Translator: Robert Rauch <mail@robertrauch.de>\n"
-"Language-Team: German "
-"<https://hosted.weblate.org/projects/kallithea/stable/de/>\n"
+"PO-Revision-Date: 2018-12-04 20:10+0000\n"
+"Last-Translator: ssantos <ssantos@web.de>\n"
+"Language-Team: German <https://hosted.weblate.org/projects/kallithea/stable/"
+"de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2.4-dev\n"
+"X-Generator: Weblate 3.4-dev\n"
 
 #: kallithea/controllers/changelog.py:86
 #: kallithea/controllers/pullrequests.py:238 kallithea/lib/base.py:512
@@ -341,7 +341,7 @@ msgstr "Spezial"
 
 #: kallithea/controllers/pullrequests.py:174
 msgid "Peer branches"
-msgstr ""
+msgstr "Branches anderer"
 
 #: kallithea/controllers/pullrequests.py:175 kallithea/model/scm.py:826
 #: kallithea/templates/switch_to_list.html:38
@@ -368,7 +368,7 @@ msgstr "Es wurde erfolgreich ein neuer Pullrequest eröffnet"
 #: kallithea/controllers/pullrequests.py:510
 #, python-format
 msgid "Invalid reviewer \"%s\" specified"
-msgstr ""
+msgstr "Ungültigen Begutachter \"%s\" angegeben"
 
 #: kallithea/controllers/pullrequests.py:369
 #: kallithea/controllers/pullrequests.py:456
@@ -387,6 +387,7 @@ msgstr "Neue Changesets in %s %s seit dem letzten Pull Request:"
 #: kallithea/controllers/pullrequests.py:415
 msgid "Ancestor didn't change - show diff since previous version:"
 msgstr ""
+"Eltern-Commit hat sich nicht verändert - zeige Diff seit voriger Version:"
 
 #: kallithea/controllers/pullrequests.py:422
 #, python-format
@@ -450,7 +451,7 @@ msgstr "Git Pull Request unterstützen bisher keine Updates."
 
 #: kallithea/controllers/pullrequests.py:724
 msgid "No permission to change pull request status"
-msgstr ""
+msgstr "Keine Berechtigung zum Ändern des Status des Pull Requests"
 
 #: kallithea/controllers/pullrequests.py:729
 msgid "Closing."
@@ -1074,7 +1075,7 @@ msgstr "Ungültiger API Key"
 
 #: kallithea/lib/auth.py:785
 msgid "CSRF token leak has been detected - all form tokens have been expired"
-msgstr ""
+msgstr "Es wurde ein CSRF Leck entdeckt. Alle Formular Token sind abgelaufen"
 
 #: kallithea/lib/auth.py:832
 msgid "You need to be a registered user to perform this action"
@@ -1977,8 +1978,7 @@ msgstr "%(user)s hat am %(when)s einen Pull Request kommentiert"
 
 #: kallithea/model/notification.py:303
 #, fuzzy, python-format
-#| msgid "" "[Comment from %(comment_username)s] %(repo_name)s changeset
-#| %(short_id)s " "on %(branch)s"
+#| msgid "" "
 msgid "[Comment] %(repo_name)s changeset %(short_id)s on %(branch)s"
 msgstr ""
 "Kommentar für %(repo_name)s Changeset %(short_id)s in %(branch)s erstellt"
@@ -1991,8 +1991,7 @@ msgstr "Neuer Benutzer %(new_username)s registriert"
 
 #: kallithea/model/notification.py:308
 #, fuzzy, python-format
-#| msgid "" "[Added by %(pr_username)s] %(repo_name)s pull request
-#| %(pr_nice_id)s from" " %(ref)s"
+#| msgid "" "
 msgid "[Added] %(repo_name)s pull request %(pr_nice_id)s from %(ref)s"
 msgstr ""
 "Review Request für %(repo_name)s Pull Request #%(pr_id)s von %(ref)s "
@@ -2077,6 +2076,8 @@ msgid ""
 "The password to your account %s has been changed using password reset "
 "form."
 msgstr ""
+"Das Passwort für dein Konto %s wurde mit dem Formular zum Zurücksetzen des "
+"Passworts geändert."
 
 #: kallithea/model/validators.py:77 kallithea/model/validators.py:78
 msgid "Value cannot be an empty list"
@@ -2196,6 +2197,8 @@ msgid ""
 "Invalid repository URL. It must be a valid http, https, ssh, svn+http or "
 "svn+https URL"
 msgstr ""
+"Ungültige Repository-URL. Es muss eine gültige http, https, ssh, svn+http "
+"oder svn+https URL sein"
 
 #: kallithea/model/validators.py:489
 msgid "Fork has to be the same type as parent"
@@ -2523,8 +2526,7 @@ msgstr "E-Mail zum Zurücksetzen des Passworts anfordern"
 
 #: kallithea/templates/password_reset.html:47
 #, fuzzy
-#| msgid "" "Password reset link will be sent to the email address matching
-#| your " "username."
+#| msgid "" "
 msgid ""
 "A password reset link will be sent to the specified email address if it "
 "is registered in the system."
@@ -2536,16 +2538,19 @@ msgstr ""
 #, python-format
 msgid "You are about to set a new password for the email address %s."
 msgstr ""
+"Du bist dabei, ein neues Passwort für die E-Mail-Adresse %s festzulegen."
 
 #: kallithea/templates/password_reset_confirmation.html:20
 msgid ""
 "Note that you must use the same browser session for this as the one used "
 "to request the password reset."
 msgstr ""
+"Beachten Sie, dass Sie dafür die gleiche Browsersitzung verwenden müssen, "
+"mit der Sie das Zurücksetzen des Passworts beantragt haben."
 
 #: kallithea/templates/password_reset_confirmation.html:30
 msgid "Code you received in the email"
-msgstr ""
+msgstr "Code, den du in der E-Mail erhalten hast"
 
 #: kallithea/templates/password_reset_confirmation.html:39
 #, fuzzy
@@ -2561,7 +2566,7 @@ msgstr "Bestätige neues Passwort"
 
 #: kallithea/templates/password_reset_confirmation.html:56
 msgid "Confirm"
-msgstr ""
+msgstr "Bestätigen"
 
 #: kallithea/templates/register.html:5 kallithea/templates/register.html:14
 #: kallithea/templates/register.html:90
@@ -2803,7 +2808,7 @@ msgstr "Locking aktivieren"
 #: kallithea/templates/admin/defaults/defaults.html:77
 #: kallithea/templates/admin/repos/repo_edit_settings.html:106
 msgid "Enable lock-by-pulling on repository."
-msgstr ""
+msgstr "Aktivieren Sie Lock-by-Pulling im Repository."
 
 #: kallithea/templates/admin/gists/edit.html:5
 #: kallithea/templates/admin/gists/edit.html:18
@@ -3157,6 +3162,8 @@ msgstr "Bestätige neues Passwort"
 #, python-format
 msgid "This account is managed with %s and the password cannot be changed here"
 msgstr ""
+"Dieses Konto wird mit %s verwaltet und das Passwort kann hier nicht geändert "
+"werden"
 
 #: kallithea/templates/admin/my_account/my_account_profile.html:11
 msgid "Change your avatar at"
@@ -3165,7 +3172,7 @@ msgstr "Benutzerbild ändern unter"
 #: kallithea/templates/admin/my_account/my_account_profile.html:12
 #: kallithea/templates/admin/users/user_edit_profile.html:9
 msgid "Using"
-msgstr ""
+msgstr "Verwendet"
 
 #: kallithea/templates/admin/my_account/my_account_profile.html:14
 #: kallithea/templates/admin/users/user_edit_profile.html:11
@@ -3283,7 +3290,7 @@ msgstr "Bestehendes Repository importieren?"
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:27
 msgid "Permissions for the Default user on new repositories."
-msgstr ""
+msgstr "Berechtigungen für den Standardbenutzer auf neuen Repositories."
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:32
 #: kallithea/templates/admin/repos/repo_add_base.html:37
@@ -3331,11 +3338,11 @@ msgstr ""
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:54
 msgid "Apply to all existing user groups"
-msgstr ""
+msgstr "Auf alle bestehenden Benutzergruppen anwenden"
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:55
 msgid "Permissions for the Default user on new user groups."
-msgstr ""
+msgstr "Berechtigungen für den Standardbenutzer für neue Benutzergruppen."
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:60
 #, fuzzy
@@ -3345,16 +3352,20 @@ msgstr "Repository erstellung"
 #: kallithea/templates/admin/permissions/permissions_globals.html:64
 msgid "Enable this to allow non-admins to create repositories at the top level."
 msgstr ""
+"Aktiviere dies, damit Nicht-Administratoren Repositories auf der obersten "
+"Ebene erstellen können."
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:65
 msgid ""
 "Note: This will also give all users API access to create repositories "
 "everywhere. That might change in future versions."
 msgstr ""
+"Hinweis: dadurch erhalten auch alle Benutzer API-Zugriff, um überall "
+"Repositories zu erstellen. Das kann sich in zukünftigen Versionen ändern."
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:70
 msgid "Repository creation with group write access"
-msgstr ""
+msgstr "Repository-Erstellung mit Gruppenschreibzugriff"
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:74
 #, fuzzy
@@ -3373,14 +3384,18 @@ msgstr "Benutzergruppen Erstellung"
 #: kallithea/templates/admin/permissions/permissions_globals.html:83
 msgid "Enable this to allow non-admins to create user groups."
 msgstr ""
+"Aktivieren Sie dies, damit Nicht-Administratoren Benutzergruppen erstellen "
+"können."
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:88
 msgid "Repository forking"
-msgstr ""
+msgstr "Repository-forking"
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:92
 msgid "Enable this to allow non-admins to fork repositories."
 msgstr ""
+"Aktivieren Sie dies, um Nichtadministratoren zu erlauben, Repositories zu "
+"forken."
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:97
 msgid "Registration"
@@ -6402,4 +6417,3 @@ msgstr "Tags vergleichen"
 
 #~ msgid "Created by"
 #~ msgstr "Erstellt von"
-
