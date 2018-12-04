@@ -8,7 +8,6 @@ syntax: glob
 *.mo
 .eggs/
 tarballcache/
-node_modules/
 
 syntax: regexp
 ^rcextensions
@@ -22,6 +21,8 @@ syntax: regexp
 ^\.project$
 ^\.pydevproject$
 ^\.coverage$
+^kallithea/front-end/node_modules$
+^kallithea/front-end/package-lock\.json$
 ^kallithea/public/css/style\.css(\.map)?$
 ^kallithea/public/css/pygments.css$
 ^theme\.less$

@@ -12,12 +12,12 @@ include           development.ini
 include           pytest.ini
 include           requirements.txt
 include           tox.ini
-include           package.json
 recursive-include docs *
 recursive-include init.d *
 recursive-include kallithea/alembic *
 include           kallithea/bin/ldap_sync.conf
 include           kallithea/lib/paster_commands/template.ini.mako
+recursive-include kallithea/front-end *
 recursive-include kallithea/i18n *
 recursive-include kallithea/public *
 recursive-include kallithea/templates *

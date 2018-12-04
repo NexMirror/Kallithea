@@ -35,22 +35,24 @@ def front_end_build(install_deps, generate):
     The installation of front-end dependencies happens via the tool 'npm' which
     is expected to be installed already.
     """
-    rootdir = os.path.dirname(os.path.dirname(os.path.abspath(kallithea.__file__)))
+    front_end_dir = os.path.abspath(os.path.join(kallithea.__file__, '..', 'front-end'))
+    public_dir = os.path.abspath(os.path.join(kallithea.__file__, '..', 'public'))
 
     if install_deps:
         click.echo("Running 'npm install' to install front-end dependencies from package.json")
-        subprocess.check_call(['npm', 'install'], cwd=rootdir)
+        subprocess.check_call(['npm', 'install'], cwd=front_end_dir)
 
     if generate:
         click.echo("Generating CSS")
-        with open(os.path.join(rootdir, 'kallithea', 'public', 'css', 'pygments.css'), 'w') as f:
+        with open(os.path.join(public_dir, 'pygments.css'), 'w') as f:
             subprocess.check_call(['pygmentize',
                     '-S', 'default',
                     '-f', 'html',
                     '-a', '.code-highlight'],
                     stdout=f)
-        lesscpath = os.path.join(rootdir, 'node_modules', '.bin', 'lessc')
-        lesspath = os.path.join(rootdir, 'kallithea', 'public', 'less', 'main.less')
-        csspath = os.path.join(rootdir, 'kallithea', 'public', 'css', 'style.css')
+        lesscpath = os.path.join(front_end_dir, 'node_modules', '.bin', 'lessc')
+        lesspath = os.path.join(public_dir, 'less', 'main.less')
+        csspath = os.path.join(public_dir, 'css', 'style.css')
         subprocess.check_call([lesscpath, '--relative-urls', '--source-map',
-                '--source-map-less-inline', lesspath, csspath])
+                '--source-map-less-inline', lesspath, csspath],
+                cwd=front_end_dir)
