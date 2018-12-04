@@ -354,19 +354,10 @@
     ## USER MENU
     <li class="dropdown">
       <a class="menu_link dropdown-toggle" data-toggle="dropdown" role="button" id="quick_login_link"
-        aria-expanded="false" aria-controls="quick_login"
-        %if request.authuser.username != 'default':
-          href="${h.url('notifications')}"
-        %else:
-          href="#"
-        %endif
-      >
+        aria-expanded="false" aria-controls="quick_login" href="#">
           ${h.gravatar_div(request.authuser.email, size=20, div_class="icon")}
           %if request.authuser.username != 'default':
             <span class="menu_link_user">${request.authuser.username}</span>
-            %if c.unread_notifications != 0:
-              <span class="badge">${c.unread_notifications}</span>
-            %endif
           %else:
               <span>${_('Not Logged In')}</span>
           %endif
@@ -405,7 +396,6 @@
                 <div class="email">${request.authuser.email}</div>
             </div>
             <div id="quick_login_h" class="pull-right list-group text-right">
-              <a class="list-group-item" href="${h.url('notifications')}">${_('Notifications')}: ${c.unread_notifications}</a>
               ${h.link_to(_('My Account'),h.url('my_account'),class_='list-group-item')}
               %if not request.authuser.is_external_auth:
                 ## Cannot log out if using external (container) authentication.

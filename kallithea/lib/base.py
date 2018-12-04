@@ -59,7 +59,6 @@ from kallithea.lib.vcs.exceptions import RepositoryError, EmptyRepositoryError, 
 from kallithea.model import meta
 
 from kallithea.model.db import PullRequest, Repository, Ui, User, Setting
-from kallithea.model.notification import NotificationModel
 from kallithea.model.scm import ScmModel
 
 log = logging.getLogger(__name__)
@@ -418,8 +417,6 @@ class BaseController(TGController):
 
         c.repo_name = get_repo_slug(request)  # can be empty
         c.backends = BACKENDS.keys()
-        c.unread_notifications = NotificationModel() \
-                        .get_unread_cnt_for_user(request.authuser.user_id)
 
         self.cut_off_limit = safe_int(config.get('cut_off_limit'))
 
