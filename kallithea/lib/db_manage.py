@@ -54,14 +54,6 @@ from kallithea.model.permission import PermissionModel
 log = logging.getLogger(__name__)
 
 
-def notify(msg):
-    """
-    Notification for migrations messages
-    """
-    ml = len(msg) + (4 * 2)
-    print('\n%s\n*** %s ***\n%s' % ('*' * ml, msg, '*' * ml)).upper()
-
-
 class DbManage(object):
     def __init__(self, dbconf, root, tests=False, SESSION=None, cli_args=None):
         self.dbname = dbconf.split('/')[-1]
