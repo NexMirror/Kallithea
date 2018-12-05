@@ -6,7 +6,7 @@ import routes.util
 
 from kallithea.tests.base import *
 from kallithea.lib import helpers as h
-from kallithea.model.db import User, Notification, UserNotification
+from kallithea.model.db import User, Notification
 from kallithea.model.user import UserModel
 from kallithea.model.meta import Session
 from kallithea.model.notification import NotificationModel, EmailNotificationModel
@@ -42,10 +42,6 @@ class TestNotifications(TestController):
         Session().commit()
         self.u3 = u3.user_id
 
-        self.remove_all_notifications()
-        assert [] == Notification.query().all()
-        assert [] == UserNotification.query().all()
-
     def test_create_notification(self):
         with test_context(self.app):
             usrs = [self.u1, self.u2]
@@ -60,118 +56,6 @@ class TestNotifications(TestController):
                 notification = NotificationModel().create(created_by=self.u1,
                                                    subject=u'subj', body=u'hi there',
                                                    recipients=usrs)
-                Session().commit()
-                u1 = User.get(self.u1)
-                u2 = User.get(self.u2)
-                u3 = User.get(self.u3)
-                notifications = Notification.query().all()
-                assert len(notifications) == 1
-
-                assert notifications[0].recipients == [u1, u2]
-                assert notification.notification_id == notifications[0].notification_id
-
-                unotification = UserNotification.query() \
-                    .filter(UserNotification.notification == notification).all()
-
-                assert len(unotification) == len(usrs)
-                assert set([x.user_id for x in unotification]) == set(usrs)
-
-    def test_user_notifications(self):
-        with test_context(self.app):
-            notification1 = NotificationModel().create(created_by=self.u1,
-                                                subject=u'subj', body=u'hi there1',
-                                                recipients=[self.u3])
-            Session().commit()
-            notification2 = NotificationModel().create(created_by=self.u1,
-                                                subject=u'subj', body=u'hi there2',
-                                                recipients=[self.u3])
-            Session().commit()
-            u3 = Session().query(User).get(self.u3)
-
-            assert sorted([x.notification for x in u3.notifications]) == sorted([notification2, notification1])
-
-    def test_delete_notifications(self):
-        with test_context(self.app):
-            notification = NotificationModel().create(created_by=self.u1,
-                                               subject=u'title', body=u'hi there3',
-                                        recipients=[self.u3, self.u1, self.u2])
-            Session().commit()
-            notifications = Notification.query().all()
-            assert notification in notifications
-
-            Notification.delete(notification.notification_id)
-            Session().commit()
-
-            notifications = Notification.query().all()
-            assert notification not in notifications
-
-            un = UserNotification.query().filter(UserNotification.notification
-                                                 == notification).all()
-            assert un == []
-
-    def test_delete_association(self):
-        with test_context(self.app):
-            notification = NotificationModel().create(created_by=self.u1,
-                                               subject=u'title', body=u'hi there3',
-                                        recipients=[self.u3, self.u1, self.u2])
-            Session().commit()
-
-            unotification = UserNotification.query() \
-                                .filter(UserNotification.notification ==
-                                        notification) \
-                                .filter(UserNotification.user_id == self.u3) \
-                                .scalar()
-
-            assert unotification.user_id == self.u3
-
-            NotificationModel().delete(self.u3,
-                                       notification.notification_id)
-            Session().commit()
-
-            u3notification = UserNotification.query() \
-                                .filter(UserNotification.notification ==
-                                        notification) \
-                                .filter(UserNotification.user_id == self.u3) \
-                                .scalar()
-
-            assert u3notification == None
-
-            # notification object is still there
-            assert Notification.query().all() == [notification]
-
-            # u1 and u2 still have assignments
-            u1notification = UserNotification.query() \
-                                .filter(UserNotification.notification ==
-                                        notification) \
-                                .filter(UserNotification.user_id == self.u1) \
-                                .scalar()
-            assert u1notification != None
-            u2notification = UserNotification.query() \
-                                .filter(UserNotification.notification ==
-                                        notification) \
-                                .filter(UserNotification.user_id == self.u2) \
-                                .scalar()
-            assert u2notification != None
-
-    def test_notification_counter(self):
-        with test_context(self.app):
-            NotificationModel().create(created_by=self.u1,
-                                subject=u'title', body=u'hi there_delete',
-                                recipients=[self.u3, self.u1])
-            Session().commit()
-
-            assert NotificationModel().get_unread_cnt_for_user(self.u1) == 0
-            assert NotificationModel().get_unread_cnt_for_user(self.u2) == 0
-            assert NotificationModel().get_unread_cnt_for_user(self.u3) == 1
-
-            notification = NotificationModel().create(created_by=self.u1,
-                                               subject=u'title', body=u'hi there3',
-                                        recipients=[self.u3, self.u1, self.u2])
-            Session().commit()
-
-            assert NotificationModel().get_unread_cnt_for_user(self.u1) == 0
-            assert NotificationModel().get_unread_cnt_for_user(self.u2) == 1
-            assert NotificationModel().get_unread_cnt_for_user(self.u3) == 2
 
     @mock.patch.object(h, 'canonical_url', (lambda arg, **kwargs: 'http://%s/?%s' % (arg, '&'.join('%s=%s' % (k, v) for (k, v) in sorted(kwargs.items())))))
     def test_dump_html_mails(self):

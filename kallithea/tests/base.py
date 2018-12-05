@@ -24,7 +24,7 @@ from tg import config
 from webtest import TestApp
 
 from kallithea import model
-from kallithea.model.db import Notification, User, UserNotification
+from kallithea.model.db import User
 from kallithea.model.meta import Session
 from kallithea.lib.utils2 import safe_str
 
@@ -148,15 +148,6 @@ class TestController(object):
         logging.getLogger("kallithea").addHandler(h)
         self.app = TestApp(testapp)
         return self.app
-
-    def remove_all_notifications(self):
-        # query().delete() does not (by default) trigger cascades
-        # ( http://docs.sqlalchemy.org/en/rel_0_7/orm/collections.html#passive-deletes )
-        # so delete the UserNotification first to ensure referential integrity.
-        UserNotification.query().delete()
-
-        Notification.query().delete()
-        Session().commit()
 
     def log_user(self, username=TEST_USER_ADMIN_LOGIN,
                  password=TEST_USER_ADMIN_PASS):

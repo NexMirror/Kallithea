@@ -12,7 +12,7 @@ from kallithea.lib.auth import check_password
 from kallithea.lib import helpers as h
 from kallithea.model.api_key import ApiKeyModel
 from kallithea.model import validators
-from kallithea.model.db import User, Notification
+from kallithea.model.db import User
 from kallithea.model.meta import Session
 from kallithea.model.user import UserModel
 
@@ -22,9 +22,6 @@ fixture = Fixture()
 
 
 class TestLoginController(TestController):
-    def setup_method(self, method):
-        self.remove_all_notifications()
-        assert Notification.query().all() == []
 
     def test_index(self):
         response = self.app.get(url(controller='login', action='index'))

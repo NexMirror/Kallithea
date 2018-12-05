@@ -2,8 +2,7 @@ import re
 
 from kallithea.tests.base import *
 from kallithea.model.changeset_status import ChangesetStatusModel
-from kallithea.model.db import ChangesetComment, Notification, \
-    UserNotification
+from kallithea.model.db import ChangesetComment
 from kallithea.model.meta import Session
 
 
@@ -13,8 +12,6 @@ class TestChangeSetCommentsController(TestController):
         for x in ChangesetComment.query().all():
             Session().delete(x)
         Session().commit()
-
-        self.remove_all_notifications()
 
     def test_create(self):
         self.log_user()
@@ -38,17 +35,6 @@ class TestChangeSetCommentsController(TestController):
 
         # test DB
         assert ChangesetComment.query().count() == 1
-        assert Notification.query().count() == 1
-
-        notification = Notification.query().all()[0]
-
-        comment_id = ChangesetComment.query().first().comment_id
-        assert notification.type_ == Notification.TYPE_CHANGESET_COMMENT
-        sbj = (u'/%s/changeset/'
-               '27cd5cce30c96924232dffcd24178a07ffeb5dfc#comment-%s'
-               % (HG_REPO, comment_id))
-        print "%s vs %s" % (sbj, notification.subject)
-        assert sbj in notification.subject
 
     def test_create_inline(self):
         self.log_user()
@@ -79,16 +65,6 @@ class TestChangeSetCommentsController(TestController):
 
         # test DB
         assert ChangesetComment.query().count() == 1
-        assert Notification.query().count() == 1
-
-        notification = Notification.query().all()[0]
-        comment_id = ChangesetComment.query().first().comment_id
-        assert notification.type_ == Notification.TYPE_CHANGESET_COMMENT
-        sbj = (u'/%s/changeset/'
-               '27cd5cce30c96924232dffcd24178a07ffeb5dfc#comment-%s'
-               % (HG_REPO, comment_id))
-        print "%s vs %s" % (sbj, notification.subject)
-        assert sbj in notification.subject
 
     def test_create_with_mention(self):
         self.log_user()
@@ -113,11 +89,6 @@ class TestChangeSetCommentsController(TestController):
 
         # test DB
         assert ChangesetComment.query().count() == 1
-        assert Notification.query().count() == 2
-        users = [x.user.username for x in UserNotification.query().all()]
-
-        # test_regular gets notification by @mention
-        assert sorted(users) == [TEST_USER_ADMIN_LOGIN, TEST_USER_REGULAR_LOGIN]
 
     def test_create_status_change(self):
         self.log_user()
@@ -142,17 +113,6 @@ class TestChangeSetCommentsController(TestController):
 
         # test DB
         assert ChangesetComment.query().count() == 1
-        assert Notification.query().count() == 1
-
-        notification = Notification.query().all()[0]
-
-        comment_id = ChangesetComment.query().first().comment_id
-        assert notification.type_ == Notification.TYPE_CHANGESET_COMMENT
-        sbj = (u'/%s/changeset/'
-               '27cd5cce30c96924232dffcd24178a07ffeb5dfc#comment-%s'
-               % (HG_REPO, comment_id))
-        print "%s vs %s" % (sbj, notification.subject)
-        assert sbj in notification.subject
 
         # check status
         status = ChangesetStatusModel().get_status(repo=HG_REPO, revision=rev)
@@ -196,8 +156,6 @@ class TestPullrequestsCommentsController(TestController):
             Session().delete(x)
         Session().commit()
 
-        self.remove_all_notifications()
-
     def _create_pr(self):
         response = self.app.post(url(controller='pullrequests', action='create',
                                      repo_name=HG_REPO),
@@ -238,15 +196,6 @@ class TestPullrequestsCommentsController(TestController):
 
         # test DB
         assert ChangesetComment.query().count() == 2
-        assert Notification.query().count() == 1
-
-        notification = Notification.query().all()[0]
-        comment_id = ChangesetComment.query().order_by(ChangesetComment.comment_id.desc()).first().comment_id
-        assert notification.type_ == Notification.TYPE_PULL_REQUEST_COMMENT
-        sbj = (u'/%s/pull-request/%s/_/stable#comment-%s'
-               % (HG_REPO, pr_id, comment_id))
-        print "%s vs %s" % (sbj, notification.subject)
-        assert sbj in notification.subject
 
     def test_create_inline(self):
         self.log_user()
@@ -277,15 +226,6 @@ class TestPullrequestsCommentsController(TestController):
 
         # test DB
         assert ChangesetComment.query().count() == 2
-        assert Notification.query().count() == 1
-
-        notification = Notification.query().all()[0]
-        comment_id = ChangesetComment.query().order_by(ChangesetComment.comment_id.desc()).first().comment_id
-        assert notification.type_ == Notification.TYPE_PULL_REQUEST_COMMENT
-        sbj = (u'/%s/pull-request/%s/_/stable#comment-%s'
-               % (HG_REPO, pr_id, comment_id))
-        print "%s vs %s" % (sbj, notification.subject)
-        assert sbj in notification.subject
 
     def test_create_with_mention(self):
         self.log_user()
@@ -309,11 +249,6 @@ class TestPullrequestsCommentsController(TestController):
 
         # test DB
         assert ChangesetComment.query().count() == 2
-        assert Notification.query().count() == 2
-        users = [x.user.username for x in UserNotification.query().all()]
-
-        # test_regular gets notification by @mention
-        assert sorted(users) == [TEST_USER_ADMIN_LOGIN, TEST_USER_REGULAR_LOGIN]
 
     def test_create_status_change(self):
         self.log_user()
@@ -341,15 +276,6 @@ class TestPullrequestsCommentsController(TestController):
 
         # test DB
         assert ChangesetComment.query().count() == 2
-        assert Notification.query().count() == 1
-
-        notification = Notification.query().all()[0]
-        comment_id = ChangesetComment.query().order_by(ChangesetComment.comment_id.desc()).first().comment_id
-        assert notification.type_ == Notification.TYPE_PULL_REQUEST_COMMENT
-        sbj = (u'/%s/pull-request/%s/_/stable#comment-%s'
-               % (HG_REPO, pr_id, comment_id))
-        print "%s vs %s" % (sbj, notification.subject)
-        assert sbj in notification.subject
 
         # check status
         status = ChangesetStatusModel().get_status(repo=HG_REPO, pull_request=pr_id)
