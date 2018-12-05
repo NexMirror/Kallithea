@@ -980,34 +980,6 @@ var getSelectionLink = function(e) {
     }
 };
 
-var deleteNotification = function(url, notification_id, callbacks){
-    var success = function(o){
-            $("#notification_"+notification_id).remove();
-            _run_callbacks(callbacks);
-        };
-    var failure = function(o){
-            alert("deleteNotification failure");
-        };
-    var postData = {};
-    var sUrl = url.replace('__NOTIFICATION_ID__',notification_id);
-    ajaxPOST(sUrl, postData, success, failure);
-};
-
-var readNotification = function(url, notification_id, callbacks){
-    var success = function(o){
-            var $obj = $("#notification_"+notification_id);
-            $obj.removeClass('list-group-item-warning');
-            $obj.find('.read-notification').remove();
-            _run_callbacks(callbacks);
-        };
-    var failure = function(o){
-            alert("readNotification failure");
-        };
-    var postData = {};
-    var sUrl = url.replace('__NOTIFICATION_ID__',notification_id);
-    ajaxPOST(sUrl, postData, success, failure);
-};
-
 /**
  * Autocomplete functionality
  */

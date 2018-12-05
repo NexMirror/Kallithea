@@ -361,24 +361,6 @@ def make_map(config):
         m.connect("my_account_api_keys_delete", "/my_account/api_keys/delete",
                   action="my_account_api_keys_delete", conditions=dict(method=["POST"]))
 
-    # NOTIFICATION REST ROUTES
-    with rmap.submapper(path_prefix=ADMIN_PREFIX,
-                        controller='admin/notifications') as m:
-        m.connect("notifications", "/notifications",
-                  action="index", conditions=dict(method=["GET"]))
-        m.connect("notifications_mark_all_read", "/notifications/mark_all_read",
-                  action="mark_all_read", conditions=dict(method=["GET"]))
-        m.connect("formatted_notifications", "/notifications.{format}",
-                  action="index", conditions=dict(method=["GET"]))
-        m.connect("notification_update", "/notifications/{notification_id}/update",
-                  action="update", conditions=dict(method=["POST"]))
-        m.connect("notification_delete", "/notifications/{notification_id}/delete",
-                  action="delete", conditions=dict(method=["POST"]))
-        m.connect("notification", "/notifications/{notification_id}",
-                  action="show", conditions=dict(method=["GET"]))
-        m.connect("formatted_notification", "/notifications/{notification_id}.{format}",
-                  action="show", conditions=dict(method=["GET"]))
-
     # ADMIN GIST
     with rmap.submapper(path_prefix=ADMIN_PREFIX,
                         controller='admin/gists') as m:
