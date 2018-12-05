@@ -33,7 +33,7 @@ from collections import defaultdict
 from kallithea.lib.utils2 import extract_mentioned_users, safe_unicode
 from kallithea.lib import helpers as h
 from kallithea.model.db import ChangesetComment, User, \
-    Notification, PullRequest, Repository
+    PullRequest, Repository
 from kallithea.model.notification import NotificationModel
 from kallithea.model.meta import Session
 
@@ -69,7 +69,7 @@ class ChangesetCommentsModel(object):
 
         # changeset
         if revision:
-            notification_type = Notification.TYPE_CHANGESET_COMMENT
+            notification_type = NotificationModel.TYPE_CHANGESET_COMMENT
             cs = repo.scm_instance.get_changeset(revision)
             desc = cs.short_id
 
@@ -114,7 +114,7 @@ class ChangesetCommentsModel(object):
             }
         # pull request
         elif pull_request:
-            notification_type = Notification.TYPE_PULL_REQUEST_COMMENT
+            notification_type = NotificationModel.TYPE_PULL_REQUEST_COMMENT
             desc = comment.pull_request.title
             _org_ref_type, org_ref_name, _org_rev = comment.pull_request.org_ref.split(':')
             _other_ref_type, other_ref_name, _other_rev = comment.pull_request.other_ref.split(':')

@@ -6,7 +6,7 @@ import routes.util
 
 from kallithea.tests.base import *
 from kallithea.lib import helpers as h
-from kallithea.model.db import User, Notification
+from kallithea.model.db import User
 from kallithea.model.user import UserModel
 from kallithea.model.meta import Session
 from kallithea.model.notification import NotificationModel, EmailNotificationModel
@@ -92,7 +92,7 @@ class TestNotifications(TestController):
                     )
 
                 for type_, body, kwargs in [
-                        (Notification.TYPE_CHANGESET_COMMENT,
+                        (NotificationModel.TYPE_CHANGESET_COMMENT,
                          u'This is the new \'comment\'.\n\n - and here it ends indented.',
                          dict(
                             short_id='cafe1234',
@@ -107,18 +107,18 @@ class TestNotifications(TestController):
                             cs_target_repo='http://example.com/repo_target',
                             cs_url='http://changeset.com',
                             cs_author=User.get(self.u2))),
-                        (Notification.TYPE_MESSAGE,
+                        (NotificationModel.TYPE_MESSAGE,
                          u'This is the \'body\' of the "test" message\n - nothing interesting here except indentation.',
                          dict()),
-                        #(Notification.TYPE_MENTION, '$body', None), # not used
-                        (Notification.TYPE_REGISTRATION,
+                        #(NotificationModel.TYPE_MENTION, '$body', None), # not used
+                        (NotificationModel.TYPE_REGISTRATION,
                          u'Registration body',
                          dict(
                             new_username='newbie',
                             registered_user_url='http://newbie.org',
                             new_email='new@email.com',
                             new_full_name='New Full Name')),
-                        (Notification.TYPE_PULL_REQUEST,
+                        (NotificationModel.TYPE_PULL_REQUEST,
                          u'This PR is \'awesome\' because it does <stuff>\n - please approve indented!',
                          dict(
                             pr_user_created='Requesting User (root)', # pr_owner should perhaps be used for @mention in description ...
@@ -126,7 +126,7 @@ class TestNotifications(TestController):
                             pr_revisions=[('123abc'*7, "Introduce one and two\n\nand that's it"), ('567fed'*7, 'Make one plus two equal tree')],
                             org_repo_name='repo_org',
                             **pr_kwargs)),
-                        (Notification.TYPE_PULL_REQUEST_COMMENT,
+                        (NotificationModel.TYPE_PULL_REQUEST_COMMENT,
                          u'Me too!\n\n - and indented on second line',
                          dict(
                             closing_pr=[False, True],

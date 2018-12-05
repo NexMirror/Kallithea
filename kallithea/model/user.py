@@ -39,7 +39,7 @@ from sqlalchemy.exc import DatabaseError
 
 from kallithea.lib.utils2 import safe_str, generate_api_key, get_current_authuser
 from kallithea.lib.caching_query import FromCache
-from kallithea.model.db import Permission, User, UserToPerm, Notification, \
+from kallithea.model.db import Permission, User, UserToPerm, \
     UserEmailMap, UserIpMap
 from kallithea.lib.exceptions import DefaultUserException, \
     UserOwnsReposException
@@ -202,7 +202,7 @@ class UserModel(object):
             'new_full_name': new_user.full_name}
         NotificationModel().create(created_by=new_user, subject=subject,
                                    body=body, recipients=None,
-                                   type_=Notification.TYPE_REGISTRATION,
+                                   type_=NotificationModel.TYPE_REGISTRATION,
                                    email_kwargs=email_kwargs)
 
     def update(self, user_id, form_data, skip_attrs=None):

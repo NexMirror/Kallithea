@@ -36,7 +36,7 @@ from sqlalchemy.orm import joinedload
 
 from kallithea.model.meta import Session
 from kallithea.lib import helpers as h
-from kallithea.model.db import PullRequest, PullRequestReviewer, Notification, \
+from kallithea.model.db import PullRequest, PullRequestReviewer, \
     ChangesetStatus, User
 from kallithea.model.notification import NotificationModel
 from kallithea.lib.utils2 import extract_mentioned_users, safe_str, safe_unicode
@@ -109,7 +109,7 @@ class PullRequestModel(object):
         if reviewers:
             NotificationModel().create(created_by=user, subject=subject, body=body,
                                        recipients=reviewers,
-                                       type_=Notification.TYPE_PULL_REQUEST,
+                                       type_=NotificationModel.TYPE_PULL_REQUEST,
                                        email_kwargs=email_kwargs)
 
         if mention_recipients:
@@ -118,7 +118,7 @@ class PullRequestModel(object):
             # FIXME: this subject is wrong and unused!
             NotificationModel().create(created_by=user, subject=subject, body=body,
                                        recipients=mention_recipients,
-                                       type_=Notification.TYPE_PULL_REQUEST,
+                                       type_=NotificationModel.TYPE_PULL_REQUEST,
                                        email_kwargs=email_kwargs)
 
     def mention_from_description(self, user, pr, old_description=''):

@@ -2478,14 +2478,6 @@ class PullRequestReviewer(Base, BaseDbModel):
 class Notification(object):
     __tablename__ = 'notifications'
 
-    TYPE_CHANGESET_COMMENT = u'cs_comment'
-    TYPE_MESSAGE = u'message'
-    TYPE_MENTION = u'mention' # not used
-    TYPE_REGISTRATION = u'registration'
-    TYPE_PULL_REQUEST = u'pull_request'
-    TYPE_PULL_REQUEST_COMMENT = u'pull_request_comment'
-
-
 class UserNotification(object):
     __tablename__ = 'user_to_notification'
 

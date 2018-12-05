@@ -37,7 +37,7 @@ from sqlalchemy.orm import joinedload, subqueryload
 import kallithea
 from kallithea.lib import helpers as h
 from kallithea.lib.utils2 import safe_unicode
-from kallithea.model.db import Notification, User
+from kallithea.model.db import User
 from kallithea.model.meta import Session
 
 log = logging.getLogger(__name__)
@@ -45,8 +45,15 @@ log = logging.getLogger(__name__)
 
 class NotificationModel(object):
 
+    TYPE_CHANGESET_COMMENT = u'cs_comment'
+    TYPE_MESSAGE = u'message'
+    TYPE_MENTION = u'mention' # not used
+    TYPE_REGISTRATION = u'registration'
+    TYPE_PULL_REQUEST = u'pull_request'
+    TYPE_PULL_REQUEST_COMMENT = u'pull_request_comment'
+
     def create(self, created_by, subject, body, recipients=None,
-               type_=Notification.TYPE_MESSAGE, with_email=True,
+               type_=TYPE_MESSAGE, with_email=True,
                email_kwargs=None, repo_name=None):
         """
 
@@ -133,13 +140,13 @@ class NotificationModel(object):
 
 class EmailNotificationModel(object):
 
-    TYPE_CHANGESET_COMMENT = Notification.TYPE_CHANGESET_COMMENT
-    TYPE_MESSAGE = Notification.TYPE_MESSAGE # only used for testing
-    # Notification.TYPE_MENTION is not used
+    TYPE_CHANGESET_COMMENT = NotificationModel.TYPE_CHANGESET_COMMENT
+    TYPE_MESSAGE = NotificationModel.TYPE_MESSAGE # only used for testing
+    # NotificationModel.TYPE_MENTION is not used
     TYPE_PASSWORD_RESET = 'password_link'
-    TYPE_REGISTRATION = Notification.TYPE_REGISTRATION
-    TYPE_PULL_REQUEST = Notification.TYPE_PULL_REQUEST
-    TYPE_PULL_REQUEST_COMMENT = Notification.TYPE_PULL_REQUEST_COMMENT
+    TYPE_REGISTRATION = NotificationModel.TYPE_REGISTRATION
+    TYPE_PULL_REQUEST = NotificationModel.TYPE_PULL_REQUEST
+    TYPE_PULL_REQUEST_COMMENT = NotificationModel.TYPE_PULL_REQUEST_COMMENT
     TYPE_DEFAULT = 'default'
 
     def __init__(self):
