@@ -26,6 +26,7 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+import datetime
 import logging
 import traceback
 
@@ -36,7 +37,7 @@ from sqlalchemy.orm import joinedload, subqueryload
 import kallithea
 from kallithea.lib import helpers as h
 from kallithea.lib.utils2 import safe_unicode
-from kallithea.model.db import Notification, User, UserNotification
+from kallithea.model.db import Notification, User
 from kallithea.model.meta import Session
 
 log = logging.getLogger(__name__)
@@ -88,14 +89,8 @@ class NotificationModel(object):
             )
         #else: silently skip notification mails?
 
-        # TODO: inform user who are notified
-        notif = Notification.create(
-            created_by=created_by_obj, subject=subject,
-            body=body, recipients=recipients_objs, type_=type_
-        )
-
         if not with_email:
-            return notif
+            return
 
         headers = {}
         headers['X-Kallithea-Notification-Type'] = type_
@@ -103,18 +98,19 @@ class NotificationModel(object):
             headers['References'] = ' '.join('<%s>' % x for x in email_kwargs['threading'])
 
         # this is passed into template
+        created_on = h.fmt_date(datetime.datetime.now())
         html_kwargs = {
                   'subject': subject,
                   'body': h.render_w_mentions(body, repo_name),
-                  'when': h.fmt_date(notif.created_on),
-                  'user': notif.created_by_user.username,
+                  'when': created_on,
+                  'user': created_by_obj.username,
                   }
 
         txt_kwargs = {
                   'subject': subject,
                   'body': body,
-                  'when': h.fmt_date(notif.created_on),
-                  'user': notif.created_by_user.username,
+                  'when': created_on,
+                  'user': created_by_obj.username,
                   }
 
         html_kwargs.update(email_kwargs)
@@ -133,131 +129,6 @@ class NotificationModel(object):
         for rec in rec_objs:
             tasks.send_email([rec.email], email_subject, email_txt_body,
                      email_html_body, headers, author=created_by_obj)
-
-        return notif
-
-    def delete(self, user, notification):
-        # we don't want to remove actual notification just the assignment
-        try:
-            notification = Notification.guess_instance(notification)
-            user = User.guess_instance(user)
-            if notification and user:
-                obj = UserNotification.query() \
-                        .filter(UserNotification.user == user) \
-                        .filter(UserNotification.notification
-                                == notification) \
-                        .one()
-                Session().delete(obj)
-                return True
-        except Exception:
-            log.error(traceback.format_exc())
-            raise
-
-    def query_for_user(self, user, filter_=None):
-        """
-        Get notifications for given user, filter them if filter dict is given
-
-        :param user:
-        :param filter:
-        """
-        user = User.guess_instance(user)
-
-        q = UserNotification.query() \
-            .filter(UserNotification.user == user) \
-            .join((Notification, UserNotification.notification_id ==
-                                 Notification.notification_id)) \
-            .options(joinedload('notification')) \
-            .options(subqueryload('notification.created_by_user')) \
-            .order_by(Notification.created_on.desc())
-
-        if filter_:
-            q = q.filter(Notification.type_.in_(filter_))
-
-        return q
-
-    def mark_read(self, user, notification):
-        try:
-            notification = Notification.guess_instance(notification)
-            user = User.guess_instance(user)
-            if notification and user:
-                obj = UserNotification.query() \
-                        .filter(UserNotification.user == user) \
-                        .filter(UserNotification.notification
-                                == notification) \
-                        .one()
-                obj.read = True
-                return True
-        except Exception:
-            log.error(traceback.format_exc())
-            raise
-
-    def mark_all_read_for_user(self, user, filter_=None):
-        user = User.guess_instance(user)
-        q = UserNotification.query() \
-            .filter(UserNotification.user == user) \
-            .filter(UserNotification.read == False) \
-            .join((Notification, UserNotification.notification_id ==
-                                 Notification.notification_id))
-        if filter_:
-            q = q.filter(Notification.type_.in_(filter_))
-
-        # this is a little inefficient but sqlalchemy doesn't support
-        # update on joined tables :(
-        for obj in q:
-            obj.read = True
-
-    def get_unread_cnt_for_user(self, user):
-        user = User.guess_instance(user)
-        return UserNotification.query() \
-                .filter(UserNotification.read == False) \
-                .filter(UserNotification.user == user).count()
-
-    def get_unread_for_user(self, user):
-        user = User.guess_instance(user)
-        return [x.notification for x in UserNotification.query() \
-                .filter(UserNotification.read == False) \
-                .filter(UserNotification.user == user).all()]
-
-    def get_user_notification(self, user, notification):
-        user = User.guess_instance(user)
-        notification = Notification.guess_instance(notification)
-
-        return UserNotification.query() \
-            .filter(UserNotification.notification == notification) \
-            .filter(UserNotification.user == user).scalar()
-
-    def make_description(self, notification, show_age=True):
-        """
-        Creates a human readable description based on properties
-        of notification object
-        """
-        # alias
-        _n = notification
-
-        if show_age:
-            return {
-                    _n.TYPE_CHANGESET_COMMENT: _('%(user)s commented on changeset %(age)s'),
-                    _n.TYPE_MESSAGE: _('%(user)s sent message %(age)s'),
-                    _n.TYPE_MENTION: _('%(user)s mentioned you %(age)s'),
-                    _n.TYPE_REGISTRATION: _('%(user)s registered in Kallithea %(age)s'),
-                    _n.TYPE_PULL_REQUEST: _('%(user)s opened new pull request %(age)s'),
-                    _n.TYPE_PULL_REQUEST_COMMENT: _('%(user)s commented on pull request %(age)s'),
-                }[notification.type_] % dict(
-                    user=notification.created_by_user.username,
-                    age=h.age(notification.created_on),
-                )
-        else:
-            return {
-                    _n.TYPE_CHANGESET_COMMENT: _('%(user)s commented on changeset at %(when)s'),
-                    _n.TYPE_MESSAGE: _('%(user)s sent message at %(when)s'),
-                    _n.TYPE_MENTION: _('%(user)s mentioned you at %(when)s'),
-                    _n.TYPE_REGISTRATION: _('%(user)s registered in Kallithea at %(when)s'),
-                    _n.TYPE_PULL_REQUEST: _('%(user)s opened new pull request at %(when)s'),
-                    _n.TYPE_PULL_REQUEST_COMMENT: _('%(user)s commented on pull request at %(when)s'),
-                }[notification.type_] % dict(
-                    user=notification.created_by_user.username,
-                    when=h.fmt_date(notification.created_on),
-                )
 
 
 class EmailNotificationModel(object):

@@ -10,9 +10,6 @@ The :mod:`models` module
 .. automodule:: kallithea.model.comment
    :members:
 
-.. automodule:: kallithea.model.notification
-   :members:
-
 .. automodule:: kallithea.model.permission
    :members:
 

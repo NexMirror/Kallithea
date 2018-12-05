@@ -53,7 +53,7 @@ class TestNotifications(TestController):
                 assert '>hi there<' in html_body
                 assert author.username == 'u1'
             with mock.patch.object(kallithea.lib.celerylib.tasks, 'send_email', send_email):
-                notification = NotificationModel().create(created_by=self.u1,
+                NotificationModel().create(created_by=self.u1,
                                                    subject=u'subj', body=u'hi there',
                                                    recipients=usrs)
 
@@ -151,7 +151,7 @@ class TestNotifications(TestController):
 
                     for desc, type_, body, kwargs in params:
                         # desc is used as "global" variable
-                        notification = NotificationModel().create(created_by=self.u1,
+                        NotificationModel().create(created_by=self.u1,
                                                            subject=u'unused', body=body, email_kwargs=kwargs,
                                                            recipients=[self.u2], type_=type_)
 

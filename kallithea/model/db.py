@@ -452,9 +452,6 @@ class User(Base, BaseDbModel):
 
     group_member = relationship('UserGroupMember', cascade='all')
 
-    notifications = relationship('UserNotification', cascade='all')
-    # notifications assigned to this user
-    user_created_notifications = relationship('Notification', cascade='all')
     # comments created by this user
     user_comments = relationship('ChangesetComment', cascade='all')
     # extra emails for this user
@@ -2478,12 +2475,8 @@ class PullRequestReviewer(Base, BaseDbModel):
         )
 
 
-class Notification(Base, BaseDbModel):
+class Notification(object):
     __tablename__ = 'notifications'
-    __table_args__ = (
-        Index('notification_type_idx', 'type'),
-        _table_args_default_dict,
-    )
 
     TYPE_CHANGESET_COMMENT = u'cs_comment'
     TYPE_MESSAGE = u'message'
@@ -2492,70 +2485,9 @@ class Notification(Base, BaseDbModel):
     TYPE_PULL_REQUEST = u'pull_request'
     TYPE_PULL_REQUEST_COMMENT = u'pull_request_comment'
 
-    notification_id = Column(Integer(), primary_key=True)
-    subject = Column(Unicode(512), nullable=False)
-    body = Column(UnicodeText(), nullable=False)
-    created_by = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
-    created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
-    type_ = Column('type', Unicode(255), nullable=False)
 
-    created_by_user = relationship('User')
-    notifications_to_users = relationship('UserNotification', cascade="all, delete-orphan")
-
-    @property
-    def recipients(self):
-        return [x.user for x in UserNotification.query()
-                .filter(UserNotification.notification == self)
-                .order_by(UserNotification.user_id.asc()).all()]
-
-    @classmethod
-    def create(cls, created_by, subject, body, recipients, type_=None):
-        if type_ is None:
-            type_ = Notification.TYPE_MESSAGE
-
-        notification = cls()
-        notification.created_by_user = created_by
-        notification.subject = subject
-        notification.body = body
-        notification.type_ = type_
-        notification.created_on = datetime.datetime.now()
-
-        for recipient in recipients:
-            un = UserNotification()
-            un.notification = notification
-            un.user_id = recipient.user_id
-            # Mark notifications to self "pre-read" - should perhaps just be skipped
-            if recipient == created_by:
-                un.read = True
-            Session().add(un)
-
-        Session().add(notification)
-        Session().flush() # assign notification.notification_id
-        return notification
-
-    @property
-    def description(self):
-        from kallithea.model.notification import NotificationModel
-        return NotificationModel().make_description(self)
-
-
-class UserNotification(Base, BaseDbModel):
+class UserNotification(object):
     __tablename__ = 'user_to_notification'
-    __table_args__ = (
-        UniqueConstraint('user_id', 'notification_id'),
-        _table_args_default_dict,
-    )
-
-    user_id = Column(Integer(), ForeignKey('users.user_id'), primary_key=True)
-    notification_id = Column(Integer(), ForeignKey('notifications.notification_id'), primary_key=True)
-    read = Column(Boolean, nullable=False, default=False)
-    sent_on = Column(DateTime(timezone=False), nullable=True) # FIXME: not nullable?
-
-    user = relationship('User')
-    notification = relationship('Notification')
-
-    def mark_as_read(self):
-        self.read = True
 
 
 class Gist(Base, BaseDbModel):
