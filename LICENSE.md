@@ -54,7 +54,7 @@ using the ''kallithea-cli front-end-build'' command.
 Codemirror
 ----------
 
-Kallithea incorporates parts of the Javascript system called
+Kallithea uses the Javascript system called
 [Codemirror](http://codemirror.net/), version 4.7.0, which is primarily:
 
 Copyright &copy; 2013-2014 by Marijn Haverbeke <marijnh@gmail.com>
@@ -63,10 +63,10 @@ and licensed under the MIT-permissive license, which is
 [included in this distribution](MIT-Permissive-License.txt).
 
 Additional files from upstream Codemirror are copyrighted by various authors
-and licensed under other permissive licenses.  The sub-directories under
-[.../public/codemirror](kallithea/public/codemirror) include the copyright and
-license notice and information as they appeared in Codemirror's upstream
-release.
+and licensed under other permissive licenses.
+
+It is not distributed with Kallithea, but will be downloaded
+using the ''kallithea-cli front-end-build'' command.
 
 
 

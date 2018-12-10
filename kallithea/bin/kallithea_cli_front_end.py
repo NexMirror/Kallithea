@@ -82,6 +82,11 @@ def front_end_build(install_deps, generate):
         shutil.copy(os.path.join(front_end_dir, 'node_modules', 'select2', 'select2x2.png'), os.path.join(public_dir, 'css', 'select2x2.png'))
         shutil.copy(os.path.join(front_end_dir, 'node_modules', 'select2', 'select2-spinner.gif'), os.path.join(public_dir, 'css', 'select2-spinner.gif'))
 
+        click.echo("Preparing CodeMirror JS")
+        if os.path.isdir(os.path.join(public_dir, 'codemirror')):
+            shutil.rmtree(os.path.join(public_dir, 'codemirror'))
+        shutil.copytree(os.path.join(front_end_dir, 'node_modules', 'codemirror'), os.path.join(public_dir, 'codemirror'))
+
         click.echo("Generating LICENSES.txt")
         check_licensing_json_path = os.path.join(tmp_dir, 'licensing.json')
         licensing_txt_path = os.path.join(public_dir, 'LICENSES.txt')
