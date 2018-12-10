@@ -84,6 +84,38 @@ using the ''kallithea-cli front-end-build'' command.
 
 
 
+At.js
+-----
+
+Kallithea uses the Javascript system called
+[At.js](http://ichord.github.com/At.js),
+which can be found together with its Corresponding Source in
+https://github.com/ichord/At.js at tag v1.5.4.
+
+It is Copyright 2013 chord.luo@gmail.com and is under an
+[MIT-permissive license](MIT-Permissive-License.txt).
+
+It is not distributed with Kallithea, but will be downloaded
+using the ''kallithea-cli front-end-build'' command.
+
+
+
+Caret.js
+--------
+
+Kallithea uses the Javascript system called
+[Caret.js](http://ichord.github.com/Caret.js/),
+which can be found together with its Corresponding Source in
+https://github.com/ichord/Caret.js at tag v0.3.1.
+
+It is Copyright 2013 chord.luo@gmail.com and is under an
+[MIT-permissive license](MIT-Permissive-License.txt).
+
+It is not distributed with Kallithea, but will be downloaded
+using the ''kallithea-cli front-end-build'' command.
+
+
+
 DataTables
 ----------
 

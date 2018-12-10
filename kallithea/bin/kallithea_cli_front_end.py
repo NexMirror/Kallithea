@@ -66,11 +66,13 @@ def front_end_build(install_deps, generate):
         click.echo("Preparing Bootstrap JS")
         shutil.copy(os.path.join(front_end_dir, 'node_modules', 'bootstrap', 'dist', 'js', 'bootstrap.js'), os.path.join(public_dir, 'js', 'bootstrap.js'))
 
-        click.echo("Preparing jQuery JS with Flot")
+        click.echo("Preparing jQuery JS with Flot, Caret and Atwho")
         shutil.copy(os.path.join(front_end_dir, 'node_modules', 'jquery', 'dist', 'jquery.min.js'), os.path.join(public_dir, 'js', 'jquery.min.js'))
         shutil.copy(os.path.join(front_end_dir, 'node_modules', 'jquery.flot', 'jquery.flot.js'), os.path.join(public_dir, 'js', 'jquery.flot.js'))
         shutil.copy(os.path.join(front_end_dir, 'node_modules', 'jquery.flot', 'jquery.flot.selection.js'), os.path.join(public_dir, 'js', 'jquery.flot.selection.js'))
         shutil.copy(os.path.join(front_end_dir, 'node_modules', 'jquery.flot', 'jquery.flot.time.js'), os.path.join(public_dir, 'js', 'jquery.flot.time.js'))
+        shutil.copy(os.path.join(front_end_dir, 'node_modules', 'jquery.caret', 'dist', 'jquery.caret.min.js'), os.path.join(public_dir, 'js', 'jquery.caret.min.js'))
+        shutil.copy(os.path.join(front_end_dir, 'node_modules', 'at.js', 'dist', 'js', 'jquery.atwho.min.js'), os.path.join(public_dir, 'js', 'jquery.atwho.min.js'))
 
         click.echo("Preparing DataTables JS")
         shutil.copy(os.path.join(front_end_dir, 'node_modules', 'datatables.net', 'js', 'jquery.dataTables.js'), os.path.join(public_dir, 'js', 'jquery.dataTables.js'))

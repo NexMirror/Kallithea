@@ -751,7 +751,7 @@ function _comment_div_append_form($comment_div, f_path, line_no) {
 
     tooltip_activate();
     if ($textarea.length > 0) {
-        MentionsAutoComplete($textarea, _USERS_AC_DATA);
+        MentionsAutoComplete($textarea);
     }
     if (f_path) {
         $textarea.focus();
@@ -1155,65 +1155,30 @@ var MembersAutoComplete = function ($inputElement, $typeElement) {
     });
 }
 
-var MentionsAutoComplete = function ($inputElement, users_list) {
-    var $container = $('<div/>').insertAfter($inputElement);
-
-    var matchUsers = function (sQuery) {
-            // use the search string from $inputElement instead of sQuery
-            if(!$container.data('search')){
-                // return empty list so the input list isn't shown
-                return []
-            }
-            return autocompleteMatchUsers($container.data('search'), users_list);
-    }
-
-    var datasource = new YAHOO.util.FunctionDataSource(matchUsers);
-    var mentionsAC = new YAHOO.widget.AutoComplete($inputElement[0], $container[0], datasource);
-    mentionsAC.useShadow = false;
-    mentionsAC.resultTypeList = false;
-    mentionsAC.animVert = false;
-    mentionsAC.animHoriz = false;
-    mentionsAC.animSpeed = 0.1;
-    mentionsAC.suppressInputUpdate = true;
-    mentionsAC.formatResult = function (oResultData, sQuery, sResultMatch) {
-        // use the search string from $inputElement instead of sQuery
-        return autocompleteFormatter(oResultData, $container.data('search'), sResultMatch);
-    }
-
-    // Handler for selection of an entry
-    if(mentionsAC.itemSelectEvent){
-        mentionsAC.itemSelectEvent.subscribe(function (sType, aArgs) {
-            var myAC = aArgs[0]; // reference back to the AC instance
-            var elLI = aArgs[1]; // reference to the selected LI element
-            var oData = aArgs[2]; // object literal of selected item's result data
-            myAC.getInputEl().value = $container.data('before') + oData.nname + ' ' + $container.data('after');
-            _setCaretPosition($(myAC.getInputEl()), myAC.dataSource.before.length + oData.nname.length + 1);
-        });
-    }
-
-    // Must match utils2.py MENTIONS_REGEX.
-    // Operates on a string from char before @ up to cursor.
-    // Check that the char before @ doesn't look like an email address, and match to end of string.
-    var mentionRe = new RegExp('(?:^|[^a-zA-Z0-9])@([a-zA-Z0-9][-_.a-zA-Z0-9]*[a-zA-Z0-9])$');
-
-    $inputElement.keyup(function(e){
-            var currentMessage = $inputElement.val();
-            var currentCaretPosition = $inputElement[0].selectionStart;
-
-            $container.data('search', '');
-            var messageBeforeCaret = currentMessage.substr(0, currentCaretPosition);
-            var lastAtPos = messageBeforeCaret.lastIndexOf('@');
-            if(lastAtPos >= 0){
-                // Search from one char before last @ ... if possible
-                var m = mentionRe.exec(messageBeforeCaret.substr(Math.max(0, lastAtPos - 1)));
-                if(m){
-                    $container.data('before', currentMessage.substr(0, lastAtPos + 1));
-                    $container.data('search', currentMessage.substr(lastAtPos + 1, currentCaretPosition - lastAtPos - 1));
-                    $container.data('after', currentMessage.substr(currentCaretPosition));
-                }
-            }
-        });
-}
+var MentionsAutoComplete = function ($inputElement) {
+  $inputElement.atwho({
+    at: "@",
+    callbacks: {
+      remoteFilter: function(query, callback) {
+        $.getJSON(
+          pyroutes.url('users_and_groups_data'),
+          {
+            query: query,
+            types: 'users'
+          },
+          function(data) {
+            callback(data.results)
+          }
+        );
+      },
+      sorter: function(query, items, searchKey) {
+        return items;
+      }
+    },
+    displayTpl: "<li>" + autocompleteGravatar('${fname} ${lname} (${nname})', '${gravatar_lnk}', 16) + "</li>",
+    insertTpl: "${atwho-at}${nname}"
+  });
+};
 
 
 // Set caret at the given position in the input element
