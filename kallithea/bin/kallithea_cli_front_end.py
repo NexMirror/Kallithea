@@ -43,8 +43,12 @@ def front_end_build(install_deps, generate):
         subprocess.check_call(['npm', 'install'], cwd=front_end_dir)
 
     if generate:
+        tmp_dir = os.path.join(front_end_dir, 'tmp')
+        if not os.path.isdir(tmp_dir):
+            os.mkdir(tmp_dir)
+
         click.echo("Generating CSS")
-        with open(os.path.join(public_dir, 'pygments.css'), 'w') as f:
+        with open(os.path.join(tmp_dir, 'pygments.css'), 'w') as f:
             subprocess.check_call(['pygmentize',
                     '-S', 'default',
                     '-f', 'html',

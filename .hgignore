@@ -23,8 +23,8 @@ syntax: regexp
 ^\.coverage$
 ^kallithea/front-end/node_modules$
 ^kallithea/front-end/package-lock\.json$
+^kallithea/front-end/tmp$
 ^kallithea/public/css/style\.css(\.map)?$
-^kallithea/public/css/pygments.css$
 ^theme\.less$
 ^kallithea\.db$
 ^test\.db$
