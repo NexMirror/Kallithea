@@ -30,6 +30,8 @@ syntax: regexp
 ^kallithea/public/css/style\.css$
 ^kallithea/public/css/style\.css\.map$
 ^kallithea/public/js/bootstrap\.js$
+^kallithea/public/js/dataTables\.bootstrap\.js$
+^kallithea/public/js/jquery\.dataTables\.js$
 ^kallithea/public/js/jquery\.flot\.js$
 ^kallithea/public/js/jquery\.flot\.selection\.js$
 ^kallithea/public/js/jquery\.flot\.time\.js$

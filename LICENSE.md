@@ -87,14 +87,14 @@ using the ''kallithea-cli front-end-build'' command.
 DataTables
 ----------
 
-Kallithea incorporates the Javascript system called
-[DataTables](http://www.datatables.net/)
-which can be found together with their Corresponding Source in
-https://github.com/DataTables/DataTables at tag 1.10.13 (mirrored at
-https://kallithea-scm.org/repos/mirror/DataTables/files/1.10.13/ ).
+Kallithea uses the Javascript system called
+[DataTables](http://www.datatables.net/).
 
 It is Copyright 2008-2015 SpryMedia Ltd. and is under an
 [MIT-permissive license](MIT-Permissive-License.txt).
+
+It is not distributed with Kallithea, but will be downloaded
+using the ''kallithea-cli front-end-build'' command.
 
 
 

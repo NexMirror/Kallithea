@@ -72,6 +72,10 @@ def front_end_build(install_deps, generate):
         shutil.copy(os.path.join(front_end_dir, 'node_modules', 'jquery.flot', 'jquery.flot.selection.js'), os.path.join(public_dir, 'js', 'jquery.flot.selection.js'))
         shutil.copy(os.path.join(front_end_dir, 'node_modules', 'jquery.flot', 'jquery.flot.time.js'), os.path.join(public_dir, 'js', 'jquery.flot.time.js'))
 
+        click.echo("Preparing DataTables JS")
+        shutil.copy(os.path.join(front_end_dir, 'node_modules', 'datatables.net', 'js', 'jquery.dataTables.js'), os.path.join(public_dir, 'js', 'jquery.dataTables.js'))
+        shutil.copy(os.path.join(front_end_dir, 'node_modules', 'datatables.net-bs', 'js', 'dataTables.bootstrap.js'), os.path.join(public_dir, 'js', 'dataTables.bootstrap.js'))
+
         click.echo("Preparing Select2 JS")
         shutil.copy(os.path.join(front_end_dir, 'node_modules', 'select2', 'select2.js'), os.path.join(public_dir, 'js', 'select2.js'))
         shutil.copy(os.path.join(front_end_dir, 'node_modules', 'select2', 'select2.png'), os.path.join(public_dir, 'css', 'select2.png'))
