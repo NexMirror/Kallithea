@@ -26,6 +26,10 @@ syntax: regexp
 ^kallithea/front-end/tmp$
 ^kallithea/public/css/style\.css(\.map)?$
 ^kallithea/public/js/bootstrap\.js$
+^kallithea/public/js/jquery\.flot\.js$
+^kallithea/public/js/jquery\.flot\.selection\.js$
+^kallithea/public/js/jquery\.flot\.time\.js$
+^kallithea/public/js/jquery\.min\.js$
 ^theme\.less$
 ^kallithea\.db$
 ^test\.db$

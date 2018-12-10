@@ -73,14 +73,14 @@ release.
 jQuery
 ------
 
-Kallithea incorporates the Javascript system called
-[jQuery](http://jquery.org/), [herein](kallithea/public/js/jquery.min.js),
-which can be found together with its Corresponding Source in
-https://github.com/jquery/jquery at tag 1.12.3 (mirrored at
-https://kallithea-scm.org/repos/mirror/jquery/files/1.12.3/ ).
+Kallithea uses the Javascript system called
+[jQuery](http://jquery.org/).
 
 It is Copyright 2013 jQuery Foundation and other contributors http://jquery.com/ and is under an
 [MIT-permissive license](MIT-Permissive-License.txt).
+
+It is not distributed with Kallithea, but will be downloaded
+using the ''kallithea-cli front-end-build'' command.
 
 
 
@@ -254,7 +254,7 @@ in this distribution.
 Flot
 ----
 
-Kallithea incorporates some parts of a Javascript system called
+Kallithea uses some parts of a Javascript system called
 [Flot](http://www.flotcharts.org/), which is:
 
 Copyright (c) 2007-2014 IOLA and Ole Laursen
@@ -279,6 +279,9 @@ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
+
+It is not distributed with Kallithea, but will be downloaded
+using the ''kallithea-cli front-end-build'' command.
 
 
 
