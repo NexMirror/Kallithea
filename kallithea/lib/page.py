@@ -26,7 +26,7 @@ log = logging.getLogger(__name__)
 
 class Page(_Page):
     """
-    Custom pager to match rendering style with YUI paginator emitting Bootstrap paginators
+    Custom pager emitting Bootstrap paginators
     """
 
     def __init__(self, *args, **kwargs):
