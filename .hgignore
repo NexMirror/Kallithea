@@ -25,6 +25,7 @@ syntax: regexp
 ^kallithea/front-end/package-lock\.json$
 ^kallithea/front-end/tmp$
 ^kallithea/public/css/style\.css(\.map)?$
+^kallithea/public/js/bootstrap\.js$
 ^theme\.less$
 ^kallithea\.db$
 ^test\.db$

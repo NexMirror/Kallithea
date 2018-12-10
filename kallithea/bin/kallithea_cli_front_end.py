@@ -16,6 +16,7 @@ import click
 import kallithea.bin.kallithea_cli_base as cli_base
 
 import os
+import shutil
 import subprocess
 import json
 
@@ -48,7 +49,7 @@ def front_end_build(install_deps, generate):
         if not os.path.isdir(tmp_dir):
             os.mkdir(tmp_dir)
 
-        click.echo("Generating CSS")
+        click.echo("Building CSS styling based on Bootstrap")
         with open(os.path.join(tmp_dir, 'pygments.css'), 'w') as f:
             subprocess.check_call(['pygmentize',
                     '-S', 'default',
@@ -61,6 +62,9 @@ def front_end_build(install_deps, generate):
         subprocess.check_call([lesscpath, '--relative-urls', '--source-map',
                 '--source-map-less-inline', lesspath, csspath],
                 cwd=front_end_dir)
+
+        click.echo("Preparing Bootstrap JS")
+        shutil.copy(os.path.join(front_end_dir, 'node_modules', 'bootstrap', 'dist', 'js', 'bootstrap.js'), os.path.join(public_dir, 'js', 'bootstrap.js'))
 
         click.echo("Generating LICENSES.txt")
         check_licensing_json_path = os.path.join(tmp_dir, 'licensing.json')

@@ -38,16 +38,16 @@ and licensed under the MIT-permissive license, which is
 Bootstrap
 ---------
 
-Kallithea incorporates the web framework called
+Kallithea uses the web framework called
 [Bootstrap](http://getbootstrap.com/), which is:
 
 Copyright &copy; 2011-2016 Twitter, Inc.
 
 and licensed under the MIT-permissive license, which is
-[included in this distribution](MIT-Permissive-License.txt),
-which can be found together with its Corresponding Source in
-https://github.com/twbs/bootstrap at tag v3.3.7 (mirrored at
-https://kallithea-scm.org/repos/mirror/bootstrap/ ).
+[included in this distribution](MIT-Permissive-License.txt).
+
+It is not distributed with Kallithea, but will be downloaded
+using the ''kallithea-cli front-end-build'' command.
 
 
 
