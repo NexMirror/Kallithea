@@ -57,7 +57,7 @@ def front_end_build(install_deps, generate):
                     '-a', '.code-highlight'],
                     stdout=f)
         lesscpath = os.path.join(front_end_dir, 'node_modules', '.bin', 'lessc')
-        lesspath = os.path.join(public_dir, 'less', 'main.less')
+        lesspath = os.path.join(front_end_dir, 'main.less')
         csspath = os.path.join(public_dir, 'css', 'style.css')
         subprocess.check_call([lesscpath, '--source-map',
                 '--source-map-less-inline', lesspath, csspath],
