@@ -113,7 +113,7 @@ tri-license.
 Select2
 -------
 
-Kallithea incorporates parts of the Javascript system called
+Kallithea uses the Javascript system called
 [Select2](http://ivaynberg.github.io/select2/), which is:
 
 Copyright 2012 Igor Vaynberg (and probably others)
@@ -132,12 +132,15 @@ in this distribution.
 Kallithea will take the Apache license fork of the dual license, since
 Kallithea is GPLv3'd.
 
+It is not distributed with Kallithea, but will be downloaded
+using the ''kallithea-cli front-end-build'' command.
+
 
 
 Select2-Bootstrap-CSS
 ---------------------
 
-Kallithea incorporates some CSS from a system called
+Kallithea uses some CSS from a system called
 [Select2-bootstrap-css](https://github.com/t0m/select2-bootstrap-css), which
 is:
 
@@ -145,6 +148,9 @@ Copyright &copy; 2013 Tom Terrace (and likely others)
 
 and licensed under the MIT-permissive license, which is
 [included in this distribution](MIT-Permissive-License.txt).
+
+It is not distributed with Kallithea, but will be downloaded
+using the ''kallithea-cli front-end-build'' command.
 
 
 
