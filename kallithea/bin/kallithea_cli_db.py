@@ -76,3 +76,4 @@ def db_create(user, password, email, repos, force_yes, force_no, public_access):
         click.echo('Initial repository scan: no repositories found.')
 
     click.echo('Database set up successfully.')
+    click.echo("Don't forget to build the front-end using 'kallithea-cli front-end-build'.")

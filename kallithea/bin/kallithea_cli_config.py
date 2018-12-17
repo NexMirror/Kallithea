@@ -86,6 +86,7 @@ def config_create(config_file, key_value_pairs):
         config_file_abs = os.path.abspath(config_file)
         inifile.create(config_file_abs, mako_variable_values, ini_settings)
         click.echo('Wrote new config file in %s' % config_file_abs)
+        click.echo("Don't forget to build the front-end using 'kallithea-cli front-end-build'.")
 
     except Exception:
         click.echo(mako.exceptions.text_error_template().render())
