@@ -69,9 +69,10 @@ installed.
   (``pip install kallithea`` from a source tree will do pretty much the same
   but build the Kallithea package itself locally instead of downloading it.)
 
-.. note:: Kallithea includes front-end code that needs to be processed first.
-The tool npm_ is used to download external dependencies and orchestrate the
-processing. The ``npm`` binary must thus be available.
+.. note::
+   Kallithea includes front-end code that needs to be processed first.
+   The tool npm_ is used to download external dependencies and orchestrate the
+   processing. The ``npm`` binary must thus be available.
 
 
 Web server
