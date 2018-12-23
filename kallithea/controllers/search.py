@@ -31,7 +31,7 @@ import urllib
 from tg.i18n import ugettext as _
 from tg import request, config, tmpl_context as c
 
-from whoosh.index import open_dir, EmptyIndexError
+from whoosh.index import open_dir, exists_in, EmptyIndexError
 from whoosh.qparser import QueryParser, QueryParserError
 from whoosh.query import Phrase, Prefix
 from webhelpers.util import update_params
@@ -84,9 +84,11 @@ class SearchController(BaseRepoController):
         if c.cur_query:
             p = safe_int(request.GET.get('page'), 1)
             highlight_items = set()
+            index_dir = config['app_conf']['index_dir']
             try:
-                idx = open_dir(config['app_conf']['index_dir'],
-                               indexname=index_name)
+                if not exists_in(index_dir, index_name):
+                    raise EmptyIndexError
+                idx = open_dir(index_dir, indexname=index_name)
                 searcher = idx.searcher()
 
                 qp = QueryParser(search_type, schema=schema_defn)
@@ -133,7 +135,7 @@ class SearchController(BaseRepoController):
                 except QueryParserError:
                     c.runtime = _('Invalid search query. Try quoting it.')
                 searcher.close()
-            except (EmptyIndexError, IOError):
+            except EmptyIndexError:
                 log.error(traceback.format_exc())
                 log.error('Empty Index data')
                 c.runtime = _('There is no index to search in. '
