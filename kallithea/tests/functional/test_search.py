@@ -24,8 +24,7 @@ class TestSearchController(TestController):
         with mock.patch('kallithea.controllers.search.config', config_mock):
             response = self.app.get(url(controller='search', action='index'),
                                     {'q': HG_REPO})
-            response.mustcontain('There is no index to search in. '
-                                 'Please run whoosh indexer')
+            response.mustcontain('The server has no search index.')
 
     def test_normal_search(self):
         self.log_user()

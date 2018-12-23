@@ -136,10 +136,8 @@ class SearchController(BaseRepoController):
                     c.runtime = _('Invalid search query. Try quoting it.')
                 searcher.close()
             except EmptyIndexError:
-                log.error(traceback.format_exc())
-                log.error('Empty Index data')
-                c.runtime = _('There is no index to search in. '
-                              'Please run whoosh indexer')
+                log.error("Empty search index - run 'kallithea-cli index-create' regularly")
+                c.runtime = _('The server has no search index.')
             except Exception:
                 log.error(traceback.format_exc())
                 c.runtime = _('An error occurred during search operation.')
