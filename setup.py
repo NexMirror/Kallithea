@@ -157,8 +157,5 @@ setuptools.setup(
 
     [paste.app_factory]
     main = kallithea.config.middleware:make_app
-
-    [gearbox.commands]
-    upgrade-db=kallithea.lib.dbmigrate:UpgradeDb
     """,
 )
