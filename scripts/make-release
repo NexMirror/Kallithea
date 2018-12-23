@@ -32,8 +32,8 @@ rm -rf build dist
 hg archive build
 cd build
 
-echo "Check MANIFEST.in"
-sed -e 's/[^ ]*[ ]*\([^ ]*\).*/\1/g' MANIFEST.in | grep -v '^node_modules/bootstrap\|^kallithea/public/css/style.css' | xargs ls -lad
+echo "Check that each entry in MANIFEST.in match something"
+sed -e 's/[^ ]*[ ]*\([^ ]*\).*/\1/g' MANIFEST.in | xargs ls -lad
 
 echo "Build dist"
 python2 setup.py compile_catalog
@@ -48,7 +48,6 @@ echo "Releasing Kallithea $version in directory $namerel"
 
 echo "Verify dist file content"
 diff -u <((hg mani | grep -v '^\.hg') | LANG=C sort) <(tar tf dist/Kallithea-$version.tar.gz | sed "s|^$namerel/||" | grep . | grep -v '^kallithea/i18n/.*/LC_MESSAGES/kallithea.mo$\|^Kallithea.egg-info/\|^PKG-INFO$\|/$' | LANG=C sort)
-! tar tf dist/Kallithea-$version.tar.gz | grep "$namerel/node_modules/bootstrap/\$"
 
 echo "Verify docs build"
 python2 setup.py build_sphinx # not used yet ... but we want to make sure it builds
