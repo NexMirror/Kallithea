@@ -292,7 +292,7 @@ class MercurialRepository(BaseRepository):
         if url.startswith('ssh:'):
             # in case of invalid uri or authentication issues, sshpeer will
             # throw an exception.
-            sshpeer(repoui or ui.ui(), url).lookup('tip')
+            sshpeer.instance(repoui or ui.ui(), url, False).lookup('tip')
             return True
 
         url_prefix = None
@@ -334,7 +334,7 @@ class MercurialRepository(BaseRepository):
         if not url_prefix: # skip svn+http://... (and git+... too)
             # now check if it's a proper hg repo
             try:
-                httppeer(repoui or ui.ui(), url).lookup('tip')
+                httppeer.instance(repoui or ui.ui(), url, False).lookup('tip')
             except Exception as e:
                 raise urllib2.URLError(
                     "url [%s] does not look like an hg repo org_exc: %s"
