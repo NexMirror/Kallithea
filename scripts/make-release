@@ -20,7 +20,7 @@ virtualenv -p python2 "$venv"
 
 echo "Install/verify tools needed for building and uploading stuff"
 pip install --upgrade -e .
-pip install --upgrade -r dev_requirements.txt Sphinx Sphinx-PyPI-upload
+pip install --upgrade -r dev_requirements.txt Sphinx-PyPI-upload
 
 echo "Cleanup and update copyrights ... and clean checkout"
 scripts/run-all-cleanup
