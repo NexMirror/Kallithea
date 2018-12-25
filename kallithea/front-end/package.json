@@ -6,6 +6,7 @@
   },
   "devDependencies": {
     "less": "~2.7",
-    "less-plugin-clean-css": "~1.5"
+    "less-plugin-clean-css": "~1.5",
+    "license-checker": "24.1.0"
   }
 }
