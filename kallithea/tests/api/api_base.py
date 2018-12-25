@@ -387,20 +387,24 @@ class _BaseTestApi(object):
         self._compare_error(id_, expected, given=response.body)
 
     def test_api_lock_repo_lock_acquire(self):
-        id_, params = _build_data(self.apikey, 'lock',
-                                  userid=TEST_USER_ADMIN_LOGIN,
-                                  repoid=self.REPO,
-                                  locked=True)
-        response = api_call(self, params)
-        expected = {
-            'repo': self.REPO, 'locked': True,
-            'locked_since': response.json['result']['locked_since'],
-            'locked_by': TEST_USER_ADMIN_LOGIN,
-            'lock_state_changed': True,
-            'msg': ('User `%s` set lock state for repo `%s` to `%s`'
-                    % (TEST_USER_ADMIN_LOGIN, self.REPO, True))
-        }
-        self._compare_ok(id_, expected, given=response.body)
+        try:
+            id_, params = _build_data(self.apikey, 'lock',
+                                      userid=TEST_USER_ADMIN_LOGIN,
+                                      repoid=self.REPO,
+                                      locked=True)
+            response = api_call(self, params)
+            expected = {
+                'repo': self.REPO, 'locked': True,
+                'locked_since': response.json['result']['locked_since'],
+                'locked_by': TEST_USER_ADMIN_LOGIN,
+                'lock_state_changed': True,
+                'msg': ('User `%s` set lock state for repo `%s` to `%s`'
+                        % (TEST_USER_ADMIN_LOGIN, self.REPO, True))
+            }
+            self._compare_ok(id_, expected, given=response.body)
+        finally:
+            # cleanup
+            Repository.unlock(RepoModel().get_by_repo_name(self.REPO))
 
     def test_api_lock_repo_lock_acquire_by_non_admin(self):
         repo_name = u'api_delete_me'
@@ -464,26 +468,40 @@ class _BaseTestApi(object):
         }
         self._compare_ok(id_, expected, given=response.body)
 
-    def test_api_lock_repo_lock_acquire_optional_userid(self):
+        # test_api_lock_repo_lock_optional_not_locked(self):
         id_, params = _build_data(self.apikey, 'lock',
-                                  repoid=self.REPO,
-                                  locked=True)
+                                  repoid=self.REPO)
         response = api_call(self, params)
-        time_ = response.json['result']['locked_since']
         expected = {
             'repo': self.REPO,
-            'locked': True,
-            'locked_since': time_,
-            'locked_by': TEST_USER_ADMIN_LOGIN,
-            'lock_state_changed': True,
-            'msg': ('User `%s` set lock state for repo `%s` to `%s`'
-                    % (TEST_USER_ADMIN_LOGIN, self.REPO, True))
+            'locked': False,
+            'locked_since': None,
+            'locked_by': None,
+            'lock_state_changed': False,
+            'msg': ('Repo `%s` not locked.' % (self.REPO,))
         }
-
         self._compare_ok(id_, expected, given=response.body)
 
-    def test_api_lock_repo_lock_optional_locked(self):
+    def test_api_lock_repo_lock_acquire_optional_userid(self):
         try:
+            id_, params = _build_data(self.apikey, 'lock',
+                                      repoid=self.REPO,
+                                      locked=True)
+            response = api_call(self, params)
+            time_ = response.json['result']['locked_since']
+            expected = {
+                'repo': self.REPO,
+                'locked': True,
+                'locked_since': time_,
+                'locked_by': TEST_USER_ADMIN_LOGIN,
+                'lock_state_changed': True,
+                'msg': ('User `%s` set lock state for repo `%s` to `%s`'
+                        % (TEST_USER_ADMIN_LOGIN, self.REPO, True))
+            }
+
+            self._compare_ok(id_, expected, given=response.body)
+
+            # test_api_lock_repo_lock_optional_locked
             id_, params = _build_data(self.apikey, 'lock',
                                       repoid=self.REPO)
             response = api_call(self, params)
@@ -502,27 +520,6 @@ class _BaseTestApi(object):
         finally:
             # cleanup
             Repository.unlock(RepoModel().get_by_repo_name(self.REPO))
-
-    def test_api_lock_repo_lock_optional_not_locked(self):
-        repo_name = u'api_not_locked'
-        repo = fixture.create_repo(repo_name, repo_type=self.REPO_TYPE,
-                            cur_user=self.TEST_USER_LOGIN)
-        assert repo.locked == [None, None]
-        try:
-            id_, params = _build_data(self.apikey, 'lock',
-                                      repoid=repo.repo_id)
-            response = api_call(self, params)
-            expected = {
-                'repo': repo_name,
-                'locked': False,
-                'locked_since': None,
-                'locked_by': None,
-                'lock_state_changed': False,
-                'msg': ('Repo `%s` not locked.' % (repo_name,))
-            }
-            self._compare_ok(id_, expected, given=response.body)
-        finally:
-            fixture.destroy_repo(repo_name)
 
     @mock.patch.object(Repository, 'lock', crash)
     def test_api_lock_error(self):
