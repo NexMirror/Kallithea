@@ -686,8 +686,8 @@ class AuthUser(object):
         _set = set()
 
         if inherit_from_default:
-            default_ips = UserIpMap.query().filter(UserIpMap.user ==
-                                            User.get_default_user(cache=True))
+            default_ips = UserIpMap.query().filter(UserIpMap.user_id ==
+                                            User.get_default_user(cache=True).user_id)
             if cache:
                 default_ips = default_ips.options(FromCache("sql_cache_short",
                                                   "get_user_ips_default"))
