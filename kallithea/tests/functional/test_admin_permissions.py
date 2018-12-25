@@ -21,58 +21,55 @@ class TestAdminPermissionsController(TestController):
         # Test response...
         response.mustcontain('All IP addresses are allowed')
 
-    def test_add_ips(self, auto_clear_ip_permissions):
+    def test_add_delete_ips(self, auto_clear_ip_permissions):
         self.log_user()
         default_user_id = User.get_default_user().user_id
+
+        # Add IP and verify it is shown in UI and both gives access and rejects
+
         response = self.app.post(url('edit_user_ips_update', id=default_user_id),
-                                 params=dict(new_ip='127.0.0.0/24',
+                                 params=dict(new_ip='0.0.0.0/24',
                                  _authentication_token=self.authentication_token()))
+        invalidate_all_caches()
+        response = self.app.get(url('admin_permissions_ips'),
+                                extra_environ={'REMOTE_ADDR': '0.0.0.1'})
+        response.mustcontain('0.0.0.0/24')
+        response.mustcontain('0.0.0.0 - 0.0.0.255')
 
-        # IP permissions are cached, need to invalidate this cache explicitly
+        response = self.app.get(url('admin_permissions_ips'),
+                                extra_environ={'REMOTE_ADDR': '0.0.1.1'}, status=403)
+
+        # Add another IP and verify previously rejected now works
+
+        response = self.app.post(url('edit_user_ips_update', id=default_user_id),
+                                 params=dict(new_ip='0.0.1.0/24',
+                                 _authentication_token=self.authentication_token()))
         invalidate_all_caches()
 
-        self.app.get(url('admin_permissions_ips'), status=302)
-
-        # REMOTE_ADDR must match 127.0.0.0/24
         response = self.app.get(url('admin_permissions_ips'),
-                                extra_environ={'REMOTE_ADDR': '127.0.0.1'})
-        response.mustcontain('127.0.0.0/24')
-        response.mustcontain('127.0.0.0 - 127.0.0.255')
+                                extra_environ={'REMOTE_ADDR': '0.0.1.1'})
 
-    def test_delete_ips(self, auto_clear_ip_permissions):
-        self.log_user()
-        default_user_id = User.get_default_user().user_id
+        # Delete latest IP and verify same IP is rejected again
 
-        ## first add
-        new_ip = '127.0.0.0/24'
-        with test_context(self.app):
-            user_model = UserModel()
-            ip_obj = user_model.add_extra_ip(default_user_id, new_ip)
-            Session().commit()
-
-        ## double check that add worked
-        # IP permissions are cached, need to invalidate this cache explicitly
-        invalidate_all_caches()
-        self.app.get(url('admin_permissions_ips'), status=302)
-        # REMOTE_ADDR must match 127.0.0.0/24
-        response = self.app.get(url('admin_permissions_ips'),
-                                extra_environ={'REMOTE_ADDR': '127.0.0.1'})
-        response.mustcontain('127.0.0.0/24')
-        response.mustcontain('127.0.0.0 - 127.0.0.255')
-
-        ## now delete
+        x = UserIpMap.query().filter_by(ip_addr='0.0.1.0/24').first()
         response = self.app.post(url('edit_user_ips_delete', id=default_user_id),
-                                 params=dict(del_ip_id=ip_obj.ip_id,
-                                             _authentication_token=self.authentication_token()),
-                                 extra_environ={'REMOTE_ADDR': '127.0.0.1'})
-
-        # IP permissions are cached, need to invalidate this cache explicitly
+                                 params=dict(del_ip_id=x.ip_id,
+                                             _authentication_token=self.authentication_token()))
         invalidate_all_caches()
 
-        response = self.app.get(url('admin_permissions_ips'))
-        response.mustcontain('All IP addresses are allowed')
-        response.mustcontain(no=['127.0.0.0/24'])
-        response.mustcontain(no=['127.0.0.0 - 127.0.0.255'])
+        response = self.app.get(url('admin_permissions_ips'),
+                                extra_environ={'REMOTE_ADDR': '0.0.1.1'}, status=403)
+
+        # Delete first IP and verify unlimited access again
+
+        x = UserIpMap.query().filter_by(ip_addr='0.0.0.0/24').first()
+        response = self.app.post(url('edit_user_ips_delete', id=default_user_id),
+                                 params=dict(del_ip_id=x.ip_id,
+                                             _authentication_token=self.authentication_token()))
+        invalidate_all_caches()
+
+        response = self.app.get(url('admin_permissions_ips'),
+                                extra_environ={'REMOTE_ADDR': '0.0.1.1'})
 
     def test_index_overview(self):
         self.log_user()
