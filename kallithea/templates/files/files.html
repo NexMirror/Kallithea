@@ -90,6 +90,24 @@ var ypjax_links = function(){
     });
 }
 
+var load_state = function(state) {
+    var $files_data = $('#files_data');
+    var cache_key = state.url;
+    var _cache_obj = CACHE[cache_key];
+    var _cur_time = new Date().getTime();
+    if (_cache_obj !== undefined && _cache_obj[0] > _cur_time) {
+        $files_data.html(_cache_obj[1]);
+        $files_data.css('opacity', '1.0');
+        post_load_state(state);
+    } else {
+        asynchtml(State.url, $files_data, function() {
+                  post_load_state(state);
+                  var expire_on = new Date().getTime() + CACHE_EXPIRE;
+                  CACHE[cache_key] = [expire_on, $files_data.html()];
+            });
+    }
+}
+
 var post_load_state = function(state) {
     ypjax_links();
     tooltip_activate();
@@ -198,27 +216,11 @@ var post_load_state = function(state) {
 
 $(document).ready(function(){
     ypjax_links();
-    var $files_data = $('#files_data');
     //Bind to StateChange Event
     History.Adapter.bind(window,'statechange',function(){
         var State = History.getState();
-        cache_key = State.url;
-        //check if we have this request in cache maybe ?
-        var _cache_obj = CACHE[cache_key];
-        var _cur_time = new Date().getTime();
-        // get from cache if it's there and not yet expired !
-        if(_cache_obj !== undefined && _cache_obj[0] > _cur_time){
-            $files_data.html(_cache_obj[1]);
-            $files_data.css('opacity','1.0');
-            post_load_state(State.data);
-        }
-        else{
-            asynchtml(State.url, $files_data, function(){
-                    post_load_state(State.data);
-                    var expire_on = new Date().getTime() + CACHE_EXPIRE;
-                    CACHE[cache_key] = [expire_on, $files_data.html()];
-                });
-        }
+        if (State.data)
+            load_state(State.data);
     });
 
     // init the search filter
