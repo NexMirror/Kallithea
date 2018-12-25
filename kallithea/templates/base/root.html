@@ -72,22 +72,12 @@
         <script type="text/javascript" src="${h.url('/js/dataTables.bootstrap.js', ver=c.kallithea_version)}"></script>
         <script type="text/javascript" src="${h.url('/js/bootstrap.js', ver=c.kallithea_version)}"></script>
         <script type="text/javascript" src="${h.url('/js/select2.js', ver=c.kallithea_version)}"></script>
-        <script type="text/javascript" src="${h.url('/js/native.history.js', ver=c.kallithea_version)}"></script>
         <script type="text/javascript" src="${h.url('/js/jquery.caret.min.js', ver=c.kallithea_version)}"></script>
         <script type="text/javascript" src="${h.url('/js/jquery.atwho.min.js', ver=c.kallithea_version)}"></script>
         <script type="text/javascript" src="${h.url('/js/base.js', ver=c.kallithea_version)}"></script>
         ## EXTRA FOR JS
         <%block name="js_extra"/>
         <script type="text/javascript">
-            (function(window,undefined){
-                var History = window.History; // Note: We are using a capital H instead of a lower h
-                if ( !History.enabled ) {
-                     // History.js is disabled for this browser.
-                     // This is because we can optionally choose to support HTML4 browsers or not.
-                    return false;
-                }
-            })(window);
-
             $(document).ready(function(){
               tooltip_activate();
               show_more_event();

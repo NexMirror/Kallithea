@@ -86,6 +86,6 @@
              rev: ${h.js(c.changeset.raw_id)},
              f_path: ${h.js(h.safe_unicode(c.file.path))}
         }
-        post_load_state(State.data); // defined in files.html
+        window.history.pushState(state, null, ${h.js(h.url.current())});
     });
 </script>

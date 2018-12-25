@@ -53,7 +53,7 @@ var ypjax_links = function(){
     $('.ypjax-link').click(function(e){
 
         //don't do ypjax on middle click
-        if(e.which == 2 || !History.enabled){
+        if (e.which == 2) {
             return true;
         }
 
@@ -82,7 +82,8 @@ var ypjax_links = function(){
         // Change our States and save some data for handling events
         var state = {url:url, title:title, url_base:_url_base,
                      node_list_url:_node_list_url, rev:rev, f_path:f_path};
-        History.pushState(state, null, url);
+        window.history.pushState(state, null, url);
+        load_state(state);
 
         //now we're sure that we can do ypjax things
         e.preventDefault();
@@ -218,11 +219,11 @@ var post_load_state = function(state) {
 
 $(document).ready(function(){
     ypjax_links();
-    //Bind to StateChange Event
-    History.Adapter.bind(window,'statechange',function(){
-        var State = History.getState();
-        if (State.data)
-            load_state(State.data);
+
+    // Process history navigation event and load its state
+    window.addEventListener('popstate', function(e){
+        if (e.state)
+            load_state(e.state);
     });
 
     // init the search filter
