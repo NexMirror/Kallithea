@@ -90,20 +90,19 @@ var ypjax_links = function(){
     });
 }
 
-// callbacks needed to process the ypjax filebrowser
-var callbacks = function(State){
+var post_load_state = function(state) {
     ypjax_links();
     tooltip_activate();
 
-    if(State !== undefined){
+    if(state !== undefined) {
         //initially loaded stuff
-        var _f_path = State.data.f_path;
-        var _rev = State.data.rev;
+        var _f_path = state.f_path;
+        var _rev = state.rev;
 
-        fileBrowserListeners(State.data.node_list_url, State.data.url_base);
+        fileBrowserListeners(state.node_list_url, state.url_base);
         // Inform Google Analytics of the change
         if ( typeof window.pageTracker !== 'undefined' ) {
-            window.pageTracker._trackPageview(State.url);
+            window.pageTracker._trackPageview(state.url);
         }
     }
 
@@ -211,12 +210,11 @@ $(document).ready(function(){
         if(_cache_obj !== undefined && _cache_obj[0] > _cur_time){
             $files_data.html(_cache_obj[1]);
             $files_data.css('opacity','1.0');
-            //callbacks after ypjax call
-            callbacks(State);
+            post_load_state(State.data);
         }
         else{
             asynchtml(State.url, $files_data, function(){
-                    callbacks(State);
+                    post_load_state(State.data);
                     var expire_on = new Date().getTime() + CACHE_EXPIRE;
                     CACHE[cache_key] = [expire_on, $files_data.html()];
                 });

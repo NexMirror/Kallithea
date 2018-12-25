@@ -80,16 +80,12 @@
 
 <script>
     $(document).ready(function(){
-        // fake html5 history state
-        var _State = {
-           url: ${h.js(h.url.current())},
-           data: {
+        var state = {
              node_list_url: node_list_url.replace('__REV__',${h.js(c.changeset.raw_id)}).replace('__FPATH__', ${h.js(h.safe_unicode(c.file.path))}),
              url_base: url_base.replace('__REV__',${h.js(c.changeset.raw_id)}),
-             rev:${h.js(c.changeset.raw_id)},
+             rev: ${h.js(c.changeset.raw_id)},
              f_path: ${h.js(h.safe_unicode(c.file.path))}
-           }
         }
-        callbacks(_State); // defined in files.html, main callbacks. Triggered in pjax calls
+        post_load_state(State.data); // defined in files.html
     });
 </script>
