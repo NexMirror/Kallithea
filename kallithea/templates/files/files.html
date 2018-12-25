@@ -82,7 +82,7 @@ var ypjax_links = function(){
         // Change our States and save some data for handling events
         var state = {url:url, title:title, url_base:_url_base,
                      node_list_url:_node_list_url, rev:rev, f_path:f_path};
-        History.pushState(state, title, url);
+        History.pushState(state, null, url);
 
         //now we're sure that we can do ypjax things
         e.preventDefault();
@@ -113,6 +113,8 @@ var post_load_state = function(state) {
     tooltip_activate();
 
     if(state !== undefined) {
+        document.title = state.title;
+
         //initially loaded stuff
         var _f_path = state.f_path;
         var _rev = state.rev;
