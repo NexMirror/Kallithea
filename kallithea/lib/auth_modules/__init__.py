@@ -55,8 +55,6 @@ class KallitheaAuthPluginBase(object):
         "extern_name": "name in external source of record",
         "admin": 'True|False defines if user should be Kallithea admin',
         "active": 'True|False defines active state of user in Kallithea',
-        "active_from_extern": "True|False|None, active state from the external auth, "
-                              "None means use value from the auth plugin"
     }
 
     @property
@@ -257,18 +255,6 @@ class KallitheaExternalAuthPlugin(KallitheaAuthPluginBase):
         user_data = super(KallitheaExternalAuthPlugin, self)._authenticate(
             userobj, username, passwd, settings, **kwargs)
         if user_data is not None:
-            # maybe plugin will clean the username ?
-            # we should use the return value
-            username = user_data['username']
-            # if user is not active from our extern type we should fail to auth
-            # this can prevent from creating users in Kallithea when using
-            # external authentication, but if it's inactive user we shouldn't
-            # create that user anyway
-            if user_data['active_from_extern'] is False:
-                log.warning("User %s authenticated against %s, but is inactive",
-                            username, self.__module__)
-                return None
-
             if self.use_fake_password():
                 # Randomize the PW because we don't need it, but don't want
                 # them blank either
@@ -277,7 +263,7 @@ class KallitheaExternalAuthPlugin(KallitheaAuthPluginBase):
             log.debug('Updating or creating user info from %s plugin',
                       self.name)
             user = UserModel().create_or_update(
-                username=username,
+                username=user_data['username'],
                 password=passwd,
                 email=user_data["email"],
                 firstname=user_data["firstname"],

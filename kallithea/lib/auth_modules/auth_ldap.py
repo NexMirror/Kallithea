@@ -352,7 +352,6 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
                 'email': get_ldap_attr('attr_email') or email,
                 'admin': admin,
                 'active': active,
-                "active_from_extern": None,
                 'extern_name': user_dn,
             }
             log.info('user %s authenticated correctly', user_data['username'])

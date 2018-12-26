@@ -79,7 +79,6 @@ class KallitheaAuthPlugin(auth_modules.KallitheaAuthPluginBase):
             "email": userobj.email,
             "admin": userobj.admin,
             "active": userobj.active,
-            "active_from_extern": userobj.active,
             "extern_name": userobj.user_id,
         }
 

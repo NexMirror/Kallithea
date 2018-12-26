@@ -218,6 +218,11 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
         crowd_user = server.user_auth(username, password)
         log.debug("Crowd returned: \n%s", formatted_json(crowd_user))
         if not crowd_user["status"]:
+            log.error('Crowd authentication as %s returned no status', username)
+            return None
+
+        if not crowd_user.get('active'):
+            log.error('Crowd authentication as %s returned in-active user', username)
             return None
 
         res = server.user_groups(crowd_user["name"])
@@ -239,7 +244,6 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
             'email': crowd_user["email"] or email,
             'admin': admin,
             'active': active,
-            'active_from_extern': crowd_user.get('active'), # ???
             'extern_name': crowd_user["name"],
         }
 

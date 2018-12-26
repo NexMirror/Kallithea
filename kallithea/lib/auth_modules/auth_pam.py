@@ -128,7 +128,6 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
             'email': email,
             'admin': admin,
             'active': active,
-            "active_from_extern": None,
             'extern_name': username,
         }
 
