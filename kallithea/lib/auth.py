@@ -944,11 +944,11 @@ class _PermsFunction(object):
 class HasPermissionAny(_PermsFunction):
 
     def __call__(self, purpose=None):
-        global_permissions = request.user.permissions['global'] # usually very short
+        global_permissions = request.authuser.permissions['global'] # usually very short
         ok = any(p in global_permissions for p in self.required_perms)
 
         log.debug('Check %s for global %s (%s): %s' %
-            (request.user.username, self.required_perms, purpose, ok))
+            (request.authuser.username, self.required_perms, purpose, ok))
         return ok
 
 
@@ -963,19 +963,19 @@ class _PermFunction(_PermsFunction):
 class HasRepoPermissionLevel(_PermFunction):
 
     def __call__(self, repo_name, purpose=None):
-        return request.user.has_repository_permission_level(repo_name, self.required_perm, purpose)
+        return request.authuser.has_repository_permission_level(repo_name, self.required_perm, purpose)
 
 
 class HasRepoGroupPermissionLevel(_PermFunction):
 
     def __call__(self, group_name, purpose=None):
-        return request.user.has_repository_group_permission_level(group_name, self.required_perm, purpose)
+        return request.authuser.has_repository_group_permission_level(group_name, self.required_perm, purpose)
 
 
 class HasUserGroupPermissionLevel(_PermFunction):
 
     def __call__(self, user_group_name, purpose=None):
-        return request.user.has_user_group_permission_level(user_group_name, self.required_perm, purpose)
+        return request.authuser.has_user_group_permission_level(user_group_name, self.required_perm, purpose)
 
 
 #==============================================================================

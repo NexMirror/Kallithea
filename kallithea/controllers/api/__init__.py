@@ -182,7 +182,7 @@ class JSONRPCController(TGController):
         # this is little trick to inject logged in user for
         # perms decorators to work they expect the controller class to have
         # authuser attribute set
-        request.authuser = request.user = auth_u
+        request.authuser = auth_u
 
         # This attribute will need to be first param of a method that uses
         # api_key, which is translated to instance of user at that name

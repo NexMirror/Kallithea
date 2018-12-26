@@ -333,7 +333,7 @@ class Fixture(object):
             org_repo = other_repo = Repository.get_by_repo_name(repo_name)
             owner_user = User.get_by_username(TEST_USER_ADMIN_LOGIN)
             reviewers = [User.get_by_username(TEST_USER_REGULAR_LOGIN)]
-            request.authuser = request.user = AuthUser(dbuser=owner_user)
+            request.authuser = AuthUser(dbuser=owner_user)
             # creating a PR sends a message with an absolute URL - without routing that requires mocking
             with mock.patch.object(helpers, 'url', (lambda arg, qualified=False, **kwargs: ('https://localhost' if qualified else '') + '/fake/' + arg)):
                 cmd = CreatePullRequestAction(org_repo, other_repo, org_ref, other_ref, title, u'No description', owner_user, reviewers)

@@ -529,7 +529,7 @@ class BaseController(TGController):
                 if type.lower() == 'bearer':
                     bearer_token = params
 
-            request.authuser = request.user = self._determine_auth_user(
+            request.authuser = self._determine_auth_user(
                 request.GET.get('api_key'),
                 bearer_token,
                 session.get('authuser'),
