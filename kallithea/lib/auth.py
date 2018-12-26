@@ -482,9 +482,6 @@ class AuthUser(object):
         self.is_external_auth = is_external_auth
         self.authenticating_api_key = authenticating_api_key
 
-        user_model = UserModel()
-        self._default_user = User.get_default_user(cache=True)
-
         # These attributes will be overridden by fill_data, below, unless the
         # requested user cannot be found and the default anonymous user is
         # not enabled.
@@ -500,7 +497,7 @@ class AuthUser(object):
         # Look up database user, if necessary.
         if user_id is not None:
             log.debug('Auth User lookup by USER ID %s', user_id)
-            dbuser = user_model.get(user_id)
+            dbuser = UserModel().get(user_id)
         else:
             # Note: dbuser is allowed to be None.
             log.debug('Auth User lookup by database user %s', dbuser)
@@ -508,10 +505,14 @@ class AuthUser(object):
         is_user_loaded = self._fill_data(dbuser)
 
         # If user cannot be found, try falling back to anonymous.
-        if not is_user_loaded:
-            is_user_loaded = self._fill_data(self._default_user)
+        if is_user_loaded:
+            assert dbuser is not None
+            self.is_default_user = dbuser.is_default_user
+        else:
+            default_user = User.get_default_user(cache=True)
+            is_user_loaded = self._fill_data(default_user)
+            self.is_default_user = is_user_loaded
 
-        self.is_default_user = (self.user_id == self._default_user.user_id)
         self.is_anonymous = not is_user_loaded or self.is_default_user
 
         if not self.username:
