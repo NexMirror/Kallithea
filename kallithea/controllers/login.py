@@ -76,10 +76,8 @@ class LoginController(BaseController):
         else:
             c.came_from = url('home')
 
-        ip_allowed = AuthUser.check_ip_allowed(request.authuser, request.ip_addr)
-
         # redirect if already logged in
-        if request.authuser.is_authenticated and ip_allowed:
+        if request.authuser.is_authenticated:
             raise HTTPFound(location=c.came_from)
 
         if request.POST:

@@ -529,11 +529,16 @@ class BaseController(TGController):
                 if type.lower() == 'bearer':
                     bearer_token = params
 
-            request.authuser = self._determine_auth_user(
+            authuser = self._determine_auth_user(
                 request.GET.get('api_key'),
                 bearer_token,
                 session.get('authuser'),
             )
+
+            if not AuthUser.check_ip_allowed(authuser, request.ip_addr):
+                raise webob.exc.HTTPForbidden()
+
+            request.authuser = authuser
 
             log.info('IP: %s User: %s accessed %s',
                 request.ip_addr, request.authuser,

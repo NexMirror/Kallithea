@@ -777,9 +777,6 @@ class LoginRequired(object):
         loc = "%s:%s" % (controller.__class__.__name__, func.__name__)
         log.debug('Checking access for user %s @ %s', user, loc)
 
-        if not AuthUser.check_ip_allowed(user, request.ip_addr):
-            raise _redirect_to_login(_('IP %s not allowed') % request.ip_addr)
-
         # Check if we used an API key to authenticate.
         api_key = user.authenticating_api_key
         if api_key is not None:
