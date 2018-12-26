@@ -193,10 +193,6 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
     def use_fake_password(self):
         return True
 
-    def user_activation_state(self):
-        def_user_perms = User.get_default_user().AuthUser.permissions['global']
-        return 'hg.extern_activate.auto' in def_user_perms
-
     def auth(self, userobj, username, password, settings, **kwargs):
         """
         Given a user object (which may be null), username, a plaintext password,
@@ -231,7 +227,6 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
 
         # old attrs fetched from Kallithea database
         admin = getattr(userobj, 'admin', False)
-        active = getattr(userobj, 'active', True)
         email = getattr(userobj, 'email', '')
         firstname = getattr(userobj, 'firstname', '')
         lastname = getattr(userobj, 'lastname', '')
@@ -243,7 +238,6 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
             'groups': crowd_user["groups"],
             'email': crowd_user["email"] or email,
             'admin': admin,
-            'active': active,
             'extern_name': crowd_user["name"],
         }
 

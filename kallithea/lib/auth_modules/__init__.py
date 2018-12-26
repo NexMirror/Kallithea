@@ -54,7 +54,6 @@ class KallitheaAuthPluginBase(object):
         "groups": '["list", "of", "groups"]',
         "extern_name": "name in external source of record",
         "admin": 'True|False defines if user should be Kallithea admin',
-        "active": 'True|False defines active state of user in Kallithea',
     }
 
     @property
@@ -196,14 +195,6 @@ class KallitheaAuthPluginBase(object):
         )
         return rcsettings
 
-    def user_activation_state(self):
-        """
-        Defines user activation state when creating new users
-
-        :returns: boolean
-        """
-        raise NotImplementedError("Not implemented in base class")
-
     def auth(self, userobj, username, passwd, settings, **kwargs):
         """
         Given a user object (which may be None), username, a plaintext password,
@@ -220,11 +211,6 @@ class KallitheaAuthPluginBase(object):
     def _authenticate(self, userobj, username, passwd, settings, **kwargs):
         """
         Wrapper to call self.auth() that validates call on it
-
-        :param userobj: userobj
-        :param username: username
-        :param passwd: plaintext password
-        :param settings: plugin settings
         """
         user_data = self.auth(userobj, username, passwd, settings, **kwargs)
         if user_data is not None:
@@ -255,6 +241,12 @@ class KallitheaExternalAuthPlugin(KallitheaAuthPluginBase):
         user_data = super(KallitheaExternalAuthPlugin, self)._authenticate(
             userobj, username, passwd, settings, **kwargs)
         if user_data is not None:
+            if userobj is None: # external authentication of unknown user that will be created soon
+                def_user_perms = User.get_default_user().AuthUser.permissions['global']
+                active = 'hg.extern_activate.auto' in def_user_perms
+            else:
+                active = userobj.active
+
             if self.use_fake_password():
                 # Randomize the PW because we don't need it, but don't want
                 # them blank either
@@ -268,10 +260,10 @@ class KallitheaExternalAuthPlugin(KallitheaAuthPluginBase):
                 email=user_data["email"],
                 firstname=user_data["firstname"],
                 lastname=user_data["lastname"],
-                active=user_data["active"],
+                active=active,
                 admin=user_data["admin"],
                 extern_name=user_data["extern_name"],
-                extern_type=self.name
+                extern_type=self.name,
             )
             # enforce user is just in given groups, all of them has to be ones
             # created from plugins. We store this info in _group_data JSON field
@@ -369,6 +361,11 @@ def authenticate(username, password, environ=None):
         user = plugin.get_user(username, environ=environ,
                                settings=plugin_settings)
         log.debug('Plugin %s extracted user `%s`', module, user)
+
+        if user is not None and not user.active:
+            log.error("Rejecting authentication of in-active user %s", user)
+            continue
+
         if not plugin.accepts(user):
             log.debug('Plugin %s does not accept user `%s` for authentication',
                       module, user)
@@ -408,7 +405,7 @@ def authenticate(username, password, environ=None):
 
 def get_managed_fields(user):
     """return list of fields that are managed by the user's auth source, usually some of
-    'username', 'firstname', 'lastname', 'email', 'active', 'password'
+    'username', 'firstname', 'lastname', 'email', 'password'
     """
     auth_plugins = get_auth_plugins()
     for plugin in auth_plugins:

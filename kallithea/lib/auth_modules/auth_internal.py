@@ -47,10 +47,6 @@ class KallitheaAuthPlugin(auth_modules.KallitheaAuthPluginBase):
     def settings(self):
         return []
 
-    def user_activation_state(self):
-        def_user_perms = User.get_default_user().AuthUser.permissions['global']
-        return 'hg.register.auto_activate' in def_user_perms
-
     def accepts(self, user, accepts_empty=True):
         """
         Custom accepts for this auth that doesn't accept empty users. We
@@ -78,27 +74,23 @@ class KallitheaAuthPlugin(auth_modules.KallitheaAuthPluginBase):
             "groups": [],
             "email": userobj.email,
             "admin": userobj.admin,
-            "active": userobj.active,
             "extern_name": userobj.user_id,
         }
-
         log.debug(formatted_json(user_data))
-        if userobj.active:
-            from kallithea.lib import auth
-            password_match = auth.check_password(password, userobj.password)
-            if userobj.is_default_user and userobj.active:
-                log.info('user %s authenticated correctly as anonymous user',
-                         username)
-                return user_data
 
-            elif userobj.username == username and password_match:
-                log.info('user %s authenticated correctly', user_data['username'])
-                return user_data
-            log.error("user %s had a bad password", username)
-            return None
-        else:
-            log.warning('user %s tried auth but is disabled', username)
-            return None
+        from kallithea.lib import auth
+        password_match = auth.check_password(password, userobj.password)
+        if userobj.is_default_user:
+            log.info('user %s authenticated correctly as anonymous user',
+                     username)
+            return user_data
+
+        elif userobj.username == username and password_match:
+            log.info('user %s authenticated correctly', user_data['username'])
+            return user_data
+
+        log.error("user %s had a bad password", username)
+        return None
 
     def get_managed_fields(self):
         # Note: 'username' should only be editable (at least for user) if self registration is enabled

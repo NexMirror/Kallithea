@@ -105,10 +105,6 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
     def use_fake_password(self):
         return True
 
-    def user_activation_state(self):
-        def_user_perms = User.get_default_user().AuthUser.permissions['global']
-        return 'hg.extern_activate.auto' in def_user_perms
-
     def _clean_username(self, username):
         # Removing realm and domain from username
         username = username.partition('@')[0]
@@ -195,7 +191,6 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
 
         # old attrs fetched from Kallithea database
         admin = getattr(userobj, 'admin', False)
-        active = getattr(userobj, 'active', True)
         email = environ.get(settings.get('email_header'), getattr(userobj, 'email', ''))
         firstname = environ.get(settings.get('firstname_header'), getattr(userobj, 'firstname', ''))
         lastname = environ.get(settings.get('lastname_header'), getattr(userobj, 'lastname', ''))
@@ -207,7 +202,6 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
             'groups': [],
             'email': email or '',
             'admin': admin or False,
-            'active': active,
             'extern_name': username,
         }
 
