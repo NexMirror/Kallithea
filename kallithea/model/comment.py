@@ -244,30 +244,51 @@ class ChangesetCommentsModel(object):
         return self._get_comments(repo_id, revision=revision, pull_request=pull_request,
                                   inline=False)
 
-    def get_inline_comments(self, repo_id, revision=None, pull_request=None):
+    def get_inline_comments(self, repo_id, revision=None, pull_request=None,
+                f_path=None, line_no=None):
         """
         Gets inline comments for either revision or pull_request.
 
         Returns a list of tuples with file path and list of comments per line number.
         """
         comments = self._get_comments(repo_id, revision=revision, pull_request=pull_request,
-                                      inline=True)
+                                      inline=True, f_path=f_path, line_no=line_no)
 
         paths = defaultdict(lambda: defaultdict(list))
         for co in comments:
             paths[co.f_path][co.line_no].append(co)
         return paths.items()
 
-    def _get_comments(self, repo_id, revision=None, pull_request=None, inline=False):
+    def _get_comments(self, repo_id, revision=None, pull_request=None,
+                inline=False, f_path=None, line_no=None):
         """
         Gets comments for either revision or pull_request_id, either inline or general.
+        If a file path and optionally line number are given, return only the matching inline comments.
         """
+        if f_path is None and line_no is not None:
+            raise Exception("line_no only makes sense if f_path is given.")
+
+        if inline is None and f_path is not None:
+            raise Exception("f_path only makes sense for inline comments.")
+
         q = Session().query(ChangesetComment)
 
         if inline:
-            q = q.filter(ChangesetComment.line_no != None) \
-                .filter(ChangesetComment.f_path != None)
+            if f_path is not None:
+                # inline comments for a given file...
+                q = q.filter(ChangesetComment.f_path == f_path)
+                if line_no is None:
+                    # ... on any line
+                    q = q.filter(ChangesetComment.line_no != None)
+                else:
+                    # ... on specific line
+                    q = q.filter(ChangesetComment.line_no == line_no)
+            else:
+                # all inline comments
+                q = q.filter(ChangesetComment.line_no != None) \
+                    .filter(ChangesetComment.f_path != None)
         else:
+            # all general comments
             q = q.filter(ChangesetComment.line_no == None) \
                 .filter(ChangesetComment.f_path == None)
 
