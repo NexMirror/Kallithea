@@ -117,8 +117,8 @@ class LoginController(BaseController):
     @HasPermissionAnyDecorator('hg.admin', 'hg.register.auto_activate',
                                'hg.register.manual_activate')
     def register(self):
-        c.auto_active = 'hg.register.auto_activate' in User.get_default_user() \
-            .AuthUser.permissions['global']
+        def_user_perms = AuthUser(dbuser=User.get_default_user()).permissions['global']
+        c.auto_active = 'hg.register.auto_activate' in def_user_perms
 
         settings = Setting.get_app_settings()
         captcha_private_key = settings.get('captcha_private_key')

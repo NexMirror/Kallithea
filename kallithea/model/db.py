@@ -525,14 +525,6 @@ class User(Base, BaseDbModel):
     def is_default_user(self):
         return self.username == User.DEFAULT_USER
 
-    @property
-    def AuthUser(self):
-        """
-        Returns instance of AuthUser for this user
-        """
-        from kallithea.lib.auth import AuthUser
-        return AuthUser(dbuser=self)
-
     @hybrid_property
     def user_data(self):
         if not self._user_data:

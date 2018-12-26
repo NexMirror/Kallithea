@@ -21,7 +21,7 @@ import importlib
 
 from kallithea.lib.utils2 import str2bool
 from kallithea.lib.compat import formatted_json, hybrid_property
-from kallithea.lib.auth import PasswordGenerator
+from kallithea.lib.auth import PasswordGenerator, AuthUser
 from kallithea.model.user import UserModel
 from kallithea.model.db import Setting, User
 from kallithea.model.meta import Session
@@ -242,7 +242,7 @@ class KallitheaExternalAuthPlugin(KallitheaAuthPluginBase):
             userobj, username, passwd, settings, **kwargs)
         if user_data is not None:
             if userobj is None: # external authentication of unknown user that will be created soon
-                def_user_perms = User.get_default_user().AuthUser.permissions['global']
+                def_user_perms = AuthUser(dbuser=User.get_default_user()).permissions['global']
                 active = 'hg.extern_activate.auto' in def_user_perms
             else:
                 active = userobj.active

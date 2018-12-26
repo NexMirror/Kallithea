@@ -89,7 +89,7 @@ class MyAccountController(BaseController):
         self.__load_data()
         c.perm_user = AuthUser(user_id=request.authuser.user_id)
         managed_fields = auth_modules.get_managed_fields(c.user)
-        def_user_perms = User.get_default_user().AuthUser.permissions['global']
+        def_user_perms = AuthUser(dbuser=User.get_default_user()).permissions['global']
         if 'hg.register.none' in def_user_perms:
             managed_fields.extend(['username', 'firstname', 'lastname', 'email'])
 

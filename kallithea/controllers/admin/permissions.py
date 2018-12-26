@@ -37,7 +37,7 @@ from webob.exc import HTTPFound
 
 from kallithea.config.routing import url
 from kallithea.lib import helpers as h
-from kallithea.lib.auth import LoginRequired, HasPermissionAnyDecorator
+from kallithea.lib.auth import LoginRequired, HasPermissionAnyDecorator, AuthUser
 from kallithea.lib.base import BaseController, render
 from kallithea.model.forms import DefaultPermissionsForm
 from kallithea.model.permission import PermissionModel
@@ -193,5 +193,5 @@ class PermissionsController(BaseController):
     def permission_perms(self):
         c.active = 'perms'
         c.user = User.get_default_user()
-        c.perm_user = c.user.AuthUser
+        c.perm_user = AuthUser(dbuser=c.user)
         return render('admin/permissions/permissions.html')
