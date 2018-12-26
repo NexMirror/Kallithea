@@ -450,15 +450,7 @@ class BaseController(TGController):
         # v0.3 and earlier included an 'is_authenticated' key; if present,
         # this must be True.
         if isinstance(session_authuser, dict) and session_authuser.get('is_authenticated', True):
-            try:
-                return AuthUser.from_cookie(session_authuser)
-            except UserCreationError as e:
-                # container auth or other auth functions that create users on
-                # the fly can throw UserCreationError to signal issues with
-                # user creation. Explanation should be provided in the
-                # exception object.
-                from kallithea.lib import helpers as h
-                h.flash(e, 'error', logf=log.error)
+            return AuthUser.from_cookie(session_authuser)
 
         # Authenticate by auth_container plugin (if enabled)
         if any(
