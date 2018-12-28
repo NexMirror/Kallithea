@@ -55,7 +55,8 @@ If using MySQL, please consult the documentation for the ``mysqldump``
 utility.
 
 Look for ``sqlalchemy.url`` in your configuration file to determine
-database type, settings, location, etc.
+database type, settings, location, etc. If you were running Kallithea 0.3.x or
+older, this was ``sqlalchemy.db1.url``.
 
 
 3. Activate the Kallithea virtual environment (if any)
@@ -101,7 +102,8 @@ Run the following command to create a new configuration (``.ini``) file::
 
     kallithea-cli config-create new.ini
 
-Then compare it with your old config file and see what changed.
+Then compare it with your old config file and copy over the required
+configuration values from the old to the new file.
 
 .. note::
     Please always make sure your ``.ini`` files are up to date. Errors
@@ -196,6 +198,11 @@ new Whoosh versions can introduce incompatible index changes.
 
 This step once again depends entirely on the web server software used to
 serve Kallithea.
+
+If you were running Kallithea 0.3.x or older and were using ``paster serve
+my.ini`` before, then the corresponding command in Kallithea 0.4 and later is::
+
+    gearbox serve -c new.ini
 
 Before starting the new version of Kallithea, you may find it helpful to
 clear out your log file so that new errors are readily apparent.
