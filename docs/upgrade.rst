@@ -88,6 +88,8 @@ If you originally installed from version control, it is as simple as::
     pip install --upgrade -e .
     kallithea-cli front-end-build
 
+.. _upgrade_config:
+
 
 5. Upgrade your configuration
 -----------------------------
@@ -116,7 +118,7 @@ Then compare it with your old config file and see what changed.
 
 First, run the following command to see your current database version::
 
-    alembic -c my.ini current
+    alembic -c new.ini current
 
 Typical output will be something like "9358dc3d6828 (head)", which is
 the current Alembic database "revision ID". Write down the entire output
@@ -129,12 +131,12 @@ found or has no ``[alembic]`` section, see the next section.
 Next, if you are performing an *upgrade*: Run the following command to
 upgrade your database to the current Kallithea version::
 
-    alembic -c my.ini upgrade head
+    alembic -c new.ini upgrade head
 
 If you are performing a *downgrade*: Run the following command to
 downgrade your database to the given version::
 
-    alembic -c my.ini downgrade 0.4
+    alembic -c new.ini downgrade 0.4
 
 Alembic will show the necessary migrations (if any) as it executes them.
 If no "ERROR" is displayed, the command was successful.
@@ -150,6 +152,13 @@ Kallithea configuration files created before the introduction of Alembic
 Without this, Alembic will fail with an error like this::
 
     FAILED: No config file 'my.ini' found, or file has no '[alembic]' section
+
+.. note::
+    If you followed this upgrade guide correctly, you will have created a
+    new configuration file in section :ref:`Upgrading your configuration
+    <upgrade_config>`. When calling Alembic, make
+    sure to use this new config file. In this case, you should not get any
+    errors and the below manual steps should not be needed.
 
 If Alembic complains specifically about a missing ``alembic.ini``, it is
 likely because you did not specify a config file using the ``-c`` option.
