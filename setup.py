@@ -59,7 +59,7 @@ requirements = [
     "dulwich >= 0.14.1, < 0.20",
     "mercurial >= 4.1.1, < 4.9",
     "decorator >= 3.3.2, < 4.4",
-    "Paste >= 2.0.3, < 3",
+    "Paste >= 2.0.3, < 3.1",
     "bleach >= 3.0, < 3.1",
     "Click >= 7.0, < 8",
 ]
