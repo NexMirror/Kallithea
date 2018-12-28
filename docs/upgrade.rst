@@ -184,8 +184,29 @@ following command::
     kallithea-cli front-end-build
 
 
-8. Update Git repository hooks
-------------------------------
+8. Rebuild the Whoosh full-text index
+-------------------------------------
+
+It is recommended that you rebuild the Whoosh index after upgrading since
+new Whoosh versions can introduce incompatible index changes.
+
+
+9. Start the Kallithea web application
+--------------------------------------
+
+This step once again depends entirely on the web server software used to
+serve Kallithea.
+
+Before starting the new version of Kallithea, you may find it helpful to
+clear out your log file so that new errors are readily apparent.
+
+.. note::
+    If you're using Celery, make sure you restart all instances of it after
+    upgrade.
+
+
+10. Update Git repository hooks
+-------------------------------
 
 It is possible that an upgrade involves changes to the Git hooks installed by
 Kallithea. As these hooks are created inside the repositories on the server
@@ -200,27 +221,6 @@ To update the hooks of your Git repositories:
 .. note::
     Kallithea does not use hooks on Mercurial repositories. This step is thus
     not necessary if you only have Mercurial repositories.
-
-
-9. Rebuild the Whoosh full-text index
--------------------------------------
-
-It is recommended that you rebuild the Whoosh index after upgrading since
-new Whoosh versions can introduce incompatible index changes.
-
-
-10. Start the Kallithea web application
----------------------------------------
-
-This step once again depends entirely on the web server software used to
-serve Kallithea.
-
-Before starting the new version of Kallithea, you may find it helpful to
-clear out your log file so that new errors are readily apparent.
-
-.. note::
-    If you're using Celery, make sure you restart all instances of it after
-    upgrade.
 
 
 .. _virtualenv: http://pypi.python.org/pypi/virtualenv
