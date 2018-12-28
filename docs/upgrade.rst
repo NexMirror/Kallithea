@@ -81,10 +81,14 @@ If you originally installed using pip, it is as simple as::
 
     pip install --upgrade kallithea
 
-If you originally installed from version control, it is as simple as::
+If you originally installed from version control, assuming you did not make
+private changes (in which case you should adapt the instructions accordingly)::
 
     cd my-kallithea-clone
-    hg pull -u
+    hg parent   # make a note of the original revision
+    hg pull
+    hg update
+    hg parent   # make a note of the new revision
     pip install --upgrade -e .
     kallithea-cli front-end-build
 
