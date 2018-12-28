@@ -90,7 +90,6 @@ private changes (in which case you should adapt the instructions accordingly)::
     hg update
     hg parent   # make a note of the new revision
     pip install --upgrade -e .
-    kallithea-cli front-end-build
 
 .. _upgrade_config:
 
@@ -175,7 +174,17 @@ need to append the following lines to it::
 Your config file should now work with Alembic.
 
 
-7. Update Git repository hooks
+7. Prepare the front-end
+------------------------
+
+Starting with Kallithea 0.4, external front-end dependencies are no longer
+shipped but need to be downloaded and/or generated at installation time. Run the
+following command::
+
+    kallithea-cli front-end-build
+
+
+8. Update Git repository hooks
 ------------------------------
 
 It is possible that an upgrade involves changes to the Git hooks installed by
@@ -193,15 +202,15 @@ To update the hooks of your Git repositories:
     not necessary if you only have Mercurial repositories.
 
 
-8. Rebuild the Whoosh full-text index
+9. Rebuild the Whoosh full-text index
 -------------------------------------
 
 It is recommended that you rebuild the Whoosh index after upgrading since
 new Whoosh versions can introduce incompatible index changes.
 
 
-9. Start the Kallithea web application
---------------------------------------
+10. Start the Kallithea web application
+---------------------------------------
 
 This step once again depends entirely on the web server software used to
 serve Kallithea.
