@@ -76,10 +76,6 @@ class LoginController(BaseController):
         else:
             c.came_from = url('home')
 
-        # redirect if already logged in
-        if request.authuser.is_authenticated:
-            raise HTTPFound(location=c.came_from)
-
         if request.POST:
             # import Login Form validator class
             login_form = LoginForm()()
@@ -108,6 +104,10 @@ class LoginController(BaseController):
             else:
                 log_in_user(user, c.form_result['remember'],
                     is_external_auth=False)
+                raise HTTPFound(location=c.came_from)
+        else:
+            # redirect if already logged in
+            if request.authuser.is_authenticated:
                 raise HTTPFound(location=c.came_from)
 
         return render('/login.html')
