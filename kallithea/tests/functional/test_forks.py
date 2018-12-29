@@ -249,9 +249,12 @@ class _BaseTestCase(TestController):
         response.mustcontain('<div>fork of vcs test</div>')
 
         # remove permissions
+        default_user = User.get_default_user()
         try:
             RepoModel().grant_user_permission(repo=forks[0],
                                               user=usr, perm='repository.none')
+            RepoModel().grant_user_permission(repo=forks[0],
+                                              user=default_user, perm='repository.none')
             Session().commit()
 
             # fork shouldn't be visible
@@ -262,6 +265,8 @@ class _BaseTestCase(TestController):
         finally:
             RepoModel().grant_user_permission(repo=forks[0],
                                               user=usr, perm='repository.read')
+            RepoModel().grant_user_permission(repo=forks[0],
+                                              user=default_user, perm='repository.read')
             RepoModel().delete(repo=forks[0])
 
 

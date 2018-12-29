@@ -559,7 +559,7 @@ class AuthUser(object):
     def api_keys(self):
         return self._get_api_keys()
 
-    def __get_perms(self, user, explicit=True, cache=False):
+    def __get_perms(self, user, explicit=False, cache=False):
         """
         Fills user permission attribute with permissions taken from database
         works for permissions given for repositories, and for permissions that

@@ -132,29 +132,20 @@ class TestPermissions(TestController):
         self.ug1 = fixture.create_user_group(u'G1')
         UserGroupModel().add_user_to_group(self.ug1, self.u1)
 
-        # set permission to lower
-        new_perm = 'repository.none'
-        RepoModel().grant_user_permission(repo=HG_REPO, user=self.u1, perm=new_perm)
+        # set user permission none
+        RepoModel().grant_user_permission(repo=HG_REPO, user=self.u1, perm='repository.none')
         Session().commit()
         u1_auth = AuthUser(user_id=self.u1.user_id)
-        assert u1_auth.permissions['repositories'][HG_REPO] == new_perm
+        assert u1_auth.permissions['repositories'][HG_REPO] == 'repository.read' # inherit from default user
 
-        # grant perm for group this should not override permission from user
-        # since it has explicitly set
-        new_perm_gr = 'repository.write'
+        # grant perm for group this should override permission from user
         RepoModel().grant_user_group_permission(repo=HG_REPO,
                                                  group_name=self.ug1,
-                                                 perm=new_perm_gr)
-        # check perms
+                                                 perm='repository.write')
+
+        # verify that user group permissions win
         u1_auth = AuthUser(user_id=self.u1.user_id)
-        perms = {
-            'repositories_groups': {},
-            'global': set(['hg.create.repository', 'repository.read',
-                           'hg.register.manual_activate']),
-            'repositories': {HG_REPO: 'repository.read'}
-        }
-        assert u1_auth.permissions['repositories'][HG_REPO] == new_perm
-        assert u1_auth.permissions['repositories_groups'] == perms['repositories_groups']
+        assert u1_auth.permissions['repositories'][HG_REPO] == 'repository.write'
 
     def test_propagated_permission_from_users_group(self):
         # make group

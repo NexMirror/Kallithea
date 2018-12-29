@@ -107,6 +107,7 @@ class _BaseTestApi(object):
         Session().commit()
         cls.TEST_USER_LOGIN = cls.test_user.username
         cls.apikey_regular = cls.test_user.api_key
+        cls.default_user_username = User.get_default_user().username
 
     @classmethod
     def teardown_class(cls):
@@ -706,15 +707,23 @@ class _BaseTestApi(object):
 
     def test_api_get_repo_by_non_admin_no_permission_to_repo(self):
         RepoModel().grant_user_permission(repo=self.REPO,
-                                          user=self.TEST_USER_LOGIN,
+                                          user=self.default_user_username,
                                           perm='repository.none')
+        try:
+            RepoModel().grant_user_permission(repo=self.REPO,
+                                              user=self.TEST_USER_LOGIN,
+                                              perm='repository.none')
 
-        id_, params = _build_data(self.apikey_regular, 'get_repo',
-                                  repoid=self.REPO)
-        response = api_call(self, params)
+            id_, params = _build_data(self.apikey_regular, 'get_repo',
+                                      repoid=self.REPO)
+            response = api_call(self, params)
 
-        expected = 'repository `%s` does not exist' % (self.REPO)
-        self._compare_error(id_, expected, given=response.body)
+            expected = 'repository `%s` does not exist' % (self.REPO)
+            self._compare_error(id_, expected, given=response.body)
+        finally:
+            RepoModel().grant_user_permission(repo=self.REPO,
+                                              user=self.default_user_username,
+                                              perm='repository.read')
 
     def test_api_get_repo_that_doesn_not_exist(self):
         id_, params = _build_data(self.apikey, 'get_repo',
@@ -1355,17 +1364,22 @@ class _BaseTestApi(object):
 
     def test_api_fork_repo_non_admin_no_permission_to_fork(self):
         RepoModel().grant_user_permission(repo=self.REPO,
-                                          user=self.TEST_USER_LOGIN,
+                                          user=self.default_user_username,
                                           perm='repository.none')
-        fork_name = u'api-repo-fork'
-        id_, params = _build_data(self.apikey_regular, 'fork_repo',
-                                  repoid=self.REPO,
-                                  fork_name=fork_name,
-        )
-        response = api_call(self, params)
-        expected = 'repository `%s` does not exist' % (self.REPO)
-        self._compare_error(id_, expected, given=response.body)
-        fixture.destroy_repo(fork_name)
+        try:
+            fork_name = u'api-repo-fork'
+            id_, params = _build_data(self.apikey_regular, 'fork_repo',
+                                      repoid=self.REPO,
+                                      fork_name=fork_name,
+            )
+            response = api_call(self, params)
+            expected = 'repository `%s` does not exist' % (self.REPO)
+            self._compare_error(id_, expected, given=response.body)
+        finally:
+            RepoModel().grant_user_permission(repo=self.REPO,
+                                              user=self.default_user_username,
+                                              perm='repository.read')
+            fixture.destroy_repo(fork_name)
 
     @parametrize('name,perm', [
         ('read', 'repository.read'),
