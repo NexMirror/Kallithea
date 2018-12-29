@@ -544,7 +544,7 @@ Example WSGI dispatch script:
     site.addsitedir("/srv/kallithea/venv/lib/python2.7/site-packages")
 
     ini = '/srv/kallithea/my.ini'
-    from paste.script.util.logging_config import fileConfig
+    from logging.config import fileConfig
     fileConfig(ini)
     from paste.deploy import loadapp
     application = loadapp('config:' + ini)
@@ -560,7 +560,7 @@ Or using proper virtualenv activation:
     os.environ['HOME'] = '/srv/kallithea'
 
     ini = '/srv/kallithea/kallithea.ini'
-    from paste.script.util.logging_config import fileConfig
+    from logging.config import fileConfig
     fileConfig(ini)
     from paste.deploy import loadapp
     application = loadapp('config:' + ini)

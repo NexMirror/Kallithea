@@ -30,7 +30,7 @@ import os
 
 def __ExtensionFactory__():
     from paste.deploy import loadapp
-    from paste.script.util.logging_config import fileConfig
+    from logging.config import fileConfig
     fileConfig('%(inifile)s')
     application = loadapp('config:%(inifile)s')
 
