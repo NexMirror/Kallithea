@@ -582,7 +582,7 @@ class BaseRepoController(BaseController):
                 from kallithea.lib import helpers as h
                 h.flash(h.literal(_('Repository not found in the filesystem')),
                         category='error')
-                raise paste.httpexceptions.HTTPNotFound()
+                raise webob.exc.HTTPNotFound()
 
             # some globals counter for menu
             c.repository_followers = self.scm_model.get_followers(dbr)
