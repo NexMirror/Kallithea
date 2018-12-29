@@ -285,14 +285,11 @@ def _cached_perms_data(user_id, user_is_admin):
         .filter(UserGroupMember.user_id == user_id) \
         .all()
 
-    multiple_counter = collections.defaultdict(int)
     for perm in user_repo_perms_from_users_groups:
         r_k = perm.UserGroupRepoToPerm.repository.repo_name
-        multiple_counter[r_k] += 1
-        p = perm.Permission.permission_name
         cur_perm = permissions[RK][r_k]
-        if multiple_counter[r_k] > 1:
-            p = _choose_perm(p, cur_perm)
+        p = perm.Permission.permission_name
+        p = _choose_perm(p, cur_perm)
         permissions[RK][r_k] = p
 
     # user permissions for repositories
@@ -325,14 +322,11 @@ def _cached_perms_data(user_id, user_is_admin):
      .filter(UserGroupMember.user_id == user_id) \
      .all()
 
-    multiple_counter = collections.defaultdict(int)
     for perm in user_repo_group_perms_from_users_groups:
         g_k = perm.UserGroupRepoGroupToPerm.group.group_name
-        multiple_counter[g_k] += 1
         p = perm.Permission.permission_name
         cur_perm = permissions[GK][g_k]
-        if multiple_counter[g_k] > 1:
-            p = _choose_perm(p, cur_perm)
+        p = _choose_perm(p, cur_perm)
         permissions[GK][g_k] = p
 
     # user explicit permissions for repository groups
@@ -362,14 +356,11 @@ def _cached_perms_data(user_id, user_is_admin):
      .filter(UserGroup.users_group_active == True) \
      .all()
 
-    multiple_counter = collections.defaultdict(int)
     for perm in user_group_user_groups_perms:
         g_k = perm.UserGroupUserGroupToPerm.target_user_group.users_group_name
-        multiple_counter[g_k] += 1
         p = perm.Permission.permission_name
         cur_perm = permissions[UK][g_k]
-        if multiple_counter[g_k] > 1:
-            p = _choose_perm(p, cur_perm)
+        p = _choose_perm(p, cur_perm)
         permissions[UK][g_k] = p
 
     # user explicit permission for user groups
