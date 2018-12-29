@@ -133,7 +133,7 @@ def check_password(password, hashed):
 
 
 def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
-                       explicit, algo):
+                       explicit):
     RK = 'repositories'
     GK = 'repositories_groups'
     UK = 'user_groups'
@@ -144,14 +144,9 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
     def _choose_perm(new_perm, cur_perm):
         new_perm_val = PERM_WEIGHTS[new_perm]
         cur_perm_val = PERM_WEIGHTS[cur_perm]
-        if algo == 'higherwin':
-            if new_perm_val > cur_perm_val:
-                return new_perm
-            return cur_perm
-        elif algo == 'lowerwin':
-            if new_perm_val < cur_perm_val:
-                return new_perm
-            return cur_perm
+        if new_perm_val > cur_perm_val:
+            return new_perm
+        return cur_perm
 
     #======================================================================
     # fetch default permissions
@@ -289,8 +284,7 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
     #======================================================================
     #======================================================================
     # check if user is part of user groups for this repository and
-    # fill in his permission from it. _choose_perm decides of which
-    # permission should be selected based on selected method
+    # fill in his permission from it.
     #======================================================================
 
     # user group for repositories permissions
@@ -343,8 +337,7 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
     #======================================================================
     #======================================================================
     # check if user is part of user groups for this repository groups and
-    # fill in his permission from it. _choose_perm decides of which
-    # permission should be selected based on selected method
+    # fill in his permission from it.
     #======================================================================
     # user group for repo groups permissions
     user_repo_group_perms_from_users_groups = \
@@ -580,7 +573,7 @@ class AuthUser(object):
     def api_keys(self):
         return self._get_api_keys()
 
-    def __get_perms(self, user, explicit=True, algo='higherwin', cache=False):
+    def __get_perms(self, user, explicit=True, cache=False):
         """
         Fills user permission attribute with permissions taken from database
         works for permissions given for repositories, and for permissions that
@@ -590,11 +583,7 @@ class AuthUser(object):
         :param explicit: In case there are permissions both for user and a group
             that user is part of, explicit flag will define if user will
             explicitly override permissions from group, if it's False it will
-            make decision based on the algo
-        :param algo: algorithm to decide what permission should be choose if
-            it's multiple defined, eg user in two different groups. It also
-            decides if explicit flag is turned off how to specify the permission
-            for case when user is in a group + have defined separate permission
+            compute the decision
         """
         user_id = user.user_id
         user_is_admin = user.is_admin
@@ -604,7 +593,7 @@ class AuthUser(object):
         compute = conditional_cache('short_term', 'cache_desc',
                                     condition=cache, func=_cached_perms_data)
         return compute(user_id, user_is_admin,
-                       user_inherit_default_permissions, explicit, algo)
+                       user_inherit_default_permissions, explicit)
 
     def _get_api_keys(self):
         api_keys = [self.api_key]
