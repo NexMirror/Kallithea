@@ -186,7 +186,7 @@ class _BaseTestCase(TestController):
         response = self.app.post(url('delete_repo', repo_name=fork_name),
             params={'_authentication_token': self.authentication_token()})
 
-    def test_z_fork_create(self):
+    def test_fork_create_and_permissions(self):
         self.log_user()
         fork_name = self.REPO_FORK
         description = 'fork of vcs test'
@@ -226,9 +226,7 @@ class _BaseTestCase(TestController):
         response.mustcontain(self.REPO_TYPE)
         response.mustcontain('Fork of "<a href="/%s">%s</a>"' % (repo_name, repo_name))
 
-    def test_zz_fork_permission_page(self):
         usr = self.log_user(self.username, self.password)['user_id']
-        repo_name = self.REPO
 
         forks = Repository.query() \
             .filter(Repository.repo_type == self.REPO_TYPE) \
@@ -246,23 +244,21 @@ class _BaseTestCase(TestController):
 
         response.mustcontain('<div>fork of vcs test</div>')
 
-    def test_zzz_fork_permission_page(self):
-        usr = self.log_user(self.username, self.password)['user_id']
-        repo_name = self.REPO
+        # remove permissions
+        try:
+            RepoModel().grant_user_permission(repo=forks[0],
+                                              user=usr, perm='repository.none')
+            Session().commit()
 
-        forks = Repository.query() \
-            .filter(Repository.repo_type == self.REPO_TYPE) \
-            .filter(Repository.fork_id != None).all()
-        assert 1 == len(forks)
+            # fork shouldn't be visible
+            response = self.app.get(url(controller='forks', action='forks',
+                                        repo_name=repo_name))
+            response.mustcontain('There are no forks yet')
 
-        # set none
-        RepoModel().grant_user_permission(repo=forks[0],
-                                          user=usr, perm='repository.none')
-        Session().commit()
-        # fork shouldn't be there
-        response = self.app.get(url(controller='forks', action='forks',
-                                    repo_name=repo_name))
-        response.mustcontain('There are no forks yet')
+        finally:
+            RepoModel().grant_user_permission(repo=forks[0],
+                                              user=usr, perm='repository.read')
+            RepoModel().delete(repo=forks[0])
 
 
 class TestGIT(_BaseTestCase):
