@@ -132,8 +132,7 @@ def check_password(password, hashed):
                         % __platform__)
 
 
-def _cached_perms_data(user_id, user_is_admin,
-                       explicit):
+def _cached_perms_data(user_id, user_is_admin):
     RK = 'repositories'
     GK = 'repositories_groups'
     UK = 'user_groups'
@@ -304,8 +303,7 @@ def _cached_perms_data(user_id, user_is_admin,
                 p = _choose_perm(p, cur_perm)
         permissions[RK][r_k] = p
 
-    # user explicit permissions for repositories, overrides any specified
-    # by the group permission
+    # user permissions for repositories
     user_repo_perms = Permission.get_default_perms(user_id)
     for perm in user_repo_perms:
         r_k = perm.UserRepoToPerm.repository.repo_name
@@ -315,8 +313,7 @@ def _cached_perms_data(user_id, user_is_admin,
             p = 'repository.admin'
         else:
             p = perm.Permission.permission_name
-            if not explicit:
-                p = _choose_perm(p, cur_perm)
+            p = _choose_perm(p, cur_perm)
         permissions[RK][r_k] = p
 
     #======================================================================
@@ -356,8 +353,7 @@ def _cached_perms_data(user_id, user_is_admin,
         rg_k = perm.UserRepoGroupToPerm.group.group_name
         p = perm.Permission.permission_name
         cur_perm = permissions[GK][rg_k]
-        if not explicit:
-            p = _choose_perm(p, cur_perm)
+        p = _choose_perm(p, cur_perm)
         permissions[GK][rg_k] = p
 
     #======================================================================
@@ -394,8 +390,7 @@ def _cached_perms_data(user_id, user_is_admin,
         u_k = perm.UserUserGroupToPerm.user_group.users_group_name
         p = perm.Permission.permission_name
         cur_perm = permissions[UK][u_k]
-        if not explicit:
-            p = _choose_perm(p, cur_perm)
+        p = _choose_perm(p, cur_perm)
         permissions[UK][u_k] = p
 
     return permissions
@@ -559,17 +554,13 @@ class AuthUser(object):
     def api_keys(self):
         return self._get_api_keys()
 
-    def __get_perms(self, user, explicit=False, cache=False):
+    def __get_perms(self, user, cache=False):
         """
         Fills user permission attribute with permissions taken from database
         works for permissions given for repositories, and for permissions that
         are granted to groups
 
         :param user: `AuthUser` instance
-        :param explicit: In case there are permissions both for user and a group
-            that user is part of, explicit flag will define if user will
-            explicitly override permissions from group, if it's False it will
-            compute the decision
         """
         user_id = user.user_id
         user_is_admin = user.is_admin
@@ -577,7 +568,7 @@ class AuthUser(object):
         log.debug('Getting PERMISSION tree')
         compute = conditional_cache('short_term', 'cache_desc',
                                     condition=cache, func=_cached_perms_data)
-        return compute(user_id, user_is_admin, explicit)
+        return compute(user_id, user_is_admin)
 
     def _get_api_keys(self):
         api_keys = [self.api_key]
