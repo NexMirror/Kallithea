@@ -33,7 +33,6 @@ import re
 import logging
 import traceback
 
-from paste.httpheaders import REMOTE_USER, AUTH_TYPE
 from webob.exc import HTTPNotFound, HTTPForbidden, HTTPInternalServerError, \
     HTTPNotAcceptable
 from kallithea.model.db import Ui
