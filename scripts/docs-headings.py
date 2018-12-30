@@ -30,8 +30,9 @@ headermatch = re.compile(r'''\n*(.+)\n([][!"#$%&'()*+,./:;<=>?@\\^_`{|}~-])\2{2,
 
 
 def main():
-    for fn in subprocess.check_output(['hg', 'loc', 'set:**.rst+kallithea/i18n/how_to']).splitlines():
-        print 'processing %s:' % fn
+    filenames = subprocess.check_output(['hg', 'loc', 'set:**.rst+kallithea/i18n/how_to']).splitlines()
+    for fn in filenames:
+        print 'processing %s' % fn
         s = open(fn).read()
 
         # find levels and their styles
@@ -72,8 +73,8 @@ def main():
         s = re.sub(r'''\n+((?:\.\. _[^\n]*\n)+)$''', r'\n\n\n\1', s)
 
         open(fn, 'w').write(s)
-        print subprocess.check_output(['hg', 'diff', fn])
-        print
+
+    print subprocess.check_output(['hg', 'diff'] + filenames)
 
 if __name__ == '__main__':
     main()
