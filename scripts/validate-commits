@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+# Validate the specified commits against test suite and other checks.
+
+if [ -n "$VIRTUAL_ENV" ]; then
+    echo "Please run this script from outside a virtualenv."
+    exit 1
+fi
+
+if ! hg update --check -q .; then
+    echo "Working dir is not clean, please commit/revert changes first."
+    exit 1
+fi
+
+venv=$(mktemp -d kallithea-validatecommits-env-XXXXXX)
+resultfile=$(mktemp kallithea-validatecommits-result-XXXXXX)
+echo > "$resultfile"
+
+cleanup()
+{
+    rm -rf /tmp/kallithea-test*
+    rm -rf "$venv"
+}
+finish()
+{
+    cleanup
+    # print (possibly intermediate) results
+    cat "$resultfile"
+    rm "$resultfile"
+}
+trap finish EXIT
+
+for rev in $(hg log -r "$1" -T '{node}\n'); do
+    hg log -r "$rev"
+    hg update "$rev"
+
+    cleanup
+    virtualenv -p "$(command -v python2)" "$venv"
+    source "$venv/bin/activate"
+    pip install --upgrade pip setuptools
+    pip install -e .
+    pip install -r dev_requirements.txt
+    pip install python-ldap python-pam
+
+    # run-all-cleanup
+    scripts/run-all-cleanup
+    if ! hg update --check -q .; then
+        echo "run-all-cleanup did not give clean results!"
+        result="NOK"
+        hg diff
+        hg revert -a
+    else
+        result=" OK"
+    fi
+    echo "$result: $rev (run-all-cleanup)" >> "$resultfile"
+
+    # pytest
+    if py.test; then
+        result=" OK"
+    else
+        result="NOK"
+    fi
+    echo "$result: $rev (pytest)" >> "$resultfile"
+
+    deactivate
+    echo
+done
