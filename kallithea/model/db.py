@@ -426,7 +426,6 @@ class User(Base, BaseDbModel):
     extern_type = Column(String(255), nullable=True) # FIXME: not nullable?
     extern_name = Column(String(255), nullable=True) # FIXME: not nullable?
     api_key = Column(String(255), nullable=False)
-    inherit_default_permissions = Column(Boolean(), nullable=False, default=True)
     created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
     _user_data = Column("user_data", LargeBinary(), nullable=True)  # JSON data # FIXME: not nullable?
 
@@ -820,7 +819,6 @@ class UserGroup(Base, BaseDbModel):
     users_group_name = Column(Unicode(255), nullable=False, unique=True)
     user_group_description = Column(Unicode(10000), nullable=True) # FIXME: not nullable?
     users_group_active = Column(Boolean(), nullable=False)
-    inherit_default_permissions = Column("users_group_inherit_default_permissions", Boolean(), nullable=False, default=True)
     owner_id = Column('user_id', Integer(), ForeignKey('users.user_id'), nullable=False)
     created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
     _group_data = Column("group_data", LargeBinary(), nullable=True)  # JSON data # FIXME: not nullable?

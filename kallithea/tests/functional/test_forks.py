@@ -7,7 +7,7 @@ from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
 
 from kallithea.lib.utils2 import safe_str, safe_unicode
-from kallithea.model.db import Repository
+from kallithea.model.db import Repository, User
 from kallithea.model.repo import RepoModel
 from kallithea.model.user import UserModel
 from kallithea.model.meta import Session
@@ -44,20 +44,19 @@ class _BaseTestCase(TestController):
         response.mustcontain("""There are no forks yet""")
 
     def test_no_permissions_to_fork(self):
-        usr = self.log_user(TEST_USER_REGULAR_LOGIN,
-                            TEST_USER_REGULAR_PASS)['user_id']
+        self.log_user(TEST_USER_REGULAR_LOGIN, TEST_USER_REGULAR_PASS)['user_id']
         try:
             user_model = UserModel()
+            usr = User.get_default_user()
             user_model.revoke_perm(usr, 'hg.fork.repository')
             user_model.grant_perm(usr, 'hg.fork.none')
-            u = UserModel().get(usr)
-            u.inherit_default_permissions = False
             Session().commit()
             # try create a fork
             repo_name = self.REPO
             self.app.post(url(controller='forks', action='fork_create',
                               repo_name=repo_name), {'_authentication_token': self.authentication_token()}, status=403)
         finally:
+            usr = User.get_default_user()
             user_model.revoke_perm(usr, 'hg.fork.none')
             user_model.grant_perm(usr, 'hg.fork.repository')
             Session().commit()

@@ -315,8 +315,6 @@ class UsersController(BaseController):
             form = CustomDefaultPermissionsForm()()
             form_result = form.to_python(request.POST)
 
-            inherit_perms = form_result['inherit_default_permissions']
-            user.inherit_default_permissions = inherit_perms
             user_model = UserModel()
 
             defs = UserToPerm.query() \
@@ -391,7 +389,6 @@ class UsersController(BaseController):
         c.user_ip_map = UserIpMap.query() \
             .filter(UserIpMap.user == c.user).all()
 
-        c.inherit_default_ips = c.user.inherit_default_permissions
         c.default_user_ip_map = UserIpMap.query() \
             .filter(UserIpMap.user == User.get_default_user()).all()
 

@@ -105,7 +105,6 @@ def _cruserhook(*args, **kwargs):
       :param active:
       :param password:
       :param emails:
-      :param inherit_default_permissions:
       :param created_by:
     """
     return 0
@@ -169,7 +168,6 @@ def _dluserhook(*args, **kwargs):
       :param active:
       :param password:
       :param emails:
-      :param inherit_default_permissions:
       :param deleted_by:
     """
     return 0

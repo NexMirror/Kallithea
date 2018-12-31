@@ -1,5 +1,5 @@
 <table class="table">
-    %if c.default_user_ip_map and c.inherit_default_ips:
+    %if c.default_user_ip_map:
         %for ip in c.default_user_ip_map:
           <tr>
             <td><div class="ip">${ip.ip_addr}</div></td>

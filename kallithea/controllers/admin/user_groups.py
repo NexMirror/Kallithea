@@ -369,8 +369,6 @@ class UserGroupsController(BaseController):
             form = CustomDefaultPermissionsForm()()
             form_result = form.to_python(request.POST)
 
-            inherit_perms = form_result['inherit_default_permissions']
-            user_group.inherit_default_permissions = inherit_perms
             usergroup_model = UserGroupModel()
 
             defs = UserGroupToPerm.query() \

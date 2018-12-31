@@ -212,7 +212,6 @@ def log_create_user(user_dict, created_by, **kwargs):
      'active',
      'password',
      'emails',
-     'inherit_default_permissions'
 
     """
     from kallithea import EXTENSIONS
@@ -285,7 +284,6 @@ def log_delete_user(user_dict, deleted_by, **kwargs):
      'active',
      'password',
      'emails',
-     'inherit_default_permissions'
 
     """
     from kallithea import EXTENSIONS

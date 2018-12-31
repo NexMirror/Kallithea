@@ -132,7 +132,7 @@ def check_password(password, hashed):
                         % __platform__)
 
 
-def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
+def _cached_perms_data(user_id, user_is_admin,
                        explicit):
     RK = 'repositories'
     GK = 'repositories_groups'
@@ -226,14 +226,8 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
         permissions[UK][u_k] = p
 
     #======================================================================
-    # !! OVERRIDE GLOBALS !! with user permissions if any found
+    # !! Augment GLOBALS with user permissions if any found !!
     #======================================================================
-    # those can be configured from groups or users explicitly
-    _configurable = set([
-        'hg.fork.none', 'hg.fork.repository',
-        'hg.create.none', 'hg.create.repository',
-        'hg.usergroup.create.false', 'hg.usergroup.create.true'
-    ])
 
     # USER GROUPS comes first
     # user group global permissions
@@ -253,14 +247,6 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
                 itertools.groupby(user_perms_from_users_groups,
                                   lambda x:x.users_group)]
     for gr, perms in _grouped:
-        # since user can be in multiple groups iterate over them and
-        # select the lowest permissions first (more explicit)
-        # TODO: do this^^
-        if not gr.inherit_default_permissions:
-            # NEED TO IGNORE all configurable permissions and
-            # replace them with explicitly set
-            permissions[GLOBAL] = permissions[GLOBAL] \
-                                            .difference(_configurable)
         for perm in perms:
             permissions[GLOBAL].add(perm.permission.permission_name)
 
@@ -269,14 +255,15 @@ def _cached_perms_data(user_id, user_is_admin, user_inherit_default_permissions,
             .options(joinedload(UserToPerm.permission)) \
             .filter(UserToPerm.user_id == user_id).all()
 
-    if not user_inherit_default_permissions:
-        # NEED TO IGNORE all configurable permissions and
-        # replace them with explicitly set
-        permissions[GLOBAL] = permissions[GLOBAL] \
-                                        .difference(_configurable)
+    for perm in user_perms:
+        permissions[GLOBAL].add(perm.permission.permission_name)
 
-        for perm in user_perms:
-            permissions[GLOBAL].add(perm.permission.permission_name)
+    # for each kind of global permissions, only keep the one with heighest weight
+    kind_max_perm = {}
+    for perm in sorted(permissions[GLOBAL], key=lambda n: PERM_WEIGHTS[n]):
+        kind = perm.rsplit('.', 1)[0]
+        kind_max_perm[kind] = perm
+    permissions[GLOBAL] = set(kind_max_perm.values())
     ## END GLOBAL PERMISSIONS
 
     #======================================================================
@@ -485,7 +472,6 @@ class AuthUser(object):
         self.lastname = ''
         self.email = ''
         self.admin = False
-        self.inherit_default_permissions = False
 
         # Look up database user, if necessary.
         if user_id is not None:
@@ -587,13 +573,11 @@ class AuthUser(object):
         """
         user_id = user.user_id
         user_is_admin = user.is_admin
-        user_inherit_default_permissions = user.inherit_default_permissions
 
         log.debug('Getting PERMISSION tree')
         compute = conditional_cache('short_term', 'cache_desc',
                                     condition=cache, func=_cached_perms_data)
-        return compute(user_id, user_is_admin,
-                       user_inherit_default_permissions, explicit)
+        return compute(user_id, user_is_admin, explicit)
 
     def _get_api_keys(self):
         api_keys = [self.api_key]
@@ -637,8 +621,7 @@ class AuthUser(object):
         Check if the given IP address (a `str`) is allowed for the given
         user (an `AuthUser` or `db.User`).
         """
-        allowed_ips = AuthUser.get_allowed_ips(user.user_id, cache=True,
-            inherit_from_default=user.inherit_default_permissions)
+        allowed_ips = AuthUser.get_allowed_ips(user.user_id, cache=True)
         if check_ip_access(source_ip=ip_addr, allowed_ips=allowed_ips):
             log.debug('IP:%s is in range of %s', ip_addr, allowed_ips)
             return True
@@ -672,30 +655,26 @@ class AuthUser(object):
         return au
 
     @classmethod
-    def get_allowed_ips(cls, user_id, cache=False, inherit_from_default=False):
+    def get_allowed_ips(cls, user_id, cache=False):
         _set = set()
 
-        if inherit_from_default:
-            default_ips = UserIpMap.query().filter(UserIpMap.user_id ==
-                                            User.get_default_user(cache=True).user_id)
-            if cache:
-                default_ips = default_ips.options(FromCache("sql_cache_short",
-                                                  "get_user_ips_default"))
-
-            # populate from default user
-            for ip in default_ips:
-                try:
-                    _set.add(ip.ip_addr)
-                except ObjectDeletedError:
-                    # since we use heavy caching sometimes it happens that we get
-                    # deleted objects here, we just skip them
-                    pass
+        default_ips = UserIpMap.query().filter(UserIpMap.user_id ==
+                                        User.get_default_user(cache=True).user_id)
+        if cache:
+            default_ips = default_ips.options(FromCache("sql_cache_short",
+                                              "get_user_ips_default"))
+        for ip in default_ips:
+            try:
+                _set.add(ip.ip_addr)
+            except ObjectDeletedError:
+                # since we use heavy caching sometimes it happens that we get
+                # deleted objects here, we just skip them
+                pass
 
         user_ips = UserIpMap.query().filter(UserIpMap.user_id == user_id)
         if cache:
             user_ips = user_ips.options(FromCache("sql_cache_short",
                                                   "get_user_ips_%s" % user_id))
-
         for ip in user_ips:
             try:
                 _set.add(ip.ip_addr)
