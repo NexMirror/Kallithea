@@ -140,12 +140,16 @@ def _cached_perms_data(user_id, user_is_admin):
     PERM_WEIGHTS = Permission.PERM_WEIGHTS
     permissions = {RK: {}, GK: {}, UK: {}, GLOBAL: set()}
 
-    def _choose_perm(new_perm, cur_perm):
+    def bump_permission(kind, key, new_perm):
+        """Add a new permission for kind and key.
+        Assuming the permissions are comparable, set the new permission if it
+        has higher weight, else drop it and keep the old permission.
+        """
+        cur_perm = permissions[kind][key]
         new_perm_val = PERM_WEIGHTS[new_perm]
         cur_perm_val = PERM_WEIGHTS[cur_perm]
         if new_perm_val > cur_perm_val:
-            return new_perm
-        return cur_perm
+            permissions[kind][key] = new_perm
 
     #======================================================================
     # fetch default permissions
@@ -286,20 +290,16 @@ def _cached_perms_data(user_id, user_is_admin):
         .all()
 
     for perm in user_repo_perms_from_users_groups:
-        r_k = perm.UserGroupRepoToPerm.repository.repo_name
-        cur_perm = permissions[RK][r_k]
-        p = perm.Permission.permission_name
-        p = _choose_perm(p, cur_perm)
-        permissions[RK][r_k] = p
+        bump_permission(RK,
+            perm.UserGroupRepoToPerm.repository.repo_name,
+            perm.Permission.permission_name)
 
     # user permissions for repositories
     user_repo_perms = Permission.get_default_perms(user_id)
     for perm in user_repo_perms:
-        r_k = perm.UserRepoToPerm.repository.repo_name
-        cur_perm = permissions[RK][r_k]
-        p = perm.Permission.permission_name
-        p = _choose_perm(p, cur_perm)
-        permissions[RK][r_k] = p
+        bump_permission(RK,
+            perm.UserRepoToPerm.repository.repo_name,
+            perm.Permission.permission_name)
 
     #======================================================================
     # !! PERMISSIONS FOR REPOSITORY GROUPS !!
@@ -323,20 +323,16 @@ def _cached_perms_data(user_id, user_is_admin):
      .all()
 
     for perm in user_repo_group_perms_from_users_groups:
-        g_k = perm.UserGroupRepoGroupToPerm.group.group_name
-        p = perm.Permission.permission_name
-        cur_perm = permissions[GK][g_k]
-        p = _choose_perm(p, cur_perm)
-        permissions[GK][g_k] = p
+        bump_permission(GK,
+            perm.UserGroupRepoGroupToPerm.group.group_name,
+            perm.Permission.permission_name)
 
     # user explicit permissions for repository groups
     user_repo_groups_perms = Permission.get_default_group_perms(user_id)
     for perm in user_repo_groups_perms:
-        rg_k = perm.UserRepoGroupToPerm.group.group_name
-        p = perm.Permission.permission_name
-        cur_perm = permissions[GK][rg_k]
-        p = _choose_perm(p, cur_perm)
-        permissions[GK][rg_k] = p
+        bump_permission(GK,
+            perm.UserRepoGroupToPerm.group.group_name,
+            perm.Permission.permission_name)
 
     #======================================================================
     # !! PERMISSIONS FOR USER GROUPS !!
@@ -357,20 +353,16 @@ def _cached_perms_data(user_id, user_is_admin):
      .all()
 
     for perm in user_group_user_groups_perms:
-        g_k = perm.UserGroupUserGroupToPerm.target_user_group.users_group_name
-        p = perm.Permission.permission_name
-        cur_perm = permissions[UK][g_k]
-        p = _choose_perm(p, cur_perm)
-        permissions[UK][g_k] = p
+        bump_permission(UK,
+            perm.UserGroupUserGroupToPerm.target_user_group.users_group_name,
+            perm.Permission.permission_name)
 
     # user explicit permission for user groups
     user_user_groups_perms = Permission.get_default_user_group_perms(user_id)
     for perm in user_user_groups_perms:
-        u_k = perm.UserUserGroupToPerm.user_group.users_group_name
-        p = perm.Permission.permission_name
-        cur_perm = permissions[UK][u_k]
-        p = _choose_perm(p, cur_perm)
-        permissions[UK][u_k] = p
+        bump_permission(UK,
+            perm.UserUserGroupToPerm.user_group.users_group_name,
+            perm.Permission.permission_name)
 
     return permissions
 
