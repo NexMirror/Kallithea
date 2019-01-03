@@ -124,7 +124,6 @@ def log_in_user(user, remember, is_external_auth):
                          is_external_auth=is_external_auth)
     # It should not be possible to explicitly log in as the default user.
     assert not auth_user.is_default_user
-    auth_user.is_authenticated = True
 
     # Start new session to prevent session fixation attacks.
     session.invalidate()

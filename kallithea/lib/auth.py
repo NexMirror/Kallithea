@@ -379,10 +379,9 @@ class AuthUser(object):
     adding various non-persistent data. If lookup fails but anonymous
     access to Kallithea is enabled, the default user is loaded instead.
 
-    `AuthUser` does not by itself authenticate users and the constructor
-    sets the `is_authenticated` field to False. It's up to other parts
-    of the code to check e.g. if a supplied password is correct, and if
-    so, set `is_authenticated` to True.
+    `AuthUser` does not by itself authenticate users. It's up to other parts of
+    the code to check e.g. if a supplied password is correct, and if so, trust
+    the AuthUser object as an authenticated user.
 
     However, `AuthUser` does refuse to load a user that is not `active`.
 
@@ -401,8 +400,6 @@ class AuthUser(object):
 
     def __init__(self, user_id=None, dbuser=None, authenticating_api_key=None,
             is_external_auth=False):
-
-        self.is_authenticated = False
         self.is_external_auth = is_external_auth
         self.authenticating_api_key = authenticating_api_key
 
@@ -571,8 +568,7 @@ class AuthUser(object):
             return False
 
     def __repr__(self):
-        return "<AuthUser('id:%s[%s] auth:%s')>" \
-            % (self.user_id, self.username, (self.is_authenticated or self.is_default_user))
+        return "<AuthUser('id:%s[%s]')>" % (self.user_id, self.username)
 
     def to_cookie(self):
         """ Serializes this login session to a cookie `dict`. """
@@ -591,7 +587,6 @@ class AuthUser(object):
             user_id=cookie.get('user_id'),
             is_external_auth=cookie.get('is_external_auth', False),
         )
-        au.is_authenticated = True
         return au
 
     @classmethod
