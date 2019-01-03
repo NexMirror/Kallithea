@@ -155,7 +155,7 @@ class PermissionsController(BaseController):
             if p.permission.permission_name.startswith('usergroup.'):
                 defaults['default_user_group_perm'] = p.permission.permission_name
 
-            if p.permission.permission_name.startswith('hg.create.write_on_repogroup'):
+            if p.permission.permission_name.startswith('hg.create.write_on_repogroup.'):
                 defaults['create_on_write'] = p.permission.permission_name
 
             elif p.permission.permission_name.startswith('hg.create.'):

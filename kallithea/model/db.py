@@ -1652,7 +1652,7 @@ class Permission(Base, BaseDbModel):
         _table_args_default_dict,
     )
 
-    PERMS = [
+    PERMS = (
         ('hg.admin', _('Kallithea Administrator')),
 
         ('repository.none', _('Default user has no access to new repositories')),
@@ -1691,10 +1691,10 @@ class Permission(Base, BaseDbModel):
 
         ('hg.extern_activate.manual', _('Manual activation of external account')),
         ('hg.extern_activate.auto', _('Automatic activation of external account')),
-    ]
+    )
 
     # definition of system default permissions for DEFAULT user
-    DEFAULT_USER_PERMISSIONS = [
+    DEFAULT_USER_PERMISSIONS = (
         'repository.read',
         'group.read',
         'usergroup.read',
@@ -1703,7 +1703,7 @@ class Permission(Base, BaseDbModel):
         'hg.fork.repository',
         'hg.register.manual_activate',
         'hg.extern_activate.auto',
-    ]
+    )
 
     # defines which permissions are more important higher the more important
     # Weight defines which permissions are more important.
@@ -1734,7 +1734,17 @@ class Permission(Base, BaseDbModel):
         'hg.fork.repository': 1,
 
         'hg.create.none': 0,
-        'hg.create.repository': 1
+        'hg.create.repository': 1,
+
+        'hg.create.write_on_repogroup.false': 0,
+        'hg.create.write_on_repogroup.true': 1,
+
+        'hg.register.none': 0,
+        'hg.register.manual_activate': 1,
+        'hg.register.auto_activate': 2,
+
+        'hg.extern_activate.manual': 0,
+        'hg.extern_activate.auto': 1,
     }
 
     permission_id = Column(Integer(), primary_key=True)
