@@ -103,7 +103,7 @@ class JSONRPCController(TGController):
 
         environ = state.request.environ
         start = time.time()
-        ip_addr = request.ip_addr = self._get_ip_addr(environ)
+        ip_addr = self._get_ip_addr(environ)
         self._req_id = None
         if 'CONTENT_LENGTH' not in environ:
             log.debug("No Content-Length")
@@ -146,21 +146,16 @@ class JSONRPCController(TGController):
         # check if we can find this session using api_key
         try:
             u = User.get_by_api_key(self._req_api_key)
-            auth_user = AuthUser.make(dbuser=u)
+            auth_user = AuthUser.make(dbuser=u, ip_addr=ip_addr)
             if auth_user is None:
                 raise JSONRPCErrorResponse(retid=self._req_id,
                                            message='Invalid API key')
-            if not AuthUser.check_ip_allowed(auth_user, ip_addr):
-                raise JSONRPCErrorResponse(retid=self._req_id,
-                                           message='request from IP:%s not allowed' % (ip_addr,))
-            else:
-                log.info('Access for IP:%s allowed', ip_addr)
-
         except Exception as e:
             raise JSONRPCErrorResponse(retid=self._req_id,
                                        message='Invalid API key')
 
         request.authuser = auth_user
+        request.ip_addr = ip_addr
 
         self._error = None
         try:

@@ -399,15 +399,20 @@ class AuthUser(object):
     """
 
     @classmethod
-    def make(cls, dbuser=None, authenticating_api_key=None, is_external_auth=False):
+    def make(cls, dbuser=None, authenticating_api_key=None, is_external_auth=False, ip_addr=None):
         """Create an AuthUser to be authenticated ... or return None if user for some reason can't be authenticated.
-        Checks that a non-None dbuser is provided and is active.
+        Checks that a non-None dbuser is provided, is active, and that the IP address is ok.
         """
+        assert ip_addr is not None
         if dbuser is None:
             log.info('No db user for authentication')
             return None
         if not dbuser.active:
             log.info('Db user %s not active', dbuser.username)
+            return None
+        allowed_ips = AuthUser.get_allowed_ips(dbuser.user_id, cache=True)
+        if not check_ip_access(source_ip=ip_addr, allowed_ips=allowed_ips):
+            log.info('Access for %s from %s forbidden - not in %s', dbuser.username, ip_addr, allowed_ips)
             return None
         return cls(dbuser=dbuser, authenticating_api_key=authenticating_api_key,
             is_external_auth=is_external_auth)
@@ -561,21 +566,6 @@ class AuthUser(object):
         return [x[0] for x in self.permissions['user_groups'].iteritems()
                 if x[1] == 'usergroup.admin']
 
-    @staticmethod
-    def check_ip_allowed(user, ip_addr):
-        """
-        Check if the given IP address (a `str`) is allowed for the given
-        user (an `AuthUser` or `db.User`).
-        """
-        allowed_ips = AuthUser.get_allowed_ips(user.user_id, cache=True)
-        if check_ip_access(source_ip=ip_addr, allowed_ips=allowed_ips):
-            log.debug('IP:%s is in range of %s', ip_addr, allowed_ips)
-            return True
-        else:
-            log.info('Access for IP:%s forbidden, '
-                     'not in %s' % (ip_addr, allowed_ips))
-            return False
-
     def __repr__(self):
         return "<AuthUser('id:%s[%s]')>" % (self.user_id, self.username)
 
@@ -587,13 +577,14 @@ class AuthUser(object):
         }
 
     @staticmethod
-    def from_cookie(cookie):
+    def from_cookie(cookie, ip_addr):
         """
         Deserializes an `AuthUser` from a cookie `dict` ... or return None.
         """
         return AuthUser.make(
             dbuser=UserModel().get(cookie.get('user_id')),
             is_external_auth=cookie.get('is_external_auth', False),
+            ip_addr=ip_addr,
         )
 
     @classmethod
