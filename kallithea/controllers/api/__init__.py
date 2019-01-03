@@ -146,12 +146,11 @@ class JSONRPCController(TGController):
         # check if we can find this session using api_key
         try:
             u = User.get_by_api_key(self._req_api_key)
-            if u is None:
+            auth_user = AuthUser.make(dbuser=u)
+            if auth_user is None:
                 raise JSONRPCErrorResponse(retid=self._req_id,
                                            message='Invalid API key')
-
-            auth_u = AuthUser(dbuser=u)
-            if not AuthUser.check_ip_allowed(auth_u, ip_addr):
+            if not AuthUser.check_ip_allowed(auth_user, ip_addr):
                 raise JSONRPCErrorResponse(retid=self._req_id,
                                            message='request from IP:%s not allowed' % (ip_addr,))
             else:
@@ -160,6 +159,8 @@ class JSONRPCController(TGController):
         except Exception as e:
             raise JSONRPCErrorResponse(retid=self._req_id,
                                        message='Invalid API key')
+
+        request.authuser = auth_user
 
         self._error = None
         try:
@@ -178,11 +179,6 @@ class JSONRPCController(TGController):
         # kw arguments required by this method
         func_kwargs = dict(itertools.izip_longest(reversed(arglist), reversed(defaults),
                                                   fillvalue=default_empty))
-
-        # this is little trick to inject logged in user for
-        # perms decorators to work they expect the controller class to have
-        # authuser attribute set
-        request.authuser = auth_u
 
         # This attribute will need to be first param of a method that uses
         # api_key, which is translated to instance of user at that name

@@ -398,6 +398,20 @@ class AuthUser(object):
     "default". Use `is_anonymous` to check for both "default" and "no user".
     """
 
+    @classmethod
+    def make(cls, dbuser=None, authenticating_api_key=None, is_external_auth=False):
+        """Create an AuthUser to be authenticated ... or return None if user for some reason can't be authenticated.
+        Checks that a non-None dbuser is provided and is active.
+        """
+        if dbuser is None:
+            log.info('No db user for authentication')
+            return None
+        if not dbuser.active:
+            log.info('Db user %s not active', dbuser.username)
+            return None
+        return cls(dbuser=dbuser, authenticating_api_key=authenticating_api_key,
+            is_external_auth=is_external_auth)
+
     def __init__(self, user_id=None, dbuser=None, authenticating_api_key=None,
             is_external_auth=False):
         self.is_external_auth = is_external_auth # container auth - don't show logout option
@@ -575,14 +589,12 @@ class AuthUser(object):
     @staticmethod
     def from_cookie(cookie):
         """
-        Deserializes an `AuthUser` from a cookie `dict`.
+        Deserializes an `AuthUser` from a cookie `dict` ... or return None.
         """
-
-        au = AuthUser(
-            user_id=cookie.get('user_id'),
+        return AuthUser.make(
+            dbuser=UserModel().get(cookie.get('user_id')),
             is_external_auth=cookie.get('is_external_auth', False),
         )
-        return au
 
     @classmethod
     def get_allowed_ips(cls, user_id, cache=False):
@@ -871,18 +883,17 @@ class HasPermissionAnyMiddleware(object):
     def __init__(self, *perms):
         self.required_perms = set(perms)
 
-    def __call__(self, user, repo_name, purpose=None):
+    def __call__(self, authuser, repo_name, purpose=None):
         # repo_name MUST be unicode, since we handle keys in ok
         # dict by unicode
         repo_name = safe_unicode(repo_name)
-        user = AuthUser(user.user_id)
 
         try:
-            ok = user.permissions['repositories'][repo_name] in self.required_perms
+            ok = authuser.permissions['repositories'][repo_name] in self.required_perms
         except KeyError:
             ok = False
 
-        log.debug('Middleware check %s for %s for repo %s (%s): %s', user.username, self.required_perms, repo_name, purpose, ok)
+        log.debug('Middleware check %s for %s for repo %s (%s): %s', authuser.username, self.required_perms, repo_name, purpose, ok)
         return ok
 
 

@@ -117,13 +117,15 @@ def log_in_user(user, remember, is_external_auth):
 
     Returns populated `AuthUser` object.
     """
+    # It should not be possible to explicitly log in as the default user.
+    assert not user.is_default_user, user
+
+    auth_user = AuthUser.make(dbuser=user, is_external_auth=is_external_auth)
+    if auth_user is None:
+        return None
+
     user.update_lastlogin()
     meta.Session().commit()
-
-    auth_user = AuthUser(dbuser=user,
-                         is_external_auth=is_external_auth)
-    # It should not be possible to explicitly log in as the default user.
-    assert not auth_user.is_default_user
 
     # Start new session to prevent session fixation attacks.
     session.invalidate()
@@ -210,18 +212,15 @@ class BaseVCSController(object):
         Returns (user, None) on successful authentication and authorization.
         Returns (None, wsgi_app) to send the wsgi_app response to the client.
         """
-        # Check if anonymous access is allowed.
+        # Use anonymous access if allowed for action on repo.
         default_user = User.get_default_user(cache=True)
-        is_default_user_allowed = (default_user.active and
-            self._check_permission(action, default_user, repo_name, ip_addr))
-        if is_default_user_allowed:
-            return default_user, None
-
-        if not default_user.active:
-            log.debug('Anonymous access is disabled')
+        default_authuser = AuthUser.make(dbuser=default_user)
+        if default_authuser is None:
+            log.debug('No anonymous access at all') # move on to proper user auth
         else:
-            log.debug('Not authorized to access this '
-                      'repository as anonymous user')
+            if self._check_permission(action, default_authuser, repo_name, ip_addr):
+                return default_authuser, None
+            log.debug('Not authorized to access this repository as anonymous user')
 
         username = None
         #==============================================================
@@ -252,15 +251,14 @@ class BaseVCSController(object):
         #==============================================================
         try:
             user = User.get_by_username_or_email(username)
-            if user is None or not user.active:
-                return None, webob.exc.HTTPForbidden()
         except Exception:
             log.error(traceback.format_exc())
             return None, webob.exc.HTTPInternalServerError()
 
-        # check permissions for this repository
-        perm = self._check_permission(action, user, repo_name, ip_addr)
-        if not perm:
+        authuser = AuthUser.make(dbuser=user)
+        if authuser is None:
+            return None, webob.exc.HTTPForbidden()
+        if not self._check_permission(action, authuser, repo_name, ip_addr):
             return None, webob.exc.HTTPForbidden()
 
         return user, None
@@ -285,7 +283,7 @@ class BaseVCSController(object):
 
         return '/'.join(data)
 
-    def _check_permission(self, action, user, repo_name, ip_addr=None):
+    def _check_permission(self, action, authuser, repo_name, ip_addr=None):
         """
         Checks permissions using action (push/pull) user and repository
         name
@@ -295,7 +293,7 @@ class BaseVCSController(object):
         :param repo_name: repository name
         """
         # check IP
-        ip_allowed = AuthUser.check_ip_allowed(user, ip_addr)
+        ip_allowed = AuthUser.check_ip_allowed(authuser, ip_addr)
         if ip_allowed:
             log.info('Access for IP:%s allowed', ip_addr)
         else:
@@ -303,7 +301,7 @@ class BaseVCSController(object):
 
         if action == 'push':
             if not HasPermissionAnyMiddleware('repository.write',
-                                              'repository.admin')(user,
+                                              'repository.admin')(authuser,
                                                                   repo_name):
                 return False
 
@@ -311,7 +309,7 @@ class BaseVCSController(object):
             #any other action need at least read permission
             if not HasPermissionAnyMiddleware('repository.read',
                                               'repository.write',
-                                              'repository.admin')(user,
+                                              'repository.admin')(authuser,
                                                                   repo_name):
                 return False
 
@@ -392,6 +390,7 @@ class BaseController(TGController):
         """
         Create an `AuthUser` object given the API key/bearer token
         (if any) and the value of the authuser session cookie.
+        Returns None if no valid user is found (like not active).
         """
 
         # Authenticate by bearer token
@@ -400,9 +399,9 @@ class BaseController(TGController):
 
         # Authenticate by API key
         if api_key is not None:
-            au = AuthUser(dbuser=User.get_by_api_key(api_key),
-                authenticating_api_key=api_key, is_external_auth=True)
-            if au.is_anonymous:
+            dbuser = User.get_by_api_key(api_key)
+            au = AuthUser.make(dbuser=dbuser, authenticating_api_key=api_key, is_external_auth=True)
+            if au is None or au.is_anonymous:
                 log.warning('API key ****%s is NOT valid', api_key[-4:])
                 raise webob.exc.HTTPForbidden(_('Invalid API key'))
             return au
@@ -429,12 +428,14 @@ class BaseController(TGController):
                 if user_info is not None:
                     username = user_info['username']
                     user = User.get_by_username(username, case_insensitive=True)
-                    return log_in_user(user, remember=False,
-                                       is_external_auth=True)
+                    return log_in_user(user, remember=False, is_external_auth=True)
 
         # User is default user (if active) or anonymous
         default_user = User.get_default_user(cache=True)
-        return AuthUser(dbuser=default_user)
+        authuser = AuthUser.make(dbuser=default_user)
+        if authuser is None: # fall back to anonymous
+            authuser = AuthUser(dbuser=default_user) # TODO: somehow use .make?
+        return authuser
 
     @staticmethod
     def _basic_security_checks():
@@ -490,7 +491,9 @@ class BaseController(TGController):
                 bearer_token,
                 session.get('authuser'),
             )
-
+            if authuser is None:
+                log.info('No valid user found')
+                raise webob.exc.HTTPForbidden()
             if not AuthUser.check_ip_allowed(authuser, request.ip_addr):
                 raise webob.exc.HTTPForbidden()
 

@@ -362,7 +362,7 @@ def authenticate(username, password, environ=None):
                                settings=plugin_settings)
         log.debug('Plugin %s extracted user `%s`', module, user)
 
-        if user is not None and not user.active:
+        if user is not None and not user.active: # give up, way before creating AuthUser
             log.error("Rejecting authentication of in-active user %s", user)
             continue
 

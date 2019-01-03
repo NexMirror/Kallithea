@@ -102,8 +102,8 @@ class LoginController(BaseController):
                 # Exception itself
                 h.flash(e, 'error')
             else:
-                log_in_user(user, c.form_result['remember'],
-                    is_external_auth=False)
+                auth_user = log_in_user(user, c.form_result['remember'], is_external_auth=False)
+                # TODO: handle auth_user is None as failed authentication?
                 raise HTTPFound(location=c.came_from)
         else:
             # redirect if already logged in
