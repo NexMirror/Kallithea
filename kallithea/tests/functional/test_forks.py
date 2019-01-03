@@ -27,12 +27,12 @@ class _BaseTestCase(TestController):
     def setup_method(self, method):
         self.username = u'forkuser'
         self.password = u'qweqwe'
-        self.u1 = fixture.create_user(self.username, password=self.password,
-                                      email=u'fork_king@example.com')
+        u1 = fixture.create_user(self.username, password=self.password, email=u'fork_king@example.com')
+        self.u1_id = u1.user_id
         Session().commit()
 
     def teardown_method(self, method):
-        Session().delete(self.u1)
+        fixture.destroy_user(self.u1_id)
         Session().commit()
 
     def test_index(self):
@@ -46,16 +46,21 @@ class _BaseTestCase(TestController):
     def test_no_permissions_to_fork(self):
         usr = self.log_user(TEST_USER_REGULAR_LOGIN,
                             TEST_USER_REGULAR_PASS)['user_id']
-        user_model = UserModel()
-        user_model.revoke_perm(usr, 'hg.fork.repository')
-        user_model.grant_perm(usr, 'hg.fork.none')
-        u = UserModel().get(usr)
-        u.inherit_default_permissions = False
-        Session().commit()
-        # try create a fork
-        repo_name = self.REPO
-        self.app.post(url(controller='forks', action='fork_create',
-                          repo_name=repo_name), {'_authentication_token': self.authentication_token()}, status=403)
+        try:
+            user_model = UserModel()
+            user_model.revoke_perm(usr, 'hg.fork.repository')
+            user_model.grant_perm(usr, 'hg.fork.none')
+            u = UserModel().get(usr)
+            u.inherit_default_permissions = False
+            Session().commit()
+            # try create a fork
+            repo_name = self.REPO
+            self.app.post(url(controller='forks', action='fork_create',
+                              repo_name=repo_name), {'_authentication_token': self.authentication_token()}, status=403)
+        finally:
+            user_model.revoke_perm(usr, 'hg.fork.none')
+            user_model.grant_perm(usr, 'hg.fork.repository')
+            Session().commit()
 
     def test_index_with_fork(self):
         self.log_user()
