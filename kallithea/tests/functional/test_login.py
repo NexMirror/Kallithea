@@ -441,10 +441,6 @@ class TestLoginController(TestController):
     # API
     #==========================================================================
 
-    def _get_api_whitelist(self, values=None):
-        config = {'api_access_controllers_whitelist': values or []}
-        return config
-
     def _api_key_test(self, api_key, status):
         """Verifies HTTP status code for accessing an auth-requiring page,
         using the given api_key URL parameter as well as using the API key
@@ -476,45 +472,22 @@ class TestLoginController(TestController):
         ('none', None, 302),
         ('empty_string', '', 403),
         ('fake_number', '123456', 403),
-        ('proper_api_key', True, 403)
-    ])
-    def test_access_not_whitelisted_page_via_api_key(self, test_name, api_key, code):
-        whitelist = self._get_api_whitelist([])
-        with mock.patch('kallithea.CONFIG', whitelist):
-            assert [] == whitelist['api_access_controllers_whitelist']
-            self._api_key_test(api_key, code)
-
-    @parametrize('test_name,api_key,code', [
-        ('none', None, 302),
-        ('empty_string', '', 403),
-        ('fake_number', '123456', 403),
         ('fake_not_alnum', 'a-z', 403),
         ('fake_api_key', '0123456789abcdef0123456789ABCDEF01234567', 403),
         ('proper_api_key', True, 200)
     ])
-    def test_access_whitelisted_page_via_api_key(self, test_name, api_key, code):
-        whitelist = self._get_api_whitelist(['ChangesetController:changeset_raw'])
-        with mock.patch('kallithea.CONFIG', whitelist):
-            assert ['ChangesetController:changeset_raw'] == whitelist['api_access_controllers_whitelist']
-            self._api_key_test(api_key, code)
+    def test_access_page_via_api_key(self, test_name, api_key, code):
+        self._api_key_test(api_key, code)
 
     def test_access_page_via_extra_api_key(self):
-        whitelist = self._get_api_whitelist(['ChangesetController:changeset_raw'])
-        with mock.patch('kallithea.CONFIG', whitelist):
-            assert ['ChangesetController:changeset_raw'] == whitelist['api_access_controllers_whitelist']
-
-            new_api_key = ApiKeyModel().create(TEST_USER_ADMIN_LOGIN, u'test')
-            Session().commit()
-            self._api_key_test(new_api_key.api_key, status=200)
+        new_api_key = ApiKeyModel().create(TEST_USER_ADMIN_LOGIN, u'test')
+        Session().commit()
+        self._api_key_test(new_api_key.api_key, status=200)
 
     def test_access_page_via_expired_api_key(self):
-        whitelist = self._get_api_whitelist(['ChangesetController:changeset_raw'])
-        with mock.patch('kallithea.CONFIG', whitelist):
-            assert ['ChangesetController:changeset_raw'] == whitelist['api_access_controllers_whitelist']
-
-            new_api_key = ApiKeyModel().create(TEST_USER_ADMIN_LOGIN, u'test')
-            Session().commit()
-            # patch the API key and make it expired
-            new_api_key.expires = 0
-            Session().commit()
-            self._api_key_test(new_api_key.api_key, status=403)
+        new_api_key = ApiKeyModel().create(TEST_USER_ADMIN_LOGIN, u'test')
+        Session().commit()
+        # patch the API key and make it expired
+        new_api_key.expires = 0
+        Session().commit()
+        self._api_key_test(new_api_key.api_key, status=403)

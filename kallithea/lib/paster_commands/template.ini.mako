@@ -250,18 +250,6 @@ show_revision_number = false
 <%text>## Kallithea url, ie. http[s]://kallithea.example.com/_admin/gists/<gistid></%text>
 gist_alias_url =
 
-<%text>## white list of API enabled controllers. This allows to add list of</%text>
-<%text>## controllers to which access will be enabled by api_key. eg: to enable</%text>
-<%text>## api access to raw_files put `FilesController:raw`, to enable access to patches</%text>
-<%text>## add `ChangesetController:changeset_patch`. This list should be "," separated</%text>
-<%text>## Syntax is <ControllerClass>:<function>. Check debug logs for generated names</%text>
-<%text>## Recommended settings below are commented out:</%text>
-api_access_controllers_whitelist =
-#    ChangesetController:changeset_patch,
-#    ChangesetController:changeset_raw,
-#    FilesController:raw,
-#    FilesController:archivefile
-
 <%text>## default encoding used to convert from and to unicode</%text>
 <%text>## can be also a comma separated list of encoding in case of mixed encodings</%text>
 default_encoding = utf-8

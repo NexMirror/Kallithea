@@ -1238,24 +1238,8 @@ OUTPUT::
 API access for web views
 ------------------------
 
-API access can also be turned on for each web view in Kallithea that is
-decorated with the ``@LoginRequired`` decorator. Some views use
-``@LoginRequired(api_access=True)`` and are always available. By default only
-RSS/Atom feed views are enabled. Other views are
-only available if they have been whitelisted. Edit the
-``api_access_controllers_whitelist`` option in your .ini file and define views
-that should have API access enabled.
-
-For example, to enable API access to patch/diff, raw file and archive::
-
-    api_access_controllers_whitelist =
-        ChangesetController:changeset_patch,
-        ChangesetController:changeset_raw,
-        FilesController:raw,
-        FilesController:archivefile
-
-After this change, a Kallithea view can be accessed without login using
-bearer authentication, by including this header with the request::
+Kallithea HTTP entry points can also be accessed without login using bearer
+authentication by including this header with the request::
 
     Authentication: Bearer <api_key>
 

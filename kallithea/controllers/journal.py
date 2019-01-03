@@ -220,7 +220,7 @@ class JournalController(BaseController):
 
         return render('journal/journal.html')
 
-    @LoginRequired(api_access=True)
+    @LoginRequired()
     def journal_atom(self):
         """
         Produce an atom-1.0 feed via feedgenerator module
@@ -231,7 +231,7 @@ class JournalController(BaseController):
             .all()
         return self._atom_feed(following, public=False)
 
-    @LoginRequired(api_access=True)
+    @LoginRequired()
     def journal_rss(self):
         """
         Produce an rss feed via feedgenerator module
@@ -289,7 +289,7 @@ class JournalController(BaseController):
 
         return render('journal/public_journal.html')
 
-    @LoginRequired(api_access=True, allow_default_user=True)
+    @LoginRequired(allow_default_user=True)
     def public_journal_atom(self):
         """
         Produce an atom-1.0 feed via feedgenerator module
@@ -301,7 +301,7 @@ class JournalController(BaseController):
 
         return self._atom_feed(c.following)
 
-    @LoginRequired(api_access=True, allow_default_user=True)
+    @LoginRequired(allow_default_user=True)
     def public_journal_rss(self):
         """
         Produce an rss2 feed via feedgenerator module

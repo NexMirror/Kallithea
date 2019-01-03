@@ -367,28 +367,6 @@ def _cached_perms_data(user_id, user_is_admin):
     return permissions
 
 
-def allowed_api_access(controller_name, whitelist=None, api_key=None):
-    """
-    Check if given controller_name is in whitelist API access
-    """
-    if not whitelist:
-        from kallithea import CONFIG
-        whitelist = aslist(CONFIG.get('api_access_controllers_whitelist'),
-                           sep=',')
-        log.debug('whitelist of API access is: %s', whitelist)
-    api_access_valid = controller_name in whitelist
-    if api_access_valid:
-        log.debug('controller:%s is in API whitelist', controller_name)
-    else:
-        msg = 'controller: %s is *NOT* in API whitelist' % (controller_name)
-        if api_key:
-            # if we use API key and don't have access it's a warning
-            log.warning(msg)
-        else:
-            log.debug(msg)
-    return api_access_valid
-
-
 class AuthUser(object):
     """
     Represents a Kallithea user, including various authentication and
@@ -689,13 +667,10 @@ class LoginRequired(object):
     If the "default" user is enabled and allow_default_user is true, that is
     considered valid too.
 
-    Also checks that IP address is allowed, and if using API key instead
-    of regular cookie authentication, checks that API key access is allowed
-    (based on `api_access` parameter and the API view whitelist).
+    Also checks that IP address is allowed.
     """
 
-    def __init__(self, api_access=False, allow_default_user=False):
-        self.api_access = api_access
+    def __init__(self, allow_default_user=False):
         self.allow_default_user = allow_default_user
 
     def __call__(self, func):
@@ -708,16 +683,9 @@ class LoginRequired(object):
         log.debug('Checking access for user %s @ %s', user, loc)
 
         # Check if we used an API key to authenticate.
-        api_key = user.authenticating_api_key
-        if api_key is not None:
-            # Check that controller is enabled for API key usage.
-            if not self.api_access and not allowed_api_access(loc, api_key=api_key):
-                # controller does not allow API access
-                log.warning('API access to %s is not allowed', loc)
-                raise HTTPForbidden()
-
+        if user.authenticating_api_key is not None:
             log.info('user %s authenticated with API key ****%s @ %s',
-                     user, api_key[-4:], loc)
+                     user, user.authenticating_api_key[-4:], loc)
             return func(*fargs, **fkwargs)
 
         # CSRF protection: Whenever a request has ambient authority (whether

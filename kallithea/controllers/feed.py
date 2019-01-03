@@ -51,7 +51,7 @@ ttl = "5"
 
 class FeedController(BaseRepoController):
 
-    @LoginRequired(api_access=True, allow_default_user=True)
+    @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')
     def _before(self, *args, **kwargs):
         super(FeedController, self)._before(*args, **kwargs)
