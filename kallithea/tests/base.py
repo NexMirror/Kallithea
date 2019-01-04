@@ -154,7 +154,8 @@ class TestController(object):
         self._logged_username = username
         response = self.app.post(url(controller='login', action='index'),
                                  {'username': username,
-                                  'password': password})
+                                  'password': password,
+                                  '_authentication_token': self.authentication_token()})
 
         if 'Invalid username or password' in response.body:
             pytest.fail('could not login using %s %s' % (username, password))
