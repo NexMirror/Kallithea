@@ -327,6 +327,18 @@ class BaseController(TGController):
         """
         _before is called before controller methods and after __call__
         """
+        if request.needs_csrf_check:
+            # CSRF protection: Whenever a request has ambient authority (whether
+            # through a session cookie or its origin IP address), it must include
+            # the correct token, unless the HTTP method is GET or HEAD (and thus
+            # guaranteed to be side effect free. In practice, the only situation
+            # where we allow side effects without ambient authority is when the
+            # authority comes from an API key; and that is handled above.
+            token = request.POST.get(secure_form.token_key)
+            if not token or token != secure_form.authentication_token():
+                log.error('CSRF check failed')
+                raise webob.exc.HTTPForbidden()
+
         c.kallithea_version = __version__
         rc_config = Setting.get_app_settings()
 
@@ -467,18 +479,15 @@ class BaseController(TGController):
                     session.get('authuser'),
                     ip_addr=ip_addr,
                 )
+                needs_csrf_check = request.method not in ['GET', 'HEAD']
 
             else:
                 dbuser = User.get_by_api_key(api_key)
                 if dbuser is None:
                     log.info('No db user found for authentication with API key ****%s from %s',
                              api_key[-4:], ip_addr)
-                authuser = AuthUser.make(
-                    dbuser=dbuser,
-                    authenticating_api_key=api_key,
-                    is_external_auth=True,
-                    ip_addr=ip_addr,
-                )
+                authuser = AuthUser.make(dbuser=dbuser, authenticating_api_key=api_key, is_external_auth=True, ip_addr=ip_addr)
+                needs_csrf_check = False # API key provides CSRF protection
 
             if authuser is None:
                 log.info('No valid user found')
@@ -487,6 +496,7 @@ class BaseController(TGController):
             # set globals for auth user
             request.authuser = authuser
             request.ip_addr = ip_addr
+            request.needs_csrf_check = needs_csrf_check
 
             log.info('IP: %s User: %s accessed %s',
                 request.ip_addr, request.authuser,
