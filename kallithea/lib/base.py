@@ -379,25 +379,12 @@ class BaseController(TGController):
         self.scm_model = ScmModel()
 
     @staticmethod
-    def _determine_auth_user(api_key, bearer_token, session_authuser, ip_addr):
+    def _determine_auth_user(session_authuser, ip_addr):
         """
         Create an `AuthUser` object given the API key/bearer token
         (if any) and the value of the authuser session cookie.
         Returns None if no valid user is found (like not active or no access for IP).
         """
-
-        # Authenticate by bearer token
-        if bearer_token is not None:
-            api_key = bearer_token
-
-        # Authenticate by API key
-        if api_key is not None:
-            dbuser = User.get_by_api_key(api_key)
-            if dbuser is None:
-                log.info('No db user found for authentication with API key ****%s from %s',
-                         api_key[-4:], ip_addr)
-                return None
-            return AuthUser.make(dbuser=dbuser, authenticating_api_key=api_key, is_external_auth=True, ip_addr=ip_addr)
 
         # Authenticate by session cookie
         # In ancient login sessions, 'authuser' may not be a dict.
@@ -463,13 +450,9 @@ class BaseController(TGController):
     def __call__(self, environ, context):
         try:
             ip_addr = _get_ip_addr(environ)
-            # make sure that we update permissions each time we call controller
-
             self._basic_security_checks()
 
-            # set globals for auth user
-
-            bearer_token = None
+            api_key = request.GET.get('api_key')
             try:
                 # Request.authorization may raise ValueError on invalid input
                 type, params = request.authorization
@@ -477,18 +460,31 @@ class BaseController(TGController):
                 pass
             else:
                 if type.lower() == 'bearer':
-                    bearer_token = params
+                    api_key = params # bearer token is an api key too
 
-            authuser = self._determine_auth_user(
-                request.GET.get('api_key'),
-                bearer_token,
-                session.get('authuser'),
-                ip_addr=ip_addr,
-            )
+            if api_key is None:
+                authuser = self._determine_auth_user(
+                    session.get('authuser'),
+                    ip_addr=ip_addr,
+                )
+
+            else:
+                dbuser = User.get_by_api_key(api_key)
+                if dbuser is None:
+                    log.info('No db user found for authentication with API key ****%s from %s',
+                             api_key[-4:], ip_addr)
+                authuser = AuthUser.make(
+                    dbuser=dbuser,
+                    authenticating_api_key=api_key,
+                    is_external_auth=True,
+                    ip_addr=ip_addr,
+                )
+
             if authuser is None:
                 log.info('No valid user found')
                 raise webob.exc.HTTPForbidden()
 
+            # set globals for auth user
             request.authuser = authuser
             request.ip_addr = ip_addr
 

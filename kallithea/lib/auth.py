@@ -675,19 +675,13 @@ class LoginRequired(object):
         loc = "%s:%s" % (controller.__class__.__name__, func.__name__)
         log.debug('Checking access for user %s @ %s', user, loc)
 
-        # Check if we used an API key to authenticate.
-        if user.authenticating_api_key is not None:
-            log.info('user %s authenticated with API key ****%s @ %s',
-                     user, user.authenticating_api_key[-4:], loc)
-            return func(*fargs, **fkwargs)
-
         # CSRF protection: Whenever a request has ambient authority (whether
         # through a session cookie or its origin IP address), it must include
         # the correct token, unless the HTTP method is GET or HEAD (and thus
         # guaranteed to be side effect free. In practice, the only situation
         # where we allow side effects without ambient authority is when the
         # authority comes from an API key; and that is handled above.
-        if request.method not in ['GET', 'HEAD']:
+        if user.authenticating_api_key is None and request.method not in ['GET', 'HEAD']:
             token = request.POST.get(secure_form.token_key)
             if not token or token != secure_form.authentication_token():
                 log.error('CSRF check failed')
