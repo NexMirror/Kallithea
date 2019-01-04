@@ -399,7 +399,7 @@ class AuthUser(object):
     """
 
     @classmethod
-    def make(cls, dbuser=None, authenticating_api_key=None, is_external_auth=False, ip_addr=None):
+    def make(cls, dbuser=None, is_external_auth=False, ip_addr=None):
         """Create an AuthUser to be authenticated ... or return None if user for some reason can't be authenticated.
         Checks that a non-None dbuser is provided, is active, and that the IP address is ok.
         """
@@ -414,13 +414,10 @@ class AuthUser(object):
         if not check_ip_access(source_ip=ip_addr, allowed_ips=allowed_ips):
             log.info('Access for %s from %s forbidden - not in %s', dbuser.username, ip_addr, allowed_ips)
             return None
-        return cls(dbuser=dbuser, authenticating_api_key=authenticating_api_key,
-            is_external_auth=is_external_auth)
+        return cls(dbuser=dbuser, is_external_auth=is_external_auth)
 
-    def __init__(self, user_id=None, dbuser=None, authenticating_api_key=None,
-            is_external_auth=False):
+    def __init__(self, user_id=None, dbuser=None, is_external_auth=False):
         self.is_external_auth = is_external_auth # container auth - don't show logout option
-        self.authenticating_api_key = authenticating_api_key
 
         # These attributes will be overridden by fill_data, below, unless the
         # requested user cannot be found and the default anonymous user is

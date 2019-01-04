@@ -486,7 +486,7 @@ class BaseController(TGController):
                 if dbuser is None:
                     log.info('No db user found for authentication with API key ****%s from %s',
                              api_key[-4:], ip_addr)
-                authuser = AuthUser.make(dbuser=dbuser, authenticating_api_key=api_key, is_external_auth=True, ip_addr=ip_addr)
+                authuser = AuthUser.make(dbuser=dbuser, is_external_auth=True, ip_addr=ip_addr)
                 needs_csrf_check = False # API key provides CSRF protection
 
             if authuser is None:
