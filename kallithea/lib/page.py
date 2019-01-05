@@ -190,7 +190,7 @@ class RepoPage(Page):
         try:
             self.page = int(page)  # make it int() if we get it as a string
         except (ValueError, TypeError):
-            log.error("Invalid page value: %r" % page)
+            log.error("Invalid page value: %r", page)
             self.page = 1
 
         self.items_per_page = items_per_page

@@ -933,8 +933,8 @@ class HasPermissionAny(_PermsFunction):
         global_permissions = request.authuser.permissions['global'] # usually very short
         ok = any(p in global_permissions for p in self.required_perms)
 
-        log.debug('Check %s for global %s (%s): %s' %
-            (request.authuser.username, self.required_perms, purpose, ok))
+        log.debug('Check %s for global %s (%s): %s',
+            request.authuser.username, self.required_perms, purpose, ok)
         return ok
 
 
@@ -983,7 +983,7 @@ class HasPermissionAnyMiddleware(object):
         except KeyError:
             ok = False
 
-        log.debug('Middleware check %s for %s for repo %s (%s): %s' % (user.username, self.required_perms, repo_name, purpose, ok))
+        log.debug('Middleware check %s for %s for repo %s (%s): %s', user.username, self.required_perms, repo_name, purpose, ok)
         return ok
 
 
