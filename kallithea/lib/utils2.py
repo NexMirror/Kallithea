@@ -483,7 +483,7 @@ def extract_mentioned_usernames(text):
     Returns list of (possible) usernames @mentioned in given text.
 
     >>> extract_mentioned_usernames('@1-2.a_X,@1234 not@not @ddd@not @n @ee @ff @gg, @gg;@hh @n\n@zz,')
-    ['1-2.a_X', '1234', 'ddd', 'ee', 'ff', 'gg', 'hh', 'zz']
+    ['1-2.a_X', '1234', 'ddd', 'ee', 'ff', 'gg', 'gg', 'hh', 'zz']
     """
     return MENTIONS_REGEX.findall(text)
 
