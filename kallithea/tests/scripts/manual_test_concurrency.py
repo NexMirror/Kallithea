@@ -43,7 +43,7 @@ from kallithea.model import meta
 from kallithea.model.db import User, Repository, Ui
 from kallithea.lib.auth import get_crypt_password
 
-from kallithea.tests.base import HG_REPO
+from kallithea.tests.base import HG_REPO, TEST_USER_ADMIN_LOGIN, TEST_USER_ADMIN_PASS
 from kallithea.config.environment import load_environment
 
 rel_path = dirname(dirname(dirname(dirname(os.path.abspath(__file__)))))
