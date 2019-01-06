@@ -70,7 +70,7 @@ class GitRepository(object):
     git_folder_signature = set(['config', 'head', 'info', 'objects', 'refs'])
     commands = ['git-upload-pack', 'git-receive-pack']
 
-    def __init__(self, repo_name, content_path, extras):
+    def __init__(self, repo_name, content_path):
         files = set([f.lower() for f in os.listdir(content_path)])
         if not (self.git_folder_signature.intersection(files)
                 == self.git_folder_signature):
@@ -79,7 +79,6 @@ class GitRepository(object):
         self.valid_accepts = ['application/x-%s-result' %
                               c for c in self.commands]
         self.repo_name = repo_name
-        self.extras = extras
 
     def _get_fixedpath(self, path):
         """
@@ -201,7 +200,7 @@ class GitRepository(object):
 
 class GitDirectory(object):
 
-    def __init__(self, repo_root, repo_name, extras):
+    def __init__(self, repo_root, repo_name):
         repo_location = os.path.join(repo_root, repo_name)
         if not os.path.isdir(repo_location):
             raise OSError(repo_location)
@@ -209,22 +208,21 @@ class GitDirectory(object):
         self.content_path = repo_location
         self.repo_name = repo_name
         self.repo_location = repo_location
-        self.extras = extras
 
     def __call__(self, environ, start_response):
         content_path = self.content_path
         try:
-            app = GitRepository(self.repo_name, content_path, self.extras)
+            app = GitRepository(self.repo_name, content_path)
         except (AssertionError, OSError):
             content_path = os.path.join(content_path, '.git')
             if os.path.isdir(content_path):
-                app = GitRepository(self.repo_name, content_path, self.extras)
+                app = GitRepository(self.repo_name, content_path)
             else:
                 return exc.HTTPNotFound()(environ, start_response)
         return app(environ, start_response)
 
 
-def make_wsgi_app(repo_name, repo_root, extras):
+def make_wsgi_app(repo_name, repo_root):
     from dulwich.web import LimitedInputFilter, GunzipFilter
-    app = GitDirectory(repo_root, repo_name, extras)
+    app = GitDirectory(repo_root, repo_name)
     return GunzipFilter(LimitedInputFilter(app))

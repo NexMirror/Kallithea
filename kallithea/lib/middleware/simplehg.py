@@ -149,7 +149,7 @@ class SimpleHg(BaseVCSController):
             log.info('%s action on Mercurial repo "%s" by "%s" from %s',
                      action, str_repo_name, safe_str(user.username), ip_addr)
             environ['REPO_NAME'] = str_repo_name # used by hgweb_mod.hgweb
-            app = self.__make_app(repo_path, baseui, extras)
+            app = self.__make_app(repo_path, baseui)
             return app(environ, start_response)
         except RepoError as e:
             if str(e).find('not found') != -1:
@@ -158,10 +158,9 @@ class SimpleHg(BaseVCSController):
             log.error(traceback.format_exc())
             return HTTPInternalServerError()(environ, start_response)
 
-    def __make_app(self, repo_name, baseui, extras):
+    def __make_app(self, repo_name, baseui):
         """
-        Make an wsgi application using hgweb, and inject generated baseui
-        instance, additionally inject some extras into ui object
+        Make an hgweb wsgi application using baseui.
         """
         return hgweb_mod.hgweb(repo_name, name=repo_name, baseui=baseui)
 

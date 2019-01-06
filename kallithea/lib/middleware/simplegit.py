@@ -41,6 +41,7 @@ from kallithea.lib.utils2 import safe_str, safe_unicode, fix_PATH, get_server_ur
     _set_extras
 from kallithea.lib.base import BaseVCSController
 from kallithea.lib.utils import make_ui, is_valid_repo
+from kallithea.lib.middleware.pygrack import make_wsgi_app
 
 log = logging.getLogger(__name__)
 
@@ -113,9 +114,6 @@ class SimpleGit(BaseVCSController):
         #===================================================================
         # GIT REQUEST HANDLING
         #===================================================================
-        repo_path = os.path.join(safe_str(self.basepath), str_repo_name)
-        log.debug('Repository path is %s', repo_path)
-
         fix_PATH()
         log.debug('HOOKS extras is %s', extras)
         baseui = make_ui()
@@ -125,27 +123,17 @@ class SimpleGit(BaseVCSController):
             self._handle_githooks(repo_name, action, baseui, environ)
             log.info('%s action on Git repo "%s" by "%s" from %s',
                      action, str_repo_name, safe_str(user.username), ip_addr)
-            app = self.__make_app(repo_name, repo_path, extras)
+            app = self.__make_app(repo_name)
             return app(environ, start_response)
         except Exception:
             log.error(traceback.format_exc())
             return HTTPInternalServerError()(environ, start_response)
 
-    def __make_app(self, repo_name, repo_path, extras):
+    def __make_app(self, repo_name):
         """
-        Make an wsgi application using dulserver
-
-        :param repo_name: name of the repository
-        :param repo_path: full path to the repository
+        Return a pygrack wsgi application.
         """
-
-        from kallithea.lib.middleware.pygrack import make_wsgi_app
-        app = make_wsgi_app(
-            repo_root=safe_str(self.basepath),
-            repo_name=safe_unicode(repo_name),
-            extras=extras,
-        )
-        return app
+        return make_wsgi_app(repo_name, safe_str(self.basepath)) # FIXME: safe_str???
 
     def __get_repository(self, environ):
         """
