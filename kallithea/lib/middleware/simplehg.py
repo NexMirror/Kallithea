@@ -151,9 +151,6 @@ class SimpleHg(BaseVCSController):
             environ['REPO_NAME'] = str_repo_name # used by hgweb_mod.hgweb
             app = self.__make_app(repo_path, baseui)
             return app(environ, start_response)
-        except RepoError as e:
-            if str(e).find('not found') != -1:
-                return HTTPNotFound()(environ, start_response)
         except Exception:
             log.error(traceback.format_exc())
             return HTTPInternalServerError()(environ, start_response)
