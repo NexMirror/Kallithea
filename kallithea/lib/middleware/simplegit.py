@@ -37,7 +37,7 @@ from webob.exc import HTTPNotFound, HTTPForbidden, HTTPInternalServerError, \
     HTTPNotAcceptable
 from kallithea.model.db import Ui
 
-from kallithea.lib.utils2 import safe_str, safe_unicode, fix_PATH, get_server_url, \
+from kallithea.lib.utils2 import safe_str, safe_unicode, get_server_url, \
     _set_extras
 from kallithea.lib.base import BaseVCSController
 from kallithea.lib.utils import make_ui, is_valid_repo
@@ -114,7 +114,6 @@ class SimpleGit(BaseVCSController):
         #===================================================================
         # GIT REQUEST HANDLING
         #===================================================================
-        fix_PATH()
         log.debug('HOOKS extras is %s', extras)
         baseui = make_ui()
         _set_extras(extras or {})

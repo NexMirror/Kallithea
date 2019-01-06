@@ -506,21 +506,6 @@ class AttributeDict(dict):
     __delattr__ = dict.__delitem__
 
 
-def fix_PATH(os_=None):
-    """
-    Get current active python path, and append it to PATH variable to fix issues
-    of subprocess calls and different python versions
-    """
-    if os_ is None:
-        import os
-    else:
-        os = os_
-
-    cur_path = os.path.split(sys.executable)[0]
-    if not os.environ['PATH'].startswith(cur_path):
-        os.environ['PATH'] = '%s:%s' % (cur_path, os.environ['PATH'])
-
-
 def obfuscate_url_pw(engine):
     from sqlalchemy.engine import url as sa_url
     from sqlalchemy.exc import ArgumentError
