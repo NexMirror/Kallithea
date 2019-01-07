@@ -34,7 +34,7 @@ import logging
 import traceback
 
 from webob.exc import HTTPNotFound, HTTPForbidden, HTTPInternalServerError, \
-    HTTPNotAcceptable
+    HTTPNotAcceptable, HTTPBadRequest
 from kallithea.model.db import Ui
 
 from kallithea.lib.utils2 import safe_str, safe_unicode, get_server_url, \
@@ -59,8 +59,6 @@ def is_git(environ):
 
 
 class SimpleGit(BaseVCSController):
-
-    _git_stored_op = 'pull' # most recent kind of command
 
     def _handle_request(self, environ, start_response):
         if not is_git(environ):
@@ -149,6 +147,8 @@ class SimpleGit(BaseVCSController):
     def __get_action(self, environ):
         """
         Maps Git request commands into 'pull' or 'push'.
+
+        Raises HTTPBadRequest if the request environment doesn't look like a git client.
         """
         mapping = {
             'git-receive-pack': 'push',
@@ -156,18 +156,19 @@ class SimpleGit(BaseVCSController):
         }
         path_info = environ.get('PATH_INFO', '')
         m = GIT_PROTO_PAT.match(path_info)
-        if m is not None:
+        if m is None:
+            action = None
+        else:
             cmd = m.group(2)
-            if cmd == 'info/refs':
-                service = environ['QUERY_STRING'].split('=')
-                cmd = service[1] if len(service) > 1 else None
-                if cmd in mapping:
-                    self._git_stored_op = mapping[cmd]
-            elif cmd in mapping:
-                self._git_stored_op = mapping[cmd]
-        # fallback to stored variable as we don't know if the last
-        # operation is pull/push
-        return self._git_stored_op
+            query_string = environ['QUERY_STRING']
+            if cmd == 'info/refs' and query_string.startswith('service='):
+                service = query_string.split('=', 1)[1]
+                action = mapping.get(service)
+            else:
+                action = mapping.get(cmd)
+        if action is None:
+            raise HTTPBadRequest('Unable to detect pull/push action for %r! Are you using a nonstandard command or client?' % path_info)
+        return action
 
     def _handle_githooks(self, repo_name, action, baseui, environ):
         """
