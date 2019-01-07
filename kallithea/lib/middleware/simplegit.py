@@ -28,13 +28,11 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 
-import os
 import re
 import logging
 import traceback
 
-from webob.exc import HTTPNotFound, HTTPForbidden, HTTPInternalServerError, \
-    HTTPNotAcceptable, HTTPBadRequest
+from webob.exc import HTTPNotFound, HTTPInternalServerError, HTTPBadRequest
 
 from kallithea.model.db import Ui, Repository
 from kallithea.lib.utils2 import safe_str, safe_unicode, get_server_url, \
@@ -83,7 +81,6 @@ class SimpleGit(BaseVCSController):
         return parsed_request
 
     def _handle_request(self, parsed_request, environ, start_response):
-        ip_addr = self._get_ip_addr(environ)
         # skip passing error to error controller
         environ['pylons.status_code_redirect'] = True
 
@@ -98,14 +95,14 @@ class SimpleGit(BaseVCSController):
         #======================================================================
         # CHECK PERMISSIONS
         #======================================================================
-        user, response_app = self._authorize(environ, start_response, parsed_request.action, parsed_request.repo_name, ip_addr)
+        ip_addr = self._get_ip_addr(environ)
+        user, response_app = self._authorize(environ, parsed_request.action, parsed_request.repo_name, ip_addr)
         if response_app is not None:
             return response_app(environ, start_response)
 
         # extras are injected into Mercurial UI object and later available
         # in hooks executed by Kallithea
         from kallithea import CONFIG
-        server_url = get_server_url(environ)
         extras = {
             'ip': ip_addr,
             'username': user.username,
@@ -113,14 +110,14 @@ class SimpleGit(BaseVCSController):
             'repository': parsed_request.repo_name,
             'scm': self.scm_alias,
             'config': CONFIG['__file__'],
-            'server_url': server_url,
+            'server_url': get_server_url(environ),
         }
 
-        #===================================================================
-        # GIT REQUEST HANDLING
-        #===================================================================
+        #======================================================================
+        # REQUEST HANDLING
+        #======================================================================
         log.debug('HOOKS extras is %s', extras)
-        _set_extras(extras or {})
+        _set_extras(extras)
 
         try:
             log.info('%s action on %s repo "%s" by "%s" from %s',

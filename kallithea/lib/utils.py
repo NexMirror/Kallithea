@@ -268,6 +268,7 @@ def is_valid_repo(repo_name, base_path, scm=None):
 
     :return True: if given path is a valid repository
     """
+    # TODO: paranoid security checks?
     full_path = os.path.join(safe_str(base_path), safe_str(repo_name))
 
     try:

@@ -58,7 +58,7 @@ from kallithea.lib.exceptions import UserCreationError
 from kallithea.lib.vcs.exceptions import RepositoryError, EmptyRepositoryError, ChangesetDoesNotExistError
 from kallithea.model import meta
 
-from kallithea.model.db import PullRequest, Repository, Ui, User, Setting
+from kallithea.model.db import PullRequest, Repository, User, Setting
 from kallithea.model.scm import ScmModel
 
 log = logging.getLogger(__name__)
@@ -102,11 +102,11 @@ def _get_ip_addr(environ):
 
 
 def _get_access_path(environ):
-    path = environ.get('PATH_INFO')
+    """Return PATH_INFO from environ ... using tg.original_request if available."""
     org_req = environ.get('tg.original_request')
-    if org_req:
-        path = org_req.environ.get('PATH_INFO')
-    return path
+    if org_req is not None:
+        environ = org_req.environ
+    return environ.get('PATH_INFO')
 
 
 def log_in_user(user, remember, is_external_auth, ip_addr):
@@ -210,7 +210,7 @@ class BaseVCSController(object):
         """
         raise NotImplementedError()
 
-    def _authorize(self, environ, start_response, action, repo_name, ip_addr):
+    def _authorize(self, environ, action, repo_name, ip_addr):
         """Authenticate and authorize user.
 
         Since we're dealing with a VCS client and not a browser, we only
