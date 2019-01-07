@@ -148,22 +148,25 @@ class SimpleGit(BaseVCSController):
 
     def __get_action(self, environ):
         """
-        Maps Git request commands into a pull or push command.
-
-        :param environ:
+        Maps Git request commands into 'pull' or 'push'.
         """
-        service = environ['QUERY_STRING'].split('=')
-
-        if len(service) > 1:
-            service_cmd = service[1]
-            mapping = {
-                'git-receive-pack': 'push',
-                'git-upload-pack': 'pull',
-            }
-            op = mapping[service_cmd]
-            self._git_stored_op = op
-            # try to fallback to stored variable as we don't know if the last
-            # operation is pull/push
+        mapping = {
+            'git-receive-pack': 'push',
+            'git-upload-pack': 'pull',
+        }
+        path_info = environ.get('PATH_INFO', '')
+        m = GIT_PROTO_PAT.match(path_info)
+        if m is not None:
+            cmd = m.group(2)
+            if cmd == 'info/refs':
+                service = environ['QUERY_STRING'].split('=')
+                cmd = service[1] if len(service) > 1 else None
+                if cmd in mapping:
+                    self._git_stored_op = mapping[cmd]
+            elif cmd in mapping:
+                self._git_stored_op = mapping[cmd]
+        # fallback to stored variable as we don't know if the last
+        # operation is pull/push
         return self._git_stored_op
 
     def _handle_githooks(self, repo_name, action, baseui, environ):
