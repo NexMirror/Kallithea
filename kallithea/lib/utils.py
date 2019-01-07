@@ -78,29 +78,35 @@ def get_user_group_slug(request):
     return None
 
 
-def _extract_id_from_repo_name(repo_name):
-    if repo_name.startswith('/'):
-        repo_name = repo_name.lstrip('/')
-    by_id_match = re.match(r'^_(\d{1,})', repo_name)
-    if by_id_match:
-        return by_id_match.groups()[0]
-
-
-def get_repo_by_id(repo_name):
+def _get_permanent_id(s):
+    """Helper for decoding stable URLs with repo ID. For a string like '_123'
+    return 123.
     """
-    Extracts repo_name by id from special urls. Example url is _11/repo_name
+    by_id_match = re.match(r'^_(\d+)$', s)
+    if by_id_match is None:
+        return None
+    return int(by_id_match.group(1))
 
-    :param repo_name:
-    :return: repo_name if matched else None
+
+def fix_repo_id_name(path):
     """
-    _repo_id = _extract_id_from_repo_name(repo_name)
-    if _repo_id:
+    Rewrite repo_name for _<ID> permanent URLs.
+
+    Given a path, if the first path element is like _<ID>, return the path with
+    this part expanded to the corresponding full repo name, else return the
+    provided path.
+    """
+    first, rest = path, ''
+    if '/' in path:
+        first, rest_ = path.split('/', 1)
+        rest = '/' + rest_
+    repo_id = _get_permanent_id(first)
+    if repo_id is not None:
         from kallithea.model.db import Repository
-        repo = Repository.get(_repo_id)
-        if repo:
-            # TODO: return repo instead of reponame? or would that be a layering violation?
-            return repo.repo_name
-    return None
+        repo = Repository.get(repo_id)
+        if repo is not None:
+            return repo.repo_name + rest
+    return path
 
 
 def action_logger(user, action, repo, ipaddr='', commit=False):

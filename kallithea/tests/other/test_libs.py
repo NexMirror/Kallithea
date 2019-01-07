@@ -532,26 +532,32 @@ class TestLibs(TestController):
 
     @parametrize('test,expected', [
       ("", None),
-      ("/_2", '2'),
-      ("_2", '2'),
-      ("/_2/", '2'),
-      ("_2/", '2'),
-
-      ("/_21", '21'),
-      ("_21", '21'),
-      ("/_21/", '21'),
-      ("_21/", '21'),
-
-      ("/_21/foobar", '21'),
-      ("_21/121", '21'),
-      ("/_21/_12", '21'),
-      ("_21/prefix/foo", '21'),
+      ("/_2", None),
+      ("_2", 2),
+      ("_2/", None),
     ])
-    def test_get_repo_by_id(self, test, expected):
-        from kallithea.lib.utils import _extract_id_from_repo_name
-        _test = _extract_id_from_repo_name(test)
-        assert _test == expected, 'url:%s, got:`%s` expected: `%s`' % (test, _test, expected)
+    def test_get_permanent_id(self, test, expected):
+        from kallithea.lib.utils import _get_permanent_id
+        extracted = _get_permanent_id(test)
+        assert extracted == expected, 'url:%s, got:`%s` expected: `%s`' % (test, _test, expected)
 
+    @parametrize('test,expected', [
+      ("", ""),
+      ("/", "/"),
+      ("/_ID", '/_ID'),
+      ("ID", "ID"),
+      ("_ID", 'NAME'),
+      ("_ID/", 'NAME/'),
+      ("_ID/1/2", 'NAME/1/2'),
+      ("_IDa", '_IDa'),
+    ])
+    def test_fix_repo_id_name(self, test, expected):
+        repo = Repository.get_by_repo_name(HG_REPO)
+        test = test.replace('ID', str(repo.repo_id))
+        expected = expected.replace('NAME', repo.repo_name).replace('ID', str(repo.repo_id))
+        from kallithea.lib.utils import fix_repo_id_name
+        replaced = fix_repo_id_name(test)
+        assert replaced == expected, 'url:%s, got:`%s` expected: `%s`' % (test, replaced, expected)
 
     @parametrize('canonical,test,expected', [
         ('http://www.example.org/', '/abc/xyz', 'http://www.example.org/abc/xyz'),

@@ -266,23 +266,6 @@ class BaseVCSController(object):
     def _handle_request(self, environ, start_response):
         raise NotImplementedError()
 
-    def _get_by_id(self, repo_name):
-        """
-        Gets a special pattern _<ID> from clone url and tries to replace it
-        with a repository_name for support of _<ID> permanent URLs
-
-        :param repo_name:
-        """
-
-        data = repo_name.split('/')
-        if len(data) >= 2:
-            from kallithea.lib.utils import get_repo_by_id
-            by_id_match = get_repo_by_id(repo_name)
-            if by_id_match:
-                data[1] = safe_str(by_id_match)
-
-        return '/'.join(data)
-
     def _check_permission(self, action, authuser, repo_name):
         """
         Checks permissions using action (push/pull) user and repository

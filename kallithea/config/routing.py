@@ -33,28 +33,18 @@ def make_map(config):
     rmap.minimization = False
     rmap.explicit = False
 
-    from kallithea.lib.utils import (is_valid_repo, is_valid_repo_group,
-                                     get_repo_by_id)
+    from kallithea.lib.utils import is_valid_repo, is_valid_repo_group
 
     def check_repo(environ, match_dict):
         """
-        check for valid repository for proper 404 handling
-
-        :param environ:
-        :param match_dict:
+        Check for valid repository for proper 404 handling.
+        Also, a bit of side effect modifying match_dict ...
         """
-        repo_name = match_dict.get('repo_name')
-
         if match_dict.get('f_path'):
             # fix for multiple initial slashes that causes errors
             match_dict['f_path'] = match_dict['f_path'].lstrip('/')
 
-        by_id_match = get_repo_by_id(repo_name)
-        if by_id_match:
-            repo_name = by_id_match
-            match_dict['repo_name'] = repo_name
-
-        return is_valid_repo(repo_name, config['base_path'])
+        return is_valid_repo(match_dict['repo_name'], config['base_path'])
 
     def check_group(environ, match_dict):
         """

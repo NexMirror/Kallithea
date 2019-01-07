@@ -141,13 +141,10 @@ class SimpleGit(BaseVCSController):
         :param environ: environ where PATH_INFO is stored
         """
         try:
-            environ['PATH_INFO'] = self._get_by_id(environ['PATH_INFO'])
-            repo_name = GIT_PROTO_PAT.match(environ['PATH_INFO']).group(1)
+            return GIT_PROTO_PAT.match(environ['PATH_INFO']).group(1)
         except Exception:
             log.error(traceback.format_exc())
             raise
-
-        return repo_name
 
     def __get_action(self, environ):
         """

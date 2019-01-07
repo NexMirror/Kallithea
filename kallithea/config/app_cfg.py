@@ -30,6 +30,7 @@ from alembic.migration import MigrationContext
 from sqlalchemy import create_engine
 import mercurial
 
+from kallithea.lib.middleware.permanent_repo_url import PermanentRepoUrl
 from kallithea.lib.middleware.https_fixup import HttpsFixup
 from kallithea.lib.middleware.simplegit import SimpleGit
 from kallithea.lib.middleware.simplehg import SimpleHg
@@ -208,6 +209,8 @@ def setup_application(app):
     # Enable https redirects based on HTTP_X_URL_SCHEME set by proxy
     if any(asbool(config.get(x)) for x in ['https_fixup', 'force_https', 'use_htsts']):
         app = HttpsFixup(app, config)
+
+    app = PermanentRepoUrl(app, config)
     return app
 
 
