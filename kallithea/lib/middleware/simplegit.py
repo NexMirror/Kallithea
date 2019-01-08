@@ -57,6 +57,8 @@ cmd_mapping = {
 
 class SimpleGit(BaseVCSController):
 
+    scm_alias = 'git'
+
     @classmethod
     def parse_request(cls, environ):
         path_info = environ.get('PATH_INFO', '')
@@ -85,7 +87,7 @@ class SimpleGit(BaseVCSController):
         environ['pylons.status_code_redirect'] = True
 
         # quick check if repo exists...
-        if not is_valid_repo(parsed_request.repo_name, self.basepath, 'git'):
+        if not is_valid_repo(parsed_request.repo_name, self.basepath, self.scm_alias):
             raise HTTPNotFound()
 
         if parsed_request.action is None:
@@ -108,7 +110,7 @@ class SimpleGit(BaseVCSController):
             'username': user.username,
             'action': parsed_request.action,
             'repository': parsed_request.repo_name,
-            'scm': 'git',
+            'scm': self.scm_alias,
             'config': CONFIG['__file__'],
             'server_url': server_url,
         }
@@ -122,8 +124,8 @@ class SimpleGit(BaseVCSController):
 
         try:
             self._handle_githooks(parsed_request.repo_name, parsed_request.action, baseui, environ)
-            log.info('%s action on Git repo "%s" by "%s" from %s',
-                     parsed_request.action, parsed_request.repo_name, safe_str(user.username), ip_addr)
+            log.info('%s action on %s repo "%s" by "%s" from %s',
+                     parsed_request.action, self.scm_alias, parsed_request.repo_name, safe_str(user.username), ip_addr)
             app = self.__make_app(parsed_request.repo_name)
             return app(environ, start_response)
         except Exception:

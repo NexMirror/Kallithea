@@ -192,6 +192,8 @@ class BaseVCSController(object):
     (coming from a VCS client, and not a browser).
     """
 
+    scm_alias = None # 'hg' / 'git'
+
     def __init__(self, application, config):
         self.application = application
         self.config = config

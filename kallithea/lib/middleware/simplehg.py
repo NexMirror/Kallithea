@@ -96,6 +96,8 @@ cmd_mapping = {
 
 class SimpleHg(BaseVCSController):
 
+    scm_alias = 'hg'
+
     @classmethod
     def parse_request(cls, environ):
         http_accept = environ.get('HTTP_ACCEPT', '')
@@ -140,7 +142,7 @@ class SimpleHg(BaseVCSController):
         environ['pylons.status_code_redirect'] = True
 
         # quick check if repo exists...
-        if not is_valid_repo(parsed_request.repo_name, self.basepath, 'hg'):
+        if not is_valid_repo(parsed_request.repo_name, self.basepath, self.scm_alias):
             raise HTTPNotFound()
 
         if parsed_request.action is None:
@@ -163,7 +165,7 @@ class SimpleHg(BaseVCSController):
             'username': user.username,
             'action': parsed_request.action,
             'repository': parsed_request.repo_name,
-            'scm': 'hg',
+            'scm': self.scm_alias,
             'config': CONFIG['__file__'],
             'server_url': server_url,
         }
@@ -179,8 +181,8 @@ class SimpleHg(BaseVCSController):
         _set_extras(extras or {})
 
         try:
-            log.info('%s action on Mercurial repo "%s" by "%s" from %s',
-                     parsed_request.action, parsed_request.repo_name, safe_str(user.username), ip_addr)
+            log.info('%s action on %s repo "%s" by "%s" from %s',
+                     parsed_request.action, self.scm_alias, parsed_request.repo_name, safe_str(user.username), ip_addr)
             environ['REPO_NAME'] = str_repo_name # used by hgweb_mod.hgweb
             app = self.__make_app(repo_path, baseui)
             return app(environ, start_response)
