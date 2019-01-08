@@ -45,24 +45,6 @@ from kallithea.lib.vcs.utils.hgcompat import RepoError, hgweb_mod
 log = logging.getLogger(__name__)
 
 
-def is_mercurial(environ):
-    """
-    Returns True if request's target is mercurial server - header
-    ``HTTP_ACCEPT`` of such request would start with ``application/mercurial``.
-    """
-    http_accept = environ.get('HTTP_ACCEPT')
-    path_info = environ['PATH_INFO']
-    if http_accept and http_accept.startswith('application/mercurial'):
-        ishg_path = True
-    else:
-        ishg_path = False
-
-    log.debug('pathinfo: %s detected as Mercurial %s',
-        path_info, ishg_path
-    )
-    return ishg_path
-
-
 def get_header_hgarg(environ):
     """Decode the special Mercurial encoding of big requests over multiple headers.
     >>> get_header_hgarg({})
@@ -83,27 +65,27 @@ def get_header_hgarg(environ):
 
 class SimpleHg(BaseVCSController):
 
-    def _handle_request(self, environ, start_response):
-        if not is_mercurial(environ):
-            return self.application(environ, start_response)
+    @classmethod
+    def parse_request(cls, environ):
+        http_accept = environ.get('HTTP_ACCEPT', '')
+        if not http_accept.startswith('application/mercurial'):
+            return None
+        path_info = environ.get('PATH_INFO', '')
+        if not path_info.startswith('/'): # it must!
+            return None
 
+        class parsed_request(object):
+            repo_name = safe_unicode(path_info[1:].rstrip('/'))
+
+        return parsed_request
+
+    def _handle_request(self, parsed_request, environ, start_response):
         ip_addr = self._get_ip_addr(environ)
         # skip passing error to error controller
         environ['pylons.status_code_redirect'] = True
 
-        #======================================================================
-        # EXTRACT REPOSITORY NAME FROM ENV
-        #======================================================================
-        try:
-            str_repo_name = self.__get_repository(environ)
-            repo_name = safe_unicode(str_repo_name)
-            log.debug('Extracted repo name is %s', repo_name)
-        except Exception as e:
-            log.error('error extracting repo_name: %r', e)
-            return HTTPInternalServerError()(environ, start_response)
-
-        # quick check if that dir exists...
-        if not is_valid_repo(repo_name, self.basepath, 'hg'):
+        # quick check if repo exists...
+        if not is_valid_repo(parsed_request.repo_name, self.basepath, 'hg'):
             return HTTPNotFound()(environ, start_response)
 
         #======================================================================
@@ -117,7 +99,7 @@ class SimpleHg(BaseVCSController):
         #======================================================================
         # CHECK PERMISSIONS
         #======================================================================
-        user, response_app = self._authorize(environ, start_response, action, repo_name, ip_addr)
+        user, response_app = self._authorize(environ, start_response, action, parsed_request.repo_name, ip_addr)
         if response_app is not None:
             return response_app(environ, start_response)
 
@@ -129,7 +111,7 @@ class SimpleHg(BaseVCSController):
             'ip': ip_addr,
             'username': user.username,
             'action': action,
-            'repository': repo_name,
+            'repository': parsed_request.repo_name,
             'scm': 'hg',
             'config': CONFIG['__file__'],
             'server_url': server_url,
@@ -137,6 +119,7 @@ class SimpleHg(BaseVCSController):
         #======================================================================
         # MERCURIAL REQUEST HANDLING
         #======================================================================
+        str_repo_name = safe_str(parsed_request.repo_name)
         repo_path = os.path.join(safe_str(self.basepath), str_repo_name)
         log.debug('Repository path is %s', repo_path)
 
@@ -146,7 +129,7 @@ class SimpleHg(BaseVCSController):
 
         try:
             log.info('%s action on Mercurial repo "%s" by "%s" from %s',
-                     action, str_repo_name, safe_str(user.username), ip_addr)
+                     action, parsed_request.repo_name, safe_str(user.username), ip_addr)
             environ['REPO_NAME'] = str_repo_name # used by hgweb_mod.hgweb
             app = self.__make_app(repo_path, baseui)
             return app(environ, start_response)
@@ -159,20 +142,6 @@ class SimpleHg(BaseVCSController):
         Make an hgweb wsgi application using baseui.
         """
         return hgweb_mod.hgweb(repo_name, name=repo_name, baseui=baseui)
-
-    def __get_repository(self, environ):
-        """
-        Gets repository name out of PATH_INFO header
-
-        :param environ: environ where PATH_INFO is stored
-        """
-        try:
-            path_info = environ['PATH_INFO']
-            if path_info.startswith('/'):
-                return path_info[1:].rstrip('/')
-        except Exception:
-            log.error(traceback.format_exc())
-            raise
 
     def __get_action(self, environ):
         """

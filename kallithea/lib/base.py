@@ -201,6 +201,13 @@ class BaseVCSController(object):
         self.authenticate = BasicAuth('', auth_modules.authenticate,
                                       config.get('auth_ret_code'))
 
+    @classmethod
+    def parse_request(cls, environ):
+        """If request is parsed as a request for this VCS, return a namespace with the parsed request.
+        If the request is unknown, return None.
+        """
+        raise NotImplementedError()
+
     def _authorize(self, environ, start_response, action, repo_name, ip_addr):
         """Authenticate and authorize user.
 
@@ -297,7 +304,10 @@ class BaseVCSController(object):
     def __call__(self, environ, start_response):
         start = time.time()
         try:
-            return self._handle_request(environ, start_response)
+            parsed_request = self.parse_request(environ)
+            if parsed_request is None:
+                return self.application(environ, start_response)
+            return self._handle_request(parsed_request, environ, start_response)
         finally:
             log = logging.getLogger('kallithea.' + self.__class__.__name__)
             log.debug('Request time: %.3fs', time.time() - start)

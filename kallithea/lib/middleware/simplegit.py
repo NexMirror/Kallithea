@@ -49,38 +49,28 @@ log = logging.getLogger(__name__)
 GIT_PROTO_PAT = re.compile(r'^/(.+)/(info/refs|git-upload-pack|git-receive-pack)$')
 
 
-def is_git(environ):
-    path_info = environ['PATH_INFO']
-    isgit_path = GIT_PROTO_PAT.match(path_info)
-    log.debug('pathinfo: %s detected as Git %s',
-        path_info, isgit_path is not None
-    )
-    return isgit_path
-
-
 class SimpleGit(BaseVCSController):
 
-    def _handle_request(self, environ, start_response):
-        if not is_git(environ):
-            return self.application(environ, start_response)
+    @classmethod
+    def parse_request(cls, environ):
+        path_info = environ.get('PATH_INFO', '')
+        m = GIT_PROTO_PAT.match(path_info)
+        if m is None:
+            return None
 
+        class parsed_request(object):
+            repo_name = safe_unicode(m.group(1).rstrip('/'))
+            cmd = m.group(2)
+
+        return parsed_request
+
+    def _handle_request(self, parsed_request, environ, start_response):
         ip_addr = self._get_ip_addr(environ)
         # skip passing error to error controller
         environ['pylons.status_code_redirect'] = True
 
-        #======================================================================
-        # EXTRACT REPOSITORY NAME FROM ENV
-        #======================================================================
-        try:
-            str_repo_name = self.__get_repository(environ)
-            repo_name = safe_unicode(str_repo_name)
-            log.debug('Extracted repo name is %s', repo_name)
-        except Exception as e:
-            log.error('error extracting repo_name: %r', e)
-            return HTTPInternalServerError()(environ, start_response)
-
-        # quick check if that dir exists...
-        if not is_valid_repo(repo_name, self.basepath, 'git'):
+        # quick check if repo exists...
+        if not is_valid_repo(parsed_request.repo_name, self.basepath, 'git'):
             return HTTPNotFound()(environ, start_response)
 
         #======================================================================
@@ -91,7 +81,7 @@ class SimpleGit(BaseVCSController):
         #======================================================================
         # CHECK PERMISSIONS
         #======================================================================
-        user, response_app = self._authorize(environ, start_response, action, repo_name, ip_addr)
+        user, response_app = self._authorize(environ, start_response, action, parsed_request.repo_name, ip_addr)
         if response_app is not None:
             return response_app(environ, start_response)
 
@@ -103,7 +93,7 @@ class SimpleGit(BaseVCSController):
             'ip': ip_addr,
             'username': user.username,
             'action': action,
-            'repository': repo_name,
+            'repository': parsed_request.repo_name,
             'scm': 'git',
             'config': CONFIG['__file__'],
             'server_url': server_url,
@@ -117,10 +107,10 @@ class SimpleGit(BaseVCSController):
         _set_extras(extras or {})
 
         try:
-            self._handle_githooks(repo_name, action, baseui, environ)
+            self._handle_githooks(parsed_request.repo_name, action, baseui, environ)
             log.info('%s action on Git repo "%s" by "%s" from %s',
-                     action, str_repo_name, safe_str(user.username), ip_addr)
-            app = self.__make_app(repo_name)
+                     action, parsed_request.repo_name, safe_str(user.username), ip_addr)
+            app = self.__make_app(parsed_request.repo_name)
             return app(environ, start_response)
         except Exception:
             log.error(traceback.format_exc())
@@ -131,18 +121,6 @@ class SimpleGit(BaseVCSController):
         Return a pygrack wsgi application.
         """
         return make_wsgi_app(repo_name, safe_str(self.basepath)) # FIXME: safe_str???
-
-    def __get_repository(self, environ):
-        """
-        Gets repository name out of PATH_INFO header
-
-        :param environ: environ where PATH_INFO is stored
-        """
-        try:
-            return GIT_PROTO_PAT.match(environ['PATH_INFO']).group(1)
-        except Exception:
-            log.error(traceback.format_exc())
-            raise
 
     def __get_action(self, environ):
         """
