@@ -46,7 +46,7 @@ from kallithea.lib.middleware.pygrack import make_wsgi_app
 log = logging.getLogger(__name__)
 
 
-GIT_PROTO_PAT = re.compile(r'^/(.+)/(info/refs|git-upload-pack|git-receive-pack)')
+GIT_PROTO_PAT = re.compile(r'^/(.+)/(info/refs|git-upload-pack|git-receive-pack)$')
 
 
 def is_git(environ):
