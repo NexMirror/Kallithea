@@ -86,15 +86,12 @@ class SimpleHg(BaseVCSController):
 
         # quick check if repo exists...
         if not is_valid_repo(parsed_request.repo_name, self.basepath, 'hg'):
-            return HTTPNotFound()(environ, start_response)
+            raise HTTPNotFound()
 
         #======================================================================
         # GET ACTION PULL or PUSH
         #======================================================================
-        try:
-            action = self.__get_action(environ)
-        except HTTPBadRequest as e:
-            return e(environ, start_response)
+        action = self.__get_action(environ)
 
         #======================================================================
         # CHECK PERMISSIONS
@@ -135,7 +132,7 @@ class SimpleHg(BaseVCSController):
             return app(environ, start_response)
         except Exception:
             log.error(traceback.format_exc())
-            return HTTPInternalServerError()(environ, start_response)
+            raise HTTPInternalServerError()
 
     def __make_app(self, repo_name, baseui):
         """

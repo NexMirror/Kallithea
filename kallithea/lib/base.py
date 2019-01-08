@@ -308,6 +308,8 @@ class BaseVCSController(object):
             if parsed_request is None:
                 return self.application(environ, start_response)
             return self._handle_request(parsed_request, environ, start_response)
+        except webob.exc.HTTPException as e:
+            return e(environ, start_response)
         finally:
             log = logging.getLogger('kallithea.' + self.__class__.__name__)
             log.debug('Request time: %.3fs', time.time() - start)
