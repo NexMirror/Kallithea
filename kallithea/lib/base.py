@@ -49,7 +49,7 @@ from kallithea import __version__, BACKENDS
 
 from kallithea.config.routing import url
 from kallithea.lib.utils2 import str2bool, safe_unicode, AttributeDict, \
-    safe_str, safe_int, _set_extras
+    safe_str, safe_int
 from kallithea.lib import auth_modules
 from kallithea.lib.auth import AuthUser, HasPermissionAnyMiddleware
 from kallithea.lib.compat import json
@@ -330,23 +330,11 @@ class BaseVCSController(object):
             if response_app is not None:
                 return response_app(environ, start_response)
 
-            # extras are injected into Mercurial UI object and later available
-            # in hooks executed by Kallithea
-            from kallithea import CONFIG
-            extras = {
-                'ip': ip_addr,
-                'username': user.username,
-                'action': parsed_request.action,
-                'repository': parsed_request.repo_name,
-                'scm': self.scm_alias,
-                'config': CONFIG['__file__'],
-            }
-
             #======================================================================
             # REQUEST HANDLING
             #======================================================================
-            log.debug('HOOKS extras is %s', extras)
-            _set_extras(extras)
+            ScmModel()._handle_rc_scm_extras(user.username, ip_addr,
+                parsed_request.repo_name, self.scm_alias, parsed_request.action)
 
             try:
                 log.info('%s action on %s repo "%s" by "%s" from %s',
