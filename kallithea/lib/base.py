@@ -49,7 +49,7 @@ from kallithea import __version__, BACKENDS
 
 from kallithea.config.routing import url
 from kallithea.lib.utils2 import str2bool, safe_unicode, AttributeDict, \
-    safe_str, safe_int
+    safe_str, safe_int, set_hook_environment
 from kallithea.lib import auth_modules
 from kallithea.lib.auth import AuthUser, HasPermissionAnyMiddleware
 from kallithea.lib.compat import json
@@ -333,7 +333,7 @@ class BaseVCSController(object):
             #======================================================================
             # REQUEST HANDLING
             #======================================================================
-            ScmModel()._handle_rc_scm_extras(user.username, ip_addr,
+            set_hook_environment(user.username, ip_addr,
                 parsed_request.repo_name, self.scm_alias, parsed_request.action)
 
             try:

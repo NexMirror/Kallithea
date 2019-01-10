@@ -47,7 +47,7 @@ from kallithea.lib.vcs.backends.base import EmptyChangeset
 
 from kallithea import BACKENDS
 from kallithea.lib import helpers as h
-from kallithea.lib.utils2 import safe_str, safe_unicode, _set_extras
+from kallithea.lib.utils2 import safe_str, safe_unicode, set_hook_environment
 from kallithea.lib.auth import HasRepoPermissionLevel, HasRepoGroupPermissionLevel, \
     HasUserGroupPermissionLevel, HasPermissionAny, HasPermissionAny
 from kallithea.lib.utils import get_filesystem_repos, make_ui, \
@@ -327,19 +327,6 @@ class ScmModel(object):
         repo.fork = fork
         return repo
 
-    def _handle_rc_scm_extras(self, username, ip_addr, repo_name, repo_alias,
-                              action=None):
-        from kallithea import CONFIG
-        extras = {
-            'ip': ip_addr,
-            'username': username,
-            'action': action or 'push_local',
-            'repository': repo_name,
-            'scm': repo_alias,
-            'config': CONFIG['__file__'],
-        }
-        _set_extras(extras)
-
     def _handle_push(self, repo, username, ip_addr, action, repo_name, revisions):
         """
         Handle that the repository has changed.
@@ -351,7 +338,7 @@ class ScmModel(object):
         :param repo_name: name of repo
         :param revisions: list of revisions that we pushed
         """
-        self._handle_rc_scm_extras(username, ip_addr, repo_name, repo_alias=repo.alias, action=action)
+        set_hook_environment(username, ip_addr, repo_name, repo_alias=repo.alias, action=action)
         process_pushed_raw_ids(revisions) # also calls mark_for_invalidation
 
     def _get_IMC_module(self, scm_type):
@@ -396,7 +383,7 @@ class ScmModel(object):
                                   repo_name=repo_name,
                                   revisions=[])
             else:
-                self._handle_rc_scm_extras(username, ip_addr, dbrepo.repo_name,
+                set_hook_environment(username, ip_addr, dbrepo.repo_name,
                                            repo.alias, action='push_remote')
                 repo.pull(clone_uri)
 

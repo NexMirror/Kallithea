@@ -35,7 +35,7 @@ from kallithea.lib.utils import action_logger
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.exceptions import UserCreationError
 from kallithea.lib.utils import make_ui, setup_cache_regions
-from kallithea.lib.utils2 import safe_str, safe_unicode, _extract_extras
+from kallithea.lib.utils2 import safe_str, safe_unicode, get_hook_environment
 from kallithea.model.db import Repository, User, Ui
 
 
@@ -85,7 +85,7 @@ def log_pull_action(ui, repo, **kwargs):
 
     Does *not* use the action from the hook environment but is always 'pull'.
     """
-    ex = _extract_extras()
+    ex = get_hook_environment()
 
     user = User.get_by_username(ex.username)
     action = 'pull'
@@ -124,7 +124,7 @@ def process_pushed_raw_ids(revs):
     or from the Git post-receive hook calling handle_git_post_receive ...
     or from scm _handle_push.
     """
-    ex = _extract_extras()
+    ex = get_hook_environment()
 
     action = '%s:%s' % (ex.action, ','.join(revs))
     action_logger(ex.username, action, ex.repository, ex.ip, commit=True)
@@ -308,7 +308,7 @@ def _hook_environment(repo_path):
     from kallithea.config.environment import load_environment
     from kallithea.model.base import init_model
 
-    extras = _extract_extras()
+    extras = get_hook_environment()
     ini_file_path = extras['config']
     #logging.config.fileConfig(ini_file_path) # Note: we are in a different process - don't use configured logging
     app_conf = appconfig('config:%s' % ini_file_path)

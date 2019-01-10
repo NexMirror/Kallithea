@@ -518,11 +518,16 @@ def obfuscate_url_pw(engine):
     return str(_url)
 
 
-def _extract_extras():
+def get_hook_environment():
     """
-    Extracts the Kallithea extras data from os.environ, and wraps it into named
-    AttributeDict object
+    Get hook context by deserializing the global KALLITHEA_EXTRAS environment
+    variable.
+
+    Called early in Git out-of-process hooks to get .ini config path so the
+    basic environment can be configured properly. Also used in all hooks to get
+    information about the action that triggered it.
     """
+
     try:
         extras = json.loads(os.environ['KALLITHEA_EXTRAS'])
     except KeyError:
@@ -537,7 +542,24 @@ def _extract_extras():
     return AttributeDict(extras)
 
 
-def _set_extras(extras):
+def set_hook_environment(username, ip_addr, repo_name, repo_alias, action=None):
+    """Prepare global context for running hooks by serializing data in the
+    global KALLITHEA_EXTRAS environment variable.
+
+    Most importantly, this allow Git hooks to do proper logging and updating of
+    caches after pushes.
+
+    Must always be called before anything with hooks are invoked.
+    """
+    from kallithea import CONFIG
+    extras = {
+        'ip': ip_addr, # used in log_push/pull_action action_logger
+        'username': username,
+        'action': action or 'push_local', # used in log_push_action_raw_ids action_logger
+        'repository': repo_name,
+        'scm': repo_alias, # used to pick hack in log_push_action_raw_ids
+        'config': CONFIG['__file__'], # used by git hook to read config
+    }
     os.environ['KALLITHEA_EXTRAS'] = json.dumps(extras)
 
 
