@@ -518,11 +518,6 @@ def obfuscate_url_pw(engine):
     return str(_url)
 
 
-def get_server_url(environ):
-    req = webob.Request(environ)
-    return req.host_url + req.script_name
-
-
 def _extract_extras():
     """
     Extracts the Kallithea extras data from os.environ, and wraps it into named

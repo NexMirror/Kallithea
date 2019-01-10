@@ -49,7 +49,7 @@ from kallithea import __version__, BACKENDS
 
 from kallithea.config.routing import url
 from kallithea.lib.utils2 import str2bool, safe_unicode, AttributeDict, \
-    safe_str, safe_int, get_server_url, _set_extras
+    safe_str, safe_int, _set_extras
 from kallithea.lib import auth_modules
 from kallithea.lib.auth import AuthUser, HasPermissionAnyMiddleware
 from kallithea.lib.compat import json
@@ -340,7 +340,6 @@ class BaseVCSController(object):
                 'repository': parsed_request.repo_name,
                 'scm': self.scm_alias,
                 'config': CONFIG['__file__'],
-                'server_url': get_server_url(environ),
             }
 
             #======================================================================

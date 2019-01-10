@@ -47,8 +47,7 @@ from kallithea.lib.vcs.backends.base import EmptyChangeset
 
 from kallithea import BACKENDS
 from kallithea.lib import helpers as h
-from kallithea.lib.utils2 import safe_str, safe_unicode, get_server_url, \
-    _set_extras
+from kallithea.lib.utils2 import safe_str, safe_unicode, _set_extras
 from kallithea.lib.auth import HasRepoPermissionLevel, HasRepoGroupPermissionLevel, \
     HasUserGroupPermissionLevel, HasPermissionAny, HasPermissionAny
 from kallithea.lib.utils import get_filesystem_repos, make_ui, \
@@ -347,7 +346,6 @@ class ScmModel(object):
             'repository': repo_name,
             'scm': repo_alias,
             'config': CONFIG['__file__'],
-            'server_url': get_server_url(environ),
         }
         _set_extras(extras)
 

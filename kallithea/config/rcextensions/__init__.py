@@ -187,7 +187,6 @@ def _pushhook(*args, **kwargs):
     Post push hook
     kwargs available:
 
-      :param server_url: url of instance that triggered this hook
       :param config: path to .ini config used
       :param scm: type of VS 'git' or 'hg'
       :param username: name of user who pushed
@@ -213,7 +212,6 @@ def _pullhook(*args, **kwargs):
     Post pull hook
     kwargs available::
 
-      :param server_url: url of instance that triggered this hook
       :param config: path to .ini config used
       :param scm: type of VS 'git' or 'hg'
       :param username: name of user who pulled
