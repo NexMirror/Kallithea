@@ -206,6 +206,7 @@ class ApiController(JSONRPCController):
         try:
             ScmModel().pull_changes(repo.repo_name,
                                     request.authuser.username,
+                                    request.ip_addr,
                                     clone_uri=Optional.extract(clone_uri))
             return dict(
                 msg='Pulled from `%s`' % repo.repo_name,
@@ -2269,6 +2270,7 @@ class ApiController(JSONRPCController):
 
             gist = GistModel().create(description=description,
                                       owner=owner,
+                                      ip_addr=request.ip_addr,
                                       gist_mapping=files,
                                       gist_type=gist_type,
                                       lifetime=lifetime)

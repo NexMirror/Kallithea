@@ -501,7 +501,7 @@ class ReposController(BaseRepoController):
         c.active = 'remote'
         if request.POST:
             try:
-                ScmModel().pull_changes(repo_name, request.authuser.username)
+                ScmModel().pull_changes(repo_name, request.authuser.username, request.ip_addr)
                 h.flash(_('Pulled from remote location'), category='success')
             except Exception as e:
                 log.error(traceback.format_exc())

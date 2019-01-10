@@ -11,7 +11,7 @@ def _create_gist(f_name, content='some gist', lifetime=-1,
         f_name: {'content': content}
     }
     owner = User.get_by_username(owner)
-    gist = GistModel().create(description, owner=owner,
+    gist = GistModel().create(description, owner=owner, ip_addr=IP_ADDR,
                        gist_mapping=gist_mapping, gist_type=gist_type,
                        lifetime=lifetime)
     Session().commit()

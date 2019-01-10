@@ -118,6 +118,7 @@ class GistsController(BaseController):
             gist = GistModel().create(
                 description=form_result['description'],
                 owner=request.authuser.user_id,
+                ip_addr=request.ip_addr,
                 gist_mapping=nodes,
                 gist_type=gist_type,
                 lifetime=form_result['lifetime']
@@ -215,7 +216,8 @@ class GistsController(BaseController):
                 GistModel().update(
                     gist=c.gist,
                     description=rpost['description'],
-                    owner=c.gist.owner,
+                    owner=c.gist.owner, # FIXME: request.authuser.user_id ?
+                    ip_addr=request.ip_addr,
                     gist_mapping=nodes,
                     gist_type=c.gist.gist_type,
                     lifetime=rpost['lifetime']

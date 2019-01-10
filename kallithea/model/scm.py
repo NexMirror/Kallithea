@@ -327,20 +327,11 @@ class ScmModel(object):
         repo.fork = fork
         return repo
 
-    def _handle_rc_scm_extras(self, username, repo_name, repo_alias,
+    def _handle_rc_scm_extras(self, username, ip_addr, repo_name, repo_alias,
                               action=None):
         from kallithea import CONFIG
-        from kallithea.lib.base import _get_ip_addr
-        try:
-            from tg import request
-            environ = request.environ
-        except TypeError:
-            # we might use this outside of request context, let's fake the
-            # environ data
-            from webob import Request
-            environ = Request.blank('').environ
         extras = {
-            'ip': _get_ip_addr(environ),
+            'ip': ip_addr,
             'username': username,
             'action': action or 'push_local',
             'repository': repo_name,
@@ -349,7 +340,7 @@ class ScmModel(object):
         }
         _set_extras(extras)
 
-    def _handle_push(self, repo, username, action, repo_name, revisions):
+    def _handle_push(self, repo, username, ip_addr, action, repo_name, revisions):
         """
         Handle that the repository has changed.
         Adds an action log entry with the new revisions, and the head revision
@@ -360,7 +351,7 @@ class ScmModel(object):
         :param repo_name: name of repo
         :param revisions: list of revisions that we pushed
         """
-        self._handle_rc_scm_extras(username, repo_name, repo_alias=repo.alias, action=action)
+        self._handle_rc_scm_extras(username, ip_addr, repo_name, repo_alias=repo.alias, action=action)
         process_pushed_raw_ids(revisions) # also calls mark_for_invalidation
 
     def _get_IMC_module(self, scm_type):
@@ -380,7 +371,7 @@ class ScmModel(object):
         raise Exception('Invalid scm_type, must be one of hg,git got %s'
                         % (scm_type,))
 
-    def pull_changes(self, repo, username, clone_uri=None):
+    def pull_changes(self, repo, username, ip_addr, clone_uri=None):
         """
         Pull from "clone URL" or fork origin.
         """
@@ -400,11 +391,12 @@ class ScmModel(object):
                 # TODO: extract fetched revisions ... somehow ...
                 self._handle_push(repo,
                                   username=username,
+                                  ip_addr=ip_addr,
                                   action='push_remote',
                                   repo_name=repo_name,
                                   revisions=[])
             else:
-                self._handle_rc_scm_extras(username, dbrepo.repo_name,
+                self._handle_rc_scm_extras(username, ip_addr, dbrepo.repo_name,
                                            repo.alias, action='push_remote')
                 repo.pull(clone_uri)
 
@@ -413,7 +405,7 @@ class ScmModel(object):
             log.error(traceback.format_exc())
             raise
 
-    def commit_change(self, repo, repo_name, cs, user, author, message,
+    def commit_change(self, repo, repo_name, cs, user, ip_addr, author, message,
                       content, f_path):
         """
         Commit a change to a single file
@@ -444,6 +436,7 @@ class ScmModel(object):
             self.mark_for_invalidation(repo_name)
         self._handle_push(repo,
                           username=user.username,
+                          ip_addr=ip_addr,
                           action='push_local',
                           repo_name=repo_name,
                           revisions=[tip.raw_id])
@@ -485,7 +478,7 @@ class ScmModel(object):
 
         return _dirs, _files
 
-    def create_nodes(self, user, repo, message, nodes, parent_cs=None,
+    def create_nodes(self, user, ip_addr, repo, message, nodes, parent_cs=None,
                      author=None, trigger_push_hook=True):
         """
         Commits specified nodes to repo.
@@ -549,12 +542,13 @@ class ScmModel(object):
         if trigger_push_hook:
             self._handle_push(scm_instance,
                               username=user.username,
+                              ip_addr=ip_addr,
                               action='push_local',
                               repo_name=repo.repo_name,
                               revisions=[tip.raw_id])
         return tip
 
-    def update_nodes(self, user, repo, message, nodes, parent_cs=None,
+    def update_nodes(self, user, ip_addr, repo, message, nodes, parent_cs=None,
                      author=None, trigger_push_hook=True):
         """
         Commits specified nodes to repo. Again.
@@ -609,11 +603,12 @@ class ScmModel(object):
         if trigger_push_hook:
             self._handle_push(scm_instance,
                               username=user.username,
+                              ip_addr=ip_addr,
                               action='push_local',
                               repo_name=repo.repo_name,
                               revisions=[tip.raw_id])
 
-    def delete_nodes(self, user, repo, message, nodes, parent_cs=None,
+    def delete_nodes(self, user, ip_addr, repo, message, nodes, parent_cs=None,
                      author=None, trigger_push_hook=True):
         """
         Deletes specified nodes from repo.
@@ -668,6 +663,7 @@ class ScmModel(object):
         if trigger_push_hook:
             self._handle_push(scm_instance,
                               username=user.username,
+                              ip_addr=ip_addr,
                               action='push_local',
                               repo_name=repo.repo_name,
                               revisions=[tip.raw_id])

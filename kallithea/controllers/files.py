@@ -326,7 +326,9 @@ class FilesController(BaseRepoController):
                     }
                 }
                 self.scm_model.delete_nodes(
-                    user=request.authuser.user_id, repo=c.db_repo,
+                    user=request.authuser.user_id,
+                    ip_addr=request.ip_addr,
+                    repo=c.db_repo,
                     message=message,
                     nodes=nodes,
                     parent_cs=c.cs,
@@ -389,6 +391,7 @@ class FilesController(BaseRepoController):
                 self.scm_model.commit_change(repo=c.db_repo_scm_instance,
                                              repo_name=repo_name, cs=c.cs,
                                              user=request.authuser.user_id,
+                                             ip_addr=request.ip_addr,
                                              author=author, message=message,
                                              content=content, f_path=f_path)
                 h.flash(_('Successfully committed to %s') % f_path,
@@ -450,7 +453,9 @@ class FilesController(BaseRepoController):
                     }
                 }
                 self.scm_model.create_nodes(
-                    user=request.authuser.user_id, repo=c.db_repo,
+                    user=request.authuser.user_id,
+                    ip_addr=request.ip_addr,
+                    repo=c.db_repo,
                     message=message,
                     nodes=nodes,
                     parent_cs=c.cs,

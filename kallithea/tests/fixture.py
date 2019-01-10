@@ -42,7 +42,7 @@ from kallithea.lib.auth import AuthUser
 from kallithea.lib.db_manage import DbManage
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.tests.base import invalidate_all_caches, GIT_REPO, HG_REPO, \
-    TESTS_TMP_PATH, TEST_USER_ADMIN_LOGIN, TEST_USER_REGULAR_LOGIN, TEST_USER_ADMIN_EMAIL
+    TESTS_TMP_PATH, TEST_USER_ADMIN_LOGIN, TEST_USER_REGULAR_LOGIN, TEST_USER_ADMIN_EMAIL, IP_ADDR
 
 
 log = logging.getLogger(__name__)
@@ -261,7 +261,7 @@ class Fixture(object):
         }
         form_data.update(kwargs)
         gist = GistModel().create(
-            description=form_data['description'], owner=form_data['owner'],
+            description=form_data['description'], owner=form_data['owner'], ip_addr=IP_ADDR,
             gist_mapping=form_data['gist_mapping'], gist_type=form_data['gist_type'],
             lifetime=form_data['lifetime']
         )
@@ -302,7 +302,9 @@ class Fixture(object):
                 }
             }
             cs = ScmModel().create_nodes(
-                user=TEST_USER_ADMIN_LOGIN, repo=repo,
+                user=TEST_USER_ADMIN_LOGIN,
+                ip_addr=IP_ADDR,
+                repo=repo,
                 message=message,
                 nodes=nodes,
                 parent_cs=_cs,
@@ -311,7 +313,9 @@ class Fixture(object):
         else:
             cs = ScmModel().commit_change(
                 repo=repo.scm_instance, repo_name=repo.repo_name,
-                cs=parent, user=TEST_USER_ADMIN_LOGIN,
+                cs=parent,
+                user=TEST_USER_ADMIN_LOGIN,
+                ip_addr=IP_ADDR,
                 author=author,
                 message=message,
                 content=content,
