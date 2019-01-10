@@ -49,11 +49,11 @@ from kallithea import __version__, BACKENDS
 
 from kallithea.config.routing import url
 from kallithea.lib.utils2 import str2bool, safe_unicode, AttributeDict, \
-    safe_str, safe_int
+    safe_str, safe_int, get_server_url, _set_extras
 from kallithea.lib import auth_modules
 from kallithea.lib.auth import AuthUser, HasPermissionAnyMiddleware
 from kallithea.lib.compat import json
-from kallithea.lib.utils import get_repo_slug
+from kallithea.lib.utils import get_repo_slug, is_valid_repo
 from kallithea.lib.exceptions import UserCreationError
 from kallithea.lib.vcs.exceptions import RepositoryError, EmptyRepositoryError, ChangesetDoesNotExistError
 from kallithea.model import meta
@@ -306,15 +306,63 @@ class BaseVCSController(object):
     def __call__(self, environ, start_response):
         start = time.time()
         try:
+            # try parsing a request for this VCS - if it fails, call the wrapped app
             parsed_request = self.parse_request(environ)
             if parsed_request is None:
                 return self.application(environ, start_response)
-            return self._handle_request(parsed_request, environ, start_response)
+
+            # skip passing error to error controller
+            environ['pylons.status_code_redirect'] = True
+
+            # quick check if repo exists...
+            if not is_valid_repo(parsed_request.repo_name, self.basepath, self.scm_alias):
+                raise webob.exc.HTTPNotFound()
+
+            if parsed_request.action is None:
+                # Note: the client doesn't get the helpful error message
+                raise webob.exc.HTTPBadRequest('Unable to detect pull/push action for %r! Are you using a nonstandard command or client?' % parsed_request.repo_name)
+
+            #======================================================================
+            # CHECK PERMISSIONS
+            #======================================================================
+            ip_addr = self._get_ip_addr(environ)
+            user, response_app = self._authorize(environ, parsed_request.action, parsed_request.repo_name, ip_addr)
+            if response_app is not None:
+                return response_app(environ, start_response)
+
+            # extras are injected into Mercurial UI object and later available
+            # in hooks executed by Kallithea
+            from kallithea import CONFIG
+            extras = {
+                'ip': ip_addr,
+                'username': user.username,
+                'action': parsed_request.action,
+                'repository': parsed_request.repo_name,
+                'scm': self.scm_alias,
+                'config': CONFIG['__file__'],
+                'server_url': get_server_url(environ),
+            }
+
+            #======================================================================
+            # REQUEST HANDLING
+            #======================================================================
+            log.debug('HOOKS extras is %s', extras)
+            _set_extras(extras)
+
+            try:
+                log.info('%s action on %s repo "%s" by "%s" from %s',
+                         parsed_request.action, self.scm_alias, parsed_request.repo_name, safe_str(user.username), ip_addr)
+                app = self._make_app(parsed_request)
+                return app(environ, start_response)
+            except Exception:
+                log.error(traceback.format_exc())
+                raise webob.exc.HTTPInternalServerError()
+
         except webob.exc.HTTPException as e:
             return e(environ, start_response)
         finally:
-            log = logging.getLogger('kallithea.' + self.__class__.__name__)
-            log.debug('Request time: %.3fs', time.time() - start)
+            log_ = logging.getLogger('kallithea.' + self.__class__.__name__)
+            log_.debug('Request time: %.3fs', time.time() - start)
             meta.Session.remove()
 
 
