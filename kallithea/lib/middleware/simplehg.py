@@ -63,6 +63,37 @@ def get_header_hgarg(environ):
     return ''.join(chunks)
 
 
+cmd_mapping = {
+    # 'batch' is not in this list - it is handled explicitly
+    'between': 'pull',
+    'branches': 'pull',
+    'branchmap': 'pull',
+    'capabilities': 'pull',
+    'changegroup': 'pull',
+    'changegroupsubset': 'pull',
+    'changesetdata': 'pull',
+    'clonebundles': 'pull',
+    'debugwireargs': 'pull',
+    'filedata': 'pull',
+    'getbundle': 'pull',
+    'getlfile': 'pull',
+    'heads': 'pull',
+    'hello': 'pull',
+    'known': 'pull',
+    'lheads': 'pull',
+    'listkeys': 'pull',
+    'lookup': 'pull',
+    'manifestdata': 'pull',
+    'narrow_widen': 'pull',
+    'protocaps': 'pull',
+    'statlfile': 'pull',
+    'stream_out': 'pull',
+    'pushkey': 'push',
+    'putlfile': 'push',
+    'unbundle': 'push',
+    }
+
+
 class SimpleHg(BaseVCSController):
 
     @classmethod
@@ -77,6 +108,30 @@ class SimpleHg(BaseVCSController):
         class parsed_request(object):
             repo_name = safe_unicode(path_info[1:].rstrip('/'))
 
+            query_string = environ['QUERY_STRING']
+
+            action = None
+            for qry in query_string.split('&'):
+                parts = qry.split('=', 1)
+                if len(parts) == 2 and parts[0] == 'cmd':
+                    cmd = parts[1]
+                    if cmd == 'batch':
+                        hgarg = get_header_hgarg(environ)
+                        if not hgarg.startswith('cmds='):
+                            action = 'push' # paranoid and safe
+                            break
+                        action = 'pull'
+                        for cmd_arg in hgarg[5:].split(';'):
+                            cmd, _args = urllib.unquote_plus(cmd_arg).split(' ', 1)
+                            op = cmd_mapping.get(cmd, 'push')
+                            if op != 'pull':
+                                assert op == 'push'
+                                action = 'push'
+                                break
+                    else:
+                        action = cmd_mapping.get(cmd, 'push')
+                    break # only process one cmd
+
         return parsed_request
 
     def _handle_request(self, parsed_request, environ, start_response):
@@ -88,15 +143,14 @@ class SimpleHg(BaseVCSController):
         if not is_valid_repo(parsed_request.repo_name, self.basepath, 'hg'):
             raise HTTPNotFound()
 
-        #======================================================================
-        # GET ACTION PULL or PUSH
-        #======================================================================
-        action = self.__get_action(environ)
+        if parsed_request.action is None:
+            # Note: the client doesn't get the helpful error message
+            raise HTTPBadRequest('Unable to detect pull/push action for %r! Are you using a nonstandard command or client?' % parsed_request.repo_name)
 
         #======================================================================
         # CHECK PERMISSIONS
         #======================================================================
-        user, response_app = self._authorize(environ, start_response, action, parsed_request.repo_name, ip_addr)
+        user, response_app = self._authorize(environ, start_response, parsed_request.action, parsed_request.repo_name, ip_addr)
         if response_app is not None:
             return response_app(environ, start_response)
 
@@ -107,7 +161,7 @@ class SimpleHg(BaseVCSController):
         extras = {
             'ip': ip_addr,
             'username': user.username,
-            'action': action,
+            'action': parsed_request.action,
             'repository': parsed_request.repo_name,
             'scm': 'hg',
             'config': CONFIG['__file__'],
@@ -126,7 +180,7 @@ class SimpleHg(BaseVCSController):
 
         try:
             log.info('%s action on Mercurial repo "%s" by "%s" from %s',
-                     action, parsed_request.repo_name, safe_str(user.username), ip_addr)
+                     parsed_request.action, parsed_request.repo_name, safe_str(user.username), ip_addr)
             environ['REPO_NAME'] = str_repo_name # used by hgweb_mod.hgweb
             app = self.__make_app(repo_path, baseui)
             return app(environ, start_response)
@@ -139,58 +193,3 @@ class SimpleHg(BaseVCSController):
         Make an hgweb wsgi application using baseui.
         """
         return hgweb_mod.hgweb(repo_name, name=repo_name, baseui=baseui)
-
-    def __get_action(self, environ):
-        """
-        Maps Mercurial request commands into 'pull' or 'push'.
-
-        Raises HTTPBadRequest if the request environment doesn't look like a hg client.
-        """
-        mapping = {
-            # 'batch' is not in this list - it is handled explicitly
-            'between': 'pull',
-            'branches': 'pull',
-            'branchmap': 'pull',
-            'capabilities': 'pull',
-            'changegroup': 'pull',
-            'changegroupsubset': 'pull',
-            'changesetdata': 'pull',
-            'clonebundles': 'pull',
-            'debugwireargs': 'pull',
-            'filedata': 'pull',
-            'getbundle': 'pull',
-            'getlfile': 'pull',
-            'heads': 'pull',
-            'hello': 'pull',
-            'known': 'pull',
-            'lheads': 'pull',
-            'listkeys': 'pull',
-            'lookup': 'pull',
-            'manifestdata': 'pull',
-            'narrow_widen': 'pull',
-            'protocaps': 'pull',
-            'statlfile': 'pull',
-            'stream_out': 'pull',
-            'pushkey': 'push',
-            'putlfile': 'push',
-            'unbundle': 'push',
-            }
-        for qry in environ['QUERY_STRING'].split('&'):
-            parts = qry.split('=', 1)
-            if len(parts) == 2 and parts[0] == 'cmd':
-                cmd = parts[1]
-                if cmd == 'batch':
-                    hgarg = get_header_hgarg(environ)
-                    if not hgarg.startswith('cmds='):
-                        return 'push' # paranoid and safe
-                    for cmd_arg in hgarg[5:].split(';'):
-                        cmd, _args = urllib.unquote_plus(cmd_arg).split(' ', 1)
-                        op = mapping.get(cmd, 'push')
-                        if op != 'pull':
-                            assert op == 'push'
-                            return 'push'
-                    return 'pull'
-                return mapping.get(cmd, 'push')
-
-        # Note: the client doesn't get the helpful error message
-        raise HTTPBadRequest('Unable to detect pull/push action! Are you using non standard command or client?')

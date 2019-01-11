@@ -49,6 +49,12 @@ log = logging.getLogger(__name__)
 GIT_PROTO_PAT = re.compile(r'^/(.+)/(info/refs|git-upload-pack|git-receive-pack)$')
 
 
+cmd_mapping = {
+    'git-receive-pack': 'push',
+    'git-upload-pack': 'pull',
+}
+
+
 class SimpleGit(BaseVCSController):
 
     @classmethod
@@ -59,8 +65,17 @@ class SimpleGit(BaseVCSController):
             return None
 
         class parsed_request(object):
+            # See https://git-scm.com/book/en/v2/Git-Internals-Transfer-Protocols#_the_smart_protocol
             repo_name = safe_unicode(m.group(1).rstrip('/'))
             cmd = m.group(2)
+
+            query_string = environ['QUERY_STRING']
+            if cmd == 'info/refs' and query_string.startswith('service='):
+                service = query_string.split('=', 1)[1]
+                action = cmd_mapping.get(service)
+            else:
+                service = None
+                action = cmd_mapping.get(cmd)
 
         return parsed_request
 
@@ -73,15 +88,14 @@ class SimpleGit(BaseVCSController):
         if not is_valid_repo(parsed_request.repo_name, self.basepath, 'git'):
             raise HTTPNotFound()
 
-        #======================================================================
-        # GET ACTION PULL or PUSH
-        #======================================================================
-        action = self.__get_action(environ)
+        if parsed_request.action is None:
+            # Note: the client doesn't get the helpful error message
+            raise HTTPBadRequest('Unable to detect pull/push action for %r! Are you using a nonstandard command or client?' % parsed_request.repo_name)
 
         #======================================================================
         # CHECK PERMISSIONS
         #======================================================================
-        user, response_app = self._authorize(environ, start_response, action, parsed_request.repo_name, ip_addr)
+        user, response_app = self._authorize(environ, start_response, parsed_request.action, parsed_request.repo_name, ip_addr)
         if response_app is not None:
             return response_app(environ, start_response)
 
@@ -92,7 +106,7 @@ class SimpleGit(BaseVCSController):
         extras = {
             'ip': ip_addr,
             'username': user.username,
-            'action': action,
+            'action': parsed_request.action,
             'repository': parsed_request.repo_name,
             'scm': 'git',
             'config': CONFIG['__file__'],
@@ -107,9 +121,9 @@ class SimpleGit(BaseVCSController):
         _set_extras(extras or {})
 
         try:
-            self._handle_githooks(parsed_request.repo_name, action, baseui, environ)
+            self._handle_githooks(parsed_request.repo_name, parsed_request.action, baseui, environ)
             log.info('%s action on Git repo "%s" by "%s" from %s',
-                     action, parsed_request.repo_name, safe_str(user.username), ip_addr)
+                     parsed_request.action, parsed_request.repo_name, safe_str(user.username), ip_addr)
             app = self.__make_app(parsed_request.repo_name)
             return app(environ, start_response)
         except Exception:
@@ -121,32 +135,6 @@ class SimpleGit(BaseVCSController):
         Return a pygrack wsgi application.
         """
         return make_wsgi_app(repo_name, safe_str(self.basepath)) # FIXME: safe_str???
-
-    def __get_action(self, environ):
-        """
-        Maps Git request commands into 'pull' or 'push'.
-
-        Raises HTTPBadRequest if the request environment doesn't look like a git client.
-        """
-        mapping = {
-            'git-receive-pack': 'push',
-            'git-upload-pack': 'pull',
-        }
-        path_info = environ.get('PATH_INFO', '')
-        m = GIT_PROTO_PAT.match(path_info)
-        if m is None:
-            action = None
-        else:
-            cmd = m.group(2)
-            query_string = environ['QUERY_STRING']
-            if cmd == 'info/refs' and query_string.startswith('service='):
-                service = query_string.split('=', 1)[1]
-                action = mapping.get(service)
-            else:
-                action = mapping.get(cmd)
-        if action is None:
-            raise HTTPBadRequest('Unable to detect pull/push action for %r! Are you using a nonstandard command or client?' % path_info)
-        return action
 
     def _handle_githooks(self, repo_name, action, baseui, environ):
         """
