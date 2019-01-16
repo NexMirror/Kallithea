@@ -267,14 +267,14 @@ class TestVCSOperations(TestController):
         elif vt.repo_type == 'hg':
             assert 'HTTP Error 404: Not Found' in stderr
 
-    # TODO: use @parametrize_vcs_test and run on hg
-    def test_push_new_repo_git(self, webserver):
+    @parametrize_vcs_test
+    def test_push_new_repo(self, webserver, vt):
         # Clear the log so we know what is added
         UserLog.query().delete()
         Session().commit()
 
         # Create an empty server repo using the API
-        repo_name = u'new_git_%s' % _RandomNameSequence().next()
+        repo_name = u'new_%s_%s' % (vt.repo_type, _RandomNameSequence().next())
         usr = User.get_by_username(TEST_USER_ADMIN_LOGIN)
         params = {
             "id": 7,
@@ -282,7 +282,7 @@ class TestVCSOperations(TestController):
             "method": 'create_repo',
             "args": dict(repo_name=repo_name,
                          owner=TEST_USER_ADMIN_LOGIN,
-                         repo_type='git'),
+                         repo_type=vt.repo_type),
         }
         req = urllib2.Request(
             'http://%s:%s/_admin/api' % webserver.server_address,
@@ -291,33 +291,41 @@ class TestVCSOperations(TestController):
         response = urllib2.urlopen(req)
         result = json.loads(response.read())
         # Expect something like:
-        # {u'result': {u'msg': u'Created new repository `new_git_XXX`', u'task': None, u'success': True}, u'id': 7, u'error': None}
+        # {u'result': {u'msg': u'Created new repository `new_XXX`', u'task': None, u'success': True}, u'id': 7, u'error': None}
         assert result[u'result'][u'success']
 
         # Create local clone of the empty server repo
         local_clone_dir = _get_tmp_dir()
-        clone_url = GitHttpVcsTest.repo_url_param(webserver, repo_name)
-        stdout, stderr = Command(TESTS_TMP_PATH).execute('git clone', clone_url, local_clone_dir, ignoreReturnCode=True)
+        clone_url = vt.repo_url_param(webserver, repo_name)
+        stdout, stderr = Command(TESTS_TMP_PATH).execute(vt.repo_type, 'clone', clone_url, local_clone_dir)
 
         # Make 3 commits and push to the empty server repo.
         # The server repo doesn't have any other heads than the
         # refs/heads/master we are pushing, but the `git log` in the push hook
         # should still list the 3 commits.
-        stdout, stderr = _add_files_and_push(webserver, GitHttpVcsTest, local_clone_dir, clone_url=clone_url)
-        _check_proper_git_push(stdout, stderr)
+        stdout, stderr = _add_files_and_push(webserver, vt, local_clone_dir, clone_url=clone_url)
+        if vt.repo_type == 'git':
+            _check_proper_git_push(stdout, stderr)
+        elif vt.repo_type == 'hg':
+            assert 'pushing to ' in stdout
+            assert 'remote: added ' in stdout
 
         # Verify that we got the right events in UserLog. Expect something like:
         # <UserLog('id:new_git_XXX:started_following_repo')>
         # <UserLog('id:new_git_XXX:user_created_repo')>
         # <UserLog('id:new_git_XXX:pull')>
         # <UserLog('id:new_git_XXX:push:aed9d4c1732a1927da3be42c47eb9afdc200d427,d38b083a07af10a9f44193486959a96a23db78da,4841ff9a2b385bec995f4679ef649adb3f437622')>
-        uls = list(UserLog.query().order_by(UserLog.user_log_id))
-        assert len(uls) == 4
-        assert uls[0].action == 'started_following_repo'
-        assert uls[1].action == 'user_created_repo'
-        assert uls[2].action == 'pull'
-        assert uls[3].action.startswith(u'push:')
-        assert uls[3].action.count(',') == 2 # expect 3 commits
+        action_parts = [ul.action.split(':', 1) for ul in UserLog.query().order_by(UserLog.user_log_id)]
+        assert [(t[0], (t[1].count(',') + 1) if len(t) == 2 else 0) for t in action_parts] == ([
+            (u'started_following_repo', 0),
+            (u'user_created_repo', 0),
+            (u'pull', 0),
+            (u'push', 3)]
+            if vt.repo_type == 'git' else [
+            (u'started_following_repo', 0),
+            (u'user_created_repo', 0),
+            # (u'pull', 0), # Mercurial outgoing hook is not called for empty clones
+            (u'push', 3)])
 
     @parametrize_vcs_test
     def test_push_new_file(self, webserver, testfork, vt):
