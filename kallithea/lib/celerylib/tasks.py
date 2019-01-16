@@ -349,7 +349,6 @@ def create_repo(form_data, cur_user):
     # repo creation defaults, private and repo_type are filled in form
     defs = Setting.get_default_repo_settings(strip_prefix=True)
     enable_statistics = defs.get('repo_enable_statistics')
-    enable_locking = defs.get('repo_enable_locking')
     enable_downloads = defs.get('repo_enable_downloads')
 
     try:
@@ -366,7 +365,6 @@ def create_repo(form_data, cur_user):
             copy_fork_permissions=copy_fork_permissions,
             copy_group_permissions=copy_group_permissions,
             enable_statistics=enable_statistics,
-            enable_locking=enable_locking,
             enable_downloads=enable_downloads,
             state=state
         )

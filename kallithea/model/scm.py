@@ -348,8 +348,6 @@ class ScmModel(object):
             'scm': repo_alias,
             'config': CONFIG['__file__'],
             'server_url': get_server_url(environ),
-            'make_lock': None,
-            'locked_by': [None, None]
         }
         _set_extras(extras)
 

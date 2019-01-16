@@ -481,7 +481,6 @@ def repo2db_mapper(initial_repo_list, remove_obsolete=False,
     # creation defaults
     defs = Setting.get_default_repo_settings(strip_prefix=True)
     enable_statistics = defs.get('repo_enable_statistics')
-    enable_locking = defs.get('repo_enable_locking')
     enable_downloads = defs.get('repo_enable_downloads')
     private = defs.get('repo_private')
 
@@ -503,7 +502,6 @@ def repo2db_mapper(initial_repo_list, remove_obsolete=False,
                 description=desc,
                 repo_group=getattr(group, 'group_id', None),
                 owner=user,
-                enable_locking=enable_locking,
                 enable_downloads=enable_downloads,
                 enable_statistics=enable_statistics,
                 private=private,

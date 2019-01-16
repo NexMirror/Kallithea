@@ -182,7 +182,6 @@ def RepoGroupForm(edit=False, old_data=None, repo_groups=None,
                                       testValueList=True,
                                       if_missing=None, not_empty=True),
                               v.Int(min=-1, not_empty=True))
-        enable_locking = v.StringBoolean(if_missing=False)
         chained_validators = [v.ValidRepoGroup(edit, old_data)]
 
     return _RepoGroupForm
@@ -264,7 +263,6 @@ def RepoForm(edit=False, old_data=None, supported_backends=BACKENDS.keys(),
 
         repo_enable_statistics = v.StringBoolean(if_missing=False)
         repo_enable_downloads = v.StringBoolean(if_missing=False)
-        repo_enable_locking = v.StringBoolean(if_missing=False)
 
         if edit:
             owner = All(v.UnicodeString(not_empty=True), v.ValidRepoUser())
@@ -447,7 +445,6 @@ def DefaultsForm(edit=False, old_data=None, supported_backends=BACKENDS.keys()):
         default_repo_private = v.StringBoolean(if_missing=False)
         default_repo_enable_statistics = v.StringBoolean(if_missing=False)
         default_repo_enable_downloads = v.StringBoolean(if_missing=False)
-        default_repo_enable_locking = v.StringBoolean(if_missing=False)
 
     return _DefaultsForm
 

@@ -316,10 +316,6 @@ issue_sub =
 <%text>## handling that. Set this variable to 403 to return HTTPForbidden</%text>
 auth_ret_code =
 
-<%text>## locking return code. When repository is locked return this HTTP code. 2XX</%text>
-<%text>## codes don't break the transactions while 4XX codes do</%text>
-lock_ret_code = 423
-
 <%text>## allows to change the repository location in settings page</%text>
 allow_repo_location_change = True
 

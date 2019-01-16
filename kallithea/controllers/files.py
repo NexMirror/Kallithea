@@ -295,14 +295,6 @@ class FilesController(BaseRepoController):
     @HasRepoPermissionLevelDecorator('write')
     def delete(self, repo_name, revision, f_path):
         repo = c.db_repo
-        if repo.enable_locking and repo.locked[0]:
-            h.flash(_('This repository has been locked by %s on %s')
-                % (h.person_by_id(repo.locked[0]),
-                   h.fmt_date(h.time_to_datetime(repo.locked[1]))),
-                'warning')
-            raise HTTPFound(location=h.url('files_home',
-                                  repo_name=repo_name, revision='tip'))
-
         # check if revision is a branch identifier- basically we cannot
         # create multiple heads via file editing
         _branches = repo.scm_instance.branches
@@ -355,14 +347,6 @@ class FilesController(BaseRepoController):
     @HasRepoPermissionLevelDecorator('write')
     def edit(self, repo_name, revision, f_path):
         repo = c.db_repo
-        if repo.enable_locking and repo.locked[0]:
-            h.flash(_('This repository has been locked by %s on %s')
-                % (h.person_by_id(repo.locked[0]),
-                   h.fmt_date(h.time_to_datetime(repo.locked[1]))),
-                'warning')
-            raise HTTPFound(location=h.url('files_home',
-                                  repo_name=repo_name, revision='tip'))
-
         # check if revision is a branch identifier- basically we cannot
         # create multiple heads via file editing
         _branches = repo.scm_instance.branches
@@ -422,14 +406,6 @@ class FilesController(BaseRepoController):
     def add(self, repo_name, revision, f_path):
 
         repo = c.db_repo
-        if repo.enable_locking and repo.locked[0]:
-            h.flash(_('This repository has been locked by %s on %s')
-                % (h.person_by_id(repo.locked[0]),
-                   h.fmt_date(h.time_to_datetime(repo.locked[1]))),
-                  'warning')
-            raise HTTPFound(location=h.url('files_home',
-                                  repo_name=repo_name, revision='tip'))
-
         r_post = request.POST
         c.cs = self.__get_cs(revision, silent_empty=True)
         if c.cs is None:

@@ -117,7 +117,6 @@ class Fixture(object):
             parent_group_id=u'-1',
             perms_updates=[],
             perms_new=[],
-            enable_locking=False,
             recursive=False
         )
         defs.update(custom)

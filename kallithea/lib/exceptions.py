@@ -71,24 +71,6 @@ class NonRelativePathError(Exception):
     pass
 
 
-class HTTPLockedRC(HTTPClientError):
-    """
-    Special Exception For locked Repos in Kallithea, the return code can
-    be overwritten by _code keyword argument passed into constructors
-    """
-    code = 423
-    title = explanation = 'Repository Locked'
-
-    def __init__(self, reponame, username, *args, **kwargs):
-        from kallithea import CONFIG
-        from kallithea.lib.utils2 import safe_int
-        _code = CONFIG.get('lock_ret_code')
-        self.code = safe_int(_code, self.code)
-        self.title = self.explanation = safe_str(
-            'Repository `%s` locked by user `%s`' % (reponame, username))
-        super(HTTPLockedRC, self).__init__(*args, **kwargs)
-
-
 class IMCCommitError(Exception):
     pass
 

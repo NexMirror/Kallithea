@@ -33,7 +33,7 @@ from kallithea.lib.vcs.utils.hgcompat import nullrev, revrange
 from kallithea.lib import helpers as h
 from kallithea.lib.utils import action_logger
 from kallithea.lib.vcs.backends.base import EmptyChangeset
-from kallithea.lib.exceptions import HTTPLockedRC, UserCreationError
+from kallithea.lib.exceptions import UserCreationError
 from kallithea.lib.utils import make_ui, setup_cache_regions
 from kallithea.lib.utils2 import safe_str, safe_unicode, _extract_extras
 from kallithea.model.db import Repository, User, Ui
@@ -78,44 +78,8 @@ def repo_size(ui, repo, hooktype=None, **kwargs):
     ui.status(msg)
 
 
-def push_lock_handling(ui, repo, **kwargs):
-    """Pre push function, currently used to ban pushing when repository is locked.
-
-    Called as Mercurial hook prechangegroup.push_lock_handling or from the Git pre-receive hook calling handle_git_pre_receive.
-    """
-    ex = _extract_extras()
-
-    usr = User.get_by_username(ex.username)
-    if ex.locked_by[0] and usr.user_id != int(ex.locked_by[0]):
-        locked_by = User.get(ex.locked_by[0]).username
-        # this exception is interpreted in git/hg middlewares and based
-        # on that proper return code is server to client
-        _http_ret = HTTPLockedRC(ex.repository, locked_by)
-        if str(_http_ret.code).startswith('2'):
-            # 2xx Codes don't raise exceptions
-            ui.status(safe_str(_http_ret.title))
-        else:
-            raise _http_ret
-
-
-def pull_lock_handling(ui, repo, **kwargs):
-    """Called as Mercurial hook preoutgoing.pull_lock_handling or from Kallithea before invoking Git"""
-    # pre pull function ...
-    ex = _extract_extras()
-    if ex.locked_by[0]:
-        locked_by = User.get(ex.locked_by[0]).username
-        # this exception is interpreted in git/hg middlewares and based
-        # on that proper return code is server to client
-        _http_ret = HTTPLockedRC(ex.repository, locked_by)
-        if str(_http_ret.code).startswith('2'):
-            # 2xx Codes don't raise exceptions
-            ui.status(safe_str(_http_ret.title))
-        else:
-            raise _http_ret
-
-
 def log_pull_action(ui, repo, **kwargs):
-    """Logs user last pull action, and also handle locking
+    """Logs user last pull action
 
     Called as Mercurial hook outgoing.pull_logger or from Kallithea before invoking Git.
     """
@@ -132,17 +96,6 @@ def log_pull_action(ui, repo, **kwargs):
         kw.update(ex)
         callback(**kw)
 
-    if ex.make_lock is not None and ex.make_lock:
-        Repository.lock(Repository.get_by_repo_name(ex.repository), user.user_id)
-        #msg = 'Made lock on repo `%s`' % repository
-        #ui.status(msg)
-
-    if ex.locked_by[0]:
-        locked_by = User.get(ex.locked_by[0]).username
-        _http_ret = HTTPLockedRC(ex.repository, locked_by)
-        if str(_http_ret.code).startswith('2'):
-            # 2xx Codes don't raise exceptions
-            ui.status(safe_str(_http_ret.title))
     return 0
 
 
@@ -195,17 +148,6 @@ def log_push_action(ui, repo, **kwargs):
         kw = {'pushed_revs': revs}
         kw.update(ex)
         callback(**kw)
-
-    if ex.make_lock is not None and not ex.make_lock:
-        Repository.unlock(Repository.get_by_repo_name(ex.repository))
-        ui.status(safe_str('Released lock on repo `%s`\n' % ex.repository))
-
-    if ex.locked_by[0]:
-        locked_by = User.get(ex.locked_by[0]).username
-        _http_ret = HTTPLockedRC(ex.repository, locked_by)
-        if str(_http_ret.code).startswith('2'):
-            # 2xx Codes don't raise exceptions
-            ui.status(safe_str(_http_ret.title))
 
     return 0
 
@@ -406,9 +348,6 @@ def _hook_environment(repo_path):
 
 def handle_git_pre_receive(repo_path, git_stdin_lines):
     """Called from Git pre-receive hook"""
-    baseui, repo = _hook_environment(repo_path)
-    scm_repo = repo.scm_instance
-    push_lock_handling(baseui, scm_repo)
     return 0
 
 

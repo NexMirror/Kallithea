@@ -287,8 +287,6 @@ class RepoGroupModel(object):
                 repo_group.group_description = repo_group_args['group_description']
             if 'parent_group_id' in repo_group_args:
                 repo_group.parent_group_id = repo_group_args['parent_group_id']
-            if 'enable_locking' in repo_group_args:
-                repo_group.enable_locking = repo_group_args['enable_locking']
 
             if 'parent_group_id' in repo_group_args:
                 assert repo_group_args['parent_group_id'] != u'-1', repo_group_args  # RepoGroupForm should have converted to None
@@ -302,14 +300,12 @@ class RepoGroupModel(object):
             Session().add(repo_group)
 
             # iterate over all members of this groups and do fixes
-            # set locking if given
             # if obj is a repoGroup also fix the name of the group according
             # to the parent
             # if obj is a Repo fix it's name
             # this can be potentially heavy operation
             for obj in repo_group.recursive_groups_and_repos():
                 # set the value from it's parent
-                obj.enable_locking = repo_group.enable_locking
                 if isinstance(obj, RepoGroup):
                     new_name = obj.get_new_name(obj.name)
                     log.debug('Fixing group %s to new name %s' \

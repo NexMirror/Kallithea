@@ -55,14 +55,6 @@
             </div>
 
             <div class="form-group">
-                <label class="control-label" for="default_repo_enable_locking">${_('Enable locking')}:</label>
-                <div>
-                    ${h.checkbox('default_repo_enable_locking',value="True")}
-                    <span class="help-block">${_('Enable lock-by-pulling on repository.')}</span>
-                </div>
-            </div>
-
-            <div class="form-group">
                 <div class="buttons">
                     ${h.submit('save',_('Save'),class_="btn btn-default")}
                 </div>

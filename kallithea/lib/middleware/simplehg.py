@@ -38,10 +38,9 @@ from webob.exc import HTTPNotFound, HTTPForbidden, HTTPInternalServerError, \
 
 from kallithea.lib.utils2 import safe_str, safe_unicode, fix_PATH, get_server_url, \
     _set_extras
-from kallithea.lib.base import BaseVCSController, check_locking_state
+from kallithea.lib.base import BaseVCSController
 from kallithea.lib.utils import make_ui, is_valid_repo, ui_sections
 from kallithea.lib.vcs.utils.hgcompat import RepoError, hgweb_mod
-from kallithea.lib.exceptions import HTTPLockedRC
 
 log = logging.getLogger(__name__)
 
@@ -134,27 +133,12 @@ class SimpleHg(BaseVCSController):
             'scm': 'hg',
             'config': CONFIG['__file__'],
             'server_url': server_url,
-            'make_lock': None,
-            'locked_by': [None, None]
         }
         #======================================================================
         # MERCURIAL REQUEST HANDLING
         #======================================================================
         repo_path = os.path.join(safe_str(self.basepath), str_repo_name)
         log.debug('Repository path is %s', repo_path)
-
-        # A Mercurial HTTP server will see listkeys operations (bookmarks,
-        # phases and obsolescence marker) in a different request - we don't
-        # want to check locking on those
-        if environ['QUERY_STRING'] == 'cmd=listkeys':
-            pass
-        # CHECK LOCKING only if it's not ANONYMOUS USER
-        elif not user.is_default_user:
-            log.debug('Checking locking on repository')
-            make_lock, locked, locked_by = check_locking_state(action, repo_name, user)
-            # store the make_lock for later evaluation in hooks
-            extras.update({'make_lock': make_lock,
-                           'locked_by': locked_by})
 
         fix_PATH()
         log.debug('HOOKS extras is %s', extras)
@@ -171,10 +155,6 @@ class SimpleHg(BaseVCSController):
         except RepoError as e:
             if str(e).find('not found') != -1:
                 return HTTPNotFound()(environ, start_response)
-        except HTTPLockedRC as e:
-            # Before Mercurial 3.6, lock exceptions were caught here
-            log.debug('Locked, response %s: %s', e.code, e.title)
-            return e(environ, start_response)
         except Exception:
             log.error(traceback.format_exc())
             return HTTPInternalServerError()(environ, start_response)
@@ -184,26 +164,7 @@ class SimpleHg(BaseVCSController):
         Make an wsgi application using hgweb, and inject generated baseui
         instance, additionally inject some extras into ui object
         """
-        class HgWebWrapper(hgweb_mod.hgweb):
-            # Work-around for Mercurial 3.6+ causing lock exceptions to be
-            # thrown late
-            def _runwsgi(self, *args):
-                try:
-                    return super(HgWebWrapper, self)._runwsgi(*args)
-                except HTTPLockedRC as e:
-                    log.debug('Locked, response %s: %s', e.code, e.title)
-                    try:
-                        req, res, repo = args
-                        res.status = e.status
-                        res.headers['Content-Type'] = 'text/plain'
-                        res.setbodybytes('')
-                        return res.sendresponse()
-                    except ValueError: # wsgiresponse was introduced in Mercurial 4.6 (a88d68dc3ee8)
-                        req, repo = args
-                        req.respond(e.status, 'text/plain')
-                        return ''
-
-        return HgWebWrapper(repo_name, name=repo_name, baseui=baseui)
+        return hgweb_mod.hgweb(repo_name, name=repo_name, baseui=baseui)
 
     def __get_repository(self, environ):
         """

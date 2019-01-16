@@ -63,7 +63,6 @@ User guide
 
    usage/general
    usage/vcs_notes
-   usage/locking
    usage/statistics
    api/api
 

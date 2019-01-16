@@ -549,8 +549,7 @@ def _extract_extras():
         raise Exception("Environment variable KALLITHEA_EXTRAS not found")
 
     try:
-        for k in ['username', 'repository', 'locked_by', 'scm', 'make_lock',
-                  'action', 'ip']:
+        for k in ['username', 'repository', 'scm', 'action', 'ip']:
             extras[k]
     except KeyError:
         raise Exception('Missing key %s in KALLITHEA_EXTRAS %s' % (k, extras))

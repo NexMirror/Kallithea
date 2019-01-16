@@ -478,46 +478,6 @@ class ReposController(BaseRepoController):
         raise HTTPFound(location=url('edit_repo_advanced', repo_name=repo_name))
 
     @HasRepoPermissionLevelDecorator('admin')
-    def edit_advanced_locking(self, repo_name):
-        """
-        Unlock repository when it is locked !
-
-        :param repo_name:
-        """
-        try:
-            repo = Repository.get_by_repo_name(repo_name)
-            if request.POST.get('set_lock'):
-                Repository.lock(repo, request.authuser.user_id)
-                h.flash(_('Repository has been locked'), category='success')
-            elif request.POST.get('set_unlock'):
-                Repository.unlock(repo)
-                h.flash(_('Repository has been unlocked'), category='success')
-        except Exception as e:
-            log.error(traceback.format_exc())
-            h.flash(_('An error occurred during unlocking'),
-                    category='error')
-        raise HTTPFound(location=url('edit_repo_advanced', repo_name=repo_name))
-
-    @HasRepoPermissionLevelDecorator('write')
-    def toggle_locking(self, repo_name):
-        try:
-            repo = Repository.get_by_repo_name(repo_name)
-
-            if repo.enable_locking:
-                if repo.locked[0]:
-                    Repository.unlock(repo)
-                    h.flash(_('Repository has been unlocked'), category='success')
-                else:
-                    Repository.lock(repo, request.authuser.user_id)
-                    h.flash(_('Repository has been locked'), category='success')
-
-        except Exception as e:
-            log.error(traceback.format_exc())
-            h.flash(_('An error occurred during unlocking'),
-                    category='error')
-        raise HTTPFound(location=url('summary_home', repo_name=repo_name))
-
-    @HasRepoPermissionLevelDecorator('admin')
     def edit_caches(self, repo_name):
         c.repo_info = self._load_repo()
         c.active = 'caches'

@@ -236,7 +236,7 @@ class RepoModel(object):
         defaults['repo_group'] = repo_info.group_id
 
         for strip, k in [(0, 'repo_type'), (1, 'repo_enable_downloads'),
-                         (1, 'repo_description'), (1, 'repo_enable_locking'),
+                         (1, 'repo_description'),
                          (1, 'repo_landing_rev'), (0, 'clone_uri'),
                          (1, 'repo_private'), (1, 'repo_enable_statistics')]:
             attr = k
@@ -284,7 +284,6 @@ class RepoModel(object):
             log.debug('Updating repo %s with params:%s', cur_repo, kwargs)
             for k in ['repo_enable_downloads',
                       'repo_description',
-                      'repo_enable_locking',
                       'repo_landing_rev',
                       'repo_private',
                       'repo_enable_statistics',
@@ -332,7 +331,7 @@ class RepoModel(object):
                      private=False, clone_uri=None, repo_group=None,
                      landing_rev='rev:tip', fork_of=None,
                      copy_fork_permissions=False, enable_statistics=False,
-                     enable_locking=False, enable_downloads=False,
+                     enable_downloads=False,
                      copy_group_permissions=False, state=Repository.STATE_PENDING):
         """
         Create repository inside database with PENDING state. This should only be
@@ -371,11 +370,7 @@ class RepoModel(object):
             new_repo.landing_rev = landing_rev
 
             new_repo.enable_statistics = enable_statistics
-            new_repo.enable_locking = enable_locking
             new_repo.enable_downloads = enable_downloads
-
-            if repo_group:
-                new_repo.enable_locking = repo_group.enable_locking
 
             if fork_of:
                 parent_repo = fork_of

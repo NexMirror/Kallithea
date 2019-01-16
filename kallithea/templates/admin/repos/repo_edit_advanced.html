@@ -39,32 +39,6 @@ ${h.form(url('edit_repo_advanced_journal', repo_name=c.repo_info.repo_name))}
 </div>
 ${h.end_form()}
 
-<h3>${_('Change Locking')}</h3>
-${h.form(url('edit_repo_advanced_locking', repo_name=c.repo_info.repo_name))}
-<div class="form">
-      %if c.repo_info.locked[0]:
-        ${h.hidden('set_unlock', '1')}
-        <button class="btn btn-default btn-sm" type="submit"
-                onclick="return confirm('${_('Confirm to unlock repository.')}');">
-            <i class="icon-lock-open-alt"></i>
-            ${_('Unlock Repository')}
-        </button>
-       ${_('Locked by %s on %s') % (h.person_by_id(c.repo_info.locked[0]),h.fmt_date(h.time_to_datetime(c.repo_info.locked[1])))}
-      %else:
-        ${h.hidden('set_lock', '1')}
-        <button class="btn btn-default btn-sm" type="submit"
-                onclick="return confirm('${_('Confirm to lock repository.')}');">
-            <i class="icon-lock"></i>
-            ${_('Lock Repository')}
-        </button>
-        ${_('Repository is not locked')}
-      %endif
-   <div class="text-muted">
-   ${_('Force locking on the repository. Works only when anonymous access is disabled. Triggering a pull locks the repository.  The user who is pulling locks the repository; only the user who pulled and locked it can unlock it by doing a push.')}
-   </div>
-</div>
-${h.end_form()}
-
 <h3>${_('Delete')}</h3>
 ${h.form(url('delete_repo', repo_name=c.repo_name))}
 <div class="form">

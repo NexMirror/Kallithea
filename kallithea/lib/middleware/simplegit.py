@@ -39,10 +39,8 @@ from kallithea.model.db import Ui
 
 from kallithea.lib.utils2 import safe_str, safe_unicode, fix_PATH, get_server_url, \
     _set_extras
-from kallithea.lib.base import BaseVCSController, check_locking_state
+from kallithea.lib.base import BaseVCSController
 from kallithea.lib.utils import make_ui, is_valid_repo
-from kallithea.lib.exceptions import HTTPLockedRC
-from kallithea.lib.hooks import pull_lock_handling
 
 log = logging.getLogger(__name__)
 
@@ -110,8 +108,6 @@ class SimpleGit(BaseVCSController):
             'scm': 'git',
             'config': CONFIG['__file__'],
             'server_url': server_url,
-            'make_lock': None,
-            'locked_by': [None, None]
         }
 
         #===================================================================
@@ -119,13 +115,6 @@ class SimpleGit(BaseVCSController):
         #===================================================================
         repo_path = os.path.join(safe_str(self.basepath), str_repo_name)
         log.debug('Repository path is %s', repo_path)
-
-        if not user.is_default_user:
-            log.debug('Checking locking on repository')
-            make_lock, locked, locked_by = check_locking_state(action, repo_name, user)
-            # store the make_lock for later evaluation in hooks
-            extras.update({'make_lock': make_lock,
-                           'locked_by': locked_by})
 
         fix_PATH()
         log.debug('HOOKS extras is %s', extras)
@@ -138,9 +127,6 @@ class SimpleGit(BaseVCSController):
                      action, str_repo_name, safe_str(user.username), ip_addr)
             app = self.__make_app(repo_name, repo_path, extras)
             return app(environ, start_response)
-        except HTTPLockedRC as e:
-            log.debug('Locked, response %s: %s', e.code, e.title)
-            return e(environ, start_response)
         except Exception:
             log.error(traceback.format_exc())
             return HTTPInternalServerError()(environ, start_response)
@@ -211,8 +197,5 @@ class SimpleGit(BaseVCSController):
         _repo = _repo.scm_instance
 
         _hooks = dict(baseui.configitems('hooks')) or {}
-        if action == 'pull':
-            # stupid git, emulate pre-pull hook !
-            pull_lock_handling(ui=baseui, repo=_repo._repo)
         if action == 'pull' and _hooks.get(Ui.HOOK_PULL_LOG):
             log_pull_action(ui=baseui, repo=_repo._repo)

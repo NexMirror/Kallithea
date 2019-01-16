@@ -352,9 +352,7 @@ class Ui(Base, BaseDbModel):
     HOOK_UPDATE = 'changegroup.update'
     HOOK_REPO_SIZE = 'changegroup.repo_size'
     HOOK_PUSH_LOG = 'changegroup.push_logger'
-    HOOK_PUSH_LOCK = 'prechangegroup.push_lock_handling'
     HOOK_PULL_LOG = 'outgoing.pull_logger'
-    HOOK_PULL_LOCK = 'preoutgoing.pull_lock_handling'
 
     ui_id = Column(Integer(), primary_key=True)
     ui_section = Column(String(255), nullable=False)
@@ -380,8 +378,7 @@ class Ui(Base, BaseDbModel):
     def get_builtin_hooks(cls):
         q = cls.query()
         q = q.filter(cls.ui_key.in_([cls.HOOK_UPDATE, cls.HOOK_REPO_SIZE,
-                                     cls.HOOK_PUSH_LOG, cls.HOOK_PUSH_LOCK,
-                                     cls.HOOK_PULL_LOG, cls.HOOK_PULL_LOCK]))
+                                     cls.HOOK_PUSH_LOG, cls.HOOK_PULL_LOG]))
         q = q.filter(cls.ui_section == 'hooks')
         return q.all()
 
@@ -389,8 +386,7 @@ class Ui(Base, BaseDbModel):
     def get_custom_hooks(cls):
         q = cls.query()
         q = q.filter(~cls.ui_key.in_([cls.HOOK_UPDATE, cls.HOOK_REPO_SIZE,
-                                      cls.HOOK_PUSH_LOG, cls.HOOK_PUSH_LOCK,
-                                      cls.HOOK_PULL_LOG, cls.HOOK_PULL_LOCK]))
+                                      cls.HOOK_PUSH_LOG, cls.HOOK_PULL_LOG]))
         q = q.filter(cls.ui_section == 'hooks')
         return q.all()
 
@@ -994,8 +990,6 @@ class Repository(Base, BaseDbModel):
     created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
     updated_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
     _landing_revision = Column("landing_revision", String(255), nullable=False)
-    enable_locking = Column(Boolean(), nullable=False, default=False)
-    _locked = Column("locked", String(255), nullable=True) # FIXME: not nullable?
     _changeset_cache = Column("changeset_cache", LargeBinary(), nullable=True) # JSON data # FIXME: not nullable?
 
     fork_id = Column(Integer(), ForeignKey('repositories.repo_id'), nullable=True)
@@ -1045,21 +1039,6 @@ class Repository(Base, BaseDbModel):
             raise ValueError('value must be delimited with `:` and consist '
                              'of <rev_type>:<rev>, got %s instead' % val)
         self._landing_revision = val
-
-    @hybrid_property
-    def locked(self):
-        # always should return [user_id, timelocked]
-        if self._locked:
-            _lock_info = self._locked.split(':')
-            return int(_lock_info[0]), _lock_info[1]
-        return [None, None]
-
-    @locked.setter
-    def locked(self, val):
-        if val and isinstance(val, (list, tuple)):
-            self._locked = ':'.join(map(str, val))
-        else:
-            self._locked = None
 
     @hybrid_property
     def changeset_cache(self):
@@ -1254,13 +1233,8 @@ class Repository(Base, BaseDbModel):
             owner=repo.owner.username,
             fork_of=repo.fork.repo_name if repo.fork else None,
             enable_statistics=repo.enable_statistics,
-            enable_locking=repo.enable_locking,
             enable_downloads=repo.enable_downloads,
             last_changeset=repo.changeset_cache,
-            locked_by=User.get(self.locked[0]).get_api_data() \
-                if self.locked[0] else None,
-            locked_date=time_to_datetime(self.locked[1]) \
-                if self.locked[1] else None
         )
         if with_revision_names:
             scm_repo = repo.scm_instance_no_cache()
@@ -1278,22 +1252,6 @@ class Repository(Base, BaseDbModel):
                 data[f.field_key_prefixed] = f.field_value
 
         return data
-
-    @classmethod
-    def lock(cls, repo, user_id, lock_time=None):
-        if lock_time is not None:
-            lock_time = time.time()
-        repo.locked = [user_id, lock_time]
-        Session().commit()
-
-    @classmethod
-    def unlock(cls, repo):
-        repo.locked = None
-        Session().commit()
-
-    @classmethod
-    def getlock(cls, repo):
-        return repo.locked
 
     @property
     def last_db_change(self):
@@ -1524,7 +1482,6 @@ class RepoGroup(Base, BaseDbModel):
     group_name = Column(Unicode(255), nullable=False, unique=True) # full path
     parent_group_id = Column('group_parent_id', Integer(), ForeignKey('groups.group_id'), nullable=True)
     group_description = Column(Unicode(10000), nullable=False)
-    enable_locking = Column(Boolean(), nullable=False, default=False)
     owner_id = Column('user_id', Integer(), ForeignKey('users.user_id'), nullable=False)
     created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
 

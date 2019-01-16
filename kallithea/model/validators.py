@@ -625,7 +625,7 @@ def ValidSettings():
             # with forms
 
             forbidden_params = [
-                'user', 'repo_type', 'repo_enable_locking',
+                'user', 'repo_type',
                 'repo_enable_downloads', 'repo_enable_statistics'
             ]
 
