@@ -55,7 +55,7 @@ from kallithea.lib.utils import get_filesystem_repos, make_ui, \
     action_logger
 from kallithea.model.db import Repository, Session, Ui, CacheInvalidation, \
     UserFollowing, UserLog, User, RepoGroup, PullRequest
-from kallithea.lib.hooks import log_push_action
+from kallithea.lib.hooks import process_pushed_raw_ids
 from kallithea.lib.exceptions import NonRelativePathError, IMCCommitError
 
 log = logging.getLogger(__name__)
@@ -353,21 +353,17 @@ class ScmModel(object):
 
     def _handle_push(self, repo, username, action, repo_name, revisions):
         """
-        Triggers push action hooks
+        Handle that the repository has changed.
+        Adds an action log entry with the new revisions, and the head revision
+        cache and in-memory caches are invalidated/updated.
 
-        :param repo: SCM repo
         :param username: username who pushes
         :param action: push/push_local/push_remote
         :param repo_name: name of repo
         :param revisions: list of revisions that we pushed
         """
         self._handle_rc_scm_extras(username, repo_name, repo_alias=repo.alias, action=action)
-        _scm_repo = repo._repo
-        # trigger push hook
-        if repo.alias == 'hg':
-            log_push_action(_scm_repo.ui, _scm_repo, node=revisions[0])
-        elif repo.alias == 'git':
-            log_push_action(None, _scm_repo, _git_revs=revisions)
+        process_pushed_raw_ids(revisions) # also calls mark_for_invalidation
 
     def _get_IMC_module(self, scm_type):
         """
@@ -402,8 +398,8 @@ class ScmModel(object):
             if repo.alias == 'git':
                 repo.fetch(clone_uri)
                 # git doesn't really have something like post-fetch action
-                # we fake that now. #TODO: extract fetched revisions somehow
-                # here
+                # we fake that now.
+                # TODO: extract fetched revisions ... somehow ...
                 self._handle_push(repo,
                                   username=username,
                                   action='push_remote',

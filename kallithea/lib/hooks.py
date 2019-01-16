@@ -82,6 +82,8 @@ def log_pull_action(ui, repo, **kwargs):
     """Logs user last pull action
 
     Called as Mercurial hook outgoing.pull_logger or from Kallithea before invoking Git.
+
+    Does *not* use the action from the hook environment but is always 'pull'.
     """
     ex = _extract_extras()
 
@@ -99,43 +101,32 @@ def log_pull_action(ui, repo, **kwargs):
     return 0
 
 
-def log_push_action(ui, repo, **kwargs):
+def log_push_action(ui, repo, node, node_last, **kwargs):
     """
-    Register that changes have been pushed - log it *and* invalidate caches.
-    Note: It is not only logging, but also the side effect invalidating cahes!
-    The function should perhaps be renamed.
+    Entry point for Mercurial hook changegroup.push_logger.
 
-    Called as Mercurial hook changegroup.push_logger or from the Git
-    post-receive hook calling handle_git_post_receive ... or from scm _handle_push.
+    The pushed changesets is given by the revset 'node:node_last'.
 
-    Revisions are passed in different hack-ish ways.
+    Note: This hook is not only logging, but also the side effect invalidating
+    cahes! The function should perhaps be renamed.
+    """
+    _h = binascii.hexlify
+    revs = [_h(repo[r].node()) for r in revrange(repo, [node + ':' + node_last])]
+    process_pushed_raw_ids(revs)
+    return 0
+
+
+def process_pushed_raw_ids(revs):
+    """
+    Register that changes have been added to the repo - log the action *and* invalidate caches.
+
+    Called from  Mercurial changegroup.push_logger calling hook log_push_action,
+    or from the Git post-receive hook calling handle_git_post_receive ...
+    or from scm _handle_push.
     """
     ex = _extract_extras()
 
-    action_tmpl = ex.action + ':%s'
-    revs = []
-    if ex.scm == 'hg':
-        node = kwargs['node']
-
-        def get_revs(repo, rev_opt):
-            if rev_opt:
-                revs = revrange(repo, rev_opt)
-
-                if len(revs) == 0:
-                    return (nullrev, nullrev)
-                return max(revs), min(revs)
-            else:
-                return len(repo) - 1, 0
-
-        stop, start = get_revs(repo, [node + ':'])
-        _h = binascii.hexlify
-        revs = [_h(repo[r].node()) for r in xrange(start, stop + 1)]
-    elif ex.scm == 'git':
-        revs = kwargs.get('_git_revs', [])
-        if '_git_revs' in kwargs:
-            kwargs.pop('_git_revs')
-
-    action = action_tmpl % ','.join(revs)
+    action = '%s:%s' % (ex.action, ','.join(revs))
     action_logger(ex.username, action, ex.repository, ex.ip, commit=True)
 
     from kallithea.model.scm import ScmModel
@@ -148,8 +139,6 @@ def log_push_action(ui, repo, **kwargs):
         kw = {'pushed_revs': revs}
         kw.update(ex)
         callback(**kw)
-
-    return 0
 
 
 def log_create_repository(repository_dict, created_by, **kwargs):
@@ -348,6 +337,7 @@ def _hook_environment(repo_path):
 
 def handle_git_pre_receive(repo_path, git_stdin_lines):
     """Called from Git pre-receive hook"""
+    # Currently unused. TODO: remove?
     return 0
 
 
@@ -403,6 +393,6 @@ def handle_git_post_receive(repo_path, git_stdin_lines):
         elif _type == 'tags':
             git_revs += ['tag=>%s' % push_ref['name']]
 
-    log_push_action(baseui, scm_repo, _git_revs=git_revs)
+    process_pushed_raw_ids(git_revs)
 
     return 0
