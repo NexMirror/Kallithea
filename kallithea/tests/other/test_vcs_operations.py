@@ -73,9 +73,9 @@ class Command(object):
         stdout, stderr = p.communicate()
         if DEBUG:
             if stdout:
-                print 'stdout:', repr(stdout)
+                print 'stdout:', stdout
             if stderr:
-                print 'stderr:', repr(stderr)
+                print 'stderr:', stderr
         if not ignoreReturnCode:
             assert p.returncode == 0
         return stdout, stderr
