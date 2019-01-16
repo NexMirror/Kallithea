@@ -150,13 +150,13 @@ def _add_files(vcs, dest_dir, files_no=3):
         # git commit needs EMAIL on some machines
         Command(dest_dir).execute(cmd, EMAIL=email)
 
-def _add_files_and_push(webserver, vcs, dest_dir, clone_url, ignoreReturnCode=False, files_no=3):
-    _add_files(vcs, dest_dir, files_no=files_no)
+def _add_files_and_push(webserver, vt, dest_dir, clone_url, ignoreReturnCode=False, files_no=3):
+    _add_files(vt.repo_type, dest_dir, files_no=files_no)
     # PUSH it back
     stdout = stderr = None
-    if vcs == 'hg':
+    if vt.repo_type == 'hg':
         stdout, stderr = Command(dest_dir).execute('hg push --verbose', clone_url, ignoreReturnCode=ignoreReturnCode)
-    elif vcs == 'git':
+    elif vt.repo_type == 'git':
         stdout, stderr = Command(dest_dir).execute('git push --verbose', clone_url, "master", ignoreReturnCode=ignoreReturnCode)
 
     return stdout, stderr
@@ -297,7 +297,7 @@ class TestVCSOperations(TestController):
         # The server repo doesn't have any other heads than the
         # refs/heads/master we are pushing, but the `git log` in the push hook
         # should still list the 3 commits.
-        stdout, stderr = _add_files_and_push(webserver, 'git', local_clone_dir, clone_url=clone_url)
+        stdout, stderr = _add_files_and_push(webserver, GitHttpVcsTest, local_clone_dir, clone_url=clone_url)
         _check_proper_git_push(stdout, stderr)
 
         # Verify that we got the right events in UserLog. Expect something like:
@@ -320,7 +320,7 @@ class TestVCSOperations(TestController):
         stdout, stderr = Command(TESTS_TMP_PATH).execute(vt.repo_type, 'clone', clone_url, dest_dir)
 
         clone_url = webserver.repo_url(testfork[vt.repo_type])
-        stdout, stderr = _add_files_and_push(webserver, vt.repo_type, dest_dir, clone_url=clone_url)
+        stdout, stderr = _add_files_and_push(webserver, vt, dest_dir, clone_url=clone_url)
 
         if vt.repo_type == 'git':
             print [(x.repo_full_path, x.repo_path) for x in Repository.query()]  # TODO: what is this for
@@ -345,7 +345,7 @@ class TestVCSOperations(TestController):
         clone_url = webserver.repo_url(testfork[vt.repo_type])
         stdout, stderr = Command(TESTS_TMP_PATH).execute(vt.repo_type, 'clone', clone_url, dest_dir)
 
-        stdout, stderr = _add_files_and_push(webserver, vt.repo_type, dest_dir, files_no=1, clone_url=clone_url)
+        stdout, stderr = _add_files_and_push(webserver, vt, dest_dir, files_no=1, clone_url=clone_url)
 
         if vt.repo_type == 'git':
             _check_proper_git_push(stdout, stderr)
@@ -360,7 +360,7 @@ class TestVCSOperations(TestController):
         stdout, stderr = Command(TESTS_TMP_PATH).execute(vt.repo_type, 'clone', clone_url, dest_dir)
 
         clone_url = webserver.repo_url(vt.repo_name, username='bad', password='name')
-        stdout, stderr = _add_files_and_push(webserver, vt.repo_type, dest_dir,
+        stdout, stderr = _add_files_and_push(webserver, vt, dest_dir,
                                              clone_url=clone_url, ignoreReturnCode=True)
 
         if vt.repo_type == 'git':
@@ -374,7 +374,7 @@ class TestVCSOperations(TestController):
         clone_url = webserver.repo_url(vt.repo_name, username=TEST_USER_REGULAR_LOGIN, password=TEST_USER_REGULAR_PASS)
         stdout, stderr = Command(TESTS_TMP_PATH).execute(vt.repo_type, 'clone', clone_url, dest_dir)
 
-        stdout, stderr = _add_files_and_push(webserver, vt.repo_type, dest_dir, clone_url=clone_url, ignoreReturnCode=True)
+        stdout, stderr = _add_files_and_push(webserver, vt, dest_dir, ignoreReturnCode=True, clone_url=clone_url)
 
         if vt.repo_type == 'git':
             assert 'The requested URL returned error: 403' in stderr
@@ -388,7 +388,7 @@ class TestVCSOperations(TestController):
         stdout, stderr = Command(TESTS_TMP_PATH).execute(vt.repo_type, 'clone', clone_url, dest_dir)
 
         stdout, stderr = _add_files_and_push(
-            webserver, vt.repo_type, dest_dir, clone_url='http://%s:%s/tmp' % (
+            webserver, vt, dest_dir, clone_url='http://%s:%s/tmp' % (
                 webserver.server_address[0], webserver.server_address[1]),
             ignoreReturnCode=True)
 
@@ -460,7 +460,7 @@ class TestVCSOperations(TestController):
         dest_dir = _get_tmp_dir()
         stdout, stderr = Command(TESTS_TMP_PATH).execute(vt.repo_type, 'clone', clone_url, dest_dir)
 
-        stdout, stderr = _add_files_and_push(webserver, vt.repo_type, dest_dir, clone_url,
+        stdout, stderr = _add_files_and_push(webserver, vt, dest_dir, clone_url,
                                              ignoreReturnCode=True)
         assert 'failing_test_hook failed' in stdout + stderr
         assert 'Traceback' not in stdout + stderr
