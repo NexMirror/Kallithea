@@ -329,6 +329,9 @@ class TestVCSOperations(TestController):
 
     @parametrize_vcs_test
     def test_push_new_file(self, webserver, testfork, vt):
+        UserLog.query().delete()
+        Session().commit()
+
         dest_dir = _get_tmp_dir()
         clone_url = vt.repo_url_param(webserver, vt.repo_name)
         stdout, stderr = Command(TESTS_TMP_PATH).execute(vt.repo_type, 'clone', clone_url, dest_dir)
@@ -337,12 +340,15 @@ class TestVCSOperations(TestController):
         stdout, stderr = _add_files_and_push(webserver, vt, dest_dir, clone_url=clone_url)
 
         if vt.repo_type == 'git':
-            print [(x.repo_full_path, x.repo_path) for x in Repository.query()]  # TODO: what is this for
             _check_proper_git_push(stdout, stderr)
         elif vt.repo_type == 'hg':
             assert 'pushing to' in stdout
             assert 'Repository size' in stdout
             assert 'Last revision is now' in stdout
+
+        action_parts = [ul.action.split(':', 1) for ul in UserLog.query().order_by(UserLog.user_log_id)]
+        assert [(t[0], (t[1].count(',') + 1) if len(t) == 2 else 0) for t in action_parts] == \
+            [(u'pull', 0), (u'push', 3)]
 
     @parametrize_vcs_test
     def test_push_invalidates_cache(self, webserver, testfork, vt):
@@ -384,6 +390,9 @@ class TestVCSOperations(TestController):
 
     @parametrize_vcs_test
     def test_push_with_readonly_credentials(self, webserver, vt):
+        UserLog.query().delete()
+        Session().commit()
+
         dest_dir = _get_tmp_dir()
         clone_url = vt.repo_url_param(webserver, vt.repo_name, username=TEST_USER_REGULAR_LOGIN, password=TEST_USER_REGULAR_PASS)
         stdout, stderr = Command(TESTS_TMP_PATH).execute(vt.repo_type, 'clone', clone_url, dest_dir)
@@ -394,6 +403,10 @@ class TestVCSOperations(TestController):
             assert 'The requested URL returned error: 403' in stderr
         elif vt.repo_type == 'hg':
             assert 'abort: HTTP Error 403: Forbidden' in stderr
+
+        action_parts = [ul.action.split(':', 1) for ul in UserLog.query().order_by(UserLog.user_log_id)]
+        assert [(t[0], (t[1].count(',') + 1) if len(t) == 2 else 0) for t in action_parts] == \
+            [(u'pull', 0)]
 
     @parametrize_vcs_test
     def test_push_back_to_wrong_url(self, webserver, vt):
