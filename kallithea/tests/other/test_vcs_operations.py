@@ -482,7 +482,7 @@ class TestVCSOperations(TestController):
 
     @parametrize_vcs_test_hg # git hooks doesn't work like hg hooks
     def test_custom_hooks_prechangegroup(self, testhook_cleanup, webserver, testfork, vt):
-        # set prechangegroup to failing hook (returns True)
+        # set prechangegroup to failing hook (returns exit code 1)
         Ui.create_or_update_hook('prechangegroup.testhook', 'python:kallithea.tests.fixture.failing_test_hook')
         Session().commit()
         # clone repo
@@ -504,11 +504,10 @@ class TestVCSOperations(TestController):
         Session().commit()
         # re-try to push
         stdout, stderr = Command(dest_dir).execute('%s push' % vt.repo_type, clone_url, ignoreReturnCode=True)
-        if vt.repo_type == 'hg':
+        if vt is HgHttpVcsTest:
             # like with 'hg serve...' 'HTTP Error 500: INTERNAL SERVER ERROR' should be returned
             assert 'HTTP Error 500: INTERNAL SERVER ERROR' in stderr
-        elif vt.repo_type == 'git':
-            assert 'exception_test_hook threw an exception' in stderr
+        else: assert False
         # there are still outgoing changesets
         stdout, stderr = _check_outgoing(vt.repo_type, dest_dir, clone_url)
         assert stdout != ''
