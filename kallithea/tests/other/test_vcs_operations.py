@@ -150,19 +150,9 @@ def _add_files(vcs, dest_dir, files_no=3):
         # git commit needs EMAIL on some machines
         Command(dest_dir).execute(cmd, EMAIL=email)
 
-def _add_files_and_push(webserver, vcs, dest_dir, ignoreReturnCode=False, files_no=3,
-                            clone_url=None, username=TEST_USER_ADMIN_LOGIN, password=TEST_USER_ADMIN_PASS):
+def _add_files_and_push(webserver, vcs, dest_dir, clone_url, ignoreReturnCode=False, files_no=3):
     _add_files(vcs, dest_dir, files_no=files_no)
     # PUSH it back
-    _REPO = None
-    if vcs == 'hg':
-        _REPO = HG_REPO
-    elif vcs == 'git':
-        _REPO = GIT_REPO
-
-    if clone_url is None:
-        clone_url = webserver.repo_url(_REPO, username=username, password=password)
-
     stdout = stderr = None
     if vcs == 'hg':
         stdout, stderr = Command(dest_dir).execute('hg push --verbose', clone_url, ignoreReturnCode=ignoreReturnCode)
@@ -172,7 +162,7 @@ def _add_files_and_push(webserver, vcs, dest_dir, ignoreReturnCode=False, files_
     return stdout, stderr
 
 
-def _check_outgoing(vcs, cwd, clone_url=''):
+def _check_outgoing(vcs, cwd, clone_url):
     if vcs == 'hg':
         # hg removes the password from default URLs, so we have to provide it here via the clone_url
         return Command(cwd).execute('hg -q outgoing', clone_url, ignoreReturnCode=True)
@@ -195,7 +185,6 @@ def set_anonymous_access(enable=True):
 
 
 def _check_proper_git_push(stdout, stderr):
-    # WTF Git stderr is output ?!
     assert 'fatal' not in stderr
     assert 'rejected' not in stderr
     assert 'Pushing to' in stderr
@@ -370,8 +359,9 @@ class TestVCSOperations(TestController):
         clone_url = webserver.repo_url(vt.repo_name)
         stdout, stderr = Command(TESTS_TMP_PATH).execute(vt.repo_type, 'clone', clone_url, dest_dir)
 
-        stdout, stderr = _add_files_and_push(webserver, vt.repo_type, dest_dir, username='bad',
-                                             password='name', ignoreReturnCode=True)
+        clone_url = webserver.repo_url(vt.repo_name, username='bad', password='name')
+        stdout, stderr = _add_files_and_push(webserver, vt.repo_type, dest_dir,
+                                             clone_url=clone_url, ignoreReturnCode=True)
 
         if vt.repo_type == 'git':
             assert 'fatal: Authentication failed' in stderr
@@ -384,8 +374,7 @@ class TestVCSOperations(TestController):
         clone_url = webserver.repo_url(vt.repo_name, username=TEST_USER_REGULAR_LOGIN, password=TEST_USER_REGULAR_PASS)
         stdout, stderr = Command(TESTS_TMP_PATH).execute(vt.repo_type, 'clone', clone_url, dest_dir)
 
-        stdout, stderr = _add_files_and_push(webserver, vt.repo_type, dest_dir, username=TEST_USER_REGULAR_LOGIN,
-                                             password=TEST_USER_REGULAR_PASS, ignoreReturnCode=True)
+        stdout, stderr = _add_files_and_push(webserver, vt.repo_type, dest_dir, clone_url=clone_url, ignoreReturnCode=True)
 
         if vt.repo_type == 'git':
             assert 'The requested URL returned error: 403' in stderr
@@ -471,9 +460,7 @@ class TestVCSOperations(TestController):
         dest_dir = _get_tmp_dir()
         stdout, stderr = Command(TESTS_TMP_PATH).execute(vt.repo_type, 'clone', clone_url, dest_dir)
 
-        stdout, stderr = _add_files_and_push(webserver, vt.repo_type, dest_dir,
-                                             username=TEST_USER_ADMIN_LOGIN,
-                                             password=TEST_USER_ADMIN_PASS,
+        stdout, stderr = _add_files_and_push(webserver, vt.repo_type, dest_dir, clone_url,
                                              ignoreReturnCode=True)
         assert 'failing_test_hook failed' in stdout + stderr
         assert 'Traceback' not in stdout + stderr
