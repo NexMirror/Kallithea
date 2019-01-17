@@ -158,9 +158,9 @@ def _add_files_and_push(webserver, vt, dest_dir, clone_url, ignoreReturnCode=Fal
     # PUSH it back
     stdout = stderr = None
     if vt.repo_type == 'hg':
-        stdout, stderr = Command(dest_dir).execute('hg push --verbose', clone_url, ignoreReturnCode=ignoreReturnCode)
+        stdout, stderr = Command(dest_dir).execute('hg push -f --verbose', clone_url, ignoreReturnCode=ignoreReturnCode)
     elif vt.repo_type == 'git':
-        stdout, stderr = Command(dest_dir).execute('git push --verbose', clone_url, "master", ignoreReturnCode=ignoreReturnCode)
+        stdout, stderr = Command(dest_dir).execute('git push -f --verbose', clone_url, "master", ignoreReturnCode=ignoreReturnCode)
 
     return stdout, stderr
 
