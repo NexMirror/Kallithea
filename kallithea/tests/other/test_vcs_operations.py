@@ -353,9 +353,9 @@ class TestVCSOperations(TestController):
     @parametrize_vcs_test
     def test_push_invalidates_cache(self, webserver, testfork, vt):
         key = CacheInvalidation.query().filter(CacheInvalidation.cache_key
-                                               == vt.repo_name).scalar()
+                                               == testfork[vt.repo_type]).scalar()
         if not key:
-            key = CacheInvalidation(vt.repo_name, vt.repo_name)
+            key = CacheInvalidation(testfork[vt.repo_type], testfork[vt.repo_type])
             Session().add(key)
 
         key.cache_active = True
