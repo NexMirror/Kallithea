@@ -352,6 +352,8 @@ class TestVCSOperations(TestController):
 
     @parametrize_vcs_test
     def test_push_invalidates_cache(self, webserver, testfork, vt):
+        pre_cached_tip = [repo.get_api_data()['last_changeset']['short_id'] for repo in Repository.query().filter(Repository.repo_name == testfork[vt.repo_type])]
+
         key = CacheInvalidation.query().filter(CacheInvalidation.cache_key
                                                == testfork[vt.repo_type]).scalar()
         if not key:
@@ -369,6 +371,10 @@ class TestVCSOperations(TestController):
 
         if vt.repo_type == 'git':
             _check_proper_git_push(stdout, stderr)
+
+        post_cached_tip = [repo.get_api_data()['last_changeset']['short_id'] for repo in Repository.query().filter(Repository.repo_name == testfork[vt.repo_type])]
+        assert pre_cached_tip != post_cached_tip
+
         key = CacheInvalidation.query().filter(CacheInvalidation.cache_key
                                                == testfork[vt.repo_type]).all()
         assert key == []
