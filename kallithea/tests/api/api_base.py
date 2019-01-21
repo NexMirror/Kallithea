@@ -288,6 +288,8 @@ class _BaseTestApi(object):
         r.clone_uri = os.path.join(Ui.get_by_key('paths', '/').ui_value, self.REPO)
         Session().commit()
 
+        pre_cached_tip = [repo.get_api_data()['last_changeset']['short_id'] for repo in Repository.query().filter(Repository.repo_name == repo_name)]
+
         id_, params = _build_data(self.apikey, 'pull',
                                   repoid=repo_name,)
         response = api_call(self, params)
@@ -296,7 +298,11 @@ class _BaseTestApi(object):
                     'repository': repo_name}
         self._compare_ok(id_, expected, given=response.body)
 
+        post_cached_tip = [repo.get_api_data()['last_changeset']['short_id'] for repo in Repository.query().filter(Repository.repo_name == repo_name)]
+
         fixture.destroy_repo(repo_name)
+
+        assert pre_cached_tip != post_cached_tip
 
     def test_api_pull_fork(self):
         fork_name = u'fork'
