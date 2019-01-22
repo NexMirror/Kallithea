@@ -173,7 +173,7 @@ def setup_configuration(app):
     load_rcextensions(root_path=config['here'])
 
     set_available_permissions(config)
-    repos_path = make_ui('db').configitems('paths')[0][1]
+    repos_path = make_ui().configitems('paths')[0][1]
     config['base_path'] = repos_path
     set_app_settings(config)
 

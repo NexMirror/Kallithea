@@ -427,7 +427,7 @@ def ValidCloneUri():
 
             if url and url != value.get('clone_uri_hidden'):
                 try:
-                    is_valid_repo_uri(repo_type, url, make_ui('db', clear_session=False))
+                    is_valid_repo_uri(repo_type, url, make_ui(clear_session=False))
                 except Exception:
                     log.exception('URL validation failed')
                     msg = self.message('clone_uri', state)

@@ -295,7 +295,7 @@ class RepoModel(object):
                 # clone_uri is modified - if given a value, check it is valid
                 if clone_uri != '':
                     # will raise exception on error
-                    is_valid_repo_uri(cur_repo.repo_type, clone_uri, make_ui('db', clear_session=False))
+                    is_valid_repo_uri(cur_repo.repo_type, clone_uri, make_ui(clear_session=False))
                 cur_repo.clone_uri = clone_uri
 
             if 'repo_name' in kwargs:
@@ -365,7 +365,7 @@ class RepoModel(object):
             new_repo.private = private
             if clone_uri:
                 # will raise exception on error
-                is_valid_repo_uri(repo_type, clone_uri, make_ui('db', clear_session=False))
+                is_valid_repo_uri(repo_type, clone_uri, make_ui(clear_session=False))
             new_repo.clone_uri = clone_uri
             new_repo.landing_rev = landing_rev
 
@@ -666,7 +666,7 @@ class RepoModel(object):
         backend = get_backend(repo_type)
 
         if repo_type == 'hg':
-            baseui = make_ui('db', clear_session=False)
+            baseui = make_ui(clear_session=False)
             # patch and reset hooks section of UI config to not run any
             # hooks on creating remote repo
             for k, v in baseui.configitems('hooks'):

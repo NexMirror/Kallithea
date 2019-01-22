@@ -39,7 +39,7 @@ from webob.exc import HTTPNotFound, HTTPForbidden, HTTPInternalServerError, \
 from kallithea.lib.utils2 import safe_str, safe_unicode, fix_PATH, get_server_url, \
     _set_extras
 from kallithea.lib.base import BaseVCSController
-from kallithea.lib.utils import make_ui, is_valid_repo, ui_sections
+from kallithea.lib.utils import make_ui, is_valid_repo
 from kallithea.lib.vcs.utils.hgcompat import RepoError, hgweb_mod
 
 log = logging.getLogger(__name__)
@@ -142,8 +142,7 @@ class SimpleHg(BaseVCSController):
 
         fix_PATH()
         log.debug('HOOKS extras is %s', extras)
-        baseui = make_ui('db')
-        self._augment_hgrc(repo_path, baseui)
+        baseui = make_ui(repo_path=repo_path)
         _set_extras(extras or {})
 
         try:
@@ -237,11 +236,3 @@ class SimpleHg(BaseVCSController):
 
         # Note: the client doesn't get the helpful error message
         raise HTTPBadRequest('Unable to detect pull/push action! Are you using non standard command or client?')
-
-    def _augment_hgrc(self, repo_path, baseui):
-        """Augment baseui with config settings from the repo_path repo"""
-        hgrc = os.path.join(repo_path, '.hg', 'hgrc')
-        repoui = make_ui('file', hgrc)
-        for section in ui_sections:
-            for k, v in repoui.configitems(section):
-                baseui.setconfig(section, k, v)

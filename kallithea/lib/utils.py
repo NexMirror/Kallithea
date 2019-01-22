@@ -315,15 +315,11 @@ ui_sections = ['alias', 'auth',
                 'ui', 'web', ]
 
 
-def make_ui(read_from='file', path=None, clear_session=True):
+def make_ui(repo_path=None, clear_session=True):
     """
-    A function that will read python rc files or database
-    and make an mercurial ui object from read options
-
-    :param path: path to mercurial config file
-    :param read_from: read from 'file' or 'db'
+    Create an Mercurial 'ui' object based on database Ui settings, possibly
+    augmenting with content from a hgrc file.
     """
-
     baseui = ui.ui()
 
     # clean the baseui object
@@ -331,42 +327,39 @@ def make_ui(read_from='file', path=None, clear_session=True):
     baseui._ucfg = config.config()
     baseui._tcfg = config.config()
 
-    if read_from == 'file':
-        if not os.path.isfile(path):
-            log.debug('hgrc file is not present at %s, skipping...', path)
-            return baseui
-        log.debug('reading hgrc from %s', path)
-        cfg = config.config()
-        cfg.read(path)
-        for section in ui_sections:
-            for k, v in cfg.items(section):
-                log.debug('settings ui from file: [%s] %s=%s', section, k, v)
-                baseui.setconfig(safe_str(section), safe_str(k), safe_str(v))
+    sa = meta.Session()
+    for ui_ in sa.query(Ui).all():
+        if ui_.ui_active:
+            ui_val = '' if ui_.ui_value is None else safe_str(ui_.ui_value)
+            log.debug('config from db: [%s] %s=%r', ui_.ui_section,
+                      ui_.ui_key, ui_val)
+            baseui.setconfig(safe_str(ui_.ui_section), safe_str(ui_.ui_key),
+                             ui_val)
+    if clear_session:
+        meta.Session.remove()
 
-    elif read_from == 'db':
-        sa = meta.Session()
-        ret = sa.query(Ui).all()
+    # force set push_ssl requirement to False, Kallithea handles that
+    baseui.setconfig('web', 'push_ssl', False)
+    baseui.setconfig('web', 'allow_push', '*')
+    # prevent interactive questions for ssh password / passphrase
+    ssh = baseui.config('ui', 'ssh', default='ssh')
+    baseui.setconfig('ui', 'ssh', '%s -oBatchMode=yes -oIdentitiesOnly=yes' % ssh)
+    # push / pull hooks
+    baseui.setconfig('hooks', 'changegroup.kallithea_log_push_action', 'python:kallithea.lib.hooks.log_push_action')
+    baseui.setconfig('hooks', 'outgoing.kallithea_log_pull_action', 'python:kallithea.lib.hooks.log_pull_action')
 
-        hg_ui = ret
-        for ui_ in hg_ui:
-            if ui_.ui_active:
-                ui_val = '' if ui_.ui_value is None else safe_str(ui_.ui_value)
-                log.debug('settings ui from db: [%s] %s=%r', ui_.ui_section,
-                          ui_.ui_key, ui_val)
-                baseui.setconfig(safe_str(ui_.ui_section), safe_str(ui_.ui_key),
-                                 ui_val)
-        if clear_session:
-            meta.Session.remove()
-
-        # force set push_ssl requirement to False, Kallithea handles that
-        baseui.setconfig('web', 'push_ssl', False)
-        baseui.setconfig('web', 'allow_push', '*')
-        # prevent interactive questions for ssh password / passphrase
-        ssh = baseui.config('ui', 'ssh', default='ssh')
-        baseui.setconfig('ui', 'ssh', '%s -oBatchMode=yes -oIdentitiesOnly=yes' % ssh)
-        # push / pull hooks
-        baseui.setconfig('hooks', 'changegroup.kallithea_log_push_action', 'python:kallithea.lib.hooks.log_push_action')
-        baseui.setconfig('hooks', 'outgoing.kallithea_log_pull_action', 'python:kallithea.lib.hooks.log_pull_action')
+    if repo_path is not None:
+        hgrc_path = os.path.join(repo_path, '.hg', 'hgrc')
+        if os.path.isfile(hgrc_path):
+            log.debug('reading hgrc from %s', hgrc_path)
+            cfg = config.config()
+            cfg.read(hgrc_path)
+            for section in ui_sections:
+                for k, v in cfg.items(section):
+                    log.debug('config from file: [%s] %s=%s', section, k, v)
+                    baseui.setconfig(safe_str(section), safe_str(k), safe_str(v))
+        else:
+            log.debug('hgrc file is not present at %s, skipping...', hgrc_path)
 
     return baseui
 

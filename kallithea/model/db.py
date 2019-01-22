@@ -1196,7 +1196,7 @@ class Repository(Base, BaseDbModel):
         Creates an db based ui object for this repository
         """
         from kallithea.lib.utils import make_ui
-        return make_ui('db', clear_session=False)
+        return make_ui(clear_session=False)
 
     @classmethod
     def is_valid(cls, repo_name):

@@ -118,7 +118,7 @@ class SimpleGit(BaseVCSController):
 
         fix_PATH()
         log.debug('HOOKS extras is %s', extras)
-        baseui = make_ui('db')
+        baseui = make_ui()
         _set_extras(extras or {})
 
         try:

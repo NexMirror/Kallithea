@@ -342,7 +342,7 @@ def _hook_environment(repo_path):
         raise OSError('Repository %s not found in database'
                       % (safe_str(repo_path)))
 
-    baseui = make_ui('db')
+    baseui = make_ui()
     return baseui, repo
 
 

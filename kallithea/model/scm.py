@@ -178,7 +178,7 @@ class ScmModel(object):
 
         log.info('scanning for repositories in %s', repos_path)
 
-        baseui = make_ui('db')
+        baseui = make_ui()
         repos = {}
 
         for name, path in get_filesystem_repos(repos_path):
