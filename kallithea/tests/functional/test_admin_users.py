@@ -18,7 +18,7 @@ import pytest
 from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
 from kallithea.controllers.admin.users import UsersController
-from kallithea.model.db import User, Permission, UserIpMap, UserApiKeys
+from kallithea.model.db import User, Permission, UserIpMap, UserApiKeys, RepoGroup
 from kallithea.lib.auth import check_password
 from kallithea.model.user import UserModel
 from kallithea.model import validators
@@ -39,11 +39,8 @@ def user_and_repo_group_fail():
     repo_group = fixture.create_repo_group(name=groupname, cur_user=username)
     yield user, repo_group
     # cleanup
-    try:
+    if RepoGroup.get_by_group_name(groupname):
         fixture.destroy_repo_group(repo_group)
-    except ObjectDeletedError:
-        # delete already succeeded in test body
-        pass
 
 
 class TestAdminUsersController(TestController):
