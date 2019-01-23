@@ -57,8 +57,8 @@ def db_create(user, password, email, repos, force_yes, force_no, public_access):
     dbmanage = DbManage(dbconf=dbconf, root=kallithea.CONFIG['here'],
                         tests=False, cli_args=cli_args)
     dbmanage.create_tables(override=True)
-    opts = dbmanage.config_prompt(None)
-    dbmanage.create_settings(opts)
+    repo_root_path = dbmanage.prompt_repo_root_path(None)
+    dbmanage.create_settings(repo_root_path)
     dbmanage.create_default_user()
     dbmanage.admin_prompt()
     dbmanage.create_permissions()

@@ -290,7 +290,7 @@ class DbManage(object):
         for repo in Repository.query():
             repo.update_changeset_cache()
 
-    def config_prompt(self, test_repo_path='', retries=3):
+    def prompt_repo_root_path(self, test_repo_path='', retries=3):
         _path = self.cli_args.get('repos_location')
         if retries == 3:
             log.info('Setting up repositories config')
@@ -334,7 +334,7 @@ class DbManage(object):
             if _path is not None:
                 sys.exit('Invalid repo path: %s' % _path)
             retries -= 1
-            return self.config_prompt(test_repo_path, retries) # recursing!!!
+            return self.prompt_repo_root_path(test_repo_path, retries) # recursing!!!
 
         real_path = os.path.normpath(os.path.realpath(path))
 
@@ -343,17 +343,16 @@ class DbManage(object):
 
         return real_path
 
-    def create_settings(self, path):
-
+    def create_settings(self, repo_root_path):
         ui_config = [
             ('web', 'allow_archive', 'gz zip bz2', True),
             ('web', 'baseurl', '/', True),
-            ('paths', '/', path, True),
+            ('paths', '/', repo_root_path, True),
             #('phases', 'publish', 'false', False)
             ('hooks', Ui.HOOK_UPDATE, 'hg update >&2', False),
             ('hooks', Ui.HOOK_REPO_SIZE, 'python:kallithea.lib.hooks.repo_size', True),
             ('extensions', 'largefiles', '', True),
-            ('largefiles', 'usercache', os.path.join(path, '.cache', 'largefiles'), True),
+            ('largefiles', 'usercache', os.path.join(repo_root_path, '.cache', 'largefiles'), True),
             ('extensions', 'hgsubversion', '', False),
             ('extensions', 'hggit', '', False),
         ]

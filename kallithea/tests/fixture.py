@@ -368,7 +368,7 @@ def create_test_env(repos_test_path, config):
                         tests=True)
     dbmanage.create_tables(override=True)
     # for tests dynamically set new root paths based on generated content
-    dbmanage.create_settings(dbmanage.config_prompt(repos_test_path))
+    dbmanage.create_settings(dbmanage.prompt_repo_root_path(repos_test_path))
     dbmanage.create_default_user()
     dbmanage.admin_prompt()
     dbmanage.create_permissions()
