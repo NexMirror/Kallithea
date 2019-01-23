@@ -35,12 +35,13 @@ import traceback
 
 from webob.exc import HTTPNotFound, HTTPForbidden, HTTPInternalServerError, \
     HTTPNotAcceptable, HTTPBadRequest
-from kallithea.model.db import Ui
 
+from kallithea.model.db import Ui, Repository
 from kallithea.lib.utils2 import safe_str, safe_unicode, get_server_url, \
     _set_extras
 from kallithea.lib.base import BaseVCSController
 from kallithea.lib.utils import make_ui, is_valid_repo
+from kallithea.lib.hooks import log_pull_action
 from kallithea.lib.middleware.pygrack import make_wsgi_app
 
 log = logging.getLogger(__name__)
@@ -119,38 +120,34 @@ class SimpleGit(BaseVCSController):
         # GIT REQUEST HANDLING
         #===================================================================
         log.debug('HOOKS extras is %s', extras)
-        baseui = make_ui()
         _set_extras(extras or {})
 
         try:
-            self._handle_githooks(parsed_request.repo_name, parsed_request.action, baseui, environ)
             log.info('%s action on %s repo "%s" by "%s" from %s',
                      parsed_request.action, self.scm_alias, parsed_request.repo_name, safe_str(user.username), ip_addr)
-            app = self.__make_app(parsed_request.repo_name)
+            app = self._make_app(parsed_request)
             return app(environ, start_response)
         except Exception:
             log.error(traceback.format_exc())
             raise HTTPInternalServerError()
 
-    def __make_app(self, repo_name):
+    def _make_app(self, parsed_request):
         """
         Return a pygrack wsgi application.
         """
-        return make_wsgi_app(repo_name, safe_str(self.basepath)) # FIXME: safe_str???
+        pygrack_app = make_wsgi_app(parsed_request.repo_name, self.basepath)
 
-    def _handle_githooks(self, repo_name, action, baseui, environ):
-        """
-        Handles pull action, push is handled by post-receive hook
-        """
-        from kallithea.lib.hooks import log_pull_action
-        service = environ['QUERY_STRING'].split('=')
+        def wrapper_app(environ, start_response):
+            if (parsed_request.cmd == 'info/refs' and
+                parsed_request.service == 'git-upload-pack'
+                ):
+                baseui = make_ui()
+                repo = Repository.get_by_repo_name(parsed_request.repo_name)
+                scm_repo = repo.scm_instance
+                # Run hooks, like Mercurial outgoing.pull_logger does
+                log_pull_action(ui=baseui, repo=scm_repo._repo)
+            # Note: push hooks are handled by post-receive hook
 
-        if len(service) < 2:
-            return
+            return pygrack_app(environ, start_response)
 
-        from kallithea.model.db import Repository
-        _repo = Repository.get_by_repo_name(repo_name)
-        _repo = _repo.scm_instance
-
-        if action == 'pull':
-            log_pull_action(ui=baseui, repo=_repo._repo)
+        return wrapper_app

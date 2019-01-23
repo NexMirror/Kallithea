@@ -172,26 +172,29 @@ class SimpleHg(BaseVCSController):
         #======================================================================
         # MERCURIAL REQUEST HANDLING
         #======================================================================
-        str_repo_name = safe_str(parsed_request.repo_name)
-        repo_path = os.path.join(safe_str(self.basepath), str_repo_name)
-        log.debug('Repository path is %s', repo_path)
-
         log.debug('HOOKS extras is %s', extras)
-        baseui = make_ui(repo_path=repo_path)
         _set_extras(extras or {})
 
         try:
             log.info('%s action on %s repo "%s" by "%s" from %s',
                      parsed_request.action, self.scm_alias, parsed_request.repo_name, safe_str(user.username), ip_addr)
-            environ['REPO_NAME'] = str_repo_name # used by hgweb_mod.hgweb
-            app = self.__make_app(repo_path, baseui)
+            app = self._make_app(parsed_request)
             return app(environ, start_response)
         except Exception:
             log.error(traceback.format_exc())
             raise HTTPInternalServerError()
 
-    def __make_app(self, repo_name, baseui):
+    def _make_app(self, parsed_request):
         """
-        Make an hgweb wsgi application using baseui.
+        Make an hgweb wsgi application.
         """
-        return hgweb_mod.hgweb(repo_name, name=repo_name, baseui=baseui)
+        str_repo_name = safe_str(parsed_request.repo_name)
+        repo_path = os.path.join(safe_str(self.basepath), str_repo_name)
+        baseui = make_ui(repo_path=repo_path)
+        hgweb_app = hgweb_mod.hgweb(repo_path, name=str_repo_name, baseui=baseui)
+
+        def wrapper_app(environ, start_response):
+            environ['REPO_NAME'] = str_repo_name # used by hgweb_mod.hgweb
+            return hgweb_app(environ, start_response)
+
+        return wrapper_app
