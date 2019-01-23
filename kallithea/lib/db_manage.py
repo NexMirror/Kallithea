@@ -345,8 +345,6 @@ class DbManage(object):
 
     def create_settings(self, repo_root_path):
         ui_config = [
-            ('web', 'allow_archive', 'gz zip bz2', True),
-            ('web', 'baseurl', '/', True),
             ('paths', '/', repo_root_path, True),
             #('phases', 'publish', 'false', False)
             ('hooks', Ui.HOOK_UPDATE, 'hg update >&2', False),
@@ -356,12 +354,12 @@ class DbManage(object):
             ('extensions', 'hgsubversion', '', False),
             ('extensions', 'hggit', '', False),
         ]
-        for section, key, value, active in ui_config:
-            ui_conf = Ui()
-            setattr(ui_conf, 'ui_section', section)
-            setattr(ui_conf, 'ui_key', key)
-            setattr(ui_conf, 'ui_value', value)
-            setattr(ui_conf, 'ui_active', active)
+        for ui_section, ui_key, ui_value, ui_active in ui_config:
+            ui_conf = Ui(
+                ui_section=ui_section,
+                ui_key=ui_key,
+                ui_value=ui_value,
+                ui_active=ui_active)
             self.sa.add(ui_conf)
 
         settings = [
@@ -386,7 +384,7 @@ class DbManage(object):
         self.create_auth_plugin_options()
         self.create_default_options()
 
-        log.info('created ui config')
+        log.info('Populated Ui and Settings defaults')
 
     def create_user(self, username, password, email='', admin=False):
         log.info('creating user %s', username)
