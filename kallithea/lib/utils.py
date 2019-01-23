@@ -364,6 +364,9 @@ def make_ui(read_from='file', path=None, clear_session=True):
         # prevent interactive questions for ssh password / passphrase
         ssh = baseui.config('ui', 'ssh', default='ssh')
         baseui.setconfig('ui', 'ssh', '%s -oBatchMode=yes -oIdentitiesOnly=yes' % ssh)
+        # push / pull hooks
+        baseui.setconfig('hooks', 'changegroup.kallithea_log_push_action', 'python:kallithea.lib.hooks.log_push_action')
+        baseui.setconfig('hooks', 'outgoing.kallithea_log_pull_action', 'python:kallithea.lib.hooks.log_pull_action')
 
     return baseui
 

@@ -11,18 +11,6 @@ ${h.form(url('admin_settings'), method='post')}
                     </div>
                     <div class="checkbox">
                         <label>
-                            ${h.checkbox('hooks_changegroup_push_logger','True')}
-                            ${_('Log user push commands')}
-                        </label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            ${h.checkbox('hooks_outgoing_pull_logger','True')}
-                            ${_('Log user pull commands')}
-                        </label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
                             ${h.checkbox('hooks_changegroup_update','True')}
                             ${_('Update repository after push (hg update)')}
                         </label>

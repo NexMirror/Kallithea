@@ -196,6 +196,5 @@ class SimpleGit(BaseVCSController):
         _repo = Repository.get_by_repo_name(repo_name)
         _repo = _repo.scm_instance
 
-        _hooks = dict(baseui.configitems('hooks')) or {}
-        if action == 'pull' and _hooks.get(Ui.HOOK_PULL_LOG):
+        if action == 'pull':
             log_pull_action(ui=baseui, repo=_repo._repo)

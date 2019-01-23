@@ -385,8 +385,6 @@ def ApplicationUiSettingsForm():
         )
         hooks_changegroup_update = v.StringBoolean(if_missing=False)
         hooks_changegroup_repo_size = v.StringBoolean(if_missing=False)
-        hooks_changegroup_push_logger = v.StringBoolean(if_missing=False)
-        hooks_outgoing_pull_logger = v.StringBoolean(if_missing=False)
 
         extensions_largefiles = v.StringBoolean(if_missing=False)
         extensions_hgsubversion = v.StringBoolean(if_missing=False)

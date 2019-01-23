@@ -352,8 +352,6 @@ class DbManage(object):
             #('phases', 'publish', 'false', False)
             ('hooks', Ui.HOOK_UPDATE, 'hg update >&2', False),
             ('hooks', Ui.HOOK_REPO_SIZE, 'python:kallithea.lib.hooks.repo_size', True),
-            ('hooks', Ui.HOOK_PUSH_LOG, 'python:kallithea.lib.hooks.log_push_action', True),
-            ('hooks', Ui.HOOK_PULL_LOG, 'python:kallithea.lib.hooks.log_pull_action', True),
             ('extensions', 'largefiles', '', True),
             ('largefiles', 'usercache', os.path.join(path, '.cache', 'largefiles'), True),
             ('extensions', 'hgsubversion', '', False),

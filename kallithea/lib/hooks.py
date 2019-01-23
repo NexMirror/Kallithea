@@ -358,53 +358,51 @@ def handle_git_post_receive(repo_path, git_stdin_lines):
     # the post push hook should never use the cached instance
     scm_repo = repo.scm_instance_no_cache()
 
-    _hooks = dict(baseui.configitems('hooks')) or {}
-    # if push hook is enabled via web interface
-    if _hooks.get(Ui.HOOK_PUSH_LOG):
-        rev_data = []
-        for l in git_stdin_lines:
-            old_rev, new_rev, ref = l.strip().split(' ')
-            _ref_data = ref.split('/')
-            if _ref_data[1] in ['tags', 'heads']:
-                rev_data.append({'old_rev': old_rev,
-                                 'new_rev': new_rev,
-                                 'ref': ref,
-                                 'type': _ref_data[1],
-                                 'name': '/'.join(_ref_data[2:])})
+    rev_data = []
+    for l in git_stdin_lines:
+        old_rev, new_rev, ref = l.strip().split(' ')
+        _ref_data = ref.split('/')
+        if _ref_data[1] in ['tags', 'heads']:
+            rev_data.append({'old_rev': old_rev,
+                             'new_rev': new_rev,
+                             'ref': ref,
+                             'type': _ref_data[1],
+                             'name': '/'.join(_ref_data[2:])})
 
-        git_revs = []
-        for push_ref in rev_data:
-            _type = push_ref['type']
-            if _type == 'heads':
-                if push_ref['old_rev'] == EmptyChangeset().raw_id:
-                    # update the symbolic ref if we push new repo
-                    if scm_repo.is_empty():
-                        scm_repo._repo.refs.set_symbolic_ref('HEAD',
-                                            'refs/heads/%s' % push_ref['name'])
+    git_revs = []
+    for push_ref in rev_data:
+        _type = push_ref['type']
+        if _type == 'heads':
+            if push_ref['old_rev'] == EmptyChangeset().raw_id:
+                # update the symbolic ref if we push new repo
+                if scm_repo.is_empty():
+                    scm_repo._repo.refs.set_symbolic_ref('HEAD',
+                                        'refs/heads/%s' % push_ref['name'])
 
-                    # build exclude list without the ref
-                    cmd = ['for-each-ref', '--format=%(refname)', 'refs/heads/*']
-                    stdout, stderr = scm_repo.run_git_command(cmd)
-                    ref = push_ref['ref']
-                    heads = [head for head in stdout.splitlines() if head != ref]
-                    # now list the git revs while excluding from the list
-                    cmd = ['log', push_ref['new_rev'], '--reverse', '--pretty=format:%H']
-                    cmd.append('--not')
-                    cmd.extend(heads) # empty list is ok
-                    stdout, stderr = scm_repo.run_git_command(cmd)
-                    git_revs += stdout.splitlines()
+                # build exclude list without the ref
+                cmd = ['for-each-ref', '--format=%(refname)', 'refs/heads/*']
+                stdout, stderr = scm_repo.run_git_command(cmd)
+                ref = push_ref['ref']
+                heads = [head for head in stdout.splitlines() if head != ref]
+                # now list the git revs while excluding from the list
+                cmd = ['log', push_ref['new_rev'], '--reverse', '--pretty=format:%H']
+                cmd.append('--not')
+                cmd.extend(heads) # empty list is ok
+                stdout, stderr = scm_repo.run_git_command(cmd)
+                git_revs += stdout.splitlines()
 
-                elif push_ref['new_rev'] == EmptyChangeset().raw_id:
-                    # delete branch case
-                    git_revs += ['delete_branch=>%s' % push_ref['name']]
-                else:
-                    cmd = ['log', '%(old_rev)s..%(new_rev)s' % push_ref,
-                           '--reverse', '--pretty=format:%H']
-                    stdout, stderr = scm_repo.run_git_command(cmd)
-                    git_revs += stdout.splitlines()
+            elif push_ref['new_rev'] == EmptyChangeset().raw_id:
+                # delete branch case
+                git_revs += ['delete_branch=>%s' % push_ref['name']]
+            else:
+                cmd = ['log', '%(old_rev)s..%(new_rev)s' % push_ref,
+                       '--reverse', '--pretty=format:%H']
+                stdout, stderr = scm_repo.run_git_command(cmd)
+                git_revs += stdout.splitlines()
 
-            elif _type == 'tags':
-                git_revs += ['tag=>%s' % push_ref['name']]
+        elif _type == 'tags':
+            git_revs += ['tag=>%s' % push_ref['name']]
 
-        log_push_action(baseui, scm_repo, _git_revs=git_revs)
+    log_push_action(baseui, scm_repo, _git_revs=git_revs)
+
     return 0
