@@ -220,12 +220,12 @@ class TestAdminUsersController(TestController):
         self.checkSessionFlash(response, 'Successfully deleted user')
 
     def test_delete_repo_group_err(self, user_and_repo_group_fail):
-        self.log_user()
-        username = 'repogrouperr'
-        groupname = u'repogroup_fail'
+        new_user, repo_group = user_and_repo_group_fail
+        username = new_user.username
+        groupname = repo_group.group_name
 
-        new_user = Session().query(User) \
-            .filter(User.username == username).one()
+        self.log_user()
+
         response = self.app.post(url('delete_user', id=new_user.user_id),
             params={'_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'User "%s" still '
