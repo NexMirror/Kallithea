@@ -222,6 +222,7 @@ class ScmModel(object):
 
         :param repo_name: the repo for which caches should be marked invalid
         """
+        log.debug("Marking %s as invalidated and update cache", repo_name)
         CacheInvalidation.set_invalidate(repo_name)
         repo = Repository.get_by_repo_name(repo_name)
         if repo is not None:
@@ -386,8 +387,6 @@ class ScmModel(object):
                 set_hook_environment(username, ip_addr, dbrepo.repo_name,
                                            repo.alias, action='push_remote')
                 repo.pull(clone_uri)
-
-            self.mark_for_invalidation(repo_name)
         except Exception:
             log.error(traceback.format_exc())
             raise
@@ -417,10 +416,9 @@ class ScmModel(object):
                              parents=[cs], branch=cs.branch)
         except Exception as e:
             log.error(traceback.format_exc())
-            raise IMCCommitError(str(e))
-        finally:
-            # always clear caches, if commit fails we want fresh object also
+            # clear caches - we also want a fresh object if commit fails
             self.mark_for_invalidation(repo_name)
+            raise IMCCommitError(str(e))
         self._handle_push(repo,
                           username=user.username,
                           ip_addr=ip_addr,
@@ -525,7 +523,6 @@ class ScmModel(object):
                          parents=parents,
                          branch=parent_cs.branch)
 
-        self.mark_for_invalidation(repo.repo_name)
         if trigger_push_hook:
             self._handle_push(scm_instance,
                               username=user.username,
@@ -533,6 +530,8 @@ class ScmModel(object):
                               action='push_local',
                               repo_name=repo.repo_name,
                               revisions=[tip.raw_id])
+        else:
+            self.mark_for_invalidation(repo.repo_name)
         return tip
 
     def update_nodes(self, user, ip_addr, repo, message, nodes, parent_cs=None,
@@ -586,7 +585,6 @@ class ScmModel(object):
                          parents=parents,
                          branch=parent_cs.branch)
 
-        self.mark_for_invalidation(repo.repo_name)
         if trigger_push_hook:
             self._handle_push(scm_instance,
                               username=user.username,
@@ -594,6 +592,8 @@ class ScmModel(object):
                               action='push_local',
                               repo_name=repo.repo_name,
                               revisions=[tip.raw_id])
+        else:
+            self.mark_for_invalidation(repo.repo_name)
 
     def delete_nodes(self, user, ip_addr, repo, message, nodes, parent_cs=None,
                      author=None, trigger_push_hook=True):
@@ -646,7 +646,6 @@ class ScmModel(object):
                          parents=parents,
                          branch=parent_cs.branch)
 
-        self.mark_for_invalidation(repo.repo_name)
         if trigger_push_hook:
             self._handle_push(scm_instance,
                               username=user.username,
@@ -654,6 +653,8 @@ class ScmModel(object):
                               action='push_local',
                               repo_name=repo.repo_name,
                               revisions=[tip.raw_id])
+        else:
+            self.mark_for_invalidation(repo.repo_name)
         return tip
 
     def get_unread_journal(self):
