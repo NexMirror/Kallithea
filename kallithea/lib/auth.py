@@ -719,7 +719,7 @@ def redirect_to_login(message=None):
     from kallithea.lib import helpers as h
     p = request.path_qs
     if message:
-        h.flash(h.literal(message), category='warning')
+        h.flash(message, category='warning')
     log.debug('Redirecting to login page, origin: %s', p)
     return redirect(url('login_home', came_from=p))
 

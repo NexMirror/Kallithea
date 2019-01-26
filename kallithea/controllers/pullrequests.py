@@ -235,8 +235,7 @@ class PullrequestsController(BaseRepoController):
         try:
             org_scm_instance.get_changeset()
         except EmptyRepositoryError as e:
-            h.flash(h.literal(_('There are no changesets yet')),
-                    category='warning')
+            h.flash(_('There are no changesets yet'), category='warning')
             redirect(url('summary_home', repo_name=org_repo.repo_name))
 
         org_rev = request.GET.get('rev_end')

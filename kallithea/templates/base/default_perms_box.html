@@ -30,7 +30,7 @@ ${h.form(form_url, method='put')}
                 <div class="checkboxes">
                     ${h.checkbox('create_repo_perm',value=True)}
                     <span class="help-block">
-                    ${h.literal(_('Select this option to allow repository creation for this user'))}
+                    ${_('Select this option to allow repository creation for this user')}
                     </span>
                 </div>
              </div>
@@ -42,7 +42,7 @@ ${h.form(form_url, method='put')}
                 <div class="checkboxes">
                     ${h.checkbox('create_user_group_perm',value=True)}
                     <span class="help-block">
-                        ${h.literal(_('Select this option to allow user group creation for this user'))}
+                        ${_('Select this option to allow user group creation for this user')}
                     </span>
                 </div>
              </div>
@@ -54,7 +54,7 @@ ${h.form(form_url, method='put')}
                 <div class="checkboxes">
                     ${h.checkbox('fork_repo_perm',value=True)}
                     <span class="help-block">
-                        ${h.literal(_('Select this option to allow repository forking for this user'))}
+                        ${_('Select this option to allow repository forking for this user')}
                     </span>
                 </div>
              </div>
