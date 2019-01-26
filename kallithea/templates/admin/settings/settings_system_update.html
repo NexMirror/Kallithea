@@ -6,7 +6,7 @@
 %if c.should_upgrade:
     A <b>new version</b> is available:
     %if c.latest_data.get('title'):
-        <b>${h.literal(c.latest_data['title'])}</b>
+        <b>${c.latest_data['title']}</b>
     %else:
         <b>${c.latest_ver}</b>
     %endif

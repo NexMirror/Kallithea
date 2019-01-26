@@ -580,7 +580,7 @@ class BaseRepoController(BaseController):
                 log.error('%s this repository is present in database but it '
                           'cannot be created as an scm instance', c.repo_name)
                 from kallithea.lib import helpers as h
-                h.flash(h.literal(_('Repository not found in the filesystem')),
+                h.flash(_('Repository not found in the filesystem'),
                         category='error')
                 raise webob.exc.HTTPNotFound()
 
@@ -602,12 +602,11 @@ class BaseRepoController(BaseController):
         except EmptyRepositoryError as e:
             if returnempty:
                 return repo.scm_instance.EMPTY_CHANGESET
-            h.flash(h.literal(_('There are no changesets yet')),
-                    category='error')
+            h.flash(_('There are no changesets yet'), category='error')
             raise webob.exc.HTTPNotFound()
         except ChangesetDoesNotExistError as e:
-            h.flash(h.literal(_('Changeset for %s %s not found in %s') %
-                              (ref_type, ref_name, repo.repo_name)),
+            h.flash(_('Changeset for %s %s not found in %s') %
+                              (ref_type, ref_name, repo.repo_name),
                     category='error')
             raise webob.exc.HTTPNotFound()
         except RepositoryError as e:

@@ -734,7 +734,7 @@ def _redirect_to_login(message=None):
     The optional message will be shown in a flash message."""
     from kallithea.lib import helpers as h
     if message:
-        h.flash(h.literal(message), category='warning')
+        h.flash(message, category='warning')
     p = request.path_qs
     log.debug('Redirecting to login page, origin: %s', p)
     return HTTPFound(location=url('login_home', came_from=p))

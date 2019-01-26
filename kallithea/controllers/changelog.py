@@ -64,8 +64,7 @@ class ChangelogController(BaseRepoController):
         try:
             return c.db_repo_scm_instance.get_changeset(rev)
         except EmptyRepositoryError as e:
-            h.flash(h.literal(_('There are no changesets yet')),
-                    category='error')
+            h.flash(_('There are no changesets yet'), category='error')
         except RepositoryError as e:
             log.error(traceback.format_exc())
             h.flash(safe_str(e), category='error')
