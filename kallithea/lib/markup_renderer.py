@@ -125,7 +125,19 @@ class MarkupRenderer(object):
 
         renderer = self._detect_renderer(source, filename)
         readme_data = renderer(source)
-        return readme_data
+        # Allow most HTML, while preventing XSS issues:
+        # no <script> tags, no onclick attributes, no javascript
+        # "protocol", and also limit styling to prevent defacing.
+        return bleach.clean(readme_data,
+            tags=['a', 'abbr', 'b', 'blockquote', 'br', 'code', 'dd',
+                  'div', 'dl', 'dt', 'em', 'h1', 'h2', 'h3', 'h4', 'h5',
+                  'h6', 'hr', 'i', 'img', 'li', 'ol', 'p', 'pre', 'span',
+                  'strong', 'sub', 'sup', 'table', 'tbody', 'td', 'th',
+                  'thead', 'tr', 'ul'],
+            attributes=['class', 'id', 'style', 'label', 'title', 'alt', 'href', 'src'],
+            styles=['color'],
+            protocols=['http', 'https', 'mailto'],
+            )
 
     @classmethod
     def plain(cls, source, universal_newline=True):
@@ -163,20 +175,7 @@ class MarkupRenderer(object):
         try:
             if flavored:
                 source = cls._flavored_markdown(source)
-            markdown_html = markdown_mod.markdown(source, ['codehilite', 'extra'])
-            # Allow most HTML, while preventing XSS issues:
-            # no <script> tags, no onclick attributes, no javascript
-            # "protocol", and also limit styling to prevent defacing.
-            return bleach.clean(markdown_html,
-                tags=['a', 'abbr', 'b', 'blockquote', 'br', 'code', 'dd',
-                      'div', 'dl', 'dt', 'em', 'h1', 'h2', 'h3', 'h4', 'h5',
-                      'h6', 'hr', 'i', 'img', 'li', 'ol', 'p', 'pre', 'span',
-                      'strong', 'sub', 'sup', 'table', 'tbody', 'td', 'th',
-                      'thead', 'tr', 'ul'],
-                attributes=['class', 'id', 'style', 'label', 'title', 'alt', 'href', 'src'],
-                styles=['color'],
-                protocols=['http', 'https', 'mailto'],
-                )
+            return markdown_mod.markdown(source, ['codehilite', 'extra'])
         except Exception:
             log.error(traceback.format_exc())
             if safe:
