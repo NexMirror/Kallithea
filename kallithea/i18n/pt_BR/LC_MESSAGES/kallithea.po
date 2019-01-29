@@ -11,12 +11,12 @@ msgstr ""
 "POT-Creation-Date: 2017-07-27 13:13+0200\n"
 "PO-Revision-Date: 2014-02-13 14:34+0000\n"
 "Last-Translator: marcinkuzminski <marcin@python-blog.com>\n"
-"Language-Team: Portuguese (Brazil) "
-"<https://hosted.weblate.org/projects/kallithea/kallithea/pt_BR/>\n"
-"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+"Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/kallithea/kallithea/pt_BR/>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
 #: kallithea/controllers/changelog.py:86
 #: kallithea/controllers/pullrequests.py:256 kallithea/lib/base.py:613
@@ -96,9 +96,7 @@ msgstr ""
 
 #: kallithea/controllers/error.py:84
 msgid "The request could not be understood by the server due to malformed syntax."
-msgstr ""
-"A requisição não pôde ser compreendida pelo servidor devido à sintaxe mal"
-" formada."
+msgstr "A requisição não pôde ser compreendida pelo servidor devido à sintaxe mal formada."
 
 #: kallithea/controllers/error.py:87
 msgid "Unauthorized access to resource"
@@ -113,12 +111,8 @@ msgid "The resource could not be found"
 msgstr "O recurso não pôde ser encontrado"
 
 #: kallithea/controllers/error.py:93
-msgid ""
-"The server encountered an unexpected condition which prevented it from "
-"fulfilling the request."
-msgstr ""
-"O servidor encontrou uma condição inesperada que o impediu de satisfazer "
-"a requisição."
+msgid "The server encountered an unexpected condition which prevented it from fulfilling the request."
+msgstr "O servidor encontrou uma condição inesperada que o impediu de satisfazer a requisição."
 
 #: kallithea/controllers/feed.py:80
 #: kallithea/templates/changeset/changeset.html:176
@@ -358,7 +352,7 @@ msgid "Invalid reviewer \"%s\" specified"
 msgstr ""
 
 #: kallithea/controllers/pullrequests.py:135
-#, fuzzy, python-format
+#, python-format
 msgid "%s (closed)"
 msgstr ""
 
@@ -964,9 +958,7 @@ msgstr "Configurações de VCS atualizadas"
 
 #: kallithea/controllers/admin/settings.py:139
 #: kallithea/model/validators.py:426
-msgid ""
-"Unable to activate hgsubversion support. The \"hgsubversion\" library is "
-"missing"
+msgid "Unable to activate hgsubversion support. The \"hgsubversion\" library is missing"
 msgstr ""
 
 #: kallithea/controllers/admin/settings.py:145
@@ -1143,9 +1135,7 @@ msgstr "Arquivo binário"
 
 #: kallithea/lib/diffs.py:89
 msgid "Changeset was too big and was cut off, use diff menu to display this diff"
-msgstr ""
-"Conjunto de mudanças é grande demais e foi cortado, use o menu de "
-"diferenças para ver as diferenças"
+msgstr "Conjunto de mudanças é grande demais e foi cortado, use o menu de diferenças para ver as diferenças"
 
 #: kallithea/lib/diffs.py:99
 msgid "No changes detected"
@@ -1316,14 +1306,8 @@ msgstr "chmod"
 
 #: kallithea/lib/helpers.py:1230
 #, python-format
-msgid ""
-"%s repository is not mapped to db perhaps it was created or renamed from "
-"the filesystem please run the application again in order to rescan "
-"repositories"
-msgstr ""
-"O repositório %s não está mapeado ao BD. Talvez ele tenha sido criado ou "
-"renomeado a partir do sistema de arquivos. Por favor, execute a aplicação"
-" outra vez para varrer novamente por repositórios"
+msgid "%s repository is not mapped to db perhaps it was created or renamed from the filesystem please run the application again in order to rescan repositories"
+msgstr "O repositório %s não está mapeado ao BD. Talvez ele tenha sido criado ou renomeado a partir do sistema de arquivos. Por favor, execute a aplicação outra vez para varrer novamente por repositórios"
 
 #: kallithea/lib/utils2.py:387
 #, python-format
@@ -1623,9 +1607,7 @@ msgstr "%(user)s comentou no pull request em %(when)s"
 #: kallithea/model/notification.py:288
 #, fuzzy, python-format
 #| msgid "[Comment] %(repo_name)s pull request %(pr_nice_id)s from %(ref)s"
-msgid ""
-"[Comment] %(repo_name)s changeset %(short_id)s \"%(message_short)s\" on "
-"%(branch)s"
+msgid "[Comment] %(repo_name)s changeset %(short_id)s \"%(message_short)s\" on %(branch)s"
 msgstr "[comentado] no pull request para"
 
 #: kallithea/model/notification.py:291
@@ -1635,16 +1617,12 @@ msgstr "O username \"%(new_username)s\" não é válido"
 
 #: kallithea/model/notification.py:293
 #, python-format
-msgid ""
-"[Review] %(repo_name)s PR %(pr_nice_id)s \"%(pr_title_short)s\" from "
-"%(pr_source_branch)s by %(pr_owner_username)s"
+msgid "[Review] %(repo_name)s PR %(pr_nice_id)s \"%(pr_title_short)s\" from %(pr_source_branch)s by %(pr_owner_username)s"
 msgstr ""
 
 #: kallithea/model/notification.py:294
 #, python-format
-msgid ""
-"[Comment] %(repo_name)s PR %(pr_nice_id)s \"%(pr_title_short)s\" from "
-"%(pr_source_branch)s by %(pr_owner_username)s"
+msgid "[Comment] %(repo_name)s PR %(pr_nice_id)s \"%(pr_title_short)s\" from %(pr_source_branch)s by %(pr_owner_username)s"
 msgstr ""
 
 #: kallithea/model/notification.py:307
@@ -1665,9 +1643,7 @@ msgstr "Criar Pull Request"
 
 #: kallithea/model/pull_request.py:219
 #, python-format
-msgid ""
-"Cannot create pull request - criss cross merge detected, please merge a "
-"later %s revision to %s"
+msgid "Cannot create pull request - criss cross merge detected, please merge a later %s revision to %s"
 msgstr ""
 
 #: kallithea/model/pull_request.py:247 kallithea/model/pull_request.py:382
@@ -1691,9 +1667,7 @@ msgstr ""
 
 #: kallithea/model/pull_request.py:362
 #, python-format
-msgid ""
-"This iteration is based on another %s revision and there is no simple "
-"diff."
+msgid "This iteration is based on another %s revision and there is no simple diff."
 msgstr ""
 
 #: kallithea/model/pull_request.py:364
@@ -1717,36 +1691,22 @@ msgstr "Novo registro de usuário"
 #: kallithea/model/user.py:253
 #, fuzzy
 msgid "You can't remove this user since it is crucial for the entire application"
-msgstr ""
-"Você não pode remover esse usuário, pois ele é crucial para toda a "
-"aplicação"
+msgstr "Você não pode remover esse usuário, pois ele é crucial para toda a aplicação"
 
 #: kallithea/model/user.py:258
 #, fuzzy, python-format
-msgid ""
-"User \"%s\" still owns %s repositories and cannot be removed. Switch "
-"owners or remove those repositories: %s"
-msgstr ""
-"usuário \"%s\" ainda é dono de %s repositórios e não pode ser removido. "
-"Troque os donos ou remova esses repositórios. %s"
+msgid "User \"%s\" still owns %s repositories and cannot be removed. Switch owners or remove those repositories: %s"
+msgstr "usuário \"%s\" ainda é dono de %s repositórios e não pode ser removido. Troque os donos ou remova esses repositórios. %s"
 
 #: kallithea/model/user.py:263
 #, fuzzy, python-format
-msgid ""
-"User \"%s\" still owns %s repository groups and cannot be removed. Switch"
-" owners or remove those repository groups: %s"
-msgstr ""
-"usuário \"%s\" ainda é dono de %s repositórios e não pode ser removido. "
-"Troque os donos ou remova esses repositórios. %s"
+msgid "User \"%s\" still owns %s repository groups and cannot be removed. Switch owners or remove those repository groups: %s"
+msgstr "usuário \"%s\" ainda é dono de %s repositórios e não pode ser removido. Troque os donos ou remova esses repositórios. %s"
 
 #: kallithea/model/user.py:270
 #, fuzzy, python-format
-msgid ""
-"User \"%s\" still owns %s user groups and cannot be removed. Switch "
-"owners or remove those user groups: %s"
-msgstr ""
-"usuário \"%s\" ainda é dono de %s repositórios e não pode ser removido. "
-"Troque os donos ou remova esses repositórios. %s"
+msgid "User \"%s\" still owns %s user groups and cannot be removed. Switch owners or remove those user groups: %s"
+msgstr "usuário \"%s\" ainda é dono de %s repositórios e não pode ser removido. Troque os donos ou remova esses repositórios. %s"
 
 #: kallithea/model/user.py:364
 msgid "Password reset link"
@@ -1759,9 +1719,7 @@ msgstr "Link para trocar senha"
 
 #: kallithea/model/user.py:414
 #, python-format
-msgid ""
-"The password to your account %s has been changed using password reset "
-"form."
+msgid "The password to your account %s has been changed using password reset form."
 msgstr ""
 
 #: kallithea/model/validators.py:54 kallithea/model/validators.py:55
@@ -1780,12 +1738,8 @@ msgstr "O username \"%(username)s\" não é válido"
 
 #: kallithea/model/validators.py:77
 #, fuzzy
-msgid ""
-"Username may only contain alphanumeric characters underscores, periods or"
-" dashes and must begin with an alphanumeric character or underscore"
-msgstr ""
-"Nome de usuário pode conter somente caracteres alfanuméricos, sublinha, "
-"pontos e hífens e deve iniciar com caractere alfanumérico"
+msgid "Username may only contain alphanumeric characters underscores, periods or dashes and must begin with an alphanumeric character or underscore"
+msgstr "Nome de usuário pode conter somente caracteres alfanuméricos, sublinha, pontos e hífens e deve iniciar com caractere alfanumérico"
 
 #: kallithea/model/validators.py:104
 msgid "The input is not valid"
@@ -1806,13 +1760,8 @@ msgid "User group \"%(usergroup)s\" already exists"
 msgstr "O grupo de usuários \"%(usergroup)s\" já existe"
 
 #: kallithea/model/validators.py:134
-msgid ""
-"user group name may only contain alphanumeric characters underscores, "
-"periods or dashes and must begin with alphanumeric character"
-msgstr ""
-"O nome de um grupo de usuários só pode conter characters alfa-numéricos, "
-"underscores, pontos ou hífens, e deve começar om um caractere alfa-"
-"numérico"
+msgid "user group name may only contain alphanumeric characters underscores, periods or dashes and must begin with alphanumeric character"
+msgstr "O nome de um grupo de usuários só pode conter characters alfa-numéricos, underscores, pontos ou hífens, e deve começar om um caractere alfa-numérico"
 
 #: kallithea/model/validators.py:174
 msgid "Cannot assign this group as parent"
@@ -1875,9 +1824,7 @@ msgid "Invalid repository URL"
 msgstr "repositório privado"
 
 #: kallithea/model/validators.py:450
-msgid ""
-"Invalid repository URL. It must be a valid http, https, ssh, svn+http or "
-"svn+https URL"
+msgid "Invalid repository URL. It must be a valid http, https, ssh, svn+http or svn+https URL"
 msgstr ""
 
 #: kallithea/model/validators.py:475
@@ -1915,12 +1862,8 @@ msgid "Email address \"%(email)s\" not found"
 msgstr "o e-mail \"%(email)s\" não existe."
 
 #: kallithea/model/validators.py:749
-msgid ""
-"The LDAP Login attribute of the CN must be specified - this is the name "
-"of the attribute that is equivalent to \"username\""
-msgstr ""
-"O atributo de login LDAP do CN deve ser especificado - isto é o nome do "
-"atributo que é equivalente ao 'nome de usuário'"
+msgid "The LDAP Login attribute of the CN must be specified - this is the name of the attribute that is equivalent to \"username\""
+msgstr "O atributo de login LDAP do CN deve ser especificado - isto é o nome do atributo que é equivalente ao 'nome de usuário'"
 
 #: kallithea/model/validators.py:761
 msgid "Please enter a valid IPv4 or IPv6 address"
@@ -2152,7 +2095,7 @@ msgstr "Senha Trocada"
 #: kallithea/templates/password_reset_confirmation.html:13
 #: kallithea/tests/data/templates/password_reset.html.py:60
 #: kallithea/tests/data/templates/password_reset_confirmation.html.py:56
-#, fuzzy, python-format
+#, python-format
 msgid "Reset Your Password to %s"
 msgstr ""
 
@@ -2187,12 +2130,8 @@ msgstr "Link para trocar senha"
 #: kallithea/templates/password_reset.html:44
 #: kallithea/tests/data/templates/password_reset.html.py:82
 #, fuzzy
-msgid ""
-"A password reset link will be sent to the specified email address if it "
-"is registered in the system."
-msgstr ""
-"Link de reinicialização de senha será enviado ao endereço de e-mail "
-"correspondente"
+msgid "A password reset link will be sent to the specified email address if it is registered in the system."
+msgstr "Link de reinicialização de senha será enviado ao endereço de e-mail correspondente"
 
 #: kallithea/templates/password_reset_confirmation.html:20
 #: kallithea/tests/data/templates/password_reset_confirmation.html.py:65
@@ -2202,9 +2141,7 @@ msgstr ""
 
 #: kallithea/templates/password_reset_confirmation.html:21
 #: kallithea/tests/data/templates/password_reset_confirmation.html.py:67
-msgid ""
-"Note that you must use the same browser session for this as the one used "
-"to request the password reset."
+msgid "Note that you must use the same browser session for this as the one used to request the password reset."
 msgstr ""
 
 #: kallithea/templates/password_reset_confirmation.html:26
@@ -2387,9 +2324,7 @@ msgstr ""
 
 #: kallithea/templates/admin/auth/auth_settings.html:32
 #: kallithea/tests/data/templates/admin/auth/auth_settings.html.py:120
-msgid ""
-"Comma-separated list of plugins; Kallithea will try user authentication "
-"in plugin order"
+msgid "Comma-separated list of plugins; Kallithea will try user authentication in plugin order"
 msgstr ""
 
 #: kallithea/templates/admin/auth/auth_settings.html:36
@@ -2465,12 +2400,8 @@ msgstr "Repositório privado"
 #: kallithea/templates/forks/fork.html:61
 #: kallithea/tests/data/templates/admin/defaults/defaults.html.py:117
 #: kallithea/tests/data/templates/admin/repos/repo_add_base.html.py:88
-msgid ""
-"Private repositories are only visible to people explicitly added as "
-"collaborators."
-msgstr ""
-"Repositórios privados são visíveis somente por pessoas explicitamente "
-"adicionadas como colaboradores."
+msgid "Private repositories are only visible to people explicitly added as collaborators."
+msgstr "Repositórios privados são visíveis somente por pessoas explicitamente adicionadas como colaboradores."
 
 #: kallithea/templates/admin/defaults/defaults.html:42
 #: kallithea/templates/admin/repos/repo_edit_settings.html:67
@@ -2516,9 +2447,7 @@ msgstr ""
 
 #: kallithea/templates/admin/gists/edit.html:35
 #, python-format
-msgid ""
-"Gist was update since you started editing. Copy your changes and click "
-"%(here)s to reload new version."
+msgid "Gist was update since you started editing. Copy your changes and click %(here)s to reload new version."
 msgstr ""
 
 #: kallithea/templates/admin/gists/edit.html:51
@@ -3158,21 +3087,13 @@ msgstr "Acesso anônimo"
 #: kallithea/templates/admin/permissions/permissions_globals.html:9
 #: kallithea/tests/data/templates/admin/permissions/permissions_globals.html.py:43
 #, python-format
-msgid ""
-"Allow access to Kallithea without needing to log in. Anonymous users use "
-"%s user permissions."
+msgid "Allow access to Kallithea without needing to log in. Anonymous users use %s user permissions."
 msgstr ""
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:18
 #: kallithea/tests/data/templates/admin/permissions/permissions_globals.html.py:51
-msgid ""
-"All default permissions on each repository will be reset to chosen "
-"permission, note that all custom default permission on repositories will "
-"be lost"
-msgstr ""
-"Todas as permissões padrão em cada repositório serão modificadas para a "
-"permissão escolhida, note que todas as permissões padrão customizadas nos"
-" repositórios serão perdidas"
+msgid "All default permissions on each repository will be reset to chosen permission, note that all custom default permission on repositories will be lost"
+msgstr "Todas as permissões padrão em cada repositório serão modificadas para a permissão escolhida, note que todas as permissões padrão customizadas nos repositórios serão perdidas"
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:19
 #: kallithea/tests/data/templates/admin/permissions/permissions_globals.html.py:53
@@ -3198,14 +3119,8 @@ msgstr "Grupo de repositórios"
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:31
 #: kallithea/tests/data/templates/admin/permissions/permissions_globals.html.py:63
-msgid ""
-"All default permissions on each repository group will be reset to chosen "
-"permission, note that all custom default permission on repository groups "
-"will be lost"
-msgstr ""
-"Todas as permissões padrão em cada grupo de repositórios serão "
-"modificadas para a permissão escolhida, note que todas as permissões "
-"padrão customizadas em grupos de repositórios serão perdidas"
+msgid "All default permissions on each repository group will be reset to chosen permission, note that all custom default permission on repository groups will be lost"
+msgstr "Todas as permissões padrão em cada grupo de repositórios serão modificadas para a permissão escolhida, note que todas as permissões padrão customizadas em grupos de repositórios serão perdidas"
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:32
 #: kallithea/tests/data/templates/admin/permissions/permissions_globals.html.py:65
@@ -3228,14 +3143,8 @@ msgstr "Grupo de usuários"
 #: kallithea/templates/admin/permissions/permissions_globals.html:44
 #: kallithea/tests/data/templates/admin/permissions/permissions_globals.html.py:75
 #, fuzzy
-msgid ""
-"All default permissions on each user group will be reset to chosen "
-"permission, note that all custom default permission on user groups will "
-"be lost"
-msgstr ""
-"Todas as permissões padrão em cada repositório serão reinicializadas para"
-" as permissões escolhidas. Note que todas as permissões padrão "
-"customizadas nos repositórios serão perdidas"
+msgid "All default permissions on each user group will be reset to chosen permission, note that all custom default permission on user groups will be lost"
+msgstr "Todas as permissões padrão em cada repositório serão reinicializadas para as permissões escolhidas. Note que todas as permissões padrão customizadas nos repositórios serão perdidas"
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:45
 #: kallithea/tests/data/templates/admin/permissions/permissions_globals.html.py:77
@@ -3260,9 +3169,7 @@ msgstr ""
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:56
 #: kallithea/tests/data/templates/admin/permissions/permissions_globals.html.py:87
-msgid ""
-"Note: This will also give all users API access to create repositories "
-"everywhere. That might change in future versions."
+msgid "Note: This will also give all users API access to create repositories everywhere. That might change in future versions."
 msgstr ""
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:60
@@ -3272,10 +3179,7 @@ msgstr ""
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:63
 #: kallithea/tests/data/templates/admin/permissions/permissions_globals.html.py:93
-msgid ""
-"With this, write permission to a repository group allows creating "
-"repositories inside that group. Without this, group write permissions "
-"mean nothing."
+msgid "With this, write permission to a repository group allows creating repositories inside that group. Without this, group write permissions mean nothing."
 msgstr ""
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:67
@@ -3372,7 +3276,7 @@ msgid "Copy permission set from parent repository group."
 msgstr ""
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit.html:5
-#, fuzzy, python-format
+#, python-format
 msgid "%s Repository Group Settings"
 msgstr ""
 
@@ -3518,18 +3422,12 @@ msgid "Both"
 msgstr ""
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:92
-msgid ""
-"Set or revoke permission to all children of that group, including non-"
-"private repositories and other groups if selected."
+msgid "Set or revoke permission to all children of that group, including non-private repositories and other groups if selected."
 msgstr ""
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_settings.html:29
-msgid ""
-"Enable lock-by-pulling on group. This option will be applied to all other"
-" groups and repositories inside"
-msgstr ""
-"Habilitar trava-por-pulling no grupo. Esta opção será aplicada a todos os"
-" outros grupos e repositórios dentro deles"
+msgid "Enable lock-by-pulling on group. This option will be applied to all other groups and repositories inside"
+msgstr "Habilitar trava-por-pulling no grupo. Esta opção será aplicada a todos os outros grupos e repositórios dentro deles"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_settings.html:46
 #, fuzzy
@@ -3577,9 +3475,7 @@ msgstr "repositório [criado]"
 
 #: kallithea/templates/admin/repos/repo_add_base.html:16
 #: kallithea/tests/data/templates/admin/repos/repo_add_base.html.py:52
-msgid ""
-"Optional: URL of a remote repository. If set, the repository will be "
-"created as a clone from this URL."
+msgid "Optional: URL of a remote repository. If set, the repository will be created as a clone from this URL."
 msgstr ""
 
 #: kallithea/templates/admin/repos/repo_add_base.html:24
@@ -3587,9 +3483,7 @@ msgstr ""
 #: kallithea/templates/forks/fork.html:37
 #: kallithea/tests/data/templates/admin/repos/repo_add_base.html.py:58
 msgid "Keep it short and to the point. Use a README file for longer descriptions."
-msgstr ""
-"Seja sucinto e objetivo. Use um arquivo README para descrições mais "
-"longas."
+msgstr "Seja sucinto e objetivo. Use um arquivo README para descrições mais longas."
 
 #: kallithea/templates/admin/repos/repo_add_base.html:31
 #: kallithea/templates/admin/repos/repo_edit_settings.html:31
@@ -3612,9 +3506,7 @@ msgstr "Revisão de pouso"
 
 #: kallithea/templates/admin/repos/repo_add_base.html:52
 #: kallithea/tests/data/templates/admin/repos/repo_add_base.html.py:82
-msgid ""
-"Default revision for files page, downloads, full text search index and "
-"readme generation"
+msgid "Default revision for files page, downloads, full text search index and readme generation"
 msgstr ""
 
 #: kallithea/templates/admin/repos/repo_creating.html:9
@@ -3628,20 +3520,16 @@ msgstr ""
 
 #: kallithea/templates/admin/repos/repo_creating.html:27
 #, python-format
-msgid ""
-"Repository \"%(repo_name)s\" is being created, you will be redirected "
-"when this process is finished.repo_name"
+msgid "Repository \"%(repo_name)s\" is being created, you will be redirected when this process is finished.repo_name"
 msgstr ""
 
 #: kallithea/templates/admin/repos/repo_creating.html:39
-msgid ""
-"We're sorry but error occurred during this operation. Please check your "
-"Kallithea server logs, or contact administrator."
+msgid "We're sorry but error occurred during this operation. Please check your Kallithea server logs, or contact administrator."
 msgstr ""
 
 #: kallithea/templates/admin/repos/repo_edit.html:8
 #: kallithea/tests/data/templates/admin/repos/repo_edit.html.py:192
-#, fuzzy, python-format
+#, python-format
 msgid "%s Repository Settings"
 msgstr ""
 
@@ -3687,9 +3575,7 @@ msgstr ""
 #: kallithea/tests/data/templates/admin/repos/repo_edit_advanced.html.py:50
 #, fuzzy
 msgid "Manually set this repository as a fork of another from the list."
-msgstr ""
-"Marque manualmente este repositório como uma bifurcação de um outro da "
-"lista"
+msgstr "Marque manualmente este repositório como uma bifurcação de um outro da lista"
 
 #: kallithea/templates/admin/repos/repo_edit_advanced.html:20
 #: kallithea/tests/data/templates/admin/repos/repo_edit_advanced.html.py:54
@@ -3711,12 +3597,8 @@ msgstr "diário público"
 #: kallithea/templates/admin/repos/repo_edit_advanced.html:37
 #: kallithea/tests/data/templates/admin/repos/repo_edit_advanced.html.py:67
 #, fuzzy
-msgid ""
-"All actions done in this repository will be visible to everyone in the "
-"public journal."
-msgstr ""
-"Todas as ações feitas nesse repositório serão acessíveis a todos no "
-"diário público"
+msgid "All actions done in this repository will be visible to everyone in the public journal."
+msgstr "Todas as ações feitas nesse repositório serão acessíveis a todos no diário público"
 
 #: kallithea/templates/admin/repos/repo_edit_advanced.html:42
 #: kallithea/tests/data/templates/admin/repos/repo_edit_advanced.html.py:71
@@ -3761,11 +3643,7 @@ msgstr "Repositório não está travado"
 
 #: kallithea/templates/admin/repos/repo_edit_advanced.html:63
 #: kallithea/tests/data/templates/admin/repos/repo_edit_advanced.html.py:96
-msgid ""
-"Force locking on the repository. Works only when anonymous access is "
-"disabled. Triggering a pull locks the repository.  The user who is "
-"pulling locks the repository; only the user who pulled and locked it can "
-"unlock it by doing a push."
+msgid "Force locking on the repository. Works only when anonymous access is disabled. Triggering a pull locks the repository.  The user who is pulling locks the repository; only the user who pulled and locked it can unlock it by doing a push."
 msgstr ""
 
 #: kallithea/templates/admin/repos/repo_edit_advanced.html:72
@@ -3802,10 +3680,7 @@ msgstr "Excluir bifurcações"
 
 #: kallithea/templates/admin/repos/repo_edit_advanced.html:88
 #: kallithea/tests/data/templates/admin/repos/repo_edit_advanced.html.py:117
-msgid ""
-"The deleted repository will be moved away and hidden until the "
-"administrator expires it. The administrator can both permanently delete "
-"it or restore it."
+msgid "The deleted repository will be moved away and hidden until the administrator expires it. The administrator can both permanently delete it or restore it."
 msgstr ""
 
 #: kallithea/templates/admin/repos/repo_edit_caches.html:4
@@ -3815,12 +3690,8 @@ msgstr "Invalidar cache do repositório"
 
 #: kallithea/templates/admin/repos/repo_edit_caches.html:6
 #, fuzzy
-msgid ""
-"Manually invalidate cache for this repository. On first access, the "
-"repository will be cached again."
-msgstr ""
-"Invalidar manualmente o cache deste repositório. No próximo acesso o "
-"repositório será cacheado novamente"
+msgid "Manually invalidate cache for this repository. On first access, the repository will be cached again."
+msgstr "Invalidar manualmente o cache deste repositório. No próximo acesso o repositório será cacheado novamente"
 
 #: kallithea/templates/admin/repos/repo_edit_caches.html:9
 #, fuzzy
@@ -3929,12 +3800,9 @@ msgstr ""
 
 #: kallithea/templates/admin/repos/repo_edit_settings.html:10
 msgid ""
-"In case this repository is renamed or moved into another group the "
-"repository URL changes.\n"
-"                               Using the above permanent URL guarantees "
-"that this repository always will be accessible on that URL.\n"
-"                               This is useful for CI systems, or any "
-"other cases that you need to hardcode the URL into a 3rd party service."
+"In case this repository is renamed or moved into another group the repository URL changes.\n"
+"                               Using the above permanent URL guarantees that this repository always will be accessible on that URL.\n"
+"                               This is useful for CI systems, or any other cases that you need to hardcode the URL into a 3rd party service."
 msgstr ""
 
 #: kallithea/templates/admin/repos/repo_edit_settings.html:16
@@ -3948,9 +3816,7 @@ msgid "Repository URL"
 msgstr "Repositório"
 
 #: kallithea/templates/admin/repos/repo_edit_settings.html:23
-msgid ""
-"Optional: URL of a remote repository. If set, the repository can be "
-"pulled from this URL."
+msgid "Optional: URL of a remote repository. If set, the repository can be pulled from this URL."
 msgstr ""
 
 #: kallithea/templates/admin/repos/repo_edit_settings.html:38
@@ -4060,13 +3926,7 @@ msgstr ""
 
 #: kallithea/templates/admin/settings/settings_global.html:22
 #: kallithea/tests/data/templates/admin/settings/settings_global.html.py:49
-msgid ""
-"HTML (possibly with                         JavaScript and/or CSS) that "
-"will be added to the bottom                         of every page. This "
-"can be used for web analytics                         systems like Google"
-" Analytics or Piwik, but also to                         perform "
-"instance-specific customizations like adding a                         "
-"project banner at the top of every page."
+msgid "HTML (possibly with                         JavaScript and/or CSS) that will be added to the bottom                         of every page. This can be used for web analytics                         systems like Google Analytics or Piwik, but also to                         perform instance-specific customizations like adding a                         project banner at the top of every page."
 msgstr ""
 
 #: kallithea/templates/admin/settings/settings_global.html:32
@@ -4086,9 +3946,7 @@ msgstr ""
 
 #: kallithea/templates/admin/settings/settings_global.html:43
 #: kallithea/tests/data/templates/admin/settings/settings_global.html.py:66
-msgid ""
-"Private key for reCaptcha system. Setting this value will enable captcha "
-"on registration."
+msgid "Private key for reCaptcha system. Setting this value will enable captcha on registration."
 msgstr ""
 
 #: kallithea/templates/admin/settings/settings_global.html:49
@@ -4108,9 +3966,7 @@ msgstr ""
 
 #: kallithea/templates/admin/settings/settings_hooks.html:11
 #: kallithea/tests/data/templates/admin/settings/settings_hooks.html.py:49
-msgid ""
-"Hooks can be used to trigger actions on certain events such as push / "
-"pull. They can trigger Python functions or external applications."
+msgid "Hooks can be used to trigger actions on certain events such as push / pull. They can trigger Python functions or external applications."
 msgstr ""
 
 #: kallithea/templates/admin/settings/settings_hooks.html:19
@@ -4138,9 +3994,7 @@ msgstr "Buscar nos repositórios"
 
 #: kallithea/templates/admin/settings/settings_mapping.html:12
 #: kallithea/tests/data/templates/admin/settings/settings_mapping.html.py:41
-msgid ""
-"Check this option to remove all comments, pull requests and other records"
-" related to repositories that no longer exist in the filesystem."
+msgid "Check this option to remove all comments, pull requests and other records related to repositories that no longer exist in the filesystem."
 msgstr ""
 
 #: kallithea/templates/admin/settings/settings_mapping.html:17
@@ -4161,9 +4015,7 @@ msgstr ""
 
 #: kallithea/templates/admin/settings/settings_mapping.html:28
 #: kallithea/tests/data/templates/admin/settings/settings_mapping.html.py:53
-msgid ""
-"Verify if Kallithea's Git hooks are installed for each repository. "
-"Current hooks will be updated to the latest version."
+msgid "Verify if Kallithea's Git hooks are installed for each repository. Current hooks will be updated to the latest version."
 msgstr ""
 
 #: kallithea/templates/admin/settings/settings_mapping.html:32
@@ -4173,10 +4025,7 @@ msgstr ""
 
 #: kallithea/templates/admin/settings/settings_mapping.html:35
 #: kallithea/tests/data/templates/admin/settings/settings_mapping.html.py:59
-msgid ""
-"If installing Git hooks, overwrite any existing hooks, even if they do "
-"not seem to come from Kallithea. WARNING: This operation will destroy any"
-" custom git hooks you may have deployed by hand!"
+msgid "If installing Git hooks, overwrite any existing hooks, even if they do not seem to come from Kallithea. WARNING: This operation will destroy any custom git hooks you may have deployed by hand!"
 msgstr ""
 
 #: kallithea/templates/admin/settings/settings_mapping.html:41
@@ -4196,9 +4045,7 @@ msgstr "Construir do zero"
 
 #: kallithea/templates/admin/settings/settings_search.html:12
 #: kallithea/tests/data/templates/admin/settings/settings_search.html.py:41
-msgid ""
-"This option completely reindexeses all of the repositories for proper "
-"fulltext search capabilities."
+msgid "This option completely reindexeses all of the repositories for proper fulltext search capabilities."
 msgstr ""
 
 #: kallithea/templates/admin/settings/settings_search.html:18
@@ -4300,9 +4147,7 @@ msgstr "Habilitar extensão hgsubversion"
 
 #: kallithea/templates/admin/settings/settings_vcs.html:47
 #: kallithea/tests/data/templates/admin/settings/settings_vcs.html.py:75
-msgid ""
-"Requires hgsubversion library to be installed. Enables cloning of remote "
-"Subversion repositories while converting them to Mercurial."
+msgid "Requires hgsubversion library to be installed. Enables cloning of remote Subversion repositories while converting them to Mercurial."
 msgstr ""
 
 #: kallithea/templates/admin/settings/settings_vcs.html:59
@@ -4313,18 +4158,12 @@ msgstr "Criar repositórios"
 
 #: kallithea/templates/admin/settings/settings_vcs.html:64
 #: kallithea/tests/data/templates/admin/settings/settings_vcs.html.py:84
-msgid ""
-"Click to unlock. You must restart Kallithea in order to make this setting"
-" take effect."
-msgstr ""
-"Clique para destravar. Você deve reiniciar o Kallithea para que esta "
-"configuração tenha efeito."
+msgid "Click to unlock. You must restart Kallithea in order to make this setting take effect."
+msgstr "Clique para destravar. Você deve reiniciar o Kallithea para que esta configuração tenha efeito."
 
 #: kallithea/templates/admin/settings/settings_vcs.html:68
 #: kallithea/tests/data/templates/admin/settings/settings_vcs.html.py:86
-msgid ""
-"Filesystem location where repositories are stored. After changing this "
-"value, a restart and rescan of the repository folder are both required."
+msgid "Filesystem location where repositories are stored. After changing this value, a restart and rescan of the repository folder are both required."
 msgstr ""
 
 #: kallithea/templates/admin/settings/settings_visual.html:4
@@ -4360,18 +4199,12 @@ msgstr ""
 #: kallithea/tests/data/templates/admin/settings/settings_visual.html.py:55
 msgid ""
 "Gravatar URL allows you to use another avatar server application.\n"
-"                                                        The following "
-"variables of the URL will be replaced accordingly.\n"
-"                                                        {scheme}    "
-"'http' or 'https' sent from running Kallithea server,\n"
-"                                                        {email}     user "
-"email,\n"
-"                                                        {md5email}  md5 "
-"hash of the user email (like at gravatar.com),\n"
-"                                                        {size}      size "
-"of the image that is expected from the server application,\n"
-"                                                        {netloc}    "
-"network location/server host of running Kallithea server"
+"                                                        The following variables of the URL will be replaced accordingly.\n"
+"                                                        {scheme}    'http' or 'https' sent from running Kallithea server,\n"
+"                                                        {email}     user email,\n"
+"                                                        {md5email}  md5 hash of the user email (like at gravatar.com),\n"
+"                                                        {size}      size of the image that is expected from the server application,\n"
+"                                                        {netloc}    network location/server host of running Kallithea server"
 msgstr ""
 
 #: kallithea/templates/admin/settings/settings_visual.html:40
@@ -4384,20 +4217,13 @@ msgstr "URL de clonagem"
 
 #: kallithea/templates/admin/settings/settings_visual.html:43
 msgid ""
-"Schema of clone URL construction eg. '{scheme}://{user}@{netloc}/{repo}'."
-"\n"
-"                                                    The following "
-"variables are available:\n"
-"                                                    {scheme} 'http' or "
-"'https' sent from running Kallithea server,\n"
-"                                                    {user}   current user"
-" username,\n"
-"                                                    {netloc} network "
-"location/server host of running Kallithea server,\n"
-"                                                    {repo}   full "
-"repository name,\n"
-"                                                    {repoid} ID of "
-"repository, can be used to construct clone-by-id"
+"Schema of clone URL construction eg. '{scheme}://{user}@{netloc}/{repo}'.\n"
+"                                                    The following variables are available:\n"
+"                                                    {scheme} 'http' or 'https' sent from running Kallithea server,\n"
+"                                                    {user}   current user username,\n"
+"                                                    {netloc} network location/server host of running Kallithea server,\n"
+"                                                    {repo}   full repository name,\n"
+"                                                    {repoid} ID of repository, can be used to construct clone-by-id"
 msgstr ""
 
 #: kallithea/templates/admin/settings/settings_visual.html:54
@@ -4407,9 +4233,7 @@ msgid "Repository page size"
 msgstr "Tamanho do Repositório"
 
 #: kallithea/templates/admin/settings/settings_visual.html:57
-msgid ""
-"Number of items displayed in the repository pages before pagination is "
-"shown."
+msgid "Number of items displayed in the repository pages before pagination is shown."
 msgstr ""
 
 #: kallithea/templates/admin/settings/settings_visual.html:62
@@ -4418,9 +4242,7 @@ msgstr ""
 
 #: kallithea/templates/admin/settings/settings_visual.html:65
 #: kallithea/tests/data/templates/admin/settings/settings_visual.html.py:85
-msgid ""
-"Number of items displayed in the admin pages grids before pagination is "
-"shown."
+msgid "Number of items displayed in the admin pages grids before pagination is shown."
 msgstr ""
 
 #: kallithea/templates/admin/settings/settings_visual.html:70
@@ -4452,9 +4274,7 @@ msgstr "Meta-Tagging"
 
 #: kallithea/templates/admin/settings/settings_visual.html:94
 #: kallithea/tests/data/templates/admin/settings/settings_visual.html.py:105
-msgid ""
-"Parses meta tags from the repository description field and turns them "
-"into colored tags."
+msgid "Parses meta tags from the repository description field and turns them into colored tags."
 msgstr ""
 
 #: kallithea/templates/admin/settings/settings_visual.html:98
@@ -4871,9 +4691,7 @@ msgstr "Padrões de repositórios"
 #: kallithea/templates/base/default_perms_box.html:15
 #: kallithea/tests/data/templates/base/default_perms_box.html.py:51
 #, python-format
-msgid ""
-"Select to inherit global settings, IP whitelist and permissions from the "
-"%s."
+msgid "Select to inherit global settings, IP whitelist and permissions from the %s."
 msgstr ""
 
 #: kallithea/templates/base/default_perms_box.html:23
@@ -4884,9 +4702,7 @@ msgstr "Criar repositórios"
 #: kallithea/templates/base/default_perms_box.html:27
 #: kallithea/tests/data/templates/base/default_perms_box.html.py:58
 msgid "Select this option to allow repository creation for this user"
-msgstr ""
-"Selecione esta opção para permitir a criação de repositórios para este "
-"usuário"
+msgstr "Selecione esta opção para permitir a criação de repositórios para este usuário"
 
 #: kallithea/templates/base/default_perms_box.html:33
 #: kallithea/tests/data/templates/base/default_perms_box.html.py:60
@@ -4896,9 +4712,7 @@ msgstr "Criar grupos de usuários"
 #: kallithea/templates/base/default_perms_box.html:37
 #: kallithea/tests/data/templates/base/default_perms_box.html.py:64
 msgid "Select this option to allow user group creation for this user"
-msgstr ""
-"Selecione esta opção para permitir a criação de grupos de usuários para "
-"este usuário"
+msgstr "Selecione esta opção para permitir a criação de grupos de usuários para este usuário"
 
 #: kallithea/templates/base/default_perms_box.html:43
 #: kallithea/tests/data/templates/base/default_perms_box.html.py:66
@@ -4908,9 +4722,7 @@ msgstr "Bufurcar repositórios"
 #: kallithea/templates/base/default_perms_box.html:47
 #: kallithea/tests/data/templates/base/default_perms_box.html.py:70
 msgid "Select this option to allow repository forking for this user"
-msgstr ""
-"Selecione esta opção para permitir a bifurcação de repositórios para este"
-" usuário"
+msgstr "Selecione esta opção para permitir a bifurcação de repositórios para este usuário"
 
 #: kallithea/templates/base/perms_summary.html:13
 #: kallithea/templates/changelog/changelog.html:39
@@ -5455,12 +5267,8 @@ msgstr "Comentando a linha {1}."
 #: kallithea/templates/changeset/changeset_file_comment.html:58
 #: kallithea/tests/data/templates/changeset/changeset_file_comment.html.py:150
 #, fuzzy
-msgid ""
-"Comments are in plain text. Use @username inside this text to notify "
-"another user."
-msgstr ""
-"Use @nomedeusuário dentro desse texto para enviar notificação a este "
-"usuário do Kallithea"
+msgid "Comments are in plain text. Use @username inside this text to notify another user."
+msgstr "Use @nomedeusuário dentro desse texto para enviar notificação a este usuário do Kallithea"
 
 #: kallithea/templates/changeset/changeset_file_comment.html:65
 #: kallithea/tests/data/templates/changeset/changeset_file_comment.html.py:154
@@ -5536,7 +5344,7 @@ msgstr[1] "(%d em linha)"
 
 #: kallithea/templates/changeset/changeset_file_comment.html:128
 #: kallithea/tests/data/templates/changeset/changeset_file_comment.html.py:43
-#, fuzzy, python-format
+#, python-format
 msgid "%d general"
 msgid_plural "%d general"
 msgstr[0] ""
@@ -5633,9 +5441,7 @@ msgid "Criss cross merge situation with multiple merge ancestors detected!"
 msgstr ""
 
 #: kallithea/templates/compare/compare_cs.html:14
-msgid ""
-"Please merge the target branch to your branch before creating a pull "
-"request."
+msgid "Please merge the target branch to your branch before creating a pull request."
 msgstr ""
 
 #: kallithea/templates/compare/compare_cs.html:18
@@ -5821,9 +5627,7 @@ msgstr "Recebemos uma requisição para criar uma nova senha para sua conta."
 #: kallithea/templates/email_templates/password_reset.html:25
 #: kallithea/tests/data/templates/email_templates/password_reset.html.py:55
 #: kallithea/tests/data/templates/email_templates/password_reset.txt.py:54
-msgid ""
-"This account is however managed outside this system and the password "
-"cannot be changed here."
+msgid "This account is however managed outside this system and the password cannot be changed here."
 msgstr ""
 
 #: kallithea/templates/email_templates/password_reset.html:28
@@ -5835,17 +5639,13 @@ msgstr ""
 #: kallithea/templates/email_templates/password_reset.html:33
 #: kallithea/tests/data/templates/email_templates/password_reset.html.py:65
 #: kallithea/tests/data/templates/email_templates/password_reset.txt.py:61
-msgid ""
-"Should you not be able to use the link above, please type the following "
-"code into the password reset form"
+msgid "Should you not be able to use the link above, please type the following code into the password reset form"
 msgstr ""
 
 #: kallithea/templates/email_templates/password_reset.html:44
 #: kallithea/tests/data/templates/email_templates/password_reset.html.py:70
 #: kallithea/tests/data/templates/email_templates/password_reset.txt.py:66
-msgid ""
-"If it weren't you who requested the password reset, just disregard this "
-"message."
+msgid "If it weren't you who requested the password reset, just disregard this message."
 msgstr ""
 
 #: kallithea/templates/email_templates/pull_request.html:4
@@ -6105,9 +5905,7 @@ msgstr ""
 #: kallithea/templates/files/files_source.html:40
 #: kallithea/tests/data/templates/files/files_source.html.py:92
 msgid "Editing files allowed only when on branch head revision"
-msgstr ""
-"A edição de arquivos só é permitida quando se está na revisão mais "
-"recente do ramo"
+msgstr "A edição de arquivos só é permitida quando se está na revisão mais recente do ramo"
 
 #: kallithea/templates/files/files_source.html:41
 #: kallithea/tests/data/templates/files/files_source.html.py:94
@@ -6434,9 +6232,7 @@ msgstr ""
 
 #: kallithea/templates/pullrequests/pullrequest_show.html:106
 #: kallithea/tests/data/templates/pullrequests/pullrequest_show.html.py:223
-msgid ""
-"This is just a range of changesets and doesn't have a target or a real "
-"merge ancestor."
+msgid "This is just a range of changesets and doesn't have a target or a real merge ancestor."
 msgstr ""
 
 #: kallithea/templates/pullrequests/pullrequest_show.html:114
@@ -6458,9 +6254,7 @@ msgstr ""
 
 #: kallithea/templates/pullrequests/pullrequest_show.html:189
 #: kallithea/tests/data/templates/pullrequests/pullrequest_show.html.py:304
-msgid ""
-"Pull request iterations do not change content once created. Select a "
-"revision and save to make a new iteration."
+msgid "Pull request iterations do not change content once created. Select a revision and save to make a new iteration."
 msgstr ""
 
 #: kallithea/templates/pullrequests/pullrequest_show.html:197
@@ -6866,9 +6660,7 @@ msgid "Require SSL for vcs operations"
 msgstr "Requer SSL para operações de VCS"
 
 #: kallithea/tests/data/templates/admin/settings/settings_vcs.html.py:45
-msgid ""
-"Activate to require SSL both pushing and pulling. If SSL certificate is "
-"missing, it will return an HTTP Error 406: Not Acceptable."
+msgid "Activate to require SSL both pushing and pulling. If SSL certificate is missing, it will return an HTTP Error 406: Not Acceptable."
 msgstr ""
 
 #: kallithea/tests/data/templates/admin/settings/settings_visual.html.py:51
@@ -6877,20 +6669,13 @@ msgstr ""
 
 #: kallithea/tests/data/templates/admin/settings/settings_visual.html.py:67
 msgid ""
-"Schema of clone URL construction eg. '{scheme}://{user}@{netloc}/{repo}'."
-"\n"
-"                                                        The following "
-"variables are available:\n"
-"                                                        {scheme} 'http' "
-"or 'https' sent from running Kallithea server,\n"
-"                                                        {user}   current "
-"user username,\n"
-"                                                        {netloc} network "
-"location/server host of running Kallithea server,\n"
-"                                                        {repo}   full "
-"repository name,\n"
-"                                                        {repoid} ID of "
-"repository, can be used to construct clone-by-id"
+"Schema of clone URL construction eg. '{scheme}://{user}@{netloc}/{repo}'.\n"
+"                                                        The following variables are available:\n"
+"                                                        {scheme} 'http' or 'https' sent from running Kallithea server,\n"
+"                                                        {user}   current user username,\n"
+"                                                        {netloc} network location/server host of running Kallithea server,\n"
+"                                                        {repo}   full repository name,\n"
+"                                                        {repoid} ID of repository, can be used to construct clone-by-id"
 msgstr ""
 
 #: kallithea/tests/data/templates/admin/settings/settings_visual.html.py:75
@@ -6898,9 +6683,7 @@ msgid "Dashboard items"
 msgstr "Itens do dashboard"
 
 #: kallithea/tests/data/templates/admin/settings/settings_visual.html.py:79
-msgid ""
-"Number of items displayed in the main page dashboard before pagination is"
-" shown."
+msgid "Number of items displayed in the main page dashboard before pagination is shown."
 msgstr ""
 
 #: kallithea/tests/data/templates/admin/settings/settings_visual.html.py:81
@@ -6948,7 +6731,7 @@ msgstr ""
 
 #: kallithea/tests/data/templates/email_templates/changeset_comment.html.py:79
 #: kallithea/tests/data/templates/email_templates/changeset_comment.txt.py:77
-#, fuzzy, python-format
+#, python-format
 msgid "Comment from %s on %s changeset %s"
 msgstr ""
 
@@ -6964,19 +6747,19 @@ msgstr ""
 
 #: kallithea/tests/data/templates/email_templates/pull_request.html.py:75
 #: kallithea/tests/data/templates/email_templates/pull_request.txt.py:74
-#, fuzzy, python-format
+#, python-format
 msgid "%s mentioned you on %s pull request \"%s\""
 msgstr ""
 
 #: kallithea/tests/data/templates/email_templates/pull_request.html.py:79
 #: kallithea/tests/data/templates/email_templates/pull_request.txt.py:77
-#, fuzzy, python-format
+#, python-format
 msgid "%s requested your review of %s pull request \"%s\""
 msgstr ""
 
 #: kallithea/tests/data/templates/email_templates/pull_request_comment.html.py:65
 #: kallithea/tests/data/templates/email_templates/pull_request_comment.txt.py:65
-#, fuzzy, python-format
+#, python-format
 msgid "Comment from %s on %s pull request \"%s\""
 msgstr ""
 
@@ -7006,9 +6789,6 @@ msgstr ""
 msgid "Repository Size"
 msgstr "Tamanho do Repositório"
 
-#~ msgid "increase diff context to %(num)s lines"
-#~ msgstr ""
-
 #~ msgid "No comments."
 #~ msgstr "%d comentário"
 
@@ -7017,18 +6797,6 @@ msgstr "Tamanho do Repositório"
 
 #~ msgid "journal"
 #~ msgstr "diário"
-
-#~ msgid "bad captcha"
-#~ msgstr ""
-
-#~ msgid "unmodified"
-#~ msgstr ""
-
-#~ msgid "Locked repository"
-#~ msgstr ""
-
-#~ msgid "Unlocked repository"
-#~ msgstr ""
 
 #~ msgid "Unlocked"
 #~ msgstr "Destravado"
@@ -7060,14 +6828,8 @@ msgstr "Tamanho do Repositório"
 #~ msgid "Invalid clone URL, provide a valid clone http(s)/svn+http(s)/ssh URL"
 #~ msgstr "URL inválida, por favor, forneça uma URL de clone http(s)/svn+http(s)"
 
-#~ msgid "Revisions %(revs)s are already part of pull request or have set status"
-#~ msgstr ""
-
 #~ msgid "Defaults"
 #~ msgstr "Padrões"
-
-#~ msgid "My Emails"
-#~ msgstr ""
 
 #~ msgid "Watched"
 #~ msgstr "Seguindo"
@@ -7075,47 +6837,14 @@ msgstr "Tamanho do Repositório"
 #~ msgid "My Permissions"
 #~ msgstr "Minhas permissões"
 
-#~ msgid "expires"
-#~ msgstr ""
-
-#~ msgid "Confirm to reset this api key: %s"
-#~ msgstr ""
-
-#~ msgid "reset"
-#~ msgstr ""
-
-#~ msgid "expired"
-#~ msgstr ""
-
-#~ msgid "Confirm to remove this api key: %s"
-#~ msgstr ""
-
-#~ msgid "remove"
-#~ msgstr ""
-
-#~ msgid "No additional api keys specified"
-#~ msgstr ""
-
-#~ msgid "New api key"
-#~ msgstr ""
-
 #~ msgid "delete"
 #~ msgstr "excluir"
-
-#~ msgid "current IP"
-#~ msgstr ""
 
 #~ msgid "Permissions Administration"
 #~ msgstr "Administração de permissões"
 
-#~ msgid "Overview"
-#~ msgstr ""
-
 #~ msgid "Overwrite existing settings"
 #~ msgstr "Sobrescrever as configurações existentes"
-
-#~ msgid "Default IP Whitelist for All Users"
-#~ msgstr ""
 
 #~ msgid "Default User Permissions Overview"
 #~ msgstr "Permissões padrão"
@@ -7132,15 +6861,6 @@ msgstr "Tamanho do Repositório"
 #~ msgid "admin"
 #~ msgstr "administrador"
 
-#~ msgid "user/user group"
-#~ msgstr ""
-
-#~ msgid "delegated admin"
-#~ msgstr ""
-
-#~ msgid "Import existing repository ?"
-#~ msgstr ""
-
 #~ msgid "Optional URL from which repository should be cloned."
 #~ msgstr "URL opcional http[s] da qual o repositório deve ser clonado."
 
@@ -7150,80 +6870,17 @@ msgstr "Tamanho do Repositório"
 #~ msgid "Pull Changes from Remote Location"
 #~ msgstr "Realizar pull de alterações a partir de localização remota"
 
-#~ msgid "This repository does not have a remote URL set."
-#~ msgstr ""
-
 #~ msgid "Non-changeable id"
 #~ msgstr "ID inalterável"
 
 #~ msgid "edit"
 #~ msgstr "editar"
 
-#~ msgid "new value"
-#~ msgstr ""
-
-#~ msgid "URL used for doing remote pulls."
-#~ msgstr ""
-
-#~ msgid "Email prefix"
-#~ msgstr ""
-
-#~ msgid "Kallithea email from"
-#~ msgstr ""
-
-#~ msgid "Error email from"
-#~ msgstr ""
-
-#~ msgid "Error email recipients"
-#~ msgstr ""
-
-#~ msgid "SMTP server"
-#~ msgstr ""
-
-#~ msgid "SMTP username"
-#~ msgstr ""
-
-#~ msgid "SMTP password"
-#~ msgstr ""
-
-#~ msgid "SMTP port"
-#~ msgstr ""
-
-#~ msgid "SMTP use TLS"
-#~ msgstr ""
-
-#~ msgid "SMTP use SSL"
-#~ msgstr ""
-
-#~ msgid "SMTP auth"
-#~ msgstr ""
-
 #~ msgid "Destroy old data"
 #~ msgstr "Destruir dados antigos"
 
-#~ msgid "check for updates"
-#~ msgstr ""
-
 #~ msgid "Default permissions"
 #~ msgstr "Permissões padrão"
-
-#~ msgid "user groups"
-#~ msgstr ""
-
-#~ msgid "Inherit from defaults"
-#~ msgstr ""
-
-#~ msgid "show"
-#~ msgstr ""
-
-#~ msgid "parent rev."
-#~ msgstr ""
-
-#~ msgid "child rev."
-#~ msgstr ""
-
-#~ msgid "no revisions"
-#~ msgstr ""
 
 #~ msgid "Status change from pull request"
 #~ msgstr "Alteração de estado no changeset"
@@ -7234,23 +6891,11 @@ msgstr "Tamanho do Repositório"
 #~ msgid "Comment on changeset"
 #~ msgstr "Comentário no changeset"
 
-#~ msgid "revision"
-#~ msgstr ""
-
 #~ msgid "Mimetype"
 #~ msgstr "Mimetype"
 
 #~ msgid "My Repos"
 #~ msgstr "Meus repositórios"
-
-#~ msgid "Latest vote: %s"
-#~ msgstr ""
-
-#~ msgid "Nobody voted"
-#~ msgstr ""
-
-#~ msgid "Pull request #%s from %s#%s"
-#~ msgstr ""
 
 #~ msgid "owner"
 #~ msgstr "dono"
@@ -7276,59 +6921,17 @@ msgstr "Tamanho do Repositório"
 #~ msgid "Created by"
 #~ msgstr "criado"
 
-#~ msgid "You can only delete files with revision being a valid branch "
-#~ msgstr ""
-
-#~ msgid "This pull request can be updated with changes on %s:"
-#~ msgstr ""
-
 #~ msgid "Confirm to invalidate repository cache."
 #~ msgstr "Confirma invalidar cache do repositório"
 
 #~ msgid "Comments parsed using %s syntax with %s support."
 #~ msgstr "Comentários interpretados usando a sintaxe %s com suporte a %s."
 
-#~ msgid "Use @username inside this text to notify another user"
-#~ msgstr ""
-
 #~ msgid "Comment preview"
 #~ msgstr "Visualizar comentário"
 
 #~ msgid "Preview"
 #~ msgstr "Visualizar"
-
-#~ msgid "New file mode"
-#~ msgstr ""
-
-#~ msgid "Missing changesets since the previous pull request:"
-#~ msgstr ""
-
-#~ msgid "New changesets on %s %s since the previous pull request:"
-#~ msgstr ""
-
-#~ msgid "Ancestor didn't change - show diff since previous version:"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "This pull request is based on "
-#~ "another %s revision and there is "
-#~ "no simple diff."
-#~ msgstr ""
-
-#~ msgid "No changes found on %s %s since previous version."
-#~ msgstr ""
-
-#~ msgid "Closed, replaced by %s ."
-#~ msgstr ""
-
-#~ msgid "The following changes are available on %s:"
-#~ msgstr ""
-
-#~ msgid "No changesets found for updating this pull request."
-#~ msgstr ""
-
-#~ msgid "Git pull requests don't support updates yet."
-#~ msgstr ""
 
 #~ msgid "Closing."
 #~ msgstr "carregando ..."
@@ -7429,9 +7032,6 @@ msgstr "Tamanho do Repositório"
 #~ msgid "User Registration with automatic account activation"
 #~ msgstr "Registro de Usuário com ativação automática de conta"
 
-#~ msgid "[Comment] %(repo_name)s changeset %(short_id)s on %(branch)s"
-#~ msgstr ""
-
 #~ msgid "[Added] %(repo_name)s pull request %(pr_nice_id)s from %(ref)s"
 #~ msgstr "%(user)s solicita sua revisão no pull request $%(pr_id)s: %(pr_title)s"
 
@@ -7450,66 +7050,17 @@ msgstr "Tamanho do Repositório"
 #~ msgid "There are no bookmarks yet"
 #~ msgstr "Ainda não há marcadores"
 
-#~ msgid "Analytics HTML block"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "HTML with JavaScript for web analytics"
-#~ " systems like Google Analytics or "
-#~ "Piwik. This will be added at the"
-#~ " bottom of every page."
-#~ msgstr ""
-
-#~ msgid ""
-#~ "Schema of clone URL construction eg. "
-#~ "'{scheme}://{user}@{netloc}/{repo}'.\n"
-#~ "                                                        The "
-#~ "following variables are available:\n"
-#~ "                                                        {scheme}"
-#~ " 'http' or 'https' sent from running"
-#~ " Kallithea server,\n"
-#~ "                                                        {user}"
-#~ "   current user username,\n"
-#~ "                                                        {netloc}"
-#~ " network location/server host of running"
-#~ " Kallithea server,\n"
-#~ "                                                        {repo}"
-#~ "   full repository name,\n"
-#~ "                                                        {repoid}"
-#~ " ID of repository, can be used "
-#~ "to contruct clone-by-id"
-#~ msgstr ""
-
-#~ msgid "enabled"
-#~ msgstr ""
-
-#~ msgid "disabled"
-#~ msgstr ""
-
 #~ msgid "%s Bookmarks"
 #~ msgstr "%s Bookmarks"
 
-#~ msgid "Compare Bookmarks"
-#~ msgstr ""
-
 #~ msgid "%s Branches"
 #~ msgstr "%s Ramos"
-
-#~ msgid "Compare Branches"
-#~ msgstr ""
 
 #~ msgid "Editing file"
 #~ msgstr "Editando arquivo"
 
 #~ msgid "Update"
 #~ msgstr "usuário [atualizado]"
-
-#~ msgid ""
-#~ "Pull requests do not change once "
-#~ "created. Select a revision and save "
-#~ "to replace this pull request with "
-#~ "a new one."
-#~ msgstr ""
 
 #~ msgid "Save Updates as New Pull Request"
 #~ msgstr "Crie novo pull request"
@@ -7519,4 +7070,3 @@ msgstr "Tamanho do Repositório"
 
 #~ msgid "Compare Tags"
 #~ msgstr "Comparar tags"
-
