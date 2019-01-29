@@ -47,7 +47,7 @@ total_ignore.add('<>')
 # Normalize some committer names where people have contributed under different
 # names or email addresses:
 name_fixes = {}
-name_fixes['Andrew Shadura'] = "Andrew Shadura <andrew@shadura.me>"
+name_fixes['Andrew Shadura'] = "Andrej Shadura <andrew@shadura.me>"
 name_fixes['aparkar'] = "Aparkar <aparkar@icloud.com>"
 name_fixes['Aras Pranckevicius'] = "Aras Pranckevičius <aras@unity3d.com>"
 name_fixes['Augosto Hermann'] = "Augusto Herrmann <augusto.herrmann@planejamento.gov.br>"
