@@ -8,6 +8,30 @@ if (typeof console == "undefined" || typeof console.log == "undefined"){
 }
 
 /**
+ * INJECT .html_escape function into String
+ * Usage: "unsafe string".html_escape()
+ *
+ * This is the Javascript equivalent of kallithea.lib.helpers.html_escape(). It
+ * will escape HTML characters to prevent XSS or other issues.  It should be
+ * used in all cases where Javascript code is inserting potentially unsafe data
+ * into the document.
+ *
+ * For example:
+ *      <script>confirm("boo")</script>
+ * is changed into:
+ *      &lt;script&gt;confirm(&quot;boo&quot;)&lt;/script&gt;
+ *
+ */
+String.prototype.html_escape = function() {
+    return this
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+/**
  * INJECT .format function into String
  * Usage: "My name is {0} {1}".format("Johny","Bravo")
  * Return "My name is Johny Bravo"
