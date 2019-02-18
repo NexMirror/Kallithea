@@ -589,7 +589,6 @@ class TestMercurialChangeset(object):
         init_chset = self.repo.get_changeset(0)
         assert init_chset.successors == []
 
-    @pytest.mark.xfail
     def test_predecessors(self):
         init_chset = self.repo.get_changeset(0)
         assert init_chset.predecessors == set([])

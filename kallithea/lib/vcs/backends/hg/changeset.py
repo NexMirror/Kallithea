@@ -104,7 +104,11 @@ class MercurialChangeset(BaseChangeset):
     def predecessors(self):
         predecessors = set()
         nm = self._ctx._repo.changelog.nodemap
-        for p in self._ctx._repo.obsstore.precursors.get(self._ctx.node(), ()):
+        try:
+            raw_predecessors = self._ctx._repo.obsstore.predecessors
+        except AttributeError:  # renamed in Mercurial 4.4 (d5acd967f95a)
+            raw_predecessors = self._ctx._repo.obsstore.precursors
+        for p in raw_predecessors.get(self._ctx.node(), ()):
             pr = nm.get(p[0])
             if pr is not None:
                 predecessors.add(hex(p[0])[:12])
