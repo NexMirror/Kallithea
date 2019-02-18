@@ -89,9 +89,11 @@ class MercurialChangeset(BaseChangeset):
     @LazyProperty
     def successors(self):
         try:
+            # This works starting from Mercurial 4.3: the function `successorssets` was moved to the mercurial.obsutil module and gained the `closest` parameter.
             from mercurial import obsutil
-            successors = obsutil.successorssets(self._ctx._repo, self._ctx.node())
-        except ImportError:  # moved in Mercurial 4.3 (4f49810a1011)
+            successors = obsutil.successorssets(self._ctx._repo, self._ctx.node(), closest=True)
+        except ImportError:
+            # fallback for older versions
             successors = obsolete.successorssets(self._ctx._repo, self._ctx.node())
         if successors:
             # flatten the list here handles both divergent (len > 1)
@@ -102,17 +104,19 @@ class MercurialChangeset(BaseChangeset):
 
     @LazyProperty
     def predecessors(self):
-        predecessors = set()
-        nm = self._ctx._repo.changelog.nodemap
         try:
-            raw_predecessors = self._ctx._repo.obsstore.predecessors
-        except AttributeError:  # renamed in Mercurial 4.4 (d5acd967f95a)
-            raw_predecessors = self._ctx._repo.obsstore.precursors
-        for p in raw_predecessors.get(self._ctx.node(), ()):
-            pr = nm.get(p[0])
-            if pr is not None:
-                predecessors.add(hex(p[0])[:12])
-        return predecessors
+            # This works starting from Mercurial 4.3: the function `closestpredecessors` was added.
+            from mercurial import obsutil
+            return [hex(n)[:12] for n in obsutil.closestpredecessors(self._ctx._repo, self._ctx.node())]
+        except ImportError:
+            # fallback for older versions
+            predecessors = set()
+            nm = self._ctx._repo.changelog.nodemap
+            for p in self._ctx._repo.obsstore.precursors.get(self._ctx.node(), ()):
+                pr = nm.get(p[0])
+                if pr is not None:
+                    predecessors.add(hex(p[0])[:12])
+            return predecessors
 
     @LazyProperty
     def bookmarks(self):

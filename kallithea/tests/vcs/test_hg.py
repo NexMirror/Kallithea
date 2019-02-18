@@ -591,4 +591,4 @@ class TestMercurialChangeset(object):
 
     def test_predecessors(self):
         init_chset = self.repo.get_changeset(0)
-        assert init_chset.predecessors == set([])
+        assert len(init_chset.predecessors) == 0
