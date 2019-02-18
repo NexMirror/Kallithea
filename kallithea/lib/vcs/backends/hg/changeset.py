@@ -97,7 +97,7 @@ class MercurialChangeset(BaseChangeset):
         return successors
 
     @LazyProperty
-    def precursors(self):
+    def predecessors(self):
         precursors = set()
         nm = self._ctx._repo.changelog.nodemap
         for p in self._ctx._repo.obsstore.precursors.get(self._ctx.node(), ()):

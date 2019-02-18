@@ -117,16 +117,16 @@ ${self.repo_context_bar('changelog', c.changeset.raw_id)}
                      </div>
                      % endif
 
-                     % if hasattr(c.changeset, 'precursors') and c.changeset.precursors:
-                     <div class='precursors'>
-                       <span class='precursors_header'>${_('Preceded by:')} </span>
-                       % for i, s in enumerate(c.changeset.precursors):
+                     % if hasattr(c.changeset, 'predecessors') and c.changeset.predecessors:
+                     <div class='predecessors'>
+                       <span class='predecessors_header'>${_('Preceded by:')} </span>
+                       % for i, s in enumerate(c.changeset.predecessors):
                            <%
                            comma = ""
-                           if i != len(c.changeset.precursors)-1:
+                           if i != len(c.changeset.predecessors)-1:
                              comma = ", "
                            %>
-                           <a class="precursors_hash" href="${h.url('changeset_home',repo_name=c.repo_name, revision=s)}">${s}</a>${comma}
+                           <a class="predecessors_hash" href="${h.url('changeset_home',repo_name=c.repo_name, revision=s)}">${s}</a>${comma}
                        % endfor
                      </div>
                      % endif
