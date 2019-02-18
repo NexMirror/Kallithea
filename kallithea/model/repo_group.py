@@ -277,24 +277,24 @@ class RepoGroupModel(object):
 
         return updates
 
-    def update(self, repo_group, kwargs):
+    def update(self, repo_group, repo_group_args):
         try:
             repo_group = RepoGroup.guess_instance(repo_group)
             old_path = repo_group.full_path
 
             # change properties
-            if 'group_description' in kwargs:
-                repo_group.group_description = kwargs['group_description']
-            if 'parent_group_id' in kwargs:
-                repo_group.parent_group_id = kwargs['parent_group_id']
-            if 'enable_locking' in kwargs:
-                repo_group.enable_locking = kwargs['enable_locking']
+            if 'group_description' in repo_group_args:
+                repo_group.group_description = repo_group_args['group_description']
+            if 'parent_group_id' in repo_group_args:
+                repo_group.parent_group_id = repo_group_args['parent_group_id']
+            if 'enable_locking' in repo_group_args:
+                repo_group.enable_locking = repo_group_args['enable_locking']
 
-            if 'parent_group_id' in kwargs:
-                assert kwargs['parent_group_id'] != u'-1', kwargs # RepoGroupForm should have converted to None
-                repo_group.parent_group = RepoGroup.get(kwargs['parent_group_id'])
-            if 'group_name' in kwargs:
-                group_name = kwargs['group_name']
+            if 'parent_group_id' in repo_group_args:
+                assert repo_group_args['parent_group_id'] != u'-1', repo_group_args  # RepoGroupForm should have converted to None
+                repo_group.parent_group = RepoGroup.get(repo_group_args['parent_group_id'])
+            if 'group_name' in repo_group_args:
+                group_name = repo_group_args['group_name']
                 if kallithea.lib.utils2.repo_name_slug(group_name) != group_name:
                     raise Exception('invalid repo group name %s' % group_name)
                 repo_group.group_name = repo_group.get_new_name(group_name)
