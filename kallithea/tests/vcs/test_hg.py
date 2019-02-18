@@ -585,7 +585,6 @@ class TestMercurialChangeset(object):
         assert 'Lukasz Balcerzak' == self.repo.get_changeset('3803844fdbd3').author_name
         assert 'marcink' == self.repo.get_changeset('84478366594b').author_name
 
-    @pytest.mark.xfail
     def test_successors(self):
         init_chset = self.repo.get_changeset(0)
         assert init_chset.successors == []

@@ -88,7 +88,11 @@ class MercurialChangeset(BaseChangeset):
 
     @LazyProperty
     def successors(self):
-        successors = obsolete.successorssets(self._ctx._repo, self._ctx.node())
+        try:
+            from mercurial import obsutil
+            successors = obsutil.successorssets(self._ctx._repo, self._ctx.node())
+        except ImportError:  # moved in Mercurial 4.3 (4f49810a1011)
+            successors = obsolete.successorssets(self._ctx._repo, self._ctx.node())
         if successors:
             # flatten the list here handles both divergent (len > 1)
             # and the usual case (len = 1)
