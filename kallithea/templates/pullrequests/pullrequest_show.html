@@ -26,7 +26,7 @@ ${self.repo_context_bar('showpullrequest')}
     <div class="form pr-box pull-left">
       <div class="pr-details-title ${'closed' if c.pull_request.is_closed() else ''}">
         <h3>
-          ${_('Title')}: ${c.pull_request.title}
+          ${_('Title')}: ${h.urlify_text(c.pull_request.title, c.pull_request.org_repo.repo_name)}
           %if c.pull_request.is_closed():
               (${_('Closed')})
           %endif
