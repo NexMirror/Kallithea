@@ -32,7 +32,7 @@
       </td>
       <td>
         <a href="${pr.url()}">
-        ${pr.title or _("(no title)")}
+        ${h.urlify_text(pr.title or _("(no title)"), pr.org_repo.repo_name, pr.url())}
         %if pr.is_closed():
           <span class="pr-closed-tag">${_('Closed')}</span>
         %endif
