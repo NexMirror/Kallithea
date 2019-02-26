@@ -101,7 +101,7 @@ ${self.repo_context_bar('changelog')}
       $(css_selector).select2({
         placeholder: placeholder,
         formatSelection: function(obj){
-            return '{0}@{1}'.format(repo_name, obj.text);
+            return '{0}@{1}'.format(repo_name, obj.text).html_escape();
         },
         dropdownAutoWidth: true,
         query: function(query){
