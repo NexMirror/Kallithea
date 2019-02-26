@@ -107,7 +107,7 @@ ${self.repo_context_bar('changelog')}
       $(css_selector).select2({
         placeholder: '{0}@{1}'.format(repo_name, ref_name || ${h.jshtml(_('Select changeset'))}),
         formatSelection: function(obj){
-            return '{0}@{1}'.format(repo_name, obj.text);
+            return '{0}@{1}'.format(repo_name, obj.text).html_escape();
         },
         dropdownAutoWidth: true,
         maxResults: 50,
