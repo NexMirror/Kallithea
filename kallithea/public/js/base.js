@@ -1313,6 +1313,8 @@ var MentionsAutoComplete = function ($inputElement, $container, users_list) {
         });
 }
 
+// Important: input arguments to addReviewMember should be safe (escaped) for
+// inclusion into HTML.
 var addReviewMember = function(id,fname,lname,nname,gravatar_link,gravatar_size){
     var displayname = nname;
     if ((fname != "") && (lname != "")) {
@@ -1372,6 +1374,8 @@ var PullRequestAutoComplete = function ($inputElement, $container, users_list) {
             var elLI = aArgs[1]; // reference to the selected LI element
             var oData = aArgs[2]; // object literal of selected item's result data
 
+            // The fields in oData have already been escaped by the YUI
+            // framework. We thus should not add explicit escaping here anymore.
             addReviewMember(oData.id, oData.fname, oData.lname, oData.nname,
                             oData.gravatar_lnk, oData.gravatar_size);
             myAC.getInputEl().value = '';

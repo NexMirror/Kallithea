@@ -412,7 +412,14 @@ ${self.repo_context_bar('showpullrequest')}
 
           $('.missing_reviewer').click(function(){
             var $this = $(this);
-            addReviewMember($this.attr('user_id'), $this.attr('fname'), $this.attr('lname'), $this.attr('nname'), $this.attr('gravatar_lnk'), $this.attr('gravatar_size'));
+            addReviewMember(
+                $this.attr('user_id'),
+                $this.attr('fname').html_escape(),
+                $this.attr('lname').html_escape(),
+                $this.attr('nname').html_escape(),
+                $this.attr('gravatar_lnk'),
+                $this.attr('gravatar_size')
+            );
           });
       });
     </script>
