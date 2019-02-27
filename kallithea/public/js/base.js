@@ -1046,16 +1046,17 @@ var autocompleteMatchGroups = function (sQuery, myGroups) {
     return matches;
 };
 
-// Highlight the snippet if it is found in the full text.
+// Highlight the snippet if it is found in the full text, while escaping any existing markup.
 // Snippet must be lowercased already.
 var autocompleteHighlightMatch = function (full, snippet) {
     var matchindex = full.toLowerCase().indexOf(snippet);
     if (matchindex <0)
-        return full;
-    return full.substring(0, matchindex)
+        return full.html_escape();
+    return full.substring(0, matchindex).html_escape()
         + '<span class="select2-match">'
-        + full.substr(matchindex, snippet.length)
-        + '</span>' + full.substring(matchindex + snippet.length);
+        + full.substr(matchindex, snippet.length).html_escape()
+        + '</span>'
+        + full.substring(matchindex + snippet.length).html_escape();
 };
 
 // Return html snippet for showing the provided gravatar url
@@ -1081,7 +1082,7 @@ var autocompleteGravatar = function(res, gravatar_lnk, size, group) {
     return '<div class="ac-container-wrap">{0}{1}</div>'.format(elem, res);
 }
 
-// Custom formatter to highlight the matching letters
+// Custom formatter to highlight the matching letters and do HTML escaping
 var autocompleteFormatter = function (oResultData, sQuery, sResultMatch) {
     var query;
     if (sQuery && sQuery.toLowerCase) // YAHOO AutoComplete
