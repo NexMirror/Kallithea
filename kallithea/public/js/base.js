@@ -1198,7 +1198,13 @@ var MentionsAutoComplete = function ($inputElement) {
         return items;
       }
     },
-    displayTpl: "<li>" + autocompleteGravatar('${fname} ${lname} (${nname})', '${gravatar_lnk}', 16) + "</li>",
+    displayTpl: function(item) {
+        return "<li>" +
+            autocompleteGravatar(
+                "{0} {1} ({2})".format(item.fname, item.lname, item.nname).html_escape(),
+                '${gravatar_lnk}', 16) +
+            "</li>";
+    },
     insertTpl: "${atwho-at}${nname}"
   });
 };
