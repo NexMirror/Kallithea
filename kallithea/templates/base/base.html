@@ -188,8 +188,9 @@
     $(document).ready(function() {
       var bcache = {};
 
+      var branch_switcher_placeholder = '<i class="icon-exchange"></i>' + ${h.jshtml(_('Switch To'))} + ' <span class="caret"></span>';
       $("#branch_switcher").select2({
-          placeholder: '<i class="icon-exchange"></i>' + ${h.jshtml(_('Switch To'))} + ' <span class="caret"></span>',
+          placeholder: branch_switcher_placeholder,
           dropdownAutoWidth: true,
           sortResults: prefixFirstSort,
           formatResult: function(obj) {
@@ -202,11 +203,8 @@
               return ${h.jshtml(_('No matches found'))};
           },
           escapeMarkup: function(m) {
-              // don't escape our custom placeholder
-              if (m.substr(0, 25) == '<i class="icon-exchange">') {
-                  return m;
-              }
-
+              if (m == branch_switcher_placeholder)
+                  return branch_switcher_placeholder;
               return Select2.util.escapeMarkup(m);
           },
           containerCssClass: "branch-switcher",
@@ -415,7 +413,7 @@
             /*format the look of items in the list*/
             var format = function(state){
                 if (!state.id){
-                  return state.text; // optgroup
+                  return state.text.html_escape(); // optgroup
                 }
                 var obj_dict = state.obj;
                 var tmpl = '';
@@ -439,12 +437,13 @@
                 if(obj_dict && state.type == 'group'){
                         tmpl += '<i class="icon-folder"></i>';
                 }
-                tmpl += state.text;
+                tmpl += state.text.html_escape();
                 return tmpl;
             }
 
+            var repo_switcher_placeholder = '<i class="icon-database"></i>' + ${h.jshtml(_('Repositories'))} + ' <span class="caret"></span>';
             $("#repo_switcher").select2({
-                placeholder: '<i class="icon-database"></i>' + ${h.jshtml(_('Repositories'))} + ' <span class="caret"></span>',
+                placeholder: repo_switcher_placeholder,
                 dropdownAutoWidth: true,
                 sortResults: prefixFirstSort,
                 formatResult: format,
@@ -455,11 +454,8 @@
                 containerCssClass: "repo-switcher",
                 dropdownCssClass: "repo-switcher-dropdown",
                 escapeMarkup: function(m){
-                    // don't escape our custom placeholder
-                    if(m.substr(0,29) == '<i class="icon-database"></i>'){
-                        return m;
-                    }
-
+                    if (m == repo_switcher_placeholder)
+                        return repo_switcher_placeholder;
                     return Select2.util.escapeMarkup(m);
                 },
                 query: function(query){
