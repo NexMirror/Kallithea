@@ -18,6 +18,7 @@ Consists of functions to typically be used within templates, but also
 available to Controllers. This module is available to both as 'h'.
 """
 import hashlib
+import json
 import StringIO
 import math
 import logging
@@ -99,6 +100,36 @@ def html_escape(s):
         .replace('"', "&quot;")
         .replace("'", "&apos;")
         )
+
+def js(value):
+    """Convert Python value to the corresponding JavaScript representation.
+
+    This is necessary to safely insert arbitrary values into HTML <script>
+    sections e.g. using Mako template expression substitution.
+
+    Note: Rather than using this function, it's preferable to avoid the
+    insertion of values into HTML <script> sections altogether. Instead,
+    data should (to the extent possible) be passed to JavaScript using
+    data attributes or AJAX calls, eliminating the need for JS specific
+    escaping.
+
+    Note: This is not safe for use in attributes (e.g. onclick), because
+    quotes are not escaped.
+
+    Because the rules for parsing <script> varies between XHTML (where
+    normal rules apply for any special characters) and HTML (where
+    entities are not interpreted, but the literal string "</script>"
+    is forbidden), the function ensures that the result never contains
+    '&', '<' and '>', thus making it safe in both those contexts (but
+    not in attributes).
+    """
+    return literal(
+        ('(' + json.dumps(value) + ')')
+        # In JSON, the following can only appear in string literals.
+        .replace('&', r'\x26')
+        .replace('<', r'\x3c')
+        .replace('>', r'\x3e')
+    )
 
 def shorter(s, size=20):
     postfix = '...'

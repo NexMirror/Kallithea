@@ -140,8 +140,8 @@ ${self.repo_context_bar('changelog')}
     });
     }
 
-    make_revision_dropdown("#compare_org",   "${'%s@%s' % (c.a_repo.repo_name, c.a_ref_name)}",   "${c.a_repo.repo_name}",  'cache');
-    make_revision_dropdown("#compare_other", "${'%s@%s' % (c.cs_repo.repo_name, c.cs_ref_name)}", "${c.cs_repo.repo_name}", 'cache2');
+    make_revision_dropdown("#compare_org",   ${h.js('%s@%s' % (c.a_repo.repo_name, c.a_ref_name))},   "${c.a_repo.repo_name}",  'cache');
+    make_revision_dropdown("#compare_other", ${h.js('%s@%s' % (c.cs_repo.repo_name, c.cs_ref_name))}, "${c.cs_repo.repo_name}", 'cache2');
 
     var values_changed = function() {
         var values = $('#compare_org').select2('data') && $('#compare_other').select2('data');
