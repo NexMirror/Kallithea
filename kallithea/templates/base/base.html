@@ -194,10 +194,10 @@
           dropdownAutoWidth: true,
           sortResults: prefixFirstSort,
           formatResult: function(obj) {
-              return obj.text;
+              return obj.text.html_escape();
           },
           formatSelection: function(obj) {
-              return obj.text;
+              return obj.text.html_escape();
           },
           formatNoMatches: function(term) {
               return ${h.jshtml(_('No matches found'))};
