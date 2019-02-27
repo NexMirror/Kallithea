@@ -1146,7 +1146,6 @@ var SimpleUserAutoComplete = function ($inputElement) {
         },
         formatSelection: autocompleteFormatter,
         formatResult: autocompleteFormatter,
-        escapeMarkup: function(m) { return m; },
         id: function(item) { return item.nname; },
     });
 }
@@ -1172,7 +1171,6 @@ var MembersAutoComplete = function ($inputElement, $typeElement) {
         },
         formatSelection: autocompleteFormatter,
         formatResult: autocompleteFormatter,
-        escapeMarkup: function(m) { return m; },
         id: function(item) { return item.type == 'user' ? item.nname : item.grname },
     }).on("select2-selecting", function(e) {
         // e.choice.id is automatically used as selection value - just set the type of the selection
@@ -1249,7 +1247,7 @@ var addReviewMember = function(id,fname,lname,nname,gravatar_link,gravatar_size)
         '         </a> (add not saved)\n'+
         '       </span>\n'+
         '     </li>\n'
-        ).format(gravatarelm, displayname, id);
+        ).format(gravatarelm, displayname.html_escape(), id);
     // check if we don't have this ID already in
     var ids = [];
     $('#review_members').find('li').each(function() {
@@ -1289,7 +1287,6 @@ var PullRequestAutoComplete = function ($inputElement) {
         },
         formatSelection: autocompleteFormatter,
         formatResult: autocompleteFormatter,
-        escapeMarkup: function(m) { return m; },
     }).on("select2-selecting", function(e) {
         addReviewMember(e.choice.id, e.choice.fname, e.choice.lname, e.choice.nname,
                         e.choice.gravatar_lnk, e.choice.gravatar_size);
