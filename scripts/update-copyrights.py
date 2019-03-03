@@ -76,6 +76,7 @@ name_fixes['Søren Løvborg'] = "Søren Løvborg <sorenl@unity3d.com>"
 name_fixes['Thomas De Schampheleire'] = "Thomas De Schampheleire <thomas.de_schampheleire@nokia.com>"
 name_fixes['Weblate'] = "<>"
 name_fixes['xpol'] = "xpol <xpolife@gmail.com>"
+name_fixes['Lars <devel@sumpfralle.de>'] = "Lars Kruse <devel@sumpfralle.de>"
 
 
 # Some committer email address domains that indicate that another entity might
