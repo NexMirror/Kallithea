@@ -6924,7 +6924,7 @@ msgstr ""
 #~ msgid "Invalid clone URL, provide a valid clone http(s)/svn+http(s)/ssh URL"
 #~ msgstr "无效的克隆地址，提供一个有效的克隆 http(s)或svn+http(s)地址"
 
-#~ msgid ""
+#~ msgid "Revisions %(revs)s are already part of pull request or have set status"
 #~ msgstr "修订%(revs)s已经包含在拉取请求中或者或者已经设置状态"
 
 #~ msgid "Defaults"
