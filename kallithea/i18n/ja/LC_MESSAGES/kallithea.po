@@ -4270,14 +4270,13 @@ msgstr "クローンURL"
 
 #: kallithea/templates/admin/settings/settings_visual.html:43
 #, fuzzy
-#| msgid "" "Schema of clone URL construction eg.
-#| '{scheme}://{user}@{netloc}/{repo}'." "\n" "
-#| The following " "variables are available:\n" "
-#| {scheme} 'http' " "or 'https' sent from running Kallithea server,\n" "
-#| {user}   current " "user username,\n" "
-#| {netloc} network " "location/server host of running Kallithea server,\n" "
-#| {repo}   full " "repository name,\n" "
-#| {repoid} ID of " "repository, can be used to contruct clone-by-id"
+#| msgid "" "Schema of clone URL construction eg. '{scheme}://{user}@{netloc}/{repo}'.\n"
+#| "The following " "variables are available:\n"
+#| "{scheme} 'http' " "or 'https' sent from running Kallithea server,\n"
+#| "{user}   current " "user username,\n"
+#| "{netloc} network " "location/server host of running Kallithea server,\n"
+#| "{repo}   full " "repository name,\n"
+#| "{repoid} ID of " "repository, can be used to contruct clone-by-id"
 msgid ""
 "Schema of clone URL construction eg. '{scheme}://{user}@{netloc}/{repo}'."
 "\n"
@@ -4315,8 +4314,7 @@ msgstr "リポジトリサイズ"
 
 #: kallithea/templates/admin/settings/settings_visual.html:57
 #, fuzzy
-#| msgid "" "Number of items displayed in the admin pages grids before
-#| pagination is " "shown."
+#| msgid "" "Number of items displayed in the admin pages grids before pagination is shown."
 msgid ""
 "Number of items displayed in the repository pages before pagination is "
 "shown."
@@ -6707,14 +6705,13 @@ msgstr "Gravatorsを利用する"
 
 #: kallithea/tests/data/templates/admin/settings/settings_visual.html.py:67
 #, fuzzy
-#| msgid "" "Schema of clone URL construction eg.
-#| '{scheme}://{user}@{netloc}/{repo}'." "\n" "
-#| The following " "variables are available:\n" "
-#| {scheme} 'http' " "or 'https' sent from running Kallithea server,\n" "
-#| {user}   current " "user username,\n" "
-#| {netloc} network " "location/server host of running Kallithea server,\n" "
-#| {repo}   full " "repository name,\n" "
-#| {repoid} ID of " "repository, can be used to contruct clone-by-id"
+#| msgid "" "Schema of clone URL construction eg. '{scheme}://{user}@{netloc}/{repo}'.\n"
+#| "The following " "variables are available:\n"
+#| "{scheme} 'http' " "or 'https' sent from running Kallithea server,\n"
+#| "{user}   current " "user username,\n"
+#| "{netloc} network " "location/server host of running Kallithea server,\n"
+#| "{repo}   full " "repository name,\n"
+#| "{repoid} ID of " "repository, can be used to contruct clone-by-id"
 msgid ""
 "Schema of clone URL construction eg. '{scheme}://{user}@{netloc}/{repo}'."
 "\n"
@@ -6886,9 +6883,6 @@ msgstr "リポジトリサイズ"
 
 #~ msgid "No Files"
 #~ msgstr "ファイルなし"
-
-#~ msgid ""
-#~ msgstr "クローズしたプルリクエストに関連するチェンジセットのステータスを変更することは許可されていません"
 
 #~ msgid "Username \"%(username)s\" is forbidden"
 #~ msgstr "ユーザー名 \"%(username)s\" は許可されていません"
