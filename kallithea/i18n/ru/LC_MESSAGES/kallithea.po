@@ -1707,8 +1707,7 @@ msgstr ""
 
 #: kallithea/model/pull_request.py:362
 #, fuzzy, python-format
-#| msgid "" "This pull request is based on another %s revision and there is no
-#| simple " "diff."
+#| msgid "This pull request is based on another %s revision and there is no simple diff."
 msgid ""
 "This iteration is based on another %s revision and there is no simple "
 "diff."
