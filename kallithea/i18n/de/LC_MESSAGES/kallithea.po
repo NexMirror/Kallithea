@@ -1705,7 +1705,6 @@ msgstr "Vorgänger unverändert - zeige Diff zu lezter Version:"
 
 #: kallithea/model/pull_request.py:362
 #, fuzzy, python-format
-#| msgid "" "
 msgid ""
 "This iteration is based on another %s revision and there is no simple "
 "diff."
