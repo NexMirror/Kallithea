@@ -1683,7 +1683,6 @@ msgstr ""
 
 #: kallithea/model/pull_request.py:362
 #, fuzzy, python-format
-#| msgid "" "
 msgid ""
 "This iteration is based on another %s revision and there is no simple "
 "diff."
@@ -4339,7 +4338,6 @@ msgstr "Памер рэпазітара"
 
 #: kallithea/templates/admin/settings/settings_visual.html:57
 #, fuzzy
-#| msgid "" "
 msgid ""
 "Number of items displayed in the repository pages before pagination is "
 "shown."
