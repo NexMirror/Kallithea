@@ -59,17 +59,30 @@ database type, settings, location, etc. If you were running Kallithea 0.3.x or
 older, this was ``sqlalchemy.db1.url``.
 
 
-3. Activate the Kallithea virtual environment (if any)
-------------------------------------------------------
+3. Activate or recreate the Kallithea virtual environment (if any)
+------------------------------------------------------------------
 
-Verify that you are using the Python environment that you originally
-installed Kallithea in by running::
+.. note::
+    If you did not install Kallithea in a virtual environment, skip this step.
+
+For major upgrades, e.g. from 0.3.x to 0.4.x, it is recommended to create a new
+virtual environment, rather than reusing the old. For minor upgrades, e.g.
+within the 0.4.x range, this is not really necessary (but equally fine).
+
+To create a new virtual environment, please refer to the appropriate
+installation page for details. After creating and activating the new virtual
+environment, proceed with the rest of the upgrade process starting from the next
+section.
+
+To reuse the same virtual environment, first activate it, then verify that you
+are using the correct environment by running::
 
     pip freeze
 
 This will list all packages installed in the current environment. If
-Kallithea isn't listed, activate the correct virtual environment.
-See the appropriate installation page for details.
+Kallithea isn't listed, deactivate the environment and then activate the correct
+one, or recreate a new environment. See the appropriate installation page for
+details.
 
 
 4. Install new version of Kallithea
