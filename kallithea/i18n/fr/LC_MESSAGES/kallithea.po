@@ -6249,9 +6249,6 @@ msgstr "Comparer les tags"
 #~ msgid "No Files"
 #~ msgstr "Aucun fichier"
 
-#~ msgid ""
-#~ msgstr ""
-
 #~ msgid "Username \"%(username)s\" is forbidden"
 #~ msgstr "Le nom d’utilisateur « %(username)s » n’est pas autorisé"
 
