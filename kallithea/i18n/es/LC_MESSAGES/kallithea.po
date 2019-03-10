@@ -1663,7 +1663,6 @@ msgstr "El ascendente no ha cambiado - ver diferencias desde la versión anterio
 
 #: kallithea/model/pull_request.py:362
 #, fuzzy, python-format
-#| msgid "" "
 msgid ""
 "This iteration is based on another %s revision and there is no simple "
 "diff."
