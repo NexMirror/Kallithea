@@ -29,8 +29,8 @@ format parameters, untranslated strings copied into the translation. Please perf
 necessary corrections when they're needed, or override the false positives.
 
 
-Merging translations from Weblate
----------------------------------
+Merging translations from Weblate (admin-only)
+----------------------------------------------
 
 Weblate rebases its changes every time it pulls from our repository. Pulls are triggered
 by a web hook from Our Own Kallithea every time it receives new commits. Usually merging
@@ -43,6 +43,28 @@ It makes sense sometimes to re-order or fold commits by the same author when the
 just the same language translation. That, however, may confuse Weblate sometimes, in
 which case it should be manually convinced it has to discard the commits it created by
 using its administrative interface.
+
+
+Regenerating translatations after source code changes (admin-only)
+------------------------------------------------------------------
+
+When the Kallithea source code changes, both the location as the content of
+translation strings can change. It is therefore necessary to regularly
+regenerate the `kallithea.pot` file containing these strings, as well as aligning
+the translation files (`*.po`).
+
+First update the translation strings::
+
+    python2 setup.py extract_messages
+
+Then regenerate the translation files. This could either be done with `python2
+setup.py update_catalog` or with `msgmerge` from the `gettext` package. As
+Weblate is also touching these translation files, it is preferred to use the
+same tools (`msgmerge`) and settings as Weblate to minimize the diff::
+
+    find kallithea/i18n -name kallithea.po | xargs -I '{}' \
+        msgmerge --width=76 --backup=none --previous --update '{}' \
+        kallithea/i18n/kallithea.pot
 
 
 Manual creation of a new language translation
