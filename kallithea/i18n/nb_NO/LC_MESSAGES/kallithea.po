@@ -8,13 +8,16 @@ msgstr ""
 "Project-Id-Version: Kallithea 0.3.99\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2019-03-11 20:31+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2019-03-14 01:03+0000\n"
+"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
+"Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
+"kallithea/kallithea/nb_NO/>\n"
 "Language: nb_NO\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.5.1\n"
 
 #: kallithea/controllers/changelog.py:67
 #: kallithea/controllers/pullrequests.py:252 kallithea/lib/base.py:605
@@ -61,7 +64,7 @@ msgstr "Ingen tilgang til endring av innsendingsforespørselsstatus"
 #: kallithea/controllers/changeset.py:213
 #, python-format
 msgid "Successfully deleted pull request %s"
-msgstr ""
+msgstr "Slettet flettingsforespørsel %s"
 
 #: kallithea/controllers/changeset.py:320 kallithea/controllers/files.py:97
 #: kallithea/controllers/files.py:117 kallithea/controllers/files.py:727
@@ -71,15 +74,16 @@ msgstr "En slik revisjon funnes ikke for denne pakkebrønnen"
 #: kallithea/controllers/compare.py:66
 #, python-format
 msgid "Could not find other repository %s"
-msgstr ""
+msgstr "Fant ikke annen pakkebrønn %s"
 
 #: kallithea/controllers/compare.py:72
 msgid "Cannot compare repositories of different types"
-msgstr ""
+msgstr "Kan ikke sammenligne pakkebrønner av forskjellige typer"
 
 #: kallithea/controllers/compare.py:244
+#, fuzzy
 msgid "Cannot show empty diff"
-msgstr ""
+msgstr "Kan ikke vise tom diff"
 
 #: kallithea/controllers/compare.py:246
 msgid "No ancestor found for merge diff"
@@ -295,7 +299,7 @@ msgstr "Forgrening"
 
 #: kallithea/controllers/home.py:127
 msgid "Closed Branches"
-msgstr ""
+msgstr "Lukkede forgreninger"
 
 #: kallithea/controllers/home.py:133
 msgid "Tag"
@@ -324,9 +328,9 @@ msgid "Bad captcha"
 msgstr "Feilaktig CAPTCHA"
 
 #: kallithea/controllers/login.py:145
-#, python-format
+#, fuzzy, python-format
 msgid "You have successfully registered with %s"
-msgstr ""
+msgstr "Du har registrer deg på %s"
 
 #: kallithea/controllers/login.py:189
 msgid "A password reset confirmation code has been sent"
@@ -465,7 +469,7 @@ msgstr "Ugyldig søkespørring. Prøv å sette den i sistattegn."
 
 #: kallithea/controllers/search.py:140
 msgid "The server has no search index."
-msgstr ""
+msgstr "Tjeneren har ingen søkeindeks."
 
 #: kallithea/controllers/search.py:143
 msgid "An error occurred during search operation."
@@ -909,7 +913,7 @@ msgstr ""
 
 #: kallithea/controllers/admin/settings.py:135
 msgid "Updated VCS settings"
-msgstr ""
+msgstr "Oppdaterte VCS-innstillinger"
 
 #: kallithea/controllers/admin/settings.py:139 kallithea/lib/utils.py:231
 msgid ""
@@ -946,7 +950,7 @@ msgstr ""
 
 #: kallithea/controllers/admin/settings.py:312
 msgid "Please enter email address"
-msgstr ""
+msgstr "Skriv inn e-postadresse"
 
 #: kallithea/controllers/admin/settings.py:327
 msgid "Send email task created"
@@ -981,7 +985,7 @@ msgstr ""
 #: kallithea/controllers/admin/user_groups.py:143
 #, python-format
 msgid "Created user group %s"
-msgstr ""
+msgstr "Opprettet brukergruppe %s"
 
 #: kallithea/controllers/admin/user_groups.py:156
 #, python-format
@@ -991,7 +995,7 @@ msgstr ""
 #: kallithea/controllers/admin/user_groups.py:184
 #, python-format
 msgid "Updated user group %s"
-msgstr ""
+msgstr "Oppdaterte brukergruppe %s"
 
 #: kallithea/controllers/admin/user_groups.py:206
 #, python-format
@@ -999,8 +1003,9 @@ msgid "Error occurred during update of user group %s"
 msgstr ""
 
 #: kallithea/controllers/admin/user_groups.py:217
+#, fuzzy
 msgid "Successfully deleted user group"
-msgstr ""
+msgstr "Brukergruppe slettet"
 
 #: kallithea/controllers/admin/user_groups.py:222
 msgid "An error occurred during deletion of user group"
@@ -1520,7 +1525,7 @@ msgstr ""
 
 #: kallithea/model/notification.py:184
 msgid "Closing"
-msgstr ""
+msgstr "Lukker"
 
 #: kallithea/model/pull_request.py:76
 #, python-format
@@ -1629,12 +1634,12 @@ msgstr ""
 #: kallithea/model/validators.py:74
 #, python-format
 msgid "Username \"%(username)s\" already exists"
-msgstr ""
+msgstr "Brukernavnet \"%(username)s\" finnes allerede"
 
 #: kallithea/model/validators.py:76
 #, python-format
 msgid "Username \"%(username)s\" cannot be used"
-msgstr ""
+msgstr "Brukernavnet \"%(username)s\" kan ikke brukes"
 
 #: kallithea/model/validators.py:78
 msgid ""
@@ -1653,12 +1658,12 @@ msgstr ""
 
 #: kallithea/model/validators.py:133
 msgid "Invalid user group name"
-msgstr ""
+msgstr "Ugyldig brukergruppenavn"
 
 #: kallithea/model/validators.py:134
 #, python-format
 msgid "User group \"%(usergroup)s\" already exists"
-msgstr ""
+msgstr "Brukergruppen \"%(usergroup)s\" finnes allerede"
 
 #: kallithea/model/validators.py:136
 msgid ""
@@ -1686,15 +1691,15 @@ msgstr ""
 
 #: kallithea/model/validators.py:250
 msgid "Invalid old password"
-msgstr ""
+msgstr "Ugyldig gammelt passord"
 
 #: kallithea/model/validators.py:266
 msgid "Passwords do not match"
-msgstr ""
+msgstr "Passordene samsvarer ikke"
 
 #: kallithea/model/validators.py:281
 msgid "Invalid username or password"
-msgstr ""
+msgstr "Ugyldig brukernavn eller passord"
 
 #: kallithea/model/validators.py:312
 msgid "Token mismatch"
@@ -1722,7 +1727,7 @@ msgstr ""
 
 #: kallithea/model/validators.py:419
 msgid "Invalid repository URL"
-msgstr ""
+msgstr "Ugyldig pakkebrønnsnettadresse"
 
 #: kallithea/model/validators.py:420
 msgid ""
@@ -1752,16 +1757,16 @@ msgstr ""
 
 #: kallithea/model/validators.py:645
 msgid "This is not a valid path"
-msgstr ""
+msgstr "Dette er ikke en gyldig sti"
 
 #: kallithea/model/validators.py:662
 msgid "This email address is already in use"
-msgstr ""
+msgstr "E-postadressen er allerede i bruk"
 
 #: kallithea/model/validators.py:682
-#, python-format
+#, fuzzy, python-format
 msgid "Email address \"%(email)s\" not found"
-msgstr ""
+msgstr "Fant ikke e-postadressen \"%(email)s\""
 
 #: kallithea/model/validators.py:719
 msgid ""
@@ -1771,7 +1776,7 @@ msgstr ""
 
 #: kallithea/model/validators.py:731
 msgid "Please enter a valid IPv4 or IPv6 address"
-msgstr ""
+msgstr "Skriv inn en gyldig IPv4- eller IPv6-adresse"
 
 #: kallithea/model/validators.py:732
 #, python-format
@@ -1794,7 +1799,7 @@ msgstr ""
 
 #: kallithea/templates/about.html:4 kallithea/templates/about.html:13
 msgid "About"
-msgstr ""
+msgstr "Om"
 
 #: kallithea/templates/admin/repos/repo_add.html:5
 #: kallithea/templates/admin/repos/repo_add.html:19
@@ -1802,7 +1807,7 @@ msgstr ""
 #: kallithea/templates/index_base.html:25
 #: kallithea/templates/index_base.html:30
 msgid "Add Repository"
-msgstr ""
+msgstr "Legg til pakkebrønn"
 
 #: kallithea/templates/admin/repo_groups/repo_group_add.html:5
 #: kallithea/templates/admin/repo_groups/repo_group_add.html:13
@@ -1810,7 +1815,7 @@ msgstr ""
 #: kallithea/templates/index_base.html:27
 #: kallithea/templates/index_base.html:32
 msgid "Add Repository Group"
-msgstr ""
+msgstr "Legg til pakkebrønnsgruppe"
 
 #: kallithea/templates/index_base.html:37
 msgid "You have admin right to this group, and can edit it"
@@ -1818,13 +1823,13 @@ msgstr ""
 
 #: kallithea/templates/index_base.html:37
 msgid "Edit Repository Group"
-msgstr ""
+msgstr "Rediger pakkebrønnsgruppe"
 
 #: kallithea/templates/admin/admin_log.html:7
 #: kallithea/templates/admin/permissions/permissions_globals.html:14
 #: kallithea/templates/index_base.html:53
 msgid "Repository"
-msgstr ""
+msgstr "Pakkebrønn"
 
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:59
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:61
@@ -1847,18 +1852,18 @@ msgstr ""
 #: kallithea/templates/pullrequests/pullrequest_show.html:59
 #: kallithea/templates/summary/summary.html:79
 msgid "Description"
-msgstr ""
+msgstr "Beskrivelse"
 
 #: kallithea/templates/index_base.html:60
 msgid "Last Change"
-msgstr ""
+msgstr "Siste endring"
 
 #: kallithea/templates/admin/my_account/my_account_repos.html:15
 #: kallithea/templates/admin/my_account/my_account_watched.html:15
 #: kallithea/templates/admin/repos/repos.html:41
 #: kallithea/templates/index_base.html:62
 msgid "Tip"
-msgstr ""
+msgstr "Tips"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_advanced.html:10
 #: kallithea/templates/admin/repo_groups/repo_groups.html:42
@@ -1872,17 +1877,17 @@ msgstr ""
 #: kallithea/templates/pullrequests/pullrequest_show.html:219
 #: kallithea/templates/summary/summary.html:124
 msgid "Owner"
-msgstr ""
+msgstr "Eier"
 
 #: kallithea/templates/base/base.html:387 kallithea/templates/login.html:5
 #: kallithea/templates/login.html:19
 msgid "Log In"
-msgstr ""
+msgstr "Logg inn"
 
 #: kallithea/templates/login.html:17
 #, python-format
 msgid "Log In to %s"
-msgstr ""
+msgstr "Logg inn på %s"
 
 #: kallithea/templates/admin/admin_log.html:5
 #: kallithea/templates/admin/my_account/my_account_profile.html:18
@@ -1893,55 +1898,59 @@ msgstr ""
 #: kallithea/templates/email_templates/registration.html:11
 #: kallithea/templates/login.html:28 kallithea/templates/register.html:31
 msgid "Username"
-msgstr ""
+msgstr "Brukernavn"
 
 #: kallithea/templates/admin/my_account/my_account.html:27
 #: kallithea/templates/admin/users/user_add.html:34
 #: kallithea/templates/base/base.html:375 kallithea/templates/login.html:34
 #: kallithea/templates/register.html:38
 msgid "Password"
-msgstr ""
+msgstr "Passord"
 
 #: kallithea/templates/login.html:44
+#, fuzzy
 msgid "Stay logged in after browser restart"
-msgstr ""
+msgstr "Forbli innlogget etter omstart av nettleser"
 
 #: kallithea/templates/login.html:52
 msgid "Forgot your password ?"
-msgstr ""
+msgstr "Glemt passordet ditt?"
 
 #: kallithea/templates/login.html:55
+#, fuzzy
 msgid "Don't have an account ?"
-msgstr ""
+msgstr "Har du ikke en konto?"
 
 #: kallithea/templates/login.html:62
+#, fuzzy
 msgid "Sign In"
-msgstr ""
+msgstr "Logg inn"
 
 #: kallithea/templates/password_reset.html:5
 msgid "Password Reset"
-msgstr ""
+msgstr "Passordstilbakestilling"
 
 #: kallithea/templates/password_reset.html:21
 #: kallithea/templates/password_reset_confirmation.html:16
 #, python-format
 msgid "Reset Your Password to %s"
-msgstr ""
+msgstr "Tilbakestill passordet ditt til %s"
 
 #: kallithea/templates/password_reset.html:23
 #: kallithea/templates/password_reset_confirmation.html:5
 #: kallithea/templates/password_reset_confirmation.html:18
 msgid "Reset Your Password"
-msgstr ""
+msgstr "Tilbakestill passordet ditt"
 
 #: kallithea/templates/password_reset.html:30
 msgid "Email Address"
-msgstr ""
+msgstr "E-postadresse"
 
 #: kallithea/templates/password_reset.html:38
 #: kallithea/templates/register.html:74
+#, fuzzy
 msgid "Captcha"
-msgstr ""
+msgstr "CAPTCHA"
 
 #: kallithea/templates/password_reset.html:47
 msgid "Send Password Reset Email"
@@ -1970,29 +1979,29 @@ msgstr ""
 
 #: kallithea/templates/password_reset_confirmation.html:36
 msgid "New Password"
-msgstr ""
+msgstr "Nytt passord"
 
 #: kallithea/templates/password_reset_confirmation.html:43
 msgid "Confirm New Password"
-msgstr ""
+msgstr "Bekreft nytt passord"
 
 #: kallithea/templates/password_reset_confirmation.html:51
 msgid "Confirm"
-msgstr ""
+msgstr "Bekreft"
 
 #: kallithea/templates/register.html:5 kallithea/templates/register.html:24
 #: kallithea/templates/register.html:83
 msgid "Sign Up"
-msgstr ""
+msgstr "Registrer"
 
 #: kallithea/templates/register.html:22
 #, python-format
 msgid "Sign Up to %s"
-msgstr ""
+msgstr "Registrer på %s"
 
 #: kallithea/templates/register.html:45
 msgid "Re-enter password"
-msgstr ""
+msgstr "Skriv inn passord på ny"
 
 #: kallithea/templates/admin/my_account/my_account_profile.html:25
 #: kallithea/templates/admin/users/user_add.html:48
@@ -2000,7 +2009,7 @@ msgstr ""
 #: kallithea/templates/admin/users/users.html:38
 #: kallithea/templates/register.html:52
 msgid "First Name"
-msgstr ""
+msgstr "Fornavn"
 
 #: kallithea/templates/admin/my_account/my_account_profile.html:32
 #: kallithea/templates/admin/users/user_add.html:55
@@ -2008,7 +2017,7 @@ msgstr ""
 #: kallithea/templates/admin/users/users.html:39
 #: kallithea/templates/register.html:59
 msgid "Last Name"
-msgstr ""
+msgstr "Etternavn"
 
 #: kallithea/templates/admin/my_account/my_account_profile.html:39
 #: kallithea/templates/admin/settings/settings.html:31
@@ -2017,7 +2026,7 @@ msgstr ""
 #: kallithea/templates/email_templates/registration.html:33
 #: kallithea/templates/register.html:66
 msgid "Email"
-msgstr ""
+msgstr "E-post"
 
 #: kallithea/templates/register.html:85
 msgid "Registered accounts are ready to use and need no further action."
@@ -2041,7 +2050,7 @@ msgstr ""
 #: kallithea/templates/admin/admin.html:12
 #: kallithea/templates/journal/journal.html:12
 msgid "Filter"
-msgstr ""
+msgstr "Filter"
 
 #: kallithea/templates/admin/admin.html:13
 #: kallithea/templates/journal/journal.html:13
@@ -2063,32 +2072,33 @@ msgstr ""
 
 #: kallithea/templates/admin/admin_log.html:8
 msgid "Date"
-msgstr ""
+msgstr "Dato"
 
 #: kallithea/templates/admin/admin_log.html:9
+#, fuzzy
 msgid "From IP"
-msgstr ""
+msgstr "Fra IP"
 
 #: kallithea/templates/admin/admin_log.html:61
 msgid "No actions yet"
-msgstr ""
+msgstr "Ingen handlinger enda"
 
 #: kallithea/templates/admin/auth/auth_settings.html:5
 msgid "Authentication Settings"
-msgstr ""
+msgstr "Identitetsbekreftelsesinnstillinger"
 
 #: kallithea/templates/admin/auth/auth_settings.html:11
 #: kallithea/templates/base/base.html:61
 msgid "Authentication"
-msgstr ""
+msgstr "Identitetsbekreftelse"
 
 #: kallithea/templates/admin/auth/auth_settings.html:27
 msgid "Authentication Plugins"
-msgstr ""
+msgstr "Identitetsbekreftelsesprogramtillegg"
 
 #: kallithea/templates/admin/auth/auth_settings.html:29
 msgid "Enabled Plugins"
-msgstr ""
+msgstr "Aktiverte programtillegg"
 
 #: kallithea/templates/admin/auth/auth_settings.html:32
 msgid ""
@@ -2098,11 +2108,11 @@ msgstr ""
 
 #: kallithea/templates/admin/auth/auth_settings.html:36
 msgid "Available built-in plugins"
-msgstr ""
+msgstr "Tilgjengelige innebygde programtillegg"
 
 #: kallithea/templates/admin/auth/auth_settings.html:53
 msgid "Plugin"
-msgstr ""
+msgstr "Programtillegg"
 
 #: kallithea/templates/admin/auth/auth_settings.html:101
 #: kallithea/templates/admin/defaults/defaults.html:67
@@ -2122,7 +2132,7 @@ msgstr ""
 #: kallithea/templates/admin/users/user_edit_profile.html:89
 #: kallithea/templates/base/default_perms_box.html:56
 msgid "Save"
-msgstr ""
+msgstr "Lagre"
 
 #: kallithea/templates/admin/defaults/defaults.html:5
 #: kallithea/templates/admin/defaults/defaults.html:11
@@ -2134,14 +2144,14 @@ msgstr ""
 #: kallithea/templates/admin/repos/repo_add_base.html:42
 #: kallithea/templates/admin/repos/repo_edit_fields.html:8
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
 #: kallithea/templates/admin/defaults/defaults.html:34
 #: kallithea/templates/admin/repos/repo_add_base.html:56
 #: kallithea/templates/admin/repos/repo_edit_settings.html:57
 #: kallithea/templates/data_table/_dt_elements.html:21
 msgid "Private repository"
-msgstr ""
+msgstr "Privat pakkebrønn"
 
 #: kallithea/templates/admin/defaults/defaults.html:37
 #: kallithea/templates/admin/repos/repo_add_base.html:59
@@ -2155,7 +2165,7 @@ msgstr ""
 #: kallithea/templates/admin/defaults/defaults.html:42
 #: kallithea/templates/admin/repos/repo_edit_settings.html:64
 msgid "Enable statistics"
-msgstr ""
+msgstr "Skru på statistikk"
 
 #: kallithea/templates/admin/defaults/defaults.html:45
 #: kallithea/templates/admin/repos/repo_edit_settings.html:67
@@ -2165,18 +2175,18 @@ msgstr ""
 #: kallithea/templates/admin/defaults/defaults.html:50
 #: kallithea/templates/admin/repos/repo_edit_settings.html:71
 msgid "Enable downloads"
-msgstr ""
+msgstr "Skru på nedlastinger"
 
 #: kallithea/templates/admin/defaults/defaults.html:53
 #: kallithea/templates/admin/repos/repo_edit_settings.html:74
 msgid "Enable download menu on summary page."
-msgstr ""
+msgstr "Skru på nedlastingsmeny på sammendragsside."
 
 #: kallithea/templates/admin/defaults/defaults.html:58
 #: kallithea/templates/admin/repo_groups/repo_group_edit_settings.html:26
 #: kallithea/templates/admin/repos/repo_edit_settings.html:78
 msgid "Enable locking"
-msgstr ""
+msgstr "Skru på låsing"
 
 #: kallithea/templates/admin/defaults/defaults.html:61
 #: kallithea/templates/admin/repos/repo_edit_settings.html:81
@@ -2218,7 +2228,7 @@ msgstr ""
 #: kallithea/templates/admin/users/user_edit_api_keys.html:26
 #: kallithea/templates/admin/users/user_edit_api_keys.html:31
 msgid "Expires"
-msgstr ""
+msgstr "Utløper"
 
 #: kallithea/templates/admin/gists/edit.html:59
 #: kallithea/templates/admin/gists/index.html:54
@@ -2228,7 +2238,7 @@ msgstr ""
 #: kallithea/templates/admin/users/user_edit_api_keys.html:7
 #: kallithea/templates/admin/users/user_edit_api_keys.html:26
 msgid "Never"
-msgstr ""
+msgstr "Aldri"
 
 #: kallithea/templates/admin/gists/edit.html:145
 msgid "Update Gist"
@@ -2238,7 +2248,7 @@ msgstr ""
 #: kallithea/templates/base/root.html:27
 #: kallithea/templates/changeset/changeset_file_comment.html:129
 msgid "Cancel"
-msgstr ""
+msgstr "Avbryt"
 
 #: kallithea/templates/admin/gists/index.html:6
 #: kallithea/templates/admin/gists/index.html:16
@@ -2266,7 +2276,7 @@ msgstr ""
 #: kallithea/templates/admin/gists/index.html:51
 #: kallithea/templates/data_table/_dt_elements.html:78
 msgid "Created"
-msgstr ""
+msgstr "Opprettet"
 
 #: kallithea/templates/admin/gists/index.html:66
 msgid "There are no gists yet"
@@ -2326,7 +2336,7 @@ msgstr ""
 
 #: kallithea/templates/admin/gists/show.html:10
 msgid "URL"
-msgstr ""
+msgstr "Nettadresse"
 
 #: kallithea/templates/admin/gists/show.html:35
 msgid "Public Gist"
@@ -2358,7 +2368,7 @@ msgstr ""
 #: kallithea/templates/files/files_source.html:41
 #: kallithea/templates/pullrequests/pullrequest_data.html:20
 msgid "Delete"
-msgstr ""
+msgstr "Slett"
 
 #: kallithea/templates/admin/gists/show.html:54
 msgid "Confirm to delete this Gist"
@@ -2381,7 +2391,7 @@ msgstr ""
 #: kallithea/templates/files/files_source.html:40
 #: kallithea/templates/pullrequests/pullrequest_show.html:41
 msgid "Edit"
-msgstr ""
+msgstr "Rediger"
 
 #: kallithea/templates/admin/gists/show.html:63
 #: kallithea/templates/files/files_edit.html:52
@@ -2401,25 +2411,25 @@ msgstr ""
 #: kallithea/templates/admin/my_account/my_account.html:9
 #: kallithea/templates/base/base.html:397
 msgid "My Account"
-msgstr ""
+msgstr "Min konto"
 
 #: kallithea/templates/admin/my_account/my_account.html:25
 #: kallithea/templates/admin/users/user_edit.html:29
 msgid "Profile"
-msgstr ""
+msgstr "Profil"
 
 #: kallithea/templates/admin/my_account/my_account.html:26
 msgid "Email Addresses"
-msgstr ""
+msgstr "E-postadresser"
 
 #: kallithea/templates/admin/my_account/my_account.html:28
 #: kallithea/templates/admin/users/user_edit.html:31
 msgid "API Keys"
-msgstr ""
+msgstr "API-nøkler"
 
 #: kallithea/templates/admin/my_account/my_account.html:29
 msgid "Owned Repositories"
-msgstr ""
+msgstr "Eide pakkebrønner"
 
 #: kallithea/templates/admin/my_account/my_account.html:30
 #: kallithea/templates/journal/journal.html:33
@@ -2458,7 +2468,7 @@ msgstr ""
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:41
 #: kallithea/templates/admin/users/user_edit_api_keys.html:41
 msgid "Remove"
-msgstr ""
+msgstr "Fjern"
 
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:48
 #: kallithea/templates/admin/users/user_edit_api_keys.html:48
@@ -2468,7 +2478,7 @@ msgstr ""
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:56
 #: kallithea/templates/admin/users/user_edit_api_keys.html:56
 msgid "New API key"
-msgstr ""
+msgstr "Ny API-nøkkel"
 
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:72
 #: kallithea/templates/admin/my_account/my_account_emails.html:46
@@ -2479,7 +2489,7 @@ msgstr ""
 #: kallithea/templates/admin/users/user_edit_emails.html:46
 #: kallithea/templates/admin/users/user_edit_ips.html:44
 msgid "Add"
-msgstr ""
+msgstr "Legg til"
 
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:81
 #, python-format
@@ -2525,16 +2535,16 @@ msgstr ""
 
 #: kallithea/templates/admin/my_account/my_account_password.html:8
 msgid "Current password"
-msgstr ""
+msgstr "Nåværende passord"
 
 #: kallithea/templates/admin/my_account/my_account_password.html:15
 #: kallithea/templates/admin/users/user_edit_profile.html:46
 msgid "New password"
-msgstr ""
+msgstr "Nytt passord"
 
 #: kallithea/templates/admin/my_account/my_account_password.html:22
 msgid "Confirm new password"
-msgstr ""
+msgstr "Bekreft nytt passord"
 
 #: kallithea/templates/admin/my_account/my_account_password.html:39
 #, python-format
@@ -2544,27 +2554,27 @@ msgstr ""
 
 #: kallithea/templates/admin/my_account/my_account_perms.html:3
 msgid "Current IP"
-msgstr ""
+msgstr "Nåværende IP"
 
 #: kallithea/templates/admin/my_account/my_account_profile.html:4
 #: kallithea/templates/admin/users/user_edit_profile.html:4
 msgid "Gravatar"
-msgstr ""
+msgstr "Gravatar"
 
 #: kallithea/templates/admin/my_account/my_account_profile.html:10
 #: kallithea/templates/admin/users/user_edit_profile.html:10
 #, python-format
 msgid "Change %s avatar at"
-msgstr ""
+msgstr "Endre %s-avatar på"
 
 #: kallithea/templates/admin/my_account/my_account_profile.html:12
 #: kallithea/templates/admin/users/user_edit_profile.html:12
 msgid "Avatars are disabled"
-msgstr ""
+msgstr "Avatarer er avskrudd"
 
 #: kallithea/templates/admin/my_account/my_account_repos.html:1
 msgid "Repositories You Own"
-msgstr ""
+msgstr "Pakkebrønner du eier"
 
 #: kallithea/templates/admin/my_account/my_account_repos.html:13
 #: kallithea/templates/admin/my_account/my_account_watched.html:13
@@ -2576,17 +2586,17 @@ msgstr ""
 #: kallithea/templates/base/perms_summary.html:54
 #: kallithea/templates/files/files_browser.html:51
 msgid "Name"
-msgstr ""
+msgstr "Navn"
 
 #: kallithea/templates/admin/my_account/my_account_watched.html:1
 msgid "Repositories You are Watching"
-msgstr ""
+msgstr "Pakkebrønner du holder oppsyn med"
 
 #: kallithea/templates/admin/permissions/permissions.html:5
 #: kallithea/templates/admin/permissions/permissions.html:11
 #: kallithea/templates/base/base.html:60
 msgid "Default Permissions"
-msgstr ""
+msgstr "Forvalgte tilganger"
 
 #: kallithea/templates/admin/permissions/permissions.html:28
 #: kallithea/templates/admin/settings/settings.html:29
@@ -2596,15 +2606,15 @@ msgstr ""
 #: kallithea/templates/admin/permissions/permissions.html:29
 #: kallithea/templates/admin/users/user_edit.html:32
 msgid "IP Whitelist"
-msgstr ""
+msgstr "IP-hvitliste"
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:4
 msgid "Anonymous access"
-msgstr ""
+msgstr "Anonym tilgang"
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:8
 msgid "Allow anonymous access"
-msgstr ""
+msgstr "Tillat anonym tilgang"
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:10
 #, python-format
