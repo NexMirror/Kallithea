@@ -30,7 +30,7 @@ Original author and date, and relevant copyright and licensing information is be
 import sys
 import platform
 
-VERSION = (0, 3, 99)
+VERSION = (0, 4, 0, 'rc1')
 BACKENDS = {
     'hg': 'Mercurial repository',
     'git': 'Git repository',
