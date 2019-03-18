@@ -20,7 +20,7 @@ virtualenv -p python2 "$venv"
 
 echo "Install/verify tools needed for building and uploading stuff"
 pip install --upgrade -e .
-pip install --upgrade -r dev_requirements.txt Sphinx-PyPI-upload
+pip install --upgrade -r dev_requirements.txt
 
 echo "Cleanup and update copyrights ... and clean checkout"
 scripts/run-all-cleanup
@@ -50,7 +50,7 @@ echo "Verify dist file content"
 diff -u <((hg mani | grep -v '^\.hg') | LANG=C sort) <(tar tf dist/Kallithea-$version.tar.gz | sed "s|^$namerel/||" | grep . | grep -v '^kallithea/i18n/.*/LC_MESSAGES/kallithea.mo$\|^Kallithea.egg-info/\|^PKG-INFO$\|/$' | LANG=C sort)
 
 echo "Verify docs build"
-python2 setup.py build_sphinx # not used yet ... but we want to make sure it builds
+python2 setup.py build_sphinx # the results are not actually used, but we want to make sure it builds
 
 cat - << EOT
 
@@ -68,11 +68,6 @@ hg log -r "'$version'&." | grep .
 echo -n "Enter \"pypi\" to upload Kallithea $version to pypi: "
 read answer
 [ "$answer" = "pypi" ]
-
-echo "Upload docs to pypi"
-# See https://wiki.python.org/moin/PyPiDocumentationHosting
-python2 setup.py build_sphinx upload_sphinx
-xdg-open http://packages.python.org/Kallithea/installation.html
 
 echo "Rebuild readthedocs for docs.kallithea-scm.org"
 xdg-open https://readthedocs.org/projects/kallithea/
