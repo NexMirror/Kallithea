@@ -20,7 +20,7 @@ virtualenv -p python2 "$venv"
 
 echo "Install/verify tools needed for building and uploading stuff"
 pip install --upgrade -e .
-pip install --upgrade -r dev_requirements.txt
+pip install --upgrade -r dev_requirements.txt twine
 
 echo "Cleanup and update copyrights ... and clean checkout"
 scripts/run-all-cleanup
@@ -75,6 +75,5 @@ curl -X POST http://readthedocs.org/build/kallithea
 xdg-open https://readthedocs.org/builds/kallithea/
 xdg-open http://docs.kallithea-scm.org/en/latest/ # or whatever the branch is
 
-extraargs=${EMAIL:+--identity=$EMAIL}
-python2 setup.py sdist upload --sign $extraargs
+twine upload dist/*
 xdg-open https://pypi.python.org/pypi/Kallithea
