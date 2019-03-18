@@ -42,7 +42,7 @@ def front_end_build(install_deps, generate):
 
     if install_deps:
         click.echo("Running 'npm install' to install front-end dependencies from package.json")
-        subprocess.check_call(['npm', 'install'], cwd=front_end_dir)
+        subprocess.check_call(['npm', 'install'], cwd=front_end_dir, shell=kallithea.is_windows)
 
     if generate:
         tmp_dir = os.path.join(front_end_dir, 'tmp')
@@ -61,7 +61,7 @@ def front_end_build(install_deps, generate):
         csspath = os.path.join(public_dir, 'css', 'style.css')
         subprocess.check_call([lesscpath, '--source-map',
                 '--source-map-less-inline', lesspath, csspath],
-                cwd=front_end_dir)
+                cwd=front_end_dir, shell=kallithea.is_windows)
 
         click.echo("Preparing Bootstrap JS")
         shutil.copy(os.path.join(front_end_dir, 'node_modules', 'bootstrap', 'dist', 'js', 'bootstrap.js'), os.path.join(public_dir, 'js', 'bootstrap.js'))
@@ -90,13 +90,11 @@ def front_end_build(install_deps, generate):
         shutil.copytree(os.path.join(front_end_dir, 'node_modules', 'codemirror'), os.path.join(public_dir, 'codemirror'))
 
         click.echo("Generating LICENSES.txt")
+        license_checker_path = os.path.join(front_end_dir, 'node_modules', '.bin', 'license-checker')
         check_licensing_json_path = os.path.join(tmp_dir, 'licensing.json')
         licensing_txt_path = os.path.join(public_dir, 'LICENSES.txt')
-        subprocess.check_call([
-            os.path.join(front_end_dir, 'node_modules', '.bin', 'license-checker'),
-            '--json',
-            '--out', check_licensing_json_path,
-            ], cwd=front_end_dir)
+        subprocess.check_call([license_checker_path, '--json', '--out', check_licensing_json_path],
+                cwd=front_end_dir, shell=kallithea.is_windows)
         with open(check_licensing_json_path) as jsonfile:
             rows = json.loads(jsonfile.read())
             with open(licensing_txt_path, 'w') as out:
