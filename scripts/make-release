@@ -52,6 +52,9 @@ diff -u <((hg mani | grep -v '^\.hg') | LANG=C sort) <(tar tf dist/Kallithea-$ve
 echo "Verify docs build"
 python2 setup.py build_sphinx # the results are not actually used, but we want to make sure it builds
 
+echo "Shortlog for inclusion in the release announcement"
+scripts/shortlog.py "only('.', branch('stable') & tagged() & public() & not '.')"
+
 cat - << EOT
 
 Now, make sure
