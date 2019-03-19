@@ -334,7 +334,7 @@ def make_ui(read_from='file', path=None, clear_session=True):
     if read_from == 'file':
         if not os.path.isfile(path):
             log.debug('hgrc file is not present at %s, skipping...', path)
-            return False
+            return baseui
         log.debug('reading hgrc from %s', path)
         cfg = config.config()
         cfg.read(path)
