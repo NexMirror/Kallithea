@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
-"POT-Creation-Date: 2019-03-11 20:31+0100\n"
+"POT-Creation-Date: 2019-03-20 20:53+0100\n"
 "PO-Revision-Date: 2019-03-20 10:03+0000\n"
 "Last-Translator: Étienne Gilli <etienne.gilli@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/kallithea/"
@@ -420,8 +420,8 @@ msgstr "Révision %s non trouvée dans %s"
 #, python-format
 msgid "Error: changesets not found when displaying pull request from %s."
 msgstr ""
-"Erreur : Pas de changeset trouvé lors de l'affichage la requête de pull de "
-"%s."
+"Erreur : Pas de changeset trouvé lors de l'affichage la requête de pull "
+"de %s."
 
 #: kallithea/controllers/pullrequests.py:522
 #, python-format
@@ -435,7 +435,8 @@ msgstr "Cette pull request a été fermée et ne peut pas être mise à jour."
 #: kallithea/controllers/pullrequests.py:543
 #, python-format
 msgid "The following additional changes are available on %s:"
-msgstr "Les modifications additionnelles suivantes sont disponibles sur %s :"
+msgstr ""
+"Les modifications additionnelles suivantes sont disponibles sur %s :"
 
 #: kallithea/controllers/pullrequests.py:545
 #: kallithea/controllers/pullrequests.py:549
@@ -449,7 +450,8 @@ msgstr "Note: La branche %s a une autre tête : %s."
 
 #: kallithea/controllers/pullrequests.py:564
 msgid "Git pull requests don't support iterating yet."
-msgstr "Les itérations des requêtes de pull Git ne sont pas encore supportées."
+msgstr ""
+"Les itérations des requêtes de pull Git ne sont pas encore supportées."
 
 #: kallithea/controllers/pullrequests.py:566
 #, python-format
@@ -974,8 +976,8 @@ msgstr "Le hook existe déjà"
 #: kallithea/controllers/admin/settings.py:357
 msgid "Builtin hooks are read-only. Please use another hook name."
 msgstr ""
-"Les hooks intégrés sont en lecture seule. Merci de choisir un autre nom pour "
-"le hook."
+"Les hooks intégrés sont en lecture seule. Merci de choisir un autre nom "
+"pour le hook."
 
 #: kallithea/controllers/admin/settings.py:360
 msgid "Added new hook"
@@ -1549,8 +1551,8 @@ msgid ""
 "[Comment] %(repo_name)s changeset %(short_id)s \"%(message_short)s\" on "
 "%(branch)s"
 msgstr ""
-"[Commentaire] Changeset %(short_id)s « %(message_short)s » de %(repo_name)s "
-"dans %(branch)s"
+"[Commentaire] Changeset %(short_id)s « %(message_short)s » de "
+"%(repo_name)s dans %(branch)s"
 
 #: kallithea/model/notification.py:168
 #, python-format
@@ -1572,8 +1574,8 @@ msgid ""
 "[Comment] %(repo_name)s PR %(pr_nice_id)s \"%(pr_title_short)s\" from "
 "%(pr_source_branch)s by %(pr_owner_username)s"
 msgstr ""
-"[Commentaire] %(repo_name)s PR %(pr_nice_id)s « %(pr_title_short)s » depuis "
-"%(pr_source_branch)s par %(pr_owner_username)s"
+"[Commentaire] %(repo_name)s PR %(pr_nice_id)s « %(pr_title_short)s » "
+"depuis %(pr_source_branch)s par %(pr_owner_username)s"
 
 #: kallithea/model/notification.py:184
 msgid "Closing"
@@ -1597,8 +1599,8 @@ msgid ""
 "Cannot create pull request - criss cross merge detected, please merge a "
 "later %s revision to %s"
 msgstr ""
-"Impossible de créer la requête de pull : fusion croisée détectée, merci de "
-"fusionner une révision plus vieille de %s vers %s"
+"Impossible de créer la requête de pull : fusion croisée détectée, merci "
+"de fusionner une révision plus vieille de %s vers %s"
 
 #: kallithea/model/pull_request.py:247 kallithea/model/pull_request.py:382
 msgid "You are not authorized to create the pull request"
@@ -1623,8 +1625,8 @@ msgid ""
 "This iteration is based on another %s revision and there is no simple "
 "diff."
 msgstr ""
-"Cette itération est basée sur une autre révision %s et il n'y a pas de diff "
-"simple."
+"Cette itération est basée sur une autre révision %s et il n'y a pas de "
+"diff simple."
 
 #: kallithea/model/pull_request.py:364
 #, python-format
@@ -2598,8 +2600,8 @@ msgid ""
 msgstr ""
 "\n"
 "Les clés API sont utilisées pour permettre à des scripts et des services "
-"d'accéder à %s en utilisant votre compte, comme si vous aviez fourni votre "
-"mot de passe à ces scripts ou services.\n"
+"d'accéder à %s en utilisant votre compte, comme si vous aviez fourni "
+"votre mot de passe à ces scripts ou services.\n"
 
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:86
 msgid ""
@@ -2610,10 +2612,10 @@ msgid ""
 msgstr ""
 "\n"
 "Comme les mots de passe, les clés API ne devraient donc jamais être "
-"diffusées à des tiers, ni passés à des scripts ou services auxquels vous ne "
-"faites pas confiance. Si cette diffusion a tout de même lieu, vous pouvez "
-"réinitialiser la clé API sur cette page pour qu'elle ne puisse plus être "
-"utilisée.\n"
+"diffusées à des tiers, ni passés à des scripts ou services auxquels vous "
+"ne faites pas confiance. Si cette diffusion a tout de même lieu, vous "
+"pouvez réinitialiser la clé API sur cette page pour qu'elle ne puisse "
+"plus être utilisée.\n"
 
 #: kallithea/templates/admin/my_account/my_account_emails.html:9
 #: kallithea/templates/admin/users/user_edit_emails.html:9
@@ -3509,19 +3511,27 @@ msgid "HTML/JavaScript/CSS customization block"
 msgstr "Bloc de personnalisation HTML/JavaScript/CSS"
 
 #: kallithea/templates/admin/settings/settings_global.html:22
+#, fuzzy
+#| msgid ""
+#| "HTML (possibly with                         JavaScript and/or CSS) "
+#| "that will be added to the bottom                         of every "
+#| "page. This can be used for web analytics                         "
+#| "systems like Google Analytics or Piwik, but also "
+#| "to                         perform instance-specific customizations "
+#| "like adding a                         project banner at the top of "
+#| "every page."
 msgid ""
 "HTML (possibly with                         JavaScript and/or CSS) that "
 "will be added to the bottom                         of every page. This "
-"can be used for web analytics                         systems like Google "
-"Analytics or Piwik, but also to                         perform instance-"
-"specific customizations like adding a                         project "
-"banner at the top of every page."
+"can be used for web analytics                         systems, but also "
+"to                         perform instance-specific customizations like "
+"adding a                         project banner at the top of every page."
 msgstr ""
 "HTML (potentiellement avec du JavaScript et/ou du CSS) qui sera ajouté en "
 "bas de chaque page. Cela peut être utilisé pour les systèmes d'analyse de "
-"trafic Web (comme Google Analytics ou Piwik), mais aussi pour effectuer des "
-"personnalisations spécifiques à une instance, comme ajouter une bannière de "
-"projet en haut de chaque page."
+"trafic Web (comme Google Analytics ou Piwik), mais aussi pour effectuer "
+"des personnalisations spécifiques à une instance, comme ajouter une "
+"bannière de projet en haut de chaque page."
 
 #: kallithea/templates/admin/settings/settings_global.html:32
 msgid "ReCaptcha public key"
@@ -3828,12 +3838,13 @@ msgid ""
 "                                                    {repoid} ID of "
 "repository, can be used to construct clone-by-id"
 msgstr ""
-"Modèle de construction d'URL de clone. Par exemple : "
-"'{scheme}://{user}@{netloc}/{repo}'.\n"
+"Modèle de construction d'URL de clone. Par exemple : '{scheme}://{user}"
+"@{netloc}/{repo}'.\n"
 "                                                       Les variables "
 "suivantes sont disponibles :\n"
-"                                                        {scheme}    'http' "
-"ou 'https' envoyé à partir du serveur Kallithea en cours d'utilisation,\n"
+"                                                        {scheme}    "
+"'http' ou 'https' envoyé à partir du serveur Kallithea en cours "
+"d'utilisation,\n"
 "                                                        {user}     nom de "
 "l'utilisateur courant,\n"
 "                                                        {netloc}    "
@@ -4360,7 +4371,8 @@ msgstr "Aucune révision"
 
 #: kallithea/templates/base/root.html:46
 msgid "Type name of user or member to grant permission"
-msgstr "Saisir le nom de l'utilisateur ou du membre à qui donner l'autorisation"
+msgstr ""
+"Saisir le nom de l'utilisateur ou du membre à qui donner l'autorisation"
 
 #: kallithea/templates/base/root.html:47
 msgid "Failed to revoke permission"
@@ -4618,8 +4630,8 @@ msgstr "Changement de statut"
 #: kallithea/templates/changeset/changeset_file_comment.html:86
 msgid "Comments are in plain text. Use @username to notify another user."
 msgstr ""
-"Les commentaires sont en texte brut. Utilisez @nomutilisateur pour envoyer "
-"une notification à un autre utilisateur."
+"Les commentaires sont en texte brut. Utilisez @nomutilisateur pour "
+"envoyer une notification à un autre utilisateur."
 
 #: kallithea/templates/changeset/changeset_file_comment.html:92
 msgid "Set changeset status"
@@ -4888,8 +4900,8 @@ msgid ""
 "This account is however managed outside this system and the password "
 "cannot be changed here."
 msgstr ""
-"Cependant, ce compte est géré hors de ce système et le mot de passe ne peut "
-"pas être changé ici."
+"Cependant, ce compte est géré hors de ce système et le mot de passe ne "
+"peut pas être changé ici."
 
 #: kallithea/templates/email_templates/password_reset.html:28
 msgid "To set a new password, click the following link"
