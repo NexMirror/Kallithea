@@ -16,8 +16,9 @@
           <span data-toggle="tooltip" title="${h.fmt_date(co.modified_at)}">
               ${h.age(co.modified_at)}
               %if co.pull_request:
+                <a href="${co.url()}">${_("comment")}</a>
                 ${_('on pull request')}
-                <a href="${co.url()}">"${co.pull_request.title or _("No title")}"</a>
+                <a href="${co.pull_request.url()}">"${co.pull_request.title or _("No title")}"</a>
               %else:
                 ${_('on this changeset')}
               %endif
