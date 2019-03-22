@@ -540,8 +540,8 @@ div.form div.form-group div.highlight,
   top: 4px;
   margin: -10px 2px 0;
 }
-/** comment inline **/
-.inline-comments {
+/** indent actual inline comments - not general comments **/
+td.inline-comments {
   padding: 5px;
 }
 .inline-comments .comments-number {
@@ -692,6 +692,7 @@ div.comment-prev-next-links div.next-comment {
 #updaterevs-table {
   .make-xs-column-offset(1);
   .make-xs-column(11);
+  padding: 0;
 }
 
 /* use bootstrap grid columns for centered columns */
@@ -753,6 +754,7 @@ div.comment-prev-next-links div.next-comment {
   max-width: @container-md;
   .form-horizontal;
   .make-sm-column(10);
+  padding-left: 0;
   .form-group > label {
     .make-sm-column(2);
   }
@@ -762,11 +764,13 @@ div.comment-prev-next-links div.next-comment {
 }
 #summary-menu-stats {
   .make-sm-column(2);
+  padding-right: 0;
 }
 
 /* use columns and form-horizontal for pull request page */
 .pr-box {
   .make-sm-column(9);
+  padding-left: 0;
   max-width: @container-md;
   #pr-summary {
     .form-horizontal;
@@ -784,6 +788,7 @@ div.comment-prev-next-links div.next-comment {
 }
 .pr-reviewers-box {
   .make-sm-column(3);
+  padding-right: 0;
 }
 
 /* repo table icons */
