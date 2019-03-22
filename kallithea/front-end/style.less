@@ -90,6 +90,8 @@ nav.navbar.mainmenu > .navbar-header > .navbar-brand {
   overflow-x: visible;
 }
 
+/* margin below PR comments */
+.comment > .panel,
 /* margin below top level panels */
 #main > .panel {
   margin-bottom: @kallithea-panel-margin;
@@ -546,6 +548,9 @@ td.inline-comments {
 }
 .inline-comments .comments-number {
   padding: 0px 0px 10px 0px;
+}
+.comment-inline-well {
+  margin-bottom: @kallithea-panel-margin;
 }
 input.status_change_checkbox,
 input.status_change_radio {
