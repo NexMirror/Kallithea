@@ -46,6 +46,7 @@ from kallithea.model.db import ChangesetComment, ChangesetStatus
 from kallithea.model.comment import ChangesetCommentsModel
 from kallithea.model.changeset_status import ChangesetStatusModel
 from kallithea.model.meta import Session
+from kallithea.model.pull_request import PullRequestModel
 from kallithea.model.repo import RepoModel
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.utils2 import safe_unicode
@@ -213,9 +214,9 @@ def create_cs_pr_comment(repo_name, revision=None, pull_request=None, allowed_to
             h.flash(_('Successfully deleted pull request %s') % pull_request_id,
                     category='success')
             return {
-               'location': url('my_pullrequests'), # or repo pr list?
+               'location': h.url('my_pullrequests'), # or repo pr list?
             }
-            raise HTTPFound(location=url('my_pullrequests')) # or repo pr list?
+            raise HTTPFound(location=h.url('my_pullrequests')) # or repo pr list?
         raise HTTPForbidden()
 
     text = request.POST.get('text', '').strip()
