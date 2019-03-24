@@ -818,9 +818,13 @@ div.comment-prev-next-links div.next-comment {
     text-overflow: ellipsis;
     white-space: nowrap;
     vertical-align: baseline;
+    &:last-child {
+      padding-right: 0;
+    }
   }
   .checkbox-column {
-    width: 24px;
+    width: 20px;
+    padding: 0;
     /* the optional second checkbox will be inline-block but should wrap to a new line */
     white-space: normal;
     > input[type=checkbox] {
