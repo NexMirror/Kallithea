@@ -15,6 +15,7 @@
 
           <span data-toggle="tooltip" title="${h.fmt_date(co.modified_at)}">
               ${h.age(co.modified_at)}
+          </span>
               %if co.pull_request:
                 <a href="${co.url()}">${_("comment")}</a>
                 ${_('on pull request')}
@@ -23,7 +24,6 @@
                 ${_('on this changeset')}
               %endif
               <a class="permalink" href="${co.url()}">&para;</a>
-          </span>
 
           %if co.author_id == request.authuser.user_id or h.HasRepoPermissionLevel('admin')(c.repo_name):
             %if co.deletable():
