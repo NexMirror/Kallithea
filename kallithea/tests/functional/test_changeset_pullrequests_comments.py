@@ -2,7 +2,7 @@ import re
 
 from kallithea.tests.base import *
 from kallithea.model.changeset_status import ChangesetStatusModel
-from kallithea.model.db import ChangesetComment
+from kallithea.model.db import ChangesetComment, PullRequest
 from kallithea.model.meta import Session
 
 
@@ -310,3 +310,68 @@ class TestPullrequestsCommentsController(TestController):
             ''' 1 comment (0 inline, 1 general)'''
         )
         response.mustcontain(no=text)
+
+    def test_close_pr(self):
+        self.log_user()
+        pr_id = self._create_pr()
+
+        text = u'general comment on pullrequest'
+        params = {'text': text, 'save_close': 'close',
+                '_authentication_token': self.authentication_token()}
+        response = self.app.post(url(controller='pullrequests', action='comment',
+                                     repo_name=HG_REPO, pull_request_id=pr_id),
+                                     params=params, extra_environ={'HTTP_X_PARTIAL_XHR': '1'})
+        # Test response...
+        assert response.status == '200 OK'
+
+        response = self.app.get(url(controller='pullrequests', action='show',
+                                repo_name=HG_REPO, pull_request_id=pr_id, extra=''))
+        response.mustcontain(
+            '''title (Closed)'''
+        )
+        response.mustcontain(text)
+
+        # test DB
+        assert PullRequest.get(pr_id).status == PullRequest.STATUS_CLOSED
+
+    def test_delete_pr(self):
+        self.log_user()
+        pr_id = self._create_pr()
+
+        text = u'general comment on pullrequest'
+        params = {'text': text, 'save_delete': 'delete',
+                '_authentication_token': self.authentication_token()}
+        response = self.app.post(url(controller='pullrequests', action='comment',
+                                     repo_name=HG_REPO, pull_request_id=pr_id),
+                                     params=params, extra_environ={'HTTP_X_PARTIAL_XHR': '1'})
+        # Test response...
+        assert response.status == '200 OK'
+
+        response = self.app.get(url(controller='pullrequests', action='show',
+                                repo_name=HG_REPO, pull_request_id=pr_id, extra=''), status=404)
+
+        # test DB
+        assert PullRequest.get(pr_id) is None
+
+    def test_delete_closed_pr(self):
+        self.log_user()
+        pr_id = self._create_pr()
+
+        # first close
+        text = u'general comment on pullrequest'
+        params = {'text': text, 'save_close': 'close',
+                '_authentication_token': self.authentication_token()}
+        response = self.app.post(url(controller='pullrequests', action='comment',
+                                     repo_name=HG_REPO, pull_request_id=pr_id),
+                                     params=params, extra_environ={'HTTP_X_PARTIAL_XHR': '1'})
+        assert response.status == '200 OK'
+
+        # attempt delete, should fail
+        params = {'text': text, 'save_delete': 'delete',
+                '_authentication_token': self.authentication_token()}
+        response = self.app.post(url(controller='pullrequests', action='comment',
+                                     repo_name=HG_REPO, pull_request_id=pr_id),
+                                     params=params, extra_environ={'HTTP_X_PARTIAL_XHR': '1'}, status=403)
+
+        # verify that PR still exists, in closed state
+        assert PullRequest.get(pr_id).status == PullRequest.STATUS_CLOSED
