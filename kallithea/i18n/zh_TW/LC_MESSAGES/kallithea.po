@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
-"POT-Creation-Date: 2019-03-20 20:53+0100\n"
+"POT-Creation-Date: 2019-03-26 22:07+0100\n"
 "PO-Revision-Date: 2017-03-10 18:26+0000\n"
 "Last-Translator: mao <mao@lins.fju.edu.tw>\n"
 "Language-Team: Chinese (Traditional) <https://hosted.weblate.org/projects/"
@@ -41,32 +41,32 @@ msgstr "無"
 msgid "(closed)"
 msgstr "（已關閉）"
 
-#: kallithea/controllers/changeset.py:82
+#: kallithea/controllers/changeset.py:83
 msgid "Show whitespace"
 msgstr "顯示空格"
 
-#: kallithea/controllers/changeset.py:89
-#: kallithea/controllers/changeset.py:96
+#: kallithea/controllers/changeset.py:90
+#: kallithea/controllers/changeset.py:97
 #: kallithea/templates/files/diff_2way.html:55
 msgid "Ignore whitespace"
 msgstr "忽略空格"
 
-#: kallithea/controllers/changeset.py:162
+#: kallithea/controllers/changeset.py:163
 #, python-format
 msgid "Increase diff context to %(num)s lines"
 msgstr "增加 diff 上下文至 %(num)s 行"
 
-#: kallithea/controllers/changeset.py:202
+#: kallithea/controllers/changeset.py:203
 #, fuzzy
 msgid "No permission to change status"
 msgstr "尚未有任何變更"
 
-#: kallithea/controllers/changeset.py:213
+#: kallithea/controllers/changeset.py:214
 #, fuzzy, python-format
 msgid "Successfully deleted pull request %s"
 msgstr "成功遞交至 %s"
 
-#: kallithea/controllers/changeset.py:320 kallithea/controllers/files.py:97
+#: kallithea/controllers/changeset.py:321 kallithea/controllers/files.py:97
 #: kallithea/controllers/files.py:117 kallithea/controllers/files.py:727
 msgid "Such revision does not exist for this repository"
 msgstr ""
@@ -463,12 +463,12 @@ msgstr ""
 msgid "An error occurred during search operation."
 msgstr ""
 
-#: kallithea/controllers/summary.py:177
+#: kallithea/controllers/summary.py:179
 #: kallithea/templates/summary/summary.html:395
 msgid "No data ready yet"
 msgstr ""
 
-#: kallithea/controllers/summary.py:180
+#: kallithea/controllers/summary.py:182
 #: kallithea/templates/summary/summary.html:89
 msgid "Statistics are disabled for this repository"
 msgstr "這個版本庫的統計功能已停用"
@@ -2223,7 +2223,7 @@ msgstr ""
 
 #: kallithea/templates/admin/gists/edit.html:146
 #: kallithea/templates/base/root.html:27
-#: kallithea/templates/changeset/changeset_file_comment.html:129
+#: kallithea/templates/changeset/changeset_file_comment.html:130
 msgid "Cancel"
 msgstr ""
 
@@ -2331,8 +2331,8 @@ msgstr ""
 #: kallithea/templates/admin/settings/settings_hooks.html:30
 #: kallithea/templates/admin/users/user_edit_emails.html:23
 #: kallithea/templates/admin/users/user_edit_ips.html:21
-#: kallithea/templates/changeset/changeset_file_comment.html:29
-#: kallithea/templates/changeset/changeset_file_comment.html:120
+#: kallithea/templates/changeset/changeset_file_comment.html:30
+#: kallithea/templates/changeset/changeset_file_comment.html:121
 #: kallithea/templates/data_table/_dt_elements.html:69
 #: kallithea/templates/data_table/_dt_elements.html:89
 #: kallithea/templates/data_table/_dt_elements.html:91
@@ -4078,7 +4078,7 @@ msgid "Retry"
 msgstr ""
 
 #: kallithea/templates/base/root.html:29
-#: kallithea/templates/changeset/changeset_file_comment.html:64
+#: kallithea/templates/changeset/changeset_file_comment.html:65
 msgid "Submitting ..."
 msgstr ""
 
@@ -4386,87 +4386,93 @@ msgstr[0] ""
 msgid "Show full diff anyway"
 msgstr ""
 
-#: kallithea/templates/changeset/changeset_file_comment.html:19
+#: kallithea/templates/changeset/changeset_file_comment.html:20
+#, fuzzy
+#| msgid "%s committed on %s"
+msgid "comment"
+msgstr "%s 評論於 %s"
+
+#: kallithea/templates/changeset/changeset_file_comment.html:21
 msgid "on pull request"
 msgstr ""
 
-#: kallithea/templates/changeset/changeset_file_comment.html:20
+#: kallithea/templates/changeset/changeset_file_comment.html:22
 #, fuzzy
 msgid "No title"
 msgstr "沒有檔案"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:22
+#: kallithea/templates/changeset/changeset_file_comment.html:24
 #, fuzzy
 msgid "on this changeset"
 msgstr "沒有修改"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:29
+#: kallithea/templates/changeset/changeset_file_comment.html:30
 msgid "Delete comment?"
 msgstr ""
 
-#: kallithea/templates/changeset/changeset_file_comment.html:37
-#: kallithea/templates/changeset/changeset_file_comment.html:70
+#: kallithea/templates/changeset/changeset_file_comment.html:38
+#: kallithea/templates/changeset/changeset_file_comment.html:71
 #, fuzzy
 msgid "Status change"
 msgstr "多個檔案修改"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:86
+#: kallithea/templates/changeset/changeset_file_comment.html:87
 msgid "Comments are in plain text. Use @username to notify another user."
 msgstr ""
 
-#: kallithea/templates/changeset/changeset_file_comment.html:92
+#: kallithea/templates/changeset/changeset_file_comment.html:93
 #, fuzzy
 msgid "Set changeset status"
 msgstr "尚未有任何變更"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:94
+#: kallithea/templates/changeset/changeset_file_comment.html:95
 msgid "Vote for pull request status"
 msgstr ""
 
-#: kallithea/templates/changeset/changeset_file_comment.html:100
+#: kallithea/templates/changeset/changeset_file_comment.html:101
 #: kallithea/templates/changeset/diff_block.html:46
 #, fuzzy
 msgid "No change"
 msgstr "沒有修改"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:113
+#: kallithea/templates/changeset/changeset_file_comment.html:114
 #, fuzzy
 msgid "Finish pull request"
 msgstr "文件內容"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:116
+#: kallithea/templates/changeset/changeset_file_comment.html:117
 msgid "Close"
 msgstr ""
 
-#: kallithea/templates/changeset/changeset_file_comment.html:128
+#: kallithea/templates/changeset/changeset_file_comment.html:129
 msgid "Comment"
 msgstr ""
 
-#: kallithea/templates/changeset/changeset_file_comment.html:136
+#: kallithea/templates/changeset/changeset_file_comment.html:137
 msgid "You need to be logged in to comment."
 msgstr ""
 
-#: kallithea/templates/changeset/changeset_file_comment.html:136
+#: kallithea/templates/changeset/changeset_file_comment.html:137
 msgid "Login now"
 msgstr ""
 
-#: kallithea/templates/changeset/changeset_file_comment.html:140
+#: kallithea/templates/changeset/changeset_file_comment.html:141
 msgid "Hide"
 msgstr ""
 
-#: kallithea/templates/changeset/changeset_file_comment.html:152
+#: kallithea/templates/changeset/changeset_file_comment.html:153
 #, python-format
 msgid "%d comment"
 msgid_plural "%d comments"
 msgstr[0] ""
 
-#: kallithea/templates/changeset/changeset_file_comment.html:153
+#: kallithea/templates/changeset/changeset_file_comment.html:154
 #, python-format
 msgid "%d inline"
 msgid_plural "%d inline"
 msgstr[0] ""
 
-#: kallithea/templates/changeset/changeset_file_comment.html:154
+#: kallithea/templates/changeset/changeset_file_comment.html:155
 #, python-format
 msgid "%d general"
 msgid_plural "%d general"

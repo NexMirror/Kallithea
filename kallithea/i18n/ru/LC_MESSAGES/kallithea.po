@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
-"POT-Creation-Date: 2019-03-20 20:53+0100\n"
+"POT-Creation-Date: 2019-03-26 22:07+0100\n"
 "PO-Revision-Date: 2017-01-05 14:58+0000\n"
 "Last-Translator: Andrej Shadura <andrew@shadura.me>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/kallithea/"
@@ -52,33 +52,33 @@ msgstr "Ничего"
 msgid "(closed)"
 msgstr "(закрыто)"
 
-#: kallithea/controllers/changeset.py:82
+#: kallithea/controllers/changeset.py:83
 msgid "Show whitespace"
 msgstr "Отображать пробелы"
 
-#: kallithea/controllers/changeset.py:89
-#: kallithea/controllers/changeset.py:96
+#: kallithea/controllers/changeset.py:90
+#: kallithea/controllers/changeset.py:97
 #: kallithea/templates/files/diff_2way.html:55
 msgid "Ignore whitespace"
 msgstr "Игнорировать пробелы"
 
-#: kallithea/controllers/changeset.py:162
+#: kallithea/controllers/changeset.py:163
 #, python-format
 msgid "Increase diff context to %(num)s lines"
 msgstr "Увеличить контекст до %(num)s строк"
 
-#: kallithea/controllers/changeset.py:202
+#: kallithea/controllers/changeset.py:203
 #, fuzzy
 #| msgid "No permissions defined yet"
 msgid "No permission to change status"
 msgstr "Привилегии еще не назначены"
 
-#: kallithea/controllers/changeset.py:213
+#: kallithea/controllers/changeset.py:214
 #, fuzzy, python-format
 msgid "Successfully deleted pull request %s"
 msgstr "Pull-запрос успешно удалён"
 
-#: kallithea/controllers/changeset.py:320 kallithea/controllers/files.py:97
+#: kallithea/controllers/changeset.py:321 kallithea/controllers/files.py:97
 #: kallithea/controllers/files.py:117 kallithea/controllers/files.py:727
 msgid "Such revision does not exist for this repository"
 msgstr "Нет такой ревизии в этом репозитории"
@@ -492,12 +492,12 @@ msgstr ""
 msgid "An error occurred during search operation."
 msgstr "Произошла ошибка при выполнении этого поиска."
 
-#: kallithea/controllers/summary.py:177
+#: kallithea/controllers/summary.py:179
 #: kallithea/templates/summary/summary.html:395
 msgid "No data ready yet"
 msgstr "Нет данных"
 
-#: kallithea/controllers/summary.py:180
+#: kallithea/controllers/summary.py:182
 #: kallithea/templates/summary/summary.html:89
 msgid "Statistics are disabled for this repository"
 msgstr "Статистические данные отключены для этого репозитария"
@@ -2331,7 +2331,7 @@ msgstr "Обновить"
 
 #: kallithea/templates/admin/gists/edit.html:146
 #: kallithea/templates/base/root.html:27
-#: kallithea/templates/changeset/changeset_file_comment.html:129
+#: kallithea/templates/changeset/changeset_file_comment.html:130
 msgid "Cancel"
 msgstr "Отмена"
 
@@ -2439,8 +2439,8 @@ msgstr ""
 #: kallithea/templates/admin/settings/settings_hooks.html:30
 #: kallithea/templates/admin/users/user_edit_emails.html:23
 #: kallithea/templates/admin/users/user_edit_ips.html:21
-#: kallithea/templates/changeset/changeset_file_comment.html:29
-#: kallithea/templates/changeset/changeset_file_comment.html:120
+#: kallithea/templates/changeset/changeset_file_comment.html:30
+#: kallithea/templates/changeset/changeset_file_comment.html:121
 #: kallithea/templates/data_table/_dt_elements.html:69
 #: kallithea/templates/data_table/_dt_elements.html:89
 #: kallithea/templates/data_table/_dt_elements.html:91
@@ -4197,7 +4197,7 @@ msgid "Retry"
 msgstr ""
 
 #: kallithea/templates/base/root.html:29
-#: kallithea/templates/changeset/changeset_file_comment.html:64
+#: kallithea/templates/changeset/changeset_file_comment.html:65
 msgid "Submitting ..."
 msgstr "Применение..."
 
@@ -4515,76 +4515,82 @@ msgstr[2] "%s файлов изменёно: %s добавлений, %s уда�
 msgid "Show full diff anyway"
 msgstr "Показать полный diff"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:19
+#: kallithea/templates/changeset/changeset_file_comment.html:20
+#, fuzzy
+#| msgid "Comment"
+msgid "comment"
+msgstr "Комментировать"
+
+#: kallithea/templates/changeset/changeset_file_comment.html:21
 #, fuzzy
 msgid "on pull request"
 msgstr "Комментарий в pull-запросе"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:20
+#: kallithea/templates/changeset/changeset_file_comment.html:22
 msgid "No title"
 msgstr "Нет заголовка"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:22
+#: kallithea/templates/changeset/changeset_file_comment.html:24
 #, fuzzy
 msgid "on this changeset"
 msgstr "Нет изменений"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:29
+#: kallithea/templates/changeset/changeset_file_comment.html:30
 msgid "Delete comment?"
 msgstr "Удалить комментарий?"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:37
-#: kallithea/templates/changeset/changeset_file_comment.html:70
+#: kallithea/templates/changeset/changeset_file_comment.html:38
+#: kallithea/templates/changeset/changeset_file_comment.html:71
 #, fuzzy
 msgid "Status change"
 msgstr "Последние изменения"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:86
+#: kallithea/templates/changeset/changeset_file_comment.html:87
 #, fuzzy
 msgid "Comments are in plain text. Use @username to notify another user."
 msgstr ""
 "Используйте @имя_пользователя в тексте, чтобы отправить оповещение "
 "указанному пользователю."
 
-#: kallithea/templates/changeset/changeset_file_comment.html:92
+#: kallithea/templates/changeset/changeset_file_comment.html:93
 msgid "Set changeset status"
 msgstr "Изменить статус ревизии"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:94
+#: kallithea/templates/changeset/changeset_file_comment.html:95
 msgid "Vote for pull request status"
 msgstr ""
 
-#: kallithea/templates/changeset/changeset_file_comment.html:100
+#: kallithea/templates/changeset/changeset_file_comment.html:101
 #: kallithea/templates/changeset/diff_block.html:46
 msgid "No change"
 msgstr "Без изменений"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:113
+#: kallithea/templates/changeset/changeset_file_comment.html:114
 #, fuzzy
 msgid "Finish pull request"
 msgstr "Комментарий в pull-запросе"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:116
+#: kallithea/templates/changeset/changeset_file_comment.html:117
 msgid "Close"
 msgstr "Закрыть"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:128
+#: kallithea/templates/changeset/changeset_file_comment.html:129
 msgid "Comment"
 msgstr "Комментировать"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:136
+#: kallithea/templates/changeset/changeset_file_comment.html:137
 msgid "You need to be logged in to comment."
 msgstr "Вам необходимо авторизоваться, чтобы оставлять комментарии."
 
-#: kallithea/templates/changeset/changeset_file_comment.html:136
+#: kallithea/templates/changeset/changeset_file_comment.html:137
 msgid "Login now"
 msgstr "Авторизоваться сейчас"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:140
+#: kallithea/templates/changeset/changeset_file_comment.html:141
 msgid "Hide"
 msgstr "Скрыть"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:152
+#: kallithea/templates/changeset/changeset_file_comment.html:153
 #, python-format
 msgid "%d comment"
 msgid_plural "%d comments"
@@ -4592,7 +4598,7 @@ msgstr[0] "%d комментарий"
 msgstr[1] "%d комментария"
 msgstr[2] "%d комментариев"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:153
+#: kallithea/templates/changeset/changeset_file_comment.html:154
 #, python-format
 msgid "%d inline"
 msgid_plural "%d inline"
@@ -4600,7 +4606,7 @@ msgstr[0] "%d к строке"
 msgstr[1] "%d к строкам"
 msgstr[2] "%d к строкам"
 
-#: kallithea/templates/changeset/changeset_file_comment.html:154
+#: kallithea/templates/changeset/changeset_file_comment.html:155
 #, python-format
 msgid "%d general"
 msgid_plural "%d general"
