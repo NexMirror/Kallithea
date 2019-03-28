@@ -410,18 +410,19 @@ class GitChangeset(BaseChangeset):
         filenodes = []
         als = self.repository.alias
         for name, stat, id in tree.iteritems():
-            if objects.S_ISGITLINK(stat):
-                cf = ConfigFile.from_file(BytesIO(self.repository._repo.get_object(tree['.gitmodules'][1]).data))
-                url = cf.get(('submodule', name), 'url')
-                dirnodes.append(SubModuleNode(name, url=url, changeset=id,
-                                              alias=als))
-                continue
-
-            obj = self.repository._repo.get_object(id)
             if path != '':
                 obj_path = '/'.join((path, name))
             else:
                 obj_path = name
+            if objects.S_ISGITLINK(stat):
+                root_tree = self.repository._repo[self._tree_id]
+                cf = ConfigFile.from_file(BytesIO(self.repository._repo.get_object(root_tree['.gitmodules'][1]).data))
+                url = cf.get(('submodule', obj_path), 'url')
+                dirnodes.append(SubModuleNode(obj_path, url=url, changeset=id,
+                                              alias=als))
+                continue
+
+            obj = self.repository._repo.get_object(id)
             if obj_path not in self._stat_modes:
                 self._stat_modes[obj_path] = stat
             if isinstance(obj, objects.Tree):
