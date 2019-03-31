@@ -1,77 +1,41 @@
-## Changesets table !
-<div class="container">
+## Changesets table with graph
+<%namespace name="changelog_table" file="/changelog/changelog_table.html"/>
+<div>
   %if not c.cs_ranges:
-    <span class="empty_data">${_('No changesets')}</span>
+    <span class="text-muted">${_('No changesets')}</span>
   %else:
 
-    %if c.ancestor:
-    <div class="ancestor">${_('Ancestor')}:
-      ${h.link_to(h.short_id(c.ancestor),h.url('changeset_home',repo_name=c.repo_name,revision=c.ancestor))}
-    </div>
+    %if c.ancestors:
+      <div class="ancestor">
+        %if len(c.ancestors) > 1:
+        <div class="text-danger">
+          ${_('Criss cross merge situation with multiple merge ancestors detected!')}
+        </div>
+        <div>
+          ${_('Please merge the target branch to your branch before creating a pull request.')}
+        </div>
+        %endif
+        <div>
+          ${_('Merge Ancestor')}:
+          %for ancestor in c.ancestors:
+            ${h.link_to(h.short_id(ancestor),h.url('changeset_home',repo_name=c.repo_name,revision=ancestor), class_="changeset_hash")}
+          %endfor
+        </div>
+      </div>
     %endif
 
     <div id="graph_nodes">
-        <canvas id="graph_canvas" style="width:0"></canvas>
+        <canvas id="graph_canvas"></canvas>
     </div>
 
-    <div id="graph_content_pr" style="margin-left: 100px;">
-
-    <table class="compare_view_commits noborder">
-    %for cnt, cs in enumerate(reversed(c.cs_ranges)):
-        <tr id="chg_${cnt+1}">
-        <td style="width:50px">
-          %if cs.raw_id in c.statuses:
-            <div title="${_('Changeset status: %s') % c.statuses[cs.raw_id][1]}" class="changeset-status-ico">
-                <i class="icon-circle changeset-status-${c.statuses[cs.raw_id][0]}"></i>
-            </div>
-          %endif
-          %if c.cs_comments.get(cs.raw_id):
-              <div class="comments-container">
-                  <div class="comments-cnt" title="${_('Changeset has comments')}">
-                      <a href="${c.cs_comments[cs.raw_id][0].url()}">
-                          ${len(c.cs_comments[cs.raw_id])}
-                          <i class="icon-comment"></i>
-                      </a>
-                  </div>
-              </div>
-          %endif
-        </td>
-        <td class="changeset-logical-index">
-          <%
-              num_cs = len(c.cs_ranges)
-              index = num_cs - cnt
-              if index == 1:
-                  title = _('First (oldest) changeset in this list')
-              elif index == num_cs:
-                  title = _('Last (most recent) changeset in this list')
-              else:
-                  title = _('Position in this list of changesets')
-          %>
-          <span class="tooltip" title="${title}">
-            ${index}
-          </span>
-        </td>
-        <td style="width: 140px"><span class="tooltip" title="${h.age(cs.date)}">${cs.date}</span></td>
-        <td><div class="gravatar" commit_id="${cs.raw_id}">${h.gravatar(h.email_or_none(cs.author), size=14)}</div></td>
-        <td><div class="author">${h.person(cs.author)}</div></td>
-        <td>${h.link_to(h.show_id(cs),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}</td>
-        <td>
-        %if cs.branch:
-        <span class="branchtag">${h.link_to(cs.branch,h.url('changelog_home',repo_name=c.cs_repo.repo_name,branch=cs.branch))}</span>
-        %endif
-        </td>
-        <td class="expand_commit" commit_id="${cs.raw_id}" title="${_('Expand commit message')}">
-            <i class="icon-align-left" style="color:#999"></i>
-        </td>
-        <td><div id="C-${cs.raw_id}" class="message">${h.urlify_commit(cs.message, c.repo_name)}</div></td>
-        </tr>
-    %endfor
-    </table>
-
+    <div id="graph_content_pr">
+      ${changelog_table.changelog(c.cs_repo.repo_name, list(reversed(c.cs_ranges)), c.cs_statuses, c.cs_comments,
+                                  show_index=True,
+                                  resize_js='graph.render(jsdata)')}
     </div>
 
-    %if c.as_form:
-      <div style="font-size:1.1em;font-weight: bold;clear:both;padding-top:10px">
+    %if c.is_ajax_preview:
+      <h5>
       ## links should perhaps use ('rev', c.a_rev) instead ...
       ${h.link_to(_('Show merge diff'),
         h.url('compare_url',
@@ -81,19 +45,11 @@
           other_ref_type=c.cs_ref_type, other_ref_name=c.cs_ref_name,
           merge='1')
         )}
-      </div>
-      <div style="font-size:1.1em;font-weight: bold;clear:both;padding-top:10px">
-        ${_('Common ancestor')}:
-        %if c.ancestor:
-        ${h.link_to(h.short_id(c.ancestor),h.url('changeset_home',repo_name=c.repo_name,revision=c.ancestor))}
-        %else:
-        ${_('No common ancestor found - repositories are unrelated')}
-        %endif
-      </div>
+      </h5>
     %endif
     %if c.cs_ranges_org is not None:
       ## TODO: list actual changesets?
-      <div style="font-size:1.1em;font-weight: bold;clear:both;padding-top:10px">
+      <div>
         ${h.link_to_ref(c.cs_repo.repo_name, c.cs_ref_type, c.cs_ref_name, c.cs_rev)}
         ${_('is')}
         <a href="${c.swap_url}">${_('%s changesets') % (len(c.cs_ranges_org))}</a>
@@ -104,31 +60,26 @@
   %endif
 </div>
 
-%if c.as_form:
-<div id="jsdata" style="display:none">${c.jsdata|n}</div>
+%if c.is_ajax_preview:
+<div id="jsdata" style="display:none">${h.js(c.jsdata)}</div>
 %else:
 <script type="text/javascript" src="${h.url('/js/graph.js', ver=c.kallithea_version)}"></script>
 %endif
 
 <script type="text/javascript">
+    var jsdata = ${h.js(c.jsdata)};
+    var graph = new BranchRenderer('graph_canvas', 'graph_content_pr', 'chg_');
 
     $(document).ready(function(){
-%if not c.as_form:
-        var jsdata = ${c.jsdata|n};
-        var r = new BranchRenderer('graph_canvas', 'graph_content_pr', 'chg_');
-        r.render(jsdata,100);
-%endif
+        graph.render(jsdata);
 
         $('.expand_commit').click(function(e){
-            var cid = $(this).attr('commit_id');
-            $('#C-'+cid).toggleClass('expanded');
-            r.render(jsdata,100);
+            $(this).next('.mid').find('.message').toggleClass('expanded');
+            graph.render(jsdata);
         });
-
-        $('.gravatar').click(function(e){
-            var cid = $(this).attr('commit_id');
-            $('#row-'+cid).toggleClass('hl', !$('#row-'+cid).hasClass('hl'));
-        });
+    });
+    $(window).resize(function(){
+        graph.render(jsdata);
     });
 
 </script>

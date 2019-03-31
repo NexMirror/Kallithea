@@ -1,12 +1,12 @@
 .. _installation_win_old:
 
-======================================================================
-Installation and upgrade on Windows (XP/Vista/Server 2003/Server 2008)
-======================================================================
+==========================================================
+Installation on Windows (XP/Vista/Server 2003/Server 2008)
+==========================================================
 
 
 First-time install
-::::::::::::::::::
+------------------
 
 Target OS: Windows XP SP3 32-bit English (Clean installation)
 + All Windows Updates until 24-may-2012
@@ -24,7 +24,7 @@ Target OS: Windows XP SP3 32-bit English (Clean installation)
    - http://bugs.python.org/issue7511
 
 Step 1 -- Install Visual Studio 2008 Express
---------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Optional: You can also install MinGW, but VS2008 installation is easier.
 
@@ -58,7 +58,7 @@ choose "Visual C++ 2008 Express" when installing.
    Copy C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\bin\vcvars64.bat to C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\bin\amd64\vcvarsamd64.bat
 
 Step 2 -- Install Python
-------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 Install Python 2.x.y (x = 6 or 7) x86 version (32-bit). DO NOT USE A 3.x version.
 Download Python 2.x.y from:
@@ -74,7 +74,7 @@ be needed in the next step. In this case, it is "2.7".
    64-bit: Just download and install the 64-bit version of python.
 
 Step 3 -- Install Win32py extensions
-------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Download pywin32 from:
 http://sourceforge.net/projects/pywin32/files/
@@ -93,7 +93,7 @@ http://sourceforge.net/projects/pywin32/files/
      http://sourceforge.net/projects/pywin32/files/pywin32/Build%20218/pywin32-218.win-amd64-py2.7.exe/download
 
 Step 4 -- Python BIN
---------------------
+^^^^^^^^^^^^^^^^^^^^
 
 Add Python BIN folder to the path
 
@@ -120,7 +120,7 @@ that came preinstalled in Vista/7 and can be installed in Windows XP.
   Typically: C:\\Python27
 
 Step 5 -- Kallithea folder structure
-------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Create a Kallithea folder structure
 
@@ -137,7 +137,7 @@ Create the following folder structure::
   C:\Kallithea\Repos
 
 Step 6 -- Install virtualenv
-----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Install Virtual Env for Python
 
@@ -157,7 +157,7 @@ where you downloaded "virtualenv.py", and write::
 to include it)
 
 Step 7 -- Install Kallithea
----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Finally, install Kallithea
 
@@ -183,7 +183,7 @@ In that CMD (loaded with VS2008 PATHs) type::
 
   cd C:\Kallithea\Env\Scripts (or similar)
   activate
-  pip install --upgrade pip "setuptools<34"
+  pip install --upgrade pip setuptools
 
 The prompt will change into "(Env) C:\\Kallithea\\Env\\Scripts" or similar
 (depending of your folder structure). Then type::
@@ -195,7 +195,7 @@ The prompt will change into "(Env) C:\\Kallithea\\Env\\Scripts" or similar
 Some warnings will appear, don't worry as they are normal.
 
 Step 8 -- Configuring Kallithea
--------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 steps taken from http://packages.python.org/Kallithea/setup.html
 
@@ -204,9 +204,9 @@ if you closed it reopen it following the same commands (including the
 "activate" one). When ready, just type::
 
   cd C:\Kallithea\Bin
-  paster make-config Kallithea production.ini
+  kallithea-cli config-create my.ini
 
-Then, you must edit production.ini to fit your needs (network address and
+Then, you must edit my.ini to fit your needs (network address and
 port, mail settings, database, whatever). I recommend using NotePad++
 (free) or similar text editor, as it handles well the EndOfLine
 character differences between Unix and Windows
@@ -215,10 +215,11 @@ character differences between Unix and Windows
 For the sake of simplicity lets run it with the default settings. After
 your edits (if any), in the previous Command Prompt, type::
 
- paster setup-db production.ini
+  kallithea-cli db-create -c my.ini
 
-(this time a NEW database will be installed, you must follow a different
-step to later UPGRADE to a newer Kallithea version)
+.. warning:: This time a *new* database will be installed. You must
+             follow a different process to later :ref:`upgrade <upgrade>`
+             to a newer Kallithea version.
 
 The script will ask you for confirmation about creating a NEW database,
 answer yes (y)
@@ -233,12 +234,12 @@ If you make some mistake and the script does not end, don't worry, start
 it again.
 
 Step 9 -- Running Kallithea
----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In the previous command prompt, being in the C:\\Kallithea\\Bin folder,
 just type::
 
- paster serve production.ini
+ gearbox serve -c my.ini
 
 Open yout web server, and go to http://127.0.0.1:5000
 
@@ -260,23 +261,3 @@ What this Guide does not cover:
 - Using Apache. You can investigate here:
 
   - https://groups.google.com/group/rhodecode/msg/c433074e813ffdc4
-
-
-Upgrading
-:::::::::
-
-Stop running Kallithea
-Open a CommandPrompt like in Step7 (VS2008 path + activate) and type::
-
- easy_install -U kallithea
- cd \Kallithea\Bin
-
-{ backup your production.ini file now} ::
-
- paster make-config Kallithea production.ini
-
-(check changes and update your production.ini accordingly) ::
-
- paster upgrade-db production.ini (update database)
-
-Full steps in http://packages.python.org/Kallithea/upgrade.html

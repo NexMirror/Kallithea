@@ -20,7 +20,8 @@ import re
 import formencode
 import logging
 from collections import defaultdict
-from pylons.i18n.translation import _
+from tg.i18n import ugettext as _
+from sqlalchemy import func
 from webhelpers.pylonslib.secure_form import authentication_token
 import sqlalchemy
 
@@ -30,42 +31,18 @@ from formencode.validators import (
 )
 from kallithea.lib.compat import OrderedSet
 from kallithea.lib import ipaddr
-from kallithea.lib.utils import repo_name_slug, is_valid_repo_uri
-from kallithea.lib.utils2 import str2bool, aslist
+from kallithea.lib.utils import is_valid_repo_uri
+from kallithea.lib.utils2 import str2bool, aslist, repo_name_slug
 from kallithea.model.db import RepoGroup, Repository, UserGroup, User
 from kallithea.lib.exceptions import LdapImportError
 from kallithea.config.routing import ADMIN_PREFIX
-from kallithea.lib.auth import HasRepoGroupPermissionAny, HasPermissionAny
+from kallithea.lib.auth import HasRepoGroupPermissionLevel, HasPermissionAny
 
 # silence warnings and pylint
 UnicodeString, OneOf, Int, Number, Regex, Email, Bool, StringBoolean, Set, \
     NotEmpty, IPAddress, CIDR, String, FancyValidator
 
 log = logging.getLogger(__name__)
-
-
-class StateObj(object):
-    """
-    this is needed to translate the messages using _() in validators
-    """
-    _ = staticmethod(_)
-
-
-def M(self, key, state=None, **kwargs):
-    """
-    returns string from self.message based on given key,
-    passed kw params are used to substitute %(named)s params inside
-    translated strings
-
-    :param msg:
-    :param state:
-    """
-    if state is None:
-        state = StateObj()
-    else:
-        state._ = staticmethod(_)
-    #inject validator into state object
-    return self.message(key, state, **kwargs)
 
 
 def UniqueListFromString():
@@ -89,7 +66,9 @@ def UniqueListFromString():
     return _UniqueListFromString
 
 
-def ValidUsername(edit=False, old_data={}):
+def ValidUsername(edit=False, old_data=None):
+    old_data = old_data or {}
+
     class _validator(formencode.validators.FancyValidator):
         messages = {
             'username_exists': _('Username "%(username)s" already exists'),
@@ -103,20 +82,20 @@ def ValidUsername(edit=False, old_data={}):
 
         def validate_python(self, value, state):
             if value in ['default', 'new_user']:
-                msg = M(self, 'system_invalid_username', state, username=value)
+                msg = self.message('system_invalid_username', state, username=value)
                 raise formencode.Invalid(msg, value, state)
-            #check if user is unique
+            # check if user is unique
             old_un = None
             if edit:
                 old_un = User.get(old_data.get('user_id')).username
 
             if old_un != value or not edit:
                 if User.get_by_username(value, case_insensitive=True):
-                    msg = M(self, 'username_exists', state, username=value)
+                    msg = self.message('username_exists', state, username=value)
                     raise formencode.Invalid(msg, value, state)
 
             if re.match(r'^[a-zA-Z0-9\_]{1}[a-zA-Z0-9\-\_\.]*$', value) is None:
-                msg = M(self, 'invalid_username', state)
+                msg = self.message('invalid_username', state)
                 raise formencode.Invalid(msg, value, state)
     return _validator
 
@@ -135,10 +114,10 @@ def ValidRepoUser():
 
         def validate_python(self, value, state):
             try:
-                User.query().filter(User.active == True)\
+                User.query().filter(User.active == True) \
                     .filter(User.username == value).one()
             except sqlalchemy.exc.InvalidRequestError: # NoResultFound/MultipleResultsFound
-                msg = M(self, 'invalid_username', state, username=value)
+                msg = self.message('invalid_username', state, username=value)
                 raise formencode.Invalid(msg, value, state,
                     error_dict=dict(username=msg)
                 )
@@ -146,7 +125,9 @@ def ValidRepoUser():
     return _validator
 
 
-def ValidUserGroup(edit=False, old_data={}):
+def ValidUserGroup(edit=False, old_data=None):
+    old_data = old_data or {}
+
     class _validator(formencode.validators.FancyValidator):
         messages = {
             'invalid_group': _('Invalid user group name'),
@@ -159,11 +140,11 @@ def ValidUserGroup(edit=False, old_data={}):
 
         def validate_python(self, value, state):
             if value in ['default']:
-                msg = M(self, 'invalid_group', state)
+                msg = self.message('invalid_group', state)
                 raise formencode.Invalid(msg, value, state,
                     error_dict=dict(users_group_name=msg)
                 )
-            #check if group is unique
+            # check if group is unique
             old_ugname = None
             if edit:
                 old_id = old_data.get('users_group_id')
@@ -173,13 +154,13 @@ def ValidUserGroup(edit=False, old_data={}):
                 is_existing_group = UserGroup.get_by_group_name(value,
                                                         case_insensitive=True)
                 if is_existing_group:
-                    msg = M(self, 'group_exist', state, usergroup=value)
+                    msg = self.message('group_exist', state, usergroup=value)
                     raise formencode.Invalid(msg, value, state,
                         error_dict=dict(users_group_name=msg)
                     )
 
             if re.match(r'^[a-zA-Z0-9]{1}[a-zA-Z0-9\-\_\.]+$', value) is None:
-                msg = M(self, 'invalid_usergroup_name', state)
+                msg = self.message('invalid_usergroup_name', state)
                 raise formencode.Invalid(msg, value, state,
                     error_dict=dict(users_group_name=msg)
                 )
@@ -187,10 +168,12 @@ def ValidUserGroup(edit=False, old_data={}):
     return _validator
 
 
-def ValidRepoGroup(edit=False, old_data={}):
+def ValidRepoGroup(edit=False, old_data=None):
+    old_data = old_data or {}
+
     class _validator(formencode.validators.FancyValidator):
         messages = {
-            'group_parent_id': _('Cannot assign this group as parent'),
+            'parent_group_id': _('Cannot assign this group as parent'),
             'group_exists': _('Group "%(group_name)s" already exists'),
             'repo_exists':
                 _('Repository with name "%(group_name)s" already exists')
@@ -199,20 +182,20 @@ def ValidRepoGroup(edit=False, old_data={}):
         def validate_python(self, value, state):
             # TODO WRITE VALIDATIONS
             group_name = value.get('group_name')
-            group_parent_id = value.get('group_parent_id')
+            parent_group_id = value.get('parent_group_id')
 
             # slugify repo group just in case :)
             slug = repo_name_slug(group_name)
 
             # check for parent of self
             parent_of_self = lambda: (
-                old_data['group_id'] == group_parent_id
-                if group_parent_id else False
+                old_data['group_id'] == parent_group_id
+                if parent_group_id else False
             )
             if edit and parent_of_self():
-                msg = M(self, 'group_parent_id', state)
+                msg = self.message('parent_group_id', state)
                 raise formencode.Invalid(msg, value, state,
-                    error_dict=dict(group_parent_id=msg)
+                    error_dict=dict(parent_group_id=msg)
                 )
 
             old_gname = None
@@ -222,24 +205,22 @@ def ValidRepoGroup(edit=False, old_data={}):
             if old_gname != group_name or not edit:
 
                 # check group
-                gr = RepoGroup.query()\
-                      .filter(RepoGroup.group_name == slug)\
-                      .filter(RepoGroup.group_parent_id == group_parent_id)\
+                gr = RepoGroup.query() \
+                      .filter(func.lower(RepoGroup.group_name) == func.lower(slug)) \
+                      .filter(RepoGroup.parent_group_id == parent_group_id) \
                       .scalar()
-
                 if gr is not None:
-                    msg = M(self, 'group_exists', state, group_name=slug)
+                    msg = self.message('group_exists', state, group_name=slug)
                     raise formencode.Invalid(msg, value, state,
                             error_dict=dict(group_name=msg)
                     )
 
                 # check for same repo
-                repo = Repository.query()\
-                      .filter(Repository.repo_name == slug)\
+                repo = Repository.query() \
+                      .filter(func.lower(Repository.repo_name) == func.lower(slug)) \
                       .scalar()
-
                 if repo is not None:
-                    msg = M(self, 'repo_exists', state, group_name=slug)
+                    msg = self.message('repo_exists', state, group_name=slug)
                     raise formencode.Invalid(msg, value, state,
                             error_dict=dict(group_name=msg)
                     )
@@ -258,7 +239,7 @@ def ValidPassword():
             try:
                 (value or '').decode('ascii')
             except UnicodeError:
-                msg = M(self, 'invalid_password', state)
+                msg = self.message('invalid_password', state)
                 raise formencode.Invalid(msg, value, state,)
     return _validator
 
@@ -272,7 +253,7 @@ def ValidOldPassword(username):
         def validate_python(self, value, state):
             from kallithea.lib import auth_modules
             if auth_modules.authenticate(username, value, '') is None:
-                msg = M(self, 'invalid_password', state)
+                msg = self.message('invalid_password', state)
                 raise formencode.Invalid(msg, value, state,
                     error_dict=dict(current_password=msg)
                 )
@@ -287,7 +268,7 @@ def ValidPasswordsMatch(password_field, password_confirmation_field):
 
         def validate_python(self, value, state):
             if value.get(password_field) != value[password_confirmation_field]:
-                msg = M(self, 'password_mismatch', state)
+                msg = self.message('password_mismatch', state)
                 raise formencode.Invalid(msg, value, state,
                      error_dict={password_field:msg, password_confirmation_field: msg}
                 )
@@ -309,16 +290,16 @@ def ValidAuth():
             # authenticate returns unused dict but has called
             # plugin._authenticate which has create_or_update'ed the username user in db
             if auth_modules.authenticate(username, password) is None:
-                user = User.get_by_username(username)
+                user = User.get_by_username_or_email(username)
                 if user and not user.active:
                     log.warning('user %s is disabled', username)
-                    msg = M(self, 'invalid_auth', state)
+                    msg = self.message('invalid_auth', state)
                     raise formencode.Invalid(msg, value, state,
                         error_dict=dict(username=' ', password=msg)
                     )
                 else:
                     log.warning('user %s failed to authenticate', username)
-                    msg = M(self, 'invalid_auth', state)
+                    msg = self.message('invalid_auth', state)
                     raise formencode.Invalid(msg, value, state,
                         error_dict=dict(username=' ', password=msg)
                     )
@@ -333,12 +314,14 @@ def ValidAuthToken():
 
         def validate_python(self, value, state):
             if value != authentication_token():
-                msg = M(self, 'invalid_token', state)
+                msg = self.message('invalid_token', state)
                 raise formencode.Invalid(msg, value, state)
     return _validator
 
 
-def ValidRepoName(edit=False, old_data={}):
+def ValidRepoName(edit=False, old_data=None):
+    old_data = old_data or {}
+
     class _validator(formencode.validators.FancyValidator):
         messages = {
             'invalid_repo_name':
@@ -373,14 +356,13 @@ def ValidRepoName(edit=False, old_data={}):
             return value
 
         def validate_python(self, value, state):
-
             repo_name = value.get('repo_name')
             repo_name_full = value.get('repo_name_full')
             group_path = value.get('group_path')
             group_name = value.get('group_name')
 
             if repo_name in [ADMIN_PREFIX, '']:
-                msg = M(self, 'invalid_repo_name', state, repo=repo_name)
+                msg = self.message('invalid_repo_name', state, repo=repo_name)
                 raise formencode.Invalid(msg, value, state,
                     error_dict=dict(repo_name=msg)
                 )
@@ -388,24 +370,24 @@ def ValidRepoName(edit=False, old_data={}):
             rename = old_data.get('repo_name') != repo_name_full
             create = not edit
             if rename or create:
-
+                repo = Repository.get_by_repo_name(repo_name_full, case_insensitive=True)
+                repo_group = RepoGroup.get_by_group_name(repo_name_full, case_insensitive=True)
                 if group_path != '':
-                    if Repository.get_by_repo_name(repo_name_full):
-                        msg = M(self, 'repository_in_group_exists', state,
-                                repo=repo_name, group=group_name)
+                    if repo is not None:
+                        msg = self.message('repository_in_group_exists', state,
+                                repo=repo.repo_name, group=group_name)
                         raise formencode.Invalid(msg, value, state,
                             error_dict=dict(repo_name=msg)
                         )
-                elif RepoGroup.get_by_group_name(repo_name_full):
-                        msg = M(self, 'same_group_exists', state,
+                elif repo_group is not None:
+                        msg = self.message('same_group_exists', state,
                                 repo=repo_name)
                         raise formencode.Invalid(msg, value, state,
                             error_dict=dict(repo_name=msg)
                         )
-
-                elif Repository.get_by_repo_name(repo_name_full):
-                        msg = M(self, 'repository_exists', state,
-                                repo=repo_name)
+                elif repo is not None:
+                        msg = self.message('repository_exists', state,
+                                repo=repo.repo_name)
                         raise formencode.Invalid(msg, value, state,
                             error_dict=dict(repo_name=msg)
                         )
@@ -448,14 +430,16 @@ def ValidCloneUri():
                     is_valid_repo_uri(repo_type, url, make_ui('db', clear_session=False))
                 except Exception:
                     log.exception('URL validation failed')
-                    msg = M(self, 'clone_uri')
+                    msg = self.message('clone_uri', state)
                     raise formencode.Invalid(msg, value, state,
                         error_dict=dict(clone_uri=msg)
                     )
     return _validator
 
 
-def ValidForkType(old_data={}):
+def ValidForkType(old_data=None):
+    old_data = old_data or {}
+
     class _validator(formencode.validators.FancyValidator):
         messages = {
             'invalid_fork_type': _('Fork has to be the same type as parent')
@@ -463,7 +447,7 @@ def ValidForkType(old_data={}):
 
         def validate_python(self, value, state):
             if old_data['repo_type'] != value:
-                msg = M(self, 'invalid_fork_type', state)
+                msg = self.message('invalid_fork_type', state)
                 raise formencode.Invalid(msg, value, state,
                     error_dict=dict(repo_type=msg)
                 )
@@ -480,7 +464,7 @@ def CanWriteGroup(old_data=None):
         }
 
         def _to_python(self, value, state):
-            #root location
+            # root location
             if value == -1:
                 return None
             return value
@@ -491,9 +475,9 @@ def CanWriteGroup(old_data=None):
 
             # create repositories with write permission on group is set to true
             create_on_write = HasPermissionAny('hg.create.write_on_repogroup.true')()
-            group_admin = HasRepoGroupPermissionAny('group.admin')(gr_name,
+            group_admin = HasRepoGroupPermissionLevel('admin')(gr_name,
                                             'can write into group validator')
-            group_write = HasRepoGroupPermissionAny('group.write')(gr_name,
+            group_write = HasRepoGroupPermissionLevel('write')(gr_name,
                                             'can write into group validator')
             forbidden = not (group_admin or (group_write and create_on_write))
             can_create_repos = HasPermissionAny('hg.admin', 'hg.create.repository')
@@ -506,15 +490,15 @@ def CanWriteGroup(old_data=None):
             # don't need to check permission if he didn't change the value of
             # groups in form box
             if value_changed or new:
-                #parent group need to be existing
+                # parent group need to be existing
                 if gr and forbidden:
-                    msg = M(self, 'permission_denied', state)
+                    msg = self.message('permission_denied', state)
                     raise formencode.Invalid(msg, value, state,
                         error_dict=dict(repo_type=msg)
                     )
                 ## check if we can write to root location !
                 elif gr is None and not can_create_repos():
-                    msg = M(self, 'permission_denied_root', state)
+                    msg = self.message('permission_denied_root', state)
                     raise formencode.Invalid(msg, value, state,
                         error_dict=dict(repo_type=msg)
                     )
@@ -530,7 +514,7 @@ def CanCreateGroup(can_create_in_root=False):
         }
 
         def to_python(self, value, state):
-            #root location
+            # root location
             if value == -1:
                 return None
             return value
@@ -540,16 +524,15 @@ def CanCreateGroup(can_create_in_root=False):
             gr_name = gr.group_name if gr is not None else None # None means ROOT location
 
             if can_create_in_root and gr is None:
-                #we can create in root, we're fine no validations required
+                # we can create in root, we're fine no validations required
                 return
 
             forbidden_in_root = gr is None and not can_create_in_root
-            val = HasRepoGroupPermissionAny('group.admin')
-            forbidden = not val(gr_name, 'can create group validator')
+            forbidden = not HasRepoGroupPermissionLevel('admin')(gr_name, 'can create group validator')
             if forbidden_in_root or forbidden:
-                msg = M(self, 'permission_denied', state)
+                msg = self.message('permission_denied', state)
                 raise formencode.Invalid(msg, value, state,
-                    error_dict=dict(group_parent_id=msg)
+                    error_dict=dict(parent_group_id=msg)
                 )
 
     return _validator
@@ -574,7 +557,7 @@ def ValidPerms(type_='repo'):
             perms_new = OrderedSet()
             # build a list of permission to update and new permission to create
 
-            #CLEAN OUT ORG VALUE FROM NEW MEMBERS, and group them using
+            # CLEAN OUT ORG VALUE FROM NEW MEMBERS, and group them using
             new_perms_group = defaultdict(dict)
             for k, v in value.copy().iteritems():
                 if k.startswith('perm_new_member'):
@@ -616,17 +599,17 @@ def ValidPerms(type_='repo'):
             for k, v, t in perms_new:
                 try:
                     if t is 'user':
-                        self.user_db = User.query()\
-                            .filter(User.active == True)\
+                        self.user_db = User.query() \
+                            .filter(User.active == True) \
                             .filter(User.username == k).one()
                     if t is 'users_group':
-                        self.user_db = UserGroup.query()\
-                            .filter(UserGroup.users_group_active == True)\
+                        self.user_db = UserGroup.query() \
+                            .filter(UserGroup.users_group_active == True) \
                             .filter(UserGroup.users_group_name == k).one()
 
                 except Exception:
                     log.exception('Updated permission failed')
-                    msg = M(self, 'perm_new_member_type', state)
+                    msg = self.message('perm_new_member_type', state)
                     raise formencode.Invalid(msg, value, state,
                         error_dict=dict(perm_new_member_name=msg)
                     )
@@ -664,14 +647,16 @@ def ValidPath():
 
         def validate_python(self, value, state):
             if not os.path.isdir(value):
-                msg = M(self, 'invalid_path', state)
+                msg = self.message('invalid_path', state)
                 raise formencode.Invalid(msg, value, state,
                     error_dict=dict(paths_root_path=msg)
                 )
     return _validator
 
 
-def UniqSystemEmail(old_data={}):
+def UniqSystemEmail(old_data=None):
+    old_data = old_data or {}
+
     class _validator(formencode.validators.FancyValidator):
         messages = {
             'email_taken': _('This email address is already in use')
@@ -682,9 +667,9 @@ def UniqSystemEmail(old_data={}):
 
         def validate_python(self, value, state):
             if (old_data.get('email') or '').lower() != value:
-                user = User.get_by_email(value, case_insensitive=True)
+                user = User.get_by_email(value)
                 if user is not None:
-                    msg = M(self, 'email_taken', state)
+                    msg = self.message('email_taken', state)
                     raise formencode.Invalid(msg, value, state,
                         error_dict=dict(email=msg)
                     )
@@ -701,9 +686,9 @@ def ValidSystemEmail():
             return value.lower()
 
         def validate_python(self, value, state):
-            user = User.get_by_email(value, case_insensitive=True)
+            user = User.get_by_email(value)
             if user is None:
-                msg = M(self, 'non_existing_email', state, email=value)
+                msg = self.message('non_existing_email', state, email=value)
                 raise formencode.Invalid(msg, value, state,
                     error_dict=dict(email=msg)
                 )
@@ -753,11 +738,11 @@ def ValidIp():
             v = v.strip()
             net = ipaddr.IPNetwork(address=v)
             if isinstance(net, ipaddr.IPv4Network):
-                #if IPv4 doesn't end with a mask, add /32
+                # if IPv4 doesn't end with a mask, add /32
                 if '/' not in value:
                     v += '/32'
             if isinstance(net, ipaddr.IPv6Network):
-                #if IPv6 doesn't end with a mask, add /128
+                # if IPv6 doesn't end with a mask, add /128
                 if '/' not in value:
                     v += '/128'
             return v
@@ -765,7 +750,7 @@ def ValidIp():
         def validate_python(self, value, state):
             try:
                 addr = value.strip()
-                #this raises an ValueError if address is not IPv4 or IPv6
+                # this raises an ValueError if address is not IPv4 or IPv6
                 ipaddr.IPNetwork(address=addr)
             except ValueError:
                 raise formencode.Invalid(self.message('badFormat', state),
@@ -823,7 +808,7 @@ def ValidAuthPlugins():
                     plugin = auth_modules.loadplugin(module)
                     plugin_name = plugin.name
                     if plugin_name in unique_names:
-                        msg = M(self, 'import_duplicate', state,
+                        msg = self.message('import_duplicate', state,
                                 loaded=unique_names[plugin_name],
                                 next_to_load=plugin_name)
                         raise formencode.Invalid(msg, value, state)

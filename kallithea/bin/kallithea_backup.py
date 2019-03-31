@@ -28,11 +28,11 @@ Original author and date, and relevant copyright and licensing information is be
 
 import os
 import sys
-
 import logging
 import tarfile
 import datetime
 import subprocess
+import tempfile
 
 logging.basicConfig(level=logging.DEBUG,
                     format="%(asctime)s %(levelname)-5.5s %(message)s")
@@ -47,7 +47,7 @@ class BackupManager(object):
         self.repos_path = self.get_repos_path(repos_location)
         self.backup_server = backup_server
 
-        self.backup_file_path = '/tmp'
+        self.backup_file_path = tempfile.gettempdir()
 
         logging.info('starting backup for %s', self.repos_path)
         logging.info('backup target %s', self.backup_file_path)
@@ -86,11 +86,12 @@ class BackupManager(object):
                '%(backup_server)s' % params]
 
         subprocess.call(cmd)
-        logging.info('Transfered file %s to %s', self.backup_file_name, cmd[4])
+        logging.info('Transferred file %s to %s', self.backup_file_name, cmd[4])
 
     def rm_file(self):
         logging.info('Removing file %s', self.backup_file_name)
         os.remove(os.path.join(self.backup_file_path, self.backup_file_name))
+
 
 if __name__ == "__main__":
 

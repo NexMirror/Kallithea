@@ -20,7 +20,7 @@ APP_PATH="/var/www/$APP_NAME"
 CONF_NAME="production.ini"
 
 # write to wherever the PID should be stored, just ensure
-# that the user you run paster as has the appropriate permissions
+# that the user you run gearbox as has the appropriate permissions
 # same goes for the log file
 PID_PATH="/var/run/kallithea/pid"
 LOG_PATH="/var/log/kallithea/kallithea.log"
@@ -31,13 +31,13 @@ PYTHON_PATH="/opt/python_virtualenvironments/kallithea-venv"
 
 RUN_AS="kallithea"
 
-DAEMON="$PYTHON_PATH/bin/paster"
+DAEMON="$PYTHON_PATH/bin/gearbox"
 
 DAEMON_OPTS="serve --daemon \
     --user=$RUN_AS \
     --group=$RUN_AS \
     --pid-file=$PID_PATH \
-    --log-file=$LOG_PATH $APP_PATH/$CONF_NAME"
+    --log-file=$LOG_PATH -c $APP_PATH/$CONF_NAME"
 
 DESC="kallithea-server"
 LOCK_FILE="/var/lock/subsys/$APP_NAME"

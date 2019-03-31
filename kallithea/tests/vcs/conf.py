@@ -2,57 +2,35 @@
 Unit tests configuration module for vcs.
 """
 import os
-import time
-import hashlib
-import tempfile
-import datetime
-import shutil
 import uuid
-from os.path import join as jn
+
+# Retrieve the necessary configuration options from the test base
+# module. Some of these configuration options are subsequently
+# consumed by the VCS test module.
+from kallithea.tests.base import (
+    TESTS_TMP_PATH,
+    TEST_HG_REPO, HG_REMOTE_REPO,
+    TEST_HG_REPO_CLONE, TEST_HG_REPO_PULL,
+    TEST_GIT_REPO, GIT_REMOTE_REPO,
+    TEST_GIT_REPO_CLONE,
+)
 
 __all__ = (
     'TEST_HG_REPO', 'TEST_GIT_REPO', 'HG_REMOTE_REPO', 'GIT_REMOTE_REPO',
-    'SCM_TESTS',
+    'TEST_HG_REPO_CLONE', 'TEST_GIT_REPO_CLONE', 'TEST_HG_REPO_PULL',
 )
-
-SCM_TESTS = ['hg', 'git']
-uniq_suffix = str(int(time.mktime(datetime.datetime.now().timetuple())))
-
-THIS = os.path.abspath(os.path.dirname(__file__))
-
-GIT_REMOTE_REPO = 'git://github.com/codeinn/vcs.git'
-
-TEST_TMP_PATH = os.environ.get('VCS_TEST_ROOT', '/tmp')
-TEST_GIT_REPO = os.environ.get('VCS_TEST_GIT_REPO',
-                              jn(TEST_TMP_PATH, 'vcs-git'))
-TEST_GIT_REPO_CLONE = os.environ.get('VCS_TEST_GIT_REPO_CLONE',
-                            jn(TEST_TMP_PATH, 'vcsgitclone%s' % uniq_suffix))
-TEST_GIT_REPO_PULL = os.environ.get('VCS_TEST_GIT_REPO_PULL',
-                            jn(TEST_TMP_PATH, 'vcsgitpull%s' % uniq_suffix))
-
-HG_REMOTE_REPO = 'http://bitbucket.org/marcinkuzminski/vcs'
-TEST_HG_REPO = os.environ.get('VCS_TEST_HG_REPO',
-                              jn(TEST_TMP_PATH, 'vcs-hg'))
-TEST_HG_REPO_CLONE = os.environ.get('VCS_TEST_HG_REPO_CLONE',
-                              jn(TEST_TMP_PATH, 'vcshgclone%s' % uniq_suffix))
-TEST_HG_REPO_PULL = os.environ.get('VCS_TEST_HG_REPO_PULL',
-                              jn(TEST_TMP_PATH, 'vcshgpull%s' % uniq_suffix))
-
-TEST_DIR = os.environ.get('VCS_TEST_ROOT', tempfile.gettempdir())
-TEST_REPO_PREFIX = 'vcs-test'
 
 
 def get_new_dir(title=None):
     """
-    Calculates a path for a new, non-existant, unique sub-directory in TEST_DIR.
+    Calculates a path for a new, non-existant, unique sub-directory in TESTS_TMP_PATH.
 
     Resulting directory name will have format:
 
-    prefix-[title-]hexuuid
+    vcs-test-[title-]hexuuid
 
-    Prefix is equal to value of variable TEST_REPO_PREFIX. The "hexuuid" is a
-    hexadecimal value of a randomly generated UUID. Title will be added if
-    specified.
+    The "hexuuid" is a hexadecimal value of a randomly generated
+    UUID. Title will be added if specified.
 
     Args:
         title: Custom title to include as part of the resulting sub-directory
@@ -63,12 +41,14 @@ def get_new_dir(title=None):
         Path to the new directory as a string.
     """
 
-    if title:
-        name = "%s-%s" % (TEST_REPO_PREFIX, title)
-    else:
-        name = TEST_REPO_PREFIX
+    test_repo_prefix = 'vcs-test'
 
-    path = os.path.join(TEST_DIR, name)
+    if title:
+        name = "%s-%s" % (test_repo_prefix, title)
+    else:
+        name = test_repo_prefix
+
+    path = os.path.join(TESTS_TMP_PATH, name)
 
     # Generate new hexes until we get a unique name (just in case).
     hex_uuid = uuid.uuid4().hex
@@ -76,13 +56,3 @@ def get_new_dir(title=None):
         hex_uuid = uuid.uuid4().hex
 
     return "%s-%s" % (path, hex_uuid)
-
-
-PACKAGE_DIR = os.path.abspath(os.path.join(
-    os.path.dirname(__file__), '..'))
-_dest = jn(TEST_TMP_PATH, 'aconfig')
-shutil.copy(jn(THIS, 'aconfig'), _dest)
-TEST_USER_CONFIG_FILE = _dest
-
-#overide default configurations with kallithea ones
-from kallithea.tests import *

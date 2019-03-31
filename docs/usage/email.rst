@@ -12,8 +12,17 @@ cannot be sent, all mails will show up in the log output.
 Before any email can be sent, an SMTP server has to be configured using the
 configuration file setting ``smtp_server``. If required for that server, specify
 a username (``smtp_username``) and password (``smtp_password``), a non-standard
-port (``smtp_port``), encryption settings (``smtp_use_tls`` or ``smtp_use_ssl``)
-and/or specific authentication parameters (``smtp_auth``).
+port (``smtp_port``), whether to use "SSL" when connecting (``smtp_use_ssl``)
+or use STARTTLS (``smtp_use_tls``), and/or specify special ESMTP "auth" features
+(``smtp_auth``).
+
+For example, for sending through gmail, use::
+
+    smtp_server = smtp.gmail.com
+    smtp_username = username
+    smtp_password = password
+    smtp_port = 465
+    smtp_use_ssl = true
 
 
 Application emails
@@ -67,19 +76,14 @@ Error emails
 
 When an exception occurs in Kallithea -- and unless interactive debugging is
 enabled using ``set debug = true`` in the ``[app:main]`` section of the
-configuration file -- an email with exception details is sent by WebError_'s
-``ErrorMiddleware`` to the addresses specified in ``email_to`` in the
-configuration file.
+configuration file -- an email with exception details is sent by backlash_
+to the addresses specified in ``email_to`` in the configuration file.
 
 Recipients will see these emails originating from the sender specified in the
 ``error_email_from`` setting in the configuration file. This setting can either
 contain only an email address, like `kallithea-noreply@example.com`, or both
 a name and an address in the following format: `Kallithea Errors
 <kallithea-noreply@example.com>`.
-
-*Note:* The WebError_ package does not respect ``smtp_port`` and assumes the
-standard SMTP port (25). If you have a remote SMTP server with a different port,
-you could set up a local forwarding SMTP server on port 25.
 
 
 References
@@ -89,4 +93,4 @@ References
 - `ErrorHandler (Pylons modules documentation) <http://pylons-webframework.readthedocs.org/en/latest/modules/middleware.html#pylons.middleware.ErrorHandler>`_
 
 
-.. _WebError: https://pypi.python.org/pypi/WebError
+.. _backlash: https://github.com/TurboGears/backlash

@@ -1,18 +1,8 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="/base/base.html"/>
 <%block name="title">
-    ${_('%s Repository group dashboard') % c.group.group_name}
+    ${_('Repository group %s') % c.group.group_name}
 </%block>
-
-<%def name="breadcrumbs()">
-    <span class="groups_breadcrumbs">
-    ${h.link_to(_('Home'),h.url('/'))}
-    %if c.group.parent_group:
-        &raquo; ${h.link_to(c.group.parent_group.name,h.url('repos_group_home',group_name=c.group.parent_group.group_name))}
-    %endif
-    &raquo; "${c.group.name}" ${_('with')}
-    </span>
-</%def>
 
 <%block name="header_menu">
     ${self.menu('repositories')}

@@ -1,20 +1,32 @@
-## -*- coding: utf-8 -*-
-<%inherit file="main.txt"/>
+<%block name="header">\
+<% title = _('Mention on Pull Request %s "%s" by %s') % (pr_nice_id, pr_title, pr_user_created) if is_mention else _('Added as Reviewer of Pull Request %s "%s" by %s') % (pr_nice_id, pr_title, pr_user_created) %>\
+<%include file="header.txt" args="title=title,link=pr_url"/>\
+</%block>\
 
-%if is_mention:
-${_('%s mentioned you on %s pull request "%s"') % (pr_user_created, repo_name, pr_title)|n,unicode}
-%else:
-${_('%s requested your review of %s pull request "%s"') % (pr_user_created, repo_name, pr_title)|n,unicode}
-%endif
+${_('Pull request')|n,unicode} \
+${pr_nice_id|n,unicode} \
+"${pr_title|n,unicode}" \
+${_('by')|n,unicode} \
+${pr_owner.full_name_and_username|n,unicode}
+${_('from')} \
+${pr_source_repo|n,unicode} \
+${_('branch')|n,unicode} \
+${pr_source_branch|n,unicode}
+${_('to')|n,unicode} \
+${pr_target_repo|n,unicode} \
+${_('branch')|n,unicode} \
+${pr_target_branch|n,unicode}
 
-${_('URL')|n,unicode}: ${pr_url|n,unicode}
 
 ${_('Description')|n,unicode}:
+
 ${body|n,unicode}
 
-${_('Changesets')|n,unicode}:
-%for r,r_msg in pr_revisions:
-${h.short_id(r)|n,unicode}:
-${h.shorter(r_msg, 256)|n,unicode}
 
+${_('Changesets')|n,unicode}:
+
+%for revision, desc in pr_revisions:
+${h.shorter(desc, 80, firstline=True)|n,unicode}
 %endfor
+
+<%include file="button.txt" args="url=pr_url,title='View Pull Request'"/>\

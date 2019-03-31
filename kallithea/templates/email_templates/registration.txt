@@ -1,6 +1,11 @@
-## -*- coding: utf-8 -*-
-<%inherit file="main.txt"/>
+<%block name="header">\
+<%include file="header.txt" args="title=_('New User Registration'),link=registered_user_url"/>\
+</%block>\
 
-${body|n,unicode}
+${_('Username')|n,unicode}: ${new_username|n,unicode}
 
-${_('View this user here')|n,unicode}: ${registered_user_url|n,unicode}
+${_('Full Name')|n,unicode}: ${new_full_name|n,unicode}
+
+${_('Email')|n,unicode}: ${new_email|n,unicode}
+
+<%include file="button.txt" args="url=registered_user_url,title='View User Profile'"/>\

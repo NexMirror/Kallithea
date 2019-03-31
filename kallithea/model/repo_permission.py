@@ -24,20 +24,17 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 import logging
-from kallithea.model import BaseModel
-from kallithea.model.db import UserRepoToPerm, UserGroupRepoToPerm, \
-    Permission
+from kallithea.model.db import User, UserRepoToPerm, UserGroupRepoToPerm, \
+    Permission, Repository, Session
 
 log = logging.getLogger(__name__)
 
 
-class RepositoryPermissionModel(BaseModel):
-
-    cls = UserRepoToPerm
+class RepositoryPermissionModel(object):
 
     def get_user_permission(self, repository, user):
-        repository = self._get_repo(repository)
-        user = self._get_user(user)
+        repository = Repository.guess_instance(repository)
+        user = User.guess_instance(user)
 
         return UserRepoToPerm.query() \
                 .filter(UserRepoToPerm.user == user) \
@@ -48,19 +45,19 @@ class RepositoryPermissionModel(BaseModel):
         permission = Permission.get_by_key(permission)
         current = self.get_user_permission(repository, user)
         if current:
-            if not current.permission is permission:
+            if current.permission is not permission:
                 current.permission = permission
         else:
             p = UserRepoToPerm()
             p.user = user
             p.repository = repository
             p.permission = permission
-            self.sa.add(p)
+            Session().add(p)
 
     def delete_user_permission(self, repository, user):
         current = self.get_user_permission(repository, user)
         if current:
-            self.sa.delete(current)
+            Session().delete(current)
 
     def get_users_group_permission(self, repository, users_group):
         return UserGroupRepoToPerm.query() \
@@ -73,19 +70,19 @@ class RepositoryPermissionModel(BaseModel):
         permission = Permission.get_by_key(permission)
         current = self.get_users_group_permission(repository, users_group)
         if current:
-            if not current.permission is permission:
+            if current.permission is not permission:
                 current.permission = permission
         else:
             p = UserGroupRepoToPerm()
             p.users_group = users_group
             p.repository = repository
             p.permission = permission
-            self.sa.add(p)
+            Session().add(p)
 
     def delete_users_group_permission(self, repository, users_group):
         current = self.get_users_group_permission(repository, users_group)
         if current:
-            self.sa.delete(current)
+            Session().delete(current)
 
     def update_or_delete_user_permission(self, repository, user, permission):
         if permission:

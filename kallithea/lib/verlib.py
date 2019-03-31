@@ -5,9 +5,11 @@ discussion at PyCon 2009.
 
 import re
 
+
 class IrrationalVersionError(Exception):
     """This is an irrational version."""
     pass
+
 
 class HugeMajorVersionNumError(IrrationalVersionError):
     """An irrational version because the major version number is huge
@@ -17,6 +19,7 @@ class HugeMajorVersionNumError(IrrationalVersionError):
     This guard can be disabled by setting that option False.
     """
     pass
+
 
 # A marker used in the second and third parts of the `parts` tuple, for
 # versions that don't have those segments, to sort properly. An example
@@ -46,6 +49,7 @@ VERSION_RE = re.compile(r'''
     )?
     (?P<postdev>(\.post(?P<post>\d+))?(\.dev(?P<dev>\d+))?)?
     $''', re.VERBOSE)
+
 
 class NormalizedVersion(object):
     """A rational version.
@@ -212,6 +216,7 @@ class NormalizedVersion(object):
     def __ge__(self, other):
         return self.__eq__(other) or self.__gt__(other)
 
+
 def suggest_normalized_version(s):
     """Suggest a normalized version close to the given version string.
 
@@ -251,7 +256,7 @@ def suggest_normalized_version(s):
     rs = re.sub(r"dev$", r"dev0", rs)
 
     # if we have something like "b-2" or "a.2" at the end of the
-    # version, that is pobably beta, alpha, etc
+    # version, that is probably beta, alpha, etc
     # let's remove the dash or dot
     rs = re.sub(r"([abc|rc])[\-\.](\d+)$", r"\1\2", rs)
 
@@ -267,7 +272,7 @@ def suggest_normalized_version(s):
         rs = rs[1:]
 
     # Clean leading '0's on numbers.
-    #TODO: unintended side-effect on, e.g., "2003.05.09"
+    # TODO: unintended side-effect on, e.g., "2003.05.09"
     # PyPI stats: 77 (~2%) better
     rs = re.sub(r"\b0+(\d+)(?!\d)", r"\1", rs)
 
@@ -312,7 +317,6 @@ def suggest_normalized_version(s):
     #   1.0preview123   ->  1.0c123
     # PyPI stats: ~21 (0.62%) better
     rs = re.sub(r"\.?(pre|preview|-c)(\d+)$", r"c\g<2>", rs)
-
 
     # Tcl/Tk uses "px" for their post release markers
     rs = re.sub(r"p(\d+)$", r".post\1", rs)

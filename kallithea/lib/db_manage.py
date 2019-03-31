@@ -31,14 +31,16 @@ import sys
 import time
 import uuid
 import logging
-from os.path import dirname as dn, join as jn
+import sqlalchemy
+from os.path import dirname
 
-from kallithea import __dbversion__, __py_version__, EXTERN_TYPE_INTERNAL, DB_MIGRATIONS
+import alembic.config
+import alembic.command
+
 from kallithea.model.user import UserModel
-from kallithea.lib.utils import ask_ok
-from kallithea.model import init_model
+from kallithea.model.base import init_model
 from kallithea.model.db import User, Permission, Ui, \
-    Setting, UserToPerm, DbMigrateVersion, RepoGroup, \
+    Setting, UserToPerm, RepoGroup, \
     UserRepoGroupToPerm, CacheInvalidation, Repository
 
 from sqlalchemy.engine import create_engine
@@ -52,36 +54,30 @@ from kallithea.model.permission import PermissionModel
 log = logging.getLogger(__name__)
 
 
-def notify(msg):
-    """
-    Notification for migrations messages
-    """
-    ml = len(msg) + (4 * 2)
-    print('\n%s\n*** %s ***\n%s' % ('*' * ml, msg, '*' * ml)).upper()
-
-
 class DbManage(object):
-    def __init__(self, log_sql, dbconf, root, tests=False, SESSION=None, cli_args={}):
+    def __init__(self, dbconf, root, tests=False, SESSION=None, cli_args=None):
         self.dbname = dbconf.split('/')[-1]
         self.tests = tests
         self.root = root
         self.dburi = dbconf
-        self.log_sql = log_sql
         self.db_exists = False
-        self.cli_args = cli_args
+        self.cli_args = cli_args or {}
         self.init_db(SESSION=SESSION)
 
+    def _ask_ok(self, msg):
+        """Invoke ask_ok unless the force_ask option provides the answer"""
         force_ask = self.cli_args.get('force_ask')
         if force_ask is not None:
-            global ask_ok
-            ask_ok = lambda *args, **kwargs: force_ask
+            return force_ask
+        from kallithea.lib.utils2 import ask_ok
+        return ask_ok(msg)
 
     def init_db(self, SESSION=None):
         if SESSION:
             self.sa = SESSION
         else:
-            #init new sessions
-            engine = create_engine(self.dburi, echo=self.log_sql)
+            # init new sessions
+            engine = create_engine(self.dburi)
             init_model(engine)
             self.sa = Session()
 
@@ -94,103 +90,62 @@ class DbManage(object):
         if self.tests:
             destroy = True
         else:
-            destroy = ask_ok('Are you sure to destroy old database ? [y/n]')
+            destroy = self._ask_ok('Are you sure to destroy old database ? [y/n]')
         if not destroy:
             print 'Nothing done.'
             sys.exit(0)
         if destroy:
-            Base.metadata.drop_all()
+            # drop and re-create old schemas
+
+            url = sqlalchemy.engine.url.make_url(self.dburi)
+            database = url.database
+
+            # Some databases enforce foreign key constraints and Base.metadata.drop_all() doesn't work
+            if url.drivername == 'mysql':
+                url.database = None  # don't connect to the database (it might not exist)
+                engine = sqlalchemy.create_engine(url)
+                with engine.connect() as conn:
+                    conn.execute('DROP DATABASE IF EXISTS ' + database)
+                    conn.execute('CREATE DATABASE ' + database)
+            elif url.drivername == 'postgresql':
+                from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
+                url.database = 'postgres'  # connect to the system database (as the real one might not exist)
+                engine = sqlalchemy.create_engine(url)
+                with engine.connect() as conn:
+                    conn.connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+                    conn.execute('DROP DATABASE IF EXISTS ' + database)
+                    conn.execute('CREATE DATABASE ' + database)
+            else:
+                # known to work on SQLite - possibly not on other databases with strong referential integrity
+                Base.metadata.drop_all()
 
         checkfirst = not override
         Base.metadata.create_all(checkfirst=checkfirst)
+
+        # Create an Alembic configuration and generate the version table,
+        # "stamping" it with the most recent Alembic migration revision, to
+        # tell Alembic that all the schema upgrades are already in effect.
+        alembic_cfg = alembic.config.Config()
+        alembic_cfg.set_main_option('script_location', 'kallithea:alembic')
+        alembic_cfg.set_main_option('sqlalchemy.url', self.dburi)
+        # This command will give an error in an Alembic multi-head scenario,
+        # but in practice, such a scenario should not come up during database
+        # creation, even during development.
+        alembic.command.stamp(alembic_cfg, 'head')
+
         log.info('Created tables for %s', self.dbname)
-
-    def set_db_version(self):
-        ver = DbMigrateVersion()
-        ver.version = __dbversion__
-        ver.repository_id = DB_MIGRATIONS
-        ver.repository_path = 'versions'
-        self.sa.add(ver)
-        log.info('db version set to: %s', __dbversion__)
-
-    def upgrade(self):
-        """
-        Upgrades given database schema to given revision following
-        all needed steps, to perform the upgrade
-
-        """
-
-        from kallithea.lib.dbmigrate.migrate.versioning import api
-        from kallithea.lib.dbmigrate.migrate.exceptions import \
-            DatabaseNotControlledError
-
-        if 'sqlite' in self.dburi:
-            print (
-               '********************** WARNING **********************\n'
-               'Make sure your version of sqlite is at least 3.7.X.  \n'
-               'Earlier versions are known to fail on some migrations\n'
-               '*****************************************************\n')
-
-        upgrade = ask_ok('You are about to perform database upgrade, make '
-                         'sure You backed up your database before. '
-                         'Continue ? [y/n]')
-        if not upgrade:
-            print 'No upgrade performed'
-            sys.exit(0)
-
-        repository_path = jn(dn(dn(dn(os.path.realpath(__file__)))),
-                             'kallithea/lib/dbmigrate')
-        db_uri = self.dburi
-
-        try:
-            curr_version = api.db_version(db_uri, repository_path)
-            msg = ('Found current database under version '
-                   'control with version %s' % curr_version)
-
-        except (RuntimeError, DatabaseNotControlledError):
-            curr_version = 1
-            msg = ('Current database is not under version control. Setting '
-                   'as version %s' % curr_version)
-            api.version_control(db_uri, repository_path, curr_version)
-
-        notify(msg)
-        if curr_version == __dbversion__:
-            print 'This database is already at the newest version'
-            sys.exit(0)
-
-        # clear cache keys
-        log.info("Clearing cache keys now...")
-        CacheInvalidation.clear_cache()
-
-        upgrade_steps = range(curr_version + 1, __dbversion__ + 1)
-        notify('attempting to do database upgrade from '
-               'version %s to version %s' % (curr_version, __dbversion__))
-
-        # CALL THE PROPER ORDER OF STEPS TO PERFORM FULL UPGRADE
-        _step = None
-        for step in upgrade_steps:
-            notify('performing upgrade step %s' % step)
-            time.sleep(0.5)
-
-            api.upgrade(db_uri, repository_path, step)
-            notify('schema upgrade for step %s completed' % (step,))
-
-            _step = step
-
-        notify('upgrade to version %s successful' % _step)
 
     def fix_repo_paths(self):
         """
         Fixes a old kallithea version path into new one without a '*'
         """
 
-        paths = self.sa.query(Ui)\
-                .filter(Ui.ui_key == '/')\
+        paths = Ui.query() \
+                .filter(Ui.ui_key == '/') \
                 .scalar()
 
         paths.ui_value = paths.ui_value.replace('*', '')
 
-        self.sa.add(paths)
         self.sa.commit()
 
     def fix_default_user(self):
@@ -198,15 +153,12 @@ class DbManage(object):
         Fixes a old default user with some 'nicer' default values,
         used mostly for anonymous access
         """
-        def_user = self.sa.query(User)\
-                .filter(User.username == User.DEFAULT_USER)\
-                .one()
+        def_user = User.query().filter_by(is_default_user=True).one()
 
         def_user.name = 'Anonymous'
         def_user.lastname = 'User'
         def_user.email = 'anonymous@kallithea-scm.org'
 
-        self.sa.add(def_user)
         self.sa.commit()
 
     def fix_settings(self):
@@ -223,11 +175,9 @@ class DbManage(object):
         if not self.tests:
             import getpass
 
-            # defaults
-            defaults = self.cli_args
-            username = defaults.get('username')
-            password = defaults.get('password')
-            email = defaults.get('email')
+            username = self.cli_args.get('username')
+            password = self.cli_args.get('password')
+            email = self.cli_args.get('email')
 
             def get_password():
                 password = getpass.getpass('Specify admin password '
@@ -247,7 +197,7 @@ class DbManage(object):
             if password is None:
                 password = get_password()
                 if not password:
-                    #second try
+                    # second try
                     password = get_password()
                     if not password:
                         sys.exit()
@@ -256,7 +206,7 @@ class DbManage(object):
             self.create_user(username, password, email, True)
         else:
             log.info('creating admin and regular test users')
-            from kallithea.tests import TEST_USER_ADMIN_LOGIN, \
+            from kallithea.tests.base import TEST_USER_ADMIN_LOGIN, \
             TEST_USER_ADMIN_PASS, TEST_USER_ADMIN_EMAIL, \
             TEST_USER_REGULAR_LOGIN, TEST_USER_REGULAR_PASS, \
             TEST_USER_REGULAR_EMAIL, TEST_USER_REGULAR2_LOGIN, \
@@ -271,88 +221,6 @@ class DbManage(object):
             self.create_user(TEST_USER_REGULAR2_LOGIN, TEST_USER_REGULAR2_PASS,
                              TEST_USER_REGULAR2_EMAIL, False)
 
-    def create_ui_settings(self, repo_store_path):
-        """
-        Creates ui settings, fills out hooks
-        """
-
-        #HOOKS
-        hooks1_key = Ui.HOOK_UPDATE
-        hooks1_ = self.sa.query(Ui)\
-            .filter(Ui.ui_key == hooks1_key).scalar()
-
-        hooks1 = Ui() if hooks1_ is None else hooks1_
-        hooks1.ui_section = 'hooks'
-        hooks1.ui_key = hooks1_key
-        hooks1.ui_value = 'hg update >&2'
-        hooks1.ui_active = False
-        self.sa.add(hooks1)
-
-        hooks2_key = Ui.HOOK_REPO_SIZE
-        hooks2_ = self.sa.query(Ui)\
-            .filter(Ui.ui_key == hooks2_key).scalar()
-        hooks2 = Ui() if hooks2_ is None else hooks2_
-        hooks2.ui_section = 'hooks'
-        hooks2.ui_key = hooks2_key
-        hooks2.ui_value = 'python:kallithea.lib.hooks.repo_size'
-        self.sa.add(hooks2)
-
-        hooks3 = Ui()
-        hooks3.ui_section = 'hooks'
-        hooks3.ui_key = Ui.HOOK_PUSH
-        hooks3.ui_value = 'python:kallithea.lib.hooks.log_push_action'
-        self.sa.add(hooks3)
-
-        hooks4 = Ui()
-        hooks4.ui_section = 'hooks'
-        hooks4.ui_key = Ui.HOOK_PRE_PUSH
-        hooks4.ui_value = 'python:kallithea.lib.hooks.pre_push'
-        self.sa.add(hooks4)
-
-        hooks5 = Ui()
-        hooks5.ui_section = 'hooks'
-        hooks5.ui_key = Ui.HOOK_PULL
-        hooks5.ui_value = 'python:kallithea.lib.hooks.log_pull_action'
-        self.sa.add(hooks5)
-
-        hooks6 = Ui()
-        hooks6.ui_section = 'hooks'
-        hooks6.ui_key = Ui.HOOK_PRE_PULL
-        hooks6.ui_value = 'python:kallithea.lib.hooks.pre_pull'
-        self.sa.add(hooks6)
-
-        # enable largefiles
-        largefiles = Ui()
-        largefiles.ui_section = 'extensions'
-        largefiles.ui_key = 'largefiles'
-        largefiles.ui_value = ''
-        self.sa.add(largefiles)
-
-        # set default largefiles cache dir, defaults to
-        # /repo location/.cache/largefiles
-        largefiles = Ui()
-        largefiles.ui_section = 'largefiles'
-        largefiles.ui_key = 'usercache'
-        largefiles.ui_value = os.path.join(repo_store_path, '.cache',
-                                           'largefiles')
-        self.sa.add(largefiles)
-
-        # enable hgsubversion disabled by default
-        hgsubversion = Ui()
-        hgsubversion.ui_section = 'extensions'
-        hgsubversion.ui_key = 'hgsubversion'
-        hgsubversion.ui_value = ''
-        hgsubversion.ui_active = False
-        self.sa.add(hgsubversion)
-
-        # enable hggit disabled by default
-        hggit = Ui()
-        hggit.ui_section = 'extensions'
-        hggit.ui_key = 'hggit'
-        hggit.ui_value = ''
-        hggit.ui_active = False
-        self.sa.add(hggit)
-
     def create_auth_plugin_options(self, skip_existing=False):
         """
         Create default auth plugin settings, and make it active
@@ -361,8 +229,8 @@ class DbManage(object):
         """
 
         for k, v, t in [('auth_plugins', 'kallithea.lib.auth_modules.auth_internal', 'list'),
-                     ('auth_internal_enabled', 'True', 'bool')]:
-            if skip_existing and Setting.get_by_name(k) != None:
+                        ('auth_internal_enabled', 'True', 'bool')]:
+            if skip_existing and Setting.get_by_name(k) is not None:
                 log.debug('Skipping option %s', k)
                 continue
             setting = Setting(k, v, t)
@@ -388,17 +256,15 @@ class DbManage(object):
         def_usr = User.get_default_user()
         for g in RepoGroup.query().all():
             g.group_name = g.get_new_name(g.name)
-            self.sa.add(g)
             # get default perm
-            default = UserRepoGroupToPerm.query()\
-                .filter(UserRepoGroupToPerm.group == g)\
-                .filter(UserRepoGroupToPerm.user == def_usr)\
+            default = UserRepoGroupToPerm.query() \
+                .filter(UserRepoGroupToPerm.group == g) \
+                .filter(UserRepoGroupToPerm.user == def_usr) \
                 .scalar()
 
             if default is None:
                 log.debug('missing default permission for group %s adding', g)
-                perm_obj = RepoGroupModel()._create_default_perms(g)
-                self.sa.add(perm_obj)
+                RepoGroupModel()._create_default_perms(g)
 
     def reset_permissions(self, username):
         """
@@ -411,7 +277,7 @@ class DbManage(object):
         if not default_user:
             return
 
-        u2p = UserToPerm.query()\
+        u2p = UserToPerm.query() \
             .filter(UserToPerm.user == default_user).all()
         fixed = False
         if len(u2p) != len(Permission.DEFAULT_USER_PERMISSIONS):
@@ -422,11 +288,11 @@ class DbManage(object):
         return fixed
 
     def update_repo_info(self):
-        RepoModel.update_repoinfo()
+        for repo in Repository.query():
+            repo.update_changeset_cache()
 
     def config_prompt(self, test_repo_path='', retries=3):
-        defaults = self.cli_args
-        _path = defaults.get('repos_location')
+        _path = self.cli_args.get('repos_location')
         if retries == 3:
             log.info('Setting up repositories config')
 
@@ -458,7 +324,7 @@ class DbManage(object):
         # check write access, warn user about non writeable paths
         elif not os.access(path, os.W_OK) and path_ok:
             log.warning('No write permission to given path %s', path)
-            if not ask_ok('Given path %s is not writeable, do you want to '
+            if not self._ask_ok('Given path %s is not writeable, do you want to '
                           'continue with read only mode ? [y/n]' % (path,)):
                 log.error('Canceled by user')
                 sys.exit(-1)
@@ -466,8 +332,10 @@ class DbManage(object):
         if retries == 0:
             sys.exit('max retries reached')
         if not path_ok:
+            if _path is not None:
+                sys.exit('Invalid repo path: %s' % _path)
             retries -= 1
-            return self.config_prompt(test_repo_path, retries)
+            return self.config_prompt(test_repo_path, retries) # recursing!!!
 
         real_path = os.path.normpath(os.path.realpath(path))
 
@@ -478,21 +346,28 @@ class DbManage(object):
 
     def create_settings(self, path):
 
-        self.create_ui_settings(path)
-
         ui_config = [
-            ('web', 'push_ssl', 'false'),
-            ('web', 'allow_archive', 'gz zip bz2'),
-            ('web', 'allow_push', '*'),
-            ('web', 'baseurl', '/'),
-            ('paths', '/', path),
-            #('phases', 'publish', 'false')
+            ('web', 'allow_archive', 'gz zip bz2', True),
+            ('web', 'baseurl', '/', True),
+            ('paths', '/', path, True),
+            #('phases', 'publish', 'false', False)
+            ('hooks', Ui.HOOK_UPDATE, 'hg update >&2', False),
+            ('hooks', Ui.HOOK_REPO_SIZE, 'python:kallithea.lib.hooks.repo_size', True),
+            ('hooks', Ui.HOOK_PUSH_LOG, 'python:kallithea.lib.hooks.log_push_action', True),
+            ('hooks', Ui.HOOK_PUSH_LOCK, 'python:kallithea.lib.hooks.push_lock_handling', True),
+            ('hooks', Ui.HOOK_PULL_LOG, 'python:kallithea.lib.hooks.log_pull_action', True),
+            ('hooks', Ui.HOOK_PULL_LOCK, 'python:kallithea.lib.hooks.pull_lock_handling', True),
+            ('extensions', 'largefiles', '', True),
+            ('largefiles', 'usercache', os.path.join(path, '.cache', 'largefiles'), True),
+            ('extensions', 'hgsubversion', '', False),
+            ('extensions', 'hggit', '', False),
         ]
-        for section, key, value in ui_config:
+        for section, key, value, active in ui_config:
             ui_conf = Ui()
             setattr(ui_conf, 'ui_section', section)
             setattr(ui_conf, 'ui_key', key)
             setattr(ui_conf, 'ui_value', value)
+            setattr(ui_conf, 'ui_active', active)
             self.sa.add(ui_conf)
 
         settings = [
@@ -501,8 +376,8 @@ class DbManage(object):
             ('ga_code', '', 'unicode'),
             ('show_public_icon', True, 'bool'),
             ('show_private_icon', True, 'bool'),
-            ('stylify_metatags', False, 'bool'),
-            ('dashboard_items', 100, 'int'),
+            ('stylify_metalabels', False, 'bool'),
+            ('dashboard_items', 100, 'int'), # TODO: call it page_size
             ('admin_grid_items', 25, 'int'),
             ('show_version', True, 'bool'),
             ('use_gravatar', True, 'bool'),
@@ -522,9 +397,9 @@ class DbManage(object):
     def create_user(self, username, password, email='', admin=False):
         log.info('creating user %s', username)
         UserModel().create_or_update(username, password, email,
-                                     firstname='Kallithea', lastname='Admin',
+                                     firstname=u'Kallithea', lastname=u'Admin',
                                      active=True, admin=admin,
-                                     extern_type=EXTERN_TYPE_INTERNAL)
+                                     extern_type=User.DEFAULT_AUTH_TYPE)
 
     def create_default_user(self):
         log.info('creating default user')
@@ -532,14 +407,13 @@ class DbManage(object):
         user = UserModel().create_or_update(username=User.DEFAULT_USER,
                                             password=str(uuid.uuid1())[:20],
                                             email='anonymous@kallithea-scm.org',
-                                            firstname='Anonymous',
-                                            lastname='User')
+                                            firstname=u'Anonymous',
+                                            lastname=u'User')
         # based on configuration options activate/deactivate this user which
         # controls anonymous access
         if self.cli_args.get('public_access') is False:
             log.info('Public access disabled')
             user.active = False
-            Session().add(user)
             Session().commit()
 
     def create_permissions(self):
@@ -549,7 +423,7 @@ class DbManage(object):
         # module.(access|create|change|delete)_[name]
         # module.(none|read|write|admin)
         log.info('creating permissions')
-        PermissionModel(self.sa).create_permissions()
+        PermissionModel().create_permissions()
 
     def populate_default_permissions(self):
         """
@@ -557,14 +431,4 @@ class DbManage(object):
         permissions that are missing, and not alter already defined ones
         """
         log.info('creating default user permissions')
-        PermissionModel(self.sa).create_default_permissions(user=User.DEFAULT_USER)
-
-    @staticmethod
-    def check_waitress():
-        """
-        Function executed at the end of setup
-        """
-        if not __py_version__ >= (2, 6):
-            notify('Python2.5 detected, please switch '
-                   'egg:waitress#main -> egg:Paste#http '
-                   'in your .ini file')
+        PermissionModel().create_default_permissions(user=User.DEFAULT_USER)

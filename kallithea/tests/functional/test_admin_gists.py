@@ -1,4 +1,4 @@
-from kallithea.tests import *
+from kallithea.tests.base import *
 from kallithea.model.gist import GistModel
 from kallithea.model.meta import Session
 from kallithea.model.db import User, Gist
@@ -10,8 +10,8 @@ def _create_gist(f_name, content='some gist', lifetime=-1,
     gist_mapping = {
         f_name: {'content': content}
     }
-    user = User.get_by_username(owner)
-    gist = GistModel().create(description, owner=user,
+    owner = User.get_by_username(owner)
+    gist = GistModel().create(description, owner=owner,
                        gist_mapping=gist_mapping, gist_type=gist_type,
                        lifetime=lifetime)
     Session().commit()
@@ -20,8 +20,8 @@ def _create_gist(f_name, content='some gist', lifetime=-1,
 
 class TestGistsController(TestController):
 
-    def tearDown(self):
-        for g in Gist.get_all():
+    def teardown_method(self, method):
+        for g in Gist.query():
             GistModel().delete(g)
         Session().commit()
 
@@ -50,7 +50,7 @@ class TestGistsController(TestController):
         response = self.app.get(url('gists', private=1))
         # Test response...
 
-        #and privates
+        # and privates
         response.mustcontain('gist: %s' % gist.gist_access_id)
 
     def test_create_missing_description(self):
@@ -73,7 +73,7 @@ class TestGistsController(TestController):
         response = response.follow()
         response.mustcontain('added file: foo')
         response.mustcontain('gist test')
-        response.mustcontain('<div class="btn btn-mini btn-success disabled">Public Gist</div>')
+        response.mustcontain('<div class="label label-success">Public Gist</div>')
 
     def test_create_with_path_with_dirs(self):
         self.log_user()
@@ -90,7 +90,6 @@ class TestGistsController(TestController):
         self.log_user()
         gist = _create_gist('never-see-me')
         gist.gist_expires = 0  # 1970
-        Session().add(gist)
         Session().commit()
 
         response = self.app.get(url('gist', gist_id=gist.gist_access_id), status=404)
@@ -107,7 +106,7 @@ class TestGistsController(TestController):
         response = response.follow()
         response.mustcontain('added file: private-foo<')
         response.mustcontain('private gist test')
-        response.mustcontain('<div class="btn btn-mini btn-warning disabled">Private Gist</div>')
+        response.mustcontain('<div class="label label-warning">Private Gist</div>')
 
     def test_create_with_description(self):
         self.log_user()
@@ -123,33 +122,29 @@ class TestGistsController(TestController):
         response.mustcontain('added file: foo-desc')
         response.mustcontain('gist test')
         response.mustcontain('gist-desc')
-        response.mustcontain('<div class="btn btn-mini btn-success disabled">Public Gist</div>')
+        response.mustcontain('<div class="label label-success">Public Gist</div>')
 
     def test_new(self):
         self.log_user()
         response = self.app.get(url('new_gist'))
 
-    def test_update(self):
-        self.skipTest('not implemented')
-        response = self.app.put(url('gist', gist_id=1))
-
     def test_delete(self):
         self.log_user()
         gist = _create_gist('delete-me')
-        response = self.app.post(url('gist', gist_id=gist.gist_id),
-            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
+        response = self.app.post(url('gist_delete', gist_id=gist.gist_id),
+            params={'_authentication_token': self.authentication_token()})
 
     def test_delete_normal_user_his_gist(self):
         self.log_user(TEST_USER_REGULAR_LOGIN, TEST_USER_REGULAR_PASS)
         gist = _create_gist('delete-me', owner=TEST_USER_REGULAR_LOGIN)
-        response = self.app.post(url('gist', gist_id=gist.gist_id),
-            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
+        response = self.app.post(url('gist_delete', gist_id=gist.gist_id),
+            params={'_authentication_token': self.authentication_token()})
 
     def test_delete_normal_user_not_his_own_gist(self):
         self.log_user(TEST_USER_REGULAR_LOGIN, TEST_USER_REGULAR_PASS)
         gist = _create_gist('delete-me')
-        response = self.app.post(url('gist', gist_id=gist.gist_id), status=403,
-            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
+        response = self.app.post(url('gist_delete', gist_id=gist.gist_id), status=403,
+            params={'_authentication_token': self.authentication_token()})
 
     def test_show(self):
         gist = _create_gist('gist-show-me')
@@ -157,20 +152,20 @@ class TestGistsController(TestController):
         response.mustcontain('added file: gist-show-me<')
         response.mustcontain('%s - created' % TEST_USER_ADMIN_LOGIN)
         response.mustcontain('gist-desc')
-        response.mustcontain('<div class="btn btn-mini btn-success disabled">Public Gist</div>')
+        response.mustcontain('<div class="label label-success">Public Gist</div>')
 
     def test_show_as_raw(self):
         gist = _create_gist('gist-show-me', content='GIST CONTENT')
         response = self.app.get(url('formatted_gist',
                                     gist_id=gist.gist_access_id, format='raw'))
-        self.assertEqual(response.body, 'GIST CONTENT')
+        assert response.body == 'GIST CONTENT'
 
     def test_show_as_raw_individual_file(self):
         gist = _create_gist('gist-show-me-raw', content='GIST BODY')
         response = self.app.get(url('formatted_gist_file',
                                     gist_id=gist.gist_access_id, format='raw',
                                     revision='tip', f_path='gist-show-me-raw'))
-        self.assertEqual(response.body, 'GIST BODY')
+        assert response.body == 'GIST BODY'
 
     def test_edit(self):
         response = self.app.get(url('edit_gist', gist_id=1))

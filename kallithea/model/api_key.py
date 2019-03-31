@@ -27,18 +27,15 @@ Original author and date, and relevant copyright and licensing information is be
 
 import time
 import logging
-from sqlalchemy import or_
 
 from kallithea.lib.utils2 import generate_api_key
-from kallithea.model import BaseModel
-from kallithea.model.db import UserApiKeys
+from kallithea.model.db import User, UserApiKeys
 from kallithea.model.meta import Session
 
 log = logging.getLogger(__name__)
 
 
-class ApiKeyModel(BaseModel):
-    cls = UserApiKeys
+class ApiKeyModel(object):
 
     def create(self, user, description, lifetime=-1):
         """
@@ -46,7 +43,7 @@ class ApiKeyModel(BaseModel):
         :param description: description of ApiKey
         :param lifetime: expiration time in seconds
         """
-        user = self._get_user(user)
+        user = User.guess_instance(user)
 
         new_api_key = UserApiKeys()
         new_api_key.api_key = generate_api_key()
@@ -65,18 +62,16 @@ class ApiKeyModel(BaseModel):
         api_key = UserApiKeys.query().filter(UserApiKeys.api_key == api_key)
 
         if user is not None:
-            user = self._get_user(user)
+            user = User.guess_instance(user)
             api_key = api_key.filter(UserApiKeys.user_id == user.user_id)
 
         api_key = api_key.scalar()
         Session().delete(api_key)
 
     def get_api_keys(self, user, show_expired=True):
-        user = self._get_user(user)
-        user_api_keys = UserApiKeys.query()\
+        user = User.guess_instance(user)
+        user_api_keys = UserApiKeys.query() \
             .filter(UserApiKeys.user_id == user.user_id)
         if not show_expired:
-            user_api_keys = user_api_keys\
-                .filter(or_(UserApiKeys.expires == -1,
-                            UserApiKeys.expires >= time.time()))
+            user_api_keys = user_api_keys.filter_by(is_expired=False)
         return user_api_keys

@@ -8,18 +8,18 @@ General Kallithea usage
 Repository deletion
 -------------------
 
-Currently when an admin or owner deletes a repository, Kallithea does
+When an admin or owner deletes a repository, Kallithea does
 not physically delete said repository from the filesystem, but instead
 renames it in a special way so that it is not possible to push, clone
 or access the repository.
 
 There is a special command for cleaning up such archived repositories::
 
-    paster cleanup-repos --older-than=30d my.ini
+    kallithea-cli repo-purge-deleted -c my.ini --older-than=30d
 
 This command scans for archived repositories that are older than
 30 days, displays them, and asks if you want to delete them (unless given
-the ``--dont-ask`` flag). If you host a large amount of repositories with
+the ``--no-ask`` flag). If you host a large amount of repositories with
 forks that are constantly being deleted, it is recommended that you run this
 command via crontab.
 
@@ -151,7 +151,7 @@ described in more detail in this documentation. However, there are a few
 features that merit further explanation.
 
 Repository extra fields
-~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^
 
 In the *Visual* tab, there is an option "Use repository extra
 fields", which allows to set custom fields for each repository in the system.
@@ -165,7 +165,7 @@ about a manager of each repository.  There's no limit for adding custom fields.
 Newly created fields are accessible via the API.
 
 Meta tagging
-~~~~~~~~~~~~
+^^^^^^^^^^^^
 
 In the *Visual* tab, option "Stylify recognised meta tags" will cause Kallithea
 to turn certain text fragments in repository and repository group

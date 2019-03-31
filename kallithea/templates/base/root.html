@@ -4,122 +4,124 @@
     <head>
         <title><%block name="title"/><%block name="branding_title"/></title>
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=10"/>
         <meta name="robots" content="index, nofollow"/>
-        <link rel="icon" href="${h.url('/images/favicon.ico')}" type="image/png" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="shortcut icon" href="${h.url('/images/favicon.ico')}" type="image/x-icon" />
+        <link rel="icon" type="image/png" href="${h.url('/images/favicon-32x32.png')}" sizes="32x32">
+        <link rel="icon" type="image/png" href="${h.url('/images/favicon-16x16.png')}" sizes="16x16">
+        <link rel="apple-touch-icon" sizes="180x180" href="${h.url('/images/apple-touch-icon.png')}">
+        <link rel="manifest" href="${h.url('/images/manifest.json')}">
+        <link rel="mask-icon" href="${h.url('/images/safari-pinned-tab.svg')}" color="#b1d579">
+        <meta name="msapplication-config" content="${h.url('/images/browserconfig.xml')}">
+        <meta name="theme-color" content="#ffffff">
 
         ## CSS ###
-        <link rel="stylesheet" type="text/css" href="${h.url('/js/select2/select2.css', ver=c.kallithea_version)}"/>
-        <link rel="stylesheet" type="text/css" href="${h.url('/css/pygments.css', ver=c.kallithea_version)}"/>
         <link rel="stylesheet" type="text/css" href="${h.url('/css/style.css', ver=c.kallithea_version)}" media="screen"/>
-        <link rel="stylesheet" type="text/css" href="${h.url('/css/contextbar.css', ver=c.kallithea_version)}" media="screen"/>
-        <link rel="stylesheet" type="text/css" href="${h.url('/fontello/css/kallithea.css', ver=c.kallithea_version)}">
         <%block name="css_extra"/>
 
         ## JAVASCRIPT ##
         <script type="text/javascript">
             ## JS translations map
             var TRANSLATION_MAP = {
-                'Add Another Comment':'${_("Add Another Comment")}',
-                'Stop following this repository':"${_('Stop following this repository')}",
-                'Start following this repository':"${_('Start following this repository')}",
-                'Group':"${_('Group')}",
-                'members':"${_('members')}",
-                'Loading ...':"${_('Loading ...')}",
-                'loading ...':"${_('loading ...')}",
-                'Search truncated': "${_('Search truncated')}",
-                'No matching files': "${_('No matching files')}",
-                'Open New Pull Request from {0}': "${_('Open New Pull Request from {0}')}",
-                'Open New Pull Request for {0} &rarr; {1}': "${h.literal(_('Open New Pull Request for {0} &rarr; {1}'))}",
-                'Show Selected Changesets {0} &rarr; {1}': "${h.literal(_('Show Selected Changesets {0} &rarr; {1}'))}",
-                'Selection Link': "${_('Selection Link')}",
-                'Collapse Diff': "${_('Collapse Diff')}",
-                'Expand Diff': "${_('Expand Diff')}",
-                'Failed to revoke permission': "${_('Failed to revoke permission')}",
-                'Confirm to revoke permission for {0}: {1} ?': "${_('Confirm to revoke permission for {0}: {1} ?')}",
-                'enabled': "${_('enabled')}",
-                'disabled': "${_('disabled')}",
-                'Select changeset': "${_('Select changeset')}",
-                'Specify changeset': "${_('Specify changeset')}",
-                'MSG_SORTASC': "${_('Click to sort ascending')}",
-                'MSG_SORTDESC': "${_('Click to sort descending')}",
-                'MSG_EMPTY': "${_('No records found.')}",
-                'MSG_ERROR': "${_('Data error.')}",
-                'MSG_LOADING': "${_('Loading...')}"
+                'Cancel': ${h.jshtml(_("Cancel"))},
+                'Retry': ${h.jshtml(_("Retry"))},
+                'Submitting ...': ${h.jshtml(_("Submitting ..."))},
+                'Unable to post': ${h.jshtml(_("Unable to post"))},
+                'Add Another Comment': ${h.jshtml(_("Add Another Comment"))},
+                'Stop following this repository': ${h.jshtml(_('Stop following this repository'))},
+                'Start following this repository': ${h.jshtml(_('Start following this repository'))},
+                'Group': ${h.jshtml(_('Group'))},
+                'Loading ...': ${h.jshtml(_('Loading ...'))},
+                'loading ...': ${h.jshtml(_('loading ...'))},
+                'Search truncated': ${h.jshtml(_('Search truncated'))},
+                'No matching files': ${h.jshtml(_('No matching files'))},
+                'Open New Pull Request from {0}': ${h.jshtml(_('Open New Pull Request from {0}'))},
+                'Open New Pull Request for {0} &rarr; {1}': ${h.js(_('Open New Pull Request for {0} &rarr; {1}'))},
+                'Show Selected Changesets {0} &rarr; {1}': ${h.js(_('Show Selected Changesets {0} &rarr; {1}'))},
+                'Selection Link': ${h.jshtml(_('Selection Link'))},
+                'Collapse Diff': ${h.jshtml(_('Collapse Diff'))},
+                'Expand Diff': ${h.jshtml(_('Expand Diff'))},
+                'No revisions': ${h.jshtml(_('No revisions'))},
+                'Type name of user or member to grant permission': ${h.jshtml(_('Type name of user or member to grant permission'))},
+                'Failed to revoke permission': ${h.jshtml(_('Failed to revoke permission'))},
+                'Confirm to revoke permission for {0}: {1} ?': ${h.jshtml(_('Confirm to revoke permission for {0}: {1} ?'))},
+                'Enabled': ${h.jshtml(_('Enabled'))},
+                'Disabled': ${h.jshtml(_('Disabled'))},
+                'Select changeset': ${h.jshtml(_('Select changeset'))},
+                'Specify changeset': ${h.jshtml(_('Specify changeset'))},
+                'MSG_SORTASC': ${h.jshtml(_('Click to sort ascending'))},
+                'MSG_SORTDESC': ${h.jshtml(_('Click to sort descending'))},
+                'MSG_EMPTY': ${h.jshtml(_('No records found.'))},
+                'MSG_ERROR': ${h.jshtml(_('Data error.'))},
+                'MSG_LOADING': ${h.jshtml(_('Loading...'))}
             };
             var _TM = TRANSLATION_MAP;
 
-            var TOGGLE_FOLLOW_URL  = "${h.url('toggle_following')}";
+            var TOGGLE_FOLLOW_URL  = ${h.js(h.url('toggle_following'))};
 
             var REPO_NAME = "";
             %if hasattr(c, 'repo_name'):
-                var REPO_NAME = "${c.repo_name}";
+                var REPO_NAME = ${h.js(c.repo_name)};
             %endif
 
-            var _authentication_token = "${h.authentication_token()}";
+            var _authentication_token = ${h.js(h.authentication_token())};
         </script>
-        <script type="text/javascript" src="${h.url('/js/yui.2.9.js', ver=c.kallithea_version)}"></script>
-        <script type="text/javascript" src="${h.url('/js/jquery-1.11.1.min.js', ver=c.kallithea_version)}"></script>
+        <script type="text/javascript" src="${h.url('/js/jquery.min.js', ver=c.kallithea_version)}"></script>
+        <script type="text/javascript" src="${h.url('/js/jquery.dataTables.js', ver=c.kallithea_version)}"></script>
+        <script type="text/javascript" src="${h.url('/js/dataTables.bootstrap.js', ver=c.kallithea_version)}"></script>
         <script type="text/javascript" src="${h.url('/js/bootstrap.js', ver=c.kallithea_version)}"></script>
-        <script type="text/javascript" src="${h.url('/js/select2/select2.js', ver=c.kallithea_version)}"></script>
-        <script type="text/javascript" src="${h.url('/js/mousetrap.js', ver=c.kallithea_version)}"></script>
-        <script type="text/javascript" src="${h.url('/js/yui.flot.js', ver=c.kallithea_version)}"></script>
-        <script type="text/javascript" src="${h.url('/js/native.history.js', ver=c.kallithea_version)}"></script>
+        <script type="text/javascript" src="${h.url('/js/select2.js', ver=c.kallithea_version)}"></script>
+        <script type="text/javascript" src="${h.url('/js/jquery.caret.min.js', ver=c.kallithea_version)}"></script>
+        <script type="text/javascript" src="${h.url('/js/jquery.atwho.min.js', ver=c.kallithea_version)}"></script>
         <script type="text/javascript" src="${h.url('/js/base.js', ver=c.kallithea_version)}"></script>
         ## EXTRA FOR JS
         <%block name="js_extra"/>
         <script type="text/javascript">
-            (function(window,undefined){
-                var History = window.History; // Note: We are using a capital H instead of a lower h
-                if ( !History.enabled ) {
-                     // History.js is disabled for this browser.
-                     // This is because we can optionally choose to support HTML4 browsers or not.
-                    return false;
-                }
-            })(window);
-
             $(document).ready(function(){
               tooltip_activate();
               show_more_event();
-              show_changeset_tooltip();
               // routes registration
-              pyroutes.register('home', "${h.url('home')}", []);
-              pyroutes.register('new_gist', "${h.url('new_gist')}", []);
-              pyroutes.register('gists', "${h.url('gists')}", []);
-              pyroutes.register('new_repo', "${h.url('new_repo')}", []);
+              pyroutes.register('home', ${h.js(h.url('home'))}, []);
+              pyroutes.register('new_gist', ${h.js(h.url('new_gist'))}, []);
+              pyroutes.register('gists', ${h.js(h.url('gists'))}, []);
+              pyroutes.register('new_repo', ${h.js(h.url('new_repo'))}, []);
 
-              pyroutes.register('summary_home', "${h.url('summary_home', repo_name='%(repo_name)s')}", ['repo_name']);
-              pyroutes.register('changelog_home', "${h.url('changelog_home', repo_name='%(repo_name)s')}", ['repo_name']);
-              pyroutes.register('files_home', "${h.url('files_home', repo_name='%(repo_name)s',revision='%(revision)s',f_path='%(f_path)s')}", ['repo_name', 'revision', 'f_path']);
-              pyroutes.register('edit_repo', "${h.url('edit_repo', repo_name='%(repo_name)s')}", ['repo_name']);
-              pyroutes.register('edit_repo_perms', "${h.url('edit_repo_perms', repo_name='%(repo_name)s')}", ['repo_name']);
-              pyroutes.register('pullrequest_home', "${h.url('pullrequest_home', repo_name='%(repo_name)s')}", ['repo_name']);
+              pyroutes.register('summary_home', ${h.js(h.url('summary_home', repo_name='%(repo_name)s'))}, ['repo_name']);
+              pyroutes.register('changelog_home', ${h.js(h.url('changelog_home', repo_name='%(repo_name)s'))}, ['repo_name']);
+              pyroutes.register('files_home', ${h.js(h.url('files_home', repo_name='%(repo_name)s',revision='%(revision)s',f_path='%(f_path)s'))}, ['repo_name', 'revision', 'f_path']);
+              pyroutes.register('edit_repo', ${h.js(h.url('edit_repo', repo_name='%(repo_name)s'))}, ['repo_name']);
+              pyroutes.register('edit_repo_perms', ${h.js(h.url('edit_repo_perms', repo_name='%(repo_name)s'))}, ['repo_name']);
+              pyroutes.register('pullrequest_home', ${h.js(h.url('pullrequest_home', repo_name='%(repo_name)s'))}, ['repo_name']);
 
-              pyroutes.register('toggle_following', "${h.url('toggle_following')}");
-              pyroutes.register('changeset_info', "${h.url('changeset_info', repo_name='%(repo_name)s', revision='%(revision)s')}", ['repo_name', 'revision']);
-              pyroutes.register('repo_size', "${h.url('repo_size', repo_name='%(repo_name)s')}", ['repo_name']);
-              pyroutes.register('changeset_comment_preview', "${h.url('changeset_comment_preview', repo_name='%(repo_name)s')}", ['repo_name']);
-              pyroutes.register('repo_refs_data', "${h.url('repo_refs_data', repo_name='%(repo_name)s')}", ['repo_name']);
+              pyroutes.register('toggle_following', ${h.js(h.url('toggle_following'))});
+              pyroutes.register('changeset_info', ${h.js(h.url('changeset_info', repo_name='%(repo_name)s', revision='%(revision)s'))}, ['repo_name', 'revision']);
+              pyroutes.register('changeset_home', ${h.js(h.url('changeset_home', repo_name='%(repo_name)s', revision='%(revision)s'))}, ['repo_name', 'revision']);
+              pyroutes.register('repo_size', ${h.js(h.url('repo_size', repo_name='%(repo_name)s'))}, ['repo_name']);
+              pyroutes.register('repo_refs_data', ${h.js(h.url('repo_refs_data', repo_name='%(repo_name)s'))}, ['repo_name']);
+              pyroutes.register('users_and_groups_data', ${h.js(h.url('users_and_groups_data'))}, []);
              });
         </script>
 
         <%block name="head_extra"/>
     </head>
-    <body id="body">
-      <div id="header">
-        <div id="header-inner" class="title">
-          <div id="logo">
-            <a href="${h.url('home')}" style="display: block;">
-              <div class="header">
-                <img src="${h.url('/images/kallithea-logo.svg')}" onerror="this.onerror='';this.src='${h.url('/images/kallithea-logo.png')}'" alt="Kallithea"/>
-              </div>
-              %if c.site_name:
-                <div class="branding">${c.site_name}</div>
-              %endif
+    <body>
+      <nav class="navbar navbar-inverse mainmenu">
+          <div class="navbar-header" id="logo">
+            <a class="navbar-brand" href="${h.url('home')}">
+              <span class="branding">${c.site_name}</span>
             </a>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
           </div>
-          <%block name="header_menu"/>
-        </div>
-      </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <%block name="header_menu"/>
+          </div>
+      </nav>
 
       ${next.body()}
 

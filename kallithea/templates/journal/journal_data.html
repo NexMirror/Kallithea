@@ -1,45 +1,44 @@
 ## -*- coding: utf-8 -*-
 
-%if c.journal_day_aggreagate:
-    %for day,items in c.journal_day_aggreagate:
-     <div class="journal_day">${day}</div>
+%if c.journal_day_aggregate:
+    %for day,items in c.journal_day_aggregate:
+        <h4>${day}</h4>
         % for user,entries in items:
-            <div class="journal_container">
-                <div class="gravatar">
-                    ${h.gravatar(user.email if user else 'anonymous@kallithea-scm.org', size=24)}
-                </div>
+            <div class="container-fluid">
+                ${h.gravatar_div(user.email if user else 'anonymous@kallithea-scm.org', size=24)}
                 %if user:
-                    <div class="journal_user">${user.name} ${user.lastname}</div>
+                    <span class="journal_user">${user.name} ${user.lastname}</span>
                 %else:
-                    <div class="journal_user deleted">${entries[0].username}</div>
+                    <span class="journal_user deleted">${entries[0].username}</span>
                 %endif
-                <div class="journal_action_container">
                 % for entry in entries:
-                    <div class="journal_icon"> ${h.action_parser(entry)[2]()}</div>
-                    <div class="journal_action">${h.action_parser(entry)[0]()}</div>
-                    <div class="journal_repo">
-                        <span class="journal_repo_name">
-                        %if entry.repository is not None:
-                          ${h.link_to(entry.repository.repo_name,
-                                      h.url('summary_home',repo_name=entry.repository.repo_name))}
-                        %else:
-                          ${entry.repository_name}
-                        %endif
-                        </span>
+                  <div class="clearfix">
+                    <div class="pull-left">
+                      <div class="journal_icon"> ${h.action_parser(entry)[2]()}</div>
                     </div>
-                    <div class="journal_action_params">${h.literal(h.action_parser(entry)[1]())}</div>
-                    <div class="date"><span class="tooltip" title="${h.fmt_date(entry.action_date)}">${h.age(entry.action_date)}</span></div>
+                    <div class="pull-left">
+                      <div class="journal_action">
+                          ${h.action_parser(entry)[0]()}
+                          <span class="journal_repo_name">
+                          %if entry.repository is not None:
+                            ${h.link_to(entry.repository.repo_name,
+                                        h.url('summary_home',repo_name=entry.repository.repo_name))}
+                          %else:
+                            ${entry.repository_name}
+                          %endif
+                          </span>
+                      </div>
+                      <div class="journal_action_params">${h.literal(h.action_parser(entry)[1]())}</div>
+                      <div class="date"><span data-toggle="tooltip" title="${h.fmt_date(entry.action_date)}">${h.age(entry.action_date)}</span></div>
+                    </div>
+                  </div>
                 %endfor
-                </div>
             </div>
         %endfor
     %endfor
-
-  <div class="pagination-wh pagination-left" style="padding: 0px 0px 0px 10px;">
-  ${c.journal_pager.pager('$link_previous ~2~ $link_next')}
-  </div>
+    ${c.journal_pager.pager()}
 %else:
-  <div style="padding:5px 0px 10px 10px;">
+  <div>
       ${_('No entries yet')}
   </div>
 %endif

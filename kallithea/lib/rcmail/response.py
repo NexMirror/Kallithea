@@ -196,7 +196,7 @@ class MailResponse(object):
         self.attachments.append({'filename': filename,
                                  'content_type': content_type,
                                  'data': data,
-                                 'disposition': disposition,})
+                                 'disposition': disposition})
 
     def attach_part(self, part):
         """

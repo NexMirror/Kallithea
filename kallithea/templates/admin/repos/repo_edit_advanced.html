@@ -1,12 +1,10 @@
 <h3>${_('Parent')}</h3>
-${h.form(url('edit_repo_advanced_fork', repo_name=c.repo_info.repo_name), method='put')}
+${h.form(url('edit_repo_advanced_fork', repo_name=c.repo_info.repo_name))}
 <div class="form">
-       ${h.select('id_fork_of','',c.repos_list,class_="medium")}
-       ${h.submit('set_as_fork_%s' % c.repo_info.repo_name,_('Set'),class_="btn btn-small")}
-       <div class="field" style="border:none;color:#888">
-       <ul>
-            <li>${_('''Manually set this repository as a fork of another from the list.''')}</li>
-       </ul>
+       ${h.select('id_fork_of','',c.repos_list)}
+       ${h.submit('set_as_fork_%s' % c.repo_info.repo_name,_('Set'),class_="btn btn-default btn-sm")}
+       <div class="text-muted">
+       ${_('''Manually set this repository as a fork of another from the list.''')}
        </div>
 </div>
 ${h.end_form()}
@@ -20,35 +18,33 @@ ${h.end_form()}
 </script>
 
 <h3>${_('Public Journal Visibility')}</h3>
-${h.form(url('edit_repo_advanced_journal', repo_name=c.repo_info.repo_name), method='put')}
+${h.form(url('edit_repo_advanced_journal', repo_name=c.repo_info.repo_name))}
 <div class="form">
-  <div class="field">
+  <div>
   %if c.in_public_journal:
-    <button class="btn btn-small" type="submit">
+    <button class="btn btn-default btn-sm" type="submit">
         <i class="icon-minus"></i>
         ${_('Remove from public journal')}
     </button>
   %else:
-    <button class="btn btn-small" type="submit">
+    <button class="btn btn-default btn-sm" type="submit">
         <i class="icon-plus"></i>
         ${_('Add to Public Journal')}
     </button>
   %endif
   </div>
- <div class="field" style="border:none;color:#888">
- <ul>
-      <li>${_('All actions done in this repository will be visible to everyone in the public journal.')}</li>
- </ul>
+ <div class="text-muted">
+ ${_('All actions done in this repository will be visible to everyone in the public journal.')}
  </div>
 </div>
 ${h.end_form()}
 
 <h3>${_('Change Locking')}</h3>
-${h.form(url('edit_repo_advanced_locking', repo_name=c.repo_info.repo_name), method='put')}
+${h.form(url('edit_repo_advanced_locking', repo_name=c.repo_info.repo_name))}
 <div class="form">
       %if c.repo_info.locked[0]:
         ${h.hidden('set_unlock', '1')}
-        <button class="btn btn-small" type="submit"
+        <button class="btn btn-default btn-sm" type="submit"
                 onclick="return confirm('${_('Confirm to unlock repository.')}');">
             <i class="icon-lock-open-alt"></i>
             ${_('Unlock Repository')}
@@ -56,39 +52,40 @@ ${h.form(url('edit_repo_advanced_locking', repo_name=c.repo_info.repo_name), met
        ${_('Locked by %s on %s') % (h.person_by_id(c.repo_info.locked[0]),h.fmt_date(h.time_to_datetime(c.repo_info.locked[1])))}
       %else:
         ${h.hidden('set_lock', '1')}
-        <button class="btn btn-small" type="submit"
+        <button class="btn btn-default btn-sm" type="submit"
                 onclick="return confirm('${_('Confirm to lock repository.')}');">
             <i class="icon-lock"></i>
             ${_('Lock Repository')}
         </button>
         ${_('Repository is not locked')}
       %endif
-   <div class="field" style="border:none;color:#888">
-   <ul>
-        <li>${_('Force locking on the repository. Works only when anonymous access is disabled. Triggering a pull locks the repository.  The user who is pulling locks the repository; only the user who pulled and locked it can unlock it by doing a push.')}
-        </li>
-   </ul>
+   <div class="text-muted">
+   ${_('Force locking on the repository. Works only when anonymous access is disabled. Triggering a pull locks the repository.  The user who is pulling locks the repository; only the user who pulled and locked it can unlock it by doing a push.')}
    </div>
 </div>
 ${h.end_form()}
 
 <h3>${_('Delete')}</h3>
-${h.form(url('delete_repo', repo_name=c.repo_name), method='delete')}
+${h.form(url('delete_repo', repo_name=c.repo_name))}
 <div class="form">
-    <button class="btn btn-small btn-danger" type="submit"
+    <button class="btn btn-danger btn-sm" type="submit"
             onclick="return confirm('${_('Confirm to delete this repository: %s') % c.repo_name}');">
-        <i class="icon-minus-circled"></i>
+        <i class="icon-trashcan"></i>
         ${_('Delete this Repository')}
     </button>
     %if c.repo_info.forks.count():
         ${ungettext('This repository has %s fork', 'This repository has %s forks', c.repo_info.forks.count()) % c.repo_info.forks.count()}
-        <input type="radio" name="forks" value="detach_forks" checked="checked"/> <label for="forks">${_('Detach forks')}</label>
-        <input type="radio" name="forks" value="delete_forks" /> <label for="forks">${_('Delete forks')}</label>
+        <label>
+            <input type="radio" name="forks" value="detach_forks" checked="checked"/>
+            ${_('Detach forks')}
+        </label>
+        <label>
+            <input type="radio" name="forks" value="delete_forks" />
+            ${_('Delete forks')}
+        </label>
     %endif
-    <div class="field" style="border:none;color:#888">
-        <ul>
-        <li>${_('The deleted repository will be moved away and hidden until the administrator expires it. The administrator can both permanently delete it or restore it.')}</li>
-        </ul>
+    <div class="text-muted">
+        ${_('The deleted repository will be moved away and hidden until the administrator expires it. The administrator can both permanently delete it or restore it.')}
     </div>
 </div>
 ${h.end_form()}

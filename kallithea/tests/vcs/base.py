@@ -1,36 +1,28 @@
 """
-Module providing backend independent mixin class. It requires that
-InMemoryChangeset class is working properly at backend class.
+Module providing backend independent mixin class.
 """
 import os
 import time
-import shutil
 import datetime
-from kallithea.tests.vcs.conf import SCM_TESTS, get_new_dir
+import pytest
 
 from kallithea.lib import vcs
-from kallithea.lib.vcs.utils.compat import unittest
 from kallithea.lib.vcs.nodes import FileNode
+
+from kallithea.tests.vcs.conf import get_new_dir
 
 
 class _BackendTestMixin(object):
     """
-    This is a backend independent test case class which should be created
-    with ``type`` method.
+    This is a backend independent test case class
 
-    It is required to set following attributes at subclass:
+    It is possible to set following attributes at subclass:
 
     - ``backend_alias``: alias of used backend (see ``vcs.BACKENDS``)
-    - ``repo_path``: path to the repository which would be created for set of
-      tests
     - ``recreate_repo_per_test``: If set to ``False``, repo would NOT be created
       before every single test. Defaults to ``True``.
     """
     recreate_repo_per_test = True
-
-    @classmethod
-    def get_backend(cls):
-        return vcs.get_backend(cls.backend_alias)
 
     @classmethod
     def _get_commits(cls):
@@ -60,12 +52,23 @@ class _BackendTestMixin(object):
         ]
         return commits
 
+    # Note: cannot use classmethod fixtures with pytest 3.7.1+
+    @pytest.fixture(autouse=True,
+                    scope='class')
+    def _configure_backend(self, request):
+        Backend = vcs.get_backend(self.backend_alias)
+        type(self).backend_class = Backend
+        type(self).setup_repo(Backend)
+
     @classmethod
-    def setUpClass(cls):
-        Backend = cls.get_backend()
-        cls.backend_class = Backend
-        cls.repo_path = get_new_dir(str(time.time()))
-        cls.repo = Backend(cls.repo_path, create=True)
+    def setup_empty_repo(cls, backend):
+        repo_path = get_new_dir(str(time.time()))
+        repo = backend(repo_path, create=True)
+        return repo
+
+    @classmethod
+    def setup_repo(cls, backend):
+        cls.repo = cls.setup_empty_repo(backend)
         cls.imc = cls.repo.in_memory_changeset
         cls.default_branch = cls.repo.DEFAULT_BRANCH_NAME
 
@@ -81,31 +84,7 @@ class _BackendTestMixin(object):
                                      author=unicode(commit['author']),
                                      date=commit['date'])
 
-    @classmethod
-    def tearDownClass(cls):
-        if not getattr(cls, 'recreate_repo_per_test', False) and \
-            'VCS_REMOVE_TEST_DIRS' in os.environ:
-            shutil.rmtree(cls.repo_path)
-
-    def setUp(self):
+    @pytest.fixture(autouse=True)
+    def _possibly_recreate_repo(self):
         if getattr(self, 'recreate_repo_per_test', False):
-            self.__class__.setUpClass()
-
-    def tearDown(self):
-        if getattr(self, 'recreate_repo_per_test', False) and \
-            'VCS_REMOVE_TEST_DIRS' in os.environ:
-            shutil.rmtree(self.repo_path)
-
-
-# For each backend create test case class
-for alias in SCM_TESTS:
-    attrs = {
-        'backend_alias': alias,
-    }
-    cls_name = ''.join(('%s base backend test' % alias).title().split())
-    bases = (_BackendTestMixin, unittest.TestCase)
-    globals()[cls_name] = type(cls_name, bases, attrs)
-
-
-if __name__ == '__main__':
-    unittest.main()
+            self.setup_repo(self.backend_class)

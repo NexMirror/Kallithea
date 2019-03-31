@@ -27,14 +27,15 @@ import logging
 import formencode.htmlfill
 import traceback
 
-from pylons import request, tmpl_context as c, url
-from pylons.controllers.util import redirect
-from pylons.i18n.translation import _
+from tg import request, tmpl_context as c
+from tg.i18n import ugettext as _
+from webob.exc import HTTPFound
 
+from kallithea.config.routing import url
 from kallithea.lib import helpers as h
 from kallithea.lib.compat import formatted_json
 from kallithea.lib.base import BaseController, render
-from kallithea.lib.auth import LoginRequired, HasPermissionAllDecorator
+from kallithea.lib.auth import LoginRequired, HasPermissionAnyDecorator
 from kallithea.lib import auth_modules
 from kallithea.model.forms import AuthSettingsForm
 from kallithea.model.db import Setting
@@ -46,9 +47,9 @@ log = logging.getLogger(__name__)
 class AuthSettingsController(BaseController):
 
     @LoginRequired()
-    @HasPermissionAllDecorator('hg.admin')
-    def __before__(self):
-        super(AuthSettingsController, self).__before__()
+    @HasPermissionAnyDecorator('hg.admin')
+    def _before(self, *args, **kwargs):
+        super(AuthSettingsController, self)._before(*args, **kwargs)
 
     def __load_defaults(self):
         c.available_plugins = [
@@ -58,31 +59,31 @@ class AuthSettingsController(BaseController):
             'kallithea.lib.auth_modules.auth_crowd',
             'kallithea.lib.auth_modules.auth_pam'
         ]
-        c.enabled_plugins = Setting.get_auth_plugins()
+        self.enabled_plugins = auth_modules.get_auth_plugins()
+        c.enabled_plugin_names = [plugin.__class__.__module__ for plugin in self.enabled_plugins]
 
     def __render(self, defaults, errors):
         c.defaults = {}
         c.plugin_settings = {}
         c.plugin_shortnames = {}
 
-        for module in c.enabled_plugins:
-            plugin = auth_modules.loadplugin(module)
-            plugin_name = plugin.name
-            c.plugin_shortnames[module] = plugin_name
+        for plugin in self.enabled_plugins:
+            module = plugin.__class__.__module__
+            c.plugin_shortnames[module] = plugin.name
             c.plugin_settings[module] = plugin.plugin_settings()
             for v in c.plugin_settings[module]:
-                fullname = ("auth_" + plugin_name + "_" + v["name"])
+                fullname = "auth_%s_%s" % (plugin.name, v["name"])
                 if "default" in v:
                     c.defaults[fullname] = v["default"]
                 # Current values will be the default on the form, if there are any
                 setting = Setting.get_by_name(fullname)
                 if setting is not None:
                     c.defaults[fullname] = setting.app_settings_value
-        # we want to show , separated list of enabled plugins
-        c.defaults['auth_plugins'] = ','.join(c.enabled_plugins)
-
         if defaults:
             c.defaults.update(defaults)
+
+        # we want to show , separated list of enabled plugins
+        c.defaults['auth_plugins'] = ','.join(c.enabled_plugin_names)
 
         log.debug(formatted_json(defaults))
         return formencode.htmlfill.render(
@@ -117,10 +118,10 @@ class AuthSettingsController(BaseController):
             # (yet), since that'll cause validation errors and/or wrong
             # settings being applied (e.g. checkboxes being cleared),
             # since the plugin settings will not be in the POST data.
-            c.enabled_plugins = [ p for p in c.enabled_plugins if p in new_enabled_plugins ]
+            c.enabled_plugin_names = [p for p in c.enabled_plugin_names if p in new_enabled_plugins]
 
         # Next, parse everything including plugin settings.
-        _form = AuthSettingsForm(c.enabled_plugins)()
+        _form = AuthSettingsForm(c.enabled_plugin_names)()
 
         try:
             form_result = _form.to_python(dict(request.POST))
@@ -130,7 +131,6 @@ class AuthSettingsController(BaseController):
                     v = ','.join(v)
                 log.debug("%s = %s", k, str(v))
                 setting = Setting.create_or_update(k, v)
-                Session().add(setting)
             Session().commit()
             h.flash(_('Auth settings updated successfully'),
                        category='success')
@@ -146,4 +146,4 @@ class AuthSettingsController(BaseController):
             h.flash(_('error occurred during update of auth settings'),
                     category='error')
 
-        return redirect(url('auth_home'))
+        raise HTTPFound(location=url('auth_home'))

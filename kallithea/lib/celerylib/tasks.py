@@ -26,73 +26,61 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-from celery.decorators import task
-
 import os
 import traceback
 import logging
 import rfc822
-from os.path import join as jn
 
 from time import mktime
 from operator import itemgetter
 from string import lower
 
-from pylons import config
+from tg import config
 
 from kallithea import CELERY_ON
-from kallithea.lib.celerylib import run_task, locked_task, dbsession, \
-    str2bool, __get_lockkey, LockHeld, DaemonLock, get_session
+from kallithea.lib import celerylib
 from kallithea.lib.helpers import person
 from kallithea.lib.rcmail.smtp_mailer import SmtpMailer
-from kallithea.lib.utils import add_cache, action_logger
+from kallithea.lib.utils import action_logger
+from kallithea.lib.utils2 import str2bool
 from kallithea.lib.vcs.utils import author_email
 from kallithea.lib.compat import json, OrderedDict
 from kallithea.lib.hooks import log_create_repository
 
-from kallithea.model.db import Statistics, Repository, User
+from kallithea.model.db import Statistics, RepoGroup, Repository, User
 
-
-add_cache(config)  # pragma: no cover
 
 __all__ = ['whoosh_index', 'get_commits_stats', 'send_email']
 
 
-def get_logger(cls):
-    if CELERY_ON:
-        try:
-            return cls.get_logger()
-        except AttributeError:
-            pass
-    return logging.getLogger(__name__)
+log = logging.getLogger(__name__)
 
 
-@task(ignore_result=True)
-@locked_task
-@dbsession
+@celerylib.task
+@celerylib.locked_task
+@celerylib.dbsession
 def whoosh_index(repo_location, full_index):
     from kallithea.lib.indexers.daemon import WhooshIndexingDaemon
-    DBS = get_session()
+    celerylib.get_session() # initialize database connection
 
     index_location = config['index_dir']
     WhooshIndexingDaemon(index_location=index_location,
-                         repo_location=repo_location, sa=DBS)\
+                         repo_location=repo_location) \
                          .run(full_index=full_index)
 
 
-@task(ignore_result=True)
-@dbsession
+@celerylib.task
+@celerylib.dbsession
 def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
-    log = get_logger(get_commits_stats)
-    DBS = get_session()
-    lockkey = __get_lockkey('get_commits_stats', repo_name, ts_min_y,
+    DBS = celerylib.get_session()
+    lockkey = celerylib.__get_lockkey('get_commits_stats', repo_name, ts_min_y,
                             ts_max_y)
     lockkey_path = config['app_conf']['cache_dir']
 
     log.info('running task with lockkey %s', lockkey)
 
     try:
-        lock = l = DaemonLock(file_=jn(lockkey_path, lockkey))
+        lock = celerylib.DaemonLock(os.path.join(lockkey_path, lockkey))
 
         # for js data compatibility cleans the key for person from '
         akc = lambda k: person(k).replace('"', "")
@@ -116,9 +104,9 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
         last_cs = None
         timegetter = itemgetter('time')
 
-        dbrepo = DBS.query(Repository)\
+        dbrepo = DBS.query(Repository) \
             .filter(Repository.repo_name == repo_name).scalar()
-        cur_stats = DBS.query(Statistics)\
+        cur_stats = DBS.query(Statistics) \
             .filter(Statistics.repository == dbrepo).scalar()
 
         if cur_stats is not None:
@@ -176,7 +164,7 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
                                     "changed": len(cs.changed),
                                     "removed": len(cs.removed),
                                    }
-                        co_day_auth_aggr[akc(cs.author)]['data']\
+                        co_day_auth_aggr[akc(cs.author)]['data'] \
                             .append(datadict)
 
             else:
@@ -192,7 +180,7 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
                                         "schema": ["commits"],
                                         }
 
-            #gather all data by day
+            # gather all data by day
             if k in commits_by_day_aggregate:
                 commits_by_day_aggregate[k] += 1
             else:
@@ -236,19 +224,18 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
 
         # execute another task if celery is enabled
         if len(repo.revisions) > 1 and CELERY_ON and recurse_limit > 0:
-            recurse_limit -= 1
-            run_task(get_commits_stats, repo_name, ts_min_y, ts_max_y,
-                     recurse_limit)
-        if recurse_limit <= 0:
-            log.debug('Breaking recursive mode due to reach of recurse limit')
-        return True
-    except LockHeld:
-        log.info('LockHeld')
+            get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit - 1)
+        elif recurse_limit <= 0:
+            log.debug('Not recursing - limit has been reached')
+        else:
+            log.debug('Not recursing')
+    except celerylib.LockHeld:
+        log.info('Task with key %s already running', lockkey)
         return 'Task with key %s already running' % lockkey
 
 
-@task(ignore_result=True)
-@dbsession
+@celerylib.task
+@celerylib.dbsession
 def send_email(recipients, subject, body='', html_body='', headers=None, author=None):
     """
     Sends an email with defined parameters from the .ini files.
@@ -261,7 +248,6 @@ def send_email(recipients, subject, body='', html_body='', headers=None, author=
     :param headers: dictionary of prepopulated e-mail headers
     :param author: User object of the author of this mail, if known and relevant
     """
-    log = get_logger(send_email)
     assert isinstance(recipients, list), recipients
     if headers is None:
         headers = {}
@@ -279,7 +265,7 @@ def send_email(recipients, subject, body='', html_body='', headers=None, author=
         recipients = [u.email for u in User.query()
                       .filter(User.admin == True).all()]
         if email_config.get('email_to') is not None:
-            recipients += [email_config.get('email_to')]
+            recipients += email_config.get('email_to').split(',')
 
         # If there are still no recipients, there are no admins and no address
         # configured in email_to, so return.
@@ -335,17 +321,16 @@ def send_email(recipients, subject, body='', html_body='', headers=None, author=
         return False
     return True
 
-@task(ignore_result=False)
-@dbsession
+
+@celerylib.task
+@celerylib.dbsession
 def create_repo(form_data, cur_user):
     from kallithea.model.repo import RepoModel
-    from kallithea.model.user import UserModel
     from kallithea.model.db import Setting
 
-    log = get_logger(create_repo)
-    DBS = get_session()
+    DBS = celerylib.get_session()
 
-    cur_user = UserModel(DBS)._get_user(cur_user)
+    cur_user = User.guess_instance(cur_user)
 
     owner = cur_user
     repo_name = form_data['repo_name']
@@ -368,7 +353,7 @@ def create_repo(form_data, cur_user):
     enable_downloads = defs.get('repo_enable_downloads')
 
     try:
-        repo = RepoModel(DBS)._create_repo(
+        repo = RepoModel()._create_repo(
             repo_name=repo_name_full,
             repo_type=repo_type,
             description=description,
@@ -387,14 +372,14 @@ def create_repo(form_data, cur_user):
         )
 
         action_logger(cur_user, 'user_created_repo',
-                      form_data['repo_name_full'], '', DBS)
+                      form_data['repo_name_full'], '')
 
         DBS.commit()
         # now create this repo on Filesystem
-        RepoModel(DBS)._create_filesystem_repo(
+        RepoModel()._create_filesystem_repo(
             repo_name=repo_name,
             repo_type=repo_type,
-            repo_group=RepoModel(DBS)._get_repo_group(repo_group),
+            repo_group=RepoGroup.guess_instance(repo_group),
             clone_uri=clone_uri,
         )
         repo = Repository.get_by_repo_name(repo_name_full)
@@ -414,18 +399,14 @@ def create_repo(form_data, cur_user):
         if repo:
             Repository.delete(repo.repo_id)
             DBS.commit()
-            RepoModel(DBS)._delete_filesystem_repo(repo)
+            RepoModel()._delete_filesystem_repo(repo)
         raise
-
-    # it's an odd fix to make celery fail task when exception occurs
-    def on_failure(self, *args, **kwargs):
-        pass
 
     return True
 
 
-@task(ignore_result=False)
-@dbsession
+@celerylib.task
+@celerylib.dbsession
 def create_repo_fork(form_data, cur_user):
     """
     Creates a fork of repository using interval VCS methods
@@ -434,13 +415,11 @@ def create_repo_fork(form_data, cur_user):
     :param cur_user:
     """
     from kallithea.model.repo import RepoModel
-    from kallithea.model.user import UserModel
 
-    log = get_logger(create_repo_fork)
-    DBS = get_session()
+    DBS = celerylib.get_session()
 
     base_path = Repository.base_path()
-    cur_user = UserModel(DBS)._get_user(cur_user)
+    cur_user = User.guess_instance(cur_user)
 
     repo_name = form_data['repo_name']  # fork in this case
     repo_name_full = form_data['repo_name_full']
@@ -454,9 +433,9 @@ def create_repo_fork(form_data, cur_user):
     copy_fork_permissions = form_data.get('copy_permissions')
 
     try:
-        fork_of = RepoModel(DBS)._get_repo(form_data.get('fork_parent_id'))
+        fork_of = Repository.guess_instance(form_data.get('fork_parent_id'))
 
-        RepoModel(DBS)._create_repo(
+        RepoModel()._create_repo(
             repo_name=repo_name_full,
             repo_type=repo_type,
             description=form_data['description'],
@@ -469,17 +448,16 @@ def create_repo_fork(form_data, cur_user):
             copy_fork_permissions=copy_fork_permissions
         )
         action_logger(cur_user, 'user_forked_repo:%s' % repo_name_full,
-                      fork_of.repo_name, '', DBS)
+                      fork_of.repo_name, '')
         DBS.commit()
 
-        update_after_clone = form_data['update_after_clone'] # FIXME - unused!
         source_repo_path = os.path.join(base_path, fork_of.repo_name)
 
         # now create this repo on Filesystem
-        RepoModel(DBS)._create_filesystem_repo(
+        RepoModel()._create_filesystem_repo(
             repo_name=repo_name,
             repo_type=repo_type,
-            repo_group=RepoModel(DBS)._get_repo_group(repo_group),
+            repo_group=RepoGroup.guess_instance(repo_group),
             clone_uri=source_repo_path,
         )
         repo = Repository.get_by_repo_name(repo_name_full)
@@ -494,17 +472,13 @@ def create_repo_fork(form_data, cur_user):
     except Exception as e:
         log.warning('Exception %s occurred when forking repository, '
                     'doing cleanup...' % e)
-        #rollback things manually !
+        # rollback things manually !
         repo = Repository.get_by_repo_name(repo_name_full)
         if repo:
             Repository.delete(repo.repo_id)
             DBS.commit()
-            RepoModel(DBS)._delete_filesystem_repo(repo)
+            RepoModel()._delete_filesystem_repo(repo)
         raise
-
-    # it's an odd fix to make celery fail task when exception occurs
-    def on_failure(self, *args, **kwargs):
-        pass
 
     return True
 

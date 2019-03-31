@@ -1,22 +1,88 @@
-## -*- coding: utf-8 -*-
-<%inherit file="main.html"/>
+<%inherit file="main.html"/>\
+\
+<%block name="header">\
+<% title = _('Mention on Pull Request %s "%s" by %s') % (pr_nice_id, pr_title, pr_user_created) if is_mention else _('Added as Reviewer of Pull Request %s "%s" by %s') % (pr_nice_id, pr_title, pr_user_created) %>\
+<%include file="header.html" args="title=title,link=pr_url"/>\
+</%block>\
+\
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td>
+            <div>
+                ${_('Pull request')}
+                <a style="${link_style}"
+                   href="${pr_url}">${pr_nice_id} "${pr_title}"</a>
+                ${_('by')}
+                <span style="${data_style}">${pr_owner.full_name_and_username}</span>.
+            </div>
+            <div>
+                ${_('from')}
+                <a style="${link_text_style}"
+                   href="${pr_source_repo}">${pr_source_repo}</a>
+                ${_('branch')}
+                <span style="${data_style}">${pr_source_branch}</span>
+                <br/>
+                ${_('to')}
+                <a style="${link_text_style}"
+                   href="${pr_target_repo}">${pr_target_repo}</a>
+                ${_('branch')}
+                <span style="${data_style}">${pr_target_branch}</span>
+            </div>
+        </td>
+    </tr>
+    <tr><td height="10px" style="height:10px"></td></tr>
+    <tr>
+        <td>
+            <div>
+                ${_('Description')}:
+            </div>
+        </td>
+    </tr>
+    <tr><td height="10px" style="height:10px"></td></tr>
+    <tr>
+        <td>
+            <table cellpadding="0" cellspacing="0" width="100%" border="0" bgcolor="${color_background_grey}" style="border:1px solid ${color_border};border-radius:4px">
+                <tr>
+                    <td height="10px" style="height:10px" colspan="3"></td>
+                </tr>
+                <tr>
+                    <td width="20px" style="width:20px"></td>
+                    <td>
+                        <div style="${comment_style}">${body}</div>
+                    </td>
+                    <td width="20px" style="width:20px"></td>
+                </tr>
+                <tr>
+                    <td height="10px" style="height:10px" colspan="3"></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr><td height="15px" style="height:15px"></td></tr>
+    <tr>
+        <td>
+            <div>${_('Changesets')}:</div>
+        </td>
+    </tr>
+    <tr><td height="10px" style="height:10px"></td></tr>
 
-%if is_mention:
-<p>${_('%s mentioned you on %s pull request "%s"') % (pr_user_created, repo_name, pr_title)}</p>
-%else:
-<p>${_('%s requested your review of %s pull request "%s"') % (pr_user_created, repo_name, pr_title)}</p>
-%endif
-
-<p>${_('URL')}: <a href="${pr_url}">${pr_url}</a></p>
-
-<p>${_('Description')}:</p>
-<p style="white-space: pre-wrap;">${body}</p>
-
-<p>${_('Changesets')}:</p>
-<p style="white-space: pre-wrap;">
-%for r,r_msg in pr_revisions:
-<i>${h.short_id(r)}</i>:
-${h.shorter(r_msg, 256)}
-
-%endfor
-</p>
+    <tr>
+        <td style="${sans_style}">
+            <ul style="color:${color_link};padding-left:15px;margin:0">
+                %for revision, desc in pr_revisions:
+                    <li style="mso-special-format:bullet">
+                        <a style="${link_style}"
+                           href="${h.canonical_url('changeset_home', repo_name=org_repo_name, revision=revision)}">
+                            ${h.shorter(desc, 80, firstline=True)}
+                        </a>
+                    </li>
+                %endfor
+            </ul>
+        </td>
+    </tr>
+    <tr>
+        <td>
+<%include file="button.html" args="url=pr_url,title=_('View Pull Request'),padding_bottom=False"/>\
+        </td>
+    </tr>
+</table>

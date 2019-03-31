@@ -29,79 +29,208 @@ import re
 import difflib
 import logging
 
-from itertools import tee, imap
+from tg.i18n import ugettext as _
 
-from pylons.i18n.translation import _
-
+from kallithea.lib import helpers as h
 from kallithea.lib.vcs.exceptions import VCSError
 from kallithea.lib.vcs.nodes import FileNode, SubModuleNode
 from kallithea.lib.vcs.backends.base import EmptyChangeset
-from kallithea.lib.helpers import escape
 from kallithea.lib.utils2 import safe_unicode
 
 log = logging.getLogger(__name__)
 
 
-def wrap_to_table(str_):
-    return '''<table class="code-difftable">
+def _safe_id(idstring):
+    """Make a string safe for including in an id attribute.
+
+    The HTML spec says that id attributes 'must begin with
+    a letter ([A-Za-z]) and may be followed by any number
+    of letters, digits ([0-9]), hyphens ("-"), underscores
+    ("_"), colons (":"), and periods (".")'. These regexps
+    are slightly over-zealous, in that they remove colons
+    and periods unnecessarily.
+
+    Whitespace is transformed into underscores, and then
+    anything which is not a hyphen or a character that
+    matches \w (alphanumerics and underscore) is removed.
+
+    """
+    # Transform all whitespace to underscore
+    idstring = re.sub(r'\s', "_", idstring)
+    # Remove everything that is not a hyphen or a member of \w
+    idstring = re.sub(r'(?!-)\W', "", idstring).lower()
+    return idstring
+
+
+def as_html(table_class='code-difftable', line_class='line',
+            old_lineno_class='lineno old', new_lineno_class='lineno new',
+            no_lineno_class='lineno',
+            code_class='code', enable_comments=False, parsed_lines=None):
+    """
+    Return given diff as html table with customized css classes
+    """
+    def _link_to_if(condition, label, url):
+        """
+        Generates a link if condition is meet or just the label if not.
+        """
+
+        if condition:
+            return '''<a href="%(url)s" data-pseudo-content="%(label)s"></a>''' % {
+                'url': url,
+                'label': label
+            }
+        else:
+            return label
+
+    _html_empty = True
+    _html = []
+    _html.append('''<table class="%(table_class)s">\n''' % {
+        'table_class': table_class
+    })
+
+    for diff in parsed_lines:
+        for line in diff['chunks']:
+            _html_empty = False
+            for change in line:
+                _html.append('''<tr class="%(lc)s %(action)s">\n''' % {
+                    'lc': line_class,
+                    'action': change['action']
+                })
+                anchor_old_id = ''
+                anchor_new_id = ''
+                anchor_old = "%(filename)s_o%(oldline_no)s" % {
+                    'filename': _safe_id(diff['filename']),
+                    'oldline_no': change['old_lineno']
+                }
+                anchor_new = "%(filename)s_n%(oldline_no)s" % {
+                    'filename': _safe_id(diff['filename']),
+                    'oldline_no': change['new_lineno']
+                }
+                cond_old = (change['old_lineno'] != '...' and
+                            change['old_lineno'])
+                cond_new = (change['new_lineno'] != '...' and
+                            change['new_lineno'])
+                no_lineno = (change['old_lineno'] == '...' and
+                             change['new_lineno'] == '...')
+                if cond_old:
+                    anchor_old_id = 'id="%s"' % anchor_old
+                if cond_new:
+                    anchor_new_id = 'id="%s"' % anchor_new
+                ###########################################################
+                # OLD LINE NUMBER
+                ###########################################################
+                _html.append('''\t<td %(a_id)s class="%(olc)s" %(colspan)s>''' % {
+                    'a_id': anchor_old_id,
+                    'olc': no_lineno_class if no_lineno else old_lineno_class,
+                    'colspan': 'colspan="2"' if no_lineno else ''
+                })
+
+                _html.append('''%(link)s''' % {
+                    'link': _link_to_if(not no_lineno, change['old_lineno'],
+                                        '#%s' % anchor_old)
+                })
+                _html.append('''</td>\n''')
+                ###########################################################
+                # NEW LINE NUMBER
+                ###########################################################
+
+                if not no_lineno:
+                    _html.append('''\t<td %(a_id)s class="%(nlc)s">''' % {
+                        'a_id': anchor_new_id,
+                        'nlc': new_lineno_class
+                    })
+
+                    _html.append('''%(link)s''' % {
+                        'link': _link_to_if(True, change['new_lineno'],
+                                            '#%s' % anchor_new)
+                    })
+                    _html.append('''</td>\n''')
+                ###########################################################
+                # CODE
+                ###########################################################
+                comments = '' if enable_comments else 'no-comment'
+                _html.append('''\t<td class="%(cc)s %(inc)s">''' % {
+                    'cc': code_class,
+                    'inc': comments
+                })
+                _html.append('''\n\t\t<div class="add-bubble"><div>&nbsp;</div></div><pre>%(code)s</pre>\n''' % {
+                    'code': change['line']
+                })
+
+                _html.append('''\t</td>''')
+                _html.append('''\n</tr>\n''')
+    _html.append('''</table>''')
+    if _html_empty:
+        return None
+    return ''.join(_html)
+
+
+def wrap_to_table(html):
+    """Given a string with html, return it wrapped in a table, similar to what
+    DiffProcessor returns."""
+    return '''\
+              <table class="code-difftable">
                 <tr class="line no-comment">
                 <td class="lineno new"></td>
                 <td class="code no-comment"><pre>%s</pre></td>
                 </tr>
-              </table>''' % str_
+              </table>''' % html
 
 
-def wrapped_diff(filenode_old, filenode_new, cut_off_limit=None,
+def wrapped_diff(filenode_old, filenode_new, diff_limit=None,
                 ignore_whitespace=True, line_context=3,
                 enable_comments=False):
     """
-    returns a wrapped diff into a table, checks for cut_off_limit and presents
-    proper message
+    Returns a file diff wrapped into a table.
+    Checks for diff_limit and presents a message if the diff is too big.
     """
-
     if filenode_old is None:
         filenode_old = FileNode(filenode_new.path, '', EmptyChangeset())
 
+    op = None
+    a_path = filenode_old.path # default, might be overriden by actual rename in diff
     if filenode_old.is_binary or filenode_new.is_binary:
-        diff = wrap_to_table(_('Binary file'))
+        html_diff = wrap_to_table(_('Binary file'))
         stats = (0, 0)
-        size = 0
 
-    elif cut_off_limit != -1 and (cut_off_limit is None or
-    (filenode_old.size < cut_off_limit and filenode_new.size < cut_off_limit)):
+    elif diff_limit != -1 and (
+            diff_limit is None or
+            (filenode_old.size < diff_limit and filenode_new.size < diff_limit)):
 
-        f_gitdiff = get_gitdiff(filenode_old, filenode_new,
+        raw_diff = get_gitdiff(filenode_old, filenode_new,
                                 ignore_whitespace=ignore_whitespace,
                                 context=line_context)
-        diff_processor = DiffProcessor(f_gitdiff, format='gitdiff')
+        diff_processor = DiffProcessor(raw_diff)
+        if diff_processor.parsed: # there should be exactly one element, for the specified file
+            f = diff_processor.parsed[0]
+            op = f['operation']
+            a_path = f['old_filename']
 
-        diff = diff_processor.as_html(enable_comments=enable_comments)
+        html_diff = as_html(parsed_lines=diff_processor.parsed, enable_comments=enable_comments)
         stats = diff_processor.stat()
-        size = len(diff or '')
+
     else:
-        diff = wrap_to_table(_('Changeset was too big and was cut off, use '
+        html_diff = wrap_to_table(_('Changeset was too big and was cut off, use '
                                'diff menu to display this diff'))
         stats = (0, 0)
-        size = 0
-    if not diff:
+
+    if not html_diff:
         submodules = filter(lambda o: isinstance(o, SubModuleNode),
                             [filenode_new, filenode_old])
         if submodules:
-            diff = wrap_to_table(escape('Submodule %r' % submodules[0]))
+            html_diff = wrap_to_table(h.escape('Submodule %r' % submodules[0]))
         else:
-            diff = wrap_to_table(_('No changes detected'))
+            html_diff = wrap_to_table(_('No changes detected'))
 
     cs1 = filenode_old.changeset.raw_id
     cs2 = filenode_new.changeset.raw_id
 
-    return size, cs1, cs2, diff, stats
+    return cs1, cs2, a_path, html_diff, stats, op
 
 
 def get_gitdiff(filenode_old, filenode_new, ignore_whitespace=True, context=3):
     """
     Returns git style diff between given ``filenode_old`` and ``filenode_new``.
-
-    :param ignore_whitespace: ignore whitespaces in diff
     """
     # make sure we pass in default context
     context = context or 3
@@ -119,9 +248,22 @@ def get_gitdiff(filenode_old, filenode_new, ignore_whitespace=True, context=3):
     old_raw_id = getattr(filenode_old.changeset, 'raw_id', repo.EMPTY_CHANGESET)
     new_raw_id = getattr(filenode_new.changeset, 'raw_id', repo.EMPTY_CHANGESET)
 
-    vcs_gitdiff = repo.get_diff(old_raw_id, new_raw_id, filenode_new.path,
-                                ignore_whitespace, context)
+    vcs_gitdiff = get_diff(repo, old_raw_id, new_raw_id, filenode_new.path,
+                           ignore_whitespace, context)
     return vcs_gitdiff
+
+
+def get_diff(scm_instance, rev1, rev2, path=None, ignore_whitespace=False, context=3):
+    """
+    A thin wrapper around vcs lib get_diff.
+    """
+    try:
+        return scm_instance.get_diff(rev1, rev2, path=path,
+                                     ignore_whitespace=ignore_whitespace, context=context)
+    except MemoryError:
+        h.flash('MemoryError: Diff is too big', category='error')
+        return ''
+
 
 NEW_FILENODE = 1
 DEL_FILENODE = 2
@@ -132,78 +274,18 @@ CHMOD_FILENODE = 6
 BIN_FILENODE = 7
 
 
-class DiffLimitExceeded(Exception):
-    pass
-
-
-class LimitedDiffContainer(object):
-
-    def __init__(self, diff_limit, cur_diff_size, diff):
-        self.diff = diff
-        self.diff_limit = diff_limit
-        self.cur_diff_size = cur_diff_size
-
-    def __iter__(self):
-        for l in self.diff:
-            yield l
-
-
 class DiffProcessor(object):
     """
     Give it a unified or git diff and it returns a list of the files that were
     mentioned in the diff together with a dict of meta information that
     can be used to render it in a HTML template.
     """
-    _chunk_re = re.compile(r'^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@(.*)')
-    _newline_marker = re.compile(r'^\\ No newline at end of file')
-    _git_header_re = re.compile(r"""
-        # has already been split on this:
-        # ^diff[ ]--git
-            [ ]a/(?P<a_path>.+?)[ ]b/(?P<b_path>.+?)\n
-        (?:^old[ ]mode[ ](?P<old_mode>\d+)\n
-           ^new[ ]mode[ ](?P<new_mode>\d+)(?:\n|$))?
-        (?:^similarity[ ]index[ ](?P<similarity_index>\d+)%\n
-           ^rename[ ]from[ ](?P<rename_from>.+)\n
-           ^rename[ ]to[ ](?P<rename_to>.+)(?:\n|$))?
-        (?:^new[ ]file[ ]mode[ ](?P<new_file_mode>.+)(?:\n|$))?
-        (?:^deleted[ ]file[ ]mode[ ](?P<deleted_file_mode>.+)(?:\n|$))?
-        (?:^index[ ](?P<a_blob_id>[0-9A-Fa-f]+)
-            \.\.(?P<b_blob_id>[0-9A-Fa-f]+)[ ]?(?P<b_mode>.+)?(?:\n|$))?
-        (?:^(?P<bin_patch>GIT[ ]binary[ ]patch)(?:\n|$))?
-        (?:^---[ ](a/(?P<a_file>.+?)|/dev/null)\t?(?:\n|$))?
-        (?:^\+\+\+[ ](b/(?P<b_file>.+?)|/dev/null)\t?(?:\n|$))?
-    """, re.VERBOSE | re.MULTILINE)
-    _hg_header_re = re.compile(r"""
-        # has already been split on this:
-        # ^diff[ ]--git
-            [ ]a/(?P<a_path>.+?)[ ]b/(?P<b_path>.+?)\n
-        (?:^old[ ]mode[ ](?P<old_mode>\d+)\n
-           ^new[ ]mode[ ](?P<new_mode>\d+)(?:\n|$))?
-        (?:^similarity[ ]index[ ](?P<similarity_index>\d+)%(?:\n|$))?
-        (?:^rename[ ]from[ ](?P<rename_from>.+)\n
-           ^rename[ ]to[ ](?P<rename_to>.+)(?:\n|$))?
-        (?:^copy[ ]from[ ](?P<copy_from>.+)\n
-           ^copy[ ]to[ ](?P<copy_to>.+)(?:\n|$))?
-        (?:^new[ ]file[ ]mode[ ](?P<new_file_mode>.+)(?:\n|$))?
-        (?:^deleted[ ]file[ ]mode[ ](?P<deleted_file_mode>.+)(?:\n|$))?
-        (?:^index[ ](?P<a_blob_id>[0-9A-Fa-f]+)
-            \.\.(?P<b_blob_id>[0-9A-Fa-f]+)[ ]?(?P<b_mode>.+)?(?:\n|$))?
-        (?:^(?P<bin_patch>GIT[ ]binary[ ]patch)(?:\n|$))?
-        (?:^---[ ](a/(?P<a_file>.+?)|/dev/null)\t?(?:\n|$))?
-        (?:^\+\+\+[ ](b/(?P<b_file>.+?)|/dev/null)\t?(?:\n|$))?
-    """, re.VERBOSE | re.MULTILINE)
+    _diff_git_re = re.compile('^diff --git', re.MULTILINE)
 
-    # Used for inline highlighter word split, must match the substitutions in _escaper
-    _token_re = re.compile(r'()(&amp;|&lt;|&gt;|<u>\t</u>|<u class="cr"></u>| <i></i>|\W+?)')
-
-    _escape_re = re.compile(r'(&)|(<)|(>)|(\t)|(\r)|(?<=.)( \n| $)')
-
-
-    def __init__(self, diff, vcs='hg', format='gitdiff', diff_limit=None):
+    def __init__(self, diff, vcs='hg', diff_limit=None, inline_diff=True):
         """
         :param diff:   a text in diff format
         :param vcs: type of version control hg or git
-        :param format: format of diff passed, `udiff` or `gitdiff`
         :param diff_limit: define the size of diff that is considered "big"
             based on that parameter cut off will be triggered, set to None
             to show full diff
@@ -212,175 +294,29 @@ class DiffProcessor(object):
             raise Exception('Diff must be a basestring got %s instead' % type(diff))
 
         self._diff = diff
-        self._format = format
         self.adds = 0
         self.removes = 0
-        # calculate diff size
-        self.diff_size = len(diff)
         self.diff_limit = diff_limit
-        self.cur_diff_size = 0
-        self.parsed = False
-        self.parsed_diff = []
+        self.limited_diff = False
         self.vcs = vcs
+        self.parsed = self._parse_gitdiff(inline_diff=inline_diff)
 
-        if format == 'gitdiff':
-            self.differ = self._highlight_line_difflib
-            self._parser = self._parse_gitdiff
-        else:
-            self.differ = self._highlight_line_udiff
-            self._parser = self._parse_udiff
-
-    def _copy_iterator(self):
+    def _parse_gitdiff(self, inline_diff):
+        """Parse self._diff and return a list of dicts with meta info and chunks for each file.
+        Might set limited_diff.
+        Optionally, do an extra pass and to extra markup of one-liner changes.
         """
-        make a fresh copy of generator, we should not iterate thru
-        an original as it's needed for repeating operations on
-        this instance of DiffProcessor
-        """
-        self.__udiff, iterator_copy = tee(self.__udiff)
-        return iterator_copy
+        _files = [] # list of dicts with meta info and chunks
 
-    def _escaper(self, string):
-        """
-        Escaper for diff escapes special chars and checks the diff limit
+        starts = [m.start() for m in self._diff_git_re.finditer(self._diff)]
+        starts.append(len(self._diff))
 
-        :param string:
-        """
+        for start, end in zip(starts, starts[1:]):
+            if self.diff_limit and end > self.diff_limit:
+                self.limited_diff = True
+                continue
 
-        self.cur_diff_size += len(string)
-
-        # escaper gets iterated on each .next() call and it checks if each
-        # parsed line doesn't exceed the diff limit
-        if self.diff_limit is not None and self.cur_diff_size > self.diff_limit:
-            raise DiffLimitExceeded('Diff Limit Exceeded')
-
-        def substitute(m):
-            groups = m.groups()
-            if groups[0]:
-                return '&amp;'
-            if groups[1]:
-                return '&lt;'
-            if groups[2]:
-                return '&gt;'
-            if groups[3]:
-                return '<u>\t</u>'
-            if groups[4]:
-                return '<u class="cr"></u>'
-            if groups[5]:
-                return ' <i></i>'
-            assert False
-
-        return self._escape_re.sub(substitute, safe_unicode(string))
-
-    def _line_counter(self, l):
-        """
-        Checks each line and bumps total adds/removes for this diff
-
-        :param l:
-        """
-        if l.startswith('+') and not l.startswith('+++'):
-            self.adds += 1
-        elif l.startswith('-') and not l.startswith('---'):
-            self.removes += 1
-        return safe_unicode(l)
-
-    def _highlight_line_difflib(self, line, next_):
-        """
-        Highlight inline changes in both lines.
-        """
-
-        if line['action'] == 'del':
-            old, new = line, next_
-        else:
-            old, new = next_, line
-
-        oldwords = self._token_re.split(old['line'])
-        newwords = self._token_re.split(new['line'])
-        sequence = difflib.SequenceMatcher(None, oldwords, newwords)
-
-        oldfragments, newfragments = [], []
-        for tag, i1, i2, j1, j2 in sequence.get_opcodes():
-            oldfrag = ''.join(oldwords[i1:i2])
-            newfrag = ''.join(newwords[j1:j2])
-            if tag != 'equal':
-                if oldfrag:
-                    oldfrag = '<del>%s</del>' % oldfrag
-                if newfrag:
-                    newfrag = '<ins>%s</ins>' % newfrag
-            oldfragments.append(oldfrag)
-            newfragments.append(newfrag)
-
-        old['line'] = "".join(oldfragments)
-        new['line'] = "".join(newfragments)
-
-    def _highlight_line_udiff(self, line, next_):
-        """
-        Highlight inline changes in both lines.
-        """
-        start = 0
-        limit = min(len(line['line']), len(next_['line']))
-        while start < limit and line['line'][start] == next_['line'][start]:
-            start += 1
-        end = -1
-        limit -= start
-        while -end <= limit and line['line'][end] == next_['line'][end]:
-            end -= 1
-        end += 1
-        if start or end:
-            def do(l):
-                last = end + len(l['line'])
-                if l['action'] == 'add':
-                    tag = 'ins'
-                else:
-                    tag = 'del'
-                l['line'] = '%s<%s>%s</%s>%s' % (
-                    l['line'][:start],
-                    tag,
-                    l['line'][start:last],
-                    tag,
-                    l['line'][last:]
-                )
-            do(line)
-            do(next_)
-
-    def _get_header(self, diff_chunk):
-        """
-        parses the diff header, and returns parts, and leftover diff
-        parts consists of 14 elements::
-
-            a_path, b_path, similarity_index, rename_from, rename_to,
-            old_mode, new_mode, new_file_mode, deleted_file_mode,
-            a_blob_id, b_blob_id, b_mode, a_file, b_file
-
-        :param diff_chunk:
-        """
-
-        match = None
-        if self.vcs == 'git':
-            match = self._git_header_re.match(diff_chunk)
-        elif self.vcs == 'hg':
-            match = self._hg_header_re.match(diff_chunk)
-        if match is None:
-            raise Exception('diff not recognized as valid %s diff' % self.vcs)
-        groups = match.groupdict()
-        rest = diff_chunk[match.end():]
-        if rest and not rest.startswith('@') and not rest.startswith('literal ') and not rest.startswith('delta '):
-            raise Exception('cannot parse diff header: %r followed by %r' % (diff_chunk[:match.end()], rest[:1000]))
-        difflines = imap(self._escaper, re.findall(r'.*\n|.+$', rest)) # don't split on \r as str.splitlines do
-        return groups, difflines
-
-    def _clean_line(self, line, command):
-        if command in ['+', '-', ' ']:
-            #only modify the line if it's actually a diff thing
-            line = line[1:]
-        return line
-
-    def _parse_gitdiff(self, inline_diff=True):
-        _files = []
-        diff_container = lambda arg: arg
-
-        ##split the diff in chunks of separate --git a/file b/file chunks
-        for raw_diff in ('\n' + self._diff).split('\ndiff --git')[1:]:
-            head, diff = self._get_header(raw_diff)
+            head, diff_lines = _get_header(self.vcs, buffer(self._diff, start, end - start))
 
             op = None
             stats = {
@@ -391,75 +327,68 @@ class DiffProcessor(object):
             }
 
             if head['deleted_file_mode']:
-                op = 'D'
+                op = 'removed'
                 stats['binary'] = True
                 stats['ops'][DEL_FILENODE] = 'deleted file'
 
             elif head['new_file_mode']:
-                op = 'A'
+                op = 'added'
                 stats['binary'] = True
                 stats['ops'][NEW_FILENODE] = 'new file %s' % head['new_file_mode']
             else:  # modify operation, can be cp, rename, chmod
                 # CHMOD
                 if head['new_mode'] and head['old_mode']:
-                    op = 'M'
+                    op = 'modified'
                     stats['binary'] = True
                     stats['ops'][CHMOD_FILENODE] = ('modified file chmod %s => %s'
                                         % (head['old_mode'], head['new_mode']))
                 # RENAME
                 if (head['rename_from'] and head['rename_to']
                       and head['rename_from'] != head['rename_to']):
-                    op = 'R'
+                    op = 'renamed'
                     stats['binary'] = True
                     stats['ops'][RENAMED_FILENODE] = ('file renamed from %s to %s'
                                     % (head['rename_from'], head['rename_to']))
                 # COPY
                 if head.get('copy_from') and head.get('copy_to'):
-                    op = 'M'
+                    op = 'modified'
                     stats['binary'] = True
                     stats['ops'][COPIED_FILENODE] = ('file copied from %s to %s'
                                         % (head['copy_from'], head['copy_to']))
                 # FALL BACK: detect missed old style add or remove
                 if op is None:
                     if not head['a_file'] and head['b_file']:
-                        op = 'A'
+                        op = 'added'
                         stats['binary'] = True
                         stats['ops'][NEW_FILENODE] = 'new file'
 
                     elif head['a_file'] and not head['b_file']:
-                        op = 'D'
+                        op = 'removed'
                         stats['binary'] = True
                         stats['ops'][DEL_FILENODE] = 'deleted file'
 
                 # it's not ADD not DELETE
                 if op is None:
-                    op = 'M'
+                    op = 'modified'
                     stats['binary'] = True
                     stats['ops'][MOD_FILENODE] = 'modified file'
 
             # a real non-binary diff
             if head['a_file'] or head['b_file']:
-                try:
-                    chunks, _stats = self._parse_lines(diff)
-                    stats['binary'] = False
-                    stats['added'] = _stats[0]
-                    stats['deleted'] = _stats[1]
-                    # explicit mark that it's a modified file
-                    if op == 'M':
-                        stats['ops'][MOD_FILENODE] = 'modified file'
-
-                except DiffLimitExceeded:
-                    diff_container = lambda _diff: \
-                        LimitedDiffContainer(self.diff_limit,
-                                            self.cur_diff_size, _diff)
-                    break
+                chunks, added, deleted = _parse_lines(diff_lines)
+                stats['binary'] = False
+                stats['added'] = added
+                stats['deleted'] = deleted
+                # explicit mark that it's a modified file
+                if op == 'modified':
+                    stats['ops'][MOD_FILENODE] = 'modified file'
             else:  # Git binary patch (or empty diff)
                 # Git binary patch
                 if head['bin_patch']:
                     stats['ops'][BIN_FILENODE] = 'binary diff not shown'
                 chunks = []
 
-            if op == 'D' and chunks:
+            if op == 'removed' and chunks:
                 # a way of seeing deleted content could perhaps be nice - but
                 # not with the current UI
                 chunks = []
@@ -473,6 +402,7 @@ class DiffProcessor(object):
                   if _op not in [MOD_FILENODE]])
 
             _files.append({
+                'old_filename':     head['a_path'],
                 'filename':         head['b_path'],
                 'old_revision':     head['a_blob_id'],
                 'new_revision':     head['b_blob_id'],
@@ -482,274 +412,266 @@ class DiffProcessor(object):
             })
 
         if not inline_diff:
-            return diff_container(_files)
+            return _files
 
-        # highlight inline changes
+        # highlight inline changes when one del is followed by one add
         for diff_data in _files:
             for chunk in diff_data['chunks']:
                 lineiter = iter(chunk)
                 try:
-                    while 1:
-                        line = lineiter.next()
-                        if line['action'] not in ['unmod', 'context']:
-                            nextline = lineiter.next()
-                            if nextline['action'] in ['unmod', 'context'] or \
-                               nextline['action'] == line['action']:
-                                continue
-                            self.differ(line, nextline)
+                    peekline = lineiter.next()
+                    while True:
+                        # find a first del line
+                        while peekline['action'] != 'del':
+                            peekline = lineiter.next()
+                        delline = peekline
+                        peekline = lineiter.next()
+                        # if not followed by add, eat all following del lines
+                        if peekline['action'] != 'add':
+                            while peekline['action'] == 'del':
+                                peekline = lineiter.next()
+                            continue
+                        # found an add - make sure it is the only one
+                        addline = peekline
+                        try:
+                            peekline = lineiter.next()
+                        except StopIteration:
+                            # add was last line - ok
+                            _highlight_inline_diff(delline, addline)
+                            raise
+                        if peekline['action'] != 'add':
+                            # there was only one add line - ok
+                            _highlight_inline_diff(delline, addline)
                 except StopIteration:
                     pass
 
-        return diff_container(_files)
-
-    def _parse_udiff(self, inline_diff=True):
-        raise NotImplementedError()
-
-    def _parse_lines(self, diff):
-        """
-        Parse the diff and return data for the template.
-        """
-
-        stats = [0, 0]
-        (old_line, old_end, new_line, new_end) = (None, None, None, None)
-
-        try:
-            chunks = []
-            line = diff.next()
-
-            while True:
-                lines = []
-                chunks.append(lines)
-
-                match = self._chunk_re.match(line)
-
-                if not match:
-                    raise Exception('error parsing diff @@ line %r' % line)
-
-                gr = match.groups()
-                (old_line, old_end,
-                 new_line, new_end) = [int(x or 1) for x in gr[:-1]]
-                old_line -= 1
-                new_line -= 1
-
-                context = len(gr) == 5
-                old_end += old_line
-                new_end += new_line
-
-                if context:
-                    # skip context only if it's first line
-                    if int(gr[0]) > 1:
-                        lines.append({
-                            'old_lineno': '...',
-                            'new_lineno': '...',
-                            'action':     'context',
-                            'line':       line,
-                        })
-
-                line = diff.next()
-
-                while old_line < old_end or new_line < new_end:
-                    if not line:
-                        raise Exception('error parsing diff - empty line at -%s+%s' % (old_line, new_line))
-
-                    affects_old = affects_new = False
-
-                    command = line[0]
-                    if command == '+':
-                        affects_new = True
-                        action = 'add'
-                        stats[0] += 1
-                    elif command == '-':
-                        affects_old = True
-                        action = 'del'
-                        stats[1] += 1
-                    elif command == ' ':
-                        affects_old = affects_new = True
-                        action = 'unmod'
-                    else:
-                        raise Exception('error parsing diff - unknown command in line %r at -%s+%s' % (line, old_line, new_line))
-
-                    if not self._newline_marker.match(line):
-                        old_line += affects_old
-                        new_line += affects_new
-                        lines.append({
-                            'old_lineno':   affects_old and old_line or '',
-                            'new_lineno':   affects_new and new_line or '',
-                            'action':       action,
-                            'line':         self._clean_line(line, command)
-                        })
-
-                    line = diff.next()
-
-                    if self._newline_marker.match(line):
-                        # we need to append to lines, since this is not
-                        # counted in the line specs of diff
-                        lines.append({
-                            'old_lineno':   '...',
-                            'new_lineno':   '...',
-                            'action':       'context',
-                            'line':         self._clean_line(line, command)
-                        })
-                        line = diff.next()
-                if old_line > old_end:
-                        raise Exception('error parsing diff - more than %s "-" lines at -%s+%s' % (old_end, old_line, new_line))
-                if new_line > new_end:
-                        raise Exception('error parsing diff - more than %s "+" lines at -%s+%s' % (new_end, old_line, new_line))
-        except StopIteration:
-            pass
-        if old_line != old_end or new_line != new_end:
-            raise Exception('diff processing broken when old %s<>%s or new %s<>%s line %r' % (old_line, old_end, new_line, new_end, line))
-
-        return chunks, stats
-
-    def _safe_id(self, idstring):
-        """Make a string safe for including in an id attribute.
-
-        The HTML spec says that id attributes 'must begin with
-        a letter ([A-Za-z]) and may be followed by any number
-        of letters, digits ([0-9]), hyphens ("-"), underscores
-        ("_"), colons (":"), and periods (".")'. These regexps
-        are slightly over-zealous, in that they remove colons
-        and periods unnecessarily.
-
-        Whitespace is transformed into underscores, and then
-        anything which is not a hyphen or a character that
-        matches \w (alphanumerics and underscore) is removed.
-
-        """
-        # Transform all whitespace to underscore
-        idstring = re.sub(r'\s', "_", idstring)
-        # Remove everything that is not a hyphen or a member of \w
-        idstring = re.sub(r'(?!-)\W', "", idstring).lower()
-        return idstring
-
-    def prepare(self, inline_diff=True):
-        """
-        Prepare the passed udiff for HTML rendering. It'l return a list
-        of dicts with diff information
-        """
-        parsed = self._parser(inline_diff=inline_diff)
-        self.parsed = True
-        self.parsed_diff = parsed
-        return parsed
-
-    def as_raw(self, diff_lines=None):
-        """
-        Returns raw string diff
-        """
-        return self._diff
-        #return u''.join(imap(self._line_counter, self._diff.splitlines(1)))
-
-    def as_html(self, table_class='code-difftable', line_class='line',
-                old_lineno_class='lineno old', new_lineno_class='lineno new',
-                no_lineno_class='lineno',
-                code_class='code', enable_comments=False, parsed_lines=None):
-        """
-        Return given diff as html table with customized css classes
-        """
-        def _link_to_if(condition, label, url):
-            """
-            Generates a link if condition is meet or just the label if not.
-            """
-
-            if condition:
-                return '''<a href="%(url)s">%(label)s</a>''' % {
-                    'url': url,
-                    'label': label
-                }
-            else:
-                return label
-        if not self.parsed:
-            self.prepare()
-
-        diff_lines = self.parsed_diff
-        if parsed_lines:
-            diff_lines = parsed_lines
-
-        _html_empty = True
-        _html = []
-        _html.append('''<table class="%(table_class)s">\n''' % {
-            'table_class': table_class
-        })
-
-        for diff in diff_lines:
-            for line in diff['chunks']:
-                _html_empty = False
-                for change in line:
-                    _html.append('''<tr class="%(lc)s %(action)s">\n''' % {
-                        'lc': line_class,
-                        'action': change['action']
-                    })
-                    anchor_old_id = ''
-                    anchor_new_id = ''
-                    anchor_old = "%(filename)s_o%(oldline_no)s" % {
-                        'filename': self._safe_id(diff['filename']),
-                        'oldline_no': change['old_lineno']
-                    }
-                    anchor_new = "%(filename)s_n%(oldline_no)s" % {
-                        'filename': self._safe_id(diff['filename']),
-                        'oldline_no': change['new_lineno']
-                    }
-                    cond_old = (change['old_lineno'] != '...' and
-                                change['old_lineno'])
-                    cond_new = (change['new_lineno'] != '...' and
-                                change['new_lineno'])
-                    no_lineno = (change['old_lineno'] == '...' and
-                                 change['new_lineno'] == '...')
-                    if cond_old:
-                        anchor_old_id = 'id="%s"' % anchor_old
-                    if cond_new:
-                        anchor_new_id = 'id="%s"' % anchor_new
-                    ###########################################################
-                    # OLD LINE NUMBER
-                    ###########################################################
-                    _html.append('''\t<td %(a_id)s class="%(olc)s" %(colspan)s>''' % {
-                        'a_id': anchor_old_id,
-                        'olc': no_lineno_class if no_lineno else old_lineno_class,
-                        'colspan': 'colspan="2"' if no_lineno else ''
-                    })
-
-                    _html.append('''%(link)s''' % {
-                        'link': _link_to_if(True, change['old_lineno'],
-                                            '#%s' % anchor_old)
-                    })
-                    _html.append('''</td>\n''')
-                    ###########################################################
-                    # NEW LINE NUMBER
-                    ###########################################################
-
-                    if not no_lineno:
-                        _html.append('''\t<td %(a_id)s class="%(nlc)s">''' % {
-                            'a_id': anchor_new_id,
-                            'nlc': new_lineno_class
-                        })
-
-                        _html.append('''%(link)s''' % {
-                            'link': _link_to_if(True, change['new_lineno'],
-                                                '#%s' % anchor_new)
-                        })
-                        _html.append('''</td>\n''')
-                    ###########################################################
-                    # CODE
-                    ###########################################################
-                    comments = '' if enable_comments else 'no-comment'
-                    _html.append('''\t<td class="%(cc)s %(inc)s">''' % {
-                        'cc': code_class,
-                        'inc': comments
-                    })
-                    _html.append('''\n\t\t<div class="add-bubble"><div>&nbsp;</div></div><pre>%(code)s</pre>\n''' % {
-                        'code': change['line']
-                    })
-
-                    _html.append('''\t</td>''')
-                    _html.append('''\n</tr>\n''')
-        _html.append('''</table>''')
-        if _html_empty:
-            return None
-        return ''.join(_html)
+        return _files
 
     def stat(self):
         """
         Returns tuple of added, and removed lines for this instance
         """
         return self.adds, self.removes
+
+
+_escape_re = re.compile(r'(&)|(<)|(>)|(\t)|(\r)|(?<=.)( \n| $)')
+
+
+def _escaper(string):
+    """
+    Do HTML escaping/markup
+    """
+
+    def substitute(m):
+        groups = m.groups()
+        if groups[0]:
+            return '&amp;'
+        if groups[1]:
+            return '&lt;'
+        if groups[2]:
+            return '&gt;'
+        if groups[3]:
+            return '<u>\t</u>'
+        if groups[4]:
+            return '<u class="cr"></u>'
+        if groups[5]:
+            return ' <i></i>'
+        assert False
+
+    return _escape_re.sub(substitute, safe_unicode(string))
+
+
+_git_header_re = re.compile(r"""
+    ^diff[ ]--git[ ]a/(?P<a_path>.+?)[ ]b/(?P<b_path>.+?)\n
+    (?:^old[ ]mode[ ](?P<old_mode>\d+)\n
+       ^new[ ]mode[ ](?P<new_mode>\d+)(?:\n|$))?
+    (?:^similarity[ ]index[ ](?P<similarity_index>\d+)%\n
+       ^rename[ ]from[ ](?P<rename_from>.+)\n
+       ^rename[ ]to[ ](?P<rename_to>.+)(?:\n|$))?
+    (?:^new[ ]file[ ]mode[ ](?P<new_file_mode>.+)(?:\n|$))?
+    (?:^deleted[ ]file[ ]mode[ ](?P<deleted_file_mode>.+)(?:\n|$))?
+    (?:^index[ ](?P<a_blob_id>[0-9A-Fa-f]+)
+        \.\.(?P<b_blob_id>[0-9A-Fa-f]+)[ ]?(?P<b_mode>.+)?(?:\n|$))?
+    (?:^(?P<bin_patch>GIT[ ]binary[ ]patch)(?:\n|$))?
+    (?:^---[ ](a/(?P<a_file>.+?)|/dev/null)\t?(?:\n|$))?
+    (?:^\+\+\+[ ](b/(?P<b_file>.+?)|/dev/null)\t?(?:\n|$))?
+""", re.VERBOSE | re.MULTILINE)
+
+
+_hg_header_re = re.compile(r"""
+    ^diff[ ]--git[ ]a/(?P<a_path>.+?)[ ]b/(?P<b_path>.+?)\n
+    (?:^old[ ]mode[ ](?P<old_mode>\d+)\n
+       ^new[ ]mode[ ](?P<new_mode>\d+)(?:\n|$))?
+    (?:^similarity[ ]index[ ](?P<similarity_index>\d+)%(?:\n|$))?
+    (?:^rename[ ]from[ ](?P<rename_from>.+)\n
+       ^rename[ ]to[ ](?P<rename_to>.+)(?:\n|$))?
+    (?:^copy[ ]from[ ](?P<copy_from>.+)\n
+       ^copy[ ]to[ ](?P<copy_to>.+)(?:\n|$))?
+    (?:^new[ ]file[ ]mode[ ](?P<new_file_mode>.+)(?:\n|$))?
+    (?:^deleted[ ]file[ ]mode[ ](?P<deleted_file_mode>.+)(?:\n|$))?
+    (?:^index[ ](?P<a_blob_id>[0-9A-Fa-f]+)
+        \.\.(?P<b_blob_id>[0-9A-Fa-f]+)[ ]?(?P<b_mode>.+)?(?:\n|$))?
+    (?:^(?P<bin_patch>GIT[ ]binary[ ]patch)(?:\n|$))?
+    (?:^---[ ](a/(?P<a_file>.+?)|/dev/null)\t?(?:\n|$))?
+    (?:^\+\+\+[ ](b/(?P<b_file>.+?)|/dev/null)\t?(?:\n|$))?
+""", re.VERBOSE | re.MULTILINE)
+
+
+def _get_header(vcs, diff_chunk):
+    """
+    Parses a Git diff for a single file (header and chunks) and returns a tuple with:
+
+    1. A dict with meta info:
+
+        a_path, b_path, similarity_index, rename_from, rename_to,
+        old_mode, new_mode, new_file_mode, deleted_file_mode,
+        a_blob_id, b_blob_id, b_mode, a_file, b_file
+
+    2. An iterator yielding lines with simple HTML markup.
+    """
+    match = None
+    if vcs == 'git':
+        match = _git_header_re.match(diff_chunk)
+    elif vcs == 'hg':
+        match = _hg_header_re.match(diff_chunk)
+    if match is None:
+        raise Exception('diff not recognized as valid %s diff' % vcs)
+    meta_info = match.groupdict()
+    rest = diff_chunk[match.end():]
+    if rest and not rest.startswith('@') and not rest.startswith('literal ') and not rest.startswith('delta '):
+        raise Exception('cannot parse %s diff header: %r followed by %r' % (vcs, diff_chunk[:match.end()], rest[:1000]))
+    diff_lines = (_escaper(m.group(0)) for m in re.finditer(r'.*\n|.+$', rest)) # don't split on \r as str.splitlines do
+    return meta_info, diff_lines
+
+
+_chunk_re = re.compile(r'^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@(.*)')
+_newline_marker = re.compile(r'^\\ No newline at end of file')
+
+
+def _parse_lines(diff_lines):
+    """
+    Given an iterator of diff body lines, parse them and return a dict per
+    line and added/removed totals.
+    """
+    added = deleted = 0
+    old_line = old_end = new_line = new_end = None
+
+    try:
+        chunks = []
+        line = diff_lines.next()
+
+        while True:
+            lines = []
+            chunks.append(lines)
+
+            match = _chunk_re.match(line)
+
+            if not match:
+                raise Exception('error parsing diff @@ line %r' % line)
+
+            gr = match.groups()
+            (old_line, old_end,
+             new_line, new_end) = [int(x or 1) for x in gr[:-1]]
+            old_line -= 1
+            new_line -= 1
+
+            context = len(gr) == 5
+            old_end += old_line
+            new_end += new_line
+
+            if context:
+                # skip context only if it's first line
+                if int(gr[0]) > 1:
+                    lines.append({
+                        'old_lineno': '...',
+                        'new_lineno': '...',
+                        'action':     'context',
+                        'line':       line,
+                    })
+
+            line = diff_lines.next()
+
+            while old_line < old_end or new_line < new_end:
+                if not line:
+                    raise Exception('error parsing diff - empty line at -%s+%s' % (old_line, new_line))
+
+                affects_old = affects_new = False
+
+                command = line[0]
+                if command == '+':
+                    affects_new = True
+                    action = 'add'
+                    added += 1
+                elif command == '-':
+                    affects_old = True
+                    action = 'del'
+                    deleted += 1
+                elif command == ' ':
+                    affects_old = affects_new = True
+                    action = 'unmod'
+                else:
+                    raise Exception('error parsing diff - unknown command in line %r at -%s+%s' % (line, old_line, new_line))
+
+                if not _newline_marker.match(line):
+                    old_line += affects_old
+                    new_line += affects_new
+                    lines.append({
+                        'old_lineno':   affects_old and old_line or '',
+                        'new_lineno':   affects_new and new_line or '',
+                        'action':       action,
+                        'line':         line[1:],
+                    })
+
+                line = diff_lines.next()
+
+                if _newline_marker.match(line):
+                    # we need to append to lines, since this is not
+                    # counted in the line specs of diff
+                    lines.append({
+                        'old_lineno':   '...',
+                        'new_lineno':   '...',
+                        'action':       'context',
+                        'line':         line,
+                    })
+                    line = diff_lines.next()
+            if old_line > old_end:
+                raise Exception('error parsing diff - more than %s "-" lines at -%s+%s' % (old_end, old_line, new_line))
+            if new_line > new_end:
+                raise Exception('error parsing diff - more than %s "+" lines at -%s+%s' % (new_end, old_line, new_line))
+    except StopIteration:
+        pass
+    if old_line != old_end or new_line != new_end:
+        raise Exception('diff processing broken when old %s<>%s or new %s<>%s line %r' % (old_line, old_end, new_line, new_end, line))
+
+    return chunks, added, deleted
+
+# Used for inline highlighter word split, must match the substitutions in _escaper
+_token_re = re.compile(r'()(&amp;|&lt;|&gt;|<u>\t</u>|<u class="cr"></u>| <i></i>|\W+?)')
+
+
+def _highlight_inline_diff(old, new):
+    """
+    Highlight simple add/remove in two lines given as info dicts. They are
+    modified in place and given markup with <del>/<ins>.
+    """
+    assert old['action'] == 'del'
+    assert new['action'] == 'add'
+
+    oldwords = _token_re.split(old['line'])
+    newwords = _token_re.split(new['line'])
+    sequence = difflib.SequenceMatcher(None, oldwords, newwords)
+
+    oldfragments, newfragments = [], []
+    for tag, i1, i2, j1, j2 in sequence.get_opcodes():
+        oldfrag = ''.join(oldwords[i1:i2])
+        newfrag = ''.join(newwords[j1:j2])
+        if tag != 'equal':
+            if oldfrag:
+                oldfrag = '<del>%s</del>' % oldfrag
+            if newfrag:
+                newfrag = '<ins>%s</ins>' % newfrag
+        oldfragments.append(oldfrag)
+        newfragments.append(newfrag)
+
+    old['line'] = "".join(oldfragments)
+    new['line'] = "".join(newfragments)

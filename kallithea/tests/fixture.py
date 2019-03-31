@@ -15,10 +15,18 @@
 """
 Helpers for fixture generation
 """
+
+import logging
 import os
-import time
-from kallithea.tests import *
-from kallithea.model.db import Repository, User, RepoGroup, UserGroup
+import shutil
+import tarfile
+from os.path import dirname
+
+import mock
+from tg import request
+from tg.util.webtest import test_context
+
+from kallithea.model.db import Repository, User, RepoGroup, UserGroup, Gist, ChangesetStatus
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
 from kallithea.model.user import UserModel
@@ -26,10 +34,20 @@ from kallithea.model.repo_group import RepoGroupModel
 from kallithea.model.user_group import UserGroupModel
 from kallithea.model.gist import GistModel
 from kallithea.model.scm import ScmModel
+from kallithea.model.comment import ChangesetCommentsModel
+from kallithea.model.changeset_status import ChangesetStatusModel
+from kallithea.model.pull_request import CreatePullRequestAction#, CreatePullRequestIterationAction, PullRequestModel
+from kallithea.lib import helpers
+from kallithea.lib.auth import AuthUser
+from kallithea.lib.db_manage import DbManage
 from kallithea.lib.vcs.backends.base import EmptyChangeset
+from kallithea.tests.base import invalidate_all_caches, GIT_REPO, HG_REPO, \
+    TESTS_TMP_PATH, TEST_USER_ADMIN_LOGIN, TEST_USER_REGULAR_LOGIN, TEST_USER_ADMIN_EMAIL
 
-dn = os.path.dirname
-FIXTURES = os.path.join(dn(dn(os.path.abspath(__file__))), 'tests', 'fixtures')
+
+log = logging.getLogger(__name__)
+
+FIXTURES = os.path.join(dirname(dirname(os.path.abspath(__file__))), 'tests', 'fixtures')
 
 
 def error_function(*args, **kwargs):
@@ -58,25 +76,24 @@ class Fixture(object):
                 anon = User.get_default_user()
                 self._before = anon.active
                 anon.active = status
-                Session().add(anon)
                 Session().commit()
-                time.sleep(1.5)  # hack: wait for beaker sql_cache_short to expire
+                invalidate_all_caches()
 
             def __exit__(self, exc_type, exc_val, exc_tb):
                 anon = User.get_default_user()
                 anon.active = self._before
-                Session().add(anon)
                 Session().commit()
 
         return context()
 
     def _get_repo_create_params(self, **custom):
+        """Return form values to be validated through RepoForm"""
         defs = dict(
             repo_name=None,
             repo_type='hg',
             clone_uri='',
             repo_group=u'-1',
-            repo_description='DESC',
+            repo_description=u'DESC',
             repo_private=False,
             repo_landing_rev='rev:tip',
             repo_copy_permissions=False,
@@ -92,11 +109,12 @@ class Fixture(object):
 
         return defs
 
-    def _get_group_create_params(self, **custom):
+    def _get_repo_group_create_params(self, **custom):
+        """Return form values to be validated through RepoGroupForm"""
         defs = dict(
             group_name=None,
-            group_description='DESC',
-            group_parent_id=None,
+            group_description=u'DESC',
+            parent_group_id=u'-1',
             perms_updates=[],
             perms_new=[],
             enable_locking=False,
@@ -111,8 +129,8 @@ class Fixture(object):
             username=name,
             password='qweqwe',
             email='%s+test@example.com' % name,
-            firstname='TestUser',
-            lastname='Test',
+            firstname=u'TestUser',
+            lastname=u'Test',
             active=True,
             admin=False,
             extern_type='internal',
@@ -125,7 +143,7 @@ class Fixture(object):
     def _get_user_group_create_params(self, name, **custom):
         defs = dict(
             users_group_name=name,
-            user_group_description='DESC',
+            user_group_description=u'DESC',
             users_group_active=True,
             user_group_data={},
         )
@@ -133,20 +151,22 @@ class Fixture(object):
 
         return defs
 
-    def create_repo(self, name, **kwargs):
+    def create_repo(self, name, repo_group=None, **kwargs):
         if 'skip_if_exists' in kwargs:
             del kwargs['skip_if_exists']
             r = Repository.get_by_repo_name(name)
             if r:
                 return r
 
-        if isinstance(kwargs.get('repo_group'), RepoGroup):
-            kwargs['repo_group'] = kwargs['repo_group'].group_id
+        if isinstance(repo_group, RepoGroup):
+            repo_group = repo_group.group_id
 
         form_data = self._get_repo_create_params(repo_name=name, **kwargs)
+        form_data['repo_group'] = repo_group # patch form dict so it can be used directly by model
         cur_user = kwargs.get('cur_user', TEST_USER_ADMIN_LOGIN)
         RepoModel().create(form_data, cur_user)
         Session().commit()
+        ScmModel().mark_for_invalidation(name)
         return Repository.get_by_repo_name(name)
 
     def create_fork(self, repo_to_fork, fork_name, **kwargs):
@@ -156,9 +176,7 @@ class Fixture(object):
                                             fork_parent_id=repo_to_fork,
                                             repo_type=repo_to_fork.repo_type,
                                             **kwargs)
-        form_data['update_after_clone'] = False
-
-        #TODO: fix it !!
+        # patch form dict so it can be used directly by model
         form_data['description'] = form_data['repo_description']
         form_data['private'] = form_data['repo_private']
         form_data['landing_rev'] = form_data['repo_landing_rev']
@@ -166,6 +184,7 @@ class Fixture(object):
         owner = kwargs.get('cur_user', TEST_USER_ADMIN_LOGIN)
         RepoModel().create_fork(form_data, cur_user=owner)
         Session().commit()
+        ScmModel().mark_for_invalidation(fork_name)
         r = Repository.get_by_repo_name(fork_name)
         assert r
         return r
@@ -174,19 +193,20 @@ class Fixture(object):
         RepoModel().delete(repo_name, **kwargs)
         Session().commit()
 
-    def create_repo_group(self, name, **kwargs):
+    def create_repo_group(self, name, parent_group_id=None, **kwargs):
         assert '/' not in name, (name, kwargs) # use group_parent_id to make nested groups
         if 'skip_if_exists' in kwargs:
             del kwargs['skip_if_exists']
             gr = RepoGroup.get_by_group_name(group_name=name)
             if gr:
                 return gr
-        form_data = self._get_group_create_params(group_name=name, **kwargs)
-        owner = kwargs.get('cur_user', TEST_USER_ADMIN_LOGIN)
+        form_data = self._get_repo_group_create_params(group_name=name, **kwargs)
         gr = RepoGroupModel().create(
             group_name=form_data['group_name'],
             group_description=form_data['group_name'],
-            owner=owner, parent=form_data['group_parent_id'])
+            parent=parent_group_id,
+            owner=kwargs.get('cur_user', TEST_USER_ADMIN_LOGIN),
+            )
         Session().commit()
         gr = RepoGroup.get_by_group_name(gr.group_name)
         return gr
@@ -236,13 +256,13 @@ class Fixture(object):
         form_data = {
             'description': u'new-gist',
             'owner': TEST_USER_ADMIN_LOGIN,
-            'gist_type': GistModel.cls.GIST_PUBLIC,
+            'gist_type': Gist.GIST_PUBLIC,
             'lifetime': -1,
-            'gist_mapping': {'filename1.txt':{'content':'hello world'},}
+            'gist_mapping': {'filename1.txt': {'content': 'hello world'}}
         }
         form_data.update(kwargs)
         gist = GistModel().create(
-            description=form_data['description'],owner=form_data['owner'],
+            description=form_data['description'], owner=form_data['owner'],
             gist_mapping=form_data['gist_mapping'], gist_type=form_data['gist_type'],
             lifetime=form_data['lifetime']
         )
@@ -251,7 +271,7 @@ class Fixture(object):
         return gist
 
     def destroy_gists(self, gistid=None):
-        for g in GistModel.cls.get_all():
+        for g in Gist.query():
             if gistid:
                 if gistid == g.gist_access_id:
                     GistModel().delete(g)
@@ -260,18 +280,21 @@ class Fixture(object):
         Session().commit()
 
     def load_resource(self, resource_name, strip=True):
-        with open(os.path.join(FIXTURES, resource_name)) as f:
+        with open(os.path.join(FIXTURES, resource_name), 'rb') as f:
             source = f.read()
             if strip:
                 source = source.strip()
 
         return source
 
-    def commit_change(self, repo, filename, content, message, vcs_type, parent=None, newfile=False):
+    def commit_change(self, repo, filename, content, message, vcs_type,
+                      parent=None, newfile=False, author=None):
         repo = Repository.get_by_repo_name(repo)
         _cs = parent
-        if not parent:
+        if parent is None:
             _cs = EmptyChangeset(alias=vcs_type)
+        if author is None:
+            author = '%s <%s>' % (TEST_USER_ADMIN_LOGIN, TEST_USER_ADMIN_EMAIL)
 
         if newfile:
             nodes = {
@@ -284,15 +307,127 @@ class Fixture(object):
                 message=message,
                 nodes=nodes,
                 parent_cs=_cs,
-                author=TEST_USER_ADMIN_LOGIN,
+                author=author,
             )
         else:
             cs = ScmModel().commit_change(
                 repo=repo.scm_instance, repo_name=repo.repo_name,
                 cs=parent, user=TEST_USER_ADMIN_LOGIN,
-                author=TEST_USER_ADMIN_LOGIN,
+                author=author,
                 message=message,
                 content=content,
                 f_path=filename
             )
         return cs
+
+    def review_changeset(self, repo, revision, status, author=TEST_USER_ADMIN_LOGIN):
+        comment = ChangesetCommentsModel().create(u"review comment", repo, author, revision=revision, send_email=False)
+        csm = ChangesetStatusModel().set_status(repo, ChangesetStatus.STATUS_APPROVED, author, comment, revision=revision)
+        Session().commit()
+        return csm
+
+    def create_pullrequest(self, testcontroller, repo_name, pr_src_rev, pr_dst_rev, title=u'title'):
+        org_ref = 'branch:stable:%s' % pr_src_rev
+        other_ref = 'branch:default:%s' % pr_dst_rev
+        with test_context(testcontroller.app): # needed to be able to mock request user
+            org_repo = other_repo = Repository.get_by_repo_name(repo_name)
+            owner_user = User.get_by_username(TEST_USER_ADMIN_LOGIN)
+            reviewers = [User.get_by_username(TEST_USER_REGULAR_LOGIN)]
+            request.authuser = AuthUser(dbuser=owner_user)
+            # creating a PR sends a message with an absolute URL - without routing that requires mocking
+            with mock.patch.object(helpers, 'url', (lambda arg, qualified=False, **kwargs: ('https://localhost' if qualified else '') + '/fake/' + arg)):
+                cmd = CreatePullRequestAction(org_repo, other_repo, org_ref, other_ref, title, u'No description', owner_user, reviewers)
+                pull_request = cmd.execute()
+            Session().commit()
+        return pull_request.pull_request_id
+
+
+#==============================================================================
+# Global test environment setup
+#==============================================================================
+
+def create_test_env(repos_test_path, config):
+    """
+    Makes a fresh database and
+    install test repository into tmp dir
+    """
+
+    # PART ONE create db
+    dbconf = config['sqlalchemy.url']
+    log.debug('making test db %s', dbconf)
+
+    # create test dir if it doesn't exist
+    if not os.path.isdir(repos_test_path):
+        log.debug('Creating testdir %s', repos_test_path)
+        os.makedirs(repos_test_path)
+
+    dbmanage = DbManage(dbconf=dbconf, root=config['here'],
+                        tests=True)
+    dbmanage.create_tables(override=True)
+    # for tests dynamically set new root paths based on generated content
+    dbmanage.create_settings(dbmanage.config_prompt(repos_test_path))
+    dbmanage.create_default_user()
+    dbmanage.admin_prompt()
+    dbmanage.create_permissions()
+    dbmanage.populate_default_permissions()
+    Session().commit()
+    # PART TWO make test repo
+    log.debug('making test vcs repositories')
+
+    idx_path = config['index_dir']
+    data_path = config['cache_dir']
+
+    # clean index and data
+    if idx_path and os.path.exists(idx_path):
+        log.debug('remove %s', idx_path)
+        shutil.rmtree(idx_path)
+
+    if data_path and os.path.exists(data_path):
+        log.debug('remove %s', data_path)
+        shutil.rmtree(data_path)
+
+    # CREATE DEFAULT TEST REPOS
+    tar = tarfile.open(os.path.join(FIXTURES, 'vcs_test_hg.tar.gz'))
+    tar.extractall(os.path.join(TESTS_TMP_PATH, HG_REPO))
+    tar.close()
+
+    tar = tarfile.open(os.path.join(FIXTURES, 'vcs_test_git.tar.gz'))
+    tar.extractall(os.path.join(TESTS_TMP_PATH, GIT_REPO))
+    tar.close()
+
+    # LOAD VCS test stuff
+    from kallithea.tests.vcs import setup_package
+    setup_package()
+
+
+def create_test_index(repo_location, config, full_index):
+    """
+    Makes default test index
+    """
+
+    from kallithea.lib.indexers.daemon import WhooshIndexingDaemon
+    from kallithea.lib.pidlock import DaemonLock, LockHeld
+
+    index_location = os.path.join(config['index_dir'])
+    if not os.path.exists(index_location):
+        os.makedirs(index_location)
+
+    l = DaemonLock(os.path.join(index_location, 'make_index.lock'))
+    WhooshIndexingDaemon(index_location=index_location,
+                         repo_location=repo_location) \
+        .run(full_index=full_index)
+    l.release()
+
+
+def failing_test_hook(ui, repo, **kwargs):
+    ui.write("failing_test_hook failed\n")
+    return 1
+
+
+def exception_test_hook(ui, repo, **kwargs):
+    raise Exception("exception_test_hook threw an exception")
+
+
+def passing_test_hook(ui, repo, **kwargs):
+    ui.write("passing_test_hook succeeded\n")
+    return 0

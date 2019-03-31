@@ -2,9 +2,9 @@
 ########################################
 #### THIS IS A DEBIAN INIT.D SCRIPT ####
 ########################################
- 
+
 ### BEGIN INIT INFO
-# Provides:          kallithea          
+# Provides:          kallithea
 # Required-Start:    $all
 # Required-Stop:     $all
 # Default-Start:     2 3 4 5
@@ -12,29 +12,29 @@
 # Short-Description: starts instance of kallithea
 # Description:       starts instance of kallithea using start-stop-daemon
 ### END INIT INFO
- 
+
 APP_NAME="kallithea"
 APP_HOMEDIR="opt"
 APP_PATH="/$APP_HOMEDIR/$APP_NAME"
- 
+
 CONF_NAME="production.ini"
- 
+
 PID_PATH="$APP_PATH/$APP_NAME.pid"
 LOG_PATH="$APP_PATH/$APP_NAME.log"
- 
+
 PYTHON_PATH="/$APP_HOMEDIR/$APP_NAME-venv"
- 
+
 RUN_AS="root"
- 
-DAEMON="$PYTHON_PATH/bin/paster"
- 
+
+DAEMON="$PYTHON_PATH/bin/gearbox"
+
 DAEMON_OPTS="serve --daemon \
  --user=$RUN_AS \
  --group=$RUN_AS \
  --pid-file=$PID_PATH \
- --log-file=$LOG_PATH  $APP_PATH/$CONF_NAME"
- 
- 
+ --log-file=$LOG_PATH -c $APP_PATH/$CONF_NAME"
+
+
 start() {
   echo "Starting $APP_NAME"
   PYTHON_EGG_CACHE="/tmp" start-stop-daemon -d $APP_PATH \
@@ -43,18 +43,18 @@ start() {
       --user $RUN_AS \
       --exec $DAEMON -- $DAEMON_OPTS
 }
- 
+
 stop() {
   echo "Stopping $APP_NAME"
   start-stop-daemon -d $APP_PATH \
       --stop --quiet \
       --pidfile $PID_PATH || echo "$APP_NAME - Not running!"
- 
+
   if [ -f $PID_PATH ]; then
     rm $PID_PATH
   fi
 }
- 
+
 status() {
   echo -n "Checking status of $APP_NAME ... "
   pid=`cat $PID_PATH`
@@ -65,7 +65,7 @@ status() {
     echo "NOT running"
   fi
 }
- 
+
 case "$1" in
   status)
    status

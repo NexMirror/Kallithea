@@ -97,6 +97,9 @@ class BaseRepository(object):
 
     @LazyProperty
     def name(self):
+        """
+        Return repository name (without group name)
+        """
         raise NotImplementedError
 
     @property
@@ -137,9 +140,6 @@ class BaseRepository(object):
     def is_empty(self):
         return self._empty
 
-    def get_last_change(self):
-        self.get_changesets()
-
     #==========================================================================
     # CHANGESETS
     #==========================================================================
@@ -163,11 +163,10 @@ class BaseRepository(object):
             yield self.get_changeset(revision)
 
     def get_changesets(self, start=None, end=None, start_date=None,
-                       end_date=None, branch_name=None, reverse=False):
+                       end_date=None, branch_name=None, reverse=False, max_revisions=None):
         """
-        Returns iterator of ``MercurialChangeset`` objects from start to end
-        not inclusive This should behave just like a list, ie. end is not
-        inclusive
+        Returns iterator of ``BaseChangeset`` objects from start to end,
+        both inclusive.
 
         :param start: None or str
         :param end: None or str
@@ -385,15 +384,28 @@ class BaseChangeset(object):
     def __eq__(self, other):
         return self.raw_id == other.raw_id
 
-    def __json__(self):
-        return dict(
-            short_id=self.short_id,
-            raw_id=self.raw_id,
-            revision=self.revision,
-            message=self.message,
-            date=self.date,
-            author=self.author,
-        )
+    def __json__(self, with_file_list=False):
+        if with_file_list:
+            return dict(
+                short_id=self.short_id,
+                raw_id=self.raw_id,
+                revision=self.revision,
+                message=self.message,
+                date=self.date,
+                author=self.author,
+                added=[safe_unicode(el.path) for el in self.added],
+                changed=[safe_unicode(el.path) for el in self.changed],
+                removed=[safe_unicode(el.path) for el in self.removed],
+            )
+        else:
+            return dict(
+                short_id=self.short_id,
+                raw_id=self.raw_id,
+                revision=self.revision,
+                message=self.message,
+                date=self.date,
+                author=self.author,
+            )
 
     @LazyProperty
     def last(self):
@@ -655,9 +667,9 @@ class BaseChangeset(object):
         data = get_dict_for_attrs(self, ['id', 'raw_id', 'short_id',
             'revision', 'date', 'message'])
         data['author'] = {'name': self.author_name, 'email': self.author_email}
-        data['added'] = [node.path for node in self.added]
-        data['changed'] = [node.path for node in self.changed]
-        data['removed'] = [node.path for node in self.removed]
+        data['added'] = [safe_unicode(node.path) for node in self.added]
+        data['changed'] = [safe_unicode(node.path) for node in self.changed]
+        data['removed'] = [safe_unicode(node.path) for node in self.removed]
         return data
 
     @LazyProperty
@@ -667,6 +679,27 @@ class BaseChangeset(object):
     @LazyProperty
     def obsolete(self):
         return False
+
+    @LazyProperty
+    def bumped(self):
+        return False
+
+    @LazyProperty
+    def divergent(self):
+        return False
+
+    @LazyProperty
+    def extinct(self):
+        return False
+
+    @LazyProperty
+    def unstable(self):
+        return False
+
+    @LazyProperty
+    def phase(self):
+        return ''
+
 
 class BaseWorkdir(object):
     """
@@ -1005,6 +1038,11 @@ class EmptyChangeset(BaseChangeset):
         return get_backend(self.alias).DEFAULT_BRANCH_NAME
 
     @LazyProperty
+    def branches(self):
+        from kallithea.lib.vcs.backends import get_backend
+        return [get_backend(self.alias).DEFAULT_BRANCH_NAME]
+
+    @LazyProperty
     def short_id(self):
         return self.raw_id[:12]
 
@@ -1031,12 +1069,13 @@ class CollectionGenerator(object):
         for rev in self.revs:
             yield self.repo.get_changeset(rev)
 
-    def __getslice__(self, i, j):
-        """
-        Returns a iterator of sliced repository
-        """
-        sliced_revs = self.revs[i:j]
-        return CollectionGenerator(self.repo, sliced_revs)
+    def __getitem__(self, what):
+        """Return either a single element by index, or a sliced collection."""
+        if isinstance(what, slice):
+            return CollectionGenerator(self.repo, self.revs[what])
+        else:
+            # single item
+            return self.repo.get_changeset(self.revs[what])
 
     def __repr__(self):
         return '<CollectionGenerator[len:%s]>' % (len(self))

@@ -4,7 +4,7 @@ import os
 import sys
 import platform
 
-if sys.version_info < (2, 6):
+if sys.version_info < (2, 6) or sys.version_info >= (3,):
     raise Exception('Kallithea requires python 2.6 or 2.7')
 
 
@@ -35,39 +35,41 @@ __platform__ = platform.system()
 is_windows = __platform__ in ['Windows']
 
 requirements = [
-    "setuptools<34", # setuptools==34 has an undeclared requirement of pyparsing >=2.1, but celery<2.3 requires pyparsing<2
-    "waitress==0.8.8",
-    "webob>=1.0.8,<=1.1.1",
-    "webtest==1.4.3",
-    "Pylons>=1.0.0,<=1.0.3",
-    "Beaker==1.6.4",
-    "WebHelpers==1.3",
-    "formencode>=1.2.4,<=1.2.6",
-    "SQLAlchemy==0.7.10",
-    "Mako>=0.9.0,<=1.0.0",
-    "pygments>=1.5",
-    "whoosh>=2.4.0,<=2.5.7",
-    "celery>=2.2.5,<2.3",
-    "babel>=0.9.6,<=1.3",
-    "python-dateutil>=1.5.0,<2.0.0",
-    "markdown==2.2.1",
-    "docutils>=0.8.1,<=0.11",
-    "mock",
-    "URLObject==2.3.4",
-    "Routes==1.13",
-    "dulwich>=0.9.9,<=0.9.9",
-    "mercurial>=2.9,<4.3",
+    "alembic >= 0.8.0, < 1.1",
+    "gearbox < 1",
+    "waitress >= 0.8.8, < 1.2",
+    "WebOb >= 1.7, < 1.8", # turbogears2 2.3.12 requires WebOb<1.8.0
+    "backlash >= 0.1.2, < 1",
+    "TurboGears2 >= 2.3.10, < 3",
+    "tgext.routes >= 0.2.0, < 1",
+    "Beaker >= 1.7.0, < 2",
+    "WebHelpers >= 1.3, < 1.4",
+    "FormEncode >= 1.2.4, < 1.4",
+    "SQLAlchemy >= 1.1, < 1.3",
+    "Mako >= 0.9.0, < 1.1",
+    "Pygments >= 2.0, < 2.3",
+    "Whoosh >= 2.5.0, < 2.8",
+    "celery >= 3.1, < 4.0", # celery 4 doesn't work
+    "Babel >= 1.3, < 2.7",
+    "python-dateutil >= 1.5.0, < 2.8",
+    "Markdown >= 2.2.1, < 2.7",
+    "docutils >= 0.11, < 0.15",
+    "URLObject >= 2.3.4, < 2.5",
+    "Routes >= 1.13, < 2",
+    "dulwich >= 0.14.1, < 0.20",
+    "mercurial >= 4.1.1, < 4.10",
+    "decorator >= 3.3.2, < 4.4",
+    "Paste >= 2.0.3, < 3.1",
     "bleach >= 3.0, < 3.1",
+    "Click >= 7.0, < 8",
 ]
 
 if sys.version_info < (2, 7):
-    requirements.append("importlib==1.0.1")
-    requirements.append("unittest2")
+    requirements.append("importlib == 1.0.1")
     requirements.append("argparse")
 
 if not is_windows:
-    requirements.append("py-bcrypt>=0.3.0,<=0.4")
-
+    requirements.append("bcrypt >= 3.1.0, < 3.2")
 
 dependency_links = [
 ]
@@ -90,9 +92,6 @@ classifiers = [
 # relative to sys.prefix
 data_files = []
 
-# additional files that goes into package itself
-package_data = {'kallithea': ['i18n/*/LC_MESSAGES/*.mo', ], }
-
 description = ('Kallithea is a fast and powerful management tool '
                'for Mercurial and Git with a built in push/pull server, '
                'full text search and code-review.')
@@ -105,24 +104,16 @@ keywords = ' '.join([
 
 # long description
 README_FILE = 'README.rst'
-CHANGELOG_FILE = 'docs/changelog.rst'
 try:
-    long_description = open(README_FILE).read() + '\n\n' + \
-        open(CHANGELOG_FILE).read()
-
+    long_description = open(README_FILE).read()
 except IOError as err:
     sys.stderr.write(
-        "[WARNING] Cannot find file specified as long_description (%s)\n or "
-        "changelog (%s) skipping that file" % (README_FILE, CHANGELOG_FILE)
+        "[WARNING] Cannot find file specified as long_description (%s)\n"
+        % README_FILE
     )
     long_description = description
 
-try:
-    from setuptools import setup, find_packages
-except ImportError:
-    from ez_setup import use_setuptools
-    use_setuptools()
-    from setuptools import setup, find_packages
+import setuptools
 
 # monkey patch setuptools to use distutils owner/group functionality
 from setuptools.command import sdist
@@ -133,10 +124,9 @@ class sdist_new(sdist_org):
         self.owner = self.group = 'root'
 sdist.sdist = sdist_new
 
-# packages
-packages = find_packages(exclude=['ez_setup'])
+packages = setuptools.find_packages(exclude=['ez_setup'])
 
-setup(
+setuptools.setup(
     name='Kallithea',
     version=__version__,
     description=description,
@@ -149,45 +139,23 @@ setup(
     url=__url__,
     install_requires=requirements,
     classifiers=classifiers,
-    setup_requires=["PasteScript>=1.6.3"],
     data_files=data_files,
     packages=packages,
     include_package_data=True,
-    test_suite='nose.collector',
-    package_data=package_data,
     message_extractors={'kallithea': [
             ('**.py', 'python', None),
             ('templates/**.mako', 'mako', {'input_encoding': 'utf-8'}),
             ('templates/**.html', 'mako', {'input_encoding': 'utf-8'}),
             ('public/**', 'ignore', None)]},
     zip_safe=False,
-    paster_plugins=['PasteScript', 'Pylons'],
     entry_points="""
     [console_scripts]
     kallithea-api =    kallithea.bin.kallithea_api:main
     kallithea-gist =   kallithea.bin.kallithea_gist:main
     kallithea-config = kallithea.bin.kallithea_config:main
+    kallithea-cli =    kallithea.bin.kallithea_cli:cli
 
     [paste.app_factory]
     main = kallithea.config.middleware:make_app
-
-    [paste.app_install]
-    main = pylons.util:PylonsInstaller
-
-    [paste.global_paster_command]
-    setup-db=kallithea.lib.paster_commands.setup_db:Command
-    cleanup-repos=kallithea.lib.paster_commands.cleanup:Command
-    update-repoinfo=kallithea.lib.paster_commands.update_repoinfo:Command
-    make-rcext=kallithea.lib.paster_commands.make_rcextensions:Command
-    repo-scan=kallithea.lib.paster_commands.repo_scan:Command
-    cache-keys=kallithea.lib.paster_commands.cache_keys:Command
-    ishell=kallithea.lib.paster_commands.ishell:Command
-    make-index=kallithea.lib.paster_commands.make_index:Command
-    upgrade-db=kallithea.lib.dbmigrate:UpgradeDb
-    celeryd=kallithea.lib.celerypylons.commands:CeleryDaemonCommand
-    install-iis=kallithea.lib.paster_commands.install_iis:Command
-
-    [nose.plugins]
-    pylons = pylons.test:PylonsPlugin
     """,
 )

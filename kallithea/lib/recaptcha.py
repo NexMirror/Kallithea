@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 import urllib
 import urllib2
-
-API_SSL_SERVER = "https://www.google.com/recaptcha/api"
-API_SERVER = "http://www.google.com/recaptcha/api"
-VERIFY_SERVER = "www.google.com"
+import json
 
 
 class RecaptchaResponse(object):
@@ -16,53 +13,17 @@ class RecaptchaResponse(object):
         return '<RecaptchaResponse:%s>' % (self.is_valid)
 
 
-def displayhtml(public_key, use_ssl=False, error=None):
-    """Gets the HTML to display for reCAPTCHA
-
-    public_key -- The public api key
-    use_ssl -- Should the request be sent over ssl?
-    error -- An error message to display (from RecaptchaResponse.error_code)"""
-
-    error_param = ''
-    if error:
-        error_param = '&error=%s' % error
-
-    if use_ssl:
-        server = API_SSL_SERVER
-    else:
-        server = API_SERVER
-
-    return """<script type="text/javascript" src="%(ApiServer)s/challenge?k=%(PublicKey)s%(ErrorParam)s"></script>
-
-<noscript>
-  <iframe src="%(ApiServer)s/noscript?k=%(PublicKey)s%(ErrorParam)s" height="300" width="500" frameborder="0"></iframe><br />
-  <textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
-  <input type='hidden' name='recaptcha_response_field' value='manual_challenge' />
-</noscript>
-""" % {
-        'ApiServer': server,
-        'PublicKey': public_key,
-        'ErrorParam': error_param,
-    }
-
-
-def submit(recaptcha_challenge_field, recaptcha_response_field, private_key,
-           remoteip):
+def submit(g_recaptcha_response, private_key, remoteip):
     """
-    Submits a reCAPTCHA request for verification. Returns RecaptchaResponse
-    for the request
+    Submits a reCAPTCHA request for verification. Returns RecaptchaResponse for the request
 
-    recaptcha_challenge_field -- The value of recaptcha_challenge_field from the form
-    recaptcha_response_field -- The value of recaptcha_response_field from the form
+    g_recaptcha_response -- The value of g_recaptcha_response from the form
     private_key -- your reCAPTCHA private key
     remoteip -- the user's IP address
     """
 
-    if not (recaptcha_response_field and recaptcha_challenge_field and
-                len(recaptcha_response_field) and len(
-            recaptcha_challenge_field)):
-        return RecaptchaResponse(is_valid=False,
-                                 error_code='incorrect-captcha-sol')
+    if not (g_recaptcha_response and len(g_recaptcha_response)):
+        return RecaptchaResponse(is_valid=False, error_code='incorrect-captcha-sol')
 
     def encode_if_necessary(s):
         if isinstance(s, unicode):
@@ -70,14 +31,13 @@ def submit(recaptcha_challenge_field, recaptcha_response_field, private_key,
         return s
 
     params = urllib.urlencode({
-        'privatekey': encode_if_necessary(private_key),
+        'secret': encode_if_necessary(private_key),
         'remoteip': encode_if_necessary(remoteip),
-        'challenge': encode_if_necessary(recaptcha_challenge_field),
-        'response': encode_if_necessary(recaptcha_response_field),
+        'response': encode_if_necessary(g_recaptcha_response),
     })
 
-    request = urllib2.Request(
-        url="http://%s/recaptcha/api/verify" % VERIFY_SERVER,
+    req = urllib2.Request(
+        url="https://www.google.com/recaptcha/api/siteverify",
         data=params,
         headers={
             "Content-type": "application/x-www-form-urlencoded",
@@ -85,14 +45,15 @@ def submit(recaptcha_challenge_field, recaptcha_response_field, private_key,
         }
     )
 
-    httpresp = urllib2.urlopen(request)
-
-    return_values = httpresp.read().splitlines()
+    httpresp = urllib2.urlopen(req)
+    return_values = json.loads(httpresp.read())
     httpresp.close()
 
-    return_code = return_values[0]
-
-    if return_code == "true":
+    if not (isinstance(return_values, dict)):
+        return RecaptchaResponse(is_valid=False, error_code='incorrect-captcha-sol')
+    elif (("success" in return_values) and ((return_values["success"] == True) or (return_values["success"] == "true"))):
         return RecaptchaResponse(is_valid=True)
+    elif (("error-codes" in return_values) and isinstance(return_values["error-codes"], list) and (len(return_values["error-codes"]) > 0)):
+        return RecaptchaResponse(is_valid=False, error_code=return_values["error-codes"][0])
     else:
-        return RecaptchaResponse(is_valid=False, error_code=return_values[1])
+        return RecaptchaResponse(is_valid=False, error_code='incorrect-captcha-sol')

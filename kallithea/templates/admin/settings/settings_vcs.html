@@ -1,74 +1,70 @@
 ${h.form(url('admin_settings'), method='post')}
     <div class="form">
-        <div class="fields">
-            <div class="field">
-                <div class="label label-checkbox">
-                    <label>${_('Web')}:</label>
-                </div>
-                <div class="checkboxes">
+            <div class="form-group">
+                <label class="control-label">${_('Hooks')}:</label>
+                <div>
                     <div class="checkbox">
-                        ${h.checkbox('web_push_ssl', 'True')}
-                        <label for="web_push_ssl">${_('Require SSL for vcs operations')}</label>
-                    </div>
-                    <span class="help-block">${_('Activate to require SSL both pushing and pulling. If SSL certificate is missing, it will return an HTTP Error 406: Not Acceptable.')}</span>
-                </div>
-             </div>
-
-             <div class="field">
-                <div class="label label-checkbox">
-                    <label>${_('Hooks')}:</label>
-                </div>
-                <div class="checkboxes">
-                    <div class="checkbox">
-                        ${h.checkbox('hooks_changegroup_repo_size','True')}
-                        <label for="hooks_changegroup_repo_size">${_('Show repository size after push')}</label>
+                        <label>
+                            ${h.checkbox('hooks_changegroup_repo_size','True')}
+                            ${_('Show repository size after push')}
+                        </label>
                     </div>
                     <div class="checkbox">
-                        ${h.checkbox('hooks_changegroup_push_logger','True')}
-                        <label for="hooks_changegroup_push_logger">${_('Log user push commands')}</label>
+                        <label>
+                            ${h.checkbox('hooks_changegroup_push_logger','True')}
+                            ${_('Log user push commands')}
+                        </label>
                     </div>
                     <div class="checkbox">
-                        ${h.checkbox('hooks_outgoing_pull_logger','True')}
-                        <label for="hooks_outgoing_pull_logger">${_('Log user pull commands')}</label>
+                        <label>
+                            ${h.checkbox('hooks_outgoing_pull_logger','True')}
+                            ${_('Log user pull commands')}
+                        </label>
                     </div>
                     <div class="checkbox">
-                        ${h.checkbox('hooks_changegroup_update','True')}
-                        <label for="hooks_changegroup_update">${_('Update repository after push (hg update)')}</label>
+                        <label>
+                            ${h.checkbox('hooks_changegroup_update','True')}
+                            ${_('Update repository after push (hg update)')}
+                        </label>
                     </div>
                 </div>
-             </div>
-             <div class="field">
-                <div class="label label-checkbox">
-                    <label>${_('Mercurial extensions')}:</label>
-                </div>
-                <div class="checkboxes">
+            </div>
+            <div class="form-group">
+                <label class="control-label">${_('Mercurial extensions')}:</label>
+                <div>
                     <div class="checkbox">
-                        ${h.checkbox('extensions_largefiles','True')}
-                        <label for="extensions_largefiles">${_('Enable largefiles extension')}</label>
+                        <label>
+                            ${h.checkbox('extensions_largefiles','True')}
+                            ${_('Enable largefiles extension')}
+                        </label>
                     </div>
                     <div class="checkbox">
-                        ${h.checkbox('extensions_hgsubversion','True')}
-                        <label for="extensions_hgsubversion">${_('Enable hgsubversion extension')}</label>
+                        <label>
+                            ${h.checkbox('extensions_hgsubversion','True')}
+                            ${_('Enable hgsubversion extension')}
+                        </label>
                     </div>
                     <span class="help-block">${_('Requires hgsubversion library to be installed. Enables cloning of remote Subversion repositories while converting them to Mercurial.')}</span>
                     ##<div class="checkbox">
-                    ##    ${h.checkbox('extensions_hggit','True')}
-                    ##    <label for="extensions_hggit">${_('Enable hg-git extension')}</label>
+                    ##    <label>
+                    ##        ${h.checkbox('extensions_hggit','True')}
+                    ##        ${_('Enable hg-git extension')}
+                    ##    </label>
                     ##</div>
                     ##<span class="help-block">${_('Requires hg-git library to be installed. Enables cloning of remote Git repositories while converting them to Mercurial.')}</span>
                 </div>
             </div>
             %if c.visual.allow_repo_location_change:
-            <div class="field">
-                <div class="label">
-                    <label for="paths_root_path">${_('Location of repositories')}:</label>
-                </div>
-                <div class="input">
-                    ${h.text('paths_root_path',size=60,readonly="readonly")}
-                    <span id="path_unlock" class="tooltip" style="cursor: pointer"
+            <div class="form-group">
+                <label class="control-label" for="paths_root_path">${_('Location of repositories')}:</label>
+                <div>
+                    <div class="input-group">
+                        ${h.text('paths_root_path',size=60,readonly="readonly",class_='form-control')}
+                        <span id="path_unlock" data-toggle="tooltip" class="input-group-btn"
                             title="${_('Click to unlock. You must restart Kallithea in order to make this setting take effect.')}">
-                        <div class="btn btn-small"><i id="path_unlock_icon" class="icon-lock"></i></div>
-                    </span>
+                            <button type="button" class="btn btn-default btn-sm"><i id="path_unlock_icon" class="icon-lock"></i></button>
+                        </span>
+                    </div>
                     <span class="help-block">${_('Filesystem location where repositories are stored. After changing this value, a restart and rescan of the repository folder are both required.')}</span>
                 </div>
             </div>
@@ -76,11 +72,12 @@ ${h.form(url('admin_settings'), method='post')}
             ## form still requires this but we cannot internally change it anyway
             ${h.hidden('paths_root_path',size=30,readonly="readonly")}
             %endif
-            <div class="buttons">
-                ${h.submit('save',_('Save Settings'),class_="btn")}
-                ${h.reset('reset',_('Reset'),class_="btn")}
+            <div class="form-group">
+                <div class="buttons">
+                    ${h.submit('save',_('Save Settings'),class_="btn btn-default")}
+                    ${h.reset('reset',_('Reset'),class_="btn btn-default")}
+                </div>
            </div>
-        </div>
     </div>
     ${h.end_form()}
 

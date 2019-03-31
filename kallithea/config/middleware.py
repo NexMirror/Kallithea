@@ -11,102 +11,41 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-"""
-    Pylons middleware initialization
-"""
+"""WSGI middleware initialization for the Kallithea application."""
 
-from routes.middleware import RoutesMiddleware
-from paste.cascade import Cascade
-from paste.registry import RegistryManager
-from paste.urlparser import StaticURLParser
-from paste.deploy.converters import asbool
-from paste.gzipper import make_gzip_middleware
-
-from pylons.middleware import ErrorHandler, StatusCodeRedirect
-from pylons.wsgiapp import PylonsApp
-
-from kallithea.lib.middleware.simplehg import SimpleHg
-from kallithea.lib.middleware.simplegit import SimpleGit
-from kallithea.lib.middleware.https_fixup import HttpsFixup
-from kallithea.lib.middleware.sessionmiddleware import SecureSessionMiddleware
+import logging.config
+from kallithea.config.app_cfg import base_config
 from kallithea.config.environment import load_environment
-from kallithea.lib.middleware.wrapper import RequestWrapper
+
+__all__ = ['make_app']
+
+# Use base_config to setup the necessary PasteDeploy application factory.
+# make_base_app will wrap the TurboGears2 app with all the middleware it needs.
+make_base_app = base_config.setup_tg_wsgi_app(load_environment)
 
 
-def make_app(global_conf, full_stack=True, static_files=True, **app_conf):
-    """Create a Pylons WSGI application and return it
+def make_app_without_logging(global_conf, full_stack=True, **app_conf):
+    """The core of make_app for use from gearbox commands (other than 'serve')"""
+    return make_base_app(global_conf, full_stack=full_stack, **app_conf)
 
-    ``global_conf``
-        The inherited configuration for this application. Normally from
-        the [DEFAULT] section of the Paste ini file.
 
-    ``full_stack``
-        Whether or not this application provides a full WSGI stack (by
-        default, meaning it handles its own exceptions and errors).
-        Disable full_stack when this application is "managed" by
-        another WSGI middleware.
-
-    ``app_conf``
-        The application's local configuration. Normally specified in
-        the [app:<name>] section of the Paste ini file (where <name>
-        defaults to main).
-
+def make_app(global_conf, full_stack=True, **app_conf):
     """
-    # Configure the Pylons environment
-    config = load_environment(global_conf, app_conf)
+    Set up Kallithea with the settings found in the PasteDeploy configuration
+    file used.
 
-    # The Pylons WSGI app
-    app = PylonsApp(config=config)
+    :param global_conf: The global settings for Kallithea (those
+        defined under the ``[DEFAULT]`` section).
+    :type global_conf: dict
+    :param full_stack: Should the whole TurboGears2 stack be set up?
+    :type full_stack: str or bool
+    :return: The Kallithea application with all the relevant middleware
+        loaded.
 
-    # Routing/Session/Cache Middleware
-    app = RoutesMiddleware(app, config['routes.map'])
-    app = SecureSessionMiddleware(app, config)
+    This is the PasteDeploy factory for the Kallithea application.
 
-    # CUSTOM MIDDLEWARE HERE (filtered by error handling middlewares)
-    if asbool(config['pdebug']):
-        from kallithea.lib.profiler import ProfilingMiddleware
-        app = ProfilingMiddleware(app)
-
-    if asbool(full_stack):
-
-        from kallithea.lib.middleware.sentry import Sentry
-        from kallithea.lib.middleware.appenlight import AppEnlight
-        if AppEnlight and asbool(config['app_conf'].get('appenlight')):
-            app = AppEnlight(app, config)
-        elif Sentry:
-            app = Sentry(app, config)
-
-        # Handle Python exceptions
-        app = ErrorHandler(app, global_conf, **config['pylons.errorware'])
-
-        # Display error documents for 401, 403, 404 status codes (and
-        # 500 when debug is disabled)
-        # Note: will buffer the output in memory!
-        if asbool(config['debug']):
-            app = StatusCodeRedirect(app)
-        else:
-            app = StatusCodeRedirect(app, [400, 401, 403, 404, 500])
-
-        # we want our low level middleware to get to the request ASAP. We don't
-        # need any pylons stack middleware in them - especially no StatusCodeRedirect buffering
-        app = SimpleHg(app, config)
-        app = SimpleGit(app, config)
-
-        # Enable https redirects based on HTTP_X_URL_SCHEME set by proxy
-        if any(asbool(config.get(x)) for x in ['https_fixup', 'force_https', 'use_htsts']):
-            app = HttpsFixup(app, config)
-
-        app = RequestWrapper(app, config) # logging
-
-    # Establish the Registry for this application
-    app = RegistryManager(app) # thread / request-local module globals / variables
-
-    if asbool(static_files):
-        # Serve static files
-        static_app = StaticURLParser(config['pylons.paths']['static_files'])
-        app = Cascade([static_app, app])
-        app = make_gzip_middleware(app, global_conf, compress_level=1)
-
-    app.config = config
-
-    return app
+    ``app_conf`` contains all the application-specific settings (those defined
+    under ``[app:main]``.
+    """
+    logging.config.fileConfig(global_conf['__file__'])
+    return make_app_without_logging(global_conf, full_stack=full_stack, **app_conf)

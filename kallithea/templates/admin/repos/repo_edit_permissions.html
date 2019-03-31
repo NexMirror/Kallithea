@@ -1,9 +1,8 @@
-${h.form(url('edit_repo_perms_update', repo_name=c.repo_name), method='put')}
+${h.form(url('edit_repo_perms_update', repo_name=c.repo_name))}
 <div class="form">
-   <div class="fields">
-        <div class="field">
+        <div class="form-group">
             ${h.hidden('repo_private')}
-            <table id="permissions_manage" class="noborder">
+            <table id="permissions_manage" class="table table-condensed">
                 <tr>
                     <td>${_('None')}</td>
                     <td>${_('Read')}</td>
@@ -21,7 +20,7 @@ ${h.form(url('edit_repo_perms_update', repo_name=c.repo_name), method='put')}
                                 ${_('Private Repository')}
                                 </span>
                             </td>
-                            <td class="private_repo_msg"><i class="icon-user"></i> ${_('Default')}</td>
+                            <td class="private_repo_msg"><i class="icon-user"></i>${_('Default')}</td>
                         </tr>
                     %else:
                     <tr id="id${id(r2p.user.username)}">
@@ -29,7 +28,7 @@ ${h.form(url('edit_repo_perms_update', repo_name=c.repo_name), method='put')}
                         <td>${h.radio('u_perm_%s' % r2p.user.username,'repository.read')}</td>
                         <td>${h.radio('u_perm_%s' % r2p.user.username,'repository.write')}</td>
                         <td>${h.radio('u_perm_%s' % r2p.user.username,'repository.admin')}</td>
-                        <td style="white-space: nowrap;">
+                        <td>
                             ${h.gravatar(r2p.user.email, size=14)}
                             %if h.HasPermissionAny('hg.admin')() and r2p.user.username != 'default':
                              <a href="${h.url('edit_user',id=r2p.user.user_id)}">${r2p.user.username}</a>
@@ -39,9 +38,9 @@ ${h.form(url('edit_repo_perms_update', repo_name=c.repo_name), method='put')}
                         </td>
                         <td>
                           %if r2p.user.username !='default':
-                            <span style="color:#da4f49" class="action_button" onclick="ajaxActionRevoke(${r2p.user.user_id}, 'user', '${'id%s'%id(r2p.user.username)}', '${r2p.user.username}')">
-                            <i class="icon-minus-circled"></i> ${_('Revoke')}
-                            </span>
+                            <button type="button" class="btn btn-default btn-xs" onclick="ajaxActionRevoke(${r2p.user.user_id}, 'user', '${'id%s'%id(r2p.user.username)}', '${r2p.user.username}')">
+                            <i class="icon-minus-circled"></i>${_('Revoke')}
+                            </button>
                           %endif
                         </td>
                     </tr>
@@ -55,7 +54,7 @@ ${h.form(url('edit_repo_perms_update', repo_name=c.repo_name), method='put')}
                         <td>${h.radio('g_perm_%s' % g2p.users_group.users_group_name,'repository.read')}</td>
                         <td>${h.radio('g_perm_%s' % g2p.users_group.users_group_name,'repository.write')}</td>
                         <td>${h.radio('g_perm_%s' % g2p.users_group.users_group_name,'repository.admin')}</td>
-                        <td style="white-space: nowrap;">
+                        <td>
                             <i class="icon-users"></i>
                             %if h.HasPermissionAny('hg.admin')():
                              <a href="${h.url('edit_users_group',id=g2p.users_group.users_group_id)}">${g2p.users_group.users_group_name}</a>
@@ -64,50 +63,33 @@ ${h.form(url('edit_repo_perms_update', repo_name=c.repo_name), method='put')}
                             %endif
                         </td>
                         <td>
-                            <span style="color:#da4f49" class="action_button" onclick="ajaxActionRevoke(${g2p.users_group.users_group_id}, 'user_group', '${'id%s'%id(g2p.users_group.users_group_name)}', '${g2p.users_group.users_group_name}')">
-                            <i class="icon-minus-circled"></i> ${_('Revoke')}
-                            </span>
+                            <button type="button" class="btn btn-default btn-xs" onclick="ajaxActionRevoke(${g2p.users_group.users_group_id}, 'user_group', '${'id%s'%id(g2p.users_group.users_group_name)}', '${g2p.users_group.users_group_name}')">
+                            <i class="icon-minus-circled"></i>${_('Revoke')}
+                            </button>
                         </td>
                     </tr>
                 %endfor
-
-                <%
-                _tmpl = h.literal("""' \
-                    <td><input type="radio" value="repository.none" name="perm_new_member_{0}" id="perm_new_member_{0}"></td> \
-                    <td><input type="radio" value="repository.read" checked="checked" name="perm_new_member_{0}" id="perm_new_member_{0}"></td> \
-                    <td><input type="radio" value="repository.write" name="perm_new_member_{0}" id="perm_new_member_{0}"></td> \
-                    <td><input type="radio" value="repository.admin" name="perm_new_member_{0}" id="perm_new_member_{0}"></td> \
-                    <td class="ac"> \
-                        <div class="perm_ac" id="perm_ac_{0}"> \
-                            <input class="yui-ac-input" id="perm_new_member_name_{0}" name="perm_new_member_name_{0}" value="" type="text"> \
-                            <input id="perm_new_member_type_{0}" name="perm_new_member_type_{0}" value="" type="hidden">  \
-                            <div id="perm_container_{0}"></div> \
-                        </div> \
-                    </td> \
-                    <td></td>'""")
-                %>
-                ## ADD HERE DYNAMICALLY NEW INPUTS FROM THE '_tmpl'
-                <tr class="new_members last_new_member" id="add_perm_input"></tr>
+                ## New entries added by addPermAction here.
+                <tr class="new_members last_new_member" id="add_perm_input"><td colspan="6"></td></tr>
                 <tr>
                     <td colspan="6">
-                        <span id="add_perm" style="cursor: pointer;">
-                            <i class="icon-plus"></i> ${_('Add new')}
-                        </span>
+                        <button type="button" id="add_perm" class="btn btn-link btn-xs">
+                            <i class="icon-plus"></i>${_('Add new')}
+                        </button>
                     </td>
                 </tr>
             </table>
         </div>
-        <div class="buttons">
-          ${h.submit('save',_('Save'),class_="btn")}
-          ${h.reset('reset',_('Reset'),class_="btn")}
+        <div class="form-group">
+            ${h.submit('save',_('Save'),class_="btn btn-default")}
+            ${h.reset('reset',_('Reset'),class_="btn btn-default")}
         </div>
-   </div>
 </div>
 ${h.end_form()}
 
 <script type="text/javascript">
     function ajaxActionRevoke(obj_id, obj_type, field_id, obj_name) {
-        url = "${h.url('edit_repo_perms_revoke',repo_name=c.repo_name)}";
+        url = ${h.js(h.url('edit_repo_perms_revoke',repo_name=c.repo_name))};
         var revoke_msg = _TM['Confirm to revoke permission for {0}: {1} ?'].format(obj_type.replace('_', ' '), obj_name);
         if (confirm(revoke_msg)){
             ajaxActionRevokePermission(url, obj_id, obj_type, field_id);
@@ -119,7 +101,7 @@ ${h.end_form()}
             $('#add_perm_input').hide();
         }
         $('#add_perm').click(function () {
-            addPermAction(${_tmpl}, ${c.users_array|n}, ${c.user_groups_array|n});
+            addPermAction('repository');
         });
     });
 </script>

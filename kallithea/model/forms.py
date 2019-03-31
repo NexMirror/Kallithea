@@ -38,7 +38,7 @@ import logging
 import formencode
 from formencode import All
 
-from pylons.i18n.translation import _
+from tg.i18n import ugettext as _
 
 from kallithea import BACKENDS
 from kallithea.model import validators as v
@@ -46,30 +46,32 @@ from kallithea.model import validators as v
 log = logging.getLogger(__name__)
 
 
-class LoginForm(formencode.Schema):
-    allow_extra_fields = True
-    filter_extra_fields = True
-    username = v.UnicodeString(
-        strip=True,
-        min=1,
-        not_empty=True,
-        messages={
-           'empty': _('Please enter a login'),
-           'tooShort': _('Enter a value %(min)i characters long or more')}
-    )
+def LoginForm():
+    class _LoginForm(formencode.Schema):
+        allow_extra_fields = True
+        filter_extra_fields = True
+        username = v.UnicodeString(
+            strip=True,
+            min=1,
+            not_empty=True,
+            messages={
+               'empty': _('Please enter a login'),
+               'tooShort': _('Enter a value %(min)i characters long or more')}
+        )
 
-    password = v.UnicodeString(
-        strip=False,
-        min=3,
-        not_empty=True,
-        messages={
-            'empty': _('Please enter a password'),
-            'tooShort': _('Enter %(min)i characters or more')}
-    )
+        password = v.UnicodeString(
+            strip=False,
+            min=3,
+            not_empty=True,
+            messages={
+                'empty': _('Please enter a password'),
+                'tooShort': _('Enter %(min)i characters or more')}
+        )
 
-    remember = v.StringBoolean(if_missing=False)
+        remember = v.StringBoolean(if_missing=False)
 
-    chained_validators = [v.ValidAuth()]
+        chained_validators = [v.ValidAuth()]
+    return _LoginForm
 
 
 def PasswordChangeForm(username):
@@ -86,7 +88,9 @@ def PasswordChangeForm(username):
     return _PasswordChangeForm
 
 
-def UserForm(edit=False, old_data={}):
+def UserForm(edit=False, old_data=None):
+    old_data = old_data or {}
+
     class _UserForm(formencode.Schema):
         allow_extra_fields = True
         filter_extra_fields = True
@@ -125,7 +129,10 @@ def UserForm(edit=False, old_data={}):
     return _UserForm
 
 
-def UserGroupForm(edit=False, old_data={}, available_members=[]):
+def UserGroupForm(edit=False, old_data=None, available_members=None):
+    old_data = old_data or {}
+    available_members = available_members or []
+
     class _UserGroupForm(formencode.Schema):
         allow_extra_fields = True
         filter_extra_fields = True
@@ -148,9 +155,12 @@ def UserGroupForm(edit=False, old_data={}, available_members=[]):
     return _UserGroupForm
 
 
-def RepoGroupForm(edit=False, old_data={}, repo_groups=[],
+def RepoGroupForm(edit=False, old_data=None, repo_groups=None,
                    can_create_in_root=False):
+    old_data = old_data or {}
+    repo_groups = repo_groups or []
     repo_group_ids = [rg[0] for rg in repo_groups]
+
     class _RepoGroupForm(formencode.Schema):
         allow_extra_fields = True
         filter_extra_fields = False
@@ -163,11 +173,11 @@ def RepoGroupForm(edit=False, old_data={}, repo_groups=[],
         group_copy_permissions = v.StringBoolean(if_missing=False)
 
         if edit:
-            #FIXME: do a special check that we cannot move a group to one of
-            #its children
+            # FIXME: do a special check that we cannot move a group to one of
+            # its children
             pass
 
-        group_parent_id = All(v.CanCreateGroup(can_create_in_root),
+        parent_group_id = All(v.CanCreateGroup(can_create_in_root),
                               v.OneOf(repo_group_ids, hideList=False,
                                       testValueList=True,
                                       if_missing=None, not_empty=True),
@@ -178,7 +188,7 @@ def RepoGroupForm(edit=False, old_data={}, repo_groups=[],
     return _RepoGroupForm
 
 
-def RegisterForm(edit=False, old_data={}):
+def RegisterForm(edit=False, old_data=None):
     class _RegisterForm(formencode.Schema):
         allow_extra_fields = True
         filter_extra_fields = True
@@ -212,6 +222,7 @@ def PasswordResetRequestForm():
         email = v.Email(not_empty=True)
     return _PasswordResetRequestForm
 
+
 def PasswordResetConfirmationForm():
     class _PasswordResetConfirmationForm(formencode.Schema):
         allow_extra_fields = True
@@ -227,9 +238,14 @@ def PasswordResetConfirmationForm():
                                                     'password_confirm')]
     return _PasswordResetConfirmationForm
 
-def RepoForm(edit=False, old_data={}, supported_backends=BACKENDS.keys(),
-             repo_groups=[], landing_revs=[]):
+
+def RepoForm(edit=False, old_data=None, supported_backends=BACKENDS.keys(),
+             repo_groups=None, landing_revs=None):
+    old_data = old_data or {}
+    repo_groups = repo_groups or []
+    landing_revs = landing_revs or []
     repo_group_ids = [rg[0] for rg in repo_groups]
+
     class _RepoForm(formencode.Schema):
         allow_extra_fields = True
         filter_extra_fields = False
@@ -251,8 +267,7 @@ def RepoForm(edit=False, old_data={}, supported_backends=BACKENDS.keys(),
         repo_enable_locking = v.StringBoolean(if_missing=False)
 
         if edit:
-            #this is repo owner
-            user = All(v.UnicodeString(not_empty=True), v.ValidRepoUser())
+            owner = All(v.UnicodeString(not_empty=True), v.ValidRepoUser())
             # Not a real field - just for reference for validation:
             # clone_uri_hidden = v.UnicodeString(if_missing='')
 
@@ -302,9 +317,13 @@ def RepoFieldForm():
     return _RepoFieldForm
 
 
-def RepoForkForm(edit=False, old_data={}, supported_backends=BACKENDS.keys(),
-                 repo_groups=[], landing_revs=[]):
+def RepoForkForm(edit=False, old_data=None, supported_backends=BACKENDS.keys(),
+                 repo_groups=None, landing_revs=None):
+    old_data = old_data or {}
+    repo_groups = repo_groups or []
+    landing_revs = landing_revs or []
     repo_group_ids = [rg[0] for rg in repo_groups]
+
     class _RepoForkForm(formencode.Schema):
         allow_extra_fields = True
         filter_extra_fields = False
@@ -344,7 +363,7 @@ def ApplicationVisualisationForm():
         filter_extra_fields = False
         show_public_icon = v.StringBoolean(if_missing=False)
         show_private_icon = v.StringBoolean(if_missing=False)
-        stylify_metatags = v.StringBoolean(if_missing=False)
+        stylify_metalabels = v.StringBoolean(if_missing=False)
 
         repository_fields = v.StringBoolean(if_missing=False)
         lightweight_journal = v.StringBoolean(if_missing=False)
@@ -362,7 +381,6 @@ def ApplicationUiSettingsForm():
     class _ApplicationUiSettingsForm(formencode.Schema):
         allow_extra_fields = True
         filter_extra_fields = False
-        web_push_ssl = v.StringBoolean(if_missing=False)
         paths_root_path = All(
             v.ValidPath(),
             v.UnicodeString(strip=True, min=1, not_empty=True)
@@ -421,7 +439,7 @@ def CustomDefaultPermissionsForm():
     return _CustomDefaultPermissionsForm
 
 
-def DefaultsForm(edit=False, old_data={}, supported_backends=BACKENDS.keys()):
+def DefaultsForm(edit=False, old_data=None, supported_backends=BACKENDS.keys()):
     class _DefaultsForm(formencode.Schema):
         allow_extra_fields = True
         filter_extra_fields = True
@@ -455,7 +473,7 @@ def AuthSettingsForm(current_active_modules):
                         validator = sv["validator"]
                         if isinstance(validator, LazyFormencode):
                             validator = validator()
-                        #init all lazy validators from formencode.All
+                        # init all lazy validators from formencode.All
                         if isinstance(validator, All):
                             init_validators = []
                             for validator in validator.validators:
@@ -515,7 +533,6 @@ def PullRequestForm(repo_id):
         org_ref = v.UnicodeString(strip=True, required=True)
         other_repo = v.UnicodeString(strip=True, required=True)
         other_ref = v.UnicodeString(strip=True, required=True)
-        review_members = v.Set()
 
         pullrequest_title = v.UnicodeString(strip=True, required=True)
         pullrequest_desc = v.UnicodeString(strip=True, required=False)
@@ -530,6 +547,7 @@ def PullRequestPostForm():
 
         pullrequest_title = v.UnicodeString(strip=True, required=True)
         pullrequest_desc = v.UnicodeString(strip=True, required=False)
+        org_review_members = v.Set()
         review_members = v.Set()
         updaterev = v.UnicodeString(strip=True, required=False, if_missing=None)
         owner = All(v.UnicodeString(strip=True, required=True),

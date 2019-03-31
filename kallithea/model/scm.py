@@ -26,16 +26,17 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 import os
+import sys
+import posixpath
 import re
 import time
 import traceback
 import logging
 import cStringIO
 import pkg_resources
-from os.path import join as jn
 
 from sqlalchemy import func
-from pylons.i18n.translation import _
+from tg.i18n import ugettext as _
 
 import kallithea
 from kallithea.lib.vcs import get_backend
@@ -46,14 +47,13 @@ from kallithea.lib.vcs.backends.base import EmptyChangeset
 
 from kallithea import BACKENDS
 from kallithea.lib import helpers as h
-from kallithea.lib.utils2 import safe_str, safe_unicode, get_server_url,\
+from kallithea.lib.utils2 import safe_str, safe_unicode, get_server_url, \
     _set_extras
-from kallithea.lib.auth import HasRepoPermissionAny, HasRepoGroupPermissionAny,\
-    HasUserGroupPermissionAny, HasPermissionAny, HasPermissionAll
+from kallithea.lib.auth import HasRepoPermissionLevel, HasRepoGroupPermissionLevel, \
+    HasUserGroupPermissionLevel, HasPermissionAny, HasPermissionAny
 from kallithea.lib.utils import get_filesystem_repos, make_ui, \
     action_logger
-from kallithea.model import BaseModel
-from kallithea.model.db import Repository, Ui, CacheInvalidation, \
+from kallithea.model.db import Repository, Session, Ui, CacheInvalidation, \
     UserFollowing, UserLog, User, RepoGroup, PullRequest
 from kallithea.lib.hooks import log_push_action
 from kallithea.lib.exceptions import NonRelativePathError, IMCCommitError
@@ -75,92 +75,6 @@ class RepoTemp(object):
 
     def __repr__(self):
         return "<%s('id:%s')>" % (self.__class__.__name__, self.repo_id)
-
-
-class CachedRepoList(object):
-    """
-    Cached repo list. Uses super-fast in-memory cache after initialization.
-    """
-
-    def __init__(self, db_repo_list, repos_path, order_by=None, perm_set=None):
-        self.db_repo_list = db_repo_list
-        self.repos_path = repos_path
-        self.order_by = order_by
-        self.reversed = (order_by or '').startswith('-')
-        if not perm_set:
-            perm_set = ['repository.read', 'repository.write',
-                        'repository.admin']
-        self.perm_set = perm_set
-
-    def __len__(self):
-        return len(self.db_repo_list)
-
-    def __repr__(self):
-        return '<%s (%s)>' % (self.__class__.__name__, self.__len__())
-
-    def __iter__(self):
-        # pre-propagated valid_cache_keys to save executing select statements
-        # for each repo
-        valid_cache_keys = CacheInvalidation.get_valid_cache_keys()
-
-        for dbr in self.db_repo_list:
-            scmr = dbr.scm_instance_cached(valid_cache_keys)
-            # check permission at this level
-            if not HasRepoPermissionAny(
-                *self.perm_set)(dbr.repo_name, 'get repo check'):
-                continue
-
-            try:
-                last_change = scmr.last_change
-                tip = h.get_changeset_safe(scmr, 'tip')
-            except Exception:
-                log.error(
-                    '%s this repository is present in database but it '
-                    'cannot be created as an scm instance, org_exc:%s'
-                    % (dbr.repo_name, traceback.format_exc())
-                )
-                continue
-
-            tmp_d = {}
-            tmp_d['name'] = dbr.repo_name
-            tmp_d['name_sort'] = tmp_d['name'].lower()
-            tmp_d['raw_name'] = tmp_d['name'].lower()
-            tmp_d['description'] = dbr.description
-            tmp_d['description_sort'] = tmp_d['description'].lower()
-            tmp_d['last_change'] = last_change
-            tmp_d['last_change_sort'] = time.mktime(last_change.timetuple())
-            tmp_d['tip'] = tip.raw_id
-            tmp_d['tip_sort'] = tip.revision
-            tmp_d['rev'] = tip.revision
-            tmp_d['contact'] = dbr.user.full_contact
-            tmp_d['contact_sort'] = tmp_d['contact']
-            tmp_d['owner_sort'] = tmp_d['contact']
-            tmp_d['repo_archives'] = list(scmr._get_archives())
-            tmp_d['last_msg'] = tip.message
-            tmp_d['author'] = tip.author
-            tmp_d['dbrepo'] = dbr.get_dict()
-            tmp_d['dbrepo_fork'] = dbr.fork.get_dict() if dbr.fork else {}
-            yield tmp_d
-
-
-class SimpleCachedRepoList(CachedRepoList):
-    """
-    Lighter version of CachedRepoList without the scm initialisation
-    """
-
-    def __iter__(self):
-        for dbr in self.db_repo_list:
-            # check permission at this level
-            if not HasRepoPermissionAny(
-                *self.perm_set)(dbr.repo_name, 'get repo check'):
-                continue
-
-            tmp_d = {
-                'name': dbr.repo_name,
-                'dbrepo': dbr.get_dict(),
-                'dbrepo_fork': dbr.fork.get_dict() if dbr.fork else {}
-            }
-            yield tmp_d
 
 
 class _PermCheckIterator(object):
@@ -199,41 +113,32 @@ class _PermCheckIterator(object):
 
 class RepoList(_PermCheckIterator):
 
-    def __init__(self, db_repo_list, perm_set=None, extra_kwargs=None):
-        if not perm_set:
-            perm_set = ['repository.read', 'repository.write', 'repository.admin']
-
+    def __init__(self, db_repo_list, perm_level, extra_kwargs=None):
         super(RepoList, self).__init__(obj_list=db_repo_list,
-                    obj_attr='repo_name', perm_set=perm_set,
-                    perm_checker=HasRepoPermissionAny,
+                    obj_attr='repo_name', perm_set=[perm_level],
+                    perm_checker=HasRepoPermissionLevel,
                     extra_kwargs=extra_kwargs)
 
 
 class RepoGroupList(_PermCheckIterator):
 
-    def __init__(self, db_repo_group_list, perm_set=None, extra_kwargs=None):
-        if not perm_set:
-            perm_set = ['group.read', 'group.write', 'group.admin']
-
+    def __init__(self, db_repo_group_list, perm_level, extra_kwargs=None):
         super(RepoGroupList, self).__init__(obj_list=db_repo_group_list,
-                    obj_attr='group_name', perm_set=perm_set,
-                    perm_checker=HasRepoGroupPermissionAny,
+                    obj_attr='group_name', perm_set=[perm_level],
+                    perm_checker=HasRepoGroupPermissionLevel,
                     extra_kwargs=extra_kwargs)
 
 
 class UserGroupList(_PermCheckIterator):
 
-    def __init__(self, db_user_group_list, perm_set=None, extra_kwargs=None):
-        if not perm_set:
-            perm_set = ['usergroup.read', 'usergroup.write', 'usergroup.admin']
-
+    def __init__(self, db_user_group_list, perm_level, extra_kwargs=None):
         super(UserGroupList, self).__init__(obj_list=db_user_group_list,
-                    obj_attr='users_group_name', perm_set=perm_set,
-                    perm_checker=HasUserGroupPermissionAny,
+                    obj_attr='users_group_name', perm_set=[perm_level],
+                    perm_checker=HasUserGroupPermissionLevel,
                     extra_kwargs=extra_kwargs)
 
 
-class ScmModel(BaseModel):
+class ScmModel(object):
     """
     Generic Scm Model
     """
@@ -256,7 +161,7 @@ class ScmModel(BaseModel):
         Gets the repositories root path from database
         """
 
-        q = self.sa.query(Ui).filter(Ui.ui_key == '/').one()
+        q = Ui.query().filter(Ui.ui_key == '/').one()
 
         return q.ui_value
 
@@ -299,58 +204,39 @@ class ScmModel(BaseModel):
         log.debug('found %s paths with repositories', len(repos))
         return repos
 
-    def get_repos(self, all_repos=None, sort_key=None, simple=False):
+    def get_repos(self, repos):
+        """Return the repos the user has access to"""
+        return RepoList(repos, perm_level='read')
+
+    def get_repo_groups(self, groups=None):
+        """Return the repo groups the user has access to
+        If no groups are specified, use top level groups.
         """
-        Get all repos from db and for each repo create its
-        backend instance and fill that backed with information from database
+        if groups is None:
+            groups = RepoGroup.query() \
+                .filter(RepoGroup.parent_group_id == None).all()
+        return RepoGroupList(groups, perm_level='read')
 
-        :param all_repos: list of repository names as strings
-            give specific repositories list, good for filtering
-
-        :param sort_key: initial sorting of repos
-        :param simple: use SimpleCachedList - one without the SCM info
-        """
-        if all_repos is None:
-            all_repos = self.sa.query(Repository)\
-                        .filter(Repository.group_id == None)\
-                        .order_by(func.lower(Repository.repo_name)).all()
-        if simple:
-            repo_iter = SimpleCachedRepoList(all_repos,
-                                             repos_path=self.repos_path,
-                                             order_by=sort_key)
-        else:
-            repo_iter = CachedRepoList(all_repos,
-                                       repos_path=self.repos_path,
-                                       order_by=sort_key)
-
-        return repo_iter
-
-    def get_repo_groups(self, all_groups=None):
-        if all_groups is None:
-            all_groups = RepoGroup.query()\
-                .filter(RepoGroup.group_parent_id == None).all()
-        return [x for x in RepoGroupList(all_groups)]
-
-    def mark_for_invalidation(self, repo_name, delete=False):
+    def mark_for_invalidation(self, repo_name):
         """
         Mark caches of this repo invalid in the database.
 
         :param repo_name: the repo for which caches should be marked invalid
         """
-        CacheInvalidation.set_invalidate(repo_name, delete=delete)
+        CacheInvalidation.set_invalidate(repo_name)
         repo = Repository.get_by_repo_name(repo_name)
         if repo is not None:
             repo.update_changeset_cache()
 
     def toggle_following_repo(self, follow_repo_id, user_id):
 
-        f = self.sa.query(UserFollowing)\
-            .filter(UserFollowing.follows_repo_id == follow_repo_id)\
+        f = UserFollowing.query() \
+            .filter(UserFollowing.follows_repository_id == follow_repo_id) \
             .filter(UserFollowing.user_id == user_id).scalar()
 
         if f is not None:
             try:
-                self.sa.delete(f)
+                Session().delete(f)
                 action_logger(UserTemp(user_id),
                               'stopped_following_repo',
                               RepoTemp(follow_repo_id))
@@ -362,8 +248,8 @@ class ScmModel(BaseModel):
         try:
             f = UserFollowing()
             f.user_id = user_id
-            f.follows_repo_id = follow_repo_id
-            self.sa.add(f)
+            f.follows_repository_id = follow_repo_id
+            Session().add(f)
 
             action_logger(UserTemp(user_id),
                           'started_following_repo',
@@ -373,13 +259,13 @@ class ScmModel(BaseModel):
             raise
 
     def toggle_following_user(self, follow_user_id, user_id):
-        f = self.sa.query(UserFollowing)\
-            .filter(UserFollowing.follows_user_id == follow_user_id)\
+        f = UserFollowing.query() \
+            .filter(UserFollowing.follows_user_id == follow_user_id) \
             .filter(UserFollowing.user_id == user_id).scalar()
 
         if f is not None:
             try:
-                self.sa.delete(f)
+                Session().delete(f)
                 return
             except Exception:
                 log.error(traceback.format_exc())
@@ -389,17 +275,17 @@ class ScmModel(BaseModel):
             f = UserFollowing()
             f.user_id = user_id
             f.follows_user_id = follow_user_id
-            self.sa.add(f)
+            Session().add(f)
         except Exception:
             log.error(traceback.format_exc())
             raise
 
     def is_following_repo(self, repo_name, user_id, cache=False):
-        r = self.sa.query(Repository)\
+        r = Repository.query() \
             .filter(Repository.repo_name == repo_name).scalar()
 
-        f = self.sa.query(UserFollowing)\
-            .filter(UserFollowing.follows_repository == r)\
+        f = UserFollowing.query() \
+            .filter(UserFollowing.follows_repository == r) \
             .filter(UserFollowing.user_id == user_id).scalar()
 
         return f is not None
@@ -407,27 +293,27 @@ class ScmModel(BaseModel):
     def is_following_user(self, username, user_id, cache=False):
         u = User.get_by_username(username)
 
-        f = self.sa.query(UserFollowing)\
-            .filter(UserFollowing.follows_user == u)\
+        f = UserFollowing.query() \
+            .filter(UserFollowing.follows_user == u) \
             .filter(UserFollowing.user_id == user_id).scalar()
 
         return f is not None
 
     def get_followers(self, repo):
-        repo = self._get_repo(repo)
+        repo = Repository.guess_instance(repo)
 
-        return self.sa.query(UserFollowing)\
+        return UserFollowing.query() \
                 .filter(UserFollowing.follows_repository == repo).count()
 
     def get_forks(self, repo):
-        repo = self._get_repo(repo)
-        return self.sa.query(Repository)\
+        repo = Repository.guess_instance(repo)
+        return Repository.query() \
                 .filter(Repository.fork == repo).count()
 
     def get_pull_requests(self, repo):
-        repo = self._get_repo(repo)
-        return self.sa.query(PullRequest)\
-                .filter(PullRequest.other_repo == repo)\
+        repo = Repository.guess_instance(repo)
+        return PullRequest.query() \
+                .filter(PullRequest.other_repo == repo) \
                 .filter(PullRequest.status != PullRequest.STATUS_CLOSED).count()
 
     def mark_as_fork(self, repo, fork, user):
@@ -440,7 +326,6 @@ class ScmModel(BaseModel):
             raise RepositoryError("Cannot set repository as fork of repository with other type")
 
         repo.fork = fork
-        self.sa.add(repo)
         return repo
 
     def _handle_rc_scm_extras(self, username, repo_name, repo_alias,
@@ -448,7 +333,7 @@ class ScmModel(BaseModel):
         from kallithea import CONFIG
         from kallithea.lib.base import _get_ip_addr
         try:
-            from pylons import request
+            from tg import request
             environ = request.environ
         except TypeError:
             # we might use this outside of request context, let's fake the
@@ -478,7 +363,7 @@ class ScmModel(BaseModel):
         :param repo_name: name of repo
         :param revisions: list of revisions that we pushed
         """
-        self._handle_rc_scm_extras(username, repo_name, repo_alias=repo.alias)
+        self._handle_rc_scm_extras(username, repo_name, repo_alias=repo.alias, action=action)
         _scm_repo = repo._repo
         # trigger push hook
         if repo.alias == 'hg':
@@ -503,12 +388,13 @@ class ScmModel(BaseModel):
         raise Exception('Invalid scm_type, must be one of hg,git got %s'
                         % (scm_type,))
 
-    def pull_changes(self, repo, username):
+    def pull_changes(self, repo, username, clone_uri=None):
         """
-        Pull from "clone URL".
+        Pull from "clone URL" or fork origin.
         """
         dbrepo = self.__get_repo(repo)
-        clone_uri = dbrepo.clone_uri
+        if clone_uri is None:
+            clone_uri = dbrepo.clone_uri or dbrepo.fork and dbrepo.fork.repo_full_path
         if not clone_uri:
             raise Exception("This repository doesn't have a clone uri")
 
@@ -542,7 +428,7 @@ class ScmModel(BaseModel):
 
         :param repo: a db_repo.scm_instance
         """
-        user = self._get_user(user)
+        user = User.guess_instance(user)
         IMC = self._get_IMC_module(repo.alias)
 
         # decoding here will force that we have proper encoded values
@@ -575,7 +461,7 @@ class ScmModel(BaseModel):
         if f_path.startswith('/') or f_path.startswith('.') or '../' in f_path:
             raise NonRelativePathError('%s is not an relative path' % f_path)
         if f_path:
-            f_path = os.path.normpath(f_path)
+            f_path = posixpath.normpath(f_path)
         return f_path
 
     def get_nodes(self, repo_name, revision, root_path='/', flat=True):
@@ -623,13 +509,13 @@ class ScmModel(BaseModel):
         :returns: new committed changeset
         """
 
-        user = self._get_user(user)
+        user = User.guess_instance(user)
         scm_instance = repo.scm_instance_no_cache()
 
         processed_nodes = []
         for f_path in nodes:
-            f_path = self._sanitize_path(f_path)
             content = nodes[f_path]['content']
+            f_path = self._sanitize_path(f_path)
             f_path = safe_str(f_path)
             # decoding here will force that we have proper encoded values
             # in any other case this will throw exceptions and deny commit
@@ -681,7 +567,7 @@ class ScmModel(BaseModel):
         """
         Commits specified nodes to repo. Again.
         """
-        user = self._get_user(user)
+        user = User.guess_instance(user)
         scm_instance = repo.scm_instance_no_cache()
 
         message = safe_unicode(message)
@@ -715,7 +601,7 @@ class ScmModel(BaseModel):
                 imc.remove(filenode)
             elif op == 'mod':
                 if filename != old_filename:
-                    #TODO: handle renames, needs vcs lib changes
+                    # TODO: handle renames, needs vcs lib changes
                     imc.remove(filenode)
                     imc.add(FileNode(filename, content=content))
                 else:
@@ -751,7 +637,7 @@ class ScmModel(BaseModel):
         :returns: new committed changeset after deletion
         """
 
-        user = self._get_user(user)
+        user = User.guess_instance(user)
         scm_instance = repo.scm_instance_no_cache()
 
         processed_nodes = []
@@ -796,7 +682,7 @@ class ScmModel(BaseModel):
         return tip
 
     def get_unread_journal(self):
-        return self.sa.query(UserLog).count()
+        return UserLog.query().count()
 
     def get_repo_landing_revs(self, repo=None):
         """
@@ -842,21 +728,23 @@ class ScmModel(BaseModel):
         :param force_create: Create even if same name hook exists
         """
 
-        loc = jn(repo.path, 'hooks')
+        loc = os.path.join(repo.path, 'hooks')
         if not repo.bare:
-            loc = jn(repo.path, '.git', 'hooks')
+            loc = os.path.join(repo.path, '.git', 'hooks')
         if not os.path.isdir(loc):
             os.makedirs(loc)
 
-        tmpl_post = pkg_resources.resource_string(
-            'kallithea', jn('config', 'post_receive_tmpl.py')
+        tmpl_post = "#!/usr/bin/env %s\n" % sys.executable or 'python2'
+        tmpl_post += pkg_resources.resource_string(
+            'kallithea', os.path.join('config', 'post_receive_tmpl.py')
         )
-        tmpl_pre = pkg_resources.resource_string(
-            'kallithea', jn('config', 'pre_receive_tmpl.py')
+        tmpl_pre = "#!/usr/bin/env %s\n" % sys.executable or 'python2'
+        tmpl_pre += pkg_resources.resource_string(
+            'kallithea', os.path.join('config', 'pre_receive_tmpl.py')
         )
 
         for h_type, tmpl in [('pre', tmpl_pre), ('post', tmpl_post)]:
-            _hook_file = jn(loc, '%s-receive' % h_type)
+            _hook_file = os.path.join(loc, '%s-receive' % h_type)
             has_hook = False
             log.debug('Installing git hook in repo %s', repo)
             if os.path.exists(_hook_file):
@@ -889,17 +777,18 @@ class ScmModel(BaseModel):
             else:
                 log.debug('skipping writing hook file')
 
-def AvailableRepoGroupChoices(top_perms, repo_group_perms, extras=()):
+
+def AvailableRepoGroupChoices(top_perms, repo_group_perm_level, extras=()):
     """Return group_id,string tuples with choices for all the repo groups where
     the user has the necessary permissions.
 
     Top level is -1.
     """
     groups = RepoGroup.query().all()
-    if HasPermissionAll('hg.admin')('available repo groups'):
+    if HasPermissionAny('hg.admin')('available repo groups'):
         groups.append(None)
     else:
-        groups = list(RepoGroupList(groups, perm_set=repo_group_perms))
+        groups = list(RepoGroupList(groups, perm_level=repo_group_perm_level))
         if top_perms and HasPermissionAny(*top_perms)('available repo groups'):
             groups.append(None)
         for extra in extras:

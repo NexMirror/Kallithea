@@ -15,7 +15,9 @@
 kallithea.lib.utils2
 ~~~~~~~~~~~~~~~~~~~~
 
-Some simple helper functions
+Some simple helper functions.
+Note: all these functions should be independent of Kallithea classes, i.e.
+models, controllers, etc.  to prevent import cycles.
 
 This file was forked by the Kallithea project in July 2014.
 Original author and date, and relevant copyright and licensing information is below:
@@ -37,50 +39,16 @@ import binascii
 
 import webob
 import urlobject
+from webhelpers.text import collapse, remove_formatting, strip_tags
 
-from pylons.i18n.translation import _, ungettext
+from tg.i18n import ugettext as _, ungettext
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.compat import json
 
 
-def __get_lem():
-    """
-    Get language extension map based on what's inside pygments lexers
-    """
-    from pygments import lexers
-    from string import lower
-    from collections import defaultdict
-
-    d = defaultdict(lambda: [])
-
-    def __clean(s):
-        s = s.lstrip('*')
-        s = s.lstrip('.')
-
-        if s.find('[') != -1:
-            exts = []
-            start, stop = s.find('['), s.find(']')
-
-            for suffix in s[start + 1:stop]:
-                exts.append(s[:s.find('[')] + suffix)
-            return map(lower, exts)
-        else:
-            return map(lower, [s])
-
-    for lx, t in sorted(lexers.LEXERS.items()):
-        m = map(__clean, t[-2])
-        if m:
-            m = reduce(lambda x, y: x + y, m)
-            for ext in m:
-                desc = lx.replace('Lexer', '')
-                d[ext].append(desc)
-
-    return dict(d)
-
-
 def str2bool(_str):
     """
-    returs True/False value from given string, it tries to translate the
+    returns True/False value from given string, it tries to translate the
     string into boolean
 
     :param _str: string value to translate into boolean
@@ -166,7 +134,14 @@ def detect_mode(line, default):
 def generate_api_key():
     """
     Generates a random (presumably unique) API key.
+
+    This value is used in URLs and "Bearer" HTTP Authorization headers,
+    which in practice means it should only contain URL-safe characters
+    (RFC 3986):
+
+        unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
     """
+    # Hexadecimal certainly qualifies as URL-safe.
     return binascii.hexlify(os.urandom(20))
 
 
@@ -204,7 +179,7 @@ def safe_unicode(str_, from_encoding=None):
     if not from_encoding:
         import kallithea
         DEFAULT_ENCODINGS = aslist(kallithea.CONFIG.get('default_encoding',
-                                                        'utf8'), sep=',')
+                                                        'utf-8'), sep=',')
         from_encoding = DEFAULT_ENCODINGS
 
     if not isinstance(from_encoding, (list, tuple)):
@@ -253,7 +228,7 @@ def safe_str(unicode_, to_encoding=None):
     if not to_encoding:
         import kallithea
         DEFAULT_ENCODINGS = aslist(kallithea.CONFIG.get('default_encoding',
-                                                        'utf8'), sep=',')
+                                                        'utf-8'), sep=',')
         to_encoding = DEFAULT_ENCODINGS
 
     if not isinstance(to_encoding, (list, tuple)):
@@ -288,63 +263,6 @@ def remove_prefix(s, prefix):
     return s
 
 
-def engine_from_config(configuration, prefix='sqlalchemy.', **kwargs):
-    """
-    Custom engine_from_config functions that makes sure we use NullPool for
-    file based sqlite databases. This prevents errors on sqlite. This only
-    applies to sqlalchemy versions < 0.7.0
-
-    """
-    import sqlalchemy
-    from sqlalchemy import engine_from_config as efc
-    import logging
-
-    if int(sqlalchemy.__version__.split('.')[1]) < 7:
-
-        # This solution should work for sqlalchemy < 0.7.0, and should use
-        # proxy=TimerProxy() for execution time profiling
-
-        from sqlalchemy.pool import NullPool
-        url = configuration[prefix + 'url']
-
-        if url.startswith('sqlite'):
-            kwargs.update({'poolclass': NullPool})
-        return efc(configuration, prefix, **kwargs)
-    else:
-        import time
-        from sqlalchemy import event
-
-        log = logging.getLogger('sqlalchemy.engine')
-        BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = xrange(30, 38)
-        engine = efc(configuration, prefix, **kwargs)
-
-        def color_sql(sql):
-            COLOR_SEQ = "\033[1;%dm"
-            COLOR_SQL = YELLOW
-            normal = '\x1b[0m'
-            return ''.join([COLOR_SEQ % COLOR_SQL, sql, normal])
-
-        if configuration['debug']:
-            #attach events only for debug configuration
-
-            def before_cursor_execute(conn, cursor, statement,
-                                    parameters, context, executemany):
-                context._query_start_time = time.time()
-                log.info(color_sql(">>>>> STARTING QUERY >>>>>"))
-
-            def after_cursor_execute(conn, cursor, statement,
-                                    parameters, context, executemany):
-                total = time.time() - context._query_start_time
-                log.info(color_sql("<<<<< TOTAL TIME: %f <<<<<" % total))
-
-            event.listen(engine, "before_cursor_execute",
-                         before_cursor_execute)
-            event.listen(engine, "after_cursor_execute",
-                         after_cursor_execute)
-
-    return engine
-
-
 def age(prevdate, show_short_version=False, now=None):
     """
     turns a datetime into an age string.
@@ -352,7 +270,7 @@ def age(prevdate, show_short_version=False, now=None):
     example: 2days ago, instead of 2 days and 23 hours ago.
 
     :param prevdate: datetime object
-    :param show_short_version: if it should aproximate the date and return a shorter string
+    :param show_short_version: if it should approximate the date and return a shorter string
     :rtype: unicode
     :returns: unicode words describing age
     """
@@ -486,7 +404,7 @@ def credentials_filter(uri):
     """
 
     uri = uri_filter(uri)
-    #check if we have port
+    # check if we have port
     if len(uri) > 2 and uri[2]:
         uri[2] = ':' + uri[2]
 
@@ -553,25 +471,32 @@ def time_to_datetime(tm):
                 return
         return datetime.datetime.fromtimestamp(tm)
 
+
 # Must match regexp in kallithea/public/js/base.js MentionsAutoComplete()
 # Check char before @ - it must not look like we are in an email addresses.
-# Matching is gready so we don't have to look beyond the end.
+# Matching is greedy so we don't have to look beyond the end.
 MENTIONS_REGEX = re.compile(r'(?:^|(?<=[^a-zA-Z0-9]))@([a-zA-Z0-9][-_.a-zA-Z0-9]*[a-zA-Z0-9])')
 
-def extract_mentioned_users(s):
+
+def extract_mentioned_usernames(text):
     r"""
-    Returns unique usernames from given string s that have @mention
+    Returns list of (possible) usernames @mentioned in given text.
 
-    :param s: string to get mentions
-
-    >>> extract_mentioned_users('@1-2.a_X,@1234 not@not @ddd@not @n @ee @ff @gg, @gg;@hh @n\n@zz,')
+    >>> extract_mentioned_usernames('@1-2.a_X,@1234 not@not @ddd@not @n @ee @ff @gg, @gg;@hh @n\n@zz,')
     ['1-2.a_X', '1234', 'ddd', 'ee', 'ff', 'gg', 'hh', 'zz']
     """
-    usrs = set()
-    for username in MENTIONS_REGEX.findall(s):
-        usrs.add(username)
+    return MENTIONS_REGEX.findall(text)
 
-    return sorted(list(usrs), key=lambda k: k.lower())
+
+def extract_mentioned_users(text):
+    """ Returns set of actual database Users @mentioned in given text. """
+    from kallithea.model.db import User
+    result = set()
+    for name in extract_mentioned_usernames(text):
+        user = User.get_by_username(name, case_insensitive=True)
+        if user is not None and not user.is_default_user:
+            result.add(user)
+    return result
 
 
 class AttributeDict(dict):
@@ -613,68 +538,28 @@ def get_server_url(environ):
     return req.host_url + req.script_name
 
 
-def _extract_extras(env=None):
+def _extract_extras():
     """
     Extracts the Kallithea extras data from os.environ, and wraps it into named
     AttributeDict object
     """
-    if not env:
-        env = os.environ
-
     try:
-        extras = json.loads(env['KALLITHEA_EXTRAS'])
+        extras = json.loads(os.environ['KALLITHEA_EXTRAS'])
     except KeyError:
-        extras = {}
+        raise Exception("Environment variable KALLITHEA_EXTRAS not found")
 
     try:
         for k in ['username', 'repository', 'locked_by', 'scm', 'make_lock',
                   'action', 'ip']:
             extras[k]
-    except KeyError as e:
-        raise Exception('Missing key %s in os.environ %s' % (e, extras))
+    except KeyError:
+        raise Exception('Missing key %s in KALLITHEA_EXTRAS %s' % (k, extras))
 
     return AttributeDict(extras)
 
 
 def _set_extras(extras):
-    # RC_SCM_DATA can probably be removed in the future, but for compatibilty now...
-    os.environ['KALLITHEA_EXTRAS'] = os.environ['RC_SCM_DATA'] = json.dumps(extras)
-
-
-def unique_id(hexlen=32):
-    alphabet = "23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjklmnpqrstuvwxyz"
-    return suuid(truncate_to=hexlen, alphabet=alphabet)
-
-
-def suuid(url=None, truncate_to=22, alphabet=None):
-    """
-    Generate and return a short URL safe UUID.
-
-    If the url parameter is provided, set the namespace to the provided
-    URL and generate a UUID.
-
-    :param url to get the uuid for
-    :truncate_to: truncate the basic 22 UUID to shorter version
-
-    The IDs won't be universally unique any longer, but the probability of
-    a collision will still be very low.
-    """
-    # Define our alphabet.
-    _ALPHABET = alphabet or "23456789ABCDEFGHJKLMNPQRSTUVWXYZ"
-
-    # If no URL is given, generate a random UUID.
-    if url is None:
-        unique_id = uuid.uuid4().int
-    else:
-        unique_id = uuid.uuid3(uuid.NAMESPACE_URL, url).int
-
-    alphabet_length = len(_ALPHABET)
-    output = []
-    while unique_id > 0:
-        digit = unique_id % alphabet_length
-        output.append(_ALPHABET[digit])
-        unique_id = int(unique_id / alphabet_length)
-    return "".join(output)[:truncate_to]
+    os.environ['KALLITHEA_EXTRAS'] = json.dumps(extras)
 
 
 def get_current_authuser():
@@ -682,7 +567,7 @@ def get_current_authuser():
     Gets kallithea user from threadlocal tmpl_context variable if it's
     defined, else returns None.
     """
-    from pylons import tmpl_context
+    from tg import tmpl_context
     if hasattr(tmpl_context, 'authuser'):
         return tmpl_context.authuser
 
@@ -708,7 +593,8 @@ class OptionalAttr(object):
     def __call__(self):
         return self
 
-#alias
+
+# alias
 OAttr = OptionalAttr
 
 
@@ -756,5 +642,55 @@ class Optional(object):
             return val.getval()
         return val
 
+
 def urlreadable(s, _cleanstringsub=re.compile('[^-a-zA-Z0-9./]+').sub):
     return _cleanstringsub('_', safe_str(s)).rstrip('_')
+
+
+def recursive_replace(str_, replace=' '):
+    """
+    Recursive replace of given sign to just one instance
+
+    :param str_: given string
+    :param replace: char to find and replace multiple instances
+
+    Examples::
+    >>> recursive_replace("Mighty---Mighty-Bo--sstones",'-')
+    'Mighty-Mighty-Bo-sstones'
+    """
+
+    if str_.find(replace * 2) == -1:
+        return str_
+    else:
+        str_ = str_.replace(replace * 2, replace)
+        return recursive_replace(str_, replace)
+
+
+def repo_name_slug(value):
+    """
+    Return slug of name of repository
+    This function is called on each creation/modification
+    of repository to prevent bad names in repo
+    """
+
+    slug = remove_formatting(value)
+    slug = strip_tags(slug)
+
+    for c in """`?=[]\;'"<>,/~!@#$%^&*()+{}|: """:
+        slug = slug.replace(c, '-')
+    slug = recursive_replace(slug, '-')
+    slug = collapse(slug, '-')
+    return slug
+
+
+def ask_ok(prompt, retries=4, complaint='Yes or no please!'):
+    while True:
+        ok = raw_input(prompt)
+        if ok in ('y', 'ye', 'yes'):
+            return True
+        if ok in ('n', 'no', 'nop', 'nope'):
+            return False
+        retries = retries - 1
+        if retries < 0:
+            raise IOError
+        print complaint

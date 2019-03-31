@@ -1,21 +1,20 @@
-# encoding: utf8
-
+# encoding: utf-8
 
 import datetime
+
 from kallithea.lib.vcs.nodes import FileNode
-from kallithea.lib.vcs.utils.compat import unittest
-from kallithea.tests.vcs.test_inmemchangesets import BackendBaseTestCase
-from kallithea.tests.vcs.conf import SCM_TESTS
+from kallithea.tests.vcs.base import _BackendTestMixin
 
 
-class FileNodeUnicodePathTestsMixin(object):
+class FileNodeUnicodePathTestsMixin(_BackendTestMixin):
 
     fname = 'ąśðąęłąć.txt'
     ufname = (fname).decode('utf-8')
 
-    def get_commits(self):
-        self.nodes = [
-            FileNode(self.fname, content='Foobar'),
+    @classmethod
+    def _get_commits(cls):
+        cls.nodes = [
+            FileNode(cls.fname, content='Foobar'),
         ]
 
         commits = [
@@ -23,7 +22,7 @@ class FileNodeUnicodePathTestsMixin(object):
                 'message': 'Initial commit',
                 'author': 'Joe Doe <joe.doe@example.com>',
                 'date': datetime.datetime(2010, 1, 1, 20),
-                'added': self.nodes,
+                'added': cls.nodes,
             },
         ]
         return commits
@@ -31,18 +30,12 @@ class FileNodeUnicodePathTestsMixin(object):
     def test_filenode_path(self):
         node = self.tip.get_node(self.fname)
         unode = self.tip.get_node(self.ufname)
-        self.assertEqual(node, unode)
+        assert node == unode
 
 
-for alias in SCM_TESTS:
-    attrs = {
-        'backend_alias': alias,
-    }
-    cls_name = ''.join(('%s file node unicode path test' % alias).title()
-        .split())
-    bases = (FileNodeUnicodePathTestsMixin, BackendBaseTestCase)
-    globals()[cls_name] = type(cls_name, bases, attrs)
+class TestGitFileNodeUnicodePath(FileNodeUnicodePathTestsMixin):
+    backend_alias = 'git'
 
 
-if __name__ == '__main__':
-    unittest.main()
+class TestHgFileNodeUnicodePath(FileNodeUnicodePathTestsMixin):
+    backend_alias = 'hg'

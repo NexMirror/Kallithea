@@ -6,54 +6,47 @@
 </%block>
 
 <%def name="breadcrumbs_links()">
-    <input class="q_filter_box" id="q_filter" size="15" type="text" name="filter" placeholder="${_('quick filter...')}" value=""/> ${h.link_to(_('Admin'),h.url('admin_home'))} &raquo; <span id="repo_count">0</span> ${_('Repositories')}
+    <span id="repo_count">0</span> ${_('Repositories')}
 </%def>
 <%block name="header_menu">
     ${self.menu('admin')}
 </%block>
 <%def name="main()">
-<div class="box">
+<div class="panel panel-primary">
 
-    <div class="title">
-        ${self.breadcrumbs()}
-        <ul class="links">
+    <div class="panel-heading clearfix">
+        <div class="pull-left">
+            ${self.breadcrumbs()}
+        </div>
+        <div class="pull-right">
          %if h.HasPermissionAny('hg.admin','hg.create.repository')():
-          <li>
-            <a href="${h.url('new_repo')}" class="btn btn-small btn-success"><i class="icon-plus"></i> ${_('Add Repository')}</a>
-          </li>
+            <a href="${h.url('new_repo')}" class="btn btn-success btn-xs"><i class="icon-plus"></i>${_('Add Repository')}</a>
          %endif
-        </ul>
+        </div>
     </div>
-    <div class="table-grid table yui-skin-sam" id="datatable_list_wrap"></div>
-    <div id="user-paginator" style="padding: 0px 0px 0px 20px"></div>
-
+    <div class="panel-body">
+        <table class="table" id="datatable_list_wrap" width="100%"></table>
+    </div>
 
 </div>
 <script>
-  var data = ${c.data|n};
-  var fields = [
-    {key:"menu"},
-    {key:"raw_name"},
-    {key:"name"},
-    {key:"desc"},
-    {key:"last_changeset"},
-    {key:"last_rev_raw"},
-    {key:"owner"},
-    {key:"state"},
-    {key:"action"}
-  ];
-  var column_defs = [
-    {key:"menu",label:"",sortable:false,className:"quick_repo_menu hidden"},
-    {key:"name",label:"${_('Name')}",sortable:true, sortOptions: { sortFunction: nameSort }},
-    {key:"desc",label:"${_('Description')}",sortable:true},
-    {key:"last_changeset",label:"${_('Tip')}",sortable:true, sortOptions: { sortFunction: revisionSort }},
-    {key:"owner",label:"${_('Owner')}",sortable:true},
-    {key:"state",label:"${_('State')}",sortable:true},
-    {key:"action",label:"${_('Action')}",sortable:false}
-  ];
-  var counter = YUD.get('repo_count');
-  var sort_key = "name";
-  YUI_datatable(data, fields, column_defs, counter, sort_key, ${c.visual.admin_grid_items});
+  var data = ${h.js(c.data)};
+  var myDataTable = $("#datatable_list_wrap").DataTable({
+        data: data.records,
+        columns: [
+            {data: "raw_name", visible: false, searchable: false},
+            {data: "name", orderData: 1, title: ${h.jshtml(_('Name'))}},
+            {data: "desc", title: ${h.jshtml(_('Description'))}, searchable: false},
+            {data: "last_rev_raw", visible: false, searchable: false},
+            {data: "last_changeset", orderData: 4, title: ${h.jshtml(_('Tip'))}, searchable: false},
+            {data: "owner", title: ${h.jshtml(_('Owner'))}, searchable: false},
+            {data: "state", title: ${h.jshtml(_('State'))}, searchable: false},
+            {data: "action", title: ${h.jshtml(_('Action'))}, sortable: false, searchable: false}
+        ],
+        drawCallback: updateRowCountCallback($("#repo_count")),
+        dom: '<"dataTables_left"f><"dataTables_right"ip>t',
+        pageLength: 100
+    });
 </script>
 
 </%def>

@@ -28,36 +28,27 @@ Original author and date, and relevant copyright and licensing information is be
 import logging
 from sqlalchemy.orm import joinedload
 
-from kallithea.model import BaseModel
-from kallithea.model.db import ChangesetStatus, PullRequest
-from kallithea.lib.exceptions import StatusChangeOnClosedPullRequestError
+from kallithea.model.db import ChangesetStatus, PullRequest, Repository, User, Session
 
 log = logging.getLogger(__name__)
 
 
-class ChangesetStatusModel(BaseModel):
-
-    cls = ChangesetStatus
-
-    def __get_changeset_status(self, changeset_status):
-        return self._get_instance(ChangesetStatus, changeset_status)
-
-    def __get_pull_request(self, pull_request):
-        return self._get_instance(PullRequest, pull_request)
+class ChangesetStatusModel(object):
 
     def _get_status_query(self, repo, revision, pull_request,
                           with_revisions=False):
-        repo = self._get_repo(repo)
+        repo = Repository.guess_instance(repo)
 
-        q = ChangesetStatus.query()\
+        q = ChangesetStatus.query() \
             .filter(ChangesetStatus.repo == repo)
         if not with_revisions:
+            # only report the latest vote across all users! TODO: be smarter!
             q = q.filter(ChangesetStatus.version == 0)
 
         if revision:
             q = q.filter(ChangesetStatus.revision == revision)
         elif pull_request:
-            pull_request = self.__get_pull_request(pull_request)
+            pull_request = PullRequest.guess_instance(pull_request)
             q = q.filter(ChangesetStatus.pull_request == pull_request)
         else:
             raise Exception('Please specify revision or pull_request')
@@ -98,14 +89,14 @@ class ChangesetStatusModel(BaseModel):
         pull_request_reviewers = []
         pull_request_pending_reviewers = []
         relevant_statuses = []
-        for r in pull_request.reviewers:
-            st = cs_statuses.get(r.user.username)
+        for user in pull_request.get_reviewer_users():
+            st = cs_statuses.get(user.username)
             relevant_statuses.append(st)
-            if not st or st.status in (ChangesetStatus.STATUS_NOT_REVIEWED,
-                                       ChangesetStatus.STATUS_UNDER_REVIEW):
-                st = None
-                pull_request_pending_reviewers.append(r.user)
-            pull_request_reviewers.append((r.user, st))
+            status = ChangesetStatus.STATUS_NOT_REVIEWED if st is None else st.status
+            if status in (ChangesetStatus.STATUS_NOT_REVIEWED,
+                          ChangesetStatus.STATUS_UNDER_REVIEW):
+                pull_request_pending_reviewers.append(user)
+            pull_request_reviewers.append((user, status))
 
         result = self._calculate_status(relevant_statuses)
 
@@ -141,7 +132,7 @@ class ChangesetStatusModel(BaseModel):
         return status
 
     def set_status(self, repo, status, user, comment, revision=None,
-                   pull_request=None, dont_allow_on_closed_pull_request=False):
+                   pull_request=None):
         """
         Creates new status for changeset or updates the old ones bumping their
         version, leaving the current status at the value of 'status'.
@@ -152,11 +143,8 @@ class ChangesetStatusModel(BaseModel):
         :param comment:
         :param revision:
         :param pull_request:
-        :param dont_allow_on_closed_pull_request: don't allow a status change
-            if last status was for pull request and it's closed. We shouldn't
-            mess around this manually
         """
-        repo = self._get_repo(repo)
+        repo = Repository.guess_instance(repo)
 
         q = ChangesetStatus.query()
         if revision is not None:
@@ -166,37 +154,27 @@ class ChangesetStatusModel(BaseModel):
             revisions = [revision]
         else:
             assert pull_request is not None
-            pull_request = self.__get_pull_request(pull_request)
+            pull_request = PullRequest.guess_instance(pull_request)
             repo = pull_request.org_repo
             q = q.filter(ChangesetStatus.repo == repo)
             q = q.filter(ChangesetStatus.revision.in_(pull_request.revisions))
             revisions = pull_request.revisions
         cur_statuses = q.all()
 
-        #if statuses exists and last is associated with a closed pull request
-        # we need to check if we can allow this status change
-        if (dont_allow_on_closed_pull_request and cur_statuses
-            and getattr(cur_statuses[0].pull_request, 'status', '')
-                == PullRequest.STATUS_CLOSED):
-            raise StatusChangeOnClosedPullRequestError(
-                'Changing status on closed pull request is not allowed'
-            )
-
-        #update all current statuses with older version
+        # update all current statuses with older version
         for st in cur_statuses:
             st.version += 1
-            self.sa.add(st)
 
         new_statuses = []
         for rev in revisions:
             new_status = ChangesetStatus()
             new_status.version = 0 # default
-            new_status.author = self._get_user(user)
-            new_status.repo = self._get_repo(repo)
+            new_status.author = User.guess_instance(user)
+            new_status.repo = Repository.guess_instance(repo)
             new_status.status = status
             new_status.comment = comment
             new_status.revision = rev
             new_status.pull_request = pull_request
             new_statuses.append(new_status)
-            self.sa.add(new_status)
+            Session().add(new_status)
         return new_statuses

@@ -1,3 +1,5 @@
+<%namespace name="base" file="/base/base.html"/>
+
 <%def name="file_class(node)">
     %if node.is_file():
         <%return "browser-file" %>
@@ -24,26 +26,18 @@
     %>
     <%return h.literal('<i class="%s"></i><span>%s</span>' % (c, h.escape(node.name)))%>
 </%def>
-<div id="body" class="browserblock">
-    <div class="browser-header">
-        <div class="browser-nav">
-            ${h.form(h.url.current())}
-            <div class="info_box">
-              <div class="info_box_elem rev">${_('Revision')}</div>
-              <div class="info_box_elem"><a class="btn btn-mini ypjax-link" href="${c.url_prev}" title="${_('Previous revision')}"><i class="icon-left-open"></i></a></div>
-              <div class="info_box_elem">${h.text('at_rev',value=c.changeset.revision,size=5)}</div>
-              <div class="info_box_elem"><a class="btn btn-mini ypjax-link" href="${c.url_next}" title="${_('Next revision')}"><i class="icon-right-open"></i></a></div>
-            </div>
-            ${h.end_form()}
-        </div>
-        <div class="browser-branch">
-           ${h.checkbox('stay_at_branch',c.changeset.branch,c.changeset.branch==c.branch)}
-           <label>${_('Follow current branch')}</label>
-        </div>
+<div id="body" class="panel panel-default">
+    <div class="panel-heading clearfix">
+        ${base.parent_child_navigation()}
+    </div>
+
+    <div class="panel-body">
+        ${h.form(h.url.current())}
         <div id="search_activate_id" class="search_activate">
-           <a class="btn btn-mini" id="filter_activate" href="#">${_('Search File List')}</a>
+            <a class="btn btn-default btn-xs" id="filter_activate" href="#">${_('Search File List')}</a>
         </div>
-        <div class="browser-search">
+        ${h.end_form()}
+        <div class="browser-search form-inline">
             <div>
                 <div id="node_filter_box_loading" style="display:none">${_('Loading file list...')}</div>
                 <div id="node_filter_box" style="display:none">
@@ -51,10 +45,7 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="browser-body">
-        <table class="code-browser">
+        <table class="table code-browser">
             <thead>
                 <tr>
                     <th>${_('Name')}</th>
@@ -81,7 +72,7 @@
             %for cnt,node in enumerate(c.file):
                 <tr class="parity${cnt%2}">
                      <td>
-                         ${h.link_to(file_name(node),file_url(node,c),class_=file_class(node)+" ypjax-link")}
+                         ${h.link_to(file_name(node),file_url(node,c),class_=file_class(node)+(" ypjax-link" if not node.is_submodule() else ""), target_="_blank" if node.is_submodule() else None)}
                      </td>
                      <td>
                      %if node.is_file():
@@ -90,12 +81,12 @@
                      </td>
                      <td>
                          %if node.is_file():
-                             <a title="${node.last_changeset.message}" href="${h.url('changeset_home',repo_name=c.repo_name,revision=node.last_changeset.raw_id)}" class="tooltip revision-link">${h.show_id(node.last_changeset)}</a>
+                             <a data-toggle="tooltip" title="${node.last_changeset.message}" href="${h.url('changeset_home',repo_name=c.repo_name,revision=node.last_changeset.raw_id)}" class="changeset_hash">${h.show_id(node.last_changeset)}</a>
                          %endif
                      </td>
                      <td>
                          %if node.is_file():
-                             <span class="tooltip" title="${h.fmt_date(node.last_changeset.date)}">
+                             <span data-toggle="tooltip" title="${h.fmt_date(node.last_changeset.date)}">
                             ${h.age(node.last_changeset.date)}</span>
                          %endif
                      </td>
@@ -118,7 +109,7 @@
 <script>
     $(document).ready(function(){
         // init node filter if we pass GET param ?search=1
-        var search_GET = "${request.GET.get('search','')}";
+        var search_GET = ${h.js(request.GET.get('search',''))};
         if(search_GET == "1"){
             $("#filter_activate").click();
         }

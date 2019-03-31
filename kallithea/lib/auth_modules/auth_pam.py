@@ -115,7 +115,6 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
 
         # old attrs fetched from Kallithea database
         admin = getattr(userobj, 'admin', False)
-        active = getattr(userobj, 'active', True)
         email = getattr(userobj, 'email', '') or "%s@%s" % (username, socket.gethostname())
         firstname = getattr(userobj, 'firstname', '')
         lastname = getattr(userobj, 'lastname', '')
@@ -127,8 +126,6 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
             'groups': [g.gr_name for g in grp.getgrall() if username in g.gr_mem],
             'email': email,
             'admin': admin,
-            'active': active,
-            "active_from_extern": None,
             'extern_name': username,
         }
 

@@ -41,6 +41,7 @@ log = logging.getLogger(__name__)
 
 try:
     import ldap
+    import ldap.filter
 except ImportError:
     # means that python-ldap is not installed
     ldap = None
@@ -48,38 +49,33 @@ except ImportError:
 
 class AuthLdap(object):
 
-    def __init__(self, server, base_dn, port=389, bind_dn='', bind_pass='',
-                 tls_kind='PLAIN', tls_reqcert='DEMAND', ldap_version=3,
+    def __init__(self, server, base_dn, port=None, bind_dn='', bind_pass='',
+                 tls_kind='LDAPS', tls_reqcert='DEMAND', cacertdir=None, ldap_version=3,
                  ldap_filter='(&(objectClass=user)(!(objectClass=computer)))',
                  search_scope='SUBTREE', attr_login='uid'):
         if ldap is None:
             raise LdapImportError
 
         self.ldap_version = ldap_version
-        ldap_server_type = 'ldap'
 
         self.TLS_KIND = tls_kind
-
-        if self.TLS_KIND == 'LDAPS':
-            port = port or 689
-            ldap_server_type = ldap_server_type + 's'
-
         OPT_X_TLS_DEMAND = 2
         self.TLS_REQCERT = getattr(ldap, 'OPT_X_TLS_%s' % tls_reqcert,
                                    OPT_X_TLS_DEMAND)
-        # split server into list
-        self.LDAP_SERVER_ADDRESS = server.split(',')
-        self.LDAP_SERVER_PORT = port
+        self.cacertdir = cacertdir
 
-        # USE FOR READ ONLY BIND TO LDAP SERVER
+        protocol = 'ldaps' if self.TLS_KIND == 'LDAPS' else 'ldap'
+        if not port:
+            port = 636 if self.TLS_KIND == 'LDAPS' else 389
+        self.LDAP_SERVER = str(', '.join(
+            "%s://%s:%s" % (protocol,
+                            host.strip(),
+                            port)
+            for host in server.split(',')))
+
         self.LDAP_BIND_DN = safe_str(bind_dn)
         self.LDAP_BIND_PASS = safe_str(bind_pass)
-        _LDAP_SERVERS = []
-        for host in self.LDAP_SERVER_ADDRESS:
-            _LDAP_SERVERS.append("%s://%s:%s" % (ldap_server_type,
-                                                     host.replace(' ', ''),
-                                                     self.LDAP_SERVER_PORT))
-        self.LDAP_SERVER = str(', '.join(s for s in _LDAP_SERVERS))
+
         self.BASE_DN = safe_str(base_dn)
         self.LDAP_FILTER = safe_str(ldap_filter)
         self.SEARCH_SCOPE = getattr(ldap, 'SCOPE_%s' % search_scope)
@@ -96,10 +92,6 @@ class AuthLdap(object):
         :param password: password
         """
 
-        from kallithea.lib.helpers import chop_at
-
-        uid = chop_at(username, "@%s" % self.LDAP_SERVER_ADDRESS)
-
         if not password:
             log.debug("Attempt to authenticate LDAP user "
                       "with blank password rejected.")
@@ -107,9 +99,11 @@ class AuthLdap(object):
         if "," in username:
             raise LdapUsernameError("invalid character in username: ,")
         try:
-            if hasattr(ldap, 'OPT_X_TLS_CACERTDIR'):
-                ldap.set_option(ldap.OPT_X_TLS_CACERTDIR,
-                                '/etc/openldap/cacerts')
+            if self.cacertdir:
+                if hasattr(ldap, 'OPT_X_TLS_CACERTDIR'):
+                    ldap.set_option(ldap.OPT_X_TLS_CACERTDIR, self.cacertdir)
+                else:
+                    log.debug("OPT_X_TLS_CACERTDIR is not available - can't set %s", self.cacertdir)
             ldap.set_option(ldap.OPT_REFERRALS, ldap.OPT_OFF)
             ldap.set_option(ldap.OPT_RESTART, ldap.OPT_ON)
             ldap.set_option(ldap.OPT_TIMEOUT, 20)
@@ -131,8 +125,9 @@ class AuthLdap(object):
                           self.LDAP_BIND_DN)
                 server.simple_bind_s(self.LDAP_BIND_DN, self.LDAP_BIND_PASS)
 
-            filter_ = '(&%s(%s=%s))' % (self.LDAP_FILTER, self.attr_login,
-                                        username)
+            filter_ = '(&%s(%s=%s))' % (self.LDAP_FILTER,
+                                        ldap.filter.escape_filter_chars(self.attr_login),
+                                        ldap.filter.escape_filter_chars(username))
             log.debug("Authenticating %r filter %s at %s", self.BASE_DN,
                       filter_, self.LDAP_SERVER)
             lobjects = server.search_ext_s(self.BASE_DN, self.SEARCH_SCOPE,
@@ -148,26 +143,28 @@ class AuthLdap(object):
                 try:
                     log.debug('Trying simple bind with %s', dn)
                     server.simple_bind_s(dn, safe_str(password))
-                    attrs = server.search_ext_s(dn, ldap.SCOPE_BASE,
-                                                '(objectClass=*)')[0][1]
-                    break
+                    results = server.search_ext_s(dn, ldap.SCOPE_BASE,
+                                                  '(objectClass=*)')
+                    if len(results) == 1:
+                        dn_, attrs = results[0]
+                        assert dn_ == dn
+                        return dn, attrs
 
                 except ldap.INVALID_CREDENTIALS:
-                    log.debug("LDAP rejected password for user '%s' (%s): %s",
-                              uid, username, dn)
+                    log.debug("LDAP rejected password for user '%s': %s",
+                              username, dn)
+                    continue # accept authentication as another ldap user with same username
 
-            else:
-                log.debug("No matching LDAP objects for authentication "
-                          "of '%s' (%s)", uid, username)
-                raise LdapPasswordError()
+            log.debug("No matching LDAP objects for authentication "
+                      "of '%s'", username)
+            raise LdapPasswordError()
 
         except ldap.NO_SUCH_OBJECT:
-            log.debug("LDAP says no such user '%s' (%s)", uid, username)
+            log.debug("LDAP says no such user '%s'", username)
             raise LdapUsernameError()
         except ldap.SERVER_DOWN:
-            raise LdapConnectionError("LDAP can't access authentication server")
-
-        return dn, attrs
+            # [0] might be {'info': "TLS error -8179:Peer's Certificate issuer is not recognized.", 'desc': "Can't contact LDAP server"}
+            raise LdapConnectionError("LDAP can't connect to authentication server")
 
 
 class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
@@ -192,11 +189,11 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
             },
             {
                 "name": "port",
-                "validator": self.validators.Number(strip=True, not_empty=True),
+                "validator": self.validators.Number(strip=True),
                 "type": "string",
-                "description": "Port that the LDAP server is listening on",
-                "default": 389,
-                "formname": "Port"
+                "description": "Port that the LDAP server is listening on. Defaults to 389 for PLAIN/START_TLS and 636 for LDAPS.",
+                "default": "",
+                "formname": "Custom LDAP Port"
             },
             {
                 "name": "dn_user",
@@ -218,7 +215,7 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
                 "type": "select",
                 "values": self._tls_kind_values,
                 "description": "TLS Type",
-                "default": 'PLAIN',
+                "default": 'LDAPS',
                 "formname": "Connection Security"
             },
             {
@@ -228,6 +225,13 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
                 "values": self._tls_reqcert_values,
                 "description": "Require Cert over TLS?",
                 "formname": "Certificate Checks"
+            },
+            {
+                "name": "cacertdir",
+                "validator": self.validators.UnicodeString(strip=True),
+                "type": "string",
+                "description": "Optional: Custom CA certificate directory for validating LDAPS",
+                "formname": "Custom CA Certificates"
             },
             {
                 "name": "base_dn",
@@ -285,10 +289,6 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
     def use_fake_password(self):
         return True
 
-    def user_activation_state(self):
-        def_user_perms = User.get_default_user().AuthUser.permissions['global']
-        return 'hg.extern_activate.auto' in def_user_perms
-
     def auth(self, userobj, username, password, settings, **kwargs):
         """
         Given a user object (which may be null), username, a plaintext password,
@@ -313,6 +313,7 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
             'bind_pass': settings.get('dn_pass'),
             'tls_kind': settings.get('tls_kind'),
             'tls_reqcert': settings.get('tls_reqcert'),
+            'cacertdir': settings.get('cacertdir'),
             'ldap_filter': settings.get('filter'),
             'search_scope': settings.get('search_scope'),
             'attr_login': settings.get('attr_login'),
@@ -334,7 +335,6 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
 
             # old attrs fetched from Kallithea database
             admin = getattr(userobj, 'admin', False)
-            active = getattr(userobj, 'active', self.user_activation_state())
             email = getattr(userobj, 'email', '')
             firstname = getattr(userobj, 'firstname', '')
             lastname = getattr(userobj, 'lastname', '')
@@ -346,19 +346,18 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
                 'groups': [],
                 'email': get_ldap_attr('attr_email') or email,
                 'admin': admin,
-                'active': active,
-                "active_from_extern": None,
                 'extern_name': user_dn,
             }
             log.info('user %s authenticated correctly', user_data['username'])
             return user_data
 
-        except (LdapUsernameError, LdapPasswordError, LdapImportError):
-            log.error(traceback.format_exc())
-            return None
-        except (Exception,):
-            log.error(traceback.format_exc())
-            return None
+        except LdapUsernameError:
+            log.info('Error authenticating %s with LDAP: User not found', username)
+        except LdapPasswordError:
+            log.info('Error authenticating %s with LDAP: Password error', username)
+        except LdapImportError:
+            log.error('Error authenticating %s with LDAP: LDAP not available', username)
+        return None
 
     def get_managed_fields(self):
         return ['username', 'firstname', 'lastname', 'email', 'password']

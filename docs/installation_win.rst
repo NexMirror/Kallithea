@@ -1,12 +1,12 @@
 .. _installation_win:
 
-================================================================
-Installation and upgrade on Windows (7/Server 2008 R2 and newer)
-================================================================
+====================================================
+Installation on Windows (7/Server 2008 R2 and newer)
+====================================================
 
 
 First time install
-::::::::::::::::::
+------------------
 
 Target OS: Windows 7 and newer or Windows Server 2008 R2 and newer
 
@@ -15,7 +15,7 @@ Tested on Windows 8.1, Windows Server 2008 R2 and Windows Server 2012
 To install on an older version of Windows, see `<installation_win_old.html>`_
 
 Step 1 -- Install Python
-------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 Install Python 2.x.y (x = 6 or 7). Latest version is recommended. If you need another version, they can run side by side.
 
@@ -31,7 +31,7 @@ Remember the specific major and minor versions installed, because they will
 be needed in the next step. In this case, it is "2.7".
 
 Step 2 -- Python BIN
---------------------
+^^^^^^^^^^^^^^^^^^^^
 
 Add Python BIN folder to the path. This can be done manually (editing
 "PATH" environment variable) or by using Windows Support Tools that
@@ -45,7 +45,7 @@ Please substitute [your-python-path] with your Python installation
 path. Typically this is ``C:\\Python27``.
 
 Step 3 -- Install pywin32 extensions
-------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Download pywin32 from:
 http://sourceforge.net/projects/pywin32/files/
@@ -61,7 +61,7 @@ http://sourceforge.net/projects/pywin32/files/
   (Win32)
 
 Step 4 -- Install pip
----------------------
+^^^^^^^^^^^^^^^^^^^^^
 
 pip is a package management system for Python. You will need it to install Kallithea and its dependencies.
 
@@ -85,7 +85,7 @@ open a CMD and type::
   SETX PATH "%PATH%;[your-python-path]\Scripts" /M
 
 Step 5 -- Kallithea folder structure
-------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Create a Kallithea folder structure.
 
@@ -102,7 +102,7 @@ Create the following folder structure::
   C:\Kallithea\Repos
 
 Step 6 -- Install virtualenv
-----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. note::
    A python virtual environment will allow for isolation between the Python packages of your system and those used for Kallithea.
@@ -119,7 +119,7 @@ To create a virtual environment, run::
   virtualenv C:\Kallithea\Env
 
 Step 7 -- Install Kallithea
----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In order to install Kallithea, you need to be able to run "pip install kallithea". It will use pip to install the Kallithea Python package and its dependencies.
 Some Python packages use managed code and need to be compiled.
@@ -134,7 +134,7 @@ In a command prompt type (adapting paths if necessary)::
 
   cd C:\Kallithea\Env\Scripts
   activate
-  pip install --upgrade pip "setuptools<34"
+  pip install --upgrade pip setuptools
 
 The prompt will change into "(Env) C:\\Kallithea\\Env\\Scripts" or similar
 (depending of your folder structure). Then type::
@@ -145,17 +145,19 @@ The prompt will change into "(Env) C:\\Kallithea\\Env\\Scripts" or similar
           complete. Some warnings will appear. Don't worry, they are
           normal.
 
-Step 8 -- Install git (optional)
---------------------------------
+Step 8 -- Install Git (optional)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Mercurial being a python package, it was installed automatically when doing "pip install kallithea".
+Mercurial being a python package, was installed automatically when doing ``pip install kallithea``.
 
-You need to install git manually if you want Kallithea to be able to host git repositories.
-
+You need to install Git manually if you want Kallithea to be able to host Git repositories.
 See http://git-scm.com/book/en/v2/Getting-Started-Installing-Git#Installing-on-Windows for instructions.
+The location of the Git binaries (like ``c:\path\to\git\bin``) must be
+added to the ``PATH`` environment variable so ``git.exe`` and other tools like
+``gzip.exe`` are available.
 
 Step 9 -- Configuring Kallithea
--------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Steps taken from `<setup.html>`_
 
@@ -164,9 +166,9 @@ it, reopen it following the same commands (including the "activate"
 one). When ready, type::
 
   cd C:\Kallithea\Bin
-  paster make-config Kallithea production.ini
+  kallithea-cli config-create my.ini
 
-Then you must edit production.ini to fit your needs (IP address, IP
+Then you must edit my.ini to fit your needs (IP address, IP
 port, mail settings, database, etc.). `NotePad++`__ or a similar text
 editor is recommended to properly handle the newline character
 differences between Unix and Windows.
@@ -175,11 +177,11 @@ __ http://notepad-plus-plus.org/
 
 For the sake of simplicity, run it with the default settings. After your edits (if any) in the previous command prompt, type::
 
-  paster setup-db production.ini
+  kallithea-cli db-create -c my.ini
 
 .. warning:: This time a *new* database will be installed. You must
-             follow a different step to later *upgrade* to a newer
-             Kallithea version)
+             follow a different process to later :ref:`upgrade <upgrade>`
+             to a newer Kallithea version.
 
 The script will ask you for confirmation about creating a new database, answer yes (y)
 
@@ -191,14 +193,14 @@ The script will ask you for admin mail, answer "admin@xxxx.com" (or whatever you
 
 If you make a mistake and the script doesn't end, don't worry: start it again.
 
-If you decided not to install git, you will get errors about it that you can ignore.
+If you decided not to install Git, you will get errors about it that you can ignore.
 
 Step 10 -- Running Kallithea
-----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In the previous command prompt, being in the C:\\Kallithea\\Bin folder, type::
 
-  paster serve production.ini
+  gearbox serve -c my.ini
 
 Open your web server, and go to http://127.0.0.1:5000
 
@@ -219,27 +221,3 @@ What this guide does not cover:
 - Using Apache. You can investigate here:
 
   - https://groups.google.com/group/rhodecode/msg/c433074e813ffdc4
-
-
-Upgrading
-:::::::::
-
-Stop running Kallithea
-Open a CommandPrompt like in Step 7 (cd to C:\Kallithea\Env\Scripts and activate) and type::
-
-  pip install kallithea --upgrade
-  cd \Kallithea\Bin
-
-Backup your production.ini file now.
-
-Then run::
-
-  paster make-config Kallithea production.ini
-
-Look for changes and update your production.ini accordingly.
-
-Next, update the database::
-
-  paster upgrade-db production.ini
-
-More details can be found in `<upgrade.html>`_.

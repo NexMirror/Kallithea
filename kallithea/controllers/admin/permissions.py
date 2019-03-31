@@ -31,12 +31,13 @@ import traceback
 import formencode
 from formencode import htmlfill
 
-from pylons import request, tmpl_context as c, url
-from pylons.controllers.util import redirect
-from pylons.i18n.translation import _
+from tg import request, tmpl_context as c
+from tg.i18n import ugettext as _
+from webob.exc import HTTPFound
 
+from kallithea.config.routing import url
 from kallithea.lib import helpers as h
-from kallithea.lib.auth import LoginRequired, HasPermissionAllDecorator
+from kallithea.lib.auth import LoginRequired, HasPermissionAnyDecorator, AuthUser
 from kallithea.lib.base import BaseController, render
 from kallithea.model.forms import DefaultPermissionsForm
 from kallithea.model.permission import PermissionModel
@@ -53,9 +54,9 @@ class PermissionsController(BaseController):
     #     map.resource('permission', 'permissions')
 
     @LoginRequired()
-    @HasPermissionAllDecorator('hg.admin')
-    def __before__(self):
-        super(PermissionsController, self).__before__()
+    @HasPermissionAnyDecorator('hg.admin')
+    def _before(self, *args, **kwargs):
+        super(PermissionsController, self)._before(*args, **kwargs)
 
     def __load_data(self):
         c.repo_perms_choices = [('repository.none', _('None'),),
@@ -139,7 +140,7 @@ class PermissionsController(BaseController):
                 h.flash(_('Error occurred during update of permissions'),
                         category='error')
 
-            return redirect(url('admin_permissions'))
+            raise HTTPFound(location=url('admin_permissions'))
 
         c.user = User.get_default_user()
         defaults = {'anonymous': c.user.active}
@@ -184,7 +185,7 @@ class PermissionsController(BaseController):
     def permission_ips(self):
         c.active = 'ips'
         c.user = User.get_default_user()
-        c.user_ip_map = UserIpMap.query()\
+        c.user_ip_map = UserIpMap.query() \
                         .filter(UserIpMap.user == c.user).all()
 
         return render('admin/permissions/permissions.html')
@@ -192,5 +193,5 @@ class PermissionsController(BaseController):
     def permission_perms(self):
         c.active = 'perms'
         c.user = User.get_default_user()
-        c.perm_user = c.user.AuthUser
+        c.perm_user = AuthUser(dbuser=c.user)
         return render('admin/permissions/permissions.html')

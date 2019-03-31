@@ -28,11 +28,9 @@ Original author and date, and relevant copyright and licensing information is be
 import os
 import cgi
 import logging
-import paste.fileapp
 
-from pylons import tmpl_context as c, request, config
-from pylons.i18n.translation import _
-from pylons.middleware import media_path
+from tg import tmpl_context as c, request, config, expose
+from tg.i18n import ugettext as _
 
 from kallithea.lib.base import BaseController, render
 
@@ -49,12 +47,13 @@ class ErrorController(BaseController):
     ErrorDocuments middleware in your config/middleware.py file.
     """
 
-    def __before__(self):
+    def _before(self, *args, **kwargs):
         # disable all base actions since we don't need them here
         pass
 
-    def document(self):
-        resp = request.environ.get('pylons.original_response')
+    @expose('/errors/error_document.html')
+    def document(self, *args, **kwargs):
+        resp = request.environ.get('tg.original_response')
         c.site_name = config.get('title')
 
         log.debug('### %s ###', resp and resp.status or 'no response')
@@ -71,22 +70,7 @@ class ErrorController(BaseController):
             c.error_message = _('No response')
             c.error_explanation = _('Unknown error')
 
-        return render('/errors/error_document.html')
-
-    def img(self, id):
-        """Serve Pylons' stock images"""
-        return self._serve_file(os.path.join(media_path, 'img', id))
-
-    def style(self, id):
-        """Serve Pylons' stock stylesheets"""
-        return self._serve_file(os.path.join(media_path, 'style', id))
-
-    def _serve_file(self, path):
-        """Call Paste's FileApp (a WSGI application) to serve the file
-        at the specified path
-        """
-        fapp = paste.fileapp.FileApp(path)
-        return fapp(request.environ, self.start_response)
+        return dict()
 
     def get_error_explanation(self, code):
         """ get the error explanations of int codes

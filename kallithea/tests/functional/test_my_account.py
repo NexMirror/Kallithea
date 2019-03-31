@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from kallithea.model.db import User, UserFollowing, Repository, UserApiKeys
-from kallithea.tests import *
+from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
 from kallithea.lib import helpers as h
 from kallithea.model.user import UserModel
 from kallithea.model.meta import Session
+
+from tg.util.webtest import test_context
 
 fixture = Fixture()
 
@@ -28,9 +30,10 @@ class TestMyAccountController(TestController):
     def test_my_account_my_repos(self):
         self.log_user()
         response = self.app.get(url('my_account_repos'))
-        cnt = Repository.query().filter(Repository.user ==
+        cnt = Repository.query().filter(Repository.owner ==
                            User.get_by_username(TEST_USER_ADMIN_LOGIN)).count()
-        response.mustcontain('"totalRecords": %s' % cnt)
+        response.mustcontain('"raw_name": "%s"' % HG_REPO)
+        response.mustcontain('"just_name": "%s"' % GIT_REPO)
 
     def test_my_account_my_watched(self):
         self.log_user()
@@ -38,7 +41,8 @@ class TestMyAccountController(TestController):
 
         cnt = UserFollowing.query().filter(UserFollowing.user ==
                             User.get_by_username(TEST_USER_ADMIN_LOGIN)).count()
-        response.mustcontain('"totalRecords": %s' % cnt)
+        response.mustcontain('"raw_name": "%s"' % HG_REPO)
+        response.mustcontain('"just_name": "%s"' % GIT_REPO)
 
     def test_my_account_my_emails(self):
         self.log_user()
@@ -53,7 +57,7 @@ class TestMyAccountController(TestController):
                                  {'new_email': TEST_USER_REGULAR_EMAIL, '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'This email address is already in use')
 
-    def test_my_account_my_emails_add_mising_email_in_form(self):
+    def test_my_account_my_emails_add_missing_email_in_form(self):
         self.log_user()
         response = self.app.get(url('my_account_emails'))
         response.mustcontain('No additional emails specified')
@@ -72,21 +76,21 @@ class TestMyAccountController(TestController):
         response = self.app.get(url('my_account_emails'))
 
         from kallithea.model.db import UserEmailMap
-        email_id = UserEmailMap.query()\
-            .filter(UserEmailMap.user == User.get_by_username(TEST_USER_ADMIN_LOGIN))\
+        email_id = UserEmailMap.query() \
+            .filter(UserEmailMap.user == User.get_by_username(TEST_USER_ADMIN_LOGIN)) \
             .filter(UserEmailMap.email == 'barz@example.com').one().email_id
 
         response.mustcontain('barz@example.com')
         response.mustcontain('<input id="del_email_id" name="del_email_id" type="hidden" value="%s" />' % email_id)
 
-        response = self.app.post(url('my_account_emails'),
-                                 {'del_email_id': email_id, '_method': 'delete', '_authentication_token': self.authentication_token()})
+        response = self.app.post(url('my_account_emails_delete'),
+                                 {'del_email_id': email_id, '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Removed email from user')
         response = self.app.get(url('my_account_emails'))
         response.mustcontain('No additional emails specified')
 
 
-    @parameterized.expand(
+    @parametrize('name,attrs',
         [('firstname', {'firstname': 'new_username'}),
          ('lastname', {'lastname': 'new_username'}),
          ('admin', {'admin': True}),
@@ -132,20 +136,20 @@ class TestMyAccountController(TestController):
         if name == 'email':
             params['emails'] = [attrs['email']]
         if name == 'extern_type':
-            #cannot update this via form, expected value is original one
+            # cannot update this via form, expected value is original one
             params['extern_type'] = "internal"
         if name == 'extern_name':
-            #cannot update this via form, expected value is original one
+            # cannot update this via form, expected value is original one
             params['extern_name'] = str(user_id)
         if name == 'active':
-            #my account cannot deactivate account
+            # my account cannot deactivate account
             params['active'] = True
         if name == 'admin':
-            #my account cannot make you an admin !
+            # my account cannot make you an admin !
             params['admin'] = False
 
         params.pop('_authentication_token')
-        self.assertEqual(params, updated_params)
+        assert params == updated_params
 
     def test_my_account_update_err_email_exists(self):
         self.log_user()
@@ -156,8 +160,8 @@ class TestMyAccountController(TestController):
                                     username=TEST_USER_ADMIN_LOGIN,
                                     new_password=TEST_USER_ADMIN_PASS,
                                     password_confirmation='test122',
-                                    firstname='NewName',
-                                    lastname='NewLastname',
+                                    firstname=u'NewName',
+                                    lastname=u'NewLastname',
                                     email=new_email,
                                     _authentication_token=self.authentication_token())
                                 )
@@ -173,15 +177,16 @@ class TestMyAccountController(TestController):
                                             username=TEST_USER_ADMIN_LOGIN,
                                             new_password=TEST_USER_ADMIN_PASS,
                                             password_confirmation='test122',
-                                            firstname='NewName',
-                                            lastname='NewLastname',
+                                            firstname=u'NewName',
+                                            lastname=u'NewLastname',
                                             email=new_email,
                                             _authentication_token=self.authentication_token()))
 
         response.mustcontain('An email address must contain a single @')
         from kallithea.model import validators
-        msg = validators.ValidUsername(edit=False, old_data={})\
-                ._messages['username_exists']
+        with test_context(self.app):
+            msg = validators.ValidUsername(edit=False, old_data={}) \
+                    ._messages['username_exists']
         msg = h.html_escape(msg % {'username': TEST_USER_ADMIN_LOGIN})
         response.mustcontain(msg)
 
@@ -192,7 +197,7 @@ class TestMyAccountController(TestController):
         response.mustcontain(user.api_key)
         response.mustcontain('Expires: Never')
 
-    @parameterized.expand([
+    @parametrize('desc,lifetime', [
         ('forever', -1),
         ('5mins', 60*5),
         ('30days', 60*60*24*30),
@@ -221,16 +226,15 @@ class TestMyAccountController(TestController):
         self.checkSessionFlash(response, 'API key successfully created')
         response = response.follow()
 
-        #now delete our key
+        # now delete our key
         keys = UserApiKeys.query().all()
-        self.assertEqual(1, len(keys))
+        assert 1 == len(keys)
 
-        response = self.app.post(url('my_account_api_keys'),
-                 {'_method': 'delete', 'del_api_key': keys[0].api_key, '_authentication_token': self.authentication_token()})
+        response = self.app.post(url('my_account_api_keys_delete'),
+                 {'del_api_key': keys[0].api_key, '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'API key successfully deleted')
         keys = UserApiKeys.query().all()
-        self.assertEqual(0, len(keys))
-
+        assert 0 == len(keys)
 
     def test_my_account_reset_main_api_key(self):
         usr = self.log_user(TEST_USER_REGULAR2_LOGIN, TEST_USER_REGULAR2_PASS)
@@ -240,8 +244,8 @@ class TestMyAccountController(TestController):
         response.mustcontain(api_key)
         response.mustcontain('Expires: Never')
 
-        response = self.app.post(url('my_account_api_keys'),
-                 {'_method': 'delete', 'del_api_key_builtin': api_key, '_authentication_token': self.authentication_token()})
+        response = self.app.post(url('my_account_api_keys_delete'),
+                 {'del_api_key_builtin': api_key, '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'API key successfully reset')
         response = response.follow()
         response.mustcontain(no=[api_key])

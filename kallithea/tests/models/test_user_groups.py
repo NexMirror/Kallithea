@@ -1,6 +1,6 @@
-from kallithea.model.db import User
+from kallithea.model.db import User, UserGroup
 
-from kallithea.tests import BaseTestCase, parameterized, TEST_USER_REGULAR_LOGIN
+from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
 
 from kallithea.model.user_group import UserGroupModel
@@ -10,27 +10,27 @@ from kallithea.model.meta import Session
 fixture = Fixture()
 
 
-class TestUserGroups(BaseTestCase):
+class TestUserGroups(TestController):
 
-    def tearDown(self):
+    def teardown_method(self, method):
         # delete all groups
-        for gr in UserGroupModel.get_all():
+        for gr in UserGroup.query():
             fixture.destroy_user_group(gr)
         Session().commit()
 
-    @parameterized.expand([
+    @parametrize('pre_existing,regular_should_be,external_should_be,groups,expected', [
         ([], [], [], [], []),
-        ([], ['regular'], [], [], ['regular']),  # no changes of regular
-        (['some_other'], [], [], ['some_other'], []),   # not added to regular group
-        ([], ['regular'], ['container'], ['container'], ['regular', 'container']),
-        ([], ['regular'], [], ['container', 'container2'], ['regular', 'container', 'container2']),
-        ([], ['regular'], ['other'], [], ['regular']),  # remove not used
-        (['some_other'], ['regular'], ['other', 'container'], ['container', 'container2'], ['regular', 'container', 'container2']),
+        ([], [u'regular'], [], [], [u'regular']),  # no changes of regular
+        ([u'some_other'], [], [], [u'some_other'], []),   # not added to regular group
+        ([], [u'regular'], [u'container'], [u'container'], [u'regular', u'container']),
+        ([], [u'regular'], [], [u'container', u'container2'], [u'regular', u'container', u'container2']),
+        ([], [u'regular'], [u'other'], [], [u'regular']),  # remove not used
+        ([u'some_other'], [u'regular'], [u'other', u'container'], [u'container', u'container2'], [u'regular', u'container', u'container2']),
     ])
     def test_enforce_groups(self, pre_existing, regular_should_be,
                             external_should_be, groups, expected):
         # delete all groups
-        for gr in UserGroupModel.get_all():
+        for gr in UserGroup.query():
             fixture.destroy_user_group(gr)
         Session().commit()
 
@@ -58,4 +58,4 @@ class TestUserGroups(BaseTestCase):
 
         user = User.get_by_username(TEST_USER_REGULAR_LOGIN)
         in_groups = user.group_member
-        self.assertEqual(expected, [x.users_group.users_group_name for x in in_groups])
+        assert expected == [x.users_group.users_group_name for x in in_groups]

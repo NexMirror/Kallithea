@@ -1,11 +1,8 @@
-
 import datetime
 from kallithea.lib import vcs
-from kallithea.lib.vcs.utils.compat import unittest
 from kallithea.lib.vcs.nodes import FileNode
 
 from kallithea.tests.vcs.base import _BackendTestMixin
-from kallithea.tests.vcs.conf import SCM_TESTS
 
 
 class BranchesTestCaseMixin(_BackendTestMixin):
@@ -40,12 +37,12 @@ class BranchesTestCaseMixin(_BackendTestMixin):
 
     def test_simple(self):
         tip = self.repo.get_changeset()
-        self.assertEqual(tip.date, datetime.datetime(2010, 1, 1, 21))
+        assert tip.date == datetime.datetime(2010, 1, 1, 21)
 
     def test_new_branch(self):
         # This check must not be removed to ensure the 'branches' LazyProperty
         # gets hit *before* the new 'foobar' branch got created:
-        self.assertFalse('foobar' in self.repo.branches)
+        assert 'foobar' not in self.repo.branches
         self.imc.add(vcs.nodes.FileNode('docs/index.txt',
             content='Documentation\n'))
         foobar_tip = self.imc.commit(
@@ -53,8 +50,9 @@ class BranchesTestCaseMixin(_BackendTestMixin):
             author=u'joe',
             branch='foobar',
         )
-        self.assertTrue('foobar' in self.repo.branches)
-        self.assertEqual(foobar_tip.branch, 'foobar')
+        assert 'foobar' in self.repo.branches
+        assert foobar_tip.branch == 'foobar'
+        assert foobar_tip.branches == ['foobar']
 
     def test_new_head(self):
         tip = self.repo.get_changeset()
@@ -82,14 +80,14 @@ class BranchesTestCaseMixin(_BackendTestMixin):
             parents=[newtip, foobar_tip],
         )
 
-        self.assertEqual(newest_tip.branch,
-            self.backend_class.DEFAULT_BRANCH_NAME)
+        assert newest_tip.branch == self.backend_class.DEFAULT_BRANCH_NAME
+        assert newest_tip.branches == [self.backend_class.DEFAULT_BRANCH_NAME]
 
     def test_branch_with_slash_in_name(self):
         self.imc.add(vcs.nodes.FileNode('extrafile', content='Some data\n'))
         self.imc.commit(u'Branch with a slash!', author=u'joe',
             branch='issue/123')
-        self.assertTrue('issue/123' in self.repo.branches)
+        assert 'issue/123' in self.repo.branches
 
     def test_branch_with_slash_in_name_and_similar_without(self):
         self.imc.add(vcs.nodes.FileNode('extrafile', content='Some data\n'))
@@ -98,19 +96,13 @@ class BranchesTestCaseMixin(_BackendTestMixin):
         self.imc.add(vcs.nodes.FileNode('extrafile II', content='Some data\n'))
         self.imc.commit(u'Branch without a slash...', author=u'joe',
             branch='123')
-        self.assertIn('issue/123', self.repo.branches)
-        self.assertIn('123', self.repo.branches)
+        assert 'issue/123' in self.repo.branches
+        assert '123' in self.repo.branches
 
 
-# For each backend create test case class
-for alias in SCM_TESTS:
-    attrs = {
-        'backend_alias': alias,
-    }
-    cls_name = ''.join(('%s branches test' % alias).title().split())
-    bases = (BranchesTestCaseMixin, unittest.TestCase)
-    globals()[cls_name] = type(cls_name, bases, attrs)
+class TestGitBranches(BranchesTestCaseMixin):
+    backend_alias = 'git'
 
 
-if __name__ == '__main__':
-    unittest.main()
+class TestHgBranches(BranchesTestCaseMixin):
+    backend_alias = 'hg'

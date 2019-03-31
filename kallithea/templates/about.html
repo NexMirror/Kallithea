@@ -3,20 +3,17 @@
 <%block name="title">
     ${_('About')}
 </%block>
-<%def name="breadcrumbs()">
-    ${c.site_name}
-</%def>
 <%block name="header_menu">
     ${self.menu('about')}
 </%block>
 <%def name="main()">
 
-<div class="box">
-  <!-- box / title -->
-  <div class="title">
-    <h5>${_('About')} Kallithea</h5>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h5 class="panel-title">${_('About')} Kallithea</h5>
   </div>
 
+  <div class="panel-body panel-about">
   <p><a href="https://kallithea-scm.org/">Kallithea</a> is a project of the
   <a href="http://sfconservancy.org/">Software Freedom Conservancy, Inc.</a>
   and is released under the terms of the
@@ -24,31 +21,54 @@
   v 3.0 (GPLv3)</a>.</p>
 
   <p>Kallithea is copyrighted by various authors, including but not
-  necessarily limited to the following:
-  <ul style="margin: 0 0 0 50px;">
+  necessarily limited to the following:</p>
+  <ul>
 
   <li>Copyright &copy; 2012&ndash;2019, Mads Kiilerich</li>
+  <li>Copyright &copy; 2012, 2014&ndash;2017, 2019, Andrej Shadura</li>
   <li>Copyright &copy; 2014&ndash;2019, Thomas De Schampheleire</li>
+  <li>Copyright &copy; 2015&ndash;2017, 2019, Étienne Gilli</li>
+  <li>Copyright &copy; 2017&ndash;2019, Allan Nordhøy</li>
+  <li>Copyright &copy; 2019, Danni Randeris</li>
+  <li>Copyright &copy; 2019, Edmund Wong</li>
+  <li>Copyright &copy; 2019, Manuel Jacob</li>
+  <li>Copyright &copy; 2012, 2014&ndash;2018, Dominik Ruf</li>
   <li>Copyright &copy; 2014&ndash;2015, 2018, Michal Čihař</li>
   <li>Copyright &copy; 2015, 2018, Branko Majic</li>
+  <li>Copyright &copy; 2018, Chris Rule</li>
+  <li>Copyright &copy; 2018, Jesús Sánchez</li>
+  <li>Copyright &copy; 2018, Patrick Vane</li>
+  <li>Copyright &copy; 2018, Pheng Heong Tan</li>
   <li>Copyright &copy; 2018, ssantos</li>
   <li>Copyright &copy; 2018, Максим Якимчук</li>
   <li>Copyright &copy; 2018, Марс Ямбар</li>
   <li>Copyright &copy; 2012&ndash;2017, Unity Technologies</li>
-  <li>Copyright &copy; 2012, 2014&ndash;2017, Andrew Shadura</li>
-  <li>Copyright &copy; 2012, 2014, 2016&ndash;2017, Dominik Ruf</li>
-  <li>Copyright &copy; 2015, 2017, Étienne Gilli</li>
+  <li>Copyright &copy; 2015&ndash;2017, Søren Løvborg</li>
   <li>Copyright &copy; 2015, 2017, Sam Jaques</li>
-  <li>Copyright &copy; 2017, Allan Nordhøy</li>
+  <li>Copyright &copy; 2016&ndash;2017, Asterios Dimitriou</li>
+  <li>Copyright &copy; 2017, Alessandro Molina</li>
+  <li>Copyright &copy; 2017, Anton Schur</li>
   <li>Copyright &copy; 2017, Ching-Chen Mao</li>
+  <li>Copyright &copy; 2017, Eivind Tagseth</li>
   <li>Copyright &copy; 2017, FUJIWARA Katsunori</li>
+  <li>Copyright &copy; 2017, Holger Schramm</li>
+  <li>Copyright &copy; 2017, Karl Goetz</li>
+  <li>Copyright &copy; 2017, Lars Kruse</li>
+  <li>Copyright &copy; 2017, Marko Semet</li>
   <li>Copyright &copy; 2017, Viktar Vauchkevich</li>
   <li>Copyright &copy; 2012&ndash;2016, Takumi IINO</li>
-  <li>Copyright &copy; 2015&ndash;2016, Søren Løvborg</li>
+  <li>Copyright &copy; 2015&ndash;2016, Jan Heylen</li>
+  <li>Copyright &copy; 2015&ndash;2016, Robert Martinez</li>
+  <li>Copyright &copy; 2015&ndash;2016, Robert Rauch</li>
+  <li>Copyright &copy; 2016, Angel Ezquerra</li>
   <li>Copyright &copy; 2016, Anton Shestakov</li>
   <li>Copyright &copy; 2016, Brandon Jones</li>
+  <li>Copyright &copy; 2016, Kateryna Musina</li>
   <li>Copyright &copy; 2016, Konstantin Veretennicov</li>
+  <li>Copyright &copy; 2016, Oscar Curero</li>
   <li>Copyright &copy; 2016, Robert James Dennington</li>
+  <li>Copyright &copy; 2016, timeless@gmail.com</li>
+  <li>Copyright &copy; 2016, YFdyh000</li>
   <li>Copyright &copy; 2012&ndash;2013, 2015, Aras Pranckevičius</li>
   <li>Copyright &copy; 2014&ndash;2015, Christian Oyarzun</li>
   <li>Copyright &copy; 2014&ndash;2015, Joseph Rivera</li>
@@ -63,7 +83,7 @@
   <li>Copyright &copy; 2015, duanhongyi</li>
   <li>Copyright &copy; 2015, EriCSN Chang</li>
   <li>Copyright &copy; 2015, Grzegorz Krason</li>
-  <li>Copyright &copy; 2015, Jan Heylen</li>
+  <li>Copyright &copy; 2015, Jiří Suchan</li>
   <li>Copyright &copy; 2015, Kazunari Kobayashi</li>
   <li>Copyright &copy; 2015, Kevin Bullock</li>
   <li>Copyright &copy; 2015, kobanari</li>
@@ -76,11 +96,10 @@
   <li>Copyright &copy; 2015, Nick High</li>
   <li>Copyright &copy; 2015, Niemand Jedermann</li>
   <li>Copyright &copy; 2015, Peter Vitt</li>
-  <li>Copyright &copy; 2015, Robert Martinez</li>
-  <li>Copyright &copy; 2015, Robert Rauch</li>
   <li>Copyright &copy; 2015, Ronny Pfannschmidt</li>
   <li>Copyright &copy; 2015, Tuux</li>
   <li>Copyright &copy; 2015, Viktar Palstsiuk</li>
+  <li>Copyright &copy; 2014, Ante Ilic</li>
   <li>Copyright &copy; 2014, Bradley M. Kuhn</li>
   <li>Copyright &copy; 2014, Calinou</li>
   <li>Copyright &copy; 2014, Daniel Anderson</li>
@@ -145,15 +164,21 @@
 ## Stefan Engel <mail@engel-stefan.de> in 2012
 ## Ton Plomp <tcplomp@gmail.com> in 2013
 ##
-</ul></p>
+  </ul>
 
-<p>The above are the copyright holders who have submitted direct
-  contributions to the Kallithea repository.  In
-  the <a href="https://kallithea-scm.org/repos/kallithea">Kallithea source
-  code</a>, there is
-  a <a href="https://kallithea-scm.org/repos/kallithea/files/tip/LICENSE.md">list
+  <p>The above are the copyright holders who have submitted direct
+  contributions to the Kallithea repository.</p>
+
+  <p>In the <a href="https://kallithea-scm.org/repos/kallithea">Kallithea
+  source code</a>, there is a
+  <a href="https://kallithea-scm.org/repos/kallithea/files/tip/LICENSE.md">list
   of third-party libraries and code that Kallithea incorporates</a>.</p>
 
+  <p>The front-end contains a <a href="${h.url('/LICENSES.txt')}">list of
+  software that is used to build the front-end</a> but isn't distributed as a
+  part of Kallithea.</p>
+
+  </div>
 </div>
 
 </%def>

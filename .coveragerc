@@ -1,0 +1,33 @@
+[run]
+omit =
+    # the bin scripts are not part of the Kallithea web app
+    kallithea/bin/*
+    # we ship with no active extensions
+    kallithea/config/rcextensions/*
+    # dbmigrate is not a part of the Kallithea web app
+    kallithea/lib/dbmigrate/*
+    # the tests themselves should not be part of the coverage report
+    kallithea/tests/*
+    # the scm hooks are not run in the kallithea process
+    kallithea/config/post_receive_tmpl.py
+    kallithea/config/pre_receive_tmpl.py
+
+# same omit lines should be present in sections 'run' and 'report'
+[report]
+omit =
+    # the bin scripts are not part of the Kallithea web app
+    kallithea/bin/*
+    # we ship with no active extensions
+    kallithea/config/rcextensions/*
+    # dbmigrate is not a part of the Kallithea web app
+    kallithea/lib/dbmigrate/*
+    # the tests themselves should not be part of the coverage report
+    kallithea/tests/*
+    # the scm hooks are not run in the kallithea process
+    kallithea/config/post_receive_tmpl.py
+    kallithea/config/pre_receive_tmpl.py
+
+[paths]
+source =
+    kallithea/
+    **/workspace/*/kallithea

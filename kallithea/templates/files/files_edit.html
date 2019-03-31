@@ -23,49 +23,54 @@
 
 <%def name="main()">
 ${self.repo_context_bar('files')}
-<div class="box">
-    <!-- box / title -->
-    <div class="title">
-        ${self.breadcrumbs()}
-        <ul class="links">
-            <li>
-              <span><a href="#">${_('Branch')}: ${c.cs.branch}</a></span>
-            </li>
-        </ul>
+<div class="panel panel-primary">
+    <div class="panel-heading clearfix">
+        <div class="pull-left">
+            ${self.breadcrumbs()}
+        </div>
+        <div class="pull-right">
+            <a href="#">${_('Branch')}: ${c.cs.branch}</a>
+        </div>
     </div>
-    <div class="table" id="edit">
+    <div class="panel-body" id="edit">
         <div id="files_data">
-            <h3 class="files_location">${_('Location')}: ${h.files_breadcrumbs(c.repo_name,c.cs.revision,c.file.path)}</h3>
             ${h.form(h.url.current(),method='post',id='eform')}
-            <div id="body" class="codeblock">
-            <div class="code-header">
-                <div class="stats">
-                    <div class="left"><i class="icon-doc-inv"></i></div>
-                    <div class="left item">${h.link_to(h.show_id(c.file.changeset),h.url('changeset_home',repo_name=c.repo_name,revision=c.file.changeset.raw_id))}</div>
-                    <div class="left item">${h.format_byte_size(c.file.size,binary=True)}</div>
-                    <div class="left item last">${c.file.mimetype}</div>
-                    <div class="buttons">
-                      ${h.link_to(_('Show Annotation'),h.url('files_annotate_home',repo_name=c.repo_name,revision=c.cs.raw_id,f_path=c.f_path),class_="btn btn-mini")}
-                      ${h.link_to(_('Show as Raw'),h.url('files_raw_home',repo_name=c.repo_name,revision=c.cs.raw_id,f_path=c.f_path),class_="btn btn-mini")}
-                      ${h.link_to(_('Download as Raw'),h.url('files_rawfile_home',repo_name=c.repo_name,revision=c.cs.raw_id,f_path=c.f_path),class_="btn btn-mini")}
-                      % if h.HasRepoPermissionAny('repository.write','repository.admin')(c.repo_name):
+            <h3 class="files_location">
+              ${_('Location')}: ${h.files_breadcrumbs(c.repo_name,c.cs.raw_id,c.file.path)}
+            </h3>
+            <div id="body" class="panel panel-default">
+              <div class="panel-heading clearfix form-inline form-group-sm">
+                    <span>
+                        <span><i class="icon-doc-inv"></i></span>
+                        <span>${h.link_to(h.show_id(c.file.changeset),h.url('changeset_home',repo_name=c.repo_name,revision=c.file.changeset.raw_id))}</span>
+                        <span>${h.format_byte_size(c.file.size,binary=True)}</span>
+                        <span>${c.file.mimetype}</span>
+                        <select class="form-control" id="mimetype" name="mimetype"></select>
+                    </span>
+                    <span class="pull-right buttons">
+                      ${h.link_to(_('Show Annotation'),h.url('files_annotate_home',repo_name=c.repo_name,revision=c.cs.raw_id,f_path=c.f_path),class_="btn btn-default btn-xs")}
+                      ${h.link_to(_('Show as Raw'),h.url('files_raw_home',repo_name=c.repo_name,revision=c.cs.raw_id,f_path=c.f_path),class_="btn btn-default btn-xs")}
+                      ${h.link_to(_('Download as Raw'),h.url('files_rawfile_home',repo_name=c.repo_name,revision=c.cs.raw_id,f_path=c.f_path),class_="btn btn-default btn-xs")}
+                      % if h.HasRepoPermissionLevel('write')(c.repo_name):
                        % if not c.file.is_binary:
-                        ${h.link_to(_('Source'),h.url('files_home',repo_name=c.repo_name,revision=c.cs.raw_id,f_path=c.f_path),class_="btn btn-mini")}
+                        ${h.link_to(_('Source'),h.url('files_home',repo_name=c.repo_name,revision=c.cs.raw_id,f_path=c.f_path),class_="btn btn-default btn-xs")}
                        % endif
                       % endif
-                    </div>
-                </div>
-                <label class="commit" for="set_mode">${_('Editing file')}: ${c.file.unicode_path}</label>
-                <select id="set_mode" name="set_mode"/>
-            </div>
-                <pre id="editor_pre"></pre>
+                    </span>
+              </div>
+              <div class="panel-body no-padding">
                 <textarea id="editor" name="content" style="display:none">${h.escape(c.file.content)|n}</textarea>
-                <div style="padding: 10px;color:#666666">${_('Commit Message')}</div>
-                <textarea id="commit" name="message" style="height: 60px;width: 99%;margin-left:4px" placeholder="${c.default_message}"></textarea>
+              </div>
             </div>
-            <div style="text-align: left;padding-top: 5px">
-            ${h.submit('commit',_('Commit Changes'),class_="btn btn-small btn-success")}
-            ${h.reset('reset',_('Reset'),class_="btn btn-small")}
+            <div>
+              <div class="form-group">
+                  <label>${_('Commit Message')}</label>
+                  <textarea class="form-control" id="commit" name="message" placeholder="${c.default_message}"></textarea>
+              </div>
+              <div class="form-group buttons">
+                ${h.submit('commit',_('Commit Changes'),class_="btn btn-success")}
+                ${h.reset('reset',_('Reset'),class_="btn btn-default")}
+              </div>
             </div>
             ${h.end_form()}
         </div>
@@ -73,40 +78,41 @@ ${self.repo_context_bar('files')}
 </div>
 
 <script type="text/javascript">
-$(document).ready(function(){
-    var reset_url = "${h.url('files_home',repo_name=c.repo_name,revision=c.cs.raw_id,f_path=c.file.path)}";
-    var myCodeMirror = initCodeMirror('editor', "${request.script_name}", reset_url);
+    $(document).ready(function(){
+        var reset_url = ${h.jshtml(h.url('files_home',repo_name=c.repo_name,revision=c.cs.raw_id,f_path=c.file.path))};
+        var myCodeMirror = initCodeMirror('editor', ${h.jshtml(request.script_name)}, reset_url);
 
-   //inject new modes, based on codeMirrors modeInfo object
-    $('#set_mode').each(function(){
-        var modes_select = this;
-        var index = 1;
-        for(var i=0;i<CodeMirror.modeInfo.length;i++){
-            var m = CodeMirror.modeInfo[i];
-            var opt = new Option(m.name, m.mime);
-            $(opt).attr('mode', m.mode);
-            if (m.mime == 'text/plain') {
-                // default plain text
-                $(opt).prop('selected', true);
-                modes_select.options[0] = opt;
-            } else {
-                modes_select.options[index++] = opt;
+       //inject new modes, based on codeMirrors modeInfo object
+        var $mimetype_select = $('#mimetype');
+        $mimetype_select.each(function(){
+            var modes_select = this;
+            var index = 1;
+            for(var i=0;i<CodeMirror.modeInfo.length;i++){
+                var m = CodeMirror.modeInfo[i];
+                var opt = new Option(m.name, m.mime);
+                $(opt).attr('mode', m.mode);
+                if (m.mime == 'text/plain') {
+                    // default plain text
+                    $(opt).prop('selected', true);
+                    modes_select.options[0] = opt;
+                } else {
+                    modes_select.options[index++] = opt;
+                }
             }
+        });
+        // try to detect the mode based on the file we edit
+        var detected_mode = CodeMirror.findModeByExtension(${h.js(c.file.extension)});
+        if(detected_mode){
+            setCodeMirrorMode(myCodeMirror, detected_mode);
+            $($mimetype_select.find('option[value="'+detected_mode.mime+'"]')[0]).prop('selected', true);
         }
-    });
-    // try to detect the mode based on the file we edit
-    var detected_mode = CodeMirror.findModeByExtension("${c.file.extension}");
-    if(detected_mode){
-        setCodeMirrorMode(myCodeMirror, detected_mode);
-        $($('#set_mode option[value="'+detected_mode.mime+'"]')[0]).prop('selected', true);
-    }
 
-    $('#set_mode').on('change', function(e){
-        var selected = e.currentTarget;
-        var node = selected.options[selected.selectedIndex];
-        var detected_mode = CodeMirror.findModeByMIME(node.value);
-        setCodeMirrorMode(myCodeMirror, detected_mode);
+        $mimetype_select.on('change', function(e){
+            var selected = e.currentTarget;
+            var node = selected.options[selected.selectedIndex];
+            var detected_mode = CodeMirror.findModeByMIME(node.value);
+            setCodeMirrorMode(myCodeMirror, detected_mode);
+        });
     });
-});
 </script>
 </%def>

@@ -32,16 +32,14 @@ import logging
 import time
 import traceback
 
-from pylons import config
-from pylons.i18n.translation import _
+from tg import config
+from tg.i18n import ugettext as _
 
 from sqlalchemy.exc import DatabaseError
 
-from kallithea import EXTERN_TYPE_INTERNAL
-from kallithea.lib.utils2 import safe_unicode, generate_api_key, get_current_authuser
+from kallithea.lib.utils2 import safe_str, generate_api_key, get_current_authuser
 from kallithea.lib.caching_query import FromCache
-from kallithea.model import BaseModel
-from kallithea.model.db import User, UserToPerm, Notification, \
+from kallithea.model.db import Permission, User, UserToPerm, \
     UserEmailMap, UserIpMap
 from kallithea.lib.exceptions import DefaultUserException, \
     UserOwnsReposException
@@ -51,20 +49,18 @@ from kallithea.model.meta import Session
 log = logging.getLogger(__name__)
 
 
-class UserModel(BaseModel):
+class UserModel(object):
     password_reset_token_lifetime = 86400 # 24 hours
 
-    cls = User
-
     def get(self, user_id, cache=False):
-        user = self.sa.query(User)
+        user = User.query()
         if cache:
             user = user.options(FromCache("sql_cache_short",
                                           "get_user_%s" % user_id))
         return user.get(user_id)
 
     def get_user(self, user):
-        return self._get_user(user)
+        return User.guess_instance(user)
 
     def create(self, form_data, cur_user=None):
         if not cur_user:
@@ -95,13 +91,14 @@ class UserModel(BaseModel):
             setattr(new_user, k, v)
 
         new_user.api_key = generate_api_key()
-        self.sa.add(new_user)
+        Session().add(new_user)
+        Session().flush() # make database assign new_user.user_id
 
         log_create_user(new_user.get_dict(), cur_user)
         return new_user
 
-    def create_or_update(self, username, password, email, firstname='',
-                         lastname='', active=True, admin=False,
+    def create_or_update(self, username, password, email, firstname=u'',
+                         lastname=u'', active=True, admin=False,
                          extern_type=None, extern_name=None, cur_user=None):
         """
         Creates a new instance if not found, or updates current one
@@ -148,9 +145,9 @@ class UserModel(BaseModel):
             new_user.admin = admin
             new_user.email = email
             new_user.active = active
-            new_user.extern_name = safe_unicode(extern_name) \
+            new_user.extern_name = safe_str(extern_name) \
                 if extern_name else None
-            new_user.extern_type = safe_unicode(extern_type) \
+            new_user.extern_type = safe_str(extern_type) \
                 if extern_type else None
             new_user.name = firstname
             new_user.lastname = lastname
@@ -165,12 +162,15 @@ class UserModel(BaseModel):
                 reason = 'new password' if edit else 'new user'
                 log.debug('Updating password reason=>%s', reason)
                 new_user.password = get_crypt_password(password) \
-                    if password else None
+                    if password else ''
 
-            self.sa.add(new_user)
+            if user is None:
+                Session().add(new_user)
+                Session().flush() # make database assign new_user.user_id
 
             if not edit:
                 log_create_user(new_user.get_dict(), cur_user)
+
             return new_user
         except (DatabaseError,):
             log.error(traceback.format_exc())
@@ -181,12 +181,9 @@ class UserModel(BaseModel):
         import kallithea.lib.helpers as h
 
         form_data['admin'] = False
-        form_data['extern_name'] = EXTERN_TYPE_INTERNAL
-        form_data['extern_type'] = EXTERN_TYPE_INTERNAL
+        form_data['extern_type'] = User.DEFAULT_AUTH_TYPE
+        form_data['extern_name'] = ''
         new_user = self.create(form_data)
-
-        self.sa.add(new_user)
-        self.sa.flush()
 
         # notification to admins
         subject = _('New user registration')
@@ -200,17 +197,19 @@ class UserModel(BaseModel):
         edit_url = h.canonical_url('edit_user', id=new_user.user_id)
         email_kwargs = {
             'registered_user_url': edit_url,
-            'new_username': new_user.username}
+            'new_username': new_user.username,
+            'new_email': new_user.email,
+            'new_full_name': new_user.full_name}
         NotificationModel().create(created_by=new_user, subject=subject,
                                    body=body, recipients=None,
-                                   type_=Notification.TYPE_REGISTRATION,
+                                   type_=NotificationModel.TYPE_REGISTRATION,
                                    email_kwargs=email_kwargs)
 
-    def update(self, user_id, form_data, skip_attrs=[]):
+    def update(self, user_id, form_data, skip_attrs=None):
         from kallithea.lib.auth import get_crypt_password
-
+        skip_attrs = skip_attrs or []
         user = self.get(user_id, cache=False)
-        if user.username == User.DEFAULT_USER:
+        if user.is_default_user:
             raise DefaultUserException(
                             _("You can't edit this user since it's "
                               "crucial for entire application"))
@@ -226,13 +225,12 @@ class UserModel(BaseModel):
                 if k == 'firstname':
                     k = 'name'
                 setattr(user, k, v)
-        self.sa.add(user)
 
     def update_user(self, user, **kwargs):
         from kallithea.lib.auth import get_crypt_password
 
-        user = self._get_user(user)
-        if user.username == User.DEFAULT_USER:
+        user = User.guess_instance(user)
+        if user.is_default_user:
             raise DefaultUserException(
                 _("You can't edit this user since it's"
                   " crucial for entire application")
@@ -243,15 +241,14 @@ class UserModel(BaseModel):
                 v = get_crypt_password(v)
 
             setattr(user, k, v)
-        self.sa.add(user)
         return user
 
     def delete(self, user, cur_user=None):
         if cur_user is None:
             cur_user = getattr(get_current_authuser(), 'username', None)
-        user = self._get_user(user)
+        user = User.guess_instance(user)
 
-        if user.username == User.DEFAULT_USER:
+        if user.is_default_user:
             raise DefaultUserException(
                 _("You can't remove this user since it is"
                   " crucial for the entire application"))
@@ -273,10 +270,15 @@ class UserModel(BaseModel):
                 _('User "%s" still owns %s user groups and cannot be '
                   'removed. Switch owners or remove those user groups: %s')
                 % (user.username, len(usergroups), ', '.join(usergroups)))
-        self.sa.delete(user)
+        Session().delete(user)
 
         from kallithea.lib.hooks import log_delete_user
         log_delete_user(user.get_dict(), cur_user)
+
+    def can_change_password(self, user):
+        from kallithea.lib import auth_modules
+        managed_fields = auth_modules.get_managed_fields(user)
+        return 'password' not in managed_fields
 
     def get_reset_password_token(self, user, timestamp, session_id):
         """
@@ -324,7 +326,7 @@ class UserModel(BaseModel):
         allowing users to copy-paste or manually enter the token from the
         email.
         """
-        from kallithea.lib.celerylib import tasks, run_task
+        from kallithea.lib.celerylib import tasks
         from kallithea.model.notification import EmailNotificationModel
         import kallithea.lib.helpers as h
 
@@ -332,18 +334,21 @@ class UserModel(BaseModel):
         user = User.get_by_email(user_email)
         timestamp = int(time.time())
         if user is not None:
-            log.debug('password reset user %s found', user)
-            token = self.get_reset_password_token(user,
-                                                  timestamp,
-                                                  h.authentication_token())
-            # URL must be fully qualified; but since the token is locked to
-            # the current browser session, we must provide a URL with the
-            # current scheme and hostname, rather than the canonical_url.
-            link = h.url('reset_password_confirmation', qualified=True,
-                         email=user_email,
-                         timestamp=timestamp,
-                         token=token)
-
+            if self.can_change_password(user):
+                log.debug('password reset user %s found', user)
+                token = self.get_reset_password_token(user,
+                                                      timestamp,
+                                                      h.authentication_token())
+                # URL must be fully qualified; but since the token is locked to
+                # the current browser session, we must provide a URL with the
+                # current scheme and hostname, rather than the canonical_url.
+                link = h.url('reset_password_confirmation', qualified=True,
+                             email=user_email,
+                             timestamp=timestamp,
+                             token=token)
+            else:
+                log.debug('password reset user %s found but was managed', user)
+                token = link = None
             reg_type = EmailNotificationModel.TYPE_PASSWORD_RESET
             body = EmailNotificationModel().get_email_tmpl(
                 reg_type, 'txt',
@@ -356,8 +361,7 @@ class UserModel(BaseModel):
                 reset_token=token,
                 reset_url=link)
             log.debug('sending email')
-            run_task(tasks.send_email, [user_email],
-                     _("Password reset link"), body, html_body)
+            tasks.send_email([user_email], _("Password reset link"), body, html_body)
             log.info('send new password mail to %s', user_email)
         else:
             log.debug("password reset email %s not found", user_email)
@@ -367,7 +371,7 @@ class UserModel(BaseModel):
                      timestamp=timestamp)
 
     def verify_reset_password_token(self, email, timestamp, token):
-        from kallithea.lib.celerylib import tasks, run_task
+        from kallithea.lib.celerylib import tasks
         from kallithea.lib import auth
         import kallithea.lib.helpers as h
         user = User.get_by_email(email)
@@ -393,18 +397,19 @@ class UserModel(BaseModel):
         return expected_token == token
 
     def reset_password(self, user_email, new_passwd):
-        from kallithea.lib.celerylib import tasks, run_task
+        from kallithea.lib.celerylib import tasks
         from kallithea.lib import auth
         user = User.get_by_email(user_email)
         if user is not None:
+            if not self.can_change_password(user):
+                raise Exception('trying to change password for external user')
             user.password = auth.get_crypt_password(new_passwd)
-            Session().add(user)
             Session().commit()
             log.info('change password for %s', user_email)
         if new_passwd is None:
             raise Exception('unable to set new password')
 
-        run_task(tasks.send_email, [user_email],
+        tasks.send_email([user_email],
                  _('Password reset notification'),
                  _('The password to your account %s has been changed using password reset form.') % (user.username,))
         log.info('send password reset mail to %s', user_email)
@@ -412,10 +417,10 @@ class UserModel(BaseModel):
         return True
 
     def has_perm(self, user, perm):
-        perm = self._get_perm(perm)
-        user = self._get_user(user)
+        perm = Permission.guess_instance(perm)
+        user = User.guess_instance(user)
 
-        return UserToPerm.query().filter(UserToPerm.user == user)\
+        return UserToPerm.query().filter(UserToPerm.user == user) \
             .filter(UserToPerm.permission == perm).scalar() is not None
 
     def grant_perm(self, user, perm):
@@ -425,19 +430,19 @@ class UserModel(BaseModel):
         :param user:
         :param perm:
         """
-        user = self._get_user(user)
-        perm = self._get_perm(perm)
+        user = User.guess_instance(user)
+        perm = Permission.guess_instance(perm)
         # if this permission is already granted skip it
-        _perm = UserToPerm.query()\
-            .filter(UserToPerm.user == user)\
-            .filter(UserToPerm.permission == perm)\
+        _perm = UserToPerm.query() \
+            .filter(UserToPerm.user == user) \
+            .filter(UserToPerm.permission == perm) \
             .scalar()
         if _perm:
             return
         new = UserToPerm()
         new.user = user
         new.permission = perm
-        self.sa.add(new)
+        Session().add(new)
         return new
 
     def revoke_perm(self, user, perm):
@@ -447,8 +452,8 @@ class UserModel(BaseModel):
         :param user:
         :param perm:
         """
-        user = self._get_user(user)
-        perm = self._get_perm(perm)
+        user = User.guess_instance(user)
+        perm = Permission.guess_instance(perm)
 
         UserToPerm.query().filter(
             UserToPerm.user == user,
@@ -465,12 +470,12 @@ class UserModel(BaseModel):
         from kallithea.model import forms
         form = forms.UserExtraEmailForm()()
         data = form.to_python(dict(email=email))
-        user = self._get_user(user)
+        user = User.guess_instance(user)
 
         obj = UserEmailMap()
         obj.user = user
         obj.email = data['email']
-        self.sa.add(obj)
+        Session().add(obj)
         return obj
 
     def delete_extra_email(self, user, email_id):
@@ -480,10 +485,10 @@ class UserModel(BaseModel):
         :param user:
         :param email_id:
         """
-        user = self._get_user(user)
+        user = User.guess_instance(user)
         obj = UserEmailMap.query().get(email_id)
         if obj is not None:
-            self.sa.delete(obj)
+            Session().delete(obj)
 
     def add_extra_ip(self, user, ip):
         """
@@ -495,12 +500,12 @@ class UserModel(BaseModel):
         from kallithea.model import forms
         form = forms.UserExtraIpForm()()
         data = form.to_python(dict(ip=ip))
-        user = self._get_user(user)
+        user = User.guess_instance(user)
 
         obj = UserIpMap()
         obj.user = user
         obj.ip_addr = data['ip']
-        self.sa.add(obj)
+        Session().add(obj)
         return obj
 
     def delete_extra_ip(self, user, ip_id):
@@ -510,7 +515,7 @@ class UserModel(BaseModel):
         :param user:
         :param ip_id:
         """
-        user = self._get_user(user)
+        user = User.guess_instance(user)
         obj = UserIpMap.query().get(ip_id)
         if obj:
-            self.sa.delete(obj)
+            Session().delete(obj)

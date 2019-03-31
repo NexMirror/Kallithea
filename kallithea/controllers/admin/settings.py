@@ -30,16 +30,18 @@ import traceback
 import formencode
 
 from formencode import htmlfill
-from pylons import request, tmpl_context as c, url, config
-from pylons.controllers.util import redirect
-from pylons.i18n.translation import _
+from tg import request, tmpl_context as c, config
+from tg.i18n import ugettext as _
+from webob.exc import HTTPFound
 
+from kallithea.config.routing import url
 from kallithea.lib import helpers as h
-from kallithea.lib.auth import LoginRequired, HasPermissionAllDecorator
+from kallithea.lib.auth import LoginRequired, HasPermissionAnyDecorator
 from kallithea.lib.base import BaseController, render
-from kallithea.lib.celerylib import tasks, run_task
+from kallithea.lib.celerylib import tasks
 from kallithea.lib.exceptions import HgsubversionImportError
 from kallithea.lib.utils import repo2db_mapper, set_app_settings
+from kallithea.lib.vcs import VCSError
 from kallithea.model.db import Ui, Repository, Setting
 from kallithea.model.forms import ApplicationSettingsForm, \
     ApplicationUiSettingsForm, ApplicationVisualisationForm
@@ -57,38 +59,30 @@ class SettingsController(BaseController):
     #     map.resource('setting', 'settings', controller='admin/settings',
     #         path_prefix='/admin', name_prefix='admin_')
 
-    @LoginRequired()
-    def __before__(self):
-        super(SettingsController, self).__before__()
+    @LoginRequired(allow_default_user=True)
+    def _before(self, *args, **kwargs):
+        super(SettingsController, self)._before(*args, **kwargs)
 
     def _get_hg_ui_settings(self):
         ret = Ui.query().all()
 
-        if not ret:
-            raise Exception('Could not get application ui settings !')
         settings = {}
         for each in ret:
-            k = each.ui_key
+            k = each.ui_section + '_' + each.ui_key
             v = each.ui_value
-            if k == '/':
-                k = 'root_path'
+            if k == 'paths_/':
+                k = 'paths_root_path'
 
-            if k == 'push_ssl':
-                v = str2bool(v)
-
-            if k.find('.') != -1:
-                k = k.replace('.', '_')
+            k = k.replace('.', '_')
 
             if each.ui_section in ['hooks', 'extensions']:
                 v = each.ui_active
 
-            settings[each.ui_section + '_' + k] = v
+            settings[k] = v
         return settings
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def settings_vcs(self):
-        """GET /admin/settings: All items in the collection"""
-        # url('admin_settings')
         c.active = 'vcs'
         if request.POST:
             application_form = ApplicationUiSettingsForm()()
@@ -104,66 +98,37 @@ class SettingsController(BaseController):
                      force_defaults=False)
 
             try:
-                sett = Ui.get_by_key('push_ssl')
-                sett.ui_value = form_result['web_push_ssl']
-                Session().add(sett)
                 if c.visual.allow_repo_location_change:
-                    sett = Ui.get_by_key('/')
+                    sett = Ui.get_by_key('paths', '/')
                     sett.ui_value = form_result['paths_root_path']
-                    Session().add(sett)
 
-                #HOOKS
-                sett = Ui.get_by_key(Ui.HOOK_UPDATE)
+                # HOOKS
+                sett = Ui.get_by_key('hooks', Ui.HOOK_UPDATE)
                 sett.ui_active = form_result['hooks_changegroup_update']
-                Session().add(sett)
 
-                sett = Ui.get_by_key(Ui.HOOK_REPO_SIZE)
+                sett = Ui.get_by_key('hooks', Ui.HOOK_REPO_SIZE)
                 sett.ui_active = form_result['hooks_changegroup_repo_size']
-                Session().add(sett)
 
-                sett = Ui.get_by_key(Ui.HOOK_PUSH)
+                sett = Ui.get_by_key('hooks', Ui.HOOK_PUSH_LOG)
                 sett.ui_active = form_result['hooks_changegroup_push_logger']
-                Session().add(sett)
 
-                sett = Ui.get_by_key(Ui.HOOK_PULL)
+                sett = Ui.get_by_key('hooks', Ui.HOOK_PULL_LOG)
                 sett.ui_active = form_result['hooks_outgoing_pull_logger']
 
-                Session().add(sett)
-
                 ## EXTENSIONS
-                sett = Ui.get_by_key('largefiles')
-                if not sett:
-                    #make one if it's not there !
-                    sett = Ui()
-                    sett.ui_key = 'largefiles'
-                    sett.ui_section = 'extensions'
+                sett = Ui.get_or_create('extensions', 'largefiles')
                 sett.ui_active = form_result['extensions_largefiles']
-                Session().add(sett)
 
-                sett = Ui.get_by_key('hgsubversion')
-                if not sett:
-                    #make one if it's not there !
-                    sett = Ui()
-                    sett.ui_key = 'hgsubversion'
-                    sett.ui_section = 'extensions'
-
+                sett = Ui.get_or_create('extensions', 'hgsubversion')
                 sett.ui_active = form_result['extensions_hgsubversion']
                 if sett.ui_active:
                     try:
                         import hgsubversion  # pragma: no cover
                     except ImportError:
                         raise HgsubversionImportError
-                Session().add(sett)
 
-#                sett = Ui.get_by_key('hggit')
-#                if not sett:
-#                    #make one if it's not there !
-#                    sett = Ui()
-#                    sett.ui_key = 'hggit'
-#                    sett.ui_section = 'extensions'
-#
+#                sett = Ui.get_or_create('extensions', 'hggit')
 #                sett.ui_active = form_result['extensions_hggit']
-#                Session().add(sett)
 
                 Session().commit()
 
@@ -189,15 +154,13 @@ class SettingsController(BaseController):
             encoding="UTF-8",
             force_defaults=False)
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def settings_mapping(self):
-        """GET /admin/settings/mapping: All items in the collection"""
-        # url('admin_settings_mapping')
         c.active = 'mapping'
         if request.POST:
             rm_obsolete = request.POST.get('destroy', False)
             install_git_hooks = request.POST.get('hooks', False)
-            overwrite_git_hooks = request.POST.get('hooks_overwrite', False);
+            overwrite_git_hooks = request.POST.get('hooks_overwrite', False)
             invalidate_cache = request.POST.get('invalidate', False)
             log.debug('rescanning repo location with destroy obsolete=%s, '
                       'install git hooks=%s and '
@@ -206,7 +169,7 @@ class SettingsController(BaseController):
             filesystem_repos = ScmModel().repo_scan()
             added, removed = repo2db_mapper(filesystem_repos, rm_obsolete,
                                             install_git_hooks=install_git_hooks,
-                                            user=c.authuser.username,
+                                            user=request.authuser.username,
                                             overwrite_git_hooks=overwrite_git_hooks)
             h.flash(h.literal(_('Repositories successfully rescanned. Added: %s. Removed: %s.') %
                 (', '.join(h.link_to(safe_unicode(repo_name), h.url('summary_home', repo_name=repo_name))
@@ -217,15 +180,15 @@ class SettingsController(BaseController):
             if invalidate_cache:
                 log.debug('invalidating all repositories cache')
                 i = 0
-                for repo in Repository.get_all():
+                for repo in Repository.query():
                     try:
-                        ScmModel().mark_for_invalidation(repo.repo_name, delete=True)
+                        ScmModel().mark_for_invalidation(repo.repo_name)
                         i += 1
                     except VCSError as e:
                         log.warning('VCS error invalidating %s: %s', repo.repo_name, e)
                 h.flash(_('Invalidated %s repositories') % i, category='success')
 
-            return redirect(url('admin_settings_mapping'))
+            raise HTTPFound(location=url('admin_settings_mapping'))
 
         defaults = Setting.get_app_settings()
         defaults.update(self._get_hg_ui_settings())
@@ -236,10 +199,8 @@ class SettingsController(BaseController):
             encoding="UTF-8",
             force_defaults=False)
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def settings_global(self):
-        """GET /admin/settings/global: All items in the collection"""
-        # url('admin_settings_global')
         c.active = 'global'
         if request.POST:
             application_form = ApplicationSettingsForm()()
@@ -255,25 +216,14 @@ class SettingsController(BaseController):
                     force_defaults=False)
 
             try:
-                sett1 = Setting.create_or_update('title',
-                                            form_result['title'])
-                Session().add(sett1)
-
-                sett2 = Setting.create_or_update('realm',
-                                            form_result['realm'])
-                Session().add(sett2)
-
-                sett3 = Setting.create_or_update('ga_code',
-                                            form_result['ga_code'])
-                Session().add(sett3)
-
-                sett4 = Setting.create_or_update('captcha_public_key',
-                                    form_result['captcha_public_key'])
-                Session().add(sett4)
-
-                sett5 = Setting.create_or_update('captcha_private_key',
-                                    form_result['captcha_private_key'])
-                Session().add(sett5)
+                for setting in (
+                    'title',
+                    'realm',
+                    'ga_code',
+                    'captcha_public_key',
+                    'captcha_private_key',
+                ):
+                    Setting.create_or_update(setting, form_result[setting])
 
                 Session().commit()
                 set_app_settings(config)
@@ -285,7 +235,7 @@ class SettingsController(BaseController):
                           'application settings'),
                           category='error')
 
-            return redirect(url('admin_settings_global'))
+            raise HTTPFound(location=url('admin_settings_global'))
 
         defaults = Setting.get_app_settings()
         defaults.update(self._get_hg_ui_settings())
@@ -296,10 +246,8 @@ class SettingsController(BaseController):
             encoding="UTF-8",
             force_defaults=False)
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def settings_visual(self):
-        """GET /admin/settings/visual: All items in the collection"""
-        # url('admin_settings_visual')
         c.active = 'visual'
         if request.POST:
             application_form = ApplicationVisualisationForm()()
@@ -318,7 +266,7 @@ class SettingsController(BaseController):
                 settings = [
                     ('show_public_icon', 'show_public_icon', 'bool'),
                     ('show_private_icon', 'show_private_icon', 'bool'),
-                    ('stylify_metatags', 'stylify_metatags', 'bool'),
+                    ('stylify_metalabels', 'stylify_metalabels', 'bool'),
                     ('repository_fields', 'repository_fields', 'bool'),
                     ('dashboard_items', 'dashboard_items', 'int'),
                     ('admin_grid_items', 'admin_grid_items', 'int'),
@@ -328,9 +276,7 @@ class SettingsController(BaseController):
                     ('clone_uri_tmpl', 'clone_uri_tmpl', 'unicode'),
                 ]
                 for setting, form_key, type_ in settings:
-                    sett = Setting.create_or_update(setting,
-                                        form_result[form_key], type_)
-                    Session().add(sett)
+                    Setting.create_or_update(setting, form_result[form_key], type_)
 
                 Session().commit()
                 set_app_settings(config)
@@ -343,7 +289,7 @@ class SettingsController(BaseController):
                           'visualisation settings'),
                         category='error')
 
-            return redirect(url('admin_settings_visual'))
+            raise HTTPFound(location=url('admin_settings_visual'))
 
         defaults = Setting.get_app_settings()
         defaults.update(self._get_hg_ui_settings())
@@ -354,10 +300,8 @@ class SettingsController(BaseController):
             encoding="UTF-8",
             force_defaults=False)
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def settings_email(self):
-        """GET /admin/settings/email: All items in the collection"""
-        # url('admin_settings_email')
         c.active = 'email'
         if request.POST:
             test_email = request.POST.get('test_email')
@@ -366,22 +310,22 @@ class SettingsController(BaseController):
                                'Kallithea version: %s' % c.kallithea_version)
             if not test_email:
                 h.flash(_('Please enter email address'), category='error')
-                return redirect(url('admin_settings_email'))
+                raise HTTPFound(location=url('admin_settings_email'))
 
-            test_email_txt_body = EmailNotificationModel()\
+            test_email_txt_body = EmailNotificationModel() \
                 .get_email_tmpl(EmailNotificationModel.TYPE_DEFAULT,
                                 'txt', body=test_body)
-            test_email_html_body = EmailNotificationModel()\
+            test_email_html_body = EmailNotificationModel() \
                 .get_email_tmpl(EmailNotificationModel.TYPE_DEFAULT,
                                 'html', body=test_body)
 
             recipients = [test_email] if test_email else None
 
-            run_task(tasks.send_email, recipients, test_email_subj,
-                     test_email_txt_body, test_email_html_body)
+            tasks.send_email(recipients, test_email_subj,
+                             test_email_txt_body, test_email_html_body)
 
             h.flash(_('Send email task created'), category='success')
-            return redirect(url('admin_settings_email'))
+            raise HTTPFound(location=url('admin_settings_email'))
 
         defaults = Setting.get_app_settings()
         defaults.update(self._get_hg_ui_settings())
@@ -395,10 +339,8 @@ class SettingsController(BaseController):
             encoding="UTF-8",
             force_defaults=False)
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def settings_hooks(self):
-        """GET /admin/settings/hooks: All items in the collection"""
-        # url('admin_settings_hooks')
         c.active = 'hooks'
         if request.POST:
             if c.visual.allow_custom_hooks_settings:
@@ -409,7 +351,11 @@ class SettingsController(BaseController):
 
                 try:
                     ui_key = ui_key and ui_key.strip()
-                    if ui_value and ui_key:
+                    if ui_key in (x.ui_key for x in Ui.get_custom_hooks()):
+                        h.flash(_('Hook already exists'), category='error')
+                    elif ui_key in (x.ui_key for x in Ui.get_builtin_hooks()):
+                        h.flash(_('Builtin hooks are read-only. Please use another hook name.'), category='error')
+                    elif ui_value and ui_key:
                         Ui.create_or_update_hook(ui_key, ui_value)
                         h.flash(_('Added new hook'), category='success')
                     elif hook_id:
@@ -419,10 +365,12 @@ class SettingsController(BaseController):
                     # check for edits
                     update = False
                     _d = request.POST.dict_of_lists()
-                    for k, v in zip(_d.get('hook_ui_key', []),
-                                    _d.get('hook_ui_value_new', [])):
-                        Ui.create_or_update_hook(k, v)
-                        update = True
+                    for k, v, ov in zip(_d.get('hook_ui_key', []),
+                                        _d.get('hook_ui_value_new', []),
+                                        _d.get('hook_ui_value', [])):
+                        if v != ov:
+                            Ui.create_or_update_hook(k, v)
+                            update = True
 
                     if update:
                         h.flash(_('Updated hooks'), category='success')
@@ -432,7 +380,7 @@ class SettingsController(BaseController):
                     h.flash(_('Error occurred during hook creation'),
                             category='error')
 
-                return redirect(url('admin_settings_hooks'))
+                raise HTTPFound(location=url('admin_settings_hooks'))
 
         defaults = Setting.get_app_settings()
         defaults.update(self._get_hg_ui_settings())
@@ -446,17 +394,15 @@ class SettingsController(BaseController):
             encoding="UTF-8",
             force_defaults=False)
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def settings_search(self):
-        """GET /admin/settings/search: All items in the collection"""
-        # url('admin_settings_search')
         c.active = 'search'
         if request.POST:
             repo_location = self._get_hg_ui_settings()['paths_root_path']
             full_index = request.POST.get('full_index', False)
-            run_task(tasks.whoosh_index, repo_location, full_index)
+            tasks.whoosh_index(repo_location, full_index)
             h.flash(_('Whoosh reindex task scheduled'), category='success')
-            return redirect(url('admin_settings_search'))
+            raise HTTPFound(location=url('admin_settings_search'))
 
         defaults = Setting.get_app_settings()
         defaults.update(self._get_hg_ui_settings())
@@ -467,10 +413,8 @@ class SettingsController(BaseController):
             encoding="UTF-8",
             force_defaults=False)
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def settings_system(self):
-        """GET /admin/settings/system: All items in the collection"""
-        # url('admin_settings_system')
         c.active = 'system'
 
         defaults = Setting.get_app_settings()
@@ -489,10 +433,8 @@ class SettingsController(BaseController):
             encoding="UTF-8",
             force_defaults=False)
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def settings_system_update(self):
-        """GET /admin/settings/system/updates: All items in the collection"""
-        # url('admin_settings_system_update')
         import json
         import urllib2
         from kallithea.lib.verlib import NormalizedVersion
@@ -503,7 +445,7 @@ class SettingsController(BaseController):
         _update_url = defaults.get('update_url', '')
         _update_url = "" # FIXME: disabled
 
-        _err = lambda s: '<div style="color:#ff8888; padding:4px 0px">%s</div>' % (s)
+        _err = lambda s: '<div class="alert alert-danger">%s</div>' % (s)
         try:
             import kallithea
             ver = kallithea.__version__

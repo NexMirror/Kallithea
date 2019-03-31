@@ -20,10 +20,10 @@ virtualenv -p python2 "$venv"
 
 echo "Install/verify tools needed for building and uploading stuff"
 pip install --upgrade -e .
-pip install --upgrade Sphinx Sphinx-PyPI-upload
+pip install --upgrade -r dev_requirements.txt twine
 
 echo "Cleanup and update copyrights ... and clean checkout"
-scripts/whitespacecleanup.sh
+scripts/run-all-cleanup
 scripts/update-copyrights.py
 hg up -cr .
 
@@ -32,8 +32,8 @@ rm -rf build dist
 hg archive build
 cd build
 
-echo "Check MANIFEST.in"
-sed -e 's/[^ ]*[ ]*\([^ ]*\).*/\1/g' MANIFEST.in | grep -v '^node_modules/bootstrap\|^kallithea/public/css/style.css' | xargs ls -lad
+echo "Check that each entry in MANIFEST.in match something"
+sed -e 's/[^ ]*[ ]*\([^ ]*\).*/\1/g' MANIFEST.in | xargs ls -lad
 
 echo "Build dist"
 python2 setup.py compile_catalog
@@ -47,10 +47,13 @@ ls -l $(pwd)/dist/$namerel.tar.gz
 echo "Releasing Kallithea $version in directory $namerel"
 
 echo "Verify dist file content"
-! tar tf dist/Kallithea-$version.tar.gz | grep "$namerel/node_modules/bootstrap/\$"
+diff -u <((hg mani | grep -v '^\.hg') | LANG=C sort) <(tar tf dist/Kallithea-$version.tar.gz | sed "s|^$namerel/||" | grep . | grep -v '^kallithea/i18n/.*/LC_MESSAGES/kallithea.mo$\|^Kallithea.egg-info/\|^PKG-INFO$\|/$' | LANG=C sort)
 
 echo "Verify docs build"
-python2 setup.py build_sphinx # not used yet ... but we want to make sure it builds
+python2 setup.py build_sphinx # the results are not actually used, but we want to make sure it builds
+
+echo "Shortlog for inclusion in the release announcement"
+scripts/shortlog.py "only('.', branch('stable') & tagged() & public() & not '.')"
 
 cat - << EOT
 
@@ -69,17 +72,11 @@ echo -n "Enter \"pypi\" to upload Kallithea $version to pypi: "
 read answer
 [ "$answer" = "pypi" ]
 
-echo "Upload docs to pypi"
-# See https://wiki.python.org/moin/PyPiDocumentationHosting
-python2 setup.py build_sphinx upload_sphinx
-xdg-open http://packages.python.org/Kallithea/installation.html
-
 echo "Rebuild readthedocs for docs.kallithea-scm.org"
 xdg-open https://readthedocs.org/projects/kallithea/
 curl -X POST http://readthedocs.org/build/kallithea
 xdg-open https://readthedocs.org/builds/kallithea/
 xdg-open http://docs.kallithea-scm.org/en/latest/ # or whatever the branch is
 
-extraargs=${EMAIL:+--identity=$EMAIL}
-python2 setup.py sdist upload --sign $extraargs
+twine upload dist/*
 xdg-open https://pypi.python.org/pypi/Kallithea

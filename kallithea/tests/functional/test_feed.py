@@ -1,4 +1,4 @@
-from kallithea.tests import *
+from kallithea.tests.base import *
 
 class TestFeedController(TestController):
 
@@ -6,8 +6,6 @@ class TestFeedController(TestController):
         self.log_user()
         response = self.app.get(url(controller='feed', action='rss',
                                     repo_name=HG_REPO))
-
-
 
         assert response.content_type == "application/rss+xml"
         assert """<rss version="2.0">""" in response

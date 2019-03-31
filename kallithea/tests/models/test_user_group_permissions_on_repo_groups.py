@@ -17,7 +17,7 @@ _get_repo_perms = None
 _get_group_perms = None
 
 
-def permissions_setup_func(group_name='g0', perm='group.read', recursive='all'):
+def permissions_setup_func(group_name=u'g0', perm='group.read', recursive='all'):
     """
     Resets all permissions to perm attribute
     """
@@ -44,7 +44,7 @@ def setup_module():
     Session().commit()
     test_u2_id = test_u2.user_id
 
-    gr1 = fixture.create_user_group('perms_group_1')
+    gr1 = fixture.create_user_group(u'perms_group_1')
     Session().commit()
     test_u2_gr_id = gr1.users_group_id
     UserGroupModel().add_user_to_group(gr1, user=test_u2_id)
@@ -58,45 +58,45 @@ def setup_module():
 
 def teardown_module():
     _destroy_project_tree(test_u2_id)
-    fixture.destroy_user_group('perms_group_1')
+    fixture.destroy_user_group(u'perms_group_1')
 
 
 def test_user_permissions_on_group_without_recursive_mode():
     # set permission to g0 non-recursive mode
     recursive = 'none'
-    group = 'g0'
+    group = u'g0'
     permissions_setup_func(group, 'group.write', recursive=recursive)
 
     items = [x for x in _get_repo_perms(group, recursive)]
     expected = 0
     assert len(items) == expected, ' %s != %s' % (len(items), expected)
     for name, perm in items:
-        yield check_tree_perms, name, perm, group, 'repository.read'
+        check_tree_perms(name, perm, group, 'repository.read')
 
     items = [x for x in _get_group_perms(group, recursive)]
     expected = 1
     assert len(items) == expected, ' %s != %s' % (len(items), expected)
     for name, perm in items:
-        yield check_tree_perms, name, perm, group, 'group.write'
+        check_tree_perms(name, perm, group, 'group.write')
 
 
 def test_user_permissions_on_group_without_recursive_mode_subgroup():
     # set permission to g0 non-recursive mode
     recursive = 'none'
-    group = 'g0/g0_1'
+    group = u'g0/g0_1'
     permissions_setup_func(group, 'group.write', recursive=recursive)
 
     items = [x for x in _get_repo_perms(group, recursive)]
     expected = 0
     assert len(items) == expected, ' %s != %s' % (len(items), expected)
     for name, perm in items:
-        yield check_tree_perms, name, perm, group, 'repository.read'
+        check_tree_perms(name, perm, group, 'repository.read')
 
     items = [x for x in _get_group_perms(group, recursive)]
     expected = 1
     assert len(items) == expected, ' %s != %s' % (len(items), expected)
     for name, perm in items:
-        yield check_tree_perms, name, perm, group, 'group.write'
+        check_tree_perms(name, perm, group, 'group.write')
 
 
 def test_user_permissions_on_group_with_recursive_mode():
@@ -104,7 +104,7 @@ def test_user_permissions_on_group_with_recursive_mode():
     # set permission to g0 recursive mode, all children including
     # other repos and groups should have this permission now set !
     recursive = 'all'
-    group = 'g0'
+    group = u'g0'
     permissions_setup_func(group, 'group.write', recursive=recursive)
 
     repo_items = [x for x in _get_repo_perms(group, recursive)]
@@ -112,16 +112,16 @@ def test_user_permissions_on_group_with_recursive_mode():
     _check_expected_count(items, repo_items, expected_count(group, True))
 
     for name, perm in repo_items:
-        yield check_tree_perms, name, perm, group, 'repository.write'
+        check_tree_perms(name, perm, group, 'repository.write')
 
     for name, perm in items:
-        yield check_tree_perms, name, perm, group, 'group.write'
+        check_tree_perms(name, perm, group, 'group.write')
 
 
 def test_user_permissions_on_group_with_recursive_mode_inner_group():
     ## set permission to g0_3 group to none
     recursive = 'all'
-    group = 'g0/g0_3'
+    group = u'g0/g0_3'
     permissions_setup_func(group, 'group.none', recursive=recursive)
 
     repo_items = [x for x in _get_repo_perms(group, recursive)]
@@ -129,16 +129,16 @@ def test_user_permissions_on_group_with_recursive_mode_inner_group():
     _check_expected_count(items, repo_items, expected_count(group, True))
 
     for name, perm in repo_items:
-        yield check_tree_perms, name, perm, group, 'repository.none'
+        check_tree_perms(name, perm, group, 'repository.none')
 
     for name, perm in items:
-        yield check_tree_perms, name, perm, group, 'group.none'
+        check_tree_perms(name, perm, group, 'group.none')
 
 
 def test_user_permissions_on_group_with_recursive_mode_deepest():
     ## set permission to g0_3 group to none
     recursive = 'all'
-    group = 'g0/g0_1/g0_1_1'
+    group = u'g0/g0_1/g0_1_1'
     permissions_setup_func(group, 'group.write', recursive=recursive)
 
     repo_items = [x for x in _get_repo_perms(group, recursive)]
@@ -146,16 +146,16 @@ def test_user_permissions_on_group_with_recursive_mode_deepest():
     _check_expected_count(items, repo_items, expected_count(group, True))
 
     for name, perm in repo_items:
-        yield check_tree_perms, name, perm, group, 'repository.write'
+        check_tree_perms(name, perm, group, 'repository.write')
 
     for name, perm in items:
-        yield check_tree_perms, name, perm, group, 'group.write'
+        check_tree_perms(name, perm, group, 'group.write')
 
 
 def test_user_permissions_on_group_with_recursive_mode_only_with_repos():
     ## set permission to g0_3 group to none
     recursive = 'all'
-    group = 'g0/g0_2'
+    group = u'g0/g0_2'
     permissions_setup_func(group, 'group.admin', recursive=recursive)
 
     repo_items = [x for x in _get_repo_perms(group, recursive)]
@@ -163,16 +163,16 @@ def test_user_permissions_on_group_with_recursive_mode_only_with_repos():
     _check_expected_count(items, repo_items, expected_count(group, True))
 
     for name, perm in repo_items:
-        yield check_tree_perms, name, perm, group, 'repository.admin'
+        check_tree_perms(name, perm, group, 'repository.admin')
 
     for name, perm in items:
-        yield check_tree_perms, name, perm, group, 'group.admin'
+        check_tree_perms(name, perm, group, 'group.admin')
 
 
 def test_user_permissions_on_group_with_recursive_mode_on_repos():
     # set permission to g0/g0_1 with recursive mode on just repositories
     recursive = 'repos'
-    group = 'g0/g0_1'
+    group = u'g0/g0_1'
     perm = 'group.write'
     permissions_setup_func(group, perm, recursive=recursive)
 
@@ -181,7 +181,7 @@ def test_user_permissions_on_group_with_recursive_mode_on_repos():
     _check_expected_count(items, repo_items, expected_count(group, True))
 
     for name, perm in repo_items:
-        yield check_tree_perms, name, perm, group, 'repository.write'
+        check_tree_perms(name, perm, group, 'repository.write')
 
     for name, perm in items:
         # permission is set with repos only mode, but we also change the permission
@@ -190,13 +190,13 @@ def test_user_permissions_on_group_with_recursive_mode_on_repos():
         old_perm = 'group.read'
         if name == group:
             old_perm = perm
-        yield check_tree_perms, name, perm, group, old_perm
+        check_tree_perms(name, perm, group, old_perm)
 
 
 def test_user_permissions_on_group_with_recursive_mode_on_repo_groups():
     # set permission to g0/g0_1 with recursive mode on just repository groups
     recursive = 'groups'
-    group = 'g0/g0_1'
+    group = u'g0/g0_1'
     perm = 'group.none'
     permissions_setup_func(group, perm, recursive=recursive)
 
@@ -205,7 +205,7 @@ def test_user_permissions_on_group_with_recursive_mode_on_repo_groups():
     _check_expected_count(items, repo_items, expected_count(group, True))
 
     for name, perm in repo_items:
-        yield check_tree_perms, name, perm, group, 'repository.read'
+        check_tree_perms(name, perm, group, 'repository.read')
 
     for name, perm in items:
-        yield check_tree_perms, name, perm, group, 'group.none'
+        check_tree_perms(name, perm, group, 'group.none')

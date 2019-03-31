@@ -315,18 +315,8 @@ class FileNode(Node):
 
     def get_mimetype(self):
         """
-        Mimetype is calculated based on the file's content. If ``_mimetype``
-        attribute is available, it will be returned (backends which store
-        mimetypes or can easily recognize them, should set this private
-        attribute to indicate that type should *NOT* be calculated).
+        Mimetype is calculated based on the file's content.
         """
-        if hasattr(self, '_mimetype'):
-            if (isinstance(self._mimetype, (tuple, list,)) and
-                len(self._mimetype) == 2):
-                return self._mimetype
-            else:
-                raise NodeError('given _mimetype attribute must be an 2 '
-                                'element list or tuple')
 
         mtype, encoding = mimetypes.guess_type(self.name)
 
@@ -338,7 +328,7 @@ class FileNode(Node):
                 mtype = 'text/plain'
                 encoding = None
 
-                #try with pygments
+                # try with pygments
                 try:
                     from pygments import lexers
                     mt = lexers.get_lexer_for_filename(self.name).mimetypes
@@ -604,26 +594,18 @@ class SubModuleNode(Node):
     is_binary = False
     size = 0
 
-    def __init__(self, name, url=None, changeset=None, alias=None):
+    def __init__(self, name, url, changeset=None, alias=None):
         self.path = name
         self.kind = NodeKind.SUBMODULE
         self.alias = alias
         # we have to use emptyChangeset here since this can point to svn/git/hg
         # submodules we cannot get from repository
         self.changeset = EmptyChangeset(str(changeset), alias=alias)
-        self.url = url or self._extract_submodule_url()
+        self.url = url
 
     def __repr__(self):
         return '<%s %r @ %s>' % (self.__class__.__name__, self.path,
                                  getattr(self.changeset, 'short_id', ''))
-
-    def _extract_submodule_url(self):
-        if self.alias == 'git':
-            #TODO: find a way to parse gits submodule file and extract the
-            # linking URL
-            return self.path
-        if self.alias == 'hg':
-            return self.path
 
     @LazyProperty
     def name(self):

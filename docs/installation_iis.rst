@@ -39,7 +39,7 @@ will be served from the root of its own website. The changes to serve it in its
 own virtual folder will be noted where appropriate.
 
 Application pool
-................
+^^^^^^^^^^^^^^^^
 
 Make sure that there is a unique application pool for the Kallithea application
 with an identity that has read access to the Kallithea distribution.
@@ -55,11 +55,11 @@ to run on the website and neither will Kallithea.
     as long as the Kallithea requirements are met by the existing pool.
 
 ISAPI handler
-.............
+^^^^^^^^^^^^^
 
 The ISAPI handler can be generated using::
 
-    paster install-iis my.ini --virtualdir=/
+    kallithea-cli iis-install -c my.ini --virtualdir=/
 
 This will generate a ``dispatch.py`` file in the current directory that contains
 the necessary components to finalize an installation into IIS. Once this file
@@ -74,12 +74,12 @@ This accomplishes two things: generating an ISAPI compliant DLL file,
 
 The ISAPI handler is registered to all file extensions, so it will automatically
 be the one handling all requests to the specified virtual directory. When the website starts
-the ISAPI handler, it will start a thread pool managed wrapper around the paster
+the ISAPI handler, it will start a thread pool managed wrapper around the
 middleware WSGI handler that Kallithea runs within and each HTTP request to the
 site will be processed through this logic henceforth.
 
 Authentication with Kallithea using IIS authentication modules
-..............................................................
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The recommended way to handle authentication with Kallithea using IIS is to let
 IIS handle all the authentication and just pass it to Kallithea.
@@ -111,7 +111,7 @@ Troubleshooting
 ---------------
 
 Typically, any issues in this setup will either be entirely in IIS or entirely
-in Kallithea (or Kallithea's WSGI/paster middleware). Consequently, two
+in Kallithea (or Kallithea's WSGI middleware). Consequently, two
 different options for finding issues exist: IIS' failed request tracking which
 is great at finding issues until they exist inside Kallithea, at which point the
 ISAPI-WSGI wrapper above uses ``win32traceutil``, which is part of ``pywin32``.

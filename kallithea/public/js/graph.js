@@ -28,11 +28,11 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 	// row_id_prefix is prefix that is applied to get row id's
 	this.canvas = document.getElementById(canvas_id);
 	var content = document.getElementById(content_id);
-	
+
 	if (!document.createElement("canvas").getContext)
 		this.canvas = window.G_vmlCanvasManager.initElement(this.canvas);
 	if (!this.canvas) { // canvas creation did for some reason fail - fail silently
-		this.render = function(data,canvasWidth) {};
+		this.render = function(data) {};
 		return;
 	}
 	this.ctx = this.canvas.getContext('2d');
@@ -62,8 +62,9 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 		this.ctx.fillStyle = s;
 	}
 
-	this.render = function(data,canvasWidth) {
+	this.render = function(data) {
 		var idx = 1;
+		var canvasWidth = $(this.canvas).parent().width();
 
 		this.canvas.setAttribute('width',canvasWidth);
 		this.canvas.setAttribute('height',content.clientHeight);
@@ -100,15 +101,22 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 			}
 			var next = document.getElementById(row_id_prefix+(idx+1));
 			var extra = 0;
-			
+
 			cur = data[i];
 			node = cur[0];
 			in_l = cur[1];
 			closing = cur[2];
 			obsolete_node = cur[3];
+			bumped_node = cur[4];
+			divergent_node = cur[5];
+			extinct_node = cur[6];
+			unstable_node = cur[7];
 
-			var rowY = row.offsetTop + row.offsetHeight/2;
-			var nextY = (next == null) ? rowY + row.offsetHeight/2 : next.offsetTop + next.offsetHeight/2;
+			// center dots on the first element in a td (not necessarily the first one, but there must be one)
+			var firstincell = $(row).find('td>*:visible')[0];
+			var nextFirstincell = $(next).find('td>*:visible')[0];
+			var rowY = Math.floor(row.offsetTop + firstincell.offsetTop + firstincell.offsetHeight/2);
+			var nextY = Math.floor((next == null) ? rowY + row.offsetHeight/2 : next.offsetTop + nextFirstincell.offsetTop + nextFirstincell.offsetHeight/2);
 
 			for (var j in in_l) {
 				line = in_l[j];
@@ -116,7 +124,7 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 				end = line[1];
 				color = line[2];
 				obsolete_line = line[3];
-				
+
 				x = Math.floor(base_x - box_size * start);
 
 				// figure out if this is a dead-end;
@@ -157,7 +165,7 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 				{
 					this.setColor(color, 0.0, 0.65);
 				}
-				
+
 				this.ctx.lineWidth=this.line_width;
 				this.ctx.beginPath();
 				if (obsolete_line)
@@ -183,14 +191,17 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 				this.ctx.stroke();
 				this.ctx.setLineDash([]); // reset the dashed line, if any
 			}
-			
+
 			column = node[0];
 			color = node[1];
-			
-			x = Math.floor(base_x - box_size * column);
-		
-			this.setColor(color, 0.25, 0.75);
 
+			x = Math.floor(base_x - box_size * column);
+
+			this.setColor(color, 0.25, 0.75);
+			if(unstable_node)
+			{
+				this.ctx.fillStyle = 'rgb(255, 0, 0)';
+			}
 
 			r = this.dot_radius
 			if (obsolete_node)
@@ -216,7 +227,7 @@ function BranchRenderer(canvas_id, content_id, row_id_prefix) {
 
 			idx++;
 		}
-				
+
 	}
 
 }

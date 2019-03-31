@@ -12,7 +12,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from kallithea.tests import *
+from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
 from kallithea.model.db import Repository
 from kallithea.model.repo import RepoModel
@@ -24,25 +24,31 @@ fixture = Fixture()
 
 class TestSummaryController(TestController):
 
-    def test_index(self):
+    def test_index_hg(self):
         self.log_user()
         ID = Repository.get_by_repo_name(HG_REPO).repo_id
         response = self.app.get(url(controller='summary',
                                     action='index',
                                     repo_name=HG_REPO))
 
-        #repo type
+        # repo type
         response.mustcontain(
-            """<span class="repotag">hg"""
+            """<span class="label label-repo" title="Mercurial repository">hg"""
         )
-        #public/private
+        # public/private
         response.mustcontain(
             """<i class="icon-globe">"""
         )
 
         # clone url...
-        response.mustcontain('''id="clone_url" readonly="readonly" value="http://%s@localhost:80/%s"''' % (TEST_USER_ADMIN_LOGIN, HG_REPO))
-        response.mustcontain('''id="clone_url_id" readonly="readonly" value="http://%s@localhost:80/_%s"''' % (TEST_USER_ADMIN_LOGIN, ID))
+        response.mustcontain(
+            '''<input class="form-control" size="80" readonly="readonly" value="http://%s@localhost:80/%s"/>''' %
+            (TEST_USER_ADMIN_LOGIN, HG_REPO)
+        )
+        response.mustcontain(
+            '''<input class="form-control" size="80" readonly="readonly" value="http://%s@localhost:80/_%s"/>''' %
+            (TEST_USER_ADMIN_LOGIN, ID)
+        )
 
     def test_index_git(self):
         self.log_user()
@@ -51,18 +57,23 @@ class TestSummaryController(TestController):
                                     action='index',
                                     repo_name=GIT_REPO))
 
-        #repo type
+        # repo type
         response.mustcontain(
-            """<span class="repotag">git"""
+            """<span class="label label-repo" title="Git repository">git"""
         )
-        #public/private
+        # public/private
         response.mustcontain(
             """<i class="icon-globe">"""
         )
 
         # clone url...
-        response.mustcontain('''id="clone_url" readonly="readonly" value="http://%s@localhost:80/%s"''' % (TEST_USER_ADMIN_LOGIN, GIT_REPO))
-        response.mustcontain('''id="clone_url_id" readonly="readonly" value="http://%s@localhost:80/_%s"''' % (TEST_USER_ADMIN_LOGIN, ID))
+        response.mustcontain(
+            '''<input class="form-control" size="80" readonly="readonly" value="http://%s@localhost:80/%s"/>''' %
+            (TEST_USER_ADMIN_LOGIN, GIT_REPO))
+        response.mustcontain(
+            '''<input class="form-control" size="80" readonly="readonly" value="http://%s@localhost:80/_%s"/>''' %
+            (TEST_USER_ADMIN_LOGIN, ID)
+        )
 
     def test_index_by_id_hg(self):
         self.log_user()
@@ -71,18 +82,18 @@ class TestSummaryController(TestController):
                                     action='index',
                                     repo_name='_%s' % ID))
 
-        #repo type
+        # repo type
         response.mustcontain(
-            """<span class="repotag">hg"""
+            """<span class="label label-repo" title="Mercurial repository">hg"""
         )
-        #public/private
+        # public/private
         response.mustcontain(
             """<i class="icon-globe">"""
         )
 
     def test_index_by_repo_having_id_path_in_name_hg(self):
         self.log_user()
-        fixture.create_repo(name='repo_1')
+        fixture.create_repo(name=u'repo_1')
         response = self.app.get(url(controller='summary',
                                     action='index',
                                     repo_name='repo_1'))
@@ -90,7 +101,7 @@ class TestSummaryController(TestController):
         try:
             response.mustcontain("repo_1")
         finally:
-            RepoModel().delete(Repository.get_by_repo_name('repo_1'))
+            RepoModel().delete(Repository.get_by_repo_name(u'repo_1'))
             Session().commit()
 
     def test_index_by_id_git(self):
@@ -100,11 +111,11 @@ class TestSummaryController(TestController):
                                     action='index',
                                     repo_name='_%s' % ID))
 
-        #repo type
+        # repo type
         response.mustcontain(
-            """<span class="repotag">git"""
+            """<span class="label label-repo" title="Git repository">git"""
         )
-        #public/private
+        # public/private
         response.mustcontain(
             """<i class="icon-globe">"""
         )
@@ -112,15 +123,17 @@ class TestSummaryController(TestController):
     def _enable_stats(self, repo):
         r = Repository.get_by_repo_name(repo)
         r.enable_statistics = True
-        Session().add(r)
         Session().commit()
 
     def test_index_trending(self):
         self.log_user()
-        #codes stats
+        # codes stats
         self._enable_stats(HG_REPO)
 
         ScmModel().mark_for_invalidation(HG_REPO)
+        # generate statistics first
+        response = self.app.get(url(controller='summary', action='statistics',
+                                    repo_name=HG_REPO))
         response = self.app.get(url(controller='summary', action='index',
                                     repo_name=HG_REPO))
         response.mustcontain(
@@ -133,12 +146,12 @@ class TestSummaryController(TestController):
             '["js", {"count": 1, "desc": ["Javascript"]}], '
             '["cfg", {"count": 1, "desc": ["Ini"]}], '
             '["ini", {"count": 1, "desc": ["Ini"]}], '
-            '["html", {"count": 1, "desc": ["EvoqueHtml", "Html"]}]];'
+            '["html", {"count": 1, "desc": ["EvoqueHtml", "Html"]}]]'
         )
 
     def test_index_statistics(self):
         self.log_user()
-        #codes stats
+        # codes stats
         self._enable_stats(HG_REPO)
 
         ScmModel().mark_for_invalidation(HG_REPO)
@@ -147,10 +160,13 @@ class TestSummaryController(TestController):
 
     def test_index_trending_git(self):
         self.log_user()
-        #codes stats
+        # codes stats
         self._enable_stats(GIT_REPO)
 
         ScmModel().mark_for_invalidation(GIT_REPO)
+        # generate statistics first
+        response = self.app.get(url(controller='summary', action='statistics',
+                                    repo_name=GIT_REPO))
         response = self.app.get(url(controller='summary', action='index',
                                     repo_name=GIT_REPO))
         response.mustcontain(
@@ -163,12 +179,12 @@ class TestSummaryController(TestController):
             '["cfg", {"count": 1, "desc": ["Ini"]}], '
             '["ini", {"count": 1, "desc": ["Ini"]}], '
             '["html", {"count": 1, "desc": ["EvoqueHtml", "Html"]}], '
-            '["bat", {"count": 1, "desc": ["Batch"]}]];'
+            '["bat", {"count": 1, "desc": ["Batch"]}]]'
         )
 
     def test_index_statistics_git(self):
         self.log_user()
-        #codes stats
+        # codes stats
         self._enable_stats(GIT_REPO)
 
         ScmModel().mark_for_invalidation(GIT_REPO)

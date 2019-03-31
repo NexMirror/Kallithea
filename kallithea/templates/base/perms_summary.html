@@ -4,38 +4,39 @@
 ##    ${p.perms_summary(c.perm_user.permissions)}
 
 <%def name="perms_summary(permissions, show_all=False, actions=True)">
-<div id="perms" class="table">
+<div id="perms">
      %for section in sorted(permissions.keys()):
         <div class="perms_section_head">
-            ${section.replace("_"," ").capitalize()}
+            <h4>${section.replace("_"," ").capitalize()}</h4>
             %if section != 'global':
-                <div style="float: right">
+              <div class="pull-right checkbox">
                 ${_('Show')}:
-                ${h.checkbox('perms_filter_none_%s' % section, 'none', 'checked', class_='perm_filter filter_%s' % section, section=section, perm_type='none')} <label for="${'perms_filter_none_%s' % section}"><span class="perm_tag none">${_('None')}</span></label>
-                ${h.checkbox('perms_filter_read_%s' % section, 'read', 'checked', class_='perm_filter filter_%s' % section, section=section, perm_type='read')} <label for="${'perms_filter_read_%s' % section}"><span class="perm_tag read">${_('Read')}</span></label>
-                ${h.checkbox('perms_filter_write_%s' % section, 'write', 'checked', class_='perm_filter filter_%s' % section, section=section, perm_type='write')} <label for="${'perms_filter_write_%s' % section}"> <span class="perm_tag write">${_('Write')}</span></label>
-                ${h.checkbox('perms_filter_admin_%s' % section, 'admin', 'checked', class_='perm_filter filter_%s' % section, section=section, perm_type='admin')} <label for="${'perms_filter_admin_%s' % section}"><span class="perm_tag admin">${_('Admin')}</span></label>
-                </div>
+                <label>${h.checkbox('perms_filter_none_%s' % section, 'none', 'checked', class_='perm_filter filter_%s' % section, **{'data-section':section, 'data-perm_type':'none'})}<span class="label label-none">${_('None')}</span></label>
+                <label>${h.checkbox('perms_filter_read_%s' % section, 'read', 'checked', class_='perm_filter filter_%s' % section, **{'data-section':section, 'data-perm_type':'read'})}<span class="label label-read">${_('Read')}</span></label>
+                <label>${h.checkbox('perms_filter_write_%s' % section, 'write', 'checked', class_='perm_filter filter_%s' % section, **{'data-section':section, 'data-perm_type':'write'})}<span class="label label-write">${_('Write')}</span></label>
+                <label>${h.checkbox('perms_filter_admin_%s' % section, 'admin', 'checked', class_='perm_filter filter_%s' % section, **{'data-section':section, 'data-perm_type':'admin'})}<span class="label label-admin">${_('Admin')}</span></label>
+              </div>
             %endif
         </div>
         %if not permissions[section]:
-            <span class="empty_data">${_('No permissions defined yet')}</span>
+            <span class="text-muted">${_('No permissions defined yet')}</span>
         %else:
-        <div id='tbl_list_wrap_${section}' class="yui-skin-sam">
-         <table id="tbl_list_${section}">
+        <div id='tbl_list_wrap_${section}'>
+         <table id="tbl_list_${section}" class="table">
           ## global permission box
           %if section == 'global':
               <thead>
-                  <tr>
-                  <th colspan="2" class="left">${_('Permission')}</th>
+                <tr>
+                  <th class="left col-xs-9">${_('Permission')}</th>
                   %if actions:
-                  <th class="left">${_('Edit Permission')}</th>
+                  <th class="left col-xs-3">${_('Edit Permission')}</th>
                   %endif
+                </tr>
               </thead>
               <tbody>
               %for k in permissions[section]:
                   <tr>
-                      <td colspan="2">
+                      <td>
                           ${h.get_permission_name(k)}
                       </td>
                       %if actions:
@@ -49,12 +50,13 @@
           %else:
              ## none/read/write/admin permissions on groups/repos etc
               <thead>
-                  <tr>
-                  <th class="left">${_('Name')}</th>
-                  <th class="left">${_('Permission')}</th>
+                <tr>
+                  <th class="left col-xs-7">${_('Name')}</th>
+                  <th class="left col-xs-2">${_('Permission')}</th>
                   %if actions:
-                  <th class="left">${_('Edit Permission')}</th>
+                  <th class="left col-xs-3">${_('Edit Permission')}</th>
                   %endif
+                </tr>
               </thead>
               <tbody class="section_${section}">
               %for k, section_perm in sorted(permissions[section].items(), key=lambda s: {'none':0, 'read':1,'write':2,'admin':3}.get(s[1].split('.')[-1])):
@@ -71,7 +73,7 @@
                           %endif
                       </td>
                       <td>
-                           <span class="perm_tag ${section_perm.split('.')[-1]}">${section_perm}</span>
+                           <span class="label label-${section_perm.split('.')[-1]}">${section_perm}</span>
                       </td>
                       %if actions:
                       <td>
@@ -87,7 +89,7 @@
                   </tr>
                   %endif
               %endfor
-              <tr id="empty_${section}" style="display: none"><td colspan="6">${_('No permission defined')}</td></tr>
+              <tr id="empty_${section}" style="display: none"><td colspan="${3 if actions else 2}">${_('No permission defined')}</td></tr>
               </tbody>
           %endif
          </table>
@@ -107,10 +109,10 @@
             }
         }
         var update_show = function($checkbox){
-            var section = $checkbox.attr('section');
+            var section = $checkbox.data('section');
 
             var elems = $('.filter_' + section).each(function(el){
-                var perm_type = $checkbox.attr('perm_type');
+                var perm_type = $checkbox.data('perm_type');
                 var checked = $checkbox.prop('checked');
                 if(checked){
                     $('.'+section+'_'+perm_type).show();

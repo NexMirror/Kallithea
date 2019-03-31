@@ -23,13 +23,12 @@
 </%block>
 
 <%def name="main()">
-<div class="box">
-    <!-- box / title -->
-    <div class="title">
+<div class="panel panel-primary">
+    <div class="panel-heading clearfix">
         ${self.breadcrumbs()}
     </div>
 
-    <div class="table">
+    <div class="panel-body">
         <div id="edit_error" style="display: none" class="flash_msg">
             <div class="alert alert-dismissable alert-warning">
               <button type="button" class="close" data-dismiss="alert" aria-hidden="true"><i class="icon-cancel-circled"></i></button>
@@ -46,17 +45,16 @@
         <div id="files_data">
           ${h.form(h.url('edit_gist', gist_id=c.gist.gist_access_id), method='post', id='eform')}
             <div>
-                <div class="gravatar">
-                  ${h.gravatar(c.authuser.email, size=32)}
-                </div>
                 <input type="hidden" value="${c.file_changeset.raw_id}" name="parent_hash">
-                <textarea style="resize:vertical; width:400px;border: 1px solid #ccc;border-radius: 3px;"
+                <textarea class="form-control"
                           id="description" name="description"
                           placeholder="${_('Gist description ...')}">${c.gist.gist_description}</textarea>
-                <div style="padding:0px 0px 0px 42px">
-                    <label for='lifetime'>${_('Gist lifetime')}</label>
-                    ${h.select('lifetime', '0', c.lifetime_options)}
-                    <span class="" style="color: #AAA">
+                <div>
+                    <label>
+                        ${_('Gist lifetime')}
+                        ${h.select('lifetime', '0', c.lifetime_options)}
+                    </label>
+                    <span class="text-muted">
                      %if c.gist.gist_expires == -1:
                       ${_('Expires')}: ${_('Never')}
                      %else:
@@ -67,83 +65,85 @@
             </div>
 
             % for cnt, file in enumerate(c.files):
-                <div id="body" class="codeblock" style="margin-bottom: 4px">
-                    <div style="padding: 10px 10px 10px 26px;color:#666666">
+                <div id="body" class="panel panel-default form-inline">
+                    <div class="panel-heading">
                         <input type="hidden" value="${h.safe_unicode(file.path)}" name="org_files">
-                        <input id="filename_${h.FID('f',file.path)}" name="files" size="30" type="text" value="${h.safe_unicode(file.path)}">
-                        <select id="mimetype_${h.FID('f',file.path)}" name="mimetypes"/>
+                        <input class="form-control" id="filename_${h.FID('f',file.path)}" name="files" size="30" type="text" value="${h.safe_unicode(file.path)}">
+                        <select class="form-control" id="mimetype_${h.FID('f',file.path)}" name="mimetypes"></select>
                     </div>
-                    <div class="editor_container">
-                        <pre id="editor_pre"></pre>
-                        <textarea id="editor_${h.FID('f',file.path)}" name="contents" style="display:none">${file.content}</textarea>
+                    <div class="panel-body no-padding">
+                        <div id="editor_container">
+                            <textarea id="editor_${h.FID('f',file.path)}" name="contents" style="display:none">${file.content}</textarea>
+                        </div>
                     </div>
                 </div>
 
                 ## dynamic edit box.
                 <script type="text/javascript">
-                var myCodeMirror = initCodeMirror("editor_${h.FID('f',file.path)}", "${request.script_name}", '');
+                    $(document).ready(function(){
+                        var myCodeMirror = initCodeMirror(${h.js('editor_' + h.FID('f',file.path))}, ${h.jshtml(request.script_name)}, '');
 
-                //inject new modes
-                var $modes_select = $('#mimetype_${h.FID('f',file.path)}');
-                $modes_select.each(function(){
-                    var modes_select = this;
-                    var index = 1;
-                    for(var i=0;i<CodeMirror.modeInfo.length;i++) {
-                        var m = CodeMirror.modeInfo[i];
-                        var opt = new Option(m.name, m.mime);
-                        $(opt).attr('mode', m.mode);
-                        if (m.mime == 'text/plain') {
-                            // default plain text
-                            $(opt).prop('selected', true);
-                            modes_select.options[0] = opt;
-                        } else {
-                            modes_select.options[index++] = opt;
-                        }
-                    }
-                });
+                        //inject new modes
+                        var $mimetype_select = $(${h.js('#mimetype_' + h.FID('f',file.path))});
+                        $mimetype_select.each(function(){
+                            var modes_select = this;
+                            var index = 1;
+                            for(var i=0;i<CodeMirror.modeInfo.length;i++) {
+                                var m = CodeMirror.modeInfo[i];
+                                var opt = new Option(m.name, m.mime);
+                                $(opt).attr('mode', m.mode);
+                                if (m.mime == 'text/plain') {
+                                    // default plain text
+                                    $(opt).prop('selected', true);
+                                    modes_select.options[0] = opt;
+                                } else {
+                                    modes_select.options[index++] = opt;
+                                }
+                            }
+                        });
 
-                var $filename = $('#filename_${h.FID('f',file.path)}');
-                // on select change set new mode
-                $modes_select.change(function(e){
-                    var selected = e.currentTarget;
-                    var node = selected.options[selected.selectedIndex];
-                    var detected_mode = CodeMirror.findModeByMIME(node.value);
-                    setCodeMirrorMode(myCodeMirror, detected_mode);
+                        var $filename_input = $(${h.js('#filename_' + h.FID('f',file.path))});
+                        // on select change set new mode
+                        $mimetype_select.change(function(e){
+                            var selected = e.currentTarget;
+                            var node = selected.options[selected.selectedIndex];
+                            var detected_mode = CodeMirror.findModeByMIME(node.value);
+                            setCodeMirrorMode(myCodeMirror, detected_mode);
 
-                    var proposed_ext = CodeMirror.findExtensionByMode(detected_mode);
-                    var file_data = CodeMirror.getFilenameAndExt($filename.val());
-                    var filename = file_data['filename'] || 'filename1';
-                    $filename.val(filename + '.' + proposed_ext);
-                });
+                            var proposed_ext = CodeMirror.findExtensionByMode(detected_mode);
+                            var file_data = CodeMirror.getFilenameAndExt($filename_input.val());
+                            var filename = file_data['filename'] || 'filename1';
+                            $filename_input.val(filename + '.' + proposed_ext);
+                        });
 
-                // on type the new filename set mode
-                $filename.keyup(function(e){
-                    var file_data = CodeMirror.getFilenameAndExt(this.value);
-                    if(file_data['ext'] != null){
-                        var detected_mode = CodeMirror.findModeByExtension(file_data['ext']) || CodeMirror.findModeByMIME('text/plain');
+                        // on type the new filename set mode
+                        $filename_input.keyup(function(e){
+                            var file_data = CodeMirror.getFilenameAndExt(this.value);
+                            if(file_data['ext'] != null){
+                                var detected_mode = CodeMirror.findModeByExtension(file_data['ext']) || CodeMirror.findModeByMIME('text/plain');
+
+                                if (detected_mode){
+                                    setCodeMirrorMode(myCodeMirror, detected_mode);
+                                    $mimetype_select.val(detected_mode.mime);
+                                }
+                            }
+                        });
+
+                        // set mode on page load
+                        var detected_mode = CodeMirror.findModeByExtension(${h.js(file.extension)});
 
                         if (detected_mode){
                             setCodeMirrorMode(myCodeMirror, detected_mode);
-                            $modes_select.val(detected_mode.mime);
+                            $mimetype_select.val(detected_mode.mime);
                         }
-                    }
-                });
-
-                // set mode on page load
-                var detected_mode = CodeMirror.findModeByExtension("${file.extension}");
-
-                if (detected_mode){
-                    setCodeMirrorMode(myCodeMirror, detected_mode);
-                    $modes_select.val(detected_mode.mime);
-                }
-
+                    });
                 </script>
 
             %endfor
 
-            <div style="padding-top: 5px">
-            ${h.submit('update',_('Update Gist'),class_="btn btn-mini btn-success")}
-            <a class="btn btn-mini" href="${h.url('gist', gist_id=c.gist.gist_access_id)}">${_('Cancel')}</a>
+            <div>
+            ${h.submit('update',_('Update Gist'),class_="btn btn-success")}
+            <a class="btn btn-default" href="${h.url('gist', gist_id=c.gist.gist_access_id)}">${_('Cancel')}</a>
             </div>
           ${h.end_form()}
           <script>
@@ -152,8 +152,8 @@
 
                   // check for newer version.
                   $.ajax({
-                    url: "${h.url('edit_gist_check_revision', gist_id=c.gist.gist_access_id)}",
-                    data: {'revision': '${c.file_changeset.raw_id}', '_authentication_token': _authentication_token},
+                    url: ${h.js(h.url('edit_gist_check_revision', gist_id=c.gist.gist_access_id))},
+                    data: {'revision': ${h.js(c.file_changeset.raw_id)}, '_authentication_token': _authentication_token},
                     dataType: 'json',
                     type: 'POST',
                     success: function(data) {

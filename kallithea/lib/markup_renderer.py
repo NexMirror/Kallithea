@@ -38,8 +38,9 @@ from kallithea.lib.utils2 import safe_unicode, MENTIONS_REGEX
 log = logging.getLogger(__name__)
 
 
-url_re = re.compile(r'''(\bhttps?://(?:[\da-zA-Z0-9@:.-]+)'''
-                    r'''(?:[/a-zA-Z0-9_=@#~&+%.,:;?!*()-]*[/a-zA-Z0-9_=@#~])?)''')
+url_re = re.compile(r'''\bhttps?://(?:[\da-zA-Z0-9@:.-]+)'''
+                    r'''(?:[/a-zA-Z0-9_=@#~&+%.,:;?!*()-]*[/a-zA-Z0-9_=@#~])?''')
+
 
 class MarkupRenderer(object):
     RESTRUCTUREDTEXT_DISALLOWED_DIRECTIVES = ['include', 'meta', 'raw']
@@ -48,7 +49,7 @@ class MarkupRenderer(object):
     RST_PAT = re.compile(r're?st', re.IGNORECASE)
     PLAIN_PAT = re.compile(r'readme', re.IGNORECASE)
 
-    def _detect_renderer(self, source, filename=None):
+    def _detect_renderer(self, source, filename):
         """
         runs detection of what renderer should be used for generating html
         from a markup language
@@ -59,16 +60,13 @@ class MarkupRenderer(object):
         :param filename:
         """
 
-        if MarkupRenderer.MARKDOWN_PAT.findall(filename):
-            detected_renderer = 'markdown'
-        elif MarkupRenderer.RST_PAT.findall(filename):
-            detected_renderer = 'rst'
-        elif MarkupRenderer.PLAIN_PAT.findall(filename):
-            detected_renderer = 'rst'
-        else:
-            detected_renderer = 'plain'
-
-        return getattr(MarkupRenderer, detected_renderer)
+        if self.MARKDOWN_PAT.findall(filename):
+            return self.markdown
+        elif self.RST_PAT.findall(filename):
+            return self.rst
+        elif self.PLAIN_PAT.findall(filename):
+            return self.rst
+        return self.plain
 
     @classmethod
     def _flavored_markdown(cls, text):
@@ -81,6 +79,7 @@ class MarkupRenderer(object):
 
         # Extract pre blocks.
         extractions = {}
+
         def pre_extraction_callback(matchobj):
             digest = md5(matchobj.group(0)).hexdigest()
             extractions[digest] = matchobj.group(0)
@@ -147,7 +146,7 @@ class MarkupRenderer(object):
             source = newline.join(source.splitlines())
 
         def url_func(match_obj):
-            url_full = match_obj.groups()[0]
+            url_full = match_obj.group(0)
             return '<a href="%(url)s">%(url)s</a>' % ({'url': url_full})
         source = url_re.sub(url_func, source)
         return '<br />' + source.replace("\n", '<br />')
@@ -175,7 +174,10 @@ class MarkupRenderer(object):
         try:
             if flavored:
                 source = cls._flavored_markdown(source)
-            return markdown_mod.markdown(source, ['codehilite', 'extra'])
+            return markdown_mod.markdown(
+                source,
+                extensions=['codehilite', 'extra'],
+                extension_configs={'codehilite': {'css_class': 'code-highlight'}})
         except Exception:
             log.error(traceback.format_exc())
             if safe:
@@ -217,10 +219,9 @@ class MarkupRenderer(object):
 
     @classmethod
     def rst_with_mentions(cls, source):
-        mention_pat = re.compile(MENTIONS_REGEX)
 
         def wrapp(match_obj):
             uname = match_obj.groups()[0]
             return '\ **@%(uname)s**\ ' % {'uname': uname}
-        mention_hl = mention_pat.sub(wrapp, source).strip()
+        mention_hl = MENTIONS_REGEX.sub(wrapp, source).strip()
         return cls.rst(mention_hl)

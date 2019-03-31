@@ -30,21 +30,20 @@ import logging
 import traceback
 import formencode.htmlfill
 
-from pylons import request, response, tmpl_context as c, url
-from pylons.controllers.util import redirect
-from pylons.i18n.translation import _
+from tg import request, response, tmpl_context as c
+from tg.i18n import ugettext as _
+from webob.exc import HTTPFound, HTTPNotFound, HTTPForbidden
 
+from kallithea.config.routing import url
 from kallithea.model.forms import GistForm
 from kallithea.model.gist import GistModel
 from kallithea.model.meta import Session
 from kallithea.model.db import Gist, User
 from kallithea.lib import helpers as h
-from kallithea.lib.base import BaseController, render
-from kallithea.lib.auth import LoginRequired, NotAnonymous
-from kallithea.lib.utils import jsonify
+from kallithea.lib.base import BaseController, render, jsonify
+from kallithea.lib.auth import LoginRequired
 from kallithea.lib.utils2 import safe_int, safe_unicode, time_to_datetime
-from kallithea.lib.helpers import Page
-from webob.exc import HTTPNotFound, HTTPForbidden
+from kallithea.lib.page import Page
 from sqlalchemy.sql.expression import or_
 from kallithea.lib.vcs.exceptions import VCSError, NodeNotChangedError
 
@@ -66,52 +65,47 @@ class GistsController(BaseController):
             c.lifetime_values.append(extra_values)
         c.lifetime_options = [(c.lifetime_values, _("Lifetime"))]
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     def index(self):
-        """GET /admin/gists: All items in the collection"""
-        # url('gists')
-        not_default_user = c.authuser.username != User.DEFAULT_USER
+        not_default_user = not request.authuser.is_default_user
         c.show_private = request.GET.get('private') and not_default_user
         c.show_public = request.GET.get('public') and not_default_user
 
-        gists = Gist().query()\
-            .filter(or_(Gist.gist_expires == -1, Gist.gist_expires >= time.time()))\
+        gists = Gist().query() \
+            .filter_by(is_expired=False) \
             .order_by(Gist.created_on.desc())
 
         # MY private
         if c.show_private and not c.show_public:
-            gists = gists.filter(Gist.gist_type == Gist.GIST_PRIVATE)\
-                             .filter(Gist.gist_owner == c.authuser.user_id)
+            gists = gists.filter(Gist.gist_type == Gist.GIST_PRIVATE) \
+                             .filter(Gist.owner_id == request.authuser.user_id)
         # MY public
         elif c.show_public and not c.show_private:
-            gists = gists.filter(Gist.gist_type == Gist.GIST_PUBLIC)\
-                             .filter(Gist.gist_owner == c.authuser.user_id)
+            gists = gists.filter(Gist.gist_type == Gist.GIST_PUBLIC) \
+                             .filter(Gist.owner_id == request.authuser.user_id)
 
         # MY public+private
         elif c.show_private and c.show_public:
             gists = gists.filter(or_(Gist.gist_type == Gist.GIST_PUBLIC,
-                                     Gist.gist_type == Gist.GIST_PRIVATE))\
-                             .filter(Gist.gist_owner == c.authuser.user_id)
+                                     Gist.gist_type == Gist.GIST_PRIVATE)) \
+                             .filter(Gist.owner_id == request.authuser.user_id)
 
         # default show ALL public gists
         if not c.show_public and not c.show_private:
             gists = gists.filter(Gist.gist_type == Gist.GIST_PUBLIC)
 
         c.gists = gists
-        p = safe_int(request.GET.get('page', 1), 1)
+        p = safe_int(request.GET.get('page'), 1)
         c.gists_pager = Page(c.gists, page=p, items_per_page=10)
         return render('admin/gists/index.html')
 
     @LoginRequired()
-    @NotAnonymous()
     def create(self):
-        """POST /admin/gists: Create a new item"""
-        # url('gists')
         self.__load_defaults()
         gist_form = GistForm([x[0] for x in c.lifetime_values])()
         try:
             form_result = gist_form.to_python(dict(request.POST))
-            #TODO: multiple files support, from the form
+            # TODO: multiple files support, from the form
             filename = form_result['filename'] or Gist.DEFAULT_FILENAME
             nodes = {
                 filename: {
@@ -123,7 +117,7 @@ class GistsController(BaseController):
             gist_type = Gist.GIST_PUBLIC if _public else Gist.GIST_PRIVATE
             gist = GistModel().create(
                 description=form_result['description'],
-                owner=c.authuser.user_id,
+                owner=request.authuser.user_id,
                 gist_mapping=nodes,
                 gist_type=gist_type,
                 lifetime=form_result['lifetime']
@@ -144,40 +138,18 @@ class GistsController(BaseController):
         except Exception as e:
             log.error(traceback.format_exc())
             h.flash(_('Error occurred during gist creation'), category='error')
-            return redirect(url('new_gist'))
-        return redirect(url('gist', gist_id=new_gist_id))
+            raise HTTPFound(location=url('new_gist'))
+        raise HTTPFound(location=url('gist', gist_id=new_gist_id))
 
     @LoginRequired()
-    @NotAnonymous()
     def new(self, format='html'):
-        """GET /admin/gists/new: Form to create a new item"""
-        # url('new_gist')
         self.__load_defaults()
         return render('admin/gists/new.html')
 
     @LoginRequired()
-    @NotAnonymous()
-    def update(self, gist_id):
-        """PUT /admin/gists/gist_id: Update an existing item"""
-        # Forms posted to this method should contain a hidden field:
-        #    <input type="hidden" name="_method" value="PUT" />
-        # Or using helpers:
-        #    h.form(url('gist', gist_id=ID),
-        #           method='put')
-        # url('gist', gist_id=ID)
-
-    @LoginRequired()
-    @NotAnonymous()
     def delete(self, gist_id):
-        """DELETE /admin/gists/gist_id: Delete an existing item"""
-        # Forms posted to this method should contain a hidden field:
-        #    <input type="hidden" name="_method" value="DELETE" />
-        # Or using helpers:
-        #    h.form(url('gist', gist_id=ID),
-        #           method='delete')
-        # url('gist', gist_id=ID)
         gist = GistModel().get_gist(gist_id)
-        owner = gist.gist_owner == c.authuser.user_id
+        owner = gist.owner_id == request.authuser.user_id
         if h.HasPermissionAny('hg.admin')() or owner:
             GistModel().delete(gist)
             Session().commit()
@@ -185,20 +157,16 @@ class GistsController(BaseController):
         else:
             raise HTTPForbidden()
 
-        return redirect(url('gists'))
+        raise HTTPFound(location=url('gists'))
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     def show(self, gist_id, revision='tip', format='html', f_path=None):
-        """GET /admin/gists/gist_id: Show a specific item"""
-        # url('gist', gist_id=ID)
         c.gist = Gist.get_or_404(gist_id)
 
-        #check if this gist is not expired
-        if c.gist.gist_expires != -1:
-            if time.time() > c.gist.gist_expires:
-                log.error('Gist expired at %s',
-                          time_to_datetime(c.gist.gist_expires))
-                raise HTTPNotFound()
+        if c.gist.is_expired:
+            log.error('Gist expired at %s',
+                      time_to_datetime(c.gist.gist_expires))
+            raise HTTPNotFound()
         try:
             c.file_changeset, c.files = GistModel().get_gist_files(gist_id,
                                                             revision=revision)
@@ -212,18 +180,13 @@ class GistsController(BaseController):
         return render('admin/gists/show.html')
 
     @LoginRequired()
-    @NotAnonymous()
     def edit(self, gist_id, format='html'):
-        """GET /admin/gists/gist_id/edit: Form to edit an existing item"""
-        # url('edit_gist', gist_id=ID)
         c.gist = Gist.get_or_404(gist_id)
 
-        #check if this gist is not expired
-        if c.gist.gist_expires != -1:
-            if time.time() > c.gist.gist_expires:
-                log.error('Gist expired at %s',
-                          time_to_datetime(c.gist.gist_expires))
-                raise HTTPNotFound()
+        if c.gist.is_expired:
+            log.error('Gist expired at %s',
+                      time_to_datetime(c.gist.gist_expires))
+            raise HTTPNotFound()
         try:
             c.file_changeset, c.files = GistModel().get_gist_files(gist_id)
         except VCSError:
@@ -270,12 +233,11 @@ class GistsController(BaseController):
                 h.flash(_('Error occurred during update of gist %s') % gist_id,
                         category='error')
 
-            return redirect(url('gist', gist_id=gist_id))
+            raise HTTPFound(location=url('gist', gist_id=gist_id))
 
         return rendered
 
     @LoginRequired()
-    @NotAnonymous()
     @jsonify
     def check_revision(self, gist_id):
         c.gist = Gist.get_or_404(gist_id)
@@ -283,7 +245,7 @@ class GistsController(BaseController):
         success = True
         revision = request.POST.get('revision')
 
-        ##TODO: maybe move this to model ?
+        # TODO: maybe move this to model ?
         if revision != last_rev.raw_id:
             log.error('Last revision %s is different than submitted %s',
                       revision, last_rev)

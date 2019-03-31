@@ -7,9 +7,9 @@
 
 <%def name="breadcrumbs_links()">
     ${_('Changesets')} -
-    ${h.link_to(h.show_id(c.cs_ranges[0]),h.url('changeset_home',repo_name=c.repo_name,revision=c.cs_ranges[0].raw_id))}</td>
+    ${h.link_to(h.show_id(c.cs_ranges[0]),h.url('changeset_home',repo_name=c.repo_name,revision=c.cs_ranges[0].raw_id))}
     <i class="icon-right"></i>
-    ${h.link_to(h.show_id(c.cs_ranges[-1]),h.url('changeset_home',repo_name=c.repo_name,revision=c.cs_ranges[-1].raw_id))}</td>
+    ${h.link_to(h.show_id(c.cs_ranges[-1]),h.url('changeset_home',repo_name=c.repo_name,revision=c.cs_ranges[-1].raw_id))}
 </%def>
 
 <%block name="header_menu">
@@ -18,96 +18,90 @@
 
 <%def name="main()">
 ${self.repo_context_bar('changelog')}
-<div class="box">
-    <!-- box / title -->
-    <div class="title">
-        ${self.breadcrumbs()}
+<div class="panel panel-primary">
+    <div class="panel-heading clearfix">
+        <div class="pull-left">
+            ${self.breadcrumbs()}
+        </div>
+        <div class="pull-right">
+            <a href="${h.url('compare_url',repo_name=c.repo_name,org_ref_type='rev',org_ref_name=getattr(c.cs_ranges[0].parents[0] if c.cs_ranges[0].parents else h.EmptyChangeset(),'raw_id'),other_ref_type='rev',other_ref_name=c.cs_ranges[-1].raw_id)}" class="btn btn-default btn-sm"><i class="icon-git-compare"></i>Compare Revisions</a>
+        </div>
     </div>
-    <div class="table">
-        <div id="body" class="diffblock">
-            <div class="code-header">
-                <div>
-                    ${h.show_id(c.cs_ranges[0])}
-                    <i class="icon-right"></i>
-                    ${h.show_id(c.cs_ranges[-1])}
-                    <a style="font-weight: bold" href="${h.url('compare_url',repo_name=c.repo_name,org_ref_type='rev',org_ref_name=getattr(c.cs_ranges[0].parents[0] if c.cs_ranges[0].parents else h.EmptyChangeset(),'raw_id'),other_ref_type='rev',other_ref_name=c.cs_ranges[-1].raw_id)}" class="btn btn-small"><i class="icon-git-compare"></i> Compare Revisions</a>
-                </div>
-            </div>
-        </div>
-        <div id="changeset_compare_view_content">
-            <div class="container">
-            <table class="compare_view_commits noborder">
-            %for cnt,cs in enumerate(c.cs_ranges):
-                <tr>
-                <td><div class="gravatar">${h.gravatar(h.email_or_none(cs.author), size=14)}</div></td>
-                <td>${h.link_to('r%s:%s' % (cs.revision,h.short_id(cs.raw_id)),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}</td>
-                <td><div class="author">${h.person(cs.author)}</div></td>
-                <td><span class="tooltip" title="${h.age(cs.date)}">${cs.date}</span></td>
-                <td>
-                  %if c.statuses:
-                    <div title="${_('Changeset status')}" class="changeset-status-ico"><i class="icon-circle changeset-status-${c.statuses[cnt]}"></i></div>
-                  %endif
-                </td>
-                <td><div class="message">${h.urlify_commit(h.wrap_paragraphs(cs.message),c.repo_name)}</div></td>
-                </tr>
-            %endfor
-            </table>
-            </div>
-            <div style="font-size:1.1em;font-weight: bold;clear:both;padding-top:10px">${_('Files affected')}</div>
-            <div class="cs_files">
-                %for cs in c.cs_ranges:
-                    <div class="cur_cs">${h.link_to(h.show_id(cs),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}</div>
-                    %for FID, (cs1, cs2, change, path, diff, stats) in c.changes[cs.raw_id].iteritems():
-                        <div class="cs_${change}">
-                            <div class="node">
-                                <i class="icon-diff-${change}"></i>
-                                ${h.link_to(h.safe_unicode(path),h.url.current(anchor=FID))}
-                            </div>
-                            <div class="changes">${h.fancy_file_stats(stats)}</div>
-                        </div>
-                    %endfor
+    <div class="panel-body">
+        <div>
+                <table class="table compare_view_commits">
+                %for cnt,cs in enumerate(c.cs_ranges):
+                  <tr>
+                    %if c.visual.use_gravatar:
+                    <td>${h.gravatar_div(h.email_or_none(cs.author), size=14)}</td>
+                    %endif
+                    <td>${h.link_to(h.short_id(cs.raw_id),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}</td>
+                    <td class="author">${h.person(cs.author)}</td>
+                    <td><span data-toggle="tooltip" title="${h.age(cs.date)}">${cs.date}</span></td>
+                    <td>
+                      %if c.statuses:
+                        <i class="icon-circle changeset-status-${c.statuses[cnt]}" title="${_('Changeset status: %s') % h.changeset_status_lbl(c.statuses[cnt])}"></i>
+                      %endif
+                    </td>
+                    <td><div class="message">${h.urlify_text(h.wrap_paragraphs(cs.message),c.repo_name)}</div></td>
+                  </tr>
                 %endfor
-            </div>
+                </table>
+                <h4>${_('Files affected')}</h4>
+                <div class="cs_files">
+                    %for cs in c.cs_ranges:
+                        <h6>${h.link_to(h.show_id(cs),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}</h6>
+                        <% a_rev, cs_rev, file_diff_data = c.changes[cs.raw_id] %>
+                        %for fid, url_fid, op, a_path, path, diff, stats in file_diff_data:
+                            <div class="cs_${op} clearfix">
+                                <span class="node">
+                                    <i class="icon-diff-${op}"></i>
+                                    ${h.link_to(h.safe_unicode(path), '#%s' % fid)}
+                                </span>
+                                <div class="changes">${h.fancy_file_stats(stats)}</div>
+                            </div>
+                        %endfor
+                    %endfor
+                </div>
         </div>
-
     </div>
     <%namespace name="comment" file="/changeset/changeset_file_comment.html"/>
     <%namespace name="diff_block" file="/changeset/diff_block.html"/>
     ${diff_block.diff_block_js()}
     %for cs in c.cs_ranges:
-          ##${comment.comment_inline_form(cs)}
+        <div class="panel-body">
           ## diff block
           <div class="h3">
-          <a class="tooltip" title="${cs.message}" href="${h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id)}">${h.show_id(cs)}</a>
-             <div class="gravatar">
-               ${h.gravatar(h.email_or_none(cs.author), size=20)}
-             </div>
-             <div class="right">
-              <span class="logtags">
+          ${h.gravatar_div(h.email_or_none(cs.author), size=20)}
+          <a data-toggle="tooltip" title="${cs.message}" href="${h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id)}">${h.show_id(cs)}</a>
+            <div class="right">
+              <span>
                 %if len(cs.parents)>1:
-                <span class="merge">${_('Merge')}</span>
+                <span class="label label-merge">${_('Merge')}</span>
                 %endif
                 %if h.is_hg(c.db_repo_scm_instance):
                   %for book in cs.bookmarks:
-                  <span class="booktag" title="${_('Bookmark %s') % book}">
+                  <span class="label label-bookmark" title="${_('Bookmark %s') % book}">
                      ${h.link_to(book,h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}
                   </span>
                   %endfor
                 %endif
                 %for tag in cs.tags:
-                    <span class="tagtag" title="${_('Tag %s') % tag}">
+                    <span class="label label-tag" title="${_('Tag %s') % tag}">
                     ${h.link_to(tag,h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}</span>
                 %endfor
-                %if cs.branch:
-                <span class="branchtag" title="${_('Branch %s') % cs.branch}">
-                   ${h.link_to(cs.branch,h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}
-                </span>
-                %endif
+                %for branch in cs.branches:
+                  <span class="label label-branch" title="${_('Branch %s') % branch}">
+                    ${h.link_to(branch,h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}
+                  </span>
+                %endfor
               </span>
             </div>
-           </div>
-          ${diff_block.diff_block(c.changes[cs.raw_id])}
-
+          </div>
+          <% a_rev, cs_rev, file_diff_data = c.changes[cs.raw_id] %>
+          ${diff_block.diff_block(c.repo_name, 'rev', a_rev, a_rev,
+                                  c.repo_name, 'rev', cs_rev, cs_rev, file_diff_data)}
+        </div>
     %endfor
 </div>
 </%def>

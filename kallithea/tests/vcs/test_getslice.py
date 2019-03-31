@@ -1,9 +1,8 @@
-
 import datetime
-from kallithea.tests.vcs.base import _BackendTestMixin
-from kallithea.tests.vcs.conf import SCM_TESTS
+
 from kallithea.lib.vcs.nodes import FileNode
-from kallithea.lib.vcs.utils.compat import unittest
+
+from kallithea.tests.vcs.base import _BackendTestMixin
 
 
 class GetsliceTestCaseMixin(_BackendTestMixin):
@@ -22,34 +21,24 @@ class GetsliceTestCaseMixin(_BackendTestMixin):
             }
 
     def test__getslice__last_item_is_tip(self):
-        self.assertEqual(list(self.repo[-1:])[0], self.repo.get_changeset())
+        assert list(self.repo[-1:])[0] == self.repo.get_changeset()
 
     def test__getslice__respects_start_index(self):
-        self.assertEqual(list(self.repo[2:]),
-            [self.repo.get_changeset(rev) for rev in self.repo.revisions[2:]])
+        assert list(self.repo[2:]) == [self.repo.get_changeset(rev) for rev in self.repo.revisions[2:]]
 
     def test__getslice__respects_negative_start_index(self):
-        self.assertEqual(list(self.repo[-2:]),
-            [self.repo.get_changeset(rev) for rev in self.repo.revisions[-2:]])
+        assert list(self.repo[-2:]) == [self.repo.get_changeset(rev) for rev in self.repo.revisions[-2:]]
 
     def test__getslice__respects_end_index(self):
-        self.assertEqual(list(self.repo[:2]),
-            [self.repo.get_changeset(rev) for rev in self.repo.revisions[:2]])
+        assert list(self.repo[:2]) == [self.repo.get_changeset(rev) for rev in self.repo.revisions[:2]]
 
     def test__getslice__respects_negative_end_index(self):
-        self.assertEqual(list(self.repo[:-2]),
-            [self.repo.get_changeset(rev) for rev in self.repo.revisions[:-2]])
+        assert list(self.repo[:-2]) == [self.repo.get_changeset(rev) for rev in self.repo.revisions[:-2]]
 
 
-# For each backend create test case class
-for alias in SCM_TESTS:
-    attrs = {
-        'backend_alias': alias,
-    }
-    cls_name = ''.join(('%s getslice test' % alias).title().split())
-    bases = (GetsliceTestCaseMixin, unittest.TestCase)
-    globals()[cls_name] = type(cls_name, bases, attrs)
+class TestGitGetslice(GetsliceTestCaseMixin):
+    backend_alias = 'git'
 
 
-if __name__ == '__main__':
-    unittest.main()
+class TestHgGetslice(GetsliceTestCaseMixin):
+    backend_alias = 'hg'

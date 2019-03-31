@@ -12,18 +12,38 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.orm.exc import NoResultFound, ObjectDeletedError
 
-from kallithea.tests import *
+import pytest
+from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
+from kallithea.controllers.admin.users import UsersController
 from kallithea.model.db import User, Permission, UserIpMap, UserApiKeys
 from kallithea.lib.auth import check_password
 from kallithea.model.user import UserModel
 from kallithea.model import validators
 from kallithea.lib import helpers as h
 from kallithea.model.meta import Session
+from webob.exc import HTTPNotFound
+
+from tg.util.webtest import test_context
 
 fixture = Fixture()
+
+
+@pytest.fixture
+def user_and_repo_group_fail():
+    username = 'repogrouperr'
+    groupname = u'repogroup_fail'
+    user = fixture.create_user(name=username)
+    repo_group = fixture.create_repo_group(name=groupname, cur_user=username)
+    yield user, repo_group
+    # cleanup
+    try:
+        fixture.destroy_repo_group(repo_group)
+    except ObjectDeletedError:
+        # delete already succeeded in test body
+        pass
 
 
 class TestAdminUsersController(TestController):
@@ -38,18 +58,18 @@ class TestAdminUsersController(TestController):
     def test_index(self):
         self.log_user()
         response = self.app.get(url('users'))
-        # Test response...
+        # TODO: Test response...
 
     def test_create(self):
         self.log_user()
         username = 'newtestuser'
         password = 'test12'
         password_confirmation = password
-        name = 'name'
-        lastname = 'lastname'
+        name = u'name'
+        lastname = u'lastname'
         email = 'mail@example.com'
 
-        response = self.app.post(url('users'),
+        response = self.app.post(url('new_user'),
             {'username': username,
              'password': password,
              'password_confirmation': password_confirmation,
@@ -60,40 +80,42 @@ class TestAdminUsersController(TestController):
              'extern_type': 'internal',
              'email': email,
              '_authentication_token': self.authentication_token()})
+        # 302 Found
+        # The resource was found at http://localhost/_admin/users/5/edit; you should be redirected automatically.
 
-        self.checkSessionFlash(response, '''Created user <a href="/_admin/users/''')
-        self.checkSessionFlash(response, '''/edit">%s</a>''' % (username))
+        self.checkSessionFlash(response, '''Created user %s''' % username)
 
-        new_user = Session().query(User).\
+        response = response.follow()
+        response.mustcontain("""%s user settings""" % username) # in <title>
+
+        new_user = Session().query(User). \
             filter(User.username == username).one()
 
-        self.assertEqual(new_user.username, username)
-        self.assertEqual(check_password(password, new_user.password), True)
-        self.assertEqual(new_user.name, name)
-        self.assertEqual(new_user.lastname, lastname)
-        self.assertEqual(new_user.email, email)
-
-        response.follow()
-        response = response.follow()
-        response.mustcontain("""newtestuser""")
+        assert new_user.username == username
+        assert check_password(password, new_user.password) == True
+        assert new_user.name == name
+        assert new_user.lastname == lastname
+        assert new_user.email == email
 
     def test_create_err(self):
         self.log_user()
         username = 'new_user'
         password = ''
-        name = 'name'
-        lastname = 'lastname'
+        name = u'name'
+        lastname = u'lastname'
         email = 'errmail.example.com'
 
-        response = self.app.post(url('users'), {'username': username,
-                                               'password': password,
-                                               'name': name,
-                                               'active': False,
-                                               'lastname': lastname,
-                                               'email': email,
-                                               '_authentication_token': self.authentication_token()})
+        response = self.app.post(url('new_user'),
+            {'username': username,
+             'password': password,
+             'name': name,
+             'active': False,
+             'lastname': lastname,
+             'email': email,
+             '_authentication_token': self.authentication_token()})
 
-        msg = validators.ValidUsername(False, {})._messages['system_invalid_username']
+        with test_context(self.app):
+            msg = validators.ValidUsername(False, {})._messages['system_invalid_username']
         msg = h.html_escape(msg % {'username': 'new_user'})
         response.mustcontain("""<span class="error-message">%s</span>""" % msg)
         response.mustcontain("""<span class="error-message">Please enter a value</span>""")
@@ -102,13 +124,14 @@ class TestAdminUsersController(TestController):
         def get_user():
             Session().query(User).filter(User.username == username).one()
 
-        self.assertRaises(NoResultFound, get_user), 'found user in database'
+        with pytest.raises(NoResultFound):
+            get_user(), 'found user in database'
 
     def test_new(self):
         self.log_user()
         response = self.app.get(url('new_user'))
 
-    @parameterized.expand(
+    @parametrize('name,attrs',
         [('firstname', {'firstname': 'new_username'}),
          ('lastname', {'lastname': 'new_username'}),
          ('admin', {'admin': True}),
@@ -138,17 +161,16 @@ class TestAdminUsersController(TestController):
         if name == 'email':
             params['emails'] = [attrs['email']]
         if name == 'extern_type':
-            #cannot update this via form, expected value is original one
+            # cannot update this via form, expected value is original one
             params['extern_type'] = "internal"
         if name == 'extern_name':
-            #cannot update this via form, expected value is original one
+            # cannot update this via form, expected value is original one
             params['extern_name'] = self.test_user_1
-            # special case since this user is not
-                                          # logged in yet his data is not filled
-                                          # so we use creation data
+            # special case since this user is not logged in yet his data is
+            # not filled so we use creation data
 
         params.update({'_authentication_token': self.authentication_token()})
-        response = self.app.put(url('user', id=usr.user_id), params)
+        response = self.app.post(url('update_user', id=usr.user_id), params)
         self.checkSessionFlash(response, 'User updated successfully')
         params.pop('_authentication_token')
 
@@ -157,7 +179,7 @@ class TestAdminUsersController(TestController):
         updated_params.update({'password_confirmation': ''})
         updated_params.update({'new_password': ''})
 
-        self.assertEqual(params, updated_params)
+        assert params == updated_params
 
     def test_delete(self):
         self.log_user()
@@ -165,50 +187,47 @@ class TestAdminUsersController(TestController):
 
         fixture.create_user(name=username)
 
-        new_user = Session().query(User)\
+        new_user = Session().query(User) \
             .filter(User.username == username).one()
-        response = self.app.post(url('user', id=new_user.user_id),
-            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
+        response = self.app.post(url('delete_user', id=new_user.user_id),
+            params={'_authentication_token': self.authentication_token()})
 
         self.checkSessionFlash(response, 'Successfully deleted user')
 
     def test_delete_repo_err(self):
         self.log_user()
         username = 'repoerr'
-        reponame = 'repoerr_fail'
+        reponame = u'repoerr_fail'
 
         fixture.create_user(name=username)
         fixture.create_repo(name=reponame, cur_user=username)
 
-        new_user = Session().query(User)\
+        new_user = Session().query(User) \
             .filter(User.username == username).one()
-        response = self.app.post(url('user', id=new_user.user_id),
-            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
+        response = self.app.post(url('delete_user', id=new_user.user_id),
+            params={'_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'User "%s" still '
                                'owns 1 repositories and cannot be removed. '
                                'Switch owners or remove those repositories: '
                                '%s' % (username, reponame))
 
         response = self.app.post(url('delete_repo', repo_name=reponame),
-            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
+            params={'_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Deleted repository %s' % reponame)
 
-        response = self.app.post(url('user', id=new_user.user_id),
-            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
+        response = self.app.post(url('delete_user', id=new_user.user_id),
+            params={'_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Successfully deleted user')
 
-    def test_delete_repo_group_err(self):
+    def test_delete_repo_group_err(self, user_and_repo_group_fail):
         self.log_user()
         username = 'repogrouperr'
-        groupname = 'repogroup_fail'
+        groupname = u'repogroup_fail'
 
-        fixture.create_user(name=username)
-        fixture.create_repo_group(name=groupname, cur_user=username)
-
-        new_user = Session().query(User)\
+        new_user = Session().query(User) \
             .filter(User.username == username).one()
-        response = self.app.post(url('user', id=new_user.user_id),
-            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
+        response = self.app.post(url('delete_user', id=new_user.user_id),
+            params={'_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'User "%s" still '
                                'owns 1 repository groups and cannot be removed. '
                                'Switch owners or remove those repository groups: '
@@ -219,25 +238,25 @@ class TestAdminUsersController(TestController):
         # response = self.app.get(url('repos_groups', id=rg.group_id))
 
         response = self.app.post(url('delete_repo_group', group_name=groupname),
-            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
+            params={'_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Removed repository group %s' % groupname)
 
-        response = self.app.post(url('user', id=new_user.user_id),
-            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
+        response = self.app.post(url('delete_user', id=new_user.user_id),
+            params={'_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Successfully deleted user')
 
     def test_delete_user_group_err(self):
         self.log_user()
         username = 'usergrouperr'
-        groupname = 'usergroup_fail'
+        groupname = u'usergroup_fail'
 
         fixture.create_user(name=username)
         ug = fixture.create_user_group(name=groupname, cur_user=username)
 
-        new_user = Session().query(User)\
+        new_user = Session().query(User) \
             .filter(User.username == username).one()
-        response = self.app.post(url('user', id=new_user.user_id),
-            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
+        response = self.app.post(url('delete_user', id=new_user.user_id),
+            params={'_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'User "%s" still '
                                'owns 1 user groups and cannot be removed. '
                                'Switch owners or remove those user groups: '
@@ -249,12 +268,9 @@ class TestAdminUsersController(TestController):
 
         fixture.destroy_user_group(ug.users_group_id)
 
-        response = self.app.post(url('user', id=new_user.user_id),
-            params={'_method': 'delete', '_authentication_token': self.authentication_token()})
+        response = self.app.post(url('delete_user', id=new_user.user_id),
+            params={'_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'Successfully deleted user')
-
-    def test_show(self):
-        response = self.app.get(url('user', id=1))
 
     def test_edit(self):
         self.log_user()
@@ -267,27 +283,26 @@ class TestAdminUsersController(TestController):
         perm_create = Permission.get_by_key('hg.create.repository')
 
         user = UserModel().create_or_update(username='dummy', password='qwe',
-                                            email='dummy', firstname='a',
-                                            lastname='b')
+                                            email='dummy', firstname=u'a',
+                                            lastname=u'b')
         Session().commit()
         uid = user.user_id
 
         try:
-            #User should have None permission on creation repository
-            self.assertEqual(UserModel().has_perm(user, perm_none), False)
-            self.assertEqual(UserModel().has_perm(user, perm_create), False)
+            # User should have None permission on creation repository
+            assert UserModel().has_perm(user, perm_none) == False
+            assert UserModel().has_perm(user, perm_create) == False
 
-            response = self.app.post(url('edit_user_perms', id=uid),
-                                     params=dict(_method='put',
-                                                 create_repo_perm=True,
+            response = self.app.post(url('edit_user_perms_update', id=uid),
+                                     params=dict(create_repo_perm=True,
                                                  _authentication_token=self.authentication_token()))
 
             perm_none = Permission.get_by_key('hg.create.none')
             perm_create = Permission.get_by_key('hg.create.repository')
 
-            #User should have None permission on creation repository
-            self.assertEqual(UserModel().has_perm(uid, perm_none), False)
-            self.assertEqual(UserModel().has_perm(uid, perm_create), True)
+            # User should have None permission on creation repository
+            assert UserModel().has_perm(uid, perm_none) == False
+            assert UserModel().has_perm(uid, perm_create) == True
         finally:
             UserModel().delete(uid)
             Session().commit()
@@ -298,25 +313,25 @@ class TestAdminUsersController(TestController):
         perm_create = Permission.get_by_key('hg.create.repository')
 
         user = UserModel().create_or_update(username='dummy', password='qwe',
-                                            email='dummy', firstname='a',
-                                            lastname='b')
+                                            email='dummy', firstname=u'a',
+                                            lastname=u'b')
         Session().commit()
         uid = user.user_id
 
         try:
-            #User should have None permission on creation repository
-            self.assertEqual(UserModel().has_perm(user, perm_none), False)
-            self.assertEqual(UserModel().has_perm(user, perm_create), False)
+            # User should have None permission on creation repository
+            assert UserModel().has_perm(user, perm_none) == False
+            assert UserModel().has_perm(user, perm_create) == False
 
-            response = self.app.post(url('edit_user_perms', id=uid),
-                                     params=dict(_method='put', _authentication_token=self.authentication_token()))
+            response = self.app.post(url('edit_user_perms_update', id=uid),
+                                     params=dict(_authentication_token=self.authentication_token()))
 
             perm_none = Permission.get_by_key('hg.create.none')
             perm_create = Permission.get_by_key('hg.create.repository')
 
-            #User should have None permission on creation repository
-            self.assertEqual(UserModel().has_perm(uid, perm_none), True)
-            self.assertEqual(UserModel().has_perm(uid, perm_create), False)
+            # User should have None permission on creation repository
+            assert UserModel().has_perm(uid, perm_none) == True
+            assert UserModel().has_perm(uid, perm_create) == False
         finally:
             UserModel().delete(uid)
             Session().commit()
@@ -327,27 +342,26 @@ class TestAdminUsersController(TestController):
         perm_fork = Permission.get_by_key('hg.fork.repository')
 
         user = UserModel().create_or_update(username='dummy', password='qwe',
-                                            email='dummy', firstname='a',
-                                            lastname='b')
+                                            email='dummy', firstname=u'a',
+                                            lastname=u'b')
         Session().commit()
         uid = user.user_id
 
         try:
-            #User should have None permission on creation repository
-            self.assertEqual(UserModel().has_perm(user, perm_none), False)
-            self.assertEqual(UserModel().has_perm(user, perm_fork), False)
+            # User should have None permission on creation repository
+            assert UserModel().has_perm(user, perm_none) == False
+            assert UserModel().has_perm(user, perm_fork) == False
 
-            response = self.app.post(url('edit_user_perms', id=uid),
-                                     params=dict(_method='put',
-                                                 create_repo_perm=True,
+            response = self.app.post(url('edit_user_perms_update', id=uid),
+                                     params=dict(create_repo_perm=True,
                                                  _authentication_token=self.authentication_token()))
 
             perm_none = Permission.get_by_key('hg.create.none')
             perm_create = Permission.get_by_key('hg.create.repository')
 
-            #User should have None permission on creation repository
-            self.assertEqual(UserModel().has_perm(uid, perm_none), False)
-            self.assertEqual(UserModel().has_perm(uid, perm_create), True)
+            # User should have None permission on creation repository
+            assert UserModel().has_perm(uid, perm_none) == False
+            assert UserModel().has_perm(uid, perm_create) == True
         finally:
             UserModel().delete(uid)
             Session().commit()
@@ -358,25 +372,25 @@ class TestAdminUsersController(TestController):
         perm_fork = Permission.get_by_key('hg.fork.repository')
 
         user = UserModel().create_or_update(username='dummy', password='qwe',
-                                            email='dummy', firstname='a',
-                                            lastname='b')
+                                            email='dummy', firstname=u'a',
+                                            lastname=u'b')
         Session().commit()
         uid = user.user_id
 
         try:
-            #User should have None permission on creation repository
-            self.assertEqual(UserModel().has_perm(user, perm_none), False)
-            self.assertEqual(UserModel().has_perm(user, perm_fork), False)
+            # User should have None permission on creation repository
+            assert UserModel().has_perm(user, perm_none) == False
+            assert UserModel().has_perm(user, perm_fork) == False
 
-            response = self.app.post(url('edit_user_perms', id=uid),
-                                     params=dict(_method='put', _authentication_token=self.authentication_token()))
+            response = self.app.post(url('edit_user_perms_update', id=uid),
+                                     params=dict(_authentication_token=self.authentication_token()))
 
             perm_none = Permission.get_by_key('hg.create.none')
             perm_create = Permission.get_by_key('hg.create.repository')
 
-            #User should have None permission on creation repository
-            self.assertEqual(UserModel().has_perm(uid, perm_none), True)
-            self.assertEqual(UserModel().has_perm(uid, perm_create), False)
+            # User should have None permission on creation repository
+            assert UserModel().has_perm(uid, perm_none) == True
+            assert UserModel().has_perm(uid, perm_create) == False
         finally:
             UserModel().delete(uid)
             Session().commit()
@@ -387,7 +401,7 @@ class TestAdminUsersController(TestController):
         response = self.app.get(url('edit_user_ips', id=user.user_id))
         response.mustcontain('All IP addresses are allowed')
 
-    @parameterized.expand([
+    @parametrize('test_name,ip,ip_range,failure', [
         ('127/24', '127.0.0.1/24', '127.0.0.0 - 127.0.0.255', False),
         ('10/32', '10.0.0.10/32', '10.0.0.10 - 10.0.0.10', False),
         ('0/16', '0.0.0.0/16', '0.0.0.0 - 0.0.255.255', False),
@@ -395,13 +409,13 @@ class TestAdminUsersController(TestController):
         ('127_bad_mask', '127.0.0.1/99', '127.0.0.1 - 127.0.0.1', True),
         ('127_bad_ip', 'foobar', 'foobar', True),
     ])
-    def test_add_ip(self, test_name, ip, ip_range, failure):
+    def test_add_ip(self, test_name, ip, ip_range, failure, auto_clear_ip_permissions):
         self.log_user()
         user = User.get_by_username(TEST_USER_REGULAR_LOGIN)
         user_id = user.user_id
 
-        response = self.app.put(url('edit_user_ips', id=user_id),
-                                params=dict(new_ip=ip, _authentication_token=self.authentication_token()))
+        response = self.app.post(url('edit_user_ips_update', id=user_id),
+                                 params=dict(new_ip=ip, _authentication_token=self.authentication_token()))
 
         if failure:
             self.checkSessionFlash(response, 'Please enter a valid IPv4 or IPv6 address')
@@ -414,27 +428,23 @@ class TestAdminUsersController(TestController):
             response.mustcontain(ip)
             response.mustcontain(ip_range)
 
-        ## cleanup
-        for del_ip in UserIpMap.query().filter(UserIpMap.user_id == user_id).all():
-            Session().delete(del_ip)
-            Session().commit()
-
-    def test_delete_ip(self):
+    def test_delete_ip(self, auto_clear_ip_permissions):
         self.log_user()
         user = User.get_by_username(TEST_USER_REGULAR_LOGIN)
         user_id = user.user_id
         ip = '127.0.0.1/32'
         ip_range = '127.0.0.1 - 127.0.0.1'
-        new_ip = UserModel().add_extra_ip(user_id, ip)
-        Session().commit()
+        with test_context(self.app):
+            new_ip = UserModel().add_extra_ip(user_id, ip)
+            Session().commit()
         new_ip_id = new_ip.ip_id
 
         response = self.app.get(url('edit_user_ips', id=user_id))
         response.mustcontain(ip)
         response.mustcontain(ip_range)
 
-        self.app.post(url('edit_user_ips', id=user_id),
-                      params=dict(_method='delete', del_ip_id=new_ip_id, _authentication_token=self.authentication_token()))
+        self.app.post(url('edit_user_ips_delete', id=user_id),
+                      params=dict(del_ip_id=new_ip_id, _authentication_token=self.authentication_token()))
 
         response = self.app.get(url('edit_user_ips', id=user_id))
         response.mustcontain('All IP addresses are allowed')
@@ -449,7 +459,7 @@ class TestAdminUsersController(TestController):
         response.mustcontain(user.api_key)
         response.mustcontain('Expires: Never')
 
-    @parameterized.expand([
+    @parametrize('desc,lifetime', [
         ('forever', -1),
         ('5mins', 60*5),
         ('30days', 60*60*24*30),
@@ -459,7 +469,7 @@ class TestAdminUsersController(TestController):
         user = User.get_by_username(TEST_USER_REGULAR_LOGIN)
         user_id = user.user_id
 
-        response = self.app.post(url('edit_user_api_keys', id=user_id),
+        response = self.app.post(url('edit_user_api_keys_update', id=user_id),
                  {'description': desc, 'lifetime': lifetime, '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'API key successfully created')
         try:
@@ -477,20 +487,20 @@ class TestAdminUsersController(TestController):
         user = User.get_by_username(TEST_USER_REGULAR_LOGIN)
         user_id = user.user_id
 
-        response = self.app.post(url('edit_user_api_keys', id=user_id),
+        response = self.app.post(url('edit_user_api_keys_update', id=user_id),
                 {'description': 'desc', 'lifetime': -1, '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'API key successfully created')
         response = response.follow()
 
-        #now delete our key
+        # now delete our key
         keys = UserApiKeys.query().filter(UserApiKeys.user_id == user_id).all()
-        self.assertEqual(1, len(keys))
+        assert 1 == len(keys)
 
-        response = self.app.post(url('edit_user_api_keys', id=user_id),
-                 {'_method': 'delete', 'del_api_key': keys[0].api_key, '_authentication_token': self.authentication_token()})
+        response = self.app.post(url('edit_user_api_keys_delete', id=user_id),
+                 {'del_api_key': keys[0].api_key, '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'API key successfully deleted')
         keys = UserApiKeys.query().filter(UserApiKeys.user_id == user_id).all()
-        self.assertEqual(0, len(keys))
+        assert 0 == len(keys)
 
     def test_reset_main_api_key(self):
         self.log_user()
@@ -501,35 +511,29 @@ class TestAdminUsersController(TestController):
         response.mustcontain(api_key)
         response.mustcontain('Expires: Never')
 
-        response = self.app.post(url('edit_user_api_keys', id=user_id),
-                 {'_method': 'delete', 'del_api_key_builtin': api_key, '_authentication_token': self.authentication_token()})
+        response = self.app.post(url('edit_user_api_keys_delete', id=user_id),
+                 {'del_api_key_builtin': api_key, '_authentication_token': self.authentication_token()})
         self.checkSessionFlash(response, 'API key successfully reset')
         response = response.follow()
         response.mustcontain(no=[api_key])
 
-# TODO To be uncommented when pytest is the test runner
-#import pytest
-#from kallithea.controllers.admin.users import UsersController
-#class TestAdminUsersController_unittest(object):
-#    """
-#    Unit tests for the users controller
-#    These are in a separate class, not deriving from TestController (and thus
-#    unittest.TestCase), to be able to benefit from pytest features like
-#    monkeypatch.
-#    """
-#    def test_get_user_or_raise_if_default(self, monkeypatch):
-#        # flash complains about an unexisting session
-#        def flash_mock(*args, **kwargs):
-#            pass
-#        monkeypatch.setattr(h, 'flash', flash_mock)
-#
-#        u = UsersController()
-#        # a regular user should work correctly
-#        user = User.get_by_username(TEST_USER_REGULAR_LOGIN)
-#        assert u._get_user_or_raise_if_default(user.user_id) == user
-#        # the default user should raise
-#        with pytest.raises(HTTPNotFound):
-#            u._get_user_or_raise_if_default(User.get_default_user().user_id)
+
+class TestAdminUsersController_unittest(TestController):
+    """ Unit tests for the users controller """
+
+    def test_get_user_or_raise_if_default(self, monkeypatch, test_context_fixture):
+        # flash complains about an non-existing session
+        def flash_mock(*args, **kwargs):
+            pass
+        monkeypatch.setattr(h, 'flash', flash_mock)
+
+        u = UsersController()
+        # a regular user should work correctly
+        user = User.get_by_username(TEST_USER_REGULAR_LOGIN)
+        assert u._get_user_or_raise_if_default(user.user_id) == user
+        # the default user should raise
+        with pytest.raises(HTTPNotFound):
+            u._get_user_or_raise_if_default(User.get_default_user().user_id)
 
 
 class TestAdminUsersControllerForDefaultUser(TestController):
@@ -556,14 +560,14 @@ class TestAdminUsersControllerForDefaultUser(TestController):
     def test_add_api_keys_default_user(self):
         self.log_user()
         user = User.get_default_user()
-        response = self.app.post(url('edit_user_api_keys', id=user.user_id),
-                 {'_method': 'put', '_authentication_token': self.authentication_token()}, status=404)
+        response = self.app.post(url('edit_user_api_keys_update', id=user.user_id),
+                 {'_authentication_token': self.authentication_token()}, status=404)
 
     def test_delete_api_keys_default_user(self):
         self.log_user()
         user = User.get_default_user()
-        response = self.app.post(url('edit_user_api_keys', id=user.user_id),
-                 {'_method': 'delete', '_authentication_token': self.authentication_token()}, status=404)
+        response = self.app.post(url('edit_user_api_keys_delete', id=user.user_id),
+                 {'_authentication_token': self.authentication_token()}, status=404)
 
     # Permissions
     def test_edit_perms_default_user(self):
@@ -574,8 +578,8 @@ class TestAdminUsersControllerForDefaultUser(TestController):
     def test_update_perms_default_user(self):
         self.log_user()
         user = User.get_default_user()
-        response = self.app.post(url('edit_user_perms', id=user.user_id),
-                 {'_method': 'put', '_authentication_token': self.authentication_token()}, status=404)
+        response = self.app.post(url('edit_user_perms_update', id=user.user_id),
+                 {'_authentication_token': self.authentication_token()}, status=404)
 
     # Emails
     def test_edit_emails_default_user(self):
@@ -586,14 +590,14 @@ class TestAdminUsersControllerForDefaultUser(TestController):
     def test_add_emails_default_user(self):
         self.log_user()
         user = User.get_default_user()
-        response = self.app.post(url('edit_user_emails', id=user.user_id),
-                 {'_method': 'put', '_authentication_token': self.authentication_token()}, status=404)
+        response = self.app.post(url('edit_user_emails_update', id=user.user_id),
+                 {'_authentication_token': self.authentication_token()}, status=404)
 
     def test_delete_emails_default_user(self):
         self.log_user()
         user = User.get_default_user()
-        response = self.app.post(url('edit_user_emails', id=user.user_id),
-                 {'_method': 'delete', '_authentication_token': self.authentication_token()}, status=404)
+        response = self.app.post(url('edit_user_emails_delete', id=user.user_id),
+                 {'_authentication_token': self.authentication_token()}, status=404)
 
     # IP addresses
     # Add/delete of IP addresses for the default user is used to maintain

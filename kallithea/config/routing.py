@@ -19,6 +19,7 @@ may take precedent over the more generic routes. For more information
 refer to the routes manual at http://routes.groovie.org/docs/
 """
 
+from tg import request
 from routes import Mapper
 
 # prefix for non repository related links needs to be prefixed with `/`
@@ -27,7 +28,7 @@ ADMIN_PREFIX = '/_admin'
 
 def make_map(config):
     """Create, configure and return the routes Mapper"""
-    rmap = Mapper(directory=config['pylons.paths']['controllers'],
+    rmap = Mapper(directory=config['paths']['controllers'],
                   always_scan=config['debug'])
     rmap.minimization = False
     rmap.explicit = False
@@ -45,7 +46,7 @@ def make_map(config):
         repo_name = match_dict.get('repo_name')
 
         if match_dict.get('f_path'):
-            #fix for multiple initial slashes that causes errors
+            # fix for multiple initial slashes that causes errors
             match_dict['f_path'] = match_dict['f_path'].lstrip('/')
 
         by_id_match = get_repo_by_id(repo_name)
@@ -89,20 +90,18 @@ def make_map(config):
     def check_int(environ, match_dict):
         return match_dict.get('id').isdigit()
 
-    # The ErrorController route (handles 404/500 error pages); it should
-    # likely stay at the top, ensuring it can always be resolved
-    rmap.connect('/error/{action}', controller='error')
-    rmap.connect('/error/{action}/{id}', controller='error')
-
     #==========================================================================
     # CUSTOM ROUTES HERE
     #==========================================================================
 
-    #MAIN PAGE
+    # MAIN PAGE
     rmap.connect('home', '/', controller='home', action='index')
     rmap.connect('about', '/about', controller='home', action='about')
+    rmap.redirect('/favicon.ico', '/images/favicon.ico')
     rmap.connect('repo_switcher_data', '/_repos', controller='home',
                  action='repo_switcher_data')
+    rmap.connect('users_and_groups_data', '/_users_and_groups', controller='home',
+                 action='users_and_groups_data')
 
     rmap.connect('rst_help',
                  "http://docutils.sourceforge.net/docs/user/rst/quickref.html",
@@ -110,7 +109,7 @@ def make_map(config):
     rmap.connect('kallithea_project_url', "https://kallithea-scm.org/", _static=True)
     rmap.connect('issues_url', 'https://bitbucket.org/conservancy/kallithea/issues', _static=True)
 
-    #ADMIN REPOSITORY ROUTES
+    # ADMIN REPOSITORY ROUTES
     with rmap.submapper(path_prefix=ADMIN_PREFIX,
                         controller='admin/repos') as m:
         m.connect("repos", "/repos",
@@ -119,14 +118,13 @@ def make_map(config):
                   action="index", conditions=dict(method=["GET"]))
         m.connect("new_repo", "/create_repository",
                   action="create_repository", conditions=dict(method=["GET"]))
-        m.connect("put_repo", "/repos/{repo_name:.*?}",
-                  action="update", conditions=dict(method=["PUT"],
+        m.connect("update_repo", "/repos/{repo_name:.*?}",
+                  action="update", conditions=dict(method=["POST"],
                   function=check_repo))
-        m.connect("delete_repo", "/repos/{repo_name:.*?}",
-                  action="delete", conditions=dict(method=["DELETE"],
-                  ))
+        m.connect("delete_repo", "/repos/{repo_name:.*?}/delete",
+                  action="delete", conditions=dict(method=["POST"]))
 
-    #ADMIN REPOSITORY GROUPS ROUTES
+    # ADMIN REPOSITORY GROUPS ROUTES
     with rmap.submapper(path_prefix=ADMIN_PREFIX,
                         controller='admin/repo_groups') as m:
         m.connect("repos_groups", "/repo_groups",
@@ -136,47 +134,40 @@ def make_map(config):
         m.connect("new_repos_group", "/repo_groups/new",
                   action="new", conditions=dict(method=["GET"]))
         m.connect("update_repos_group", "/repo_groups/{group_name:.*?}",
-                  action="update", conditions=dict(method=["PUT"],
+                  action="update", conditions=dict(method=["POST"],
                                                    function=check_group))
 
         m.connect("repos_group", "/repo_groups/{group_name:.*?}",
                   action="show", conditions=dict(method=["GET"],
                                                  function=check_group))
 
-        #EXTRAS REPO GROUP ROUTES
+        # EXTRAS REPO GROUP ROUTES
         m.connect("edit_repo_group", "/repo_groups/{group_name:.*?}/edit",
                   action="edit",
                   conditions=dict(method=["GET"], function=check_group))
-        m.connect("edit_repo_group", "/repo_groups/{group_name:.*?}/edit",
-                  action="edit",
-                  conditions=dict(method=["PUT"], function=check_group))
 
         m.connect("edit_repo_group_advanced", "/repo_groups/{group_name:.*?}/edit/advanced",
                   action="edit_repo_group_advanced",
                   conditions=dict(method=["GET"], function=check_group))
-        m.connect("edit_repo_group_advanced", "/repo_groups/{group_name:.*?}/edit/advanced",
-                  action="edit_repo_group_advanced",
-                  conditions=dict(method=["PUT"], function=check_group))
 
         m.connect("edit_repo_group_perms", "/repo_groups/{group_name:.*?}/edit/permissions",
                   action="edit_repo_group_perms",
                   conditions=dict(method=["GET"], function=check_group))
-        m.connect("edit_repo_group_perms", "/repo_groups/{group_name:.*?}/edit/permissions",
+        m.connect("edit_repo_group_perms_update", "/repo_groups/{group_name:.*?}/edit/permissions",
                   action="update_perms",
-                  conditions=dict(method=["PUT"], function=check_group))
-        m.connect("edit_repo_group_perms", "/repo_groups/{group_name:.*?}/edit/permissions",
+                  conditions=dict(method=["POST"], function=check_group))
+        m.connect("edit_repo_group_perms_delete", "/repo_groups/{group_name:.*?}/edit/permissions/delete",
                   action="delete_perms",
-                  conditions=dict(method=["DELETE"], function=check_group))
+                  conditions=dict(method=["POST"], function=check_group))
 
-        m.connect("delete_repo_group", "/repo_groups/{group_name:.*?}",
-                  action="delete", conditions=dict(method=["DELETE"],
+        m.connect("delete_repo_group", "/repo_groups/{group_name:.*?}/delete",
+                  action="delete", conditions=dict(method=["POST"],
                                                    function=check_group_skip_path))
 
-
-    #ADMIN USER ROUTES
+    # ADMIN USER ROUTES
     with rmap.submapper(path_prefix=ADMIN_PREFIX,
                         controller='admin/users') as m:
-        m.connect("users", "/users",
+        m.connect("new_user", "/users/new",
                   action="create", conditions=dict(method=["POST"]))
         m.connect("users", "/users",
                   action="index", conditions=dict(method=["GET"]))
@@ -185,47 +176,43 @@ def make_map(config):
         m.connect("new_user", "/users/new",
                   action="new", conditions=dict(method=["GET"]))
         m.connect("update_user", "/users/{id}",
-                  action="update", conditions=dict(method=["PUT"]))
-        m.connect("delete_user", "/users/{id}",
-                  action="delete", conditions=dict(method=["DELETE"]))
+                  action="update", conditions=dict(method=["POST"]))
+        m.connect("delete_user", "/users/{id}/delete",
+                  action="delete", conditions=dict(method=["POST"]))
         m.connect("edit_user", "/users/{id}/edit",
                   action="edit", conditions=dict(method=["GET"]))
-        m.connect("user", "/users/{id}",
-                  action="show", conditions=dict(method=["GET"]))
 
-        #EXTRAS USER ROUTES
+        # EXTRAS USER ROUTES
         m.connect("edit_user_advanced", "/users/{id}/edit/advanced",
                   action="edit_advanced", conditions=dict(method=["GET"]))
-        m.connect("edit_user_advanced", "/users/{id}/edit/advanced",
-                  action="update_advanced", conditions=dict(method=["PUT"]))
 
         m.connect("edit_user_api_keys", "/users/{id}/edit/api_keys",
                   action="edit_api_keys", conditions=dict(method=["GET"]))
-        m.connect("edit_user_api_keys", "/users/{id}/edit/api_keys",
+        m.connect("edit_user_api_keys_update", "/users/{id}/edit/api_keys",
                   action="add_api_key", conditions=dict(method=["POST"]))
-        m.connect("edit_user_api_keys", "/users/{id}/edit/api_keys",
-                  action="delete_api_key", conditions=dict(method=["DELETE"]))
+        m.connect("edit_user_api_keys_delete", "/users/{id}/edit/api_keys/delete",
+                  action="delete_api_key", conditions=dict(method=["POST"]))
 
         m.connect("edit_user_perms", "/users/{id}/edit/permissions",
                   action="edit_perms", conditions=dict(method=["GET"]))
-        m.connect("edit_user_perms", "/users/{id}/edit/permissions",
-                  action="update_perms", conditions=dict(method=["PUT"]))
+        m.connect("edit_user_perms_update", "/users/{id}/edit/permissions",
+                  action="update_perms", conditions=dict(method=["POST"]))
 
         m.connect("edit_user_emails", "/users/{id}/edit/emails",
                   action="edit_emails", conditions=dict(method=["GET"]))
-        m.connect("edit_user_emails", "/users/{id}/edit/emails",
-                  action="add_email", conditions=dict(method=["PUT"]))
-        m.connect("edit_user_emails", "/users/{id}/edit/emails",
-                  action="delete_email", conditions=dict(method=["DELETE"]))
+        m.connect("edit_user_emails_update", "/users/{id}/edit/emails",
+                  action="add_email", conditions=dict(method=["POST"]))
+        m.connect("edit_user_emails_delete", "/users/{id}/edit/emails/delete",
+                  action="delete_email", conditions=dict(method=["POST"]))
 
         m.connect("edit_user_ips", "/users/{id}/edit/ips",
                   action="edit_ips", conditions=dict(method=["GET"]))
-        m.connect("edit_user_ips", "/users/{id}/edit/ips",
-                  action="add_ip", conditions=dict(method=["PUT"]))
-        m.connect("edit_user_ips", "/users/{id}/edit/ips",
-                  action="delete_ip", conditions=dict(method=["DELETE"]))
+        m.connect("edit_user_ips_update", "/users/{id}/edit/ips",
+                  action="add_ip", conditions=dict(method=["POST"]))
+        m.connect("edit_user_ips_delete", "/users/{id}/edit/ips/delete",
+                  action="delete_ip", conditions=dict(method=["POST"]))
 
-    #ADMIN USER GROUPS REST ROUTES
+    # ADMIN USER GROUPS REST ROUTES
     with rmap.submapper(path_prefix=ADMIN_PREFIX,
                         controller='admin/user_groups') as m:
         m.connect("users_groups", "/user_groups",
@@ -235,28 +222,25 @@ def make_map(config):
         m.connect("new_users_group", "/user_groups/new",
                   action="new", conditions=dict(method=["GET"]))
         m.connect("update_users_group", "/user_groups/{id}",
-                  action="update", conditions=dict(method=["PUT"]))
-        m.connect("delete_users_group", "/user_groups/{id}",
-                  action="delete", conditions=dict(method=["DELETE"]))
+                  action="update", conditions=dict(method=["POST"]))
+        m.connect("delete_users_group", "/user_groups/{id}/delete",
+                  action="delete", conditions=dict(method=["POST"]))
         m.connect("edit_users_group", "/user_groups/{id}/edit",
                   action="edit", conditions=dict(method=["GET"]),
                   function=check_user_group)
-        m.connect("users_group", "/user_groups/{id}",
-                  action="show", conditions=dict(method=["GET"]))
 
-        #EXTRAS USER GROUP ROUTES
+        # EXTRAS USER GROUP ROUTES
         m.connect("edit_user_group_default_perms", "/user_groups/{id}/edit/default_perms",
                   action="edit_default_perms", conditions=dict(method=["GET"]))
-        m.connect("edit_user_group_default_perms", "/user_groups/{id}/edit/default_perms",
-                  action="update_default_perms", conditions=dict(method=["PUT"]))
-
+        m.connect("edit_user_group_default_perms_update", "/user_groups/{id}/edit/default_perms",
+                  action="update_default_perms", conditions=dict(method=["POST"]))
 
         m.connect("edit_user_group_perms", "/user_groups/{id}/edit/perms",
                   action="edit_perms", conditions=dict(method=["GET"]))
-        m.connect("edit_user_group_perms", "/user_groups/{id}/edit/perms",
-                  action="update_perms", conditions=dict(method=["PUT"]))
-        m.connect("edit_user_group_perms", "/user_groups/{id}/edit/perms",
-                  action="delete_perms", conditions=dict(method=["DELETE"]))
+        m.connect("edit_user_group_perms_update", "/user_groups/{id}/edit/perms",
+                  action="update_perms", conditions=dict(method=["POST"]))
+        m.connect("edit_user_group_perms_delete", "/user_groups/{id}/edit/perms/delete",
+                  action="delete_perms", conditions=dict(method=["POST"]))
 
         m.connect("edit_user_group_advanced", "/user_groups/{id}/edit/advanced",
                   action="edit_advanced", conditions=dict(method=["GET"]))
@@ -264,9 +248,7 @@ def make_map(config):
         m.connect("edit_user_group_members", "/user_groups/{id}/edit/members",
                   action="edit_members", conditions=dict(method=["GET"]))
 
-
-
-    #ADMIN PERMISSIONS ROUTES
+    # ADMIN PERMISSIONS ROUTES
     with rmap.submapper(path_prefix=ADMIN_PREFIX,
                         controller='admin/permissions') as m:
         m.connect("admin_permissions", "/permissions",
@@ -275,28 +257,27 @@ def make_map(config):
                   action="permission_globals", conditions=dict(method=["GET"]))
 
         m.connect("admin_permissions_ips", "/permissions/ips",
-                  action="permission_ips", conditions=dict(method=["POST"]))
-        m.connect("admin_permissions_ips", "/permissions/ips",
                   action="permission_ips", conditions=dict(method=["GET"]))
 
         m.connect("admin_permissions_perms", "/permissions/perms",
-                  action="permission_perms", conditions=dict(method=["POST"]))
-        m.connect("admin_permissions_perms", "/permissions/perms",
                   action="permission_perms", conditions=dict(method=["GET"]))
 
+    # ADMIN DEFAULTS ROUTES
+    with rmap.submapper(path_prefix=ADMIN_PREFIX,
+                        controller='admin/defaults') as m:
+        m.connect('defaults', 'defaults',
+                  action="index")
+        m.connect('defaults_update', 'defaults/{id}/update',
+                  action="update", conditions=dict(method=["POST"]))
 
-    #ADMIN DEFAULTS REST ROUTES
-    rmap.resource('default', 'defaults',
-                  controller='admin/defaults', path_prefix=ADMIN_PREFIX)
-
-    #ADMIN AUTH SETTINGS
+    # ADMIN AUTH SETTINGS
     rmap.connect('auth_settings', '%s/auth' % ADMIN_PREFIX,
                  controller='admin/auth_settings', action='auth_settings',
                  conditions=dict(method=["POST"]))
     rmap.connect('auth_home', '%s/auth' % ADMIN_PREFIX,
                  controller='admin/auth_settings')
 
-    #ADMIN SETTINGS ROUTES
+    # ADMIN SETTINGS ROUTES
     with rmap.submapper(path_prefix=ADMIN_PREFIX,
                         controller='admin/settings') as m:
         m.connect("admin_settings", "/settings",
@@ -326,8 +307,8 @@ def make_map(config):
 
         m.connect("admin_settings_hooks", "/settings/hooks",
                   action="settings_hooks", conditions=dict(method=["POST"]))
-        m.connect("admin_settings_hooks", "/settings/hooks",
-                  action="settings_hooks", conditions=dict(method=["DELETE"]))
+        m.connect("admin_settings_hooks_delete", "/settings/hooks/delete",
+                  action="settings_hooks", conditions=dict(method=["POST"]))
         m.connect("admin_settings_hooks", "/settings/hooks",
                   action="settings_hooks", conditions=dict(method=["GET"]))
 
@@ -343,7 +324,7 @@ def make_map(config):
         m.connect("admin_settings_system_update", "/settings/system/updates",
                   action="settings_system_update", conditions=dict(method=["GET"]))
 
-    #ADMIN MY ACCOUNT
+    # ADMIN MY ACCOUNT
     with rmap.submapper(path_prefix=ADMIN_PREFIX,
                         controller='admin/my_account') as m:
 
@@ -370,46 +351,17 @@ def make_map(config):
                   action="my_account_emails", conditions=dict(method=["GET"]))
         m.connect("my_account_emails", "/my_account/emails",
                   action="my_account_emails_add", conditions=dict(method=["POST"]))
-        m.connect("my_account_emails", "/my_account/emails",
-                  action="my_account_emails_delete", conditions=dict(method=["DELETE"]))
+        m.connect("my_account_emails_delete", "/my_account/emails/delete",
+                  action="my_account_emails_delete", conditions=dict(method=["POST"]))
 
         m.connect("my_account_api_keys", "/my_account/api_keys",
                   action="my_account_api_keys", conditions=dict(method=["GET"]))
         m.connect("my_account_api_keys", "/my_account/api_keys",
                   action="my_account_api_keys_add", conditions=dict(method=["POST"]))
-        m.connect("my_account_api_keys", "/my_account/api_keys",
-                  action="my_account_api_keys_delete", conditions=dict(method=["DELETE"]))
+        m.connect("my_account_api_keys_delete", "/my_account/api_keys/delete",
+                  action="my_account_api_keys_delete", conditions=dict(method=["POST"]))
 
-    #NOTIFICATION REST ROUTES
-    with rmap.submapper(path_prefix=ADMIN_PREFIX,
-                        controller='admin/notifications') as m:
-        m.connect("notifications", "/notifications",
-                  action="create", conditions=dict(method=["POST"]))
-        m.connect("notifications", "/notifications",
-                  action="index", conditions=dict(method=["GET"]))
-        m.connect("notifications_mark_all_read", "/notifications/mark_all_read",
-                  action="mark_all_read", conditions=dict(method=["GET"]))
-        m.connect("formatted_notifications", "/notifications.{format}",
-                  action="index", conditions=dict(method=["GET"]))
-        m.connect("new_notification", "/notifications/new",
-                  action="new", conditions=dict(method=["GET"]))
-        m.connect("formatted_new_notification", "/notifications/new.{format}",
-                  action="new", conditions=dict(method=["GET"]))
-        m.connect("/notifications/{notification_id}",
-                  action="update", conditions=dict(method=["PUT"]))
-        m.connect("/notifications/{notification_id}",
-                  action="delete", conditions=dict(method=["DELETE"]))
-        m.connect("edit_notification", "/notifications/{notification_id}/edit",
-                  action="edit", conditions=dict(method=["GET"]))
-        m.connect("formatted_edit_notification",
-                  "/notifications/{notification_id}.{format}/edit",
-                  action="edit", conditions=dict(method=["GET"]))
-        m.connect("notification", "/notifications/{notification_id}",
-                  action="show", conditions=dict(method=["GET"]))
-        m.connect("formatted_notification", "/notifications/{notification_id}.{format}",
-                  action="show", conditions=dict(method=["GET"]))
-
-    #ADMIN GIST
+    # ADMIN GIST
     with rmap.submapper(path_prefix=ADMIN_PREFIX,
                         controller='admin/gists') as m:
         m.connect("gists", "/gists",
@@ -419,16 +371,12 @@ def make_map(config):
         m.connect("new_gist", "/gists/new",
                   action="new", conditions=dict(method=["GET"]))
 
-
-        m.connect("/gists/{gist_id}",
-                  action="update", conditions=dict(method=["PUT"]))
-        m.connect("/gists/{gist_id}",
-                  action="delete", conditions=dict(method=["DELETE"]))
+        m.connect("gist_delete", "/gists/{gist_id}/delete",
+                  action="delete", conditions=dict(method=["POST"]))
         m.connect("edit_gist", "/gists/{gist_id}/edit",
                   action="edit", conditions=dict(method=["GET", "POST"]))
         m.connect("edit_gist_check_revision", "/gists/{gist_id}/edit/check_revision",
                   action="check_revision", conditions=dict(method=["POST"]))
-
 
         m.connect("gist", "/gists/{gist_id}",
                   action="show", conditions=dict(method=["GET"]))
@@ -442,7 +390,7 @@ def make_map(config):
                   revision='tip',
                   action="show", conditions=dict(method=["GET"]))
 
-    #ADMIN MAIN PAGES
+    # ADMIN MAIN PAGES
     with rmap.submapper(path_prefix=ADMIN_PREFIX,
                         controller='admin/admin') as m:
         m.connect('admin_home', '', action='index')
@@ -451,11 +399,11 @@ def make_map(config):
     #==========================================================================
     # API V2
     #==========================================================================
-    with rmap.submapper(path_prefix=ADMIN_PREFIX,
-                        controller='api/api') as m:
+    with rmap.submapper(path_prefix=ADMIN_PREFIX, controller='api/api',
+                        action='_dispatch') as m:
         m.connect('api', '/api')
 
-    #USER JOURNAL
+    # USER JOURNAL
     rmap.connect('journal', '%s/journal' % ADMIN_PREFIX,
                  controller='journal', action='index')
     rmap.connect('journal_rss', '%s/journal/rss' % ADMIN_PREFIX,
@@ -484,7 +432,7 @@ def make_map(config):
                  controller='journal', action='toggle_following',
                  conditions=dict(method=["POST"]))
 
-    #SEARCH
+    # SEARCH
     rmap.connect('search', '%s/search' % ADMIN_PREFIX, controller='search',)
     rmap.connect('search_repo_admin', '%s/search/{repo_name:.*}' % ADMIN_PREFIX,
                  controller='search',
@@ -494,7 +442,7 @@ def make_map(config):
                  conditions=dict(function=check_repo),
                  )
 
-    #LOGIN/LOGOUT/REGISTER/SIGN IN
+    # LOGIN/LOGOUT/REGISTER/SIGN IN
     rmap.connect('authentication_token', '%s/authentication_token' % ADMIN_PREFIX, controller='login', action='authentication_token')
     rmap.connect('login_home', '%s/login' % ADMIN_PREFIX, controller='login')
     rmap.connect('logout_home', '%s/logout' % ADMIN_PREFIX, controller='login',
@@ -510,7 +458,7 @@ def make_map(config):
                  '%s/password_reset_confirmation' % ADMIN_PREFIX,
                  controller='login', action='password_reset_confirmation')
 
-    #FEEDS
+    # FEEDS
     rmap.connect('rss_feed_home', '/{repo_name:.*?}/feed/rss',
                 controller='feed', action='rss',
                 conditions=dict(function=check_repo))
@@ -543,8 +491,6 @@ def make_map(config):
                 controller='summary', action='repo_size',
                 conditions=dict(function=check_repo))
 
-    rmap.connect('branch_tag_switcher', '/{repo_name:.*?}/branches-tags',
-                 controller='home', action='branch_tag_switcher')
     rmap.connect('repo_refs_data', '/{repo_name:.*?}/refs-data',
                  controller='home', action='repo_refs_data')
 
@@ -568,21 +514,20 @@ def make_map(config):
                  conditions=dict(method=["GET"], function=check_repo))
     rmap.connect("edit_repo_perms_update", "/{repo_name:.*?}/settings/permissions",
                  controller='admin/repos', action="edit_permissions_update",
-                 conditions=dict(method=["PUT"], function=check_repo))
-    rmap.connect("edit_repo_perms_revoke", "/{repo_name:.*?}/settings/permissions",
+                 conditions=dict(method=["POST"], function=check_repo))
+    rmap.connect("edit_repo_perms_revoke", "/{repo_name:.*?}/settings/permissions/delete",
                  controller='admin/repos', action="edit_permissions_revoke",
-                 conditions=dict(method=["DELETE"], function=check_repo))
+                 conditions=dict(method=["POST"], function=check_repo))
 
     rmap.connect("edit_repo_fields", "/{repo_name:.*?}/settings/fields",
                  controller='admin/repos', action="edit_fields",
                  conditions=dict(method=["GET"], function=check_repo))
     rmap.connect('create_repo_fields', "/{repo_name:.*?}/settings/fields/new",
                  controller='admin/repos', action="create_repo_field",
-                 conditions=dict(method=["PUT"], function=check_repo))
-    rmap.connect('delete_repo_fields', "/{repo_name:.*?}/settings/fields/{field_id}",
+                 conditions=dict(method=["POST"], function=check_repo))
+    rmap.connect('delete_repo_fields', "/{repo_name:.*?}/settings/fields/{field_id}/delete",
                  controller='admin/repos', action="delete_repo_field",
-                 conditions=dict(method=["DELETE"], function=check_repo))
-
+                 conditions=dict(method=["POST"], function=check_repo))
 
     rmap.connect("edit_repo_advanced", "/{repo_name:.*?}/settings/advanced",
                  controller='admin/repos', action="edit_advanced",
@@ -590,43 +535,41 @@ def make_map(config):
 
     rmap.connect("edit_repo_advanced_locking", "/{repo_name:.*?}/settings/advanced/locking",
                  controller='admin/repos', action="edit_advanced_locking",
-                 conditions=dict(method=["PUT"], function=check_repo))
+                 conditions=dict(method=["POST"], function=check_repo))
     rmap.connect('toggle_locking', "/{repo_name:.*?}/settings/advanced/locking_toggle",
                  controller='admin/repos', action="toggle_locking",
                  conditions=dict(method=["GET"], function=check_repo))
 
     rmap.connect("edit_repo_advanced_journal", "/{repo_name:.*?}/settings/advanced/journal",
                  controller='admin/repos', action="edit_advanced_journal",
-                 conditions=dict(method=["PUT"], function=check_repo))
+                 conditions=dict(method=["POST"], function=check_repo))
 
     rmap.connect("edit_repo_advanced_fork", "/{repo_name:.*?}/settings/advanced/fork",
                  controller='admin/repos', action="edit_advanced_fork",
-                 conditions=dict(method=["PUT"], function=check_repo))
-
+                 conditions=dict(method=["POST"], function=check_repo))
 
     rmap.connect("edit_repo_caches", "/{repo_name:.*?}/settings/caches",
                  controller='admin/repos', action="edit_caches",
                  conditions=dict(method=["GET"], function=check_repo))
-    rmap.connect("edit_repo_caches", "/{repo_name:.*?}/settings/caches",
+    rmap.connect("update_repo_caches", "/{repo_name:.*?}/settings/caches",
                  controller='admin/repos', action="edit_caches",
-                 conditions=dict(method=["PUT"], function=check_repo))
-
+                 conditions=dict(method=["POST"], function=check_repo))
 
     rmap.connect("edit_repo_remote", "/{repo_name:.*?}/settings/remote",
                  controller='admin/repos', action="edit_remote",
                  conditions=dict(method=["GET"], function=check_repo))
-    rmap.connect("edit_repo_remote", "/{repo_name:.*?}/settings/remote",
+    rmap.connect("edit_repo_remote_update", "/{repo_name:.*?}/settings/remote",
                  controller='admin/repos', action="edit_remote",
-                 conditions=dict(method=["PUT"], function=check_repo))
+                 conditions=dict(method=["POST"], function=check_repo))
 
     rmap.connect("edit_repo_statistics", "/{repo_name:.*?}/settings/statistics",
                  controller='admin/repos', action="edit_statistics",
                  conditions=dict(method=["GET"], function=check_repo))
-    rmap.connect("edit_repo_statistics", "/{repo_name:.*?}/settings/statistics",
+    rmap.connect("edit_repo_statistics_update", "/{repo_name:.*?}/settings/statistics",
                  controller='admin/repos', action="edit_statistics",
-                 conditions=dict(method=["PUT"], function=check_repo))
+                 conditions=dict(method=["POST"], function=check_repo))
 
-    #still working url for backward compat.
+    # still working url for backward compat.
     rmap.connect('raw_changeset_home_depraced',
                  '/{repo_name:.*?}/raw-changeset/{revision}',
                  controller='changeset', action='changeset_raw',
@@ -653,15 +596,10 @@ def make_map(config):
                 controller='changeset', revision='tip', action='comment',
                 conditions=dict(function=check_repo))
 
-    rmap.connect('changeset_comment_preview',
-                 '/{repo_name:.*?}/changeset-comment-preview',
-                controller='changeset', action='preview_comment',
-                conditions=dict(function=check_repo, method=["POST"]))
-
     rmap.connect('changeset_comment_delete',
-                 '/{repo_name:.*?}/changeset-comment-delete/{comment_id}',
+                 '/{repo_name:.*?}/changeset-comment/{comment_id}/delete',
                 controller='changeset', action='delete_comment',
-                conditions=dict(function=check_repo, method=["DELETE"]))
+                conditions=dict(function=check_repo, method=["POST"]))
 
     rmap.connect('changeset_info', '/changeset_info/{repo_name:.*?}/{revision}',
                  controller='changeset', action='changeset_info')
@@ -706,10 +644,10 @@ def make_map(config):
                  action='post', conditions=dict(function=check_repo,
                                                 method=["POST"]))
     rmap.connect('pullrequest_delete',
-                 '/{repo_name:.*?}/pull-request/{pull_request_id}',
+                 '/{repo_name:.*?}/pull-request/{pull_request_id}/delete',
                  controller='pullrequests',
                  action='delete', conditions=dict(function=check_repo,
-                                                method=["DELETE"]))
+                                                  method=["POST"]))
 
     rmap.connect('pullrequest_show_all',
                  '/{repo_name:.*?}/pull-request',
@@ -731,26 +669,13 @@ def make_map(config):
     rmap.connect('pullrequest_comment_delete',
                  '/{repo_name:.*?}/pull-request-comment/{comment_id}/delete',
                 controller='pullrequests', action='delete_comment',
-                conditions=dict(function=check_repo, method=["DELETE"]))
+                conditions=dict(function=check_repo, method=["POST"]))
 
     rmap.connect('summary_home_summary', '/{repo_name:.*?}/summary',
                 controller='summary', conditions=dict(function=check_repo))
 
-    rmap.connect('branches_home', '/{repo_name:.*?}/branches',
-                controller='branches', conditions=dict(function=check_repo))
-
-    rmap.connect('tags_home', '/{repo_name:.*?}/tags',
-                controller='tags', conditions=dict(function=check_repo))
-
-    rmap.connect('bookmarks_home', '/{repo_name:.*?}/bookmarks',
-                controller='bookmarks', conditions=dict(function=check_repo))
-
     rmap.connect('changelog_home', '/{repo_name:.*?}/changelog',
                 controller='changelog', conditions=dict(function=check_repo))
-
-    rmap.connect('changelog_summary_home', '/{repo_name:.*?}/changelog_summary',
-                controller='changelog', action='changelog_summary',
-                conditions=dict(function=check_repo))
 
     rmap.connect('changelog_file_home', '/{repo_name:.*?}/changelog/{revision}/{f_path:.*}',
                 controller='changelog', f_path=None,
@@ -842,3 +767,29 @@ def make_map(config):
                  conditions=dict(function=check_repo))
 
     return rmap
+
+
+class UrlGenerator(object):
+    """Emulate pylons.url in providing a wrapper around routes.url
+
+    This code was added during migration from Pylons to Turbogears2. Pylons
+    already provided a wrapper like this, but Turbogears2 does not.
+
+    When the routing of Kallithea is changed to use less Routes and more
+    Turbogears2-style routing, this class may disappear or change.
+
+    url() (the __call__ method) returns the URL based on a route name and
+    arguments.
+    url.current() returns the URL of the current page with arguments applied.
+
+    Refer to documentation of Routes for details:
+    https://routes.readthedocs.io/en/latest/generating.html#generation
+    """
+    def __call__(self, *args, **kwargs):
+        return request.environ['routes.url'](*args, **kwargs)
+
+    def current(self, *args, **kwargs):
+        return request.environ['routes.url'].current(*args, **kwargs)
+
+
+url = UrlGenerator()

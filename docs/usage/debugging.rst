@@ -25,7 +25,7 @@ Enable interactive debug mode
 
 To enable interactive debug mode simply comment out ``set debug = false`` in
 the .ini file. This will trigger an interactive debugger each time
-there is an error in the browser, or send a http link if an error occured in the backend. This
+there is an error in the browser, or send a http link if an error occurred in the backend. This
 is a great tool for fast debugging as you get a handy Python console right
 in the web view.
 

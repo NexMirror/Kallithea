@@ -1,5 +1,6 @@
+import mock
 import os
-from kallithea.tests import *
+from kallithea.tests.base import *
 
 
 class TestSearchController(TestController):
@@ -8,18 +9,22 @@ class TestSearchController(TestController):
         self.log_user()
         response = self.app.get(url(controller='search', action='index'))
 
-        response.mustcontain('class="small" id="q" name="q" type="text"')
+        response.mustcontain('class="form-control" id="q" name="q" type="text"')
         # Test response...
 
-    def test_empty_search(self):
-        if os.path.isdir(self.index_location):
-            raise SkipTest('skipped due to existing index')
-        else:
-            self.log_user()
+    def test_empty_search(self, tmpdir):
+        self.log_user()
+
+        config_mock = {
+            'app_conf': {
+                # can be any existing dir that does not contain an actual index
+                'index_dir': str(tmpdir),
+            }
+        }
+        with mock.patch('kallithea.controllers.search.config', config_mock):
             response = self.app.get(url(controller='search', action='index'),
                                     {'q': HG_REPO})
-            response.mustcontain('There is no index to search in. '
-                                 'Please run whoosh indexer')
+            response.mustcontain('The server has no search index.')
 
     def test_normal_search(self):
         self.log_user()

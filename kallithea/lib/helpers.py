@@ -20,49 +20,34 @@ available to Controllers. This module is available to both as 'h'.
 import hashlib
 import json
 import StringIO
-import math
 import logging
 import re
 import urlparse
 import textwrap
 
+from beaker.cache import cache_region
 from pygments.formatters.html import HtmlFormatter
 from pygments import highlight as code_highlight
-from pylons import url
-from pylons.i18n.translation import _, ungettext
+from tg.i18n import ugettext as _
 
 from webhelpers.html import literal, HTML, escape
-from webhelpers.html.tools import *
-from webhelpers.html.builder import make_tag
-from webhelpers.html.tags import auto_discovery_link, checkbox, css_classes, \
-    end_form, file, hidden, image, javascript_link, link_to, \
-    link_to_if, link_to_unless, ol, required_legend, select, stylesheet_link, \
-    submit, text, password, textarea, title, ul, xml_declaration, radio, \
-    form as insecure_form
-from webhelpers.html.tools import auto_link, button_to, highlight, \
-    js_obfuscate, mail_to, strip_links, strip_tags, tag_re
-from webhelpers.number import format_byte_size, format_bit_size
+from webhelpers.html.tags import checkbox, end_form, hidden, link_to, \
+    select, submit, text, password, textarea, radio, form as insecure_form
+from webhelpers.number import format_byte_size
 from webhelpers.pylonslib import Flash as _Flash
 from webhelpers.pylonslib.secure_form import secure_form, authentication_token
-from webhelpers.text import chop_at, collapse, convert_accented_entities, \
-    convert_misc_entities, lchop, plural, rchop, remove_formatting, \
-    replace_whitespace, urlify, truncate, wrap_paragraphs
-from webhelpers.date import time_ago_in_words
-from webhelpers.paginate import Page as _Page
+from webhelpers.text import chop_at, truncate, wrap_paragraphs
 from webhelpers.html.tags import _set_input_attrs, _set_id_attr, \
     convert_boolean_attrs, NotGiven, _make_safe_id_component
 
+from kallithea.config.routing import url
 from kallithea.lib.annotate import annotate_highlight
-from kallithea.lib.utils import repo_name_slug, get_custom_lexer
+from kallithea.lib.pygmentsutils import get_custom_lexer
 from kallithea.lib.utils2 import str2bool, safe_unicode, safe_str, \
-    get_changeset_safe, datetime_to_time, time_to_datetime, AttributeDict,\
-    safe_int
-from kallithea.lib.markup_renderer import MarkupRenderer, url_re
+    time_to_datetime, AttributeDict, safe_int, MENTIONS_REGEX
+from kallithea.lib.markup_renderer import url_re
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError
 from kallithea.lib.vcs.backends.base import BaseChangeset, EmptyChangeset
-from kallithea.config.conf import DATE_FORMAT, DATETIME_FORMAT
-from kallithea.model.changeset_status import ChangesetStatusModel
-from kallithea.model.db import URL_SEP, Permission
 
 log = logging.getLogger(__name__)
 
@@ -73,11 +58,12 @@ def canonical_url(*args, **kargs):
     from kallithea import CONFIG
     try:
         parts = CONFIG.get('canonical_url', '').split('://', 1)
-        kargs['host'] = parts[1].split('/', 1)[0]
+        kargs['host'] = parts[1]
         kargs['protocol'] = parts[0]
     except IndexError:
         kargs['qualified'] = True
     return url(*args, **kargs)
+
 
 def canonical_hostname():
     '''Return canonical hostname of system'''
@@ -89,6 +75,7 @@ def canonical_hostname():
         parts = url('home', qualified=True).split('://', 1)
         return parts[1].split('/', 1)[0]
 
+
 def html_escape(s):
     """Return string with all html escaped.
     This is also safe for javascript in html but not necessarily correct.
@@ -98,7 +85,7 @@ def html_escape(s):
         .replace(">", "&gt;")
         .replace("<", "&lt;")
         .replace('"', "&quot;")
-        .replace("'", "&apos;")
+        .replace("'", "&apos;") # Note: this is HTML5 not HTML4 and might not work in mails
         )
 
 def js(value):
@@ -131,8 +118,27 @@ def js(value):
         .replace('>', r'\x3e')
     )
 
-def shorter(s, size=20):
-    postfix = '...'
+
+def jshtml(val):
+    """HTML escapes a string value, then converts the resulting string
+    to its corresponding JavaScript representation (see `js`).
+
+    This is used when a plain-text string (possibly containing special
+    HTML characters) will be used by a script in an HTML context (e.g.
+    element.innerHTML or jQuery's 'html' method).
+
+    If in doubt, err on the side of using `jshtml` over `js`, since it's
+    better to escape too much than too little.
+    """
+    return js(escape(val))
+
+
+def shorter(s, size=20, firstline=False, postfix='...'):
+    """Truncate s to size, including the postfix string if truncating.
+    If firstline, truncate at newline.
+    """
+    if firstline:
+        s = s.split('\n', 1)[0].rstrip()
     if len(s) > size:
         return s[:size - len(postfix)] + postfix
     return s
@@ -146,6 +152,7 @@ def _reset(name, value=None, id=NotGiven, type="reset", **attrs):
     _set_id_attr(attrs, id, name)
     convert_boolean_attrs(attrs, ["disabled"])
     return HTML.input(**attrs)
+
 
 reset = _reset
 safeid = _make_safe_id_component
@@ -161,22 +168,6 @@ def FID(raw_id, path):
     """
 
     return 'C-%s-%s' % (short_id(raw_id), hashlib.md5(safe_str(path)).hexdigest()[:12])
-
-
-class _GetError(object):
-    """Get error from form_errors, and represent it as span wrapped error
-    message
-
-    :param field_name: field to fetch errors for
-    :param form_errors: form errors dict
-    """
-
-    def __call__(self, field_name, form_errors):
-        tmpl = """<span class="error_msg">%s</span>"""
-        if form_errors and field_name in form_errors:
-            return literal(tmpl % form_errors.get(field_name))
-
-get_error = _GetError()
 
 
 class _FilesBreadCrumbs(object):
@@ -203,6 +194,7 @@ class _FilesBreadCrumbs(object):
 
         return literal('/'.join(url_l))
 
+
 files_breadcrumbs = _FilesBreadCrumbs()
 
 
@@ -217,7 +209,7 @@ class CodeHtmlFormatter(HtmlFormatter):
     def _wrap_code(self, source):
         for cnt, it in enumerate(source):
             i, t = it
-            t = '<div id="L%s">%s</div>' % (cnt + 1, t)
+            t = '<span id="L%s">%s</span>' % (cnt + 1, t)
             yield i, t
 
     def _wrap_tablelinenos(self, inner):
@@ -271,19 +263,20 @@ class CodeHtmlFormatter(HtmlFormatter):
         # some configurations seem to mess up the formatting...
         if nocls:
             yield 0, ('<table class="%stable">' % self.cssclass +
-                      '<tr><td><div class="linenodiv" '
-                      'style="background-color: #f0f0f0; padding-right: 10px">'
-                      '<pre style="line-height: 125%">' +
-                      ls + '</pre></div></td><td id="hlcode" class="code">')
+                      '<tr><td><div class="linenodiv">'
+                      '<pre>' + ls + '</pre></div></td>'
+                      '<td id="hlcode" class="code">')
         else:
             yield 0, ('<table class="%stable">' % self.cssclass +
-                      '<tr><td class="linenos"><div class="linenodiv"><pre>' +
-                      ls + '</pre></div></td><td id="hlcode" class="code">')
+                      '<tr><td class="linenos"><div class="linenodiv">'
+                      '<pre>' + ls + '</pre></div></td>'
+                      '<td id="hlcode" class="code">')
         yield 0, dummyoutfile.getvalue()
         yield 0, '</td></tr></table>'
 
 
 _whitespace_re = re.compile(r'(\t)|( )(?=\n|</div>)')
+
 
 def _markup_whitespace(m):
     groups = m.groups()
@@ -292,8 +285,10 @@ def _markup_whitespace(m):
     if groups[1]:
         return ' <i></i>'
 
+
 def markup_whitespace(s):
     return _whitespace_re.sub(_markup_whitespace, s)
+
 
 def pygmentize(filenode, **kwargs):
     """
@@ -369,9 +364,9 @@ def pygmentize_annotation(repo_name, filenode, **kwargs):
             author = escape(changeset.author)
             date = changeset.date
             message = escape(changeset.message)
-            tooltip_html = ("<div style='font-size:0.8em'><b>Author:</b>"
-                            " %s<br/><b>Date:</b> %s</b><br/><b>Message:"
-                            "</b> %s<br/></div>") % (author, date, message)
+            tooltip_html = ("<b>Author:</b> %s<br/>"
+                            "<b>Date:</b> %s</b><br/>"
+                            "<b>Message:</b> %s") % (author, date, message)
 
             lnk_format = show_id(changeset)
             uri = link_to(
@@ -379,8 +374,8 @@ def pygmentize_annotation(repo_name, filenode, **kwargs):
                     url('changeset_home', repo_name=repo_name,
                         revision=changeset.raw_id),
                     style=get_color_string(changeset.raw_id),
-                    class_='tooltip safe-html-title',
-                    title=tooltip_html
+                    **{'data-toggle': 'popover',
+                       'data-content': tooltip_html}
                   )
 
             uri += '\n'
@@ -389,10 +384,6 @@ def pygmentize_annotation(repo_name, filenode, **kwargs):
 
     return literal(markup_whitespace(annotate_highlight(filenode, url_func(repo_name), **kwargs)))
 
-
-def is_following_repo(repo_name, user_id):
-    from kallithea.model.scm import ScmModel
-    return ScmModel().is_following_repo(repo_name, user_id)
 
 class _Message(object):
     """A message returned by ``Flash.pop_messages()``.
@@ -415,6 +406,7 @@ class _Message(object):
 
     def __html__(self):
         return escape(safe_unicode(self.message))
+
 
 class Flash(_Flash):
 
@@ -442,10 +434,11 @@ class Flash(_Flash):
 
         The return value is a list of ``Message`` objects.
         """
-        from pylons import session
+        from tg import session
         messages = session.pop(self.session_key, [])
         session.save()
         return [_Message(*m) for m in messages]
+
 
 flash = Flash()
 
@@ -454,9 +447,8 @@ flash = Flash()
 #==============================================================================
 from kallithea.lib.vcs.utils import author_name, author_email
 from kallithea.lib.utils2 import credentials_filter, age as _age
-from kallithea.model.db import User, ChangesetStatus, PullRequest
 
-age = lambda  x, y=False: _age(x, y)
+age = lambda x, y=False: _age(x, y)
 capitalize = lambda x: x.capitalize()
 email = author_email
 short_id = lambda x: x[:12]
@@ -483,7 +475,7 @@ def show_id(cs):
 
 def fmt_date(date):
     if date:
-        return date.strftime("%Y-%m-%d %H:%M:%S").decode('utf8')
+        return date.strftime("%Y-%m-%d %H:%M:%S").decode('utf-8')
 
     return ""
 
@@ -508,20 +500,19 @@ def is_hg(repository):
     return _type == 'hg'
 
 
+@cache_region('long_term', 'user_or_none')
 def user_or_none(author):
+    """Try to match email part of VCS committer string with a local user - or return None"""
+    from kallithea.model.db import User
     email = author_email(author)
     if email:
-        user = User.get_by_email(email, case_insensitive=True, cache=True)
-        if user is not None:
-            return user
-
-    user = User.get_by_username(author_name(author), case_insensitive=True, cache=True)
-    if user is not None:
-        return user
-
+        return User.get_by_email(email, cache=True) # cache will only use sql_cache_short
     return None
 
+
 def email_or_none(author):
+    """Try to match email part of VCS committer string with a local user.
+    Return primary email of user, email part of the specified author name, or None."""
     if not author:
         return None
     user = user_or_none(author)
@@ -536,9 +527,11 @@ def email_or_none(author):
     # No valid email, not a valid user in the system, none!
     return None
 
+
 def person(author, show_attr="username"):
     """Find the user identified by 'author', return one of the users attributes,
     default to the username attribute, None if there is no user"""
+    from kallithea.model.db import User
     # attr to return from fetched user
     person_getter = lambda usr: getattr(usr, show_attr)
 
@@ -555,39 +548,17 @@ def person(author, show_attr="username"):
 
 
 def person_by_id(id_, show_attr="username"):
+    from kallithea.model.db import User
     # attr to return from fetched user
     person_getter = lambda usr: getattr(usr, show_attr)
 
-    #maybe it's an ID ?
+    # maybe it's an ID ?
     if str(id_).isdigit() or isinstance(id_, int):
         id_ = int(id_)
         user = User.get(id_)
         if user is not None:
             return person_getter(user)
     return id_
-
-
-def desc_stylize(value):
-    """
-    converts tags from value into html equivalent
-
-    :param value:
-    """
-    if not value:
-        return ''
-
-    value = re.sub(r'\[see\ \=&gt;\ *([a-zA-Z0-9\/\=\?\&\ \:\/\.\-]*)\]',
-                   '<div class="metatag" tag="see">see =&gt; \\1 </div>', value)
-    value = re.sub(r'\[license\ \=&gt;\ *([a-zA-Z0-9\/\=\?\&\ \:\/\.\-]*)\]',
-                   '<div class="metatag" tag="license"><a href="http:\/\/www.opensource.org/licenses/\\1">\\1</a></div>', value)
-    value = re.sub(r'\[(requires|recommends|conflicts|base)\ \=&gt;\ *([a-zA-Z0-9\-\/]*)\]',
-                   '<div class="metatag" tag="\\1">\\1 =&gt; <a href="/\\2">\\2</a></div>', value)
-    value = re.sub(r'\[(lang|language)\ \=&gt;\ *([a-zA-Z\-\/\#\+]*)\]',
-                   '<div class="metatag" tag="lang">\\2</div>', value)
-    value = re.sub(r'\[([a-z]+)\]',
-                  '<div class="metatag" tag="\\1">\\1</div>', value)
-
-    return value
 
 
 def boolicon(value):
@@ -653,9 +624,9 @@ def action_parser(user_log, feed=False, parse_cs=False):
                 lbl = rev[:12]
                 title_ = _('Changeset %s not found') % lbl
             if parse_cs:
-                return link_to(lbl, url_, title=title_, class_='tooltip')
-            return link_to(lbl, url_, raw_id=rev.raw_id, repo_name=repo_name,
-                           class_='lazy-cs' if lazy_cs else '')
+                return link_to(lbl, url_, title=title_, **{'data-toggle': 'tooltip'})
+            return link_to(lbl, url_, class_='lazy-cs' if lazy_cs else '',
+                           **{'data-raw_id': rev.raw_id, 'data-repo_name': repo_name})
 
         def _get_op(rev_txt):
             _op = None
@@ -698,7 +669,7 @@ def action_parser(user_log, feed=False, parse_cs=False):
         _rev = '%s...%s' % (_name1, _name2)
 
         compare_view = (
-            ' <div class="compare_view tooltip" title="%s">'
+            ' <div class="compare_view" data-toggle="tooltip" title="%s">'
             '<a href="%s">%s</a> </div>' % (
                 _('Show all combined changesets %s->%s') % (
                     revs_ids[0][:12], revs_ids[-1][:12]
@@ -762,6 +733,7 @@ def action_parser(user_log, feed=False, parse_cs=False):
         return group_name
 
     def get_pull_request():
+        from kallithea.model.db import PullRequest
         pull_request_id = action_params
         nice_id = PullRequest.make_nice_id(pull_request_id)
 
@@ -833,9 +805,9 @@ def action_parser(user_log, feed=False, parse_cs=False):
     if feed:
         action = action_str[0].replace('[', '').replace(']', '')
     else:
-        action = action_str[0]\
-            .replace('[', '<span class="journal_highlight">')\
-            .replace(']', '</span>')
+        action = action_str[0] \
+            .replace('[', '<b>') \
+            .replace(']', '</b>')
 
     action_params_func = lambda: ""
 
@@ -850,9 +822,9 @@ def action_parser(user_log, feed=False, parse_cs=False):
         if len(x) > 1:
             action, action_params = x
 
-        tmpl = """<i class="%s" alt="%s"></i>"""
         ico = action_map.get(action, ['', '', ''])[2]
-        return literal(tmpl % (ico, action))
+        html = """<i class="%s"></i>""" % ico
+        return literal(html)
 
     # returned callbacks we need to call to get
     return [lambda: literal(action), action_params_func, action_parser_icon]
@@ -862,15 +834,34 @@ def action_parser(user_log, feed=False, parse_cs=False):
 #==============================================================================
 # PERMS
 #==============================================================================
-from kallithea.lib.auth import HasPermissionAny, HasPermissionAll, \
-HasRepoPermissionAny, HasRepoPermissionAll, HasRepoGroupPermissionAll, \
-HasRepoGroupPermissionAny
+from kallithea.lib.auth import HasPermissionAny, \
+    HasRepoPermissionLevel, HasRepoGroupPermissionLevel
 
 
 #==============================================================================
 # GRAVATAR URL
 #==============================================================================
-def gravatar(email_address, cls='', size=30, ssl_enabled=True):
+def gravatar_div(email_address, cls='', size=30, **div_attributes):
+    """Return an html literal with a span around a gravatar if they are enabled.
+    Extra keyword parameters starting with 'div_' will get the prefix removed
+    and '_' changed to '-' and be used as attributes on the div. The default
+    class is 'gravatar'.
+    """
+    from tg import tmpl_context as c
+    if not c.visual.use_gravatar:
+        return ''
+    if 'div_class' not in div_attributes:
+        div_attributes['div_class'] = "gravatar"
+    attributes = []
+    for k, v in sorted(div_attributes.items()):
+        assert k.startswith('div_'), k
+        attributes.append(' %s="%s"' % (k[4:].replace('_', '-'), escape(v)))
+    return literal("""<span%s>%s</span>""" %
+                   (''.join(attributes),
+                    gravatar(email_address, cls=cls, size=size)))
+
+
+def gravatar(email_address, cls='', size=30):
     """return html element of the gravatar
 
     This method will return an <img> with the resolution double the size (for
@@ -878,268 +869,49 @@ def gravatar(email_address, cls='', size=30, ssl_enabled=True):
     empty then we fallback to using an icon.
 
     """
-    src = gravatar_url(email_address, size*2, ssl_enabled)
+    from tg import tmpl_context as c
+    if not c.visual.use_gravatar:
+        return ''
 
-    #  here it makes sense to use style="width: ..." (instead of, say, a
-    # stylesheet) because we using this to generate a high-res (retina) size
-    tmpl = '<img alt="" class="{cls}" style="width: {size}px; height: {size}px" src="{src}"/>'
+    src = gravatar_url(email_address, size * 2)
 
-    # if src is empty then there was no gravatar, so we use a font icon
-    if not src:
-        tmpl = """<i class="icon-user {cls}" style="font-size: {size}px;"></i>"""
+    if src:
+        # here it makes sense to use style="width: ..." (instead of, say, a
+        # stylesheet) because we using this to generate a high-res (retina) size
+        html = ('<i class="icon-gravatar {cls}"'
+                ' style="font-size: {size}px;background-size: {size}px;background-image: url(\'{src}\')"'
+                '></i>').format(cls=cls, size=size, src=src)
 
-    tmpl = tmpl.format(cls=cls, size=size, src=src)
-    return literal(tmpl)
+    else:
+        # if src is empty then there was no gravatar, so we use a font icon
+        html = ("""<i class="icon-user {cls}" style="font-size: {size}px;"></i>"""
+            .format(cls=cls, size=size, src=src))
 
-def gravatar_url(email_address, size=30, ssl_enabled=True):
+    return literal(html)
+
+
+def gravatar_url(email_address, size=30, default=''):
     # doh, we need to re-import those to mock it later
-    from pylons import url
-    from pylons import tmpl_context as c
-
-    _def = 'anonymous@kallithea-scm.org'  # default gravatar
-    _use_gravatar = c.visual.use_gravatar
-    _gravatar_url = c.visual.gravatar_url or User.DEFAULT_GRAVATAR_URL
-
-    email_address = email_address or _def
-
-    if not _use_gravatar or not email_address or email_address == _def:
+    from kallithea.config.routing import url
+    from kallithea.model.db import User
+    from tg import tmpl_context as c
+    if not c.visual.use_gravatar:
         return ""
 
-    if _use_gravatar:
-        _md5 = lambda s: hashlib.md5(s).hexdigest()
+    _def = 'anonymous@kallithea-scm.org'  # default gravatar
+    email_address = email_address or _def
 
-        tmpl = _gravatar_url
-        parsed_url = urlparse.urlparse(url.current(qualified=True))
-        tmpl = tmpl.replace('{email}', email_address)\
-                   .replace('{md5email}', _md5(safe_str(email_address).lower())) \
-                   .replace('{netloc}', parsed_url.netloc)\
-                   .replace('{scheme}', parsed_url.scheme)\
-                   .replace('{size}', safe_str(size))
-        return tmpl
+    if email_address == _def:
+        return default
 
-class Page(_Page):
-    """
-    Custom pager to match rendering style with YUI paginator
-    """
-
-    def _get_pos(self, cur_page, max_page, items):
-        edge = (items / 2) + 1
-        if (cur_page <= edge):
-            radius = max(items / 2, items - cur_page)
-        elif (max_page - cur_page) < edge:
-            radius = (items - 1) - (max_page - cur_page)
-        else:
-            radius = items / 2
-
-        left = max(1, (cur_page - (radius)))
-        right = min(max_page, cur_page + (radius))
-        return left, cur_page, right
-
-    def _range(self, regexp_match):
-        """
-        Return range of linked pages (e.g. '1 2 [3] 4 5 6 7 8').
-
-        Arguments:
-
-        regexp_match
-            A "re" (regular expressions) match object containing the
-            radius of linked pages around the current page in
-            regexp_match.group(1) as a string
-
-        This function is supposed to be called as a callable in
-        re.sub.
-
-        """
-        radius = int(regexp_match.group(1))
-
-        # Compute the first and last page number within the radius
-        # e.g. '1 .. 5 6 [7] 8 9 .. 12'
-        # -> leftmost_page  = 5
-        # -> rightmost_page = 9
-        leftmost_page, _cur, rightmost_page = self._get_pos(self.page,
-                                                            self.last_page,
-                                                            (radius * 2) + 1)
-        nav_items = []
-
-        # Create a link to the first page (unless we are on the first page
-        # or there would be no need to insert '..' spacers)
-        if self.page != self.first_page and self.first_page < leftmost_page:
-            nav_items.append(self._pagerlink(self.first_page, self.first_page))
-
-        # Insert dots if there are pages between the first page
-        # and the currently displayed page range
-        if leftmost_page - self.first_page > 1:
-            # Wrap in a SPAN tag if nolink_attr is set
-            text_ = '..'
-            if self.dotdot_attr:
-                text_ = HTML.span(c=text_, **self.dotdot_attr)
-            nav_items.append(text_)
-
-        for thispage in xrange(leftmost_page, rightmost_page + 1):
-            # Highlight the current page number and do not use a link
-            text_ = str(thispage)
-            if thispage == self.page:
-                # Wrap in a SPAN tag if nolink_attr is set
-                if self.curpage_attr:
-                    text_ = HTML.span(c=text_, **self.curpage_attr)
-                nav_items.append(text_)
-            # Otherwise create just a link to that page
-            else:
-                nav_items.append(self._pagerlink(thispage, text_))
-
-        # Insert dots if there are pages between the displayed
-        # page numbers and the end of the page range
-        if self.last_page - rightmost_page > 1:
-            text_ = '..'
-            # Wrap in a SPAN tag if nolink_attr is set
-            if self.dotdot_attr:
-                text_ = HTML.span(c=text_, **self.dotdot_attr)
-            nav_items.append(text_)
-
-        # Create a link to the very last page (unless we are on the last
-        # page or there would be no need to insert '..' spacers)
-        if self.page != self.last_page and rightmost_page < self.last_page:
-            nav_items.append(self._pagerlink(self.last_page, self.last_page))
-
-        #_page_link = url.current()
-        #nav_items.append(literal('<link rel="prerender" href="%s?page=%s">' % (_page_link, str(int(self.page)+1))))
-        #nav_items.append(literal('<link rel="prefetch" href="%s?page=%s">' % (_page_link, str(int(self.page)+1))))
-        return self.separator.join(nav_items)
-
-    def pager(self, format='~2~', page_param='page', partial_param='partial',
-        show_if_single_page=False, separator=' ', onclick=None,
-        symbol_first='<<', symbol_last='>>',
-        symbol_previous='<', symbol_next='>',
-        link_attr={'class': 'pager_link', 'rel': 'prerender'},
-        curpage_attr={'class': 'pager_curpage'},
-        dotdot_attr={'class': 'pager_dotdot'}, **kwargs):
-
-        self.curpage_attr = curpage_attr
-        self.separator = separator
-        self.pager_kwargs = kwargs
-        self.page_param = page_param
-        self.partial_param = partial_param
-        self.onclick = onclick
-        self.link_attr = link_attr
-        self.dotdot_attr = dotdot_attr
-
-        # Don't show navigator if there is no more than one page
-        if self.page_count == 0 or (self.page_count == 1 and not show_if_single_page):
-            return ''
-
-        from string import Template
-        # Replace ~...~ in token format by range of pages
-        result = re.sub(r'~(\d+)~', self._range, format)
-
-        # Interpolate '%' variables
-        result = Template(result).safe_substitute({
-            'first_page': self.first_page,
-            'last_page': self.last_page,
-            'page': self.page,
-            'page_count': self.page_count,
-            'items_per_page': self.items_per_page,
-            'first_item': self.first_item,
-            'last_item': self.last_item,
-            'item_count': self.item_count,
-            'link_first': self.page > self.first_page and \
-                    self._pagerlink(self.first_page, symbol_first) or '',
-            'link_last': self.page < self.last_page and \
-                    self._pagerlink(self.last_page, symbol_last) or '',
-            'link_previous': self.previous_page and \
-                    self._pagerlink(self.previous_page, symbol_previous) \
-                    or HTML.span(symbol_previous, class_="yui-pg-previous"),
-            'link_next': self.next_page and \
-                    self._pagerlink(self.next_page, symbol_next) \
-                    or HTML.span(symbol_next, class_="yui-pg-next")
-        })
-
-        return literal(result)
-
-
-#==============================================================================
-# REPO PAGER, PAGER FOR REPOSITORY
-#==============================================================================
-class RepoPage(Page):
-
-    def __init__(self, collection, page=1, items_per_page=20,
-                 item_count=None, url=None, **kwargs):
-
-        """Create a "RepoPage" instance. special pager for paging
-        repository
-        """
-        self._url_generator = url
-
-        # Safe the kwargs class-wide so they can be used in the pager() method
-        self.kwargs = kwargs
-
-        # Save a reference to the collection
-        self.original_collection = collection
-
-        self.collection = collection
-
-        # The self.page is the number of the current page.
-        # The first page has the number 1!
-        try:
-            self.page = int(page)  # make it int() if we get it as a string
-        except (ValueError, TypeError):
-            self.page = 1
-
-        self.items_per_page = items_per_page
-
-        # Unless the user tells us how many items the collections has
-        # we calculate that ourselves.
-        if item_count is not None:
-            self.item_count = item_count
-        else:
-            self.item_count = len(self.collection)
-
-        # Compute the number of the first and last available page
-        if self.item_count > 0:
-            self.first_page = 1
-            self.page_count = int(math.ceil(float(self.item_count) /
-                                            self.items_per_page))
-            self.last_page = self.first_page + self.page_count - 1
-
-            # Make sure that the requested page number is the range of
-            # valid pages
-            if self.page > self.last_page:
-                self.page = self.last_page
-            elif self.page < self.first_page:
-                self.page = self.first_page
-
-            # Note: the number of items on this page can be less than
-            #       items_per_page if the last page is not full
-            self.first_item = max(0, (self.item_count) - (self.page *
-                                                          items_per_page))
-            self.last_item = ((self.item_count - 1) - items_per_page *
-                              (self.page - 1))
-
-            self.items = list(self.collection[self.first_item:self.last_item + 1])
-
-            # Links to previous and next page
-            if self.page > self.first_page:
-                self.previous_page = self.page - 1
-            else:
-                self.previous_page = None
-
-            if self.page < self.last_page:
-                self.next_page = self.page + 1
-            else:
-                self.next_page = None
-
-        # No items available
-        else:
-            self.first_page = None
-            self.page_count = 0
-            self.last_page = None
-            self.first_item = None
-            self.last_item = None
-            self.previous_page = None
-            self.next_page = None
-            self.items = []
-
-        # This is a subclass of the 'list' type. Initialise the list now.
-        list.__init__(self, reversed(self.items))
+    parsed_url = urlparse.urlparse(url.current(qualified=True))
+    url = (c.visual.gravatar_url or User.DEFAULT_GRAVATAR_URL ) \
+               .replace('{email}', email_address) \
+               .replace('{md5email}', hashlib.md5(safe_str(email_address).lower()).hexdigest()) \
+               .replace('{netloc}', parsed_url.netloc) \
+               .replace('{scheme}', parsed_url.scheme) \
+               .replace('{size}', safe_str(size))
+    return url
 
 
 def changed_tooltip(nodes):
@@ -1160,27 +932,6 @@ def changed_tooltip(nodes):
         return ': ' + _('No files')
 
 
-def repo_link(groups_and_repos):
-    """
-    Makes a breadcrumbs link to repo within a group
-    joins &raquo; on each group to create a fancy link
-
-    ex::
-        group >> subgroup >> repo
-
-    :param groups_and_repos:
-    :param last_url:
-    """
-    groups, just_name, repo_name = groups_and_repos
-    last_url = url('summary_home', repo_name=repo_name)
-    last_link = link_to(just_name, last_url)
-
-    def make_link(group):
-        return link_to(group.name,
-                       url('repos_group_home', group_name=group.group_name))
-    return literal(' &raquo; '.join(map(make_link, groups) + ['<span>%s</span>' % last_link]))
-
-
 def fancy_file_stats(stats):
     """
     Displays a fancy two colored bar for number of added/deleted
@@ -1191,31 +942,11 @@ def fancy_file_stats(stats):
     from kallithea.lib.diffs import NEW_FILENODE, DEL_FILENODE, \
         MOD_FILENODE, RENAMED_FILENODE, CHMOD_FILENODE, BIN_FILENODE
 
-    def cgen(l_type, a_v, d_v):
-        mapping = {'tr': 'top-right-rounded-corner-mid',
-                   'tl': 'top-left-rounded-corner-mid',
-                   'br': 'bottom-right-rounded-corner-mid',
-                   'bl': 'bottom-left-rounded-corner-mid'}
-        map_getter = lambda x: mapping[x]
-
-        if l_type == 'a' and d_v:
-            #case when added and deleted are present
-            return ' '.join(map(map_getter, ['tl', 'bl']))
-
-        if l_type == 'a' and not d_v:
-            return ' '.join(map(map_getter, ['tr', 'br', 'tl', 'bl']))
-
-        if l_type == 'd' and a_v:
-            return ' '.join(map(map_getter, ['tr', 'br']))
-
-        if l_type == 'd' and not a_v:
-            return ' '.join(map(map_getter, ['tr', 'br', 'tl', 'bl']))
-
     a, d = stats['added'], stats['deleted']
     width = 100
 
     if stats['binary']:
-        #binary mode
+        # binary mode
         lbl = ''
         bin_op = 1
 
@@ -1235,15 +966,15 @@ def fancy_file_stats(stats):
             lbl += _('rename')
             bin_op = RENAMED_FILENODE
 
-        #chmod can go with other operations
+        # chmod can go with other operations
         if CHMOD_FILENODE in stats['ops']:
             _org_lbl = _('chmod')
             lbl += _org_lbl if lbl.endswith('+') else '+%s' % _org_lbl
 
         #import ipdb;ipdb.set_trace()
-        b_d = '<div class="bin bin%s %s" style="width:100%%">%s</div>' % (bin_op, cgen('a', a_v='', d_v=0), lbl)
+        b_d = '<div class="bin bin%s progress-bar" style="width:100%%">%s</div>' % (bin_op, lbl)
         b_a = '<div class="bin bin1" style="width:0%"></div>'
-        return literal('<div style="width:%spx">%s%s</div>' % (width, b_a, b_d))
+        return literal('<div style="width:%spx" class="progress">%s%s</div>' % (width, b_a, b_d))
 
     t = stats['added'] + stats['deleted']
     unit = float(width) / (t or 1)
@@ -1254,7 +985,7 @@ def fancy_file_stats(stats):
     p_sum = a_p + d_p
 
     if p_sum > width:
-        #adjust the percentage to be == 100% since we adjusted to 9
+        # adjust the percentage to be == 100% since we adjusted to 9
         if a_p > d_p:
             a_p = a_p - (p_sum - width)
         else:
@@ -1263,165 +994,218 @@ def fancy_file_stats(stats):
     a_v = a if a > 0 else ''
     d_v = d if d > 0 else ''
 
-    d_a = '<div class="added %s" style="width:%s%%">%s</div>' % (
-        cgen('a', a_v, d_v), a_p, a_v
+    d_a = '<div class="added progress-bar" style="width:%s%%">%s</div>' % (
+        a_p, a_v
     )
-    d_d = '<div class="deleted %s" style="width:%s%%">%s</div>' % (
-        cgen('d', a_v, d_v), d_p, d_v
+    d_d = '<div class="deleted progress-bar" style="width:%s%%">%s</div>' % (
+        d_p, d_v
     )
-    return literal('<div style="width:%spx">%s%s</div>' % (width, d_a, d_d))
+    return literal('<div class="progress" style="width:%spx">%s%s</div>' % (width, d_a, d_d))
 
 
-def _urlify_text(s):
-    """
-    Extract urls from text and make html links out of them
-    """
-    def url_func(match_obj):
-        url_full = match_obj.group(1)
-        return '<a href="%(url)s">%(url)s</a>' % ({'url': url_full})
-    return url_re.sub(url_func, s)
+_URLIFY_RE = re.compile(r'''
+# URL markup
+(?P<url>%s) |
+# @mention markup
+(?P<mention>%s) |
+# Changeset hash markup
+(?<!\w|[-_])
+  (?P<hash>[0-9a-f]{12,40})
+(?!\w|[-_]) |
+# Markup of *bold text*
+(?:
+  (?:^|(?<=\s))
+  (?P<bold> [*] (?!\s) [^*\n]* (?<!\s) [*] )
+  (?![*\w])
+) |
+# "Stylize" markup
+\[see\ \=&gt;\ *(?P<seen>[a-zA-Z0-9\/\=\?\&\ \:\/\.\-]*)\] |
+\[license\ \=&gt;\ *(?P<license>[a-zA-Z0-9\/\=\?\&\ \:\/\.\-]*)\] |
+\[(?P<tagtype>requires|recommends|conflicts|base)\ \=&gt;\ *(?P<tagvalue>[a-zA-Z0-9\-\/]*)\] |
+\[(?:lang|language)\ \=&gt;\ *(?P<lang>[a-zA-Z\-\/\#\+]*)\] |
+\[(?P<tag>[a-z]+)\]
+''' % (url_re.pattern, MENTIONS_REGEX.pattern),
+    re.VERBOSE | re.MULTILINE | re.IGNORECASE)
 
-def urlify_text(s, truncate=None, stylize=False, truncatef=truncate):
+
+def urlify_text(s, repo_name=None, link_=None, truncate=None, stylize=False, truncatef=truncate):
     """
-    Extract urls from text and make literal html links out of them
+    Parses given text message and make literal html with markup.
+    The text will be truncated to the specified length.
+    Hashes are turned into changeset links to specified repository.
+    URLs links to what they say.
+    Issues are linked to given issue-server.
+    If link_ is provided, all text not already linking somewhere will link there.
     """
-    if truncate is not None:
-        s = truncatef(s, truncate)
+
+    def _replace(match_obj):
+        url = match_obj.group('url')
+        if url is not None:
+            return '<a href="%(url)s">%(url)s</a>' % {'url': url}
+        mention = match_obj.group('mention')
+        if mention is not None:
+            return '<b>%s</b>' % mention
+        hash_ = match_obj.group('hash')
+        if hash_ is not None and repo_name is not None:
+            from kallithea.config.routing import url  # doh, we need to re-import url to mock it later
+            return '<a class="changeset_hash" href="%(url)s">%(hash)s</a>' % {
+                 'url': url('changeset_home', repo_name=repo_name, revision=hash_),
+                 'hash': hash_,
+                }
+        bold = match_obj.group('bold')
+        if bold is not None:
+            return '<b>*%s*</b>' % _urlify(bold[1:-1])
+        if stylize:
+            seen = match_obj.group('seen')
+            if seen:
+                return '<div class="label label-meta" data-tag="see">see =&gt; %s</div>' % seen
+            license = match_obj.group('license')
+            if license:
+                return '<div class="label label-meta" data-tag="license"><a href="http:\/\/www.opensource.org/licenses/%s">%s</a></div>' % (license, license)
+            tagtype = match_obj.group('tagtype')
+            if tagtype:
+                tagvalue = match_obj.group('tagvalue')
+                return '<div class="label label-meta" data-tag="%s">%s =&gt; <a href="/%s">%s</a></div>' % (tagtype, tagtype, tagvalue, tagvalue)
+            lang = match_obj.group('lang')
+            if lang:
+                return '<div class="label label-meta" data-tag="lang">%s</div>' % lang
+            tag = match_obj.group('tag')
+            if tag:
+                return '<div class="label label-meta" data-tag="%s">%s</div>' % (tag, tag)
+        return match_obj.group(0)
+
+    def _urlify(s):
+        """
+        Extract urls from text and make html links out of them
+        """
+        return _URLIFY_RE.sub(_replace, s)
+
+    if truncate is None:
+        s = s.rstrip()
+    else:
+        s = truncatef(s, truncate, whole_word=True)
     s = html_escape(s)
-    if stylize:
-        s = desc_stylize(s)
-    s = _urlify_text(s)
+    s = _urlify(s)
+    if repo_name is not None:
+        s = urlify_issues(s, repo_name)
+    if link_ is not None:
+        # make href around everything that isn't a href already
+        s = linkify_others(s, link_)
+    s = s.replace('\r\n', '<br/>').replace('\n', '<br/>')
+    # Turn HTML5 into more valid HTML4 as required by some mail readers.
+    # (This is not done in one step in html_escape, because character codes like
+    # &#123; risk to be seen as an issue reference due to the presence of '#'.)
+    s = s.replace("&apos;", "&#39;")
     return literal(s)
 
-def urlify_changesets(text_, repository):
-    """
-    Extract revision ids from changeset and make link from them
-
-    :param text_:
-    :param repository: repo name to build the URL with
-    """
-    from pylons import url  # doh, we need to re-import url to mock it later
-
-    def url_func(match_obj):
-        rev = match_obj.group(0)
-        return '<a class="revision-link" href="%(url)s">%(rev)s</a>' % {
-         'url': url('changeset_home', repo_name=repository, revision=rev),
-         'rev': rev,
-        }
-
-    return re.sub(r'(?:^|(?<=[\s(),]))([0-9a-fA-F]{12,40})(?=$|\s|[.,:()])', url_func, text_)
 
 def linkify_others(t, l):
+    """Add a default link to html with links.
+    HTML doesn't allow nesting of links, so the outer link must be broken up
+    in pieces and give space for other links.
+    """
     urls = re.compile(r'(\<a.*?\<\/a\>)',)
     links = []
     for e in urls.split(t):
-        if not urls.match(e):
+        if e.strip() and not urls.match(e):
             links.append('<a class="message-link" href="%s">%s</a>' % (l, e))
         else:
             links.append(e)
 
     return ''.join(links)
 
-def urlify_commit(text_, repository, link_=None):
+
+# Global variable that will hold the actual urlify_issues function body.
+# Will be set on first use when the global configuration has been read.
+_urlify_issues_f = None
+
+
+def urlify_issues(newtext, repo_name):
+    """Urlify issue references according to .ini configuration"""
+    global _urlify_issues_f
+    if _urlify_issues_f is None:
+        from kallithea import CONFIG
+        from kallithea.model.db import URL_SEP
+        assert CONFIG['sqlalchemy.url'] # make sure config has been loaded
+
+        # Build chain of urlify functions, starting with not doing any transformation
+        tmp_urlify_issues_f = lambda s: s
+
+        issue_pat_re = re.compile(r'issue_pat(.*)')
+        for k in CONFIG.keys():
+            # Find all issue_pat* settings that also have corresponding server_link and prefix configuration
+            m = issue_pat_re.match(k)
+            if m is None:
+                continue
+            suffix = m.group(1)
+            issue_pat = CONFIG.get(k)
+            issue_server_link = CONFIG.get('issue_server_link%s' % suffix)
+            issue_sub = CONFIG.get('issue_sub%s' % suffix)
+            if not issue_pat or not issue_server_link or issue_sub is None: # issue_sub can be empty but should be present
+                log.error('skipping incomplete issue pattern %r: %r -> %r %r', suffix, issue_pat, issue_server_link, issue_sub)
+                continue
+
+            # Wrap tmp_urlify_issues_f with substitution of this pattern, while making sure all loop variables (and compiled regexpes) are bound
+            try:
+                issue_re = re.compile(issue_pat)
+            except re.error as e:
+                log.error('skipping invalid issue pattern %r: %r -> %r %r. Error: %s', suffix, issue_pat, issue_server_link, issue_sub, str(e))
+                continue
+
+            log.debug('issue pattern %r: %r -> %r %r', suffix, issue_pat, issue_server_link, issue_sub)
+
+            def issues_replace(match_obj,
+                               issue_server_link=issue_server_link, issue_sub=issue_sub):
+                try:
+                    issue_url = match_obj.expand(issue_server_link)
+                except (IndexError, re.error) as e:
+                    log.error('invalid issue_url setting %r -> %r %r. Error: %s', issue_pat, issue_server_link, issue_sub, str(e))
+                    issue_url = issue_server_link
+                issue_url = issue_url.replace('{repo}', repo_name)
+                issue_url = issue_url.replace('{repo_name}', repo_name.split(URL_SEP)[-1])
+                # if issue_sub is empty use the matched issue reference verbatim
+                if not issue_sub:
+                    issue_text = match_obj.group()
+                else:
+                    try:
+                        issue_text = match_obj.expand(issue_sub)
+                    except (IndexError, re.error) as e:
+                        log.error('invalid issue_sub setting %r -> %r %r. Error: %s', issue_pat, issue_server_link, issue_sub, str(e))
+                        issue_text = match_obj.group()
+
+                return (
+                    '<a class="issue-tracker-link" href="%(url)s">'
+                    '%(text)s'
+                    '</a>'
+                    ) % {
+                     'url': issue_url,
+                     'text': issue_text,
+                    }
+            tmp_urlify_issues_f = (lambda s,
+                                          issue_re=issue_re, issues_replace=issues_replace, chain_f=tmp_urlify_issues_f:
+                                   issue_re.sub(issues_replace, chain_f(s)))
+
+        # Set tmp function globally - atomically
+        _urlify_issues_f = tmp_urlify_issues_f
+
+    return _urlify_issues_f(newtext)
+
+
+def render_w_mentions(source, repo_name=None):
     """
-    Parses given text message and makes proper links.
-    issues are linked to given issue-server, and rest is a changeset link
-    if link_ is given, in other case it's a plain text
-
-    :param text_:
-    :param repository:
-    :param link_: changeset link
+    Render plain text with revision hashes and issue references urlified
+    and with @mention highlighting.
     """
-    newtext = html_escape(text_)
+    s = safe_unicode(source)
+    s = urlify_text(s, repo_name=repo_name)
+    return literal('<div class="formatted-fixed">%s</div>' % s)
 
-    # urlify changesets - extract revisions and make link out of them
-    newtext = urlify_changesets(newtext, repository)
-
-    # extract http/https links and make them real urls
-    newtext = _urlify_text(newtext)
-
-    newtext = urlify_issues(newtext, repository, link_)
-
-    return literal(newtext)
-
-def urlify_issues(newtext, repository, link_=None):
-    from kallithea import CONFIG as conf
-
-    # allow multiple issue servers to be used
-    valid_indices = [
-        x.group(1)
-        for x in map(lambda x: re.match(r'issue_pat(.*)', x), conf.keys())
-        if x and 'issue_server_link%s' % x.group(1) in conf
-        and 'issue_prefix%s' % x.group(1) in conf
-    ]
-
-    if valid_indices:
-        log.debug('found issue server suffixes `%s` during valuation of: %s',
-                  ','.join(valid_indices), newtext)
-
-    for pattern_index in valid_indices:
-        ISSUE_PATTERN = conf.get('issue_pat%s' % pattern_index)
-        ISSUE_SERVER_LNK = conf.get('issue_server_link%s' % pattern_index)
-        ISSUE_PREFIX = conf.get('issue_prefix%s' % pattern_index)
-
-        log.debug('pattern suffix `%s` PAT:%s SERVER_LINK:%s PREFIX:%s',
-                  pattern_index, ISSUE_PATTERN, ISSUE_SERVER_LNK,
-                     ISSUE_PREFIX)
-
-        URL_PAT = re.compile(ISSUE_PATTERN)
-
-        def url_func(match_obj):
-            pref = ''
-            if match_obj.group().startswith(' '):
-                pref = ' '
-
-            issue_id = ''.join(match_obj.groups())
-            issue_url = ISSUE_SERVER_LNK.replace('{id}', issue_id)
-            if repository:
-                issue_url = issue_url.replace('{repo}', repository)
-                repo_name = repository.split(URL_SEP)[-1]
-                issue_url = issue_url.replace('{repo_name}', repo_name)
-
-            return (
-                '%(pref)s<a class="%(cls)s" href="%(url)s">'
-                '%(issue-prefix)s%(id-repr)s'
-                '</a>'
-                ) % {
-                 'pref': pref,
-                 'cls': 'issue-tracker-link',
-                 'url': issue_url,
-                 'id-repr': issue_id,
-                 'issue-prefix': ISSUE_PREFIX,
-                 'serv': ISSUE_SERVER_LNK,
-                }
-        newtext = URL_PAT.sub(url_func, newtext)
-        log.debug('processed prefix:`%s` => %s', pattern_index, newtext)
-
-    # if we actually did something above
-    if link_:
-        # wrap not links into final link => link_
-        newtext = linkify_others(newtext, link_)
-    return newtext
-
-
-def rst(source):
-    return literal('<div class="rst-block">%s</div>' %
-                   MarkupRenderer.rst(source))
-
-
-def rst_w_mentions(source):
-    """
-    Wrapped rst renderer with @mention highlighting
-
-    :param source:
-    """
-    return literal('<div class="rst-block">%s</div>' %
-                   MarkupRenderer.rst_with_mentions(source))
 
 def short_ref(ref_type, ref_name):
     if ref_type == 'rev':
         return short_id(ref_name)
     return ref_name
+
 
 def link_to_ref(repo_name, ref_type, ref_name, rev=None):
     """
@@ -1440,15 +1224,19 @@ def link_to_ref(repo_name, ref_type, ref_name, rev=None):
         l = literal('%s (%s)' % (l, link_to(short_id(rev), url('changeset_home', repo_name=repo_name, revision=rev))))
     return l
 
+
 def changeset_status(repo, revision):
+    from kallithea.model.changeset_status import ChangesetStatusModel
     return ChangesetStatusModel().get_status(repo, revision)
 
 
 def changeset_status_lbl(changeset_status):
-    return dict(ChangesetStatus.STATUSES).get(changeset_status)
+    from kallithea.model.db import ChangesetStatus
+    return ChangesetStatus.get_status_lbl(changeset_status)
 
 
 def get_permission_name(key):
+    from kallithea.model.db import Permission
     return dict(Permission.PERMS).get(key)
 
 

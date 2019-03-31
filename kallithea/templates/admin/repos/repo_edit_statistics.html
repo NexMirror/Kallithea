@@ -1,13 +1,13 @@
-${h.form(url('edit_repo_statistics', repo_name=c.repo_info.repo_name), method='put')}
+${h.form(url('edit_repo_statistics_update', repo_name=c.repo_info.repo_name))}
 <div class="form">
-    <div class="fields">
-       <div class="field" style="border:none;color:#888">
-        <ul>
+      <div class="form-group text-muted">
+        <ul class="list-unstyled">
             <li>${_('Processed commits')}: ${c.stats_revision}/${c.repo_last_rev}</li>
             <li>${_('Processed progress')}: ${c.stats_percentage}%</li>
         </ul>
-       </div>
-        ${h.submit('reset_stats_%s' % c.repo_info.repo_name,_('Reset Statistics'),class_="btn btn-small",onclick="return confirm('"+_('Confirm to remove current statistics.')+"');")}
-   </div>
+      </div>
+      <div class="form-group">
+        ${h.submit('reset_stats_%s' % c.repo_info.repo_name,_('Reset Statistics'),class_="btn btn-default btn-sm",onclick="return confirm('"+_('Confirm to remove current statistics.')+"');")}
+      </div>
 </div>
 ${h.end_form()}

@@ -2,7 +2,7 @@
 <%inherit file="root.html"/>
 
 <!-- CONTENT -->
-<div id="content">
+<div id="content" class="container-fluid">
     ${self.flash_msg()}
     <div id="main">
         ${next.main()}
@@ -11,27 +11,23 @@
 <!-- END CONTENT -->
 
 <!-- FOOTER -->
-<div id="footer">
-   <div id="footer-inner" class="title">
-       <div>
-           <p class="footer-link">
-               ${_('Server instance: %s') % c.instance_id if c.instance_id else ''}
-           </p>
-           <p class="footer-link-right">
-               This site is powered by
-               %if c.visual.show_version:
-                   <a href="${h.url('kallithea_project_url')}" target="_blank">Kallithea</a> ${c.kallithea_version},
-               %else:
-                   <a href="${h.url('kallithea_project_url')}" target="_blank">Kallithea</a>,
-               %endif
-               which is
-               <a href="${h.canonical_url('about')}#copyright">&copy; 2010&ndash;2019 by various authors &amp; licensed under GPLv3</a>.
-               %if c.issues_url:
-                   &ndash; <a href="${c.issues_url}" target="_blank">${_('Support')}</a>
-               %endif
-           </p>
-       </div>
-   </div>
+<div class="footer navbar navbar-inverse">
+    <span class="navbar-text pull-left">
+        ${_('Server instance: %s') % c.instance_id if c.instance_id else ''}
+    </span>
+    <span class="navbar-text pull-right">
+        This site is powered by
+        %if c.visual.show_version:
+            <a class="navbar-link" href="${h.url('kallithea_project_url')}" target="_blank">Kallithea</a> ${c.kallithea_version},
+        %else:
+            <a class="navbar-link" href="${h.url('kallithea_project_url')}" target="_blank">Kallithea</a>,
+        %endif
+        which is
+        <a class="navbar-link" href="${h.canonical_url('about')}#copyright">&copy; 2010&ndash;2019 by various authors &amp; licensed under GPLv3</a>.
+        %if c.issues_url:
+            &ndash; <a class="navbar-link" href="${c.issues_url}" target="_blank">${_('Support')}</a>
+        %endif
+    </span>
 </div>
 
 <!-- END FOOTER -->
@@ -49,22 +45,22 @@
 </%def>
 
 <%def name="breadcrumbs()">
-    <div class="breadcrumbs">
+    <div class="panel-title">
     ${self.breadcrumbs_links()}
     </div>
 </%def>
 
 <%def name="admin_menu()">
-  <ul class="admin_menu">
-      <li><a href="${h.url('admin_home')}"><i class="icon-book"></i> ${_('Admin Journal')}</a></li>
-      <li><a href="${h.url('repos')}"><i class="icon-database"></i> ${_('Repositories')}</a></li>
-      <li><a href="${h.url('repos_groups')}"><i class="icon-folder"></i> ${_('Repository Groups')}</a></li>
-      <li><a href="${h.url('users')}"><i class="icon-user"></i> ${_('Users')}</a></li>
-      <li><a href="${h.url('users_groups')}"><i class="icon-users"></i> ${_('User Groups')}</a></li>
-      <li><a href="${h.url('admin_permissions')}"><i class="icon-block"></i> ${_('Default Permissions')}</a></li>
-      <li><a href="${h.url('auth_home')}"><i class="icon-key"></i> ${_('Authentication')}</a></li>
-      <li><a href="${h.url('defaults')}"><i class="icon-wrench"></i> ${_('Repository Defaults')}</a></li>
-      <li class="last"><a href="${h.url('admin_settings')}"><i class="icon-gear"></i> ${_('Settings')}</a></li>
+  <ul class="dropdown-menu" role="menu">
+      <li><a href="${h.url('admin_home')}"><i class="icon-book"></i>${_('Admin Journal')}</a></li>
+      <li><a href="${h.url('repos')}"><i class="icon-database"></i>${_('Repositories')}</a></li>
+      <li><a href="${h.url('repos_groups')}"><i class="icon-folder"></i>${_('Repository Groups')}</a></li>
+      <li><a href="${h.url('users')}"><i class="icon-user"></i>${_('Users')}</a></li>
+      <li><a href="${h.url('users_groups')}"><i class="icon-users"></i>${_('User Groups')}</a></li>
+      <li><a href="${h.url('admin_permissions')}"><i class="icon-block"></i>${_('Default Permissions')}</a></li>
+      <li><a href="${h.url('auth_home')}"><i class="icon-key"></i>${_('Authentication')}</a></li>
+      <li><a href="${h.url('defaults')}"><i class="icon-wrench"></i>${_('Repository Defaults')}</a></li>
+      <li class="last"><a href="${h.url('admin_settings')}"><i class="icon-gear"></i>${_('Settings')}</a></li>
   </ul>
 
 </%def>
@@ -72,521 +68,475 @@
 
 ## admin menu used for people that have some admin resources
 <%def name="admin_menu_simple(repositories=None, repository_groups=None, user_groups=None)">
-  <ul>
+  <ul class="dropdown-menu" role="menu">
    %if repositories:
-      <li><a href="${h.url('repos')}"><i class="icon-database"></i> ${_('Repositories')}</a></li>
+      <li><a href="${h.url('repos')}"><i class="icon-database"></i>${_('Repositories')}</a></li>
    %endif
    %if repository_groups:
-      <li><a href="${h.url('repos_groups')}"><i class="icon-folder"></i> ${_('Repository Groups')}</a></li>
+      <li><a href="${h.url('repos_groups')}"><i class="icon-folder"></i>${_('Repository Groups')}</a></li>
    %endif
    %if user_groups:
-      <li><a href="${h.url('users_groups')}"><i class="icon-users"></i> ${_('User Groups')}</a></li>
+      <li><a href="${h.url('users_groups')}"><i class="icon-users"></i>${_('User Groups')}</a></li>
    %endif
   </ul>
 </%def>
 
-<%def name="repotag(repo)">
+<%def name="repolabel(repo)">
   %if h.is_hg(repo):
-    <span class="repotag" title="${_('Mercurial repository')}">hg</span>
+    <span class="label label-repo" title="${_('Mercurial repository')}">hg</span>
   %endif
   %if h.is_git(repo):
-    <span class="repotag" title="${_('Git repository')}">git</span>
+    <span class="label label-repo" title="${_('Git repository')}">git</span>
   %endif
 </%def>
 
 <%def name="repo_context_bar(current=None, rev=None)">
   <% rev = None if rev == 'tip' else rev %>
-  <%
-    def is_current(selected):
-        if selected == current:
-            return h.literal('class="current"')
-    %>
-
   <!--- CONTEXT BAR -->
-  <div id="context-bar" class="box">
-      <h2>
-        ${repotag(c.db_repo)}
+  <nav id="context-bar" class="navbar navbar-inverse">
+    <div class="container-fluid">
+    <div class="navbar-header">
+      <div class="navbar-brand">
+        ${repolabel(c.db_repo)}
 
         ## public/private
         %if c.db_repo.private:
-          <i class="icon-keyhole-circled"></i>
+          <i class="icon-lock"></i>
         %else:
           <i class="icon-globe"></i>
         %endif
-        ${h.repo_link(c.db_repo.groups_and_repo)}
+        %for group in c.db_repo.groups_with_parents:
+          ${h.link_to(group.name, url('repos_group_home', group_name=group.group_name), class_='navbar-link')}
+          &raquo;
+        %endfor
+        ${h.link_to(c.db_repo.just_name, url('summary_home', repo_name=c.db_repo.repo_name), class_='navbar-link')}
 
         %if current == 'createfork':
          - ${_('Create Fork')}
         %endif
-      </h2>
-      <!--
-      <div id="breadcrumbs">
-        ${h.link_to(_('Repositories'),h.url('home'))}
-        &raquo;
-        ${h.repo_link(c.db_repo.groups_and_repo)}
       </div>
-      -->
-      <ul id="context-pages" class="horizontal-list">
-        <li ${is_current('summary')}><a href="${h.url('summary_home', repo_name=c.repo_name)}"><i class="icon-doc-text"></i> ${_('Summary')}</a></li>
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#context-pages" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div id="context-pages" class="navbar-collapse collapse">
+    <ul class="nav navbar-nav navbar-right">
+        <li class="${'active' if current == 'summary' else ''}" data-context="summary"><a href="${h.url('summary_home', repo_name=c.repo_name)}"><i class="icon-doc-text"></i>${_('Summary')}</a></li>
         %if rev:
-        <li ${is_current('changelog')}><a href="${h.url('changelog_file_home', repo_name=c.repo_name, revision=rev, f_path='')}"><i class="icon-clock"></i> ${_('Changelog')}</a></li>
+        <li class="${'active' if current == 'changelog' else ''}" data-context="changelog"><a href="${h.url('changelog_file_home', repo_name=c.repo_name, revision=rev, f_path='')}"><i class="icon-clock"></i>${_('Changelog')}</a></li>
         %else:
-        <li ${is_current('changelog')}><a href="${h.url('changelog_home', repo_name=c.repo_name)}"><i class="icon-clock"></i> ${_('Changelog')}</a></li>
+        <li class="${'active' if current == 'changelog' else ''}" data-context="changelog"><a href="${h.url('changelog_home', repo_name=c.repo_name)}"><i class="icon-clock"></i>${_('Changelog')}</a></li>
         %endif
-        <li ${is_current('files')}><a href="${h.url('files_home', repo_name=c.repo_name, revision=rev or 'tip')}"><i class="icon-doc-inv"></i> ${_('Files')}</a></li>
-        <li ${is_current('switch-to')}>
-          <a href="#" id="branch_tag_switcher_2" class="dropdown"><i class="icon-exchange"></i> ${_('Switch To')}</a>
-          <ul id="switch_to_list_2" class="switch_to submenu">
-            <li><a href="#">${_('Loading...')}</a></li>
-          </ul>
+        <li class="${'active' if current == 'files' else ''}" data-context="files"><a href="${h.url('files_home', repo_name=c.repo_name, revision=rev or 'tip')}"><i class="icon-doc-inv"></i>${_('Files')}</a></li>
+        <li class="${'active' if current == 'showpullrequest' else ''}" data-context="showpullrequest">
+          <a href="${h.url('pullrequest_show_all',repo_name=c.repo_name)}" title="${_('Show Pull Requests for %s') % c.repo_name}"> <i class="icon-git-pull-request"></i>${_('Pull Requests')}
+            %if c.repository_pull_requests:
+              <span class="badge">${c.repository_pull_requests}</span>
+            %endif
+          </a>
         </li>
-        <li ${is_current('options')}>
-             %if h.HasRepoPermissionAll('repository.admin')(c.repo_name):
-               <a href="${h.url('edit_repo',repo_name=c.repo_name)}" class="dropdown"><i class="icon-wrench"></i> ${_('Options')}</a>
+        <li class="${'active' if current == 'switch-to' else ''}" data-context="switch-to">
+          <input id="branch_switcher" name="branch_switcher" type="hidden">
+        </li>
+        <li class="${'active' if current == 'options' else ''} dropdown" data-context="options">
+             %if h.HasRepoPermissionLevel('admin')(c.repo_name):
+               <a href="${h.url('edit_repo',repo_name=c.repo_name)}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true"><i class="icon-wrench"></i>${_('Options')} <i class="caret"></i></a>
              %else:
-               <a href="#" class="dropdown"><i class="icon-wrench"></i> ${_('Options')}</a>
+               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true"><i class="icon-wrench"></i>${_('Options')} <i class="caret"></i></a>
              %endif
-          <ul>
-             %if h.HasRepoPermissionAll('repository.admin')(c.repo_name):
-                   <li><a href="${h.url('edit_repo',repo_name=c.repo_name)}"><i class="icon-gear"></i> ${_('Settings')}</a></li>
+          <ul class="dropdown-menu" role="menu" aria-hidden="true">
+             %if h.HasRepoPermissionLevel('admin')(c.repo_name):
+                   <li><a href="${h.url('edit_repo',repo_name=c.repo_name)}"><i class="icon-gear"></i>${_('Settings')}</a></li>
              %endif
               %if c.db_repo.fork:
                <li><a href="${h.url('compare_url',repo_name=c.db_repo.fork.repo_name,org_ref_type=c.db_repo.landing_rev[0],org_ref_name=c.db_repo.landing_rev[1], other_repo=c.repo_name,other_ref_type='branch' if request.GET.get('branch') else c.db_repo.landing_rev[0],other_ref_name=request.GET.get('branch') or c.db_repo.landing_rev[1], merge=1)}">
-                   <i class="icon-git-compare"></i> ${_('Compare Fork')}</a></li>
+                   <i class="icon-git-compare"></i>${_('Compare Fork')}</a></li>
               %endif
-              <li><a href="${h.url('compare_home',repo_name=c.repo_name)}"><i class="icon-git-compare"></i> ${_('Compare')}</a></li>
+              <li><a href="${h.url('compare_home',repo_name=c.repo_name)}"><i class="icon-git-compare"></i>${_('Compare')}</a></li>
 
-              <li><a href="${h.url('search_repo',repo_name=c.repo_name)}"><i class="icon-search"></i> ${_('Search')}</a></li>
+              <li><a href="${h.url('search_repo',repo_name=c.repo_name)}"><i class="icon-search"></i>${_('Search')}</a></li>
 
-              %if h.HasRepoPermissionAny('repository.write','repository.admin')(c.repo_name) and c.db_repo.enable_locking:
+              %if h.HasRepoPermissionLevel('write')(c.repo_name) and c.db_repo.enable_locking:
                 %if c.db_repo.locked[0]:
-                  <li><a href="${h.url('toggle_locking', repo_name=c.repo_name)}"><i class="icon-lock"></i> ${_('Unlock')}</a></li>
+                  <li><a href="${h.url('toggle_locking', repo_name=c.repo_name)}"><i class="icon-lock"></i>${_('Unlock')}</a></li>
                 %else:
-                  <li><a href="${h.url('toggle_locking', repo_name=c.repo_name)}"><i class="icon-lock-open-alt"></i> ${_('Lock')}</li>
+                  <li><a href="${h.url('toggle_locking', repo_name=c.repo_name)}"><i class="icon-lock-open-alt"></i>${_('Lock')}</a></li>
                 %endif
               %endif
               ## TODO: this check feels wrong, it would be better to have a check for permissions
               ## also it feels like a job for the controller
-              %if c.authuser.username != 'default':
+              %if request.authuser.username != 'default':
                   <li>
-                   <a class="${'following' if c.repository_following else 'follow'}" onclick="toggleFollowingRepo(this, ${c.db_repo.repo_id});">
-                    <span class="show-follow"><i class="icon-heart-empty"></i> ${_('Follow')}</span>
-                    <span class="show-following"><i class="icon-heart"></i> ${_('Unfollow')}</span>
+                   <a href="#" class="${'following' if c.repository_following else 'follow'}" onclick="toggleFollowingRepo(this, ${c.db_repo.repo_id});">
+                    <span class="show-follow"><i class="icon-heart-empty"></i>${_('Follow')}</span>
+                    <span class="show-following"><i class="icon-heart"></i>${_('Unfollow')}</span>
                    </a>
                   </li>
-                  <li><a href="${h.url('repo_fork_home',repo_name=c.repo_name)}"><i class="icon-git-pull-request"></i> ${_('Fork')}</a></li>
-                  <li><a href="${h.url('pullrequest_home',repo_name=c.repo_name)}"><i class="icon-git-pull-request"></i> ${_('Create Pull Request')}</a></li>
+                  <li><a href="${h.url('repo_fork_home',repo_name=c.repo_name)}"><i class="icon-git-pull-request"></i>${_('Fork')}</a></li>
+                  <li><a href="${h.url('pullrequest_home',repo_name=c.repo_name)}"><i class="icon-git-pull-request"></i>${_('Create Pull Request')}</a></li>
               %endif
              </ul>
         </li>
-        <li ${is_current('showpullrequest')}>
-          <a href="${h.url('pullrequest_show_all',repo_name=c.repo_name)}" title="${_('Show Pull Requests for %s') % c.repo_name}"> <i class="icon-git-pull-request"></i> ${_('Pull Requests')}
-            %if c.repository_pull_requests:
-              <span>${c.repository_pull_requests}</span>
-            %endif
-          </a>
-        </li>
-      </ul>
-  </div>
+    </ul>
+    </div>
+    </div>
+  </nav>
   <script type="text/javascript">
-      YUE.on('branch_tag_switcher_2','mouseover',function(){
-         var $branch_tag_switcher_2 = $('#branch_tag_switcher_2');
-         var loaded = $branch_tag_switcher_2.hasClass('loaded');
-         if(!loaded){
-             $branch_tag_switcher_2.addClass('loaded');
-             asynchtml("${h.url('branch_tag_switcher',repo_name=c.repo_name)}", $('#switch_to_list_2'));
-         }
-         return false;
+    $(document).ready(function() {
+      var bcache = {};
+
+      var branch_switcher_placeholder = '<i class="icon-exchange"></i>' + ${h.jshtml(_('Switch To'))} + ' <span class="caret"></span>';
+      $("#branch_switcher").select2({
+          placeholder: branch_switcher_placeholder,
+          dropdownAutoWidth: true,
+          sortResults: prefixFirstSort,
+          formatResult: function(obj) {
+              return obj.text.html_escape();
+          },
+          formatSelection: function(obj) {
+              return obj.text.html_escape();
+          },
+          formatNoMatches: function(term) {
+              return ${h.jshtml(_('No matches found'))};
+          },
+          escapeMarkup: function(m) {
+              if (m == branch_switcher_placeholder)
+                  return branch_switcher_placeholder;
+              return Select2.util.escapeMarkup(m);
+          },
+          containerCssClass: "branch-switcher",
+          dropdownCssClass: "repo-switcher-dropdown",
+          query: function(query) {
+              var key = 'cache';
+              var cached = bcache[key];
+              if (cached) {
+                  var data = {
+                      results: []
+                  };
+                  // filter results
+                  $.each(cached.results, function() {
+                      var section = this.text;
+                      var children = [];
+                      $.each(this.children, function() {
+                          if (query.term.length === 0 || this.text.toUpperCase().indexOf(query.term.toUpperCase()) >= 0) {
+                              children.push({
+                                  'id': this.id,
+                                  'text': this.text,
+                                  'type': this.type,
+                                  'obj': this.obj
+                              });
+                          }
+                      });
+                      if (children.length !== 0) {
+                          data.results.push({
+                              'text': section,
+                              'children': children
+                          });
+                      }
+
+                  });
+                  query.callback(data);
+              } else {
+                  $.ajax({
+                      url: pyroutes.url('repo_refs_data', {
+                          'repo_name': ${h.js(c.repo_name)}
+                      }),
+                      data: {},
+                      dataType: 'json',
+                      type: 'GET',
+                      success: function(data) {
+                          bcache[key] = data;
+                          query.callback(data);
+                      }
+                  });
+              }
+          }
       });
+
+      $("#branch_switcher").on('select2-selecting', function(e) {
+          e.preventDefault();
+          var context = $('#context-bar .active').data('context');
+          if (context == 'files') {
+              window.location = pyroutes.url('files_home', {
+                  'repo_name': REPO_NAME,
+                  'revision': e.choice.id,
+                  'f_path': '',
+                  'at': e.choice.text
+              });
+          } else if (context == 'changelog') {
+              if (e.choice.type == 'tag' || e.choice.type == 'book') {
+                  $("#branch_filter").append($('<'+'option/>').val(e.choice.text));
+              }
+              $("#branch_filter").val(e.choice.text).change();
+          } else {
+              window.location = pyroutes.url('changelog_home', {
+                  'repo_name': ${h.js(c.repo_name)},
+                  'branch': e.choice.text
+              });
+          }
+      });
+    });
   </script>
   <!--- END CONTEXT BAR -->
 </%def>
 
 <%def name="menu(current=None)">
-  <%
-  def is_current(selected):
-      if selected == current:
-          return h.literal('class="current"')
-  %>
-
-  <ul id="quick" class="horizontal-list">
+  <ul id="quick" class="nav navbar-nav navbar-right">
     <!-- repo switcher -->
-    <li ${is_current('repositories')}>
+    <li class="${'active' if current == 'repositories' else ''}">
       <input id="repo_switcher" name="repo_switcher" type="hidden">
     </li>
 
     ##ROOT MENU
-    %if c.authuser.username != 'default':
-      <li ${is_current('journal')}>
+    %if request.authuser.username != 'default':
+      <li class="${'active' if current == 'journal' else ''}">
         <a class="menu_link" title="${_('Show recent activity')}"  href="${h.url('journal')}">
-          <i class="icon-book"></i> ${_('Journal')}
+          <i class="icon-book"></i>${_('Journal')}
         </a>
       </li>
     %else:
-      <li ${is_current('journal')}>
+      <li class="${'active' if current == 'journal' else ''}">
         <a class="menu_link" title="${_('Public journal')}"  href="${h.url('public_journal')}">
-          <i class="icon-book"></i> ${_('Public journal')}
+          <i class="icon-book"></i>${_('Public journal')}
         </a>
       </li>
     %endif
-      <li ${is_current('gists')}>
-        <a class="menu_link childs" title="${_('Show public gists')}"  href="${h.url('gists')}">
-          <i class="icon-clippy"></i> ${_('Gists')}
+      <li class="${'active' if current == 'gists' else ''} dropdown">
+        <a class="menu_link dropdown-toggle" data-toggle="dropdown" role="button" title="${_('Show public gists')}"  href="${h.url('gists')}">
+          <i class="icon-clippy"></i>${_('Gists')} <span class="caret"></span>
         </a>
-          <ul class="admin_menu">
-            <li><a href="${h.url('new_gist', public=1)}"><i class="icon-paste"></i> ${_('Create New Gist')}</a></li>
-            <li><a href="${h.url('gists')}"><i class="icon-globe"></i> ${_('All Public Gists')}</a></li>
-            %if c.authuser.username != 'default':
-              <li><a href="${h.url('gists', public=1)}"><i class="icon-user"></i> ${_('My Public Gists')}</a></li>
-              <li><a href="${h.url('gists', private=1)}"><i class="icon-keyhole-circled"></i> ${_('My Private Gists')}</a></li>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="${h.url('new_gist', public=1)}"><i class="icon-paste"></i>${_('Create New Gist')}</a></li>
+            <li><a href="${h.url('gists')}"><i class="icon-globe"></i>${_('All Public Gists')}</a></li>
+            %if request.authuser.username != 'default':
+              <li><a href="${h.url('gists', public=1)}"><i class="icon-user"></i>${_('My Public Gists')}</a></li>
+              <li><a href="${h.url('gists', private=1)}"><i class="icon-lock"></i>${_('My Private Gists')}</a></li>
             %endif
           </ul>
       </li>
-    <li ${is_current('search')}>
+    <li class="${'active' if current == 'search' else ''}">
         <a class="menu_link" title="${_('Search in repositories')}"  href="${h.url('search')}">
-          <i class="icon-search"></i> ${_('Search')}
+          <i class="icon-search"></i>${_('Search')}
         </a>
     </li>
-    % if h.HasPermissionAll('hg.admin')('access admin main page'):
-      <li ${is_current('admin')}>
-        <a class="menu_link childs" title="${_('Admin')}" href="${h.url('admin_home')}">
-          <i class="icon-gear"></i> ${_('Admin')}
+    % if h.HasPermissionAny('hg.admin')('access admin main page'):
+      <li class="${'active' if current == 'admin' else ''} dropdown">
+        <a class="menu_link dropdown-toggle" data-toggle="dropdown" role="button" title="${_('Admin')}" href="${h.url('admin_home')}">
+          <i class="icon-gear"></i>${_('Admin')} <span class="caret"></span>
         </a>
         ${admin_menu()}
       </li>
-    % elif c.authuser.repositories_admin or c.authuser.repository_groups_admin or c.authuser.user_groups_admin:
-    <li ${is_current('admin')}>
-        <a class="menu_link childs" title="${_('Admin')}">
-          <i class="icon-gear"></i> ${_('Admin')}
+    % elif request.authuser.repositories_admin or request.authuser.repository_groups_admin or request.authuser.user_groups_admin:
+    <li class="${'active' if current == 'admin' else ''} dropdown">
+        <a class="menu_link dropdown-toggle" data-toggle="dropdown" role="button" title="${_('Admin')}" href="">
+          <i class="icon-gear"></i>${_('Admin')}
         </a>
-        ${admin_menu_simple(c.authuser.repositories_admin,
-                            c.authuser.repository_groups_admin,
-                            c.authuser.user_groups_admin or h.HasPermissionAny('hg.usergroup.create.true')())}
+        ${admin_menu_simple(request.authuser.repositories_admin,
+                            request.authuser.repository_groups_admin,
+                            request.authuser.user_groups_admin or h.HasPermissionAny('hg.usergroup.create.true')())}
     </li>
     % endif
 
-    <li ${is_current('my_pullrequests')}>
+    <li class="${'active' if current == 'my_pullrequests' else ''}">
       <a class="menu_link" title="${_('My Pull Requests')}" href="${h.url('my_pullrequests')}">
-        <i class="icon-git-pull-request"></i> ${_('My Pull Requests')}
+        <i class="icon-git-pull-request"></i>${_('My Pull Requests')}
         %if c.my_pr_count != 0:
-          <span class="menu_link_notifications">${c.my_pr_count}</span>
+          <span class="badge">${c.my_pr_count}</span>
         %endif
       </a>
     </li>
 
     ## USER MENU
-    <li>
-      <a class="menu_link childs" id="quick_login_link">
-          <span class="icon">
-            ${h.gravatar(c.authuser.email, size=20)}
-          </span>
-          %if c.authuser.username != 'default':
-            <span class="menu_link_user">${c.authuser.username}</span>
-            %if c.unread_notifications != 0:
-              <span class="menu_link_notifications">${c.unread_notifications}</span>
-            %endif
+    <li class="dropdown">
+      <a class="menu_link dropdown-toggle" data-toggle="dropdown" role="button" id="quick_login_link"
+        aria-expanded="false" aria-controls="quick_login" href="#">
+          ${h.gravatar_div(request.authuser.email, size=20, div_class="icon")}
+          %if request.authuser.username != 'default':
+            <span class="menu_link_user">${request.authuser.username}</span>
           %else:
               <span>${_('Not Logged In')}</span>
           %endif
+          <i class="caret"></i>
       </a>
 
-      <div class="user-menu">
-        <div id="quick_login">
-          %if c.authuser.username == 'default' or c.authuser.user_id is None:
-            <h4>${_('Login to Your Account')}</h4>
-            ${h.form(h.url('login_home', came_from=request.path_qs))}
-            <div class="form">
-                <div class="fields">
-                    <div class="field">
-                        <div class="label">
-                            <label for="username">${_('Username')}:</label>
-                        </div>
-                        <div class="input">
-                            ${h.text('username',class_='focus')}
-                        </div>
-
-                    </div>
-                    <div class="field">
-                        <div class="label">
-                            <label for="password">${_('Password')}:</label>
-                        </div>
-                        <div class="input">
-                            ${h.password('password',class_='focus')}
-                        </div>
-
-                    </div>
-                    <div class="buttons">
-                        <div class="password_forgoten">${h.link_to(_('Forgot password ?'),h.url('reset_password'))}</div>
-                        <div class="register">
-                        %if h.HasPermissionAny('hg.admin', 'hg.register.auto_activate', 'hg.register.manual_activate')():
-                         ${h.link_to(_("Don't have an account ?"),h.url('register'))}
-                        %endif
-                        </div>
-                        <div class="submit">
-                            ${h.submit('sign_in',_('Log In'),class_="btn btn-mini")}
-                        </div>
-                    </div>
+      <div class="dropdown-menu user-menu" role="menu">
+        <div id="quick_login" role="form" aria-describedby="quick_login_h" aria-hidden="true" class="container-fluid">
+          %if request.authuser.username == 'default' or request.authuser.user_id is None:
+            ${h.form(h.url('login_home', came_from=request.path_qs), class_='form clearfix')}
+                <h4 id="quick_login_h">${_('Login to Your Account')}</h4>
+                <label>
+                    ${_('Username')}:
+                    ${h.text('username',class_='form-control')}
+                </label>
+                <label>
+                    ${_('Password')}:
+                    ${h.password('password',class_='form-control')}
+                </label>
+                <div class="password_forgotten">
+                    ${h.link_to(_('Forgot password?'),h.url('reset_password'))}
                 </div>
-            </div>
+                <div class="register">
+                    %if h.HasPermissionAny('hg.admin', 'hg.register.auto_activate', 'hg.register.manual_activate')():
+                        ${h.link_to(_("Don't have an account?"),h.url('register'))}
+                    %endif
+                </div>
+                <div class="submit">
+                    ${h.submit('sign_in',_('Log In'),class_="btn btn-default btn-xs")}
+                </div>
             ${h.end_form()}
           %else:
-            <div class="links_left">
-                <div class="big_gravatar">
-                  ${h.gravatar(c.authuser.email, size=48)}
-                </div>
-                <div class="full_name">${c.authuser.full_name_or_username}</div>
-                <div class="email">${c.authuser.email}</div>
+            <div class="pull-left">
+                ${h.gravatar_div(request.authuser.email, size=48, div_class="big_gravatar")}
+                <b class="full_name">${request.authuser.full_name_or_username}</b>
+                <div class="email">${request.authuser.email}</div>
             </div>
-            <div class="links_right">
-            <ol class="links">
-              <li><a href="${h.url('notifications')}">${_('Notifications')}: ${c.unread_notifications}</a></li>
-              <li>${h.link_to(_('My Account'),h.url('my_account'))}</li>
-              %if not c.authuser.is_external_auth:
+            <div id="quick_login_h" class="pull-right list-group text-right">
+              ${h.link_to(_('My Account'),h.url('my_account'),class_='list-group-item')}
+              %if not request.authuser.is_external_auth:
                 ## Cannot log out if using external (container) authentication.
-                <li class="logout">${h.link_to(_('Log Out'), h.url('logout_home'))}</li>
+                ${h.link_to(_('Log Out'), h.url('logout_home'),class_='list-group-item')}
               %endif
-            </ol>
             </div>
           %endif
         </div>
       </div>
     </li>
+  </ul>
 
     <script type="text/javascript">
-        var visual_show_public_icon = "${c.visual.show_public_icon}" == "True";
-        var cache = {}
-        /*format the look of items in the list*/
-        var format = function(state){
-            if (!state.id){
-              return state.text; // optgroup
-            }
-            var obj_dict = state.obj;
-            var tmpl = '';
+        $(document).ready(function(){
+            var visual_show_public_icon = ${h.js(c.visual.show_public_icon)};
+            var cache = {}
+            /*format the look of items in the list*/
+            var format = function(state){
+                if (!state.id){
+                  return state.text.html_escape(); // optgroup
+                }
+                var obj_dict = state.obj;
+                var tmpl = '';
 
-            if(obj_dict && state.type == 'repo'){
-                tmpl += '<span class="repo-icons">';
-                if(obj_dict['repo_type'] === 'hg'){
-                    tmpl += '<span class="repotag">hg</span> ';
+                if(obj_dict && state.type == 'repo'){
+                    tmpl += '<span class="repo-icons">';
+                    if(obj_dict['repo_type'] === 'hg'){
+                        tmpl += '<span class="label label-repo" title="${_('Mercurial repository')}">hg</span> ';
+                    }
+                    else if(obj_dict['repo_type'] === 'git'){
+                        tmpl += '<span class="label label-repo" title="${_('Git repository')}">git</span> ';
+                    }
+                    if(obj_dict['private']){
+                        tmpl += '<i class="icon-lock"></i>';
+                    }
+                    else if(visual_show_public_icon){
+                        tmpl += '<i class="icon-globe"></i>';
+                    }
+                    tmpl += '</span>';
                 }
-                else if(obj_dict['repo_type'] === 'git'){
-                    tmpl += '<span class="repotag">git</span> ';
+                if(obj_dict && state.type == 'group'){
+                        tmpl += '<i class="icon-folder"></i>';
                 }
-                if(obj_dict['private']){
-                    tmpl += '<i class="icon-keyhole-circled"></i> ';
-                }
-                else if(visual_show_public_icon){
-                    tmpl += '<i class="icon-globe"></i> ';
-                }
-                tmpl += '</span>';
+                tmpl += state.text.html_escape();
+                return tmpl;
             }
-            if(obj_dict && state.type == 'group'){
-                    tmpl += '<i class="icon-folder"></i> ';
-            }
-            tmpl += state.text;
-            return tmpl;
-        }
 
-        $("#repo_switcher").select2({
-            placeholder: '<i class="icon-database"></i> ${_('Repositories')}',
-            dropdownAutoWidth: true,
-            formatResult: format,
-            formatSelection: format,
-            formatNoMatches: function(term){
-                return "${_('No matches found')}";
-            },
-            containerCssClass: "repo-switcher",
-            dropdownCssClass: "repo-switcher-dropdown",
-            escapeMarkup: function(m){
-                // don't escape our custom placeholder
-                if(m.substr(0,29) == '<i class="icon-database"></i>'){
-                    return m;
-                }
-
-                return Select2.util.escapeMarkup(m);
-            },
-            query: function(query){
-              var key = 'cache';
-              var cached = cache[key] ;
-              if(cached) {
-                var data = {results: []};
-                //filter results
-                $.each(cached.results, function(){
-                    var section = this.text;
-                    var children = [];
-                    $.each(this.children, function(){
-                        if(query.term.length == 0 || this.text.toUpperCase().indexOf(query.term.toUpperCase()) >= 0 ){
-                            children.push({'id': this.id, 'text': this.text, 'type': this.type, 'obj': this.obj});
+            var repo_switcher_placeholder = '<i class="icon-database"></i>' + ${h.jshtml(_('Repositories'))} + ' <span class="caret"></span>';
+            $("#repo_switcher").select2({
+                placeholder: repo_switcher_placeholder,
+                dropdownAutoWidth: true,
+                sortResults: prefixFirstSort,
+                formatResult: format,
+                formatSelection: format,
+                formatNoMatches: function(term){
+                    return ${h.jshtml(_('No matches found'))};
+                },
+                containerCssClass: "repo-switcher",
+                dropdownCssClass: "repo-switcher-dropdown",
+                escapeMarkup: function(m){
+                    if (m == repo_switcher_placeholder)
+                        return repo_switcher_placeholder;
+                    return Select2.util.escapeMarkup(m);
+                },
+                query: function(query){
+                  var key = 'cache';
+                  var cached = cache[key] ;
+                  if(cached) {
+                    var data = {results: []};
+                    //filter results
+                    $.each(cached.results, function(){
+                        var section = this.text;
+                        var children = [];
+                        $.each(this.children, function(){
+                            if(query.term.length == 0 || this.text.toUpperCase().indexOf(query.term.toUpperCase()) >= 0 ){
+                                children.push({'id': this.id, 'text': this.text, 'type': this.type, 'obj': this.obj});
+                            }
+                        });
+                        if(children.length !== 0){
+                            data.results.push({'text': section, 'children': children});
                         }
+
                     });
-                    if(children.length !== 0){
-                        data.results.push({'text': section, 'children': children});
-                    }
-
-                });
-                query.callback(data);
-              }else{
-                  $.ajax({
-                    url: "${h.url('repo_switcher_data')}",
-                    data: {},
-                    dataType: 'json',
-                    type: 'GET',
-                    success: function(data) {
-                      cache[key] = data;
-                      query.callback({results: data.results});
-                    }
-                  });
-              }
-            }
-        });
-
-        $("#repo_switcher").on('select2-selecting', function(e){
-            e.preventDefault();
-            window.location = pyroutes.url('summary_home', {'repo_name': e.val});
-        });
-
-        ## Global mouse bindings ##
-
-        // general help "?"
-        Mousetrap.bind(['?'], function(e) {
-            $('#help_kb').modal({});
-        });
-
-        // / open the quick filter
-        Mousetrap.bind(['/'], function(e) {
-            $("#repo_switcher").select2("open");
-
-            // return false to prevent default browser behavior
-            // and stop event from bubbling
-            return false;
-        });
-
-        // ctrl/command+b, show the the main bar
-        Mousetrap.bind(['command+b', 'ctrl+b'], function(e) {
-            if($('#header-inner').hasClass('hover') && $('#content').hasClass('hover')){
-                $('#header-inner').removeClass('hover');
-                $('#content').removeClass('hover');
-            }
-            else{
-                $('#header-inner').addClass('hover');
-                $('#content').addClass('hover');
-            }
-            return false;
-        });
-
-        // general nav g + action
-        Mousetrap.bind(['g h'], function(e) {
-            window.location = pyroutes.url('home');
-        });
-        Mousetrap.bind(['g g'], function(e) {
-            window.location = pyroutes.url('gists', {'private':1});
-        });
-        Mousetrap.bind(['g G'], function(e) {
-            window.location = pyroutes.url('gists', {'public':1});
-        });
-        Mousetrap.bind(['n g'], function(e) {
-            window.location = pyroutes.url('new_gist');
-        });
-        Mousetrap.bind(['n r'], function(e) {
-            window.location = pyroutes.url('new_repo');
-        });
-
-        % if hasattr(c, 'repo_name') and hasattr(c, 'db_repo'):
-            // nav in repo context
-            Mousetrap.bind(['g s'], function(e) {
-                window.location = pyroutes.url('summary_home', {'repo_name': REPO_NAME});
+                    query.callback(data);
+                  }else{
+                      $.ajax({
+                        url: ${h.js(h.url('repo_switcher_data'))},
+                        data: {},
+                        dataType: 'json',
+                        type: 'GET',
+                        success: function(data) {
+                          cache[key] = data;
+                          query.callback({results: data.results});
+                        }
+                      });
+                  }
+                }
             });
-            Mousetrap.bind(['g c'], function(e) {
-                window.location = pyroutes.url('changelog_home', {'repo_name': REPO_NAME});
-            });
-            Mousetrap.bind(['g F'], function(e) {
-                window.location = pyroutes.url('files_home', {'repo_name': REPO_NAME, 'revision': '${c.db_repo.landing_rev[1]}', 'f_path': '', 'search': '1'});
-            });
-            Mousetrap.bind(['g f'], function(e) {
-                window.location = pyroutes.url('files_home', {'repo_name': REPO_NAME, 'revision': '${c.db_repo.landing_rev[1]}', 'f_path': ''});
-            });
-            Mousetrap.bind(['g o'], function(e) {
-                window.location = pyroutes.url('edit_repo', {'repo_name': REPO_NAME});
-            });
-            Mousetrap.bind(['g O'], function(e) {
-                window.location = pyroutes.url('edit_repo_perms', {'repo_name': REPO_NAME});
-            });
-        % endif
 
+            $("#repo_switcher").on('select2-selecting', function(e){
+                e.preventDefault();
+                window.location = pyroutes.url('summary_home', {'repo_name': e.val});
+            });
+
+            $(document).on('shown.bs.dropdown', function(event) {
+                var dropdown = $(event.target);
+
+                dropdown.attr('aria-expanded', true);
+                dropdown.find('.dropdown-menu').attr('aria-hidden', false);
+            });
+
+            $(document).on('hidden.bs.dropdown', function(event) {
+                var dropdown = $(event.target);
+
+                dropdown.attr('aria-expanded', false);
+                dropdown.find('.dropdown-menu').attr('aria-hidden', true);
+            });
+        });
     </script>
 </%def>
 
-%if 0:
-<div class="modal" id="help_kb" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="icon-cancel-circled"></i></button>
-          <h4 class="modal-title">${_('Keyboard shortcuts')}</h4>
+<%def name="parent_child_navigation()">
+    <div class="pull-left">
+        <div class="parent-child-link"
+             data-ajax-url="${h.url('changeset_parents',repo_name=c.repo_name, revision=c.changeset.raw_id)}"
+             data-linktype="parent"
+             data-reponame="${c.repo_name}">
+            <i class="icon-left-open"></i><a href="#">${_('Parent rev.')}</a>
         </div>
-        <div class="modal-body">
-           <div class="row">
-              <div class="col-md-5">
-                <table class="keyboard-mappings">
-                    <tbody>
-                  <tr>
-                    <th></th>
-                    <th>${_('Site-wide shortcuts')}</th>
-                  </tr>
-                  <%
-                     elems = [
-                         ('/', 'Open quick search box'),
-                         ('ctrl/cmd+b', 'Show main settings bar'),
-                         ('g h', 'Goto home page'),
-                         ('g g', 'Goto my private gists page'),
-                         ('g G', 'Goto my public gists page'),
-                         ('n r', 'New repository page'),
-                         ('n g', 'New gist page'),
-                     ]
-                  %>
-                  %for key, desc in elems:
-                  <tr>
-                    <td class="keys">
-                      <span class="key">${key}</span>
-                    </td>
-                    <td>${desc}</td>
-                  </tr>
-                %endfor
-                </tbody>
-                  </table>
-              </div>
-              <div class="col-md-offset-5">
-                <table class="keyboard-mappings">
-                <tbody>
-                  <tr>
-                    <th></th>
-                    <th>${_('Repositories')}</th>
-                  </tr>
-                  <%
-                     elems = [
-                         ('g s', 'Goto summary page'),
-                         ('g c', 'Goto changelog page'),
-                         ('g f', 'Goto files page'),
-                         ('g F', 'Goto files page with file search activated'),
-                         ('g o', 'Goto repository settings'),
-                         ('g O', 'Goto repository permissions settings'),
-                     ]
-                  %>
-                  %for key, desc in elems:
-                  <tr>
-                    <td class="keys">
-                      <span class="key">${key}</span>
-                    </td>
-                    <td>${desc}</td>
-                  </tr>
-                %endfor
-                </tbody>
-            </table>
-              </div>
-            </div>
+    </div>
+
+    <div class="pull-right">
+        <div class="parent-child-link"
+             data-ajax-url="${h.url('changeset_children',repo_name=c.repo_name, revision=c.changeset.raw_id)}"
+             data-linktype="child"
+             data-reponame="${c.repo_name}">
+            <a href="#">${_('Child rev.')}</a><i class="icon-right-open"></i>
         </div>
-        <div class="modal-footer">
-        </div>
-      </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-%endif
+    </div>
+
+    <script type="text/javascript">
+      $(document).ready(function(){
+          activate_parent_child_links();
+      });
+    </script>
+</%def>

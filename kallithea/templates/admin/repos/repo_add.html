@@ -6,7 +6,7 @@
 </%block>
 
 <%def name="breadcrumbs_links()">
-    %if c.authuser.is_admin:
+    %if request.authuser.is_admin:
     ${h.link_to(_('Admin'),h.url('admin_home'))}
     &raquo;
     ${h.link_to(_('Repositories'),h.url('repos'))}
@@ -24,11 +24,12 @@
 </%block>
 
 <%def name="main()">
-    <div class="box">
-        <!-- box / title -->
-        <div class="title">
+    <div class="panel panel-primary">
+        <div class="panel-heading clearfix">
             ${self.breadcrumbs()}
         </div>
-        <%include file="repo_add_base.html"/>
+        <div class="panel-body settings">
+            <%include file="repo_add_base.html"/>
+        </div>
     </div>
 </%def>

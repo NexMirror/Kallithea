@@ -15,8 +15,8 @@
 kallithea.lib.middleware.simplehg
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-SimpleHg middleware for handling mercurial protocol request
-(push/clone etc.). It's implemented with basic auth function
+SimpleHg middleware for handling Mercurial protocol requests (push/clone etc.).
+It's implemented with basic auth function
 
 This file was forked by the Kallithea project in July 2014.
 Original author and date, and relevant copyright and licensing information is below:
@@ -33,18 +33,15 @@ import logging
 import traceback
 import urllib
 
-from paste.httpheaders import REMOTE_USER, AUTH_TYPE
 from webob.exc import HTTPNotFound, HTTPForbidden, HTTPInternalServerError, \
-    HTTPNotAcceptable
-from kallithea.model.db import User
+    HTTPNotAcceptable, HTTPBadRequest
 
-from kallithea.lib.utils2 import safe_str, safe_unicode, fix_PATH, get_server_url,\
+from kallithea.lib.utils2 import safe_str, safe_unicode, fix_PATH, get_server_url, \
     _set_extras
-from kallithea.lib.base import BaseVCSController, WSGIResultCloseCallback
+from kallithea.lib.base import BaseVCSController, check_locking_state
 from kallithea.lib.utils import make_ui, is_valid_repo, ui_sections
 from kallithea.lib.vcs.utils.hgcompat import RepoError, hgweb_mod
 from kallithea.lib.exceptions import HTTPLockedRC
-from kallithea.lib import auth_modules
 
 log = logging.getLogger(__name__)
 
@@ -90,11 +87,8 @@ class SimpleHg(BaseVCSController):
     def _handle_request(self, environ, start_response):
         if not is_mercurial(environ):
             return self.application(environ, start_response)
-        if not self._check_ssl(environ):
-            return HTTPNotAcceptable('SSL REQUIRED !')(environ, start_response)
 
         ip_addr = self._get_ip_addr(environ)
-        username = None
         # skip passing error to error controller
         environ['pylons.status_code_redirect'] = True
 
@@ -102,10 +96,8 @@ class SimpleHg(BaseVCSController):
         # EXTRACT REPOSITORY NAME FROM ENV
         #======================================================================
         try:
-            str_repo_name = environ['REPO_NAME'] = self.__get_repository(environ)
-            assert isinstance(str_repo_name, str), str_repo_name
+            str_repo_name = self.__get_repository(environ)
             repo_name = safe_unicode(str_repo_name)
-            assert safe_str(repo_name) == str_repo_name, (str_repo_name, repo_name)
             log.debug('Extracted repo name is %s', repo_name)
         except Exception as e:
             log.error('error extracting repo_name: %r', e)
@@ -118,79 +110,25 @@ class SimpleHg(BaseVCSController):
         #======================================================================
         # GET ACTION PULL or PUSH
         #======================================================================
-        action = self.__get_action(environ)
+        try:
+            action = self.__get_action(environ)
+        except HTTPBadRequest as e:
+            return e(environ, start_response)
 
         #======================================================================
-        # CHECK ANONYMOUS PERMISSION
+        # CHECK PERMISSIONS
         #======================================================================
-        if action in ['pull', 'push']:
-            anonymous_user = self.__get_user('default')
-            username = anonymous_user.username
-            if anonymous_user.active:
-                # ONLY check permissions if the user is activated
-                anonymous_perm = self._check_permission(action, anonymous_user,
-                                                        repo_name, ip_addr)
-            else:
-                anonymous_perm = False
+        user, response_app = self._authorize(environ, start_response, action, repo_name, ip_addr)
+        if response_app is not None:
+            return response_app(environ, start_response)
 
-            if not anonymous_user.active or not anonymous_perm:
-                if not anonymous_user.active:
-                    log.debug('Anonymous access is disabled, running '
-                              'authentication')
-
-                if not anonymous_perm:
-                    log.debug('Not enough credentials to access this '
-                              'repository as anonymous user')
-
-                username = None
-                #==============================================================
-                # DEFAULT PERM FAILED OR ANONYMOUS ACCESS IS DISABLED SO WE
-                # NEED TO AUTHENTICATE AND ASK FOR AUTH USER PERMISSIONS
-                #==============================================================
-
-                # try to auth based on environ, container auth methods
-                log.debug('Running PRE-AUTH for container based authentication')
-                pre_auth = auth_modules.authenticate('', '', environ)
-                if pre_auth is not None and pre_auth.get('username'):
-                    username = pre_auth['username']
-                log.debug('PRE-AUTH got %s as username', username)
-
-                # If not authenticated by the container, running basic auth
-                if not username:
-                    self.authenticate.realm = \
-                        safe_str(self.config['realm'])
-                    result = self.authenticate(environ)
-                    if isinstance(result, str):
-                        AUTH_TYPE.update(environ, 'basic')
-                        REMOTE_USER.update(environ, result)
-                        username = result
-                    else:
-                        return result.wsgi_application(environ, start_response)
-
-                #==============================================================
-                # CHECK PERMISSIONS FOR THIS REQUEST USING GIVEN USERNAME
-                #==============================================================
-                try:
-                    user = self.__get_user(username)
-                    if user is None or not user.active:
-                        return HTTPForbidden()(environ, start_response)
-                    username = user.username
-                except Exception:
-                    log.error(traceback.format_exc())
-                    return HTTPInternalServerError()(environ, start_response)
-
-                #check permissions for this repository
-                perm = self._check_permission(action, user, repo_name, ip_addr)
-                if not perm:
-                    return HTTPForbidden()(environ, start_response)
-
-        # extras are injected into mercurial UI object and later available
-        # in hg hooks executed by kallithea
+        # extras are injected into Mercurial UI object and later available
+        # in hooks executed by Kallithea
         from kallithea import CONFIG
         server_url = get_server_url(environ)
         extras = {
             'ip': ip_addr,
-            'username': username,
+            'username': user.username,
             'action': action,
             'repository': repo_name,
             'scm': 'hg',
@@ -205,15 +143,15 @@ class SimpleHg(BaseVCSController):
         repo_path = os.path.join(safe_str(self.basepath), str_repo_name)
         log.debug('Repository path is %s', repo_path)
 
+        # A Mercurial HTTP server will see listkeys operations (bookmarks,
+        # phases and obsolescence marker) in a different request - we don't
+        # want to check locking on those
+        if environ['QUERY_STRING'] == 'cmd=listkeys':
+            pass
         # CHECK LOCKING only if it's not ANONYMOUS USER
-        if username != User.DEFAULT_USER:
+        elif not user.is_default_user:
             log.debug('Checking locking on repository')
-            (make_lock,
-             locked,
-             locked_by) = self._check_locking_state(
-                            environ=environ, action=action,
-                            repo=repo_name, user_id=user.user_id
-                       )
+            make_lock, locked, locked_by = check_locking_state(action, repo_name, user)
             # store the make_lock for later evaluation in hooks
             extras.update({'make_lock': make_lock,
                            'locked_by': locked_by})
@@ -221,17 +159,15 @@ class SimpleHg(BaseVCSController):
         fix_PATH()
         log.debug('HOOKS extras is %s', extras)
         baseui = make_ui('db')
-        self.__inject_extras(repo_path, baseui, extras)
+        self._augment_hgrc(repo_path, baseui)
+        _set_extras(extras or {})
 
         try:
             log.info('%s action on Mercurial repo "%s" by "%s" from %s',
-                     action, str_repo_name, safe_str(username), ip_addr)
+                     action, str_repo_name, safe_str(user.username), ip_addr)
+            environ['REPO_NAME'] = str_repo_name # used by hgweb_mod.hgweb
             app = self.__make_app(repo_path, baseui, extras)
-            result = app(environ, start_response)
-            if action == 'push':
-                result = WSGIResultCloseCallback(result,
-                    lambda: self._invalidate_cache(repo_name))
-            return result
+            return app(environ, start_response)
         except RepoError as e:
             if str(e).find('not found') != -1:
                 return HTTPNotFound()(environ, start_response)
@@ -251,13 +187,21 @@ class SimpleHg(BaseVCSController):
         class HgWebWrapper(hgweb_mod.hgweb):
             # Work-around for Mercurial 3.6+ causing lock exceptions to be
             # thrown late
-            def _runwsgi(self, req, repo):
+            def _runwsgi(self, *args):
                 try:
-                    return super(HgWebWrapper, self)._runwsgi(req, repo)
+                    return super(HgWebWrapper, self)._runwsgi(*args)
                 except HTTPLockedRC as e:
                     log.debug('Locked, response %s: %s', e.code, e.title)
-                    req.respond(e.status, 'text/plain')
-                    return ''
+                    try:
+                        req, res, repo = args
+                        res.status = e.status
+                        res.headers['Content-Type'] = 'text/plain'
+                        res.setbodybytes('')
+                        return res.sendresponse()
+                    except ValueError: # wsgiresponse was introduced in Mercurial 4.6 (a88d68dc3ee8)
+                        req, repo = args
+                        req.respond(e.status, 'text/plain')
+                        return ''
 
         return HgWebWrapper(repo_name, name=repo_name, baseui=baseui)
 
@@ -278,14 +222,11 @@ class SimpleHg(BaseVCSController):
 
         return repo_name
 
-    def __get_user(self, username):
-        return User.get_by_username(username)
-
     def __get_action(self, environ):
         """
         Maps Mercurial request commands into 'pull' or 'push'.
 
-        :param environ:
+        Raises HTTPBadRequest if the request environment doesn't look like a hg client.
         """
         mapping = {
             # 'batch' is not in this list - it is handled explicitly
@@ -333,26 +274,13 @@ class SimpleHg(BaseVCSController):
                     return 'pull'
                 return mapping.get(cmd, 'push')
 
-        raise Exception('Unable to detect pull/push action !!'
-                        'Are you using non standard command or client ?')
+        # Note: the client doesn't get the helpful error message
+        raise HTTPBadRequest('Unable to detect pull/push action! Are you using non standard command or client?')
 
-    def __inject_extras(self, repo_path, baseui, extras={}):
-        """
-        Injects some extra params into baseui instance
-
-        also overwrites global settings with those takes from local hgrc file
-
-        :param baseui: baseui instance
-        :param extras: dict with extra params to put into baseui
-        """
-
+    def _augment_hgrc(self, repo_path, baseui):
+        """Augment baseui with config settings from the repo_path repo"""
         hgrc = os.path.join(repo_path, '.hg', 'hgrc')
-
-        repoui = make_ui('file', hgrc, False)
-
-        if repoui:
-            #overwrite our ui instance with the section from hgrc file
-            for section in ui_sections:
-                for k, v in repoui.configitems(section):
-                    baseui.setconfig(section, k, v)
-        _set_extras(extras)
+        repoui = make_ui('file', hgrc)
+        for section in ui_sections:
+            for k, v in repoui.configitems(section):
+                baseui.setconfig(section, k, v)

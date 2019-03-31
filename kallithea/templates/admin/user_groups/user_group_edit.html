@@ -18,13 +18,13 @@
 </%block>
 
 <%def name="main()">
-<div class="box" style="overflow:auto">
-    <div class="title">
+<div class="panel panel-primary">
+    <div class="panel-heading clearfix">
         ${self.breadcrumbs()}
     </div>
 
     ##main
-    <div style="width: 150px; float:left">
+    <div class="form panel-body settings">
       <ul class="nav nav-pills nav-stacked">
         <li class="${'active' if c.active=='settings' else ''}"><a href="${h.url('edit_users_group', id=c.user_group.users_group_id)}">${_('Settings')}</a></li>
         <li class="${'active' if c.active=='advanced' else ''}"><a href="${h.url('edit_user_group_advanced', id=c.user_group.users_group_id)}">${_('Advanced')}</a></li>
@@ -32,10 +32,10 @@
         <li class="${'active' if c.active=='default_perms' else ''}"><a href="${h.url('edit_user_group_default_perms', id=c.user_group.users_group_id)}">${_('Show Permissions')}</a></li>
         <li class="${'active' if c.active=='members' else ''}"><a href="${h.url('edit_user_group_members', id=c.user_group.users_group_id)}">${_('Show Members')}</a></li>
       </ul>
-    </div>
 
-    <div style="width:750px; float:left; padding: 10px 0px 0px 20px;margin: 0px 0px 0px 10px; border-left: 1px solid #DDDDDD">
+      <div>
         <%include file="/admin/user_groups/user_group_edit_${c.active}.html"/>
+      </div>
     </div>
 </div>
 </%def>

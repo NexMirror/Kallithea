@@ -27,39 +27,35 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 
-from pylons.i18n.translation import _
+from tg.i18n import ugettext as _
 from collections import defaultdict
 
 from kallithea.lib.utils2 import extract_mentioned_users, safe_unicode
 from kallithea.lib import helpers as h
-from kallithea.model import BaseModel
 from kallithea.model.db import ChangesetComment, User, \
-    Notification, PullRequest
+    PullRequest, Repository
 from kallithea.model.notification import NotificationModel
 from kallithea.model.meta import Session
 
 log = logging.getLogger(__name__)
 
 
-class ChangesetCommentsModel(BaseModel):
+def _list_changeset_commenters(revision):
+    return (Session().query(User)
+        .join(ChangesetComment.author)
+        .filter(ChangesetComment.revision == revision)
+        .all())
 
-    cls = ChangesetComment
+def _list_pull_request_commenters(pull_request):
+    return (Session().query(User)
+        .join(ChangesetComment.author)
+        .filter(ChangesetComment.pull_request_id == pull_request.pull_request_id)
+        .all())
 
-    def __get_changeset_comment(self, changeset_comment):
-        return self._get_instance(ChangesetComment, changeset_comment)
 
-    def __get_pull_request(self, pull_request):
-        return self._get_instance(PullRequest, pull_request)
+class ChangesetCommentsModel(object):
 
-    def _extract_mentions(self, s):
-        user_objects = []
-        for username in extract_mentioned_users(s):
-            user_obj = User.get_by_username(username, case_insensitive=True)
-            if user_obj:
-                user_objects.append(user_obj)
-        return user_objects
-
-    def _get_notification_data(self, repo, comment, user, comment_text,
+    def _get_notification_data(self, repo, comment, author, comment_text,
                                line_no=None, revision=None, pull_request=None,
                                status_change=None, closing_pr=False):
         """
@@ -71,9 +67,9 @@ class ChangesetCommentsModel(BaseModel):
         if line_no:
             line = _('on line %s') % line_no
 
-        #changeset
+        # changeset
         if revision:
-            notification_type = Notification.TYPE_CHANGESET_COMMENT
+            notification_type = NotificationModel.TYPE_CHANGESET_COMMENT
             cs = repo.scm_instance.get_changeset(revision)
             desc = cs.short_id
 
@@ -91,31 +87,37 @@ class ChangesetCommentsModel(BaseModel):
                           comment_url)
             )
             # get the current participants of this changeset
-            recipients = ChangesetComment.get_users(revision=revision)
+            recipients = _list_changeset_commenters(revision)
             # add changeset author if it's known locally
             cs_author = User.get_from_cs_author(cs.author)
             if not cs_author:
-                #use repo owner if we cannot extract the author correctly
-                cs_author = repo.user
-            recipients += [cs_author]
+                # use repo owner if we cannot extract the author correctly
+                # FIXME: just use committer name even if not a user
+                cs_author = repo.owner
+            recipients.append(cs_author)
+
             email_kwargs = {
                 'status_change': status_change,
-                'cs_comment_user': user.full_name_and_username,
+                'cs_comment_user': author.full_name_and_username,
                 'cs_target_repo': h.canonical_url('summary_home', repo_name=repo.repo_name),
                 'cs_comment_url': comment_url,
+                'cs_url': h.canonical_url('changeset_home', repo_name=repo.repo_name, revision=revision),
                 'raw_id': revision,
                 'message': cs.message,
+                'message_short': h.shorter(cs.message, 50, firstline=True),
+                'cs_author': cs_author,
                 'repo_name': repo.repo_name,
                 'short_id': h.short_id(revision),
                 'branch': cs.branch,
-                'comment_username': user.username,
+                'comment_username': author.username,
                 'threading': threading,
             }
-        #pull request
+        # pull request
         elif pull_request:
-            notification_type = Notification.TYPE_PULL_REQUEST_COMMENT
+            notification_type = NotificationModel.TYPE_PULL_REQUEST_COMMENT
             desc = comment.pull_request.title
             _org_ref_type, org_ref_name, _org_rev = comment.pull_request.org_ref.split(':')
+            _other_ref_type, other_ref_name, _other_rev = comment.pull_request.other_ref.split(':')
             threading = ['%s-pr-%s@%s' % (pull_request.other_repo.repo_name,
                                           pull_request.pull_request_id,
                                           h.canonical_hostname())]
@@ -126,40 +128,43 @@ class ChangesetCommentsModel(BaseModel):
             comment_url = pull_request.url(canonical=True,
                 anchor='comment-%s' % comment.comment_id)
             subj = safe_unicode(
-                h.link_to('Re pull request %(pr_nice_id)s: %(desc)s %(line)s' % \
+                h.link_to('Re pull request %(pr_nice_id)s: %(desc)s %(line)s' %
                           {'desc': desc,
                            'pr_nice_id': comment.pull_request.nice_id(),
                            'line': line},
                           comment_url)
             )
             # get the current participants of this pull request
-            recipients = ChangesetComment.get_users(pull_request_id=
-                                                pull_request.pull_request_id)
-            # add pull request author
-            recipients += [pull_request.owner]
+            recipients = _list_pull_request_commenters(pull_request)
+            recipients.append(pull_request.owner)
+            recipients += pull_request.get_reviewer_users()
 
-            # add the reviewers to notification
-            recipients += [x.user for x in pull_request.reviewers]
-
-            #set some variables for email notification
+            # set some variables for email notification
             email_kwargs = {
                 'pr_title': pull_request.title,
+                'pr_title_short': h.shorter(pull_request.title, 50),
                 'pr_nice_id': pull_request.nice_id(),
                 'status_change': status_change,
                 'closing_pr': closing_pr,
                 'pr_comment_url': comment_url,
-                'pr_comment_user': user.full_name_and_username,
+                'pr_url': pull_request.url(canonical=True),
+                'pr_comment_user': author.full_name_and_username,
                 'pr_target_repo': h.canonical_url('summary_home',
                                    repo_name=pull_request.other_repo.repo_name),
+                'pr_target_branch': other_ref_name,
+                'pr_source_repo': h.canonical_url('summary_home',
+                                   repo_name=pull_request.org_repo.repo_name),
+                'pr_source_branch': org_ref_name,
+                'pr_owner': pull_request.owner,
+                'pr_owner_username': pull_request.owner.username,
                 'repo_name': pull_request.other_repo.repo_name,
-                'ref': org_ref_name,
-                'comment_username': user.username,
+                'comment_username': author.username,
                 'threading': threading,
             }
 
         return subj, body, recipients, notification_type, email_kwargs
 
-    def create(self, text, repo, user, revision=None, pull_request=None,
+    def create(self, text, repo, author, revision=None, pull_request=None,
                f_path=None, line_no=None, status_change=None, closing_pr=False,
                send_email=True):
         """
@@ -172,11 +177,11 @@ class ChangesetCommentsModel(BaseModel):
             log.warning('Missing text for comment, skipping...')
             return None
 
-        repo = self._get_repo(repo)
-        user = self._get_user(user)
+        repo = Repository.guess_instance(repo)
+        author = User.guess_instance(author)
         comment = ChangesetComment()
         comment.repo = repo
-        comment.author = user
+        comment.author = author
         comment.text = text
         comment.f_path = f_path
         comment.line_no = line_no
@@ -184,7 +189,7 @@ class ChangesetCommentsModel(BaseModel):
         if revision is not None:
             comment.revision = revision
         elif pull_request is not None:
-            pull_request = self.__get_pull_request(pull_request)
+            pull_request = PullRequest.guess_instance(pull_request)
             comment.pull_request = pull_request
         else:
             raise Exception('Please specify revision or pull_request_id')
@@ -195,7 +200,7 @@ class ChangesetCommentsModel(BaseModel):
         if send_email:
             (subj, body, recipients, notification_type,
              email_kwargs) = self._get_notification_data(
-                                repo, comment, user,
+                                repo, comment, author,
                                 comment_text=text,
                                 line_no=line_no,
                                 revision=revision,
@@ -205,18 +210,18 @@ class ChangesetCommentsModel(BaseModel):
             email_kwargs['is_mention'] = False
             # create notification objects, and emails
             NotificationModel().create(
-                created_by=user, subject=subj, body=body,
+                created_by=author, subject=subj, body=body,
                 recipients=recipients, type_=notification_type,
                 email_kwargs=email_kwargs,
             )
 
-            mention_recipients = set(self._extract_mentions(body))\
-                                    .difference(recipients)
+            mention_recipients = extract_mentioned_users(body).difference(recipients)
             if mention_recipients:
                 email_kwargs['is_mention'] = True
                 subj = _('[Mention]') + ' ' + subj
+                # FIXME: this subject is wrong and unused!
                 NotificationModel().create(
-                    created_by=user, subject=subj, body=body,
+                    created_by=author, subject=subj, body=body,
                     recipients=mention_recipients,
                     type_=notification_type,
                     email_kwargs=email_kwargs
@@ -225,7 +230,7 @@ class ChangesetCommentsModel(BaseModel):
         return comment
 
     def delete(self, comment):
-        comment = self.__get_changeset_comment(comment)
+        comment = ChangesetComment.guess_instance(comment)
         Session().delete(comment)
 
         return comment
@@ -239,38 +244,59 @@ class ChangesetCommentsModel(BaseModel):
         return self._get_comments(repo_id, revision=revision, pull_request=pull_request,
                                   inline=False)
 
-    def get_inline_comments(self, repo_id, revision=None, pull_request=None):
+    def get_inline_comments(self, repo_id, revision=None, pull_request=None,
+                f_path=None, line_no=None):
         """
         Gets inline comments for either revision or pull_request.
 
         Returns a list of tuples with file path and list of comments per line number.
         """
         comments = self._get_comments(repo_id, revision=revision, pull_request=pull_request,
-                                      inline=True)
+                                      inline=True, f_path=f_path, line_no=line_no)
 
         paths = defaultdict(lambda: defaultdict(list))
         for co in comments:
             paths[co.f_path][co.line_no].append(co)
         return paths.items()
 
-    def _get_comments(self, repo_id, revision=None, pull_request=None, inline=False):
+    def _get_comments(self, repo_id, revision=None, pull_request=None,
+                inline=False, f_path=None, line_no=None):
         """
         Gets comments for either revision or pull_request_id, either inline or general.
+        If a file path and optionally line number are given, return only the matching inline comments.
         """
+        if f_path is None and line_no is not None:
+            raise Exception("line_no only makes sense if f_path is given.")
+
+        if inline is None and f_path is not None:
+            raise Exception("f_path only makes sense for inline comments.")
+
         q = Session().query(ChangesetComment)
 
         if inline:
-            q = q.filter(ChangesetComment.line_no != None)\
-                .filter(ChangesetComment.f_path != None)
+            if f_path is not None:
+                # inline comments for a given file...
+                q = q.filter(ChangesetComment.f_path == f_path)
+                if line_no is None:
+                    # ... on any line
+                    q = q.filter(ChangesetComment.line_no != None)
+                else:
+                    # ... on specific line
+                    q = q.filter(ChangesetComment.line_no == line_no)
+            else:
+                # all inline comments
+                q = q.filter(ChangesetComment.line_no != None) \
+                    .filter(ChangesetComment.f_path != None)
         else:
-            q = q.filter(ChangesetComment.line_no == None)\
+            # all general comments
+            q = q.filter(ChangesetComment.line_no == None) \
                 .filter(ChangesetComment.f_path == None)
 
-        if revision:
-            q = q.filter(ChangesetComment.revision == revision)\
+        if revision is not None:
+            q = q.filter(ChangesetComment.revision == revision) \
                 .filter(ChangesetComment.repo_id == repo_id)
-        elif pull_request:
-            pull_request = self.__get_pull_request(pull_request)
+        elif pull_request is not None:
+            pull_request = PullRequest.guess_instance(pull_request)
             q = q.filter(ChangesetComment.pull_request == pull_request)
         else:
             raise Exception('Please specify either revision or pull_request')

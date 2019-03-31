@@ -11,12 +11,14 @@ Setting up Kallithea
 First, you will need to create a Kallithea configuration file. Run the
 following command to do so::
 
-    paster make-config Kallithea my.ini
+    kallithea-cli config-create my.ini
 
 This will create the file ``my.ini`` in the current directory. This
 configuration file contains the various settings for Kallithea, e.g.
 proxy port, email settings, usage of static files, cache, Celery
-settings, and logging.
+settings, and logging. Extra settings can be specified like::
+
+    kallithea-cli config-create my.ini host=8.8.8.8 "[handler_console]" formatter=color_formatter
 
 Next, you need to create the databases used by Kallithea. It is recommended to
 use PostgreSQL or SQLite (default). If you choose a database other than the
@@ -25,20 +27,20 @@ configuration file to use this other database. Kallithea currently supports
 PostgreSQL, SQLite and MySQL databases. Create the database by running
 the following command::
 
-    paster setup-db my.ini
+    kallithea-cli db-create -c my.ini
 
 This will prompt you for a "root" path. This "root" path is the location where
 Kallithea will store all of its repositories on the current machine. After
-entering this "root" path ``setup-db`` will also prompt you for a username
-and password for the initial admin account which ``setup-db`` sets
+entering this "root" path ``db-create`` will also prompt you for a username
+and password for the initial admin account which ``db-create`` sets
 up for you.
 
-The ``setup-db`` values can also be given on the command line.
+The ``db-create`` values can also be given on the command line.
 Example::
 
-    paster setup-db my.ini --user=nn --password=secret --email=nn@example.com --repos=/srv/repos
+    kallithea-cli db-create -c my.ini --user=nn --password=secret --email=nn@example.com --repos=/srv/repos
 
-The ``setup-db`` command will create all needed tables and an
+The ``db-create`` command will create all needed tables and an
 admin account. When choosing a root path you can either use a new
 empty location, or a location which already contains existing
 repositories. If you choose a location which contains existing
@@ -52,14 +54,18 @@ path to the root).
           but when trying to do a push it will fail with permission
           denied errors unless it has write access.
 
+Finally, prepare the front-end by running::
+
+    kallithea-cli front-end-build
+
 You are now ready to use Kallithea. To run it simply execute::
 
-    paster serve my.ini
+    gearbox serve -c my.ini
 
 - This command runs the Kallithea server. The web app should be available at
   http://127.0.0.1:5000. The IP address and port is configurable via the
   configuration file created in the previous step.
-- Log in to Kallithea using the admin account created when running ``setup-db``.
+- Log in to Kallithea using the admin account created when running ``db-create``.
 - The default permissions on each repository is read, and the owner is admin.
   Remember to update these if needed.
 - In the admin panel you can toggle LDAP, anonymous, and permissions
@@ -67,22 +73,20 @@ You are now ready to use Kallithea. To run it simply execute::
   repositories.
 
 
-Extensions
-----------
+Internationalization (i18n support)
+-----------------------------------
 
-Optionally one can create an ``rcextensions`` package that extends Kallithea
-functionality.
-To generate a skeleton extensions package, run::
+The Kallithea web interface is automatically displayed in the user's preferred
+language, as indicated by the browser. Thus, different users may see the
+application in different languages. If the requested language is not available
+(because the translation file for that language does not yet exist or is
+incomplete), the language specified in setting ``i18n.lang`` in the Kallithea
+configuration file is used as fallback. If no fallback language is explicitly
+specified, English is used.
 
-    paster make-rcext my.ini
-
-This will create an ``rcextensions`` package next to the specified ``ini`` file.
-With ``rcextensions`` it's possible to add additional mapping for whoosh,
-stats and add additional code into the push/pull/create/delete repo hooks,
-for example for sending signals to build-bots such as Jenkins.
-
-See the ``__init__.py`` file inside the generated ``rcextensions`` package
-for more details.
+If you want to disable automatic language detection and instead configure a
+fixed language regardless of user preference, set ``i18n.enabled = false`` and
+set ``i18n.lang`` to the desired language (or leave empty for English).
 
 
 Using Kallithea with SSH
@@ -129,23 +133,23 @@ Kallithea provides full text search of repositories using `Whoosh`__.
 
 For an incremental index build, run::
 
-    paster make-index my.ini
+    kallithea-cli index-create -c my.ini
 
 For a full index rebuild, run::
 
-    paster make-index my.ini -f
+    kallithea-cli index-create -c my.ini --full
 
-The ``--repo-location`` option allows the location of the repositories to be overriden;
+The ``--repo-location`` option allows the location of the repositories to be overridden;
 usually, the location is retrieved from the Kallithea database.
 
 The ``--index-only`` option can be used to limit the indexed repositories to a comma-separated list::
 
-    paster make-index my.ini --index-only=vcs,kallithea
+    kallithea-cli index-create -c my.ini --index-only=vcs,kallithea
 
 To keep your index up-to-date it is necessary to do periodic index builds;
 for this, it is recommended to use a crontab entry. Example::
 
-    0  3  *  *  *  /path/to/virtualenv/bin/paster make-index /path/to/kallithea/my.ini
+    0  3  *  *  *  /path/to/virtualenv/bin/kallithea-cli index-create -c /path/to/kallithea/my.ini
 
 When using incremental mode (the default), Whoosh will check the last
 modification date of each file and add it to be reindexed if a newer file is
@@ -155,321 +159,75 @@ from index.
 If you want to rebuild the index from scratch, you can use the ``-f`` flag as above,
 or in the admin panel you can check the "build from scratch" checkbox.
 
-.. _ldap-setup:
-
-Setting up LDAP support
------------------------
-
-Kallithea supports LDAP authentication. In order
-to use LDAP, you have to install the python-ldap_ package. This package is
-available via PyPI, so you can install it by running::
-
-    pip install python-ldap
-
-.. note:: ``python-ldap`` requires some libraries to be installed on
-          your system, so before installing it check that you have at
-          least the ``openldap`` and ``sasl`` libraries.
-
-Choose *Admin > Authentication*, click the ``kallithea.lib.auth_modules.auth_ldap`` button
-and then *Save*, to enable the LDAP plugin and configure its settings.
-
-Here's a typical LDAP setup::
-
- Connection settings
- Enable LDAP          = checked
- Host                 = host.example.com
- Port                 = 389
- Account              = <account>
- Password             = <password>
- Connection Security  = LDAPS connection
- Certificate Checks   = DEMAND
-
- Search settings
- Base DN              = CN=users,DC=host,DC=example,DC=org
- LDAP Filter          = (&(objectClass=user)(!(objectClass=computer)))
- LDAP Search Scope    = SUBTREE
-
- Attribute mappings
- Login Attribute      = uid
- First Name Attribute = firstName
- Last Name Attribute  = lastName
- Email Attribute      = mail
-
-If your user groups are placed in an Organisation Unit (OU) structure, the Search Settings configuration differs::
-
- Search settings
- Base DN              = DC=host,DC=example,DC=org
- LDAP Filter          = (&(memberOf=CN=your user group,OU=subunit,OU=unit,DC=host,DC=example,DC=org)(objectClass=user))
- LDAP Search Scope    = SUBTREE
-
-.. _enable_ldap:
-
-Enable LDAP : required
-    Whether to use LDAP for authenticating users.
-
-.. _ldap_host:
-
-Host : required
-    LDAP server hostname or IP address. Can be also a comma separated
-    list of servers to support LDAP fail-over.
-
-.. _Port:
-
-Port : required
-    389 for un-encrypted LDAP, 636 for SSL-encrypted LDAP.
-
-.. _ldap_account:
-
-Account : optional
-    Only required if the LDAP server does not allow anonymous browsing of
-    records.  This should be a special account for record browsing.  This
-    will require `LDAP Password`_ below.
-
-.. _LDAP Password:
-
-Password : optional
-    Only required if the LDAP server does not allow anonymous browsing of
-    records.
-
-.. _Enable LDAPS:
-
-Connection Security : required
-    Defines the connection to LDAP server
-
-    No encryption
-        Plain non encrypted connection
-
-    LDAPS connection
-        Enable LDAPS connections. It will likely require `Port`_ to be set to
-        a different value (standard LDAPS port is 636). When LDAPS is enabled
-        then `Certificate Checks`_ is required.
-
-    START_TLS on LDAP connection
-        START TLS connection
-
-.. _Certificate Checks:
-
-Certificate Checks : optional
-    How SSL certificates verification is handled -- this is only useful when
-    `Enable LDAPS`_ is enabled.  Only DEMAND or HARD offer full SSL security
-    while the other options are susceptible to man-in-the-middle attacks.  SSL
-    certificates can be installed to /etc/openldap/cacerts so that the
-    DEMAND or HARD options can be used with self-signed certificates or
-    certificates that do not have traceable certificates of authority.
-
-    NEVER
-        A serve certificate will never be requested or checked.
-
-    ALLOW
-        A server certificate is requested.  Failure to provide a
-        certificate or providing a bad certificate will not terminate the
-        session.
-
-    TRY
-        A server certificate is requested.  Failure to provide a
-        certificate does not halt the session; providing a bad certificate
-        halts the session.
-
-    DEMAND
-        A server certificate is requested and must be provided and
-        authenticated for the session to proceed.
-
-    HARD
-        The same as DEMAND.
-
-.. _Base DN:
-
-Base DN : required
-    The Distinguished Name (DN) where searches for users will be performed.
-    Searches can be controlled by `LDAP Filter`_ and `LDAP Search Scope`_.
-
-.. _LDAP Filter:
-
-LDAP Filter : optional
-    A LDAP filter defined by RFC 2254.  This is more useful when `LDAP
-    Search Scope`_ is set to SUBTREE.  The filter is useful for limiting
-    which LDAP objects are identified as representing Users for
-    authentication.  The filter is augmented by `Login Attribute`_ below.
-    This can commonly be left blank.
-
-.. _LDAP Search Scope:
-
-LDAP Search Scope : required
-    This limits how far LDAP will search for a matching object.
-
-    BASE
-        Only allows searching of `Base DN`_ and is usually not what you
-        want.
-
-    ONELEVEL
-        Searches all entries under `Base DN`_, but not Base DN itself.
-
-    SUBTREE
-        Searches all entries below `Base DN`_, but not Base DN itself.
-        When using SUBTREE `LDAP Filter`_ is useful to limit object
-        location.
-
-.. _Login Attribute:
-
-Login Attribute : required
-    The LDAP record attribute that will be matched as the USERNAME or
-    ACCOUNT used to connect to Kallithea.  This will be added to `LDAP
-    Filter`_ for locating the User object.  If `LDAP Filter`_ is specified as
-    "LDAPFILTER", `Login Attribute`_ is specified as "uid" and the user has
-    connected as "jsmith" then the `LDAP Filter`_ will be augmented as below
-    ::
-
-        (&(LDAPFILTER)(uid=jsmith))
-
-.. _ldap_attr_firstname:
-
-First Name Attribute : required
-    The LDAP record attribute which represents the user's first name.
-
-.. _ldap_attr_lastname:
-
-Last Name Attribute : required
-    The LDAP record attribute which represents the user's last name.
-
-.. _ldap_attr_email:
-
-Email Attribute : required
-    The LDAP record attribute which represents the user's email address.
-
-If all data are entered correctly, and python-ldap_ is properly installed
-users should be granted access to Kallithea with LDAP accounts.  At this
-time user information is copied from LDAP into the Kallithea user database.
-This means that updates of an LDAP user object may not be reflected as a
-user update in Kallithea.
-
-If You have problems with LDAP access and believe You entered correct
-information check out the Kallithea logs, any error messages sent from LDAP
-will be saved there.
-
-Active Directory
-''''''''''''''''
-
-Kallithea can use Microsoft Active Directory for user authentication.  This
-is done through an LDAP or LDAPS connection to Active Directory.  The
-following LDAP configuration settings are typical for using Active
-Directory ::
-
- Base DN              = OU=SBSUsers,OU=Users,OU=MyBusiness,DC=v3sys,DC=local
- Login Attribute      = sAMAccountName
- First Name Attribute = givenName
- Last Name Attribute  = sn
- Email Attribute     = mail
-
-All other LDAP settings will likely be site-specific and should be
-appropriately configured.
-
-
-Authentication by container or reverse-proxy
---------------------------------------------
-
-Kallithea supports delegating the authentication
-of users to its WSGI container, or to a reverse-proxy server through which all
-clients access the application.
-
-When these authentication methods are enabled in Kallithea, it uses the
-username that the container/proxy (Apache or Nginx, etc.) provides and doesn't
-perform the authentication itself. The authorization, however, is still done by
-Kallithea according to its settings.
-
-When a user logs in for the first time using these authentication methods,
-a matching user account is created in Kallithea with default permissions. An
-administrator can then modify it using Kallithea's admin interface.
-
-It's also possible for an administrator to create accounts and configure their
-permissions before the user logs in for the first time, using the :ref:`create-user` API.
-
-Container-based authentication
-''''''''''''''''''''''''''''''
-
-In a container-based authentication setup, Kallithea reads the user name from
-the ``REMOTE_USER`` server variable provided by the WSGI container.
-
-After setting up your container (see `Apache with mod_wsgi`_), you'll need
-to configure it to require authentication on the location configured for
-Kallithea.
-
-Proxy pass-through authentication
-'''''''''''''''''''''''''''''''''
-
-In a proxy pass-through authentication setup, Kallithea reads the user name
-from the ``X-Forwarded-User`` request header, which should be configured to be
-sent by the reverse-proxy server.
-
-After setting up your proxy solution (see `Apache virtual host reverse proxy example`_,
-`Apache as subdirectory`_ or `Nginx virtual host example`_), you'll need to
-configure the authentication and add the username in a request header named
-``X-Forwarded-User``.
-
-For example, the following config section for Apache sets a subdirectory in a
-reverse-proxy setup with basic auth:
-
-.. code-block:: apache
-
-    <Location /someprefix>
-      ProxyPass http://127.0.0.1:5000/someprefix
-      ProxyPassReverse http://127.0.0.1:5000/someprefix
-      SetEnvIf X-Url-Scheme https HTTPS=1
-
-      AuthType Basic
-      AuthName "Kallithea authentication"
-      AuthUserFile /srv/kallithea/.htpasswd
-      Require valid-user
-
-      RequestHeader unset X-Forwarded-User
-
-      RewriteEngine On
-      RewriteCond %{LA-U:REMOTE_USER} (.+)
-      RewriteRule .* - [E=RU:%1]
-      RequestHeader set X-Forwarded-User %{RU}e
-    </Location>
-
-.. note::
-   If you enable proxy pass-through authentication, make sure your server is
-   only accessible through the proxy. Otherwise, any client would be able to
-   forge the authentication header and could effectively become authenticated
-   using any account of their liking.
-
 
 Integration with issue trackers
 -------------------------------
 
 Kallithea provides a simple integration with issue trackers. It's possible
 to define a regular expression that will match an issue ID in commit messages,
-and have that replaced with a URL to the issue. To enable this simply
-uncomment the following variables in the ini file::
+and have that replaced with a URL to the issue.
 
-    issue_pat = (?:^#|\s#)(\w+)
-    issue_server_link = https://issues.example.com/{repo}/issue/{id}
-    issue_prefix = #
+This is achieved with following three variables in the ini file::
+
+    issue_pat = #(\d+)
+    issue_server_link = https://issues.example.com/{repo}/issue/\1
+    issue_sub =
 
 ``issue_pat`` is the regular expression describing which strings in
-commit messages will be treated as issue references. A match group in
-parentheses should be used to specify the actual issue id.
+commit messages will be treated as issue references. The expression can/should
+have one or more parenthesized groups that can later be referred to in
+``issue_server_link`` and ``issue_sub`` (see below). If you prefer, named groups
+can be used instead of simple parenthesized groups.
 
-The default expression matches issues in the format ``#<number>``, e.g., ``#300``.
+If the pattern should only match if it is preceded by whitespace, add the
+following string before the actual pattern: ``(?:^|(?<=\s))``.
+If the pattern should only match if it is followed by whitespace, add the
+following string after the actual pattern: ``(?:$|(?=\s))``.
+These expressions use lookbehind and lookahead assertions of the Python regular
+expression module to avoid the whitespace to be part of the actual pattern,
+otherwise the link text will also contain that whitespace.
 
 Matched issue references are replaced with the link specified in
-``issue_server_link``. ``{id}`` is replaced with the issue ID, and
-``{repo}`` with the repository name.  Since the # is stripped away,
-``issue_prefix`` is prepended to the link text.  ``issue_prefix`` doesn't
-necessarily need to be ``#``: if you set issue prefix to ``ISSUE-`` this will
-generate a URL in the format:
+``issue_server_link``, in which any backreferences are resolved. Backreferences
+can be ``\1``, ``\2``, ... or for named groups ``\g<groupname>``.
+The special token ``{repo}`` is replaced with the full repository path
+(including repository groups), while token ``{repo_name}`` is replaced with the
+repository name (without repository groups).
+
+The link text is determined by ``issue_sub``, which can be a string containing
+backreferences to the groups specified in ``issue_pat``. If ``issue_sub`` is
+empty, then the text matched by ``issue_pat`` is used verbatim.
+
+The example settings shown above match issues in the format ``#<number>``.
+This will cause the text ``#300`` to be transformed into a link:
 
 .. code-block:: html
 
-  <a href="https://issues.example.com/example_repo/issue/300">ISSUE-300</a>
+  <a href="https://issues.example.com/example_repo/issue/300">#300</a>
+
+The following example transforms a text starting with either of 'pullrequest',
+'pull request' or 'PR', followed by an optional space, then a pound character
+(#) and one or more digits, into a link with the text 'PR #' followed by the
+digits::
+
+    issue_pat = (pullrequest|pull request|PR) ?#(\d+)
+    issue_server_link = https://issues.example.com/\2
+    issue_sub = PR #\2
+
+The following example demonstrates how to require whitespace before the issue
+reference in order for it to be recognized, such that the text ``issue#123`` will
+not cause a match, but ``issue #123`` will::
+
+    issue_pat = (?:^|(?<=\s))#(\d+)
+    issue_server_link = https://issues.example.com/\1
+    issue_sub =
 
 If needed, more than one pattern can be specified by appending a unique suffix to
-the variables. For example::
+the variables. For example, also demonstrating the use of named groups::
 
-    issue_pat_wiki = (?:wiki-)(.+)
-    issue_server_link_wiki = https://wiki.example.com/{id}
-    issue_prefix_wiki = WIKI-
+    issue_pat_wiki = wiki-(?P<pagename>\S+)
+    issue_server_link_wiki = https://wiki.example.com/\g<pagename>
+    issue_sub_wiki = WIKI-\g<pagename>
 
 With these settings, wiki pages can be referenced as wiki-some-id, and every
 such reference will be transformed into:
@@ -477,6 +235,9 @@ such reference will be transformed into:
 .. code-block:: html
 
   <a href="https://wiki.example.com/some-id">WIKI-some-id</a>
+
+Refer to the `Python regular expression documentation`_ for more details about
+the supported syntax in ``issue_pat``, ``issue_server_link`` and ``issue_sub``.
 
 
 Hook management
@@ -501,6 +262,9 @@ This affects many parts in Kallithea including user names, filenames, and
 encoding of commit messages. In addition Kallithea can detect if the ``chardet``
 library is installed. If ``chardet`` is detected Kallithea will fallback to it
 when there are encode/decode errors.
+
+The Mercurial encoding is configurable as ``hgencoding``. It is similar to
+setting the ``HGENCODING`` environment variable, but will override it.
 
 
 Celery configuration
@@ -531,7 +295,10 @@ Celery. So for example setting `BROKER_HOST` in Celery means setting
 
 To start the Celery process, run::
 
- paster celeryd <configfile.ini>
+  kallithea-cli celery-run -c my.ini
+
+Extra options to the Celery worker can be passed after ``--`` - see ``-- -h``
+for more info.
 
 .. note::
    Make sure you run this command from the same virtualenv, and with the same
@@ -551,6 +318,8 @@ directly which scheme/protocol Kallithea will use when generating URLs:
   (default ``http``).
 - With ``force_https = true`` the default will be ``https``.
 - With ``use_htsts = true``, Kallithea will set ``Strict-Transport-Security`` when using https.
+
+.. _nginx_virtual_host:
 
 
 Nginx virtual host example
@@ -606,7 +375,7 @@ Sample config for Nginx using proxy:
 
        ## uncomment root directive if you want to serve static files by nginx
        ## requires static_files = false in .ini file
-       #root /path/to/installation/kallithea/public;
+       #root /srv/kallithea/kallithea/kallithea/public;
        include         /etc/nginx/proxy.conf;
        location / {
             try_files $uri @kallithea;
@@ -640,6 +409,8 @@ pushes or large pushes::
     client_body_buffer_size     128k;
     large_client_header_buffers 8 64k;
 
+.. _apache_virtual_host_reverse_proxy:
+
 
 Apache virtual host reverse proxy example
 -----------------------------------------
@@ -661,7 +432,7 @@ Here is a sample configuration file for Apache using proxy:
             </Proxy>
 
             #important !
-            #Directive to properly generate url (clone url) for pylons
+            #Directive to properly generate url (clone url) for Kallithea
             ProxyPreserveHost On
 
             #kallithea instance
@@ -675,6 +446,8 @@ Here is a sample configuration file for Apache using proxy:
 Additional tutorial
 http://pylonsbook.com/en/1.1/deployment.html#using-apache-to-proxy-requests-to-pylons
 
+.. _apache_subdirectory:
+
 
 Apache as subdirectory
 ----------------------
@@ -683,9 +456,9 @@ Apache subdirectory part:
 
 .. code-block:: apache
 
-    <Location /<someprefix> >
-      ProxyPass http://127.0.0.1:5000/<someprefix>
-      ProxyPassReverse http://127.0.0.1:5000/<someprefix>
+    <Location /PREFIX >
+      ProxyPass http://127.0.0.1:5000/PREFIX
+      ProxyPassReverse http://127.0.0.1:5000/PREFIX
       SetEnvIf X-Url-Scheme https HTTPS=1
     </Location>
 
@@ -698,9 +471,11 @@ Add the following at the end of the .ini file::
 
     [filter:proxy-prefix]
     use = egg:PasteDeploy#prefix
-    prefix = /<someprefix>
+    prefix = /PREFIX
 
-then change ``<someprefix>`` into your chosen prefix
+then change ``PREFIX`` into your chosen prefix
+
+.. _apache_mod_wsgi:
 
 
 Apache with mod_wsgi
@@ -755,27 +530,21 @@ usually ``www-data`` or ``apache``. If you need to have the repositories
 directory owned by a different user, use the user and group options to
 WSGIDaemonProcess to set the name of the user and group.
 
-.. note::
-   If running Kallithea in multiprocess mode,
-   make sure you set ``instance_id = *`` in the configuration so each process
-   gets it's own cache invalidation key.
-
 Example WSGI dispatch script:
 
 .. code-block:: python
 
     import os
-    os.environ["HGENCODING"] = "UTF-8"
     os.environ['PYTHON_EGG_CACHE'] = '/srv/kallithea/.egg-cache'
 
-    # sometimes it's needed to set the curent dir
+    # sometimes it's needed to set the current dir
     os.chdir('/srv/kallithea/')
 
     import site
     site.addsitedir("/srv/kallithea/venv/lib/python2.7/site-packages")
 
     ini = '/srv/kallithea/my.ini'
-    from paste.script.util.logging_config import fileConfig
+    from logging.config import fileConfig
     fileConfig(ini)
     from paste.deploy import loadapp
     application = loadapp('config:' + ini)
@@ -791,7 +560,7 @@ Or using proper virtualenv activation:
     os.environ['HOME'] = '/srv/kallithea'
 
     ini = '/srv/kallithea/kallithea.ini'
-    from paste.script.util.logging_config import fileConfig
+    from logging.config import fileConfig
     fileConfig(ini)
     from paste.deploy import loadapp
     application = loadapp('config:' + ini)
@@ -808,11 +577,11 @@ the ``init.d`` directory of the Kallithea source.
 
 .. _virtualenv: http://pypi.python.org/pypi/virtualenv
 .. _python: http://www.python.org/
+.. _Python regular expression documentation: https://docs.python.org/2/library/re.html
 .. _Mercurial: https://www.mercurial-scm.org/
 .. _Celery: http://celeryproject.org/
 .. _Celery documentation: http://docs.celeryproject.org/en/latest/getting-started/index.html
 .. _RabbitMQ: http://www.rabbitmq.com/
 .. _Redis: http://redis.io/
-.. _python-ldap: http://www.python-ldap.org/
 .. _mercurial-server: http://www.lshift.net/mercurial-server.html
 .. _PublishingRepositories: https://www.mercurial-scm.org/wiki/PublishingRepositories

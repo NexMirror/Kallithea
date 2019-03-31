@@ -1,0 +1,958 @@
+body {
+  background: url("../images/background.png") repeat scroll 0 0 #B0B0B0;
+}
+
+/* pseude content that should not be selected or copied by the user */
+[data-pseudo-content]:before {
+  content: attr(data-pseudo-content);
+}
+
+/* class for texts where newlines should be preserved, for very light-weight ascii art markup (like pull request descriptions) */
+.formatted-fixed {
+  font-family: @font-family-monospace;
+  white-space: pre-wrap;
+}
+
+/* use monospace for changeset hashes */
+.changeset_hash {
+  font-family: @font-family-monospace;
+}
+
+/* Note: class 'icon-empty' or 'icon-gravatar' can be used to get icon-ish styling without an actual glyph */
+i[class^='icon-empty'],
+i[class^='icon-gravatar'] {
+  background-repeat: no-repeat;
+  background-position: center;
+  display: inline-block;
+  min-width: 16px;
+  min-height: 16px;
+  margin: -2px 0 -4px 0;
+}
+
+.inline-comments-general.show-general-status .hidden.general-only {
+  display: block !important;
+}
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  -ms-text-overflow: ellipsis;
+}
+.truncate.autoexpand:hover {
+  overflow: visible;
+}
+
+/* show comment anchors when hovering over panel-heading */
+a.permalink {
+  visibility: hidden;
+}
+.panel-heading:hover .permalink {
+  visibility: visible;
+}
+
+.navbar-inverse {
+  border: none;
+}
+
+/* logo */
+nav.navbar.mainmenu > .navbar-header > .navbar-brand {
+  font-size: 20px;
+  padding-top: 12px;
+  > .branding:before {
+    content: "";
+    display: inline-block;
+    margin-right: .2em;
+    background-image: url(@kallithea-logo-url);
+    width: @kallithea-logo-width;
+    height: @kallithea-logo-height;
+    margin-bottom: -@kallithea-logo-bottom;
+    margin-top: -12px;
+  }
+}
+
+/* code highlighting */
+/* don't use bootstrap style for code blocks */
+.code-highlighttable pre {
+  background: inherit;
+  border: 0;
+}
+
+/* every direct child of a panel, that is not .panel-heading, should auto
+ * overflow to prevent overflowing of elements like text boxes and tables */
+.panel > :not(.panel-heading){
+  overflow-x: auto;
+  min-height: 0.01%;
+}
+
+/* allow other exceptions to automatic overflow-x */
+.panel > .overflow-x-visible {
+  overflow-x: visible;
+}
+
+/* margin below PR comments */
+.comment > .panel,
+/* margin below top level panels */
+#main > .panel {
+  margin-bottom: @kallithea-panel-margin;
+}
+
+/* search highlighting */
+div.search-code-body pre .match {
+  background-color: @highlight-color;
+}
+div.search-code-body pre .break {
+  background-color: @highlight-line-color;
+  width: 100%;
+  display: block;
+}
+
+/* use @alert-danger-text for form error messages and .alert-danger for the input element */
+.form-group .error-message {
+  color: @alert-danger-text;
+  display: inline-block;
+  padding-top: 5px;
+  &:empty{
+    display: none;
+  }
+}
+input.error {
+  .alert-danger;
+}
+
+/* datatable */
+.dataTables_left {
+  .pull-left;
+}
+.dataTables_right {
+  .pull-right;
+}
+
+/* make all datatable paginations small */
+.dataTables_paginate .pagination {
+  .pagination-sm;
+}
+
+/* show column sort icons in our font ... and before column header */
+table.dataTable {
+  .sorting_asc:before {
+    font-family: "kallithea";
+    content: "\23f6";
+    padding-right: 8px;
+  }
+  .sorting_desc:before {
+    font-family: "kallithea";
+    content: "\23f7";
+    padding-right: 8px;
+  }
+  .sorting:before {
+    font-family: "kallithea";
+    content: "\2195";
+    padding-right: 8px;
+    opacity: 0.5;
+  }
+  .sorting_asc:after,
+  .sorting_desc:after,
+  .sorting:after {
+    content: "" !important;
+  }
+}
+
+/* _dt_elements.html styling - some submit buttons have their own form but should still be shown inline */
+table.dataTable td > .btn + form {
+  display: inline;
+}
+
+table.dataTable .dt_repo_pending {
+  opacity: 0.5;
+}
+
+/* language bars (summary page) */
+#lang_stats {
+  .progress-bar {
+    min-width: 15px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
+  td {
+    padding: 1px 0 !important;
+  }
+}
+
+/* use pointer cursor for expand_commit */
+.expand_commit .icon-align-left {
+  cursor: pointer;
+  color: #999;
+}
+
+/* don't break author, date and comment cells into multiple lines in changeset table */
+table.changesets {
+  .author,
+  .date,
+  .comments {
+    white-space: nowrap;
+  }
+}
+
+/* textareas should be at least 100px high and 400px wide */
+textarea.form-control {
+  font-family: @font-family-monospace;
+  min-height: 100px;
+  min-width: 400px;
+}
+
+/* add some space between the code-browser icons and the file names */
+.browser-dir > i[class^='icon-'],
+.submodule-dir > i[class^='icon-'],
+.browser-file > i[class^='icon-'] {
+  padding-right: 0.3em;
+}
+
+div.panel-primary {
+  border: none;
+}
+
+/* no extra vertical margin */
+#content div.panel ul.pagination {
+  margin: 0;
+}
+
+/* remove margin below footer */
+.navbar.footer {
+  margin-bottom: 0;
+}
+
+.user-menu {
+  padding: 0 !important;
+}
+#quick_login {
+  width: 360px;
+  margin-top: 15px;
+  min-height: 110px;
+}
+#quick_login input#username,
+#quick_login input#password {
+  display: block;
+  margin: 5px 0 10px;
+}
+#quick_login .password_forgotten a,
+#quick_login .register a {
+  padding: 0 !important;
+  line-height: 25px !important;
+  float: left;
+  clear: both;
+}
+#quick_login .submit {
+  float: right;
+}
+#quick_login .submit input#sign_in {
+  margin-top: 5px;
+}
+#quick_login > .pull-left {
+  width: 170px;
+}
+#quick_login > .pull-right {
+  width: 140px;
+}
+#quick_login .full_name {
+  font-weight: bold;
+  padding: 3px;
+}
+#quick_login .email {
+  padding: 3px 3px 3px 0;
+}
+#quick_login :not(input) {
+  color: @kallithea-theme-inverse-color;
+  padding-bottom: 3px;
+}
+
+#journal .journal_user {
+  color: #747474;
+  font-size: 14px;
+  font-weight: bold;
+  height: 30px;
+}
+#journal .journal_user.deleted {
+  color: #747474;
+  font-size: 14px;
+  font-weight: normal;
+  height: 30px;
+  font-style: italic;
+}
+#journal .journal_icon {
+  clear: both;
+  float: left;
+  padding-right: 4px;
+  padding-top: 3px;
+}
+#journal .journal_action {
+  padding-top: 4px;
+  min-height: 2px;
+  float: left;
+}
+#journal .journal_action_params {
+  clear: left;
+  padding-left: 22px;
+}
+#journal .date {
+  clear: both;
+  color: #777777;
+  font-size: 11px;
+  padding-left: 22px;
+}
+#journal .journal_repo_name {
+  font-weight: bold;
+  font-size: 1.1em;
+}
+#journal .compare_view {
+  padding: 5px 0px 5px 0px;
+  width: 95px;
+}
+.trending_language_tbl,
+.trending_language_tbl td {
+  border: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.trending_language_tbl,
+.trending_language_tbl tr {
+  border-spacing: 1px;
+}
+h3.files_location {
+  font-size: 1.8em;
+  font-weight: 700;
+  border-bottom: none !important;
+  margin: 10px 0 !important;
+}
+.file_history {
+  padding-top: 10px;
+  font-size: 16px;
+}
+.file_author {
+  float: left;
+}
+.file_author .item {
+  float: left;
+  padding: 5px;
+  color: #888;
+}
+table#updaterevs-table tr.mergerow,
+table#updaterevs-table tr.out-of-range,
+table#changesets tr.mergerow,
+table#changesets tr.out-of-range {
+  opacity: 0.6;
+}
+.issue-tracker-link {
+  color: #3F6F9F;
+  font-weight: bold !important;
+}
+/* changeset statuses (must be the same name as the status) */
+.changeset-status-not_reviewed {
+  color: #bababa;
+}
+.changeset-status-approved {
+  color: #81ba51;
+}
+.changeset-status-rejected {
+  color: #d06060;
+}
+.changeset-status-under_review {
+  color: #ffc71e;
+}
+
+#repo_size {
+  display: block;
+  margin-top: 4px;
+  color: #666;
+  float: right;
+}
+.currently_following {
+  padding-left: 10px;
+  padding-bottom: 5px;
+}
+#switch_repos {
+  position: absolute;
+  height: 25px;
+  z-index: 1;
+}
+#switch_repos select {
+  min-width: 150px;
+  max-height: 250px;
+  z-index: 1;
+}
+table#permissions_manage span.private_repo_msg {
+  font-size: 0.8em;
+  opacity: 0.6;
+}
+table#permissions_manage td.private_repo_msg {
+  font-size: 0.8em;
+}
+table#permissions_manage tr#add_perm_input td {
+  vertical-align: middle;
+}
+div.gravatar {
+  float: left;
+  background-color: #FFF;
+  margin-right: 0.7em;
+  padding: 1px 1px 1px 1px;
+  line-height: 0;
+  border-radius: 3px;
+}
+div.gravatar img {
+  border-radius: 2px;
+}
+.panel-body.settings .nav-pills > :not(.active) > a {
+  color: inherit;
+}
+.panel-body.no-padding {
+  padding: 0;
+}
+.panel-body ~ .panel-body {
+  padding-top: 0;
+}
+.panel-body.no-padding ~ .panel-body {
+  padding-top: 15px;
+}
+.panel-body > :last-child {
+  margin-bottom: 0;
+}
+.panel-body.settings .text-muted {
+  margin: 5px 0;
+}
+ins,
+div.options a:hover {
+  text-decoration: none;
+}
+img,
+nav.navbar #quick li a:hover span.normal,
+#clone_url,
+#clone_url_id {
+  border: none;
+}
+img.icon,
+.right .merge img {
+  vertical-align: bottom;
+}
+#content div.panel div.panel-heading ul.links,
+#content div.panel div.message div.dismiss {
+  float: right;
+  margin: 0;
+  padding: 0;
+}
+nav.navbar #home,
+#content div.panel ul.left,
+#content div.panel ol.left,
+div#commit_history,
+div#legend_data,
+div#legend_container,
+div#legend_choices {
+  float: left;
+}
+
+/* set size for statistics charts */
+#commit_history {
+  width: 450px;
+  height: 300px;
+}
+#overview {
+  clear: both;
+  width: 450px;
+  height: 100px;
+}
+
+#content #left #menu ul.closed,
+#content #left #menu li ul.collapsed {
+  display: none;
+}
+#content #left #menu ul.opened,
+#content #left #menu li ul.expanded {
+  display: block !important;
+}
+
+#content div.panel ol.lower-roman,
+#content div.panel ol.upper-roman,
+#content div.panel ol.lower-alpha,
+#content div.panel ol.upper-alpha,
+#content div.panel ol.decimal {
+  margin: 10px 24px 10px 44px;
+}
+
+div.form div.form-group div.button input,
+#content div.panel div.form div.buttons input,
+div.form div.buttons input,
+#content div.panel div.action div.button input {
+  font-size: 11px;
+  font-weight: 700;
+  margin: 0;
+}
+div.form div.form-group div.highlight,
+#content div.panel div.form div.buttons div.highlight {
+  display: inline;
+}
+#content div.panel table td.user,
+#content div.panel table td.address {
+  width: 10%;
+  text-align: center;
+}
+#content div.panel div.action div.button {
+  text-align: right;
+  margin: 6px 0 0;
+  padding: 0;
+}
+.ac .match {
+  font-weight: 700;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.q_filter_box {
+  border-radius: 4px;
+  border: 0 none;
+  margin-bottom: -4px;
+  margin-top: -4px;
+  padding-left: 3px;
+}
+#node_filter {
+  border: 0px solid #545454;
+  color: #AAAAAA;
+  padding-left: 3px;
+}
+/** comment main **/
+.comment .panel,
+.comment-inline-form {
+  max-width: 978px;
+}
+.comment .panel-body {
+  background-color: #FAFAFA;
+}
+.comments-number {
+  padding: 10px 0;
+  color: #666;
+}
+.automatic-comment {
+  font-style: italic;
+}
+/** comment form **/
+.status-block {
+  margin: 5px;
+  clear: both;
+}
+.panel-heading .pull-left input[type=checkbox],
+.panel-heading .pull-right input[type=checkbox] {
+  position: relative;
+  top: 4px;
+  margin: -10px 2px 0;
+}
+/** indent actual inline comments - not general comments **/
+td.inline-comments {
+  padding: @kallithea-panel-margin;
+}
+.inline-comments .comments-number {
+  padding: 0px 0px 10px 0px;
+}
+.comment-inline-well {
+  margin-bottom: @kallithea-panel-margin;
+}
+input.status_change_checkbox,
+input.status_change_radio {
+  margin: 0 0 5px 15px;
+}
+@keyframes animated-comment-background {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 20px 0;
+  }
+}
+.comment-preview.failed .user,
+.comment-preview.failed .panel-body {
+  color: #666;
+}
+.comment-preview .comment-submission-status {
+  float: right;
+}
+.comment-preview .comment-submission-status .btn-group {
+  margin-left: 10px;
+}
+.comment-preview.submitting .panel-body {
+  background-image: linear-gradient(-45deg, #FAFAFA, #FAFAFA 25%, #FFF 25%, #FFF 50%, #FAFAFA 50%, #FAFAFA 75%, #FFF 75%, #FFF 100%);
+  background-size: 20px 20px;
+  animation: animated-comment-background 0.4s linear infinite;
+}
+/****
+PULL REQUESTS
+*****/
+div.pr-details-title.closed {
+  color: #555;
+  background: #eee;
+}
+div.pr {
+  margin: 0px 15px;
+  padding: 4px 4px;
+}
+tr.pr-closed td {
+  background-color: #eee !important;
+  color: #555 !important;
+}
+span.pr-closed-tag {
+  margin-bottom: 1px;
+  margin-right: 1px;
+  padding: 1px 3px;
+  font-size: 10px;
+  color: @kallithea-theme-main-color;
+  white-space: nowrap;
+  border-radius: 4px;
+  border: 1px solid #d9e8f8;
+  line-height: 1.5em;
+}
+#s2id_org_ref,
+#s2id_other_ref,
+#s2id_org_repo,
+#s2id_other_repo {
+  min-width: 150px;
+  margin: 5px;
+}
+#pr-summary > .pr-not-edit {
+  min-height: 50px !important;
+}
+/* make 'next iteration' changeset table smaller and scrollable */
+#pr-summary #updaterevs {
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/****
+  PERMS
+*****/
+.perm-gravatar-ac {
+  vertical-align: middle;
+  padding: 2px;
+  width: 14px;
+  height: 14px;
+}
+
+/* avoid gaps between the navbar and browser */
+.navbar.mainmenu {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.navbar.footer {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* show some context of link targets - but only works when the link target
+   can be extended with any visual difference */
+div.comment:target:before {
+  display: block;
+  height: 100px;
+  margin: -100px 0 0;
+  content: "";
+}
+div.comment:target > .panel {
+  border: solid 2px #ee0 !important;
+}
+.lineno:target a {
+  border: solid 2px #ee0 !important;
+  margin: -2px;
+}
+.btn-image-diff-show,
+.btn-image-diff-swap {
+  margin: 5px;
+}
+.img-diff {
+  max-width: 45%;
+  height: auto;
+  margin: 5px;
+  /* http://lea.verou.me/demos/css3-patterns.html */
+  background-image: linear-gradient(45deg, #888 25%, transparent 25%, transparent), linear-gradient(-45deg, #888 25%, transparent 25%, transparent), linear-gradient(45deg, transparent 75%, #888 75%), linear-gradient(-45deg, transparent 75%, #888 75%);
+  background-size: 10px 10px;
+  background-color: #999;
+}
+.img-preview {
+  max-width: 100%;
+  height: auto;
+  margin: 5px;
+}
+div.comment-prev-next-links div.prev-comment,
+div.comment-prev-next-links div.next-comment {
+  display: inline-block;
+  min-width: 150px;
+  margin: 3px 15px;
+}
+#comments-general-comments div.comment-prev-next-links div.prev-comment,
+#comments-general-comments div.comment-prev-next-links div.next-comment {
+  margin-left: 0;
+}
+
+/* changelog graph */
+#graph_nodes,
+#updaterevs-graph {
+  .make-xs-column(1);
+  height: 0;
+}
+#graph_content,
+#graph_content_pr,
+#updaterevs-table {
+  .make-xs-column-offset(1);
+  .make-xs-column(11);
+  padding: 0;
+}
+
+/* use bootstrap grid columns for centered columns */
+.centered-column {
+  .make-sm-column-offset(3);
+  .make-sm-column(6);
+  .form {
+    .form-horizontal;
+    .form-group > label {
+      .make-sm-column(4);
+    }
+    .form-group > div {
+      .make-sm-column(8);
+    }
+    .form-group > div:first-child { /* in case there is no label */
+      .make-sm-column-offset(4);
+      .make-sm-column(8);
+    }
+  }
+}
+
+/* use columns and form-horizontal for settings pages ... on wide screens */
+@media (min-width: @screen-sm-min) {
+  .settings {
+    max-width: @container-md;
+    > ul.nav-stacked {
+      .make-sm-column(2);
+      max-width: (@container-md/12)*2;
+    }
+    > div {
+      .make-sm-column(10);
+      max-width: (@container-md/12)*10;
+    }
+    .form {
+      .form-horizontal;
+    }
+    .form-group {
+      .clearfix;
+      > label {
+        .make-xs-column(3);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        input {
+          width: 100%;
+        }
+      }
+      > div {
+        .make-xs-column(9);
+      }
+      .buttons {
+        .make-xs-column-offset(3);
+      }
+    }
+  }
+}
+
+/* use columns and form-horizontal for summary page */
+#summary {
+  max-width: @container-md;
+  .form-horizontal;
+  .make-sm-column(10);
+  padding-left: 0;
+  .form-group > label {
+    .make-sm-column(2);
+  }
+  .form-group > div {
+    .make-sm-column(10);
+  }
+}
+#summary-menu-stats {
+  .make-sm-column(2);
+  padding-right: 0;
+}
+
+/* use columns and form-horizontal for pull request page */
+.pr-box {
+  .make-sm-column(9);
+  padding-left: 0;
+  max-width: @container-md;
+  #pr-summary {
+    .form-horizontal;
+    .form-group > label {
+      .make-sm-column(3);
+    }
+    .form-group > div {
+      .make-sm-column(9);
+    }
+    .form-group > .buttons {
+      .make-sm-column-offset(3);
+      .make-sm-column(9);
+    }
+  }
+}
+.pr-reviewers-box {
+  .make-sm-column(3);
+  padding-right: 0;
+}
+
+/* repo table icons */
+#repos_list_wrap_wrapper {
+  /* make icon-folder and repotag the same width */
+  .icon-folder:before {
+    margin: 0; // default margin would otherwise add to the total width
+    width: 24px;
+    text-align: left;
+  }
+  .label-repo {
+    display: inline-block;
+    width: 24px;
+  }
+}
+
+/* changelog table columns */
+.table#changesets {
+  table-layout: fixed;
+  td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: baseline;
+    &:last-child {
+      padding-right: 0;
+    }
+  }
+  .checkbox-column {
+    width: 20px;
+    padding: 0;
+    /* the optional second checkbox will be inline-block but should wrap to a new line */
+    white-space: normal;
+    > input[type=checkbox] {
+      margin-top: inherit;
+      vertical-align: text-bottom;
+    }
+  }
+  .changeset-logical-index {
+    color: @gray-light;
+    font-style: italic;
+    font-size: 85%;
+    text-align: right;
+    overflow: visible;
+  }
+  .changeset-logical-index,
+  .expand_commit,
+  .status {
+    width: 28px;
+  }
+  .author {
+    width: 200px;
+    @media (max-width: @screen-sm-max) {
+      width: 120px;
+    }
+    @media (max-width: @screen-xs-max) {
+      width: 20px;
+      /* keep gravatar but hide name on tiny screens to give important columns more room */
+      span {
+        .hidden;
+      }
+    }
+    > .icon-user::before {
+      margin: 0;
+    }
+  }
+  .hash {
+    .small;
+    width: 110px;
+    @media (max-width: @screen-xs-max) {
+      width: 48px;
+    }
+  }
+  .date {
+    .small;
+    width: 100px;
+  }
+  /* hide on small screens to give important columns more room */
+  .status,
+  .expand_commit,
+  .comments,
+  .extra-container {
+    .hidden-xs;
+  }
+  .mid > .log-container {
+    position: relative;
+    overflow: hidden;
+    > .extra-container {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: white;
+      box-shadow: -10px 0px 10px 0px white;
+    }
+  }
+}
+
+/* undo Bootstrap chrome/webkit blue outline on focus in navbar */
+.navbar-inverse .navbar-nav > li > a:focus {
+  outline: 0;
+}
+
+/* use same badge coloring in navbar inverse as in panel-heading */
+.navbar-inverse {
+  .badge {
+    color: @navbar-inverse-bg;
+    background-color: @navbar-inverse-color;
+  }
+}
+
+/* pygments style */
+div.search-code-body pre .match {
+  background-color: @highlight-color;
+}
+div.search-code-body pre .break {
+  background-color: @highlight-line-color;
+  width: 100%;
+  color: #747474;
+  display: block;
+}
+div.annotatediv {
+  margin-left: 2px;
+  margin-right: 4px;
+}
+.code-highlight {
+  border-left: 1px solid #ccc;
+}
+.code-highlight pre,
+.linenodiv pre {
+  padding: 5px 2px 0px 5px;
+  margin: 0;
+}
+.code-highlight pre div:target {
+  background-color: #FFFFBE !important;
+}
+.linenos a { text-decoration: none; }
+
+/* Stylesheets for the context bar */
+#quick_login > .pull-right .list-group-item {
+  background-color: @kallithea-theme-main-color;
+  border: 0;
+}
+#content #context-pages .follow .show-following,
+#content #context-pages .following .show-follow {
+  display: none;
+}
+
+nav.navbar #quick > li > a,
+#context-pages > ul > li > a {
+  height: @navbar-height;
+}
+
+/* align with panel-heading */
+nav.navbar#context-bar > .container-fluid {
+  padding-left: 15px;
+}
+
+/* at.js */
+.atwho-view strong {
+  /* the blue color doesn't look good, use normal color */
+  color: inherit;
+}

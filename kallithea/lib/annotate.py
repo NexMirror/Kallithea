@@ -48,7 +48,7 @@ def annotate_highlight(filenode, annotate_from_changeset_func=None,
     :param headers: dictionary with headers (keys are whats in ``order``
       parameter)
     """
-    from kallithea.lib.utils import get_custom_lexer
+    from kallithea.lib.pygmentsutils import get_custom_lexer
     options['linenos'] = True
     formatter = AnnotateHtmlFormatter(filenode=filenode, order=order,
         headers=headers,
@@ -68,7 +68,7 @@ class AnnotateHtmlFormatter(HtmlFormatter):
         following function as ``annotate_from_changeset_func``::
 
             def changeset_to_anchor(changeset):
-                return '<a href="/changesets/%s/">%s</a>\n' %\
+                return '<a href="/changesets/%s/">%s</a>\n' % \
                        (changeset.id, changeset.id)
 
         :param annotate_from_changeset_func: see above
@@ -149,7 +149,7 @@ class AnnotateHtmlFormatter(HtmlFormatter):
             for i in range(fl, fl + lncount):
                 if i % st == 0:
                     if aln:
-                        lines.append('<a href="#%s-%d">%*d</a>' \
+                        lines.append('<a href="#%s-%d">%*d</a>'
                                      % (la, i, mw, i))
                     else:
                         lines.append('%*d' % (mw, i))
@@ -158,7 +158,7 @@ class AnnotateHtmlFormatter(HtmlFormatter):
             ls = '\n'.join(lines)
 
 #        annotate_changesets = [tup[1] for tup in self.filenode.annotate]
-##        TODO: not sure what that fixes
+#        # TODO: not sure what that fixes
 #        # If pygments cropped last lines break we need do that too
 #        ln_cs = len(annotate_changesets)
 #        ln_ = len(ls.splitlines())

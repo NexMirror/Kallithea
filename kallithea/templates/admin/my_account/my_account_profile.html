@@ -1,65 +1,52 @@
 ${h.form(url('my_account'), method='post')}
     <div class="form">
-
-         <div class="field">
-           <div class="gravatar_box">
-               <div class="gravatar">
-                 ${h.gravatar(c.user.email)}
-               </div>
-                <p>
-                %if c.visual.use_gravatar:
-                <strong>${_('Change your avatar at')} <a href="http://gravatar.com">gravatar.com</a></strong>
-                <br/>${_('Using')} ${c.user.email}
-                %else:
-                <strong>${_('Avatars are disabled')}</strong>
-                <br/>${c.user.email or _('Missing email, please update your user email address.')}
-                    [${_('Current IP')}: ${c.ip_addr}]
-                %endif
-               </p>
-           </div>
-         </div>
-
-        <div class="fields">
-             <div class="field">
-                <div class="label">
-                    <label for="username">${_('Username')}:</label>
+            <div class="form-group">
+                <label class="control-label">${_('Gravatar')}:</label>
+                <div class="gravatar_box clearfix">
+                    ${h.gravatar_div(c.user.email)}
                 </div>
-                <div class="input">
-                  ${h.text('username',class_='medium', readonly=c.readonly('username'))}
+                <div>
+                    %if c.visual.use_gravatar:
+                        ${_('Change %s avatar at') % c.user.email} <a href="http://gravatar.com">gravatar.com</a>
+                    %else:
+                        ${_('Avatars are disabled')}
+                    %endif
                 </div>
-             </div>
-
-             <div class="field">
-                <div class="label">
-                    <label for="name">${_('First Name')}:</label>
-                </div>
-                <div class="input">
-                    ${h.text('firstname',class_="medium", readonly=c.readonly('firstname'))}
-                </div>
-             </div>
-
-             <div class="field">
-                <div class="label">
-                    <label for="lastname">${_('Last Name')}:</label>
-                </div>
-                <div class="input">
-                    ${h.text('lastname',class_="medium", readonly=c.readonly('lastname'))}
-                </div>
-             </div>
-
-             <div class="field">
-                <div class="label">
-                    <label for="email">${_('Email')}:</label>
-                </div>
-                <div class="input">
-                    ${h.text('email',class_="medium", readonly=c.readonly('email'))}
-                </div>
-             </div>
-
-            <div class="buttons">
-              ${h.submit('save',_('Save'),class_="btn")}
-              ${h.reset('reset',_('Reset'),class_="btn")}
             </div>
-        </div>
+
+            <div class="form-group">
+                <label class="control-label" for="username">${_('Username')}:</label>
+                <div>
+                    ${h.text('username',class_='form-control', readonly=c.readonly('username'))}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label" for="firstname">${_('First Name')}:</label>
+                <div>
+                    ${h.text('firstname',class_='form-control', readonly=c.readonly('firstname'))}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label" for="lastname">${_('Last Name')}:</label>
+                <div>
+                    ${h.text('lastname',class_='form-control', readonly=c.readonly('lastname'))}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label" for="email">${_('Email')}:</label>
+                <div>
+                    ${h.text('email',class_='form-control', readonly=c.readonly('email'))}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="buttons">
+                    ${h.submit('save',_('Save'),class_="btn btn-default")}
+                    ${h.reset('reset',_('Reset'),class_="btn btn-default")}
+                </div>
+            </div>
     </div>
 ${h.end_form()}

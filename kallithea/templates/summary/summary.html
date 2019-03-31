@@ -1,4 +1,5 @@
 <%inherit file="/base/base.html"/>
+<%namespace name="changelog_table" file="/changelog/changelog_table.html"/>
 
 <%block name="title">
     ${_('%s Summary') % c.repo_name}
@@ -10,24 +11,20 @@
     ## locking icon
     %if c.db_repo.enable_locking:
      %if c.db_repo.locked[0]:
-       <span class="locking_locked tooltip icon-block" title="${_('Repository locked by %s') % h.person_by_id(c.db_repo.locked[0])}"></span>
+       <span class="locking_locked icon-block" data-toggle="tooltip" title="${_('Repository locked by %s') % h.person_by_id(c.db_repo.locked[0])}"></span>
      %else:
-       <span class="locking_unlocked tooltip icon-ok" title="${_('Repository unlocked')}"></span>
+       <span class="locking_unlocked icon-ok" data-toggle="tooltip" title="${_('Repository unlocked')}"></span>
      %endif
     %endif
 
     ##FORK
     %if c.db_repo.fork:
-    <span>
-        - <i class="icon-fork"></i> ${_('Fork of')} "<a href="${h.url('summary_home',repo_name=c.db_repo.fork.repo_name)}">${c.db_repo.fork.repo_name}</a>"
-    </span>
+        - <i class="icon-fork"></i>${_('Fork of')} "<a href="${h.url('summary_home',repo_name=c.db_repo.fork.repo_name)}">${c.db_repo.fork.repo_name}</a>"
     %endif
 
     ##REMOTE
     %if c.db_repo.clone_uri:
-    <span>
-       - <i class="icon-fork"></i> ${_('Clone from')} "<a href="${h.url(str(h.hide_credentials(c.db_repo.clone_uri)))}">${h.hide_credentials(c.db_repo.clone_uri)}</a>"
-    <span>
+       - <i class="icon-fork"></i>${_('Clone from')} "<a href="${h.url(str(h.hide_credentials(c.db_repo.clone_uri)))}">${h.hide_credentials(c.db_repo.clone_uri)}</a>"
     %endif
 </%def>
 
@@ -36,14 +33,14 @@
 </%block>
 
 <%block name="head_extra">
-  <link href="${h.url('atom_feed_home',repo_name=c.db_repo.repo_name,api_key=c.authuser.api_key)}" rel="alternate" title="${_('%s ATOM feed') % c.repo_name}" type="application/atom+xml" />
-  <link href="${h.url('rss_feed_home',repo_name=c.db_repo.repo_name,api_key=c.authuser.api_key)}" rel="alternate" title="${_('%s RSS feed') % c.repo_name}" type="application/rss+xml" />
+  <link href="${h.url('atom_feed_home',repo_name=c.db_repo.repo_name,api_key=request.authuser.api_key)}" rel="alternate" title="${_('%s ATOM feed') % c.repo_name}" type="application/atom+xml" />
+  <link href="${h.url('rss_feed_home',repo_name=c.db_repo.repo_name,api_key=request.authuser.api_key)}" rel="alternate" title="${_('%s RSS feed') % c.repo_name}" type="application/rss+xml" />
 
   <script>
   redirect_hash_branch = function(){
     var branch = window.location.hash.replace(/^#(.*)/, '$1');
     if (branch){
-      window.location = "${h.url('changelog_home',repo_name=c.repo_name,branch='__BRANCH__')}"
+      window.location = ${h.js(h.url('changelog_home',repo_name=c.repo_name,branch='__BRANCH__'))}
         .replace('__BRANCH__',branch);
     }
   }
@@ -56,196 +53,204 @@
 
 <%def name="main()">
 ${self.repo_context_bar('summary')}
-<%
-summary = lambda n:{False:'summary-short'}.get(n)
-%>
-<div class="box">
-    <!-- box / title -->
-    <div class="title">
+<div class="panel panel-primary">
+    <div class="panel-heading clearfix">
         ${self.breadcrumbs()}
     </div>
-    <!-- end box / title -->
-    <div class="form">
-        <div id="summary" class="fields">
-            <div class="field">
-                <div class="label-summary">
-                  <label>${_('Clone URL')}:</label>
-                </div>
-                <div class="input ${summary(c.show_stats)}">
-                  ${self.repotag(c.db_repo)}
-                  <input style="width:80%" type="text" id="clone_url" readonly="readonly" value="${c.clone_repo_url}"/>
-                  <input style="display:none;width:80%" type="text" id="clone_url_id" readonly="readonly" value="${c.clone_repo_url_id}"/>
-                  <div style="display:none" id="clone_by_name" class="btn btn-small">${_('Show by Name')}</div>
-                  <div id="clone_by_id" class="btn btn-small">${_('Show by ID')}</div>
+    <div id="summary-panel-body" class="form panel-body">
+        <div id="summary" class="pull-left">
+            <div class="form-group form-inline">
+                <label>${_('Clone URL')}:</label>
+                <div id="clone-url">
+                  <div id="clone_by_name" class="input-group">
+                    <span class="input-group-addon">${self.repolabel(c.db_repo)}</span>
+                    <input class="form-control" size="80" readonly="readonly" value="${c.clone_repo_url}"/>
+                    <span class="input-group-addon btn">${_('Show by ID')}</span>
+                  </div>
+                  <div id="clone_by_id" class="input-group" style="display:none">
+                    <span class="input-group-addon">${self.repolabel(c.db_repo)}</span>
+                    <input class="form-control" size="80" readonly="readonly" value="${c.clone_repo_url_id}"/>
+                    <span class="input-group-addon btn">${_('Show by Name')}</span>
+                  </div>
                 </div>
             </div>
 
-            <div class="field">
-              <div class="label-summary">
-                  <label>${_('Description')}:</label>
-              </div>
-              <div class="input ${summary(c.show_stats)} desc">${h.urlify_text(c.db_repo.description, stylize=c.visual.stylify_metatags)}</div>
+            <div class="form-group">
+              <label>${_('Description')}:</label>
+              <div class="formatted-fixed">${h.urlify_text(c.db_repo.description, stylize=c.visual.stylify_metalabels)}</div>
             </div>
 
-            <div class="field">
-              <div class="label-summary">
-                  <label>${_('Trending files')}:</label>
-              </div>
-              <div class="input ${summary(c.show_stats)}">
+            <div class="form-group">
+              <label>${_('Trending files')}:</label>
+              <div>
                 %if c.show_stats:
                 <div id="lang_stats"></div>
                 %else:
                    ${_('Statistics are disabled for this repository')}
-                   %if h.HasPermissionAll('hg.admin')('enable stats on from summary'):
-                        ${h.link_to(_('Enable'),h.url('edit_repo',repo_name=c.repo_name, anchor='repo_enable_statistics'),class_="btn btn-mini")}
+                   %if h.HasPermissionAny('hg.admin')('enable stats on from summary'):
+                        ${h.link_to(_('Enable'),h.url('edit_repo',repo_name=c.repo_name, anchor='repo_enable_statistics'),class_="btn btn-default btn-xs")}
                    %endif
                 %endif
               </div>
             </div>
 
-            <div class="field">
-              <div class="label-summary">
-                  <label>${_('Download')}:</label>
-              </div>
-              <div class="input ${summary(c.show_stats)}">
+            <div class="form-group">
+              <label>${_('Download')}:</label>
+              <div>
                 %if len(c.db_repo_scm_instance.revisions) == 0:
                   ${_('There are no downloads yet')}
                 %elif not c.enable_downloads:
                   ${_('Downloads are disabled for this repository')}
-                    %if h.HasPermissionAll('hg.admin')('enable downloads on from summary'):
-                        ${h.link_to(_('Enable'),h.url('edit_repo',repo_name=c.repo_name, anchor='repo_enable_downloads'),class_="btn btn-mini")}
+                    %if h.HasPermissionAny('hg.admin')('enable downloads on from summary'):
+                        ${h.link_to(_('Enable'),h.url('edit_repo',repo_name=c.repo_name, anchor='repo_enable_downloads'),class_="btn btn-default btn-xs")}
                     %endif
                 %else:
                     <span id="${'zip_link'}">
-                        <a class="btn btn-small" href="${h.url('files_archive_home',repo_name=c.db_repo.repo_name,fname='tip.zip')}"><i class="icon-file-zip"></i> ${_('Download as zip')}</a>
+                        <a class="btn btn-default btn-sm" href="${h.url('files_archive_home',repo_name=c.db_repo.repo_name,fname='tip.zip')}"><i class="icon-file-zip"></i>${_('Download as zip')}</a>
                     </span>
                     ${h.hidden('download_options')}
-                    <span style="vertical-align: bottom">
-                      <input id="archive_subrepos" type="checkbox" name="subrepos" />
-                      <label for="archive_subrepos" class="tooltip" title="${_('Check this to download archive with subrepos')}" >${_('With subrepos')}</label>
+                    <span>
+                      <label data-toggle="tooltip" title="${_('Check this to download archive with subrepos')}">
+                          <input id="archive_subrepos" type="checkbox" name="subrepos" />
+                          ${_('With subrepos')}
+                      </label>
                     </span>
                 %endif
               </div>
             </div>
         </div>
-        <div id="summary-menu-stats">
-          <ul>
-            <li>
-               <a title="${_('Owner')} ${c.db_repo.user.email}">
-                <i class="icon-user"></i> ${c.db_repo.user.username}
-                  <div class="gravatar" style="float: right; margin: 0px 0px 0px 0px" title="${c.db_repo.user.name} ${c.db_repo.user.lastname}">
-                    ${h.gravatar(c.db_repo.user.email, size=18)}
-                  </div>
+        <ul id="summary-menu-stats" class="list-group pull-right">
+            <li class="list-group-item">
+               <a title="${_('Owner')} ${c.db_repo.owner.email}">
+                <i class="icon-user"></i>${c.db_repo.owner.username}
+                ${h.gravatar_div(c.db_repo.owner.email, size=18, div_class="pull-right")}
               </a>
             </li>
-            <li>
+            <li class="list-group-item">
                <a title="${_('Followers')}" href="${h.url('repo_followers_home',repo_name=c.repo_name)}">
-                <i class="icon-heart"></i> ${_('Followers')}
-                <span class="stats-bullet" id="current_followers_count">${c.repository_followers}</span>
+                <i class="icon-heart"></i>${_('Followers')}
+                <span class="badge pull-right" id="current_followers_count">${c.repository_followers}</span>
               </a>
             </li>
-            <li>
+            <li class="list-group-item">
               <a title="${_('Forks')}" href="${h.url('repo_forks_home',repo_name=c.repo_name)}">
-                <i class="icon-fork"></i> ${_('Forks')}
-                <span class="stats-bullet">${c.repository_forks}</span>
+                <i class="icon-fork"></i>${_('Forks')}
+                <span class="badge pull-right">${c.repository_forks}</span>
               </a>
             </li>
 
-            %if c.authuser.username != 'default':
-            <li class="repo_size">
-              <a href="#" onclick="javascript:showRepoSize('repo_size_2','${c.db_repo.repo_name}')"><i class="icon-ruler"></i> ${_('Repository Size')}</a>
-              <span  class="stats-bullet" id="repo_size_2"></span>
+            %if request.authuser.username != 'default':
+            <li class="list-group-item clearfix">
+              <a href="#" onclick="javascript:showRepoSize('repo_size_2','${c.db_repo.repo_name}')">
+                <i class="icon-ruler"></i>${_('Size')}
+                <span class="badge pull-right" id="repo_size_2"></span>
+              </a>
             </li>
             %endif
 
-            <li>
-            %if c.authuser.username != 'default':
-              <a href="${h.url('atom_feed_home',repo_name=c.db_repo.repo_name,api_key=c.authuser.api_key)}"><i class="icon-rss-squared"></i> ${_('Feed')}</a>
+            <li class="list-group-item">
+            %if request.authuser.username != 'default':
+              <a href="${h.url('atom_feed_home',repo_name=c.db_repo.repo_name,api_key=request.authuser.api_key)}"><i class="icon-rss-squared"></i>${_('Feed')}</a>
             %else:
-              <a href="${h.url('atom_feed_home',repo_name=c.db_repo.repo_name)}"><i class="icon-rss-squared"></i> ${_('Feed')}</a>
+              <a href="${h.url('atom_feed_home',repo_name=c.db_repo.repo_name)}"><i class="icon-rss-squared"></i>${_('Feed')}</a>
             %endif
             </li>
 
             %if c.show_stats:
-            <li>
+            <li class="list-group-item">
               <a title="${_('Statistics')}" href="${h.url('repo_stats_home',repo_name=c.repo_name)}">
-                <i class="icon-graph"></i> ${_('Statistics')}
+                <i class="icon-graph"></i>${_('Statistics')}
               </a>
             </li>
             %endif
-          </ul>
-        </div>
+        </ul>
     </div>
 </div>
 
 
-<div class="box">
-    <div class="title">
-        <div class="breadcrumbs">
-        %if c.repo_changesets:
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <div class="panel-title">
+        %if c.cs_pagination:
             ${h.link_to(_('Latest Changes'),h.url('changelog_home',repo_name=c.repo_name))}
         %else:
             ${_('Quick Start')}
          %endif
         </div>
     </div>
-    <div class="table">
+    <div class="panel-body">
         <div id="shortlog_data">
-            <%include file='../changelog/changelog_summary_data.html'/>
+            %if c.cs_pagination:
+                ${changelog_table.changelog(c.repo_name, c.cs_pagination, c.cs_statuses, c.cs_comments, show_checkbox=False)}
+                ${c.cs_pagination.pager()}
+            %else:
+                %if h.HasRepoPermissionLevel('write')(c.repo_name):
+                <h4>${_('Add or upload files directly via Kallithea')}</h4>
+                <div>
+                  <div id="add_node_id" class="add_node">
+                      <a class="btn btn-default btn-xs" href="${h.url('files_add_home',repo_name=c.repo_name,revision=0,f_path='', anchor='edit')}">${_('Add New File')}</a>
+                  </div>
+                </div>
+                %endif
+
+                <h4>${_('Push new repository')}</h4>
+                <pre>
+${c.db_repo_scm_instance.alias} clone ${c.clone_repo_url}
+${c.db_repo_scm_instance.alias} add README # add first file
+${c.db_repo_scm_instance.alias} commit -m "Initial" # commit with message
+${c.db_repo_scm_instance.alias} push ${'origin master' if h.is_git(c.db_repo_scm_instance) else ''} # push changes back
+                </pre>
+
+                <h4>${_('Existing repository?')}</h4>
+                <pre>
+                %if h.is_git(c.db_repo_scm_instance):
+git remote add origin ${c.clone_repo_url}
+git push -u origin master
+                %else:
+hg push ${c.clone_repo_url}
+                %endif
+                </pre>
+            %endif
         </div>
     </div>
 </div>
 
 %if c.readme_data:
 <div id="readme" class="anchor">
-<div class="box" style="background-color: #FAFAFA">
-    <div class="title" title="${_('Readme file from revision %s:%s') % (c.db_repo.landing_rev[0], c.db_repo.landing_rev[1])}">
-        <div class="breadcrumbs">
+</div>
+<div class="panel panel-primary">
+    <div class="panel-heading" title="${_('Readme file from revision %s:%s') % (c.db_repo.landing_rev[0], c.db_repo.landing_rev[1])}">
+        <div class="panel-title">
             <a href="${h.url('files_home',repo_name=c.repo_name,revision='tip',f_path=c.readme_file)}">${c.readme_file}</a>
         </div>
     </div>
-    <div class="readme">
-      <div class="readme_box">
+    <div class="readme panel-body">
         ${c.readme_data|n}
-      </div>
     </div>
-</div>
 </div>
 %endif
 
 <script type="text/javascript">
 $(document).ready(function(){
-    var $clone_url = $('#clone_url');
-    var $clone_url_id = $('#clone_url_id');
-    var $clone_by_name = $('#clone_by_name');
-    var $clone_by_id = $('#clone_by_id');
-    $clone_url.click(function(e){
-        if($clone_url.hasClass('selected')){
+    $('#clone-url input').click(function(e){
+        if($(this).hasClass('selected')){
+            $(this).removeClass('selected');
             return ;
         }else{
-            $clone_url.addClass('selected');
-            $clone_url.select();
+            $(this).addClass('selected');
+            $(this).select();
         }
     });
 
-    $clone_by_name.click(function(e){
-        // show url by name and hide name button
-        $clone_url.show();
+    var $clone_by_name = $('#clone_by_name');
+    var $clone_by_id = $('#clone_by_id');
+    $clone_by_name.find('.btn').click(function(e){
         $clone_by_name.hide();
-
-        // hide url by id and show name button
         $clone_by_id.show();
-        $clone_url_id.hide();
     });
-
-    $clone_by_id.click(function(e){
-        // show url by id and hide id button
+    $clone_by_id.find('.btn').click(function(e){
         $clone_by_id.hide();
-        $clone_url_id.show();
-
-        // hide url by name and show id button
         $clone_by_name.show();
-        $clone_url.hide();
     });
 
     var cache = {}
@@ -271,7 +276,7 @@ $(document).ready(function(){
             query.callback(data);
           }else{
               $.ajax({
-                url: pyroutes.url('repo_refs_data', {'repo_name': '${c.repo_name}'}),
+                url: pyroutes.url('repo_refs_data', {'repo_name': ${h.js(c.repo_name)}}),
                 data: {},
                 dataType: 'json',
                 type: 'GET',
@@ -290,10 +295,10 @@ $(document).ready(function(){
        for(k in tmpl_links){
            var s = $('#'+k+'_link');
            if(s){
-             var title_tmpl = "${_('Download %s as %s') % ('__CS_NAME__','__CS_EXT__')}";
+             var title_tmpl = ${h.jshtml(_('Download %s as %s') % ('__CS_NAME__','__CS_EXT__'))};
              title_tmpl= title_tmpl.replace('__CS_NAME__',new_cs.text);
              title_tmpl = title_tmpl.replace('__CS_EXT__',k);
-             title_tmpl = '<i class="icon-file-zip"></i> '+ title_tmpl.html_escape();
+             title_tmpl = '<i class="icon-file-zip"></i>'+ title_tmpl.html_escape();
              var url = tmpl_links[k].replace('__CS__',new_cs.id);
              var subrepos = $('#archive_subrepos').is(':checked');
              url = url.replace('__SUB__',subrepos);
@@ -306,7 +311,7 @@ $(document).ready(function(){
 
     var tmpl_links = {};
     %for cnt,archive in enumerate(c.db_repo_scm_instance._get_archives()):
-      tmpl_links["${archive['type']}"] = '${h.link_to('__NAME__', h.url('files_archive_home',repo_name=c.db_repo.repo_name, fname='__CS__'+archive['extension'],subrepos='__SUB__'),class_='btn btn-small')}';
+      tmpl_links[${h.jshtml(archive['type'])}] = ${h.js(h.link_to('__NAME__', h.url('files_archive_home',repo_name=c.db_repo.repo_name, fname='__CS__'+archive['extension'],subrepos='__SUB__'),class_='btn btn-default btn-sm'))};
     %endfor
 });
 </script>
@@ -314,11 +319,11 @@ $(document).ready(function(){
 %if c.show_stats:
 <script type="text/javascript">
 $(document).ready(function(){
-    var data = ${c.trending_languages|n};
+    var data = ${h.js(c.trending_languages)};
     var total = 0;
     var no_data = true;
     var tbl = document.createElement('table');
-    tbl.setAttribute('class','trending_language_tbl');
+    tbl.setAttribute('class','table');
     var cnt = 0;
     for (var i=0;i<data.length;i++){
         total+= data[i][1].count;
@@ -338,7 +343,7 @@ $(document).ready(function(){
         var percentage = Math.round((obj.count/total*100),2);
 
         var td1 = document.createElement('td');
-        td1.width = 150;
+        td1.width = 250;
         var trending_language_label = document.createElement('div');
         trending_language_label.innerHTML = obj.desc+" ("+k+")";
         td1.appendChild(trending_language_label);
@@ -346,19 +351,25 @@ $(document).ready(function(){
         var td2 = document.createElement('td');
         td2.setAttribute('style','padding-right:14px !important');
         var trending_language = document.createElement('div');
-        var nr_files = obj.count+" ${_('files')}";
+        var nr_files = obj.count + ' ' + ${h.jshtml(_('files'))};
 
         trending_language.title = k+" "+nr_files;
 
         if (percentage>22){
-            trending_language.innerHTML = "<b style='font-size:0.8em'>"+percentage+"% "+nr_files+ "</b>";
+            trending_language.innerHTML = "<b class='progress-bar' role='progressbar'"
+                + "aria-valuemin='0' aria-valuemax='100' aria-valuenow='" + percentage
+                + "' style='width: " + percentage + "%;'>" + percentage + "%, " + nr_files + "</b>";
         }
-        else{
-            trending_language.innerHTML = "<b style='font-size:0.8em'>"+percentage+"%</b>";
+        else if (percentage>5){
+            trending_language.innerHTML = "<b class='progress-bar' role='progressbar'"
+                + "aria-valuemin='0' aria-valuemax='100' aria-valuenow='" + percentage
+                + "' style='width: " + percentage + "%;'>" + percentage + "%</b>";
+        }else{
+            trending_language.innerHTML = "<b class='progress-bar' role='progressbar'"
+                + "aria-valuemin='0' aria-valuemax='100' aria-valuenow='" + percentage
+                + "' style='width: " + percentage + "%;'>&nbsp;</b>&nbsp;" + percentage + "%";
         }
 
-        trending_language.setAttribute("class", 'trending_language top-right-rounded-corner bottom-right-rounded-corner');
-        trending_language.style.width=percentage+"%";
         td2.appendChild(trending_language);
 
         tr.appendChild(td1);
@@ -370,7 +381,7 @@ $(document).ready(function(){
             lnk = document.createElement('a');
 
             lnk.href='#';
-            lnk.innerHTML = "${_('Show more')}";
+            lnk.innerHTML = ${h.jshtml(_('Show more'))};
             lnk.id='code_stats_show_more';
             td.appendChild(lnk);
 
@@ -381,7 +392,7 @@ $(document).ready(function(){
 
     }
     if (data.length == 0) {
-        tbl.innerHTML = "<tr><td>${_('No data ready yet')}</td></tr>";
+        tbl.innerHTML = '<tr><td>' + ${h.jshtml(_('No data ready yet'))} + '</td></tr>';
     }
 
     $('#lang_stats').append(tbl);
@@ -392,16 +403,5 @@ $(document).ready(function(){
 });
 </script>
 %endif
-
-## Shortlog paging
-<script type="text/javascript">
-  $(document).ready(function(){
-    var $shortlog_data = $('#shortlog_data');
-    $shortlog_data.on('click','.pager_link',function(e){
-      asynchtml(e.target.href, $shortlog_data, function(){tooltip_activate();});
-      e.preventDefault();
-    });
-  });
-</script>
 
 </%def>

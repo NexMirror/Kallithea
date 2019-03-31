@@ -1,8 +1,9 @@
 <div class="flash_msg">
     <% messages = h.flash.pop_messages() %>
     % if messages:
+        <% alert_categories = {'warning': 'alert-warning', 'notice': 'alert-info', 'error': 'alert-danger', 'success': 'alert-success'} %>
         % for message in messages:
-            <div class="alert alert-dismissable alert-${message.category}">
+            <div class="alert alert-dismissable ${alert_categories[message.category]}" role="alert">
               <button type="button" class="close" data-dismiss="alert" aria-hidden="true"><i class="icon-cancel-circled"></i></button>
               ${message}
             </div>

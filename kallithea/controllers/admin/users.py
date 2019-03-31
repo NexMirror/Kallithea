@@ -15,7 +15,7 @@
 kallithea.controllers.admin.users
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Users crud controller for pylons
+Users crud controller
 
 This file was forked by the Kallithea project in July 2014.
 Original author and date, and relevant copyright and licensing information is below:
@@ -30,20 +30,19 @@ import traceback
 import formencode
 
 from formencode import htmlfill
-from pylons import request, tmpl_context as c, url, config
-from pylons.controllers.util import redirect
-from pylons.i18n.translation import _
+from tg import request, tmpl_context as c, config, app_globals
+from tg.i18n import ugettext as _
 from sqlalchemy.sql.expression import func
-from webob.exc import HTTPNotFound
+from webob.exc import HTTPFound, HTTPNotFound
 
 import kallithea
+from kallithea.config.routing import url
 from kallithea.lib.exceptions import DefaultUserException, \
     UserOwnsReposException, UserCreationError
 from kallithea.lib import helpers as h
-from kallithea.lib.auth import LoginRequired, HasPermissionAllDecorator, \
+from kallithea.lib.auth import LoginRequired, HasPermissionAnyDecorator, \
     AuthUser
 from kallithea.lib import auth_modules
-from kallithea.lib.auth_modules import auth_internal
 from kallithea.lib.base import BaseController, render
 from kallithea.model.api_key import ApiKeyModel
 
@@ -52,7 +51,6 @@ from kallithea.model.forms import UserForm, CustomDefaultPermissionsForm
 from kallithea.model.user import UserModel
 from kallithea.model.meta import Session
 from kallithea.lib.utils import action_logger
-from kallithea.lib.compat import json
 from kallithea.lib.utils2 import datetime_to_time, safe_int, generate_api_key
 
 log = logging.getLogger(__name__)
@@ -62,24 +60,20 @@ class UsersController(BaseController):
     """REST Controller styled on the Atom Publishing Protocol"""
 
     @LoginRequired()
-    @HasPermissionAllDecorator('hg.admin')
-    def __before__(self):
-        super(UsersController, self).__before__()
+    @HasPermissionAnyDecorator('hg.admin')
+    def _before(self, *args, **kwargs):
+        super(UsersController, self)._before(*args, **kwargs)
         c.available_permissions = config['available_permissions']
-        c.EXTERN_TYPE_INTERNAL = kallithea.EXTERN_TYPE_INTERNAL
 
     def index(self, format='html'):
-        """GET /users: All items in the collection"""
-        # url('users')
-
-        c.users_list = User.query().order_by(User.username)\
-                        .filter(User.username != User.DEFAULT_USER)\
-                        .order_by(func.lower(User.username))\
+        c.users_list = User.query().order_by(User.username) \
+                        .filter_by(is_default_user=False) \
+                        .order_by(func.lower(User.username)) \
                         .all()
 
         users_data = []
         total_records = len(c.users_list)
-        _tmpl_lookup = kallithea.CONFIG['pylons.app_globals'].mako_lookup
+        _tmpl_lookup = app_globals.mako_lookup
         template = _tmpl_lookup.get_template('data_table/_dt_elements.html')
 
         grav_tmpl = '<div class="gravatar">%s</div>'
@@ -108,30 +102,25 @@ class UsersController(BaseController):
                 "action": user_actions(user.user_id, user.username),
             })
 
-        c.data = json.dumps({
-            "totalRecords": total_records,
-            "startIndex": 0,
+        c.data = {
             "sort": None,
             "dir": "asc",
             "records": users_data
-        })
+        }
 
         return render('admin/users/users.html')
 
     def create(self):
-        """POST /users: Create a new item"""
-        # url('users')
-        c.default_extern_type = auth_internal.KallitheaAuthPlugin.name
-        c.default_extern_name = auth_internal.KallitheaAuthPlugin.name
+        c.default_extern_type = User.DEFAULT_AUTH_TYPE
+        c.default_extern_name = ''
         user_model = UserModel()
         user_form = UserForm()()
         try:
             form_result = user_form.to_python(dict(request.POST))
             user = user_model.create(form_result)
-            usr = form_result['username']
-            action_logger(self.authuser, 'admin_created_user:%s' % usr,
-                          None, self.ip_addr, self.sa)
-            h.flash(h.literal(_('Created user %s') % h.link_to(h.escape(usr), url('edit_user', id=user.user_id))),
+            action_logger(request.authuser, 'admin_created_user:%s' % user.username,
+                          None, request.ip_addr)
+            h.flash(_('Created user %s') % user.username,
                     category='success')
             Session().commit()
         except formencode.Invalid as errors:
@@ -146,25 +135,16 @@ class UsersController(BaseController):
             h.flash(e, 'error')
         except Exception:
             log.error(traceback.format_exc())
-            h.flash(_('Error occurred during creation of user %s') \
+            h.flash(_('Error occurred during creation of user %s')
                     % request.POST.get('username'), category='error')
-        return redirect(url('users'))
+        raise HTTPFound(location=url('edit_user', id=user.user_id))
 
     def new(self, format='html'):
-        """GET /users/new: Form to create a new item"""
-        # url('new_user')
-        c.default_extern_type = auth_internal.KallitheaAuthPlugin.name
-        c.default_extern_name = auth_internal.KallitheaAuthPlugin.name
+        c.default_extern_type = User.DEFAULT_AUTH_TYPE
+        c.default_extern_name = ''
         return render('admin/users/user_add.html')
 
     def update(self, id):
-        """PUT /users/id: Update an existing item"""
-        # Forms posted to this method should contain a hidden field:
-        #    <input type="hidden" name="_method" value="PUT" />
-        # Or using helpers:
-        #    h.form(url('update_user', id=ID),
-        #           method='put')
-        # url('user', id=ID)
         user_model = UserModel()
         user = user_model.get(id)
         _form = UserForm(edit=True, old_data={'user_id': id,
@@ -177,8 +157,8 @@ class UsersController(BaseController):
 
             user_model.update(id, form_result, skip_attrs=skip_attrs)
             usr = form_result['username']
-            action_logger(self.authuser, 'admin_updated_user:%s' % usr,
-                          None, self.ip_addr, self.sa)
+            action_logger(request.authuser, 'admin_updated_user:%s' % usr,
+                          None, request.ip_addr)
             h.flash(_('User updated successfully'), category='success')
             Session().commit()
         except formencode.Invalid as errors:
@@ -188,7 +168,6 @@ class UsersController(BaseController):
                 'create_repo_perm': user_model.has_perm(id,
                                                         'hg.create.repository'),
                 'fork_repo_perm': user_model.has_perm(id, 'hg.fork.repository'),
-                '_method': 'put'
             })
             return htmlfill.render(
                 self._render_edit_profile(user),
@@ -199,18 +178,11 @@ class UsersController(BaseController):
                 force_defaults=False)
         except Exception:
             log.error(traceback.format_exc())
-            h.flash(_('Error occurred during update of user %s') \
+            h.flash(_('Error occurred during update of user %s')
                     % form_result.get('username'), category='error')
-        return redirect(url('edit_user', id=id))
+        raise HTTPFound(location=url('edit_user', id=id))
 
     def delete(self, id):
-        """DELETE /users/id: Delete an existing item"""
-        # Forms posted to this method should contain a hidden field:
-        #    <input type="hidden" name="_method" value="DELETE" />
-        # Or using helpers:
-        #    h.form(url('delete_user', id=ID),
-        #           method='delete')
-        # url('user', id=ID)
         usr = User.get_or_404(id)
         try:
             UserModel().delete(usr)
@@ -222,12 +194,7 @@ class UsersController(BaseController):
             log.error(traceback.format_exc())
             h.flash(_('An error occurred during deletion of user'),
                     category='error')
-        return redirect(url('users'))
-
-    def show(self, id, format='html'):
-        """GET /users/id: Show a specific item"""
-        # url('user', id=ID)
-        User.get_or_404(-1)
+        raise HTTPFound(location=url('users'))
 
     def _get_user_or_raise_if_default(self, id):
         try:
@@ -240,14 +207,11 @@ class UsersController(BaseController):
         c.user = user
         c.active = 'profile'
         c.perm_user = AuthUser(dbuser=user)
-        c.ip_addr = self.ip_addr
         managed_fields = auth_modules.get_managed_fields(user)
         c.readonly = lambda n: 'readonly' if n in managed_fields else None
         return render('admin/users/user_edit.html')
 
     def edit(self, id, format='html'):
-        """GET /users/id/edit: Form to edit an existing item"""
-        # url('edit_user', id=ID)
         user = self._get_user_or_raise_if_default(id)
         defaults = user.get_dict()
 
@@ -260,8 +224,7 @@ class UsersController(BaseController):
     def edit_advanced(self, id):
         c.user = self._get_user_or_raise_if_default(id)
         c.active = 'advanced'
-        c.perm_user = AuthUser(user_id=id)
-        c.ip_addr = self.ip_addr
+        c.perm_user = AuthUser(dbuser=c.user)
 
         umodel = UserModel()
         defaults = c.user.get_dict()
@@ -306,25 +269,22 @@ class UsersController(BaseController):
         ApiKeyModel().create(c.user.user_id, description, lifetime)
         Session().commit()
         h.flash(_("API key successfully created"), category='success')
-        return redirect(url('edit_user_api_keys', id=c.user.user_id))
+        raise HTTPFound(location=url('edit_user_api_keys', id=c.user.user_id))
 
     def delete_api_key(self, id):
         c.user = self._get_user_or_raise_if_default(id)
 
         api_key = request.POST.get('del_api_key')
         if request.POST.get('del_api_key_builtin'):
-            user = User.get(c.user.user_id)
-            if user is not None:
-                user.api_key = generate_api_key()
-                Session().add(user)
-                Session().commit()
-                h.flash(_("API key successfully reset"), category='success')
+            c.user.api_key = generate_api_key()
+            Session().commit()
+            h.flash(_("API key successfully reset"), category='success')
         elif api_key:
             ApiKeyModel().delete(api_key, c.user.user_id)
             Session().commit()
             h.flash(_("API key successfully deleted"), category='success')
 
-        return redirect(url('edit_user_api_keys', id=c.user.user_id))
+        raise HTTPFound(location=url('edit_user_api_keys', id=c.user.user_id))
 
     def update_account(self, id):
         pass
@@ -332,8 +292,7 @@ class UsersController(BaseController):
     def edit_perms(self, id):
         c.user = self._get_user_or_raise_if_default(id)
         c.active = 'perms'
-        c.perm_user = AuthUser(user_id=id)
-        c.ip_addr = self.ip_addr
+        c.perm_user = AuthUser(dbuser=c.user)
 
         umodel = UserModel()
         defaults = c.user.get_dict()
@@ -350,8 +309,6 @@ class UsersController(BaseController):
             force_defaults=False)
 
     def update_perms(self, id):
-        """PUT /users_perm/id: Update an existing item"""
-        # url('user_perm', id=ID, method='put')
         user = self._get_user_or_raise_if_default(id)
 
         try:
@@ -360,11 +317,10 @@ class UsersController(BaseController):
 
             inherit_perms = form_result['inherit_default_permissions']
             user.inherit_default_permissions = inherit_perms
-            Session().add(user)
             user_model = UserModel()
 
-            defs = UserToPerm.query()\
-                .filter(UserToPerm.user == user)\
+            defs = UserToPerm.query() \
+                .filter(UserToPerm.user == user) \
                 .all()
             for ug in defs:
                 Session().delete(ug)
@@ -387,12 +343,12 @@ class UsersController(BaseController):
             log.error(traceback.format_exc())
             h.flash(_('An error occurred during permissions saving'),
                     category='error')
-        return redirect(url('edit_user_perms', id=id))
+        raise HTTPFound(location=url('edit_user_perms', id=id))
 
     def edit_emails(self, id):
         c.user = self._get_user_or_raise_if_default(id)
         c.active = 'emails'
-        c.user_email_map = UserEmailMap.query()\
+        c.user_email_map = UserEmailMap.query() \
             .filter(UserEmailMap.user == c.user).all()
 
         defaults = c.user.get_dict()
@@ -403,8 +359,6 @@ class UsersController(BaseController):
             force_defaults=False)
 
     def add_email(self, id):
-        """POST /user_emails:Add an existing item"""
-        # url('user_emails', id=ID, method='put')
         user = self._get_user_or_raise_if_default(id)
         email = request.POST.get('new_email')
         user_model = UserModel()
@@ -420,27 +374,25 @@ class UsersController(BaseController):
             log.error(traceback.format_exc())
             h.flash(_('An error occurred during email saving'),
                     category='error')
-        return redirect(url('edit_user_emails', id=id))
+        raise HTTPFound(location=url('edit_user_emails', id=id))
 
     def delete_email(self, id):
-        """DELETE /user_emails_delete/id: Delete an existing item"""
-        # url('user_emails_delete', id=ID, method='delete')
         user = self._get_user_or_raise_if_default(id)
         email_id = request.POST.get('del_email_id')
         user_model = UserModel()
         user_model.delete_extra_email(id, email_id)
         Session().commit()
         h.flash(_("Removed email from user"), category='success')
-        return redirect(url('edit_user_emails', id=id))
+        raise HTTPFound(location=url('edit_user_emails', id=id))
 
     def edit_ips(self, id):
         c.user = self._get_user_or_raise_if_default(id)
         c.active = 'ips'
-        c.user_ip_map = UserIpMap.query()\
+        c.user_ip_map = UserIpMap.query() \
             .filter(UserIpMap.user == c.user).all()
 
         c.inherit_default_ips = c.user.inherit_default_permissions
-        c.default_user_ip_map = UserIpMap.query()\
+        c.default_user_ip_map = UserIpMap.query() \
             .filter(UserIpMap.user == User.get_default_user()).all()
 
         defaults = c.user.get_dict()
@@ -451,9 +403,6 @@ class UsersController(BaseController):
             force_defaults=False)
 
     def add_ip(self, id):
-        """POST /user_ips:Add an existing item"""
-        # url('user_ips', id=ID, method='put')
-
         ip = request.POST.get('new_ip')
         user_model = UserModel()
 
@@ -470,12 +419,10 @@ class UsersController(BaseController):
                     category='error')
 
         if 'default_user' in request.POST:
-            return redirect(url('admin_permissions_ips'))
-        return redirect(url('edit_user_ips', id=id))
+            raise HTTPFound(location=url('admin_permissions_ips'))
+        raise HTTPFound(location=url('edit_user_ips', id=id))
 
     def delete_ip(self, id):
-        """DELETE /user_ips_delete/id: Delete an existing item"""
-        # url('user_ips_delete', id=ID, method='delete')
         ip_id = request.POST.get('del_ip_id')
         user_model = UserModel()
         user_model.delete_extra_ip(id, ip_id)
@@ -483,5 +430,5 @@ class UsersController(BaseController):
         h.flash(_("Removed IP address from user whitelist"), category='success')
 
         if 'default_user' in request.POST:
-            return redirect(url('admin_permissions_ips'))
-        return redirect(url('edit_user_ips', id=id))
+            raise HTTPFound(location=url('admin_permissions_ips'))
+        raise HTTPFound(location=url('edit_user_ips', id=id))

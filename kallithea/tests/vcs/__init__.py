@@ -1,29 +1,36 @@
 """
 Unit tests for vcs_ library.
 
-In order to run tests we need to prepare our environment first. Tests would be
-run for each engine listed at ``conf.SCM_TESTS`` - keys are aliases from
-``vcs.backends.BACKENDS``.
+While some tests are implemented for a specific backend, a huge number
+is completely independent of the underlying backend.
+
+For such independent tests a base testing class is implemented, and
+backend-specific test classes are defined. These sub-classes simply
+need to set the correct backend to use by setting the
+``backend_alias`` property, which should correspond to one of the keys
+from ``vcs.backends.BACKENDS``.
 
 For each SCM we run tests for, we need some repository. We would use
-repositories location from system environment variables or test suite defaults
-- see ``conf`` module for more detail. We simply try to check if repository at
-certain location exists, if not we would try to fetch them. At ``test_vcs`` or
-``test_common`` we run unit tests common for each repository type and for
-example specific mercurial tests are located at ``test_hg`` module.
-
-Oh, and tests are run with ``unittest.collector`` wrapped by ``collector``
-function at ``tests/__init__.py``.
-
-.. _vcs: http://bitbucket.org/marcinkuzminski/vcs
-.. _unittest: http://pypi.python.org/pypi/unittest
-
+repositories location provided in test suite defaults - see ``conf``
+module for more detail. We simply try to check if repository at
+certain location exists, if not we would try to fetch them. At
+``test_vcs`` or ``test_common`` we run unit tests common for each
+repository type and for example specific mercurial tests are located
+at ``test_hg`` module.
 """
-from kallithea.lib.vcs.utils.compat import unittest
-from kallithea.tests.vcs.conf import *
+
+import os
+import shutil
+
+from kallithea.tests.base import TEST_HG_REPO, HG_REMOTE_REPO, TEST_GIT_REPO, GIT_REMOTE_REPO, TESTS_TMP_PATH
 from kallithea.tests.vcs.utils import SCMFetcher
 
-from kallithea.tests import *
+
+# Base directory for the VCS tests.
+VCS_TEST_MODULE_BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
+# Path to user configuration file used during tests.
+TEST_USER_CONFIG_FILE = os.path.join(TESTS_TMP_PATH, 'aconfig')
 
 
 def setup_package():
@@ -50,16 +57,6 @@ def setup_package():
         fetcher = SCMFetcher(**fetcher_info)
         fetcher.setup()
 
-
-def collector():
-    setup_package()
-    start_dir = os.path.abspath(os.path.dirname(__file__))
-    return unittest.defaultTestLoader.discover(start_dir)
-
-
-def main():
-    collector()
-    unittest.main()
-
-#if __name__ == '__main__':
-#    main()
+    # Copy the test user configuration file to location where
+    # temporary test data is stored at.
+    shutil.copy(os.path.join(VCS_TEST_MODULE_BASE_DIR, 'aconfig'), TEST_USER_CONFIG_FILE)

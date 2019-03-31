@@ -21,29 +21,24 @@
 <%def name="main()">
 ${self.repo_context_bar('showpullrequest')}
 
-<div class="box">
-    <!-- box / title -->
-    <div class="title">
-        ${self.breadcrumbs()}
-        <ul class="links">
-          <li>
-             %if c.authuser.username != 'default':
-              <span>
-                  <a id="open_new_pr" class="btn btn-small btn-success" href="${h.url('pullrequest_home',repo_name=c.repo_name)}"><i class="icon-plus"></i> ${_('Open New Pull Request')}</a>
-              </span>
-             %endif
-              <span>
-                %if c.from_:
-                    <a class="btn btn-small" href="${h.url('pullrequest_show_all',repo_name=c.repo_name,closed=c.closed)}"><i class="icon-git-compare"></i> ${_('Show Pull Requests to %s') % c.repo_name}</a>
-                %else:
-                    <a class="btn btn-small" href="${h.url('pullrequest_show_all',repo_name=c.repo_name,closed=c.closed,from_=1)}"><i class="icon-git-compare"></i> ${_("Show Pull Requests from '%s'") % c.repo_name}</a>
-                %endif
-              </span>
-          </li>
-        </ul>
+<div class="panel panel-primary">
+    <div class="panel-heading clearfix">
+        <div class="pull-left">
+            ${self.breadcrumbs()}
+        </div>
+        <div class="pull-right">
+            %if request.authuser.username != 'default':
+                <a id="open_new_pr" class="btn btn-success btn-xs" href="${h.url('pullrequest_home',repo_name=c.repo_name)}"><i class="icon-plus"></i>${_('Open New Pull Request')}</a>
+            %endif
+            %if c.from_:
+                <a class="btn btn-default btn-xs" href="${h.url('pullrequest_show_all',repo_name=c.repo_name,closed=c.closed)}"><i class="icon-git-compare"></i>${_('Show Pull Requests to %s') % c.repo_name}</a>
+            %else:
+                <a class="btn btn-default btn-xs" href="${h.url('pullrequest_show_all',repo_name=c.repo_name,closed=c.closed,from_=1)}"><i class="icon-git-compare"></i>${_("Show Pull Requests from '%s'") % c.repo_name}</a>
+            %endif
+        </div>
     </div>
 
-    <div class="normal-indent">
+    <div class="panel-body">
         <div>
         %if c.closed:
             ${h.link_to(_('Hide closed pull requests (only show open pull requests)'), h.url('pullrequest_show_all',repo_name=c.repo_name,from_=c.from_))}
@@ -51,9 +46,9 @@ ${self.repo_context_bar('showpullrequest')}
             ${h.link_to(_('Show closed pull requests (in addition to open pull requests)'), h.url('pullrequest_show_all',repo_name=c.repo_name,from_=c.from_,closed=1))}
         %endif
         </div>
-    </div>
 
-    ${pullrequest_data.pullrequest_overview(c.pullrequests_pager)}
+        ${pullrequest_data.pullrequest_overview(c.pullrequests_pager)}
+    </div>
 
 </div>
 </%def>

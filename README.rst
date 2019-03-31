@@ -162,76 +162,14 @@ You can also build the documentation locally: go to ``docs/`` and run::
           install it via the command: ``pip install sphinx`` .
 
 
-Converting from RhodeCode
--------------------------
+Migrating from RhodeCode
+------------------------
 
-Currently, you have two options for working with an existing RhodeCode
-database:
-
-- keep the database unconverted (intended for testing and evaluation)
-- convert the database in a one-time step
-
-Maintaining interoperability
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Interoperability with RhodeCode 2.2.X installations is provided so you don't
-have to immediately commit to switching to Kallithea. This option will most
-likely go away once the two projects have diverged significantly.
-
-To run Kallithea on a RhodeCode database, run::
-
-   echo "BRAND = 'rhodecode'" > kallithea/brand.py
-
-This location will depend on where you installed Kallithea. If you installed
-via::
-
-   python2 setup.py install
-
-then you will find this location at
-``$VIRTUAL_ENV/lib/python2.7/site-packages/Kallithea-0.1-py2.7.egg/kallithea``.
-
-One-time conversion
-~~~~~~~~~~~~~~~~~~~
-
-Alternatively, if you would like to convert the database for good, you can use
-a helper script provided by Kallithea. This script will operate directly on the
-database, using the database string you can find in your ``production.ini`` (or
-``development.ini``) file. For example, if using SQLite::
-
-   cd /path/to/kallithea
-   cp /path/to/rhodecode/rhodecode.db kallithea.db
-   pip install sqlalchemy-migrate
-   python2 kallithea/bin/rebranddb.py sqlite:///kallithea.db
-
-.. Note::
-
-   If you started out using the branding interoperability approach mentioned
-   above, watch out for stray brand.pyc after removing brand.py.
-
-Git hooks
-~~~~~~~~~
-
-After switching to Kallithea, it will be necessary to update the Git_ hooks in
-your repositories. If not, the Git_ hooks from RhodeCode will still be called,
-which will cause ``git push`` to fail every time.
-
-If you do not have any custom Git_ hooks deployed, perform the following steps
-(this may take some time depending on the number and size of repositories you
-have):
-
-1. Log-in as an administrator.
-
-2. Open page *Admin > Settings > Remap and Rescan*.
-
-3. Turn on the option **Install Git Hooks**.
-
-4. Turn on the option **Overwrite existing Git hooks**.
-
-5. Click on the button **Rescan Repositories**.
-
-If you do have custom hooks, you will need to merge those changes manually. In
-order to get sample hooks from Kallithea, the easiest way is to create a new Git_
-repository, and have a look at the hooks deployed there.
+Kallithea 0.3.2 and earlier supports migrating from an existing RhodeCode
+installation. To migrate, install Kallithea 0.3.2 and follow the
+instructions in the 0.3.2 README to perform a one-time conversion of the
+database from RhodeCode to Kallithea, before upgrading to this version
+of Kallithea.
 
 
 .. _virtualenv: http://pypi.python.org/pypi/virtualenv

@@ -30,8 +30,8 @@ from kallithea.lib.vcs.utils.ordered_dict import OrderedDict
 from kallithea.lib.vcs.utils.paths import abspath
 from kallithea.lib.vcs.utils.hgcompat import (
     ui, nullid, match, patch, diffopts, clone, get_contact,
-    localrepository, RepoLookupError, Abort, RepoError, hex, scmutil, hg_url,
-    httpbasicauthhandler, httpdigestauthhandler, peer, httppeer, sshpeer
+    localrepo, RepoLookupError, Abort, RepoError, hex, scmutil, hg_url,
+    httpbasicauthhandler, httpdigestauthhandler, peer, httppeer, sshpeer, tag
 )
 
 from .changeset import MercurialChangeset
@@ -172,11 +172,10 @@ class MercurialRepository(BaseRepository):
                 changeset.short_id)
 
         if date is None:
-            date = datetime.datetime.now().ctime()
+            date = datetime.datetime.now().strftime('%a, %d %b %Y %H:%M:%S')
 
         try:
-            self._repo.tag(name, changeset._ctx.node(), message, local, user,
-                date)
+            tag(self._repo, name, changeset._ctx.node(), message, local, user, date)
         except Abort as e:
             raise RepositoryError(e.message)
 
@@ -202,11 +201,11 @@ class MercurialRepository(BaseRepository):
         if message is None:
             message = "Removed tag %s" % name
         if date is None:
-            date = datetime.datetime.now().ctime()
+            date = datetime.datetime.now().strftime('%a, %d %b %Y %H:%M:%S')
         local = False
 
         try:
-            self._repo.tag(name, nullid, message, local, user, date)
+            tag(self._repo, name, nullid, message, local, user, date)
             self.tags = self._get_tags()
         except Abort as e:
             raise RepositoryError(e.message)
@@ -293,7 +292,7 @@ class MercurialRepository(BaseRepository):
         if url.startswith('ssh:'):
             # in case of invalid uri or authentication issues, sshpeer will
             # throw an exception.
-            sshpeer(repoui or ui.ui(), url).lookup('tip')
+            sshpeer.instance(repoui or ui.ui(), url, False).lookup('tip')
             return True
 
         url_prefix = None
@@ -307,7 +306,7 @@ class MercurialRepository(BaseRepository):
         cleaned_uri = str(url_obj)
 
         if authinfo:
-            #create a password manager
+            # create a password manager
             passmgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
             passmgr.add_password(*authinfo)
 
@@ -335,7 +334,7 @@ class MercurialRepository(BaseRepository):
         if not url_prefix: # skip svn+http://... (and git+... too)
             # now check if it's a proper hg repo
             try:
-                httppeer(repoui or ui.ui(), url).lookup('tip')
+                httppeer.instance(repoui or ui.ui(), url, False).lookup('tip')
             except Exception as e:
                 raise urllib2.URLError(
                     "url [%s] does not look like an hg repo org_exc: %s"
@@ -356,7 +355,7 @@ class MercurialRepository(BaseRepository):
 
         try:
             if src_url:
-                url = str(self._get_url(src_url))
+                url = safe_str(self._get_url(src_url))
                 opts = {}
                 if not update_after_clone:
                     opts.update({'noupdate': True})
@@ -365,13 +364,13 @@ class MercurialRepository(BaseRepository):
 
                 # Don't try to create if we've already cloned repo
                 create = False
-            return localrepository(self.baseui, self.path, create=create)
+            return localrepo.instance(self.baseui, self.path, create=create)
         except (Abort, RepoError) as err:
             if create:
-                msg = "Cannot create repository at %s. Original error was %s"\
+                msg = "Cannot create repository at %s. Original error was %s" \
                     % (self.path, err)
             else:
-                msg = "Not valid repository at %s. Original error was %s"\
+                msg = "Not valid repository at %s. Original error was %s" \
                     % (self.path, err)
             raise RepositoryError(msg)
 
@@ -402,7 +401,7 @@ class MercurialRepository(BaseRepository):
         try:
             return time.mktime(self.get_changeset().date.timetuple())
         except RepositoryError:
-            #fallback to filesystem
+            # fallback to filesystem
             cl_path = os.path.join(self.path, '.hg', "00changelog.i")
             st_path = os.path.join(self.path, '.hg', "store")
             if os.path.exists(cl_path):
@@ -412,7 +411,7 @@ class MercurialRepository(BaseRepository):
 
     def _get_revision(self, revision):
         """
-        Gets an ID revision given as str. This will always return a fill
+        Gets an ID revision given as str. This will always return a full
         40 char revision number
 
         :param revision: str or int or None
@@ -423,19 +422,22 @@ class MercurialRepository(BaseRepository):
         if self._empty:
             raise EmptyRepositoryError("There are no changesets yet")
 
-        if revision in [-1, 'tip', None]:
+        if revision in [-1, None]:
             revision = 'tip'
 
         try:
-            revision = hex(self._repo.lookup(revision))
-        except (LookupError, ):
-            msg = ("Ambiguous identifier `%s` for %s" % (revision, self))
-            raise ChangesetDoesNotExistError(msg)
+            if isinstance(revision, int):
+                return self._repo[revision].hex()
+            try:
+                return scmutil.revsymbol(self._repo, revision).hex()
+            except AttributeError: # revsymbol was introduced in Mercurial 4.6
+                return self._repo[revision].hex()
         except (IndexError, ValueError, RepoLookupError, TypeError):
             msg = ("Revision %s does not exist for %s" % (revision, self))
             raise ChangesetDoesNotExistError(msg)
-
-        return revision
+        except (LookupError, ):
+            msg = ("Ambiguous identifier `%s` for %s" % (revision, self))
+            raise ChangesetDoesNotExistError(msg)
 
     def get_ref_revision(self, ref_type, ref_name):
         """
@@ -488,8 +490,8 @@ class MercurialRepository(BaseRepository):
         to filesystem
         (``file:///``) schema.
         """
-        url = str(url)
-        if url != 'default' and not '://' in url:
+        url = safe_str(url)
+        if url != 'default' and '://' not in url:
             url = "file:" + urllib.pathname2url(url)
         return url
 
@@ -509,7 +511,7 @@ class MercurialRepository(BaseRepository):
         return changeset
 
     def get_changesets(self, start=None, end=None, start_date=None,
-                       end_date=None, branch_name=None, reverse=False):
+                       end_date=None, branch_name=None, reverse=False, max_revisions=None):
         """
         Returns iterator of ``MercurialChangeset`` objects from start to end
         (both are inclusive)
@@ -521,7 +523,6 @@ class MercurialRepository(BaseRepository):
         :param branch_name:
         :param reversed: return changesets in reversed order
         """
-
         start_raw_id = self._get_revision(start)
         start_pos = self.revisions.index(start_raw_id) if start else None
         end_raw_id = self._get_revision(end)
@@ -536,19 +537,22 @@ class MercurialRepository(BaseRepository):
             raise BranchDoesNotExistError(msg)
         if end_pos is not None:
             end_pos += 1
-        #filter branches
+        # filter branches
         filter_ = []
         if branch_name:
-            filter_.append('branch("%s")' % (branch_name))
-
-        if start_date and not end_date:
+            filter_.append('branch("%s")' % safe_str(branch_name))
+        if start_date:
             filter_.append('date(">%s")' % start_date)
-        if end_date and not start_date:
+        if end_date:
             filter_.append('date("<%s")' % end_date)
-        if start_date and end_date:
-            filter_.append('date(">%s") and date("<%s")' % (start_date, end_date))
-        if filter_:
-            revisions = scmutil.revrange(self._repo, filter_)
+        if filter_ or max_revisions:
+            if filter_:
+                revspec = ' and '.join(filter_)
+            else:
+                revspec = 'all()'
+            if max_revisions:
+                revspec = 'limit(%s, %s)' % (revspec, max_revisions)
+            revisions = scmutil.revrange(self._repo, [revspec])
         else:
             revisions = self.revisions
 
@@ -598,8 +602,10 @@ class MercurialRepository(BaseRepository):
             config_file = [config_file]
 
         config = self._repo.ui
-        for path in config_file:
-            config.readconfig(path)
+        if config_file:
+            config = ui.ui()
+            for path in config_file:
+                config.readconfig(path)
         return config.config(section, name)
 
     def get_user_name(self, config_file=None):
@@ -609,7 +615,7 @@ class MercurialRepository(BaseRepository):
         :param config_file: A path to file which should be used to retrieve
           configuration from (might also be a list of file paths)
         """
-        username = self.get_config_value('ui', 'username')
+        username = self.get_config_value('ui', 'username', config_file=config_file)
         if username:
             return author_name(username)
         return None
@@ -621,7 +627,7 @@ class MercurialRepository(BaseRepository):
         :param config_file: A path to file which should be used to retrieve
           configuration from (might also be a list of file paths)
         """
-        username = self.get_config_value('ui', 'username')
+        username = self.get_config_value('ui', 'username', config_file=config_file)
         if username:
             return author_email(username)
         return None

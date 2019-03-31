@@ -1,0 +1,121 @@
+## Render changelog table with id 'changesets' with the range of changesets,
+## statuses, and comments.
+## Optionally, pass a js snippet to run whenever a table resize is triggered.
+<%def name="changelog(repo_name, cs_range, cs_statuses, cs_comments, show_checkbox=False, show_branch=True, show_index=False, resize_js='')">
+    <% num_cs = len(cs_range) %>
+    <table class="table" id="changesets">
+    <tbody>
+      %for cnt,cs in enumerate(cs_range):
+      <tr id="chg_${cnt+1}" class="${'mergerow' if len(cs.parents) > 1 else ''}">
+        %if show_checkbox:
+        <td class="checkbox-column">
+          ${h.checkbox(cs.raw_id,class_="changeset_range")}
+        </td>
+        %endif
+        %if show_index:
+        <td class="changeset-logical-index">
+          <%
+              index = num_cs - cnt
+              if index == 1:
+                  title = _('First (oldest) changeset in this list')
+              elif index == num_cs:
+                  title = _('Last (most recent) changeset in this list')
+              else:
+                  title = _('Position in this list of changesets')
+          %>
+          <span data-toggle="tooltip" title="${title}">
+            ${index}
+          </span>
+        </td>
+        %endif
+        <td class="status">
+          %if cs_statuses.get(cs.raw_id):
+            %if cs_statuses.get(cs.raw_id)[2]:
+              <a data-toggle="tooltip"
+                  title="${_('Changeset status: %s by %s\nClick to open associated pull request %s') % (cs_statuses.get(cs.raw_id)[1], cs_statuses.get(cs.raw_id)[5].username, cs_statuses.get(cs.raw_id)[4])}"
+                  href="${h.url('pullrequest_show',repo_name=cs_statuses.get(cs.raw_id)[3],pull_request_id=cs_statuses.get(cs.raw_id)[2])}">
+                <i class="icon-circle changeset-status-${cs_statuses.get(cs.raw_id)[0]}"></i>
+              </a>
+            %else:
+              <a data-toggle="tooltip"
+                  title="${_('Changeset status: %s by %s') % (cs_statuses.get(cs.raw_id)[1], cs_statuses.get(cs.raw_id)[5].username)}"
+                  href="${cs_comments[cs.raw_id][0].url()}">
+                <i class="icon-circle changeset-status-${cs_statuses.get(cs.raw_id)[0]}"></i>
+              </a>
+            %endif
+          %endif
+        </td>
+        <td class="author" data-toggle="tooltip" title="${cs.author}">
+          ${h.gravatar(h.email_or_none(cs.author), size=16)}
+          <span class="user">${h.person(cs.author)}</span>
+        </td>
+        <td class="hash">
+          ${h.link_to(h.show_id(cs),h.url('changeset_home',repo_name=repo_name,revision=cs.raw_id), class_='changeset_hash')}
+        </td>
+        <td class="date">
+          <div data-toggle="tooltip" title="${h.fmt_date(cs.date)}">${h.age(cs.date,True)}</div>
+        </td>
+        <% message_lines = cs.message.splitlines() %>
+        %if len(message_lines) > 1:
+        <td class="expand_commit" title="${_('Expand commit message')}">
+          <i class="icon-align-left"></i>
+        </td>
+        %else:
+        <td class="expand_commit"></td>
+        %endif
+        <td class="mid">
+          <div class="log-container">
+            <div class="message">
+              <div class="message-firstline">${h.urlify_text(message_lines[0], c.repo_name,h.url('changeset_home',repo_name=repo_name,revision=cs.raw_id))}</div>
+              %if len(message_lines) > 1:
+              <div class="message-full hidden">${h.urlify_text(cs.message, repo_name)}</div>
+              %endif
+            </div>
+            <div class="extra-container">
+              %if cs_comments.get(cs.raw_id):
+                <a class="comments-container comments-cnt" href="${cs_comments[cs.raw_id][0].url()}" data-toggle="tooltip" title="${_('%s comments') % len(cs_comments[cs.raw_id])}">${len(cs_comments[cs.raw_id])}<i class="icon-comment-discussion"></i>
+                </a>
+              %endif
+              %for book in cs.bookmarks:
+                <span class="label label-bookmark" title="${_('Bookmark %s') % book}">${h.link_to(book,h.url('changeset_home',repo_name=repo_name,revision=cs.raw_id))}</span>
+              %endfor
+              %for tag in cs.tags:
+                <span class="label label-tag" title="${_('Tag %s') % tag}">${h.link_to(tag,h.url('changeset_home',repo_name=repo_name,revision=cs.raw_id))}</span>
+              %endfor
+              %if cs.bumped:
+                <span class="label label-bumped" title="Bumped">Bumped</span>
+              %endif
+              %if cs.divergent:
+                <span class="label label-divergent" title="Divergent">Divergent</span>
+              %endif
+              %if cs.extinct:
+                <span class="label label-extinct" title="Extinct">Extinct</span>
+              %endif
+              %if cs.unstable:
+                <span class="label label-unstable" title="Unstable">Unstable</span>
+              %endif
+              %if cs.phase:
+                <span class="label label-phase" title="Phase">${cs.phase}</span>
+              %endif
+              %if show_branch:
+                %for branch in cs.branches:
+                  <span class="label label-branch" title="${_('Branch %s' % branch)}">${h.link_to(branch,h.url('changelog_home',repo_name=repo_name,branch=branch))}</span>
+                %endfor
+              %endif
+            </div>
+          </div>
+        </td>
+      </tr>
+      %endfor
+    </tbody>
+    </table>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#changesets .expand_commit').on('click',function(e){
+      $(this).next('.mid').find('.message > div').toggleClass('hidden');
+      ${resize_js};
+    });
+  });
+</script>
+</%def>

@@ -30,58 +30,55 @@ import formencode
 import traceback
 from formencode import htmlfill
 
-from pylons import tmpl_context as c, request, url
-from pylons.controllers.util import redirect
-from pylons.i18n.translation import _
+from tg import tmpl_context as c, request
+from tg.i18n import ugettext as _
+from webob.exc import HTTPFound
 
 import kallithea.lib.helpers as h
 
-from kallithea.lib.helpers import Page
-from kallithea.lib.auth import LoginRequired, HasRepoPermissionAnyDecorator, \
-    NotAnonymous, HasRepoPermissionAny, HasPermissionAnyDecorator, HasPermissionAny
+from kallithea.config.routing import url
+from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator, \
+    HasRepoPermissionLevel, HasPermissionAnyDecorator, HasPermissionAny
 from kallithea.lib.base import BaseRepoController, render
+from kallithea.lib.page import Page
+from kallithea.lib.utils2 import safe_int
 from kallithea.model.db import Repository, UserFollowing, User, Ui
 from kallithea.model.repo import RepoModel
 from kallithea.model.forms import RepoForkForm
 from kallithea.model.scm import ScmModel, AvailableRepoGroupChoices
-from kallithea.lib.utils2 import safe_int
 
 log = logging.getLogger(__name__)
 
 
 class ForksController(BaseRepoController):
 
-    def __before__(self):
-        super(ForksController, self).__before__()
-
     def __load_defaults(self):
-        repo_group_perms = ['group.admin']
         if HasPermissionAny('hg.create.write_on_repogroup.true')():
-            repo_group_perms.append('group.write')
-        c.repo_groups = AvailableRepoGroupChoices(['hg.create.repository'], repo_group_perms)
+            repo_group_perm_level = 'write'
+        else:
+            repo_group_perm_level = 'admin'
+        c.repo_groups = AvailableRepoGroupChoices(['hg.create.repository'], repo_group_perm_level)
 
         c.landing_revs_choices, c.landing_revs = ScmModel().get_repo_landing_revs()
 
-        c.can_update = Ui.get_by_key(Ui.HOOK_UPDATE).ui_active
+        c.can_update = Ui.get_by_key('hooks', Ui.HOOK_UPDATE).ui_active
 
-    def __load_data(self, repo_name=None):
+    def __load_data(self):
         """
         Load defaults settings for edit, and update
-
-        :param repo_name:
         """
         self.__load_defaults()
 
-        c.repo_info = db_repo = Repository.get_by_repo_name(repo_name)
-        repo = db_repo.scm_instance
+        c.repo_info = c.db_repo
+        repo = c.db_repo.scm_instance
 
         if c.repo_info is None:
-            h.not_mapped_error(repo_name)
-            return redirect(url('repos'))
+            h.not_mapped_error(c.repo_name)
+            raise HTTPFound(location=url('repos'))
 
         c.default_user_id = User.get_default_user().user_id
-        c.in_public_journal = UserFollowing.query()\
-            .filter(UserFollowing.user_id == c.default_user_id)\
+        c.in_public_journal = UserFollowing.query() \
+            .filter(UserFollowing.user_id == c.default_user_id) \
             .filter(UserFollowing.follows_repository == c.repo_info).scalar()
 
         if c.repo_info.stats:
@@ -98,7 +95,7 @@ class ForksController(BaseRepoController):
             c.stats_percentage = '%.2f' % ((float((last_rev)) /
                                             c.repo_last_rev) * 100)
 
-        defaults = RepoModel()._get_defaults(repo_name)
+        defaults = RepoModel()._get_defaults(c.repo_name)
         # alter the description to indicate a fork
         defaults['description'] = ('fork of repository: %s \n%s'
                                    % (defaults['repo_name'],
@@ -108,17 +105,14 @@ class ForksController(BaseRepoController):
 
         return defaults
 
-    @LoginRequired()
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @LoginRequired(allow_default_user=True)
+    @HasRepoPermissionLevelDecorator('read')
     def forks(self, repo_name):
-        p = safe_int(request.GET.get('page', 1), 1)
+        p = safe_int(request.GET.get('page'), 1)
         repo_id = c.db_repo.repo_id
         d = []
         for r in Repository.get_repo_forks(repo_id):
-            if not HasRepoPermissionAny(
-                'repository.read', 'repository.write', 'repository.admin'
-            )(r.repo_name, 'get forks check'):
+            if not HasRepoPermissionLevel('read')(r.repo_name, 'get forks check'):
                 continue
             d.append(r)
         c.forks_pager = Page(d, page=p, items_per_page=20)
@@ -129,17 +123,15 @@ class ForksController(BaseRepoController):
         return render('/forks/forks.html')
 
     @LoginRequired()
-    @NotAnonymous()
     @HasPermissionAnyDecorator('hg.admin', 'hg.fork.repository')
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     def fork(self, repo_name):
         c.repo_info = Repository.get_by_repo_name(repo_name)
         if not c.repo_info:
             h.not_mapped_error(repo_name)
-            return redirect(url('home'))
+            raise HTTPFound(location=url('home'))
 
-        defaults = self.__load_data(repo_name)
+        defaults = self.__load_data()
 
         return htmlfill.render(
             render('forks/fork.html'),
@@ -148,10 +140,8 @@ class ForksController(BaseRepoController):
             force_defaults=False)
 
     @LoginRequired()
-    @NotAnonymous()
     @HasPermissionAnyDecorator('hg.admin', 'hg.fork.repository')
-    @HasRepoPermissionAnyDecorator('repository.read', 'repository.write',
-                                   'repository.admin')
+    @HasRepoPermissionLevelDecorator('read')
     def fork_create(self, repo_name):
         self.__load_defaults()
         c.repo_info = Repository.get_by_repo_name(repo_name)
@@ -164,15 +154,13 @@ class ForksController(BaseRepoController):
             form_result = _form.to_python(dict(request.POST))
 
             # an approximation that is better than nothing
-            if not Ui.get_by_key(Ui.HOOK_UPDATE).ui_active:
+            if not Ui.get_by_key('hooks', Ui.HOOK_UPDATE).ui_active:
                 form_result['update_after_clone'] = False
 
             # create fork is done sometimes async on celery, db transaction
             # management is handled there.
-            task = RepoModel().create_fork(form_result, self.authuser.user_id)
-            from celery.result import BaseAsyncResult
-            if isinstance(task, BaseAsyncResult):
-                task_id = task.task_id
+            task = RepoModel().create_fork(form_result, request.authuser.user_id)
+            task_id = task.task_id
         except formencode.Invalid as errors:
             return htmlfill.render(
                 render('forks/fork.html'),
@@ -186,6 +174,6 @@ class ForksController(BaseRepoController):
             h.flash(_('An error occurred during repository forking %s') %
                     repo_name, category='error')
 
-        return redirect(h.url('repo_creating_home',
+        raise HTTPFound(location=h.url('repo_creating_home',
                               repo_name=form_result['repo_name_full'],
                               task_id=task_id))

@@ -1,6 +1,6 @@
 ## -*- coding: utf-8 -*-
 %if c.users_log:
-<table>
+<table class="table">
     <tr>
         <th class="left">${_('Username')}</th>
         <th class="left">${_('Action')}</th>
@@ -44,7 +44,6 @@
       asynchtml(e.target.href, $user_log, function(){
         show_more_event();
         tooltip_activate();
-        show_changeset_tooltip();
       });
       e.preventDefault();
     });
@@ -56,9 +55,8 @@
   });
 </script>
 
-<div class="pagination-wh pagination-left">
-${c.users_log.pager('$link_previous ~2~ $link_next')}
-</div>
+${c.users_log.pager()}
+
 %else:
     ${_('No actions yet')}
 %endif

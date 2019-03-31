@@ -335,12 +335,6 @@ var pyroutes = (function() {
 })();
 
 
-/**
- * GLOBAL YUI Shortcuts
- */
-var YUD = YAHOO.util.Dom;
-var YUE = YAHOO.util.Event;
-
 /* Invoke all functions in callbacks */
 var _run_callbacks = function(callbacks){
     if (callbacks !== undefined){
@@ -395,21 +389,22 @@ function asynchtml(url, $target, success, args){
         .fail(function(jqXHR, textStatus, errorThrown) {
                 if (textStatus == "abort")
                     return;
-                $target.html('<span class="error_red">ERROR: {0}</span>'.format(textStatus));
+                $target.html('<span class="bg-danger">ERROR: {0}</span>'.format(textStatus));
                 $target.css('opacity','1.0');
             })
         ;
 };
 
-var ajaxGET = function(url,success) {
+var ajaxGET = function(url, success, failure) {
+    if(failure === undefined) {
+        failure = function(jqXHR, textStatus, errorThrown) {
+                if (textStatus != "abort")
+                    alert("Ajax GET error: " + textStatus);
+            };
+    }
     return $.ajax({url: url, headers: {'X-PARTIAL-XHR': '1'}, cache: false})
         .done(success)
-        .fail(function(jqXHR, textStatus, errorThrown) {
-                if (textStatus == "abort")
-                    return;
-                alert("Ajax GET error: " + textStatus);
-        })
-        ;
+        .fail(failure);
 };
 
 var ajaxPOST = function(url, postData, success, failure) {
@@ -440,25 +435,6 @@ var show_more_event = function(){
     });
 };
 
-/**
- * activate .lazy-cs mouseover for showing changeset tooltip
- */
-var show_changeset_tooltip = function(){
-    $('.lazy-cs').mouseover(function(e){
-        var $target = $(e.currentTarget);
-        var rid = $target.attr('raw_id');
-        var repo_name = $target.attr('repo_name');
-        if(rid && !$target.hasClass('tooltip')){
-            _show_tooltip(e, _TM['loading ...']);
-            var url = pyroutes.url('changeset_info', {"repo_name": repo_name, "revision": rid});
-            ajaxGET(url, function(json){
-                    $target.addClass('tooltip');
-                    _show_tooltip(e, json['message']);
-                    _activate_tooltip($target);
-                });
-        }
-    });
-};
 
 var _onSuccessFollow = function(target){
     var $target = $(target);
@@ -480,8 +456,8 @@ var _onSuccessFollow = function(target){
     }
 }
 
-var toggleFollowingRepo = function(target, follows_repo_id){
-    var args = 'follows_repo_id=' + follows_repo_id;
+var toggleFollowingRepo = function(target, follows_repository_id){
+    var args = 'follows_repository_id=' + follows_repository_id;
     args += '&amp;_authentication_token=' + _authentication_token;
     $.post(TOGGLE_FOLLOW_URL, args, function(data){
             _onSuccessFollow(target);
@@ -504,76 +480,57 @@ var showRepoSize = function(target, repo_name){
 };
 
 /**
- * tooltips
+ * load tooltips dynamically based on data attributes, used for .lazy-cs changeset links
  */
+var get_changeset_tooltip = function() {
+    var $target = $(this);
+    var tooltip = $target.data('tooltip');
+    if (!tooltip) {
+        var raw_id = $target.data('raw_id');
+        var repo_name = $target.data('repo_name');
+        var url = pyroutes.url('changeset_info', {"repo_name": repo_name, "revision": raw_id});
 
+        $.ajax(url, {
+            async: false,
+            success: function(data) {
+                tooltip = data["message"];
+            }
+        });
+        $target.data('tooltip', tooltip);
+    }
+    return tooltip;
+};
+
+/**
+ * activate tooltips and popups
+ */
 var tooltip_activate = function(){
-    $(document).ready(_init_tooltip);
-};
-
-var _activate_tooltip = function($tt){
-    $tt.mouseover(_show_tooltip);
-    $tt.mousemove(_move_tooltip);
-    $tt.mouseout(_close_tooltip);
-};
-
-var _init_tooltip = function(){
-    var $tipBox = $('#tip-box');
-    if(!$tipBox.length){
-        $tipBox = $('<div id="tip-box"></div>');
-        $(document.body).append($tipBox);
-    }
-
-    $tipBox.hide();
-    $tipBox.css('position', 'absolute');
-    $tipBox.css('max-width', '600px');
-
-    _activate_tooltip($('.tooltip'));
-};
-
-var _show_tooltip = function(e, tipText, safe){
-    e.stopImmediatePropagation();
-    var el = e.currentTarget;
-    var $el = $(el);
-    if(tipText){
-        // just use it
-    } else if(el.tagName.toLowerCase() === 'img'){
-        tipText = el.alt ? el.alt : '';
-    } else {
-        tipText = el.title ? el.title : '';
-        safe = safe || $el.hasClass("safe-html-title");
-    }
-
-    if(tipText !== ''){
-        // save org title
-        $el.attr('tt_title', tipText);
-        // reset title to not show org tooltips
-        $el.prop('title', '');
-
-        var $tipBox = $('#tip-box');
-        if (safe) {
-            $tipBox.html(tipText);
-        } else {
-            $tipBox.text(tipText);
+    function placement(p, e){
+        if(e.getBoundingClientRect().top > 2*$(window).height()/3){
+            return 'top';
+        }else{
+            return 'bottom';
         }
-        $tipBox.css('display', 'block');
     }
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip({
+            container: 'body',
+            placement: placement
+        });
+        $('[data-toggle="popover"]').popover({
+            html: true,
+            container: 'body',
+            placement: placement,
+            trigger: 'hover',
+            template: '<div class="popover cs-popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+        });
+        $('.lazy-cs').tooltip({
+            title: get_changeset_tooltip,
+            placement: placement
+        });
+    });
 };
 
-var _move_tooltip = function(e){
-    e.stopImmediatePropagation();
-    var $tipBox = $('#tip-box');
-    $tipBox.css('top', (e.pageY + 15) + 'px');
-    $tipBox.css('left', (e.pageX + 15) + 'px');
-};
-
-var _close_tooltip = function(e){
-    e.stopImmediatePropagation();
-    var $tipBox = $('#tip-box');
-    $tipBox.hide();
-    var el = e.currentTarget;
-    $(el).prop('title', $(el).attr('tt_title'));
-};
 
 /**
  * Quick filter widget
@@ -645,9 +602,13 @@ function move_comments($anchorcomments) {
         var line_no = $anchorcomment.data('line_no');
         if ($comment_div[0]) {
             $comment_div.append($anchorcomment.children());
-            _comment_div_append_add($comment_div, f_path, line_no);
+            if (f_path && line_no) {
+                _comment_div_append_add($comment_div, f_path, line_no);
+            } else {
+                _comment_div_append_form($comment_div, f_path, line_no);
+            }
         } else {
-           $anchorcomment.before("Comment to {0} line {1} which is outside the diff context:".format(f_path || '?', line_no || '?'));
+            $anchorcomment.before("<span class='bg-warning'>Comment to {0} line {1} which is outside the diff context:</span>".format(f_path || '?', line_no || '?'));
         }
     });
     linkInlineComments($('.firstlink'), $('.comment:first-child'));
@@ -658,7 +619,7 @@ function show_comment_form($bubble) {
     var children = $bubble.closest('tr.line').children('[id]');
     var line_td_id = children[children.length - 1].id;
     var $comment_div = _get_add_comment_div(line_td_id);
-    var f_path = $bubble.closest('div.full_f_path').data('f_path');
+    var f_path = $bubble.closest('[data-f_path]').data('f_path');
     var parts = line_td_id.split('_');
     var line_no = parts[parts.length-1];
     comment_div_state($comment_div, f_path, line_no, true);
@@ -676,28 +637,29 @@ function _get_add_comment_div(target_id) {
     return $comments_box;
 }
 
-// set $comment_div state - showing or not showing form and Add button
-function comment_div_state($comment_div, f_path, line_no, show_form) {
+// Set $comment_div state - showing or not showing form and Add button.
+// An Add button is shown on non-empty forms when no form is shown.
+// The form is controlled by show_form_opt - if undefined, form is only shown for general comments.
+function comment_div_state($comment_div, f_path, line_no, show_form_opt) {
+    var show_form = show_form_opt !== undefined ? show_form_opt : !f_path && !line_no;
     var $forms = $comment_div.children('.comment-inline-form');
     var $buttonrow = $comment_div.children('.add-button-row');
-    var $comments = $comment_div.children('.comment');
-    if (show_form) {
-        if (!$forms.length) {
-            _comment_div_append_form($comment_div, f_path, line_no);
-        }
-    } else {
-        $forms.remove();
-    }
+    var $comments = $comment_div.children('.comment:not(.submitting)');
+    $forms.remove();
     $buttonrow.remove();
-    if ($comments.length && !show_form) {
+    if (show_form) {
+        _comment_div_append_form($comment_div, f_path, line_no);
+    } else if ($comments.length) {
         _comment_div_append_add($comment_div, f_path, line_no);
+    } else {
+        $comment_div.parent('tr').remove();
     }
 }
 
 // append an Add button to $comment_div and hook it up to show form
 function _comment_div_append_add($comment_div, f_path, line_no) {
     var addlabel = TRANSLATION_MAP['Add Another Comment'];
-    var $add = $('<div class="add-button-row"><span class="btn btn-mini add-button">{0}</span></div>'.format(addlabel));
+    var $add = $('<div class="add-button-row"><span class="btn btn-default btn-xs add-button">{0}</span></div>'.format(addlabel));
     $comment_div.append($add);
     $add.children('.add-button').click(function(e) {
         comment_div_state($comment_div, f_path, line_no, true);
@@ -706,78 +668,124 @@ function _comment_div_append_add($comment_div, f_path, line_no) {
 
 // append a comment form to $comment_div
 function _comment_div_append_form($comment_div, f_path, line_no) {
-    var $form_div = $($('#comment-inline-form-template').html().format(f_path, line_no))
+    var $form_div = $('#comment-inline-form-template').children()
+        .clone()
         .addClass('comment-inline-form');
     $comment_div.append($form_div);
+    var $preview = $comment_div.find("div.comment-preview");
     var $form = $comment_div.find("form");
+    var $textarea = $form.find('textarea');
 
     $form.submit(function(e) {
         e.preventDefault();
 
-        var text = $('#text_'+line_no).val();
-        if (!text){
-            return;
+        var text = $textarea.val();
+        var review_status = $form.find('input:radio[name=changeset_status]:checked').val();
+        var pr_close = $form.find('input:checkbox[name=save_close]:checked').length ? 'on' : '';
+        var pr_delete = $form.find('input:checkbox[name=save_delete]:checked').length ? 'delete' : '';
+
+        if (!text && !review_status && !pr_close && !pr_delete) {
+            alert("Please provide a comment");
+            return false;
         }
 
-        $form.find('.submitting-overlay').show();
+        if (pr_delete) {
+            if (text || review_status || pr_close) {
+                alert('Cannot delete pull request while making other changes');
+                return false;
+            }
+            if (!confirm('Confirm to delete this pull request')) {
+                return false;
+            }
+            var comments = $('.comment').size();
+            if (comments > 0 &&
+                !confirm('Confirm again to delete this pull request with {0} comments'.format(comments))) {
+                return false;
+            }
+        }
 
-        var success = function(json_data) {
-            $comment_div.append(json_data['rendered_text']);
-            comment_div_state($comment_div, f_path, line_no, false);
-            linkInlineComments($('.firstlink'), $('.comment:first-child'));
-        };
+        if (review_status) {
+            var $review_status = $preview.find('.automatic-comment');
+            var review_status_lbl = $("#comment-inline-form-template input.status_change_radio[value='" + review_status + "']").parent().text().strip();
+            $review_status.find('.comment-status-label').text(review_status_lbl);
+            $review_status.show();
+        }
+        $preview.find('.comment-text div').text(text);
+        $preview.show();
+        $textarea.val('');
+        if (f_path && line_no) {
+            $form.hide();
+        }
+
         var postData = {
             'text': text,
             'f_path': f_path,
-            'line': line_no
+            'line': line_no,
+            'changeset_status': review_status,
+            'save_close': pr_close,
+            'save_delete': pr_delete
         };
-        ajaxPOST(AJAX_COMMENT_URL, postData, success);
+        var success = function(json_data) {
+            if (pr_delete) {
+                location = json_data['location'];
+            } else {
+                $comment_div.append(json_data['rendered_text']);
+                comment_div_state($comment_div, f_path, line_no);
+                linkInlineComments($('.firstlink'), $('.comment:first-child'));
+                if ((review_status || pr_close) && !f_path && !line_no) {
+                    // Page changed a lot - reload it after closing the submitted form
+                    comment_div_state($comment_div, f_path, line_no, false);
+                    location.reload(true);
+                }
+            }
+        };
+        var failure = function(x, s, e) {
+            $preview.removeClass('submitting').addClass('failed');
+            var $status = $preview.find('.comment-submission-status');
+            $('<span>', {
+                'title': e,
+                text: _TM['Unable to post']
+            }).replaceAll($status.contents());
+            $('<div>', {
+                'class': 'btn-group'
+            }).append(
+                $('<button>', {
+                    'class': 'btn btn-default btn-xs',
+                    text: _TM['Retry']
+                }).click(function() {
+                    $status.text(_TM['Submitting ...']);
+                    $preview.addClass('submitting').removeClass('failed');
+                    ajaxPOST(AJAX_COMMENT_URL, postData, success, failure);
+                }),
+                $('<button>', {
+                    'class': 'btn btn-default btn-xs',
+                    text: _TM['Cancel']
+                }).click(function() {
+                    comment_div_state($comment_div, f_path, line_no);
+                })
+            ).appendTo($status);
+        };
+        ajaxPOST(AJAX_COMMENT_URL, postData, success, failure);
     });
 
-    $('#preview-btn_'+line_no).click(function(e){
-        var text = $('#text_'+line_no).val();
-        if(!text){
-            return
-        }
-        $('#preview-box_'+line_no).addClass('unloaded');
-        $('#preview-box_'+line_no).html(_TM['Loading ...']);
-        $('#edit-container_'+line_no).hide();
-        $('#edit-btn_'+line_no).show();
-        $('#preview-container_'+line_no).show();
-        $('#preview-btn_'+line_no).hide();
-
-        var url = pyroutes.url('changeset_comment_preview', {'repo_name': REPO_NAME});
-        var post_data = {'text': text};
-        ajaxPOST(url, post_data, function(html) {
-            $('#preview-box_'+line_no).html(html);
-            $('#preview-box_'+line_no).removeClass('unloaded');
-        })
-    })
-    $('#edit-btn_'+line_no).click(function(e) {
-        $('#edit-container_'+line_no).show();
-        $('#edit-btn_'+line_no).hide();
-        $('#preview-container_'+line_no).hide();
-        $('#preview-btn_'+line_no).show();
-    })
-
-    // create event for hide button
+    // add event handler for hide/cancel buttons
     $form.find('.hide-inline-form').click(function(e) {
-        comment_div_state($comment_div, f_path, line_no, false);
+        comment_div_state($comment_div, f_path, line_no);
     });
 
-    setTimeout(function() {
-        // callbacks
-        tooltip_activate();
-        MentionsAutoComplete($('#text_'+line_no), $('#mentions_container_'+line_no),
-                             _USERS_AC_DATA);
-        $('#text_'+line_no).focus();
-    }, 10);
+    tooltip_activate();
+    if ($textarea.length > 0) {
+        MentionsAutoComplete($textarea);
+    }
+    if (f_path) {
+        $textarea.focus();
+    }
 }
 
 
 function deleteComment(comment_id) {
     var url = AJAX_COMMENT_DELETE_URL.replace('__COMMENT_ID__', comment_id);
-    var postData = {'_method': 'delete'};
+    var postData = {};
     var success = function(o) {
         $('#comment-'+comment_id).remove();
         // Ignore that this might leave a stray Add button (or have a pending form with another comment) ...
@@ -815,20 +823,7 @@ var linkInlineComments = function($firstlinks, $comments){
 }
 
 /* activate files.html stuff */
-var fileBrowserListeners = function(current_url, node_list_url, url_base){
-    var current_url_branch = "?branch=__BRANCH__";
-
-    $('#stay_at_branch').on('click',function(e){
-        if(e.currentTarget.checked){
-            var uri = current_url_branch;
-            uri = uri.replace('__BRANCH__',e.currentTarget.value);
-            window.location = uri;
-        }
-        else{
-            window.location = current_url;
-        }
-    });
-
+var fileBrowserListeners = function(node_list_url, url_base){
     var $node_filter = $('#node_filter');
 
     var filterTimeout = null;
@@ -934,17 +929,15 @@ var initCodeMirror = function(textarea_id, baseUrl, resetUrl){
         });
 
     $('#file_enable').click(function(){
-            $('#editor_container').show();
             $('#upload_file_container').hide();
             $('#filename_container').show();
-            $('#set_mode_header').show();
+            $('#body').show();
         });
 
     $('#upload_file_enable').click(function(){
-            $('#editor_container').hide();
             $('#upload_file_container').show();
             $('#filename_container').hide();
-            $('#set_mode_header').hide();
+            $('#body').hide();
         });
 
     return myCodeMirror
@@ -1011,34 +1004,6 @@ var getSelectionLink = function(e) {
     }
 };
 
-var deleteNotification = function(url, notification_id, callbacks){
-    var success = function(o){
-            $("#notification_"+notification_id).remove();
-            _run_callbacks(callbacks);
-        };
-    var failure = function(o){
-            alert("deleteNotification failure");
-        };
-    var postData = {'_method': 'delete'};
-    var sUrl = url.replace('__NOTIFICATION_ID__',notification_id);
-    ajaxPOST(sUrl, postData, success, failure);
-};
-
-var readNotification = function(url, notification_id, callbacks){
-    var success = function(o){
-            var $obj = $("#notification_"+notification_id);
-            $obj.removeClass('unread');
-            $obj.find('.read-notification').remove();
-            _run_callbacks(callbacks);
-        };
-    var failure = function(o){
-            alert("readNotification failure");
-        };
-    var postData = {'_method': 'put'};
-    var sUrl = url.replace('__NOTIFICATION_ID__',notification_id);
-    ajaxPOST(sUrl, postData, success, failure);
-};
-
 /**
  * Autocomplete functionality
  */
@@ -1081,240 +1046,188 @@ var autocompleteMatchGroups = function (sQuery, myGroups) {
     return matches;
 };
 
-// Helper highlight function for the formatter
-var autocompleteHighlightMatch = function (full, snippet, matchindex) {
-    return full.substring(0, matchindex)
-        + "<span class='match'>"
-        + full.substr(matchindex, snippet.length)
-        + "</span>" + full.substring(matchindex + snippet.length);
+// Highlight the snippet if it is found in the full text, while escaping any existing markup.
+// Snippet must be lowercased already.
+var autocompleteHighlightMatch = function (full, snippet) {
+    var matchindex = full.toLowerCase().indexOf(snippet);
+    if (matchindex <0)
+        return full.html_escape();
+    return full.substring(0, matchindex).html_escape()
+        + '<span class="select2-match">'
+        + full.substr(matchindex, snippet.length).html_escape()
+        + '</span>'
+        + full.substring(matchindex + snippet.length).html_escape();
 };
 
-var gravatar = function(link, size, cssclass) {
-    var elem = '<img alt="" class="{2}" style="width: {0}px; height: {0}px" src="{1}"/>'.format(size, link, cssclass);
-    if (!link) {
-        elem = '<i class="icon-user {1}" style="font-size: {0}px;"></i>'.format(size, cssclass);
+// Return html snippet for showing the provided gravatar url
+var gravatar = function(gravatar_lnk, size, cssclass) {
+    if (!gravatar_lnk) {
+        return '';
     }
-    return elem;
+    if (gravatar_lnk == 'default') {
+        return '<i class="icon-user {1}" style="font-size: {0}px;"></i>'.format(size, cssclass);
+    }
+    return ('<i class="icon-gravatar {2}"' +
+            ' style="font-size: {0}px;background-image: url(\'{1}\'); background-size: {0}px"' +
+            '></i>').format(size, gravatar_lnk, cssclass);
 }
 
-var autocompleteGravatar = function(res, link, size, group) {
-    var elem = gravatar(link, size, "perm-gravatar-ac");
+var autocompleteGravatar = function(res, gravatar_lnk, size, group) {
+    var elem;
     if (group !== undefined) {
         elem = '<i class="perm-gravatar-ac icon-users"></i>';
+    } else {
+        elem = gravatar(gravatar_lnk, size, "perm-gravatar-ac");
     }
     return '<div class="ac-container-wrap">{0}{1}</div>'.format(elem, res);
 }
 
-// Custom formatter to highlight the matching letters
+// Custom formatter to highlight the matching letters and do HTML escaping
 var autocompleteFormatter = function (oResultData, sQuery, sResultMatch) {
-    var query = sQuery.toLowerCase();
+    var query;
+    if (sQuery && sQuery.toLowerCase) // YAHOO AutoComplete
+        query = sQuery.toLowerCase();
+    else if (sResultMatch && sResultMatch.term) // select2 - parameter names doesn't match
+        query = sResultMatch.term.toLowerCase();
 
     // group
-    if (oResultData.grname != undefined) {
-        var grname = oResultData.grname;
-        var grmembers = oResultData.grmembers;
-        var grnameMatchIndex = grname.toLowerCase().indexOf(query);
-        var grprefix = "{0}: ".format(_TM['Group']);
-        var grsuffix = " ({0} {1})".format(grmembers, _TM['members']);
-
-        if (grnameMatchIndex > -1) {
-            return autocompleteGravatar(grprefix + autocompleteHighlightMatch(grname, query, grnameMatchIndex) + grsuffix, null, null, true);
-        }
-        return autocompleteGravatar(grprefix + oResultData.grname + grsuffix, null, null, true);
+    if (oResultData.type == "group") {
+        return autocompleteGravatar(
+            "{0}: {1}".format(
+                _TM['Group'],
+                autocompleteHighlightMatch(oResultData.grname, query)),
+            null, null, true);
+    }
 
     // users
-    } else if (oResultData.nname != undefined) {
-        var fname = oResultData.fname || "";
-        var lname = oResultData.lname || "";
-        var nname = oResultData.nname;
-
-        // Guard against null value
-        var fnameMatchIndex = fname.toLowerCase().indexOf(query),
-            lnameMatchIndex = lname.toLowerCase().indexOf(query),
-            nnameMatchIndex = nname.toLowerCase().indexOf(query),
-            displayfname, displaylname, displaynname, displayname;
-
-        if (fnameMatchIndex > -1) {
-            displayfname = autocompleteHighlightMatch(fname, query, fnameMatchIndex);
-        } else {
-            displayfname = fname;
-        }
-
-        if (lnameMatchIndex > -1) {
-            displaylname = autocompleteHighlightMatch(lname, query, lnameMatchIndex);
-        } else {
-            displaylname = lname;
-        }
-
-        if (nnameMatchIndex > -1) {
-            displaynname = autocompleteHighlightMatch(nname, query, nnameMatchIndex);
-        } else {
-            displaynname = nname;
-        }
-
-        displayname = displaynname;
-        if (displayfname && displaylname) {
-            displayname = "{0} {1} ({2})".format(displayfname, displaylname, displayname);
+    if (oResultData.nname) {
+        var displayname = autocompleteHighlightMatch(oResultData.nname, query);
+        if (oResultData.fname && oResultData.lname) {
+            displayname = "{0} {1} ({2})".format(
+                autocompleteHighlightMatch(oResultData.fname, query),
+                autocompleteHighlightMatch(oResultData.lname, query),
+                displayname);
         }
 
         return autocompleteGravatar(displayname, oResultData.gravatar_lnk, oResultData.gravatar_size);
-    } else {
-        return '';
     }
+
+    return '';
 };
 
-// Generate a basic autocomplete instance that can be tweaked further by the caller
-var autocompleteCreate = function ($inputElement, $container, matchFunc) {
-    var datasource = new YAHOO.util.FunctionDataSource(matchFunc);
-
-    var autocomplete = new YAHOO.widget.AutoComplete($inputElement[0], $container[0], datasource);
-    autocomplete.useShadow = false;
-    autocomplete.resultTypeList = false;
-    autocomplete.animVert = false;
-    autocomplete.animHoriz = false;
-    autocomplete.animSpeed = 0.1;
-    autocomplete.formatResult = autocompleteFormatter;
-
-    return autocomplete;
+var SimpleUserAutoComplete = function ($inputElement) {
+    $inputElement.select2({
+        formatInputTooShort: $inputElement.attr('placeholder'),
+        initSelection : function (element, callback) {
+            $.ajax({
+                url: pyroutes.url('users_and_groups_data'),
+                dataType: 'json',
+                data: {
+                    key: element.val()
+                },
+                success: function(data){
+                  callback(data.results[0]);
+                }
+            });
+        },
+        minimumInputLength: 1,
+        ajax: {
+            url: pyroutes.url('users_and_groups_data'),
+            dataType: 'json',
+            data: function(term, page){
+              return {
+                query: term
+              };
+            },
+            results: function (data, page){
+              return data;
+            },
+            cache: true
+        },
+        formatSelection: autocompleteFormatter,
+        formatResult: autocompleteFormatter,
+        id: function(item) { return item.nname; },
+    });
 }
 
-var SimpleUserAutoComplete = function ($inputElement, $container, users_list) {
+var MembersAutoComplete = function ($inputElement, $typeElement) {
 
-    var matchUsers = function (sQuery) {
-        return autocompleteMatchUsers(sQuery, users_list);
-    }
-
-    var userAC = autocompleteCreate($inputElement, $container, matchUsers);
-
-    // Handler for selection of an entry
-    var itemSelectHandler = function (sType, aArgs) {
-        var myAC = aArgs[0]; // reference back to the AC instance
-        var elLI = aArgs[1]; // reference to the selected LI element
-        var oData = aArgs[2]; // object literal of selected item's result data
-        myAC.getInputEl().value = oData.nname;
-    };
-    userAC.itemSelectEvent.subscribe(itemSelectHandler);
+    $inputElement.select2({
+        placeholder: $inputElement.attr('placeholder'),
+        minimumInputLength: 1,
+        ajax: {
+            url: pyroutes.url('users_and_groups_data'),
+            dataType: 'json',
+            data: function(term, page){
+              return {
+                query: term,
+                types: 'users,groups'
+              };
+            },
+            results: function (data, page){
+              return data;
+            },
+            cache: true
+        },
+        formatSelection: autocompleteFormatter,
+        formatResult: autocompleteFormatter,
+        id: function(item) { return item.type == 'user' ? item.nname : item.grname },
+    }).on("select2-selecting", function(e) {
+        // e.choice.id is automatically used as selection value - just set the type of the selection
+        $typeElement.val(e.choice.type);
+    });
 }
 
-var MembersAutoComplete = function ($inputElement, $container, users_list, groups_list) {
+var MentionsAutoComplete = function ($inputElement) {
+  $inputElement.atwho({
+    at: "@",
+    callbacks: {
+      remoteFilter: function(query, callback) {
+        $.getJSON(
+          pyroutes.url('users_and_groups_data'),
+          {
+            query: query,
+            types: 'users'
+          },
+          function(data) {
+            callback(data.results)
+          }
+        );
+      },
+      sorter: function(query, items, searchKey) {
+        return items;
+      }
+    },
+    displayTpl: function(item) {
+        return "<li>" +
+            autocompleteGravatar(
+                "{0} {1} ({2})".format(item.fname, item.lname, item.nname).html_escape(),
+                '${gravatar_lnk}', 16) +
+            "</li>";
+    },
+    insertTpl: "${atwho-at}${nname}"
+  });
+};
 
-    var matchAll = function (sQuery) {
-        var u = autocompleteMatchUsers(sQuery, users_list);
-        var g = autocompleteMatchGroups(sQuery, groups_list);
-        return u.concat(g);
-    };
 
-    var membersAC = autocompleteCreate($inputElement, $container, matchAll);
-
-    // Handler for selection of an entry
-    var itemSelectHandler = function (sType, aArgs) {
-        var nextId = $inputElement.prop('id').split('perm_new_member_name_')[1];
-        var myAC = aArgs[0]; // reference back to the AC instance
-        var elLI = aArgs[1]; // reference to the selected LI element
-        var oData = aArgs[2]; // object literal of selected item's result data
-        //fill the autocomplete with value
-        if (oData.nname != undefined) {
-            //users
-            myAC.getInputEl().value = oData.nname;
-            $('#perm_new_member_type_'+nextId).val('user');
-        } else {
-            //groups
-            myAC.getInputEl().value = oData.grname;
-            $('#perm_new_member_type_'+nextId).val('users_group');
+// Set caret at the given position in the input element
+function _setCaretPosition($inputElement, caretPos) {
+    $inputElement.each(function(){
+        if(this.createTextRange) { // IE
+            var range = this.createTextRange();
+            range.move('character', caretPos);
+            range.select();
         }
-    };
-    membersAC.itemSelectEvent.subscribe(itemSelectHandler);
+        else if(this.selectionStart) { // other recent browsers
+            this.focus();
+            this.setSelectionRange(caretPos, caretPos);
+        }
+        else // last resort - very old browser
+            this.focus();
+    });
 }
 
-var MentionsAutoComplete = function ($inputElement, $container, users_list) {
 
-    var matchUsers = function (sQuery) {
-            var org_sQuery = sQuery;
-            if(this.mentionQuery == null){
-                return []
-            }
-            sQuery = this.mentionQuery;
-            return autocompleteMatchUsers(sQuery, users_list);
-    }
-
-    var mentionsAC = autocompleteCreate($inputElement, $container, matchUsers);
-    mentionsAC.suppressInputUpdate = true;
-    // Overwrite formatResult to take into account mentionQuery
-    mentionsAC.formatResult = function (oResultData, sQuery, sResultMatch) {
-        var org_sQuery = sQuery;
-        if (this.dataSource.mentionQuery != null) {
-            sQuery = this.dataSource.mentionQuery;
-        }
-        return autocompleteFormatter(oResultData, sQuery, sResultMatch);
-    }
-
-    // Handler for selection of an entry
-    if(mentionsAC.itemSelectEvent){
-        mentionsAC.itemSelectEvent.subscribe(function (sType, aArgs) {
-            var myAC = aArgs[0]; // reference back to the AC instance
-            var elLI = aArgs[1]; // reference to the selected LI element
-            var oData = aArgs[2]; // object literal of selected item's result data
-            //Replace the mention name with replaced
-            var re = new RegExp();
-            var org = myAC.getInputEl().value;
-            var chunks = myAC.dataSource.chunks
-            // replace middle chunk(the search term) with actuall  match
-            chunks[1] = chunks[1].replace('@'+myAC.dataSource.mentionQuery,
-                                          '@'+oData.nname+' ');
-            myAC.getInputEl().value = chunks.join('');
-            myAC.getInputEl().focus(); // Y U NO WORK !?
-        });
-    }
-
-    // in this keybuffer we will gather current value of search !
-    // since we need to get this just when someone does `@` then we do the
-    // search
-    mentionsAC.dataSource.chunks = [];
-    mentionsAC.dataSource.mentionQuery = null;
-
-    mentionsAC.get_mention = function(msg, max_pos) {
-        var org = msg;
-        // Must match utils2.py MENTIONS_REGEX.
-        // Only matching on string up to cursor, so it must end with $
-        var re = new RegExp('(?:^|[^a-zA-Z0-9])@([a-zA-Z0-9][-_.a-zA-Z0-9]*[a-zA-Z0-9])$');
-        var chunks  = [];
-
-        // cut first chunk until current pos
-        var to_max = msg.substr(0, max_pos);
-        var at_pos = Math.max(0,to_max.lastIndexOf('@')-1);
-        var msg2 = to_max.substr(at_pos);
-
-        chunks.push(org.substr(0,at_pos)); // prefix chunk
-        chunks.push(msg2);                 // search chunk
-        chunks.push(org.substr(max_pos));  // postfix chunk
-
-        // clean up msg2 for filtering and regex match
-        var msg2 = msg2.lstrip(' ').lstrip('\n');
-
-        if(re.test(msg2)){
-            var unam = re.exec(msg2)[1];
-            return [unam, chunks];
-        }
-        return [null, null];
-    };
-
-    $inputElement.keyup(function(e){
-            var currentMessage = $inputElement.val();
-            var currentCaretPosition = $inputElement[0].selectionStart;
-
-            var unam = mentionsAC.get_mention(currentMessage, currentCaretPosition);
-            var curr_search = null;
-            if(unam[0]){
-                curr_search = unam[0];
-            }
-
-            mentionsAC.dataSource.chunks = unam[1];
-            mentionsAC.dataSource.mentionQuery = curr_search;
-        });
-}
-
-// Important: input arguments to addReviewMember should be safe (escaped) for
-// inclusion into HTML.
 var addReviewMember = function(id,fname,lname,nname,gravatar_link,gravatar_size){
     var displayname = nname;
     if ((fname != "") && (lname != "")) {
@@ -1326,19 +1239,21 @@ var addReviewMember = function(id,fname,lname,nname,gravatar_link,gravatar_size)
     // If you change something here it should be reflected in the template too.
     var element = (
         '     <li id="reviewer_{2}">\n'+
-        '       <div class="reviewers_member">\n'+
-        '           <div class="reviewer_status tooltip" title="not_reviewed">\n'+
-        '             <i class="icon-circle changeset-status-not_reviewed"></i>\n'+
-        '           </div>\n'+
-        '         <div class="reviewer_gravatar gravatar">{0}</div>\n'+
-        '         <div style="float:left;">{1}</div>\n'+
+        '       <span class="reviewers_member">\n'+
         '         <input type="hidden" value="{2}" name="review_members" />\n'+
-        '         <div class="reviewer_member_remove action_button" onclick="removeReviewMember({2})">\n'+
+        '         <span class="reviewer_status" data-toggle="tooltip" title="not_reviewed">\n'+
+        '             <i class="icon-circle changeset-status-not_reviewed"></i>\n'+
+        '         </span>\n'+
+        (gravatarelm ?
+        '         {0}\n' :
+        '')+
+        '         <span>{1}</span>\n'+
+        '         <a href="#" class="reviewer_member_remove" onclick="removeReviewMember({2})">\n'+
         '             <i class="icon-minus-circled"></i>\n'+
-        '         </div> (add not saved)\n'+
-        '       </div>\n'+
+        '         </a> (add not saved)\n'+
+        '       </span>\n'+
         '     </li>\n'
-        ).format(gravatarelm, displayname, id);
+        ).format(gravatarelm, displayname.html_escape(), id);
     // check if we don't have this ID already in
     var ids = [];
     $('#review_members').find('li').each(function() {
@@ -1358,98 +1273,50 @@ var removeReviewMember = function(reviewer_id, repo_name, pull_request_id){
 }
 
 /* activate auto completion of users as PR reviewers */
-var PullRequestAutoComplete = function ($inputElement, $container, users_list) {
-
-    var matchUsers = function (sQuery) {
-        return autocompleteMatchUsers(sQuery, users_list);
-    };
-
-    var reviewerAC = autocompleteCreate($inputElement, $container, matchUsers);
-    reviewerAC.suppressInputUpdate = true;
-
-    // Handler for selection of an entry
-    if(reviewerAC.itemSelectEvent){
-        reviewerAC.itemSelectEvent.subscribe(function (sType, aArgs) {
-            var myAC = aArgs[0]; // reference back to the AC instance
-            var elLI = aArgs[1]; // reference to the selected LI element
-            var oData = aArgs[2]; // object literal of selected item's result data
-
-            // The fields in oData have already been escaped by the YUI
-            // framework. We thus should not add explicit escaping here anymore.
-            addReviewMember(oData.id, oData.fname, oData.lname, oData.nname,
-                            oData.gravatar_lnk, oData.gravatar_size);
-            myAC.getInputEl().value = '';
-        });
-    }
+var PullRequestAutoComplete = function ($inputElement) {
+    $inputElement.select2(
+    {
+        placeholder: $inputElement.attr('placeholder'),
+        minimumInputLength: 1,
+        ajax: {
+            url: pyroutes.url('users_and_groups_data'),
+            dataType: 'json',
+            data: function(term, page){
+              return {
+                query: term
+              };
+            },
+            results: function (data, page){
+              return data;
+            },
+            cache: true
+        },
+        formatSelection: autocompleteFormatter,
+        formatResult: autocompleteFormatter,
+    }).on("select2-selecting", function(e) {
+        addReviewMember(e.choice.id, e.choice.fname, e.choice.lname, e.choice.nname,
+                        e.choice.gravatar_lnk, e.choice.gravatar_size);
+        $inputElement.select2("close");
+        e.preventDefault();
+    });
 }
 
-/**
- * Activate .quick_repo_menu
- */
-var quick_repo_menu = function(){
-    $(".quick_repo_menu").mouseenter(function(e) {
-            var $menu = $(e.currentTarget).children().first().children().first();
-            if($menu.hasClass('hidden')){
-                $menu.removeClass('hidden').addClass('active');
-                $(e.currentTarget).removeClass('hidden').addClass('active');
-            }
-        });
-    $(".quick_repo_menu").mouseleave(function(e) {
-            var $menu = $(e.currentTarget).children().first().children().first();
-            if($menu.hasClass('active')){
-                $menu.removeClass('active').addClass('hidden');
-                $(e.currentTarget).removeClass('active').addClass('hidden');
-            }
-        });
-};
 
-
-/**
- * TABLE SORTING
- */
-
-var revisionSort = function(a, b, desc, field) {
-    var a_ = parseInt(a.getData('last_rev_raw') || 0);
-    var b_ = parseInt(b.getData('last_rev_raw') || 0);
-
-    return YAHOO.util.Sort.compare(a_, b_, desc);
-};
-
-var ageSort = function(a, b, desc, field) {
-    // data is like: <span class="tooltip" date="2014-06-04 18:18:55.325474" title="Wed, 04 Jun 2014 18:18:55">1 day and 23 hours ago</span>
-    var a_ = $(a.getData(field)).attr('date');
-    var b_ = $(b.getData(field)).attr('date');
-
-    return YAHOO.util.Sort.compare(a_, b_, desc);
-};
-
-var lastLoginSort = function(a, b, desc, field) {
-    var a_ = parseFloat(a.getData('last_login_raw') || 0);
-    var b_ = parseFloat(b.getData('last_login_raw') || 0);
-
-    return YAHOO.util.Sort.compare(a_, b_, desc);
-};
-
-var nameSort = function(a, b, desc, field) {
-    var a_ = a.getData('raw_name') || 0;
-    var b_ = b.getData('raw_name') || 0;
-
-    return YAHOO.util.Sort.compare(a_, b_, desc);
-};
-
-var dateSort = function(a, b, desc, field) {
-    var a_ = parseFloat(a.getData('raw_date') || 0);
-    var b_ = parseFloat(b.getData('raw_date') || 0);
-
-    return YAHOO.util.Sort.compare(a_, b_, desc);
-};
-
-var addPermAction = function(_html, users_list, groups_list){
+function addPermAction(perm_type) {
+    var template =
+        '<td><input type="radio" value="{1}.none" name="perm_new_member_{0}" id="perm_new_member_{0}"></td>' +
+        '<td><input type="radio" value="{1}.read" checked="checked" name="perm_new_member_{0}" id="perm_new_member_{0}"></td>' +
+        '<td><input type="radio" value="{1}.write" name="perm_new_member_{0}" id="perm_new_member_{0}"></td>' +
+        '<td><input type="radio" value="{1}.admin" name="perm_new_member_{0}" id="perm_new_member_{0}"></td>' +
+        '<td>' +
+                '<input class="form-control" id="perm_new_member_name_{0}" name="perm_new_member_name_{0}" value="" type="text" placeholder="{2}">' +
+                '<input id="perm_new_member_type_{0}" name="perm_new_member_type_{0}" value="" type="hidden">' +
+        '</td>' +
+        '<td></td>';
     var $last_node = $('.last_new_member').last(); // empty tr between last and add
     var next_id = $('.new_members').length;
-    $last_node.before($('<tr class="new_members">').append(_html.format(next_id)));
-    MembersAutoComplete($("#perm_new_member_name_"+next_id),
-            $("#perm_container_"+next_id), users_list, groups_list);
+    $last_node.before($('<tr class="new_members">').append(template.format(next_id, perm_type, _TM['Type name of user or member to grant permission'])));
+    MembersAutoComplete($("#perm_new_member_name_"+next_id), $("#perm_new_member_type_"+next_id));
 }
 
 function ajaxActionRevokePermission(url, obj_id, obj_type, field_id, extra_data) {
@@ -1459,9 +1326,7 @@ function ajaxActionRevokePermission(url, obj_id, obj_type, field_id, extra_data)
     var failure = function (o) {
             alert(_TM['Failed to revoke permission'] + ": " + o.status);
         };
-    var query_params = {
-        '_method': 'delete'
-    }
+    var query_params = {};
     // put extra data into POST
     if (extra_data !== undefined && (typeof extra_data === 'object')){
         for(var k in extra_data){
@@ -1512,362 +1377,6 @@ var MultiSelectWidget = function(selected_id, available_id, form_id){
         });
 }
 
-// custom paginator
-var YUI_paginator = function(links_per_page, containers){
-
-    (function () {
-
-        var Paginator = YAHOO.widget.Paginator,
-            l         = YAHOO.lang,
-            setId     = YAHOO.util.Dom.generateId;
-
-        Paginator.ui.MyFirstPageLink = function (p) {
-            this.paginator = p;
-
-            p.subscribe('recordOffsetChange',this.update,this,true);
-            p.subscribe('rowsPerPageChange',this.update,this,true);
-            p.subscribe('totalRecordsChange',this.update,this,true);
-            p.subscribe('destroy',this.destroy,this,true);
-
-            // TODO: make this work
-            p.subscribe('firstPageLinkLabelChange',this.update,this,true);
-            p.subscribe('firstPageLinkClassChange',this.update,this,true);
-        };
-
-        Paginator.ui.MyFirstPageLink.init = function (p) {
-            p.setAttributeConfig('firstPageLinkLabel', {
-                value : 1,
-                validator : l.isString
-            });
-            p.setAttributeConfig('firstPageLinkClass', {
-                value : 'yui-pg-first',
-                validator : l.isString
-            });
-            p.setAttributeConfig('firstPageLinkTitle', {
-                value : 'First Page',
-                validator : l.isString
-            });
-        };
-
-        // Instance members and methods
-        Paginator.ui.MyFirstPageLink.prototype = {
-            current   : null,
-            leftmost_page: null,
-            rightmost_page: null,
-            link      : null,
-            span      : null,
-            dotdot    : null,
-            getPos    : function(cur_page, max_page, items){
-                var edge = parseInt(items / 2) + 1;
-                if (cur_page <= edge){
-                    var radius = Math.max(parseInt(items / 2), items - cur_page);
-                }
-                else if ((max_page - cur_page) < edge) {
-                    var radius = (items - 1) - (max_page - cur_page);
-                }
-                else{
-                    var radius = parseInt(items / 2);
-                }
-
-                var left = Math.max(1, (cur_page - (radius)));
-                var right = Math.min(max_page, cur_page + (radius));
-                return [left, cur_page, right]
-            },
-            render : function (id_base) {
-                var p      = this.paginator,
-                    c      = p.get('firstPageLinkClass'),
-                    label  = p.get('firstPageLinkLabel'),
-                    title  = p.get('firstPageLinkTitle');
-
-                this.link     = document.createElement('a');
-                this.span     = document.createElement('span');
-                $(this.span).hide();
-
-                var _pos = this.getPos(p.getCurrentPage(), p.getTotalPages(), 5);
-                this.leftmost_page = _pos[0];
-                this.rightmost_page = _pos[2];
-
-                setId(this.link, id_base + '-first-link');
-                this.link.href      = '#';
-                this.link.className = c;
-                this.link.innerHTML = label;
-                this.link.title     = title;
-                YUE.on(this.link,'click',this.onClick,this,true);
-
-                setId(this.span, id_base + '-first-span');
-                this.span.className = c;
-                this.span.innerHTML = label;
-
-                this.current = p.getCurrentPage() > 1 ? this.link : this.span;
-                return this.current;
-            },
-            update : function (e) {
-                var p      = this.paginator;
-                var _pos   = this.getPos(p.getCurrentPage(), p.getTotalPages(), 5);
-                this.leftmost_page = _pos[0];
-                this.rightmost_page = _pos[2];
-
-                if (e && e.prevValue === e.newValue) {
-                    return;
-                }
-
-                var par = this.current ? this.current.parentNode : null;
-                if (this.leftmost_page > 1) {
-                    if (par && this.current === this.span) {
-                        par.replaceChild(this.link,this.current);
-                        this.current = this.link;
-                    }
-                } else {
-                    if (par && this.current === this.link) {
-                        par.replaceChild(this.span,this.current);
-                        this.current = this.span;
-                    }
-                }
-            },
-            destroy : function () {
-                YUE.purgeElement(this.link);
-                this.current.parentNode.removeChild(this.current);
-                this.link = this.span = null;
-            },
-            onClick : function (e) {
-                YUE.stopEvent(e);
-                this.paginator.setPage(1);
-            }
-        };
-
-        })();
-
-    (function () {
-
-        var Paginator = YAHOO.widget.Paginator,
-            l         = YAHOO.lang,
-            setId     = YAHOO.util.Dom.generateId;
-
-        Paginator.ui.MyLastPageLink = function (p) {
-            this.paginator = p;
-
-            p.subscribe('recordOffsetChange',this.update,this,true);
-            p.subscribe('rowsPerPageChange',this.update,this,true);
-            p.subscribe('totalRecordsChange',this.update,this,true);
-            p.subscribe('destroy',this.destroy,this,true);
-
-            // TODO: make this work
-            p.subscribe('lastPageLinkLabelChange',this.update,this,true);
-            p.subscribe('lastPageLinkClassChange', this.update,this,true);
-        };
-
-        Paginator.ui.MyLastPageLink.init = function (p) {
-            p.setAttributeConfig('lastPageLinkLabel', {
-                value : -1,
-                validator : l.isString
-            });
-            p.setAttributeConfig('lastPageLinkClass', {
-                value : 'yui-pg-last',
-                validator : l.isString
-            });
-            p.setAttributeConfig('lastPageLinkTitle', {
-                value : 'Last Page',
-                validator : l.isString
-            });
-
-        };
-
-        Paginator.ui.MyLastPageLink.prototype = {
-
-            current   : null,
-            leftmost_page: null,
-            rightmost_page: null,
-            link      : null,
-            span      : null,
-            dotdot    : null,
-            na        : null,
-            getPos    : function(cur_page, max_page, items){
-                var edge = parseInt(items / 2) + 1;
-                if (cur_page <= edge){
-                    var radius = Math.max(parseInt(items / 2), items - cur_page);
-                }
-                else if ((max_page - cur_page) < edge) {
-                    var radius = (items - 1) - (max_page - cur_page);
-                }
-                else{
-                    var radius = parseInt(items / 2);
-                }
-
-                var left = Math.max(1, (cur_page - (radius)));
-                var right = Math.min(max_page, cur_page + (radius));
-                return [left, cur_page, right]
-            },
-            render : function (id_base) {
-                var p      = this.paginator,
-                    c      = p.get('lastPageLinkClass'),
-                    label  = p.get('lastPageLinkLabel'),
-                    last   = p.getTotalPages(),
-                    title  = p.get('lastPageLinkTitle');
-
-                var _pos = this.getPos(p.getCurrentPage(), p.getTotalPages(), 5);
-                this.leftmost_page = _pos[0];
-                this.rightmost_page = _pos[2];
-
-                this.link = document.createElement('a');
-                this.span = document.createElement('span');
-                $(this.span).hide();
-
-                this.na   = this.span.cloneNode(false);
-
-                setId(this.link, id_base + '-last-link');
-                this.link.href      = '#';
-                this.link.className = c;
-                this.link.innerHTML = label;
-                this.link.title     = title;
-                YUE.on(this.link,'click',this.onClick,this,true);
-
-                setId(this.span, id_base + '-last-span');
-                this.span.className = c;
-                this.span.innerHTML = label;
-
-                setId(this.na, id_base + '-last-na');
-
-                if (this.rightmost_page < p.getTotalPages()){
-                    this.current = this.link;
-                }
-                else{
-                    this.current = this.span;
-                }
-
-                this.current.innerHTML = p.getTotalPages();
-                return this.current;
-            },
-
-            update : function (e) {
-                var p      = this.paginator;
-
-                var _pos = this.getPos(p.getCurrentPage(), p.getTotalPages(), 5);
-                this.leftmost_page = _pos[0];
-                this.rightmost_page = _pos[2];
-
-                if (e && e.prevValue === e.newValue) {
-                    return;
-                }
-
-                var par   = this.current ? this.current.parentNode : null,
-                    after = this.link;
-                if (par) {
-
-                    // only show the last page if the rightmost one is
-                    // lower, so we don't have doubled entries at the end
-                    if (!(this.rightmost_page < p.getTotalPages())){
-                        after = this.span
-                    }
-
-                    if (this.current !== after) {
-                        par.replaceChild(after,this.current);
-                        this.current = after;
-                    }
-                }
-                this.current.innerHTML = this.paginator.getTotalPages();
-
-            },
-            destroy : function () {
-                YUE.purgeElement(this.link);
-                this.current.parentNode.removeChild(this.current);
-                this.link = this.span = null;
-            },
-            onClick : function (e) {
-                YUE.stopEvent(e);
-                this.paginator.setPage(this.paginator.getTotalPages());
-            }
-        };
-
-        })();
-
-    var pagi = new YAHOO.widget.Paginator({
-        rowsPerPage: links_per_page,
-        alwaysVisible: false,
-        template : "{PreviousPageLink} {MyFirstPageLink} {PageLinks} {MyLastPageLink} {NextPageLink}",
-        pageLinks: 5,
-        containerClass: 'pagination-wh',
-        currentPageClass: 'pager_curpage',
-        pageLinkClass: 'pager_link',
-        nextPageLinkLabel: '&gt;',
-        previousPageLinkLabel: '&lt;',
-        containers:containers
-    });
-
-    return pagi
-}
-
-var YUI_datatable = function(data, fields, columns, countnode, sortkey, rows){
-    var myDataSource = new YAHOO.util.DataSource(data);
-    myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
-    myDataSource.responseSchema = {
-        resultsList: "records",
-        fields: fields
-        };
-    myDataSource.doBeforeCallback = function(req, raw, res, cb) {
-        // This is the filter function
-        var data     = res.results || [],
-            filtered = [],
-            i, l;
-
-        if (req) {
-            req = req.toLowerCase();
-            for (i = 0; i<data.length; i++) {
-                var pos = data[i].raw_name.toLowerCase().indexOf(req);
-                if (pos != -1) {
-                    filtered.push(data[i]);
-                }
-            }
-            res.results = filtered;
-        }
-        $(countnode).html(res.results.length);
-        return res;
-    }
-
-    var myDataTable = new YAHOO.widget.DataTable("datatable_list_wrap", columns, myDataSource, {
-        sortedBy: {key:sortkey, dir:"asc"},
-        paginator: YUI_paginator(rows !== undefined && rows ? rows : 25, ['user-paginator']),
-        MSG_SORTASC: _TM['MSG_SORTASC'],
-        MSG_SORTDESC: _TM['MSG_SORTDESC'],
-        MSG_EMPTY: _TM['MSG_EMPTY'],
-        MSG_ERROR: _TM['MSG_ERROR'],
-        MSG_LOADING: _TM['MSG_LOADING']
-        });
-    myDataTable.subscribe('postRenderEvent',function(oArgs) {
-        tooltip_activate();
-        quick_repo_menu();
-        });
-
-    var filterTimeout = null;
-    var $q_filter = $('#q_filter');
-
-    var updateFilter = function () {
-        // Reset timeout
-        filterTimeout = null;
-
-        // Reset sort
-        var state = myDataTable.getState();
-        state.sortedBy = {key:sortkey, dir:YAHOO.widget.DataTable.CLASS_ASC};
-
-        // Get filtered data
-        myDataSource.sendRequest($q_filter.val(), {
-            success : myDataTable.onDataReturnInitializeTable,
-            failure : myDataTable.onDataReturnInitializeTable,
-            scope   : myDataTable,
-            argument: state});
-        };
-
-    $q_filter.click(function(){
-            if(!$q_filter.hasClass('loaded')){
-                //TODO: load here full list later to do search within groups
-                $q_filter.addClass('loaded');
-            }
-        });
-
-    $q_filter.keyup(function (e) {
-            clearTimeout(filterTimeout);
-            filterTimeout = setTimeout(updateFilter, 600);
-        });
-}
 
 /**
  Branch Sorting callback for select2, modifying the filtered result so prefix
@@ -1886,9 +1395,40 @@ var branchSort = function(results, container, query) {
                 return -1;
             }
 
+            // Put early (especially prefix) matches before later matches
+            var aPos = a.text.toLowerCase().indexOf(query.term.toLowerCase()),
+                bPos = b.text.toLowerCase().indexOf(query.term.toLowerCase());
+            if (aPos < bPos) {
+                return -1;
+            }
+            if (bPos < aPos) {
+                return 1;
+            }
+
+            // Default sorting
+            if (a.text > b.text) {
+                return 1;
+            }
+            if (a.text < b.text) {
+                return -1;
+            }
+            return 0;
+        });
+    }
+    return results;
+};
+
+var prefixFirstSort = function(results, container, query) {
+    if (query.term) {
+        return results.sort(function (a, b) {
+            // if parent node, no sorting
+            if (a.children != undefined || b.children != undefined) {
+                return 0;
+            }
+
             // Put prefix matches before matches in the line
-            var aPos = a.text.indexOf(query.term),
-                bPos = b.text.indexOf(query.term);
+            var aPos = a.text.toLowerCase().indexOf(query.term.toLowerCase()),
+                bPos = b.text.toLowerCase().indexOf(query.term.toLowerCase());
             if (aPos === 0 && bPos !== 0) {
                 return -1;
             }
@@ -1909,19 +1449,61 @@ var branchSort = function(results, container, query) {
     return results;
 };
 
-// global hooks after DOM is loaded
+/* Helper for jQuery DataTables */
 
-$(document).ready(function(){
-    $('.diff-collapse-button').click(function(e) {
-        var $button = $(e.currentTarget);
-        var $target = $('#' + $button.attr('target'));
-        if($target.hasClass('hidden')){
-            $target.removeClass('hidden');
-            $button.html("&uarr; {0} &uarr;".format(_TM['Collapse Diff']));
-        }
-        else if(!$target.hasClass('hidden')){
-            $target.addClass('hidden');
-            $button.html("&darr; {0} &darr;".format(_TM['Expand Diff']));
+var updateRowCountCallback = function updateRowCountCallback($elem, onlyDisplayed) {
+    return function drawCallback() {
+        var info = this.api().page.info(),
+            count = onlyDisplayed === true ? info.recordsDisplay : info.recordsTotal;
+        $elem.html(count);
+    }
+};
+
+
+/**
+ * activate changeset parent/child navigation links
+ */
+var activate_parent_child_links = function(){
+
+    $('.parent-child-link').on('click', function(e){
+        var $this = $(this);
+        //fetch via ajax what is going to be the next link, if we have
+        //>1 links show them to user to choose
+        if(!$this.hasClass('disabled')){
+            $.ajax({
+                url: $this.data('ajax-url'),
+                success: function(data) {
+                    var repo_name = $this.data('reponame');
+                    if(data.results.length === 0){
+                        $this.addClass('disabled');
+                        $this.text(_TM['No revisions']);
+                    }
+                    if(data.results.length === 1){
+                        var commit = data.results[0];
+                        window.location = pyroutes.url('changeset_home', {'repo_name': repo_name, 'revision': commit.raw_id});
+                    }
+                    else if(data.results.length > 1){
+                        $this.addClass('disabled');
+                        $this.addClass('double');
+                        var template =
+                            ($this.data('linktype') == 'parent' ? '<i class="icon-left-open"/> ' : '') +
+                            '<a title="__title__" href="__url__">__rev__</a>' +
+                            ($this.data('linktype') == 'child' ? ' <i class="icon-right-open"/>' : '');
+                        var _html = [];
+                        for(var i = 0; i < data.results.length; i++){
+                            _html.push(template
+                                .replace('__rev__', 'r{0}:{1}'.format(data.results[i].revision, data.results[i].raw_id.substr(0, 6)))
+                                .replace('__title__', data.results[i].message)
+                                .replace('__url__', pyroutes.url('changeset_home', {
+                                    'repo_name': repo_name,
+                                    'revision': data.results[i].raw_id}))
+                                );
+                        }
+                        $this.html(_html.join('<br/>'));
+                    }
+                }
+            });
+        e.preventDefault();
         }
     });
-});
+}

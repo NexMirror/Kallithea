@@ -28,7 +28,6 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 
-from kallithea import EXTERN_TYPE_INTERNAL
 from kallithea.lib import auth_modules
 from kallithea.lib.compat import formatted_json, hybrid_property
 from kallithea.model.db import User
@@ -42,14 +41,11 @@ class KallitheaAuthPlugin(auth_modules.KallitheaAuthPluginBase):
 
     @hybrid_property
     def name(self):
-        return EXTERN_TYPE_INTERNAL
+        # Also found as kallithea.lib.model.db.User.DEFAULT_AUTH_TYPE
+        return 'internal'
 
     def settings(self):
         return []
-
-    def user_activation_state(self):
-        def_user_perms = User.get_default_user().AuthUser.permissions['global']
-        return 'hg.register.auto_activate' in def_user_perms
 
     def accepts(self, user, accepts_empty=True):
         """
@@ -78,28 +74,23 @@ class KallitheaAuthPlugin(auth_modules.KallitheaAuthPluginBase):
             "groups": [],
             "email": userobj.email,
             "admin": userobj.admin,
-            "active": userobj.active,
-            "active_from_extern": userobj.active,
             "extern_name": userobj.user_id,
         }
-
         log.debug(formatted_json(user_data))
-        if userobj.active:
-            from kallithea.lib import auth
-            password_match = auth.KallitheaCrypto.hash_check(password, userobj.password)
-            if userobj.username == User.DEFAULT_USER and userobj.active:
-                log.info('user %s authenticated correctly as anonymous user',
-                         username)
-                return user_data
 
-            elif userobj.username == username and password_match:
-                log.info('user %s authenticated correctly', user_data['username'])
-                return user_data
-            log.error("user %s had a bad password", username)
-            return None
-        else:
-            log.warning('user %s tried auth but is disabled', username)
-            return None
+        from kallithea.lib import auth
+        password_match = auth.check_password(password, userobj.password)
+        if userobj.is_default_user:
+            log.info('user %s authenticated correctly as anonymous user',
+                     username)
+            return user_data
+
+        elif userobj.username == username and password_match:
+            log.info('user %s authenticated correctly', user_data['username'])
+            return user_data
+
+        log.error("user %s had a bad password", username)
+        return None
 
     def get_managed_fields(self):
         # Note: 'username' should only be editable (at least for user) if self registration is enabled

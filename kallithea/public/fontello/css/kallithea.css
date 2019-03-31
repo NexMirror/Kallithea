@@ -2,11 +2,14 @@
 
  @font-face {
   font-family: 'kallithea';
-  src: url('../font/kallithea.eot?23730278');
-  src: url('../font/kallithea.eot?23730278#iefix') format('embedded-opentype'),
-       url('../font/kallithea.woff?23730278') format('woff'),
-       url('../font/kallithea.ttf?23730278') format('truetype'),
-       url('../font/kallithea.svg?23730278#kallithea') format('svg');
+  /* NOTE: relative font paths have been adjusted to compensate for where the */
+  /*       content of this CSS file ends up being used */
+  src: url('../fontello/font/kallithea.eot?96450582');
+  src: url('../fontello/font/kallithea.eot?96450582#iefix') format('embedded-opentype'),
+       url('../fontello/font/kallithea.woff2?96450582') format('woff2'),
+       url('../fontello/font/kallithea.woff?96450582') format('woff'),
+       url('../fontello/font/kallithea.ttf?96450582') format('truetype'),
+       url('../fontello/font/kallithea.svg?96450582#kallithea') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -16,7 +19,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'kallithea';
-    src: url('../font/kallithea.svg?23730278#kallithea') format('svg');
+    src: url('../fontello/font/kallithea.svg?96450582#kallithea') format('svg');
   }
 }
 */

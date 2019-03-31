@@ -1,0 +1,28 @@
+<%page args="url,title='',padding_top=True,padding_bottom=True" />\
+##<!-- button -->
+<center>
+    <table cellspacing="0" cellpadding="0" style="margin-left:auto;margin-right:auto">
+        %if padding_top:
+        <tr>
+            <td height="25px" style="height:25px"></td>
+        </tr>
+        %endif
+        <tr>
+            <td style="border-collapse:collapse;border-radius:2px;text-align:center;display:block;border:solid 1px ${color_button};padding:11px 20px 11px 20px">
+                <a href="${url}" style="text-decoration:none;display:block" target="_blank">
+                    <center>
+                        <font size="3">
+                            <span style="${sans_style};font-weight:700;font-size:15px;line-height:14px;color:${color_button};white-space:nowrap;vertical-align:middle">${_(title)}</span>
+                        </font>
+                    </center>
+                </a>
+            </td>
+        </tr>
+        %if padding_bottom:
+        <tr>
+            <td height="25px" style="height:25px"></td>
+        </tr>
+        %endif
+    </table>
+</center>
+##<!-- /button -->

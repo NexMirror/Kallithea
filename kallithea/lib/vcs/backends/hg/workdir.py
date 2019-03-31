@@ -19,4 +19,5 @@ class MercurialWorkdir(BaseWorkdir):
         if branch not in self.repository.branches:
             raise BranchDoesNotExistError
 
-        hg_merge.update(self.repository._repo, branch, False, False, None)
+        raw_id = self.repository.branches[branch]
+        hg_merge.update(self.repository._repo, raw_id, False, False, None)

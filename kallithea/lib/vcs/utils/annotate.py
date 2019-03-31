@@ -41,7 +41,7 @@ class AnnotateHtmlFormatter(HtmlFormatter):
         following function as ``annotate_from_changeset_func``::
 
             def changeset_to_anchor(changeset):
-                return '<a href="/changesets/%s/">%s</a>\n' %\
+                return '<a href="/changesets/%s/">%s</a>\n' % \
                        (changeset.id, changeset.id)
 
         :param annotate_from_changeset_func: see above
@@ -122,7 +122,7 @@ class AnnotateHtmlFormatter(HtmlFormatter):
             for i in range(fl, fl + lncount):
                 if i % st == 0:
                     if aln:
-                        lines.append('<a href="#%s-%d">%*d</a>' \
+                        lines.append('<a href="#%s-%d">%*d</a>'
                                      % (la, i, mw, i))
                     else:
                         lines.append('%*d' % (mw, i))
@@ -134,7 +134,7 @@ class AnnotateHtmlFormatter(HtmlFormatter):
         # If pygments cropped last lines break we need do that too
         ln_cs = len(annotate_changesets)
         ln_ = len(ls.splitlines())
-        if  ln_cs > ln_:
+        if ln_cs > ln_:
             annotate_changesets = annotate_changesets[:ln_ - ln_cs]
         annotate = ''.join((self.annotate_from_changeset(changeset)
             for changeset in annotate_changesets))

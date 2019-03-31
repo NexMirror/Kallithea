@@ -10,6 +10,7 @@ from kallithea.lib.vcs.utils.helpers import get_total_seconds
 class ProgressBarError(Exception):
     pass
 
+
 class AlreadyFinishedError(ProgressBarError):
     pass
 
@@ -179,6 +180,7 @@ background = dict([(color_names[x], '4%s' % x) for x in range(8)])
 RESET = '0'
 opt_dict = {'bold': '1', 'underscore': '4', 'blink': '5', 'reverse': '7', 'conceal': '8'}
 
+
 def colorize(text='', opts=(), **kwargs):
     """
     Returns your text, enclosed in ANSI graphics codes.
@@ -223,6 +225,7 @@ def colorize(text='', opts=(), **kwargs):
         text = text + '\x1b[%sm' % RESET
     return ('\x1b[%sm' % ';'.join(code_list)) + text
 
+
 def make_style(opts=(), **kwargs):
     """
     Returns a function with default parameters for colorize()
@@ -234,6 +237,7 @@ def make_style(opts=(), **kwargs):
         COMMENT = make_style(fg='blue', opts=('bold',))
     """
     return lambda text: colorize(text, opts, **kwargs)
+
 
 NOCOLOR_PALETTE = 'nocolor'
 DARK_PALETTE = 'dark'
@@ -346,7 +350,6 @@ class AnimatedColoredProgressBar(AnimatedProgressBar,
 class BarOnlyColoredProgressBar(ColoredProgressBar,
                                 BarOnlyProgressBar):
     pass
-
 
 
 def main():

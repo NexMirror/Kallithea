@@ -1,18 +1,20 @@
-from kallithea.tests import *
+from kallithea.tests.base import *
 from kallithea.model.changeset_status import ChangesetStatusModel
 from kallithea.model.db import ChangesetStatus as CS
+
 
 class CSM(object): # ChangesetStatusMock
 
     def __init__(self, status):
         self.status = status
 
-class TestChangesetStatusCalculation(BaseTestCase):
 
-    def setUp(self):
+class TestChangesetStatusCalculation(TestController):
+
+    def setup_method(self, method):
         self.m = ChangesetStatusModel()
 
-    @parameterized.expand([
+    @parametrize('name,expected_result,statuses', [
         ('empty list', CS.STATUS_UNDER_REVIEW, []),
         ('approve', CS.STATUS_APPROVED, [CSM(CS.STATUS_APPROVED)]),
         ('approve2', CS.STATUS_APPROVED, [CSM(CS.STATUS_APPROVED), CSM(CS.STATUS_APPROVED)]),
@@ -37,4 +39,4 @@ class TestChangesetStatusCalculation(BaseTestCase):
     ])
     def test_result(self, name, expected_result, statuses):
         result = self.m._calculate_status(statuses)
-        self.assertEqual(result, expected_result)
+        assert result == expected_result

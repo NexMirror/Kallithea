@@ -3,9 +3,6 @@
 <%block name="title">
     ${_('Public Journal')}
 </%block>
-<%def name="breadcrumbs()">
-    ${c.site_name}
-</%def>
 <%block name="header_menu">
     ${self.menu('journal')}
 </%block>
@@ -15,20 +12,17 @@
 </%block>
 <%def name="main()">
 
-<div class="box">
-  <!-- box / title -->
-  <div class="title">
-    <h5>${_('Public Journal')}</h5>
-    <ul class="links icon-only-links">
-      <li>
-        <span>
-          <a href="${h.url('public_journal_atom')}"><i class="icon-rss-squared"></i></a>
-        </span>
-      </li>
-    </ul>
+<div class="panel panel-primary">
+  <div class="panel-heading clearfix">
+    <div class="pull-left">
+      ${_('Public Journal')}
+    </div>
+    <div class="pull-right panel-title">
+        <a href="${h.url('public_journal_atom')}"><i class="icon-rss-squared"></i></a>
+    </div>
   </div>
 
-  <div id="journal">
+  <div id="journal" class="panel-body">
     <%include file='journal_data.html'/>
   </div>
 </div>

@@ -9,34 +9,16 @@ methods. Everything is available by sending JSON encoded http(s) requests to
 ``<your_server>/_admin/api``.
 
 
-API access for web views
-++++++++++++++++++++++++
+API keys
+--------
 
-API access can also be turned on for each web view in Kallithea that is
-decorated with the ``@LoginRequired`` decorator. Some views use
-``@LoginRequired(api_access=True)`` and are always available. By default only
-RSS/Atom feed views are enabled. Other views are
-only available if they have been whitelisted. Edit the
-``api_access_controllers_whitelist`` option in your .ini file and define views
-that should have API access enabled.
-
-For example, to enable API access to patch/diff, raw file and archive::
-
-    api_access_controllers_whitelist =
-        ChangesetController:changeset_patch,
-        ChangesetController:changeset_raw,
-        FilesController:raw,
-        FilesController:archivefile
-
-After this change, a Kallithea view can be accessed without login by adding a
-GET parameter ``?api_key=<api_key>`` to the URL.
-
-Exposing raw diffs is a good way to integrate with
-third-party services like code review, or build farms that can download archives.
+Every Kallithea user automatically receives an API key, which they can
+view under "My Account". On this page, API keys can also be revoked, and
+additional API keys can be generated.
 
 
 API access
-++++++++++
+----------
 
 Clients must send JSON encoded JSON-RPC requests::
 
@@ -76,7 +58,7 @@ the reponse will have a failure description in *error* and
 
 
 API client
-++++++++++
+----------
 
 Kallithea comes with a ``kallithea-api`` command line tool, providing a convenient
 way to call the JSON-RPC API.
@@ -110,11 +92,11 @@ so you don't have to specify them every time.
 
 
 API methods
-+++++++++++
+-----------
 
 
 pull
-----
+^^^^
 
 Pull the given repo from remote location. Can be used to automatically keep
 remote repos up to date.
@@ -136,7 +118,7 @@ OUTPUT::
     error :  null
 
 rescan_repos
-------------
+^^^^^^^^^^^^
 
 Rescan repositories. If ``remove_obsolete`` is set,
 Kallithea will delete repos that are in the database but not in the filesystem.
@@ -159,7 +141,7 @@ OUTPUT::
     error :  null
 
 invalidate_cache
-----------------
+^^^^^^^^^^^^^^^^
 
 Invalidate the cache for a repository.
 This command can only be executed using the api_key of a user with admin rights,
@@ -181,7 +163,7 @@ OUTPUT::
     error :  null
 
 lock
-----
+^^^^
 
 Set the locking state on the given repository by the given user.
 If the param ``userid`` is skipped, it is set to the ID of the user who is calling this method.
@@ -212,7 +194,7 @@ OUTPUT::
     error :  null
 
 get_ip
-------
+^^^^^^
 
 Return IP address as seen from Kallithea server, together with all
 defined IP addresses for given user.
@@ -244,12 +226,12 @@ OUTPUT::
     error :  null
 
 get_user
---------
+^^^^^^^^
 
 Get a user by username or userid. The result is empty if user can't be found.
 If userid param is skipped, it is set to id of user who is calling this method.
 Any userid can be specified when the command is executed using the api_key of a user with admin rights.
-Regular users can only speicy their own userid.
+Regular users can only specify their own userid.
 
 INPUT::
 
@@ -288,7 +270,7 @@ OUTPUT::
     error:  null
 
 get_users
----------
+^^^^^^^^^
 
 List all existing users.
 This command can only be executed using the api_key of a user with admin rights.
@@ -325,7 +307,7 @@ OUTPUT::
 .. _create-user:
 
 create_user
------------
+^^^^^^^^^^^
 
 Create new user.
 This command can only be executed using the api_key of a user with admin rights.
@@ -371,7 +353,7 @@ Example::
     kallithea-api create_user username:bent email:bent@example.com firstname:Bent lastname:Bentsen extern_type:ldap extern_name:uid=bent,dc=example,dc=com
 
 update_user
------------
+^^^^^^^^^^^
 
 Update the given user if such user exists.
 This command can only be executed using the api_key of a user with admin rights.
@@ -415,7 +397,7 @@ OUTPUT::
     error:  null
 
 delete_user
------------
+^^^^^^^^^^^
 
 Delete the given user if such a user exists.
 This command can only be executed using the api_key of a user with admin rights.
@@ -439,7 +421,7 @@ OUTPUT::
     error:  null
 
 get_user_group
---------------
+^^^^^^^^^^^^^^
 
 Get an existing user group.
 This command can only be executed using the api_key of a user with admin rights.
@@ -481,7 +463,7 @@ OUTPUT::
     error : null
 
 get_user_groups
----------------
+^^^^^^^^^^^^^^^
 
 List all existing user groups.
 This command can only be executed using the api_key of a user with admin rights.
@@ -507,7 +489,7 @@ OUTPUT::
     error : null
 
 create_user_group
------------------
+^^^^^^^^^^^^^^^^^
 
 Create a new user group.
 This command can only be executed using the api_key of a user with admin rights.
@@ -537,7 +519,7 @@ OUTPUT::
     error:  null
 
 add_user_to_user_group
-----------------------
+^^^^^^^^^^^^^^^^^^^^^^
 
 Adds a user to a user group. If the user already is in that group, success will be
 ``false``.
@@ -564,7 +546,7 @@ OUTPUT::
     error:  null
 
 remove_user_from_user_group
----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Remove a user from a user group. If the user isn't in the given group, success will
 be ``false``.
@@ -591,7 +573,7 @@ OUTPUT::
     error:  null
 
 get_repo
---------
+^^^^^^^^
 
 Get an existing repository by its name or repository_id. Members will contain
 either users_group or users associated to that repository.
@@ -604,7 +586,9 @@ INPUT::
     api_key : "<api_key>"
     method :  "get_repo"
     args:     {
-                "repoid" : "<reponame or repo_id>"
+                "repoid" : "<reponame or repo_id>",
+                "with_revision_names": "<bool> = Optional(False)",
+                "with_pullrequests": "<bool> = Optional(False)",
               }
 
 OUTPUT::
@@ -630,7 +614,7 @@ OUTPUT::
                                        "raw_id":   "<raw_id>",
                                        "revision": "<numeric_revision>",
                                        "short_id": "<short_id>"
-                                     }
+                                     },
                 "owner":             "<repo_owner>",
                 "fork_of":           "<name_of_fork_parent>",
                 "members" :     [
@@ -658,7 +642,7 @@ OUTPUT::
                                     "permission" : "repository.(read|write|admin)"
                                   },
                                   …
-                                ]
+                                ],
                  "followers":   [
                                   {
                                     "user_id" :     "<user_id>",
@@ -675,12 +659,74 @@ OUTPUT::
                                     "last_login":   "<last_login>",
                                   },
                                   …
-                 ]
+                                ],
+                 <if with_revision_names == True>
+                 "tags": {
+                            "<tagname>": "<raw_id>",
+                            ...
+                         },
+                 "branches": {
+                            "<branchname>": "<raw_id>",
+                            ...
+                         },
+                 "bookmarks": {
+                            "<bookmarkname>": "<raw_id>",
+                            ...
+                         },
+                <if with_pullrequests == True>
+                "pull_requests": [
+                  {
+                    "status": "<pull_request_status>",
+                    "pull_request_id": <pull_request_id>,
+                    "description": "<pull_request_description>",
+                    "title": "<pull_request_title>",
+                    "url": "<pull_request_url>",
+                    "reviewers": [
+                      {
+                        "username": "<user_id>",
+                      },
+                      ...
+                    ],
+                    "org_repo_url": "<repo_url>",
+                    "org_ref_parts": [
+                      "<ref_type>",
+                      "<ref_name>",
+                      "<raw_id>"
+                    ],
+                    "other_ref_parts": [
+                      "<ref_type>",
+                      "<ref_name>",
+                      "<raw_id>"
+                    ],
+                    "comments": [
+                      {
+                        "username": "<user_id>",
+                        "text": "<comment text>",
+                        "comment_id": "<comment_id>",
+                      },
+                      ...
+                    ],
+                    "owner": "<username>",
+                    "statuses": [
+                      {
+                        "status": "<status_of_review>",        # "under_review", "approved" or "rejected"
+                        "reviewer": "<user_id>",
+                        "modified_at": "<date_time_of_review>" # iso 8601 date, server's timezone
+                      },
+                      ...
+                    ],
+                    "revisions": [
+                      "<raw_id>",
+                      ...
+                    ]
+                  },
+                  ...
+                ]
             }
     error:  null
 
 get_repos
----------
+^^^^^^^^^
 
 List all existing repositories.
 This command can only be executed using the api_key of a user with admin rights,
@@ -717,7 +763,7 @@ OUTPUT::
     error:  null
 
 get_repo_nodes
---------------
+^^^^^^^^^^^^^^
 
 Return a list of files and directories for a given path at the given revision.
 It is possible to specify ret_type to show only ``files`` or ``dirs``.
@@ -748,7 +794,7 @@ OUTPUT::
     error:  null
 
 create_repo
------------
+^^^^^^^^^^^
 
 Create a repository. If the repository name contains "/", the repository will be
 created in the repository group indicated by that path. Any such repository
@@ -802,7 +848,7 @@ OUTPUT::
     error:  null
 
 update_repo
------------
+^^^^^^^^^^^
 
 Update a repository.
 This command can only be executed using the api_key of a user with admin rights,
@@ -862,7 +908,7 @@ OUTPUT::
     error:  null
 
 fork_repo
----------
+^^^^^^^^^
 
 Create a fork of the given repo. If using Celery, this will
 return success message immediately and a fork will be created
@@ -898,7 +944,7 @@ OUTPUT::
     error:  null
 
 delete_repo
------------
+^^^^^^^^^^^
 
 Delete a repository.
 This command can only be executed using the api_key of a user with admin rights,
@@ -925,7 +971,7 @@ OUTPUT::
     error:  null
 
 grant_user_permission
----------------------
+^^^^^^^^^^^^^^^^^^^^^
 
 Grant permission for a user on the given repository, or update the existing one if found.
 This command can only be executed using the api_key of a user with admin rights.
@@ -951,7 +997,7 @@ OUTPUT::
     error:  null
 
 revoke_user_permission
-----------------------
+^^^^^^^^^^^^^^^^^^^^^^
 
 Revoke permission for a user on the given repository.
 This command can only be executed using the api_key of a user with admin rights.
@@ -976,7 +1022,7 @@ OUTPUT::
     error:  null
 
 grant_user_group_permission
----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Grant permission for a user group on the given repository, or update the
 existing one if found.
@@ -1003,7 +1049,7 @@ OUTPUT::
     error:  null
 
 revoke_user_group_permission
-----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Revoke permission for a user group on the given repository.
 This command can only be executed using the api_key of a user with admin rights.
@@ -1026,3 +1072,235 @@ OUTPUT::
               "success": true
             }
     error:  null
+
+get_changesets
+^^^^^^^^^^^^^^
+
+Get changesets of a given repository. This command can only be executed using the api_key
+of a user with read permissions to the repository.
+
+INPUT::
+
+    id : <id_for_response>
+    api_key : "<api_key>"
+    method  : "get_changesets"
+    args:     {
+                "repoid" : "<reponame or repo_id>",
+                "start": "<revision number> = Optional(None)",
+                "end": "<revision number> = Optional(None)",
+                "start_date": "<date> = Optional(None)",    # in "%Y-%m-%dT%H:%M:%S" format
+                "end_date": "<date> = Optional(None)",      # in "%Y-%m-%dT%H:%M:%S" format
+                "branch_name": "<branch name filter> = Optional(None)",
+                "reverse": "<bool> = Optional(False)",
+                "with_file_list": "<bool> = Optional(False)"
+              }
+
+OUTPUT::
+
+    id : <id_given_in_input>
+    result: [
+    {
+      "raw_id": "<raw_id>",
+      "short_id": "short_id": "<short_id>",
+      "author": "<full_author>",
+      "date": "<date_time_of_commit>",
+      "message": "<commit_message>",
+      "revision": "<numeric_revision>",
+      <if with_file_list == True>
+      "added": [<list of added files>],
+      "changed": [<list of changed files>],
+      "removed": [<list of removed files>]
+    },
+    ...
+    ]
+    error:  null
+
+get_changeset
+^^^^^^^^^^^^^
+
+Get information and review status for a given changeset. This command can only
+be executed using the api_key of a user with read permissions to the
+repository.
+
+INPUT::
+
+    id : <id_for_response>
+    api_key : "<api_key>"
+    method  : "get_changeset"
+    args:     {
+                "repoid" : "<reponame or repo_id>",
+                "raw_id" : "<raw_id>",
+                "with_reviews": "<bool> = Optional(False)"
+              }
+
+OUTPUT::
+
+    id : <id_given_in_input>
+    result: {
+              "author":   "<full_author>",
+              "date":     "<date_time_of_commit>",
+              "message":  "<commit_message>",
+              "raw_id":   "<raw_id>",
+              "revision": "<numeric_revision>",
+              "short_id": "<short_id>",
+              "reviews": [{
+                    "reviewer":   "<username>",
+                    "modified_at": "<date_time_of_review>",  # iso 8601 date, server's timezone
+                    "status":   "<status_of_review>",        # "under_review", "approved" or "rejected"
+                 },
+                 ...
+              ]
+            }
+    error:  null
+
+Example output::
+
+    {
+      "id" : 1,
+      "error" : null,
+      "result" : {
+        "author" : {
+          "email" : "user@example.com",
+          "name" : "Kallithea Admin"
+        },
+        "changed" : [],
+        "short_id" : "e1022d3d28df",
+        "date" : "2017-03-28T09:09:03",
+        "added" : [
+          "README.rst"
+        ],
+        "removed" : [],
+        "revision" : 0,
+        "raw_id" : "e1022d3d28dfba02f626cde65dbe08f4ceb0e4e7",
+        "message" : "Added file via Kallithea",
+        "id" : "e1022d3d28dfba02f626cde65dbe08f4ceb0e4e7",
+        "reviews" : [
+          {
+            "status" : "under_review",
+            "modified_at" : "2017-03-28T09:17:08.618",
+            "reviewer" : "user"
+          }
+        ]
+      }
+    }
+
+get_pullrequest
+^^^^^^^^^^^^^^^
+
+Get information and review status for a given pull request. This command can only be executed
+using the api_key of a user with read permissions to the original repository.
+
+INPUT::
+
+    id : <id_for_response>
+    api_key : "<api_key>"
+    method  : "get_pullrequest"
+    args:     {
+                "pullrequest_id" : "<pullrequest_id>",
+              }
+
+OUTPUT::
+
+    id : <id_given_in_input>
+    result: {
+        "status": "<pull_request_status>",
+        "pull_request_id": <pull_request_id>,
+        "description": "<pull_request_description>",
+        "title": "<pull_request_title>",
+        "url": "<pull_request_url>",
+        "reviewers": [
+          {
+            "username": "<user_name>",
+          },
+          ...
+        ],
+        "org_repo_url": "<repo_url>",
+        "org_ref_parts": [
+          "<ref_type>",
+          "<ref_name>",
+          "<raw_id>"
+        ],
+        "other_ref_parts": [
+          "<ref_type>",
+          "<ref_name>",
+          "<raw_id>"
+        ],
+        "comments": [
+          {
+            "username": "<user_name>",
+            "text": "<comment text>",
+            "comment_id": "<comment_id>",
+          },
+          ...
+        ],
+        "owner": "<username>",
+        "statuses": [
+          {
+            "status": "<status_of_review>",        # "under_review", "approved" or "rejected"
+            "reviewer": "<user_name>",
+            "modified_at": "<date_time_of_review>" # iso 8601 date, server's timezone
+          },
+          ...
+        ],
+        "revisions": [
+          "<raw_id>",
+          ...
+        ]
+    },
+    error:  null
+
+comment_pullrequest
+^^^^^^^^^^^^^^^^^^^
+
+Add comment, change status or close a given pull request. This command can only be executed
+using the api_key of a user with read permissions to the original repository.
+
+INPUT::
+
+    id : <id_for_response>
+    api_key : "<api_key>"
+    method  : "comment_pullrequest"
+    args:     {
+                "pull_request_id":  "<pull_request_id>",
+                "comment_msg":      Optional(''),
+                "status":           Optional(None),     # "under_review", "approved" or "rejected"
+                "close_pr":         Optional(False)",
+              }
+
+OUTPUT::
+
+    id : <id_given_in_input>
+    result: True
+    error:  null
+
+
+API access for web views
+------------------------
+
+API access can also be turned on for each web view in Kallithea that is
+decorated with the ``@LoginRequired`` decorator. Some views use
+``@LoginRequired(api_access=True)`` and are always available. By default only
+RSS/Atom feed views are enabled. Other views are
+only available if they have been whitelisted. Edit the
+``api_access_controllers_whitelist`` option in your .ini file and define views
+that should have API access enabled.
+
+For example, to enable API access to patch/diff, raw file and archive::
+
+    api_access_controllers_whitelist =
+        ChangesetController:changeset_patch,
+        ChangesetController:changeset_raw,
+        FilesController:raw,
+        FilesController:archivefile
+
+After this change, a Kallithea view can be accessed without login using
+bearer authentication, by including this header with the request::
+
+    Authentication: Bearer <api_key>
+
+Alternatively, the API key can be passed in the URL query string using
+``?api_key=<api_key>``, though this is not recommended due to the increased
+risk of API key leaks, and support will likely be removed in the future.
+
+Exposing raw diffs is a good way to integrate with
+third-party services like code review, or build farms that can download archives.

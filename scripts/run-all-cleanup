@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Convenience script for running various idempotent source code cleanup scripts
+
+set -e
+set -x
+
+scripts/docs-headings.py
+scripts/generate-ini.py
+scripts/whitespacecleanup.sh

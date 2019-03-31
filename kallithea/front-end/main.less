@@ -1,0 +1,28 @@
+/*!
+ * Don't edit the css file directly.
+ *
+ * Instead, edit the less file(s) and regenerate the css:
+ *
+ * npm install
+ * npm run less
+ *
+ */
+
+/* 3rd party styles */
+@import "node_modules/bootstrap/less/bootstrap.less";
+@import (inline) "node_modules/datatables.net-bs/css/dataTables.bootstrap.css";
+@import (inline) "node_modules/at.js/dist/css/jquery.atwho.css";
+@import (less) "node_modules/select2/select2.css";
+@import (less) "node_modules/select2-bootstrap-css/select2-bootstrap.css";
+@import (less) "tmp/pygments.css";
+@import (less) "../public/fontello/css/kallithea.css";
+
+/* kallithea styles */
+@import "kallithea-variables.less";
+@import "kallithea-labels.less";
+@import "kallithea-select2.less";
+@import "kallithea-diff.less";
+@import "style.less";
+
+/* finally, import the optional theme file with local customizations */
+@import (optional) "theme.less";

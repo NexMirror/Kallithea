@@ -4,14 +4,23 @@
 Kallithea Documentation
 #######################
 
-**Readme**
+* :ref:`genindex`
+* :ref:`search`
+
+
+Readme
+******
 
 .. toctree::
    :maxdepth: 1
 
    readme
 
-**Installation**
+
+Administrator guide
+*******************
+
+**Installation and upgrade**
 
 .. toctree::
    :maxdepth: 1
@@ -21,52 +30,53 @@ Kallithea Documentation
    installation_win
    installation_win_old
    installation_iis
-   setup
    installation_puppet
+   upgrade
 
-**Usage**
+**Setup and configuration**
+
+.. toctree::
+   :maxdepth: 1
+
+   setup
+   administrator_guide/auth
+   administrator_guide/vcs_setup
+   usage/email
+   usage/customization
+
+**Maintenance**
+
+.. toctree::
+   :maxdepth: 1
+
+   usage/backup
+   usage/performance
+   usage/debugging
+   usage/troubleshooting
+
+
+User guide
+**********
 
 .. toctree::
    :maxdepth: 1
 
    usage/general
-   usage/vcs_support
+   usage/vcs_notes
    usage/locking
    usage/statistics
+   api/api
 
-**Administrator's guide**
 
-.. toctree::
-   :maxdepth: 1
-
-   usage/email
-   usage/performance
-   usage/backup
-   usage/debugging
-   usage/troubleshooting
-
-**Development**
+Developer guide
+***************
 
 .. toctree::
    :maxdepth: 1
 
    contributing
-   changelog
-
-**API**
-
-.. toctree::
-   :maxdepth: 1
-
-   api/api
-   api/models
-
-
-Other topics
-------------
-
-* :ref:`genindex`
-* :ref:`search`
+   dev/translation
+   dev/dbmigrations
 
 
 .. _virtualenv: http://pypi.python.org/pypi/virtualenv

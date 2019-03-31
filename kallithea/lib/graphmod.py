@@ -19,11 +19,17 @@ It allows to have a shared codebase for DAG generation for hg and git repos
 
 nullrev = -1
 
+
 def _first_known_ancestors(parentrev_func, minrev, knownrevs, head):
     """
-    Walk DAG defined by parentrev_func.
-    Return most immediate ancestors of head that are in knownrevs.
-    minrev is lower bound on knownrevs.
+    Return the apparent parents of the head revision in a filtered DAG.
+    This is like calling plain parentrev_func, except that if the parent has
+    been filtered (isn't in knownrevs), recurse on its parents.
+    For ancestors that are unknown in knownrevs, the revision number is negated.
+    (This means that a Mercurial revision can have more than 2 "parents".)
+
+    parentrev_func defines the full DAG.
+    knownrevs contains the subset we care about. minrev is lower bound on knownrevs.
     """
     pending = set([head])
     seen = set()
@@ -39,6 +45,7 @@ def _first_known_ancestors(parentrev_func, minrev, knownrevs, head):
             pending.update(parentrev_func(r))
             seen.add(r)
     return ancestors
+
 
 def graph_data(repo, revs):
     """Return a DAG with colored edge information for revs
@@ -56,7 +63,9 @@ def graph_data(repo, revs):
     dag = _dagwalker(repo, revs)
     return list(_colored(repo, dag))
 
+
 def _dagwalker(repo, revs):
+    """Iterate over revs, yielding revs (highest first) and parents to show in the graph."""
     if not revs:
         return
 
@@ -66,7 +75,7 @@ def _dagwalker(repo, revs):
         def parentrev_func(rev):
             return [x.revision for x in repo[rev].parents]
 
-    minrev = revs[-1] # assuming sorted reverse
+    minrev = revs[-1] # assuming sorted with highest revision numbers first
     knownrevs = set(revs)
     acache = {}
     for rev in revs:
@@ -96,15 +105,19 @@ def _colored(repo, dag):
         parents.
     """
     branch_cache = {}
+
     def branch(rev):
+        """Return branch for rev, using cache for efficiency.
+        For Mercurial, always return the named branch name (which may be 'default').
+        For Git, return a branch name for branch heads, otherwise None."""
         if rev not in branch_cache:
             branch_cache[rev] = repo[rev].branch
         return branch_cache[rev]
 
-    row = []
-    colors = {}
-    obs = {}
-    newcolor = 1
+    row = []  # the ancestor revision that each column is tracking
+    colors = {}  # color number for revisions - set by descendants
+    obs = {}  # obsolete flag for revisions - set by descendants
+    newcolor = 1  # the next available color
 
     for (rev, dagparents) in dag:
 
@@ -121,24 +134,26 @@ def _colored(repo, dag):
         # Add unknown parents to nextrow
         tmprow = row[:]
         tmprow[col:col + 1] = reversed(addparents) # highest revs first (to the right), dead ends last (to the left)
-        # Stop looking for non-existing ancestors
+        # Filter old fake parents but keep new ones
         nextrow = []
         for r in tmprow:
-            if r > nullrev or r in dagparents:
+            if r >= 0 or r in dagparents:
                 nextrow.append(r)
             else:
                 colors.pop(r)
                 obs.pop(r)
 
-        # Set colors for the parents
+        # Let color and obs for this rev be "inherited" by the first "parent"
         color = colors.pop(rev)
         if addparents:
             b = branch(rev)
+            searching = True
             for p in reversed(addparents):
-                obs[p] = int(repo[p].obsolete)
-                if b and branch(abs(p)) == b:
+                obs[p] = int(repo[p].obsolete) if p >= 0 else 0
+                if searching and branch(abs(p)) in [b, None]:
+                    # This is the first parent on the same branch - inherit the color
                     colors[p] = color
-                    b = None
+                    searching = False # make sure we don't give the color away twice
                 else:
                     colors[p] = newcolor
                     newcolor += 1
@@ -155,5 +170,9 @@ def _colored(repo, dag):
         # Yield and move on
         closing = int(repo[rev].closesbranch)
         obsolete = int(repo[rev].obsolete)
-        yield ((col, color), edges, closing, obsolete)
+        bumped = int(repo[rev].bumped)
+        divergent = int(repo[rev].divergent)
+        extinct = int(repo[rev].extinct)
+        unstable = int(repo[rev].unstable)
+        yield ((col, color), edges, closing, obsolete, bumped, divergent, extinct, unstable)
         row = nextrow

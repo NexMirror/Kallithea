@@ -14,93 +14,77 @@
 
 <%def name="main()">
 ${self.repo_context_bar('showpullrequest')}
-<div class="box">
-    <!-- box / title -->
-    <div class="title">
+<div class="panel panel-primary">
+    <div class="panel-heading clearfix">
         ${self.breadcrumbs()}
     </div>
 
     ${h.form(url('pullrequest', repo_name=c.repo_name), method='post', id='pull_request_form')}
-    <div class="form">
-        <!-- fields -->
-
-        <div class="fields" style="float:left;width:50%;padding-right:30px;">
-
-             <div class="field">
-                <div class="label">
-                    <label for="pullrequest_title">${_('Title')}:</label>
-                </div>
-                <div class="input">
-                    ${h.text('pullrequest_title',class_="large",placeholder=_('Summarize the changes - or leave empty'))}
-                </div>
-             </div>
-
-            <div class="field">
-                <div class="label label-textarea">
-                    <label for="pullrequest_desc">${_('Description')}:</label>
-                </div>
-                <div class="textarea text-area editor">
-                    ${h.textarea('pullrequest_desc',size=30,placeholder=_('Write a short description on this pull request'))}
+    <div class="form panel-body">
+        <div class="settings clearfix">
+            <div class="form-group">
+                <label class="control-label" for="pullrequest_title">${_('Title')}:</label>
+                <div>
+                    ${h.text('pullrequest_title',class_='form-control',placeholder=_('Summarize the changes - or leave empty'))}
                 </div>
             </div>
 
-            <div class="field">
-                <div class="label label-textarea">
-                    <label for="pullrequest_desc">${_('Changeset flow')}:</label>
+            <div class="form-group">
+                <label class="control-label" for="pullrequest_desc">${_('Description')}:</label>
+                <div>
+                    ${h.textarea('pullrequest_desc',class_='form-control',placeholder=_('Write a short description on this pull request'))}
                 </div>
-                <div class="input">
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">${_('Changeset flow')}:</label>
+                <div class="clearfix">
                     ##ORG
                     <div>
                         <div>
-                            <div style="padding:5px 3px 3px 3px;">
+                            <div>
                             <b>${_('Origin repository')}:</b> <span id="org_repo_desc">${c.db_repo.description.split('\n')[0]}</span>
                             </div>
                             <div>
                             ${h.select('org_repo','',c.cs_repos,class_='refs')}:${h.select('org_ref',c.default_cs_ref,c.cs_refs,class_='refs')}
                             </div>
-                            <div style="padding:5px 3px 3px 3px;">
+                            <div>
                             <b>${_('Revision')}:</b> <span id="org_rev_span">-</span>
                             </div>
                         </div>
                     </div>
 
                     ##OTHER, most Probably the PARENT OF THIS FORK
-                    <div style="border-top: 1px solid #EEE; margin: 5px 0px 0px 0px">
+                    <div>
                         <div>
                             ## filled with JS
-                            <div style="padding:5px 3px 3px 3px;">
+                            <div>
                             <b>${_('Destination repository')}:</b> <span id="other_repo_desc">${c.a_repo.description.split('\n')[0]}</span>
                             </div>
                             <div>
                             ${h.select('other_repo',c.a_repo.repo_name,c.a_repos,class_='refs')}:${h.select('other_ref',c.default_a_ref,c.a_refs,class_='refs')}
                             </div>
-                            <div style="padding:5px 3px 3px 3px;">
+                            <div>
                             <b>${_('Revision')}:</b> <span id="other_rev_span">-</span>
                             </div>
                         </div>
                     </div>
-                    <div style="clear:both"></div>
                 </div>
             </div>
 
-            <div class="field">
+            <div class="form-group">
                 <div class="buttons">
-                    ${h.submit('save',_('Create Pull Request'),class_="btn")}
-                    ${h.reset('reset',_('Reset'),class_="btn")}
-               </div>
+                    ${h.submit('save',_('Create Pull Request'),class_="btn btn-default")}
+                    ${h.reset('reset',_('Reset'),class_="btn btn-default")}
+                </div>
             </div>
-
         </div>
 
-        <div style="clear:both;padding: 0 0 30px 0;"></div>
-
-        <h4>${_('Changesets')}</h4>
-        <div style="float:left;padding:0px 30px 30px 30px">
+        <div>
+           <h4>${_('Changesets')}</h4>
            ## overview pulled by ajax
-           <div style="float:left" id="pull_request_overview"></div>
+           <div id="pull_request_overview"></div>
         </div>
-        <div style="clear:both;"></div>
-
     </div>
 
     ${h.end_form()}
@@ -109,7 +93,7 @@ ${self.repo_context_bar('showpullrequest')}
 
 <script type="text/javascript" src="${h.url('/js/graph.js', ver=c.kallithea_version)}"></script>
 <script type="text/javascript">
-  pyroutes.register('pullrequest_repo_info', "${url('pullrequest_repo_info',repo_name='%(repo_name)s')}", ['repo_name']);
+  pyroutes.register('pullrequest_repo_info', ${h.js(url('pullrequest_repo_info',repo_name='%(repo_name)s'))}, ['repo_name']);
 
   var pendingajax = undefined;
   var otherrepoChanged = function(){
@@ -134,13 +118,13 @@ ${self.repo_context_bar('showpullrequest')}
                 var length = options.length;
                 for(var j = 0; j < length; j++)
                 {
-                  $optgroup.append($('<option/>').text(options[j][1]).val(options[j][0]));
+                  $optgroup.append($('<'+'option/>').text(options[j][1]).val(options[j][0]));
                 }
                 $other_ref.append($optgroup);
               }
               $other_ref.val(data.selected_ref);
 
-              // re-populate the select2 thingie
+              // re-populate the select2 thingy
               $("#other_ref").select2({
                   dropdownAutoWidth: true
               });
@@ -152,16 +136,16 @@ ${self.repo_context_bar('showpullrequest')}
 
   var loadPreview = function(){
       //url template
-      var url = "${h.url('compare_url',
+      var url = ${h.js(h.url('compare_url',
                          repo_name='__other_repo__',
                          org_ref_type='rev',
                          org_ref_name='__other_ref_name__',
                          other_repo='__org_repo__',
                          other_ref_type='rev',
                          other_ref_name='__org_ref_name__',
-                         as_form=True,
+                         is_ajax_preview=True,
                          merge=True,
-                         )}";
+                         ))};
       var org_repo = $('#pull_request_form #org_repo').val();
       var org_ref = $('#pull_request_form #org_ref').val().split(':');
       ## TODO: make nice link like link_to_ref() do
@@ -188,9 +172,6 @@ ${self.repo_context_bar('showpullrequest')}
       }
       pendingajax = asynchtml(url, $('#pull_request_overview'), function(o){
           pendingajax = undefined;
-          var jsdata = eval('('+YUD.get('jsdata').innerHTML+')'); // TODO: just get json
-          var r = new BranchRenderer('graph_canvas', 'graph_content_pr', 'chg_');
-          r.render(jsdata,100);
       });
   }
 
@@ -202,6 +183,7 @@ ${self.repo_context_bar('showpullrequest')}
 
       $("#org_ref").select2({
           dropdownAutoWidth: true,
+          maxResults: 50,
           sortResults: branchSort
       });
       $("#org_ref").on("change", function(e){
@@ -217,6 +199,7 @@ ${self.repo_context_bar('showpullrequest')}
 
       $("#other_ref").select2({
           dropdownAutoWidth: true,
+          maxResults: 50,
           sortResults: branchSort
       });
       $("#other_ref").on("change", function(e){

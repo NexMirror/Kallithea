@@ -1,7 +1,7 @@
 """
 Extended JSON encoder for json
 
-json.org do not specify how date time can be represented - monkeypatch it to do something.
+json.org does not specify how date time can be represented - monkeypatch it to do something.
 """
 
 import datetime
@@ -21,6 +21,7 @@ def _is_tz_aware(value):
     """
     return (value.tzinfo is not None
             and value.tzinfo.utcoffset(value) is not None)
+
 
 def _obj_dump(obj):
     """

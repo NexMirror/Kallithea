@@ -11,6 +11,7 @@ background = dict([(color_names[x], '4%s' % x) for x in range(8)])
 RESET = '0'
 opt_dict = {'bold': '1', 'underscore': '4', 'blink': '5', 'reverse': '7', 'conceal': '8'}
 
+
 def colorize(text='', opts=(), **kwargs):
     """
     Returns your text, enclosed in ANSI graphics codes.
@@ -55,6 +56,7 @@ def colorize(text='', opts=(), **kwargs):
         text = text + '\x1b[%sm' % RESET
     return ('\x1b[%sm' % ';'.join(code_list)) + text
 
+
 def make_style(opts=(), **kwargs):
     """
     Returns a function with default parameters for colorize()
@@ -66,6 +68,7 @@ def make_style(opts=(), **kwargs):
         COMMENT = make_style(fg='blue', opts=('bold',))
     """
     return lambda text: colorize(text, opts, **kwargs)
+
 
 NOCOLOR_PALETTE = 'nocolor'
 DARK_PALETTE = 'dark'
@@ -120,10 +123,11 @@ PALETTES = {
 }
 DEFAULT_PALETTE = DARK_PALETTE
 
+
 def parse_color_setting(config_string):
     """Parse a DJANGO_COLORS environment variable to produce the system palette
 
-    The general form of a pallete definition is:
+    The general form of a palette definition is:
 
         "palette;role=fg;role=fg/bg;role=fg,option,option;role=fg/bg,option,option"
 
@@ -135,7 +139,7 @@ def parse_color_setting(config_string):
         option is a display options.
 
     Specifying a named palette is the same as manually specifying the individual
-    definitions for each role. Any individual definitions following the pallete
+    definitions for each role. Any individual definitions following the palette
     definition will augment the base palette definition.
 
     Valid roles:

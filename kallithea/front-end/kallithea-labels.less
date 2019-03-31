@@ -1,0 +1,94 @@
+.label-meta {
+  color: #000;
+}
+.label-meta[data-tag="dead"] {
+  background-color: #E44;
+}
+.label-meta[data-tag="stale"] {
+  background-color: #EA4;
+}
+.label-meta[data-tag="featured"] {
+  background-color: #AEA;
+}
+.label-meta[data-tag="requires"] {
+  background-color: #9CF;
+}
+.label-meta[data-tag="recommends"] {
+  background-color: #BDF;
+}
+.label-meta[data-tag="lang"] {
+  background-color: #FAF474;
+}
+.label-meta[data-tag="license"] {
+  border: solid 1px #9CF;
+  background-color: #DEF;
+}
+.label-meta[data-tag="see"] {
+  border: solid 1px #CBD;
+  background-color: #EDF;
+}
+a.label-metameta[data-tag="license"]:hover {
+  background-color: @kallithea-theme-main-color;
+  color: #FFF;
+  text-decoration: none;
+}
+
+/* repository vcs "alias" */
+.label-repo {
+  border: 1px solid;
+  color: inherit;
+  text-transform: uppercase;
+  padding: .2em .3em 0;
+}
+
+/* permission labels */
+.label-admin {
+  background-color: #B94A48;
+  color: #ffffff;
+}
+.label-write {
+  background-color: #DB7525;
+  color: #ffffff;
+}
+.label-read {
+  background-color: #468847;
+  color: #ffffff;
+}
+.label-none {
+  background-color: #bfbfbf;
+  color: #ffffff;
+}
+
+/* changeset labels */
+.label-merge {
+  background-color: #fca062;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+.label-bookmark {
+  border: 1px solid #46A546;
+  color: #46A546;
+}
+.label-tag {
+  border: 1px solid #62cffc;
+  color: #62cffc;
+}
+.label-bumped,
+.label-divergent,
+.label-extinct,
+.label-unstable {
+  background-color: #f00;
+  border-color: #600;
+  color: #fff;
+}
+.label-phase {
+  border: 1px solid #1F14CE;
+  color: #1F14CE;
+}
+.label-branch {
+  border: 1px solid #d9e8f8;
+  color: #577632;
+}
+.extra-container > .label {
+  padding-bottom: 0.2em;
+}

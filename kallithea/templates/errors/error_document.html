@@ -11,7 +11,6 @@
 
         <!-- stylesheets -->
         <link rel="stylesheet" type="text/css" href="${h.url('/css/style.css')}" media="screen"/>
-        <link rel="stylesheet" type="text/css" href="${h.url('/css/contextbar.css')}" media="screen"/>
         <style type="text/css">
          #main_div{
            border: 0px solid #000;
@@ -32,16 +31,14 @@
     </head>
     <body>
         <%include file="/base/flash_msg.html"/>
-        <div id="login">
-            <div class="table">
+        <div>
                 <div id="main_div">
-                    <div style="font-size:2.0em;margin: 10px">${c.site_name}</div>
+                    <h2>${c.site_name}</h2>
                     <h1 class="error_message">${c.error_message}</h1>
 
                     <p>${c.error_explanation}</p>
 
                 </div>
-            </div>
         </div>
     </body>
 

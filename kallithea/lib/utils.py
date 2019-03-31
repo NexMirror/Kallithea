@@ -30,30 +30,20 @@ import re
 import logging
 import datetime
 import traceback
-import paste
 import beaker
-import tarfile
-import shutil
-import decorator
-import warnings
-from os.path import abspath
-from os.path import dirname as dn, join as jn
 
-from paste.script.command import Command, BadCommand
-
-from webhelpers.text import collapse, remove_formatting, strip_tags
+from tg import request, response
+from tg.i18n import ugettext as _
 from beaker.cache import _cache_decorate
-
-from kallithea import BRAND
 
 from kallithea.lib.vcs.utils.hgcompat import ui, config
 from kallithea.lib.vcs.utils.helpers import get_scm
 from kallithea.lib.vcs.exceptions import VCSError
 
+from kallithea.lib.exceptions import HgsubversionImportError
 from kallithea.model import meta
 from kallithea.model.db import Repository, User, Ui, \
     UserLog, RepoGroup, Setting, UserGroup
-from kallithea.model.meta import Session
 from kallithea.model.repo_group import RepoGroupModel
 from kallithea.lib.utils2 import safe_str, safe_unicode, get_current_authuser
 from kallithea.lib.vcs.utils.fakemod import create_module
@@ -61,42 +51,6 @@ from kallithea.lib.vcs.utils.fakemod import create_module
 log = logging.getLogger(__name__)
 
 REMOVED_REPO_PAT = re.compile(r'rm__\d{8}_\d{6}_\d{6}_.*')
-
-
-def recursive_replace(str_, replace=' '):
-    """
-    Recursive replace of given sign to just one instance
-
-    :param str_: given string
-    :param replace: char to find and replace multiple instances
-
-    Examples::
-    >>> recursive_replace("Mighty---Mighty-Bo--sstones",'-')
-    'Mighty-Mighty-Bo-sstones'
-    """
-
-    if str_.find(replace * 2) == -1:
-        return str_
-    else:
-        str_ = str_.replace(replace * 2, replace)
-        return recursive_replace(str_, replace)
-
-
-def repo_name_slug(value):
-    """
-    Return slug of name of repository
-    This function is called on each creation/modification
-    of repository to prevent bad names in repo
-    """
-
-    slug = remove_formatting(value)
-    slug = strip_tags(slug)
-
-    for c in """`?=[]\;'"<>,/~!@#$%^&*()+{}|: """:
-        slug = slug.replace(c, '-')
-    slug = recursive_replace(slug, '-')
-    slug = collapse(slug, '-')
-    return slug
 
 
 #==============================================================================
@@ -149,7 +103,7 @@ def get_repo_by_id(repo_name):
     return None
 
 
-def action_logger(user, action, repo, ipaddr='', sa=None, commit=False):
+def action_logger(user, action, repo, ipaddr='', commit=False):
     """
     Action logger for various actions made by users
 
@@ -160,12 +114,9 @@ def action_logger(user, action, repo, ipaddr='', sa=None, commit=False):
     :param repo: string name of repository or object containing repo_id,
         that action was made on
     :param ipaddr: optional IP address from what the action was made
-    :param sa: optional sqlalchemy session
 
     """
 
-    if not sa:
-        sa = meta.Session()
     # if we don't get explicit IP address try to get one from registered user
     # in tmpl context var
     if not ipaddr:
@@ -186,7 +137,7 @@ def action_logger(user, action, repo, ipaddr='', sa=None, commit=False):
         repo_obj = Repository.get_by_repo_name(repo_name)
     else:
         repo_obj = None
-        repo_name = ''
+        repo_name = u''
 
     user_log = UserLog()
     user_log.user_id = user_obj.user_id
@@ -198,12 +149,12 @@ def action_logger(user, action, repo, ipaddr='', sa=None, commit=False):
 
     user_log.action_date = datetime.datetime.now()
     user_log.user_ip = ipaddr
-    sa.add(user_log)
+    meta.Session().add(user_log)
 
     log.info('Logging action:%s on %s by user:%s ip:%s',
              action, safe_unicode(repo), user_obj, ipaddr)
     if commit:
-        sa.commit()
+        meta.Session().commit()
 
 
 def get_filesystem_repos(path):
@@ -228,7 +179,7 @@ def get_filesystem_repos(path):
             if REMOVED_REPO_PAT.match(subdir):
                 continue
 
-            #skip .<something> dirs TODO: rly? then we should prevent creating them ...
+            # skip .<something> dirs TODO: rly? then we should prevent creating them ...
             if subdir.startswith('.'):
                 continue
 
@@ -274,7 +225,11 @@ def is_valid_repo_uri(repo_type, url, ui):
             # or does it pass basic auth
             MercurialRepository._check_url(url, ui)
         elif url.startswith('svn+http'):
-            from hgsubversion.svnrepo import svnremoterepo
+            try:
+                from hgsubversion.svnrepo import svnremoterepo
+            except ImportError:
+                raise HgsubversionImportError(_('Unable to activate hgsubversion support. '
+                                                'The "hgsubversion" library is missing'))
             svnremoterepo(ui, url).svn.uuid
         elif url.startswith('git+http'):
             raise NotImplementedError()
@@ -347,19 +302,7 @@ def is_valid_repo_group(repo_group_name, base_path, skip_path_check=False):
     return False
 
 
-def ask_ok(prompt, retries=4, complaint='Yes or no please!'):
-    while True:
-        ok = raw_input(prompt)
-        if ok in ('y', 'ye', 'yes'):
-            return True
-        if ok in ('n', 'no', 'nop', 'nope'):
-            return False
-        retries = retries - 1
-        if retries < 0:
-            raise IOError
-        print complaint
-
-#propagated from mercurial documentation
+# propagated from mercurial documentation
 ui_sections = ['alias', 'auth',
                 'decode/encode', 'defaults',
                 'diff', 'email',
@@ -372,13 +315,12 @@ ui_sections = ['alias', 'auth',
                 'ui', 'web', ]
 
 
-def make_ui(read_from='file', path=None, checkpaths=True, clear_session=True):
+def make_ui(read_from='file', path=None, clear_session=True):
     """
     A function that will read python rc files or database
     and make an mercurial ui object from read options
 
     :param path: path to mercurial config file
-    :param checkpaths: check the path
     :param read_from: read from 'file' or 'db'
     """
 
@@ -392,7 +334,7 @@ def make_ui(read_from='file', path=None, checkpaths=True, clear_session=True):
     if read_from == 'file':
         if not os.path.isfile(path):
             log.debug('hgrc file is not present at %s, skipping...', path)
-            return False
+            return baseui
         log.debug('reading hgrc from %s', path)
         cfg = config.config()
         cfg.read(path)
@@ -408,21 +350,17 @@ def make_ui(read_from='file', path=None, checkpaths=True, clear_session=True):
         hg_ui = ret
         for ui_ in hg_ui:
             if ui_.ui_active:
-                ui_val = safe_str(ui_.ui_value)
-                if ui_.ui_section == 'hooks' and BRAND != 'kallithea' and ui_val.startswith('python:' + BRAND + '.lib.hooks.'):
-                    ui_val = ui_val.replace('python:' + BRAND + '.lib.hooks.', 'python:kallithea.lib.hooks.')
-                log.debug('settings ui from db: [%s] %s=%s', ui_.ui_section,
+                ui_val = '' if ui_.ui_value is None else safe_str(ui_.ui_value)
+                log.debug('settings ui from db: [%s] %s=%r', ui_.ui_section,
                           ui_.ui_key, ui_val)
                 baseui.setconfig(safe_str(ui_.ui_section), safe_str(ui_.ui_key),
                                  ui_val)
-            if ui_.ui_key == 'push_ssl':
-                # force set push_ssl requirement to False, kallithea
-                # handles that
-                baseui.setconfig(safe_str(ui_.ui_section), safe_str(ui_.ui_key),
-                                 False)
         if clear_session:
             meta.Session.remove()
 
+        # force set push_ssl requirement to False, Kallithea handles that
+        baseui.setconfig('web', 'push_ssl', False)
+        baseui.setconfig('web', 'allow_push', '*')
         # prevent interactive questions for ssh password / passphrase
         ssh = baseui.config('ui', 'ssh', default='ssh')
         baseui.setconfig('ui', 'ssh', '%s -oBatchMode=yes -oIdentitiesOnly=yes' % ssh)
@@ -432,14 +370,16 @@ def make_ui(read_from='file', path=None, checkpaths=True, clear_session=True):
 
 def set_app_settings(config):
     """
-    Updates pylons config with new settings from database
+    Updates app config with new settings from database
 
     :param config:
     """
-    hgsettings = Setting.get_app_settings()
-
-    for k, v in hgsettings.items():
-        config[k] = v
+    try:
+        hgsettings = Setting.get_app_settings()
+        for k, v in hgsettings.items():
+            config[k] = v
+    finally:
+        meta.Session.remove()
 
 
 def set_vcs_config(config):
@@ -458,7 +398,22 @@ def set_vcs_config(config):
     conf.settings.GIT_EXECUTABLE_PATH = config.get('git_path', 'git')
     conf.settings.GIT_REV_FILTER = config.get('git_rev_filter', '--all').strip()
     conf.settings.DEFAULT_ENCODINGS = aslist(config.get('default_encoding',
-                                                        'utf8'), sep=',')
+                                                        'utf-8'), sep=',')
+
+
+def set_indexer_config(config):
+    """
+    Update Whoosh index mapping
+
+    :param config: kallithea.CONFIG
+    """
+    from kallithea.config import conf
+
+    log.debug('adding extra into INDEX_EXTENSIONS')
+    conf.INDEX_EXTENSIONS.extend(re.split('\s+', config.get('index.extensions', '')))
+
+    log.debug('adding extra into INDEX_FILENAMES')
+    conf.INDEX_FILENAMES.extend(re.split('\s+', config.get('index.filenames', '')))
 
 
 def map_groups(path):
@@ -476,10 +431,10 @@ def map_groups(path):
 
     # last element is repo in nested groups structure
     groups = groups[:-1]
-    rgm = RepoGroupModel(sa)
+    rgm = RepoGroupModel()
     owner = User.get_first_admin()
     for lvl, group_name in enumerate(groups):
-        group_name = '/'.join(groups[:lvl] + [group_name])
+        group_name = u'/'.join(groups[:lvl] + [group_name])
         group = RepoGroup.get_by_group_name(group_name)
         desc = '%s group' % group_name
 
@@ -492,10 +447,9 @@ def map_groups(path):
                       lvl, group_name)
             group = RepoGroup(group_name, parent)
             group.group_description = desc
-            group.user = owner
+            group.owner = owner
             sa.add(group)
-            perm_obj = rgm._create_default_perms(group)
-            sa.add(perm_obj)
+            rgm._create_default_perms(group)
             sa.flush()
 
         parent = group
@@ -524,7 +478,7 @@ def repo2db_mapper(initial_repo_list, remove_obsolete=False,
         user = User.get_first_admin()
     added = []
 
-    ##creation defaults
+    # creation defaults
     defs = Setting.get_default_repo_settings(strip_prefix=True)
     enable_statistics = defs.get('repo_enable_statistics')
     enable_locking = defs.get('repo_enable_locking')
@@ -571,13 +525,14 @@ def repo2db_mapper(initial_repo_list, remove_obsolete=False,
 
     removed = []
     # remove from database those repositories that are not in the filesystem
+    unicode_initial_repo_list = set(safe_unicode(name) for name in initial_repo_list)
     for repo in sa.query(Repository).all():
-        if repo.repo_name not in initial_repo_list.keys():
+        if repo.repo_name not in unicode_initial_repo_list:
             if remove_obsolete:
                 log.debug("Removing non-existing repository found in db `%s`",
                           repo.repo_name)
                 try:
-                    RepoModel(sa).delete(repo, forks='detach', fs_remove=False)
+                    RepoModel().delete(repo, forks='detach', fs_remove=False)
                     sa.commit()
                 except Exception:
                     #don't hold further removals on error
@@ -585,34 +540,6 @@ def repo2db_mapper(initial_repo_list, remove_obsolete=False,
                     sa.rollback()
             removed.append(repo.repo_name)
     return added, removed
-
-
-# set cache regions for beaker so celery can utilise it
-def add_cache(settings):
-    cache_settings = {'regions': None}
-    for key in settings.keys():
-        for prefix in ['beaker.cache.', 'cache.']:
-            if key.startswith(prefix):
-                name = key.split(prefix)[1].strip()
-                cache_settings[name] = settings[key].strip()
-    if cache_settings['regions']:
-        for region in cache_settings['regions'].split(','):
-            region = region.strip()
-            region_settings = {}
-            for key, value in cache_settings.items():
-                if key.startswith(region):
-                    region_settings[key.split('.')[1]] = value
-            region_settings['expire'] = int(region_settings.get('expire',
-                                                                60))
-            region_settings.setdefault('lock_dir',
-                                       cache_settings.get('lock_dir'))
-            region_settings.setdefault('data_dir',
-                                       cache_settings.get('data_dir'))
-
-            if 'type' not in region_settings:
-                region_settings['type'] = cache_settings.get('type',
-                                                             'memory')
-            beaker.cache.cache_regions[region] = region_settings
 
 
 def load_rcextensions(root_path):
@@ -628,13 +555,13 @@ def load_rcextensions(root_path):
         # Additional mappings that are not present in the pygments lexers
         conf.LANGUAGES_EXTENSIONS_MAP.update(getattr(EXT, 'EXTRA_MAPPINGS', {}))
 
-        #OVERRIDE OUR EXTENSIONS FROM RC-EXTENSIONS (if present)
+        # OVERRIDE OUR EXTENSIONS FROM RC-EXTENSIONS (if present)
 
         if getattr(EXT, 'INDEX_EXTENSIONS', []):
             log.debug('settings custom INDEX_EXTENSIONS')
             conf.INDEX_EXTENSIONS = getattr(EXT, 'INDEX_EXTENSIONS', [])
 
-        #ADDITIONAL MAPPINGS
+        # ADDITIONAL MAPPINGS
         log.debug('adding extra into INDEX_EXTENSIONS')
         conf.INDEX_EXTENSIONS.extend(getattr(EXT, 'EXTRA_INDEX_EXTENSIONS', []))
 
@@ -646,187 +573,9 @@ def load_rcextensions(root_path):
         #        setattr(EXT, k, getattr(rcextensions, k))
 
 
-def get_custom_lexer(extension):
-    """
-    returns a custom lexer if it's defined in rcextensions module, or None
-    if there's no custom lexer defined
-    """
-    import kallithea
-    from pygments import lexers
-    #check if we didn't define this extension as other lexer
-    if kallithea.EXTENSIONS and extension in kallithea.EXTENSIONS.EXTRA_LEXERS:
-        _lexer_name = kallithea.EXTENSIONS.EXTRA_LEXERS[extension]
-        return lexers.get_lexer_by_name(_lexer_name)
-
-
 #==============================================================================
-# TEST FUNCTIONS AND CREATORS
+# MISC
 #==============================================================================
-def create_test_index(repo_location, config, full_index):
-    """
-    Makes default test index
-
-    :param config: test config
-    :param full_index:
-    """
-
-    from kallithea.lib.indexers.daemon import WhooshIndexingDaemon
-    from kallithea.lib.pidlock import DaemonLock, LockHeld
-
-    repo_location = repo_location
-
-    index_location = os.path.join(config['app_conf']['index_dir'])
-    if not os.path.exists(index_location):
-        os.makedirs(index_location)
-
-    try:
-        l = DaemonLock(file_=jn(dn(index_location), 'make_index.lock'))
-        WhooshIndexingDaemon(index_location=index_location,
-                             repo_location=repo_location)\
-            .run(full_index=full_index)
-        l.release()
-    except LockHeld:
-        pass
-
-
-def create_test_env(repos_test_path, config):
-    """
-    Makes a fresh database and
-    install test repository into tmp dir
-    """
-    from kallithea.lib.db_manage import DbManage
-    from kallithea.tests import HG_REPO, GIT_REPO, TESTS_TMP_PATH
-
-    # PART ONE create db
-    dbconf = config['sqlalchemy.db1.url']
-    log.debug('making test db %s', dbconf)
-
-    # create test dir if it doesn't exist
-    if not os.path.isdir(repos_test_path):
-        log.debug('Creating testdir %s', repos_test_path)
-        os.makedirs(repos_test_path)
-
-    dbmanage = DbManage(log_sql=True, dbconf=dbconf, root=config['here'],
-                        tests=True)
-    dbmanage.create_tables(override=True)
-    # for tests dynamically set new root paths based on generated content
-    dbmanage.create_settings(dbmanage.config_prompt(repos_test_path))
-    dbmanage.create_default_user()
-    dbmanage.admin_prompt()
-    dbmanage.create_permissions()
-    dbmanage.populate_default_permissions()
-    Session().commit()
-    # PART TWO make test repo
-    log.debug('making test vcs repositories')
-
-    idx_path = config['app_conf']['index_dir']
-    data_path = config['app_conf']['cache_dir']
-
-    #clean index and data
-    if idx_path and os.path.exists(idx_path):
-        log.debug('remove %s', idx_path)
-        shutil.rmtree(idx_path)
-
-    if data_path and os.path.exists(data_path):
-        log.debug('remove %s', data_path)
-        shutil.rmtree(data_path)
-
-    #CREATE DEFAULT TEST REPOS
-    cur_dir = dn(dn(abspath(__file__)))
-    tar = tarfile.open(jn(cur_dir, 'tests', 'fixtures', "vcs_test_hg.tar.gz"))
-    tar.extractall(jn(TESTS_TMP_PATH, HG_REPO))
-    tar.close()
-
-    cur_dir = dn(dn(abspath(__file__)))
-    tar = tarfile.open(jn(cur_dir, 'tests', 'fixtures', "vcs_test_git.tar.gz"))
-    tar.extractall(jn(TESTS_TMP_PATH, GIT_REPO))
-    tar.close()
-
-    #LOAD VCS test stuff
-    from kallithea.tests.vcs import setup_package
-    setup_package()
-
-
-#==============================================================================
-# PASTER COMMANDS
-#==============================================================================
-class BasePasterCommand(Command):
-    """
-    Abstract Base Class for paster commands.
-
-    The celery commands are somewhat aggressive about loading
-    celery.conf, and since our module sets the `CELERY_LOADER`
-    environment variable to our loader, we have to bootstrap a bit and
-    make sure we've had a chance to load the pylons config off of the
-    command line, otherwise everything fails.
-    """
-    min_args = 1
-    min_args_error = "Please provide a paster config file as an argument."
-    takes_config_file = 1
-    requires_config_file = True
-
-    def notify_msg(self, msg, log=False):
-        """Make a notification to user, additionally if logger is passed
-        it logs this action using given logger
-
-        :param msg: message that will be printed to user
-        :param log: logging instance, to use to additionally log this message
-
-        """
-        if log and isinstance(log, logging):
-            log(msg)
-
-    def run(self, args):
-        """
-        Overrides Command.run
-
-        Checks for a config file argument and loads it.
-        """
-        if len(args) < self.min_args:
-            raise BadCommand(
-                self.min_args_error % {'min_args': self.min_args,
-                                       'actual_args': len(args)})
-
-        # Decrement because we're going to lob off the first argument.
-        # @@ This is hacky
-        self.min_args -= 1
-        self.bootstrap_config(args[0])
-        self.update_parser()
-        return super(BasePasterCommand, self).run(args[1:])
-
-    def update_parser(self):
-        """
-        Abstract method.  Allows for the class's parser to be updated
-        before the superclass's `run` method is called.  Necessary to
-        allow options/arguments to be passed through to the underlying
-        celery command.
-        """
-        raise NotImplementedError("Abstract Method.")
-
-    def bootstrap_config(self, conf):
-        """
-        Loads the pylons configuration.
-        """
-        from pylons import config as pylonsconfig
-
-        self.path_to_ini_file = os.path.realpath(conf)
-        conf = paste.deploy.appconfig('config:' + self.path_to_ini_file)
-        pylonsconfig.init_app(conf.global_conf, conf.local_conf)
-
-    def _init_session(self):
-        """
-        Inits SqlAlchemy Session
-        """
-        logging.config.fileConfig(self.path_to_ini_file)
-        from pylons import config
-        from kallithea.model import init_model
-        from kallithea.lib.utils2 import engine_from_config
-
-        #get to remove repos !!
-        add_cache(config)
-        engine = engine_from_config(config, 'sqlalchemy.db1.')
-        init_model(engine)
-
 
 def check_git_version():
     """
@@ -863,28 +612,38 @@ def check_git_version():
     return ver
 
 
-@decorator.decorator
-def jsonify(func, *args, **kwargs):
-    """Action decorator that formats output for JSON
+#===============================================================================
+# CACHE RELATED METHODS
+#===============================================================================
 
-    Given a function that will return content, this decorator will turn
-    the result into JSON, with a content-type of 'application/json' and
-    output it.
-
-    """
-    from pylons.decorators.util import get_pylons
-    from kallithea.lib.compat import json
-    pylons = get_pylons(args)
-    pylons.response.headers['Content-Type'] = 'application/json; charset=utf-8'
-    data = func(*args, **kwargs)
-    if isinstance(data, (list, tuple)):
-        msg = "JSON responses with Array envelopes are susceptible to " \
-              "cross-site data leak attacks, see " \
-              "http://wiki.pylonshq.com/display/pylonsfaq/Warnings"
-        warnings.warn(msg, Warning, 2)
-        log.warning(msg)
-    log.debug("Returning JSON wrapped action output")
-    return json.dumps(data, encoding='utf-8')
+# set cache regions for beaker so celery can utilise it
+def setup_cache_regions(settings):
+    # Create dict with just beaker cache configs with prefix stripped
+    cache_settings = {'regions': None}
+    prefix = 'beaker.cache.'
+    for key in settings:
+        if key.startswith(prefix):
+            name = key[len(prefix):]
+            cache_settings[name] = settings[key]
+    # Find all regions, apply defaults, and apply to beaker
+    if cache_settings['regions']:
+        for region in cache_settings['regions'].split(','):
+            region = region.strip()
+            prefix = region + '.'
+            region_settings = {}
+            for key in cache_settings:
+                if key.startswith(prefix):
+                    name = key[len(prefix):]
+                    region_settings[name] = cache_settings[key]
+            region_settings.setdefault('expire',
+                                       cache_settings.get('expire', '60'))
+            region_settings.setdefault('lock_dir',
+                                       cache_settings.get('lock_dir'))
+            region_settings.setdefault('data_dir',
+                                       cache_settings.get('data_dir'))
+            region_settings.setdefault('type',
+                                       cache_settings.get('type', 'memory'))
+            beaker.cache.cache_regions[region] = region_settings
 
 
 def conditional_cache(region, prefix, condition, func):
@@ -895,8 +654,8 @@ def conditional_cache(region, prefix, condition, func):
             #heavy computation function
             return data
 
-        # denpending from condition the compute is wrapped in cache or not
-        compute = conditional_cache('short_term', 'cache_desc', codnition=True, func=func)
+        # depending from condition the compute is wrapped in cache or not
+        compute = conditional_cache('short_term', 'cache_desc', condition=True, func=func)
         return compute(arg)
 
     :param region: name of cache region

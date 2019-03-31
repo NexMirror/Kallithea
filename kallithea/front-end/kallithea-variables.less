@@ -1,0 +1,52 @@
+/* basic variables */
+@kallithea-theme-main-color:        #577632;
+@kallithea-theme-inverse-color:     #FFF;
+@kallithea-theme-inverse-bg:        @kallithea-theme-main-color;
+@kallithea-panel-margin:            10px;
+
+/* logo */
+@kallithea-logo-url:                "../images/kallithea-logo.svg";
+@kallithea-logo-width:              140px;
+@kallithea-logo-height:             30px;
+@kallithea-logo-bottom:             4px;
+
+/* bootstrap override */
+@brand-primary:                     @kallithea-theme-main-color;
+@link-hover-color:                  darken(@kallithea-theme-main-color, 20.0%);
+@btn-default-bg:                    #E7E7E7;
+@font-family-monospace:             Lucida Console, Consolas, Monaco, Inconsolata, Liberation Mono, monospace;
+@navbar-height:                     36px;
+@navbar-margin-bottom:              @kallithea-panel-margin;
+@navbar-inverse-color:              @kallithea-theme-inverse-color;
+@navbar-inverse-bg:                 @kallithea-theme-inverse-bg;
+@navbar-inverse-border:             @kallithea-theme-inverse-bg;
+@navbar-inverse-link-color:         @kallithea-theme-inverse-color;
+@navbar-inverse-link-hover-color:   tint(@kallithea-theme-inverse-color, 15.0%);
+@navbar-inverse-link-hover-bg:      tint(@kallithea-theme-inverse-bg, 15.0%);
+@navbar-inverse-link-active-color:  @navbar-inverse-link-hover-color;
+@navbar-inverse-link-active-bg:     @navbar-inverse-link-hover-bg;
+@navbar-inverse-toggle-hover-bg:    @navbar-inverse-link-hover-bg;
+@navbar-inverse-toggle-border-color:@kallithea-theme-inverse-bg;
+@nav-pills-active-link-hover-color: @navbar-inverse-color;
+@nav-pills-active-link-hover-bg:    @navbar-inverse-bg;
+@nav-link-padding:                  8px 10px; /* default: 10px 15px */
+@dropdown-link-color:               @navbar-inverse-color;
+@dropdown-bg:                       @navbar-inverse-bg;
+@dropdown-link-hover-color:         @navbar-inverse-link-hover-color;
+@dropdown-link-hover-bg:            @navbar-inverse-link-hover-bg;
+@grid-gutter-width:                 2 * @kallithea-panel-margin; /* default: 30px */
+@panel-heading-padding:             5px 15px; /* default: 10px 15px */
+@panel-primary-text:                @kallithea-theme-inverse-color;
+@panel-primary-heading-bg:          @kallithea-theme-inverse-bg;
+@panel-primary-border:              @panel-primary-heading-bg;
+@headings-font-weight:              700;
+@table-cell-padding:                2px 4px;
+@icon-font-path:                    ; /* no glyphicons */
+@icon-font-name:                    none;
+
+/* custom variables */
+@highlight-color:                   #FAFFA6;
+@highlight-line-color:              #DDE7EF;
+@add-bg-color:                      #BBFFBB;
+@change-bg-color:                   #DDDDDD;
+@delete-bg-color:                   #FF8888;

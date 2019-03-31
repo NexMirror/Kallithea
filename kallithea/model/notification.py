@@ -26,40 +26,35 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+import datetime
 import logging
 import traceback
 
-from pylons import tmpl_context as c
-from pylons.i18n.translation import _
+from tg import tmpl_context as c, app_globals
+from tg.i18n import ugettext as _
 from sqlalchemy.orm import joinedload, subqueryload
 
 import kallithea
 from kallithea.lib import helpers as h
 from kallithea.lib.utils2 import safe_unicode
-from kallithea.model import BaseModel
-from kallithea.model.db import Notification, User, UserNotification
+from kallithea.model.db import User
 from kallithea.model.meta import Session
 
 log = logging.getLogger(__name__)
 
 
-class NotificationModel(BaseModel):
+class NotificationModel(object):
 
-    cls = Notification
-
-    def __get_notification(self, notification):
-        if isinstance(notification, Notification):
-            return notification
-        elif isinstance(notification, (int, long)):
-            return Notification.get(notification)
-        else:
-            if notification is not None:
-                raise Exception('notification must be int, long or Instance'
-                                ' of Notification got %s' % type(notification))
+    TYPE_CHANGESET_COMMENT = u'cs_comment'
+    TYPE_MESSAGE = u'message'
+    TYPE_MENTION = u'mention' # not used
+    TYPE_REGISTRATION = u'registration'
+    TYPE_PULL_REQUEST = u'pull_request'
+    TYPE_PULL_REQUEST_COMMENT = u'pull_request_comment'
 
     def create(self, created_by, subject, body, recipients=None,
-               type_=Notification.TYPE_MESSAGE, with_email=True,
-               email_kwargs={}):
+               type_=TYPE_MESSAGE, with_email=True,
+               email_kwargs=None, repo_name=None):
         """
 
         Creates notification of given type
@@ -74,23 +69,22 @@ class NotificationModel(BaseModel):
         :param with_email: send email with this notification
         :param email_kwargs: additional dict to pass as args to email template
         """
-        from kallithea.lib.celerylib import tasks, run_task
-
+        from kallithea.lib.celerylib import tasks
+        email_kwargs = email_kwargs or {}
         if recipients and not getattr(recipients, '__iter__', False):
             raise Exception('recipients must be a list or iterable')
 
-        created_by_obj = self._get_user(created_by)
+        created_by_obj = User.guess_instance(created_by)
 
-        recipients_objs = []
+        recipients_objs = set()
         if recipients:
             for u in recipients:
-                obj = self._get_user(u)
+                obj = User.guess_instance(u)
                 if obj is not None:
-                    recipients_objs.append(obj)
+                    recipients_objs.add(obj)
                 else:
                     # TODO: inform user that requested operation couldn't be completed
                     log.error('cannot email unknown user %r', u)
-            recipients_objs = set(recipients_objs)
             log.debug('sending notifications %s to %s',
                 type_, recipients_objs
             )
@@ -102,195 +96,63 @@ class NotificationModel(BaseModel):
             )
         #else: silently skip notification mails?
 
-        # TODO: inform user who are notified
-        notif = Notification.create(
-            created_by=created_by_obj, subject=subject,
-            body=body, recipients=recipients_objs, type_=type_
-        )
-
         if not with_email:
-            return notif
-
-        #don't send email to person who created this comment
-        rec_objs = set(recipients_objs).difference(set([created_by_obj]))
+            return
 
         headers = {}
         headers['X-Kallithea-Notification-Type'] = type_
         if 'threading' in email_kwargs:
             headers['References'] = ' '.join('<%s>' % x for x in email_kwargs['threading'])
 
+        # this is passed into template
+        created_on = h.fmt_date(datetime.datetime.now())
+        html_kwargs = {
+                  'subject': subject,
+                  'body': h.render_w_mentions(body, repo_name),
+                  'when': created_on,
+                  'user': created_by_obj.username,
+                  }
+
+        txt_kwargs = {
+                  'subject': subject,
+                  'body': body,
+                  'when': created_on,
+                  'user': created_by_obj.username,
+                  }
+
+        html_kwargs.update(email_kwargs)
+        txt_kwargs.update(email_kwargs)
+        email_subject = EmailNotificationModel() \
+                            .get_email_description(type_, **txt_kwargs)
+        email_txt_body = EmailNotificationModel() \
+                            .get_email_tmpl(type_, 'txt', **txt_kwargs)
+        email_html_body = EmailNotificationModel() \
+                            .get_email_tmpl(type_, 'html', **html_kwargs)
+
+        # don't send email to person who created this comment
+        rec_objs = set(recipients_objs).difference(set([created_by_obj]))
+
         # send email with notification to all other participants
         for rec in rec_objs:
-            ## this is passed into template
-            html_kwargs = {
-                      'subject': subject,
-                      'body': h.rst_w_mentions(body),
-                      'when': h.fmt_date(notif.created_on),
-                      'user': notif.created_by_user.username,
-                      }
-
-            txt_kwargs = {
-                      'subject': subject,
-                      'body': body,
-                      'when': h.fmt_date(notif.created_on),
-                      'user': notif.created_by_user.username,
-                      }
-
-            html_kwargs.update(email_kwargs)
-            txt_kwargs.update(email_kwargs)
-            email_subject = EmailNotificationModel()\
-                                .get_email_description(type_, **txt_kwargs)
-            email_txt_body = EmailNotificationModel()\
-                                .get_email_tmpl(type_, 'txt', **txt_kwargs)
-            email_html_body = EmailNotificationModel()\
-                                .get_email_tmpl(type_, 'html', **html_kwargs)
-
-            run_task(tasks.send_email, [rec.email], email_subject, email_txt_body,
+            tasks.send_email([rec.email], email_subject, email_txt_body,
                      email_html_body, headers, author=created_by_obj)
 
-        return notif
 
-    def delete(self, user, notification):
-        # we don't want to remove actual notification just the assignment
-        try:
-            notification = self.__get_notification(notification)
-            user = self._get_user(user)
-            if notification and user:
-                obj = UserNotification.query()\
-                        .filter(UserNotification.user == user)\
-                        .filter(UserNotification.notification
-                                == notification)\
-                        .one()
-                Session().delete(obj)
-                return True
-        except Exception:
-            log.error(traceback.format_exc())
-            raise
+class EmailNotificationModel(object):
 
-    def get_for_user(self, user, filter_=None):
-        """
-        Get notifications for given user, filter them if filter dict is given
-
-        :param user:
-        :param filter:
-        """
-        user = self._get_user(user)
-
-        q = UserNotification.query()\
-            .filter(UserNotification.user == user)\
-            .join((Notification, UserNotification.notification_id ==
-                                 Notification.notification_id))\
-            .options(joinedload('notification'))\
-            .options(subqueryload('notification.created_by_user'))\
-            .order_by(Notification.created_on.desc())
-
-        if filter_:
-            q = q.filter(Notification.type_.in_(filter_))
-
-        return q.all()
-
-    def mark_read(self, user, notification):
-        try:
-            notification = self.__get_notification(notification)
-            user = self._get_user(user)
-            if notification and user:
-                obj = UserNotification.query()\
-                        .filter(UserNotification.user == user)\
-                        .filter(UserNotification.notification
-                                == notification)\
-                        .one()
-                obj.read = True
-                Session().add(obj)
-                return True
-        except Exception:
-            log.error(traceback.format_exc())
-            raise
-
-    def mark_all_read_for_user(self, user, filter_=None):
-        user = self._get_user(user)
-        q = UserNotification.query()\
-            .filter(UserNotification.user == user)\
-            .filter(UserNotification.read == False)\
-            .join((Notification, UserNotification.notification_id ==
-                                 Notification.notification_id))
-        if filter_:
-            q = q.filter(Notification.type_.in_(filter_))
-
-        # this is a little inefficient but sqlalchemy doesn't support
-        # update on joined tables :(
-        for obj in q.all():
-            obj.read = True
-            Session().add(obj)
-
-    def get_unread_cnt_for_user(self, user):
-        user = self._get_user(user)
-        return UserNotification.query()\
-                .filter(UserNotification.read == False)\
-                .filter(UserNotification.user == user).count()
-
-    def get_unread_for_user(self, user):
-        user = self._get_user(user)
-        return [x.notification for x in UserNotification.query()\
-                .filter(UserNotification.read == False)\
-                .filter(UserNotification.user == user).all()]
-
-    def get_user_notification(self, user, notification):
-        user = self._get_user(user)
-        notification = self.__get_notification(notification)
-
-        return UserNotification.query()\
-            .filter(UserNotification.notification == notification)\
-            .filter(UserNotification.user == user).scalar()
-
-    def make_description(self, notification, show_age=True):
-        """
-        Creates a human readable description based on properties
-        of notification object
-        """
-        #alias
-        _n = notification
-
-        if show_age:
-            return {
-                    _n.TYPE_CHANGESET_COMMENT: _('%(user)s commented on changeset %(age)s'),
-                    _n.TYPE_MESSAGE: _('%(user)s sent message %(age)s'),
-                    _n.TYPE_MENTION: _('%(user)s mentioned you %(age)s'),
-                    _n.TYPE_REGISTRATION: _('%(user)s registered in Kallithea %(age)s'),
-                    _n.TYPE_PULL_REQUEST: _('%(user)s opened new pull request %(age)s'),
-                    _n.TYPE_PULL_REQUEST_COMMENT: _('%(user)s commented on pull request %(age)s'),
-                }[notification.type_] % dict(
-                    user=notification.created_by_user.username,
-                    age=h.age(notification.created_on),
-                )
-        else:
-            return {
-                    _n.TYPE_CHANGESET_COMMENT: _('%(user)s commented on changeset at %(when)s'),
-                    _n.TYPE_MESSAGE: _('%(user)s sent message at %(when)s'),
-                    _n.TYPE_MENTION: _('%(user)s mentioned you at %(when)s'),
-                    _n.TYPE_REGISTRATION: _('%(user)s registered in Kallithea at %(when)s'),
-                    _n.TYPE_PULL_REQUEST: _('%(user)s opened new pull request at %(when)s'),
-                    _n.TYPE_PULL_REQUEST_COMMENT: _('%(user)s commented on pull request at %(when)s'),
-                }[notification.type_] % dict(
-                    user=notification.created_by_user.username,
-                    when=h.fmt_date(notification.created_on),
-                )
-
-
-class EmailNotificationModel(BaseModel):
-
-    TYPE_CHANGESET_COMMENT = Notification.TYPE_CHANGESET_COMMENT
-    TYPE_MESSAGE = Notification.TYPE_MESSAGE # only used for testing
-    # Notification.TYPE_MENTION is not used
+    TYPE_CHANGESET_COMMENT = NotificationModel.TYPE_CHANGESET_COMMENT
+    TYPE_MESSAGE = NotificationModel.TYPE_MESSAGE # only used for testing
+    # NotificationModel.TYPE_MENTION is not used
     TYPE_PASSWORD_RESET = 'password_link'
-    TYPE_REGISTRATION = Notification.TYPE_REGISTRATION
-    TYPE_PULL_REQUEST = Notification.TYPE_PULL_REQUEST
-    TYPE_PULL_REQUEST_COMMENT = Notification.TYPE_PULL_REQUEST_COMMENT
+    TYPE_REGISTRATION = NotificationModel.TYPE_REGISTRATION
+    TYPE_PULL_REQUEST = NotificationModel.TYPE_PULL_REQUEST
+    TYPE_PULL_REQUEST_COMMENT = NotificationModel.TYPE_PULL_REQUEST_COMMENT
     TYPE_DEFAULT = 'default'
 
     def __init__(self):
         super(EmailNotificationModel, self).__init__()
-        self._template_root = kallithea.CONFIG['pylons.paths']['templates'][0]
-        self._tmpl_lookup = kallithea.CONFIG['pylons.app_globals'].mako_lookup
+        self._template_root = kallithea.CONFIG['paths']['templates'][0]
+        self._tmpl_lookup = app_globals.mako_lookup
         self.email_types = {
             self.TYPE_CHANGESET_COMMENT: 'changeset_comment',
             self.TYPE_PASSWORD_RESET: 'password_reset',
@@ -300,13 +162,13 @@ class EmailNotificationModel(BaseModel):
             self.TYPE_PULL_REQUEST_COMMENT: 'pull_request_comment',
         }
         self._subj_map = {
-            self.TYPE_CHANGESET_COMMENT: _('[Comment] %(repo_name)s changeset %(short_id)s on %(branch)s'),
+            self.TYPE_CHANGESET_COMMENT: _('[Comment] %(repo_name)s changeset %(short_id)s "%(message_short)s" on %(branch)s'),
             self.TYPE_MESSAGE: 'Test Message',
             # self.TYPE_PASSWORD_RESET
             self.TYPE_REGISTRATION: _('New user %(new_username)s registered'),
             # self.TYPE_DEFAULT
-            self.TYPE_PULL_REQUEST: _('[Added] %(repo_name)s pull request %(pr_nice_id)s from %(ref)s'),
-            self.TYPE_PULL_REQUEST_COMMENT: _('[Comment] %(repo_name)s pull request %(pr_nice_id)s from %(ref)s'),
+            self.TYPE_PULL_REQUEST: _('[Review] %(repo_name)s PR %(pr_nice_id)s "%(pr_title_short)s" from %(pr_source_branch)s by %(pr_owner_username)s'),
+            self.TYPE_PULL_REQUEST_COMMENT: _('[Comment] %(repo_name)s PR %(pr_nice_id)s "%(pr_title_short)s" from %(pr_source_branch)s by %(pr_owner_username)s'),
         }
 
     def get_email_description(self, type_, **kwargs):
@@ -339,5 +201,25 @@ class EmailNotificationModel(BaseModel):
                    'h': h,
                    'c': c}
         _kwargs.update(kwargs)
+        if content_type == 'html':
+            _kwargs.update({
+                "color_text": "#202020",
+                "color_emph": "#395fa0",
+                "color_link": "#395fa0",
+                "color_border": "#ddd",
+                "color_background_grey": "#f9f9f9",
+                "color_button": "#395fa0",
+                "monospace_style": "font-family:Lucida Console,Consolas,Monaco,Inconsolata,Liberation Mono,monospace",
+                "sans_style": "font-family:Helvetica,Arial,sans-serif",
+                })
+            _kwargs.update({
+                "default_style": "%(sans_style)s;font-weight:200;font-size:14px;line-height:17px;color:%(color_text)s" % _kwargs,
+                "comment_style": "%(monospace_style)s;white-space:pre-wrap" % _kwargs,
+                "data_style": "border:%(color_border)s 1px solid;background:%(color_background_grey)s" % _kwargs,
+                "emph_style": "font-weight:600;color:%(color_emph)s" % _kwargs,
+                "link_style": "color:%(color_link)s;text-decoration:none" % _kwargs,
+                "link_text_style": "color:%(color_text)s;text-decoration:none;border:%(color_border)s 1px solid;background:%(color_background_grey)s" % _kwargs,
+                })
+
         log.debug('rendering tmpl %s with kwargs %s', base, _kwargs)
         return email_template.render_unicode(**_kwargs)

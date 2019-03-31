@@ -15,98 +15,71 @@
 </%block>
 
 <%def name="main()">
-<% editable = not c.pull_request.is_closed() and (h.HasPermissionAny('hg.admin')() or h.HasRepoPermissionAny('repository.admin')(c.repo_name) or c.pull_request.owner.user_id == c.authuser.user_id) %>
+<% editable = not c.pull_request.is_closed() and (h.HasPermissionAny('hg.admin')() or h.HasRepoPermissionLevel('admin')(c.repo_name) or c.pull_request.owner_id == request.authuser.user_id) %>
 ${self.repo_context_bar('showpullrequest')}
-<div class="box">
-  <!-- box / title -->
-  <div class="title">
+<div class="panel panel-primary">
+  <div class="panel-heading clearfix">
     ${self.breadcrumbs()}
   </div>
 
-  ${h.form(url('pullrequest_post', repo_name=c.repo_name, pull_request_id=c.pull_request.pull_request_id), method='post', id='pull_request_form')}
-    <div class="form pr-box" style="float: left">
+  ${h.form(url('pullrequest_post', repo_name=c.repo_name, pull_request_id=c.pull_request.pull_request_id), method='post', id='pull_request_form',class_='panel-body')}
+    <div class="form pr-box pull-left">
       <div class="pr-details-title ${'closed' if c.pull_request.is_closed() else ''}">
-          ${_('Title')}: ${c.pull_request.title}
+        <h3>
+          ${_('Title')}: ${h.urlify_text(c.pull_request.title, c.pull_request.org_repo.repo_name)}
           %if c.pull_request.is_closed():
               (${_('Closed')})
           %endif
+        </h3>
       </div>
-      <div id="pr-summary" class="fields">
+      <div id="pr-summary">
 
-        <div class="field pr-not-edit" style="min-height:37px">
-          <div class="label-summary">
-            <label>${_('Description')}:</label>
+        <div class="pr-not-edit form-group">
+            <label>${_('Description')}:
             %if editable:
-            <div style="margin: 5px">
-              <a class="btn btn-small" onclick="$('.pr-do-edit').show();$('.pr-not-edit').hide()">${_("Edit")}</a>
+            <div id="pr-edit-btn">
+              <a class="btn btn-default btn-xs" onclick="$('.pr-do-edit').show();$('.pr-not-edit').hide()">${_("Edit")}</a>
             </div>
             %endif
-          </div>
-          <div class="input">
-            <div style="white-space:pre-wrap; line-height: 14px">${h.urlify_commit(c.pull_request.description, c.pull_request.org_repo.repo_name)}</div>
-          </div>
+            </label>
+            <div>
+              <div class="formatted-fixed">${h.urlify_text(c.pull_request.description, c.pull_request.org_repo.repo_name)}</div>
+            </div>
         </div>
 
         %if editable:
-        <div class="pr-do-edit" style="display:none">
-          <div class="field">
-              <div class="label-summary">
-                  <label for="pullrequest_title">${_('Title')}:</label>
+        <div class="pr-do-edit form-group" style="display:none">
+              <label for="pullrequest_title">${_('Title')}:</label>
+              <div>
+                  ${h.text('pullrequest_title',class_='form-control',value=c.pull_request.title,placeholder=_('Summarize the changes'))}
               </div>
-              <div class="input">
-                  ${h.text('pullrequest_title',class_="large",value=c.pull_request.title,placeholder=_('Summarize the changes'))}
-              </div>
-          </div>
+        </div>
 
-          <div class="field">
-              <div class="label-summary label-textarea">
-                  <label for="pullrequest_desc">${_('Description')}:</label>
+        <div class="pr-do-edit form-group" style="display:none">
+              <label for="pullrequest_desc">${_('Description')}:</label>
+              <div>
+                  ${h.textarea('pullrequest_desc',content=c.pull_request.description,placeholder=_('Write a short description on this pull request'),class_='form-control')}
               </div>
-              <div class="textarea text-area editor">
-                  ${h.textarea('pullrequest_desc',size=30,content=c.pull_request.description,placeholder=_('Write a short description on this pull request'))}
-              </div>
-          </div>
         </div>
         %endif
 
-        <div class="field">
-          <div class="label-summary">
-              <label>${_('Reviewer voting result')}:</label>
-          </div>
-          <div class="input">
-            <div class="changeset-status-container" style="float:none;clear:both">
+        <div class="form-group">
+          <label>${_('Voting Result')}:</label>
+          <div>
             %if c.current_voting_result:
-              <span class="changeset-status-ico" style="padding:0px 4px 0px 0px">
-                  <i class="icon-circle changeset-status-${c.current_voting_result}" title="${_('Pull request status calculated from votes')}"></i></span>
-              <span class="changeset-status-lbl tooltip" title="${_('Pull request status calculated from votes')}">
+              <i class="icon-circle changeset-status-${c.current_voting_result}" title="${_('Pull request status calculated from votes')}"></i>
+              <span class="changeset-status-lbl" data-toggle="tooltip" title="${_('Pull request status calculated from votes')}">
                 %if c.pull_request.is_closed():
                     ${_('Closed')},
                 %endif
                 ${h.changeset_status_lbl(c.current_voting_result)}
               </span>
             %endif
-            </div>
           </div>
         </div>
-        <div class="field">
-          <div class="label-summary">
-              <label>${_('Still not reviewed by')}:</label>
-          </div>
-          <div class="input">
-            % if len(c.pull_request_pending_reviewers) > 0:
-                <div class="tooltip" title="${', '.join([x.username for x in c.pull_request_pending_reviewers])}">${ungettext('%d reviewer', '%d reviewers',len(c.pull_request_pending_reviewers)) % len(c.pull_request_pending_reviewers)}</div>
-            % elif len(c.pull_request_reviewers) > 0:
-                <div>${_('Pull request was reviewed by all reviewers')}</div>
-            %else:
-                <div>${_('There are no reviewers')}</div>
-            %endif
-          </div>
-        </div>
-        <div class="field">
-          <div class="label-summary">
-              <label>${_('Origin')}:</label>
-          </div>
-          <div class="input">
+        <div class="form-group">
+          <label>${_('Origin')}:</label>
+          <div>
             <div>
               ${h.link_to_ref(c.pull_request.org_repo.repo_name, c.cs_ref_type, c.cs_ref_name, c.cs_rev)}
               %if c.cs_ref_type != 'branch':
@@ -115,11 +88,9 @@ ${self.repo_context_bar('showpullrequest')}
             </div>
           </div>
         </div>
-        <div class="field">
-          <div class="label-summary">
-              <label>${_('Target')}:</label>
-          </div>
-          <div class="input">
+        <div class="form-group">
+          <label>${_('Target')}:</label>
+          <div>
             %if c.is_range:
               ${_("This is just a range of changesets and doesn't have a target or a real merge ancestor.")}
             %else:
@@ -128,237 +99,236 @@ ${self.repo_context_bar('showpullrequest')}
             %endif
           </div>
         </div>
-        <div class="field">
-          <div class="label-summary">
-              <label>${_('Pull changes')}:</label>
-          </div>
-          <div class="input">
+        <div class="form-group">
+          <label>${_('Pull changes')}:</label>
+          <div>
+            %if c.cs_ranges:
               <div>
                ## TODO: use cs_ranges[-1] or org_ref_parts[1] in both cases?
                %if h.is_hg(c.pull_request.org_repo):
-                 <span style="font-family: monospace">hg pull ${c.pull_request.org_repo.clone_url()} -r ${h.short_id(c.cs_ranges[-1].raw_id)}</span>
+                 <span>hg pull ${c.pull_request.org_repo.clone_url()} -r ${h.short_id(c.cs_ranges[-1].raw_id)}</span>
                %elif h.is_git(c.pull_request.org_repo):
-                 <span style="font-family: monospace">git pull ${c.pull_request.org_repo.clone_url()} ${c.pull_request.org_ref_parts[1]}</span>
+                 <span>git pull ${c.pull_request.org_repo.clone_url()} ${c.pull_request.org_ref_parts[1]}</span>
                %endif
               </div>
+            %endif
           </div>
         </div>
-        <div class="field">
-          <div class="label-summary">
-              <label>${_('Created on')}:</label>
-          </div>
-          <div class="input">
+        <div class="form-group">
+          <label>${_('Created on')}:</label>
+          <div>
               <div>${h.fmt_date(c.pull_request.created_on)}</div>
           </div>
         </div>
-        <div class="field">
-          <div class="label-summary">
-              <label>${_('Owner')}:</label>
-          </div>
-          <div class="input pr-not-edit">
-                  <div class="gravatar">
-                    ${h.gravatar(c.pull_request.owner.email, size=20)}
-                  </div>
+        <div class="form-group">
+          <label>${_('Owner')}:</label>
+          <div class="pr-not-edit">
+                  ${h.gravatar_div(c.pull_request.owner.email, size=20)}
                   <span>${c.pull_request.owner.full_name_and_username}</span><br/>
                   <span><a href="mailto:${c.pull_request.owner.email}">${c.pull_request.owner.email}</a></span><br/>
           </div>
-          <div class="input pr-do-edit ac" style="display:none">
-               ${h.text('owner', class_="large", value=c.pull_request.owner.username, placeholder=_('Username'))}
-               <div id="owner_completion_container"></div>
+          <div class="pr-do-edit" style="display:none">
+               ${h.text('owner', class_='form-control', value=c.pull_request.owner.username, placeholder=_('Type name of user'))}
           </div>
         </div>
 
-        <div class="field">
-            <div class="label-summary">
-              <label>${_('Update')}:</label>
-            </div>
-            <div class="input">
-              <div class="msg-div">${c.update_msg}</div>
-              %if c.avail_revs:
-              <div id="updaterevs" style="max-height:200px; overflow-y:auto; overflow-x:hidden; margin-bottom: 10px; padding: 1px 0">
-                <div style="height:0">
-                  <canvas id="avail_graph_canvas" style="width:0"></canvas>
+        <div class="form-group">
+          <label>${_('Next iteration')}:</label>
+            <div>
+              <p>${c.update_msg}</p>
+              %if c.avail_cs:
+              <div id="updaterevs" class="clearfix">
+                <div id="updaterevs-graph">
+                  <canvas id="avail_graph_canvas"></canvas>
                 </div>
-                <table id="updaterevs-table" class="noborder" style="padding-left:50px">
+                <table class="table" id="updaterevs-table">
                   %for cnt, cs in enumerate(c.avail_cs):
-                    <tr id="chg_available_${cnt+1}">
-                      %if cs.revision == c.cs_ranges[-1].revision:
+                    <tr id="chg_available_${cnt+1}" class="${'mergerow' if len(cs.parents) > 1 and not (editable and cs.revision in c.avail_revs) else ''}">
+                      %if c.cs_ranges and cs.revision == c.cs_ranges[-1].revision:
+                        %if editable:
                         <td>
-                          %if editable:
-                            ${h.radio(name='updaterev', value='')}
-                          %endif
+                            ${h.radio(name='updaterev', value='', checked=True)}
                         </td>
-                        <td colspan="2">${_("Current revision - no change")}</td>
+                        %endif
+                        <td colspan="4"><span>${_("Current revision - no change")}</span></td>
                       %else:
+                        %if editable:
                         <td>
-                          %if editable and cs.revision in c.avail_revs:
-                            ${h.radio(name='updaterev', value=cs.raw_id)}
-                          %endif
+                          ${h.radio(name='updaterev', value=cs.raw_id, style=None if cs.revision in c.avail_revs else 'visibility: hidden')}
                         </td>
-                        <td>${h.link_to(h.show_id(cs),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id))}</td>
-                        <td><div class="message" style="white-space:normal; height:1.1em; max-width: 500px; padding:0">${h.urlify_commit(cs.message, c.repo_name)}</div></td>
+                        %endif
+                        <td><span data-toggle="tooltip" title="${h.age(cs.date)}">${cs.date}</span></td>
+                        <td>${h.link_to(h.show_id(cs),h.url('changeset_home',repo_name=c.cs_repo.repo_name,revision=cs.raw_id), class_='changeset_hash')}</td>
+                        <td>
+                          <div class="pull-right">
+                            %for tag in cs.tags:
+                              <span class="label label-tag" title="${_('Tag %s') % tag}">
+                                ${h.link_to(tag,h.url('changeset_home',repo_name=c.repo_name,revision=cs.raw_id))}
+                              </span>
+                            %endfor
+                          </div>
+                          <div class="message">${h.urlify_text(cs.message, c.repo_name)}</div>
+                        </td>
                       %endif
                     </tr>
                   %endfor
                 </table>
               </div>
+              <div class="alert alert-info">${_("Pull request iterations do not change content once created. Select a revision to create a new iteration.")}</div>
               %endif
-              <div class="msg-div">${c.update_msg_other}</div>
+              %if c.update_msg_other:
+                <div class="alert alert-info">${c.update_msg_other}</div>
+              %endif
             </div>
         </div>
+        %if editable:
+        <div class="form-group">
+          <div class="buttons">
+            ${h.submit('pr-form-save',_('Save Changes'),class_="btn btn-default btn-sm")}
+            ${h.submit('pr-form-clone',_('Create New Iteration with Changes'),class_="btn btn-default btn-sm",disabled='disabled')}
+            ${h.reset('pr-form-reset',_('Cancel Changes'),class_="btn btn-default btn-sm")}
+          </div>
+        </div>
+        %endif
       </div>
     </div>
     ## REVIEWERS
-    <div style="float:left; border-left:1px dashed #eee">
-        <div class="pr-details-title">${_('Pull Request Reviewers')}</div>
-        <div id="reviewers" style="padding:0px 0px 5px 10px">
+    <div class="pr-reviewers-box pull-left">
+        <h4 class="pr-details-title">${_('Reviewers')}</h4>
+        <div id="reviewers">
           ## members goes here !
           <div>
-            <ul id="review_members" class="group_members">
+            %for member,status in c.pull_request_reviewers:
+              <input type="hidden" value="${member.user_id}" name="org_review_members" />
+            %endfor
+            <ul id="review_members" class="list-unstyled">
             %for member,status in c.pull_request_reviewers:
               ## WARNING: the HTML below is duplicate with
               ## kallithea/public/js/base.js
               ## If you change something here it should be reflected in the template too.
               <li id="reviewer_${member.user_id}">
-                <div class="reviewers_member">
-                    <div class="reviewer_status tooltip" title="${h.changeset_status_lbl(status.status if status else 'not_reviewed')}">
-                      <i class="icon-circle changeset-status-${status.status if status else 'not_reviewed'}"></i>
-                    </div>
-                  <div class="reviewer_gravatar gravatar">
-                    ${h.gravatar(member.email, size=14)}
-                  </div>
-                  <div style="float:left;">
+                <span class="reviewers_member">
+                  <input type="hidden" value="${member.user_id}" name="review_members" />
+                  <span class="reviewer_status" data-toggle="tooltip" title="${h.changeset_status_lbl(status)}">
+                      <i class="icon-circle changeset-status-${status}"></i>
+                  </span>
+                  ${h.gravatar(member.email, size=14)}
+                  <span>
                     ${member.full_name_and_username}
-                    %if c.pull_request.user_id == member.user_id:
+                    %if c.pull_request.owner_id == member.user_id:
                       (${_('Owner')})
                     %endif
-                  </div>
-                  <input type="hidden" value="${member.user_id}" name="review_members" />
+                  </span>
                   %if editable:
-                  <div class="reviewer_member_remove action_button" onclick="removeReviewMember(${member.user_id})" title="${_('Remove reviewer')}">
+                  <a href="#" class="reviewer_member_remove" onclick="removeReviewMember(${member.user_id})" title="${_('Remove reviewer')}">
                       <i class="icon-minus-circled"></i>
-                  </div>
+                  </a>
                   %endif
-                </div>
+                </span>
               </li>
             %endfor
             </ul>
           </div>
           %if editable:
-          <div class='ac'>
-            <div class="reviewer_ac">
-               ${h.text('user', class_='yui-ac-input',placeholder=_('Type name of reviewer to add'))}
-               <div id="reviewers_container"></div>
-            </div>
+          <div>
+             ${h.text('user', class_='form-control',placeholder=_('Type name of reviewer to add'))}
           </div>
           %endif
         </div>
 
         %if not c.pull_request_reviewers:
-        <div class="pr-details-title">${_('Potential Reviewers')}</div>
-        <div style="margin: 10px 0 10px 10px; max-width: 250px">
+        <h4>${_('Potential Reviewers')}</h4>
+        <div>
           <div>
             ${_('Click to add the repository owner as reviewer:')}
           </div>
-          <ul style="margin-top: 10px">
-            %for u in [c.pull_request.other_repo.user]:
+          <ul class="list-unstyled">
+            %for u in [c.pull_request.other_repo.owner]:
               <li>
-                <a class="missing_reviewer missing_reviewer_${u.user_id}"
-                  user_id="${u.user_id}"
-                  fname="${u.name}"
-                  lname="${u.lastname}"
-                  nname="${u.username}"
-                  gravatar_lnk="${h.gravatar_url(u.email, size=28)}"
-                  gravatar_size="14"
-                  title="Click to add reviewer to the list, then Save Changes.">${u.full_name}</a>
+                <a class="btn btn-default btn-xs missing_reviewer missing_reviewer_${u.user_id}"
+                  href="#"
+                  data-user_id="${u.user_id}"
+                  data-fname="${u.name}"
+                  data-lname="${u.lastname}"
+                  data-nname="${u.username}"
+                  data-gravatar_lnk="${h.gravatar_url(u.email, size=28, default='default')}"
+                  data-gravatar_size="14"
+                  title="Click to add reviewer to the list, then Save Changes."><i class="icon-plus"></i>${u.full_name}</a>
               </li>
             %endfor
           </ul>
         </div>
         %endif
     </div>
-    <div class="form" style="clear:both">
-      <div class="fields">
-        %if editable:
-          <div class="buttons">
-            ${h.submit('pr-form-save',_('Save Changes'),class_="btn btn-small")}
-            ${h.submit('pr-form-clone',_('Save as New Pull Request'),class_="btn btn-small",disabled='disabled')}
-            ${h.reset('pr-form-reset',_('Cancel Changes'),class_="btn btn-small")}
-          </div>
-        %endif
-      </div>
-    </div>
   ${h.end_form()}
 </div>
 
-<div class="box">
-    <div class="title">
-      <div class="breadcrumbs">${_('Pull Request Content')}</div>
+<div class="panel panel-primary">
+    <div class="panel-heading clearfix">
+      <div class="panel-title">${_('Pull Request Content')}</div>
     </div>
-    <div class="table">
-          <div id="changeset_compare_view_content">
-              <div style="font-size:1.1em;font-weight: bold;clear:both;padding-top:10px">
+    <div class="panel-body">
+        <div>
+            <div id="changeset_compare_view_content">
+              <h5>
                   ${comment.comment_count(c.inline_cnt, len(c.comments))}
-              </div>
+              </h5>
               ##CS
-              <div style="font-size:1.1em;font-weight: bold;clear:both;padding-top:10px">
+              <h5>
                 ${ungettext('Showing %s commit','Showing %s commits', len(c.cs_ranges)) % len(c.cs_ranges)}
-              </div>
+              </h5>
               <%include file="/compare/compare_cs.html" />
 
-              <div style="font-size:1.1em;font-weight: bold;clear:both;padding-top:10px">
+              <h5>
               ${_('Common ancestor')}:
-              ${h.link_to(h.short_id(c.a_rev),h.url('changeset_home',repo_name=c.a_repo.repo_name,revision=c.a_rev))}
-              </div>
+              ${h.link_to(h.short_id(c.a_rev),h.url('changeset_home',repo_name=c.a_repo.repo_name,revision=c.a_rev), class_="changeset_hash")}
+              </h5>
 
               ## FILES
-              <div style="font-size:1.1em;font-weight: bold;clear:both;padding-top:10px">
-
+              <h5>
               % if c.limited_diff:
-                  ${ungettext('%s file changed', '%s files changed', len(c.files)) % len(c.files)}
+                  ${ungettext('%s file changed', '%s files changed', len(c.file_diff_data)) % len(c.file_diff_data)}:
               % else:
-                  ${ungettext('%s file changed with %s insertions and %s deletions','%s files changed with %s insertions and %s deletions', len(c.files)) % (len(c.files),c.lines_added,c.lines_deleted)}:
+                  ${ungettext('%s file changed with %s insertions and %s deletions','%s files changed with %s insertions and %s deletions', len(c.file_diff_data)) % (len(c.file_diff_data),c.lines_added,c.lines_deleted)}:
               %endif
-
-              </div>
+              </h5>
               <div class="cs_files">
-                %if not c.files:
-                   <span class="empty_data">${_('No files')}</span>
+                %if not c.file_diff_data:
+                   <span class="text-muted">${_('No files')}</span>
                 %endif
-                %for fid, change, f, stat in c.files:
-                    <div class="cs_${change}">
-                      <div class="node">
-                          <i class="icon-diff-${change}"></i>
-                          ${h.link_to(h.safe_unicode(f),'#' + fid)}
-                      </div>
-                      <div class="changes">${h.fancy_file_stats(stat)}</div>
+                %for fid, url_fid, op, a_path, path, diff, stats in c.file_diff_data:
+                    <div class="cs_${op} clearfix">
+                      <span class="node">
+                          <i class="icon-diff-${op}"></i>
+                          ${h.link_to(h.safe_unicode(path), '#%s' % fid)}
+                      </span>
+                      <div class="changes">${h.fancy_file_stats(stats)}</div>
                     </div>
                 %endfor
+                %if c.limited_diff:
+                  <h5>${_('Changeset was too big and was cut off...')} <a href="${h.url.current(fulldiff=1, **request.GET.mixed())}">${_('Show full diff anyway')}</a></h5>
+                %endif
               </div>
-              % if c.limited_diff:
-                <h5>${_('Changeset was too big and was cut off...')} <a href="${h.url.current(fulldiff=1, **request.GET.mixed())}">${_('Show full diff anyway')}</a></h5>
-              % endif
-          </div>
+            </div>
+        </div>
     </div>
     <script>
-    var _USERS_AC_DATA = ${c.users_array|n};
-    var _GROUPS_AC_DATA = ${c.user_groups_array|n};
     // TODO: switch this to pyroutes
-    AJAX_COMMENT_URL = "${url('pullrequest_comment',repo_name=c.repo_name,pull_request_id=c.pull_request.pull_request_id)}";
-    AJAX_COMMENT_DELETE_URL = "${url('pullrequest_comment_delete',repo_name=c.repo_name,comment_id='__COMMENT_ID__')}";
+    AJAX_COMMENT_URL = ${h.js(url('pullrequest_comment',repo_name=c.repo_name,pull_request_id=c.pull_request.pull_request_id))};
+    AJAX_COMMENT_DELETE_URL = ${h.js(url('pullrequest_comment_delete',repo_name=c.repo_name,comment_id='__COMMENT_ID__'))};
 
-    pyroutes.register('pullrequest_comment', "${url('pullrequest_comment',repo_name='%(repo_name)s',pull_request_id='%(pull_request_id)s')}", ['repo_name', 'pull_request_id']);
-    pyroutes.register('pullrequest_comment_delete', "${url('pullrequest_comment_delete',repo_name='%(repo_name)s',comment_id='%(comment_id)s')}", ['repo_name', 'comment_id']);
+    pyroutes.register('pullrequest_comment', ${h.js(url('pullrequest_comment',repo_name='%(repo_name)s',pull_request_id='%(pull_request_id)s'))}, ['repo_name', 'pull_request_id']);
+    pyroutes.register('pullrequest_comment_delete', ${h.js(url('pullrequest_comment_delete',repo_name='%(repo_name)s',comment_id='%(comment_id)s'))}, ['repo_name', 'comment_id']);
 
     </script>
 
     ## diff block
+    <div class="panel-body">
     <div class="commentable-diff">
     <%namespace name="diff_block" file="/changeset/diff_block.html"/>
     ${diff_block.diff_block_js()}
-    %for fid, change, f, stat in c.files:
-      ${diff_block.diff_block_simple([c.changes[fid]])}
-    %endfor
+    ${diff_block.diff_block(c.a_repo.repo_name, c.a_ref_type, c.a_ref_name, c.a_rev,
+                            c.cs_repo.repo_name, c.cs_ref_type, c.cs_ref_name, c.cs_rev, c.file_diff_data)}
     % if c.limited_diff:
       <h4>${_('Changeset was too big and was cut off...')} <a href="${h.url.current(fulldiff=1, **request.GET.mixed())}">${_('Show full diff anyway')}</a></h4>
     % endif
@@ -371,23 +341,24 @@ ${self.repo_context_bar('showpullrequest')}
     ${comment.generate_comments()}
 
     ## main comment form and it status
-    ${comment.comments(h.url('pullrequest_comment', repo_name=c.repo_name,
-                              pull_request_id=c.pull_request.pull_request_id),
-                       c.current_voting_result,
-                       is_pr=True, change_status=c.allowed_to_change_status)}
+    ${comment.comments(change_status=c.allowed_to_change_status)}
 
     <script type="text/javascript">
       $(document).ready(function(){
-          PullRequestAutoComplete($('#user'), $('#reviewers_container'), _USERS_AC_DATA);
-          SimpleUserAutoComplete($('#owner'), $('#owner_completion_container'), _USERS_AC_DATA);
+          PullRequestAutoComplete($('#user'));
+          SimpleUserAutoComplete($('#owner'));
 
           $('.code-difftable').on('click', '.add-bubble', function(e){
               show_comment_form($(this));
           });
 
-          var avail_jsdata = ${c.avail_jsdata|n};
+          var avail_jsdata = ${h.js(c.avail_jsdata)};
           var avail_r = new BranchRenderer('avail_graph_canvas', 'updaterevs-table', 'chg_available_');
-          avail_r.render(avail_jsdata,40);
+          avail_r.render(avail_jsdata);
+
+          $(window).resize(function(){
+              avail_r.render(avail_jsdata);
+          });
 
           move_comments($(".comments .comments-list-chunk"));
 
@@ -412,17 +383,11 @@ ${self.repo_context_bar('showpullrequest')}
 
           $('.missing_reviewer').click(function(){
             var $this = $(this);
-            addReviewMember(
-                $this.attr('user_id'),
-                $this.attr('fname').html_escape(),
-                $this.attr('lname').html_escape(),
-                $this.attr('nname').html_escape(),
-                $this.attr('gravatar_lnk'),
-                $this.attr('gravatar_size')
-            );
+            addReviewMember($this.data('user_id'), $this.data('fname'), $this.data('lname'), $this.data('nname'), $this.data('gravatar_lnk'), $this.data('gravatar_size'));
           });
       });
     </script>
+    </div>
 
 </div>
 

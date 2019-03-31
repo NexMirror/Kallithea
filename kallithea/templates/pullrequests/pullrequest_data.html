@@ -3,36 +3,36 @@
 <%def name="pullrequest_overview(pullrequests)">
 
 %if not len(pullrequests):
-    <div class="normal-indent empty_data">${_('No entries')}</div>
+    <div class="text-muted">${_('No entries')}</div>
     <% return %>
 %endif
 
-<div class="table">
-  <table>
+<div>
+  <table class="table">
     <thead>
       <tr>
-        <th class="left">${_('Vote')}</th>
-        <th class="left">${_('Title')}</th>
-        <th class="left">${_('Owner')}</th>
-        <th class="left">${_('Age')}</th>
-        <th class="left">${_('From')}</th>
-        <th class="left">${_('To')}</th>
-        <th class="right" style="padding-right:5px">${_('Delete')}</th>
+        <th>${_('Vote')}</th>
+        <th>${_('Title')}</th>
+        <th>${_('Owner')}</th>
+        <th>${_('Age')}</th>
+        <th>${_('From')}</th>
+        <th>${_('To')}</th>
+        <th>${_('Delete')}</th>
       </tr>
     </thead>
 % for pr in pullrequests:
     <tr class="${'pr-closed' if pr.is_closed() else ''}">
-      <td width="80px">
-        <% status = pr.user_review_status(c.authuser.user_id) %>
+      <td>
+        <% status = pr.user_review_status(request.authuser.user_id) %>
         %if status:
-          <i class="icon-circle changeset-status-${status}" title="${_("You voted: %s") % status}"></i>
+          <i class="icon-circle changeset-status-${status}" title="${_('You voted: %s') % h.changeset_status_lbl(status)}"></i>
         %else:
-          <i class="icon-circle changeset-status-not_reviewed" title="${_("You didn't vote")}"></i>
+          <i class="icon-circle changeset-status-not_reviewed" title="${_('You didn\'t vote')}"></i>
         %endif
       </td>
       <td>
         <a href="${pr.url()}">
-        ${pr.title or _("(no title)")}
+        ${h.urlify_text(pr.title or _("(no title)"), pr.org_repo.repo_name, pr.url())}
         %if pr.is_closed():
           <span class="pr-closed-tag">${_('Closed')}</span>
         %endif
@@ -42,7 +42,7 @@
         ${pr.owner.full_name_and_username}
       </td>
       <td>
-        <span class="tooltip" title="${h.fmt_date(pr.created_on)}">
+        <span data-toggle="tooltip" title="${h.fmt_date(pr.created_on)}">
           ${h.age(pr.created_on)}
         </span>
       </td>
@@ -58,10 +58,10 @@
           ${pr.other_repo.repo_name}#${other_ref_name}
         </a>
       </td>
-      <td style="text-align:right">
-        %if pr.owner.user_id == c.authuser.user_id:
-          ${h.form(url('pullrequest_delete', repo_name=pr.other_repo.repo_name, pull_request_id=pr.pull_request_id),method='delete', style="display:inline-block")}
-          <button class="action_button"
+      <td>
+        %if pr.owner_id == request.authuser.user_id:
+          ${h.form(url('pullrequest_delete', repo_name=pr.other_repo.repo_name, pull_request_id=pr.pull_request_id))}
+          <button type="submit" class="btn btn-link btn-xs"
                   id="remove_${pr.pull_request_id}"
                   name="remove_${pr.pull_request_id}"
                   title="${_('Delete Pull Request')}"
@@ -69,7 +69,7 @@
                       && ((${len(pr.comments)} == 0) ||
                           confirm('${_('Confirm again to delete this pull request with %s comments') % len(pr.comments)}'))
                       ">
-            <i class="icon-minus-circled"></i>
+            <i class="icon-trashcan"></i>
           </button>
           ${h.end_form()}
         %endif
@@ -80,11 +80,7 @@
 </div>
 
 %if hasattr(pullrequests, 'pager'):
-<div class="notification-paginator">
-  <div class="pagination-wh pagination-left">
-  ${pullrequests.pager('$link_previous ~2~ $link_next', **request.GET.mixed())}
-  </div>
-</div>
+    ${pullrequests.pager(**request.GET.mixed())}
 %endif
 
 </%def>

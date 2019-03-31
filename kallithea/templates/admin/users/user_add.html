@@ -17,85 +17,69 @@
 </%block>
 
 <%def name="main()">
-<div class="box">
-    <!-- box / title -->
-    <div class="title">
+<div class="panel panel-primary">
+    <div class="panel-heading clearfix">
         ${self.breadcrumbs()}
     </div>
-    <!-- end box / title -->
-    ${h.form(url('users'))}
-    <div class="form">
-        <!-- fields -->
-        <div class="fields">
-             <div class="field">
-                <div class="label">
-                    <label for="username">${_('Username')}:</label>
+    ${h.form(url('new_user'))}
+    <div class="form panel-body settings">
+            <div class="form-group">
+                <label class="control-label" for="username">${_('Username')}:</label>
+                <div>
+                    ${h.text('username',class_='form-control')}
                 </div>
-                <div class="input">
-                    ${h.text('username',class_='small')}
-                </div>
-             </div>
+            </div>
 
-             <div class="field">
-                <div class="label">
-                    <label for="password">${_('Password')}:</label>
+            <div class="form-group">
+                <label class="control-label" for="password">${_('Password')}:</label>
+                <div>
+                    ${h.password('password',class_='form-control')}
                 </div>
-                <div class="input">
-                    ${h.password('password',class_='small')}
-                </div>
-             </div>
+            </div>
 
-             <div class="field">
-                <div class="label">
-                    <label for="password_confirmation">${_('Password confirmation')}:</label>
+            <div class="form-group">
+                <label class="control-label" for="password_confirmation">${_('Password confirmation')}:</label>
+                <div>
+                    ${h.password('password_confirmation',class_='form-control')}
                 </div>
-                <div class="input">
-                    ${h.password('password_confirmation',class_="small")}
-                </div>
-             </div>
+            </div>
 
-             <div class="field">
-                <div class="label">
-                    <label for="firstname">${_('First Name')}:</label>
+            <div class="form-group">
+                <label class="control-label" for="firstname">${_('First Name')}:</label>
+                <div>
+                    ${h.text('firstname',class_='form-control')}
                 </div>
-                <div class="input">
-                    ${h.text('firstname',class_='small')}
-                </div>
-             </div>
+            </div>
 
-             <div class="field">
-                <div class="label">
-                    <label for="lastname">${_('Last Name')}:</label>
+            <div class="form-group">
+                <label class="control-label" for="lastname">${_('Last Name')}:</label>
+                <div>
+                    ${h.text('lastname',class_='form-control')}
                 </div>
-                <div class="input">
-                    ${h.text('lastname',class_='small')}
-                </div>
-             </div>
+            </div>
 
-             <div class="field">
-                <div class="label">
-                    <label for="email">${_('Email')}:</label>
+            <div class="form-group">
+                <label class="control-label" for="email">${_('Email')}:</label>
+                <div>
+                    ${h.text('email',class_='form-control')}
                 </div>
-                <div class="input">
-                    ${h.text('email',class_='small')}
-                </div>
-             </div>
+            </div>
 
-             <div class="field">
-                <div class="label label-checkbox">
-                    <label for="active">${_('Active')}:</label>
-                </div>
-                <div class="checkboxes">
+            <div class="form-group">
+                <label class="control-label" for="active">${_('Active')}:</label>
+                <div>
                     ${h.checkbox('active',value=True,checked='checked')}
                 </div>
-             </div>
+            </div>
 
             ${h.hidden('extern_type', c.default_extern_type)}
             ${h.hidden('extern_name', c.default_extern_name)}
-            <div class="buttons">
-              ${h.submit('save',_('Save'),class_="btn")}
+
+            <div class="form-group">
+                <div class="buttons">
+                    ${h.submit('save',_('Save'),class_="btn btn-default")}
+                </div>
             </div>
-        </div>
     </div>
     ${h.end_form()}
 </div>

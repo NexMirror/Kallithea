@@ -27,9 +27,9 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 from kallithea.lib import auth_modules
-from kallithea.lib.utils2 import str2bool, safe_unicode
+from kallithea.lib.utils2 import str2bool, safe_unicode, safe_str
 from kallithea.lib.compat import hybrid_property
-from kallithea.model.db import User
+from kallithea.model.db import User, Setting
 
 log = logging.getLogger(__name__)
 
@@ -53,15 +53,39 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
                 "name": "header",
                 "validator": self.validators.UnicodeString(strip=True, not_empty=True),
                 "type": "string",
-                "description": "Header to extract the user from",
+                "description": "Request header to extract the username from",
                 "default": "REMOTE_USER",
-                "formname": "Header"
+                "formname": "Username header"
+            },
+            {
+                "name": "email_header",
+                "validator": self.validators.UnicodeString(strip=True),
+                "type": "string",
+                "description": "Optional request header to extract the email from",
+                "default": "",
+                "formname": "Email header"
+            },
+            {
+                "name": "firstname_header",
+                "validator": self.validators.UnicodeString(strip=True),
+                "type": "string",
+                "description": "Optional request header to extract the first name from",
+                "default": "",
+                "formname": "Firstname header"
+            },
+            {
+                "name": "lastname_header",
+                "validator": self.validators.UnicodeString(strip=True),
+                "type": "string",
+                "description": "Optional request header to extract the last name from",
+                "default": "",
+                "formname": "Lastname header"
             },
             {
                 "name": "fallback_header",
                 "validator": self.validators.UnicodeString(strip=True),
                 "type": "string",
-                "description": "Header to extract the user from when main one fails",
+                "description": "Request header to extract the user from when main one fails",
                 "default": "HTTP_X_FORWARDED_USER",
                 "formname": "Fallback header"
             },
@@ -80,10 +104,6 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
 
     def use_fake_password(self):
         return True
-
-    def user_activation_state(self):
-        def_user_perms = User.get_default_user().AuthUser.permissions['global']
-        return 'hg.extern_activate.auto' in def_user_perms
 
     def _clean_username(self, username):
         # Removing realm and domain from username
@@ -158,7 +178,7 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
         # only way to log in is using environ
         username = None
         if userobj:
-            username = getattr(userobj, 'username')
+            username = safe_str(getattr(userobj, 'username'))
 
         if not username:
             # we don't have any objects in DB, user doesn't exist, extract
@@ -171,10 +191,9 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
 
         # old attrs fetched from Kallithea database
         admin = getattr(userobj, 'admin', False)
-        active = getattr(userobj, 'active', True)
-        email = getattr(userobj, 'email', '')
-        firstname = getattr(userobj, 'firstname', '')
-        lastname = getattr(userobj, 'lastname', '')
+        email = environ.get(settings.get('email_header'), getattr(userobj, 'email', ''))
+        firstname = environ.get(settings.get('firstname_header'), getattr(userobj, 'firstname', ''))
+        lastname = environ.get(settings.get('lastname_header'), getattr(userobj, 'lastname', ''))
 
         user_data = {
             'username': username,
@@ -183,8 +202,6 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
             'groups': [],
             'email': email or '',
             'admin': admin or False,
-            'active': active,
-            'active_from_extern': True,
             'extern_name': username,
         }
 
@@ -192,4 +209,11 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
         return user_data
 
     def get_managed_fields(self):
-        return ['username', 'password']
+        fields = ['username', 'password']
+        if(Setting.get_by_name('auth_container_email_header').app_settings_value):
+            fields.append('email')
+        if(Setting.get_by_name('auth_container_firstname_header').app_settings_value):
+            fields.append('firstname')
+        if(Setting.get_by_name('auth_container_lastname_header').app_settings_value):
+            fields.append('lastname')
+        return fields

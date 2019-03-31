@@ -4,59 +4,65 @@
 Optimizing Kallithea performance
 ================================
 
-When serving a large amount of big repositories, Kallithea can start
-performing slower than expected. Because of the demanding nature of handling large
-amounts of data from version control systems, here are some tips on how to get
-the best performance.
+When serving a large amount of big repositories, Kallithea can start performing
+slower than expected. Because of the demanding nature of handling large amounts
+of data from version control systems, here are some tips on how to get the best
+performance.
 
-* Kallithea is often I/O bound, and hence a fast disk (SSD/SAN) is
-  usually more important than a fast CPU.
 
-* Sluggish loading of the front page can easily be fixed by grouping repositories or by
-  increasing cache size (see below). This includes using the lightweight dashboard
-  option and ``vcs_full_cache`` setting in .ini file.
+Fast storage
+------------
 
-Follow these few steps to improve performance of Kallithea system.
+Kallithea is often I/O bound, and hence a fast disk (SSD/SAN) and plenty of RAM
+is usually more important than a fast CPU.
 
-1. Increase cache
 
-    Tweak beaker cache settings in the ini file. The actual effect of that
-    is questionable.
+Caching
+-------
 
-2. Switch from SQLite to PostgreSQL or MySQL
+Tweak beaker cache settings in the ini file. The actual effect of that is
+questionable.
 
-    SQLite is a good option when having a small load on the system. But due to
-    locking issues with SQLite, it is not recommended to use it for larger
-    deployments. Switching to MySQL or PostgreSQL will result in an immediate
-    performance increase. A tool like SQLAlchemyGrate_ can be used for
-    migrating to another database platform.
 
-3. Scale Kallithea horizontally
+Database
+--------
 
-    Scaling horizontally can give huge performance benefits when dealing with
-    large amounts of traffic (many users, CI servers, etc.). Kallithea can be
-    scaled horizontally on one (recommended) or multiple machines.
+SQLite is a good option when having a small load on the system. But due to
+locking issues with SQLite, it is not recommended to use it for larger
+deployments.
 
-    It is generally possible to run WSGI applications multithreaded, so that
-    several HTTP requests are served from the same Python process at once. That
-    can in principle give better utilization of internal caches and less
-    process overhead.
+Switching to MySQL or PostgreSQL will result in an immediate performance
+increase. A tool like SQLAlchemyGrate_ can be used for migrating to another
+database platform.
 
-    One danger of running multithreaded is that program execution becomes much
-    more complex; programs must be written to consider all combinations of
-    events and problems might depend on timing and be impossible to reproduce.
 
-    Kallithea can't promise to be thread-safe, just like the embedded Mercurial
-    backend doesn't make any strong promises when used as Kallithea uses it.
-    Instead, we recommend scaling by using multiple server processes.
+Horizontal scaling
+------------------
 
-    Web servers with multiple worker processes (such as ``mod_wsgi`` with the
-    ``WSGIDaemonProcess`` ``processes`` parameter) will work out of the box.
+Scaling horizontally means running several Kallithea instances and let them
+share the load. That can give huge performance benefits when dealing with large
+amounts of traffic (many users, CI servers, etc.). Kallithea can be scaled
+horizontally on one (recommended) or multiple machines.
 
-    In order to scale horizontally on multiple machines, you need to do the
-    following:
+It is generally possible to run WSGI applications multithreaded, so that
+several HTTP requests are served from the same Python process at once. That can
+in principle give better utilization of internal caches and less process
+overhead.
 
-    - Each instance needs its own .ini file and unique ``instance_id`` set.
+One danger of running multithreaded is that program execution becomes much more
+complex; programs must be written to consider all combinations of events and
+problems might depend on timing and be impossible to reproduce.
+
+Kallithea can't promise to be thread-safe, just like the embedded Mercurial
+backend doesn't make any strong promises when used as Kallithea uses it.
+Instead, we recommend scaling by using multiple server processes.
+
+Web servers with multiple worker processes (such as ``mod_wsgi`` with the
+``WSGIDaemonProcess`` ``processes`` parameter) will work out of the box.
+
+In order to scale horizontally on multiple machines, you need to do the
+following:
+
     - Each instance's ``data`` storage needs to be configured to be stored on a
       shared disk storage, preferably together with repositories. This ``data``
       dir contains template caches, sessions, whoosh index and is used for
@@ -69,6 +75,44 @@ Follow these few steps to improve performance of Kallithea system.
     - Load balance using round robin or IP hash, recommended is writing LB rules
       that will separate regular user traffic from automated processes like CI
       servers or build bots.
+
+
+Serve static files directly from the web server
+-----------------------------------------------
+
+With the default ``static_files`` ini setting, the Kallithea WSGI application
+will take care of serving the static files from ``kallithea/public/`` at the
+root of the application URL.
+
+The actual serving of the static files is very fast and unlikely to be a
+problem in a Kallithea setup - the responses generated by Kallithea from
+database and repository content will take significantly more time and
+resources.
+
+To serve static files from the web server, use something like this Apache config
+snippet::
+
+        Alias /images/ /srv/kallithea/kallithea/kallithea/public/images/
+        Alias /css/ /srv/kallithea/kallithea/kallithea/public/css/
+        Alias /js/ /srv/kallithea/kallithea/kallithea/public/js/
+        Alias /codemirror/ /srv/kallithea/kallithea/kallithea/public/codemirror/
+        Alias /fontello/ /srv/kallithea/kallithea/kallithea/public/fontello/
+
+Then disable serving of static files in the ``.ini`` ``app:main`` section::
+
+        static_files = false
+
+If using Kallithea installed as a package, you should be able to find the files
+under ``site-packages/kallithea``, either in your Python installation or in your
+virtualenv. When upgrading, make sure to update the web server configuration
+too if necessary.
+
+It might also be possible to improve performance by configuring the web server
+to compress responses (served from static files or generated by Kallithea) when
+serving them. That might also imply buffering of responses - that is more
+likely to be a problem; large responses (clones or pulls) will have to be fully
+processed and spooled to disk or memory before the client will see any
+response. See the documentation for your web server.
 
 
 .. _SQLAlchemyGrate: https://github.com/shazow/sqlalchemygrate

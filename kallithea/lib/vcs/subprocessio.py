@@ -1,8 +1,8 @@
 """
 Module provides a class allowing to wrap communication over subprocess.Popen
-input, output, error streams into a meaningfull, non-blocking, concurrent
+input, output, error streams into a meaningful, non-blocking, concurrent
 stream processor exposing the output data as an iterator fitting to be a
-return value passed by a WSGI applicaiton to a WSGI server per PEP 3333.
+return value passed by a WSGI application to a WSGI server per PEP 3333.
 
 Copyright (c) 2011  Daniel Dotsenko <dotsa[at]hotmail.com>
 
@@ -24,10 +24,11 @@ If not, see <http://www.gnu.org/licenses/>.
 """
 import os
 import subprocess
-from kallithea.lib.vcs.utils.compat import deque, Event, Thread, _bytes, _bytearray
+import collections
+import threading
 
 
-class StreamFeeder(Thread):
+class StreamFeeder(threading.Thread):
     """
     Normal writing into pipe-like is blocking once the buffer is filled.
     This thread allows a thread to seep data from a file-like into a pipe
@@ -39,12 +40,12 @@ class StreamFeeder(Thread):
         super(StreamFeeder, self).__init__()
         self.daemon = True
         filelike = False
-        self.bytes = _bytes()
-        if type(source) in (type(''), _bytes, _bytearray):  # string-like
-            self.bytes = _bytes(source)
+        self.bytes = bytes()
+        if type(source) in (type(''), bytes, bytearray):  # string-like
+            self.bytes = bytes(source)
         else:  # can be either file pointer or file-like
             if type(source) in (int, long):  # file pointer it is
-                ## converting file descriptor (int) stdin into file-like
+                # converting file descriptor (int) stdin into file-like
                 source = os.fdopen(source, 'rb', 16384)
             # let's see if source is file-like by now
             filelike = hasattr(source, 'read')
@@ -71,7 +72,7 @@ class StreamFeeder(Thread):
         return self.readiface
 
 
-class InputStreamChunker(Thread):
+class InputStreamChunker(threading.Thread):
     def __init__(self, source, target, buffer_size, chunk_size):
 
         super(InputStreamChunker, self).__init__()
@@ -83,16 +84,16 @@ class InputStreamChunker(Thread):
         self.chunk_count_max = int(buffer_size / chunk_size) + 1
         self.chunk_size = chunk_size
 
-        self.data_added = Event()
+        self.data_added = threading.Event()
         self.data_added.clear()
 
-        self.keep_reading = Event()
+        self.keep_reading = threading.Event()
         self.keep_reading.set()
 
-        self.EOF = Event()
+        self.EOF = threading.Event()
         self.EOF.clear()
 
-        self.go = Event()
+        self.go = threading.Event()
         self.go.set()
 
     def stop(self):
@@ -156,14 +157,14 @@ class BufferedGenerator(object):
     """
 
     def __init__(self, source, buffer_size=65536, chunk_size=4096,
-                 starting_values=[], bottomless=False):
-
+                 starting_values=None, bottomless=False):
+        starting_values = starting_values or []
         if bottomless:
             maxlen = int(buffer_size / chunk_size)
         else:
             maxlen = None
 
-        self.data = deque(starting_values, maxlen)
+        self.data = collections.deque(starting_values, maxlen)
         self.worker = InputStreamChunker(source, self.data, buffer_size,
                                          chunk_size)
         if starting_values:
@@ -183,7 +184,7 @@ class BufferedGenerator(object):
             self.worker.data_added.wait(0.2)
         if len(self.data):
             self.worker.keep_reading.set()
-            return _bytes(self.data.popleft())
+            return bytes(self.data.popleft())
         elif self.worker.EOF.is_set():
             raise StopIteration
 
@@ -233,7 +234,7 @@ class BufferedGenerator(object):
         Iterator might have done reading from underlying source, but the read
         chunks might still be available for serving through .next() method.
 
-        :returns: An Event class instance.
+        :returns: An threading.Event class instance.
         """
         return self.worker.EOF
 
@@ -326,7 +327,7 @@ class SubprocessIOChunker(object):
     """
 
     def __init__(self, cmd, inputstream=None, buffer_size=65536,
-                 chunk_size=4096, starting_values=[], **kwargs):
+                 chunk_size=4096, starting_values=None, **kwargs):
         """
         Initializes SubprocessIOChunker
 
@@ -336,7 +337,7 @@ class SubprocessIOChunker(object):
         :param chunk_size: (Default: 4096) A max size of a chunk. Actual chunk may be smaller.
         :param starting_values: (Default: []) An array of strings to put in front of output que.
         """
-
+        starting_values = starting_values or []
         if inputstream:
             input_streamer = StreamFeeder(inputstream)
             input_streamer.start()
@@ -355,7 +356,7 @@ class SubprocessIOChunker(object):
                                    starting_values)
         bg_err = BufferedGenerator(_p.stderr, 16000, 1, bottomless=True)
 
-        while not bg_out.done_reading and not bg_out.reading_paused and not bg_err.length:
+        while not bg_out.done_reading and not bg_out.reading_paused:
             # doing this until we reach either end of file, or end of buffer.
             bg_out.data_added_event.wait(1)
             bg_out.data_added_event.clear()
@@ -364,12 +365,9 @@ class SubprocessIOChunker(object):
         # Either way, if error (returned by ended process, or implied based on
         # presence of stuff in stderr output) we error out.
         # Else, we are happy.
-        _returncode = _p.poll()
-        if _returncode or (_returncode is None and bg_err.length):
-            try:
-                _p.terminate()
-            except Exception:
-                pass
+        returncode = _p.poll()
+        if (returncode is not None # process has terminated
+            and returncode != 0): # and it failed
             bg_out.stop()
             out = ''.join(bg_out)
             bg_err.stop()
@@ -384,7 +382,7 @@ class SubprocessIOChunker(object):
                     "Subprocess exited due to an error:\n" + err)
             else:
                 raise EnvironmentError(
-                    "Subprocess exited with non 0 ret code:%s" % _returncode)
+                    "Subprocess exited with non 0 ret code: %s" % returncode)
         self.process = _p
         self.output = bg_out
         self.error = bg_err
@@ -394,9 +392,14 @@ class SubprocessIOChunker(object):
         return self
 
     def next(self):
-        if self.process and self.process.poll():
-            err = ''.join(self.error)
-            raise EnvironmentError("Subprocess exited due to an error:\n" + err)
+        if self.process:
+            returncode = self.process.poll()
+            if (returncode is not None # process has terminated
+                and returncode != 0): # and it failed
+                self.output.stop()
+                self.error.stop()
+                err = ''.join(self.error)
+                raise EnvironmentError("Subprocess exited due to an error:\n" + err)
         return self.output.next()
 
     def throw(self, type, value=None, traceback=None):

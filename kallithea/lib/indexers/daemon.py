@@ -34,14 +34,13 @@ import traceback
 from shutil import rmtree
 from time import mktime
 
-from os.path import dirname as dn
-from os.path import join as jn
+from os.path import dirname
 
 # Add location of top level folder to sys.path
-project_path = dn(dn(dn(dn(os.path.realpath(__file__)))))
+project_path = dirname(dirname(dirname(dirname(os.path.realpath(__file__)))))
 sys.path.append(project_path)
 
-from kallithea.config.conf import INDEX_EXTENSIONS
+from kallithea.config.conf import INDEX_EXTENSIONS, INDEX_FILENAMES
 from kallithea.model.scm import ScmModel
 from kallithea.model.db import Repository
 from kallithea.lib.utils2 import safe_unicode, safe_str
@@ -64,7 +63,7 @@ class WhooshIndexingDaemon(object):
     """
 
     def __init__(self, indexname=IDX_NAME, index_location=None,
-                 repo_location=None, sa=None, repo_list=None,
+                 repo_location=None, repo_list=None,
                  repo_update_list=None):
         self.indexname = indexname
 
@@ -76,11 +75,11 @@ class WhooshIndexingDaemon(object):
         if not repo_location:
             raise Exception('You have to provide repositories location')
 
-        self.repo_paths = ScmModel(sa).repo_scan(self.repo_location)
+        self.repo_paths = ScmModel().repo_scan(self.repo_location)
 
-        #filter repo list
+        # filter repo list
         if repo_list:
-            #Fix non-ascii repo names to unicode
+            # Fix non-ascii repo names to unicode
             repo_list = map(safe_unicode, repo_list)
             self.filtered_repo_paths = {}
             for repo_name, repo in self.repo_paths.items():
@@ -89,7 +88,7 @@ class WhooshIndexingDaemon(object):
 
             self.repo_paths = self.filtered_repo_paths
 
-        #filter update repo list
+        # filter update repo list
         self.filtered_repo_update_paths = {}
         if repo_update_list:
             self.filtered_repo_update_paths = {}
@@ -102,12 +101,12 @@ class WhooshIndexingDaemon(object):
         if not os.path.isdir(self.index_location):
             os.makedirs(self.index_location)
             log.info('Cannot run incremental index since it does not '
-                     'yet exist running full build')
+                     'yet exist - running full build')
         elif not exists_in(self.index_location, IDX_NAME):
-            log.info('Running full index build as the file content '
+            log.info('Running full index build, as the file content '
                      'index does not exist')
         elif not exists_in(self.index_location, CHGSET_IDX_NAME):
-            log.info('Running full index build as the changeset '
+            log.info('Running full index build, as the changeset '
                      'index does not exist')
         else:
             self.initial = False
@@ -136,7 +135,7 @@ class WhooshIndexingDaemon(object):
             cs = self._get_index_changeset(repo)
             for _topnode, _dirs, files in cs.walk('/'):
                 for f in files:
-                    index_paths_.add(jn(safe_str(repo.path), safe_str(f.path)))
+                    index_paths_.add(os.path.join(safe_str(repo.path), safe_str(f.path)))
 
         except RepositoryError:
             log.debug(traceback.format_exc())
@@ -162,6 +161,13 @@ class WhooshIndexingDaemon(object):
         node = cs.get_node(node_path)
         return node
 
+    def is_indexable_node(self, node):
+        """
+        Just index the content of chosen files, skipping binary files
+        """
+        return (node.extension in INDEX_EXTENSIONS or node.name in INDEX_FILENAMES) and \
+               not node.is_binary
+
     def get_node_mtime(self, node):
         return mktime(node.last_changeset.date.timetuple())
 
@@ -173,23 +179,21 @@ class WhooshIndexingDaemon(object):
         try:
             node = self.get_node(repo, path, index_rev)
         except (ChangesetError, NodeDoesNotExistError):
-            log.debug("couldn't add doc - %s did not have %r at %s", repo, path, index_rev)
+            log.debug("    >> %s - not found in %s %s", path, repo, index_rev)
             return 0, 0
 
         indexed = indexed_w_content = 0
-        # we just index the content of chosen files, and skip binary files
-        if node.extension in INDEX_EXTENSIONS and not node.is_binary:
+        if self.is_indexable_node(node):
             u_content = node.content
             if not isinstance(u_content, unicode):
-                log.warning('  >> %s Could not get this content as unicode '
-                            'replacing with empty content' % path)
+                log.warning('    >> %s - no text content', path)
                 u_content = u''
             else:
-                log.debug('    >> %s [WITH CONTENT]', path)
+                log.debug('    >> %s', path)
                 indexed_w_content += 1
 
         else:
-            log.debug('    >> %s', path)
+            log.debug('    >> %s - not indexable', path)
             # just index file name without it's content
             u_content = u''
             indexed += 1
@@ -198,6 +202,7 @@ class WhooshIndexingDaemon(object):
         writer.add_document(
             fileid=p,
             owner=unicode(repo.contact),
+            repository_rawname=safe_unicode(repo_name),
             repository=safe_unicode(repo_name),
             path=p,
             content=u_content,
@@ -224,18 +229,20 @@ class WhooshIndexingDaemon(object):
         if start_rev is None:
             start_rev = repo[0].raw_id
 
-        log.debug('indexing changesets in %s starting at rev: %s',
+        log.debug('Indexing changesets in %s, starting at rev %s',
                   repo_name, start_rev)
 
         indexed = 0
         cs_iter = repo.get_changesets(start=start_rev)
         total = len(cs_iter)
         for cs in cs_iter:
-            log.debug('    >> %s/%s', cs, total)
+            indexed += 1
+            log.debug('    >> %s %s/%s', cs, indexed, total)
             writer.add_document(
                 raw_id=unicode(cs.raw_id),
                 owner=unicode(repo.contact),
                 date=cs._timestamp,
+                repository_rawname=safe_unicode(repo_name),
                 repository=safe_unicode(repo_name),
                 author=cs.author,
                 message=cs.message,
@@ -245,9 +252,7 @@ class WhooshIndexingDaemon(object):
                 changed=u' '.join([safe_unicode(node.path) for node in cs.changed]).lower(),
                 parents=u' '.join([cs.raw_id for cs in cs.parents]),
             )
-            indexed += 1
 
-        log.debug('indexed %d changesets for repo %s', indexed, repo_name)
         return indexed
 
     def index_files(self, file_idx_writer, repo_name, repo):
@@ -259,7 +264,7 @@ class WhooshIndexingDaemon(object):
         :param repo: instance of vcs repo
         """
         i_cnt = iwc_cnt = 0
-        log.debug('building index for %s @revision:%s', repo.path,
+        log.debug('Building file index for %s @revision:%s', repo_name,
                                                 self._get_index_revision(repo))
         index_rev = self._get_index_revision(repo)
         for idx_path in self.get_paths(repo):
@@ -280,7 +285,8 @@ class WhooshIndexingDaemon(object):
             try:
                 indexed_total = 0
                 repo_name = None
-                for repo_name, repo in self.repo_paths.items():
+                for repo_name, repo in sorted(self.repo_paths.items()):
+                    log.debug('Updating changeset index for repo %s', repo_name)
                     # skip indexing if there aren't any revs in the repo
                     num_of_revs = len(repo)
                     if num_of_revs < 1:
@@ -346,7 +352,7 @@ class WhooshIndexingDaemon(object):
                     indexed_repo_path = fields['repository']
                     indexed_paths.add(indexed_path)
 
-                    if not indexed_repo_path in self.filtered_repo_update_paths:
+                    if indexed_repo_path not in self.filtered_repo_update_paths:
                         continue
 
                     repo = self.repo_paths[indexed_repo_path]
@@ -378,7 +384,8 @@ class WhooshIndexingDaemon(object):
             # documents to be indexed
             ri_cnt_total = 0  # indexed
             riwc_cnt_total = 0  # indexed with content
-            for repo_name, repo in self.repo_paths.items():
+            for repo_name, repo in sorted(self.repo_paths.items()):
+                log.debug('Updating file index for repo %s', repo_name)
                 # skip indexing if there aren't any revisions
                 if len(repo) < 1:
                     continue
@@ -392,7 +399,6 @@ class WhooshIndexingDaemon(object):
                         # that wasn't indexed before. So index it!
                         i, iwc = self.add_doc(writer, path, repo, repo_name)
                         writer_is_dirty = True
-                        log.debug('re indexing %s', path)
                         ri_cnt += i
                         ri_cnt_total += 1
                         riwc_cnt += iwc
@@ -429,7 +435,8 @@ class WhooshIndexingDaemon(object):
         log.debug('BUILDING INDEX FOR EXTENSIONS %s '
                   'AND REPOS %s' % (INDEX_EXTENSIONS, self.repo_paths.keys()))
 
-        for repo_name, repo in self.repo_paths.items():
+        for repo_name, repo in sorted(self.repo_paths.items()):
+            log.debug('Updating indices for repo %s', repo_name)
             # skip indexing if there aren't any revisions
             if len(repo) < 1:
                 continue

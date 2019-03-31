@@ -19,72 +19,78 @@
 
 <%def name="main()">
 ${self.repo_context_bar('changelog')}
-<div class="box">
-    <!-- box / title -->
-    <div class="title">
+<div class="panel panel-primary">
+    <div class="panel-heading clearfix">
         ${self.breadcrumbs()}
     </div>
-    <div class="table">
-        <div id="body" class="diffblock">
-            <div class="code-header">
-                <div>
-                    ${h.hidden('compare_org')} <i class="icon-right"></i> ${h.hidden('compare_other')}
+    <div class="panel-body">
+      <div class="panel panel-default">
+        <div id="body" class="panel-heading">
+            <div class="compare-revision-selector">
+                ## divs are "inline-block" and cannot have whitespace between them.
+                <span>
+                    ${h.hidden('compare_org')}
+                </span><span>
+                    <i class="icon-right"></i>
+                </span><span>
+                    ${h.hidden('compare_other')}
+                </span><span>
                     %if not c.compare_home:
-                        <a class="btn btn-small" href="${c.swap_url}"><i class="icon-arrows-cw"></i> ${_('Swap')}</a>
+                        <a class="btn btn-default btn-sm" href="${c.swap_url}"><i class="icon-arrows-cw"></i>${_('Swap')}</a>
                     %endif
-                    <div id="compare_revs" class="btn btn-small"><i class="icon-git-compare"></i> ${_('Compare Revisions')}</div>
-                </div>
+                    <button type="button" id="compare_revs" class="btn btn-default btn-sm"><i class="icon-git-compare"></i>${_('Compare Revisions')}</button>
+                </span>
             </div>
         </div>
 
     %if c.compare_home:
-        <div id="changeset_compare_view_content">
-         <div style="color:#999;font-size: 18px">${_('Compare revisions, branches, bookmarks, or tags.')}</div>
+        <div id="changeset_compare_view_content" class="panel-body">
+         <h4 class="text-muted">${_('Compare revisions, branches, bookmarks, or tags.')}</h4>
         </div>
     %else:
-        <div id="changeset_compare_view_content">
+        <div id="changeset_compare_view_content" class="panel-body">
                 ##CS
-                <div style="font-size:1.1em;font-weight: bold;clear:both;padding-top:10px">${ungettext('Showing %s commit','Showing %s commits', len(c.cs_ranges)) % len(c.cs_ranges)}</div>
+                <h5>${ungettext('Showing %s commit','Showing %s commits', len(c.cs_ranges)) % len(c.cs_ranges)}</h5>
                 <%include file="compare_cs.html" />
 
                 ## FILES
-                <div style="font-size:1.1em;font-weight: bold;clear:both;padding-top:10px">
-
+                <h5>
                 % if c.limited_diff:
-                    ${ungettext('%s file changed', '%s files changed', len(c.files)) % len(c.files)}
+                    ${ungettext('%s file changed', '%s files changed', len(c.file_diff_data)) % len(c.file_diff_data)}:
                 % else:
-                    ${ungettext('%s file changed with %s insertions and %s deletions','%s files changed with %s insertions and %s deletions', len(c.files)) % (len(c.files),c.lines_added,c.lines_deleted)}:
+                    ${ungettext('%s file changed with %s insertions and %s deletions','%s files changed with %s insertions and %s deletions', len(c.file_diff_data)) % (len(c.file_diff_data),c.lines_added,c.lines_deleted)}:
                 %endif
 
                 ${c.ignorews_url(request.GET)}
                 ${c.context_url(request.GET)}
-
-                </div>
+                </h5>
                 <div class="cs_files">
-                  %if not c.files:
-                     <span class="empty_data">${_('No files')}</span>
+                  %if not c.file_diff_data:
+                     <span class="text-muted">${_('No files')}</span>
                   %endif
-                  %for fid, change, f, stat in c.files:
-                     <div class="cs_${change}">
-                         <div class="node">
-                             <i class="icon-diff-${change}"></i>
-                             ${h.link_to(h.safe_unicode(f), '#' + fid)}
-                         </div>
-                         <div class="changes">${h.fancy_file_stats(stat)}</div>
-                     </div>
+                  %for fid, url_fid, op, a_path, path, diff, stats in c.file_diff_data:
+                    <div class="cs_${op} clearfix">
+                      <span class="node">
+                          <i class="icon-diff-${op}"></i>
+                          ${h.link_to(h.safe_unicode(path), '#%s' % fid)}
+                      </span>
+                      <div class="changes">${h.fancy_file_stats(stats)}</div>
+                    </div>
                   %endfor
+                  %if c.limited_diff:
+                    <h5>${_('Changeset was too big and was cut off...')} <a href="${h.url.current(fulldiff=1, **request.GET.mixed())}">${_('Show full diff anyway')}</a></h5>
+                  %endif
                 </div>
-                % if c.limited_diff:
-                  <h5>${_('Changeset was too big and was cut off...')} <a href="${h.url.current(fulldiff=1, **request.GET.mixed())}">${_('Show full diff')}</a></h5>
-                % endif
-         </div>
+        </div>
+      </div>
+    %endif
 
+    %if not c.compare_home:
         ## diff block
         <%namespace name="diff_block" file="/changeset/diff_block.html"/>
         ${diff_block.diff_block_js()}
-        %for fid, change, f, stat in c.files:
-          ${diff_block.diff_block_simple([c.changes[fid]])}
-        %endfor
+        ${diff_block.diff_block(c.a_repo.repo_name, c.a_ref_type, c.a_ref_name, c.a_rev,
+                                c.cs_repo.repo_name, c.cs_ref_type, c.cs_ref_name, c.cs_rev, c.file_diff_data)}
         % if c.limited_diff:
           <h4>${_('Changeset was too big and was cut off...')} <a href="${h.url.current(fulldiff=1, **request.GET.mixed())}">${_('Show full diff')}</a></h4>
         % endif
@@ -97,27 +103,32 @@ ${self.repo_context_bar('changelog')}
    $(document).ready(function(){
     var cache = {};
 
-    function make_revision_dropdown(css_selector, placeholder, repo_name, cache_key) {
+    function make_revision_dropdown(css_selector, repo_name, ref_name, cache_key) {
       $(css_selector).select2({
-        placeholder: placeholder,
+        placeholder: '{0}@{1}'.format(repo_name, ref_name || ${h.jshtml(_('Select changeset'))}),
         formatSelection: function(obj){
             return '{0}@{1}'.format(repo_name, obj.text).html_escape();
         },
         dropdownAutoWidth: true,
+        maxResults: 50,
         query: function(query){
           var key = cache_key;
           var cached = cache[key] ;
           if(cached) {
             var data = {results: []};
+            var queryLower = query.term.toLowerCase();
             //filter results
             $.each(cached.results, function(){
                 var section = this.text;
                 var children = [];
                 $.each(this.children, function(){
-                    if(query.term.length == 0 || this.text.toUpperCase().indexOf(query.term.toUpperCase()) >= 0 ){
+                    if(children.length < 50 ?
+                       ((queryLower.length == 0) || (this.text.toLowerCase().indexOf(queryLower) >= 0)) :
+                       ((queryLower.length != 0) && (this.text.toLowerCase().indexOf(queryLower) == 0))) {
                         children.push(this);
                     }
                 });
+                children = branchSort(children, undefined, query)
                 data.results.push({'text': section, 'children': children});
             });
             //push the typed in changeset
@@ -140,8 +151,8 @@ ${self.repo_context_bar('changelog')}
     });
     }
 
-    make_revision_dropdown("#compare_org",   ${h.js('%s@%s' % (c.a_repo.repo_name, c.a_ref_name))},   "${c.a_repo.repo_name}",  'cache');
-    make_revision_dropdown("#compare_other", ${h.js('%s@%s' % (c.cs_repo.repo_name, c.cs_ref_name))}, "${c.cs_repo.repo_name}", 'cache2');
+    make_revision_dropdown("#compare_org",   ${h.js(c.a_repo.repo_name)},  ${h.js(c.a_ref_name)},  'cache');
+    make_revision_dropdown("#compare_other", ${h.js(c.cs_repo.repo_name)}, ${h.js(c.cs_ref_name)}, 'cache2');
 
     var values_changed = function() {
         var values = $('#compare_org').select2('data') && $('#compare_other').select2('data');
@@ -163,7 +174,7 @@ ${self.repo_context_bar('changelog')}
             return;
         }
 
-        var compare_url = "${h.url('compare_url',repo_name=c.repo_name,org_ref_type='__other_ref_type__',org_ref_name='__org__',other_ref_type='__org_ref_type__',other_ref_name='__other__', other_repo=c.cs_repo.repo_name)}";
+        var compare_url = ${h.js(h.url('compare_url',repo_name=c.repo_name,org_ref_type='__other_ref_type__',org_ref_name='__org__',other_ref_type='__org_ref_type__',other_ref_name='__other__', other_repo=c.cs_repo.repo_name))};
         var u = compare_url.replace('__other_ref_type__',org.type)
                            .replace('__org__',org.text)
                            .replace('__org_ref_type__',other.type)

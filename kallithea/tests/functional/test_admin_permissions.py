@@ -1,5 +1,12 @@
+import time
+
 from kallithea.model.db import User, UserIpMap
-from kallithea.tests import *
+from kallithea.model.user import UserModel
+from kallithea.model.meta import Session
+from kallithea.tests.base import *
+
+from tg.util.webtest import test_context
+
 
 class TestAdminPermissionsController(TestController):
 
@@ -14,32 +21,55 @@ class TestAdminPermissionsController(TestController):
         # Test response...
         response.mustcontain('All IP addresses are allowed')
 
-    def test_add_ips(self):
+    def test_add_delete_ips(self, auto_clear_ip_permissions):
         self.log_user()
         default_user_id = User.get_default_user().user_id
-        response = self.app.put(url('edit_user_ips', id=default_user_id),
-                                 params=dict(new_ip='127.0.0.0/24',
+
+        # Add IP and verify it is shown in UI and both gives access and rejects
+
+        response = self.app.post(url('edit_user_ips_update', id=default_user_id),
+                                 params=dict(new_ip='0.0.0.0/24',
                                  _authentication_token=self.authentication_token()))
+        invalidate_all_caches()
+        response = self.app.get(url('admin_permissions_ips'),
+                                extra_environ={'REMOTE_ADDR': '0.0.0.1'})
+        response.mustcontain('0.0.0.0/24')
+        response.mustcontain('0.0.0.0 - 0.0.0.255')
 
-        response = self.app.get(url('admin_permissions_ips'))
-        response.mustcontain('127.0.0.0/24')
-        response.mustcontain('127.0.0.0 - 127.0.0.255')
+        response = self.app.get(url('admin_permissions_ips'),
+                                extra_environ={'REMOTE_ADDR': '0.0.1.1'}, status=403)
 
-        ## delete
-        default_user_id = User.get_default_user().user_id
-        del_ip_id = UserIpMap.query().filter(UserIpMap.user_id ==
-                                             default_user_id).first().ip_id
+        # Add another IP and verify previously rejected now works
 
-        response = self.app.post(url('edit_user_ips', id=default_user_id),
-                                 params=dict(_method='delete',
-                                             del_ip_id=del_ip_id,
+        response = self.app.post(url('edit_user_ips_update', id=default_user_id),
+                                 params=dict(new_ip='0.0.1.0/24',
+                                 _authentication_token=self.authentication_token()))
+        invalidate_all_caches()
+
+        response = self.app.get(url('admin_permissions_ips'),
+                                extra_environ={'REMOTE_ADDR': '0.0.1.1'})
+
+        # Delete latest IP and verify same IP is rejected again
+
+        x = UserIpMap.query().filter_by(ip_addr='0.0.1.0/24').first()
+        response = self.app.post(url('edit_user_ips_delete', id=default_user_id),
+                                 params=dict(del_ip_id=x.ip_id,
                                              _authentication_token=self.authentication_token()))
+        invalidate_all_caches()
 
-        response = self.app.get(url('admin_permissions_ips'))
-        response.mustcontain('All IP addresses are allowed')
-        response.mustcontain(no=['127.0.0.0/24'])
-        response.mustcontain(no=['127.0.0.0 - 127.0.0.255'])
+        response = self.app.get(url('admin_permissions_ips'),
+                                extra_environ={'REMOTE_ADDR': '0.0.1.1'}, status=403)
 
+        # Delete first IP and verify unlimited access again
+
+        x = UserIpMap.query().filter_by(ip_addr='0.0.0.0/24').first()
+        response = self.app.post(url('edit_user_ips_delete', id=default_user_id),
+                                 params=dict(del_ip_id=x.ip_id,
+                                             _authentication_token=self.authentication_token()))
+        invalidate_all_caches()
+
+        response = self.app.get(url('admin_permissions_ips'),
+                                extra_environ={'REMOTE_ADDR': '0.0.1.1'})
 
     def test_index_overview(self):
         self.log_user()
@@ -53,7 +83,6 @@ class TestAdminPermissionsController(TestController):
         response = self.app.post(
             url('edit_repo_perms_update', repo_name=HG_REPO),
             params=dict(
-                _method='put',
                 perm_new_member_1='repository.read',
                 perm_new_member_name_1=user.username,
                 perm_new_member_type_1='user',
@@ -66,7 +95,6 @@ class TestAdminPermissionsController(TestController):
         response = self.app.post(
             url('edit_repo_perms_revoke', repo_name=HG_REPO),
             params=dict(
-                _method='delete',
                 obj_type='user',
                 user_id=user.user_id,
                 _authentication_token=self.authentication_token()),
@@ -80,7 +108,6 @@ class TestAdminPermissionsController(TestController):
         response = self.app.post(
             url('edit_repo_perms_update', repo_name=HG_REPO),
             params=dict(
-                _method='put',
                 perm_new_member_1='repository.read',
                 perm_new_member_name_1=user.username,
                 perm_new_member_type_1='user',
@@ -92,9 +119,8 @@ class TestAdminPermissionsController(TestController):
         response = self.app.post(
             url('edit_repo_perms_revoke', repo_name=HG_REPO),
             params=dict(
-                _method='delete',
                 obj_type='user',
                 user_id=user.user_id,
                 _authentication_token=self.authentication_token()),
-            status=200) # success has no content
+            status=200)
         assert not response.body

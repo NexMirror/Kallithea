@@ -1,28 +1,51 @@
 List of contributors to Kallithea project:
 
+    Andrej Shadura <andrew@shadura.me> 2012 2014-2017 2019
     Thomas De Schampheleire <thomas.de_schampheleire@nokia.com> 2014-2019
+    Étienne Gilli <etienne.gilli@gmail.com> 2015-2017 2019
     Mads Kiilerich <mads@kiilerich.com> 2016-2019
+    Allan Nordhøy <epost@anotheragency.no> 2017-2019
+    Danni Randeris <danniranderis@gmail.com> 2019
+    Edmund Wong <ewong@crazy-cat.org> 2019
+    Manuel Jacob <me@manueljacob.de> 2019
+    Dominik Ruf <dominikruf@gmail.com> 2012 2014-2018
     Michal Čihař <michal@cihar.com> 2014-2015 2018
     Branko Majic <branko@majic.rs> 2015 2018
+    Chris Rule <crule@aegistg.com> 2018
+    Jesús Sánchez <jsanchezfdz95@gmail.com> 2018
+    Patrick Vane <patrick_vane@lowentry.com> 2018
+    Pheng Heong Tan <phtan90@gmail.com> 2018
     ssantos <ssantos@web.de> 2018
     Максим Якимчук <xpinovo@gmail.com> 2018
     Марс Ямбар <mjambarmeta@gmail.com> 2018
     Mads Kiilerich <madski@unity3d.com> 2012-2017
     Unity Technologies 2012-2017
-    Andrew Shadura <andrew@shadura.me> 2012 2014-2017
-    Dominik Ruf <dominikruf@gmail.com> 2012 2014 2016-2017
-    Étienne Gilli <etienne.gilli@gmail.com> 2015 2017
+    Søren Løvborg <sorenl@unity3d.com> 2015-2017
     Sam Jaques <sam.jaques@me.com> 2015 2017
-    Allan Nordhøy <epost@anotheragency.no> 2017
+    Asterios Dimitriou <steve@pci.gr> 2016-2017
+    Alessandro Molina <alessandro.molina@axant.it> 2017
+    Anton Schur <tonich.sh@gmail.com> 2017
     Ching-Chen Mao <mao@lins.fju.edu.tw> 2017
+    Eivind Tagseth <eivindt@gmail.com> 2017
     FUJIWARA Katsunori <foozy@lares.dti.ne.jp> 2017
+    Holger Schramm <info@schramm.by> 2017
+    Karl Goetz <karl@kgoetz.id.au> 2017
+    Lars Kruse <devel@sumpfralle.de> 2017
+    Marko Semet <markosemet@googlemail.com> 2017
     Viktar Vauchkevich <victorenator@gmail.com> 2017
     Takumi IINO <trot.thunder@gmail.com> 2012-2016
-    Søren Løvborg <sorenl@unity3d.com> 2015-2016
+    Jan Heylen <heyleke@gmail.com> 2015-2016
+    Robert Martinez <ntttq@inboxen.org> 2015-2016
+    Robert Rauch <mail@robertrauch.de> 2015-2016
+    Angel Ezquerra <angel.ezquerra@gmail.com> 2016
     Anton Shestakov <av6@dwimlabs.net> 2016
     Brandon Jones <bjones14@gmail.com> 2016
+    Kateryna Musina <kateryna@unity3d.com> 2016
     Konstantin Veretennicov <kveretennicov@gmail.com> 2016
+    Oscar Curero <oscar@naiandei.net> 2016
     Robert James Dennington <tinytimrob@googlemail.com> 2016
+    timeless@gmail.com 2016
+    YFdyh000 <yfdyh000@gmail.com> 2016
     Aras Pranckevičius <aras@unity3d.com> 2012-2013 2015
     Sean Farley <sean.michael.farley@gmail.com> 2013-2015
     Christian Oyarzun <oyarzun@gmail.com> 2014-2015
@@ -37,7 +60,7 @@ List of contributors to Kallithea project:
     duanhongyi <duanhongyi@doopai.com> 2015
     EriCSN Chang <ericsning@gmail.com> 2015
     Grzegorz Krason <grzegorz.krason@gmail.com> 2015
-    Jan Heylen <heyleke@gmail.com> 2015
+    Jiří Suchan <yed@vanyli.net> 2015
     Kazunari Kobayashi <kobanari@nifty.com> 2015
     Kevin Bullock <kbullock@ringworld.org> 2015
     kobanari <kobanari@nifty.com> 2015
@@ -50,11 +73,10 @@ List of contributors to Kallithea project:
     Nick High <nick@silverchip.org> 2015
     Niemand Jedermann <predatorix@web.de> 2015
     Peter Vitt <petervitt@web.de> 2015
-    Robert Martinez <ntttq@inboxen.org> 2015
-    Robert Rauch <mail@robertrauch.de> 2015
     Ronny Pfannschmidt <opensource@ronnypfannschmidt.de> 2015
     Tuux <tuxa@galaxie.eu.org> 2015
     Viktar Palstsiuk <vipals@gmail.com> 2015
+    Ante Ilic <ante@unity3d.com> 2014
     Bradley M. Kuhn <bkuhn@sfconservancy.org> 2014
     Calinou <calinou@opmbx.org> 2014
     Daniel Anderson <daniel@dattrix.com> 2014

@@ -26,16 +26,16 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 import os
+import random
 import time
 import logging
 import traceback
 import shutil
 
-from kallithea.lib.utils2 import safe_unicode, unique_id, safe_int, \
+from kallithea.lib.utils2 import safe_unicode, safe_int, \
     time_to_datetime, AttributeDict
 from kallithea.lib.compat import json
-from kallithea.model import BaseModel
-from kallithea.model.db import Gist
+from kallithea.model.db import Gist, Session, User
 from kallithea.model.repo import RepoModel
 from kallithea.model.scm import ScmModel
 
@@ -45,16 +45,15 @@ GIST_STORE_LOC = '.rc_gist_store'
 GIST_METADATA_FILE = '.rc_gist_metadata'
 
 
-class GistModel(BaseModel):
-    cls = Gist
+def make_gist_id():
+    """Generate a random, URL safe, almost certainly unique gist identifier."""
+    rnd = random.SystemRandom() # use cryptographically secure system PRNG
+    alphabet = '23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjklmnpqrstuvwxyz'
+    length = 20
+    return u''.join(rnd.choice(alphabet) for _ in xrange(length))
 
-    def _get_gist(self, gist):
-        """
-        Helper method to get gist by ID, or gist_access_id as a fallback
 
-        :param gist: GistID, gist_access_id, or Gist instance
-        """
-        return self._get_instance(Gist, gist, callback=Gist.get_by_access_id)
+class GistModel(object):
 
     def __delete_gist(self, gist):
         """
@@ -86,7 +85,7 @@ class GistModel(BaseModel):
             f.write(json.dumps(metadata))
 
     def get_gist(self, gist):
-        return self._get_gist(gist)
+        return Gist.guess_instance(gist)
 
     def get_gist_files(self, gist_access_id, revision=None):
         """
@@ -108,27 +107,26 @@ class GistModel(BaseModel):
         :param gist_type: type of gist private/public
         :param lifetime: in minutes, -1 == forever
         """
-        owner = self._get_user(owner)
-        gist_id = safe_unicode(unique_id(20))
+        owner = User.guess_instance(owner)
+        gist_id = make_gist_id()
         lifetime = safe_int(lifetime, -1)
         gist_expires = time.time() + (lifetime * 60) if lifetime != -1 else -1
         log.debug('set GIST expiration date to: %s',
                   time_to_datetime(gist_expires)
                    if gist_expires != -1 else 'forever')
-        #create the Database version
+        # create the Database version
         gist = Gist()
         gist.gist_description = description
         gist.gist_access_id = gist_id
-        gist.gist_owner = owner.user_id
+        gist.owner_id = owner.user_id
         gist.gist_expires = gist_expires
         gist.gist_type = safe_unicode(gist_type)
-        self.sa.add(gist)
-        self.sa.flush()
+        Session().add(gist)
+        Session().flush() # make database assign gist.gist_id
         if gist_type == Gist.GIST_PUBLIC:
             # use DB ID for easy to use GIST ID
             gist_id = safe_unicode(gist.gist_id)
             gist.gist_access_id = gist_id
-            self.sa.add(gist)
 
         gist_repo_path = os.path.join(GIST_STORE_LOC, gist_id)
         log.debug('Creating new %s GIST repo in %s', gist_type, gist_repo_path)
@@ -141,7 +139,7 @@ class GistModel(BaseModel):
                 raise Exception('Filename cannot be inside a directory')
 
             content = gist_mapping[filename]['content']
-            #TODO: expand support for setting explicit lexers
+            # TODO: expand support for setting explicit lexers
 #             if lexer is None:
 #                 try:
 #                     guess_lexer = pygments.lexers.guess_lexer_for_filename
@@ -155,7 +153,7 @@ class GistModel(BaseModel):
         message += 's: ' if len(processed_mapping) > 1 else ': '
         message += ', '.join([x for x in processed_mapping])
 
-        #fake Kallithea Repository object
+        # fake Kallithea Repository object
         fake_repo = AttributeDict(dict(
             repo_name=gist_repo_path,
             scm_instance_no_cache=lambda: repo,
@@ -172,9 +170,9 @@ class GistModel(BaseModel):
         return gist
 
     def delete(self, gist, fs_remove=True):
-        gist = self._get_gist(gist)
+        gist = Gist.guess_instance(gist)
         try:
-            self.sa.delete(gist)
+            Session().delete(gist)
             if fs_remove:
                 self.__delete_gist(gist)
             else:
@@ -185,7 +183,7 @@ class GistModel(BaseModel):
 
     def update(self, gist, description, owner, gist_mapping, gist_type,
                lifetime):
-        gist = self._get_gist(gist)
+        gist = Gist.guess_instance(gist)
         gist_repo = gist.scm_instance
 
         lifetime = safe_int(lifetime, -1)
@@ -194,7 +192,7 @@ class GistModel(BaseModel):
         else:
             gist_expires = time.time() + (lifetime * 60) if lifetime != -1 else -1
 
-        #calculate operation type based on given data
+        # calculate operation type based on given data
         gist_mapping_op = {}
         for k, v in gist_mapping.items():
             # add, mod, del
@@ -212,14 +210,12 @@ class GistModel(BaseModel):
         gist.gist_expires = gist_expires
         gist.owner = owner
         gist.gist_type = gist_type
-        self.sa.add(gist)
-        self.sa.flush()
 
         message = 'updated file'
         message += 's: ' if len(gist_mapping) > 1 else ': '
         message += ', '.join([x for x in gist_mapping])
 
-        #fake Kallithea Repository object
+        # fake Kallithea Repository object
         fake_repo = AttributeDict(dict(
             repo_name=gist_repo.path,
             scm_instance_no_cache=lambda: gist_repo,

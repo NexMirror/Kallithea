@@ -1,0 +1,121 @@
+#!/bin/sh -e
+
+if [ $# -lt 2 ] || [ $# -gt 3 ]; then
+    cat >&2 <<EOD
+usage: $0 CONFIG_FILE FROM_REV [TO_REV]
+
+Runs a database migration from FROM_REV to TO_REV (default: current
+working directory parent), using the specified CONFIG_FILE (.ini file).
+
+Test is run using a clean Kallithea install, in a temporary virtual
+environment. FROM_REV and (optional) TO_REV should be Mercurial revision
+identifiers (e.g. changeset hash or a version number tag). The working
+directory is not touched, but the database referenced in the config file
+will be (re)created.
+
+Only SQLite is available out of the box; for MySQL or PostgreSQL, set
+the EXTRA environment variable to the required package(s), and it'll
+be installed in the virtual environment. (E.g. EXTRA=MySQL-python or
+EXTRA=psycopg2.)
+
+The temporary directory is not removed, allowing follow-up examination
+of the upgrade results. It is, however, created in /tmp by default,
+which many Linux distributions automatically clean at regular intervals.
+EOD
+    exit 1
+fi
+
+config_file=$(readlink -f "$1")
+from_rev=$2
+to_rev=$3
+source_repo=$(dirname "$(dirname "$(readlink -f "$0")")")
+
+announce() {
+    echo
+    echo "$1"
+    echo
+}
+
+quiet_if_ok() (
+    local output
+    local st
+    set +e
+    output=$("$@" < /dev/null 2>&1)
+    st=$?
+    if [ $st -ne 0 ]; then
+        echo "$output" >&2
+        echo "Command $@ returned exit status $st." >&2
+        exit 1
+    fi
+)
+
+HG() {
+    "${HG:-hg}" --repository "$source_repo" "$@"
+}
+
+# If upgrading to "current revision", warn if working directory is dirty.
+if [ ! "$to_rev" ] && [ "$(HG status -mard)" ]; then
+    announce "Warning: Uncommitted changes in working directory will be ignored!"
+fi
+
+from_rev_hash=$(HG id --id --rev "${from_rev:-.}")
+to_rev_hash=$(HG id --id --rev "${to_rev:-.}")
+temp=$(readlink -f "$(mktemp --tmpdir -d 'dbmigrate-test.XXXXXX')")
+
+cat <<EOD
+Config file:    $config_file
+EOD
+sed -n -e 's/^sqlalchemy\.url *= */Database URL:   /p' "$config_file"
+cat <<EOD
+Working dir:    $temp
+Repository:     $source_repo
+Upgrade from:   $from_rev_hash (${from_rev:-current})
+Upgrade to:     $to_rev_hash (${to_rev:-current})
+Extra packages: ${EXTRA:-(none)}
+EOD
+
+mkdir "$temp/repos" # empty
+
+# Enable caching for old pip versions (this will cache the pip upgrade)
+# Newer pip versions cache automatically, and don't use this variable.
+if [ ! "$PIP_DOWNLOAD_CACHE" ]; then
+    export PIP_DOWNLOAD_CACHE=$HOME/.cache/pip/legacy
+fi
+
+install_kallithea() {
+    local prefix=$1
+    local rev=$2
+
+    announce "Installing Kallithea $rev in $prefix..."
+
+    "${VIRTUALENV:-virtualenv}" --quiet "$prefix-env"
+    HG archive --rev "$rev" "$prefix"
+
+    (
+        cd "$prefix"
+        . "$prefix-env/bin/activate"
+        pip install --quiet --upgrade pip setuptools mercurial $EXTRA
+        pip install --quiet -e .
+    )
+}
+
+install_kallithea "$temp/from" "$from_rev_hash"
+(
+    cd "$temp/from"
+    . "$temp/from-env/bin/activate"
+    announce "Initializing database..."
+    quiet_if_ok kallithea-cli db-create -c "$config_file" --repos="$temp/repos" --user=doe --email=doe@example.com --password=123456 --no-public-access --force-yes
+    alembic -c "$config_file" current -v
+)
+
+install_kallithea "$temp/to" "$to_rev_hash"
+(
+    cd "$temp/to"
+    . "$temp/to-env/bin/activate"
+
+    announce "Commencing database upgrade from shown Alembic revision to head..."
+    alembic -c "$config_file" current -v
+    alembic -c "$config_file" upgrade head
+    announce "Upgrade complete, now at the shown Alembic revision:"
+    alembic -c "$config_file" current -v
+)

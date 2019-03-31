@@ -111,8 +111,8 @@ class RcConf(object):
             return True
         return False
 
-    def __eq__(self):
-        return self._conf.__eq__()
+    def __eq__(self, other):
+        return self._conf.__eq__(other)
 
     def __repr__(self):
         return 'RcConf<%s>' % self._conf.__repr__()
@@ -158,7 +158,7 @@ class RcConf(object):
         """
         try:
             with open(self._conf_name, 'rb') as conf:
-                return  json.load(conf)
+                return json.load(conf)
         except IOError as e:
             #sys.stderr.write(str(e) + '\n')
             pass

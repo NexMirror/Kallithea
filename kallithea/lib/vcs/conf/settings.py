@@ -17,7 +17,7 @@ if os.path.isdir(VCSRC_PATH):
     VCSRC_PATH = os.path.join(VCSRC_PATH, '__init__.py')
 
 # list of default encoding used in safe_unicode/safe_str methods
-DEFAULT_ENCODINGS = aslist('utf8')
+DEFAULT_ENCODINGS = aslist('utf-8')
 
 # path to git executable run by run_git_command function
 GIT_EXECUTABLE_PATH = 'git'

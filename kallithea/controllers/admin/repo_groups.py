@@ -32,16 +32,16 @@ import itertools
 
 from formencode import htmlfill
 
-from pylons import request, tmpl_context as c, url
-from pylons.controllers.util import abort, redirect
-from pylons.i18n.translation import _, ungettext
+from tg import request, tmpl_context as c, app_globals
+from tg.i18n import ugettext as _, ungettext
+from webob.exc import HTTPFound, HTTPForbidden, HTTPNotFound, HTTPInternalServerError
 
 import kallithea
+from kallithea.config.routing import url
 from kallithea.lib import helpers as h
-from kallithea.lib.compat import json
 from kallithea.lib.auth import LoginRequired, \
-    HasRepoGroupPermissionAnyDecorator, HasRepoGroupPermissionAll, \
-    HasPermissionAll
+    HasRepoGroupPermissionLevelDecorator, HasRepoGroupPermissionLevel, \
+    HasPermissionAny
 from kallithea.lib.base import BaseController, render
 from kallithea.model.db import RepoGroup, Repository
 from kallithea.model.scm import RepoGroupList, AvailableRepoGroupChoices
@@ -49,7 +49,6 @@ from kallithea.model.repo_group import RepoGroupModel
 from kallithea.model.forms import RepoGroupForm, RepoGroupPermsForm
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
-from webob.exc import HTTPInternalServerError, HTTPNotFound
 from kallithea.lib.utils2 import safe_int
 from sqlalchemy.sql.expression import func
 
@@ -59,23 +58,19 @@ log = logging.getLogger(__name__)
 
 class RepoGroupsController(BaseController):
 
-    @LoginRequired()
-    def __before__(self):
-        super(RepoGroupsController, self).__before__()
+    @LoginRequired(allow_default_user=True)
+    def _before(self, *args, **kwargs):
+        super(RepoGroupsController, self)._before(*args, **kwargs)
 
     def __load_defaults(self, extras=(), exclude=()):
         """extras is used for keeping current parent ignoring permissions
         exclude is used for not moving group to itself TODO: also exclude descendants
         Note: only admin can create top level groups
         """
-        repo_groups = AvailableRepoGroupChoices([], ['group.admin'], extras)
+        repo_groups = AvailableRepoGroupChoices([], 'admin', extras)
         exclude_group_ids = set(rg.group_id for rg in exclude)
         c.repo_groups = [rg for rg in repo_groups
                          if rg[0] not in exclude_group_ids]
-
-        repo_model = RepoModel()
-        c.users_array = repo_model.get_users_js()
-        c.user_groups_array = repo_model.get_user_groups_js()
 
     def __load_data(self, group_id):
         """
@@ -100,24 +95,20 @@ class RepoGroupsController(BaseController):
         return data
 
     def _revoke_perms_on_yourself(self, form_result):
-        _up = filter(lambda u: c.authuser.username == u[0],
+        _up = filter(lambda u: request.authuser.username == u[0],
                      form_result['perms_updates'])
-        _new = filter(lambda u: c.authuser.username == u[0],
+        _new = filter(lambda u: request.authuser.username == u[0],
                       form_result['perms_new'])
         if _new and _new[0][1] != 'group.admin' or _up and _up[0][1] != 'group.admin':
             return True
         return False
 
     def index(self, format='html'):
-        """GET /repo_groups: All items in the collection"""
-        # url('repos_groups')
-        _list = RepoGroup.query()\
-                    .order_by(func.lower(RepoGroup.group_name))\
-                    .all()
-        group_iter = RepoGroupList(_list, perm_set=['group.admin'])
+        _list = RepoGroup.query(sorted=True).all()
+        group_iter = RepoGroupList(_list, perm_level='admin')
         repo_groups_data = []
         total_records = len(group_iter)
-        _tmpl_lookup = kallithea.CONFIG['pylons.app_globals'].mako_lookup
+        _tmpl_lookup = app_globals.mako_lookup
         template = _tmpl_lookup.get_template('data_table/_dt_elements.html')
 
         repo_group_name = lambda repo_group_name, children_groups: (
@@ -140,25 +131,20 @@ class RepoGroupsController(BaseController):
                 "group_name": repo_group_name(repo_gr.group_name, children_groups),
                 "desc": h.escape(repo_gr.group_description),
                 "repos": repo_count,
-                "owner": h.person(repo_gr.user),
+                "owner": h.person(repo_gr.owner),
                 "action": repo_group_actions(repo_gr.group_id, repo_gr.group_name,
                                              repo_count)
             })
 
-        c.data = json.dumps({
-            "totalRecords": total_records,
-            "startIndex": 0,
+        c.data = {
             "sort": None,
             "dir": "asc",
             "records": repo_groups_data
-        })
+        }
 
         return render('admin/repo_groups/repo_groups.html')
 
     def create(self):
-        """POST /repo_groups: Create a new item"""
-        # url('repos_groups')
-
         self.__load_defaults()
 
         # permissions for can create group based on parent_id are checked
@@ -169,12 +155,12 @@ class RepoGroupsController(BaseController):
             gr = RepoGroupModel().create(
                 group_name=form_result['group_name'],
                 group_description=form_result['group_description'],
-                parent=form_result['group_parent_id'],
-                owner=self.authuser.user_id, # TODO: make editable
+                parent=form_result['parent_group_id'],
+                owner=request.authuser.user_id, # TODO: make editable
                 copy_permissions=form_result['group_copy_permissions']
             )
             Session().commit()
-            #TODO: in futureaction_logger(, '', '', '', self.sa)
+            # TODO: in future action_logger(, '', '', '')
         except formencode.Invalid as errors:
             return htmlfill.render(
                 render('admin/repo_groups/repo_group_add.html'),
@@ -185,20 +171,18 @@ class RepoGroupsController(BaseController):
                 force_defaults=False)
         except Exception:
             log.error(traceback.format_exc())
-            h.flash(_('Error occurred during creation of repository group %s') \
+            h.flash(_('Error occurred during creation of repository group %s')
                     % request.POST.get('group_name'), category='error')
-            parent_group_id = form_result['group_parent_id']
-            #TODO: maybe we should get back to the main view, not the admin one
-            return redirect(url('repos_groups', parent_group=parent_group_id))
+            parent_group_id = form_result['parent_group_id']
+            # TODO: maybe we should get back to the main view, not the admin one
+            raise HTTPFound(location=url('repos_groups', parent_group=parent_group_id))
         h.flash(_('Created repository group %s') % gr.group_name,
                 category='success')
-        return redirect(url('repos_group_home', group_name=gr.group_name))
+        raise HTTPFound(location=url('repos_group_home', group_name=gr.group_name))
 
     def new(self):
-        """GET /repo_groups/new: Form to create a new item"""
-        # url('new_repos_group')
-        if HasPermissionAll('hg.admin')('group create'):
-            #we're global admin, we're ok and we can create TOP level groups
+        if HasPermissionAny('hg.admin')('group create'):
+            # we're global admin, we're ok and we can create TOP level groups
             pass
         else:
             # we pass in parent group into creation form, thus we know
@@ -206,31 +190,23 @@ class RepoGroupsController(BaseController):
             group_id = safe_int(request.GET.get('parent_group'))
             group = RepoGroup.get(group_id) if group_id else None
             group_name = group.group_name if group else None
-            if HasRepoGroupPermissionAll('group.admin')(group_name, 'group create'):
+            if HasRepoGroupPermissionLevel('admin')(group_name, 'group create'):
                 pass
             else:
-                return abort(403)
+                raise HTTPForbidden()
 
         self.__load_defaults()
         return render('admin/repo_groups/repo_group_add.html')
 
-    @HasRepoGroupPermissionAnyDecorator('group.admin')
+    @HasRepoGroupPermissionLevelDecorator('admin')
     def update(self, group_name):
-        """PUT /repo_groups/group_name: Update an existing item"""
-        # Forms posted to this method should contain a hidden field:
-        #    <input type="hidden" name="_method" value="PUT" />
-        # Or using helpers:
-        #    h.form(url('repos_group', group_name=GROUP_NAME),
-        #           method='put')
-        # url('repos_group', group_name=GROUP_NAME)
-
-        c.repo_group = RepoGroupModel()._get_repo_group(group_name)
+        c.repo_group = RepoGroup.guess_instance(group_name)
         self.__load_defaults(extras=[c.repo_group.parent_group],
                              exclude=[c.repo_group])
 
         # TODO: kill allow_empty_group - it is only used for redundant form validation!
-        if HasPermissionAll('hg.admin')('group edit'):
-            #we're global admin, we're ok and we can create TOP level groups
+        if HasPermissionAny('hg.admin')('group edit'):
+            # we're global admin, we're ok and we can create TOP level groups
             allow_empty_group = True
         elif not c.repo_group.parent_group:
             allow_empty_group = True
@@ -247,13 +223,13 @@ class RepoGroupsController(BaseController):
 
             new_gr = RepoGroupModel().update(group_name, form_result)
             Session().commit()
-            h.flash(_('Updated repository group %s') \
+            h.flash(_('Updated repository group %s')
                     % form_result['group_name'], category='success')
             # we now have new name !
             group_name = new_gr.group_name
-            #TODO: in future action_logger(, '', '', '', self.sa)
+            # TODO: in future action_logger(, '', '', '')
         except formencode.Invalid as errors:
-
+            c.active = 'settings'
             return htmlfill.render(
                 render('admin/repo_groups/repo_group_edit.html'),
                 defaults=errors.value,
@@ -263,48 +239,40 @@ class RepoGroupsController(BaseController):
                 force_defaults=False)
         except Exception:
             log.error(traceback.format_exc())
-            h.flash(_('Error occurred during update of repository group %s') \
+            h.flash(_('Error occurred during update of repository group %s')
                     % request.POST.get('group_name'), category='error')
 
-        return redirect(url('edit_repo_group', group_name=group_name))
+        raise HTTPFound(location=url('edit_repo_group', group_name=group_name))
 
-    @HasRepoGroupPermissionAnyDecorator('group.admin')
+    @HasRepoGroupPermissionLevelDecorator('admin')
     def delete(self, group_name):
-        """DELETE /repo_groups/group_name: Delete an existing item"""
-        # Forms posted to this method should contain a hidden field:
-        #    <input type="hidden" name="_method" value="DELETE" />
-        # Or using helpers:
-        #    h.form(url('repos_group', group_name=GROUP_NAME),
-        #           method='delete')
-        # url('repos_group', group_name=GROUP_NAME)
-
-        gr = c.repo_group = RepoGroupModel()._get_repo_group(group_name)
+        gr = c.repo_group = RepoGroup.guess_instance(group_name)
         repos = gr.repositories.all()
         if repos:
             h.flash(_('This group contains %s repositories and cannot be '
                       'deleted') % len(repos), category='warning')
-            return redirect(url('repos_groups'))
+            raise HTTPFound(location=url('repos_groups'))
 
         children = gr.children.all()
         if children:
             h.flash(_('This group contains %s subgroups and cannot be deleted'
                       % (len(children))), category='warning')
-            return redirect(url('repos_groups'))
+            raise HTTPFound(location=url('repos_groups'))
 
         try:
             RepoGroupModel().delete(group_name)
             Session().commit()
             h.flash(_('Removed repository group %s') % group_name,
                     category='success')
-            #TODO: in future action_logger(, '', '', '', self.sa)
+            # TODO: in future action_logger(, '', '', '')
         except Exception:
             log.error(traceback.format_exc())
             h.flash(_('Error occurred during deletion of repository group %s')
                     % group_name, category='error')
 
         if gr.parent_group:
-            return redirect(url('repos_group_home', group_name=gr.parent_group.group_name))
-        return redirect(url('repos_groups'))
+            raise HTTPFound(location=url('repos_group_home', group_name=gr.parent_group.group_name))
+        raise HTTPFound(location=url('repos_groups'))
 
     def show_by_name(self, group_name):
         """
@@ -317,42 +285,27 @@ class RepoGroupsController(BaseController):
             return self.show(group_name)
         raise HTTPNotFound
 
-    @HasRepoGroupPermissionAnyDecorator('group.read', 'group.write',
-                                         'group.admin')
+    @HasRepoGroupPermissionLevelDecorator('read')
     def show(self, group_name):
-        """GET /repo_groups/group_name: Show a specific item"""
-        # url('repos_group', group_name=GROUP_NAME)
         c.active = 'settings'
 
-        c.group = c.repo_group = RepoGroupModel()._get_repo_group(group_name)
-        c.group_repos = c.group.repositories.all()
+        c.group = c.repo_group = RepoGroup.guess_instance(group_name)
 
-        #overwrite our cached list with current filter
-        c.repo_cnt = 0
+        groups = RepoGroup.query(sorted=True).filter_by(parent_group=c.group).all()
+        repo_groups_list = self.scm_model.get_repo_groups(groups)
 
-        groups = RepoGroup.query().order_by(RepoGroup.group_name)\
-            .filter(RepoGroup.group_parent_id == c.group.group_id).all()
-        c.groups = self.scm_model.get_repo_groups(groups)
-
-        c.repos_list = Repository.query()\
-                        .filter(Repository.group_id == c.group.group_id)\
-                        .order_by(func.lower(Repository.repo_name))\
-                        .all()
-
-        repos_data = RepoModel().get_repos_as_dict(repos_list=c.repos_list,
-                                                   admin=False)
-        #json used to render the grid
-        c.data = json.dumps(repos_data)
+        repos_list = Repository.query(sorted=True).filter_by(group=c.group).all()
+        c.data = RepoModel().get_repos_as_dict(repos_list,
+                                               repo_groups_list=repo_groups_list,
+                                               short_name=True)
 
         return render('admin/repo_groups/repo_group_show.html')
 
-    @HasRepoGroupPermissionAnyDecorator('group.admin')
+    @HasRepoGroupPermissionLevelDecorator('admin')
     def edit(self, group_name):
-        """GET /repo_groups/group_name/edit: Form to edit an existing item"""
-        # url('edit_repo_group', group_name=GROUP_NAME)
         c.active = 'settings'
 
-        c.repo_group = RepoGroupModel()._get_repo_group(group_name)
+        c.repo_group = RepoGroup.guess_instance(group_name)
         self.__load_defaults(extras=[c.repo_group.parent_group],
                              exclude=[c.repo_group])
         defaults = self.__load_data(c.repo_group.group_id)
@@ -364,21 +317,17 @@ class RepoGroupsController(BaseController):
             force_defaults=False
         )
 
-    @HasRepoGroupPermissionAnyDecorator('group.admin')
+    @HasRepoGroupPermissionLevelDecorator('admin')
     def edit_repo_group_advanced(self, group_name):
-        """GET /repo_groups/group_name/edit: Form to edit an existing item"""
-        # url('edit_repo_group', group_name=GROUP_NAME)
         c.active = 'advanced'
-        c.repo_group = RepoGroupModel()._get_repo_group(group_name)
+        c.repo_group = RepoGroup.guess_instance(group_name)
 
         return render('admin/repo_groups/repo_group_edit.html')
 
-    @HasRepoGroupPermissionAnyDecorator('group.admin')
+    @HasRepoGroupPermissionLevelDecorator('admin')
     def edit_repo_group_perms(self, group_name):
-        """GET /repo_groups/group_name/edit: Form to edit an existing item"""
-        # url('edit_repo_group', group_name=GROUP_NAME)
         c.active = 'perms'
-        c.repo_group = RepoGroupModel()._get_repo_group(group_name)
+        c.repo_group = RepoGroup.guess_instance(group_name)
         self.__load_defaults()
         defaults = self.__load_data(c.repo_group.group_id)
 
@@ -389,7 +338,7 @@ class RepoGroupsController(BaseController):
             force_defaults=False
         )
 
-    @HasRepoGroupPermissionAnyDecorator('group.admin')
+    @HasRepoGroupPermissionLevelDecorator('admin')
     def update_perms(self, group_name):
         """
         Update permissions for given repository group
@@ -397,14 +346,14 @@ class RepoGroupsController(BaseController):
         :param group_name:
         """
 
-        c.repo_group = RepoGroupModel()._get_repo_group(group_name)
+        c.repo_group = RepoGroup.guess_instance(group_name)
         valid_recursive_choices = ['none', 'repos', 'groups', 'all']
         form_result = RepoGroupPermsForm(valid_recursive_choices)().to_python(request.POST)
-        if not c.authuser.is_admin:
+        if not request.authuser.is_admin:
             if self._revoke_perms_on_yourself(form_result):
                 msg = _('Cannot revoke permission for yourself as admin')
                 h.flash(msg, category='warning')
-                return redirect(url('edit_repo_group_perms', group_name=group_name))
+                raise HTTPFound(location=url('edit_repo_group_perms', group_name=group_name))
         recursive = form_result['recursive']
         # iterate over all members(if in recursive mode) of this groups and
         # set the permissions !
@@ -413,20 +362,15 @@ class RepoGroupsController(BaseController):
                                              form_result['perms_new'],
                                              form_result['perms_updates'],
                                              recursive)
-        #TODO: implement this
-        #action_logger(self.authuser, 'admin_changed_repo_permissions',
-        #              repo_name, self.ip_addr, self.sa)
+        # TODO: implement this
+        #action_logger(request.authuser, 'admin_changed_repo_permissions',
+        #              repo_name, request.ip_addr)
         Session().commit()
         h.flash(_('Repository group permissions updated'), category='success')
-        return redirect(url('edit_repo_group_perms', group_name=group_name))
+        raise HTTPFound(location=url('edit_repo_group_perms', group_name=group_name))
 
-    @HasRepoGroupPermissionAnyDecorator('group.admin')
+    @HasRepoGroupPermissionLevelDecorator('admin')
     def delete_perms(self, group_name):
-        """
-        DELETE an existing repository group permission user
-
-        :param group_name:
-        """
         try:
             obj_type = request.POST.get('obj_type')
             obj_id = None
@@ -435,8 +379,8 @@ class RepoGroupsController(BaseController):
             elif obj_type == 'user_group':
                 obj_id = safe_int(request.POST.get('user_group_id'))
 
-            if not c.authuser.is_admin:
-                if obj_type == 'user' and c.authuser.user_id == obj_id:
+            if not request.authuser.is_admin:
+                if obj_type == 'user' and request.authuser.user_id == obj_id:
                     msg = _('Cannot revoke permission for yourself as admin')
                     h.flash(msg, category='warning')
                     raise Exception('revoke admin permission on self')

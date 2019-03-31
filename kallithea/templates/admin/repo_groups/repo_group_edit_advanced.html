@@ -1,4 +1,4 @@
-<div style="font-size: 24px; color: #666666; padding: 0px 0px 10px 0px">${_('Repository Group: %s') % c.repo_group.group_name}</div>
+<h4>${_('Repository Group: %s') % c.repo_group.group_name}</h4>
 
 <dl class="dl-horizontal">
 <%
@@ -7,21 +7,21 @@
     (_('Total repositories'), c.repo_group.repositories_recursive_count, ''),
     (_('Children groups'), c.repo_group.children.count(), ''),
     (_('Created on'), h.fmt_date(c.repo_group.created_on), ''),
-    (_('Owner'), h.person(c.repo_group.user), ''),
+    (_('Owner'), h.person(c.repo_group.owner), ''),
  ]
 %>
 %for dt, dd, tt in elems:
-  <dt style="width:150px; text-align: left">${dt}:</dt>
-  <dd style="margin-left: 160px" title="${tt}">${dd}</dd>
+  <dt>${dt}:</dt>
+  <dd title="${tt}">${dd}</dd>
 %endfor
 </dl>
 
-${h.form(h.url('repos_group', group_name=c.repo_group.group_name),method='delete')}
-    <button class="btn btn-small btn-danger" type="submit"
+${h.form(h.url('delete_repo_group', group_name=c.repo_group.group_name))}
+    <button class="btn btn-danger btn-sm" type="submit"
             onclick="return confirm('${ungettext('Confirm to delete this group: %s with %s repository',
           'Confirm to delete this group: %s with %s repositories',
  c.repo_group.repositories_recursive_count) % (c.repo_group.group_name, c.repo_group.repositories_recursive_count)}');">
-        <i class="icon-minus-circled"></i>
+        <i class="icon-trashcan"></i>
         ${_('Delete this repository group')}
     </button>
 ${h.end_form()}

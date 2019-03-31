@@ -6,29 +6,24 @@
 </%block>
 
 <%def name="breadcrumbs_links()">
-    <form id="filter_form">
-    <input class="q_filter_box ${'' if c.search_term else 'initial'}" id="j_filter" size="15" type="text" name="filter" value="${c.search_term or _('journal filter...')}"/>
-    <span class="tooltip" title="${h.journal_filter_help()}">?</span>
-    <input type='submit' value="${_('Filter')}" class="btn btn-mini" style="padding:0px 2px 0px 2px;margin:0px"/>
-    ${_('Admin Journal')} - ${ungettext('%s Entry', '%s Entries', c.users_log.item_count) % (c.users_log.item_count)}
+    <form id="filter_form" class="pull-left form-inline input-group-sm">
+        <input class="form-control q_filter_box ${'' if c.search_term else 'initial'}" id="j_filter" size="15" type="text" name="filter" value="${c.search_term or _('journal filter...')}"/>
+        <span data-toggle="popover" data-content="${h.journal_filter_help()}">?</span>
+        <input type='submit' value="${_('Filter')}" class="btn btn-default btn-xs"/>
+        ${_('Admin Journal')} - ${ungettext('%s Entry', '%s Entries', c.users_log.item_count) % (c.users_log.item_count)}
     </form>
-    ${h.end_form()}
 </%def>
 
 <%block name="header_menu">
     ${self.menu('admin')}
 </%block>
 <%def name="main()">
-<div class="box">
-    <!-- box / title -->
-    <div class="title">
+<div class="panel panel-primary">
+    <div class="panel-heading clearfix">
         ${self.breadcrumbs()}
     </div>
-    <!-- end box / title -->
-    <div class="table">
-        <div id="user_log">
+    <div id="user_log" class="panel-body">
             <%include file='admin_log.html'/>
-        </div>
     </div>
 </div>
 
@@ -49,7 +44,7 @@ $(document).ready(function() {
   $('#filter_form').submit(function (e) {
       e.preventDefault();
       var val = $('#j_filter').val();
-      window.location = "${url.current(filter='__FILTER__')}".replace('__FILTER__',val);
+      window.location = ${h.js(url.current(filter='__FILTER__'))}.replace('__FILTER__',val);
   });
   fix_j_filter_width($('#j_filter').val().length);
 });

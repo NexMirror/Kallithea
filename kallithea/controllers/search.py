@@ -28,10 +28,10 @@ Original author and date, and relevant copyright and licensing information is be
 import logging
 import traceback
 import urllib
-from pylons.i18n.translation import _
-from pylons import request, config, tmpl_context as c
+from tg.i18n import ugettext as _
+from tg import request, config, tmpl_context as c
 
-from whoosh.index import open_dir, EmptyIndexError
+from whoosh.index import open_dir, exists_in, EmptyIndexError
 from whoosh.qparser import QueryParser, QueryParserError
 from whoosh.query import Phrase, Prefix
 from webhelpers.util import update_params
@@ -40,19 +40,16 @@ from kallithea.lib.auth import LoginRequired
 from kallithea.lib.base import BaseRepoController, render
 from kallithea.lib.indexers import CHGSETS_SCHEMA, SCHEMA, CHGSET_IDX_NAME, \
     IDX_NAME, WhooshResultWrapper
-from kallithea.model.repo import RepoModel
+from kallithea.lib.page import Page
 from kallithea.lib.utils2 import safe_str, safe_int
-from kallithea.lib.helpers import Page
+from kallithea.model.repo import RepoModel
 
 log = logging.getLogger(__name__)
 
 
 class SearchController(BaseRepoController):
 
-    def __before__(self):
-        super(SearchController, self).__before__()
-
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     def index(self, repo_name=None):
         c.repo_name = repo_name
         c.formated_results = []
@@ -85,16 +82,20 @@ class SearchController(BaseRepoController):
             log.debug(cur_query)
 
         if c.cur_query:
-            p = safe_int(request.GET.get('page', 1), 1)
+            p = safe_int(request.GET.get('page'), 1)
             highlight_items = set()
+            index_dir = config['app_conf']['index_dir']
             try:
-                idx = open_dir(config['app_conf']['index_dir'],
-                               indexname=index_name)
+                if not exists_in(index_dir, index_name):
+                    raise EmptyIndexError
+                idx = open_dir(index_dir, indexname=index_name)
                 searcher = idx.searcher()
 
                 qp = QueryParser(search_type, schema=schema_defn)
                 if c.repo_name:
-                    cur_query = u'repository:%s %s' % (c.repo_name, cur_query)
+                    # use "repository_rawname:" instead of "repository:"
+                    # for case-sensitive matching
+                    cur_query = u'repository_rawname:%s %s' % (c.repo_name, cur_query)
                 try:
                     query = qp.parse(unicode(cur_query))
                     # extract words for highlight
@@ -134,12 +135,10 @@ class SearchController(BaseRepoController):
                 except QueryParserError:
                     c.runtime = _('Invalid search query. Try quoting it.')
                 searcher.close()
-            except (EmptyIndexError, IOError):
-                log.error(traceback.format_exc())
-                log.error('Empty Index data')
-                c.runtime = _('There is no index to search in. '
-                              'Please run whoosh indexer')
-            except (Exception):
+            except EmptyIndexError:
+                log.error("Empty search index - run 'kallithea-cli index-create' regularly")
+                c.runtime = _('The server has no search index.')
+            except Exception:
                 log.error(traceback.format_exc())
                 c.runtime = _('An error occurred during search operation.')
 

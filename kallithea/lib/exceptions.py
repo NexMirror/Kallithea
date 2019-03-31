@@ -27,6 +27,8 @@ Original author and date, and relevant copyright and licensing information is be
 
 from webob.exc import HTTPClientError
 
+from kallithea.lib.utils2 import safe_str
+
 
 class LdapUsernameError(Exception):
     pass
@@ -57,10 +59,6 @@ class UserGroupsAssignedException(Exception):
     pass
 
 
-class StatusChangeOnClosedPullRequestError(Exception):
-    pass
-
-
 class AttachedForksError(Exception):
     pass
 
@@ -86,8 +84,8 @@ class HTTPLockedRC(HTTPClientError):
         from kallithea.lib.utils2 import safe_int
         _code = CONFIG.get('lock_ret_code')
         self.code = safe_int(_code, self.code)
-        self.title = self.explanation = ('Repository `%s` locked by '
-                                         'user `%s`' % (reponame, username))
+        self.title = self.explanation = safe_str(
+            'Repository `%s` locked by user `%s`' % (reponame, username))
         super(HTTPLockedRC, self).__init__(*args, **kwargs)
 
 
@@ -96,10 +94,6 @@ class IMCCommitError(Exception):
 
 
 class UserCreationError(Exception):
-    pass
-
-
-class UserInvalidException(Exception):
     pass
 
 

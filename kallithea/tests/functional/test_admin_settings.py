@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from kallithea.model.db import Setting, Ui
-from kallithea.tests import *
+from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
 
 fixture = Fixture()
@@ -37,31 +37,69 @@ class TestAdminSettingsController(TestController):
         self.log_user()
         response = self.app.post(url('admin_settings_hooks'),
                                 params=dict(new_hook_ui_key='test_hooks_1',
-                                            new_hook_ui_value='cd /tmp',
+                                            new_hook_ui_value='cd %s' % TESTS_TMP_PATH,
+                                            _authentication_token=self.authentication_token()))
+
+        self.checkSessionFlash(response, 'Added new hook')
+        response = response.follow()
+        response.mustcontain('test_hooks_1')
+        response.mustcontain('cd %s' % TESTS_TMP_PATH)
+
+    def test_edit_custom_hook(self):
+        self.log_user()
+        response = self.app.post(url('admin_settings_hooks'),
+                                params=dict(hook_ui_key='test_hooks_1',
+                                            hook_ui_value='old_value_of_hook_1',
+                                            hook_ui_value_new='new_value_of_hook_1',
                                             _authentication_token=self.authentication_token()))
 
         response = response.follow()
         response.mustcontain('test_hooks_1')
-        response.mustcontain('cd /tmp')
+        response.mustcontain('new_value_of_hook_1')
+
+    def test_add_existing_custom_hook(self):
+        self.log_user()
+        response = self.app.post(url('admin_settings_hooks'),
+                                params=dict(new_hook_ui_key='test_hooks_1',
+                                            new_hook_ui_value='attempted_new_value',
+                                            _authentication_token=self.authentication_token()))
+
+        self.checkSessionFlash(response, 'Hook already exists')
+        response = response.follow()
+        response.mustcontain('test_hooks_1')
+        response.mustcontain('new_value_of_hook_1')
 
     def test_create_custom_hook_delete(self):
         self.log_user()
         response = self.app.post(url('admin_settings_hooks'),
                                 params=dict(new_hook_ui_key='test_hooks_2',
-                                            new_hook_ui_value='cd /tmp2',
+                                            new_hook_ui_value='cd %s2' % TESTS_TMP_PATH,
                                             _authentication_token=self.authentication_token()))
 
+        self.checkSessionFlash(response, 'Added new hook')
         response = response.follow()
         response.mustcontain('test_hooks_2')
-        response.mustcontain('cd /tmp2')
+        response.mustcontain('cd %s2' % TESTS_TMP_PATH)
 
-        hook_id = Ui.get_by_key('test_hooks_2').ui_id
+        hook_id = Ui.get_by_key('hooks', 'test_hooks_2').ui_id
         ## delete
         self.app.post(url('admin_settings_hooks'),
                         params=dict(hook_id=hook_id, _authentication_token=self.authentication_token()))
         response = self.app.get(url('admin_settings_hooks'))
         response.mustcontain(no=['test_hooks_2'])
-        response.mustcontain(no=['cd /tmp2'])
+        response.mustcontain(no=['cd %s2' % TESTS_TMP_PATH])
+
+    def test_add_existing_builtin_hook(self):
+        self.log_user()
+        response = self.app.post(url('admin_settings_hooks'),
+                                params=dict(new_hook_ui_key='changegroup.update',
+                                            new_hook_ui_value='attempted_new_value',
+                                            _authentication_token=self.authentication_token()))
+
+        self.checkSessionFlash(response, 'Builtin hooks are read-only')
+        response = response.follow()
+        response.mustcontain('changegroup.update')
+        response.mustcontain('hg update &gt;&amp;2')
 
     def test_index_search(self):
         self.log_user()
@@ -87,8 +125,7 @@ class TestAdminSettingsController(TestController):
 
         self.checkSessionFlash(response, 'Updated application settings')
 
-        self.assertEqual(Setting
-                         .get_app_settings()['ga_code'], new_ga_code)
+        assert Setting.get_app_settings()['ga_code'] == new_ga_code
 
         response = response.follow()
         response.mustcontain("""_gaq.push(['_setAccount', '%s']);""" % new_ga_code)
@@ -108,8 +145,7 @@ class TestAdminSettingsController(TestController):
                                  ))
 
         self.checkSessionFlash(response, 'Updated application settings')
-        self.assertEqual(Setting
-                        .get_app_settings()['ga_code'], new_ga_code)
+        assert Setting.get_app_settings()['ga_code'] == new_ga_code
 
         response = response.follow()
         response.mustcontain(no=["_gaq.push(['_setAccount', '%s']);" % new_ga_code])
@@ -129,8 +165,7 @@ class TestAdminSettingsController(TestController):
                                  ))
 
         self.checkSessionFlash(response, 'Updated application settings')
-        self.assertEqual(Setting
-                        .get_app_settings()['captcha_private_key'], '1234567890')
+        assert Setting.get_app_settings()['captcha_private_key'] == '1234567890'
 
         response = self.app.get(url('register'))
         response.mustcontain('captcha')
@@ -150,8 +185,7 @@ class TestAdminSettingsController(TestController):
                                  ))
 
         self.checkSessionFlash(response, 'Updated application settings')
-        self.assertEqual(Setting
-                        .get_app_settings()['captcha_private_key'], '')
+        assert Setting.get_app_settings()['captcha_private_key'] == ''
 
         response = self.app.get(url('register'))
         response.mustcontain(no=['captcha'])
@@ -173,9 +207,7 @@ class TestAdminSettingsController(TestController):
                                 ))
 
             self.checkSessionFlash(response, 'Updated application settings')
-            self.assertEqual(Setting
-                             .get_app_settings()['title'],
-                             new_title.decode('utf-8'))
+            assert Setting.get_app_settings()['title'] == new_title.decode('utf-8')
 
             response = response.follow()
-            response.mustcontain("""<div class="branding">%s</div>""" % new_title)
+            response.mustcontain("""<span class="branding">%s</span>""" % new_title)

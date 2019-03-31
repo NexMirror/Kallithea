@@ -19,7 +19,7 @@ def import_class(class_path):
     try:
         class_mod = __import__(mod_path, {}, {}, [class_name])
     except ImportError as err:
-        msg = "There was problem while trying to import backend class. "\
+        msg = "There was problem while trying to import backend class. " \
             "Original error was:\n%s" % err
         raise VCSError(msg)
     cls = getattr(class_mod, class_name)

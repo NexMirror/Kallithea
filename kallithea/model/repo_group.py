@@ -32,27 +32,16 @@ import traceback
 import shutil
 import datetime
 
-import kallithea.lib.utils
+import kallithea.lib.utils2
 from kallithea.lib.utils2 import LazyProperty
 
-from kallithea.model import BaseModel
-from kallithea.model.db import RepoGroup, Ui, UserRepoGroupToPerm, \
+from kallithea.model.db import RepoGroup, Session, Ui, UserRepoGroupToPerm, \
     User, Permission, UserGroupRepoGroupToPerm, UserGroup, Repository
 
 log = logging.getLogger(__name__)
 
 
-class RepoGroupModel(BaseModel):
-
-    cls = RepoGroup
-
-    def _get_user_group(self, users_group):
-        return self._get_instance(UserGroup, users_group,
-                                  callback=UserGroup.get_by_group_name)
-
-    def _get_repo_group(self, repo_group):
-        return self._get_instance(RepoGroup, repo_group,
-                                  callback=RepoGroup.get_by_group_name)
+class RepoGroupModel(object):
 
     @LazyProperty
     def repos_path(self):
@@ -60,7 +49,7 @@ class RepoGroupModel(BaseModel):
         Gets the repositories root path from database
         """
 
-        q = Ui.get_by_key('/')
+        q = Ui.get_by_key('paths', '/')
         return q.ui_value
 
     def _create_default_perms(self, new_group):
@@ -77,6 +66,7 @@ class RepoGroupModel(BaseModel):
 
         repo_group_to_perm.group = new_group
         repo_group_to_perm.user_id = def_user.user_id
+        Session().add(repo_group_to_perm)
         return repo_group_to_perm
 
     def _create_group(self, group_name):
@@ -136,7 +126,7 @@ class RepoGroupModel(BaseModel):
             if force_delete:
                 shutil.rmtree(rm_path)
             else:
-                #archive that group`
+                # archive that group
                 _now = datetime.datetime.now()
                 _ms = str(_now.microsecond).rjust(6, '0')
                 _d = 'rm__%s_GROUP_%s' % (_now.strftime('%Y%m%d_%H%M%S_' + _ms),
@@ -146,22 +136,22 @@ class RepoGroupModel(BaseModel):
     def create(self, group_name, group_description, owner, parent=None,
                just_db=False, copy_permissions=False):
         try:
-            if kallithea.lib.utils.repo_name_slug(group_name) != group_name:
+            if kallithea.lib.utils2.repo_name_slug(group_name) != group_name:
                 raise Exception('invalid repo group name %s' % group_name)
 
-            user = self._get_user(owner)
-            parent_group = self._get_repo_group(parent)
+            owner = User.guess_instance(owner)
+            parent_group = RepoGroup.guess_instance(parent)
             new_repo_group = RepoGroup()
-            new_repo_group.user = user
+            new_repo_group.owner = owner
             new_repo_group.group_description = group_description or group_name
             new_repo_group.parent_group = parent_group
             new_repo_group.group_name = new_repo_group.get_new_name(group_name)
 
-            self.sa.add(new_repo_group)
+            Session().add(new_repo_group)
 
             # create an ADMIN permission for owner except if we're super admin,
             # later owner should go into the owner field of groups
-            if not user.is_admin:
+            if not owner.is_admin:
                 self.grant_user_permission(repo_group=new_repo_group,
                                            user=owner, perm='group.admin')
 
@@ -177,19 +167,18 @@ class RepoGroupModel(BaseModel):
                     # don't copy over the permission for user who is creating
                     # this group, if he is not super admin he get's admin
                     # permission set above
-                    if perm.user != user or user.is_admin:
+                    if perm.user != owner or owner.is_admin:
                         UserRepoGroupToPerm.create(perm.user, new_repo_group, perm.permission)
 
                 for perm in group_perms:
                     UserGroupRepoGroupToPerm.create(perm.users_group, new_repo_group, perm.permission)
             else:
-                perm_obj = self._create_default_perms(new_repo_group)
-                self.sa.add(perm_obj)
+                self._create_default_perms(new_repo_group)
 
             if not just_db:
                 # we need to flush here, in order to check if database won't
                 # throw any exceptions, create filesystem dirs at the very end
-                self.sa.flush()
+                Session().flush()
                 self._create_group(new_repo_group.group_name)
 
             return new_repo_group
@@ -201,7 +190,7 @@ class RepoGroupModel(BaseModel):
                             perms_updates=None, recursive=None,
                             check_perms=True):
         from kallithea.model.repo import RepoModel
-        from kallithea.lib.auth import HasUserGroupPermissionAny
+        from kallithea.lib.auth import HasUserGroupPermissionLevel
 
         if not perms_new:
             perms_new = []
@@ -212,9 +201,11 @@ class RepoGroupModel(BaseModel):
             if isinstance(obj, RepoGroup):
                 self.grant_user_permission(repo_group=obj, user=user, perm=perm)
             elif isinstance(obj, Repository):
+                user = User.guess_instance(user)
+
                 # private repos will not allow to change the default permissions
                 # using recursive mode
-                if obj.private and user == User.DEFAULT_USER:
+                if obj.private and user.is_default_user:
                     return
 
                 # we set group permission but we have to switch to repo
@@ -246,7 +237,7 @@ class RepoGroupModel(BaseModel):
             # iterated obj is an instance of a repos group or repository in
             # that group, recursive option can be: none, repos, groups, all
             if recursive == 'all':
-                obj = obj
+                pass
             elif recursive == 'repos':
                 # skip groups, other than this one
                 if isinstance(obj, RepoGroup) and not obj == repo_group:
@@ -267,18 +258,16 @@ class RepoGroupModel(BaseModel):
                     _set_perm_user(obj, user=member, perm=perm)
                 ## set for user group
                 else:
-                    #check if we have permissions to alter this usergroup
-                    req_perms = ('usergroup.read', 'usergroup.write', 'usergroup.admin')
-                    if not check_perms or HasUserGroupPermissionAny(*req_perms)(member):
+                    # check if we have permissions to alter this usergroup's access
+                    if not check_perms or HasUserGroupPermissionLevel('read')(member):
                         _set_perm_group(obj, users_group=member, perm=perm)
             # set new permissions
             for member, perm, member_type in perms_new:
                 if member_type == 'user':
                     _set_perm_user(obj, user=member, perm=perm)
                 else:
-                    #check if we have permissions to alter this usergroup
-                    req_perms = ('usergroup.read', 'usergroup.write', 'usergroup.admin')
-                    if not check_perms or HasUserGroupPermissionAny(*req_perms)(member):
+                    # check if we have permissions to alter this usergroup's access
+                    if not check_perms or HasUserGroupPermissionLevel('read')(member):
                         _set_perm_group(obj, users_group=member, perm=perm)
             updates.append(obj)
             # if it's not recursive call for all,repos,groups
@@ -288,24 +277,29 @@ class RepoGroupModel(BaseModel):
 
         return updates
 
-    def update(self, repo_group, form_data):
-
+    def update(self, repo_group, repo_group_args):
         try:
-            repo_group = self._get_repo_group(repo_group)
+            repo_group = RepoGroup.guess_instance(repo_group)
             old_path = repo_group.full_path
 
             # change properties
-            repo_group.group_description = form_data['group_description']
-            repo_group.group_parent_id = form_data['group_parent_id']
-            repo_group.enable_locking = form_data['enable_locking']
+            if 'group_description' in repo_group_args:
+                repo_group.group_description = repo_group_args['group_description']
+            if 'parent_group_id' in repo_group_args:
+                repo_group.parent_group_id = repo_group_args['parent_group_id']
+            if 'enable_locking' in repo_group_args:
+                repo_group.enable_locking = repo_group_args['enable_locking']
 
-            repo_group.parent_group = RepoGroup.get(form_data['group_parent_id'])
-            group_name = form_data['group_name']
-            if kallithea.lib.utils.repo_name_slug(group_name) != group_name:
-                raise Exception('invalid repo group name %s' % group_name)
-            repo_group.group_name = repo_group.get_new_name(group_name)
+            if 'parent_group_id' in repo_group_args:
+                assert repo_group_args['parent_group_id'] != u'-1', repo_group_args  # RepoGroupForm should have converted to None
+                repo_group.parent_group = RepoGroup.get(repo_group_args['parent_group_id'])
+            if 'group_name' in repo_group_args:
+                group_name = repo_group_args['group_name']
+                if kallithea.lib.utils2.repo_name_slug(group_name) != group_name:
+                    raise Exception('invalid repo group name %s' % group_name)
+                repo_group.group_name = repo_group.get_new_name(group_name)
             new_path = repo_group.full_path
-            self.sa.add(repo_group)
+            Session().add(repo_group)
 
             # iterate over all members of this groups and do fixes
             # set locking if given
@@ -314,7 +308,7 @@ class RepoGroupModel(BaseModel):
             # if obj is a Repo fix it's name
             # this can be potentially heavy operation
             for obj in repo_group.recursive_groups_and_repos():
-                #set the value from it's parent
+                # set the value from it's parent
                 obj.enable_locking = repo_group.enable_locking
                 if isinstance(obj, RepoGroup):
                     new_name = obj.get_new_name(obj.name)
@@ -328,7 +322,6 @@ class RepoGroupModel(BaseModel):
                     log.debug('Fixing repo %s to new name %s' \
                                 % (obj.repo_name, new_name))
                     obj.repo_name = new_name
-                self.sa.add(obj)
 
             self._rename_group(old_path, new_path)
 
@@ -338,9 +331,9 @@ class RepoGroupModel(BaseModel):
             raise
 
     def delete(self, repo_group, force_delete=False):
-        repo_group = self._get_repo_group(repo_group)
+        repo_group = RepoGroup.guess_instance(repo_group)
         try:
-            self.sa.delete(repo_group)
+            Session().delete(repo_group)
             self._delete_group(repo_group, force_delete)
         except Exception:
             log.error('Error removing repo_group %s', repo_group)
@@ -348,14 +341,14 @@ class RepoGroupModel(BaseModel):
 
     def add_permission(self, repo_group, obj, obj_type, perm, recursive):
         from kallithea.model.repo import RepoModel
-        repo_group = self._get_repo_group(repo_group)
-        perm = self._get_perm(perm)
+        repo_group = RepoGroup.guess_instance(repo_group)
+        perm = Permission.guess_instance(perm)
 
         for el in repo_group.recursive_groups_and_repos():
             # iterated obj is an instance of a repos group or repository in
             # that group, recursive option can be: none, repos, groups, all
             if recursive == 'all':
-                el = el
+                pass
             elif recursive == 'repos':
                 # skip groups, other than this one
                 if isinstance(el, RepoGroup) and not el == repo_group:
@@ -404,13 +397,13 @@ class RepoGroupModel(BaseModel):
         :param recursive: recurse to all children of group
         """
         from kallithea.model.repo import RepoModel
-        repo_group = self._get_repo_group(repo_group)
+        repo_group = RepoGroup.guess_instance(repo_group)
 
         for el in repo_group.recursive_groups_and_repos():
             # iterated obj is an instance of a repos group or repository in
             # that group, recursive option can be: none, repos, groups, all
             if recursive == 'all':
-                el = el
+                pass
             elif recursive == 'repos':
                 # skip groups, other than this one
                 if isinstance(el, RepoGroup) and not el == repo_group:
@@ -457,22 +450,22 @@ class RepoGroupModel(BaseModel):
         :param perm: Instance of Permission, or permission_name
         """
 
-        repo_group = self._get_repo_group(repo_group)
-        user = self._get_user(user)
-        permission = self._get_perm(perm)
+        repo_group = RepoGroup.guess_instance(repo_group)
+        user = User.guess_instance(user)
+        permission = Permission.guess_instance(perm)
 
         # check if we have that permission already
-        obj = self.sa.query(UserRepoGroupToPerm)\
-            .filter(UserRepoGroupToPerm.user == user)\
-            .filter(UserRepoGroupToPerm.group == repo_group)\
+        obj = UserRepoGroupToPerm.query() \
+            .filter(UserRepoGroupToPerm.user == user) \
+            .filter(UserRepoGroupToPerm.group == repo_group) \
             .scalar()
         if obj is None:
             # create new !
             obj = UserRepoGroupToPerm()
+            Session().add(obj)
         obj.group = repo_group
         obj.user = user
         obj.permission = permission
-        self.sa.add(obj)
         log.debug('Granted perm %s to %s on %s', perm, user, repo_group)
         return obj
 
@@ -485,15 +478,15 @@ class RepoGroupModel(BaseModel):
         :param user: Instance of User, user_id or username
         """
 
-        repo_group = self._get_repo_group(repo_group)
-        user = self._get_user(user)
+        repo_group = RepoGroup.guess_instance(repo_group)
+        user = User.guess_instance(user)
 
-        obj = self.sa.query(UserRepoGroupToPerm)\
-            .filter(UserRepoGroupToPerm.user == user)\
-            .filter(UserRepoGroupToPerm.group == repo_group)\
+        obj = UserRepoGroupToPerm.query() \
+            .filter(UserRepoGroupToPerm.user == user) \
+            .filter(UserRepoGroupToPerm.group == repo_group) \
             .scalar()
         if obj is not None:
-            self.sa.delete(obj)
+            Session().delete(obj)
             log.debug('Revoked perm on %s on %s', repo_group, user)
 
     def grant_user_group_permission(self, repo_group, group_name, perm):
@@ -507,24 +500,24 @@ class RepoGroupModel(BaseModel):
             or user group name
         :param perm: Instance of Permission, or permission_name
         """
-        repo_group = self._get_repo_group(repo_group)
-        group_name = self._get_user_group(group_name)
-        permission = self._get_perm(perm)
+        repo_group = RepoGroup.guess_instance(repo_group)
+        group_name = UserGroup.guess_instance(group_name)
+        permission = Permission.guess_instance(perm)
 
         # check if we have that permission already
-        obj = self.sa.query(UserGroupRepoGroupToPerm)\
-            .filter(UserGroupRepoGroupToPerm.group == repo_group)\
-            .filter(UserGroupRepoGroupToPerm.users_group == group_name)\
+        obj = UserGroupRepoGroupToPerm.query() \
+            .filter(UserGroupRepoGroupToPerm.group == repo_group) \
+            .filter(UserGroupRepoGroupToPerm.users_group == group_name) \
             .scalar()
 
         if obj is None:
             # create new
             obj = UserGroupRepoGroupToPerm()
+            Session().add(obj)
 
         obj.group = repo_group
         obj.users_group = group_name
         obj.permission = permission
-        self.sa.add(obj)
         log.debug('Granted perm %s to %s on %s', perm, group_name, repo_group)
         return obj
 
@@ -537,13 +530,13 @@ class RepoGroupModel(BaseModel):
         :param group_name: Instance of UserGroup, users_group_id,
             or user group name
         """
-        repo_group = self._get_repo_group(repo_group)
-        group_name = self._get_user_group(group_name)
+        repo_group = RepoGroup.guess_instance(repo_group)
+        group_name = UserGroup.guess_instance(group_name)
 
-        obj = self.sa.query(UserGroupRepoGroupToPerm)\
-            .filter(UserGroupRepoGroupToPerm.group == repo_group)\
-            .filter(UserGroupRepoGroupToPerm.users_group == group_name)\
+        obj = UserGroupRepoGroupToPerm.query() \
+            .filter(UserGroupRepoGroupToPerm.group == repo_group) \
+            .filter(UserGroupRepoGroupToPerm.users_group == group_name) \
             .scalar()
         if obj is not None:
-            self.sa.delete(obj)
+            Session().delete(obj)
             log.debug('Revoked perm to %s on %s', repo_group, group_name)

@@ -1,15 +1,22 @@
-## -*- coding: utf-8 -*-
-<%inherit file="main.txt"/>
+<%block name="header">\
+<% title = _('Mention in Comment on Pull Request %s "%s"') % (pr_nice_id, pr_title) if is_mention else _('Pull Request %s "%s" Closed') % (pr_nice_id, pr_title) if closing_pr else _('Comment on Pull Request %s "%s"') % (pr_nice_id, pr_title) %>\
+<%include file="header.txt" args="title=title,link=pr_comment_url"/>\
+</%block>\
 
-${_('Comment from %s on %s pull request "%s"') % (pr_comment_user, repo_name, pr_title)|n,unicode}:
-${body|n,unicode}
+<%include file="comment.txt" args="text=body,author=pr_comment_user,status=status_change,close=closing_pr"/>\
 
-%if status_change:
-    %if closing_pr:
-${_('The comment closed the pull request with status')|n,unicode}: ${status_change|n,unicode}
-    %else:
-${_('The comment was made with status')|n,unicode}: ${status_change|n,unicode}
-    %endif
-%endif
+${_('Pull request')|n,unicode} \
+${pr_nice_id|n,unicode} \
+"${pr_title|n,unicode}" \
+${_('by')|n,unicode} \
+${pr_owner.full_name_and_username|n,unicode}
+${_('from')} \
+${pr_source_repo|n,unicode} \
+${_('branch')|n,unicode} \
+${pr_source_branch|n,unicode}
+${_('to')|n,unicode} \
+${pr_target_repo|n,unicode} \
+${_('branch')|n,unicode} \
+${pr_target_branch|n,unicode}
 
-${_('URL')|n,unicode}: ${pr_comment_url|n,unicode}
+<%include file="button.txt" args="url=pr_comment_url,title=_('View Comment')"/>\

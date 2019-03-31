@@ -30,7 +30,7 @@ from kallithea.lib.vcs.exceptions import (
     BranchDoesNotExistError, ChangesetDoesNotExistError, EmptyRepositoryError,
     RepositoryError, TagAlreadyExistError, TagDoesNotExistError
 )
-from kallithea.lib.vcs.utils import safe_unicode, makedate, date_fromtimestamp
+from kallithea.lib.vcs.utils import safe_str, safe_unicode, makedate, date_fromtimestamp
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.vcs.utils.ordered_dict import OrderedDict
 from kallithea.lib.vcs.utils.paths import abspath, get_user_home
@@ -58,9 +58,9 @@ class GitRepository(BaseRepository):
     def __init__(self, repo_path, create=False, src_url=None,
                  update_after_clone=False, bare=False):
 
-        self.path = abspath(repo_path)
-        repo = self._get_repo(create, src_url, update_after_clone, bare)
-        self.bare = repo.bare
+        self.path = safe_unicode(abspath(repo_path))
+        self.repo = self._get_repo(create, src_url, update_after_clone, bare)
+        self.bare = self.repo.bare
 
     @property
     def _config_files(self):
@@ -72,7 +72,7 @@ class GitRepository(BaseRepository):
 
     @property
     def _repo(self):
-        return Repo(self.path)
+        return self.repo
 
     @property
     def head(self):
@@ -118,7 +118,7 @@ class GitRepository(BaseRepository):
             _copts = ['-c', 'core.quotepath=false', ]
         safe_call = False
         if '_safe' in opts:
-            #no exc on failure
+            # no exc on failure
             del opts['_safe']
             safe_call = True
 
@@ -189,7 +189,7 @@ class GitRepository(BaseRepository):
             test_uri = test_uri.rstrip('/') + '/info/refs'
 
         if authinfo:
-            #create a password manager
+            # create a password manager
             passmgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
             passmgr.add_password(*authinfo)
 
@@ -214,7 +214,7 @@ class GitRepository(BaseRepository):
 
         # now detect if it's proper git repo
         gitdata = resp.read()
-        if not 'service=git-upload-pack' in gitdata:
+        if 'service=git-upload-pack' not in gitdata:
             raise urllib2.URLError(
                 "url [%s] does not look like an git" % (cleaned_uri))
 
@@ -239,7 +239,7 @@ class GitRepository(BaseRepository):
                 else:
                     return Repo.init(self.path)
             else:
-                return self._repo
+                return Repo(self.path)
         except (NotGitRepository, OSError) as err:
             raise RepositoryError(err)
 
@@ -262,7 +262,7 @@ class GitRepository(BaseRepository):
         return so.splitlines()
 
     def _get_all_revisions2(self):
-        #alternate implementation using dulwich
+        # alternate implementation using dulwich
         includes = [x[1][0] for x in self._parsed_refs.iteritems()
                     if x[1][1] != 'T']
         return [c.commit.id for c in self._repo.get_walker(include=includes)]
@@ -328,8 +328,8 @@ class GitRepository(BaseRepository):
         Returns normalized url. If schema is not given, would fall to
         filesystem (``file:///``) schema.
         """
-        url = str(url)
-        if url != 'default' and not '://' in url:
+        url = safe_str(url)
+        if url != 'default' and '://' not in url:
             url = ':///'.join(('file', url))
         return url
 
@@ -504,7 +504,7 @@ class GitRepository(BaseRepository):
         return changeset
 
     def get_changesets(self, start=None, end=None, start_date=None,
-           end_date=None, branch_name=None, reverse=False):
+           end_date=None, branch_name=None, reverse=False, max_revisions=None):
         """
         Returns iterator of ``GitChangeset`` objects from start to end (both
         are inclusive), in ascending date order (unless ``reverse`` is set).
@@ -527,7 +527,7 @@ class GitRepository(BaseRepository):
 
         """
         if branch_name and branch_name not in self.branches:
-            raise BranchDoesNotExistError("Branch '%s' not found" \
+            raise BranchDoesNotExistError("Branch '%s' not found"
                                           % branch_name)
         # actually we should check now if it's not an empty repo to not spaw
         # subprocess commands
@@ -537,6 +537,8 @@ class GitRepository(BaseRepository):
         # %H at format means (full) commit hash, initial hashes are retrieved
         # in ascending date order
         cmd = ['log', '--date-order', '--reverse', '--pretty=format:%H']
+        if max_revisions:
+            cmd += ['--max-count=%s' % max_revisions]
         if start_date:
             cmd += ['--since', start_date.strftime('%m/%d/%y %H:%M:%S')]
         if end_date:
@@ -604,7 +606,7 @@ class GitRepository(BaseRepository):
         overflowed_long_int = 2**31
 
         if context >= overflowed_long_int:
-            context = overflowed_long_int-1
+            context = overflowed_long_int - 1
 
         # Negative context values make no sense, and will result in
         # errors. Ensure this does not happen.

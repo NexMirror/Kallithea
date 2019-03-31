@@ -1,7 +1,9 @@
 import re
 from itertools import chain
 from dulwich import objects
+from dulwich.config import ConfigFile
 from subprocess import Popen, PIPE
+from io import BytesIO
 
 from kallithea.lib.vcs.conf import settings
 from kallithea.lib.vcs.backends.base import BaseChangeset, EmptyChangeset
@@ -50,6 +52,10 @@ class GitChangeset(BaseChangeset):
         self._paths = {}
 
     @LazyProperty
+    def bookmarks(self):
+        return ()
+
+    @LazyProperty
     def message(self):
         return safe_unicode(self._commit.message)
 
@@ -87,12 +93,18 @@ class GitChangeset(BaseChangeset):
 
     @LazyProperty
     def branch(self):
-
+        # Note: This function will return one branch name for the changeset -
+        # that might not make sense in Git where branches() is a better match
+        # for the basic model
         heads = self.repository._heads(reverse=False)
-
         ref = heads.get(self.raw_id)
         if ref:
             return safe_unicode(ref)
+
+    @LazyProperty
+    def branches(self):
+        heads = self.repository._heads(reverse=True)
+        return [b for b in heads if heads[b] == self.raw_id] # FIXME: Inefficient ... and returning None!
 
     def _fix_path(self, path):
         """
@@ -106,7 +118,7 @@ class GitChangeset(BaseChangeset):
     def _get_id_for_path(self, path):
         path = safe_str(path)
         # FIXME: Please, spare a couple of minutes and make those codes cleaner;
-        if not path in self._paths:
+        if path not in self._paths:
             path = path.strip('/')
             # set root tree
             tree = self.repository._repo[self._tree_id]
@@ -151,7 +163,7 @@ class GitChangeset(BaseChangeset):
                         name = item
                     self._paths[name] = id
                     self._stat_modes[name] = stat
-            if not path in self._paths:
+            if path not in self._paths:
                 raise NodeDoesNotExistError("There is no file nor directory "
                     "at the given path '%s' at revision %s"
                     % (path, safe_str(self.short_id)))
@@ -398,16 +410,19 @@ class GitChangeset(BaseChangeset):
         filenodes = []
         als = self.repository.alias
         for name, stat, id in tree.iteritems():
-            if objects.S_ISGITLINK(stat):
-                dirnodes.append(SubModuleNode(name, url=None, changeset=id,
-                                              alias=als))
-                continue
-
-            obj = self.repository._repo.get_object(id)
             if path != '':
                 obj_path = '/'.join((path, name))
             else:
                 obj_path = name
+            if objects.S_ISGITLINK(stat):
+                root_tree = self.repository._repo[self._tree_id]
+                cf = ConfigFile.from_file(BytesIO(self.repository._repo.get_object(root_tree['.gitmodules'][1]).data))
+                url = cf.get(('submodule', obj_path), 'url')
+                dirnodes.append(SubModuleNode(obj_path, url=url, changeset=id,
+                                              alias=als))
+                continue
+
+            obj = self.repository._repo.get_object(id)
             if obj_path not in self._stat_modes:
                 self._stat_modes[obj_path] = stat
             if isinstance(obj, objects.Tree):
@@ -419,7 +434,7 @@ class GitChangeset(BaseChangeset):
                                      "or Blob, is %r" % type(obj))
         nodes = dirnodes + filenodes
         for node in nodes:
-            if not node.path in self.nodes:
+            if node.path not in self.nodes:
                 self.nodes[node.path] = node
         nodes.sort()
         return nodes
@@ -428,7 +443,7 @@ class GitChangeset(BaseChangeset):
         if isinstance(path, unicode):
             path = path.encode('utf-8')
         path = self._fix_path(path)
-        if not path in self.nodes:
+        if path not in self.nodes:
             try:
                 id_ = self._get_id_for_path(path)
             except ChangesetError:
@@ -437,7 +452,10 @@ class GitChangeset(BaseChangeset):
 
             _GL = lambda m: m and objects.S_ISGITLINK(m)
             if _GL(self._stat_modes.get(path)):
-                node = SubModuleNode(path, url=None, changeset=id_,
+                tree = self.repository._repo[self._tree_id]
+                cf = ConfigFile.from_file(BytesIO(self.repository._repo.get_object(tree['.gitmodules'][1]).data))
+                url = cf.get(('submodule', path), 'url')
+                node = SubModuleNode(path, url=url, changeset=id_,
                                      alias=self.repository.alias)
             else:
                 obj = self.repository._repo.get_object(id_)

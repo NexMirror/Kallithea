@@ -26,6 +26,22 @@ The following describes three different ways of installing Kallithea:
   have to remove its dependencies manually and make sure that they are not
   needed by other packages.
 
+Regardless of the installation method you may need to make sure you have
+appropriate development packages installed, as installation of some of the
+Kallithea dependencies requires a working C compiler and libffi library
+headers. Depending on your configuration, you may also need to install
+Git and development packages for the database of your choice.
+
+For Debian and Ubuntu, the following command will ensure that a reasonable
+set of dependencies is installed::
+
+    sudo apt-get install build-essential git python-pip python-virtualenv libffi-dev python-dev
+
+For Fedora and RHEL-derivatives, the following command will ensure that a
+reasonable set of dependencies is installed::
+
+    sudo yum install gcc git python-pip python-virtualenv libffi-devel python-devel
+
 .. _installation-source:
 
 
@@ -38,15 +54,12 @@ repository, follow the instructions below::
         hg clone https://kallithea-scm.org/repos/kallithea -u stable
         cd kallithea
         virtualenv ../kallithea-venv
-        source ../kallithea-venv/bin/activate
-        pip install --upgrade pip "setuptools<34"
-        pip install -e .
+        . ../kallithea-venv/bin/activate
+        pip install --upgrade pip setuptools
+        pip install --upgrade -e .
         python2 setup.py compile_catalog   # for translation of the UI
 
 You can now proceed to :ref:`setup`.
-
-To upgrade, simply update the repository with ``hg pull -u`` and restart the
-server.
 
 .. _installation-virtualenv:
 
@@ -68,8 +81,8 @@ An additional benefit of virtualenv_ is that it doesn't require root privileges.
 - Activate the virtualenv_ in your current shell session and make sure the
   basic requirements are up-to-date by running::
 
-    source /srv/kallithea/venv/bin/activate
-    pip install --upgrade pip "setuptools<34"
+    . /srv/kallithea/venv/bin/activate
+    pip install --upgrade pip setuptools
 
 .. note:: You can't use UNIX ``sudo`` to source the ``virtualenv`` script; it
    will "activate" a shell that terminates immediately. It is also perfectly
@@ -78,8 +91,8 @@ An additional benefit of virtualenv_ is that it doesn't require root privileges.
 .. note:: Some dependencies are optional. If you need them, install them in
    the virtualenv too::
 
-     pip install psycopg2
-     pip install python-ldap
+     pip install --upgrade psycopg2
+     pip install --upgrade python-ldap
 
    This might require installation of development packages using your
    distribution's package manager.
@@ -91,15 +104,15 @@ An additional benefit of virtualenv_ is that it doesn't require root privileges.
 
 - Go into the created directory and run this command to install Kallithea::
 
-    pip install kallithea
+    pip install --upgrade kallithea
 
   Alternatively, download a .tar.gz from http://pypi.python.org/pypi/Kallithea,
   extract it and run::
 
-    pip install .
+    pip install --upgrade .
 
-- This will install Kallithea together with pylons_ and all other required
-  python libraries into the activated virtualenv.
+- This will install Kallithea together with all other required
+  Python libraries into the activated virtualenv.
 
 You can now proceed to :ref:`setup`.
 
@@ -123,90 +136,4 @@ To install as a regular user in ``~/.local``, you can use::
 You can now proceed to :ref:`setup`.
 
 
-Upgrading Kallithea from Python Package Index (PyPI)
-----------------------------------------------------
-
-.. note::
-   It is strongly recommended that you **always** perform a database and
-   configuration backup before doing an upgrade.
-
-   These directions will use '{version}' to note that this is the version of
-   Kallithea that these files were used with.  If backing up your Kallithea
-   instance from version 0.1 to 0.2, the ``my.ini`` file could be
-   backed up to ``my.ini.0-1``.
-
-If using a SQLite database, stop the Kallithea process/daemon/service, and
-then make a copy of the database file::
-
- service kallithea stop
- cp kallithea.db kallithea.db.{version}
-
-Back up your configuration file::
-
- cp my.ini my.ini.{version}
-
-Ensure that you are using the Python virtual environment that you originally
-installed Kallithea in by running::
-
- pip freeze
-
-This will list all packages installed in the current environment.  If
-Kallithea isn't listed, activate the correct virtual environment::
-
- source /srv/kallithea/venv/bin/activate
-
-Once you have verified the environment you can upgrade Kallithea with::
-
- pip install --upgrade kallithea
-
-Then run the following command from the installation directory::
-
- paster make-config Kallithea my.ini
-
-This will display any changes made by the new version of Kallithea to your
-current configuration. It will try to perform an automerge. It is recommended
-that you recheck the content after the automerge.
-
-.. note::
-   Please always make sure your .ini files are up to date. Errors can
-   often be caused by missing parameters added in new versions.
-
-It is also recommended that you rebuild the whoosh index after upgrading since
-the new whoosh version could introduce some incompatible index changes. Please
-read the changelog to see if there were any changes to whoosh.
-
-The final step is to upgrade the database. To do this simply run::
-
- paster upgrade-db my.ini
-
-This will upgrade the schema and update some of the defaults in the database,
-and will always recheck the settings of the application, if there are no new
-options that need to be set.
-
-.. note::
-   The DB schema upgrade library has some limitations and can sometimes fail if you try to
-   upgrade from older major releases. In such a case simply run upgrades sequentially, e.g.,
-   upgrading from 0.1.X to 0.3.X should be done like this: 0.1.X. > 0.2.X > 0.3.X
-   You can always specify what version of Kallithea you want to install for example in pip
-   `pip install Kallithea==0.2`
-
-You may find it helpful to clear out your log file so that new errors are
-readily apparent::
-
- echo > kallithea.log
-
-Once that is complete, you may now start your upgraded Kallithea Instance::
-
- service kallithea start
-
-Or::
-
- paster serve /srv/kallithea/my.ini
-
-.. note::
-   If you're using Celery, make sure you restart all instances of it after
-   upgrade.
-
-
 .. _virtualenv: http://pypi.python.org/pypi/virtualenv
-.. _pylons: http://www.pylonsproject.org/

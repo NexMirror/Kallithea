@@ -26,58 +26,68 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 
-import socket
-import traceback
+import os
 import logging
-from os.path import join as jn
-from pylons import config
+
+from tg import config
 
 from hashlib import md5
 from decorator import decorator
 
-from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea import CELERY_ON, CELERY_EAGER
-from kallithea.lib.utils2 import str2bool, safe_str
+from kallithea.lib.utils2 import safe_str
 from kallithea.lib.pidlock import DaemonLock, LockHeld
-from kallithea.model import init_model
+from kallithea.model.base import init_model
 from kallithea.model import meta
-
-from sqlalchemy import engine_from_config
 
 
 log = logging.getLogger(__name__)
 
 
-class ResultWrapper(object):
-    def __init__(self, task):
-        self.task = task
+class FakeTask(object):
+    """Fake a sync result to make it look like a finished task"""
 
-    @LazyProperty
-    def result(self):
-        return self.task
+    def __init__(self, result):
+        self.result = result
+
+    def failed(self):
+        return False
+
+    traceback = None # if failed
+
+    task_id = None
 
 
-def run_task(task, *args, **kwargs):
-    global CELERY_ON
+def task(f_org):
+    """Wrapper of celery.task.task, running async if CELERY_ON
+    """
+
     if CELERY_ON:
-        try:
-            t = task.apply_async(args=args, kwargs=kwargs)
-            log.info('running task %s:%s', t.task_id, task)
+        def f_async(*args, **kwargs):
+            log.info('executing %s task', f_org.__name__)
+            try:
+                f_org(*args, **kwargs)
+            finally:
+                log.info('executed %s task', f_org.__name__)
+        f_async.__name__ = f_org.__name__
+        from kallithea.lib import celerypylons
+        runner = celerypylons.task(ignore_result=True)(f_async)
+
+        def f_wrapped(*args, **kwargs):
+            t = runner.apply_async(args=args, kwargs=kwargs)
+            log.info('executing task %s in async mode - id %s', f_org, t.task_id)
             return t
+    else:
+        def f_wrapped(*args, **kwargs):
+            log.info('executing task %s in sync', f_org.__name__)
+            try:
+                result = f_org(*args, **kwargs)
+            except Exception as e:
+                log.error('exception executing sync task %s in sync: %r', f_org.__name__, e)
+                raise # TODO: return this in FakeTask as with async tasks?
+            return FakeTask(result)
 
-        except socket.error as e:
-            if isinstance(e, IOError) and e.errno == 111:
-                log.debug('Unable to connect to celeryd. Sync execution')
-                CELERY_ON = False
-            else:
-                log.error(traceback.format_exc())
-        except KeyError as e:
-                log.debug('Unable to connect to celeryd. Sync execution')
-        except Exception as e:
-            log.error(traceback.format_exc())
-
-    log.debug('executing task %s in sync mode', task)
-    return ResultWrapper(task(*args, **kwargs))
+    return f_wrapped
 
 
 def __get_lockkey(func, *fargs, **fkwargs):
@@ -98,7 +108,7 @@ def locked_task(func):
 
         log.info('running task with lockkey %s', lockkey)
         try:
-            l = DaemonLock(file_=jn(lockkey_path, lockkey))
+            l = DaemonLock(os.path.join(lockkey_path, lockkey))
             ret = func(*fargs, **fkwargs)
             l.release()
             return ret
@@ -110,9 +120,6 @@ def locked_task(func):
 
 
 def get_session():
-    if CELERY_ON:
-        engine = engine_from_config(config, 'sqlalchemy.db1.')
-        init_model(engine)
     sa = meta.Session()
     return sa
 

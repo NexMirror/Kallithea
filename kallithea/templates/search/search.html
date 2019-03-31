@@ -32,48 +32,49 @@
 %if c.repo_name:
 ${self.repo_context_bar('options')}
 %endif
-<div class="box">
-    <!-- box / title -->
-    <div class="title">
+<div class="panel panel-primary">
+    <div class="panel-heading clearfix">
         ${self.breadcrumbs()}
     </div>
-    <!-- end box / title -->
+    <div class="panel-body settings form">
     %if c.repo_name:
         ${h.form(h.url('search_repo',repo_name=c.repo_name),method='get')}
     %else:
         ${h.form(h.url('search'),method='get')}
     %endif
-    <div class="form">
-        <div class="fields">
-            <div class="field field-first field-noborder">
-             <div class="label">
-                 <label for="q">${_('Search term')}:</label>
-             </div>
-                <div class="input">${h.text('q',c.cur_query,class_="small")}
-                    <div class="button highlight">
-                        <input type="submit" value="${_('Search')}" class="btn"/>
-                    </div>
+
+            <div class="form-group">
+                <label class="control-label" for="q">${_('Search term')}:</label>
+                <div>
+                    ${h.text('q',c.cur_query,class_='form-control')}
                 </div>
-                <div style="font-weight: bold;clear:both;margin-left:200px">${c.runtime}</div>
             </div>
 
-            <div class="field">
-                <div class="label">
-                    <label for="type">${_('Search in')}:</label>
-                </div>
-                <div class="select">
+            <div class="form-group">
+                <label class="control-label" for="type">${_('Search in')}:</label>
+                <div>
                     ${h.select('type',c.cur_type,[('content',_('File contents')),
                         ('commit',_('Commit messages')),
                         ('path',_('File names')),
                         ##('repository',_('Repository names')),
-                        ])}
+                        ],
+                        class_='form-control')}
                 </div>
-             </div>
+            </div>
 
-        </div>
+            <div class="form-group">
+                <div class="buttons">
+                    <input type="submit" value="${_('Search')}" class="btn btn-default"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                ## <label>${_('Status')}:</label>
+                <div>${c.runtime}</div>
+            </div>
+        ${h.end_form()}
     </div>
-    ${h.end_form()}
-    <div class="search">
+    <div class="panel-body">
     %if c.cur_type == 'content':
         <%include file='search_content.html'/>
     %elif c.cur_type == 'path':

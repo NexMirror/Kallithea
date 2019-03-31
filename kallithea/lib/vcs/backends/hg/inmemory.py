@@ -47,18 +47,13 @@ class MercurialInMemoryChangeset(BaseInMemoryChangeset):
 
             # check if this path is removed
             if path in (node.path for node in self.removed):
-                if getattr(memctx, '_returnnoneformissingfiles', False):
-                    return None
-                else:
-                    # (hg < 3.2) Raising exception is the way to mark node for
-                    # removal
-                    raise IOError(errno.ENOENT, '%s is deleted' % path)
+                return None
 
             # check if this path is added
             for node in self.added:
                 if node.path == path:
-                    return memfilectx(_repo, path=node.path,
-                        data=(node.content.encode('utf8')
+                    return memfilectx(_repo, memctx, path=node.path,
+                        data=(node.content.encode('utf-8')
                               if not node.is_binary else node.content),
                         islink=False,
                         isexec=node.is_executable,
@@ -67,8 +62,8 @@ class MercurialInMemoryChangeset(BaseInMemoryChangeset):
             # or changed
             for node in self.changed:
                 if node.path == path:
-                    return memfilectx(_repo, path=node.path,
-                        data=(node.content.encode('utf8')
+                    return memfilectx(_repo, memctx, path=node.path,
+                        data=(node.content.encode('utf-8')
                               if not node.is_binary else node.content),
                         islink=False,
                         isexec=node.is_executable,
@@ -83,7 +78,7 @@ class MercurialInMemoryChangeset(BaseInMemoryChangeset):
                 parents[i] = parent._ctx.node()
 
         if date and isinstance(date, datetime.datetime):
-            date = date.ctime()
+            date = date.strftime('%a, %d %b %Y %H:%M:%S')
 
         commit_ctx = memctx(repo=self.repository._repo,
             parents=parents,

@@ -52,7 +52,7 @@ class CrowdServer(object):
                                   passwd="some_passwd",
                                   version="1")
         """
-        if not "port" in kwargs:
+        if "port" not in kwargs:
             kwargs["port"] = "8095"
         self._logger = kwargs.get("logger", logging.getLogger(__name__))
         self._uri = "%s://%s:%s/crowd" % (kwargs.get("method", "http"),
@@ -88,14 +88,14 @@ class CrowdServer(object):
         log.debug("Sent crowd: \n%s",
                   formatted_json({"url": url, "body": body,
                                            "headers": _headers}))
-        request = urllib2.Request(url, body, _headers)
+        req = urllib2.Request(url, body, _headers)
         if method:
-            request.get_method = lambda: method
+            req.get_method = lambda: method
 
         global msg
         msg = ""
         try:
-            rdoc = self.opener.open(request)
+            rdoc = self.opener.open(req)
             msg = "".join(rdoc.readlines())
             if not msg and empty_response_ok:
                 rval = {}
@@ -131,6 +131,8 @@ class CrowdServer(object):
 
 
 class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
+    def __init__(self):
+        self._protocol_values = ["http", "https"]
 
     @hybrid_property
     def name(self):
@@ -138,6 +140,14 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
 
     def settings(self):
         settings = [
+            {
+                "name": "method",
+                "validator": self.validators.OneOf(self._protocol_values),
+                "type": "select",
+                "values": self._protocol_values,
+                "description": "The protocol used to connect to the Atlassian CROWD server.",
+                "formname": "Protocol"
+            },
             {
                 "name": "host",
                 "validator": self.validators.UnicodeString(strip=True),
@@ -183,10 +193,6 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
     def use_fake_password(self):
         return True
 
-    def user_activation_state(self):
-        def_user_perms = User.get_default_user().AuthUser.permissions['global']
-        return 'hg.extern_activate.auto' in def_user_perms
-
     def auth(self, userobj, username, password, settings, **kwargs):
         """
         Given a user object (which may be null), username, a plaintext password,
@@ -208,6 +214,11 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
         crowd_user = server.user_auth(username, password)
         log.debug("Crowd returned: \n%s", formatted_json(crowd_user))
         if not crowd_user["status"]:
+            log.error('Crowd authentication as %s returned no status', username)
+            return None
+
+        if not crowd_user.get('active'):
+            log.error('Crowd authentication as %s returned in-active user', username)
             return None
 
         res = server.user_groups(crowd_user["name"])
@@ -216,7 +227,6 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
 
         # old attrs fetched from Kallithea database
         admin = getattr(userobj, 'admin', False)
-        active = getattr(userobj, 'active', True)
         email = getattr(userobj, 'email', '')
         firstname = getattr(userobj, 'firstname', '')
         lastname = getattr(userobj, 'lastname', '')
@@ -228,8 +238,6 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
             'groups': crowd_user["groups"],
             'email': crowd_user["email"] or email,
             'admin': admin,
-            'active': active,
-            'active_from_extern': crowd_user.get('active'), # ???
             'extern_name': crowd_user["name"],
         }
 

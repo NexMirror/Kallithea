@@ -1,0 +1,68 @@
+// Style these like Bootstrap ".navbar-inverse .navbar-nav > li"
+.branch-switcher.select2-container,
+.repo-switcher.select2-container {
+  > a.select2-choice.select2-default {
+    line-height: @line-height-computed;
+    height: @navbar-height;
+    padding: @nav-link-padding;
+    padding-top: @navbar-padding-vertical;
+    padding-bottom: @navbar-padding-vertical;
+    color: @navbar-inverse-link-color !important;
+    background: inherit;
+    &:hover {
+      color: @navbar-inverse-link-hover-color !important;
+      background-color: @navbar-inverse-link-hover-bg;
+    }
+    border: inherit;
+    border-radius: inherit;
+    box-shadow: inherit;
+    > .select2-chosen {
+      margin-right: inherit; // don't leave room for .select2-arrow
+      line-height: inherit;
+    }
+    > .select2-arrow {
+      display: none;
+    }
+  }
+}
+
+// Style these like Bootstrap .dropdown-menu
+.branch-switcher-dropdown.select2-drop.select2-drop-active,
+.repo-switcher-dropdown.select2-drop.select2-drop-active {
+  color: inherit;
+  background-color: @dropdown-bg;
+  border: 1px solid @dropdown-border;
+  .box-shadow(0 6px 12px rgba(0,0,0,.175));
+  > .select2-results {
+    color: @dropdown-link-color;
+    .select2-highlighted {
+      color: @dropdown-link-hover-color;
+      background-color: @dropdown-link-hover-bg;
+    }
+  }
+}
+
+.select2-container {
+  /* select2 already has border and padding, remove bootstrap form-control border and padding */
+  &.form-control {
+    border: 0;
+    padding: 0;
+  }
+  /* make select2 as big as form-controls */
+  .select2-choice {
+    height: 100%;
+  }
+  .select2-chosen {
+    line-height: @input-height-base - 2; /* subtract border width */
+  }
+}
+
+/* highlight query in user autocomplete search results */
+.select2-results .match {
+  font-weight: 700;
+}
+
+/* fix select2 input style if input-sm is used */
+.select2-container.input-sm input {
+  .input-sm;
+}

@@ -26,6 +26,7 @@ Original Beaker SessionMiddleware class written by Ben Bangert
 from beaker.session import SessionObject
 from beaker.middleware import SessionMiddleware
 
+
 class SecureSessionMiddleware(SessionMiddleware):
     def __call__(self, environ, start_response):
         """

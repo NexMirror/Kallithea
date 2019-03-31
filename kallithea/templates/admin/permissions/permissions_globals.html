@@ -1,117 +1,100 @@
 ${h.form(url('admin_permissions'), method='post')}
     <div class="form">
-        <!-- fields -->
-        <div class="fields">
-            <div class="field">
-                <div class="label label-checkbox">
-                    <label for="anonymous">${_('Anonymous access')}:</label>
-                </div>
-                <div class="checkboxes">
-                    <div class="checkbox">
+            <div class="form-group">
+                <label class="control-label" for="anonymous">${_('Anonymous access')}:</label>
+                <div class="form-inline">
+                    <label>
                         ${h.checkbox('anonymous',True)}
-                    </div>
-                     <span class="help-block">${h.literal(_('Allow access to Kallithea without needing to log in. Anonymous users use %s user permissions.' % (h.link_to('*default*',h.url('admin_permissions_perms')))))}</span>
+                        <span>${_('Allow anonymous access')}</span>
+                    </label>
+                    <span class="help-block">${h.literal(_('Allow access to Kallithea without needing to log in. Anonymous users use %s user permissions.' % (h.link_to('*default*',h.url('admin_permissions_perms')))))}</span>
                 </div>
             </div>
-            <div class="field">
-                <div class="label">
-                    <label for="default_repo_perm">${_('Repository')}:</label>
-                </div>
-                <div class="select">
-                    ${h.select('default_repo_perm','',c.repo_perms_choices)}
-                    ${h.checkbox('overwrite_default_repo','true')}
-                    <label for="overwrite_default_repo">
-                    <span class="tooltip"
-                    title="${_('All default permissions on each repository will be reset to chosen permission, note that all custom default permission on repositories will be lost')}">
-                    ${_('Apply to all existing repositories')}</span> </label>
+            <div class="form-group">
+                <label class="control-label" for="default_repo_perm">${_('Repository')}:</label>
+                <div class="form-inline">
+                    ${h.select('default_repo_perm','',c.repo_perms_choices,class_='form-control')}
+                    <label>
+                        ${h.checkbox('overwrite_default_repo','true')}
+                        <span data-toggle="tooltip" title="${_('All default permissions on each repository will be reset to chosen permission, note that all custom default permission on repositories will be lost')}">
+                            ${_('Apply to all existing repositories')}
+                        </span>
+                    </label>
                     <span class="help-block">${_('Permissions for the Default user on new repositories.')}</span>
                 </div>
             </div>
-            <div class="field">
-                <div class="label">
-                    <label for="default_group_perm">${_('Repository group')}:</label>
-                </div>
-                <div class="select">
-                    ${h.select('default_group_perm','',c.group_perms_choices)}
-                    ${h.checkbox('overwrite_default_group','true')}
-                    <label for="overwrite_default_group">
-                    <span class="tooltip"
-                    title="${_('All default permissions on each repository group will be reset to chosen permission, note that all custom default permission on repository groups will be lost')}">
-                    ${_('Apply to all existing repository groups')}</span> </label>
+            <div class="form-group">
+                <label class="control-label" for="default_group_perm">${_('Repository group')}:</label>
+                <div class="form-inline">
+                    ${h.select('default_group_perm','',c.group_perms_choices,class_='form-control')}
+                    <label>
+                        ${h.checkbox('overwrite_default_group','true')}
+                        <span data-toggle="tooltip" title="${_('All default permissions on each repository group will be reset to chosen permission, note that all custom default permission on repository groups will be lost')}">
+                            ${_('Apply to all existing repository groups')}
+                        </span>
+                    </label>
                     <span class="help-block">${_('Permissions for the Default user on new repository groups.')}</span>
                 </div>
             </div>
-            <div class="field">
-                <div class="label">
-                    <label for="default_group_perm">${_('User group')}:</label>
-                </div>
-                <div class="select">
-                    ${h.select('default_user_group_perm','',c.user_group_perms_choices)}
-                    ${h.checkbox('overwrite_default_user_group','true')}
-                    <label for="overwrite_default_user_group">
-                    <span class="tooltip"
-                    title="${_('All default permissions on each user group will be reset to chosen permission, note that all custom default permission on user groups will be lost')}">
-                    ${_('Apply to all existing user groups')}</span></label>
+            <div class="form-group">
+                <label class="control-label" for="default_user_group_perm">${_('User group')}:</label>
+                <div class="form-inline">
+                    ${h.select('default_user_group_perm','',c.user_group_perms_choices,class_='form-control')}
+                    <label>
+                        ${h.checkbox('overwrite_default_user_group','true')}
+                        <span data-toggle="tooltip" title="${_('All default permissions on each user group will be reset to chosen permission, note that all custom default permission on user groups will be lost')}">
+                            ${_('Apply to all existing user groups')}
+                        </span>
+                    </label>
                     <span class="help-block">${_('Permissions for the Default user on new user groups.')}</span>
                 </div>
             </div>
-             <div class="field">
-                <div class="label">
-                    <label for="default_repo_create">${_('Top level repository creation')}:</label>
-                </div>
-                <div class="select">
-                    ${h.select('default_repo_create','',c.repo_create_choices)}
+            <div class="form-group">
+                <label class="control-label" for="default_repo_create">${_('Top level repository creation')}:</label>
+                <div>
+                    ${h.select('default_repo_create','',c.repo_create_choices,class_='form-control')}
                     <span class="help-block">${_('Enable this to allow non-admins to create repositories at the top level.')}</span>
                     <span class="help-block">${_('Note: This will also give all users API access to create repositories everywhere. That might change in future versions.')}</span>
                 </div>
-             </div>
-            <div class="field">
-                <div class="label label-checkbox">
-                    <label for="create_on_write">${_('Repository creation with group write access')}:</label>
-                </div>
-                <div class="select">
-                    ${h.select('create_on_write','',c.repo_create_on_write_choices)}
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="create_on_write">${_('Repository creation with group write access')}:</label>
+                <div>
+                    ${h.select('create_on_write','',c.repo_create_on_write_choices,class_='form-control')}
                     <span class="help-block">${_('With this, write permission to a repository group allows creating repositories inside that group. Without this, group write permissions mean nothing.')}</span>
                 </div>
             </div>
-             <div class="field">
-                <div class="label">
-                    <label for="default_user_group_create">${_('User group creation')}:</label>
-                </div>
-                <div class="select">
-                    ${h.select('default_user_group_create','',c.user_group_create_choices)}
+            <div class="form-group">
+                <label class="control-label" for="default_user_group_create">${_('User group creation')}:</label>
+                <div>
+                    ${h.select('default_user_group_create','',c.user_group_create_choices,class_='form-control')}
                     <span class="help-block">${_('Enable this to allow non-admins to create user groups.')}</span>
                 </div>
-             </div>
-             <div class="field">
-                <div class="label">
-                    <label for="default_fork">${_('Repository forking')}:</label>
-                </div>
-                <div class="select">
-                    ${h.select('default_fork','',c.fork_choices)}
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="default_fork">${_('Repository forking')}:</label>
+                <div>
+                    ${h.select('default_fork','',c.fork_choices,class_='form-control')}
                     <span class="help-block">${_('Enable this to allow non-admins to fork repositories.')}</span>
                 </div>
-             </div>
-             <div class="field">
-                <div class="label">
-                    <label for="default_register">${_('Registration')}:</label>
-                </div>
-                <div class="select">
-                    ${h.select('default_register','',c.register_choices)}
-                </div>
-             </div>
-             <div class="field">
-                <div class="label">
-                    <label for="default_extern_activate">${_('External auth account activation')}:</label>
-                </div>
-                <div class="select">
-                    ${h.select('default_extern_activate','',c.extern_activate_choices)}
-                </div>
-             </div>
-            <div class="buttons">
-              ${h.submit('save',_('Save'),class_="btn")}
-              ${h.reset('reset',_('Reset'),class_="btn")}
             </div>
-        </div>
+            <div class="form-group">
+                <label class="control-label" for="default_register">${_('Registration')}:</label>
+                <div>
+                    ${h.select('default_register','',c.register_choices,class_='form-control')}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="default_extern_activate">${_('External auth account activation')}:</label>
+                <div>
+                    ${h.select('default_extern_activate','',c.extern_activate_choices,class_='form-control')}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="buttons">
+                    ${h.submit('save',_('Save'),class_="btn btn-default")}
+                    ${h.reset('reset',_('Reset'),class_="btn btn-default")}
+                </div>
+            </div>
     </div>
 ${h.end_form()}

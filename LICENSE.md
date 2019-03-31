@@ -22,27 +22,39 @@ Various third-party code under GPLv3-compatible licenses is included as part
 of Kallithea.
 
 
+Alembic
+-------
+
+Kallithea incorporates an [Alembic](http://alembic.zzzcomputing.com/en/latest/)
+"migration environment" in `kallithea/alembic`, portions of which is:
+
+Copyright &copy; 2009-2016 by Michael Bayer.
+Alembic is a trademark of Michael Bayer.
+
+and licensed under the MIT-permissive license, which is
+[included in this distribution](MIT-Permissive-License.txt).
+
 
 Bootstrap
 ---------
 
-Kallithea incorporates parts of the Javascript system called
+Kallithea uses the web framework called
 [Bootstrap](http://getbootstrap.com/), which is:
 
-Copyright &copy; 2012 Twitter, Inc.
+Copyright &copy; 2011-2016 Twitter, Inc.
 
-and licensed under
-[the Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
+and licensed under the MIT-permissive license, which is
+[included in this distribution](MIT-Permissive-License.txt).
 
-A copy of the Apache License 2.0 is also included in this distribution in its
-entirety in the file Apache-License-2.0.txt
+It is not distributed with Kallithea, but will be downloaded
+using the ''kallithea-cli front-end-build'' command.
 
 
 
 Codemirror
 ----------
 
-Kallithea incorporates parts of the Javascript system called
+Kallithea uses the Javascript system called
 [Codemirror](http://codemirror.net/), version 4.7.0, which is primarily:
 
 Copyright &copy; 2013-2014 by Marijn Haverbeke <marijnh@gmail.com>
@@ -51,40 +63,70 @@ and licensed under the MIT-permissive license, which is
 [included in this distribution](MIT-Permissive-License.txt).
 
 Additional files from upstream Codemirror are copyrighted by various authors
-and licensed under other permissive licenses.  The sub-directories under
-[.../public/codemirror](kallithea/public/codemirror) include the copyright and
-license notice and information as they appeared in Codemirror's upstream
-release.
+and licensed under other permissive licenses.
+
+It is not distributed with Kallithea, but will be downloaded
+using the ''kallithea-cli front-end-build'' command.
 
 
 
 jQuery
 ------
 
-Kallithea incorporates the Javascript system called
-[jQuery](http://jquery.org/),
-[herein](kallithea/public/js/jquery-1.11.1.min.js), and the Corresponding
-Source can be found in https://github.com/jquery/jquery at tag 1.11.1
-(mirrored at https://kallithea-scm.org/repos/mirror/jquery/files/1.11.1/ ).
+Kallithea uses the Javascript system called
+[jQuery](http://jquery.org/).
 
 It is Copyright 2013 jQuery Foundation and other contributors http://jquery.com/ and is under an
 [MIT-permissive license](MIT-Permissive-License.txt).
 
+It is not distributed with Kallithea, but will be downloaded
+using the ''kallithea-cli front-end-build'' command.
 
 
-Mousetrap
----------
 
-Kallithea incorporates parts of the Javascript system called
-[Mousetrap](http://craig.is/killing/mice/), which is:
+At.js
+-----
 
-   Copyright 2013 Craig Campbell
+Kallithea uses the Javascript system called
+[At.js](http://ichord.github.com/At.js),
+which can be found together with its Corresponding Source in
+https://github.com/ichord/At.js at tag v1.5.4.
 
-and licensed under
-[the Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
+It is Copyright 2013 chord.luo@gmail.com and is under an
+[MIT-permissive license](MIT-Permissive-License.txt).
 
-A [copy of the Apache License 2.0](Apache-License-2.0.txt) is also included
-in this distribution.
+It is not distributed with Kallithea, but will be downloaded
+using the ''kallithea-cli front-end-build'' command.
+
+
+
+Caret.js
+--------
+
+Kallithea uses the Javascript system called
+[Caret.js](http://ichord.github.com/Caret.js/),
+which can be found together with its Corresponding Source in
+https://github.com/ichord/Caret.js at tag v0.3.1.
+
+It is Copyright 2013 chord.luo@gmail.com and is under an
+[MIT-permissive license](MIT-Permissive-License.txt).
+
+It is not distributed with Kallithea, but will be downloaded
+using the ''kallithea-cli front-end-build'' command.
+
+
+
+DataTables
+----------
+
+Kallithea uses the Javascript system called
+[DataTables](http://www.datatables.net/).
+
+It is Copyright 2008-2015 SpryMedia Ltd. and is under an
+[MIT-permissive license](MIT-Permissive-License.txt).
+
+It is not distributed with Kallithea, but will be downloaded
+using the ''kallithea-cli front-end-build'' command.
 
 
 
@@ -103,7 +145,7 @@ tri-license.
 Select2
 -------
 
-Kallithea incorporates parts of the Javascript system called
+Kallithea uses the Javascript system called
 [Select2](http://ivaynberg.github.io/select2/), which is:
 
 Copyright 2012 Igor Vaynberg (and probably others)
@@ -122,12 +164,15 @@ in this distribution.
 Kallithea will take the Apache license fork of the dual license, since
 Kallithea is GPLv3'd.
 
+It is not distributed with Kallithea, but will be downloaded
+using the ''kallithea-cli front-end-build'' command.
+
 
 
 Select2-Bootstrap-CSS
 ---------------------
 
-Kallithea incorporates some CSS from a system called
+Kallithea uses some CSS from a system called
 [Select2-bootstrap-css](https://github.com/t0m/select2-bootstrap-css), which
 is:
 
@@ -136,122 +181,43 @@ Copyright &copy; 2013 Tom Terrace (and likely others)
 and licensed under the MIT-permissive license, which is
 [included in this distribution](MIT-Permissive-License.txt).
 
-
-
-History.js
-----------
-
-Kallithea incorporates some CSS from a system called History.js, which is
-
-Copyright 2010-2011 Benjamin Arthur Lupton <contact@balupton.com>
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice,
-   this list of conditions and the following disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright notice,
-   this list of conditions and the following disclaimer in the documentation
-   and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-POSSIBILITY OF SUCH DAMAGE.
-
-
-
-YUI
----
-
-Kallithea incorporates parts of the Javascript system called
-[YUI 2 — Yahoo! User Interface Library](http://yui.github.io/yui2/docs/yui_2.9.0_full/),
-which is made available under the [BSD License](http://yuilibrary.com/license/):
-
-Copyright &copy; 2013 Yahoo! Inc. All rights reserved.
-
-Redistribution and use of this software in source and binary forms, with or
-without modification, are permitted provided that the following conditions are
-met:
-
-* Redistributions of source code must retain the above copyright notice, this
-  list of conditions and the following disclaimer.
-
-* Redistributions in binary form must reproduce the above copyright notice,
-  this list of conditions and the following disclaimer in the documentation
-  and/or other materials provided with the distribution.
-
-* Neither the name of Yahoo! Inc. nor the names of YUI's contributors may be
-  used to endorse or promote products derived from this software without
-  specific prior written permission of Yahoo! Inc.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
-ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-
-Kallithea includes a minified version of YUI 2.9. To build yui.2.9.js:
-
-    git clone https://github.com/yui/builder
-    git clone https://github.com/yui/yui2
-    cd yui2/
-    git checkout hudson-yui2-2800
-    ln -sf JumpToPageDropDown.js src/paginator/js/JumpToPageDropdown.js # work around inconsistent casing
-    rm -f tmp.js
-    for m in yahoo event dom connection animation dragdrop element datasource autocomplete container event-delegate json datatable paginator; do
-      rm -f build/\$m/\$m.js
-      ( cd src/\$m && ant build deploybuild ) && sed -e 's,@VERSION@,2.9.0,g' -e 's,@BUILD@,2800,g' build/\$m/\$m.js >> tmp.js
-    done
-    java -jar ../builder/componentbuild/lib/yuicompressor/yuicompressor-2.4.4.jar tmp.js -o yui.2.9.js
-
-In compliance with GPLv3 the Corresponding Source for this Object Code is made
-available on
-[https://kallithea-scm.org/repos/mirror](https://kallithea-scm.org/repos/mirror).
+It is not distributed with Kallithea, but will be downloaded
+using the ''kallithea-cli front-end-build'' command.
 
 
 
 Flot
 ----
 
-Kallithea incorporates some CSS from a system called
-[Flot](http://code.google.com/p/flot/), which is:
+Kallithea uses some parts of a Javascript system called
+[Flot](http://www.flotcharts.org/), which is:
 
-Copyright 2006 Google Inc.
+Copyright (c) 2007-2014 IOLA and Ole Laursen
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without
+restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following
+conditions:
 
-A [copy of the Apache License 2.0](Apache-License-2.0.txt) is also included
-in this distribution.
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
 
+It is not distributed with Kallithea, but will be downloaded
+using the ''kallithea-cli front-end-build'' command.
 
-Migrate
--------
-
-Kallithea incorporates in kallithea/lib/dbmigrate/migrate parts of the Python
-system called [Migrate or sqlalchemy-migrate](https://github.com/stackforge/sqlalchemy-migrate),
-which is:
-
-Copyright (c) 2009 Evan Rosson, Jan Dittberner, Domen Kožar
-
-and licensed under the MIT-permissive license, which is
-[included in this distribution](MIT-Permissive-License.txt).
 
 
 Icon fonts
@@ -261,7 +227,7 @@ Kallithea incorporates subsets of both
 [Font Awesome](http://fontawesome.io) and
 [GitHub Octicons](https://octicons.github.com) for icons. Font Awesome is:
 
-Copyright (c) 2012, Dave Gandy
+Copyright (c) 2016, Dave Gandy
 
 Octicons is:
 

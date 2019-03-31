@@ -28,19 +28,20 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 
-from pylons import request, tmpl_context as c, url
+from tg import request, tmpl_context as c
 from sqlalchemy.orm import joinedload
 from whoosh.qparser.default import QueryParser
 from whoosh.qparser.dateparse import DateParserPlugin
 from whoosh import query
 from sqlalchemy.sql.expression import or_, and_, func
 
+from kallithea.config.routing import url
 from kallithea.model.db import UserLog
-from kallithea.lib.auth import LoginRequired, HasPermissionAllDecorator
+from kallithea.lib.auth import LoginRequired, HasPermissionAnyDecorator
 from kallithea.lib.base import BaseController, render
 from kallithea.lib.utils2 import safe_int, remove_prefix, remove_suffix
 from kallithea.lib.indexers import JOURNAL_SCHEMA
-from kallithea.lib.helpers import Page
+from kallithea.lib.page import Page
 
 
 log = logging.getLogger(__name__)
@@ -64,14 +65,14 @@ def _journal_filter(user_log, search_term):
 
     def wildcard_handler(col, wc_term):
         if wc_term.startswith('*') and not wc_term.endswith('*'):
-            #postfix == endswith
+            # postfix == endswith
             wc_term = remove_prefix(wc_term, prefix='*')
-            return func.lower(col).endswith(wc_term)
+            return func.lower(col).endswith(func.lower(wc_term))
         elif wc_term.startswith('*') and wc_term.endswith('*'):
-            #wildcard == ilike
+            # wildcard == ilike
             wc_term = remove_prefix(wc_term, prefix='*')
             wc_term = remove_suffix(wc_term, suffix='*')
-            return func.lower(col).contains(wc_term)
+            return func.lower(col).contains(func.lower(wc_term))
 
     def get_filterion(field, val, term):
 
@@ -87,7 +88,7 @@ def _journal_filter(user_log, search_term):
             field = getattr(UserLog, field)
         log.debug('filter field: %s val=>%s', field, val)
 
-        #sql filtering
+        # sql filtering
         if isinstance(term, query.Wildcard):
             return wildcard_handler(field, val)
         elif isinstance(term, query.Prefix):
@@ -119,23 +120,23 @@ def _journal_filter(user_log, search_term):
 
 class AdminController(BaseController):
 
-    @LoginRequired()
-    def __before__(self):
-        super(AdminController, self).__before__()
+    @LoginRequired(allow_default_user=True)
+    def _before(self, *args, **kwargs):
+        super(AdminController, self)._before(*args, **kwargs)
 
-    @HasPermissionAllDecorator('hg.admin')
+    @HasPermissionAnyDecorator('hg.admin')
     def index(self):
-        users_log = UserLog.query()\
-                .options(joinedload(UserLog.user))\
+        users_log = UserLog.query() \
+                .options(joinedload(UserLog.user)) \
                 .options(joinedload(UserLog.repository))
 
-        #FILTERING
+        # FILTERING
         c.search_term = request.GET.get('filter')
         users_log = _journal_filter(users_log, c.search_term)
 
         users_log = users_log.order_by(UserLog.action_date.desc())
 
-        p = safe_int(request.GET.get('page', 1), 1)
+        p = safe_int(request.GET.get('page'), 1)
 
         def url_generator(**kw):
             return url.current(filter=c.search_term, **kw)

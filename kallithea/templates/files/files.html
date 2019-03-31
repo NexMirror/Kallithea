@@ -20,17 +20,16 @@
 
 <%def name="main()">
 ${self.repo_context_bar('files', c.revision)}
-<div class="box">
-    <!-- box / title -->
-    <div class="title">
-        ${self.breadcrumbs()}
-        <ul class="links">
-            <li style="color:white">
+<div class="panel panel-primary">
+    <div class="panel-heading clearfix">
+        <div class="pull-left">
+            ${self.breadcrumbs()}
+        </div>
+        <div class="pull-right">
               ${_("Branch filter:")} ${h.select('branch_selector',c.changeset.raw_id,c.revision_options)}
-            </li>
-        </ul>
+        </div>
     </div>
-    <div class="table">
+    <div class="panel-body">
         <div id="files_data">
             <%include file='files_ypjax.html'/>
         </div>
@@ -41,29 +40,27 @@ ${self.repo_context_bar('files', c.revision)}
 var CACHE = {};
 var CACHE_EXPIRE = 5*60*1000; //cache for 5*60s
 //used to construct links from the search list
-var url_base = '${h.url("files_home",repo_name=c.repo_name,revision='__REV__',f_path='__FPATH__')}';
+var url_base = ${h.js(h.url("files_home",repo_name=c.repo_name,revision='__REV__',f_path='__FPATH__'))};
 //send the nodelist request to this url
-var node_list_url = '${h.url("files_nodelist_home",repo_name=c.repo_name,revision='__REV__',f_path='__FPATH__')}';
-// send the node history requst to this url
-var node_history_url = '${h.url("files_history_home",repo_name=c.repo_name,revision='__REV__',f_path='__FPATH__')}';
+var node_list_url = ${h.js(h.url("files_nodelist_home",repo_name=c.repo_name,revision='__REV__',f_path='__FPATH__'))};
 
 ## new pyroutes URLs
-pyroutes.register('files_nodelist_home', "${h.url('files_nodelist_home', repo_name=c.repo_name,revision='%(revision)s',f_path='%(f_path)s')}", ['revision', 'f_path']);
-pyroutes.register('files_history_home', "${h.url('files_history_home', repo_name=c.repo_name,revision='%(revision)s',f_path='%(f_path)s')}", ['revision', 'f_path']);
-pyroutes.register('files_authors_home', "${h.url('files_authors_home', repo_name=c.repo_name,revision='%(revision)s',f_path='%(f_path)s')}", ['revision', 'f_path']);
+pyroutes.register('files_nodelist_home', ${h.js(h.url('files_nodelist_home', repo_name=c.repo_name,revision='%(revision)s',f_path='%(f_path)s'))}, ['revision', 'f_path']);
+pyroutes.register('files_history_home', ${h.js(h.url('files_history_home', repo_name=c.repo_name,revision='%(revision)s',f_path='%(f_path)s'))}, ['revision', 'f_path']);
+pyroutes.register('files_authors_home', ${h.js(h.url('files_authors_home', repo_name=c.repo_name,revision='%(revision)s',f_path='%(f_path)s'))}, ['revision', 'f_path']);
 
 var ypjax_links = function(){
     $('.ypjax-link').click(function(e){
 
         //don't do ypjax on middle click
-        if(e.which == 2 || !History.enabled){
+        if (e.which == 2) {
             return true;
         }
 
         var el = e.currentTarget;
         var url = el.href;
 
-        var _base_url = '${h.url("files_home",repo_name=c.repo_name,revision='',f_path='')}';
+        var _base_url = ${h.jshtml(h.url("files_home",repo_name=c.repo_name,revision='',f_path=''))};
         _base_url = _base_url.replace('//','/');
 
         //extract rev and the f_path from url.
@@ -77,15 +74,16 @@ var ypjax_links = function(){
         var f_path = parts2.join('/');
 
         //page title - make this consistent with title mako block above
-        var title = "${_('%s Files') % c.repo_name}" + " \u00B7 " + (f_path || '/') + " \u00B7 " + "${c.site_name}";
+        var title = ${h.jshtml(_('%s Files') % c.repo_name)} + " \u00B7 " + (f_path || '/') + " \u00B7 " + ${h.jshtml(c.site_name)};
 
         var _node_list_url = node_list_url.replace('__REV__',rev).replace('__FPATH__', f_path);
         var _url_base = url_base.replace('__REV__',rev);
 
         // Change our States and save some data for handling events
-        var data = {url:url,title:title, url_base:_url_base,
-                    node_list_url:_node_list_url, rev:rev, f_path:f_path};
-        History.pushState(data, title, url);
+        var state = {url:url, title:title, url_base:_url_base,
+                     node_list_url:_node_list_url, rev:rev, f_path:f_path};
+        window.history.pushState(state, null, url);
+        load_state(state);
 
         //now we're sure that we can do ypjax things
         e.preventDefault();
@@ -93,20 +91,39 @@ var ypjax_links = function(){
     });
 }
 
-// callbacks needed to process the ypjax filebrowser
-var callbacks = function(State){
+var load_state = function(state) {
+    var $files_data = $('#files_data');
+    var cache_key = state.url;
+    var _cache_obj = CACHE[cache_key];
+    var _cur_time = new Date().getTime();
+    if (_cache_obj !== undefined && _cache_obj[0] > _cur_time) {
+        $files_data.html(_cache_obj[1]);
+        $files_data.css('opacity', '1.0');
+        post_load_state(state);
+    } else {
+        asynchtml(State.url, $files_data, function() {
+                  post_load_state(state);
+                  var expire_on = new Date().getTime() + CACHE_EXPIRE;
+                  CACHE[cache_key] = [expire_on, $files_data.html()];
+            });
+    }
+}
+
+var post_load_state = function(state) {
     ypjax_links();
     tooltip_activate();
 
-    if(State !== undefined){
-        //inistially loaded stuff
-        var _f_path = State.data.f_path;
-        var _rev = State.data.rev;
+    if(state !== undefined) {
+        document.title = state.title;
 
-        fileBrowserListeners(State.url, State.data.node_list_url, State.data.url_base);
+        //initially loaded stuff
+        var _f_path = state.f_path;
+        var _rev = state.rev;
+
+        fileBrowserListeners(state.node_list_url, state.url_base);
         // Inform Google Analytics of the change
         if ( typeof window.pageTracker !== 'undefined' ) {
-            window.pageTracker._trackPageview(State.url);
+            window.pageTracker._trackPageview(state.url);
         }
     }
 
@@ -149,22 +166,30 @@ var callbacks = function(State){
     $("#diff1").select2({
         placeholder: _TM['Select changeset'],
         dropdownAutoWidth: true,
+        maxResults: 50,
         query: function(query){
           var key = 'cache';
           var cached = cache[key] ;
           if(cached) {
             var data = {results: []};
+            var queryLower = query.term.toLowerCase();
             //filter results
             $.each(cached.results, function(){
                 var section = this.text;
                 var children = [];
                 $.each(this.children, function(){
-                    if(query.term.length == 0 || this.text.toUpperCase().indexOf(query.term.toUpperCase()) >= 0 ){
-                        children.push({'id': this.id, 'text': this.text});
+                    if(children.length < 50 ?
+                       ((queryLower.length == 0) || (this.text.toLowerCase().indexOf(queryLower) >= 0)) :
+                       ((queryLower.length != 0) && (this.text.toLowerCase().indexOf(queryLower) == 0))) {
+                        children.push(this);
                     }
                 });
+                children = branchSort(children, undefined, query)
                 data.results.push({'text': section, 'children': children});
             });
+            //push the typed in changeset
+            data.results.push({'text':_TM['Specify changeset'],
+                               'children': [{'id': query.term, 'text': query.term, 'type': 'rev'}]});
             query.callback(data);
           }else{
               $.ajax({
@@ -174,7 +199,7 @@ var callbacks = function(State){
                 type: 'GET',
                 success: function(data) {
                   cache[key] = data;
-                  query.callback({results: data.results});
+                  query.callback(data);
                 }
               });
           }
@@ -194,56 +219,32 @@ var callbacks = function(State){
 
 $(document).ready(function(){
     ypjax_links();
-    var $files_data = $('#files_data');
-    //Bind to StateChange Event
-    History.Adapter.bind(window,'statechange',function(){
-        var State = History.getState();
-        cache_key = State.url;
-        //check if we have this request in cache maybe ?
-        var _cache_obj = CACHE[cache_key];
-        var _cur_time = new Date().getTime();
-        // get from cache if it's there and not yet expired !
-        if(_cache_obj !== undefined && _cache_obj[0] > _cur_time){
-            $files_data.html(_cache_obj[1]);
-            $files_data.css('opacity','1.0');
-            //callbacks after ypjax call
-            callbacks(State);
-        }
-        else{
-            asynchtml(State.url, $files_data, function(){
-                    callbacks(State);
-                    var expire_on = new Date().getTime() + CACHE_EXPIRE;
-                    CACHE[cache_key] = [expire_on, $files_data.html()];
-                });
-        }
+
+    // Process history navigation event and load its state
+    window.addEventListener('popstate', function(e){
+        if (e.state)
+            load_state(e.state);
     });
 
     // init the search filter
-    var _State = {
-       url: "${h.url.current()}",
-       data: {
-         node_list_url: node_list_url.replace('__REV__',"${c.changeset.raw_id}").replace('__FPATH__', "${h.safe_unicode(c.file.path)}"),
-         url_base: url_base.replace('__REV__',"${c.changeset.raw_id}"),
-         rev:"${c.changeset.raw_id}",
-         f_path: "${h.safe_unicode(c.file.path)}"
-       }
-    }
-    fileBrowserListeners(_State.url, _State.data.node_list_url, _State.data.url_base);
+    var _node_list_url = node_list_url.replace('__REV__', ${h.js(c.changeset.raw_id)}).replace('__FPATH__', ${h.js(h.safe_unicode(c.file.path))});
+    var _url_base = url_base.replace('__REV__', ${h.js(c.changeset.raw_id)});
+    fileBrowserListeners(_node_list_url, _url_base);
 
     // change branch filter
     $("#branch_selector").select2({
         dropdownAutoWidth: true,
-        minimumInputLength: 1,
+        maxResults: 50,
         sortResults: branchSort
         });
 
     $("#branch_selector").change(function(e){
         var selected = e.currentTarget.options[e.currentTarget.selectedIndex].value;
-        if(selected && selected != "${c.changeset.raw_id}"){
-            window.location = pyroutes.url('files_home', {'repo_name': "${h.safe_unicode(c.repo_name)}", 'revision': selected, 'f_path': "${h.safe_unicode(c.file.path)}"});
-            $("#body.browserblock").hide();
+        if(selected && selected != ${h.js(c.changeset.raw_id)}){
+            window.location = pyroutes.url('files_home', {'repo_name': ${h.js(h.safe_unicode(c.repo_name))}, 'revision': selected, 'f_path': ${h.js(h.safe_unicode(c.file.path))}});
+            $("#body").hide();
         } else {
-            $("#branch_selector").val("${c.changeset.raw_id}");
+            $("#branch_selector").val(${h.js(c.changeset.raw_id)});
         }
     });
 

@@ -367,8 +367,10 @@ def collapse_address_list(addresses):
     return _collapse_address_list_recursive(sorted(
         addrs + nets, key=_BaseNet._get_networks_key))
 
+
 # backwards compatibility
 CollapseAddrList = collapse_address_list
+
 
 # We need to distinguish between the string and packed-bytes representations
 # of an IP address.  For example, b'0::1' is the IPv4 address 48.58.58.49,
@@ -767,18 +769,17 @@ class _BaseNet(_IPAddrBase):
                 s1, s2 = s2.subnet()
             else:
                 # If we got here, there's a bug somewhere.
-                assert True == False, ('Error performing exclusion: '
-                                       's1: %s s2: %s other: %s' %
-                                       (str(s1), str(s2), str(other)))
+                assert False, ('Error performing exclusion: '
+                               's1: %s s2: %s other: %s' %
+                               (str(s1), str(s2), str(other)))
         if s1 == other:
             ret_addrs.append(s2)
         elif s2 == other:
             ret_addrs.append(s1)
         else:
             # If we got here, there's a bug somewhere.
-            assert True == False, ('Error performing exclusion: '
-                                   's1: %s s2: %s other: %s' %
-                                   (str(s1), str(s2), str(other)))
+            assert False, ('Error performing exclusion: s1: %s s2: %s other: %s'
+                           % (str(s1), str(s2), str(other)))
 
         return sorted(ret_addrs, key=_BaseNet._get_networks_key)
 
@@ -1245,7 +1246,7 @@ class IPv4Network(_BaseV4, _BaseNet):
               '192.168.1.1'
               '192.168.1.1/255.255.255.255'
               '192.168.1.1/32'
-              are also functionaly equivalent. That is to say, failing to
+              are also functionally equivalent. That is to say, failing to
               provide a subnetmask will create an object with a mask of /32.
 
               If the mask (portion after the / in the argument) is given in

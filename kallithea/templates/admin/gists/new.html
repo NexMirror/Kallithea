@@ -23,87 +23,86 @@
 </%block>
 
 <%def name="main()">
-<div class="box">
-    <!-- box / title -->
-    <div class="title">
+<div class="panel panel-primary">
+    <div class="panel-heading clearfix">
         ${self.breadcrumbs()}
     </div>
 
-    <div class="table">
+    <div class="panel-body">
         <div id="files_data">
           ${h.form(h.url('gists'), method='post',id='eform')}
             <div>
-                <div class="gravatar">
-                  ${h.gravatar(c.authuser.email, size=32)}
-                </div>
-                <textarea style="resize:vertical; width:400px;border: 1px solid #ccc;border-radius: 3px;" id="description" name="description" placeholder="${_('Gist description ...')}"></textarea>
-                <div style="padding:0px 0px 0px 42px">
-                <label for='lifetime'>${_('Gist lifetime')}</label>
-                ${h.select('lifetime', '', c.lifetime_options)}
-                </div>
-            </div>
-            <div id="body" class="codeblock">
-                <div style="padding: 10px 10px 10px 26px;color:#666666">
-                    ${h.text('filename', size=30, placeholder=_('name this file...'))}
-                    <select id="mimetype" name="mimetype"/>
-                </div>
-                <div id="editor_container">
-                    <pre id="editor_pre"></pre>
-                    <textarea id="editor" name="content" style="display:none"></textarea>
+                <textarea class="form-control" id="description" name="description" placeholder="${_('Gist description ...')}"></textarea>
+                <div>
+                    <label>
+                        ${_('Gist lifetime')}
+                        ${h.select('lifetime', '', c.lifetime_options)}
+                    </label>
                 </div>
             </div>
-            <div style="padding-top: 5px">
-            ${h.submit('private',_('Create Private Gist'),class_="btn btn-mini btn-success")}
-            ${h.submit('public',_('Create Public Gist'),class_="btn btn-mini")}
-            ${h.reset('reset',_('Reset'),class_="btn btn-mini")}
+            <div id="body" class="panel panel-default form-inline">
+                <div class="panel-heading">
+                    ${h.text('filename', size=30, placeholder=_('Name this gist ...'), class_='form-control')}
+                    <select class="form-control" id="mimetype" name="mimetype"></select>
+                </div>
+                <div class="panel-body no-padding">
+                        <textarea id="editor" name="content"></textarea>
+                </div>
+            </div>
+            <div>
+            ${h.submit('private',_('Create Private Gist'),class_="btn btn-success btn-xs")}
+            ${h.submit('public',_('Create Public Gist'),class_="btn btn-default btn-xs")}
+            ${h.reset('reset',_('Reset'),class_="btn btn-default btn-xs")}
             </div>
           ${h.end_form()}
           <script type="text/javascript">
-            var myCodeMirror = initCodeMirror('editor', "${request.script_name}", '');
+            $(document).ready(function(){
+                var myCodeMirror = initCodeMirror('editor', ${h.jshtml(request.script_name)}, '');
 
-            //inject new modes
-            var $modes_select = $('#mimetype');
-            $modes_select.each(function(){
-                var modes_select = this;
-                var index = 1;
-                for(var i=0;i<CodeMirror.modeInfo.length;i++) {
-                    var m = CodeMirror.modeInfo[i];
-                    var opt = new Option(m.name, m.mime);
-                    $(opt).attr('mode', m.mode);
-                    if (m.mime == 'text/plain') {
-                        // default plain text
-                        $(opt).prop('selected', true);
-                        modes_select.options[0] = opt;
-                    } else {
-                        modes_select.options[index++] = opt;
+                //inject new modes
+                var $mimetype_select = $('#mimetype');
+                $mimetype_select.each(function(){
+                    var modes_select = this;
+                    var index = 1;
+                    for(var i=0;i<CodeMirror.modeInfo.length;i++) {
+                        var m = CodeMirror.modeInfo[i];
+                        var opt = new Option(m.name, m.mime);
+                        $(opt).attr('mode', m.mode);
+                        if (m.mime == 'text/plain') {
+                            // default plain text
+                            $(opt).prop('selected', true);
+                            modes_select.options[0] = opt;
+                        } else {
+                            modes_select.options[index++] = opt;
+                        }
                     }
-                }
-            });
+                });
 
-            var $filename = $('#filename');
-            // on select change set new mode
-            $modes_select.change(function(e){
-                var selected = e.currentTarget;
-                var node = selected.options[selected.selectedIndex];
-                var detected_mode = CodeMirror.findModeByMIME(node.value);
-                setCodeMirrorMode(myCodeMirror, detected_mode);
+                var $filename_input = $('#filename');
+                // on select change set new mode
+                $mimetype_select.change(function(e){
+                    var selected = e.currentTarget;
+                    var node = selected.options[selected.selectedIndex];
+                    var detected_mode = CodeMirror.findModeByMIME(node.value);
+                    setCodeMirrorMode(myCodeMirror, detected_mode);
 
-                var proposed_ext = CodeMirror.findExtensionByMode(detected_mode);
-                var file_data = CodeMirror.getFilenameAndExt($filename.val());
-                var filename = file_data['filename'] || 'filename1';
-                $filename.val(filename + '.' + proposed_ext);
-            });
+                    var proposed_ext = CodeMirror.findExtensionByMode(detected_mode);
+                    var file_data = CodeMirror.getFilenameAndExt($filename_input.val());
+                    var filename = file_data['filename'] || 'filename1';
+                    $filename_input.val(filename + '.' + proposed_ext);
+                });
 
-            // on type the new filename set mode
-            $filename.keyup(function(e){
-                var file_data = CodeMirror.getFilenameAndExt(this.value);
-                if(file_data['ext'] != null){
-                    var detected_mode = CodeMirror.findModeByExtension(file_data['ext']) || CodeMirror.findModeByMIME('text/plain');
-                    if (detected_mode){
-                        setCodeMirrorMode(myCodeMirror, detected_mode);
-                        $modes_select.val(detected_mode.mime);
+                // on type the new filename set mode
+                $filename_input.keyup(function(e){
+                    var file_data = CodeMirror.getFilenameAndExt(this.value);
+                    if(file_data['ext'] != null){
+                        var detected_mode = CodeMirror.findModeByExtension(file_data['ext']) || CodeMirror.findModeByMIME('text/plain');
+                        if (detected_mode){
+                            setCodeMirrorMode(myCodeMirror, detected_mode);
+                            $mimetype_select.val(detected_mode.mime);
+                        }
                     }
-                }
+                });
             });
           </script>
         </div>

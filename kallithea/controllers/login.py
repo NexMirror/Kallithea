@@ -31,12 +31,12 @@ import re
 import formencode
 
 from formencode import htmlfill
+from tg.i18n import ugettext as _
+from tg import request, session, tmpl_context as c
 from webob.exc import HTTPFound, HTTPBadRequest
-from pylons.i18n.translation import _
-from pylons.controllers.util import redirect
-from pylons import request, session, tmpl_context as c, url
 
 import kallithea.lib.helpers as h
+from kallithea.config.routing import url
 from kallithea.lib.auth import AuthUser, HasPermissionAnyDecorator
 from kallithea.lib.base import BaseController, log_in_user, render
 from kallithea.lib.exceptions import UserCreationError
@@ -52,9 +52,6 @@ log = logging.getLogger(__name__)
 
 
 class LoginController(BaseController):
-
-    def __before__(self):
-        super(LoginController, self).__before__()
 
     def _validate_came_from(self, came_from,
             _re=re.compile(r"/(?!/)[-!#$%&'()*+,./:;=?@_~0-9A-Za-z]*$")):
@@ -79,25 +76,18 @@ class LoginController(BaseController):
         else:
             c.came_from = url('home')
 
-        not_default = self.authuser.username != User.DEFAULT_USER
-        ip_allowed = AuthUser.check_ip_allowed(self.authuser, self.ip_addr)
-
-        # redirect if already logged in
-        if self.authuser.is_authenticated and not_default and ip_allowed:
-            raise HTTPFound(location=c.came_from)
-
         if request.POST:
             # import Login Form validator class
-            login_form = LoginForm()
+            login_form = LoginForm()()
             try:
                 c.form_result = login_form.to_python(dict(request.POST))
                 # form checks for username/password, now we're authenticated
                 username = c.form_result['username']
-                user = User.get_by_username(username, case_insensitive=True)
+                user = User.get_by_username_or_email(username, case_insensitive=True)
             except formencode.Invalid as errors:
                 defaults = errors.value
                 # remove password from filling in form again
-                del defaults['password']
+                defaults.pop('password', None)
                 return htmlfill.render(
                     render('/login.html'),
                     defaults=errors.value,
@@ -115,14 +105,18 @@ class LoginController(BaseController):
                 log_in_user(user, c.form_result['remember'],
                     is_external_auth=False)
                 raise HTTPFound(location=c.came_from)
+        else:
+            # redirect if already logged in
+            if request.authuser.is_authenticated:
+                raise HTTPFound(location=c.came_from)
 
         return render('/login.html')
 
     @HasPermissionAnyDecorator('hg.admin', 'hg.register.auto_activate',
                                'hg.register.manual_activate')
     def register(self):
-        c.auto_active = 'hg.register.auto_activate' in User.get_default_user()\
-            .AuthUser.permissions['global']
+        def_user_perms = AuthUser(dbuser=User.get_default_user()).permissions['global']
+        c.auto_active = 'hg.register.auto_activate' in def_user_perms
 
         settings = Setting.get_app_settings()
         captcha_private_key = settings.get('captcha_private_key')
@@ -137,11 +131,10 @@ class LoginController(BaseController):
 
                 if c.captcha_active:
                     from kallithea.lib.recaptcha import submit
-                    response = submit(request.POST.get('recaptcha_challenge_field'),
-                                      request.POST.get('recaptcha_response_field'),
+                    response = submit(request.POST.get('g-recaptcha-response'),
                                       private_key=captcha_private_key,
-                                      remoteip=self.ip_addr)
-                    if c.captcha_active and not response.is_valid:
+                                      remoteip=request.ip_addr)
+                    if not response.is_valid:
                         _value = form_result
                         _msg = _('Bad captcha')
                         error_dict = {'recaptcha_field': _msg}
@@ -149,10 +142,10 @@ class LoginController(BaseController):
                                                  error_dict=error_dict)
 
                 UserModel().create_registration(form_result)
-                h.flash(_('You have successfully registered into Kallithea'),
+                h.flash(_('You have successfully registered with %s') % (c.site_name or 'Kallithea'),
                         category='success')
                 Session().commit()
-                return redirect(url('login_home'))
+                raise HTTPFound(location=url('login_home'))
 
             except formencode.Invalid as errors:
                 return htmlfill.render(
@@ -183,11 +176,10 @@ class LoginController(BaseController):
                 form_result = password_reset_form.to_python(dict(request.POST))
                 if c.captcha_active:
                     from kallithea.lib.recaptcha import submit
-                    response = submit(request.POST.get('recaptcha_challenge_field'),
-                                      request.POST.get('recaptcha_response_field'),
+                    response = submit(request.POST.get('g-recaptcha-response'),
                                       private_key=captcha_private_key,
-                                      remoteip=self.ip_addr)
-                    if c.captcha_active and not response.is_valid:
+                                      remoteip=request.ip_addr)
+                    if not response.is_valid:
                         _value = form_result
                         _msg = _('Bad captcha')
                         error_dict = {'recaptcha_field': _msg}
@@ -196,7 +188,7 @@ class LoginController(BaseController):
                 redirect_link = UserModel().send_reset_password_email(form_result)
                 h.flash(_('A password reset confirmation code has been sent'),
                             category='success')
-                return redirect(redirect_link)
+                raise HTTPFound(location=redirect_link)
 
             except formencode.Invalid as errors:
                 return htmlfill.render(
@@ -249,12 +241,12 @@ class LoginController(BaseController):
 
         UserModel().reset_password(form_result['email'], form_result['password'])
         h.flash(_('Successfully updated password'), category='success')
-        return redirect(url('login_home'))
+        raise HTTPFound(location=url('login_home'))
 
     def logout(self):
         session.delete()
         log.info('Logging out and deleting session for user')
-        redirect(url('home'))
+        raise HTTPFound(location=url('home'))
 
     def authentication_token(self):
         """Return the CSRF protection token for the session - just like it

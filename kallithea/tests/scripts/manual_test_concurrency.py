@@ -30,29 +30,27 @@ import os
 import sys
 import shutil
 import logging
-from os.path import join as jn
-from os.path import dirname as dn
-
-from tempfile import _RandomNameSequence
+import tempfile
+from os.path import dirname
 from subprocess import Popen, PIPE
 
 from paste.deploy import appconfig
 from sqlalchemy import engine_from_config
 
-from kallithea.lib.utils import add_cache
-from kallithea.model import init_model
+from kallithea.lib.utils import setup_cache_regions
+from kallithea.model.base import init_model
 from kallithea.model import meta
-from kallithea.model.db import User, Repository
+from kallithea.model.db import User, Repository, Ui
 from kallithea.lib.auth import get_crypt_password
 
-from kallithea.tests import TESTS_TMP_PATH, HG_REPO
+from kallithea.tests.base import HG_REPO
 from kallithea.config.environment import load_environment
 
-rel_path = dn(dn(dn(dn(os.path.abspath(__file__)))))
+rel_path = dirname(dirname(dirname(dirname(os.path.abspath(__file__)))))
 conf = appconfig('config:development.ini', relative_to=rel_path)
 load_environment(conf.global_conf, conf.local_conf)
 
-add_cache(conf)
+setup_cache_regions(conf)
 
 USER = TEST_USER_ADMIN_LOGIN
 PASS = TEST_USER_ADMIN_PASS
@@ -83,7 +81,7 @@ class Command(object):
 
 
 def get_session():
-    engine = engine_from_config(conf, 'sqlalchemy.db1.')
+    engine = engine_from_config(conf, 'sqlalchemy.')
     init_model(engine)
     sa = meta.Session
     return sa
@@ -134,9 +132,9 @@ def create_test_repo(force=True):
 
         form_data = {'repo_name': HG_REPO,
                      'repo_type': 'hg',
-                     'private':False,
-                     'clone_uri': '' }
-        rm = RepoModel(sa)
+                     'private': False,
+                     'clone_uri': ''}
+        rm = RepoModel()
         rm.base_path = '/home/hg'
         rm.create(form_data, user)
 
@@ -160,16 +158,13 @@ def get_anonymous_access():
 # TESTS
 #==============================================================================
 def test_clone_with_credentials(no_errors=False, repo=HG_REPO, method=METHOD,
-                                seq=None, backend='hg'):
-    cwd = path = jn(TESTS_TMP_PATH, repo)
-
-    if seq is None:
-        seq = _RandomNameSequence().next()
+                                backend='hg'):
+    cwd = path = os.path.join(Ui.get_by_key('paths', '/').ui_value, repo)
 
     try:
         shutil.rmtree(path, ignore_errors=True)
         os.makedirs(path)
-        #print 'made dirs %s' % jn(path)
+        #print 'made dirs %s' % os.path.join(path)
     except OSError:
         raise
 
@@ -179,23 +174,22 @@ def test_clone_with_credentials(no_errors=False, repo=HG_REPO, method=METHOD,
                    'host': HOST,
                    'cloned_repo': repo, }
 
-    dest = path + seq
+    dest = tempfile.mktemp(dir=path, prefix='dest-')
     if method == 'pull':
         stdout, stderr = Command(cwd).execute(backend, method, '--cwd', dest, clone_url)
     else:
         stdout, stderr = Command(cwd).execute(backend, method, clone_url, dest)
-        print stdout,'sdasdsadsa'
         if not no_errors:
             if backend == 'hg':
                 assert """adding file changes""" in stdout, 'no messages about cloning'
-                assert """abort""" not in stderr , 'got error from clone'
+                assert """abort""" not in stderr, 'got error from clone'
             elif backend == 'git':
                 assert """Cloning into""" in stdout, 'no messages about cloning'
+
 
 if __name__ == '__main__':
     try:
         create_test_user(force=False)
-        seq = None
         import time
 
         try:
@@ -209,14 +203,14 @@ if __name__ == '__main__':
             backend = 'hg'
 
         if METHOD == 'pull':
-            seq = _RandomNameSequence().next()
+            seq = tempfile._RandomNameSequence().next()
             test_clone_with_credentials(repo=sys.argv[1], method='clone',
-                                        seq=seq, backend=backend)
+                                        backend=backend)
         s = time.time()
         for i in range(1, int(sys.argv[2]) + 1):
             print 'take', i
             test_clone_with_credentials(repo=sys.argv[1], method=METHOD,
-                                        seq=seq, backend=backend)
+                                        backend=backend)
         print 'time taken %.3f' % (time.time() - s)
     except Exception as e:
         sys.exit('stop on %s' % e)

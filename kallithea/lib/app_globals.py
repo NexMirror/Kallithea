@@ -25,9 +25,8 @@ Original author and date, and relevant copyright and licensing information is be
 :copyright: (c) 2013 RhodeCode GmbH, and others.
 :license: GPLv3, see LICENSE.md for more details.
 """
-
-from beaker.cache import CacheManager
-from beaker.util import parse_cache_config_options
+import tg
+from tg import config
 
 
 class Globals(object):
@@ -36,11 +35,18 @@ class Globals(object):
     life of the application
     """
 
-    def __init__(self, config):
+    def __init__(self):
         """One instance of Globals is created during application
         initialization and is available during requests via the
         'app_globals' variable
 
         """
-        self.cache = CacheManager(**parse_cache_config_options(config))
         self.available_permissions = None   # propagated after init_model
+
+    @property
+    def cache(self):
+        return tg.cache
+
+    @property
+    def mako_lookup(self):
+        return config['render_functions']['mako'].normal_loader

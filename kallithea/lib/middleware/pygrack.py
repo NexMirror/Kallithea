@@ -1,3 +1,30 @@
+# -*- coding: utf-8 -*-
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
+kallithea.lib.middleware.pygrack
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Python implementation of git-http-backend's Smart HTTP protocol
+
+Based on original code from git_http_backend.py project.
+
+Copyright (c) 2010 Daniel Dotsenko <dotsa@hotmail.com>
+Copyright (c) 2012 Marcin Kuzminski <marcin@python-works.com>
+
+This file was forked by the Kallithea project in July 2014.
+"""
+
 import os
 import socket
 import logging
@@ -7,6 +34,7 @@ from webob import Request, Response, exc
 
 import kallithea
 from kallithea.lib.vcs import subprocessio
+from kallithea.lib.utils2 import safe_unicode
 
 log = logging.getLogger(__name__)
 
@@ -44,7 +72,7 @@ class GitRepository(object):
 
     def __init__(self, repo_name, content_path, extras):
         files = set([f.lower() for f in os.listdir(content_path)])
-        if  not (self.git_folder_signature.intersection(files)
+        if not (self.git_folder_signature.intersection(files)
                 == self.git_folder_signature):
             raise OSError('%s missing git signature' % content_path)
         self.content_path = content_path
@@ -59,15 +87,17 @@ class GitRepository(object):
 
         :param path:
         """
-        return path.split(self.repo_name, 1)[-1].strip('/')
+        path = safe_unicode(path)
+        assert path.startswith('/' + self.repo_name + '/')
+        return path[len(self.repo_name) + 2:].strip('/')
 
-    def inforefs(self, request, environ):
+    def inforefs(self, req, environ):
         """
         WSGI Response producer for HTTP GET Git Smart
         HTTP /info/refs request.
         """
 
-        git_command = request.GET.get('service')
+        git_command = req.GET.get('service')
         if git_command not in self.commands:
             log.debug('command %s not allowed', git_command)
             return exc.HTTPMethodNotAllowed()
@@ -101,7 +131,7 @@ class GitRepository(object):
         resp.app_iter = out
         return resp
 
-    def backend(self, request, environ):
+    def backend(self, req, environ):
         """
         WSGI Response producer for HTTP POST Git Smart HTTP requests.
         Reads commands and data from HTTP POST's body.
@@ -109,14 +139,14 @@ class GitRepository(object):
         response to stdout
         """
         _git_path = kallithea.CONFIG.get('git_path', 'git')
-        git_command = self._get_fixedpath(request.path_info)
+        git_command = self._get_fixedpath(req.path_info)
         if git_command not in self.commands:
             log.debug('command %s not allowed', git_command)
             return exc.HTTPMethodNotAllowed()
 
         if 'CONTENT_LENGTH' in environ:
             inputstream = FileWrapper(environ['wsgi.input'],
-                                      request.content_length)
+                                      req.content_length)
         else:
             inputstream = environ['wsgi.input']
 
@@ -146,20 +176,20 @@ class GitRepository(object):
                 update_server_info(repo._repo)
 
         resp = Response()
-        resp.content_type = 'application/x-%s-result' % git_command.encode('utf8')
+        resp.content_type = 'application/x-%s-result' % git_command.encode('utf-8')
         resp.charset = None
         resp.app_iter = out
         return resp
 
     def __call__(self, environ, start_response):
-        request = Request(environ)
-        _path = self._get_fixedpath(request.path_info)
+        req = Request(environ)
+        _path = self._get_fixedpath(req.path_info)
         if _path.startswith('info/refs'):
             app = self.inforefs
-        elif [a for a in self.valid_accepts if a in request.accept]:
+        elif [a for a in self.valid_accepts if a in req.accept]:
             app = self.backend
         try:
-            resp = app(request, environ)
+            resp = app(req, environ)
         except exc.HTTPException as e:
             resp = e
             log.error(traceback.format_exc())

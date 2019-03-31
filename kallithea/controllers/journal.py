@@ -15,7 +15,7 @@
 kallithea.controllers.journal
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Journal controller for pylons
+Journal controller
 
 This file was forked by the Kallithea project in July 2014.
 Original author and date, and relevant copyright and licensing information is below:
@@ -37,37 +37,39 @@ from sqlalchemy.sql.expression import func
 from webhelpers.feedgenerator import Atom1Feed, Rss201rev2Feed
 
 from webob.exc import HTTPBadRequest
-from pylons import request, tmpl_context as c, response, url
-from pylons.i18n.translation import _
+from tg import request, tmpl_context as c, response
+from tg.i18n import ugettext as _
 
+from kallithea.config.routing import url
 from kallithea.controllers.admin.admin import _journal_filter
 from kallithea.model.db import UserLog, UserFollowing, Repository, User
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
 import kallithea.lib.helpers as h
-from kallithea.lib.helpers import Page
-from kallithea.lib.auth import LoginRequired, NotAnonymous
+from kallithea.lib.auth import LoginRequired
 from kallithea.lib.base import BaseController, render
+from kallithea.lib.page import Page
 from kallithea.lib.utils2 import safe_int, AttributeDict
-from kallithea.lib.compat import json
 
 log = logging.getLogger(__name__)
 
 
+language = 'en-us'
+ttl = "5"
+feed_nr = 20
+
+
 class JournalController(BaseController):
 
-    def __before__(self):
-        super(JournalController, self).__before__()
-        self.language = 'en-us'
-        self.ttl = "5"
-        self.feed_nr = 20
+    def _before(self, *args, **kwargs):
+        super(JournalController, self)._before(*args, **kwargs)
         c.search_term = request.GET.get('filter')
 
     def _get_daily_aggregate(self, journal):
         groups = []
         for k, g in groupby(journal, lambda x: x.action_as_day):
             user_group = []
-            #groupby username if it's a present value, else fallback to journal username
+            # groupby username if it's a present value, else fallback to journal username
             for _unused, g2 in groupby(list(g), lambda x: x.user.username if x.user else x.username):
                 l = list(g2)
                 user_group.append((l[0].user, l))
@@ -77,10 +79,10 @@ class JournalController(BaseController):
         return groups
 
     def _get_journal_data(self, following_repos):
-        repo_ids = [x.follows_repository.repo_id for x in following_repos
-                    if x.follows_repository is not None]
-        user_ids = [x.follows_user.user_id for x in following_repos
-                    if x.follows_user is not None]
+        repo_ids = [x.follows_repository_id for x in following_repos
+                    if x.follows_repository_id is not None]
+        user_ids = [x.follows_user_id for x in following_repos
+                    if x.follows_user_id is not None]
 
         filtering_criterion = None
 
@@ -92,12 +94,12 @@ class JournalController(BaseController):
         if not repo_ids and user_ids:
             filtering_criterion = UserLog.user_id.in_(user_ids)
         if filtering_criterion is not None:
-            journal = self.sa.query(UserLog)\
-                .options(joinedload(UserLog.user))\
+            journal = UserLog.query() \
+                .options(joinedload(UserLog.user)) \
                 .options(joinedload(UserLog.repository))
-            #filter
+            # filter
             journal = _journal_filter(journal, c.search_term)
-            journal = journal.filter(filtering_criterion)\
+            journal = journal.filter(filtering_criterion) \
                         .order_by(UserLog.action_date.desc())
         else:
             journal = []
@@ -117,13 +119,13 @@ class JournalController(BaseController):
         feed = Atom1Feed(title=_desc,
                          link=_link,
                          description=_desc,
-                         language=self.language,
-                         ttl=self.ttl)
+                         language=language,
+                         ttl=ttl)
 
-        for entry in journal[:self.feed_nr]:
+        for entry in journal[:feed_nr]:
             user = entry.user
             if user is None:
-                #fix deleted users
+                # fix deleted users
                 user = AttributeDict({'short_contact': entry.username,
                                       'email': '',
                                       'full_contact': ''})
@@ -159,13 +161,13 @@ class JournalController(BaseController):
         feed = Rss201rev2Feed(title=_desc,
                          link=_link,
                          description=_desc,
-                         language=self.language,
-                         ttl=self.ttl)
+                         language=language,
+                         ttl=ttl)
 
-        for entry in journal[:self.feed_nr]:
+        for entry in journal[:feed_nr]:
             user = entry.user
             if user is None:
-                #fix deleted users
+                # fix deleted users
                 user = AttributeDict({'short_contact': entry.username,
                                       'email': '',
                                       'full_contact': ''})
@@ -189,14 +191,13 @@ class JournalController(BaseController):
         return feed.writeString('utf-8')
 
     @LoginRequired()
-    @NotAnonymous()
     def index(self):
         # Return a rendered template
-        p = safe_int(request.GET.get('page', 1), 1)
-        c.user = User.get(self.authuser.user_id)
-        c.following = self.sa.query(UserFollowing)\
-            .filter(UserFollowing.user_id == self.authuser.user_id)\
-            .options(joinedload(UserFollowing.follows_repository))\
+        p = safe_int(request.GET.get('page'), 1)
+        c.user = User.get(request.authuser.user_id)
+        c.following = UserFollowing.query() \
+            .filter(UserFollowing.user_id == request.authuser.user_id) \
+            .options(joinedload(UserFollowing.follows_repository)) \
             .all()
 
         journal = self._get_journal_data(c.following)
@@ -205,119 +206,61 @@ class JournalController(BaseController):
             return url.current(filter=c.search_term, **kw)
 
         c.journal_pager = Page(journal, page=p, items_per_page=20, url=url_generator)
-        c.journal_day_aggreagate = self._get_daily_aggregate(c.journal_pager)
+        c.journal_day_aggregate = self._get_daily_aggregate(c.journal_pager)
 
         if request.environ.get('HTTP_X_PARTIAL_XHR'):
             return render('journal/journal_data.html')
 
-        repos_list = Session().query(Repository)\
-                     .filter(Repository.user_id ==
-                             self.authuser.user_id)\
-                     .order_by(func.lower(Repository.repo_name)).all()
+        repos_list = Repository.query(sorted=True) \
+            .filter_by(owner_id=request.authuser.user_id).all()
 
-        repos_data = RepoModel().get_repos_as_dict(repos_list=repos_list,
-                                                   admin=True)
-        #json used to render the grid
-        c.data = json.dumps(repos_data)
+        repos_data = RepoModel().get_repos_as_dict(repos_list, admin=True)
+        # data used to render the grid
+        c.data = repos_data
 
-        watched_repos_data = []
-
-        ## watched repos
-        _render = RepoModel._render_datatable
-
-        def quick_menu(repo_name):
-            return _render('quick_menu', repo_name)
-
-        def repo_lnk(name, rtype, rstate, private, fork_of):
-            return _render('repo_name', name, rtype, rstate, private, fork_of,
-                           short_name=False, admin=False)
-
-        def last_rev(repo_name, cs_cache):
-            return _render('revision', repo_name, cs_cache.get('revision'),
-                           cs_cache.get('raw_id'), cs_cache.get('author'),
-                           cs_cache.get('message'))
-
-        def desc(desc):
-            from pylons import tmpl_context as c
-            return h.urlify_text(desc, truncate=60, stylize=c.visual.stylify_metatags)
-
-        def repo_actions(repo_name):
-            return _render('repo_actions', repo_name)
-
-        def owner_actions(user_id, username):
-            return _render('user_name', user_id, username)
-
-        def toogle_follow(repo_id):
-            return  _render('toggle_follow', repo_id)
-
-        for entry in c.following:
-            repo = entry.follows_repository
-            cs_cache = repo.changeset_cache
-            row = {
-                "menu": quick_menu(repo.repo_name),
-                "raw_name": repo.repo_name.lower(),
-                "name": repo_lnk(repo.repo_name, repo.repo_type,
-                                 repo.repo_state, repo.private, repo.fork),
-                "last_changeset": last_rev(repo.repo_name, cs_cache),
-                "last_rev_raw": cs_cache.get('revision'),
-                "action": toogle_follow(repo.repo_id)
-            }
-
-            watched_repos_data.append(row)
-
-        c.watched_data = json.dumps({
-            "totalRecords": len(c.following),
-            "startIndex": 0,
-            "sort": "name",
-            "dir": "asc",
-            "records": watched_repos_data
-        })
         return render('journal/journal.html')
 
     @LoginRequired(api_access=True)
-    @NotAnonymous()
     def journal_atom(self):
         """
         Produce an atom-1.0 feed via feedgenerator module
         """
-        following = self.sa.query(UserFollowing)\
-            .filter(UserFollowing.user_id == self.authuser.user_id)\
-            .options(joinedload(UserFollowing.follows_repository))\
+        following = UserFollowing.query() \
+            .filter(UserFollowing.user_id == request.authuser.user_id) \
+            .options(joinedload(UserFollowing.follows_repository)) \
             .all()
         return self._atom_feed(following, public=False)
 
     @LoginRequired(api_access=True)
-    @NotAnonymous()
     def journal_rss(self):
         """
         Produce an rss feed via feedgenerator module
         """
-        following = self.sa.query(UserFollowing)\
-            .filter(UserFollowing.user_id == self.authuser.user_id)\
-            .options(joinedload(UserFollowing.follows_repository))\
+        following = UserFollowing.query() \
+            .filter(UserFollowing.user_id == request.authuser.user_id) \
+            .options(joinedload(UserFollowing.follows_repository)) \
             .all()
         return self._rss_feed(following, public=False)
 
     @LoginRequired()
-    @NotAnonymous()
     def toggle_following(self):
         user_id = request.POST.get('follows_user_id')
         if user_id:
             try:
                 self.scm_model.toggle_following_user(user_id,
-                                            self.authuser.user_id)
-                Session.commit()
+                                            request.authuser.user_id)
+                Session().commit()
                 return 'ok'
             except Exception:
                 log.error(traceback.format_exc())
                 raise HTTPBadRequest()
 
-        repo_id = request.POST.get('follows_repo_id')
+        repo_id = request.POST.get('follows_repository_id')
         if repo_id:
             try:
                 self.scm_model.toggle_following_repo(repo_id,
-                                            self.authuser.user_id)
-                Session.commit()
+                                            request.authuser.user_id)
+                Session().commit()
                 return 'ok'
             except Exception:
                 log.error(traceback.format_exc())
@@ -325,47 +268,47 @@ class JournalController(BaseController):
 
         raise HTTPBadRequest()
 
-    @LoginRequired()
+    @LoginRequired(allow_default_user=True)
     def public_journal(self):
         # Return a rendered template
-        p = safe_int(request.GET.get('page', 1), 1)
+        p = safe_int(request.GET.get('page'), 1)
 
-        c.following = self.sa.query(UserFollowing)\
-            .filter(UserFollowing.user_id == self.authuser.user_id)\
-            .options(joinedload(UserFollowing.follows_repository))\
+        c.following = UserFollowing.query() \
+            .filter(UserFollowing.user_id == request.authuser.user_id) \
+            .options(joinedload(UserFollowing.follows_repository)) \
             .all()
 
         journal = self._get_journal_data(c.following)
 
         c.journal_pager = Page(journal, page=p, items_per_page=20)
 
-        c.journal_day_aggreagate = self._get_daily_aggregate(c.journal_pager)
+        c.journal_day_aggregate = self._get_daily_aggregate(c.journal_pager)
 
         if request.environ.get('HTTP_X_PARTIAL_XHR'):
             return render('journal/journal_data.html')
 
         return render('journal/public_journal.html')
 
-    @LoginRequired(api_access=True)
+    @LoginRequired(api_access=True, allow_default_user=True)
     def public_journal_atom(self):
         """
         Produce an atom-1.0 feed via feedgenerator module
         """
-        c.following = self.sa.query(UserFollowing)\
-            .filter(UserFollowing.user_id == self.authuser.user_id)\
-            .options(joinedload(UserFollowing.follows_repository))\
+        c.following = UserFollowing.query() \
+            .filter(UserFollowing.user_id == request.authuser.user_id) \
+            .options(joinedload(UserFollowing.follows_repository)) \
             .all()
 
         return self._atom_feed(c.following)
 
-    @LoginRequired(api_access=True)
+    @LoginRequired(api_access=True, allow_default_user=True)
     def public_journal_rss(self):
         """
         Produce an rss2 feed via feedgenerator module
         """
-        c.following = self.sa.query(UserFollowing)\
-            .filter(UserFollowing.user_id == self.authuser.user_id)\
-            .options(joinedload(UserFollowing.follows_repository))\
+        c.following = UserFollowing.query() \
+            .filter(UserFollowing.user_id == request.authuser.user_id) \
+            .options(joinedload(UserFollowing.follows_repository)) \
             .all()
 
         return self._rss_feed(c.following)

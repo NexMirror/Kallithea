@@ -1,0 +1,8 @@
+<%page args="title,link" />\
+%if link is not None:
+${link}
+
+%endif
+${title|n,unicode}
+
+## Trailing empty line

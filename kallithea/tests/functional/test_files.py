@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
-from kallithea.tests import *
+import posixpath
+import mimetypes
+from kallithea.tests.base import *
 from kallithea.model.db import Repository
 from kallithea.model.meta import Session
 from kallithea.tests.fixture import Fixture
@@ -20,7 +22,6 @@ GIT_NODE_HISTORY = fixture.load_resource('git_node_history_response.json')
 def _set_downloads(repo_name, set_to):
     repo = Repository.get_by_repo_name(repo_name)
     repo.enable_downloads = set_to
-    Session().add(repo)
     Session().commit()
 
 
@@ -57,7 +58,7 @@ class TestFilesController(TestController):
                 f_path='/')
         )
 
-        #Test response...
+        # Test response...
 
         response.mustcontain('<a class="browser-dir ypjax-link" href="/%s/files/7ba66bec8d6dbba14a2155be32408c435c5f4492/docs"><i class="icon-folder-open"></i><span>docs</span></a>' % HG_REPO)
         response.mustcontain('<a class="browser-dir ypjax-link" href="/%s/files/7ba66bec8d6dbba14a2155be32408c435c5f4492/tests"><i class="icon-folder-open"></i><span>tests</span></a>' % HG_REPO)
@@ -91,17 +92,21 @@ class TestFilesController(TestController):
             response.mustcontain("""@ r%s:%s""" % (r[0], r[1][:12]))
 
     def test_file_source(self):
+        # Force the global cache to be populated now when we know the right .ini has been loaded.
+        # (Without this, the test would fail.)
+        import kallithea.lib.helpers
+        kallithea.lib.helpers._urlify_issues_f = None
         self.log_user()
         response = self.app.get(url(controller='files', action='index',
                                     repo_name=HG_REPO,
                                     revision='8911406ad776fdd3d0b9932a2e89677e57405a48',
                                     f_path='vcs/nodes.py'))
 
-        response.mustcontain("""<div class="commit">Partially implemented <a class="issue-tracker-link" href="https://issues.example.com/vcs_test_hg/issue/16">#16</a>. filecontent/commit message/author/node name are safe_unicode now.
-In addition some other __str__ are unicode as well
-Added test for unicode
-Improved test to clone into uniq repository.
-removed extra unicode conversion in diff.</div>
+        response.mustcontain("""<div class="formatted-fixed">Partially implemented <a class="issue-tracker-link" href="https://issues.example.com/vcs_test_hg/issue/16">#16</a>. filecontent/commit message/author/node name are safe_unicode now.<br/>"""
+"""In addition some other __str__ are unicode as well<br/>"""
+"""Added test for unicode<br/>"""
+"""Improved test to clone into uniq repository.<br/>"""
+"""removed extra unicode conversion in diff.</div>
 """)
 
         response.mustcontain("""<option selected="selected" value="8911406ad776fdd3d0b9932a2e89677e57405a48">default at 8911406ad776</option>""")
@@ -113,7 +118,7 @@ removed extra unicode conversion in diff.</div>
                                     revision='tip',
                                     f_path='vcs/nodes.py'),
                                 extra_environ={'HTTP_X_PARTIAL_XHR': '1'},)
-        self.assertEqual(response.body, HG_NODE_HISTORY)
+        assert response.body == HG_NODE_HISTORY
 
     def test_file_source_history_git(self):
         self.log_user()
@@ -122,7 +127,7 @@ removed extra unicode conversion in diff.</div>
                                     revision='master',
                                     f_path='vcs/nodes.py'),
                                 extra_environ={'HTTP_X_PARTIAL_XHR': '1'},)
-        self.assertEqual(response.body, GIT_NODE_HISTORY)
+        assert response.body == GIT_NODE_HISTORY
 
     def test_file_annotation(self):
         self.log_user()
@@ -152,7 +157,7 @@ removed extra unicode conversion in diff.</div>
                                     annotate=True),
                                 extra_environ={'HTTP_X_PARTIAL_XHR': '1'})
 
-        self.assertEqual(response.body, HG_NODE_HISTORY)
+        assert response.body == HG_NODE_HISTORY
 
     def test_file_annotation_history_git(self):
         self.log_user()
@@ -163,7 +168,7 @@ removed extra unicode conversion in diff.</div>
                                     annotate=True),
                                 extra_environ={'HTTP_X_PARTIAL_XHR': '1'})
 
-        self.assertEqual(response.body, GIT_NODE_HISTORY)
+        assert response.body == GIT_NODE_HISTORY
 
     def test_file_authors(self):
         self.log_user()
@@ -197,14 +202,14 @@ removed extra unicode conversion in diff.</div>
                                         repo_name=HG_REPO,
                                         fname=fname))
 
-            self.assertEqual(response.status, '200 OK')
+            assert response.status == '200 OK'
             heads = [
                 ('Pragma', 'no-cache'),
                 ('Cache-Control', 'no-cache'),
                 ('Content-Disposition', 'attachment; filename=%s' % filename),
-                ('Content-Type', '%s; charset=utf-8' % info[0]),
+                ('Content-Type', info[0]),
             ]
-            self.assertEqual(response.response._headers.items(), heads)
+            assert response.response._headers.items() == heads
 
     def test_archival_wrong_ext(self):
         self.log_user()
@@ -240,8 +245,8 @@ removed extra unicode conversion in diff.</div>
                                     revision='27cd5cce30c96924232dffcd24178a07ffeb5dfc',
                                     f_path='vcs/nodes.py'))
 
-        self.assertEqual(response.content_disposition, "attachment; filename=nodes.py")
-        self.assertEqual(response.content_type, "text/x-python")
+        assert response.content_disposition == "attachment; filename=nodes.py"
+        assert response.content_type == mimetypes.guess_type("nodes.py")[0]
 
     def test_raw_file_wrong_cs(self):
         self.log_user()
@@ -278,7 +283,7 @@ removed extra unicode conversion in diff.</div>
                                     revision='27cd5cce30c96924232dffcd24178a07ffeb5dfc',
                                     f_path='vcs/nodes.py'))
 
-        self.assertEqual(response.content_type, "text/plain")
+        assert response.content_type == "text/plain"
 
     def test_raw_wrong_cs(self):
         self.log_user()
@@ -347,7 +352,7 @@ removed extra unicode conversion in diff.</div>
 
         self.checkSessionFlash(response, 'No filename')
 
-    @parameterized.expand([
+    @parametrize('location,filename', [
         ('/abs', 'foo'),
         ('../rel', 'foo'),
         ('file/../foo', 'foo'),
@@ -367,14 +372,14 @@ removed extra unicode conversion in diff.</div>
 
         self.checkSessionFlash(response, 'Location must be relative path and must not contain .. in path')
 
-    @parameterized.expand([
+    @parametrize('cnt,location,filename', [
         (1, '', 'foo.txt'),
         (2, 'dir', 'foo.rst'),
         (3, 'rel/dir', 'foo.bar'),
     ])
     def test_add_file_into_hg(self, cnt, location, filename):
         self.log_user()
-        repo = fixture.create_repo('commit-test-%s' % cnt, repo_type='hg')
+        repo = fixture.create_repo(u'commit-test-%s' % cnt, repo_type='hg')
         response = self.app.post(url('files_add_home',
                                       repo_name=repo.repo_name,
                                       revision='tip', f_path='/'),
@@ -387,7 +392,7 @@ removed extra unicode conversion in diff.</div>
                                  status=302)
         try:
             self.checkSessionFlash(response, 'Successfully committed to %s'
-                                   % os.path.join(location, filename))
+                                   % posixpath.join(location, filename))
         finally:
             fixture.destroy_repo(repo.repo_name)
 
@@ -423,7 +428,7 @@ removed extra unicode conversion in diff.</div>
 
         self.checkSessionFlash(response, 'No filename')
 
-    @parameterized.expand([
+    @parametrize('location,filename', [
         ('/abs', 'foo'),
         ('../rel', 'foo'),
         ('file/../foo', 'foo'),
@@ -443,14 +448,14 @@ removed extra unicode conversion in diff.</div>
 
         self.checkSessionFlash(response, 'Location must be relative path and must not contain .. in path')
 
-    @parameterized.expand([
+    @parametrize('cnt,location,filename', [
         (1, '', 'foo.txt'),
         (2, 'dir', 'foo.rst'),
         (3, 'rel/dir', 'foo.bar'),
     ])
     def test_add_file_into_git(self, cnt, location, filename):
         self.log_user()
-        repo = fixture.create_repo('commit-test-%s' % cnt, repo_type='git')
+        repo = fixture.create_repo(u'commit-test-%s' % cnt, repo_type='git')
         response = self.app.post(url('files_add_home',
                                       repo_name=repo.repo_name,
                                       revision='tip', f_path='/'),
@@ -463,7 +468,7 @@ removed extra unicode conversion in diff.</div>
                                  status=302)
         try:
             self.checkSessionFlash(response, 'Successfully committed to %s'
-                                   % os.path.join(location, filename))
+                                   % posixpath.join(location, filename))
         finally:
             fixture.destroy_repo(repo.repo_name)
 
@@ -476,7 +481,7 @@ removed extra unicode conversion in diff.</div>
 
     def test_edit_file_view_not_on_branch_hg(self):
         self.log_user()
-        repo = fixture.create_repo('test-edit-repo', repo_type='hg')
+        repo = fixture.create_repo(u'test-edit-repo', repo_type='hg')
 
         ## add file
         location = 'vcs'
@@ -494,10 +499,10 @@ removed extra unicode conversion in diff.</div>
         response.follow()
         try:
             self.checkSessionFlash(response, 'Successfully committed to %s'
-                                   % os.path.join(location, filename))
+                                   % posixpath.join(location, filename))
             response = self.app.get(url('files_edit_home',
                                           repo_name=repo.repo_name,
-                                          revision='tip', f_path='vcs/nodes.py'),
+                                          revision='tip', f_path=posixpath.join(location, filename)),
                                     status=302)
             self.checkSessionFlash(response,
                 'You can only edit files with revision being a valid branch')
@@ -506,7 +511,7 @@ removed extra unicode conversion in diff.</div>
 
     def test_edit_file_view_commit_changes_hg(self):
         self.log_user()
-        repo = fixture.create_repo('test-edit-repo', repo_type='hg')
+        repo = fixture.create_repo(u'test-edit-repo', repo_type='hg')
 
         ## add file
         location = 'vcs'
@@ -525,19 +530,19 @@ removed extra unicode conversion in diff.</div>
         response.follow()
         try:
             self.checkSessionFlash(response, 'Successfully committed to %s'
-                                   % os.path.join(location, filename))
+                                   % posixpath.join(location, filename))
             response = self.app.post(url('files_edit_home',
                                           repo_name=repo.repo_name,
                                           revision=repo.scm_instance.DEFAULT_BRANCH_NAME,
-                                          f_path='vcs/nodes.py'),
+                                          f_path=posixpath.join(location, filename)),
                                      params={
                                         'content': "def py():\n print 'hello world'\n",
-                                        'message': 'i commited',
+                                        'message': 'i committed',
                                         '_authentication_token': self.authentication_token(),
                                      },
                                     status=302)
-            self.checkSessionFlash(response,
-                                   'Successfully committed to vcs/nodes.py')
+            self.checkSessionFlash(response, 'Successfully committed to %s'
+                                   % posixpath.join(location, filename))
         finally:
             fixture.destroy_repo(repo.repo_name)
 
@@ -550,7 +555,7 @@ removed extra unicode conversion in diff.</div>
 
     def test_edit_file_view_not_on_branch_git(self):
         self.log_user()
-        repo = fixture.create_repo('test-edit-repo', repo_type='git')
+        repo = fixture.create_repo(u'test-edit-repo', repo_type='git')
 
         ## add file
         location = 'vcs'
@@ -568,10 +573,10 @@ removed extra unicode conversion in diff.</div>
         response.follow()
         try:
             self.checkSessionFlash(response, 'Successfully committed to %s'
-                                   % os.path.join(location, filename))
+                                   % posixpath.join(location, filename))
             response = self.app.get(url('files_edit_home',
                                           repo_name=repo.repo_name,
-                                          revision='tip', f_path='vcs/nodes.py'),
+                                          revision='tip', f_path=posixpath.join(location, filename)),
                                     status=302)
             self.checkSessionFlash(response,
                 'You can only edit files with revision being a valid branch')
@@ -580,7 +585,7 @@ removed extra unicode conversion in diff.</div>
 
     def test_edit_file_view_commit_changes_git(self):
         self.log_user()
-        repo = fixture.create_repo('test-edit-repo', repo_type='git')
+        repo = fixture.create_repo(u'test-edit-repo', repo_type='git')
 
         ## add file
         location = 'vcs'
@@ -599,19 +604,19 @@ removed extra unicode conversion in diff.</div>
         response.follow()
         try:
             self.checkSessionFlash(response, 'Successfully committed to %s'
-                                   % os.path.join(location, filename))
+                                   % posixpath.join(location, filename))
             response = self.app.post(url('files_edit_home',
                                           repo_name=repo.repo_name,
                                           revision=repo.scm_instance.DEFAULT_BRANCH_NAME,
-                                          f_path='vcs/nodes.py'),
+                                          f_path=posixpath.join(location, filename)),
                                      params={
                                         'content': "def py():\n print 'hello world'\n",
-                                        'message': 'i commited',
+                                        'message': 'i committed',
                                         '_authentication_token': self.authentication_token(),
                                      },
                                     status=302)
-            self.checkSessionFlash(response,
-                                   'Successfully committed to vcs/nodes.py')
+            self.checkSessionFlash(response, 'Successfully committed to %s'
+                                   % posixpath.join(location, filename))
         finally:
             fixture.destroy_repo(repo.repo_name)
 
@@ -624,7 +629,7 @@ removed extra unicode conversion in diff.</div>
 
     def test_delete_file_view_not_on_branch_hg(self):
         self.log_user()
-        repo = fixture.create_repo('test-delete-repo', repo_type='hg')
+        repo = fixture.create_repo(u'test-delete-repo', repo_type='hg')
 
         ## add file
         location = 'vcs'
@@ -642,10 +647,10 @@ removed extra unicode conversion in diff.</div>
         response.follow()
         try:
             self.checkSessionFlash(response, 'Successfully committed to %s'
-                                   % os.path.join(location, filename))
+                                   % posixpath.join(location, filename))
             response = self.app.get(url('files_delete_home',
                                           repo_name=repo.repo_name,
-                                          revision='tip', f_path='vcs/nodes.py'),
+                                          revision='tip', f_path=posixpath.join(location, filename)),
                                     status=302)
             self.checkSessionFlash(response,
                 'You can only delete files with revision being a valid branch')
@@ -654,7 +659,7 @@ removed extra unicode conversion in diff.</div>
 
     def test_delete_file_view_commit_changes_hg(self):
         self.log_user()
-        repo = fixture.create_repo('test-delete-repo', repo_type='hg')
+        repo = fixture.create_repo(u'test-delete-repo', repo_type='hg')
 
         ## add file
         location = 'vcs'
@@ -673,18 +678,18 @@ removed extra unicode conversion in diff.</div>
         response.follow()
         try:
             self.checkSessionFlash(response, 'Successfully committed to %s'
-                                   % os.path.join(location, filename))
+                                   % posixpath.join(location, filename))
             response = self.app.post(url('files_delete_home',
                                           repo_name=repo.repo_name,
                                           revision=repo.scm_instance.DEFAULT_BRANCH_NAME,
-                                          f_path='vcs/nodes.py'),
+                                          f_path=posixpath.join(location, filename)),
                                      params={
-                                        'message': 'i commited',
+                                        'message': 'i committed',
                                         '_authentication_token': self.authentication_token(),
                                      },
                                     status=302)
             self.checkSessionFlash(response,
-                                   'Successfully deleted file vcs/nodes.py')
+                                   'Successfully deleted file %s' % posixpath.join(location, filename))
         finally:
             fixture.destroy_repo(repo.repo_name)
 
@@ -697,7 +702,7 @@ removed extra unicode conversion in diff.</div>
 
     def test_delete_file_view_not_on_branch_git(self):
         self.log_user()
-        repo = fixture.create_repo('test-delete-repo', repo_type='git')
+        repo = fixture.create_repo(u'test-delete-repo', repo_type='git')
 
         ## add file
         location = 'vcs'
@@ -715,10 +720,10 @@ removed extra unicode conversion in diff.</div>
         response.follow()
         try:
             self.checkSessionFlash(response, 'Successfully committed to %s'
-                                   % os.path.join(location, filename))
+                                   % posixpath.join(location, filename))
             response = self.app.get(url('files_delete_home',
                                           repo_name=repo.repo_name,
-                                          revision='tip', f_path='vcs/nodes.py'),
+                                          revision='tip', f_path=posixpath.join(location, filename)),
                                     status=302)
             self.checkSessionFlash(response,
                 'You can only delete files with revision being a valid branch')
@@ -727,7 +732,7 @@ removed extra unicode conversion in diff.</div>
 
     def test_delete_file_view_commit_changes_git(self):
         self.log_user()
-        repo = fixture.create_repo('test-delete-repo', repo_type='git')
+        repo = fixture.create_repo(u'test-delete-repo', repo_type='git')
 
         ## add file
         location = 'vcs'
@@ -746,17 +751,33 @@ removed extra unicode conversion in diff.</div>
         response.follow()
         try:
             self.checkSessionFlash(response, 'Successfully committed to %s'
-                                   % os.path.join(location, filename))
+                                   % posixpath.join(location, filename))
             response = self.app.post(url('files_delete_home',
                                           repo_name=repo.repo_name,
                                           revision=repo.scm_instance.DEFAULT_BRANCH_NAME,
-                                          f_path='vcs/nodes.py'),
+                                          f_path=posixpath.join(location, filename)),
                                      params={
-                                        'message': 'i commited',
+                                        'message': 'i committed',
                                         '_authentication_token': self.authentication_token(),
                                      },
                                     status=302)
             self.checkSessionFlash(response,
-                                   'Successfully deleted file vcs/nodes.py')
+                                   'Successfully deleted file %s' % posixpath.join(location, filename))
         finally:
             fixture.destroy_repo(repo.repo_name)
+
+    def test_png_diff_no_crash_hg(self):
+        self.log_user()
+        response = self.app.get(url('files_diff_home',
+                                    repo_name=HG_REPO,
+                                    f_path='docs/theme/ADC/static/documentation.png',
+                                    diff1='tip', diff2='tip'))
+        response.mustcontain("""<pre>Binary file</pre>""")
+
+    def test_png_diff_no_crash_git(self):
+        self.log_user()
+        response = self.app.get(url('files_diff_home',
+                                    repo_name=GIT_REPO,
+                                    f_path='docs/theme/ADC/static/documentation.png',
+                                    diff1='master', diff2='master'))
+        response.mustcontain("""<pre>Binary file</pre>""")

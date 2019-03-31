@@ -18,6 +18,7 @@ from kallithea.lib.vcs.utils.hgcompat import archival, hex
 
 from mercurial import obsolete
 
+
 class MercurialChangeset(BaseChangeset):
     """
     Represents state of the repository at the single revision.
@@ -37,19 +38,63 @@ class MercurialChangeset(BaseChangeset):
 
     @LazyProperty
     def branch(self):
-        return  safe_unicode(self._ctx.branch())
+        return safe_unicode(self._ctx.branch())
+
+    @LazyProperty
+    def branches(self):
+        return [safe_unicode(self._ctx.branch())]
 
     @LazyProperty
     def closesbranch(self):
-        return  self._ctx.closesbranch()
+        return self._ctx.closesbranch()
 
     @LazyProperty
     def obsolete(self):
-        return  self._ctx.obsolete()
+        return self._ctx.obsolete()
+
+    @LazyProperty
+    def bumped(self):
+        try:
+            return self._ctx.phasedivergent()
+        except AttributeError: # renamed in Mercurial 4.6 (9fa874fb34e1)
+            return self._ctx.bumped()
+
+    @LazyProperty
+    def divergent(self):
+        try:
+            return self._ctx.contentdivergent()
+        except AttributeError: # renamed in Mercurial 4.6 (8b2d7684407b)
+            return self._ctx.divergent()
+
+    @LazyProperty
+    def extinct(self):
+        return self._ctx.extinct()
+
+    @LazyProperty
+    def unstable(self):
+        try:
+            return self._ctx.orphan()
+        except AttributeError: # renamed in Mercurial 4.6 (03039ff3082b)
+            return self._ctx.unstable()
+
+    @LazyProperty
+    def phase(self):
+        if(self._ctx.phase() == 1):
+            return 'Draft'
+        elif(self._ctx.phase() == 2):
+            return 'Secret'
+        else:
+            return ''
 
     @LazyProperty
     def successors(self):
-        successors = obsolete.successorssets(self._ctx._repo, self._ctx.node())
+        try:
+            # This works starting from Mercurial 4.3: the function `successorssets` was moved to the mercurial.obsutil module and gained the `closest` parameter.
+            from mercurial import obsutil
+            successors = obsutil.successorssets(self._ctx._repo, self._ctx.node(), closest=True)
+        except ImportError:
+            # fallback for older versions
+            successors = obsolete.successorssets(self._ctx._repo, self._ctx.node())
         if successors:
             # flatten the list here handles both divergent (len > 1)
             # and the usual case (len = 1)
@@ -58,14 +103,20 @@ class MercurialChangeset(BaseChangeset):
         return successors
 
     @LazyProperty
-    def precursors(self):
-        precursors = set()
-        nm = self._ctx._repo.changelog.nodemap
-        for p in self._ctx._repo.obsstore.precursors.get(self._ctx.node(), ()):
-            pr = nm.get(p[0])
-            if pr is not None:
-                precursors.add(hex(p[0])[:12])
-        return precursors
+    def predecessors(self):
+        try:
+            # This works starting from Mercurial 4.3: the function `closestpredecessors` was added.
+            from mercurial import obsutil
+            return [hex(n)[:12] for n in obsutil.closestpredecessors(self._ctx._repo, self._ctx.node())]
+        except ImportError:
+            # fallback for older versions
+            predecessors = set()
+            nm = self._ctx._repo.changelog.nodemap
+            for p in self._ctx._repo.obsstore.precursors.get(self._ctx.node(), ()):
+                pr = nm.get(p[0])
+                if pr is not None:
+                    predecessors.add(hex(p[0])[:12])
+            return predecessors
 
     @LazyProperty
     def bookmarks(self):
@@ -147,7 +198,7 @@ class MercurialChangeset(BaseChangeset):
         cs = self
         while True:
             try:
-                next_ = cs.revision + 1
+                next_ = cs.repository.revisions.index(cs.raw_id) + 1
                 next_rev = cs.repository.revisions[next_]
             except IndexError:
                 raise ChangesetDoesNotExistError
@@ -164,7 +215,7 @@ class MercurialChangeset(BaseChangeset):
         cs = self
         while True:
             try:
-                prev_ = cs.revision - 1
+                prev_ = cs.repository.revisions.index(cs.raw_id) - 1
                 if prev_ < 0:
                     raise IndexError
                 prev_rev = cs.repository.revisions[prev_]
@@ -175,10 +226,9 @@ class MercurialChangeset(BaseChangeset):
             if not branch or branch == cs.branch:
                 return cs
 
-    def diff(self, ignore_whitespace=True, context=3):
-        return ''.join(self._ctx.diff(git=True,
-                                      ignore_whitespace=ignore_whitespace,
-                                      context=context))
+    def diff(self):
+        # Only used for feed diffstat
+        return ''.join(self._ctx.diff())
 
     def _fix_path(self, path):
         """
@@ -266,12 +316,17 @@ class MercurialChangeset(BaseChangeset):
         Returns a generator of four element tuples with
             lineno, sha, changeset lazy loader and line
         """
-
-        fctx = self._get_filectx(path)
-        for i, annotate_data in enumerate(fctx.annotate(linenumber=False)):
-            ln_no = i + 1
-            sha = hex(annotate_data[0][0].node())
-            yield (ln_no, sha, lambda: self.repository.get_changeset(sha), annotate_data[1],)
+        annotations = self._get_filectx(path).annotate()
+        try:
+            annotation_lines = [(annotateline.fctx, annotateline.text) for annotateline in annotations]
+        except AttributeError: # annotateline was introduced in Mercurial 4.6 (b33b91ca2ec2)
+            try:
+                annotation_lines = [(aline.fctx, l) for aline, l in annotations]
+            except AttributeError: # aline.fctx was introduced in Mercurial 4.4
+                annotation_lines = [(aline[0], l) for aline, l in annotations]
+        for i, (fctx, l) in enumerate(annotation_lines):
+            sha = fctx.hex()
+            yield (i + 1, sha, lambda sha=sha, l=l: self.repository.get_changeset(sha), l)
 
     def fill_archive(self, stream=None, kind='tgz', prefix=None,
                      subrepos=False):
@@ -351,7 +406,7 @@ class MercurialChangeset(BaseChangeset):
 
         path = self._fix_path(path)
 
-        if not path in self.nodes:
+        if path not in self.nodes:
             if path in self._file_paths:
                 node = FileNode(path, changeset=self)
             elif path in self._dir_paths or path in self._dir_paths:
@@ -386,7 +441,7 @@ class MercurialChangeset(BaseChangeset):
         """
         Returns list of modified ``FileNode`` objects.
         """
-        return ChangedFileNodesGenerator([n for n in  self.status[0]], self)
+        return ChangedFileNodesGenerator([n for n in self.status[0]], self)
 
     @property
     def removed(self):

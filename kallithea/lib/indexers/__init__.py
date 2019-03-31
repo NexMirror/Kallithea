@@ -28,12 +28,12 @@ Original author and date, and relevant copyright and licensing information is be
 import os
 import sys
 import logging
-from os.path import dirname as dn, join as jn
+from os.path import dirname
 
 # Add location of top level folder to sys.path
-sys.path.append(dn(dn(dn(os.path.realpath(__file__)))))
+sys.path.append(dirname(dirname(dirname(os.path.realpath(__file__)))))
 
-from whoosh.analysis import RegexTokenizer, LowercaseFilter
+from whoosh.analysis import RegexTokenizer, LowercaseFilter, IDTokenizer
 from whoosh.fields import TEXT, ID, STORED, NUMERIC, BOOLEAN, Schema, FieldType, DATETIME
 from whoosh.formats import Characters
 from whoosh.highlight import highlight as whoosh_highlight, HtmlFormatter, ContextFragmenter
@@ -44,16 +44,51 @@ log = logging.getLogger(__name__)
 # CUSTOM ANALYZER wordsplit + lowercase filter
 ANALYZER = RegexTokenizer(expression=r"\w+") | LowercaseFilter()
 
-#INDEX SCHEMA DEFINITION
+# CUSTOM ANALYZER wordsplit + lowercase filter, for emailaddr-like text
+#
+# This is useful to:
+# - avoid removing "stop words" from text
+# - search case-insensitively
+#
+EMAILADDRANALYZER = RegexTokenizer() | LowercaseFilter()
+
+# CUSTOM ANALYZER raw-string + lowercase filter
+#
+# This is useful to:
+# - avoid tokenization
+# - avoid removing "stop words" from text
+# - search case-insensitively
+#
+ICASEIDANALYZER = IDTokenizer() | LowercaseFilter()
+
+# CUSTOM ANALYZER raw-string
+#
+# This is useful to:
+# - avoid tokenization
+# - avoid removing "stop words" from text
+#
+IDANALYZER = IDTokenizer()
+
+# CUSTOM ANALYZER wordsplit + lowercase filter, for pathname-like text
+#
+# This is useful to:
+# - avoid removing "stop words" from text
+# - search case-insensitively
+#
+PATHANALYZER = RegexTokenizer() | LowercaseFilter()
+
+# INDEX SCHEMA DEFINITION
 SCHEMA = Schema(
     fileid=ID(unique=True),
-    owner=TEXT(),
-    repository=TEXT(stored=True),
-    path=TEXT(stored=True),
+    owner=TEXT(analyzer=EMAILADDRANALYZER),
+    # this field preserves case of repository name for exact matching
+    repository_rawname=TEXT(analyzer=IDANALYZER),
+    repository=TEXT(stored=True, analyzer=ICASEIDANALYZER),
+    path=TEXT(stored=True, analyzer=PATHANALYZER),
     content=FieldType(format=Characters(), analyzer=ANALYZER,
                       scorable=True, stored=True),
     modtime=STORED(),
-    extension=TEXT(stored=True)
+    extension=TEXT(stored=True, analyzer=PATHANALYZER)
 )
 
 IDX_NAME = 'HG_INDEX'
@@ -64,22 +99,25 @@ CHGSETS_SCHEMA = Schema(
     raw_id=ID(unique=True, stored=True),
     date=NUMERIC(stored=True),
     last=BOOLEAN(),
-    owner=TEXT(),
-    repository=ID(unique=True, stored=True),
-    author=TEXT(stored=True),
+    owner=TEXT(analyzer=EMAILADDRANALYZER),
+    # this field preserves case of repository name for exact matching
+    # and unique-ness in index table
+    repository_rawname=ID(unique=True),
+    repository=ID(stored=True, analyzer=ICASEIDANALYZER),
+    author=TEXT(stored=True, analyzer=EMAILADDRANALYZER),
     message=FieldType(format=Characters(), analyzer=ANALYZER,
                       scorable=True, stored=True),
     parents=TEXT(),
-    added=TEXT(),
-    removed=TEXT(),
-    changed=TEXT(),
+    added=TEXT(analyzer=PATHANALYZER),
+    removed=TEXT(analyzer=PATHANALYZER),
+    changed=TEXT(analyzer=PATHANALYZER),
 )
 
 CHGSET_IDX_NAME = 'CHGSET_INDEX'
 
 # used only to generate queries in journal
 JOURNAL_SCHEMA = Schema(
-    username=TEXT(),
+    username=ID(),
     date=DATETIME(),
     action=TEXT(),
     repository=ID(),
@@ -140,7 +178,7 @@ class WhooshResultWrapper(object):
         res = self.searcher.stored_fields(docid[0])
         log.debug('result: %s', res)
         if self.search_type == 'content':
-            full_repo_path = jn(self.repo_location, res['repository'])
+            full_repo_path = os.path.join(self.repo_location, res['repository'])
             f_path = res['path'].split(full_repo_path)[-1]
             f_path = f_path.lstrip(os.sep)
             content_short = self.get_short_content(res, docid[1])
@@ -149,7 +187,7 @@ class WhooshResultWrapper(object):
                         'f_path': f_path
             })
         elif self.search_type == 'path':
-            full_repo_path = jn(self.repo_location, res['repository'])
+            full_repo_path = os.path.join(self.repo_location, res['repository'])
             f_path = res['path'].split(full_repo_path)[-1]
             f_path = f_path.lstrip(os.sep)
             res.update({'f_path': f_path})
