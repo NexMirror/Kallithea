@@ -186,7 +186,7 @@ static_files = true
 
 <%text>## Internationalization (see setup documentation for details)</%text>
 <%text>## By default, the language requested by the browser is used if available.</%text>
-#i18n.enable = false
+#i18n.enabled = false
 <%text>## Fallback language, empty for English (valid values are the names of subdirectories in kallithea/i18n):</%text>
 i18n.lang =
 
