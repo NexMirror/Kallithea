@@ -432,8 +432,9 @@ class BaseController(TGController):
                     return log_in_user(user, remember=False,
                                        is_external_auth=True)
 
-        # User is anonymous
-        return AuthUser()
+        # User is default user (if active) or anonymous
+        default_user = User.get_default_user(cache=True)
+        return AuthUser(dbuser=default_user)
 
     @staticmethod
     def _basic_security_checks():

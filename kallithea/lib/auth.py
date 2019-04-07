@@ -400,7 +400,7 @@ class AuthUser(object):
 
     def __init__(self, user_id=None, dbuser=None, authenticating_api_key=None,
             is_external_auth=False):
-        self.is_external_auth = is_external_auth
+        self.is_external_auth = is_external_auth # container auth - don't show logout option
         self.authenticating_api_key = authenticating_api_key
 
         # These attributes will be overridden by fill_data, below, unless the
@@ -416,27 +416,22 @@ class AuthUser(object):
 
         # Look up database user, if necessary.
         if user_id is not None:
+            assert dbuser is None
             log.debug('Auth User lookup by USER ID %s', user_id)
             dbuser = UserModel().get(user_id)
+            assert dbuser is not None
         else:
-            # Note: dbuser is allowed to be None.
+            assert dbuser is not None
             log.debug('Auth User lookup by database user %s', dbuser)
 
-        is_user_loaded = self._fill_data(dbuser)
-
-        # If user cannot be found, try falling back to anonymous.
-        if is_user_loaded:
-            assert dbuser is not None
+        if self._fill_data(dbuser):
             self.is_default_user = dbuser.is_default_user
         else:
-            default_user = User.get_default_user(cache=True)
-            is_user_loaded = self._fill_data(default_user)
-            self.is_default_user = is_user_loaded
-
-        self.is_anonymous = not is_user_loaded or self.is_default_user
-
-        if not self.username:
+            assert dbuser.is_default_user
+            assert not self.username
             self.username = 'None'
+            self.is_default_user = False
+        self.is_anonymous = dbuser.is_default_user
 
         log.debug('Auth User is now %s', self)
 
