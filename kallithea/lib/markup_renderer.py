@@ -49,24 +49,22 @@ class MarkupRenderer(object):
     RST_PAT = re.compile(r're?st', re.IGNORECASE)
     PLAIN_PAT = re.compile(r'readme', re.IGNORECASE)
 
-    def _detect_renderer(self, source, filename):
+    @classmethod
+    def _detect_renderer(cls, source, filename):
         """
         runs detection of what renderer should be used for generating html
         from a markup language
 
         filename can be also explicitly a renderer name
-
-        :param source:
-        :param filename:
         """
 
-        if self.MARKDOWN_PAT.findall(filename):
-            return self.markdown
-        elif self.RST_PAT.findall(filename):
-            return self.rst
-        elif self.PLAIN_PAT.findall(filename):
-            return self.rst
-        return self.plain
+        if cls.MARKDOWN_PAT.findall(filename):
+            return cls.markdown
+        elif cls.RST_PAT.findall(filename):
+            return cls.rst
+        elif cls.PLAIN_PAT.findall(filename):
+            return cls.rst
+        return cls.plain
 
     @classmethod
     def _flavored_markdown(cls, text):
@@ -112,17 +110,15 @@ class MarkupRenderer(object):
 
         return text
 
-    def render(self, source, filename=None):
+    @classmethod
+    def render(cls, source, filename=None):
         """
         Renders a given filename using detected renderer
         it detects renderers based on file extension or mimetype.
         At last it will just do a simple html replacing new lines with <br/>
-
-        :param file_name:
-        :param source:
         """
 
-        renderer = self._detect_renderer(source, filename)
+        renderer = cls._detect_renderer(source, filename)
         readme_data = renderer(source)
         # Allow most HTML, while preventing XSS issues:
         # no <script> tags, no onclick attributes, no javascript
