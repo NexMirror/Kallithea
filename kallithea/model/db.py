@@ -598,6 +598,8 @@ class User(Base, BaseDbModel):
             _res = UserApiKeys.query().filter_by(api_key=api_key, is_expired=False).first()
             if _res:
                 res = _res.user
+        if res is None or not res.active or res.is_default_user:
+            return None
         return res
 
     @classmethod

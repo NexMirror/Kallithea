@@ -393,11 +393,11 @@ class BaseController(TGController):
         # Authenticate by API key
         if api_key is not None:
             dbuser = User.get_by_api_key(api_key)
-            au = AuthUser.make(dbuser=dbuser, authenticating_api_key=api_key, is_external_auth=True, ip_addr=ip_addr)
-            if au is None or au.is_anonymous:
-                log.warning('API key ****%s is NOT valid', api_key[-4:])
-                raise webob.exc.HTTPForbidden(_('Invalid API key'))
-            return au
+            if dbuser is None:
+                log.info('No db user found for authentication with API key ****%s from %s',
+                         api_key[-4:], ip_addr)
+                return None
+            return AuthUser.make(dbuser=dbuser, authenticating_api_key=api_key, is_external_auth=True, ip_addr=ip_addr)
 
         # Authenticate by session cookie
         # In ancient login sessions, 'authuser' may not be a dict.
