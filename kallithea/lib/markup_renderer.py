@@ -116,6 +116,19 @@ class MarkupRenderer(object):
         Renders a given filename using detected renderer
         it detects renderers based on file extension or mimetype.
         At last it will just do a simple html replacing new lines with <br/>
+
+        >>> MarkupRenderer.render('''<img id="a" style="margin-top:-1000px;color:red" src="http://example.com/test.jpg">''', '.md')
+        u'<p><img id="a" src="http://example.com/test.jpg" style="color: red;"></p>'
+        >>> MarkupRenderer.render('''<img class="c d" src="file://localhost/test.jpg">''', 'b.mkd')
+        u'<p><img class="c d"></p>'
+        >>> MarkupRenderer.render('''<a href="foo">foo</a>''', 'c.mkdn')
+        u'<p><a href="foo">foo</a></p>'
+        >>> MarkupRenderer.render('''<script>alert(1)</script>''', 'd.mdown')
+        u'&lt;script&gt;alert(1)&lt;/script&gt;'
+        >>> MarkupRenderer.render('''<div onclick="alert(2)">yo</div>''', 'markdown')
+        u'<div>yo</div>'
+        >>> MarkupRenderer.render('''<a href="javascript:alert(3)">yo</a>''', 'md')
+        u'<p><a>yo</a></p>'
         """
 
         renderer = cls._detect_renderer(source, filename)
@@ -150,21 +163,21 @@ class MarkupRenderer(object):
     @classmethod
     def markdown(cls, source, safe=True, flavored=False):
         """
-        Convert Markdown (possibly GitHub Flavored) to XSS safe HTML, possibly
-        with "safe" fall-back to plaintext.
+        Convert Markdown (possibly GitHub Flavored) to INSECURE HTML, possibly
+        with "safe" fall-back to plaintext. Output from this method should be sanitized before use.
 
         >>> MarkupRenderer.markdown('''<img id="a" style="margin-top:-1000px;color:red" src="http://example.com/test.jpg">''')
-        u'<p><img id="a" src="http://example.com/test.jpg" style="color: red;"></p>'
+        u'<p><img id="a" style="margin-top:-1000px;color:red" src="http://example.com/test.jpg"></p>'
         >>> MarkupRenderer.markdown('''<img class="c d" src="file://localhost/test.jpg">''')
-        u'<p><img class="c d"></p>'
+        u'<p><img class="c d" src="file://localhost/test.jpg"></p>'
         >>> MarkupRenderer.markdown('''<a href="foo">foo</a>''')
         u'<p><a href="foo">foo</a></p>'
         >>> MarkupRenderer.markdown('''<script>alert(1)</script>''')
-        u'&lt;script&gt;alert(1)&lt;/script&gt;'
+        u'<script>alert(1)</script>'
         >>> MarkupRenderer.markdown('''<div onclick="alert(2)">yo</div>''')
-        u'<div>yo</div>'
+        u'<div onclick="alert(2)">yo</div>'
         >>> MarkupRenderer.markdown('''<a href="javascript:alert(3)">yo</a>''')
-        u'<p><a>yo</a></p>'
+        u'<p><a href="javascript:alert(3)">yo</a></p>'
         """
         source = safe_unicode(source)
         try:
