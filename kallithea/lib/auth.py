@@ -701,16 +701,16 @@ class LoginRequired(object):
                 raise HTTPForbidden()
 
         # regular user authentication
-        if user.is_authenticated:
-            log.info('user %s authenticated with regular auth @ %s', user, loc)
-            return func(*fargs, **fkwargs)
-        elif user.is_default_user:
+        if user.is_default_user:
             if self.allow_default_user:
                 log.info('default user @ %s', loc)
                 return func(*fargs, **fkwargs)
             log.info('default user is not accepted here @ %s', loc)
-        else:
-            log.warning('user %s NOT authenticated with regular auth @ %s', user, loc)
+        elif user.is_anonymous: # default user is disabled and no proper authentication
+            log.warning('user is anonymous and NOT authenticated with regular auth @ %s', loc)
+        else: # regular authentication
+            log.info('user %s authenticated with regular auth @ %s', user, loc)
+            return func(*fargs, **fkwargs)
         raise _redirect_to_login()
 
 

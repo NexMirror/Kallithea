@@ -107,8 +107,9 @@ class LoginController(BaseController):
                 raise HTTPFound(location=c.came_from)
         else:
             # redirect if already logged in
-            if request.authuser.is_authenticated:
+            if not request.authuser.is_anonymous:
                 raise HTTPFound(location=c.came_from)
+            # continue to show login to default user
 
         return render('/login.html')
 
