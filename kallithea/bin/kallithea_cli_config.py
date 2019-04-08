@@ -16,6 +16,7 @@ import click
 import kallithea.bin.kallithea_cli_base as cli_base
 
 import os
+import sys
 import uuid
 from collections import defaultdict
 
@@ -59,7 +60,9 @@ def config_create(config_file, key_value_pairs):
     should go.
     """
 
-    mako_variable_values = {}
+    mako_variable_values = {
+        'git_hook_interpreter': sys.executable,
+    }
     ini_settings = defaultdict(dict)
 
     section_name = None
