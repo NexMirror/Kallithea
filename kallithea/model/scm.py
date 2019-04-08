@@ -729,7 +729,7 @@ class ScmModel(object):
         """
         # FIXME This may not work on Windows and may need a shell wrapper script.
         return (sys.executable
-                or 'python2')
+                or '/usr/bin/env python2')
 
     def install_git_hooks(self, repo, force_create=False):
         """
@@ -745,11 +745,11 @@ class ScmModel(object):
         if not os.path.isdir(loc):
             os.makedirs(loc)
 
-        tmpl_post = "#!/usr/bin/env %s\n" % self._get_git_hook_interpreter()
+        tmpl_post = "#!%s\n" % self._get_git_hook_interpreter()
         tmpl_post += pkg_resources.resource_string(
             'kallithea', os.path.join('config', 'post_receive_tmpl.py')
         )
-        tmpl_pre = "#!/usr/bin/env %s\n" % self._get_git_hook_interpreter()
+        tmpl_pre = "#!%s\n" % self._get_git_hook_interpreter()
         tmpl_pre += pkg_resources.resource_string(
             'kallithea', os.path.join('config', 'pre_receive_tmpl.py')
         )
