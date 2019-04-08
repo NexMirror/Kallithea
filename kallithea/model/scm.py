@@ -727,8 +727,11 @@ class ScmModel(object):
         Git hook scripts so they invoke Kallithea code with the right Python
         interpreter and in the right environment.
         """
+        # Note: sys.executable might not point at a usable Python interpreter. For
+        # example, when using uwsgi, it will point at the uwsgi program itself.
         # FIXME This may not work on Windows and may need a shell wrapper script.
-        return (sys.executable
+        return (kallithea.CONFIG.get('git_hook_interpreter')
+                or sys.executable
                 or '/usr/bin/env python2')
 
     def install_git_hooks(self, repo, force_create=False):
