@@ -205,16 +205,6 @@ var post_load_state = function(state) {
           }
         }
     });
-    $('#show_authors').on('click', function(){
-        $.ajax({
-            url: pyroutes.url('files_authors_home', {'revision': _rev, 'f_path': _f_path}),
-            success: function(data) {
-                $('#file_authors').html(data);
-                $('#file_authors').show();
-                tooltip_activate();
-            }
-        });
-    });
 }
 
 $(document).ready(function(){
@@ -246,6 +236,16 @@ $(document).ready(function(){
         } else {
             $("#branch_selector").val(${h.js(c.changeset.raw_id)});
         }
+    });
+    $('#show_authors').on('click', function(){
+        $.ajax({
+            url: pyroutes.url('files_authors_home', {'revision': ${h.js(c.changeset.raw_id)}, 'f_path': ${h.js(h.safe_unicode(c.file.path))}}),
+            success: function(data) {
+                $('#file_authors').html(data);
+                $('#file_authors').show();
+                tooltip_activate();
+            }
+        });
     });
 
 });
