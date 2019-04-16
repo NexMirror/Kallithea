@@ -33,7 +33,7 @@
             <div class="alert alert-dismissable alert-warning">
               <button type="button" class="close" data-dismiss="alert" aria-hidden="true"><i class="icon-cancel-circled"></i></button>
               ${h.literal(_('Gist was update since you started editing. Copy your changes and click %(here)s to reload new version.')
-                             % {'here': h.link_to('here',h.url('edit_gist', gist_id=c.gist.gist_access_id))})}
+                             % {'here': h.link_to(_('here'),h.url('edit_gist', gist_id=c.gist.gist_access_id))})}
             </div>
             <script>
             if (typeof jQuery != 'undefined') {
