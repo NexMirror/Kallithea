@@ -2244,7 +2244,7 @@ msgstr "Gistを編集"
 #: kallithea/templates/admin/gists/edit.html:35
 #, python-format
 msgid ""
-"Gist was update since you started editing. Copy your changes and click "
+"Gist was updated since you started editing. Copy your changes and click "
 "%(here)s to reload new version."
 msgstr ""
 "編集開始後にGistが更新されています。あなたの変更箇所をコピーしておき、 "
