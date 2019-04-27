@@ -17,7 +17,7 @@
     %endif
 </%def>
 <%def name="_file_name(iconclass, name)">
-    <%return h.literal('<i class="%s"></i><span>%s</span>' % (iconclass, name))%>
+    <%return h.literal('<i class="%s"></i><span>%s</span>') % (iconclass, name)%>
 </%def>
 <%def name="file_name(node)">
     <%
@@ -27,7 +27,7 @@
         elif node.is_submodule():
             c = "icon-file-submodule"
     %>
-    <%return _file_name(c, h.escape(node.name))%>
+    <%return _file_name(c, node.name)%>
 </%def>
 <div id="body" class="panel panel-default">
     <div class="panel-heading clearfix">
