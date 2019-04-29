@@ -171,14 +171,14 @@ class SettingsController(BaseController):
                                             install_git_hooks=install_git_hooks,
                                             user=request.authuser.username,
                                             overwrite_git_hooks=overwrite_git_hooks)
-            added_msg = ', '.join(
+            added_msg = h.HTML(', ').join(
                 h.link_to(safe_unicode(repo_name), h.url('summary_home', repo_name=repo_name)) for repo_name in added
             ) or '-'
-            removed_msg = ', '.join(
-                h.escape(safe_unicode(repo_name)) for repo_name in removed
+            removed_msg = h.HTML(', ').join(
+                safe_unicode(repo_name) for repo_name in removed
             ) or '-'
-            h.flash(h.literal(_('Repositories successfully rescanned. Added: %s. Removed: %s.') %
-                    (added_msg, removed_msg)), category='success')
+            h.flash(h.HTML(_('Repositories successfully rescanned. Added: %s. Removed: %s.')) %
+                    (added_msg, removed_msg), category='success')
 
             if invalidate_cache:
                 log.debug('invalidating all repositories cache')
