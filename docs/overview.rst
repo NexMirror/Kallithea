@@ -37,6 +37,41 @@ environment used for running Kallithea.
 We recommend using virtualenv for installing Kallithea.
 
 
+Locale environment
+------------------
+
+In order to ensure a correct functioning of Kallithea with respect to non-ASCII
+characters in user names, file paths, commit messages, etc., it is very
+important that Kallithea is run with a correct `locale` configuration.
+
+On Unix, environment variables like ``LANG`` or ``LC_ALL`` can specify a language (like
+``en_US``) and encoding (like ``UTF-8``) to use for code points outside the ASCII
+range. The flexibility of supporting multiple encodings of Unicode has the flip
+side of having to specify which encoding to use - especially for Mercurial.
+
+It depends on the OS distribution and system configuration which locales are
+available. For example, some Docker containers based on Debian default to only
+supporting the ``C`` language, while other Linux environments have ``en_US`` but not
+``C``. The ``locale -a`` command will show which values are available on the
+current system. Regardless of the actual language, you should normally choose a
+locale that has the ``UTF-8`` encoding (note that spellings ``utf8``, ``utf-8``,
+``UTF8``, ``UTF-8`` are all referring to the same thing)
+
+For technical reasons, the locale configuration **must** be provided in the
+environment in which Kallithea runs - it cannot be specified in the ``.ini`` file.
+How to practically do this depends on the web server that is used and the way it
+is started. For example, gearbox is often started by a normal user, either
+manually or via a script. In this case, the required locale environment
+variables can be provided directly in that user's environment or in the script.
+However, web servers like Apache are often started at boot via an init script or
+service file. Modifying the environment for this case would thus require
+root/administrator privileges. Moreover, that environment would dictate the
+settings for all web services running under that web server, Kallithea being
+just one of them. Specifically in the case of Apache with ``mod_wsgi``, the
+locale can be set for a specific service in its ``WSGIDaemonProcess`` directive,
+using the ``lang`` parameter.
+
+
 Installation methods
 --------------------
 

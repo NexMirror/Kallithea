@@ -539,6 +539,12 @@ that, you'll need to:
 - Add the necessary ``WSGI*`` directives to the Apache Virtual Host configuration
   file, like in the example below. Notice that the WSGI dispatch script created
   above is referred to with the ``WSGIScriptAlias`` directive.
+  The default locale settings Apache provides for web services are often not
+  adequate, with `C` as the default language and `ASCII` as the encoding.
+  Instead, use the ``lang`` parameter of ``WSGIDaemonProcess`` to specify a
+  suitable locale. See also the :ref:`overview` section and the
+  `WSGIDaemonProcess documentation`_.
+
   Apache will by default run as a special Apache user, on Linux systems
   usually ``www-data`` or ``apache``. If you need to have the repositories
   directory owned by a different user, use the user and group options to
@@ -549,7 +555,7 @@ that, you'll need to:
   .. code-block:: apache
 
       WSGIDaemonProcess kallithea processes=5 threads=1 maximum-requests=100 \
-          python-home=/srv/kallithea/venv
+          python-home=/srv/kallithea/venv lang=C.UTF-8
       WSGIProcessGroup kallithea
       WSGIScriptAlias / /srv/kallithea/dispatch.wsgi
       WSGIPassAuthorization On
@@ -558,7 +564,7 @@ that, you'll need to:
 
   .. code-block:: apache
 
-      WSGIDaemonProcess kallithea processes=5 threads=1 maximum-requests=100
+      WSGIDaemonProcess kallithea processes=5 threads=1 maximum-requests=100 lang=en_US.utf8
       WSGIProcessGroup kallithea
       WSGIScriptAlias / /srv/kallithea/dispatch.wsgi
       WSGIPassAuthorization On
@@ -583,3 +589,4 @@ the ``init.d`` directory of the Kallithea source.
 .. _Redis: http://redis.io/
 .. _mercurial-server: http://www.lshift.net/mercurial-server.html
 .. _PublishingRepositories: https://www.mercurial-scm.org/wiki/PublishingRepositories
+.. _WSGIDaemonProcess documentation: https://modwsgi.readthedocs.io/en/develop/configuration-directives/WSGIDaemonProcess.html
