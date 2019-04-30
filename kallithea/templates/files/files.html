@@ -101,7 +101,7 @@ var load_state = function(state) {
         $files_data.css('opacity', '1.0');
         post_load_state(state);
     } else {
-        asynchtml(State.url, $files_data, function() {
+        asynchtml(state.url, $files_data, function() {
                   post_load_state(state);
                   var expire_on = new Date().getTime() + CACHE_EXPIRE;
                   CACHE[cache_key] = [expire_on, $files_data.html()];
