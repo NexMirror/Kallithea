@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: Kallithea 0.3.99\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2019-03-26 22:07+0100\n"
-"PO-Revision-Date: 2019-03-14 01:03+0000\n"
+"PO-Revision-Date: 2019-04-30 22:25+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
-"kallithea/kallithea/nb_NO/>\n"
+"kallithea/stable/nb_NO/>\n"
 "Language: nb_NO\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.5.1\n"
+"X-Generator: Weblate 3.6.1\n"
 
 #: kallithea/controllers/changelog.py:67
 #: kallithea/controllers/pullrequests.py:252 kallithea/lib/base.py:605
@@ -1032,7 +1032,7 @@ msgstr ""
 #: kallithea/controllers/admin/users.py:123
 #, python-format
 msgid "Created user %s"
-msgstr ""
+msgstr "Opprettet brukeren %s"
 
 #: kallithea/controllers/admin/users.py:138
 #, python-format
@@ -1053,20 +1053,20 @@ msgstr ""
 
 #: kallithea/controllers/admin/users.py:203
 msgid "The default user cannot be edited"
-msgstr ""
+msgstr "Forvalgt bruker kan ikke redigeres"
 
 #: kallithea/controllers/admin/users.py:412
 #, python-format
 msgid "Added IP address %s to user whitelist"
-msgstr ""
+msgstr "La til IP-adressen %s i brukerhvitlisten"
 
 #: kallithea/controllers/admin/users.py:418
 msgid "An error occurred while adding IP address"
-msgstr ""
+msgstr "Kunne ikke legge til IP-adresse"
 
 #: kallithea/controllers/admin/users.py:430
 msgid "Removed IP address from user whitelist"
-msgstr ""
+msgstr "Fjernet IP-adressen fra brukerhvitlisten"
 
 #: kallithea/lib/auth.py:824
 msgid "You need to be a registered user to perform this action"
@@ -1078,7 +1078,7 @@ msgstr ""
 
 #: kallithea/lib/base.py:444
 msgid "Invalid API key"
-msgstr ""
+msgstr "Ugyldig API-nøkkel"
 
 #: kallithea/lib/base.py:495
 msgid ""
@@ -1096,7 +1096,7 @@ msgstr ""
 
 #: kallithea/lib/diffs.py:193
 msgid "Binary file"
-msgstr ""
+msgstr "Binærfil"
 
 #: kallithea/lib/diffs.py:213
 msgid ""
@@ -1148,76 +1148,84 @@ msgstr ""
 #: kallithea/lib/helpers.py:725
 #, python-format
 msgid "Fork name %s"
-msgstr ""
+msgstr "Forgreningsnavn %s"
 
 #: kallithea/lib/helpers.py:746
 #, python-format
 msgid "Pull request %s"
-msgstr ""
+msgstr "Flettingsforespørsel %s"
 
 #: kallithea/lib/helpers.py:756
+#, fuzzy
 msgid "[deleted] repository"
-msgstr ""
+msgstr "[slettet] pakkebrønn"
 
 #: kallithea/lib/helpers.py:758 kallithea/lib/helpers.py:770
+#, fuzzy
 msgid "[created] repository"
-msgstr ""
+msgstr "[opprettet] pakkebrønn"
 
 #: kallithea/lib/helpers.py:760
 msgid "[created] repository as fork"
-msgstr ""
+msgstr "[opprettet] pakkebrønn som forgrening"
 
 #: kallithea/lib/helpers.py:762 kallithea/lib/helpers.py:772
+#, fuzzy
 msgid "[forked] repository"
-msgstr ""
+msgstr "[forgrenet] pakkebrønn"
 
 #: kallithea/lib/helpers.py:764 kallithea/lib/helpers.py:774
+#, fuzzy
 msgid "[updated] repository"
-msgstr ""
+msgstr "[oppdaterte] pakkebrønn"
 
 #: kallithea/lib/helpers.py:766
+#, fuzzy
 msgid "[downloaded] archive from repository"
-msgstr ""
+msgstr "[lastet ned] arkiv fra pakkebrønn"
 
 #: kallithea/lib/helpers.py:768
+#, fuzzy
 msgid "[delete] repository"
-msgstr ""
+msgstr "[slett] pakkebrønn"
 
 #: kallithea/lib/helpers.py:776
 msgid "[created] user"
-msgstr ""
+msgstr "[opprettet] bruker"
 
 #: kallithea/lib/helpers.py:778
 msgid "[updated] user"
-msgstr ""
+msgstr "[oppdaterte] bruker"
 
 #: kallithea/lib/helpers.py:780
 msgid "[created] user group"
-msgstr ""
+msgstr "[opprettet] brukergruppe"
 
 #: kallithea/lib/helpers.py:782
 msgid "[updated] user group"
-msgstr ""
+msgstr "[oppdaterte] brukergruppe"
 
 #: kallithea/lib/helpers.py:784
+#, fuzzy
 msgid "[commented] on revision in repository"
-msgstr ""
+msgstr "[kommenterte] en revisjon i pakkebrønn"
 
 #: kallithea/lib/helpers.py:786
 msgid "[commented] on pull request for"
-msgstr ""
+msgstr "[kommenterte] flettingsforespørsel for"
 
 #: kallithea/lib/helpers.py:788
 msgid "[closed] pull request for"
-msgstr ""
+msgstr "[lukket] flettingsforespørsel for"
 
 #: kallithea/lib/helpers.py:790
 msgid "[pushed] into"
-msgstr ""
+msgstr "[dyttet] til"
 
 #: kallithea/lib/helpers.py:792
+#, fuzzy
 msgid "[committed via Kallithea] into repository"
-msgstr ""
+msgstr "[innsendt via Kallithea] inn i pakkebrønn"
 
 #: kallithea/lib/helpers.py:794
 msgid "[pulled from remote] into repository"
@@ -1244,11 +1252,11 @@ msgstr ""
 #: kallithea/templates/compare/compare_diff.html:69
 #: kallithea/templates/pullrequests/pullrequest_show.html:297
 msgid "No files"
-msgstr ""
+msgstr "Ingen filer"
 
 #: kallithea/lib/helpers.py:957
 msgid "new file"
-msgstr ""
+msgstr "ny fil"
 
 #: kallithea/lib/helpers.py:960
 msgid "mod"
@@ -1278,72 +1286,72 @@ msgstr ""
 #, python-format
 msgid "%d year"
 msgid_plural "%d years"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d år"
+msgstr[1] "%d år"
 
 #: kallithea/lib/utils2.py:334
 #, python-format
 msgid "%d month"
 msgid_plural "%d months"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d måned"
+msgstr[1] "%d måneder"
 
 #: kallithea/lib/utils2.py:335
 #, python-format
 msgid "%d day"
 msgid_plural "%d days"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d dag"
+msgstr[1] "%ed dager"
 
 #: kallithea/lib/utils2.py:336
 #, python-format
 msgid "%d hour"
 msgid_plural "%d hours"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d time"
+msgstr[1] "%d timer"
 
 #: kallithea/lib/utils2.py:337
 #, python-format
 msgid "%d minute"
 msgid_plural "%d minutes"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d minutt"
+msgstr[1] "%d minutter"
 
 #: kallithea/lib/utils2.py:338
 #, python-format
 msgid "%d second"
 msgid_plural "%d seconds"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d sekund"
+msgstr[1] "%d sekunder"
 
 #: kallithea/lib/utils2.py:354
 #, python-format
 msgid "in %s"
-msgstr ""
+msgstr "om %s"
 
 #: kallithea/lib/utils2.py:356
 #, python-format
 msgid "%s ago"
-msgstr ""
+msgstr "for %s siden"
 
 #: kallithea/lib/utils2.py:358
 #, python-format
 msgid "in %s and %s"
-msgstr ""
+msgstr "om %s og %s"
 
 #: kallithea/lib/utils2.py:361
 #, python-format
 msgid "%s and %s ago"
-msgstr ""
+msgstr "%s og %s siden"
 
 #: kallithea/lib/utils2.py:364
 msgid "just now"
-msgstr ""
+msgstr "akkurat nå"
 
 #: kallithea/model/comment.py:68
 #, python-format
 msgid "on line %s"
-msgstr ""
+msgstr "på linje %s"
 
 #: kallithea/model/comment.py:221 kallithea/model/pull_request.py:117
 msgid "[Mention]"
@@ -1351,15 +1359,16 @@ msgstr ""
 
 #: kallithea/model/db.py:1562
 msgid "top level"
-msgstr ""
+msgstr "toppnivå"
 
 #: kallithea/model/db.py:1703
 msgid "Kallithea Administrator"
-msgstr ""
+msgstr "Kallithea-administrator"
 
 #: kallithea/model/db.py:1705
+#, fuzzy
 msgid "Default user has no access to new repositories"
-msgstr ""
+msgstr "Forvalgt bruker har ingen tilgang til nye pakkebrønner"
 
 #: kallithea/model/db.py:1706
 msgid "Default user has read access to new repositories"
@@ -1469,11 +1478,11 @@ msgstr ""
 
 #: kallithea/model/db.py:2265
 msgid "Not approved"
-msgstr ""
+msgstr "Ikke godkjent"
 
 #: kallithea/model/db.py:2266
 msgid "Approved"
-msgstr ""
+msgstr "Godkjent"
 
 #: kallithea/model/forms.py:58
 msgid "Please enter a login"
@@ -1486,7 +1495,7 @@ msgstr ""
 
 #: kallithea/model/forms.py:67
 msgid "Please enter a password"
-msgstr ""
+msgstr "Skriv inn ett passord"
 
 #: kallithea/model/forms.py:68
 #, python-format
@@ -1703,7 +1712,7 @@ msgstr "Ugyldig brukernavn eller passord"
 
 #: kallithea/model/validators.py:312
 msgid "Token mismatch"
-msgstr ""
+msgstr "Symbol stemmer ikke overens"
 
 #: kallithea/model/validators.py:328
 #, python-format
@@ -1819,7 +1828,7 @@ msgstr "Legg til pakkebrønnsgruppe"
 
 #: kallithea/templates/index_base.html:37
 msgid "You have admin right to this group, and can edit it"
-msgstr ""
+msgstr "Du har administratorrettigheter til denne gruppen, og kan redigere den"
 
 #: kallithea/templates/index_base.html:37
 msgid "Edit Repository Group"
@@ -1954,18 +1963,20 @@ msgstr "CAPTCHA"
 
 #: kallithea/templates/password_reset.html:47
 msgid "Send Password Reset Email"
-msgstr ""
+msgstr "Send e-post for passordtilbakestilling"
 
 #: kallithea/templates/password_reset.html:52
 msgid ""
 "A password reset link will be sent to the specified email address if it "
 "is registered in the system."
 msgstr ""
+"En passordtilbakestillingslenke vil bli sendt til angitt e-postadresse hvis "
+"den er registrert i systemet."
 
 #: kallithea/templates/password_reset_confirmation.html:23
 #, python-format
 msgid "You are about to set a new password for the email address %s."
-msgstr ""
+msgstr "Du er i ferd med å sette et nytt passord for e-postadressen %s."
 
 #: kallithea/templates/password_reset_confirmation.html:24
 msgid ""
@@ -1975,7 +1986,7 @@ msgstr ""
 
 #: kallithea/templates/password_reset_confirmation.html:29
 msgid "Code you received in the email"
-msgstr ""
+msgstr "Koden du mottok per e-post"
 
 #: kallithea/templates/password_reset_confirmation.html:36
 msgid "New Password"
@@ -2057,8 +2068,8 @@ msgstr "Filter"
 #, python-format
 msgid "%s Entry"
 msgid_plural "%s Entries"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s oppføring"
+msgstr[1] "%s oppføringer"
 
 #: kallithea/templates/admin/admin_log.html:6
 #: kallithea/templates/admin/my_account/my_account_repos.html:16
@@ -2068,7 +2079,7 @@ msgstr[1] ""
 #: kallithea/templates/admin/user_groups/user_groups.html:43
 #: kallithea/templates/admin/users/users.html:45
 msgid "Action"
-msgstr ""
+msgstr "Handling"
 
 #: kallithea/templates/admin/admin_log.html:8
 msgid "Date"
@@ -2138,7 +2149,7 @@ msgstr "Lagre"
 #: kallithea/templates/admin/defaults/defaults.html:11
 #: kallithea/templates/base/base.html:62
 msgid "Repository Defaults"
-msgstr ""
+msgstr "Pakkebrønnsdetaljer"
 
 #: kallithea/templates/admin/defaults/defaults.html:27
 #: kallithea/templates/admin/repos/repo_add_base.html:42
@@ -2327,12 +2338,12 @@ msgstr ""
 #: kallithea/templates/files/files_edit.html:72
 #: kallithea/templates/pullrequests/pullrequest.html:78
 msgid "Reset"
-msgstr ""
+msgstr "Tilbakestill"
 
 #: kallithea/templates/admin/gists/show.html:5
 #: kallithea/templates/admin/gists/show.html:9
 msgid "Gist"
-msgstr ""
+msgstr "Gist"
 
 #: kallithea/templates/admin/gists/show.html:10
 msgid "URL"
@@ -2401,7 +2412,7 @@ msgstr ""
 
 #: kallithea/templates/admin/gists/show.html:69
 msgid "created"
-msgstr ""
+msgstr "opprettet"
 
 #: kallithea/templates/admin/gists/show.html:82
 msgid "Show as raw"
@@ -2446,24 +2457,24 @@ msgstr ""
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:5
 #: kallithea/templates/admin/users/user_edit_api_keys.html:5
 msgid "Built-in"
-msgstr ""
+msgstr "Innebygd"
 
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:13
 #: kallithea/templates/admin/users/user_edit_api_keys.html:13
 #, python-format
 msgid "Confirm to reset this API key: %s"
-msgstr ""
+msgstr "Bekreft tilbakestilling av denne API-nøkkelen: %s"
 
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:29
 #: kallithea/templates/admin/users/user_edit_api_keys.html:29
 msgid "Expired"
-msgstr ""
+msgstr "Utløpt"
 
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:39
 #: kallithea/templates/admin/users/user_edit_api_keys.html:39
 #, python-format
 msgid "Confirm to remove this API key: %s"
-msgstr ""
+msgstr "Bekreft fjerning av denne API-nøklen: %s"
 
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:41
 #: kallithea/templates/admin/users/user_edit_api_keys.html:41
@@ -2473,7 +2484,7 @@ msgstr "Fjern"
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:48
 #: kallithea/templates/admin/users/user_edit_api_keys.html:48
 msgid "No additional API keys specified"
-msgstr ""
+msgstr "Ingen ytterligere API-nøkler angitt"
 
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:56
 #: kallithea/templates/admin/users/user_edit_api_keys.html:56
@@ -2527,11 +2538,11 @@ msgstr ""
 #: kallithea/templates/admin/my_account/my_account_emails.html:39
 #: kallithea/templates/admin/users/user_edit_emails.html:39
 msgid "New email address"
-msgstr ""
+msgstr "Ny e-postadresse"
 
 #: kallithea/templates/admin/my_account/my_account_password.html:1
 msgid "Change Your Account Password"
-msgstr ""
+msgstr "Endre ditt kontopassord"
 
 #: kallithea/templates/admin/my_account/my_account_password.html:8
 msgid "Current password"
@@ -2664,7 +2675,7 @@ msgstr ""
 #: kallithea/templates/admin/permissions/permissions_globals.html:40
 #: kallithea/templates/data_table/_dt_elements.html:141
 msgid "User group"
-msgstr ""
+msgstr "Brukergruppe"
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:45
 msgid ""
@@ -2725,7 +2736,7 @@ msgstr ""
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:82
 msgid "Registration"
-msgstr ""
+msgstr "Registrering"
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:88
 msgid "External auth account activation"
@@ -2745,7 +2756,7 @@ msgstr ""
 #: kallithea/templates/admin/permissions/permissions_ips.html:25
 #: kallithea/templates/admin/users/user_edit_ips.html:37
 msgid "New IP address"
-msgstr ""
+msgstr "Ny IP-adresse"
 
 #: kallithea/templates/admin/repo_groups/repo_group_add.html:11
 #: kallithea/templates/admin/repo_groups/repo_group_edit.html:11
@@ -2754,14 +2765,14 @@ msgstr ""
 #: kallithea/templates/base/base.html:57
 #: kallithea/templates/base/base.html:76
 msgid "Repository Groups"
-msgstr ""
+msgstr "Pakkebrønnsgrupper"
 
 #: kallithea/templates/admin/repo_groups/repo_group_add.html:28
 #: kallithea/templates/admin/repo_groups/repo_group_edit_settings.html:5
 #: kallithea/templates/admin/user_groups/user_group_add.html:27
 #: kallithea/templates/admin/user_groups/user_group_edit_settings.html:4
 msgid "Group name"
-msgstr ""
+msgstr "Gruppenavn"
 
 #: kallithea/templates/admin/repo_groups/repo_group_add.html:42
 #: kallithea/templates/admin/repo_groups/repo_group_edit_settings.html:19
@@ -2795,20 +2806,20 @@ msgstr ""
 #: kallithea/templates/base/base.html:63
 #: kallithea/templates/base/base.html:152
 msgid "Settings"
-msgstr ""
+msgstr "Innstillinger"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit.html:37
 #: kallithea/templates/admin/repos/repo_edit.html:31
 #: kallithea/templates/admin/user_groups/user_group_edit.html:30
 #: kallithea/templates/admin/users/user_edit.html:33
 msgid "Advanced"
-msgstr ""
+msgstr "Avansert"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit.html:38
 #: kallithea/templates/admin/repos/repo_edit.html:28
 #: kallithea/templates/admin/user_groups/user_group_edit.html:31
 msgid "Permissions"
-msgstr ""
+msgstr "Tilganger"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_advanced.html:1
 #, python-format
@@ -2832,41 +2843,41 @@ msgstr ""
 #: kallithea/templates/admin/users/user_edit_advanced.html:8
 #: kallithea/templates/pullrequests/pullrequest_show.html:118
 msgid "Created on"
-msgstr ""
+msgstr "Opprettet den"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_advanced.html:21
 #: kallithea/templates/data_table/_dt_elements.html:121
-#, python-format
+#, fuzzy, python-format
 msgid "Confirm to delete this group: %s with %s repository"
 msgid_plural "Confirm to delete this group: %s with %s repositories"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Bekreft sletting av denne gruppen: %s med %s pakkebrønn"
+msgstr[1] "Bekreft sletting av denne gruppen: %s med %s pakkebrønner"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_advanced.html:25
 msgid "Delete this repository group"
-msgstr ""
+msgstr "Slett denne pakkebrønnsgruppen"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:7
 msgid "Not visible"
-msgstr ""
+msgstr "Ikke synlig"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:8
 msgid "Visible"
-msgstr ""
+msgstr "Synlig"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:9
 msgid "Add repos"
-msgstr ""
+msgstr "Legg til pakkebrønner"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:10
 msgid "Add/Edit groups"
-msgstr ""
+msgstr "Legg til/rediger grupper"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:11
 #: kallithea/templates/admin/repos/repo_edit_permissions.html:11
 #: kallithea/templates/admin/user_groups/user_group_edit_perms.html:11
 msgid "User/User Group"
-msgstr ""
+msgstr "Bruker/brukergruppe"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:28
 #: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:45
@@ -2875,7 +2886,7 @@ msgstr ""
 #: kallithea/templates/admin/user_groups/user_group_edit_perms.html:28
 #: kallithea/templates/admin/user_groups/user_group_edit_perms.html:45
 msgid "Default"
-msgstr ""
+msgstr "Forvalg"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:34
 #: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:71
@@ -2884,13 +2895,13 @@ msgstr ""
 #: kallithea/templates/admin/user_groups/user_group_edit_perms.html:34
 #: kallithea/templates/admin/user_groups/user_group_edit_perms.html:71
 msgid "Revoke"
-msgstr ""
+msgstr "Tilbakekall"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:81
 #: kallithea/templates/admin/repos/repo_edit_permissions.html:77
 #: kallithea/templates/admin/user_groups/user_group_edit_perms.html:81
 msgid "Add new"
-msgstr ""
+msgstr "Legg til ny"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:87
 msgid "Apply to children"
@@ -2898,7 +2909,7 @@ msgstr ""
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:91
 msgid "Both"
-msgstr ""
+msgstr "Begge"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:92
 msgid ""
@@ -2914,16 +2925,16 @@ msgstr ""
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_settings.html:46
 msgid "Remove this group"
-msgstr ""
+msgstr "Fjern denne gruppen"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_settings.html:46
 msgid "Confirm to delete this group"
-msgstr ""
+msgstr "Bekreft sletting av denne gruppen"
 
 #: kallithea/templates/admin/repo_groups/repo_group_show.html:4
 #, python-format
 msgid "Repository group %s"
-msgstr ""
+msgstr "Pakkebrønnsgruppe %s"
 
 #: kallithea/templates/admin/repo_groups/repo_groups.html:5
 msgid "Repository Groups Administration"
@@ -3001,7 +3012,7 @@ msgstr ""
 
 #: kallithea/templates/admin/repos/repo_edit.html:34
 msgid "Extra Fields"
-msgstr ""
+msgstr "Ekstra felter"
 
 #: kallithea/templates/admin/repos/repo_edit.html:37
 msgid "Caches"
@@ -3016,7 +3027,7 @@ msgstr ""
 #: kallithea/templates/summary/summary.html:161
 #: kallithea/templates/summary/summary.html:162
 msgid "Statistics"
-msgstr ""
+msgstr "Statistikk"
 
 #: kallithea/templates/admin/repos/repo_edit_advanced.html:1
 msgid "Parent"
@@ -3024,7 +3035,7 @@ msgstr ""
 
 #: kallithea/templates/admin/repos/repo_edit_advanced.html:5
 msgid "Set"
-msgstr ""
+msgstr "Sett"
 
 #: kallithea/templates/admin/repos/repo_edit_advanced.html:7
 msgid "Manually set this repository as a fork of another from the list."
@@ -3071,11 +3082,11 @@ msgstr ""
 
 #: kallithea/templates/admin/repos/repo_edit_advanced.html:58
 msgid "Lock Repository"
-msgstr ""
+msgstr "Lås pakkebrønn"
 
 #: kallithea/templates/admin/repos/repo_edit_advanced.html:60
 msgid "Repository is not locked"
-msgstr ""
+msgstr "Pakkebrønnen er ikke låst"
 
 #: kallithea/templates/admin/repos/repo_edit_advanced.html:63
 msgid ""
@@ -3099,8 +3110,8 @@ msgstr ""
 #, python-format
 msgid "This repository has %s fork"
 msgid_plural "This repository has %s forks"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Denne pakkebrønnen har %s forgrening"
+msgstr[1] "Denne pakkebrønnen har %s forgreninger"
 
 #: kallithea/templates/admin/repos/repo_edit_advanced.html:80
 msgid "Detach forks"
@@ -3108,7 +3119,7 @@ msgstr ""
 
 #: kallithea/templates/admin/repos/repo_edit_advanced.html:84
 msgid "Delete forks"
-msgstr ""
+msgstr "Slett forgreninger"
 
 #: kallithea/templates/admin/repos/repo_edit_advanced.html:88
 msgid ""
@@ -3138,7 +3149,7 @@ msgstr ""
 #: kallithea/templates/admin/repos/repo_edit_caches.html:13
 #: kallithea/templates/admin/repos/repo_edit_fields.html:7
 msgid "Key"
-msgstr ""
+msgstr "Nøkkel"
 
 #: kallithea/templates/admin/repos/repo_edit_caches.html:14
 #: kallithea/templates/admin/user_groups/user_group_add.html:40
@@ -3148,48 +3159,48 @@ msgstr ""
 #: kallithea/templates/admin/users/user_edit_profile.html:74
 #: kallithea/templates/admin/users/users.html:42
 msgid "Active"
-msgstr ""
+msgstr "Aktiv"
 
 #: kallithea/templates/admin/repos/repo_edit_fields.html:6
 msgid "Label"
-msgstr ""
+msgstr "Etikett"
 
 #: kallithea/templates/admin/repos/repo_edit_fields.html:20
 #, python-format
 msgid "Confirm to delete this field: %s"
-msgstr ""
+msgstr "Bekreft sletting av dette feltet: %s"
 
 #: kallithea/templates/admin/repos/repo_edit_fields.html:31
 msgid "New field key"
-msgstr ""
+msgstr "Ny feltnøkkel"
 
 #: kallithea/templates/admin/repos/repo_edit_fields.html:38
 msgid "New field label"
-msgstr ""
+msgstr "Ny feltetikett"
 
 #: kallithea/templates/admin/repos/repo_edit_fields.html:40
 msgid "Enter short label"
-msgstr ""
+msgstr "Skriv inn kort etikett"
 
 #: kallithea/templates/admin/repos/repo_edit_fields.html:45
 msgid "New field description"
-msgstr ""
+msgstr "Ny feltbeskrivelse"
 
 #: kallithea/templates/admin/repos/repo_edit_fields.html:47
 msgid "Enter description of a field"
-msgstr ""
+msgstr "Skriv inn beskrivelse for et felt"
 
 #: kallithea/templates/admin/repos/repo_edit_fields.html:61
 msgid "Extra fields are disabled."
-msgstr ""
+msgstr "Ekstra felter avskrudd."
 
 #: kallithea/templates/admin/repos/repo_edit_permissions.html:20
 msgid "Private Repository"
-msgstr ""
+msgstr "Privat pakkebrønn"
 
 #: kallithea/templates/admin/repos/repo_edit_remote.html:4
 msgid "Fork of repository"
-msgstr ""
+msgstr "Forgrening av pakkebrønn"
 
 #: kallithea/templates/admin/repos/repo_edit_remote.html:7
 msgid "Remote repository URL"
@@ -3216,8 +3227,9 @@ msgid "What is that?"
 msgstr ""
 
 #: kallithea/templates/admin/repos/repo_edit_settings.html:9
+#, fuzzy
 msgid "URL by id"
-msgstr ""
+msgstr "Nettadresse etter ID"
 
 #: kallithea/templates/admin/repos/repo_edit_settings.html:10
 msgid ""
@@ -3250,7 +3262,7 @@ msgstr ""
 #: kallithea/templates/admin/repos/repo_edit_settings.html:44
 #: kallithea/templates/pullrequests/pullrequest_show.html:131
 msgid "Type name of user"
-msgstr ""
+msgstr "Skriv inn brukerens navn"
 
 #: kallithea/templates/admin/repos/repo_edit_settings.html:45
 msgid "Change owner of this repository."
@@ -3258,19 +3270,20 @@ msgstr ""
 
 #: kallithea/templates/admin/repos/repo_edit_statistics.html:5
 msgid "Processed commits"
-msgstr ""
+msgstr "Behandlede innsendelser"
 
 #: kallithea/templates/admin/repos/repo_edit_statistics.html:6
 msgid "Processed progress"
-msgstr ""
+msgstr "Behandlingsframdrift"
 
 #: kallithea/templates/admin/repos/repo_edit_statistics.html:10
 msgid "Reset Statistics"
-msgstr ""
+msgstr "Tilbakestill statistikk"
 
 #: kallithea/templates/admin/repos/repo_edit_statistics.html:10
+#, fuzzy
 msgid "Confirm to remove current statistics."
-msgstr ""
+msgstr "Bekreft fjerning av nåværende statistikk"
 
 #: kallithea/templates/admin/repos/repos.html:5
 msgid "Repositories Administration"
@@ -3282,11 +3295,11 @@ msgstr ""
 
 #: kallithea/templates/admin/settings/settings.html:5
 msgid "Settings Administration"
-msgstr ""
+msgstr "Innstillingsadministrasjon"
 
 #: kallithea/templates/admin/settings/settings.html:27
 msgid "VCS"
-msgstr ""
+msgstr "VKS"
 
 #: kallithea/templates/admin/settings/settings.html:28
 msgid "Remap and Rescan"
@@ -3307,15 +3320,15 @@ msgstr ""
 
 #: kallithea/templates/admin/settings/settings.html:34
 msgid "System Info"
-msgstr ""
+msgstr "Systeminfo"
 
 #: kallithea/templates/admin/settings/settings_email.html:4
 msgid "Send test email to"
-msgstr ""
+msgstr "Send test-e-post til"
 
 #: kallithea/templates/admin/settings/settings_email.html:12
 msgid "Send"
-msgstr ""
+msgstr "Send"
 
 #: kallithea/templates/admin/settings/settings_global.html:4
 msgid "Site branding"
@@ -3364,7 +3377,7 @@ msgstr ""
 #: kallithea/templates/admin/settings/settings_vcs.html:77
 #: kallithea/templates/admin/settings/settings_visual.html:115
 msgid "Save Settings"
-msgstr ""
+msgstr "Lagre innstillinger"
 
 #: kallithea/templates/admin/settings/settings_hooks.html:3
 msgid "Built-in Mercurial Hooks (Read-Only)"
@@ -3467,19 +3480,19 @@ msgstr ""
 
 #: kallithea/templates/admin/settings/settings_system.html:9
 msgid "Python version"
-msgstr ""
+msgstr "Python-versjon"
 
 #: kallithea/templates/admin/settings/settings_system.html:10
 msgid "Platform"
-msgstr ""
+msgstr "Plattform"
 
 #: kallithea/templates/admin/settings/settings_system.html:11
 msgid "Git version"
-msgstr ""
+msgstr "Git-versjon"
 
 #: kallithea/templates/admin/settings/settings_system.html:12
 msgid "Git path"
-msgstr ""
+msgstr "Git-sti"
 
 #: kallithea/templates/admin/settings/settings_system.html:13
 msgid "Upgrade info endpoint"
@@ -3491,7 +3504,7 @@ msgstr ""
 
 #: kallithea/templates/admin/settings/settings_system.html:23
 msgid "Python Packages"
-msgstr ""
+msgstr "Python-pakker"
 
 #: kallithea/templates/admin/settings/settings_vcs.html:9
 msgid "Show repository size after push"
@@ -3545,7 +3558,7 @@ msgstr ""
 
 #: kallithea/templates/admin/settings/settings_visual.html:4
 msgid "General"
-msgstr ""
+msgstr "Generelt"
 
 #: kallithea/templates/admin/settings/settings_visual.html:9
 msgid "Use repository extra fields"
@@ -3566,7 +3579,7 @@ msgstr ""
 
 #: kallithea/templates/admin/settings/settings_visual.html:25
 msgid "Show user Gravatars"
-msgstr ""
+msgstr "Vis bruker-Gravatarer"
 
 #: kallithea/templates/admin/settings/settings_visual.html:29
 msgid ""
@@ -3587,8 +3600,9 @@ msgstr ""
 
 #: kallithea/templates/admin/settings/settings_visual.html:40
 #: kallithea/templates/summary/summary.html:63
+#, fuzzy
 msgid "Clone URL"
-msgstr ""
+msgstr "Kloningsnettadresse"
 
 #: kallithea/templates/admin/settings/settings_visual.html:43
 msgid ""
@@ -3660,7 +3674,7 @@ msgstr ""
 
 #: kallithea/templates/admin/user_groups/user_group_add.html:5
 msgid "Add user group"
-msgstr ""
+msgstr "Legg til brukergruppe"
 
 #: kallithea/templates/admin/user_groups/user_group_add.html:10
 #: kallithea/templates/admin/user_groups/user_group_edit.html:11
@@ -3668,12 +3682,12 @@ msgstr ""
 #: kallithea/templates/base/base.html:59
 #: kallithea/templates/base/base.html:79
 msgid "User Groups"
-msgstr ""
+msgstr "Brukergrupper"
 
 #: kallithea/templates/admin/user_groups/user_group_add.html:12
 #: kallithea/templates/admin/user_groups/user_groups.html:24
 msgid "Add User Group"
-msgstr ""
+msgstr "Legg til brukergruppe"
 
 #: kallithea/templates/admin/user_groups/user_group_add.html:36
 #: kallithea/templates/admin/user_groups/user_group_edit_settings.html:13
@@ -3683,82 +3697,82 @@ msgstr ""
 #: kallithea/templates/admin/user_groups/user_group_edit.html:5
 #, python-format
 msgid "%s user group settings"
-msgstr ""
+msgstr "%s brukergruppeinnstillinger"
 
 #: kallithea/templates/admin/user_groups/user_group_edit.html:33
 msgid "Show Members"
-msgstr ""
+msgstr "Vis medlemmer"
 
 #: kallithea/templates/admin/user_groups/user_group_edit_advanced.html:1
 #, python-format
 msgid "User Group: %s"
-msgstr ""
+msgstr "Brukergruppe: %s"
 
 #: kallithea/templates/admin/user_groups/user_group_edit_advanced.html:6
 #: kallithea/templates/admin/user_groups/user_group_edit_settings.html:23
 #: kallithea/templates/admin/user_groups/user_groups.html:40
 msgid "Members"
-msgstr ""
+msgstr "Medlemmer"
 
 #: kallithea/templates/admin/user_groups/user_group_edit_advanced.html:19
 #: kallithea/templates/data_table/_dt_elements.html:102
-#, python-format
+#, fuzzy, python-format
 msgid "Confirm to delete this user group: %s"
-msgstr ""
+msgstr "Bekreft sletting av denne brukergruppen: %s"
 
 #: kallithea/templates/admin/user_groups/user_group_edit_advanced.html:21
 msgid "Delete this user group"
-msgstr ""
+msgstr "Slett denne brukergruppen"
 
 #: kallithea/templates/admin/user_groups/user_group_edit_members.html:11
 msgid "No members yet"
-msgstr ""
+msgstr "Ingen medlemmer enda"
 
 #: kallithea/templates/admin/user_groups/user_group_edit_settings.html:26
 msgid "Chosen group members"
-msgstr ""
+msgstr "Valgte gruppemedlemmer"
 
 #: kallithea/templates/admin/user_groups/user_group_edit_settings.html:39
 msgid "Available members"
-msgstr ""
+msgstr "Tilgjengelige medlemmer"
 
 #: kallithea/templates/admin/user_groups/user_groups.html:5
 msgid "User Groups Administration"
-msgstr ""
+msgstr "Brukergruppeadministrasjon"
 
 #: kallithea/templates/admin/users/user_add.html:5
 msgid "Add user"
-msgstr ""
+msgstr "Legg til bruker"
 
 #: kallithea/templates/admin/users/user_add.html:10
 #: kallithea/templates/admin/users/user_edit.html:11
 #: kallithea/templates/admin/users/users.html:9
 #: kallithea/templates/base/base.html:58
 msgid "Users"
-msgstr ""
+msgstr "Brukere"
 
 #: kallithea/templates/admin/users/user_add.html:12
 #: kallithea/templates/admin/users/users.html:23
 msgid "Add User"
-msgstr ""
+msgstr "Legg til bruker"
 
 #: kallithea/templates/admin/users/user_add.html:41
 msgid "Password confirmation"
-msgstr ""
+msgstr "Passordbekreftelse"
 
 #: kallithea/templates/admin/users/user_edit.html:5
 #, python-format
 msgid "%s user settings"
-msgstr ""
+msgstr "%s brukerinnstillinger"
 
 #: kallithea/templates/admin/users/user_edit.html:30
 msgid "Emails"
-msgstr ""
+msgstr "E-poster"
 
 #: kallithea/templates/admin/users/user_edit_advanced.html:1
 #, python-format
 msgid "User: %s"
-msgstr ""
+msgstr "Bruker: %s"
 
 #: kallithea/templates/admin/users/user_edit_advanced.html:7
 #: kallithea/templates/admin/users/user_edit_profile.html:32
@@ -3768,26 +3782,26 @@ msgstr ""
 #: kallithea/templates/admin/users/user_edit_advanced.html:9
 #: kallithea/templates/admin/users/users.html:41
 msgid "Last Login"
-msgstr ""
+msgstr "Siste innlogging"
 
 #: kallithea/templates/admin/users/user_edit_advanced.html:10
 msgid "Member of User Groups"
-msgstr ""
+msgstr "Medlem av brukergrupper"
 
 #: kallithea/templates/admin/users/user_edit_advanced.html:21
 #: kallithea/templates/data_table/_dt_elements.html:90
-#, python-format
+#, fuzzy, python-format
 msgid "Confirm to delete this user: %s"
-msgstr ""
+msgstr "Bekreft sletting av denne brukeren: %s"
 
 #: kallithea/templates/admin/users/user_edit_advanced.html:23
 msgid "Delete this user"
-msgstr ""
+msgstr "Slett denne brukeren"
 
 #: kallithea/templates/admin/users/user_edit_ips.html:7
 #, python-format
 msgid "Inherited from %s"
-msgstr ""
+msgstr "Nedarvet fra %s"
 
 #: kallithea/templates/admin/users/user_edit_profile.html:39
 msgid "Name in Source of Record"
@@ -3812,79 +3826,81 @@ msgstr ""
 
 #: kallithea/templates/base/base.html:28
 msgid "Support"
-msgstr ""
+msgstr "Støtte"
 
 #: kallithea/templates/base/base.html:86
 #: kallithea/templates/base/base.html:424
 msgid "Mercurial repository"
-msgstr ""
+msgstr "Merkurial-pakkebrønn"
 
 #: kallithea/templates/base/base.html:89
 #: kallithea/templates/base/base.html:427
 msgid "Git repository"
-msgstr ""
+msgstr "Git-pakkebrønn"
 
 #: kallithea/templates/base/base.html:115
 msgid "Create Fork"
-msgstr ""
+msgstr "Opprett ei forgrening"
 
 #: kallithea/templates/base/base.html:127
 #: kallithea/templates/summary/summary.html:9
 msgid "Summary"
-msgstr ""
+msgstr "Sammendrag"
 
 #: kallithea/templates/base/base.html:129
 #: kallithea/templates/base/base.html:131
 #: kallithea/templates/changelog/changelog.html:16
 msgid "Changelog"
-msgstr ""
+msgstr "Endringslogg"
 
 #: kallithea/templates/base/base.html:133
 #: kallithea/templates/files/files.html:11
 msgid "Files"
-msgstr ""
+msgstr "Filer"
 
 #: kallithea/templates/base/base.html:135
-#, python-format
+#, fuzzy, python-format
 msgid "Show Pull Requests for %s"
-msgstr ""
+msgstr "Vis flettingsforespørsler for %s"
 
 #: kallithea/templates/base/base.html:135
+#, fuzzy
 msgid "Pull Requests"
-msgstr ""
+msgstr "Flettingsforespørsler"
 
 #: kallithea/templates/base/base.html:146
 #: kallithea/templates/base/base.html:148
+#, fuzzy
 msgid "Options"
-msgstr ""
+msgstr "Valg"
 
 #: kallithea/templates/base/base.html:156
 #: kallithea/templates/forks/forks_data.html:18
 msgid "Compare Fork"
-msgstr ""
+msgstr "Sammenlign forgrening"
 
 #: kallithea/templates/base/base.html:158
 msgid "Compare"
-msgstr ""
+msgstr "Sammenlign"
 
 #: kallithea/templates/base/base.html:160
 #: kallithea/templates/base/base.html:322
 #: kallithea/templates/search/search.html:14
 #: kallithea/templates/search/search.html:67
 msgid "Search"
-msgstr ""
+msgstr "Søk"
 
 #: kallithea/templates/base/base.html:164
 msgid "Unlock"
-msgstr ""
+msgstr "Lås opp"
 
 #: kallithea/templates/base/base.html:166
 msgid "Lock"
-msgstr ""
+msgstr "Lås"
 
 #: kallithea/templates/base/base.html:174
 msgid "Follow"
-msgstr ""
+msgstr "Følg"
 
 #: kallithea/templates/base/base.html:175
 msgid "Unfollow"
@@ -3893,16 +3909,17 @@ msgstr ""
 #: kallithea/templates/base/base.html:178
 #: kallithea/templates/forks/fork.html:9
 msgid "Fork"
-msgstr ""
+msgstr "Forgren"
 
 #: kallithea/templates/base/base.html:179
 #: kallithea/templates/pullrequests/pullrequest.html:77
+#, fuzzy
 msgid "Create Pull Request"
-msgstr ""
+msgstr "Opprett flettingsorespørsel"
 
 #: kallithea/templates/base/base.html:191
 msgid "Switch To"
-msgstr ""
+msgstr "Bytt til"
 
 #: kallithea/templates/base/base.html:203
 #: kallithea/templates/base/base.html:452
@@ -3911,7 +3928,7 @@ msgstr ""
 
 #: kallithea/templates/base/base.html:296
 msgid "Show recent activity"
-msgstr ""
+msgstr "Vis nylig aktivitet"
 
 #: kallithea/templates/base/base.html:302
 #: kallithea/templates/base/base.html:303
@@ -3919,55 +3936,60 @@ msgid "Public journal"
 msgstr ""
 
 #: kallithea/templates/base/base.html:308
+#, fuzzy
 msgid "Show public gists"
-msgstr ""
+msgstr "Vis offentlige Gist-er"
 
 #: kallithea/templates/base/base.html:309
+#, fuzzy
 msgid "Gists"
-msgstr ""
+msgstr "Gist-er"
 
 #: kallithea/templates/base/base.html:313
 msgid "All Public Gists"
-msgstr ""
+msgstr "Alle offentlige Gist-er"
 
 #: kallithea/templates/base/base.html:315
 msgid "My Public Gists"
-msgstr ""
+msgstr "Mine offentlige Gist-er"
 
 #: kallithea/templates/base/base.html:316
 msgid "My Private Gists"
-msgstr ""
+msgstr "Mine private Gist-er"
 
 #: kallithea/templates/base/base.html:321
+#, fuzzy
 msgid "Search in repositories"
-msgstr ""
+msgstr "Søk i pakkebrønner"
 
 #: kallithea/templates/base/base.html:344
 #: kallithea/templates/base/base.html:345
 #: kallithea/templates/pullrequests/pullrequest_show_my.html:6
 #: kallithea/templates/pullrequests/pullrequest_show_my.html:10
+#, fuzzy
 msgid "My Pull Requests"
-msgstr ""
+msgstr "Mine flettingsforespørsler"
 
 #: kallithea/templates/base/base.html:360
 msgid "Not Logged In"
-msgstr ""
+msgstr "Ikke innlogget"
 
 #: kallithea/templates/base/base.html:369
+#, fuzzy
 msgid "Login to Your Account"
-msgstr ""
+msgstr "Logg in på kontoen din"
 
 #: kallithea/templates/base/base.html:379
 msgid "Forgot password?"
-msgstr ""
+msgstr "Glemt passordet?"
 
 #: kallithea/templates/base/base.html:383
 msgid "Don't have an account?"
-msgstr ""
+msgstr "Mangler du konto?"
 
 #: kallithea/templates/base/base.html:400
 msgid "Log Out"
-msgstr ""
+msgstr "Logg ut"
 
 #: kallithea/templates/base/base.html:524
 msgid "Parent rev."
@@ -3989,8 +4011,9 @@ msgid ""
 msgstr ""
 
 #: kallithea/templates/base/default_perms_box.html:23
+#, fuzzy
 msgid "Create repositories"
-msgstr ""
+msgstr "Opprett pakkebrønner"
 
 #: kallithea/templates/base/default_perms_box.html:27
 msgid "Select this option to allow repository creation for this user"
@@ -4015,7 +4038,7 @@ msgstr ""
 #: kallithea/templates/base/perms_summary.html:13
 #: kallithea/templates/changelog/changelog.html:41
 msgid "Show"
-msgstr ""
+msgstr "Vis"
 
 #: kallithea/templates/base/perms_summary.html:22
 msgid "No permissions defined yet"
@@ -4024,12 +4047,12 @@ msgstr ""
 #: kallithea/templates/base/perms_summary.html:30
 #: kallithea/templates/base/perms_summary.html:55
 msgid "Permission"
-msgstr ""
+msgstr "Tilgang"
 
 #: kallithea/templates/base/perms_summary.html:32
 #: kallithea/templates/base/perms_summary.html:57
 msgid "Edit Permission"
-msgstr ""
+msgstr "Rediger tilgang"
 
 #: kallithea/templates/base/perms_summary.html:92
 msgid "No permission defined"
@@ -4037,12 +4060,13 @@ msgstr ""
 
 #: kallithea/templates/base/root.html:28
 msgid "Retry"
-msgstr ""
+msgstr "Prøv igjen"
 
 #: kallithea/templates/base/root.html:29
 #: kallithea/templates/changeset/changeset_file_comment.html:65
+#, fuzzy
 msgid "Submitting ..."
-msgstr ""
+msgstr "Sender inn …"
 
 #: kallithea/templates/base/root.html:30
 msgid "Unable to post"
@@ -4050,7 +4074,7 @@ msgstr ""
 
 #: kallithea/templates/base/root.html:31
 msgid "Add Another Comment"
-msgstr ""
+msgstr "Legg til enda en kommentar"
 
 #: kallithea/templates/base/root.html:32
 msgid "Stop following this repository"
@@ -4062,15 +4086,17 @@ msgstr ""
 
 #: kallithea/templates/base/root.html:34
 msgid "Group"
-msgstr ""
+msgstr "Gruppe"
 
 #: kallithea/templates/base/root.html:35
+#, fuzzy
 msgid "Loading ..."
-msgstr ""
+msgstr "Laster …"
 
 #: kallithea/templates/base/root.html:36
+#, fuzzy
 msgid "loading ..."
-msgstr ""
+msgstr "laster …"
 
 #: kallithea/templates/base/root.html:37
 msgid "Search truncated"
@@ -4093,8 +4119,9 @@ msgid "Show Selected Changesets {0} &rarr; {1}"
 msgstr ""
 
 #: kallithea/templates/base/root.html:42
+#, fuzzy
 msgid "Selection Link"
-msgstr ""
+msgstr "Utvalgslenke"
 
 #: kallithea/templates/base/root.html:43
 #: kallithea/templates/changeset/diff_block.html:7
