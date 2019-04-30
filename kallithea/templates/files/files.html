@@ -163,6 +163,7 @@ var post_load_state = function(state) {
 
     // history select field
     var cache = {};
+    $('#diff1').prev('.select2-container').remove(); // Hack to handle repeated JS initialization on reused DOM
     $("#diff1").select2({
         placeholder: _TM['Select changeset'],
         dropdownAutoWidth: true,
