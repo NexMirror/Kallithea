@@ -5,7 +5,7 @@ import sys
 import platform
 
 if sys.version_info < (2, 6) or sys.version_info >= (3,):
-    raise Exception('Kallithea requires python 2.6 or 2.7')
+    raise Exception('Kallithea requires python 2.7')
 
 
 here = os.path.abspath(os.path.dirname(__file__))
@@ -82,7 +82,6 @@ classifiers = [
     'License :: OSI Approved :: GNU General Public License (GPL)',
     'Operating System :: OS Independent',
     'Programming Language :: Python',
-    'Programming Language :: Python :: 2.6',
     'Programming Language :: Python :: 2.7',
     'Topic :: Software Development :: Version Control',
 ]

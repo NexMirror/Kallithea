@@ -67,7 +67,7 @@ pip is a package management system for Python. You will need it to install Kalli
 
 If you installed Python 2.7.9+, you already have it (as long as you ran the installer with admin privileges or disabled UAC).
 
-If it was not installed or if you are using Python>=2.6,<2.7.9:
+If it was not installed or if you are using Python < 2.7.9:
 
 - Go to https://bootstrap.pypa.io
 - Right-click on get-pip.py and choose Saves as...

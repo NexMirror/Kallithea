@@ -88,15 +88,13 @@ by invoking ``py.test`` from the project root::
 
     py.test
 
-Note that testing on Python 2.6 also requires ``unittest2``.
-
 Note that on unix systems, the temporary directory (``/tmp`` or where
 ``$TMPDIR`` points) must allow executable files; Git hooks must be executable,
 and the test suite creates repositories in the temporary directory. Linux
 systems with /tmp mounted noexec will thus fail.
 
 You can also use ``tox`` to run the tests with all supported Python versions
-(currently Python 2.6--2.7).
+(currently only Python 2.7).
 
 When running tests, Kallithea generates a `test.ini` based on template values
 in `kallithea/tests/conftest.py` and populates the SQLite database specified
@@ -202,7 +200,7 @@ of Mercurial's (https://www.mercurial-scm.org/wiki/CodingStyle), pep8, and
 consistency with existing code. Run ``scripts/run-all-cleanup`` before
 committing to ensure some basic code formatting consistency.
 
-We support both Python 2.6.x and 2.7.x and nothing else. For now we don't care
+We currently only support Python 2.7.x and nothing else. For now we don't care
 about Python 3 compatibility.
 
 We try to support the most common modern web browsers. IE9 is still supported

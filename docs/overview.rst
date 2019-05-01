@@ -12,7 +12,7 @@ Python environment
 ------------------
 
 **Kallithea** is written entirely in Python_ and requires Python version
-2.6 or higher. Python 3.x is currently not supported.
+2.7 or higher. Python 3.x is currently not supported.
 
 Given a Python installation, there are different ways of providing the
 environment for running Python applications. Each of them pretty much
