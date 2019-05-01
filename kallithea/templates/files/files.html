@@ -58,12 +58,11 @@ var ypjax_links = function(){
             return true;
         }
 
-        var el = e.currentTarget;
-        var url = el.href;
+        var url = e.currentTarget.href;
 
         //extract rev and the f_path from url.
-        parts = url.split(_repo_files_url);
-        if(parts.length != 2){
+        var parts = url.split(_repo_files_url);
+        if (parts.length != 2) {
             return false;
         }
 
