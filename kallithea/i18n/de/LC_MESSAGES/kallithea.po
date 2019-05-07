@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2019-05-04 21:13+0200\n"
-"PO-Revision-Date: 2019-03-14 01:03+0000\n"
-"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
-"Language-Team: German <https://hosted.weblate.org/projects/kallithea/"
-"kallithea/de/>\n"
+"PO-Revision-Date: 2019-05-08 20:48+0000\n"
+"Last-Translator: ssantos <ssantos@web.de>\n"
+"Language-Team: German <https://hosted.weblate.org/projects/kallithea/stable/"
+"de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.5.1\n"
+"X-Generator: Weblate 3.7-dev\n"
 
 #: kallithea/controllers/changelog.py:67
 #: kallithea/controllers/pullrequests.py:252 kallithea/lib/base.py:605
@@ -486,7 +486,7 @@ msgstr ""
 
 #: kallithea/controllers/search.py:140
 msgid "The server has no search index."
-msgstr ""
+msgstr "Der Server hat keinen Suchindex."
 
 #: kallithea/controllers/search.py:143
 msgid "An error occurred during search operation."
@@ -989,6 +989,8 @@ msgstr "Es stehen noch keine Daten zur Verfügung"
 #: kallithea/controllers/admin/settings.py:360
 msgid "Builtin hooks are read-only. Please use another hook name."
 msgstr ""
+"Die eingebauten Hooks sind schreibgeschützt. Bitte verwenden Sie einen "
+"anderen Hook-Namen."
 
 #: kallithea/controllers/admin/settings.py:363
 msgid "Added new hook"
@@ -1591,10 +1593,12 @@ msgid ""
 "Cannot create pull request - criss cross merge detected, please merge a "
 "later %s revision to %s"
 msgstr ""
+"Pull-Request kann nicht erstellt werden - Criss Cross Merge erkannt, bitte "
+"eine spätere %s-Revision in %s zusammenführen."
 
 #: kallithea/model/pull_request.py:247 kallithea/model/pull_request.py:382
 msgid "You are not authorized to create the pull request"
-msgstr ""
+msgstr "Sie sind nicht berechtigt, den Pull-Request anzulegen."
 
 #: kallithea/model/pull_request.py:341
 #, fuzzy
@@ -1632,7 +1636,7 @@ msgstr "Keine Änderungen seit der letzten Version gefunden in %s %s."
 #: kallithea/model/pull_request.py:390
 #, python-format
 msgid "Closed, next iteration: %s ."
-msgstr ""
+msgstr "Geschlossen, nächste Iteration: %s ."
 
 #: kallithea/model/scm.py:698
 msgid "latest tip"
@@ -2004,7 +2008,7 @@ msgstr "Passwort"
 
 #: kallithea/templates/login.html:44
 msgid "Stay logged in after browser restart"
-msgstr ""
+msgstr "Nach dem Neustart des Browsers eingeloggt bleiben"
 
 #: kallithea/templates/login.html:52
 msgid "Forgot your password ?"
@@ -2315,7 +2319,7 @@ msgstr ""
 
 #: kallithea/templates/admin/gists/edit.html:36
 msgid "here"
-msgstr ""
+msgstr "hier"
 
 #: kallithea/templates/admin/gists/edit.html:51
 #: kallithea/templates/admin/gists/new.html:35
@@ -2512,7 +2516,7 @@ msgstr "Bearbeiten"
 #: kallithea/templates/files/files_edit.html:52
 #: kallithea/templates/files/files_source.html:30
 msgid "Show as Raw"
-msgstr ""
+msgstr "Als Raw anzeigen"
 
 #: kallithea/templates/admin/gists/show.html:69
 msgid "created"
@@ -2520,7 +2524,7 @@ msgstr "erstellt"
 
 #: kallithea/templates/admin/gists/show.html:82
 msgid "Show as raw"
-msgstr ""
+msgstr "Als Raw anzeigen"
 
 #: kallithea/templates/admin/my_account/my_account.html:5
 #: kallithea/templates/admin/my_account/my_account.html:9
@@ -3440,12 +3444,12 @@ msgstr ""
 
 #: kallithea/templates/admin/repos/repo_edit_settings.html:38
 msgid "Default revision for files page, downloads, whoosh and readme"
-msgstr ""
+msgstr "Standardrevision für Dateiseite, Downloads, Whoosh und Readme"
 
 #: kallithea/templates/admin/repos/repo_edit_settings.html:44
 #: kallithea/templates/pullrequests/pullrequest_show.html:131
 msgid "Type name of user"
-msgstr ""
+msgstr "Typname des Benutzers"
 
 #: kallithea/templates/admin/repos/repo_edit_settings.html:45
 msgid "Change owner of this repository."
@@ -3453,11 +3457,11 @@ msgstr "Besitzer des Repositorys ändern."
 
 #: kallithea/templates/admin/repos/repo_edit_statistics.html:5
 msgid "Processed commits"
-msgstr ""
+msgstr "Verarbeitete Commits"
 
 #: kallithea/templates/admin/repos/repo_edit_statistics.html:6
 msgid "Processed progress"
-msgstr ""
+msgstr "Verarbeiteter Fortschritt"
 
 #: kallithea/templates/admin/repos/repo_edit_statistics.html:10
 msgid "Reset Statistics"
@@ -3465,7 +3469,7 @@ msgstr "Statistiken zurücksetzen"
 
 #: kallithea/templates/admin/repos/repo_edit_statistics.html:10
 msgid "Confirm to remove current statistics."
-msgstr ""
+msgstr "Bestätigen Sie, um die aktuellen Statistiken zu entfernen."
 
 #: kallithea/templates/admin/repos/repos.html:5
 msgid "Repositories Administration"
@@ -3473,7 +3477,7 @@ msgstr "Repositoryverwaltung"
 
 #: kallithea/templates/admin/repos/repos.html:43
 msgid "State"
-msgstr ""
+msgstr "Zustand"
 
 #: kallithea/templates/admin/settings/settings.html:5
 msgid "Settings Administration"
@@ -3485,11 +3489,11 @@ msgstr "VCS"
 
 #: kallithea/templates/admin/settings/settings.html:28
 msgid "Remap and Rescan"
-msgstr ""
+msgstr "Neu zuordnen und neu scannen"
 
 #: kallithea/templates/admin/settings/settings.html:30
 msgid "Visual"
-msgstr ""
+msgstr "Visuell"
 
 #: kallithea/templates/admin/settings/settings.html:32
 #: kallithea/templates/admin/settings/settings_vcs.html:4
@@ -3506,7 +3510,7 @@ msgstr "Systeminfo"
 
 #: kallithea/templates/admin/settings/settings_email.html:4
 msgid "Send test email to"
-msgstr ""
+msgstr "Test-E-Mail senden an"
 
 #: kallithea/templates/admin/settings/settings_email.html:12
 msgid "Send"
@@ -3514,7 +3518,7 @@ msgstr "Senden"
 
 #: kallithea/templates/admin/settings/settings_global.html:4
 msgid "Site branding"
-msgstr ""
+msgstr "Website-Branding"
 
 #: kallithea/templates/admin/settings/settings_global.html:7
 msgid "Set a custom title for your Kallithea Service."
