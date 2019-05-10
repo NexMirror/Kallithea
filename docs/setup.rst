@@ -499,71 +499,68 @@ that, you'll need to:
 
     WSGIRestrictEmbedded On
 
-- Create a wsgi dispatch script, like the one below. Make sure you
+- Create a WSGI dispatch script, like the one below. Make sure you
   check that the paths correctly point to where you installed Kallithea
   and its Python Virtual Environment.
-- Enable the ``WSGIScriptAlias`` directive for the WSGI dispatch script,
-  as in the following example. Once again, check the paths are
-  correctly specified.
 
-Here is a sample excerpt from an Apache Virtual Host configuration file:
+  .. code-block:: python
 
-.. code-block:: apache
+      import os
+      os.environ['PYTHON_EGG_CACHE'] = '/srv/kallithea/.egg-cache'
 
-    WSGIDaemonProcess kallithea processes=5 threads=1 maximum-requests=100 \
-        python-home=/srv/kallithea/venv
-    WSGIProcessGroup kallithea
-    WSGIScriptAlias / /srv/kallithea/dispatch.wsgi
-    WSGIPassAuthorization On
+      # sometimes it's needed to set the current dir
+      os.chdir('/srv/kallithea/')
 
-Or if using a dispatcher WSGI script with proper virtualenv activation:
+      import site
+      site.addsitedir("/srv/kallithea/venv/lib/python2.7/site-packages")
 
-.. code-block:: apache
+      ini = '/srv/kallithea/my.ini'
+      from logging.config import fileConfig
+      fileConfig(ini)
+      from paste.deploy import loadapp
+      application = loadapp('config:' + ini)
 
-    WSGIDaemonProcess kallithea processes=5 threads=1 maximum-requests=100
-    WSGIProcessGroup kallithea
-    WSGIScriptAlias / /srv/kallithea/dispatch.wsgi
-    WSGIPassAuthorization On
+  Or using proper virtualenv activation:
 
-Apache will by default run as a special Apache user, on Linux systems
-usually ``www-data`` or ``apache``. If you need to have the repositories
-directory owned by a different user, use the user and group options to
-WSGIDaemonProcess to set the name of the user and group.
+  .. code-block:: python
 
-Example WSGI dispatch script:
+      activate_this = '/srv/kallithea/venv/bin/activate_this.py'
+      execfile(activate_this, dict(__file__=activate_this))
 
-.. code-block:: python
+      import os
+      os.environ['HOME'] = '/srv/kallithea'
 
-    import os
-    os.environ['PYTHON_EGG_CACHE'] = '/srv/kallithea/.egg-cache'
+      ini = '/srv/kallithea/kallithea.ini'
+      from logging.config import fileConfig
+      fileConfig(ini)
+      from paste.deploy import loadapp
+      application = loadapp('config:' + ini)
 
-    # sometimes it's needed to set the current dir
-    os.chdir('/srv/kallithea/')
+- Enable the ``WSGIScriptAlias`` directive for the WSGI dispatch script, as in
+  the following example from an Apache Virtual Host configuration file. Once
+  again, check the paths are correctly specified.
 
-    import site
-    site.addsitedir("/srv/kallithea/venv/lib/python2.7/site-packages")
+  .. code-block:: apache
 
-    ini = '/srv/kallithea/my.ini'
-    from logging.config import fileConfig
-    fileConfig(ini)
-    from paste.deploy import loadapp
-    application = loadapp('config:' + ini)
+      WSGIDaemonProcess kallithea processes=5 threads=1 maximum-requests=100 \
+          python-home=/srv/kallithea/venv
+      WSGIProcessGroup kallithea
+      WSGIScriptAlias / /srv/kallithea/dispatch.wsgi
+      WSGIPassAuthorization On
 
-Or using proper virtualenv activation:
+  Or if using a dispatcher WSGI script with proper virtualenv activation:
 
-.. code-block:: python
+  .. code-block:: apache
 
-    activate_this = '/srv/kallithea/venv/bin/activate_this.py'
-    execfile(activate_this, dict(__file__=activate_this))
+      WSGIDaemonProcess kallithea processes=5 threads=1 maximum-requests=100
+      WSGIProcessGroup kallithea
+      WSGIScriptAlias / /srv/kallithea/dispatch.wsgi
+      WSGIPassAuthorization On
 
-    import os
-    os.environ['HOME'] = '/srv/kallithea'
-
-    ini = '/srv/kallithea/kallithea.ini'
-    from logging.config import fileConfig
-    fileConfig(ini)
-    from paste.deploy import loadapp
-    application = loadapp('config:' + ini)
+  Apache will by default run as a special Apache user, on Linux systems
+  usually ``www-data`` or ``apache``. If you need to have the repositories
+  directory owned by a different user, use the user and group options to
+  WSGIDaemonProcess to set the name of the user and group.
 
 
 Other configuration files
