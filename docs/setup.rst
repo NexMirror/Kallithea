@@ -536,9 +536,15 @@ that, you'll need to:
       from paste.deploy import loadapp
       application = loadapp('config:' + ini)
 
-- Enable the ``WSGIScriptAlias`` directive for the WSGI dispatch script, as in
-  the following example from an Apache Virtual Host configuration file. Once
-  again, check the paths are correctly specified.
+- Add the necessary ``WSGI*`` directives to the Apache Virtual Host configuration
+  file, like in the example below. Notice that the WSGI dispatch script created
+  above is referred to with the ``WSGIScriptAlias`` directive.
+  Apache will by default run as a special Apache user, on Linux systems
+  usually ``www-data`` or ``apache``. If you need to have the repositories
+  directory owned by a different user, use the user and group options to
+  WSGIDaemonProcess to set the name of the user and group.
+
+  Once again, check that all paths are correctly specified.
 
   .. code-block:: apache
 
@@ -556,11 +562,6 @@ that, you'll need to:
       WSGIProcessGroup kallithea
       WSGIScriptAlias / /srv/kallithea/dispatch.wsgi
       WSGIPassAuthorization On
-
-  Apache will by default run as a special Apache user, on Linux systems
-  usually ``www-data`` or ``apache``. If you need to have the repositories
-  directory owned by a different user, use the user and group options to
-  WSGIDaemonProcess to set the name of the user and group.
 
 
 Other configuration files
