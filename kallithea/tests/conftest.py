@@ -154,6 +154,8 @@ def auto_clear_ip_permissions():
 
     # IP permissions are cached, need to invalidate this cache explicitly
     invalidate_all_caches()
+    session = Session()
+    session.commit()
 
 
 @pytest.fixture
