@@ -720,6 +720,20 @@ class ScmModel(object):
 
         return choices, hist_l
 
+    def _get_git_hook_interpreter(self):
+        """Return a suitable interpreter for Git hooks.
+
+        Return a suitable string to be written in the POSIX #! shebang line for
+        Git hook scripts so they invoke Kallithea code with the right Python
+        interpreter and in the right environment.
+        """
+        # Note: sys.executable might not point at a usable Python interpreter. For
+        # example, when using uwsgi, it will point at the uwsgi program itself.
+        # FIXME This may not work on Windows and may need a shell wrapper script.
+        return (kallithea.CONFIG.get('git_hook_interpreter')
+                or sys.executable
+                or '/usr/bin/env python2')
+
     def install_git_hooks(self, repo, force_create=False):
         """
         Creates a kallithea hook inside a git repository
@@ -734,11 +748,11 @@ class ScmModel(object):
         if not os.path.isdir(loc):
             os.makedirs(loc)
 
-        tmpl_post = "#!/usr/bin/env %s\n" % sys.executable or 'python2'
+        tmpl_post = "#!%s\n" % self._get_git_hook_interpreter()
         tmpl_post += pkg_resources.resource_string(
             'kallithea', os.path.join('config', 'post_receive_tmpl.py')
         )
-        tmpl_pre = "#!/usr/bin/env %s\n" % sys.executable or 'python2'
+        tmpl_pre = "#!%s\n" % self._get_git_hook_interpreter()
         tmpl_pre += pkg_resources.resource_string(
             'kallithea', os.path.join('config', 'pre_receive_tmpl.py')
         )

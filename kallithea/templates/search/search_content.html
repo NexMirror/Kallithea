@@ -4,8 +4,9 @@
     %if h.HasRepoPermissionLevel('read')(sr['repository'],'search results check'):
         <div class="panel panel-default">
             <div class="panel-heading">
-                ${h.link_to(h.literal('%s &raquo; %s' % (sr['repository'],sr['f_path'])),
-                    h.url('files_home',repo_name=sr['repository'],revision='tip',f_path=sr['f_path']))}
+                ${h.link_to(sr['repository'], h.url('summary_home', repo_name=sr['repository']))}
+                &raquo;
+                ${h.link_to(sr['f_path'], h.url('files_home', repo_name=sr['repository'], revision='tip', f_path=sr['f_path']))}
             </div>
             <div class="panel-body search-code-body">
                 <pre>${h.literal(sr['content_short_hl'])}</pre>

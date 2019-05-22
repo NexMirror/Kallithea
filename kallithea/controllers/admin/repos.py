@@ -201,10 +201,10 @@ class ReposController(BaseRepoController):
                 fork = repo.fork
                 if fork is not None:
                     fork_name = fork.repo_name
-                    h.flash(h.literal(_('Forked repository %s as %s')
-                            % (fork_name, repo_url)), category='success')
+                    h.flash(h.HTML(_('Forked repository %s as %s'))
+                            % (fork_name, repo_url), category='success')
                 else:
-                    h.flash(h.literal(_('Created repository %s') % repo_url),
+                    h.flash(h.HTML(_('Created repository %s')) % repo_url,
                             category='success')
             return {'result': True}
         return {'result': False}

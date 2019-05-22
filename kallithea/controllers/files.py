@@ -90,8 +90,7 @@ class FilesController(BaseRepoController):
                        repo_name=c.repo_name,
                        revision=0, f_path='', anchor='edit')
             add_new = h.link_to(_('Click here to add new file'), url_, class_="alert-link")
-            h.flash(h.literal(_('There are no files yet. %s') % add_new),
-                    category='warning')
+            h.flash(_('There are no files yet.') + ' ' + add_new, category='warning')
             raise HTTPNotFound()
         except (ChangesetDoesNotExistError, LookupError):
             msg = _('Such revision does not exist for this repository')

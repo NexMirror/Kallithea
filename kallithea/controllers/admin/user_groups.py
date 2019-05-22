@@ -140,7 +140,7 @@ class UserGroupsController(BaseController):
             action_logger(request.authuser,
                           'admin_created_users_group:%s' % gr,
                           None, request.ip_addr)
-            h.flash(h.literal(_('Created user group %s') % h.link_to(h.escape(gr), url('edit_users_group', id=ug.users_group_id))),
+            h.flash(h.HTML(_('Created user group %s')) % h.link_to(gr, url('edit_users_group', id=ug.users_group_id)),
                 category='success')
             Session().commit()
         except formencode.Invalid as errors:

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
-"POT-Creation-Date: 2019-03-26 22:07+0100\n"
+"POT-Creation-Date: 2019-05-04 21:13+0200\n"
 "PO-Revision-Date: 2016-01-07 01:53+0000\n"
 "Last-Translator: Takumi IINO <trot.thunder@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/kallithea/"
@@ -41,7 +41,7 @@ msgstr "まだチェンジセットがありません"
 msgid "None"
 msgstr "なし"
 
-#: kallithea/controllers/changelog.py:139 kallithea/controllers/files.py:197
+#: kallithea/controllers/changelog.py:139 kallithea/controllers/files.py:196
 msgid "(closed)"
 msgstr "(閉鎖済み)"
 
@@ -71,8 +71,8 @@ msgstr "プルリクエストステータスを変更する権限がありませ
 msgid "Successfully deleted pull request %s"
 msgstr "プルリクエストの削除に成功しました"
 
-#: kallithea/controllers/changeset.py:321 kallithea/controllers/files.py:97
-#: kallithea/controllers/files.py:117 kallithea/controllers/files.py:727
+#: kallithea/controllers/changeset.py:321 kallithea/controllers/files.py:96
+#: kallithea/controllers/files.py:116 kallithea/controllers/files.py:726
 msgid "Such revision does not exist for this repository"
 msgstr "お探しのリビジョンはこのリポジトリにはありません"
 
@@ -168,106 +168,107 @@ msgid "Click here to add new file"
 msgstr "新しいファイルを追加"
 
 #: kallithea/controllers/files.py:93
-#, python-format
-msgid "There are no files yet. %s"
+#, fuzzy
+#| msgid "There are no files yet. %s"
+msgid "There are no files yet."
 msgstr "まだファイルがありません。 %s"
 
-#: kallithea/controllers/files.py:194
+#: kallithea/controllers/files.py:193
 #, fuzzy, python-format
 msgid "%s at %s"
 msgstr "%s と %s の間"
 
-#: kallithea/controllers/files.py:300 kallithea/controllers/files.py:360
-#: kallithea/controllers/files.py:427
+#: kallithea/controllers/files.py:299 kallithea/controllers/files.py:359
+#: kallithea/controllers/files.py:426
 #, python-format
 msgid "This repository has been locked by %s on %s"
 msgstr "このリポジトリは %s によって %s にロックされました"
 
-#: kallithea/controllers/files.py:312
+#: kallithea/controllers/files.py:311
 #, fuzzy
 msgid "You can only delete files with revision being a valid branch"
 msgstr "有効なブランチ上のリビジョンからしかファイルを削除できません"
 
-#: kallithea/controllers/files.py:323
+#: kallithea/controllers/files.py:322
 #, python-format
 msgid "Deleted file %s via Kallithea"
 msgstr "Kallithea経由で %s を削除"
 
-#: kallithea/controllers/files.py:345
+#: kallithea/controllers/files.py:344
 #, python-format
 msgid "Successfully deleted file %s"
 msgstr "%s ファイルの削除に成功しました"
 
-#: kallithea/controllers/files.py:349 kallithea/controllers/files.py:415
-#: kallithea/controllers/files.py:496
+#: kallithea/controllers/files.py:348 kallithea/controllers/files.py:414
+#: kallithea/controllers/files.py:495
 msgid "Error occurred during commit"
 msgstr "コミット中にエラーが発生しました"
 
-#: kallithea/controllers/files.py:372
+#: kallithea/controllers/files.py:371
 #, fuzzy
 msgid "You can only edit files with revision being a valid branch"
 msgstr "有効なブランチを示すリビジョンでのみファイルを編集できます "
 
-#: kallithea/controllers/files.py:386
+#: kallithea/controllers/files.py:385
 #, python-format
 msgid "Edited file %s via Kallithea"
 msgstr "Kallithea経由で %s を変更"
 
-#: kallithea/controllers/files.py:402
+#: kallithea/controllers/files.py:401
 msgid "No changes"
 msgstr "変更点なし"
 
-#: kallithea/controllers/files.py:411 kallithea/controllers/files.py:485
+#: kallithea/controllers/files.py:410 kallithea/controllers/files.py:484
 #, python-format
 msgid "Successfully committed to %s"
 msgstr "%s へのコミットが成功しました"
 
-#: kallithea/controllers/files.py:438
+#: kallithea/controllers/files.py:437
 msgid "Added file via Kallithea"
 msgstr "Kallithea経由でファイルを追加"
 
-#: kallithea/controllers/files.py:459
+#: kallithea/controllers/files.py:458
 msgid "No content"
 msgstr "内容がありません"
 
-#: kallithea/controllers/files.py:463
+#: kallithea/controllers/files.py:462
 msgid "No filename"
 msgstr "ファイル名がありません"
 
-#: kallithea/controllers/files.py:488
+#: kallithea/controllers/files.py:487
 msgid "Location must be relative path and must not contain .. in path"
 msgstr "場所には相対パスかつ .. を含まないパスを入力してください"
 
-#: kallithea/controllers/files.py:520
+#: kallithea/controllers/files.py:519
 msgid "Downloads disabled"
 msgstr "ダウンロードは無効化されています"
 
-#: kallithea/controllers/files.py:531
+#: kallithea/controllers/files.py:530
 #, python-format
 msgid "Unknown revision %s"
 msgstr "%s は未知のリビジョンです"
 
-#: kallithea/controllers/files.py:533
+#: kallithea/controllers/files.py:532
 msgid "Empty repository"
 msgstr "空のリポジトリ"
 
-#: kallithea/controllers/files.py:535
+#: kallithea/controllers/files.py:534
 msgid "Unknown archive type"
 msgstr "未知のアーカイブ種別です"
 
-#: kallithea/controllers/files.py:756
+#: kallithea/controllers/files.py:755
 #: kallithea/templates/changeset/changeset_range.html:9
 #: kallithea/templates/email_templates/pull_request.html:64
 #: kallithea/templates/pullrequests/pullrequest.html:84
 msgid "Changesets"
 msgstr "チェンジセット"
 
-#: kallithea/controllers/files.py:757
+#: kallithea/controllers/files.py:756
 #: kallithea/controllers/pullrequests.py:184 kallithea/model/scm.py:706
 msgid "Branches"
 msgstr "ブランチ"
 
-#: kallithea/controllers/files.py:758
+#: kallithea/controllers/files.py:757
 #: kallithea/controllers/pullrequests.py:185 kallithea/model/scm.py:717
 msgid "Tags"
 msgstr "タグ"
@@ -926,64 +927,64 @@ msgstr ""
 "出来ません"
 
 #: kallithea/controllers/admin/settings.py:145
-#: kallithea/controllers/admin/settings.py:234
+#: kallithea/controllers/admin/settings.py:237
 msgid "Error occurred while updating application settings"
 msgstr "アプリケーション設定の更新中にエラーが発生しました"
 
-#: kallithea/controllers/admin/settings.py:174
+#: kallithea/controllers/admin/settings.py:180
 #, python-format
 msgid "Repositories successfully rescanned. Added: %s. Removed: %s."
 msgstr "リポジトリの再スキャンに成功しました。 追加: %s 削除: %s。"
 
-#: kallithea/controllers/admin/settings.py:189
+#: kallithea/controllers/admin/settings.py:192
 #, fuzzy, python-format
 #| msgid "Invalidate cache for all repositories"
 msgid "Invalidated %s repositories"
 msgstr "すべてのリポジトリのキャッシュを無効化する"
 
-#: kallithea/controllers/admin/settings.py:230
+#: kallithea/controllers/admin/settings.py:233
 msgid "Updated application settings"
 msgstr "アプリケーション設定を更新しました"
 
-#: kallithea/controllers/admin/settings.py:283
+#: kallithea/controllers/admin/settings.py:286
 msgid "Updated visualisation settings"
 msgstr "表示設定を更新しました"
 
-#: kallithea/controllers/admin/settings.py:288
+#: kallithea/controllers/admin/settings.py:291
 msgid "Error occurred during updating visualisation settings"
 msgstr "表示設定の更新中にエラーが発生しました"
 
-#: kallithea/controllers/admin/settings.py:312
+#: kallithea/controllers/admin/settings.py:315
 msgid "Please enter email address"
 msgstr "メールアドレスを入力してください"
 
-#: kallithea/controllers/admin/settings.py:327
+#: kallithea/controllers/admin/settings.py:330
 msgid "Send email task created"
 msgstr "メール送信タスクを作成しました"
 
-#: kallithea/controllers/admin/settings.py:355
+#: kallithea/controllers/admin/settings.py:358
 #, fuzzy
 #| msgid "No data ready yet"
 msgid "Hook already exists"
 msgstr "まだデータの準備ができていません"
 
-#: kallithea/controllers/admin/settings.py:357
+#: kallithea/controllers/admin/settings.py:360
 msgid "Builtin hooks are read-only. Please use another hook name."
 msgstr ""
 
-#: kallithea/controllers/admin/settings.py:360
+#: kallithea/controllers/admin/settings.py:363
 msgid "Added new hook"
 msgstr "新しいフックを追加しました"
 
-#: kallithea/controllers/admin/settings.py:376
+#: kallithea/controllers/admin/settings.py:379
 msgid "Updated hooks"
 msgstr "フックを更新しました"
 
-#: kallithea/controllers/admin/settings.py:380
+#: kallithea/controllers/admin/settings.py:383
 msgid "Error occurred during hook creation"
 msgstr "フックの作成中にエラーが発生しました"
 
-#: kallithea/controllers/admin/settings.py:404
+#: kallithea/controllers/admin/settings.py:407
 msgid "Whoosh reindex task scheduled"
 msgstr "Whooshの再インデックスタスクを予定に入れました"
 
@@ -2244,11 +2245,15 @@ msgstr "Gistを編集"
 #: kallithea/templates/admin/gists/edit.html:35
 #, python-format
 msgid ""
-"Gist was update since you started editing. Copy your changes and click "
+"Gist was updated since you started editing. Copy your changes and click "
 "%(here)s to reload new version."
 msgstr ""
 "編集開始後にGistが更新されています。あなたの変更箇所をコピーしておき、 "
 "%(here)s をクリックして新しいバージョンを読み込みなおしてください。"
+
+#: kallithea/templates/admin/gists/edit.html:36
+msgid "here"
+msgstr ""
 
 #: kallithea/templates/admin/gists/edit.html:51
 #: kallithea/templates/admin/gists/new.html:35
@@ -2632,7 +2637,7 @@ msgstr "あなたが所有者のリポジトリ"
 #: kallithea/templates/admin/repos/repos.html:38
 #: kallithea/templates/admin/user_groups/user_groups.html:38
 #: kallithea/templates/base/perms_summary.html:54
-#: kallithea/templates/files/files_browser.html:51
+#: kallithea/templates/files/files_browser.html:54
 msgid "Name"
 msgstr "名前"
 
@@ -4158,6 +4163,12 @@ msgid ""
 "%s."
 msgstr ""
 
+#: kallithea/templates/base/default_perms_box.html:16
+#, fuzzy
+#| msgid "Default permissions"
+msgid "default permissions"
+msgstr "デフォルトの権限"
+
 #: kallithea/templates/base/default_perms_box.html:23
 msgid "Create repositories"
 msgstr "リポジトリを作成する"
@@ -4986,28 +4997,28 @@ msgstr "コミットメッセージ"
 msgid "Commit Changes"
 msgstr "変更をコミット"
 
-#: kallithea/templates/files/files_browser.html:37
+#: kallithea/templates/files/files_browser.html:40
 msgid "Search File List"
 msgstr "ファイル一覧を検索"
 
-#: kallithea/templates/files/files_browser.html:42
+#: kallithea/templates/files/files_browser.html:45
 msgid "Loading file list..."
 msgstr "ファイル一覧を読み込み中..."
 
-#: kallithea/templates/files/files_browser.html:52
+#: kallithea/templates/files/files_browser.html:55
 #: kallithea/templates/summary/summary.html:145
 msgid "Size"
 msgstr "サイズ"
 
-#: kallithea/templates/files/files_browser.html:53
+#: kallithea/templates/files/files_browser.html:56
 msgid "Last Revision"
 msgstr "最後のリビジョン"
 
-#: kallithea/templates/files/files_browser.html:54
+#: kallithea/templates/files/files_browser.html:57
 msgid "Last Modified"
 msgstr "最終更新日"
 
-#: kallithea/templates/files/files_browser.html:55
+#: kallithea/templates/files/files_browser.html:58
 msgid "Last Committer"
 msgstr "最後の作成者"
 
@@ -6117,9 +6128,6 @@ msgstr "%s を %s でダウンロード"
 
 #~ msgid "Destroy old data"
 #~ msgstr "古いデータを削除する"
-
-#~ msgid "Default permissions"
-#~ msgstr "デフォルトの権限"
 
 #~ msgid "user groups"
 #~ msgstr "ユーザーグループ"

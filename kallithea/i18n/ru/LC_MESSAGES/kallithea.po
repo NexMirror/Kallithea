@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
-"POT-Creation-Date: 2019-03-26 22:07+0100\n"
+"POT-Creation-Date: 2019-05-04 21:13+0200\n"
 "PO-Revision-Date: 2017-01-05 14:58+0000\n"
 "Last-Translator: Andrej Shadura <andrew@shadura.me>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/kallithea/"
@@ -48,7 +48,7 @@ msgstr "Ещё не было изменений"
 msgid "None"
 msgstr "Ничего"
 
-#: kallithea/controllers/changelog.py:139 kallithea/controllers/files.py:197
+#: kallithea/controllers/changelog.py:139 kallithea/controllers/files.py:196
 msgid "(closed)"
 msgstr "(закрыто)"
 
@@ -78,8 +78,8 @@ msgstr "Привилегии еще не назначены"
 msgid "Successfully deleted pull request %s"
 msgstr "Pull-запрос успешно удалён"
 
-#: kallithea/controllers/changeset.py:321 kallithea/controllers/files.py:97
-#: kallithea/controllers/files.py:117 kallithea/controllers/files.py:727
+#: kallithea/controllers/changeset.py:321 kallithea/controllers/files.py:96
+#: kallithea/controllers/files.py:116 kallithea/controllers/files.py:726
 msgid "Such revision does not exist for this repository"
 msgstr "Нет такой ревизии в этом репозитории"
 
@@ -173,109 +173,110 @@ msgid "Click here to add new file"
 msgstr "Нажмите чтобы добавить новый файл"
 
 #: kallithea/controllers/files.py:93
-#, python-format
-msgid "There are no files yet. %s"
+#, fuzzy
+#| msgid "There are no files yet. %s"
+msgid "There are no files yet."
 msgstr "Нет файлов. %s"
 
-#: kallithea/controllers/files.py:194
+#: kallithea/controllers/files.py:193
 #, python-format
 msgid "%s at %s"
 msgstr "%s (%s)"
 
-#: kallithea/controllers/files.py:300 kallithea/controllers/files.py:360
-#: kallithea/controllers/files.py:427
+#: kallithea/controllers/files.py:299 kallithea/controllers/files.py:359
+#: kallithea/controllers/files.py:426
 #, python-format
 msgid "This repository has been locked by %s on %s"
 msgstr "Репозиторий заблокировал %s в %s"
 
-#: kallithea/controllers/files.py:312
+#: kallithea/controllers/files.py:311
 msgid "You can only delete files with revision being a valid branch"
 msgstr ""
 "Вы можете удалять файлы только в ревизии, связанной с существующей веткой "
 
-#: kallithea/controllers/files.py:323
+#: kallithea/controllers/files.py:322
 #, python-format
 msgid "Deleted file %s via Kallithea"
 msgstr "Файл %s удалён с помощью Kallithea"
 
-#: kallithea/controllers/files.py:345
+#: kallithea/controllers/files.py:344
 #, python-format
 msgid "Successfully deleted file %s"
 msgstr "Файл %s удалён"
 
-#: kallithea/controllers/files.py:349 kallithea/controllers/files.py:415
-#: kallithea/controllers/files.py:496
+#: kallithea/controllers/files.py:348 kallithea/controllers/files.py:414
+#: kallithea/controllers/files.py:495
 msgid "Error occurred during commit"
 msgstr "Во время коммита произошла ошибка"
 
-#: kallithea/controllers/files.py:372
+#: kallithea/controllers/files.py:371
 msgid "You can only edit files with revision being a valid branch"
 msgstr ""
 "Вы можете редактировать файлы только в ревизии, связанной с существующей "
 "веткой "
 
-#: kallithea/controllers/files.py:386
+#: kallithea/controllers/files.py:385
 #, python-format
 msgid "Edited file %s via Kallithea"
 msgstr "Файл %s отредактирован с помощью Kallithea"
 
-#: kallithea/controllers/files.py:402
+#: kallithea/controllers/files.py:401
 msgid "No changes"
 msgstr "Без изменений"
 
-#: kallithea/controllers/files.py:411 kallithea/controllers/files.py:485
+#: kallithea/controllers/files.py:410 kallithea/controllers/files.py:484
 #, python-format
 msgid "Successfully committed to %s"
 msgstr "Изменения применены в %s"
 
-#: kallithea/controllers/files.py:438
+#: kallithea/controllers/files.py:437
 msgid "Added file via Kallithea"
 msgstr "Файл добавлен с помощью Kallithea"
 
-#: kallithea/controllers/files.py:459
+#: kallithea/controllers/files.py:458
 msgid "No content"
 msgstr "Пусто"
 
-#: kallithea/controllers/files.py:463
+#: kallithea/controllers/files.py:462
 msgid "No filename"
 msgstr "Безымянный"
 
-#: kallithea/controllers/files.py:488
+#: kallithea/controllers/files.py:487
 msgid "Location must be relative path and must not contain .. in path"
 msgstr ""
 "Расположение должно быть относительным путем, и не должно содержать \".."
 "\" в пути"
 
-#: kallithea/controllers/files.py:520
+#: kallithea/controllers/files.py:519
 msgid "Downloads disabled"
 msgstr "Возможность скачивать отключена"
 
-#: kallithea/controllers/files.py:531
+#: kallithea/controllers/files.py:530
 #, python-format
 msgid "Unknown revision %s"
 msgstr "Неизвестная ревизия %s"
 
-#: kallithea/controllers/files.py:533
+#: kallithea/controllers/files.py:532
 msgid "Empty repository"
 msgstr "Пустой репозиторий"
 
-#: kallithea/controllers/files.py:535
+#: kallithea/controllers/files.py:534
 msgid "Unknown archive type"
 msgstr "Неизвестный тип архива"
 
-#: kallithea/controllers/files.py:756
+#: kallithea/controllers/files.py:755
 #: kallithea/templates/changeset/changeset_range.html:9
 #: kallithea/templates/email_templates/pull_request.html:64
 #: kallithea/templates/pullrequests/pullrequest.html:84
 msgid "Changesets"
 msgstr "Набор изменений"
 
-#: kallithea/controllers/files.py:757
+#: kallithea/controllers/files.py:756
 #: kallithea/controllers/pullrequests.py:184 kallithea/model/scm.py:706
 msgid "Branches"
 msgstr "Ветки"
 
-#: kallithea/controllers/files.py:758
+#: kallithea/controllers/files.py:757
 #: kallithea/controllers/pullrequests.py:185 kallithea/model/scm.py:717
 msgid "Tags"
 msgstr "Метки"
@@ -936,63 +937,63 @@ msgstr ""
 "отсутствует"
 
 #: kallithea/controllers/admin/settings.py:145
-#: kallithea/controllers/admin/settings.py:234
+#: kallithea/controllers/admin/settings.py:237
 msgid "Error occurred while updating application settings"
 msgstr "Произошла ошибка при обновлении настроек приложения"
 
-#: kallithea/controllers/admin/settings.py:174
+#: kallithea/controllers/admin/settings.py:180
 #, python-format
 msgid "Repositories successfully rescanned. Added: %s. Removed: %s."
 msgstr "Репозитории успешно пересканированы, добавлено: %s, удалено: %s."
 
-#: kallithea/controllers/admin/settings.py:189
+#: kallithea/controllers/admin/settings.py:192
 #, fuzzy, python-format
 msgid "Invalidated %s repositories"
 msgstr "Сбросить кэш для всех репозиториев"
 
-#: kallithea/controllers/admin/settings.py:230
+#: kallithea/controllers/admin/settings.py:233
 msgid "Updated application settings"
 msgstr "Обновленные параметры настройки приложения"
 
-#: kallithea/controllers/admin/settings.py:283
+#: kallithea/controllers/admin/settings.py:286
 msgid "Updated visualisation settings"
 msgstr "Настройки визуализации обновлены"
 
-#: kallithea/controllers/admin/settings.py:288
+#: kallithea/controllers/admin/settings.py:291
 msgid "Error occurred during updating visualisation settings"
 msgstr "Произошла ошибка при обновлении настроек визуализации"
 
-#: kallithea/controllers/admin/settings.py:312
+#: kallithea/controllers/admin/settings.py:315
 msgid "Please enter email address"
 msgstr "Пожалуйста, введите адрес электронной почты"
 
-#: kallithea/controllers/admin/settings.py:327
+#: kallithea/controllers/admin/settings.py:330
 msgid "Send email task created"
 msgstr "Задача отправки Email создана"
 
-#: kallithea/controllers/admin/settings.py:355
+#: kallithea/controllers/admin/settings.py:358
 #, fuzzy
 #| msgid "No data ready yet"
 msgid "Hook already exists"
 msgstr "Нет данных"
 
-#: kallithea/controllers/admin/settings.py:357
+#: kallithea/controllers/admin/settings.py:360
 msgid "Builtin hooks are read-only. Please use another hook name."
 msgstr ""
 
-#: kallithea/controllers/admin/settings.py:360
+#: kallithea/controllers/admin/settings.py:363
 msgid "Added new hook"
 msgstr "Добавлена новая ловушка"
 
-#: kallithea/controllers/admin/settings.py:376
+#: kallithea/controllers/admin/settings.py:379
 msgid "Updated hooks"
 msgstr "Обновлённые ловушки"
 
-#: kallithea/controllers/admin/settings.py:380
+#: kallithea/controllers/admin/settings.py:383
 msgid "Error occurred during hook creation"
 msgstr "произошла ошибка при создании хука"
 
-#: kallithea/controllers/admin/settings.py:404
+#: kallithea/controllers/admin/settings.py:407
 msgid "Whoosh reindex task scheduled"
 msgstr "Запланирована переиндексация базы Whoosh"
 
@@ -2285,8 +2286,12 @@ msgstr "Правка gist-записи"
 #: kallithea/templates/admin/gists/edit.html:35
 #, python-format
 msgid ""
-"Gist was update since you started editing. Copy your changes and click "
+"Gist was updated since you started editing. Copy your changes and click "
 "%(here)s to reload new version."
+msgstr ""
+
+#: kallithea/templates/admin/gists/edit.html:36
+msgid "here"
 msgstr ""
 
 #: kallithea/templates/admin/gists/edit.html:51
@@ -2679,7 +2684,7 @@ msgstr "Репозитории, где Вы — владелец"
 #: kallithea/templates/admin/repos/repos.html:38
 #: kallithea/templates/admin/user_groups/user_groups.html:38
 #: kallithea/templates/base/perms_summary.html:54
-#: kallithea/templates/files/files_browser.html:51
+#: kallithea/templates/files/files_browser.html:54
 msgid "Name"
 msgstr "Имя"
 
@@ -4143,6 +4148,12 @@ msgid ""
 "%s."
 msgstr ""
 
+#: kallithea/templates/base/default_perms_box.html:16
+#, fuzzy
+#| msgid "Default permissions"
+msgid "default permissions"
+msgstr "Стандартные привилегии"
+
 #: kallithea/templates/base/default_perms_box.html:23
 msgid "Create repositories"
 msgstr "Создать репозитории"
@@ -4984,28 +4995,28 @@ msgstr ""
 msgid "Commit Changes"
 msgstr "Применить изменения"
 
-#: kallithea/templates/files/files_browser.html:37
+#: kallithea/templates/files/files_browser.html:40
 msgid "Search File List"
 msgstr ""
 
-#: kallithea/templates/files/files_browser.html:42
+#: kallithea/templates/files/files_browser.html:45
 msgid "Loading file list..."
 msgstr "Загружается список файлов..."
 
-#: kallithea/templates/files/files_browser.html:52
+#: kallithea/templates/files/files_browser.html:55
 #: kallithea/templates/summary/summary.html:145
 msgid "Size"
 msgstr "Размер"
 
-#: kallithea/templates/files/files_browser.html:53
+#: kallithea/templates/files/files_browser.html:56
 msgid "Last Revision"
 msgstr "Последняя версия"
 
-#: kallithea/templates/files/files_browser.html:54
+#: kallithea/templates/files/files_browser.html:57
 msgid "Last Modified"
 msgstr "Последнее изменение"
 
-#: kallithea/templates/files/files_browser.html:55
+#: kallithea/templates/files/files_browser.html:58
 msgid "Last Committer"
 msgstr "Автор последней ревизии"
 
@@ -5962,9 +5973,6 @@ msgstr "Скачать %s как %s"
 
 #~ msgid "Destroy old data"
 #~ msgstr "Уничтожить все данные"
-
-#~ msgid "Default permissions"
-#~ msgstr "Стандартные привилегии"
 
 #~ msgid "Status change from pull request"
 #~ msgstr "Изменение статуса"

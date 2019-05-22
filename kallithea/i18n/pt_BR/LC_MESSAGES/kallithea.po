@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
-"POT-Creation-Date: 2019-03-26 22:07+0100\n"
+"POT-Creation-Date: 2019-05-04 21:13+0200\n"
 "PO-Revision-Date: 2014-02-13 14:34+0000\n"
 "Last-Translator: marcinkuzminski <marcin@python-blog.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
@@ -36,7 +36,7 @@ msgstr "Não há nenhum changeset ainda"
 msgid "None"
 msgstr "Nenhum"
 
-#: kallithea/controllers/changelog.py:139 kallithea/controllers/files.py:197
+#: kallithea/controllers/changelog.py:139 kallithea/controllers/files.py:196
 msgid "(closed)"
 msgstr "(fechado)"
 
@@ -65,8 +65,8 @@ msgstr "Vote para estado do pull request"
 msgid "Successfully deleted pull request %s"
 msgstr "Pull request excluído com sucesso"
 
-#: kallithea/controllers/changeset.py:321 kallithea/controllers/files.py:97
-#: kallithea/controllers/files.py:117 kallithea/controllers/files.py:727
+#: kallithea/controllers/changeset.py:321 kallithea/controllers/files.py:96
+#: kallithea/controllers/files.py:116 kallithea/controllers/files.py:726
 msgid "Such revision does not exist for this repository"
 msgstr ""
 
@@ -162,106 +162,107 @@ msgid "Click here to add new file"
 msgstr "Clique aqui para adicionar um novo arquivo"
 
 #: kallithea/controllers/files.py:93
-#, python-format
-msgid "There are no files yet. %s"
-msgstr ""
+#, fuzzy
+#| msgid "There are no forks yet"
+msgid "There are no files yet."
+msgstr "Ainda não há bifurcações"
 
-#: kallithea/controllers/files.py:194
+#: kallithea/controllers/files.py:193
 #, fuzzy, python-format
 msgid "%s at %s"
 msgstr "em %s e %s"
 
-#: kallithea/controllers/files.py:300 kallithea/controllers/files.py:360
-#: kallithea/controllers/files.py:427
+#: kallithea/controllers/files.py:299 kallithea/controllers/files.py:359
+#: kallithea/controllers/files.py:426
 #, python-format
 msgid "This repository has been locked by %s on %s"
 msgstr "Este repositório foi travado por %s em %s"
 
-#: kallithea/controllers/files.py:312
+#: kallithea/controllers/files.py:311
 #, fuzzy
 msgid "You can only delete files with revision being a valid branch"
 msgstr "Só é possível editar arquivos quando a revisão é um ramo válido"
 
-#: kallithea/controllers/files.py:323
+#: kallithea/controllers/files.py:322
 #, python-format
 msgid "Deleted file %s via Kallithea"
 msgstr ""
 
-#: kallithea/controllers/files.py:345
+#: kallithea/controllers/files.py:344
 #, python-format
 msgid "Successfully deleted file %s"
 msgstr ""
 
-#: kallithea/controllers/files.py:349 kallithea/controllers/files.py:415
-#: kallithea/controllers/files.py:496
+#: kallithea/controllers/files.py:348 kallithea/controllers/files.py:414
+#: kallithea/controllers/files.py:495
 msgid "Error occurred during commit"
 msgstr "Ocorreu um erro ao realizar commit"
 
-#: kallithea/controllers/files.py:372
+#: kallithea/controllers/files.py:371
 #, fuzzy
 msgid "You can only edit files with revision being a valid branch"
 msgstr "Só é possível editar arquivos quando a revisão é um ramo válido"
 
-#: kallithea/controllers/files.py:386
+#: kallithea/controllers/files.py:385
 #, python-format
 msgid "Edited file %s via Kallithea"
 msgstr "Arquivo %s editado via Kallithea"
 
-#: kallithea/controllers/files.py:402
+#: kallithea/controllers/files.py:401
 msgid "No changes"
 msgstr "Sem modificações"
 
-#: kallithea/controllers/files.py:411 kallithea/controllers/files.py:485
+#: kallithea/controllers/files.py:410 kallithea/controllers/files.py:484
 #, python-format
 msgid "Successfully committed to %s"
 msgstr "Commit realizado com sucesso para %s"
 
-#: kallithea/controllers/files.py:438
+#: kallithea/controllers/files.py:437
 msgid "Added file via Kallithea"
 msgstr "Arquivo adicionado via Kallithea"
 
-#: kallithea/controllers/files.py:459
+#: kallithea/controllers/files.py:458
 msgid "No content"
 msgstr "Nenhum conteúdo"
 
-#: kallithea/controllers/files.py:463
+#: kallithea/controllers/files.py:462
 msgid "No filename"
 msgstr "Nenhum nome de arquivo"
 
-#: kallithea/controllers/files.py:488
+#: kallithea/controllers/files.py:487
 msgid "Location must be relative path and must not contain .. in path"
 msgstr "O caminho deve ser relativo e não pode conter .."
 
-#: kallithea/controllers/files.py:520
+#: kallithea/controllers/files.py:519
 msgid "Downloads disabled"
 msgstr "Downloads desabilitados"
 
-#: kallithea/controllers/files.py:531
+#: kallithea/controllers/files.py:530
 #, python-format
 msgid "Unknown revision %s"
 msgstr "Revisão desconhecida %s"
 
-#: kallithea/controllers/files.py:533
+#: kallithea/controllers/files.py:532
 msgid "Empty repository"
 msgstr "Repositório vazio"
 
-#: kallithea/controllers/files.py:535
+#: kallithea/controllers/files.py:534
 msgid "Unknown archive type"
 msgstr "Tipo de arquivo desconhecido"
 
-#: kallithea/controllers/files.py:756
+#: kallithea/controllers/files.py:755
 #: kallithea/templates/changeset/changeset_range.html:9
 #: kallithea/templates/email_templates/pull_request.html:64
 #: kallithea/templates/pullrequests/pullrequest.html:84
 msgid "Changesets"
 msgstr "Conjuntos de mudanças"
 
-#: kallithea/controllers/files.py:757
+#: kallithea/controllers/files.py:756
 #: kallithea/controllers/pullrequests.py:184 kallithea/model/scm.py:706
 msgid "Branches"
 msgstr "Ramos"
 
-#: kallithea/controllers/files.py:758
+#: kallithea/controllers/files.py:757
 #: kallithea/controllers/pullrequests.py:185 kallithea/model/scm.py:717
 msgid "Tags"
 msgstr "Etiquetas"
@@ -923,65 +924,65 @@ msgid ""
 msgstr ""
 
 #: kallithea/controllers/admin/settings.py:145
-#: kallithea/controllers/admin/settings.py:234
+#: kallithea/controllers/admin/settings.py:237
 msgid "Error occurred while updating application settings"
 msgstr ""
 "Ocorreu um erro durante a atualização das configurações da aplicação"
 
-#: kallithea/controllers/admin/settings.py:174
+#: kallithea/controllers/admin/settings.py:180
 #, fuzzy, python-format
 msgid "Repositories successfully rescanned. Added: %s. Removed: %s."
 msgstr "Repositórios varridos com sucesso adicionados: %s ; removidos: %s"
 
-#: kallithea/controllers/admin/settings.py:189
+#: kallithea/controllers/admin/settings.py:192
 #, fuzzy, python-format
 #| msgid "Invalidate cache for all repositories"
 msgid "Invalidated %s repositories"
 msgstr "Invalidar o cache para todos os repositórios"
 
-#: kallithea/controllers/admin/settings.py:230
+#: kallithea/controllers/admin/settings.py:233
 msgid "Updated application settings"
 msgstr "Configurações da aplicação atualizadas"
 
-#: kallithea/controllers/admin/settings.py:283
+#: kallithea/controllers/admin/settings.py:286
 msgid "Updated visualisation settings"
 msgstr "Configurações de visualização atualizadas"
 
-#: kallithea/controllers/admin/settings.py:288
+#: kallithea/controllers/admin/settings.py:291
 msgid "Error occurred during updating visualisation settings"
 msgstr ""
 "Ocorreu um erro durante a atualização das configurações de visualização"
 
-#: kallithea/controllers/admin/settings.py:312
+#: kallithea/controllers/admin/settings.py:315
 msgid "Please enter email address"
 msgstr ""
 
-#: kallithea/controllers/admin/settings.py:327
+#: kallithea/controllers/admin/settings.py:330
 msgid "Send email task created"
 msgstr ""
 
-#: kallithea/controllers/admin/settings.py:355
+#: kallithea/controllers/admin/settings.py:358
 #, fuzzy
 msgid "Hook already exists"
 msgstr "Ainda não há dados carregados"
 
-#: kallithea/controllers/admin/settings.py:357
+#: kallithea/controllers/admin/settings.py:360
 msgid "Builtin hooks are read-only. Please use another hook name."
 msgstr ""
 
-#: kallithea/controllers/admin/settings.py:360
+#: kallithea/controllers/admin/settings.py:363
 msgid "Added new hook"
 msgstr "Adicionado novo gancho"
 
-#: kallithea/controllers/admin/settings.py:376
+#: kallithea/controllers/admin/settings.py:379
 msgid "Updated hooks"
 msgstr "Atualizados os ganchos"
 
-#: kallithea/controllers/admin/settings.py:380
+#: kallithea/controllers/admin/settings.py:383
 msgid "Error occurred during hook creation"
 msgstr "Ocorreu um erro durante a criação do hook"
 
-#: kallithea/controllers/admin/settings.py:404
+#: kallithea/controllers/admin/settings.py:407
 msgid "Whoosh reindex task scheduled"
 msgstr "Tarefa de reindexação do whoosh agendada"
 
@@ -2261,8 +2262,12 @@ msgstr ""
 #: kallithea/templates/admin/gists/edit.html:35
 #, python-format
 msgid ""
-"Gist was update since you started editing. Copy your changes and click "
+"Gist was updated since you started editing. Copy your changes and click "
 "%(here)s to reload new version."
+msgstr ""
+
+#: kallithea/templates/admin/gists/edit.html:36
+msgid "here"
 msgstr ""
 
 #: kallithea/templates/admin/gists/edit.html:51
@@ -2655,7 +2660,7 @@ msgstr "Nenhum repositório encontrado."
 #: kallithea/templates/admin/repos/repos.html:38
 #: kallithea/templates/admin/user_groups/user_groups.html:38
 #: kallithea/templates/base/perms_summary.html:54
-#: kallithea/templates/files/files_browser.html:51
+#: kallithea/templates/files/files_browser.html:54
 msgid "Name"
 msgstr "Nome"
 
@@ -4164,6 +4169,12 @@ msgid ""
 "%s."
 msgstr ""
 
+#: kallithea/templates/base/default_perms_box.html:16
+#, fuzzy
+#| msgid "Default permissions"
+msgid "default permissions"
+msgstr "Permissões padrão"
+
 #: kallithea/templates/base/default_perms_box.html:23
 msgid "Create repositories"
 msgstr "Criar repositórios"
@@ -5022,29 +5033,29 @@ msgstr ""
 msgid "Commit Changes"
 msgstr "Realizar commit das alterações"
 
-#: kallithea/templates/files/files_browser.html:37
+#: kallithea/templates/files/files_browser.html:40
 msgid "Search File List"
 msgstr ""
 
-#: kallithea/templates/files/files_browser.html:42
+#: kallithea/templates/files/files_browser.html:45
 msgid "Loading file list..."
 msgstr "Carregando lista de arquivos..."
 
-#: kallithea/templates/files/files_browser.html:52
+#: kallithea/templates/files/files_browser.html:55
 #: kallithea/templates/summary/summary.html:145
 msgid "Size"
 msgstr "Tamanho"
 
-#: kallithea/templates/files/files_browser.html:53
+#: kallithea/templates/files/files_browser.html:56
 msgid "Last Revision"
 msgstr "Última revisão"
 
-#: kallithea/templates/files/files_browser.html:54
+#: kallithea/templates/files/files_browser.html:57
 #, fuzzy
 msgid "Last Modified"
 msgstr "Última alteração"
 
-#: kallithea/templates/files/files_browser.html:55
+#: kallithea/templates/files/files_browser.html:58
 #, fuzzy
 msgid "Last Committer"
 msgstr "Último commiter"
@@ -6004,9 +6015,6 @@ msgstr "Descarregar %s como %s"
 
 #~ msgid "Destroy old data"
 #~ msgstr "Destruir dados antigos"
-
-#~ msgid "Default permissions"
-#~ msgstr "Permissões padrão"
 
 #~ msgid "Status change from pull request"
 #~ msgstr "Alteração de estado no changeset"

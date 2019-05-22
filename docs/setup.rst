@@ -499,71 +499,75 @@ that, you'll need to:
 
     WSGIRestrictEmbedded On
 
-- Create a wsgi dispatch script, like the one below. Make sure you
+- Create a WSGI dispatch script, like the one below. Make sure you
   check that the paths correctly point to where you installed Kallithea
   and its Python Virtual Environment.
-- Enable the ``WSGIScriptAlias`` directive for the WSGI dispatch script,
-  as in the following example. Once again, check the paths are
-  correctly specified.
 
-Here is a sample excerpt from an Apache Virtual Host configuration file:
+  .. code-block:: python
 
-.. code-block:: apache
+      import os
+      os.environ['PYTHON_EGG_CACHE'] = '/srv/kallithea/.egg-cache'
 
-    WSGIDaemonProcess kallithea processes=5 threads=1 maximum-requests=100 \
-        python-home=/srv/kallithea/venv
-    WSGIProcessGroup kallithea
-    WSGIScriptAlias / /srv/kallithea/dispatch.wsgi
-    WSGIPassAuthorization On
+      # sometimes it's needed to set the current dir
+      os.chdir('/srv/kallithea/')
 
-Or if using a dispatcher WSGI script with proper virtualenv activation:
+      import site
+      site.addsitedir("/srv/kallithea/venv/lib/python2.7/site-packages")
 
-.. code-block:: apache
+      ini = '/srv/kallithea/my.ini'
+      from logging.config import fileConfig
+      fileConfig(ini)
+      from paste.deploy import loadapp
+      application = loadapp('config:' + ini)
 
-    WSGIDaemonProcess kallithea processes=5 threads=1 maximum-requests=100
-    WSGIProcessGroup kallithea
-    WSGIScriptAlias / /srv/kallithea/dispatch.wsgi
-    WSGIPassAuthorization On
+  Or using proper virtualenv activation:
 
-Apache will by default run as a special Apache user, on Linux systems
-usually ``www-data`` or ``apache``. If you need to have the repositories
-directory owned by a different user, use the user and group options to
-WSGIDaemonProcess to set the name of the user and group.
+  .. code-block:: python
 
-Example WSGI dispatch script:
+      activate_this = '/srv/kallithea/venv/bin/activate_this.py'
+      execfile(activate_this, dict(__file__=activate_this))
 
-.. code-block:: python
+      import os
+      os.environ['HOME'] = '/srv/kallithea'
 
-    import os
-    os.environ['PYTHON_EGG_CACHE'] = '/srv/kallithea/.egg-cache'
+      ini = '/srv/kallithea/kallithea.ini'
+      from logging.config import fileConfig
+      fileConfig(ini)
+      from paste.deploy import loadapp
+      application = loadapp('config:' + ini)
 
-    # sometimes it's needed to set the current dir
-    os.chdir('/srv/kallithea/')
+- Add the necessary ``WSGI*`` directives to the Apache Virtual Host configuration
+  file, like in the example below. Notice that the WSGI dispatch script created
+  above is referred to with the ``WSGIScriptAlias`` directive.
+  The default locale settings Apache provides for web services are often not
+  adequate, with `C` as the default language and `ASCII` as the encoding.
+  Instead, use the ``lang`` parameter of ``WSGIDaemonProcess`` to specify a
+  suitable locale. See also the :ref:`overview` section and the
+  `WSGIDaemonProcess documentation`_.
 
-    import site
-    site.addsitedir("/srv/kallithea/venv/lib/python2.7/site-packages")
+  Apache will by default run as a special Apache user, on Linux systems
+  usually ``www-data`` or ``apache``. If you need to have the repositories
+  directory owned by a different user, use the user and group options to
+  WSGIDaemonProcess to set the name of the user and group.
 
-    ini = '/srv/kallithea/my.ini'
-    from logging.config import fileConfig
-    fileConfig(ini)
-    from paste.deploy import loadapp
-    application = loadapp('config:' + ini)
+  Once again, check that all paths are correctly specified.
 
-Or using proper virtualenv activation:
+  .. code-block:: apache
 
-.. code-block:: python
+      WSGIDaemonProcess kallithea processes=5 threads=1 maximum-requests=100 \
+          python-home=/srv/kallithea/venv lang=C.UTF-8
+      WSGIProcessGroup kallithea
+      WSGIScriptAlias / /srv/kallithea/dispatch.wsgi
+      WSGIPassAuthorization On
 
-    activate_this = '/srv/kallithea/venv/bin/activate_this.py'
-    execfile(activate_this, dict(__file__=activate_this))
+  Or if using a dispatcher WSGI script with proper virtualenv activation:
 
-    import os
-    os.environ['HOME'] = '/srv/kallithea'
+  .. code-block:: apache
 
-    ini = '/srv/kallithea/kallithea.ini'
-    from logging.config import fileConfig
-    fileConfig(ini)
-    from paste.deploy import loadapp
-    application = loadapp('config:' + ini)
+      WSGIDaemonProcess kallithea processes=5 threads=1 maximum-requests=100 lang=en_US.utf8
+      WSGIProcessGroup kallithea
+      WSGIScriptAlias / /srv/kallithea/dispatch.wsgi
+      WSGIPassAuthorization On
 
 
 Other configuration files
@@ -585,3 +589,4 @@ the ``init.d`` directory of the Kallithea source.
 .. _Redis: http://redis.io/
 .. _mercurial-server: http://www.lshift.net/mercurial-server.html
 .. _PublishingRepositories: https://www.mercurial-scm.org/wiki/PublishingRepositories
+.. _WSGIDaemonProcess documentation: https://modwsgi.readthedocs.io/en/develop/configuration-directives/WSGIDaemonProcess.html

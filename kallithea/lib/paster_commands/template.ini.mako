@@ -186,7 +186,7 @@ static_files = true
 
 <%text>## Internationalization (see setup documentation for details)</%text>
 <%text>## By default, the language requested by the browser is used if available.</%text>
-#i18n.enable = false
+#i18n.enabled = false
 <%text>## Fallback language, empty for English (valid values are the names of subdirectories in kallithea/i18n):</%text>
 i18n.lang =
 
@@ -210,6 +210,18 @@ use_htsts = false
 
 <%text>## number of commits stats will parse on each iteration</%text>
 commit_parse_limit = 25
+
+<%text>## Path to Python executable to be used for git hooks.</%text>
+<%text>## This value will be written inside the git hook scripts as the text</%text>
+<%text>## after '#!' (shebang). When empty or not defined, the value of</%text>
+<%text>## 'sys.executable' at the time of installation of the git hooks is</%text>
+<%text>## used, which is correct in many cases but for example not when using uwsgi.</%text>
+<%text>## If you change this setting, you should reinstall the Git hooks via</%text>
+<%text>## Admin > Settings > Remap and Rescan.</%text>
+# git_hook_interpreter = /srv/kallithea/venv/bin/python2
+%if git_hook_interpreter:
+git_hook_interpreter = ${git_hook_interpreter}
+%endif
 
 <%text>## path to git executable</%text>
 git_path = git

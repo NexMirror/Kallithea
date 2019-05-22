@@ -4,7 +4,7 @@
           <tr>
             <td><div class="ip">${ip.ip_addr}</div></td>
             <td><div class="ip">${h.ip_range(ip.ip_addr)}</div></td>
-            <td>${h.literal(_('Inherited from %s') % h.link_to('*default*',h.url('admin_permissions_ips')))}</td>
+            <td>${h.HTML(_('Inherited from %s')) % h.link_to('*default*',h.url('admin_permissions_ips'))}</td>
           </tr>
         %endfor
     %endif

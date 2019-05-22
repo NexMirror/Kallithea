@@ -12,8 +12,8 @@ ${h.form(form_url)}
                 <div>
                     ${h.checkbox('inherit_default_permissions',value=True)}
                     <span class="help-block">
-                        ${h.literal(_('Select to inherit global settings, IP whitelist and permissions from the %s.')
-                                    % h.link_to('default permissions', url('admin_permissions')))}
+                        ${(h.HTML(_('Select to inherit global settings, IP whitelist and permissions from the %s.'))
+                                % h.link_to(_('default permissions'), url('admin_permissions')))}
                     </span>
                 </div>
             </div>

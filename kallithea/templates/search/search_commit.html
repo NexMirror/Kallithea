@@ -4,8 +4,9 @@
     %if h.HasRepoPermissionLevel('read')(sr['repository'],'search results check'):
         <div class="panel panel-default">
             <div class="panel-heading">
-                ${h.link_to(h.literal('%s &raquo; %s' % (sr['repository'],sr['raw_id'])),
-                    h.url('changeset_home',repo_name=sr['repository'],revision=sr['raw_id']))}
+                ${h.link_to(sr['repository'], h.url('summary_home', repo_name=sr['repository']))}
+                &raquo;
+                ${h.link_to(sr['raw_id'], h.url('changeset_home', repo_name=sr['repository'], revision=sr['raw_id']))}
                 ${h.fmt_date(h.time_to_datetime(sr['date']))}
             </div>
             <div class="panel-body">

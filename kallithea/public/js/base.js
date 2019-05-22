@@ -1493,7 +1493,7 @@ var activate_parent_child_links = function(){
                         for(var i = 0; i < data.results.length; i++){
                             _html.push(template
                                 .replace('__rev__', 'r{0}:{1}'.format(data.results[i].revision, data.results[i].raw_id.substr(0, 6)))
-                                .replace('__title__', data.results[i].message)
+                                .replace('__title__', data.results[i].message.html_escape())
                                 .replace('__url__', pyroutes.url('changeset_home', {
                                     'repo_name': repo_name,
                                     'revision': data.results[i].raw_id}))
