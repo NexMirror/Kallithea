@@ -57,7 +57,7 @@ class MercurialInMemoryChangeset(BaseInMemoryChangeset):
                               if not node.is_binary else node.content),
                         islink=False,
                         isexec=node.is_executable,
-                        copied=False)
+                        copysource=False)
 
             # or changed
             for node in self.changed:
@@ -67,7 +67,7 @@ class MercurialInMemoryChangeset(BaseInMemoryChangeset):
                               if not node.is_binary else node.content),
                         islink=False,
                         isexec=node.is_executable,
-                        copied=False)
+                        copysource=False)
 
             raise RepositoryError("Given path haven't been marked as added,"
                                   "changed or removed (%s)" % path)

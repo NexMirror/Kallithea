@@ -37,3 +37,11 @@ from mercurial.url import httpbasicauthhandler, httpdigestauthhandler
 localrepo.localrepository._lfstatuswriters = [lambda *msg, **opts: None]
 # 3.5 7699d3212994 added the invariant that repo.lfstatus must exist before hitting overridearchive
 localrepo.localrepository.lfstatus = False
+
+# Mercurial 5.0 550a172a603b renamed memfilectx argument `copied` to `copysource`
+import inspect
+if inspect.getargspec(memfilectx.__init__).args[7] != 'copysource':
+    assert inspect.getargspec(memfilectx.__init__).args[7] == 'copied', inspect.getargspec(memfilectx.__init__).args
+    __org_memfilectx_ = memfilectx
+    memfilectx = lambda repo, changectx, path, data, islink=False, isexec=False, copysource=None: \
+        __org_memfilectx_(repo, changectx, path, data, islink=islink, isexec=isexec, copied=copysource)
