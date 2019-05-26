@@ -12,9 +12,10 @@ from mercurial import localrepo
 from mercurial import unionrepo
 from mercurial import scmutil
 from mercurial import config
-from mercurial import tags as tagsmod
+from mercurial.tags import tag
 from mercurial import httppeer
 from mercurial import sshpeer
+from mercurial import obsutil
 from mercurial.commands import clone, nullid, pull
 from mercurial.context import memctx, memfilectx
 from mercurial.error import RepoError, RepoLookupError, Abort
@@ -32,23 +33,7 @@ from mercurial.node import nullrev
 from mercurial.url import httpbasicauthhandler, httpdigestauthhandler
 
 
-# Mercurial 4.5 8a0cac20a1ad introduced an extra memctx changectx argument
-# - introduce an optional wrapper factory that doesn't pass it on
-import inspect
-if inspect.getargspec(memfilectx.__init__).args[2] != 'changectx':
-    __org_memfilectx = memfilectx
-    memfilectx = lambda repo, changectx, *args, **kwargs: __org_memfilectx(repo, *args, **kwargs)
-
-
 # workaround for 3.3 94ac64bcf6fe and not calling largefiles reposetup correctly
 localrepo.localrepository._lfstatuswriters = [lambda *msg, **opts: None]
 # 3.5 7699d3212994 added the invariant that repo.lfstatus must exist before hitting overridearchive
 localrepo.localrepository.lfstatus = False
-
-# Mercurial 4.2 moved tag from localrepo to the tags module
-def tag(repo, *args):
-    try:
-        tag_f  = tagsmod.tag
-    except AttributeError:
-        return repo.tag(*args)
-    tag_f(repo, *args)

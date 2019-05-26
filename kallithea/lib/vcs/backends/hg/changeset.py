@@ -14,7 +14,7 @@ from kallithea.lib.vcs.nodes import (
 from kallithea.lib.vcs.utils import safe_str, safe_unicode, date_fromtimestamp
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.vcs.utils.paths import get_dirs_for_path
-from kallithea.lib.vcs.utils.hgcompat import archival, hex
+from kallithea.lib.vcs.utils.hgcompat import archival, hex, obsutil
 
 from mercurial import obsolete
 
@@ -88,13 +88,7 @@ class MercurialChangeset(BaseChangeset):
 
     @LazyProperty
     def successors(self):
-        try:
-            # This works starting from Mercurial 4.3: the function `successorssets` was moved to the mercurial.obsutil module and gained the `closest` parameter.
-            from mercurial import obsutil
-            successors = obsutil.successorssets(self._ctx._repo, self._ctx.node(), closest=True)
-        except ImportError:
-            # fallback for older versions
-            successors = obsolete.successorssets(self._ctx._repo, self._ctx.node())
+        successors = obsutil.successorssets(self._ctx._repo, self._ctx.node(), closest=True)
         if successors:
             # flatten the list here handles both divergent (len > 1)
             # and the usual case (len = 1)
@@ -104,19 +98,7 @@ class MercurialChangeset(BaseChangeset):
 
     @LazyProperty
     def predecessors(self):
-        try:
-            # This works starting from Mercurial 4.3: the function `closestpredecessors` was added.
-            from mercurial import obsutil
-            return [hex(n)[:12] for n in obsutil.closestpredecessors(self._ctx._repo, self._ctx.node())]
-        except ImportError:
-            # fallback for older versions
-            predecessors = set()
-            nm = self._ctx._repo.changelog.nodemap
-            for p in self._ctx._repo.obsstore.precursors.get(self._ctx.node(), ()):
-                pr = nm.get(p[0])
-                if pr is not None:
-                    predecessors.add(hex(p[0])[:12])
-            return predecessors
+        return [hex(n)[:12] for n in obsutil.closestpredecessors(self._ctx._repo, self._ctx.node())]
 
     @LazyProperty
     def bookmarks(self):
@@ -320,10 +302,7 @@ class MercurialChangeset(BaseChangeset):
         try:
             annotation_lines = [(annotateline.fctx, annotateline.text) for annotateline in annotations]
         except AttributeError: # annotateline was introduced in Mercurial 4.6 (b33b91ca2ec2)
-            try:
-                annotation_lines = [(aline.fctx, l) for aline, l in annotations]
-            except AttributeError: # aline.fctx was introduced in Mercurial 4.4
-                annotation_lines = [(aline[0], l) for aline, l in annotations]
+            annotation_lines = [(aline.fctx, l) for aline, l in annotations]
         for i, (fctx, l) in enumerate(annotation_lines):
             sha = fctx.hex()
             yield (i + 1, sha, lambda sha=sha, l=l: self.repository.get_changeset(sha), l)
