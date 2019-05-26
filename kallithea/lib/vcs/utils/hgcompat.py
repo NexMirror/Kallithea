@@ -21,7 +21,7 @@ from mercurial.context import memctx, memfilectx
 from mercurial.error import RepoError, RepoLookupError, Abort
 from mercurial.hgweb import hgweb_mod
 from mercurial.hgweb.common import get_contact
-from mercurial.match import match
+from mercurial.match import match, exact as match_exact
 from mercurial.mdiff import diffopts
 from mercurial.node import hex
 from mercurial.encoding import tolocal
@@ -45,3 +45,7 @@ if inspect.getargspec(memfilectx.__init__).args[7] != 'copysource':
     __org_memfilectx_ = memfilectx
     memfilectx = lambda repo, changectx, path, data, islink=False, isexec=False, copysource=None: \
         __org_memfilectx_(repo, changectx, path, data, islink=islink, isexec=isexec, copied=copysource)
+
+# Mercurial 5.0 dropped exact argument for match in 635a12c53ea6, and 0531dff73d0b made the exact function stable with a single parameter
+if inspect.getargspec(match_exact).args[0] != 'files':
+    match_exact = lambda path: match(None, '', [path], exact=True)

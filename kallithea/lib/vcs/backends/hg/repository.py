@@ -29,7 +29,7 @@ from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.vcs.utils.ordered_dict import OrderedDict
 from kallithea.lib.vcs.utils.paths import abspath
 from kallithea.lib.vcs.utils.hgcompat import (
-    ui, nullid, match, patch, diffopts, clone, get_contact,
+    ui, nullid, match, match_exact, patch, diffopts, clone, get_contact,
     localrepo, RepoLookupError, Abort, RepoError, hex, scmutil, hg_url,
     httpbasicauthhandler, httpdigestauthhandler, peer, httppeer, sshpeer, tag
 )
@@ -264,7 +264,7 @@ class MercurialRepository(BaseRepository):
             self.get_changeset(rev1)
         self.get_changeset(rev2)
         if path:
-            file_filter = match(self.path, '', [path], exact=True)
+            file_filter = match_exact(path)
         else:
             file_filter = None
 
