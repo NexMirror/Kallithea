@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2019-05-04 21:13+0200\n"
-"PO-Revision-Date: 2019-05-08 20:48+0000\n"
+"PO-Revision-Date: 2019-06-18 19:01+0000\n"
 "Last-Translator: ssantos <ssantos@web.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/kallithea/stable/"
 "de/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.7-dev\n"
+"X-Generator: Weblate 3.7\n"
 
 #: kallithea/controllers/changelog.py:67
 #: kallithea/controllers/pullrequests.py:252 kallithea/lib/base.py:605
@@ -3523,14 +3523,15 @@ msgstr "Website-Branding"
 #: kallithea/templates/admin/settings/settings_global.html:7
 msgid "Set a custom title for your Kallithea Service."
 msgstr ""
+"Legen Sie einen benutzerdefinierten Titel für Ihren Kallithea-Dienst fest."
 
 #: kallithea/templates/admin/settings/settings_global.html:12
 msgid "HTTP authentication realm"
-msgstr ""
+msgstr "HTTP-Authentifizierungsrealm"
 
 #: kallithea/templates/admin/settings/settings_global.html:19
 msgid "HTML/JavaScript/CSS customization block"
-msgstr ""
+msgstr "HTML/JavaScript/CSS Anpassungsblock"
 
 #: kallithea/templates/admin/settings/settings_global.html:22
 msgid ""
@@ -3543,21 +3544,23 @@ msgstr ""
 
 #: kallithea/templates/admin/settings/settings_global.html:32
 msgid "ReCaptcha public key"
-msgstr ""
+msgstr "ReCaptcha öffentlicher Schlüssel"
 
 #: kallithea/templates/admin/settings/settings_global.html:35
 msgid "Public key for reCaptcha system."
-msgstr ""
+msgstr "Öffentlicher Schlüssel für das reCaptcha-System."
 
 #: kallithea/templates/admin/settings/settings_global.html:40
 msgid "ReCaptcha private key"
-msgstr ""
+msgstr "ReCaptcha privater Schlüssel"
 
 #: kallithea/templates/admin/settings/settings_global.html:43
 msgid ""
 "Private key for reCaptcha system. Setting this value will enable captcha "
 "on registration."
 msgstr ""
+"Privater Schlüssel für das reCaptcha-System. Wenn Sie diesen Wert "
+"einstellen, wird das Captcha bei der Registrierung aktiviert."
 
 #: kallithea/templates/admin/settings/settings_global.html:49
 #: kallithea/templates/admin/settings/settings_vcs.html:77
@@ -3567,21 +3570,24 @@ msgstr "Einstellungen speichern"
 
 #: kallithea/templates/admin/settings/settings_hooks.html:3
 msgid "Built-in Mercurial Hooks (Read-Only)"
-msgstr ""
+msgstr "Eingebaute Mercurial Hooks (Read -Only)"
 
 #: kallithea/templates/admin/settings/settings_hooks.html:17
 msgid "Custom Hooks"
-msgstr ""
+msgstr "Benutzerdefinierte Hooks"
 
 #: kallithea/templates/admin/settings/settings_hooks.html:18
 msgid ""
 "Hooks can be used to trigger actions on certain events such as push / "
 "pull. They can trigger Python functions or external applications."
 msgstr ""
+"Mit Hilfe von Hooks können bei bestimmten Ereignissen, wie z.B. Push / Pull, "
+"Aktionen ausgelöst werden. Sie können Python-Funktionen oder externe "
+"Anwendungen auslösen."
 
 #: kallithea/templates/admin/settings/settings_hooks.html:60
 msgid "Failed to remove hook"
-msgstr ""
+msgstr "Hook konnte nicht entfernt werden"
 
 #: kallithea/templates/admin/settings/settings_mapping.html:4
 #, fuzzy
@@ -3591,35 +3597,42 @@ msgstr "Beschreibung"
 
 #: kallithea/templates/admin/settings/settings_mapping.html:9
 msgid "Delete records of missing repositories"
-msgstr ""
+msgstr "Datensätze fehlender Repositories löschen"
 
 #: kallithea/templates/admin/settings/settings_mapping.html:12
 msgid ""
 "Check this option to remove all comments, pull requests and other records "
 "related to repositories that no longer exist in the filesystem."
 msgstr ""
+"Aktivieren Sie diese Option, um alle Kommentare, Pull-Requests und andere "
+"Datensätze zu entfernen, die sich auf Repositories beziehen, die nicht mehr "
+"im Dateisystem vorhanden sind."
 
 #: kallithea/templates/admin/settings/settings_mapping.html:17
 msgid "Invalidate cache for all repositories"
-msgstr ""
+msgstr "Cache für alle Repositories entwerten"
 
 #: kallithea/templates/admin/settings/settings_mapping.html:20
 msgid "Check this to reload data and clear cache keys for all repositories."
 msgstr ""
+"Aktivieren Sie dies, um Daten neu zu laden und Cache-Schlüssel für alle "
+"Repositories zu löschen."
 
 #: kallithea/templates/admin/settings/settings_mapping.html:25
 msgid "Install Git hooks"
-msgstr ""
+msgstr "Git-Hooks installieren"
 
 #: kallithea/templates/admin/settings/settings_mapping.html:28
 msgid ""
 "Verify if Kallithea's Git hooks are installed for each repository. "
 "Current hooks will be updated to the latest version."
 msgstr ""
+"Überprüfen Sie, ob die Git-Hooks von Kallithea für jedes Repository "
+"installiert sind. Aktuelle Hooks werden auf die neueste Version aktualisiert."
 
 #: kallithea/templates/admin/settings/settings_mapping.html:32
 msgid "Overwrite existing Git hooks"
-msgstr ""
+msgstr "Bestehende Git-Hooks überschreiben"
 
 #: kallithea/templates/admin/settings/settings_mapping.html:35
 msgid ""
@@ -3627,24 +3640,30 @@ msgid ""
 "not seem to come from Kallithea. WARNING: This operation will destroy any "
 "custom git hooks you may have deployed by hand!"
 msgstr ""
+"Wenn Sie Git-Hooks installieren, überschreiben Sie alle vorhandenen Hooks, "
+"auch wenn sie nicht von Kallithea zu kommen scheinen. WARNUNG: Diese "
+"Operation zerstört alle benutzerdefinierten Git-Hooks, die Sie "
+"möglicherweise von Hand bereitgestellt haben!"
 
 #: kallithea/templates/admin/settings/settings_mapping.html:41
 msgid "Rescan Repositories"
-msgstr ""
+msgstr "Repositories erneut scannen"
 
 #: kallithea/templates/admin/settings/settings_search.html:4
 msgid "Index build option"
-msgstr ""
+msgstr "Option zum Aufbau eines Index"
 
 #: kallithea/templates/admin/settings/settings_search.html:9
 msgid "Build from scratch"
-msgstr ""
+msgstr "Von Grund auf neu bauen"
 
 #: kallithea/templates/admin/settings/settings_search.html:12
 msgid ""
 "This option completely reindexeses all of the repositories for proper "
 "fulltext search capabilities."
 msgstr ""
+"Diese Option führt zu einer vollständigen Neuindizierung aller Repositories "
+"für eine korrekte Volltextsuche."
 
 #: kallithea/templates/admin/settings/settings_search.html:18
 msgid "Reindex"
@@ -3656,7 +3675,7 @@ msgstr "Prüfe auf Updates..."
 
 #: kallithea/templates/admin/settings/settings_system.html:7
 msgid "Kallithea version"
-msgstr ""
+msgstr "Kallithea-Version"
 
 #: kallithea/templates/admin/settings/settings_system.html:7
 #, fuzzy
@@ -3665,7 +3684,7 @@ msgstr "Auf Updates prüfen"
 
 #: kallithea/templates/admin/settings/settings_system.html:8
 msgid "Kallithea configuration file"
-msgstr ""
+msgstr "Kallithea Konfigurationsdatei"
 
 #: kallithea/templates/admin/settings/settings_system.html:9
 msgid "Python version"
@@ -3681,11 +3700,11 @@ msgstr "Git-Version"
 
 #: kallithea/templates/admin/settings/settings_system.html:12
 msgid "Git path"
-msgstr ""
+msgstr "Git-Pfad"
 
 #: kallithea/templates/admin/settings/settings_system.html:13
 msgid "Upgrade info endpoint"
-msgstr ""
+msgstr "Upgrade-Info-Endpunkt"
 
 #: kallithea/templates/admin/settings/settings_system.html:13
 msgid "Note: please make sure this server can access this URL"
@@ -3695,23 +3714,23 @@ msgstr ""
 
 #: kallithea/templates/admin/settings/settings_system.html:23
 msgid "Python Packages"
-msgstr ""
+msgstr "Python-Pakete"
 
 #: kallithea/templates/admin/settings/settings_vcs.html:9
 msgid "Show repository size after push"
-msgstr ""
+msgstr "Zeigt die Größe des Repositories nach dem Push an"
 
 #: kallithea/templates/admin/settings/settings_vcs.html:15
 msgid "Log user push commands"
-msgstr ""
+msgstr "Protokollieren der Push-Befehle der Benutzer"
 
 #: kallithea/templates/admin/settings/settings_vcs.html:21
 msgid "Log user pull commands"
-msgstr ""
+msgstr "Protokollieren der Pull-Befehle des Benutzers"
 
 #: kallithea/templates/admin/settings/settings_vcs.html:27
 msgid "Update repository after push (hg update)"
-msgstr ""
+msgstr "Repository nach dem Push aktualisieren (hg update)"
 
 #: kallithea/templates/admin/settings/settings_vcs.html:33
 msgid "Mercurial extensions"
@@ -3730,6 +3749,9 @@ msgid ""
 "Requires hgsubversion library to be installed. Enables cloning of remote "
 "Subversion repositories while converting them to Mercurial."
 msgstr ""
+"Erfordert die Installation der hgsubversion-Bibliothek. Ermöglicht das "
+"Klonen von entfernten Subversion-Repositories während der Konvertierung zu "
+"Mercurial."
 
 #: kallithea/templates/admin/settings/settings_vcs.html:59
 msgid "Location of repositories"
@@ -3740,12 +3762,17 @@ msgid ""
 "Click to unlock. You must restart Kallithea in order to make this setting "
 "take effect."
 msgstr ""
+"Zum Entsperren klicken. Sie müssen Kallithea neu starten, damit diese "
+"Einstellung wirksam wird."
 
 #: kallithea/templates/admin/settings/settings_vcs.html:68
 msgid ""
 "Filesystem location where repositories are stored. After changing this "
 "value, a restart and rescan of the repository folder are both required."
 msgstr ""
+"Dateisystem-Speicherort, an dem die Repositories gespeichert sind. Nach dem "
+"Ändern dieses Wertes sind sowohl ein Neustart als auch ein erneuter Scan des "
+"Repository-Ordners erforderlich."
 
 #: kallithea/templates/admin/settings/settings_visual.html:4
 msgid "General"
@@ -3753,11 +3780,13 @@ msgstr "Allgemein"
 
 #: kallithea/templates/admin/settings/settings_visual.html:9
 msgid "Use repository extra fields"
-msgstr ""
+msgstr "Zusätzliche Repository-Felder verwenden"
 
 #: kallithea/templates/admin/settings/settings_visual.html:12
 msgid "Allows storing additional customized fields per repository."
 msgstr ""
+"Ermöglicht die Speicherung zusätzlicher benutzerdefinierter Felder pro "
+"Repository."
 
 #: kallithea/templates/admin/settings/settings_visual.html:17
 msgid "Show Kallithea version"
@@ -3767,10 +3796,12 @@ msgstr "Zeige Kallithea-Version"
 msgid ""
 "Shows or hides a version number of Kallithea displayed in the footer."
 msgstr ""
+"Zeigt oder verbirgt eine Versionsnummer von Kallithea, die in der Fußzeile "
+"angezeigt wird."
 
 #: kallithea/templates/admin/settings/settings_visual.html:25
 msgid "Show user Gravatars"
-msgstr ""
+msgstr "Benutzer Gravatare anzeigen"
 
 #: kallithea/templates/admin/settings/settings_visual.html:29
 msgid ""
@@ -3788,6 +3819,20 @@ msgid ""
 "                                                        {netloc}    "
 "network location/server host of running Kallithea server"
 msgstr ""
+"Gravatar URL ermöglicht es Ihnen, eine andere Avatar-Serveranwendung zu "
+"verwenden.\n"
+"                                                        Die folgenden "
+"Variablen der URL werden entsprechend ersetzt.\n"
+"                                                        {scheme}    'http' "
+"oder'https', die vom laufenden Kallithea-Server gesendet werden,\n"
+"                                                        {email}    "
+"Benutzer-E-Mail,\n"
+"                                                        {md5email}  md5 Hash "
+"der Benutzer-E-Mail (wie bei gravatar.com),\n"
+"                                                        {size}       Größe "
+"des Bildes, das von der Serveranwendung erwartet wird,\n"
+"                                                        {netloc}    "
+"Netzwerkstandort/Server-Host des laufenden Kallithea-Servers"
 
 #: kallithea/templates/admin/settings/settings_visual.html:40
 #: kallithea/templates/summary/summary.html:63
@@ -3811,6 +3856,19 @@ msgid ""
 "                                                    {repoid} ID of "
 "repository, can be used to construct clone-by-id"
 msgstr ""
+"Schema der Klon-URL-Konstruktion z.B. '{scheme}://{user}@{netloc}/{repo}'.\n"
+"                                                    Die folgenden Variablen "
+"stehen zur Verfügung:\n"
+"                                                    {scheme}'http' "
+"oder'https', die vom laufenden Kallithea-Server gesendet werden,\n"
+"                                                    {user}   aktueller "
+"Benutzername des Benutzers,\n"
+"                                                    {netloc} "
+"Netzwerkstandort/Server-Host des laufenden Kallithea-Servers,\n"
+"                                                    {repo}   vollständiger "
+"Name des Repositories,\n"
+"                                                    {repoid} ID des "
+"Repositorys, kann verwendet werden, um einen Klon nach Id zu erstellen"
 
 #: kallithea/templates/admin/settings/settings_visual.html:54
 #, fuzzy
@@ -3823,16 +3881,20 @@ msgid ""
 "Number of items displayed in the repository pages before pagination is "
 "shown."
 msgstr ""
+"Anzahl der Elemente, die auf den Repository-Seiten angezeigt werden, bevor "
+"der Seitenumbruch angezeigt wird."
 
 #: kallithea/templates/admin/settings/settings_visual.html:62
 msgid "Admin page size"
-msgstr ""
+msgstr "Größe der Admin-Seite"
 
 #: kallithea/templates/admin/settings/settings_visual.html:65
 msgid ""
 "Number of items displayed in the admin pages grids before pagination is "
 "shown."
 msgstr ""
+"Anzahl der Elemente, die in den Gittern der Admin-Seiten angezeigt werden, "
+"bevor der Seitenumbruch angezeigt wird."
 
 #: kallithea/templates/admin/settings/settings_visual.html:70
 msgid "Icons"
@@ -3840,15 +3902,15 @@ msgstr "Icons"
 
 #: kallithea/templates/admin/settings/settings_visual.html:75
 msgid "Show public repository icon on repositories"
-msgstr ""
+msgstr "Öffentliches Repository-Symbol in Repositories anzeigen"
 
 #: kallithea/templates/admin/settings/settings_visual.html:81
 msgid "Show private repository icon on repositories"
-msgstr ""
+msgstr "Privates Repository-Symbol in Repositories anzeigen"
 
 #: kallithea/templates/admin/settings/settings_visual.html:84
 msgid "Show public/private icons next to repository names."
-msgstr ""
+msgstr "Zeigt öffentliche/private Symbole neben den Namen der Repositories an."
 
 #: kallithea/templates/admin/settings/settings_visual.html:89
 #, fuzzy
@@ -3860,10 +3922,12 @@ msgid ""
 "Parses meta tags from the repository description field and turns them "
 "into colored tags."
 msgstr ""
+"Analysiert Meta-Tags aus dem Beschreibungsfeld des Repositorys und "
+"verwandelt sie in farbige Tags."
 
 #: kallithea/templates/admin/settings/settings_visual.html:98
 msgid "Stylify recognised meta tags:"
-msgstr ""
+msgstr "Erkannte Meta-Tags stilisieren:"
 
 #: kallithea/templates/admin/user_groups/user_group_add.html:5
 msgid "Add user group"
@@ -3912,7 +3976,7 @@ msgstr "Mitglieder"
 #: kallithea/templates/data_table/_dt_elements.html:102
 #, python-format
 msgid "Confirm to delete this user group: %s"
-msgstr ""
+msgstr "Bestätigen, um diese Benutzergruppe zu löschen: %s"
 
 #: kallithea/templates/admin/user_groups/user_group_edit_advanced.html:21
 msgid "Delete this user group"
@@ -3952,7 +4016,7 @@ msgstr "Benutzer hinzufügen"
 
 #: kallithea/templates/admin/users/user_add.html:41
 msgid "Password confirmation"
-msgstr ""
+msgstr "Passwortbestätigung"
 
 #: kallithea/templates/admin/users/user_edit.html:5
 #, python-format
@@ -3961,7 +4025,7 @@ msgstr ""
 
 #: kallithea/templates/admin/users/user_edit.html:30
 msgid "Emails"
-msgstr ""
+msgstr "E-Mails"
 
 #: kallithea/templates/admin/users/user_edit_advanced.html:1
 #, python-format
