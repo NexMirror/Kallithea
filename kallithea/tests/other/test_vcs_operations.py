@@ -52,25 +52,22 @@ fixture = Fixture()
 # Parameterize different kinds of VCS testing - both the kind of VCS and the
 # access method (HTTP/SSH)
 
+# Mixin for using HTTP URLs
 class HttpVcsTest(object):
     @staticmethod
     def repo_url_param(webserver, repo_name, **kwargs):
         return webserver.repo_url(repo_name, **kwargs)
 
+# Mixins for using Mercurial and Git
 class HgVcsTest(object):
     repo_type = 'hg'
     repo_name = HG_REPO
-    @staticmethod
-    def repo_url_param(webserver, repo_name, **kwargs):
-        return webserver.repo_url(repo_name, **kwargs)
 
 class GitVcsTest(object):
     repo_type = 'git'
     repo_name = GIT_REPO
-    @staticmethod
-    def repo_url_param(webserver, repo_name, **kwargs):
-        return webserver.repo_url(repo_name, **kwargs)
 
+# Combine mixins to give the combinations we want to parameterize tests with
 class HgHttpVcsTest(HgVcsTest, HttpVcsTest):
     pass
 
