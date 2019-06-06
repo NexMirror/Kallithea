@@ -440,32 +440,18 @@ class AuthUser(object):
             assert dbuser is not None
             log.debug('Auth User lookup by database user %s', dbuser)
 
-        if self._fill_data(dbuser):
-            self.is_default_user = dbuser.is_default_user
-        else:
-            assert dbuser.is_default_user
-            assert not self.username
+        log.debug('filling %s data', dbuser)
+        self.is_anonymous = dbuser.is_default_user
+        if dbuser.is_default_user and not dbuser.active:
             self.username = 'None'
             self.is_default_user = False
-        self.is_anonymous = dbuser.is_default_user
-
-        log.debug('Auth User is now %s', self)
-
-    def _fill_data(self, dbuser):
-        """
-        Copies database fields from a `db.User` to this `AuthUser`. Does
-        not copy `api_keys` and `permissions` attributes.
-
-        Checks that `dbuser` is `active` (and not None) before copying;
-        returns True on success.
-        """
-        if dbuser is not None and dbuser.active:
-            log.debug('filling %s data', dbuser)
+        else:
+            # copy non-confidential database fields from a `db.User` to this `AuthUser`.
             for k, v in dbuser.get_dict().iteritems():
                 assert k not in ['api_keys', 'permissions']
                 setattr(self, k, v)
-            return True
-        return False
+            self.is_default_user = dbuser.is_default_user
+        log.debug('Auth User is now %s', self)
 
     @LazyProperty
     def permissions(self):
