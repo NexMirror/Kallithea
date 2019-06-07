@@ -348,6 +348,26 @@ class TestVCSOperations(TestController):
             [(u'pull', 0), (u'push', 3)]
 
     @parametrize_vcs_test
+    def test_pull(self, webserver, testfork, vt):
+        UserLog.query().delete()
+        Session().commit()
+
+        dest_dir = _get_tmp_dir()
+        stdout, stderr = Command(TESTS_TMP_PATH).execute(vt.repo_type, 'init', dest_dir)
+
+        clone_url = vt.repo_url_param(webserver, vt.repo_name)
+        print (vt, clone_url)
+        stdout, stderr = Command(dest_dir).execute(vt.repo_type, 'pull', clone_url)
+
+        if vt.repo_type == 'git':
+            assert 'FETCH_HEAD' in stderr
+        elif vt.repo_type == 'hg':
+            assert 'new changesets' in stdout
+
+        action_parts = [ul.action for ul in UserLog.query().order_by(UserLog.user_log_id)]
+        assert action_parts == [u'pull']
+
+    @parametrize_vcs_test
     def test_push_invalidates_cache(self, webserver, testfork, vt):
         pre_cached_tip = [repo.get_api_data()['last_changeset']['short_id'] for repo in Repository.query().filter(Repository.repo_name == testfork[vt.repo_type])]
 
