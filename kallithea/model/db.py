@@ -706,7 +706,6 @@ class UserApiKeys(Base, BaseDbModel):
         Index('uak_api_key_expires_idx', 'api_key', 'expires'),
         _table_args_default_dict,
     )
-    __mapper_args__ = {}
 
     user_api_key_id = Column(Integer(), primary_key=True)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
@@ -728,7 +727,6 @@ class UserEmailMap(Base, BaseDbModel):
         Index('uem_email_idx', 'email'),
         _table_args_default_dict,
     )
-    __mapper_args__ = {}
 
     email_id = Column(Integer(), primary_key=True)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
@@ -758,7 +756,6 @@ class UserIpMap(Base, BaseDbModel):
         UniqueConstraint('user_id', 'ip_addr'),
         _table_args_default_dict,
     )
-    __mapper_args__ = {}
 
     ip_id = Column(Integer(), primary_key=True)
     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
@@ -1470,7 +1467,6 @@ class RepoGroup(Base, BaseDbModel):
     __table_args__ = (
         _table_args_default_dict,
     )
-    __mapper_args__ = {'order_by': 'group_name'} # TODO: Deprecated as of SQLAlchemy 1.1.
 
     SEP = ' &raquo; '
 
