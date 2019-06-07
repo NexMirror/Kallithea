@@ -17,7 +17,7 @@ ini_files = [
             '[app:main]': {
                 'debug': 'true',
                 'app_instance_uuid': 'development-not-secret',
-                'beaker.session.secret': 'development-not-secret',
+                'session.secret': 'development-not-secret',
             },
             '[handler_console]': {
                 'formatter': 'color_formatter',

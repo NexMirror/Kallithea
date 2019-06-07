@@ -373,31 +373,31 @@ beaker.cache.sql_cache_short.key_length = 256
 
 <%text>## Name of session cookie. Should be unique for a given host and path, even when running</%text>
 <%text>## on different ports. Otherwise, cookie sessions will be shared and messed up.</%text>
-beaker.session.key = kallithea
+session.key = kallithea
 <%text>## Sessions should always only be accessible by the browser, not directly by JavaScript.</%text>
-beaker.session.httponly = true
+session.httponly = true
 <%text>## Session lifetime. 2592000 seconds is 30 days.</%text>
-beaker.session.timeout = 2592000
+session.timeout = 2592000
 
 <%text>## Server secret used with HMAC to ensure integrity of cookies.</%text>
-beaker.session.secret = ${uuid()}
+session.secret = ${uuid()}
 <%text>## Further, encrypt the data with AES.</%text>
-#beaker.session.encrypt_key = <key_for_encryption>
-#beaker.session.validate_key = <validation_key>
+#session.encrypt_key = <key_for_encryption>
+#session.validate_key = <validation_key>
 
 <%text>## Type of storage used for the session, current types are</%text>
 <%text>## dbm, file, memcached, database, and memory.</%text>
 
 <%text>## File system storage of session data. (default)</%text>
-#beaker.session.type = file
+#session.type = file
 
 <%text>## Cookie only, store all session data inside the cookie. Requires secure secrets.</%text>
-#beaker.session.type = cookie
+#session.type = cookie
 
 <%text>## Database storage of session data.</%text>
-#beaker.session.type = ext:database
-#beaker.session.sa.url = postgresql://postgres:qwe@localhost/kallithea
-#beaker.session.table_name = db_session
+#session.type = ext:database
+#session.sa.url = postgresql://postgres:qwe@localhost/kallithea
+#session.table_name = db_session
 
 <%text>############################</%text>
 <%text>## ERROR HANDLING SYSTEMS ##</%text>
