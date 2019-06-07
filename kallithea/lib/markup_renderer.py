@@ -196,8 +196,8 @@ class MarkupRenderer(object):
                 source = cls._flavored_markdown(source)
             return markdown_mod.markdown(
                 source,
-                extensions=['codehilite', 'extra'],
-                extension_configs={'codehilite': {'css_class': 'code-highlight'}})
+                extensions=['markdown.extensions.codehilite', 'markdown.extensions.extra'],
+                extension_configs={'markdown.extensions.codehilite': {'css_class': 'code-highlight'}})
         except Exception:
             log.error(traceback.format_exc())
             if safe:
