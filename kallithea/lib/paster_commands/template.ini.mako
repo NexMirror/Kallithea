@@ -399,7 +399,6 @@ beaker.session.secret = ${uuid()}
 #beaker.session.sa.url = postgresql://postgres:qwe@localhost/kallithea
 #beaker.session.table_name = db_session
 
-%if error_aggregation_service == 'appenlight':
 <%text>############################</%text>
 <%text>## ERROR HANDLING SYSTEMS ##</%text>
 <%text>############################</%text>
@@ -411,6 +410,7 @@ get trace_errors.smtp_server = smtp_server
 get trace_errors.smtp_port = smtp_port
 get trace_errors.from_address = error_email_from
 
+%if error_aggregation_service == 'appenlight':
 <%text>####################</%text>
 <%text>### [appenlight] ###</%text>
 <%text>####################</%text>
