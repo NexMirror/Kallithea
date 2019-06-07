@@ -1,8 +1,8 @@
 pytest >= 3.3.0, < 4.7
-pytest-runner < 4.3
+pytest-runner < 5.2
 pytest-sugar >= 0.7.0, < 0.10
 pytest-benchmark < 3.3
-pytest-localserver < 0.5
-mock < 2.1
-Sphinx < 1.8
+pytest-localserver < 0.6
+mock < 3.1
+Sphinx < 1.9
 WebTest < 2.1
