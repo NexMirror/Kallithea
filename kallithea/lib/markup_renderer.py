@@ -178,6 +178,17 @@ class MarkupRenderer(object):
         u'<div onclick="alert(2)">yo</div>'
         >>> MarkupRenderer.markdown('''<a href="javascript:alert(3)">yo</a>''')
         u'<p><a href="javascript:alert(3)">yo</a></p>'
+        >>> MarkupRenderer.markdown('''## Foo''')
+        u'<h2>Foo</h2>'
+        >>> print MarkupRenderer.markdown('''
+        ...     #!/bin/bash
+        ...     echo "hello"
+        ... ''')
+        <table class="code-highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+        2</pre></div></td><td class="code"><div class="code-highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+        <span class="nb">echo</span> <span class="s2">&quot;hello&quot;</span>
+        </pre></div>
+        </td></tr></table>
         """
         source = safe_unicode(source)
         try:
