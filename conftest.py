@@ -22,3 +22,16 @@ def pytest_ignore_collect(path):
     )
     if str(path).endswith(kallithea_ignore_paths):
         return True
+
+@pytest.fixture()
+def doctest_mock_ugettext(request):
+    """Mock ugettext ('_') in the module using this fixture.
+
+    Intended to be used for doctests.
+
+    In a doctest, enable this fixture using:
+        >>> getfixture('doctest_mock_ugettext')
+    """
+    m = __import__(request.module.__name__, globals(), locals(), [None], 0)
+    with mock.patch.object(m, '_', lambda s: s):
+        yield
