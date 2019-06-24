@@ -30,6 +30,7 @@ from alembic.migration import MigrationContext
 from sqlalchemy import create_engine
 import mercurial
 
+import kallithea.lib.locale
 from kallithea.lib.middleware.permanent_repo_url import PermanentRepoUrl
 from kallithea.lib.middleware.https_fixup import HttpsFixup
 from kallithea.lib.middleware.simplegit import SimpleGit
@@ -121,19 +122,7 @@ else:
 def setup_configuration(app):
     config = app.config
 
-    # Verify that things work when Dulwich passes unicode paths to the file system layer.
-    # Note: UTF-8 is preferred, but for example ISO-8859-1 or mbcs should also work under the right cirumstances.
-    try:
-        u'\xe9'.encode(sys.getfilesystemencoding()) # Test using é (&eacute;)
-    except UnicodeEncodeError:
-        log.error("Cannot encode Unicode paths to file system encoding %r", sys.getfilesystemencoding())
-        for var in ['LC_ALL', 'LC_CTYPE', 'LANG']:
-            if var in os.environ:
-                val = os.environ[var]
-                log.error("Note: Environment variable %s is %r - perhaps change it to some other value from 'locale -a', like 'C.UTF-8' or 'en_US.UTF-8'", var, val)
-                break
-        else:
-            log.error("Note: No locale setting found in environment variables - perhaps set LC_CTYPE to some value from 'locale -a', like 'C.UTF-8' or 'en_US.UTF-8'")
+    if not kallithea.lib.locale.current_locale_is_valid():
         log.error("Terminating ...")
         sys.exit(1)
 
