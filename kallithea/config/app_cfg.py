@@ -127,7 +127,7 @@ def setup_configuration(app):
         u'\xe9'.encode(sys.getfilesystemencoding()) # Test using é (&eacute;)
     except UnicodeEncodeError:
         log.error("Cannot encode Unicode paths to file system encoding %r", sys.getfilesystemencoding())
-        for var in ['LC_CTYPE', 'LC_ALL', 'LANG']:
+        for var in ['LC_ALL', 'LC_CTYPE', 'LANG']:
             if var in os.environ:
                 val = os.environ[var]
                 log.error("Note: Environment variable %s is %r - perhaps change it to some other value from 'locale -a', like 'C.UTF-8' or 'en_US.UTF-8'", var, val)
