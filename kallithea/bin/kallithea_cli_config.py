@@ -63,6 +63,7 @@ def config_create(config_file, key_value_pairs):
     mako_variable_values = {
         'git_hook_interpreter': sys.executable,
         'user_home_path': os.path.expanduser('~'),
+        'kallithea_cli_path': cli_base.kallithea_cli_path,
     }
     ini_settings = defaultdict(dict)
 

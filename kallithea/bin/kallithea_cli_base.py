@@ -15,10 +15,20 @@
 import click
 import functools
 import os
+import sys
 
 import kallithea
 import logging.config
 import paste.deploy
+
+
+# kallithea_cli is usually invoked through the 'kallithea-cli' wrapper script
+# that is installed by setuptools, as specified in setup.py console_scripts
+# entry_points. The script will be using the right virtualenv (if any), and for
+# Unix, it will contain #! pointing at the right python executable. The script
+# also makes sure sys.argv[0] points back at the script path, and that is what
+# can be used to invoke 'kallithea-cli' later.
+kallithea_cli_path = sys.argv[0]
 
 
 # This placeholder is the main entry point for the kallithea-cli command

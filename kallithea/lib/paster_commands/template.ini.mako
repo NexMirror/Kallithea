@@ -337,6 +337,9 @@ ssh_authorized_keys = ${user_home_path}/.ssh/authorized_keys
 
 <%text>## Path to be used in ssh_authorized_keys file to invoke kallithea-cli with ssh-serve.</%text>
 #kallithea_cli_path = /srv/kallithea/venv/bin/kallithea-cli
+%if kallithea_cli_path:
+kallithea_cli_path = ${kallithea_cli_path}
+%endif
 
 <%text>####################################</%text>
 <%text>###        CELERY CONFIG        ####</%text>
