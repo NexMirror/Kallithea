@@ -563,6 +563,9 @@ class TestVCSOperations(TestController):
                                     repo_name=testfork['git'],
                                     revision='tip',
                                     f_path='/'))
+        # check _repo_files_url that will be used to reload as AJAX
+        response.mustcontain('var _repo_files_url = ("/%s/files/");' % testfork['git'])
+
         response.mustcontain('<a class="submodule-dir" href="%s" target="_blank"><i class="icon-file-submodule"></i><span>testsubmodule @ ' % clone_url)
 
         # check that following a submodule link actually works - and redirects
