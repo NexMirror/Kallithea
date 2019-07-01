@@ -346,6 +346,9 @@ kallithea_cli_path = ${kallithea_cli_path}
 <%text>## settings, which may not be available on the server.</%text>
 <%text>## See `locale -a` for valid values on this system.</%text>
 #ssh_locale = C.UTF-8
+%if ssh_locale:
+ssh_locale = ${ssh_locale}
+%endif
 
 <%text>####################################</%text>
 <%text>###        CELERY CONFIG        ####</%text>

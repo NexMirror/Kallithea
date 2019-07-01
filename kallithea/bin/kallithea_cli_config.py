@@ -22,6 +22,7 @@ from collections import defaultdict
 
 import mako.exceptions
 
+import kallithea.lib.locale
 from kallithea.lib import inifile
 
 def show_defaults(ctx, param, value):
@@ -64,6 +65,7 @@ def config_create(config_file, key_value_pairs):
         'git_hook_interpreter': sys.executable,
         'user_home_path': os.path.expanduser('~'),
         'kallithea_cli_path': cli_base.kallithea_cli_path,
+        'ssh_locale': kallithea.lib.locale.get_current_locale(),
     }
     ini_settings = defaultdict(dict)
 

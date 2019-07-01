@@ -35,3 +35,14 @@ def current_locale_is_valid():
             log.error("Note: No locale setting found in environment variables - perhaps set LC_CTYPE to some value from 'locale -a', like 'C.UTF-8' or 'en_US.UTF-8'")
         return False
     return True
+
+def get_current_locale():
+    """Return the current locale based on environment variables.
+    There does not seem to be a good (and functional) way to get it via Python.
+    """
+    for var in ['LC_ALL', 'LC_CTYPE', 'LANG']:
+        val = os.environ.get(var)
+        if val:
+            log.debug('Determined current locale via environment variable %s (%s)', var, val)
+            return val
+    return None
