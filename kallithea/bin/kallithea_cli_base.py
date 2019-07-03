@@ -22,7 +22,7 @@ import paste.deploy
 
 
 # This placeholder is the main entry point for the kallithea-cli command
-@click.group()
+@click.group(context_settings=dict(help_option_names=['-h', '--help']))
 def cli():
     """Various commands to manage a Kallithea instance."""
 
