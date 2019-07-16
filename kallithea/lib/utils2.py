@@ -426,9 +426,10 @@ def get_clone_url(clone_uri_tmpl, prefix_url, repo_name, repo_id, username=None)
 
     # remove leading @ sign if it's present. Case of empty user
     url_obj = urlobject.URLObject(url)
-    url = url_obj.with_netloc(url_obj.netloc.lstrip('@'))
+    if not url_obj.username:
+        url_obj = url_obj.with_username(None)
 
-    return safe_unicode(url)
+    return safe_unicode(url_obj)
 
 
 def get_changeset_safe(repo, rev):
