@@ -114,9 +114,9 @@ class SummaryController(BaseRepoController):
         c.cs_statuses = c.db_repo.statuses(page_revisions)
 
         if request.authuser.is_default_user:
-            username = ''
+            username = None
         else:
-            username = safe_str(request.authuser.username)
+            username = request.authuser.username
         c.clone_repo_url = c.db_repo.clone_url(clone_uri_tmpl=c.clone_uri_tmpl, with_id=False, username=username)
         c.clone_repo_url_id = c.db_repo.clone_url(clone_uri_tmpl=c.clone_uri_tmpl, with_id=True, username=username)
 

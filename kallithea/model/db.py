@@ -1259,7 +1259,7 @@ class Repository(Base, BaseDbModel):
                 clone_uri = url_obj.with_password('*****')
         return clone_uri
 
-    def clone_url(self, clone_uri_tmpl, with_id=False, **override):
+    def clone_url(self, clone_uri_tmpl, with_id=False, username=None):
         if '{repo}' not in clone_uri_tmpl and '_{repoid}' not in clone_uri_tmpl:
             log.error("Configured clone_uri_tmpl %r has no '{repo}' or '_{repoid}' and cannot toggle to use repo id URLs", clone_uri_tmpl)
         elif with_id:
@@ -1273,7 +1273,8 @@ class Repository(Base, BaseDbModel):
         return get_clone_url(clone_uri_tmpl=clone_uri_tmpl,
                              prefix_url=prefix_url,
                              repo_name=self.repo_name,
-                             repo_id=self.repo_id, **override)
+                             repo_id=self.repo_id,
+                             username=username)
 
     def set_state(self, state):
         self.repo_state = state

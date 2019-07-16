@@ -411,21 +411,17 @@ def credentials_filter(uri):
     return ''.join(uri)
 
 
-def get_clone_url(clone_uri_tmpl, prefix_url, repo_name, repo_id, **override):
+def get_clone_url(clone_uri_tmpl, prefix_url, repo_name, repo_id, username=None):
     parsed_url = urlobject.URLObject(prefix_url)
     prefix = safe_unicode(urllib.unquote(parsed_url.path.rstrip('/')))
     args = {
         'scheme': parsed_url.scheme,
-        'user': '',
+        'user': safe_unicode(urllib.quote(safe_str(username or ''))),
         'netloc': parsed_url.netloc + prefix,  # like "hostname:port/prefix" (with optional ":port" and "/prefix")
         'prefix': prefix, # undocumented, empty or starting with /
         'repo': repo_name,
         'repoid': str(repo_id),
     }
-    if 'username' in override:
-        args['user'] = override.pop('username')
-    args.update(override)
-    args['user'] = urllib.quote(safe_str(args['user']))
 
     for k, v in args.items():
         clone_uri_tmpl = clone_uri_tmpl.replace('{%s}' % k, v)
