@@ -36,6 +36,7 @@ import uuid
 import datetime
 import urllib
 import binascii
+import pwd
 
 import webob
 import urlobject
@@ -414,6 +415,10 @@ def credentials_filter(uri):
 def get_clone_url(clone_uri_tmpl, prefix_url, repo_name, repo_id, username=None):
     parsed_url = urlobject.URLObject(prefix_url)
     prefix = safe_unicode(urllib.unquote(parsed_url.path.rstrip('/')))
+    try:
+        system_user = pwd.getpwuid(os.getuid()).pw_name
+    except Exception: # TODO: support all systems - especially Windows
+        system_user = 'kallithea' # hardcoded default value ...
     args = {
         'scheme': parsed_url.scheme,
         'user': safe_unicode(urllib.quote(safe_str(username or ''))),
@@ -421,6 +426,8 @@ def get_clone_url(clone_uri_tmpl, prefix_url, repo_name, repo_id, username=None)
         'prefix': prefix, # undocumented, empty or starting with /
         'repo': repo_name,
         'repoid': str(repo_id),
+        'system_user': safe_unicode(system_user),
+        'hostname': parsed_url.hostname,
     }
     url = re.sub('{([^{}]+)}', lambda m: args.get(m.group(1), m.group(0)), clone_uri_tmpl)
 
