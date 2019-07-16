@@ -267,25 +267,25 @@ class TestLibs(TestController):
                 grav = gravatar_url(email_address=em, size=24)
                 assert grav == 'https://example.com/%s/%s' % (_md5(em), 24)
 
-    @parametrize('tmpl,repo_name,overrides,prefix,expected', [
+    @parametrize('clone_uri_tmpl,repo_name,overrides,prefix,expected', [
         (Repository.DEFAULT_CLONE_URI, 'group/repo1', {}, '', 'http://vps1:8000/group/repo1'),
-        (Repository.DEFAULT_CLONE_URI, 'group/repo1', {'user': 'username'}, '', 'http://username@vps1:8000/group/repo1'),
+        (Repository.DEFAULT_CLONE_URI, 'group/repo1', {'username': 'username'}, '', 'http://username@vps1:8000/group/repo1'),
         (Repository.DEFAULT_CLONE_URI, 'group/repo1', {}, '/prefix', 'http://vps1:8000/prefix/group/repo1'),
-        (Repository.DEFAULT_CLONE_URI, 'group/repo1', {'user': 'user'}, '/prefix', 'http://user@vps1:8000/prefix/group/repo1'),
-        (Repository.DEFAULT_CLONE_URI, 'group/repo1', {'user': 'username'}, '/prefix', 'http://username@vps1:8000/prefix/group/repo1'),
-        (Repository.DEFAULT_CLONE_URI, 'group/repo1', {'user': 'user'}, '/prefix/', 'http://user@vps1:8000/prefix/group/repo1'),
-        (Repository.DEFAULT_CLONE_URI, 'group/repo1', {'user': 'username'}, '/prefix/', 'http://username@vps1:8000/prefix/group/repo1'),
+        (Repository.DEFAULT_CLONE_URI, 'group/repo1', {'username': 'user'}, '/prefix', 'http://user@vps1:8000/prefix/group/repo1'),
+        (Repository.DEFAULT_CLONE_URI, 'group/repo1', {'username': 'username'}, '/prefix', 'http://username@vps1:8000/prefix/group/repo1'),
+        (Repository.DEFAULT_CLONE_URI, 'group/repo1', {'username': 'user'}, '/prefix/', 'http://user@vps1:8000/prefix/group/repo1'),
+        (Repository.DEFAULT_CLONE_URI, 'group/repo1', {'username': 'username'}, '/prefix/', 'http://username@vps1:8000/prefix/group/repo1'),
         ('{scheme}://{user}@{netloc}/_{repoid}', 'group/repo1', {}, '', 'http://vps1:8000/_23'),
-        ('{scheme}://{user}@{netloc}/_{repoid}', 'group/repo1', {'user': 'username'}, '', 'http://username@vps1:8000/_23'),
-        ('http://{user}@{netloc}/_{repoid}', 'group/repo1', {'user': 'username'}, '', 'http://username@vps1:8000/_23'),
-        ('http://{netloc}/_{repoid}', 'group/repo1', {'user': 'username'}, '', 'http://vps1:8000/_23'),
-        ('https://{user}@proxy1.example.com/{repo}', 'group/repo1', {'user': 'username'}, '', 'https://username@proxy1.example.com/group/repo1'),
+        ('{scheme}://{user}@{netloc}/_{repoid}', 'group/repo1', {'username': 'username'}, '', 'http://username@vps1:8000/_23'),
+        ('http://{user}@{netloc}/_{repoid}', 'group/repo1', {'username': 'username'}, '', 'http://username@vps1:8000/_23'),
+        ('http://{netloc}/_{repoid}', 'group/repo1', {'username': 'username'}, '', 'http://vps1:8000/_23'),
+        ('https://{user}@proxy1.example.com/{repo}', 'group/repo1', {'username': 'username'}, '', 'https://username@proxy1.example.com/group/repo1'),
         ('https://{user}@proxy1.example.com/{repo}', 'group/repo1', {}, '', 'https://proxy1.example.com/group/repo1'),
-        ('https://proxy1.example.com/{user}/{repo}', 'group/repo1', {'user': 'username'}, '', 'https://proxy1.example.com/username/group/repo1'),
+        ('https://proxy1.example.com/{user}/{repo}', 'group/repo1', {'username': 'username'}, '', 'https://proxy1.example.com/username/group/repo1'),
     ])
-    def test_clone_url_generator(self, tmpl, repo_name, overrides, prefix, expected):
+    def test_clone_url_generator(self, clone_uri_tmpl, repo_name, overrides, prefix, expected):
         from kallithea.lib.utils2 import get_clone_url
-        clone_url = get_clone_url(uri_tmpl=tmpl, qualified_home_url='http://vps1:8000'+prefix,
+        clone_url = get_clone_url(clone_uri_tmpl=clone_uri_tmpl, prefix_url='http://vps1:8000' + prefix,
                                   repo_name=repo_name, repo_id=23, **overrides)
         assert clone_url == expected
 

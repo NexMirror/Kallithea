@@ -1261,31 +1261,31 @@ class Repository(Base, BaseDbModel):
         return clone_uri
 
     def clone_url(self, **override):
-        import kallithea.lib.helpers as h
-        qualified_home_url = h.canonical_url('home')
-
-        uri_tmpl = None
+        clone_uri_tmpl = None
         if 'with_id' in override:
-            uri_tmpl = self.DEFAULT_CLONE_URI_ID
+            clone_uri_tmpl = self.DEFAULT_CLONE_URI_ID
             del override['with_id']
 
-        if 'uri_tmpl' in override:
-            uri_tmpl = override['uri_tmpl']
-            del override['uri_tmpl']
+        if 'clone_uri_tmpl' in override:
+            clone_uri_tmpl = override['clone_uri_tmpl']
+            del override['clone_uri_tmpl']
 
         # we didn't override our tmpl from **overrides
-        if not uri_tmpl:
-            uri_tmpl = self.DEFAULT_CLONE_URI
+        if not clone_uri_tmpl:
+            clone_uri_tmpl = self.DEFAULT_CLONE_URI
             try:
                 from tg import tmpl_context as c
-                uri_tmpl = c.clone_uri_tmpl
+                clone_uri_tmpl = c.clone_uri_tmpl
             except AttributeError:
                 # in any case if we call this outside of request context,
                 # ie, not having tmpl_context set up
                 pass
 
-        return get_clone_url(uri_tmpl=uri_tmpl,
-                             qualified_home_url=qualified_home_url,
+        import kallithea.lib.helpers as h
+        prefix_url = h.canonical_url('home')
+
+        return get_clone_url(clone_uri_tmpl=clone_uri_tmpl,
+                             prefix_url=prefix_url,
                              repo_name=self.repo_name,
                              repo_id=self.repo_id, **override)
 

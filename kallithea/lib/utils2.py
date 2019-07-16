@@ -411,25 +411,27 @@ def credentials_filter(uri):
     return ''.join(uri)
 
 
-def get_clone_url(uri_tmpl, qualified_home_url, repo_name, repo_id, **override):
-    parsed_url = urlobject.URLObject(qualified_home_url)
-    decoded_path = safe_unicode(urllib.unquote(parsed_url.path.rstrip('/')))
+def get_clone_url(clone_uri_tmpl, prefix_url, repo_name, repo_id, **override):
+    parsed_url = urlobject.URLObject(prefix_url)
+    prefix = safe_unicode(urllib.unquote(parsed_url.path.rstrip('/')))
     args = {
         'scheme': parsed_url.scheme,
         'user': '',
-        'netloc': parsed_url.netloc+decoded_path,  # path if we use proxy-prefix
-        'prefix': decoded_path,
+        'netloc': parsed_url.netloc + prefix,  # like "hostname:port/prefix" (with optional ":port" and "/prefix")
+        'prefix': prefix, # undocumented, empty or starting with /
         'repo': repo_name,
-        'repoid': str(repo_id)
+        'repoid': str(repo_id),
     }
+    if 'username' in override:
+        args['user'] = override.pop('username')
     args.update(override)
     args['user'] = urllib.quote(safe_str(args['user']))
 
     for k, v in args.items():
-        uri_tmpl = uri_tmpl.replace('{%s}' % k, v)
+        clone_uri_tmpl = clone_uri_tmpl.replace('{%s}' % k, v)
 
     # remove leading @ sign if it's present. Case of empty user
-    url_obj = urlobject.URLObject(uri_tmpl)
+    url_obj = urlobject.URLObject(clone_uri_tmpl)
     url = url_obj.with_netloc(url_obj.netloc.lstrip('@'))
 
     return safe_unicode(url)
