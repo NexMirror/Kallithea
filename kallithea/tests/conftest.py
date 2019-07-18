@@ -42,6 +42,7 @@ def pytest_configure():
             'port': '4999',
         },
         '[app:main]': {
+            'ssh_enabled': 'true',
             'app_instance_uuid': 'test',
             'show_revision_number': 'true',
             'beaker.cache.sql_cache_short.expire': '1',

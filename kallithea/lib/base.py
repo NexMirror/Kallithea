@@ -408,6 +408,7 @@ class BaseController(TGController):
         ## INI stored
         c.visual.allow_repo_location_change = str2bool(config.get('allow_repo_location_change', True))
         c.visual.allow_custom_hooks_settings = str2bool(config.get('allow_custom_hooks_settings', True))
+        c.ssh_enabled = str2bool(config.get('ssh_enabled', False))
 
         c.instance_id = config.get('instance_id')
         c.issues_url = config.get('bugtracker', url('issues_url'))
@@ -636,3 +637,15 @@ def jsonify(func, *args, **kwargs):
         log.warning(msg)
     log.debug("Returning JSON wrapped action output")
     return json.dumps(data, encoding='utf-8')
+
+@decorator.decorator
+def IfSshEnabled(func, *args, **kwargs):
+    """Decorator for functions that can only be called if SSH access is enabled.
+
+    If SSH access is disabled in the configuration file, HTTPNotFound is raised.
+    """
+    if not c.ssh_enabled:
+        from kallithea.lib import helpers as h
+        h.flash(_("SSH access is disabled."), category='warning')
+        raise webob.exc.HTTPNotFound()
+    return func(*args, **kwargs)

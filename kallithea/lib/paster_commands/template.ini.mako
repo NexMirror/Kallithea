@@ -323,6 +323,13 @@ allow_custom_hooks_settings = True
 #    CHANGELOG
 
 <%text>####################################</%text>
+<%text>###           SSH CONFIG        ####</%text>
+<%text>####################################</%text>
+
+<%text>## SSH is disabled by default, until an Administrator decides to enable it.</%text>
+ssh_enabled = false
+
+<%text>####################################</%text>
 <%text>###        CELERY CONFIG        ####</%text>
 <%text>####################################</%text>
 
