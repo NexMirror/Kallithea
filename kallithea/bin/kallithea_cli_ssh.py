@@ -45,6 +45,11 @@ def ssh_serve(user_id, key_id):
         sys.stderr.write("SSH access is disabled.\n")
         return sys.exit(1)
 
+    ssh_locale = kallithea.CONFIG.get('ssh_locale')
+    if ssh_locale:
+        os.environ['LC_ALL'] = ssh_locale # trumps everything, including LANG, except LANGUAGE
+        os.environ['LANGUAGE'] = ssh_locale # trumps LC_ALL for GNU gettext message handling
+
     ssh_original_command = os.environ.get('SSH_ORIGINAL_COMMAND', '')
     connection = re.search('^([\d\.]+)', os.environ.get('SSH_CONNECTION', ''))
     client_ip = connection.group(1) if connection else '0.0.0.0'

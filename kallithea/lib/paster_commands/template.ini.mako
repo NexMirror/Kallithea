@@ -341,6 +341,12 @@ ssh_authorized_keys = ${user_home_path}/.ssh/authorized_keys
 kallithea_cli_path = ${kallithea_cli_path}
 %endif
 
+<%text>## Locale to be used in the ssh-serve command.</%text>
+<%text>## This is needed because an SSH client may try to use its own locale</%text>
+<%text>## settings, which may not be available on the server.</%text>
+<%text>## See `locale -a` for valid values on this system.</%text>
+#ssh_locale = C.UTF-8
+
 <%text>####################################</%text>
 <%text>###        CELERY CONFIG        ####</%text>
 <%text>####################################</%text>
