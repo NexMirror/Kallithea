@@ -62,6 +62,12 @@ no_about.add(('Ton Plomp <tcplomp@gmail.com>', '2013'))
 # Was reworked and contributed later and shadowed by other contributions:
 no_about.add(('Sean Farley <sean.michael.farley@gmail.com>', '2013'))
 
+# Contributors in about.html and CONTRIBUTORS not appearing in repository
+# history:
+other = [
+    # Work folded into commits attributed to others:
+]
+
 # Preserve contributors listed in about.html but not appearing in repository
 # history:
 other_about = [

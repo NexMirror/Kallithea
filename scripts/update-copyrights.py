@@ -127,7 +127,7 @@ def main():
 
     insert_entries(
         filename='kallithea/templates/about.html',
-        all_entries=repo_entries + contributor_data.other_about,
+        all_entries=repo_entries + contributor_data.other_about + contributor_data.other,
         no_entries=contributor_data.no_about,
         domain_extra=contributor_data.domain_extra,
         split_re=r'(?:  <li>Copyright &copy; [^\n]*</li>\n)*',
@@ -137,7 +137,7 @@ def main():
 
     insert_entries(
         filename='CONTRIBUTORS',
-        all_entries=repo_entries + contributor_data.other_contributors,
+        all_entries=repo_entries + contributor_data.other_contributors + contributor_data.other,
         no_entries=contributor_data.total_ignore,
         domain_extra=contributor_data.domain_extra,
         split_re=r'(?:    [^\n]*\n)*',
