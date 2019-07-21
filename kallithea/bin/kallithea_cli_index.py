@@ -23,7 +23,6 @@ import click
 import kallithea.bin.kallithea_cli_base as cli_base
 
 import os
-from string import strip
 import sys
 
 import kallithea
@@ -45,9 +44,9 @@ def index_create(repo_location, index_only, update_only, full_index):
 
     if not repo_location:
         repo_location = RepoModel().repos_path
-    repo_list = map(strip, index_only.split(',')) \
+    repo_list = [x.strip() for x in index_only.split(',')] \
         if index_only else None
-    repo_update_list = map(strip, update_only.split(',')) \
+    repo_update_list = [x.strip() for x in update_only.split(',')] \
         if update_only else None
 
     try:

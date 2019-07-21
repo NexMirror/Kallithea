@@ -34,7 +34,6 @@ import rfc822
 from collections import OrderedDict
 from time import mktime
 from operator import itemgetter
-from string import lower
 
 from tg import config
 
@@ -491,7 +490,7 @@ def __get_codes_stats(repo_name):
 
     def aggregate(cs):
         for f in cs[2]:
-            ext = lower(f.extension)
+            ext = f.extension.lower()
             if ext in LANGUAGES_EXTENSIONS_MAP.keys() and not f.is_binary:
                 if ext in code_stats:
                     code_stats[ext] += 1
