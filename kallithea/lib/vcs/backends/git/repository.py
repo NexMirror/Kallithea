@@ -17,6 +17,7 @@ import urllib
 import urllib2
 import logging
 import posixpath
+from collections import OrderedDict
 
 from dulwich.objects import Tag
 from dulwich.repo import Repo, NotGitRepository
@@ -32,7 +33,6 @@ from kallithea.lib.vcs.exceptions import (
 )
 from kallithea.lib.vcs.utils import safe_str, safe_unicode, makedate, date_fromtimestamp
 from kallithea.lib.vcs.utils.lazy import LazyProperty
-from kallithea.lib.vcs.utils.ordered_dict import OrderedDict
 from kallithea.lib.vcs.utils.paths import abspath, get_user_home
 
 from kallithea.lib.vcs.utils.hgcompat import (

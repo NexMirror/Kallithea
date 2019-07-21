@@ -27,7 +27,7 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 import traceback
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 
 from tg import tmpl_context as c, request, response
 from tg.i18n import ugettext as _
@@ -40,7 +40,6 @@ import kallithea.lib.helpers as h
 from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator
 from kallithea.lib.base import BaseRepoController, render, jsonify
 from kallithea.lib.utils import action_logger
-from kallithea.lib.compat import OrderedDict
 from kallithea.lib import diffs
 from kallithea.model.db import ChangesetComment, ChangesetStatus
 from kallithea.model.comment import ChangesetCommentsModel

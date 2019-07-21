@@ -31,6 +31,7 @@ import traceback
 import logging
 import rfc822
 
+from collections import OrderedDict
 from time import mktime
 from operator import itemgetter
 from string import lower
@@ -44,7 +45,7 @@ from kallithea.lib.rcmail.smtp_mailer import SmtpMailer
 from kallithea.lib.utils import action_logger
 from kallithea.lib.utils2 import str2bool
 from kallithea.lib.vcs.utils import author_email
-from kallithea.lib.compat import json, OrderedDict
+from kallithea.lib.compat import json
 from kallithea.lib.hooks import log_create_repository
 
 from kallithea.model.db import Statistics, RepoGroup, Repository, User

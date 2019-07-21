@@ -31,6 +31,7 @@ import logging
 import traceback
 import tempfile
 import shutil
+from collections import OrderedDict
 
 from tg import request, response, tmpl_context as c
 from tg.i18n import ugettext as _
@@ -41,7 +42,6 @@ from kallithea.lib.utils import action_logger
 from kallithea.lib import diffs
 from kallithea.lib import helpers as h
 
-from kallithea.lib.compat import OrderedDict
 from kallithea.lib.utils2 import convert_line_endings, detect_mode, safe_str, \
     str2bool, safe_int
 from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator
