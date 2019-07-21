@@ -41,15 +41,6 @@ formatted_json = functools.partial(json.dumps, indent=4, sort_keys=True)
 
 
 #==============================================================================
-# unittest
-#==============================================================================
-if sys.version_info >= (2, 7):
-    import unittest
-else:
-    import unittest2 as unittest
-
-
-#==============================================================================
 # OrderedSet
 #==============================================================================
 from sqlalchemy.util import OrderedSet

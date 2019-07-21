@@ -17,11 +17,11 @@ To install on an older version of Windows, see `<installation_win_old.html>`_
 Step 1 -- Install Python
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-Install Python 2.x.y (x = 6 or 7). Latest version is recommended. If you need another version, they can run side by side.
+Install Python 2.7.x. Latest version is recommended. If you need another version, they can run side by side.
 
 .. warning:: Python 3.x is not supported.
 
-- Download Python 2.x.y from http://www.python.org/download/
+- Download Python 2.7.x from http://www.python.org/download/
 - Choose and click on the version
 - Click on "Windows X86-64 Installer" for x64 or "Windows x86 MSI installer" for Win32.
 - Disable UAC or run the installer with admin privileges. If you chose to disable UAC, do not forget to reboot afterwards.

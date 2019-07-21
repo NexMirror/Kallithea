@@ -64,10 +64,6 @@ requirements = [
     "Click >= 7.0, < 8",
 ]
 
-if sys.version_info < (2, 7):
-    requirements.append("importlib == 1.0.1")
-    requirements.append("argparse")
-
 if not is_windows:
     requirements.append("bcrypt >= 3.1.0, < 3.2")
 
