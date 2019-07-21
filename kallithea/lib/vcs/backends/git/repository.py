@@ -43,7 +43,7 @@ from .changeset import GitChangeset
 from .inmemory import GitInMemoryChangeset
 from .workdir import GitWorkdir
 
-SHA_PATTERN = re.compile(r'^[[0-9a-fA-F]{12}|[0-9a-fA-F]{40}]$')
+SHA_PATTERN = re.compile(r'^([0-9a-fA-F]{12}|[0-9a-fA-F]{40})$')
 
 log = logging.getLogger(__name__)
 
