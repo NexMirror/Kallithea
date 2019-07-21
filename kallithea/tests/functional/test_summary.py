@@ -158,12 +158,12 @@ class TestSummaryController(TestController):
             '["rst", {"count": 16, "desc": ["Rst"]}], '
             '["css", {"count": 2, "desc": ["Css"]}], '
             '["sh", {"count": 2, "desc": ["Bash"]}], '
-            '["yml", {"count": 1, "desc": ["Yaml"]}], '
-            '["makefile", {"count": 1, "desc": ["Makefile", "Makefile"]}], '
-            '["js", {"count": 1, "desc": ["Javascript"]}], '
+            '["bat", {"count": 1, "desc": ["Batch"]}], '
             '["cfg", {"count": 1, "desc": ["Ini"]}], '
+            '["html", {"count": 1, "desc": ["EvoqueHtml", "Html"]}], '
             '["ini", {"count": 1, "desc": ["Ini"]}], '
-            '["html", {"count": 1, "desc": ["EvoqueHtml", "Html"]}]]'
+            '["js", {"count": 1, "desc": ["Javascript"]}], '
+            '["makefile", {"count": 1, "desc": ["Makefile", "Makefile"]}]]',
         )
 
     def test_index_statistics(self):
@@ -191,12 +191,12 @@ class TestSummaryController(TestController):
             '["rst", {"count": 16, "desc": ["Rst"]}], '
             '["css", {"count": 2, "desc": ["Css"]}], '
             '["sh", {"count": 2, "desc": ["Bash"]}], '
-            '["makefile", {"count": 1, "desc": ["Makefile", "Makefile"]}], '
-            '["js", {"count": 1, "desc": ["Javascript"]}], '
+            '["bat", {"count": 1, "desc": ["Batch"]}], '
             '["cfg", {"count": 1, "desc": ["Ini"]}], '
-            '["ini", {"count": 1, "desc": ["Ini"]}], '
             '["html", {"count": 1, "desc": ["EvoqueHtml", "Html"]}], '
-            '["bat", {"count": 1, "desc": ["Batch"]}]]'
+            '["ini", {"count": 1, "desc": ["Ini"]}], '
+            '["js", {"count": 1, "desc": ["Javascript"]}], '
+            '["makefile", {"count": 1, "desc": ["Makefile", "Makefile"]}]]',
         )
 
     def test_index_statistics_git(self):

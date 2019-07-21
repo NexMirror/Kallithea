@@ -136,13 +136,12 @@ class SummaryController(BaseRepoController):
             c.no_data = False is c.db_repo.enable_statistics
             lang_stats_d = json.loads(stats.languages)
 
-            lang_stats = ((x, {"count": y,
-                               "desc": LANGUAGES_EXTENSIONS_MAP.get(x)})
-                          for x, y in lang_stats_d.items())
+            lang_stats = [(x, {"count": y,
+                               "desc": LANGUAGES_EXTENSIONS_MAP.get(x, '?')})
+                          for x, y in lang_stats_d.items()]
+            lang_stats.sort(key=lambda k: (-k[1]['count'], k[0]))
 
-            c.trending_languages = (
-                sorted(lang_stats, reverse=True, key=lambda k: k[1])[:10]
-            )
+            c.trending_languages = lang_stats[:10]
         else:
             c.no_data = True
             c.trending_languages = []
