@@ -35,7 +35,7 @@ from webhelpers.html.tags import checkbox, end_form, hidden, link_to, \
     select, submit, text, password, textarea, radio, form as insecure_form
 from webhelpers.number import format_byte_size
 from webhelpers.pylonslib import Flash as _Flash
-from webhelpers.pylonslib.secure_form import secure_form, authentication_token
+from webhelpers.pylonslib.secure_form import secure_form, authentication_token, token_key
 from webhelpers.text import chop_at, truncate, wrap_paragraphs
 from webhelpers.html.tags import _set_input_attrs, _set_id_attr, \
     convert_boolean_attrs, NotGiven, _make_safe_id_component

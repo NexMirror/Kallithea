@@ -39,7 +39,6 @@ import webob.exc
 import paste.httpexceptions
 import paste.auth.basic
 import paste.httpheaders
-from webhelpers.pylonslib import secure_form
 
 from tg import config, tmpl_context as c, request, response, session, render_template
 from tg import TGController
@@ -366,8 +365,9 @@ class BaseController(TGController):
             # guaranteed to be side effect free. In practice, the only situation
             # where we allow side effects without ambient authority is when the
             # authority comes from an API key; and that is handled above.
-            token = request.POST.get(secure_form.token_key)
-            if not token or token != secure_form.authentication_token():
+            from kallithea.lib import helpers as h
+            token = request.POST.get(h.token_key)
+            if not token or token != h.authentication_token():
                 log.error('CSRF check failed')
                 raise webob.exc.HTTPForbidden()
 
@@ -478,11 +478,11 @@ class BaseController(TGController):
             raise webob.exc.HTTPMethodNotAllowed()
 
         # Make sure CSRF token never appears in the URL. If so, invalidate it.
-        if secure_form.token_key in request.GET:
+        from kallithea.lib import helpers as h
+        if h.token_key in request.GET:
             log.error('CSRF key leak detected')
-            session.pop(secure_form.token_key, None)
+            session.pop(h.token_key, None)
             session.save()
-            from kallithea.lib import helpers as h
             h.flash(_('CSRF token leak has been detected - all form tokens have been expired'),
                     category='error')
 
