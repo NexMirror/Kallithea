@@ -155,6 +155,17 @@ def main():
         format_f=lambda years, name: ' ' + nice_years(years, '&ndash;', ', ') + ' ',
         )
 
+    #docs/conf.py:copyright = u'2010-2016 by various authors, licensed as GPLv3.'
+    insert_entries(
+        filename='docs/conf.py',
+        all_entries=repo_entries,
+        no_entries=contributor_data.total_ignore,
+        domain_extra={},
+        split_re=r"(?<=copyright = u').*(?= by various authors)",
+        normalize_name=lambda name: '',
+        format_f=lambda years, name: nice_years(years, '-', ', ') ,
+        )
+
 
 if __name__ == '__main__':
     main()
