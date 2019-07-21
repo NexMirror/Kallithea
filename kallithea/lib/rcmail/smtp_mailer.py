@@ -28,8 +28,9 @@ Original author and date, and relevant copyright and licensing information is be
 import time
 import logging
 import smtplib
-from socket import sslerror
+from ssl import SSLError
 from email.utils import formatdate
+
 from kallithea.lib.rcmail.message import Message
 from kallithea.lib.rcmail.utils import DNS_NAME
 
@@ -100,6 +101,6 @@ class SmtpMailer(object):
 
         try:
             smtp_serv.quit()
-        except sslerror:
-            # sslerror is raised in tls connections on closing sometimes
+        except SSLError:
+            # SSL error might sometimes be raised in tls connections on closing
             smtp_serv.close()
