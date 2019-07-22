@@ -975,7 +975,7 @@ class Repository(Base, BaseDbModel):
     repo_state = Column(String(255), nullable=False)
 
     clone_uri = Column(String(255), nullable=True) # FIXME: not nullable?
-    repo_type = Column(String(255), nullable=False)
+    repo_type = Column(String(255), nullable=False) # 'hg' or 'git'
     owner_id = Column('user_id', Integer(), ForeignKey('users.user_id'), nullable=False)
     private = Column(Boolean(), nullable=False)
     enable_statistics = Column("statistics", Boolean(), nullable=False, default=True)

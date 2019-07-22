@@ -414,7 +414,8 @@ class ReposController(BaseRepoController):
         c.repos_list = [(None, _('-- Not a fork --'))]
         c.repos_list += [(x.repo_id, x.repo_name)
                          for x in read_access_repos
-                         if x.repo_id != c.repo_info.repo_id]
+                         if x.repo_id != c.repo_info.repo_id
+                         and x.repo_type == c.repo_info.repo_type]
 
         defaults = {
             'id_fork_of': c.repo_info.fork_id if c.repo_info.fork_id else ''
