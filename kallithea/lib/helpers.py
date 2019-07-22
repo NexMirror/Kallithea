@@ -24,6 +24,7 @@ import logging
 import re
 import urlparse
 import textwrap
+import random
 
 from beaker.cache import cache_region
 from pygments.formatters.html import HtmlFormatter
@@ -35,7 +36,6 @@ from webhelpers.html.tags import checkbox, end_form, hidden, link_to, \
     select, submit, text, password, textarea, radio, form as insecure_form
 from webhelpers.number import format_byte_size
 from webhelpers.pylonslib import Flash as _Flash
-from webhelpers.pylonslib.secure_form import secure_form, authentication_token as session_csrf_secret_token, token_key as session_csrf_secret_name
 from webhelpers.text import chop_at, truncate, wrap_paragraphs
 from webhelpers.html.tags import _set_input_attrs, _set_id_attr, \
     convert_boolean_attrs, NotGiven, _make_safe_id_component
@@ -1273,12 +1273,22 @@ def ip_range(ip_addr):
     return '%s - %s' % (s, e)
 
 
+session_csrf_secret_name = "_authentication_token"
+
+def session_csrf_secret_token():
+    """Return (and create) the current session's CSRF protection token."""
+    from tg import session
+    if not session_csrf_secret_name in session:
+        session[session_csrf_secret_name] = str(random.getrandbits(128))
+        session.save()
+    return session[session_csrf_secret_name]
+
 def form(url, method="post", **attrs):
-    """Like webhelpers.html.tags.form but automatically using secure_form with
-    session_csrf_secret_token for POST. The secret is thus never leaked in
+    """Like webhelpers.html.tags.form , but automatically adding
+    session_csrf_secret_token for POST. The secret is thus never leaked in GET
     URLs.
     """
+    form = insecure_form(url, method, **attrs)
     if method.lower() == 'get':
-        return insecure_form(url, method=method, **attrs)
-    # webhelpers will turn everything but GET into POST
-    return secure_form(url, method=method, **attrs)
+        return form
+    return form + HTML.div(hidden(session_csrf_secret_name, session_csrf_secret_token()), style="display: none;")
