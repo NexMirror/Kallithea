@@ -65,7 +65,7 @@
                 var REPO_NAME = ${h.js(c.repo_name)};
             %endif
 
-            var _authentication_token = ${h.js(h.authentication_token())};
+            var _session_csrf_secret_token = ${h.js(h.session_csrf_secret_token())};
         </script>
         <script type="text/javascript" src="${h.url('/js/jquery.min.js', ver=c.kallithea_version)}"></script>
         <script type="text/javascript" src="${h.url('/js/jquery.dataTables.js', ver=c.kallithea_version)}"></script>

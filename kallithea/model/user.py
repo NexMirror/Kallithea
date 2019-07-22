@@ -338,7 +338,7 @@ class UserModel(object):
                 log.debug('password reset user %s found', user)
                 token = self.get_reset_password_token(user,
                                                       timestamp,
-                                                      h.authentication_token())
+                                                      h.session_csrf_secret_token())
                 # URL must be fully qualified; but since the token is locked to
                 # the current browser session, we must provide a URL with the
                 # current scheme and hostname, rather than the canonical_url.
@@ -391,7 +391,7 @@ class UserModel(object):
 
         expected_token = self.get_reset_password_token(user,
                                                        timestamp,
-                                                       h.authentication_token())
+                                                       h.session_csrf_secret_token())
         log.debug('computed password reset token: %s', expected_token)
         log.debug('received password reset token: %s', token)
         return expected_token == token

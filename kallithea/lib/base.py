@@ -366,8 +366,8 @@ class BaseController(TGController):
             # where we allow side effects without ambient authority is when the
             # authority comes from an API key; and that is handled above.
             from kallithea.lib import helpers as h
-            token = request.POST.get(h.token_key)
-            if not token or token != h.authentication_token():
+            token = request.POST.get(h.session_csrf_secret_name)
+            if not token or token != h.session_csrf_secret_token():
                 log.error('CSRF check failed')
                 raise webob.exc.HTTPForbidden()
 
@@ -479,9 +479,9 @@ class BaseController(TGController):
 
         # Make sure CSRF token never appears in the URL. If so, invalidate it.
         from kallithea.lib import helpers as h
-        if h.token_key in request.GET:
+        if h.session_csrf_secret_name in request.GET:
             log.error('CSRF key leak detected')
-            session.pop(h.token_key, None)
+            session.pop(h.session_csrf_secret_name, None)
             session.save()
             h.flash(_('CSRF token leak has been detected - all form tokens have been expired'),
                     category='error')

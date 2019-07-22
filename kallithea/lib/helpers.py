@@ -35,7 +35,7 @@ from webhelpers.html.tags import checkbox, end_form, hidden, link_to, \
     select, submit, text, password, textarea, radio, form as insecure_form
 from webhelpers.number import format_byte_size
 from webhelpers.pylonslib import Flash as _Flash
-from webhelpers.pylonslib.secure_form import secure_form, authentication_token, token_key
+from webhelpers.pylonslib.secure_form import secure_form, authentication_token as session_csrf_secret_token, token_key as session_csrf_secret_name
 from webhelpers.text import chop_at, truncate, wrap_paragraphs
 from webhelpers.html.tags import _set_input_attrs, _set_id_attr, \
     convert_boolean_attrs, NotGiven, _make_safe_id_component
@@ -1275,8 +1275,9 @@ def ip_range(ip_addr):
 
 def form(url, method="post", **attrs):
     """Like webhelpers.html.tags.form but automatically using secure_form with
-    authentication_token for POST. authentication_token is thus never leaked
-    in the URL."""
+    session_csrf_secret_token for POST. The secret is thus never leaked in
+    URLs.
+    """
     if method.lower() == 'get':
         return insecure_form(url, method=method, **attrs)
     # webhelpers will turn everything but GET into POST

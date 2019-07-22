@@ -255,4 +255,4 @@ class LoginController(BaseController):
         Only intended for testing but might also be useful for other kinds
         of automation.
         """
-        return h.authentication_token()
+        return h.session_csrf_secret_token()
