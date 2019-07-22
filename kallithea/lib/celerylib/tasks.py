@@ -75,7 +75,7 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
     DBS = celerylib.get_session()
     lockkey = celerylib.__get_lockkey('get_commits_stats', repo_name, ts_min_y,
                             ts_max_y)
-    lockkey_path = config['app_conf']['cache_dir']
+    lockkey_path = config['tg.cache_dir']  # The configured cache_dir is only available under this name ...
 
     log.info('running task with lockkey %s', lockkey)
 
@@ -99,7 +99,7 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
             return True
 
         skip_date_limit = True
-        parse_limit = int(config['app_conf'].get('commit_parse_limit'))
+        parse_limit = int(config.get('commit_parse_limit'))
         last_rev = None
         last_cs = None
         timegetter = itemgetter('time')

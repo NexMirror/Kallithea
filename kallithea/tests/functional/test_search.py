@@ -16,10 +16,8 @@ class TestSearchController(TestController):
         self.log_user()
 
         config_mock = {
-            'app_conf': {
-                # can be any existing dir that does not contain an actual index
-                'index_dir': str(tmpdir),
-            }
+            # can be any existing dir that does not contain an actual index
+            'index_dir': str(tmpdir),
         }
         with mock.patch('kallithea.controllers.search.config', config_mock):
             response = self.app.get(url(controller='search', action='index'),

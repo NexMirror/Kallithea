@@ -104,7 +104,7 @@ def __get_lockkey(func, *fargs, **fkwargs):
 def locked_task(func):
     def __wrapper(func, *fargs, **fkwargs):
         lockkey = __get_lockkey(func, *fargs, **fkwargs)
-        lockkey_path = config['app_conf']['cache_dir']
+        lockkey_path = config['tg.cache_dir']  # The configured cache_dir is only available under this name ...
 
         log.info('running task with lockkey %s', lockkey)
         try:

@@ -84,7 +84,7 @@ class SearchController(BaseRepoController):
         if c.cur_query:
             p = safe_int(request.GET.get('page'), 1)
             highlight_items = set()
-            index_dir = config['app_conf']['index_dir']
+            index_dir = config['index_dir']
             try:
                 if not exists_in(index_dir, index_name):
                     raise EmptyIndexError
