@@ -34,7 +34,7 @@ from tg import request, config, tmpl_context as c
 from whoosh.index import open_dir, exists_in, EmptyIndexError
 from whoosh.qparser import QueryParser, QueryParserError
 from whoosh.query import Phrase, Prefix
-from webhelpers.util import update_params
+from webhelpers2.html.tools import update_params
 
 from kallithea.lib.auth import LoginRequired
 from kallithea.lib.base import BaseRepoController, render
@@ -120,8 +120,7 @@ class SearchController(BaseRepoController):
 
                     def url_generator(**kw):
                         q = urllib.quote(safe_str(c.cur_query))
-                        return update_params("?q=%s&type=%s" \
-                        % (q, safe_str(c.cur_type)), **kw)
+                        return update_params("?q=%s&type=%s" % (q, safe_str(c.cur_type)), **kw)
                     repo_location = RepoModel().repos_path
                     c.formated_results = Page(
                         WhooshResultWrapper(search_type, searcher, matcher,

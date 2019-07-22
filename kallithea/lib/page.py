@@ -18,7 +18,7 @@ import logging
 import math
 import re
 from kallithea.config.routing import url
-from webhelpers.html import literal, HTML
+from webhelpers2.html import literal, HTML
 from webhelpers.paginate import Page as _Page
 
 log = logging.getLogger(__name__)

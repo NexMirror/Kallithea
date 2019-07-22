@@ -1495,7 +1495,7 @@ class RepoGroup(Base, BaseDbModel):
     @classmethod
     def _generate_choice(cls, repo_group):
         """Return tuple with group_id and name as html literal"""
-        from webhelpers.html import literal
+        from webhelpers2.html import literal
         if repo_group is None:
             return (-1, u'-- %s --' % _('top level'))
         return repo_group.group_id, literal(cls.SEP.join(repo_group.full_path_splitted))

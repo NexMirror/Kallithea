@@ -44,6 +44,7 @@ requirements = [
     "tgext.routes >= 0.2.0, < 1",
     "Beaker >= 1.7.0, < 2",
     "WebHelpers >= 1.3, < 1.4",
+    "WebHelpers2 >= 2.0, < 2.1",
     "FormEncode >= 1.3.0, < 1.4",
     "SQLAlchemy >= 1.1, < 1.4",
     "Mako >= 0.9.0, < 1.1",

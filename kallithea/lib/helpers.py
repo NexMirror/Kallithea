@@ -31,14 +31,14 @@ from pygments.formatters.html import HtmlFormatter
 from pygments import highlight as code_highlight
 from tg.i18n import ugettext as _
 
-from webhelpers.html import literal, HTML, escape
-from webhelpers.html.tags import checkbox, end_form, hidden, link_to, \
-    select, submit, text, password, textarea, radio, form as insecure_form
-from webhelpers.number import format_byte_size
+from webhelpers2.html import literal, HTML, escape
+from webhelpers2.html.tags import checkbox, end_form, hidden, link_to, \
+    select as webhelpers2_select, Option, Options, \
+    submit, text, password, textarea, radio, form as insecure_form
+from webhelpers2.number import format_byte_size
 from webhelpers.pylonslib import Flash as _Flash
-from webhelpers.text import chop_at, truncate, wrap_paragraphs
-from webhelpers.html.tags import _set_input_attrs, _set_id_attr, \
-    convert_boolean_attrs, NotGiven, _make_safe_id_component
+from webhelpers2.text import chop_at, truncate, wrap_paragraphs
+from webhelpers2.html.tags import _input, NotGiven, _make_safe_id_component
 
 from kallithea.config.routing import url
 from kallithea.lib.annotate import annotate_highlight
@@ -144,17 +144,29 @@ def shorter(s, size=20, firstline=False, postfix='...'):
     return s
 
 
-def _reset(name, value=None, id=NotGiven, type="reset", **attrs):
-    """
-    Reset button
-    """
-    _set_input_attrs(attrs, type, name, value)
-    _set_id_attr(attrs, id, name)
-    convert_boolean_attrs(attrs, ["disabled"])
-    return HTML.input(**attrs)
+def reset(name, value, id=NotGiven, **attrs):
+    """Create a reset button, similar to webhelpers2.html.tags.submit ."""
+    return _input("reset", name, value, id, attrs)
 
 
-reset = _reset
+def select(name, selected_values, options, id=NotGiven, **attrs):
+    """Convenient wrapper of webhelpers2 to let it accept options as a tuple list"""
+    if isinstance(options, list):
+        l = []
+        for x in options:
+            try:
+                value, label = x
+            except ValueError: # too many values to unpack
+                if isinstance(x, basestring):
+                    value = label = x
+                else:
+                    log.error('invalid select option %r', x)
+                    raise
+            l.append(Option(label, value))
+        options = Options(l)
+    return webhelpers2_select(name, selected_values, options, id=id, **attrs)
+
+
 safeid = _make_safe_id_component
 
 

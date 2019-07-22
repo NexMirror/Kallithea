@@ -40,7 +40,7 @@ import pwd
 
 import webob
 import urlobject
-from webhelpers.text import collapse, remove_formatting, strip_tags
+from webhelpers2.text import collapse, remove_formatting, strip_tags
 
 from tg.i18n import ugettext as _, ungettext
 from kallithea.lib.vcs.utils.lazy import LazyProperty
