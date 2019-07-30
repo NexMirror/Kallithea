@@ -43,6 +43,7 @@ from webob.exc import HTTPNotFound
 
 from tg.i18n import lazy_ugettext as _
 
+import kallithea
 from kallithea.lib.exceptions import DefaultUserException
 from kallithea.lib.vcs import get_backend
 from kallithea.lib.vcs.utils.helpers import get_scm
@@ -325,7 +326,6 @@ class Setting(Base, BaseDbModel):
     def get_server_info(cls):
         import pkg_resources
         import platform
-        import kallithea
         from kallithea.lib.utils import check_git_version
         mods = [(p.project_name, p.version) for p in pkg_resources.working_set]
         info = {
@@ -1270,17 +1270,6 @@ class Repository(Base, BaseDbModel):
             clone_uri_tmpl = override['clone_uri_tmpl']
             del override['clone_uri_tmpl']
 
-        # we didn't override our tmpl from **overrides
-        if not clone_uri_tmpl:
-            clone_uri_tmpl = self.DEFAULT_CLONE_URI
-            try:
-                from tg import tmpl_context as c
-                clone_uri_tmpl = c.clone_uri_tmpl
-            except AttributeError:
-                # in any case if we call this outside of request context,
-                # ie, not having tmpl_context set up
-                pass
-
         import kallithea.lib.helpers as h
         prefix_url = h.canonical_url('home')
 
@@ -2092,7 +2081,6 @@ class CacheInvalidation(Base, BaseDbModel):
         Wrapper for generating a unique cache key for this instance and "key".
         key must / will start with a repo_name which will be stored in .cache_args .
         """
-        import kallithea
         prefix = kallithea.CONFIG.get('instance_id', '')
         return "%s%s" % (prefix, key)
 
@@ -2370,6 +2358,7 @@ class PullRequest(Base, BaseDbModel):
         return self.__json__()
 
     def __json__(self):
+        clone_uri_tmpl = kallithea.CONFIG.get('clone_uri_tmpl') or Repository.DEFAULT_CLONE_URI
         return dict(
             pull_request_id=self.pull_request_id,
             url=self.url(),
@@ -2378,7 +2367,7 @@ class PullRequest(Base, BaseDbModel):
             owner=self.owner.username,
             title=self.title,
             description=self.description,
-            org_repo_url=self.org_repo.clone_url(),
+            org_repo_url=self.org_repo.clone_url(clone_uri_tmpl=clone_uri_tmpl),
             org_ref_parts=self.org_ref_parts,
             other_ref_parts=self.other_ref_parts,
             status=self.status,
@@ -2479,7 +2468,6 @@ class Gist(Base, BaseDbModel):
         return cls.query().filter(cls.gist_access_id == gist_access_id).scalar()
 
     def gist_url(self):
-        import kallithea
         alias_url = kallithea.CONFIG.get('gist_alias_url')
         if alias_url:
             return alias_url.replace('{gistid}', self.gist_access_id)
