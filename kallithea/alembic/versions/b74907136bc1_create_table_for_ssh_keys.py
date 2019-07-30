@@ -29,6 +29,8 @@ depends_on = None
 from alembic import op
 import sqlalchemy as sa
 
+from kallithea.model import db
+
 
 def upgrade():
     op.create_table('user_ssh_keys',
@@ -45,6 +47,13 @@ def upgrade():
     )
     with op.batch_alter_table('user_ssh_keys', schema=None) as batch_op:
         batch_op.create_index('usk_fingerprint_idx', ['fingerprint'], unique=False)
+
+    session = sa.orm.session.Session(bind=op.get_bind())
+    if not session.query(db.Setting).filter(db.Setting.app_settings_name == 'clone_ssh_tmpl').all():
+        setting = db.Setting('clone_ssh_tmpl', db.Repository.DEFAULT_CLONE_SSH, 'unicode')
+        session.add(setting)
+    session.commit()
+
 
 def downgrade():
     with op.batch_alter_table('user_ssh_keys', schema=None) as batch_op:
