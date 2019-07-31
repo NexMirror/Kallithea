@@ -42,6 +42,8 @@ from kallithea.model.db import User, Repository, UserIpMap, CacheInvalidation, U
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
 from kallithea.model.user import UserModel
+from kallithea.model.ssh_key import SshKeyModel
+from kallithea import CONFIG
 
 DEBUG = True
 HOST = '127.0.0.1:4999'  # test host
@@ -52,11 +54,29 @@ fixture = Fixture()
 # Parameterize different kinds of VCS testing - both the kind of VCS and the
 # access method (HTTP/SSH)
 
-# Mixin for using HTTP URLs
+# Mixin for using HTTP and SSH URLs
 class HttpVcsTest(object):
     @staticmethod
     def repo_url_param(webserver, repo_name, **kwargs):
         return webserver.repo_url(repo_name, **kwargs)
+
+class SshVcsTest(object):
+    public_keys = {
+        TEST_USER_REGULAR_LOGIN: u'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC6Ycnc2oUZHQnQwuqgZqTTdMDZD7ataf3JM7oG2Fw8JR6cdmz4QZLe5mfDwaFwG2pWHLRpVqzfrD/Pn3rIO++bgCJH5ydczrl1WScfryV1hYMJ/4EzLGM657J1/q5EI+b9SntKjf4ax+KP322L0TNQGbZUHLbfG2MwHMrYBQpHUQ== kallithea@localhost',
+        TEST_USER_ADMIN_LOGIN: u'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC6Ycnc2oUZHQnQwuqgZqTTdMDZD7ataf3JM7oG2Fw8JR6cdmz4QZLe5mfDwaFwG2pWHLRpVqzfrD/Pn3rIO++bgCJH5ydczrl1WScfryV1hYMJ/4EzLGM657J1/q5EI+b9SntKjf4ax+KP322L0TNQGbZUHLbfG2MwHMrYBQpHUq== kallithea@localhost',
+    }
+
+    @classmethod
+    def repo_url_param(cls, webserver, repo_name, username=TEST_USER_ADMIN_LOGIN, password=TEST_USER_ADMIN_PASS, client_ip=IP_ADDR):
+        user = User.get_by_username(username)
+        if user.ssh_keys:
+            ssh_key = user.ssh_keys[0]
+        else:
+            sshkeymodel = SshKeyModel()
+            ssh_key = sshkeymodel.create(user, u'test key', cls.public_keys[user.username])
+            Session().commit()
+
+        return cls._ssh_param(repo_name, user, ssh_key, client_ip)
 
 # Mixins for using Mercurial and Git
 class HgVcsTest(object):
@@ -74,12 +94,37 @@ class HgHttpVcsTest(HgVcsTest, HttpVcsTest):
 class GitHttpVcsTest(GitVcsTest, HttpVcsTest):
     pass
 
+class HgSshVcsTest(HgVcsTest, SshVcsTest):
+    @staticmethod
+    def _ssh_param(repo_name, user, ssh_key, client_ip):
+        # Specify a custom ssh command on the command line
+        return r"""--config ui.ssh="bash -c 'SSH_ORIGINAL_COMMAND=\"\$2\" SSH_CONNECTION=\"%s 1024 127.0.0.1 22\" kallithea-cli ssh-serve -c %s %s %s' --" ssh://someuser@somehost/%s""" % (
+            client_ip,
+            CONFIG['__file__'],
+            user.user_id,
+            ssh_key.user_ssh_key_id,
+            repo_name)
+
+class GitSshVcsTest(GitVcsTest, SshVcsTest):
+    @staticmethod
+    def _ssh_param(repo_name, user, ssh_key, client_ip):
+        # Set a custom ssh command in the global environment
+        os.environ['GIT_SSH_COMMAND'] = r"""bash -c 'SSH_ORIGINAL_COMMAND="$2" SSH_CONNECTION="%s 1024 127.0.0.1 22" kallithea-cli ssh-serve -c %s %s %s' --""" % (
+            client_ip,
+            CONFIG['__file__'],
+            user.user_id,
+            ssh_key.user_ssh_key_id)
+        return "ssh://someuser@somehost/%s""" % repo_name
+
 parametrize_vcs_test = parametrize('vt', [
     HgHttpVcsTest,
     GitHttpVcsTest,
+    HgSshVcsTest,
+    GitSshVcsTest,
 ])
 parametrize_vcs_test_hg = parametrize('vt', [
     HgHttpVcsTest,
+    HgSshVcsTest,
 ])
 parametrize_vcs_test_http = parametrize('vt', [
     HgHttpVcsTest,
@@ -248,7 +293,7 @@ class TestVCSOperations(TestController):
     def test_clone_git_dir_as_hg(self, webserver):
         clone_url = HgHttpVcsTest.repo_url_param(webserver, GIT_REPO)
         stdout, stderr = Command(TESTS_TMP_PATH).execute('hg clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
-        assert 'HTTP Error 404: Not Found' in stderr
+        assert 'HTTP Error 404: Not Found' in stderr or "not a valid repository" in stdout and 'abort:' in stderr
 
     def test_clone_hg_repo_as_git(self, webserver):
         clone_url = GitHttpVcsTest.repo_url_param(webserver, HG_REPO)
@@ -260,9 +305,9 @@ class TestVCSOperations(TestController):
         clone_url = vt.repo_url_param(webserver, 'trololo')
         stdout, stderr = Command(TESTS_TMP_PATH).execute(vt.repo_type, 'clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
         if vt.repo_type == 'git':
-            assert 'not found' in stderr
+            assert 'not found' in stderr or 'abort: Access to %r denied' % 'trololo' in stderr
         elif vt.repo_type == 'hg':
-            assert 'HTTP Error 404: Not Found' in stderr
+            assert 'HTTP Error 404: Not Found' in stderr or 'abort: no suitable response from remote hg' in stderr and 'remote: abort: Access to %r denied' % 'trololo' in stdout
 
     @parametrize_vcs_test
     def test_push_new_repo(self, webserver, vt):
@@ -423,9 +468,9 @@ class TestVCSOperations(TestController):
         stdout, stderr = _add_files_and_push(webserver, vt, dest_dir, ignoreReturnCode=True, clone_url=clone_url)
 
         if vt.repo_type == 'git':
-            assert 'The requested URL returned error: 403' in stderr
+            assert 'The requested URL returned error: 403' in stderr or 'abort: Push access to %r denied' % str(vt.repo_name) in stderr
         elif vt.repo_type == 'hg':
-            assert 'abort: HTTP Error 403: Forbidden' in stderr
+            assert 'abort: HTTP Error 403: Forbidden' in stderr or 'abort: push failed on remote' in stderr and 'remote: Push access to %r denied' % str(vt.repo_name) in stdout
 
         action_parts = [ul.action.split(':', 1) for ul in UserLog.query().order_by(UserLog.user_log_id)]
         assert [(t[0], (t[1].count(',') + 1) if len(t) == 2 else 0) for t in action_parts] == \
@@ -460,9 +505,9 @@ class TestVCSOperations(TestController):
             stdout, stderr = Command(TESTS_TMP_PATH).execute(vt.repo_type, 'clone', clone_url, _get_tmp_dir(), ignoreReturnCode=True)
             if vt.repo_type == 'git':
                 # The message apparently changed in Git 1.8.3, so match it loosely.
-                assert re.search(r'\b403\b', stderr)
+                assert re.search(r'\b403\b', stderr) or 'abort: User test_admin from 127.0.0.127 cannot be authorized' in stderr
             elif vt.repo_type == 'hg':
-                assert 'abort: HTTP Error 403: Forbidden' in stderr
+                assert 'abort: HTTP Error 403: Forbidden' in stderr or 'remote: abort: User test_admin from 127.0.0.127 cannot be authorized' in stdout
         finally:
             # release IP restrictions
             for ip in UserIpMap.query():
@@ -527,6 +572,8 @@ class TestVCSOperations(TestController):
         if vt is HgHttpVcsTest:
             # like with 'hg serve...' 'HTTP Error 500: INTERNAL SERVER ERROR' should be returned
             assert 'HTTP Error 500: INTERNAL SERVER ERROR' in stderr
+        elif vt is HgSshVcsTest:
+            assert 'remote: Exception: exception_test_hook threw an exception' in stdout
         else: assert False
         # there are still outgoing changesets
         stdout, stderr = _check_outgoing(vt.repo_type, dest_dir, clone_url)
