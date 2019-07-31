@@ -555,37 +555,31 @@ level = WARN
 handlers =
 qualname = routes.middleware
 <%text>## "level = DEBUG" logs the route matched and routing variables.</%text>
-propagate = 1
 
 [logger_beaker]
 level = WARN
 handlers =
 qualname = beaker.container
-propagate = 1
 
 [logger_templates]
 level = WARN
 handlers =
 qualname = pylons.templating
-propagate = 1
 
 [logger_kallithea]
 level = WARN
 handlers =
 qualname = kallithea
-propagate = 1
 
 [logger_tg]
 level = WARN
 handlers =
 qualname = tg
-propagate = 1
 
 [logger_gearbox]
 level = WARN
 handlers =
 qualname = gearbox
-propagate = 1
 
 [logger_sqlalchemy]
 level = WARN
@@ -597,19 +591,16 @@ propagate = 0
 level = WARN
 handlers =
 qualname = whoosh_indexer
-propagate = 1
 
 [logger_werkzeug]
 level = WARN
 handlers =
 qualname = werkzeug
-propagate = 1
 
 [logger_backlash]
 level = WARN
 handlers =
 qualname = backlash
-propagate = 1
 
 <%text>##############</%text>
 <%text>## HANDLERS ##</%text>
