@@ -963,7 +963,6 @@ class Repository(Base, BaseDbModel):
     )
 
     DEFAULT_CLONE_URI = '{scheme}://{user}@{netloc}/{repo}'
-    DEFAULT_CLONE_URI_ID = '{scheme}://{user}@{netloc}/_{repoid}'
 
     STATE_CREATED = u'repo_state_created'
     STATE_PENDING = u'repo_state_pending'
@@ -1260,15 +1259,13 @@ class Repository(Base, BaseDbModel):
                 clone_uri = url_obj.with_password('*****')
         return clone_uri
 
-    def clone_url(self, **override):
-        clone_uri_tmpl = None
-        if 'with_id' in override:
-            clone_uri_tmpl = self.DEFAULT_CLONE_URI_ID
-            del override['with_id']
-
-        if 'clone_uri_tmpl' in override:
-            clone_uri_tmpl = override['clone_uri_tmpl']
-            del override['clone_uri_tmpl']
+    def clone_url(self, clone_uri_tmpl, with_id=False, **override):
+        if '{repo}' not in clone_uri_tmpl and '_{repoid}' not in clone_uri_tmpl:
+            log.error("Configured clone_uri_tmpl %r has no '{repo}' or '_{repoid}' and cannot toggle to use repo id URLs", clone_uri_tmpl)
+        elif with_id:
+            clone_uri_tmpl = clone_uri_tmpl.replace('{repo}', '_{repoid}')
+        else:
+            clone_uri_tmpl = clone_uri_tmpl.replace('_{repoid}', '{repo}')
 
         import kallithea.lib.helpers as h
         prefix_url = h.canonical_url('home')

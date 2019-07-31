@@ -117,17 +117,8 @@ class SummaryController(BaseRepoController):
             username = ''
         else:
             username = safe_str(request.authuser.username)
-
-        _def_clone_uri = _def_clone_uri_by_id = c.clone_uri_tmpl
-        if '{repo}' in _def_clone_uri_by_id:
-            _def_clone_uri_by_id = _def_clone_uri_by_id.replace('{repo}', '_{repoid}')
-        elif '_{repoid}' in _def_clone_uri:
-            _def_clone_uri = _def_clone_uri.replace('_{repoid}', '{repo}')
-        else:
-            log.error("Configured clone_uri_tmpl %r has no '{repo}' or '_{repoid}' and cannot toggle to use repo id URLs", c.clone_uri_tmpl)
-
-        c.clone_repo_url = c.db_repo.clone_url(clone_uri_tmpl=_def_clone_uri, username=username)
-        c.clone_repo_url_id = c.db_repo.clone_url(clone_uri_tmpl=_def_clone_uri_by_id, username=username)
+        c.clone_repo_url = c.db_repo.clone_url(clone_uri_tmpl=c.clone_uri_tmpl, with_id=False, username=username)
+        c.clone_repo_url_id = c.db_repo.clone_url(clone_uri_tmpl=c.clone_uri_tmpl, with_id=True, username=username)
 
         if c.db_repo.enable_statistics:
             c.show_stats = True
