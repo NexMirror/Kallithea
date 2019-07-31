@@ -422,12 +422,10 @@ def get_clone_url(clone_uri_tmpl, prefix_url, repo_name, repo_id, username=None)
         'repo': repo_name,
         'repoid': str(repo_id),
     }
-
-    for k, v in args.items():
-        clone_uri_tmpl = clone_uri_tmpl.replace('{%s}' % k, v)
+    url = re.sub('{([^{}]+)}', lambda m: args.get(m.group(1), m.group(0)), clone_uri_tmpl)
 
     # remove leading @ sign if it's present. Case of empty user
-    url_obj = urlobject.URLObject(clone_uri_tmpl)
+    url_obj = urlobject.URLObject(url)
     url = url_obj.with_netloc(url_obj.netloc.lstrip('@'))
 
     return safe_unicode(url)
