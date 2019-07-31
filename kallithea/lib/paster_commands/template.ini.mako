@@ -677,3 +677,21 @@ datefmt = %Y-%m-%d %H:%M:%S
 class = kallithea.lib.colored_formatter.ColorFormatterSql
 format = %(asctime)s.%(msecs)03d %(levelname)-5.5s [%(name)s] %(message)s
 datefmt = %Y-%m-%d %H:%M:%S
+
+<%text>#################</%text>
+<%text>## SSH LOGGING ##</%text>
+<%text>#################</%text>
+
+# The default loggers use 'handler_console' that uses StreamHandler with
+# destination 'sys.stderr'. In the context of the SSH server process, these log
+# messages would be sent to the client, which is normally not what you want.
+# By default, when running ssh-serve, just use NullHandler and disable logging
+# completely. For other logging options, see:
+# https://docs.python.org/2/library/logging.handlers.html
+
+[ssh_serve:logger_root]
+level = CRITICAL
+handlers = null
+
+# Note: If logging is configured with other handlers, they might need similar
+# muting for ssh-serve too.
