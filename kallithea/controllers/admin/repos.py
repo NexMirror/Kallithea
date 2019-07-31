@@ -94,6 +94,7 @@ class ReposController(BaseRepoController):
 
         defaults = RepoModel()._get_defaults(c.repo_name)
         defaults['clone_uri'] = c.repo_info.clone_uri_hidden # don't show password
+        defaults['permanent_url'] = c.repo_info.clone_url(clone_uri_tmpl=c.clone_uri_tmpl, with_id=True)
 
         return defaults
 

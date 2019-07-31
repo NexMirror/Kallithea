@@ -4,12 +4,17 @@ ${h.form(url('update_repo', repo_name=c.repo_info.repo_name))}
                 <label class="control-label" for="repo_name">${_('Name')}:</label>
                 <div>
                     ${h.text('repo_name',class_='form-control')}
-                    <span class="help-block">${_('Permanent Repository ID')}: `_${c.repo_info.repo_id}` <span><a id="show_more_clone_id" href="#">${_('What is that?')}</a></span></span>
-                    <span id="clone_id" class="help-block" style="display: none">
-                        ${_('URL by id')}: `${c.repo_info.clone_url(clone_uri_tmpl=c.clone_uri_tmpl, with_id=True)}`<br/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="permanent_url">${_('Permanent URL')}:</label>
+                <div>
+                    ${h.text('permanent_url',class_='form-control', readonly='1')}
+                    <span class="help-block">
                         ${_('''In case this repository is renamed or moved into another group the repository URL changes.
                                Using the above permanent URL guarantees that this repository always will be accessible on that URL.
-                               This is useful for CI systems, or any other cases that you need to hardcode the URL into a 3rd party service.''')}</span>
+                               This is useful for CI systems, or any other cases that you need to hardcode the URL into a 3rd party service.''')}
+                    </span>
                 </div>
             </div>
             <div class="form-group">
@@ -100,11 +105,6 @@ ${h.form(url('update_repo', repo_name=c.repo_info.repo_name))}
 
 <script>
     $(document).ready(function(){
-        $('#show_more_clone_id').on('click', function(e){
-            $('#clone_id').show();
-            e.preventDefault();
-        });
-
         $('#repo_landing_rev').select2({
             'dropdownAutoWidth': true
         });
