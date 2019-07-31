@@ -537,7 +537,7 @@ script_location = kallithea:alembic
 keys = root, routes, kallithea, sqlalchemy, tg, gearbox, beaker, templates, whoosh_indexer, werkzeug, backlash
 
 [handlers]
-keys = console, console_sql
+keys = console, console_color, console_color_sql, null
 
 [formatters]
 keys = generic, color_formatter, color_formatter_sql
@@ -549,6 +549,8 @@ keys = generic, color_formatter, color_formatter_sql
 [logger_root]
 level = NOTSET
 handlers = console
+# For coloring based on log level:
+# handlers = console_color
 
 [logger_routes]
 level = WARN
@@ -583,9 +585,12 @@ qualname = gearbox
 
 [logger_sqlalchemy]
 level = WARN
-handlers = console_sql
+handlers =
 qualname = sqlalchemy.engine
-propagate = 0
+# For coloring based on log level and pretty printing of SQL:
+# level = INFO
+# handlers = console_color_sql
+# propagate = 0
 
 [logger_whoosh_indexer]
 level = WARN
@@ -611,10 +616,21 @@ class = StreamHandler
 args = (sys.stderr,)
 formatter = generic
 
-[handler_console_sql]
+[handler_console_color]
+# ANSI color coding based on log level
 class = StreamHandler
 args = (sys.stderr,)
-formatter = generic
+formatter = color_formatter
+
+[handler_console_color_sql]
+# ANSI color coding and pretty printing of SQL statements
+class = StreamHandler
+args = (sys.stderr,)
+formatter = color_formatter_sql
+
+[handler_null]
+class = NullHandler
+args = ()
 
 <%text>################</%text>
 <%text>## FORMATTERS ##</%text>

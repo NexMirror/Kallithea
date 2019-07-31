@@ -19,11 +19,8 @@ ini_files = [
                 'app_instance_uuid': 'development-not-secret',
                 'session.secret': 'development-not-secret',
             },
-            '[handler_console]': {
-                'formatter': 'color_formatter',
-            },
-            '[handler_console_sql]': {
-                'formatter': 'color_formatter_sql',
+            '[logger_root]': {
+                'handlers': 'console_color',
             },
             '[logger_routes]': {
                 'level': 'DEBUG',
