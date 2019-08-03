@@ -82,7 +82,7 @@ class ForksController(BaseRepoController):
             .filter(UserFollowing.follows_repository == c.repo_info).scalar()
 
         if c.repo_info.stats:
-            last_rev = c.repo_info.stats.stat_on_revision+1
+            last_rev = c.repo_info.stats.stat_on_revision + 1
         else:
             last_rev = 0
         c.stats_revision = last_rev

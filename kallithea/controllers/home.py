@@ -174,9 +174,9 @@ class HomeController(BaseController):
                     .filter(User.is_default_user == False) \
                     .filter(User.active == True) \
                     .filter(or_(
-                        User.username.ilike("%%"+query+"%%"),
-                        User.name.ilike("%%"+query+"%%"),
-                        User.lastname.ilike("%%"+query+"%%"),
+                        User.username.ilike("%%" + query + "%%"),
+                        User.name.ilike("%%" + query + "%%"),
+                        User.lastname.ilike("%%" + query + "%%"),
                     )) \
                     .order_by(User.username) \
                     .limit(500) \
@@ -199,7 +199,7 @@ class HomeController(BaseController):
                     grp_list = [grp]
             elif query:
                 grp_list = UserGroup.query() \
-                    .filter(UserGroup.users_group_name.ilike("%%"+query+"%%")) \
+                    .filter(UserGroup.users_group_name.ilike("%%" + query + "%%")) \
                     .filter(UserGroup.users_group_active == True) \
                     .order_by(UserGroup.users_group_name) \
                     .limit(500) \
