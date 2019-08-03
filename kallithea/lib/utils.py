@@ -411,10 +411,10 @@ def set_indexer_config(config):
     from kallithea.config import conf
 
     log.debug('adding extra into INDEX_EXTENSIONS')
-    conf.INDEX_EXTENSIONS.extend(re.split('\s+', config.get('index.extensions', '')))
+    conf.INDEX_EXTENSIONS.extend(re.split(r'\s+', config.get('index.extensions', '')))
 
     log.debug('adding extra into INDEX_FILENAMES')
-    conf.INDEX_FILENAMES.extend(re.split('\s+', config.get('index.filenames', '')))
+    conf.INDEX_FILENAMES.extend(re.split(r'\s+', config.get('index.filenames', '')))
 
 
 def map_groups(path):
@@ -592,7 +592,7 @@ def check_git_version():
     stdout, stderr = GitRepository._run_git_command(['--version'], _bare=True,
                                                     _safe=True)
 
-    m = re.search("\d+.\d+.\d+", stdout)
+    m = re.search(r"\d+.\d+.\d+", stdout)
     if m:
         ver = StrictVersion(m.group(0))
     else:

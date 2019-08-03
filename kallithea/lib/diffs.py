@@ -42,7 +42,7 @@ log = logging.getLogger(__name__)
 
 
 def _safe_id(idstring):
-    """Make a string safe for including in an id attribute.
+    r"""Make a string safe for including in an id attribute.
 
     The HTML spec says that id attributes 'must begin with
     a letter ([A-Za-z]) and may be followed by any number

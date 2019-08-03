@@ -90,7 +90,7 @@ class MarkupRenderer(object):
         def italic_callback(matchobj):
             s = matchobj.group(0)
             if list(s).count('_') >= 2:
-                return s.replace('_', '\_')
+                return s.replace('_', r'\_')
             return s
         text = re.sub(r'^(?! {4}|\t)\w+_\w+_\w[\w_]*', italic_callback, text)
 
@@ -243,6 +243,6 @@ class MarkupRenderer(object):
 
         def wrapp(match_obj):
             uname = match_obj.groups()[0]
-            return '\ **@%(uname)s**\ ' % {'uname': uname}
+            return r'\ **@%(uname)s**\ ' % {'uname': uname}
         mention_hl = MENTIONS_REGEX.sub(wrapp, source).strip()
         return cls.rst(mention_hl)

@@ -399,7 +399,7 @@ def make_map(config):
     with rmap.submapper(path_prefix=ADMIN_PREFIX,
                         controller='admin/admin') as m:
         m.connect('admin_home', '', action='index')
-        m.connect('admin_add_repo', '/add_repo/{new_repo:[a-z0-9\. _-]*}',
+        m.connect('admin_add_repo', '/add_repo/{new_repo:[a-z0-9. _-]*}',
                   action='add_repo')
     #==========================================================================
     # API V2

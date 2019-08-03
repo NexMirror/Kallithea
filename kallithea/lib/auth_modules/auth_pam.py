@@ -84,7 +84,7 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
                 "type": "string",
                 "description": "Regex for extracting user name/email etc "
                                "from Unix userinfo",
-                "default": "(?P<last_name>.+),\s*(?P<first_name>\w+)",
+                "default": r"(?P<last_name>.+),\s*(?P<first_name>\w+)",
                 "formname": "Gecos Regex"
             }
         ]

@@ -1073,7 +1073,7 @@ def urlify_text(s, repo_name=None, link_=None, truncate=None, stylize=False, tru
                 return '<div class="label label-meta" data-tag="see">see =&gt; %s</div>' % seen
             license = match_obj.group('license')
             if license:
-                return '<div class="label label-meta" data-tag="license"><a href="http:\/\/www.opensource.org/licenses/%s">%s</a></div>' % (license, license)
+                return '<div class="label label-meta" data-tag="license"><a href="http://www.opensource.org/licenses/%s">%s</a></div>' % (license, license)
             tagtype = match_obj.group('tagtype')
             if tagtype:
                 tagvalue = match_obj.group('tagvalue')
