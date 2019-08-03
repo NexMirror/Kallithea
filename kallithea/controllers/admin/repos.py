@@ -338,7 +338,8 @@ class ReposController(BaseRepoController):
                 obj_id = safe_int(request.POST.get('user_id'))
             elif obj_type == 'user_group':
                 obj_id = safe_int(request.POST.get('user_group_id'))
-            else: assert False
+            else:
+                assert False
 
             if obj_type == 'user':
                 RepoModel().revoke_user_permission(repo=repo_name, user=obj_id)
@@ -346,7 +347,8 @@ class ReposController(BaseRepoController):
                 RepoModel().revoke_user_group_permission(
                     repo=repo_name, group_name=obj_id
                 )
-            else: assert False
+            else:
+                assert False
             # TODO: implement this
             #action_logger(request.authuser, 'admin_revoked_repo_permissions',
             #              repo_name, request.ip_addr)
