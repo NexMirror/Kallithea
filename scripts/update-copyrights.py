@@ -164,7 +164,7 @@ def main():
         domain_extra={},
         split_re=r"(?<=copyright = u').*(?= by various authors)",
         normalize_name=lambda name: '',
-        format_f=lambda years, name: nice_years(years, '-', ', ') ,
+        format_f=lambda years, name: nice_years(years, '-', ', '),
         )
 
 
