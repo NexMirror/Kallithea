@@ -917,7 +917,7 @@ def gravatar_url(email_address, size=30, default=''):
         return default
 
     parsed_url = urlparse.urlparse(url.current(qualified=True))
-    url = (c.visual.gravatar_url or User.DEFAULT_GRAVATAR_URL ) \
+    url = (c.visual.gravatar_url or User.DEFAULT_GRAVATAR_URL) \
                .replace('{email}', email_address) \
                .replace('{md5email}', hashlib.md5(safe_str(email_address).lower()).hexdigest()) \
                .replace('{netloc}', parsed_url.netloc) \
