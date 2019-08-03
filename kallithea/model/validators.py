@@ -20,16 +20,17 @@ import re
 import formencode
 import logging
 from collections import defaultdict
+
 from tg.i18n import ugettext as _
 from sqlalchemy import func
 import sqlalchemy
+import ipaddr
 
 from formencode.validators import (
     UnicodeString, OneOf, Int, Number, Regex, Email, Bool, StringBoolean, Set,
     NotEmpty, IPAddress, CIDR, String, FancyValidator
 )
 from kallithea.lib.compat import OrderedSet
-from kallithea.lib import ipaddr
 from kallithea.lib.utils import is_valid_repo_uri
 from kallithea.lib.utils2 import str2bool, aslist, repo_name_slug
 from kallithea.model.db import RepoGroup, Repository, UserGroup, User

@@ -40,6 +40,7 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship, joinedload, class_mapper, validates
 from beaker.cache import cache_region, region_invalidate
 from webob.exc import HTTPNotFound
+import ipaddr
 
 from tg.i18n import lazy_ugettext as _
 
@@ -766,7 +767,6 @@ class UserIpMap(Base, BaseDbModel):
 
     @classmethod
     def _get_ip_range(cls, ip_addr):
-        from kallithea.lib import ipaddr
         net = ipaddr.IPNetwork(address=ip_addr)
         return [str(net.network), str(net.broadcast)]
 

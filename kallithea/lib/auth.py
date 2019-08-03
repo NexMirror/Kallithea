@@ -33,6 +33,7 @@ import collections
 
 from decorator import decorator
 
+import ipaddr
 from tg import request, session
 from tg.i18n import ugettext as _
 from sqlalchemy.orm.exc import ObjectDeletedError
@@ -859,7 +860,6 @@ def check_ip_access(source_ip, allowed_ips=None):
     :param source_ip:
     :param allowed_ips: list of allowed ips together with mask
     """
-    from kallithea.lib import ipaddr
     source_ip = source_ip.split('%', 1)[0]
     log.debug('checking if ip:%s is subnet of %s', source_ip, allowed_ips)
     if isinstance(allowed_ips, (tuple, list, set)):

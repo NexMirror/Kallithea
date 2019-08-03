@@ -63,6 +63,7 @@ requirements = [
     "Paste >= 2.0.3, < 3.1",
     "bleach >= 3.0, < 3.2",
     "Click >= 7.0, < 8",
+    "ipaddr >= 2.0, < 2.3",
 ]
 
 if not is_windows:
