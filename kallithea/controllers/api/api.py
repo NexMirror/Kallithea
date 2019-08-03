@@ -898,7 +898,7 @@ class ApiController(JSONRPCController):
 
         try:
             ugm = UserGroupModel().add_user_to_group(user_group, user)
-            success = True if ugm != True else False
+            success = True if ugm is not True else False
             msg = 'added member `%s` to user group `%s`' % (
                 user.username, user_group.users_group_name
             )

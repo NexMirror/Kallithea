@@ -166,6 +166,7 @@ class UserGroupModel(object):
             raise
 
     def add_user_to_group(self, user_group, user):
+        """Return True if user already is in the group - else return the new UserGroupMember"""
         user_group = UserGroup.guess_instance(user_group)
         user = User.guess_instance(user)
 
