@@ -206,7 +206,7 @@ def create_cs_pr_comment(repo_name, revision=None, pull_request=None, allowed_to
             h.HasPermissionAny('hg.admin')() or
             h.HasRepoPermissionLevel('admin')(pull_request.org_repo.repo_name) or
             h.HasRepoPermissionLevel('admin')(pull_request.other_repo.repo_name)
-            ) and not pull_request.is_closed():
+        ) and not pull_request.is_closed():
             PullRequestModel().delete(pull_request)
             Session().commit()
             h.flash(_('Successfully deleted pull request %s') % pull_request_id,

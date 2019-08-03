@@ -304,7 +304,8 @@ def age(prevdate, show_short_version=False, now=None):
     month_lengths = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     if deltas['day'] < 0:
         if prevdate.month == 2 and (prevdate.year % 4 == 0 and
-            (prevdate.year % 100 != 0 or prevdate.year % 400 == 0)):
+            (prevdate.year % 100 != 0 or prevdate.year % 400 == 0)
+        ):
             deltas['day'] += 29
         else:
             deltas['day'] += month_lengths[prevdate.month - 1]

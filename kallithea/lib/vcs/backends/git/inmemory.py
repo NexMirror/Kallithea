@@ -95,7 +95,8 @@ class GitInMemoryChangeset(BaseInMemoryChangeset):
             new_trees.append(parent)
             # Update ancestors
             for parent, tree, path in reversed([(a[1], b[1], b[0]) for a, b in
-                zip(ancestors, ancestors[1:])]):
+                zip(ancestors, ancestors[1:])]
+            ):
                 parent[path] = stat.S_IFDIR, tree.id
                 object_store.add_object(tree)
 

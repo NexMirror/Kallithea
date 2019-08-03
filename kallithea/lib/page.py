@@ -126,7 +126,8 @@ class Page(_Page):
         symbol_previous='<', symbol_next='>',
         link_attr=None,
         curpage_attr=None,
-        dotdot_attr=None, **kwargs):
+        dotdot_attr=None, **kwargs
+    ):
         self.curpage_attr = curpage_attr or {'class': 'active'}
         self.separator = separator
         self.pager_kwargs = kwargs

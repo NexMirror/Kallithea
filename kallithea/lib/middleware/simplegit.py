@@ -86,7 +86,7 @@ class SimpleGit(BaseVCSController):
         def wrapper_app(environ, start_response):
             if (parsed_request.cmd == 'info/refs' and
                 parsed_request.service == 'git-upload-pack'
-                ):
+            ):
                 baseui = make_ui()
                 repo = Repository.get_by_repo_name(parsed_request.repo_name)
                 scm_repo = repo.scm_instance

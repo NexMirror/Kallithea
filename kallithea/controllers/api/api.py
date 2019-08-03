@@ -1321,7 +1321,7 @@ class ApiController(JSONRPCController):
 
             if (name != repo.repo_name and
                 not HasPermissionAny('hg.create.repository')()
-                ):
+            ):
                 raise JSONRPCError('no permission to create (or move) repositories')
 
             if not isinstance(owner, Optional):

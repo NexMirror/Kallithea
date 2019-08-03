@@ -62,7 +62,8 @@ class AnnotateHtmlFormatter(HtmlFormatter):
         self.order = order or ('ls', 'annotate', 'code')
         headers = options.pop('headers', None)
         if headers and not ('ls' in headers and 'annotate' in headers and
-            'code' in headers):
+            'code' in headers
+        ):
             raise ValueError("If headers option dict is specified it must "
                 "all 'ls', 'annotate' and 'code' keys")
         self.headers = headers
