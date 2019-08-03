@@ -20,16 +20,17 @@ def _get_meta_var(name, data, callback_handler=None):
     import re
     matches = re.compile(r'(?:%s)\s*=\s*(.*)' % name).search(data)
     if matches:
-        if not callable(callback_handler):
-            callback_handler = lambda v: v
-
-        return callback_handler(eval(matches.groups()[0]))
+        s = eval(matches.groups()[0])
+        if callable(callback_handler):
+            return callback_handler(s)
+        return s
 
 _meta = open(os.path.join(here, 'kallithea', '__init__.py'), 'r')
 _metadata = _meta.read()
 _meta.close()
 
-callback = lambda V: ('.'.join(map(str, V[:3])) + '.'.join(V[3:]))
+def callback(V):
+    return '.'.join(map(str, V[:3])) + '.'.join(V[3:])
 __version__ = _get_meta_var('VERSION', _metadata, callback)
 __license__ = _get_meta_var('__license__', _metadata)
 __author__ = _get_meta_var('__author__', _metadata)

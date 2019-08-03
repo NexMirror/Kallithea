@@ -435,8 +435,8 @@ class GitChangeset(BaseChangeset):
                 raise NodeDoesNotExistError("Cannot find one of parents' "
                     "directories for a given path: %s" % path)
 
-            _GL = lambda m: m and objects.S_ISGITLINK(m)
-            if _GL(self._stat_modes.get(path)):
+            stat = self._stat_modes.get(path)
+            if stat and objects.S_ISGITLINK(stat):
                 tree = self.repository._repo[self._tree_id]
                 cf = ConfigFile.from_file(BytesIO(self.repository._repo.get_object(tree[b'.gitmodules'][1]).data))
                 url = ascii_str(cf.get(('submodule', path), 'url'))

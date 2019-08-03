@@ -186,11 +186,7 @@ def ValidRepoGroup(edit=False, old_data=None):
             slug = repo_name_slug(group_name)
 
             # check for parent of self
-            parent_of_self = lambda: (
-                old_data['group_id'] == parent_group_id
-                if parent_group_id else False
-            )
-            if edit and parent_of_self():
+            if edit and parent_group_id and old_data['group_id'] == parent_group_id:
                 msg = self.message('parent_group_id', state)
                 raise formencode.Invalid(msg, value, state,
                     error_dict=dict(parent_group_id=msg)

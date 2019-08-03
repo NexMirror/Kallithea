@@ -66,6 +66,11 @@ def whoosh_index(repo_location, full_index):
                          .run(full_index=full_index)
 
 
+# for js data compatibility cleans the key for person from '
+def akc(k):
+    return person(k).replace('"', '')
+
+
 @celerylib.task
 @celerylib.dbsession
 def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
@@ -78,9 +83,6 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
 
     try:
         lock = celerylib.DaemonLock(os.path.join(lockkey_path, lockkey))
-
-        # for js data compatibility cleans the key for person from '
-        akc = lambda k: person(k).replace('"', "")
 
         co_day_auth_aggr = {}
         commits_by_day_aggregate = {}

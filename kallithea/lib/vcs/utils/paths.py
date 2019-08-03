@@ -1,7 +1,8 @@
 import os
 
 
-abspath = lambda * p: os.path.abspath(os.path.join(*p))
+def abspath(*p):
+    return os.path.abspath(os.path.join(*p))
 
 
 def get_dirs_for_path(*paths):

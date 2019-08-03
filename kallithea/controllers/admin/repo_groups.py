@@ -104,15 +104,14 @@ class RepoGroupsController(BaseController):
         _tmpl_lookup = app_globals.mako_lookup
         template = _tmpl_lookup.get_template('data_table/_dt_elements.html')
 
-        repo_group_name = lambda repo_group_name, children_groups: (
-            template.get_def("repo_group_name")
-            .render_unicode(repo_group_name, children_groups, _=_, h=h, c=c)
-        )
-        repo_group_actions = lambda repo_group_id, repo_group_name, gr_count: (
-            template.get_def("repo_group_actions")
-            .render_unicode(repo_group_id, repo_group_name, gr_count, _=_, h=h, c=c,
-                    ungettext=ungettext)
-        )
+        def repo_group_name(repo_group_name, children_groups):
+            return template.get_def("repo_group_name") \
+                .render_unicode(repo_group_name, children_groups, _=_, h=h, c=c)
+
+        def repo_group_actions(repo_group_id, repo_group_name, gr_count):
+            return template.get_def("repo_group_actions") \
+                .render_unicode(repo_group_id, repo_group_name, gr_count, _=_, h=h, c=c,
+                        ungettext=ungettext)
 
         for repo_gr in group_iter:
             children_groups = [g.name for g in repo_gr.parents] + [repo_gr.name]

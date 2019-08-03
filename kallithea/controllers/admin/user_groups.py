@@ -89,16 +89,15 @@ class UserGroupsController(BaseController):
         _tmpl_lookup = app_globals.mako_lookup
         template = _tmpl_lookup.get_template('data_table/_dt_elements.html')
 
-        user_group_name = lambda user_group_id, user_group_name: (
-            template.get_def("user_group_name")
-            .render_unicode(user_group_id, user_group_name, _=_, h=h, c=c)
-        )
-        user_group_actions = lambda user_group_id, user_group_name: (
-            template.get_def("user_group_actions")
-            .render_unicode(user_group_id, user_group_name, _=_, h=h, c=c)
-        )
-        for user_gr in group_iter:
+        def user_group_name(user_group_id, user_group_name):
+            return template.get_def("user_group_name") \
+                .render_unicode(user_group_id, user_group_name, _=_, h=h, c=c)
 
+        def user_group_actions(user_group_id, user_group_name):
+            return template.get_def("user_group_actions") \
+                .render_unicode(user_group_id, user_group_name, _=_, h=h, c=c)
+
+        for user_gr in group_iter:
             user_groups_data.append({
                 "raw_name": user_gr.users_group_name,
                 "group_name": user_group_name(user_gr.users_group_id,

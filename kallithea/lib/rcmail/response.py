@@ -44,7 +44,9 @@ from email.utils import parseaddr
 
 ADDRESS_HEADERS_WHITELIST = ['From', 'To', 'Delivered-To', 'Cc']
 DEFAULT_ENCODING = "utf-8"
-VALUE_IS_EMAIL_ADDRESS = lambda v: '@' in v
+
+def VALUE_IS_EMAIL_ADDRESS(v):
+    return '@' in v
 
 
 def normalize_header(header):

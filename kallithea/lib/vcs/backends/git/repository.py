@@ -358,10 +358,9 @@ class GitRepository(BaseRepository):
     def branches(self):
         if not self.revisions:
             return {}
-        sortkey = lambda ctx: ctx[0]
         _branches = [(safe_str(key), ascii_str(sha))
                      for key, (sha, type_) in self._parsed_refs.items() if type_ == b'H']
-        return OrderedDict(sorted(_branches, key=sortkey, reverse=False))
+        return OrderedDict(sorted(_branches, key=(lambda ctx: ctx[0]), reverse=False))
 
     @LazyProperty
     def closed_branches(self):
@@ -374,11 +373,9 @@ class GitRepository(BaseRepository):
     def _get_tags(self):
         if not self.revisions:
             return {}
-
-        sortkey = lambda ctx: ctx[0]
         _tags = [(safe_str(key), ascii_str(sha))
                  for key, (sha, type_) in self._parsed_refs.items() if type_ == b'T']
-        return OrderedDict(sorted(_tags, key=sortkey, reverse=True))
+        return OrderedDict(sorted(_tags, key=(lambda ctx: ctx[0]), reverse=True))
 
     def tag(self, name, user, revision=None, message=None, date=None,
             **kwargs):

@@ -502,11 +502,19 @@ def pop_flash_messages():
     return [_Message(category, message) for category, message in _session_flash_messages(clear=True)]
 
 
-age = lambda x, y=False: _age(x, y)
-capitalize = lambda x: x.capitalize()
+def age(x, y=False):
+    return _age(x, y)
+
+def capitalize(x):
+    return x.capitalize()
+
 email = author_email
-short_id = lambda x: x[:12]
-hide_credentials = lambda x: ''.join(credentials_filter(x))
+
+def short_id(x):
+    return x[:12]
+
+def hide_credentials(x):
+    return ''.join(credentials_filter(x))
 
 
 def show_id(cs):
@@ -602,15 +610,12 @@ def person(author, show_attr="username"):
 
 def person_by_id(id_, show_attr="username"):
     from kallithea.model.db import User
-    # attr to return from fetched user
-    person_getter = lambda usr: getattr(usr, show_attr)
-
     # maybe it's an ID ?
     if str(id_).isdigit() or isinstance(id_, int):
         id_ = int(id_)
         user = User.get(id_)
         if user is not None:
-            return person_getter(user)
+            return getattr(user, show_attr)
     return id_
 
 
@@ -862,10 +867,7 @@ def action_parser(user_log, feed=False, parse_cs=False):
             .replace('[', '<b>') \
             .replace(']', '</b>')
 
-    action_params_func = lambda: ""
-
-    if callable(action_str[1]):
-        action_params_func = action_str[1]
+    action_params_func = action_str[1] if callable(action_str[1]) else (lambda: "")
 
     def action_parser_icon():
         action = user_log.action
@@ -1176,7 +1178,8 @@ def urlify_issues(newtext, repo_name):
         assert CONFIG['sqlalchemy.url'] # make sure config has been loaded
 
         # Build chain of urlify functions, starting with not doing any transformation
-        tmp_urlify_issues_f = lambda s: s
+        def tmp_urlify_issues_f(s):
+            return s
 
         issue_pat_re = re.compile(r'issue_pat(.*)')
         for k in CONFIG:
@@ -1228,9 +1231,9 @@ def urlify_issues(newtext, repo_name):
                      'url': issue_url,
                      'text': issue_text,
                     }
-            tmp_urlify_issues_f = (lambda s,
-                                          issue_re=issue_re, issues_replace=issues_replace, chain_f=tmp_urlify_issues_f:
-                                   issue_re.sub(issues_replace, chain_f(s)))
+
+            def tmp_urlify_issues_f(s, issue_re=issue_re, issues_replace=issues_replace, chain_f=tmp_urlify_issues_f):
+                return issue_re.sub(issues_replace, chain_f(s))
 
         # Set tmp function globally - atomically
         _urlify_issues_f = tmp_urlify_issues_f

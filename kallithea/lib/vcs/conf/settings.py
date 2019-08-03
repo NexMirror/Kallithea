@@ -5,7 +5,8 @@ from kallithea.lib.vcs.utils import aslist
 from kallithea.lib.vcs.utils.paths import get_user_home
 
 
-abspath = lambda * p: os.path.abspath(os.path.join(*p))
+def abspath(*p):
+    return os.path.abspath(os.path.join(*p))
 
 VCSRC_PATH = os.environ.get('VCSRC_PATH')
 

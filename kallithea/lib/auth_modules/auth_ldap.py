@@ -327,7 +327,8 @@ class KallitheaAuthPlugin(auth_modules.KallitheaExternalAuthPlugin):
             (user_dn, ldap_attrs) = aldap.authenticate_ldap(username, password)
             log.debug('Got ldap DN response %s', user_dn)
 
-            get_ldap_attr = lambda k: ldap_attrs.get(settings.get(k), [''])[0]
+            def get_ldap_attr(k):
+                return ldap_attrs.get(settings.get(k), [''])[0]
 
             # old attrs fetched from Kallithea database
             admin = getattr(userobj, 'admin', False)
