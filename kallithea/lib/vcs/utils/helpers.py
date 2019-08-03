@@ -51,7 +51,7 @@ def get_scm(path, search_up=False, explicit_alias=None):
         raise VCSError('More than one [%s] scm found at given path %s'
                        % (', '.join((x[0] for x in found_scms)), path))
 
-    if len(found_scms) is 0:
+    if len(found_scms) == 0:
         raise VCSError('No scm found at given path %s' % path)
 
     return found_scms[0]

@@ -583,11 +583,11 @@ def ValidPerms(type_='repo'):
             # update permissions
             for k, v, t in perms_new:
                 try:
-                    if t is 'user':
+                    if t == 'user':
                         self.user_db = User.query() \
                             .filter(User.active == True) \
                             .filter(User.username == k).one()
-                    if t is 'users_group':
+                    if t == 'users_group':
                         self.user_db = UserGroup.query() \
                             .filter(UserGroup.users_group_active == True) \
                             .filter(UserGroup.users_group_name == k).one()
