@@ -172,7 +172,8 @@ class CreatePullRequestAction(object):
         object.
         """
         if (h.HasRepoPermissionLevel('read')(org_repo.repo_name) and
-            h.HasRepoPermissionLevel('read')(other_repo.repo_name)):
+            h.HasRepoPermissionLevel('read')(other_repo.repo_name)
+        ):
             return True
 
         return False

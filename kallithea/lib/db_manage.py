@@ -237,8 +237,8 @@ class DbManage(object):
             ('default_repo_enable_downloads', False, 'bool'),
             ('default_repo_enable_statistics', False, 'bool'),
             ('default_repo_private', False, 'bool'),
-            ('default_repo_type', 'hg', 'unicode')]:
-
+            ('default_repo_type', 'hg', 'unicode')
+        ]:
             if skip_existing and Setting.get_by_name(k) is not None:
                 log.debug('Skipping option %s', k)
                 continue

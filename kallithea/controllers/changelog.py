@@ -88,7 +88,8 @@ class ChangelogController(BaseRepoController):
         if (branch_name and
             branch_name not in c.db_repo_scm_instance.branches and
             branch_name not in c.db_repo_scm_instance.closed_branches and
-            not revision):
+            not revision
+        ):
             raise HTTPFound(location=url('changelog_file_home', repo_name=c.repo_name,
                                     revision=branch_name, f_path=f_path or ''))
 

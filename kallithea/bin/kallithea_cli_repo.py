@@ -133,7 +133,8 @@ def repo_purge_deleted(ask, older_than):
         if ('.hg' in alldirs or
             '.git' in alldirs or
             '.svn' in alldirs or
-            'objects' in alldirs and ('refs' in alldirs or 'packed-refs' in f)):
+            'objects' in alldirs and ('refs' in alldirs or 'packed-refs' in f)
+        ):
             continue
         for loc in alldirs:
             if REMOVED_REPO_PAT.match(loc):

@@ -278,7 +278,8 @@ class GitRepository(BaseRepository):
 
         is_bstr = isinstance(revision, (str, unicode))
         if ((is_bstr and revision.isdigit() and len(revision) < 12)
-            or isinstance(revision, int) or is_null(revision)):
+            or isinstance(revision, int) or is_null(revision)
+        ):
             try:
                 revision = self.revisions[int(revision)]
             except IndexError:
