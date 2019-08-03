@@ -307,14 +307,14 @@ class RepoGroupModel(object):
                 # set the value from it's parent
                 if isinstance(obj, RepoGroup):
                     new_name = obj.get_new_name(obj.name)
-                    log.debug('Fixing group %s to new name %s' \
+                    log.debug('Fixing group %s to new name %s'
                                 % (obj.group_name, new_name))
                     obj.group_name = new_name
                 elif isinstance(obj, Repository):
                     # we need to get all repositories from this new group and
                     # rename them accordingly to new group path
                     new_name = obj.get_new_name(obj.just_name)
-                    log.debug('Fixing repo %s to new name %s' \
+                    log.debug('Fixing repo %s to new name %s'
                                 % (obj.repo_name, new_name))
                     obj.repo_name = new_name
 

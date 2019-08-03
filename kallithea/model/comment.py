@@ -82,7 +82,7 @@ class ChangesetCommentsModel(object):
                 revision=revision,
                 anchor='comment-%s' % comment.comment_id)
             subj = safe_unicode(
-                h.link_to('Re changeset: %(desc)s %(line)s' % \
+                h.link_to('Re changeset: %(desc)s %(line)s' %
                           {'desc': desc, 'line': line},
                           comment_url)
             )

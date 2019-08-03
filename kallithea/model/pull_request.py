@@ -70,7 +70,7 @@ class PullRequestModel(object):
                                       h.canonical_hostname())]
         subject = safe_unicode(
             h.link_to(
-              _('%(user)s wants you to review pull request %(pr_nice_id)s: %(pr_title)s') % \
+              _('%(user)s wants you to review pull request %(pr_nice_id)s: %(pr_title)s') %
                 {'user': user.username,
                  'pr_title': pr.title,
                  'pr_nice_id': pr.nice_id()},

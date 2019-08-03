@@ -154,15 +154,15 @@ class Page(_Page):
             'first_item': self.first_item,
             'last_item': self.last_item,
             'item_count': self.item_count,
-            'link_first': self.page > self.first_page and \
+            'link_first': self.page > self.first_page and
                     self._pagerlink(self.first_page, symbol_first) or '',
-            'link_last': self.page < self.last_page and \
+            'link_last': self.page < self.last_page and
                     self._pagerlink(self.last_page, symbol_last) or '',
-            'link_previous': HTML.li(self.previous_page and \
-                    self._pagerlink(self.previous_page, symbol_previous) \
+            'link_previous': HTML.li(self.previous_page and
+                    self._pagerlink(self.previous_page, symbol_previous)
                     or HTML.a(symbol_previous)),
-            'link_next': HTML.li(self.next_page and \
-                    self._pagerlink(self.next_page, symbol_next) \
+            'link_next': HTML.li(self.next_page and
+                    self._pagerlink(self.next_page, symbol_next)
                     or HTML.a(symbol_next))
         })
 
