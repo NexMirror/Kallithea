@@ -358,8 +358,8 @@ class CreatePullRequestIterationAction(object):
             else:
                 infos.append(_('This iteration is based on another %s revision and there is no simple diff.') % other_ref_name)
         else:
-           infos.append(_('No changes found on %s %s since previous iteration.') % (org_ref_type, org_ref_name))
-           # TODO: fail?
+            infos.append(_('No changes found on %s %s since previous iteration.') % (org_ref_type, org_ref_name))
+            # TODO: fail?
 
         try:
             title, old_v = re.match(r'(.*)\(v(\d+)\)\s*$', title).groups()
