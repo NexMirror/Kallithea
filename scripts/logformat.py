@@ -17,15 +17,15 @@ logre = r'''
 
 res = [
     # handle % () - keeping spaces around the old %
-    (re.compile(logre % r'''("[^"]*"|'[^']*')   ([\n ]*) %  ([\n ]*) \( ( (?:[^()]|\n)* (?: \( (?:[^()]|\n)* \) (?:[^()]|\n)* )* ) \) ''', flags=re.MULTILINE|re.VERBOSE), r'\1\2,\3\4\5\6'),
+    (re.compile(logre % r'''("[^"]*"|'[^']*')   ([\n ]*) %  ([\n ]*) \( ( (?:[^()]|\n)* (?: \( (?:[^()]|\n)* \) (?:[^()]|\n)* )* ) \) ''', flags=re.MULTILINE | re.VERBOSE), r'\1\2,\3\4\5\6'),
     # handle % without () - keeping spaces around the old %
-    (re.compile(logre % r'''("[^"]*"|'[^']*')   ([\n ]*) %  ([\n ]*)    ( (?:[^()]|\n)* (?: \( (?:[^()]|\n)* \) (?:[^()]|\n)* )* )    ''', flags=re.MULTILINE|re.VERBOSE), r'\1\2,\3\4\5\6'),
+    (re.compile(logre % r'''("[^"]*"|'[^']*')   ([\n ]*) %  ([\n ]*)    ( (?:[^()]|\n)* (?: \( (?:[^()]|\n)* \) (?:[^()]|\n)* )* )    ''', flags=re.MULTILINE | re.VERBOSE), r'\1\2,\3\4\5\6'),
     # remove extra space if it is on next line
-    (re.compile(logre % r'''("[^"]*"|'[^']*') , (\n [ ]) ([ ][\n ]*)    ( (?:[^()]|\n)* (?: \( (?:[^()]|\n)* \) (?:[^()]|\n)* )* )    ''', flags=re.MULTILINE|re.VERBOSE), r'\1\2,\3\4\5\6'),
+    (re.compile(logre % r'''("[^"]*"|'[^']*') , (\n [ ]) ([ ][\n ]*)    ( (?:[^()]|\n)* (?: \( (?:[^()]|\n)* \) (?:[^()]|\n)* )* )    ''', flags=re.MULTILINE | re.VERBOSE), r'\1\2,\3\4\5\6'),
     # remove extra space if it is on same line
-    (re.compile(logre % r'''("[^"]*"|'[^']*') , [ ]+  () (   [\n ]+)    ( (?:[^()]|\n)* (?: \( (?:[^()]|\n)* \) (?:[^()]|\n)* )* )    ''', flags=re.MULTILINE|re.VERBOSE), r'\1\2,\3\4\5\6'),
+    (re.compile(logre % r'''("[^"]*"|'[^']*') , [ ]+  () (   [\n ]+)    ( (?:[^()]|\n)* (?: \( (?:[^()]|\n)* \) (?:[^()]|\n)* )* )    ''', flags=re.MULTILINE | re.VERBOSE), r'\1\2,\3\4\5\6'),
     # remove trailing , and space
-    (re.compile(logre % r'''("[^"]*"|'[^']*') ,       () (   [\n ]*)    ( (?:[^()]|\n)* (?: \( (?:[^()]|\n)* \) (?:[^()]|\n)* )* [^(), \n] ) [ ,]*''', flags=re.MULTILINE|re.VERBOSE), r'\1\2,\3\4\5\6'),
+    (re.compile(logre % r'''("[^"]*"|'[^']*') ,       () (   [\n ]*)    ( (?:[^()]|\n)* (?: \( (?:[^()]|\n)* \) (?:[^()]|\n)* )* [^(), \n] ) [ ,]*''', flags=re.MULTILINE | re.VERBOSE), r'\1\2,\3\4\5\6'),
     ]
 
 

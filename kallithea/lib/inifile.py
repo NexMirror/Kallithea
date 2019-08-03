@@ -141,7 +141,7 @@ def expand(template, mako_variable_values, settings):
             )*
         )
         ''',
-        process_section, ini_lines, flags=re.MULTILINE|re.VERBOSE) \
+        process_section, ini_lines, flags=re.MULTILINE | re.VERBOSE) \
         + \
         ''.join(
             '\n' + sectionname + '\n' + ''.join('%s = %s\n' % (key, value) for key, value in sorted(section_settings.items()))
