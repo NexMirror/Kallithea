@@ -268,7 +268,7 @@ def ValidPasswordsMatch(password_field, password_confirmation_field):
             if value.get(password_field) != value[password_confirmation_field]:
                 msg = self.message('password_mismatch', state)
                 raise formencode.Invalid(msg, value, state,
-                     error_dict={password_field:msg, password_confirmation_field: msg}
+                     error_dict={password_field: msg, password_confirmation_field: msg}
                 )
     return _validator
 

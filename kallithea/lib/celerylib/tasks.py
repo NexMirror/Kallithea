@@ -169,11 +169,11 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
                 if k >= ts_min_y and k <= ts_max_y or skip_date_limit:
                     co_day_auth_aggr[akc(cs.author)] = {
                                         "label": akc(cs.author),
-                                        "data": [{"time":k,
-                                                 "commits":1,
-                                                 "added":len(cs.added),
-                                                 "changed":len(cs.changed),
-                                                 "removed":len(cs.removed),
+                                        "data": [{"time": k,
+                                                 "commits": 1,
+                                                 "added": len(cs.added),
+                                                 "changed": len(cs.changed),
+                                                 "removed": len(cs.removed),
                                                  }],
                                         "schema": ["commits"],
                                         }
