@@ -164,7 +164,7 @@ class Page(_Page):
                     or HTML.a(symbol_previous)),
             'link_next': HTML.li(self.next_page and
                     self._pagerlink(self.next_page, symbol_next)
-                    or HTML.a(symbol_next))
+                    or HTML.a(symbol_next)),
         })
 
         return literal(result)
