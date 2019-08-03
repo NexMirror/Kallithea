@@ -847,9 +847,6 @@ def action_parser(user_log, feed=False, parse_cs=False):
     return [lambda: literal(action), action_params_func, action_parser_icon]
 
 
-
-
-
 #==============================================================================
 # GRAVATAR URL
 #==============================================================================
