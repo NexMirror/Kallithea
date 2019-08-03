@@ -357,8 +357,8 @@ def main():
     print "Standard progress bar..."
     bar = ProgressBar(30)
     for x in xrange(1, 31):
-            bar.render(x)
-            time.sleep(0.02)
+        bar.render(x)
+        time.sleep(0.02)
     bar.stream.write('\n')
     print
 

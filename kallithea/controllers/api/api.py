@@ -2354,9 +2354,9 @@ class ApiController(JSONRPCController):
 
         with_reviews = Optional.extract(with_reviews)
         if with_reviews:
-                reviews = ChangesetStatusModel().get_statuses(
-                                    repo.repo_name, raw_id)
-                info["reviews"] = reviews
+            reviews = ChangesetStatusModel().get_statuses(
+                                repo.repo_name, raw_id)
+            info["reviews"] = reviews
 
         return info
 

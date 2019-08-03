@@ -365,17 +365,17 @@ def ValidRepoName(edit=False, old_data=None):
                             error_dict=dict(repo_name=msg)
                         )
                 elif repo_group is not None:
-                        msg = self.message('same_group_exists', state,
-                                repo=repo_name)
-                        raise formencode.Invalid(msg, value, state,
-                            error_dict=dict(repo_name=msg)
-                        )
+                    msg = self.message('same_group_exists', state,
+                            repo=repo_name)
+                    raise formencode.Invalid(msg, value, state,
+                        error_dict=dict(repo_name=msg)
+                    )
                 elif repo is not None:
-                        msg = self.message('repository_exists', state,
-                                repo=repo.repo_name)
-                        raise formencode.Invalid(msg, value, state,
-                            error_dict=dict(repo_name=msg)
-                        )
+                    msg = self.message('repository_exists', state,
+                            repo=repo.repo_name)
+                    raise formencode.Invalid(msg, value, state,
+                        error_dict=dict(repo_name=msg)
+                    )
             return value
     return _validator
 

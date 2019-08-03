@@ -196,11 +196,11 @@ class JSONRPCController(TGController):
 
         extra = set(self._request_params).difference(func_kwargs)
         if extra:
-                raise JSONRPCErrorResponse(
-                    retid=self._req_id,
-                    message='Unknown %s arg in JSON DATA' %
-                            ', '.join('`%s`' % arg for arg in extra),
-                )
+            raise JSONRPCErrorResponse(
+                retid=self._req_id,
+                message='Unknown %s arg in JSON DATA' %
+                        ', '.join('`%s`' % arg for arg in extra),
+            )
 
         self._rpc_args = {}
         self._rpc_args.update(self._request_params)

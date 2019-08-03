@@ -100,13 +100,13 @@ def convert_line_endings(line, mode):
     from string import replace
 
     if mode == 0:
-            line = replace(line, '\r\n', '\n')
-            line = replace(line, '\r', '\n')
+        line = replace(line, '\r\n', '\n')
+        line = replace(line, '\r', '\n')
     elif mode == 1:
-            line = replace(line, '\r\n', '\r')
-            line = replace(line, '\n', '\r')
+        line = replace(line, '\r\n', '\r')
+        line = replace(line, '\n', '\r')
     elif mode == 2:
-            line = re.sub("\r(?!\n)|(?<!\r)\n", "\r\n", line)
+        line = re.sub("\r(?!\n)|(?<!\r)\n", "\r\n", line)
     return line
 
 

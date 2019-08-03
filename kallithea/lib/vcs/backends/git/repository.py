@@ -316,7 +316,7 @@ class GitRepository(BaseRepository):
     def _get_archives(self, archive_name='tip'):
 
         for i in [('zip', '.zip'), ('gz', '.tar.gz'), ('bz2', '.tar.bz2')]:
-                yield {"type": i[0], "extension": i[1], "node": archive_name}
+            yield {"type": i[0], "extension": i[1], "node": archive_name}
 
     def _get_url(self, url):
         """
