@@ -6,6 +6,8 @@ syntax: glob
 *.egg-info
 *.egg
 *.mo
+*.orig
+*.rej
 *.bak
 .eggs/
 tarballcache/
