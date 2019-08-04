@@ -320,7 +320,7 @@ class MercurialChangeset(BaseChangeset):
         allowed_kinds = settings.ARCHIVE_SPECS.keys()
         if kind not in allowed_kinds:
             raise ImproperArchiveTypeError('Archive kind not supported use one'
-                'of %s', allowed_kinds)
+                'of %s' % allowed_kinds)
 
         if stream is None:
             raise VCSError('You need to pass in a valid stream for filling'

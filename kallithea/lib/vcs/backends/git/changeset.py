@@ -358,7 +358,7 @@ class GitChangeset(BaseChangeset):
         allowed_kinds = settings.ARCHIVE_SPECS.keys()
         if kind not in allowed_kinds:
             raise ImproperArchiveTypeError('Archive kind not supported use one'
-                'of %s', allowed_kinds)
+                'of %s' % allowed_kinds)
 
         if prefix is None:
             prefix = '%s-%s' % (self.repository.name, self.short_id)
