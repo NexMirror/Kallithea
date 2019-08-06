@@ -488,15 +488,13 @@ def __get_codes_stats(repo_name):
     tip = repo.get_changeset()
     code_stats = {}
 
-    def aggregate(cs):
-        for f in cs[2]:
-            ext = f.extension.lower()
-            if ext in LANGUAGES_EXTENSIONS_MAP.keys() and not f.is_binary:
+    for _topnode, _dirnodes, filenodes in tip.walk('/'):
+        for filenode in filenodes:
+            ext = filenode.extension.lower()
+            if ext in LANGUAGES_EXTENSIONS_MAP.keys() and not filenode.is_binary:
                 if ext in code_stats:
                     code_stats[ext] += 1
                 else:
                     code_stats[ext] = 1
-
-    map(aggregate, tip.walk('/'))
 
     return code_stats or {}
