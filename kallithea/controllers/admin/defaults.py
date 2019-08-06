@@ -40,7 +40,6 @@ from kallithea.lib.auth import LoginRequired, HasPermissionAnyDecorator
 from kallithea.lib.base import BaseController, render
 from kallithea.model.forms import DefaultsForm
 from kallithea.model.meta import Session
-from kallithea import BACKENDS
 from kallithea.model.db import Setting
 
 log = logging.getLogger(__name__)
@@ -54,7 +53,6 @@ class DefaultsController(BaseController):
         super(DefaultsController, self)._before(*args, **kwargs)
 
     def index(self, format='html'):
-        c.backends = BACKENDS.keys()
         defaults = Setting.get_default_repo_settings()
 
         return htmlfill.render(
