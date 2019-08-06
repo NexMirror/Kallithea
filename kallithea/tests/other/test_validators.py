@@ -139,13 +139,6 @@ class TestRepoGroups(TestController):
         with pytest.raises(formencode.Invalid):
             validator.to_python(invalid_creds)
 
-    def test_ValidAuthToken(self):
-        validator = v.ValidAuthToken()
-        # this is untestable without a threadlocal
-#        self.assertRaises(formencode.Invalid,
-#                          validator.to_python, 'BadToken')
-        validator
-
     def test_ValidRepoName(self):
         validator = v.ValidRepoName()
 

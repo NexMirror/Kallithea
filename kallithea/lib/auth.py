@@ -35,7 +35,6 @@ from decorator import decorator
 
 from tg import request, session
 from tg.i18n import ugettext as _
-from webhelpers.pylonslib import secure_form
 from sqlalchemy.orm.exc import ObjectDeletedError
 from sqlalchemy.orm import joinedload
 from webob.exc import HTTPFound, HTTPBadRequest, HTTPForbidden, HTTPMethodNotAllowed

@@ -22,7 +22,6 @@ import logging
 from collections import defaultdict
 from tg.i18n import ugettext as _
 from sqlalchemy import func
-from webhelpers.pylonslib.secure_form import authentication_token
 import sqlalchemy
 
 from formencode.validators import (
@@ -303,19 +302,6 @@ def ValidAuth():
                     raise formencode.Invalid(msg, value, state,
                         error_dict=dict(username=' ', password=msg)
                     )
-    return _validator
-
-
-def ValidAuthToken():
-    class _validator(formencode.validators.FancyValidator):
-        messages = {
-            'invalid_token': _('Token mismatch')
-        }
-
-        def _validate_python(self, value, state):
-            if value != authentication_token():
-                msg = self.message('invalid_token', state)
-                raise formencode.Invalid(msg, value, state)
     return _validator
 
 
