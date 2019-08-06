@@ -221,15 +221,3 @@ def get_dict_for_attrs(obj, attrs):
     for attr in attrs:
         data[attr] = getattr(obj, attr)
     return data
-
-
-def get_total_seconds(timedelta):
-    """
-    Backported for Python 2.5.
-
-    See http://docs.python.org/library/datetime.html.
-    """
-    return ((timedelta.microseconds + (
-            timedelta.seconds +
-            timedelta.days * 24 * 60 * 60
-        ) * 10**6) / 10**6)

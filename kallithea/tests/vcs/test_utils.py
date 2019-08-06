@@ -12,7 +12,6 @@ from kallithea.lib.vcs.utils.paths import get_dirs_for_path
 from kallithea.lib.vcs.utils.helpers import get_dict_for_attrs
 from kallithea.lib.vcs.utils.helpers import get_scm
 from kallithea.lib.vcs.utils.helpers import get_scms_for_path
-from kallithea.lib.vcs.utils.helpers import get_total_seconds
 from kallithea.lib.vcs.utils.helpers import parse_changesets
 from kallithea.lib.vcs.utils.helpers import parse_datetime
 from kallithea.lib.vcs.utils import author_email, author_name
@@ -229,21 +228,6 @@ class TestGetDictForAttrs(object):
             'date': datetime.datetime(2010, 12, 31),
             'count': 1001,
         }
-
-
-class TestGetTotalSeconds(object):
-
-    def assertTotalSecondsEqual(self, timedelta, expected_seconds):
-        result = get_total_seconds(timedelta)
-        assert result == expected_seconds, \
-            "We computed %s seconds for %s but expected %s" \
-            % (result, timedelta, expected_seconds)
-
-    def test_get_total_seconds_returns_proper_value(self):
-        self.assertTotalSecondsEqual(datetime.timedelta(seconds=1001), 1001)
-
-    def test_get_total_seconds_returns_proper_value_for_partial_seconds(self):
-        self.assertTotalSecondsEqual(datetime.timedelta(seconds=50.65), 50.65)
 
 
 class TestGetUserHome(object):

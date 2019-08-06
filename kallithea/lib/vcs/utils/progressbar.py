@@ -4,7 +4,6 @@ import datetime
 import string
 
 from kallithea.lib.vcs.utils.filesize import filesizeformat
-from kallithea.lib.vcs.utils.helpers import get_total_seconds
 
 
 class ProgressBarError(Exception):
@@ -87,7 +86,7 @@ class ProgressBar(object):
             current_time = datetime.datetime.now()
         if self.step == 0:
             return datetime.timedelta()
-        total_seconds = get_total_seconds(self.get_total_time())
+        total_seconds = self.get_total_time().total_seconds()
         eta_seconds = total_seconds * self.steps / self.step - total_seconds
         return datetime.timedelta(seconds=int(eta_seconds))
 
@@ -113,7 +112,7 @@ class ProgressBar(object):
         if step is None:
             step = self.step
         if total_seconds is None:
-            total_seconds = get_total_seconds(self.get_total_time())
+            total_seconds = self.get_total_time().total_seconds()
         if step <= 0 or total_seconds <= 0:
             speed = '-'
         else:
