@@ -32,7 +32,7 @@ class TestLoginController(TestController):
         response = self.app.post(url(controller='login', action='index'),
                                  {'username': TEST_USER_ADMIN_LOGIN,
                                   'password': TEST_USER_ADMIN_PASS,
-                                  '_authentication_token': self.authentication_token()})
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token()})
         assert response.status == '302 Found'
         self.assert_authenticated_user(response, TEST_USER_ADMIN_LOGIN)
 
@@ -43,7 +43,7 @@ class TestLoginController(TestController):
         response = self.app.post(url(controller='login', action='index'),
                                  {'username': TEST_USER_REGULAR_LOGIN,
                                   'password': TEST_USER_REGULAR_PASS,
-                                  '_authentication_token': self.authentication_token()})
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         assert response.status == '302 Found'
         self.assert_authenticated_user(response, TEST_USER_REGULAR_LOGIN)
@@ -55,7 +55,7 @@ class TestLoginController(TestController):
         response = self.app.post(url(controller='login', action='index'),
                                  {'username': TEST_USER_REGULAR_EMAIL,
                                   'password': TEST_USER_REGULAR_PASS,
-                                  '_authentication_token': self.authentication_token()})
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         assert response.status == '302 Found'
         self.assert_authenticated_user(response, TEST_USER_REGULAR_LOGIN)
@@ -69,7 +69,7 @@ class TestLoginController(TestController):
                                      came_from=test_came_from),
                                  {'username': TEST_USER_ADMIN_LOGIN,
                                   'password': TEST_USER_ADMIN_PASS,
-                                  '_authentication_token': self.authentication_token()})
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token()})
         assert response.status == '302 Found'
         response = response.follow()
 
@@ -81,7 +81,7 @@ class TestLoginController(TestController):
                                  {'username': TEST_USER_REGULAR_LOGIN,
                                   'password': TEST_USER_REGULAR_PASS,
                                   'remember': False,
-                                  '_authentication_token': self.authentication_token()})
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         assert 'Set-Cookie' in response.headers
         for cookie in response.headers.getall('Set-Cookie'):
@@ -92,7 +92,7 @@ class TestLoginController(TestController):
                                  {'username': TEST_USER_REGULAR_LOGIN,
                                   'password': TEST_USER_REGULAR_PASS,
                                   'remember': True,
-                                  '_authentication_token': self.authentication_token()})
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         assert 'Set-Cookie' in response.headers
         for cookie in response.headers.getall('Set-Cookie'):
@@ -102,7 +102,7 @@ class TestLoginController(TestController):
         response = self.app.post(url(controller='login', action='index'),
                                  {'username': TEST_USER_REGULAR_LOGIN,
                                   'password': TEST_USER_REGULAR_PASS,
-                                  '_authentication_token': self.authentication_token()})
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         # Verify that a login session has been established.
         response = self.app.get(url(controller='login', action='index'))
@@ -131,14 +131,14 @@ class TestLoginController(TestController):
                                      came_from=url_came_from),
                                  {'username': TEST_USER_ADMIN_LOGIN,
                                   'password': TEST_USER_ADMIN_PASS,
-                                  '_authentication_token': self.authentication_token()},
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token()},
                                  status=400)
 
     def test_login_short_password(self):
         response = self.app.post(url(controller='login', action='index'),
                                  {'username': TEST_USER_ADMIN_LOGIN,
                                   'password': 'as',
-                                  '_authentication_token': self.authentication_token()})
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token()})
         assert response.status == '200 OK'
 
         response.mustcontain('Enter 3 characters or more')
@@ -147,7 +147,7 @@ class TestLoginController(TestController):
         response = self.app.post(url(controller='login', action='index'),
                                  {'username': 'error',
                                   'password': 'test12',
-                                  '_authentication_token': self.authentication_token()})
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         response.mustcontain('Invalid username or password')
 
@@ -155,7 +155,7 @@ class TestLoginController(TestController):
         response = self.app.post(url(controller='login', action='index'),
                                  {'username': TEST_USER_REGULAR_LOGIN,
                                   'password': 'blåbærgrød',
-                                  '_authentication_token': self.authentication_token()})
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         response.mustcontain('>Invalid username or password<')
 
@@ -199,7 +199,7 @@ class TestLoginController(TestController):
                                      came_from=url('/_admin/users', **args)),
                                  {'username': TEST_USER_ADMIN_LOGIN,
                                   'password': TEST_USER_ADMIN_PASS,
-                                  '_authentication_token': self.authentication_token()})
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token()})
         assert response.status == '302 Found'
         for encoded in args_encoded:
             assert encoded in response.location
@@ -214,7 +214,7 @@ class TestLoginController(TestController):
                                      came_from=url('/_admin/users', **args)),
                                  {'username': 'error',
                                   'password': 'test12',
-                                  '_authentication_token': self.authentication_token()})
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         response.mustcontain('Invalid username or password')
         came_from = urlparse.parse_qs(urlparse.urlparse(response.form.action).query)['came_from'][0]
@@ -237,7 +237,7 @@ class TestLoginController(TestController):
                                              'email': 'goodmail@example.com',
                                              'firstname': 'test',
                                              'lastname': 'test',
-                                             '_authentication_token': self.authentication_token()})
+                                             '_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         with test_context(self.app):
             msg = validators.ValidUsername()._messages['username_exists']
@@ -252,7 +252,7 @@ class TestLoginController(TestController):
                                              'email': TEST_USER_ADMIN_EMAIL,
                                              'firstname': 'test',
                                              'lastname': 'test',
-                                             '_authentication_token': self.authentication_token()})
+                                             '_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         with test_context(self.app):
             msg = validators.UniqSystemEmail()()._messages['email_taken']
@@ -266,7 +266,7 @@ class TestLoginController(TestController):
                                              'email': TEST_USER_ADMIN_EMAIL.title(),
                                              'firstname': 'test',
                                              'lastname': 'test',
-                                             '_authentication_token': self.authentication_token()})
+                                             '_session_csrf_secret_token': self.session_csrf_secret_token()})
         with test_context(self.app):
             msg = validators.UniqSystemEmail()()._messages['email_taken']
         response.mustcontain(msg)
@@ -279,7 +279,7 @@ class TestLoginController(TestController):
                                              'email': 'goodmailm',
                                              'firstname': 'test',
                                              'lastname': 'test',
-                                             '_authentication_token': self.authentication_token()})
+                                             '_session_csrf_secret_token': self.session_csrf_secret_token()})
         assert response.status == '200 OK'
         response.mustcontain('An email address must contain a single @')
         response.mustcontain('Enter a value 6 characters long or more')
@@ -292,7 +292,7 @@ class TestLoginController(TestController):
                                              'email': 'goodmailm',
                                              'firstname': 'test',
                                              'lastname': 'test',
-                                             '_authentication_token': self.authentication_token()})
+                                             '_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         response.mustcontain('An email address must contain a single @')
         response.mustcontain('Username may only contain '
@@ -309,7 +309,7 @@ class TestLoginController(TestController):
                                              'email': 'goodmailm',
                                              'firstname': 'test',
                                              'lastname': 'test',
-                                             '_authentication_token': self.authentication_token()})
+                                             '_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         response.mustcontain('An email address must contain a single @')
         with test_context(self.app):
@@ -325,7 +325,7 @@ class TestLoginController(TestController):
                                          'email': 'goodmailm@test.plx',
                                          'firstname': 'test',
                                          'lastname': 'test',
-                                         '_authentication_token': self.authentication_token()})
+                                         '_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         with test_context(self.app):
             msg = validators.ValidPassword()._messages['invalid_password']
@@ -339,7 +339,7 @@ class TestLoginController(TestController):
                                              'email': 'goodmailm@test.plxa',
                                              'firstname': 'test',
                                              'lastname': 'test',
-                                             '_authentication_token': self.authentication_token()})
+                                             '_session_csrf_secret_token': self.session_csrf_secret_token()})
         with test_context(self.app):
             msg = validators.ValidPasswordsMatch('password', 'password_confirmation')._messages['password_mismatch']
         response.mustcontain(msg)
@@ -359,7 +359,7 @@ class TestLoginController(TestController):
                                              'firstname': name,
                                              'lastname': lastname,
                                              'admin': True,
-                                             '_authentication_token': self.authentication_token()})  # This should be overridden
+                                             '_session_csrf_secret_token': self.session_csrf_secret_token()})  # This should be overridden
         assert response.status == '302 Found'
         self.checkSessionFlash(response, 'You have successfully registered with Kallithea')
 
@@ -381,7 +381,7 @@ class TestLoginController(TestController):
         response = self.app.post(
                         url(controller='login', action='password_reset'),
                             {'email': bad_email,
-                             '_authentication_token': self.authentication_token()})
+                             '_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         response.mustcontain('An email address must contain a single @')
 
@@ -410,7 +410,7 @@ class TestLoginController(TestController):
         response = self.app.post(url(controller='login',
                                      action='password_reset'),
                                  {'email': email,
-                                  '_authentication_token': self.authentication_token()})
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         self.checkSessionFlash(response, 'A password reset confirmation code has been sent')
 
@@ -427,7 +427,7 @@ class TestLoginController(TestController):
                                   'password': "p@ssw0rd",
                                   'password_confirm': "p@ssw0rd",
                                   'token': token,
-                                  '_authentication_token': self.authentication_token(),
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                  })
         assert response.status == '200 OK'
         response.mustcontain('Invalid password reset token')
@@ -438,7 +438,7 @@ class TestLoginController(TestController):
         # above, instead of being recalculated.
 
         token = UserModel().get_reset_password_token(
-            User.get_by_username(username), timestamp, self.authentication_token())
+            User.get_by_username(username), timestamp, self.session_csrf_secret_token())
 
         response = self.app.get(url(controller='login',
                                     action='password_reset_confirmation',
@@ -455,7 +455,7 @@ class TestLoginController(TestController):
                                   'password': "p@ssw0rd",
                                   'password_confirm': "p@ssw0rd",
                                   'token': token,
-                                  '_authentication_token': self.authentication_token(),
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                  })
         assert response.status == '302 Found'
         self.checkSessionFlash(response, 'Successfully updated password')

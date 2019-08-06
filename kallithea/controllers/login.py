@@ -249,7 +249,7 @@ class LoginController(BaseController):
         log.info('Logging out and deleting session for user')
         raise HTTPFound(location=url('home'))
 
-    def authentication_token(self):
+    def session_csrf_secret_token(self):
         """Return the CSRF protection token for the session - just like it
         could have been screen scraped from a page with a form.
         Only intended for testing but might also be useful for other kinds

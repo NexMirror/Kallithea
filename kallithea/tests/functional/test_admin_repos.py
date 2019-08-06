@@ -53,7 +53,7 @@ class _BaseTestCase(TestController):
                                                 repo_name=repo_name,
                                                 repo_type=self.REPO_TYPE,
                                                 repo_description=description,
-                                                _authentication_token=self.authentication_token()))
+                                                _session_csrf_secret_token=self.session_csrf_secret_token()))
         ## run the check page that triggers the flash message
         response = self.app.get(url('repo_check_home', repo_name=repo_name))
         assert response.json == {u'result': True}
@@ -91,7 +91,7 @@ class _BaseTestCase(TestController):
                                                                  repo_name=repo_name,
                                                                  repo_type=self.REPO_TYPE,
                                                                  repo_description=description,
-                                                                 _authentication_token=self.authentication_token()))
+                                                                 _session_csrf_secret_token=self.session_csrf_secret_token()))
         # try to create repo with swapped case
         swapped_repo_name = repo_name.swapcase()
         response = self.app.post(url('repos'),
@@ -99,7 +99,7 @@ class _BaseTestCase(TestController):
                                                                  repo_name=swapped_repo_name,
                                                                  repo_type=self.REPO_TYPE,
                                                                  repo_description=description,
-                                                                 _authentication_token=self.authentication_token()))
+                                                                 _session_csrf_secret_token=self.session_csrf_secret_token()))
         response.mustcontain('already exists')
 
         RepoModel().delete(repo_name)
@@ -124,7 +124,7 @@ class _BaseTestCase(TestController):
                                                 repo_type=self.REPO_TYPE,
                                                 repo_description=description,
                                                 repo_group=gr.group_id,
-                                                _authentication_token=self.authentication_token()))
+                                                _session_csrf_secret_token=self.session_csrf_secret_token()))
         ## run the check page that triggers the flash message
         response = self.app.get(url('repo_check_home', repo_name=repo_name_full))
         assert response.json == {u'result': True}
@@ -163,7 +163,7 @@ class _BaseTestCase(TestController):
     def test_create_in_group_without_needed_permissions(self):
         usr = self.log_user(TEST_USER_REGULAR_LOGIN, TEST_USER_REGULAR_PASS)
         # avoid spurious RepoGroup DetachedInstanceError ...
-        authentication_token = self.authentication_token()
+        session_csrf_secret_token = self.session_csrf_secret_token()
         # revoke
         user_model = UserModel()
         # disable fork and create on default user
@@ -201,7 +201,7 @@ class _BaseTestCase(TestController):
                                                 repo_type=self.REPO_TYPE,
                                                 repo_description=description,
                                                 repo_group=gr.group_id,
-                                                _authentication_token=authentication_token))
+                                                _session_csrf_secret_token=session_csrf_secret_token))
 
         response.mustcontain('Invalid value')
 
@@ -215,7 +215,7 @@ class _BaseTestCase(TestController):
                                                 repo_type=self.REPO_TYPE,
                                                 repo_description=description,
                                                 repo_group=gr_allowed.group_id,
-                                                _authentication_token=authentication_token))
+                                                _session_csrf_secret_token=session_csrf_secret_token))
 
         ## run the check page that triggers the flash message
         response = self.app.get(url('repo_check_home', repo_name=repo_name_full))
@@ -277,7 +277,7 @@ class _BaseTestCase(TestController):
                                                 repo_description=description,
                                                 repo_group=gr.group_id,
                                                 repo_copy_permissions=True,
-                                                _authentication_token=self.authentication_token()))
+                                                _session_csrf_secret_token=self.session_csrf_secret_token()))
 
         ## run the check page that triggers the flash message
         response = self.app.get(url('repo_check_home', repo_name=repo_name_full))
@@ -329,7 +329,7 @@ class _BaseTestCase(TestController):
                                                 repo_type=self.REPO_TYPE,
                                                 repo_description=description,
                                                 clone_uri='http://127.0.0.1/repo',
-                                                _authentication_token=self.authentication_token()))
+                                                _session_csrf_secret_token=self.session_csrf_secret_token()))
         response.mustcontain('Invalid repository URL')
 
     def test_create_remote_repo_wrong_clone_uri_hg_svn(self):
@@ -342,7 +342,7 @@ class _BaseTestCase(TestController):
                                                 repo_type=self.REPO_TYPE,
                                                 repo_description=description,
                                                 clone_uri='svn+http://127.0.0.1/repo',
-                                                _authentication_token=self.authentication_token()))
+                                                _session_csrf_secret_token=self.session_csrf_secret_token()))
         response.mustcontain('Invalid repository URL')
 
     def test_delete(self):
@@ -354,7 +354,7 @@ class _BaseTestCase(TestController):
                                                 repo_type=self.REPO_TYPE,
                                                 repo_name=repo_name,
                                                 repo_description=description,
-                                                _authentication_token=self.authentication_token()))
+                                                _session_csrf_secret_token=self.session_csrf_secret_token()))
         ## run the check page that triggers the flash message
         response = self.app.get(url('repo_check_home', repo_name=repo_name))
         self.checkSessionFlash(response,
@@ -379,7 +379,7 @@ class _BaseTestCase(TestController):
             pytest.fail('no repo %s in filesystem' % repo_name)
 
         response = self.app.post(url('delete_repo', repo_name=repo_name),
-            params={'_authentication_token': self.authentication_token()})
+            params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         self.checkSessionFlash(response, 'Deleted repository %s' % (repo_name))
 
@@ -405,7 +405,7 @@ class _BaseTestCase(TestController):
                                                 repo_name=repo_name,
                                                 repo_type=self.REPO_TYPE,
                                                 repo_description=description,
-                                                _authentication_token=self.authentication_token()))
+                                                _session_csrf_secret_token=self.session_csrf_secret_token()))
         ## run the check page that triggers the flash message
         response = self.app.get(url('repo_check_home', repo_name=repo_name))
         assert response.json == {u'result': True}
@@ -431,7 +431,7 @@ class _BaseTestCase(TestController):
             pytest.fail('no repo %s in filesystem' % repo_name)
 
         response = self.app.post(url('delete_repo', repo_name=repo_name),
-            params={'_authentication_token': self.authentication_token()})
+            params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
         self.checkSessionFlash(response, 'Deleted repository %s' % (repo_name_unicode))
         response.follow()
 
@@ -449,7 +449,7 @@ class _BaseTestCase(TestController):
 
     def test_delete_browser_fakeout(self):
         response = self.app.post(url('delete_repo', repo_name=self.REPO),
-                                 params=dict(_authentication_token=self.authentication_token()))
+                                 params=dict(_session_csrf_secret_token=self.session_csrf_secret_token()))
 
     def test_show(self):
         self.log_user()
@@ -471,7 +471,7 @@ class _BaseTestCase(TestController):
                                                 repo_name=self.REPO,
                                                 repo_type=self.REPO_TYPE,
                                                 owner=TEST_USER_ADMIN_LOGIN,
-                                                _authentication_token=self.authentication_token()))
+                                                _session_csrf_secret_token=self.session_csrf_secret_token()))
         self.checkSessionFlash(response,
                                msg='Repository %s updated successfully' % (self.REPO))
         assert Repository.get_by_repo_name(self.REPO).private == True
@@ -486,7 +486,7 @@ class _BaseTestCase(TestController):
                                                 repo_name=self.REPO,
                                                 repo_type=self.REPO_TYPE,
                                                 owner=TEST_USER_ADMIN_LOGIN,
-                                                _authentication_token=self.authentication_token()))
+                                                _session_csrf_secret_token=self.session_csrf_secret_token()))
         self.checkSessionFlash(response,
                                msg='Repository %s updated successfully' % (self.REPO))
         assert Repository.get_by_repo_name(self.REPO).private == False
@@ -514,7 +514,7 @@ class _BaseTestCase(TestController):
         repo = Repository.get_by_repo_name(self.REPO)
         repo2 = Repository.get_by_repo_name(other_repo)
         response = self.app.post(url('edit_repo_advanced_fork', repo_name=self.REPO),
-                                params=dict(id_fork_of=repo2.repo_id, _authentication_token=self.authentication_token()))
+                                params=dict(id_fork_of=repo2.repo_id, _session_csrf_secret_token=self.session_csrf_secret_token()))
         repo = Repository.get_by_repo_name(self.REPO)
         repo2 = Repository.get_by_repo_name(other_repo)
         self.checkSessionFlash(response,
@@ -535,7 +535,7 @@ class _BaseTestCase(TestController):
         repo = Repository.get_by_repo_name(self.REPO)
         repo2 = Repository.get_by_repo_name(self.OTHER_TYPE_REPO)
         response = self.app.post(url('edit_repo_advanced_fork', repo_name=self.REPO),
-                                params=dict(id_fork_of=repo2.repo_id, _authentication_token=self.authentication_token()))
+                                params=dict(id_fork_of=repo2.repo_id, _session_csrf_secret_token=self.session_csrf_secret_token()))
         repo = Repository.get_by_repo_name(self.REPO)
         repo2 = Repository.get_by_repo_name(self.OTHER_TYPE_REPO)
         self.checkSessionFlash(response,
@@ -545,7 +545,7 @@ class _BaseTestCase(TestController):
         self.log_user()
         ## mark it as None
         response = self.app.post(url('edit_repo_advanced_fork', repo_name=self.REPO),
-                                params=dict(id_fork_of=None, _authentication_token=self.authentication_token()))
+                                params=dict(id_fork_of=None, _session_csrf_secret_token=self.session_csrf_secret_token()))
         repo = Repository.get_by_repo_name(self.REPO)
         repo2 = Repository.get_by_repo_name(self.OTHER_TYPE_REPO)
         self.checkSessionFlash(response,
@@ -557,7 +557,7 @@ class _BaseTestCase(TestController):
         self.log_user()
         repo = Repository.get_by_repo_name(self.REPO)
         response = self.app.post(url('edit_repo_advanced_fork', repo_name=self.REPO),
-                                params=dict(id_fork_of=repo.repo_id, _authentication_token=self.authentication_token()))
+                                params=dict(id_fork_of=repo.repo_id, _session_csrf_secret_token=self.session_csrf_secret_token()))
         self.checkSessionFlash(response,
                                'An error occurred during this operation')
 
@@ -588,7 +588,7 @@ class _BaseTestCase(TestController):
                                                 repo_name=repo_name,
                                                 repo_type=self.REPO_TYPE,
                                                 repo_description=description,
-                                                _authentication_token=self.authentication_token()))
+                                                _session_csrf_secret_token=self.session_csrf_secret_token()))
 
         response.mustcontain('<span class="error-message">Invalid value</span>')
 
@@ -606,7 +606,7 @@ class _BaseTestCase(TestController):
                                                 repo_name=repo_name,
                                                 repo_type=self.REPO_TYPE,
                                                 repo_description=description,
-                                                _authentication_token=self.authentication_token()))
+                                                _session_csrf_secret_token=self.session_csrf_secret_token()))
 
         self.checkSessionFlash(response,
                                'Error creating repository %s' % repo_name)

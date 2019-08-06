@@ -333,7 +333,7 @@ class TestFilesController(TestController):
                                       revision='tip', f_path='/'),
                                  params={
                                     'content': '',
-                                    '_authentication_token': self.authentication_token(),
+                                    '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                  },
                                  status=302)
 
@@ -346,7 +346,7 @@ class TestFilesController(TestController):
                                       revision='tip', f_path='/'),
                                  params={
                                     'content': "foo",
-                                    '_authentication_token': self.authentication_token(),
+                                    '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                  },
                                  status=302)
 
@@ -366,7 +366,7 @@ class TestFilesController(TestController):
                                     'content': "foo",
                                     'filename': filename,
                                     'location': location,
-                                    '_authentication_token': self.authentication_token(),
+                                    '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                  },
                                  status=302)
 
@@ -387,7 +387,7 @@ class TestFilesController(TestController):
                                     'content': "foo",
                                     'filename': filename,
                                     'location': location,
-                                    '_authentication_token': self.authentication_token(),
+                                    '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                  },
                                  status=302)
         try:
@@ -410,7 +410,7 @@ class TestFilesController(TestController):
                                       revision='tip', f_path='/'),
                                  params={
                                      'content': '',
-                                     '_authentication_token': self.authentication_token(),
+                                     '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                  },
                                  status=302)
         self.checkSessionFlash(response, 'No content')
@@ -422,7 +422,7 @@ class TestFilesController(TestController):
                                       revision='tip', f_path='/'),
                                  params={
                                     'content': "foo",
-                                    '_authentication_token': self.authentication_token(),
+                                    '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                  },
                                  status=302)
 
@@ -442,7 +442,7 @@ class TestFilesController(TestController):
                                     'content': "foo",
                                     'filename': filename,
                                     'location': location,
-                                    '_authentication_token': self.authentication_token(),
+                                    '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                  },
                                  status=302)
 
@@ -463,7 +463,7 @@ class TestFilesController(TestController):
                                     'content': "foo",
                                     'filename': filename,
                                     'location': location,
-                                    '_authentication_token': self.authentication_token(),
+                                    '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                  },
                                  status=302)
         try:
@@ -493,7 +493,7 @@ class TestFilesController(TestController):
                                     'content': "def py():\n print 'hello'\n",
                                     'filename': filename,
                                     'location': location,
-                                    '_authentication_token': self.authentication_token(),
+                                    '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                  },
                                  status=302)
         response.follow()
@@ -524,7 +524,7 @@ class TestFilesController(TestController):
                                     'content': "def py():\n print 'hello'\n",
                                     'filename': filename,
                                     'location': location,
-                                    '_authentication_token': self.authentication_token(),
+                                    '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                  },
                                  status=302)
         response.follow()
@@ -538,7 +538,7 @@ class TestFilesController(TestController):
                                      params={
                                         'content': "def py():\n print 'hello world'\n",
                                         'message': 'i committed',
-                                        '_authentication_token': self.authentication_token(),
+                                        '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                      },
                                     status=302)
             self.checkSessionFlash(response, 'Successfully committed to %s'
@@ -567,7 +567,7 @@ class TestFilesController(TestController):
                                     'content': "def py():\n print 'hello'\n",
                                     'filename': filename,
                                     'location': location,
-                                    '_authentication_token': self.authentication_token(),
+                                    '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                  },
                                  status=302)
         response.follow()
@@ -598,7 +598,7 @@ class TestFilesController(TestController):
                                     'content': "def py():\n print 'hello'\n",
                                     'filename': filename,
                                     'location': location,
-                                    '_authentication_token': self.authentication_token(),
+                                    '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                  },
                                  status=302)
         response.follow()
@@ -612,7 +612,7 @@ class TestFilesController(TestController):
                                      params={
                                         'content': "def py():\n print 'hello world'\n",
                                         'message': 'i committed',
-                                        '_authentication_token': self.authentication_token(),
+                                        '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                      },
                                     status=302)
             self.checkSessionFlash(response, 'Successfully committed to %s'
@@ -641,7 +641,7 @@ class TestFilesController(TestController):
                                     'content': "def py():\n print 'hello'\n",
                                     'filename': filename,
                                     'location': location,
-                                    '_authentication_token': self.authentication_token(),
+                                    '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                  },
                                  status=302)
         response.follow()
@@ -672,7 +672,7 @@ class TestFilesController(TestController):
                                     'content': "def py():\n print 'hello'\n",
                                     'filename': filename,
                                     'location': location,
-                                    '_authentication_token': self.authentication_token(),
+                                    '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                  },
                                  status=302)
         response.follow()
@@ -685,7 +685,7 @@ class TestFilesController(TestController):
                                           f_path=posixpath.join(location, filename)),
                                      params={
                                         'message': 'i committed',
-                                        '_authentication_token': self.authentication_token(),
+                                        '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                      },
                                     status=302)
             self.checkSessionFlash(response,
@@ -714,7 +714,7 @@ class TestFilesController(TestController):
                                     'content': "def py():\n print 'hello'\n",
                                     'filename': filename,
                                     'location': location,
-                                    '_authentication_token': self.authentication_token(),
+                                    '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                  },
                                  status=302)
         response.follow()
@@ -745,7 +745,7 @@ class TestFilesController(TestController):
                                     'content': "def py():\n print 'hello'\n",
                                     'filename': filename,
                                     'location': location,
-                                    '_authentication_token': self.authentication_token(),
+                                    '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                  },
                                  status=302)
         response.follow()
@@ -758,7 +758,7 @@ class TestFilesController(TestController):
                                           f_path=posixpath.join(location, filename)),
                                      params={
                                         'message': 'i committed',
-                                        '_authentication_token': self.authentication_token(),
+                                        '_session_csrf_secret_token': self.session_csrf_secret_token(),
                                      },
                                     status=302)
             self.checkSessionFlash(response,

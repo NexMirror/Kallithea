@@ -20,7 +20,7 @@ class TestAdminUsersGroupsController(TestController):
                                  {'users_group_name': users_group_name,
                                   'user_group_description': u'DESC',
                                   'active': True,
-                                  '_authentication_token': self.authentication_token()})
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token()})
         response.follow()
 
         self.checkSessionFlash(response,
@@ -36,7 +36,7 @@ class TestAdminUsersGroupsController(TestController):
 
     def test_update_browser_fakeout(self):
         response = self.app.post(url('update_users_group', id=1),
-                                 params=dict(_authentication_token=self.authentication_token()))
+                                 params=dict(_session_csrf_secret_token=self.session_csrf_secret_token()))
 
     def test_delete(self):
         self.log_user()
@@ -45,7 +45,7 @@ class TestAdminUsersGroupsController(TestController):
                                  {'users_group_name': users_group_name,
                                   'user_group_description': u'DESC',
                                   'active': True,
-                                  '_authentication_token': self.authentication_token()})
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token()})
         response.follow()
 
         self.checkSessionFlash(response,
@@ -55,7 +55,7 @@ class TestAdminUsersGroupsController(TestController):
             .filter(UserGroup.users_group_name == users_group_name).one()
 
         response = self.app.post(url('delete_users_group', id=gr.users_group_id),
-            params={'_authentication_token': self.authentication_token()})
+            params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         gr = Session().query(UserGroup) \
             .filter(UserGroup.users_group_name == users_group_name).scalar()
@@ -69,7 +69,7 @@ class TestAdminUsersGroupsController(TestController):
                                  {'users_group_name': users_group_name,
                                   'user_group_description': u'DESC',
                                   'active': True,
-                                  '_authentication_token': self.authentication_token()})
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token()})
         response.follow()
 
         ug = UserGroup.get_by_group_name(users_group_name)
@@ -79,7 +79,7 @@ class TestAdminUsersGroupsController(TestController):
         response = self.app.post(url('edit_user_group_default_perms_update',
                                      id=ug.users_group_id),
                                  {'create_repo_perm': True,
-                                  '_authentication_token': self.authentication_token()})
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token()})
         response.follow()
         ug = UserGroup.get_by_group_name(users_group_name)
         p = Permission.get_by_key('hg.create.repository')
@@ -97,7 +97,7 @@ class TestAdminUsersGroupsController(TestController):
         ## DISABLE REPO CREATE ON A GROUP
         response = self.app.post(
             url('edit_user_group_default_perms_update', id=ug.users_group_id),
-            params={'_authentication_token': self.authentication_token()})
+            params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         response.follow()
         ug = UserGroup.get_by_group_name(users_group_name)
@@ -118,7 +118,7 @@ class TestAdminUsersGroupsController(TestController):
         ug = UserGroup.get_by_group_name(users_group_name)
         ugid = ug.users_group_id
         response = self.app.post(url('delete_users_group', id=ug.users_group_id),
-            params={'_authentication_token': self.authentication_token()})
+            params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
         response = response.follow()
         gr = Session().query(UserGroup) \
             .filter(UserGroup.users_group_name == users_group_name).scalar()
@@ -138,7 +138,7 @@ class TestAdminUsersGroupsController(TestController):
                                  {'users_group_name': users_group_name,
                                   'user_group_description': u'DESC',
                                   'active': True,
-                                  '_authentication_token': self.authentication_token()})
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token()})
         response.follow()
 
         ug = UserGroup.get_by_group_name(users_group_name)
@@ -147,7 +147,7 @@ class TestAdminUsersGroupsController(TestController):
         ## ENABLE REPO CREATE ON A GROUP
         response = self.app.post(url('edit_user_group_default_perms_update',
                                      id=ug.users_group_id),
-                                 {'fork_repo_perm': True, '_authentication_token': self.authentication_token()})
+                                 {'fork_repo_perm': True, '_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         response.follow()
         ug = UserGroup.get_by_group_name(users_group_name)
@@ -165,7 +165,7 @@ class TestAdminUsersGroupsController(TestController):
 
         ## DISABLE REPO CREATE ON A GROUP
         response = self.app.post(url('edit_user_group_default_perms_update', id=ug.users_group_id),
-            params={'_authentication_token': self.authentication_token()})
+            params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         response.follow()
         ug = UserGroup.get_by_group_name(users_group_name)
@@ -185,7 +185,7 @@ class TestAdminUsersGroupsController(TestController):
         ug = UserGroup.get_by_group_name(users_group_name)
         ugid = ug.users_group_id
         response = self.app.post(url('delete_users_group', id=ug.users_group_id),
-            params={'_authentication_token': self.authentication_token()})
+            params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
         response = response.follow()
         gr = Session().query(UserGroup) \
                            .filter(UserGroup.users_group_name ==
@@ -201,4 +201,4 @@ class TestAdminUsersGroupsController(TestController):
 
     def test_delete_browser_fakeout(self):
         response = self.app.post(url('delete_users_group', id=1),
-                                 params=dict(_authentication_token=self.authentication_token()))
+                                 params=dict(_session_csrf_secret_token=self.session_csrf_secret_token()))

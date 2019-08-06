@@ -54,7 +54,7 @@ class _BaseTestCase(TestController):
             # try create a fork
             repo_name = self.REPO
             self.app.post(url(controller='forks', action='fork_create',
-                              repo_name=repo_name), {'_authentication_token': self.authentication_token()}, status=403)
+                              repo_name=repo_name), {'_session_csrf_secret_token': self.session_csrf_secret_token()}, status=403)
         finally:
             usr = User.get_default_user()
             user_model.revoke_perm(usr, 'hg.fork.none')
@@ -77,7 +77,7 @@ class _BaseTestCase(TestController):
             'description': description,
             'private': 'False',
             'landing_rev': 'rev:tip',
-            '_authentication_token': self.authentication_token()}
+            '_session_csrf_secret_token': self.session_csrf_secret_token()}
 
         self.app.post(url(controller='forks', action='fork_create',
                           repo_name=repo_name), creation_args)
@@ -91,7 +91,7 @@ class _BaseTestCase(TestController):
 
         # remove this fork
         response = self.app.post(url('delete_repo', repo_name=fork_name),
-            params={'_authentication_token': self.authentication_token()})
+            params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
 
     def test_fork_create_into_group(self):
         self.log_user()
@@ -110,7 +110,7 @@ class _BaseTestCase(TestController):
             'description': description,
             'private': 'False',
             'landing_rev': 'rev:tip',
-            '_authentication_token': self.authentication_token()}
+            '_session_csrf_secret_token': self.session_csrf_secret_token()}
         self.app.post(url(controller='forks', action='fork_create',
                           repo_name=repo_name), creation_args)
         repo = Repository.get_by_repo_name(fork_name_full)
@@ -154,7 +154,7 @@ class _BaseTestCase(TestController):
             'description': 'unicode repo 1',
             'private': 'False',
             'landing_rev': 'rev:tip',
-            '_authentication_token': self.authentication_token()}
+            '_session_csrf_secret_token': self.session_csrf_secret_token()}
         self.app.post(url(controller='forks', action='fork_create',
                           repo_name=repo_name), creation_args)
         response = self.app.get(url(controller='forks', action='forks',
@@ -175,7 +175,7 @@ class _BaseTestCase(TestController):
             'description': 'unicode repo 2',
             'private': 'False',
             'landing_rev': 'rev:tip',
-            '_authentication_token': self.authentication_token()}
+            '_session_csrf_secret_token': self.session_csrf_secret_token()}
         self.app.post(url(controller='forks', action='fork_create',
                           repo_name=fork_name), creation_args)
         response = self.app.get(url(controller='forks', action='forks',
@@ -186,9 +186,9 @@ class _BaseTestCase(TestController):
 
         # remove these forks
         response = self.app.post(url('delete_repo', repo_name=fork_name_2),
-            params={'_authentication_token': self.authentication_token()})
+            params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
         response = self.app.post(url('delete_repo', repo_name=fork_name),
-            params={'_authentication_token': self.authentication_token()})
+            params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
 
     def test_fork_create_and_permissions(self):
         self.log_user()
@@ -204,7 +204,7 @@ class _BaseTestCase(TestController):
             'description': description,
             'private': 'False',
             'landing_rev': 'rev:tip',
-            '_authentication_token': self.authentication_token()}
+            '_session_csrf_secret_token': self.session_csrf_secret_token()}
         self.app.post(url(controller='forks', action='fork_create',
                           repo_name=repo_name), creation_args)
         repo = Repository.get_by_repo_name(self.REPO_FORK)

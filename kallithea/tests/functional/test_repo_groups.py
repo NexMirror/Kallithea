@@ -20,7 +20,7 @@ class TestRepoGroupsController(TestController):
         # creation with form error
         response = self.app.post(url('repos_groups'),
                                          {'group_name': group_name,
-                                          '_authentication_token': self.authentication_token()})
+                                          '_session_csrf_secret_token': self.session_csrf_secret_token()})
         response.mustcontain('name="group_name" type="text" value="%s"' % group_name)
         response.mustcontain('<!-- for: group_description -->')
 
@@ -30,7 +30,7 @@ class TestRepoGroupsController(TestController):
                                          'group_description': 'lala',
                                          'parent_group_id': '-1',
                                          'group_copy_permissions': 'True',
-                                          '_authentication_token': self.authentication_token()})
+                                          '_session_csrf_secret_token': self.session_csrf_secret_token()})
         self.checkSessionFlash(response, 'Created repository group %s' % group_name)
 
         # edit form
@@ -40,7 +40,7 @@ class TestRepoGroupsController(TestController):
         # edit with form error
         response = self.app.post(url('update_repos_group', group_name=group_name),
                                          {'group_name': group_name,
-                                          '_authentication_token': self.authentication_token()})
+                                          '_session_csrf_secret_token': self.session_csrf_secret_token()})
         response.mustcontain('name="group_name" type="text" value="%s"' % group_name)
         response.mustcontain('<!-- for: group_description -->')
 
@@ -48,7 +48,7 @@ class TestRepoGroupsController(TestController):
         response = self.app.post(url('update_repos_group', group_name=group_name),
                                          {'group_name': group_name,
                                          'group_description': 'lolo',
-                                          '_authentication_token': self.authentication_token()})
+                                          '_session_csrf_secret_token': self.session_csrf_secret_token()})
         self.checkSessionFlash(response, 'Updated repository group %s' % group_name)
         response = response.follow()
         response.mustcontain('name="group_name" type="text" value="%s"' % group_name)
@@ -69,7 +69,7 @@ class TestRepoGroupsController(TestController):
 
         # delete
         response = self.app.post(url('delete_repo_group', group_name=group_name),
-                                 {'_authentication_token': self.authentication_token()})
+                                 {'_session_csrf_secret_token': self.session_csrf_secret_token()})
         self.checkSessionFlash(response, 'Removed repository group %s' % group_name)
 
     def test_new_by_regular_user(self):

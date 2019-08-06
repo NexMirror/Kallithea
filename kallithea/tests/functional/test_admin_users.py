@@ -76,7 +76,7 @@ class TestAdminUsersController(TestController):
              'extern_name': 'internal',
              'extern_type': 'internal',
              'email': email,
-             '_authentication_token': self.authentication_token()})
+             '_session_csrf_secret_token': self.session_csrf_secret_token()})
         # 302 Found
         # The resource was found at http://localhost/_admin/users/5/edit; you should be redirected automatically.
 
@@ -109,7 +109,7 @@ class TestAdminUsersController(TestController):
              'active': False,
              'lastname': lastname,
              'email': email,
-             '_authentication_token': self.authentication_token()})
+             '_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         with test_context(self.app):
             msg = validators.ValidUsername(False, {})._messages['system_invalid_username']
@@ -166,10 +166,10 @@ class TestAdminUsersController(TestController):
             # special case since this user is not logged in yet his data is
             # not filled so we use creation data
 
-        params.update({'_authentication_token': self.authentication_token()})
+        params.update({'_session_csrf_secret_token': self.session_csrf_secret_token()})
         response = self.app.post(url('update_user', id=usr.user_id), params)
         self.checkSessionFlash(response, 'User updated successfully')
-        params.pop('_authentication_token')
+        params.pop('_session_csrf_secret_token')
 
         updated_user = User.get_by_username(self.test_user_1)
         updated_params = updated_user.get_api_data(True)
@@ -187,7 +187,7 @@ class TestAdminUsersController(TestController):
         new_user = Session().query(User) \
             .filter(User.username == username).one()
         response = self.app.post(url('delete_user', id=new_user.user_id),
-            params={'_authentication_token': self.authentication_token()})
+            params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         self.checkSessionFlash(response, 'Successfully deleted user')
 
@@ -202,18 +202,18 @@ class TestAdminUsersController(TestController):
         new_user = Session().query(User) \
             .filter(User.username == username).one()
         response = self.app.post(url('delete_user', id=new_user.user_id),
-            params={'_authentication_token': self.authentication_token()})
+            params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
         self.checkSessionFlash(response, 'User "%s" still '
                                'owns 1 repositories and cannot be removed. '
                                'Switch owners or remove those repositories: '
                                '%s' % (username, reponame))
 
         response = self.app.post(url('delete_repo', repo_name=reponame),
-            params={'_authentication_token': self.authentication_token()})
+            params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
         self.checkSessionFlash(response, 'Deleted repository %s' % reponame)
 
         response = self.app.post(url('delete_user', id=new_user.user_id),
-            params={'_authentication_token': self.authentication_token()})
+            params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
         self.checkSessionFlash(response, 'Successfully deleted user')
 
     def test_delete_repo_group_err(self, user_and_repo_group_fail):
@@ -224,7 +224,7 @@ class TestAdminUsersController(TestController):
         self.log_user()
 
         response = self.app.post(url('delete_user', id=new_user.user_id),
-            params={'_authentication_token': self.authentication_token()})
+            params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
         self.checkSessionFlash(response, 'User "%s" still '
                                'owns 1 repository groups and cannot be removed. '
                                'Switch owners or remove those repository groups: '
@@ -235,11 +235,11 @@ class TestAdminUsersController(TestController):
         # response = self.app.get(url('repos_groups', id=rg.group_id))
 
         response = self.app.post(url('delete_repo_group', group_name=groupname),
-            params={'_authentication_token': self.authentication_token()})
+            params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
         self.checkSessionFlash(response, 'Removed repository group %s' % groupname)
 
         response = self.app.post(url('delete_user', id=new_user.user_id),
-            params={'_authentication_token': self.authentication_token()})
+            params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
         self.checkSessionFlash(response, 'Successfully deleted user')
 
     def test_delete_user_group_err(self):
@@ -253,7 +253,7 @@ class TestAdminUsersController(TestController):
         new_user = Session().query(User) \
             .filter(User.username == username).one()
         response = self.app.post(url('delete_user', id=new_user.user_id),
-            params={'_authentication_token': self.authentication_token()})
+            params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
         self.checkSessionFlash(response, 'User "%s" still '
                                'owns 1 user groups and cannot be removed. '
                                'Switch owners or remove those user groups: '
@@ -266,7 +266,7 @@ class TestAdminUsersController(TestController):
         fixture.destroy_user_group(ug.users_group_id)
 
         response = self.app.post(url('delete_user', id=new_user.user_id),
-            params={'_authentication_token': self.authentication_token()})
+            params={'_session_csrf_secret_token': self.session_csrf_secret_token()})
         self.checkSessionFlash(response, 'Successfully deleted user')
 
     def test_edit(self):
@@ -292,7 +292,7 @@ class TestAdminUsersController(TestController):
 
             response = self.app.post(url('edit_user_perms_update', id=uid),
                                      params=dict(create_repo_perm=True,
-                                                 _authentication_token=self.authentication_token()))
+                                                 _session_csrf_secret_token=self.session_csrf_secret_token()))
 
             perm_none = Permission.get_by_key('hg.create.none')
             perm_create = Permission.get_by_key('hg.create.repository')
@@ -321,7 +321,7 @@ class TestAdminUsersController(TestController):
             assert UserModel().has_perm(user, perm_create) == False
 
             response = self.app.post(url('edit_user_perms_update', id=uid),
-                                     params=dict(_authentication_token=self.authentication_token()))
+                                     params=dict(_session_csrf_secret_token=self.session_csrf_secret_token()))
 
             perm_none = Permission.get_by_key('hg.create.none')
             perm_create = Permission.get_by_key('hg.create.repository')
@@ -351,7 +351,7 @@ class TestAdminUsersController(TestController):
 
             response = self.app.post(url('edit_user_perms_update', id=uid),
                                      params=dict(create_repo_perm=True,
-                                                 _authentication_token=self.authentication_token()))
+                                                 _session_csrf_secret_token=self.session_csrf_secret_token()))
 
             perm_none = Permission.get_by_key('hg.create.none')
             perm_create = Permission.get_by_key('hg.create.repository')
@@ -380,7 +380,7 @@ class TestAdminUsersController(TestController):
             assert UserModel().has_perm(user, perm_fork) == False
 
             response = self.app.post(url('edit_user_perms_update', id=uid),
-                                     params=dict(_authentication_token=self.authentication_token()))
+                                     params=dict(_session_csrf_secret_token=self.session_csrf_secret_token()))
 
             perm_none = Permission.get_by_key('hg.create.none')
             perm_create = Permission.get_by_key('hg.create.repository')
@@ -412,7 +412,7 @@ class TestAdminUsersController(TestController):
         user_id = user.user_id
 
         response = self.app.post(url('edit_user_ips_update', id=user_id),
-                                 params=dict(new_ip=ip, _authentication_token=self.authentication_token()))
+                                 params=dict(new_ip=ip, _session_csrf_secret_token=self.session_csrf_secret_token()))
 
         if failure:
             self.checkSessionFlash(response, 'Please enter a valid IPv4 or IPv6 address')
@@ -441,7 +441,7 @@ class TestAdminUsersController(TestController):
         response.mustcontain(ip_range)
 
         self.app.post(url('edit_user_ips_delete', id=user_id),
-                      params=dict(del_ip_id=new_ip_id, _authentication_token=self.authentication_token()))
+                      params=dict(del_ip_id=new_ip_id, _session_csrf_secret_token=self.session_csrf_secret_token()))
 
         response = self.app.get(url('edit_user_ips', id=user_id))
         response.mustcontain('All IP addresses are allowed')
@@ -467,7 +467,7 @@ class TestAdminUsersController(TestController):
         user_id = user.user_id
 
         response = self.app.post(url('edit_user_api_keys_update', id=user_id),
-                 {'description': desc, 'lifetime': lifetime, '_authentication_token': self.authentication_token()})
+                 {'description': desc, 'lifetime': lifetime, '_session_csrf_secret_token': self.session_csrf_secret_token()})
         self.checkSessionFlash(response, 'API key successfully created')
         try:
             response = response.follow()
@@ -485,7 +485,7 @@ class TestAdminUsersController(TestController):
         user_id = user.user_id
 
         response = self.app.post(url('edit_user_api_keys_update', id=user_id),
-                {'description': 'desc', 'lifetime': -1, '_authentication_token': self.authentication_token()})
+                {'description': 'desc', 'lifetime': -1, '_session_csrf_secret_token': self.session_csrf_secret_token()})
         self.checkSessionFlash(response, 'API key successfully created')
         response = response.follow()
 
@@ -494,7 +494,7 @@ class TestAdminUsersController(TestController):
         assert 1 == len(keys)
 
         response = self.app.post(url('edit_user_api_keys_delete', id=user_id),
-                 {'del_api_key': keys[0].api_key, '_authentication_token': self.authentication_token()})
+                 {'del_api_key': keys[0].api_key, '_session_csrf_secret_token': self.session_csrf_secret_token()})
         self.checkSessionFlash(response, 'API key successfully deleted')
         keys = UserApiKeys.query().filter(UserApiKeys.user_id == user_id).all()
         assert 0 == len(keys)
@@ -509,7 +509,7 @@ class TestAdminUsersController(TestController):
         response.mustcontain('Expires: Never')
 
         response = self.app.post(url('edit_user_api_keys_delete', id=user_id),
-                 {'del_api_key_builtin': api_key, '_authentication_token': self.authentication_token()})
+                 {'del_api_key_builtin': api_key, '_session_csrf_secret_token': self.session_csrf_secret_token()})
         self.checkSessionFlash(response, 'API key successfully reset')
         response = response.follow()
         response.mustcontain(no=[api_key])
@@ -526,7 +526,7 @@ class TestAdminUsersController(TestController):
         response = self.app.post(url('edit_user_ssh_keys', id=user_id),
                                  {'description': description,
                                   'public_key': public_key,
-                                  '_authentication_token': self.authentication_token()})
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token()})
         self.checkSessionFlash(response, 'SSH key %s successfully added' % fingerprint)
 
         response = response.follow()
@@ -549,7 +549,7 @@ class TestAdminUsersController(TestController):
         response = self.app.post(url('edit_user_ssh_keys', id=user_id),
                                  {'description': description,
                                   'public_key': public_key,
-                                  '_authentication_token': self.authentication_token()})
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token()})
         self.checkSessionFlash(response, 'SSH key %s successfully added' % fingerprint)
         response.follow()
         ssh_key = UserSshKeys.query().filter(UserSshKeys.user_id == user_id).one()
@@ -557,7 +557,7 @@ class TestAdminUsersController(TestController):
 
         response = self.app.post(url('edit_user_ssh_keys_delete', id=user_id),
                                  {'del_public_key': ssh_key.public_key,
-                                  '_authentication_token': self.authentication_token()})
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token()})
         self.checkSessionFlash(response, 'SSH key successfully deleted')
         keys = UserSshKeys.query().all()
         assert 0 == len(keys)
@@ -606,13 +606,13 @@ class TestAdminUsersControllerForDefaultUser(TestController):
         self.log_user()
         user = User.get_default_user()
         response = self.app.post(url('edit_user_api_keys_update', id=user.user_id),
-                 {'_authentication_token': self.authentication_token()}, status=404)
+                 {'_session_csrf_secret_token': self.session_csrf_secret_token()}, status=404)
 
     def test_delete_api_keys_default_user(self):
         self.log_user()
         user = User.get_default_user()
         response = self.app.post(url('edit_user_api_keys_delete', id=user.user_id),
-                 {'_authentication_token': self.authentication_token()}, status=404)
+                 {'_session_csrf_secret_token': self.session_csrf_secret_token()}, status=404)
 
     # Permissions
     def test_edit_perms_default_user(self):
@@ -624,7 +624,7 @@ class TestAdminUsersControllerForDefaultUser(TestController):
         self.log_user()
         user = User.get_default_user()
         response = self.app.post(url('edit_user_perms_update', id=user.user_id),
-                 {'_authentication_token': self.authentication_token()}, status=404)
+                 {'_session_csrf_secret_token': self.session_csrf_secret_token()}, status=404)
 
     # Emails
     def test_edit_emails_default_user(self):
@@ -636,13 +636,13 @@ class TestAdminUsersControllerForDefaultUser(TestController):
         self.log_user()
         user = User.get_default_user()
         response = self.app.post(url('edit_user_emails_update', id=user.user_id),
-                 {'_authentication_token': self.authentication_token()}, status=404)
+                 {'_session_csrf_secret_token': self.session_csrf_secret_token()}, status=404)
 
     def test_delete_emails_default_user(self):
         self.log_user()
         user = User.get_default_user()
         response = self.app.post(url('edit_user_emails_delete', id=user.user_id),
-                 {'_authentication_token': self.authentication_token()}, status=404)
+                 {'_session_csrf_secret_token': self.session_csrf_secret_token()}, status=404)
 
     # IP addresses
     # Add/delete of IP addresses for the default user is used to maintain

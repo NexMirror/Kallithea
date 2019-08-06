@@ -1273,7 +1273,7 @@ def ip_range(ip_addr):
     return '%s - %s' % (s, e)
 
 
-session_csrf_secret_name = "_authentication_token"
+session_csrf_secret_name = "_session_csrf_secret_token"
 
 def session_csrf_secret_token():
     """Return (and create) the current session's CSRF protection token."""

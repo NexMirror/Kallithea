@@ -18,12 +18,12 @@ class TestDefaultsController(TestController):
             'default_repo_enable_statistics': True,
             'default_repo_private': True,
             'default_repo_type': 'hg',
-            '_authentication_token': self.authentication_token(),
+            '_session_csrf_secret_token': self.session_csrf_secret_token(),
         }
         response = self.app.post(url('defaults_update', id='default'), params=params)
         self.checkSessionFlash(response, 'Default settings updated successfully')
 
-        params.pop('_authentication_token')
+        params.pop('_session_csrf_secret_token')
         defs = Setting.get_default_repo_settings()
         assert params == defs
 
@@ -34,11 +34,11 @@ class TestDefaultsController(TestController):
             'default_repo_enable_statistics': False,
             'default_repo_private': False,
             'default_repo_type': 'git',
-            '_authentication_token': self.authentication_token(),
+            '_session_csrf_secret_token': self.session_csrf_secret_token(),
         }
         response = self.app.post(url('defaults_update', id='default'), params=params)
         self.checkSessionFlash(response, 'Default settings updated successfully')
 
-        params.pop('_authentication_token')
+        params.pop('_session_csrf_secret_token')
         defs = Setting.get_default_repo_settings()
         assert params == defs

@@ -54,7 +54,7 @@ class TestMyAccountController(TestController):
         response = self.app.get(url('my_account_emails'))
         response.mustcontain('No additional emails specified')
         response = self.app.post(url('my_account_emails'),
-                                 {'new_email': TEST_USER_REGULAR_EMAIL, '_authentication_token': self.authentication_token()})
+                                 {'new_email': TEST_USER_REGULAR_EMAIL, '_session_csrf_secret_token': self.session_csrf_secret_token()})
         self.checkSessionFlash(response, 'This email address is already in use')
 
     def test_my_account_my_emails_add_missing_email_in_form(self):
@@ -62,7 +62,7 @@ class TestMyAccountController(TestController):
         response = self.app.get(url('my_account_emails'))
         response.mustcontain('No additional emails specified')
         response = self.app.post(url('my_account_emails'),
-            {'_authentication_token': self.authentication_token()})
+            {'_session_csrf_secret_token': self.session_csrf_secret_token()})
         self.checkSessionFlash(response, 'Please enter an email address')
 
     def test_my_account_my_emails_add_remove(self):
@@ -71,7 +71,7 @@ class TestMyAccountController(TestController):
         response.mustcontain('No additional emails specified')
 
         response = self.app.post(url('my_account_emails'),
-                                 {'new_email': 'barz@example.com', '_authentication_token': self.authentication_token()})
+                                 {'new_email': 'barz@example.com', '_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         response = self.app.get(url('my_account_emails'))
 
@@ -84,7 +84,7 @@ class TestMyAccountController(TestController):
         response.mustcontain('<input id="del_email_id" name="del_email_id" type="hidden" value="%s" />' % email_id)
 
         response = self.app.post(url('my_account_emails_delete'),
-                                 {'del_email_id': email_id, '_authentication_token': self.authentication_token()})
+                                 {'del_email_id': email_id, '_session_csrf_secret_token': self.session_csrf_secret_token()})
         self.checkSessionFlash(response, 'Removed email from user')
         response = self.app.get(url('my_account_emails'))
         response.mustcontain('No additional emails specified')
@@ -119,7 +119,7 @@ class TestMyAccountController(TestController):
         params.update({'new_password': ''})
         params.update({'extern_type': 'internal'})
         params.update({'extern_name': self.test_user_1})
-        params.update({'_authentication_token': self.authentication_token()})
+        params.update({'_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         params.update(attrs)
         response = self.app.post(url('my_account'), params)
@@ -148,7 +148,7 @@ class TestMyAccountController(TestController):
             # my account cannot make you an admin !
             params['admin'] = False
 
-        params.pop('_authentication_token')
+        params.pop('_session_csrf_secret_token')
         assert params == updated_params
 
     def test_my_account_update_err_email_exists(self):
@@ -163,7 +163,7 @@ class TestMyAccountController(TestController):
                                     firstname=u'NewName',
                                     lastname=u'NewLastname',
                                     email=new_email,
-                                    _authentication_token=self.authentication_token())
+                                    _session_csrf_secret_token=self.session_csrf_secret_token())
                                 )
 
         response.mustcontain('This email address is already in use')
@@ -180,7 +180,7 @@ class TestMyAccountController(TestController):
                                             firstname=u'NewName',
                                             lastname=u'NewLastname',
                                             email=new_email,
-                                            _authentication_token=self.authentication_token()))
+                                            _session_csrf_secret_token=self.session_csrf_secret_token()))
 
         response.mustcontain('An email address must contain a single @')
         from kallithea.model import validators
@@ -206,7 +206,7 @@ class TestMyAccountController(TestController):
         usr = self.log_user(TEST_USER_REGULAR2_LOGIN, TEST_USER_REGULAR2_PASS)
         user = User.get(usr['user_id'])
         response = self.app.post(url('my_account_api_keys'),
-                                 {'description': desc, 'lifetime': lifetime, '_authentication_token': self.authentication_token()})
+                                 {'description': desc, 'lifetime': lifetime, '_session_csrf_secret_token': self.session_csrf_secret_token()})
         self.checkSessionFlash(response, 'API key successfully created')
         try:
             response = response.follow()
@@ -222,7 +222,7 @@ class TestMyAccountController(TestController):
         usr = self.log_user(TEST_USER_REGULAR2_LOGIN, TEST_USER_REGULAR2_PASS)
         user = User.get(usr['user_id'])
         response = self.app.post(url('my_account_api_keys'),
-                                 {'description': 'desc', 'lifetime': -1, '_authentication_token': self.authentication_token()})
+                                 {'description': 'desc', 'lifetime': -1, '_session_csrf_secret_token': self.session_csrf_secret_token()})
         self.checkSessionFlash(response, 'API key successfully created')
         response = response.follow()
 
@@ -231,7 +231,7 @@ class TestMyAccountController(TestController):
         assert 1 == len(keys)
 
         response = self.app.post(url('my_account_api_keys_delete'),
-                 {'del_api_key': keys[0].api_key, '_authentication_token': self.authentication_token()})
+                 {'del_api_key': keys[0].api_key, '_session_csrf_secret_token': self.session_csrf_secret_token()})
         self.checkSessionFlash(response, 'API key successfully deleted')
         keys = UserApiKeys.query().all()
         assert 0 == len(keys)
@@ -245,7 +245,7 @@ class TestMyAccountController(TestController):
         response.mustcontain('Expires: Never')
 
         response = self.app.post(url('my_account_api_keys_delete'),
-                 {'del_api_key_builtin': api_key, '_authentication_token': self.authentication_token()})
+                 {'del_api_key_builtin': api_key, '_session_csrf_secret_token': self.session_csrf_secret_token()})
         self.checkSessionFlash(response, 'API key successfully reset')
         response = response.follow()
         response.mustcontain(no=[api_key])
@@ -259,7 +259,7 @@ class TestMyAccountController(TestController):
         response = self.app.post(url('my_account_ssh_keys'),
                                  {'description': description,
                                   'public_key': public_key,
-                                  '_authentication_token': self.authentication_token()})
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token()})
         self.checkSessionFlash(response, 'SSH key %s successfully added' % fingerprint)
 
         response = response.follow()
@@ -280,7 +280,7 @@ class TestMyAccountController(TestController):
         response = self.app.post(url('my_account_ssh_keys'),
                                  {'description': description,
                                   'public_key': public_key,
-                                  '_authentication_token': self.authentication_token()})
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token()})
         self.checkSessionFlash(response, 'SSH key %s successfully added' % fingerprint)
         response.follow()
         user_id = response.session['authuser']['user_id']
@@ -289,7 +289,7 @@ class TestMyAccountController(TestController):
 
         response = self.app.post(url('my_account_ssh_keys_delete'),
                                  {'del_public_key': ssh_key.public_key,
-                                  '_authentication_token': self.authentication_token()})
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token()})
         self.checkSessionFlash(response, 'SSH key successfully deleted')
         keys = UserSshKeys.query().all()
         assert 0 == len(keys)

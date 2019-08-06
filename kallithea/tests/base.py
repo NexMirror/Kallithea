@@ -157,7 +157,7 @@ class TestController(object):
         response = self.app.post(url(controller='login', action='index'),
                                  {'username': username,
                                   'password': password,
-                                  '_authentication_token': self.authentication_token()})
+                                  '_session_csrf_secret_token': self.session_csrf_secret_token()})
 
         if 'Invalid username or password' in response.body:
             pytest.fail('could not login using %s %s' % (username, password))
@@ -178,8 +178,8 @@ class TestController(object):
         user = user and user.username
         assert user == expected_username
 
-    def authentication_token(self):
-        return self.app.get(url('authentication_token')).body
+    def session_csrf_secret_token(self):
+        return self.app.get(url('session_csrf_secret_token')).body
 
     def checkSessionFlash(self, response, msg=None, skip=0, _matcher=lambda msg, m: msg in m):
         if 'flash' not in response.session:

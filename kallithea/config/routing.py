@@ -447,7 +447,7 @@ def make_map(config):
                  )
 
     # LOGIN/LOGOUT/REGISTER/SIGN IN
-    rmap.connect('authentication_token', '%s/authentication_token' % ADMIN_PREFIX, controller='login', action='authentication_token')
+    rmap.connect('session_csrf_secret_token', '%s/session_csrf_secret_token' % ADMIN_PREFIX, controller='login', action='session_csrf_secret_token')
     rmap.connect('login_home', '%s/login' % ADMIN_PREFIX, controller='login')
     rmap.connect('logout_home', '%s/logout' % ADMIN_PREFIX, controller='login',
                  action='logout')
