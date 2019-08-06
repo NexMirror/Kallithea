@@ -15,28 +15,26 @@
 Set of generic validators
 """
 
+import logging
 import os
 import re
-import formencode
-import logging
 from collections import defaultdict
 
-from tg.i18n import ugettext as _
-from sqlalchemy import func
-import sqlalchemy
+import formencode
 import ipaddr
+import sqlalchemy
+from formencode.validators import CIDR, Bool, Email, FancyValidator, Int, IPAddress, NotEmpty, Number, OneOf, Regex, Set, String, StringBoolean, UnicodeString
+from sqlalchemy import func
+from tg.i18n import ugettext as _
 
-from formencode.validators import (
-    UnicodeString, OneOf, Int, Number, Regex, Email, Bool, StringBoolean, Set,
-    NotEmpty, IPAddress, CIDR, String, FancyValidator
-)
-from kallithea.lib.compat import OrderedSet
-from kallithea.lib.utils import is_valid_repo_uri
-from kallithea.lib.utils2 import str2bool, aslist, repo_name_slug
-from kallithea.model.db import RepoGroup, Repository, UserGroup, User
-from kallithea.lib.exceptions import LdapImportError
 from kallithea.config.routing import ADMIN_PREFIX
-from kallithea.lib.auth import HasRepoGroupPermissionLevel, HasPermissionAny
+from kallithea.lib.auth import HasPermissionAny, HasRepoGroupPermissionLevel
+from kallithea.lib.compat import OrderedSet
+from kallithea.lib.exceptions import LdapImportError
+from kallithea.lib.utils import is_valid_repo_uri
+from kallithea.lib.utils2 import aslist, repo_name_slug, str2bool
+from kallithea.model.db import RepoGroup, Repository, User, UserGroup
+
 
 # silence warnings and pylint
 UnicodeString, OneOf, Int, Number, Regex, Email, Bool, StringBoolean, Set, \

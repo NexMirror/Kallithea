@@ -12,12 +12,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
 import logging
+import os
 
 from kallithea.lib.hooks import log_pull_action
 from kallithea.lib.utils import make_ui
-from kallithea.lib.utils2 import safe_unicode, safe_str
+from kallithea.lib.utils2 import safe_str, safe_unicode
 from kallithea.lib.vcs.backends.ssh import BaseSshHandler
 
 

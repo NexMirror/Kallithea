@@ -3,8 +3,7 @@ import errno
 
 from kallithea.lib.vcs.backends.base import BaseInMemoryChangeset
 from kallithea.lib.vcs.exceptions import RepositoryError
-
-from kallithea.lib.vcs.utils.hgcompat import memfilectx, memctx, hex, tolocal
+from kallithea.lib.vcs.utils.hgcompat import hex, memctx, memfilectx, tolocal
 
 
 class MercurialInMemoryChangeset(BaseInMemoryChangeset):

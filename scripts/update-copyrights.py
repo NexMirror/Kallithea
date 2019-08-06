@@ -41,6 +41,7 @@ contributor, the legal entity is given credit too.
 import os
 import re
 from collections import defaultdict
+
 import contributor_data
 
 

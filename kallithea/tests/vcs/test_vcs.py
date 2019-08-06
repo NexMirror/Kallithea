@@ -4,10 +4,9 @@ import shutil
 import pytest
 
 from kallithea.lib.utils2 import safe_str
-from kallithea.lib.vcs import VCSError, get_repo, get_backend
+from kallithea.lib.vcs import VCSError, get_backend, get_repo
 from kallithea.lib.vcs.backends.hg import MercurialRepository
-
-from kallithea.tests.vcs.conf import TEST_HG_REPO, TEST_GIT_REPO, TESTS_TMP_PATH
+from kallithea.tests.vcs.conf import TEST_GIT_REPO, TEST_HG_REPO, TESTS_TMP_PATH
 
 
 class TestVCS(object):

@@ -1,11 +1,11 @@
 import time
 
-from kallithea.model.db import User, UserIpMap
-from kallithea.model.user import UserModel
-from kallithea.model.meta import Session
-from kallithea.tests.base import *
-
 from tg.util.webtest import test_context
+
+from kallithea.model.db import User, UserIpMap
+from kallithea.model.meta import Session
+from kallithea.model.user import UserModel
+from kallithea.tests.base import *
 
 
 class TestAdminPermissionsController(TestController):

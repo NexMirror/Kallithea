@@ -26,28 +26,26 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-import os
-import traceback
 import logging
+import os
 import rfc822
-
+import traceback
 from collections import OrderedDict
-from time import mktime
 from operator import itemgetter
+from time import mktime
 
 from tg import config
 
 from kallithea import CELERY_ON
 from kallithea.lib import celerylib
+from kallithea.lib.compat import json
 from kallithea.lib.helpers import person
+from kallithea.lib.hooks import log_create_repository
 from kallithea.lib.rcmail.smtp_mailer import SmtpMailer
 from kallithea.lib.utils import action_logger
 from kallithea.lib.utils2 import str2bool
 from kallithea.lib.vcs.utils import author_email
-from kallithea.lib.compat import json
-from kallithea.lib.hooks import log_create_repository
-
-from kallithea.model.db import Statistics, RepoGroup, Repository, User
+from kallithea.model.db import RepoGroup, Repository, Statistics, User
 
 
 __all__ = ['whoosh_index', 'get_commits_stats', 'send_email']

@@ -1,15 +1,13 @@
+from kallithea.lib.auth import AuthUser
+from kallithea.model.db import Permission, RepoGroup, User, UserGroupRepoGroupToPerm, UserToPerm
+from kallithea.model.meta import Session
+from kallithea.model.permission import PermissionModel
+from kallithea.model.repo import RepoModel
+from kallithea.model.repo_group import RepoGroupModel
+from kallithea.model.user import UserModel
+from kallithea.model.user_group import UserGroupModel
 from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
-from kallithea.model.repo_group import RepoGroupModel
-from kallithea.model.repo import RepoModel
-from kallithea.model.db import RepoGroup, User, UserGroupRepoGroupToPerm, \
-    Permission, UserToPerm
-from kallithea.model.user import UserModel
-
-from kallithea.model.meta import Session
-from kallithea.model.user_group import UserGroupModel
-from kallithea.lib.auth import AuthUser
-from kallithea.model.permission import PermissionModel
 
 
 fixture = Fixture()

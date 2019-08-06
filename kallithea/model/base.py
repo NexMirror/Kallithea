@@ -27,8 +27,10 @@ Original author and date, and relevant copyright and licensing information is be
 
 
 import logging
-from kallithea.model import meta
+
 from kallithea.lib.utils2 import obfuscate_url_pw
+from kallithea.model import meta
+
 
 log = logging.getLogger(__name__)
 

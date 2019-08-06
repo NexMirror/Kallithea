@@ -26,17 +26,16 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 
-import os
-import logging
-import traceback
-import shutil
 import datetime
+import logging
+import os
+import shutil
+import traceback
 
 import kallithea.lib.utils2
 from kallithea.lib.utils2 import LazyProperty
+from kallithea.model.db import Permission, RepoGroup, Repository, Session, Ui, User, UserGroup, UserGroupRepoGroupToPerm, UserRepoGroupToPerm
 
-from kallithea.model.db import RepoGroup, Session, Ui, UserRepoGroupToPerm, \
-    User, Permission, UserGroupRepoGroupToPerm, UserGroup, Repository
 
 log = logging.getLogger(__name__)
 

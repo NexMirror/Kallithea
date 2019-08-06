@@ -12,21 +12,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from sqlalchemy.orm.exc import NoResultFound, ObjectDeletedError
-
 import pytest
-from kallithea.tests.base import *
-from kallithea.tests.fixture import Fixture
-from kallithea.controllers.admin.users import UsersController
-from kallithea.model.db import User, Permission, UserIpMap, UserApiKeys, RepoGroup, UserSshKeys
-from kallithea.lib.auth import check_password
-from kallithea.model.user import UserModel
-from kallithea.model import validators
-from kallithea.lib import helpers as h
-from kallithea.model.meta import Session
+from sqlalchemy.orm.exc import NoResultFound, ObjectDeletedError
+from tg.util.webtest import test_context
 from webob.exc import HTTPNotFound
 
-from tg.util.webtest import test_context
+from kallithea.controllers.admin.users import UsersController
+from kallithea.lib import helpers as h
+from kallithea.lib.auth import check_password
+from kallithea.model import validators
+from kallithea.model.db import Permission, RepoGroup, User, UserApiKeys, UserIpMap, UserSshKeys
+from kallithea.model.meta import Session
+from kallithea.model.user import UserModel
+from kallithea.tests.base import *
+from kallithea.tests.fixture import Fixture
+
 
 fixture = Fixture()
 

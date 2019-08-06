@@ -25,39 +25,36 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+import collections
+import datetime
+import functools
+import hashlib
+import logging
 import os
 import time
-import logging
-import datetime
 import traceback
-import hashlib
-import collections
-import functools
 
+import ipaddr
 import sqlalchemy
+from beaker.cache import cache_region, region_invalidate
 from sqlalchemy import *
 from sqlalchemy.ext.hybrid import hybrid_property
-from sqlalchemy.orm import relationship, joinedload, class_mapper, validates
-from beaker.cache import cache_region, region_invalidate
-from webob.exc import HTTPNotFound
-import ipaddr
-
+from sqlalchemy.orm import class_mapper, joinedload, relationship, validates
 from tg.i18n import lazy_ugettext as _
+from webob.exc import HTTPNotFound
 
 import kallithea
+from kallithea.lib.caching_query import FromCache
+from kallithea.lib.compat import json
 from kallithea.lib.exceptions import DefaultUserException
+from kallithea.lib.utils2 import (
+    Optional, aslist, get_changeset_safe, get_clone_url, remove_prefix, safe_int, safe_str, safe_unicode, str2bool, time_to_datetime, urlreadable)
 from kallithea.lib.vcs import get_backend
+from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.utils.helpers import get_scm
 from kallithea.lib.vcs.utils.lazy import LazyProperty
-from kallithea.lib.vcs.backends.base import EmptyChangeset
-
-from kallithea.lib.utils2 import str2bool, safe_str, get_changeset_safe, \
-    safe_unicode, remove_prefix, time_to_datetime, aslist, Optional, safe_int, \
-    get_clone_url, urlreadable
-from kallithea.lib.compat import json
-from kallithea.lib.caching_query import FromCache
-
 from kallithea.model.meta import Base, Session
+
 
 URL_SEP = '/'
 log = logging.getLogger(__name__)

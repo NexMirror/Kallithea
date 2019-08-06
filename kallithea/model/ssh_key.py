@@ -19,19 +19,20 @@ SSH key model for Kallithea
 
 """
 
+import errno
 import logging
 import os
 import stat
 import tempfile
-import errno
 
 from tg import config
 from tg.i18n import ugettext as _
 
-from kallithea.lib.utils2 import safe_str, str2bool
-from kallithea.model.db import UserSshKeys, User
-from kallithea.model.meta import Session
 from kallithea.lib import ssh
+from kallithea.lib.utils2 import safe_str, str2bool
+from kallithea.model.db import User, UserSshKeys
+from kallithea.model.meta import Session
+
 
 log = logging.getLogger(__name__)
 

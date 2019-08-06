@@ -10,11 +10,12 @@
 """
 import os
 from pprint import pformat
+
 from kallithea.lib.vcs.conf import settings
 from kallithea.lib.vcs.exceptions import VCSError
 from kallithea.lib.vcs.utils.helpers import get_scm
-from kallithea.lib.vcs.utils.paths import abspath
 from kallithea.lib.vcs.utils.imports import import_class
+from kallithea.lib.vcs.utils.paths import abspath
 
 
 def get_repo(path=None, alias=None, create=False):

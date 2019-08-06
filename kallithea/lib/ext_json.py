@@ -5,9 +5,10 @@ json.org does not specify how date time can be represented - monkeypatch it to d
 """
 
 import datetime
-import functools
 import decimal
-import json # is re-exported after monkey patching
+import functools
+import json  # is re-exported after monkey patching
+
 
 __all__ = ['json']
 

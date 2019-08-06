@@ -1,13 +1,12 @@
 import functools
 
-from kallithea.model.repo_group import RepoGroupModel
 from kallithea.model.db import RepoGroup
-
 from kallithea.model.meta import Session
-from kallithea.tests.models.common import _create_project_tree, check_tree_perms, \
-    _get_perms, _check_expected_count, expected_count, _destroy_project_tree
+from kallithea.model.repo_group import RepoGroupModel
 from kallithea.model.user_group import UserGroupModel
 from kallithea.tests.fixture import Fixture
+from kallithea.tests.models.common import _check_expected_count, _create_project_tree, _destroy_project_tree, _get_perms, check_tree_perms, expected_count
+
 
 fixture = Fixture()
 

@@ -3,7 +3,6 @@ import datetime
 import pytest
 
 from kallithea.lib.vcs.nodes import FileNode
-
 from kallithea.tests.vcs.base import _BackendTestMixin
 
 

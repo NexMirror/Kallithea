@@ -25,28 +25,27 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+import datetime
+import logging
 import os
 import re
-import logging
-import datetime
 import traceback
-import beaker
 
+import beaker
+from beaker.cache import _cache_decorate
 from tg import request, response
 from tg.i18n import ugettext as _
-from beaker.cache import _cache_decorate
-
-from kallithea.lib.vcs.utils.hgcompat import ui, config
-from kallithea.lib.vcs.utils.helpers import get_scm
-from kallithea.lib.vcs.exceptions import VCSError
 
 from kallithea.lib.exceptions import HgsubversionImportError
-from kallithea.model import meta
-from kallithea.model.db import Repository, User, Ui, \
-    UserLog, RepoGroup, Setting, UserGroup
-from kallithea.model.repo_group import RepoGroupModel
-from kallithea.lib.utils2 import safe_str, safe_unicode, get_current_authuser
+from kallithea.lib.utils2 import get_current_authuser, safe_str, safe_unicode
+from kallithea.lib.vcs.exceptions import VCSError
 from kallithea.lib.vcs.utils.fakemod import create_module
+from kallithea.lib.vcs.utils.helpers import get_scm
+from kallithea.lib.vcs.utils.hgcompat import config, ui
+from kallithea.model import meta
+from kallithea.model.db import RepoGroup, Repository, Setting, Ui, User, UserGroup, UserLog
+from kallithea.model.repo_group import RepoGroupModel
+
 
 log = logging.getLogger(__name__)
 

@@ -1,8 +1,10 @@
-import time
 import datetime
 import posixpath
 import stat
+import time
+
 from dulwich import objects
+
 from kallithea.lib.vcs.backends.base import BaseInMemoryChangeset
 from kallithea.lib.vcs.exceptions import RepositoryError
 from kallithea.lib.vcs.utils import safe_str

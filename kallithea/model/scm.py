@@ -25,37 +25,34 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+import cStringIO
+import logging
 import os
-import sys
 import posixpath
 import re
+import sys
 import time
 import traceback
-import logging
-import cStringIO
-import pkg_resources
 
+import pkg_resources
 from sqlalchemy import func
 from tg.i18n import ugettext as _
 
 import kallithea
-from kallithea.lib.vcs import get_backend
-from kallithea.lib.vcs.exceptions import RepositoryError
-from kallithea.lib.vcs.utils.lazy import LazyProperty
-from kallithea.lib.vcs.nodes import FileNode
-from kallithea.lib.vcs.backends.base import EmptyChangeset
-
 from kallithea import BACKENDS
 from kallithea.lib import helpers as h
-from kallithea.lib.utils2 import safe_str, safe_unicode, set_hook_environment
-from kallithea.lib.auth import HasRepoPermissionLevel, HasRepoGroupPermissionLevel, \
-    HasUserGroupPermissionLevel, HasPermissionAny, HasPermissionAny
-from kallithea.lib.utils import get_filesystem_repos, make_ui, \
-    action_logger
-from kallithea.model.db import Repository, Session, Ui, CacheInvalidation, \
-    UserFollowing, UserLog, User, RepoGroup, PullRequest
+from kallithea.lib.auth import HasPermissionAny, HasRepoGroupPermissionLevel, HasRepoPermissionLevel, HasUserGroupPermissionLevel
+from kallithea.lib.exceptions import IMCCommitError, NonRelativePathError
 from kallithea.lib.hooks import process_pushed_raw_ids
-from kallithea.lib.exceptions import NonRelativePathError, IMCCommitError
+from kallithea.lib.utils import action_logger, get_filesystem_repos, make_ui
+from kallithea.lib.utils2 import safe_str, safe_unicode, set_hook_environment
+from kallithea.lib.vcs import get_backend
+from kallithea.lib.vcs.backends.base import EmptyChangeset
+from kallithea.lib.vcs.exceptions import RepositoryError
+from kallithea.lib.vcs.nodes import FileNode
+from kallithea.lib.vcs.utils.lazy import LazyProperty
+from kallithea.model.db import CacheInvalidation, PullRequest, RepoGroup, Repository, Session, Ui, User, UserFollowing, UserLog
+
 
 log = logging.getLogger(__name__)
 

@@ -8,7 +8,9 @@ commit counts in a given revision set.
 import argparse
 import os
 from collections import Counter
+
 import contributor_data
+
 
 def main():
 

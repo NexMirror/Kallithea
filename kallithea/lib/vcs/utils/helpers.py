@@ -3,15 +3,15 @@ Utilities aimed to help achieve mostly basic tasks.
 """
 from __future__ import division
 
-import re
-import os
-import time
 import datetime
-from subprocess import Popen, PIPE
+import os
+import re
+import time
+from subprocess import PIPE, Popen
 
-from kallithea.lib.vcs.exceptions import VCSError
-from kallithea.lib.vcs.exceptions import RepositoryError
+from kallithea.lib.vcs.exceptions import RepositoryError, VCSError
 from kallithea.lib.vcs.utils.paths import abspath
+
 
 ALIASES = ['hg', 'git']
 

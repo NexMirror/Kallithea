@@ -25,18 +25,17 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+import binascii
 import os
 import time
-import binascii
 
-from kallithea.lib.vcs.utils.hgcompat import nullrev, revrange
 from kallithea.lib import helpers as h
-from kallithea.lib.utils import action_logger
-from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.exceptions import UserCreationError
-from kallithea.lib.utils import make_ui, setup_cache_regions
-from kallithea.lib.utils2 import safe_str, safe_unicode, get_hook_environment
-from kallithea.model.db import Repository, User, Ui
+from kallithea.lib.utils import action_logger, make_ui, setup_cache_regions
+from kallithea.lib.utils2 import get_hook_environment, safe_str, safe_unicode
+from kallithea.lib.vcs.backends.base import EmptyChangeset
+from kallithea.lib.vcs.utils.hgcompat import nullrev, revrange
+from kallithea.model.db import Repository, Ui, User
 
 
 def _get_scm_size(alias, root_path):

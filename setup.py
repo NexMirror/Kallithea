@@ -1,8 +1,13 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 import os
-import sys
 import platform
+import sys
+
+import setuptools
+# monkey patch setuptools to use distutils owner/group functionality
+from setuptools.command import sdist
+
 
 if sys.version_info < (2, 6) or sys.version_info >= (3,):
     raise Exception('Kallithea requires python 2.7')
@@ -110,10 +115,7 @@ except IOError as err:
     )
     long_description = description
 
-import setuptools
 
-# monkey patch setuptools to use distutils owner/group functionality
-from setuptools.command import sdist
 sdist_org = sdist.sdist
 class sdist_new(sdist_org):
     def initialize_options(self):

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from kallithea.tests.base import *
 
+
 class TestCompareController(TestController):
 
     def test_compare_tag_hg(self):

@@ -32,21 +32,23 @@ Original author and date, and relevant copyright and licensing information is be
 
 
 import cookielib
-import urllib
-import urllib2
-import time
 import os
 import sys
 import tempfile
+import time
+import urllib
+import urllib2
 from os.path import dirname
+
+from kallithea.lib import vcs
+from kallithea.lib.compat import OrderedSet
+from kallithea.lib.vcs.exceptions import RepositoryError
+
 
 __here__ = os.path.abspath(__file__)
 __root__ = dirname(dirname(dirname(__here__)))
 sys.path.append(__root__)
 
-from kallithea.lib import vcs
-from kallithea.lib.compat import OrderedSet
-from kallithea.lib.vcs.exceptions import RepositoryError
 
 PASES = 3
 HOST = 'http://127.0.0.1'

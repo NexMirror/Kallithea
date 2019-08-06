@@ -4,19 +4,19 @@ import time
 import urlparse
 
 import mock
+from tg.util.webtest import test_context
 
-from kallithea.tests.base import *
-from kallithea.tests.fixture import Fixture
-from kallithea.lib.utils2 import generate_api_key
-from kallithea.lib.auth import check_password
 from kallithea.lib import helpers as h
-from kallithea.model.api_key import ApiKeyModel
+from kallithea.lib.auth import check_password
+from kallithea.lib.utils2 import generate_api_key
 from kallithea.model import validators
+from kallithea.model.api_key import ApiKeyModel
 from kallithea.model.db import User
 from kallithea.model.meta import Session
 from kallithea.model.user import UserModel
+from kallithea.tests.base import *
+from kallithea.tests.fixture import Fixture
 
-from tg.util.webtest import test_context
 
 fixture = Fixture()
 

@@ -7,6 +7,7 @@ import re
 
 from kallithea.lib import inifile
 
+
 # files to be generated from the mako template
 ini_files = [
     ('development.ini',

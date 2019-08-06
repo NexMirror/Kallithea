@@ -1,22 +1,22 @@
 # -*- coding: utf-8 -*-
 
 import os
-import mock
 import urllib
 
+import mock
 import pytest
 from sqlalchemy import func
 
 from kallithea.lib import vcs
 from kallithea.lib.utils2 import safe_str, safe_unicode
-from kallithea.model.db import Repository, RepoGroup, UserRepoToPerm, User, \
-    Permission, Ui
+from kallithea.model.db import Permission, RepoGroup, Repository, Ui, User, UserRepoToPerm
+from kallithea.model.meta import Base, Session
+from kallithea.model.repo import RepoModel
+from kallithea.model.repo_group import RepoGroupModel
 from kallithea.model.user import UserModel
 from kallithea.tests.base import *
-from kallithea.model.repo_group import RepoGroupModel
-from kallithea.model.repo import RepoModel
-from kallithea.model.meta import Session, Base
 from kallithea.tests.fixture import Fixture, error_function
+
 
 fixture = Fixture()
 

@@ -17,9 +17,12 @@ Custom paging classes
 import logging
 import math
 import re
-from kallithea.config.routing import url
-from webhelpers2.html import literal, HTML
+
+from webhelpers2.html import HTML, literal
 from webhelpers.paginate import Page as _Page
+
+from kallithea.config.routing import url
+
 
 log = logging.getLogger(__name__)
 

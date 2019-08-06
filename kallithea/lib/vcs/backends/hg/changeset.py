@@ -1,22 +1,17 @@
 import os
 import posixpath
 
-from kallithea.lib.vcs.conf import settings
+from mercurial import obsolete
+
 from kallithea.lib.vcs.backends.base import BaseChangeset
-from kallithea.lib.vcs.exceptions import (
-    ChangesetDoesNotExistError, ChangesetError, ImproperArchiveTypeError,
-    NodeDoesNotExistError, VCSError
-)
+from kallithea.lib.vcs.conf import settings
+from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, ChangesetError, ImproperArchiveTypeError, NodeDoesNotExistError, VCSError
 from kallithea.lib.vcs.nodes import (
-    AddedFileNodesGenerator, ChangedFileNodesGenerator, DirNode, FileNode,
-    NodeKind, RemovedFileNodesGenerator, RootNode, SubModuleNode
-)
-from kallithea.lib.vcs.utils import safe_str, safe_unicode, date_fromtimestamp
+    AddedFileNodesGenerator, ChangedFileNodesGenerator, DirNode, FileNode, NodeKind, RemovedFileNodesGenerator, RootNode, SubModuleNode)
+from kallithea.lib.vcs.utils import date_fromtimestamp, safe_str, safe_unicode
+from kallithea.lib.vcs.utils.hgcompat import archival, hex, obsutil
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.vcs.utils.paths import get_dirs_for_path
-from kallithea.lib.vcs.utils.hgcompat import archival, hex, obsutil
-
-from mercurial import obsolete
 
 
 class MercurialChangeset(BaseChangeset):

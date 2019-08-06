@@ -26,29 +26,26 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+import logging
 import os
 import sys
 import time
 import uuid
-import logging
-import sqlalchemy
 from os.path import dirname
 
-import alembic.config
 import alembic.command
-
-from kallithea.model.user import UserModel
-from kallithea.model.base import init_model
-from kallithea.model.db import User, Permission, Ui, \
-    Setting, UserToPerm, RepoGroup, \
-    UserRepoGroupToPerm, CacheInvalidation, Repository
-
+import alembic.config
+import sqlalchemy
 from sqlalchemy.engine import create_engine
-from kallithea.model.repo_group import RepoGroupModel
+
+from kallithea.model.base import init_model
+from kallithea.model.db import CacheInvalidation, Permission, RepoGroup, Repository, Setting, Ui, User, UserRepoGroupToPerm, UserToPerm
 #from kallithea.model import meta
-from kallithea.model.meta import Session, Base
-from kallithea.model.repo import RepoModel
+from kallithea.model.meta import Base, Session
 from kallithea.model.permission import PermissionModel
+from kallithea.model.repo import RepoModel
+from kallithea.model.repo_group import RepoGroupModel
+from kallithea.model.user import UserModel
 
 
 log = logging.getLogger(__name__)

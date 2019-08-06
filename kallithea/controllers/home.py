@@ -28,19 +28,21 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 
-from tg import tmpl_context as c, request
+from sqlalchemy import and_, or_
+from sqlalchemy.sql.expression import func
+from tg import request
+from tg import tmpl_context as c
 from tg.i18n import ugettext as _
 from webob.exc import HTTPBadRequest
-from sqlalchemy.sql.expression import func
-from sqlalchemy import or_, and_
 
-from kallithea.lib.utils import conditional_cache
-from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator
-from kallithea.lib.base import BaseController, render, jsonify
 from kallithea.lib import helpers as h
-from kallithea.model.db import Repository, RepoGroup, User, UserGroup
+from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
+from kallithea.lib.base import BaseController, jsonify, render
+from kallithea.lib.utils import conditional_cache
+from kallithea.model.db import RepoGroup, Repository, User, UserGroup
 from kallithea.model.repo import RepoModel
 from kallithea.model.scm import UserGroupList
+
 
 log = logging.getLogger(__name__)
 

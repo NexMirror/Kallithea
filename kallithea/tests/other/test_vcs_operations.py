@@ -25,25 +25,26 @@ Original author and date, and relevant copyright and licensing information is be
 
 """
 
+import json
 import os
 import re
 import tempfile
 import time
 import urllib2
-import json
+from subprocess import PIPE, Popen
 from tempfile import _RandomNameSequence
-from subprocess import Popen, PIPE
 
 import pytest
 
-from kallithea.tests.base import *
-from kallithea.tests.fixture import Fixture
-from kallithea.model.db import User, Repository, UserIpMap, CacheInvalidation, Ui, UserLog
+from kallithea import CONFIG
+from kallithea.model.db import CacheInvalidation, Repository, Ui, User, UserIpMap, UserLog
 from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
-from kallithea.model.user import UserModel
 from kallithea.model.ssh_key import SshKeyModel
-from kallithea import CONFIG
+from kallithea.model.user import UserModel
+from kallithea.tests.base import *
+from kallithea.tests.fixture import Fixture
+
 
 DEBUG = True
 HOST = '127.0.0.1:4999'  # test host

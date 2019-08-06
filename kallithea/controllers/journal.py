@@ -33,23 +33,23 @@ from itertools import groupby
 from sqlalchemy import or_
 from sqlalchemy.orm import joinedload
 from sqlalchemy.sql.expression import func
-
-from webhelpers.feedgenerator import Atom1Feed, Rss201rev2Feed
-
-from webob.exc import HTTPBadRequest
-from tg import request, tmpl_context as c, response
+from tg import request, response
+from tg import tmpl_context as c
 from tg.i18n import ugettext as _
+from webhelpers.feedgenerator import Atom1Feed, Rss201rev2Feed
+from webob.exc import HTTPBadRequest
 
+import kallithea.lib.helpers as h
 from kallithea.config.routing import url
 from kallithea.controllers.admin.admin import _journal_filter
-from kallithea.model.db import UserLog, UserFollowing, Repository, User
-from kallithea.model.meta import Session
-from kallithea.model.repo import RepoModel
-import kallithea.lib.helpers as h
 from kallithea.lib.auth import LoginRequired
 from kallithea.lib.base import BaseController, render
 from kallithea.lib.page import Page
-from kallithea.lib.utils2 import safe_int, AttributeDict
+from kallithea.lib.utils2 import AttributeDict, safe_int
+from kallithea.model.db import Repository, User, UserFollowing, UserLog
+from kallithea.model.meta import Session
+from kallithea.model.repo import RepoModel
+
 
 log = logging.getLogger(__name__)
 

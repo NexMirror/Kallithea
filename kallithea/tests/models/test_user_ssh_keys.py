@@ -1,7 +1,7 @@
 from kallithea.model.db import UserSshKeys
-
 from kallithea.tests.base import TestController
 from kallithea.tests.fixture import Fixture
+
 
 fixture = Fixture()
 

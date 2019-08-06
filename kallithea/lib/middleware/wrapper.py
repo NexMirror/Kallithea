@@ -25,9 +25,10 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-import time
 import logging
-from kallithea.lib.base import _get_ip_addr, _get_access_path
+import time
+
+from kallithea.lib.base import _get_access_path, _get_ip_addr
 from kallithea.lib.utils2 import safe_unicode
 
 

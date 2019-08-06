@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-from kallithea.tests.base import *
-from kallithea.model.db import UserGroup, UserGroupToPerm, Permission
+from kallithea.model.db import Permission, UserGroup, UserGroupToPerm
 from kallithea.model.meta import Session
+from kallithea.tests.base import *
+
 
 TEST_USER_GROUP = u'admins_test'
 

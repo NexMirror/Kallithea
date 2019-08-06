@@ -1,5 +1,6 @@
 from kallithea.tests.base import *
 
+
 class TestFeedController(TestController):
 
     def test_rss(self):

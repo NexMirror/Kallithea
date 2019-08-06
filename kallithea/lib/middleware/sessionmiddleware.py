@@ -23,8 +23,8 @@ class to automagically use secure cookies over HTTPS.
 Original Beaker SessionMiddleware class written by Ben Bangert
 """
 
-from beaker.session import SessionObject
 from beaker.middleware import SessionMiddleware
+from beaker.session import SessionObject
 
 
 class SecureSessionMiddleware(SessionMiddleware):

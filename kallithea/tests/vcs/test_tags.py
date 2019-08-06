@@ -1,8 +1,6 @@
 import pytest
 
-from kallithea.lib.vcs.exceptions import TagAlreadyExistError
-from kallithea.lib.vcs.exceptions import TagDoesNotExistError
-
+from kallithea.lib.vcs.exceptions import TagAlreadyExistError, TagDoesNotExistError
 from kallithea.tests.vcs.base import _BackendTestMixin
 
 

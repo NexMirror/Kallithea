@@ -27,29 +27,29 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 import traceback
-from collections import defaultdict, OrderedDict
+from collections import OrderedDict, defaultdict
 
-from tg import tmpl_context as c, request, response
+from tg import request, response
+from tg import tmpl_context as c
 from tg.i18n import ugettext as _
-from webob.exc import HTTPFound, HTTPForbidden, HTTPBadRequest, HTTPNotFound
-
-from kallithea.lib.vcs.exceptions import RepositoryError, \
-    ChangesetDoesNotExistError, EmptyRepositoryError
+from webob.exc import HTTPBadRequest, HTTPForbidden, HTTPFound, HTTPNotFound
 
 import kallithea.lib.helpers as h
-from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator
-from kallithea.lib.base import BaseRepoController, render, jsonify
-from kallithea.lib.utils import action_logger
 from kallithea.lib import diffs
-from kallithea.model.db import ChangesetComment, ChangesetStatus
-from kallithea.model.comment import ChangesetCommentsModel
+from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
+from kallithea.lib.base import BaseRepoController, jsonify, render
+from kallithea.lib.graphmod import graph_data
+from kallithea.lib.utils import action_logger
+from kallithea.lib.utils2 import safe_unicode
+from kallithea.lib.vcs.backends.base import EmptyChangeset
+from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, EmptyRepositoryError, RepositoryError
 from kallithea.model.changeset_status import ChangesetStatusModel
+from kallithea.model.comment import ChangesetCommentsModel
+from kallithea.model.db import ChangesetComment, ChangesetStatus
 from kallithea.model.meta import Session
 from kallithea.model.pull_request import PullRequestModel
 from kallithea.model.repo import RepoModel
-from kallithea.lib.vcs.backends.base import EmptyChangeset
-from kallithea.lib.utils2 import safe_unicode
-from kallithea.lib.graphmod import graph_data
+
 
 log = logging.getLogger(__name__)
 

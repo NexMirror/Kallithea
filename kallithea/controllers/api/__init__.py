@@ -26,22 +26,23 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 import inspect
-import logging
-import types
-import traceback
-import time
 import itertools
+import logging
+import time
+import traceback
+import types
 
-from tg import Response, response, request, TGController
-
+from tg import Response, TGController, request, response
 from webob.exc import HTTPError, HTTPException, WSGIHTTPException
 
-from kallithea.model.db import User
-from kallithea.model import meta
-from kallithea.lib.compat import json
 from kallithea.lib.auth import AuthUser
-from kallithea.lib.base import _get_ip_addr as _get_ip, _get_access_path
-from kallithea.lib.utils2 import safe_unicode, safe_str
+from kallithea.lib.base import _get_access_path
+from kallithea.lib.base import _get_ip_addr as _get_ip
+from kallithea.lib.compat import json
+from kallithea.lib.utils2 import safe_str, safe_unicode
+from kallithea.model import meta
+from kallithea.model.db import User
+
 
 log = logging.getLogger('JSONRPC')
 

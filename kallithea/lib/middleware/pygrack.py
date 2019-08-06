@@ -25,16 +25,17 @@ Copyright (c) 2012 Marcin Kuzminski <marcin@python-works.com>
 This file was forked by the Kallithea project in July 2014.
 """
 
+import logging
 import os
 import socket
-import logging
 import traceback
 
 from webob import Request, Response, exc
 
 import kallithea
-from kallithea.lib.vcs import subprocessio
 from kallithea.lib.utils2 import safe_unicode
+from kallithea.lib.vcs import subprocessio
+
 
 log = logging.getLogger(__name__)
 

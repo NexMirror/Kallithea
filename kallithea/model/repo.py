@@ -26,29 +26,27 @@ Original author and date, and relevant copyright and licensing information is be
 
 """
 
+import logging
 import os
 import shutil
-import logging
 import traceback
 from datetime import datetime
+
 from sqlalchemy.orm import subqueryload
 
 import kallithea.lib.utils2
-from kallithea.lib.utils import make_ui, is_valid_repo_uri
-from kallithea.lib.vcs.backends import get_backend
-from kallithea.lib.utils2 import LazyProperty, safe_str, safe_unicode, \
-    remove_prefix, obfuscate_url_pw, get_current_authuser
-from kallithea.lib.caching_query import FromCache
-from kallithea.lib.hooks import log_delete_repository
-
-from kallithea.model.db import Repository, UserRepoToPerm, UserGroupRepoToPerm, \
-    UserRepoGroupToPerm, UserGroupRepoGroupToPerm, User, Permission, Session, \
-    Statistics, UserGroup, Ui, RepoGroup, RepositoryField
-
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import HasRepoPermissionLevel, HasUserGroupPermissionLevel
+from kallithea.lib.caching_query import FromCache
 from kallithea.lib.exceptions import AttachedForksError
+from kallithea.lib.hooks import log_delete_repository
+from kallithea.lib.utils import is_valid_repo_uri, make_ui
+from kallithea.lib.utils2 import LazyProperty, get_current_authuser, obfuscate_url_pw, remove_prefix, safe_str, safe_unicode
+from kallithea.lib.vcs.backends import get_backend
+from kallithea.model.db import (
+    Permission, RepoGroup, Repository, RepositoryField, Session, Statistics, Ui, User, UserGroup, UserGroupRepoGroupToPerm, UserGroupRepoToPerm, UserRepoGroupToPerm, UserRepoToPerm)
 from kallithea.model.scm import UserGroupList
+
 
 log = logging.getLogger(__name__)
 

@@ -3,6 +3,7 @@
 import re
 import sys
 
+
 logre = r'''
 (log\.(?:error|info|warning|debug)
 [(][ \n]*

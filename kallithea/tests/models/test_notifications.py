@@ -3,18 +3,16 @@ import re
 
 import mock
 import routes.util
-
-from kallithea.tests.base import *
-from kallithea.lib import helpers as h
-from kallithea.model.db import User
-from kallithea.model.user import UserModel
-from kallithea.model.meta import Session
-from kallithea.model.notification import NotificationModel, EmailNotificationModel
+from tg.util.webtest import test_context
 
 import kallithea.lib.celerylib
 import kallithea.lib.celerylib.tasks
-
-from tg.util.webtest import test_context
+from kallithea.lib import helpers as h
+from kallithea.model.db import User
+from kallithea.model.meta import Session
+from kallithea.model.notification import EmailNotificationModel, NotificationModel
+from kallithea.model.user import UserModel
+from kallithea.tests.base import *
 
 
 class TestNotifications(TestController):

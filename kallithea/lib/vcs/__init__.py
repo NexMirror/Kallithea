@@ -20,8 +20,9 @@ __all__ = [
 ]
 
 import sys
-from kallithea.lib.vcs.backends import get_repo, get_backend
-from kallithea.lib.vcs.exceptions import VCSError, RepositoryError, ChangesetError
+
+from kallithea.lib.vcs.backends import get_backend, get_repo
+from kallithea.lib.vcs.exceptions import ChangesetError, RepositoryError, VCSError
 
 
 def get_version():

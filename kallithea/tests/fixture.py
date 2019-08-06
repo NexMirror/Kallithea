@@ -26,23 +26,23 @@ import mock
 from tg import request
 from tg.util.webtest import test_context
 
-from kallithea.model.db import Repository, User, RepoGroup, UserGroup, Gist, ChangesetStatus
-from kallithea.model.meta import Session
-from kallithea.model.repo import RepoModel
-from kallithea.model.user import UserModel
-from kallithea.model.repo_group import RepoGroupModel
-from kallithea.model.user_group import UserGroupModel
-from kallithea.model.gist import GistModel
-from kallithea.model.scm import ScmModel
-from kallithea.model.comment import ChangesetCommentsModel
-from kallithea.model.changeset_status import ChangesetStatusModel
-from kallithea.model.pull_request import CreatePullRequestAction#, CreatePullRequestIterationAction, PullRequestModel
 from kallithea.lib import helpers
 from kallithea.lib.auth import AuthUser
 from kallithea.lib.db_manage import DbManage
 from kallithea.lib.vcs.backends.base import EmptyChangeset
-from kallithea.tests.base import invalidate_all_caches, GIT_REPO, HG_REPO, \
-    TESTS_TMP_PATH, TEST_USER_ADMIN_LOGIN, TEST_USER_REGULAR_LOGIN, TEST_USER_ADMIN_EMAIL, IP_ADDR
+from kallithea.model.changeset_status import ChangesetStatusModel
+from kallithea.model.comment import ChangesetCommentsModel
+from kallithea.model.db import ChangesetStatus, Gist, RepoGroup, Repository, User, UserGroup
+from kallithea.model.gist import GistModel
+from kallithea.model.meta import Session
+from kallithea.model.pull_request import CreatePullRequestAction  # , CreatePullRequestIterationAction, PullRequestModel
+from kallithea.model.repo import RepoModel
+from kallithea.model.repo_group import RepoGroupModel
+from kallithea.model.scm import ScmModel
+from kallithea.model.user import UserModel
+from kallithea.model.user_group import UserGroupModel
+from kallithea.tests.base import (
+    GIT_REPO, HG_REPO, IP_ADDR, TEST_USER_ADMIN_EMAIL, TEST_USER_ADMIN_LOGIN, TEST_USER_REGULAR_LOGIN, TESTS_TMP_PATH, invalidate_all_caches)
 
 
 log = logging.getLogger(__name__)

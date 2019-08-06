@@ -21,11 +21,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import logging
 import binascii
+import logging
 import re
 
 from tg.i18n import ugettext as _
+
 
 log = logging.getLogger(__name__)
 

@@ -9,39 +9,34 @@
     :copyright: (c) 2010-2011 by Marcin Kuzminski, Lukasz Balcerzak.
 """
 
+import errno
+import logging
 import os
+import posixpath
 import re
 import time
-import errno
 import urllib
 import urllib2
-import logging
-import posixpath
 from collections import OrderedDict
 
-from dulwich.objects import Tag
-from dulwich.repo import Repo, NotGitRepository
 from dulwich.config import ConfigFile
+from dulwich.objects import Tag
+from dulwich.repo import NotGitRepository, Repo
 
 from kallithea.lib.vcs import subprocessio
 from kallithea.lib.vcs.backends.base import BaseRepository, CollectionGenerator
 from kallithea.lib.vcs.conf import settings
-
 from kallithea.lib.vcs.exceptions import (
-    BranchDoesNotExistError, ChangesetDoesNotExistError, EmptyRepositoryError,
-    RepositoryError, TagAlreadyExistError, TagDoesNotExistError
-)
-from kallithea.lib.vcs.utils import safe_str, safe_unicode, makedate, date_fromtimestamp
+    BranchDoesNotExistError, ChangesetDoesNotExistError, EmptyRepositoryError, RepositoryError, TagAlreadyExistError, TagDoesNotExistError)
+from kallithea.lib.vcs.utils import date_fromtimestamp, makedate, safe_str, safe_unicode
+from kallithea.lib.vcs.utils.hgcompat import hg_url, httpbasicauthhandler, httpdigestauthhandler
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.vcs.utils.paths import abspath, get_user_home
-
-from kallithea.lib.vcs.utils.hgcompat import (
-    hg_url, httpbasicauthhandler, httpdigestauthhandler
-)
 
 from .changeset import GitChangeset
 from .inmemory import GitInMemoryChangeset
 from .workdir import GitWorkdir
+
 
 SHA_PATTERN = re.compile(r'^([0-9a-fA-F]{12}|[0-9a-fA-F]{40})$')
 

@@ -12,14 +12,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import pytest
+
+from kallithea.model.db import Repository
+from kallithea.model.meta import Session
+from kallithea.model.repo import RepoModel
+from kallithea.model.scm import ScmModel
 from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
-from kallithea.model.db import Repository
-from kallithea.model.repo import RepoModel
-from kallithea.model.meta import Session
-from kallithea.model.scm import ScmModel
 
-import pytest
 
 fixture = Fixture()
 

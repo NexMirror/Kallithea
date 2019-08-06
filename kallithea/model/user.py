@@ -32,17 +32,14 @@ import logging
 import time
 import traceback
 
+from sqlalchemy.exc import DatabaseError
 from tg import config
 from tg.i18n import ugettext as _
 
-from sqlalchemy.exc import DatabaseError
-
-from kallithea.lib.utils2 import safe_str, generate_api_key, get_current_authuser
 from kallithea.lib.caching_query import FromCache
-from kallithea.model.db import Permission, User, UserToPerm, \
-    UserEmailMap, UserIpMap
-from kallithea.lib.exceptions import DefaultUserException, \
-    UserOwnsReposException
+from kallithea.lib.exceptions import DefaultUserException, UserOwnsReposException
+from kallithea.lib.utils2 import generate_api_key, get_current_authuser, safe_str
+from kallithea.model.db import Permission, User, UserEmailMap, UserIpMap, UserToPerm
 from kallithea.model.meta import Session
 
 

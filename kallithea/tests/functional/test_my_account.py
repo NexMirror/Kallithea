@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from kallithea.model.db import User, UserFollowing, Repository, UserApiKeys, UserSshKeys
+from tg.util.webtest import test_context
+
+from kallithea.lib import helpers as h
+from kallithea.model.db import Repository, User, UserApiKeys, UserFollowing, UserSshKeys
+from kallithea.model.meta import Session
+from kallithea.model.user import UserModel
 from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
-from kallithea.lib import helpers as h
-from kallithea.model.user import UserModel
-from kallithea.model.meta import Session
 
-from tg.util.webtest import test_context
 
 fixture = Fixture()
 

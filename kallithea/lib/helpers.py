@@ -19,35 +19,45 @@ available to Controllers. This module is available to both as 'h'.
 """
 import hashlib
 import json
-import StringIO
 import logging
-import re
-import urlparse
-import textwrap
 import random
+import re
+import StringIO
+import textwrap
+import urlparse
 
 from beaker.cache import cache_region
-from pygments.formatters.html import HtmlFormatter
 from pygments import highlight as code_highlight
+from pygments.formatters.html import HtmlFormatter
 from tg.i18n import ugettext as _
-
-from webhelpers2.html import literal, HTML, escape
-from webhelpers2.html.tags import checkbox, end_form, hidden, link_to, \
-    select as webhelpers2_select, Option, Options, \
-    submit, text, password, textarea, radio, form as insecure_form
+from webhelpers2.html import HTML, escape, literal
+from webhelpers2.html.tags import NotGiven, Option, Options, _input, _make_safe_id_component, checkbox, end_form
+from webhelpers2.html.tags import form as insecure_form
+from webhelpers2.html.tags import hidden, link_to, password, radio
+from webhelpers2.html.tags import select as webhelpers2_select
+from webhelpers2.html.tags import submit, text, textarea
 from webhelpers2.number import format_byte_size
-from webhelpers.pylonslib import Flash as _Flash
 from webhelpers2.text import chop_at, truncate, wrap_paragraphs
-from webhelpers2.html.tags import _input, NotGiven, _make_safe_id_component
+from webhelpers.pylonslib import Flash as _Flash
 
 from kallithea.config.routing import url
 from kallithea.lib.annotate import annotate_highlight
-from kallithea.lib.pygmentsutils import get_custom_lexer
-from kallithea.lib.utils2 import str2bool, safe_unicode, safe_str, \
-    time_to_datetime, AttributeDict, safe_int, MENTIONS_REGEX
+#==============================================================================
+# PERMS
+#==============================================================================
+from kallithea.lib.auth import HasPermissionAny, HasRepoGroupPermissionLevel, HasRepoPermissionLevel
 from kallithea.lib.markup_renderer import url_re
-from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError
+from kallithea.lib.pygmentsutils import get_custom_lexer
+from kallithea.lib.utils2 import MENTIONS_REGEX, AttributeDict
+from kallithea.lib.utils2 import age as _age
+from kallithea.lib.utils2 import credentials_filter, safe_int, safe_str, safe_unicode, str2bool, time_to_datetime
 from kallithea.lib.vcs.backends.base import BaseChangeset, EmptyChangeset
+from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError
+#==============================================================================
+# SCM FILTERS available via h.
+#==============================================================================
+from kallithea.lib.vcs.utils import author_email, author_name
+
 
 log = logging.getLogger(__name__)
 
@@ -454,11 +464,6 @@ class Flash(_Flash):
 
 flash = Flash()
 
-#==============================================================================
-# SCM FILTERS available via h.
-#==============================================================================
-from kallithea.lib.vcs.utils import author_name, author_email
-from kallithea.lib.utils2 import credentials_filter, age as _age
 
 age = lambda x, y=False: _age(x, y)
 capitalize = lambda x: x.capitalize()
@@ -843,11 +848,6 @@ def action_parser(user_log, feed=False, parse_cs=False):
 
 
 
-#==============================================================================
-# PERMS
-#==============================================================================
-from kallithea.lib.auth import HasPermissionAny, \
-    HasRepoPermissionLevel, HasRepoGroupPermissionLevel
 
 
 #==============================================================================

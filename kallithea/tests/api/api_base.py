@@ -18,25 +18,25 @@ Tests for the JSON-RPC web api.
 
 import os
 import random
-import mock
 import re
 
+import mock
 import pytest
 
-from kallithea.tests.base import *
-from kallithea.tests.fixture import Fixture
-from kallithea.lib.compat import json
 from kallithea.lib.auth import AuthUser
-from kallithea.model.user import UserModel
-from kallithea.model.user_group import UserGroupModel
+from kallithea.lib.compat import json
+from kallithea.lib.utils2 import time_to_datetime
+from kallithea.model.changeset_status import ChangesetStatusModel
+from kallithea.model.db import ChangesetStatus, PullRequest, RepoGroup, Repository, Setting, Ui, User
+from kallithea.model.gist import GistModel
+from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
 from kallithea.model.repo_group import RepoGroupModel
-from kallithea.model.meta import Session
 from kallithea.model.scm import ScmModel
-from kallithea.model.gist import GistModel
-from kallithea.model.changeset_status import ChangesetStatusModel
-from kallithea.model.db import Repository, User, Setting, Ui, PullRequest, ChangesetStatus, RepoGroup
-from kallithea.lib.utils2 import time_to_datetime
+from kallithea.model.user import UserModel
+from kallithea.model.user_group import UserGroupModel
+from kallithea.tests.base import *
+from kallithea.tests.fixture import Fixture
 
 
 API_URL = '/_admin/api'

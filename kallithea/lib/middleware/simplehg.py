@@ -28,14 +28,15 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 
-import os
 import logging
+import os
 import urllib
 
-from kallithea.lib.utils2 import safe_str, safe_unicode
 from kallithea.lib.base import BaseVCSController
 from kallithea.lib.utils import make_ui
+from kallithea.lib.utils2 import safe_str, safe_unicode
 from kallithea.lib.vcs.utils.hgcompat import hgweb_mod
+
 
 log = logging.getLogger(__name__)
 

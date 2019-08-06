@@ -27,11 +27,14 @@ Original author and date, and relevant copyright and licensing information is be
 
 import datetime
 import hashlib
+
 import mock
-from kallithea.tests.base import *
+from tg.util.webtest import test_context
+
 from kallithea.lib.utils2 import AttributeDict
 from kallithea.model.db import Repository
-from tg.util.webtest import test_context
+from kallithea.tests.base import *
+
 
 proto = 'http'
 TEST_URLS = [

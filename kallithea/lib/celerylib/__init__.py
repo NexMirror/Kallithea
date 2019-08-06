@@ -26,19 +26,18 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 
-import os
 import logging
+import os
+from hashlib import md5
 
+from decorator import decorator
 from tg import config
 
-from hashlib import md5
-from decorator import decorator
-
-from kallithea import CELERY_ON, CELERY_EAGER
-from kallithea.lib.utils2 import safe_str
+from kallithea import CELERY_EAGER, CELERY_ON
 from kallithea.lib.pidlock import DaemonLock, LockHeld
-from kallithea.model.base import init_model
+from kallithea.lib.utils2 import safe_str
 from kallithea.model import meta
+from kallithea.model.base import init_model
 
 
 log = logging.getLogger(__name__)

@@ -1,28 +1,26 @@
+import logging
 import os
 import re
 import sys
-import logging
-import pkg_resources
 import time
 
 import formencode
-from paste.deploy import loadwsgi
-from routes.util import URLGenerator
+import pkg_resources
 import pytest
+from paste.deploy import loadwsgi
 from pytest_localserver.http import WSGIServer
+from routes.util import URLGenerator
+from tg.util.webtest import test_context
 
+import kallithea.tests.base  # FIXME: needed for setting testapp instance!!!
 from kallithea.controllers.root import RootController
 from kallithea.lib import inifile
 from kallithea.lib.utils import repo2db_mapper
-from kallithea.model.user import UserModel
-from kallithea.model.meta import Session
 from kallithea.model.db import Setting, User, UserIpMap
+from kallithea.model.meta import Session
 from kallithea.model.scm import ScmModel
-from kallithea.tests.base import invalidate_all_caches, TEST_USER_REGULAR_LOGIN, TESTS_TMP_PATH, \
-    TEST_USER_ADMIN_LOGIN, TEST_USER_ADMIN_PASS
-import kallithea.tests.base # FIXME: needed for setting testapp instance!!!
-
-from tg.util.webtest import test_context
+from kallithea.model.user import UserModel
+from kallithea.tests.base import TEST_USER_ADMIN_LOGIN, TEST_USER_ADMIN_PASS, TEST_USER_REGULAR_LOGIN, TESTS_TMP_PATH, invalidate_all_caches
 
 
 def pytest_configure():

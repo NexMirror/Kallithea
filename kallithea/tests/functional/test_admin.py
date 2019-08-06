@@ -1,11 +1,13 @@
-import os
 import csv
 import datetime
-from kallithea.tests.base import *
+import os
+from os.path import dirname
+
+from kallithea.lib.utils2 import safe_unicode
 from kallithea.model.db import UserLog
 from kallithea.model.meta import Session
-from kallithea.lib.utils2 import safe_unicode
-from os.path import dirname
+from kallithea.tests.base import *
+
 
 FIXTURES = os.path.join(dirname(dirname(os.path.abspath(__file__))), 'fixtures')
 

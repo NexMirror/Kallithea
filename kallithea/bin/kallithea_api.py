@@ -25,10 +25,10 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-import sys
 import argparse
+import sys
 
-from kallithea.bin.base import json, api_call, RcConf, FORMAT_JSON, FORMAT_PRETTY
+from kallithea.bin.base import FORMAT_JSON, FORMAT_PRETTY, RcConf, api_call, json
 
 
 def argparser(argv):

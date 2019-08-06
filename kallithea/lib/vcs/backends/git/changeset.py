@@ -1,23 +1,17 @@
 import re
+from io import BytesIO
 from itertools import chain
+from subprocess import PIPE, Popen
+
 from dulwich import objects
 from dulwich.config import ConfigFile
-from subprocess import Popen, PIPE
-from io import BytesIO
 
-from kallithea.lib.vcs.conf import settings
 from kallithea.lib.vcs.backends.base import BaseChangeset, EmptyChangeset
-from kallithea.lib.vcs.exceptions import (
-    RepositoryError, ChangesetError, NodeDoesNotExistError, VCSError,
-    ChangesetDoesNotExistError, ImproperArchiveTypeError
-)
+from kallithea.lib.vcs.conf import settings
+from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, ChangesetError, ImproperArchiveTypeError, NodeDoesNotExistError, RepositoryError, VCSError
 from kallithea.lib.vcs.nodes import (
-    FileNode, DirNode, NodeKind, RootNode, SubModuleNode,
-    ChangedFileNodesGenerator, AddedFileNodesGenerator, RemovedFileNodesGenerator
-)
-from kallithea.lib.vcs.utils import (
-    safe_unicode, safe_str, safe_int, date_fromtimestamp
-)
+    AddedFileNodesGenerator, ChangedFileNodesGenerator, DirNode, FileNode, NodeKind, RemovedFileNodesGenerator, RootNode, SubModuleNode)
+from kallithea.lib.vcs.utils import date_fromtimestamp, safe_int, safe_str, safe_unicode
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 
 

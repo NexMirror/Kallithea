@@ -25,12 +25,13 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-import time
 import logging
+import time
 
 from kallithea.lib.utils2 import generate_api_key
 from kallithea.model.db import User, UserApiKeys
 from kallithea.model.meta import Session
+
 
 log = logging.getLogger(__name__)
 

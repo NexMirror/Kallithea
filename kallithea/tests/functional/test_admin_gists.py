@@ -1,7 +1,7 @@
-from kallithea.tests.base import *
+from kallithea.model.db import Gist, User
 from kallithea.model.gist import GistModel
 from kallithea.model.meta import Session
-from kallithea.model.db import User, Gist
+from kallithea.tests.base import *
 
 
 def _create_gist(f_name, content='some gist', lifetime=-1,

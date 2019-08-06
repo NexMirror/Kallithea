@@ -12,18 +12,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import click
-import kallithea.bin.kallithea_cli_base as cli_base
-
 import os
 import sys
 import uuid
 from collections import defaultdict
 
+import click
 import mako.exceptions
 
+import kallithea.bin.kallithea_cli_base as cli_base
 import kallithea.lib.locale
 from kallithea.lib import inifile
+
 
 def show_defaults(ctx, param, value):
     # Following construct is taken from the Click documentation:

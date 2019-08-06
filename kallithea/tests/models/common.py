@@ -1,13 +1,11 @@
+from kallithea.lib.auth import AuthUser
+from kallithea.model.db import RepoGroup, Repository, User
+from kallithea.model.meta import Session
+from kallithea.model.repo import RepoModel
+from kallithea.model.repo_group import RepoGroupModel
+from kallithea.model.user import UserModel
 from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
-
-from kallithea.model.repo_group import RepoGroupModel
-from kallithea.model.repo import RepoModel
-from kallithea.model.db import RepoGroup, Repository, User
-from kallithea.model.user import UserModel
-
-from kallithea.lib.auth import AuthUser
-from kallithea.model.meta import Session
 
 
 fixture = Fixture()

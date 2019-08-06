@@ -26,14 +26,15 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 
-import re
 import logging
+import re
 import traceback
 
-import markdown as markdown_mod
 import bleach
+import markdown as markdown_mod
 
-from kallithea.lib.utils2 import safe_unicode, MENTIONS_REGEX
+from kallithea.lib.utils2 import MENTIONS_REGEX, safe_unicode
+
 
 log = logging.getLogger(__name__)
 

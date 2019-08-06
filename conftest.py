@@ -1,7 +1,9 @@
-import mock
 import os
-import pytest
 import sys
+
+import mock
+import pytest
+
 
 here = os.path.dirname(__file__)
 

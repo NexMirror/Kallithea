@@ -27,27 +27,29 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 import traceback
-import formencode
 
-from sqlalchemy import func
+import formencode
 from formencode import htmlfill
-from tg import request, tmpl_context as c
+from sqlalchemy import func
+from tg import request
+from tg import tmpl_context as c
 from tg.i18n import ugettext as _
 from webob.exc import HTTPFound
 
 from kallithea.config.routing import url
-from kallithea.lib import helpers as h
 from kallithea.lib import auth_modules
-from kallithea.lib.auth import LoginRequired, AuthUser
-from kallithea.lib.base import BaseController, render, IfSshEnabled
+from kallithea.lib import helpers as h
+from kallithea.lib.auth import AuthUser, LoginRequired
+from kallithea.lib.base import BaseController, IfSshEnabled, render
 from kallithea.lib.utils2 import generate_api_key, safe_int
-from kallithea.model.db import Repository, UserEmailMap, User, UserFollowing
-from kallithea.model.forms import UserForm, PasswordChangeForm
-from kallithea.model.user import UserModel
-from kallithea.model.repo import RepoModel
 from kallithea.model.api_key import ApiKeyModel
-from kallithea.model.ssh_key import SshKeyModel, SshKeyModelException
+from kallithea.model.db import Repository, User, UserEmailMap, UserFollowing
+from kallithea.model.forms import PasswordChangeForm, UserForm
 from kallithea.model.meta import Session
+from kallithea.model.repo import RepoModel
+from kallithea.model.ssh_key import SshKeyModel, SshKeyModelException
+from kallithea.model.user import UserModel
+
 
 log = logging.getLogger(__name__)
 

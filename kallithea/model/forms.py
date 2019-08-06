@@ -37,11 +37,11 @@ import logging
 
 import formencode
 from formencode import All
-
 from tg.i18n import ugettext as _
 
 from kallithea import BACKENDS
 from kallithea.model import validators as v
+
 
 log = logging.getLogger(__name__)
 

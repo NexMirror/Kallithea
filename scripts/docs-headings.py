@@ -7,6 +7,7 @@ Consistent formatting of rst section titles
 import re
 import subprocess
 
+
 spaces = [
     (0, 1), # we assume this is a over-and-underlined header
     (2, 1),

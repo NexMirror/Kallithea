@@ -1,5 +1,6 @@
 from kallithea.tests.base import *
 
+
 class TestChangesetController(TestController):
 
     def test_index(self):

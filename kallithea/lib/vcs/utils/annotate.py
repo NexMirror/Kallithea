@@ -1,7 +1,7 @@
 import StringIO
 
-from pygments.formatters import HtmlFormatter
 from pygments import highlight
+from pygments.formatters import HtmlFormatter
 
 from kallithea.lib.vcs.exceptions import VCSError
 from kallithea.lib.vcs.nodes import FileNode

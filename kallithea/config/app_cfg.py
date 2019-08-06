@@ -17,32 +17,33 @@ Global configuration file for TurboGears2 specific settings in Kallithea.
 This file complements the .ini file.
 """
 
+import logging
+import os
 import platform
-import os, sys, logging
+import sys
 
+import alembic.config
+import formencode
+import mercurial
 import tg
+from alembic.migration import MigrationContext
+from alembic.script.base import ScriptDirectory
+from sqlalchemy import create_engine
 from tg import hooks
 from tg.configuration import AppConfig
 from tg.support.converters import asbool
-import alembic.config
-from alembic.script.base import ScriptDirectory
-from alembic.migration import MigrationContext
-from sqlalchemy import create_engine
-import mercurial
 
 import kallithea.lib.locale
-from kallithea.lib.middleware.permanent_repo_url import PermanentRepoUrl
+import kallithea.model.base
+from kallithea.lib.auth import set_available_permissions
 from kallithea.lib.middleware.https_fixup import HttpsFixup
+from kallithea.lib.middleware.permanent_repo_url import PermanentRepoUrl
 from kallithea.lib.middleware.simplegit import SimpleGit
 from kallithea.lib.middleware.simplehg import SimpleHg
-from kallithea.lib.auth import set_available_permissions
-from kallithea.lib.utils import load_rcextensions, make_ui, set_app_settings, set_vcs_config, \
-    set_indexer_config, check_git_version, repo2db_mapper
+from kallithea.lib.utils import check_git_version, load_rcextensions, make_ui, repo2db_mapper, set_app_settings, set_indexer_config, set_vcs_config
 from kallithea.lib.utils2 import str2bool
-import kallithea.model.base
 from kallithea.model.scm import ScmModel
 
-import formencode
 
 log = logging.getLogger(__name__)
 

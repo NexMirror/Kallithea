@@ -2,11 +2,10 @@ import datetime
 
 import pytest
 
-from kallithea.lib.vcs.nodes import FileNode
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError
-
-from kallithea.tests.vcs.base import _BackendTestMixin
+from kallithea.lib.vcs.nodes import FileNode
 from kallithea.tests.vcs import TEST_USER_CONFIG_FILE
+from kallithea.tests.vcs.base import _BackendTestMixin
 
 
 class RepositoryBaseTest(_BackendTestMixin):

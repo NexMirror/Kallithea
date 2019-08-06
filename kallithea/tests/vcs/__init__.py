@@ -22,7 +22,7 @@ at ``test_hg`` module.
 import os
 import shutil
 
-from kallithea.tests.base import TEST_HG_REPO, HG_REMOTE_REPO, TEST_GIT_REPO, GIT_REMOTE_REPO, TESTS_TMP_PATH
+from kallithea.tests.base import GIT_REMOTE_REPO, HG_REMOTE_REPO, TEST_GIT_REPO, TEST_HG_REPO, TESTS_TMP_PATH
 from kallithea.tests.vcs.utils import SCMFetcher
 
 

@@ -15,17 +15,18 @@
 Authentication modules
 """
 
+import importlib
 import logging
 import traceback
-import importlib
 
-from kallithea.lib.utils2 import str2bool
+from kallithea.lib.auth import AuthUser, PasswordGenerator
 from kallithea.lib.compat import formatted_json, hybrid_property
-from kallithea.lib.auth import PasswordGenerator, AuthUser
-from kallithea.model.user import UserModel
+from kallithea.lib.utils2 import str2bool
 from kallithea.model.db import Setting, User
 from kallithea.model.meta import Session
+from kallithea.model.user import UserModel
 from kallithea.model.user_group import UserGroupModel
+
 
 log = logging.getLogger(__name__)
 

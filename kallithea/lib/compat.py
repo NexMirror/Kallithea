@@ -27,29 +27,31 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 
-import sys
-import os
 import functools
+import os
+import sys
+
+#==============================================================================
+# Hybrid property/method
+#==============================================================================
+from sqlalchemy.ext.hybrid import hybrid_property
+#==============================================================================
+# OrderedSet
+#==============================================================================
+from sqlalchemy.util import OrderedSet
 
 #==============================================================================
 # json
 #==============================================================================
 from kallithea.lib.ext_json import json
 
+
 # alias for formatted json
 formatted_json = functools.partial(json.dumps, indent=4, sort_keys=True)
 
 
-#==============================================================================
-# OrderedSet
-#==============================================================================
-from sqlalchemy.util import OrderedSet
 
 
-#==============================================================================
-# Hybrid property/method
-#==============================================================================
-from sqlalchemy.ext.hybrid import hybrid_property
 
 
 #==============================================================================

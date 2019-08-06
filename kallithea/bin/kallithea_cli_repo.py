@@ -19,19 +19,20 @@ Original author and date, and relevant copyright and licensing information is be
 :copyright: (c) 2013 RhodeCode GmbH, and others.
 :license: GPLv3, see LICENSE.md for more details.
 """
-import click
-import kallithea.bin.kallithea_cli_base as cli_base
-
 import datetime
 import os
 import re
 import shutil
 
-from kallithea.lib.utils import repo2db_mapper, REMOVED_REPO_PAT
-from kallithea.lib.utils2 import safe_unicode, safe_str, ask_ok
+import click
+
+import kallithea.bin.kallithea_cli_base as cli_base
+from kallithea.lib.utils import REMOVED_REPO_PAT, repo2db_mapper
+from kallithea.lib.utils2 import ask_ok, safe_str, safe_unicode
 from kallithea.model.db import Repository, Ui
 from kallithea.model.meta import Session
 from kallithea.model.scm import ScmModel
+
 
 @cli_base.register_command(config_file_initialize_app=True)
 @click.option('--remove-missing', is_flag=True,

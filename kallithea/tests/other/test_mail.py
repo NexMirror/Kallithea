@@ -1,8 +1,8 @@
 import mock
 
 import kallithea
-from kallithea.tests.base import *
 from kallithea.model.db import User
+from kallithea.tests.base import *
 
 
 class smtplib_mock(object):

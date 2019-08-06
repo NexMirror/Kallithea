@@ -1,5 +1,6 @@
-from kallithea.tests.base import *
 import datetime
+
+from kallithea.tests.base import *
 
 
 class TestJournalController(TestController):

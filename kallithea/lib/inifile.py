@@ -21,8 +21,8 @@ other custom values.
 """
 
 import logging
-import re
 import os
+import re
 
 import mako.template
 

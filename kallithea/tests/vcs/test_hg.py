@@ -1,15 +1,13 @@
 import os
 
-import pytest
 import mock
+import pytest
 
 from kallithea.lib.utils2 import safe_str
-from kallithea.lib.vcs.backends.hg import MercurialRepository, MercurialChangeset
-from kallithea.lib.vcs.exceptions import RepositoryError, VCSError, NodeDoesNotExistError
+from kallithea.lib.vcs.backends.hg import MercurialChangeset, MercurialRepository
+from kallithea.lib.vcs.exceptions import NodeDoesNotExistError, RepositoryError, VCSError
 from kallithea.lib.vcs.nodes import NodeKind, NodeState
-
-from kallithea.tests.vcs.conf import TEST_HG_REPO, TEST_HG_REPO_CLONE, \
-    TEST_HG_REPO_PULL, TESTS_TMP_PATH
+from kallithea.tests.vcs.conf import TEST_HG_REPO, TEST_HG_REPO_CLONE, TEST_HG_REPO_PULL, TESTS_TMP_PATH
 
 
 class TestMercurialRepository(object):

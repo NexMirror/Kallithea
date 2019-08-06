@@ -25,21 +25,19 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-import logging
 import datetime
+import logging
 import re
 
+from sqlalchemy.orm import joinedload
 from tg import request
 from tg.i18n import ugettext as _
 
-from sqlalchemy.orm import joinedload
-
-from kallithea.model.meta import Session
 from kallithea.lib import helpers as h
-from kallithea.model.db import PullRequest, PullRequestReviewer, \
-    ChangesetStatus, User
-from kallithea.model.notification import NotificationModel
 from kallithea.lib.utils2 import extract_mentioned_users, safe_str, safe_unicode
+from kallithea.model.db import ChangesetStatus, PullRequest, PullRequestReviewer, User
+from kallithea.model.meta import Session
+from kallithea.model.notification import NotificationModel
 
 
 log = logging.getLogger(__name__)

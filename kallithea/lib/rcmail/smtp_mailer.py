@@ -25,11 +25,11 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-import time
 import logging
 import smtplib
-from ssl import SSLError
+import time
 from email.utils import formatdate
+from ssl import SSLError
 
 from kallithea.lib.rcmail.message import Message
 from kallithea.lib.rcmail.utils import DNS_NAME

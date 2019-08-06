@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 
-import urllib
 import unittest
-
-from kallithea.tests.base import *
-from kallithea.tests.fixture import Fixture
+import urllib
 
 from kallithea.lib.utils2 import safe_str, safe_unicode
 from kallithea.model.db import Repository, User
+from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
 from kallithea.model.user import UserModel
-from kallithea.model.meta import Session
+from kallithea.tests.base import *
+from kallithea.tests.fixture import Fixture
+
 
 fixture = Fixture()
 

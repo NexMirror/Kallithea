@@ -9,9 +9,9 @@
     :copyright: (c) 2010-2011 by Marcin Kuzminski, Lukasz Balcerzak.
 """
 
-from .repository import MercurialRepository
 from .changeset import MercurialChangeset
 from .inmemory import MercurialInMemoryChangeset
+from .repository import MercurialRepository
 from .workdir import MercurialWorkdir
 
 

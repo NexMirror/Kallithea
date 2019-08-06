@@ -27,35 +27,35 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 import traceback
-import formencode
 
-from tg import request, tmpl_context as c
+import formencode
+from tg import request
+from tg import tmpl_context as c
 from tg.i18n import ugettext as _
-from webob.exc import HTTPFound, HTTPNotFound, HTTPForbidden, HTTPBadRequest
+from webob.exc import HTTPBadRequest, HTTPForbidden, HTTPFound, HTTPNotFound
 
 from kallithea.config.routing import url
-from kallithea.lib import helpers as h
+from kallithea.controllers.changeset import _context_url, _ignorews_url, create_cs_pr_comment, delete_cs_pr_comment
+from kallithea.controllers.compare import CompareController
 from kallithea.lib import diffs
-from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator
-from kallithea.lib.base import BaseRepoController, render, jsonify
+from kallithea.lib import helpers as h
+from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
+from kallithea.lib.base import BaseRepoController, jsonify, render
+from kallithea.lib.graphmod import graph_data
 from kallithea.lib.page import Page
 from kallithea.lib.utils import action_logger
-from kallithea.lib.vcs.exceptions import EmptyRepositoryError, ChangesetDoesNotExistError
+from kallithea.lib.utils2 import safe_int
+from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, EmptyRepositoryError
 from kallithea.lib.vcs.utils import safe_str
 from kallithea.lib.vcs.utils.hgcompat import unionrepo
-from kallithea.model.db import PullRequest, ChangesetStatus, \
-    PullRequestReviewer, Repository, User
-from kallithea.model.pull_request import CreatePullRequestAction, CreatePullRequestIterationAction, PullRequestModel
-from kallithea.model.meta import Session
-from kallithea.model.repo import RepoModel
-from kallithea.model.comment import ChangesetCommentsModel
 from kallithea.model.changeset_status import ChangesetStatusModel
+from kallithea.model.comment import ChangesetCommentsModel
+from kallithea.model.db import ChangesetStatus, PullRequest, PullRequestReviewer, Repository, User
 from kallithea.model.forms import PullRequestForm, PullRequestPostForm
-from kallithea.lib.utils2 import safe_int
-from kallithea.controllers.changeset import _ignorews_url, _context_url, \
-    create_cs_pr_comment, delete_cs_pr_comment
-from kallithea.controllers.compare import CompareController
-from kallithea.lib.graphmod import graph_data
+from kallithea.model.meta import Session
+from kallithea.model.pull_request import CreatePullRequestAction, CreatePullRequestIterationAction, PullRequestModel
+from kallithea.model.repo import RepoModel
+
 
 log = logging.getLogger(__name__)
 

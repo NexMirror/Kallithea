@@ -11,11 +11,12 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from tgext.routes import RoutedController
-from kallithea.config.routing import make_map
-from kallithea.lib.base import BaseController
-from kallithea.controllers.error import ErrorController
 from tg import config
+from tgext.routes import RoutedController
+
+from kallithea.config.routing import make_map
+from kallithea.controllers.error import ErrorController
+from kallithea.lib.base import BaseController
 
 
 # This is the main Kallithea entry point; TurboGears will forward all requests

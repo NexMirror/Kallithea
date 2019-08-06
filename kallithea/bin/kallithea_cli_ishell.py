@@ -19,13 +19,13 @@ Original author and date, and relevant copyright and licensing information is be
 :copyright: (c) 2013 RhodeCode GmbH, and others.
 :license: GPLv3, see LICENSE.md for more details.
 """
-import click
-import kallithea.bin.kallithea_cli_base as cli_base
-
 import sys
 
-# make following imports directly available inside the ishell
+import click
+
+import kallithea.bin.kallithea_cli_base as cli_base
 from kallithea.model.db import *
+
 
 @cli_base.register_command(config_file_initialize_app=True)
 def ishell():

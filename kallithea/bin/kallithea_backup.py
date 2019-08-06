@@ -26,13 +26,14 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-import os
-import sys
-import logging
-import tarfile
 import datetime
+import logging
+import os
 import subprocess
+import sys
+import tarfile
 import tempfile
+
 
 logging.basicConfig(level=logging.DEBUG,
                     format="%(asctime)s %(levelname)-5.5s %(message)s")

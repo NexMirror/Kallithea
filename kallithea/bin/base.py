@@ -26,12 +26,13 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 import os
-import sys
-import random
-import urllib2
 import pprint
+import random
+import sys
+import urllib2
 
 from kallithea.lib.compat import json
+
 
 CONFIG_NAME = '.config/kallithea'
 FORMAT_PRETTY = 'pretty'

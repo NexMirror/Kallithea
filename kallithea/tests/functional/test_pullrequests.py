@@ -1,14 +1,14 @@
 import re
-import pytest
 
+import pytest
 from tg.util.webtest import test_context
 
-from kallithea.tests.base import *
-from kallithea.tests.fixture import Fixture
+from kallithea.controllers.pullrequests import PullrequestsController
 from kallithea.model.db import PullRequest, User
 from kallithea.model.meta import Session
+from kallithea.tests.base import *
+from kallithea.tests.fixture import Fixture
 
-from kallithea.controllers.pullrequests import PullrequestsController
 
 fixture = Fixture()
 

@@ -1,9 +1,10 @@
-from kallithea.tests.base import *
-from kallithea.model.comment import ChangesetCommentsModel
-from kallithea.model.db import Repository
-
 import pytest
 from tg.util.webtest import test_context
+
+from kallithea.model.comment import ChangesetCommentsModel
+from kallithea.model.db import Repository
+from kallithea.tests.base import *
+
 
 class TestComments(TestController):
 

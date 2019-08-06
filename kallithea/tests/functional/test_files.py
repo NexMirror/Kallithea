@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
+import mimetypes
 import os
 import posixpath
-import mimetypes
-from kallithea.tests.base import *
+
 from kallithea.model.db import Repository
 from kallithea.model.meta import Session
+from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
+
 
 fixture = Fixture()
 

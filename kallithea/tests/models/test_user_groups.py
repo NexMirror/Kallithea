@@ -1,10 +1,8 @@
 from kallithea.model.db import User, UserGroup
-
+from kallithea.model.meta import Session
+from kallithea.model.user_group import UserGroupModel
 from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
-
-from kallithea.model.user_group import UserGroupModel
-from kallithea.model.meta import Session
 
 
 fixture = Fixture()

@@ -1,5 +1,7 @@
-import mock
 import os
+
+import mock
+
 from kallithea.tests.base import *
 
 

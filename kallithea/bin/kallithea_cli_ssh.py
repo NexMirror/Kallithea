@@ -12,20 +12,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import click
-import kallithea.bin.kallithea_cli_base as cli_base
-
-import os
-import sys
-import re
 import logging
+import os
+import re
 import shlex
+import sys
+
+import click
 
 import kallithea
+import kallithea.bin.kallithea_cli_base as cli_base
 from kallithea.lib.utils2 import str2bool
 from kallithea.lib.vcs.backends.git.ssh import GitSshHandler
 from kallithea.lib.vcs.backends.hg.ssh import MercurialSshHandler
 from kallithea.model.ssh_key import SshKeyModel
+
 
 log = logging.getLogger(__name__)
 

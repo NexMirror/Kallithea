@@ -12,11 +12,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import click
-import kallithea.bin.kallithea_cli_base as cli_base
 
 import kallithea
+import kallithea.bin.kallithea_cli_base as cli_base
 from kallithea.lib.db_manage import DbManage
 from kallithea.model.meta import Session
+
 
 @cli_base.register_command(config_file=True)
 @click.option('--user', help='Username of administrator account.')

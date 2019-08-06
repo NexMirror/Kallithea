@@ -4,7 +4,6 @@ functions here are crafted as we don't want to use ``vcs`` to verify tests.
 """
 import os
 import sys
-
 from subprocess import Popen
 
 

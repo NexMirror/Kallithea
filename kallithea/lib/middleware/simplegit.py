@@ -28,15 +28,16 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 
-import re
 import logging
+import re
 
-from kallithea.model.db import Ui, Repository
-from kallithea.lib.utils2 import safe_unicode
 from kallithea.lib.base import BaseVCSController
-from kallithea.lib.utils import make_ui
 from kallithea.lib.hooks import log_pull_action
 from kallithea.lib.middleware.pygrack import make_wsgi_app
+from kallithea.lib.utils import make_ui
+from kallithea.lib.utils2 import safe_unicode
+from kallithea.model.db import Repository, Ui
+
 
 log = logging.getLogger(__name__)
 

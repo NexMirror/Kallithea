@@ -27,28 +27,29 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 import traceback
+
 import formencode
 from formencode import htmlfill
-from tg import request, tmpl_context as c
-from tg.i18n import ugettext as _
 from sqlalchemy.sql.expression import func
-from webob.exc import HTTPFound, HTTPInternalServerError, HTTPForbidden, HTTPNotFound
+from tg import request
+from tg import tmpl_context as c
+from tg.i18n import ugettext as _
+from webob.exc import HTTPForbidden, HTTPFound, HTTPInternalServerError, HTTPNotFound
 
 from kallithea.config.routing import url
 from kallithea.lib import helpers as h
-from kallithea.lib.auth import LoginRequired, \
-    HasRepoPermissionLevelDecorator, NotAnonymous, HasPermissionAny
-from kallithea.lib.base import BaseRepoController, render, jsonify
-from kallithea.lib.utils import action_logger
-from kallithea.lib.vcs import RepositoryError
-from kallithea.model.meta import Session
-from kallithea.model.db import User, Repository, UserFollowing, RepoGroup, \
-    Setting, RepositoryField
-from kallithea.model.forms import RepoForm, RepoFieldForm, RepoPermsForm
-from kallithea.model.scm import ScmModel, AvailableRepoGroupChoices, RepoList
-from kallithea.model.repo import RepoModel
+from kallithea.lib.auth import HasPermissionAny, HasRepoPermissionLevelDecorator, LoginRequired, NotAnonymous
+from kallithea.lib.base import BaseRepoController, jsonify, render
 from kallithea.lib.exceptions import AttachedForksError
+from kallithea.lib.utils import action_logger
 from kallithea.lib.utils2 import safe_int
+from kallithea.lib.vcs import RepositoryError
+from kallithea.model.db import RepoGroup, Repository, RepositoryField, Setting, User, UserFollowing
+from kallithea.model.forms import RepoFieldForm, RepoForm, RepoPermsForm
+from kallithea.model.meta import Session
+from kallithea.model.repo import RepoModel
+from kallithea.model.scm import AvailableRepoGroupChoices, RepoList, ScmModel
+
 
 log = logging.getLogger(__name__)
 

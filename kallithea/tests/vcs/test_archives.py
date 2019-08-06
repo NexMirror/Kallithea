@@ -1,15 +1,14 @@
-import os
-import tarfile
-import zipfile
 import datetime
-import tempfile
+import os
 import StringIO
+import tarfile
+import tempfile
+import zipfile
 
 import pytest
 
 from kallithea.lib.vcs.exceptions import VCSError
 from kallithea.lib.vcs.nodes import FileNode
-
 from kallithea.tests.vcs.base import _BackendTestMixin
 from kallithea.tests.vcs.conf import TESTS_TMP_PATH
 

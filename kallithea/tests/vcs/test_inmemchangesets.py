@@ -3,23 +3,16 @@
 Tests so called "in memory changesets" commit API of vcs.
 """
 
-import time
 import datetime
+import time
 
 import pytest
 
 from kallithea.lib import vcs
-from kallithea.lib.vcs.exceptions import EmptyRepositoryError
-from kallithea.lib.vcs.exceptions import NodeAlreadyAddedError
-from kallithea.lib.vcs.exceptions import NodeAlreadyExistsError
-from kallithea.lib.vcs.exceptions import NodeAlreadyRemovedError
-from kallithea.lib.vcs.exceptions import NodeAlreadyChangedError
-from kallithea.lib.vcs.exceptions import NodeDoesNotExistError
-from kallithea.lib.vcs.exceptions import NodeNotChangedError
-from kallithea.lib.vcs.nodes import DirNode
-from kallithea.lib.vcs.nodes import FileNode
+from kallithea.lib.vcs.exceptions import (
+    EmptyRepositoryError, NodeAlreadyAddedError, NodeAlreadyChangedError, NodeAlreadyExistsError, NodeAlreadyRemovedError, NodeDoesNotExistError, NodeNotChangedError)
+from kallithea.lib.vcs.nodes import DirNode, FileNode
 from kallithea.lib.vcs.utils import safe_unicode
-
 from kallithea.tests.vcs.base import _BackendTestMixin
 
 

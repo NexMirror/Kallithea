@@ -1,5 +1,5 @@
-from kallithea.model.meta import Session
 from kallithea.model.db import Setting
+from kallithea.model.meta import Session
 
 
 name = 'spam-setting-name'

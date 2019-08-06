@@ -19,14 +19,14 @@ vcs.backends.ssh
 SSH backend for all available SCMs
 """
 
-import sys
 import datetime
 import logging
+import sys
 
+from kallithea.lib.auth import AuthUser, HasPermissionAnyMiddleware
+from kallithea.lib.utils2 import safe_str, set_hook_environment
 from kallithea.model.db import Repository, User, UserSshKeys
 from kallithea.model.meta import Session
-from kallithea.lib.auth import HasPermissionAnyMiddleware, AuthUser
-from kallithea.lib.utils2 import safe_str, set_hook_environment
 
 
 log = logging.getLogger(__name__)

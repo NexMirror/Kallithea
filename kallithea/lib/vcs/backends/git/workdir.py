@@ -1,7 +1,7 @@
 import re
+
 from kallithea.lib.vcs.backends.base import BaseWorkdir
-from kallithea.lib.vcs.exceptions import RepositoryError
-from kallithea.lib.vcs.exceptions import BranchDoesNotExistError
+from kallithea.lib.vcs.exceptions import BranchDoesNotExistError, RepositoryError
 
 
 class GitWorkdir(BaseWorkdir):

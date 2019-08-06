@@ -28,19 +28,20 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 
-from tg import response, tmpl_context as c
-from tg.i18n import ugettext as _
-
 from beaker.cache import cache_region, region_invalidate
+from tg import response
+from tg import tmpl_context as c
+from tg.i18n import ugettext as _
 from webhelpers.feedgenerator import Atom1Feed, Rss201rev2Feed
 
 from kallithea import CONFIG
 from kallithea.lib import helpers as h
-from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator
+from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseRepoController
 from kallithea.lib.diffs import DiffProcessor
+from kallithea.lib.utils2 import safe_int, safe_unicode, str2bool
 from kallithea.model.db import CacheInvalidation
-from kallithea.lib.utils2 import safe_int, str2bool, safe_unicode
+
 
 log = logging.getLogger(__name__)
 

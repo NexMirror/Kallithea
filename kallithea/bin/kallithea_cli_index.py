@@ -19,17 +19,18 @@ Original author and date, and relevant copyright and licensing information is be
 :copyright: (c) 2013 RhodeCode GmbH, and others.
 :license: GPLv3, see LICENSE.md for more details.
 """
-import click
-import kallithea.bin.kallithea_cli_base as cli_base
-
 import os
 import sys
 
+import click
+
 import kallithea
+import kallithea.bin.kallithea_cli_base as cli_base
 from kallithea.lib.indexers.daemon import WhooshIndexingDaemon
-from kallithea.lib.pidlock import LockHeld, DaemonLock
+from kallithea.lib.pidlock import DaemonLock, LockHeld
 from kallithea.lib.utils import load_rcextensions
 from kallithea.model.repo import RepoModel
+
 
 @cli_base.register_command(config_file_initialize_app=True)
 @click.option('--repo-location', help='Base path of repositories to index. Default: all')

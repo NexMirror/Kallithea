@@ -9,33 +9,27 @@
     :copyright: (c) 2010-2011 by Marcin Kuzminski, Lukasz Balcerzak.
 """
 
+import datetime
+import logging
 import os
 import time
 import urllib
 import urllib2
-import logging
-import datetime
 from collections import OrderedDict
 
 from kallithea.lib.vcs.backends.base import BaseRepository, CollectionGenerator
 from kallithea.lib.vcs.exceptions import (
-    BranchDoesNotExistError, ChangesetDoesNotExistError, EmptyRepositoryError,
-    RepositoryError, VCSError, TagAlreadyExistError, TagDoesNotExistError
-)
-from kallithea.lib.vcs.utils import (
-    author_email, author_name, date_fromtimestamp, makedate, safe_unicode, safe_str,
-)
+    BranchDoesNotExistError, ChangesetDoesNotExistError, EmptyRepositoryError, RepositoryError, TagAlreadyExistError, TagDoesNotExistError, VCSError)
+from kallithea.lib.vcs.utils import author_email, author_name, date_fromtimestamp, makedate, safe_str, safe_unicode
+from kallithea.lib.vcs.utils.hgcompat import (
+    Abort, RepoError, RepoLookupError, clone, diffopts, get_contact, hex, hg_url, httpbasicauthhandler, httpdigestauthhandler, httppeer, localrepo, match, match_exact, nullid, patch, peer, scmutil, sshpeer, tag, ui)
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.vcs.utils.paths import abspath
-from kallithea.lib.vcs.utils.hgcompat import (
-    ui, nullid, match, match_exact, patch, diffopts, clone, get_contact,
-    localrepo, RepoLookupError, Abort, RepoError, hex, scmutil, hg_url,
-    httpbasicauthhandler, httpdigestauthhandler, peer, httppeer, sshpeer, tag
-)
 
 from .changeset import MercurialChangeset
 from .inmemory import MercurialInMemoryChangeset
 from .workdir import MercurialWorkdir
+
 
 log = logging.getLogger(__name__)
 

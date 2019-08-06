@@ -1,24 +1,18 @@
 # -*- coding: utf-8 -*-
 
-import os
-import mock
-import time
-import shutil
 import datetime
+import os
+import shutil
+import time
 
+import mock
 import pytest
 
-from kallithea.lib.vcs.utils.paths import get_dirs_for_path
-from kallithea.lib.vcs.utils.helpers import get_dict_for_attrs
-from kallithea.lib.vcs.utils.helpers import get_scm
-from kallithea.lib.vcs.utils.helpers import get_scms_for_path
-from kallithea.lib.vcs.utils.helpers import parse_changesets
-from kallithea.lib.vcs.utils.helpers import parse_datetime
-from kallithea.lib.vcs.utils import author_email, author_name
-from kallithea.lib.vcs.utils.paths import get_user_home
 from kallithea.lib.vcs.exceptions import VCSError
-
-from kallithea.tests.vcs.conf import TEST_HG_REPO, TEST_GIT_REPO, TESTS_TMP_PATH
+from kallithea.lib.vcs.utils import author_email, author_name
+from kallithea.lib.vcs.utils.helpers import get_dict_for_attrs, get_scm, get_scms_for_path, parse_changesets, parse_datetime
+from kallithea.lib.vcs.utils.paths import get_dirs_for_path, get_user_home
+from kallithea.tests.vcs.conf import TEST_GIT_REPO, TEST_HG_REPO, TESTS_TMP_PATH
 
 
 class TestPaths(object):

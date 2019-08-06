@@ -33,13 +33,14 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-import os
 import mimetypes
+import os
 import string
 from email import encoders
 from email.charset import Charset
-from email.utils import parseaddr
 from email.mime.base import MIMEBase
+from email.utils import parseaddr
+
 
 ADDRESS_HEADERS_WHITELIST = ['From', 'To', 'Delivered-To', 'Cc']
 DEFAULT_ENCODING = "utf-8"

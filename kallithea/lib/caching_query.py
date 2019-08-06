@@ -18,10 +18,10 @@ Beaker constructs.
 """
 import beaker
 from beaker.exceptions import BeakerException
-
 from sqlalchemy.orm.interfaces import MapperOption
 from sqlalchemy.orm.query import Query
 from sqlalchemy.sql import visitors
+
 from kallithea.lib.utils2 import safe_str
 
 

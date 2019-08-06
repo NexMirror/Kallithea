@@ -25,32 +25,32 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-import traceback
 import calendar
-import logging
 import itertools
+import logging
+import traceback
+from datetime import date, timedelta
 from time import mktime
-from datetime import timedelta, date
 
-from tg import tmpl_context as c, request
+from beaker.cache import cache_region, region_invalidate
+from tg import request
+from tg import tmpl_context as c
 from tg.i18n import ugettext as _
 from webob.exc import HTTPBadRequest
 
-from beaker.cache import cache_region, region_invalidate
-
-from kallithea.lib.vcs.exceptions import ChangesetError, EmptyRepositoryError, \
-    NodeDoesNotExistError
-from kallithea.config.conf import ALL_READMES, ALL_EXTS, LANGUAGES_EXTENSIONS_MAP
-from kallithea.model.db import Statistics, CacheInvalidation, User
-from kallithea.lib.utils2 import safe_int, safe_str
-from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator
-from kallithea.lib.base import BaseRepoController, render, jsonify
-from kallithea.lib.vcs.backends.base import EmptyChangeset
-from kallithea.lib.markup_renderer import MarkupRenderer
+from kallithea.config.conf import ALL_EXTS, ALL_READMES, LANGUAGES_EXTENSIONS_MAP
+from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
+from kallithea.lib.base import BaseRepoController, jsonify, render
 from kallithea.lib.celerylib.tasks import get_commits_stats
 from kallithea.lib.compat import json
-from kallithea.lib.vcs.nodes import FileNode
+from kallithea.lib.markup_renderer import MarkupRenderer
 from kallithea.lib.page import RepoPage
+from kallithea.lib.utils2 import safe_int, safe_str
+from kallithea.lib.vcs.backends.base import EmptyChangeset
+from kallithea.lib.vcs.exceptions import ChangesetError, EmptyRepositoryError, NodeDoesNotExistError
+from kallithea.lib.vcs.nodes import FileNode
+from kallithea.model.db import CacheInvalidation, Statistics, User
+
 
 log = logging.getLogger(__name__)
 

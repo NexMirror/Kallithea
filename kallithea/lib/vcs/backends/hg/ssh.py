@@ -15,14 +15,17 @@
 import logging
 
 from mercurial import hg
+
+from kallithea.lib.utils import make_ui
+from kallithea.lib.utils2 import safe_str, safe_unicode
+from kallithea.lib.vcs.backends.ssh import BaseSshHandler
+
+
 try:
     from mercurial.wireprotoserver import sshserver
 except ImportError:
     from mercurial.sshserver import sshserver # moved in Mercurial 4.6 (1bf5263fe5cc)
 
-from kallithea.lib.utils import make_ui
-from kallithea.lib.utils2 import safe_unicode, safe_str
-from kallithea.lib.vcs.backends.ssh import BaseSshHandler
 
 
 log = logging.getLogger(__name__)

@@ -28,23 +28,24 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 
+import binascii
+import datetime
 import os
+import pwd
 import re
 import sys
 import time
-import uuid
-import datetime
 import urllib
-import binascii
-import pwd
+import uuid
 
-import webob
 import urlobject
+import webob
+from tg.i18n import ugettext as _
+from tg.i18n import ungettext
 from webhelpers2.text import collapse, remove_formatting, strip_tags
 
-from tg.i18n import ugettext as _, ungettext
-from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.compat import json
+from kallithea.lib.vcs.utils.lazy import LazyProperty
 
 
 def str2bool(_str):

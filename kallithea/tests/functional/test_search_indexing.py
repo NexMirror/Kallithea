@@ -6,7 +6,8 @@ from kallithea.model.meta import Session
 from kallithea.model.repo import RepoModel
 from kallithea.model.repo_group import RepoGroupModel
 from kallithea.tests.base import *
-from kallithea.tests.fixture import create_test_index, Fixture
+from kallithea.tests.fixture import Fixture, create_test_index
+
 
 fixture = Fixture()
 

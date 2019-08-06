@@ -27,31 +27,31 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 import traceback
-import formencode
 
+import formencode
 from formencode import htmlfill
-from tg import request, tmpl_context as c, config, app_globals
-from tg.i18n import ugettext as _
 from sqlalchemy.sql.expression import func
+from tg import app_globals, config, request
+from tg import tmpl_context as c
+from tg.i18n import ugettext as _
 from webob.exc import HTTPFound, HTTPNotFound
 
 import kallithea
 from kallithea.config.routing import url
-from kallithea.lib.exceptions import DefaultUserException, \
-    UserOwnsReposException, UserCreationError
-from kallithea.lib import helpers as h
-from kallithea.lib.auth import LoginRequired, HasPermissionAnyDecorator, \
-    AuthUser
 from kallithea.lib import auth_modules
-from kallithea.lib.base import BaseController, render, IfSshEnabled
-from kallithea.model.api_key import ApiKeyModel
-from kallithea.model.ssh_key import SshKeyModel, SshKeyModelException
-from kallithea.model.db import User, UserEmailMap, UserIpMap, UserToPerm
-from kallithea.model.forms import UserForm, CustomDefaultPermissionsForm
-from kallithea.model.user import UserModel
-from kallithea.model.meta import Session
+from kallithea.lib import helpers as h
+from kallithea.lib.auth import AuthUser, HasPermissionAnyDecorator, LoginRequired
+from kallithea.lib.base import BaseController, IfSshEnabled, render
+from kallithea.lib.exceptions import DefaultUserException, UserCreationError, UserOwnsReposException
 from kallithea.lib.utils import action_logger
-from kallithea.lib.utils2 import datetime_to_time, safe_int, generate_api_key
+from kallithea.lib.utils2 import datetime_to_time, generate_api_key, safe_int
+from kallithea.model.api_key import ApiKeyModel
+from kallithea.model.db import User, UserEmailMap, UserIpMap, UserToPerm
+from kallithea.model.forms import CustomDefaultPermissionsForm, UserForm
+from kallithea.model.meta import Session
+from kallithea.model.ssh_key import SshKeyModel, SshKeyModelException
+from kallithea.model.user import UserModel
+
 
 log = logging.getLogger(__name__)
 

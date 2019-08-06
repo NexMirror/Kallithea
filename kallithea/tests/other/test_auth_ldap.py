@@ -1,8 +1,10 @@
+import uuid
+
+import pytest
+
 from kallithea.lib.auth_modules import auth_ldap, authenticate
 from kallithea.model.db import Setting, User
 from kallithea.model.meta import Session
-import uuid
-import pytest
 
 
 @pytest.fixture

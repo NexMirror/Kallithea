@@ -12,16 +12,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import click
 import cStringIO
 import functools
+import logging.config
 import os
 import re
 import sys
 
-import kallithea
-import logging.config
+import click
 import paste.deploy
+
+import kallithea
 
 
 # kallithea_cli is usually invoked through the 'kallithea-cli' wrapper script

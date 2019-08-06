@@ -29,36 +29,33 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 import datetime
-import decorator
 import logging
 import time
 import traceback
 import warnings
 
-import webob.exc
-import paste.httpexceptions
+import decorator
 import paste.auth.basic
+import paste.httpexceptions
 import paste.httpheaders
-
-from tg import config, tmpl_context as c, request, response, session, render_template
-from tg import TGController
+import webob.exc
+from tg import TGController, config, render_template, request, response, session
+from tg import tmpl_context as c
 from tg.i18n import ugettext as _
 
-from kallithea import __version__, BACKENDS
-
+from kallithea import BACKENDS, __version__
 from kallithea.config.routing import url
-from kallithea.lib.utils2 import str2bool, safe_unicode, AttributeDict, \
-    safe_str, safe_int, set_hook_environment
 from kallithea.lib import auth_modules
 from kallithea.lib.auth import AuthUser, HasPermissionAnyMiddleware
 from kallithea.lib.compat import json
-from kallithea.lib.utils import get_repo_slug, is_valid_repo
 from kallithea.lib.exceptions import UserCreationError
-from kallithea.lib.vcs.exceptions import RepositoryError, EmptyRepositoryError, ChangesetDoesNotExistError
+from kallithea.lib.utils import get_repo_slug, is_valid_repo
+from kallithea.lib.utils2 import AttributeDict, safe_int, safe_str, safe_unicode, set_hook_environment, str2bool
+from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, EmptyRepositoryError, RepositoryError
 from kallithea.model import meta
-
-from kallithea.model.db import PullRequest, Repository, User, Setting
+from kallithea.model.db import PullRequest, Repository, Setting, User
 from kallithea.model.scm import ScmModel
+
 
 log = logging.getLogger(__name__)
 

@@ -27,10 +27,11 @@ Original author and date, and relevant copyright and licensing information is be
 
 import StringIO
 
+from pygments import highlight
+from pygments.formatters import HtmlFormatter
+
 from kallithea.lib.vcs.exceptions import VCSError
 from kallithea.lib.vcs.nodes import FileNode
-from pygments.formatters import HtmlFormatter
-from pygments import highlight
 
 
 def annotate_highlight(filenode, annotate_from_changeset_func=None,

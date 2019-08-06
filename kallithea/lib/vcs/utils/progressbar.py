@@ -1,7 +1,7 @@
 # encoding: UTF-8
-import sys
 import datetime
 import string
+import sys
 
 from kallithea.lib.vcs.utils.filesize import filesizeformat
 

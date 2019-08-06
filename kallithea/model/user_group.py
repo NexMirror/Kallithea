@@ -27,11 +27,10 @@ Original author and date, and relevant copyright and licensing information is be
 import logging
 import traceback
 
-from kallithea.model.db import Session, UserGroupMember, UserGroup, \
-    UserGroupRepoToPerm, Permission, UserGroupToPerm, User, UserUserGroupToPerm, \
-    UserGroupUserGroupToPerm
-from kallithea.lib.exceptions import UserGroupsAssignedException, \
-    RepoGroupAssignmentError
+from kallithea.lib.exceptions import RepoGroupAssignmentError, UserGroupsAssignedException
+from kallithea.model.db import (
+    Permission, Session, User, UserGroup, UserGroupMember, UserGroupRepoToPerm, UserGroupToPerm, UserGroupUserGroupToPerm, UserUserGroupToPerm)
+
 
 log = logging.getLogger(__name__)
 

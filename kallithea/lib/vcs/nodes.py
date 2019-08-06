@@ -9,14 +9,14 @@
     :copyright: (c) 2010-2011 by Marcin Kuzminski, Lukasz Balcerzak.
 """
 
-import stat
-import posixpath
 import mimetypes
+import posixpath
+import stat
 
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.exceptions import NodeError, RemovedFileNodeError
+from kallithea.lib.vcs.utils import safe_str, safe_unicode
 from kallithea.lib.vcs.utils.lazy import LazyProperty
-from kallithea.lib.vcs.utils import safe_unicode, safe_str
 
 
 class NodeKind:

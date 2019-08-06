@@ -28,12 +28,13 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 import re
-import formencode
 
+import formencode
 from formencode import htmlfill
+from tg import request, session
+from tg import tmpl_context as c
 from tg.i18n import ugettext as _
-from tg import request, session, tmpl_context as c
-from webob.exc import HTTPFound, HTTPBadRequest
+from webob.exc import HTTPBadRequest, HTTPFound
 
 import kallithea.lib.helpers as h
 from kallithea.config.routing import url
@@ -41,11 +42,10 @@ from kallithea.lib.auth import AuthUser, HasPermissionAnyDecorator
 from kallithea.lib.base import BaseController, log_in_user, render
 from kallithea.lib.exceptions import UserCreationError
 from kallithea.lib.utils2 import safe_str
-from kallithea.model.db import User, Setting
-from kallithea.model.forms import \
-    LoginForm, RegisterForm, PasswordResetRequestForm, PasswordResetConfirmationForm
-from kallithea.model.user import UserModel
+from kallithea.model.db import Setting, User
+from kallithea.model.forms import LoginForm, PasswordResetConfirmationForm, PasswordResetRequestForm, RegisterForm
 from kallithea.model.meta import Session
+from kallithea.model.user import UserModel
 
 
 log = logging.getLogger(__name__)

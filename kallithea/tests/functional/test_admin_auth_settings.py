@@ -1,5 +1,5 @@
-from kallithea.tests.base import *
 from kallithea.model.db import Setting
+from kallithea.tests.base import *
 
 
 class TestAuthSettingsController(TestController):

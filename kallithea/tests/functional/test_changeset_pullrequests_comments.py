@@ -1,9 +1,9 @@
 import re
 
-from kallithea.tests.base import *
 from kallithea.model.changeset_status import ChangesetStatusModel
 from kallithea.model.db import ChangesetComment, PullRequest
 from kallithea.model.meta import Session
+from kallithea.tests.base import *
 
 
 class TestChangeSetCommentsController(TestController):

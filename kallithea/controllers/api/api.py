@@ -25,42 +25,35 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+import logging
 import time
 import traceback
-import logging
-
 from datetime import datetime
-from sqlalchemy import or_
 
+from sqlalchemy import or_
 from tg import request
 
 from kallithea.controllers.api import JSONRPCController, JSONRPCError
 from kallithea.lib.auth import (
-    PasswordGenerator, AuthUser, HasPermissionAnyDecorator,
-    HasPermissionAnyDecorator, HasPermissionAny, HasRepoPermissionLevel,
-    HasRepoGroupPermissionLevel, HasUserGroupPermissionLevel)
-from kallithea.lib.utils import map_groups, repo2db_mapper
-from kallithea.lib.utils2 import (
-    str2bool, time_to_datetime, safe_int, Optional, OAttr)
-from kallithea.model.meta import Session
-from kallithea.model.repo_group import RepoGroupModel
-from kallithea.model.scm import ScmModel, UserGroupList
-from kallithea.model.repo import RepoModel
-from kallithea.model.user import UserModel
-from kallithea.model.user_group import UserGroupModel
-from kallithea.model.gist import GistModel
+    AuthUser, HasPermissionAny, HasPermissionAnyDecorator, HasRepoGroupPermissionLevel, HasRepoPermissionLevel, HasUserGroupPermissionLevel, PasswordGenerator)
+from kallithea.lib.compat import json
+from kallithea.lib.exceptions import DefaultUserException, UserGroupsAssignedException
+from kallithea.lib.utils import action_logger, map_groups, repo2db_mapper
+from kallithea.lib.utils2 import OAttr, Optional, safe_int, str2bool, time_to_datetime
+from kallithea.lib.vcs.backends.base import EmptyChangeset
+from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, EmptyRepositoryError
 from kallithea.model.changeset_status import ChangesetStatusModel
 from kallithea.model.comment import ChangesetCommentsModel
+from kallithea.model.db import ChangesetStatus, Gist, Permission, PullRequest, RepoGroup, Repository, Setting, User, UserGroup, UserIpMap
+from kallithea.model.gist import GistModel
+from kallithea.model.meta import Session
 from kallithea.model.pull_request import PullRequestModel
-from kallithea.model.db import (
-    Repository, Setting, UserIpMap, Permission, User, Gist,
-    RepoGroup, UserGroup, PullRequest, ChangesetStatus)
-from kallithea.lib.compat import json
-from kallithea.lib.exceptions import (
-    DefaultUserException, UserGroupsAssignedException)
-from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, EmptyRepositoryError
-from kallithea.lib.vcs.backends.base import EmptyChangeset
-from kallithea.lib.utils import action_logger
+from kallithea.model.repo import RepoModel
+from kallithea.model.repo_group import RepoGroupModel
+from kallithea.model.scm import ScmModel, UserGroupList
+from kallithea.model.user import UserModel
+from kallithea.model.user_group import UserGroupModel
+
 
 log = logging.getLogger(__name__)
 

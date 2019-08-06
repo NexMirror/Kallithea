@@ -27,35 +27,31 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 import traceback
+
 import formencode
-
 from formencode import htmlfill
-from tg import request, tmpl_context as c, config, app_globals
-from tg.i18n import ugettext as _
-from webob.exc import HTTPFound
-
 from sqlalchemy.orm import joinedload
 from sqlalchemy.sql.expression import func
-from webob.exc import HTTPInternalServerError
+from tg import app_globals, config, request
+from tg import tmpl_context as c
+from tg.i18n import ugettext as _
+from webob.exc import HTTPFound, HTTPInternalServerError
 
 import kallithea
 from kallithea.config.routing import url
 from kallithea.lib import helpers as h
-from kallithea.lib.exceptions import UserGroupsAssignedException, \
-    RepoGroupAssignmentError
-from kallithea.lib.utils2 import safe_unicode, safe_int
-from kallithea.lib.auth import LoginRequired, \
-    HasUserGroupPermissionLevelDecorator, HasPermissionAnyDecorator
+from kallithea.lib.auth import HasPermissionAnyDecorator, HasUserGroupPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseController, render
+from kallithea.lib.exceptions import RepoGroupAssignmentError, UserGroupsAssignedException
+from kallithea.lib.utils import action_logger
+from kallithea.lib.utils2 import safe_int, safe_unicode
+from kallithea.model.db import User, UserGroup, UserGroupRepoGroupToPerm, UserGroupRepoToPerm, UserGroupToPerm
+from kallithea.model.forms import CustomDefaultPermissionsForm, UserGroupForm, UserGroupPermsForm
+from kallithea.model.meta import Session
+from kallithea.model.repo import RepoModel
 from kallithea.model.scm import UserGroupList
 from kallithea.model.user_group import UserGroupModel
-from kallithea.model.repo import RepoModel
-from kallithea.model.db import User, UserGroup, UserGroupToPerm, \
-    UserGroupRepoToPerm, UserGroupRepoGroupToPerm
-from kallithea.model.forms import UserGroupForm, UserGroupPermsForm, \
-    CustomDefaultPermissionsForm
-from kallithea.model.meta import Session
-from kallithea.lib.utils import action_logger
+
 
 log = logging.getLogger(__name__)
 

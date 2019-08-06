@@ -25,13 +25,14 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-import ldap
 import urllib2
 import uuid
+from ConfigParser import ConfigParser
+
+import ldap
 
 from kallithea.lib.compat import json
 
-from ConfigParser import ConfigParser
 
 config = ConfigParser()
 config.read('ldap_sync.conf')

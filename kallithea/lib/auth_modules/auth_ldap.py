@@ -31,11 +31,10 @@ import traceback
 
 from kallithea.lib import auth_modules
 from kallithea.lib.compat import hybrid_property
-from kallithea.lib.utils2 import safe_unicode, safe_str
-from kallithea.lib.exceptions import (
-    LdapConnectionError, LdapUsernameError, LdapPasswordError, LdapImportError
-)
+from kallithea.lib.exceptions import LdapConnectionError, LdapImportError, LdapPasswordError, LdapUsernameError
+from kallithea.lib.utils2 import safe_str, safe_unicode
 from kallithea.model.db import User
+
 
 log = logging.getLogger(__name__)
 

@@ -26,25 +26,25 @@ Original author and date, and relevant copyright and licensing information is be
 
 """
 
-import os
-import sys
-import shutil
 import logging
+import os
+import shutil
+import sys
 import tempfile
 from os.path import dirname
-from subprocess import Popen, PIPE
+from subprocess import PIPE, Popen
 
 from paste.deploy import appconfig
 from sqlalchemy import engine_from_config
 
-from kallithea.lib.utils import setup_cache_regions
-from kallithea.model.base import init_model
-from kallithea.model import meta
-from kallithea.model.db import User, Repository, Ui
-from kallithea.lib.auth import get_crypt_password
-
-from kallithea.tests.base import HG_REPO, TEST_USER_ADMIN_LOGIN, TEST_USER_ADMIN_PASS
 from kallithea.config.environment import load_environment
+from kallithea.lib.auth import get_crypt_password
+from kallithea.lib.utils import setup_cache_regions
+from kallithea.model import meta
+from kallithea.model.base import init_model
+from kallithea.model.db import Repository, Ui, User
+from kallithea.tests.base import HG_REPO, TEST_USER_ADMIN_LOGIN, TEST_USER_ADMIN_PASS
+
 
 rel_path = dirname(dirname(dirname(dirname(os.path.abspath(__file__)))))
 conf = appconfig('config:development.ini', relative_to=rel_path)

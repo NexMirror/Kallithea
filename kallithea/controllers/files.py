@@ -25,43 +25,36 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+import logging
 import os
 import posixpath
-import logging
-import traceback
-import tempfile
 import shutil
+import tempfile
+import traceback
 from collections import OrderedDict
 
-from tg import request, response, tmpl_context as c
+from tg import request, response
+from tg import tmpl_context as c
 from tg.i18n import ugettext as _
-from webob.exc import HTTPFound
+from webob.exc import HTTPFound, HTTPNotFound
 
 from kallithea.config.routing import url
-from kallithea.lib.utils import action_logger
+from kallithea.controllers.changeset import _context_url, _ignorews_url, anchor_url, get_ignore_ws, get_line_ctx
 from kallithea.lib import diffs
 from kallithea.lib import helpers as h
-
-from kallithea.lib.utils2 import convert_line_endings, detect_mode, safe_str, \
-    str2bool, safe_int
-from kallithea.lib.auth import LoginRequired, HasRepoPermissionLevelDecorator
-from kallithea.lib.base import BaseRepoController, render, jsonify
+from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
+from kallithea.lib.base import BaseRepoController, jsonify, render
+from kallithea.lib.exceptions import NonRelativePathError
+from kallithea.lib.utils import action_logger
+from kallithea.lib.utils2 import convert_line_endings, detect_mode, safe_int, safe_str, str2bool
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.conf import settings
-from kallithea.lib.vcs.exceptions import RepositoryError, \
-    ChangesetDoesNotExistError, EmptyRepositoryError, \
-    ImproperArchiveTypeError, VCSError, NodeAlreadyExistsError, \
-    NodeDoesNotExistError, ChangesetError, NodeError
+from kallithea.lib.vcs.exceptions import (
+    ChangesetDoesNotExistError, ChangesetError, EmptyRepositoryError, ImproperArchiveTypeError, NodeAlreadyExistsError, NodeDoesNotExistError, NodeError, RepositoryError, VCSError)
 from kallithea.lib.vcs.nodes import FileNode
-
+from kallithea.model.db import Repository
 from kallithea.model.repo import RepoModel
 from kallithea.model.scm import ScmModel
-from kallithea.model.db import Repository
-
-from kallithea.controllers.changeset import anchor_url, _ignorews_url, \
-    _context_url, get_line_ctx, get_ignore_ws
-from webob.exc import HTTPNotFound
-from kallithea.lib.exceptions import NonRelativePathError
 
 
 log = logging.getLogger(__name__)

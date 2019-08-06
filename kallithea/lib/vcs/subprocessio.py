@@ -22,9 +22,9 @@ You should have received a copy of the GNU Lesser General Public License
 along with git_http_backend.py Project.
 If not, see <http://www.gnu.org/licenses/>.
 """
+import collections
 import os
 import subprocess
-import collections
 import threading
 
 

@@ -26,10 +26,12 @@ down_revision = 'a020f7044fd6'
 branch_labels = None
 depends_on = None
 
-from alembic import op
 import sqlalchemy as sa
+from alembic import op
+from sqlalchemy import MetaData, Table
+
 from kallithea.model.db import Ui
-from sqlalchemy import Table, MetaData
+
 
 meta = MetaData()
 

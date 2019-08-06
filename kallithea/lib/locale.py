@@ -15,6 +15,7 @@ import logging
 import os
 import sys
 
+
 log = logging.getLogger(__name__)
 
 def current_locale_is_valid():

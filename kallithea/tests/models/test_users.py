@@ -1,12 +1,12 @@
 import pytest
-from kallithea.tests.base import *
 
-from kallithea.model.db import User, UserGroup, UserGroupMember, UserEmailMap, \
-    Permission
-from kallithea.model.user import UserModel
+from kallithea.model.db import Permission, User, UserEmailMap, UserGroup, UserGroupMember
 from kallithea.model.meta import Session
+from kallithea.model.user import UserModel
 from kallithea.model.user_group import UserGroupModel
+from kallithea.tests.base import *
 from kallithea.tests.fixture import Fixture
+
 
 fixture = Fixture()
 
