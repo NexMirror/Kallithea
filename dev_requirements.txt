@@ -6,3 +6,4 @@ pytest-localserver < 0.6
 mock < 3.1
 Sphinx < 1.9
 WebTest < 2.1
+isort == 4.3.21

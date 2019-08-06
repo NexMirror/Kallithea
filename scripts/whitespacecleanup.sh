@@ -17,4 +17,7 @@ sed -i -e 's|^\([^ /].*,\)\([^ ]\)|\1 \2|g' `hg loc '*.css'`
 hg mani | xargs chmod -x
 hg loc 'set:!binary()&grep("^#!")&!(**_tmpl.py)&!(**/template**)' | xargs chmod +x
 
+# isort is installed from dev_requirements.txt
+isort --line-width 160 --wrap-length 160 --lines-after-imports 2 `hg loc '*.py'`
+
 hg diff
