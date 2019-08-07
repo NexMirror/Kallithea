@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import unittest
 import urllib
 
 from kallithea.lib.utils2 import safe_str, safe_unicode

@@ -36,14 +36,12 @@ from webob.exc import HTTPBadRequest, HTTPForbidden, HTTPFound, HTTPNotFound
 
 from kallithea.config.routing import url
 from kallithea.controllers.changeset import _context_url, _ignorews_url, create_cs_pr_comment, delete_cs_pr_comment
-from kallithea.controllers.compare import CompareController
 from kallithea.lib import diffs
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseRepoController, jsonify, render
 from kallithea.lib.graphmod import graph_data
 from kallithea.lib.page import Page
-from kallithea.lib.utils import action_logger
 from kallithea.lib.utils2 import safe_int
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, EmptyRepositoryError
 from kallithea.lib.vcs.utils import safe_str
@@ -54,7 +52,6 @@ from kallithea.model.db import ChangesetStatus, PullRequest, PullRequestReviewer
 from kallithea.model.forms import PullRequestForm, PullRequestPostForm
 from kallithea.model.meta import Session
 from kallithea.model.pull_request import CreatePullRequestAction, CreatePullRequestIterationAction, PullRequestModel
-from kallithea.model.repo import RepoModel
 
 
 log = logging.getLogger(__name__)

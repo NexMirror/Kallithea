@@ -14,9 +14,6 @@ To make sure that the config really has been initialized, we check one of the
 mandatory settings.
 """
 
-import os
-import warnings
-
 import celery
 import celery.result as result
 import tg

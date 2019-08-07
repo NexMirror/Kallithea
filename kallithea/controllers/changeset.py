@@ -48,7 +48,6 @@ from kallithea.model.comment import ChangesetCommentsModel
 from kallithea.model.db import ChangesetComment, ChangesetStatus
 from kallithea.model.meta import Session
 from kallithea.model.pull_request import PullRequestModel
-from kallithea.model.repo import RepoModel
 
 
 log = logging.getLogger(__name__)

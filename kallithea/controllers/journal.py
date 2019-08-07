@@ -32,7 +32,6 @@ from itertools import groupby
 
 from sqlalchemy import or_
 from sqlalchemy.orm import joinedload
-from sqlalchemy.sql.expression import func
 from tg import request, response
 from tg import tmpl_context as c
 from tg.i18n import ugettext as _

@@ -3,7 +3,6 @@ import re
 import time
 import urlparse
 
-import mock
 from tg.util.webtest import test_context
 
 from kallithea.lib import helpers as h

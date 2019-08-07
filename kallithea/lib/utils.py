@@ -33,7 +33,6 @@ import traceback
 
 import beaker
 from beaker.cache import _cache_decorate
-from tg import request, response
 from tg.i18n import ugettext as _
 
 from kallithea.lib.exceptions import HgsubversionImportError

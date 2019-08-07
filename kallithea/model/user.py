@@ -368,8 +368,6 @@ class UserModel(object):
                      timestamp=timestamp)
 
     def verify_reset_password_token(self, email, timestamp, token):
-        from kallithea.lib.celerylib import tasks
-        from kallithea.lib import auth
         import kallithea.lib.helpers as h
         user = User.get_by_email(email)
         if user is None:

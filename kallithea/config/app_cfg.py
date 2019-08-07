@@ -23,7 +23,6 @@ import platform
 import sys
 
 import alembic.config
-import formencode
 import mercurial
 import tg
 from alembic.migration import MigrationContext
@@ -40,9 +39,8 @@ from kallithea.lib.middleware.https_fixup import HttpsFixup
 from kallithea.lib.middleware.permanent_repo_url import PermanentRepoUrl
 from kallithea.lib.middleware.simplegit import SimpleGit
 from kallithea.lib.middleware.simplehg import SimpleHg
-from kallithea.lib.utils import check_git_version, load_rcextensions, make_ui, repo2db_mapper, set_app_settings, set_indexer_config, set_vcs_config
+from kallithea.lib.utils import check_git_version, load_rcextensions, make_ui, set_app_settings, set_indexer_config, set_vcs_config
 from kallithea.lib.utils2 import str2bool
-from kallithea.model.scm import ScmModel
 
 
 log = logging.getLogger(__name__)

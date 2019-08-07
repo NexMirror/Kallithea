@@ -27,13 +27,11 @@ Original author and date, and relevant copyright and licensing information is be
 
 
 import logging
-import traceback
 
 from kallithea.lib import auth_modules
 from kallithea.lib.compat import hybrid_property
 from kallithea.lib.exceptions import LdapConnectionError, LdapImportError, LdapPasswordError, LdapUsernameError
 from kallithea.lib.utils2 import safe_str, safe_unicode
-from kallithea.model.db import User
 
 
 log = logging.getLogger(__name__)

@@ -30,7 +30,6 @@ import traceback
 
 import formencode
 from formencode import htmlfill
-from sqlalchemy import func
 from tg import request
 from tg import tmpl_context as c
 from tg.i18n import ugettext as _

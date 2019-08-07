@@ -47,8 +47,7 @@ import kallithea
 from kallithea.lib.caching_query import FromCache
 from kallithea.lib.compat import json
 from kallithea.lib.exceptions import DefaultUserException
-from kallithea.lib.utils2 import (
-    Optional, aslist, get_changeset_safe, get_clone_url, remove_prefix, safe_int, safe_str, safe_unicode, str2bool, time_to_datetime, urlreadable)
+from kallithea.lib.utils2 import Optional, aslist, get_changeset_safe, get_clone_url, remove_prefix, safe_int, safe_str, safe_unicode, str2bool, urlreadable
 from kallithea.lib.vcs import get_backend
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.utils.helpers import get_scm

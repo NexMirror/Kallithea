@@ -36,7 +36,6 @@ from time import mktime
 
 from whoosh.index import create_in, exists_in, open_dir
 from whoosh.qparser import QueryParser
-from whoosh.query import *
 
 from kallithea.config.conf import INDEX_EXTENSIONS, INDEX_FILENAMES
 from kallithea.lib.indexers import CHGSET_IDX_NAME, CHGSETS_SCHEMA, IDX_NAME, SCHEMA

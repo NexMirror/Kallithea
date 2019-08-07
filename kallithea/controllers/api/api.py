@@ -26,22 +26,19 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 import logging
-import time
 import traceback
 from datetime import datetime
 
-from sqlalchemy import or_
 from tg import request
 
 from kallithea.controllers.api import JSONRPCController, JSONRPCError
 from kallithea.lib.auth import (
-    AuthUser, HasPermissionAny, HasPermissionAnyDecorator, HasRepoGroupPermissionLevel, HasRepoPermissionLevel, HasUserGroupPermissionLevel, PasswordGenerator)
-from kallithea.lib.compat import json
+    AuthUser, HasPermissionAny, HasPermissionAnyDecorator, HasRepoGroupPermissionLevel, HasRepoPermissionLevel, HasUserGroupPermissionLevel)
 from kallithea.lib.exceptions import DefaultUserException, UserGroupsAssignedException
-from kallithea.lib.utils import action_logger, map_groups, repo2db_mapper
-from kallithea.lib.utils2 import OAttr, Optional, safe_int, str2bool, time_to_datetime
+from kallithea.lib.utils import action_logger, repo2db_mapper
+from kallithea.lib.utils2 import OAttr, Optional
 from kallithea.lib.vcs.backends.base import EmptyChangeset
-from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, EmptyRepositoryError
+from kallithea.lib.vcs.exceptions import EmptyRepositoryError
 from kallithea.model.changeset_status import ChangesetStatusModel
 from kallithea.model.comment import ChangesetCommentsModel
 from kallithea.model.db import ChangesetStatus, Gist, Permission, PullRequest, RepoGroup, Repository, Setting, User, UserGroup, UserIpMap

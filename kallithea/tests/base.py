@@ -20,13 +20,10 @@ import tempfile
 import time
 
 import pytest
-from tg import config
 from webtest import TestApp
 
-from kallithea import model
 from kallithea.lib.utils2 import safe_str
 from kallithea.model.db import User
-from kallithea.model.meta import Session
 
 
 log = logging.getLogger(__name__)

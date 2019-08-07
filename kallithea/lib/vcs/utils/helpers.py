@@ -7,7 +7,6 @@ import datetime
 import os
 import re
 import time
-from subprocess import PIPE, Popen
 
 from kallithea.lib.vcs.exceptions import RepositoryError, VCSError
 from kallithea.lib.vcs.utils.paths import abspath

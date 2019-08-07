@@ -13,7 +13,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import pytest
-from sqlalchemy.orm.exc import NoResultFound, ObjectDeletedError
+from sqlalchemy.orm.exc import NoResultFound
 from tg.util.webtest import test_context
 from webob.exc import HTTPNotFound
 
@@ -21,7 +21,7 @@ from kallithea.controllers.admin.users import UsersController
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import check_password
 from kallithea.model import validators
-from kallithea.model.db import Permission, RepoGroup, User, UserApiKeys, UserIpMap, UserSshKeys
+from kallithea.model.db import Permission, RepoGroup, User, UserApiKeys, UserSshKeys
 from kallithea.model.meta import Session
 from kallithea.model.user import UserModel
 from kallithea.tests.base import *

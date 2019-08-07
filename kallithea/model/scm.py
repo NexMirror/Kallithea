@@ -31,16 +31,13 @@ import os
 import posixpath
 import re
 import sys
-import time
 import traceback
 
 import pkg_resources
-from sqlalchemy import func
 from tg.i18n import ugettext as _
 
 import kallithea
 from kallithea import BACKENDS
-from kallithea.lib import helpers as h
 from kallithea.lib.auth import HasPermissionAny, HasRepoGroupPermissionLevel, HasRepoPermissionLevel, HasUserGroupPermissionLevel
 from kallithea.lib.exceptions import IMCCommitError, NonRelativePathError
 from kallithea.lib.hooks import process_pushed_raw_ids

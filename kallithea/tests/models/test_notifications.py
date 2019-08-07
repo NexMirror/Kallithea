@@ -2,7 +2,6 @@ import os
 import re
 
 import mock
-import routes.util
 from tg.util.webtest import test_context
 
 import kallithea.lib.celerylib

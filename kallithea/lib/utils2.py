@@ -33,13 +33,10 @@ import datetime
 import os
 import pwd
 import re
-import sys
 import time
 import urllib
-import uuid
 
 import urlobject
-import webob
 from tg.i18n import ugettext as _
 from tg.i18n import ungettext
 from webhelpers2.text import collapse, remove_formatting, strip_tags

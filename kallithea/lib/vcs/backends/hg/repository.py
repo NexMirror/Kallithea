@@ -22,7 +22,7 @@ from kallithea.lib.vcs.exceptions import (
     BranchDoesNotExistError, ChangesetDoesNotExistError, EmptyRepositoryError, RepositoryError, TagAlreadyExistError, TagDoesNotExistError, VCSError)
 from kallithea.lib.vcs.utils import author_email, author_name, date_fromtimestamp, makedate, safe_str, safe_unicode
 from kallithea.lib.vcs.utils.hgcompat import (
-    Abort, RepoError, RepoLookupError, clone, diffopts, get_contact, hex, hg_url, httpbasicauthhandler, httpdigestauthhandler, httppeer, localrepo, match, match_exact, nullid, patch, peer, scmutil, sshpeer, tag, ui)
+    Abort, RepoError, RepoLookupError, clone, diffopts, get_contact, hex, hg_url, httpbasicauthhandler, httpdigestauthhandler, httppeer, localrepo, match_exact, nullid, patch, peer, scmutil, sshpeer, tag, ui)
 from kallithea.lib.vcs.utils.lazy import LazyProperty
 from kallithea.lib.vcs.utils.paths import abspath
 

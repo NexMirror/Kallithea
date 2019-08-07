@@ -42,7 +42,7 @@ from kallithea.lib.base import BaseController, render
 from kallithea.lib.celerylib import tasks
 from kallithea.lib.exceptions import HgsubversionImportError
 from kallithea.lib.utils import repo2db_mapper, set_app_settings
-from kallithea.lib.utils2 import safe_unicode, str2bool
+from kallithea.lib.utils2 import safe_unicode
 from kallithea.lib.vcs import VCSError
 from kallithea.model.db import Repository, Setting, Ui
 from kallithea.model.forms import ApplicationSettingsForm, ApplicationUiSettingsForm, ApplicationVisualisationForm

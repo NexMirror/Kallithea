@@ -29,7 +29,6 @@ import datetime
 import logging
 import re
 
-from sqlalchemy.orm import joinedload
 from tg import request
 from tg.i18n import ugettext as _
 

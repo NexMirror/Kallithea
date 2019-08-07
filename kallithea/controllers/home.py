@@ -28,8 +28,7 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 
-from sqlalchemy import and_, or_
-from sqlalchemy.sql.expression import func
+from sqlalchemy import or_
 from tg import request
 from tg import tmpl_context as c
 from tg.i18n import ugettext as _

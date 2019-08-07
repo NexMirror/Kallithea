@@ -37,7 +37,6 @@ from kallithea import CELERY_EAGER, CELERY_ON
 from kallithea.lib.pidlock import DaemonLock, LockHeld
 from kallithea.lib.utils2 import safe_str
 from kallithea.model import meta
-from kallithea.model.base import init_model
 
 
 log = logging.getLogger(__name__)

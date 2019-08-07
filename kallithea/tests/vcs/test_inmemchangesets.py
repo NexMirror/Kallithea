@@ -4,7 +4,6 @@ Tests so called "in memory changesets" commit API of vcs.
 """
 
 import datetime
-import time
 
 import pytest
 

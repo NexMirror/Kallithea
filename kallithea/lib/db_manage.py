@@ -29,9 +29,7 @@ Original author and date, and relevant copyright and licensing information is be
 import logging
 import os
 import sys
-import time
 import uuid
-from os.path import dirname
 
 import alembic.command
 import alembic.config
@@ -39,11 +37,10 @@ import sqlalchemy
 from sqlalchemy.engine import create_engine
 
 from kallithea.model.base import init_model
-from kallithea.model.db import CacheInvalidation, Permission, RepoGroup, Repository, Setting, Ui, User, UserRepoGroupToPerm, UserToPerm
+from kallithea.model.db import Permission, RepoGroup, Repository, Setting, Ui, User, UserRepoGroupToPerm, UserToPerm
 #from kallithea.model import meta
 from kallithea.model.meta import Base, Session
 from kallithea.model.permission import PermissionModel
-from kallithea.model.repo import RepoModel
 from kallithea.model.repo_group import RepoGroupModel
 from kallithea.model.user import UserModel
 

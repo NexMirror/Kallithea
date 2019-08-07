@@ -1,5 +1,4 @@
 import datetime
-import errno
 
 from kallithea.lib.vcs.backends.base import BaseInMemoryChangeset
 from kallithea.lib.vcs.exceptions import RepositoryError

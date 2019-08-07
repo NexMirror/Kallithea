@@ -32,8 +32,6 @@ import shutil
 import traceback
 from datetime import datetime
 
-from sqlalchemy.orm import subqueryload
-
 import kallithea.lib.utils2
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import HasRepoPermissionLevel, HasUserGroupPermissionLevel
@@ -45,7 +43,6 @@ from kallithea.lib.utils2 import LazyProperty, get_current_authuser, obfuscate_u
 from kallithea.lib.vcs.backends import get_backend
 from kallithea.model.db import (
     Permission, RepoGroup, Repository, RepositoryField, Session, Statistics, Ui, User, UserGroup, UserGroupRepoGroupToPerm, UserGroupRepoToPerm, UserRepoGroupToPerm, UserRepoToPerm)
-from kallithea.model.scm import UserGroupList
 
 
 log = logging.getLogger(__name__)

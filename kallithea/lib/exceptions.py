@@ -25,11 +25,6 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
-from webob.exc import HTTPClientError
-
-from kallithea.lib.utils2 import safe_str
-
-
 class LdapUsernameError(Exception):
     pass
 

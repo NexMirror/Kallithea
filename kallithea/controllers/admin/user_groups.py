@@ -48,7 +48,6 @@ from kallithea.lib.utils2 import safe_int, safe_unicode
 from kallithea.model.db import User, UserGroup, UserGroupRepoGroupToPerm, UserGroupRepoToPerm, UserGroupToPerm
 from kallithea.model.forms import CustomDefaultPermissionsForm, UserGroupForm, UserGroupPermsForm
 from kallithea.model.meta import Session
-from kallithea.model.repo import RepoModel
 from kallithea.model.scm import UserGroupList
 from kallithea.model.user_group import UserGroupModel
 

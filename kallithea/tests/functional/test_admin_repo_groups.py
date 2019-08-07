@@ -1,4 +1,3 @@
-from kallithea.model.db import Repository
 from kallithea.model.meta import Session
 from kallithea.model.repo_group import RepoGroupModel
 from kallithea.tests.base import TestController, url

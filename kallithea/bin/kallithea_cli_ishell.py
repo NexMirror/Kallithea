@@ -21,8 +21,6 @@ Original author and date, and relevant copyright and licensing information is be
 """
 import sys
 
-import click
-
 import kallithea.bin.kallithea_cli_base as cli_base
 from kallithea.model.db import *
 

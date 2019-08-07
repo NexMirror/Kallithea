@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import mimetypes
-import os
 import posixpath
 
 from kallithea.model.db import Repository

@@ -25,7 +25,6 @@ import pytest
 
 from kallithea.lib.auth import AuthUser
 from kallithea.lib.compat import json
-from kallithea.lib.utils2 import time_to_datetime
 from kallithea.model.changeset_status import ChangesetStatusModel
 from kallithea.model.db import ChangesetStatus, PullRequest, RepoGroup, Repository, Setting, Ui, User
 from kallithea.model.gist import GistModel

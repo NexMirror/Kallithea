@@ -1,7 +1,6 @@
 import re
 
 import pytest
-from tg.util.webtest import test_context
 
 from kallithea.controllers.pullrequests import PullrequestsController
 from kallithea.model.db import PullRequest, User

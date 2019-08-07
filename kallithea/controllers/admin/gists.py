@@ -26,7 +26,6 @@ Original author and date, and relevant copyright and licensing information is be
 """
 
 import logging
-import time
 import traceback
 
 import formencode.htmlfill
@@ -43,7 +42,7 @@ from kallithea.lib.base import BaseController, jsonify, render
 from kallithea.lib.page import Page
 from kallithea.lib.utils2 import safe_int, safe_unicode, time_to_datetime
 from kallithea.lib.vcs.exceptions import NodeNotChangedError, VCSError
-from kallithea.model.db import Gist, User
+from kallithea.model.db import Gist
 from kallithea.model.forms import GistForm
 from kallithea.model.gist import GistModel
 from kallithea.model.meta import Session

@@ -2,7 +2,6 @@
 Module providing backend independent mixin class.
 """
 import datetime
-import os
 import time
 
 import pytest

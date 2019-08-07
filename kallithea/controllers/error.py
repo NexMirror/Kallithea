@@ -27,13 +27,12 @@ Original author and date, and relevant copyright and licensing information is be
 
 import cgi
 import logging
-import os
 
 from tg import config, expose, request
 from tg import tmpl_context as c
 from tg.i18n import ugettext as _
 
-from kallithea.lib.base import BaseController, render
+from kallithea.lib.base import BaseController
 
 
 log = logging.getLogger(__name__)

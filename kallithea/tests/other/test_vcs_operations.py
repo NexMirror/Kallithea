@@ -39,7 +39,6 @@ import pytest
 from kallithea import CONFIG
 from kallithea.model.db import CacheInvalidation, Repository, Ui, User, UserIpMap, UserLog
 from kallithea.model.meta import Session
-from kallithea.model.repo import RepoModel
 from kallithea.model.ssh_key import SshKeyModel
 from kallithea.model.user import UserModel
 from kallithea.tests.base import *
