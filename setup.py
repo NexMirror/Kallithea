@@ -43,9 +43,9 @@ requirements = [
     "alembic >= 0.8.0, < 1.1",
     "gearbox < 1",
     "waitress >= 0.8.8, < 1.4",
-    "WebOb >= 1.7, < 1.8", # turbogears2 2.3.12 requires WebOb<1.8.0
+    "WebOb >= 1.7, < 1.9",
     "backlash >= 0.1.2, < 1",
-    "TurboGears2 >= 2.3.10, < 2.4", # TODO: 2.4 drops Pylons compatibility
+    "TurboGears2 >= 2.3.10, < 2.5",
     "tgext.routes >= 0.2.0, < 1",
     "Beaker >= 1.7.0, < 2",
     "WebHelpers >= 1.3, < 1.4",
