@@ -422,7 +422,6 @@ class SettingsController(BaseController):
 
         import kallithea
         c.ini = kallithea.CONFIG
-        c.update_url = defaults.get('update_url')
         server_info = Setting.get_server_info()
         for key, val in server_info.iteritems():
             setattr(c, key, val)
@@ -432,46 +431,3 @@ class SettingsController(BaseController):
             defaults=defaults,
             encoding="UTF-8",
             force_defaults=False)
-
-    @HasPermissionAnyDecorator('hg.admin')
-    def settings_system_update(self):
-        import json
-        import urllib2
-        from kallithea.lib.verlib import NormalizedVersion
-        from kallithea import __version__
-
-        defaults = Setting.get_app_settings()
-        defaults.update(self._get_hg_ui_settings())
-        _update_url = defaults.get('update_url', '')
-        _update_url = "" # FIXME: disabled
-
-        _err = lambda s: '<div class="alert alert-danger">%s</div>' % (s)
-        try:
-            import kallithea
-            ver = kallithea.__version__
-            log.debug('Checking for upgrade on `%s` server', _update_url)
-            opener = urllib2.build_opener()
-            opener.addheaders = [('User-agent', 'Kallithea-SCM/%s' % ver)]
-            response = opener.open(_update_url)
-            response_data = response.read()
-            data = json.loads(response_data)
-        except urllib2.URLError as e:
-            log.error(traceback.format_exc())
-            return _err('Failed to contact upgrade server: %r' % e)
-        except ValueError as e:
-            log.error(traceback.format_exc())
-            return _err('Bad data sent from update server')
-
-        latest = data['versions'][0]
-
-        c.update_url = _update_url
-        c.latest_data = latest
-        c.latest_ver = latest['version']
-        c.cur_ver = __version__
-        c.should_upgrade = False
-
-        if NormalizedVersion(c.latest_ver) > NormalizedVersion(c.cur_ver):
-            c.should_upgrade = True
-        c.important_notices = latest['general']
-
-        return render('admin/settings/settings_system_update.html'),

@@ -319,8 +319,6 @@ def make_map(config):
                   action="settings_system", conditions=dict(method=["POST"]))
         m.connect("admin_settings_system", "/settings/system",
                   action="settings_system", conditions=dict(method=["GET"]))
-        m.connect("admin_settings_system_update", "/settings/system/updates",
-                  action="settings_system_update", conditions=dict(method=["GET"]))
 
     # ADMIN MY ACCOUNT
     with rmap.submapper(path_prefix=ADMIN_PREFIX,
