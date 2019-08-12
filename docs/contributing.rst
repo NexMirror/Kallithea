@@ -35,7 +35,7 @@ To get started with Kallithea development::
         virtualenv ../kallithea-venv
         source ../kallithea-venv/bin/activate
         pip install --upgrade pip setuptools
-        pip install --upgrade -e . -r dev_requirements.txt
+        pip install --upgrade -e . -r dev_requirements.txt python-ldap python-pam
         kallithea-cli config-create my.ini
         kallithea-cli db-create -c my.ini --user=user --email=user@example.com --password=password --repos=/tmp
         kallithea-cli front-end-build
