@@ -44,8 +44,7 @@ node {
     }
     stage('setup') {
         def virtualenvscript = """$activatevirtualenv
-            pip install --upgrade -e .
-            pip install -r dev_requirements.txt
+            pip install --upgrade -e . -r dev_requirements.txt
             python setup.py compile_catalog
             """
         if (isUnix()) {
