@@ -93,6 +93,31 @@ Using Kallithea with SSH
 ------------------------
 
 Kallithea supports repository access via SSH key based authentication.
+This means:
+
+- repository URLs like ``ssh://kallithea@example.com/name/of/repository``
+
+- all network traffic for both read and write happens over the SSH protocol on
+  port 22, without using HTTP/HTTPS nor the Kallithea WSGI application
+
+- encryption and authentication protocols are managed by the system's ``sshd``
+  process, with all users using the same Kallithea system user (e.g.
+  ``kallithea``) when connecting to the SSH server, but with users' public keys
+  in the Kallithea system user's `.ssh/authorized_keys` file granting each user
+  sandboxed access to the repositories.
+
+- users and admins can manage SSH public keys in the web UI
+
+- in their SSH client configuration, users can configure how the client should
+  control access to their SSH key - without passphrase, with passphrase, and
+  optionally with passphrase caching in the local shell session (``ssh-agent``).
+  This is standard SSH functionality, not something Kallithea provides or
+  interferes with.
+
+- network communication between client and server happens in a bidirectional
+  stateful stream, and will in some cases be faster than HTTP/HTTPS with several
+  stateless round-trips.
+
 
 .. note:: At this moment, repository access via SSH has been tested on Unix
     only. Windows users that care about SSH are invited to test it and report
