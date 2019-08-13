@@ -54,14 +54,14 @@ ${self.repo_context_bar('summary')}
                 <label>${_('Clone URL')}:</label>
                 <div id="clone-url">
                   <div id="clone_by_name" class="input-group"
-                    %if c.ssh_enabled:
+                    %if c.ssh_repo_url:
                         style="display:none"
                     %endif
                     >
                     <span class="input-group-addon">${self.repolabel(c.db_repo)}</span>
                     <input class="form-control" size="80" readonly="readonly" value="${c.clone_repo_url}"/>
                     <span class="input-group-addon btn use-id">${_('Use ID')}</span>
-                    %if c.ssh_enabled:
+                    %if c.ssh_repo_url:
                     <span class="input-group-addon btn use-ssh">${_('Use SSH')}</span>
                     %endif
                   </div>
@@ -69,11 +69,11 @@ ${self.repo_context_bar('summary')}
                     <span class="input-group-addon">${self.repolabel(c.db_repo)}</span>
                     <input class="form-control" size="80" readonly="readonly" value="${c.clone_repo_url_id}"/>
                     <span class="input-group-addon btn use-name">${_('Use Name')}</span>
-                    %if c.ssh_enabled:
+                    %if c.ssh_repo_url:
                     <span class="input-group-addon btn use-ssh">${_('Use SSH')}</span>
                     %endif
                   </div>
-                  %if c.ssh_enabled:
+                  %if c.ssh_repo_url:
                   <div id="clone_ssh" class="input-group">
                     <span class="input-group-addon">${self.repolabel(c.db_repo)}</span>
                     <input id="ssh_url" class="form-control" size="80" readonly="readonly" value="${c.ssh_repo_url}"/>
