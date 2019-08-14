@@ -52,8 +52,7 @@ def ssh_serve(user_id, key_id):
         os.environ['LANGUAGE'] = ssh_locale # trumps LC_ALL for GNU gettext message handling
 
     ssh_original_command = os.environ.get('SSH_ORIGINAL_COMMAND', '')
-    connection = re.search(r'^([0-9.]+)', os.environ.get('SSH_CONNECTION', ''))
-    client_ip = connection.group(1) if connection else '0.0.0.0'
+    client_ip = os.environ.get('SSH_CONNECTION', '').split(' ', 1)[0] or '0.0.0.0'
     log.debug('ssh-serve was invoked for SSH command %r from %s', ssh_original_command, client_ip)
 
     if not ssh_original_command:
