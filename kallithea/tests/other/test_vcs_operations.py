@@ -401,7 +401,6 @@ class TestVCSOperations(TestController):
         stdout, stderr = Command(TESTS_TMP_PATH).execute(vt.repo_type, 'init', dest_dir)
 
         clone_url = vt.repo_url_param(webserver, vt.repo_name)
-        print (vt, clone_url)
         stdout, stderr = Command(dest_dir).execute(vt.repo_type, 'pull', clone_url)
 
         if vt.repo_type == 'git':

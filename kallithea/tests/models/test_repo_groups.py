@@ -52,9 +52,6 @@ class TestRepoGroups(TestController):
         path = os.path.join(*path)
         return os.path.isdir(path)
 
-    def _check_folders(self):
-        print os.listdir(TESTS_TMP_PATH)
-
     def __delete_group(self, id_):
         RepoGroupModel().delete(id_)
 

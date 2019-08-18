@@ -294,7 +294,6 @@ class TestDiffLib(TestController):
         for d in chunks[1]:
             l.append('%(action)-7s %(new_lineno)3s %(old_lineno)3s %(line)r\n' % d)
         s = ''.join(l)
-        print s
         assert s == r'''
 context ... ... u'@@ -51,6 +51,13 @@\n'
 unmod    51  51 u'<u>\t</u>begin();\n'
