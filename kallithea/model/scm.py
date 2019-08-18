@@ -665,7 +665,7 @@ class ScmModel(object):
         hist_l = []
         choices = []
         repo = self.__get_repo(repo)
-        hist_l.append(['rev:tip', _('latest tip')])
+        hist_l.append(('rev:tip', _('latest tip')))
         choices.append('rev:tip')
         if repo is None:
             return choices, hist_l
