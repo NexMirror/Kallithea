@@ -25,6 +25,8 @@ Original author and date, and relevant copyright and licensing information is be
 
 """
 
+from __future__ import print_function
+
 import json
 import os
 import re
@@ -144,7 +146,7 @@ class Command(object):
         command = ' '.join(args)
         ignoreReturnCode = environ.pop('ignoreReturnCode', False)
         if DEBUG:
-            print '*** CMD %s ***' % command
+            print('*** CMD %s ***' % command)
         testenv = dict(os.environ)
         testenv['LANG'] = 'en_US.UTF-8'
         testenv['LANGUAGE'] = 'en_US:en'
@@ -155,9 +157,9 @@ class Command(object):
         stdout, stderr = p.communicate()
         if DEBUG:
             if stdout:
-                print 'stdout:', stdout
+                print('stdout:', stdout)
             if stderr:
-                print 'stderr:', stderr
+                print('stderr:', stderr)
         if not ignoreReturnCode:
             assert p.returncode == 0
         return stdout, stderr

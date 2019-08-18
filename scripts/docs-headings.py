@@ -4,6 +4,8 @@
 Consistent formatting of rst section titles
 """
 
+from __future__ import print_function
+
 import re
 import subprocess
 
@@ -33,7 +35,7 @@ headermatch = re.compile(r'''\n*(.+)\n([][!"#$%&'()*+,./:;<=>?@\\^_`{|}~-])\2{2,
 def main():
     filenames = subprocess.check_output(['hg', 'loc', 'set:**.rst+kallithea/i18n/how_to']).splitlines()
     for fn in filenames:
-        print 'processing %s' % fn
+        print('processing %s' % fn)
         s = open(fn).read()
 
         # find levels and their styles
@@ -44,11 +46,11 @@ def main():
             if style in styles:
                 stylepos = styles.index(style)
                 if stylepos > lastpos + 1:
-                    print 'bad style %r with level %s - was at %s' % (style, stylepos, lastpos)
+                    print('bad style %r with level %s - was at %s' % (style, stylepos, lastpos))
             else:
                 stylepos = len(styles)
                 if stylepos > lastpos + 1:
-                    print 'bad new style %r - expected %r' % (style, styles[lastpos + 1])
+                    print('bad new style %r - expected %r' % (style, styles[lastpos + 1]))
                 else:
                     styles.append(style)
             lastpos = stylepos
@@ -75,7 +77,7 @@ def main():
 
         open(fn, 'w').write(s)
 
-    print subprocess.check_output(['hg', 'diff'] + filenames)
+    print(subprocess.check_output(['hg', 'diff'] + filenames))
 
 if __name__ == '__main__':
     main()

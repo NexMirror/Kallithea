@@ -19,6 +19,9 @@ Original author and date, and relevant copyright and licensing information is be
 :copyright: (c) 2013 RhodeCode GmbH, and others.
 :license: GPLv3, see LICENSE.md for more details.
 """
+
+from __future__ import print_function
+
 import sys
 
 import kallithea.bin.kallithea_cli_base as cli_base
@@ -31,7 +34,7 @@ def ishell():
     try:
         from IPython import embed
     except ImportError:
-        print 'Kallithea ishell requires the Python package IPython 4 or later'
+        print('Kallithea ishell requires the Python package IPython 4 or later')
         sys.exit(-1)
     from traitlets.config.loader import Config
     cfg = Config()

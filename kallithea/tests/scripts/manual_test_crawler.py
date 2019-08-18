@@ -30,6 +30,7 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+from __future__ import print_function
 
 import cookielib
 import os
@@ -61,7 +62,7 @@ if len(sys.argv) == 2:
 if not BASE_URI.endswith('/'):
     BASE_URI += '/'
 
-print 'Crawling @ %s' % BASE_URI
+print('Crawling @ %s' % BASE_URI)
 BASE_URI += '%s'
 PROJECT_PATH = os.path.join('/', 'home', 'username', 'repos')
 PROJECTS = [
@@ -109,16 +110,16 @@ def test_changelog_walk(proj, pages=100):
         size = len(f.read())
         e = time.time() - s
         total_time += e
-        print 'visited %s size:%s req:%s ms' % (full_uri, size, e)
+        print('visited %s size:%s req:%s ms' % (full_uri, size, e))
 
-    print 'total_time', total_time
-    print 'average on req', total_time / float(pages)
+    print('total_time', total_time)
+    print('average on req', total_time / float(pages))
 
 
 def test_changeset_walk(proj, limit=None):
     repo, proj = _get_repo(proj)
 
-    print 'processing', os.path.join(PROJECT_PATH, proj)
+    print('processing', os.path.join(PROJECT_PATH, proj))
     total_time = 0
 
     cnt = 0
@@ -129,22 +130,22 @@ def test_changeset_walk(proj, limit=None):
             break
 
         full_uri = (BASE_URI % raw_cs)
-        print '%s visiting %s\%s' % (cnt, full_uri, i)
+        print('%s visiting %s\%s' % (cnt, full_uri, i))
         s = time.time()
         f = o.open(full_uri)
         size = len(f.read())
         e = time.time() - s
         total_time += e
-        print '%s visited %s\%s size:%s req:%s ms' % (cnt, full_uri, i, size, e)
+        print('%s visited %s\%s size:%s req:%s ms' % (cnt, full_uri, i, size, e))
 
-    print 'total_time', total_time
-    print 'average on req', total_time / float(cnt)
+    print('total_time', total_time)
+    print('average on req', total_time / float(cnt))
 
 
 def test_files_walk(proj, limit=100):
     repo, proj = _get_repo(proj)
 
-    print 'processing', os.path.join(PROJECT_PATH, proj)
+    print('processing', os.path.join(PROJECT_PATH, proj))
     total_time = 0
 
     paths_ = OrderedSet([''])
@@ -171,22 +172,22 @@ def test_files_walk(proj, limit=100):
 
         file_path = '/'.join((proj, 'files', 'tip', f))
         full_uri = (BASE_URI % file_path)
-        print '%s visiting %s' % (cnt, full_uri)
+        print('%s visiting %s' % (cnt, full_uri))
         s = time.time()
         f = o.open(full_uri)
         size = len(f.read())
         e = time.time() - s
         total_time += e
-        print '%s visited OK size:%s req:%s ms' % (cnt, size, e)
+        print('%s visited OK size:%s req:%s ms' % (cnt, size, e))
 
-    print 'total_time', total_time
-    print 'average on req', total_time / float(cnt)
+    print('total_time', total_time)
+    print('average on req', total_time / float(cnt))
 
 if __name__ == '__main__':
     for path in PROJECTS:
         repo = vcs.get_repo(os.path.join(PROJECT_PATH, path))
         for i in range(PASES):
-            print 'PASS %s/%s' % (i, PASES)
+            print('PASS %s/%s' % (i, PASES))
             test_changelog_walk(repo, pages=80)
             test_changeset_walk(repo, limit=100)
             test_files_walk(repo, limit=100)

@@ -25,6 +25,8 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+from __future__ import print_function
+
 import urllib2
 import uuid
 from ConfigParser import ConfigParser
@@ -242,7 +244,7 @@ class LdapSync(object):
 
 if __name__ == '__main__':
     sync = LdapSync()
-    print sync.update_groups_from_ldap()
+    print(sync.update_groups_from_ldap())
 
     for gr in sync.ldap_client.get_groups():
         # TODO: exception when user does not exist during add membership...

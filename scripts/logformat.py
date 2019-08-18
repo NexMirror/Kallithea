@@ -1,5 +1,7 @@
 #!/usr/bin/env python2
 
+from __future__ import print_function
+
 import re
 import sys
 
@@ -38,9 +40,9 @@ def rewrite(f):
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print 'Cleanup of superfluous % formatting of log statements.'
-        print 'Usage:'
-        print '''  hg revert `hg loc '*.py'|grep -v logformat.py` && scripts/logformat.py `hg loc '*.py'` && hg diff'''
+        print('Cleanup of superfluous % formatting of log statements.')
+        print('Usage:')
+        print('''  hg revert `hg loc '*.py'|grep -v logformat.py` && scripts/logformat.py `hg loc '*.py'` && hg diff''')
         raise SystemExit(1)
 
     for f in sys.argv[1:]:

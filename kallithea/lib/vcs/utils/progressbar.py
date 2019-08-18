@@ -1,4 +1,7 @@
 # encoding: UTF-8
+
+from __future__ import print_function
+
 import datetime
 import string
 import sys
@@ -354,54 +357,54 @@ class BarOnlyColoredProgressBar(ColoredProgressBar,
 def main():
     import time
 
-    print "Standard progress bar..."
+    print("Standard progress bar...")
     bar = ProgressBar(30)
     for x in xrange(1, 31):
         bar.render(x)
         time.sleep(0.02)
     bar.stream.write('\n')
-    print
+    print()
 
-    print "Empty bar..."
+    print("Empty bar...")
     bar = ProgressBar(50)
     bar.render(0)
-    print
-    print
+    print()
+    print()
 
-    print "Colored bar..."
+    print("Colored bar...")
     bar = ColoredProgressBar(20)
     for x in bar:
         time.sleep(0.01)
-    print
+    print()
 
-    print "Animated char bar..."
+    print("Animated char bar...")
     bar = AnimatedProgressBar(20)
     for x in bar:
         time.sleep(0.01)
-    print
+    print()
 
-    print "Animated + colored char bar..."
+    print("Animated + colored char bar...")
     bar = AnimatedColoredProgressBar(20)
     for x in bar:
         time.sleep(0.01)
-    print
+    print()
 
-    print "Bar only ..."
+    print("Bar only ...")
     bar = BarOnlyProgressBar(20)
     for x in bar:
         time.sleep(0.01)
-    print
+    print()
 
-    print "Colored, longer bar-only, eta, total time ..."
+    print("Colored, longer bar-only, eta, total time ...")
     bar = BarOnlyColoredProgressBar(40)
     bar.width = 60
     bar.elements += ['time', 'eta']
     for x in bar:
         time.sleep(0.01)
-    print
-    print
+    print()
+    print()
 
-    print "File transfer bar, breaks after 2 seconds ..."
+    print("File transfer bar, breaks after 2 seconds ...")
     total_bytes = 1024 * 1024 * 2
     bar = ProgressBar(total_bytes)
     bar.width = 50
@@ -413,8 +416,8 @@ def main():
         now = datetime.datetime.now()
         if now - bar.started >= datetime.timedelta(seconds=2):
             break
-    print
-    print
+    print()
+    print()
 
 
 if __name__ == '__main__':

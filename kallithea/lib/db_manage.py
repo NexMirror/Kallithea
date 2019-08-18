@@ -26,6 +26,8 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+from __future__ import print_function
+
 import logging
 import os
 import sys
@@ -86,7 +88,7 @@ class DbManage(object):
         else:
             destroy = self._ask_ok('Are you sure to destroy old database ? [y/n]')
         if not destroy:
-            print 'Nothing done.'
+            print('Nothing done.')
             sys.exit(0)
         if destroy:
             # drop and re-create old schemas

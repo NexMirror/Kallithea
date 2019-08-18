@@ -27,6 +27,7 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+from __future__ import print_function
 
 import binascii
 import datetime
@@ -697,4 +698,4 @@ def ask_ok(prompt, retries=4, complaint='Yes or no please!'):
         retries = retries - 1
         if retries < 0:
             raise IOError
-        print complaint
+        print(complaint)

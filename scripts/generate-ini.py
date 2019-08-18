@@ -3,6 +3,8 @@
 Based on kallithea/lib/paster_commands/template.ini.mako, generate development.ini
 """
 
+from __future__ import print_function
+
 import re
 
 from kallithea.lib import inifile
@@ -52,17 +54,17 @@ ini_files = [
 def main():
     # make sure all mako lines starting with '#' (the '##' comments) are marked up as <text>
     makofile = inifile.template_file
-    print 'reading:', makofile
+    print('reading:', makofile)
     mako_org = open(makofile).read()
     mako_no_text_markup = re.sub(r'</?%text>', '', mako_org)
     mako_marked_up = re.sub(r'\n(##.*)', r'\n<%text>\1</%text>', mako_no_text_markup, flags=re.MULTILINE)
     if mako_marked_up != mako_org:
-        print 'writing:', makofile
+        print('writing:', makofile)
         open(makofile, 'w').write(mako_marked_up)
 
     # create ini files
     for fn, settings in ini_files:
-        print 'updating:', fn
+        print('updating:', fn)
         inifile.create(fn, None, settings)
 
 

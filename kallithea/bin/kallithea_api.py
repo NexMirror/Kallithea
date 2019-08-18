@@ -25,6 +25,8 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+from __future__ import print_function
+
 import argparse
 import sys
 
@@ -104,7 +106,7 @@ def main(argv=None):
         sys.stderr.write('Error parsing arguments \n')
         sys.exit()
     if args.format == FORMAT_PRETTY:
-        print 'Calling method %s => %s' % (method, apihost)
+        print('Calling method %s => %s' % (method, apihost))
 
     json_resp = api_call(apikey, apihost, method, **margs)
     error_prefix = ''
@@ -114,11 +116,11 @@ def main(argv=None):
     else:
         json_data = json_resp['result']
     if args.format == FORMAT_JSON:
-        print json.dumps(json_data)
+        print(json.dumps(json_data))
     elif args.format == FORMAT_PRETTY:
-        print 'Server response \n%s%s' % (
+        print('Server response \n%s%s' % (
             error_prefix, json.dumps(json_data, indent=4, sort_keys=True)
-        )
+        ))
     return 0
 
 
