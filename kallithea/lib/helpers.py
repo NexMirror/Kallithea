@@ -163,7 +163,7 @@ def select(name, selected_values, options, id=NotGiven, **attrs):
     """Convenient wrapper of webhelpers2 to let it accept options as a tuple list"""
     if isinstance(options, list):
         option_list = options
-        # Handle old style value,label lists
+        # Handle old value,label lists ... where value also can be value,label lists
         options = Options()
         for x in option_list:
             if isinstance(x, tuple) and len(x) == 2:
@@ -173,7 +173,19 @@ def select(name, selected_values, options, id=NotGiven, **attrs):
             else:
                 log.error('invalid select option %r', x)
                 raise
-            options.add_option(label, value)
+            if isinstance(value, list):
+                og = options.add_optgroup(label)
+                for x in value:
+                    if isinstance(x, tuple) and len(x) == 2:
+                        group_value, group_label = x
+                    elif isinstance(x, basestring):
+                        group_value = group_label = x
+                    else:
+                        log.error('invalid select option %r', x)
+                        raise
+                    og.add_option(group_label, group_value)
+            else:
+                options.add_option(label, value)
     return webhelpers2_select(name, selected_values, options, id=id, **attrs)
 
 
