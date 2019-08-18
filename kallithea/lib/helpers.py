@@ -164,14 +164,13 @@ def select(name, selected_values, options, id=NotGiven, **attrs):
     if isinstance(options, list):
         l = []
         for x in options:
-            try:
+            if isinstance(x, tuple) and len(x) == 2:
                 value, label = x
-            except ValueError: # too many values to unpack
-                if isinstance(x, basestring):
-                    value = label = x
-                else:
-                    log.error('invalid select option %r', x)
-                    raise
+            elif isinstance(x, basestring):
+                value = label = x
+            else:
+                log.error('invalid select option %r', x)
+                raise
             l.append(Option(label, value))
         options = Options(l)
     return webhelpers2_select(name, selected_values, options, id=id, **attrs)
