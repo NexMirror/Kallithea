@@ -263,7 +263,7 @@ def make_map(config):
     # ADMIN DEFAULTS ROUTES
     with rmap.submapper(path_prefix=ADMIN_PREFIX,
                         controller='admin/defaults') as m:
-        m.connect('defaults', 'defaults',
+        m.connect('defaults', '/defaults',
                   action="index")
         m.connect('defaults_update', 'defaults/{id}/update',
                   action="update", conditions=dict(method=["POST"]))
