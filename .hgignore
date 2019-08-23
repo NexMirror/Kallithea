@@ -24,6 +24,7 @@ syntax: regexp
 ^\.coverage$
 ^kallithea/front-end/node_modules$
 ^kallithea/front-end/package-lock\.json$
+^kallithea/front-end/theme\.less$
 ^kallithea/front-end/tmp$
 ^kallithea/public/codemirror$
 ^kallithea/public/css/select2-spinner\.gif$
@@ -41,7 +42,6 @@ syntax: regexp
 ^kallithea/public/js/jquery\.flot\.time\.js$
 ^kallithea/public/js/jquery\.min\.js$
 ^kallithea/public/js/select2\.js$
-^theme\.less$
 ^kallithea\.db$
 ^test\.db$
 ^Kallithea\.egg-info$
