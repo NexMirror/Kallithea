@@ -54,8 +54,6 @@ msgid "Increase diff context to %(num)s lines"
 msgstr "Øg diff konteksten med %(num)s linjer"
 
 #: kallithea/controllers/changeset.py:203
-#, fuzzy
-#| msgid "No permission to change pull request status"
 msgid "No permission to change status"
 msgstr "Ingen tilladelse til ændring af status for pull-forespørgsel"
 
@@ -159,8 +157,6 @@ msgid "Click here to add new file"
 msgstr "Klik her  for at tilføje en ny fil"
 
 #: kallithea/controllers/files.py:93
-#, fuzzy
-#| msgid "There are no files yet. %s"
 msgid "There are no files yet."
 msgstr "Der er ingen filer endnu. %s"
 
@@ -250,13 +246,11 @@ msgstr "Ukendt arkivtype"
 #: kallithea/templates/changeset/changeset_range.html:9
 #: kallithea/templates/email_templates/pull_request.html:64
 #: kallithea/templates/pullrequests/pullrequest.html:84
-#, fuzzy
 msgid "Changesets"
 msgstr "Changesets"
 
 #: kallithea/controllers/files.py:756
 #: kallithea/controllers/pullrequests.py:184 kallithea/model/scm.py:706
-#, fuzzy
 msgid "Branches"
 msgstr "Branches"
 
@@ -283,7 +277,6 @@ msgstr "Grupper"
 #: kallithea/templates/base/base.html:56
 #: kallithea/templates/base/base.html:73
 #: kallithea/templates/base/base.html:444 kallithea/templates/index.html:5
-#, fuzzy
 msgid "Repositories"
 msgstr "Repositories"
 
@@ -291,7 +284,6 @@ msgstr "Repositories"
 #: kallithea/templates/files/files_add.html:32
 #: kallithea/templates/files/files_delete.html:23
 #: kallithea/templates/files/files_edit.html:32
-#, fuzzy
 msgid "Branch"
 msgstr "Branch"
 
@@ -354,7 +346,6 @@ msgstr "%s (lukket)"
 
 #: kallithea/controllers/pullrequests.py:160
 #: kallithea/templates/changeset/changeset.html:12
-#, fuzzy
 msgid "Changeset"
 msgstr "Changeset"
 
@@ -898,7 +889,6 @@ msgid "An error occurred during cache invalidation"
 msgstr "Der opstod en fejl under cache ugyldiggørelse"
 
 #: kallithea/controllers/admin/repos.py:545
-#, fuzzy
 msgid "Pulled from remote location"
 msgstr "Pulled fra remote placering"
 
@@ -958,8 +948,6 @@ msgid "Send email task created"
 msgstr "Send email-opgave oprettet"
 
 #: kallithea/controllers/admin/settings.py:358
-#, fuzzy
-#| msgid "No data ready yet"
 msgid "Hook already exists"
 msgstr "Ingen data er klar endnu"
 
@@ -4003,8 +3991,6 @@ msgid ""
 msgstr ""
 
 #: kallithea/templates/base/default_perms_box.html:16
-#, fuzzy
-#| msgid "Updated permissions"
 msgid "default permissions"
 msgstr "Tilladelser opdateret"
 
@@ -4265,8 +4251,7 @@ msgid "Expand commit message"
 msgstr ""
 
 #: kallithea/templates/changelog/changelog_table.html:76
-#, fuzzy, python-format
-#| msgid "%s committed on %s"
+#, python-format
 msgid "%s comments"
 msgstr "%s committed den %s"
 
@@ -4365,8 +4350,6 @@ msgid "Show full diff anyway"
 msgstr ""
 
 #: kallithea/templates/changeset/changeset_file_comment.html:20
-#, fuzzy
-#| msgid "%s committed on %s"
 msgid "comment"
 msgstr "%s committed den %s"
 
@@ -4687,8 +4670,6 @@ msgstr ""
 
 #: kallithea/templates/email_templates/pull_request.html:12
 #: kallithea/templates/email_templates/pull_request_comment.html:20
-#, fuzzy
-#| msgid "Pull request %s"
 msgid "Pull request"
 msgstr "Pull-forespørgsel %s"
 

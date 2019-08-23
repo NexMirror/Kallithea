@@ -54,8 +54,6 @@ msgid "Increase diff context to %(num)s lines"
 msgstr "Aumentar el contexto del diff a %(num)s lineas"
 
 #: kallithea/controllers/changeset.py:203
-#, fuzzy
-#| msgid "No permission to change pull request status"
 msgid "No permission to change status"
 msgstr "No tene permiso para cambiar el estado de la petición pull"
 
@@ -150,7 +148,7 @@ msgid "%s %s feed"
 msgstr "%s%s canal"
 
 #: kallithea/controllers/feed.py:113 kallithea/controllers/feed.py:145
-#, fuzzy, python-format
+#, python-format
 msgid "Changes on %s repository"
 msgstr "Cambios en %s repositorio"
 
@@ -159,8 +157,6 @@ msgid "Click here to add new file"
 msgstr "Haga clic aquí para añadir un archivo nuevo"
 
 #: kallithea/controllers/files.py:93
-#, fuzzy
-#| msgid "There are no files yet. %s"
 msgid "There are no files yet."
 msgstr "Aún no hay archivos. %s"
 
@@ -227,7 +223,6 @@ msgid "No filename"
 msgstr "Sin nombre de archivo"
 
 #: kallithea/controllers/files.py:487
-#, fuzzy
 msgid "Location must be relative path and must not contain .. in path"
 msgstr "La ruta debe ser relativa y no debe contener .. en la ruta"
 
@@ -360,7 +355,6 @@ msgid "Special"
 msgstr "Especial"
 
 #: kallithea/controllers/pullrequests.py:182
-#, fuzzy
 msgid "Peer branches"
 msgstr "Ramas de los pares"
 
@@ -383,8 +377,6 @@ msgid "Successfully opened new pull request"
 msgstr "La petición de pull se ha creado correctamente"
 
 #: kallithea/controllers/pullrequests.py:375
-#, fuzzy
-#| msgid "Pull request update created"
 msgid "New pull request iteration created"
 msgstr "Actualización de la petición pull creada"
 
@@ -417,8 +409,7 @@ msgid "Revision %s not found in %s"
 msgstr ""
 
 #: kallithea/controllers/pullrequests.py:508
-#, fuzzy, python-format
-#| msgid "No changesets found for updating this pull request."
+#, python-format
 msgid "Error: changesets not found when displaying pull request from %s."
 msgstr "No se encontraron cambios para actualizar la petición pull."
 
@@ -432,32 +423,26 @@ msgid "This pull request has been closed and can not be updated."
 msgstr "La petición pull esta cerrada y no se puede actualizar."
 
 #: kallithea/controllers/pullrequests.py:543
-#, fuzzy, python-format
-#| msgid "The following changes are available on %s:"
+#, python-format
 msgid "The following additional changes are available on %s:"
 msgstr "Los siguientes cambios están disponibles en %s:"
 
 #: kallithea/controllers/pullrequests.py:545
 #: kallithea/controllers/pullrequests.py:549
-#, fuzzy
-#| msgid "No changesets found for updating this pull request."
 msgid "No additional changesets found for iterating on this pull request."
 msgstr "No se encontraron cambios para actualizar la petición pull."
 
 #: kallithea/controllers/pullrequests.py:557
-#, fuzzy, python-format
+#, python-format
 msgid "Note: Branch %s has another head: %s."
 msgstr "Nota: la rama %s tiene otro head: %s."
 
 #: kallithea/controllers/pullrequests.py:564
-#, fuzzy
-#| msgid "Git pull requests don't support updates yet."
 msgid "Git pull requests don't support iterating yet."
 msgstr "La peticiones pull de Git aún no soportan actualizaciones."
 
 #: kallithea/controllers/pullrequests.py:566
-#, fuzzy, python-format
-#| msgid "No changesets found for updating this pull request."
+#, python-format
 msgid ""
 "Error: some changesets not found when displaying pull request from %s."
 msgstr "No se encontraron cambios para actualizar la petición pull."
@@ -837,8 +822,7 @@ msgid "Field validation error: %s"
 msgstr ""
 
 #: kallithea/controllers/admin/repos.py:390
-#, fuzzy, python-format
-#| msgid "An error occurred during repository forking %s"
+#, python-format
 msgid "An error occurred during creation of field: %r"
 msgstr "Ocurrió un error mientras se bifurcaba el repositorio %s"
 
@@ -952,8 +936,6 @@ msgid "Send email task created"
 msgstr ""
 
 #: kallithea/controllers/admin/settings.py:358
-#, fuzzy
-#| msgid "No data ready yet"
 msgid "Hook already exists"
 msgstr "Todavía no hay datos disponibles"
 
@@ -1528,8 +1510,6 @@ msgid ""
 msgstr ""
 
 #: kallithea/model/pull_request.py:211
-#, fuzzy
-#| msgid "Error creating pull request: %s"
 msgid "Cannot create empty pull request"
 msgstr "Error al crear la petición de pull: %s"
 
@@ -1545,26 +1525,21 @@ msgid "You are not authorized to create the pull request"
 msgstr ""
 
 #: kallithea/model/pull_request.py:341
-#, fuzzy
-#| msgid "Missing changesets since the previous pull request:"
 msgid "Missing changesets since the previous iteration:"
 msgstr "Cambios que faltan desde la ultima petición de pull:"
 
 #: kallithea/model/pull_request.py:348
-#, fuzzy, python-format
-#| msgid "New changesets on %s %s since the previous pull request:"
+#, python-format
 msgid "New changesets on %s %s since the previous iteration:"
 msgstr "Cambios nuevos en %s %s desde la ultima petición pull:"
 
 #: kallithea/model/pull_request.py:355
-#, fuzzy
-#| msgid "Ancestor didn't change - show diff since previous version:"
 msgid "Ancestor didn't change - diff since previous iteration:"
 msgstr ""
 "El ascendente no ha cambiado - ver diferencias desde la versión anterior:"
 
 #: kallithea/model/pull_request.py:362
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "This iteration is based on another %s revision and there is no simple "
 "diff."
@@ -1573,8 +1548,7 @@ msgstr ""
 "simple."
 
 #: kallithea/model/pull_request.py:364
-#, fuzzy, python-format
-#| msgid "No changes found on %s %s since previous version."
+#, python-format
 msgid "No changes found on %s %s since previous iteration."
 msgstr "No se encontró ningún cambio en %s %s desde la versión anterior."
 
@@ -2859,8 +2833,6 @@ msgid "Visible"
 msgstr ""
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:9
-#, fuzzy
-#| msgid "No response"
 msgid "Add repos"
 msgstr "No hay respuesta"
 
@@ -3194,8 +3166,6 @@ msgid "Private Repository"
 msgstr ""
 
 #: kallithea/templates/admin/repos/repo_edit_remote.html:4
-#, fuzzy
-#| msgid "Empty repository"
 msgid "Fork of repository"
 msgstr "Repositorio vacío"
 
@@ -3617,8 +3587,6 @@ msgid ""
 msgstr ""
 
 #: kallithea/templates/admin/settings/settings_visual.html:54
-#, fuzzy
-#| msgid "Repositories"
 msgid "Repository page size"
 msgstr "Repositorios"
 
@@ -4259,8 +4227,7 @@ msgid "Expand commit message"
 msgstr ""
 
 #: kallithea/templates/changelog/changelog_table.html:76
-#, fuzzy, python-format
-#| msgid "%s committed on %s"
+#, python-format
 msgid "%s comments"
 msgstr "%s anotó en %s"
 
@@ -4359,8 +4326,6 @@ msgid "Show full diff anyway"
 msgstr ""
 
 #: kallithea/templates/changeset/changeset_file_comment.html:20
-#, fuzzy
-#| msgid "%s committed on %s"
 msgid "comment"
 msgstr "%s anotó en %s"
 
@@ -4470,8 +4435,6 @@ msgid "File before"
 msgstr ""
 
 #: kallithea/templates/changeset/diff_block.html:40
-#, fuzzy
-#| msgid "Unmodified"
 msgid "Modified"
 msgstr "Sin modificar"
 
@@ -4484,14 +4447,11 @@ msgid "Renamed"
 msgstr ""
 
 #: kallithea/templates/changeset/diff_block.html:48
-#, fuzzy, python-format
-#| msgid "Unknown revision %s"
+#, python-format
 msgid "Unknown operation: %r"
 msgstr "Revisión desconocida %s"
 
 #: kallithea/templates/changeset/diff_block.html:52
-#, fuzzy
-#| msgid "No filename"
 msgid "No file after"
 msgstr "Sin nombre de archivo"
 
@@ -4618,8 +4578,6 @@ msgid "Comment on Changeset \"%s\""
 msgstr ""
 
 #: kallithea/templates/email_templates/changeset_comment.html:20
-#, fuzzy
-#| msgid "Changeset"
 msgid "Changeset on"
 msgstr "Cambio"
 
@@ -4628,8 +4586,6 @@ msgstr "Cambio"
 #: kallithea/templates/email_templates/pull_request.html:28
 #: kallithea/templates/email_templates/pull_request_comment.html:30
 #: kallithea/templates/email_templates/pull_request_comment.html:36
-#, fuzzy
-#| msgid "Branch"
 msgid "branch"
 msgstr "Rama"
 
@@ -4644,8 +4600,6 @@ msgid "Status change:"
 msgstr ""
 
 #: kallithea/templates/email_templates/comment.html:33
-#, fuzzy
-#| msgid "This pull request has been closed and can not be updated."
 msgid "The pull request has been closed."
 msgstr "La petición pull esta cerrada y no se puede actualizar."
 
@@ -4692,8 +4646,6 @@ msgstr ""
 
 #: kallithea/templates/email_templates/pull_request.html:12
 #: kallithea/templates/email_templates/pull_request_comment.html:20
-#, fuzzy
-#| msgid "Pull request updated"
 msgid "Pull request"
 msgstr "Petición pull actualizada"
 
@@ -4708,8 +4660,7 @@ msgid "to"
 msgstr ""
 
 #: kallithea/templates/email_templates/pull_request_comment.html:4
-#, fuzzy, python-format
-#| msgid "Error creating pull request: %s"
+#, python-format
 msgid "Mention in Comment on Pull Request %s \"%s\""
 msgstr "Error al crear la petición de pull: %s"
 
@@ -4719,8 +4670,7 @@ msgid "Pull Request %s \"%s\" Closed"
 msgstr ""
 
 #: kallithea/templates/email_templates/pull_request_comment.html:4
-#, fuzzy, python-format
-#| msgid "Error creating pull request: %s"
+#, python-format
 msgid "Comment on Pull Request %s \"%s\""
 msgstr "Error al crear la petición de pull: %s"
 

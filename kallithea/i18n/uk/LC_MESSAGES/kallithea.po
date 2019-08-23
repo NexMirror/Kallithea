@@ -4454,8 +4454,7 @@ msgid "Renamed"
 msgstr ""
 
 #: kallithea/templates/changeset/diff_block.html:48
-#, fuzzy, python-format
-#| msgid "Unknown error"
+#, python-format
 msgid "Unknown operation: %r"
 msgstr "Невідома помилка"
 
@@ -4605,8 +4604,6 @@ msgid "by"
 msgstr ""
 
 #: kallithea/templates/email_templates/comment.html:27
-#, fuzzy
-#| msgid "Latest Changes"
 msgid "Status change:"
 msgstr "Останні зміни"
 

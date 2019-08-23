@@ -2,7 +2,6 @@
 # Copyright (C) 2014 Various authors, licensing as GPLv3
 # This file is distributed under the same license as the Kallithea project.
 # Automatically generated, 2014.
-# #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
@@ -56,12 +55,11 @@ msgid "Increase diff context to %(num)s lines"
 msgstr ""
 
 #: kallithea/controllers/changeset.py:203
-#, fuzzy
 msgid "No permission to change status"
 msgstr "Zmeny"
 
 #: kallithea/controllers/changeset.py:214
-#, fuzzy, python-format
+#, python-format
 msgid "Successfully deleted pull request %s"
 msgstr "Úspešne zmazaný súbor %s"
 
@@ -71,8 +69,7 @@ msgid "Such revision does not exist for this repository"
 msgstr "Taká revízia neexistuje"
 
 #: kallithea/controllers/compare.py:66
-#, fuzzy, python-format
-#| msgid "Go to tip of repository"
+#, python-format
 msgid "Could not find other repository %s"
 msgstr "Prázdny repozitár"
 
@@ -97,7 +94,6 @@ msgid "Cannot compare repositories without using common ancestor"
 msgstr ""
 
 #: kallithea/controllers/error.py:70
-#, fuzzy
 msgid "No response"
 msgstr "Neznáma revízia %s"
 
@@ -158,8 +154,6 @@ msgid "Click here to add new file"
 msgstr "Kliknite pre pridanie nového súboru"
 
 #: kallithea/controllers/files.py:93
-#, fuzzy
-#| msgid "There are no files yet. %s"
 msgid "There are no files yet."
 msgstr "Zatiaľ nie sú žiadne súbory. %s"
 
@@ -315,7 +309,6 @@ msgid "Journal"
 msgstr ""
 
 #: kallithea/controllers/login.py:139 kallithea/controllers/login.py:184
-#, fuzzy
 msgid "Bad captcha"
 msgstr "zlá captcha"
 
@@ -824,8 +817,7 @@ msgid "Field validation error: %s"
 msgstr ""
 
 #: kallithea/controllers/admin/repos.py:390
-#, fuzzy, python-format
-#| msgid "Error occurred during gist creation"
+#, python-format
 msgid "An error occurred during creation of field: %r"
 msgstr "Došlo k chybe pri vytváraní gist"
 
@@ -860,13 +852,11 @@ msgstr ""
 
 #: kallithea/controllers/admin/repos.py:491
 #: kallithea/controllers/admin/repos.py:512
-#, fuzzy
 msgid "Repository has been locked"
 msgstr "Tento repozitár bol uzamknutý používateľom %s dňa %s"
 
 #: kallithea/controllers/admin/repos.py:494
 #: kallithea/controllers/admin/repos.py:509
-#, fuzzy
 msgid "Repository has been unlocked"
 msgstr "Tento repozitár bol uzamknutý používateľom %s dňa %s"
 
@@ -916,8 +906,7 @@ msgid "Repositories successfully rescanned. Added: %s. Removed: %s."
 msgstr ""
 
 #: kallithea/controllers/admin/settings.py:192
-#, fuzzy, python-format
-#| msgid "Watched Repositories"
+#, python-format
 msgid "Invalidated %s repositories"
 msgstr "Repozitáre"
 
@@ -1100,8 +1089,7 @@ msgid "Created tag: %s"
 msgstr ""
 
 #: kallithea/lib/helpers.py:625
-#, fuzzy, python-format
-#| msgid "Set changeset status"
+#, python-format
 msgid "Changeset %s not found"
 msgstr "Zmeny"
 
@@ -1429,12 +1417,10 @@ msgid ""
 msgstr ""
 
 #: kallithea/model/db.py:1732
-#, fuzzy
 msgid "Only admins can fork repositories"
 msgstr "Repozitáre"
 
 #: kallithea/model/db.py:1733
-#, fuzzy
 msgid "Non-admins can fork repositories"
 msgstr "Repozitáre"
 
@@ -1717,7 +1703,6 @@ msgid "Repository group with name \"%(repo)s\" already exists"
 msgstr ""
 
 #: kallithea/model/validators.py:419
-#, fuzzy
 msgid "Invalid repository URL"
 msgstr "Odblokovať repozitár"
 
@@ -2125,7 +2110,6 @@ msgstr ""
 #: kallithea/templates/admin/defaults/defaults.html:5
 #: kallithea/templates/admin/defaults/defaults.html:11
 #: kallithea/templates/base/base.html:62
-#, fuzzy
 msgid "Repository Defaults"
 msgstr "Repozitáre"
 
@@ -2421,13 +2405,11 @@ msgid "API Keys"
 msgstr ""
 
 #: kallithea/templates/admin/my_account/my_account.html:29
-#, fuzzy
 msgid "Owned Repositories"
 msgstr "Repozitáre"
 
 #: kallithea/templates/admin/my_account/my_account.html:30
 #: kallithea/templates/journal/journal.html:33
-#, fuzzy
 msgid "Watched Repositories"
 msgstr "Repozitáre"
 
@@ -2626,7 +2608,6 @@ msgid ""
 msgstr ""
 
 #: kallithea/templates/admin/permissions/permissions_globals.html:20
-#, fuzzy
 msgid "Apply to all existing repositories"
 msgstr "Repozitáre"
 
@@ -2852,8 +2833,6 @@ msgid "Visible"
 msgstr ""
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_perms.html:9
-#, fuzzy
-#| msgid "No response"
 msgid "Add repos"
 msgstr "Neznáma revízia %s"
 
@@ -2920,8 +2899,7 @@ msgid "Confirm to delete this group"
 msgstr ""
 
 #: kallithea/templates/admin/repo_groups/repo_group_show.html:4
-#, fuzzy, python-format
-#| msgid "Repository Defaults"
+#, python-format
 msgid "Repository group %s"
 msgstr "Repozitáre"
 
@@ -2934,7 +2912,6 @@ msgid "Number of Top-level Repositories"
 msgstr ""
 
 #: kallithea/templates/admin/repos/repo_add_base.html:12
-#, fuzzy
 msgid "Clone remote repository"
 msgstr "Prázdny repozitár"
 
@@ -3186,28 +3163,22 @@ msgid "Extra fields are disabled."
 msgstr ""
 
 #: kallithea/templates/admin/repos/repo_edit_permissions.html:20
-#, fuzzy
 msgid "Private Repository"
 msgstr "Prázdny repozitár"
 
 #: kallithea/templates/admin/repos/repo_edit_remote.html:4
-#, fuzzy
-#| msgid "Go to tip of repository"
 msgid "Fork of repository"
 msgstr "Prázdny repozitár"
 
 #: kallithea/templates/admin/repos/repo_edit_remote.html:7
-#, fuzzy
 msgid "Remote repository URL"
 msgstr "Prázdny repozitár"
 
 #: kallithea/templates/admin/repos/repo_edit_remote.html:15
-#, fuzzy
 msgid "Pull Changes from Remote Repository"
 msgstr "Zmeny na repozitáre %s"
 
 #: kallithea/templates/admin/repos/repo_edit_remote.html:17
-#, fuzzy
 msgid "Confirm to pull changes from remote repository."
 msgstr "Potvrdenie blokovania repozitára."
 
@@ -3216,7 +3187,6 @@ msgid "This repository does not have a remote repository URL."
 msgstr ""
 
 #: kallithea/templates/admin/repos/repo_edit_settings.html:7
-#, fuzzy
 msgid "Permanent Repository ID"
 msgstr "Prázdny repozitár"
 
@@ -3239,12 +3209,10 @@ msgid ""
 msgstr ""
 
 #: kallithea/templates/admin/repos/repo_edit_settings.html:16
-#, fuzzy
 msgid "Remote repository"
 msgstr "Prázdny repozitár"
 
 #: kallithea/templates/admin/repos/repo_edit_settings.html:19
-#, fuzzy
 msgid "Repository URL"
 msgstr "Repozitáre"
 
@@ -3539,7 +3507,6 @@ msgid ""
 msgstr ""
 
 #: kallithea/templates/admin/settings/settings_vcs.html:59
-#, fuzzy
 msgid "Location of repositories"
 msgstr "Repozitáre"
 
@@ -3621,8 +3588,6 @@ msgid ""
 msgstr ""
 
 #: kallithea/templates/admin/settings/settings_visual.html:54
-#, fuzzy
-#| msgid "Repositories"
 msgid "Repository page size"
 msgstr "Repozitáre"
 
@@ -3992,7 +3957,6 @@ msgid "Child rev."
 msgstr ""
 
 #: kallithea/templates/base/default_perms_box.html:11
-#, fuzzy
 msgid "Inherit defaults"
 msgstr "Repozitáre"
 
@@ -4100,7 +4064,6 @@ msgid "No matching files"
 msgstr ""
 
 #: kallithea/templates/base/root.html:39
-#, fuzzy
 msgid "Open New Pull Request from {0}"
 msgstr "Zmena stavu"
 
@@ -4126,7 +4089,6 @@ msgid "Expand Diff"
 msgstr ""
 
 #: kallithea/templates/base/root.html:45
-#, fuzzy
 msgid "No revisions"
 msgstr "Neznáma revízia %s"
 
@@ -4189,7 +4151,6 @@ msgid "Clear selection"
 msgstr ""
 
 #: kallithea/templates/changelog/changelog.html:54
-#, fuzzy
 msgid "Go to tip of repository"
 msgstr "Prázdny repozitár"
 
@@ -4259,7 +4220,7 @@ msgid ""
 msgstr ""
 
 #: kallithea/templates/changelog/changelog_table.html:41
-#, fuzzy, python-format
+#, python-format
 msgid "Changeset status: %s by %s"
 msgstr "Zmeny"
 
@@ -4268,8 +4229,7 @@ msgid "Expand commit message"
 msgstr ""
 
 #: kallithea/templates/changelog/changelog_table.html:76
-#, fuzzy, python-format
-#| msgid "No comments."
+#, python-format
 msgid "%s comments"
 msgstr "Nie sú žiadne komentáre."
 
@@ -4370,13 +4330,10 @@ msgid "Show full diff anyway"
 msgstr ""
 
 #: kallithea/templates/changeset/changeset_file_comment.html:20
-#, fuzzy
-#| msgid "No comments."
 msgid "comment"
 msgstr "Nie sú žiadne komentáre."
 
 #: kallithea/templates/changeset/changeset_file_comment.html:21
-#, fuzzy
 msgid "on pull request"
 msgstr "Zmena stavu"
 
@@ -4385,7 +4342,6 @@ msgid "No title"
 msgstr ""
 
 #: kallithea/templates/changeset/changeset_file_comment.html:24
-#, fuzzy
 msgid "on this changeset"
 msgstr "%s zmien"
 
@@ -4395,7 +4351,6 @@ msgstr ""
 
 #: kallithea/templates/changeset/changeset_file_comment.html:38
 #: kallithea/templates/changeset/changeset_file_comment.html:71
-#, fuzzy
 msgid "Status change"
 msgstr "Posledné zmeny"
 
@@ -4404,7 +4359,6 @@ msgid "Comments are in plain text. Use @username to notify another user."
 msgstr ""
 
 #: kallithea/templates/changeset/changeset_file_comment.html:93
-#, fuzzy
 msgid "Set changeset status"
 msgstr "Zmeny"
 
@@ -4414,17 +4368,14 @@ msgstr ""
 
 #: kallithea/templates/changeset/changeset_file_comment.html:101
 #: kallithea/templates/changeset/diff_block.html:46
-#, fuzzy
 msgid "No change"
 msgstr "Žiadne zmeny"
 
 #: kallithea/templates/changeset/changeset_file_comment.html:114
-#, fuzzy
 msgid "Finish pull request"
 msgstr "Zmena stavu"
 
 #: kallithea/templates/changeset/changeset_file_comment.html:117
-#, fuzzy
 msgid "Close"
 msgstr "(zatvorené)"
 
@@ -4503,8 +4454,7 @@ msgid "Renamed"
 msgstr ""
 
 #: kallithea/templates/changeset/diff_block.html:48
-#, fuzzy, python-format
-#| msgid "Unknown revision %s"
+#, python-format
 msgid "Unknown operation: %r"
 msgstr "Neznáma revízia %s"
 
@@ -4557,7 +4507,7 @@ msgid "is"
 msgstr ""
 
 #: kallithea/templates/compare/compare_cs.html:55
-#, fuzzy, python-format
+#, python-format
 msgid "%s changesets"
 msgstr "%s zmien"
 
@@ -4631,14 +4581,11 @@ msgid "Mention in Comment on Changeset \"%s\""
 msgstr ""
 
 #: kallithea/templates/email_templates/changeset_comment.html:4
-#, fuzzy, python-format
-#| msgid "Set changeset status"
+#, python-format
 msgid "Comment on Changeset \"%s\""
 msgstr "Zmeny"
 
 #: kallithea/templates/email_templates/changeset_comment.html:20
-#, fuzzy
-#| msgid "Changesets"
 msgid "Changeset on"
 msgstr "Zmeny"
 
@@ -4647,8 +4594,6 @@ msgstr "Zmeny"
 #: kallithea/templates/email_templates/pull_request.html:28
 #: kallithea/templates/email_templates/pull_request_comment.html:30
 #: kallithea/templates/email_templates/pull_request_comment.html:36
-#, fuzzy
-#| msgid "Branch"
 msgid "branch"
 msgstr "Vetva"
 
@@ -4659,14 +4604,10 @@ msgid "by"
 msgstr ""
 
 #: kallithea/templates/email_templates/comment.html:27
-#, fuzzy
-#| msgid "Status change"
 msgid "Status change:"
 msgstr "Posledné zmeny"
 
 #: kallithea/templates/email_templates/comment.html:33
-#, fuzzy
-#| msgid "Repository has been locked"
 msgid "The pull request has been closed."
 msgstr "Tento repozitár bol uzamknutý používateľom %s dňa %s"
 
@@ -4713,8 +4654,6 @@ msgstr ""
 
 #: kallithea/templates/email_templates/pull_request.html:12
 #: kallithea/templates/email_templates/pull_request_comment.html:20
-#, fuzzy
-#| msgid "on pull request"
 msgid "Pull request"
 msgstr "Zmena stavu"
 
@@ -4739,8 +4678,7 @@ msgid "Pull Request %s \"%s\" Closed"
 msgstr ""
 
 #: kallithea/templates/email_templates/pull_request_comment.html:4
-#, fuzzy, python-format
-#| msgid "on pull request"
+#, python-format
 msgid "Comment on Pull Request %s \"%s\""
 msgstr "Zmena stavu"
 
@@ -4816,7 +4754,6 @@ msgstr ""
 #: kallithea/templates/files/files_add.html:68
 #: kallithea/templates/files/files_delete.html:40
 #: kallithea/templates/files/files_edit.html:71
-#, fuzzy
 msgid "Commit Changes"
 msgstr "Žiadne zmeny"
 
@@ -5242,7 +5179,7 @@ msgid "%s Pull Requests"
 msgstr ""
 
 #: kallithea/templates/pullrequests/pullrequest_show_all.html:11
-#, fuzzy, python-format
+#, python-format
 msgid "Pull Requests from '%s'"
 msgstr "Zmena stavu"
 
@@ -5468,7 +5405,6 @@ msgid "Add or upload files directly via Kallithea"
 msgstr ""
 
 #: kallithea/templates/summary/summary.html:196
-#, fuzzy
 msgid "Push new repository"
 msgstr "Prázdny repozitár"
 

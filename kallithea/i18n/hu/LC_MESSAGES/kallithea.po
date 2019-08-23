@@ -2,7 +2,6 @@
 # Copyright (C) 2014 Various authors, licensing as GPLv3
 # This file is distributed under the same license as the Kallithea project.
 # Automatically generated, 2014.
-# #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
@@ -853,13 +852,11 @@ msgstr ""
 
 #: kallithea/controllers/admin/repos.py:491
 #: kallithea/controllers/admin/repos.py:512
-#, fuzzy
 msgid "Repository has been locked"
 msgstr "Ennek a tárolónak %s elágazása van"
 
 #: kallithea/controllers/admin/repos.py:494
 #: kallithea/controllers/admin/repos.py:509
-#, fuzzy
 msgid "Repository has been unlocked"
 msgstr "Ennek a tárolónak %s elágazása van"
 
@@ -909,8 +906,7 @@ msgid "Repositories successfully rescanned. Added: %s. Removed: %s."
 msgstr ""
 
 #: kallithea/controllers/admin/settings.py:192
-#, fuzzy, python-format
-#| msgid "Private Repository"
+#, python-format
 msgid "Invalidated %s repositories"
 msgstr "Tároló törlése"
 
@@ -2424,7 +2420,7 @@ msgstr ""
 
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:13
 #: kallithea/templates/admin/users/user_edit_api_keys.html:13
-#, fuzzy, python-format
+#, python-format
 msgid "Confirm to reset this API key: %s"
 msgstr "A csoport törlésének megerősítése"
 
@@ -2435,7 +2431,7 @@ msgstr ""
 
 #: kallithea/templates/admin/my_account/my_account_api_keys.html:39
 #: kallithea/templates/admin/users/user_edit_api_keys.html:39
-#, fuzzy, python-format
+#, python-format
 msgid "Confirm to remove this API key: %s"
 msgstr "A csoport törlésének megerősítése"
 
@@ -2707,7 +2703,7 @@ msgstr ""
 
 #: kallithea/templates/admin/permissions/permissions_ips.html:12
 #: kallithea/templates/admin/users/user_edit_ips.html:22
-#, fuzzy, python-format
+#, python-format
 msgid "Confirm to delete this IP address: %s"
 msgstr "A csoport törlésének megerősítése"
 
@@ -2895,9 +2891,7 @@ msgid "Confirm to delete this group"
 msgstr "A csoport törlésének megerősítése"
 
 #: kallithea/templates/admin/repo_groups/repo_group_show.html:4
-#, fuzzy, python-format
-#| msgid "This repository has %s fork"
-#| msgid_plural "This repository has %s forks"
+#, python-format
 msgid "Repository group %s"
 msgstr "Ennek a tárolónak %s elágazása van"
 
@@ -2910,7 +2904,6 @@ msgid "Number of Top-level Repositories"
 msgstr ""
 
 #: kallithea/templates/admin/repos/repo_add_base.html:12
-#, fuzzy
 msgid "Clone remote repository"
 msgstr "Tároló törlése"
 
@@ -3161,18 +3154,14 @@ msgid "Extra fields are disabled."
 msgstr ""
 
 #: kallithea/templates/admin/repos/repo_edit_permissions.html:20
-#, fuzzy
 msgid "Private Repository"
 msgstr "Tároló törlése"
 
 #: kallithea/templates/admin/repos/repo_edit_remote.html:4
-#, fuzzy
-#| msgid "Remote repository"
 msgid "Fork of repository"
 msgstr "Tároló törlése"
 
 #: kallithea/templates/admin/repos/repo_edit_remote.html:7
-#, fuzzy
 msgid "Remote repository URL"
 msgstr "Tároló törlése"
 
@@ -3211,7 +3200,6 @@ msgid ""
 msgstr ""
 
 #: kallithea/templates/admin/repos/repo_edit_settings.html:16
-#, fuzzy
 msgid "Remote repository"
 msgstr "Tároló törlése"
 
@@ -4231,8 +4219,7 @@ msgid "Expand commit message"
 msgstr ""
 
 #: kallithea/templates/changelog/changelog_table.html:76
-#, fuzzy, python-format
-#| msgid "No comments."
+#, python-format
 msgid "%s comments"
 msgstr "Nincsenek hozzászólások."
 
@@ -4331,8 +4318,6 @@ msgid "Show full diff anyway"
 msgstr ""
 
 #: kallithea/templates/changeset/changeset_file_comment.html:20
-#, fuzzy
-#| msgid "No comments."
 msgid "comment"
 msgstr "Nincsenek hozzászólások."
 
@@ -4345,7 +4330,6 @@ msgid "No title"
 msgstr ""
 
 #: kallithea/templates/changeset/changeset_file_comment.html:24
-#, fuzzy
 msgid "on this changeset"
 msgstr "%s módosításcsomag"
 
@@ -4355,7 +4339,6 @@ msgstr "Hozzászólás törlése?"
 
 #: kallithea/templates/changeset/changeset_file_comment.html:38
 #: kallithea/templates/changeset/changeset_file_comment.html:71
-#, fuzzy
 msgid "Status change"
 msgstr "%s módosításcsomag"
 
@@ -4587,8 +4570,6 @@ msgid "Comment on Changeset \"%s\""
 msgstr ""
 
 #: kallithea/templates/email_templates/changeset_comment.html:20
-#, fuzzy
-#| msgid "%s changesets"
 msgid "Changeset on"
 msgstr "%s módosításcsomag"
 
@@ -4607,14 +4588,10 @@ msgid "by"
 msgstr ""
 
 #: kallithea/templates/email_templates/comment.html:27
-#, fuzzy
-#| msgid "Status change"
 msgid "Status change:"
 msgstr "%s módosításcsomag"
 
 #: kallithea/templates/email_templates/comment.html:33
-#, fuzzy
-#| msgid "Repository has been locked"
 msgid "The pull request has been closed."
 msgstr "Ennek a tárolónak %s elágazása van"
 
@@ -5152,8 +5129,6 @@ msgid "Cancel Changes"
 msgstr ""
 
 #: kallithea/templates/pullrequests/pullrequest_show.html:197
-#, fuzzy
-#| msgid "Remove reviewer"
 msgid "Reviewers"
 msgstr "Átnéző eltávolítása"
 

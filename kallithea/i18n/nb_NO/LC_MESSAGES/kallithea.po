@@ -55,8 +55,6 @@ msgid "Increase diff context to %(num)s lines"
 msgstr "Øk diff-bindeleddsinformasjon til %(num)s linjer"
 
 #: kallithea/controllers/changeset.py:203
-#, fuzzy
-#| msgid "No permission to change pull request status"
 msgid "No permission to change status"
 msgstr "Ingen tilgang til endring av innsendingsforespørselsstatus"
 
@@ -80,7 +78,6 @@ msgid "Cannot compare repositories of different types"
 msgstr "Kan ikke sammenligne pakkebrønner av forskjellige typer"
 
 #: kallithea/controllers/compare.py:244
-#, fuzzy
 msgid "Cannot show empty diff"
 msgstr "Kan ikke vise tom diff"
 
@@ -147,12 +144,12 @@ msgid "Changeset was too big and was cut off..."
 msgstr "Endringsettet var for stort og har blitt avskåret…"
 
 #: kallithea/controllers/feed.py:111 kallithea/controllers/feed.py:143
-#, fuzzy, python-format
+#, python-format
 msgid "%s %s feed"
 msgstr "%s %s kilde"
 
 #: kallithea/controllers/feed.py:113 kallithea/controllers/feed.py:145
-#, fuzzy, python-format
+#, python-format
 msgid "Changes on %s repository"
 msgstr "Endringer i %s-pakkebrønn"
 
@@ -161,13 +158,11 @@ msgid "Click here to add new file"
 msgstr "Klikk her for å legge til ny fil"
 
 #: kallithea/controllers/files.py:93
-#, fuzzy
-#| msgid "There are no files yet. %s"
 msgid "There are no files yet."
 msgstr "Ingen filer enda. %s"
 
 #: kallithea/controllers/files.py:193
-#, fuzzy, python-format
+#, python-format
 msgid "%s at %s"
 msgstr "%s den %s"
 
@@ -178,7 +173,6 @@ msgid "This repository has been locked by %s on %s"
 msgstr "Denne pakkebrønnen har blitt påst av %s den %s"
 
 #: kallithea/controllers/files.py:311
-#, fuzzy
 msgid "You can only delete files with revision being a valid branch"
 msgstr ""
 "Du kan bare slette filer med en revisjon som er en gyldig forgrening"
@@ -293,7 +287,6 @@ msgstr "Pakkebrønner"
 #: kallithea/templates/files/files_add.html:32
 #: kallithea/templates/files/files_delete.html:23
 #: kallithea/templates/files/files_edit.html:32
-#, fuzzy
 msgid "Branch"
 msgstr "Forgrening"
 
@@ -323,12 +316,11 @@ msgid "Journal"
 msgstr "Loggbok"
 
 #: kallithea/controllers/login.py:139 kallithea/controllers/login.py:184
-#, fuzzy
 msgid "Bad captcha"
 msgstr "Feilaktig CAPTCHA"
 
 #: kallithea/controllers/login.py:145
-#, fuzzy, python-format
+#, python-format
 msgid "You have successfully registered with %s"
 msgstr "Du har registrer deg på %s"
 
@@ -346,7 +338,7 @@ msgid "Successfully updated password"
 msgstr "Passord oppdatert"
 
 #: kallithea/controllers/pullrequests.py:71
-#, fuzzy, python-format
+#, python-format
 msgid "Invalid reviewer \"%s\" specified"
 msgstr "Ugyldig analytiker \"%s\" angitt"
 
@@ -361,7 +353,6 @@ msgid "Changeset"
 msgstr "Endringssett"
 
 #: kallithea/controllers/pullrequests.py:181
-#, fuzzy
 msgid "Special"
 msgstr "Spesiell"
 
@@ -561,7 +552,7 @@ msgid "Successfully updated gist data"
 msgstr "Oppdaterte gist-data"
 
 #: kallithea/controllers/admin/gists.py:233
-#, fuzzy, python-format
+#, python-format
 msgid "Error occurred during update of gist %s"
 msgstr "Feil inntraff under oppdatering av gist-en %s"
 
@@ -578,7 +569,7 @@ msgstr "Kontoen din ble oppdatert"
 
 #: kallithea/controllers/admin/my_account.py:132
 #: kallithea/controllers/admin/users.py:181
-#, fuzzy, python-format
+#, python-format
 msgid "Error occurred during update of user %s"
 msgstr "Feil inntraff under oppdatering av brukeren %s"
 
@@ -588,19 +579,17 @@ msgstr "Feil inntraff under oppdatering av brukerpassord"
 
 #: kallithea/controllers/admin/my_account.py:207
 #: kallithea/controllers/admin/users.py:369
-#, fuzzy, python-format
+#, python-format
 msgid "Added email %s to user"
 msgstr "La til e-postadressen %s for bruker"
 
 #: kallithea/controllers/admin/my_account.py:213
 #: kallithea/controllers/admin/users.py:375
-#, fuzzy
 msgid "An error occurred during email saving"
 msgstr "Feil inntraff under lagring av e-postadresse"
 
 #: kallithea/controllers/admin/my_account.py:222
 #: kallithea/controllers/admin/users.py:385
-#, fuzzy
 msgid "Removed email from user"
 msgstr "Fjernet e-postadresse fra bruker"
 
@@ -710,7 +699,6 @@ msgid "Enabled"
 msgstr "Påskrudd"
 
 #: kallithea/controllers/admin/permissions.py:125
-#, fuzzy
 msgid "Global permissions updated successfully"
 msgstr "Globale tilganger oppdatert"
 
@@ -761,7 +749,6 @@ msgstr "Feil inntraff under sletting av pakkebrønnsgruppen %s"
 #: kallithea/controllers/admin/repo_groups.py:354
 #: kallithea/controllers/admin/repo_groups.py:384
 #: kallithea/controllers/admin/user_groups.py:299
-#, fuzzy
 msgid "Cannot revoke permission for yourself as admin"
 msgstr "Kan ikke tilbakekalle egen administratortilgang"
 
@@ -857,7 +844,6 @@ msgid "Updated repository visibility in public journal"
 msgstr "Oppdaterte pakkebrønnssynlighet i offentlig loggbok"
 
 #: kallithea/controllers/admin/repos.py:450
-#, fuzzy
 msgid "An error occurred during setting this repository in public journal"
 msgstr ""
 "En feil inntraff under innlemmelse av denne pakkebrønnen i offentlig "
@@ -957,8 +943,6 @@ msgid "Send email task created"
 msgstr ""
 
 #: kallithea/controllers/admin/settings.py:358
-#, fuzzy
-#| msgid "No data ready yet"
 msgid "Hook already exists"
 msgstr "Ingen data klar enda"
 
@@ -1003,7 +987,6 @@ msgid "Error occurred during update of user group %s"
 msgstr ""
 
 #: kallithea/controllers/admin/user_groups.py:217
-#, fuzzy
 msgid "Successfully deleted user group"
 msgstr "Brukergruppe slettet"
 
@@ -1156,12 +1139,10 @@ msgid "Pull request %s"
 msgstr "Flettingsforespørsel %s"
 
 #: kallithea/lib/helpers.py:756
-#, fuzzy
 msgid "[deleted] repository"
 msgstr "[slettet] pakkebrønn"
 
 #: kallithea/lib/helpers.py:758 kallithea/lib/helpers.py:770
-#, fuzzy
 msgid "[created] repository"
 msgstr "[opprettet] pakkebrønn"
 
@@ -1170,22 +1151,18 @@ msgid "[created] repository as fork"
 msgstr "[opprettet] pakkebrønn som forgrening"
 
 #: kallithea/lib/helpers.py:762 kallithea/lib/helpers.py:772
-#, fuzzy
 msgid "[forked] repository"
 msgstr "[forgrenet] pakkebrønn"
 
 #: kallithea/lib/helpers.py:764 kallithea/lib/helpers.py:774
-#, fuzzy
 msgid "[updated] repository"
 msgstr "[oppdaterte] pakkebrønn"
 
 #: kallithea/lib/helpers.py:766
-#, fuzzy
 msgid "[downloaded] archive from repository"
 msgstr "[lastet ned] arkiv fra pakkebrønn"
 
 #: kallithea/lib/helpers.py:768
-#, fuzzy
 msgid "[delete] repository"
 msgstr "[slett] pakkebrønn"
 
@@ -1206,7 +1183,6 @@ msgid "[updated] user group"
 msgstr "[oppdaterte] brukergruppe"
 
 #: kallithea/lib/helpers.py:784
-#, fuzzy
 msgid "[commented] on revision in repository"
 msgstr "[kommenterte] en revisjon i pakkebrønn"
 
@@ -1223,7 +1199,6 @@ msgid "[pushed] into"
 msgstr "[dyttet] til"
 
 #: kallithea/lib/helpers.py:792
-#, fuzzy
 msgid "[committed via Kallithea] into repository"
 msgstr "[innsendt via Kallithea] inn i pakkebrønn"
 
@@ -1366,7 +1341,6 @@ msgid "Kallithea Administrator"
 msgstr "Kallithea-administrator"
 
 #: kallithea/model/db.py:1705
-#, fuzzy
 msgid "Default user has no access to new repositories"
 msgstr "Forvalgt bruker har ingen tilgang til nye pakkebrønner"
 
@@ -1773,7 +1747,7 @@ msgid "This email address is already in use"
 msgstr "E-postadressen er allerede i bruk"
 
 #: kallithea/model/validators.py:682
-#, fuzzy, python-format
+#, python-format
 msgid "Email address \"%(email)s\" not found"
 msgstr "Fant ikke e-postadressen \"%(email)s\""
 
@@ -1918,7 +1892,6 @@ msgid "Password"
 msgstr "Passord"
 
 #: kallithea/templates/login.html:44
-#, fuzzy
 msgid "Stay logged in after browser restart"
 msgstr "Forbli innlogget etter omstart av nettleser"
 
@@ -1927,12 +1900,10 @@ msgid "Forgot your password ?"
 msgstr "Glemt passordet ditt?"
 
 #: kallithea/templates/login.html:55
-#, fuzzy
 msgid "Don't have an account ?"
 msgstr "Har du ikke en konto?"
 
 #: kallithea/templates/login.html:62
-#, fuzzy
 msgid "Sign In"
 msgstr "Logg inn"
 
@@ -1958,7 +1929,6 @@ msgstr "E-postadresse"
 
 #: kallithea/templates/password_reset.html:38
 #: kallithea/templates/register.html:74
-#, fuzzy
 msgid "Captcha"
 msgstr "CAPTCHA"
 
@@ -2087,7 +2057,6 @@ msgid "Date"
 msgstr "Dato"
 
 #: kallithea/templates/admin/admin_log.html:9
-#, fuzzy
 msgid "From IP"
 msgstr "Fra IP"
 
@@ -2852,7 +2821,7 @@ msgstr "Opprettet den"
 
 #: kallithea/templates/admin/repo_groups/repo_group_edit_advanced.html:21
 #: kallithea/templates/data_table/_dt_elements.html:121
-#, fuzzy, python-format
+#, python-format
 msgid "Confirm to delete this group: %s with %s repository"
 msgid_plural "Confirm to delete this group: %s with %s repositories"
 msgstr[0] "Bekreft sletting av denne gruppen: %s med %s pakkebrønn"
@@ -3232,7 +3201,6 @@ msgid "What is that?"
 msgstr ""
 
 #: kallithea/templates/admin/repos/repo_edit_settings.html:9
-#, fuzzy
 msgid "URL by id"
 msgstr "Nettadresse etter ID"
 
@@ -3286,7 +3254,6 @@ msgid "Reset Statistics"
 msgstr "Tilbakestill statistikk"
 
 #: kallithea/templates/admin/repos/repo_edit_statistics.html:10
-#, fuzzy
 msgid "Confirm to remove current statistics."
 msgstr "Bekreft fjerning av nåværende statistikk"
 
@@ -3605,7 +3572,6 @@ msgstr ""
 
 #: kallithea/templates/admin/settings/settings_visual.html:40
 #: kallithea/templates/summary/summary.html:63
-#, fuzzy
 msgid "Clone URL"
 msgstr "Kloningsnettadresse"
 
@@ -3721,7 +3687,7 @@ msgstr "Medlemmer"
 
 #: kallithea/templates/admin/user_groups/user_group_edit_advanced.html:19
 #: kallithea/templates/data_table/_dt_elements.html:102
-#, fuzzy, python-format
+#, python-format
 msgid "Confirm to delete this user group: %s"
 msgstr "Bekreft sletting av denne brukergruppen: %s"
 
@@ -3795,7 +3761,7 @@ msgstr "Medlem av brukergrupper"
 
 #: kallithea/templates/admin/users/user_edit_advanced.html:21
 #: kallithea/templates/data_table/_dt_elements.html:90
-#, fuzzy, python-format
+#, python-format
 msgid "Confirm to delete this user: %s"
 msgstr "Bekreft sletting av denne brukeren: %s"
 
@@ -3864,18 +3830,16 @@ msgid "Files"
 msgstr "Filer"
 
 #: kallithea/templates/base/base.html:135
-#, fuzzy, python-format
+#, python-format
 msgid "Show Pull Requests for %s"
 msgstr "Vis flettingsforespørsler for %s"
 
 #: kallithea/templates/base/base.html:135
-#, fuzzy
 msgid "Pull Requests"
 msgstr "Flettingsforespørsler"
 
 #: kallithea/templates/base/base.html:146
 #: kallithea/templates/base/base.html:148
-#, fuzzy
 msgid "Options"
 msgstr "Valg"
 
@@ -3918,7 +3882,6 @@ msgstr "Forgren"
 
 #: kallithea/templates/base/base.html:179
 #: kallithea/templates/pullrequests/pullrequest.html:77
-#, fuzzy
 msgid "Create Pull Request"
 msgstr "Opprett flettingsorespørsel"
 
@@ -3941,12 +3904,10 @@ msgid "Public journal"
 msgstr ""
 
 #: kallithea/templates/base/base.html:308
-#, fuzzy
 msgid "Show public gists"
 msgstr "Vis offentlige Gist-er"
 
 #: kallithea/templates/base/base.html:309
-#, fuzzy
 msgid "Gists"
 msgstr "Gist-er"
 
@@ -3963,7 +3924,6 @@ msgid "My Private Gists"
 msgstr "Mine private Gist-er"
 
 #: kallithea/templates/base/base.html:321
-#, fuzzy
 msgid "Search in repositories"
 msgstr "Søk i pakkebrønner"
 
@@ -3971,7 +3931,6 @@ msgstr "Søk i pakkebrønner"
 #: kallithea/templates/base/base.html:345
 #: kallithea/templates/pullrequests/pullrequest_show_my.html:6
 #: kallithea/templates/pullrequests/pullrequest_show_my.html:10
-#, fuzzy
 msgid "My Pull Requests"
 msgstr "Mine flettingsforespørsler"
 
@@ -3980,7 +3939,6 @@ msgid "Not Logged In"
 msgstr "Ikke innlogget"
 
 #: kallithea/templates/base/base.html:369
-#, fuzzy
 msgid "Login to Your Account"
 msgstr "Logg in på kontoen din"
 
@@ -4016,13 +3974,10 @@ msgid ""
 msgstr ""
 
 #: kallithea/templates/base/default_perms_box.html:16
-#, fuzzy
-#| msgid "Default Permissions"
 msgid "default permissions"
 msgstr "Forvalgte tilganger"
 
 #: kallithea/templates/base/default_perms_box.html:23
-#, fuzzy
 msgid "Create repositories"
 msgstr "Opprett pakkebrønner"
 
@@ -4075,7 +4030,6 @@ msgstr "Prøv igjen"
 
 #: kallithea/templates/base/root.html:29
 #: kallithea/templates/changeset/changeset_file_comment.html:65
-#, fuzzy
 msgid "Submitting ..."
 msgstr "Sender inn …"
 
@@ -4100,12 +4054,10 @@ msgid "Group"
 msgstr "Gruppe"
 
 #: kallithea/templates/base/root.html:35
-#, fuzzy
 msgid "Loading ..."
 msgstr "Laster …"
 
 #: kallithea/templates/base/root.html:36
-#, fuzzy
 msgid "loading ..."
 msgstr "laster …"
 
@@ -4130,7 +4082,6 @@ msgid "Show Selected Changesets {0} &rarr; {1}"
 msgstr ""
 
 #: kallithea/templates/base/root.html:42
-#, fuzzy
 msgid "Selection Link"
 msgstr "Utvalgslenke"
 
@@ -4283,8 +4234,7 @@ msgid "Expand commit message"
 msgstr ""
 
 #: kallithea/templates/changelog/changelog_table.html:76
-#, fuzzy, python-format
-#| msgid "%s committed on %s"
+#, python-format
 msgid "%s comments"
 msgstr "%s sendte inn %s"
 
@@ -4383,8 +4333,6 @@ msgid "Show full diff anyway"
 msgstr ""
 
 #: kallithea/templates/changeset/changeset_file_comment.html:20
-#, fuzzy
-#| msgid "%s committed on %s"
 msgid "comment"
 msgstr "%s sendte inn %s"
 
@@ -4705,8 +4653,6 @@ msgstr ""
 
 #: kallithea/templates/email_templates/pull_request.html:12
 #: kallithea/templates/email_templates/pull_request_comment.html:20
-#, fuzzy
-#| msgid "Pull request updated"
 msgid "Pull request"
 msgstr "Innsendingsforespørsel oppdatert"
 
