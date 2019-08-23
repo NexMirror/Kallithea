@@ -5485,15 +5485,3 @@ msgstr ""
 #, python-format
 msgid "Download %s as %s"
 msgstr ""
-
-#, fuzzy
-#~| msgid "Repository URL"
-#~ msgid "Repository Group"
-#~ msgstr "Repozitáre"
-
-#, fuzzy
-#~ msgid "There are no reviewers"
-#~ msgstr "Zatiaľ nie sú reviewers"
-
-#~ msgid "My Repos"
-#~ msgstr "Moje repozitáre"

@@ -5462,19 +5462,3 @@ msgstr ""
 #, python-format
 msgid "Download %s as %s"
 msgstr ""
-
-#~ msgid "There is no index to search in. Please run whoosh indexer"
-#~ msgstr ""
-#~ "No hay ningún indice para buscar. Por favor, ejecute el indexador "
-#~ "whoosh"
-
-#, fuzzy
-#~| msgid "Empty repository"
-#~ msgid "Repository Group"
-#~ msgstr "Repositorio vacío"
-
-#~ msgid "Closed, replaced by %s ."
-#~ msgstr "Cerrado, reemplazado por %s."
-
-#~ msgid "Closing."
-#~ msgstr "Cerrado."

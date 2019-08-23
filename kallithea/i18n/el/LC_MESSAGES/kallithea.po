@@ -5489,25 +5489,3 @@ msgstr ""
 #, python-format
 msgid "Download %s as %s"
 msgstr ""
-
-#~ msgid "There is no index to search in. Please run whoosh indexer"
-#~ msgstr ""
-#~ "Δεν υπάρχει ευρετήριο για την αναζήτηση. Παρακαλώ τρέξτε τον whoosh "
-#~ "για την δημιουργία του"
-
-#, fuzzy
-#~| msgid "Updated repository group %s"
-#~ msgid "Repository Group"
-#~ msgstr "Ενημερώθηκε η ομάδα αποθετηρίου %s"
-
-#~ msgid "This pull request can be updated with changes on %s:"
-#~ msgstr "Αυτό το αίτημα έλξης μπορεί να ενημερωθεί με αλλαγές στο %s:"
-
-#~ msgid "Closed, replaced by %s ."
-#~ msgstr "Κλειστό, αντικαταστάθηκε από %s."
-
-#~ msgid "Closing."
-#~ msgstr "Κλείνει."
-
-#~ msgid "Save Updates as New Pull Request"
-#~ msgstr "Ένα νέο αίτημα έλξης (pull request) δημιουργήθηκε επιτυχώς"

@@ -5456,8 +5456,3 @@ msgstr ""
 #, python-format
 msgid "Download %s as %s"
 msgstr ""
-
-#, fuzzy
-#~| msgid "Empty repository"
-#~ msgid "Repository Group"
-#~ msgstr "Lege repository"

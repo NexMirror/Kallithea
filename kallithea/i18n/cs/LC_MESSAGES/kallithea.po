@@ -5490,21 +5490,3 @@ msgstr ""
 #, python-format
 msgid "Download %s as %s"
 msgstr ""
-
-#, fuzzy
-#~| msgid "Repository URL"
-#~ msgid "Repository Group"
-#~ msgstr "Repozitáře"
-
-#, fuzzy
-#~ msgid "There are no reviewers"
-#~ msgstr "Zatím nejsou žádné soubory. %s"
-
-#~ msgid "Unlocked"
-#~ msgstr "Odemčeno"
-
-#~ msgid "Locked"
-#~ msgstr "Zamčeno"
-
-#~ msgid "My Repos"
-#~ msgstr "Prázdný repozitář"
