@@ -75,12 +75,10 @@ other = [
     ('2012', 'Augusto Herrmann <augusto.herrmann@gmail.com>'),
     ('2012', 'Nemcio <areczek01@gmail.com>'),
     ('2012', 'Nemcio <bogdan114@g.pl>'),
-    ('2012', 'xpol <xpolife@gmail.com>'),
     ('2013', 'Andrey Mivrenik <myvrenik@gmail.com>'),
     ('2013', 'ArcheR <aleclitvinov1980@gmail.com>'),
     ('2013', 'gnustavo <gustavo@gnustavo.com>'),
     ('2013', 'ivlevdenis <ivlevdenis.ru@gmail.com>'),
-    ('2013', 'Marcin Kuźmiński <marcin@python-works.com>'),
     ('2013', 'Mikhail Zholobov <legal90@gmail.com>'),
     ('2013', 'mokeev1995 <mokeev_andre@mail.ru>'),
     ('2013', 'Nemcio <areczek01@gmail.com>'),
@@ -88,14 +86,11 @@ other = [
     ('2013', 'shirou - しろう'),
     ('2013', 'softforwinxp <softforwinxp@gmail.com>'),
     ('2013', 'stephanj <info@stephan-jauernick.de>'),
-    ('2013', 'Takumi IINO <trot.thunder@gmail.com>'),
     ('2013', 'zhmylove <zhmylove@narod.ru>'),
     ('2013', 'こいんとす <tkondou@gmail.com>'),
     ('2014', 'invision70 <invision70@gmail.com>'),
     ('2014', 'SkryabinD <skryabind@gmail.com>'),
     ('2014', 'whosaysni <whosaysni@gmail.com>'),
-    ('2015', 'Andrej Shadura <andrew@shadura.me>'),
-    ('2016', 'Andrej Shadura <andrew@shadura.me>'),
 ]
 
 # Preserve contributors listed in about.html but not appearing in repository
