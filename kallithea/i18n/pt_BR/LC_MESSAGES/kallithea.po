@@ -1,9 +1,6 @@
 # Portuguese (Brazil) translations for Kallithea.
 # Copyright (C) 2014 RhodeCode GmbH, and others.
 # This file is distributed under the same license as the Kallithea project.
-# Translators:
-# Augusto Herrmann <augusto.herrmann@gmail.com>, 2012
-# gnustavo <gustavo@gnustavo.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
