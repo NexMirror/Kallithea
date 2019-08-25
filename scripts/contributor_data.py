@@ -30,6 +30,7 @@ name_fixes['Lukasz Balcerzak'] = "Łukasz Balcerzak <lukaszbalcerzak@gmail.com>"
 name_fixes['mao <mao@lins.fju.edu.tw>'] = "Ching-Chen Mao <mao@lins.fju.edu.tw>"
 name_fixes['marcink'] = "Marcin Kuźmiński <marcin@python-works.com>"
 name_fixes['Marcin Kuzminski'] = "Marcin Kuźmiński <marcin@python-works.com>"
+name_fixes['mikespook'] = "mikespook <mikespook@gmail.com>"
 name_fixes['nansenat16@null.tw'] = "nansenat16 <nansenat16@null.tw>"
 name_fixes['Peter Vitt'] = "Peter Vitt <petervitt@web.de>"
 name_fixes['philip.j@hostdime.com'] = "Philip Jameson <philip.j@hostdime.com>"
@@ -72,7 +73,6 @@ other = [
     # kallithea/i18n/*/LC_MESSAGES/kallithea.po and originating from before the
     # use of Weblate.
     ('2012', 'Augusto Herrmann <augusto.herrmann@gmail.com>'),
-    ('2012', 'mikespook <mikespook@gmail.com>'),
     ('2012', 'Nemcio <areczek01@gmail.com>'),
     ('2012', 'Nemcio <bogdan114@g.pl>'),
     ('2012', 'xpol <xpolife@gmail.com>'),
