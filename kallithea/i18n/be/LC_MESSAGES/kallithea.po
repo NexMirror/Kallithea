@@ -1,7 +1,6 @@
-# Belarusian translations for Kallithea.
 # Copyright (C) 2016 Various authors, licensing as GPLv3
 # This file is distributed under the same license as the Kallithea project.
-# Automatically generated, 2016.
+
 msgid ""
 msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
