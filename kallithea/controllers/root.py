@@ -28,7 +28,8 @@ from kallithea.lib.base import BaseController
 # inheriting from its RoutedController class.
 class RootController(RoutedController, BaseController):
 
-    mapper = make_map(config)
+    def __init__(self):
+        self.mapper = make_map(config)
 
-    # the following assignment hooks in error handling
-    error = ErrorController()
+        # the following assignment hooks in error handling
+        self.error = ErrorController()
