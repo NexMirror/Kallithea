@@ -73,7 +73,7 @@ def get_commits_stats(repo_name, ts_min_y, ts_max_y, recurse_limit=100):
     DBS = celerylib.get_session()
     lockkey = celerylib.__get_lockkey('get_commits_stats', repo_name, ts_min_y,
                             ts_max_y)
-    lockkey_path = config['tg.cache_dir']  # The configured cache_dir is only available under this name ...
+    lockkey_path = config.get('cache_dir') or config['app_conf']['cache_dir']  # Backward compatibility for TurboGears < 2.4
 
     log.info('running task with lockkey %s', lockkey)
 
