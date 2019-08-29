@@ -4,7 +4,7 @@
 # Translators:
 # Nemcio <areczek01@gmail.com>, 2013
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2010
-# marcinkuzminski <marcin@python-blog.com>, 2013
+# Marcin Kuźmiński <marcin@python-works.com>, 2013
 # Nemcio <bogdan114@g.pl>, 2012
 # Nemcio <areczek01@gmail.com>, 2012-2013
 msgid ""
