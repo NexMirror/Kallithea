@@ -2,7 +2,6 @@
 # Copyright (C) 2014 RhodeCode GmbH, and others.
 # This file is distributed under the same license as the Kallithea project.
 # Translators:
-# しろう, 2013
 # shirou - しろう, 2013
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2011
 # こいんとす <tkondou@gmail.com>, 2013
