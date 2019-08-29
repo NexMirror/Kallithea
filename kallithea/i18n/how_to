@@ -7,7 +7,7 @@ Translations are available on Hosted Weblate at the following URL:
     https://hosted.weblate.org/projects/kallithea/kallithea/
 
 Registered users may contribute to the existing languages, or request a new
-language translations.
+language translation.
 
 
 Translating using Weblate
@@ -45,8 +45,8 @@ which case it should be manually convinced it has to discard the commits it crea
 using its administrative interface.
 
 
-Regenerating translatations after source code changes (admin-only)
-------------------------------------------------------------------
+Regenerating translations after source code changes (admin-only)
+----------------------------------------------------------------
 
 When the Kallithea source code changes, both the location as the content of
 translation strings can change. It is therefore necessary to regularly
