@@ -44,27 +44,44 @@ def cli(debug):
 
 @cli.command()
 @click.argument('po_files', nargs=-1)
-def normalize_po_files(po_files):
+@click.option('--merge-pot-file', default=None)
+@click.option('--strip/--no-strip', default=False)
+def normalize_po_files(po_files, merge_pot_file, strip):
     """Normalize the specified .po and .pot files.
 
-    Only actual translations and essential headers will be preserved.
+    By default, only actual translations and essential headers will be
+    preserved, just as we want it in the main branches with minimal noise.
+
+    If a .pot file is specified, the po files will instead be updated by
+    running GNU msgmerge with this .pot file, thus updating source code
+    references and preserving comments and outdated translations.
     """
     for po_file in po_files:
-        i18n_utils._normalize_po_file(po_file, strip=True)
+        i18n_utils._normalize_po_file(po_file, merge_pot_file=merge_pot_file, strip=strip)
 
 @cli.command()
 @click.argument('local')
 @click.argument('base')
 @click.argument('other')
 @click.argument('output')
-def normalized_merge(local, base, other, output):
+@click.option('--merge-pot-file', default=None)
+@click.option('--strip/--no-strip', default=False)
+def normalized_merge(local, base, other, output, merge_pot_file, strip):
     """Merge tool for use with 'hg merge/rebase/graft --tool'
 
-    Merging i18n files with a standard merge tool could yield merge conflicts
-    when one side is normalized and the other is not. In such cases, it may be
-    better to first normalize all sides, then proceed with a standard merge.
-    This command does exactly that, and can be used as 'merge-tool' in
-    Mercurial commands like merge, rebase and graft.
+    i18n files are partially manually editored original source of content, and
+    partially automatically generated and updated. That create a lot of churn
+    and often cause a lot of merge conflicts.
+
+    To avoid that, this merge tool wrapper will normalize .po content before
+    running the merge tool.
+
+    By default, only actual translations and essential headers will be
+    preserved, just as we want it in the main branches with minimal noise.
+
+    If a .pot file is specified, the po files will instead be updated by
+    running GNU msgmerge with this .pot file, thus updating source code
+    references and preserving comments and outdated translations.
 
     Add the following to your user or repository-specific .hgrc file to use it:
         [merge-tools]
@@ -81,10 +98,10 @@ def normalized_merge(local, base, other, output):
 
     print('i18n normalized-merge: merging file %s' % output)
 
-    i18n_utils._normalize_po_file(local, strip=True)
-    i18n_utils._normalize_po_file(base, strip=True)
-    i18n_utils._normalize_po_file(other, strip=True)
-    i18n_utils._normalize_po_file(output, strip=True)
+    i18n_utils._normalize_po_file(local, merge_pot_file=merge_pot_file, strip=strip)
+    i18n_utils._normalize_po_file(base, merge_pot_file=merge_pot_file, strip=strip)
+    i18n_utils._normalize_po_file(other, merge_pot_file=merge_pot_file, strip=strip)
+    i18n_utils._normalize_po_file(output, merge_pot_file=merge_pot_file, strip=strip)
 
     # simplemerge will write markers to 'local' if it fails, keep a copy without markers
     localkeep = local + '.keep'
@@ -110,9 +127,11 @@ def normalized_merge(local, base, other, output):
 @cli.command()
 @click.argument('file1')
 @click.argument('file2')
-def normalized_diff(file1, file2):
+@click.option('--merge-pot-file', default=None)
+@click.option('--strip/--no-strip', default=False)
+def normalized_diff(file1, file2, merge_pot_file, strip):
     """Compare two files while transparently normalizing them."""
-    sys.exit(i18n_utils._normalized_diff(file1, file2, strip=True))
+    sys.exit(i18n_utils._normalized_diff(file1, file2, merge_pot_file=merge_pot_file, strip=strip))
 
 if __name__ == '__main__':
     cli()

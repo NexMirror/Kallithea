@@ -159,7 +159,10 @@ def _normalize_po(raw_content):
         chunks.append('\n'.join(chunk_lines) + '\n')
     return '\n'.join(chunks)
 
-def _normalize_po_file(po_file, strip=False):
+def _normalize_po_file(po_file, merge_pot_file=None, strip=False):
+    if merge_pot_file:
+        runcmd(['msgmerge', '--width=76', '--backup=none', '--previous',
+                '--update', po_file, '-q', merge_pot_file])
     if strip:
         po_tmp = po_file + '.tmp'
         with open(po_file, 'r') as src, open(po_tmp, 'w') as dest:
@@ -168,7 +171,7 @@ def _normalize_po_file(po_file, strip=False):
             dest.write(normalized_content)
         os.rename(po_tmp, po_file)
 
-def _normalized_diff(file1, file2, strip=False):
+def _normalized_diff(file1, file2, merge_pot_file=None, strip=False):
     # Create temporary copies of both files
     temp1 = tempfile.NamedTemporaryFile(prefix=os.path.basename(file1))
     temp2 = tempfile.NamedTemporaryFile(prefix=os.path.basename(file2))
@@ -176,8 +179,8 @@ def _normalized_diff(file1, file2, strip=False):
     shutil.copyfile(file1, temp1.name)
     shutil.copyfile(file2, temp2.name)
     # Normalize them in place
-    _normalize_po_file(temp1.name, strip=strip)
-    _normalize_po_file(temp2.name, strip=strip)
+    _normalize_po_file(temp1.name, merge_pot_file=merge_pot_file, strip=strip)
+    _normalize_po_file(temp2.name, merge_pot_file=merge_pot_file, strip=strip)
     # Now compare
     try:
         runcmd(['diff', '-u', temp1.name, temp2.name])
