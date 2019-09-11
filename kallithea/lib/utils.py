@@ -29,6 +29,7 @@ import datetime
 import logging
 import os
 import re
+import sys
 import traceback
 from distutils.version import StrictVersion
 
@@ -581,7 +582,7 @@ git_req_ver = StrictVersion('1.7.4')
 
 def check_git_version():
     """
-    Checks what version of git is installed in system, and issues a warning
+    Checks what version of git is installed on the system, and raise a system exit
     if it's too old for Kallithea to work properly.
     """
     from kallithea import BACKENDS
@@ -589,6 +590,10 @@ def check_git_version():
     from kallithea.lib.vcs.conf import settings
 
     if 'git' not in BACKENDS:
+        return None
+
+    if not settings.GIT_EXECUTABLE_PATH:
+        log.warning('No git executable configured - check "git_path" in the ini file.')
         return None
 
     stdout, stderr = GitRepository._run_git_command(['--version'], _bare=True,
@@ -603,10 +608,14 @@ def check_git_version():
         log.debug('Git executable: "%s", version %s (parsed from: "%s")',
                   settings.GIT_EXECUTABLE_PATH, ver, stdout.strip())
         if ver < git_req_ver:
-            log.warning('Kallithea detected %s version %s, which is too old '
-                        'for the system to function properly. '
-                        'Please upgrade to version %s or later.',
-                        settings.GIT_EXECUTABLE_PATH, ver, git_req_ver)
+            log.error('Kallithea detected %s version %s, which is too old '
+                      'for the system to function properly. '
+                      'Please upgrade to version %s or later. '
+                      'If you strictly need Mercurial repositories, you can '
+                      'clear the "git_path" setting in the ini file.',
+                      settings.GIT_EXECUTABLE_PATH, ver, git_req_ver)
+            log.error("Terminating ...")
+            sys.exit(1)
     else:
         ver = StrictVersion('0.0.0')
         log.warning('Error finding version number in "%s --version" stdout: %r',
