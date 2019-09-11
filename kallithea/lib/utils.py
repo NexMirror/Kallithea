@@ -30,6 +30,7 @@ import logging
 import os
 import re
 import traceback
+from distutils.version import StrictVersion
 
 import beaker
 from beaker.cache import _cache_decorate
@@ -576,6 +577,8 @@ def load_rcextensions(root_path):
 # MISC
 #==============================================================================
 
+git_req_ver = StrictVersion('1.7.4')
+
 def check_git_version():
     """
     Checks what version of git is installed in system, and issues a warning
@@ -584,7 +587,6 @@ def check_git_version():
     from kallithea import BACKENDS
     from kallithea.lib.vcs.backends.git.repository import GitRepository
     from kallithea.lib.vcs.conf import settings
-    from distutils.version import StrictVersion
 
     if 'git' not in BACKENDS:
         return None
@@ -592,22 +594,24 @@ def check_git_version():
     stdout, stderr = GitRepository._run_git_command(['--version'], _bare=True,
                                                     _safe=True)
 
+    if stderr:
+        log.warning('Error/stderr from "%s --version": %r', settings.GIT_EXECUTABLE_PATH, stderr)
+
     m = re.search(r"\d+.\d+.\d+", stdout)
     if m:
         ver = StrictVersion(m.group(0))
+        log.debug('Git executable: "%s", version %s (parsed from: "%s")',
+                  settings.GIT_EXECUTABLE_PATH, ver, stdout.strip())
+        if ver < git_req_ver:
+            log.warning('Kallithea detected %s version %s, which is too old '
+                        'for the system to function properly. '
+                        'Please upgrade to version %s or later.',
+                        settings.GIT_EXECUTABLE_PATH, ver, git_req_ver)
     else:
         ver = StrictVersion('0.0.0')
+        log.warning('Error finding version number in "%s --version" stdout: %r',
+                    settings.GIT_EXECUTABLE_PATH, stdout.strip())
 
-    req_ver = StrictVersion('1.7.4')
-
-    log.debug('Git executable: "%s" version %s detected: %s',
-              settings.GIT_EXECUTABLE_PATH, ver, stdout)
-    if stderr:
-        log.warning('Error detecting git version: %r', stderr)
-    elif ver < req_ver:
-        log.warning('Kallithea detected git version %s, which is too old '
-                    'for the system to function properly. '
-                    'Please upgrade to version %s or later.' % (ver, req_ver))
     return ver
 
 
