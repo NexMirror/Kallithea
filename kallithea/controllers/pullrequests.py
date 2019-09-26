@@ -530,9 +530,14 @@ class PullrequestsController(BaseRepoController):
                             # Note: org_scm_instance.path must come first so all
                             # valid revision numbers are 100% org_scm compatible
                             # - both for avail_revs and for revset results
-                            hgrepo = unionrepo.unionrepository(org_scm_instance.baseui,
-                                                               org_scm_instance.path,
-                                                               other_scm_instance.path)
+                            try:
+                                hgrepo = unionrepo.makeunionrepository(org_scm_instance.baseui,
+                                                                       org_scm_instance.path,
+                                                                       other_scm_instance.path)
+                            except AttributeError: # makeunionrepository was introduced in Mercurial 4.8 23f2299e9e53
+                                hgrepo = unionrepo.unionrepository(org_scm_instance.baseui,
+                                                                   org_scm_instance.path,
+                                                                   other_scm_instance.path)
                         else:
                             hgrepo = org_scm_instance._repo
                         show = set(hgrepo.revs('::%ld & !::parents(%s) & !::%s',
