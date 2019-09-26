@@ -32,7 +32,7 @@ Clients must send JSON encoded JSON-RPC requests::
 For example, to pull to a local "CPython" mirror using curl::
 
     curl https://kallithea.example.com/_admin/api -X POST -H 'content-type:text/plain' \
-        --data-binary '{"id":1,"api_key":"xe7cdb2v278e4evbdf5vs04v832v0efvcbcve4a3","method":"pull","args":{"repo":"CPython"}}'
+        --data-binary '{"id":1,"api_key":"xe7cdb2v278e4evbdf5vs04v832v0efvcbcve4a3","method":"pull","args":{"repoid":"CPython"}}'
 
 In general, provide
  - *id*, a value of any type, can be used to match the response with the request that it is replying to.
