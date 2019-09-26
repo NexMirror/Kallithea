@@ -50,15 +50,6 @@ msgstr "リポジトリの最新のリビジョン(tip)に移動"
 msgid "Cannot compare repositories of different types"
 msgstr "共通の祖先を持たないのでリポジトリを比較できません"
 
-msgid "Cannot show empty diff"
-msgstr ""
-
-msgid "No ancestor found for merge diff"
-msgstr ""
-
-msgid "Multiple merge ancestors found for merge compare"
-msgstr ""
-
 msgid "Cannot compare repositories without using common ancestor"
 msgstr "共通の祖先を持たないのでリポジトリを比較できません"
 
@@ -212,9 +203,6 @@ msgstr "無効なパスワードリセットトークン"
 msgid "Successfully updated password"
 msgstr "パスワードを更新しました"
 
-msgid "Invalid reviewer \"%s\" specified"
-msgstr ""
-
 msgid "%s (closed)"
 msgstr "%s (閉鎖済み)"
 
@@ -242,12 +230,6 @@ msgstr "新しいプルリクエストの作成に成功しました"
 msgid "New pull request iteration created"
 msgstr "プルリクエストレビュアー"
 
-msgid "Meanwhile, the following reviewers have been added: %s"
-msgstr ""
-
-msgid "Meanwhile, the following reviewers have been removed: %s"
-msgstr ""
-
 msgid "No description"
 msgstr "説明がありません"
 
@@ -257,21 +239,12 @@ msgstr "プルリクエストを更新しました"
 msgid "Successfully deleted pull request"
 msgstr "プルリクエストの削除に成功しました"
 
-msgid "Revision %s not found in %s"
-msgstr ""
-
 msgid "Error: changesets not found when displaying pull request from %s."
 msgstr "プルリクエストを更新するためのチェンジセットが見つかりません。"
-
-msgid "This pull request has already been merged to %s."
-msgstr ""
 
 msgid "This pull request has been closed and can not be updated."
 msgstr ""
 "このプルリクエストはすでにクローズされていて、更新することはできません。"
-
-msgid "The following additional changes are available on %s:"
-msgstr ""
 
 msgid "No additional changesets found for iterating on this pull request."
 msgstr "プルリクエストを更新するためのチェンジセットが見つかりません。"
@@ -286,14 +259,8 @@ msgid ""
 "Error: some changesets not found when displaying pull request from %s."
 msgstr "プルリクエストを更新するためのチェンジセットが見つかりません。"
 
-msgid "The diff can't be shown - the PR revisions could not be found."
-msgstr ""
-
 msgid "Invalid search query. Try quoting it."
 msgstr "無効な検索クエリーです。\\\"で囲んで下さい。"
-
-msgid "The server has no search index."
-msgstr ""
 
 msgid "An error occurred during search operation."
 msgstr "検索を実行する際にエラーが発生しました。"
@@ -485,9 +452,6 @@ msgstr "%s の削除中にエラーが発生しました"
 msgid "Repository permissions updated"
 msgstr "リポジトリ権限を更新しました"
 
-msgid "Field validation error: %s"
-msgstr ""
-
 msgid "An error occurred during creation of field: %r"
 msgstr "フィールドの作成中にエラーが発生しました"
 
@@ -573,9 +537,6 @@ msgstr "メール送信タスクを作成しました"
 msgid "Hook already exists"
 msgstr "まだデータの準備ができていません"
 
-msgid "Builtin hooks are read-only. Please use another hook name."
-msgstr ""
-
 msgid "Added new hook"
 msgstr "新しいフックを追加しました"
 
@@ -654,10 +615,6 @@ msgstr "このページを閲覧するためにはサインインが必要です
 
 msgid "Invalid API key"
 msgstr "APIキーが無効です"
-
-msgid ""
-"CSRF token leak has been detected - all form tokens have been expired"
-msgstr ""
 
 msgid "Repository not found in the filesystem"
 msgstr "ファイルシステム内にリポジトリが見つかりません"
@@ -859,33 +816,6 @@ msgid "Default user has write access to new repositories"
 msgstr ""
 "デフォルトユーザーは新しいリポジトリに書き込みアクセスする権限があります"
 
-msgid "Default user has admin access to new repositories"
-msgstr ""
-
-msgid "Default user has no access to new repository groups"
-msgstr ""
-
-msgid "Default user has read access to new repository groups"
-msgstr ""
-
-msgid "Default user has write access to new repository groups"
-msgstr ""
-
-msgid "Default user has admin access to new repository groups"
-msgstr ""
-
-msgid "Default user has no access to new user groups"
-msgstr ""
-
-msgid "Default user has read access to new user groups"
-msgstr ""
-
-msgid "Default user has write access to new user groups"
-msgstr ""
-
-msgid "Default user has admin access to new user groups"
-msgstr ""
-
 msgid "Only admins can create repository groups"
 msgstr "管理者のみがリポジトリのグループを作成できます"
 
@@ -964,16 +894,6 @@ msgstr "プルリクエストに[コメント]"
 msgid "New user %(new_username)s registered"
 msgstr "新しいユーザー %(new_username)s が登録されました"
 
-msgid ""
-"[Review] %(repo_name)s PR %(pr_nice_id)s \"%(pr_title_short)s\" from "
-"%(pr_source_branch)s by %(pr_owner_username)s"
-msgstr ""
-
-msgid ""
-"[Comment] %(repo_name)s PR %(pr_nice_id)s \"%(pr_title_short)s\" from "
-"%(pr_source_branch)s by %(pr_owner_username)s"
-msgstr ""
-
 msgid "Closing"
 msgstr "クローズ"
 
@@ -986,33 +906,8 @@ msgstr ""
 msgid "Cannot create empty pull request"
 msgstr "プルリクエスト作成中にエラーが発生しました: %s"
 
-msgid ""
-"Cannot create pull request - criss cross merge detected, please merge a "
-"later %s revision to %s"
-msgstr ""
-
 msgid "You are not authorized to create the pull request"
 msgstr "このプルリクエストを削除してもよろしいですか？"
-
-msgid "Missing changesets since the previous iteration:"
-msgstr ""
-
-msgid "New changesets on %s %s since the previous iteration:"
-msgstr ""
-
-msgid "Ancestor didn't change - diff since previous iteration:"
-msgstr ""
-
-msgid ""
-"This iteration is based on another %s revision and there is no simple "
-"diff."
-msgstr ""
-
-msgid "No changes found on %s %s since previous iteration."
-msgstr ""
-
-msgid "Closed, next iteration: %s ."
-msgstr ""
 
 msgid "latest tip"
 msgstr "最新のtip"
@@ -1052,11 +947,6 @@ msgstr "パスワードリセットのリンク"
 
 msgid "Password reset notification"
 msgstr "パスワードの再設定通知"
-
-msgid ""
-"The password to your account %s has been changed using password reset "
-"form."
-msgstr ""
 
 msgid "Value cannot be an empty list"
 msgstr "空のリストにはできません"
@@ -1134,11 +1024,6 @@ msgstr "リポジトリグループ名 \"%(repo)s\" はすでに存在します"
 msgid "Invalid repository URL"
 msgstr "無効なリポジトリのURL"
 
-msgid ""
-"Invalid repository URL. It must be a valid http, https, ssh, svn+http or "
-"svn+https URL"
-msgstr ""
-
 msgid "Fork has to be the same type as parent"
 msgstr "フォークは親と同じ種別の必要があります"
 
@@ -1192,9 +1077,6 @@ msgstr ""
 "%(loaded)s プラグインと %(next_to_load)s プラグインで同じ名前が使われてい"
 "ます"
 
-msgid "About"
-msgstr ""
-
 msgid "Add Repository"
 msgstr "リポジトリを追加"
 
@@ -1234,9 +1116,6 @@ msgstr "ユーザー名"
 msgid "Password"
 msgstr "パスワード"
 
-msgid "Stay logged in after browser restart"
-msgstr ""
-
 msgid "Forgot your password ?"
 msgstr "パスワードを忘れた?"
 
@@ -1271,25 +1150,11 @@ msgstr ""
 "システムに登録されている場合、パスワードリセットのリンクを指定されたメール"
 "アドレスに送信します。"
 
-msgid "You are about to set a new password for the email address %s."
-msgstr ""
-
-msgid ""
-"Note that you must use the same browser session for this as the one used "
-"to request the password reset."
-msgstr ""
-
-msgid "Code you received in the email"
-msgstr ""
-
 msgid "New Password"
 msgstr "新しいパスワード"
 
 msgid "Confirm New Password"
 msgstr "新しいパスワードの確認"
-
-msgid "Confirm"
-msgstr ""
 
 msgid "Sign Up"
 msgstr "サインアップ"
@@ -1308,12 +1173,6 @@ msgstr "名字"
 
 msgid "Email"
 msgstr "メールアドレス"
-
-msgid "Registered accounts are ready to use and need no further action."
-msgstr ""
-
-msgid "Please wait for an administrator to activate your account."
-msgstr ""
 
 msgid "Admin Journal"
 msgstr "管理ジャーナル"
@@ -1411,9 +1270,6 @@ msgid ""
 msgstr ""
 "編集開始後にGistが更新されています。あなたの変更箇所をコピーしておき、 "
 "%(here)s をクリックして新しいバージョンを読み込みなおしてください。"
-
-msgid "here"
-msgstr ""
 
 msgid "Gist description ..."
 msgstr "Gist の説明..."
@@ -1541,20 +1397,6 @@ msgstr "新しいAPIキー"
 msgid "Add"
 msgstr "追加"
 
-msgid ""
-"\n"
-"API keys are used to let scripts or services access %s using your\n"
-"account, as if you had provided the script or service with your actual\n"
-"password.\n"
-msgstr ""
-
-msgid ""
-"\n"
-"Like passwords, API keys should therefore never be shared with others,\n"
-"nor passed to untrusted scripts or services. If such sharing should\n"
-"happen anyway, reset the API key on this page to prevent further use.\n"
-msgstr ""
-
 msgid "Primary"
 msgstr "プライマリ"
 
@@ -1579,15 +1421,8 @@ msgstr "新しいパスワード"
 msgid "Confirm new password"
 msgstr "新しいパスワードの確認"
 
-msgid ""
-"This account is managed with %s and the password cannot be changed here"
-msgstr ""
-
 msgid "Current IP"
 msgstr "現在の IP アドレス"
-
-msgid "Gravatar"
-msgstr ""
 
 msgid "Change %s avatar at"
 msgstr "アバターを変更:"
@@ -1638,9 +1473,6 @@ msgstr ""
 msgid "Apply to all existing repositories"
 msgstr "既存のリポジトリを import しますか？"
 
-msgid "Permissions for the Default user on new repositories."
-msgstr ""
-
 msgid "Repository group"
 msgstr "リポジトリグループ"
 
@@ -1672,23 +1504,8 @@ msgstr ""
 "セットします。各ユーザーグループの既存のカスタムデフォルトパーミッション設"
 "定は無くなるので注意してください"
 
-msgid "Apply to all existing user groups"
-msgstr ""
-
-msgid "Permissions for the Default user on new user groups."
-msgstr ""
-
 msgid "Top level repository creation"
 msgstr "トップレベルリポジトリの作成"
-
-msgid ""
-"Enable this to allow non-admins to create repositories at the top level."
-msgstr ""
-
-msgid ""
-"Note: This will also give all users API access to create repositories "
-"everywhere. That might change in future versions."
-msgstr ""
 
 msgid "Repository creation with group write access"
 msgstr "グループ書き込み権限でのリポジトリ作成"
@@ -1704,14 +1521,8 @@ msgstr ""
 msgid "User group creation"
 msgstr "ユーザーグループ作成"
 
-msgid "Enable this to allow non-admins to create user groups."
-msgstr ""
-
 msgid "Repository forking"
 msgstr "リポジトリのフォーク"
-
-msgid "Enable this to allow non-admins to fork repositories."
-msgstr ""
 
 msgid "Registration"
 msgstr "新規登録"
@@ -1781,9 +1592,6 @@ msgstr[0] "このグループを削除してもよろしいですか？ : %s %s 
 msgid "Delete this repository group"
 msgstr "このリポジトリグループを削除"
 
-msgid "Not visible"
-msgstr ""
-
 msgid "Visible"
 msgstr "無効"
 
@@ -1842,11 +1650,6 @@ msgstr "トップレベルリポジトリ数"
 
 msgid "Clone remote repository"
 msgstr "リモートリポジトリをクローン"
-
-msgid ""
-"Optional: URL of a remote repository. If set, the repository will be "
-"created as a clone from this URL."
-msgstr ""
 
 msgid ""
 "Keep it short and to the point. Use a README file for longer descriptions."
@@ -1937,9 +1740,6 @@ msgstr "このリポジトリのロックを解除しますか."
 msgid "Unlock Repository"
 msgstr "リポジトリのロックを解除"
 
-msgid "Locked by %s on %s"
-msgstr ""
-
 msgid "Confirm to lock repository."
 msgstr "このリポジトリをロックしますか."
 
@@ -1948,13 +1748,6 @@ msgstr "リポジトリをロック"
 
 msgid "Repository is not locked"
 msgstr "リポジトリはロックされていません"
-
-msgid ""
-"Force locking on the repository. Works only when anonymous access is "
-"disabled. Triggering a pull locks the repository.  The user who is "
-"pulling locks the repository; only the user who pulled and locked it can "
-"unlock it by doing a push."
-msgstr ""
 
 msgid "Confirm to delete this repository: %s"
 msgstr "このリポジトリを削除してもよろしいですか？ : %s"
@@ -1971,12 +1764,6 @@ msgstr "フォークの切り離し"
 
 msgid "Delete forks"
 msgstr "フォークも削除"
-
-msgid ""
-"The deleted repository will be moved away and hidden until the "
-"administrator expires it. The administrator can both permanently delete "
-"it or restore it."
-msgstr ""
 
 msgid "Invalidate Repository Cache"
 msgstr "リポジトリのキャッシュを無効化"
@@ -2143,17 +1930,6 @@ msgstr "このKallitheaサービスのカスタムタイトルを設定します
 msgid "HTTP authentication realm"
 msgstr "HTTP認証レルム"
 
-msgid "HTML/JavaScript/CSS customization block"
-msgstr ""
-
-msgid ""
-"HTML (possibly with                         JavaScript and/or CSS) that "
-"will be added to the bottom                         of every page. This "
-"can be used for web analytics                         systems, but also "
-"to                         perform instance-specific customizations like "
-"adding a                         project banner at the top of every page."
-msgstr ""
-
 msgid "ReCaptcha public key"
 msgstr "ReCaptcha 公開鍵"
 
@@ -2195,11 +1971,6 @@ msgstr "再スキャンオプション"
 
 msgid "Delete records of missing repositories"
 msgstr "見つからないリポジトリのレコードを削除"
-
-msgid ""
-"Check this option to remove all comments, pull requests and other records "
-"related to repositories that no longer exist in the filesystem."
-msgstr ""
 
 msgid "Invalidate cache for all repositories"
 msgstr "すべてのリポジトリのキャッシュを無効化する"
@@ -2341,9 +2112,6 @@ msgid ""
 "Shows or hides a version number of Kallithea displayed in the footer."
 msgstr ""
 "フッターに表示されるKallitheaのバージョン番号の表示、非表示を設定します。"
-
-msgid "Show user Gravatars"
-msgstr ""
 
 msgid ""
 "Gravatar URL allows you to use another avatar server application.\n"
@@ -2653,11 +2421,6 @@ msgstr "子リビジョン"
 msgid "Inherit defaults"
 msgstr "デフォルト権限を継承"
 
-msgid ""
-"Select to inherit global settings, IP whitelist and permissions from the "
-"%s."
-msgstr ""
-
 msgid "default permissions"
 msgstr "デフォルトの権限"
 
@@ -2698,9 +2461,6 @@ msgstr "権限を編集"
 
 msgid "No permission defined"
 msgstr "権限が設定されていません"
-
-msgid "Retry"
-msgstr ""
 
 msgid "Submitting ..."
 msgstr "送信中..."
@@ -2752,9 +2512,6 @@ msgstr "差分を表示"
 
 msgid "No revisions"
 msgstr "リビジョンなし"
-
-msgid "Type name of user or member to grant permission"
-msgstr ""
 
 msgid "Failed to revoke permission"
 msgstr "権限の取消に失敗しました"
@@ -2820,15 +2577,6 @@ msgstr "追加"
 msgid "Affected %s files"
 msgstr "%s ファイルに影響"
 
-msgid "First (oldest) changeset in this list"
-msgstr ""
-
-msgid "Last (most recent) changeset in this list"
-msgstr ""
-
-msgid "Position in this list of changesets"
-msgstr ""
-
 msgid ""
 "Changeset status: %s by %s\n"
 "Click to open associated pull request %s"
@@ -2874,9 +2622,6 @@ msgstr "マージ"
 
 msgid "Grafted from:"
 msgstr "作成日"
-
-msgid "Transplanted from:"
-msgstr ""
 
 msgid "Replaced by:"
 msgstr "作成日"
@@ -2964,9 +2709,6 @@ msgstr "チェンジセットステータス: %s"
 msgid "Files affected"
 msgstr "影響のあるファイル"
 
-msgid "No file before"
-msgstr ""
-
 msgid "File before"
 msgstr "削除されたファイル"
 
@@ -2999,14 +2741,6 @@ msgstr "インラインコメントを表示"
 
 msgid "No changesets"
 msgstr "チェンジセットはありません"
-
-msgid "Criss cross merge situation with multiple merge ancestors detected!"
-msgstr ""
-
-msgid ""
-"Please merge the target branch to your branch before creating a pull "
-"request."
-msgstr ""
 
 msgid "Merge Ancestor"
 msgstr "共通の祖先"
@@ -3072,9 +2806,6 @@ msgstr "変更の流れ"
 msgid "branch"
 msgstr "ブランチ"
 
-msgid "by"
-msgstr ""
-
 msgid "Status change:"
 msgstr "ステータスを変更"
 
@@ -3088,18 +2819,8 @@ msgstr "こんにちは %s"
 msgid "We have received a request to reset the password for your account."
 msgstr "あなたのアカウントのパスワードリセットリクエストを受け取りました。"
 
-msgid ""
-"This account is however managed outside this system and the password "
-"cannot be changed here."
-msgstr ""
-
 msgid "To set a new password, click the following link"
 msgstr "新しいパスワードを設定するために、次のリンクをクリックしてください"
-
-msgid ""
-"Should you not be able to use the link above, please type the following "
-"code into the password reset form"
-msgstr ""
 
 msgid ""
 "If it weren't you who requested the password reset, just disregard this "
@@ -3116,12 +2837,6 @@ msgstr "%sさんが%sへのプルリクエスト \"%s\"でレビューを要求�
 
 msgid "Pull request"
 msgstr "プルリクエスト #%s"
-
-msgid "from"
-msgstr ""
-
-msgid "to"
-msgstr ""
 
 msgid "Mention in Comment on Pull Request %s \"%s\""
 msgstr "%sさんが%sへのプルリクエスト \"%s\"でメンションしました"
@@ -3342,9 +3057,6 @@ msgstr "新しいプルリクエスト"
 msgid "Title"
 msgstr "タイトル"
 
-msgid "Summarize the changes - or leave empty"
-msgstr ""
-
 msgid "Write a short description on this pull request"
 msgstr "このプルリクエストの簡潔な説明を書いてください"
 
@@ -3422,11 +3134,6 @@ msgstr "on"
 msgid "Target"
 msgstr "Target"
 
-msgid ""
-"This is just a range of changesets and doesn't have a target or a real "
-"merge ancestor."
-msgstr ""
-
 msgid "Pull changes"
 msgstr "変更を取得:"
 
@@ -3436,16 +3143,8 @@ msgstr "新規登録"
 msgid "Current revision - no change"
 msgstr "現在のリビジョン ｰ 変更なし"
 
-msgid ""
-"Pull request iterations do not change content once created. Select a "
-"revision to create a new iteration."
-msgstr ""
-
 msgid "Save Changes"
 msgstr "変更を保存"
-
-msgid "Create New Iteration with Changes"
-msgstr ""
 
 msgid "Cancel Changes"
 msgstr "変更をキャンセル"

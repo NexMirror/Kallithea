@@ -33,41 +33,17 @@ msgstr "pokazuj spacje"
 msgid "Ignore whitespace"
 msgstr "Ignoruj pokazywanie spacji"
 
-msgid "Increase diff context to %(num)s lines"
-msgstr ""
-
 msgid "No permission to change status"
 msgstr "Brak uprawnień do zmiany statusu"
 
 msgid "Successfully deleted pull request %s"
 msgstr "Prośba o skasowanie połączenia gałęzi %s została wykonana prawidłowo"
 
-msgid "Such revision does not exist for this repository"
-msgstr ""
-
 msgid "Could not find other repository %s"
 msgstr "Nie można znaleźć innego repozytorium %s"
 
-msgid "Cannot compare repositories of different types"
-msgstr ""
-
-msgid "Cannot show empty diff"
-msgstr ""
-
-msgid "No ancestor found for merge diff"
-msgstr ""
-
-msgid "Multiple merge ancestors found for merge compare"
-msgstr ""
-
-msgid "Cannot compare repositories without using common ancestor"
-msgstr ""
-
 msgid "No response"
 msgstr "Brak odpowiedzi"
-
-msgid "Unknown error"
-msgstr ""
 
 msgid ""
 "The request could not be understood by the server due to malformed syntax."
@@ -116,12 +92,6 @@ msgstr "Repozytorium zostało zablokowane przez %s na %s"
 
 msgid "You can only delete files with revision being a valid branch"
 msgstr "Można tylko usuwać pliki po sprawdzeniu obecnej gałęzi"
-
-msgid "Deleted file %s via Kallithea"
-msgstr ""
-
-msgid "Successfully deleted file %s"
-msgstr ""
 
 msgid "Error occurred during commit"
 msgstr "Wystąpił błąd w trakcie zatwierdzania"
@@ -175,9 +145,6 @@ msgstr "Etykiety"
 msgid "An error occurred during repository forking %s"
 msgstr "Wystąpił błąd podczas rozgałęzienia %s repozytorium"
 
-msgid "Groups"
-msgstr ""
-
 msgid "Repositories"
 msgstr "Repozytoria"
 
@@ -199,9 +166,6 @@ msgstr "Dziennik Publiczny"
 msgid "Journal"
 msgstr "Dziennik"
 
-msgid "Bad captcha"
-msgstr ""
-
 msgid "You have successfully registered with %s"
 msgstr "Udało Ci się zarejestrować w %s"
 
@@ -210,12 +174,6 @@ msgstr "Twój link zresetowania hasła został wysłany"
 
 msgid "Invalid password reset token"
 msgstr "Nieprawidłowy token resetowania hasła"
-
-msgid "Successfully updated password"
-msgstr ""
-
-msgid "Invalid reviewer \"%s\" specified"
-msgstr ""
 
 msgid "%s (closed)"
 msgstr "%s (zamknięty)"
@@ -232,9 +190,6 @@ msgstr "gałęzie"
 msgid "Bookmarks"
 msgstr "Zakładki"
 
-msgid "Error creating pull request: %s"
-msgstr ""
-
 msgid "Error occurred while creating pull request"
 msgstr "Wystąpił błąd podczas prośby o połączenie gałęzi"
 
@@ -243,12 +198,6 @@ msgstr "Prośba o wykonanie połączenia gałęzi została wykonana prawidłowo"
 
 msgid "New pull request iteration created"
 msgstr "Recenzje wniosków połączenia gałęzi"
-
-msgid "Meanwhile, the following reviewers have been added: %s"
-msgstr ""
-
-msgid "Meanwhile, the following reviewers have been removed: %s"
-msgstr ""
 
 msgid "No description"
 msgstr "Brak opisu"
@@ -259,42 +208,8 @@ msgstr "Połączone gałęzie zaktualizowane"
 msgid "Successfully deleted pull request"
 msgstr "Prośba o skasowanie połączenia gałęzi została wykonana prawidłowo"
 
-msgid "Revision %s not found in %s"
-msgstr ""
-
-msgid "Error: changesets not found when displaying pull request from %s."
-msgstr ""
-
-msgid "This pull request has already been merged to %s."
-msgstr ""
-
-msgid "This pull request has been closed and can not be updated."
-msgstr ""
-
-msgid "The following additional changes are available on %s:"
-msgstr ""
-
-msgid "No additional changesets found for iterating on this pull request."
-msgstr ""
-
-msgid "Note: Branch %s has another head: %s."
-msgstr ""
-
-msgid "Git pull requests don't support iterating yet."
-msgstr ""
-
-msgid ""
-"Error: some changesets not found when displaying pull request from %s."
-msgstr ""
-
-msgid "The diff can't be shown - the PR revisions could not be found."
-msgstr ""
-
 msgid "Invalid search query. Try quoting it."
 msgstr "Nieprawidłowe zapytanie. Spróbuj zacytować je."
-
-msgid "The server has no search index."
-msgstr ""
 
 msgid "An error occurred during search operation."
 msgstr "Wystąpił błąd podczas operacji wyszukiwania."
@@ -344,15 +259,6 @@ msgstr "Usuń gist %s"
 msgid "Unmodified"
 msgstr "Niemodyfikowany"
 
-msgid "Successfully updated gist content"
-msgstr ""
-
-msgid "Successfully updated gist data"
-msgstr ""
-
-msgid "Error occurred during update of gist %s"
-msgstr ""
-
 msgid "You can't edit this user since it's crucial for entire application"
 msgstr ""
 "Nie możesz edytować tego użytkownika ponieważ jest kluczowy dla całej "
@@ -364,9 +270,6 @@ msgstr "Twoje konto zostało pomyślnie zaktualizowane"
 msgid "Error occurred during update of user %s"
 msgstr "wystąpił błąd podczas aktualizacji użytkownika %s"
 
-msgid "Error occurred during update of user password"
-msgstr ""
-
 msgid "Added email %s to user"
 msgstr "Dodano e-mail %s do użytkownika"
 
@@ -375,15 +278,6 @@ msgstr "Wystąpił błąd podczas zapisywania e-maila"
 
 msgid "Removed email from user"
 msgstr "Usunięto e-mail użytkownikowi"
-
-msgid "API key successfully created"
-msgstr ""
-
-msgid "API key successfully reset"
-msgstr ""
-
-msgid "API key successfully deleted"
-msgstr ""
 
 msgid "Read"
 msgstr "Odczyt"
@@ -487,9 +381,6 @@ msgstr "Wystąpił błąd podczas usuwania %s"
 msgid "Repository permissions updated"
 msgstr "Uprawnienia repozytorium zostały zaktualizowane"
 
-msgid "Field validation error: %s"
-msgstr ""
-
 msgid "An error occurred during creation of field: %r"
 msgstr "Wystąpił błąd podczas tworzenia pola: %r"
 
@@ -542,11 +433,6 @@ msgstr "Wystąpił błąd podczas usuwania z repozytorium statystyk"
 msgid "Updated VCS settings"
 msgstr "Aktualizacja ustawień VCS"
 
-msgid ""
-"Unable to activate hgsubversion support. The \"hgsubversion\" library is "
-"missing"
-msgstr ""
-
 msgid "Error occurred while updating application settings"
 msgstr "Wystąpił błąd podczas aktualizacji ustawień aplikacji"
 
@@ -570,14 +456,8 @@ msgstr "Wystąpił błąd podczas aktualizacji ustawień wizualizacji"
 msgid "Please enter email address"
 msgstr "Proszę podać adres email"
 
-msgid "Send email task created"
-msgstr ""
-
 msgid "Hook already exists"
 msgstr "Hook już istnieje"
-
-msgid "Builtin hooks are read-only. Please use another hook name."
-msgstr ""
 
 msgid "Added new hook"
 msgstr "Dodano nowy hook"
@@ -636,9 +516,6 @@ msgstr "Użytkownik został usunięty"
 msgid "An error occurred during deletion of user"
 msgstr "Wystąpił błąd podczas usuwania użytkownika"
 
-msgid "The default user cannot be edited"
-msgstr ""
-
 msgid "Added IP address %s to user whitelist"
 msgstr "Dodano ip %s do listy dozwolonych adresów użytkownika"
 
@@ -653,16 +530,6 @@ msgstr "Musisz być zarejestrowanym użytkownikiem, żeby wykonać to działanie
 
 msgid "You need to be signed in to view this page"
 msgstr "Musisz być zalogowany, żeby oglądać stronę"
-
-msgid "Invalid API key"
-msgstr ""
-
-msgid ""
-"CSRF token leak has been detected - all form tokens have been expired"
-msgstr ""
-
-msgid "Repository not found in the filesystem"
-msgstr ""
 
 msgid "Changeset for %s %s not found in %s"
 msgstr "Nie znaleziono changeset dla %s%s w %s"
@@ -862,41 +729,11 @@ msgstr "najwyższy poziom"
 msgid "Kallithea Administrator"
 msgstr "Administrator Kallithea"
 
-msgid "Default user has no access to new repositories"
-msgstr ""
-
 msgid "Default user has read access to new repositories"
 msgstr "Użytkownik domyślny ma dostęp do odczytu nowych repozytoriów"
 
 msgid "Default user has write access to new repositories"
 msgstr "Użytkownik domyślny ma dostęp do zapisu nowych repozytoriów"
-
-msgid "Default user has admin access to new repositories"
-msgstr ""
-
-msgid "Default user has no access to new repository groups"
-msgstr ""
-
-msgid "Default user has read access to new repository groups"
-msgstr ""
-
-msgid "Default user has write access to new repository groups"
-msgstr ""
-
-msgid "Default user has admin access to new repository groups"
-msgstr ""
-
-msgid "Default user has no access to new user groups"
-msgstr ""
-
-msgid "Default user has read access to new user groups"
-msgstr ""
-
-msgid "Default user has write access to new user groups"
-msgstr ""
-
-msgid "Default user has admin access to new user groups"
-msgstr ""
 
 msgid "Only admins can create repository groups"
 msgstr "Tylko admini mogą tworzyć grupy repozytoriów"
@@ -911,20 +748,6 @@ msgstr "Tylko admini mogą tworzyć grupy użytkowników"
 msgid "Non-admins can create user groups"
 msgstr ""
 "Użytkownicy bez uprawnień administratora mogą tworzyć grupy użytkowników"
-
-msgid "Only admins can create top level repositories"
-msgstr ""
-
-msgid "Non-admins can create top level repositories"
-msgstr ""
-
-msgid ""
-"Repository creation enabled with write permission to a repository group"
-msgstr ""
-
-msgid ""
-"Repository creation disabled with write permission to a repository group"
-msgstr ""
 
 msgid "Only admins can fork repositories"
 msgstr "Tylko admini mogą rozgałęziać repozytoria"
@@ -965,9 +788,6 @@ msgstr "Wpisz hasło"
 msgid "Enter %(min)i characters or more"
 msgstr "Wpisz %(min)i lub więcej znaków"
 
-msgid "Name must not contain only digits"
-msgstr ""
-
 msgid ""
 "[Comment] %(repo_name)s changeset %(short_id)s \"%(message_short)s\" on "
 "%(branch)s"
@@ -975,16 +795,6 @@ msgstr "[komentarz] wniosek o połączenie gałęzi"
 
 msgid "New user %(new_username)s registered"
 msgstr "Użytkownik %(new_username)s zarejestrował się"
-
-msgid ""
-"[Review] %(repo_name)s PR %(pr_nice_id)s \"%(pr_title_short)s\" from "
-"%(pr_source_branch)s by %(pr_owner_username)s"
-msgstr ""
-
-msgid ""
-"[Comment] %(repo_name)s PR %(pr_nice_id)s \"%(pr_title_short)s\" from "
-"%(pr_source_branch)s by %(pr_owner_username)s"
-msgstr ""
 
 msgid "Closing"
 msgstr "Zamykanie"
@@ -996,33 +806,8 @@ msgstr "%(user)s chce żeby przejrzeć nowe gałęzie %(pr_nice_id)s: %(pr_title
 msgid "Cannot create empty pull request"
 msgstr "Nie można stworzyć pustego żądania połączenia gałęzi"
 
-msgid ""
-"Cannot create pull request - criss cross merge detected, please merge a "
-"later %s revision to %s"
-msgstr ""
-
 msgid "You are not authorized to create the pull request"
 msgstr "Nie masz uprawnień, aby stworzyć żądanie połączenia gałęzi"
-
-msgid "Missing changesets since the previous iteration:"
-msgstr ""
-
-msgid "New changesets on %s %s since the previous iteration:"
-msgstr ""
-
-msgid "Ancestor didn't change - diff since previous iteration:"
-msgstr ""
-
-msgid ""
-"This iteration is based on another %s revision and there is no simple "
-"diff."
-msgstr ""
-
-msgid "No changes found on %s %s since previous iteration."
-msgstr ""
-
-msgid "Closed, next iteration: %s ."
-msgstr ""
 
 msgid "latest tip"
 msgstr "ostatni tip"
@@ -1062,11 +847,6 @@ msgstr "łącze resetowania hasła"
 msgid "Password reset notification"
 msgstr "Powiadomienie o resetowaniu hasła"
 
-msgid ""
-"The password to your account %s has been changed using password reset "
-"form."
-msgstr ""
-
 msgid "Value cannot be an empty list"
 msgstr "Wartość listy nie może być pusta"
 
@@ -1083,9 +863,6 @@ msgstr ""
 "Nazwa użytkownika może zawierać tylko znaki alfanumeryczne, podkreślenia, "
 "kropki lub myślniki i musi zaczynać się znakiem alfanumerycznym lub "
 "podkreśleniem"
-
-msgid "The input is not valid"
-msgstr ""
 
 msgid "Username %(username)s is not valid"
 msgstr "Nazwa użytkownika %(username)s jest nieprawidłowa"
@@ -1115,9 +892,6 @@ msgstr "Repozytorium o nazwie \"%(group_name)s\" już istnieje"
 msgid "Invalid characters (non-ascii) in password"
 msgstr "Nieprawidłowe znaki (nie-ascii) w haśle"
 
-msgid "Invalid old password"
-msgstr ""
-
 msgid "Passwords do not match"
 msgstr "Hasła różnią się"
 
@@ -1141,11 +915,6 @@ msgstr "Grupa repozytoriów z nazwą \"%(repo)s\" już istnieje"
 
 msgid "Invalid repository URL"
 msgstr "Nieprawidłowy URL repozytorium"
-
-msgid ""
-"Invalid repository URL. It must be a valid http, https, ssh, svn+http or "
-"svn+https URL"
-msgstr ""
 
 msgid "Fork has to be the same type as parent"
 msgstr "Fork musi być tego samego typu, jak rodzic"
@@ -1194,12 +963,6 @@ msgstr ""
 msgid "Filename cannot be inside a directory"
 msgstr "Nazwa pliku nie może znajdować się w katalogu"
 
-msgid "Plugins %(loaded)s and %(next_to_load)s both export the same name"
-msgstr ""
-
-msgid "About"
-msgstr ""
-
 msgid "Add Repository"
 msgstr "Dodaj Repozytorium"
 
@@ -1239,9 +1002,6 @@ msgstr "Nazwa użytkownika"
 msgid "Password"
 msgstr "Hasło"
 
-msgid "Stay logged in after browser restart"
-msgstr ""
-
 msgid "Forgot your password ?"
 msgstr "Zapomniałeś hasła?"
 
@@ -1263,9 +1023,6 @@ msgstr "Zresetuj hasło"
 msgid "Email Address"
 msgstr "Adres Email"
 
-msgid "Captcha"
-msgstr ""
-
 msgid "Send Password Reset Email"
 msgstr "Wyślij email z resetowaniem hasła"
 
@@ -1276,31 +1033,14 @@ msgstr ""
 "Link do zresetowania hasła zostanie wysłany na adres e-mail znajdujący się w "
 "systemie."
 
-msgid "You are about to set a new password for the email address %s."
-msgstr ""
-
-msgid ""
-"Note that you must use the same browser session for this as the one used "
-"to request the password reset."
-msgstr ""
-
-msgid "Code you received in the email"
-msgstr ""
-
 msgid "New Password"
 msgstr "Nowe hasło"
 
 msgid "Confirm New Password"
 msgstr "Potwierdź nowe hasło"
 
-msgid "Confirm"
-msgstr ""
-
 msgid "Sign Up"
 msgstr "Zarejestruj się"
-
-msgid "Sign Up to %s"
-msgstr ""
 
 msgid "Re-enter password"
 msgstr "Ponownie wprowadź hasło"
@@ -1313,12 +1053,6 @@ msgstr "Nazwisko"
 
 msgid "Email"
 msgstr "E-mail"
-
-msgid "Registered accounts are ready to use and need no further action."
-msgstr ""
-
-msgid "Please wait for an administrator to activate your account."
-msgstr ""
 
 msgid "Admin Journal"
 msgstr "Dziennik administratora"
@@ -1358,14 +1092,6 @@ msgstr "Wtyczki Autentykacji"
 
 msgid "Enabled Plugins"
 msgstr "Włączone Wtyczki"
-
-msgid ""
-"Comma-separated list of plugins; Kallithea will try user authentication "
-"in plugin order"
-msgstr ""
-
-msgid "Available built-in plugins"
-msgstr ""
 
 msgid "Plugin"
 msgstr "Wtyczka"
@@ -1410,14 +1136,6 @@ msgstr "Włącz blokowanie pobierania w repozytorium."
 msgid "Edit Gist"
 msgstr "Edytuj Gist"
 
-msgid ""
-"Gist was updated since you started editing. Copy your changes and click "
-"%(here)s to reload new version."
-msgstr ""
-
-msgid "here"
-msgstr ""
-
 msgid "Gist description ..."
 msgstr "Opis Gist ..."
 
@@ -1457,9 +1175,6 @@ msgstr "Nie ma jeszcze żadnych gists"
 msgid "New Gist"
 msgstr "Nowy Gist"
 
-msgid "Name this gist ..."
-msgstr ""
-
 msgid "Create Private Gist"
 msgstr "Utwórz Prywatny Gist"
 
@@ -1490,9 +1205,6 @@ msgstr "Potwierdź aby usunąć ten Gist"
 msgid "Edit"
 msgstr "Edycja"
 
-msgid "Show as Raw"
-msgstr ""
-
 msgid "created"
 msgstr "utworzono"
 
@@ -1508,9 +1220,6 @@ msgstr "Profil"
 msgid "Email Addresses"
 msgstr "Adresy e-mail"
 
-msgid "API Keys"
-msgstr ""
-
 msgid "Owned Repositories"
 msgstr "Posiadane repozytoria"
 
@@ -1519,9 +1228,6 @@ msgstr "Obserwowane repozytoria"
 
 msgid "Show Permissions"
 msgstr "Pokaż uprawnienia"
-
-msgid "Built-in"
-msgstr ""
 
 msgid "Confirm to reset this API key: %s"
 msgstr "Potwierdź, aby usunąć to ip: %s"
@@ -1544,20 +1250,6 @@ msgstr "Nowe pole klucza API"
 msgid "Add"
 msgstr "Dodaj"
 
-msgid ""
-"\n"
-"API keys are used to let scripts or services access %s using your\n"
-"account, as if you had provided the script or service with your actual\n"
-"password.\n"
-msgstr ""
-
-msgid ""
-"\n"
-"Like passwords, API keys should therefore never be shared with others,\n"
-"nor passed to untrusted scripts or services. If such sharing should\n"
-"happen anyway, reset the API key on this page to prevent further use.\n"
-msgstr ""
-
 msgid "Primary"
 msgstr "Główny"
 
@@ -1573,24 +1265,8 @@ msgstr "Nowy adres e-mail"
 msgid "Change Your Account Password"
 msgstr "Zmień hasło"
 
-msgid "Current password"
-msgstr ""
-
 msgid "New password"
 msgstr "Nowe hasło"
-
-msgid "Confirm new password"
-msgstr ""
-
-msgid ""
-"This account is managed with %s and the password cannot be changed here"
-msgstr ""
-
-msgid "Current IP"
-msgstr ""
-
-msgid "Gravatar"
-msgstr ""
 
 msgid "Change %s avatar at"
 msgstr "Zmiana awataru %s na"
@@ -1623,11 +1299,6 @@ msgid "Allow anonymous access"
 msgstr "Zezwalaj na dostęp anonimowy"
 
 msgid ""
-"Allow access to Kallithea without needing to log in. Anonymous users use "
-"%s user permissions."
-msgstr ""
-
-msgid ""
 "All default permissions on each repository will be reset to chosen "
 "permission, note that all custom default permission on repositories will "
 "be lost"
@@ -1638,9 +1309,6 @@ msgstr ""
 
 msgid "Apply to all existing repositories"
 msgstr "Zastosuj do wszystkich Istniejących repozytoriów"
-
-msgid "Permissions for the Default user on new repositories."
-msgstr ""
 
 msgid "Repository group"
 msgstr "Repozytorium grupy"
@@ -1657,9 +1325,6 @@ msgstr ""
 msgid "Apply to all existing repository groups"
 msgstr "Zastosuj do wszystkich istniejących grup repozytoriów"
 
-msgid "Permissions for the Default user on new repository groups."
-msgstr ""
-
 msgid "User group"
 msgstr "Grupa użytkownika"
 
@@ -1672,44 +1337,14 @@ msgstr ""
 "do wybranego zezwolenia, trzeba pamiętać, że wszystkie niestandardowe "
 "uprawnienia domyślne dla grup repozytorium zostaną utracone"
 
-msgid "Apply to all existing user groups"
-msgstr ""
-
-msgid "Permissions for the Default user on new user groups."
-msgstr ""
-
 msgid "Top level repository creation"
 msgstr "Tworzenie repozytoriów najwyższego poziomu"
-
-msgid ""
-"Enable this to allow non-admins to create repositories at the top level."
-msgstr ""
-
-msgid ""
-"Note: This will also give all users API access to create repositories "
-"everywhere. That might change in future versions."
-msgstr ""
-
-msgid "Repository creation with group write access"
-msgstr ""
-
-msgid ""
-"With this, write permission to a repository group allows creating "
-"repositories inside that group. Without this, group write permissions "
-"mean nothing."
-msgstr ""
 
 msgid "User group creation"
 msgstr "Tworzenie grupy użytkowników"
 
-msgid "Enable this to allow non-admins to create user groups."
-msgstr ""
-
 msgid "Repository forking"
 msgstr "Rozwidlanie repozytorium"
-
-msgid "Enable this to allow non-admins to fork repositories."
-msgstr ""
 
 msgid "Registration"
 msgstr "Rejestracja"
@@ -1735,18 +1370,6 @@ msgstr "Nazwa grupy"
 msgid "Group parent"
 msgstr "Rodzic grupy"
 
-msgid "Copy parent group permissions"
-msgstr ""
-
-msgid "Copy permission set from parent repository group."
-msgstr ""
-
-msgid "%s Repository Group Settings"
-msgstr ""
-
-msgid "Add Child Group"
-msgstr ""
-
 msgid "Settings"
 msgstr "Ustawienia"
 
@@ -1759,14 +1382,8 @@ msgstr "Uprawnienia"
 msgid "Repository Group: %s"
 msgstr "Grupa Repozytoriów: %s"
 
-msgid "Top level repositories"
-msgstr ""
-
 msgid "Total repositories"
 msgstr "Ogólna liczba repozytoriów"
-
-msgid "Children groups"
-msgstr ""
 
 msgid "Created on"
 msgstr "Utworzono"
@@ -1779,9 +1396,6 @@ msgstr[2] "Potwierdź żeby usunąć grupę %s wraz z %s repozytoriami"
 
 msgid "Delete this repository group"
 msgstr "Usuń tę grupę repozytoriów"
-
-msgid "Not visible"
-msgstr ""
 
 msgid "Visible"
 msgstr "Widoczne"
@@ -1811,11 +1425,6 @@ msgid "Both"
 msgstr "Oba"
 
 msgid ""
-"Set or revoke permission to all children of that group, including non-"
-"private repositories and other groups if selected."
-msgstr ""
-
-msgid ""
 "Enable lock-by-pulling on group. This option will be applied to all other "
 "groups and repositories inside"
 msgstr ""
@@ -1841,11 +1450,6 @@ msgid "Clone remote repository"
 msgstr "Klonuj zdalne repozytorium"
 
 msgid ""
-"Optional: URL of a remote repository. If set, the repository will be "
-"created as a clone from this URL."
-msgstr ""
-
-msgid ""
 "Keep it short and to the point. Use a README file for longer descriptions."
 msgstr ""
 "Powinna być krótka i na temat. Użyj pliku README dla dłuższych opisów."
@@ -1859,35 +1463,11 @@ msgstr "Rodzaj repozytorium do stworzenia."
 msgid "Landing revision"
 msgstr "Docelowa rewizja"
 
-msgid ""
-"Default revision for files page, downloads, full text search index and "
-"readme generation"
-msgstr ""
-
 msgid "%s Creating Repository"
 msgstr "Tworzenie repozytorium %s"
 
-msgid "Creating repository"
-msgstr ""
-
-msgid ""
-"Repository \"%(repo_name)s\" is being created, you will be redirected "
-"when this process is finished.repo_name"
-msgstr ""
-
-msgid ""
-"We're sorry but error occurred during this operation. Please check your "
-"Kallithea server logs, or contact administrator."
-msgstr ""
-
-msgid "%s Repository Settings"
-msgstr ""
-
 msgid "Extra Fields"
 msgstr "Dodatkowe pola"
-
-msgid "Caches"
-msgstr ""
 
 msgid "Remote"
 msgstr "Zdalnie"
@@ -1929,9 +1509,6 @@ msgstr "Potwierdź odblokowanie repozytorium."
 msgid "Unlock Repository"
 msgstr "Odblokuj repozytorium"
 
-msgid "Locked by %s on %s"
-msgstr ""
-
 msgid "Confirm to lock repository."
 msgstr "Potwierdź blokowanie repozytorium."
 
@@ -1940,13 +1517,6 @@ msgstr "Zablokuj repozytorium"
 
 msgid "Repository is not locked"
 msgstr "Repozytorium nie jest zablokowane"
-
-msgid ""
-"Force locking on the repository. Works only when anonymous access is "
-"disabled. Triggering a pull locks the repository.  The user who is "
-"pulling locks the repository; only the user who pulled and locked it can "
-"unlock it by doing a push."
-msgstr ""
 
 msgid "Confirm to delete this repository: %s"
 msgstr "Potwierdź usunięcie repozytorium: %s"
@@ -1965,12 +1535,6 @@ msgstr "Ustaw jako rozwidlenie"
 
 msgid "Delete forks"
 msgstr "Usuń rozwidlenie"
-
-msgid ""
-"The deleted repository will be moved away and hidden until the "
-"administrator expires it. The administrator can both permanently delete "
-"it or restore it."
-msgstr ""
 
 msgid "Invalidate Repository Cache"
 msgstr "Unieważnij pamięć podręczną repozytorium"
@@ -1993,9 +1557,6 @@ msgstr "Klucz"
 
 msgid "Active"
 msgstr "Aktywny"
-
-msgid "Label"
-msgstr ""
 
 msgid "Confirm to delete this field: %s"
 msgstr "Potwierdź, aby usunąć to pole: %s"
@@ -2033,26 +1594,8 @@ msgstr "pobieranie zmian ze zdalnego repozytorium"
 msgid "Confirm to pull changes from remote repository."
 msgstr "Potwierdź pobranie zmian ze zdalnego repozytorium."
 
-msgid "This repository does not have a remote repository URL."
-msgstr ""
-
 msgid "Permanent Repository ID"
 msgstr "Stałe ID repozytorium"
-
-msgid "What is that?"
-msgstr ""
-
-msgid "URL by id"
-msgstr ""
-
-msgid ""
-"In case this repository is renamed or moved into another group the "
-"repository URL changes.\n"
-"                               Using the above permanent URL guarantees "
-"that this repository always will be accessible on that URL.\n"
-"                               This is useful for CI systems, or any "
-"other cases that you need to hardcode the URL into a 3rd party service."
-msgstr ""
 
 msgid "Remote repository"
 msgstr "Zdalne repozytorium"
@@ -2060,25 +1603,11 @@ msgstr "Zdalne repozytorium"
 msgid "Repository URL"
 msgstr "URL Repozytorium"
 
-msgid ""
-"Optional: URL of a remote repository. If set, the repository can be "
-"pulled from this URL."
-msgstr ""
-
 msgid "Default revision for files page, downloads, whoosh and readme"
 msgstr "Wersja domyślna dla plików stronicowania, pobierania plików, readme"
 
-msgid "Type name of user"
-msgstr ""
-
 msgid "Change owner of this repository."
 msgstr "Zmiana właściciela tego repozytorium."
-
-msgid "Processed commits"
-msgstr ""
-
-msgid "Processed progress"
-msgstr ""
 
 msgid "Reset Statistics"
 msgstr "Resetuj Statystyki"
@@ -2089,32 +1618,11 @@ msgstr "Potwierdź usunięcie aktualnych statystyk."
 msgid "Repositories Administration"
 msgstr "Administracja repozytoriami"
 
-msgid "State"
-msgstr ""
-
 msgid "Settings Administration"
 msgstr "Ustawienia administracji"
 
-msgid "VCS"
-msgstr ""
-
-msgid "Remap and Rescan"
-msgstr ""
-
-msgid "Visual"
-msgstr ""
-
 msgid "Hooks"
 msgstr "Aktualizacja"
-
-msgid "Full Text Search"
-msgstr ""
-
-msgid "System Info"
-msgstr ""
-
-msgid "Send test email to"
-msgstr ""
 
 msgid "Send"
 msgstr "Wyślij"
@@ -2122,50 +1630,14 @@ msgstr "Wyślij"
 msgid "Site branding"
 msgstr "Nazwa strony"
 
-msgid "Set a custom title for your Kallithea Service."
-msgstr ""
-
 msgid "HTTP authentication realm"
 msgstr "Sfera uwierzytelniania HTTP"
-
-msgid "HTML/JavaScript/CSS customization block"
-msgstr ""
-
-msgid ""
-"HTML (possibly with                         JavaScript and/or CSS) that "
-"will be added to the bottom                         of every page. This "
-"can be used for web analytics                         systems, but also "
-"to                         perform instance-specific customizations like "
-"adding a                         project banner at the top of every page."
-msgstr ""
-
-msgid "ReCaptcha public key"
-msgstr ""
-
-msgid "Public key for reCaptcha system."
-msgstr ""
-
-msgid "ReCaptcha private key"
-msgstr ""
-
-msgid ""
-"Private key for reCaptcha system. Setting this value will enable captcha "
-"on registration."
-msgstr ""
 
 msgid "Save Settings"
 msgstr "Zapisz ustawienia"
 
-msgid "Built-in Mercurial Hooks (Read-Only)"
-msgstr ""
-
 msgid "Custom Hooks"
 msgstr "Niestandardowy Hook"
-
-msgid ""
-"Hooks can be used to trigger actions on certain events such as push / "
-"pull. They can trigger Python functions or external applications."
-msgstr ""
 
 msgid "Failed to remove hook"
 msgstr "Nie udało się usunąć hooka"
@@ -2176,36 +1648,11 @@ msgstr "ponowne skanowanie opcji"
 msgid "Delete records of missing repositories"
 msgstr "Usuń wpisy o brakujących repozytoriach"
 
-msgid ""
-"Check this option to remove all comments, pull requests and other records "
-"related to repositories that no longer exist in the filesystem."
-msgstr ""
-
 msgid "Invalidate cache for all repositories"
 msgstr "Unieważnia cache dla wszystkich repozytoriów"
 
 msgid "Check this to reload data and clear cache keys for all repositories."
 msgstr "Unieważnia cache dla wszystkich repozytoriów"
-
-msgid "Install Git hooks"
-msgstr ""
-
-msgid ""
-"Verify if Kallithea's Git hooks are installed for each repository. "
-"Current hooks will be updated to the latest version."
-msgstr ""
-
-msgid "Overwrite existing Git hooks"
-msgstr ""
-
-msgid ""
-"If installing Git hooks, overwrite any existing hooks, even if they do "
-"not seem to come from Kallithea. WARNING: This operation will destroy any "
-"custom git hooks you may have deployed by hand!"
-msgstr ""
-
-msgid "Rescan Repositories"
-msgstr ""
 
 msgid "Index build option"
 msgstr "Opcja odbudowy indeksowania"
@@ -2213,46 +1660,11 @@ msgstr "Opcja odbudowy indeksowania"
 msgid "Build from scratch"
 msgstr "Buduj od podstaw"
 
-msgid ""
-"This option completely reindexeses all of the repositories for proper "
-"fulltext search capabilities."
-msgstr ""
-
 msgid "Reindex"
 msgstr "Indeksuj ponownie"
 
-msgid "Checking for updates..."
-msgstr ""
-
-msgid "Kallithea version"
-msgstr ""
-
-msgid "Check for updates"
-msgstr ""
-
-msgid "Kallithea configuration file"
-msgstr ""
-
-msgid "Python version"
-msgstr ""
-
-msgid "Platform"
-msgstr ""
-
 msgid "Git version"
 msgstr "Wersja Git"
-
-msgid "Git path"
-msgstr ""
-
-msgid "Upgrade info endpoint"
-msgstr ""
-
-msgid "Note: please make sure this server can access this URL"
-msgstr ""
-
-msgid "Python Packages"
-msgstr ""
 
 msgid "Show repository size after push"
 msgstr "Pokaż rozmiar repozytorium po wysłaniu zmian"
@@ -2275,11 +1687,6 @@ msgstr "Rozszerzenia dużych plików"
 msgid "Enable hgsubversion extension"
 msgstr "Rozszerzenia hgsubversion"
 
-msgid ""
-"Requires hgsubversion library to be installed. Enables cloning of remote "
-"Subversion repositories while converting them to Mercurial."
-msgstr ""
-
 msgid "Location of repositories"
 msgstr "Położenie repozytoriów"
 
@@ -2289,11 +1696,6 @@ msgid ""
 msgstr ""
 "Kliknij, aby odblokować. Musisz ponownie uruchomić Kallithea żeby "
 "wprowadzić to ustawienie w życie."
-
-msgid ""
-"Filesystem location where repositories are stored. After changing this "
-"value, a restart and rescan of the repository folder are both required."
-msgstr ""
 
 msgid "General"
 msgstr "Główne"
@@ -2308,64 +1710,11 @@ msgstr ""
 msgid "Show Kallithea version"
 msgstr "Pokaż wersję Kallithea"
 
-msgid ""
-"Shows or hides a version number of Kallithea displayed in the footer."
-msgstr ""
-
-msgid "Show user Gravatars"
-msgstr ""
-
-msgid ""
-"Gravatar URL allows you to use another avatar server application.\n"
-"                                                        The following "
-"variables of the URL will be replaced accordingly.\n"
-"                                                        {scheme}    "
-"'http' or 'https' sent from running Kallithea server,\n"
-"                                                        {email}     user "
-"email,\n"
-"                                                        {md5email}  md5 "
-"hash of the user email (like at gravatar.com),\n"
-"                                                        {size}      size "
-"of the image that is expected from the server application,\n"
-"                                                        {netloc}    "
-"network location/server host of running Kallithea server"
-msgstr ""
-
 msgid "Clone URL"
 msgstr "URL klonowania"
 
-msgid ""
-"Schema of clone URL construction eg. '{scheme}://{user}@{netloc}/"
-"{repo}'.\n"
-"                                                    The following "
-"variables are available:\n"
-"                                                    {scheme} 'http' or "
-"'https' sent from running Kallithea server,\n"
-"                                                    {user}   current user "
-"username,\n"
-"                                                    {netloc} network "
-"location/server host of running Kallithea server,\n"
-"                                                    {repo}   full "
-"repository name,\n"
-"                                                    {repoid} ID of "
-"repository, can be used to construct clone-by-id"
-msgstr ""
-
 msgid "Repository page size"
 msgstr "Rozmiar Repozytorium"
-
-msgid ""
-"Number of items displayed in the repository pages before pagination is "
-"shown."
-msgstr ""
-
-msgid "Admin page size"
-msgstr ""
-
-msgid ""
-"Number of items displayed in the admin pages grids before pagination is "
-"shown."
-msgstr ""
 
 msgid "Icons"
 msgstr "Ikony"
@@ -2382,43 +1731,17 @@ msgstr "Pokazuj  ikonę publiczne/prywatne repo w repozytoriach."
 msgid "Meta Tagging"
 msgstr "Tagowanie meta"
 
-msgid ""
-"Parses meta tags from the repository description field and turns them "
-"into colored tags."
-msgstr ""
-
-msgid "Stylify recognised meta tags:"
-msgstr ""
-
 msgid "Add user group"
 msgstr "Dodaj grupę użytkowników"
 
-msgid "User Groups"
-msgstr ""
-
-msgid "Add User Group"
-msgstr ""
-
-msgid "Short, optional description for this user group."
-msgstr ""
-
-msgid "%s user group settings"
-msgstr ""
-
 msgid "Show Members"
 msgstr "Pokaż użytkowników"
-
-msgid "User Group: %s"
-msgstr ""
 
 msgid "Members"
 msgstr "Użytkownicy"
 
 msgid "Confirm to delete this user group: %s"
 msgstr "Potwierdź usunięcie grupy użytkowników: %s"
-
-msgid "Delete this user group"
-msgstr ""
 
 msgid "No members yet"
 msgstr "Nie ma jeszcze żadnego użytkownika"
@@ -2438,41 +1761,11 @@ msgstr "Dodaj użytkownika"
 msgid "Users"
 msgstr "Użytkownicy"
 
-msgid "Add User"
-msgstr ""
-
 msgid "Password confirmation"
 msgstr "Potwierdzenie hasła"
 
-msgid "%s user settings"
-msgstr ""
-
-msgid "Emails"
-msgstr ""
-
-msgid "User: %s"
-msgstr ""
-
-msgid "Source of Record"
-msgstr ""
-
-msgid "Last Login"
-msgstr ""
-
-msgid "Member of User Groups"
-msgstr ""
-
 msgid "Confirm to delete this user: %s"
 msgstr "Potwierdź usunięcie tego użytkownika: %s"
-
-msgid "Delete this user"
-msgstr ""
-
-msgid "Inherited from %s"
-msgstr ""
-
-msgid "Name in Source of Record"
-msgstr ""
 
 msgid "New password confirmation"
 msgstr "Potwierdzenie nowego hasła"
@@ -2480,14 +1773,8 @@ msgstr "Potwierdzenie nowego hasła"
 msgid "Users Administration"
 msgstr "Administracja użytkownikami"
 
-msgid "Auth Type"
-msgstr ""
-
 msgid "Server instance: %s"
 msgstr "Wystąpienia serwera: %s"
-
-msgid "Support"
-msgstr ""
 
 msgid "Mercurial repository"
 msgstr "Repozytorium mercurial"
@@ -2546,9 +1833,6 @@ msgstr "Stwórz nowe żądanie połączenia gałęzi"
 msgid "Switch To"
 msgstr "Przełącz do"
 
-msgid "No matches found"
-msgstr ""
-
 msgid "Show recent activity"
 msgstr "Pokaż ostatnią aktywność"
 
@@ -2591,19 +1875,8 @@ msgstr "Nie masz konta?"
 msgid "Log Out"
 msgstr "Wyloguj się"
 
-msgid "Parent rev."
-msgstr ""
-
-msgid "Child rev."
-msgstr ""
-
 msgid "Inherit defaults"
 msgstr "Dziedziczenie domyślne"
-
-msgid ""
-"Select to inherit global settings, IP whitelist and permissions from the "
-"%s."
-msgstr ""
 
 msgid "default permissions"
 msgstr "Domyślne uprawnienia"
@@ -2644,12 +1917,6 @@ msgstr "Uprawnienia"
 msgid "Edit Permission"
 msgstr "Edycja Uprawnień"
 
-msgid "No permission defined"
-msgstr ""
-
-msgid "Retry"
-msgstr ""
-
 msgid "Submitting ..."
 msgstr "Przesyłanie..."
 
@@ -2683,9 +1950,6 @@ msgstr "Nie ma plików pasujących"
 msgid "Open New Pull Request from {0}"
 msgstr "Komentarz połączenia gałęzi %s"
 
-msgid "Open New Pull Request for {0} &rarr; {1}"
-msgstr ""
-
 msgid "Show Selected Changesets {0} &rarr; {1}"
 msgstr "Pokaż wybrane zmiany __S -> __E"
 
@@ -2700,9 +1964,6 @@ msgstr "poprawka różnic"
 
 msgid "No revisions"
 msgstr "Brak sprawdzenia"
-
-msgid "Type name of user or member to grant permission"
-msgstr ""
 
 msgid "Failed to revoke permission"
 msgstr "Nie udało się cofnąć uprawnienia"
@@ -2770,15 +2031,6 @@ msgstr "Dodana"
 msgid "Affected %s files"
 msgstr "Zarażone pliki %s"
 
-msgid "First (oldest) changeset in this list"
-msgstr ""
-
-msgid "Last (most recent) changeset in this list"
-msgstr ""
-
-msgid "Position in this list of changesets"
-msgstr ""
-
 msgid ""
 "Changeset status: %s by %s\n"
 "Click to open associated pull request %s"
@@ -2786,9 +2038,6 @@ msgstr "Status grupy zmian: %s⏎ Kliknij, aby otworzyć prośby pobrania #%s"
 
 msgid "Changeset status: %s by %s"
 msgstr "Status grupy zmian: %s przez %s"
-
-msgid "Expand commit message"
-msgstr ""
 
 msgid "%s comments"
 msgstr "%s komentarz"
@@ -2822,9 +2071,6 @@ msgstr "połącz"
 
 msgid "Grafted from:"
 msgstr "Połączono z:"
-
-msgid "Transplanted from:"
-msgstr ""
 
 msgid "Replaced by:"
 msgstr "Zastąpiono przez:"
@@ -2909,12 +2155,6 @@ msgstr[0] "(%d linii)"
 msgstr[1] "(%d linii)"
 msgstr[2] "(%d linii)"
 
-msgid "%d general"
-msgid_plural "%d general"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-
 msgid "%s Changesets"
 msgstr "%s Zestawienie zmian"
 
@@ -2923,9 +2163,6 @@ msgstr "Status grupy zmian: %s"
 
 msgid "Files affected"
 msgstr "Pliki naruszone"
-
-msgid "No file before"
-msgstr ""
 
 msgid "File before"
 msgstr "plik usunięty"
@@ -2960,14 +2197,6 @@ msgstr "Pokaż wewnętrzne komentarze"
 msgid "No changesets"
 msgstr "Brak zestawienia zmian"
 
-msgid "Criss cross merge situation with multiple merge ancestors detected!"
-msgstr ""
-
-msgid ""
-"Please merge the target branch to your branch before creating a pull "
-"request."
-msgstr ""
-
 msgid "Merge Ancestor"
 msgstr "Skomentuj grupę zmian"
 
@@ -2986,15 +2215,6 @@ msgstr "Indeksuj ponownie"
 msgid "%s Compare"
 msgstr "%s Porównaj"
 
-msgid "Compare Revisions"
-msgstr ""
-
-msgid "Swap"
-msgstr ""
-
-msgid "Compare revisions, branches, bookmarks, or tags."
-msgstr ""
-
 msgid "Showing %s commit"
 msgid_plural "Showing %s commits"
 msgstr[0] "Pokaż %s komentarz"
@@ -3007,9 +2227,6 @@ msgstr "Pokaż pełną historię"
 msgid "Public repository"
 msgstr "Publiczne repozytorium"
 
-msgid "Repository creation in progress..."
-msgstr ""
-
 msgid "No changesets yet"
 msgstr "Nie ma jeszcze zestawienia zmian"
 
@@ -3018,9 +2235,6 @@ msgstr "Subskrybuj %s kanał rss"
 
 msgid "Subscribe to %s atom feed"
 msgstr "Subskrybuj %s kanał atom"
-
-msgid "Creating"
-msgstr ""
 
 msgid "Mention in Comment on Changeset \"%s\""
 msgstr "Skomentowano zatwierdzenie \"%s\""
@@ -3034,9 +2248,6 @@ msgstr "Przepływ zestawienia zmian"
 msgid "branch"
 msgstr "gałąź"
 
-msgid "by"
-msgstr ""
-
 msgid "Status change:"
 msgstr "Ostatnia aktywność:"
 
@@ -3049,38 +2260,11 @@ msgstr "Witaj %s"
 msgid "We have received a request to reset the password for your account."
 msgstr "Otrzymaliśmy prośbę o utworzenie nowego hasła do twojego konta."
 
-msgid ""
-"This account is however managed outside this system and the password "
-"cannot be changed here."
-msgstr ""
-
-msgid "To set a new password, click the following link"
-msgstr ""
-
-msgid ""
-"Should you not be able to use the link above, please type the following "
-"code into the password reset form"
-msgstr ""
-
-msgid ""
-"If it weren't you who requested the password reset, just disregard this "
-"message."
-msgstr ""
-
 msgid "Mention on Pull Request %s \"%s\" by %s"
 msgstr "[komentarz] wniosek o połączenie gałęzi"
 
-msgid "Added as Reviewer of Pull Request %s \"%s\" by %s"
-msgstr ""
-
 msgid "Pull request"
 msgstr "Połączonych gałęzi #%s"
-
-msgid "from"
-msgstr ""
-
-msgid "to"
-msgstr ""
 
 msgid "Mention in Comment on Pull Request %s \"%s\""
 msgstr "%(user)s skomentował nowe połączenie gałęzi w %(when)s"
@@ -3109,35 +2293,17 @@ msgstr "Pliki %s"
 msgid "%s Files Add"
 msgstr "Pliki %s"
 
-msgid "Add New File"
-msgstr ""
-
 msgid "Location"
 msgstr "Położenie"
-
-msgid "Enter filename..."
-msgstr ""
 
 msgid "or"
 msgstr "lub"
 
-msgid "Upload File"
-msgstr ""
-
-msgid "Create New File"
-msgstr ""
-
 msgid "New file type"
 msgstr "nowy typ pliku"
 
-msgid "Commit Message"
-msgstr ""
-
 msgid "Commit Changes"
 msgstr "Zatwierdź zmiany"
-
-msgid "Search File List"
-msgstr ""
 
 msgid "Loading file list..."
 msgstr "Wczytywanie listy plików..."
@@ -3160,17 +2326,8 @@ msgstr "%s Usuń Plik"
 msgid "Delete file"
 msgstr "Usuń plik"
 
-msgid "%s File Edit"
-msgstr ""
-
 msgid "Edit file"
 msgstr "Edytuj plik"
-
-msgid "Show Annotation"
-msgstr ""
-
-msgid "Download as Raw"
-msgstr ""
 
 msgid "Source"
 msgstr "Źródło"
@@ -3180,18 +2337,6 @@ msgid_plural "%s authors"
 msgstr[0] "%s autor"
 msgstr[1] "%s autorzy"
 msgstr[2] "%s autorzy"
-
-msgid "Diff to Revision"
-msgstr ""
-
-msgid "Show at Revision"
-msgstr ""
-
-msgid "Show Full History"
-msgstr ""
-
-msgid "Show Authors"
-msgstr ""
 
 msgid "Show Source"
 msgstr "Pokaż źródło"
@@ -3206,9 +2351,6 @@ msgid "Editing files allowed only when on branch head revision"
 msgstr ""
 "Edycja plików dozwolona tylko wtedy, gdy rewizja jest w trakcie rewizji "
 "głównej gałęzi"
-
-msgid "Deleting files allowed only when on branch head revision"
-msgstr ""
 
 msgid "Binary file (%s)"
 msgstr "Plik binarny (%s)"
@@ -3240,9 +2382,6 @@ msgstr "Obserwuje"
 msgid "Started following -"
 msgstr "Rozpoczęto obserwację -"
 
-msgid "Fork repository %s"
-msgstr ""
-
 msgid "Fork name"
 msgstr "Nazwa rozgałęzienia"
 
@@ -3264,9 +2403,6 @@ msgstr "Aktualizuj po klonowaniu"
 
 msgid "Checkout source after making a clone"
 msgstr "Sprawdź źródło po wykonaniu klonowania"
-
-msgid "Fork this Repository"
-msgstr ""
 
 msgid "%s Forks"
 msgstr "Gałąź %s"
@@ -3304,9 +2440,6 @@ msgstr "Nowa prośba o połączenie gałęzi"
 msgid "Title"
 msgstr "Tytuł"
 
-msgid "Summarize the changes - or leave empty"
-msgstr ""
-
 msgid "Write a short description on this pull request"
 msgstr "Napisz krótki opis tego tego połączenia gałęzi"
 
@@ -3331,21 +2464,6 @@ msgstr "Głosuj"
 msgid "Age"
 msgstr "Ostatnia zmiana"
 
-msgid "From"
-msgstr ""
-
-msgid "To"
-msgstr ""
-
-msgid "You voted: %s"
-msgstr ""
-
-msgid "You didn't vote"
-msgstr ""
-
-msgid "(no title)"
-msgstr ""
-
 msgid "Closed"
 msgstr "Zamknięte"
 
@@ -3367,45 +2485,14 @@ msgstr "Połączonych gałęzi #%s"
 msgid "Summarize the changes"
 msgstr "Podsumuj zmiany"
 
-msgid "Voting Result"
-msgstr ""
-
-msgid "Pull request status calculated from votes"
-msgstr ""
-
-msgid "Origin"
-msgstr ""
-
 msgid "on"
 msgstr "na"
-
-msgid "Target"
-msgstr ""
-
-msgid ""
-"This is just a range of changesets and doesn't have a target or a real "
-"merge ancestor."
-msgstr ""
 
 msgid "Pull changes"
 msgstr "Pobierz zmiany"
 
 msgid "Next iteration"
 msgstr "Następne działanie"
-
-msgid "Current revision - no change"
-msgstr ""
-
-msgid ""
-"Pull request iterations do not change content once created. Select a "
-"revision to create a new iteration."
-msgstr ""
-
-msgid "Save Changes"
-msgstr ""
-
-msgid "Create New Iteration with Changes"
-msgstr ""
 
 msgid "Cancel Changes"
 msgstr "Anuluj zmiany"
@@ -3416,14 +2503,8 @@ msgstr "recenzenci"
 msgid "Remove reviewer"
 msgstr "Usuń recenzenta"
 
-msgid "Type name of reviewer to add"
-msgstr ""
-
 msgid "Potential Reviewers"
 msgstr "Potencjalni recenzenci"
-
-msgid "Click to add the repository owner as reviewer:"
-msgstr ""
 
 msgid "Pull Request Content"
 msgstr "Zawartość żądania połączenia"
@@ -3449,12 +2530,6 @@ msgstr "Pokaż Prośby Pobrania %s"
 msgid "Show Pull Requests from '%s'"
 msgstr "Pokaż Prośby Pobrania \"%s\""
 
-msgid "Hide closed pull requests (only show open pull requests)"
-msgstr ""
-
-msgid "Show closed pull requests (in addition to open pull requests)"
-msgstr ""
-
 msgid "Pull Requests Created by Me"
 msgstr "Recenzje wniosków połączenia gałęzi"
 
@@ -3463,9 +2538,6 @@ msgstr "Żądania połączenia gałęzi wymagające mojej recenzji"
 
 msgid "Pull Requests I Participate In"
 msgstr "Żądania połączenia gałęzi w których biorę udział"
-
-msgid "%s Search"
-msgstr ""
 
 msgid "Search in All Repositories"
 msgstr "Szukaj we wszystkich repozytoriach"
@@ -3592,9 +2664,6 @@ msgstr "Wyślij zmiany do nowego repo"
 
 msgid "Existing repository?"
 msgstr "Istniejące repozytorium?"
-
-msgid "Readme file from revision %s:%s"
-msgstr ""
 
 msgid "Download %s as %s"
 msgstr "Pobierz %s jak %s"

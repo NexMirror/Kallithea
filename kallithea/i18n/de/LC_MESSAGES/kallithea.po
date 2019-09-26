@@ -1001,16 +1001,6 @@ msgstr ""
 msgid "New user %(new_username)s registered"
 msgstr "Neuer Benutzer %(new_username)s registriert"
 
-msgid ""
-"[Review] %(repo_name)s PR %(pr_nice_id)s \"%(pr_title_short)s\" from "
-"%(pr_source_branch)s by %(pr_owner_username)s"
-msgstr ""
-
-msgid ""
-"[Comment] %(repo_name)s PR %(pr_nice_id)s \"%(pr_title_short)s\" from "
-"%(pr_source_branch)s by %(pr_owner_username)s"
-msgstr ""
-
 msgid "Closing"
 msgstr "Schließen"
 
@@ -2243,14 +2233,6 @@ msgstr "HTTP-Authentifizierungsrealm"
 msgid "HTML/JavaScript/CSS customization block"
 msgstr "HTML/JavaScript/CSS Anpassungsblock"
 
-msgid ""
-"HTML (possibly with                         JavaScript and/or CSS) that "
-"will be added to the bottom                         of every page. This "
-"can be used for web analytics                         systems, but also "
-"to                         perform instance-specific customizations like "
-"adding a                         project banner at the top of every page."
-msgstr ""
-
 msgid "ReCaptcha public key"
 msgstr "ReCaptcha öffentlicher Schlüssel"
 
@@ -2576,9 +2558,6 @@ msgstr "Benutzergruppe hinzufügen"
 msgid "Short, optional description for this user group."
 msgstr "Kurze, optionale Beschreibung für diese Benutzergruppe."
 
-msgid "%s user group settings"
-msgstr ""
-
 msgid "Show Members"
 msgstr "mitglieder"
 
@@ -2618,17 +2597,11 @@ msgstr "Benutzer hinzufügen"
 msgid "Password confirmation"
 msgstr "Passwortbestätigung"
 
-msgid "%s user settings"
-msgstr ""
-
 msgid "Emails"
 msgstr "E-Mails"
 
 msgid "User: %s"
 msgstr "Benutzer: %s"
-
-msgid "Source of Record"
-msgstr ""
 
 msgid "Last Login"
 msgstr "Letzter Login"
@@ -2636,29 +2609,14 @@ msgstr "Letzter Login"
 msgid "Member of User Groups"
 msgstr "Mitglieder der Benutzergruppe"
 
-msgid "Confirm to delete this user: %s"
-msgstr ""
-
 msgid "Delete this user"
 msgstr "Diesen Benutzer löschen"
-
-msgid "Inherited from %s"
-msgstr ""
-
-msgid "Name in Source of Record"
-msgstr ""
-
-msgid "New password confirmation"
-msgstr ""
 
 msgid "Users Administration"
 msgstr "Benutzerverwaltung"
 
 msgid "Auth Type"
 msgstr "Authentifizierungsart"
-
-msgid "Server instance: %s"
-msgstr ""
 
 msgid "Support"
 msgstr "Support"
@@ -2675,14 +2633,8 @@ msgstr "Fork erstellen"
 msgid "Summary"
 msgstr "Zusammenfassung"
 
-msgid "Changelog"
-msgstr ""
-
 msgid "Files"
 msgstr "Dateien"
-
-msgid "Show Pull Requests for %s"
-msgstr ""
 
 msgid "Pull Requests"
 msgstr "Pull Requests"
@@ -2693,59 +2645,11 @@ msgstr "Optionen"
 msgid "Compare Fork"
 msgstr "Fork vergleichen"
 
-msgid "Compare"
-msgstr ""
-
-msgid "Search"
-msgstr ""
-
-msgid "Unlock"
-msgstr ""
-
-msgid "Lock"
-msgstr ""
-
-msgid "Follow"
-msgstr ""
-
-msgid "Unfollow"
-msgstr ""
-
-msgid "Fork"
-msgstr ""
-
-msgid "Create Pull Request"
-msgstr ""
-
-msgid "Switch To"
-msgstr ""
-
 msgid "No matches found"
 msgstr "Keine Übereinstimmungen gefunden"
 
-msgid "Show recent activity"
-msgstr ""
-
 msgid "Public journal"
 msgstr "Öffentliches Logbuch"
-
-msgid "Show public gists"
-msgstr ""
-
-msgid "Gists"
-msgstr ""
-
-msgid "All Public Gists"
-msgstr ""
-
-msgid "My Public Gists"
-msgstr ""
-
-msgid "My Private Gists"
-msgstr ""
-
-msgid "Search in repositories"
-msgstr ""
 
 msgid "My Pull Requests"
 msgstr "Meine Pull Requests"
@@ -2753,58 +2657,17 @@ msgstr "Meine Pull Requests"
 msgid "Not Logged In"
 msgstr "Nicht eingeloggt"
 
-msgid "Login to Your Account"
-msgstr ""
-
 msgid "Forgot password?"
 msgstr "Passwort vergessen?"
 
 msgid "Don't have an account?"
 msgstr "Kein Account?"
 
-msgid "Log Out"
-msgstr ""
-
-msgid "Parent rev."
-msgstr ""
-
-msgid "Child rev."
-msgstr ""
-
 msgid "Inherit defaults"
 msgstr "Repositorystandards"
 
-msgid ""
-"Select to inherit global settings, IP whitelist and permissions from the "
-"%s."
-msgstr ""
-
 msgid "default permissions"
 msgstr "Standart Rechte"
-
-msgid "Create repositories"
-msgstr ""
-
-msgid "Select this option to allow repository creation for this user"
-msgstr ""
-
-msgid "Create user groups"
-msgstr ""
-
-msgid "Select this option to allow user group creation for this user"
-msgstr ""
-
-msgid "Fork repositories"
-msgstr ""
-
-msgid "Select this option to allow repository forking for this user"
-msgstr ""
-
-msgid "Show"
-msgstr ""
-
-msgid "No permissions defined yet"
-msgstr ""
 
 msgid "Permission"
 msgstr "Rechte"
@@ -2812,68 +2675,23 @@ msgstr "Rechte"
 msgid "Edit Permission"
 msgstr "Berechtigungen editieren"
 
-msgid "No permission defined"
-msgstr ""
-
-msgid "Retry"
-msgstr ""
-
-msgid "Submitting ..."
-msgstr ""
-
 msgid "Unable to post"
 msgstr "Aktiviere Downloads"
 
 msgid "Add Another Comment"
 msgstr "Einen weiteren Kommentar hinzufügen"
 
-msgid "Stop following this repository"
-msgstr ""
-
-msgid "Start following this repository"
-msgstr ""
-
 msgid "Group"
 msgstr "Gruppe"
-
-msgid "Loading ..."
-msgstr ""
-
-msgid "loading ..."
-msgstr ""
-
-msgid "Search truncated"
-msgstr ""
-
-msgid "No matching files"
-msgstr ""
 
 msgid "Open New Pull Request from {0}"
 msgstr "Kommentar von Pull Request"
 
-msgid "Open New Pull Request for {0} &rarr; {1}"
-msgstr ""
-
 msgid "Show Selected Changesets {0} &rarr; {1}"
 msgstr "Ausgewähltes Changeset anzeigen __S"
 
-msgid "Selection Link"
-msgstr ""
-
-msgid "Collapse Diff"
-msgstr ""
-
-msgid "Expand Diff"
-msgstr ""
-
 msgid "No revisions"
 msgstr "revisionen"
-
-msgid "Type name of user or member to grant permission"
-msgstr ""
-
-msgid "Failed to revoke permission"
-msgstr ""
 
 msgid "Confirm to revoke permission for {0}: {1} ?"
 msgstr "Widerruf der Rechte für {0}: {1} bestätigen?"
@@ -2899,118 +2717,26 @@ msgstr "Datenfehler."
 msgid "Loading..."
 msgstr "Lade..."
 
-msgid "%s Changelog"
-msgstr ""
-
-msgid "showing %d out of %d revision"
-msgid_plural "showing %d out of %d revisions"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "Clear selection"
-msgstr ""
-
 msgid "Go to tip of repository"
 msgstr "Gehe zum Tip des Repositorys"
-
-msgid "Compare fork with %s"
-msgstr ""
-
-msgid "Compare fork with parent repository (%s)"
-msgstr ""
-
-msgid "Branch filter:"
-msgstr ""
 
 msgid "There are no changes yet"
 msgstr "Bisher gibt es keine Änderungen"
 
-msgid "Removed"
-msgstr ""
-
-msgid "Changed"
-msgstr ""
-
-msgid "Added"
-msgstr ""
-
-msgid "Affected %s files"
-msgstr ""
-
-msgid "First (oldest) changeset in this list"
-msgstr ""
-
-msgid "Last (most recent) changeset in this list"
-msgstr ""
-
-msgid "Position in this list of changesets"
-msgstr ""
-
-msgid ""
-"Changeset status: %s by %s\n"
-"Click to open associated pull request %s"
-msgstr ""
-
 msgid "Changeset status: %s by %s"
 msgstr "Setze Changesetstatus"
-
-msgid "Expand commit message"
-msgstr ""
 
 msgid "%s comments"
 msgstr "%d Kommentar"
 
-msgid "Bookmark %s"
-msgstr ""
-
-msgid "Tag %s"
-msgstr ""
-
 msgid "Branch %s"
 msgstr "Branch %s"
-
-msgid "%s Changeset"
-msgstr ""
-
-msgid "Changeset status"
-msgstr ""
-
-msgid "Raw diff"
-msgstr ""
-
-msgid "Patch diff"
-msgstr ""
-
-msgid "Download diff"
-msgstr ""
-
-msgid "Merge"
-msgstr ""
-
-msgid "Grafted from:"
-msgstr ""
-
-msgid "Transplanted from:"
-msgstr ""
 
 msgid "Replaced by:"
 msgstr "Erstellt von"
 
 msgid "Preceded by:"
 msgstr "Erstellt von"
-
-msgid "%s file changed"
-msgid_plural "%s files changed"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "%s file changed with %s insertions and %s deletions"
-msgid_plural "%s files changed with %s insertions and %s deletions"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "Show full diff anyway"
-msgstr ""
 
 msgid "comment"
 msgstr "Kommentar"
@@ -3030,14 +2756,8 @@ msgstr "Kommentar löschen?"
 msgid "Status change"
 msgstr "Letzte Änderungen"
 
-msgid "Comments are in plain text. Use @username to notify another user."
-msgstr ""
-
 msgid "Set changeset status"
 msgstr "Setze Changesetstatus"
-
-msgid "Vote for pull request status"
-msgstr ""
 
 msgid "No change"
 msgstr "Keine Änderungen"
@@ -3050,15 +2770,6 @@ msgstr "Schließen"
 
 msgid "Comment"
 msgstr "Kommentar"
-
-msgid "You need to be logged in to comment."
-msgstr ""
-
-msgid "Login now"
-msgstr ""
-
-msgid "Hide"
-msgstr ""
 
 msgid "%d comment"
 msgid_plural "%d comments"
@@ -3074,18 +2785,6 @@ msgid "%d general"
 msgid_plural "%d general"
 msgstr[0] "%d generell"
 msgstr[1] "%d generell"
-
-msgid "%s Changesets"
-msgstr ""
-
-msgid "Changeset status: %s"
-msgstr ""
-
-msgid "Files affected"
-msgstr ""
-
-msgid "No file before"
-msgstr ""
 
 msgid "File before"
 msgstr "Datei entfernt"
@@ -3108,78 +2807,20 @@ msgstr "Kein Dateiname"
 msgid "File after"
 msgstr "Datei hinzugefügt"
 
-msgid "Show full diff for this file"
-msgstr ""
-
-msgid "Show full side-by-side diff for this file"
-msgstr ""
-
-msgid "Show inline comments"
-msgstr ""
-
-msgid "No changesets"
-msgstr ""
-
-msgid "Criss cross merge situation with multiple merge ancestors detected!"
-msgstr ""
-
-msgid ""
-"Please merge the target branch to your branch before creating a pull "
-"request."
-msgstr ""
-
-msgid "Merge Ancestor"
-msgstr ""
-
-msgid "Show merge diff"
-msgstr ""
-
-msgid "is"
-msgstr ""
-
 msgid "%s changesets"
 msgstr "%s Changesets"
 
 msgid "behind"
 msgstr "zurück"
 
-msgid "%s Compare"
-msgstr ""
-
-msgid "Compare Revisions"
-msgstr ""
-
-msgid "Swap"
-msgstr ""
-
-msgid "Compare revisions, branches, bookmarks, or tags."
-msgstr ""
-
-msgid "Showing %s commit"
-msgid_plural "Showing %s commits"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "Show full diff"
-msgstr ""
-
 msgid "Public repository"
 msgstr "Öffenentliches Repository"
-
-msgid "Repository creation in progress..."
-msgstr ""
-
-msgid "No changesets yet"
-msgstr ""
 
 msgid "Subscribe to %s rss feed"
 msgstr "Abonniere den %s RSS Feed"
 
 msgid "Subscribe to %s atom feed"
 msgstr "Abonniere den %s ATOM Feed"
-
-msgid "Creating"
-msgstr ""
 
 msgid "Mention in Comment on Changeset \"%s\""
 msgstr "%(user)s hat am %(when)s ein Changeset kommentiert"
@@ -3192,9 +2833,6 @@ msgstr "Änderungssatz"
 
 msgid "branch"
 msgstr "Zweig"
-
-msgid "by"
-msgstr ""
 
 msgid "Status change:"
 msgstr "Letzte Änderungen"
@@ -3212,38 +2850,11 @@ msgstr ""
 "Wir haben eine Anforderung erhalten, für deinen Account ein neues "
 "Passwort zu erstellen."
 
-msgid ""
-"This account is however managed outside this system and the password "
-"cannot be changed here."
-msgstr ""
-
-msgid "To set a new password, click the following link"
-msgstr ""
-
-msgid ""
-"Should you not be able to use the link above, please type the following "
-"code into the password reset form"
-msgstr ""
-
-msgid ""
-"If it weren't you who requested the password reset, just disregard this "
-"message."
-msgstr ""
-
 msgid "Mention on Pull Request %s \"%s\" by %s"
 msgstr "Pull Request [kommentiert] für"
 
-msgid "Added as Reviewer of Pull Request %s \"%s\" by %s"
-msgstr ""
-
 msgid "Pull request"
 msgstr "Pull Request %s"
-
-msgid "from"
-msgstr ""
-
-msgid "to"
-msgstr ""
 
 msgid "Mention in Comment on Pull Request %s \"%s\""
 msgstr "%(user)s hat am %(when)s einen Pull Request kommentiert"
@@ -3257,187 +2868,43 @@ msgstr "Pull Request [kommentiert] für"
 msgid "Full Name"
 msgstr "Gruppen name"
 
-msgid "%s File side-by-side diff"
-msgstr ""
-
-msgid "File diff"
-msgstr ""
-
-msgid "%s File Diff"
-msgstr ""
-
-msgid "%s Files"
-msgstr ""
-
-msgid "%s Files Add"
-msgstr ""
-
-msgid "Add New File"
-msgstr ""
-
-msgid "Location"
-msgstr ""
-
-msgid "Enter filename..."
-msgstr ""
-
 msgid "or"
 msgstr "oder"
-
-msgid "Upload File"
-msgstr ""
-
-msgid "Create New File"
-msgstr ""
 
 msgid "New file type"
 msgstr "neue Datei"
 
-msgid "Commit Message"
-msgstr ""
-
 msgid "Commit Changes"
 msgstr "Änderungen einchecken"
-
-msgid "Search File List"
-msgstr ""
-
-msgid "Loading file list..."
-msgstr ""
 
 msgid "Size"
 msgstr "Größe"
 
-msgid "Last Revision"
-msgstr ""
-
 msgid "Last Modified"
 msgstr "Zuletzt geändert"
 
-msgid "Last Committer"
-msgstr ""
-
-msgid "%s Files Delete"
-msgstr ""
-
 msgid "Delete file"
 msgstr "Datei löschen"
-
-msgid "%s File Edit"
-msgstr ""
-
-msgid "Edit file"
-msgstr ""
-
-msgid "Show Annotation"
-msgstr ""
-
-msgid "Download as Raw"
-msgstr ""
-
-msgid "Source"
-msgstr ""
 
 msgid "%s author"
 msgid_plural "%s authors"
 msgstr[0] "%s Autor"
 msgstr[1] "%s Autoren"
 
-msgid "Diff to Revision"
-msgstr ""
-
-msgid "Show at Revision"
-msgstr ""
-
-msgid "Show Full History"
-msgstr ""
-
-msgid "Show Authors"
-msgstr ""
-
-msgid "Show Source"
-msgstr ""
-
 msgid "Edit on Branch: %s"
 msgstr "Branch %s gelöscht"
-
-msgid "Editing binary files not allowed"
-msgstr ""
-
-msgid "Editing files allowed only when on branch head revision"
-msgstr ""
-
-msgid "Deleting files allowed only when on branch head revision"
-msgstr ""
-
-msgid "Binary file (%s)"
-msgstr ""
 
 msgid "File is too big to display."
 msgstr "Die Datei ist zu groß, um sie anzuzeigen"
 
-msgid "Show full annotation anyway."
-msgstr ""
-
-msgid "Show as raw."
-msgstr ""
-
-msgid "annotation"
-msgstr ""
-
 msgid "Go Back"
 msgstr "Zurück"
-
-msgid "No files at given path"
-msgstr ""
-
-msgid "%s Followers"
-msgstr ""
-
-msgid "Followers"
-msgstr ""
-
-msgid "Started following -"
-msgstr ""
-
-msgid "Fork repository %s"
-msgstr ""
-
-msgid "Fork name"
-msgstr ""
-
-msgid "Default revision for files page, downloads, whoosh, and readme."
-msgstr ""
 
 msgid "Private"
 msgstr "Privat"
 
 msgid "Copy permissions"
 msgstr "Berechtigungen kopieren"
-
-msgid "Copy permissions from forked repository"
-msgstr ""
-
-msgid "Update after clone"
-msgstr ""
-
-msgid "Checkout source after making a clone"
-msgstr ""
-
-msgid "Fork this Repository"
-msgstr ""
-
-msgid "%s Forks"
-msgstr ""
-
-msgid "Forks"
-msgstr ""
-
-msgid "Forked"
-msgstr ""
-
-msgid "There are no forks yet"
-msgstr ""
 
 msgid "ATOM journal feed"
 msgstr "ATOM Logbuch Feed"
@@ -3447,9 +2914,6 @@ msgstr "RSS Logbuch Feed"
 
 msgid "My Repositories"
 msgstr "Meine Repositories"
-
-msgid "No entries yet"
-msgstr ""
 
 msgid "ATOM public journal feed"
 msgstr "ATOM Feed für das Öffentliche Logbuch"
@@ -3463,26 +2927,8 @@ msgstr "Neuer Pull Request"
 msgid "Title"
 msgstr "Titel"
 
-msgid "Summarize the changes - or leave empty"
-msgstr ""
-
-msgid "Write a short description on this pull request"
-msgstr ""
-
-msgid "Changeset flow"
-msgstr ""
-
-msgid "Origin repository"
-msgstr ""
-
 msgid "Revision"
 msgstr "Revision"
-
-msgid "Destination repository"
-msgstr ""
-
-msgid "No entries"
-msgstr ""
 
 msgid "Vote"
 msgstr "entziehen"
@@ -3490,29 +2936,8 @@ msgstr "entziehen"
 msgid "Age"
 msgstr "Alter"
 
-msgid "From"
-msgstr ""
-
-msgid "To"
-msgstr ""
-
-msgid "You voted: %s"
-msgstr ""
-
-msgid "You didn't vote"
-msgstr ""
-
-msgid "(no title)"
-msgstr ""
-
-msgid "Closed"
-msgstr ""
-
 msgid "Delete Pull Request"
 msgstr "Pull Request löschen"
-
-msgid "Confirm to delete this pull request"
-msgstr ""
 
 msgid "Confirm again to delete this pull request with %s comments"
 msgstr "Löschen der Gruppe bestätigen: %s mit %s Repository"
@@ -3526,45 +2951,11 @@ msgstr "Pull Request #%s von %s#%s"
 msgid "Summarize the changes"
 msgstr "Zusammenfassung der Änderungen"
 
-msgid "Voting Result"
-msgstr ""
-
-msgid "Pull request status calculated from votes"
-msgstr ""
-
-msgid "Origin"
-msgstr ""
-
 msgid "on"
 msgstr "in"
 
-msgid "Target"
-msgstr ""
-
-msgid ""
-"This is just a range of changesets and doesn't have a target or a real "
-"merge ancestor."
-msgstr ""
-
-msgid "Pull changes"
-msgstr ""
-
 msgid "Next iteration"
 msgstr "Registrierung"
-
-msgid "Current revision - no change"
-msgstr ""
-
-msgid ""
-"Pull request iterations do not change content once created. Select a "
-"revision to create a new iteration."
-msgstr ""
-
-msgid "Save Changes"
-msgstr ""
-
-msgid "Create New Iteration with Changes"
-msgstr ""
 
 msgid "Cancel Changes"
 msgstr "Änderungen verwerfen"
@@ -3575,23 +2966,11 @@ msgstr "Reviewer entfernen"
 msgid "Remove reviewer"
 msgstr "Reviewer entfernen"
 
-msgid "Type name of reviewer to add"
-msgstr ""
-
 msgid "Potential Reviewers"
 msgstr "Potentielle Reviewer"
 
-msgid "Click to add the repository owner as reviewer:"
-msgstr ""
-
 msgid "Pull Request Content"
 msgstr "Inhalt des Pull Requests"
-
-msgid "Common ancestor"
-msgstr ""
-
-msgid "%s Pull Requests"
-msgstr ""
 
 msgid "Pull Requests from '%s'"
 msgstr "Pull Requests von '%s'"
@@ -3608,23 +2987,11 @@ msgstr "Zeige Pull Requests für '%s'"
 msgid "Show Pull Requests from '%s'"
 msgstr "Zeige Pull Requests von '%s'"
 
-msgid "Hide closed pull requests (only show open pull requests)"
-msgstr ""
-
-msgid "Show closed pull requests (in addition to open pull requests)"
-msgstr ""
-
 msgid "Pull Requests Created by Me"
 msgstr "Von mir erstellte Pull Requests"
 
 msgid "Pull Requests Needing My Review"
 msgstr "Pull Request Reviewers"
-
-msgid "Pull Requests I Participate In"
-msgstr ""
-
-msgid "%s Search"
-msgstr ""
 
 msgid "Search in All Repositories"
 msgstr "Suche in allen Repositories"
@@ -3647,20 +3014,8 @@ msgstr "Dateinamen"
 msgid "Permission denied"
 msgstr "Zugriff verweigert"
 
-msgid "%s Statistics"
-msgstr ""
-
-msgid "%s ATOM feed"
-msgstr ""
-
-msgid "%s RSS feed"
-msgstr ""
-
 msgid "Enable"
 msgstr "Aktiviere"
-
-msgid "Stats gathered: "
-msgstr ""
 
 msgid "files"
 msgstr "Dateien"
@@ -3692,47 +3047,11 @@ msgstr "Datei geändert"
 msgid "file removed"
 msgstr "Datei entfernt"
 
-msgid "%s Summary"
-msgstr ""
-
-msgid "Repository locked by %s"
-msgstr ""
-
-msgid "Repository unlocked"
-msgstr ""
-
-msgid "Fork of"
-msgstr ""
-
 msgid "Clone from"
 msgstr "Clone von"
 
-msgid "Show by ID"
-msgstr ""
-
-msgid "Show by Name"
-msgstr ""
-
-msgid "Trending files"
-msgstr ""
-
-msgid "Download"
-msgstr ""
-
-msgid "There are no downloads yet"
-msgstr ""
-
-msgid "Downloads are disabled for this repository"
-msgstr ""
-
 msgid "Download as zip"
 msgstr "Herunterladen als zip"
-
-msgid "Check this to download archive with subrepos"
-msgstr ""
-
-msgid "With subrepos"
-msgstr ""
 
 msgid "Feed"
 msgstr "Feed"
@@ -3743,14 +3062,8 @@ msgstr "Letzte Änderungen"
 msgid "Quick Start"
 msgstr "Schnelleinstieg"
 
-msgid "Add or upload files directly via Kallithea"
-msgstr ""
-
 msgid "Push new repository"
 msgstr "privates Repository"
-
-msgid "Existing repository?"
-msgstr ""
 
 msgid "Readme file from revision %s:%s"
 msgstr "Liesmich-Datei von Revision %s:%s"

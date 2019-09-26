@@ -48,21 +48,6 @@ msgstr "在此代码库内，此修改并不存在"
 msgid "Could not find other repository %s"
 msgstr "找不到那个版本库 %s"
 
-msgid "Cannot compare repositories of different types"
-msgstr ""
-
-msgid "Cannot show empty diff"
-msgstr ""
-
-msgid "No ancestor found for merge diff"
-msgstr ""
-
-msgid "Multiple merge ancestors found for merge compare"
-msgstr ""
-
-msgid "Cannot compare repositories without using common ancestor"
-msgstr ""
-
 msgid "No response"
 msgstr "无响应"
 
@@ -86,9 +71,6 @@ msgid ""
 "The server encountered an unexpected condition which prevented it from "
 "fulfilling the request."
 msgstr "服务进入非预期的混乱状态，这会阻止它对请求进行响应。"
-
-msgid "%s committed on %s"
-msgstr ""
 
 msgid "Changeset was too big and was cut off..."
 msgstr "修订集太大并已被截断..."
@@ -143,9 +125,6 @@ msgstr "无内容"
 
 msgid "No filename"
 msgstr "无文件名"
-
-msgid "Location must be relative path and must not contain .. in path"
-msgstr ""
 
 msgid "Downloads disabled"
 msgstr "下载已禁用"
@@ -240,12 +219,6 @@ msgstr "成功提交拉取请求"
 msgid "New pull request iteration created"
 msgstr "拉取请求更新已创建"
 
-msgid "Meanwhile, the following reviewers have been added: %s"
-msgstr ""
-
-msgid "Meanwhile, the following reviewers have been removed: %s"
-msgstr ""
-
 msgid "No description"
 msgstr "无描述"
 
@@ -261,36 +234,15 @@ msgstr "未找到修订集"
 msgid "Error: changesets not found when displaying pull request from %s."
 msgstr "没有找到更新此拉取请求的修订集。"
 
-msgid "This pull request has already been merged to %s."
-msgstr ""
-
-msgid "This pull request has been closed and can not be updated."
-msgstr ""
-
-msgid "The following additional changes are available on %s:"
-msgstr ""
-
 msgid "No additional changesets found for iterating on this pull request."
 msgstr "没有找到更新此拉取请求的修订集。"
-
-msgid "Note: Branch %s has another head: %s."
-msgstr ""
-
-msgid "Git pull requests don't support iterating yet."
-msgstr ""
 
 msgid ""
 "Error: some changesets not found when displaying pull request from %s."
 msgstr "没有找到更新此拉取请求的修订集。"
 
-msgid "The diff can't be shown - the PR revisions could not be found."
-msgstr ""
-
 msgid "Invalid search query. Try quoting it."
 msgstr "错误的搜索。请尝试用引号包含它。"
-
-msgid "The server has no search index."
-msgstr ""
 
 msgid "An error occurred during search operation."
 msgstr "搜索操作期间发生错误。"
@@ -412,65 +364,11 @@ msgstr "全局权限更新成功"
 msgid "Error occurred during update of permissions"
 msgstr "权限更新时发生错误"
 
-msgid "Error occurred during creation of repository group %s"
-msgstr ""
-
-msgid "Created repository group %s"
-msgstr ""
-
-msgid "Updated repository group %s"
-msgstr ""
-
-msgid "Error occurred during update of repository group %s"
-msgstr ""
-
 msgid "This group contains %s repositories and cannot be deleted"
 msgstr "这个组内有%s个版本库因而无法删除"
 
-msgid "This group contains %s subgroups and cannot be deleted"
-msgstr ""
-
-msgid "Removed repository group %s"
-msgstr ""
-
-msgid "Error occurred during deletion of repository group %s"
-msgstr ""
-
-msgid "Cannot revoke permission for yourself as admin"
-msgstr ""
-
-msgid "Repository group permissions updated"
-msgstr ""
-
-msgid "An error occurred during revoking of permission"
-msgstr ""
-
-msgid "Error creating repository %s"
-msgstr ""
-
-msgid "Created repository %s from %s"
-msgstr ""
-
-msgid "Forked repository %s as %s"
-msgstr ""
-
-msgid "Created repository %s"
-msgstr ""
-
 msgid "Repository %s updated successfully"
 msgstr "版本库%s成功更新"
-
-msgid "Error occurred during update of repository %s"
-msgstr ""
-
-msgid "Detached %s forks"
-msgstr ""
-
-msgid "Deleted %s forks"
-msgstr ""
-
-msgid "Deleted repository %s"
-msgstr ""
 
 msgid "Cannot delete repository %s which still has forks"
 msgstr "无法删除%s因为它还有其他分复刻本库"
@@ -478,20 +376,8 @@ msgstr "无法删除%s因为它还有其他分复刻本库"
 msgid "An error occurred during deletion of %s"
 msgstr "在删除%s的时候发生错误"
 
-msgid "Repository permissions updated"
-msgstr ""
-
-msgid "Field validation error: %s"
-msgstr ""
-
 msgid "An error occurred during creation of field: %r"
 msgstr "删除用户时发生错误"
-
-msgid "An error occurred during removal of field"
-msgstr ""
-
-msgid "-- Not a fork --"
-msgstr ""
 
 msgid "Updated repository visibility in public journal"
 msgstr "成功更新在公共日志中的可见性"
@@ -517,9 +403,6 @@ msgstr "版本库未锁定"
 msgid "An error occurred during unlocking"
 msgstr "解锁时发生错误"
 
-msgid "Cache invalidation successful"
-msgstr ""
-
 msgid "An error occurred during cache invalidation"
 msgstr "清除缓存时发生错误"
 
@@ -535,17 +418,6 @@ msgstr "删除版本库统计时发生错误"
 msgid "Updated VCS settings"
 msgstr "成功更新版本控制系统设置"
 
-msgid ""
-"Unable to activate hgsubversion support. The \"hgsubversion\" library is "
-"missing"
-msgstr ""
-
-msgid "Error occurred while updating application settings"
-msgstr ""
-
-msgid "Repositories successfully rescanned. Added: %s. Removed: %s."
-msgstr ""
-
 msgid "Invalidated %s repositories"
 msgstr "清除版本库缓存"
 
@@ -555,20 +427,8 @@ msgstr "更新应用设置"
 msgid "Updated visualisation settings"
 msgstr "成功更新可视化设置"
 
-msgid "Error occurred during updating visualisation settings"
-msgstr ""
-
-msgid "Please enter email address"
-msgstr ""
-
-msgid "Send email task created"
-msgstr ""
-
 msgid "Hook already exists"
 msgstr "数据尚未就绪"
-
-msgid "Builtin hooks are read-only. Please use another hook name."
-msgstr ""
 
 msgid "Added new hook"
 msgstr "新建钩子"
@@ -576,68 +436,17 @@ msgstr "新建钩子"
 msgid "Updated hooks"
 msgstr "更新钩子"
 
-msgid "Error occurred during hook creation"
-msgstr ""
-
 msgid "Whoosh reindex task scheduled"
 msgstr "Whoosh重新索引任务调度"
-
-msgid "Created user group %s"
-msgstr ""
-
-msgid "Error occurred during creation of user group %s"
-msgstr ""
-
-msgid "Updated user group %s"
-msgstr ""
-
-msgid "Error occurred during update of user group %s"
-msgstr ""
-
-msgid "Successfully deleted user group"
-msgstr ""
-
-msgid "An error occurred during deletion of user group"
-msgstr ""
-
-msgid "Target group cannot be the same"
-msgstr ""
-
-msgid "User group permissions updated"
-msgstr ""
-
-msgid "Updated permissions"
-msgstr ""
 
 msgid "An error occurred during permissions saving"
 msgstr "保存权限时发生错误"
 
-msgid "Created user %s"
-msgstr ""
-
-msgid "Error occurred during creation of user %s"
-msgstr ""
-
 msgid "User updated successfully"
 msgstr "用户更新成功"
 
-msgid "Successfully deleted user"
-msgstr ""
-
 msgid "An error occurred during deletion of user"
 msgstr "删除用户时发生错误"
-
-msgid "The default user cannot be edited"
-msgstr ""
-
-msgid "Added IP address %s to user whitelist"
-msgstr ""
-
-msgid "An error occurred while adding IP address"
-msgstr ""
-
-msgid "Removed IP address from user whitelist"
-msgstr ""
 
 msgid "You need to be a registered user to perform this action"
 msgstr "必须是注册用户才能进行此操作"
@@ -645,21 +454,8 @@ msgstr "必须是注册用户才能进行此操作"
 msgid "You need to be signed in to view this page"
 msgstr "必须登录才能访问该页面"
 
-msgid "Invalid API key"
-msgstr ""
-
-msgid ""
-"CSRF token leak has been detected - all form tokens have been expired"
-msgstr ""
-
-msgid "Repository not found in the filesystem"
-msgstr ""
-
 msgid "Changeset for %s %s not found in %s"
 msgstr "未找到修订集"
-
-msgid "Binary file"
-msgstr ""
 
 msgid ""
 "Changeset was too big and was cut off, use diff menu to display this diff"
@@ -713,9 +509,6 @@ msgstr "[复刻]版本库"
 msgid "[updated] repository"
 msgstr "[更新]版本库"
 
-msgid "[downloaded] archive from repository"
-msgstr ""
-
 msgid "[delete] repository"
 msgstr "[删除]版本库"
 
@@ -724,12 +517,6 @@ msgstr "[创建]用户"
 
 msgid "[updated] user"
 msgstr "[更新]用户"
-
-msgid "[created] user group"
-msgstr ""
-
-msgid "[updated] user group"
-msgstr ""
 
 msgid "[commented] on revision in repository"
 msgstr "[评论]了版本库中的修订"
@@ -763,21 +550,6 @@ msgstr " 还有%s个"
 
 msgid "No files"
 msgstr "无文件"
-
-msgid "new file"
-msgstr ""
-
-msgid "mod"
-msgstr ""
-
-msgid "del"
-msgstr ""
-
-msgid "rename"
-msgstr ""
-
-msgid "chmod"
-msgstr ""
 
 msgid ""
 "%s repository is not mapped to db perhaps it was created or renamed from "
@@ -832,14 +604,8 @@ msgstr "在%s行"
 msgid "[Mention]"
 msgstr "[提及]"
 
-msgid "top level"
-msgstr ""
-
 msgid "Kallithea Administrator"
 msgstr "Kallithea 管理员"
-
-msgid "Default user has no access to new repositories"
-msgstr ""
 
 msgid "Default user has read access to new repositories"
 msgstr "未授权的资源访问"
@@ -847,73 +613,17 @@ msgstr "未授权的资源访问"
 msgid "Default user has write access to new repositories"
 msgstr "未授权的资源访问"
 
-msgid "Default user has admin access to new repositories"
-msgstr ""
-
-msgid "Default user has no access to new repository groups"
-msgstr ""
-
-msgid "Default user has read access to new repository groups"
-msgstr ""
-
-msgid "Default user has write access to new repository groups"
-msgstr ""
-
-msgid "Default user has admin access to new repository groups"
-msgstr ""
-
-msgid "Default user has no access to new user groups"
-msgstr ""
-
-msgid "Default user has read access to new user groups"
-msgstr ""
-
-msgid "Default user has write access to new user groups"
-msgstr ""
-
-msgid "Default user has admin access to new user groups"
-msgstr ""
-
 msgid "Only admins can create repository groups"
 msgstr "没有在该版本库组中创建版本库的权限"
 
 msgid "Non-admins can create repository groups"
 msgstr "没有在该版本库组中创建版本库的权限"
 
-msgid "Only admins can create user groups"
-msgstr ""
-
-msgid "Non-admins can create user groups"
-msgstr ""
-
-msgid "Only admins can create top level repositories"
-msgstr ""
-
-msgid "Non-admins can create top level repositories"
-msgstr ""
-
-msgid ""
-"Repository creation enabled with write permission to a repository group"
-msgstr ""
-
-msgid ""
-"Repository creation disabled with write permission to a repository group"
-msgstr ""
-
 msgid "Only admins can fork repositories"
 msgstr "创建版本库"
 
 msgid "Non-admins can fork repositories"
 msgstr "创建版本库"
-
-msgid "Registration disabled"
-msgstr ""
-
-msgid "User registration with manual account activation"
-msgstr ""
-
-msgid "User registration with automatic account activation"
-msgstr ""
 
 msgid "Not reviewed"
 msgstr "未检视"
@@ -939,9 +649,6 @@ msgstr "请输入密码"
 msgid "Enter %(min)i characters or more"
 msgstr "输入少于%(min)i个字符"
 
-msgid "Name must not contain only digits"
-msgstr ""
-
 msgid ""
 "[Comment] %(repo_name)s changeset %(short_id)s \"%(message_short)s\" on "
 "%(branch)s"
@@ -950,30 +657,11 @@ msgstr "[评论] %(repo_name)s 修订集 %(short_id)s 在 %(branch)s"
 msgid "New user %(new_username)s registered"
 msgstr "用户名称 %(new_username)s 无效"
 
-msgid ""
-"[Review] %(repo_name)s PR %(pr_nice_id)s \"%(pr_title_short)s\" from "
-"%(pr_source_branch)s by %(pr_owner_username)s"
-msgstr ""
-
-msgid ""
-"[Comment] %(repo_name)s PR %(pr_nice_id)s \"%(pr_title_short)s\" from "
-"%(pr_source_branch)s by %(pr_owner_username)s"
-msgstr ""
-
 msgid "Closing"
 msgstr "使用中"
 
-msgid ""
-"%(user)s wants you to review pull request %(pr_nice_id)s: %(pr_title)s"
-msgstr ""
-
 msgid "Cannot create empty pull request"
 msgstr "创建拉取请求出错：%s"
-
-msgid ""
-"Cannot create pull request - criss cross merge detected, please merge a "
-"later %s revision to %s"
-msgstr ""
 
 msgid "You are not authorized to create the pull request"
 msgstr "确认删除拉取请求"
@@ -984,25 +672,11 @@ msgstr "缺少上次拉取请求之后的修订集："
 msgid "New changesets on %s %s since the previous iteration:"
 msgstr "在上次拉取请求之后，在 %s %s 上的新修订集："
 
-msgid "Ancestor didn't change - diff since previous iteration:"
-msgstr ""
-
-msgid ""
-"This iteration is based on another %s revision and there is no simple "
-"diff."
-msgstr ""
-
 msgid "No changes found on %s %s since previous iteration."
 msgstr "在上次拉取请求之后，在 %s %s 上的新修订集："
 
-msgid "Closed, next iteration: %s ."
-msgstr ""
-
 msgid "latest tip"
 msgstr "最新tip版本"
-
-msgid "New user registration"
-msgstr ""
 
 msgid ""
 "You can't remove this user since it is crucial for the entire application"
@@ -1029,16 +703,8 @@ msgstr ""
 "由于用户 \"%s\" 拥有版本库%s因而无法删除，请修改版本库所有者或删除版本"
 "库。%s"
 
-msgid "Password reset link"
-msgstr ""
-
 msgid "Password reset notification"
 msgstr "确认密码"
-
-msgid ""
-"The password to your account %s has been changed using password reset "
-"form."
-msgstr ""
 
 msgid "Value cannot be an empty list"
 msgstr "值不能为空"
@@ -1049,27 +715,8 @@ msgstr "用户名称%(username)s已经存在"
 msgid "Username \"%(username)s\" cannot be used"
 msgstr "用户名称 %(username)s 无效"
 
-msgid ""
-"Username may only contain alphanumeric characters underscores, periods or "
-"dashes and must begin with an alphanumeric character or underscore"
-msgstr ""
-
-msgid "The input is not valid"
-msgstr ""
-
 msgid "Username %(username)s is not valid"
 msgstr "用户名称 %(username)s 无效"
-
-msgid "Invalid user group name"
-msgstr ""
-
-msgid "User group \"%(usergroup)s\" already exists"
-msgstr ""
-
-msgid ""
-"user group name may only contain alphanumeric characters underscores, "
-"periods or dashes and must begin with alphanumeric character"
-msgstr ""
 
 msgid "Cannot assign this group as parent"
 msgstr "不能将这个组作为parent"
@@ -1082,9 +729,6 @@ msgstr "已经存在名为 \"%(group_name)s\" 的版本库"
 
 msgid "Invalid characters (non-ascii) in password"
 msgstr "密码含有无效（非ASCII）字符"
-
-msgid "Invalid old password"
-msgstr ""
 
 msgid "Passwords do not match"
 msgstr "密码不符"
@@ -1104,31 +748,14 @@ msgstr "已经存在版本库%(repo)s"
 msgid "Repository \"%(repo)s\" already exists in group \"%(group)s\""
 msgstr "版本库组 \"%(group)s\" 中已经存在版本库 \"%(repo)s\""
 
-msgid "Repository group with name \"%(repo)s\" already exists"
-msgstr ""
-
 msgid "Invalid repository URL"
 msgstr "私有版本库"
-
-msgid ""
-"Invalid repository URL. It must be a valid http, https, ssh, svn+http or "
-"svn+https URL"
-msgstr ""
 
 msgid "Fork has to be the same type as parent"
 msgstr "复刻版本库必须和父版本库类型相同"
 
 msgid "You don't have permissions to create repository in this group"
 msgstr "没有在该版本库组中创建版本库的权限"
-
-msgid "no permission to create repository in root location"
-msgstr ""
-
-msgid "You don't have permissions to create a group in this location"
-msgstr ""
-
-msgid "This username or user group name is not valid"
-msgstr ""
 
 msgid "This is not a valid path"
 msgstr "不是一个合法的路径"
@@ -1143,37 +770,6 @@ msgid ""
 "The LDAP Login attribute of the CN must be specified - this is the name "
 "of the attribute that is equivalent to \"username\""
 msgstr "LDAP 登陆属性的 CN 必须指定 - 这个名字作为用户名"
-
-msgid "Please enter a valid IPv4 or IPv6 address"
-msgstr ""
-
-msgid ""
-"The network size (bits) must be within the range of 0-32 (not %(bits)r)"
-msgstr ""
-
-msgid "Key name can only consist of letters, underscore, dash or numbers"
-msgstr ""
-
-msgid "Filename cannot be inside a directory"
-msgstr ""
-
-msgid "Plugins %(loaded)s and %(next_to_load)s both export the same name"
-msgstr ""
-
-msgid "About"
-msgstr ""
-
-msgid "Add Repository"
-msgstr ""
-
-msgid "Add Repository Group"
-msgstr ""
-
-msgid "You have admin right to this group, and can edit it"
-msgstr ""
-
-msgid "Edit Repository Group"
-msgstr ""
 
 msgid "Repository"
 msgstr "版本库"
@@ -1193,17 +789,11 @@ msgstr "所有者"
 msgid "Log In"
 msgstr "登录"
 
-msgid "Log In to %s"
-msgstr ""
-
 msgid "Username"
 msgstr "帐号"
 
 msgid "Password"
 msgstr "密码"
-
-msgid "Stay logged in after browser restart"
-msgstr ""
 
 msgid "Forgot your password ?"
 msgstr "忘记了密码？"
@@ -1214,20 +804,8 @@ msgstr "还没有帐号？"
 msgid "Sign In"
 msgstr "登录"
 
-msgid "Password Reset"
-msgstr ""
-
-msgid "Reset Your Password to %s"
-msgstr ""
-
 msgid "Reset Your Password"
 msgstr "忘记了密码？"
-
-msgid "Email Address"
-msgstr ""
-
-msgid "Captcha"
-msgstr ""
 
 msgid "Send Password Reset Email"
 msgstr "确认新密码"
@@ -1237,31 +815,14 @@ msgid ""
 "is registered in the system."
 msgstr "密码重置地址已经发送到邮件"
 
-msgid "You are about to set a new password for the email address %s."
-msgstr ""
-
-msgid ""
-"Note that you must use the same browser session for this as the one used "
-"to request the password reset."
-msgstr ""
-
-msgid "Code you received in the email"
-msgstr ""
-
 msgid "New Password"
 msgstr "新密码"
 
 msgid "Confirm New Password"
 msgstr "新密码"
 
-msgid "Confirm"
-msgstr ""
-
 msgid "Sign Up"
 msgstr "注册"
-
-msgid "Sign Up to %s"
-msgstr ""
 
 msgid "Re-enter password"
 msgstr "确认密码"
@@ -1274,12 +835,6 @@ msgstr "姓"
 
 msgid "Email"
 msgstr "电子邮件"
-
-msgid "Registered accounts are ready to use and need no further action."
-msgstr ""
-
-msgid "Please wait for an administrator to activate your account."
-msgstr ""
 
 msgid "Admin Journal"
 msgstr "系统日志"
@@ -1305,29 +860,6 @@ msgstr "来源IP"
 
 msgid "No actions yet"
 msgstr "无操作"
-
-msgid "Authentication Settings"
-msgstr ""
-
-msgid "Authentication"
-msgstr ""
-
-msgid "Authentication Plugins"
-msgstr ""
-
-msgid "Enabled Plugins"
-msgstr ""
-
-msgid ""
-"Comma-separated list of plugins; Kallithea will try user authentication "
-"in plugin order"
-msgstr ""
-
-msgid "Available built-in plugins"
-msgstr ""
-
-msgid "Plugin"
-msgstr ""
 
 msgid "Save"
 msgstr "保存"
@@ -1364,109 +896,20 @@ msgstr "启用锁定"
 msgid "Enable lock-by-pulling on repository."
 msgstr "启用版本库的拉取锁定。"
 
-msgid "Edit Gist"
-msgstr ""
-
-msgid ""
-"Gist was updated since you started editing. Copy your changes and click "
-"%(here)s to reload new version."
-msgstr ""
-
-msgid "here"
-msgstr ""
-
-msgid "Gist description ..."
-msgstr ""
-
-msgid "Gist lifetime"
-msgstr ""
-
-msgid "Expires"
-msgstr ""
-
 msgid "Never"
 msgstr "检视者"
-
-msgid "Update Gist"
-msgstr ""
-
-msgid "Cancel"
-msgstr ""
-
-msgid "Private Gists for User %s"
-msgstr ""
-
-msgid "Public Gists for User %s"
-msgstr ""
-
-msgid "Public Gists"
-msgstr ""
-
-msgid "Create New Gist"
-msgstr ""
-
-msgid "Created"
-msgstr ""
-
-msgid "There are no gists yet"
-msgstr ""
-
-msgid "New Gist"
-msgstr ""
-
-msgid "Name this gist ..."
-msgstr ""
-
-msgid "Create Private Gist"
-msgstr ""
-
-msgid "Create Public Gist"
-msgstr ""
 
 msgid "Reset"
 msgstr "重置"
 
-msgid "Gist"
-msgstr ""
-
-msgid "URL"
-msgstr ""
-
-msgid "Public Gist"
-msgstr ""
-
-msgid "Private Gist"
-msgstr ""
-
 msgid "Delete"
 msgstr "删除"
-
-msgid "Confirm to delete this Gist"
-msgstr ""
-
-msgid "Edit"
-msgstr ""
-
-msgid "Show as Raw"
-msgstr ""
-
-msgid "created"
-msgstr ""
-
-msgid "Show as raw"
-msgstr ""
 
 msgid "My Account"
 msgstr "我的账户"
 
-msgid "Profile"
-msgstr ""
-
 msgid "Email Addresses"
 msgstr "增加邮箱"
-
-msgid "API Keys"
-msgstr ""
 
 msgid "Owned Repositories"
 msgstr "版本库"
@@ -1477,14 +920,8 @@ msgstr "创建版本库"
 msgid "Show Permissions"
 msgstr "拷贝权限"
 
-msgid "Built-in"
-msgstr ""
-
 msgid "Confirm to reset this API key: %s"
 msgstr "确认删除用户：%s"
-
-msgid "Expired"
-msgstr ""
 
 msgid "Confirm to remove this API key: %s"
 msgstr "确认删除用户：%s"
@@ -1492,37 +929,11 @@ msgstr "确认删除用户：%s"
 msgid "Remove"
 msgstr "移除"
 
-msgid "No additional API keys specified"
-msgstr ""
-
-msgid "New API key"
-msgstr ""
-
 msgid "Add"
 msgstr "增加"
 
-msgid ""
-"\n"
-"API keys are used to let scripts or services access %s using your\n"
-"account, as if you had provided the script or service with your actual\n"
-"password.\n"
-msgstr ""
-
-msgid ""
-"\n"
-"Like passwords, API keys should therefore never be shared with others,\n"
-"nor passed to untrusted scripts or services. If such sharing should\n"
-"happen anyway, reset the API key on this page to prevent further use.\n"
-msgstr ""
-
-msgid "Primary"
-msgstr ""
-
 msgid "Confirm to delete this email: %s"
 msgstr "确认删除邮箱：%s"
-
-msgid "No additional emails specified."
-msgstr ""
 
 msgid "New email address"
 msgstr "增加邮箱"
@@ -1530,30 +941,11 @@ msgstr "增加邮箱"
 msgid "Change Your Account Password"
 msgstr "忘记了密码？"
 
-msgid "Current password"
-msgstr ""
-
 msgid "New password"
 msgstr "新密码"
 
-msgid "Confirm new password"
-msgstr ""
-
-msgid ""
-"This account is managed with %s and the password cannot be changed here"
-msgstr ""
-
-msgid "Current IP"
-msgstr ""
-
-msgid "Gravatar"
-msgstr ""
-
 msgid "Change %s avatar at"
 msgstr "修改你的头像"
-
-msgid "Avatars are disabled"
-msgstr ""
 
 msgid "Repositories You Own"
 msgstr "版本库"
@@ -1567,115 +959,32 @@ msgstr "版本库路径"
 msgid "Default Permissions"
 msgstr "默认权限"
 
-msgid "Global"
-msgstr ""
-
-msgid "IP Whitelist"
-msgstr ""
-
 msgid "Anonymous access"
 msgstr "匿名访问"
 
 msgid "Allow anonymous access"
 msgstr "匿名访问"
 
-msgid ""
-"Allow access to Kallithea without needing to log in. Anonymous users use "
-"%s user permissions."
-msgstr ""
-
-msgid ""
-"All default permissions on each repository will be reset to chosen "
-"permission, note that all custom default permission on repositories will "
-"be lost"
-msgstr ""
-
 msgid "Apply to all existing repositories"
 msgstr "已有版本库？"
-
-msgid "Permissions for the Default user on new repositories."
-msgstr ""
 
 msgid "Repository group"
 msgstr "版本库组"
 
-msgid ""
-"All default permissions on each repository group will be reset to chosen "
-"permission, note that all custom default permission on repository groups "
-"will be lost"
-msgstr ""
-
 msgid "Apply to all existing repository groups"
 msgstr "已有版本库？"
-
-msgid "Permissions for the Default user on new repository groups."
-msgstr ""
-
-msgid "User group"
-msgstr ""
-
-msgid ""
-"All default permissions on each user group will be reset to chosen "
-"permission, note that all custom default permission on user groups will "
-"be lost"
-msgstr ""
-
-msgid "Apply to all existing user groups"
-msgstr ""
-
-msgid "Permissions for the Default user on new user groups."
-msgstr ""
 
 msgid "Top level repository creation"
 msgstr "建立版本库"
 
-msgid ""
-"Enable this to allow non-admins to create repositories at the top level."
-msgstr ""
-
-msgid ""
-"Note: This will also give all users API access to create repositories "
-"everywhere. That might change in future versions."
-msgstr ""
-
-msgid "Repository creation with group write access"
-msgstr ""
-
-msgid ""
-"With this, write permission to a repository group allows creating "
-"repositories inside that group. Without this, group write permissions "
-"mean nothing."
-msgstr ""
-
-msgid "User group creation"
-msgstr ""
-
-msgid "Enable this to allow non-admins to create user groups."
-msgstr ""
-
 msgid "Repository forking"
 msgstr "版本库复刻"
-
-msgid "Enable this to allow non-admins to fork repositories."
-msgstr ""
 
 msgid "Registration"
 msgstr "注册"
 
-msgid "External auth account activation"
-msgstr ""
-
 msgid "Confirm to delete this IP address: %s"
 msgstr "确认删除用户：%s"
-
-msgid "All IP addresses are allowed."
-msgstr ""
-
-msgid "New IP address"
-msgstr ""
-
-msgid "Repository Groups"
-msgstr ""
 
 msgid "Group name"
 msgstr "组名"
@@ -1683,38 +992,11 @@ msgstr "组名"
 msgid "Group parent"
 msgstr "上级组"
 
-msgid "Copy parent group permissions"
-msgstr ""
-
-msgid "Copy permission set from parent repository group."
-msgstr ""
-
-msgid "%s Repository Group Settings"
-msgstr ""
-
-msgid "Add Child Group"
-msgstr ""
-
 msgid "Settings"
 msgstr "设置"
 
-msgid "Advanced"
-msgstr ""
-
 msgid "Permissions"
 msgstr "权限"
-
-msgid "Repository Group: %s"
-msgstr ""
-
-msgid "Top level repositories"
-msgstr ""
-
-msgid "Total repositories"
-msgstr ""
-
-msgid "Children groups"
-msgstr ""
 
 msgid "Created on"
 msgstr "创建于"
@@ -1723,23 +1005,11 @@ msgid "Confirm to delete this group: %s with %s repository"
 msgid_plural "Confirm to delete this group: %s with %s repositories"
 msgstr[0] "确认删除这个版本库组：%s包含%s个版本库"
 
-msgid "Delete this repository group"
-msgstr ""
-
-msgid "Not visible"
-msgstr ""
-
 msgid "Visible"
 msgstr "停用"
 
 msgid "Add repos"
 msgstr "无响应"
-
-msgid "Add/Edit groups"
-msgstr ""
-
-msgid "User/User Group"
-msgstr ""
 
 msgid "Default"
 msgstr "默认"
@@ -1747,27 +1017,13 @@ msgstr "默认"
 msgid "Revoke"
 msgstr "移除"
 
-msgid "Add new"
-msgstr ""
-
 msgid "Apply to children"
 msgstr "应用到成员"
-
-msgid "Both"
-msgstr ""
-
-msgid ""
-"Set or revoke permission to all children of that group, including non-"
-"private repositories and other groups if selected."
-msgstr ""
 
 msgid ""
 "Enable lock-by-pulling on group. This option will be applied to all other "
 "groups and repositories inside"
 msgstr "启用组的拉取锁定。这个选项将应用到组内的其他组和版本库"
-
-msgid "Remove this group"
-msgstr ""
 
 msgid "Confirm to delete this group"
 msgstr "确认删除用户：%s"
@@ -1785,11 +1041,6 @@ msgid "Clone remote repository"
 msgstr "[创建]版本库"
 
 msgid ""
-"Optional: URL of a remote repository. If set, the repository will be "
-"created as a clone from this URL."
-msgstr ""
-
-msgid ""
 "Keep it short and to the point. Use a README file for longer descriptions."
 msgstr "保持简短。用README文件来写更长的描述。"
 
@@ -1802,36 +1053,6 @@ msgstr "要创建的版本库类型。"
 msgid "Landing revision"
 msgstr "默认修订"
 
-msgid ""
-"Default revision for files page, downloads, full text search index and "
-"readme generation"
-msgstr ""
-
-msgid "%s Creating Repository"
-msgstr ""
-
-msgid "Creating repository"
-msgstr ""
-
-msgid ""
-"Repository \"%(repo_name)s\" is being created, you will be redirected "
-"when this process is finished.repo_name"
-msgstr ""
-
-msgid ""
-"We're sorry but error occurred during this operation. Please check your "
-"Kallithea server logs, or contact administrator."
-msgstr ""
-
-msgid "%s Repository Settings"
-msgstr ""
-
-msgid "Extra Fields"
-msgstr ""
-
-msgid "Caches"
-msgstr ""
-
 msgid "Remote"
 msgstr "远程"
 
@@ -1840,9 +1061,6 @@ msgstr "统计"
 
 msgid "Parent"
 msgstr "上级组"
-
-msgid "Set"
-msgstr ""
 
 msgid "Manually set this repository as a fork of another from the list."
 msgstr "从列表中手动设置这个版本库复刻自另一版本库"
@@ -1870,9 +1088,6 @@ msgstr "确认解锁版本库"
 msgid "Unlock Repository"
 msgstr "公共版本库"
 
-msgid "Locked by %s on %s"
-msgstr ""
-
 msgid "Confirm to lock repository."
 msgstr "确认锁定版本库"
 
@@ -1882,34 +1097,11 @@ msgstr "公共版本库"
 msgid "Repository is not locked"
 msgstr "版本库未锁定"
 
-msgid ""
-"Force locking on the repository. Works only when anonymous access is "
-"disabled. Triggering a pull locks the repository.  The user who is "
-"pulling locks the repository; only the user who pulled and locked it can "
-"unlock it by doing a push."
-msgstr ""
-
 msgid "Confirm to delete this repository: %s"
 msgstr "确认删除版本库：%s"
 
 msgid "Delete this Repository"
 msgstr "[删除]版本库"
-
-msgid "This repository has %s fork"
-msgid_plural "This repository has %s forks"
-msgstr[0] ""
-
-msgid "Detach forks"
-msgstr ""
-
-msgid "Delete forks"
-msgstr ""
-
-msgid ""
-"The deleted repository will be moved away and hidden until the "
-"administrator expires it. The administrator can both permanently delete "
-"it or restore it."
-msgstr ""
 
 msgid "Invalidate Repository Cache"
 msgstr "清除版本库缓存"
@@ -1931,27 +1123,6 @@ msgstr "键"
 msgid "Active"
 msgstr "启用"
 
-msgid "Label"
-msgstr ""
-
-msgid "Confirm to delete this field: %s"
-msgstr ""
-
-msgid "New field key"
-msgstr ""
-
-msgid "New field label"
-msgstr ""
-
-msgid "Enter short label"
-msgstr ""
-
-msgid "New field description"
-msgstr ""
-
-msgid "Enter description of a field"
-msgstr ""
-
 msgid "Extra fields are disabled."
 msgstr "禁用注册"
 
@@ -1970,26 +1141,8 @@ msgstr "[远程拉取]到版本库"
 msgid "Confirm to pull changes from remote repository."
 msgstr "确认从远程拉取修订集"
 
-msgid "This repository does not have a remote repository URL."
-msgstr ""
-
 msgid "Permanent Repository ID"
 msgstr "私有版本库"
-
-msgid "What is that?"
-msgstr ""
-
-msgid "URL by id"
-msgstr ""
-
-msgid ""
-"In case this repository is renamed or moved into another group the "
-"repository URL changes.\n"
-"                               Using the above permanent URL guarantees "
-"that this repository always will be accessible on that URL.\n"
-"                               This is useful for CI systems, or any "
-"other cases that you need to hardcode the URL into a 3rd party service."
-msgstr ""
 
 msgid "Remote repository"
 msgstr "[创建]版本库"
@@ -1997,25 +1150,11 @@ msgstr "[创建]版本库"
 msgid "Repository URL"
 msgstr "版本库"
 
-msgid ""
-"Optional: URL of a remote repository. If set, the repository can be "
-"pulled from this URL."
-msgstr ""
-
 msgid "Default revision for files page, downloads, whoosh and readme"
 msgstr "文件浏览、下载、whoosh和README的默认修订版本"
 
-msgid "Type name of user"
-msgstr ""
-
 msgid "Change owner of this repository."
 msgstr "修改这个版本库的所有者。"
-
-msgid "Processed commits"
-msgstr ""
-
-msgid "Processed progress"
-msgstr ""
 
 msgid "Reset Statistics"
 msgstr "启用统计"
@@ -2026,83 +1165,20 @@ msgstr "确认移除当前统计"
 msgid "Repositories Administration"
 msgstr "版本库管理员"
 
-msgid "State"
-msgstr ""
-
 msgid "Settings Administration"
 msgstr "系统设置"
-
-msgid "VCS"
-msgstr ""
-
-msgid "Remap and Rescan"
-msgstr ""
-
-msgid "Visual"
-msgstr ""
 
 msgid "Hooks"
 msgstr "钩子"
 
-msgid "Full Text Search"
-msgstr ""
-
-msgid "System Info"
-msgstr ""
-
-msgid "Send test email to"
-msgstr ""
-
 msgid "Send"
 msgstr "发送"
-
-msgid "Site branding"
-msgstr ""
-
-msgid "Set a custom title for your Kallithea Service."
-msgstr ""
-
-msgid "HTTP authentication realm"
-msgstr ""
-
-msgid "HTML/JavaScript/CSS customization block"
-msgstr ""
-
-msgid ""
-"HTML (possibly with                         JavaScript and/or CSS) that "
-"will be added to the bottom                         of every page. This "
-"can be used for web analytics                         systems, but also "
-"to                         perform instance-specific customizations like "
-"adding a                         project banner at the top of every page."
-msgstr ""
-
-msgid "ReCaptcha public key"
-msgstr ""
-
-msgid "Public key for reCaptcha system."
-msgstr ""
-
-msgid "ReCaptcha private key"
-msgstr ""
-
-msgid ""
-"Private key for reCaptcha system. Setting this value will enable captcha "
-"on registration."
-msgstr ""
 
 msgid "Save Settings"
 msgstr "保存设置"
 
-msgid "Built-in Mercurial Hooks (Read-Only)"
-msgstr ""
-
 msgid "Custom Hooks"
 msgstr "自定义钩子"
-
-msgid ""
-"Hooks can be used to trigger actions on certain events such as push / "
-"pull. They can trigger Python functions or external applications."
-msgstr ""
 
 msgid "Failed to remove hook"
 msgstr "移除钩子失败"
@@ -2110,86 +1186,11 @@ msgstr "移除钩子失败"
 msgid "Rescan options"
 msgstr "描述"
 
-msgid "Delete records of missing repositories"
-msgstr ""
-
-msgid ""
-"Check this option to remove all comments, pull requests and other records "
-"related to repositories that no longer exist in the filesystem."
-msgstr ""
-
-msgid "Invalidate cache for all repositories"
-msgstr ""
-
-msgid "Check this to reload data and clear cache keys for all repositories."
-msgstr ""
-
-msgid "Install Git hooks"
-msgstr ""
-
-msgid ""
-"Verify if Kallithea's Git hooks are installed for each repository. "
-"Current hooks will be updated to the latest version."
-msgstr ""
-
-msgid "Overwrite existing Git hooks"
-msgstr ""
-
-msgid ""
-"If installing Git hooks, overwrite any existing hooks, even if they do "
-"not seem to come from Kallithea. WARNING: This operation will destroy any "
-"custom git hooks you may have deployed by hand!"
-msgstr ""
-
-msgid "Rescan Repositories"
-msgstr ""
-
-msgid "Index build option"
-msgstr ""
-
-msgid "Build from scratch"
-msgstr ""
-
-msgid ""
-"This option completely reindexeses all of the repositories for proper "
-"fulltext search capabilities."
-msgstr ""
-
 msgid "Reindex"
 msgstr "重新索引"
 
-msgid "Checking for updates..."
-msgstr ""
-
-msgid "Kallithea version"
-msgstr ""
-
-msgid "Check for updates"
-msgstr ""
-
-msgid "Kallithea configuration file"
-msgstr ""
-
-msgid "Python version"
-msgstr ""
-
-msgid "Platform"
-msgstr ""
-
 msgid "Git version"
 msgstr "编辑权限"
-
-msgid "Git path"
-msgstr ""
-
-msgid "Upgrade info endpoint"
-msgstr ""
-
-msgid "Note: please make sure this server can access this URL"
-msgstr ""
-
-msgid "Python Packages"
-msgstr ""
 
 msgid "Show repository size after push"
 msgstr "推送后显示版本库大小"
@@ -2206,100 +1207,17 @@ msgstr "推送后更新版本库（hg update）"
 msgid "Mercurial extensions"
 msgstr "Mercurial扩展"
 
-msgid "Enable largefiles extension"
-msgstr ""
-
-msgid "Enable hgsubversion extension"
-msgstr ""
-
-msgid ""
-"Requires hgsubversion library to be installed. Enables cloning of remote "
-"Subversion repositories while converting them to Mercurial."
-msgstr ""
-
 msgid "Location of repositories"
 msgstr "创建版本库"
-
-msgid ""
-"Click to unlock. You must restart Kallithea in order to make this setting "
-"take effect."
-msgstr ""
-
-msgid ""
-"Filesystem location where repositories are stored. After changing this "
-"value, a restart and rescan of the repository folder are both required."
-msgstr ""
 
 msgid "General"
 msgstr "通用"
 
-msgid "Use repository extra fields"
-msgstr ""
-
-msgid "Allows storing additional customized fields per repository."
-msgstr ""
-
-msgid "Show Kallithea version"
-msgstr ""
-
-msgid ""
-"Shows or hides a version number of Kallithea displayed in the footer."
-msgstr ""
-
-msgid "Show user Gravatars"
-msgstr ""
-
-msgid ""
-"Gravatar URL allows you to use another avatar server application.\n"
-"                                                        The following "
-"variables of the URL will be replaced accordingly.\n"
-"                                                        {scheme}    "
-"'http' or 'https' sent from running Kallithea server,\n"
-"                                                        {email}     user "
-"email,\n"
-"                                                        {md5email}  md5 "
-"hash of the user email (like at gravatar.com),\n"
-"                                                        {size}      size "
-"of the image that is expected from the server application,\n"
-"                                                        {netloc}    "
-"network location/server host of running Kallithea server"
-msgstr ""
-
 msgid "Clone URL"
 msgstr "克隆地址"
 
-msgid ""
-"Schema of clone URL construction eg. '{scheme}://{user}@{netloc}/"
-"{repo}'.\n"
-"                                                    The following "
-"variables are available:\n"
-"                                                    {scheme} 'http' or "
-"'https' sent from running Kallithea server,\n"
-"                                                    {user}   current user "
-"username,\n"
-"                                                    {netloc} network "
-"location/server host of running Kallithea server,\n"
-"                                                    {repo}   full "
-"repository name,\n"
-"                                                    {repoid} ID of "
-"repository, can be used to construct clone-by-id"
-msgstr ""
-
 msgid "Repository page size"
 msgstr "版本库"
-
-msgid ""
-"Number of items displayed in the repository pages before pagination is "
-"shown."
-msgstr ""
-
-msgid "Admin page size"
-msgstr ""
-
-msgid ""
-"Number of items displayed in the admin pages grids before pagination is "
-"shown."
-msgstr ""
 
 msgid "Icons"
 msgstr "图标"
@@ -2316,49 +1234,14 @@ msgstr "显示公共版本库图标"
 msgid "Meta Tagging"
 msgstr "元标记"
 
-msgid ""
-"Parses meta tags from the repository description field and turns them "
-"into colored tags."
-msgstr ""
-
-msgid "Stylify recognised meta tags:"
-msgstr ""
-
-msgid "Add user group"
-msgstr ""
-
-msgid "User Groups"
-msgstr ""
-
-msgid "Add User Group"
-msgstr ""
-
-msgid "Short, optional description for this user group."
-msgstr ""
-
-msgid "%s user group settings"
-msgstr ""
-
 msgid "Show Members"
 msgstr "成员"
-
-msgid "User Group: %s"
-msgstr ""
 
 msgid "Members"
 msgstr "成员"
 
-msgid "Confirm to delete this user group: %s"
-msgstr ""
-
-msgid "Delete this user group"
-msgstr ""
-
 msgid "No members yet"
 msgstr "还没有成员"
-
-msgid "Chosen group members"
-msgstr ""
 
 msgid "Available members"
 msgstr "启用成员"
@@ -2372,56 +1255,17 @@ msgstr "添加用户"
 msgid "Users"
 msgstr "用户"
 
-msgid "Add User"
-msgstr ""
-
 msgid "Password confirmation"
 msgstr "确认密码"
 
-msgid "%s user settings"
-msgstr ""
-
-msgid "Emails"
-msgstr ""
-
-msgid "User: %s"
-msgstr ""
-
-msgid "Source of Record"
-msgstr ""
-
-msgid "Last Login"
-msgstr ""
-
-msgid "Member of User Groups"
-msgstr ""
-
 msgid "Confirm to delete this user: %s"
 msgstr "确认删除用户：%s"
-
-msgid "Delete this user"
-msgstr ""
-
-msgid "Inherited from %s"
-msgstr ""
-
-msgid "Name in Source of Record"
-msgstr ""
 
 msgid "New password confirmation"
 msgstr "确认新密码"
 
 msgid "Users Administration"
 msgstr "用户管理员"
-
-msgid "Auth Type"
-msgstr ""
-
-msgid "Server instance: %s"
-msgstr ""
-
-msgid "Support"
-msgstr ""
 
 msgid "Mercurial repository"
 msgstr "Mercurial版本库"
@@ -2441,12 +1285,6 @@ msgstr "修订记录"
 msgid "Files"
 msgstr "浏览"
 
-msgid "Show Pull Requests for %s"
-msgstr ""
-
-msgid "Pull Requests"
-msgstr ""
-
 msgid "Options"
 msgstr "选项"
 
@@ -2459,59 +1297,14 @@ msgstr "比较显示"
 msgid "Search"
 msgstr "搜索"
 
-msgid "Unlock"
-msgstr ""
-
-msgid "Lock"
-msgstr ""
-
-msgid "Follow"
-msgstr ""
-
-msgid "Unfollow"
-msgstr ""
-
 msgid "Fork"
 msgstr "复刻"
-
-msgid "Create Pull Request"
-msgstr ""
-
-msgid "Switch To"
-msgstr ""
-
-msgid "No matches found"
-msgstr ""
-
-msgid "Show recent activity"
-msgstr ""
 
 msgid "Public journal"
 msgstr "公共日志"
 
-msgid "Show public gists"
-msgstr ""
-
-msgid "Gists"
-msgstr ""
-
-msgid "All Public Gists"
-msgstr ""
-
-msgid "My Public Gists"
-msgstr ""
-
-msgid "My Private Gists"
-msgstr ""
-
-msgid "Search in repositories"
-msgstr ""
-
 msgid "My Pull Requests"
 msgstr "拉取请求"
-
-msgid "Not Logged In"
-msgstr ""
 
 msgid "Login to Your Account"
 msgstr "登录"
@@ -2525,19 +1318,8 @@ msgstr "还没有帐号？"
 msgid "Log Out"
 msgstr "退出"
 
-msgid "Parent rev."
-msgstr ""
-
-msgid "Child rev."
-msgstr ""
-
 msgid "Inherit defaults"
 msgstr "版本库默认设置"
-
-msgid ""
-"Select to inherit global settings, IP whitelist and permissions from the "
-"%s."
-msgstr ""
 
 msgid "default permissions"
 msgstr "默认权限"
@@ -2545,38 +1327,17 @@ msgstr "默认权限"
 msgid "Create repositories"
 msgstr "创建版本库"
 
-msgid "Select this option to allow repository creation for this user"
-msgstr ""
-
-msgid "Create user groups"
-msgstr ""
-
-msgid "Select this option to allow user group creation for this user"
-msgstr ""
-
 msgid "Fork repositories"
 msgstr "复刻版本库"
 
-msgid "Select this option to allow repository forking for this user"
-msgstr ""
-
 msgid "Show"
 msgstr "显示"
-
-msgid "No permissions defined yet"
-msgstr ""
 
 msgid "Permission"
 msgstr "权限"
 
 msgid "Edit Permission"
 msgstr "编辑权限"
-
-msgid "No permission defined"
-msgstr ""
-
-msgid "Retry"
-msgstr ""
 
 msgid "Submitting ..."
 msgstr "提交中……"
@@ -2596,23 +1357,8 @@ msgstr "开始关注该版本库"
 msgid "Group"
 msgstr "组"
 
-msgid "Loading ..."
-msgstr ""
-
-msgid "loading ..."
-msgstr ""
-
-msgid "Search truncated"
-msgstr ""
-
-msgid "No matching files"
-msgstr ""
-
 msgid "Open New Pull Request from {0}"
 msgstr "[评论]拉取请求"
-
-msgid "Open New Pull Request for {0} &rarr; {1}"
-msgstr ""
 
 msgid "Show Selected Changesets {0} &rarr; {1}"
 msgstr "显示选中的修订集 {0} &rarr; {1}"
@@ -2628,15 +1374,6 @@ msgstr "文件差异"
 
 msgid "No revisions"
 msgstr "修订"
-
-msgid "Type name of user or member to grant permission"
-msgstr ""
-
-msgid "Failed to revoke permission"
-msgstr ""
-
-msgid "Confirm to revoke permission for {0}: {1} ?"
-msgstr ""
 
 msgid "Select changeset"
 msgstr "选择修订集"
@@ -2672,29 +1409,11 @@ msgstr "清除选择"
 msgid "Go to tip of repository"
 msgstr "确认锁定版本库"
 
-msgid "Compare fork with %s"
-msgstr ""
-
-msgid "Compare fork with parent repository (%s)"
-msgstr ""
-
 msgid "Branch filter:"
 msgstr "过滤"
 
 msgid "There are no changes yet"
 msgstr "没有任何变更"
-
-msgid "Removed"
-msgstr ""
-
-msgid "Changed"
-msgstr ""
-
-msgid "Added"
-msgstr ""
-
-msgid "Affected %s files"
-msgstr ""
 
 msgid "First (oldest) changeset in this list"
 msgstr "此列表中首个（最旧）修订集"
@@ -2715,20 +1434,8 @@ msgstr ""
 msgid "Changeset status: %s by %s"
 msgstr "修订集状态：%s 由 %s"
 
-msgid "Expand commit message"
-msgstr ""
-
 msgid "%s comments"
 msgstr "%d条评论"
-
-msgid "Bookmark %s"
-msgstr ""
-
-msgid "Tag %s"
-msgstr ""
-
-msgid "Branch %s"
-msgstr ""
 
 msgid "%s Changeset"
 msgstr "%s 修订集"
@@ -2736,23 +1443,11 @@ msgstr "%s 修订集"
 msgid "Changeset status"
 msgstr "修订集状态"
 
-msgid "Raw diff"
-msgstr ""
-
-msgid "Patch diff"
-msgstr ""
-
-msgid "Download diff"
-msgstr ""
-
 msgid "Merge"
 msgstr "合并"
 
 msgid "Grafted from:"
 msgstr "创建于"
-
-msgid "Transplanted from:"
-msgstr ""
 
 msgid "Replaced by:"
 msgstr "创建于"
@@ -2767,9 +1462,6 @@ msgstr[0] "修改%s个文件"
 msgid "%s file changed with %s insertions and %s deletions"
 msgid_plural "%s files changed with %s insertions and %s deletions"
 msgstr[0] "修改%s个文件包括%s行插入和%s行删除"
-
-msgid "Show full diff anyway"
-msgstr ""
 
 msgid "comment"
 msgstr "评论"
@@ -2794,9 +1486,6 @@ msgstr "在文本中使用 @用户名 以发送通知到该Kallithea用户"
 
 msgid "Set changeset status"
 msgstr "设置修订集状态"
-
-msgid "Vote for pull request status"
-msgstr ""
 
 msgid "No change"
 msgstr "无变更"
@@ -2827,10 +1516,6 @@ msgid "%d inline"
 msgid_plural "%d inline"
 msgstr[0] "(%d内嵌)"
 
-msgid "%d general"
-msgid_plural "%d general"
-msgstr[0] ""
-
 msgid "%s Changesets"
 msgstr "%s 修订集"
 
@@ -2839,9 +1524,6 @@ msgstr "修订集状态：%s"
 
 msgid "Files affected"
 msgstr "影响文件"
-
-msgid "No file before"
-msgstr ""
 
 msgid "File before"
 msgstr "文件已删除"
@@ -2864,34 +1546,8 @@ msgstr "无文件名"
 msgid "File after"
 msgstr "文件已添加"
 
-msgid "Show full diff for this file"
-msgstr ""
-
-msgid "Show full side-by-side diff for this file"
-msgstr ""
-
-msgid "Show inline comments"
-msgstr ""
-
 msgid "No changesets"
 msgstr "无修订集"
-
-msgid "Criss cross merge situation with multiple merge ancestors detected!"
-msgstr ""
-
-msgid ""
-"Please merge the target branch to your branch before creating a pull "
-"request."
-msgstr ""
-
-msgid "Merge Ancestor"
-msgstr ""
-
-msgid "Show merge diff"
-msgstr ""
-
-msgid "is"
-msgstr ""
 
 msgid "%s changesets"
 msgstr "%s 修订集"
@@ -2899,30 +1555,12 @@ msgstr "%s 修订集"
 msgid "behind"
 msgstr "重新索引"
 
-msgid "%s Compare"
-msgstr ""
-
-msgid "Compare Revisions"
-msgstr ""
-
-msgid "Swap"
-msgstr ""
-
-msgid "Compare revisions, branches, bookmarks, or tags."
-msgstr ""
-
 msgid "Showing %s commit"
 msgid_plural "Showing %s commits"
 msgstr[0] "显示%s个提交"
 
-msgid "Show full diff"
-msgstr ""
-
 msgid "Public repository"
 msgstr "公共版本库"
-
-msgid "Repository creation in progress..."
-msgstr ""
 
 msgid "No changesets yet"
 msgstr "尚无任何修订集"
@@ -2932,9 +1570,6 @@ msgstr "订阅%s的RSS"
 
 msgid "Subscribe to %s atom feed"
 msgstr "订阅%s的Atom"
-
-msgid "Creating"
-msgstr ""
 
 msgid "Mention in Comment on Changeset \"%s\""
 msgstr "%(user)s 已评论修订集在 %(age)s"
@@ -2948,53 +1583,20 @@ msgstr "修订集"
 msgid "branch"
 msgstr "分支"
 
-msgid "by"
-msgstr ""
-
 msgid "Status change:"
 msgstr "文件已更改"
 
 msgid "The pull request has been closed."
 msgstr "版本库未锁定"
 
-msgid "Hello %s"
-msgstr ""
-
 msgid "We have received a request to reset the password for your account."
 msgstr "我们收到重置你用户密码的请求。"
-
-msgid ""
-"This account is however managed outside this system and the password "
-"cannot be changed here."
-msgstr ""
-
-msgid "To set a new password, click the following link"
-msgstr ""
-
-msgid ""
-"Should you not be able to use the link above, please type the following "
-"code into the password reset form"
-msgstr ""
-
-msgid ""
-"If it weren't you who requested the password reset, just disregard this "
-"message."
-msgstr ""
 
 msgid "Mention on Pull Request %s \"%s\" by %s"
 msgstr "[评论]拉取请求"
 
-msgid "Added as Reviewer of Pull Request %s \"%s\" by %s"
-msgstr ""
-
 msgid "Pull request"
 msgstr "拉取请求#%s"
-
-msgid "from"
-msgstr ""
-
-msgid "to"
-msgstr ""
 
 msgid "Mention in Comment on Pull Request %s \"%s\""
 msgstr "[评论]拉取请求"
@@ -3008,50 +1610,20 @@ msgstr "[评论]拉取请求"
 msgid "Full Name"
 msgstr "组名"
 
-msgid "%s File side-by-side diff"
-msgstr ""
-
 msgid "File diff"
 msgstr "文件差异"
-
-msgid "%s File Diff"
-msgstr ""
-
-msgid "%s Files"
-msgstr ""
-
-msgid "%s Files Add"
-msgstr ""
-
-msgid "Add New File"
-msgstr ""
 
 msgid "Location"
 msgstr "位置"
 
-msgid "Enter filename..."
-msgstr ""
-
 msgid "or"
 msgstr "或者"
-
-msgid "Upload File"
-msgstr ""
-
-msgid "Create New File"
-msgstr ""
 
 msgid "New file type"
 msgstr "未知包类型"
 
-msgid "Commit Message"
-msgstr ""
-
 msgid "Commit Changes"
 msgstr "提交修改"
-
-msgid "Search File List"
-msgstr ""
 
 msgid "Loading file list..."
 msgstr "加载文件列表..."
@@ -3068,57 +1640,12 @@ msgstr "最后修改于"
 msgid "Last Committer"
 msgstr "最后提交者"
 
-msgid "%s Files Delete"
-msgstr ""
-
-msgid "Delete file"
-msgstr ""
-
-msgid "%s File Edit"
-msgstr ""
-
-msgid "Edit file"
-msgstr ""
-
-msgid "Show Annotation"
-msgstr ""
-
-msgid "Download as Raw"
-msgstr ""
-
-msgid "Source"
-msgstr ""
-
 msgid "%s author"
 msgid_plural "%s authors"
 msgstr[0] "%s个作者"
 
-msgid "Diff to Revision"
-msgstr ""
-
-msgid "Show at Revision"
-msgstr ""
-
-msgid "Show Full History"
-msgstr ""
-
-msgid "Show Authors"
-msgstr ""
-
-msgid "Show Source"
-msgstr ""
-
 msgid "Edit on Branch: %s"
 msgstr "已经删除分支%s"
-
-msgid "Editing binary files not allowed"
-msgstr ""
-
-msgid "Editing files allowed only when on branch head revision"
-msgstr ""
-
-msgid "Deleting files allowed only when on branch head revision"
-msgstr ""
 
 msgid "Binary file (%s)"
 msgstr "二进制文件（%s）"
@@ -3126,17 +1653,8 @@ msgstr "二进制文件（%s）"
 msgid "File is too big to display."
 msgstr "文件过大，不能显示"
 
-msgid "Show full annotation anyway."
-msgstr ""
-
-msgid "Show as raw."
-msgstr ""
-
 msgid "annotation"
 msgstr "显示注释"
-
-msgid "Go Back"
-msgstr ""
 
 msgid "No files at given path"
 msgstr "指定的路径中没有文件"
@@ -3149,9 +1667,6 @@ msgstr "关注者"
 
 msgid "Started following -"
 msgstr "开始关注 -"
-
-msgid "Fork repository %s"
-msgstr ""
 
 msgid "Fork name"
 msgstr "复刻名称"
@@ -3174,17 +1689,11 @@ msgstr "克隆后更新"
 msgid "Checkout source after making a clone"
 msgstr "完成克隆后检出源代码"
 
-msgid "Fork this Repository"
-msgstr ""
-
 msgid "%s Forks"
 msgstr "%s个复刻"
 
 msgid "Forks"
 msgstr "复刻"
-
-msgid "Forked"
-msgstr ""
 
 msgid "There are no forks yet"
 msgstr "无复刻"
@@ -3194,9 +1703,6 @@ msgstr "订阅日志ATOM"
 
 msgid "RSS journal feed"
 msgstr "订阅日志RSS"
-
-msgid "My Repositories"
-msgstr ""
 
 msgid "No entries yet"
 msgstr "没有条目"
@@ -3213,47 +1719,14 @@ msgstr "新建拉取请求"
 msgid "Title"
 msgstr "标题"
 
-msgid "Summarize the changes - or leave empty"
-msgstr ""
-
-msgid "Write a short description on this pull request"
-msgstr ""
-
-msgid "Changeset flow"
-msgstr ""
-
-msgid "Origin repository"
-msgstr ""
-
 msgid "Revision"
 msgstr "修订"
-
-msgid "Destination repository"
-msgstr ""
 
 msgid "No entries"
 msgstr "没有条目"
 
 msgid "Vote"
 msgstr "移除"
-
-msgid "Age"
-msgstr ""
-
-msgid "From"
-msgstr ""
-
-msgid "To"
-msgstr ""
-
-msgid "You voted: %s"
-msgstr ""
-
-msgid "You didn't vote"
-msgstr ""
-
-msgid "(no title)"
-msgstr ""
 
 msgid "Closed"
 msgstr "已关闭"
@@ -3276,45 +1749,11 @@ msgstr "拉取请求#%s"
 msgid "Summarize the changes"
 msgstr "提交修改"
 
-msgid "Voting Result"
-msgstr ""
-
-msgid "Pull request status calculated from votes"
-msgstr ""
-
-msgid "Origin"
-msgstr ""
-
 msgid "on"
 msgstr "无"
 
-msgid "Target"
-msgstr ""
-
-msgid ""
-"This is just a range of changesets and doesn't have a target or a real "
-"merge ancestor."
-msgstr ""
-
-msgid "Pull changes"
-msgstr ""
-
 msgid "Next iteration"
 msgstr "注册"
-
-msgid "Current revision - no change"
-msgstr ""
-
-msgid ""
-"Pull request iterations do not change content once created. Select a "
-"revision to create a new iteration."
-msgstr ""
-
-msgid "Save Changes"
-msgstr ""
-
-msgid "Create New Iteration with Changes"
-msgstr ""
 
 msgid "Cancel Changes"
 msgstr "无变更"
@@ -3325,23 +1764,11 @@ msgstr "%d个检视者"
 msgid "Remove reviewer"
 msgstr "检视者"
 
-msgid "Type name of reviewer to add"
-msgstr ""
-
 msgid "Potential Reviewers"
 msgstr "%d个检视者"
 
-msgid "Click to add the repository owner as reviewer:"
-msgstr ""
-
 msgid "Pull Request Content"
 msgstr "拉取请求"
-
-msgid "Common ancestor"
-msgstr ""
-
-msgid "%s Pull Requests"
-msgstr ""
 
 msgid "Pull Requests from '%s'"
 msgstr "拉取请求#%s"
@@ -3355,15 +1782,6 @@ msgstr "新建拉取请求"
 msgid "Show Pull Requests to %s"
 msgstr "拉取请求#%s"
 
-msgid "Show Pull Requests from '%s'"
-msgstr ""
-
-msgid "Hide closed pull requests (only show open pull requests)"
-msgstr ""
-
-msgid "Show closed pull requests (in addition to open pull requests)"
-msgstr ""
-
 msgid "Pull Requests Created by Me"
 msgstr "拉取请求检视人员"
 
@@ -3372,9 +1790,6 @@ msgstr "拉取请求检视人员"
 
 msgid "Pull Requests I Participate In"
 msgstr "我参与的"
-
-msgid "%s Search"
-msgstr ""
 
 msgid "Search in All Repositories"
 msgstr "在所有的版本库中搜索"
@@ -3397,26 +1812,11 @@ msgstr "文件名"
 msgid "Permission denied"
 msgstr "权限不足"
 
-msgid "%s Statistics"
-msgstr ""
-
-msgid "%s ATOM feed"
-msgstr ""
-
-msgid "%s RSS feed"
-msgstr ""
-
-msgid "Enable"
-msgstr ""
-
 msgid "Stats gathered: "
 msgstr "已收集的统计： "
 
 msgid "files"
 msgstr "文件"
-
-msgid "Show more"
-msgstr ""
 
 msgid "commits"
 msgstr "提交"
@@ -3484,9 +1884,6 @@ msgstr "勾选以下载包含子版本库的压缩包"
 msgid "With subrepos"
 msgstr "包括子版本库"
 
-msgid "Feed"
-msgstr ""
-
 msgid "Latest Changes"
 msgstr "文件已更改"
 
@@ -3501,9 +1898,6 @@ msgstr "推送新版本库"
 
 msgid "Existing repository?"
 msgstr "已有版本库？"
-
-msgid "Readme file from revision %s:%s"
-msgstr ""
 
 msgid "Download %s as %s"
 msgstr "下载%s为%s包"
