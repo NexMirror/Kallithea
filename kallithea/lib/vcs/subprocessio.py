@@ -205,9 +205,6 @@ class BufferedGenerator(object):
         except (GeneratorExit, StopIteration):
             pass
 
-    def __del__(self):
-        self.close()
-
     ####################
     # Threaded reader's infrastructure.
     ####################
@@ -426,6 +423,3 @@ class SubprocessIOChunker(object):
             os.close(self.inputstream)
         except:
             pass
-
-    def __del__(self):
-        self.close()
