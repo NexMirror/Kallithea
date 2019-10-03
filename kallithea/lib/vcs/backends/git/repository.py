@@ -144,7 +144,10 @@ class GitRepository(BaseRepository):
             else:
                 raise RepositoryError(tb_err)
 
-        return ''.join(p.output), ''.join(p.error)
+        try:
+            return ''.join(p.output), ''.join(p.error)
+        finally:
+            p.close()
 
     def run_git_command(self, cmd):
         opts = {}
