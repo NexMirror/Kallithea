@@ -153,7 +153,7 @@ class LdapClient(object):
         self.client.simple_bind(user, key)
         self.base_dn = base_dn
 
-    def __del__(self):
+    def close(self):
         self.client.unbind()
 
     def get_groups(self):
@@ -241,6 +241,9 @@ class LdapSync(object):
                 # TODO: handle somehow maybe..
                 pass
 
+    def close(self):
+        self.ldap_client.close()
+
 
 if __name__ == '__main__':
     sync = LdapSync()
@@ -253,3 +256,5 @@ if __name__ == '__main__':
         # we need to find a way to recognize the right exception (we always get
         # ResponseError with no error code so maybe by return msg (?)
         sync.update_memberships_from_ldap(gr)
+
+    sync.close()
