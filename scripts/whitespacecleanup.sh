@@ -2,7 +2,7 @@
 
 # Enforce some consistency in whitespace - just to avoid spurious whitespaces changes
 
-files=`hg mani | egrep -v '/fontello/|/email_templates/|(/lockfiles.py|^LICENSE-MERGELY.html|^docs/Makefile|^scripts/whitespacecleanup.sh|/(graph|mergely|native.history)\.js|/test_dump_html_mails.ref.html|\.png|\.gif|\.ico|\.pot|\.po|\.mo|\.tar\.gz|\.diff)$'`
+files=`hg mani | egrep -v '/fontello/|/email_templates/|(^LICENSE-MERGELY.html|^docs/Makefile|^scripts/whitespacecleanup.sh|/(graph|mergely|native.history)\.js|/test_dump_html_mails.ref.html|\.png|\.gif|\.ico|\.pot|\.po|\.mo|\.tar\.gz|\.diff)$'`
 
 sed -i "s/`printf '\r'`//g" $files
 sed -i -e "s,`printf '\t'`,    ,g" $files
