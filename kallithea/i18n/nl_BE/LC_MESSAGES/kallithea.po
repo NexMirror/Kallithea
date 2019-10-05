@@ -28,6 +28,12 @@ msgstr "Vergroot de diff context tot %(num)s lijnen"
 msgid "Such revision does not exist for this repository"
 msgstr "Deze revisie bestaat niet in deze repository"
 
+msgid "Cannot compare repositories of different types"
+msgstr "Kan geen repositories van verschillende types vergelijken"
+
+msgid "Cannot show empty diff"
+msgstr "Kan geen lege diff tonen"
+
 msgid "Cannot compare repositories without using common ancestor"
 msgstr ""
 "Kan geen repositories vergelijken zonder een gemeenschappelijke voorouder "
