@@ -25,6 +25,9 @@ msgstr "Toon witruimtes"
 msgid "Increase diff context to %(num)s lines"
 msgstr "Vergroot de diff context tot %(num)s lijnen"
 
+msgid "No permission to change status"
+msgstr "Geen toestemming om de status te veranderen"
+
 msgid "Such revision does not exist for this repository"
 msgstr "Deze revisie bestaat niet in deze repository"
 
@@ -80,6 +83,9 @@ msgstr "Veranderingen in repository %s"
 
 msgid "Click here to add new file"
 msgstr "Klik hier om een nieuw bestand toe te voegen"
+
+msgid "There are no files yet."
+msgstr "Er zijn nog geen bestanden."
 
 msgid "%s at %s"
 msgstr "%s op %s"
@@ -191,5 +197,98 @@ msgstr "Changeset"
 msgid "Special"
 msgstr "Bijzonder"
 
+msgid "SSH key successfully deleted"
+msgstr "SSH key succesvol verwijderd"
+
+msgid "An error occurred during creation of field: %r"
+msgstr "Er is een fout opgetreden tijdens het aanmaken van veld: %r"
+
+msgid "Changeset %s not found"
+msgstr "Changeset %s werd niet gevonden"
+
+msgid "SSH key %r not found"
+msgstr "SSH key %r werd niet gevonden"
+
+msgid "Add repos"
+msgstr "Repositories toevoegen"
+
+msgid "Fork of repository"
+msgstr "Fork van repository"
+
+msgid "Repository page size"
+msgstr "Repository paginagrootte"
+
+msgid "Open New Pull Request from {0}"
+msgstr "Open nieuwe pull request vanaf {0}"
+
+msgid "Show Selected Changesets {0} &rarr; {1}"
+msgstr "Toon geselecteerde changesets {0} &rarr; {1}"
+
 msgid "Select changeset"
 msgstr "Selecteer een changeset"
+
+msgid "Specify changeset"
+msgstr "Specifieer een changeset"
+
+msgid "Changeset status: %s by %s"
+msgstr "Changeset status: %s door %s"
+
+msgid "%s comments"
+msgstr "%s opmerkingen"
+
+msgid "comment"
+msgstr "opmerking"
+
+msgid "on pull request"
+msgstr "op pull request"
+
+msgid "on this changeset"
+msgstr "op deze changeset"
+
+msgid "Status change"
+msgstr "Statuswijziging"
+
+msgid "Set changeset status"
+msgstr "Zet changeset status"
+
+msgid "Finish pull request"
+msgstr "Werk pull request af"
+
+msgid "Close"
+msgstr "Sluit"
+
+msgid "Unknown operation: %r"
+msgstr "Ongekende operatie: %r"
+
+msgid "No file after"
+msgstr "Geen bestand hierna"
+
+msgid "Comment on Changeset \"%s\""
+msgstr "Opmerking op changeset \"%s\""
+
+msgid "Changeset on"
+msgstr "Changeset in"
+
+msgid "branch"
+msgstr "branch"
+
+msgid "Status change:"
+msgstr "Statuswijziging:"
+
+msgid "Pull request"
+msgstr "Pull request"
+
+msgid "Comment on Pull Request %s \"%s\""
+msgstr "Opmerking bij pull request %s \"%s\""
+
+msgid "Commit Changes"
+msgstr "Committeer wijzigingen"
+
+msgid "Cancel Changes"
+msgstr "Annuleer wijzigingen"
+
+msgid "Pull Requests from '%s'"
+msgstr "Pull requests vanaf '%s'"
+
+msgid "Latest Changes"
+msgstr "Laatste wijzigingen"
