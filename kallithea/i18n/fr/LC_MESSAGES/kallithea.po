@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "POT-Creation-Date: 2019-05-04 21:13+0200\n"
-"PO-Revision-Date: 2019-09-29 10:55+0000\n"
-"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
+"PO-Revision-Date: 2019-10-13 16:52+0000\n"
+"Last-Translator: Nathan <bonnemainsnathan@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/kallithea/stable/"
 "fr/>\n"
 "Language: fr\n"
@@ -443,7 +443,7 @@ msgid "No additional changesets found for iterating on this pull request."
 msgstr "Pas de changeset additionnel trouvé pour cette requête de pull."
 
 #: kallithea/controllers/pullrequests.py:557
-#, fuzzy, python-format
+#, python-format
 msgid "Note: Branch %s has another head: %s."
 msgstr "Note : La branche %s a une autre tête : %s."
 
