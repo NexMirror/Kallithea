@@ -15,7 +15,8 @@
 kallithea.lib.middleware.wrapper
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Wrap app to measure request and response time ... until the response starts.
+Wrap app to measure request and response time ... all the way to the response
+WSGI iterator has been closed.
 
 This file was forked by the Kallithea project in July 2014.
 Original author and date, and relevant copyright and licensing information is below:
@@ -44,6 +45,26 @@ class Meter:
         return time.time() - self._start
 
 
+class ResultIter:
+
+    def __init__(self, result, meter, description):
+        self._result_close = getattr(result, 'close', None) or (lambda: None)
+        self._next = iter(result).next
+        self._meter = meter
+        self._description = description
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        chunk = self._next()
+        return chunk
+
+    def close(self):
+        self._result_close()
+        log.info("%s responded after %.3fs", self._description, self._meter.duration())
+
+
 class RequestWrapper(object):
 
     def __init__(self, app, config):
@@ -60,4 +81,4 @@ class RequestWrapper(object):
             result = self.application(environ, start_response)
         finally:
             log.info("%s responding after %.3fs", description, meter.duration())
-        return result
+        return ResultIter(result, meter, description)
