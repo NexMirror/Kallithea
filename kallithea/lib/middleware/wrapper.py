@@ -15,7 +15,7 @@
 kallithea.lib.middleware.wrapper
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-request time measuring app
+Wrap app to measure request and response time ... until the response starts.
 
 This file was forked by the Kallithea project in July 2014.
 Original author and date, and relevant copyright and licensing information is below:
@@ -32,6 +32,18 @@ from kallithea.lib.base import _get_access_path, _get_ip_addr
 from kallithea.lib.utils2 import safe_unicode
 
 
+log = logging.getLogger(__name__)
+
+
+class Meter:
+
+    def __init__(self):
+        self._start = time.time()
+
+    def duration(self):
+        return time.time() - self._start
+
+
 class RequestWrapper(object):
 
     def __init__(self, app, config):
@@ -39,12 +51,13 @@ class RequestWrapper(object):
         self.config = config
 
     def __call__(self, environ, start_response):
-        start = time.time()
+        meter = Meter()
+        description = "Request from %s for %s" % (
+            _get_ip_addr(environ),
+            safe_unicode(_get_access_path(environ)),
+        )
         try:
-            return self.application(environ, start_response)
+            result = self.application(environ, start_response)
         finally:
-            log = logging.getLogger('kallithea.' + self.__class__.__name__)
-            log.info('IP: %s Request to %s time: %.3fs' % (
-                _get_ip_addr(environ),
-                safe_unicode(_get_access_path(environ)), time.time() - start)
-            )
+            log.info("%s responding after %.3fs", description, meter.duration())
+        return result

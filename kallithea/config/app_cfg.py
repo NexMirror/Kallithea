@@ -39,6 +39,7 @@ from kallithea.lib.middleware.https_fixup import HttpsFixup
 from kallithea.lib.middleware.permanent_repo_url import PermanentRepoUrl
 from kallithea.lib.middleware.simplegit import SimpleGit
 from kallithea.lib.middleware.simplehg import SimpleHg
+from kallithea.lib.middleware.wrapper import RequestWrapper
 from kallithea.lib.utils import check_git_version, load_rcextensions, make_ui, set_app_settings, set_indexer_config, set_vcs_config
 from kallithea.lib.utils2 import str2bool
 
@@ -199,6 +200,11 @@ def setup_application(app):
         app = HttpsFixup(app, config)
 
     app = PermanentRepoUrl(app, config)
+
+    # Optional and undocumented wrapper - gives more verbose request/response logging, but has a slight overhead
+    if str2bool(config.get('use_wsgi_wrapper')):
+        app = RequestWrapper(app, config)
+
     return app
 
 
