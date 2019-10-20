@@ -26,6 +26,12 @@
   }
 }
 
+.select2-chosen,
+.select2-choice > span:first-child,
+.select2-container .select2-choices .select2-search-field input {
+    padding: 0 12px;
+}
+
 // Style these like Bootstrap .dropdown-menu
 .branch-switcher-dropdown.select2-drop.select2-drop-active,
 .repo-switcher-dropdown.select2-drop.select2-drop-active {
@@ -65,4 +71,8 @@
 /* fix select2 input style if input-sm is used */
 .select2-container.input-sm input {
   .input-sm;
+}
+
+.form-inline .select2-container.form-control {
+  display: inline-block;
 }

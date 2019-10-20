@@ -104,7 +104,7 @@ ${self.repo_context_bar('summary')}
 
             <div class="form-group">
               <label>${_('Download')}:</label>
-              <div>
+              <div class="form-inline">
                 %if len(c.db_repo_scm_instance.revisions) == 0:
                   ${_('There are no downloads yet')}
                 %elif not c.enable_downloads:
@@ -116,7 +116,7 @@ ${self.repo_context_bar('summary')}
                     <span id="${'zip_link'}">
                         <a class="btn btn-default btn-sm" href="${h.url('files_archive_home',repo_name=c.db_repo.repo_name,fname='tip.zip')}"><i class="icon-file-zip"></i>${_('Download as zip')}</a>
                     </span>
-                    ${h.hidden('download_options')}
+                    ${h.hidden('download_options', class_='form-control')}
                     <span>
                       <label data-toggle="tooltip" title="${_('Check this to download archive with subrepos')}">
                           <input id="archive_subrepos" type="checkbox" name="subrepos" />
