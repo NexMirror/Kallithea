@@ -48,7 +48,7 @@ from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.exceptions import RepositoryError
 from kallithea.lib.vcs.nodes import FileNode
 from kallithea.lib.vcs.utils.lazy import LazyProperty
-from kallithea.model.db import CacheInvalidation, PullRequest, RepoGroup, Repository, Session, Ui, User, UserFollowing, UserLog
+from kallithea.model.db import PullRequest, RepoGroup, Repository, Session, Ui, User, UserFollowing, UserLog
 
 
 log = logging.getLogger(__name__)
@@ -217,9 +217,9 @@ class ScmModel(object):
         :param repo_name: the repo for which caches should be marked invalid
         """
         log.debug("Marking %s as invalidated and update cache", repo_name)
-        CacheInvalidation.set_invalidate(repo_name)
         repo = Repository.get_by_repo_name(repo_name)
         if repo is not None:
+            repo.set_invalidate()
             repo.update_changeset_cache()
 
     def toggle_following_repo(self, follow_repo_id, user_id):
