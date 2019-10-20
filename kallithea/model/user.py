@@ -36,7 +36,6 @@ from sqlalchemy.exc import DatabaseError
 from tg import config
 from tg.i18n import ugettext as _
 
-from kallithea.lib.caching_query import FromCache
 from kallithea.lib.exceptions import DefaultUserException, UserOwnsReposException
 from kallithea.lib.utils2 import generate_api_key, get_current_authuser
 from kallithea.model.db import Permission, User, UserEmailMap, UserIpMap, UserToPerm
@@ -49,11 +48,8 @@ log = logging.getLogger(__name__)
 class UserModel(object):
     password_reset_token_lifetime = 86400 # 24 hours
 
-    def get(self, user_id, cache=False):
+    def get(self, user_id):
         user = User.query()
-        if cache:
-            user = user.options(FromCache("sql_cache_short",
-                                          "get_user_%s" % user_id))
         return user.get(user_id)
 
     def get_user(self, user):
@@ -203,7 +199,7 @@ class UserModel(object):
     def update(self, user_id, form_data, skip_attrs=None):
         from kallithea.lib.auth import get_crypt_password
         skip_attrs = skip_attrs or []
-        user = self.get(user_id, cache=False)
+        user = self.get(user_id)
         if user.is_default_user:
             raise DefaultUserException(
                             _("You can't edit this user since it's "

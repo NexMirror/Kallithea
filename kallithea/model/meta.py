@@ -18,8 +18,6 @@ from beaker import cache
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-from kallithea.lib import caching_query
-
 
 # Beaker CacheManager.  A home base for cache configurations.
 cache_manager = cache.CacheManager()
@@ -29,17 +27,12 @@ __all__ = ['Base', 'Session']
 #
 # SQLAlchemy session manager.
 #
-session_factory = sessionmaker(
-    query_cls=caching_query.query_callable(cache_manager),
-    expire_on_commit=True)
+session_factory = sessionmaker(expire_on_commit=True)
 Session = scoped_session(session_factory)
 
 # The base class for declarative schemas in db.py
 # Engine is injected when model.__init__.init_model() sets meta.Base.metadata.bind
 Base = declarative_base()
-
-# to use cache use this in query:
-#   .options(FromCache("sqlalchemy_cache_type", "cachekey"))
 
 
 # Define naming conventions for foreign keys, primary keys, indexes,

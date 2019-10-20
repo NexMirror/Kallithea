@@ -46,7 +46,6 @@ from webob.exc import HTTPNotFound
 
 import kallithea
 from kallithea.lib import ext_json
-from kallithea.lib.caching_query import FromCache
 from kallithea.lib.exceptions import DefaultUserException
 from kallithea.lib.utils2 import (Optional, ascii_bytes, aslist, get_changeset_safe, get_clone_url, remove_prefix, safe_bytes, safe_int, safe_str, str2bool,
                                   urlreadable)
@@ -278,13 +277,9 @@ class Setting(Base, BaseDbModel):
         return res
 
     @classmethod
-    def get_app_settings(cls, cache=False):
+    def get_app_settings(cls):
 
         ret = cls.query()
-
-        if cache:
-            ret = ret.options(FromCache("sql_cache_short", "get_hg_settings"))
-
         if ret is None:
             raise Exception('Could not get application settings !')
         settings = {}
@@ -295,7 +290,7 @@ class Setting(Base, BaseDbModel):
         return settings
 
     @classmethod
-    def get_auth_settings(cls, cache=False):
+    def get_auth_settings(cls):
         ret = cls.query() \
                 .filter(cls.app_settings_name.startswith('auth_')).all()
         fd = {}
@@ -304,7 +299,7 @@ class Setting(Base, BaseDbModel):
         return fd
 
     @classmethod
-    def get_default_repo_settings(cls, cache=False, strip_prefix=False):
+    def get_default_repo_settings(cls, strip_prefix=False):
         ret = cls.query() \
                 .filter(cls.app_settings_name.startswith('default_')).all()
         fd = {}
@@ -548,7 +543,7 @@ class User(Base, BaseDbModel):
         return user
 
     @classmethod
-    def get_by_username_or_email(cls, username_or_email, case_insensitive=True, cache=False):
+    def get_by_username_or_email(cls, username_or_email, case_insensitive=True):
         """
         For anything that looks like an email address, look up by the email address (matching
         case insensitively).
@@ -557,35 +552,24 @@ class User(Base, BaseDbModel):
         This assumes no normal username can have '@' symbol.
         """
         if '@' in username_or_email:
-            return User.get_by_email(username_or_email, cache=cache)
+            return User.get_by_email(username_or_email)
         else:
-            return User.get_by_username(username_or_email, case_insensitive=case_insensitive, cache=cache)
+            return User.get_by_username(username_or_email, case_insensitive=case_insensitive)
 
     @classmethod
-    def get_by_username(cls, username, case_insensitive=False, cache=False):
+    def get_by_username(cls, username, case_insensitive=False):
         if case_insensitive:
             q = cls.query().filter(sqlalchemy.func.lower(cls.username) == sqlalchemy.func.lower(username))
         else:
             q = cls.query().filter(cls.username == username)
-
-        if cache:
-            q = q.options(FromCache(
-                            "sql_cache_short",
-                            "get_user_%s" % _hash_key(username)
-                          )
-            )
         return q.scalar()
 
     @classmethod
-    def get_by_api_key(cls, api_key, cache=False, fallback=True):
+    def get_by_api_key(cls, api_key, fallback=True):
         if len(api_key) != 40 or not api_key.isalnum():
             return None
 
         q = cls.query().filter(cls.api_key == api_key)
-
-        if cache:
-            q = q.options(FromCache("sql_cache_short",
-                                    "get_api_key_%s" % api_key))
         res = q.scalar()
 
         if fallback and not res:
@@ -600,20 +584,12 @@ class User(Base, BaseDbModel):
     @classmethod
     def get_by_email(cls, email, cache=False):
         q = cls.query().filter(sqlalchemy.func.lower(cls.email) == sqlalchemy.func.lower(email))
-
-        if cache:
-            q = q.options(FromCache("sql_cache_short",
-                                    "get_email_key_%s" % email))
-
         ret = q.scalar()
         if ret is None:
             q = UserEmailMap.query()
             # try fetching in alternate email map
             q = q.filter(sqlalchemy.func.lower(UserEmailMap.email) == sqlalchemy.func.lower(email))
             q = q.options(joinedload(UserEmailMap.user))
-            if cache:
-                q = q.options(FromCache("sql_cache_short",
-                                        "get_email_map_key_%s" % email))
             ret = getattr(q.scalar(), 'user', None)
 
         return ret
@@ -651,8 +627,8 @@ class User(Base, BaseDbModel):
         return user
 
     @classmethod
-    def get_default_user(cls, cache=False):
-        user = User.get_by_username(User.DEFAULT_USER, cache=cache)
+    def get_default_user(cls):
+        user = User.get_by_username(User.DEFAULT_USER)
         if user is None:
             raise Exception('Missing default account!')
         return user
@@ -851,26 +827,16 @@ class UserGroup(Base, BaseDbModel):
         return super(UserGroup, cls).guess_instance(value, UserGroup.get_by_group_name)
 
     @classmethod
-    def get_by_group_name(cls, group_name, cache=False,
-                          case_insensitive=False):
+    def get_by_group_name(cls, group_name, case_insensitive=False):
         if case_insensitive:
             q = cls.query().filter(sqlalchemy.func.lower(cls.users_group_name) == sqlalchemy.func.lower(group_name))
         else:
             q = cls.query().filter(cls.users_group_name == group_name)
-        if cache:
-            q = q.options(FromCache(
-                            "sql_cache_short",
-                            "get_group_%s" % _hash_key(group_name)
-                          )
-            )
         return q.scalar()
 
     @classmethod
-    def get(cls, user_group_id, cache=False):
+    def get(cls, user_group_id):
         user_group = cls.query()
-        if cache:
-            user_group = user_group.options(FromCache("sql_cache_short",
-                                    "get_users_group_%s" % user_group_id))
         return user_group.get(user_group_id)
 
     def get_api_data(self, with_members=True):
@@ -1480,7 +1446,7 @@ class RepoGroup(Base, BaseDbModel):
         return super(RepoGroup, cls).guess_instance(value, RepoGroup.get_by_group_name)
 
     @classmethod
-    def get_by_group_name(cls, group_name, cache=False, case_insensitive=False):
+    def get_by_group_name(cls, group_name, case_insensitive=False):
         group_name = group_name.rstrip('/')
         if case_insensitive:
             gr = cls.query() \
@@ -1488,12 +1454,6 @@ class RepoGroup(Base, BaseDbModel):
         else:
             gr = cls.query() \
                 .filter(cls.group_name == group_name)
-        if cache:
-            gr = gr.options(FromCache(
-                            "sql_cache_short",
-                            "get_group_%s" % _hash_key(group_name)
-                            )
-            )
         return gr.scalar()
 
     @property

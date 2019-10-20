@@ -223,7 +223,7 @@ class BaseVCSController(object):
         Returns (None, wsgi_app) to send the wsgi_app response to the client.
         """
         # Use anonymous access if allowed for action on repo.
-        default_user = User.get_default_user(cache=True)
+        default_user = User.get_default_user()
         default_authuser = AuthUser.make(dbuser=default_user, ip_addr=ip_addr)
         if default_authuser is None:
             log.debug('No anonymous access at all') # move on to proper user auth
@@ -454,7 +454,7 @@ class BaseController(TGController):
                     return log_in_user(user, remember=False, is_external_auth=True, ip_addr=ip_addr)
 
         # User is default user (if active) or anonymous
-        default_user = User.get_default_user(cache=True)
+        default_user = User.get_default_user()
         authuser = AuthUser.make(dbuser=default_user, ip_addr=ip_addr)
         if authuser is None: # fall back to anonymous
             authuser = AuthUser(dbuser=default_user) # TODO: somehow use .make?

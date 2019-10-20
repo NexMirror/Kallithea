@@ -568,7 +568,7 @@ def user_attr_or_none(author, show_attr):
     email = author_email(author)
     if email:
         from kallithea.model.db import User
-        user = User.get_by_email(email, cache=True) # cache will only use sql_cache_short
+        user = User.get_by_email(email)
         if user is not None:
             return getattr(user, show_attr)
     return None

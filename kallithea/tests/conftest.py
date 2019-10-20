@@ -45,7 +45,6 @@ def pytest_configure():
             #'ssh_locale': 'C',
             'app_instance_uuid': 'test',
             'show_revision_number': 'true',
-            'beaker.cache.sql_cache_short.expire': '1',
             'session.secret': '{74e0cd75-b339-478b-b129-07dd221def1f}',
             #'i18n.lang': '',
         },

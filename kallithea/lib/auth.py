@@ -40,7 +40,6 @@ from tg.i18n import ugettext as _
 from webob.exc import HTTPForbidden, HTTPFound
 
 from kallithea.config.routing import url
-from kallithea.lib.caching_query import FromCache
 from kallithea.lib.utils import conditional_cache, get_repo_group_slug, get_repo_slug, get_user_group_slug
 from kallithea.lib.utils2 import ascii_bytes, ascii_str, safe_bytes
 from kallithea.lib.vcs.utils.lazy import LazyProperty
@@ -139,7 +138,7 @@ def _cached_perms_data(user_id, user_is_admin):
     #======================================================================
     # fetch default permissions
     #======================================================================
-    default_user = User.get_by_username('default', cache=True)
+    default_user = User.get_by_username('default')
     default_user_id = default_user.user_id
 
     default_repo_perms = Permission.get_default_perms(default_user_id)
@@ -390,7 +389,7 @@ class AuthUser(object):
         if not dbuser.active:
             log.info('Db user %s not active', dbuser.username)
             return None
-        allowed_ips = AuthUser.get_allowed_ips(dbuser.user_id, cache=True)
+        allowed_ips = AuthUser.get_allowed_ips(dbuser.user_id)
         if not check_ip_access(source_ip=ip_addr, allowed_ips=allowed_ips):
             log.info('Access for %s from %s forbidden - not in %s', dbuser.username, ip_addr, allowed_ips)
             return None
@@ -550,14 +549,11 @@ class AuthUser(object):
         )
 
     @classmethod
-    def get_allowed_ips(cls, user_id, cache=False):
+    def get_allowed_ips(cls, user_id):
         _set = set()
 
         default_ips = UserIpMap.query().filter(UserIpMap.user_id ==
-                                        User.get_default_user(cache=True).user_id)
-        if cache:
-            default_ips = default_ips.options(FromCache("sql_cache_short",
-                                              "get_user_ips_default"))
+                                        User.get_default_user().user_id)
         for ip in default_ips:
             try:
                 _set.add(ip.ip_addr)
@@ -567,9 +563,6 @@ class AuthUser(object):
                 pass
 
         user_ips = UserIpMap.query().filter(UserIpMap.user_id == user_id)
-        if cache:
-            user_ips = user_ips.options(FromCache("sql_cache_short",
-                                                  "get_user_ips_%s" % user_id))
         for ip in user_ips:
             try:
                 _set.add(ip.ip_addr)

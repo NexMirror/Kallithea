@@ -83,7 +83,6 @@ class RepoModel(object):
     def get(self, repo_id):
         repo = Repository.query() \
             .filter(Repository.repo_id == repo_id)
-
         return repo.scalar()
 
     def get_repo(self, repository):
@@ -92,7 +91,6 @@ class RepoModel(object):
     def get_by_repo_name(self, repo_name):
         repo = Repository.query() \
             .filter(Repository.repo_name == repo_name)
-
         return repo.scalar()
 
     def get_all_user_repos(self, user):
