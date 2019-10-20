@@ -101,7 +101,7 @@ class FeedController(BaseRepoController):
     def _feed(self, repo_name, feeder):
         """Produce a simple feed"""
 
-        @cache_region('long_term', '_get_feed_from_cache')
+        @cache_region('long_term_file', '_get_feed_from_cache')
         def _get_feed_from_cache(*_cache_keys):  # parameters are not really used - only as caching key
             header = dict(
                 title=_('%s %s feed') % (c.site_name, repo_name),

@@ -381,7 +381,7 @@ celery.task_always_eager = false
 beaker.cache.data_dir = %(here)s/data/cache/data
 beaker.cache.lock_dir = %(here)s/data/cache/lock
 
-beaker.cache.regions = short_term,long_term,sql_cache_short
+beaker.cache.regions = short_term,long_term,sql_cache_short,long_term_file
 
 beaker.cache.short_term.type = memory
 beaker.cache.short_term.expire = 60
@@ -394,6 +394,10 @@ beaker.cache.long_term.key_length = 256
 beaker.cache.sql_cache_short.type = memory
 beaker.cache.sql_cache_short.expire = 10
 beaker.cache.sql_cache_short.key_length = 256
+
+beaker.cache.long_term_file.type = file
+beaker.cache.long_term_file.expire = 604800
+beaker.cache.long_term_file.key_length = 256
 
 <%text>####################################</%text>
 <%text>###       BEAKER SESSION        ####</%text>
