@@ -541,13 +541,16 @@ def is_hg(repository):
     return _type == 'hg'
 
 
-@cache_region('long_term', 'user_or_none')
-def user_or_none(author):
-    """Try to match email part of VCS committer string with a local user - or return None"""
-    from kallithea.model.db import User
+@cache_region('long_term', 'user_attr_or_none')
+def user_attr_or_none(author, show_attr):
+    """Try to match email part of VCS committer string with a local user and return show_attr
+    - or return None if user not found"""
     email = author_email(author)
     if email:
-        return User.get_by_email(email, cache=True) # cache will only use sql_cache_short
+        from kallithea.model.db import User
+        user = User.get_by_email(email, cache=True) # cache will only use sql_cache_short
+        if user is not None:
+            return getattr(user, show_attr)
     return None
 
 
@@ -556,9 +559,9 @@ def email_or_none(author):
     Return primary email of user, email part of the specified author name, or None."""
     if not author:
         return None
-    user = user_or_none(author)
-    if user is not None:
-        return user.email # always use main email address - not necessarily the one used to find user
+    email = user_attr_or_none(author, 'email')
+    if email is not None:
+        return email # always use user's main email address - not necessarily the one used to find user
 
     # extract email from the commit string
     email = author_email(author)
@@ -573,16 +576,13 @@ def person(author, show_attr="username"):
     """Find the user identified by 'author', return one of the users attributes,
     default to the username attribute, None if there is no user"""
     from kallithea.model.db import User
-    # attr to return from fetched user
-    person_getter = lambda usr: getattr(usr, show_attr)
-
     # if author is already an instance use it for extraction
     if isinstance(author, User):
-        return person_getter(author)
+        return getattr(author, show_attr)
 
-    user = user_or_none(author)
-    if user is not None:
-        return person_getter(user)
+    value = user_attr_or_none(author, show_attr)
+    if value is not None:
+        return value
 
     # Still nothing?  Just pass back the author name if any, else the email
     return author_name(author) or email(author)
