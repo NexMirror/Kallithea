@@ -274,7 +274,7 @@ class ScmModel(object):
             log.error(traceback.format_exc())
             raise
 
-    def is_following_repo(self, repo_name, user_id, cache=False):
+    def is_following_repo(self, repo_name, user_id):
         r = Repository.query() \
             .filter(Repository.repo_name == repo_name).scalar()
 
@@ -284,7 +284,7 @@ class ScmModel(object):
 
         return f is not None
 
-    def is_following_user(self, username, user_id, cache=False):
+    def is_following_user(self, username, user_id):
         u = User.get_by_username(username)
 
         f = UserFollowing.query() \

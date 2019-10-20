@@ -88,7 +88,7 @@ class UserGroupModel(object):
                         target_user_group=user_group, user_group=member, perm=perm
                     )
 
-    def get(self, user_group_id, cache=False):
+    def get(self, user_group_id):
         return UserGroup.get(user_group_id)
 
     def get_group(self, user_group):
