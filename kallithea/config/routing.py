@@ -563,13 +563,6 @@ def make_map(config):
                  controller='admin/repos', action="edit_advanced_fork",
                  conditions=dict(method=["POST"], function=check_repo))
 
-    rmap.connect("edit_repo_caches", "/{repo_name:.*?}/settings/caches",
-                 controller='admin/repos', action="edit_caches",
-                 conditions=dict(method=["GET"], function=check_repo))
-    rmap.connect("update_repo_caches", "/{repo_name:.*?}/settings/caches",
-                 controller='admin/repos', action="edit_caches",
-                 conditions=dict(method=["POST"], function=check_repo))
-
     rmap.connect("edit_repo_remote", "/{repo_name:.*?}/settings/remote",
                  controller='admin/repos', action="edit_remote",
                  conditions=dict(method=["GET"], function=check_repo))

@@ -357,40 +357,6 @@ class _BaseTestApi(object):
         expected = 'Error occurred during rescan repositories action'
         self._compare_error(id_, expected, given=response.body)
 
-    def test_api_invalidate_cache(self):
-        repo = RepoModel().get_by_repo_name(self.REPO)
-        repo.scm_instance_cached()  # seed cache
-
-        id_, params = _build_data(self.apikey, 'invalidate_cache',
-                                  repoid=self.REPO)
-        response = api_call(self, params)
-
-        expected = {
-            'msg': "Cache for repository `%s` was invalidated" % (self.REPO,),
-            'repository': self.REPO
-        }
-        self._compare_ok(id_, expected, given=response.body)
-
-    @mock.patch.object(ScmModel, 'mark_for_invalidation', crash)
-    def test_api_invalidate_cache_error(self):
-        id_, params = _build_data(self.apikey, 'invalidate_cache',
-                                  repoid=self.REPO)
-        response = api_call(self, params)
-
-        expected = 'Error occurred during cache invalidation action'
-        self._compare_error(id_, expected, given=response.body)
-
-    def test_api_invalidate_cache_regular_user_no_permission(self):
-        repo = RepoModel().get_by_repo_name(self.REPO)
-        repo.scm_instance_cached() # seed cache
-
-        id_, params = _build_data(self.apikey_regular, 'invalidate_cache',
-                                  repoid=self.REPO)
-        response = api_call(self, params)
-
-        expected = "repository `%s` does not exist" % (self.REPO,)
-        self._compare_error(id_, expected, given=response.body)
-
     def test_api_create_existing_user(self):
         id_, params = _build_data(self.apikey, 'create_user',
                                   username=base.TEST_USER_ADMIN_LOGIN,

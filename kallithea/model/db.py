@@ -37,7 +37,6 @@ import traceback
 
 import ipaddr
 import sqlalchemy
-from beaker.cache import cache_region, region_invalidate
 from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Index, Integer, LargeBinary, String, Unicode, UnicodeText, UniqueConstraint
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import class_mapper, joinedload, relationship, validates
@@ -1104,16 +1103,6 @@ class Repository(Base, BaseDbModel):
         p += self.repo_name.split(URL_SEP)
         return os.path.join(*p)
 
-    @property
-    def cache_keys(self):
-        """
-        Returns associated cache keys for that repo
-        """
-        return CacheInvalidation.query() \
-            .filter(CacheInvalidation.cache_args == self.repo_name) \
-            .order_by(CacheInvalidation.cache_key) \
-            .all()
-
     def get_new_name(self, repo_name):
         """
         returns new full repository name based on assigned group and new new
@@ -1336,32 +1325,20 @@ class Repository(Base, BaseDbModel):
 
     def set_invalidate(self):
         """
-        Mark caches of this repo as invalid.
+        Flush SA session caches of instances of on disk repo.
         """
-        CacheInvalidation.set_invalidate(self.repo_name)
+        try:
+            del self._scm_instance
+        except AttributeError:
+            pass
 
-    _scm_instance = None
+    _scm_instance = None  # caching inside lifetime of SA session
 
     @property
     def scm_instance(self):
         if self._scm_instance is None:
-            self._scm_instance = self.scm_instance_cached()
+            return self.scm_instance_no_cache()  # will populate self._scm_instance
         return self._scm_instance
-
-    def scm_instance_cached(self, valid_cache_keys=None):
-        @cache_region('long_term', 'scm_instance_cached')
-        def _c(repo_name): # repo_name is just for the cache key
-            log.debug('Creating new %s scm_instance and populating cache', repo_name)
-            return self.scm_instance_no_cache()
-        rn = self.repo_name
-
-        valid = CacheInvalidation.test_and_set_valid(rn, None, valid_cache_keys=valid_cache_keys)
-        if not valid:
-            log.debug('Cache for %s invalidated, getting new object', rn)
-            region_invalidate(_c, None, 'scm_instance_cached', rn)
-        else:
-            log.debug('Trying to get scm_instance of %s from cache', rn)
-        return _c(rn)
 
     def scm_instance_no_cache(self):
         repo_full_path = self.repo_full_path
@@ -1371,12 +1348,11 @@ class Repository(Base, BaseDbModel):
         backend = get_backend(alias)
 
         if alias == 'hg':
-            repo = backend(repo_full_path, create=False,
-                           baseui=self._ui)
+            self._scm_instance = backend(repo_full_path, create=False, baseui=self._ui)
         else:
-            repo = backend(repo_full_path, create=False)
+            self._scm_instance = backend(repo_full_path, create=False)
 
-        return repo
+        return self._scm_instance
 
     def __json__(self):
         return dict(
@@ -1945,130 +1921,6 @@ class UserFollowing(Base, BaseDbModel):
     @classmethod
     def get_repo_followers(cls, repo_id):
         return cls.query().filter(cls.follows_repository_id == repo_id)
-
-
-class CacheInvalidation(Base, BaseDbModel):
-    __tablename__ = 'cache_invalidation'
-    __table_args__ = (
-        Index('key_idx', 'cache_key'),
-        _table_args_default_dict,
-    )
-
-    # cache_id, not used
-    cache_id = Column(Integer(), primary_key=True)
-    # cache_key as created by _get_cache_key
-    cache_key = Column(Unicode(255), nullable=False, unique=True)
-    # cache_args is a repo_name
-    cache_args = Column(Unicode(255), nullable=False)
-    # instance sets cache_active True when it is caching, other instances set
-    # cache_active to False to indicate that this cache is invalid
-    cache_active = Column(Boolean(), nullable=False, default=False)
-
-    def __init__(self, cache_key, repo_name=''):
-        self.cache_key = cache_key
-        self.cache_args = repo_name
-        self.cache_active = False
-
-    def __repr__(self):
-        return "<%s %s: %s=%s" % (
-            self.__class__.__name__,
-            self.cache_id, self.cache_key, self.cache_active)
-
-    def _cache_key_partition(self):
-        prefix, repo_name, suffix = self.cache_key.partition(self.cache_args)
-        return prefix, repo_name, suffix
-
-    def get_prefix(self):
-        """
-        get prefix that might have been used in _get_cache_key to
-        generate self.cache_key. Only used for informational purposes
-        in repo_edit.html.
-        """
-        # prefix, repo_name, suffix
-        return self._cache_key_partition()[0]
-
-    def get_suffix(self):
-        """
-        get suffix that might have been used in _get_cache_key to
-        generate self.cache_key. Only used for informational purposes
-        in repo_edit.html.
-        """
-        # prefix, repo_name, suffix
-        return self._cache_key_partition()[2]
-
-    @classmethod
-    def clear_cache(cls):
-        """
-        Delete all cache keys from database.
-        Should only be run when all instances are down and all entries thus stale.
-        """
-        cls.query().delete()
-        Session().commit()
-
-    @classmethod
-    def _get_cache_key(cls, key):
-        """
-        Wrapper for generating a unique cache key for this instance and "key".
-        key must / will start with a repo_name which will be stored in .cache_args .
-        """
-        prefix = kallithea.CONFIG.get('instance_id', '')
-        return "%s%s" % (prefix, key)
-
-    @classmethod
-    def set_invalidate(cls, repo_name):
-        """
-        Mark all caches of a repo as invalid in the database.
-        """
-        inv_objs = Session().query(cls).filter(cls.cache_args == repo_name).all()
-        log.debug('for repo %s got %s invalidation objects',
-                  repo_name, inv_objs)
-
-        for inv_obj in inv_objs:
-            log.debug('marking %s key for invalidation based on repo_name=%s',
-                      inv_obj, repo_name)
-            Session().delete(inv_obj)
-        Session().commit()
-
-    @classmethod
-    def test_and_set_valid(cls, repo_name, kind, valid_cache_keys=None):
-        """
-        Mark this cache key as active and currently cached.
-        Return True if the existing cache registration still was valid.
-        Return False to indicate that it had been invalidated and caches should be refreshed.
-        """
-
-        key = (repo_name + '_' + kind) if kind else repo_name
-        cache_key = cls._get_cache_key(key)
-
-        if valid_cache_keys and cache_key in valid_cache_keys:
-            return True
-
-        inv_obj = cls.query().filter(cls.cache_key == cache_key).scalar()
-        if inv_obj is None:
-            inv_obj = cls(cache_key, repo_name)
-            Session().add(inv_obj)
-        elif inv_obj.cache_active:
-            return True
-        inv_obj.cache_active = True
-        try:
-            Session().commit()
-        except sqlalchemy.exc.IntegrityError:
-            log.error('commit of CacheInvalidation failed - retrying')
-            Session().rollback()
-            inv_obj = cls.query().filter(cls.cache_key == cache_key).scalar()
-            if inv_obj is None:
-                log.error('failed to create CacheInvalidation entry')
-                # TODO: fail badly?
-            # else: TOCTOU - another thread added the key at the same time; no further action required
-        return False
-
-    @classmethod
-    def get_valid_cache_keys(cls):
-        """
-        Return opaque object with information of which caches still are valid
-        and can be used without checking for invalidation.
-        """
-        return set(inv_obj.cache_key for inv_obj in cls.query().filter(cls.cache_active).all())
 
 
 class ChangesetComment(Base, BaseDbModel):

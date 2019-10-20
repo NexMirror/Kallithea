@@ -38,7 +38,7 @@ import pytest
 
 from kallithea import CONFIG
 from kallithea.lib.utils2 import ascii_bytes, safe_str
-from kallithea.model.db import CacheInvalidation, Repository, Ui, User, UserIpMap, UserLog
+from kallithea.model.db import Repository, Ui, User, UserIpMap, UserLog
 from kallithea.model.meta import Session
 from kallithea.model.ssh_key import SshKeyModel
 from kallithea.model.user import UserModel
@@ -442,30 +442,19 @@ class TestVCSOperations(base.TestController):
     def test_push_invalidates_cache(self, webserver, testfork, vt):
         pre_cached_tip = [repo.get_api_data()['last_changeset']['short_id'] for repo in Repository.query().filter(Repository.repo_name == testfork[vt.repo_type])]
 
-        key = CacheInvalidation.query().filter(CacheInvalidation.cache_key
-                                               == testfork[vt.repo_type]).scalar()
-        if not key:
-            key = CacheInvalidation(testfork[vt.repo_type], testfork[vt.repo_type])
-            Session().add(key)
-
-        key.cache_active = True
-        Session().commit()
-
         dest_dir = _get_tmp_dir()
         clone_url = vt.repo_url_param(webserver, testfork[vt.repo_type])
         stdout, stderr = Command(base.TESTS_TMP_PATH).execute(vt.repo_type, 'clone', clone_url, dest_dir)
 
         stdout, stderr = _add_files_and_push(webserver, vt, dest_dir, files_no=1, clone_url=clone_url)
 
+        Session().commit()  # expire test session to make sure SA fetch new Repository instances after last_changeset has been updated server side hook in other process
+
         if vt.repo_type == 'git':
             _check_proper_git_push(stdout, stderr)
 
         post_cached_tip = [repo.get_api_data()['last_changeset']['short_id'] for repo in Repository.query().filter(Repository.repo_name == testfork[vt.repo_type])]
         assert pre_cached_tip != post_cached_tip
-
-        key = CacheInvalidation.query().filter(CacheInvalidation.cache_key
-                                               == testfork[vt.repo_type]).all()
-        assert key == []
 
     @parametrize_vcs_test_http
     def test_push_wrong_credentials(self, webserver, vt):

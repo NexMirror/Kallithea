@@ -479,24 +479,6 @@ class ReposController(BaseRepoController):
         raise HTTPFound(location=url('edit_repo_advanced', repo_name=repo_name))
 
     @HasRepoPermissionLevelDecorator('admin')
-    def edit_caches(self, repo_name):
-        c.repo_info = self._load_repo()
-        c.active = 'caches'
-        if request.POST:
-            try:
-                ScmModel().mark_for_invalidation(repo_name)
-                Session().commit()
-                h.flash(_('Cache invalidation successful'),
-                        category='success')
-            except Exception as e:
-                log.error(traceback.format_exc())
-                h.flash(_('An error occurred during cache invalidation'),
-                        category='error')
-
-            raise HTTPFound(location=url('edit_repo_caches', repo_name=c.repo_name))
-        return render('admin/repos/repo_edit.html')
-
-    @HasRepoPermissionLevelDecorator('admin')
     def edit_remote(self, repo_name):
         c.repo_info = self._load_repo()
         c.active = 'remote'
