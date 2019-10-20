@@ -32,7 +32,7 @@ import traceback
 from datetime import date, timedelta
 from time import mktime
 
-from beaker.cache import cache_region, region_invalidate
+from beaker.cache import cache_region
 from tg import request
 from tg import tmpl_context as c
 from tg.i18n import ugettext as _
@@ -49,7 +49,7 @@ from kallithea.lib.utils2 import safe_int
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.exceptions import ChangesetError, EmptyRepositoryError, NodeDoesNotExistError
 from kallithea.lib.vcs.nodes import FileNode
-from kallithea.model.db import CacheInvalidation, Statistics
+from kallithea.model.db import Statistics
 
 
 log = logging.getLogger(__name__)
@@ -97,10 +97,7 @@ class SummaryController(BaseRepoController):
             return readme_data, readme_file
 
         kind = 'README'
-        valid = CacheInvalidation.test_and_set_valid(repo_name, kind)
-        if not valid:
-            region_invalidate(_get_readme_from_cache, None, '_get_readme_from_cache', repo_name, kind)
-        return _get_readme_from_cache(repo_name, kind)
+        return _get_readme_from_cache(repo_name, kind, c.db_repo.changeset_cache.get('raw_id'))
 
     @LoginRequired(allow_default_user=True)
     @HasRepoPermissionLevelDecorator('read')

@@ -28,7 +28,7 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 
-from beaker.cache import cache_region, region_invalidate
+from beaker.cache import cache_region
 from tg import response
 from tg import tmpl_context as c
 from tg.i18n import ugettext as _
@@ -40,7 +40,6 @@ from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseRepoController
 from kallithea.lib.diffs import DiffProcessor
 from kallithea.lib.utils2 import safe_int, safe_unicode, str2bool
-from kallithea.model.db import CacheInvalidation
 
 
 log = logging.getLogger(__name__)
@@ -130,10 +129,7 @@ class FeedController(BaseRepoController):
             return feed.writeString('utf-8')
 
         kind = 'ATOM'
-        valid = CacheInvalidation.test_and_set_valid(repo_name, kind)
-        if not valid:
-            region_invalidate(_get_feed_from_cache, None, '_get_feed_from_cache', repo_name, kind)
-        return _get_feed_from_cache(repo_name, kind)
+        return _get_feed_from_cache(repo_name, kind, c.db_repo.changeset_cache.get('raw_id'))
 
     def rss(self, repo_name):
         """Produce an rss2 feed via feedgenerator module"""
@@ -162,7 +158,4 @@ class FeedController(BaseRepoController):
             return feed.writeString('utf-8')
 
         kind = 'RSS'
-        valid = CacheInvalidation.test_and_set_valid(repo_name, kind)
-        if not valid:
-            region_invalidate(_get_feed_from_cache, None, '_get_feed_from_cache', repo_name, kind)
-        return _get_feed_from_cache(repo_name, kind)
+        return _get_feed_from_cache(repo_name, kind, c.db_repo.changeset_cache.get('raw_id'))
