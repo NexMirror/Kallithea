@@ -602,32 +602,3 @@ def check_git_version():
                     settings.GIT_EXECUTABLE_PATH, output)
 
     return ver
-
-
-#===============================================================================
-# CACHE RELATED METHODS
-#===============================================================================
-
-def conditional_cache(region, prefix, condition, func):
-    """
-    Conditional caching function use like::
-        def func(arg):
-            #heavy computation function
-            return data
-
-        # depending from condition the compute is wrapped in cache or not
-        compute = conditional_cache('short_term', 'cache_desc', condition=True, func=func)
-        return compute(arg)
-
-    :param region: name of cache region
-    :param prefix: cache region prefix
-    :param condition: condition for cache to be triggered, and return data cached
-    :param func: heavy function to compute
-    """
-    wrapped = func
-    if condition:
-        log.debug('conditional_cache: True, wrapping call of '
-                  'func: %s into %s region cache' % (region, func))
-        wrapped = beaker.cache._cache_decorate((prefix,), None, None, region)(func)
-
-    return wrapped
