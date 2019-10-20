@@ -95,7 +95,7 @@ class UserGroupModel(object):
         return UserGroup.guess_instance(user_group)
 
     def get_by_name(self, name, cache=False, case_insensitive=False):
-        return UserGroup.get_by_group_name(name, cache, case_insensitive)
+        return UserGroup.get_by_group_name(name, cache=cache, case_insensitive=case_insensitive)
 
     def create(self, name, description, owner, active=True, group_data=None):
         try:
