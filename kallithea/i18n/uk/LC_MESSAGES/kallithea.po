@@ -11,8 +11,14 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
+msgid "There are no changesets yet"
+msgstr "Наборів змін немає"
+
 msgid "None"
 msgstr "Нічого"
+
+msgid "(closed)"
+msgstr "(закрито)"
 
 msgid "Show whitespace"
 msgstr "Відображати пробіли"
@@ -20,17 +26,293 @@ msgstr "Відображати пробіли"
 msgid "Ignore whitespace"
 msgstr "Ігнорувати пробіли"
 
+msgid "Increase diff context to %(num)s lines"
+msgstr "Збільшити відмінність контексту для %(num)s рядків"
+
+msgid "No permission to change status"
+msgstr "У вас немає дозволу змінювати статус"
+
+msgid "Successfully deleted pull request %s"
+msgstr "Успішно вилучено pull request %s"
+
+msgid "Such revision does not exist for this repository"
+msgstr "Така редакція не існує для цього репозиторію"
+
+msgid "Could not find other repository %s"
+msgstr "Не вдалося знайти інший репозиторій %s"
+
+msgid "Cannot compare repositories of different types"
+msgstr "Не вдається порівняти репозиторії різних типів"
+
+msgid "Cannot show empty diff"
+msgstr "Не вдалося відобразити пусті відмінності"
+
+msgid "No ancestor found for merge diff"
+msgstr "Не знайдено предка для злиття відмінностей"
+
+msgid "Multiple merge ancestors found for merge compare"
+msgstr "Множинні злиття предків знайдено для злиття порівняти"
+
+msgid "Cannot compare repositories without using common ancestor"
+msgstr "Не вдається порівняти репозиторії без використання спільного предка"
+
+msgid "No response"
+msgstr "Немає відповіді"
+
 msgid "Unknown error"
 msgstr "Невідома помилка"
+
+msgid ""
+"The request could not be understood by the server due to malformed syntax."
+msgstr "Запит не може бути зрозумілий сервером через синтаксичні помилки."
+
+msgid "Unauthorized access to resource"
+msgstr "Несанкціонований доступ до ресурсів"
+
+msgid "You don't have permission to view this page"
+msgstr "Ви не маєте дозволу на перегляд цієї сторінки"
+
+msgid "The resource could not be found"
+msgstr "Ресурс не може бути знайдений"
+
+msgid ""
+"The server encountered an unexpected condition which prevented it from "
+"fulfilling the request."
+msgstr ""
+"На сервері виявлено неочікувану умову, яка перешкоджала виконанню запиту."
+
+msgid "%s committed on %s"
+msgstr "%s зафіксовано на %s"
+
+msgid "Changeset was too big and was cut off..."
+msgstr "Changeset був занадто великий і був відрізаний..."
+
+msgid "%s %s feed"
+msgstr "%s %s канал"
+
+msgid "Changes on %s repository"
+msgstr "Зміни в репозиторії  %s"
+
+msgid "Click here to add new file"
+msgstr "Натисніть тут, щоб додати новий файл"
+
+msgid "There are no files yet."
+msgstr "Файлів ще немає."
+
+msgid "%s at %s"
+msgstr "%s у  %s"
+
+msgid "You can only delete files with revision being a valid branch"
+msgstr "Видаляти файли можна лише з ревізії припустимого бренчу"
+
+msgid "Deleted file %s via Kallithea"
+msgstr "Видалений файл %s через Kallithea"
+
+msgid "Successfully deleted file %s"
+msgstr "Успішно видалений файл %s"
+
+msgid "Error occurred during commit"
+msgstr "Під час фіксації сталася помилка"
+
+msgid "You can only edit files with revision being a valid branch"
+msgstr "Редагувати файли можна лише з ревізії, що належить валідному бренчу"
+
+msgid "Edited file %s via Kallithea"
+msgstr "Відредагований файл %s через Kallithea"
+
+msgid "No changes"
+msgstr "Нема змін"
+
+msgid "Successfully committed to %s"
+msgstr "Успішно зафіксовано в  %s"
+
+msgid "Added file via Kallithea"
+msgstr "Доданий файл через Kallithea"
+
+msgid "No content"
+msgstr "Немає вмісту"
+
+msgid "No filename"
+msgstr "Не вказано назви файлу"
+
+msgid "Location must be relative path and must not contain .. in path"
+msgstr ""
+"Розташування має бути відносним шляхом і не повинен містити .. в шляху"
+
+msgid "Downloads disabled"
+msgstr "Завантаження вимкнено"
+
+msgid "Unknown revision %s"
+msgstr "Невідома редакція %s"
+
+msgid "Empty repository"
+msgstr "Порожній репозиторій"
+
+msgid "Unknown archive type"
+msgstr "Невідомий тип архіву"
+
+msgid "Changesets"
+msgstr "Набори змін"
+
+msgid "Branches"
+msgstr "Гілки"
+
+msgid "Tags"
+msgstr "Теги"
+
+msgid "An error occurred during repository forking %s"
+msgstr "Під час forking репозиторію %s сталася помилка"
+
+msgid "Groups"
+msgstr "Групи"
+
+msgid "Repositories"
+msgstr "Репозиторії"
+
+msgid "Branch"
+msgstr "Гілка"
+
+msgid "Closed Branches"
+msgstr "Закриті Гілки"
+
+msgid "Tag"
+msgstr "Тег"
+
+msgid "Bookmark"
+msgstr "Закладка"
+
+msgid "Public Journal"
+msgstr "Публічний журнал"
 
 msgid "Journal"
 msgstr "Журнал"
 
+msgid "Bad captcha"
+msgstr "Погана капча"
+
+msgid "You have successfully registered with %s"
+msgstr "Ви успішно зареєстровані з  %s"
+
+msgid "A password reset confirmation code has been sent"
+msgstr "Надісланий код підтвердження скидання пароля"
+
+msgid "Invalid password reset token"
+msgstr "Недійсний маркер скидання пароля"
+
+msgid "Successfully updated password"
+msgstr "Пароль успішно оновлений"
+
+msgid "Invalid reviewer \"%s\" specified"
+msgstr "Вказаний недійсний рецензент \"%s\""
+
+msgid "%s (closed)"
+msgstr "%s (закрито)"
+
+msgid "Changeset"
+msgstr "Набір змін"
+
+msgid "Special"
+msgstr "Спеціальний"
+
+msgid "Bookmarks"
+msgstr "Закладки"
+
+msgid "Error creating pull request: %s"
+msgstr "Помилка створення pull request: %s"
+
+msgid "Error occurred while creating pull request"
+msgstr "Сталася помилка при створенні pull request"
+
+msgid "Successfully opened new pull request"
+msgstr "Новий pull request успішно відкритий"
+
+msgid "New pull request iteration created"
+msgstr "Створено нову ітерацію запиту на pull request"
+
+msgid "Meanwhile, the following reviewers have been added: %s"
+msgstr "Тим часом додано наступних рецензентів: %s"
+
+msgid "Meanwhile, the following reviewers have been removed: %s"
+msgstr "Тим часом було видалено наступних рецензентів: %s"
+
 msgid "No description"
 msgstr "Без опису"
 
+msgid "Pull request updated"
+msgstr "Pull request оновлено"
+
+msgid "Successfully deleted pull request"
+msgstr "Успішно вилучено pull request"
+
+msgid "Revision %s not found in %s"
+msgstr "Ревізія %s не знайдена в %s"
+
+msgid "Error: changesets not found when displaying pull request from %s."
+msgstr ""
+"Помилка: changesets не знайдено під час відображення pull request з %s."
+
+msgid "This pull request has already been merged to %s."
+msgstr "Цей pull request уже об'єднано з  %s."
+
+msgid "This pull request has been closed and can not be updated."
+msgstr "Цей pull request закрито, його не можна оновити."
+
+msgid "The following additional changes are available on %s:"
+msgstr "Наступні додаткові зміни доступні на %s:"
+
+msgid "No additional changesets found for iterating on this pull request."
+msgstr "Немає додаткових змін для ітератування на  pull request."
+
+msgid "Note: Branch %s has another head: %s."
+msgstr "Примітка: гілка %s має іншу голову: %s."
+
+msgid "Git pull requests don't support iterating yet."
+msgstr "Git pull requests не підтримують ітерацію."
+
+msgid ""
+"Error: some changesets not found when displaying pull request from %s."
+msgstr ""
+"Помилка: деякі changesets  не знайдені під час відображення pull request "
+"з %s."
+
+msgid "The diff can't be shown - the PR revisions could not be found."
+msgstr "Різниця не може бути показана - версії PR не вдалося знайти."
+
+msgid "Invalid search query. Try quoting it."
+msgstr "Неприпустимий пошуковий запит. Спробуйте цитувати його."
+
+msgid "The server has no search index."
+msgstr "Сервер не має індексу пошуку."
+
+msgid "An error occurred during search operation."
+msgstr "Сталася помилка під час операції пошуку."
+
+msgid "No data ready yet"
+msgstr "Дані ще не готові"
+
+msgid "Statistics are disabled for this repository"
+msgstr "Статистичні дані для цього репозиторію вимкнено"
+
+msgid "Auth settings updated successfully"
+msgstr "Параметри автентифікації успішно оновлено"
+
+msgid "error occurred during update of auth settings"
+msgstr "під час оновлення параметрів автентифікації сталася помилка"
+
+msgid "Default settings updated successfully"
+msgstr "Параметри за промовчанням оновлено успішно"
+
+msgid "Error occurred during update of defaults"
+msgstr "Сталася помилка під час оновлення за промовчанням"
+
+msgid "Forever"
+msgstr "Назавжди"
+
 msgid "5 minutes"
 msgstr "5 хвилин"
+
+msgid "1 hour"
+msgstr "1 година"
 
 msgid "1 day"
 msgstr "1 день"
@@ -38,17 +320,967 @@ msgstr "1 день"
 msgid "1 month"
 msgstr "1 місяць"
 
+msgid "Lifetime"
+msgstr "Постійно"
+
+msgid "Error occurred during gist creation"
+msgstr "Сталася помилка під час створення GIST"
+
+msgid "Deleted gist %s"
+msgstr "Видалено gist %s"
+
+msgid "Unmodified"
+msgstr "Незмінений"
+
+msgid "Successfully updated gist content"
+msgstr "Зміст gist успішно оновлено"
+
+msgid "Successfully updated gist data"
+msgstr "Дані gist успішно оновлені"
+
+msgid "Error occurred during update of gist %s"
+msgstr "Сталася помилка під час оновлення gist %s"
+
+msgid "You can't edit this user since it's crucial for entire application"
+msgstr ""
+"Ви не можете редагувати цього користувача, оскільки це важливо для всієї "
+"програми"
+
+msgid "Your account was updated successfully"
+msgstr "Ваш обліковий запис успішно оновлено"
+
+msgid "Error occurred during update of user %s"
+msgstr "Сталася помилка під час оновлення користувача %s"
+
+msgid "Error occurred during update of user password"
+msgstr "Сталася помилка під час оновлення пароля користувача"
+
+msgid "Added email %s to user"
+msgstr "Додано email %s користувачу"
+
+msgid "An error occurred during email saving"
+msgstr "Сталася помилка під час збереження електронної пошти"
+
+msgid "Removed email from user"
+msgstr "Видалено email користувача"
+
+msgid "API key successfully created"
+msgstr "API ключ успішно створений"
+
+msgid "API key successfully reset"
+msgstr "Ключ API успішно скинуто"
+
+msgid "API key successfully deleted"
+msgstr "API ключ успішно видалений"
+
+msgid "Read"
+msgstr "Читати"
+
+msgid "Write"
+msgstr "Писати"
+
+msgid "Admin"
+msgstr "Адмін"
+
+msgid "Disabled"
+msgstr "Вимкнуто"
+
+msgid "Allowed with manual account activation"
+msgstr "Дозволено з ручною активацією облікового запису"
+
+msgid "Allowed with automatic account activation"
+msgstr "Дозволено з автоматичною активацію облікового запису"
+
+msgid "Manual activation of external account"
+msgstr "Ручна Активація зовнішнього акаунту"
+
+msgid "Automatic activation of external account"
+msgstr "Автоматична Активація зовнішнього акаунту"
+
+msgid "Enabled"
+msgstr "Увімкнено"
+
+msgid "Global permissions updated successfully"
+msgstr "Глобальні права успішно оновлено"
+
+msgid "Error occurred during update of permissions"
+msgstr "Сталася помилка під час оновлення прав"
+
+msgid "Error occurred during creation of repository group %s"
+msgstr "Сталася помилка при створенні repository group %s"
+
+msgid "Created repository group %s"
+msgstr "Створена група репозиторіїв %s"
+
+msgid "Updated repository group %s"
+msgstr "Оновлено групу репозиторіїв %s"
+
+msgid "Error occurred during update of repository group %s"
+msgstr "Сталася помилка при оновленні repository group %s"
+
+msgid "This group contains %s repositories and cannot be deleted"
+msgstr "Ця група містить %s репозиторії, і їх неможливо видалити"
+
+msgid "This group contains %s subgroups and cannot be deleted"
+msgstr "Ця група містить %s підгрупи і не може бути видалена"
+
+msgid "Removed repository group %s"
+msgstr "Видалена група репозиторіїв %s"
+
+msgid "Error occurred during deletion of repository group %s"
+msgstr "Сталася помилка під час видалення групи репохиторіїв %s"
+
+msgid "Cannot revoke permission for yourself as admin"
+msgstr "Неможливо відкликати дозвіл для себе як адміністратора"
+
+msgid "Repository group permissions updated"
+msgstr "Оновлено дозволи групи репозиторіїв"
+
+msgid "An error occurred during revoking of permission"
+msgstr "Сталася помилка під час відкликання прав"
+
+msgid "Error creating repository %s"
+msgstr "Помилка створення репозиторію  %s"
+
+msgid "Created repository %s from %s"
+msgstr "Створено репозиторій  %s з %s"
+
+msgid "Forked repository %s as %s"
+msgstr "Роздвоєно репозиторій %s як %s"
+
+msgid "Created repository %s"
+msgstr "Створено репозиторій %s"
+
+msgid "Repository %s updated successfully"
+msgstr "Репозиторій %s успішно оновлений"
+
+msgid "Error occurred during update of repository %s"
+msgstr "Сталася помилка при оновленні репозиторію %s"
+
+msgid "Detached %s forks"
+msgstr "Від'єднано %s forks"
+
+msgid "Deleted %s forks"
+msgstr "Видалено %s forks"
+
+msgid "Deleted repository %s"
+msgstr "Видалений репозиторій %s"
+
+msgid "Cannot delete repository %s which still has forks"
+msgstr "Неможливо видалити репозиторій %s, що ще має forks"
+
+msgid "An error occurred during deletion of %s"
+msgstr "Сталася помилка під час видалення %s"
+
+msgid "Repository permissions updated"
+msgstr "Права доступів до репозиторіїв оновлено"
+
+msgid "An error occurred during removal of field"
+msgstr "Під час видалення поля виникла помилка"
+
+msgid "-- Not a fork --"
+msgstr "-- Не fork --"
+
+msgid "Updated repository visibility in public journal"
+msgstr "Оновлено видимість репозиторія в публічному журналі"
+
+msgid "An error occurred during setting this repository in public journal"
+msgstr ""
+"Сталася помилка під час налаштувань цього репозиторію в публічному журналі"
+
+msgid "Nothing"
+msgstr "Нічого"
+
+msgid "An error occurred during this operation"
+msgstr "Сталася помилка під час виконання цієї операції"
+
+msgid "Cache invalidation successful"
+msgstr "Інвалідація кешу успішна"
+
+msgid "An error occurred during cache invalidation"
+msgstr "Сталася помилка під час Анулювання кеша"
+
+msgid "An error occurred during deletion of repository stats"
+msgstr "Під час видалення статистики репозиторію сталася помилка"
+
+msgid "Updated VCS settings"
+msgstr "Оновлені налаштування VCS"
+
+msgid "Error occurred while updating application settings"
+msgstr "Під час оновлення параметрів застосунку сталася помилка"
+
+msgid "Updated application settings"
+msgstr "Оновлені параметри застосунку"
+
+msgid "Updated visualisation settings"
+msgstr "Оновлені параметри візуалізації"
+
+msgid "Error occurred during updating visualisation settings"
+msgstr "Під час оновлення параметрів візуалізації сталася помилка"
+
+msgid "Please enter email address"
+msgstr "Будь ласка, введіть адресу електронної пошти"
+
+msgid "Send email task created"
+msgstr "Надіслати електронною поштою завдання створено"
+
+msgid "Hook already exists"
+msgstr "Hook вже існує"
+
+msgid "Builtin hooks are read-only. Please use another hook name."
+msgstr ""
+"Вбудовані hooks доступні лише для читання. Будь ласка, використовуйте "
+"інше ім'я hook."
+
+msgid "Added new hook"
+msgstr "Додано новий hook"
+
+msgid "Updated hooks"
+msgstr "Оновлено hooks"
+
+msgid "Error occurred during hook creation"
+msgstr "Сталася помилка під час створення hook"
+
+msgid "Whoosh reindex task scheduled"
+msgstr "Завдання реіндекса Whoosh заплановано"
+
+msgid "Created user group %s"
+msgstr "Створена Група користувачів %s"
+
+msgid "Error occurred during creation of user group %s"
+msgstr "Під час створення групи користувачів  %s сталася помилка"
+
+msgid "Updated user group %s"
+msgstr "Оновлена група користувачів %s"
+
+msgid "Error occurred during update of user group %s"
+msgstr "Сталася помилка під час оновлення групи користувачів %s"
+
+msgid "Successfully deleted user group"
+msgstr "Група користувачів успішно видалена"
+
+msgid "An error occurred during deletion of user group"
+msgstr "Під час видалення групи користувачів сталася помилка"
+
+msgid "Target group cannot be the same"
+msgstr "Цільова група не може бути однаковою"
+
+msgid "User group permissions updated"
+msgstr "Права на групи користувачів оновлені"
+
+msgid "Updated permissions"
+msgstr "Оновлені дозволи"
+
+msgid "An error occurred during permissions saving"
+msgstr "Сталася помилка під час збереження дозволів"
+
+msgid "Created user %s"
+msgstr "Створено користувача %s"
+
+msgid "Error occurred during creation of user %s"
+msgstr "Під час створення користувача %s сталася помилка"
+
+msgid "User updated successfully"
+msgstr "Користувач успішно оновлений"
+
+msgid "Successfully deleted user"
+msgstr "Користувач успішно видалений"
+
+msgid "An error occurred during deletion of user"
+msgstr "Сталася помилка під час видалення користувача"
+
+msgid "The default user cannot be edited"
+msgstr "Користувача за промовчанням не можна редагувати"
+
+msgid "Added IP address %s to user whitelist"
+msgstr "Додана IP-адреса %s в білий список користувача"
+
+msgid "An error occurred while adding IP address"
+msgstr "Сталася помилка під час додавання IP-адреси"
+
+msgid "Removed IP address from user whitelist"
+msgstr "Вилучено IP-адресу з білого списку користувачів"
+
+msgid "You need to be a registered user to perform this action"
+msgstr "Для виконання цієї дії потрібно бути зареєстрованим користувачем"
+
+msgid "You need to be signed in to view this page"
+msgstr "Ви повинні бути зареєстровані для перегляду цієї сторінки"
+
+msgid ""
+"CSRF token leak has been detected - all form tokens have been expired"
+msgstr "Виявлено витік токенів CSRF - всі маркери форми минули"
+
+msgid "Repository not found in the filesystem"
+msgstr "Репозиторій не знайдено у файловій системі"
+
+msgid "Binary file"
+msgstr "Двійковий файл"
+
+msgid ""
+"Changeset was too big and was cut off, use diff menu to display this diff"
+msgstr ""
+"Набір змін був занадто великий і було відрізано, використовуйте меню діфф "
+"для показу цього порівняння"
+
+msgid "No changes detected"
+msgstr "Не виявлено змін"
+
+msgid "Deleted branch: %s"
+msgstr "Видалено гілку: %s"
+
+msgid "Created tag: %s"
+msgstr "Створено тег: %s"
+
+msgid "Changeset %s not found"
+msgstr "Набір змін %s не знайдено"
+
+msgid "Compare view"
+msgstr "Порівняйте вигляд"
+
+msgid "and"
+msgstr "і"
+
+msgid "%s more"
+msgstr "%s більше"
+
+msgid "revisions"
+msgstr "редакції"
+
+msgid "Fork name %s"
+msgstr "Ім'я розгалуження %s"
+
+msgid "Pull request %s"
+msgstr "Pull request %s"
+
+msgid "[deleted] repository"
+msgstr "[видалений] репозиторій"
+
+msgid "[created] repository"
+msgstr "[створено] репозиторій"
+
+msgid "[created] repository as fork"
+msgstr "[створено] репозиторій як fork"
+
+msgid "[forked] repository"
+msgstr "[forked] репозиторій"
+
+msgid "[updated] repository"
+msgstr "[оновлено] репозиторій"
+
+msgid "[downloaded] archive from repository"
+msgstr "[завантажити] архів з репозиторію"
+
+msgid "[delete] repository"
+msgstr "[видалити] репозиторій"
+
+msgid "[created] user"
+msgstr "[створено] користувач"
+
+msgid "[updated] user"
+msgstr "[оновлений] користувач"
+
+msgid "[created] user group"
+msgstr "[створено] групу користувачів"
+
+msgid "[updated] user group"
+msgstr "[оновлено] група користувачів"
+
+msgid "No files"
+msgstr "Файлів немає"
+
+msgid "new file"
+msgstr "новий файл"
+
+msgid "rename"
+msgstr "перейменувати"
+
+msgid "chmod"
+msgstr "chmod"
+
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] "%d день"
+msgstr[1] "%d днів"
+msgstr[2] "%d дня"
+
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "%d година"
+msgstr[1] "%d годин"
+msgstr[2] "%d години"
+
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] "%d хвилина"
+msgstr[1] "%d хвилин"
+msgstr[2] "%d хвилини"
+
+msgid "%d second"
+msgid_plural "%d seconds"
+msgstr[0] "%d секунда"
+msgstr[1] "%d секунд"
+msgstr[2] "%d секунди"
+
+msgid "in %s"
+msgstr "в %s"
+
+msgid "%s ago"
+msgstr "%s тому"
+
+msgid "in %s and %s"
+msgstr "у %s і %s"
+
+msgid "%s and %s ago"
+msgstr "%s і %s тому"
+
+msgid "just now"
+msgstr "прямо зараз"
+
+msgid "on line %s"
+msgstr "в рядку %s"
+
+msgid "[Mention]"
+msgstr "[Згадування]"
+
+msgid "top level"
+msgstr "верхній рівень"
+
+msgid "Kallithea Administrator"
+msgstr "Kallithea Адміністратор"
+
+msgid "Default user has no access to new repositories"
+msgstr "Користувач за промовчанням не має доступу до нових репозиторіїв"
+
+msgid "Default user has read access to new repositories"
+msgstr ""
+"Користувач за замовчанням має доступ на перегляд  нових репозиторіїв"
+
+msgid "Default user has write access to new repositories"
+msgstr ""
+"Користувач за замовчуванням має доступ до запису до нових репозиторіїв"
+
+msgid "Default user has admin access to new repositories"
+msgstr ""
+"Користувач за промовчанням має доступ адміністратора до нових репозиторіїв"
+
+msgid "Default user has no access to new repository groups"
+msgstr ""
+"Користувач за замовчуванням не має доступу до нових груп репозиторіїв"
+
+msgid "Create Public Gist"
+msgstr "Створити публічний GIST"
+
+msgid "Reset"
+msgstr "Скинути"
+
+msgid "Gist"
+msgstr "Gist"
+
+msgid "URL"
+msgstr "URL"
+
+msgid "Public Gist"
+msgstr "Публічний GIST"
+
+msgid "Private Gist"
+msgstr "Приватний Gist"
+
+msgid "Delete"
+msgstr "Видалити"
+
+msgid "Confirm to delete this Gist"
+msgstr "Підтвердіть видалення цього Gist"
+
+msgid "Edit"
+msgstr "Редагувати"
+
+msgid "Show as Raw"
+msgstr "Відображати як RAW"
+
+msgid "created"
+msgstr "створено"
+
+msgid "Show as raw"
+msgstr "Відображати як RAW"
+
+msgid "My Account"
+msgstr "Мій акаунт"
+
+msgid "Profile"
+msgstr "Профіль"
+
+msgid "Email Addresses"
+msgstr "Адреси Електронної Пошти"
+
+msgid "API Keys"
+msgstr "API Ключі"
+
+msgid "Owned Repositories"
+msgstr "Власні Репозиторії"
+
+msgid "Watched Repositories"
+msgstr "Переглянуті репозиторії"
+
+msgid "Show Permissions"
+msgstr "Показати Права доступу"
+
+msgid "Built-in"
+msgstr "Вбудований"
+
+msgid "Confirm to reset this API key: %s"
+msgstr "Підтвердіть, щоб скинути цей ключ API: %s"
+
+msgid "Expired"
+msgstr "Просрочено"
+
+msgid "Confirm to remove this API key: %s"
+msgstr "Підтвердіть, щоб видалити цей ключ API: %s"
+
+msgid "Remove"
+msgstr "Видалити"
+
+msgid "No additional API keys specified"
+msgstr "Не вказано додаткових ключів API"
+
+msgid "New API key"
+msgstr "Новий ключ API"
+
+msgid "Add"
+msgstr "Додати"
+
+msgid "Primary"
+msgstr "Основний"
+
+msgid "Confirm to delete this email: %s"
+msgstr "Підтвердіть, щоб видалити цей email: %s"
+
+msgid "No additional emails specified."
+msgstr "Не вказано додаткових email."
+
+msgid "New email address"
+msgstr "Нова електронна адреса"
+
+msgid "Change Your Account Password"
+msgstr "Зміна Пароля Облікового Запису"
+
+msgid "Current password"
+msgstr "Поточний пароль"
+
+msgid "New password"
+msgstr "Новий пароль"
+
+msgid "Confirm new password"
+msgstr "Підтвердіть новий пароль"
+
+msgid "Current IP"
+msgstr "Поточний IP"
+
+msgid "Gravatar"
+msgstr "Gravatar"
+
+msgid "Change %s avatar at"
+msgstr "Змінити %s Avatar на"
+
+msgid "Avatars are disabled"
+msgstr "Аватарки відключені"
+
+msgid "Repositories You Own"
+msgstr "Репозиторії якими Ви володієте"
+
+msgid "Name"
+msgstr "Назва"
+
+msgid "Repositories You are Watching"
+msgstr "Ви проглядаєте репозиторії"
+
+msgid "Default Permissions"
+msgstr "Дозволу за замовчуванням"
+
+msgid "Global"
+msgstr "Глобальні"
+
+msgid "IP Whitelist"
+msgstr "Білий список IP"
+
+msgid "Anonymous access"
+msgstr "Анонімний доступ"
+
+msgid "Allow anonymous access"
+msgstr "Дозволити анонімний доступ"
+
+msgid "Apply to all existing repositories"
+msgstr "Поширюються на всі існуючі репозиторії"
+
+msgid "Permissions for the Default user on new repositories."
+msgstr "Дозволи для користувача за промовчанням на нові репозиторії."
+
+msgid "Repository group"
+msgstr "Група репозиторіїв"
+
+msgid "Apply to all existing repository groups"
+msgstr "Застосувати до всіх наявних груп репозиторіїв"
+
+msgid "Permissions for the Default user on new repository groups."
+msgstr "Дозволи для користувача за промовчанням на нові групи репозиторіів."
+
+msgid "User group"
+msgstr "Група користувачів"
+
+msgid "Apply to all existing user groups"
+msgstr "Застосувати до всіх існуючих груп користувачів"
+
+msgid "Permissions for the Default user on new user groups."
+msgstr ""
+"Дозволи для користувача за замовчуванням для нових груп користувачів."
+
+msgid "User group creation"
+msgstr "Створення групи користувачів"
+
+msgid "Repository forking"
+msgstr "Репозиторій розгалуження"
+
+msgid "Registration"
+msgstr "Реєстрація"
+
+msgid "Confirm to delete this IP address: %s"
+msgstr "Підтвердіть, щоб видалити IP-адреса: %s"
+
+msgid "All IP addresses are allowed."
+msgstr "Дозволено всі IP-адреси."
+
+msgid "New IP address"
+msgstr "Нова ІР-адреса"
+
+msgid "Repository Groups"
+msgstr "Групи Репозиторіїв"
+
+msgid "Group name"
+msgstr "Назва групи"
+
+msgid "Group parent"
+msgstr "Батьківська група"
+
+msgid "Copy parent group permissions"
+msgstr "Копіювання дозволів батьківської групи"
+
+msgid "Add Child Group"
+msgstr "Додати Дочіру групу"
+
+msgid "Settings"
+msgstr "Параметри"
+
+msgid "Advanced"
+msgstr "Додатково"
+
+msgid "Permissions"
+msgstr "Дозволи"
+
+msgid "Repository Group: %s"
+msgstr "Група репозиторію: %s"
+
+msgid "Total repositories"
+msgstr "Всього репозиторіїв"
+
+msgid "Children groups"
+msgstr "Дочірні групи"
+
+msgid "Created on"
+msgstr "Створено о"
+
+msgid "Delete this repository group"
+msgstr "Видалити цю групу репозиторіїв"
+
+msgid "Not visible"
+msgstr "Не видно"
+
+msgid "Visible"
+msgstr "Видно"
+
+msgid "Add repos"
+msgstr "Додати репозиторій"
+
+msgid "Add/Edit groups"
+msgstr "Додавання/редагування груп"
+
+msgid "User/User Group"
+msgstr "Група користувачів/користувачів"
+
+msgid "Default"
+msgstr "За промовчанням"
+
+msgid "Revoke"
+msgstr "Відкликати"
+
+msgid "Add new"
+msgstr "Додати новий"
+
+msgid "Apply to children"
+msgstr "Застосовувати до дочірніх"
+
+msgid "Both"
+msgstr "Обидва"
+
+msgid "Remove this group"
+msgstr "Видалити цю групу"
+
+msgid "Confirm to delete this group"
+msgstr "Підтвердіть, щоб видалити цю групу"
+
+msgid "Number of Top-level Repositories"
+msgstr "Кількість репозиторіїв верхнього рівня"
+
+msgid "Clone remote repository"
+msgstr "Клонувати віддалений репозиторій"
+
+msgid "Files"
+msgstr "Файли"
+
+msgid "Pull Requests"
+msgstr "Запити Pull Requests"
+
+msgid "Options"
+msgstr "Параметри"
+
+msgid "Compare Fork"
+msgstr "Порівняти Вилки"
+
+msgid "Compare"
+msgstr "Порівняти"
+
+msgid "Search"
+msgstr "Пошук"
+
+msgid "Follow"
+msgstr "Слідувати"
+
+msgid "Unfollow"
+msgstr "Не слідкувати"
+
+msgid "Fork"
+msgstr "Форк"
+
+msgid "Create Pull Request"
+msgstr "Створити Pull-Запит"
+
+msgid "Switch To"
+msgstr "Переключитися на"
+
+msgid "No matches found"
+msgstr "Збігів не знайдено"
+
+msgid "Show recent activity"
+msgstr "Показати недавню активність"
+
+msgid "Public journal"
+msgstr "Публічний журнал"
+
+msgid "Gists"
+msgstr "Gists"
+
+msgid "Search in repositories"
+msgstr "Пошук в репозиторіях"
+
+msgid "Login to Your Account"
+msgstr "Увійти в свій аккаунт"
+
+msgid "Forgot password?"
+msgstr "Забули пароль?"
+
+msgid "Don't have an account?"
+msgstr "Не маєте облікового запису?"
+
+msgid "Log Out"
+msgstr "Вийти"
+
+msgid "Create repositories"
+msgstr "Створення репозиторіїв"
+
+msgid "Create user groups"
+msgstr "Створення груп користувачів"
+
+msgid "Show"
+msgstr "Показати"
+
+msgid "No permissions defined yet"
+msgstr "Ще не визначено жодних дозволів"
+
+msgid "Permission"
+msgstr "Права"
+
+msgid "Edit Permission"
+msgstr "Змінити права"
+
+msgid "Retry"
+msgstr "Повторити"
+
+msgid "Submitting ..."
+msgstr "Надсилання…"
+
+msgid "Unable to post"
+msgstr "Не вдається опублікувати"
+
+msgid "Add Another Comment"
+msgstr "Додати ще один коментар"
+
+msgid "Group"
+msgstr "Група"
+
+msgid "Loading ..."
+msgstr "Завантаження..."
+
+msgid "loading ..."
+msgstr "завантаження..."
+
+msgid "Search truncated"
+msgstr "Пошук усічений"
+
+msgid "No matching files"
+msgstr "Немає відповідних файлів"
+
+msgid "Collapse Diff"
+msgstr "Згорнути відмінності"
+
+msgid "Expand Diff"
+msgstr "Розгорнути відмінність"
+
+msgid "No revisions"
+msgstr "Немає змін"
+
+msgid "Failed to revoke permission"
+msgstr "Не вдалося відкликати дозвіл"
+
+msgid "Select changeset"
+msgstr "Виберіть набір змін"
+
+msgid "Specify changeset"
+msgstr "Укажіть набір змін"
+
+msgid "Click to sort ascending"
+msgstr "Натисніть для сортування за зростанням"
+
+msgid "Click to sort descending"
+msgstr "Натисніть для сортування за спаданням"
+
+msgid "No records found."
+msgstr "Записів не знайдено."
+
+msgid "Data error."
+msgstr "Помилка даних."
+
+msgid "Loading..."
+msgstr "Завантаження..."
+
+msgid "Clear selection"
+msgstr "Зняти позначення"
+
+msgid "There are no changes yet"
+msgstr "Поки що немає змін"
+
+msgid "Removed"
+msgstr "Вилучено"
+
+msgid "Changed"
+msgstr "Змінено"
+
+msgid "Added"
+msgstr "Додано"
+
+msgid "Expand commit message"
+msgstr "Розгорнути повідомлення про фіксацію"
+
+msgid "%s comments"
+msgstr "%s коментарів"
+
+msgid "Bookmark %s"
+msgstr "Закладка %s"
+
+msgid "Tag %s"
+msgstr "Тег %s"
+
+msgid "Branch %s"
+msgstr "Branch %s"
+
+msgid "%s Changeset"
+msgstr "%s Changeset"
+
+msgid "Changeset status"
+msgstr "Стан набору змін"
+
+msgid "Merge"
+msgstr "Злити"
+
+msgid "Replaced by:"
+msgstr "Замінено на:"
+
+msgid "Show full diff anyway"
+msgstr "Все одно Відображати всі відмінності"
+
+msgid "comment"
+msgstr "коментар"
+
+msgid "No title"
+msgstr "Без назви"
+
 msgid "files"
 msgstr "файли"
 
 msgid "Show more"
 msgstr "Показати більше"
 
+msgid "files changed"
+msgstr "файли змінено"
+
+msgid "files removed"
+msgstr "вилучені файли"
+
+msgid "commit"
+msgstr "Фіксація"
+
+msgid "file added"
+msgstr "файл додано"
+
+msgid "file changed"
+msgstr "файл змінено"
+
+msgid "file removed"
+msgstr "файл видалено"
+
+msgid "Fork of"
+msgstr "Відгалуження з"
+
 msgid "Clone from"
 msgstr "Клонувати з"
+
+msgid "Trending files"
+msgstr "Популярні файли"
+
+msgid "Download"
+msgstr "Завантажити"
+
+msgid "There are no downloads yet"
+msgstr "Завантажень немає"
+
+msgid "Downloads are disabled for this repository"
+msgstr "Завантаження відключені для цього репозиторію"
+
+msgid "Download as zip"
+msgstr "Скачати як zip"
+
+msgid "With subrepos"
+msgstr "З підрепо"
+
+msgid "Feed"
+msgstr "Канал"
 
 msgid "Latest Changes"
 msgstr "Останні зміни"
 
 msgid "Quick Start"
 msgstr "Швидкий старт"
+
+msgid "Add or upload files directly via Kallithea"
+msgstr "Додайте або завантажте файли безпосередньо через Kallithea"
+
+msgid "Existing repository?"
+msgstr "Існуючий репозиторій?"
