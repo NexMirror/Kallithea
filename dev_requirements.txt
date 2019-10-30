@@ -2,7 +2,7 @@ pytest >= 4.6.6, < 4.7
 pytest-sugar >= 0.9.2, < 0.10
 pytest-benchmark >= 3.2.2, < 3.3
 pytest-localserver >= 0.5.0, < 0.6
-mock < 3.1
-Sphinx < 1.9
-WebTest < 2.1
+mock >= 3.0.0, < 3.1
+Sphinx >= 1.8.0, < 1.9
+WebTest >= 2.0.3, < 2.1
 isort == 4.3.21

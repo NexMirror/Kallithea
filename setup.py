@@ -41,7 +41,7 @@ is_windows = __platform__ in ['Windows']
 
 requirements = [
     "alembic >= 0.8.0, < 1.1",
-    "gearbox < 1",
+    "gearbox >= 0.1.0, < 1",
     "waitress >= 0.8.8, < 1.4",
     "WebOb >= 1.7, < 1.9",
     "backlash >= 0.1.2, < 1",
