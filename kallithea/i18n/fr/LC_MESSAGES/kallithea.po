@@ -281,7 +281,7 @@ msgid "No additional changesets found for iterating on this pull request."
 msgstr "Pas de changeset additionnel trouvé pour cette requête de pull."
 
 msgid "Note: Branch %s has another head: %s."
-msgstr "Note: La branche %s a une autre tête : %s."
+msgstr "Note : La branche %s a une autre tête : %s."
 
 msgid "Git pull requests don't support iterating yet."
 msgstr ""
