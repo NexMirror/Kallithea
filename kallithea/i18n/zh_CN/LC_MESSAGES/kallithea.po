@@ -574,9 +574,6 @@ msgstr "密码含有无效（非ASCII）字符"
 msgid "Passwords do not match"
 msgstr "密码不符"
 
-msgid "Token mismatch"
-msgstr "令牌不匹配"
-
 msgid "Repository named %(repo)s already exists"
 msgstr "已经存在版本库%(repo)s"
 

@@ -856,9 +856,6 @@ msgstr "Hasła różnią się"
 msgid "Invalid username or password"
 msgstr "nieprawidłowa nazwa użytkownika lub hasło"
 
-msgid "Token mismatch"
-msgstr "Niezgodność tokenu"
-
 msgid "Repository named %(repo)s already exists"
 msgstr "Repozytorium o nazwie %(repo)s już istnieje"
 

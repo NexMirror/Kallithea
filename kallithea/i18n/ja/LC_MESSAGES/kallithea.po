@@ -905,9 +905,6 @@ msgstr "パスワードが一致しません"
 msgid "Invalid username or password"
 msgstr "ユーザー名とパスワードの組み合わせが無効です"
 
-msgid "Token mismatch"
-msgstr "トークンが一致しません"
-
 msgid "Repository name %(repo)s is not allowed"
 msgstr "リポジトリ名 %(repo)s は許可されていません"
 

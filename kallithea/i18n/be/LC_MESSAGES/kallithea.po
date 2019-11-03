@@ -935,9 +935,6 @@ msgstr "Паролі не супадаюць"
 msgid "Invalid username or password"
 msgstr "Няслушнае імя ці пароль"
 
-msgid "Token mismatch"
-msgstr "Несупадзенне токенаў"
-
 msgid "Repository name %(repo)s is not allowed"
 msgstr "Імя рэпазітара %(repo)s забароненае"
 

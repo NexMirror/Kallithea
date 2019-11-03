@@ -556,9 +556,6 @@ msgstr "Passordene samsvarer ikke"
 msgid "Invalid username or password"
 msgstr "Ugyldig brukernavn eller passord"
 
-msgid "Token mismatch"
-msgstr "Symbol stemmer ikke overens"
-
 msgid "Invalid repository URL"
 msgstr "Ugyldig pakkebrønnsnettadresse"
 

@@ -848,9 +848,6 @@ msgstr "Неверно задан старый пароль"
 msgid "Passwords do not match"
 msgstr "Пароли не совпадают"
 
-msgid "Token mismatch"
-msgstr "Несовпадение токенов"
-
 msgid "Repository named %(repo)s already exists"
 msgstr "Репозитарий %(repo)s уже существует"
 

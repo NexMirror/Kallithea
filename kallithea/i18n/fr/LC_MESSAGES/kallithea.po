@@ -1171,9 +1171,6 @@ msgstr "Les mots de passe ne correspondent pas"
 msgid "Invalid username or password"
 msgstr "Nom d'utilisateur ou mot de passe invalide"
 
-msgid "Token mismatch"
-msgstr "Jeton d’authentification incorrect"
-
 msgid "Repository name %(repo)s is not allowed"
 msgstr "Le nom de dépôt « %(repo)s » n’est pas autorisé"
 

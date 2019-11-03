@@ -1013,9 +1013,6 @@ msgstr "Ungültiges altes Passwort"
 msgid "Passwords do not match"
 msgstr "Die Passwörter stimmen nicht überein"
 
-msgid "Token mismatch"
-msgstr "Schlüssel stimmt nicht überein"
-
 msgid "Repository named %(repo)s already exists"
 msgstr "Es gibt bereits ein Repository mit \"%(repo)s\""
 

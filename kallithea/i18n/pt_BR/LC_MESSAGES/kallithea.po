@@ -643,9 +643,6 @@ msgstr "Caracteres inválidos (não-ascii) na senha"
 msgid "Passwords do not match"
 msgstr "Senhas não conferem"
 
-msgid "Token mismatch"
-msgstr "Descompasso de Token"
-
 msgid "Repository named %(repo)s already exists"
 msgstr "Um repositório chamado %(repo)s já existe"
 
