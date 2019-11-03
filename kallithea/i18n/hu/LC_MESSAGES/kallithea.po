@@ -3,7 +3,6 @@
 
 msgid ""
 msgstr ""
-"Project-Id-Version: Kallithea 0.3\n"
 "Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
