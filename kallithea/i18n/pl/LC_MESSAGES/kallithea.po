@@ -781,11 +781,6 @@ msgstr "Wpisz hasło"
 msgid "Enter %(min)i characters or more"
 msgstr "Wpisz %(min)i lub więcej znaków"
 
-msgid ""
-"[Comment] %(repo_name)s changeset %(short_id)s \"%(message_short)s\" on "
-"%(branch)s"
-msgstr "[komentarz] wniosek o połączenie gałęzi"
-
 msgid "New user %(new_username)s registered"
 msgstr "Użytkownik %(new_username)s zarejestrował się"
 
@@ -2024,11 +2019,6 @@ msgstr "Dodana"
 msgid "Affected %s files"
 msgstr "Zarażone pliki %s"
 
-msgid ""
-"Changeset status: %s by %s\n"
-"Click to open associated pull request %s"
-msgstr "Status grupy zmian: %s⏎ Kliknij, aby otworzyć prośby pobrania #%s"
-
 msgid "Changeset status: %s by %s"
 msgstr "Status grupy zmian: %s przez %s"
 
@@ -2466,14 +2456,8 @@ msgstr "Usuń prośbę o połączenie gałęzi"
 msgid "Confirm to delete this pull request"
 msgstr "Potwierdź usunięcie połączenia gałęzi"
 
-msgid "Confirm again to delete this pull request with %s comments"
-msgstr "Potwierdź usunięcie połączenia gałęzi"
-
 msgid "%s Pull Request %s"
 msgstr "%s Połączonych gałęzi %s"
-
-msgid "Pull request %s from %s#%s"
-msgstr "Połączonych gałęzi #%s"
 
 msgid "Summarize the changes"
 msgstr "Podsumuj zmiany"
