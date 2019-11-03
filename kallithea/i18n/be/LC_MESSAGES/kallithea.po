@@ -1607,12 +1607,6 @@ msgstr "Занесці змены з аддаленага рэпазітара"
 msgid "Confirm to pull changes from remote repository."
 msgstr "Пацвердзіце спампоўку змен з аддаленага рэпазітара."
 
-msgid "Permanent Repository ID"
-msgstr "Пастаяннае ШВ рэпазітара"
-
-msgid "What is that?"
-msgstr "Што гэта?"
-
 msgid "Remote repository"
 msgstr "Аддалены рэпазітар"
 

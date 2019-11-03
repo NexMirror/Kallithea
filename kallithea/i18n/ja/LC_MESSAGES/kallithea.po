@@ -1637,15 +1637,6 @@ msgstr "リモートリポジトリから変更を取り込んでもよろしい
 msgid "This repository does not have a remote repository URL."
 msgstr "このリポジトリにリモートURLは設定されていません"
 
-msgid "Permanent Repository ID"
-msgstr "リポジトリID"
-
-msgid "What is that?"
-msgstr "これは何？"
-
-msgid "URL by id"
-msgstr "id を使ってURLを表現"
-
 msgid ""
 "In case this repository is renamed or moved into another group the "
 "repository URL changes.\n"

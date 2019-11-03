@@ -1895,15 +1895,6 @@ msgstr "Bestätige die Abholung von Änderungen vom entfernten Repository."
 msgid "This repository does not have a remote repository URL."
 msgstr "Für dieses Repository ist keine nicht-lokale URL angegeben."
 
-msgid "Permanent Repository ID"
-msgstr "Dauerhafte Repository-Kennung"
-
-msgid "What is that?"
-msgstr "Was ist das?"
-
-msgid "URL by id"
-msgstr "URL nach Kennung"
-
 msgid ""
 "In case this repository is renamed or moved into another group the "
 "repository URL changes.\n"

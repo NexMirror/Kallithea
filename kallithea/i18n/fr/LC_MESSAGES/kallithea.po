@@ -2106,15 +2106,6 @@ msgstr ""
 msgid "This repository does not have a remote repository URL."
 msgstr "Ce dépôt n'a pas d'URL de dépôt distant."
 
-msgid "Permanent Repository ID"
-msgstr "ID permanent du dépôt"
-
-msgid "What is that?"
-msgstr "Qu'est-ce que c'est ?"
-
-msgid "URL by id"
-msgstr "URL par id"
-
 msgid ""
 "In case this repository is renamed or moved into another group the "
 "repository URL changes.\n"

@@ -1485,9 +1485,6 @@ msgstr "pobieranie zmian ze zdalnego repozytorium"
 msgid "Confirm to pull changes from remote repository."
 msgstr "Potwierdź pobranie zmian ze zdalnego repozytorium."
 
-msgid "Permanent Repository ID"
-msgstr "Stałe ID repozytorium"
-
 msgid "Remote repository"
 msgstr "Zdalne repozytorium"
 
