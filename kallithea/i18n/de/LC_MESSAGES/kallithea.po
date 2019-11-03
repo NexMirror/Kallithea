@@ -2117,14 +2117,6 @@ msgstr "Git-Version"
 msgid "Git path"
 msgstr "Git-Pfad"
 
-msgid "Upgrade info endpoint"
-msgstr "Upgrade-Info-Endpunkt"
-
-msgid "Note: please make sure this server can access this URL"
-msgstr ""
-"Hinweis: Bitte stellen Sie sicher, dass der Server auf die URL zugreifen "
-"kann"
-
 msgid "Python Packages"
 msgstr "Python-Pakete"
 

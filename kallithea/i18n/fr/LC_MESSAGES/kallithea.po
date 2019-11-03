@@ -2329,9 +2329,6 @@ msgstr "Vérification des mises à jour…"
 msgid "Kallithea version"
 msgstr "Version de Kallithea"
 
-msgid "Check for updates"
-msgstr "Vérifier les mises à jour"
-
 msgid "Kallithea configuration file"
 msgstr "Fichier de configuration de Kallithea"
 
@@ -2346,12 +2343,6 @@ msgstr "Version de Git"
 
 msgid "Git path"
 msgstr "Chemin de Git"
-
-msgid "Upgrade info endpoint"
-msgstr "Point d'accès aux informations de mise à jour"
-
-msgid "Note: please make sure this server can access this URL"
-msgstr "Note : vérifiez que le serveur peut accéder cette URL"
 
 msgid "Python Packages"
 msgstr "Paquets Python"

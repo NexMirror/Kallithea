@@ -1824,9 +1824,6 @@ msgstr "更新を確認中..."
 msgid "Kallithea version"
 msgstr "Kallithea バージョン"
 
-msgid "Check for updates"
-msgstr "更新を確認"
-
 msgid "Kallithea configuration file"
 msgstr "Kallithea の設定ファイル"
 
@@ -1841,12 +1838,6 @@ msgstr "Git バージョン"
 
 msgid "Git path"
 msgstr "Git パス"
-
-msgid "Upgrade info endpoint"
-msgstr "更新情報のエンドポイント"
-
-msgid "Note: please make sure this server can access this URL"
-msgstr "ノート: サーバーがこのURLにアクセスできることを確認して下さい"
 
 msgid "Python Packages"
 msgstr "Python パッケージ"

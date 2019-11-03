@@ -1695,9 +1695,6 @@ msgstr "Праверка абнаўленняў..."
 msgid "Kallithea version"
 msgstr "Версія Kallithea"
 
-msgid "Check for updates"
-msgstr "Праверыць наяўнасць абнаўленняў"
-
 msgid "Platform"
 msgstr "Платформа"
 
