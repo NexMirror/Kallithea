@@ -1554,12 +1554,6 @@ msgstr "Wersja Git"
 msgid "Show repository size after push"
 msgstr "Pokaż rozmiar repozytorium po wysłaniu zmian"
 
-msgid "Log user push commands"
-msgstr "Logi poleceń wysłania zmian użytkowników"
-
-msgid "Log user pull commands"
-msgstr "Logi poleceń połączenia gałęzi użytkowników"
-
 msgid "Update repository after push (hg update)"
 msgstr "Aktualizacja repozytorium po wysłaniu zmian (aktualizacja hg)"
 

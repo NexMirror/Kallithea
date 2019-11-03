@@ -311,12 +311,6 @@ msgstr "重新索引"
 msgid "Show repository size after push"
 msgstr "push 後顯示版本庫大小"
 
-msgid "Log user push commands"
-msgstr "紀錄使用者推送命令"
-
-msgid "Log user pull commands"
-msgstr "紀錄使用者抓取命令"
-
 msgid "Update repository after push (hg update)"
 msgstr "push後更新版本庫 (hg update)"
 

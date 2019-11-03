@@ -2111,12 +2111,6 @@ msgstr "Python-Pakete"
 msgid "Show repository size after push"
 msgstr "Zeigt die Größe des Repositories nach dem Push an"
 
-msgid "Log user push commands"
-msgstr "Protokollieren der Push-Befehle der Benutzer"
-
-msgid "Log user pull commands"
-msgstr "Protokollieren der Pull-Befehle des Benutzers"
-
 msgid "Update repository after push (hg update)"
 msgstr "Repository nach dem Push aktualisieren (hg update)"
 

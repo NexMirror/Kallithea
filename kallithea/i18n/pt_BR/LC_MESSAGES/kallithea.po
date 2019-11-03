@@ -1015,12 +1015,6 @@ msgstr "Reindexar"
 msgid "Show repository size after push"
 msgstr "Mostrar tamanho do repositório após o push"
 
-msgid "Log user push commands"
-msgstr "Armazenar registro de comandos de push dos usuários"
-
-msgid "Log user pull commands"
-msgstr "Armazenar registro de comandos de pull dos usuários"
-
 msgid "Update repository after push (hg update)"
 msgstr "Atualizar repositório após realizar push (hg update)"
 

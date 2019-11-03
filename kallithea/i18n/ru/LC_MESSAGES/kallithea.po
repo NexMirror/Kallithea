@@ -1457,12 +1457,6 @@ msgstr "Версия Git"
 msgid "Show repository size after push"
 msgstr "Показывать размер репозитория после отправки"
 
-msgid "Log user push commands"
-msgstr "Логировать пользовательские команды отправки"
-
-msgid "Log user pull commands"
-msgstr "Логировать пользовательские команды получения"
-
 msgid "Update repository after push (hg update)"
 msgstr "Обновлять репозиторий после отправки (hg update)"
 

@@ -1833,12 +1833,6 @@ msgstr "Python パッケージ"
 msgid "Show repository size after push"
 msgstr "プッシュ後にリポジトリのサイズを表示する"
 
-msgid "Log user push commands"
-msgstr "ユーザーのプッシュコマンドを記録する"
-
-msgid "Log user pull commands"
-msgstr "ユーザーのプルコマンドを記録する"
-
 msgid "Update repository after push (hg update)"
 msgstr "プッシュ後にリポジトリを更新する (hg update)"
 
