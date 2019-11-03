@@ -1907,9 +1907,6 @@ msgstr "Аўтарызавацца"
 msgid "Log Out"
 msgstr "Выйсці"
 
-msgid "Inherit defaults"
-msgstr "Ужываць значэнні па змоўчанні"
-
 msgid "Create repositories"
 msgstr "Стварыць рэпазітары"
 

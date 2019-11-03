@@ -2105,9 +2105,6 @@ msgstr "親リビジョン"
 msgid "Child rev."
 msgstr "子リビジョン"
 
-msgid "Inherit defaults"
-msgstr "デフォルト権限を継承"
-
 msgid "Create repositories"
 msgstr "リポジトリを作成する"
 

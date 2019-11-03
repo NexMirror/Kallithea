@@ -2670,19 +2670,6 @@ msgstr "Révision parente"
 msgid "Child rev."
 msgstr "Révision fille"
 
-msgid "Inherit defaults"
-msgstr "Hériter des réglages par défaut"
-
-msgid ""
-"Select to inherit global settings, IP whitelist and permissions from the "
-"%s."
-msgstr ""
-"Sélectionner pour hériter des réglages généraux, de la liste blanche d'IP "
-"et des permissions depuis les %s."
-
-msgid "default permissions"
-msgstr "permissions par défaut"
-
 msgid "Create repositories"
 msgstr "Création de dépôts"
 

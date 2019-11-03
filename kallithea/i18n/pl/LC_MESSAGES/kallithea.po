@@ -1724,12 +1724,6 @@ msgstr "Nie masz konta?"
 msgid "Log Out"
 msgstr "Wyloguj się"
 
-msgid "Inherit defaults"
-msgstr "Dziedziczenie domyślne"
-
-msgid "default permissions"
-msgstr "Domyślne uprawnienia"
-
 msgid "Create repositories"
 msgstr "Utwórz repozytorium"
 
