@@ -89,9 +89,6 @@ msgstr "Haga clic aquí para añadir un archivo nuevo"
 msgid "%s at %s"
 msgstr "%s en %s"
 
-msgid "This repository has been locked by %s on %s"
-msgstr "Este repositorio ha sido bloqueado por %s en %s"
-
 msgid "You can only delete files with revision being a valid branch"
 msgstr ""
 "Sólo puede borrar archivos si la revisión pertenece a una rama válida"

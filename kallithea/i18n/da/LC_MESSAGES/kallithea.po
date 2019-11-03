@@ -98,9 +98,6 @@ msgstr "Klik her  for at tilføje en ny fil"
 msgid "%s at %s"
 msgstr "%s fra %s"
 
-msgid "This repository has been locked by %s on %s"
-msgstr "Dette repository er låst af %s den %s"
-
 msgid "You can only delete files with revision being a valid branch"
 msgstr "Du kan kun slette filer, hvor revisionen er en gyldig branch"
 
@@ -488,15 +485,6 @@ msgstr "Mærket repository %s som fork af %s"
 
 msgid "An error occurred during this operation"
 msgstr "Der opstod en fejl under denne operation"
-
-msgid "Repository has been locked"
-msgstr "Repository er blevet låst"
-
-msgid "Repository has been unlocked"
-msgstr "Repository er blevet låst op"
-
-msgid "An error occurred during unlocking"
-msgstr "Der opstod en fejl ved oplåsning"
 
 msgid "Cache invalidation successful"
 msgstr "Ugyldiggørelse af cache er succesfuld"

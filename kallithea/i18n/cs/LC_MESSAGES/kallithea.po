@@ -109,12 +109,6 @@ msgstr "Chyba při vytváření repozitáře %s"
 msgid "Nothing"
 msgstr "Nic"
 
-msgid "Repository has been locked"
-msgstr "Repozitář byl uzamčen"
-
-msgid "Repository has been unlocked"
-msgstr "Repozitář byl odemčen"
-
 msgid "Settings"
 msgstr "Nastavení"
 

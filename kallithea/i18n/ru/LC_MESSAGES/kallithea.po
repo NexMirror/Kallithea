@@ -78,9 +78,6 @@ msgstr "Нажмите чтобы добавить новый файл"
 msgid "%s at %s"
 msgstr "%s (%s)"
 
-msgid "This repository has been locked by %s on %s"
-msgstr "Репозиторий заблокировал %s в %s"
-
 msgid "You can only delete files with revision being a valid branch"
 msgstr ""
 "Вы можете удалять файлы только в ревизии, связанной с существующей веткой "
@@ -435,15 +432,6 @@ msgstr "Репозиторий %s отмечен как форк %s"
 
 msgid "An error occurred during this operation"
 msgstr "Произошла ошибка при выполнении операции"
-
-msgid "Repository has been locked"
-msgstr "Репозиторий заблокирован"
-
-msgid "Repository has been unlocked"
-msgstr "Репозиторий разблокирован"
-
-msgid "An error occurred during unlocking"
-msgstr "Произошла ошибка во время разблокирования"
 
 msgid "Cache invalidation successful"
 msgstr "Кэш сброшен"
@@ -1080,12 +1068,6 @@ msgstr "Включить скачивание"
 msgid "Enable download menu on summary page."
 msgstr "Включить меню скачивания на странице «Общие сведения»."
 
-msgid "Enable locking"
-msgstr "Включить блокирование"
-
-msgid "Enable lock-by-pulling on repository."
-msgstr "Включить автоблокировку для репозитория."
-
 msgid "Edit Gist"
 msgstr "Правка gist-записи"
 
@@ -1287,13 +1269,6 @@ msgstr "Удалить эту группу репозиториев"
 msgid "Add new"
 msgstr "Добавить новый"
 
-msgid ""
-"Enable lock-by-pulling on group. This option will be applied to all other "
-"groups and repositories inside"
-msgstr ""
-"Включить автоблокировку для группы. Эта опция будет применена ко всем "
-"дочерним группам и репозиториям"
-
 msgid "Remove this group"
 msgstr "Удалить эту группу"
 
@@ -1359,24 +1334,6 @@ msgid ""
 msgstr ""
 "Все производимые с этим репозиторием действия будут отображаться в "
 "публичном журнале."
-
-msgid "Change Locking"
-msgstr "Включить блокирование"
-
-msgid "Confirm to unlock repository."
-msgstr "Подтвердите снятие блокировки с репозитория."
-
-msgid "Unlock Repository"
-msgstr "Разблокировать репозиторий"
-
-msgid "Confirm to lock repository."
-msgstr "Подтвердите блокировку репозитория."
-
-msgid "Lock Repository"
-msgstr "Заблокировать репозиторий"
-
-msgid "Repository is not locked"
-msgstr "Репозиторий не заблокирован"
 
 msgid "Confirm to delete this repository: %s"
 msgstr "Подтвердите удаление этого репозитория: %s"
@@ -1632,12 +1589,6 @@ msgstr "Сравнить"
 
 msgid "Search"
 msgstr "Поиск"
-
-msgid "Unlock"
-msgstr "Разблокировать"
-
-msgid "Lock"
-msgstr "Заблокировать"
 
 msgid "Follow"
 msgstr "Наблюдать"
@@ -2233,12 +2184,6 @@ msgstr "файл удалён"
 
 msgid "%s Summary"
 msgstr "%s общие сведения"
-
-msgid "Repository locked by %s"
-msgstr "Репозитарий заблокирован %s"
-
-msgid "Repository unlocked"
-msgstr "Репозиторий разблокирован"
 
 msgid "Fork of"
 msgstr "Форк от"

@@ -80,9 +80,6 @@ msgstr "Endringsettet var for stort og har blitt avskåret…"
 msgid "Click here to add new file"
 msgstr "Klikk her for å legge til ny fil"
 
-msgid "This repository has been locked by %s on %s"
-msgstr "Denne pakkebrønnen har blitt påst av %s den %s"
-
 msgid "Deleted file %s via Kallithea"
 msgstr "Slettet filen %s via Kallithea"
 
@@ -405,15 +402,6 @@ msgstr "Markerte pakkebrønnen %s som en forgrening av %s"
 
 msgid "An error occurred during this operation"
 msgstr "En feil inntraff under denne operasjonen"
-
-msgid "Repository has been locked"
-msgstr "Pakkebrønnen har blitt låst"
-
-msgid "Repository has been unlocked"
-msgstr "Pakkebrønnen har blitt låst opp"
-
-msgid "An error occurred during unlocking"
-msgstr "En feil inntraff under opplåsning"
 
 msgid "Updated VCS settings"
 msgstr "Oppdaterte VCS-innstillinger"
@@ -743,9 +731,6 @@ msgstr "Skru på nedlastinger"
 msgid "Enable download menu on summary page."
 msgstr "Skru på nedlastingsmeny på sammendragsside."
 
-msgid "Enable locking"
-msgstr "Skru på låsing"
-
 msgid "Expires"
 msgstr "Utløper"
 
@@ -937,12 +922,6 @@ msgstr "Statistikk"
 
 msgid "Set"
 msgstr "Sett"
-
-msgid "Lock Repository"
-msgstr "Lås pakkebrønn"
-
-msgid "Repository is not locked"
-msgstr "Pakkebrønnen er ikke låst"
 
 msgid "This repository has %s fork"
 msgid_plural "This repository has %s forks"
@@ -1137,12 +1116,6 @@ msgstr "Sammenlign"
 
 msgid "Search"
 msgstr "Søk"
-
-msgid "Unlock"
-msgstr "Lås opp"
-
-msgid "Lock"
-msgstr "Lås"
 
 msgid "Follow"
 msgstr "Følg"

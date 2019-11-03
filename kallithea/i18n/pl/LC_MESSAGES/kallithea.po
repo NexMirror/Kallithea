@@ -80,9 +80,6 @@ msgstr "Nie ma jeszcze gałęzi."
 msgid "%s at %s"
 msgstr "w %s i %s"
 
-msgid "This repository has been locked by %s on %s"
-msgstr "Repozytorium zostało zablokowane przez %s na %s"
-
 msgid "You can only delete files with revision being a valid branch"
 msgstr "Można tylko usuwać pliki po sprawdzeniu obecnej gałęzi"
 
@@ -389,15 +386,6 @@ msgstr "Oznaczono %s repo jako rozwidlenie %s"
 
 msgid "An error occurred during this operation"
 msgstr "Wystąpił błąd podczas tej operacji"
-
-msgid "Repository has been locked"
-msgstr "Repozytorium zostało zablokowane"
-
-msgid "Repository has been unlocked"
-msgstr "Repozytorium zostało odblokowane"
-
-msgid "An error occurred during unlocking"
-msgstr "Wystąpił błąd podczas odblokowywania"
 
 msgid "Cache invalidation successful"
 msgstr "Cache wyczyszczony poprawnie"
@@ -1079,12 +1067,6 @@ msgstr "Włącz pobieranie"
 msgid "Enable download menu on summary page."
 msgstr "Włącz menu pobierania na stronie podsumowania."
 
-msgid "Enable locking"
-msgstr "Włącz blokowanie"
-
-msgid "Enable lock-by-pulling on repository."
-msgstr "Włącz blokowanie pobierania w repozytorium."
-
 msgid "Edit Gist"
 msgstr "Edytuj Gist"
 
@@ -1358,13 +1340,6 @@ msgstr "Dodaj nowe"
 msgid "Both"
 msgstr "Oba"
 
-msgid ""
-"Enable lock-by-pulling on group. This option will be applied to all other "
-"groups and repositories inside"
-msgstr ""
-"Włącz blokowanie pobierania przez grupy. Opcja ta będzie stosowana do "
-"wszystkich innych grup i repozytoriów wewnątrz"
-
 msgid "Remove this group"
 msgstr "Usuń tę grupę użytkowników"
 
@@ -1433,24 +1408,6 @@ msgid ""
 msgstr ""
 "Wszystkie działania wykonywane na tym repozytorium będą dostępne dla "
 "wszystkich w dzienniku publicznym."
-
-msgid "Change Locking"
-msgstr "Włącz blokowanie"
-
-msgid "Confirm to unlock repository."
-msgstr "Potwierdź odblokowanie repozytorium."
-
-msgid "Unlock Repository"
-msgstr "Odblokuj repozytorium"
-
-msgid "Confirm to lock repository."
-msgstr "Potwierdź blokowanie repozytorium."
-
-msgid "Lock Repository"
-msgstr "Zablokuj repozytorium"
-
-msgid "Repository is not locked"
-msgstr "Repozytorium nie jest zablokowane"
 
 msgid "Confirm to delete this repository: %s"
 msgstr "Potwierdź usunięcie repozytorium: %s"
@@ -1733,12 +1690,6 @@ msgstr "Porównaj"
 
 msgid "Search"
 msgstr "Szukaj"
-
-msgid "Unlock"
-msgstr "Odblokowany"
-
-msgid "Lock"
-msgstr "zablokowane"
 
 msgid "Follow"
 msgstr "Obserwuj"
@@ -2467,12 +2418,6 @@ msgstr "plik usunięty"
 
 msgid "%s Summary"
 msgstr "Podsumowanie %s"
-
-msgid "Repository locked by %s"
-msgstr "Repozytorium zablokowane przez %s"
-
-msgid "Repository unlocked"
-msgstr "Repozytorium odblokowane"
 
 msgid "Fork of"
 msgstr "Gałąź z"

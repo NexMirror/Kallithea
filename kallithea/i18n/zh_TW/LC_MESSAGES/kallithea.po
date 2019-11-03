@@ -112,12 +112,6 @@ msgstr "啟用"
 msgid "Repository %s updated successfully"
 msgstr "版本庫 %s 更新完成"
 
-msgid "Repository has been locked"
-msgstr "儲存所已被鎖定"
-
-msgid "Repository has been unlocked"
-msgstr "儲存所已打開"
-
 msgid "Updated application settings"
 msgstr "更新應用設定"
 

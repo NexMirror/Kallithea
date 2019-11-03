@@ -85,9 +85,6 @@ msgstr "Κλικ εδώ για προθήκη νέου αρχείου"
 msgid "%s at %s"
 msgstr "%s την %s"
 
-msgid "This repository has been locked by %s on %s"
-msgstr "Το αποθετήριο κλειδώθηκε από %s την %s"
-
 msgid "Deleted file %s via Kallithea"
 msgstr "Διαγραφή αρχείου %s μέσω του Kallithea"
 
@@ -449,15 +446,6 @@ msgstr "Σημειώθηκε το αποθετήριο %s σαν κλώνος τ
 
 msgid "An error occurred during this operation"
 msgstr "Παρουσιάστηκε ένα σφάλμα κατά τη διάρκεια αυτής της λειτουργίας"
-
-msgid "Repository has been locked"
-msgstr "Το αποθετήριο έχει κλειδωθεί"
-
-msgid "Repository has been unlocked"
-msgstr "Το αποθετήριο έχει ξεκλειδωθεί"
-
-msgid "An error occurred during unlocking"
-msgstr "Παρουσιάστηκε ένα σφάλμα κατά το ξεκλείδωμα"
 
 msgid "Cache invalidation successful"
 msgstr "Η ακύρωση της cache ήταν επιτυχής"

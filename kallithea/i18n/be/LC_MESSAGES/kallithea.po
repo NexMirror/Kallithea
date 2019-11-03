@@ -88,9 +88,6 @@ msgstr "Націсніце каб дадаць новы файл"
 msgid "%s at %s"
 msgstr "%s (%s)"
 
-msgid "This repository has been locked by %s on %s"
-msgstr "Рэпазітар заблакаваў %s у %s"
-
 msgid "You can only delete files with revision being a valid branch"
 msgstr "Вы можаце выдаляць файлы толькі ў рэвізіі, злучанай з існай галінай"
 
@@ -452,15 +449,6 @@ msgstr "Рэпазітар %s адзначаны як форк %s"
 
 msgid "An error occurred during this operation"
 msgstr "Памылка пры выкананні аперацыі"
-
-msgid "Repository has been locked"
-msgstr "Рэпазітар заблакаваны"
-
-msgid "Repository has been unlocked"
-msgstr "Рэпазітар разблакаваны"
-
-msgid "An error occurred during unlocking"
-msgstr "Памылка падчас разблакавання"
 
 msgid "Cache invalidation successful"
 msgstr "Кэш скінуты"
@@ -1209,12 +1197,6 @@ msgstr "Уключыць спампоўку"
 msgid "Enable download menu on summary page."
 msgstr "Уключыць меню спампоўкі на старонцы «Агульныя звесткі»."
 
-msgid "Enable locking"
-msgstr "Уключыць блакаванне"
-
-msgid "Enable lock-by-pulling on repository."
-msgstr "Уключыць аўтаблакаванне для рэпазітара."
-
 msgid "Edit Gist"
 msgstr "Правіць gist-запіс"
 
@@ -1481,13 +1463,6 @@ msgstr "Дадаць новы"
 msgid "Both"
 msgstr "Абедзьве"
 
-msgid ""
-"Enable lock-by-pulling on group. This option will be applied to all other "
-"groups and repositories inside"
-msgstr ""
-"Уключыць аўтаблакоўку для групы. Гэта опцыя будзе ўжыта да ўсіх даччыных "
-"груп і рэпазітарам"
-
 msgid "Remove this group"
 msgstr "Выдаліць гэту групу"
 
@@ -1560,27 +1535,6 @@ msgid ""
 msgstr ""
 "Усе выконваемыя з гэтым рэпазітаром дзеянні будуць адлюстроўвацца ў "
 "публічным журнал."
-
-msgid "Change Locking"
-msgstr "Уключыць блакаванне"
-
-msgid "Confirm to unlock repository."
-msgstr "Пацвердзіце разблакаванне рэпазітара."
-
-msgid "Unlock Repository"
-msgstr "Разблакаваць рэпазітар"
-
-msgid "Locked by %s on %s"
-msgstr "Заблакавана %s %s"
-
-msgid "Confirm to lock repository."
-msgstr "Пацвердзіце блакаванне рэпазітара."
-
-msgid "Lock Repository"
-msgstr "Заблакаваць рэпазітар"
-
-msgid "Repository is not locked"
-msgstr "Рэпазітар не заблакаваны"
 
 msgid "Confirm to delete this repository: %s"
 msgstr "Пацвердзіце выдаленне гэтага рэпазітара: %s"
@@ -1922,12 +1876,6 @@ msgstr "Параўнаць"
 
 msgid "Search"
 msgstr "Пошук"
-
-msgid "Unlock"
-msgstr "Разблакаваць"
-
-msgid "Lock"
-msgstr "Заблакаваць"
 
 msgid "Follow"
 msgstr "Назіраць"
@@ -2644,12 +2592,6 @@ msgstr "файл выдалены"
 
 msgid "%s Summary"
 msgstr "%s агульныя звесткі"
-
-msgid "Repository locked by %s"
-msgstr "Рэпазітар заблакаваны %s"
-
-msgid "Repository unlocked"
-msgstr "Рэпазітар разблакаваны"
 
 msgid "Fork of"
 msgstr "Форк ад"

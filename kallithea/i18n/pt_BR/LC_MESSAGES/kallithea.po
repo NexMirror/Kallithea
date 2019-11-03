@@ -62,9 +62,6 @@ msgstr "Modificações no repositório %s"
 msgid "Click here to add new file"
 msgstr "Clique aqui para adicionar um novo arquivo"
 
-msgid "This repository has been locked by %s on %s"
-msgstr "Este repositório foi travado por %s em %s"
-
 msgid "Error occurred during commit"
 msgstr "Ocorreu um erro ao realizar commit"
 
@@ -308,9 +305,6 @@ msgstr "Marcado repositório %s como bifurcação de %s"
 
 msgid "An error occurred during this operation"
 msgstr "Ocorreu um erro durante essa operação"
-
-msgid "An error occurred during unlocking"
-msgstr "Ocorreu um erro durante o destravamento"
 
 msgid "An error occurred during cache invalidation"
 msgstr "Ocorreu um erro ao invalidar o cache"
@@ -800,12 +794,6 @@ msgstr "Habilitar downloads"
 msgid "Enable download menu on summary page."
 msgstr "Habilitar menu de descarregar na página de sumário."
 
-msgid "Enable locking"
-msgstr "Habilitar travas"
-
-msgid "Enable lock-by-pulling on repository."
-msgstr "Habilitar trava-por-pulling no repositório."
-
 msgid "Gist description ..."
 msgstr "Descrição do gist ..."
 
@@ -932,13 +920,6 @@ msgid "Add new"
 msgstr "Adicionar novo"
 
 msgid ""
-"Enable lock-by-pulling on group. This option will be applied to all other "
-"groups and repositories inside"
-msgstr ""
-"Habilitar trava-por-pulling no grupo. Esta opção será aplicada a todos os "
-"outros grupos e repositórios dentro deles"
-
-msgid ""
 "Keep it short and to the point. Use a README file for longer descriptions."
 msgstr ""
 "Seja sucinto e objetivo. Use um arquivo README para descrições mais "
@@ -961,9 +942,6 @@ msgstr "Estatísticas"
 
 msgid "Remove from public journal"
 msgstr "Remover do diário público"
-
-msgid "Repository is not locked"
-msgstr "Repositório não está travado"
 
 msgid "Confirm to delete this repository: %s"
 msgstr "Confirma excluir esse repositório: %s"
@@ -1145,12 +1123,6 @@ msgstr "Compare"
 
 msgid "Search"
 msgstr "Pesquisar"
-
-msgid "Unlock"
-msgstr "Destravar"
-
-msgid "Lock"
-msgstr "Travar"
 
 msgid "Follow"
 msgstr "Seguir"
@@ -1597,12 +1569,6 @@ msgstr "arquivo removido"
 
 msgid "%s Summary"
 msgstr "%s Sumário"
-
-msgid "Repository locked by %s"
-msgstr "Repositório travado por %s"
-
-msgid "Repository unlocked"
-msgstr "Repositório destravado"
 
 msgid "Fork of"
 msgstr "Bifurcação de"

@@ -94,9 +94,6 @@ msgstr "Hier klicken, um eine neue Datei hinzuzufügen"
 msgid "%s at %s"
 msgstr "%s auf %s"
 
-msgid "This repository has been locked by %s on %s"
-msgstr "Dieses Repository ist von %s am %s gesperrt worden"
-
 msgid "Deleted file %s via Kallithea"
 msgstr "Datei %s via Kallithea gelöscht"
 
@@ -474,15 +471,6 @@ msgstr "Markiere Repository %s als Abzweig von Repository %s"
 
 msgid "An error occurred during this operation"
 msgstr "Während dieser operation trat ein Fehler auf"
-
-msgid "Repository has been locked"
-msgstr "Repository wurde gesperrt"
-
-msgid "Repository has been unlocked"
-msgstr "Repository nicht mehr gesperrt"
-
-msgid "An error occurred during unlocking"
-msgstr "Fehler beim Entsperren"
 
 msgid "Cache invalidation successful"
 msgstr "Cache Entfernung war erfolgreich"
@@ -1292,12 +1280,6 @@ msgstr "Aktiviere Downloads"
 msgid "Enable download menu on summary page."
 msgstr "Download-Menü auf der Zusammenfassungsseite aktivieren."
 
-msgid "Enable locking"
-msgstr "Locking aktivieren"
-
-msgid "Enable lock-by-pulling on repository."
-msgstr "Aktivieren Sie Lock-by-Pulling im Repository."
-
 msgid "Edit Gist"
 msgstr "Gist editieren"
 
@@ -1712,13 +1694,6 @@ msgstr ""
 "untergeordneten Elemente, einschließlich nicht-privater Repositories und "
 "anderer Gruppen, falls ausgewählt."
 
-msgid ""
-"Enable lock-by-pulling on group. This option will be applied to all other "
-"groups and repositories inside"
-msgstr ""
-"Aktiviere die Sperre-bei-Pull für die Gruppe. Diese Option wird auf alle "
-"anderen enthaltenen Gruppen und Repositories angewandt"
-
 msgid "Remove this group"
 msgstr "Diese Gruppe löschen"
 
@@ -1829,38 +1804,6 @@ msgid ""
 msgstr ""
 "Alle Aktionen, die in diesem Repository ausgeführt wurden, sind im "
 "öffentlichen Logbuch für jeden einsehbar."
-
-msgid "Change Locking"
-msgstr "Ändere die Sperrung"
-
-msgid "Confirm to unlock repository."
-msgstr "Entsperren des Repositorys bestätigen."
-
-msgid "Unlock Repository"
-msgstr "Repository entsperren"
-
-msgid "Locked by %s on %s"
-msgstr "Gesperrt durch %s auf %s"
-
-msgid "Confirm to lock repository."
-msgstr "Sperren des Repositorys bestätigen."
-
-msgid "Lock Repository"
-msgstr "Repository sperren"
-
-msgid "Repository is not locked"
-msgstr "Repository ist nicht gesperrt"
-
-msgid ""
-"Force locking on the repository. Works only when anonymous access is "
-"disabled. Triggering a pull locks the repository.  The user who is "
-"pulling locks the repository; only the user who pulled and locked it can "
-"unlock it by doing a push."
-msgstr ""
-"Erzwinge die Sperre dieses Repositories. Dies funktioniert nur, falls "
-"anonymer Zugang abgeschaltet ist. Ein Pull führt zur Sperre des "
-"Repositories. Der pullende Nutzer sperrt das Repository; nur dieser "
-"Nutzer kann die Sperre durch eine Push-Operation wieder aufheben."
 
 msgid "Confirm to delete this repository: %s"
 msgstr "Löschen des Repositorys bestätigen: %s"

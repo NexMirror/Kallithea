@@ -73,9 +73,6 @@ msgstr "点击这里添加新文件"
 msgid "%s at %s"
 msgstr "%s 在 %s"
 
-msgid "This repository has been locked by %s on %s"
-msgstr "版本库由%s于%s锁定"
-
 msgid "You can only delete files with revision being a valid branch"
 msgstr "您只能删除有效分支的修订中的文件"
 
@@ -351,9 +348,6 @@ msgstr "成功将版本库%s标记为复刻自%s"
 
 msgid "An error occurred during this operation"
 msgstr "在搜索操作中发生错误"
-
-msgid "An error occurred during unlocking"
-msgstr "解锁时发生错误"
 
 msgid "An error occurred during cache invalidation"
 msgstr "清除缓存时发生错误"
@@ -692,12 +686,6 @@ msgstr "启用下载"
 msgid "Enable download menu on summary page."
 msgstr "启用概况页面上的下载菜单。"
 
-msgid "Enable locking"
-msgstr "启用锁定"
-
-msgid "Enable lock-by-pulling on repository."
-msgstr "启用版本库的拉取锁定。"
-
 msgid "Reset"
 msgstr "重置"
 
@@ -754,11 +742,6 @@ msgid_plural "Confirm to delete this group: %s with %s repositories"
 msgstr[0] "确认删除这个版本库组：%s包含%s个版本库"
 
 msgid ""
-"Enable lock-by-pulling on group. This option will be applied to all other "
-"groups and repositories inside"
-msgstr "启用组的拉取锁定。这个选项将应用到组内的其他组和版本库"
-
-msgid ""
 "Keep it short and to the point. Use a README file for longer descriptions."
 msgstr "保持简短。用README文件来写更长的描述。"
 
@@ -779,9 +762,6 @@ msgstr "统计"
 
 msgid "Remove from public journal"
 msgstr "从公共日志删除"
-
-msgid "Repository is not locked"
-msgstr "版本库未锁定"
 
 msgid "Confirm to delete this repository: %s"
 msgstr "确认删除版本库：%s"
@@ -1185,12 +1165,6 @@ msgstr "文件已删除"
 
 msgid "%s Summary"
 msgstr "%s概要"
-
-msgid "Repository locked by %s"
-msgstr "版本库由%s锁定"
-
-msgid "Repository unlocked"
-msgstr "版本库未锁定"
 
 msgid "Fork of"
 msgstr "复刻自"

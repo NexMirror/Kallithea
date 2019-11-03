@@ -34,9 +34,6 @@ msgstr "Zmeny na repozitáre %s"
 msgid "Click here to add new file"
 msgstr "Kliknite pre pridanie nového súboru"
 
-msgid "This repository has been locked by %s on %s"
-msgstr "Tento repozitár bol uzamknutý používateľom %s dňa %s"
-
 msgid "Deleted file %s via Kallithea"
 msgstr "Zmazaný súbor %s cez Kallithea"
 
@@ -135,15 +132,6 @@ msgstr "Vaše repozitáre"
 
 msgid "%s Creating Repository"
 msgstr "Vytváranie repozitára %s"
-
-msgid "Unlock Repository"
-msgstr "Odblokovať repozitár"
-
-msgid "Confirm to lock repository."
-msgstr "Potvrdenie blokovania repozitára."
-
-msgid "Lock Repository"
-msgstr "Zablokovať repozitár"
 
 msgid "Delete this Repository"
 msgstr "Vymazať tento repozitár"

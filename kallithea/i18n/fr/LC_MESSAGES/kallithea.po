@@ -104,9 +104,6 @@ msgstr "Il n'y a pas encore de fichier."
 msgid "%s at %s"
 msgstr "%s à %s"
 
-msgid "This repository has been locked by %s on %s"
-msgstr "Ce dépôt a été verrouillé par %s sur %s"
-
 msgid "You can only delete files with revision being a valid branch"
 msgstr ""
 "Vous ne pouvez supprimer les fichiers que si la révision est une branche "
@@ -529,15 +526,6 @@ msgstr "Le dépôt %s a été marké comme fork de %s"
 
 msgid "An error occurred during this operation"
 msgstr "Une erreur est survenue durant cette opération"
-
-msgid "Repository has been locked"
-msgstr "Ce dépôt a été verrouillé"
-
-msgid "Repository has been unlocked"
-msgstr "Ce dépôt a été déverrouillé"
-
-msgid "An error occurred during unlocking"
-msgstr "Une erreur est survenue durant le déverrouillage"
 
 msgid "Cache invalidation successful"
 msgstr "Invalidation du cache réalisée avec succès"
@@ -1478,12 +1466,6 @@ msgstr "Activer les téléchargements"
 msgid "Enable download menu on summary page."
 msgstr "Afficher le menu de téléchargements sur la page du dépôt."
 
-msgid "Enable locking"
-msgstr "Activer le verrouillage"
-
-msgid "Enable lock-by-pulling on repository."
-msgstr "Activer le verrouillage lors d’un pull sur le dépôt."
-
 msgid "Edit Gist"
 msgstr "Modifier le gist"
 
@@ -1924,13 +1906,6 @@ msgstr ""
 "Ajouter ou révoquer la permission pour tous les enfants de ce groupe, y "
 "compris les dépôts non-privés et les autres groupes si sélectionné."
 
-msgid ""
-"Enable lock-by-pulling on group. This option will be applied to all other "
-"groups and repositories inside"
-msgstr ""
-"Activer le verrou lors d’un pull sur le groupe. Cette option sera "
-"appliquée à tous les sous-groupes et dépôts de ce groupe"
-
 msgid "Remove this group"
 msgstr "Supprimer ce groupe"
 
@@ -2039,38 +2014,6 @@ msgid ""
 msgstr ""
 "Les actions réalisées sur ce dépôt seront visibles à tous depuis le "
 "journal public."
-
-msgid "Change Locking"
-msgstr "Changer le verrouillage"
-
-msgid "Confirm to unlock repository."
-msgstr "Veuillez confirmer le déverrouillage de ce dépôt."
-
-msgid "Unlock Repository"
-msgstr "Déverrouiller le dépôt"
-
-msgid "Locked by %s on %s"
-msgstr "Verrouillé par %s sur %s"
-
-msgid "Confirm to lock repository."
-msgstr "Veuillez confirmer le verrouillage de ce dépôt."
-
-msgid "Lock Repository"
-msgstr "Verrouiller le dépôt"
-
-msgid "Repository is not locked"
-msgstr "Ce dépôt n’est pas verrouillé"
-
-msgid ""
-"Force locking on the repository. Works only when anonymous access is "
-"disabled. Triggering a pull locks the repository.  The user who is "
-"pulling locks the repository; only the user who pulled and locked it can "
-"unlock it by doing a push."
-msgstr ""
-"Forcer le verrouillage du dépôt. Ne fonctionne que lorsque l'accès "
-"anonyme est désactivé. Déclencher un pull verrouille le dépôt. "
-"L'utilisateur qui fait le pull verrouille le dépôt ; seul l'utilisateur "
-"qui a fait le pull et a verrouillé peut déverrouiller en faisant un push."
 
 msgid "Confirm to delete this repository: %s"
 msgstr "Voulez-vous vraiment supprimer le dépôt %s ?"
@@ -2725,12 +2668,6 @@ msgstr "Comparer"
 
 msgid "Search"
 msgstr "Rechercher"
-
-msgid "Unlock"
-msgstr "Déverrouiller"
-
-msgid "Lock"
-msgstr "Verrouiller"
 
 msgid "Follow"
 msgstr "Suivre"
@@ -3757,12 +3694,6 @@ msgstr "fichier supprimé"
 
 msgid "%s Summary"
 msgstr "Résumé de %s"
-
-msgid "Repository locked by %s"
-msgstr "Dépôt verrouillé par %s"
-
-msgid "Repository unlocked"
-msgstr "Dépôt déverrouillé"
 
 msgid "Fork of"
 msgstr "Fork de"

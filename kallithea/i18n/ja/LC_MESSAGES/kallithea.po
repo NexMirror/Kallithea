@@ -76,9 +76,6 @@ msgstr "%s リポジトリでの変更"
 msgid "Click here to add new file"
 msgstr "新しいファイルを追加"
 
-msgid "This repository has been locked by %s on %s"
-msgstr "このリポジトリは %s によって %s にロックされました"
-
 msgid "Deleted file %s via Kallithea"
 msgstr "Kallithea経由で %s を削除"
 
@@ -425,15 +422,6 @@ msgstr "%s リポジトリを %s のフォークとする"
 
 msgid "An error occurred during this operation"
 msgstr "操作中にエラーが発生しました"
-
-msgid "Repository has been locked"
-msgstr "リポジトリがロックされました"
-
-msgid "Repository has been unlocked"
-msgstr "リポジトリのロックが解除されました"
-
-msgid "An error occurred during unlocking"
-msgstr "アンロック中にエラーが発生しました"
 
 msgid "Cache invalidation successful"
 msgstr "キャッシュの無効化に成功しました"
@@ -1170,12 +1158,6 @@ msgstr "ダウンロードを有効にする"
 msgid "Enable download menu on summary page."
 msgstr "概要ページのダウンロードメニューを有効にします。"
 
-msgid "Enable locking"
-msgstr "ロックを有効にする"
-
-msgid "Enable lock-by-pulling on repository."
-msgstr "リポジトリのpullのロックを有効にします。"
-
 msgid "Edit Gist"
 msgstr "Gistを編集"
 
@@ -1486,13 +1468,6 @@ msgstr ""
 "このグループに属する全ての子要素のパーミッションを設定または無効化します。"
 "選択されていれば、非公開でないリポジトリや他のリポジトリも対象に含みます。"
 
-msgid ""
-"Enable lock-by-pulling on group. This option will be applied to all other "
-"groups and repositories inside"
-msgstr ""
-"グループに対してpullのロックを有効にします。このオプションはグループに含ま"
-"れる全てのグループとリポジトリに適用されます。"
-
 msgid "Remove this group"
 msgstr "このグループを削除"
 
@@ -1584,24 +1559,6 @@ msgid ""
 "public journal."
 msgstr ""
 "公開ジャーナルでは、このリポジトリに対して行った操作のすべてが公開されます"
-
-msgid "Change Locking"
-msgstr "ロック"
-
-msgid "Confirm to unlock repository."
-msgstr "このリポジトリのロックを解除しますか."
-
-msgid "Unlock Repository"
-msgstr "リポジトリのロックを解除"
-
-msgid "Confirm to lock repository."
-msgstr "このリポジトリをロックしますか."
-
-msgid "Lock Repository"
-msgstr "リポジトリをロック"
-
-msgid "Repository is not locked"
-msgstr "リポジトリはロックされていません"
 
 msgid "Confirm to delete this repository: %s"
 msgstr "このリポジトリを削除してもよろしいですか？ : %s"
@@ -2120,12 +2077,6 @@ msgstr "比較"
 
 msgid "Search"
 msgstr "検索"
-
-msgid "Unlock"
-msgstr "アンロック"
-
-msgid "Lock"
-msgstr "ロック"
 
 msgid "Follow"
 msgstr "フォロー"
@@ -2906,12 +2857,6 @@ msgstr "削除されたファイル"
 
 msgid "%s Summary"
 msgstr "%s 要約"
-
-msgid "Repository locked by %s"
-msgstr "リポジトリは %s によってロックされました"
-
-msgid "Repository unlocked"
-msgstr "リポジトリはロックされていません"
 
 msgid "Fork of"
 msgstr "フォーク元"

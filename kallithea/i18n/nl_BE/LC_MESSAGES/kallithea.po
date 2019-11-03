@@ -78,9 +78,6 @@ msgstr "Klik hier om een nieuw bestand toe te voegen"
 msgid "%s at %s"
 msgstr "%s op %s"
 
-msgid "This repository has been locked by %s on %s"
-msgstr "Deze repository is gelocket door %s op %s"
-
 msgid "You can only delete files with revision being a valid branch"
 msgstr ""
 "Men kan enkel bestanden verwijderen als de revisie een geldige branch is"
