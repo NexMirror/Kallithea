@@ -545,9 +545,6 @@ msgstr ""
 msgid "You need to be signed in to view this page"
 msgstr "このページを閲覧するためにはサインインが必要です"
 
-msgid "Invalid API key"
-msgstr "APIキーが無効です"
-
 msgid "Repository not found in the filesystem"
 msgstr "ファイルシステム内にリポジトリが見つかりません"
 

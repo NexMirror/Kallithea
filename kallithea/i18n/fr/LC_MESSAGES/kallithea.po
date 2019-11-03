@@ -668,9 +668,6 @@ msgstr ""
 msgid "You need to be signed in to view this page"
 msgstr "Vous devez être connecté pour visualiser cette page"
 
-msgid "Invalid API key"
-msgstr "Clé d'API invalide"
-
 msgid ""
 "CSRF token leak has been detected - all form tokens have been expired"
 msgstr ""

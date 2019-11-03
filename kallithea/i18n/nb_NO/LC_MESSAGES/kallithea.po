@@ -430,9 +430,6 @@ msgstr "Kunne ikke legge til IP-adresse"
 msgid "Removed IP address from user whitelist"
 msgstr "Fjernet IP-adressen fra brukerhvitlisten"
 
-msgid "Invalid API key"
-msgstr "Ugyldig API-nøkkel"
-
 msgid "Binary file"
 msgstr "Binærfil"
 

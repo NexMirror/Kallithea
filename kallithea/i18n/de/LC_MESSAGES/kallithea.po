@@ -610,9 +610,6 @@ msgstr ""
 msgid "You need to be signed in to view this page"
 msgstr "Sie müssen sich anmelden um diese Seite aufzurufen"
 
-msgid "Invalid API key"
-msgstr "Ungültiger API Key"
-
 msgid ""
 "CSRF token leak has been detected - all form tokens have been expired"
 msgstr ""

@@ -572,9 +572,6 @@ msgstr ""
 msgid "You need to be signed in to view this page"
 msgstr "Старонка даступная толькі аўтарызаваным карыстальнікам"
 
-msgid "Invalid API key"
-msgstr "Няслушны API-ключ"
-
 msgid "Repository not found in the filesystem"
 msgstr "Рэпазітар не знойдзены на файлавай сістэме"
 

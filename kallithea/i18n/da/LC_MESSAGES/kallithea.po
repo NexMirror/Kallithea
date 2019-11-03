@@ -604,9 +604,6 @@ msgstr "Du skal være registreret bruger for at kunne udføre denne handling"
 msgid "You need to be signed in to view this page"
 msgstr "Du skal være logget ind for at se denne side"
 
-msgid "Invalid API key"
-msgstr "Ugyldig API-nøgle"
-
 msgid ""
 "CSRF token leak has been detected - all form tokens have been expired"
 msgstr "CSRF-token lækage opdaget, alle form-tokens er invalideret"
