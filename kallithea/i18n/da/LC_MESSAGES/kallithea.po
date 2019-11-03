@@ -28,9 +28,6 @@ msgstr "Ignorer mellemrum"
 msgid "Increase diff context to %(num)s lines"
 msgstr "Øg diff konteksten med %(num)s linjer"
 
-msgid "No permission to change status"
-msgstr "Ingen tilladelse til ændring af status for pull-forespørgsel"
-
 msgid "Successfully deleted pull request %s"
 msgstr "Pull-forespørgsel %s slettet successfuldt"
 
@@ -98,9 +95,6 @@ msgstr "Ændringer på repository %s"
 msgid "Click here to add new file"
 msgstr "Klik her  for at tilføje en ny fil"
 
-msgid "There are no files yet."
-msgstr "Der er ingen filer endnu. %s"
-
 msgid "%s at %s"
 msgstr "%s fra %s"
 
@@ -156,12 +150,6 @@ msgstr "Tomt repository"
 msgid "Unknown archive type"
 msgstr "Ukendt arkivtype"
 
-msgid "Changesets"
-msgstr "Changesets"
-
-msgid "Branches"
-msgstr "Branches"
-
 msgid "Tags"
 msgstr "Tags"
 
@@ -170,12 +158,6 @@ msgstr "Der opstod en fejl under repository forking %s"
 
 msgid "Groups"
 msgstr "Grupper"
-
-msgid "Repositories"
-msgstr "Repositories"
-
-msgid "Branch"
-msgstr "Branch"
 
 msgid "Closed Branches"
 msgstr "Lukkede Branches"
@@ -212,9 +194,6 @@ msgstr "Ugyldig reviewer \"%s\" angivet"
 
 msgid "%s (closed)"
 msgstr "%s (lukket)"
-
-msgid "Changeset"
-msgstr "Changeset"
 
 msgid "Special"
 msgstr "Speciel"
@@ -525,9 +504,6 @@ msgstr "Ugyldiggørelse af cache er succesfuld"
 msgid "An error occurred during cache invalidation"
 msgstr "Der opstod en fejl under cache ugyldiggørelse"
 
-msgid "Pulled from remote location"
-msgstr "Pulled fra remote placering"
-
 msgid "An error occurred during pull from remote location"
 msgstr "Der opstod en fejl under pull fra remote placering"
 
@@ -567,9 +543,6 @@ msgstr "Indtast email-adresse"
 
 msgid "Send email task created"
 msgstr "Send email-opgave oprettet"
-
-msgid "Hook already exists"
-msgstr "Ingen data er klar endnu"
 
 msgid "Added new hook"
 msgstr "Tilføjet nyt hook"
@@ -956,15 +929,3 @@ msgstr ""
 
 msgid "Cannot create empty pull request"
 msgstr "Kan ikke oprette en tom pull-forespørgsel"
-
-msgid "default permissions"
-msgstr "Tilladelser opdateret"
-
-msgid "%s comments"
-msgstr "%s committed den %s"
-
-msgid "comment"
-msgstr "%s committed den %s"
-
-msgid "Pull request"
-msgstr "Pull-forespørgsel %s"

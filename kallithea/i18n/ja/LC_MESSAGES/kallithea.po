@@ -28,20 +28,8 @@ msgstr "空白を無視"
 msgid "Increase diff context to %(num)s lines"
 msgstr "diff コンテキストを %(num)s 行増やす"
 
-msgid "No permission to change status"
-msgstr "プルリクエストステータスを変更する権限がありません"
-
-msgid "Successfully deleted pull request %s"
-msgstr "プルリクエストの削除に成功しました"
-
 msgid "Such revision does not exist for this repository"
 msgstr "お探しのリビジョンはこのリポジトリにはありません"
-
-msgid "Could not find other repository %s"
-msgstr "リポジトリの最新のリビジョン(tip)に移動"
-
-msgid "Cannot compare repositories of different types"
-msgstr "共通の祖先を持たないのでリポジトリを比較できません"
 
 msgid "Cannot compare repositories without using common ancestor"
 msgstr "共通の祖先を持たないのでリポジトリを比較できません"
@@ -88,17 +76,8 @@ msgstr "%s リポジトリでの変更"
 msgid "Click here to add new file"
 msgstr "新しいファイルを追加"
 
-msgid "There are no files yet."
-msgstr "まだファイルがありません。 %s"
-
-msgid "%s at %s"
-msgstr "%s と %s の間"
-
 msgid "This repository has been locked by %s on %s"
 msgstr "このリポジトリは %s によって %s にロックされました"
-
-msgid "You can only delete files with revision being a valid branch"
-msgstr "有効なブランチ上のリビジョンからしかファイルを削除できません"
 
 msgid "Deleted file %s via Kallithea"
 msgstr "Kallithea経由で %s を削除"
@@ -108,9 +87,6 @@ msgstr "%s ファイルの削除に成功しました"
 
 msgid "Error occurred during commit"
 msgstr "コミット中にエラーが発生しました"
-
-msgid "You can only edit files with revision being a valid branch"
-msgstr "有効なブランチを示すリビジョンでのみファイルを編集できます "
 
 msgid "Edited file %s via Kallithea"
 msgstr "Kallithea経由で %s を変更"
@@ -220,9 +196,6 @@ msgstr "プルリクエストの作成中にエラーが発生しました"
 msgid "Successfully opened new pull request"
 msgstr "新しいプルリクエストの作成に成功しました"
 
-msgid "New pull request iteration created"
-msgstr "プルリクエストレビュアー"
-
 msgid "No description"
 msgstr "説明がありません"
 
@@ -232,25 +205,12 @@ msgstr "プルリクエストを更新しました"
 msgid "Successfully deleted pull request"
 msgstr "プルリクエストの削除に成功しました"
 
-msgid "Error: changesets not found when displaying pull request from %s."
-msgstr "プルリクエストを更新するためのチェンジセットが見つかりません。"
-
 msgid "This pull request has been closed and can not be updated."
 msgstr ""
 "このプルリクエストはすでにクローズされていて、更新することはできません。"
 
-msgid "No additional changesets found for iterating on this pull request."
-msgstr "プルリクエストを更新するためのチェンジセットが見つかりません。"
-
 msgid "Note: Branch %s has another head: %s."
 msgstr "ノート: ブランチ%sには別のヘッド%sがあります。"
-
-msgid "Git pull requests don't support iterating yet."
-msgstr "Gitのプルリクエストはまだ更新をサポートしていません。"
-
-msgid ""
-"Error: some changesets not found when displaying pull request from %s."
-msgstr "プルリクエストを更新するためのチェンジセットが見つかりません。"
 
 msgid "Invalid search query. Try quoting it."
 msgstr "無効な検索クエリーです。\\\"で囲んで下さい。"
@@ -445,9 +405,6 @@ msgstr "%s の削除中にエラーが発生しました"
 msgid "Repository permissions updated"
 msgstr "リポジトリ権限を更新しました"
 
-msgid "An error occurred during creation of field: %r"
-msgstr "フィールドの作成中にエラーが発生しました"
-
 msgid "An error occurred during removal of field"
 msgstr "フィールドの削除中にエラーが発生しました"
 
@@ -509,9 +466,6 @@ msgstr "アプリケーション設定の更新中にエラーが発生しまし
 msgid "Repositories successfully rescanned. Added: %s. Removed: %s."
 msgstr "リポジトリの再スキャンに成功しました。 追加: %s 削除: %s。"
 
-msgid "Invalidated %s repositories"
-msgstr "すべてのリポジトリのキャッシュを無効化する"
-
 msgid "Updated application settings"
 msgstr "アプリケーション設定を更新しました"
 
@@ -526,9 +480,6 @@ msgstr "メールアドレスを入力してください"
 
 msgid "Send email task created"
 msgstr "メール送信タスクを作成しました"
-
-msgid "Hook already exists"
-msgstr "まだデータの準備ができていません"
 
 msgid "Added new hook"
 msgstr "新しいフックを追加しました"
@@ -612,9 +563,6 @@ msgstr "APIキーが無効です"
 msgid "Repository not found in the filesystem"
 msgstr "ファイルシステム内にリポジトリが見つかりません"
 
-msgid "Changeset for %s %s not found in %s"
-msgstr "リビジョンが見つかりません"
-
 msgid "Binary file"
 msgstr "バイナリファイル"
 
@@ -632,9 +580,6 @@ msgstr "削除されたブランチ: %s"
 
 msgid "Created tag: %s"
 msgstr "作成したタグ: %s"
-
-msgid "Changeset %s not found"
-msgstr "リビジョンが見つかりません"
 
 msgid "Show all combined changesets %s->%s"
 msgstr "%s から %s までのすべてのチェンジセットを表示"
@@ -840,9 +785,6 @@ msgstr ""
 msgid "Only admins can fork repositories"
 msgstr "管理者のみがリポジトリをフォークすることができます"
 
-msgid "Non-admins can fork repositories"
-msgstr "非管理者がリポジトリをフォークすることができます"
-
 msgid "Registration disabled"
 msgstr "新規登録を無効にする"
 
@@ -857,9 +799,6 @@ msgstr "未レビュー"
 
 msgid "Under review"
 msgstr "レビュー中"
-
-msgid "Not approved"
-msgstr "承認"
 
 msgid "Approved"
 msgstr "承認"
@@ -879,11 +818,6 @@ msgstr "%(min)i 文字以上必要です"
 msgid "Name must not contain only digits"
 msgstr "数字だけの名前は使えません"
 
-msgid ""
-"[Comment] %(repo_name)s changeset %(short_id)s \"%(message_short)s\" on "
-"%(branch)s"
-msgstr "プルリクエストに[コメント]"
-
 msgid "New user %(new_username)s registered"
 msgstr "新しいユーザー %(new_username)s が登録されました"
 
@@ -896,23 +830,11 @@ msgstr ""
 "%(user)s がプリリクエスト #%(pr_nice_id)s: %(pr_title)s のレビューを求めて"
 "います"
 
-msgid "Cannot create empty pull request"
-msgstr "プルリクエスト作成中にエラーが発生しました: %s"
-
-msgid "You are not authorized to create the pull request"
-msgstr "このプルリクエストを削除してもよろしいですか？"
-
 msgid "latest tip"
 msgstr "最新のtip"
 
 msgid "New user registration"
 msgstr "新規ユーザー登録"
-
-msgid ""
-"You can't remove this user since it is crucial for the entire application"
-msgstr ""
-"このユーザーを削除できません。このユーザーはアプリケーションにとって必要不"
-"可欠です。"
 
 msgid ""
 "User \"%s\" still owns %s repositories and cannot be removed. Switch "
@@ -1303,9 +1225,6 @@ msgstr "まだgistがありません"
 msgid "New Gist"
 msgstr "Gistを新規作成"
 
-msgid "Name this gist ..."
-msgstr "ファイルに名前をつける..."
-
 msgid "Create Private Gist"
 msgstr "非公開 Gist を作成"
 
@@ -1417,9 +1336,6 @@ msgstr "新しいパスワードの確認"
 msgid "Current IP"
 msgstr "現在の IP アドレス"
 
-msgid "Change %s avatar at"
-msgstr "アバターを変更:"
-
 msgid "Avatars are disabled"
 msgstr "アバターは無効です"
 
@@ -1444,16 +1360,6 @@ msgstr "IPアドレスのホワイトリスト"
 msgid "Anonymous access"
 msgstr "匿名アクセス"
 
-msgid "Allow anonymous access"
-msgstr "匿名アクセス"
-
-msgid ""
-"Allow access to Kallithea without needing to log in. Anonymous users use "
-"%s user permissions."
-msgstr ""
-"ログインしなくても Kallithea にアクセスできるようにします。匿名ユーザーは "
-"%s ユーザーパーミッションを使います"
-
 msgid ""
 "All default permissions on each repository will be reset to chosen "
 "permission, note that all custom default permission on repositories will "
@@ -1462,9 +1368,6 @@ msgstr ""
 "選択したパーミッションで、各リポジトリのデフォルトパーミッションをリセット"
 "します。各リポジトリの既存のカスタムデフォルトパーミッション設定は無くなる"
 "ので注意してください"
-
-msgid "Apply to all existing repositories"
-msgstr "既存のリポジトリを import しますか？"
 
 msgid "Repository group"
 msgstr "リポジトリグループ"
@@ -1478,38 +1381,14 @@ msgstr ""
 "リセットします。各リポジトリグループの既存のカスタムデフォルトパーミッショ"
 "ン設定は無くなるので注意してください"
 
-msgid "Apply to all existing repository groups"
-msgstr "既存のリポジトリを import しますか？"
-
-msgid "Permissions for the Default user on new repository groups."
-msgstr ""
-"親のリポジトリグループにセットされているパーミッションをコピーします。"
-
 msgid "User group"
 msgstr "ユーザーグループ"
-
-msgid ""
-"All default permissions on each user group will be reset to chosen "
-"permission, note that all custom default permission on user groups will "
-"be lost"
-msgstr ""
-"選択したパーミッションで、各ユーザーグループのデフォルトパーミッションをリ"
-"セットします。各ユーザーグループの既存のカスタムデフォルトパーミッション設"
-"定は無くなるので注意してください"
 
 msgid "Top level repository creation"
 msgstr "トップレベルリポジトリの作成"
 
 msgid "Repository creation with group write access"
 msgstr "グループ書き込み権限でのリポジトリ作成"
-
-msgid ""
-"With this, write permission to a repository group allows creating "
-"repositories inside that group. Without this, group write permissions "
-"mean nothing."
-msgstr ""
-"リポジトリグループに書き込みパーミッションを付与すると、グループ内にリポジ"
-"トリを作成できるようになります"
 
 msgid "User group creation"
 msgstr "ユーザーグループ作成"
@@ -1585,20 +1464,8 @@ msgstr[0] "このグループを削除してもよろしいですか？ : %s %s 
 msgid "Delete this repository group"
 msgstr "このリポジトリグループを削除"
 
-msgid "Visible"
-msgstr "無効"
-
-msgid "Add repos"
-msgstr "リポジトリを追加"
-
-msgid "Add/Edit groups"
-msgstr "ユーザーグループを追加"
-
 msgid "User/User Group"
 msgstr "ユーザー/ユーザーグループ"
-
-msgid "Default"
-msgstr "Default"
 
 msgid "Revoke"
 msgstr "取消"
@@ -1632,9 +1499,6 @@ msgstr "このグループを削除"
 msgid "Confirm to delete this group"
 msgstr "このグループを削除してもよろしいですか？: %s"
 
-msgid "Repository group %s"
-msgstr "リポジトリグループ: %s"
-
 msgid "Repository Groups Administration"
 msgstr "リポジトリグループ管理"
 
@@ -1664,9 +1528,6 @@ msgid ""
 msgstr ""
 "ファイルページ、ダウンロード、全文検索インデックス、READMEなどの生成に使う"
 "デフォルトのリビジョン"
-
-msgid "%s Creating Repository"
-msgstr "%s Creating repository"
 
 msgid "Creating repository"
 msgstr "リポジトリを作成中"
@@ -1807,9 +1668,6 @@ msgstr "拡張フィールドは無効化されています"
 msgid "Private Repository"
 msgstr "非公開リポジトリ"
 
-msgid "Fork of repository"
-msgstr "リポジトリを[フォーク]"
-
 msgid "Remote repository URL"
 msgstr "リモートリポジトリURL"
 
@@ -1862,9 +1720,6 @@ msgid "Default revision for files page, downloads, whoosh and readme"
 msgstr ""
 "ファイルページ、ダウンロード、検索、READMEのデフォルトのリビジョンを指定し"
 "ます"
-
-msgid "Type name of user"
-msgstr "追加するレビュアーの名前を入力"
 
 msgid "Change owner of this repository."
 msgstr "リポジトリの所有者を変更"
@@ -1959,16 +1814,10 @@ msgstr ""
 msgid "Failed to remove hook"
 msgstr "フックの削除に失敗しました"
 
-msgid "Rescan options"
-msgstr "再スキャンオプション"
-
 msgid "Delete records of missing repositories"
 msgstr "見つからないリポジトリのレコードを削除"
 
 msgid "Invalidate cache for all repositories"
-msgstr "すべてのリポジトリのキャッシュを無効化する"
-
-msgid "Check this to reload data and clear cache keys for all repositories."
 msgstr "すべてのリポジトリのキャッシュを無効化する"
 
 msgid "Install Git hooks"
@@ -2106,75 +1955,8 @@ msgid ""
 msgstr ""
 "フッターに表示されるKallitheaのバージョン番号の表示、非表示を設定します。"
 
-msgid ""
-"Gravatar URL allows you to use another avatar server application.\n"
-"                                                        The following "
-"variables of the URL will be replaced accordingly.\n"
-"                                                        {scheme}    "
-"'http' or 'https' sent from running Kallithea server,\n"
-"                                                        {email}     user "
-"email,\n"
-"                                                        {md5email}  md5 "
-"hash of the user email (like at gravatar.com),\n"
-"                                                        {size}      size "
-"of the image that is expected from the server application,\n"
-"                                                        {netloc}    "
-"network location/server host of running Kallithea server"
-msgstr ""
-"Gravatar URL を設定すると、外部のアバターサーバーアプリケーションを使用し"
-"ます。\n"
-"必要に応じて、 URL に以下の変数を使ってください。\n"
-"{scheme} Kallithea サーバからリクエストを送信するときに使うスキーム。 "
-"'http' または 'https'\n"
-"{email} ユーザーのメールアドレス\n"
-"{md5email} ユーザーのメールアドレスの md5 ハッシュ値 (gravatar.com で使っ"
-"ています)\n"
-"{size} サーバーアプリケーションに要求する画像のサイズ\n"
-"{netloc} Kallithea サーバーのアドレスまたはホスト名"
-
 msgid "Clone URL"
 msgstr "クローンURL"
-
-msgid ""
-"Schema of clone URL construction eg. '{scheme}://{user}@{netloc}/"
-"{repo}'.\n"
-"                                                    The following "
-"variables are available:\n"
-"                                                    {scheme} 'http' or "
-"'https' sent from running Kallithea server,\n"
-"                                                    {user}   current user "
-"username,\n"
-"                                                    {netloc} network "
-"location/server host of running Kallithea server,\n"
-"                                                    {repo}   full "
-"repository name,\n"
-"                                                    {repoid} ID of "
-"repository, can be used to construct clone-by-id"
-msgstr ""
-"クローン URL のスキーマは、 '{scheme}://{user}@{netloc}/{repo}' のような形"
-"式にします。使える変数は下記の通りです:\n"
-"                                                        {scheme} "
-"Kallithea サーバからリクエストを送信するときに使うスキーム。 'http' また"
-"は 'https'\n"
-"                                                        {user}   現在の"
-"ユーザーのユーザー名\n"
-"                                                        {netloc} "
-"Kallithea サーバーのアドレスまたはホスト名\n"
-"                                                        {repo}   リポジト"
-"リの完全な名前\n"
-"                                                        {repoid} リポジト"
-"リの ID。 clone-by-id に使います。"
-
-msgid "Repository page size"
-msgstr "リポジトリサイズ"
-
-msgid ""
-"Number of items displayed in the repository pages before pagination is "
-"shown."
-msgstr "管理ページで、ページ分割しないでグリッドに表示する項目の数"
-
-msgid "Admin page size"
-msgstr "管理ページの項目"
 
 msgid ""
 "Number of items displayed in the admin pages grids before pagination is "
@@ -2396,12 +2178,6 @@ msgstr "ログインしていません"
 msgid "Login to Your Account"
 msgstr "あなたのアカウントにログイン"
 
-msgid "Forgot password?"
-msgstr "パスワードを忘れた?"
-
-msgid "Don't have an account?"
-msgstr "アカウントを持っていない?"
-
 msgid "Log Out"
 msgstr "ログアウト"
 
@@ -2413,9 +2189,6 @@ msgstr "子リビジョン"
 
 msgid "Inherit defaults"
 msgstr "デフォルト権限を継承"
-
-msgid "default permissions"
-msgstr "デフォルトの権限"
 
 msgid "Create repositories"
 msgstr "リポジトリを作成する"
@@ -2458,9 +2231,6 @@ msgstr "権限が設定されていません"
 msgid "Submitting ..."
 msgstr "送信中..."
 
-msgid "Unable to post"
-msgstr "ダウンロードを有効にする"
-
 msgid "Add Another Comment"
 msgstr "別のコメントを追加"
 
@@ -2493,9 +2263,6 @@ msgstr "{0} &rarr; {1}から新しいプルリクエストを作成する"
 
 msgid "Show Selected Changesets {0} &rarr; {1}"
 msgstr "選択したチェンジセット{0} &rarr; {0}を表示"
-
-msgid "Selection Link"
-msgstr "セレクション・リンク"
 
 msgid "Collapse Diff"
 msgstr "差分をたたむ"
@@ -2570,21 +2337,8 @@ msgstr "追加"
 msgid "Affected %s files"
 msgstr "%s ファイルに影響"
 
-msgid ""
-"Changeset status: %s by %s\n"
-"Click to open associated pull request %s"
-msgstr ""
-"チェンジセットステータス: %s\n"
-"関連するプルリクエスト %s を開く"
-
-msgid "Changeset status: %s by %s"
-msgstr "チェンジセットステータス: %s"
-
 msgid "Expand commit message"
 msgstr "コミットメッセージを展開"
-
-msgid "%s comments"
-msgstr "%d 個のコメント"
 
 msgid "Bookmark %s"
 msgstr "ブックマーク %s"
@@ -2613,15 +2367,6 @@ msgstr "差分をダウンロード"
 msgid "Merge"
 msgstr "マージ"
 
-msgid "Grafted from:"
-msgstr "作成日"
-
-msgid "Replaced by:"
-msgstr "作成日"
-
-msgid "Preceded by:"
-msgstr "作成日"
-
 msgid "%s file changed"
 msgid_plural "%s files changed"
 msgstr[0] "%s ファイルに影響"
@@ -2633,26 +2378,14 @@ msgstr[0] "%s ファイルに影響。 %s 個の追加と %s 個の削除"
 msgid "Show full diff anyway"
 msgstr "とにかくすべての差分を表示"
 
-msgid "comment"
-msgstr "コメント"
-
-msgid "on pull request"
-msgstr "プルリクエスト #%s にコメント"
-
 msgid "No title"
 msgstr "No title"
-
-msgid "on this changeset"
-msgstr "チェンジセットはありません"
 
 msgid "Delete comment?"
 msgstr "コメントを削除しますか？"
 
 msgid "Status change"
 msgstr "ステータスを変更"
-
-msgid "Comments are in plain text. Use @username to notify another user."
-msgstr "テキスト内で @username を使うと、そのユーザーに通知されます。"
 
 msgid "Set changeset status"
 msgstr "リビジョンステータスを設定"
@@ -2662,12 +2395,6 @@ msgstr "プルリクエストステータスの投票"
 
 msgid "No change"
 msgstr "変更なし"
-
-msgid "Finish pull request"
-msgstr "プルリクエスト #%s にコメント"
-
-msgid "Close"
-msgstr "(閉鎖済み)"
 
 msgid "Comment"
 msgstr "コメント"
@@ -2702,26 +2429,11 @@ msgstr "チェンジセットステータス: %s"
 msgid "Files affected"
 msgstr "影響のあるファイル"
 
-msgid "File before"
-msgstr "削除されたファイル"
-
-msgid "Modified"
-msgstr "変更しない"
-
 msgid "Deleted"
 msgstr "削除"
 
 msgid "Renamed"
 msgstr "リネーム"
-
-msgid "Unknown operation: %r"
-msgstr "%s は未知のリビジョンです"
-
-msgid "No file after"
-msgstr "ファイル名がありません"
-
-msgid "File after"
-msgstr "追加されたファイル"
 
 msgid "Show full diff for this file"
 msgstr "このファイルのすべての差分を表示"
@@ -2734,9 +2446,6 @@ msgstr "インラインコメントを表示"
 
 msgid "No changesets"
 msgstr "チェンジセットはありません"
-
-msgid "Merge Ancestor"
-msgstr "共通の祖先"
 
 msgid "Show merge diff"
 msgstr "マージの差分を表示"
@@ -2787,25 +2496,6 @@ msgstr "%s の ATOM フィードを購読"
 msgid "Creating"
 msgstr "作成中"
 
-msgid "Mention in Comment on Changeset \"%s\""
-msgstr "%(user)s がチェンジセットにコメント %(age)s"
-
-msgid "Comment on Changeset \"%s\""
-msgstr "%sから%sのチェンジセット%sに対するコメント"
-
-msgid "Changeset on"
-msgstr "変更の流れ"
-
-msgid "branch"
-msgstr "ブランチ"
-
-msgid "Status change:"
-msgstr "ステータスを変更"
-
-msgid "The pull request has been closed."
-msgstr ""
-"このプルリクエストはすでにクローズされていて、更新することはできません。"
-
 msgid "Hello %s"
 msgstr "こんにちは %s"
 
@@ -2821,27 +2511,6 @@ msgid ""
 msgstr ""
 "パスワードリセットのリクエストをしていない場合、このメッセージは無視してく"
 "ださい。"
-
-msgid "Mention on Pull Request %s \"%s\" by %s"
-msgstr "%sさんが%sへのプルリクエスト \"%s\"でメンションしました"
-
-msgid "Added as Reviewer of Pull Request %s \"%s\" by %s"
-msgstr "%sさんが%sへのプルリクエスト \"%s\"でレビューを要求しています"
-
-msgid "Pull request"
-msgstr "プルリクエスト #%s"
-
-msgid "Mention in Comment on Pull Request %s \"%s\""
-msgstr "%sさんが%sへのプルリクエスト \"%s\"でメンションしました"
-
-msgid "Pull Request %s \"%s\" Closed"
-msgstr "%s からのプルリクエスト"
-
-msgid "Comment on Pull Request %s \"%s\""
-msgstr "プルリクエストに[コメント]"
-
-msgid "Full Name"
-msgstr "グループ名"
 
 msgid "%s File side-by-side diff"
 msgstr "%s ファイルの差分を並べて表示"
@@ -2875,9 +2544,6 @@ msgstr "アップロードファイル"
 
 msgid "Create New File"
 msgstr "新しいファイルを作成"
-
-msgid "New file type"
-msgstr "新しいファイル"
 
 msgid "Commit Message"
 msgstr "コミットメッセージ"
@@ -2943,9 +2609,6 @@ msgstr "作成者を表示"
 msgid "Show Source"
 msgstr "ソースを表示"
 
-msgid "Edit on Branch: %s"
-msgstr "ブランチ:%s で編集"
-
 msgid "Editing binary files not allowed"
 msgstr "バイナリファイルの編集は行えません"
 
@@ -2957,15 +2620,6 @@ msgstr "ファイルの削除はブランチのヘッドリビジョンでのみ
 
 msgid "Binary file (%s)"
 msgstr "バイナリファイル (%s)"
-
-msgid "File is too big to display."
-msgstr "表示するには大きすぎるファイルです"
-
-msgid "Show full annotation anyway."
-msgstr "とにかくすべての差分を表示"
-
-msgid "Show as raw."
-msgstr "Raw形式で表示"
 
 msgid "annotation"
 msgstr "アノテーション"
@@ -3106,14 +2760,8 @@ msgstr ""
 msgid "%s Pull Request %s"
 msgstr "%s プルリクエスト %s"
 
-msgid "Pull request %s from %s#%s"
-msgstr "%s からのプルリクエスト"
-
 msgid "Summarize the changes"
 msgstr "変更の概要"
-
-msgid "Voting Result"
-msgstr "レビュアーの投票結果"
 
 msgid "Pull request status calculated from votes"
 msgstr "投票からプルリクエストのステータスを計算"
@@ -3130,9 +2778,6 @@ msgstr "Target"
 msgid "Pull changes"
 msgstr "変更を取得:"
 
-msgid "Next iteration"
-msgstr "新規登録"
-
 msgid "Current revision - no change"
 msgstr "現在のリビジョン ｰ 変更なし"
 
@@ -3141,9 +2786,6 @@ msgstr "変更を保存"
 
 msgid "Cancel Changes"
 msgstr "変更をキャンセル"
-
-msgid "Reviewers"
-msgstr "レビュアー"
 
 msgid "Remove reviewer"
 msgstr "レビュアーを削除"
@@ -3165,9 +2807,6 @@ msgstr "共通の祖先"
 
 msgid "%s Pull Requests"
 msgstr "%s プルリクエスト"
-
-msgid "Pull Requests from '%s'"
-msgstr "%s' からのプルリクエスト"
 
 msgid "Pull Requests to '%s'"
 msgstr "'%s' へのプルリクエスト"
@@ -3192,9 +2831,6 @@ msgstr ""
 
 msgid "Pull Requests Created by Me"
 msgstr "作成したプルリクエスト"
-
-msgid "Pull Requests Needing My Review"
-msgstr "プルリクエストレビュアー"
 
 msgid "Pull Requests I Participate In"
 msgstr "参加しているプルリクエスト"

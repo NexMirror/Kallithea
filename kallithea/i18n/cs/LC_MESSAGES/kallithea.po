@@ -13,20 +13,8 @@ msgstr ""
 msgid "(closed)"
 msgstr "(zavřeno)"
 
-msgid "No permission to change status"
-msgstr "Změny"
-
-msgid "Successfully deleted pull request %s"
-msgstr "Úspěšně aktualizované heslo"
-
 msgid "Such revision does not exist for this repository"
 msgstr "Taková revize neexistuje"
-
-msgid "Could not find other repository %s"
-msgstr "Prázdný repozitář"
-
-msgid "No response"
-msgstr "Neznámá revize %s"
 
 msgid "You don't have permission to view this page"
 msgstr "Nemáte oprávnění k zobrazení této stránky"
@@ -36,9 +24,6 @@ msgstr "Změny na repozitáři %s"
 
 msgid "Click here to add new file"
 msgstr "Klikněte pro přidání nového souboru"
-
-msgid "There are no files yet."
-msgstr "Zatím nejsou žádné soubory. %s"
 
 msgid "No changes"
 msgstr "Žádné změny"
@@ -121,9 +106,6 @@ msgstr "Došlo k chybě při ukládání e-mailové adresy"
 msgid "Error creating repository %s"
 msgstr "Chyba při vytváření repozitáře %s"
 
-msgid "An error occurred during creation of field: %r"
-msgstr "Došlo k chybě při vytváření gist"
-
 msgid "Nothing"
 msgstr "Nic"
 
@@ -133,179 +115,8 @@ msgstr "Repozitář byl uzamčen"
 msgid "Repository has been unlocked"
 msgstr "Repozitář byl odemčen"
 
-msgid "Invalidated %s repositories"
-msgstr "Repozitáře"
-
-msgid "Changeset %s not found"
-msgstr "Změny"
-
-msgid "Only admins can fork repositories"
-msgstr "Chyba při vytváření repozitáře %s"
-
-msgid "Non-admins can fork repositories"
-msgstr "Chyba při vytváření repozitáře %s"
-
-msgid "Invalid repository URL"
-msgstr "Prázdný repozitář"
-
-msgid "Repository Defaults"
-msgstr "Repozitáře"
-
-msgid "Owned Repositories"
-msgstr "Repozitáře"
-
-msgid "Watched Repositories"
-msgstr "Repozitáře"
-
-msgid "Repositories You Own"
-msgstr "Umístění repozitářů"
-
-msgid "Repositories You are Watching"
-msgstr "Umístění repozitářů"
-
-msgid "Apply to all existing repositories"
-msgstr "Chyba při vytváření repozitáře %s"
-
 msgid "Settings"
 msgstr "Nastavení"
 
 msgid "Advanced"
 msgstr "Pokročilé"
-
-msgid "Add repos"
-msgstr "Neznámá revize %s"
-
-msgid "Repository group %s"
-msgstr "Repozitáře"
-
-msgid "Clone remote repository"
-msgstr "Prázdný repozitář"
-
-msgid "%s Creating Repository"
-msgstr "Chyba při vytváření repozitáře %s"
-
-msgid "Unlock Repository"
-msgstr "Prázdný repozitář"
-
-msgid "Confirm to lock repository."
-msgstr "Prázdný repozitář"
-
-msgid "Lock Repository"
-msgstr "Prázdný repozitář"
-
-msgid "Delete this Repository"
-msgstr "Prázdný repozitář"
-
-msgid "Private Repository"
-msgstr "Prázdný repozitář"
-
-msgid "Fork of repository"
-msgstr "Prázdný repozitář"
-
-msgid "Remote repository URL"
-msgstr "Prázdný repozitář"
-
-msgid "Pull Changes from Remote Repository"
-msgstr "Změny na repozitáři %s"
-
-msgid "Confirm to pull changes from remote repository."
-msgstr "Prázdný repozitář"
-
-msgid "Permanent Repository ID"
-msgstr "Prázdný repozitář"
-
-msgid "Remote repository"
-msgstr "Prázdný repozitář"
-
-msgid "Repository URL"
-msgstr "Repozitáře"
-
-msgid "Repositories Administration"
-msgstr "Umístění repozitářů"
-
-msgid "Save Settings"
-msgstr "Nastavení"
-
-msgid "Location of repositories"
-msgstr "Chyba při vytváření repozitáře %s"
-
-msgid "Repository page size"
-msgstr "Repozitáře"
-
-msgid "Meta Tagging"
-msgstr "Nastavení"
-
-msgid "Inherit defaults"
-msgstr "Repozitáře"
-
-msgid "Open New Pull Request from {0}"
-msgstr "Změna stavu-> %s"
-
-msgid "No revisions"
-msgstr "Neznámá revize %s"
-
-msgid "Go to tip of repository"
-msgstr "Prázdný repozitář"
-
-msgid "Changeset status: %s by %s"
-msgstr "Změny"
-
-msgid "on pull request"
-msgstr "Změna stavu-> %s"
-
-msgid "on this changeset"
-msgstr "Žádné změny"
-
-msgid "Status change"
-msgstr "Změna stavu-> %s"
-
-msgid "Set changeset status"
-msgstr "Změny"
-
-msgid "No change"
-msgstr "Žádné změny"
-
-msgid "Finish pull request"
-msgstr "Změna stavu-> %s"
-
-msgid "Close"
-msgstr "(zavřeno)"
-
-msgid "Unknown operation: %r"
-msgstr "Neznámá revize %s"
-
-msgid "Comment on Changeset \"%s\""
-msgstr "Změny"
-
-msgid "Changeset on"
-msgstr "Změny"
-
-msgid "branch"
-msgstr "Větev"
-
-msgid "Status change:"
-msgstr "Změna stavu-> %s"
-
-msgid "The pull request has been closed."
-msgstr "Repozitář byl uzamčen"
-
-msgid "Pull request"
-msgstr "Změna stavu-> %s"
-
-msgid "Comment on Pull Request %s \"%s\""
-msgstr "Změna stavu-> %s"
-
-msgid "Commit Changes"
-msgstr "Žádné změny"
-
-msgid "Cancel Changes"
-msgstr "Žádné změny"
-
-msgid "Pull Requests from '%s'"
-msgstr "Změna stavu-> %s"
-
-msgid "Latest Changes"
-msgstr "Změna stavu-> %s"
-
-msgid "Push new repository"
-msgstr "Prázdný repozitář"

@@ -29,9 +29,6 @@ msgstr "Ігнараваць прабелы"
 msgid "Increase diff context to %(num)s lines"
 msgstr "Павялічыць кантэкст да %(num)s радкоў"
 
-msgid "No permission to change status"
-msgstr "Няма правоў змяняць статус pull-запыту"
-
 msgid "Successfully deleted pull request %s"
 msgstr "Pull-запыт %s паспяхова выдалены"
 
@@ -87,9 +84,6 @@ msgstr "Змены ў рэпазітары %s"
 
 msgid "Click here to add new file"
 msgstr "Націсніце каб дадаць новы файл"
-
-msgid "There are no files yet."
-msgstr "Няма файлаў. %s"
 
 msgid "%s at %s"
 msgstr "%s (%s)"
@@ -226,9 +220,6 @@ msgstr "Адбылася памылка пры стварэнні pull-запы�
 msgid "Successfully opened new pull request"
 msgstr "Pull-запыт створаны паспяхова"
 
-msgid "New pull request iteration created"
-msgstr "Абнаўленне для pull-запыту створана"
-
 msgid "No description"
 msgstr "Няма апісання"
 
@@ -238,33 +229,14 @@ msgstr "Pull-запыт абноўлены"
 msgid "Successfully deleted pull request"
 msgstr "Pull-запыт паспяхова выдалены"
 
-msgid "Revision %s not found in %s"
-msgstr "Набор змен для %s %s не знойдзены ў %s"
-
-msgid "Error: changesets not found when displaying pull request from %s."
-msgstr "Няма змен для абнаўлення гэтага pull-запыту."
-
 msgid "This pull request has already been merged to %s."
 msgstr "Гэты pull-запыт ужо прыняты на галіну %s."
 
 msgid "This pull request has been closed and can not be updated."
 msgstr "Гэты pull-запыт быў зачынены і не можа быць абноўлены."
 
-msgid "The following additional changes are available on %s:"
-msgstr "Гэтыя змены даступныя на %s:"
-
-msgid "No additional changesets found for iterating on this pull request."
-msgstr "Няма змен для абнаўлення гэтага pull-запыту."
-
 msgid "Note: Branch %s has another head: %s."
 msgstr "Увага: Галіна %s мае яшчэ адну верхавіну: %s."
-
-msgid "Git pull requests don't support iterating yet."
-msgstr "Абнаўленне pull-запытаў git яшчэ не падтрымліваецца."
-
-msgid ""
-"Error: some changesets not found when displaying pull request from %s."
-msgstr "Няма змен для абнаўлення гэтага pull-запыту."
 
 msgid "Invalid search query. Try quoting it."
 msgstr "Недапушчальны пошукавы запыт. Паспрабуйце скласці яго ў двукоссі."
@@ -460,9 +432,6 @@ msgstr "Памылка падчас выдалення %s"
 msgid "Repository permissions updated"
 msgstr "Прывілеі рэпазітара абноўленыя"
 
-msgid "An error occurred during creation of field: %r"
-msgstr "Памылка пры стварэнні поля"
-
 msgid "An error occurred during removal of field"
 msgstr "Памылка пры выдаленні поля"
 
@@ -541,9 +510,6 @@ msgstr "Калі ласка, увядзіце e-mail-адрас"
 
 msgid "Send email task created"
 msgstr "Задача адпраўкі e-mail створаная"
-
-msgid "Hook already exists"
-msgstr "Няма дадзеных"
 
 msgid "Added new hook"
 msgstr "Дададзены новы хук"
@@ -822,12 +788,6 @@ msgstr "верхні ўзровень"
 msgid "Kallithea Administrator"
 msgstr "Адміністратар Kallithea"
 
-msgid "Default user has read access to new repositories"
-msgstr "Несанкцыянаваны доступ да рэсурсу"
-
-msgid "Default user has write access to new repositories"
-msgstr "Несанкцыянаваны доступ да рэсурсу"
-
 msgid "Only admins can create repository groups"
 msgstr "Толькі адміністратары могуць ствараць групы репазітароў"
 
@@ -864,9 +824,6 @@ msgstr "Не прагледжана"
 msgid "Under review"
 msgstr "На разглядзе"
 
-msgid "Not approved"
-msgstr "Ухвалена"
-
 msgid "Approved"
 msgstr "Ухвалена"
 
@@ -885,11 +842,6 @@ msgstr "Увядзіце не меней %(min)i знакаў"
 msgid "Name must not contain only digits"
 msgstr "Імя не можа ўтрымліваць толькі лічбы"
 
-msgid ""
-"[Comment] %(repo_name)s changeset %(short_id)s \"%(message_short)s\" on "
-"%(branch)s"
-msgstr "[пракаментавана] у запыце на занясенне змен для"
-
 msgid "New user %(new_username)s registered"
 msgstr "Новы карыстальнік \"%(new_username)s\" зарэгістраваны"
 
@@ -900,27 +852,6 @@ msgid ""
 "%(user)s wants you to review pull request %(pr_nice_id)s: %(pr_title)s"
 msgstr ""
 "%(user)s просіць вас разгледзець pull request %(pr_nice_id)s: %(pr_title)s"
-
-msgid "Cannot create empty pull request"
-msgstr "Памылка пры стварэнні pull-запыту: %s"
-
-msgid "You are not authorized to create the pull request"
-msgstr "Пацвердзіце выдаленне гэтага pull-request'а"
-
-msgid "Missing changesets since the previous iteration:"
-msgstr "Адсутныя рэвізіі адносна папярэдняга pull-запыту:"
-
-msgid "New changesets on %s %s since the previous iteration:"
-msgstr "Новыя рэвізіі на %s %s адносна папярэдняга pull-запыту:"
-
-msgid ""
-"This iteration is based on another %s revision and there is no simple "
-"diff."
-msgstr ""
-"Гэты pull-запыт заснаваны на іншай рэвізіі %s, просты diff немагчымы."
-
-msgid "No changes found on %s %s since previous iteration."
-msgstr "Няма змен на %s %s адносна папярэдняй версіі."
 
 msgid "latest tip"
 msgstr "апошняя версія"
@@ -1362,9 +1293,6 @@ msgstr "API-ключы"
 msgid "Owned Repositories"
 msgstr "Мае рэпазітары"
 
-msgid "Watched Repositories"
-msgstr "Стварыць рэпазітары"
-
 msgid "Show Permissions"
 msgstr "Паказаць прывілеі"
 
@@ -1419,9 +1347,6 @@ msgstr "Пацвердзіце новы пароль"
 msgid "Current IP"
 msgstr "Цяперашні IP-адрас"
 
-msgid "Change %s avatar at"
-msgstr "Змяніць аватар можна праз"
-
 msgid "Avatars are disabled"
 msgstr "Аватары адключаныя"
 
@@ -1446,9 +1371,6 @@ msgstr "Белы спіс IP"
 msgid "Anonymous access"
 msgstr "Ананімны доступ"
 
-msgid "Allow anonymous access"
-msgstr "Ананімны доступ"
-
 msgid ""
 "All default permissions on each repository will be reset to chosen "
 "permission, note that all custom default permission on repositories will "
@@ -1456,9 +1378,6 @@ msgid ""
 msgstr ""
 "Выбраныя прывілеі будуць усталяваныя па змоўчанні для кожнага рэпазітара. "
 "Улічыце, што раней усталяваныя прывілеі па змоўчанні будуць скінутыя"
-
-msgid "Apply to all existing repositories"
-msgstr "Імпартаваць існы рэпазітар?"
 
 msgid "Repository group"
 msgstr "Група рэпазітароў"
@@ -1472,9 +1391,6 @@ msgstr ""
 "рэпазітароў. Улічыце, што раней усталяваныя прывілеі па змоўчанні для "
 "груп рэпазітароў будуць скінутыя"
 
-msgid "Apply to all existing repository groups"
-msgstr "Імпартаваць існы рэпазітар?"
-
 msgid "User group"
 msgstr "Група карыстальнікаў"
 
@@ -1486,9 +1402,6 @@ msgstr ""
 "Выбраныя прывілеі будуць усталяваныя па змоўчанні для кожнай групы "
 "карыстальнікаў. Улічыце, што раней усталяваныя прывілеі па змоўчанні для "
 "груп карыстальнікаў будуць скінутыя"
-
-msgid "Top level repository creation"
-msgstr "Стварэнне рэпазітара"
 
 msgid "User group creation"
 msgstr "Стварэнне груп карыстальнікаў"
@@ -1553,15 +1466,6 @@ msgstr[2] "Пацвердзіце выдаленне групы %s, утрымо
 msgid "Delete this repository group"
 msgstr "Выдаліць гэту групу рэпазітароў"
 
-msgid "Visible"
-msgstr "адключана"
-
-msgid "Add repos"
-msgstr "Дадаць рэпазітар"
-
-msgid "Add/Edit groups"
-msgstr "Дадаць групу карыстальнікаў"
-
 msgid "User/User Group"
 msgstr "Карыстальнік/група карыстальнікаў"
 
@@ -1573,9 +1477,6 @@ msgstr "Адклікаць"
 
 msgid "Add new"
 msgstr "Дадаць новы"
-
-msgid "Apply to children"
-msgstr "дастасаваць да даччыным"
 
 msgid "Both"
 msgstr "Абедзьве"
@@ -1593,17 +1494,11 @@ msgstr "Выдаліць гэту групу"
 msgid "Confirm to delete this group"
 msgstr "Пацвердзіце выдаленне гэтай групы карыстальнікаў"
 
-msgid "Repository group %s"
-msgstr "Група рэпазітароў: %s"
-
 msgid "Repository Groups Administration"
 msgstr "Адміністраванне груп рэпазітароў"
 
 msgid "Number of Top-level Repositories"
 msgstr "Лік рэпазітароў верхняга ўзроўня"
-
-msgid "Clone remote repository"
-msgstr "[створаны] рэпазітар"
 
 msgid ""
 "Keep it short and to the point. Use a README file for longer descriptions."
@@ -1749,9 +1644,6 @@ msgstr "Дадатковыя палі адключаныя."
 msgid "Private Repository"
 msgstr "Прыватны рэпазітар"
 
-msgid "Fork of repository"
-msgstr "[форкнуты] рэпазітар"
-
 msgid "Remote repository URL"
 msgstr "URL аддаленага рэпазітара"
 
@@ -1824,9 +1716,6 @@ msgstr "Карыстальніцкія хукі"
 
 msgid "Failed to remove hook"
 msgstr "Не атрымалася выдаліць хук"
-
-msgid "Rescan options"
-msgstr "Опцыі перасканіравання"
 
 msgid "Delete records of missing repositories"
 msgstr "Сцерці запісы пра выдаленыя рэпазітары"
@@ -1910,16 +1799,6 @@ msgstr "Паказвае або хавае нумар версіі Kallithea ў 
 
 msgid "Clone URL"
 msgstr "URL для кланавання"
-
-msgid "Repository page size"
-msgstr "Памер рэпазітара"
-
-msgid ""
-"Number of items displayed in the repository pages before pagination is "
-"shown."
-msgstr ""
-"Колькасць элементаў, што паказваюцца на галоўнай старонцы панэлі "
-"кіравання перад паказам нумарацыі старонак."
 
 msgid "Icons"
 msgstr "Абразкі"
@@ -2101,20 +1980,11 @@ msgstr "Не аўтарызаваны"
 msgid "Login to Your Account"
 msgstr "Аўтарызавацца"
 
-msgid "Forgot password?"
-msgstr "Забыліся на пароль?"
-
-msgid "Don't have an account?"
-msgstr "Няма акаўнта?"
-
 msgid "Log Out"
 msgstr "Выйсці"
 
 msgid "Inherit defaults"
 msgstr "Ужываць значэнні па змоўчанні"
-
-msgid "default permissions"
-msgstr "Стандартныя прывілеі"
 
 msgid "Create repositories"
 msgstr "Стварыць рэпазітары"
@@ -2150,9 +2020,6 @@ msgstr "Змяніць прывілеі"
 
 msgid "Submitting ..."
 msgstr "Адпраўка..."
-
-msgid "Unable to post"
-msgstr "Уключыць спампоўку"
 
 msgid "Add Another Comment"
 msgstr "Дадаць яшчэ адзін каментар"
@@ -2278,9 +2145,6 @@ msgstr "Статус набору змен: %s ад %s"
 msgid "Expand commit message"
 msgstr "Разгарнуць паведамленне"
 
-msgid "%s comments"
-msgstr "%d каментар"
-
 msgid "Bookmark %s"
 msgstr "Закладка %s"
 
@@ -2304,9 +2168,6 @@ msgstr "Patch diff"
 
 msgid "Download diff"
 msgstr "Спампаваць diff"
-
-msgid "Merge"
-msgstr "звесці"
 
 msgid "Grafted from:"
 msgstr "Перанесена з:"
@@ -2332,9 +2193,6 @@ msgstr[2] "%s файлаў зменена: %s даданняў, %s выдале�
 msgid "Show full diff anyway"
 msgstr "Паказаць поўны diff"
 
-msgid "comment"
-msgstr "Каментаваць"
-
 msgid "on pull request"
 msgstr "у pull-запыце"
 
@@ -2349,11 +2207,6 @@ msgstr "Выдаліць каментар?"
 
 msgid "Status change"
 msgstr "Змена статусу"
-
-msgid "Comments are in plain text. Use @username to notify another user."
-msgstr ""
-"Выкарыстоўвайце @імя_карыстальніка ў тэксце, каб адправіць паведамленне "
-"пэўнаму карыстальніку"
 
 msgid "Set changeset status"
 msgstr "Змяніць статус рэвізіі"
@@ -2394,26 +2247,11 @@ msgstr "Статус набору змен: %s"
 msgid "Files affected"
 msgstr "Закранутыя файлы"
 
-msgid "File before"
-msgstr "файл выдалены"
-
-msgid "Modified"
-msgstr "Без змен"
-
 msgid "Deleted"
 msgstr "Выдалены"
 
 msgid "Renamed"
 msgstr "Пераназваны"
-
-msgid "Unknown operation: %r"
-msgstr "Невядомая рэвізія %s"
-
-msgid "No file after"
-msgstr "Безназоўны"
-
-msgid "File after"
-msgstr "файл выдалены"
 
 msgid "Show full diff for this file"
 msgstr "Паказаць поўны diff для гэтага файла"
@@ -2426,9 +2264,6 @@ msgstr "Паказаць каментары ў радках"
 
 msgid "No changesets"
 msgstr "Няма змен"
-
-msgid "Merge Ancestor"
-msgstr "Агульны продак"
 
 msgid "Show merge diff"
 msgstr "Паказаць merge diff"
@@ -2472,50 +2307,11 @@ msgstr "Падпісацца на стужку Atom %s"
 msgid "Creating"
 msgstr "Ствараецца"
 
-msgid "Mention in Comment on Changeset \"%s\""
-msgstr "%(user)s пакінуў каментар да набору змен %(age)s"
-
-msgid "Comment on Changeset \"%s\""
-msgstr "Каментар ад %s да набору змен %s %s"
-
-msgid "Changeset on"
-msgstr "Струмень змен"
-
-msgid "branch"
-msgstr "Галіна"
-
-msgid "Status change:"
-msgstr "Змена статусу"
-
-msgid "The pull request has been closed."
-msgstr "Гэты pull-запыт быў зачынены і не можа быць абноўлены."
-
 msgid "Hello %s"
 msgstr "Добры дзень, %s"
 
 msgid "We have received a request to reset the password for your account."
 msgstr "Мы атрымалі запыт на скіданне пароля для вашага акаўнта."
-
-msgid "Mention on Pull Request %s \"%s\" by %s"
-msgstr "%s згадаў Вас у каментары да pull-запыту %s \"%s\""
-
-msgid "Added as Reviewer of Pull Request %s \"%s\" by %s"
-msgstr "%s запытаў рэцэнзаванне pull-запыту %s \"%s\""
-
-msgid "Pull request"
-msgstr "Pull-запыт %s"
-
-msgid "Mention in Comment on Pull Request %s \"%s\""
-msgstr "%s згадаў Вас у каментары да pull-запыту %s \"%s\""
-
-msgid "Pull Request %s \"%s\" Closed"
-msgstr "Pull-запыт %s ад %s#%s"
-
-msgid "Comment on Pull Request %s \"%s\""
-msgstr "[каментар] у pull-запыце для"
-
-msgid "Full Name"
-msgstr "Імя групы"
 
 msgid "File diff"
 msgstr "Параўнанне файлаў"
@@ -2588,9 +2384,6 @@ msgstr "Паказаць ўсю гісторыю"
 
 msgid "Show Authors"
 msgstr "Паказаць аўтараў"
-
-msgid "Edit on Branch: %s"
-msgstr "Выдаленая галіна: %s"
 
 msgid "Editing binary files not allowed"
 msgstr "Рэдагаванне бінарных файлаў забароненае"
@@ -2753,17 +2546,11 @@ msgstr "Цэль"
 msgid "Pull changes"
 msgstr "Прыняць змены"
 
-msgid "Next iteration"
-msgstr "Рэгістрацыя"
-
 msgid "Save Changes"
 msgstr "Захаваць змены"
 
 msgid "Cancel Changes"
 msgstr "Адмяніць змены"
-
-msgid "Reviewers"
-msgstr "рэцэнзент"
 
 msgid "Remove reviewer"
 msgstr "Выдаліць рэцэнзента"
@@ -2791,9 +2578,6 @@ msgstr "Паказаць pull-запыты да %s"
 
 msgid "Show Pull Requests from '%s'"
 msgstr "Паказаць pull-запыты ад %s"
-
-msgid "Pull Requests Needing My Review"
-msgstr "Рэцэнзенты pull-запытаў"
 
 msgid "Search in All Repositories"
 msgstr "Пошук па ўсіх рэпазітарах"

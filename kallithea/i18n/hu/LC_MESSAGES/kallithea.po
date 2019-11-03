@@ -10,37 +10,13 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-msgid "Repository has been locked"
-msgstr "Ennek a tárolónak %s elágazása van"
-
-msgid "Repository has been unlocked"
-msgstr "Ennek a tárolónak %s elágazása van"
-
-msgid "Invalidated %s repositories"
-msgstr "Tároló törlése"
-
 msgid "%s Entry"
 msgid_plural "%s Entries"
 msgstr[0] "%s bejegyzés"
 msgstr[1] "%s bejegyzés"
 
-msgid "Confirm to reset this API key: %s"
-msgstr "A csoport törlésének megerősítése"
-
-msgid "Confirm to remove this API key: %s"
-msgstr "A csoport törlésének megerősítése"
-
-msgid "Confirm to delete this IP address: %s"
-msgstr "A csoport törlésének megerősítése"
-
 msgid "Confirm to delete this group"
 msgstr "A csoport törlésének megerősítése"
-
-msgid "Repository group %s"
-msgstr "Ennek a tárolónak %s elágazása van"
-
-msgid "Clone remote repository"
-msgstr "Tároló törlése"
 
 msgid "%s Repository Settings"
 msgstr "%s tároló beállítások"
@@ -53,35 +29,11 @@ msgid_plural "This repository has %s forks"
 msgstr[0] "Ennek a tárolónak %s elágazása van"
 msgstr[1] "Ennek a tárolónak %s elágazása van"
 
-msgid "Private Repository"
-msgstr "Tároló törlése"
-
-msgid "Fork of repository"
-msgstr "Tároló törlése"
-
-msgid "Remote repository URL"
-msgstr "Tároló törlése"
-
-msgid "Remote repository"
-msgstr "Tároló törlése"
-
 msgid "Add Another Comment"
 msgstr "Egy másik hozzászólás hozzáadása"
 
-msgid "%s comments"
-msgstr "Nincsenek hozzászólások."
-
-msgid "comment"
-msgstr "Nincsenek hozzászólások."
-
-msgid "on this changeset"
-msgstr "%s módosításcsomag"
-
 msgid "Delete comment?"
 msgstr "Hozzászólás törlése?"
-
-msgid "Status change"
-msgstr "%s módosításcsomag"
 
 msgid "%d inline"
 msgid_plural "%d inline"
@@ -90,18 +42,6 @@ msgstr[1] "%d sorközi"
 
 msgid "%s changesets"
 msgstr "%s módosításcsomag"
-
-msgid "Changeset on"
-msgstr "%s módosításcsomag"
-
-msgid "Status change:"
-msgstr "%s módosításcsomag"
-
-msgid "The pull request has been closed."
-msgstr "Ennek a tárolónak %s elágazása van"
-
-msgid "Reviewers"
-msgstr "Átnéző eltávolítása"
 
 msgid "Remove reviewer"
 msgstr "Átnéző eltávolítása"

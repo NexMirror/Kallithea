@@ -25,15 +25,6 @@ msgstr "忽略空格"
 msgid "Increase diff context to %(num)s lines"
 msgstr "增加 diff 上下文至 %(num)s 行"
 
-msgid "No permission to change status"
-msgstr "尚未有任何變更"
-
-msgid "Successfully deleted pull request %s"
-msgstr "成功遞交至 %s"
-
-msgid "Could not find other repository %s"
-msgstr "Git 版本庫"
-
 msgid "No response"
 msgstr "未回應"
 
@@ -48,9 +39,6 @@ msgstr "%s 評論於 %s"
 
 msgid "Changes on %s repository"
 msgstr "修改於版本庫 %s"
-
-msgid "There are no files yet."
-msgstr "尚未有任何 fork"
 
 msgid "No changes"
 msgstr "沒有修改"
@@ -130,9 +118,6 @@ msgstr "儲存所已被鎖定"
 msgid "Repository has been unlocked"
 msgstr "儲存所已打開"
 
-msgid "Invalidated %s repositories"
-msgstr "確認廢止版本庫快取"
-
 msgid "Updated application settings"
 msgstr "更新應用設定"
 
@@ -157,9 +142,6 @@ msgstr "您必須登入後才能瀏覽這個頁面"
 msgid "No changes detected"
 msgstr "尚未有任何變更"
 
-msgid "Changeset %s not found"
-msgstr "尚未有任何變更"
-
 msgid "and"
 msgstr "和"
 
@@ -177,9 +159,6 @@ msgstr "現在"
 
 msgid "Only admins can fork repositories"
 msgstr "祗有管理者才能分歧版本庫"
-
-msgid "Non-admins can fork repositories"
-msgstr "建立版本庫"
 
 msgid "Not reviewed"
 msgstr "未審核"
@@ -218,9 +197,6 @@ msgstr "無效的版本庫 URL"
 msgid "This is not a valid path"
 msgstr "不是一個有效的路徑"
 
-msgid "This email address is already in use"
-msgstr "這個郵件位址已經使用了"
-
 msgid "Repository"
 msgstr "版本庫"
 
@@ -245,20 +221,6 @@ msgstr "沒有帳號?"
 msgid "Sign In"
 msgstr "登入"
 
-msgid "Reset Your Password"
-msgstr "忘記您的密碼?"
-
-msgid ""
-"A password reset link will be sent to the specified email address if it "
-"is registered in the system."
-msgstr "密碼重設連結已郵寄至您的信箱"
-
-msgid "New Password"
-msgstr "新密碼"
-
-msgid "Confirm New Password"
-msgstr "新密碼"
-
 msgid "Sign Up"
 msgstr "登入"
 
@@ -274,12 +236,6 @@ msgstr "姓"
 msgid "Email"
 msgstr "電子郵件"
 
-msgid "Admin Journal"
-msgstr "管理員日誌"
-
-msgid "Filter"
-msgstr "檔案"
-
 msgid "Action"
 msgstr "動作"
 
@@ -291,9 +247,6 @@ msgstr "來源IP"
 
 msgid "Save"
 msgstr "儲存"
-
-msgid "Repository Defaults"
-msgstr "個版本庫"
 
 msgid "Type"
 msgstr "類型"
@@ -307,9 +260,6 @@ msgstr "啟用統計"
 msgid "Enable downloads"
 msgstr "啟用下載"
 
-msgid "Never"
-msgstr "擁有者"
-
 msgid "Reset"
 msgstr "重設"
 
@@ -319,56 +269,17 @@ msgstr "移除"
 msgid "My Account"
 msgstr "我的帳號"
 
-msgid "Owned Repositories"
-msgstr "個版本庫"
-
-msgid "Watched Repositories"
-msgstr "建立版本庫"
-
-msgid "Show Permissions"
-msgstr "權限"
-
-msgid "Confirm to remove this API key: %s"
-msgstr "確認移除目前的統計"
-
-msgid "Remove"
-msgstr "移除檔案"
-
-msgid "Change Your Account Password"
-msgstr "忘記您的密碼?"
-
 msgid "New password"
 msgstr "新密碼"
-
-msgid "Change %s avatar at"
-msgstr "修改您的頭像於"
-
-msgid "Repositories You Own"
-msgstr "個版本庫"
 
 msgid "Name"
 msgstr "名稱"
 
-msgid "Repositories You are Watching"
-msgstr "版本庫路徑"
-
-msgid "Default Permissions"
-msgstr "預設權限"
-
 msgid "Anonymous access"
 msgstr "訪客權限"
 
-msgid "Allow anonymous access"
-msgstr "訪客權限"
-
-msgid "Apply to all existing repositories"
-msgstr "建立版本庫"
-
 msgid "Repository group"
 msgstr "版本庫群組"
-
-msgid "Top level repository creation"
-msgstr "版本庫建立"
 
 msgid "Registration"
 msgstr "註冊"
@@ -385,116 +296,20 @@ msgstr "設定"
 msgid "Permissions"
 msgstr "權限"
 
-msgid "Visible"
-msgstr "停用"
-
-msgid "Add repos"
-msgstr "未回應"
-
-msgid "Default"
-msgstr "刪除"
-
-msgid "Repository group %s"
-msgstr "版本庫群組"
-
-msgid "Repository Groups Administration"
-msgstr "版本庫管理員"
-
-msgid "Number of Top-level Repositories"
-msgstr "建立版本庫"
-
-msgid "Clone remote repository"
-msgstr "私有版本庫"
-
 msgid "Remote"
 msgstr "遠端"
 
 msgid "Statistics"
 msgstr "統計"
 
-msgid "Parent"
-msgstr "父群組"
-
-msgid "Public Journal Visibility"
-msgstr "公開日誌"
-
 msgid "Remove from public journal"
 msgstr "從公開日誌移除"
-
-msgid "Add to Public Journal"
-msgstr "公開日誌"
-
-msgid "Change Locking"
-msgstr "修改紀錄"
-
-msgid "Confirm to unlock repository."
-msgstr "確認廢止版本庫快取"
-
-msgid "Unlock Repository"
-msgstr "公開的版本庫"
-
-msgid "Confirm to lock repository."
-msgstr "確認廢止版本庫快取"
-
-msgid "Lock Repository"
-msgstr "公開的版本庫"
-
-msgid "Delete this Repository"
-msgstr "公開的版本庫"
-
-msgid "Invalidate Repository Cache"
-msgstr "確認廢止版本庫快取"
 
 msgid "Active"
 msgstr "啟用"
 
-msgid "Private Repository"
-msgstr "私有版本庫"
-
-msgid "Fork of repository"
-msgstr "Git 版本庫"
-
-msgid "Remote repository URL"
-msgstr "私有版本庫"
-
-msgid "Pull Changes from Remote Repository"
-msgstr "修改於版本庫 %s"
-
-msgid "Confirm to pull changes from remote repository."
-msgstr "確認廢止版本庫快取"
-
-msgid "Permanent Repository ID"
-msgstr "私有版本庫"
-
-msgid "Remote repository"
-msgstr "私有版本庫"
-
-msgid "Repository URL"
-msgstr "版本庫"
-
-msgid "Reset Statistics"
-msgstr "啟用統計"
-
-msgid "Confirm to remove current statistics."
-msgstr "確認移除目前的統計"
-
-msgid "Repositories Administration"
-msgstr "版本庫管理員"
-
-msgid "Settings Administration"
-msgstr "設定管理員"
-
-msgid "Save Settings"
-msgstr "儲存設定"
-
-msgid "Custom Hooks"
-msgstr "自訂hook"
-
 msgid "Failed to remove hook"
 msgstr "移除hook失敗"
-
-msgid "Rescan options"
-msgstr "描述"
 
 msgid "Reindex"
 msgstr "重新索引"
@@ -511,41 +326,17 @@ msgstr "紀錄使用者抓取命令"
 msgid "Update repository after push (hg update)"
 msgstr "push後更新版本庫 (hg update)"
 
-msgid "Mercurial extensions"
-msgstr "Mercurial 版本庫"
-
-msgid "Location of repositories"
-msgstr "建立版本庫"
-
-msgid "Clone URL"
-msgstr "複製連結"
-
-msgid "Repository page size"
-msgstr "個版本庫"
-
-msgid "Meta Tagging"
-msgstr "設定"
-
-msgid "Show Members"
-msgstr "成員"
-
 msgid "Members"
 msgstr "成員"
 
 msgid "Available members"
 msgstr "啟用的成員"
 
-msgid "User Groups Administration"
-msgstr "使用者管理員"
-
 msgid "Add user"
 msgstr "新增使用者"
 
 msgid "Users"
 msgstr "使用者"
-
-msgid "Users Administration"
-msgstr "使用者管理員"
 
 msgid "Mercurial repository"
 msgstr "Mercurial 版本庫"
@@ -574,29 +365,14 @@ msgstr "分支"
 msgid "Public journal"
 msgstr "公開日誌"
 
-msgid "Forgot password?"
-msgstr "忘記密碼?"
-
-msgid "Don't have an account?"
-msgstr "沒有帳號?"
-
 msgid "Log Out"
 msgstr "登出"
-
-msgid "Inherit defaults"
-msgstr "個版本庫"
-
-msgid "default permissions"
-msgstr "預設權限"
 
 msgid "Create repositories"
 msgstr "建立版本庫"
 
 msgid "Show"
 msgstr "顯示"
-
-msgid "Unable to post"
-msgstr "啟用下載"
 
 msgid "Stop following this repository"
 msgstr "停止追蹤這個版本庫"
@@ -607,74 +383,8 @@ msgstr "開始追蹤這個版本庫"
 msgid "Group"
 msgstr "群組"
 
-msgid "Collapse Diff"
-msgstr "檔案差異"
-
-msgid "Expand Diff"
-msgstr "檔案差異"
-
-msgid "No revisions"
-msgstr "修訂"
-
-msgid "Go to tip of repository"
-msgstr "Git 版本庫"
-
 msgid "There are no changes yet"
 msgstr "尚未有任何變更"
-
-msgid "Changeset status: %s by %s"
-msgstr "尚未有任何變更"
-
-msgid "%s comments"
-msgstr "%s 評論於 %s"
-
-msgid "Merge"
-msgstr "合併"
-
-msgid "comment"
-msgstr "%s 評論於 %s"
-
-msgid "No title"
-msgstr "沒有檔案"
-
-msgid "on this changeset"
-msgstr "沒有修改"
-
-msgid "Status change"
-msgstr "多個檔案修改"
-
-msgid "Set changeset status"
-msgstr "尚未有任何變更"
-
-msgid "No change"
-msgstr "沒有修改"
-
-msgid "Finish pull request"
-msgstr "文件內容"
-
-msgid "File before"
-msgstr "移除檔案"
-
-msgid "Modified"
-msgstr "未修改"
-
-msgid "Deleted"
-msgstr "刪除"
-
-msgid "Renamed"
-msgstr "讀"
-
-msgid "Unknown operation: %r"
-msgstr "未知修訂 %s"
-
-msgid "No file after"
-msgstr "未知的存檔類型"
-
-msgid "File after"
-msgstr "檔案新增"
-
-msgid "behind"
-msgstr "重新索引"
 
 msgid "Public repository"
 msgstr "公開的版本庫"
@@ -688,44 +398,11 @@ msgstr "訂閱 %s rss"
 msgid "Subscribe to %s atom feed"
 msgstr "訂閱 %s atom"
 
-msgid "Comment on Changeset \"%s\""
-msgstr "尚未有任何變更"
-
-msgid "Changeset on"
-msgstr "變更"
-
-msgid "branch"
-msgstr "分支"
-
-msgid "Status change:"
-msgstr "多個檔案修改"
-
-msgid "The pull request has been closed."
-msgstr "儲存所已被鎖定"
-
-msgid "Pull request"
-msgstr "提取要求 %s"
-
-msgid "Pull Request %s \"%s\" Closed"
-msgstr "提取要求 %s"
-
-msgid "Comment on Pull Request %s \"%s\""
-msgstr "提取要求 %s"
-
-msgid "Full Name"
-msgstr "群組名稱"
-
 msgid "File diff"
 msgstr "檔案差異"
 
 msgid "Location"
 msgstr "位置"
-
-msgid "New file type"
-msgstr "未知的存檔類型"
-
-msgid "Commit Changes"
-msgstr "遞交修改"
 
 msgid "Loading file list..."
 msgstr "載入檔案列表..."
@@ -733,17 +410,8 @@ msgstr "載入檔案列表..."
 msgid "Size"
 msgstr "大小"
 
-msgid "Last Modified"
-msgstr "最後修改"
-
-msgid "Last Committer"
-msgstr "最後的遞交者"
-
 msgid "Binary file (%s)"
 msgstr "二進位檔 (%s)"
-
-msgid "File is too big to display."
-msgstr "顯示的檔案太大"
 
 msgid "Followers"
 msgstr "追蹤者"
@@ -759,30 +427,6 @@ msgstr "尚未有任何 fork"
 
 msgid "Revision"
 msgstr "修訂"
-
-msgid "Vote"
-msgstr "遠端"
-
-msgid "Summarize the changes"
-msgstr "遞交修改"
-
-msgid "on"
-msgstr "無"
-
-msgid "Next iteration"
-msgstr "註冊"
-
-msgid "Cancel Changes"
-msgstr "沒有修改"
-
-msgid "Pull Request Content"
-msgstr "文件內容"
-
-msgid "Pull Requests from '%s'"
-msgstr "文件內容"
-
-msgid "Search in All Repositories"
-msgstr "Mercurial 版本庫"
 
 msgid "Search term"
 msgstr "搜尋關鍵字"
@@ -837,15 +481,6 @@ msgstr "沒有任何下載"
 
 msgid "Downloads are disabled for this repository"
 msgstr "這個版本庫的下載已停用"
-
-msgid "Latest Changes"
-msgstr "多個檔案修改"
-
-msgid "Quick Start"
-msgstr "快速過濾..."
-
-msgid "Push new repository"
-msgstr "私有版本庫"
 
 msgid "Download %s as %s"
 msgstr "下載 %s 為 %s"

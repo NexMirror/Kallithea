@@ -25,18 +25,6 @@ msgstr "Mostrar espaços em branco"
 msgid "Ignore whitespace"
 msgstr "Ignorar espaços em branco"
 
-msgid "No permission to change status"
-msgstr "Vote para estado do pull request"
-
-msgid "Successfully deleted pull request %s"
-msgstr "Pull request excluído com sucesso"
-
-msgid "Could not find other repository %s"
-msgstr "Confirme para travar repositório"
-
-msgid "No response"
-msgstr "revisões"
-
 msgid ""
 "The request could not be understood by the server due to malformed syntax."
 msgstr ""
@@ -74,23 +62,11 @@ msgstr "Modificações no repositório %s"
 msgid "Click here to add new file"
 msgstr "Clique aqui para adicionar um novo arquivo"
 
-msgid "There are no files yet."
-msgstr "Ainda não há bifurcações"
-
-msgid "%s at %s"
-msgstr "em %s e %s"
-
 msgid "This repository has been locked by %s on %s"
 msgstr "Este repositório foi travado por %s em %s"
 
-msgid "You can only delete files with revision being a valid branch"
-msgstr "Só é possível editar arquivos quando a revisão é um ramo válido"
-
 msgid "Error occurred during commit"
 msgstr "Ocorreu um erro ao realizar commit"
-
-msgid "You can only edit files with revision being a valid branch"
-msgstr "Só é possível editar arquivos quando a revisão é um ramo válido"
 
 msgid "Edited file %s via Kallithea"
 msgstr "Arquivo %s editado via Kallithea"
@@ -155,12 +131,6 @@ msgstr "Diário"
 msgid "You have successfully registered with %s"
 msgstr "Você foi registrado no %s com sucesso"
 
-msgid "A password reset confirmation code has been sent"
-msgstr "Seu link de reinicialização de senha foi enviado"
-
-msgid "Invalid password reset token"
-msgstr "Link para trocar senha"
-
 msgid "Changeset"
 msgstr "Conjunto de Mudanças"
 
@@ -173,32 +143,14 @@ msgstr "Ramos pares"
 msgid "Bookmarks"
 msgstr "Marcadores"
 
-msgid "Error occurred while creating pull request"
-msgstr "Ocorreu um erro durante o envio do pull request"
-
 msgid "Successfully opened new pull request"
 msgstr "Novo pull request criado com sucesso"
-
-msgid "New pull request iteration created"
-msgstr "Revisores do pull request"
-
-msgid "No description"
-msgstr "Descrição"
-
-msgid "Pull request updated"
-msgstr "Pull requests para %s"
 
 msgid "Successfully deleted pull request"
 msgstr "Pull request excluído com sucesso"
 
 msgid "Invalid search query. Try quoting it."
 msgstr "Consulta de busca inválida. Tente usar aspas."
-
-msgid "An error occurred during search operation."
-msgstr "Ocorreu um erro durante essa operação de busca"
-
-msgid "No data ready yet"
-msgstr "Ainda não há dados carregados"
 
 msgid "Statistics are disabled for this repository"
 msgstr "As estatísticas estão desabillitadas para este repositório"
@@ -208,9 +160,6 @@ msgstr "Configurações padrão atualizadas com sucesso"
 
 msgid "Error occurred during update of defaults"
 msgstr "Ocorreu um erro durnge a atualização dos padrões"
-
-msgid "Forever"
-msgstr "para sempre"
 
 msgid "5 minutes"
 msgstr "cinco minutos"
@@ -229,9 +178,6 @@ msgstr "Ocorreu um erro durante a criação de um gist"
 
 msgid "Deleted gist %s"
 msgstr "Gist %s excluído"
-
-msgid "Unmodified"
-msgstr "Última alteração"
 
 msgid "You can't edit this user since it's crucial for entire application"
 msgstr ""
@@ -339,18 +285,11 @@ msgstr "%s bifurcações excluídas"
 msgid "Deleted repository %s"
 msgstr "Repositório %s excluído"
 
-msgid "Cannot delete repository %s which still has forks"
-msgstr ""
-"Nao é possível excluir %s pois ele ainda contém bifurcações vinculadas"
-
 msgid "An error occurred during deletion of %s"
 msgstr "Ocorreu um erro durante a exclusão de %s"
 
 msgid "Repository permissions updated"
 msgstr "Permissões do repositório atualizadas"
-
-msgid "An error occurred during creation of field: %r"
-msgstr "Ocorreu um erro durante a criação do campo"
 
 msgid "An error occurred during removal of field"
 msgstr "Ocorreu um erro durante a remoção do campo"
@@ -369,12 +308,6 @@ msgstr "Marcado repositório %s como bifurcação de %s"
 
 msgid "An error occurred during this operation"
 msgstr "Ocorreu um erro durante essa operação"
-
-msgid "Repository has been locked"
-msgstr "Repositório não está travado"
-
-msgid "Repository has been unlocked"
-msgstr "Repositório não está travado"
 
 msgid "An error occurred during unlocking"
 msgstr "Ocorreu um erro durante o destravamento"
@@ -398,12 +331,6 @@ msgid "Error occurred while updating application settings"
 msgstr ""
 "Ocorreu um erro durante a atualização das configurações da aplicação"
 
-msgid "Repositories successfully rescanned. Added: %s. Removed: %s."
-msgstr "Repositórios varridos com sucesso adicionados: %s ; removidos: %s"
-
-msgid "Invalidated %s repositories"
-msgstr "Invalidar o cache para todos os repositórios"
-
 msgid "Updated application settings"
 msgstr "Configurações da aplicação atualizadas"
 
@@ -413,9 +340,6 @@ msgstr "Configurações de visualização atualizadas"
 msgid "Error occurred during updating visualisation settings"
 msgstr ""
 "Ocorreu um erro durante a atualização das configurações de visualização"
-
-msgid "Hook already exists"
-msgstr "Ainda não há dados carregados"
 
 msgid "Added new hook"
 msgstr "Adicionado novo gancho"
@@ -483,9 +407,6 @@ msgstr "Você precisa ser um usuário registrado para realizar essa ação"
 msgid "You need to be signed in to view this page"
 msgstr "Você precisa estar logado para ver essa página"
 
-msgid "Changeset for %s %s not found in %s"
-msgstr "Conjunto de alterações não encontrado"
-
 msgid "Binary file"
 msgstr "Arquivo binário"
 
@@ -504,14 +425,8 @@ msgstr "Excluído ramo: %s"
 msgid "Created tag: %s"
 msgstr "Tag criada: %s"
 
-msgid "Changeset %s not found"
-msgstr "Conjunto de alterações não encontrado"
-
 msgid "Show all combined changesets %s->%s"
 msgstr "Ver todos os conjuntos de mudanças combinados %s->%s"
-
-msgid "Compare view"
-msgstr "comparar exibir"
 
 msgid "and"
 msgstr "e"
@@ -521,12 +436,6 @@ msgstr "%s mais"
 
 msgid "revisions"
 msgstr "revisões"
-
-msgid "Fork name %s"
-msgstr "nome da bifurcação %s"
-
-msgid "Pull request %s"
-msgstr "Pull request #%s"
 
 msgid "[deleted] repository"
 msgstr "repositório [excluído]"
@@ -675,47 +584,8 @@ msgstr "nível superior"
 msgid "Kallithea Administrator"
 msgstr "Administrador do Kallithea"
 
-msgid "Default user has read access to new repositories"
-msgstr "Acesso não autorizado ao recurso"
-
-msgid "Default user has write access to new repositories"
-msgstr "Acesso não autorizado ao recurso"
-
-msgid "Only admins can create repository groups"
-msgstr "Grupo de repositórios %s criado"
-
-msgid "Non-admins can create repository groups"
-msgstr "Grupo de repositórios %s criado"
-
-msgid "Only admins can create user groups"
-msgstr "Criar grupos de usuários"
-
-msgid "Non-admins can create user groups"
-msgstr "Criar grupos de usuários"
-
-msgid "Only admins can fork repositories"
-msgstr "Criar repositórios"
-
-msgid "Non-admins can fork repositories"
-msgstr "Invalidar o cache para todos os repositórios"
-
 msgid "Registration disabled"
 msgstr "Registro desatilitado"
-
-msgid "User registration with manual account activation"
-msgstr "Registro de Usuário com ativação manual de conta"
-
-msgid "User registration with automatic account activation"
-msgstr "Registro de Usuário com ativação automática de conta"
-
-msgid "Not reviewed"
-msgstr "Não Revisado"
-
-msgid "Under review"
-msgstr "Sob Revisão"
-
-msgid "Not approved"
-msgstr "Aprovado"
 
 msgid "Approved"
 msgstr "Aprovado"
@@ -732,65 +602,13 @@ msgstr "Por favor entre com uma senha"
 msgid "Enter %(min)i characters or more"
 msgstr "Entre com %(min)i caracteres ou mais"
 
-msgid ""
-"[Comment] %(repo_name)s changeset %(short_id)s \"%(message_short)s\" on "
-"%(branch)s"
-msgstr "[comentado] no pull request para"
-
-msgid "New user %(new_username)s registered"
-msgstr "O username \"%(new_username)s\" não é válido"
-
-msgid "Closing"
-msgstr "Usando"
-
-msgid ""
-"%(user)s wants you to review pull request %(pr_nice_id)s: %(pr_title)s"
-msgstr ""
-"%(user)s solicita sua revisão no pull request $%(pr_id)s: %(pr_title)s"
-
-msgid "Cannot create empty pull request"
-msgstr "Criar Pull Request"
-
-msgid "You are not authorized to create the pull request"
-msgstr "Confirme para excluir este pull request"
-
 msgid "latest tip"
 msgstr "tip mais recente"
 
 msgid "New user registration"
 msgstr "Novo registro de usuário"
 
-msgid ""
-"You can't remove this user since it is crucial for the entire application"
-msgstr ""
-"Você não pode remover esse usuário, pois ele é crucial para toda a "
-"aplicação"
-
-msgid ""
-"User \"%s\" still owns %s repositories and cannot be removed. Switch "
-"owners or remove those repositories: %s"
-msgstr ""
-"usuário \"%s\" ainda é dono de %s repositórios e não pode ser removido. "
-"Troque os donos ou remova esses repositórios. %s"
-
-msgid ""
-"User \"%s\" still owns %s repository groups and cannot be removed. Switch "
-"owners or remove those repository groups: %s"
-msgstr ""
-"usuário \"%s\" ainda é dono de %s repositórios e não pode ser removido. "
-"Troque os donos ou remova esses repositórios. %s"
-
-msgid ""
-"User \"%s\" still owns %s user groups and cannot be removed. Switch "
-"owners or remove those user groups: %s"
-msgstr ""
-"usuário \"%s\" ainda é dono de %s repositórios e não pode ser removido. "
-"Troque os donos ou remova esses repositórios. %s"
-
 msgid "Password reset link"
-msgstr "Link para trocar senha"
-
-msgid "Password reset notification"
 msgstr "Link para trocar senha"
 
 msgid "Value cannot be an empty list"
@@ -798,16 +616,6 @@ msgstr "O valor não pode ser uma lista vazia"
 
 msgid "Username \"%(username)s\" already exists"
 msgstr "O username \\\"%(username)s\\\" já existe"
-
-msgid "Username \"%(username)s\" cannot be used"
-msgstr "O username \"%(username)s\" não é válido"
-
-msgid ""
-"Username may only contain alphanumeric characters underscores, periods or "
-"dashes and must begin with an alphanumeric character or underscore"
-msgstr ""
-"Nome de usuário pode conter somente caracteres alfanuméricos, sublinha, "
-"pontos e hífens e deve iniciar com caractere alfanumérico"
 
 msgid "Username %(username)s is not valid"
 msgstr "O username \"%(username)s\" não é válido"
@@ -841,14 +649,8 @@ msgstr "Caracteres inválidos (não-ascii) na senha"
 msgid "Passwords do not match"
 msgstr "Senhas não conferem"
 
-msgid "Invalid username or password"
-msgstr "senha inválida"
-
 msgid "Token mismatch"
 msgstr "Descompasso de Token"
-
-msgid "Repository name %(repo)s is not allowed"
-msgstr "O nome de repositório %(repo)s não é permitido"
 
 msgid "Repository named %(repo)s already exists"
 msgstr "Um repositório chamado %(repo)s já existe"
@@ -858,9 +660,6 @@ msgstr "Um repositório \"%(repo)s\" já existe no grupo \"%(group)s\""
 
 msgid "Repository group with name \"%(repo)s\" already exists"
 msgstr "Um Grupo de Repositórios chamado \"%(repo)s\" já existe"
-
-msgid "Invalid repository URL"
-msgstr "repositório privado"
 
 msgid "Fork has to be the same type as parent"
 msgstr "A bifurcação deve ser do mesmo tipo que o pai"
@@ -879,12 +678,6 @@ msgstr "Este nome de usuário ou de grupo de usuários não é válido"
 
 msgid "This is not a valid path"
 msgstr "Esse não é um caminho válido"
-
-msgid "This email address is already in use"
-msgstr "Esse endereço de e-mail já está tomado"
-
-msgid "Email address \"%(email)s\" not found"
-msgstr "o e-mail \"%(email)s\" não existe."
 
 msgid ""
 "The LDAP Login attribute of the CN must be specified - this is the name "
@@ -949,25 +742,6 @@ msgstr "Entrar"
 msgid "Password Reset"
 msgstr "Senha Trocada"
 
-msgid "Reset Your Password"
-msgstr "Esqueceu sua senha ?"
-
-msgid "Send Password Reset Email"
-msgstr "Link para trocar senha"
-
-msgid ""
-"A password reset link will be sent to the specified email address if it "
-"is registered in the system."
-msgstr ""
-"Link de reinicialização de senha será enviado ao endereço de e-mail "
-"correspondente"
-
-msgid "New Password"
-msgstr "Nova senha"
-
-msgid "Confirm New Password"
-msgstr "Sua nova senha"
-
 msgid "Sign Up"
 msgstr "Inscrever-se"
 
@@ -983,19 +757,8 @@ msgstr "Último Nome"
 msgid "Email"
 msgstr "E-mail"
 
-msgid "Admin Journal"
-msgstr "Diário do administrador"
-
 msgid "journal filter..."
 msgstr "filtro de diário..."
-
-msgid "Filter"
-msgstr "filtro"
-
-msgid "%s Entry"
-msgid_plural "%s Entries"
-msgstr[0] "%s entrada"
-msgstr[1] "%s entradas"
 
 msgid "Action"
 msgstr "Ação"
@@ -1011,9 +774,6 @@ msgstr "Ainda não há ações"
 
 msgid "Save"
 msgstr "Salvar"
-
-msgid "Repository Defaults"
-msgstr "Padrões de repositórios"
 
 msgid "Type"
 msgstr "Tipo"
@@ -1055,17 +815,8 @@ msgstr "Tempo de vida do Gist"
 msgid "Expires"
 msgstr "Expira"
 
-msgid "Never"
-msgstr "nunca"
-
 msgid "Cancel"
 msgstr "Cancelar"
-
-msgid "Private Gists for User %s"
-msgstr "Gists privados do usuário %s"
-
-msgid "Public Gists for User %s"
-msgstr "Gists públicos do usuário %s"
 
 msgid "Public Gists"
 msgstr "Gists Públicos"
@@ -1100,33 +851,6 @@ msgstr "Mostrar original"
 msgid "My Account"
 msgstr "Minha Conta"
 
-msgid "Email Addresses"
-msgstr "Novo endereço de email"
-
-msgid "Owned Repositories"
-msgstr "repositórios"
-
-msgid "Watched Repositories"
-msgstr "Criar repositórios"
-
-msgid "Show Permissions"
-msgstr "Copiar permissões"
-
-msgid "Confirm to reset this API key: %s"
-msgstr "Confirme para excluir este IP: %s"
-
-msgid "Expired"
-msgstr "Expira"
-
-msgid "Confirm to remove this API key: %s"
-msgstr "Confirme para excluir este IP: %s"
-
-msgid "Remove"
-msgstr "Removido"
-
-msgid "New API key"
-msgstr "Próxima chave de campo"
-
 msgid "Add"
 msgstr "Adicionar"
 
@@ -1136,31 +860,13 @@ msgstr "Confirme para excluir este email: %s"
 msgid "New email address"
 msgstr "Novo endereço de email"
 
-msgid "Change Your Account Password"
-msgstr "Sua nova senha"
-
 msgid "New password"
 msgstr "Nova senha"
-
-msgid "Change %s avatar at"
-msgstr "Altere o seu avatar em"
-
-msgid "Repositories You Own"
-msgstr "Nenhum repositório encontrado."
 
 msgid "Name"
 msgstr "Nome"
 
-msgid "Repositories You are Watching"
-msgstr "Localização dos repositórios"
-
-msgid "Default Permissions"
-msgstr "Permissões padrão"
-
 msgid "Anonymous access"
-msgstr "Acesso anônimo"
-
-msgid "Allow anonymous access"
 msgstr "Acesso anônimo"
 
 msgid ""
@@ -1171,9 +877,6 @@ msgstr ""
 "Todas as permissões padrão em cada repositório serão modificadas para a "
 "permissão escolhida, note que todas as permissões padrão customizadas nos "
 "repositórios serão perdidas"
-
-msgid "Apply to all existing repositories"
-msgstr "Repositório existente?"
 
 msgid "Repository group"
 msgstr "Grupo de repositórios"
@@ -1187,23 +890,8 @@ msgstr ""
 "modificadas para a permissão escolhida, note que todas as permissões "
 "padrão customizadas em grupos de repositórios serão perdidas"
 
-msgid "Apply to all existing repository groups"
-msgstr "Grupo de repositórios %s atualizado"
-
 msgid "User group"
 msgstr "Grupo de usuários"
-
-msgid ""
-"All default permissions on each user group will be reset to chosen "
-"permission, note that all custom default permission on user groups will "
-"be lost"
-msgstr ""
-"Todas as permissões padrão em cada repositório serão reinicializadas para "
-"as permissões escolhidas. Note que todas as permissões padrão "
-"customizadas nos repositórios serão perdidas"
-
-msgid "Top level repository creation"
-msgstr "Criação de repositório"
 
 msgid "User group creation"
 msgstr "Criação de grupo de usuários"
@@ -1216,12 +904,6 @@ msgstr "Registro"
 
 msgid "External auth account activation"
 msgstr "Ativação de autenticação de conta externa"
-
-msgid "Confirm to delete this IP address: %s"
-msgstr "Confirme para excluir este IP: %s"
-
-msgid "All IP addresses are allowed."
-msgstr "Todos os endereços IP são permitidos"
 
 msgid "New IP address"
 msgstr "Novo endereço IP"
@@ -1246,29 +928,8 @@ msgid_plural "Confirm to delete this group: %s with %s repositories"
 msgstr[0] "Confirme para excluir este grupo: %s com %s repositório"
 msgstr[1] "Confirme para excluir este grupo: %s com %s repositórios"
 
-msgid "Visible"
-msgstr "Desabilitado"
-
-msgid "Add repos"
-msgstr "revisões"
-
-msgid "Add/Edit groups"
-msgstr "Adicionar grupo de usuários"
-
-msgid "User/User Group"
-msgstr "Grupo de usuários"
-
-msgid "Default"
-msgstr "padrão"
-
-msgid "Revoke"
-msgstr "revogar"
-
 msgid "Add new"
 msgstr "Adicionar novo"
-
-msgid "Apply to children"
-msgstr "aplicar aos filhos"
 
 msgid ""
 "Enable lock-by-pulling on group. This option will be applied to all other "
@@ -1276,24 +937,6 @@ msgid ""
 msgstr ""
 "Habilitar trava-por-pulling no grupo. Esta opção será aplicada a todos os "
 "outros grupos e repositórios dentro deles"
-
-msgid "Remove this group"
-msgstr "Criar grupos de usuários"
-
-msgid "Confirm to delete this group"
-msgstr "Confirme para excluir este grupo de usuário: %s"
-
-msgid "Repository group %s"
-msgstr "Grupo de repositórios"
-
-msgid "Repository Groups Administration"
-msgstr "Administração de grupos de repositórios"
-
-msgid "Number of Top-level Repositories"
-msgstr "Número de repositórios de nível superior"
-
-msgid "Clone remote repository"
-msgstr "repositório [criado]"
 
 msgid ""
 "Keep it short and to the point. Use a README file for longer descriptions."
@@ -1310,56 +953,14 @@ msgstr "Tipo de repositório a criar."
 msgid "Landing revision"
 msgstr "Revisão de pouso"
 
-msgid "%s Creating Repository"
-msgstr "Erro ao criar repositório %s"
-
-msgid "Extra Fields"
-msgstr "Campos extras"
-
 msgid "Remote"
 msgstr "Remoto"
 
 msgid "Statistics"
 msgstr "Estatísticas"
 
-msgid "Parent"
-msgstr "Progenitor do grupo"
-
-msgid "Manually set this repository as a fork of another from the list."
-msgstr ""
-"Marque manualmente este repositório como uma bifurcação de um outro da "
-"lista"
-
-msgid "Public Journal Visibility"
-msgstr "diário público"
-
 msgid "Remove from public journal"
 msgstr "Remover do diário público"
-
-msgid "Add to Public Journal"
-msgstr "diário público"
-
-msgid ""
-"All actions done in this repository will be visible to everyone in the "
-"public journal."
-msgstr ""
-"Todas as ações feitas nesse repositório serão acessíveis a todos no "
-"diário público"
-
-msgid "Change Locking"
-msgstr "Habilitar travas"
-
-msgid "Confirm to unlock repository."
-msgstr "Confirme para destravar repositório"
-
-msgid "Unlock Repository"
-msgstr "Repositório público"
-
-msgid "Confirm to lock repository."
-msgstr "Confirme para travar repositório"
-
-msgid "Lock Repository"
-msgstr "Repositório público"
 
 msgid "Repository is not locked"
 msgstr "Repositório não está travado"
@@ -1367,32 +968,11 @@ msgstr "Repositório não está travado"
 msgid "Confirm to delete this repository: %s"
 msgstr "Confirma excluir esse repositório: %s"
 
-msgid "Delete this Repository"
-msgstr "[excluir] repositório"
-
-msgid "This repository has %s fork"
-msgid_plural "This repository has %s forks"
-msgstr[0] "este repositório tem %s bifurcação"
-msgstr[1] "este repositório tem %s bifurcações"
-
 msgid "Detach forks"
 msgstr "Desassociar bifurcações"
 
 msgid "Delete forks"
 msgstr "Excluir bifurcações"
-
-msgid "Invalidate Repository Cache"
-msgstr "Invalidar cache do repositório"
-
-msgid ""
-"Manually invalidate cache for this repository. On first access, the "
-"repository will be cached again."
-msgstr ""
-"Invalidar manualmente o cache deste repositório. No próximo acesso o "
-"repositório será cacheado novamente"
-
-msgid "List of Cached Values"
-msgstr "Lista de valores cacheados"
 
 msgid "Prefix"
 msgstr "Prefixo"
@@ -1421,50 +1001,11 @@ msgstr "Nova descrição de campo"
 msgid "Enter description of a field"
 msgstr "Entre com a descrição de um campo"
 
-msgid "Extra fields are disabled."
-msgstr "Registro desabilitado"
-
-msgid "Private Repository"
-msgstr "repositório privado"
-
-msgid "Fork of repository"
-msgstr "repositório [bifurcado]"
-
-msgid "Remote repository URL"
-msgstr "Repositório %s criado"
-
-msgid "Pull Changes from Remote Repository"
-msgstr "[pulled do remote] no repositório"
-
-msgid "Confirm to pull changes from remote repository."
-msgstr "Confirma realizar pull de alterações a partir de lado remoto"
-
-msgid "Permanent Repository ID"
-msgstr "repositório privado"
-
-msgid "Remote repository"
-msgstr "repositório [criado]"
-
-msgid "Repository URL"
-msgstr "Repositório"
-
 msgid "Default revision for files page, downloads, whoosh and readme"
 msgstr "Revisão padrão para página de arquivos, downloads, whoosh e readme"
 
 msgid "Change owner of this repository."
 msgstr "Mudar o dono desse repositório."
-
-msgid "Reset Statistics"
-msgstr "Habilitar estatísticas"
-
-msgid "Confirm to remove current statistics."
-msgstr "Confirma remover atuais estatísticas"
-
-msgid "Repositories Administration"
-msgstr "Administração de repositórios"
-
-msgid "Settings Administration"
-msgstr "Administração de configurações"
 
 msgid "Hooks"
 msgstr "Ganchos"
@@ -1478,25 +1019,10 @@ msgstr "Marca do site"
 msgid "HTTP authentication realm"
 msgstr "Realm de autenticação HTTP"
 
-msgid "Save Settings"
-msgstr "Salvar configurações"
-
-msgid "Custom Hooks"
-msgstr "Ganchos customizados"
-
 msgid "Failed to remove hook"
 msgstr "Falha ao remover gancho"
 
-msgid "Rescan options"
-msgstr "Opção de varredura"
-
-msgid "Delete records of missing repositories"
-msgstr "Buscar nos repositórios"
-
 msgid "Invalidate cache for all repositories"
-msgstr "Invalidar o cache para todos os repositórios"
-
-msgid "Check this to reload data and clear cache keys for all repositories."
 msgstr "Invalidar o cache para todos os repositórios"
 
 msgid "Index build option"
@@ -1507,9 +1033,6 @@ msgstr "Construir do zero"
 
 msgid "Reindex"
 msgstr "Reindexar"
-
-msgid "Git version"
-msgstr "Editar Permissão"
 
 msgid "Show repository size after push"
 msgstr "Mostrar tamanho do repositório após o push"
@@ -1523,17 +1046,11 @@ msgstr "Armazenar registro de comandos de pull dos usuários"
 msgid "Update repository after push (hg update)"
 msgstr "Atualizar repositório após realizar push (hg update)"
 
-msgid "Mercurial extensions"
-msgstr "Extensões do Mercurial"
-
 msgid "Enable largefiles extension"
 msgstr "Habilitar extensão largefiles"
 
 msgid "Enable hgsubversion extension"
 msgstr "Habilitar extensão hgsubversion"
-
-msgid "Location of repositories"
-msgstr "Criar repositórios"
 
 msgid ""
 "Click to unlock. You must restart Kallithea in order to make this setting "
@@ -1554,12 +1071,6 @@ msgstr "Permite armazenar campos customizados adicionais por repositório."
 msgid "Show Kallithea version"
 msgstr "Mostrar versão do Kallithea"
 
-msgid "Clone URL"
-msgstr "URL de clonagem"
-
-msgid "Repository page size"
-msgstr "Tamanho do Repositório"
-
 msgid "Icons"
 msgstr "Ícones"
 
@@ -1569,17 +1080,8 @@ msgstr "Mostrar ícone de repositório público nos repositórios"
 msgid "Show private repository icon on repositories"
 msgstr "Mostrar ícone de repositório privado nos repositórios"
 
-msgid "Show public/private icons next to repository names."
-msgstr "Mostrar ícone de repositório público nos repositórios"
-
-msgid "Meta Tagging"
-msgstr "Meta-Tagging"
-
 msgid "Add user group"
 msgstr "Adicionar grupo de usuários"
-
-msgid "Show Members"
-msgstr "membros"
 
 msgid "Members"
 msgstr "Membros"
@@ -1596,9 +1098,6 @@ msgstr "Membros escolhidos do grupo"
 msgid "Available members"
 msgstr "Membros disponíveis"
 
-msgid "User Groups Administration"
-msgstr "Administração de grupos de usuários"
-
 msgid "Add user"
 msgstr "Adicionar usuário"
 
@@ -1614,9 +1113,6 @@ msgstr "Confirma excluir este usuário: %s"
 msgid "New password confirmation"
 msgstr "Confirmação de nova senha"
 
-msgid "Users Administration"
-msgstr "Administração de usuários"
-
 msgid "Server instance: %s"
 msgstr "Instância de servidor: %s"
 
@@ -1625,9 +1121,6 @@ msgstr "Repositório Mercurial"
 
 msgid "Git repository"
 msgstr "Repositório Git"
-
-msgid "Create Fork"
-msgstr "Excluir bifurcações"
 
 msgid "Summary"
 msgstr "Sumário"
@@ -1646,9 +1139,6 @@ msgstr "Pull Requests"
 
 msgid "Options"
 msgstr "Opções"
-
-msgid "Compare Fork"
-msgstr "Compare bifurcação"
 
 msgid "Compare"
 msgstr "Compare"
@@ -1689,41 +1179,11 @@ msgstr "Mostrar gists públicos"
 msgid "Gists"
 msgstr "Gists"
 
-msgid "All Public Gists"
-msgstr "Todos os gists públicos"
-
-msgid "My Public Gists"
-msgstr "Meus gists públicos"
-
-msgid "My Private Gists"
-msgstr "Meus gists privados"
-
 msgid "Search in repositories"
 msgstr "Buscar nos repositórios"
 
-msgid "My Pull Requests"
-msgstr "Pull requests"
-
-msgid "Not Logged In"
-msgstr "Não logado"
-
-msgid "Login to Your Account"
-msgstr "Entrar com sua conta"
-
-msgid "Forgot password?"
-msgstr "Esqueceu a senha ?"
-
-msgid "Don't have an account?"
-msgstr "Não possui uma conta ?"
-
 msgid "Log Out"
 msgstr "Sair"
-
-msgid "Inherit defaults"
-msgstr "Padrões de repositórios"
-
-msgid "default permissions"
-msgstr "Permissões padrão"
 
 msgid "Create repositories"
 msgstr "Criar repositórios"
@@ -1761,15 +1221,6 @@ msgstr "Permissão"
 msgid "Edit Permission"
 msgstr "Editar Permissão"
 
-msgid "Submitting ..."
-msgstr "Enviando..."
-
-msgid "Unable to post"
-msgstr "Habilitar downloads"
-
-msgid "Add Another Comment"
-msgstr "Adicionar outro comentário"
-
 msgid "Stop following this repository"
 msgstr "Parar de seguir este repositório"
 
@@ -1791,32 +1242,8 @@ msgstr "Busca truncada"
 msgid "No matching files"
 msgstr "Nenhum arquivo encontrado"
 
-msgid "Open New Pull Request from {0}"
-msgstr "Comentar no pull request #%s"
-
-msgid "Show Selected Changesets {0} &rarr; {1}"
-msgstr "Mostrar changesets selecionados __S -> __E"
-
-msgid "Selection Link"
-msgstr "Link da seleção"
-
-msgid "Collapse Diff"
-msgstr "Colapsar diff"
-
-msgid "Expand Diff"
-msgstr "Expandir diff"
-
-msgid "No revisions"
-msgstr "revisões"
-
 msgid "Failed to revoke permission"
 msgstr "Falhou ao revocar a permissão"
-
-msgid "Confirm to revoke permission for {0}: {1} ?"
-msgstr "confirme para revogar permissão para {0}: {1} ?"
-
-msgid "Specify changeset"
-msgstr "%s Changeset"
 
 msgid "Click to sort ascending"
 msgstr "Clique para ordenar em ordem crescente"
@@ -1844,17 +1271,8 @@ msgstr[1] "mostrando %d de %d revisões"
 msgid "Clear selection"
 msgstr "Deselecionar seleção"
 
-msgid "Go to tip of repository"
-msgstr "Confirme para travar repositório"
-
 msgid "Compare fork with %s"
 msgstr "Comparar bifurcação com %s"
-
-msgid "Compare fork with parent repository (%s)"
-msgstr "Comparar bifurcação com %s"
-
-msgid "Branch filter:"
-msgstr "filtro"
 
 msgid "There are no changes yet"
 msgstr "Ainda não há alteações"
@@ -1870,19 +1288,6 @@ msgstr "Adicionado"
 
 msgid "Affected %s files"
 msgstr "Afetados %s arquivos"
-
-msgid ""
-"Changeset status: %s by %s\n"
-"Click to open associated pull request %s"
-msgstr ""
-"Estado do changeset: %s\n"
-"Clique para abrir os pull request #%s associado"
-
-msgid "Changeset status: %s by %s"
-msgstr "Estado do changeset: %s"
-
-msgid "%s comments"
-msgstr "%d comentário"
 
 msgid "Bookmark %s"
 msgstr "Bookmark %s"
@@ -1908,18 +1313,6 @@ msgstr "D"
 msgid "Download diff"
 msgstr "Baixar diff"
 
-msgid "Merge"
-msgstr "mesclar"
-
-msgid "Grafted from:"
-msgstr "Criado em"
-
-msgid "Replaced by:"
-msgstr "criado"
-
-msgid "Preceded by:"
-msgstr "criado"
-
 msgid "%s file changed"
 msgid_plural "%s files changed"
 msgstr[0] "%s arquivo modificado"
@@ -1930,46 +1323,8 @@ msgid_plural "%s files changed with %s insertions and %s deletions"
 msgstr[0] "%s arquivo modificado com %s inserções e %s exclusões"
 msgstr[1] "%s arquivos modificados com %s inserções e %s exclusões"
 
-msgid "Show full diff anyway"
-msgstr "Mostrar diff completo"
-
-msgid "comment"
-msgstr "Comentário"
-
-msgid "on pull request"
-msgstr "Comentar no pull request #%s"
-
-msgid "No title"
-msgstr "novo arquivo"
-
-msgid "on this changeset"
-msgstr "Nenhum changeset"
-
-msgid "Delete comment?"
-msgstr "%d comentário"
-
-msgid "Status change"
-msgstr "Mudanças mais recentes"
-
-msgid "Comments are in plain text. Use @username to notify another user."
-msgstr ""
-"Use @nomedeusuário dentro desse texto para enviar notificação a este "
-"usuário do Kallithea"
-
-msgid "Set changeset status"
-msgstr "Altere o estado do changeset"
-
 msgid "Vote for pull request status"
 msgstr "Vote para estado do pull request"
-
-msgid "No change"
-msgstr "Sem modificações"
-
-msgid "Finish pull request"
-msgstr "Comentar no pull request #%s"
-
-msgid "Close"
-msgstr "(fechado)"
 
 msgid "Comment"
 msgstr "Comentário"
@@ -1988,11 +1343,6 @@ msgid_plural "%d comments"
 msgstr[0] "%d comentário"
 msgstr[1] "%d comentários"
 
-msgid "%d inline"
-msgid_plural "%d inline"
-msgstr[0] "(%d em linha)"
-msgstr[1] "(%d em linha)"
-
 msgid "%s Changesets"
 msgstr "%s Changesets"
 
@@ -2001,27 +1351,6 @@ msgstr "Estado do changeset: %s"
 
 msgid "Files affected"
 msgstr "Arquivos afetados"
-
-msgid "File before"
-msgstr "arquivo removido"
-
-msgid "Modified"
-msgstr "Última alteração"
-
-msgid "Deleted"
-msgstr "excluir"
-
-msgid "Renamed"
-msgstr "renomear"
-
-msgid "Unknown operation: %r"
-msgstr "Revisão desconhecida %s"
-
-msgid "No file after"
-msgstr "Nenhum nome de arquivo"
-
-msgid "File after"
-msgstr "arquivo adicionado"
 
 msgid "Show full diff for this file"
 msgstr "Mostrar diff completo para este arquivo"
@@ -2034,21 +1363,6 @@ msgstr "Mostrar comentários inline"
 
 msgid "No changesets"
 msgstr "Nenhum changeset"
-
-msgid "Merge Ancestor"
-msgstr "Comentário no changeset"
-
-msgid "Show merge diff"
-msgstr "Mostrar diff completo"
-
-msgid "is"
-msgstr "Gist"
-
-msgid "%s changesets"
-msgstr "%s Changesets"
-
-msgid "behind"
-msgstr "Reindexar"
 
 msgid "%s Compare"
 msgstr "%s Comparar"
@@ -2073,47 +1387,8 @@ msgstr "Assinar o feed rss de %s"
 msgid "Subscribe to %s atom feed"
 msgstr "Assinar o feed atom de %s"
 
-msgid "Mention in Comment on Changeset \"%s\""
-msgstr "%(user)s comentou no changeset em %(when)s"
-
-msgid "Comment on Changeset \"%s\""
-msgstr "%(user)s comentou no changeset em %(when)s"
-
-msgid "Changeset on"
-msgstr "Fluxo de changesets"
-
-msgid "branch"
-msgstr "Ramo"
-
-msgid "Status change:"
-msgstr "Mudanças mais recentes"
-
-msgid "The pull request has been closed."
-msgstr "Repositório não está travado"
-
 msgid "Hello %s"
 msgstr "Olá %s"
-
-msgid "We have received a request to reset the password for your account."
-msgstr "Recebemos uma requisição para criar uma nova senha para sua conta."
-
-msgid "Mention on Pull Request %s \"%s\" by %s"
-msgstr "[comentado] no pull request para"
-
-msgid "Pull request"
-msgstr "Pull request #%s"
-
-msgid "Mention in Comment on Pull Request %s \"%s\""
-msgstr "%(user)s comentou no pull request em %(when)s"
-
-msgid "Pull Request %s \"%s\" Closed"
-msgstr "Pull requests de %s"
-
-msgid "Comment on Pull Request %s \"%s\""
-msgstr "[comentado] no pull request para"
-
-msgid "Full Name"
-msgstr "Nome do grupo"
 
 msgid "%s File side-by-side diff"
 msgstr "Arquivo %s diff lado-a-lado"
@@ -2136,12 +1411,6 @@ msgstr "Local"
 msgid "or"
 msgstr "ou"
 
-msgid "New file type"
-msgstr "novo arquivo"
-
-msgid "Commit Changes"
-msgstr "Realizar commit das alterações"
-
 msgid "Loading file list..."
 msgstr "Carregando lista de arquivos..."
 
@@ -2150,12 +1419,6 @@ msgstr "Tamanho"
 
 msgid "Last Revision"
 msgstr "Última revisão"
-
-msgid "Last Modified"
-msgstr "Última alteração"
-
-msgid "Last Committer"
-msgstr "Último commiter"
 
 msgid "Edit file"
 msgstr "Editar arquivo"
@@ -2168,9 +1431,6 @@ msgid_plural "%s authors"
 msgstr[0] "%s autor"
 msgstr[1] "%s autores"
 
-msgid "Edit on Branch: %s"
-msgstr "Excluído ramo: %s"
-
 msgid "Editing files allowed only when on branch head revision"
 msgstr ""
 "A edição de arquivos só é permitida quando se está na revisão mais "
@@ -2178,15 +1438,6 @@ msgstr ""
 
 msgid "Binary file (%s)"
 msgstr "Arquivo binário (%s)"
-
-msgid "File is too big to display."
-msgstr "Arquivo é grande demais para exibir"
-
-msgid "Show full annotation anyway."
-msgstr "Mostrar diff completo"
-
-msgid "Show as raw."
-msgstr "Mostrar original"
 
 msgid "annotation"
 msgstr "anotação"
@@ -2205,9 +1456,6 @@ msgstr "Começou a seguir -"
 
 msgid "Fork name"
 msgstr "Nome da bifurcação"
-
-msgid "Default revision for files page, downloads, whoosh, and readme."
-msgstr "Revisão padrão para página de arquivos, downloads, whoosh e readme"
 
 msgid "Private"
 msgstr "Privado"
@@ -2251,9 +1499,6 @@ msgstr "ATOM feed do diário público"
 msgid "RSS public journal feed"
 msgstr "RSS feed do diário público"
 
-msgid "New Pull Request"
-msgstr "Novo pull request"
-
 msgid "Title"
 msgstr "Título"
 
@@ -2272,98 +1517,23 @@ msgstr "Revisão"
 msgid "Destination repository"
 msgstr "Repositório de destino"
 
-msgid "No entries"
-msgstr "Ainda não há entradas"
-
-msgid "Vote"
-msgstr "revogar"
-
 msgid "Age"
 msgstr "Idade"
 
 msgid "Closed"
 msgstr "Fechado"
 
-msgid "Delete Pull Request"
-msgstr "Novo pull request"
-
 msgid "Confirm to delete this pull request"
 msgstr "Confirme para excluir este pull request"
-
-msgid "Confirm again to delete this pull request with %s comments"
-msgstr "Confirme para excluir este pull request"
-
-msgid "%s Pull Request %s"
-msgstr "%s Pull Request #%s"
-
-msgid "Pull request %s from %s#%s"
-msgstr "Pull requests de %s"
-
-msgid "Summarize the changes"
-msgstr "Realizar commit das alterações"
 
 msgid "Pull request status calculated from votes"
 msgstr "Estado do pull request calculado a partir dos votos"
 
-msgid "on"
-msgstr "nenhum"
-
 msgid "Pull changes"
 msgstr "Puxar mudanças"
 
-msgid "Next iteration"
-msgstr "Registro"
-
-msgid "Cancel Changes"
-msgstr "Mudanças mais recentes"
-
-msgid "Reviewers"
-msgstr "revisor"
-
-msgid "Remove reviewer"
-msgstr "revisor"
-
-msgid "Potential Reviewers"
-msgstr "Visualizar comentário"
-
-msgid "Pull Request Content"
-msgstr "O pull request mudou de estado"
-
-msgid "Common ancestor"
-msgstr "Comentário no changeset"
-
 msgid "%s Pull Requests"
 msgstr "%s Pull Requests"
-
-msgid "Pull Requests from '%s'"
-msgstr "Pull requests de %s"
-
-msgid "Pull Requests to '%s'"
-msgstr "Pull requests para %s"
-
-msgid "Open New Pull Request"
-msgstr "Crie novo pull request"
-
-msgid "Show Pull Requests to %s"
-msgstr "Pull requests para %s"
-
-msgid "Show Pull Requests from '%s'"
-msgstr "Pull requests de %s"
-
-msgid "Show closed pull requests (in addition to open pull requests)"
-msgstr "Mostrar pull requests fechados também"
-
-msgid "Pull Requests Created by Me"
-msgstr "Revisores do pull request"
-
-msgid "Pull Requests Needing My Review"
-msgstr "Revisores do pull request"
-
-msgid "Pull Requests I Participate In"
-msgstr "Eu participo em"
-
-msgid "Search in All Repositories"
-msgstr "Buscar em todos os repositórios"
 
 msgid "Search term"
 msgstr "Termo de pesquisa"
@@ -2464,23 +1634,11 @@ msgstr "Download como zip"
 msgid "Check this to download archive with subrepos"
 msgstr "Marque isto para descarregar arquivo com subrepositórios"
 
-msgid "With subrepos"
-msgstr "com subrepositórios"
-
 msgid "Feed"
 msgstr "Feed"
 
-msgid "Latest Changes"
-msgstr "Mudanças mais recentes"
-
-msgid "Quick Start"
-msgstr "Início rápido"
-
 msgid "Add or upload files directly via Kallithea"
 msgstr "Adicionar ou enviar arquivos diretamente pelo Kallithea"
-
-msgid "Push new repository"
-msgstr "Fazer push de novo repositório"
 
 msgid "Existing repository?"
 msgstr "Repositório existente?"

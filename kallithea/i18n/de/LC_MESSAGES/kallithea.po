@@ -28,22 +28,11 @@ msgstr "Ignoriere unsichtbare Zeichen"
 msgid "Increase diff context to %(num)s lines"
 msgstr "Erhöhe diff-Kontext auf %(num)s Zeilen"
 
-msgid "No permission to change status"
-msgstr "Keine Berechtigung zum Ändern des Status des Pull Requests"
-
 msgid "Successfully deleted pull request %s"
 msgstr "Pull-Request %s erfolgreich gelöscht"
 
 msgid "Such revision does not exist for this repository"
 msgstr "Die angegebene Version existiert nicht in diesem Repository"
-
-msgid "Could not find other repository %s"
-msgstr "Gehe zum Tip des Repositorys"
-
-msgid "Cannot compare repositories of different types"
-msgstr ""
-"Ohne einen gemeinsamen Vorfahren ist ein Vergleich der Repositories nicht "
-"möglich"
 
 msgid "Cannot show empty diff"
 msgstr "Kann leeren diff nicht anzeigen"
@@ -102,18 +91,11 @@ msgstr "Änderungen im %s Repository"
 msgid "Click here to add new file"
 msgstr "Hier klicken, um eine neue Datei hinzuzufügen"
 
-msgid "There are no files yet."
-msgstr "Es gibt hier noch keine Dateien. %s"
-
 msgid "%s at %s"
 msgstr "%s auf %s"
 
 msgid "This repository has been locked by %s on %s"
 msgstr "Dieses Repository ist von %s am %s gesperrt worden"
-
-msgid "You can only delete files with revision being a valid branch"
-msgstr ""
-"Dateien können nur gelöscht werden, deren Revision ein gültiger Branch ist"
 
 msgid "Deleted file %s via Kallithea"
 msgstr "Datei %s via Kallithea gelöscht"
@@ -123,10 +105,6 @@ msgstr "Datei %s erfolgreich gelöscht"
 
 msgid "Error occurred during commit"
 msgstr "Während des Commits trat ein Fehler auf"
-
-msgid "You can only edit files with revision being a valid branch"
-msgstr ""
-"Dateien können nur editiert werden, deren Revision ein gültiger Branch ist"
 
 msgid "Edited file %s via Kallithea"
 msgstr "Datei %s via Kallithea editiert"
@@ -239,9 +217,6 @@ msgstr "Während des Erstellens des Pull Requests trat ein Fehler auf"
 msgid "Successfully opened new pull request"
 msgstr "Es wurde erfolgreich ein neuer Pullrequest eröffnet"
 
-msgid "New pull request iteration created"
-msgstr "Pull Request Update erstellt"
-
 msgid "Meanwhile, the following reviewers have been added: %s"
 msgstr "Es wurden inzwischen folgende Begutachter hinzugefügt: %s"
 
@@ -260,9 +235,6 @@ msgstr "Erfolgreich Pull-Request gelöscht"
 msgid "Revision %s not found in %s"
 msgstr "Die Revision %s konnte in %s nicht gefunden werden"
 
-msgid "Error: changesets not found when displaying pull request from %s."
-msgstr "Keine Changesets gefunden, um den Pull Request zu aktualisieren."
-
 msgid "This pull request has already been merged to %s."
 msgstr "Dieser Pull Request wurde bereits in %s integriert."
 
@@ -271,21 +243,8 @@ msgstr ""
 "Dieser Pull Request wurde geschlossen und kann daher nicht aktualisiert "
 "werden."
 
-msgid "The following additional changes are available on %s:"
-msgstr "Die folgenden Änderungen sind verfügbar unter %s:"
-
-msgid "No additional changesets found for iterating on this pull request."
-msgstr "Keine Changesets gefunden, um den Pull Request zu aktualisieren."
-
 msgid "Note: Branch %s has another head: %s."
 msgstr "Hinweis: Branch %s hat einen anderen Head: %s."
-
-msgid "Git pull requests don't support iterating yet."
-msgstr "Git Pull Request unterstützen bisher keine Updates."
-
-msgid ""
-"Error: some changesets not found when displaying pull request from %s."
-msgstr "Keine Changesets gefunden, um den Pull Request zu aktualisieren."
 
 msgid "The diff can't be shown - the PR revisions could not be found."
 msgstr ""
@@ -493,9 +452,6 @@ msgstr "Repositoriumsberechtigungen aktualisiert"
 msgid "Field validation error: %s"
 msgstr "Feldvalidierung fehlgeschlagen: %s"
 
-msgid "An error occurred during creation of field: %r"
-msgstr "Fehler während der Erzeugung des Feldes"
-
 msgid "An error occurred during removal of field"
 msgstr "Fehler beim Entfernen des Feldes"
 
@@ -565,9 +521,6 @@ msgstr ""
 "Die Repositories wurden erfolgreich überprüft. Hinzugefügt: %s. Entfernt: "
 "%s."
 
-msgid "Invalidated %s repositories"
-msgstr "Ungültiger Repositorycache"
-
 msgid "Updated application settings"
 msgstr "Anwendungseinstellungen aktualisiert"
 
@@ -584,9 +537,6 @@ msgstr "Bitte gebe eine E-Mailadresse an"
 
 msgid "Send email task created"
 msgstr "Task zum Versenden von E-Mails erstellt"
-
-msgid "Hook already exists"
-msgstr "Es stehen noch keine Daten zur Verfügung"
 
 msgid "Builtin hooks are read-only. Please use another hook name."
 msgstr ""
@@ -683,9 +633,6 @@ msgstr ""
 msgid "Repository not found in the filesystem"
 msgstr "Das Repository konnte nicht im Filesystem gefunden werden"
 
-msgid "Changeset for %s %s not found in %s"
-msgstr "Änderungssatz nicht gefunden"
-
 msgid "Binary file"
 msgstr "Binäre Datei"
 
@@ -703,9 +650,6 @@ msgstr "Branch %s gelöscht"
 
 msgid "Created tag: %s"
 msgstr "Tag %s erstellt"
-
-msgid "Changeset %s not found"
-msgstr "Änderungssatz nicht gefunden"
 
 msgid "Show all combined changesets %s->%s"
 msgstr "Zeige alle Kombinierten Änderungensätze %s->%s"
@@ -963,9 +907,6 @@ msgstr "Nicht Begutachtet"
 msgid "Under review"
 msgstr "In Begutachtung"
 
-msgid "Not approved"
-msgstr "Akzeptiert"
-
 msgid "Approved"
 msgstr "Akzeptiert"
 
@@ -984,26 +925,11 @@ msgstr "Bitte mindestens %(min)i Zeichen eingeben"
 msgid "Name must not contain only digits"
 msgstr "Name darf nicht nur Ziffern enthalten"
 
-msgid ""
-"[Comment] %(repo_name)s changeset %(short_id)s \"%(message_short)s\" on "
-"%(branch)s"
-msgstr ""
-"Kommentar für %(repo_name)s Changeset %(short_id)s in %(branch)s erstellt "
-"von %(comment_username)s"
-
 msgid "New user %(new_username)s registered"
 msgstr "Neuer Benutzer %(new_username)s registriert"
 
 msgid "Closing"
 msgstr "Schließen"
-
-msgid ""
-"%(user)s wants you to review pull request %(pr_nice_id)s: %(pr_title)s"
-msgstr ""
-"%(user)s möchte ein Review des Pull Request #%(pr_id)s: %(pr_title)s"
-
-msgid "Cannot create empty pull request"
-msgstr "Fehler beim Erstellen des Pull-Requests: %s"
 
 msgid ""
 "Cannot create pull request - criss cross merge detected, please merge a "
@@ -1015,25 +941,6 @@ msgstr ""
 msgid "You are not authorized to create the pull request"
 msgstr "Sie sind nicht berechtigt, den Pull-Request anzulegen."
 
-msgid "Missing changesets since the previous iteration:"
-msgstr "Fehlende Changesets seit letztem Pull Request:"
-
-msgid "New changesets on %s %s since the previous iteration:"
-msgstr "Neue Changesets in %s %s seit dem letzten Pull Request:"
-
-msgid "Ancestor didn't change - diff since previous iteration:"
-msgstr "Vorgänger unverändert - zeige Diff zu lezter Version:"
-
-msgid ""
-"This iteration is based on another %s revision and there is no simple "
-"diff."
-msgstr ""
-"Dieser Pull Request basiert auf einer anderen %s Revision. Daher ist kein "
-"Simple Diff verfügbar."
-
-msgid "No changes found on %s %s since previous iteration."
-msgstr "Keine Änderungen seit der letzten Version gefunden in %s %s."
-
 msgid "Closed, next iteration: %s ."
 msgstr "Geschlossen, nächste Iteration: %s ."
 
@@ -1042,12 +949,6 @@ msgstr "Letzter Tip"
 
 msgid "New user registration"
 msgstr "Neue Benutzerregistrierung"
-
-msgid ""
-"You can't remove this user since it is crucial for the entire application"
-msgstr ""
-"Sie können diesen Benutzer nicht löschen, da er von entscheidender "
-"Bedeutung für die gesamte Applikation ist"
 
 msgid ""
 "User \"%s\" still owns %s repositories and cannot be removed. Switch "
@@ -1076,9 +977,6 @@ msgstr ""
 msgid "Password reset link"
 msgstr "Link zum Zurücksetzen des Passworts"
 
-msgid "Password reset notification"
-msgstr "Link zum Zurücksetzen des Passworts"
-
 msgid ""
 "The password to your account %s has been changed using password reset "
 "form."
@@ -1091,17 +989,6 @@ msgstr "Eine leere Liste ist kein gültiger Wert"
 
 msgid "Username \"%(username)s\" already exists"
 msgstr "Benutezrname \"%(username)s\" existiert bereits"
-
-msgid "Username \"%(username)s\" cannot be used"
-msgstr "Benutzername \"%(username)s\" ist ungültig"
-
-msgid ""
-"Username may only contain alphanumeric characters underscores, periods or "
-"dashes and must begin with an alphanumeric character or underscore"
-msgstr ""
-"Der Benutzername darf nur alphanumerische Zeichen, Unterstriche, Punkte "
-"oder Bindestriche enthalten und muss mit einem alphanumerischen Zeichen "
-"oder einem Unterstrich beginnen"
 
 msgid "The input is not valid"
 msgstr "Die Eingabe ist nicht gültig"
@@ -1141,14 +1028,8 @@ msgstr "Ungültiges altes Passwort"
 msgid "Passwords do not match"
 msgstr "Die Passwörter stimmen nicht überein"
 
-msgid "Invalid username or password"
-msgstr "Ungültiges Passwort"
-
 msgid "Token mismatch"
 msgstr "Schlüssel stimmt nicht überein"
-
-msgid "Repository name %(repo)s is not allowed"
-msgstr "Repository Name \"%(repo)s\" ist nicht erlaubt"
 
 msgid "Repository named %(repo)s already exists"
 msgstr "Es gibt bereits ein Repository mit \"%(repo)s\""
@@ -1191,12 +1072,6 @@ msgstr "Dieser Benutzername oder Benutzergruppenname ist nicht gültig"
 
 msgid "This is not a valid path"
 msgstr "Dies ist ein Ungültiger Pfad"
-
-msgid "This email address is already in use"
-msgstr "Diese E-Mailaddresse ist bereits in Benutzung"
-
-msgid "Email address \"%(email)s\" not found"
-msgstr "E-MailAddresse \"%(email)s\" existiert nicht."
 
 msgid ""
 "The LDAP Login attribute of the CN must be specified - this is the name "
@@ -1299,13 +1174,6 @@ msgstr "CAPTCHA"
 msgid "Send Password Reset Email"
 msgstr "E-Mail zum Zurücksetzen des Passworts anfordern"
 
-msgid ""
-"A password reset link will be sent to the specified email address if it "
-"is registered in the system."
-msgstr ""
-"Der Link zum Zurücksetzen des Passworts wird an die zum Benutzernamen "
-"zugehörige E-Mailaddresse gesendet."
-
 msgid "You are about to set a new password for the email address %s."
 msgstr ""
 "Du bist dabei, ein neues Passwort für die E-Mail-Adresse %s festzulegen."
@@ -1319,12 +1187,6 @@ msgstr ""
 
 msgid "Code you received in the email"
 msgstr "Code, den du in der E-Mail erhalten hast"
-
-msgid "New Password"
-msgstr "Neues Passwort"
-
-msgid "Confirm New Password"
-msgstr "Bestätige neues Passwort"
 
 msgid "Confirm"
 msgstr "Bestätigen"
@@ -1393,14 +1255,6 @@ msgstr "Plug-Ins zur Authentifizierung"
 msgid "Enabled Plugins"
 msgstr "Aktivierte Plugins"
 
-msgid ""
-"Comma-separated list of plugins; Kallithea will try user authentication "
-"in plugin order"
-msgstr ""
-"Kommaseparierte Liste der Plug-Ins. Reihenfolge der Plug-Ins entspricht "
-"der Reihenfolge, in der Kallithea die Plug-Ins zur Authentifizierung des "
-"Benutzers verwendet"
-
 msgid "Available built-in plugins"
 msgstr "Verfügbare mitgelieferte Plug-Ins"
 
@@ -1466,9 +1320,6 @@ msgstr "Gist Lebenszeit"
 msgid "Expires"
 msgstr "Verfällt"
 
-msgid "Never"
-msgstr "nie"
-
 msgid "Update Gist"
 msgstr "Gist aktualisieren"
 
@@ -1495,9 +1346,6 @@ msgstr "Bisher sind keine Gists vorhanden"
 
 msgid "New Gist"
 msgstr "Neuer Gist"
-
-msgid "Name this gist ..."
-msgstr "benenne diese Datei..."
 
 msgid "Create Private Gist"
 msgstr "Privaten Gist erstellen"
@@ -1638,9 +1486,6 @@ msgstr ""
 "Dieser Account wird mit %s verwaltet - daher kann das Passwort nicht "
 "geändert werden"
 
-msgid "Current IP"
-msgstr "Aktuelle IP-Adresse"
-
 msgid "Gravatar"
 msgstr "Gravatar"
 
@@ -1669,9 +1514,6 @@ msgid "IP Whitelist"
 msgstr "IP Whitelist"
 
 msgid "Anonymous access"
-msgstr "Anonymer Zugang"
-
-msgid "Allow anonymous access"
 msgstr "Anonymer Zugang"
 
 msgid ""
@@ -1779,12 +1621,6 @@ msgstr ""
 msgid "Registration"
 msgstr "Registrierung"
 
-msgid "External auth account activation"
-msgstr "Externe Authentifizierung für Accounts aktivieren"
-
-msgid "Confirm to delete this IP address: %s"
-msgstr "Bestätigen diese IP zu löschen: %s"
-
 msgid "All IP addresses are allowed."
 msgstr "Alle IP-Adressen sind zulässig."
 
@@ -1850,14 +1686,8 @@ msgstr "Nicht sichtbar"
 msgid "Visible"
 msgstr "Sichtbar"
 
-msgid "Add repos"
-msgstr "Repository hinzufügen"
-
 msgid "Add/Edit groups"
 msgstr "Benutzergruppen hinzufügen oder ändern"
-
-msgid "User/User Group"
-msgstr "Benutzer/Benutzergruppe"
 
 msgid "Default"
 msgstr "Vorgabe"
@@ -2262,9 +2092,6 @@ msgstr ""
 msgid "Failed to remove hook"
 msgstr "Hook konnte nicht entfernt werden"
 
-msgid "Rescan options"
-msgstr "Beschreibung"
-
 msgid "Delete records of missing repositories"
 msgstr "Datensätze fehlender Repositories löschen"
 
@@ -2331,9 +2158,6 @@ msgstr "Prüfe auf Updates..."
 
 msgid "Kallithea version"
 msgstr "Kallithea-Version"
-
-msgid "Check for updates"
-msgstr "Auf Updates prüfen"
 
 msgid "Kallithea configuration file"
 msgstr "Kallithea Konfigurationsdatei"
@@ -2494,9 +2318,6 @@ msgstr ""
 "                                                    {repoid} ID des "
 "Repositorys, kann verwendet werden, um einen Klon nach Id zu erstellen"
 
-msgid "Repository page size"
-msgstr "Repository Größe"
-
 msgid ""
 "Number of items displayed in the repository pages before pagination is "
 "shown."
@@ -2526,9 +2347,6 @@ msgstr "Privates Repository-Symbol in Repositories anzeigen"
 msgid "Show public/private icons next to repository names."
 msgstr "Zeigt öffentliche/private Symbole neben den Namen der Repositories an."
 
-msgid "Meta Tagging"
-msgstr "Einstellungen"
-
 msgid ""
 "Parses meta tags from the repository description field and turns them "
 "into colored tags."
@@ -2550,9 +2368,6 @@ msgstr "Benutzergruppe hinzufügen"
 
 msgid "Short, optional description for this user group."
 msgstr "Kurze, optionale Beschreibung für diese Benutzergruppe."
-
-msgid "Show Members"
-msgstr "mitglieder"
 
 msgid "User Group: %s"
 msgstr "Benutzergruppe: %s"
@@ -2650,41 +2465,17 @@ msgstr "Meine Pull Requests"
 msgid "Not Logged In"
 msgstr "Nicht eingeloggt"
 
-msgid "Forgot password?"
-msgstr "Passwort vergessen?"
-
-msgid "Don't have an account?"
-msgstr "Kein Account?"
-
-msgid "Inherit defaults"
-msgstr "Repositorystandards"
-
-msgid "default permissions"
-msgstr "Standart Rechte"
-
 msgid "Permission"
 msgstr "Rechte"
 
 msgid "Edit Permission"
 msgstr "Berechtigungen editieren"
 
-msgid "Unable to post"
-msgstr "Aktiviere Downloads"
-
 msgid "Add Another Comment"
 msgstr "Einen weiteren Kommentar hinzufügen"
 
 msgid "Group"
 msgstr "Gruppe"
-
-msgid "Open New Pull Request from {0}"
-msgstr "Kommentar von Pull Request"
-
-msgid "Show Selected Changesets {0} &rarr; {1}"
-msgstr "Ausgewähltes Changeset anzeigen __S"
-
-msgid "No revisions"
-msgstr "revisionen"
 
 msgid "Confirm to revoke permission for {0}: {1} ?"
 msgstr "Widerruf der Rechte für {0}: {1} bestätigen?"
@@ -2716,47 +2507,20 @@ msgstr "Gehe zum Tip des Repositorys"
 msgid "There are no changes yet"
 msgstr "Bisher gibt es keine Änderungen"
 
-msgid "Changeset status: %s by %s"
-msgstr "Setze Changesetstatus"
-
-msgid "%s comments"
-msgstr "%d Kommentar"
-
 msgid "Branch %s"
 msgstr "Branch %s"
-
-msgid "Replaced by:"
-msgstr "Erstellt von"
-
-msgid "Preceded by:"
-msgstr "Erstellt von"
-
-msgid "comment"
-msgstr "Kommentar"
-
-msgid "on pull request"
-msgstr "Kommentar von Pull Request"
 
 msgid "No title"
 msgstr "Kein Titel"
 
-msgid "on this changeset"
-msgstr "%s Changesets"
-
 msgid "Delete comment?"
 msgstr "Kommentar löschen?"
-
-msgid "Status change"
-msgstr "Letzte Änderungen"
 
 msgid "Set changeset status"
 msgstr "Setze Changesetstatus"
 
 msgid "No change"
 msgstr "Keine Änderungen"
-
-msgid "Finish pull request"
-msgstr "Kommentar von Pull Request"
 
 msgid "Close"
 msgstr "Schließen"
@@ -2779,26 +2543,11 @@ msgid_plural "%d general"
 msgstr[0] "%d generell"
 msgstr[1] "%d generell"
 
-msgid "File before"
-msgstr "Datei entfernt"
-
-msgid "Modified"
-msgstr "Ungeändert"
-
 msgid "Deleted"
 msgstr "Gelöscht"
 
 msgid "Renamed"
 msgstr "Umbenannt"
-
-msgid "Unknown operation: %r"
-msgstr "Unbekannte Revision %s"
-
-msgid "No file after"
-msgstr "Kein Dateiname"
-
-msgid "File after"
-msgstr "Datei hinzugefügt"
 
 msgid "%s changesets"
 msgstr "%s Changesets"
@@ -2815,57 +2564,11 @@ msgstr "Abonniere den %s RSS Feed"
 msgid "Subscribe to %s atom feed"
 msgstr "Abonniere den %s ATOM Feed"
 
-msgid "Mention in Comment on Changeset \"%s\""
-msgstr "%(user)s hat am %(when)s ein Changeset kommentiert"
-
-msgid "Comment on Changeset \"%s\""
-msgstr "%(user)s hat am %(when)s ein Changeset kommentiert"
-
-msgid "Changeset on"
-msgstr "Änderungssatz"
-
-msgid "branch"
-msgstr "Zweig"
-
-msgid "Status change:"
-msgstr "Letzte Änderungen"
-
-msgid "The pull request has been closed."
-msgstr ""
-"Dieser Pull Request wurde geschlossen und kann daher nicht aktualisiert "
-"werden."
-
 msgid "Hello %s"
 msgstr "Hallo %s"
 
-msgid "We have received a request to reset the password for your account."
-msgstr ""
-"Wir haben eine Anforderung erhalten, für deinen Account ein neues "
-"Passwort zu erstellen."
-
-msgid "Mention on Pull Request %s \"%s\" by %s"
-msgstr "Pull Request [kommentiert] für"
-
-msgid "Pull request"
-msgstr "Pull Request %s"
-
-msgid "Mention in Comment on Pull Request %s \"%s\""
-msgstr "%(user)s hat am %(when)s einen Pull Request kommentiert"
-
-msgid "Pull Request %s \"%s\" Closed"
-msgstr "Pull Request #%s von %s#%s"
-
-msgid "Comment on Pull Request %s \"%s\""
-msgstr "Pull Request [kommentiert] für"
-
-msgid "Full Name"
-msgstr "Gruppen name"
-
 msgid "or"
 msgstr "oder"
-
-msgid "New file type"
-msgstr "neue Datei"
 
 msgid "Commit Changes"
 msgstr "Änderungen einchecken"
@@ -2883,12 +2586,6 @@ msgid "%s author"
 msgid_plural "%s authors"
 msgstr[0] "%s Autor"
 msgstr[1] "%s Autoren"
-
-msgid "Edit on Branch: %s"
-msgstr "Branch %s gelöscht"
-
-msgid "File is too big to display."
-msgstr "Die Datei ist zu groß, um sie anzuzeigen"
 
 msgid "Go Back"
 msgstr "Zurück"
@@ -2923,23 +2620,11 @@ msgstr "Titel"
 msgid "Revision"
 msgstr "Revision"
 
-msgid "Vote"
-msgstr "entziehen"
-
 msgid "Age"
 msgstr "Alter"
 
 msgid "Delete Pull Request"
 msgstr "Pull Request löschen"
-
-msgid "Confirm again to delete this pull request with %s comments"
-msgstr "Löschen der Gruppe bestätigen: %s mit %s Repository"
-
-msgid "%s Pull Request %s"
-msgstr "Pull Request #%s"
-
-msgid "Pull request %s from %s#%s"
-msgstr "Pull Request #%s von %s#%s"
 
 msgid "Summarize the changes"
 msgstr "Zusammenfassung der Änderungen"
@@ -2947,14 +2632,8 @@ msgstr "Zusammenfassung der Änderungen"
 msgid "on"
 msgstr "in"
 
-msgid "Next iteration"
-msgstr "Registrierung"
-
 msgid "Cancel Changes"
 msgstr "Änderungen verwerfen"
-
-msgid "Reviewers"
-msgstr "Reviewer entfernen"
 
 msgid "Remove reviewer"
 msgstr "Reviewer entfernen"
@@ -2964,9 +2643,6 @@ msgstr "Potentielle Reviewer"
 
 msgid "Pull Request Content"
 msgstr "Inhalt des Pull Requests"
-
-msgid "Pull Requests from '%s'"
-msgstr "Pull Requests von '%s'"
 
 msgid "Pull Requests to '%s'"
 msgstr "Pull Requests für '%s'"
@@ -2982,9 +2658,6 @@ msgstr "Zeige Pull Requests von '%s'"
 
 msgid "Pull Requests Created by Me"
 msgstr "Von mir erstellte Pull Requests"
-
-msgid "Pull Requests Needing My Review"
-msgstr "Pull Request Reviewers"
 
 msgid "Search in All Repositories"
 msgstr "Suche in allen Repositories"
@@ -3054,9 +2727,6 @@ msgstr "Letzte Änderungen"
 
 msgid "Quick Start"
 msgstr "Schnelleinstieg"
-
-msgid "Push new repository"
-msgstr "privates Repository"
 
 msgid "Readme file from revision %s:%s"
 msgstr "Liesmich-Datei von Revision %s:%s"

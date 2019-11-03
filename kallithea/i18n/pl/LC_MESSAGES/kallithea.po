@@ -189,9 +189,6 @@ msgstr "Wystąpił błąd podczas prośby o połączenie gałęzi"
 msgid "Successfully opened new pull request"
 msgstr "Prośba o wykonanie połączenia gałęzi została wykonana prawidłowo"
 
-msgid "New pull request iteration created"
-msgstr "Recenzje wniosków połączenia gałęzi"
-
 msgid "No description"
 msgstr "Brak opisu"
 
@@ -207,9 +204,6 @@ msgstr "Nieprawidłowe zapytanie. Spróbuj zacytować je."
 msgid "An error occurred during search operation."
 msgstr "Wystąpił błąd podczas operacji wyszukiwania."
 
-msgid "No data ready yet"
-msgstr "Żadne dane nie zostały załadowane"
-
 msgid "Statistics are disabled for this repository"
 msgstr "Statystyki są wyłączone dla tego repozytorium"
 
@@ -224,9 +218,6 @@ msgstr "Domyślne ustawienia zostały pomyślnie zaktualizowane"
 
 msgid "Error occurred during update of defaults"
 msgstr "wystąpił błąd podczas aktualizacji wartości domyślnych"
-
-msgid "Forever"
-msgstr "na zawsze"
 
 msgid "5 minutes"
 msgstr "5 minut"
@@ -551,9 +542,6 @@ msgstr "Nie znaleziono changeset %s"
 msgid "Show all combined changesets %s->%s"
 msgstr "Pokaż wszystkie zestawienia zmian changesets %s->%s"
 
-msgid "Compare view"
-msgstr "Wyświetl porównanie"
-
 msgid "and"
 msgstr "i"
 
@@ -562,12 +550,6 @@ msgstr "%s więcej"
 
 msgid "revisions"
 msgstr "rewizja"
-
-msgid "Fork name %s"
-msgstr "nazwa rozgałęzienia %s"
-
-msgid "Pull request %s"
-msgstr "Połączonych gałęzi #%s"
 
 msgid "[deleted] repository"
 msgstr "[usunięte] repozytorium"
@@ -889,9 +871,6 @@ msgstr "nieprawidłowa nazwa użytkownika lub hasło"
 msgid "Token mismatch"
 msgstr "Niezgodność tokenu"
 
-msgid "Repository name %(repo)s is not allowed"
-msgstr "Nazwa repozytorium  %(repo)s jest zabroniona"
-
 msgid "Repository named %(repo)s already exists"
 msgstr "Repozytorium o nazwie %(repo)s już istnieje"
 
@@ -1042,20 +1021,8 @@ msgstr "Nazwisko"
 msgid "Email"
 msgstr "E-mail"
 
-msgid "Admin Journal"
-msgstr "Dziennik administratora"
-
 msgid "journal filter..."
 msgstr "filtr dziennika..."
-
-msgid "Filter"
-msgstr "filtr"
-
-msgid "%s Entry"
-msgid_plural "%s Entries"
-msgstr[0] "%s wejście"
-msgstr[1] "%s wejść"
-msgstr[2] "%s wejść"
 
 msgid "Action"
 msgstr "Działanie"
@@ -1086,9 +1053,6 @@ msgstr "Wtyczka"
 
 msgid "Save"
 msgstr "Zapisz"
-
-msgid "Repository Defaults"
-msgstr "Repozytoria domyślne"
 
 msgid "Type"
 msgstr "Typ"
@@ -1133,20 +1097,11 @@ msgstr "Trwałość Gist"
 msgid "Expires"
 msgstr "Wygasa"
 
-msgid "Never"
-msgstr "nigdy"
-
 msgid "Update Gist"
 msgstr "Zaktualizuj Gist"
 
 msgid "Cancel"
 msgstr "Anuluj"
-
-msgid "Private Gists for User %s"
-msgstr "Prywatne Gists użytkownika %s"
-
-msgid "Public Gists for User %s"
-msgstr "Publiczne Gists użytkownika %s"
 
 msgid "Public Gists"
 msgstr "Publiczne Gists"
@@ -1277,14 +1232,8 @@ msgstr "Domyślne uprawnienia"
 msgid "Global"
 msgstr "Globalne"
 
-msgid "IP Whitelist"
-msgstr "Lista dozwolonych adresów IP"
-
 msgid "Anonymous access"
 msgstr "Dostęp anonimowy"
-
-msgid "Allow anonymous access"
-msgstr "Zezwalaj na dostęp anonimowy"
 
 msgid ""
 "All default permissions on each repository will be reset to chosen "
@@ -1405,9 +1354,6 @@ msgstr "odwołaj"
 
 msgid "Add new"
 msgstr "Dodaj nowe"
-
-msgid "Apply to children"
-msgstr "dotyczy dzieci"
 
 msgid "Both"
 msgstr "Oba"
@@ -1639,9 +1585,6 @@ msgstr "Usuń wpisy o brakujących repozytoriach"
 msgid "Invalidate cache for all repositories"
 msgstr "Unieważnia cache dla wszystkich repozytoriów"
 
-msgid "Check this to reload data and clear cache keys for all repositories."
-msgstr "Unieważnia cache dla wszystkich repozytoriów"
-
 msgid "Index build option"
 msgstr "Opcja odbudowy indeksowania"
 
@@ -1665,9 +1608,6 @@ msgstr "Logi poleceń połączenia gałęzi użytkowników"
 
 msgid "Update repository after push (hg update)"
 msgstr "Aktualizacja repozytorium po wysłaniu zmian (aktualizacja hg)"
-
-msgid "Mercurial extensions"
-msgstr "Rozszerzenia Mercurial"
 
 msgid "Enable largefiles extension"
 msgstr "Rozszerzenia dużych plików"
@@ -1758,9 +1698,6 @@ msgstr "Potwierdź usunięcie tego użytkownika: %s"
 msgid "New password confirmation"
 msgstr "Potwierdzenie nowego hasła"
 
-msgid "Users Administration"
-msgstr "Administracja użytkownikami"
-
 msgid "Server instance: %s"
 msgstr "Wystąpienia serwera: %s"
 
@@ -1790,9 +1727,6 @@ msgstr "Połączone gałęzie"
 
 msgid "Options"
 msgstr "Opcje"
-
-msgid "Compare Fork"
-msgstr "Porównaj rozwidlenie"
 
 msgid "Compare"
 msgstr "Porównaj"
@@ -1832,15 +1766,6 @@ msgstr "Wyświetl publiczne gists"
 
 msgid "Gists"
 msgstr "Gists"
-
-msgid "All Public Gists"
-msgstr "Wszystkie publiczne gists"
-
-msgid "My Public Gists"
-msgstr "Moje publiczne gists"
-
-msgid "My Private Gists"
-msgstr "Moje prywatne gists"
 
 msgid "Search in repositories"
 msgstr "Szukaj we wszystkich repozytoriach"
@@ -1960,9 +1885,6 @@ msgid "Confirm to revoke permission for {0}: {1} ?"
 msgstr "potwierdzić odwołanie pozwolenia na {0}: {1} ?"
 
 msgid "Select changeset"
-msgstr "Wybrane zmiany"
-
-msgid "Specify changeset"
 msgstr "Wybrane zmiany"
 
 msgid "Click to sort ascending"
@@ -2105,15 +2027,6 @@ msgstr "Zmiana statusu grupy zmian"
 msgid "Vote for pull request status"
 msgstr "Zagłosuj na żądanie na grupę zmian"
 
-msgid "No change"
-msgstr "Bez zmian"
-
-msgid "Finish pull request"
-msgstr "Komentarz połączenia gałęzi %s"
-
-msgid "Close"
-msgstr "(zamknięty)"
-
 msgid "Comment"
 msgstr "Komentarz"
 
@@ -2131,12 +2044,6 @@ msgid_plural "%d comments"
 msgstr[0] "%d komentarz"
 msgstr[1] "%d komentarzy"
 msgstr[2] "%d komentarzy"
-
-msgid "%d inline"
-msgid_plural "%d inline"
-msgstr[0] "(%d linii)"
-msgstr[1] "(%d linii)"
-msgstr[2] "(%d linii)"
 
 msgid "%s Changesets"
 msgstr "%s Zestawienie zmian"
@@ -2239,27 +2146,6 @@ msgstr "Żądanie połączenia zmian zostało zamknięte."
 
 msgid "Hello %s"
 msgstr "Witaj %s"
-
-msgid "We have received a request to reset the password for your account."
-msgstr "Otrzymaliśmy prośbę o utworzenie nowego hasła do twojego konta."
-
-msgid "Mention on Pull Request %s \"%s\" by %s"
-msgstr "[komentarz] wniosek o połączenie gałęzi"
-
-msgid "Pull request"
-msgstr "Połączonych gałęzi #%s"
-
-msgid "Mention in Comment on Pull Request %s \"%s\""
-msgstr "%(user)s skomentował nowe połączenie gałęzi w %(when)s"
-
-msgid "Pull Request %s \"%s\" Closed"
-msgstr "Połączonych gałęzi #%s"
-
-msgid "Comment on Pull Request %s \"%s\""
-msgstr "[komentarz] wniosek o połączenie gałęzi"
-
-msgid "Full Name"
-msgstr "Nazwa grupy"
 
 msgid "%s File side-by-side diff"
 msgstr "Pliki z listą zmian i różnic: %s"
@@ -2416,9 +2302,6 @@ msgstr "Publiczny dziennik kanału ATOM"
 
 msgid "RSS public journal feed"
 msgstr "Publiczny dziennik kanału RSS"
-
-msgid "New Pull Request"
-msgstr "Nowa prośba o połączenie gałęzi"
 
 msgid "Title"
 msgstr "Tytuł"
@@ -2621,9 +2504,6 @@ msgstr "Pobierz jako zip"
 msgid "Check this to download archive with subrepos"
 msgstr "Zaznacz tu żeby pobrać archiwum z subrepozytorium"
 
-msgid "With subrepos"
-msgstr "z subrepozytorium"
-
 msgid "Feed"
 msgstr "Kanał RSS"
 
@@ -2635,9 +2515,6 @@ msgstr "Szybki start"
 
 msgid "Add or upload files directly via Kallithea"
 msgstr "Dodaj lub prześlij pliki bezpośrednio przez stronę"
-
-msgid "Push new repository"
-msgstr "Wyślij zmiany do nowego repo"
 
 msgid "Existing repository?"
 msgstr "Istniejące repozytorium?"

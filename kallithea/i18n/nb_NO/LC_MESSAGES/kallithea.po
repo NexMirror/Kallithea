@@ -28,9 +28,6 @@ msgstr "Ignorer blanktegn"
 msgid "Increase diff context to %(num)s lines"
 msgstr "Øk diff-bindeleddsinformasjon til %(num)s linjer"
 
-msgid "No permission to change status"
-msgstr "Ingen tilgang til endring av innsendingsforespørselsstatus"
-
 msgid "Successfully deleted pull request %s"
 msgstr "Slettet flettingsforespørsel %s"
 
@@ -42,9 +39,6 @@ msgstr "Fant ikke annen pakkebrønn %s"
 
 msgid "Cannot compare repositories of different types"
 msgstr "Kan ikke sammenligne pakkebrønner av forskjellige typer"
-
-msgid "Cannot show empty diff"
-msgstr "Kan ikke vise tom diff"
 
 msgid "Cannot compare repositories without using common ancestor"
 msgstr "Kan ikke sammenligne pakkebrønner uten bruk av felles opphav"
@@ -83,27 +77,11 @@ msgstr "%s sendte inn %s"
 msgid "Changeset was too big and was cut off..."
 msgstr "Endringsettet var for stort og har blitt avskåret…"
 
-msgid "%s %s feed"
-msgstr "%s %s kilde"
-
-msgid "Changes on %s repository"
-msgstr "Endringer i %s-pakkebrønn"
-
 msgid "Click here to add new file"
 msgstr "Klikk her for å legge til ny fil"
 
-msgid "There are no files yet."
-msgstr "Ingen filer enda. %s"
-
-msgid "%s at %s"
-msgstr "%s den %s"
-
 msgid "This repository has been locked by %s on %s"
 msgstr "Denne pakkebrønnen har blitt påst av %s den %s"
-
-msgid "You can only delete files with revision being a valid branch"
-msgstr ""
-"Du kan bare slette filer med en revisjon som er en gyldig forgrening"
 
 msgid "Deleted file %s via Kallithea"
 msgstr "Slettet filen %s via Kallithea"
@@ -170,9 +148,6 @@ msgstr "Grupper"
 msgid "Repositories"
 msgstr "Pakkebrønner"
 
-msgid "Branch"
-msgstr "Forgrening"
-
 msgid "Closed Branches"
 msgstr "Lukkede forgreninger"
 
@@ -188,12 +163,6 @@ msgstr "Offentlig loggbok"
 msgid "Journal"
 msgstr "Loggbok"
 
-msgid "Bad captcha"
-msgstr "Feilaktig CAPTCHA"
-
-msgid "You have successfully registered with %s"
-msgstr "Du har registrer deg på %s"
-
 msgid "A password reset confirmation code has been sent"
 msgstr "Passordbekreftelseskode sendt"
 
@@ -203,17 +172,11 @@ msgstr "Ugyldig passordtilbakestillingssymbol"
 msgid "Successfully updated password"
 msgstr "Passord oppdatert"
 
-msgid "Invalid reviewer \"%s\" specified"
-msgstr "Ugyldig analytiker \"%s\" angitt"
-
 msgid "%s (closed)"
 msgstr "%s (lukket)"
 
 msgid "Changeset"
 msgstr "Endringssett"
-
-msgid "Special"
-msgstr "Spesiell"
 
 msgid "Peer branches"
 msgstr "Likemennsforgreninger"
@@ -309,9 +272,6 @@ msgstr "Oppdaterte gist-innhold"
 msgid "Successfully updated gist data"
 msgstr "Oppdaterte gist-data"
 
-msgid "Error occurred during update of gist %s"
-msgstr "Feil inntraff under oppdatering av gist-en %s"
-
 msgid "You can't edit this user since it's crucial for entire application"
 msgstr ""
 "Du kan ikke endre denne brukeren siden den er avgjørende for hele "
@@ -320,20 +280,8 @@ msgstr ""
 msgid "Your account was updated successfully"
 msgstr "Kontoen din ble oppdatert"
 
-msgid "Error occurred during update of user %s"
-msgstr "Feil inntraff under oppdatering av brukeren %s"
-
 msgid "Error occurred during update of user password"
 msgstr "Feil inntraff under oppdatering av brukerpassord"
-
-msgid "Added email %s to user"
-msgstr "La til e-postadressen %s for bruker"
-
-msgid "An error occurred during email saving"
-msgstr "Feil inntraff under lagring av e-postadresse"
-
-msgid "Removed email from user"
-msgstr "Fjernet e-postadresse fra bruker"
 
 msgid "API key successfully created"
 msgstr "API-nøkkel opprettet"
@@ -371,9 +319,6 @@ msgstr "Automatisk aktivering av ekstern konto"
 msgid "Enabled"
 msgstr "Påskrudd"
 
-msgid "Global permissions updated successfully"
-msgstr "Globale tilganger oppdatert"
-
 msgid "Error occurred during update of permissions"
 msgstr "Feil inntraff under oppdatering av tilganger"
 
@@ -400,9 +345,6 @@ msgstr "Fjernet pakkebrønnsgruppen %s"
 
 msgid "Error occurred during deletion of repository group %s"
 msgstr "Feil inntraff under sletting av pakkebrønnsgruppen %s"
-
-msgid "Cannot revoke permission for yourself as admin"
-msgstr "Kan ikke tilbakekalle egen administratortilgang"
 
 msgid "Repository group permissions updated"
 msgstr "Pakkebrønnsgruppetilganger oppdatert"
@@ -455,11 +397,6 @@ msgstr "-- Ikke en forgrening --"
 msgid "Updated repository visibility in public journal"
 msgstr "Oppdaterte pakkebrønnssynlighet i offentlig loggbok"
 
-msgid "An error occurred during setting this repository in public journal"
-msgstr ""
-"En feil inntraff under innlemmelse av denne pakkebrønnen i offentlig "
-"loggbok"
-
 msgid "Nothing"
 msgstr "Ingenting"
 
@@ -484,17 +421,11 @@ msgstr "Oppdaterte VCS-innstillinger"
 msgid "Please enter email address"
 msgstr "Skriv inn e-postadresse"
 
-msgid "Hook already exists"
-msgstr "Ingen data klar enda"
-
 msgid "Created user group %s"
 msgstr "Opprettet brukergruppe %s"
 
 msgid "Updated user group %s"
 msgstr "Oppdaterte brukergruppe %s"
-
-msgid "Successfully deleted user group"
-msgstr "Brukergruppe slettet"
 
 msgid "Created user %s"
 msgstr "Opprettet brukeren %s"
@@ -523,26 +454,8 @@ msgstr "Forgreningsnavn %s"
 msgid "Pull request %s"
 msgstr "Flettingsforespørsel %s"
 
-msgid "[deleted] repository"
-msgstr "[slettet] pakkebrønn"
-
-msgid "[created] repository"
-msgstr "[opprettet] pakkebrønn"
-
 msgid "[created] repository as fork"
 msgstr "[opprettet] pakkebrønn som forgrening"
-
-msgid "[forked] repository"
-msgstr "[forgrenet] pakkebrønn"
-
-msgid "[updated] repository"
-msgstr "[oppdaterte] pakkebrønn"
-
-msgid "[downloaded] archive from repository"
-msgstr "[lastet ned] arkiv fra pakkebrønn"
-
-msgid "[delete] repository"
-msgstr "[slett] pakkebrønn"
 
 msgid "[created] user"
 msgstr "[opprettet] bruker"
@@ -556,9 +469,6 @@ msgstr "[opprettet] brukergruppe"
 msgid "[updated] user group"
 msgstr "[oppdaterte] brukergruppe"
 
-msgid "[commented] on revision in repository"
-msgstr "[kommenterte] en revisjon i pakkebrønn"
-
 msgid "[commented] on pull request for"
 msgstr "[kommenterte] flettingsforespørsel for"
 
@@ -567,9 +477,6 @@ msgstr "[lukket] flettingsforespørsel for"
 
 msgid "[pushed] into"
 msgstr "[dyttet] til"
-
-msgid "[committed via Kallithea] into repository"
-msgstr "[innsendt via Kallithea] inn i pakkebrønn"
 
 msgid "No files"
 msgstr "Ingen filer"
@@ -631,9 +538,6 @@ msgstr "toppnivå"
 msgid "Kallithea Administrator"
 msgstr "Kallithea-administrator"
 
-msgid "Default user has no access to new repositories"
-msgstr "Forvalgt bruker har ingen tilgang til nye pakkebrønner"
-
 msgid "Not approved"
 msgstr "Ikke godkjent"
 
@@ -678,9 +582,6 @@ msgstr "Dette er ikke en gyldig sti"
 
 msgid "This email address is already in use"
 msgstr "E-postadressen er allerede i bruk"
-
-msgid "Email address \"%(email)s\" not found"
-msgstr "Fant ikke e-postadressen \"%(email)s\""
 
 msgid "Please enter a valid IPv4 or IPv6 address"
 msgstr "Skriv inn en gyldig IPv4- eller IPv6-adresse"
@@ -728,17 +629,8 @@ msgstr "Brukernavn"
 msgid "Password"
 msgstr "Passord"
 
-msgid "Stay logged in after browser restart"
-msgstr "Forbli innlogget etter omstart av nettleser"
-
 msgid "Forgot your password ?"
 msgstr "Glemt passordet ditt?"
-
-msgid "Don't have an account ?"
-msgstr "Har du ikke en konto?"
-
-msgid "Sign In"
-msgstr "Logg inn"
 
 msgid "Password Reset"
 msgstr "Passordstilbakestilling"
@@ -751,9 +643,6 @@ msgstr "Tilbakestill passordet ditt"
 
 msgid "Email Address"
 msgstr "E-postadresse"
-
-msgid "Captcha"
-msgstr "CAPTCHA"
 
 msgid "Send Password Reset Email"
 msgstr "Send e-post for passordtilbakestilling"
@@ -811,9 +700,6 @@ msgstr "Handling"
 
 msgid "Date"
 msgstr "Dato"
-
-msgid "From IP"
-msgstr "Fra IP"
 
 msgid "No actions yet"
 msgstr "Ingen handlinger enda"
@@ -1004,11 +890,6 @@ msgstr "Tilganger"
 msgid "Created on"
 msgstr "Opprettet den"
 
-msgid "Confirm to delete this group: %s with %s repository"
-msgid_plural "Confirm to delete this group: %s with %s repositories"
-msgstr[0] "Bekreft sletting av denne gruppen: %s med %s pakkebrønn"
-msgstr[1] "Bekreft sletting av denne gruppen: %s med %s pakkebrønner"
-
 msgid "Delete this repository group"
 msgstr "Slett denne pakkebrønnsgruppen"
 
@@ -1107,9 +988,6 @@ msgstr "Privat pakkebrønn"
 msgid "Fork of repository"
 msgstr "Forgrening av pakkebrønn"
 
-msgid "URL by id"
-msgstr "Nettadresse etter ID"
-
 msgid "Type name of user"
 msgstr "Skriv inn brukerens navn"
 
@@ -1121,9 +999,6 @@ msgstr "Behandlingsframdrift"
 
 msgid "Reset Statistics"
 msgstr "Tilbakestill statistikk"
-
-msgid "Confirm to remove current statistics."
-msgstr "Bekreft fjerning av nåværende statistikk"
 
 msgid "Settings Administration"
 msgstr "Innstillingsadministrasjon"
@@ -1164,9 +1039,6 @@ msgstr "Generelt"
 msgid "Show user Gravatars"
 msgstr "Vis bruker-Gravatarer"
 
-msgid "Clone URL"
-msgstr "Kloningsnettadresse"
-
 msgid "Add user group"
 msgstr "Legg til brukergruppe"
 
@@ -1187,9 +1059,6 @@ msgstr "Brukergruppe: %s"
 
 msgid "Members"
 msgstr "Medlemmer"
-
-msgid "Confirm to delete this user group: %s"
-msgstr "Bekreft sletting av denne brukergruppen: %s"
 
 msgid "Delete this user group"
 msgstr "Slett denne brukergruppen"
@@ -1233,9 +1102,6 @@ msgstr "Siste innlogging"
 msgid "Member of User Groups"
 msgstr "Medlem av brukergrupper"
 
-msgid "Confirm to delete this user: %s"
-msgstr "Bekreft sletting av denne brukeren: %s"
-
 msgid "Delete this user"
 msgstr "Slett denne brukeren"
 
@@ -1263,15 +1129,6 @@ msgstr "Endringslogg"
 msgid "Files"
 msgstr "Filer"
 
-msgid "Show Pull Requests for %s"
-msgstr "Vis flettingsforespørsler for %s"
-
-msgid "Pull Requests"
-msgstr "Flettingsforespørsler"
-
-msgid "Options"
-msgstr "Valg"
-
 msgid "Compare Fork"
 msgstr "Sammenlign forgrening"
 
@@ -1293,20 +1150,11 @@ msgstr "Følg"
 msgid "Fork"
 msgstr "Forgren"
 
-msgid "Create Pull Request"
-msgstr "Opprett flettingsorespørsel"
-
 msgid "Switch To"
 msgstr "Bytt til"
 
 msgid "Show recent activity"
 msgstr "Vis nylig aktivitet"
-
-msgid "Show public gists"
-msgstr "Vis offentlige Gist-er"
-
-msgid "Gists"
-msgstr "Gist-er"
 
 msgid "All Public Gists"
 msgstr "Alle offentlige Gist-er"
@@ -1317,17 +1165,8 @@ msgstr "Mine offentlige Gist-er"
 msgid "My Private Gists"
 msgstr "Mine private Gist-er"
 
-msgid "Search in repositories"
-msgstr "Søk i pakkebrønner"
-
-msgid "My Pull Requests"
-msgstr "Mine flettingsforespørsler"
-
 msgid "Not Logged In"
 msgstr "Ikke innlogget"
-
-msgid "Login to Your Account"
-msgstr "Logg in på kontoen din"
 
 msgid "Forgot password?"
 msgstr "Glemt passordet?"
@@ -1337,12 +1176,6 @@ msgstr "Mangler du konto?"
 
 msgid "Log Out"
 msgstr "Logg ut"
-
-msgid "default permissions"
-msgstr "Forvalgte tilganger"
-
-msgid "Create repositories"
-msgstr "Opprett pakkebrønner"
 
 msgid "Show"
 msgstr "Vis"
@@ -1356,32 +1189,11 @@ msgstr "Rediger tilgang"
 msgid "Retry"
 msgstr "Prøv igjen"
 
-msgid "Submitting ..."
-msgstr "Sender inn …"
-
 msgid "Add Another Comment"
 msgstr "Legg til enda en kommentar"
 
 msgid "Group"
 msgstr "Gruppe"
 
-msgid "Loading ..."
-msgstr "Laster …"
-
-msgid "loading ..."
-msgstr "laster …"
-
-msgid "Selection Link"
-msgstr "Utvalgslenke"
-
 msgid "Select changeset"
 msgstr "Velg endringssett"
-
-msgid "%s comments"
-msgstr "%s sendte inn %s"
-
-msgid "comment"
-msgstr "%s sendte inn %s"
-
-msgid "Pull request"
-msgstr "Innsendingsforespørsel oppdatert"

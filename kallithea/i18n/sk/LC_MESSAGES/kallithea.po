@@ -22,20 +22,8 @@ msgstr "Ukázať medzery"
 msgid "Ignore whitespace"
 msgstr "Ignorovať medzery"
 
-msgid "No permission to change status"
-msgstr "Zmeny"
-
-msgid "Successfully deleted pull request %s"
-msgstr "Úspešne zmazaný súbor %s"
-
 msgid "Such revision does not exist for this repository"
 msgstr "Taká revízia neexistuje"
-
-msgid "Could not find other repository %s"
-msgstr "Prázdny repozitár"
-
-msgid "No response"
-msgstr "Neznáma revízia %s"
 
 msgid "You don't have permission to view this page"
 msgstr "Nemáte oprávnenie na zobrazenie tejto stránky"
@@ -45,9 +33,6 @@ msgstr "Zmeny na repozitáre %s"
 
 msgid "Click here to add new file"
 msgstr "Kliknite pre pridanie nového súboru"
-
-msgid "There are no files yet."
-msgstr "Zatiaľ nie sú žiadne súbory. %s"
 
 msgid "This repository has been locked by %s on %s"
 msgstr "Tento repozitár bol uzamknutý používateľom %s dňa %s"
@@ -100,9 +85,6 @@ msgstr "Vetva"
 msgid "Bookmark"
 msgstr "Záložka"
 
-msgid "Bad captcha"
-msgstr "zlá captcha"
-
 msgid "Successfully updated password"
 msgstr "Úspešne aktualizované heslo"
 
@@ -139,32 +121,8 @@ msgstr "Došlo k chybe pri aktualizácii hesla užívateľa"
 msgid "An error occurred during email saving"
 msgstr "Došlo k chybe pri ukladaní e-mailovej adresy"
 
-msgid "An error occurred during creation of field: %r"
-msgstr "Došlo k chybe pri vytváraní gist"
-
 msgid "Nothing"
 msgstr "Nič"
-
-msgid "Repository has been locked"
-msgstr "Tento repozitár bol uzamknutý používateľom %s dňa %s"
-
-msgid "Repository has been unlocked"
-msgstr "Tento repozitár bol uzamknutý používateľom %s dňa %s"
-
-msgid "Invalidated %s repositories"
-msgstr "Repozitáre"
-
-msgid "Changeset %s not found"
-msgstr "Zmeny"
-
-msgid "Only admins can fork repositories"
-msgstr "Repozitáre"
-
-msgid "Non-admins can fork repositories"
-msgstr "Repozitáre"
-
-msgid "Invalid repository URL"
-msgstr "Odblokovať repozitár"
 
 msgid "%s Entry"
 msgid_plural "%s Entries"
@@ -172,29 +130,8 @@ msgstr[0] "%s záznam"
 msgstr[1] "%s záznamy"
 msgstr[2] "%s záznamov"
 
-msgid "Repository Defaults"
-msgstr "Repozitáre"
-
-msgid "Owned Repositories"
-msgstr "Repozitáre"
-
-msgid "Watched Repositories"
-msgstr "Repozitáre"
-
 msgid "Repositories You Own"
 msgstr "Vaše repozitáre"
-
-msgid "Apply to all existing repositories"
-msgstr "Repozitáre"
-
-msgid "Add repos"
-msgstr "Neznáma revízia %s"
-
-msgid "Repository group %s"
-msgstr "Repozitáre"
-
-msgid "Clone remote repository"
-msgstr "Prázdny repozitár"
 
 msgid "%s Creating Repository"
 msgstr "Vytváranie repozitára %s"
@@ -211,116 +148,8 @@ msgstr "Zablokovať repozitár"
 msgid "Delete this Repository"
 msgstr "Vymazať tento repozitár"
 
-msgid "Private Repository"
-msgstr "Prázdny repozitár"
-
-msgid "Fork of repository"
-msgstr "Prázdny repozitár"
-
-msgid "Remote repository URL"
-msgstr "Prázdny repozitár"
-
-msgid "Pull Changes from Remote Repository"
-msgstr "Zmeny na repozitáre %s"
-
-msgid "Confirm to pull changes from remote repository."
-msgstr "Potvrdenie blokovania repozitára."
-
-msgid "Permanent Repository ID"
-msgstr "Prázdny repozitár"
-
-msgid "Remote repository"
-msgstr "Prázdny repozitár"
-
-msgid "Repository URL"
-msgstr "Repozitáre"
-
-msgid "Location of repositories"
-msgstr "Repozitáre"
-
-msgid "Repository page size"
-msgstr "Repozitáre"
-
-msgid "Inherit defaults"
-msgstr "Repozitáre"
-
-msgid "Open New Pull Request from {0}"
-msgstr "Zmena stavu"
-
-msgid "No revisions"
-msgstr "Neznáma revízia %s"
-
-msgid "Go to tip of repository"
-msgstr "Prázdny repozitár"
-
-msgid "Changeset status: %s by %s"
-msgstr "Zmeny"
-
-msgid "%s comments"
-msgstr "Nie sú žiadne komentáre."
-
-msgid "comment"
-msgstr "Nie sú žiadne komentáre."
-
-msgid "on pull request"
-msgstr "Zmena stavu"
-
-msgid "on this changeset"
-msgstr "%s zmien"
-
-msgid "Status change"
-msgstr "Posledné zmeny"
-
-msgid "Set changeset status"
-msgstr "Zmeny"
-
-msgid "No change"
-msgstr "Žiadne zmeny"
-
-msgid "Finish pull request"
-msgstr "Zmena stavu"
-
-msgid "Close"
-msgstr "(zatvorené)"
-
-msgid "Unknown operation: %r"
-msgstr "Neznáma revízia %s"
-
-msgid "%s changesets"
-msgstr "%s zmien"
-
-msgid "Comment on Changeset \"%s\""
-msgstr "Zmeny"
-
-msgid "Changeset on"
-msgstr "Zmeny"
-
-msgid "branch"
-msgstr "Vetva"
-
-msgid "Status change:"
-msgstr "Posledné zmeny"
-
-msgid "The pull request has been closed."
-msgstr "Tento repozitár bol uzamknutý používateľom %s dňa %s"
-
-msgid "Pull request"
-msgstr "Zmena stavu"
-
-msgid "Comment on Pull Request %s \"%s\""
-msgstr "Zmena stavu"
-
-msgid "Commit Changes"
-msgstr "Žiadne zmeny"
-
 msgid "Cancel Changes"
 msgstr "Zrušiť zmeny"
 
-msgid "Pull Requests from '%s'"
-msgstr "Zmena stavu"
-
 msgid "Latest Changes"
 msgstr "Posledné zmeny"
-
-msgid "Push new repository"
-msgstr "Prázdny repozitár"

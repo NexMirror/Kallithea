@@ -28,9 +28,6 @@ msgstr "Ignorar espacios en blanco"
 msgid "Increase diff context to %(num)s lines"
 msgstr "Aumentar el contexto del diff a %(num)s lineas"
 
-msgid "No permission to change status"
-msgstr "No tene permiso para cambiar el estado de la petición pull"
-
 msgid "Successfully deleted pull request %s"
 msgstr "Petición de pull %s eliminada correctamente"
 
@@ -86,14 +83,8 @@ msgstr "El cambio era demasiado grande y se redució..."
 msgid "%s %s feed"
 msgstr "%s%s canal"
 
-msgid "Changes on %s repository"
-msgstr "Cambios en %s repositorio"
-
 msgid "Click here to add new file"
 msgstr "Haga clic aquí para añadir un archivo nuevo"
-
-msgid "There are no files yet."
-msgstr "Aún no hay archivos. %s"
 
 msgid "%s at %s"
 msgstr "%s en %s"
@@ -135,9 +126,6 @@ msgstr "Sin contenido"
 
 msgid "No filename"
 msgstr "Sin nombre de archivo"
-
-msgid "Location must be relative path and must not contain .. in path"
-msgstr "La ruta debe ser relativa y no debe contener .. en la ruta"
 
 msgid "Downloads disabled"
 msgstr "Descargas deshabilitadas"
@@ -214,9 +202,6 @@ msgstr "Cambio"
 msgid "Special"
 msgstr "Especial"
 
-msgid "Peer branches"
-msgstr "Ramas de los pares"
-
 msgid "Bookmarks"
 msgstr "Marcadores"
 
@@ -229,9 +214,6 @@ msgstr "Ocurrió un error al crear la petición de pull"
 msgid "Successfully opened new pull request"
 msgstr "La petición de pull se ha creado correctamente"
 
-msgid "New pull request iteration created"
-msgstr "Actualización de la petición pull creada"
-
 msgid "No description"
 msgstr "No hay descripción"
 
@@ -241,30 +223,11 @@ msgstr "Petición pull actualizada"
 msgid "Successfully deleted pull request"
 msgstr "Petición pull eliminada correctamente"
 
-msgid "Error: changesets not found when displaying pull request from %s."
-msgstr "No se encontraron cambios para actualizar la petición pull."
-
 msgid "This pull request has already been merged to %s."
 msgstr "La petición pull ya ha sido incluida a %s."
 
 msgid "This pull request has been closed and can not be updated."
 msgstr "La petición pull esta cerrada y no se puede actualizar."
-
-msgid "The following additional changes are available on %s:"
-msgstr "Los siguientes cambios están disponibles en %s:"
-
-msgid "No additional changesets found for iterating on this pull request."
-msgstr "No se encontraron cambios para actualizar la petición pull."
-
-msgid "Note: Branch %s has another head: %s."
-msgstr "Nota: la rama %s tiene otro head: %s."
-
-msgid "Git pull requests don't support iterating yet."
-msgstr "La peticiones pull de Git aún no soportan actualizaciones."
-
-msgid ""
-"Error: some changesets not found when displaying pull request from %s."
-msgstr "No se encontraron cambios para actualizar la petición pull."
 
 msgid "Invalid search query. Try quoting it."
 msgstr "Consulta de búsqueda inválida. Inténtelo entre comillas."
@@ -320,76 +283,5 @@ msgstr "Sin modificar"
 msgid "Successfully updated gist content"
 msgstr "Gist actualizado correctamente"
 
-msgid "An error occurred during creation of field: %r"
-msgstr "Ocurrió un error mientras se bifurcaba el repositorio %s"
-
-msgid "Hook already exists"
-msgstr "Todavía no hay datos disponibles"
-
-msgid "Cannot create empty pull request"
-msgstr "Error al crear la petición de pull: %s"
-
-msgid "Missing changesets since the previous iteration:"
-msgstr "Cambios que faltan desde la ultima petición de pull:"
-
-msgid "New changesets on %s %s since the previous iteration:"
-msgstr "Cambios nuevos en %s %s desde la ultima petición pull:"
-
-msgid "Ancestor didn't change - diff since previous iteration:"
-msgstr ""
-"El ascendente no ha cambiado - ver diferencias desde la versión anterior:"
-
-msgid ""
-"This iteration is based on another %s revision and there is no simple "
-"diff."
-msgstr ""
-"La petición de pull está basada en otra %s revisión y no hay un diff "
-"simple."
-
-msgid "No changes found on %s %s since previous iteration."
-msgstr "No se encontró ningún cambio en %s %s desde la versión anterior."
-
-msgid "Add repos"
-msgstr "No hay respuesta"
-
-msgid "Fork of repository"
-msgstr "Repositorio vacío"
-
-msgid "Repository page size"
-msgstr "Repositorios"
-
 msgid "Select changeset"
 msgstr "Seleccionar cambios"
-
-msgid "%s comments"
-msgstr "%s anotó en %s"
-
-msgid "comment"
-msgstr "%s anotó en %s"
-
-msgid "Modified"
-msgstr "Sin modificar"
-
-msgid "Unknown operation: %r"
-msgstr "Revisión desconocida %s"
-
-msgid "No file after"
-msgstr "Sin nombre de archivo"
-
-msgid "Changeset on"
-msgstr "Cambio"
-
-msgid "branch"
-msgstr "Rama"
-
-msgid "The pull request has been closed."
-msgstr "La petición pull esta cerrada y no se puede actualizar."
-
-msgid "Pull request"
-msgstr "Petición pull actualizada"
-
-msgid "Mention in Comment on Pull Request %s \"%s\""
-msgstr "Error al crear la petición de pull: %s"
-
-msgid "Comment on Pull Request %s \"%s\""
-msgstr "Error al crear la petición de pull: %s"

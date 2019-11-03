@@ -38,12 +38,6 @@ msgstr "1 день"
 msgid "1 month"
 msgstr "1 місяць"
 
-msgid "Unknown operation: %r"
-msgstr "Невідома помилка"
-
-msgid "Status change:"
-msgstr "Останні зміни"
-
 msgid "files"
 msgstr "файли"
 

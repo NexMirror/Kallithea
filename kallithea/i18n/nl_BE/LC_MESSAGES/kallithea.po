@@ -22,22 +22,11 @@ msgstr "(gesloten)"
 msgid "Show whitespace"
 msgstr "Toon witruimtes"
 
-msgid "Ignore whitespace"
-msgstr "Negeer witruimtes"
-
 msgid "Increase diff context to %(num)s lines"
 msgstr "Vergroot de diff context tot %(num)s lijnen"
 
-msgid "No permission to change status"
-msgstr "Selecteer de changeset"
-
 msgid "Such revision does not exist for this repository"
 msgstr "Deze revisie bestaat niet in deze repository"
-
-msgid "Cannot compare repositories of different types"
-msgstr ""
-"Kan geen repositories vergelijken zonder een gemeenschappelijke voorouder "
-"te gebruiken"
 
 msgid "Cannot compare repositories without using common ancestor"
 msgstr ""
@@ -85,9 +74,6 @@ msgstr "Veranderingen in repository %s"
 
 msgid "Click here to add new file"
 msgstr "Klik hier om een nieuw bestand toe te voegen"
-
-msgid "There are no files yet."
-msgstr "Er zijn nog geen bestanden. %s"
 
 msgid "%s at %s"
 msgstr "%s op %s"
@@ -202,92 +188,5 @@ msgstr "Changeset"
 msgid "Special"
 msgstr "Bijzonder"
 
-msgid "An error occurred during creation of field: %r"
-msgstr "Er is een fout opgetreden tijdens het forken van de repository %s"
-
-msgid "Changeset %s not found"
-msgstr "Selecteer de changeset"
-
-msgid "Add repos"
-msgstr "Geen antwoord"
-
-msgid "Fork of repository"
-msgstr "Lege repository"
-
-msgid "Repository page size"
-msgstr "Repositories"
-
-msgid "Open New Pull Request from {0}"
-msgstr "Statuswijziging -> %s"
-
-msgid "Show Selected Changesets {0} &rarr; {1}"
-msgstr "Selecteer de changeset"
-
 msgid "Select changeset"
 msgstr "Selecteer een changeset"
-
-msgid "Specify changeset"
-msgstr "Selecteer de changeset"
-
-msgid "Changeset status: %s by %s"
-msgstr "Selecteer de changeset"
-
-msgid "%s comments"
-msgstr "Geen kommentaar."
-
-msgid "comment"
-msgstr "Geen kommentaar."
-
-msgid "on pull request"
-msgstr "Statuswijziging -> %s"
-
-msgid "on this changeset"
-msgstr "Selecteer de changeset"
-
-msgid "Status change"
-msgstr "Statuswijziging -> %s"
-
-msgid "Set changeset status"
-msgstr "Selecteer de changeset"
-
-msgid "Finish pull request"
-msgstr "Statuswijziging -> %s"
-
-msgid "Close"
-msgstr "(gesloten)"
-
-msgid "Unknown operation: %r"
-msgstr "Ongekende revisie %s"
-
-msgid "No file after"
-msgstr "Geen bestandsnaam"
-
-msgid "Comment on Changeset \"%s\""
-msgstr "Selecteer de changeset"
-
-msgid "Changeset on"
-msgstr "Changeset"
-
-msgid "branch"
-msgstr "Branch"
-
-msgid "Status change:"
-msgstr "Statuswijziging -> %s"
-
-msgid "Pull request"
-msgstr "Statuswijziging -> %s"
-
-msgid "Comment on Pull Request %s \"%s\""
-msgstr "Statuswijziging -> %s"
-
-msgid "Commit Changes"
-msgstr "Selecteer de changeset"
-
-msgid "Cancel Changes"
-msgstr "Selecteer de changeset"
-
-msgid "Pull Requests from '%s'"
-msgstr "Statuswijziging -> %s"
-
-msgid "Latest Changes"
-msgstr "Statuswijziging -> %s"
