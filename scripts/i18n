@@ -110,15 +110,18 @@ def normalized_merge(local, base, other, output, merge_pot_file, strip):
     ret = simplemerge.simplemerge(uimod.ui.load(),
          context.arbitraryfilectx(local.encode('utf-8')),
          context.arbitraryfilectx(base.encode('utf-8')),
-         context.arbitraryfilectx(other.encode('utf-8'))
+         context.arbitraryfilectx(other.encode('utf-8')),
+         label=[b'local', b'other', b'base'],
+         mode='merge',
     )
-    shutil.copyfile(local, output)  # simplemerge wrote to local
+    shutil.copyfile(local, output)  # simplemerge wrote to local - either resolved or with conflict markers
     if ret:
+        shutil.copyfile(localkeep, local)
         basekeep = base + '.keep'
         otherkeep = other + '.keep'
         shutil.copyfile(base, basekeep)
         shutil.copyfile(other, otherkeep)
-        sys.stderr.write("Error: simple merge failed. Run a merge tool manually to resolve conflicts, then use 'hg resolve -m'.\n")
+        sys.stderr.write("Error: simple merge failed and %s is left with conflict markers. Resolve the conflics , then use 'hg resolve -m'.\n" % output)
         sys.stderr.write('Resolve with e.g.: kdiff3 %s %s %s -o %s\n' % (basekeep, localkeep, otherkeep, output))
         sys.exit(ret)
 
