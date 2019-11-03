@@ -1576,12 +1576,6 @@ msgstr "Bifurcação de"
 msgid "Clone from"
 msgstr "Clonar de"
 
-msgid "Show by ID"
-msgstr "Mostrar por ID"
-
-msgid "Show by Name"
-msgstr "Mostrar por Nome"
-
 msgid "Trending files"
 msgstr "Tendências em arquivos"
 

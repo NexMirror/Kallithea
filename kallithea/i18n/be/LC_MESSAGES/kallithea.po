@@ -1751,9 +1751,6 @@ msgid ""
 "Shows or hides a version number of Kallithea displayed in the footer."
 msgstr "Паказвае або хавае нумар версіі Kallithea ў ніжняй частцы старонкі."
 
-msgid "Clone URL"
-msgstr "URL для кланавання"
-
 msgid "Icons"
 msgstr "Абразкі"
 
@@ -2599,11 +2596,8 @@ msgstr "Форк ад"
 msgid "Clone from"
 msgstr "Кланаваць з"
 
-msgid "Show by ID"
-msgstr "Паводле ID"
-
-msgid "Show by Name"
-msgstr "Паводле імя"
+msgid "Clone URL"
+msgstr "URL для кланавання"
 
 msgid "Trending files"
 msgstr "Папулярныя файлы"

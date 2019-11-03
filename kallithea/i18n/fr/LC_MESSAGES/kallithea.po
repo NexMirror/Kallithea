@@ -2454,9 +2454,6 @@ msgstr ""
 "                                                        {netloc}    "
 "emplacement réseau/hôte du serveur Kallithea en cours d'utilisation."
 
-msgid "Clone URL"
-msgstr "URL de clone"
-
 msgid "Repository page size"
 msgstr "Taille de la page du dépôt"
 
@@ -3669,11 +3666,8 @@ msgstr "Fork de"
 msgid "Clone from"
 msgstr "Cloner depuis"
 
-msgid "Show by ID"
-msgstr "Afficher par ID"
-
-msgid "Show by Name"
-msgstr "Afficher par nom"
+msgid "Clone URL"
+msgstr "URL de clone"
 
 msgid "Trending files"
 msgstr "Populaires"

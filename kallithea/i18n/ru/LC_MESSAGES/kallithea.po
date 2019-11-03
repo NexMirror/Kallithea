@@ -1497,9 +1497,6 @@ msgstr "Позволяет хранить дополнительные поля 
 msgid "Show Kallithea version"
 msgstr "Отображать версию Kallithea"
 
-msgid "Clone URL"
-msgstr "Ссылка для клонирования"
-
 msgid "Icons"
 msgstr "Иконки"
 
@@ -2191,11 +2188,8 @@ msgstr "Форк от"
 msgid "Clone from"
 msgstr "Клонировать из"
 
-msgid "Show by ID"
-msgstr "Показать по ID"
-
-msgid "Show by Name"
-msgstr "Показать по имени"
+msgid "Clone URL"
+msgstr "Ссылка для клонирования"
 
 msgid "Trending files"
 msgstr "Популярные файлы"

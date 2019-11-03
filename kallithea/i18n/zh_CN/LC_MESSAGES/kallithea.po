@@ -1172,12 +1172,6 @@ msgstr "复刻自"
 msgid "Clone from"
 msgstr "克隆自"
 
-msgid "Show by ID"
-msgstr "按ID显示"
-
-msgid "Show by Name"
-msgstr "以名字显示"
-
 msgid "Trending files"
 msgstr "文件趋势图"
 

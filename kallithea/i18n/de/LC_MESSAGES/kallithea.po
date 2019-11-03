@@ -2228,9 +2228,6 @@ msgstr ""
 "                                                        {netloc}    "
 "Netzwerkstandort/Server-Host des laufenden Kallithea-Servers"
 
-msgid "Clone URL"
-msgstr "Clone-URL"
-
 msgid ""
 "Number of items displayed in the repository pages before pagination is "
 "shown."
@@ -2628,6 +2625,9 @@ msgstr "Datei entfernt"
 
 msgid "Clone from"
 msgstr "Clone von"
+
+msgid "Clone URL"
+msgstr "Clone-URL"
 
 msgid "Download as zip"
 msgstr "Herunterladen als zip"

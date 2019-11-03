@@ -1595,9 +1595,6 @@ msgstr ""
 msgid "Show Kallithea version"
 msgstr "Pokaż wersję Kallithea"
 
-msgid "Clone URL"
-msgstr "URL klonowania"
-
 msgid "Repository page size"
 msgstr "Rozmiar Repozytorium"
 
@@ -2425,11 +2422,8 @@ msgstr "Gałąź z"
 msgid "Clone from"
 msgstr "Klonuj z"
 
-msgid "Show by ID"
-msgstr "Pokaż ID"
-
-msgid "Show by Name"
-msgstr "Pokaż nazwę"
+msgid "Clone URL"
+msgstr "URL klonowania"
 
 msgid "Trending files"
 msgstr "Statystyki"

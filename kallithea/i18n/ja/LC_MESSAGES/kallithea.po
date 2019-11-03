@@ -1912,9 +1912,6 @@ msgid ""
 msgstr ""
 "フッターに表示されるKallitheaのバージョン番号の表示、非表示を設定します。"
 
-msgid "Clone URL"
-msgstr "クローンURL"
-
 msgid ""
 "Number of items displayed in the admin pages grids before pagination is "
 "shown."
@@ -2864,11 +2861,8 @@ msgstr "フォーク元"
 msgid "Clone from"
 msgstr "クローン元"
 
-msgid "Show by ID"
-msgstr "IDで表示"
-
-msgid "Show by Name"
-msgstr "名前で表示"
+msgid "Clone URL"
+msgstr "クローンURL"
 
 msgid "Trending files"
 msgstr "トレンドファイル"
