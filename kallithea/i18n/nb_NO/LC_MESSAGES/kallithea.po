@@ -695,7 +695,7 @@ msgid "Add Repository Group"
 msgstr "Legg til pakkebrønnsgruppe"
 
 msgid "You have admin right to this group, and can edit it"
-msgstr "Du har administratorrettigheter til denne gruppen, og kan redigere den"
+msgstr ""
 "Du har administratorrettigheter til denne gruppen, og kan redigere den"
 
 msgid "Edit Repository Group"
