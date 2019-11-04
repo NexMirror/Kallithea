@@ -1,0 +1,20 @@
+# Copyright (C) 2019 Various authors, licensing as GPLv3
+# This file is distributed under the same license as the Kallithea project.
+
+msgid ""
+msgstr ""
+"Report-Msgid-Bugs-To: translations@kallithea-scm.org\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "None"
+msgstr "Yok"
+
+msgid "(closed)"
+msgstr "(kapalı)"
+
+msgid "Show whitespace"
+msgstr "Boşlukları göster"
