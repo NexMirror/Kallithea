@@ -38,7 +38,7 @@ from webhelpers2.html.tags import select as webhelpers2_select
 from webhelpers2.html.tags import submit, text, textarea
 from webhelpers2.number import format_byte_size
 from webhelpers2.text import chop_at, truncate, wrap_paragraphs
-from webhelpers.pylonslib import Flash as _Flash
+from webhelpers.pylonslib import Flash
 
 from kallithea.config.routing import url
 from kallithea.lib.annotate import annotate_highlight
@@ -420,7 +420,7 @@ def pygmentize_annotation(repo_name, filenode, **kwargs):
 
 
 class _Message(object):
-    """A message returned by ``Flash.pop_messages()``.
+    """A message returned by ``pop_flash_messages()``.
 
     Converting the message to a string returns the message text. Instances
     also have the following attributes:
@@ -442,39 +442,38 @@ class _Message(object):
         return escape(safe_unicode(self.message))
 
 
-class Flash(_Flash):
+def flash(message, category=None, ignore_duplicate=False, logf=None):
+    """
+    Show a message to the user _and_ log it through the specified function
 
-    def __call__(self, message, category=None, ignore_duplicate=False, logf=None):
-        """
-        Show a message to the user _and_ log it through the specified function
+    category: notice (default), warning, error, success
+    logf: a custom log function - such as log.debug
 
-        category: notice (default), warning, error, success
-        logf: a custom log function - such as log.debug
+    logf defaults to log.info, unless category equals 'success', in which
+    case logf defaults to log.debug.
+    """
+    if logf is None:
+        logf = log.info
+        if category == 'success':
+            logf = log.debug
 
-        logf defaults to log.info, unless category equals 'success', in which
-        case logf defaults to log.debug.
-        """
-        if logf is None:
-            logf = log.info
-            if category == 'success':
-                logf = log.debug
+    logf('Flash %s: %s', category, message)
 
-        logf('Flash %s: %s', category, message)
-
-        super(Flash, self).__call__(message, category, ignore_duplicate)
-
-    def pop_messages(self):
-        """Return all accumulated messages and delete them from the session.
-
-        The return value is a list of ``Message`` objects.
-        """
-        from tg import session
-        messages = session.pop(self.session_key, [])
-        session.save()
-        return [_Message(*m) for m in messages]
+    _flash(message, category, ignore_duplicate)
 
 
-flash = Flash()
+def pop_flash_messages():
+    """Return all accumulated messages and delete them from the session.
+
+    The return value is a list of ``Message`` objects.
+    """
+    from tg import session
+    messages = session.pop(_flash.session_key, [])
+    session.save()
+    return [_Message(*m) for m in messages]
+
+
+_flash = Flash()
 
 
 age = lambda x, y=False: _age(x, y)
