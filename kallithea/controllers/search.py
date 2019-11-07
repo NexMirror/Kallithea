@@ -27,12 +27,10 @@ Original author and date, and relevant copyright and licensing information is be
 
 import logging
 import traceback
-import urllib
 
 from tg import config, request
 from tg import tmpl_context as c
 from tg.i18n import ugettext as _
-from webhelpers2.html.tools import update_params
 from whoosh.index import EmptyIndexError, exists_in, open_dir
 from whoosh.qparser import QueryParser, QueryParserError
 from whoosh.query import Phrase, Prefix
@@ -119,9 +117,6 @@ class SearchController(BaseRepoController):
                         res_ln, results.runtime
                     )
 
-                    def url_generator(**kw):
-                        q = urllib.quote(safe_str(c.cur_query))
-                        return update_params("?q=%s&type=%s" % (q, safe_str(c.cur_type)), **kw)
                     repo_location = RepoModel().repos_path
                     c.formated_results = Page(
                         WhooshResultWrapper(search_type, searcher, matcher,
@@ -129,7 +124,8 @@ class SearchController(BaseRepoController):
                         page=p,
                         item_count=res_ln,
                         items_per_page=10,
-                        url=url_generator
+                        type=safe_str(c.cur_type),
+                        q=safe_str(c.cur_query),
                     )
 
                 except QueryParserError:

@@ -39,7 +39,6 @@ from webhelpers.feedgenerator import Atom1Feed, Rss201rev2Feed
 from webob.exc import HTTPBadRequest
 
 import kallithea.lib.helpers as h
-from kallithea.config.routing import url
 from kallithea.controllers.admin.admin import _journal_filter
 from kallithea.lib.auth import LoginRequired
 from kallithea.lib.base import BaseController, render
@@ -201,10 +200,8 @@ class JournalController(BaseController):
 
         journal = self._get_journal_data(c.following)
 
-        def url_generator(**kw):
-            return url.current(filter=c.search_term, **kw)
-
-        c.journal_pager = Page(journal, page=p, items_per_page=20, url=url_generator)
+        c.journal_pager = Page(journal, page=p, items_per_page=20,
+                               filter=c.search_term)
         c.journal_day_aggregate = self._get_daily_aggregate(c.journal_pager)
 
         if request.environ.get('HTTP_X_PARTIAL_XHR'):

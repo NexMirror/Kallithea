@@ -30,10 +30,11 @@ class Page(_Page):
     """
     Custom pager emitting Bootstrap paginators
     """
-
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault('url', url.current)
-        _Page.__init__(self, *args, **kwargs)
+    def __init__(self, collection,
+                 page=1, items_per_page=20, item_count=None,
+                 **kwargs):
+        _Page.__init__(self, collection, page=page, items_per_page=items_per_page, item_count=item_count,
+                       url=url.current, **kwargs)
 
     def _get_pos(self, cur_page, max_page, items):
         edge = (items / 2) + 1

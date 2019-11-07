@@ -36,7 +36,6 @@ from whoosh import query
 from whoosh.qparser.dateparse import DateParserPlugin
 from whoosh.qparser.default import QueryParser
 
-from kallithea.config.routing import url
 from kallithea.lib.auth import HasPermissionAnyDecorator, LoginRequired
 from kallithea.lib.base import BaseController, render
 from kallithea.lib.indexers import JOURNAL_SCHEMA
@@ -139,10 +138,8 @@ class AdminController(BaseController):
 
         p = safe_int(request.GET.get('page'), 1)
 
-        def url_generator(**kw):
-            return url.current(filter=c.search_term, **kw)
-
-        c.users_log = Page(users_log, page=p, items_per_page=10, url=url_generator)
+        c.users_log = Page(users_log, page=p, items_per_page=10,
+                           filter=c.search_term)
 
         if request.environ.get('HTTP_X_PARTIAL_XHR'):
             return render('admin/admin_log.html')
