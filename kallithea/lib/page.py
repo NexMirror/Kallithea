@@ -17,8 +17,10 @@ Custom paging classes
 import logging
 import re
 
+import paginate
+import paginate_sqlalchemy
+import sqlalchemy.orm
 from webhelpers2.html import HTML, literal
-from webhelpers.paginate import Page as _Page
 
 from kallithea.config.routing import url
 
@@ -26,15 +28,19 @@ from kallithea.config.routing import url
 log = logging.getLogger(__name__)
 
 
-class Page(_Page):
-    """
-    Custom pager emitting Bootstrap paginators
-    """
+class Page(paginate.Page):
+
     def __init__(self, collection,
                  page=1, items_per_page=20, item_count=None,
                  **kwargs):
-        _Page.__init__(self, collection, page=page, items_per_page=items_per_page, item_count=item_count,
-                       url=url.current, **kwargs)
+        if isinstance(collection, sqlalchemy.orm.query.Query):
+            collection = paginate_sqlalchemy.SqlalchemyOrmWrapper(collection)
+        paginate.Page.__init__(self, collection, page=page, items_per_page=items_per_page, item_count=item_count,
+                               url_maker=lambda page: url.current(page=page, **kwargs))
+
+    def _pagerlink(self, page, text):
+        """hack to mimic old webhelpers.paginate internals"""
+        return literal('''<li><a class="pager_link" href="%s">%s</a></li>''') % (self.url_maker(page), text)
 
     def _get_pos(self, cur_page, max_page, items):
         edge = (items / 2) + 1
