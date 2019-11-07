@@ -38,7 +38,6 @@ from webhelpers2.html.tags import select as webhelpers2_select
 from webhelpers2.html.tags import submit, text, textarea
 from webhelpers2.number import format_byte_size
 from webhelpers2.text import chop_at, truncate, wrap_paragraphs
-from webhelpers.pylonslib import Flash
 
 from kallithea.config.routing import url
 from kallithea.lib.annotate import annotate_highlight
@@ -442,6 +441,26 @@ class _Message(object):
         return escape(safe_unicode(self.message))
 
 
+def _session_flash_messages(append=None, clear=False):
+    """Manage a message queue in tg.session: return the current message queue
+    after appending the given message, and possibly clearing the queue."""
+    key = 'flash'
+    from tg import session
+    if key in session:
+        flash_messages = session[key]
+    else:
+        if append is None:  # common fast path - also used for clearing empty queue
+            return []  # don't bother saving
+        flash_messages = []
+        session[key] = flash_messages
+    if append is not None and append not in flash_messages:
+        flash_messages.append(append)
+    if clear:
+        session.pop(key, None)
+    session.save()
+    return flash_messages
+
+
 def flash(message, category=None, logf=None):
     """
     Show a message to the user _and_ log it through the specified function
@@ -459,7 +478,7 @@ def flash(message, category=None, logf=None):
 
     logf('Flash %s: %s', category, message)
 
-    _flash(message, category, True)
+    _session_flash_messages(append=(category, message))
 
 
 def pop_flash_messages():
@@ -467,13 +486,7 @@ def pop_flash_messages():
 
     The return value is a list of ``Message`` objects.
     """
-    from tg import session
-    messages = session.pop(_flash.session_key, [])
-    session.save()
-    return [_Message(*m) for m in messages]
-
-
-_flash = Flash()
+    return [_Message(*m) for m in _session_flash_messages(clear=True)]
 
 
 age = lambda x, y=False: _age(x, y)
