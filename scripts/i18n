@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
+
 import click
 
 import i18n_utils
@@ -48,6 +50,12 @@ def normalize_po_files(po_files):
     for po_file in po_files:
         i18n_utils._normalize_po_file(po_file, strip=True)
 
+@cli.command()
+@click.argument('file1')
+@click.argument('file2')
+def normalized_diff(file1, file2):
+    """Compare two files while transparently normalizing them."""
+    sys.exit(i18n_utils._normalized_diff(file1, file2, strip=True))
 
 if __name__ == '__main__':
     cli()

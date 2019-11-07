@@ -15,7 +15,9 @@ from __future__ import print_function
 
 import os
 import re
+import shutil
 import subprocess
+import tempfile
 
 
 do_debug = False  # set from scripts/i18n --debug
@@ -165,3 +167,19 @@ def _normalize_po_file(po_file, strip=False):
             normalized_content = _normalize_po(raw_content)
             dest.write(normalized_content)
         os.rename(po_tmp, po_file)
+
+def _normalized_diff(file1, file2, strip=False):
+    # Create temporary copies of both files
+    temp1 = tempfile.NamedTemporaryFile(prefix=os.path.basename(file1))
+    temp2 = tempfile.NamedTemporaryFile(prefix=os.path.basename(file2))
+    debug('normalized_diff: %s -> %s / %s -> %s' % (file1, temp1.name, file2, temp2.name))
+    shutil.copyfile(file1, temp1.name)
+    shutil.copyfile(file2, temp2.name)
+    # Normalize them in place
+    _normalize_po_file(temp1.name, strip=strip)
+    _normalize_po_file(temp2.name, strip=strip)
+    # Now compare
+    try:
+        runcmd(['diff', '-u', temp1.name, temp2.name])
+    except subprocess.CalledProcessError as e:
+        return e.returncode
