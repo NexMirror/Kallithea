@@ -118,7 +118,6 @@ This means:
   stateful stream, and will in some cases be faster than HTTP/HTTPS with several
   stateless round-trips.
 
-
 .. note:: At this moment, repository access via SSH has been tested on Unix
     only. Windows users that care about SSH are invited to test it and report
     problems, ideally contributing patches that solve these problems.
