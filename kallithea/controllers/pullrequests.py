@@ -201,6 +201,11 @@ class PullrequestsController(BaseRepoController):
     def show_all(self, repo_name):
         c.from_ = request.GET.get('from_') or ''
         c.closed = request.GET.get('closed') or ''
+        url_params = {}
+        if c.from_:
+            url_params['from_'] = 1
+        if c.closed:
+            url_params['closed'] = 1
         p = safe_int(request.GET.get('page'), 1)
 
         q = PullRequest.query(include_closed=c.closed, sorted=True)
@@ -210,7 +215,7 @@ class PullrequestsController(BaseRepoController):
             q = q.filter_by(other_repo=c.db_repo)
         c.pull_requests = q.all()
 
-        c.pullrequests_pager = Page(c.pull_requests, page=p, items_per_page=100)
+        c.pullrequests_pager = Page(c.pull_requests, page=p, items_per_page=100, **url_params)
 
         return render('/pullrequests/pullrequest_show_all.html')
 

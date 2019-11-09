@@ -80,7 +80,7 @@
 </div>
 
 %if hasattr(pullrequests, 'pager'):
-    ${pullrequests.pager(**request.GET.mixed())}
+    ${pullrequests.pager()}
 %endif
 
 </%def>

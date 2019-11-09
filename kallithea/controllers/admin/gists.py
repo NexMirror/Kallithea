@@ -71,6 +71,11 @@ class GistsController(BaseController):
         not_default_user = not request.authuser.is_default_user
         c.show_private = request.GET.get('private') and not_default_user
         c.show_public = request.GET.get('public') and not_default_user
+        url_params = {}
+        if c.show_public:
+            url_params['public'] = 1
+        elif c.show_private:
+            url_params['private'] = 1
 
         gists = Gist().query() \
             .filter_by(is_expired=False) \
@@ -97,7 +102,8 @@ class GistsController(BaseController):
 
         c.gists = gists
         p = safe_int(request.GET.get('page'), 1)
-        c.gists_pager = Page(c.gists, page=p, items_per_page=10)
+        c.gists_pager = Page(c.gists, page=p, items_per_page=10,
+                             **url_params)
         return render('admin/gists/index.html')
 
     @LoginRequired()
