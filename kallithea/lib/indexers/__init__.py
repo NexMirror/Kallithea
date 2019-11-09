@@ -203,8 +203,7 @@ class WhooshResultWrapper(object):
         return res
 
     def get_short_content(self, res, chunks):
-
-        return ''.join([res['content'][chunk[0]:chunk[1]] for chunk in chunks])
+        return u''.join([res['content'][chunk[0]:chunk[1]] for chunk in chunks])
 
     def get_chunks(self):
         """
