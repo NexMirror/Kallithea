@@ -442,7 +442,7 @@ class _Message(object):
         return escape(safe_unicode(self.message))
 
 
-def flash(message, category=None, ignore_duplicate=False, logf=None):
+def flash(message, category=None, logf=None):
     """
     Show a message to the user _and_ log it through the specified function
 
@@ -459,7 +459,7 @@ def flash(message, category=None, ignore_duplicate=False, logf=None):
 
     logf('Flash %s: %s', category, message)
 
-    _flash(message, category, ignore_duplicate)
+    _flash(message, category, True)
 
 
 def pop_flash_messages():
