@@ -102,17 +102,17 @@ class FeedController(BaseRepoController):
         desc_msg.append('</pre>')
         return map(safe_unicode, desc_msg)
 
-    def atom(self, repo_name):
-        """Produce an atom-1.0 feed via feedgenerator module"""
+    def _feed(self, repo_name, kind, feed_factory):
+        """Produce a simple feed"""
 
         @cache_region('long_term', '_get_feed_from_cache')
         def _get_feed_from_cache(*_cache_keys):  # parameters are not really used - only as caching key
-            feed = Atom1Feed(
+            feed = feed_factory(
                 title=_('%s %s feed') % (c.site_name, repo_name),
                 link=h.canonical_url('summary_home', repo_name=repo_name),
                 description=_('Changes on %s repository') % repo_name,
                 language=language,
-                ttl=ttl
+                ttl=ttl,  # rss only
             )
 
             rss_items_per_page = safe_int(CONFIG.get('rss_items_per_page', 20))
@@ -128,34 +128,12 @@ class FeedController(BaseRepoController):
             response.content_type = feed.mime_type
             return feed.writeString('utf-8')
 
-        kind = 'ATOM'
         return _get_feed_from_cache(repo_name, kind, c.db_repo.changeset_cache.get('raw_id'))
+
+    def atom(self, repo_name):
+        """Produce a simple atom-1.0 feed"""
+        return self._feed(repo_name, 'ATOM', Atom1Feed)
 
     def rss(self, repo_name):
         """Produce an rss2 feed via feedgenerator module"""
-
-        @cache_region('long_term', '_get_feed_from_cache')
-        def _get_feed_from_cache(*_cache_keys):  # parameters are not really used - only as caching key
-            feed = Rss201rev2Feed(
-                title=_('%s %s feed') % (c.site_name, repo_name),
-                link=h.canonical_url('summary_home', repo_name=repo_name),
-                description=_('Changes on %s repository') % repo_name,
-                language=language,
-                ttl=ttl
-            )
-
-            rss_items_per_page = safe_int(CONFIG.get('rss_items_per_page', 20))
-            for cs in reversed(list(c.db_repo_scm_instance[-rss_items_per_page:])):
-                feed.add_item(title=self._get_title(cs),
-                              link=h.canonical_url('changeset_home', repo_name=repo_name,
-                                       revision=cs.raw_id),
-                              author_name=cs.author,
-                              description=''.join(self.__get_desc(cs)),
-                              pubdate=cs.date,
-                             )
-
-            response.content_type = feed.mime_type
-            return feed.writeString('utf-8')
-
-        kind = 'RSS'
-        return _get_feed_from_cache(repo_name, kind, c.db_repo.changeset_cache.get('raw_id'))
+        return self._feed(repo_name, 'RSS', Rss201rev2Feed)
