@@ -104,89 +104,63 @@ class JournalController(BaseController):
 
         return journal
 
-    def _atom_feed(self, repos, public=True):
+    def _feed(self, repos, feed_factory, link, desc):
         journal = self._get_journal_data(repos)
+
+        feed = feed_factory(
+            title=desc,
+            link=link,
+            description=desc,
+            language=language,
+            ttl=ttl,
+        )
+
+        for entry in journal[:feed_nr]:
+            user = entry.user
+            if user is None:
+                # fix deleted users
+                user = AttributeDict({'short_contact': entry.username,
+                                      'email': '',
+                                      'full_contact': ''})
+            action, action_extra, ico = h.action_parser(entry, feed=True)
+            title = "%s - %s %s" % (user.short_contact, action(),
+                                    entry.repository.repo_name)
+            _url = None
+            if entry.repository is not None:
+                _url = h.canonical_url('changelog_home',
+                           repo_name=entry.repository.repo_name)
+
+            feed.add_item(title=title,
+                          pubdate=entry.action_date,
+                          link=_url or h.canonical_url(''),
+                          author_email=user.email,
+                          author_name=user.full_contact,
+                          description=action_extra())
+
+        response.content_type = feed.mime_type
+        return feed.writeString('utf-8')
+
+    def _atom_feed(self, repos, public=True):
         if public:
-            _link = h.canonical_url('public_journal_atom')
-            _desc = '%s %s %s' % (c.site_name, _('Public Journal'),
+            link = h.canonical_url('public_journal_atom')
+            desc = '%s %s %s' % (c.site_name, _('Public Journal'),
                                   'atom feed')
         else:
-            _link = h.canonical_url('journal_atom')
-            _desc = '%s %s %s' % (c.site_name, _('Journal'), 'atom feed')
+            link = h.canonical_url('journal_atom')
+            desc = '%s %s %s' % (c.site_name, _('Journal'), 'atom feed')
 
-        feed = Atom1Feed(title=_desc,
-                         link=_link,
-                         description=_desc,
-                         language=language,
-                         ttl=ttl)
-
-        for entry in journal[:feed_nr]:
-            user = entry.user
-            if user is None:
-                # fix deleted users
-                user = AttributeDict({'short_contact': entry.username,
-                                      'email': '',
-                                      'full_contact': ''})
-            action, action_extra, ico = h.action_parser(entry, feed=True)
-            title = "%s - %s %s" % (user.short_contact, action(),
-                                    entry.repository.repo_name)
-            desc = action_extra()
-            _url = None
-            if entry.repository is not None:
-                _url = h.canonical_url('changelog_home',
-                           repo_name=entry.repository.repo_name)
-
-            feed.add_item(title=title,
-                          pubdate=entry.action_date,
-                          link=_url or h.canonical_url(''),
-                          author_email=user.email,
-                          author_name=user.full_contact,
-                          description=desc)
-
-        response.content_type = feed.mime_type
-        return feed.writeString('utf-8')
+        return self._feed(repos, Atom1Feed, link, desc)
 
     def _rss_feed(self, repos, public=True):
-        journal = self._get_journal_data(repos)
         if public:
-            _link = h.canonical_url('public_journal_atom')
-            _desc = '%s %s %s' % (c.site_name, _('Public Journal'),
+            link = h.canonical_url('public_journal_atom')
+            desc = '%s %s %s' % (c.site_name, _('Public Journal'),
                                   'rss feed')
         else:
-            _link = h.canonical_url('journal_atom')
-            _desc = '%s %s %s' % (c.site_name, _('Journal'), 'rss feed')
+            link = h.canonical_url('journal_atom')
+            desc = '%s %s %s' % (c.site_name, _('Journal'), 'rss feed')
 
-        feed = Rss201rev2Feed(title=_desc,
-                         link=_link,
-                         description=_desc,
-                         language=language,
-                         ttl=ttl)
-
-        for entry in journal[:feed_nr]:
-            user = entry.user
-            if user is None:
-                # fix deleted users
-                user = AttributeDict({'short_contact': entry.username,
-                                      'email': '',
-                                      'full_contact': ''})
-            action, action_extra, ico = h.action_parser(entry, feed=True)
-            title = "%s - %s %s" % (user.short_contact, action(),
-                                    entry.repository.repo_name)
-            desc = action_extra()
-            _url = None
-            if entry.repository is not None:
-                _url = h.canonical_url('changelog_home',
-                           repo_name=entry.repository.repo_name)
-
-            feed.add_item(title=title,
-                          pubdate=entry.action_date,
-                          link=_url or h.canonical_url(''),
-                          author_email=user.email,
-                          author_name=user.full_contact,
-                          description=desc)
-
-        response.content_type = feed.mime_type
-        return feed.writeString('utf-8')
+        return self._feed(repos, Rss201rev2Feed, link, desc)
 
     @LoginRequired()
     def index(self):
