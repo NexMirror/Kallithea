@@ -136,7 +136,7 @@ class TestFilesController(TestController):
                                     repo_name=HG_REPO,
                                     revision='tip',
                                     f_path='vcs/nodes.py',
-                                    annotate=True))
+                                    annotate='1'))
 
         response.mustcontain("""r356:25213a5fbb04""")
 
@@ -146,7 +146,7 @@ class TestFilesController(TestController):
                                     repo_name=GIT_REPO,
                                     revision='master',
                                     f_path='vcs/nodes.py',
-                                    annotate=True))
+                                    annotate='1'))
         response.mustcontain("""r345:c994f0de03b2""")
 
     def test_file_annotation_history(self):
@@ -155,7 +155,7 @@ class TestFilesController(TestController):
                                     repo_name=HG_REPO,
                                     revision='tip',
                                     f_path='vcs/nodes.py',
-                                    annotate=True),
+                                    annotate='1'),
                                 extra_environ={'HTTP_X_PARTIAL_XHR': '1'})
 
         assert response.body == HG_NODE_HISTORY
@@ -177,7 +177,7 @@ class TestFilesController(TestController):
                                     repo_name=HG_REPO,
                                     revision='tip',
                                     f_path='vcs/nodes.py',
-                                    annotate=True))
+                                    annotate='1'))
         response.mustcontain('Marcin Kuzminski')
         response.mustcontain('Lukasz Balcerzak')
 
@@ -187,7 +187,7 @@ class TestFilesController(TestController):
                                     repo_name=GIT_REPO,
                                     revision='master',
                                     f_path='vcs/nodes.py',
-                                    annotate=True))
+                                    annotate='1'))
         response.mustcontain('Marcin Kuzminski')
         response.mustcontain('Lukasz Balcerzak')
 
