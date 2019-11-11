@@ -475,6 +475,12 @@ msgstr "Сталася помилка під час видалення %s"
 msgid "Repository permissions updated"
 msgstr "Права доступів до репозиторіїв оновлено"
 
+msgid "Field validation error: %s"
+msgstr "Помилка перевірки поля: %s"
+
+msgid "An error occurred during creation of field: %r"
+msgstr "Сталася помилка під час створення поля: %r"
+
 msgid "An error occurred during removal of field"
 msgstr "Під час видалення поля виникла помилка"
 
@@ -491,6 +497,9 @@ msgstr ""
 msgid "Nothing"
 msgstr "Нічого"
 
+msgid "Marked repository %s as fork of %s"
+msgstr "Позначено репозиторій %s як відгалуження від %s"
+
 msgid "An error occurred during this operation"
 msgstr "Сталася помилка під час виконання цієї операції"
 
@@ -500,14 +509,33 @@ msgstr "Інвалідація кешу успішна"
 msgid "An error occurred during cache invalidation"
 msgstr "Сталася помилка під час Анулювання кеша"
 
+msgid "Pulled from remote location"
+msgstr "Витягнуто з віддаленого місця"
+
+msgid "An error occurred during pull from remote location"
+msgstr "Сталася помилка під час витягування з віддаленого розташування"
+
 msgid "An error occurred during deletion of repository stats"
 msgstr "Під час видалення статистики репозиторію сталася помилка"
 
 msgid "Updated VCS settings"
 msgstr "Оновлені налаштування VCS"
 
+msgid ""
+"Unable to activate hgsubversion support. The \"hgsubversion\" library is "
+"missing"
+msgstr ""
+"Не вдається активувати підтримку hgsubversion. Бібліотека \"hgsubversion"
+"\" відсутня"
+
 msgid "Error occurred while updating application settings"
 msgstr "Під час оновлення параметрів застосунку сталася помилка"
+
+msgid "Repositories successfully rescanned. Added: %s. Removed: %s."
+msgstr "Репозиторії успішно перескановано. Додано: %s. Видалено: %s."
+
+msgid "Invalidated %s repositories"
+msgstr "До оновлення %s репозиторіїв"
 
 msgid "Updated application settings"
 msgstr "Оновлені параметри застосунку"
@@ -614,6 +642,9 @@ msgstr "Виявлено витік токенів CSRF - всі маркери 
 msgid "Repository not found in the filesystem"
 msgstr "Репозиторій не знайдено у файловій системі"
 
+msgid "Changeset for %s %s not found in %s"
+msgstr "Набір змін для %s %s не знайдено в %s"
+
 msgid "Binary file"
 msgstr "Двійковий файл"
 
@@ -634,6 +665,9 @@ msgstr "Створено тег: %s"
 
 msgid "Changeset %s not found"
 msgstr "Набір змін %s не знайдено"
+
+msgid "Show all combined changesets %s->%s"
+msgstr "Показати всі комбіновані набори змін %s- >%s"
 
 msgid "Compare view"
 msgstr "Порівняйте вигляд"
@@ -934,14 +968,30 @@ msgid "Permissions for the Default user on new user groups."
 msgstr ""
 "Дозволи для користувача за замовчуванням для нових груп користувачів."
 
+msgid "Repository creation with group write access"
+msgstr "Створення сховища з доступом до групового записування"
+
 msgid "User group creation"
 msgstr "Створення групи користувачів"
+
+msgid "Enable this to allow non-admins to create user groups."
+msgstr ""
+"Увімкніть цей параметр, щоб дозволити неадміністраторам створювати групи "
+"користувачів."
 
 msgid "Repository forking"
 msgstr "Репозиторій розгалуження"
 
+msgid "Enable this to allow non-admins to fork repositories."
+msgstr ""
+"Увімкніть цей параметр, щоб дозволити не-адміністраторам fork "
+"репозиторіїв."
+
 msgid "Registration"
 msgstr "Реєстрація"
+
+msgid "External auth account activation"
+msgstr "Активація облікового запису зовнішньої автентифікації"
 
 msgid "Confirm to delete this IP address: %s"
 msgstr "Підтвердіть, щоб видалити IP-адреса: %s"
@@ -964,6 +1014,9 @@ msgstr "Батьківська група"
 msgid "Copy parent group permissions"
 msgstr "Копіювання дозволів батьківської групи"
 
+msgid "Copy permission set from parent repository group."
+msgstr "Скопіюйте набір дозволів із батьківської групи репозиторію."
+
 msgid "Add Child Group"
 msgstr "Додати Дочіру групу"
 
@@ -978,6 +1031,9 @@ msgstr "Дозволи"
 
 msgid "Repository Group: %s"
 msgstr "Група репозиторію: %s"
+
+msgid "Top level repositories"
+msgstr "Репозиторії верхнього рівня"
 
 msgid "Total repositories"
 msgstr "Всього репозиторіїв"
@@ -1021,17 +1077,461 @@ msgstr "Застосовувати до дочірніх"
 msgid "Both"
 msgstr "Обидва"
 
+msgid ""
+"Set or revoke permission to all children of that group, including non-"
+"private repositories and other groups if selected."
+msgstr ""
+"Встановіть або скасуйте дозвіл для всіх дітей цієї групи, включно з "
+"неприватними репозиторіями та іншими групами, якщо вони вибрані."
+
 msgid "Remove this group"
 msgstr "Видалити цю групу"
 
 msgid "Confirm to delete this group"
 msgstr "Підтвердіть, щоб видалити цю групу"
 
+msgid "Repository group %s"
+msgstr "Група репозиторію: %s"
+
+msgid "Repository Groups Administration"
+msgstr "Адміністрування Груп Репозиторіїв"
+
 msgid "Number of Top-level Repositories"
 msgstr "Кількість репозиторіїв верхнього рівня"
 
 msgid "Clone remote repository"
 msgstr "Клонувати віддалений репозиторій"
+
+msgid "Optionally select a group to put this repository into."
+msgstr "За бажанням виберіть групу, в яку буде розміщено цей репозиторій."
+
+msgid "Type of repository to create."
+msgstr "Тип сховища для створення."
+
+msgid "Landing revision"
+msgstr "Цільова редакція"
+
+msgid ""
+"Default revision for files page, downloads, full text search index and "
+"readme generation"
+msgstr ""
+"Стандартна редакція для файлів сторінок, завантажень, повнотекстового "
+"індексу пошуку та генерації readme"
+
+msgid "%s Creating Repository"
+msgstr "%s створення репозиторію"
+
+msgid "Creating repository"
+msgstr "Створення репозиторію"
+
+msgid ""
+"Repository \"%(repo_name)s\" is being created, you will be redirected "
+"when this process is finished.repo_name"
+msgstr ""
+"Репозиторій \"%(repo_name)s\" створюється, ви будете переспрямовані, коли "
+"цей процес буде завершено.repo_name"
+
+msgid ""
+"We're sorry but error occurred during this operation. Please check your "
+"Kallithea server logs, or contact administrator."
+msgstr ""
+"Вибачте, але помилка сталася під час виконання цієї операції. Будь ласка, "
+"перевірте журнали сервера Kallithea або зверніться до адміністратора."
+
+msgid "%s Repository Settings"
+msgstr "Параметри репозиторію %s"
+
+msgid "Extra Fields"
+msgstr "Додаткові поля"
+
+msgid "Caches"
+msgstr "Кеши"
+
+msgid "Remote"
+msgstr "Віддалений"
+
+msgid "Statistics"
+msgstr "Статистика"
+
+msgid "Parent"
+msgstr "Батьківський"
+
+msgid "Set"
+msgstr "Набір"
+
+msgid "Manually set this repository as a fork of another from the list."
+msgstr "Вручну встановити цей репозиторій як відгалуження іншого зі списку."
+
+msgid "Public Journal Visibility"
+msgstr "Видимість публічного журналу"
+
+msgid "Remove from public journal"
+msgstr "Видалити з публічного журналу"
+
+msgid "Add to Public Journal"
+msgstr "Додати до публічного журналу"
+
+msgid ""
+"All actions done in this repository will be visible to everyone in the "
+"public journal."
+msgstr ""
+"Усі дії, зроблені в цьому репозиторії, будуть видимими для всіх у "
+"публічному журналі."
+
+msgid "Confirm to delete this repository: %s"
+msgstr "Підтвердити видалення цього сховища: %s"
+
+msgid "Delete this Repository"
+msgstr "Видалити цей репозиторій"
+
+msgid "Detach forks"
+msgstr "Від'єднати forks"
+
+msgid "Delete forks"
+msgstr "Видалити forks"
+
+msgid "Invalidate Repository Cache"
+msgstr "Скинути Кеш Репозиторію"
+
+msgid ""
+"Manually invalidate cache for this repository. On first access, the "
+"repository will be cached again."
+msgstr ""
+"Вручну скинути кеш для цього репозиторію. При першому доступі, сховище "
+"буде знову кешовано."
+
+msgid "List of Cached Values"
+msgstr "Список кешованих значень"
+
+msgid "Prefix"
+msgstr "Префікс"
+
+msgid "Key"
+msgstr "Ключ"
+
+msgid "Active"
+msgstr "Активний"
+
+msgid "Label"
+msgstr "Мітка"
+
+msgid "Confirm to delete this field: %s"
+msgstr "Підтвердити видалення цього поля: %s"
+
+msgid "New field key"
+msgstr "Новий ключ поля"
+
+msgid "New field label"
+msgstr "Нова мітка поля"
+
+msgid "Enter short label"
+msgstr "Введіть коротку мітку"
+
+msgid "New field description"
+msgstr "Опис нового поля"
+
+msgid "Enter description of a field"
+msgstr "Введіть опис поля"
+
+msgid "Extra fields are disabled."
+msgstr "Додаткові поля вимкнено."
+
+msgid "Private Repository"
+msgstr "Приватний Репозиторій"
+
+msgid "Fork of repository"
+msgstr "Форк репозиторію"
+
+msgid "Remote repository URL"
+msgstr "URL-адреса віддаленого сховища"
+
+msgid "Pull Changes from Remote Repository"
+msgstr "Витягнути зміни з віддаленого сховища"
+
+msgid "Confirm to pull changes from remote repository."
+msgstr "Підтвердьте, щоб витягнути зміни з віддаленого сховища."
+
+msgid "This repository does not have a remote repository URL."
+msgstr "У цьому сховищі немає URL-адреси віддаленого сховища."
+
+msgid "Remote repository"
+msgstr "Віддалений репозиторій"
+
+msgid "Repository URL"
+msgstr "URL репозиторію"
+
+msgid ""
+"Optional: URL of a remote repository. If set, the repository can be "
+"pulled from this URL."
+msgstr ""
+"Опціонально: URL-адреса віддаленого сховища. Якщо встановлено, сховище "
+"можна витягнути з цієї URL-адреси."
+
+msgid "Type name of user"
+msgstr "Введіть ім'я користувача"
+
+msgid "Change owner of this repository."
+msgstr "Змінити власника цього сховища."
+
+msgid "Processed commits"
+msgstr "Оброблені коміти"
+
+msgid "Processed progress"
+msgstr "Оброблений прогрес"
+
+msgid "Reset Statistics"
+msgstr "Скинути статистику"
+
+msgid "Confirm to remove current statistics."
+msgstr "Підтвердьте видалення поточної статистики."
+
+msgid "Repositories Administration"
+msgstr "Адміністрування Репозиторіїв"
+
+msgid "State"
+msgstr "Стан"
+
+msgid "Settings Administration"
+msgstr "Адміністрування параметрів"
+
+msgid "VCS"
+msgstr "VCS"
+
+msgid "Remap and Rescan"
+msgstr "Ремап та Рескан"
+
+msgid "Visual"
+msgstr "Візуальний"
+
+msgid "Hooks"
+msgstr "Хуки"
+
+msgid "Full Text Search"
+msgstr "Повнотекстовий пошук"
+
+msgid "System Info"
+msgstr "Інформація про систему"
+
+msgid "Send test email to"
+msgstr "Надіслати тестовий лист на адресу"
+
+msgid "Send"
+msgstr "Надіслати"
+
+msgid "Site branding"
+msgstr "Брендинг сайту"
+
+msgid "Set a custom title for your Kallithea Service."
+msgstr "Встановіть власну назву для Сервісу Kallithea."
+
+msgid "HTTP authentication realm"
+msgstr "Область автентифікації HTTP"
+
+msgid "HTML/JavaScript/CSS customization block"
+msgstr "HTML/JavaScript/CSS блок налаштування"
+
+msgid "ReCaptcha public key"
+msgstr "ReCaptcha публічний ключ"
+
+msgid "Public key for reCaptcha system."
+msgstr "Публічний ключ для системи reCaptcha."
+
+msgid "ReCaptcha private key"
+msgstr "Приватний ключ ReCaptcha"
+
+msgid ""
+"Private key for reCaptcha system. Setting this value will enable captcha "
+"on registration."
+msgstr ""
+"Приватний ключ для системи reCaptcha. Встановлення цього значення "
+"дозволить вмикнути капчу при реєстрації."
+
+msgid "Save Settings"
+msgstr "Зберегти налаштування"
+
+msgid "Built-in Mercurial Hooks (Read-Only)"
+msgstr "Вбудовані хуки Mercurial (лише для читання)"
+
+msgid "Custom Hooks"
+msgstr "Користувацькі хуки"
+
+msgid "Failed to remove hook"
+msgstr "Не вдалося видалити хук"
+
+msgid "Rescan options"
+msgstr "Параметри пересканування"
+
+msgid "Delete records of missing repositories"
+msgstr "Видалення записів відсутніх репозиторіїв"
+
+msgid ""
+"Check this option to remove all comments, pull requests and other records "
+"related to repositories that no longer exist in the filesystem."
+msgstr ""
+"Позначте цей пункт, щоб видалити всі коментарі, запити на пул-реквести та "
+"інші записи, пов'язані з репозиторіями, які більше не існують в файловій "
+"системі."
+
+msgid "Invalidate cache for all repositories"
+msgstr "Скинути кеш для всіх репозиторіїв"
+
+msgid "Check this to reload data and clear cache keys for all repositories."
+msgstr ""
+"Відмітьте це, щоб перезавантажити дані і очистити ключі кешу для всіх "
+"репозиторіїв."
+
+msgid "Install Git hooks"
+msgstr "Встановити Git хуки"
+
+msgid ""
+"Verify if Kallithea's Git hooks are installed for each repository. "
+"Current hooks will be updated to the latest version."
+msgstr ""
+"Перевірити, чи є в Git хуки для кожного репозиторію. Поточні хуки буде "
+"оновлено до останньої версії."
+
+msgid "Overwrite existing Git hooks"
+msgstr "Перезаписати існуючі хуки Git"
+
+msgid ""
+"If installing Git hooks, overwrite any existing hooks, even if they do "
+"not seem to come from Kallithea. WARNING: This operation will destroy any "
+"custom git hooks you may have deployed by hand!"
+msgstr ""
+"При установці Git хуків, перезаписати будь-які існуючі хуки, навіть якщо "
+"вони, здається, не приходять з Каллітея. Увага: ця операція знищить будь-"
+"які користувацькі хуки Git які ви, можливо, розгорнули вручну!"
+
+msgid "Rescan Repositories"
+msgstr "Пересканувати Репозиторії"
+
+msgid "Index build option"
+msgstr "Параметри побудови індексу"
+
+msgid "Build from scratch"
+msgstr "Побудувати з нуля"
+
+msgid ""
+"This option completely reindexeses all of the repositories for proper "
+"fulltext search capabilities."
+msgstr ""
+"Цей варіант повністю переіндексує репозиторії для правильного "
+"функціонування повнотекстового пошуку."
+
+msgid "Reindex"
+msgstr "Переіндексувати"
+
+msgid "Checking for updates..."
+msgstr "Перевірка оновлень..."
+
+msgid "Kallithea version"
+msgstr "Версія Kallithea"
+
+msgid "Kallithea configuration file"
+msgstr "Файл конфігурації Kallithea"
+
+msgid "Python version"
+msgstr "Версія Python"
+
+msgid "Platform"
+msgstr "Платформа"
+
+msgid "Git version"
+msgstr "Git версія"
+
+msgid "Git path"
+msgstr "Git шлях"
+
+msgid "Python Packages"
+msgstr "Пакети Python"
+
+msgid "Show repository size after push"
+msgstr "Показати розмір сховища після push"
+
+msgid "Update repository after push (hg update)"
+msgstr "Оновлення репозиторію після push (hg update)"
+
+msgid "Mercurial extensions"
+msgstr "Mercurial  розширення"
+
+msgid "Enable largefiles extension"
+msgstr "Увімкнути розширення largefiles"
+
+msgid "Enable hgsubversion extension"
+msgstr "Увімкнути розширення hgsubversion"
+
+msgid ""
+"Requires hgsubversion library to be installed. Enables cloning of remote "
+"Subversion repositories while converting them to Mercurial."
+msgstr ""
+"Потрібна установка бібліотеки hgsubversion. Дозволяє клонувати віддалені "
+"сховища Subversion під час перетворення їх у Mercurial."
+
+msgid "Location of repositories"
+msgstr "Розташування репозиторіїв"
+
+msgid ""
+"Click to unlock. You must restart Kallithea in order to make this setting "
+"take effect."
+msgstr ""
+"Клацніть, щоб розблокувати. Ви повинні перезапустити Kallithea для того, "
+"щоб ця настройка набула чинності."
+
+msgid "General"
+msgstr "Загальні"
+
+msgid "Use repository extra fields"
+msgstr "Використовувати додаткові поля сховища"
+
+msgid "Allows storing additional customized fields per repository."
+msgstr "Дозволяє зберігати додаткові настроювані поля для кожного сховища."
+
+msgid "Show Kallithea version"
+msgstr "Показати версію Kallithea"
+
+msgid ""
+"Shows or hides a version number of Kallithea displayed in the footer."
+msgstr ""
+"Показує або приховує номер версії Kallithea, відображений у нижньому "
+"колонтитулі."
+
+msgid "Show user Gravatars"
+msgstr "Показати Gravatars користувача"
+
+msgid "Repository page size"
+msgstr "Розмір сторінки репозиторію"
+
+msgid ""
+"Number of items displayed in the repository pages before pagination is "
+"shown."
+msgstr ""
+"Кількість елементів, що відображаються на сторінках сховища перед "
+"показаним нумерацією."
+
+msgid "Admin page size"
+msgstr "Розмір адмін сторінки"
+
+msgid ""
+"Number of items displayed in the admin pages grids before pagination is "
+"shown."
+msgstr ""
+"Кількість елементів, що відображаються в сітках адміністратора сторінки "
+"до відображення нумерації."
+
+msgid "Icons"
+msgstr "Іконки"
+
+msgid "Show public repository icon on repositories"
+msgstr "Показати піктограму загальнодоступного сховища на сховищах"
+
+msgid "Show private repository icon on repositories"
+msgstr "Показати значок приватної репозиторію на репозиторіїв"
+
+msgid "Show public/private icons next to repository names."
+msgstr "Показати публічні/приватні значки поруч із назвами сховищ."
+
+msgid "Meta Tagging"
+msgstr "Мета-теги"
 
 msgid "Files"
 msgstr "Файли"
@@ -1222,6 +1722,9 @@ msgstr "коментар"
 msgid "No title"
 msgstr "Без назви"
 
+msgid "Status change:"
+msgstr "Зміна статусу:"
+
 msgid "files"
 msgstr "файли"
 
@@ -1251,6 +1754,9 @@ msgstr "Відгалуження з"
 
 msgid "Clone from"
 msgstr "Клонувати з"
+
+msgid "Clone URL"
+msgstr "URL клону"
 
 msgid "Trending files"
 msgstr "Популярні файли"
