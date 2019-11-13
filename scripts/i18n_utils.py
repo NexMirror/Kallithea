@@ -41,6 +41,9 @@ header_comment_strip_re = re.compile(r'''
     ^
     (?:[#] \n)?
     [#],[ ]fuzzy \n
+    |
+    ^
+    [#][ ][#],[ ]fuzzy \n
     ''',
     re.MULTILINE|re.VERBOSE)
 
