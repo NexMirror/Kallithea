@@ -203,6 +203,9 @@ msgstr "Nieprawidłowe zapytanie. Spróbuj zacytować je."
 msgid "An error occurred during search operation."
 msgstr "Wystąpił błąd podczas operacji wyszukiwania."
 
+msgid "No data ready yet"
+msgstr "Żadne dane nie zostały załadowane"
+
 msgid "Statistics are disabled for this repository"
 msgstr "Statystyki są wyłączone dla tego repozytorium"
 
@@ -217,6 +220,9 @@ msgstr "Domyślne ustawienia zostały pomyślnie zaktualizowane"
 
 msgid "Error occurred during update of defaults"
 msgstr "wystąpił błąd podczas aktualizacji wartości domyślnych"
+
+msgid "Forever"
+msgstr "na zawsze"
 
 msgid "5 minutes"
 msgstr "5 minut"
@@ -533,6 +539,9 @@ msgstr "Nie znaleziono changeset %s"
 msgid "Show all combined changesets %s->%s"
 msgstr "Pokaż wszystkie zestawienia zmian changesets %s->%s"
 
+msgid "Compare view"
+msgstr "Wyświetl porównanie"
+
 msgid "and"
 msgstr "i"
 
@@ -541,6 +550,9 @@ msgstr "%s więcej"
 
 msgid "revisions"
 msgstr "rewizja"
+
+msgid "Fork name %s"
+msgstr "nazwa rozgałęzienia %s"
 
 msgid "[deleted] repository"
 msgstr "[usunięte] repozytorium"
@@ -1012,8 +1024,20 @@ msgstr "Nazwisko"
 msgid "Email"
 msgstr "E-mail"
 
+msgid "Admin Journal"
+msgstr "Dziennik administratora"
+
 msgid "journal filter..."
 msgstr "filtr dziennika..."
+
+msgid "Filter"
+msgstr "filtr"
+
+msgid "%s Entry"
+msgid_plural "%s Entries"
+msgstr[0] "%s wejście"
+msgstr[1] "%s wejść"
+msgstr[2] "%s wejść"
 
 msgid "Action"
 msgstr "Działanie"
@@ -1044,6 +1068,9 @@ msgstr "Wtyczka"
 
 msgid "Save"
 msgstr "Zapisz"
+
+msgid "Repository Defaults"
+msgstr "Repozytoria domyślne"
 
 msgid "Type"
 msgstr "Typ"
@@ -1082,11 +1109,20 @@ msgstr "Trwałość Gist"
 msgid "Expires"
 msgstr "Wygasa"
 
+msgid "Never"
+msgstr "nigdy"
+
 msgid "Update Gist"
 msgstr "Zaktualizuj Gist"
 
 msgid "Cancel"
 msgstr "Anuluj"
+
+msgid "Private Gists for User %s"
+msgstr "Prywatne Gists użytkownika %s"
+
+msgid "Public Gists for User %s"
+msgstr "Publiczne Gists użytkownika %s"
 
 msgid "Public Gists"
 msgstr "Publiczne Gists"
@@ -1217,8 +1253,14 @@ msgstr "Domyślne uprawnienia"
 msgid "Global"
 msgstr "Globalne"
 
+msgid "IP Whitelist"
+msgstr "Lista dozwolonych adresów IP"
+
 msgid "Anonymous access"
 msgstr "Dostęp anonimowy"
+
+msgid "Allow anonymous access"
+msgstr "Zezwalaj na dostęp anonimowy"
 
 msgid ""
 "All default permissions on each repository will be reset to chosen "
