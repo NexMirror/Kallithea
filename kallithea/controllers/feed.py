@@ -107,7 +107,7 @@ class FeedController(BaseRepoController):
         """Produce an atom-1.0 feed via feedgenerator module"""
 
         @cache_region('long_term', '_get_feed_from_cache')
-        def _get_feed_from_cache(key, kind):
+        def _get_feed_from_cache(*_cache_keys):  # parameters are not really used - only as caching key
             feed = Atom1Feed(
                 title=_('%s %s feed') % (c.site_name, repo_name),
                 link=h.canonical_url('summary_home', repo_name=repo_name),
@@ -139,7 +139,7 @@ class FeedController(BaseRepoController):
         """Produce an rss2 feed via feedgenerator module"""
 
         @cache_region('long_term', '_get_feed_from_cache')
-        def _get_feed_from_cache(key, kind):
+        def _get_feed_from_cache(*_cache_keys):  # parameters are not really used - only as caching key
             feed = Rss201rev2Feed(
                 title=_('%s %s feed') % (c.site_name, repo_name),
                 link=h.canonical_url('summary_home', repo_name=repo_name),

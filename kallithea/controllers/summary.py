@@ -66,7 +66,7 @@ class SummaryController(BaseRepoController):
         log.debug('Looking for README file')
 
         @cache_region('long_term', '_get_readme_from_cache')
-        def _get_readme_from_cache(key, kind):
+        def _get_readme_from_cache(*_cache_keys):  # parameters are not really used - only as caching key
             readme_data = None
             readme_file = None
             try:
