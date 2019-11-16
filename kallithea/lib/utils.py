@@ -377,12 +377,10 @@ def set_app_settings(config):
 
     :param config:
     """
-    try:
-        hgsettings = Setting.get_app_settings()
-        for k, v in hgsettings.items():
-            config[k] = v
-    finally:
-        meta.Session.remove()
+    hgsettings = Setting.get_app_settings()
+
+    for k, v in hgsettings.items():
+        config[k] = v
 
 
 def set_vcs_config(config):
