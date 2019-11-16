@@ -37,7 +37,6 @@ from webob.exc import HTTPBadRequest
 from kallithea.lib import helpers as h
 from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseController, jsonify, render
-from kallithea.lib.utils import conditional_cache
 from kallithea.model.db import RepoGroup, Repository, User, UserGroup
 from kallithea.model.repo import RepoModel
 from kallithea.model.scm import UserGroupList
@@ -67,9 +66,7 @@ class HomeController(BaseController):
     @LoginRequired(allow_default_user=True)
     @jsonify
     def repo_switcher_data(self):
-        # wrapper for conditional cache
-        def _c():
-            log.debug('generating switcher repo/groups list')
+        if request.is_xhr:
             all_repos = Repository.query(sorted=True).all()
             repo_iter = self.scm_model.get_repos(all_repos)
             all_groups = RepoGroup.query(sorted=True).all()
@@ -102,11 +99,6 @@ class HomeController(BaseController):
             }
             return data
 
-        if request.is_xhr:
-            condition = False
-            compute = conditional_cache('short_term', 'cache_desc',
-                                        condition=condition, func=_c)
-            return compute()
         else:
             raise HTTPBadRequest()
 
