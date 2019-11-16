@@ -34,6 +34,7 @@ from tg.support.converters import asbool
 
 import kallithea.lib.locale
 import kallithea.model.base
+import kallithea.model.meta
 from kallithea.lib.middleware.https_fixup import HttpsFixup
 from kallithea.lib.middleware.permanent_repo_url import PermanentRepoUrl
 from kallithea.lib.middleware.simplegit import SimpleGit
@@ -180,6 +181,8 @@ def setup_configuration(app):
     set_indexer_config(kallithea.CONFIG)
 
     check_git_version()
+
+    kallithea.model.meta.Session.remove()
 
 
 hooks.register('configure_new_app', setup_configuration)
