@@ -45,7 +45,7 @@ from kallithea.lib.base import BaseRepoController, jsonify, render
 from kallithea.lib.celerylib.tasks import get_commits_stats
 from kallithea.lib.compat import json
 from kallithea.lib.markup_renderer import MarkupRenderer
-from kallithea.lib.page import RepoPage
+from kallithea.lib.page import Page
 from kallithea.lib.utils2 import safe_int, safe_str
 from kallithea.lib.vcs.backends.base import EmptyChangeset
 from kallithea.lib.vcs.exceptions import ChangesetError, EmptyRepositoryError, NodeDoesNotExistError
@@ -106,11 +106,11 @@ class SummaryController(BaseRepoController):
         p = safe_int(request.GET.get('page'), 1)
         size = safe_int(request.GET.get('size'), 10)
         try:
-            collection = c.db_repo_scm_instance.get_changesets()
+            collection = c.db_repo_scm_instance.get_changesets(reverse=True)
         except EmptyRepositoryError as e:
             h.flash(safe_str(e), category='warning')
             collection = []
-        c.cs_pagination = RepoPage(collection, page=p, items_per_page=size)
+        c.cs_pagination = Page(collection, page=p, items_per_page=size)
         page_revisions = [x.raw_id for x in list(c.cs_pagination)]
         c.cs_comments = c.db_repo.get_comments(page_revisions)
         c.cs_statuses = c.db_repo.statuses(page_revisions)

@@ -38,7 +38,7 @@ from kallithea.config.routing import url
 from kallithea.lib.auth import HasRepoPermissionLevelDecorator, LoginRequired
 from kallithea.lib.base import BaseRepoController, render
 from kallithea.lib.graphmod import graph_data
-from kallithea.lib.page import RepoPage
+from kallithea.lib.page import Page
 from kallithea.lib.utils2 import safe_int, safe_str
 from kallithea.lib.vcs.exceptions import ChangesetDoesNotExistError, ChangesetError, EmptyRepositoryError, NodeDoesNotExistError, RepositoryError
 
@@ -113,14 +113,13 @@ class ChangelogController(BaseRepoController):
                     except RepositoryError as e:
                         h.flash(safe_str(e), category='warning')
                         raise HTTPFound(location=h.url('changelog_home', repo_name=repo_name))
-                collection = list(reversed(collection))
             else:
                 collection = c.db_repo_scm_instance.get_changesets(start=0, end=revision,
-                                                        branch_name=branch_name)
+                                                        branch_name=branch_name, reverse=True)
             c.total_cs = len(collection)
 
-            c.cs_pagination = RepoPage(collection, page=p, item_count=c.total_cs,
-                                    items_per_page=c.size, branch=branch_name,)
+            c.cs_pagination = Page(collection, page=p, item_count=c.total_cs, items_per_page=c.size,
+                                   branch=branch_name)
 
             page_revisions = [x.raw_id for x in c.cs_pagination]
             c.cs_comments = c.db_repo.get_comments(page_revisions)
