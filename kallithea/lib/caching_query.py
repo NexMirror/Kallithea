@@ -1,3 +1,5 @@
+# apparently based on https://github.com/sqlalchemy/sqlalchemy/blob/rel_0_7/examples/beaker_caching/caching_query.py
+
 """caching_query.py
 
 Represent persistence structures which allow the usage of
