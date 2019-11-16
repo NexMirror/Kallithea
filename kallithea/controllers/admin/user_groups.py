@@ -32,7 +32,7 @@ import formencode
 from formencode import htmlfill
 from sqlalchemy.orm import joinedload
 from sqlalchemy.sql.expression import func
-from tg import app_globals, config, request
+from tg import app_globals, request
 from tg import tmpl_context as c
 from tg.i18n import ugettext as _
 from webob.exc import HTTPFound, HTTPInternalServerError
@@ -61,7 +61,6 @@ class UserGroupsController(BaseController):
     @LoginRequired(allow_default_user=True)
     def _before(self, *args, **kwargs):
         super(UserGroupsController, self)._before(*args, **kwargs)
-        c.available_permissions = config['available_permissions']
 
     def __load_data(self, user_group_id):
         c.group_members_obj = sorted((x.user for x in c.user_group.members),

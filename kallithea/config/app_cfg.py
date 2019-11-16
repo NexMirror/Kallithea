@@ -34,7 +34,6 @@ from tg.support.converters import asbool
 
 import kallithea.lib.locale
 import kallithea.model.base
-from kallithea.lib.auth import set_available_permissions
 from kallithea.lib.middleware.https_fixup import HttpsFixup
 from kallithea.lib.middleware.permanent_repo_url import PermanentRepoUrl
 from kallithea.lib.middleware.simplegit import SimpleGit
@@ -162,7 +161,6 @@ def setup_configuration(app):
 
     load_rcextensions(root_path=config['here'])
 
-    set_available_permissions(config)
     repos_path = make_ui().configitems('paths')[0][1]
     config['base_path'] = repos_path
     set_app_settings(config)

@@ -31,7 +31,7 @@ import traceback
 import formencode
 from formencode import htmlfill
 from sqlalchemy.sql.expression import func
-from tg import app_globals, config, request
+from tg import app_globals, request
 from tg import tmpl_context as c
 from tg.i18n import ugettext as _
 from webob.exc import HTTPFound, HTTPNotFound
@@ -63,7 +63,6 @@ class UsersController(BaseController):
     @HasPermissionAnyDecorator('hg.admin')
     def _before(self, *args, **kwargs):
         super(UsersController, self)._before(*args, **kwargs)
-        c.available_permissions = config['available_permissions']
 
     def index(self, format='html'):
         c.users_list = User.query().order_by(User.username) \

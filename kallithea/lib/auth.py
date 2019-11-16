@@ -594,24 +594,6 @@ class AuthUser(object):
         return _set or set(['0.0.0.0/0', '::/0'])
 
 
-def set_available_permissions(config):
-    """
-    This function will propagate globals with all available defined
-    permission given in db. We don't want to check each time from db for new
-    permissions since adding a new permission also requires application restart
-    ie. to decorate new views with the newly created permission
-
-    :param config: current config instance
-
-    """
-    log.info('getting information about all available permissions')
-    try:
-        all_perms = Session().query(Permission).all()
-        config['available_permissions'] = [x.permission_name for x in all_perms]
-    finally:
-        Session.remove()
-
-
 #==============================================================================
 # CHECK DECORATORS
 #==============================================================================

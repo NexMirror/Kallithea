@@ -39,9 +39,7 @@ class Globals(object):
         """One instance of Globals is created during application
         initialization and is available during requests via the
         'app_globals' variable
-
         """
-        self.available_permissions = None   # propagated after init_model
 
     @property
     def cache(self):
