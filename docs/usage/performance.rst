@@ -23,6 +23,15 @@ Caching
 Tweak beaker cache settings in the ini file. The actual effect of that is
 questionable.
 
+.. note::
+
+    Beaker has no upper bound on cache size and will never drop any caches. For
+    memory cache, the only option is to regularly restart the worker process.
+    For file cache, it must be cleaned manually, as described in the `Beaker
+    documentation <https://beaker.readthedocs.io/en/latest/sessions.html#removing-expired-old-sessions>`_::
+
+        find data/cache -type f -mtime +30 -print -exec rm {} \;
+
 
 Database
 --------
