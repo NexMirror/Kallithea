@@ -322,7 +322,7 @@ ui_sections = ['alias', 'auth',
                 'ui', 'web', ]
 
 
-def make_ui(repo_path=None, clear_session=True):
+def make_ui(repo_path=None):
     """
     Create an Mercurial 'ui' object based on database Ui settings, possibly
     augmenting with content from a hgrc file.
@@ -342,8 +342,6 @@ def make_ui(repo_path=None, clear_session=True):
                       ui_.ui_key, ui_val)
             baseui.setconfig(safe_str(ui_.ui_section), safe_str(ui_.ui_key),
                              ui_val)
-    if clear_session:
-        meta.Session.remove()
 
     # force set push_ssl requirement to False, Kallithea handles that
     baseui.setconfig('web', 'push_ssl', False)
