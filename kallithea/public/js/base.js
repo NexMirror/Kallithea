@@ -697,7 +697,7 @@ function _comment_div_append_form($comment_div, f_path, line_no) {
             if (!confirm('Confirm to delete this pull request')) {
                 return false;
             }
-            var comments = $('.comment').size();
+            var comments = $('.comment').length;
             if (comments > 0 &&
                 !confirm('Confirm again to delete this pull request with {0} comments'.format(comments))) {
                 return false;

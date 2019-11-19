@@ -198,7 +198,7 @@ $(document).ready(function () {
 
    $(window).on('beforeunload', function(){
       var $textareas = $('.comment-inline-form textarea[name=text]');
-      if($textareas.size() > 1 ||
+      if($textareas.length > 1 ||
          $textareas.val()) {
          // this message will not be displayed on all browsers
          // (e.g. some versions of Firefox), but the user will still be warned
