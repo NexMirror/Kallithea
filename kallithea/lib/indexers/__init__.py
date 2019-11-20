@@ -212,7 +212,11 @@ class WhooshResultWrapper(object):
         close occurrences twice.
         """
         memory = [(0, 0)]
-        if self.matcher.supports('positions'):
+        try:
+            supports_positions = self.matcher.supports('positions')
+        except AttributeError:  # 'NoneType' object has no attribute 'supports' (because matcher never get a format)
+            supports_positions = False
+        if supports_positions:
             for span in self.matcher.spans():
                 start = span.startchar or 0
                 end = span.endchar or 0
