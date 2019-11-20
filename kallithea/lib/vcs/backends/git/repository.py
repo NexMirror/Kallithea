@@ -572,7 +572,8 @@ class GitRepository(BaseRepository):
 
         revs = revs[start_pos:end_pos]
         if reverse:
-            revs = reversed(revs)
+            revs.reverse()
+
         return CollectionGenerator(self, revs)
 
     def get_diff(self, rev1, rev2, path=None, ignore_whitespace=False,

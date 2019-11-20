@@ -553,7 +553,7 @@ class MercurialRepository(BaseRepository):
         # would be to get rid of this function entirely and use revsets
         revs = list(revisions)[start_pos:end_pos]
         if reverse:
-            revs = reversed(revs)
+            revs.reverse()
 
         return CollectionGenerator(self, revs)
 
