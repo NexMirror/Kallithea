@@ -26,9 +26,9 @@ Original author and date, and relevant copyright and licensing information is be
 :license: GPLv3, see LICENSE.md for more details.
 """
 
+import email.utils
 import logging
 import os
-import rfc822
 import traceback
 from collections import OrderedDict
 from operator import itemgetter
@@ -282,7 +282,7 @@ def send_email(recipients, subject, body='', html_body='', headers=None, author=
         # extract the e-mail address.
         envelope_addr = author_email(envelope_from)
         headers['From'] = '"%s" <%s>' % (
-            rfc822.quote('%s (no-reply)' % author.full_name_or_username),
+            email.utils.quote('%s (no-reply)' % author.full_name_or_username),
             envelope_addr)
 
     user = email_config.get('smtp_username')
