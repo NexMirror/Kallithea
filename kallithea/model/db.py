@@ -205,7 +205,7 @@ class Setting(Base, BaseDbModel):
 
     @validates('_app_settings_value')
     def validate_settings_value(self, key, val):
-        assert type(val) == unicode
+        assert isinstance(val, unicode)
         return val
 
     @hybrid_property

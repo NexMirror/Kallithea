@@ -422,7 +422,7 @@ def header_to_mime_encoding(value, not_email=False, separator=", "):
         return ""
 
     encoder = Charset(DEFAULT_ENCODING)
-    if type(value) == list:
+    if isinstance(value, list):
         return separator.join(properly_encode_header(
             v, encoder, not_email) for v in value)
     else:

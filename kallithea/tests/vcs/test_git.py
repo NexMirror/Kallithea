@@ -590,17 +590,17 @@ class TestGitChangeset(object):
 
     def test_commit_message_is_unicode(self):
         for cs in self.repo:
-            assert type(cs.message) == unicode
+            assert isinstance(cs.message, unicode)
 
     def test_changeset_author_is_unicode(self):
         for cs in self.repo:
-            assert type(cs.author) == unicode
+            assert isinstance(cs.author, unicode)
 
     def test_repo_files_content_is_unicode(self):
         changeset = self.repo.get_changeset()
         for node in changeset.get_node('/'):
             if node.is_file():
-                assert type(node.content) == unicode
+                assert isinstance(node.content, unicode)
 
     def test_wrong_path(self):
         # There is 'setup.py' in the root dir but not there:

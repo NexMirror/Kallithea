@@ -538,17 +538,17 @@ class TestMercurialChangeset(object):
 
     def test_commit_message_is_unicode(self):
         for cm in self.repo:
-            assert type(cm.message) == unicode
+            assert isinstance(cm.message, unicode)
 
     def test_changeset_author_is_unicode(self):
         for cm in self.repo:
-            assert type(cm.author) == unicode
+            assert isinstance(cm.author, unicode)
 
     def test_repo_files_content_is_unicode(self):
         test_changeset = self.repo.get_changeset(100)
         for node in test_changeset.get_node('/'):
             if node.is_file():
-                assert type(node.content) == unicode
+                assert isinstance(node.content, unicode)
 
     def test_wrong_path(self):
         # There is 'setup.py' in the root dir but not there:
