@@ -139,8 +139,7 @@ def _get_cache_parameters(query):
     if cache_key is None:
         # cache key - the value arguments from this query's parameters.
         args = [safe_str(x) for x in _params_from_query(query)]
-        args.extend(filter(lambda k: k not in ['None', None, u'None'],
-                           [str(query._limit), str(query._offset)]))
+        args.extend([k for k in [str(query._limit), str(query._offset)] if k not in ['None', None, u'None']])
 
         cache_key = " ".join(args)
 

@@ -66,7 +66,7 @@ def anchor_url(revision, path, GET):
 
 def get_ignore_ws(fid, GET):
     ig_ws_global = GET.get('ignorews')
-    ig_ws = filter(lambda k: k.startswith('WS'), GET.getall(fid))
+    ig_ws = [k for k in GET.getall(fid) if k.startswith('WS')]
     if ig_ws:
         try:
             return int(ig_ws[0].split(':')[-1])
@@ -109,9 +109,9 @@ def _ignorews_url(GET, fileid=None):
 def get_line_ctx(fid, GET):
     ln_ctx_global = GET.get('context')
     if fid:
-        ln_ctx = filter(lambda k: k.startswith('C'), GET.getall(fid))
+        ln_ctx = [k for k in GET.getall(fid) if k.startswith('C')]
     else:
-        _ln_ctx = filter(lambda k: k.startswith('C'), GET)
+        _ln_ctx = [k for k in GET if k.startswith('C')]
         ln_ctx = GET.get(_ln_ctx[0]) if _ln_ctx else ln_ctx_global
         if ln_ctx:
             ln_ctx = [ln_ctx]

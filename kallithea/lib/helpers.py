@@ -676,7 +676,7 @@ def action_parser(user_log, feed=False, parse_cs=False):
             return _op, _name
 
         revs = []
-        if len(filter(lambda v: v != '', revs_ids)) > 0:
+        if len([v for v in revs_ids if v != '']) > 0:
             repo = None
             for rev in revs_ids[:revs_top_limit]:
                 _op, _name = _get_op(rev)

@@ -306,8 +306,7 @@ class RepoModel(object):
                     repo=cur_repo, user='default', perm=EMPTY_PERM
                 )
                 # handle extra fields
-            for field in filter(lambda k: k.startswith(RepositoryField.PREFIX),
-                                kwargs):
+            for field in [k for k in kwargs if k.startswith(RepositoryField.PREFIX)]:
                 k = RepositoryField.un_prefix_key(field)
                 ex_field = RepositoryField.get_by_key_name(key=k, repo=cur_repo)
                 if ex_field:

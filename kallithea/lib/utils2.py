@@ -394,7 +394,7 @@ def uri_filter(uri):
     else:
         host, port = uri[:cred_pos], uri[cred_pos + 1:]
 
-    return filter(None, [proto, host, port])
+    return [_f for _f in [proto, host, port] if _f]
 
 
 def credentials_filter(uri):

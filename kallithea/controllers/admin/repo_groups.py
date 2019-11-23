@@ -92,10 +92,8 @@ class RepoGroupsController(BaseController):
         return data
 
     def _revoke_perms_on_yourself(self, form_result):
-        _up = filter(lambda u: request.authuser.username == u[0],
-                     form_result['perms_updates'])
-        _new = filter(lambda u: request.authuser.username == u[0],
-                      form_result['perms_new'])
+        _up = [u for u in form_result['perms_updates'] if request.authuser.username == u[0]]
+        _new = [u for u in form_result['perms_new'] if request.authuser.username == u[0]]
         if _new and _new[0][1] != 'group.admin' or _up and _up[0][1] != 'group.admin':
             return True
         return False

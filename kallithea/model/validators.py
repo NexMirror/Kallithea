@@ -782,7 +782,7 @@ def ValidAuthPlugins():
 
         def _convert_to_python(self, value, state):
             # filter empty values
-            return filter(lambda s: s not in [None, ''], value)
+            return [s for s in value if s not in [None, '']]
 
         def _validate_python(self, value, state):
             from kallithea.lib import auth_modules

@@ -216,8 +216,7 @@ def wrapped_diff(filenode_old, filenode_new, diff_limit=None,
         stats = (0, 0)
 
     if not html_diff:
-        submodules = filter(lambda o: isinstance(o, SubModuleNode),
-                            [filenode_new, filenode_old])
+        submodules = [o for o in [filenode_new, filenode_old] if isinstance(o, SubModuleNode)]
         if submodules:
             html_diff = wrap_to_table(h.escape('Submodule %r' % submodules[0]))
         else:
@@ -235,8 +234,7 @@ def get_gitdiff(filenode_old, filenode_new, ignore_whitespace=True, context=3):
     """
     # make sure we pass in default context
     context = context or 3
-    submodules = filter(lambda o: isinstance(o, SubModuleNode),
-                        [filenode_new, filenode_old])
+    submodules = [o for o in [filenode_new, filenode_old] if isinstance(o, SubModuleNode)]
     if submodules:
         return ''
 
