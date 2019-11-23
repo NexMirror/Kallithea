@@ -444,20 +444,20 @@ class TestMercurialChangeset(object):
         #    added:   20
         #    removed: 1
         changed = set(['.hgignore'
-            , 'README.rst' , 'docs/conf.py' , 'docs/index.rst' , 'setup.py'
-            , 'tests/test_hg.py' , 'tests/test_nodes.py' , 'vcs/__init__.py'
-            , 'vcs/backends/__init__.py' , 'vcs/backends/base.py'
-            , 'vcs/backends/hg.py' , 'vcs/nodes.py' , 'vcs/utils/__init__.py'])
+            , 'README.rst', 'docs/conf.py', 'docs/index.rst', 'setup.py'
+            , 'tests/test_hg.py', 'tests/test_nodes.py', 'vcs/__init__.py'
+            , 'vcs/backends/__init__.py', 'vcs/backends/base.py'
+            , 'vcs/backends/hg.py', 'vcs/nodes.py', 'vcs/utils/__init__.py'])
 
         added = set(['docs/api/backends/hg.rst'
-            , 'docs/api/backends/index.rst' , 'docs/api/index.rst'
-            , 'docs/api/nodes.rst' , 'docs/api/web/index.rst'
-            , 'docs/api/web/simplevcs.rst' , 'docs/installation.rst'
-            , 'docs/quickstart.rst' , 'setup.cfg' , 'vcs/utils/baseui_config.py'
-            , 'vcs/utils/web.py' , 'vcs/web/__init__.py' , 'vcs/web/exceptions.py'
-            , 'vcs/web/simplevcs/__init__.py' , 'vcs/web/simplevcs/exceptions.py'
-            , 'vcs/web/simplevcs/middleware.py' , 'vcs/web/simplevcs/models.py'
-            , 'vcs/web/simplevcs/settings.py' , 'vcs/web/simplevcs/utils.py'
+            , 'docs/api/backends/index.rst', 'docs/api/index.rst'
+            , 'docs/api/nodes.rst', 'docs/api/web/index.rst'
+            , 'docs/api/web/simplevcs.rst', 'docs/installation.rst'
+            , 'docs/quickstart.rst', 'setup.cfg', 'vcs/utils/baseui_config.py'
+            , 'vcs/utils/web.py', 'vcs/web/__init__.py', 'vcs/web/exceptions.py'
+            , 'vcs/web/simplevcs/__init__.py', 'vcs/web/simplevcs/exceptions.py'
+            , 'vcs/web/simplevcs/middleware.py', 'vcs/web/simplevcs/models.py'
+            , 'vcs/web/simplevcs/settings.py', 'vcs/web/simplevcs/utils.py'
             , 'vcs/web/simplevcs/views.py'])
 
         removed = set(['docs/api.rst'])
